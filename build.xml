@@ -17,14 +17,15 @@
         <echo>Executing test suites</echo>
         <exec executable="${js.tester}" failonerror="yes">
             <env key="NODE_PATH" value="${node.path}"/>
-            <arg value="--spec"/>
+            <arg value="--spec -v"/>
         </exec>
     </target>
 
     <target name="make" depends="clean, init">
         <echo>Compiling dc.js</echo>
         <concat destfile="dc.js">
-            <fileset dir="src" includes="**/*.js" />
+            <file file="src/core.js"/>
+            <file file="src/bar_chart.js"/>
         </concat>
         <echo>Compiling dc.min.js</echo>
         <exec executable="bash">
