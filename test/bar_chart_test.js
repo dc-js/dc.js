@@ -5,6 +5,9 @@ var assert = require('assert');
 
 var suite = vows.describe('Bar chart');
 
+var width = 200;
+var height = 100;
+
 suite.addBatch({
     'creation by selector': {
         topic: function () {
@@ -17,10 +20,6 @@ suite.addBatch({
         'we get barchart instance': function (barChart) {
             assert.isTrue(barChart instanceof dc.BarChart);
         },
-
-        'selector should be set': function(barChart){
-            assert.equal("#barchart", barChart.getSelector());
-        },
         'svg should be created': function(barChart){
             assert.isFalse(d3.select("#barchart").select("svg").empty());
         }
@@ -28,13 +27,22 @@ suite.addBatch({
     'dimensional slice generation by groups': {
         topic: function(){
             d3.select("body").append("div").attr("id", "barchart");
-            var ageDimension = data.dimension(function(d){return d.gender;});
-            var ageGroup = ageDimension.group();
             var chart = dc.createBarChart("#barchart");
-            chart.dimension(ageDimension).group(ageGroup);
+            chart.dimension(ageDimension).group(ageGroup).width(width).height(height);
             return chart;
         },
-
+        'dimension should be set': function(barChart){
+            assert.equal(ageDimension, barChart.dimension());
+        },
+        'group should be set': function(barChart){
+            assert.equal(ageGroup, barChart.group());
+        },
+        'width should be set': function(barChart){
+            assert.equal(width, barChart.width());
+        },
+        'height should be set': function(barChart){
+            assert.equal(height, barChart.height());
+        },
         'root g should be created': function(barChart){
             assert.isFalse(d3.select("#barchart").select("svg").select("g").empty());
         }

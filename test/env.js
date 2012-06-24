@@ -22,4 +22,7 @@ json = jQuery.parseJSON("[" +
 
 data = crossfilter(json)
 
+ageDimension = data.dimension(function(d){return d.gender;});
+ageGroup = ageDimension.group();
+
 require("../dc");
