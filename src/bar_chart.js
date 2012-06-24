@@ -1,7 +1,19 @@
-dc.createBarChart = function() {
-    return new this.BarChart();
+dc.createBarChart = function(selector) {
+    return new this.BarChart(selector);
 };
 
-dc.BarChart = function(){
+dc.BarChart = function(selector){
+    var selector = selector;
+    var root = d3.select(selector);
+
+    var dimension;
+    var group;
+
+    root.append("svg").append("g");
+
+    this.getSelector = function(){ return selector; }
+
+    this.dimension = function(d){ dimension = d; return this; }
+    this.group = function(g){ group = d; return this; }
 };
 
