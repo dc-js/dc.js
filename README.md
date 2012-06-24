@@ -17,6 +17,7 @@ Make sure the following packages are installed on your machine
 * npm install sizzle
 * npm install d3
 * npm install crossfilter
+* npm install jquery
 * ant # install apache ant make tool
 
 ### Build
