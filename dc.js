@@ -4,5 +4,5 @@ dc.createBarChart = function() {
 };
 
 dc.BarChart = function(){
-}
+};
 
