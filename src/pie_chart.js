@@ -14,15 +14,28 @@ dc.PieChart = function(selector) {
     var radius;
 
     this.render = function() {
-        root.append("svg")
+        var topG = root.append("svg")
+            .data([group.top(Infinity)])
             .attr("width", width)
             .attr("height", height)
             .append("g")
             .attr("transform", "translate(" + cx() + "," + cy() + ")");
+
+        var dataPie = d3.layout.pie().value(function(d){ return d.value; });
+
+        topG.selectAll("g.pie-slice")
+                .data(dataPie)
+            .enter()
+                .append("g")
+                    .attr("class", "pie-slice");
     }
 
     this.select = function(s) {
         return root.select(s);
+    }
+
+    this.selectAll = function(s){
+        return root.selectAll(s);
     }
 
     this.dimension = function(d) {

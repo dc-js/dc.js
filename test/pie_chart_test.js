@@ -35,22 +35,22 @@ suite.addBatch({
             return chart;
         },
         'dimension should be set': function(pieChart){
-            assert.equal(ageDimension, pieChart.dimension());
+            assert.equal(pieChart.dimension(), ageDimension);
         },
         'group should be set': function(pieChart){
-            assert.equal(ageGroup, pieChart.group());
+            assert.equal(pieChart.group(), ageGroup);
         },
         'width should be set': function(pieChart){
-            assert.equal(width, pieChart.width());
+            assert.equal(pieChart.width(), width);
         },
         'height should be set': function(pieChart){
-            assert.equal(height, pieChart.height());
+            assert.equal(pieChart.height(), height);
         },
         'radius should be set': function(pieChart){
-            assert.equal(radius, pieChart.radius());
+            assert.equal(pieChart.radius(), radius);
         },
         'height should be used for svg': function(pieChart){
-            assert.equal(height, pieChart.select("svg").attr("height"));
+            assert.equal(pieChart.select("svg").attr("height"), height);
         },
         'root g should be created': function(pieChart){
             assert.isFalse(pieChart.select("svg g").empty());
@@ -59,7 +59,10 @@ suite.addBatch({
             assert.isFalse(pieChart.select("svg g").empty());
         },
         'root g should be translated to center': function(pieChart){
-            assert.equal("translate(100,100)", pieChart.select("svg g").attr("transform"));
+            assert.equal(pieChart.select("svg g").attr("transform"), "translate(100,100)");
+        },
+        'slice g should be created with class': function(pieChart){
+            assert.equal(pieChart.selectAll("svg g g.pie-slice").data().length, 2);
         }
     }
 });
