@@ -1,8 +1,8 @@
-dc.createBarChart = function(selector) {
-    return new this.BarChart(selector);
+dc.createPieChart = function(selector) {
+    return new this.PieChart(selector);
 };
 
-dc.BarChart = function(selector) {
+dc.PieChart = function(selector) {
     var selector = selector;
     var root = d3.select(selector);
 
