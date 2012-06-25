@@ -7,6 +7,8 @@ dc.PieChart = function(selector) {
     var selector = selector;
     var root = d3.select(selector);
 
+    var colors = d3.scale.category20c();
+
     var dimension;
     var group;
 
@@ -22,21 +24,34 @@ dc.PieChart = function(selector) {
             .append("g")
             .attr("transform", "translate(" + cx() + "," + cy() + ")");
 
-        var dataPie = d3.layout.pie().value(function(d){ return d.value; });
+        var dataPie = d3.layout.pie().value(function(d) {
+            return d.value;
+        });
 
-        topG.selectAll("g.pie-slice")
-                .data(dataPie)
+        var slices = topG.selectAll("g.pie-slice")
+            .data(dataPie)
             .enter()
-                .append("g")
-                    .attr("class", "pie-slice");
+            .append("g")
+            .attr("class", "pie-slice");
+
+        slices.append("path")
+            .attr("fill", function(d, i) {
+                return colors(i);
+            });
     }
 
     this.select = function(s) {
         return root.select(s);
     }
 
-    this.selectAll = function(s){
+    this.selectAll = function(s) {
         return root.selectAll(s);
+    }
+
+    this.colors = function(c){
+        if(!arguments.length) return colors;
+        colors = c;
+        return this;
     }
 
     this.dimension = function(d) {

@@ -23,6 +23,9 @@ suite.addBatch({
         },
         'svg should be created': function(pieChart){
             assert.isFalse(pieChart.select("svg").empty());
+        },
+        'default color scheme should be created': function(pieChart){
+            assert.isTrue(pieChart.colors().length > 0);
         }
     },
     'dimensional slice generation by groups': {
@@ -63,6 +66,9 @@ suite.addBatch({
         },
         'slice g should be created with class': function(pieChart){
             assert.equal(pieChart.selectAll("svg g g.pie-slice").data().length, 2);
+        },
+        'slice path should be created': function(pieChart){
+            assert.equal(pieChart.selectAll("svg g g.pie-slice path").data().length, 2);
         }
     }
 });
