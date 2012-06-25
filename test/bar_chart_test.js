@@ -6,7 +6,7 @@ var assert = require('assert');
 var suite = vows.describe('Bar chart');
 
 var width = 200;
-var height = 100;
+var height = 200;
 
 suite.addBatch({
     'creation by selector': {
@@ -21,7 +21,7 @@ suite.addBatch({
             assert.isTrue(barChart instanceof dc.BarChart);
         },
         'svg should be created': function(barChart){
-            assert.isFalse(d3.select("#barchart").select("svg").empty());
+            assert.isFalse(barChart.select("svg").empty());
         }
     },
     'dimensional slice generation by groups': {
@@ -48,10 +48,13 @@ suite.addBatch({
             assert.equal(height, barChart.select("svg").attr("height"));
         },
         'root g should be created': function(barChart){
-            assert.isFalse(d3.select("#barchart").select("svg").select("g").empty());
+            assert.isFalse(barChart.select("svg").select("g").empty());
         },
         'root g should be created': function(barChart){
-            assert.isFalse(d3.select("#barchart").select("svg").select("g").empty());
+            assert.isFalse(barChart.select("svg").select("g").empty());
+        },
+        'root g should be translated to center': function(barChart){
+            assert.equal("translate(100,100)", barChart.select("svg").select("g").attr("transform"));
         }
     }
 });

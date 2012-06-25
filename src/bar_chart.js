@@ -16,7 +16,8 @@ dc.BarChart = function(selector) {
         root.append("svg")
             .attr("width", width)
             .attr("height", height)
-            .append("g");
+            .append("g")
+            .attr("transform", "translate(" + cx() + "," + cy() + ")");
     }
 
     this.select = function(s) {
@@ -45,6 +46,14 @@ dc.BarChart = function(selector) {
         if (!arguments.length) return height;
         height = h;
         return this;
+    }
+
+    function cx() {
+        return width / 2;
+    }
+
+    function cy() {
+        return height / 2;
     }
 
 };
