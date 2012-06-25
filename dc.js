@@ -12,6 +12,7 @@ dc.BarChart = function(selector) {
 
     var width;
     var height;
+    var radius;
 
     this.render = function() {
         root.append("svg")
@@ -46,6 +47,12 @@ dc.BarChart = function(selector) {
     this.height = function(h) {
         if (!arguments.length) return height;
         height = h;
+        return this;
+    }
+
+    this.radius = function(r) {
+        if (!arguments.length) return radius;
+        radius = r;
         return this;
     }
 
