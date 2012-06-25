@@ -12,7 +12,16 @@ dc.BarChart = function(selector) {
     var width;
     var height;
 
-    root.append("svg").append("g");
+    this.render = function() {
+        root.append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g");
+    }
+
+    this.select = function(s) {
+        return root.select(s);
+    }
 
     this.dimension = function(d) {
         if (!arguments.length) return dimension;
@@ -26,14 +35,14 @@ dc.BarChart = function(selector) {
         return this;
     }
 
-    this.width = function(w){
-        if(!arguments.length) return width;
+    this.width = function(w) {
+        if (!arguments.length) return width;
         width = w;
         return this;
     }
 
-    this.height = function(h){
-        if(!arguments.length) return height;
+    this.height = function(h) {
+        if (!arguments.length) return height;
         height = h;
         return this;
     }

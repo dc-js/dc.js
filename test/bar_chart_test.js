@@ -29,6 +29,7 @@ suite.addBatch({
             d3.select("body").append("div").attr("id", "barchart");
             var chart = dc.createBarChart("#barchart");
             chart.dimension(ageDimension).group(ageGroup).width(width).height(height);
+            chart.render();
             return chart;
         },
         'dimension should be set': function(barChart){
@@ -42,6 +43,12 @@ suite.addBatch({
         },
         'height should be set': function(barChart){
             assert.equal(height, barChart.height());
+        },
+        'height should be used for svg': function(barChart){
+            assert.equal(height, barChart.select("svg").attr("height"));
+        },
+        'root g should be created': function(barChart){
+            assert.isFalse(d3.select("#barchart").select("svg").select("g").empty());
         },
         'root g should be created': function(barChart){
             assert.isFalse(d3.select("#barchart").select("svg").select("g").empty());
