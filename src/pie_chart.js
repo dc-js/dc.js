@@ -27,6 +27,8 @@ dc.PieChart = function(selector) {
             return d.value;
         });
 
+        var circle = d3.svg.arc().outerRadius(radius);
+
         var slices = topG.selectAll("g.pie-slice")
             .data(dataPie)
             .enter()
@@ -36,7 +38,8 @@ dc.PieChart = function(selector) {
         slices.append("path")
             .attr("fill", function(d, i) {
                 return colors(i);
-            });
+            })
+            .attr("d", circle);
     }
 
     this.select = function(s) {

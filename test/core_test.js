@@ -6,11 +6,11 @@ var assert = require('assert');
 var suite = vows.describe('Core');
 
 suite.addBatch({
-    'when dc.version': {
+    'dc.version': {
         topic: function () { return dc.version },
 
-        'we get version string': function (topic) {
-            assert.equal (topic, "0.1.0");
+        'has the form major.minor.patch': function (version) {
+            assert.match(version, /^[0-9]+\.[0-9]+\.[0-9]+$/);
         }
     }
 });
