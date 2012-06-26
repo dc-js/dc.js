@@ -69,6 +69,11 @@ suite.addBatch({
         },
         'slice path should be created': function(pieChart){
             assert.equal(pieChart.selectAll("svg g g.pie-slice path").data().length, 2);
+        },
+        'slice path should be filled': function(pieChart){
+            pieChart.selectAll("svg g g.pie-slice path").call(function(p){
+                assert.isNotNull(p.attr("fill"));
+            });
         }
     }
 });
