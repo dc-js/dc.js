@@ -47,12 +47,13 @@ dc.PieChart = function(selector) {
                 d.innerRadius = 0;
                 d.outerRadius = radius;
                 var centroid = circle.centroid(d);
-                if (isNaN(centroid[0])) {
+                if (isNaN(centroid[0]) || isNaN(centroid[1])) {
                     return "translate(0,0)";
                 } else {
-                    return "translate(" + centroid[0] + ", 0)";
+                    return "translate(" + centroid + ")";
                 }
             })
+            .attr("text-anchor", "middle")
             .text(function(d){return d.data.key;});
     }
 

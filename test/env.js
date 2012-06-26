@@ -19,10 +19,9 @@ json = jQuery.parseJSON("[" +
     "{\"age\":\"44\",\"countrycode\":\"US\",\"gender\":\"M\",\"id\":9,\"region\":\"Central\",\"date\":\"2012-06-10T16:10:09Z\"}, " +
     "{\"age\":\"55\",\"countrycode\":\"US\",\"gender\":\"F\",\"id\":10,\"region\":\"\",\"date\":\"2012-06-10T16:10:09Z\"}" +
     "]");
-
 data = crossfilter(json)
 
-ageDimension = data.dimension(function(d){return d.gender;});
+ageDimension = data.dimension(function(d){return d.age;});
 ageGroup = ageDimension.group();
 
 require("../dc");
