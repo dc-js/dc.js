@@ -17,7 +17,7 @@
         <echo>Executing test suites</echo>
         <exec executable="${js.tester}" failonerror="yes">
             <env key="NODE_PATH" value="${node.path}"/>
-            <arg value="--spec -v"/>
+            <arg value="--spec"/>
         </exec>
     </target>
 
