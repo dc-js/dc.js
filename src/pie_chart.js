@@ -40,6 +40,19 @@ dc.PieChart = function(selector) {
                 return colors(i);
             })
             .attr("d", circle);
+
+        slices.append("text")
+            .attr("transform", function(d) {
+                d.innerRadius = 0;
+                d.outerRadius = radius;
+                var centroid = circle.centroid(d);
+                if (isNaN(centroid[0])) {
+                    return "translate(0,0)";
+                } else {
+                    return "translate(" + centroid[0] + ", 0)";
+                }
+            })
+            .text(function(d){return d.data.key;});
     }
 
     this.select = function(s) {
@@ -50,8 +63,8 @@ dc.PieChart = function(selector) {
         return root.selectAll(s);
     }
 
-    this.colors = function(c){
-        if(!arguments.length) return colors;
+    this.colors = function(c) {
+        if (!arguments.length) return colors;
         colors = c;
         return this;
     }

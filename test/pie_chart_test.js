@@ -79,6 +79,19 @@ suite.addBatch({
             pieChart.selectAll("svg g g.pie-slice path").call(function(p){
                 assert.isTrue(p.attr("d") != "");
             });
+        },
+        'slice label should be created': function(pieChart){
+            assert.equal(pieChart.selectAll("svg g g.pie-slice text").data().length, 2);
+        },
+        'slice label transform to centroid': function(pieChart){
+            pieChart.selectAll("svg g g.pie-slice text").call(function(p){
+                assert.equal(p.attr("transform"), "translate(50,0)");
+            });
+        },
+        'slice label text should be set': function(pieChart){
+            pieChart.selectAll("svg g g.pie-slice text").call(function(p){
+                assert.equal(p.text(), p.datum().data.key);
+            });
         }
     }
 });
