@@ -11,38 +11,54 @@
     <script type="text/javascript" src="../dc.js"></script>
 
     <style type="text/css">
-        .pie-slice{
+        .clear{
+            clear: both;
+        }
+
+        .pie-slice {
             fill: white;
         }
     </style>
 </head>
 <body>
 
-<div id="pie-chart"></div>
+<div id="pie-chart">
+    <span>Age PieChart</span>
+    <div class="clear"></div>
+    <a href="javascript:genderDimension.filter('F'); agePieChart.render();">Filter</a>
+    <a href="javascript:genderDimension.filterAll(); agePieChart.render();">Reset</a>
+    <div class="clear"></div>
+</div>
 
 <script>
     var json = jQuery.parseJSON("[" +
-        "{\"age\":\"44\",\"countrycode\":\"US\",\"gender\":\"M\",\"id\":1,\"region\":\"South\",\"date\":\"2011-12-10T16:10:09Z\"}, " +
-        "{\"age\":\"22\",\"countrycode\":\"US\",\"gender\":\"F\",\"id\":2,\"region\":\"West\",\"date\":\"2012-01-10T16:10:09Z\"}, " +
-        "{\"age\":\"33\",\"countrycode\":\"US\",\"gender\":\"M\",\"id\":3,\"region\":\"West\",\"date\":\"2011-12-10T16:10:09Z\"}, " +
-        "{\"age\":\"44\",\"countrycode\":\"US\",\"gender\":\"F\",\"id\":4,\"region\":\"South\",\"date\":\"2012-02-10T16:10:09Z\"}, " +
-        "{\"age\":\"55\",\"countrycode\":\"CA\",\"gender\":\"M\",\"id\":5,\"region\":\"Central\",\"date\":\"2012-03-10T16:10:09Z\"}, " +
-        "{\"age\":\"66\",\"countrycode\":\"US\",\"gender\":\"F\",\"id\":6,\"region\":\"West\",\"date\":\"2012-04-10T16:10:09Z\"}, " +
-        "{\"age\":\"22\",\"countrycode\":\"CA\",\"gender\":\"M\",\"id\":7,\"region\":\"West\",\"date\":\"2012-05-10T16:10:09Z\"}, " +
-        "{\"age\":\"33\",\"countrycode\":\"US\",\"gender\":\"F\",\"id\":8,\"region\":\"Central\",\"date\":\"2012-06-10T16:10:09Z\"}, " +
-        "{\"age\":\"44\",\"countrycode\":\"US\",\"gender\":\"M\",\"id\":9,\"region\":\"Central\",\"date\":\"2012-06-10T16:10:09Z\"}, " +
-        "{\"age\":\"55\",\"countrycode\":\"US\",\"gender\":\"F\",\"id\":10,\"region\":\"\",\"date\":\"2012-06-10T16:10:09Z\"}" +
-    "]");
+            "{\"age\":\"44\",\"countrycode\":\"US\",\"gender\":\"M\",\"id\":1,\"region\":\"South\",\"date\":\"2011-12-10T16:10:09Z\"}, " +
+            "{\"age\":\"22\",\"countrycode\":\"US\",\"gender\":\"F\",\"id\":2,\"region\":\"West\",\"date\":\"2012-01-10T16:10:09Z\"}, " +
+            "{\"age\":\"33\",\"countrycode\":\"US\",\"gender\":\"M\",\"id\":3,\"region\":\"West\",\"date\":\"2011-12-10T16:10:09Z\"}, " +
+            "{\"age\":\"44\",\"countrycode\":\"US\",\"gender\":\"F\",\"id\":4,\"region\":\"South\",\"date\":\"2012-02-10T16:10:09Z\"}, " +
+            "{\"age\":\"55\",\"countrycode\":\"CA\",\"gender\":\"M\",\"id\":5,\"region\":\"Central\",\"date\":\"2012-03-10T16:10:09Z\"}, " +
+            "{\"age\":\"66\",\"countrycode\":\"US\",\"gender\":\"F\",\"id\":6,\"region\":\"West\",\"date\":\"2012-04-10T16:10:09Z\"}, " +
+            "{\"age\":\"22\",\"countrycode\":\"CA\",\"gender\":\"M\",\"id\":7,\"region\":\"West\",\"date\":\"2012-05-10T16:10:09Z\"}, " +
+            "{\"age\":\"33\",\"countrycode\":\"US\",\"gender\":\"F\",\"id\":8,\"region\":\"Central\",\"date\":\"2012-06-10T16:10:09Z\"}, " +
+            "{\"age\":\"44\",\"countrycode\":\"US\",\"gender\":\"M\",\"id\":9,\"region\":\"Central\",\"date\":\"2012-06-10T16:10:09Z\"}, " +
+            "{\"age\":\"55\",\"countrycode\":\"US\",\"gender\":\"F\",\"id\":10,\"region\":\"\",\"date\":\"2012-06-10T16:10:09Z\"}" +
+            "]");
 
     var data = crossfilter(json)
 
-    var ageDimension = data.dimension(function(d){return d.gender;});
+    var ageDimension = data.dimension(function(d) {
+        return d.age;
+    });
     var ageGroup = ageDimension.group();
 
+    var genderDimension = data.dimension(function(d) {
+        return d.gender;
+    });
+    var genderGroup = genderDimension.group();
+
     var agePieChart = dc.createPieChart("#pie-chart");
-    agePieChart.width(200).height(200).radius(100);
+    agePieChart.width(200).height(200).radius(70);
     agePieChart.dimension(ageDimension).group(ageGroup);
-    agePieChart.render();
     agePieChart.render();
 </script>
 

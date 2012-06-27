@@ -24,4 +24,7 @@ data = crossfilter(json)
 ageDimension = data.dimension(function(d){return d.age;});
 ageGroup = ageDimension.group();
 
+genderDimension = data.dimension(function(d){return d.gender;});
+genderGroup = genderDimension.group();
+
 require("../dc");

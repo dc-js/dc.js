@@ -59,6 +59,11 @@ dc.PieChart = function(selector) {
         return this;
     }
 
+    this.filter = function(f){
+        dimension.filter(f);
+        return this;
+    }
+
     this.width = function(w) {
         if (!arguments.length) return width;
         width = w;
@@ -79,7 +84,7 @@ dc.PieChart = function(selector) {
 
     function generateTopLevelG() {
         var topG = root.append("svg")
-            .data([group.top(Infinity)])
+            .data([group.all()])
             .attr("width", width)
             .attr("height", height)
             .append("g")
