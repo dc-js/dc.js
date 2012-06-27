@@ -15,13 +15,11 @@ dc.PieChart = function(selector) {
     var height;
     var radius;
 
+
     this.render = function() {
-        var topG = root.append("svg")
-            .data([group.top(Infinity)])
-            .attr("width", width)
-            .attr("height", height)
-            .append("g")
-            .attr("transform", "translate(" + cx() + "," + cy() + ")");
+        root.select("svg").remove();
+
+        var topG = generateTopLevelG();
 
         var dataPie = d3.layout.pie().value(function(d) {
             return d.value;
@@ -29,31 +27,9 @@ dc.PieChart = function(selector) {
 
         var circle = d3.svg.arc().outerRadius(radius);
 
-        var slices = topG.selectAll("g.pie-slice")
-            .data(dataPie)
-            .enter()
-            .append("g")
-            .attr("class", "pie-slice");
+        var slices = drawSlices(topG, dataPie, circle);
 
-        slices.append("path")
-            .attr("fill", function(d, i) {
-                return colors(i);
-            })
-            .attr("d", circle);
-
-        slices.append("text")
-            .attr("transform", function(d) {
-                d.innerRadius = 0;
-                d.outerRadius = radius;
-                var centroid = circle.centroid(d);
-                if (isNaN(centroid[0]) || isNaN(centroid[1])) {
-                    return "translate(0,0)";
-                } else {
-                    return "translate(" + centroid + ")";
-                }
-            })
-            .attr("text-anchor", "middle")
-            .text(function(d){return d.data.key;});
+        drawLabels(slices, circle);
     }
 
     this.select = function(s) {
@@ -100,12 +76,55 @@ dc.PieChart = function(selector) {
         return this;
     }
 
+    function generateTopLevelG() {
+        var topG = root.append("svg")
+            .data([group.top(Infinity)])
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", "translate(" + cx() + "," + cy() + ")");
+        return topG;
+    }
+
     function cx() {
         return width / 2;
     }
 
     function cy() {
         return height / 2;
+    }
+
+    function drawSlices(topG, dataPie, circle) {
+        var slices = topG.selectAll("g.pie-slice")
+            .data(dataPie)
+            .enter()
+            .append("g")
+            .attr("class", "pie-slice");
+
+        slices.append("path")
+            .attr("fill", function(d, i) {
+                return colors(i);
+            })
+            .attr("d", circle);
+        return slices;
+    }
+
+    function drawLabels(slices, circle) {
+        slices.append("text")
+            .attr("transform", function(d) {
+                d.innerRadius = 0;
+                d.outerRadius = radius;
+                var centroid = circle.centroid(d);
+//                if (isNaN(centroid[0]) || isNaN(centroid[1])) {
+//                    return "translate(0,0)";
+//                } else {
+                return "translate(" + centroid + ")";
+//                }
+            })
+            .attr("text-anchor", "middle")
+            .text(function(d) {
+                return d.data.key;
+            });
     }
 
 };

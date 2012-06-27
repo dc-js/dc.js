@@ -10,7 +10,7 @@ var height = 200;
 var radius = 100;
 
 suite.addBatch({
-    'dimensional slice generation by groups': {
+    'pie chart generation': {
         topic: function(){
             d3.select("body").append("div").attr("id", "pie-chart-age");
             var chart = dc.createPieChart("#pie-chart-age");
@@ -86,6 +86,15 @@ suite.addBatch({
             pieChart.selectAll("svg g g.pie-slice text").call(function(p){
                 assert.equal(p.attr("text-anchor"), "middle");
             });
+        },
+        're-render' : {
+            topic: function(pieChart){
+                pieChart.render();
+                return pieChart;
+            },
+            'multiple invocation of render should update chart': function(pieChart){
+                assert.equal(jQuery("#pie-chart-age svg").length, 1);
+            }
         }
     }
 });
