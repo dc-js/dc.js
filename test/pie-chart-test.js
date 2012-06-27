@@ -98,14 +98,22 @@ suite.addBatch({
         },
         'filter' : {
             topic: function(pieChart) {
-                genderDimension.filter("F");
+                regionDimension.filter("East");
                 pieChart.render();
                 return pieChart;
             },
-            'only filtered slices should be rendered': function(pieChart) {
-                pieChart.group().all().forEach(function(d) {
-                    assert.equal(d.value, 1);
-                });
+            'label should be hidden if filtered out': function(pieChart) {
+                assert.equal(pieChart.selectAll("svg g g.pie-slice text").text(), "");
+            }
+        },
+        'n/a filter' : {
+            topic: function(pieChart) {
+                genderDimension.filter("E");
+                pieChart.render();
+                return pieChart;
+            },
+            'NaN centroid should be handled properly': function(pieChart) {
+                assert.equal(pieChart.selectAll("svg g g.pie-slice text").attr("transform"), "translate(0,0)");
             }
         }
     }

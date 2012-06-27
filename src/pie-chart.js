@@ -58,7 +58,7 @@ dc.PieChart = function(selector) {
         return this;
     }
 
-    this.filter = function(f){
+    this.filter = function(f) {
         dimension.filter(f);
         return this;
     }
@@ -120,15 +120,20 @@ dc.PieChart = function(selector) {
                 d.innerRadius = 0;
                 d.outerRadius = radius;
                 var centroid = circle.centroid(d);
-//                if (isNaN(centroid[0]) || isNaN(centroid[1])) {
-//                    return "translate(0,0)";
-//                } else {
-                return "translate(" + centroid + ")";
-//                }
+                if (isNaN(centroid[0]) || isNaN(centroid[1])) {
+                    return "translate(0,0)";
+                } else {
+                    return "translate(" + centroid + ")";
+                }
             })
             .attr("text-anchor", "middle")
             .text(function(d) {
-                return d.data.key;
+                var data = d.data;
+
+                if(data.value == 0)
+                    return "";
+
+                return data.key;
             });
     }
 

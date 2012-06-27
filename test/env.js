@@ -14,7 +14,7 @@ json = jQuery.parseJSON("[" +
     "{\"age\":\"44\",\"countrycode\":\"US\",\"gender\":\"F\",\"id\":4,\"region\":\"South\",\"date\":\"2012-02-10T16:10:09Z\"}, " +
     "{\"age\":\"55\",\"countrycode\":\"CA\",\"gender\":\"M\",\"id\":5,\"region\":\"Central\",\"date\":\"2012-03-10T16:10:09Z\"}, " +
     "{\"age\":\"66\",\"countrycode\":\"US\",\"gender\":\"F\",\"id\":6,\"region\":\"West\",\"date\":\"2012-04-10T16:10:09Z\"}, " +
-    "{\"age\":\"22\",\"countrycode\":\"CA\",\"gender\":\"M\",\"id\":7,\"region\":\"West\",\"date\":\"2012-05-10T16:10:09Z\"}, " +
+    "{\"age\":\"22\",\"countrycode\":\"CA\",\"gender\":\"M\",\"id\":7,\"region\":\"East\",\"date\":\"2012-05-10T16:10:09Z\"}, " +
     "{\"age\":\"33\",\"countrycode\":\"US\",\"gender\":\"F\",\"id\":8,\"region\":\"Central\",\"date\":\"2012-06-10T16:10:09Z\"}, " +
     "{\"age\":\"44\",\"countrycode\":\"US\",\"gender\":\"M\",\"id\":9,\"region\":\"Central\",\"date\":\"2012-06-10T16:10:09Z\"}, " +
     "{\"age\":\"55\",\"countrycode\":\"US\",\"gender\":\"F\",\"id\":10,\"region\":\"\",\"date\":\"2012-06-10T16:10:09Z\"}" +
@@ -26,5 +26,8 @@ ageGroup = ageDimension.group();
 
 genderDimension = data.dimension(function(d){return d.gender;});
 genderGroup = genderDimension.group();
+
+regionDimension = data.dimension(function(d){return d.region;});
+regionGroup = genderDimension.group();
 
 require("../dc");
