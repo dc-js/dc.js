@@ -115,6 +115,14 @@ suite.addBatch({
             'NaN centroid should be handled properly': function(pieChart) {
                 assert.equal(pieChart.selectAll("svg g g.pie-slice text").attr("transform"), "translate(0,0)");
             }
+        },
+        'slice selection' :{
+            topic: function(pieChart){
+                return pieChart;
+            },
+            'on click function should be defined': function(pieChart){
+                assert.isFalse(pieChart.selectAll("svg g g.pie-slice path").on("click") == undefined);
+            }
         }
     }
 });

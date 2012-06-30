@@ -111,7 +111,8 @@ dc.PieChart = function(selector) {
             .attr("fill", function(d, i) {
                 return colors(i);
             })
-            .attr("d", circle);
+            .attr("d", circle)
+            .on("click", function(d, i){});
         return slices;
     }
 

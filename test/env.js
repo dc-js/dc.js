@@ -8,6 +8,6 @@ crossfilter = require("crossfilter");
 
 jQuery = require("jquery");
 
-require("env-data");
+require("./env-data");
 
 require("../dc");
