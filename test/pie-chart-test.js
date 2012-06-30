@@ -118,17 +118,24 @@ suite.addBatch({
         },
         'slice selection' :{
             topic: function(pieChart){
+                filterAll();
                 return pieChart;
             },
             'on click function should be defined': function(pieChart){
                 assert.isFalse(pieChart.selectAll("svg g g.pie-slice path").on("click") == undefined);
             },
             'by default no slice should be selected': function(pieChart){
-                assert.isFalse(pieChart.hasSelectedSlice());
+                assert.isFalse(pieChart.hasSliceSelection());
             },
             'be able to set selected slice': function(pieChart){
-                assert.equal(pieChart.selectedSlice(1).selectedSlice(), 1);
-                assert.isTrue(pieChart.hasSelectedSlice());
+                assert.equal(pieChart.selectSlice("66").selectSlice(), "66");
+                assert.isTrue(pieChart.hasSliceSelection());
+            },
+            'should filter dimension by selection': function(pieChart){
+                console.log(pieChart.dimension().top(Infinity).length);
+                pieChart.selectSlice("66");
+                console.log(pieChart.dimension().top(Infinity).length);
+                assert.equal(pieChart.dimension().top(Infinity).length, 1);
             }
         }
     }

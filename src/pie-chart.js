@@ -3,7 +3,8 @@ dc.createPieChart = function(selector) {
 };
 
 dc.PieChart = function(selector) {
-    var NO_SELECTION = -1;
+    var NO_SELECTION = null;
+    var sliceCssClass = "pie-slice";
 
     var selector = selector;
     var root = d3.select(selector);
@@ -20,19 +21,7 @@ dc.PieChart = function(selector) {
     var selectedSlice = NO_SELECTION;
 
     this.render = function() {
-        root.select("svg").remove();
-
-        var topG = generateTopLevelG();
-
-        var dataPie = d3.layout.pie().value(function(d) {
-            return d.value;
-        });
-
-        var circle = d3.svg.arc().outerRadius(radius);
-
-        var slices = drawSlices(topG, dataPie, circle);
-
-        drawLabels(slices, circle);
+        doRender();
     }
 
     this.select = function(s) {
@@ -84,14 +73,30 @@ dc.PieChart = function(selector) {
         return this;
     }
 
-    this.selectedSlice = function(s){
+    this.selectSlice = function(i){
         if(!arguments.length) return selectedSlice;
-        selectedSlice = s;
+        doSelectSlice(i);
         return this;
     }
 
-    this.hasSelectedSlice = function(){
+    this.hasSliceSelection = function(){
         return selectedSlice != NO_SELECTION;
+    }
+
+    function doRender() {
+        root.select("svg").remove();
+
+        var topG = generateTopLevelG();
+
+        var dataPie = d3.layout.pie().value(function(d) {
+            return d.value;
+        });
+
+        var circle = d3.svg.arc().outerRadius(radius);
+
+        var slices = drawSlices(topG, dataPie, circle);
+
+        drawLabels(slices, circle);
     }
 
     function generateTopLevelG() {
@@ -117,14 +122,16 @@ dc.PieChart = function(selector) {
             .data(dataPie)
             .enter()
             .append("g")
-            .attr("class", "pie-slice");
+            .attr("class", sliceCssClass);
 
         slices.append("path")
             .attr("fill", function(d, i) {
                 return colors(i);
             })
             .attr("d", circle)
-            .on("click", function(d, i){});
+            .on("click", function(d, i){
+                doSelectSlice(i);
+            });
         return slices;
     }
 
@@ -149,6 +156,22 @@ dc.PieChart = function(selector) {
 
                 return data.key;
             });
+    }
+
+    function doSelectSlice(i) {
+        selectedSlice = i;
+
+        root.selectAll("." + sliceCssClass).each(function(d, i) {
+            dimension.filter(selectedSlice);
+
+            if (selectedSlice == d.data.key) {
+
+            }else{
+
+            }
+        });
+
+        doRender();
     }
 
 };
