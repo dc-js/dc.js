@@ -74,13 +74,13 @@ dc.PieChart = function(selector) {
         return this;
     }
 
-    this.selectSlice = function(i){
-        if(!arguments.length) return selectedSlice;
+    this.selectSlice = function(i) {
+        if (!arguments.length) return selectedSlice;
         doSelectSlice(i);
         return this;
     }
 
-    this.hasSliceSelection = function(){
+    this.hasSliceSelection = function() {
         return selectedSlice != NO_SELECTION;
     }
 
@@ -119,7 +119,7 @@ dc.PieChart = function(selector) {
     }
 
     function drawSlices(topG, dataPie, circle) {
-        var slices = topG.selectAll("g.pie-slice")
+        var slices = topG.selectAll("g." + sliceCssClass)
             .data(dataPie)
             .enter()
             .append("g")
@@ -130,8 +130,8 @@ dc.PieChart = function(selector) {
                 return colors(i);
             })
             .attr("d", circle)
-            .on("click", function(d, i){
-                doSelectSlice(i);
+            .on("click", function(d, i) {
+                doSelectSlice(d.data.key);
             });
         return slices;
     }
@@ -152,28 +152,32 @@ dc.PieChart = function(selector) {
             .text(function(d) {
                 var data = d.data;
 
-                if(data.value == 0)
+                if (data.value == 0)
                     return "";
 
                 return data.key;
             });
     }
 
-    function doSelectSlice(i) {
-        selectedSlice = i;
+    function doSelectSlice(d) {
+        selectedSlice = d;
 
-        root.selectAll("." + sliceCssClass).each(function(d, i) {
-            console.log(d);
-            console.log(i);
+        root.selectAll("g." + sliceCssClass).select("path").each(function(d, i) {
+            if (isSelectedSlice(d)) {
+                d3.select(this).attr("fill-opacity", 1)
+                    .attr('stroke', "#ccc")
+                    .attr('stroke-width', 3);
+            } else {
+                d3.select(this).attr("fill-opacity", 0.1)
+                    .attr('stroke-width', 0);
+            }
 
             dimension.filter(selectedSlice);
-
-            if (selectedSlice == d.data.key) {
-
-            }
         });
+    }
 
-        doRender();
+    function isSelectedSlice(d) {
+        return selectedSlice == d.data.key;
     }
 
 };
