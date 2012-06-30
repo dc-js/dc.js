@@ -122,6 +122,13 @@ suite.addBatch({
             },
             'on click function should be defined': function(pieChart){
                 assert.isFalse(pieChart.selectAll("svg g g.pie-slice path").on("click") == undefined);
+            },
+            'by default no slice should be selected': function(pieChart){
+                assert.isFalse(pieChart.hasSelectedSlice());
+            },
+            'be able to set selected slice': function(pieChart){
+                assert.equal(pieChart.selectedSlice(1).selectedSlice(), 1);
+                assert.isTrue(pieChart.hasSelectedSlice());
             }
         }
     }

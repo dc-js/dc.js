@@ -3,6 +3,8 @@ dc.createPieChart = function(selector) {
 };
 
 dc.PieChart = function(selector) {
+    var NO_SELECTION = -1;
+
     var selector = selector;
     var root = d3.select(selector);
 
@@ -15,6 +17,7 @@ dc.PieChart = function(selector) {
     var height;
     var radius;
 
+    var selectedSlice = NO_SELECTION;
 
     this.render = function() {
         root.select("svg").remove();
@@ -79,6 +82,16 @@ dc.PieChart = function(selector) {
         if (!arguments.length) return radius;
         radius = r;
         return this;
+    }
+
+    this.selectedSlice = function(s){
+        if(!arguments.length) return selectedSlice;
+        selectedSlice = s;
+        return this;
+    }
+
+    this.hasSelectedSlice = function(){
+        return selectedSlice != NO_SELECTION;
     }
 
     function generateTopLevelG() {
