@@ -54,18 +54,26 @@
         valuePieChart, countryPieChart
     ];
 
-    function renderAll(){
-        charts.forEach(function(e){e.render();});
+    function renderAll() {
+        charts.forEach(function(e) {
+            e.render();
+        });
+    }
+
+    function filterAll() {
+        charts.forEach(function(e) {
+            e.filter(null);
+        });
     }
 </script>
 
 <div class="clear"></div>
 
 <div>
-    <a href="javascript:statusDimension.filter('T');">Filter by Status</a>
-    <a href="javascript:regionDimension.filter('');">Filter by Region</a>
+    <a href="javascript:statusDimension.filter('T');renderAll();">Filter by Status</a>
+    <a href="javascript:regionDimension.filter('');renderAll();">Filter by Region</a>
     <a href="javascript:renderAll();">Render All</a>
-    <a href="javascript:filterAll();">Filter All</a>
+    <a href="javascript:filterAll();renderAll();">Filter All</a>
 </div>
 
 </body>

@@ -98,6 +98,8 @@ dc.PieChart = function(selector) {
         var slices = drawSlices(topG, dataPie, circle);
 
         drawLabels(slices, circle);
+
+        highlightFilter();
     }
 
     function generateTopLevelG() {
@@ -132,6 +134,8 @@ dc.PieChart = function(selector) {
             .attr("d", circle)
             .on("click", function(d, i) {
                 doFilter(d.data.key);
+
+                renderAll();
             });
         return slices;
     }
@@ -162,22 +166,28 @@ dc.PieChart = function(selector) {
     function doFilter(d) {
         filter = d;
 
-        root.selectAll("g." + sliceCssClass).select("path").each(function(d, i) {
-            if (isSelectedSlice(d)) {
-                d3.select(this).attr("fill-opacity", 1)
-                    .attr('stroke', "#ccc")
-                    .attr('stroke-width', 3);
-            } else {
-                d3.select(this).attr("fill-opacity", 0.1)
-                    .attr('stroke-width', 0);
-            }
-        });
+        highlightFilter();
 
         dimension.filter(filter);
     }
 
     function isSelectedSlice(d) {
         return filter == d.data.key;
+    }
+
+    function highlightFilter() {
+        if (filter) {
+            root.selectAll("g." + sliceCssClass).select("path").each(function(d, i) {
+                if (isSelectedSlice(d)) {
+                    d3.select(this).attr("fill-opacity", 1)
+                        .attr('stroke', "#ccc")
+                        .attr('stroke-width', 3);
+                } else {
+                    d3.select(this).attr("fill-opacity", 0.1)
+                        .attr('stroke-width', 0);
+                }
+            });
+        }
     }
 
 };

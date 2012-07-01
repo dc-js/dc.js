@@ -137,11 +137,19 @@ suite.addBatch({
             },
             'should highlight selected slice': function(pieChart) {
                 pieChart.filter("66");
+                pieChart.render();
                 pieChart.selectAll(".pie-slice path").each(function(d) {
-                    if(d.data.key == "66")
+                    if (d.data.key == "66")
                         assert.equal(d3.select(this).attr("fill-opacity"), 1);
                     else
                         assert.isTrue(d3.select(this).attr("fill-opacity") < 1);
+                });
+            },
+            'should highlight selected slice': function(pieChart) {
+                pieChart.filter(null);
+                pieChart.render();
+                pieChart.selectAll(".pie-slice path").each(function(d) {
+                    assert.equal(d3.select(this).attr("fill-opacity"), "");
                 });
             }
         }
