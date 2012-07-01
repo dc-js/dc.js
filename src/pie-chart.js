@@ -16,10 +16,10 @@ dc.PieChart = function() {
     var dimension;
     var group;
 
-    var width;
-    var height;
-    var radius;
-    var innerRadius = 0;
+    var width = 0,
+        height = 0,
+        radius = 0,
+        innerRadius = 0;
 
     var filter = NO_FILTER;
 
@@ -156,7 +156,7 @@ dc.PieChart = function() {
                 return colors(i);
             })
             .attr("d", arcs)
-            .on("click", function(d, i) {
+            .on("click", function(d) {
                 doFilter(d.data.key);
                 dc.renderAll();
             });
@@ -202,7 +202,7 @@ dc.PieChart = function() {
 
     function highlightFilter() {
         if (filter) {
-            root.selectAll("g." + sliceCssClass).select("path").each(function(d, i) {
+            root.selectAll("g." + sliceCssClass).select("path").each(function(d) {
                 if (isSelectedSlice(d)) {
                     d3.select(this).attr("fill-opacity", 1)
                         .attr('stroke', "#ccc")
