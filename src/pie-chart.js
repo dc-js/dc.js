@@ -1,5 +1,7 @@
 dc.createPieChart = function(selector) {
-    return new this.PieChart(selector);
+    var pieChart = new this.PieChart(selector);
+    dc.registerChart(pieChart);
+    return pieChart;
 };
 
 dc.PieChart = function(selector) {
