@@ -12,6 +12,10 @@
     <script src="env-data.js"></script>
 
     <style type="text/css">
+        .chart {
+            float: left;
+        }
+
         .clear {
             clear: both;
         }
@@ -23,24 +27,46 @@
 </head>
 <body>
 
-<div id="pie-chart">
+<div id="pie-chart-value" class="chart">
     <span>Value PieChart</span>
 
     <div class="clear"></div>
-    <a href="javascript:statusDimension.filterAll(); regionDimension.filterAll(); valuePieChart.render();">Reset</a>
+</div>
+
+<div id="pie-chart-country" class="chart">
+    <span>Country PieChart</span>
 
     <div class="clear"></div>
 </div>
 
 <script>
-    var valuePieChart = dc.createPieChart("#pie-chart");
+    var valuePieChart = dc.createPieChart("#pie-chart-value");
     valuePieChart.width(200).height(200).radius(70);
     valuePieChart.dimension(valueDimension).group(valueGroup);
     valuePieChart.render();
+
+    var countryPieChart = dc.createPieChart("#pie-chart-country");
+    countryPieChart.width(200).height(200).radius(70);
+    countryPieChart.dimension(countryDimension).group(countryGroup);
+    countryPieChart.render();
+
+    var charts = [
+        valuePieChart, countryPieChart
+    ];
+
+    function renderAll(){
+        charts.forEach(function(e){e.render();});
+    }
 </script>
 
-<a href="javascript:statusDimension.filter('T'); valuePieChart.render();">Filter by Status</a>
-<a href="javascript:regionDimension.filter(''); valuePieChart.render();">Filter by Region</a>
+<div class="clear"></div>
+
+<div>
+    <a href="javascript:statusDimension.filter('T');">Filter by Status</a>
+    <a href="javascript:regionDimension.filter('');">Filter by Region</a>
+    <a href="javascript:renderAll();">Render All</a>
+    <a href="javascript:filterAll();">Filter All</a>
+</div>
 
 </body>
 </html>

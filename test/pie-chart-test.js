@@ -125,18 +125,18 @@ suite.addBatch({
                 assert.isFalse(pieChart.selectAll("svg g g.pie-slice path").on("click") == undefined);
             },
             'by default no slice should be selected': function(pieChart) {
-                assert.isFalse(pieChart.hasSliceSelection());
+                assert.isFalse(pieChart.hasFilter());
             },
             'be able to set selected slice': function(pieChart) {
-                assert.equal(pieChart.selectSlice("66").selectSlice(), "66");
-                assert.isTrue(pieChart.hasSliceSelection());
+                assert.equal(pieChart.filter("66").filter(), "66");
+                assert.isTrue(pieChart.hasFilter());
             },
             'should filter dimension by selection': function(pieChart) {
-                pieChart.selectSlice("66");
+                pieChart.filter("66");
                 assert.equal(pieChart.dimension().top(Infinity).length, 1);
             },
             'should highlight selected slice': function(pieChart) {
-                pieChart.selectSlice("66");
+                pieChart.filter("66");
                 pieChart.selectAll(".pie-slice path").each(function(d) {
                     if(d.data.key == "66")
                         assert.equal(d3.select(this).attr("fill-opacity"), 1);

@@ -15,6 +15,9 @@ data = crossfilter(json)
 valueDimension = data.dimension(function(d){return d.value;});
 valueGroup = valueDimension.group();
 
+countryDimension = data.dimension(function(d){return d.countrycode;});
+countryGroup = countryDimension.group();
+
 statusDimension = data.dimension(function(d){return d.status;});
 statusGroup = statusDimension.group();
 

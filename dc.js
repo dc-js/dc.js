@@ -4,7 +4,7 @@ dc.createPieChart = function(selector) {
 };
 
 dc.PieChart = function(selector) {
-    var NO_SELECTION = null;
+    var NO_FILTER = null;
     var sliceCssClass = "pie-slice";
 
     var selector = selector;
@@ -19,7 +19,7 @@ dc.PieChart = function(selector) {
     var height;
     var radius;
 
-    var selectedSlice = NO_SELECTION;
+    var filter = NO_FILTER;
 
     this.render = function() {
         doRender();
@@ -74,14 +74,14 @@ dc.PieChart = function(selector) {
         return this;
     }
 
-    this.selectSlice = function(i) {
-        if (!arguments.length) return selectedSlice;
-        doSelectSlice(i);
+    this.filter = function(i) {
+        if (!arguments.length) return filter;
+        doFilter(i);
         return this;
     }
 
-    this.hasSliceSelection = function() {
-        return selectedSlice != NO_SELECTION;
+    this.hasFilter = function() {
+        return filter != NO_FILTER;
     }
 
     function doRender() {
@@ -131,7 +131,7 @@ dc.PieChart = function(selector) {
             })
             .attr("d", circle)
             .on("click", function(d, i) {
-                doSelectSlice(d.data.key);
+                doFilter(d.data.key);
             });
         return slices;
     }
@@ -159,8 +159,8 @@ dc.PieChart = function(selector) {
             });
     }
 
-    function doSelectSlice(d) {
-        selectedSlice = d;
+    function doFilter(d) {
+        filter = d;
 
         root.selectAll("g." + sliceCssClass).select("path").each(function(d, i) {
             if (isSelectedSlice(d)) {
@@ -171,13 +171,13 @@ dc.PieChart = function(selector) {
                 d3.select(this).attr("fill-opacity", 0.1)
                     .attr('stroke-width', 0);
             }
-
-            dimension.filter(selectedSlice);
         });
+
+        dimension.filter(filter);
     }
 
     function isSelectedSlice(d) {
-        return selectedSlice == d.data.key;
+        return filter == d.data.key;
     }
 
 };
