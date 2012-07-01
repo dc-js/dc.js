@@ -16,11 +16,16 @@ suite.addBatch({
     'dc.createChart': {
         topic: function(){
             var chart = dc.createPieChart("#id");
-            return dc.hasChart(chart);
+            return chart;
         },
-        'should register chart object': function(hasChart){
-            assert.equal(hasChart, true);
-        }
+        'should register chart object': function(chart){
+            assert.isTrue(dc.hasChart(chart));
+        },
+        'should be gone after remove all': function(chart){
+            dc.removeAllCharts();
+            assert.isFalse(dc.hasChart(chart));
+        },
+        teardown: function(topic){dc.removeAllCharts();}
     }
 });
 

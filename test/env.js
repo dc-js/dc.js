@@ -5,6 +5,7 @@ CSSStyleDeclaration = window.CSSStyleDeclaration;
 
 require("d3");
 crossfilter = require("crossfilter");
+sinon = require("sinon");
 
 jQuery = require("jquery");
 

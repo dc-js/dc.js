@@ -10,3 +10,7 @@ dc.registerChart = function(chart){
 dc.hasChart = function(chart){
     return dc.charts.indexOf(chart) >= 0;
 };
+
+dc.removeAllCharts = function(chart){
+    dc.charts = [];
+}

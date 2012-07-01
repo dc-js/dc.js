@@ -18,6 +18,7 @@ Make sure the following packages are installed on your machine
 * npm install d3
 * npm install crossfilter
 * npm install jquery
+* npm install sinon
 * ant # install apache ant make tool
 
 ### Build
