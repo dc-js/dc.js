@@ -39,41 +39,23 @@
     <div class="clear"></div>
 </div>
 
-<script>
+<script type="text/javascript">
     var valuePieChart = dc.createPieChart("#pie-chart-value");
     valuePieChart.width(200).height(200).radius(70);
     valuePieChart.dimension(valueDimension).group(valueGroup);
-    valuePieChart.render();
 
     var countryPieChart = dc.createPieChart("#pie-chart-country");
     countryPieChart.width(200).height(200).radius(70);
     countryPieChart.dimension(countryDimension).group(countryGroup);
-    countryPieChart.render();
 
-    var charts = [
-        valuePieChart, countryPieChart
-    ];
-
-    function renderAll() {
-        charts.forEach(function(e) {
-            e.render();
-        });
-    }
-
-    function filterAll() {
-        charts.forEach(function(e) {
-            e.filter(null);
-        });
-    }
+    dc.renderAll();
 </script>
 
 <div class="clear"></div>
 
 <div>
-    <a href="javascript:statusDimension.filter('T');renderAll();">Filter by Status</a>
-    <a href="javascript:regionDimension.filter('');renderAll();">Filter by Region</a>
-    <a href="javascript:renderAll();">Render All</a>
-    <a href="javascript:filterAll();renderAll();">Filter All</a>
+    <a href="javascript:dc.renderAll();">Render All</a>
+    <a href="javascript:dc.filterAll(); dc.renderAll();">Filter All</a>
 </div>
 
 </body>

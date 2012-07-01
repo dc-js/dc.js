@@ -105,7 +105,7 @@ suite.addBatch({
             'label should be hidden if filtered out': function(pieChart) {
                 assert.equal(pieChart.selectAll("svg g g.pie-slice text").text(), "");
             },
-            teardown: function(){ regionDimension.filterAll(); }
+            teardown: function(){ resetAllFilters(); }
         },
         'n/a filter' : {
             topic: function(pieChart) {
@@ -116,7 +116,7 @@ suite.addBatch({
             'NaN centroid should be handled properly': function(pieChart) {
                 assert.equal(pieChart.selectAll("svg g g.pie-slice text").attr("transform"), "translate(0,0)");
             },
-            teardown: function(){ statusDimension.filterAll(); }
+            teardown: function(){ resetAllFilters(); }
         },
         'slice selection' :{
             topic: function(pieChart) {
@@ -157,7 +157,7 @@ suite.addBatch({
                     assert.equal(d3.select(this).attr("fill-opacity"), "");
                 });
             },
-            teardown: function(pieChart){ dc.filterAll(); }
+            teardown: function(pieChart){ resetAllFilters(); }
         }
     }
 });

@@ -11,27 +11,32 @@ dc.hasChart = function(chart) {
     return dc.__charts__.indexOf(chart) >= 0;
 };
 
-dc.removeAllCharts = function(chart) {
+dc.removeAllCharts = function() {
     dc.__charts__ = [];
-}
+};
 
 dc.filterAll = function() {
     for (var i = 0; i < dc.__charts__.length; ++i) {
         dc.__charts__[i].filterAll();
     }
-}
+};
 
+dc.renderAll = function() {
+    for (var i = 0; i < dc.__charts__.length; ++i) {
+        dc.__charts__[i].render();
+    }
+};
 dc.createPieChart = function(selector) {
     var pieChart = new this.PieChart(selector);
     dc.registerChart(pieChart);
     return pieChart;
 };
 
-dc.PieChart = function(selector) {
+dc.PieChart = function(s) {
     var NO_FILTER = null;
     var sliceCssClass = "pie-slice";
 
-    var selector = selector;
+    var selector = s;
     var root = d3.select(selector);
 
     var colors = d3.scale.category20c();
@@ -47,87 +52,89 @@ dc.PieChart = function(selector) {
 
     this.render = function() {
         doRender();
-    }
+    };
 
     this.select = function(s) {
         return root.select(s);
-    }
+    };
 
     this.selectAll = function(s) {
         return root.selectAll(s);
-    }
+    };
 
     this.colors = function(c) {
         if (!arguments.length) return colors;
         colors = c;
         return this;
-    }
+    };
 
     this.dimension = function(d) {
         if (!arguments.length) return dimension;
         dimension = d;
         return this;
-    }
+    };
 
     this.group = function(g) {
         if (!arguments.length) return group;
         group = g;
         return this;
-    }
+    };
 
     this.filter = function(f) {
         dimension.filter(f);
         return this;
-    }
+    };
 
     this.width = function(w) {
         if (!arguments.length) return width;
         width = w;
         return this;
-    }
+    };
 
     this.height = function(h) {
         if (!arguments.length) return height;
         height = h;
         return this;
-    }
+    };
 
     this.radius = function(r) {
         if (!arguments.length) return radius;
         radius = r;
         return this;
-    }
+    };
 
     this.filter = function(i) {
         if (!arguments.length) return filter;
         doFilter(i);
         return this;
-    }
+    };
 
-    this.filterAll = function(){
+    this.filterAll = function() {
         return this.filter(NO_FILTER);
-    }
+    };
 
     this.hasFilter = function() {
         return filter != NO_FILTER;
-    }
+    };
 
     function doRender() {
         root.select("svg").remove();
 
-        var topG = generateTopLevelG();
+        if (dataAreSet()) {
+            var topG = generateTopLevelG();
 
-        var dataPie = d3.layout.pie().value(function(d) {
-            return d.value;
-        });
+            var dataPie = d3.layout.pie().value(function(d) {
+                return d.value;
+            });
 
-        var circle = d3.svg.arc().outerRadius(radius);
+            var circle = d3.svg.arc().outerRadius(radius);
 
-        var slices = drawSlices(topG, dataPie, circle);
+            var slices = drawSlices(topG, dataPie, circle);
 
-        drawLabels(slices, circle);
+            drawLabels(slices, circle);
 
-        highlightFilter();
+            highlightFilter();
+        }
     }
 
     function generateTopLevelG() {
@@ -137,6 +144,7 @@ dc.PieChart = function(selector) {
             .attr("height", height)
             .append("g")
             .attr("transform", "translate(" + cx() + "," + cy() + ")");
+
         return topG;
     }
 
@@ -162,9 +170,9 @@ dc.PieChart = function(selector) {
             .attr("d", circle)
             .on("click", function(d, i) {
                 doFilter(d.data.key);
-
-                renderAll();
+                dc.renderAll();
             });
+
         return slices;
     }
 
@@ -196,7 +204,7 @@ dc.PieChart = function(selector) {
 
         highlightFilter();
 
-        if(dimension != undefined)
+        if (dataAreSet())
             dimension.filter(filter);
     }
 
@@ -217,6 +225,10 @@ dc.PieChart = function(selector) {
                 }
             });
         }
+    }
+
+    function dataAreSet() {
+        return dimension != undefined && group != undefined;
     }
 
 };
