@@ -104,7 +104,8 @@ suite.addBatch({
             },
             'label should be hidden if filtered out': function(pieChart) {
                 assert.equal(pieChart.selectAll("svg g g.pie-slice text").text(), "");
-            }
+            },
+            teardown: function(){ regionDimension.filterAll(); }
         },
         'n/a filter' : {
             topic: function(pieChart) {
@@ -114,11 +115,12 @@ suite.addBatch({
             },
             'NaN centroid should be handled properly': function(pieChart) {
                 assert.equal(pieChart.selectAll("svg g g.pie-slice text").attr("transform"), "translate(0,0)");
-            }
+            },
+            teardown: function(){ statusDimension.filterAll(); }
         },
         'slice selection' :{
             topic: function(pieChart) {
-                filterAll();
+                resetAllFilters();
                 return pieChart;
             },
             'on click function should be defined': function(pieChart) {
@@ -130,10 +132,12 @@ suite.addBatch({
             'be able to set selected slice': function(pieChart) {
                 assert.equal(pieChart.filter("66").filter(), "66");
                 assert.isTrue(pieChart.hasFilter());
+                pieChart.filterAll();
             },
             'should filter dimension by selection': function(pieChart) {
                 pieChart.filter("66");
                 assert.equal(pieChart.dimension().top(Infinity).length, 1);
+                pieChart.filterAll();
             },
             'should highlight selected slice': function(pieChart) {
                 pieChart.filter("66");
@@ -144,14 +148,16 @@ suite.addBatch({
                     else
                         assert.isTrue(d3.select(this).attr("fill-opacity") < 1);
                 });
+                pieChart.filterAll();
             },
-            'should highlight selected slice': function(pieChart) {
-                pieChart.filter(null);
+            'should remove highlight if no slice selected': function(pieChart) {
+                pieChart.filterAll();
                 pieChart.render();
                 pieChart.selectAll(".pie-slice path").each(function(d) {
                     assert.equal(d3.select(this).attr("fill-opacity"), "");
                 });
-            }
+            },
+            teardown: function(pieChart){ dc.filterAll(); }
         }
     }
 });

@@ -13,13 +13,18 @@ suite.addBatch({
             assert.match(version, /^[0-9]+\.[0-9]+\.[0-9]+$/);
         }
     },
-    'dc.createChart': {
+    'dc.charts': {
         topic: function(){
             var chart = dc.createPieChart("#id");
+            sinon.spy(chart, "filterAll");
             return chart;
         },
         'should register chart object': function(chart){
             assert.isTrue(dc.hasChart(chart));
+        },
+        'should invoke filter on each chart': function(chart){
+            dc.filterAll();
+            assert.isTrue(chart.filterAll.calledOnce);
         },
         'should be gone after remove all': function(chart){
             dc.removeAllCharts();

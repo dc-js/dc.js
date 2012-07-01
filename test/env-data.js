@@ -24,3 +24,9 @@ statusGroup = statusDimension.group();
 regionDimension = data.dimension(function(d){return d.region;});
 regionGroup = statusDimension.group();
 
+resetAllFilters = function(){
+    valueDimension.filterAll();
+    countryDimension.filterAll();
+    statusDimension.filterAll();
+    regionDimension.filterAll();
+}

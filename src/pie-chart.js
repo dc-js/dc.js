@@ -81,6 +81,10 @@ dc.PieChart = function(selector) {
         return this;
     }
 
+    this.filterAll = function(){
+        return this.filter(NO_FILTER);
+    }
+
     this.hasFilter = function() {
         return filter != NO_FILTER;
     }
@@ -169,7 +173,8 @@ dc.PieChart = function(selector) {
 
         highlightFilter();
 
-        dimension.filter(filter);
+        if(dimension != undefined)
+            dimension.filter(filter);
     }
 
     function isSelectedSlice(d) {
