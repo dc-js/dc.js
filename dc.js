@@ -27,17 +27,17 @@ dc.renderAll = function() {
     }
 };
 dc.createPieChart = function(selector) {
-    var pieChart = new this.PieChart(selector);
+    var pieChart = new this.PieChart().anchor(selector);
     dc.registerChart(pieChart);
     return pieChart;
 };
 
-dc.PieChart = function(s) {
+dc.PieChart = function() {
     var NO_FILTER = null;
     var sliceCssClass = "pie-slice";
 
-    var selector = s;
-    var root = d3.select(selector);
+    var anchor;
+    var root;
 
     var colors = d3.scale.category20c();
 
@@ -47,6 +47,7 @@ dc.PieChart = function(s) {
     var width;
     var height;
     var radius;
+    var innerRadius = 0;
 
     var filter = NO_FILTER;
 
@@ -60,6 +61,19 @@ dc.PieChart = function(s) {
 
     this.selectAll = function(s) {
         return root.selectAll(s);
+    };
+
+    this.anchor= function(a) {
+        if (!arguments.length) return anchor;
+        anchor = a;
+        root = d3.select(anchor);
+        return this;
+    };
+
+    this.innerRadius = function(r) {
+        if (!arguments.length) return innerRadius;
+        innerRadius = r;
+        return this;
     };
 
     this.colors = function(c) {
@@ -127,25 +141,23 @@ dc.PieChart = function(s) {
                 return d.value;
             });
 
-            var circle = d3.svg.arc().outerRadius(radius);
+            var arcs = buildArcs();
 
-            var slices = drawSlices(topG, dataPie, circle);
+            var slices = drawSlices(topG, dataPie, arcs);
 
-            drawLabels(slices, circle);
+            drawLabels(slices, arcs);
 
             highlightFilter();
         }
     }
 
     function generateTopLevelG() {
-        var topG = root.append("svg")
+        return root.append("svg")
             .data([group.all()])
             .attr("width", width)
             .attr("height", height)
             .append("g")
             .attr("transform", "translate(" + cx() + "," + cy() + ")");
-
-        return topG;
     }
 
     function cx() {
@@ -156,7 +168,11 @@ dc.PieChart = function(s) {
         return height / 2;
     }
 
-    function drawSlices(topG, dataPie, circle) {
+    function buildArcs() {
+        return d3.svg.arc().outerRadius(radius).innerRadius(innerRadius);
+    }
+
+    function drawSlices(topG, dataPie, arcs) {
         var slices = topG.selectAll("g." + sliceCssClass)
             .data(dataPie)
             .enter()
@@ -167,7 +183,7 @@ dc.PieChart = function(s) {
             .attr("fill", function(d, i) {
                 return colors(i);
             })
-            .attr("d", circle)
+            .attr("d", arcs)
             .on("click", function(d, i) {
                 doFilter(d.data.key);
                 dc.renderAll();
@@ -176,12 +192,12 @@ dc.PieChart = function(s) {
         return slices;
     }
 
-    function drawLabels(slices, circle) {
+    function drawLabels(slices, arcs) {
         slices.append("text")
             .attr("transform", function(d) {
                 d.innerRadius = 0;
                 d.outerRadius = radius;
-                var centroid = circle.centroid(d);
+                var centroid = arcs.centroid(d);
                 if (isNaN(centroid[0]) || isNaN(centroid[1])) {
                     return "translate(0,0)";
                 } else {

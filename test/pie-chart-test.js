@@ -8,6 +8,7 @@ var suite = vows.describe('Bar chart');
 var width = 200;
 var height = 200;
 var radius = 100;
+var innerRadius = 30;
 
 suite.addBatch({
     'pie chart generation': {
@@ -15,7 +16,7 @@ suite.addBatch({
             d3.select("body").append("div").attr("id", "pie-chart-age");
             var chart = dc.createPieChart("#pie-chart-age");
             chart.dimension(valueDimension).group(valueGroup)
-                .width(width).height(height).radius(radius);
+                .width(width).height(height).radius(radius).innerRadius(innerRadius);
             chart.render();
             return chart;
         },
@@ -24,6 +25,9 @@ suite.addBatch({
         },
         'we get pie chart instance': function (pieChart) {
             assert.isTrue(pieChart instanceof dc.PieChart);
+        },
+        'inner radius can be set': function(chart){
+            assert.equal(chart.innerRadius(), innerRadius);
         },
         'svg should be created': function(pieChart) {
             assert.isFalse(pieChart.select("svg").empty());
@@ -75,7 +79,7 @@ suite.addBatch({
             assert.equal(pieChart.selectAll("svg g g.pie-slice text").data().length, 5);
         },
         'slice label transform to centroid': function(pieChart) {
-            assert.equal(pieChart.selectAll("svg g g.pie-slice text").attr("transform"), "translate(29.389262614623657,40.45084971874737)");
+            assert.equal(pieChart.selectAll("svg g g.pie-slice text").attr("transform"), "translate(38.20604139901075,52.58610463437159)");
         },
         'slice label text should be set': function(pieChart) {
             pieChart.selectAll("svg g g.pie-slice text").call(function(p) {

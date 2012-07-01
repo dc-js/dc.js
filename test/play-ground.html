@@ -42,7 +42,7 @@
 
 <script type="text/javascript">
     var valuePieChart = dc.createPieChart("#pie-chart-value");
-    valuePieChart.width(200).height(200).radius(70);
+    valuePieChart.width(200).height(200).radius(70).innerRadius(25);
     valuePieChart.dimension(valueDimension).group(valueGroup);
 
     var countryPieChart = dc.createPieChart("#pie-chart-country");
