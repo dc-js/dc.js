@@ -4,7 +4,6 @@ dc.pieChart = function(selector) {
 
     var colors = d3.scale.category20c();
 
-    var width = 0, height = 0;
     var radius = 0, innerRadius = 0;
 
     var chart = dc.baseMixin({});
@@ -41,18 +40,6 @@ dc.pieChart = function(selector) {
         return chart;
     };
 
-    chart.width = function(w) {
-        if (!arguments.length) return width;
-        width = w;
-        return chart;
-    };
-
-    chart.height = function(h) {
-        if (!arguments.length) return height;
-        height = h;
-        return chart;
-    };
-
     chart.radius = function(r) {
         if (!arguments.length) return radius;
         radius = r;
@@ -62,18 +49,18 @@ dc.pieChart = function(selector) {
     chart.generateTopLevelG = function() {
         return chart.root().append("svg")
             .data([chart.group().all()])
-            .attr("width", width)
-            .attr("height", height)
+            .attr("width", chart.width())
+            .attr("height", chart.height())
             .append("g")
             .attr("transform", "translate(" + chart.cx() + "," + chart.cy() + ")");
     };
 
     chart.cx = function() {
-        return width / 2;
+        return chart.width() / 2;
     };
 
     chart.cy = function() {
-        return height / 2;
+        return chart.height() / 2;
     };
 
     chart.buildArcs = function() {

@@ -26,7 +26,7 @@ dc.renderAll = function() {
         dc._charts[i].render();
     }
 };
-dc.baseMixin = function(chart){
+dc.baseMixin = function(chart) {
     var NO_FILTER = null;
 
     var _dimension;
@@ -35,6 +35,8 @@ dc.baseMixin = function(chart){
 
     var _anchor;
     var _root;
+
+    var width = 0, height = 0;
 
     chart.dimension = function(d) {
         if (!arguments.length) return _dimension;
@@ -86,11 +88,23 @@ dc.baseMixin = function(chart){
         return chart;
     };
 
-    chart.root = function(r){
+    chart.root = function(r) {
         if (!arguments.length) return _root;
         _root = r;
         return chart;
     }
+
+    chart.width = function(w) {
+        if (!arguments.length) return width;
+        width = w;
+        return chart;
+    };
+
+    chart.height = function(h) {
+        if (!arguments.length) return height;
+        height = h;
+        return chart;
+    };
 
     return chart;
 };dc.pieChart = function(selector) {
@@ -99,7 +113,6 @@ dc.baseMixin = function(chart){
 
     var colors = d3.scale.category20c();
 
-    var width = 0, height = 0;
     var radius = 0, innerRadius = 0;
 
     var chart = dc.baseMixin({});
@@ -136,18 +149,6 @@ dc.baseMixin = function(chart){
         return chart;
     };
 
-    chart.width = function(w) {
-        if (!arguments.length) return width;
-        width = w;
-        return chart;
-    };
-
-    chart.height = function(h) {
-        if (!arguments.length) return height;
-        height = h;
-        return chart;
-    };
-
     chart.radius = function(r) {
         if (!arguments.length) return radius;
         radius = r;
@@ -157,18 +158,18 @@ dc.baseMixin = function(chart){
     chart.generateTopLevelG = function() {
         return chart.root().append("svg")
             .data([chart.group().all()])
-            .attr("width", width)
-            .attr("height", height)
+            .attr("width", chart.width())
+            .attr("height", chart.height())
             .append("g")
             .attr("transform", "translate(" + chart.cx() + "," + chart.cy() + ")");
     };
 
     chart.cx = function() {
-        return width / 2;
+        return chart.width() / 2;
     };
 
     chart.cy = function() {
-        return height / 2;
+        return chart.height() / 2;
     };
 
     chart.buildArcs = function() {

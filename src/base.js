@@ -1,4 +1,4 @@
-dc.baseMixin = function(chart){
+dc.baseMixin = function(chart) {
     var NO_FILTER = null;
 
     var _dimension;
@@ -7,6 +7,8 @@ dc.baseMixin = function(chart){
 
     var _anchor;
     var _root;
+
+    var width = 0, height = 0;
 
     chart.dimension = function(d) {
         if (!arguments.length) return _dimension;
@@ -58,11 +60,23 @@ dc.baseMixin = function(chart){
         return chart;
     };
 
-    chart.root = function(r){
+    chart.root = function(r) {
         if (!arguments.length) return _root;
         _root = r;
         return chart;
     }
+
+    chart.width = function(w) {
+        if (!arguments.length) return width;
+        width = w;
+        return chart;
+    };
+
+    chart.height = function(h) {
+        if (!arguments.length) return height;
+        height = h;
+        return chart;
+    };
 
     return chart;
 };
