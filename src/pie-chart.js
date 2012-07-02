@@ -8,14 +8,15 @@ dc.pieChart = function(selector) {
 
     var colors = d3.scale.category20c();
 
-    var dimension;
-    var group;
+    var _group;
 
     var width = 0, height = 0, radius = 0, innerRadius = 0;
 
     var _filter = NO_FILTER;
 
     var chart = {};
+
+    var base = dc.base(chart);
 
     chart.render = function() {
         root.select("svg").remove();
@@ -64,20 +65,14 @@ dc.pieChart = function(selector) {
         return chart;
     };
 
-    chart.dimension = function(d) {
-        if (!arguments.length) return dimension;
-        dimension = d;
-        return chart;
-    };
-
     chart.group = function(g) {
-        if (!arguments.length) return group;
-        group = g;
+        if (!arguments.length) return _group;
+        _group = g;
         return chart;
     };
 
     chart.filter = function(f) {
-        dimension.filter(f);
+        chart.dimension().filter(f);
         return chart;
     };
 
@@ -105,7 +100,7 @@ dc.pieChart = function(selector) {
         _filter = f;
         chart.highlightFilter();
         if (chart.dataAreSet())
-            dimension.filter(_filter);
+            chart.dimension().filter(_filter);
 
         return chart;
     };
@@ -120,7 +115,7 @@ dc.pieChart = function(selector) {
 
     chart.generateTopLevelG = function() {
         return root.append("svg")
-            .data([group.all()])
+            .data([_group.all()])
             .attr("width", width)
             .attr("height", height)
             .append("g")
@@ -202,7 +197,7 @@ dc.pieChart = function(selector) {
     };
 
     chart.dataAreSet = function() {
-        return dimension != undefined && group != undefined;
+        return chart.dimension() != undefined && _group != undefined;
     };
 
     dc.registerChart(chart);
