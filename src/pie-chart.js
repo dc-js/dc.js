@@ -3,9 +3,6 @@ dc.pieChart = function(selector) {
 
     var sliceCssClass = "pie-slice";
 
-    var anchor;
-    var root;
-
     var colors = d3.scale.category20c();
 
     var width = 0, height = 0, radius = 0, innerRadius = 0;
@@ -15,7 +12,7 @@ dc.pieChart = function(selector) {
     var chart = dc.baseMixin({});
 
     chart.render = function() {
-        root.select("svg").remove();
+        chart.select("svg").remove();
 
         if (chart.dataAreSet()) {
             var topG = chart.generateTopLevelG();
@@ -32,21 +29,6 @@ dc.pieChart = function(selector) {
 
             chart.highlightFilter();
         }
-    };
-
-    chart.select = function(s) {
-        return root.select(s);
-    };
-
-    chart.selectAll = function(s) {
-        return root.selectAll(s);
-    };
-
-    chart.anchor = function(a) {
-        if (!arguments.length) return anchor;
-        anchor = a;
-        root = d3.select(anchor);
-        return chart;
     };
 
     chart.innerRadius = function(r) {
@@ -104,7 +86,7 @@ dc.pieChart = function(selector) {
     };
 
     chart.generateTopLevelG = function() {
-        return root.append("svg")
+        return chart.root().append("svg")
             .data([chart.group().all()])
             .attr("width", width)
             .attr("height", height)
@@ -173,7 +155,7 @@ dc.pieChart = function(selector) {
 
     chart.highlightFilter = function() {
         if (_filter) {
-            root.selectAll("g." + sliceCssClass).select("path").each(function(d) {
+            chart.selectAll("g." + sliceCssClass).select("path").each(function(d) {
                 if (chart.isSelectedSlice(d)) {
                     d3.select(this).attr("fill-opacity", 1)
                         .attr('stroke', "#ccc")

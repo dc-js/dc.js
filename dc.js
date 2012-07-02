@@ -29,6 +29,8 @@ dc.renderAll = function() {
 dc.baseMixin = function(chart){
     var _dimension;
     var _group;
+    var _anchor;
+    var _root;
 
     chart.dimension = function(d) {
         if (!arguments.length) return _dimension;
@@ -46,14 +48,32 @@ dc.baseMixin = function(chart){
         return _dimension != undefined && _group != undefined;
     };
 
+    chart.select = function(s) {
+        return _root.select(s);
+    };
+
+    chart.selectAll = function(s) {
+        return _root.selectAll(s);
+    };
+
+    chart.anchor = function(a) {
+        if (!arguments.length) return _anchor;
+        _anchor = a;
+        _root = d3.select(_anchor);
+        return chart;
+    };
+
+    chart.root = function(r){
+        if (!arguments.length) return _root;
+        _root = r;
+        return chart;
+    }
+
     return chart;
 };dc.pieChart = function(selector) {
     var NO_FILTER = null;
 
     var sliceCssClass = "pie-slice";
-
-    var anchor;
-    var root;
 
     var colors = d3.scale.category20c();
 
@@ -64,7 +84,7 @@ dc.baseMixin = function(chart){
     var chart = dc.baseMixin({});
 
     chart.render = function() {
-        root.select("svg").remove();
+        chart.select("svg").remove();
 
         if (chart.dataAreSet()) {
             var topG = chart.generateTopLevelG();
@@ -81,21 +101,6 @@ dc.baseMixin = function(chart){
 
             chart.highlightFilter();
         }
-    };
-
-    chart.select = function(s) {
-        return root.select(s);
-    };
-
-    chart.selectAll = function(s) {
-        return root.selectAll(s);
-    };
-
-    chart.anchor = function(a) {
-        if (!arguments.length) return anchor;
-        anchor = a;
-        root = d3.select(anchor);
-        return chart;
     };
 
     chart.innerRadius = function(r) {
@@ -153,7 +158,7 @@ dc.baseMixin = function(chart){
     };
 
     chart.generateTopLevelG = function() {
-        return root.append("svg")
+        return chart.root().append("svg")
             .data([chart.group().all()])
             .attr("width", width)
             .attr("height", height)
@@ -222,7 +227,7 @@ dc.baseMixin = function(chart){
 
     chart.highlightFilter = function() {
         if (_filter) {
-            root.selectAll("g." + sliceCssClass).select("path").each(function(d) {
+            chart.selectAll("g." + sliceCssClass).select("path").each(function(d) {
                 if (chart.isSelectedSlice(d)) {
                     d3.select(this).attr("fill-opacity", 1)
                         .attr('stroke', "#ccc")
