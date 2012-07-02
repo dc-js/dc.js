@@ -24,6 +24,16 @@
             fill: white;
             font-size: 12px;
         }
+
+        .axis path, .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+
+        .axis text {
+            font: 10px sans-serif;
+        }
     </style>
 </head>
 <body>
@@ -65,10 +75,11 @@
             .group(countryGroup);
 
     dc.barChart("#bar-chart-date")
-            .width(650)
-            .height(150)
+            .width(1100)
+            .height(200)
             .dimension(dateDimension)
-            .group(dateGroup);
+            .group(dateGroup)
+            .x(d3.time.scale().domain([new Date("Sun Jan 01 2012 00:00:00 GMT-0400 (EDT)"), new Date("Mon Dec 31 2012 00:00:00 GMT-0400 (EDT)")]));
 
     dc.renderAll();
 </script>
