@@ -40,21 +40,35 @@
     <div class="clear"></div>
 </div>
 
+<div class="clear"></div>
+
+<div id="bar-chart-date" class="chart">
+    <span>Date BarChart</span>
+
+    <div class="clear"></div>
+</div>
+
 <script type="text/javascript">
     dc.pieChart("#pie-chart-value")
-        .width(200)
-        .height(200)
-        .radius(70)
-        .innerRadius(25)
-        .dimension(valueDimension)
-        .group(valueGroup);
+            .width(200)
+            .height(200)
+            .radius(70)
+            .innerRadius(25)
+            .dimension(valueDimension)
+            .group(valueGroup);
 
     dc.pieChart("#pie-chart-country")
-        .width(200)
-        .height(200)
-        .radius(70)
-        .dimension(countryDimension)
-        .group(countryGroup);
+            .width(200)
+            .height(200)
+            .radius(70)
+            .dimension(countryDimension)
+            .group(countryGroup);
+
+    dc.barChart("#bar-chart-date")
+            .width(650)
+            .height(150)
+            .dimension(dateDimension)
+            .group(dateGroup);
 
     dc.renderAll();
 </script>

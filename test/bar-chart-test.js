@@ -39,6 +39,9 @@ suite.addBatch({
         'height should be used for svg': function(chart) {
             assert.equal(chart.select("svg").attr("height"), height);
         },
+        'margin should be set': function(chart) {
+            assert.isNotNull(chart.margin());
+        },
         'root g should be created': function(chart) {
             assert.isFalse(chart.select("svg g").empty());
         },

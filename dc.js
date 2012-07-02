@@ -259,6 +259,8 @@ dc.barChart = function(selector) {
 
     var chart = dc.baseMixin({});
 
+    var margin = {top: 10, right: 50, bottom: 20, left: 5};
+
     chart.render = function() {
         chart.resetSvg();
 
@@ -266,6 +268,12 @@ dc.barChart = function(selector) {
             var topG = chart.generateTopLevelG();
         }
     };
+
+    chart.margin = function(m){
+        if(!arguments.length) return margin;
+        margin = m;
+        return chart;
+    }
 
     dc.registerChart(chart);
 
