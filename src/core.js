@@ -11,7 +11,7 @@ dc.hasChart = function(chart) {
     return dc._charts.indexOf(chart) >= 0;
 };
 
-dc.removeAllCharts = function() {
+dc.deregisterAllCharts = function() {
     dc._charts = [];
 };
 
