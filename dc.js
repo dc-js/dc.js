@@ -26,6 +26,14 @@ dc.renderAll = function() {
         dc._charts[i].render();
     }
 };
+
+dc.convertISO8601Date = function(dtstr) {
+    dtstr = dtstr.replace(/\D/g, " ");
+    var dtcomps = dtstr.split(" ");
+    // modify month between 1 based ISO 8601 and zero based Date
+    dtcomps[1]--;
+    return new Date(Date.UTC(dtcomps[0], dtcomps[1], dtcomps[2], dtcomps[3], dtcomps[4], dtcomps[5]));
+}
 dc.baseMixin = function(chart) {
     var NO_FILTER = null;
 
@@ -92,7 +100,7 @@ dc.baseMixin = function(chart) {
         if (!arguments.length) return _root;
         _root = r;
         return chart;
-    }
+    };
 
     chart.width = function(w) {
         if (!arguments.length) return width;
@@ -104,6 +112,18 @@ dc.baseMixin = function(chart) {
         if (!arguments.length) return height;
         height = h;
         return chart;
+    };
+
+    chart.resetSvg = function() {
+        chart.select("svg").remove();
+    };
+
+    chart.generateTopLevelG = function() {
+        return chart.root().append("svg")
+            .data([chart.group().all()])
+            .attr("width", chart.width())
+            .attr("height", chart.height())
+            .append("g");
     };
 
     return chart;
@@ -118,10 +138,11 @@ dc.baseMixin = function(chart) {
     var chart = dc.baseMixin({});
 
     chart.render = function() {
-        chart.select("svg").remove();
+        chart.resetSvg();
 
         if (chart.dataAreSet()) {
-            var topG = chart.generateTopLevelG();
+            var topG = chart.generateTopLevelG()
+                .attr("transform", "translate(" + chart.cx() + "," + chart.cy() + ")");
 
             var dataPie = d3.layout.pie().value(function(d) {
                 return d.value;
@@ -153,15 +174,6 @@ dc.baseMixin = function(chart) {
         if (!arguments.length) return radius;
         radius = r;
         return chart;
-    };
-
-    chart.generateTopLevelG = function() {
-        return chart.root().append("svg")
-            .data([chart.group().all()])
-            .attr("width", chart.width())
-            .attr("height", chart.height())
-            .append("g")
-            .attr("transform", "translate(" + chart.cx() + "," + chart.cy() + ")");
     };
 
     chart.cx = function() {
@@ -236,6 +248,22 @@ dc.baseMixin = function(chart) {
                         .attr('stroke-width', 0);
                 }
             });
+        }
+    };
+
+    dc.registerChart(chart);
+
+    return chart.anchor(selector);
+};
+dc.barChart = function(selector) {
+
+    var chart = dc.baseMixin({});
+
+    chart.render = function() {
+        chart.resetSvg();
+
+        if (chart.dataAreSet()) {
+            var topG = chart.generateTopLevelG();
         }
     };
 

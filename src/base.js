@@ -64,7 +64,7 @@ dc.baseMixin = function(chart) {
         if (!arguments.length) return _root;
         _root = r;
         return chart;
-    }
+    };
 
     chart.width = function(w) {
         if (!arguments.length) return width;
@@ -76,6 +76,18 @@ dc.baseMixin = function(chart) {
         if (!arguments.length) return height;
         height = h;
         return chart;
+    };
+
+    chart.resetSvg = function() {
+        chart.select("svg").remove();
+    };
+
+    chart.generateTopLevelG = function() {
+        return chart.root().append("svg")
+            .data([chart.group().all()])
+            .attr("width", chart.width())
+            .attr("height", chart.height())
+            .append("g");
     };
 
     return chart;

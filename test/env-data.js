@@ -10,23 +10,37 @@ json = jQuery.parseJSON("[" +
     "{\"value\":\"44\",\"countrycode\":\"US\",\"status\":\"T\",\"id\":9,\"region\":\"Central\",\"date\":\"2012-06-10T16:10:09Z\"}, " +
     "{\"value\":\"55\",\"countrycode\":\"US\",\"status\":\"F\",\"id\":10,\"region\":\"\",\"date\":\"2012-06-10T16:10:09Z\"}" +
     "]");
-data = crossfilter(json)
+data = crossfilter(json);
 
-valueDimension = data.dimension(function(d){return d.value;});
+valueDimension = data.dimension(function(d) {
+    return d.value;
+});
 valueGroup = valueDimension.group();
 
-countryDimension = data.dimension(function(d){return d.countrycode;});
+countryDimension = data.dimension(function(d) {
+    return d.countrycode;
+});
 countryGroup = countryDimension.group();
 
-statusDimension = data.dimension(function(d){return d.status;});
+statusDimension = data.dimension(function(d) {
+    return d.status;
+});
 statusGroup = statusDimension.group();
 
-regionDimension = data.dimension(function(d){return d.region;});
+regionDimension = data.dimension(function(d) {
+    return d.region;
+});
 regionGroup = statusDimension.group();
 
-resetAllFilters = function(){
+dateDimension = data.dimension(function(d) {
+    return d3.time.day(dc.convertISO8601Date(d.date));
+});
+dateGroup = dateDimension.group();
+
+resetAllFilters = function() {
     valueDimension.filterAll();
     countryDimension.filterAll();
     statusDimension.filterAll();
     regionDimension.filterAll();
-}
+    dateDimension.filterAll();
+};

@@ -9,6 +9,6 @@ sinon = require("sinon");
 
 jQuery = require("jquery");
 
-require("./env-data");
-
 require("../dc");
+
+require("./env-data");

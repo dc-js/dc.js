@@ -9,10 +9,11 @@ dc.pieChart = function(selector) {
     var chart = dc.baseMixin({});
 
     chart.render = function() {
-        chart.select("svg").remove();
+        chart.resetSvg();
 
         if (chart.dataAreSet()) {
-            var topG = chart.generateTopLevelG();
+            var topG = chart.generateTopLevelG()
+                .attr("transform", "translate(" + chart.cx() + "," + chart.cy() + ")");
 
             var dataPie = d3.layout.pie().value(function(d) {
                 return d.value;
@@ -44,15 +45,6 @@ dc.pieChart = function(selector) {
         if (!arguments.length) return radius;
         radius = r;
         return chart;
-    };
-
-    chart.generateTopLevelG = function() {
-        return chart.root().append("svg")
-            .data([chart.group().all()])
-            .attr("width", chart.width())
-            .attr("height", chart.height())
-            .append("g")
-            .attr("transform", "translate(" + chart.cx() + "," + chart.cy() + ")");
     };
 
     chart.cx = function() {
