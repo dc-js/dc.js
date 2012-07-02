@@ -27,8 +27,12 @@ dc.renderAll = function() {
     }
 };
 dc.baseMixin = function(chart){
+    var NO_FILTER = null;
+
     var _dimension;
     var _group;
+    var _filter = NO_FILTER;
+
     var _anchor;
     var _root;
 
@@ -42,6 +46,25 @@ dc.baseMixin = function(chart){
         if (!arguments.length) return _group;
         _group = g;
         return chart;
+    };
+
+    chart.filter = function(f) {
+        if (!arguments.length) return _filter;
+
+        _filter = f;
+
+        if (chart.dataAreSet())
+            chart.dimension().filter(_filter);
+
+        return chart;
+    };
+
+    chart.filterAll = function() {
+        return chart.filter(NO_FILTER);
+    };
+
+    chart.hasFilter = function() {
+        return _filter != NO_FILTER;
     };
 
     chart.dataAreSet = function() {
@@ -71,15 +94,13 @@ dc.baseMixin = function(chart){
 
     return chart;
 };dc.pieChart = function(selector) {
-    var NO_FILTER = null;
 
     var sliceCssClass = "pie-slice";
 
     var colors = d3.scale.category20c();
 
-    var width = 0, height = 0, radius = 0, innerRadius = 0;
-
-    var _filter = NO_FILTER;
+    var width = 0, height = 0;
+    var radius = 0, innerRadius = 0;
 
     var chart = dc.baseMixin({});
 
@@ -115,11 +136,6 @@ dc.baseMixin = function(chart){
         return chart;
     };
 
-    chart.filter = function(f) {
-        chart.dimension().filter(f);
-        return chart;
-    };
-
     chart.width = function(w) {
         if (!arguments.length) return width;
         width = w;
@@ -136,25 +152,6 @@ dc.baseMixin = function(chart){
         if (!arguments.length) return radius;
         radius = r;
         return chart;
-    };
-
-    chart.filter = function(f) {
-        if (!arguments.length) return _filter;
-
-        _filter = f;
-        chart.highlightFilter();
-        if (chart.dataAreSet())
-            chart.dimension().filter(_filter);
-
-        return chart;
-    };
-
-    chart.filterAll = function() {
-        return chart.filter(NO_FILTER);
-    };
-
-    chart.hasFilter = function() {
-        return _filter != NO_FILTER;
     };
 
     chart.generateTopLevelG = function() {
@@ -192,6 +189,7 @@ dc.baseMixin = function(chart){
             .attr("d", arcs)
             .on("click", function(d) {
                 chart.filter(d.data.key);
+                chart.highlightFilter();
                 dc.renderAll();
             });
 
@@ -222,11 +220,11 @@ dc.baseMixin = function(chart){
     };
 
     chart.isSelectedSlice = function(d) {
-        return _filter == d.data.key;
+        return chart.filter() == d.data.key;
     };
 
     chart.highlightFilter = function() {
-        if (_filter) {
+        if (chart.hasFilter()) {
             chart.selectAll("g." + sliceCssClass).select("path").each(function(d) {
                 if (chart.isSelectedSlice(d)) {
                     d3.select(this).attr("fill-opacity", 1)
