@@ -26,13 +26,24 @@ dc.renderAll = function() {
         dc._charts[i].render();
     }
 };
-dc.base = function(chart){
+dc.baseMixin = function(chart){
     var _dimension;
+    var _group;
 
     chart.dimension = function(d) {
         if (!arguments.length) return _dimension;
         _dimension = d;
         return chart;
+    };
+
+    chart.group = function(g) {
+        if (!arguments.length) return _group;
+        _group = g;
+        return chart;
+    };
+
+    chart.dataAreSet = function() {
+        return _dimension != undefined && _group != undefined;
     };
 
     return chart;
@@ -46,15 +57,11 @@ dc.base = function(chart){
 
     var colors = d3.scale.category20c();
 
-    var _group;
-
     var width = 0, height = 0, radius = 0, innerRadius = 0;
 
     var _filter = NO_FILTER;
 
-    var chart = {};
-
-    var base = dc.base(chart);
+    var chart = dc.baseMixin({});
 
     chart.render = function() {
         root.select("svg").remove();
@@ -103,12 +110,6 @@ dc.base = function(chart){
         return chart;
     };
 
-    chart.group = function(g) {
-        if (!arguments.length) return _group;
-        _group = g;
-        return chart;
-    };
-
     chart.filter = function(f) {
         chart.dimension().filter(f);
         return chart;
@@ -153,7 +154,7 @@ dc.base = function(chart){
 
     chart.generateTopLevelG = function() {
         return root.append("svg")
-            .data([_group.all()])
+            .data([chart.group().all()])
             .attr("width", width)
             .attr("height", height)
             .append("g")
@@ -232,10 +233,6 @@ dc.base = function(chart){
                 }
             });
         }
-    };
-
-    chart.dataAreSet = function() {
-        return chart.dimension() != undefined && _group != undefined;
     };
 
     dc.registerChart(chart);

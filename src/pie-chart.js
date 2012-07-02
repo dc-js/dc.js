@@ -8,15 +8,11 @@ dc.pieChart = function(selector) {
 
     var colors = d3.scale.category20c();
 
-    var _group;
-
     var width = 0, height = 0, radius = 0, innerRadius = 0;
 
     var _filter = NO_FILTER;
 
-    var chart = {};
-
-    var base = dc.base(chart);
+    var chart = dc.baseMixin({});
 
     chart.render = function() {
         root.select("svg").remove();
@@ -65,12 +61,6 @@ dc.pieChart = function(selector) {
         return chart;
     };
 
-    chart.group = function(g) {
-        if (!arguments.length) return _group;
-        _group = g;
-        return chart;
-    };
-
     chart.filter = function(f) {
         chart.dimension().filter(f);
         return chart;
@@ -115,7 +105,7 @@ dc.pieChart = function(selector) {
 
     chart.generateTopLevelG = function() {
         return root.append("svg")
-            .data([_group.all()])
+            .data([chart.group().all()])
             .attr("width", width)
             .attr("height", height)
             .append("g")
@@ -194,10 +184,6 @@ dc.pieChart = function(selector) {
                 }
             });
         }
-    };
-
-    chart.dataAreSet = function() {
-        return chart.dimension() != undefined && _group != undefined;
     };
 
     dc.registerChart(chart);
