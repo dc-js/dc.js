@@ -40,10 +40,13 @@ suite.addBatch({
             assert.equal(chart.select("svg").attr("height"), height);
         },
         'margin should be set': function(chart) {
-            assert.isNotNull(chart.margin());
+            assert.isNotNull(chart.margins());
         },
         'root g should be created': function(chart) {
             assert.isFalse(chart.select("svg g").empty());
+        },
+        'root g should be translated to left corner': function(chart) {
+            assert.equal(chart.select("svg g").attr("transform"), "translate(5,10)");
         },
         teardown: function(topic){
             resetAllFilters();

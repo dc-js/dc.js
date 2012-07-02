@@ -8,12 +8,12 @@ dc.barChart = function(selector) {
         chart.resetSvg();
 
         if (chart.dataAreSet()) {
-            var topG = chart.generateTopLevelG();
+            var topG = chart.generateTopLevelG().attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         }
     };
 
-    chart.margin = function(m){
-        if(!arguments.length) return margin;
+    chart.margins = function(m) {
+        if (!arguments.length) return margin;
         margin = m;
         return chart;
     }
