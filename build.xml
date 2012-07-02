@@ -25,6 +25,7 @@
         <echo>Compiling dc.js</echo>
         <concat destfile="dc.js">
             <file file="src/core.js"/>
+            <file file="src/base.js"/>
             <file file="src/pie-chart.js"/>
         </concat>
         <echo>Compiling dc.min.js</echo>

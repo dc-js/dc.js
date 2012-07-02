@@ -1,11 +1,6 @@
-dc.createPieChart = function(selector) {
-    var pieChart = new this.PieChart().anchor(selector);
-    dc.registerChart(pieChart);
-    return pieChart;
-};
-
-dc.PieChart = function() {
+dc.pieChart = function(selector) {
     var NO_FILTER = null;
+
     var sliceCssClass = "pie-slice";
 
     var anchor;
@@ -16,135 +11,135 @@ dc.PieChart = function() {
     var dimension;
     var group;
 
-    var width = 0,
-        height = 0,
-        radius = 0,
-        innerRadius = 0;
+    var width = 0, height = 0, radius = 0, innerRadius = 0;
 
-    var filter = NO_FILTER;
+    var _filter = NO_FILTER;
 
-    this.render = function() {
-        doRender();
-    };
+    var chart = {};
 
-    this.select = function(s) {
-        return root.select(s);
-    };
-
-    this.selectAll = function(s) {
-        return root.selectAll(s);
-    };
-
-    this.anchor= function(a) {
-        if (!arguments.length) return anchor;
-        anchor = a;
-        root = d3.select(anchor);
-        return this;
-    };
-
-    this.innerRadius = function(r) {
-        if (!arguments.length) return innerRadius;
-        innerRadius = r;
-        return this;
-    };
-
-    this.colors = function(c) {
-        if (!arguments.length) return colors;
-        colors = c;
-        return this;
-    };
-
-    this.dimension = function(d) {
-        if (!arguments.length) return dimension;
-        dimension = d;
-        return this;
-    };
-
-    this.group = function(g) {
-        if (!arguments.length) return group;
-        group = g;
-        return this;
-    };
-
-    this.filter = function(f) {
-        dimension.filter(f);
-        return this;
-    };
-
-    this.width = function(w) {
-        if (!arguments.length) return width;
-        width = w;
-        return this;
-    };
-
-    this.height = function(h) {
-        if (!arguments.length) return height;
-        height = h;
-        return this;
-    };
-
-    this.radius = function(r) {
-        if (!arguments.length) return radius;
-        radius = r;
-        return this;
-    };
-
-    this.filter = function(i) {
-        if (!arguments.length) return filter;
-        doFilter(i);
-        return this;
-    };
-
-    this.filterAll = function() {
-        return this.filter(NO_FILTER);
-    };
-
-    this.hasFilter = function() {
-        return filter != NO_FILTER;
-    };
-
-    function doRender() {
+    chart.render = function() {
         root.select("svg").remove();
 
-        if (dataAreSet()) {
-            var topG = generateTopLevelG();
+        if (chart.dataAreSet()) {
+            var topG = chart.generateTopLevelG();
 
             var dataPie = d3.layout.pie().value(function(d) {
                 return d.value;
             });
 
-            var arcs = buildArcs();
+            var arcs = chart.buildArcs();
 
-            var slices = drawSlices(topG, dataPie, arcs);
+            var slices = chart.drawSlices(topG, dataPie, arcs);
 
-            drawLabels(slices, arcs);
+            chart.drawLabels(slices, arcs);
 
-            highlightFilter();
+            chart.highlightFilter();
         }
-    }
+    };
 
-    function generateTopLevelG() {
+    chart.select = function(s) {
+        return root.select(s);
+    };
+
+    chart.selectAll = function(s) {
+        return root.selectAll(s);
+    };
+
+    chart.anchor = function(a) {
+        if (!arguments.length) return anchor;
+        anchor = a;
+        root = d3.select(anchor);
+        return chart;
+    };
+
+    chart.innerRadius = function(r) {
+        if (!arguments.length) return innerRadius;
+        innerRadius = r;
+        return chart;
+    };
+
+    chart.colors = function(c) {
+        if (!arguments.length) return colors;
+        colors = c;
+        return chart;
+    };
+
+    chart.dimension = function(d) {
+        if (!arguments.length) return dimension;
+        dimension = d;
+        return chart;
+    };
+
+    chart.group = function(g) {
+        if (!arguments.length) return group;
+        group = g;
+        return chart;
+    };
+
+    chart.filter = function(f) {
+        dimension.filter(f);
+        return chart;
+    };
+
+    chart.width = function(w) {
+        if (!arguments.length) return width;
+        width = w;
+        return chart;
+    };
+
+    chart.height = function(h) {
+        if (!arguments.length) return height;
+        height = h;
+        return chart;
+    };
+
+    chart.radius = function(r) {
+        if (!arguments.length) return radius;
+        radius = r;
+        return chart;
+    };
+
+    chart.filter = function(f) {
+        if (!arguments.length) return _filter;
+
+        _filter = f;
+        chart.highlightFilter();
+        if (chart.dataAreSet())
+            dimension.filter(_filter);
+
+        return chart;
+    };
+
+    chart.filterAll = function() {
+        return chart.filter(NO_FILTER);
+    };
+
+    chart.hasFilter = function() {
+        return _filter != NO_FILTER;
+    };
+
+    chart.generateTopLevelG = function() {
         return root.append("svg")
             .data([group.all()])
             .attr("width", width)
             .attr("height", height)
             .append("g")
-            .attr("transform", "translate(" + cx() + "," + cy() + ")");
-    }
+            .attr("transform", "translate(" + chart.cx() + "," + chart.cy() + ")");
+    };
 
-    function cx() {
+    chart.cx = function() {
         return width / 2;
-    }
+    };
 
-    function cy() {
+    chart.cy = function() {
         return height / 2;
-    }
+    };
 
-    function buildArcs() {
+    chart.buildArcs = function() {
         return d3.svg.arc().outerRadius(radius).innerRadius(innerRadius);
-    }
+    };
 
-    function drawSlices(topG, dataPie, arcs) {
+    chart.drawSlices = function(topG, dataPie, arcs) {
         var slices = topG.selectAll("g." + sliceCssClass)
             .data(dataPie)
             .enter()
@@ -157,14 +152,14 @@ dc.PieChart = function() {
             })
             .attr("d", arcs)
             .on("click", function(d) {
-                doFilter(d.data.key);
+                chart.filter(d.data.key);
                 dc.renderAll();
             });
 
         return slices;
-    }
+    };
 
-    function drawLabels(slices, arcs) {
+    chart.drawLabels = function(slices, arcs) {
         slices.append("text")
             .attr("transform", function(d) {
                 d.innerRadius = 0;
@@ -185,25 +180,16 @@ dc.PieChart = function() {
 
                 return data.key;
             });
-    }
+    };
 
-    function doFilter(d) {
-        filter = d;
+    chart.isSelectedSlice = function(d) {
+        return _filter == d.data.key;
+    };
 
-        highlightFilter();
-
-        if (dataAreSet())
-            dimension.filter(filter);
-    }
-
-    function isSelectedSlice(d) {
-        return filter == d.data.key;
-    }
-
-    function highlightFilter() {
-        if (filter) {
+    chart.highlightFilter = function() {
+        if (_filter) {
             root.selectAll("g." + sliceCssClass).select("path").each(function(d) {
-                if (isSelectedSlice(d)) {
+                if (chart.isSelectedSlice(d)) {
                     d3.select(this).attr("fill-opacity", 1)
                         .attr('stroke', "#ccc")
                         .attr('stroke-width', 3);
@@ -213,11 +199,13 @@ dc.PieChart = function() {
                 }
             });
         }
-    }
+    };
 
-    function dataAreSet() {
+    chart.dataAreSet = function() {
         return dimension != undefined && group != undefined;
-    }
+    };
 
+    dc.registerChart(chart);
+
+    return chart.anchor(selector);
 };
-

@@ -1,28 +1,28 @@
 dc = {
     version: "0.1.0",
-    __charts__: []
+    _charts: []
 };
 
 dc.registerChart = function(chart) {
-    dc.__charts__.push(chart);
+    dc._charts.push(chart);
 };
 
 dc.hasChart = function(chart) {
-    return dc.__charts__.indexOf(chart) >= 0;
+    return dc._charts.indexOf(chart) >= 0;
 };
 
 dc.removeAllCharts = function() {
-    dc.__charts__ = [];
+    dc._charts = [];
 };
 
 dc.filterAll = function() {
-    for (var i = 0; i < dc.__charts__.length; ++i) {
-        dc.__charts__[i].filterAll();
+    for (var i = 0; i < dc._charts.length; ++i) {
+        dc._charts[i].filterAll();
     }
 };
 
 dc.renderAll = function() {
-    for (var i = 0; i < dc.__charts__.length; ++i) {
-        dc.__charts__[i].render();
+    for (var i = 0; i < dc._charts.length; ++i) {
+        dc._charts[i].render();
     }
 };

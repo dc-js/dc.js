@@ -14,7 +14,7 @@ suite.addBatch({
     'pie chart generation': {
         topic: function() {
             d3.select("body").append("div").attr("id", "pie-chart-age");
-            var chart = dc.createPieChart("#pie-chart-age");
+            var chart = dc.pieChart("#pie-chart-age");
             chart.dimension(valueDimension).group(valueGroup)
                 .width(width).height(height).radius(radius).innerRadius(innerRadius);
             chart.render();
@@ -22,9 +22,6 @@ suite.addBatch({
         },
         'we get something': function(pieChart) {
             assert.isNotNull(pieChart);
-        },
-        'we get pie chart instance': function (pieChart) {
-            assert.isTrue(pieChart instanceof dc.PieChart);
         },
         'inner radius can be set': function(chart){
             assert.equal(chart.innerRadius(), innerRadius);

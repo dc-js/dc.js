@@ -15,7 +15,7 @@ suite.addBatch({
     },
     'dc.charts': {
         topic: function(){
-            var chart = dc.createPieChart("#id");
+            var chart = dc.pieChart("#id");
             sinon.spy(chart, "filterAll");
             sinon.spy(chart, "render");
             return chart;
@@ -35,7 +35,7 @@ suite.addBatch({
             dc.removeAllCharts();
             assert.isFalse(dc.hasChart(chart));
         },
-        teardown: function(topic){dc.removeAllCharts();}
+        teardown: function(){dc.removeAllCharts();}
     }
 });
 

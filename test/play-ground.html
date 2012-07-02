@@ -9,7 +9,7 @@
     <script type="text/javascript" src="../node_modules/crossfilter/crossfilter.js"></script>
 
     <script type="text/javascript" src="../dc.js"></script>
-    <script src="env-data.js"></script>
+    <script type="text/javascript" src="env-data.js"></script>
 
     <style type="text/css">
         .chart {
@@ -41,13 +41,20 @@
 </div>
 
 <script type="text/javascript">
-    var valuePieChart = dc.createPieChart("#pie-chart-value");
-    valuePieChart.width(200).height(200).radius(70).innerRadius(25);
-    valuePieChart.dimension(valueDimension).group(valueGroup);
+    dc.pieChart("#pie-chart-value")
+        .width(200)
+        .height(200)
+        .radius(70)
+        .innerRadius(25)
+        .dimension(valueDimension)
+        .group(valueGroup);
 
-    var countryPieChart = dc.createPieChart("#pie-chart-country");
-    countryPieChart.width(200).height(200).radius(70);
-    countryPieChart.dimension(countryDimension).group(countryGroup);
+    dc.pieChart("#pie-chart-country")
+        .width(200)
+        .height(200)
+        .radius(70)
+        .dimension(countryDimension)
+        .group(countryGroup);
 
     dc.renderAll();
 </script>
