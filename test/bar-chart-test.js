@@ -57,6 +57,10 @@ suite.addBatch({
             assert.equal(chart.y().range()[0], 0);
             assert.equal(chart.y().range()[1], 160);
         },
+        'y domain is auto calculated based on height': function(chart) {
+            assert.equal(chart.y().domain()[0], 0);
+            assert.equal(chart.y().domain()[1], 3);
+        },
         'root g should be created': function(chart) {
             assert.isFalse(chart.select("svg g").empty());
         },
