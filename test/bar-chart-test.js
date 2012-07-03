@@ -73,6 +73,22 @@ suite.addBatch({
         'axis y should be placed on the left': function(chart) {
             assert.equal(chart.select("svg g g.y").attr("transform"), "translate(20,10)");
         },
+        'bar x should be set correctly': function(chart) {
+            chart.selectAll("svg g rect").each(function(d){
+                assert.equal(d3.select(this).attr('x'), chart.x()(d.key) + chart.margins().left);
+            });
+        },
+        'bar y should be set correctly': function(chart) {
+            chart.selectAll("svg g rect").each(function(d){
+                assert.equal(d3.select(this).attr('y'), chart.margins().top + chart.y()(d.value));
+            });
+        },
+        'bar height should be set correctly': function(chart) {
+            chart.selectAll("svg g rect").each(function(d){
+                assert.equal(d3.select(this).attr('height'),
+                    chart.height() - chart.margins().top - chart.margins().bottom - chart.y()(d.value));
+            });
+        },
         teardown: function(topic){
             resetAllFilters();
         }
