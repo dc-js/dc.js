@@ -1,6 +1,6 @@
 json = jQuery.parseJSON("[" +
     "{\"value\":\"44\",\"countrycode\":\"US\",\"status\":\"T\",\"id\":1,\"region\":\"South\",\"date\":\"2012-01-05T16:10:09Z\"}, " +
-    "{\"value\":\"22\",\"countrycode\":\"US\",\"status\":\"F\",\"id\":2,\"region\":\"West\",\"date\":\"2012-01-10T16:10:09Z\"}, " +
+    "{\"value\":\"22\",\"countrycode\":\"US\",\"status\":\"F\",\"id\":2,\"region\":\"West\",\"date\":\"2012-02-10T16:10:09Z\"}, " +
     "{\"value\":\"33\",\"countrycode\":\"US\",\"status\":\"T\",\"id\":3,\"region\":\"West\",\"date\":\"2012-12-10T16:10:09Z\"}, " +
     "{\"value\":\"44\",\"countrycode\":\"US\",\"status\":\"F\",\"id\":4,\"region\":\"South\",\"date\":\"2012-04-01T16:10:09Z\"}, " +
     "{\"value\":\"55\",\"countrycode\":\"CA\",\"status\":\"T\",\"id\":5,\"region\":\"Central\",\"date\":\"2012-04-10T16:10:09Z\"}, " +

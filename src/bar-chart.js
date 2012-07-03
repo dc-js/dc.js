@@ -1,12 +1,13 @@
 dc.barChart = function(selector) {
 
+    var DEFAULT_Y_AXIS_TICKS = 5;
+
     var chart = dc.baseMixin({});
 
     var margin = {top: 10, right: 50, bottom: 30, left: 20};
 
     var x;
-    var y = d3.scale.linear().range([0, 100]);
-
+    var y = d3.scale.linear().range([100, 0]);
 
     chart.render = function() {
         chart.resetSvg();
@@ -16,17 +17,9 @@ dc.barChart = function(selector) {
 
             x.rangeRound([0, (chart.width() - margin.left - margin.right)]);
             var axisX = d3.svg.axis().scale(x).orient("bottom");
-            g.append("g")
-                .attr("class", "axis x")
-                .attr("transform", "translate(" + margin.left + "," + xAxisY() + ")")
-                .call(axisX);
 
-            var axisY = d3.svg.axis().scale(y).ticks(5).orient("left");
-            y.domain([0, chart.group().top(1)[0].value]).rangeRound([0, yAxisHeight()]);
-            g.append("g")
-                .attr("class", "axis y")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-                .call(axisY);
+            y.domain([0, maxY()]).rangeRound([yAxisHeight(), 0]);
+            var axisY = d3.svg.axis().scale(y).orient("left").ticks(DEFAULT_Y_AXIS_TICKS);
 
             g.selectAll("rect")
                 .data(chart.group().all())
@@ -36,14 +29,28 @@ dc.barChart = function(selector) {
                     return x(d.key) + margin.left;
                 })
                 .attr("y", function(d) {
-                    return margin.top + yAxisHeight() - y(d.value);
+                    return margin.top + y(d.value);
                 })
                 .attr("width", 10)
                 .attr("height", function(d) {
-                    return y(d.value);
+                    return yAxisHeight() - y(d.value);
                 });
+
+            g.append("g")
+                .attr("class", "axis x")
+                .attr("transform", "translate(" + margin.left + "," + xAxisY() + ")")
+                .call(axisX);
+
+            g.append("g")
+                .attr("class", "axis y")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                .call(axisY);
         }
     };
+
+    function maxY() {
+        return chart.group().top(1)[0].value;
+    }
 
     function yAxisHeight() {
         return chart.height() - margin.top - margin.bottom;
