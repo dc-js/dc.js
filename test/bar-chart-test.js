@@ -54,8 +54,8 @@ suite.addBatch({
             assert.isTrue(chart.y() != undefined);
         },
         'y range round is auto calculated based on height': function(chart) {
-            assert.equal(chart.y().range()[0], 0);
-            assert.equal(chart.y().range()[1], 160);
+            assert.equal(chart.y().range()[0], 160);
+            assert.equal(chart.y().range()[1], 0);
         },
         'y domain is auto calculated based on height': function(chart) {
             assert.equal(chart.y().domain()[0], 0);
