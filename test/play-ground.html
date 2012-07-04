@@ -39,6 +39,16 @@
         .axis text {
             font: 10px sans-serif;
         }
+
+        .brush rect.extent {
+            fill: steelblue;
+            fill-opacity: .125;
+        }
+
+        .brush .resize path {
+            fill: #eee;
+            stroke: #666;
+        }
     </style>
 </head>
 <body>
@@ -96,8 +106,9 @@
             .height(150)
             .dimension(dateDimension)
             .group(dateGroup)
-            .x(d3.time.scale().domain([new Date(2012,4,20), new Date(2012,07,15)]))
+            .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
             .xUnits(d3.time.days)
+            .filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
             .axisX().ticks(5);
 
     dc.barChart("#bar-chart-date2")
@@ -105,7 +116,7 @@
             .height(150)
             .dimension(dateDimension)
             .group(dateGroup)
-            .x(d3.time.scale().domain([new Date(2012,0,1), new Date(2012,11,30)]))
+            .x(d3.time.scale().domain([new Date(2012, 0, 1), new Date(2012, 11, 30)]))
             .xUnits(d3.time.days)
             .axisX().ticks(5);
 
@@ -114,7 +125,7 @@
             .height(150)
             .dimension(dateDimension)
             .group(dateGroup)
-            .x(d3.time.scale().domain([new Date(2002,0,1), new Date(2012,11,30)]))
+            .x(d3.time.scale().domain([new Date(2002, 0, 1), new Date(2012, 11, 30)]))
             .xUnits(d3.time.days)
             .axisX().ticks(5);
 

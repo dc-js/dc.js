@@ -75,23 +75,23 @@ suite.addBatch({
             assert.equal(chart.select("svg g g.y").attr("transform"), "translate(20,10)");
         },
         'bar x should be set correctly': function(chart) {
-            chart.selectAll("svg g rect").each(function(d){
+            chart.selectAll("svg g rect.bar").each(function(d){
                 assert.equal(d3.select(this).attr('x'), chart.x()(d.key) + chart.margins().left);
             });
         },
         'bar y should be set correctly': function(chart) {
-            chart.selectAll("svg g rect").each(function(d){
+            chart.selectAll("svg g rect.bar").each(function(d){
                 assert.equal(d3.select(this).attr('y'), chart.margins().top + chart.y()(d.value));
             });
         },
         'bar height should be set correctly': function(chart) {
-            chart.selectAll("svg g rect").each(function(d){
+            chart.selectAll("svg g rect.bar").each(function(d){
                 assert.equal(d3.select(this).attr('height'),
                     chart.height() - chart.margins().top - chart.margins().bottom - chart.y()(d.value));
             });
         },
         'bar width should be set correctly': function(chart) {
-            chart.selectAll("svg g rect").each(function(d){
+            chart.selectAll("svg g rect.bar").each(function(d){
                 assert.equal(d3.select(this).attr('width'), 3);
             });
         },
@@ -121,7 +121,7 @@ suite.addBatch({
             return chart;
         },
         'min bar width should be set correctly': function(chart) {
-            chart.selectAll("svg g rect").each(function(d){
+            chart.selectAll("svg g rect.bar").each(function(d){
                 assert.equal(d3.select(this).attr('width'), 1);
             });
         },

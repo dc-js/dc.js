@@ -12,7 +12,8 @@ dc.pieChart = function(selector) {
         chart.resetSvg();
 
         if (chart.dataAreSet()) {
-            var topG = chart.generateTopLevelG()
+            var topG = chart.generateSvg()
+                .append("g")
                 .attr("transform", "translate(" + chart.cx() + "," + chart.cy() + ")");
 
             var dataPie = d3.layout.pie().value(function(d) {
@@ -27,6 +28,8 @@ dc.pieChart = function(selector) {
 
             chart.highlightFilter();
         }
+
+        return chart;
     };
 
     chart.innerRadius = function(r) {

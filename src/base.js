@@ -82,12 +82,11 @@ dc.baseMixin = function(chart) {
         chart.select("svg").remove();
     };
 
-    chart.generateTopLevelG = function() {
+    chart.generateSvg = function() {
         return chart.root().append("svg")
             .data([chart.group().all()])
             .attr("width", chart.width())
-            .attr("height", chart.height())
-            .append("g");
+            .attr("height", chart.height());
     };
 
     return chart;
