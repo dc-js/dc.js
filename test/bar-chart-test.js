@@ -75,27 +75,27 @@ suite.addBatch({
             assert.equal(chart.select("svg g g.y").attr("transform"), "translate(20,10)");
         },
         'bar x should be set correctly': function(chart) {
-            chart.selectAll("svg g rect.bar").each(function(d){
+            chart.selectAll("svg g rect.bar").each(function(d) {
                 assert.equal(d3.select(this).attr('x'), chart.x()(d.key) + chart.margins().left);
             });
         },
         'bar y should be set correctly': function(chart) {
-            chart.selectAll("svg g rect.bar").each(function(d){
+            chart.selectAll("svg g rect.bar").each(function(d) {
                 assert.equal(d3.select(this).attr('y'), chart.margins().top + chart.y()(d.value));
             });
         },
         'bar height should be set correctly': function(chart) {
-            chart.selectAll("svg g rect.bar").each(function(d){
+            chart.selectAll("svg g rect.bar").each(function(d) {
                 assert.equal(d3.select(this).attr('height'),
                     chart.height() - chart.margins().top - chart.margins().bottom - chart.y()(d.value));
             });
         },
         'bar width should be set correctly': function(chart) {
-            chart.selectAll("svg g rect.bar").each(function(d){
+            chart.selectAll("svg g rect.bar").each(function(d) {
                 assert.equal(d3.select(this).attr('width'), 3);
             });
         },
-        'x units should be set': function(chart){
+        'x units should be set': function(chart) {
             assert.equal(chart.xUnits(), d3.time.days);
         },
         'x axis should be created': function(chart) {
@@ -104,7 +104,26 @@ suite.addBatch({
         'y axis should be created': function(chart) {
             assert.isNotNull(chart.axisY());
         },
-        teardown: function(topic){
+        'brush should be created': function(chart) {
+            assert.isNotNull(chart.select("g.brush"));
+        },
+        'brush should be positioned with offset (left margin)': function(chart) {
+            assert.equal(chart.select("g.brush").attr("transform"), "translate(" + chart.margins().left + ",0)");
+        },
+        'brush rect should be stretched to cover the chart': function(chart) {
+            chart.select("g.brush").selectAll("rect").each(function(d) {
+                assert.equal(d3.select(this).attr("height"), 170);
+            });
+        },
+        'brush fancy resize handle should be created': function(chart) {
+            chart.select("g.brush").selectAll(".resize path").each(function(d, i) {
+                if (i == 0)
+                    assert.equal(d3.select(this).attr("d"), "M0.5,56.666666666666664A6,6 0 0 1 6.5,62.666666666666664V107.33333333333333A6,6 0 0 1 0.5,113.33333333333333ZM2.5,64.66666666666666V105.33333333333333M4.5,64.66666666666666V105.33333333333333");
+                else
+                    assert.equal(d3.select(this).attr("d"), "M-0.5,56.666666666666664A6,6 0 0 0 -6.5,62.666666666666664V107.33333333333333A6,6 0 0 0 -0.5,113.33333333333333ZM-2.5,64.66666666666666V105.33333333333333M-4.5,64.66666666666666V105.33333333333333");
+            });
+        },
+        teardown: function(topic) {
             resetAllFilters();
         }
     },
@@ -121,11 +140,11 @@ suite.addBatch({
             return chart;
         },
         'min bar width should be set correctly': function(chart) {
-            chart.selectAll("svg g rect.bar").each(function(d){
+            chart.selectAll("svg g rect.bar").each(function(d) {
                 assert.equal(d3.select(this).attr('width'), 1);
             });
         },
-        teardown: function(topic){
+        teardown: function(topic) {
             resetAllFilters();
         }
     }

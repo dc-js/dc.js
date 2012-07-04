@@ -72,7 +72,7 @@ dc.barChart = function(selector) {
 
             var gBrush = g.append("g")
                 .attr("class", "brush")
-                .attr("transform", "translate(" + margin.left + ", 0)")
+                .attr("transform", "translate(" + margin.left + ",0)")
                 .call(brush.x(x));
             gBrush.selectAll("rect").attr("height", xAxisY());
             gBrush.selectAll(".resize").append("path").attr("d", resizePath);
