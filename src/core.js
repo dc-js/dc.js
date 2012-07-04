@@ -26,3 +26,9 @@ dc.renderAll = function() {
         dc._charts[i].render();
     }
 };
+
+dc.redrawAll = function() {
+    for (var i = 0; i < dc._charts.length; ++i) {
+        dc._charts[i].redraw();
+    }
+};

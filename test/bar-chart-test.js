@@ -16,6 +16,7 @@ suite.addBatch({
             chart.dimension(dateDimension).group(dateGroup)
                 .width(width).height(height)
                 .x(d3.time.scale().domain([new Date(2012, 0, 1), new Date(2012, 11, 31)]))
+                .filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
                 .xUnits(d3.time.days);
             chart.render();
             return chart;
@@ -122,6 +123,12 @@ suite.addBatch({
                 else
                     assert.equal(d3.select(this).attr("d"), "M-0.5,56.666666666666664A6,6 0 0 0 -6.5,62.666666666666664V107.33333333333333A6,6 0 0 0 -0.5,113.33333333333333ZM-2.5,64.66666666666666V105.33333333333333M-4.5,64.66666666666666V105.33333333333333");
             });
+        },
+        'filter should extent brush when rendered': function(chart){
+            assert.equal(chart.select("g.brush rect.background").attr("width"), 1030);
+            assert.equal(chart.select("g.brush rect.background").attr("height"), 170);
+            assert.equal(chart.select("g.brush rect.extent").attr("width"), 82);
+            assert.equal(chart.select("g.brush rect.extent").attr("height"), 170);
         },
         teardown: function(topic) {
             resetAllFilters();

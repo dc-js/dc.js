@@ -1,9 +1,6 @@
 dc.baseMixin = function(chart) {
-    var NO_FILTER = null;
-
     var _dimension;
     var _group;
-    var _filter = NO_FILTER;
 
     var _anchor;
     var _root;
@@ -22,23 +19,8 @@ dc.baseMixin = function(chart) {
         return chart;
     };
 
-    chart.filter = function(f) {
-        if (!arguments.length) return _filter;
-
-        _filter = f;
-
-        if (chart.dataAreSet())
-            chart.dimension().filter(_filter);
-
-        return chart;
-    };
-
     chart.filterAll = function() {
-        return chart.filter(NO_FILTER);
-    };
-
-    chart.hasFilter = function() {
-        return _filter != NO_FILTER;
+        return chart.filter(null);
     };
 
     chart.dataAreSet = function() {

@@ -26,12 +26,15 @@ dc.renderAll = function() {
         dc._charts[i].render();
     }
 };
-dc.baseMixin = function(chart) {
-    var NO_FILTER = null;
 
+dc.redrawAll = function() {
+    for (var i = 0; i < dc._charts.length; ++i) {
+        dc._charts[i].redraw();
+    }
+};
+dc.baseMixin = function(chart) {
     var _dimension;
     var _group;
-    var _filter = NO_FILTER;
 
     var _anchor;
     var _root;
@@ -50,23 +53,8 @@ dc.baseMixin = function(chart) {
         return chart;
     };
 
-    chart.filter = function(f) {
-        if (!arguments.length) return _filter;
-
-        _filter = f;
-
-        if (chart.dataAreSet())
-            chart.dimension().filter(_filter);
-
-        return chart;
-    };
-
     chart.filterAll = function() {
-        return chart.filter(NO_FILTER);
-    };
-
-    chart.hasFilter = function() {
-        return _filter != NO_FILTER;
+        return chart.filter(null);
     };
 
     chart.dataAreSet = function() {
@@ -119,6 +107,10 @@ dc.baseMixin = function(chart) {
 
     return chart;
 };dc.pieChart = function(selector) {
+
+    var NO_FILTER = null;
+
+    var filter = NO_FILTER;
 
     var sliceCssClass = "pie-slice";
 
@@ -197,7 +189,7 @@ dc.baseMixin = function(chart) {
             .on("click", function(d) {
                 chart.filter(d.data.key);
                 chart.highlightFilter();
-                dc.renderAll();
+                dc.redrawAll();
             });
 
         return slices;
@@ -226,6 +218,21 @@ dc.baseMixin = function(chart) {
             });
     };
 
+    chart.hasFilter = function() {
+        return filter != NO_FILTER;
+    };
+
+    chart.filter = function(f) {
+        if (!arguments.length) return filter;
+
+        filter = f;
+
+        if (chart.dataAreSet())
+            chart.dimension().filter(filter);
+
+        return chart;
+    };
+
     chart.isSelectedSlice = function(d) {
         return chart.filter() == d.data.key;
     };
@@ -244,6 +251,10 @@ dc.baseMixin = function(chart) {
             });
         }
     };
+
+    chart.redraw = function(){
+        return chart.render();
+    }
 
     dc.registerChart(chart);
 
@@ -264,13 +275,16 @@ dc.barChart = function(selector) {
     var axisY = d3.svg.axis();
     var xUnits;
 
+    var g;
+
+    var filter;
     var brush = d3.svg.brush();
 
     chart.render = function() {
         chart.resetSvg();
 
         if (chart.dataAreSet()) {
-            var g = chart.generateSvg().append("g")
+            g = chart.generateSvg().append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
             x.rangeRound([0, (chart.width() - margin.left - margin.right)]);
@@ -279,26 +293,7 @@ dc.barChart = function(selector) {
             y.domain([0, maxY()]).rangeRound([yAxisHeight(), 0]);
             axisY = axisY.scale(y).orient("left").ticks(DEFAULT_Y_AXIS_TICKS);
 
-            g.selectAll("rect")
-                .data(chart.group().all())
-                .enter()
-                .append("rect")
-                .attr("class", "bar")
-                .attr("x", function(d) {
-                    return x(d.key) + margin.left;
-                })
-                .attr("y", function(d) {
-                    return margin.top + y(d.value);
-                })
-                .attr("width", function() {
-                    var w = Math.floor(chart.width() / xUnits(x.domain()[0], x.domain()[1]).length);
-                    if (isNaN(w) || w < MIN_BAR_WIDTH)
-                        w = MIN_BAR_WIDTH;
-                    return w;
-                })
-                .attr("height", function(d) {
-                    return yAxisHeight() - y(d.value);
-                });
+            redrawBars();
 
             g.append("g")
                 .attr("class", "axis x")
@@ -312,13 +307,12 @@ dc.barChart = function(selector) {
 
             brush
                 .on("brushstart", function(p) {
-                console.log(brush.extent());
             })
                 .on("brush", function(p) {
-                    console.log(brush.extent());
+                    chart.filter([brush.extent()[0], brush.extent()[1]]);
+                    dc.redrawAll();
                 })
                 .on("brushend", function() {
-                    console.log(brush.extent());
                 });
 
             var gBrush = g.append("g")
@@ -327,10 +321,55 @@ dc.barChart = function(selector) {
                 .call(brush.x(x));
             gBrush.selectAll("rect").attr("height", xAxisY());
             gBrush.selectAll(".resize").append("path").attr("d", resizePath);
+
+            if (filter) {
+                redrawBrush();
+            }
         }
 
         return chart;
     };
+
+    function redrawBars() {
+        var bars = g.selectAll("rect")
+            .data(chart.group().all());
+
+        bars.enter()
+            .append("rect")
+            .attr("class", "bar")
+            .attr("x", function(d) {
+                return x(d.key) + margin.left;
+            })
+            .attr("y", function(d) {
+                return margin.top + y(d.value);
+            })
+            .attr("width", function() {
+                var w = Math.floor(chart.width() / xUnits(x.domain()[0], x.domain()[1]).length);
+                if (isNaN(w) || w < MIN_BAR_WIDTH)
+                    w = MIN_BAR_WIDTH;
+                return w;
+            })
+            .attr("height", function(d) {
+                return yAxisHeight() - y(d.value);
+            });
+
+        bars.exit().remove();
+    }
+
+    function redrawBrush() {
+        brush.extent(filter);
+        var gBrush = g.select("g.brush");
+        gBrush.call(brush.x(x));
+        gBrush.selectAll("rect").attr("height", xAxisY());
+    }
+
+    chart.redraw = function() {
+        g.selectAll("rect").remove();
+
+        redrawBars();
+
+        redrawBrush();
+    }
 
     function maxY() {
         return chart.group().top(1)[0].value;
@@ -344,6 +383,7 @@ dc.barChart = function(selector) {
         return (chart.height() - margin.bottom);
     }
 
+    // borrowed from Crossfilter example
     function resizePath(d) {
         var e = +(d == "e"), x = e ? 1 : -1, y = xAxisY() / 3;
         return "M" + (.5 * x) + "," + y
@@ -359,12 +399,15 @@ dc.barChart = function(selector) {
 
     chart.filter = function(_) {
         if (_) {
+            filter = _;
             brush.extent(_);
             chart.dimension().filterRange(_);
         } else {
+            filter = null;
             brush.clear();
             chart.dimension().filterAll();
         }
+
         return chart;
     };
 

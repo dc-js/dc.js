@@ -1,5 +1,9 @@
 dc.pieChart = function(selector) {
 
+    var NO_FILTER = null;
+
+    var filter = NO_FILTER;
+
     var sliceCssClass = "pie-slice";
 
     var colors = d3.scale.category20c();
@@ -77,7 +81,7 @@ dc.pieChart = function(selector) {
             .on("click", function(d) {
                 chart.filter(d.data.key);
                 chart.highlightFilter();
-                dc.renderAll();
+                dc.redrawAll();
             });
 
         return slices;
@@ -106,6 +110,21 @@ dc.pieChart = function(selector) {
             });
     };
 
+    chart.hasFilter = function() {
+        return filter != NO_FILTER;
+    };
+
+    chart.filter = function(f) {
+        if (!arguments.length) return filter;
+
+        filter = f;
+
+        if (chart.dataAreSet())
+            chart.dimension().filter(filter);
+
+        return chart;
+    };
+
     chart.isSelectedSlice = function(d) {
         return chart.filter() == d.data.key;
     };
@@ -124,6 +143,10 @@ dc.pieChart = function(selector) {
             });
         }
     };
+
+    chart.redraw = function(){
+        return chart.render();
+    }
 
     dc.registerChart(chart);
 
