@@ -17,7 +17,7 @@
         }
 
         .chart rect {
-            stroke: white;
+            stroke: none;
             fill: steelblue;
         }
 
@@ -58,7 +58,19 @@
 <div class="clear"></div>
 
 <div id="bar-chart-date" class="chart">
-    <span>Date BarChart</span>
+    <span>Date BarChart (3 months)</span>
+
+    <div class="clear"></div>
+</div>
+
+<div id="bar-chart-date2" class="chart">
+    <span>Date BarChart (1 year)</span>
+
+    <div class="clear"></div>
+</div>
+
+<div id="bar-chart-date3" class="chart">
+    <span>Date BarChart (10 years)</span>
 
     <div class="clear"></div>
 </div>
@@ -80,11 +92,31 @@
             .group(countryGroup);
 
     dc.barChart("#bar-chart-date")
-            .width(1100)
-            .height(200)
+            .width(500)
+            .height(150)
             .dimension(dateDimension)
             .group(dateGroup)
-            .x(d3.time.scale().domain([new Date("Sun Jan 01 2012 00:00:00 GMT-0400 (EDT)"), new Date("Mon Dec 31 2012 00:00:00 GMT-0400 (EDT)")]));
+            .x(d3.time.scale().domain([new Date(2012,4,20), new Date(2012,07,15)]))
+            .xUnits(d3.time.days)
+            .axisX().ticks(5);
+
+    dc.barChart("#bar-chart-date2")
+            .width(500)
+            .height(150)
+            .dimension(dateDimension)
+            .group(dateGroup)
+            .x(d3.time.scale().domain([new Date(2012,0,1), new Date(2012,11,30)]))
+            .xUnits(d3.time.days)
+            .axisX().ticks(5);
+
+    dc.barChart("#bar-chart-date3")
+            .width(500)
+            .height(150)
+            .dimension(dateDimension)
+            .group(dateGroup)
+            .x(d3.time.scale().domain([new Date(2002,0,1), new Date(2012,11,30)]))
+            .xUnits(d3.time.days)
+            .axisX().ticks(5);
 
     dc.renderAll();
 </script>

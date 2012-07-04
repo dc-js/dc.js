@@ -15,7 +15,8 @@ suite.addBatch({
             var chart = dc.barChart("#bar-chart");
             chart.dimension(dateDimension).group(dateGroup)
                 .width(width).height(height)
-                .x(d3.time.scale().domain([new Date("Sun Jan 01 2012 00:00:00 GMT-0400 (EDT)"), new Date("Mon Dec 31 2012 00:00:00 GMT-0400 (EDT)")]));
+                .x(d3.time.scale().domain([new Date(2012, 0, 1), new Date(2012, 11, 31)]))
+                .xUnits(d3.time.days);
             chart.render();
             return chart;
         },
@@ -87,6 +88,41 @@ suite.addBatch({
             chart.selectAll("svg g rect").each(function(d){
                 assert.equal(d3.select(this).attr('height'),
                     chart.height() - chart.margins().top - chart.margins().bottom - chart.y()(d.value));
+            });
+        },
+        'bar width should be set correctly': function(chart) {
+            chart.selectAll("svg g rect").each(function(d){
+                assert.equal(d3.select(this).attr('width'), 3);
+            });
+        },
+        'x units should be set': function(chart){
+            assert.equal(chart.xUnits(), d3.time.days);
+        },
+        'x axis should be created': function(chart) {
+            assert.isNotNull(chart.axisX());
+        },
+        'y axis should be created': function(chart) {
+            assert.isNotNull(chart.axisY());
+        },
+        teardown: function(topic){
+            resetAllFilters();
+        }
+    },
+
+    'extra large bar chart generation': {
+        topic: function() {
+            d3.select("body").append("div").attr("id", "bar-chart2");
+            var chart = dc.barChart("#bar-chart2");
+            chart.dimension(dateDimension).group(dateGroup)
+                .width(width).height(height)
+                .x(d3.time.scale().domain([new Date(2000, 0, 1), new Date(2012, 11, 31)]))
+                .xUnits(d3.time.days);
+            chart.render();
+            return chart;
+        },
+        'min bar width should be set correctly': function(chart) {
+            chart.selectAll("svg g rect").each(function(d){
+                assert.equal(d3.select(this).attr('width'), 1);
             });
         },
         teardown: function(topic){

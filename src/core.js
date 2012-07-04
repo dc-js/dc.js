@@ -26,11 +26,3 @@ dc.renderAll = function() {
         dc._charts[i].render();
     }
 };
-
-dc.convertISO8601Date = function(dtstr) {
-    dtstr = dtstr.replace(/\D/g, " ");
-    var dtcomps = dtstr.split(" ");
-    // modify month between 1 based ISO 8601 and zero based Date
-    dtcomps[1]--;
-    return new Date(Date.UTC(dtcomps[0], dtcomps[1], dtcomps[2], dtcomps[3], dtcomps[4], dtcomps[5]));
-}

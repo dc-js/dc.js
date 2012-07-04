@@ -36,32 +36,6 @@ suite.addBatch({
             assert.isFalse(dc.hasChart(chart));
         },
         teardown: function(){ dc.deregisterAllCharts(); }
-    },
-    'iso 8601 date conversion': {
-        topic: function(){
-            return dc.convertISO8601Date("2012-12-10T16:10:09Z");
-        },
-        'should be a date object': function(date){
-            assert.isTrue(date instanceof Date);
-        },
-        'year is correct': function(date){
-            assert.equal(date.getUTCFullYear(), 2012);
-        },
-        'month is correct': function(date){
-            assert.equal(date.getUTCMonth(), 11);
-        },
-        'day is correct': function(date){
-            assert.equal(date.getUTCDate(), 10);
-        },
-        'hour is correct': function(date){
-            assert.equal(date.getUTCHours(), 16);
-        },
-        'min is correct': function(date){
-            assert.equal(date.getUTCMinutes(), 10);
-        },
-        'sec is correct': function(date){
-            assert.equal(date.getUTCSeconds(), 09);
-        }
     }
 });
 
