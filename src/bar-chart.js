@@ -4,7 +4,7 @@ dc.barChart = function(selector) {
     var MIN_BAR_WIDTH = 1;
     var transitionDuration = 1000;
 
-    var chart = dc.baseMixin({});
+    var chart = dc.baseChart({});
 
     var margin = {top: 10, right: 50, bottom: 30, left: 20};
 

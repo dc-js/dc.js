@@ -113,6 +113,7 @@ suite.addBatch({
         'brush should be created': function(chart) {
             assert.isNotNull(chart.select("g.brush"));
         },
+
         'with brush': {
             'be positioned with offset (left margin)': function(chart) {
                 assert.equal(chart.select("g.brush").attr("transform"), "translate(" + chart.margins().left + ",0)");
@@ -125,7 +126,7 @@ suite.addBatch({
                         assert.equal(d3.select(this).attr("d"), "M-0.5,56.666666666666664A6,6 0 0 0 -6.5,62.666666666666664V107.33333333333333A6,6 0 0 0 -0.5,113.33333333333333ZM-2.5,64.66666666666666V105.33333333333333M-4.5,64.66666666666666V105.33333333333333");
                 });
             },
-            'background should be stretched': function(chart){
+            'background should be stretched': function(chart) {
                 assert.equal(chart.select("g.brush rect.background").attr("width"), 1030);
             },
             'background height should be set to chart height': function(chart) {
@@ -137,39 +138,51 @@ suite.addBatch({
             'extent width should be set based on filter set': function(chart) {
                 assert.equal(chart.select("g.brush rect.extent").attr("width"), 82);
             },
-            'unselected bars should be push to background': function(chart){
+            'unselected bars should be push to background': function(chart) {
                 assert.equal(chart.select("g rect").attr("class"), "bar deselected");
             },
-            'selected bars should be push to foreground': function(chart){
-                chart.selectAll("g rect").each(function(d, i){
-                    if(i == 1)
+            'selected bars should be push to foreground': function(chart) {
+                chart.selectAll("g rect").each(function(d, i) {
+                    if (i == 1)
                         assert.equal(d3.select(this).attr("class"), "bar");
                 });
             }
         },
-        teardown: function(topic) {
-            resetAllFilters();
-        }
-    },
 
-    'extra large no filter chart': {
-        topic: function() {
-            d3.select("body").append("div").attr("id", "bar-chart2");
-            var chart = dc.barChart("#bar-chart2");
-            chart.dimension(dateDimension).group(dateGroup)
-                .width(width).height(height)
-                .x(d3.time.scale().domain([new Date(2000, 0, 1), new Date(2012, 11, 31)]))
-                .xUnits(d3.time.days);
-            chart.render();
-            return chart;
+        'filter by other dimension': {
+            topic: function(chart) {
+                valueDimension.filter(66);
+                return chart;
+            },
+            'no bar should be deselected': function(chart) {
+                chart.selectAll("svg g rect.bar").each(function(d) {
+                    assert.equal(d3.select(this).attr('class'), "bar");
+                });
+            },
+            teardown: function(topic) {
+                resetAllFilters();
+            }
         },
-        'min bar width should be set correctly': function(chart) {
-            chart.selectAll("svg g rect.bar").each(function(d) {
-                assert.equal(d3.select(this).attr('width'), 1);
-            });
-        },
-        teardown: function(topic) {
-            resetAllFilters();
+
+        'extra large no filter chart': {
+            topic: function() {
+                d3.select("body").append("div").attr("id", "bar-chart2");
+                var chart = dc.barChart("#bar-chart2");
+                chart.dimension(dateDimension).group(dateGroup)
+                    .width(width).height(height)
+                    .x(d3.time.scale().domain([new Date(2000, 0, 1), new Date(2012, 11, 31)]))
+                    .xUnits(d3.time.days);
+                chart.render();
+                return chart;
+            },
+            'min bar width should be set correctly': function(chart) {
+                chart.selectAll("svg g rect.bar").each(function(d) {
+                    assert.equal(d3.select(this).attr('width'), 1);
+                });
+            },
+            teardown: function(topic) {
+                resetAllFilters();
+            }
         }
     }
 });

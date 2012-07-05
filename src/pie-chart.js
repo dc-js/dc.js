@@ -10,7 +10,7 @@ dc.pieChart = function(selector) {
 
     var radius = 0, innerRadius = 0;
 
-    var chart = dc.baseMixin({});
+    var chart = dc.baseChart({});
 
     chart.render = function() {
         chart.resetSvg();

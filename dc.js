@@ -32,7 +32,7 @@ dc.redrawAll = function() {
         dc._charts[i].redraw();
     }
 };
-dc.baseMixin = function(chart) {
+dc.baseChart = function(chart) {
     var _dimension;
     var _group;
 
@@ -118,7 +118,7 @@ dc.baseMixin = function(chart) {
 
     var radius = 0, innerRadius = 0;
 
-    var chart = dc.baseMixin({});
+    var chart = dc.baseChart({});
 
     chart.render = function() {
         chart.resetSvg();
@@ -266,7 +266,7 @@ dc.barChart = function(selector) {
     var MIN_BAR_WIDTH = 1;
     var transitionDuration = 1000;
 
-    var chart = dc.baseMixin({});
+    var chart = dc.baseChart({});
 
     var margin = {top: 10, right: 50, bottom: 30, left: 20};
 

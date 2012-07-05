@@ -1,4 +1,4 @@
-dc.baseMixin = function(chart) {
+dc.baseChart = function(chart) {
     var _dimension;
     var _group;
 
