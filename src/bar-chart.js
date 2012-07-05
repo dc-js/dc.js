@@ -163,7 +163,7 @@ dc.barChart = function(selector) {
     }
 
     function fadeDeselectedBars() {
-        if (brush.extent() != null) {
+        if (!brush.empty() && brush.extent() != null) {
             var start = brush.extent()[0];
             var end = brush.extent()[1];
 

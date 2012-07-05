@@ -149,23 +149,9 @@ suite.addBatch({
             }
         },
 
-        'filter by other dimension': {
-            topic: function(chart) {
-                valueDimension.filter(66);
-                return chart;
-            },
-            'no bar should be deselected': function(chart) {
-                chart.selectAll("svg g rect.bar").each(function(d) {
-                    assert.equal(d3.select(this).attr('class'), "bar");
-                });
-            },
-            teardown: function(topic) {
-                resetAllFilters();
-            }
-        },
-
-        'extra large no filter chart': {
+        'extra large externally filtered chart': {
             topic: function() {
+                valueDimension.filter(66);
                 d3.select("body").append("div").attr("id", "bar-chart2");
                 var chart = dc.barChart("#bar-chart2");
                 chart.dimension(dateDimension).group(dateGroup)
@@ -178,6 +164,11 @@ suite.addBatch({
             'min bar width should be set correctly': function(chart) {
                 chart.selectAll("svg g rect.bar").each(function(d) {
                     assert.equal(d3.select(this).attr('width'), 1);
+                });
+            },
+            'no bar should be deselected': function(chart) {
+                chart.selectAll("svg g rect.bar").each(function(d) {
+                    assert.equal(d3.select(this).attr('class'), "bar");
                 });
             },
             teardown: function(topic) {
