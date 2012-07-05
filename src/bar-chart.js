@@ -43,15 +43,9 @@ dc.barChart = function(selector) {
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
                 .call(axisY);
 
-            brush
-                .on("brushstart", function(p) {
-            })
-                .on("brush", function(p) {
-                    chart.filter([brush.extent()[0], brush.extent()[1]]);
-                    dc.redrawAll();
-                })
-                .on("brushend", function() {
-                });
+            brush.on("brushstart", brushStart)
+                .on("brush", brushing)
+                .on("brushend", brushEnd);
 
             var gBrush = g.append("g")
                 .attr("class", "brush")
@@ -66,6 +60,25 @@ dc.barChart = function(selector) {
         }
 
         return chart;
+    };
+
+    function brushStart(p) {
+    }
+
+    function brushing(p) {
+        chart.filter([brush.extent()[0], brush.extent()[1]]);
+        dc.redrawAll();
+    }
+
+    function brushEnd(p) {
+    }
+
+    chart.redraw = function() {
+        g.selectAll("rect").remove();
+
+        redrawBars();
+
+        redrawBrush();
     };
 
     function redrawBars() {
@@ -92,7 +105,21 @@ dc.barChart = function(selector) {
             });
 
         bars.exit().remove();
+    }
 
+    function redrawBrush() {
+        if (filter && brush.empty())
+            brush.extent(filter);
+
+        var gBrush = g.select("g.brush");
+        gBrush.call(brush.x(x));
+        gBrush.selectAll("rect").attr("height", xAxisY());
+        gBrush.selectAll(".resize").append("path").attr("d", resizePath);
+
+        fadeDeselectedBars();
+    }
+
+    function fadeDeselectedBars() {
         if (brush.extent() != null) {
             var start = brush.extent()[0];
             var end = brush.extent()[1];
@@ -101,21 +128,6 @@ dc.barChart = function(selector) {
                 return d.key <= start || d.key >= end;
             });
         }
-    }
-
-    function redrawBrush() {
-        brush.extent(filter);
-        var gBrush = g.select("g.brush");
-        gBrush.call(brush.x(x));
-        gBrush.selectAll("rect").attr("height", xAxisY());
-    }
-
-    chart.redraw = function() {
-        g.selectAll("rect").remove();
-
-        redrawBars();
-
-        redrawBrush();
     }
 
     function maxY() {
