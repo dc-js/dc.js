@@ -9,7 +9,7 @@ var width = 1100;
 var height = 200;
 
 suite.addBatch({
-    'bar chart generation': {
+    'bar chart': {
         topic: function() {
             d3.select("body").append("div").attr("id", "bar-chart");
             var chart = dc.barChart("#bar-chart");
@@ -108,34 +108,46 @@ suite.addBatch({
         'brush should be created': function(chart) {
             assert.isNotNull(chart.select("g.brush"));
         },
-        'brush should be positioned with offset (left margin)': function(chart) {
-            assert.equal(chart.select("g.brush").attr("transform"), "translate(" + chart.margins().left + ",0)");
-        },
-        'brush rect should be stretched to cover the chart': function(chart) {
-            chart.select("g.brush").selectAll("rect").each(function(d) {
-                assert.equal(d3.select(this).attr("height"), 170);
-            });
-        },
-        'brush fancy resize handle should be created': function(chart) {
-            chart.select("g.brush").selectAll(".resize path").each(function(d, i) {
-                if (i == 0)
-                    assert.equal(d3.select(this).attr("d"), "M0.5,56.666666666666664A6,6 0 0 1 6.5,62.666666666666664V107.33333333333333A6,6 0 0 1 0.5,113.33333333333333ZM2.5,64.66666666666666V105.33333333333333M4.5,64.66666666666666V105.33333333333333");
-                else
-                    assert.equal(d3.select(this).attr("d"), "M-0.5,56.666666666666664A6,6 0 0 0 -6.5,62.666666666666664V107.33333333333333A6,6 0 0 0 -0.5,113.33333333333333ZM-2.5,64.66666666666666V105.33333333333333M-4.5,64.66666666666666V105.33333333333333");
-            });
-        },
-        'filter should extent brush when rendered': function(chart){
-            assert.equal(chart.select("g.brush rect.background").attr("width"), 1030);
-            assert.equal(chart.select("g.brush rect.background").attr("height"), 170);
-            assert.equal(chart.select("g.brush rect.extent").attr("width"), 82);
-            assert.equal(chart.select("g.brush rect.extent").attr("height"), 170);
+        'with brush': {
+            'be positioned with offset (left margin)': function(chart) {
+                assert.equal(chart.select("g.brush").attr("transform"), "translate(" + chart.margins().left + ",0)");
+            },
+            'brush fancy resize handle should be created': function(chart) {
+                chart.select("g.brush").selectAll(".resize path").each(function(d, i) {
+                    if (i == 0)
+                        assert.equal(d3.select(this).attr("d"), "M0.5,56.666666666666664A6,6 0 0 1 6.5,62.666666666666664V107.33333333333333A6,6 0 0 1 0.5,113.33333333333333ZM2.5,64.66666666666666V105.33333333333333M4.5,64.66666666666666V105.33333333333333");
+                    else
+                        assert.equal(d3.select(this).attr("d"), "M-0.5,56.666666666666664A6,6 0 0 0 -6.5,62.666666666666664V107.33333333333333A6,6 0 0 0 -0.5,113.33333333333333ZM-2.5,64.66666666666666V105.33333333333333M-4.5,64.66666666666666V105.33333333333333");
+                });
+            },
+            'background should be stretched': function(chart){
+                assert.equal(chart.select("g.brush rect.background").attr("width"), 1030);
+            },
+            'background height should be set to chart height': function(chart) {
+                assert.equal(chart.select("g.brush rect.background").attr("height"), 170);
+            },
+            'extent height should be set to chart height': function(chart) {
+                assert.equal(chart.select("g.brush rect.extent").attr("height"), 170);
+            },
+            'extent width should be set based on filter set': function(chart) {
+                assert.equal(chart.select("g.brush rect.extent").attr("width"), 82);
+            },
+            'unselected bars should be push to background': function(chart){
+                assert.equal(chart.select("g rect").attr("class"), "bar deselected");
+            },
+            'selected bars should be push to foreground': function(chart){
+                chart.selectAll("g rect").each(function(d, i){
+                    if(i == 1)
+                        assert.equal(d3.select(this).attr("class"), "bar");
+                });
+            }
         },
         teardown: function(topic) {
             resetAllFilters();
         }
     },
 
-    'extra large bar chart generation': {
+    'extra large no filter chart': {
         topic: function() {
             d3.select("body").append("div").attr("id", "bar-chart2");
             var chart = dc.barChart("#bar-chart2");

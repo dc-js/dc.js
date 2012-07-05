@@ -14,7 +14,7 @@ dc.barChart = function(selector) {
     var xUnits;
 
     var g;
-
+    var bars;
     var filter;
     var brush = d3.svg.brush();
 
@@ -69,7 +69,7 @@ dc.barChart = function(selector) {
     };
 
     function redrawBars() {
-        var bars = g.selectAll("rect")
+        bars = g.selectAll("rect")
             .data(chart.group().all());
 
         bars.enter()
@@ -92,6 +92,15 @@ dc.barChart = function(selector) {
             });
 
         bars.exit().remove();
+
+        if (brush.extent() != null) {
+            var start = brush.extent()[0];
+            var end = brush.extent()[1];
+
+            bars.classed("deselected", function(d) {
+                return d.key <= start || d.key >= end;
+            });
+        }
     }
 
     function redrawBrush() {
