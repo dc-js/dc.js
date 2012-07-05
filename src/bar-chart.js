@@ -2,6 +2,7 @@ dc.barChart = function(selector) {
 
     var DEFAULT_Y_AXIS_TICKS = 5;
     var MIN_BAR_WIDTH = 1;
+    var transitionDuration = 1000;
 
     var chart = dc.baseMixin({});
 
@@ -26,41 +27,51 @@ dc.barChart = function(selector) {
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
             x.rangeRound([0, (chart.width() - margin.left - margin.right)]);
-            axisX = axisX.scale(x).orient("bottom");
-
             y.domain([0, maxY()]).rangeRound([yAxisHeight(), 0]);
-            axisY = axisY.scale(y).orient("left").ticks(DEFAULT_Y_AXIS_TICKS);
 
             redrawBars();
 
-            g.append("g")
-                .attr("class", "axis x")
-                .attr("transform", "translate(" + margin.left + "," + xAxisY() + ")")
-                .call(axisX);
+            renderAxisX();
+            renderAxisY();
 
-            g.append("g")
-                .attr("class", "axis y")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-                .call(axisY);
-
-            brush.on("brushstart", brushStart)
-                .on("brush", brushing)
-                .on("brushend", brushEnd);
-
-            var gBrush = g.append("g")
-                .attr("class", "brush")
-                .attr("transform", "translate(" + margin.left + ",0)")
-                .call(brush.x(x));
-            gBrush.selectAll("rect").attr("height", xAxisY());
-            gBrush.selectAll(".resize").append("path").attr("d", resizePath);
-
-            if (filter) {
-                redrawBrush();
-            }
+            renderBrush();
         }
 
         return chart;
     };
+
+    function renderAxisX() {
+        axisX = axisX.scale(x).orient("bottom");
+        g.append("g")
+            .attr("class", "axis x")
+            .attr("transform", "translate(" + margin.left + "," + xAxisY() + ")")
+            .call(axisX);
+    }
+
+    function renderAxisY() {
+        axisY = axisY.scale(y).orient("left").ticks(DEFAULT_Y_AXIS_TICKS);
+        g.append("g")
+            .attr("class", "axis y")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+            .call(axisY);
+    }
+
+    function renderBrush() {
+        brush.on("brushstart", brushStart)
+            .on("brush", brushing)
+            .on("brushend", brushEnd);
+
+        var gBrush = g.append("g")
+            .attr("class", "brush")
+            .attr("transform", "translate(" + margin.left + ",0)")
+            .call(brush.x(x));
+        gBrush.selectAll("rect").attr("height", xAxisY());
+        gBrush.selectAll(".resize").append("path").attr("d", resizePath);
+
+        if (filter) {
+            redrawBrush();
+        }
+    }
 
     function brushStart(p) {
     }
@@ -74,37 +85,70 @@ dc.barChart = function(selector) {
     }
 
     chart.redraw = function() {
-        g.selectAll("rect").remove();
-
         redrawBars();
-
         redrawBrush();
     };
 
     function redrawBars() {
-        bars = g.selectAll("rect")
+        bars = g.selectAll("rect.bar")
             .data(chart.group().all());
 
+        // new
         bars.enter()
             .append("rect")
             .attr("class", "bar")
             .attr("x", function(d) {
-                return x(d.key) + margin.left;
+                return finalBarX(d);
             })
-            .attr("y", function(d) {
-                return margin.top + y(d.value);
-            })
+            .attr("y", xAxisY())
             .attr("width", function() {
-                var w = Math.floor(chart.width() / xUnits(x.domain()[0], x.domain()[1]).length);
-                if (isNaN(w) || w < MIN_BAR_WIDTH)
-                    w = MIN_BAR_WIDTH;
-                return w;
+                return finalBarWidth();
+            })
+            .transition()
+            .duration(transitionDuration)
+            .attr("y", function(d) {
+                return finalBarY(d);
             })
             .attr("height", function(d) {
-                return yAxisHeight() - y(d.value);
+                return finalBarHeight(d);
             });
 
-        bars.exit().remove();
+        // update
+        bars
+            .transition()
+            .duration(transitionDuration)
+            .attr("y", function(d) {
+                return finalBarY(d);
+            })
+            .attr("height", function(d) {
+                return finalBarHeight(d);
+            });
+
+        // delete
+        bars.exit()
+            .transition()
+            .duration(transitionDuration)
+            .attr("y", xAxisY())
+            .attr("height", 0);
+    }
+
+    function finalBarWidth() {
+        var w = Math.floor(chart.width() / xUnits(x.domain()[0], x.domain()[1]).length);
+        if (isNaN(w) || w < MIN_BAR_WIDTH)
+            w = MIN_BAR_WIDTH;
+        return w;
+    }
+
+    function finalBarX(d) {
+        return x(d.key) + margin.left;
+    }
+
+    function finalBarY(d) {
+        return margin.top + y(d.value);
+    }
+
+    function finalBarHeight(d) {
+        return yAxisHeight() - y(d.value);
     }
 
     function redrawBrush() {
@@ -114,7 +158,6 @@ dc.barChart = function(selector) {
         var gBrush = g.select("g.brush");
         gBrush.call(brush.x(x));
         gBrush.selectAll("rect").attr("height", xAxisY());
-        gBrush.selectAll(".resize").append("path").attr("d", resizePath);
 
         fadeDeselectedBars();
     }
@@ -205,6 +248,12 @@ dc.barChart = function(selector) {
         axisY = y;
         return chart;
     };
+
+    chart.transitionDuration = function(d){
+        if(!arguments.length) return transitionDuration;
+        transitionDuration = d;
+        return chart;
+    }
 
     dc.registerChart(chart);
 

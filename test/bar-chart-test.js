@@ -16,9 +16,11 @@ suite.addBatch({
             chart.dimension(dateDimension).group(dateGroup)
                 .width(width).height(height)
                 .x(d3.time.scale().domain([new Date(2012, 0, 1), new Date(2012, 11, 31)]))
+                .transitionDuration(0)
                 .filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
                 .xUnits(d3.time.days);
             chart.render();
+            d3.timer.flush();
             return chart;
         },
         'we get something': function(chart) {
@@ -41,6 +43,9 @@ suite.addBatch({
         },
         'height should be used for svg': function(chart) {
             assert.equal(chart.select("svg").attr("height"), height);
+        },
+        'transition duration should be set': function(chart) {
+            assert.equal(chart.transitionDuration(), 0);
         },
         'margin should be set': function(chart) {
             assert.isNotNull(chart.margins());
