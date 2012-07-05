@@ -76,7 +76,7 @@ suite.addBatch({
             assert.equal(pieChart.selectAll("svg g g.pie-slice text").data().length, 5);
         },
         'slice label transform to centroid': function(pieChart) {
-            assert.equal(pieChart.selectAll("svg g g.pie-slice text").attr("transform"), "translate(38.20604139901075,52.58610463437159)");
+            assert.equal(pieChart.selectAll("svg g g.pie-slice text").attr("transform"), "translate(52.58610463437159,-38.20604139901075)");
         },
         'slice label text should be set': function(pieChart) {
             pieChart.selectAll("svg g g.pie-slice text").call(function(p) {

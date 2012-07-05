@@ -66,7 +66,7 @@ dc.baseChart = function(chart) {
 
     chart.generateSvg = function() {
         return chart.root().append("svg")
-            .data([chart.group().all()])
+            .data([chart.group().top(Infinity)])
             .attr("width", chart.width())
             .attr("height", chart.height());
     };

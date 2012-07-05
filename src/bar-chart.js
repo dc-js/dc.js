@@ -2,7 +2,7 @@ dc.barChart = function(selector) {
 
     var DEFAULT_Y_AXIS_TICKS = 5;
     var MIN_BAR_WIDTH = 1;
-    var transitionDuration = 1000;
+    var transitionDuration = 750;
 
     var chart = dc.baseChart({});
 

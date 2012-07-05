@@ -9,8 +9,17 @@ dc.pieChart = function(selector) {
     var colors = d3.scale.category20c();
 
     var radius = 0, innerRadius = 0;
-
+    var arc;
+    var dataPie;
+    var slices;
+    var slicePaths;
     var chart = dc.baseChart({});
+
+    function calculateDataPie() {
+        return d3.layout.pie().value(function(d) {
+            return d.value;
+        });
+    }
 
     chart.render = function() {
         chart.resetSvg();
@@ -20,15 +29,13 @@ dc.pieChart = function(selector) {
                 .append("g")
                 .attr("transform", "translate(" + chart.cx() + "," + chart.cy() + ")");
 
-            var dataPie = d3.layout.pie().value(function(d) {
-                return d.value;
-            });
+            dataPie = calculateDataPie();
 
-            var arcs = chart.buildArcs();
+            arc = chart.buildArcs();
 
-            var slices = chart.drawSlices(topG, dataPie, arcs);
+            var slices = chart.drawSlices(topG, dataPie, arc);
 
-            chart.drawLabels(slices, arcs);
+            chart.drawLabels(slices, arc);
 
             chart.highlightFilter();
         }
@@ -67,32 +74,36 @@ dc.pieChart = function(selector) {
     };
 
     chart.drawSlices = function(topG, dataPie, arcs) {
-        var slices = topG.selectAll("g." + sliceCssClass)
+        slices = topG.selectAll("g." + sliceCssClass)
             .data(dataPie)
             .enter()
             .append("g")
             .attr("class", sliceCssClass);
 
-        slices.append("path")
+        slicePaths = slices.append("path")
             .attr("fill", function(d, i) {
                 return colors(i);
             })
-            .attr("d", arcs)
-            .on("click", function(d) {
-                chart.filter(d.data.key);
-                chart.highlightFilter();
-                dc.redrawAll();
-            });
+            .attr("d", arcs);
+
+        slicePaths.transition().duration(750)
+            .attrTween("d", tweenPie);
+
+        slicePaths.on("click", function(d) {
+            chart.filter(d.data.key);
+            chart.highlightFilter();
+            dc.redrawAll();
+        });
 
         return slices;
     };
 
-    chart.drawLabels = function(slices, arcs) {
+    chart.drawLabels = function(slices, arc) {
         slices.append("text")
             .attr("transform", function(d) {
-                d.innerRadius = 0;
+                d.innerRadius = chart.innerRadius();
                 d.outerRadius = radius;
-                var centroid = arcs.centroid(d);
+                var centroid = arc.centroid(d);
                 if (isNaN(centroid[0]) || isNaN(centroid[1])) {
                     return "translate(0,0)";
                 } else {
@@ -102,10 +113,8 @@ dc.pieChart = function(selector) {
             .attr("text-anchor", "middle")
             .text(function(d) {
                 var data = d.data;
-
                 if (data.value == 0)
                     return "";
-
                 return data.key;
             });
     };
@@ -144,8 +153,25 @@ dc.pieChart = function(selector) {
         }
     };
 
-    chart.redraw = function(){
-        return chart.render();
+    chart.redraw = function() {
+        slices.selectAll("text").remove();
+        slicePaths = slicePaths.data(dataPie(chart.group().top(Infinity)));
+        slicePaths.transition().duration(750)
+            .attrTween("d", tweenPie);
+        chart.drawLabels(slices, arc);
+        return chart;
+    }
+
+    function tweenPie(b) {
+        b.innerRadius = chart.innerRadius();
+        var current = this._current;
+        if(current == null)
+            current = {startAngle: 0, endAngle: 0};
+        var i = d3.interpolate(current, b);
+        this._current = i(0);
+        return function(t) {
+            return arc(i(t));
+        };
     }
 
     dc.registerChart(chart);
