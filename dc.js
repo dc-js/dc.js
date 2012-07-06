@@ -121,6 +121,7 @@ dc.baseChart = function(chart) {
     var dataPie;
     var slices;
     var slicePaths;
+    var labels;
     var chart = dc.baseChart({});
 
     function calculateDataPie() {
@@ -207,17 +208,22 @@ dc.baseChart = function(chart) {
     };
 
     chart.drawLabels = function(slices, arc) {
-        slices.append("text")
-            .attr("transform", function(d) {
-                d.innerRadius = chart.innerRadius();
-                d.outerRadius = radius;
-                var centroid = arc.centroid(d);
-                if (isNaN(centroid[0]) || isNaN(centroid[1])) {
-                    return "translate(0,0)";
-                } else {
-                    return "translate(" + centroid + ")";
-                }
-            })
+        labels = slices.append("text");
+
+        redrawLabels(arc);
+    };
+
+    function redrawLabels(arc) {
+        labels.attr("transform", function(d) {
+            d.innerRadius = chart.innerRadius();
+            d.outerRadius = radius;
+            var centroid = arc.centroid(d);
+            if (isNaN(centroid[0]) || isNaN(centroid[1])) {
+                return "translate(0,0)";
+            } else {
+                return "translate(" + centroid + ")";
+            }
+        })
             .attr("text-anchor", "middle")
             .text(function(d) {
                 var data = d.data;
@@ -225,7 +231,7 @@ dc.baseChart = function(chart) {
                     return "";
                 return data.key;
             });
-    };
+    }
 
     chart.hasFilter = function() {
         return filter != NO_FILTER;
@@ -262,18 +268,18 @@ dc.baseChart = function(chart) {
     };
 
     chart.redraw = function() {
-        slices.selectAll("text").remove();
         slicePaths = slicePaths.data(dataPie(chart.group().top(Infinity)));
         slicePaths.transition().duration(750)
             .attrTween("d", tweenPie);
-        chart.drawLabels(slices, arc);
+        labels = labels.data(dataPie(chart.group().top(Infinity)));
+        redrawLabels(arc);
         return chart;
     }
 
     function tweenPie(b) {
         b.innerRadius = chart.innerRadius();
         var current = this._current;
-        if(current == null)
+        if (current == null)
             current = {startAngle: 0, endAngle: 0};
         var i = d3.interpolate(current, b);
         this._current = i(0);
