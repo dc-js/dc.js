@@ -17,6 +17,7 @@ dc.barChart = function(selector) {
     var bars;
     var filter;
     var brush = d3.svg.brush();
+    var round;
 
     chart.transitionDuration(500);
 
@@ -78,6 +79,12 @@ dc.barChart = function(selector) {
     }
 
     function brushing(p) {
+        var extent = brush.extent();
+        if (round) {
+            extent[1] = extent.map(round)[1];
+            g.select(".brush")
+                .call(brush.extent(extent));
+        }
         chart.filter([brush.extent()[0], brush.extent()[1]]);
         dc.redrawAll();
     }
@@ -130,7 +137,7 @@ dc.barChart = function(selector) {
     }
 
     function finalBarWidth() {
-        var w = Math.floor(chart.width() / xUnits(x.domain()[0], x.domain()[1]).length);
+        var w = Math.floor((chart.width() - chart.margins().left - chart.margins().right) / xUnits(x.domain()[0], x.domain()[1]).length);
         if (isNaN(w) || w < MIN_BAR_WIDTH)
             w = MIN_BAR_WIDTH;
         return w;
@@ -167,7 +174,7 @@ dc.barChart = function(selector) {
             bars.classed("deselected", function(d) {
                 return d.key <= start || d.key >= end;
             });
-        }else{
+        } else {
             bars.classed("deselected", false);
         }
     }
@@ -247,6 +254,12 @@ dc.barChart = function(selector) {
     chart.axisY = function(y) {
         if (!arguments.length) return axisY;
         axisY = y;
+        return chart;
+    };
+
+    chart.round = function(_) {
+        if (!arguments.length) return round;
+        round = _;
         return chart;
     };
 

@@ -15,65 +15,53 @@
 </head>
 <body>
 
-<div id="bar-chart-date3" class="chart">
-    <span>Date BarChart (10 years)</span>
-    <a class="reset" href="javascript:barChart3.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+<h1>Nasdaq 100 Index 1985/11/01-2012/06/29</h1>
+
+<div id="bar-chart-volume" class="chart">
+    <span>Trade Volume by Month</span>
+    <a class="reset" href="javascript:volumeByMonthChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
 </div>
 
 <script type="text/javascript">
-    var pieChart1 = dc.pieChart("#pie-chart-value")
-            .width(250)
-            .height(250)
-            .radius(100)
-            .innerRadius(40)
-            .dimension(valueDimension)
-            .group(valueGroup);
+    var volumeByMonthChart = dc.barChart("#bar-chart-volume");
 
-    var pieChart2 = dc.pieChart("#pie-chart-country")
-            .width(250)
-            .height(250)
-            .radius(100)
-            .dimension(countryDimension)
-            .group(countryGroup);
+    d3.csv("ndx.csv", function(data) {
+                var dateFormat = d3.time.format("%m/%d/%Y");
+                data.forEach(function(e) {
+                    e.month = d3.time.month(dateFormat.parse(e.date));
+                });
 
-    var barChart1 = dc.barChart("#bar-chart-date");
-    barChart1.width(500)
-            .height(150)
-            .dimension(dateDimension)
-            .group(dateGroup)
-            .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
-            .xUnits(d3.time.days)
-            .filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
-            .axisX().ticks(5);
+                var ndx = crossfilter(data);
 
-    var barChart2 = dc.barChart("#bar-chart-date2");
-    barChart2.width(500)
-            .height(150)
-            .dimension(dateDimension)
-            .group(dateGroup)
-            .x(d3.time.scale().domain([new Date(2012, 0, 1), new Date(2012, 11, 30)]))
-            .xUnits(d3.time.days)
-            .axisX().ticks(5);
+                var recordByMonth = ndx.dimension(function(d) {
+                    return d.month;
+                });
+                var volumeByMonth = recordByMonth.group().reduceSum(function(d) {
+                    return d.volume;
+                });
 
-    var barChart3 = dc.barChart("#bar-chart-date3");
-    barChart3.width(500)
-            .height(150)
-            .dimension(dateDimension)
-            .group(dateGroup)
-            .x(d3.time.scale().domain([new Date(2002, 0, 1), new Date(2012, 11, 30)]))
-            .xUnits(d3.time.days)
-            .axisX().ticks(5);
+                console.log("done crossfiltering");
 
-    dc.renderAll();
+                volumeByMonthChart.width(1100)
+                        .height(250)
+                        .margins( {top: 10, right: 50, bottom: 30, left: 40})
+                        .dimension(recordByMonth)
+                        .group(volumeByMonth)
+                        .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
+                        .xUnits(d3.time.months)
+                        .axisX();
+
+                dc.renderAll();
+            }
+    );
 </script>
 
 <div class="clear"></div>
 
 <div>
-    <a href="javascript:dc.renderAll();">Render All</a>
-    <a href="javascript:dc.filterAll(); dc.renderAll();">Filter All</a>
+    <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
 </div>
 
 </body>

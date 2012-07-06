@@ -97,7 +97,7 @@ suite.addBatch({
         },
         'bar width should be set correctly': function(chart) {
             chart.selectAll("svg g rect.bar").each(function(d) {
-                assert.equal(d3.select(this).attr('width'), 3);
+                assert.equal(d3.select(this).attr('width'), 2);
             });
         },
         'x units should be set': function(chart) {
@@ -111,6 +111,13 @@ suite.addBatch({
         },
         'brush should be created': function(chart) {
             assert.isNotNull(chart.select("g.brush"));
+        },
+        'round should be off by default': function(chart) {
+            assert.isTrue(chart.round() == null);
+        },
+        'round can be changed': function(chart) {
+            chart.round(d3.time.day.round)
+            assert.isNotNull(chart.round());
         },
 
         'with brush': {
