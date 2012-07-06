@@ -57,17 +57,13 @@ suite.addBatch({
             return selections;
         },
         'transition should be activated with duration': function(selections) {
-            dc.transition(selections, {transitionDuration: function() {
-                return 100;
-            }});
+            dc.transition(selections, 100);
             assert.isTrue(selections.transition.calledOnce);
             assert.isTrue(selections.duration.calledOnce);
         },
         'transition callback should be triggered': function(selections) {
             var triggered = false;
-            dc.transition(selections, {transitionDuration: function() {
-                return 100;
-            }}, function() {
+            dc.transition(selections, 100, function() {
                 triggered = true;
             });
             assert.isTrue(triggered);
@@ -93,17 +89,13 @@ suite.addBatch({
             return selections;
         },
         'transition should not be activated with 0 duration': function(selections) {
-            dc.transition(selections, {transitionDuration: function() {
-                return 0;
-            }});
+            dc.transition(selections, 0);
             assert.isFalse(selections.transition.called);
             assert.isFalse(selections.duration.called);
         },
         'transition callback should not be triggered': function(selections) {
             var triggered = false;
-            dc.transition(selections, {transitionDuration: function() {
-                return 0;
-            }}, function() {
+            dc.transition(selections, 0, function() {
                 triggered = true;
             });
             assert.isFalse(triggered);

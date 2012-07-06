@@ -106,7 +106,7 @@ dc.barChart = function(selector) {
             .attr("width", function() {
                 return finalBarWidth();
             });
-        dc.transition(bars, chart)
+        dc.transition(bars, chart.transitionDuration())
             .attr("y", function(d) {
                 return finalBarY(d);
             })
@@ -115,7 +115,7 @@ dc.barChart = function(selector) {
             });
 
         // update
-        dc.transition(bars, chart)
+        dc.transition(bars, chart.transitionDuration())
             .attr("y", function(d) {
                 return finalBarY(d);
             })
@@ -124,7 +124,7 @@ dc.barChart = function(selector) {
             });
 
         // delete
-        dc.transition(bars.exit(), chart)
+        dc.transition(bars.exit(), chart.transitionDuration())
             .attr("y", xAxisY())
             .attr("height", 0);
     }

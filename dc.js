@@ -33,9 +33,7 @@ dc.redrawAll = function() {
     }
 };
 
-dc.transition = function(selections, chart, callback) {
-    var duration = chart.transitionDuration();
-
+dc.transition = function(selections, duration, callback) {
     if(duration <= 0)
         return selections;
 
@@ -271,7 +269,7 @@ dc.baseChart = function(chart) {
 
     chart.redraw = function() {
         slicePaths = slicePaths.data(dataPie(chart.group().top(Infinity)));
-        dc.transition(slicePaths, chart, function(s){s.attrTween("d", tweenPie);});
+        dc.transition(slicePaths, chart.transitionDuration(), function(s){s.attrTween("d", tweenPie);});
         labels = labels.data(dataPie(chart.group().top(Infinity)));
         redrawLabels(arc);
         return chart;
@@ -284,7 +282,7 @@ dc.baseChart = function(chart) {
     }
 
     function redrawLabels(arc) {
-        dc.transition(labels, chart)
+        dc.transition(labels, chart.transitionDuration()+100)
             .attr("transform", function(d) {
                 d.innerRadius = chart.innerRadius();
                 d.outerRadius = radius;
@@ -432,7 +430,7 @@ dc.barChart = function(selector) {
             .attr("width", function() {
                 return finalBarWidth();
             });
-        dc.transition(bars, chart)
+        dc.transition(bars, chart.transitionDuration())
             .attr("y", function(d) {
                 return finalBarY(d);
             })
@@ -441,7 +439,7 @@ dc.barChart = function(selector) {
             });
 
         // update
-        dc.transition(bars, chart)
+        dc.transition(bars, chart.transitionDuration())
             .attr("y", function(d) {
                 return finalBarY(d);
             })
@@ -450,7 +448,7 @@ dc.barChart = function(selector) {
             });
 
         // delete
-        dc.transition(bars.exit(), chart)
+        dc.transition(bars.exit(), chart.transitionDuration())
             .attr("y", xAxisY())
             .attr("height", 0);
     }

@@ -33,9 +33,7 @@ dc.redrawAll = function() {
     }
 };
 
-dc.transition = function(selections, chart, callback) {
-    var duration = chart.transitionDuration();
-
+dc.transition = function(selections, duration, callback) {
     if(duration <= 0)
         return selections;
 
