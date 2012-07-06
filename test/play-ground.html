@@ -45,7 +45,7 @@
             font: 10px sans-serif;
         }
 
-        .brush rect.background{
+        .brush rect.background {
             z-index: -999;
         }
 
@@ -64,12 +64,14 @@
 
 <div id="pie-chart-value" class="chart">
     <span>Value DonutChart</span>
+    <a class="reset" href="javascript:pieChart1.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
 </div>
 
 <div id="pie-chart-country" class="chart">
     <span>Country PieChart</span>
+    <a class="reset" href="javascript:pieChart2.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
 </div>
@@ -78,24 +80,27 @@
 
 <div id="bar-chart-date" class="chart">
     <span>Date BarChart (3 months)</span>
+    <a class="reset" href="javascript:barChart1.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
 </div>
 
 <div id="bar-chart-date2" class="chart">
     <span>Date BarChart (1 year)</span>
+    <a class="reset" href="javascript:barChart2.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
 </div>
 
 <div id="bar-chart-date3" class="chart">
     <span>Date BarChart (10 years)</span>
+    <a class="reset" href="javascript:barChart3.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
 </div>
 
 <script type="text/javascript">
-    dc.pieChart("#pie-chart-value")
+    var pieChart1 = dc.pieChart("#pie-chart-value")
             .width(250)
             .height(250)
             .radius(100)
@@ -103,15 +108,15 @@
             .dimension(valueDimension)
             .group(valueGroup);
 
-    dc.pieChart("#pie-chart-country")
+    var pieChart2 = dc.pieChart("#pie-chart-country")
             .width(250)
             .height(250)
             .radius(100)
             .dimension(countryDimension)
             .group(countryGroup);
 
-    dc.barChart("#bar-chart-date")
-            .width(500)
+    var barChart1 = dc.barChart("#bar-chart-date");
+    barChart1.width(500)
             .height(150)
             .dimension(dateDimension)
             .group(dateGroup)
@@ -120,8 +125,8 @@
             .filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
             .axisX().ticks(5);
 
-    dc.barChart("#bar-chart-date2")
-            .width(500)
+    var barChart2 = dc.barChart("#bar-chart-date2");
+    barChart2.width(500)
             .height(150)
             .dimension(dateDimension)
             .group(dateGroup)
@@ -129,8 +134,8 @@
             .xUnits(d3.time.days)
             .axisX().ticks(5);
 
-    dc.barChart("#bar-chart-date3")
-            .width(500)
+    var barChart3 = dc.barChart("#bar-chart-date3");
+    barChart3.width(500)
             .height(150)
             .dimension(dateDimension)
             .group(dateGroup)

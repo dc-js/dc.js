@@ -126,6 +126,14 @@ dc.baseChart = function(chart) {
             .attr("height", chart.height());
     };
 
+    chart.turnOnReset = function(){
+        chart.select("a.reset").style("display", null);
+    };
+
+    chart.turnOffReset = function(){
+        chart.select("a.reset").style("display", "none");
+    };
+
     chart.transitionDuration = function(d){
         if(!arguments.length) return _transitionDuration;
         _transitionDuration = d;
@@ -134,9 +142,7 @@ dc.baseChart = function(chart) {
 
     return chart;
 };dc.pieChart = function(selector) {
-    var NO_FILTER = null;
-
-    var filter = NO_FILTER;
+    var filter;
 
     var sliceCssClass = "pie-slice";
 
@@ -210,7 +216,7 @@ dc.baseChart = function(chart) {
             .data(dataPie(chart.orderedGroup().top(Infinity)))
             .enter()
             .append("g")
-            .attr("id", function(d){
+            .attr("id", function(d) {
                 return d.data.key;
             })
             .attr("class", sliceCssClass);
@@ -238,7 +244,7 @@ dc.baseChart = function(chart) {
     };
 
     chart.hasFilter = function() {
-        return filter != NO_FILTER;
+        return filter != null;
     };
 
     chart.filter = function(f) {
@@ -249,6 +255,12 @@ dc.baseChart = function(chart) {
         if (chart.dataAreSet())
             chart.dimension().filter(filter);
 
+        if (f) {
+            chart.turnOnReset();
+        } else {
+            chart.turnOffReset();
+        }
+
         return chart;
     };
 
@@ -257,30 +269,36 @@ dc.baseChart = function(chart) {
     };
 
     chart.highlightFilter = function() {
+        var normalOpacity = 1;
+        var highlightStrokeWidth = 3;
+        var fadeOpacity = 0.1;
+        var normalStrokeWidth = 0;
         if (chart.hasFilter()) {
             chart.selectAll("g." + sliceCssClass).select("path").each(function(d) {
                 if (chart.isSelectedSlice(d)) {
-                    d3.select(this).attr("fill-opacity", 1)
+                    d3.select(this).attr("fill-opacity", normalOpacity)
                         .attr('stroke', "#ccc")
-                        .attr('stroke-width', 3);
+                        .attr('stroke-width', highlightStrokeWidth);
                 } else {
-                    d3.select(this).attr("fill-opacity", 0.1)
-                        .attr('stroke-width', 0);
+                    d3.select(this).attr("fill-opacity", fadeOpacity)
+                        .attr('stroke-width', normalStrokeWidth);
                 }
             });
+        }else{
+            chart.selectAll("g." + sliceCssClass).selectAll("path")
+                .attr("fill-opacity", normalOpacity)
+                .attr('stroke-width', normalStrokeWidth);
         }
     };
 
     chart.redraw = function() {
-        console.log("old:");
-        console.log(slicePaths.data());
         var data = dataPie(chart.orderedGroup().top(Infinity));
-        console.log("new:");
-        console.log(data);
         slicePaths = slicePaths.data(data);
         labels = labels.data(data);
-        dc.transition(slicePaths, chart.transitionDuration(), function(s){s.attrTween("d", tweenPie);});
-        registerSliceOnClick(slicePaths);
+        dc.transition(slicePaths, chart.transitionDuration(), function(s) {
+            s.attrTween("d", tweenPie);
+        });
+        chart.highlightFilter();
         redrawLabels(arc);
         return chart;
     }
@@ -331,7 +349,6 @@ dc.baseChart = function(chart) {
     function registerSliceOnClick(paths) {
         paths.on("click", function(d) {
             chart.filter(d.data.key);
-            chart.highlightFilter();
             dc.redrawAll();
         });
         return paths;
@@ -510,6 +527,8 @@ dc.barChart = function(selector) {
             bars.classed("deselected", function(d) {
                 return d.key <= start || d.key >= end;
             });
+        }else{
+            bars.classed("deselected", false);
         }
     }
 
@@ -544,10 +563,12 @@ dc.barChart = function(selector) {
             filter = _;
             brush.extent(_);
             chart.dimension().filterRange(_);
+            chart.turnOnReset();
         } else {
             filter = null;
             brush.clear();
             chart.dimension().filterAll();
+            chart.turnOffReset();
         }
 
         return chart;

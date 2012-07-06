@@ -77,6 +77,14 @@ dc.baseChart = function(chart) {
             .attr("height", chart.height());
     };
 
+    chart.turnOnReset = function(){
+        chart.select("a.reset").style("display", null);
+    };
+
+    chart.turnOffReset = function(){
+        chart.select("a.reset").style("display", "none");
+    };
+
     chart.transitionDuration = function(d){
         if(!arguments.length) return _transitionDuration;
         _transitionDuration = d;

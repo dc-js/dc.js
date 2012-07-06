@@ -167,6 +167,8 @@ dc.barChart = function(selector) {
             bars.classed("deselected", function(d) {
                 return d.key <= start || d.key >= end;
             });
+        }else{
+            bars.classed("deselected", false);
         }
     }
 
@@ -201,10 +203,12 @@ dc.barChart = function(selector) {
             filter = _;
             brush.extent(_);
             chart.dimension().filterRange(_);
+            chart.turnOnReset();
         } else {
             filter = null;
             brush.clear();
             chart.dimension().filterAll();
+            chart.turnOffReset();
         }
 
         return chart;

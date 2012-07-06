@@ -138,12 +138,19 @@ suite.addBatch({
                 assert.equal(chart.select("g.brush rect.extent").attr("width"), 82);
             },
             'unselected bars should be push to background': function(chart) {
-                assert.equal(chart.select("g rect").attr("class"), "bar deselected");
+                assert.equal(chart.select("g rect.bar").attr("class"), "bar deselected");
             },
             'selected bars should be push to foreground': function(chart) {
-                chart.selectAll("g rect").each(function(d, i) {
+                chart.selectAll("g rect.bar").each(function(d, i) {
                     if (i == 1)
                         assert.equal(d3.select(this).attr("class"), "bar");
+                });
+            },
+            'after reset all bars should be pushed to foreground': function(chart) {
+                chart.filterAll();
+                chart.redraw();
+                chart.selectAll("g rect.bar").each(function(d) {
+                    assert.equal(d3.select(this).attr("class"), "bar");
                 });
             }
         },

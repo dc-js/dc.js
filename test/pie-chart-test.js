@@ -13,7 +13,8 @@ var innerRadius = 30;
 suite.addBatch({
     'pie chart generation': {
         topic: function() {
-            d3.select("body").append("div").attr("id", "pie-chart-age");
+            d3.select("body").append("div").attr("id", "pie-chart-age")
+                .append("a").attr("class", "reset").style("display", "none");
             var chart = dc.pieChart("#pie-chart-age");
             chart.dimension(valueDimension).group(valueGroup)
                 .width(width)
@@ -92,6 +93,9 @@ suite.addBatch({
                 assert.equal(d3.select(this).attr("text-anchor"), "middle");
             });
         },
+        'reset link hidden after init rendering': function(chart) {
+            assert.equal(chart.select("a.reset").style("display"), "none");
+        },
         're-render' : {
             topic: function(pieChart) {
                 pieChart.render();
@@ -159,11 +163,15 @@ suite.addBatch({
                 });
                 pieChart.filterAll();
             },
+            'reset link generated after slice selection': function(chart) {
+                chart.filter("66");
+                assert.isEmpty(chart.select("a.reset").style("display"));
+            },
             'should remove highlight if no slice selected': function(pieChart) {
                 pieChart.filterAll();
-                pieChart.render();
+                pieChart.redraw();
                 pieChart.selectAll(".pie-slice path").each(function(d) {
-                    assert.equal(d3.select(this).attr("fill-opacity"), "");
+                    assert.equal(d3.select(this).attr("fill-opacity"), "1");
                 });
             },
             teardown: function(pieChart) {
@@ -171,10 +179,10 @@ suite.addBatch({
             }
         },
         'group order': {
-            topic: function(chart){
+            topic: function(chart) {
                 return chart;
             },
-            'group should be order': function(chart){
+            'group should be order': function(chart) {
                 var group = chart.orderedGroup().top(Infinity);
                 countryDimension.filter("US");
                 var group2 = chart.orderedGroup().top(Infinity);
