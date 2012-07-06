@@ -7,6 +7,8 @@ dc.baseChart = function(chart) {
 
     var width = 0, height = 0;
 
+    var _transitionDuration = 750;
+
     chart.dimension = function(d) {
         if (!arguments.length) return _dimension;
         _dimension = d;
@@ -70,6 +72,12 @@ dc.baseChart = function(chart) {
             .attr("width", chart.width())
             .attr("height", chart.height());
     };
+
+    chart.transitionDuration = function(d){
+        if(!arguments.length) return _transitionDuration;
+        _transitionDuration = d;
+        return chart;
+    }
 
     return chart;
 };

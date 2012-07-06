@@ -32,6 +32,17 @@ dc.redrawAll = function() {
         dc._charts[i].redraw();
     }
 };
+
+dc.transition = function(selections, chart) {
+    var duration = chart.transitionDuration();
+
+    if(duration <= 0)
+        return selections;
+
+    return selections
+        .transition()
+        .duration(duration);
+};
 dc.baseChart = function(chart) {
     var _dimension;
     var _group;
@@ -40,6 +51,8 @@ dc.baseChart = function(chart) {
     var _root;
 
     var width = 0, height = 0;
+
+    var _transitionDuration = 750;
 
     chart.dimension = function(d) {
         if (!arguments.length) return _dimension;
@@ -105,9 +118,14 @@ dc.baseChart = function(chart) {
             .attr("height", chart.height());
     };
 
+    chart.transitionDuration = function(d){
+        if(!arguments.length) return _transitionDuration;
+        _transitionDuration = d;
+        return chart;
+    }
+
     return chart;
 };dc.pieChart = function(selector) {
-
     var NO_FILTER = null;
 
     var filter = NO_FILTER;
@@ -123,6 +141,8 @@ dc.baseChart = function(chart) {
     var slicePaths;
     var labels;
     var chart = dc.baseChart({});
+
+    chart.transitionDuration(500);
 
     function calculateDataPie() {
         return d3.layout.pie().value(function(d) {
@@ -195,7 +215,9 @@ dc.baseChart = function(chart) {
             })
             .attr("d", arcs);
 
-        slicePaths.transition().duration(750)
+        slicePaths
+            .transition()
+            .duration(chart.transitionDuration())
             .attrTween("d", tweenPie);
 
         slicePaths.on("click", function(d) {
@@ -214,7 +236,8 @@ dc.baseChart = function(chart) {
     };
 
     function redrawLabels(arc) {
-        labels.attr("transform", function(d) {
+        dc.transition(labels, chart)
+            .attr("transform", function(d) {
             d.innerRadius = chart.innerRadius();
             d.outerRadius = radius;
             var centroid = arc.centroid(d);
@@ -269,7 +292,7 @@ dc.baseChart = function(chart) {
 
     chart.redraw = function() {
         slicePaths = slicePaths.data(dataPie(chart.group().top(Infinity)));
-        slicePaths.transition().duration(750)
+        dc.transition(slicePaths, chart)
             .attrTween("d", tweenPie);
         labels = labels.data(dataPie(chart.group().top(Infinity)));
         redrawLabels(arc);
@@ -296,7 +319,6 @@ dc.barChart = function(selector) {
 
     var DEFAULT_Y_AXIS_TICKS = 5;
     var MIN_BAR_WIDTH = 1;
-    var transitionDuration = 750;
 
     var chart = dc.baseChart({});
 
@@ -399,7 +421,7 @@ dc.barChart = function(selector) {
                 return finalBarWidth();
             })
             .transition()
-            .duration(transitionDuration)
+            .duration(chart.transitionDuration())
             .attr("y", function(d) {
                 return finalBarY(d);
             })
@@ -410,7 +432,7 @@ dc.barChart = function(selector) {
         // update
         bars
             .transition()
-            .duration(transitionDuration)
+            .duration(chart.transitionDuration())
             .attr("y", function(d) {
                 return finalBarY(d);
             })
@@ -421,7 +443,7 @@ dc.barChart = function(selector) {
         // delete
         bars.exit()
             .transition()
-            .duration(transitionDuration)
+            .duration(chart.transitionDuration())
             .attr("y", xAxisY())
             .attr("height", 0);
     }
@@ -542,12 +564,6 @@ dc.barChart = function(selector) {
         axisY = y;
         return chart;
     };
-
-    chart.transitionDuration = function(d){
-        if(!arguments.length) return transitionDuration;
-        transitionDuration = d;
-        return chart;
-    }
 
     dc.registerChart(chart);
 

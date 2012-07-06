@@ -2,7 +2,6 @@ dc.barChart = function(selector) {
 
     var DEFAULT_Y_AXIS_TICKS = 5;
     var MIN_BAR_WIDTH = 1;
-    var transitionDuration = 750;
 
     var chart = dc.baseChart({});
 
@@ -105,7 +104,7 @@ dc.barChart = function(selector) {
                 return finalBarWidth();
             })
             .transition()
-            .duration(transitionDuration)
+            .duration(chart.transitionDuration())
             .attr("y", function(d) {
                 return finalBarY(d);
             })
@@ -116,7 +115,7 @@ dc.barChart = function(selector) {
         // update
         bars
             .transition()
-            .duration(transitionDuration)
+            .duration(chart.transitionDuration())
             .attr("y", function(d) {
                 return finalBarY(d);
             })
@@ -127,7 +126,7 @@ dc.barChart = function(selector) {
         // delete
         bars.exit()
             .transition()
-            .duration(transitionDuration)
+            .duration(chart.transitionDuration())
             .attr("y", xAxisY())
             .attr("height", 0);
     }
@@ -248,12 +247,6 @@ dc.barChart = function(selector) {
         axisY = y;
         return chart;
     };
-
-    chart.transitionDuration = function(d){
-        if(!arguments.length) return transitionDuration;
-        transitionDuration = d;
-        return chart;
-    }
 
     dc.registerChart(chart);
 

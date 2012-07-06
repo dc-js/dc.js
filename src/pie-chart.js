@@ -15,6 +15,8 @@ dc.pieChart = function(selector) {
     var labels;
     var chart = dc.baseChart({});
 
+    chart.transitionDuration(500);
+
     function calculateDataPie() {
         return d3.layout.pie().value(function(d) {
             return d.value;
@@ -86,7 +88,9 @@ dc.pieChart = function(selector) {
             })
             .attr("d", arcs);
 
-        slicePaths.transition().duration(750)
+        slicePaths
+            .transition()
+            .duration(chart.transitionDuration())
             .attrTween("d", tweenPie);
 
         slicePaths.on("click", function(d) {
@@ -105,7 +109,8 @@ dc.pieChart = function(selector) {
     };
 
     function redrawLabels(arc) {
-        labels.attr("transform", function(d) {
+        dc.transition(labels, chart)
+            .attr("transform", function(d) {
             d.innerRadius = chart.innerRadius();
             d.outerRadius = radius;
             var centroid = arc.centroid(d);
@@ -160,7 +165,7 @@ dc.pieChart = function(selector) {
 
     chart.redraw = function() {
         slicePaths = slicePaths.data(dataPie(chart.group().top(Infinity)));
-        slicePaths.transition().duration(750)
+        dc.transition(slicePaths, chart)
             .attrTween("d", tweenPie);
         labels = labels.data(dataPie(chart.group().top(Infinity)));
         redrawLabels(arc);
