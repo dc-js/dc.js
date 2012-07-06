@@ -215,6 +215,29 @@ suite.addBatch({
         teardown:function(chart) {
             resetAllFilters();
         }
+    },
+
+    'custom label generation' :{
+        topic: function() {
+            d3.select("body").append("div").attr("id", "pie-chart-3");
+            var chart = dc.pieChart("#pie-chart-3");
+            chart.dimension(valueDimension).group(valueGroup)
+                .transitionDuration(0)
+                .width(width)
+                .height(height)
+                .radius(radius)
+                .label(function(d){return "custom";});
+            chart.render();
+            return chart;
+        },
+        'custom function should be used to dynamically generate label': function(chart) {
+            chart.selectAll("g.pie-slice text").each(function(p) {
+                assert.equal(d3.select(this).text(), "custom");
+            });
+        },
+        teardown:function(chart) {
+            resetAllFilters();
+        }
     }
 });
 

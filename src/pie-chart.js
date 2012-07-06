@@ -14,6 +14,10 @@ dc.pieChart = function(selector) {
     var labels;
     var chart = dc.baseChart({});
 
+    var labelFunction = function(d) {
+        return d.data.key;
+    };
+
     chart.transitionDuration(350);
 
     chart.render = function() {
@@ -143,7 +147,7 @@ dc.pieChart = function(selector) {
                         .attr('stroke-width', normalStrokeWidth);
                 }
             });
-        }else{
+        } else {
             chart.selectAll("g." + sliceCssClass).selectAll("path")
                 .attr("fill-opacity", normalOpacity)
                 .attr('stroke-width', normalStrokeWidth);
@@ -159,6 +163,11 @@ dc.pieChart = function(selector) {
             s.attrTween("d", tweenPie);
         });
         redrawLabels(arc);
+        return chart;
+    }
+
+    chart.label = function(f) {
+        labelFunction = f;
         return chart;
     }
 
@@ -185,7 +194,7 @@ dc.pieChart = function(selector) {
                 var data = d.data;
                 if (data.value == 0)
                     return "";
-                return data.key;
+                return labelFunction(d);
             });
     }
 
@@ -205,9 +214,9 @@ dc.pieChart = function(selector) {
         return current == null || isNaN(current.startAngle) || isNaN(current.endAngle);
     }
 
-    function onClick(d){
-         chart.filter(d.data.key);
-            dc.redrawAll();
+    function onClick(d) {
+        chart.filter(d.data.key);
+        dc.redrawAll();
     }
 
     dc.registerChart(chart);
