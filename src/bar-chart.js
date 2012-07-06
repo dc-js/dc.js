@@ -88,6 +88,7 @@ dc.barChart = function(selector) {
     chart.redraw = function() {
         redrawBars();
         redrawBrush();
+        return chart;
     };
 
     function redrawBars() {

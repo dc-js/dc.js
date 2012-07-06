@@ -17,12 +17,6 @@ dc.pieChart = function(selector) {
 
     chart.transitionDuration(350);
 
-    function calculateDataPie() {
-        return d3.layout.pie().value(function(d) {
-            return d.value;
-        });
-    }
-
     chart.render = function() {
         chart.resetSvg();
 
@@ -35,7 +29,7 @@ dc.pieChart = function(selector) {
 
             arc = chart.buildArcs();
 
-            var slices = chart.drawSlices(topG, dataPie, arc);
+            slices = chart.drawSlices(topG, dataPie, arc);
 
             chart.drawLabels(slices, arc);
 
@@ -108,27 +102,6 @@ dc.pieChart = function(selector) {
         redrawLabels(arc);
     };
 
-    function redrawLabels(arc) {
-        dc.transition(labels, chart)
-            .attr("transform", function(d) {
-            d.innerRadius = chart.innerRadius();
-            d.outerRadius = radius;
-            var centroid = arc.centroid(d);
-            if (isNaN(centroid[0]) || isNaN(centroid[1])) {
-                return "translate(0,0)";
-            } else {
-                return "translate(" + centroid + ")";
-            }
-        })
-            .attr("text-anchor", "middle")
-            .text(function(d) {
-                var data = d.data;
-                if (data.value == 0)
-                    return "";
-                return data.key;
-            });
-    }
-
     chart.hasFilter = function() {
         return filter != NO_FILTER;
     };
@@ -165,23 +138,53 @@ dc.pieChart = function(selector) {
 
     chart.redraw = function() {
         slicePaths = slicePaths.data(dataPie(chart.group().top(Infinity)));
-        dc.transition(slicePaths, chart)
-            .attrTween("d", tweenPie);
+        dc.transition(slicePaths, chart, function(s){s.attrTween("d", tweenPie);});
         labels = labels.data(dataPie(chart.group().top(Infinity)));
         redrawLabels(arc);
         return chart;
     }
 
+    function calculateDataPie() {
+        return d3.layout.pie().value(function(d) {
+            return d.value;
+        });
+    }
+
+    function redrawLabels(arc) {
+        dc.transition(labels, chart)
+            .attr("transform", function(d) {
+                d.innerRadius = chart.innerRadius();
+                d.outerRadius = radius;
+                var centroid = arc.centroid(d);
+                if (isNaN(centroid[0]) || isNaN(centroid[1])) {
+                    return "translate(0,0)";
+                } else {
+                    return "translate(" + centroid + ")";
+                }
+            })
+            .attr("text-anchor", "middle")
+            .text(function(d) {
+                var data = d.data;
+                if (data.value == 0)
+                    return "";
+                return data.key;
+            });
+    }
+
     function tweenPie(b) {
         b.innerRadius = chart.innerRadius();
         var current = this._current;
-        if (current == null)
+        if (isOffCanvas(current))
             current = {startAngle: 0, endAngle: 0};
         var i = d3.interpolate(current, b);
         this._current = i(0);
         return function(t) {
             return arc(i(t));
         };
+    }
+
+    function isOffCanvas(current) {
+        return current == null || isNaN(current.startAngle) || isNaN(current.endAngle);
     }
 
     dc.registerChart(chart);

@@ -13,7 +13,6 @@ var innerRadius = 30;
 suite.addBatch({
     'pie chart generation': {
         topic: function() {
-            this.clock = sinon.useFakeTimers();
             d3.select("body").append("div").attr("id", "pie-chart-age");
             var chart = dc.pieChart("#pie-chart-age");
             chart.dimension(valueDimension).group(valueGroup)
@@ -28,7 +27,7 @@ suite.addBatch({
         'we get something': function(pieChart) {
             assert.isNotNull(pieChart);
         },
-        'inner radius can be set': function(chart){
+        'inner radius can be set': function(chart) {
             assert.equal(chart.innerRadius(), innerRadius);
         },
         'svg should be created': function(pieChart) {
@@ -68,13 +67,13 @@ suite.addBatch({
             assert.equal(pieChart.selectAll("svg g g.pie-slice path").data().length, 5);
         },
         'slice path should be filled': function(pieChart) {
-            pieChart.selectAll("svg g g.pie-slice path").call(function(p) {
-                assert.isTrue(p.attr("fill") != "");
+            pieChart.selectAll("svg g g.pie-slice path").each(function(p) {
+                assert.isTrue(d3.select(this).attr("fill") != "");
             });
         },
         'slice path d should be created': function(pieChart) {
-            pieChart.selectAll("svg g g.pie-slice path").call(function(p) {
-                assert.isTrue(p.attr("d") != "");
+            pieChart.selectAll("svg g g.pie-slice path").each(function(p) {
+                assert.isTrue(d3.select(this).attr("d") != "");
             });
         },
         'slice label should be created': function(pieChart) {
@@ -89,8 +88,8 @@ suite.addBatch({
             });
         },
         'slice label should be middle anchored': function(pieChart) {
-            pieChart.selectAll("svg g g.pie-slice text").call(function(p) {
-                assert.equal(p.attr("text-anchor"), "middle");
+            pieChart.selectAll("svg g g.pie-slice text").each(function(p) {
+                assert.equal(d3.select(this).attr("text-anchor"), "middle");
             });
         },
         're-render' : {
@@ -111,7 +110,9 @@ suite.addBatch({
             'label should be hidden if filtered out': function(pieChart) {
                 assert.equal(pieChart.selectAll("svg g g.pie-slice text").text(), "");
             },
-            teardown: function(){ resetAllFilters(); }
+            teardown: function() {
+                resetAllFilters();
+            }
         },
         'n/a filter' : {
             topic: function(pieChart) {
@@ -122,7 +123,9 @@ suite.addBatch({
             'NaN centroid should be handled properly': function(pieChart) {
                 assert.equal(pieChart.selectAll("svg g g.pie-slice text").attr("transform"), "translate(0,0)");
             },
-            teardown: function(){ resetAllFilters(); }
+            teardown: function() {
+                resetAllFilters();
+            }
         },
         'slice selection' :{
             topic: function(pieChart) {
@@ -163,10 +166,35 @@ suite.addBatch({
                     assert.equal(d3.select(this).attr("fill-opacity"), "");
                 });
             },
-            teardown: function(pieChart){
+            teardown: function(pieChart) {
                 resetAllFilters();
-                this.clock.restore();
             }
+        }
+    },
+
+    'redraw after empty selection' :{
+        topic: function() {
+            d3.select("body").append("div").attr("id", "pie-chart-2");
+            var chart = dc.pieChart("#pie-chart-2");
+            chart.dimension(valueDimension).group(valueGroup)
+                .transitionDuration(0)
+                .width(width)
+                .height(height)
+                .radius(radius);
+            chart.render();
+            dateDimension.filter([new Date(2010, 0, 1), new Date(2010, 0, 3)]);
+            chart.redraw()
+            dateDimension.filter([new Date(2012, 0, 1), new Date(2012, 11, 30)]);
+            chart.redraw();
+            return chart;
+        },
+        'pie chart should be restored': function(chart) {
+            chart.selectAll("g.pie-slice path").each(function(p) {
+                assert.isTrue(d3.select(this).attr("d").indexOf("NaN") < 0);
+            });
+        },
+        teardown:function(chart) {
+            resetAllFilters();
         }
     }
 });

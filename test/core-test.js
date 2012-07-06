@@ -41,8 +41,9 @@ suite.addBatch({
             dc.deregisterAllCharts();
         }
     },
-    'dc.transition': {
-        topic: function() {
+
+    'dc.transition normal': {
+        topic:function() {
             var selections = {
                 transition:function() {
                     return selections;
@@ -55,32 +56,61 @@ suite.addBatch({
             sinon.spy(selections, "duration");
             return selections;
         },
-        'normal': {
-            'transition should be activated with duration': function(selections) {
-                dc.transition(selections, {transitionDuration: function() {
-                    return 100;
-                }});
-                assert.isTrue(selections.transition.calledOnce);
-                assert.isTrue(selections.duration.calledOnce);
-            },
-            teardown: function(selections) {
-                selections.transition.restore();
-                selections.duration.restore();
-            }
+        'transition should be activated with duration': function(selections) {
+            dc.transition(selections, {transitionDuration: function() {
+                return 100;
+            }});
+            assert.isTrue(selections.transition.calledOnce);
+            assert.isTrue(selections.duration.calledOnce);
         },
+        'transition callback should be triggered': function(selections) {
+            var triggered = false;
+            dc.transition(selections, {transitionDuration: function() {
+                return 100;
+            }}, function() {
+                triggered = true;
+            });
+            assert.isTrue(triggered);
+        },
+        teardown: function(selections) {
+            selections.transition.restore();
+            selections.duration.restore();
+        }
+    },
 
-        'normal': {
-            'transition should not be activated with 0 duration': function(selections) {
-                dc.transition(selections, {transitionDuration: function() {
-                    return 0;
-                }});
-                assert.isFalse(selections.transition.called);
-                assert.isFalse(selections.duration.called);
-            },
-            teardown: function(selections) {
-                selections.transition.restore();
-                selections.duration.restore();
-            }
+    'dc.transition skip': {
+        topic:function() {
+            var selections = {
+                transition:function() {
+                    return selections;
+                },
+                duration:function() {
+                    return selections;
+                }
+            };
+            sinon.spy(selections, "transition");
+            sinon.spy(selections, "duration");
+            return selections;
+        },
+        'transition should not be activated with 0 duration': function(selections) {
+            dc.transition(selections, {transitionDuration: function() {
+                return 0;
+            }});
+            assert.isFalse(selections.transition.called);
+            assert.isFalse(selections.duration.called);
+        },
+        'transition callback should not be triggered': function(selections) {
+            var triggered = false;
+            dc.transition(selections, {transitionDuration: function() {
+                return 0;
+            }}, function() {
+                triggered = true;
+            });
+            assert.isFalse(triggered);
+        },
+        teardown: function(selections) {
+            selections.transition.restore();
+            selections.duration.restore();
         }
     }
 });
