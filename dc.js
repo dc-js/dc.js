@@ -504,8 +504,12 @@ dc.barChart = function(selector) {
             .attr("height", 0);
     }
 
+    chart.axisXLength = function() {
+        return chart.width() - chart.margins().left - chart.margins().right;
+    }
+
     function finalBarWidth() {
-        var w = Math.floor((chart.width() - chart.margins().left - chart.margins().right) / xUnits(x.domain()[0], x.domain()[1]).length);
+        var w = Math.floor(chart.axisXLength() / xUnits(x.domain()[0], x.domain()[1]).length);
         if (isNaN(w) || w < MIN_BAR_WIDTH)
             w = MIN_BAR_WIDTH;
         return w;

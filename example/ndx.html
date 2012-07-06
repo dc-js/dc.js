@@ -17,7 +17,25 @@
 
 <h1>Nasdaq 100 Index 1985/11/01-2012/06/29</h1>
 
-<div id="bar-chart-volume" class="chart">
+<div id="gain-loss-chart" class="chart">
+    <span>Gain or Loss</span>
+    <a class="reset" href="javascript:gainOrLossChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+    <div class="clear"></div>
+</div>
+
+<div class="clear"></div>
+
+<div id="fluctuation-chart" class="chart">
+    <span>Fluctuation by Percentage</span>
+    <a class="reset" href="javascript:fluctuationChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+    <div class="clear"></div>
+</div>
+
+<div class="clear"></div>
+
+<div id="volume-month-chart" class="chart">
     <span>Trade Volume by Month</span>
     <a class="reset" href="javascript:volumeByMonthChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
@@ -25,9 +43,12 @@
 </div>
 
 <script type="text/javascript">
-    var volumeByMonthChart = dc.barChart("#bar-chart-volume");
+    var volumeByMonthChart = dc.barChart("#volume-month-chart");
+    var gainOrLossChart = dc.pieChart("#gain-loss-chart");
+    var fluctuationChart = dc.barChart("#fluctuation-chart");
 
     d3.csv("ndx.csv", function(data) {
+                var totalDay = data.length;
                 var dateFormat = d3.time.format("%m/%d/%Y");
                 data.forEach(function(e) {
                     e.month = d3.time.month(dateFormat.parse(e.date));
@@ -42,16 +63,28 @@
                     return d.volume;
                 });
 
-                console.log("done crossfiltering");
+                var gainOrLoss = ndx.dimension(function(d) {
+                    return d.open > d.close ? "Loss" : "Gain";
+                });
+                var gainOrLossCounts = gainOrLoss.group();
 
                 volumeByMonthChart.width(1100)
                         .height(250)
-                        .margins( {top: 10, right: 50, bottom: 30, left: 40})
+                        .margins({top: 10, right: 50, bottom: 30, left: 40})
                         .dimension(recordByMonth)
                         .group(volumeByMonth)
                         .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
                         .xUnits(d3.time.months)
                         .axisX();
+
+                gainOrLossChart.width(250)
+                        .height(250)
+                        .radius(100)
+                        .dimension(gainOrLoss)
+                        .group(gainOrLossCounts)
+                        .label(function(d){
+                            return d.data.key + "("+ Math.floor(d.data.value/totalDay*100) +"%)";
+                        });
 
                 dc.renderAll();
             }
