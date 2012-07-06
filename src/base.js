@@ -21,6 +21,10 @@ dc.baseChart = function(chart) {
         return chart;
     };
 
+    chart.orderedGroup = function(){
+        return _group.order(function(p){return p.key;});
+    }
+
     chart.filterAll = function() {
         return chart.filter(null);
     };

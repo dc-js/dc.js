@@ -169,6 +169,17 @@ suite.addBatch({
             teardown: function(pieChart) {
                 resetAllFilters();
             }
+        },
+        'group order': {
+            topic: function(chart){
+                return chart;
+            },
+            'group should be order': function(chart){
+                var group = chart.orderedGroup().top(Infinity);
+                countryDimension.filter("US");
+                var group2 = chart.orderedGroup().top(Infinity);
+                assert.equal(group2[0].key, group[0].key);
+            }
         }
     },
 
