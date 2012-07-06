@@ -15,7 +15,7 @@ dc.pieChart = function(selector) {
     var labels;
     var chart = dc.baseChart({});
 
-    chart.transitionDuration(500);
+    chart.transitionDuration(350);
 
     function calculateDataPie() {
         return d3.layout.pie().value(function(d) {

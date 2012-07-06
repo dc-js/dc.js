@@ -20,7 +20,6 @@ suite.addBatch({
                 .filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
                 .xUnits(d3.time.days);
             chart.render();
-            d3.timer.flush();
             return chart;
         },
         'we get something': function(chart) {

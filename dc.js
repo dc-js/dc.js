@@ -142,7 +142,7 @@ dc.baseChart = function(chart) {
     var labels;
     var chart = dc.baseChart({});
 
-    chart.transitionDuration(500);
+    chart.transitionDuration(350);
 
     function calculateDataPie() {
         return d3.layout.pie().value(function(d) {
@@ -335,6 +335,8 @@ dc.barChart = function(selector) {
     var filter;
     var brush = d3.svg.brush();
 
+    chart.transitionDuration(500);
+
     chart.render = function() {
         chart.resetSvg();
 
@@ -419,9 +421,8 @@ dc.barChart = function(selector) {
             .attr("y", xAxisY())
             .attr("width", function() {
                 return finalBarWidth();
-            })
-            .transition()
-            .duration(chart.transitionDuration())
+            });
+        dc.transition(bars, chart)
             .attr("y", function(d) {
                 return finalBarY(d);
             })
@@ -430,9 +431,7 @@ dc.barChart = function(selector) {
             });
 
         // update
-        bars
-            .transition()
-            .duration(chart.transitionDuration())
+        dc.transition(bars, chart)
             .attr("y", function(d) {
                 return finalBarY(d);
             })
@@ -441,9 +440,7 @@ dc.barChart = function(selector) {
             });
 
         // delete
-        bars.exit()
-            .transition()
-            .duration(chart.transitionDuration())
+        dc.transition(bars.exit(), chart)
             .attr("y", xAxisY())
             .attr("height", 0);
     }
