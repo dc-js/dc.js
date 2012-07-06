@@ -89,7 +89,7 @@ dc.pieChart = function(selector) {
             .duration(chart.transitionDuration())
             .attrTween("d", tweenPie);
 
-        registerSliceOnClick(slicePaths);
+        slicePaths.on("click", onClick);
 
         return slices;
     };
@@ -98,6 +98,8 @@ dc.pieChart = function(selector) {
         labels = slices.append("text");
 
         redrawLabels(arc);
+
+        labels.on("click", onClick);
     };
 
     chart.hasFilter = function() {
@@ -149,13 +151,13 @@ dc.pieChart = function(selector) {
     };
 
     chart.redraw = function() {
+        chart.highlightFilter();
         var data = dataPie(chart.orderedGroup().top(Infinity));
         slicePaths = slicePaths.data(data);
         labels = labels.data(data);
         dc.transition(slicePaths, chart.transitionDuration(), function(s) {
             s.attrTween("d", tweenPie);
         });
-        chart.highlightFilter();
         redrawLabels(arc);
         return chart;
     }
@@ -203,12 +205,9 @@ dc.pieChart = function(selector) {
         return current == null || isNaN(current.startAngle) || isNaN(current.endAngle);
     }
 
-    function registerSliceOnClick(paths) {
-        paths.on("click", function(d) {
-            chart.filter(d.data.key);
+    function onClick(d){
+         chart.filter(d.data.key);
             dc.redrawAll();
-        });
-        return paths;
     }
 
     dc.registerChart(chart);

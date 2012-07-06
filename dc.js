@@ -232,7 +232,7 @@ dc.baseChart = function(chart) {
             .duration(chart.transitionDuration())
             .attrTween("d", tweenPie);
 
-        registerSliceOnClick(slicePaths);
+        slicePaths.on("click", onClick);
 
         return slices;
     };
@@ -241,6 +241,8 @@ dc.baseChart = function(chart) {
         labels = slices.append("text");
 
         redrawLabels(arc);
+
+        labels.on("click", onClick);
     };
 
     chart.hasFilter = function() {
@@ -292,13 +294,13 @@ dc.baseChart = function(chart) {
     };
 
     chart.redraw = function() {
+        chart.highlightFilter();
         var data = dataPie(chart.orderedGroup().top(Infinity));
         slicePaths = slicePaths.data(data);
         labels = labels.data(data);
         dc.transition(slicePaths, chart.transitionDuration(), function(s) {
             s.attrTween("d", tweenPie);
         });
-        chart.highlightFilter();
         redrawLabels(arc);
         return chart;
     }
@@ -346,12 +348,9 @@ dc.baseChart = function(chart) {
         return current == null || isNaN(current.startAngle) || isNaN(current.endAngle);
     }
 
-    function registerSliceOnClick(paths) {
-        paths.on("click", function(d) {
-            chart.filter(d.data.key);
+    function onClick(d){
+         chart.filter(d.data.key);
             dc.redrawAll();
-        });
-        return paths;
     }
 
     dc.registerChart(chart);
