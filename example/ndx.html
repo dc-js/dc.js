@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Nasdaq 100 Index</title>
+
+    <script type="text/javascript" src="../node_modules/jquery/tmp/jquery.js"></script>
+    <script type="text/javascript" src="../node_modules/d3/d3.v2.js"></script>
+    <script type="text/javascript" src="../node_modules/crossfilter/crossfilter.js"></script>
+
+    <script type="text/javascript" src="../dc.js"></script>
+    <script type="text/javascript" src="env-data.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="dc.css"/>
+</head>
+<body>
+
+<div id="bar-chart-date3" class="chart">
+    <span>Date BarChart (10 years)</span>
+    <a class="reset" href="javascript:barChart3.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+    <div class="clear"></div>
+</div>
+
+<script type="text/javascript">
+    var pieChart1 = dc.pieChart("#pie-chart-value")
+            .width(250)
+            .height(250)
+            .radius(100)
+            .innerRadius(40)
+            .dimension(valueDimension)
+            .group(valueGroup);
+
+    var pieChart2 = dc.pieChart("#pie-chart-country")
+            .width(250)
+            .height(250)
+            .radius(100)
+            .dimension(countryDimension)
+            .group(countryGroup);
+
+    var barChart1 = dc.barChart("#bar-chart-date");
+    barChart1.width(500)
+            .height(150)
+            .dimension(dateDimension)
+            .group(dateGroup)
+            .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
+            .xUnits(d3.time.days)
+            .filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
+            .axisX().ticks(5);
+
+    var barChart2 = dc.barChart("#bar-chart-date2");
+    barChart2.width(500)
+            .height(150)
+            .dimension(dateDimension)
+            .group(dateGroup)
+            .x(d3.time.scale().domain([new Date(2012, 0, 1), new Date(2012, 11, 30)]))
+            .xUnits(d3.time.days)
+            .axisX().ticks(5);
+
+    var barChart3 = dc.barChart("#bar-chart-date3");
+    barChart3.width(500)
+            .height(150)
+            .dimension(dateDimension)
+            .group(dateGroup)
+            .x(d3.time.scale().domain([new Date(2002, 0, 1), new Date(2012, 11, 30)]))
+            .xUnits(d3.time.days)
+            .axisX().ticks(5);
+
+    dc.renderAll();
+</script>
+
+<div class="clear"></div>
+
+<div>
+    <a href="javascript:dc.renderAll();">Render All</a>
+    <a href="javascript:dc.filterAll(); dc.renderAll();">Filter All</a>
+</div>
+
+</body>
+</html>

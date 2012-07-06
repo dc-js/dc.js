@@ -1,0 +1,46 @@
+.chart {
+    float: left;
+}
+
+.chart .bar {
+    stroke: none;
+    fill: steelblue;
+}
+
+.chart .deselected {
+    stroke: none;
+    fill: #ccc;
+}
+
+.clear {
+    clear: both;
+}
+
+.pie-slice {
+    fill: white;
+    font-size: 12px;
+}
+
+.axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font: 10px sans-serif;
+}
+
+.brush rect.background {
+    z-index: -999;
+}
+
+.brush rect.extent {
+    fill: steelblue;
+    fill-opacity: .125;
+}
+
+.brush .resize path {
+    fill: #eee;
+    stroke: #666;
+}
