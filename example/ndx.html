@@ -9,7 +9,6 @@
     <script type="text/javascript" src="../node_modules/crossfilter/crossfilter.js"></script>
 
     <script type="text/javascript" src="../dc.js"></script>
-    <script type="text/javascript" src="env-data.js"></script>
 
     <link rel="stylesheet" type="text/css" href="dc.css"/>
 </head>
@@ -71,14 +70,6 @@
                 });
                 var fluctuationGroup = fluctuation.group();
 
-                volumeByMonthChart.width(1100)
-                        .height(250)
-                        .margins({top: 10, right: 50, bottom: 30, left: 40})
-                        .dimension(volumeByMonth)
-                        .group(volumeByMonthGroup)
-                        .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
-                        .xUnits(d3.time.months);
-
                 gainOrLossChart.width(250)
                         .height(250)
                         .radius(100)
@@ -92,7 +83,15 @@
                         .height(200)
                         .dimension(fluctuation)
                         .group(fluctuationGroup)
-                        .x(d3.scale.ordinal().domain([0, 10]));
+                        .x(d3.scale.linear().domain([0, 10]));
+
+                volumeByMonthChart.width(1100)
+                        .height(250)
+                        .margins({top: 10, right: 50, bottom: 30, left: 40})
+                        .dimension(volumeByMonth)
+                        .group(volumeByMonthGroup)
+                        .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
+                        .xUnits(d3.time.months);
 
                 dc.renderAll();
             }
