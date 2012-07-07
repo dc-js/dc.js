@@ -185,7 +185,7 @@ dc.barChart = function(selector) {
     }
 
     function maxY() {
-        return chart.group().top(1)[0].value;
+        return chart.group().orderNatural().top(1)[0].value;
     }
 
     function yAxisHeight() {

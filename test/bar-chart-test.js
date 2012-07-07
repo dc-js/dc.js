@@ -9,7 +9,7 @@ var width = 1100;
 var height = 200;
 
 suite.addBatch({
-    'bar chart': {
+    'time line bar chart': {
         topic: function() {
             d3.select("body").append("div").attr("id", "bar-chart");
             var chart = dc.barChart("#bar-chart");
@@ -162,8 +162,9 @@ suite.addBatch({
             }
         },
 
-        'extra large externally filtered chart': {
+        'extra large externally filtered bar chart': {
             topic: function() {
+                resetAllFilters();
                 valueDimension.filter(66);
                 d3.select("body").append("div").attr("id", "bar-chart2");
                 var chart = dc.barChart("#bar-chart2");
@@ -183,10 +184,35 @@ suite.addBatch({
                 chart.selectAll("svg g rect.bar").each(function(d) {
                     assert.equal(d3.select(this).attr('class'), "bar");
                 });
-            },
-            teardown: function(topic) {
-                resetAllFilters();
             }
+        },
+
+        'linear number bar chart': {
+            topic: function() {
+                resetAllFilters();
+                d3.select("body").append("div").attr("id", "bar-chart3");
+                var chart = dc.barChart("#bar-chart3");
+                chart.dimension(valueDimension).group(valueGroup)
+                    .width(400).height(150)
+                    .x(d3.scale.linear().domain([10,80]))
+                    .transitionDuration(0);
+                chart.render();
+                return chart;
+            },
+
+            'y axis height should be based on max': function(chart) {
+                var hasRightScale = false;
+                chart.select("g.y").selectAll("g").each(function(d, i) {
+                    console.log(d3.select(this).select("text").text());
+                    if (d3.select(this).select("text").text() == "3.0")
+                        hasRightScale = true;
+                });
+                assert.isTrue(hasRightScale);
+            }
+        },
+
+        teardown: function(topic) {
+            resetAllFilters();
         }
     }
 });
