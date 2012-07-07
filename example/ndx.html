@@ -45,13 +45,13 @@
     var fluctuationChart = dc.barChart("#fluctuation-chart");
 
     d3.csv("ndx.csv", function(data) {
-                var totalDay = data.length;
                 var dateFormat = d3.time.format("%m/%d/%Y");
                 data.forEach(function(e) {
                     e.month = d3.time.month(dateFormat.parse(e.date));
                 });
 
                 var ndx = crossfilter(data);
+                var all = ndx.groupAll();
 
                 var volumeByMonth = ndx.dimension(function(d) {
                     return d.month;
@@ -76,13 +76,14 @@
                         .dimension(gainOrLoss)
                         .group(gainOrLossGroup)
                         .label(function(d){
-                            return d.data.key + "("+ Math.floor(d.data.value/totalDay*100) +"%)";
+                            return d.data.key + "("+ Math.floor(d.data.value/all.value()*100) +"%)";
                         });
 
                 fluctuationChart.width(400)
                         .height(200)
                         .dimension(fluctuation)
                         .group(fluctuationGroup)
+                        .round(dc.round.floor)
                         .x(d3.scale.linear().domain([0, 10]));
 
                 volumeByMonthChart.width(1100)
@@ -91,6 +92,7 @@
                         .dimension(volumeByMonth)
                         .group(volumeByMonthGroup)
                         .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
+                        .round(d3.time.month.round)
                         .xUnits(d3.time.months);
 
                 dc.renderAll();

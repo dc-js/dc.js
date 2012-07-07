@@ -34,14 +34,14 @@ dc.redrawAll = function() {
 };
 
 dc.transition = function(selections, duration, callback) {
-    if(duration <= 0)
+    if (duration <= 0)
         return selections;
 
     var s = selections
         .transition()
         .duration(duration);
 
-    if(callback instanceof Function){
+    if (callback instanceof Function) {
         callback(s);
     }
 
@@ -50,6 +50,12 @@ dc.transition = function(selections, duration, callback) {
 
 dc.units = {};
 
-dc.units.integers = function(s, e){
+dc.units.integers = function(s, e) {
     return new Array(e - s);
+};
+
+dc.round = {};
+
+dc.round.floor = function(n) {
+    return Math.floor(n);
 };

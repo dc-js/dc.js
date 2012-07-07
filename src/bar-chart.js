@@ -81,6 +81,7 @@ dc.barChart = function(selector) {
     function brushing(p) {
         var extent = brush.extent();
         if (round) {
+            extent[0] = extent.map(round)[0];
             extent[1] = extent.map(round)[1];
             g.select(".brush")
                 .call(brush.extent(extent));
@@ -176,7 +177,7 @@ dc.barChart = function(selector) {
             var end = brush.extent()[1];
 
             bars.classed("deselected", function(d) {
-                return d.key <= start || d.key >= end;
+                return d.key < start || d.key >= end;
             });
         } else {
             bars.classed("deselected", false);

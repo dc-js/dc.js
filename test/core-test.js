@@ -115,6 +115,17 @@ suite.addBatch({
                 assert.equal(units.length, 100);
             }
         }
+    },
+
+    'dc.round':{
+        '.floor': {
+            topic: function() {
+                return dc.round.floor(0.33);
+            },
+            'should floored number': function(result) {
+                assert.equal(result, 0);
+            }
+        }
     }
 });
 
