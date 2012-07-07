@@ -11,7 +11,7 @@ dc.barChart = function(selector) {
     var y = d3.scale.linear().range([100, 0]);
     var axisX = d3.svg.axis();
     var axisY = d3.svg.axis();
-    var xUnits;
+    var xUnits = dc.units.integers;
 
     var g;
     var bars;
@@ -28,7 +28,7 @@ dc.barChart = function(selector) {
             g = chart.generateSvg().append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-            x.rangeRound([0, (chart.width() - margin.left - margin.right)]);
+            x.range([0, (chart.width() - margin.left - margin.right)]);
             y.domain([0, maxY()]).rangeRound([yAxisHeight(), 0]);
 
             redrawBars();

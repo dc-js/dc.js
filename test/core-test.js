@@ -104,6 +104,17 @@ suite.addBatch({
             selections.transition.restore();
             selections.duration.restore();
         }
+    },
+
+    'dc.units':{
+        '.integers': {
+            topic: function() {
+                return dc.units.integers(0, 100);
+            },
+            'units should be based on subtraction': function(units) {
+                assert.equal(units, 100);
+            }
+        }
     }
 });
 

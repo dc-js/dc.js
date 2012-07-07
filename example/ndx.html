@@ -24,8 +24,6 @@
     <div class="clear"></div>
 </div>
 
-<div class="clear"></div>
-
 <div id="fluctuation-chart" class="chart">
     <span>Fluctuation by Percentage</span>
     <a class="reset" href="javascript:fluctuationChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -56,35 +54,45 @@
 
                 var ndx = crossfilter(data);
 
-                var recordByMonth = ndx.dimension(function(d) {
+                var volumeByMonth = ndx.dimension(function(d) {
                     return d.month;
                 });
-                var volumeByMonth = recordByMonth.group().reduceSum(function(d) {
+                var volumeByMonthGroup = volumeByMonth.group().reduceSum(function(d) {
                     return d.volume;
                 });
 
                 var gainOrLoss = ndx.dimension(function(d) {
                     return d.open > d.close ? "Loss" : "Gain";
                 });
-                var gainOrLossCounts = gainOrLoss.group();
+                var gainOrLossGroup = gainOrLoss.group();
+
+                var fluctuation = ndx.dimension(function(d){
+                    return Math.floor((d.high - d.low) / d.open * 100);
+                });
+                var fluctuationGroup = fluctuation.group();
 
                 volumeByMonthChart.width(1100)
                         .height(250)
                         .margins({top: 10, right: 50, bottom: 30, left: 40})
-                        .dimension(recordByMonth)
-                        .group(volumeByMonth)
+                        .dimension(volumeByMonth)
+                        .group(volumeByMonthGroup)
                         .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
-                        .xUnits(d3.time.months)
-                        .axisX();
+                        .xUnits(d3.time.months);
 
                 gainOrLossChart.width(250)
                         .height(250)
                         .radius(100)
                         .dimension(gainOrLoss)
-                        .group(gainOrLossCounts)
+                        .group(gainOrLossGroup)
                         .label(function(d){
                             return d.data.key + "("+ Math.floor(d.data.value/totalDay*100) +"%)";
                         });
+
+                fluctuationChart.width(400)
+                        .height(200)
+                        .dimension(fluctuation)
+                        .group(fluctuationGroup)
+                        .x(d3.scale.ordinal().domain([0, 10]));
 
                 dc.renderAll();
             }

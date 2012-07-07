@@ -47,3 +47,9 @@ dc.transition = function(selections, duration, callback) {
 
     return s;
 };
+
+dc.units = {};
+
+dc.units.integers = function(s, e){
+    return e - s;
+};
