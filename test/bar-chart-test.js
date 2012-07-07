@@ -92,7 +92,7 @@ suite.addBatch({
         'bar height should be set correctly': function(chart) {
             chart.selectAll("svg g rect.bar").each(function(d) {
                 assert.equal(d3.select(this).attr('height'),
-                    chart.height() - chart.margins().top - chart.margins().bottom - chart.y()(d.value));
+                    chart.height() - chart.margins().top - chart.margins().bottom - chart.y()(d.value) - 1);
             });
         },
         'bar width should be set correctly': function(chart) {
@@ -195,19 +195,30 @@ suite.addBatch({
                 chart.dimension(valueDimension).group(valueGroup)
                     .width(400).height(150)
                     .x(d3.scale.linear().domain([10,80]))
+                    .elasticAxisY(true)
                     .transitionDuration(0);
                 chart.render();
                 return chart;
             },
 
             'y axis height should be based on max': function(chart) {
-                var hasRightScale = false;
+                var scaleToThree = false;
                 chart.select("g.y").selectAll("g").each(function(d, i) {
-                    console.log(d3.select(this).select("text").text());
                     if (d3.select(this).select("text").text() == "3.0")
-                        hasRightScale = true;
+                        scaleToThree = true;
                 });
-                assert.isTrue(hasRightScale);
+                assert.isTrue(scaleToThree);
+            },
+
+            'y axis should be rescaled when filter applied': function(chart){
+                var scaleToThree = false;
+                countryDimension.filter("CA");
+                chart.redraw();
+                chart.select("g.y").selectAll("g").each(function(d, i) {
+                    if (d3.select(this).select("text").text() == "3.0")
+                        scaleToThree = true;
+                });
+                assert.isFalse(scaleToThree);
             }
         },
 

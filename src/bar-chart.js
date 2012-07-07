@@ -2,6 +2,7 @@ dc.barChart = function(selector) {
 
     var DEFAULT_Y_AXIS_TICKS = 5;
     var MIN_BAR_WIDTH = 1;
+    var BAR_PADDING_BOTTOM = 1;
 
     var chart = dc.baseChart({});
 
@@ -11,6 +12,7 @@ dc.barChart = function(selector) {
     var y = d3.scale.linear().range([100, 0]);
     var axisX = d3.svg.axis();
     var axisY = d3.svg.axis();
+    var elasticAxisY = false;
     var xUnits = dc.units.integers;
 
     var g;
@@ -28,13 +30,11 @@ dc.barChart = function(selector) {
             g = chart.generateSvg().append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-            x.range([0, (chart.width() - margin.left - margin.right)]);
-            y.domain([0, maxY()]).rangeRound([yAxisHeight(), 0]);
+            renderAxisX();
+
+            renderAxisY();
 
             redrawBars();
-
-            renderAxisX();
-            renderAxisY();
 
             renderBrush();
         }
@@ -43,6 +43,8 @@ dc.barChart = function(selector) {
     };
 
     function renderAxisX() {
+        g.select("g.x").remove();
+        x.range([0, (chart.width() - margin.left - margin.right)]);
         axisX = axisX.scale(x).orient("bottom");
         g.append("g")
             .attr("class", "axis x")
@@ -51,6 +53,8 @@ dc.barChart = function(selector) {
     }
 
     function renderAxisY() {
+        g.select("g.y").remove();
+        y.domain([0, maxY()]).rangeRound([yAxisHeight(), 0]);
         axisY = axisY.scale(y).orient("left").ticks(DEFAULT_Y_AXIS_TICKS);
         g.append("g")
             .attr("class", "axis y")
@@ -96,6 +100,8 @@ dc.barChart = function(selector) {
     chart.redraw = function() {
         redrawBars();
         redrawBrush();
+        if(elasticAxisY)
+            renderAxisY();
         return chart;
     };
 
@@ -157,7 +163,7 @@ dc.barChart = function(selector) {
     }
 
     function finalBarHeight(d) {
-        return yAxisHeight() - y(d.value);
+        return yAxisHeight() - y(d.value) - BAR_PADDING_BOTTOM;
     }
 
     function redrawBrush() {
@@ -267,6 +273,12 @@ dc.barChart = function(selector) {
         round = _;
         return chart;
     };
+
+    chart.elasticAxisY = function(_){
+        if(!arguments.length) return elasticAxisY;
+        elasticAxisY = _;
+        return chart;
+    }
 
     dc.registerChart(chart);
 

@@ -17,7 +17,7 @@
 <h1>Nasdaq 100 Index 1985/11/01-2012/06/29</h1>
 
 <div id="gain-loss-chart" class="chart">
-    <span>Gain or Loss</span>
+    <span>Gain or Loss by Day</span>
     <a class="reset" href="javascript:gainOrLossChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
@@ -80,11 +80,12 @@
                         });
 
                 fluctuationChart.width(400)
-                        .height(200)
+                        .height(250)
                         .dimension(fluctuation)
                         .group(fluctuationGroup)
+                        .elasticAxisY(true)
                         .round(dc.round.floor)
-                        .x(d3.scale.linear().domain([0, 10]));
+                        .x(d3.scale.linear().domain([0, 25]));
 
                 volumeByMonthChart.width(1100)
                         .height(250)
