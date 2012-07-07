@@ -97,18 +97,27 @@
                     else
                         return "Q4";
                 });
-                var quarterGroup = quarter.group();
+                var quarterGroup = quarter.group().reduceSum(function(d) {
+                    return d.volume;
+                });
 
                 var dayOfWeek = ndx.dimension(function(d) {
                     var day = d.dd.getDay();
-                    switch(day){
-                        case 0: return "Sun";
-                        case 1: return "Mon";
-                        case 2: return "Tue";
-                        case 3: return "Wed";
-                        case 4: return "Thu";
-                        case 5: return "Fri";
-                        case 6: return "Sat";
+                    switch (day) {
+                        case 0:
+                            return "Sun";
+                        case 1:
+                            return "Mon";
+                        case 2:
+                            return "Tue";
+                        case 3:
+                            return "Wed";
+                        case 4:
+                            return "Thu";
+                        case 5:
+                            return "Fri";
+                        case 6:
+                            return "Sat";
                     }
                 });
                 var dayOfWeekGroup = dayOfWeek.group();
@@ -128,9 +137,9 @@
                         .dimension(quarter)
                         .group(quarterGroup);
 
-                 dayOfWeekChart.width(230)
+                dayOfWeekChart.width(230)
                         .height(230)
-                         .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+                        .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
                         .radius(100)
                         .dimension(dayOfWeek)
                         .group(dayOfWeekGroup);
