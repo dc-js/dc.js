@@ -1,3 +1,12 @@
+body {
+    font-size: small;
+    font-family:Lucida;
+}
+
+a{
+    color: #3182bd;
+}
+
 .chart {
     float: left;
 }

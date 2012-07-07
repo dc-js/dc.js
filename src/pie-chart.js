@@ -50,7 +50,7 @@ dc.pieChart = function(selector) {
 
     chart.colors = function(c) {
         if (!arguments.length) return colors;
-        colors = c;
+        colors = d3.scale.ordinal().range(c);
         return chart;
     };
 

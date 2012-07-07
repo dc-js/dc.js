@@ -205,7 +205,7 @@ dc.baseChart = function(chart) {
 
     chart.colors = function(c) {
         if (!arguments.length) return colors;
-        colors = c;
+        colors = d3.scale.ordinal().range(c);
         return chart;
     };
 
