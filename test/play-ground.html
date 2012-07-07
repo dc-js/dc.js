@@ -1,0 +1,171 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>dc.js</title>
+
+    <script type="text/javascript" src="../node_modules/jquery/tmp/jquery.js"></script>
+    <script type="text/javascript" src="../node_modules/d3/d3.v2.js"></script>
+    <script type="text/javascript" src="../node_modules/crossfilter/crossfilter.js"></script>
+
+    <script type="text/javascript" src="../dc.js"></script>
+    <script type="text/javascript" src="env-data.js"></script>
+
+    <style type="text/css">
+        .chart {
+            float: left;
+        }
+
+        .chart .bar {
+            stroke: none;
+            fill: steelblue;
+        }
+
+        .chart .deselected {
+            stroke: none;
+            fill: #ccc;
+        }
+
+        .clear {
+            clear: both;
+        }
+
+        .pie-slice {
+            fill: white;
+            font-size: 12px;
+        }
+
+        .axis path, .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+
+        .axis text {
+            font: 10px sans-serif;
+        }
+
+        .brush rect.background {
+            z-index: -999;
+        }
+
+        .brush rect.extent {
+            fill: steelblue;
+            fill-opacity: .125;
+        }
+
+        .brush .resize path {
+            fill: #eee;
+            stroke: #666;
+        }
+    </style>
+</head>
+<body>
+
+<div id="pie-chart-value" class="chart">
+    <span>Value DonutChart</span>
+    <a class="reset" href="javascript:pieChartValue.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+    <div class="clear"></div>
+</div>
+
+<div id="pie-chart-country" class="chart">
+    <span>Country PieChart</span>
+    <a class="reset" href="javascript:pieChartCountry.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+    <div class="clear"></div>
+</div>
+
+<div id="bar-chart-value" class="chart">
+    <span>Value BarChart</span>
+    <a class="reset" href="javascript:barChartValue.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+    <div class="clear"></div>
+</div>
+
+<div class="clear"></div>
+
+<div id="bar-chart-date" class="chart">
+    <span>Date BarChart (3 months)</span>
+    <a class="reset" href="javascript:barChartDate1.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+    <div class="clear"></div>
+</div>
+
+<div id="bar-chart-date2" class="chart">
+    <span>Date BarChart (1 year)</span>
+    <a class="reset" href="javascript:barChartDate2.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+    <div class="clear"></div>
+</div>
+
+<div id="bar-chart-date3" class="chart">
+    <span>Date BarChart (10 years)</span>
+    <a class="reset" href="javascript:barChartDate3.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+    <div class="clear"></div>
+</div>
+
+<script type="text/javascript">
+    var pieChartValue = dc.pieChart("#pie-chart-value")
+            .width(250)
+            .height(250)
+            .radius(100)
+            .innerRadius(40)
+            .dimension(valueDimension)
+            .group(valueGroup);
+
+    var pieChartCountry = dc.pieChart("#pie-chart-country")
+            .width(250)
+            .height(250)
+            .radius(100)
+            .dimension(countryDimension)
+            .group(countryGroup);
+
+    var barChartValue = dc.barChart("#bar-chart-value");
+    barChartValue.width(400)
+            .height(150)
+            .dimension(valueDimension)
+            .group(valueGroup)
+            .x(d3.scale.linear().domain([10,80]));
+
+    var barChartDate1 = dc.barChart("#bar-chart-date");
+    barChartDate1.width(500)
+            .height(150)
+            .dimension(dateDimension)
+            .group(dateGroup)
+            .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
+            .xUnits(d3.time.days)
+            .filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
+            .axisX().ticks(5);
+
+    var barChartDate2 = dc.barChart("#bar-chart-date2");
+    barChartDate2.width(500)
+            .height(150)
+            .dimension(dateDimension)
+            .group(dateGroup)
+            .x(d3.time.scale().domain([new Date(2012, 0, 1), new Date(2012, 11, 30)]))
+            .xUnits(d3.time.days)
+            .axisX().ticks(5);
+
+    var barChartDate3 = dc.barChart("#bar-chart-date3");
+    barChartDate3.width(500)
+            .height(150)
+            .dimension(dateDimension)
+            .group(dateGroup)
+            .x(d3.time.scale().domain([new Date(2002, 0, 1), new Date(2012, 11, 30)]))
+            .xUnits(d3.time.days)
+            .axisX().ticks(5);
+
+    dc.renderAll();
+</script>
+
+<div class="clear"></div>
+
+<div>
+    <a href="javascript:dc.renderAll();">Render All</a>
+    <a href="javascript:dc.filterAll(); dc.renderAll();">Filter All</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Nasdaq 100 Index</title>
+
+    <script type="text/javascript" src="../node_modules/jquery/tmp/jquery.js"></script>
+    <script type="text/javascript" src="../node_modules/d3/d3.v2.js"></script>
+    <script type="text/javascript" src="../node_modules/crossfilter/crossfilter.js"></script>
+
+    <script type="text/javascript" src="../dc.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="dc.css"/>
+</head>
+<body>
+
+<h1>Nasdaq 100 Index 1985/11/01-2012/06/29</h1>
+
+<div id="gain-loss-chart" class="chart">
+    <span>Gain or Loss by Day</span>
+    <a class="reset" href="javascript:gainOrLossChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+    <div class="clear"></div>
+</div>
+
+<div id="quarter-chart" class="chart">
+    <span>Quarters</span>
+    <a class="reset" href="javascript:quarterChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+    <div class="clear"></div>
+</div>
+
+<div id="day-of-week-chart" class="chart">
+    <span>Day of Week</span>
+    <a class="reset" href="javascript:dayOfWeekChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+    <div class="clear"></div>
+</div>
+
+<div id="fluctuation-chart" class="chart">
+    <span>Fluctuation by Percentage</span>
+    <a class="reset" href="javascript:fluctuationChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+    <div class="clear"></div>
+</div>
+
+<div class="clear"></div>
+
+<div id="volume-month-chart" class="chart">
+    <span>Trade Volume by Month</span>
+    <a class="reset" href="javascript:volumeByMonthChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+    <div class="clear"></div>
+</div>
+
+<script type="text/javascript">
+    var volumeByMonthChart = dc.barChart("#volume-month-chart");
+    var gainOrLossChart = dc.pieChart("#gain-loss-chart");
+    var fluctuationChart = dc.barChart("#fluctuation-chart");
+    var quarterChart = dc.pieChart("#quarter-chart");
+    var dayOfWeekChart = dc.pieChart("#day-of-week-chart");
+
+    d3.csv("ndx.csv", function(data) {
+                var dateFormat = d3.time.format("%m/%d/%Y");
+                data.forEach(function(e) {
+                    e.dd = dateFormat.parse(e.date);
+                });
+
+                var ndx = crossfilter(data);
+                var all = ndx.groupAll();
+
+                var volumeByMonth = ndx.dimension(function(d) {
+                    return d3.time.month(d.dd);
+                });
+                var volumeByMonthGroup = volumeByMonth.group().reduceSum(function(d) {
+                    return d.volume;
+                });
+
+                var gainOrLoss = ndx.dimension(function(d) {
+                    return d.open > d.close ? "Loss" : "Gain";
+                });
+                var gainOrLossGroup = gainOrLoss.group();
+
+                var fluctuation = ndx.dimension(function(d) {
+                    return Math.floor((d.high - d.low) / d.open * 100);
+                });
+                var fluctuationGroup = fluctuation.group();
+
+                var quarter = ndx.dimension(function(d) {
+                    var month = d.dd.getMonth();
+                    if (month <= 3)
+                        return "Q1";
+                    else if (month > 3 && month <= 5)
+                        return "Q2";
+                    else if (month > 5 && month <= 7)
+                        return "Q3";
+                    else
+                        return "Q4";
+                });
+                var quarterGroup = quarter.group();
+
+                var dayOfWeek = ndx.dimension(function(d) {
+                    var day = d.dd.getDay();
+                    switch(day){
+                        case 0: return "Sun";
+                        case 1: return "Mon";
+                        case 2: return "Tue";
+                        case 3: return "Wed";
+                        case 4: return "Thu";
+                        case 5: return "Fri";
+                        case 6: return "Sat";
+                    }
+                });
+                var dayOfWeekGroup = dayOfWeek.group();
+
+                gainOrLossChart.width(230)
+                        .height(230)
+                        .radius(100)
+                        .dimension(gainOrLoss)
+                        .group(gainOrLossGroup)
+                        .label(function(d) {
+                            return d.data.key + "(" + Math.floor(d.data.value / all.value() * 100) + "%)";
+                        });
+
+                quarterChart.width(230)
+                        .height(230)
+                        .radius(100)
+                        .dimension(quarter)
+                        .group(quarterGroup);
+
+                 dayOfWeekChart.width(230)
+                        .height(230)
+                         .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+                        .radius(100)
+                        .dimension(dayOfWeek)
+                        .group(dayOfWeekGroup);
+
+                fluctuationChart.width(400)
+                        .height(230)
+                        .dimension(fluctuation)
+                        .group(fluctuationGroup)
+                        .elasticAxisY(true)
+                        .round(dc.round.floor)
+                        .x(d3.scale.linear().domain([0, 25]));
+
+                volumeByMonthChart.width(1100)
+                        .height(250)
+                        .margins({top: 10, right: 50, bottom: 30, left: 40})
+                        .dimension(volumeByMonth)
+                        .group(volumeByMonthGroup)
+                        .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
+                        .round(d3.time.month.round)
+                        .xUnits(d3.time.months);
+
+                dc.renderAll();
+            }
+    );
+</script>
+
+<div class="clear"></div>
+
+<div>
+    <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
+</div>
+
+</body>
+</html>
