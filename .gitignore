@@ -1,9 +1,0 @@
-# tmp files
-*.log
-
-# local files
-node_modules
-
-# ide files
-*.iml
-.idea
