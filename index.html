@@ -40,6 +40,10 @@
         invest? Can you find the outliers? When did the outliers occur?
     </p>
 
+    <p>
+        Try it out; select a slice or drag your mouse over a bar chart.
+    </p>
+
     <h2>Nasdaq 100 Index 1985/11/01-2012/06/29</h2>
 
     <div id="gain-loss-chart" class="chart">
@@ -64,7 +68,7 @@
     </div>
 
     <div id="fluctuation-chart" class="chart">
-        <span>Fluctuation by Percentage</span>
+        <span>Fluctuation(%) grouped by Day</span>
         <a class="reset" href="javascript:fluctuationChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
         <div class="clear"></div>
@@ -109,7 +113,7 @@
                     var gainOrLossGroup = gainOrLoss.group();
 
                     var fluctuation = ndx.dimension(function(d) {
-                        return Math.floor((d.high - d.low) / d.open * 100);
+                        return Math.floor((d.close - d.open) / d.open * 100);
                     });
                     var fluctuationGroup = fluctuation.group();
 
@@ -177,7 +181,7 @@
                             .group(fluctuationGroup)
                             .elasticAxisY(true)
                             .round(dc.round.floor)
-                            .x(d3.scale.linear().domain([0, 25]));
+                            .x(d3.scale.linear().domain([-25, 25]));
 
                     volumeByMonthChart.width(990)
                             .height(250)
