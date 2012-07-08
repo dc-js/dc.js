@@ -58,6 +58,22 @@
             fill: #eee;
             stroke: #666;
         }
+
+        #data-table {
+            margin-top: 25px;
+            margin-bottom: 25px;
+            width: 80%;
+        }
+
+        #data-table .header {
+            font-weight: bold;
+        }
+
+        #data-table .column {
+            display: inline-block;
+            width: 200px;
+            text-align: left;
+        }
     </style>
 </head>
 <body>
@@ -112,6 +128,15 @@
     <span class="filter-count"></span> selected out of <span class="total-count"></span>
 </div>
 
+<div id="data-table">
+    <div class="header row">
+        <span class="column 0">ID</span>
+        <span class="column 1">Date</span>
+        <span class="column 2">Country</span>
+        <span class="column 3">Value</span>
+    </div>
+</div>
+
 <script type="text/javascript">
     var pieChartValue = dc.pieChart("#pie-chart-value")
             .width(250)
@@ -164,8 +189,27 @@
             .axisX().ticks(5);
 
     dc.dataCount("#data-count")
-        .dimension(data)
-        .group(groupAll);
+            .dimension(data)
+            .group(groupAll);
+
+    dc.dataTable("#data-table")
+            .dimension(dateDimension)
+            .group(dateGroup)
+            .size(10)
+            .columns([
+        function(d) {
+            return d.id;
+        },
+        function(d) {
+            return d.date;
+        },
+        function(d) {
+            return d.countrycode;
+        },
+        function(d) {
+            return d.value;
+        }
+    ]);
 
     dc.renderAll();
 </script>
