@@ -23,11 +23,18 @@ suite.addBatch({
         'should be registered':function(chart) {
             assert.isTrue(dc.hasChart(chart));
         },
+        'size should be set':function(chart){
+            assert.equal(chart.size(), 3);
+        },
         'should have id column created':function(chart) {
-            assert.isFalse(chart.selectAll("span.0").empty());
+            assert.equal(chart.selectAll("span.0")[0][0].innerHTML, 9);
+            assert.equal(chart.selectAll("span.0")[0][1].innerHTML, 3);
+            assert.equal(chart.selectAll("span.0")[0][2].innerHTML, 8);
         },
         'should have status column created':function(chart) {
-            assert.isFalse(chart.selectAll("span.1").empty());
+            assert.equal(chart.selectAll("span.1")[0][0].innerHTML, "T");
+            assert.equal(chart.selectAll("span.1")[0][1].innerHTML, "T");
+            assert.equal(chart.selectAll("span.1")[0][2].innerHTML, "F");
         },
         'teardown': function() {
             resetAllFilters();
