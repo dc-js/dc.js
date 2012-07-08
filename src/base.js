@@ -5,7 +5,7 @@ dc.baseChart = function(chart) {
     var _anchor;
     var _root;
 
-    var width = 0, height = 0;
+    var width = 200, height = 200;
 
     var _transitionDuration = 750;
 

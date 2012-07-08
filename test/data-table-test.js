@@ -24,7 +24,7 @@ suite.addBatch({
             assert.isTrue(dc.hasChart(chart));
         },
         'should have id column created':function(chart) {
-            assert.isTrue(dc.hasChart(chart));
+            console.log(chart.selectAll("span"));
         },
         'teardown': function() {
             resetAllFilters();
