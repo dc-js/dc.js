@@ -25,6 +25,9 @@ suite.addBatch({
         'we get something': function(chart) {
             assert.isNotNull(chart);
         },
+        'should be registered':function(chart){
+            assert.isTrue(dc.hasChart(chart));
+        },
         'svg should be created': function(chart) {
             assert.isFalse(chart.select("svg").empty());
         },

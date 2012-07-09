@@ -28,6 +28,9 @@ suite.addBatch({
         'we get something': function(pieChart) {
             assert.isNotNull(pieChart);
         },
+        'should be registered':function(chart){
+            assert.isTrue(dc.hasChart(chart));
+        },
         'inner radius can be set': function(chart) {
             assert.equal(chart.innerRadius(), innerRadius);
         },

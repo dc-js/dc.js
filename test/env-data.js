@@ -12,6 +12,8 @@ json = jQuery.parseJSON("[" +
     "]");
 data = crossfilter(json);
 
+groupAll = data.groupAll();
+
 valueDimension = data.dimension(function(d) {
     return d.value;
 });

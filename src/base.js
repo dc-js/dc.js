@@ -91,5 +91,16 @@ dc.baseChart = function(chart) {
         return chart;
     }
 
+    // abstract function stub
+    chart.filter = function(f){
+        // do nothing in base, should be overridden by sub-function
+        return chart;
+    }
+
+    chart.render = function(){
+        // do nothing in base, should be overridden by sub-function
+        return chart;
+    }
+
     return chart;
 };
