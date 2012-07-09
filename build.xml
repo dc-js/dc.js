@@ -29,6 +29,7 @@
             <file file="src/pie-chart.js"/>
             <file file="src/bar-chart.js"/>
             <file file="src/data-count.js"/>
+            <file file="src/data-table.js"/>
         </concat>
         <echo>Compiling dc.min.js</echo>
         <exec executable="bash">
