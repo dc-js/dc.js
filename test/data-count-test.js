@@ -11,6 +11,7 @@ suite.addBatch({
             var div = d3.select("body").append("div").attr("id", "data-count");
             div.append("span").attr("class", "filter-count");
             div.append("span").attr("class", "total-count");
+            countryDimension.filter("CA");
             var chart = dc.dataCount("#data-count")
                 .dimension(data)
                 .group(groupAll);
@@ -25,6 +26,12 @@ suite.addBatch({
         },
         'should fill in the total count': function(chart) {
             assert.equal(chart.select("span.total-count").text(), "10");
+        },
+        'should fill in the total count': function(chart) {
+            assert.equal(chart.select("span.filter-count").text(), "2");
+        },
+        'teardown': function(){
+            resetAllFilters();
         }
     }
 });

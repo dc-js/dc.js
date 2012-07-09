@@ -1,8 +1,10 @@
-dc.dataCount = function(selector){
+dc.dataCount = function(selector) {
+    var formatNumber = d3.format(",d");
     var chart = dc.baseChart({});
 
-    chart.render = function(){
-        chart.selectAll(".total-count").text(chart.dimension().size());
+    chart.render = function() {
+        chart.selectAll(".total-count").text(formatNumber(chart.dimension().size()));
+        chart.selectAll(".filter-count").text(formatNumber(chart.group().value()));
 
         return chart;
     };
