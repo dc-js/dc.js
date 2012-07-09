@@ -10,202 +10,333 @@
     <script type="text/javascript" src="dc.js"></script>
 
     <link rel="stylesheet" type="text/css" href="dc.css"/>
+
+    <link href='http://alexgorbatchev.com/pub/sh/current/styles/shCore.css' rel='stylesheet' type='text/css'/>
+    <link href='http://alexgorbatchev.com/pub/sh/current/styles/shThemeDefault.css' rel='stylesheet' type='text/css'/>
+    <script src='http://alexgorbatchev.com/pub/sh/current/scripts/shCore.js' type='text/javascript'></script>
+    <script src="http://alexgorbatchev.com/pub/sh/current/scripts/shAutoloader.js" type="text/javascript"></script>
+    <script src='http://alexgorbatchev.com/pub/sh/current/scripts/shBrushJScript.js' type='text/javascript'></script>
+    <script src='http://alexgorbatchev.com/pub/sh/current/scripts/shBrushXml.js' type='text/javascript'></script>
 </head>
 <body>
 
 <div class="content">
 
-    <h1>dc.js - Dimensional Charting Javascript Library</h1>
+<h1>dc.js - Dimensional Charting Javascript Library</h1>
 
-    <p>
-        dc.js is a javascript charting library with native <a
-            href="http://square.github.com/crossfilter/">crossfilter</a>
-        support thus allowing highly efficient exploration on large multi-dimensional dataset. It
-        leverages <a href="http://d3js.org/">d3</a> engine to render charts in css friendly svg format. Charts rendered
-        using dc.js are naturally data driven and reactive therefore providing instant feedback on user's interaction.
-        The main objective of this project is to provide an easy yet powerful javascript library which can be utilized
-        to perform data visualization and analysis in browser.
-    </p>
+<p>
+    dc.js is a javascript charting library with native <a
+        href="http://square.github.com/crossfilter/">crossfilter</a>
+    support thus allowing highly efficient exploration on large multi-dimensional dataset (inspired by crossfilter's
+    demo). It leverages <a href="http://d3js.org/">d3</a> engine to render charts in css friendly svg format. Charts
+    rendered using dc.js are naturally data driven and reactive therefore providing instant feedback on user's
+    interaction. The main objective of this project is to provide an easy yet powerful javascript library which can be
+    utilized to perform data visualization and analysis in browser.
+</p>
 
-    <p>
-        Fork me @ <a href="https://github.com/NickQiZhu/dc.js">https://github.com/NickQiZhu/dc.js</a> and also feel free
-        to report any issue or request a new type of chart to be included in the next release.
-    </p>
+<p>
+    Fork me @ <a href="https://github.com/NickQiZhu/dc.js">https://github.com/NickQiZhu/dc.js</a> and also feel free
+    to report any issue or request a new type of chart to be included in the next release.
+</p>
 
-    <p>
-        The following charts provide a live example of dc.js used against Nasdaq 100 index for the last 27 years. (You
-        can run this example completely off-line) Although it is just an example, using it you can
-        already ask some quite interesting questions. If I am going to gamble whether Nasdaq 100 will gain or lose
-        tomorrow what is my chance? Is Friday the most unlucky day for investors? Is spring better than winter to
-        invest? Can you find the outliers? When did the outliers occur?
-    </p>
+<p>
+    The following charts provide a live example of dc.js used against Nasdaq 100 index for the last 27 years. (You
+    can run this example completely off-line) Although it is just an example, using it you can
+    already ask some quite interesting questions. If I am going to gamble whether Nasdaq 100 will gain or lose
+    tomorrow what is my chance? Is Friday the most unlucky day for investors? Is spring better than winter to
+    invest? Can you find the outliers? When did the outliers occur?
+</p>
 
-    <p>
-        Try it out; select a slice or drag your mouse over a bar chart.
-    </p>
+<p>
+    Try it out; select a slice or drag your mouse over a bar chart.
+</p>
 
-    <h2>Nasdaq 100 Index 1985/11/01-2012/06/29</h2>
+<h2>Nasdaq 100 Index 1985/11/01-2012/06/29</h2>
 
-    <div id="gain-loss-chart" class="chart">
-        <span>Days by Gain or Loss</span>
-        <a class="reset" href="javascript:gainOrLossChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-
-        <div class="clear"></div>
-    </div>
-
-    <div id="quarter-chart" class="chart">
-        <span>Quarters</span>
-        <a class="reset" href="javascript:quarterChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-
-        <div class="clear"></div>
-    </div>
-
-    <div id="day-of-week-chart" class="chart">
-        <span>Day of Week</span>
-        <a class="reset" href="javascript:dayOfWeekChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-
-        <div class="clear"></div>
-    </div>
-
-    <div id="fluctuation-chart" class="chart">
-        <span>Days by Fluctuation(%)</span>
-        <a class="reset" href="javascript:fluctuationChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-
-        <div class="clear"></div>
-    </div>
+<div id="gain-loss-chart" class="chart">
+    <span>Days by Gain or Loss</span>
+    <a class="reset" href="javascript:gainOrLossChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
+</div>
 
-    <div id="volume-month-chart" class="chart">
-        <span>Trade Volume by Month</span>
-        <a class="reset" href="javascript:volumeByMonthChart.filterAll();dc.redrawAll();"
-           style="display: none;">reset</a>
-
-        <div class="clear"></div>
-    </div>
-
-    <script type="text/javascript">
-        var volumeByMonthChart = dc.barChart("#volume-month-chart");
-        var gainOrLossChart = dc.pieChart("#gain-loss-chart");
-        var fluctuationChart = dc.barChart("#fluctuation-chart");
-        var quarterChart = dc.pieChart("#quarter-chart");
-        var dayOfWeekChart = dc.pieChart("#day-of-week-chart");
-
-        d3.csv("ndx.csv", function(data) {
-                    var dateFormat = d3.time.format("%m/%d/%Y");
-                    data.forEach(function(e) {
-                        e.dd = dateFormat.parse(e.date);
-                    });
-
-                    var ndx = crossfilter(data);
-                    var all = ndx.groupAll();
-
-                    var volumeByMonth = ndx.dimension(function(d) {
-                        return d3.time.month(d.dd);
-                    });
-                    var volumeByMonthGroup = volumeByMonth.group().reduceSum(function(d) {
-                        return d.volume;
-                    });
-
-                    var gainOrLoss = ndx.dimension(function(d) {
-                        return d.open > d.close ? "Loss" : "Gain";
-                    });
-                    var gainOrLossGroup = gainOrLoss.group();
-
-                    var fluctuation = ndx.dimension(function(d) {
-                        return Math.floor((d.close - d.open) / d.open * 100);
-                    });
-                    var fluctuationGroup = fluctuation.group();
-
-                    var quarter = ndx.dimension(function(d) {
-                        var month = d.dd.getMonth();
-                        if (month <= 3)
-                            return "Q1";
-                        else if (month > 3 && month <= 5)
-                            return "Q2";
-                        else if (month > 5 && month <= 7)
-                            return "Q3";
-                        else
-                            return "Q4";
-                    });
-                    var quarterGroup = quarter.group().reduceSum(function(d) {
-                        return d.volume;
-                    });
-
-                    var dayOfWeek = ndx.dimension(function(d) {
-                        var day = d.dd.getDay();
-                        switch (day) {
-                            case 0:
-                                return "Sun";
-                            case 1:
-                                return "Mon";
-                            case 2:
-                                return "Tue";
-                            case 3:
-                                return "Wed";
-                            case 4:
-                                return "Thu";
-                            case 5:
-                                return "Fri";
-                            case 6:
-                                return "Sat";
-                        }
-                    });
-                    var dayOfWeekGroup = dayOfWeek.group();
-
-                    gainOrLossChart.width(200)
-                            .height(200)
-                            .radius(90)
-                            .dimension(gainOrLoss)
-                            .group(gainOrLossGroup)
-                            .label(function(d) {
-                                return d.data.key + "(" + Math.floor(d.data.value / all.value() * 100) + "%)";
-                            });
-
-                    quarterChart.width(200)
-                            .height(200)
-                            .radius(90)
-                            .innerRadius(40)
-                            .dimension(quarter)
-                            .group(quarterGroup);
-
-                    dayOfWeekChart.width(200)
-                            .height(200)
-                            .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
-                            .radius(90)
-                            .innerRadius(40)
-                            .dimension(dayOfWeek)
-                            .group(dayOfWeekGroup);
-
-                    fluctuationChart.width(380)
-                            .height(200)
-                            .dimension(fluctuation)
-                            .group(fluctuationGroup)
-                            .elasticAxisY(true)
-                            .round(dc.round.floor)
-                            .x(d3.scale.linear().domain([-25, 25]));
-
-                    volumeByMonthChart.width(990)
-                            .height(250)
-                            .margins({top: 10, right: 50, bottom: 30, left: 40})
-                            .dimension(volumeByMonth)
-                            .group(volumeByMonthGroup)
-                            .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
-                            .round(d3.time.month.round)
-                            .xUnits(d3.time.months);
-
-                    dc.renderAll();
-                }
-        );
-    </script>
+<div id="quarter-chart" class="chart">
+    <span>Quarters</span>
+    <a class="reset" href="javascript:quarterChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
+</div>
 
-    <div>
-        <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
-    </div>
+<div id="day-of-week-chart" class="chart">
+    <span>Day of Week</span>
+    <a class="reset" href="javascript:dayOfWeekChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+    <div class="clear"></div>
+</div>
+
+<div id="fluctuation-chart" class="chart">
+    <span>Days by Fluctuation(%)</span>
+    <a class="reset" href="javascript:fluctuationChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+    <div class="clear"></div>
+</div>
+
+<div class="clear"></div>
+
+<div id="volume-month-chart" class="chart">
+    <span>Trade Volume by Month</span>
+    <a class="reset" href="javascript:volumeByMonthChart.filterAll();dc.redrawAll();"
+       style="display: none;">reset</a>
+
+    <div class="clear"></div>
+</div>
+
+<script type="text/javascript">
+    var volumeByMonthChart = dc.barChart("#volume-month-chart");
+    var gainOrLossChart = dc.pieChart("#gain-loss-chart");
+    var fluctuationChart = dc.barChart("#fluctuation-chart");
+    var quarterChart = dc.pieChart("#quarter-chart");
+    var dayOfWeekChart = dc.pieChart("#day-of-week-chart");
+
+    // load data from a csv file
+    d3.csv("ndx.csv", function(data) {
+                // since its a csv file we need to format the data a bit
+                var dateFormat = d3.time.format("%m/%d/%Y");
+                data.forEach(function(e) {
+                    e.dd = dateFormat.parse(e.date);
+                });
+
+                // feed it through crossfilter
+                var ndx = crossfilter(data);
+                var all = ndx.groupAll();
+
+                // define a dimension
+                var volumeByMonth = ndx.dimension(function(d) {
+                    return d3.time.month(d.dd);
+                });
+                // map/reduce to group sum
+                var volumeByMonthGroup = volumeByMonth.group().reduceSum(function(d) {
+                    return d.volume;
+                });
+
+                var gainOrLoss = ndx.dimension(function(d) {
+                    return d.open > d.close ? "Loss" : "Gain";
+                });
+                var gainOrLossGroup = gainOrLoss.group();
+
+                var fluctuation = ndx.dimension(function(d) {
+                    return Math.floor((d.close - d.open) / d.open * 100);
+                });
+                var fluctuationGroup = fluctuation.group();
+
+                var quarter = ndx.dimension(function(d) {
+                    var month = d.dd.getMonth();
+                    if (month <= 3)
+                        return "Q1";
+                    else if (month > 3 && month <= 5)
+                        return "Q2";
+                    else if (month > 5 && month <= 7)
+                        return "Q3";
+                    else
+                        return "Q4";
+                });
+                var quarterGroup = quarter.group().reduceSum(function(d) {
+                    return d.volume;
+                });
+
+                var dayOfWeek = ndx.dimension(function(d) {
+                    var day = d.dd.getDay();
+                    switch (day) {
+                        case 0:
+                            return "Sun";
+                        case 1:
+                            return "Mon";
+                        case 2:
+                            return "Tue";
+                        case 3:
+                            return "Wed";
+                        case 4:
+                            return "Thu";
+                        case 5:
+                            return "Fri";
+                        case 6:
+                            return "Sat";
+                    }
+                });
+                var dayOfWeekGroup = dayOfWeek.group();
+
+                gainOrLossChart.width(200)
+                        .height(200)
+                        .radius(90)
+                        .dimension(gainOrLoss)
+                        .group(gainOrLossGroup)
+                        .label(function(d) {
+                            return d.data.key + "(" + Math.floor(d.data.value / all.value() * 100) + "%)";
+                        });
+
+                quarterChart.width(200)
+                        .height(200)
+                        .radius(90)
+                        .innerRadius(40)
+                        .dimension(quarter)
+                        .group(quarterGroup);
+
+                dayOfWeekChart.width(200)
+                        .height(200)
+                        .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+                        .radius(90)
+                        .innerRadius(40)
+                        .dimension(dayOfWeek)
+                        .group(dayOfWeekGroup);
+
+                fluctuationChart.width(380)
+                        .height(200)
+                        .dimension(fluctuation)
+                        .group(fluctuationGroup)
+                        .elasticAxisY(true)
+                        .round(dc.round.floor)
+                        .x(d3.scale.linear().domain([-25, 25]));
+
+                volumeByMonthChart.width(990)
+                        .height(250)
+                        .margins({top: 10, right: 50, bottom: 30, left: 40})
+                        .dimension(volumeByMonth)
+                        .group(volumeByMonthGroup)
+                        .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
+                        .round(d3.time.month.round)
+                        .xUnits(d3.time.months);
+
+                dc.renderAll();
+            }
+    );
+</script>
+
+<div class="clear"></div>
+
+<div>
+    <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
+</div>
+
+<h2>5 Mins How-To Guide</h2>
+
+<div>
+    <h3>Load your data</h3>
+
+        <pre class="brush:js">
+            /*
+             * data can be loaded through regular means with your
+             * favorite javascript library
+             */
+            d3.csv("data.csv", function(data) {...};
+            d3.json("data.json", function(data) {...};
+            jQuery.getJson("data.json", function(data){...});
+        </pre>
+
+    <h3>Generate dimension and group</h3>
+
+    <pre class="brush:js">
+        // since its a csv file we need to format the data a bit
+        var dateFormat = d3.time.format("%m/%d/%Y");
+        data.forEach(function(e) {
+            e.dd = dateFormat.parse(e.date);
+        });
+
+        // feed it through crossfilter
+        var ndx = crossfilter(data);
+        var all = ndx.groupAll();
+
+        // define a dimension
+        var volumeByMonth = ndx.dimension(function(d) {
+            return d3.time.month(d.dd);
+        });
+        // map/reduce to group sum
+        var volumeByMonthGroup = volumeByMonth.group().reduceSum(function(d) {
+            return d.volume;
+        });
+    </pre>
+
+    <h3>Anchor Div</h3>
+
+    <pre class="brush:xml">
+        <!-- A div anchor that can be identified by id -->
+        <div id="your-chart" class="chart">
+            <!-- Title or anything you want to add before the chart -->
+            <span>Days by Gain or Loss</span>
+            <!--
+                if a link with css class "reset" is present then the chart
+                will automatically turn it/off based on whether there is filter
+                set on this chart (slice selection for pie chart and brush
+                selection for bar chart)
+             -->
+            <a class="reset" href="javascript:gainOrLossChart.filterAll();dc.redrawAll();"
+               style="display: none;">reset</a>
+        </div>
+    </pre>
+
+    <h3>Pie/Donut Chart</h3>
+
+    <pre class="brush:js">
+        // create a pie chart and use the given css selector as anchor
+        dc.pieChart("#gain-loss-chart")
+            .width(200) // define chart width
+            .height(200) // define chart height
+            // (optional) define color array for slices
+            .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+            .radius(90) // define pie radius
+            // (optional) if inner radius is used then a donut chart will
+            // be generated instead of pie chart
+            .innerRadius(40)
+            .dimension(gainOrLoss) // set dimension
+            .group(gainOrLossGroup) // set group
+            // (optional) by default pie chart will use group.key as it's label
+            // but you can overwrite it with a closure
+            .label(function(d) {
+                return d.data.key + "(" + Math.floor(d.data.value / all.value() * 100) + "%)";
+            });
+    </pre>
+
+    <h3>Bar Chart</h3>
+
+    <pre class="brush:js">
+        // create a bar chart
+        dc.barChart("#volume-month-chart")
+            .width(990) // define chart width
+            .height(250) // define chart height
+            // (optional) define margins
+            .margins({top: 10, right: 50, bottom: 30, left: 40})
+            .dimension(volumeByMonth) // set dimension
+            .group(volumeByMonthGroup) // set group
+            // define x scale
+            .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
+            // (optional) set filter brush rounding
+            .round(d3.time.month.round)
+            // define x axis units
+            .xUnits(d3.time.months);
+    </pre>
+
+    <h3>Rendering</h3>
+
+    <pre class="brush:js">
+        // simply call renderAll() to render all charts on the page
+        dc.renderAll();
+
+        // once rendered you can all redrawAll to update charts incrementally without
+        // re-rendering everything
+        dc.redrawAll();
+    </pre>
+
+    <p>
+        Try dc.js with your own data set and have fun!
+    </p>
+
+    <a href="https://github.com/NickQiZhu/dc.js"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+</div>
 
 </div>
+
+<script type="text/javascript">
+    SyntaxHighlighter.all();
+</script>
 
 </body>
 </html>
