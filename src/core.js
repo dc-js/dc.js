@@ -51,7 +51,7 @@ dc.transition = function(selections, duration, callback) {
 dc.units = {};
 
 dc.units.integers = function(s, e) {
-    return new Array(e - s);
+    return new Array(Math.abs(e - s));
 };
 
 dc.round = {};
