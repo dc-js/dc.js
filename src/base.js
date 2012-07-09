@@ -21,8 +21,10 @@ dc.baseChart = function(chart) {
         return chart;
     };
 
-    chart.orderedGroup = function(){
-        return _group.order(function(p){return p.key;});
+    chart.orderedGroup = function() {
+        return _group.order(function(p) {
+            return p.key;
+        });
     }
 
     chart.filterAll = function() {
@@ -77,27 +79,32 @@ dc.baseChart = function(chart) {
             .attr("height", chart.height());
     };
 
-    chart.turnOnReset = function(){
+    chart.turnOnReset = function() {
         chart.select("a.reset").style("display", null);
     };
 
-    chart.turnOffReset = function(){
+    chart.turnOffReset = function() {
         chart.select("a.reset").style("display", "none");
     };
 
-    chart.transitionDuration = function(d){
-        if(!arguments.length) return _transitionDuration;
+    chart.transitionDuration = function(d) {
+        if (!arguments.length) return _transitionDuration;
         _transitionDuration = d;
         return chart;
     }
 
     // abstract function stub
-    chart.filter = function(f){
+    chart.filter = function(f) {
         // do nothing in base, should be overridden by sub-function
         return chart;
     }
 
-    chart.render = function(){
+    chart.render = function() {
+        // do nothing in base, should be overridden by sub-function
+        return chart;
+    }
+
+    chart.redraw = function() {
         // do nothing in base, should be overridden by sub-function
         return chart;
     }

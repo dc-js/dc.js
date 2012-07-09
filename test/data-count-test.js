@@ -21,7 +21,7 @@ suite.addBatch({
         'should generate something': function(chart) {
             assert.isNotNull(chart);
         },
-        'should be registered':function(chart){
+        'should be registered':function(chart) {
             assert.isTrue(dc.hasChart(chart));
         },
         'should fill in the total count': function(chart) {
@@ -30,7 +30,20 @@ suite.addBatch({
         'should fill in the total count': function(chart) {
             assert.equal(chart.select("span.filter-count").text(), "2");
         },
-        'teardown': function(){
+        'redraw':{
+            topic: function(chart) {
+                resetAllFilters();
+                chart.redraw();
+                return chart;
+            },
+            'should fill in the updated total count': function(chart) {
+                assert.equal(chart.select("span.total-count").text(), "10");
+            },
+            'should fill in the updated total count': function(chart) {
+                assert.equal(chart.select("span.filter-count").text(), "10");
+            }
+        },
+        'teardown': function() {
             resetAllFilters();
         }
     }

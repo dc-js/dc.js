@@ -106,6 +106,12 @@
     <div class="clear"></div>
 </div>
 
+<div class="clear"></div>
+
+<div id="data-count">
+    <span class="filter-count"></span> selected out of <span class="total-count"></span>
+</div>
+
 <script type="text/javascript">
     var pieChartValue = dc.pieChart("#pie-chart-value")
             .width(250)
@@ -156,6 +162,10 @@
             .x(d3.time.scale().domain([new Date(2002, 0, 1), new Date(2012, 11, 30)]))
             .xUnits(d3.time.days)
             .axisX().ticks(5);
+
+    dc.dataCount("#data-count")
+        .dimension(data)
+        .group(groupAll);
 
     dc.renderAll();
 </script>
