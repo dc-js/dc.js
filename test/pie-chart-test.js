@@ -14,7 +14,7 @@ suite.addBatch({
         topic: function() {
             d3.select("body").append("div").attr("id", "pie-chart-age");
             var chart = dc.createPieChart("#pie-chart-age");
-            chart.dimension(ageDimension).group(ageGroup)
+            chart.dimension(valueDimension).group(valueGroup)
                 .width(width).height(height).radius(radius);
             chart.render();
             return chart;
@@ -32,10 +32,10 @@ suite.addBatch({
             assert.isTrue(pieChart.colors().length > 0);
         },
         'dimension should be set': function(pieChart) {
-            assert.equal(pieChart.dimension(), ageDimension);
+            assert.equal(pieChart.dimension(), valueDimension);
         },
         'group should be set': function(pieChart) {
-            assert.equal(pieChart.group(), ageGroup);
+            assert.equal(pieChart.group(), valueGroup);
         },
         'width should be set': function(pieChart) {
             assert.equal(pieChart.width(), width);
@@ -108,7 +108,7 @@ suite.addBatch({
         },
         'n/a filter' : {
             topic: function(pieChart) {
-                genderDimension.filter("E");
+                statusDimension.filter("E");
                 pieChart.render();
                 return pieChart;
             },
