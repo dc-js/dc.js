@@ -11,7 +11,9 @@ suite.addBatch({
             var div = d3.select("body").append("div").attr("id", "data-table");
             var chart = dc.dataTable("#data-table")
                 .dimension(data)
-                .group(groupAll);
+                .group(groupAll)
+                .size(3)
+                .columns([function(d){return d.id;}, function(d){return d.status;}]);
             chart.render();
             return chart;
         },
@@ -19,6 +21,9 @@ suite.addBatch({
             assert.isNotNull(chart);
         },
         'should be registered':function(chart) {
+            assert.isTrue(dc.hasChart(chart));
+        },
+        'should have id column created':function(chart) {
             assert.isTrue(dc.hasChart(chart));
         },
         'teardown': function() {
