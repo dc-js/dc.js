@@ -129,11 +129,12 @@
 </div>
 
 <div id="data-table">
-    <div class="header row">
+    <div class="header">
         <span class="column 0">ID</span>
         <span class="column 1">Date</span>
-        <span class="column 2">Country</span>
-        <span class="column 3">Value</span>
+        <span class="column 2">Status</span>
+        <span class="column 3">Country</span>
+        <span class="column 4">Value</span>
     </div>
 </div>
 
@@ -193,12 +194,15 @@
             .group(groupAll);
 
     dc.dataTable("#data-table")
-            .dimension(dateDimension)
-            .group(dateGroup)
+            .dimension(valueDimension)
+            .group(valueGroup)
             .size(10)
             .columns([
         function(d) {
             return d.id;
+        },
+        function(d) {
+            return d.date;
         },
         function(d) {
             return d.status;

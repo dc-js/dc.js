@@ -6,7 +6,7 @@ dc.dataTable = function(selector) {
 
     chart.render = function() {
         var div = chart.root()
-            .selectAll("div")
+            .selectAll("div.row")
             .data(chart.dimension().top(size));
 
         var divEnter = div.enter()
