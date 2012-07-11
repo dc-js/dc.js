@@ -53,23 +53,21 @@ suite.addBatch({
             var chart = dc.dataTable("#data-table2")
                 .dimension(dateDimension)
                 .group(dateGroup)
-                .size(3)
+                .size(10)
                 .columns([function(d) {
-                return d.id;
-            }, function(d) {
-                return d.status;
-            }]);
+                    return d.id;
+                }]);
             chart.render();
             countryDimension.filter("CA");
             chart.redraw();
             return chart;
         },
         'should only render filtered data set': function(chart) {
-            assert.equal(chart.select("span.0")[0].length, 2);
+            assert.equal(chart.selectAll("span.0")[0].length, 2);
         },
         'should render the correctly filtered records': function(chart) {
-            assert.equal(chart.select("span.0")[0][0].innerHTML, 5);
-            assert.equal(chart.select("span.0")[0][0].innerHTML, 7);
+            assert.equal(chart.selectAll("span.0")[0][0].innerHTML, 7);
+            assert.equal(chart.selectAll("span.0")[0][1].innerHTML, 5);
         },
         'teardown': function() {
             resetAllFilters();

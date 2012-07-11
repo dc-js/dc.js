@@ -5,9 +5,11 @@ dc.dataTable = function(selector) {
     var columns = [];
 
     chart.render = function() {
+        chart.selectAll("div.row").remove();
+
         var div = chart.root()
             .selectAll("div.row")
-            .data(chart.dimension().top(size));
+            .data(chart.dimension().top(Infinity));
 
         var divEnter = div.enter()
             .append("div")
