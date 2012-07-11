@@ -305,7 +305,7 @@
             <span>Days by Gain or Loss</span>
             <!--
                 if a link with css class "reset" is present then the chart
-                will automatically turn it/off based on whether there is filter
+                will automatically turn it on/off based on whether there is filter
                 set on this chart (slice selection for pie chart and brush
                 selection for bar chart)
              -->
@@ -363,8 +363,8 @@
         // simply call renderAll() to render all charts on the page
         dc.renderAll();
 
-        // once rendered you can all redrawAll to update charts incrementally without
-        // re-rendering everything
+        // once rendered you can call redrawAll to update charts incrementally when data
+        // change without re-rendering everything
         dc.redrawAll();
     </pre>
 
