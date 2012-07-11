@@ -69,6 +69,10 @@
             font-weight: bold;
         }
 
+        #data-table .group span.label {
+            font-weight: bold;
+        }
+
         #data-table .column {
             display: inline-block;
             width: 200px;
@@ -195,7 +199,7 @@
 
     dc.dataTable("#data-table")
             .dimension(valueDimension)
-            .group(valueGroup)
+            .nest(function(d){return d3.time.day(d3.time.format.iso.parse(d.date));})
             .size(10)
             .columns([
         function(d) {

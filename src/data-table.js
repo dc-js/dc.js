@@ -3,28 +3,53 @@ dc.dataTable = function(selector) {
 
     var size = 25;
     var columns = [];
+    var nest;
 
     chart.render = function() {
         chart.selectAll("div.row").remove();
 
-        var div = chart.root()
-            .selectAll("div.row")
-            .data(chart.dimension().top(Infinity));
+        var nester = d3.nest()
+            .key(nest);
 
-        var divEnter = div.enter()
+        var nestedRecords = nester.entries(chart.dimension().top(size));
+
+        var groups = chart.root().selectAll("div.group")
+            .data(nestedRecords, function(d) {
+                return d.key;
+            });
+
+        groups.enter().append("div")
+            .attr("class", "group")
+            .append("span")
+            .attr("class", "label")
+            .text(function(d) {
+                return d.key;
+            });
+
+        groups.exit().remove();
+
+        var rows = groups.order()
+            .selectAll("div.row")
+            .data(function(d) {
+                return d.values;
+            });
+
+        var rowEnter = rows.enter()
             .append("div")
             .attr("class", "row");
 
         for (var i = 0; i < columns.length; ++i) {
             var f = columns[i];
-            divEnter.append("span")
+            rowEnter.append("span")
                 .attr("class", "column " + i)
                 .text(function(d) {
                     return f(d);
                 });
         }
 
-        div.exit().remove();
+        rows.exit().remove();
+
+        rows.order();
 
         return chart;
     };
@@ -42,6 +67,12 @@ dc.dataTable = function(selector) {
     chart.columns = function(_) {
         if (!arguments.length) return columns;
         columns = _;
+        return chart;
+    }
+
+    chart.nest = function(_) {
+        if (!arguments.length) return nest;
+        nest = _;
         return chart;
     }
 
