@@ -11,7 +11,7 @@ suite.addBatch({
             var div = d3.select("body").append("div").attr("id", "data-table");
             var chart = dc.dataTable("#data-table")
                 .dimension(dateDimension)
-                .group(dateGroup)
+                .group(function(d){return d3.time.day(d3.time.format.iso.parse(d.date));})
                 .size(3)
                 .columns([function(d) {
                 return d.id;
@@ -52,7 +52,7 @@ suite.addBatch({
             var div = d3.select("body").append("div").attr("id", "data-table2");
             var chart = dc.dataTable("#data-table2")
                 .dimension(dateDimension)
-                .group(dateGroup)
+                .group(function(d){return d3.time.day(d3.time.format.iso.parse(d.date));})
                 .size(10)
                 .columns([function(d) {
                     return d.id;

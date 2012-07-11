@@ -3,13 +3,12 @@ dc.dataTable = function(selector) {
 
     var size = 25;
     var columns = [];
-    var nest;
 
     chart.render = function() {
         chart.selectAll("div.row").remove();
 
         var nester = d3.nest()
-            .key(nest);
+            .key(chart.group());
 
         var nestedRecords = nester.entries(chart.dimension().top(size));
 
@@ -67,12 +66,6 @@ dc.dataTable = function(selector) {
     chart.columns = function(_) {
         if (!arguments.length) return columns;
         columns = _;
-        return chart;
-    }
-
-    chart.nest = function(_) {
-        if (!arguments.length) return nest;
-        nest = _;
         return chart;
     }
 
