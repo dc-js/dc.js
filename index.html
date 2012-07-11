@@ -97,6 +97,20 @@
     <span class="filter-count"></span> selected out of <span class="total-count"></span> records
 </div>
 
+<div>
+    <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
+</div>
+
+<div id="data-table">
+    <div class="header">
+        <span>Date</span>
+        <span>Open</span>
+        <span>Close</span>
+        <span>Volume</span>
+    </div>
+</div>
+
+
 <script type="text/javascript">
     var volumeByMonthChart = dc.barChart("#volume-month-chart");
     var gainOrLossChart = dc.pieChart("#gain-loss-chart");
@@ -216,16 +230,33 @@
                         .dimension(ndx)
                         .group(all);
 
+                dc.dataTable("#data-table")
+                        .dimension(gainOrLoss)
+                        .group(function(d) {
+                            return d.open > d.close ? "Loss" : "Gain";
+                        })
+                        .size(10)
+                        .columns([
+                    function(d) {
+                        return d.date;
+                    },
+                    function(d) {
+                        return d.open;
+                    },
+                    function(d) {
+                        return d.close;
+                    },
+                    function(d) {
+                        return d.volume;
+                    }
+                ]);
+
                 dc.renderAll();
             }
     );
 </script>
 
 <div class="clear"></div>
-
-<div>
-    <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
-</div>
 
 <h2>5 Mins How-To Guide</h2>
 
