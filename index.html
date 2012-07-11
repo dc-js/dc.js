@@ -91,6 +91,12 @@
     <div class="clear"></div>
 </div>
 
+<div class="clear"></div>
+
+<div id="data-count">
+    <span class="filter-count"></span> selected out of <span class="total-count"></span> records
+</div>
+
 <script type="text/javascript">
     var volumeByMonthChart = dc.barChart("#volume-month-chart");
     var gainOrLossChart = dc.pieChart("#gain-loss-chart");
@@ -206,6 +212,10 @@
                         .round(d3.time.month.round)
                         .xUnits(d3.time.months);
 
+                dc.dataCount("#data-count")
+                        .dimension(ndx)
+                        .group(all);
+
                 dc.renderAll();
             }
     );
@@ -278,8 +288,9 @@
     <pre class="brush:js">
         // create a pie chart and use the given css selector as anchor
         dc.pieChart("#gain-loss-chart")
-            .width(200) // define chart width
-            .height(200) // define chart height
+            .width(200) // (optional) define chart width, :default = 200
+            .height(200) // (optional) define chart height, :default = 200
+            .transitionDuration(500) // (optional) define chart transition duration, :default = 350
             // (optional) define color array for slices
             .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
             .radius(90) // define pie radius
@@ -300,8 +311,9 @@
     <pre class="brush:js">
         // create a bar chart
         dc.barChart("#volume-month-chart")
-            .width(990) // define chart width
-            .height(250) // define chart height
+            .width(990) // (optional) define chart width, :default = 200
+            .height(250) // (optional) define chart height, :default = 200
+            .transitionDuration(500) // (optional) define chart transition duration, :default = 500
             // (optional) define margins
             .margins({top: 10, right: 50, bottom: 30, left: 40})
             .dimension(volumeByMonth) // set dimension
@@ -329,7 +341,9 @@
         Try dc.js with your own data set and have fun!
     </p>
 
-    <a href="https://github.com/NickQiZhu/dc.js"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+    <a href="https://github.com/NickQiZhu/dc.js"><img style="position: absolute; top: 0; right: 0; border: 0;"
+                                                      src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"
+                                                      alt="Fork me on GitHub"></a>
 </div>
 
 </div>

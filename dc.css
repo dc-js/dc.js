@@ -61,3 +61,19 @@ a {
     fill: #eee;
     stroke: #666;
 }
+
+#data-count{
+    float: right;
+    margin-top: 15px;
+    margin-right: 15px;
+}
+
+#data-count .filter-count{
+    color: #3182bd;
+    font-weight: bold;
+}
+
+#data-count .total-count{
+    color: #3182bd;
+    font-weight: bold;
+}

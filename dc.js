@@ -51,7 +51,7 @@ dc.transition = function(selections, duration, callback) {
 dc.units = {};
 
 dc.units.integers = function(s, e) {
-    return new Array(e - s);
+    return new Array(Math.abs(e - s));
 };
 
 dc.round = {};
@@ -66,7 +66,7 @@ dc.baseChart = function(chart) {
     var _anchor;
     var _root;
 
-    var width = 0, height = 0;
+    var width = 200, height = 200;
 
     var _transitionDuration = 750;
 
@@ -82,8 +82,10 @@ dc.baseChart = function(chart) {
         return chart;
     };
 
-    chart.orderedGroup = function(){
-        return _group.order(function(p){return p.key;});
+    chart.orderedGroup = function() {
+        return _group.order(function(p) {
+            return p.key;
+        });
     }
 
     chart.filterAll = function() {
@@ -138,17 +140,33 @@ dc.baseChart = function(chart) {
             .attr("height", chart.height());
     };
 
-    chart.turnOnReset = function(){
+    chart.turnOnReset = function() {
         chart.select("a.reset").style("display", null);
     };
 
-    chart.turnOffReset = function(){
+    chart.turnOffReset = function() {
         chart.select("a.reset").style("display", "none");
     };
 
-    chart.transitionDuration = function(d){
-        if(!arguments.length) return _transitionDuration;
+    chart.transitionDuration = function(d) {
+        if (!arguments.length) return _transitionDuration;
         _transitionDuration = d;
+        return chart;
+    }
+
+    // abstract function stub
+    chart.filter = function(f) {
+        // do nothing in base, should be overridden by sub-function
+        return chart;
+    }
+
+    chart.render = function() {
+        // do nothing in base, should be overridden by sub-function
+        return chart;
+    }
+
+    chart.redraw = function() {
+        // do nothing in base, should be overridden by sub-function
         return chart;
     }
 
@@ -662,5 +680,97 @@ dc.barChart = function(selector) {
 
     dc.registerChart(chart);
 
+    return chart.anchor(selector);
+};
+dc.dataCount = function(selector) {
+    var formatNumber = d3.format(",d");
+    var chart = dc.baseChart({});
+
+    chart.render = function() {
+        chart.selectAll(".total-count").text(formatNumber(chart.dimension().size()));
+        chart.selectAll(".filter-count").text(formatNumber(chart.group().value()));
+
+        return chart;
+    };
+
+    chart.redraw = function(){
+        return chart.render();
+    };
+
+    dc.registerChart(chart);
+    return chart.anchor(selector);
+};dc.dataTable = function(selector) {
+    var chart = dc.baseChart({});
+
+    var size = 25;
+    var columns = [];
+
+    chart.render = function() {
+        chart.selectAll("div.row").remove();
+
+        var nester = d3.nest()
+            .key(chart.group())
+            .sortKeys(d3.ascending);
+
+        var nestedRecords = nester.entries(chart.dimension().top(size));
+
+        var groups = chart.root().selectAll("div.group")
+            .data(nestedRecords, function(d) {
+                return d.key;
+            });
+
+        groups.enter().append("div")
+            .attr("class", "group")
+            .append("span")
+            .attr("class", "label")
+            .text(function(d) {
+                return d.key;
+            });
+
+        groups.exit().remove();
+
+        var rows = groups.order()
+            .selectAll("div.row")
+            .data(function(d) {
+                return d.values;
+            });
+
+        var rowEnter = rows.enter()
+            .append("div")
+            .attr("class", "row");
+
+        for (var i = 0; i < columns.length; ++i) {
+            var f = columns[i];
+            rowEnter.append("span")
+                .attr("class", "column " + i)
+                .text(function(d) {
+                    return f(d);
+                });
+        }
+
+        rows.exit().remove();
+
+        rows.order();
+
+        return chart;
+    };
+
+    chart.redraw = function() {
+        return chart.render();
+    };
+
+    chart.size = function(s) {
+        if (!arguments.length) return size;
+        size = s;
+        return chart;
+    }
+
+    chart.columns = function(_) {
+        if (!arguments.length) return columns;
+        columns = _;
+        return chart;
+    }
+
+    dc.registerChart(chart);
     return chart.anchor(selector);
 };
