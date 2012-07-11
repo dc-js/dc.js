@@ -10,25 +10,31 @@ var height = 200;
 var radius = 100;
 var innerRadius = 30;
 
+function buildChart(id) {
+    d3.select("body").append("div").attr("id", id)
+        .append("a").attr("class", "reset").style("display", "none");
+    var chart = dc.pieChart("#" + id);
+    chart.dimension(valueDimension).group(valueGroup)
+        .width(width)
+        .height(height)
+        .radius(radius)
+        .transitionDuration(0);
+    chart.render();
+    return chart;
+}
+
 suite.addBatch({
     'pie chart generation': {
         topic: function() {
-            d3.select("body").append("div").attr("id", "pie-chart-age")
-                .append("a").attr("class", "reset").style("display", "none");
-            var chart = dc.pieChart("#pie-chart-age");
-            chart.dimension(valueDimension).group(valueGroup)
-                .width(width)
-                .height(height)
-                .radius(radius)
-                .innerRadius(innerRadius)
-                .transitionDuration(0);
+            var chart = buildChart("pie-chart-age");
+            chart.innerRadius(innerRadius);
             chart.render();
             return chart;
         },
         'we get something': function(pieChart) {
             assert.isNotNull(pieChart);
         },
-        'should be registered':function(chart){
+        'should be registered':function(chart) {
             assert.isTrue(dc.hasChart(chart));
         },
         'inner radius can be set': function(chart) {
@@ -196,14 +202,7 @@ suite.addBatch({
 
     'redraw after empty selection' :{
         topic: function() {
-            d3.select("body").append("div").attr("id", "pie-chart-2");
-            var chart = dc.pieChart("#pie-chart-2");
-            chart.dimension(valueDimension).group(valueGroup)
-                .transitionDuration(0)
-                .width(width)
-                .height(height)
-                .radius(radius);
-            chart.render();
+            var chart = buildChart("pie-chart2");
             dateDimension.filter([new Date(2010, 0, 1), new Date(2010, 0, 3)]);
             chart.redraw()
             dateDimension.filter([new Date(2012, 0, 1), new Date(2012, 11, 30)]);
@@ -222,14 +221,10 @@ suite.addBatch({
 
     'custom label generation' :{
         topic: function() {
-            d3.select("body").append("div").attr("id", "pie-chart-3");
-            var chart = dc.pieChart("#pie-chart-3");
-            chart.dimension(valueDimension).group(valueGroup)
-                .transitionDuration(0)
-                .width(width)
-                .height(height)
-                .radius(radius)
-                .label(function(d){return "custom";});
+            var chart = buildChart("pie-chart3");
+            chart.label(function(d) {
+                return "custom";
+            });
             chart.render();
             return chart;
         },

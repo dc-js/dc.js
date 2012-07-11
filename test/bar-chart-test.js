@@ -8,24 +8,30 @@ var suite = vows.describe('Bar chart');
 var width = 1100;
 var height = 200;
 
+function buildChart(id, xdomain) {
+    d3.select("body").append("div").attr("id", id);
+    var chart = dc.barChart("#" + id);
+    chart.dimension(dateDimension).group(dateGroup)
+        .width(width).height(height)
+        .x(d3.time.scale().domain(xdomain))
+        .transitionDuration(0)
+        .xUnits(d3.time.days);
+    chart.render();
+    return chart;
+}
+
 suite.addBatch({
     'time line bar chart': {
         topic: function() {
-            d3.select("body").append("div").attr("id", "bar-chart");
-            var chart = dc.barChart("#bar-chart");
-            chart.dimension(dateDimension).group(dateGroup)
-                .width(width).height(height)
-                .x(d3.time.scale().domain([new Date(2012, 0, 1), new Date(2012, 11, 31)]))
-                .transitionDuration(0)
-                .filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
-                .xUnits(d3.time.days);
-            chart.render();
+            var chart = buildChart("bar-chart", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+            chart.filter([new Date(2012, 5, 01), new Date(2012, 5, 30)]);
+            chart.redraw();
             return chart;
         },
         'we get something': function(chart) {
             assert.isNotNull(chart);
         },
-        'should be registered':function(chart){
+        'should be registered':function(chart) {
             assert.isTrue(dc.hasChart(chart));
         },
         'svg should be created': function(chart) {
@@ -169,13 +175,7 @@ suite.addBatch({
             topic: function() {
                 resetAllFilters();
                 valueDimension.filter(66);
-                d3.select("body").append("div").attr("id", "bar-chart2");
-                var chart = dc.barChart("#bar-chart2");
-                chart.dimension(dateDimension).group(dateGroup)
-                    .width(width).height(height)
-                    .x(d3.time.scale().domain([new Date(2000, 0, 1), new Date(2012, 11, 31)]))
-                    .xUnits(d3.time.days);
-                chart.render();
+                var chart = buildChart("bar-chart2", [new Date(2000, 0, 1), new Date(2012, 11, 31)]);
                 return chart;
             },
             'min bar width should be set correctly': function(chart) {
@@ -213,7 +213,7 @@ suite.addBatch({
                 assert.isTrue(scaleToThree);
             },
 
-            'y axis should be rescaled when filter applied': function(chart){
+            'y axis should be rescaled when filter applied': function(chart) {
                 var scaleToThree = false;
                 countryDimension.filter("CA");
                 chart.redraw();

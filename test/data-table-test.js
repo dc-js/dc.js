@@ -5,20 +5,29 @@ var assert = require('assert');
 
 var suite = vows.describe('Data table');
 
-suite.addBatch({
-    'creation': {
-        topic: function() {
-            var div = d3.select("body").append("div").attr("id", "data-table");
-            var chart = dc.dataTable("#data-table")
-                .dimension(dateDimension)
-                .group(function(d){return d3.time.day(d3.time.format.iso.parse(d.date));})
-                .size(3)
-                .columns([function(d) {
+function buildChart(id) {
+    var div = d3.select("body").append("div").attr("id", id);
+    var chart = dc.dataTable("#" + id)
+        .dimension(dateDimension)
+        .group(function(d) {
+            return d3.time.day(d3.time.format.iso.parse(d.date));
+        })
+        .size(3)
+        .columns(
+            [function(d) {
                 return d.id;
             }, function(d) {
                 return d.status;
-            }]);
-            chart.render();
+            }]
+        );
+    chart.render();
+    return chart;
+}
+
+suite.addBatch({
+    'creation': {
+        topic: function() {
+            var chart = buildChart( "data-table");
             return chart;
         },
         'should generate something': function(chart) {
@@ -49,15 +58,7 @@ suite.addBatch({
 suite.addBatch({
     'external filter':{
         topic: function() {
-            var div = d3.select("body").append("div").attr("id", "data-table2");
-            var chart = dc.dataTable("#data-table2")
-                .dimension(dateDimension)
-                .group(function(d){return d3.time.day(d3.time.format.iso.parse(d.date));})
-                .size(10)
-                .columns([function(d) {
-                    return d.id;
-                }]);
-            chart.render();
+            var chart = buildChart( "data-table2");
             countryDimension.filter("CA");
             chart.redraw();
             return chart;
