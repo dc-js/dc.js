@@ -10,9 +10,14 @@ json = jQuery.parseJSON("[" +
     "{\"value\":\"44\",\"countrycode\":\"US\",\"status\":\"T\",\"id\":9,\"region\":\"Central\",\"date\":\"2012-08-10T16:10:29Z\"}, " +
     "{\"value\":\"55\",\"countrycode\":\"US\",\"status\":\"F\",\"id\":10,\"region\":\"\",\"date\":\"2012-06-10T16:10:39Z\"}" +
     "]");
+
+json.forEach(function(e){e.dd = d3.time.format.iso.parse(e.date);});
+
 data = crossfilter(json);
 
 groupAll = data.groupAll();
+
+dateFormat = d3.time.format("%Y-%m-%d");
 
 valueDimension = data.dimension(function(d) {
     return d.value;
@@ -35,7 +40,7 @@ regionDimension = data.dimension(function(d) {
 regionGroup = statusDimension.group();
 
 dateDimension = data.dimension(function(d) {
-    return d3.time.day(d3.time.format.iso.parse(d.date));
+    return d3.time.day(d.dd);
 });
 dateGroup = dateDimension.group();
 

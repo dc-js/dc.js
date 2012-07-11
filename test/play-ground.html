@@ -198,9 +198,9 @@
             .group(groupAll);
 
     dc.dataTable("#data-table")
-            .dimension(valueDimension)
-            .nest(function(d){return d3.time.day(d3.time.format.iso.parse(d.date));})
-            .size(10)
+            .dimension(dateDimension)
+            .group(function(d){return dateFormat(d3.time.day(d.dd));})
+            .size(3)
             .columns([
         function(d) {
             return d.id;

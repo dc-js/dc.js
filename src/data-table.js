@@ -8,7 +8,8 @@ dc.dataTable = function(selector) {
         chart.selectAll("div.row").remove();
 
         var nester = d3.nest()
-            .key(chart.group());
+            .key(chart.group())
+            .sortKeys(d3.ascending);
 
         var nestedRecords = nester.entries(chart.dimension().top(size));
 

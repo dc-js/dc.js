@@ -10,7 +10,7 @@ function buildChart(id) {
     var chart = dc.dataTable("#" + id)
         .dimension(dateDimension)
         .group(function(d) {
-            return d3.time.day(d3.time.format.iso.parse(d.date));
+            return dateFormat(d3.time.day(d.dd));
         })
         .size(3)
         .columns(
@@ -40,14 +40,14 @@ suite.addBatch({
             assert.equal(chart.size(), 3);
         },
         'should have id column created':function(chart) {
-            assert.equal(chart.selectAll("span.0")[0][0].innerHTML, 9);
-            assert.equal(chart.selectAll("span.0")[0][1].innerHTML, 3);
-            assert.equal(chart.selectAll("span.0")[0][2].innerHTML, 8);
+            assert.equal(chart.selectAll("span.0")[0][0].innerHTML, 8);
+            assert.equal(chart.selectAll("span.0")[0][1].innerHTML, 9);
+            assert.equal(chart.selectAll("span.0")[0][2].innerHTML, 3);
         },
         'should have status column created':function(chart) {
-            assert.equal(chart.selectAll("span.1")[0][0].innerHTML, "T");
+            assert.equal(chart.selectAll("span.1")[0][0].innerHTML, "F");
             assert.equal(chart.selectAll("span.1")[0][1].innerHTML, "T");
-            assert.equal(chart.selectAll("span.1")[0][2].innerHTML, "F");
+            assert.equal(chart.selectAll("span.1")[0][2].innerHTML, "T");
         },
         'teardown': function() {
             resetAllFilters();
@@ -67,8 +67,8 @@ suite.addBatch({
             assert.equal(chart.selectAll("span.0")[0].length, 2);
         },
         'should render the correctly filtered records': function(chart) {
-            assert.equal(chart.selectAll("span.0")[0][0].innerHTML, 7);
-            assert.equal(chart.selectAll("span.0")[0][1].innerHTML, 5);
+            assert.equal(chart.selectAll("span.0")[0][0].innerHTML, 5);
+            assert.equal(chart.selectAll("span.0")[0][1].innerHTML, 7);
         },
         'teardown': function() {
             resetAllFilters();
