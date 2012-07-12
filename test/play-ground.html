@@ -128,6 +128,15 @@
 
 <div class="clear"></div>
 
+<div id="line-chart-date" class="chart">
+    <span>Date LineChart (3 months)</span>
+    <a class="reset" href="javascript:lineChartDate1.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+    <div class="clear"></div>
+</div>
+
+<div class="clear"></div>
+
 <div id="data-count">
     <span class="filter-count"></span> selected out of <span class="total-count"></span>
 </div>
@@ -219,6 +228,15 @@
             return d.value;
         }
     ]);
+
+    var lineChartDate1 = dc.lineChart("#line-chart-date");
+    lineChartDate1.width(500)
+            .height(150)
+            .dimension(dateDimension)
+            .group(dateGroup)
+            .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
+            .xUnits(d3.time.days)
+            .axisX().ticks(5);
 
     dc.renderAll();
 </script>
