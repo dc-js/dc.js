@@ -233,7 +233,7 @@
                 dc.dataTable("#data-table")
                         .dimension(gainOrLoss)
                         .group(function(d) {
-                            return d.open > d.close ? "Loss" : "Gain";
+                            return d.open > d.close ? "LOSS" : "GAIN";
                         })
                         .size(10)
                         .columns([

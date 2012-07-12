@@ -80,15 +80,17 @@ a {
 
 #data-table {
     margin-top: 40px;
+    width: 800px;
 }
 
 #data-table span {
-    display: inline-block;
-    width: 175px;
-    text-align: left;
+    display: table-cell;
+    width: 135px;
+    text-align: center;
     margin-left: 2px;
     margin-right: 2px;
     padding: 5px;
+    border: white solid 2px;
 }
 
 #data-table .header {
@@ -102,6 +104,7 @@ a {
 
 #data-table .group span.label {
     font-weight: bold;
+    font-size: larger;
     float: right;
 }
 
