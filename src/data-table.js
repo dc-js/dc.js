@@ -3,18 +3,21 @@ dc.dataTable = function(selector) {
 
     var size = 25;
     var columns = [];
+    var sortBy = function(d){return d;};
+    var order = d3.ascending;
+    var sort;
 
     chart.render = function() {
         chart.selectAll("div.row").remove();
 
-        var nester = d3.nest()
-            .key(chart.group())
-            .sortKeys(d3.ascending);
+        renderRows(renderGroups());
 
-        var nestedRecords = nester.entries(chart.dimension().top(size));
+        return chart;
+    };
 
+    function renderGroups() {
         var groups = chart.root().selectAll("div.group")
-            .data(nestedRecords, function(d) {
+            .data(nestEntries(), function(d) {
                 return d.key;
             });
 
@@ -28,6 +31,21 @@ dc.dataTable = function(selector) {
 
         groups.exit().remove();
 
+        return groups;
+    }
+
+    function nestEntries() {
+        if(!sort)
+            sort = crossfilter.quicksort.by(sortBy);
+
+        var entries = chart.dimension().top(size);
+        return d3.nest()
+            .key(chart.group())
+            .sortKeys(order)
+            .entries(sort(entries, 0, entries.length));
+    }
+
+    function renderRows(groups) {
         var rows = groups.order()
             .selectAll("div.row")
             .data(function(d) {
@@ -49,10 +67,8 @@ dc.dataTable = function(selector) {
 
         rows.exit().remove();
 
-        rows.order();
-
-        return chart;
-    };
+        return rows;
+    }
 
     chart.redraw = function() {
         return chart.render();
@@ -67,6 +83,18 @@ dc.dataTable = function(selector) {
     chart.columns = function(_) {
         if (!arguments.length) return columns;
         columns = _;
+        return chart;
+    }
+
+    chart.sortBy = function(_) {
+        if (!arguments.length) return sortBy;
+        sortBy = _;
+        return chart;
+    }
+
+    chart.order = function(_) {
+        if (!arguments.length) return order;
+        order = _;
         return chart;
     }
 

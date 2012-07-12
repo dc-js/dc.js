@@ -13,13 +13,14 @@ function buildChart(id) {
             return dateFormat(d3.time.day(d.dd));
         })
         .size(3)
+        .sortBy(function(d){return d.dd.getTime();})
         .columns(
-            [function(d) {
-                return d.id;
-            }, function(d) {
-                return d.status;
-            }]
-        );
+        [function(d) {
+            return d.id;
+        }, function(d) {
+            return d.status;
+        }]
+    );
     chart.render();
     return chart;
 }
@@ -27,7 +28,7 @@ function buildChart(id) {
 suite.addBatch({
     'creation': {
         topic: function() {
-            var chart = buildChart( "data-table");
+            var chart = buildChart("data-table");
             return chart;
         },
         'should generate something': function(chart) {
@@ -39,10 +40,19 @@ suite.addBatch({
         'size should be set':function(chart) {
             assert.equal(chart.size(), 3);
         },
+        'sortBy should be set':function(chart) {
+            assert.isNotNull(chart.sortBy());
+        },
+        'order should be set':function(chart) {
+            assert.equal(chart.order(), d3.ascending);
+        },
         'should have id column created':function(chart) {
+            console.log(chart.selectAll("span.0")[0][0].innerHTML);
+            console.log(chart.selectAll("span.0")[0][1].innerHTML);
+            console.log(chart.selectAll("span.0")[0][2].innerHTML);
             assert.equal(chart.selectAll("span.0")[0][0].innerHTML, 8);
-            assert.equal(chart.selectAll("span.0")[0][1].innerHTML, 9);
-            assert.equal(chart.selectAll("span.0")[0][2].innerHTML, 3);
+            assert.equal(chart.selectAll("span.0")[0][1].innerHTML, 3);
+            assert.equal(chart.selectAll("span.0")[0][2].innerHTML, 9);
         },
         'should have status column created':function(chart) {
             assert.equal(chart.selectAll("span.1")[0][0].innerHTML, "F");
@@ -58,7 +68,7 @@ suite.addBatch({
 suite.addBatch({
     'external filter':{
         topic: function() {
-            var chart = buildChart( "data-table2");
+            var chart = buildChart("data-table2");
             countryDimension.filter("CA");
             chart.redraw();
             return chart;

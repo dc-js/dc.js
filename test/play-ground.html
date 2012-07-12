@@ -201,6 +201,7 @@
             .dimension(dateDimension)
             .group(function(d){return dateFormat(d3.time.day(d.dd));})
             .size(3)
+            .sortBy(function(d){return d.dd.getTime();})
             .columns([
         function(d) {
             return d.id;
