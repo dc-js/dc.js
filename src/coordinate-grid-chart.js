@@ -13,6 +13,8 @@ dc.coordinateGridChart = function(chart) {
     var _axisY = d3.svg.axis();
     var _elasticAxisY = false;
 
+    var _round;
+
     chart.margins = function(m) {
         if (!arguments.length) return _margin;
         _margin = m;
@@ -89,6 +91,12 @@ dc.coordinateGridChart = function(chart) {
 
     chart.yAxisHeight = function() {
         return chart.height() - chart.margins().top - chart.margins().bottom;
+    };
+
+    chart.round = function(_) {
+        if (!arguments.length) return _round;
+        _round = _;
+        return chart;
     };
 
     return chart;

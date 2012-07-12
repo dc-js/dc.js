@@ -9,7 +9,6 @@ dc.barChart = function(selector) {
     var bars;
     var filter;
     var brush = d3.svg.brush();
-    var round;
 
     chart.transitionDuration(500);
 
@@ -54,9 +53,9 @@ dc.barChart = function(selector) {
 
     function brushing(p) {
         var extent = brush.extent();
-        if (round) {
-            extent[0] = extent.map(round)[0];
-            extent[1] = extent.map(round)[1];
+        if (chart.round()) {
+            extent[0] = extent.map(chart.round())[0];
+            extent[1] = extent.map(chart.round())[1];
             g.select(".brush")
                 .call(brush.extent(extent));
         }
@@ -183,12 +182,6 @@ dc.barChart = function(selector) {
             chart.turnOffReset();
         }
 
-        return chart;
-    };
-
-    chart.round = function(_) {
-        if (!arguments.length) return round;
-        round = _;
         return chart;
     };
 
