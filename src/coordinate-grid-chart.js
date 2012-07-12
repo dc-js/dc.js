@@ -1,9 +1,16 @@
 dc.coordinateGridChart = function(chart) {
+    var DEFAULT_Y_AXIS_TICKS = 5;
+
     chart = dc.baseChart(chart);
 
     var _margin = {top: 10, right: 50, bottom: 30, left: 20};
+
     var _x;
     var _axisX = d3.svg.axis();
+
+    var _y = d3.scale.linear().range([100, 0]);
+    var _axisY = d3.svg.axis();
+    var _elasticAxisY = false;
 
     chart.margins = function(m) {
         if (!arguments.length) return _margin;
@@ -35,6 +42,46 @@ dc.coordinateGridChart = function(chart) {
 
     chart.xAxisY = function() {
         return (chart.height() - chart.margins().bottom);
+    }
+
+    chart.axisXLength = function() {
+        return chart.width() - chart.margins().left - chart.margins().right;
+    }
+
+    chart.renderAxisY = function(g) {
+        g.select("g.y").remove();
+        _y.domain([0, chart.maxY()]).rangeRound([chart.yAxisHeight(), 0]);
+        _axisY = _axisY.scale(_y).orient("left").ticks(DEFAULT_Y_AXIS_TICKS);
+        g.append("g")
+            .attr("class", "axis y")
+            .attr("transform", "translate(" + chart.margins().left + "," + chart.margins().top + ")")
+            .call(_axisY);
+    }
+
+    chart.y = function(_) {
+        if (!arguments.length) return _y;
+        _y = _;
+        return chart;
+    };
+
+    chart.axisY = function(y) {
+        if (!arguments.length) return _axisY;
+        _axisY = y;
+        return chart;
+    };
+
+    chart.elasticAxisY = function(_) {
+        if (!arguments.length) return _elasticAxisY;
+        _elasticAxisY = _;
+        return chart;
+    };
+
+    chart.maxY = function() {
+        return chart.group().orderNatural().top(1)[0].value;
+    }
+
+    chart.yAxisHeight = function() {
+        return chart.height() - chart.margins().top - chart.margins().bottom;
     }
 
     return chart;
