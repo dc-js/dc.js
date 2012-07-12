@@ -106,6 +106,7 @@
         <span>Date</span>
         <span>Open</span>
         <span>Close</span>
+        <span>Change</span>
         <span>Volume</span>
     </div>
 </div>
@@ -129,6 +130,8 @@
                 // feed it through crossfilter
                 var ndx = crossfilter(data);
                 var all = ndx.groupAll();
+
+                var dateDimension = ndx.dimension(function(d){return d.dd;});
 
                 // define a dimension
                 var volumeByMonth = ndx.dimension(function(d) {
@@ -231,9 +234,9 @@
                         .group(all);
 
                 dc.dataTable("#data-table")
-                        .dimension(gainOrLoss)
+                        .dimension(dateDimension)
                         .group(function(d) {
-                            return d.open > d.close ? "LOSS" : "GAIN";
+                            return d.dd.getFullYear() + "/" + (d.dd.getMonth() + 1);
                         })
                         .size(10)
                         .columns([
@@ -245,6 +248,9 @@
                     },
                     function(d) {
                         return d.close;
+                    },
+                    function(d) {
+                        return Math.floor((d.close - d.open)/d.open*100) + "%";
                     },
                     function(d) {
                         return d.volume;
