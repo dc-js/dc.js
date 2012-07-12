@@ -5,6 +5,8 @@ dc.coordinateGridChart = function(chart) {
 
     var _margin = {top: 10, right: 50, bottom: 30, left: 20};
 
+    var _g;
+
     var _x;
     var _axisX = d3.svg.axis();
     var _xUnits = dc.units.integers;
@@ -13,7 +15,20 @@ dc.coordinateGridChart = function(chart) {
     var _axisY = d3.svg.axis();
     var _elasticAxisY = false;
 
+    var _filter;
+    var _brush = d3.svg.brush();
     var _round;
+
+    chart.generateG = function() {
+        _g = chart.generateSvg().append("g")
+            .attr("transform", "translate(" + chart.margins().left + "," + chart.margins().top + ")");
+    }
+
+    chart.g = function(_){
+        if(!arguments.length) return _g;
+        _g = _;
+        return chart;
+    }
 
     chart.margins = function(m) {
         if (!arguments.length) return _margin;
@@ -98,6 +113,76 @@ dc.coordinateGridChart = function(chart) {
         _round = _;
         return chart;
     };
+
+    chart._filter = function(_) {
+        if (!arguments.length) return _filter;
+        _filter = _;
+        return chart;
+    };
+
+    chart.brush = function(_) {
+        if (!arguments.length) return _brush;
+        _brush = _;
+        return chart;
+    };
+
+    chart.renderBrush = function(g) {
+        _brush.on("brushstart", brushStart)
+            .on("brush", brushing)
+            .on("brushend", brushEnd);
+
+        var gBrush = g.append("g")
+            .attr("class", "brush")
+            .attr("transform", "translate(" + chart.margins().left + ",0)")
+            .call(_brush.x(chart.x()));
+        gBrush.selectAll("rect").attr("height", chart.xAxisY());
+        gBrush.selectAll(".resize").append("path").attr("d", chart.resizeHandlePath);
+
+        if (_filter) {
+            chart.redrawBrush(g);
+        }
+    }
+
+    function brushStart(p) {
+    }
+
+    function brushing(p) {
+        var extent = _brush.extent();
+        if (chart.round()) {
+            extent[0] = extent.map(chart.round())[0];
+            extent[1] = extent.map(chart.round())[1];
+            _g.select(".brush")
+                .call(_brush.extent(extent));
+        }
+        chart.filter([_brush.extent()[0], _brush.extent()[1]]);
+        dc.redrawAll();
+    }
+
+    function brushEnd(p) {
+    }
+
+    chart._redrawBrush = function(g) {
+        if (chart._filter() && chart.brush().empty())
+            chart.brush().extent(chart._filter());
+
+        var gBrush = g.select("g.brush");
+        gBrush.call(chart.brush().x(chart.x()));
+        gBrush.selectAll("rect").attr("height", chart.xAxisY());
+    }
+
+    // borrowed from Crossfilter example
+    chart.resizeHandlePath = function(d) {
+        var e = +(d == "e"), x = e ? 1 : -1, y = chart.xAxisY() / 3;
+        return "M" + (.5 * x) + "," + y
+            + "A6,6 0 0 " + e + " " + (6.5 * x) + "," + (y + 6)
+            + "V" + (2 * y - 6)
+            + "A6,6 0 0 " + e + " " + (.5 * x) + "," + (2 * y)
+            + "Z"
+            + "M" + (2.5 * x) + "," + (y + 8)
+            + "V" + (2 * y - 8)
+            + "M" + (4.5 * x) + "," + (y + 8)
+            + "V" + (2 * y - 8);
+    }
 
     return chart;
 };

@@ -1,14 +1,9 @@
 dc.barChart = function(selector) {
-
     var MIN_BAR_WIDTH = 1;
     var BAR_PADDING_BOTTOM = 1;
 
     var chart = dc.coordinateGridChart({});
-
-    var g;
     var bars;
-    var filter;
-    var brush = d3.svg.brush();
 
     chart.transitionDuration(500);
 
@@ -16,66 +11,28 @@ dc.barChart = function(selector) {
         chart.resetSvg();
 
         if (chart.dataAreSet()) {
-            g = chart.generateSvg().append("g")
-                .attr("transform", "translate(" + chart.margins().left + "," + chart.margins().top + ")");
-
-            chart.renderAxisX(g);
-
-            chart.renderAxisY(g);
+            chart.generateG();
+            chart.renderAxisX(chart.g());
+            chart.renderAxisY(chart.g());
 
             redrawBars();
 
-            renderBrush();
+            chart.renderBrush(chart.g());
         }
 
         return chart;
     };
 
-    function renderBrush() {
-        brush.on("brushstart", brushStart)
-            .on("brush", brushing)
-            .on("brushend", brushEnd);
-
-        var gBrush = g.append("g")
-            .attr("class", "brush")
-            .attr("transform", "translate(" + chart.margins().left + ",0)")
-            .call(brush.x(chart.x()));
-        gBrush.selectAll("rect").attr("height", chart.xAxisY());
-        gBrush.selectAll(".resize").append("path").attr("d", resizePath);
-
-        if (filter) {
-            redrawBrush();
-        }
-    }
-
-    function brushStart(p) {
-    }
-
-    function brushing(p) {
-        var extent = brush.extent();
-        if (chart.round()) {
-            extent[0] = extent.map(chart.round())[0];
-            extent[1] = extent.map(chart.round())[1];
-            g.select(".brush")
-                .call(brush.extent(extent));
-        }
-        chart.filter([brush.extent()[0], brush.extent()[1]]);
-        dc.redrawAll();
-    }
-
-    function brushEnd(p) {
-    }
-
     chart.redraw = function() {
         redrawBars();
-        redrawBrush();
-        if(chart.elasticAxisY())
-            chart.renderAxisY(g);
+        chart.redrawBrush(chart.g());
+        if (chart.elasticAxisY())
+            chart.renderAxisY(chart.g());
         return chart;
     };
 
     function redrawBars() {
-        bars = g.selectAll("rect.bar")
+        bars = chart.g().selectAll("rect.bar")
             .data(chart.group().all());
 
         // new
@@ -131,21 +88,16 @@ dc.barChart = function(selector) {
         return chart.yAxisHeight() - chart.y()(d.value) - BAR_PADDING_BOTTOM;
     }
 
-    function redrawBrush() {
-        if (filter && brush.empty())
-            brush.extent(filter);
-
-        var gBrush = g.select("g.brush");
-        gBrush.call(brush.x(chart.x()));
-        gBrush.selectAll("rect").attr("height", chart.xAxisY());
+    chart.redrawBrush = function(g) {
+        chart._redrawBrush(g);
 
         fadeDeselectedBars();
     }
 
     function fadeDeselectedBars() {
-        if (!brush.empty() && brush.extent() != null) {
-            var start = brush.extent()[0];
-            var end = brush.extent()[1];
+        if (!chart.brush().empty() && chart.brush().extent() != null) {
+            var start = chart.brush().extent()[0];
+            var end = chart.brush().extent()[1];
 
             bars.classed("deselected", function(d) {
                 return d.key < start || d.key >= end;
@@ -155,29 +107,15 @@ dc.barChart = function(selector) {
         }
     }
 
-    // borrowed from Crossfilter example
-    function resizePath(d) {
-        var e = +(d == "e"), x = e ? 1 : -1, y = chart.xAxisY() / 3;
-        return "M" + (.5 * x) + "," + y
-            + "A6,6 0 0 " + e + " " + (6.5 * x) + "," + (y + 6)
-            + "V" + (2 * y - 6)
-            + "A6,6 0 0 " + e + " " + (.5 * x) + "," + (2 * y)
-            + "Z"
-            + "M" + (2.5 * x) + "," + (y + 8)
-            + "V" + (2 * y - 8)
-            + "M" + (4.5 * x) + "," + (y + 8)
-            + "V" + (2 * y - 8);
-    }
-
     chart.filter = function(_) {
         if (_) {
-            filter = _;
-            brush.extent(_);
+            chart._filter(_);
+            chart.brush().extent(_);
             chart.dimension().filterRange(_);
             chart.turnOnReset();
         } else {
-            filter = null;
-            brush.clear();
+            chart._filter(null);
+            chart.brush().clear();
             chart.dimension().filterAll();
             chart.turnOffReset();
         }
