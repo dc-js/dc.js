@@ -243,7 +243,8 @@
                 dc.dataTable("#data-table")
                         .dimension(dateDimension)
                         .group(function(d) {
-                            return d.dd.getFullYear() + "/" + (d.dd.getMonth() + 1);
+                            var format = d3.format("02d");
+                            return d.dd.getFullYear() + "/" + format((d.dd.getMonth() + 1));
                         })
                         .size(10)
                         .columns([
