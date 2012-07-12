@@ -3,7 +3,7 @@ require("./env");
 var vows = require('vows');
 var assert = require('assert');
 
-var suite = vows.describe('Bar chart');
+var suite = vows.describe('Pie chart');
 
 var width = 200;
 var height = 200;
@@ -75,6 +75,11 @@ suite.addBatch({
         },
         'slice path should be created': function(pieChart) {
             assert.equal(pieChart.selectAll("svg g g.pie-slice path").data().length, 5);
+        },
+        'slice css class should be numbered with index': function(pieChart) {
+            pieChart.selectAll("g.pie-slice").each(function(p, i) {
+                assert.equal(d3.select(this).attr("class"), "pie-slice " + i);
+            });
         },
         'slice path should be filled': function(pieChart) {
             pieChart.selectAll("svg g g.pie-slice path").each(function(p) {

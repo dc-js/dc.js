@@ -77,10 +77,9 @@ dc.pieChart = function(selector) {
             .data(dataPie(chart.orderedGroup().top(Infinity)))
             .enter()
             .append("g")
-            .attr("id", function(d) {
-                return d.data.key;
-            })
-            .attr("class", sliceCssClass);
+            .attr("class", function(d, i){
+                return sliceCssClass + " " + i;
+            });
 
         slicePaths = slices.append("path")
             .attr("fill", function(d, i) {
