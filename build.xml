@@ -25,7 +25,8 @@
         <echo>Compiling dc.js</echo>
         <concat destfile="dc.js">
             <file file="src/core.js"/>
-            <file file="src/base.js"/>
+            <file file="src/base-chart.js"/>
+            <file file="src/coordinate-grid-chart.js"/>
             <file file="src/pie-chart.js"/>
             <file file="src/bar-chart.js"/>
             <file file="src/data-count.js"/>

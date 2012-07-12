@@ -4,9 +4,7 @@ dc.barChart = function(selector) {
     var MIN_BAR_WIDTH = 1;
     var BAR_PADDING_BOTTOM = 1;
 
-    var chart = dc.baseChart({});
-
-    var margin = {top: 10, right: 50, bottom: 30, left: 20};
+    var chart = dc.coordinateGridChart({});
 
     var x;
     var y = d3.scale.linear().range([100, 0]);
@@ -28,7 +26,7 @@ dc.barChart = function(selector) {
 
         if (chart.dataAreSet()) {
             g = chart.generateSvg().append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                .attr("transform", "translate(" + chart.margins().left + "," + chart.margins().top + ")");
 
             renderAxisX();
 
@@ -44,11 +42,11 @@ dc.barChart = function(selector) {
 
     function renderAxisX() {
         g.select("g.x").remove();
-        x.range([0, (chart.width() - margin.left - margin.right)]);
+        x.range([0, (chart.width() - chart.margins().left - chart.margins().right)]);
         axisX = axisX.scale(x).orient("bottom");
         g.append("g")
             .attr("class", "axis x")
-            .attr("transform", "translate(" + margin.left + "," + xAxisY() + ")")
+            .attr("transform", "translate(" + chart.margins().left + "," + xAxisY() + ")")
             .call(axisX);
     }
 
@@ -58,7 +56,7 @@ dc.barChart = function(selector) {
         axisY = axisY.scale(y).orient("left").ticks(DEFAULT_Y_AXIS_TICKS);
         g.append("g")
             .attr("class", "axis y")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+            .attr("transform", "translate(" + chart.margins().left + "," + chart.margins().top + ")")
             .call(axisY);
     }
 
@@ -69,7 +67,7 @@ dc.barChart = function(selector) {
 
         var gBrush = g.append("g")
             .attr("class", "brush")
-            .attr("transform", "translate(" + margin.left + ",0)")
+            .attr("transform", "translate(" + chart.margins().left + ",0)")
             .call(brush.x(x));
         gBrush.selectAll("rect").attr("height", xAxisY());
         gBrush.selectAll(".resize").append("path").attr("d", resizePath);
@@ -155,11 +153,11 @@ dc.barChart = function(selector) {
     }
 
     function finalBarX(d) {
-        return x(d.key) + margin.left;
+        return x(d.key) + chart.margins().left;
     }
 
     function finalBarY(d) {
-        return margin.top + y(d.value);
+        return chart.margins().top + y(d.value);
     }
 
     function finalBarHeight(d) {
@@ -195,11 +193,11 @@ dc.barChart = function(selector) {
     }
 
     function yAxisHeight() {
-        return chart.height() - margin.top - margin.bottom;
+        return chart.height() - chart.margins().top - chart.margins().bottom;
     }
 
     function xAxisY() {
-        return (chart.height() - margin.bottom);
+        return (chart.height() - chart.margins().bottom);
     }
 
     // borrowed from Crossfilter example
@@ -229,12 +227,6 @@ dc.barChart = function(selector) {
             chart.turnOffReset();
         }
 
-        return chart;
-    };
-
-    chart.margins = function(m) {
-        if (!arguments.length) return margin;
-        margin = m;
         return chart;
     };
 
