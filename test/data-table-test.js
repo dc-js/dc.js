@@ -47,9 +47,6 @@ suite.addBatch({
             assert.equal(chart.order(), d3.ascending);
         },
         'should have id column created':function(chart) {
-            console.log(chart.selectAll("span.0")[0][0].innerHTML);
-            console.log(chart.selectAll("span.0")[0][1].innerHTML);
-            console.log(chart.selectAll("span.0")[0][2].innerHTML);
             assert.equal(chart.selectAll("span.0")[0][0].innerHTML, 8);
             assert.equal(chart.selectAll("span.0")[0][1].innerHTML, 3);
             assert.equal(chart.selectAll("span.0")[0][2].innerHTML, 9);
