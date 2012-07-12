@@ -1,5 +1,5 @@
 dc = {
-    version: "0.1.0",
+    version: "0.2.0",
     _charts: []
 };
 
@@ -250,10 +250,9 @@ dc.baseChart = function(chart) {
             .data(dataPie(chart.orderedGroup().top(Infinity)))
             .enter()
             .append("g")
-            .attr("id", function(d) {
-                return d.data.key;
-            })
-            .attr("class", sliceCssClass);
+            .attr("class", function(d, i){
+                return sliceCssClass + " " + i;
+            });
 
         slicePaths = slices.append("path")
             .attr("fill", function(d, i) {
@@ -704,18 +703,21 @@ dc.dataCount = function(selector) {
 
     var size = 25;
     var columns = [];
+    var sortBy = function(d){return d;};
+    var order = d3.ascending;
+    var sort;
 
     chart.render = function() {
         chart.selectAll("div.row").remove();
 
-        var nester = d3.nest()
-            .key(chart.group())
-            .sortKeys(d3.ascending);
+        renderRows(renderGroups());
 
-        var nestedRecords = nester.entries(chart.dimension().top(size));
+        return chart;
+    };
 
+    function renderGroups() {
         var groups = chart.root().selectAll("div.group")
-            .data(nestedRecords, function(d) {
+            .data(nestEntries(), function(d) {
                 return d.key;
             });
 
@@ -729,6 +731,21 @@ dc.dataCount = function(selector) {
 
         groups.exit().remove();
 
+        return groups;
+    }
+
+    function nestEntries() {
+        if(!sort)
+            sort = crossfilter.quicksort.by(sortBy);
+
+        var entries = chart.dimension().top(size);
+        return d3.nest()
+            .key(chart.group())
+            .sortKeys(order)
+            .entries(sort(entries, 0, entries.length));
+    }
+
+    function renderRows(groups) {
         var rows = groups.order()
             .selectAll("div.row")
             .data(function(d) {
@@ -750,10 +767,8 @@ dc.dataCount = function(selector) {
 
         rows.exit().remove();
 
-        rows.order();
-
-        return chart;
-    };
+        return rows;
+    }
 
     chart.redraw = function() {
         return chart.render();
@@ -768,6 +783,18 @@ dc.dataCount = function(selector) {
     chart.columns = function(_) {
         if (!arguments.length) return columns;
         columns = _;
+        return chart;
+    }
+
+    chart.sortBy = function(_) {
+        if (!arguments.length) return sortBy;
+        sortBy = _;
+        return chart;
+    }
+
+    chart.order = function(_) {
+        if (!arguments.length) return order;
+        order = _;
         return chart;
     }
 

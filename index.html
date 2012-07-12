@@ -123,6 +123,8 @@
     d3.csv("ndx.csv", function(data) {
                 // since its a csv file we need to format the data a bit
                 var dateFormat = d3.time.format("%m/%d/%Y");
+                var numberFormat = d3.format(".2f");
+
                 data.forEach(function(e) {
                     e.dd = dateFormat.parse(e.date);
                 });
@@ -131,7 +133,9 @@
                 var ndx = crossfilter(data);
                 var all = ndx.groupAll();
 
-                var dateDimension = ndx.dimension(function(d){return d.dd;});
+                var dateDimension = ndx.dimension(function(d) {
+                    return d.dd;
+                });
 
                 // define a dimension
                 var volumeByMonth = ndx.dimension(function(d) {
@@ -250,12 +254,14 @@
                         return d.close;
                     },
                     function(d) {
-                        return Math.floor((d.close - d.open)/d.open*100) + "%";
+                        return numberFormat(d.close - d.open);
                     },
                     function(d) {
                         return d.volume;
                     }
-                ]);
+                ])
+                        .sortBy(function(d){return d.dd;})
+                        .order(d3.ascending);
 
                 dc.renderAll();
             }
@@ -284,25 +290,21 @@
     <pre class="brush:js">
         // since its a csv file we need to format the data a bit
         var dateFormat = d3.time.format("%m/%d/%Y");
-        data.forEach(function(e) {
-            e.dd = dateFormat.parse(e.date);
-        });
+        data.forEach(function(e) { e.dd = dateFormat.parse(e.date); });
 
         // feed it through crossfilter
         var ndx = crossfilter(data);
+
+        // define group all for counting
         var all = ndx.groupAll();
 
         // define a dimension
-        var volumeByMonth = ndx.dimension(function(d) {
-            return d3.time.month(d.dd);
-        });
+        var volumeByMonth = ndx.dimension(function(d) { return d3.time.month(d.dd); });
         // map/reduce to group sum
-        var volumeByMonthGroup = volumeByMonth.group().reduceSum(function(d) {
-            return d.volume;
-        });
+        var volumeByMonthGroup = volumeByMonth.group().reduceSum(function(d) { return d.volume; });
     </pre>
 
-    <h3>Anchor Div</h3>
+    <h3>Anchor Div for Charts</h3>
 
     <pre class="brush:xml">
         <!-- A div anchor that can be identified by id -->
@@ -338,9 +340,7 @@
             .group(gainOrLossGroup) // set group
             // (optional) by default pie chart will use group.key as it's label
             // but you can overwrite it with a closure
-            .label(function(d) {
-                return d.data.key + "(" + Math.floor(d.data.value / all.value() * 100) + "%)";
-            });
+            .label(function(d) { return d.data.key + "(" + Math.floor(d.data.value / all.value() * 100) + "%)"; });
     </pre>
 
     <h3>Bar Chart</h3>
@@ -361,6 +361,62 @@
             .round(d3.time.month.round)
             // define x axis units
             .xUnits(d3.time.months);
+    </pre>
+
+    <h3>Data Table</h3>
+
+    <pre class="brush:xml">
+        <!-- anchor div for data table -->
+        <div id="data-table">
+            <!-- create a custom header -->
+            <div class="header">
+                <span>Date</span>
+                <span>Open</span>
+                <span>Close</span>
+                <span>Change</span>
+                <span>Volume</span>
+            </div>
+            <!-- data rows will filled in here -->
+        </div>
+    </pre>
+    <pre class="brush:js">
+        // create data table widget
+        dc.dataTable("#data-table")
+            // set dimension
+            .dimension(dateDimension)
+            // data table does not use crossfilter group but rather a closure
+            // as a grouping function
+            .group(function(d) {
+                return d.dd.getFullYear() + "/" + (d.dd.getMonth() + 1);
+            })
+            // (optional) max number of records to be shown, :default = 25
+            .size(10)
+            // dynamic columns creation using an array of closures
+            .columns([
+                function(d) { return d.date; },
+                function(d) { return d.open; },
+                function(d) { return d.close; },
+                function(d) { return Math.floor((d.close - d.open)/d.open*100) + "%"; },
+                function(d) { return d.volume; }
+            ])
+            // (optional) sort using the given field, :default = function(d){return d;}
+            .sortBy(function(d){ return d.dd; })
+            // (optional) sort order, :default ascending
+            .order(d3.ascending);
+    </pre>
+
+    <h3>Data Count</h3>
+
+    <pre class="brush:xml">
+        <div id="data-count">
+            <span class="filter-count"></span> selected out of <span class="total-count"></span> records
+        </div>
+    </pre>
+    <pre class="brush:js">
+        // create a data count widget
+        dc.dataCount("#data-count")
+            .dimension(ndx) // set dimension to all data
+            .group(all); // set group to ndx.groupAll()
     </pre>
 
     <h3>Rendering</h3>
