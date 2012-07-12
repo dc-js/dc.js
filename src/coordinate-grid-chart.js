@@ -120,6 +120,22 @@ dc.coordinateGridChart = function(chart) {
         return chart;
     };
 
+    chart.filter = function(_) {
+        if (_) {
+            chart._filter(_);
+            chart.brush().extent(_);
+            chart.dimension().filterRange(_);
+            chart.turnOnReset();
+        } else {
+            chart._filter(null);
+            chart.brush().clear();
+            chart.dimension().filterAll();
+            chart.turnOffReset();
+        }
+
+        return chart;
+    };
+
     chart.brush = function(_) {
         if (!arguments.length) return _brush;
         _brush = _;

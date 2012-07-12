@@ -107,21 +107,6 @@ dc.barChart = function(selector) {
         }
     }
 
-    chart.filter = function(_) {
-        if (_) {
-            chart._filter(_);
-            chart.brush().extent(_);
-            chart.dimension().filterRange(_);
-            chart.turnOnReset();
-        } else {
-            chart._filter(null);
-            chart.brush().clear();
-            chart.dimension().filterAll();
-            chart.turnOffReset();
-        }
-
-        return chart;
-    };
 
     dc.registerChart(chart);
 
