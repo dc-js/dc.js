@@ -6,9 +6,7 @@ dc.barChart = function(selector) {
 
     var chart = dc.coordinateGridChart({});
 
-    var x;
     var y = d3.scale.linear().range([100, 0]);
-    var axisX = d3.svg.axis();
     var axisY = d3.svg.axis();
     var elasticAxisY = false;
     var xUnits = dc.units.integers;
@@ -28,7 +26,7 @@ dc.barChart = function(selector) {
             g = chart.generateSvg().append("g")
                 .attr("transform", "translate(" + chart.margins().left + "," + chart.margins().top + ")");
 
-            renderAxisX();
+            chart.renderAxisX(g);
 
             renderAxisY();
 
@@ -39,16 +37,6 @@ dc.barChart = function(selector) {
 
         return chart;
     };
-
-    function renderAxisX() {
-        g.select("g.x").remove();
-        x.range([0, (chart.width() - chart.margins().left - chart.margins().right)]);
-        axisX = axisX.scale(x).orient("bottom");
-        g.append("g")
-            .attr("class", "axis x")
-            .attr("transform", "translate(" + chart.margins().left + "," + xAxisY() + ")")
-            .call(axisX);
-    }
 
     function renderAxisY() {
         g.select("g.y").remove();
@@ -68,8 +56,8 @@ dc.barChart = function(selector) {
         var gBrush = g.append("g")
             .attr("class", "brush")
             .attr("transform", "translate(" + chart.margins().left + ",0)")
-            .call(brush.x(x));
-        gBrush.selectAll("rect").attr("height", xAxisY());
+            .call(brush.x(chart.x()));
+        gBrush.selectAll("rect").attr("height", chart.xAxisY());
         gBrush.selectAll(".resize").append("path").attr("d", resizePath);
 
         if (filter) {
@@ -114,7 +102,7 @@ dc.barChart = function(selector) {
             .attr("x", function(d) {
                 return finalBarX(d);
             })
-            .attr("y", xAxisY())
+            .attr("y", chart.xAxisY())
             .attr("width", function() {
                 return finalBarWidth();
             });
@@ -137,7 +125,7 @@ dc.barChart = function(selector) {
 
         // delete
         dc.transition(bars.exit(), chart.transitionDuration())
-            .attr("y", xAxisY())
+            .attr("y", chart.xAxisY())
             .attr("height", 0);
     }
 
@@ -146,14 +134,14 @@ dc.barChart = function(selector) {
     }
 
     function finalBarWidth() {
-        var w = Math.floor(chart.axisXLength() / xUnits(x.domain()[0], x.domain()[1]).length);
+        var w = Math.floor(chart.axisXLength() / xUnits(chart.x().domain()[0], chart.x().domain()[1]).length);
         if (isNaN(w) || w < MIN_BAR_WIDTH)
             w = MIN_BAR_WIDTH;
         return w;
     }
 
     function finalBarX(d) {
-        return x(d.key) + chart.margins().left;
+        return chart.x()(d.key) + chart.margins().left;
     }
 
     function finalBarY(d) {
@@ -169,8 +157,8 @@ dc.barChart = function(selector) {
             brush.extent(filter);
 
         var gBrush = g.select("g.brush");
-        gBrush.call(brush.x(x));
-        gBrush.selectAll("rect").attr("height", xAxisY());
+        gBrush.call(brush.x(chart.x()));
+        gBrush.selectAll("rect").attr("height", chart.xAxisY());
 
         fadeDeselectedBars();
     }
@@ -196,13 +184,9 @@ dc.barChart = function(selector) {
         return chart.height() - chart.margins().top - chart.margins().bottom;
     }
 
-    function xAxisY() {
-        return (chart.height() - chart.margins().bottom);
-    }
-
     // borrowed from Crossfilter example
     function resizePath(d) {
-        var e = +(d == "e"), x = e ? 1 : -1, y = xAxisY() / 3;
+        var e = +(d == "e"), x = e ? 1 : -1, y = chart.xAxisY() / 3;
         return "M" + (.5 * x) + "," + y
             + "A6,6 0 0 " + e + " " + (6.5 * x) + "," + (y + 6)
             + "V" + (2 * y - 6)
@@ -230,12 +214,6 @@ dc.barChart = function(selector) {
         return chart;
     };
 
-    chart.x = function(_) {
-        if (!arguments.length) return x;
-        x = _;
-        return chart;
-    };
-
     chart.y = function(_) {
         if (!arguments.length) return y;
         y = _;
@@ -245,12 +223,6 @@ dc.barChart = function(selector) {
     chart.xUnits = function(f) {
         if (!arguments.length) return xUnits;
         xUnits = f;
-        return chart;
-    };
-
-    chart.axisX = function(x) {
-        if (!arguments.length) return axisX;
-        axisX = x;
         return chart;
     };
 
