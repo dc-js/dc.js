@@ -248,22 +248,22 @@
                         })
                         .size(10)
                         .columns([
-                    function(d) {
-                        return d.date;
-                    },
-                    function(d) {
-                        return d.open;
-                    },
-                    function(d) {
-                        return d.close;
-                    },
-                    function(d) {
-                        return numberFormat(d.close - d.open);
-                    },
-                    function(d) {
-                        return d.volume;
-                    }
-                ])
+                            function(d) {
+                                return d.date;
+                            },
+                            function(d) {
+                                return d.open;
+                            },
+                            function(d) {
+                                return d.close;
+                            },
+                            function(d) {
+                                return numberFormat(d.close - d.open);
+                            },
+                            function(d) {
+                                return d.volume;
+                            }
+                        ])
                         .sortBy(function(d){return d.dd;})
                         .order(d3.ascending);
 
