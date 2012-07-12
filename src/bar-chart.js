@@ -5,8 +5,6 @@ dc.barChart = function(selector) {
 
     var chart = dc.coordinateGridChart({});
 
-    var xUnits = dc.units.integers;
-
     var g;
     var bars;
     var filter;
@@ -116,7 +114,7 @@ dc.barChart = function(selector) {
     }
 
     function finalBarWidth() {
-        var w = Math.floor(chart.axisXLength() / xUnits(chart.x().domain()[0], chart.x().domain()[1]).length);
+        var w = Math.floor(chart.axisXLength() / chart.xUnits()(chart.x().domain()[0], chart.x().domain()[1]).length);
         if (isNaN(w) || w < MIN_BAR_WIDTH)
             w = MIN_BAR_WIDTH;
         return w;
@@ -185,12 +183,6 @@ dc.barChart = function(selector) {
             chart.turnOffReset();
         }
 
-        return chart;
-    };
-
-    chart.xUnits = function(f) {
-        if (!arguments.length) return xUnits;
-        xUnits = f;
         return chart;
     };
 

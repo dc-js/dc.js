@@ -7,6 +7,7 @@ dc.coordinateGridChart = function(chart) {
 
     var _x;
     var _axisX = d3.svg.axis();
+    var _xUnits = dc.units.integers;
 
     var _y = d3.scale.linear().range([100, 0]);
     var _axisY = d3.svg.axis();
@@ -38,15 +39,21 @@ dc.coordinateGridChart = function(chart) {
             .attr("class", "axis x")
             .attr("transform", "translate(" + chart.margins().left + "," + chart.xAxisY() + ")")
             .call(_axisX);
-    }
+    };
 
     chart.xAxisY = function() {
         return (chart.height() - chart.margins().bottom);
-    }
+    };
 
     chart.axisXLength = function() {
         return chart.width() - chart.margins().left - chart.margins().right;
-    }
+    };
+
+    chart.xUnits = function(_) {
+        if (!arguments.length) return _xUnits;
+        _xUnits = _;
+        return chart;
+    };
 
     chart.renderAxisY = function(g) {
         g.select("g.y").remove();
@@ -56,7 +63,7 @@ dc.coordinateGridChart = function(chart) {
             .attr("class", "axis y")
             .attr("transform", "translate(" + chart.margins().left + "," + chart.margins().top + ")")
             .call(_axisY);
-    }
+    };
 
     chart.y = function(_) {
         if (!arguments.length) return _y;
@@ -78,11 +85,11 @@ dc.coordinateGridChart = function(chart) {
 
     chart.maxY = function() {
         return chart.group().orderNatural().top(1)[0].value;
-    }
+    };
 
     chart.yAxisHeight = function() {
         return chart.height() - chart.margins().top - chart.margins().bottom;
-    }
+    };
 
     return chart;
 };
