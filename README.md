@@ -2,7 +2,7 @@ dc.js
 =====
 
 Dimensional charting built to work natively with crossfilter rendered using d3.js. Check out
-[our example page with a five minutes how to guide](http://nickqizhu.github.com/dc.js/).
+our [example page](http://nickqizhu.github.com/dc.js/) with a quick five minutes how to guide.
 
 
 How to build locally
@@ -27,4 +27,8 @@ Make sure the following packages are installed on your machine
 dc.js$ ant
 
 
+License
+--------------------
 
+dc.js is a open source library and licensed under
+[Apache License v2](http://www.apache.org/licenses/LICENSE-2.0.html).
