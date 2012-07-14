@@ -37,7 +37,7 @@ statusGroup = statusDimension.group();
 regionDimension = data.dimension(function(d) {
     return d.region;
 });
-regionGroup = statusDimension.group();
+regionGroup = regionDimension.group();
 
 dateDimension = data.dimension(function(d) {
     return d3.time.day(d.dd);
