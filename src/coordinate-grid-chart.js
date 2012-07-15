@@ -19,9 +19,6 @@ dc.coordinateGridChart = function(chart) {
     var _brush = d3.svg.brush();
     var _round;
 
-    var _xValue = function(d){return d.key;};
-    var _yValue = function(d){return d.value;};
-
     chart.generateG = function() {
         _g = chart.generateSvg().append("g")
             .attr("transform", "translate(" + chart.margins().left + "," + chart.margins().top + ")");
@@ -208,18 +205,6 @@ dc.coordinateGridChart = function(chart) {
             + "M" + (4.5 * x) + "," + (y + 8)
             + "V" + (2 * y - 8);
     }
-
-    chart.xValue = function(_){
-        if(!arguments.length) return _xValue;
-        _xValue = _;
-        return chart;
-    };
-
-    chart.yValue = function(_){
-        if(!arguments.length) return _yValue;
-        _yValue = _;
-        return chart;
-    };
 
     return chart;
 };

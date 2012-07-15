@@ -7,6 +7,9 @@ dc.baseChart = function(chart) {
 
     var width = 200, height = 200;
 
+    var _xValue = function(d){return d.key;};
+    var _yValue = function(d){return d.value;};
+
     var _transitionDuration = 750;
 
     chart.dimension = function(d) {
@@ -94,23 +97,35 @@ dc.baseChart = function(chart) {
         if (!arguments.length) return _transitionDuration;
         _transitionDuration = d;
         return chart;
-    }
+    };
 
     // abstract function stub
     chart.filter = function(f) {
         // do nothing in base, should be overridden by sub-function
         return chart;
-    }
+    };
 
     chart.render = function() {
         // do nothing in base, should be overridden by sub-function
         return chart;
-    }
+    };
 
     chart.redraw = function() {
         // do nothing in base, should be overridden by sub-function
         return chart;
-    }
+    };
+
+    chart.xValue = function(_){
+        if(!arguments.length) return _xValue;
+        _xValue = _;
+        return chart;
+    };
+
+    chart.yValue = function(_){
+        if(!arguments.length) return _yValue;
+        _yValue = _;
+        return chart;
+    };
 
     return chart;
 };
