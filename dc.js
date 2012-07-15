@@ -293,13 +293,13 @@ dc.coordinateGridChart = function(chart) {
     };
 
     chart.yAxisMin = function() {
-        var min = d3.min(chart.group().all(), function(e){return e.value;});
+        var min = d3.min(chart.group().all(), function(e){return chart.yValue()(e);});
         if(min > 0) min = 0;
         return min;
     }
 
     chart.yAxisMax = function() {
-        return d3.max(chart.group().all(), function(e){return e.value;});
+        return d3.max(chart.group().all(), function(e){return chart.yValue()(e);});
     };
 
     chart.yAxisHeight = function() {
@@ -574,7 +574,7 @@ dc.pieChart = function(selector) {
 
     function calculateDataPie() {
         return d3.layout.pie().value(function(d) {
-            return d.value;
+            return chart.yValue()(d);
         });
     }
 
@@ -593,7 +593,7 @@ dc.pieChart = function(selector) {
             .attr("text-anchor", "middle")
             .text(function(d) {
                 var data = d.data;
-                if (data.value == 0)
+                if (chart.yValue()(data) == 0)
                     return "";
                 return labelFunction(d);
             });
@@ -707,11 +707,11 @@ dc.barChart = function(selector) {
     }
 
     function finalBarY(d) {
-        return chart.margins().top + chart.y()(d.value);
+        return chart.margins().top + chart.y()(chart.yValue()(d));
     }
 
     function finalBarHeight(d) {
-        return chart.yAxisHeight() - chart.y()(d.value) - BAR_PADDING_BOTTOM;
+        return chart.yAxisHeight() - chart.y()(chart.yValue()(d)) - BAR_PADDING_BOTTOM;
     }
 
     chart.redrawBrush = function(g) {
@@ -783,7 +783,7 @@ dc.lineChart = function(selector) {
                 return chart.x()(chart.xValue()(d));
             })
             .y(function(d) {
-                return chart.y()(d.value);
+                return chart.y()(chart.yValue()(d));
             });
 
         path = path
