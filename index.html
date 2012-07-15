@@ -244,7 +244,7 @@
                         .height(200)
                         .dimension(fluctuation)
                         .group(fluctuationGroup)
-                        .elasticAxisY(true)
+                        .yElasticity(true)
                         .round(dc.round.floor)
                         .x(d3.scale.linear().domain([-25, 25]));
 
@@ -262,7 +262,7 @@
                         .margins({top: 10, right: 50, bottom: 30, left: 40})
                         .dimension(monthDimension)
                         .group(monthlyMoveGroup)
-                        .elasticAxisY(true)
+                        .yElasticity(true)
                         .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
                         .round(d3.time.month.round)
                         .xUnits(d3.time.months);
@@ -392,6 +392,8 @@
             .margins({top: 10, right: 50, bottom: 30, left: 40})
             .dimension(volumeByMonth) // set dimension
             .group(volumeByMonthGroup) // set group
+            // (optional) whether chart should rescale y axis to fit data, :default = false
+            .yElasticity(true)
             // define x scale
             .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
             // (optional) set filter brush rounding
