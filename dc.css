@@ -62,6 +62,12 @@ a {
     stroke: #666;
 }
 
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1px;
+}
+
 #data-count {
     float: right;
     margin-top: 15px;
