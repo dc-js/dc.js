@@ -59,6 +59,12 @@
             stroke: #666;
         }
 
+        .line {
+            fill: none;
+            stroke: steelblue;
+            stroke-width: 1.5px;
+        }
+
         #data-table {
             margin-top: 25px;
             margin-bottom: 25px;
@@ -208,9 +214,13 @@
 
     dc.dataTable("#data-table")
             .dimension(dateDimension)
-            .group(function(d){return dateFormat(d3.time.day(d.dd));})
+            .group(function(d) {
+                return dateFormat(d3.time.day(d.dd));
+            })
             .size(3)
-            .sortBy(function(d){return d.dd.getTime();})
+            .sortBy(function(d) {
+                return d.dd.getTime();
+            })
             .columns([
         function(d) {
             return d.id;

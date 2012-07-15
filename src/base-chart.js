@@ -68,13 +68,16 @@ dc.baseChart = function(chart) {
         return chart;
     };
 
+    chart.svg = function(){
+        return chart.select("svg");
+    }
+
     chart.resetSvg = function() {
         chart.select("svg").remove();
     };
 
     chart.generateSvg = function() {
         return chart.root().append("svg")
-            .data([chart.group().top(Infinity)])
             .attr("width", chart.width())
             .attr("height", chart.height());
     };

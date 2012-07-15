@@ -28,7 +28,23 @@ dc.lineChart = function(selector) {
     };
 
     function redrawLine() {
+        chart.selectAll("path.line").remove();
 
+        var all = chart.group().all();
+        chart.g().datum(all);
+
+        var line = d3.svg.line()
+            .x(function(d) {
+                return chart.x()(d.key);
+            })
+            .y(function(d) {
+                return chart.y()(d.value);
+            });
+
+        chart.g().append("path")
+            .attr("class", "line")
+            .attr("transform", "translate("+chart.margins().left+","+chart.margins().top+")")
+            .attr("d", line);
     }
 
     chart.redrawBrush = function(g) {
