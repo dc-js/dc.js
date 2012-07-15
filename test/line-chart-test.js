@@ -132,6 +132,9 @@ suite.addBatch({
             'extent width should be set based on filter set': function(chart) {
                 assert.equal(chart.select("g.brush rect.extent").attr("width"), 82);
             },
+            'path rendering': function(chart){
+                assert.equal(chart.select("path.line").attr("d"), "M409.060502283105,107L448.5673515981735,107L454.21118721461187,0L513.4714611872146,107L538.8687214611872,53L626.3481735159817,53");
+            },
             'selected bars should be push to foreground': function(chart) {
                 chart.selectAll("g rect.bar").each(function(d, i) {
                     if (i == 1)
@@ -156,3 +159,4 @@ suite.addBatch({
 suite.export(module);
 
 
+s
