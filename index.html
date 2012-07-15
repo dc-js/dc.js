@@ -84,7 +84,7 @@
 <div class="clear"></div>
 
 <div id="index-chart" class="chart">
-    <span>Index (EoD Close)</span>
+    <span>Nasdaq 100 Index (EoD Close)</span>
     <a class="reset" href="javascript:indexChart.filterAll();dc.redrawAll();"
        style="display: none;">reset</a>
 
@@ -211,32 +211,32 @@
                 });
                 var dayOfWeekGroup = dayOfWeek.group();
 
-                gainOrLossChart.width(200)
-                        .height(200)
-                        .radius(90)
+                gainOrLossChart.width(170)
+                        .height(170)
+                        .radius(80)
                         .dimension(gainOrLoss)
                         .group(gainOrLossGroup)
                         .label(function(d) {
                             return d.data.key + "(" + Math.floor(d.data.value / all.value() * 100) + "%)";
                         });
 
-                quarterChart.width(200)
-                        .height(200)
-                        .radius(90)
-                        .innerRadius(40)
+                quarterChart.width(170)
+                        .height(170)
+                        .radius(80)
+                        .innerRadius(30)
                         .dimension(quarter)
                         .group(quarterGroup);
 
-                dayOfWeekChart.width(200)
-                        .height(200)
+                dayOfWeekChart.width(170)
+                        .height(170)
+                        .radius(80)
                         .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
-                        .radius(90)
-                        .innerRadius(40)
+                        .innerRadius(30)
                         .dimension(dayOfWeek)
                         .group(dayOfWeekGroup);
 
                 fluctuationChart.width(380)
-                        .height(200)
+                        .height(170)
                         .dimension(fluctuation)
                         .group(fluctuationGroup)
                         .elasticAxisY(true)
@@ -254,8 +254,10 @@
                         .axisY().ticks(2);
 
                 indexChart.width(990)
-                        .height(250)
+                        .height(280)
                         .margins({top: 10, right: 50, bottom: 30, left: 40})
+                        // turn off transition for large line chart, it performs better this way
+                        .transitionDuration(0)
                         .dimension(dateDimension)
                         .group(indexGroup)
                         .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
