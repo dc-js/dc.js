@@ -147,6 +147,12 @@ suite.addBatch({
                 chart.selectAll("g rect.bar").each(function(d) {
                     assert.equal(d3.select(this).attr("class"), "bar");
                 });
+            },
+            'x value should have default impl': function(chart){
+                assert.isNotNull(chart.xValue());
+            },
+            'y value should have default impl': function(chart){
+                assert.isNotNull(chart.yValue());
             }
         },
 
