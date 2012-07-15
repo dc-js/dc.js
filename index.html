@@ -83,9 +83,9 @@
 
 <div class="clear"></div>
 
-<div id="index-chart" class="chart">
-    <span>Nasdaq 100 Index (EoD Close)</span>
-    <a class="reset" href="javascript:indexChart.filterAll();dc.redrawAll();"
+<div id="monthly-move-chart" class="chart">
+    <span>Index Monthly Move</span>
+    <a class="reset" href="javascript:monthlyMoveChart.filterAll();dc.redrawAll();"
        style="display: none;">reset</a>
 
     <div class="clear"></div>
@@ -128,7 +128,7 @@
     var fluctuationChart = dc.barChart("#fluctuation-chart");
     var quarterChart = dc.pieChart("#quarter-chart");
     var dayOfWeekChart = dc.pieChart("#day-of-week-chart");
-    var indexChart = dc.lineChart("#index-chart");
+    var monthlyMoveChart = dc.lineChart("#monthly-move-chart");
 
     // set dc.js version in title
     d3.selectAll("#version").text(dc.version);
@@ -155,8 +155,15 @@
                     return d3.time.month(d.dd);
                 });
 
-                // fluctuation by month
-                var indexGroup = dateDimension.group().reduceSum(function(d){return d.close;});
+                // monthly index running avg
+                var monthlyMoveGroup = monthDimension.group().reduce(
+                        //add
+                        function(p,v){return p += +v.close - +v.open;},
+                        //remove
+                        function(p,v){return p -= +v.close - +v.open;},
+                        //init
+                        function(){return 0;}
+                );
 
                 // map/reduce to group sum
                 var volumeByMonthGroup = monthDimension.group().reduceSum(function(d) {
@@ -250,16 +257,15 @@
                         .round(d3.time.month.round)
                         .xUnits(d3.time.months);
 
-                indexChart.width(990)
+                monthlyMoveChart.width(990)
                         .height(200)
                         .margins({top: 10, right: 50, bottom: 30, left: 40})
-                        .dimension(dateDimension)
-                        .group(indexGroup)
-                        // turn off transition, perform better with large line chart
-                        .transitionDuration(0)
+                        .dimension(monthDimension)
+                        .group(monthlyMoveGroup)
+                        .elasticAxisY(true)
                         .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
-                        .round(d3.time.day.round)
-                        .xUnits(d3.time.days);
+                        .round(d3.time.month.round)
+                        .xUnits(d3.time.months);
 
                 dc.dataCount("#data-count")
                         .dimension(ndx)
