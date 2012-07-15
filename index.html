@@ -95,7 +95,7 @@
 
 <div id="volume-month-chart" class="chart">
     <span>Trade Volume by Month</span>
-    <a class="reset" href="javascript:volumeByMonthChart.filterAll();dc.redrawAll();"
+    <a class="reset" href="javascript:volumeChart.filterAll();dc.redrawAll();"
        style="display: none;">reset</a>
 
     <div class="clear"></div>
@@ -123,7 +123,7 @@
 
 
 <script type="text/javascript">
-    var volumeByMonthChart = dc.barChart("#volume-month-chart");
+    var volumeChart = dc.barChart("#volume-month-chart");
     var gainOrLossChart = dc.pieChart("#gain-loss-chart");
     var fluctuationChart = dc.barChart("#fluctuation-chart");
     var quarterChart = dc.pieChart("#quarter-chart");
@@ -151,17 +151,15 @@
                     return d.dd;
                 });
 
-                // EoD index by date
-                var indexGroup = dateDimension.group().reduceSum(function(d) {
-                    return d.close;
-                });
-
-                // define a dimension
-                var volumeByMonth = ndx.dimension(function(d) {
+                var monthDimension = ndx.dimension(function(d) {
                     return d3.time.month(d.dd);
                 });
+
+                // fluctuation by month
+                var indexGroup = dateDimension.group().reduceSum(function(d){return d.close;});
+
                 // map/reduce to group sum
-                var volumeByMonthGroup = volumeByMonth.group().reduceSum(function(d) {
+                var volumeByMonthGroup = monthDimension.group().reduceSum(function(d) {
                     return d.volume;
                 });
 
@@ -211,55 +209,54 @@
                 });
                 var dayOfWeekGroup = dayOfWeek.group();
 
-                gainOrLossChart.width(170)
-                        .height(170)
-                        .radius(80)
+                gainOrLossChart.width(200)
+                        .height(200)
+                        .radius(90)
                         .dimension(gainOrLoss)
                         .group(gainOrLossGroup)
                         .label(function(d) {
                             return d.data.key + "(" + Math.floor(d.data.value / all.value() * 100) + "%)";
                         });
 
-                quarterChart.width(170)
-                        .height(170)
-                        .radius(80)
+                quarterChart.width(200)
+                        .height(200)
+                        .radius(90)
                         .innerRadius(30)
                         .dimension(quarter)
                         .group(quarterGroup);
 
-                dayOfWeekChart.width(170)
-                        .height(170)
-                        .radius(80)
+                dayOfWeekChart.width(200)
+                        .height(200)
+                        .radius(90)
                         .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
                         .innerRadius(30)
                         .dimension(dayOfWeek)
                         .group(dayOfWeekGroup);
 
                 fluctuationChart.width(380)
-                        .height(170)
+                        .height(200)
                         .dimension(fluctuation)
                         .group(fluctuationGroup)
                         .elasticAxisY(true)
                         .round(dc.round.floor)
                         .x(d3.scale.linear().domain([-25, 25]));
 
-                volumeByMonthChart.width(990)
-                        .height(150)
+                volumeChart.width(990)
+                        .height(200)
                         .margins({top: 10, right: 50, bottom: 30, left: 40})
-                        .dimension(volumeByMonth)
+                        .dimension(monthDimension)
                         .group(volumeByMonthGroup)
                         .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
                         .round(d3.time.month.round)
-                        .xUnits(d3.time.months)
-                        .axisY().ticks(2);
+                        .xUnits(d3.time.months);
 
                 indexChart.width(990)
-                        .height(280)
+                        .height(200)
                         .margins({top: 10, right: 50, bottom: 30, left: 40})
-                        // turn off transition for large line chart, it performs better this way
-                        .transitionDuration(0)
                         .dimension(dateDimension)
                         .group(indexGroup)
+                        // turn off transition, perform better with large line chart
+                        .transitionDuration(0)
                         .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
                         .round(d3.time.day.round)
                         .xUnits(d3.time.days);
@@ -276,23 +273,25 @@
                         })
                         .size(10)
                         .columns([
-                            function(d) {
-                                return d.date;
-                            },
-                            function(d) {
-                                return d.open;
-                            },
-                            function(d) {
-                                return d.close;
-                            },
-                            function(d) {
-                                return numberFormat(d.close - d.open);
-                            },
-                            function(d) {
-                                return d.volume;
-                            }
-                        ])
-                        .sortBy(function(d){return d.dd;})
+                    function(d) {
+                        return d.date;
+                    },
+                    function(d) {
+                        return d.open;
+                    },
+                    function(d) {
+                        return d.close;
+                    },
+                    function(d) {
+                        return numberFormat(d.close - d.open);
+                    },
+                    function(d) {
+                        return d.volume;
+                    }
+                ])
+                        .sortBy(function(d) {
+                            return d.dd;
+                        })
                         .order(d3.ascending);
 
                 dc.renderAll();
@@ -474,7 +473,7 @@
 </div>
 
 <script type="text/javascript">
-    SyntaxHighlighter.all();
+//    SyntaxHighlighter.all();
 </script>
 
 </body>
