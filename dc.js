@@ -189,7 +189,8 @@ dc.baseChart = function(chart) {
     };
 
     return chart;
-};dc.coordinateGridChart = function(chart) {
+};
+dc.coordinateGridChart = function(chart) {
     var DEFAULT_Y_AXIS_TICKS = 5;
 
     chart = dc.baseChart(chart);
@@ -398,7 +399,8 @@ dc.baseChart = function(chart) {
     };
 
     return chart;
-};dc.pieChart = function(selector) {
+};
+dc.pieChart = function(selector) {
     var filter;
 
     var sliceCssClass = "pie-slice";
