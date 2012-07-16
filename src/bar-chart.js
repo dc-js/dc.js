@@ -12,8 +12,8 @@ dc.barChart = function(selector) {
 
         if (chart.dataAreSet()) {
             chart.generateG();
-            chart.renderAxisX(chart.g());
-            chart.renderAxisY(chart.g());
+            chart.renderXAxis(chart.g());
+            chart.renderYAxis(chart.g());
 
             redrawBars();
 
@@ -26,8 +26,8 @@ dc.barChart = function(selector) {
     chart.redraw = function() {
         redrawBars();
         chart.redrawBrush(chart.g());
-        if (chart.elasticAxisY())
-            chart.renderAxisY(chart.g());
+        if (chart.yElasticity())
+            chart.renderYAxis(chart.g());
         return chart;
     };
 
@@ -70,22 +70,22 @@ dc.barChart = function(selector) {
     }
 
     function finalBarWidth() {
-        var w = Math.floor(chart.axisXLength() / chart.xUnits()(chart.x().domain()[0], chart.x().domain()[1]).length);
+        var w = Math.floor(chart.xAxisLength() / chart.xUnits()(chart.x().domain()[0], chart.x().domain()[1]).length);
         if (isNaN(w) || w < MIN_BAR_WIDTH)
             w = MIN_BAR_WIDTH;
         return w;
     }
 
     function finalBarX(d) {
-        return chart.x()(d.key) + chart.margins().left;
+        return chart.x()(chart.keyFunction()(d)) + chart.margins().left;
     }
 
     function finalBarY(d) {
-        return chart.margins().top + chart.y()(d.value);
+        return chart.margins().top + chart.y()(chart.valueFunction()(d));
     }
 
     function finalBarHeight(d) {
-        return chart.yAxisHeight() - chart.y()(d.value) - BAR_PADDING_BOTTOM;
+        return chart.yAxisHeight() - chart.y()(chart.valueFunction()(d)) - BAR_PADDING_BOTTOM;
     }
 
     chart.redrawBrush = function(g) {
@@ -100,7 +100,8 @@ dc.barChart = function(selector) {
             var end = chart.brush().extent()[1];
 
             bars.classed("deselected", function(d) {
-                return d.key < start || d.key >= end;
+                var xValue = chart.keyFunction()(d);
+                return xValue < start || xValue >= end;
             });
         } else {
             bars.classed("deselected", false);

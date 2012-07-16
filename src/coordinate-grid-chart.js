@@ -8,12 +8,12 @@ dc.coordinateGridChart = function(chart) {
     var _g;
 
     var _x;
-    var _axisX = d3.svg.axis();
+    var _xAxis = d3.svg.axis();
     var _xUnits = dc.units.integers;
 
     var _y = d3.scale.linear().range([100, 0]);
-    var _axisY = d3.svg.axis();
-    var _elasticAxisY = false;
+    var _yAxis = d3.svg.axis();
+    var _yElasticity = false;
 
     var _filter;
     var _brush = d3.svg.brush();
@@ -42,27 +42,27 @@ dc.coordinateGridChart = function(chart) {
         return chart;
     };
 
-    chart.axisX = function(_) {
-        if (!arguments.length) return _axisX;
-        _axisX = _;
+    chart.xAxis = function(_) {
+        if (!arguments.length) return _xAxis;
+        _xAxis = _;
         return chart;
     };
 
-    chart.renderAxisX = function(g) {
+    chart.renderXAxis = function(g) {
         g.select("g.x").remove();
         chart.x().range([0, (chart.width() - chart.margins().left - chart.margins().right)]);
-        _axisX = _axisX.scale(chart.x()).orient("bottom");
+        _xAxis = _xAxis.scale(chart.x()).orient("bottom");
         g.append("g")
             .attr("class", "axis x")
             .attr("transform", "translate(" + chart.margins().left + "," + chart.xAxisY() + ")")
-            .call(_axisX);
+            .call(_xAxis);
     };
 
     chart.xAxisY = function() {
         return (chart.height() - chart.margins().bottom);
     };
 
-    chart.axisXLength = function() {
+    chart.xAxisLength = function() {
         return chart.width() - chart.margins().left - chart.margins().right;
     };
 
@@ -72,14 +72,14 @@ dc.coordinateGridChart = function(chart) {
         return chart;
     };
 
-    chart.renderAxisY = function(g) {
+    chart.renderYAxis = function(g) {
         g.select("g.y").remove();
-        _y.domain([chart.minY(), chart.maxY()]).rangeRound([chart.yAxisHeight(), 0]);
-        _axisY = _axisY.scale(_y).orient("left").ticks(DEFAULT_Y_AXIS_TICKS);
+        _y.domain([chart.yAxisMin(), chart.yAxisMax()]).rangeRound([chart.yAxisHeight(), 0]);
+        _yAxis = _yAxis.scale(_y).orient("left").ticks(DEFAULT_Y_AXIS_TICKS);
         g.append("g")
             .attr("class", "axis y")
             .attr("transform", "translate(" + chart.margins().left + "," + chart.margins().top + ")")
-            .call(_axisY);
+            .call(_yAxis);
     };
 
     chart.y = function(_) {
@@ -88,26 +88,26 @@ dc.coordinateGridChart = function(chart) {
         return chart;
     };
 
-    chart.axisY = function(y) {
-        if (!arguments.length) return _axisY;
-        _axisY = y;
+    chart.yAxis = function(y) {
+        if (!arguments.length) return _yAxis;
+        _yAxis = y;
         return chart;
     };
 
-    chart.elasticAxisY = function(_) {
-        if (!arguments.length) return _elasticAxisY;
-        _elasticAxisY = _;
+    chart.yElasticity = function(_) {
+        if (!arguments.length) return _yElasticity;
+        _yElasticity = _;
         return chart;
     };
 
-    chart.minY = function() {
-        var min = d3.min(chart.group().all(), function(e){return e.value;});
+    chart.yAxisMin = function() {
+        var min = d3.min(chart.group().all(), function(e){return chart.valueFunction()(e);});
         if(min > 0) min = 0;
         return min;
     }
 
-    chart.maxY = function() {
-        return d3.max(chart.group().all(), function(e){return e.value;});
+    chart.yAxisMax = function() {
+        return d3.max(chart.group().all(), function(e){return chart.valueFunction()(e);});
     };
 
     chart.yAxisHeight = function() {
@@ -163,7 +163,7 @@ dc.coordinateGridChart = function(chart) {
         if (_filter) {
             chart.redrawBrush(g);
         }
-    }
+    };
 
     function brushStart(p) {
     }
@@ -190,7 +190,7 @@ dc.coordinateGridChart = function(chart) {
         var gBrush = g.select("g.brush");
         gBrush.call(chart.brush().x(chart.x()));
         gBrush.selectAll("rect").attr("height", chart.xAxisY());
-    }
+    };
 
     // borrowed from Crossfilter example
     chart.resizeHandlePath = function(d) {
@@ -204,7 +204,7 @@ dc.coordinateGridChart = function(chart) {
             + "V" + (2 * y - 8)
             + "M" + (4.5 * x) + "," + (y + 8)
             + "V" + (2 * y - 8);
-    }
+    };
 
     return chart;
 };

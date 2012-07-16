@@ -113,10 +113,10 @@ suite.addBatch({
             assert.equal(chart.xUnits(), d3.time.days);
         },
         'x axis should be created': function(chart) {
-            assert.isNotNull(chart.axisX());
+            assert.isNotNull(chart.xAxis());
         },
         'y axis should be created': function(chart) {
-            assert.isNotNull(chart.axisY());
+            assert.isNotNull(chart.yAxis());
         },
         'brush should be created': function(chart) {
             assert.isNotNull(chart.select("g.brush"));
@@ -198,7 +198,7 @@ suite.addBatch({
                 chart.dimension(valueDimension).group(valueGroup)
                     .width(400).height(150)
                     .x(d3.scale.linear().domain([10,80]))
-                    .elasticAxisY(true)
+                    .yElasticity(true)
                     .transitionDuration(0);
                 chart.render();
                 return chart;

@@ -3,7 +3,9 @@ dc.dataTable = function(selector) {
 
     var size = 25;
     var columns = [];
-    var sortBy = function(d){return d;};
+    var sortBy = function(d) {
+        return d;
+    };
     var order = d3.ascending;
     var sort;
 
@@ -18,7 +20,7 @@ dc.dataTable = function(selector) {
     function renderGroups() {
         var groups = chart.root().selectAll("div.group")
             .data(nestEntries(), function(d) {
-                return d.key;
+                return chart.keyFunction()(d);
             });
 
         groups.enter().append("div")
@@ -26,7 +28,7 @@ dc.dataTable = function(selector) {
             .append("span")
             .attr("class", "label")
             .text(function(d) {
-                return d.key;
+                return chart.keyFunction()(d);
             });
 
         groups.exit().remove();
@@ -35,10 +37,11 @@ dc.dataTable = function(selector) {
     }
 
     function nestEntries() {
-        if(!sort)
+        if (!sort)
             sort = crossfilter.quicksort.by(sortBy);
 
         var entries = chart.dimension().top(size);
+
         return d3.nest()
             .key(chart.group())
             .sortKeys(order)

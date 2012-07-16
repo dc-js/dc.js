@@ -92,10 +92,10 @@ suite.addBatch({
             assert.equal(chart.xUnits(), d3.time.days);
         },
         'x axis should be created': function(chart) {
-            assert.isNotNull(chart.axisX());
+            assert.isNotNull(chart.xAxis());
         },
         'y axis should be created': function(chart) {
-            assert.isNotNull(chart.axisY());
+            assert.isNotNull(chart.yAxis());
         },
         'brush should be created': function(chart) {
             assert.isNotNull(chart.select("g.brush"));
@@ -149,10 +149,10 @@ suite.addBatch({
                 });
             },
             'x value should have default impl': function(chart){
-                assert.isNotNull(chart.xValue());
+                assert.isNotNull(chart.keyFunction());
             },
             'y value should have default impl': function(chart){
-                assert.isNotNull(chart.yValue());
+                assert.isNotNull(chart.valueFunction());
             }
         },
 

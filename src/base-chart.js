@@ -7,8 +7,8 @@ dc.baseChart = function(chart) {
 
     var width = 200, height = 200;
 
-    var _xValue = function(d){return d.key;};
-    var _yValue = function(d){return d.value;};
+    var _keyFunction = function(d){return d.key;};
+    var _valueFunction = function(d){return d.value;};
 
     var _transitionDuration = 750;
 
@@ -115,15 +115,15 @@ dc.baseChart = function(chart) {
         return chart;
     };
 
-    chart.xValue = function(_){
-        if(!arguments.length) return _xValue;
-        _xValue = _;
+    chart.keyFunction = function(_){
+        if(!arguments.length) return _keyFunction;
+        _keyFunction = _;
         return chart;
     };
 
-    chart.yValue = function(_){
-        if(!arguments.length) return _yValue;
-        _yValue = _;
+    chart.valueFunction = function(_){
+        if(!arguments.length) return _valueFunction;
+        _valueFunction = _;
         return chart;
     };
 

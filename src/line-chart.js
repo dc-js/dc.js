@@ -8,10 +8,11 @@ dc.lineChart = function(selector) {
 
         if (chart.dataAreSet()) {
             chart.generateG();
-            chart.renderAxisX(chart.g());
-            chart.renderAxisY(chart.g());
 
             redrawLine();
+
+            chart.renderXAxis(chart.g());
+            chart.renderYAxis(chart.g());
 
             chart.renderBrush(chart.g());
         }
@@ -22,8 +23,8 @@ dc.lineChart = function(selector) {
     chart.redraw = function() {
         redrawLine();
         chart.redrawBrush(chart.g());
-        if (chart.elasticAxisY())
-            chart.renderAxisY(chart.g());
+        if (chart.yElasticity())
+            chart.renderYAxis(chart.g());
         return chart;
     };
 
@@ -32,22 +33,24 @@ dc.lineChart = function(selector) {
 
         var path = chart.selectAll("path.line");
 
-        if(path.empty())
+        if (path.empty())
             path = chart.g().append("path")
-            .attr("class", "line");
+                .attr("class", "line");
 
         var line = d3.svg.line()
             .x(function(d) {
-                return chart.x()(d.key);
+                return chart.x()(chart.keyFunction()(d));
             })
             .y(function(d) {
-                return chart.y()(d.value);
+                return chart.y()(chart.valueFunction()(d));
             });
 
         path = path
-            .attr("transform", "translate("+chart.margins().left+","+chart.margins().top+")");
+            .attr("transform", "translate(" + chart.margins().left + "," + chart.margins().top + ")");
 
-        dc.transition(path, chart.transitionDuration(), function(t){t.ease("linear")})
+        dc.transition(path, chart.transitionDuration(), function(t) {
+            t.ease("linear")
+        })
             .attr("d", line);
     }
 
