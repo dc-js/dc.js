@@ -214,13 +214,13 @@ dc.coordinateGridChart = function(chart) {
     chart.generateG = function() {
         _g = chart.generateSvg().append("g")
             .attr("transform", "translate(" + chart.margins().left + "," + chart.margins().top + ")");
-    }
+    };
 
     chart.g = function(_){
         if(!arguments.length) return _g;
         _g = _;
         return chart;
-    }
+    };
 
     chart.margins = function(m) {
         if (!arguments.length) return _margin;
@@ -286,7 +286,7 @@ dc.coordinateGridChart = function(chart) {
         return chart;
     };
 
-    chart.yElasticity = function(_) {
+    chart.elasticY = function(_) {
         if (!arguments.length) return _yElasticity;
         _yElasticity = _;
         return chart;
@@ -296,7 +296,7 @@ dc.coordinateGridChart = function(chart) {
         var min = d3.min(chart.group().all(), function(e){return chart.valueFunction()(e);});
         if(min > 0) min = 0;
         return min;
-    }
+    };
 
     chart.yAxisMax = function() {
         return d3.max(chart.group().all(), function(e){return chart.valueFunction()(e);});
@@ -652,7 +652,7 @@ dc.barChart = function(selector) {
     chart.redraw = function() {
         redrawBars();
         chart.redrawBrush(chart.g());
-        if (chart.yElasticity())
+        if (chart.elasticY())
             chart.renderYAxis(chart.g());
         return chart;
     };
@@ -718,7 +718,7 @@ dc.barChart = function(selector) {
         chart._redrawBrush(g);
 
         fadeDeselectedBars();
-    }
+    };
 
     function fadeDeselectedBars() {
         if (!chart.brush().empty() && chart.brush().extent() != null) {
@@ -764,7 +764,7 @@ dc.lineChart = function(selector) {
     chart.redraw = function() {
         redrawLine();
         chart.redrawBrush(chart.g());
-        if (chart.yElasticity())
+        if (chart.elasticY())
             chart.renderYAxis(chart.g());
         return chart;
     };

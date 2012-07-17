@@ -198,7 +198,7 @@ suite.addBatch({
                 chart.dimension(valueDimension).group(valueGroup)
                     .width(400).height(150)
                     .x(d3.scale.linear().domain([10,80]))
-                    .yElasticity(true)
+                    .elasticY(true)
                     .transitionDuration(0);
                 chart.render();
                 return chart;

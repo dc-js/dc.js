@@ -26,7 +26,7 @@ dc.barChart = function(selector) {
     chart.redraw = function() {
         redrawBars();
         chart.redrawBrush(chart.g());
-        if (chart.yElasticity())
+        if (chart.elasticY())
             chart.renderYAxis(chart.g());
         return chart;
     };
@@ -92,7 +92,7 @@ dc.barChart = function(selector) {
         chart._redrawBrush(g);
 
         fadeDeselectedBars();
-    }
+    };
 
     function fadeDeselectedBars() {
         if (!chart.brush().empty() && chart.brush().extent() != null) {

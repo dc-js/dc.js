@@ -23,7 +23,7 @@ dc.lineChart = function(selector) {
     chart.redraw = function() {
         redrawLine();
         chart.redrawBrush(chart.g());
-        if (chart.yElasticity())
+        if (chart.elasticY())
             chart.renderYAxis(chart.g());
         return chart;
     };
