@@ -101,13 +101,13 @@ dc.coordinateGridChart = function(chart) {
     };
 
     chart.yAxisMin = function() {
-        var min = d3.min(chart.group().all(), function(e){return chart.valueFunction()(e);});
+        var min = d3.min(chart.group().all(), function(e){return chart.yValue()(e);});
         if(min > 0) min = 0;
         return min;
     };
 
     chart.yAxisMax = function() {
-        return d3.max(chart.group().all(), function(e){return chart.valueFunction()(e);});
+        return d3.max(chart.group().all(), function(e){return chart.yValue()(e);});
     };
 
     chart.yAxisHeight = function() {

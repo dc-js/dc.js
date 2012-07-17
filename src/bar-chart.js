@@ -77,15 +77,15 @@ dc.barChart = function(selector) {
     }
 
     function finalBarX(d) {
-        return chart.x()(chart.keyFunction()(d)) + chart.margins().left;
+        return chart.x()(chart.xValue()(d)) + chart.margins().left;
     }
 
     function finalBarY(d) {
-        return chart.margins().top + chart.y()(chart.valueFunction()(d));
+        return chart.margins().top + chart.y()(chart.yValue()(d));
     }
 
     function finalBarHeight(d) {
-        return chart.yAxisHeight() - chart.y()(chart.valueFunction()(d)) - BAR_PADDING_BOTTOM;
+        return chart.yAxisHeight() - chart.y()(chart.yValue()(d)) - BAR_PADDING_BOTTOM;
     }
 
     chart.redrawBrush = function(g) {
@@ -100,7 +100,7 @@ dc.barChart = function(selector) {
             var end = chart.brush().extent()[1];
 
             bars.classed("deselected", function(d) {
-                var xValue = chart.keyFunction()(d);
+                var xValue = chart.xValue()(d);
                 return xValue < start || xValue >= end;
             });
         } else {

@@ -39,10 +39,10 @@ dc.lineChart = function(selector) {
 
         var line = d3.svg.line()
             .x(function(d) {
-                return chart.x()(chart.keyFunction()(d));
+                return chart.x()(chart.xValue()(d));
             })
             .y(function(d) {
-                return chart.y()(chart.valueFunction()(d));
+                return chart.y()(chart.yValue()(d));
             });
 
         path = path
