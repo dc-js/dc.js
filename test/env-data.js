@@ -11,7 +11,9 @@ json = jQuery.parseJSON("[" +
     "{\"value\":\"55\",\"countrycode\":\"US\",\"status\":\"F\",\"id\":10,\"region\":\"\",\"date\":\"2012-06-10T16:10:39Z\"}" +
     "]");
 
-json.forEach(function(e){e.dd = d3.time.format.iso.parse(e.date);});
+json.forEach(function(e) {
+    e.dd = d3.time.format.iso.parse(e.date);
+});
 
 data = crossfilter(json);
 
@@ -33,6 +35,24 @@ statusDimension = data.dimension(function(d) {
     return d.status;
 });
 statusGroup = statusDimension.group();
+statusMultiGroup = statusGroup.reduce(
+    //add
+    function(p, v) {
+        ++p.count;
+        p.value += +v.value;
+        return p;
+    },
+    //remove
+    function(p, v) {
+        --p.count;
+        p.value -= +v.value;
+        return p;
+    },
+    //init
+    function() {
+        return {count:0, value:0};
+    }
+);
 
 regionDimension = data.dimension(function(d) {
     return d.region;

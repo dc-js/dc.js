@@ -9,6 +9,7 @@
     <script type="text/javascript" src="../node_modules/crossfilter/crossfilter.js"></script>
 
     <script type="text/javascript" src="../dc.js"></script>
+
     <script type="text/javascript" src="env-data.js"></script>
 
     <style type="text/css">
@@ -102,6 +103,8 @@
     <div class="clear"></div>
 </div>
 
+<div class="clear"></div>
+
 <div id="line-chart-date" class="chart">
     <span>Value LineChart</span>
     <a class="reset" href="javascript:lineChartDate1.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -109,11 +112,18 @@
     <div class="clear"></div>
 </div>
 
-<div class="clear"></div>
-
 <div id="bar-chart-date" class="chart">
     <span>Date BarChart (3 months)</span>
-    <a class="reset" href="javascript:barChartDate1.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+    <a class="reset" href="javascript:barChartDate.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+    <div class="clear"></div>
+</div>
+
+<div class="clear"></div>
+
+<div id="bubble-chart" class="chart">
+    <span>Bubble Chart (Date, Value, ID)</span>
+    <a class="reset" href="javascript:bubbleChartDate1.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
 </div>
@@ -150,15 +160,18 @@
             .dimension(countryDimension)
             .group(countryGroup);
 
-    var barChartValue = dc.barChart("#bar-chart-value");
-    barChartValue.width(400)
+    var lineChartDate1 = dc.lineChart("#line-chart-date");
+    lineChartDate1.width(500)
             .height(150)
             .dimension(valueDimension)
             .group(valueGroup)
-            .x(d3.scale.linear().domain([10,80]));
+            .x(d3.scale.linear().domain([10,80]))
+            .xUnits(dc.units.integers)
+            .elasticY(true)
+            .xAxis().ticks(5);
 
-    var barChartDate1 = dc.barChart("#bar-chart-date");
-    barChartDate1.width(500)
+    var barChartDate = dc.barChart("#bar-chart-date");
+    barChartDate.width(500)
             .height(150)
             .dimension(dateDimension)
             .group(dateGroup)
@@ -166,6 +179,20 @@
             .xUnits(d3.time.days)
             .filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
             .xAxis().ticks(5);
+
+    var bubbleChart = dc.bubbleChart("#bubble-chart");
+    bubbleChart.width(990)
+            .height(350)
+            .dimension(statusDimension)
+            .group(statusMultiGroup)
+            .xValue(function(p) {
+                return p.value.value;
+            })
+            .yValue(function(p) {
+                return p.value.count;
+            })
+            .x(d3.scale.linear().domain([0, 300]))
+            .y(d3.scale.linear().domain([0, 10]));
 
     dc.dataCount("#data-count")
             .dimension(data)
@@ -197,16 +224,6 @@
             return d.value;
         }
     ]);
-
-    var lineChartDate1 = dc.lineChart("#line-chart-date");
-    lineChartDate1.width(500)
-            .height(150)
-            .dimension(valueDimension)
-            .group(valueGroup)
-            .x(d3.scale.linear().domain([10,80]))
-            .xUnits(dc.units.integers)
-            .elasticY(true)
-            .xAxis().ticks(5);
 
     dc.renderAll();
 </script>

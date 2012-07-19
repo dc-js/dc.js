@@ -24,8 +24,8 @@ dc.coordinateGridChart = function(chart) {
             .attr("transform", "translate(" + chart.margins().left + "," + chart.margins().top + ")");
     };
 
-    chart.g = function(_){
-        if(!arguments.length) return _g;
+    chart.g = function(_) {
+        if (!arguments.length) return _g;
         _g = _;
         return chart;
     };
@@ -74,7 +74,9 @@ dc.coordinateGridChart = function(chart) {
 
     chart.renderYAxis = function(g) {
         g.select("g.y").remove();
+
         _y.domain([chart.yAxisMin(), chart.yAxisMax()]).rangeRound([chart.yAxisHeight(), 0]);
+
         _yAxis = _yAxis.scale(_y).orient("left").ticks(DEFAULT_Y_AXIS_TICKS);
         g.append("g")
             .attr("class", "axis y")
@@ -101,13 +103,17 @@ dc.coordinateGridChart = function(chart) {
     };
 
     chart.yAxisMin = function() {
-        var min = d3.min(chart.group().all(), function(e){return chart.yValue()(e);});
-        if(min > 0) min = 0;
+        var min = d3.min(chart.group().all(), function(e) {
+            return chart.yValue()(e);
+        });
+        if (min > 0) min = 0;
         return min;
     };
 
     chart.yAxisMax = function() {
-        return d3.max(chart.group().all(), function(e){return chart.yValue()(e);});
+        return d3.max(chart.group().all(), function(e) {
+            return chart.yValue()(e);
+        });
     };
 
     chart.yAxisHeight = function() {

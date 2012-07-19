@@ -25,9 +25,6 @@ dc.bubbleChart = function(selector) {
 
         chart.redrawBrush(chart.g());
 
-        if (chart.elasticY())
-            chart.renderYAxis(chart.g());
-
         return chart;
     };
 
@@ -38,10 +35,10 @@ dc.bubbleChart = function(selector) {
     chart.redrawBrush = function(g) {
         chart._redrawBrush(g);
 
-        fadeDeselectedArea();
+        fadeDeselectedBubbles();
     }
 
-    function fadeDeselectedArea() {
+    function fadeDeselectedBubbles() {
     }
 
     dc.registerChart(chart);

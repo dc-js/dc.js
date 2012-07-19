@@ -32,6 +32,7 @@
             <file file="src/line-chart.js"/>
             <file file="src/data-count.js"/>
             <file file="src/data-table.js"/>
+            <file file="src/bubble-chart.js"/>
         </concat>
         <echo>Compiling dc.min.js</echo>
         <exec executable="bash">
