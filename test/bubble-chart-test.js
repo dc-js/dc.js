@@ -70,6 +70,10 @@ suite.addBatch({
             assert.equal(chart.x().range()[0], 0);
             assert.equal(chart.x().range()[1], 1030);
         },
+        'x domain should be set': function(chart) {
+            assert.equal(chart.x().domain()[0], 0);
+            assert.equal(chart.x().domain()[1], 300);
+        },
         'y can be set': function(chart) {
             assert.isTrue(chart.y() != undefined);
         },
@@ -79,7 +83,7 @@ suite.addBatch({
         },
         'y domain should be set': function(chart) {
             assert.equal(chart.y().domain()[0], 0);
-            assert.equal(chart.y().domain()[1], 5);
+            assert.equal(chart.y().domain()[1], 10);
         },
         'root g should be created': function(chart) {
             assert.isFalse(chart.select("svg g").empty());

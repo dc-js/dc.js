@@ -1,4 +1,4 @@
-<project name="dc.js" default="test">
+<project name="dc.js" default="make">
     <property environment="env"/>
     <property name="node.path" value="node_modules"/>
     <property name="js.compiler" value="${node.path}/.bin/uglifyjs"/>

@@ -11,7 +11,7 @@ dc.coordinateGridChart = function(chart) {
     var _xAxis = d3.svg.axis();
     var _xUnits = dc.units.integers;
 
-    var _y = d3.scale.linear().range([100, 0]);
+    var _y;
     var _yAxis = d3.svg.axis();
     var _yElasticity = false;
 
@@ -50,7 +50,7 @@ dc.coordinateGridChart = function(chart) {
 
     chart.renderXAxis = function(g) {
         g.select("g.x").remove();
-        chart.x().range([0, (chart.width() - chart.margins().left - chart.margins().right)]);
+        _x.range([0, (chart.width() - chart.margins().left - chart.margins().right)]);
         _xAxis = _xAxis.scale(chart.x()).orient("bottom");
         g.append("g")
             .attr("class", "axis x")
@@ -75,9 +75,14 @@ dc.coordinateGridChart = function(chart) {
     chart.renderYAxis = function(g) {
         g.select("g.y").remove();
 
-        _y.domain([chart.yAxisMin(), chart.yAxisMax()]).rangeRound([chart.yAxisHeight(), 0]);
+        if (_y == null || chart.elasticY()) {
+            _y = d3.scale.linear();
+            _y.domain([chart.yAxisMin(), chart.yAxisMax()]).rangeRound([chart.yAxisHeight(), 0]);
+        }
 
+        _y.range([chart.yAxisHeight(), 0]);
         _yAxis = _yAxis.scale(_y).orient("left").ticks(DEFAULT_Y_AXIS_TICKS);
+
         g.append("g")
             .attr("class", "axis y")
             .attr("transform", "translate(" + chart.margins().left + "," + chart.margins().top + ")")

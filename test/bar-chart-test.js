@@ -21,7 +21,7 @@ function buildChart(id, xdomain) {
 }
 
 suite.addBatch({
-    'time line bar chart': {
+    'time bar chart': {
         topic: function() {
             var chart = buildChart("bar-chart", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
             chart.filter([new Date(2012, 5, 01), new Date(2012, 5, 30)]);
@@ -64,6 +64,10 @@ suite.addBatch({
         'x range round is auto calculated based on width': function(chart) {
             assert.equal(chart.x().range()[0], 0);
             assert.equal(chart.x().range()[1], 1030);
+        },
+        'x domain should be set': function(chart) {
+            assert.equal(chart.x().domain()[0].getTime(), new Date(2012, 0, 1).getTime());
+            assert.equal(chart.x().domain()[1].getTime(), new Date(2012, 11, 31).getTime());
         },
         'y can be set': function(chart) {
             assert.isTrue(chart.y() != undefined);
@@ -230,6 +234,21 @@ suite.addBatch({
         }
     }
 });
+
+suite.addBatch({'elastic y':{
+    topic: function(chart) {
+        countryDimension.filter("CA")
+        var chart = buildChart("bar-chart2", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+        chart.render();
+        return chart;
+    },
+    'y axis should have shrunk triggered by filter': function(chart) {
+        assert.equal(chart.y().domain()[1], 1);
+    },
+    teardown: function(topic) {
+        resetAllFilters();
+    }
+}});
 
 suite.export(module);
 

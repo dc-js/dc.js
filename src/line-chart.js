@@ -9,10 +9,10 @@ dc.lineChart = function(selector) {
         if (chart.dataAreSet()) {
             chart.generateG();
 
-            redrawLine();
-
             chart.renderXAxis(chart.g());
             chart.renderYAxis(chart.g());
+
+            redrawLine();
 
             chart.renderBrush(chart.g());
         }

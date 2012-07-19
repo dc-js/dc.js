@@ -9,10 +9,10 @@ dc.bubbleChart = function(selector) {
         if (chart.dataAreSet()) {
             chart.generateG();
 
-            redrawBubbles();
-
             chart.renderXAxis(chart.g());
             chart.renderYAxis(chart.g());
+
+            redrawBubbles();
 
             chart.renderBrush(chart.g());
         }

@@ -65,6 +65,10 @@ suite.addBatch({
             assert.equal(chart.x().range()[0], 0);
             assert.equal(chart.x().range()[1], 1030);
         },
+        'x domain should be set': function(chart) {
+            assert.equal(chart.x().domain()[0].getTime(), new Date(2012, 0, 1).getTime());
+            assert.equal(chart.x().domain()[1].getTime(), new Date(2012, 11, 31).getTime());
+        },
         'y can be set': function(chart) {
             assert.isTrue(chart.y() != undefined);
         },
@@ -163,8 +167,8 @@ suite.addBatch({
 
 suite.addBatch({'elastic y':{
     topic: function(chart) {
-        var chart = buildChart("chart2", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
         countryDimension.filter("CA")
+        var chart = buildChart("chart2", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
         chart.render();
         return chart;
     },
