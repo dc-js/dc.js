@@ -128,9 +128,19 @@ suite.addBatch({
         },
 
         'bubble rendering':{
-            topic: function(chart){return chart;},
-            'right number of bubbles should be rendered': function(chart){
+            topic: function(chart) {
+                return chart;
+            },
+            'right number of bubbles should be rendered': function(chart) {
                 assert.equal(chart.selectAll("circle.bubble")[0].length, 2);
+            },
+            'right cx should be calculated for each bubble': function(chart) {
+                chart.selectAll("circle.bubble").each(function(d, i) {
+                    if (i == 0)
+                        assert.equal(d3.select(this).attr("cx"), 775.3333333333334);
+                    else if (i == 1)
+                        assert.equal(d3.select(this).attr("cx"), 699.8000000000001);
+                });
             }
         },
 
