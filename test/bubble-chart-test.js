@@ -28,7 +28,8 @@ function buildChart(id) {
         .x(d3.scale.linear().domain([0, 300]))
         .y(d3.scale.linear().domain([0, 10]))
         .r(d3.scale.linear().domain([0, 30]))
-        .transitionDuration(0);
+        .transitionDuration(0)
+        .renderLabel(true);
     chart.render();
     return chart;
 }
@@ -54,7 +55,7 @@ suite.addBatch({
         'group should be set': function(chart) {
             assert.equal(chart.group(), statusMultiGroup);
         },
-        'colors should be': function(chart){
+        'colors should be': function(chart) {
             assert.isNotNull(chart.colors());
         },
         'width should be set': function(chart) {
@@ -143,7 +144,7 @@ suite.addBatch({
                 chart.selectAll("g.node").each(function(d, i) {
                     if (i == 0)
                         assert.equal(d3.select(this).attr("transform"), "translate(582.5555555555557,118.88888888888889)");
-                    else if (i == 1)
+                    if (i == 1)
                         assert.equal(d3.select(this).attr("transform"), "translate(521.688888888889,118.88888888888889)");
                 });
             },
@@ -151,7 +152,7 @@ suite.addBatch({
                 chart.selectAll("circle.bubble").each(function(d, i) {
                     if (i == 0)
                         assert.equal(d3.select(this).attr("r"), 46.111111111111114);
-                    else if (i == 1)
+                    if (i == 1)
                         assert.equal(d3.select(this).attr("r"), 46.111111111111114);
                 });
             },
@@ -159,12 +160,40 @@ suite.addBatch({
                 chart.selectAll("circle.bubble").each(function(d, i) {
                     if (i == 0)
                         assert.equal(d3.select(this).attr("class"), "bubble 0");
-                    else if (i == 1)
+                    if (i == 1)
                         assert.equal(d3.select(this).attr("class"), "bubble 1");
+                });
+            },
+            'should generate right number of labels': function(chart) {
+                assert.equal(chart.selectAll("g.node text")[0].length, 2);
+            },
+            'should create correct label for each bubble': function(chart) {
+                chart.selectAll("circle.bubble text").each(function(d, i) {
+                    if (i == 0)
+                        assert.equal(d3.select(this).text(), "T");
+                    if (i == 1)
+                        assert.equal(d3.select(this).text(), "F");
                 });
             }
         },
 
+        teardown: function(topic) {
+            resetAllFilters();
+        }
+    }
+});
+
+suite.addBatch({
+    'bubble chart wo/ label': {
+        topic: function() {
+            var chart = buildChart("chart2");
+            chart.renderLabel(false);
+            chart.render();
+            return chart;
+        },
+        'should generate right number of labels': function(chart) {
+            assert.equal(chart.selectAll("g.node text")[0].length, 0);
+        },
         teardown: function(topic) {
             resetAllFilters();
         }

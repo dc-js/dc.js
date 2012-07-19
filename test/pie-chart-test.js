@@ -244,6 +244,24 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({
+    'pie chart wo/ label': {
+        topic: function() {
+            var chart = buildChart("pie-chart4");
+            chart.innerRadius(innerRadius);
+            chart.renderLabel(false);
+            chart.render();
+            return chart;
+        },
+        'slice label should be created': function(pieChart) {
+            assert.equal(pieChart.selectAll("svg g g.pie-slice text").data().length, 0);
+        },
+        teardown:function(chart) {
+            resetAllFilters();
+        }
+    }
+});
+
 suite.export(module);
 
 

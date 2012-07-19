@@ -9,6 +9,8 @@ dc.baseChart = function(chart) {
 
     var _xValue = function(d){return d.key;};
     var _yValue = function(d){return d.value;};
+    var _label = function(d) {return d.key;};
+    var _renderLabel;
 
     var _transitionDuration = 750;
 
@@ -124,6 +126,18 @@ dc.baseChart = function(chart) {
     chart.yValue = function(_){
         if(!arguments.length) return _yValue;
         _yValue = _;
+        return chart;
+    };
+
+    chart.label = function(_) {
+        if(!arguments.length) return _label;
+        _label = _;
+        return chart;
+    };
+
+     chart.renderLabel = function(_) {
+        if(!arguments.length) return _renderLabel;
+        _renderLabel = _;
         return chart;
     };
 

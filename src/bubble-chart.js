@@ -43,20 +43,37 @@ dc.bubbleChart = function(selector) {
         var bubbles = bubbleG.enter()
             .append("g")
             .attr("class", "node")
-            .attr("transform", function(d){return "translate("+(bubbleX(d)-bubbleR(d))+","+(bubbleY(d)-bubbleR(d))+")";})
+            .attr("transform", function(d) {
+                return "translate(" + (bubbleX(d) - bubbleR(d)) + "," + (bubbleY(d) - bubbleR(d)) + ")";
+            })
             .append("circle");
 
-        bubbles.attr("class", function(d, i){return "bubble " + i;})
-            .attr("fill", function(d, i){return chart.colors()(i);})
+        bubbles.attr("class", function(d, i) {
+            return "bubble " + i;
+        })
+            .attr("fill", function(d, i) {
+                return chart.colors()(i);
+            })
             .attr("r", 0);
         dc.transition(bubbleG, chart.transitionDuration())
             .attr("r", function(d) {
                 return bubbleR(d);
             });
 
+        if (chart.renderLabel()) {
+            bubbleG.append("text")
+                .attr("text-anchor", "middle")
+                .attr("dy", ".3em")
+                .text(function(d) {
+                    return chart.label()(d);
+                });
+        }
+
         // update
         dc.transition(bubbleG, chart.transitionDuration())
-            .attr("transform", function(d){return "translate("+(bubbleX(d)-bubbleR(d))+","+(bubbleY(d)-bubbleR(d))+")";})
+            .attr("transform", function(d) {
+                return "translate(" + (bubbleX(d) - bubbleR(d)) + "," + (bubbleY(d) - bubbleR(d)) + ")";
+            })
             .selectAll("circle.bubble")
             .attr("r", function(d) {
                 return bubbleR(d);

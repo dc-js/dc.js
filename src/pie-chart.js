@@ -12,10 +12,10 @@ dc.pieChart = function(selector) {
     var labels;
     var chart = dc.colorChart(dc.baseChart({}));
 
-    var labelFunction = function(d) {
+    chart.label(function(d) {
         return chart.xValue()(d.data);
-    };
-
+    });
+    chart.renderLabel(true);
     chart.transitionDuration(350);
 
     chart.render = function() {
@@ -69,7 +69,7 @@ dc.pieChart = function(selector) {
             .data(dataPie(chart.orderedGroup().top(Infinity)))
             .enter()
             .append("g")
-            .attr("class", function(d, i){
+            .attr("class", function(d, i) {
                 return sliceCssClass + " " + i;
             });
 
@@ -90,11 +90,11 @@ dc.pieChart = function(selector) {
     };
 
     chart.drawLabels = function(slices, arc) {
-        labels = slices.append("text");
-
-        redrawLabels(arc);
-
-        labels.on("click", onClick);
+        if (chart.renderLabel()) {
+            labels = slices.append("text");
+            redrawLabels(arc);
+            labels.on("click", onClick);
+        }
     };
 
     chart.hasFilter = function() {
@@ -157,11 +157,6 @@ dc.pieChart = function(selector) {
         return chart;
     }
 
-    chart.label = function(f) {
-        labelFunction = f;
-        return chart;
-    }
-
     function calculateDataPie() {
         return d3.layout.pie().value(function(d) {
             return chart.yValue()(d);
@@ -185,7 +180,7 @@ dc.pieChart = function(selector) {
                 var data = d.data;
                 if (chart.yValue()(data) == 0)
                     return "";
-                return labelFunction(d);
+                return chart.label()(d);
             });
     }
 
