@@ -3,8 +3,6 @@ dc.pieChart = function(selector) {
 
     var sliceCssClass = "pie-slice";
 
-    var colors = d3.scale.category20c();
-
     var radius = 0, innerRadius = 0;
     var g;
     var arc;
@@ -12,7 +10,7 @@ dc.pieChart = function(selector) {
     var slices;
     var slicePaths;
     var labels;
-    var chart = dc.baseChart({});
+    var chart = dc.colorChart(dc.baseChart({}));
 
     var labelFunction = function(d) {
         return chart.xValue()(d.data);
@@ -48,12 +46,6 @@ dc.pieChart = function(selector) {
         return chart;
     };
 
-    chart.colors = function(c) {
-        if (!arguments.length) return colors;
-        colors = d3.scale.ordinal().range(c);
-        return chart;
-    };
-
     chart.radius = function(r) {
         if (!arguments.length) return radius;
         radius = r;
@@ -83,7 +75,7 @@ dc.pieChart = function(selector) {
 
         slicePaths = slices.append("path")
             .attr("fill", function(d, i) {
-                return colors(i);
+                return chart.colors()(i);
             })
             .attr("d", arcs);
 

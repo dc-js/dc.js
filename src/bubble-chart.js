@@ -1,5 +1,5 @@
 dc.bubbleChart = function(selector) {
-    var chart = dc.coordinateGridChart({});
+    var chart = dc.colorChart(dc.coordinateGridChart({}));
 
     var _r = d3.scale.linear().domain([0, 100]);
     var _rValue = function(d) {
@@ -42,7 +42,7 @@ dc.bubbleChart = function(selector) {
         // enter
         bubbles.enter()
             .append("circle")
-            .attr("class", "bubble")
+            .attr("class", function(d, i){return "bubble " + i;})
             .attr("cx", function(d) {
                 return bubbleX(d);
             })

@@ -7,6 +7,7 @@ var suite = vows.describe('Bubble chart');
 
 var width = 900;
 var height = 350;
+var colors = d3.scale.category20c();
 
 function buildChart(id) {
     d3.select("body").append("div").attr("id", id);
@@ -14,6 +15,7 @@ function buildChart(id) {
     chart.width(width).height(height)
         .dimension(statusDimension)
         .group(statusMultiGroup)
+        .colors(colors)
         .xValue(function(p) {
             return p.value.value;
         })
@@ -51,6 +53,9 @@ suite.addBatch({
         },
         'group should be set': function(chart) {
             assert.equal(chart.group(), statusMultiGroup);
+        },
+        'colors should be': function(chart){
+            assert.isNotNull(chart.colors());
         },
         'width should be set': function(chart) {
             assert.equal(chart.width(), width);
@@ -156,6 +161,14 @@ suite.addBatch({
                         assert.equal(d3.select(this).attr("r"), 46.111111111111114);
                     else if (i == 1)
                         assert.equal(d3.select(this).attr("r"), 46.111111111111114);
+                });
+            },
+            'should attach each bubble with index based class': function(chart) {
+                chart.selectAll("circle.bubble").each(function(d, i) {
+                    if (i == 0)
+                        assert.equal(d3.select(this).attr("class"), "bubble 0");
+                    else if (i == 1)
+                        assert.equal(d3.select(this).attr("class"), "bubble 1");
                 });
             }
         },
