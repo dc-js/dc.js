@@ -195,8 +195,12 @@
             .yValue(function(p) {
                 return p.value.count;
             })
+            .rValue(function(p) {
+                return p.value.count;
+            })
             .x(d3.scale.linear().domain([0, 300]))
-            .y(d3.scale.linear().domain([0, 10]));
+            .y(d3.scale.linear().domain([0, 10]))
+            .r(d3.scale.linear().domain([0, 30]));
 
     dc.dataCount("#data-count")
             .dimension(data)

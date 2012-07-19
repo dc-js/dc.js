@@ -20,8 +20,12 @@ function buildChart(id) {
         .yValue(function(p) {
             return p.value.count;
         })
+        .rValue(function(p) {
+            return p.value.count;
+        })
         .x(d3.scale.linear().domain([0, 300]))
         .y(d3.scale.linear().domain([0, 10]))
+        .r(d3.scale.linear().domain([0, 30]))
         .transitionDuration(0);
     chart.render();
     return chart;
@@ -85,6 +89,12 @@ suite.addBatch({
             assert.equal(chart.y().domain()[0], 0);
             assert.equal(chart.y().domain()[1], 10);
         },
+        'r should be set': function(chart) {
+            assert.isNotNull(chart.r());
+        },
+        'rValue should be set': function(chart) {
+            assert.isNotNull(chart.rValue());
+        },
         'root g should be created': function(chart) {
             assert.isFalse(chart.select("svg g").empty());
         },
@@ -115,6 +125,13 @@ suite.addBatch({
         'round can be changed': function(chart) {
             chart.round(d3.time.day.round)
             assert.isNotNull(chart.round());
+        },
+
+        'bubble rendering':{
+            topic: function(chart){return chart;},
+            'right number of bubbles should be rendered': function(chart){
+                assert.equal(chart.selectAll("circle.bubble")[0].length, 2);
+            }
         },
 
         teardown: function(topic) {

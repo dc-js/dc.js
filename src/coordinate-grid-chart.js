@@ -50,7 +50,7 @@ dc.coordinateGridChart = function(chart) {
 
     chart.renderXAxis = function(g) {
         g.select("g.x").remove();
-        _x.range([0, (chart.width() - chart.margins().left - chart.margins().right)]);
+        _x.range([0, chart.xAxisLength()]);
         _xAxis = _xAxis.scale(chart.x()).orient("bottom");
         g.append("g")
             .attr("class", "axis x")

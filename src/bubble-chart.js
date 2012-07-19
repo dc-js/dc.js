@@ -1,6 +1,9 @@
 dc.bubbleChart = function(selector) {
     var chart = dc.coordinateGridChart({});
 
+    var _r = d3.scale.linear().domain([0, 100]);
+    var _rValue = function(d){return d.r;};
+
     chart.transitionDuration(500);
 
     chart.render = function() {
@@ -11,6 +14,8 @@ dc.bubbleChart = function(selector) {
 
             chart.renderXAxis(chart.g());
             chart.renderYAxis(chart.g());
+
+            _r.range([0, chart.xAxisLength() / 3]);
 
             redrawBubbles();
 
@@ -38,7 +43,7 @@ dc.bubbleChart = function(selector) {
             .attr("class", "bubble")
             .attr("cx", function(d){return bubbleX(d);})
             .attr("cy", function(d){return bubbleY(d);})
-            .attr("r", 10);
+            .attr("r", function(d){return bubbleR(d);});
     }
 
     function bubbleX(d) {
@@ -49,6 +54,10 @@ dc.bubbleChart = function(selector) {
         return chart.margins().top + chart.y()(chart.yValue()(d));
     }
 
+    function bubbleR(d) {
+        return chart.r()(chart.rValue()(d));
+    }
+
     chart.redrawBrush = function(g) {
         chart._redrawBrush(g);
 
@@ -57,6 +66,18 @@ dc.bubbleChart = function(selector) {
 
     function fadeDeselectedBubbles() {
     }
+
+    chart.r = function(_){
+        if(!arguments.length) return _r;
+        _r = _;
+        return chart;
+    };
+
+    chart.rValue = function(_){
+        if(!arguments.length) return _rValue;
+        _rValue = _;
+        return chart;
+    };
 
     dc.registerChart(chart);
 
