@@ -149,6 +149,14 @@ suite.addBatch({
                     else if (i == 1)
                         assert.equal(d3.select(this).attr("cy"), 165);
                 });
+            },
+            'should calculate right r for each bubble': function(chart) {
+                chart.selectAll("circle.bubble").each(function(d, i) {
+                    if (i == 0)
+                        assert.equal(d3.select(this).attr("r"), 46.111111111111114);
+                    else if (i == 1)
+                        assert.equal(d3.select(this).attr("r"), 46.111111111111114);
+                });
             }
         },
 
