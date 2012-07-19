@@ -43,6 +43,7 @@ dc.bubbleChart = function(selector) {
         bubbles.enter()
             .append("circle")
             .attr("class", function(d, i){return "bubble " + i;})
+            .attr("fill", function(d, i){return chart.colors()(i);})
             .attr("cx", function(d) {
                 return bubbleX(d);
             })
