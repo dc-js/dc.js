@@ -1,5 +1,9 @@
 dc.bubbleChart = function(selector) {
-    var chart = dc.colorChart(dc.coordinateGridChart({}));
+    var chart = dc.singleSelectionChart(
+        dc.colorChart(
+            dc.coordinateGridChart({})
+        )
+    );
 
     var _r = d3.scale.linear().domain([0, 100]);
     var _rValue = function(d) {
@@ -52,9 +56,7 @@ dc.bubbleChart = function(selector) {
             .append("circle").attr("class", function(d, i) {
                 return "bubble " + i;
             })
-            .on("mouseover", function(d) {
-                alert(d);
-            })
+            .on("click", onClick)
             .attr("fill", function(d, i) {
                 return chart.colors()(i);
             })
@@ -68,6 +70,7 @@ dc.bubbleChart = function(selector) {
             bubbleGEnter.append("text")
                 .attr("text-anchor", "middle")
                 .attr("dy", ".3em")
+                .on("click", onClick)
                 .text(function(d) {
                     return chart.label()(d);
                 });
@@ -90,6 +93,11 @@ dc.bubbleChart = function(selector) {
             .attr("r", 0)
             .remove();
     }
+
+    var onClick = function(d) {
+        chart.filter(d.key);
+        dc.redrawAll();
+    };
 
     function bubbleX(d) {
         return chart.x()(chart.xValue()(d)) + chart.margins().left;
