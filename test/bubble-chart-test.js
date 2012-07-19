@@ -30,6 +30,7 @@ function buildChart(id) {
         .r(d3.scale.linear().domain([0, 30]))
         .transitionDuration(0)
         .renderLabel(true)
+        .renderTitle(true)
         .title(function(p){return p.key + ": {count:" + p.value.count + ",value:" + p.value.value + "}"});
     chart.render();
     return chart;
@@ -169,7 +170,7 @@ suite.addBatch({
                 assert.equal(chart.selectAll("g.node text")[0].length, 2);
             },
             'should create correct label for each bubble': function(chart) {
-                chart.selectAll("circle.bubble text").each(function(d, i) {
+                chart.selectAll("g.node text").each(function(d, i) {
                     if (i == 0)
                         assert.equal(d3.select(this).text(), "T");
                     if (i == 1)
@@ -178,6 +179,14 @@ suite.addBatch({
             },
             'should generate right number of titles': function(chart) {
                 assert.equal(chart.selectAll("g.node title")[0].length, 2);
+            },
+            'should create correct label for each bubble': function(chart) {
+                chart.selectAll("g.node title").each(function(d, i) {
+                    if (i == 0)
+                        assert.equal(d3.select(this).text(), "F: {count:5,value:220}");
+                    if (i == 1)
+                        assert.equal(d3.select(this).text(), "T: {count:5,value:198}");
+                });
             }
         },
 
@@ -188,15 +197,19 @@ suite.addBatch({
 });
 
 suite.addBatch({
-    'bubble chart wo/ label': {
+    'bubble chart wo/ label & title': {
         topic: function() {
             var chart = buildChart("chart2");
             chart.renderLabel(false);
+            chart.renderTitle(false);
             chart.render();
             return chart;
         },
         'should generate right number of labels': function(chart) {
             assert.equal(chart.selectAll("g.node text")[0].length, 0);
+        },
+        'should generate right number of labels': function(chart) {
+            assert.equal(chart.selectAll("g.node title")[0].length, 0);
         },
         teardown: function(topic) {
             resetAllFilters();

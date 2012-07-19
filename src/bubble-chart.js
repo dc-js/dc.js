@@ -76,9 +76,11 @@ dc.bubbleChart = function(selector) {
                 });
         }
 
-        bubbleGEnter.append("title").text(function(d) {
-            return chart.title()(d);
-        });
+        if (chart.renderTitle()) {
+            bubbleGEnter.append("title").text(function(d) {
+                return chart.title()(d);
+            });
+        }
 
         // update
         dc.transition(bubbleG, chart.transitionDuration())

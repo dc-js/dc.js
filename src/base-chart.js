@@ -14,6 +14,7 @@ dc.baseChart = function(chart) {
     var _renderLabel = false;
 
     var _title = function(d) {return d.key + ": " + d.value;};
+    var _renderTitle = false;
 
     var _transitionDuration = 750;
 
@@ -138,7 +139,7 @@ dc.baseChart = function(chart) {
         return chart;
     };
 
-     chart.renderLabel = function(_) {
+    chart.renderLabel = function(_) {
         if(!arguments.length) return _renderLabel;
         _renderLabel = _;
         return chart;
@@ -147,6 +148,12 @@ dc.baseChart = function(chart) {
     chart.title = function(_) {
         if(!arguments.length) return _title;
         _title = _;
+        return chart;
+    };
+
+    chart.renderTitle = function(_) {
+        if(!arguments.length) return _renderTitle;
+        _renderTitle = _;
         return chart;
     };
 
