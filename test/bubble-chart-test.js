@@ -5,8 +5,8 @@ var assert = require('assert');
 
 var suite = vows.describe('Bubble chart');
 
-var width = 1100;
-var height = 200;
+var width = 900;
+var height = 350;
 
 function buildChart(id) {
     d3.select("body").append("div").attr("id", id);
@@ -72,7 +72,7 @@ suite.addBatch({
         },
         'x range round is auto calculated based on width': function(chart) {
             assert.equal(chart.x().range()[0], 0);
-            assert.equal(chart.x().range()[1], 1030);
+            assert.equal(chart.x().range()[1], 830);
         },
         'x domain should be set': function(chart) {
             assert.equal(chart.x().domain()[0], 0);
@@ -82,7 +82,7 @@ suite.addBatch({
             assert.isTrue(chart.y() != undefined);
         },
         'y range round is auto calculated based on height': function(chart) {
-            assert.equal(chart.y().range()[0], 160);
+            assert.equal(chart.y().range()[0], 310);
             assert.equal(chart.y().range()[1], 0);
         },
         'y domain should be set': function(chart) {
@@ -102,7 +102,7 @@ suite.addBatch({
             assert.equal(chart.select("svg g").attr("transform"), "translate(20,10)");
         },
         'axis x should be placed at the bottom': function(chart) {
-            assert.equal(chart.select("svg g g.x").attr("transform"), "translate(20,170)");
+            assert.equal(chart.select("svg g g.x").attr("transform"), "translate(20,320)");
         },
         'axis y should be placed on the left': function(chart) {
             assert.equal(chart.select("svg g g.y").attr("transform"), "translate(20,10)");
@@ -131,15 +131,23 @@ suite.addBatch({
             topic: function(chart) {
                 return chart;
             },
-            'right number of bubbles should be rendered': function(chart) {
+            'should generate right number of bubbles': function(chart) {
                 assert.equal(chart.selectAll("circle.bubble")[0].length, 2);
             },
-            'right cx should be calculated for each bubble': function(chart) {
+            'should calculate right cx for each bubble': function(chart) {
                 chart.selectAll("circle.bubble").each(function(d, i) {
                     if (i == 0)
-                        assert.equal(d3.select(this).attr("cx"), 775.3333333333334);
+                        assert.equal(d3.select(this).attr("cx"), 628.6666666666667);
                     else if (i == 1)
-                        assert.equal(d3.select(this).attr("cx"), 699.8000000000001);
+                        assert.equal(d3.select(this).attr("cx"), 567.8000000000001);
+                });
+            },
+            'should calculate right cy for each bubble': function(chart) {
+                chart.selectAll("circle.bubble").each(function(d, i) {
+                    if (i == 0)
+                        assert.equal(d3.select(this).attr("cy"), 165);
+                    else if (i == 1)
+                        assert.equal(d3.select(this).attr("cy"), 165);
                 });
             }
         },
