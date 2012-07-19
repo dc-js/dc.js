@@ -9,8 +9,11 @@ dc.baseChart = function(chart) {
 
     var _xValue = function(d){return d.key;};
     var _yValue = function(d){return d.value;};
+
     var _label = function(d) {return d.key;};
-    var _renderLabel;
+    var _renderLabel = false;
+
+    var _title = function(d) {return d.key + ": " + d.value;};
 
     var _transitionDuration = 750;
 
@@ -138,6 +141,12 @@ dc.baseChart = function(chart) {
      chart.renderLabel = function(_) {
         if(!arguments.length) return _renderLabel;
         _renderLabel = _;
+        return chart;
+    };
+
+    chart.title = function(_) {
+        if(!arguments.length) return _title;
+        _title = _;
         return chart;
     };
 

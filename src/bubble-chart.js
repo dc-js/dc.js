@@ -35,22 +35,26 @@ dc.bubbleChart = function(selector) {
         return chart;
     };
 
+    var bubbleLocator = function(d) {
+        return "translate(" + (bubbleX(d) - bubbleR(d)) + "," + (bubbleY(d) - bubbleR(d)) + ")";
+    };
+
     function redrawBubbles() {
         var bubbleG = chart.g().selectAll("g.node")
             .data(chart.group().all());
 
         // enter
-        var bubbles = bubbleG.enter()
-            .append("g")
-            .attr("class", "node")
-            .attr("transform", function(d) {
-                return "translate(" + (bubbleX(d) - bubbleR(d)) + "," + (bubbleY(d) - bubbleR(d)) + ")";
-            })
-            .append("circle");
+        var bubbleGEnter = bubbleG.enter().append("g");
 
-        bubbles.attr("class", function(d, i) {
-            return "bubble " + i;
-        })
+        bubbleGEnter
+            .attr("class", "node")
+            .attr("transform", bubbleLocator)
+            .append("circle").attr("class", function(d, i) {
+                return "bubble " + i;
+            })
+            .on("mouseover", function(d) {
+                alert(d);
+            })
             .attr("fill", function(d, i) {
                 return chart.colors()(i);
             })
@@ -61,7 +65,7 @@ dc.bubbleChart = function(selector) {
             });
 
         if (chart.renderLabel()) {
-            bubbleG.append("text")
+            bubbleGEnter.append("text")
                 .attr("text-anchor", "middle")
                 .attr("dy", ".3em")
                 .text(function(d) {
@@ -69,11 +73,13 @@ dc.bubbleChart = function(selector) {
                 });
         }
 
+        bubbleGEnter.append("title").text(function(d) {
+            return chart.title()(d);
+        });
+
         // update
         dc.transition(bubbleG, chart.transitionDuration())
-            .attr("transform", function(d) {
-                return "translate(" + (bubbleX(d) - bubbleR(d)) + "," + (bubbleY(d) - bubbleR(d)) + ")";
-            })
+            .attr("transform", bubbleLocator)
             .selectAll("circle.bubble")
             .attr("r", function(d) {
                 return bubbleR(d);
@@ -97,11 +103,13 @@ dc.bubbleChart = function(selector) {
         return chart.r()(chart.rValue()(d));
     }
 
-    chart.redrawBrush = function(g) {
-        chart._redrawBrush(g);
+    chart.renderBrush = function(g) {
+        // override default x axis brush from parent chart
+    };
 
+    chart.redrawBrush = function(g) {
         fadeDeselectedBubbles();
-    }
+    };
 
     function fadeDeselectedBubbles() {
     }

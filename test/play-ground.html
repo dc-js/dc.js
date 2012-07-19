@@ -67,7 +67,7 @@
         }
 
         .node{
-            font-size: 1em;
+            font-size: 0.7em;
         }
 
         .bubble{
@@ -205,7 +205,9 @@
             })
             .x(d3.scale.linear().domain([0, 300]))
             .y(d3.scale.linear().domain([0, 10]))
-            .r(d3.scale.linear().domain([0, 30]));
+            .r(d3.scale.linear().domain([0, 30]))
+            .renderLabel(true)
+            .title(function(p){return p.key + ": {count:" + p.value.count + ",value:" + p.value.value + "}"});;
 
     dc.dataCount("#data-count")
             .dimension(data)

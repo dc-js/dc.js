@@ -29,7 +29,8 @@ function buildChart(id) {
         .y(d3.scale.linear().domain([0, 10]))
         .r(d3.scale.linear().domain([0, 30]))
         .transitionDuration(0)
-        .renderLabel(true);
+        .renderLabel(true)
+        .title(function(p){return p.key + ": {count:" + p.value.count + ",value:" + p.value.value + "}"});
     chart.render();
     return chart;
 }
@@ -174,6 +175,9 @@ suite.addBatch({
                     if (i == 1)
                         assert.equal(d3.select(this).text(), "F");
                 });
+            },
+            'should generate right number of titles': function(chart) {
+                assert.equal(chart.selectAll("g.node title")[0].length, 2);
             }
         },
 
