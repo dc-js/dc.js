@@ -140,19 +140,11 @@ suite.addBatch({
                 assert.equal(chart.selectAll("circle.bubble")[0].length, 2);
             },
             'should calculate right cx for each bubble': function(chart) {
-                chart.selectAll("circle.bubble").each(function(d, i) {
+                chart.selectAll("g.node").each(function(d, i) {
                     if (i == 0)
-                        assert.equal(d3.select(this).attr("cx"), 628.6666666666667);
+                        assert.equal(d3.select(this).attr("transform"), "translate(582.5555555555557,118.88888888888889)");
                     else if (i == 1)
-                        assert.equal(d3.select(this).attr("cx"), 567.8000000000001);
-                });
-            },
-            'should calculate right cy for each bubble': function(chart) {
-                chart.selectAll("circle.bubble").each(function(d, i) {
-                    if (i == 0)
-                        assert.equal(d3.select(this).attr("cy"), 165);
-                    else if (i == 1)
-                        assert.equal(d3.select(this).attr("cy"), 165);
+                        assert.equal(d3.select(this).attr("transform"), "translate(521.688888888889,118.88888888888889)");
                 });
             },
             'should calculate right r for each bubble': function(chart) {

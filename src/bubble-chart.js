@@ -36,40 +36,34 @@ dc.bubbleChart = function(selector) {
     };
 
     function redrawBubbles() {
-        var bubbles = chart.g().selectAll("circle.bubble")
+        var bubbleG = chart.g().selectAll("g.node")
             .data(chart.group().all());
 
         // enter
-        bubbles.enter()
-            .append("circle")
-            .attr("class", function(d, i){return "bubble " + i;})
+        var bubbles = bubbleG.enter()
+            .append("g")
+            .attr("class", "node")
+            .attr("transform", function(d){return "translate("+(bubbleX(d)-bubbleR(d))+","+(bubbleY(d)-bubbleR(d))+")";})
+            .append("circle");
+
+        bubbles.attr("class", function(d, i){return "bubble " + i;})
             .attr("fill", function(d, i){return chart.colors()(i);})
-            .attr("cx", function(d) {
-                return bubbleX(d);
-            })
-            .attr("cy", function(d) {
-                return bubbleY(d);
-            })
             .attr("r", 0);
-        dc.transition(bubbles, chart.transitionDuration())
+        dc.transition(bubbleG, chart.transitionDuration())
             .attr("r", function(d) {
                 return bubbleR(d);
             });
 
         // update
-        dc.transition(bubbles, chart.transitionDuration())
-            .attr("cx", function(d) {
-                return bubbleX(d);
-            })
-            .attr("cy", function(d) {
-                return bubbleY(d);
-            })
+        dc.transition(bubbleG, chart.transitionDuration())
+            .attr("transform", function(d){return "translate("+(bubbleX(d)-bubbleR(d))+","+(bubbleY(d)-bubbleR(d))+")";})
+            .selectAll("circle.bubble")
             .attr("r", function(d) {
                 return bubbleR(d);
             });
 
         // exit
-        dc.transition(bubbles.exit(), chart.transitionDuration())
+        dc.transition(bubbleG.exit().selectAll("circle.bubble"), chart.transitionDuration())
             .attr("r", 0)
             .remove();
     }
