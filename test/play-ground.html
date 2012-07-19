@@ -68,6 +68,7 @@
 
         .bubble{
             stroke: none;
+            fill-opacity: 0.5;
         }
 
         #data-table {
@@ -126,8 +127,8 @@
 <div class="clear"></div>
 
 <div id="bubble-chart" class="chart">
-    <span>Bubble Chart (Date, Value, ID)</span>
-    <a class="reset" href="javascript:bubbleChartDate1.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+    <span>Bubble Chart (Value, Count, Count)</span>
+    <a class="reset" href="javascript:bubbleChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
 </div>

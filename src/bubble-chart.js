@@ -2,9 +2,11 @@ dc.bubbleChart = function(selector) {
     var chart = dc.coordinateGridChart({});
 
     var _r = d3.scale.linear().domain([0, 100]);
-    var _rValue = function(d){return d.r;};
+    var _rValue = function(d) {
+        return d.r;
+    };
 
-    chart.transitionDuration(500);
+    chart.transitionDuration(750);
 
     chart.render = function() {
         chart.resetSvg();
@@ -41,9 +43,34 @@ dc.bubbleChart = function(selector) {
         bubbles.enter()
             .append("circle")
             .attr("class", "bubble")
-            .attr("cx", function(d){return bubbleX(d);})
-            .attr("cy", function(d){return bubbleY(d);})
-            .attr("r", function(d){return bubbleR(d);});
+            .attr("cx", function(d) {
+                return bubbleX(d);
+            })
+            .attr("cy", function(d) {
+                return bubbleY(d);
+            })
+            .attr("r", 0);
+        dc.transition(bubbles, chart.transitionDuration())
+            .attr("r", function(d) {
+                return bubbleR(d);
+            });
+
+        // update
+        dc.transition(bubbles, chart.transitionDuration())
+            .attr("cx", function(d) {
+                return bubbleX(d);
+            })
+            .attr("cy", function(d) {
+                return bubbleY(d);
+            })
+            .attr("r", function(d) {
+                return bubbleR(d);
+            });
+
+        // exit
+        dc.transition(bubbles.exit(), chart.transitionDuration())
+            .attr("r", 0)
+            .remove();
     }
 
     function bubbleX(d) {
@@ -67,14 +94,14 @@ dc.bubbleChart = function(selector) {
     function fadeDeselectedBubbles() {
     }
 
-    chart.r = function(_){
-        if(!arguments.length) return _r;
+    chart.r = function(_) {
+        if (!arguments.length) return _r;
         _r = _;
         return chart;
     };
 
-    chart.rValue = function(_){
-        if(!arguments.length) return _rValue;
+    chart.rValue = function(_) {
+        if (!arguments.length) return _rValue;
         _rValue = _;
         return chart;
     };
