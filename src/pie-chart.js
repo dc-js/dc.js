@@ -1,16 +1,18 @@
 dc.pieChart = function(selector) {
-    var filter;
-
     var sliceCssClass = "pie-slice";
 
     var radius = 0, innerRadius = 0;
+
     var g;
+
     var arc;
     var dataPie;
     var slices;
     var slicePaths;
+
     var labels;
-    var chart = dc.colorChart(dc.baseChart({}));
+
+    var chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
 
     chart.label(function(d) {
         return chart.xValue()(d.data);
@@ -95,27 +97,6 @@ dc.pieChart = function(selector) {
             redrawLabels(arc);
             labels.on("click", onClick);
         }
-    };
-
-    chart.hasFilter = function() {
-        return filter != null;
-    };
-
-    chart.filter = function(f) {
-        if (!arguments.length) return filter;
-
-        filter = f;
-
-        if (chart.dataAreSet())
-            chart.dimension().filter(filter);
-
-        if (f) {
-            chart.turnOnReset();
-        } else {
-            chart.turnOffReset();
-        }
-
-        return chart;
     };
 
     chart.isSelectedSlice = function(d) {
