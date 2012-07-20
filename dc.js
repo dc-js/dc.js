@@ -458,6 +458,9 @@ dc.colorChart = function(chart) {
     return chart;
 };
 dc.singleSelectionChart = function(chart) {
+    var SELECTED_CLASS = "selected";
+    var DESELECTED_CLASS = "deselected";
+
     var _filter;
 
     chart.hasFilter = function() {
@@ -481,6 +484,21 @@ dc.singleSelectionChart = function(chart) {
         return chart;
     };
 
+    chart.highlightSelected = function(e) {
+        d3.select(e).classed(SELECTED_CLASS, true);
+        d3.select(e).classed(DESELECTED_CLASS, false);
+    }
+
+    chart.fadeDeselected = function(e) {
+        d3.select(e).classed(SELECTED_CLASS, false);
+        d3.select(e).classed(DESELECTED_CLASS, true);
+    }
+
+    chart.resetHighlight = function(e) {
+        d3.select(e).classed(SELECTED_CLASS, false);
+        d3.select(e).classed(DESELECTED_CLASS, false);
+    }
+
     return chart;
 };
 dc.pieChart = function(selector) {
@@ -503,6 +521,11 @@ dc.pieChart = function(selector) {
         return chart.xValue()(d.data);
     });
     chart.renderLabel(true);
+
+    chart.title(function(d) {
+        return d.data.key + ": " + d.data.value;
+    });
+
     chart.transitionDuration(350);
 
     chart.render = function() {
@@ -520,6 +543,7 @@ dc.pieChart = function(selector) {
             slices = chart.drawSlices(g, dataPie, arc);
 
             chart.drawLabels(slices, arc);
+            chart.drawTitles(slices, arc);
 
             chart.highlightFilter();
         }
@@ -584,26 +608,27 @@ dc.pieChart = function(selector) {
         }
     };
 
+    chart.drawTitles = function(slices, arc) {
+        if (chart.renderTitle()) {
+            slices.append("title").text(function(d) {
+                return chart.title()(d);
+            });
+        }
+    };
+
     chart.highlightFilter = function() {
-        var normalOpacity = 1;
-        var highlightStrokeWidth = 3;
-        var fadeOpacity = 0.1;
-        var normalStrokeWidth = 0;
         if (chart.hasFilter()) {
             chart.selectAll("g." + sliceCssClass).select("path").each(function(d) {
                 if (chart.isSelectedSlice(d)) {
-                    d3.select(this).attr("fill-opacity", normalOpacity)
-                        .attr('stroke', "#ccc")
-                        .attr('stroke-width', highlightStrokeWidth);
+                    chart.highlightSelected(this);
                 } else {
-                    d3.select(this).attr("fill-opacity", fadeOpacity)
-                        .attr('stroke-width', normalStrokeWidth);
+                    chart.fadeDeselected(this);
                 }
             });
         } else {
-            chart.selectAll("g." + sliceCssClass).selectAll("path")
-                .attr("fill-opacity", normalOpacity)
-                .attr('stroke-width', normalStrokeWidth);
+            chart.selectAll("g." + sliceCssClass).selectAll("path").each(function(d) {
+                chart.resetHighlight(this);
+            });
         }
     };
 
@@ -620,8 +645,9 @@ dc.pieChart = function(selector) {
             s.attrTween("d", tweenPie);
         });
         redrawLabels(arc);
+        redrawTitles();
         return chart;
-    }
+    };
 
     function calculateDataPie() {
         return d3.layout.pie().value(function(d) {
@@ -648,6 +674,14 @@ dc.pieChart = function(selector) {
                     return "";
                 return chart.label()(d);
             });
+    }
+
+    function redrawTitles() {
+        if (chart.renderTitle()) {
+            slices.selectAll("title").text(function(d) {
+                return chart.title()(d);
+            });
+        }
     }
 
     function tweenPie(b) {
@@ -961,25 +995,25 @@ dc.dataTable = function(selector) {
         if (!arguments.length) return size;
         size = s;
         return chart;
-    }
+    };
 
     chart.columns = function(_) {
         if (!arguments.length) return columns;
         columns = _;
         return chart;
-    }
+    };
 
     chart.sortBy = function(_) {
         if (!arguments.length) return sortBy;
         sortBy = _;
         return chart;
-    }
+    };
 
     chart.order = function(_) {
         if (!arguments.length) return order;
         order = _;
         return chart;
-    }
+    };
 
     dc.registerChart(chart);
     return chart.anchor(selector);
@@ -989,6 +1023,9 @@ dc.bubbleChart = function(selector) {
     var BUBBLE_CLASS = "bubble";
 
     var chart = dc.singleSelectionChart(dc.colorChart(dc.coordinateGridChart({})));
+
+    chart.renderLabel(true);
+    chart.renderTitle(false);
 
     var _r = d3.scale.linear().domain([0, 100]);
     var _rValue = function(d) {
@@ -1064,23 +1101,41 @@ dc.bubbleChart = function(selector) {
         renderTitles(bubbleGEnter);
     }
 
+    var labelFunction = function(d) {
+        return bubbleR(d) > 0 ? chart.label()(d) : "";
+    };
+
     function renderLabel(bubbleGEnter) {
         if (chart.renderLabel()) {
+
             bubbleGEnter.append("text")
                 .attr("text-anchor", "middle")
                 .attr("dy", ".3em")
                 .on("click", onClick)
-                .text(function(d) {
-                    return bubbleR(d) > 0 ? chart.label()(d) : "";
-                });
+                .text(labelFunction);
         }
     }
 
-    function renderTitles(bubbleGEnter) {
+    function updateLabels(bubbleGEnter) {
+        if (chart.renderLabel()) {
+            bubbleGEnter.selectAll("text")
+                .text(labelFunction);
+        }
+    }
+
+    var titleFunction = function(d) {
+        return chart.title()(d);
+    };
+
+    function renderTitles(g) {
         if (chart.renderTitle()) {
-            bubbleGEnter.append("title").text(function(d) {
-                return chart.title()(d);
-            });
+            g.append("title").text(titleFunction);
+        }
+    }
+
+    function updateTitles(g) {
+        if (chart.renderTitle()) {
+            g.selectAll("title").text(titleFunction);
         }
     }
 
@@ -1091,14 +1146,8 @@ dc.bubbleChart = function(selector) {
             .attr("r", function(d) {
                 return bubbleR(d);
             });
-        updateText(bubbleG);
-    }
-
-    function updateText(bubbleG) {
-        bubbleG.selectAll("text")
-            .text(function(d) {
-                return bubbleR(d) > 0 ? chart.label()(d) : "";
-            });
+        updateLabels(bubbleG);
+        updateTitles(bubbleG);
     }
 
     function removeNodes(bubbleG) {
@@ -1138,14 +1187,14 @@ dc.bubbleChart = function(selector) {
         if (chart.hasFilter()) {
             chart.selectAll("g." + NODE_CLASS).select("circle").each(function(d) {
                 if (chart.isSelectedSlice(d)) {
-                    d3.select(this).classed("deselected", false);
+                    chart.highlightSelected(this);
                 } else {
-                    d3.select(this).classed("deselected", true);
+                    chart.fadeDeselected(this);
                 }
             });
         } else {
             chart.selectAll("g." + NODE_CLASS).selectAll("circle").each(function(d) {
-                d3.select(this).classed("deselected", false);
+                chart.resetHighlight(this);
             });
         }
     }

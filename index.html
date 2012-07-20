@@ -54,7 +54,7 @@
 <h2>Nasdaq 100 Index 1985/11/01-2012/06/29</h2>
 
 <div id="yearly-bubble-chart" class="chart">
-    <span>Yearly Performance (x: index gain, y: index gain in percentage, size: fluctuation/index ratio)</span>
+    <span>Yearly Performance (x: index gain, y: index gain(%), radius: fluctuation/index ratio)</span>
     <a class="reset" href="javascript:yearlyBubbleChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
@@ -479,7 +479,14 @@ d3.csv("ndx.csv", function(data) {
             .group(gainOrLossGroup) // set group
             // (optional) by default pie chart will use group.key as it's label
             // but you can overwrite it with a closure
-            .label(function(d) { return d.data.key + "(" + Math.floor(d.data.value / all.value() * 100) + "%)"; });
+            .label(function(d) { return d.data.key + "(" + Math.floor(d.data.value / all.value() * 100) + "%)"; })
+            // (optional) whether chart should render labels, :default = true
+            .renderLabel(true)
+            // (optional) by default pie chart will use group.key and group.value as its title
+            // you can overwrite it with a closure
+            .title(function(d) { return d.data.key + "(" + Math.floor(d.data.value / all.value() * 100) + "%)"; })
+            // (optional) whether chart should render titles, :default = false
+            .renderTitle(true);
     </pre>
 
     <h3>Bar Chart</h3>
@@ -524,6 +531,49 @@ d3.csv("ndx.csv", function(data) {
             .round(d3.time.month.round)
             // define x axis units
             .xUnits(d3.time.months);
+    </pre>
+
+    <h3>Bubble Chart</h3>
+
+    <pre class="brush:js">
+        dc.bubbleChart("#yearly-bubble-chart")
+            .width(990) // (optional) define chart width, :default = 200
+            .height(250) // (optional) define chart height, :default = 200
+            .transitionDuration(1000) // (optional) define chart transition duration, :default = 1000
+            // (optional) define margins
+            .margins({top: 10, right: 50, bottom: 30, left: 40})
+            .dimension(yearlyDimension) // set dimension
+            /* Bubble chart expect the groups are reduced to multiple values which would then be used
+             * to generate x, y, and radius for each key (bubble) in the group
+            .group(yearlyPerformanceGroup)
+            // (optional) define color function or array for bubbles
+            .colors(d3.scale.category20c())
+            // closure used to retrieve x value from multi-value group
+            .xValue(function(p) {return p.value.absGain;})
+            // closure used to retrieve y value from multi-value group
+            .yValue(function(p) {return p.value.percentageGain;})
+            // closure used to retrieve radius value from multi-value group
+            .rValue(function(p) {return p.value.fluctuationPercentage;})
+            // set x scale
+            .x(d3.scale.linear().domain([-2500, 2500]))
+            // set y scale
+            .y(d3.scale.linear().domain([-100, 100]))
+            // set radius scale
+            .r(d3.scale.linear().domain([0, 4000]))
+            // (optional) whether chart should render labels, :default = true
+            .renderLabel(true)
+            // (optional) closure to generate label per bubble, :default = group.key
+            .label(function(p) {return p.key.getFullYear();})
+            // (optional) whether chart should render titles, :default = false
+            .renderTitle(true)
+            // (optional) closure to generate title per bubble, :default = d.key + ": " + d.value
+            .title(function(p) {
+                return p.key.getFullYear()
+                        + "\n"
+                        + "Index Gain: " + numberFormat(p.value.absGain) + "\n"
+                        + "Index Gain in Percentage: " + numberFormat(p.value.percentageGain) + "%\n"
+                        + "Fluctuation / Index Ratio: " + numberFormat(p.value.fluctuationPercentage) + "%";
+            });
     </pre>
 
     <h3>Data Table</h3>

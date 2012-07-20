@@ -38,6 +38,17 @@ a {
     font-size: 12px;
 }
 
+.pie-slice .selected {
+    stroke-width: 3;
+    stroke: #ccc;
+    fill-opacity: 1;
+}
+
+.pie-slice .deselected {
+    strok: none;
+    fill-opacity: .5;
+}
+
 .axis path, .axis line {
     fill: none;
     stroke: #000;
@@ -70,6 +81,17 @@ a {
 
 .node {
     font-size: 0.7em;
+}
+
+.node .selected {
+    stroke-width: 3;
+    stroke: #ccc;
+    fill-opacity: 1;
+}
+
+.node .deselected {
+    strok: none;
+    fill-opacity: .5;
 }
 
 .bubble {
