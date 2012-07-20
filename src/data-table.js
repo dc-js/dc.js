@@ -81,25 +81,25 @@ dc.dataTable = function(selector) {
         if (!arguments.length) return size;
         size = s;
         return chart;
-    }
+    };
 
     chart.columns = function(_) {
         if (!arguments.length) return columns;
         columns = _;
         return chart;
-    }
+    };
 
     chart.sortBy = function(_) {
         if (!arguments.length) return sortBy;
         sortBy = _;
         return chart;
-    }
+    };
 
     chart.order = function(_) {
         if (!arguments.length) return order;
         order = _;
         return chart;
-    }
+    };
 
     dc.registerChart(chart);
     return chart.anchor(selector);

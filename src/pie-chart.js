@@ -18,9 +18,11 @@ dc.pieChart = function(selector) {
         return chart.xValue()(d.data);
     });
     chart.renderLabel(true);
+
     chart.title(function(d) {
         return d.data.key + ": " + d.data.value;
     });
+
     chart.transitionDuration(350);
 
     chart.render = function() {
@@ -142,7 +144,7 @@ dc.pieChart = function(selector) {
         redrawLabels(arc);
         redrawTitles();
         return chart;
-    }
+    };
 
     function calculateDataPie() {
         return d3.layout.pie().value(function(d) {
