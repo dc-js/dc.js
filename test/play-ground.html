@@ -66,11 +66,11 @@
             stroke-width: 1.5px;
         }
 
-        .node{
+        .node {
             font-size: 0.7em;
         }
 
-        .bubble{
+        .bubble {
             stroke: none;
             fill-opacity: 0.5;
         }
@@ -207,7 +207,11 @@
             .y(d3.scale.linear().domain([0, 10]))
             .r(d3.scale.linear().domain([0, 30]))
             .renderLabel(true)
-            .title(function(p){return p.key + ": {count:" + p.value.count + ",value:" + p.value.value + "}"});;
+            .renderTitle(true)
+            .title(function(p) {
+                return p.key + ": {count:" + p.value.count + ",value:" + p.value.value + "}"
+            });
+    ;
 
     dc.dataCount("#data-count")
             .dimension(data)

@@ -99,10 +99,6 @@ dc.pieChart = function(selector) {
         }
     };
 
-    chart.isSelectedSlice = function(d) {
-        return chart.filter() == chart.xValue()(d.data);
-    };
-
     chart.highlightFilter = function() {
         var normalOpacity = 1;
         var highlightStrokeWidth = 3;
@@ -124,6 +120,10 @@ dc.pieChart = function(selector) {
                 .attr("fill-opacity", normalOpacity)
                 .attr('stroke-width', normalStrokeWidth);
         }
+    };
+
+    chart.isSelectedSlice = function(d) {
+        return chart.filter() == chart.xValue()(d.data);
     };
 
     chart.redraw = function() {

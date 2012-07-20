@@ -31,7 +31,9 @@ function buildChart(id) {
         .transitionDuration(0)
         .renderLabel(true)
         .renderTitle(true)
-        .title(function(p){return p.key + ": {count:" + p.value.count + ",value:" + p.value.value + "}"});
+        .title(function(p) {
+            return p.key + ": {count:" + p.value.count + ",value:" + p.value.value + "}"
+        });
     chart.render();
     return chart;
 }
@@ -210,6 +212,28 @@ suite.addBatch({
         },
         'should generate right number of labels': function(chart) {
             assert.equal(chart.selectAll("g.node title")[0].length, 0);
+        },
+        teardown: function(topic) {
+            resetAllFilters();
+        }
+    }
+});
+
+suite.addBatch({
+    'bubble chart w/ filter': {
+        topic: function() {
+            var chart = buildChart("chart3");
+            chart.filter("F");
+            chart.render();
+            return chart;
+        },
+        'should deselect bubble based on filter value': function(chart) {
+            chart.selectAll("circle.bubble").each(function(d, i) {
+                if (i == 0)
+                    assert.equal(d3.select(this).attr("class"), "bubble 0");
+                if (i == 1)
+                    assert.equal(d3.select(this).attr("class"), "bubble 1 deselected");
+            });
         },
         teardown: function(topic) {
             resetAllFilters();

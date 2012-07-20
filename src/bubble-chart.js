@@ -1,4 +1,7 @@
 dc.bubbleChart = function(selector) {
+    var NODE_CLASS = "node";
+    var BUBBLE_CLASS = "bubble";
+
     var chart = dc.singleSelectionChart(
         dc.colorChart(
             dc.coordinateGridChart({})
@@ -26,6 +29,8 @@ dc.bubbleChart = function(selector) {
             redrawBubbles();
 
             chart.renderBrush(chart.g());
+
+            fadeDeselectedBubbles();
         }
 
         return chart;
@@ -44,17 +49,17 @@ dc.bubbleChart = function(selector) {
     };
 
     function redrawBubbles() {
-        var bubbleG = chart.g().selectAll("g.node")
+        var bubbleG = chart.g().selectAll("g." + NODE_CLASS)
             .data(chart.group().all());
 
         // enter
         var bubbleGEnter = bubbleG.enter().append("g");
 
         bubbleGEnter
-            .attr("class", "node")
+            .attr("class", NODE_CLASS)
             .attr("transform", bubbleLocator)
             .append("circle").attr("class", function(d, i) {
-                return "bubble " + i;
+                return BUBBLE_CLASS + " " + i;
             })
             .on("click", onClick)
             .attr("fill", function(d, i) {
@@ -85,13 +90,13 @@ dc.bubbleChart = function(selector) {
         // update
         dc.transition(bubbleG, chart.transitionDuration())
             .attr("transform", bubbleLocator)
-            .selectAll("circle.bubble")
+            .selectAll("circle." + BUBBLE_CLASS)
             .attr("r", function(d) {
                 return bubbleR(d);
             });
 
         // exit
-        dc.transition(bubbleG.exit().selectAll("circle.bubble"), chart.transitionDuration())
+        dc.transition(bubbleG.exit().selectAll("circle." + BUBBLE_CLASS), chart.transitionDuration())
             .attr("r", 0)
             .remove();
     }
@@ -122,7 +127,26 @@ dc.bubbleChart = function(selector) {
     };
 
     function fadeDeselectedBubbles() {
+        var normalOpacity = 1;
+        var fadeOpacity = 0.1;
+        if (chart.hasFilter()) {
+            chart.selectAll("g." + NODE_CLASS).select("circle").each(function(d) {
+                if (chart.isSelectedSlice(d)) {
+                    d3.select(this).classed("deselected", false);
+                } else {
+                    d3.select(this).classed("deselected", true);
+                }
+            });
+        } else {
+            chart.selectAll("g." + NODE_CLASS).selectAll("circle").each(function(d) {
+                d3.select(this).classed("deselected", false);
+            });
+        }
     }
+
+    chart.isSelectedSlice = function(d) {
+        return chart.filter() == d.key;
+    };
 
     chart.r = function(_) {
         if (!arguments.length) return _r;
