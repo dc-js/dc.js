@@ -4,6 +4,9 @@ dc.bubbleChart = function(selector) {
 
     var chart = dc.singleSelectionChart(dc.colorChart(dc.coordinateGridChart({})));
 
+    chart.renderLabel(true);
+    chart.renderTitle(false);
+
     var _r = d3.scale.linear().domain([0, 100]);
     var _rValue = function(d) {
         return d.r;
