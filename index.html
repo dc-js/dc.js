@@ -544,7 +544,7 @@ d3.csv("ndx.csv", function(data) {
             .margins({top: 10, right: 50, bottom: 30, left: 40})
             .dimension(yearlyDimension) // set dimension
             /* Bubble chart expect the groups are reduced to multiple values which would then be used
-             * to generate x, y, and radius for each key (bubble) in the group
+             * to generate x, y, and radius for each key (bubble) in the group */
             .group(yearlyPerformanceGroup)
             // (optional) define color function or array for bubbles
             .colors(d3.scale.category20c())
