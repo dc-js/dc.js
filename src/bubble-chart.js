@@ -2,11 +2,7 @@ dc.bubbleChart = function(selector) {
     var NODE_CLASS = "node";
     var BUBBLE_CLASS = "bubble";
 
-    var chart = dc.singleSelectionChart(
-        dc.colorChart(
-            dc.coordinateGridChart({})
-        )
-    );
+    var chart = dc.singleSelectionChart(dc.colorChart(dc.coordinateGridChart({})));
 
     var _r = d3.scale.linear().domain([0, 100]);
     var _rValue = function(d) {
@@ -52,9 +48,15 @@ dc.bubbleChart = function(selector) {
         var bubbleG = chart.g().selectAll("g." + NODE_CLASS)
             .data(chart.group().all());
 
-        // enter
-        var bubbleGEnter = bubbleG.enter().append("g");
+        renderNodes(bubbleG);
 
+        updateNodes(bubbleG);
+
+        removeNodes(bubbleG);
+    }
+
+    function renderNodes(bubbleG) {
+        var bubbleGEnter = bubbleG.enter().append("g");
         bubbleGEnter
             .attr("class", NODE_CLASS)
             .attr("transform", bubbleLocator)
@@ -71,35 +73,49 @@ dc.bubbleChart = function(selector) {
                 return bubbleR(d);
             });
 
+        renderLabel(bubbleGEnter);
+
+        renderTitles(bubbleGEnter);
+    }
+
+    function renderLabel(bubbleGEnter) {
         if (chart.renderLabel()) {
             bubbleGEnter.append("text")
                 .attr("text-anchor", "middle")
                 .attr("dy", ".3em")
                 .on("click", onClick)
                 .text(function(d) {
-                    return bubbleR(d)>0?chart.label()(d):"";
+                    return bubbleR(d) > 0 ? chart.label()(d) : "";
                 });
         }
+    }
 
+    function renderTitles(bubbleGEnter) {
         if (chart.renderTitle()) {
             bubbleGEnter.append("title").text(function(d) {
                 return chart.title()(d);
             });
         }
+    }
 
-        // update
+    function updateNodes(bubbleG) {
         dc.transition(bubbleG, chart.transitionDuration())
             .attr("transform", bubbleLocator)
             .selectAll("circle." + BUBBLE_CLASS)
             .attr("r", function(d) {
                 return bubbleR(d);
             });
+        updateText(bubbleG);
+    }
+
+    function updateText(bubbleG) {
         bubbleG.selectAll("text")
             .text(function(d) {
-                return bubbleR(d)>0?chart.label()(d):"";
+                return bubbleR(d) > 0 ? chart.label()(d) : "";
             });
+    }
 
-        // exit
+    function removeNodes(bubbleG) {
         dc.transition(bubbleG.exit().selectAll("circle." + BUBBLE_CLASS), chart.transitionDuration())
             .attr("r", 0)
             .remove();
