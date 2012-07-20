@@ -11,6 +11,7 @@
     <target name="clean">
         <delete file="dc.js" />
         <delete file="dc.min.js" />
+        <delete file="package.json" />
     </target>
 
     <target name="test" depends="make">
@@ -41,6 +42,11 @@
             <env key="NODE_PATH" value="${node.path}"/>
             <arg value="-c"/>
             <arg value="${js.compiler} ${basedir}/dc.js > ${basedir}/dc.min.js"/>
+        </exec>
+        <echo>Generating package.json</echo>
+        <exec executable="bash">
+            <arg value="-c"/>
+            <arg value="node ${basedir}/src/package.js > ${basedir}/package.json"/>
         </exec>
     </target>
 
