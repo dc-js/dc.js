@@ -41,7 +41,7 @@ dc.bubbleChart = function(selector) {
     };
 
     var bubbleLocator = function(d) {
-        return "translate(" + (bubbleX(d) - bubbleR(d)) + "," + (bubbleY(d) - bubbleR(d)) + ")";
+        return "translate(" + (bubbleX(d)) + "," + (bubbleY(d)) + ")";
     };
 
     function redrawBubbles() {

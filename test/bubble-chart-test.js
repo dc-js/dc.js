@@ -147,9 +147,9 @@ suite.addBatch({
             'should calculate right cx for each bubble': function(chart) {
                 chart.selectAll("g.node").each(function(d, i) {
                     if (i == 0)
-                        assert.equal(d3.select(this).attr("transform"), "translate(582.5555555555557,118.88888888888889)");
+                        assert.equal(d3.select(this).attr("transform"), "translate(628.6666666666667,165)");
                     if (i == 1)
-                        assert.equal(d3.select(this).attr("transform"), "translate(521.688888888889,118.88888888888889)");
+                        assert.equal(d3.select(this).attr("transform"), "translate(567.8000000000001,165)");
                 });
             },
             'should calculate right r for each bubble': function(chart) {

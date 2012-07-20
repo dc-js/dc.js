@@ -1,9 +1,14 @@
 dc.colorChart = function(chart) {
     var _colors = d3.scale.category20c();
 
-    chart.colors = function(c) {
+    chart.colors = function(_) {
         if (!arguments.length) return _colors;
-        _colors = d3.scale.ordinal().range(c);
+
+        if(_ instanceof Array)
+            _colors = d3.scale.ordinal().range(_);
+        else
+            _colors = _;
+
         return chart;
     };
 
