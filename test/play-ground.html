@@ -160,14 +160,17 @@
             .radius(100)
             .innerRadius(40)
             .dimension(valueDimension)
-            .group(valueGroup);
+            .group(valueGroup)
+            .title(function(d){return d.data.key + ": " + d.data.value;})
+            .renderTitle(true);
 
     var pieChartCountry = dc.pieChart("#pie-chart-country")
             .width(250)
             .height(250)
             .radius(100)
             .dimension(countryDimension)
-            .group(countryGroup);
+            .group(countryGroup)
+            .renderTitle(true);
 
     var lineChartDate1 = dc.lineChart("#line-chart-date");
     lineChartDate1.width(500)

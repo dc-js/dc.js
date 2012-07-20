@@ -18,6 +18,7 @@ dc.pieChart = function(selector) {
         return chart.xValue()(d.data);
     });
     chart.renderLabel(true);
+    chart.title(function(d){return d.data.key + ": " + d.data.value;});
     chart.transitionDuration(350);
 
     chart.render = function() {
@@ -35,6 +36,7 @@ dc.pieChart = function(selector) {
             slices = chart.drawSlices(g, dataPie, arc);
 
             chart.drawLabels(slices, arc);
+            chart.drawTitles(slices, arc);
 
             chart.highlightFilter();
         }
@@ -99,6 +101,14 @@ dc.pieChart = function(selector) {
         }
     };
 
+    chart.drawTitles = function(slices, arc) {
+        if (chart.renderTitle()) {
+            slices.append("title").text(function(d) {
+                return chart.title()(d);
+            });
+        }
+    };
+
     chart.highlightFilter = function() {
         var normalOpacity = 1;
         var highlightStrokeWidth = 3;
@@ -135,6 +145,7 @@ dc.pieChart = function(selector) {
             s.attrTween("d", tweenPie);
         });
         redrawLabels(arc);
+        redrawTitles();
         return chart;
     }
 
@@ -163,6 +174,14 @@ dc.pieChart = function(selector) {
                     return "";
                 return chart.label()(d);
             });
+    }
+
+    function redrawTitles() {
+        if (chart.renderTitle()) {
+            slices.selectAll("title").text(function(d) {
+                return chart.title()(d);
+            });
+        }
     }
 
     function tweenPie(b) {

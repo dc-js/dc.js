@@ -224,17 +224,32 @@ suite.addBatch({
         }
     },
 
-    'custom label generation' :{
+    'custom label & title generation' :{
         topic: function() {
             var chart = buildChart("pie-chart3");
             chart.label(function(d) {
                 return "custom";
-            });
+            })
+                .title(function(d) {
+                    return "custom";
+                })
+                .renderTitle(true);
             chart.render();
             return chart;
         },
+        'should render correct number of text': function(chart) {
+            assert.equal(chart.selectAll("g.pie-slice text")[0].length, 5);
+        },
         'custom function should be used to dynamically generate label': function(chart) {
             chart.selectAll("g.pie-slice text").each(function(p) {
+                assert.equal(d3.select(this).text(), "custom");
+            });
+        },
+        'should render correct number of title': function(chart) {
+            assert.equal(chart.selectAll("g.pie-slice title")[0].length, 5);
+        },
+        'custom function should be used to dynamically generate title': function(chart) {
+            chart.selectAll("g.pie-slice title").each(function(p) {
                 assert.equal(d3.select(this).text(), "custom");
             });
         },
