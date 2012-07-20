@@ -115,17 +115,14 @@ dc.pieChart = function(selector) {
         if (chart.hasFilter()) {
             chart.selectAll("g." + sliceCssClass).select("path").each(function(d) {
                 if (chart.isSelectedSlice(d)) {
-                    d3.select(this).classed("selected", true);
-                    d3.select(this).classed("deselected", false);
+                    chart.highlightSelected(this);
                 } else {
-                    d3.select(this).classed("selected", false);
-                    d3.select(this).classed("deselected", true);
+                    chart.fadeDeselected(this);
                 }
             });
         } else {
             chart.selectAll("g." + sliceCssClass).selectAll("path").each(function(d) {
-                d3.select(this).classed("selected", false);
-                d3.select(this).classed("deselected", false);
+                chart.resetHighlight(this);
             });
         }
     };

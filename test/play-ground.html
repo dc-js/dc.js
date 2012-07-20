@@ -36,6 +36,17 @@
             font-size: 12px;
         }
 
+        .pie-slice .selected {
+            stroke-width: 3;
+            stroke: #ccc;
+            fill-opacity: 1;
+        }
+
+        .pie-slice .deselected {
+            strok: none;
+            fill-opacity: .5;
+        }
+
         .axis path, .axis line {
             fill: none;
             stroke: #000;
@@ -68,6 +79,17 @@
 
         .node {
             font-size: 0.7em;
+        }
+
+        .node .selected {
+            stroke-width: 3;
+            stroke: #ccc;
+            fill-opacity: 1;
+        }
+
+        .node .deselected {
+            strok: none;
+            fill-opacity: .5;
         }
 
         .bubble {
@@ -161,7 +183,9 @@
             .innerRadius(40)
             .dimension(valueDimension)
             .group(valueGroup)
-            .title(function(d){return d.data.key + ": " + d.data.value;})
+            .title(function(d) {
+                return d.data.key + ": " + d.data.value;
+            })
             .renderTitle(true);
 
     var pieChartCountry = dc.pieChart("#pie-chart-country")

@@ -1,4 +1,7 @@
 dc.singleSelectionChart = function(chart) {
+    var SELECTED_CLASS = "selected";
+    var DESELECTED_CLASS = "deselected";
+
     var _filter;
 
     chart.hasFilter = function() {
@@ -21,6 +24,21 @@ dc.singleSelectionChart = function(chart) {
 
         return chart;
     };
+
+    chart.highlightSelected = function(e) {
+        d3.select(e).classed(SELECTED_CLASS, true);
+        d3.select(e).classed(DESELECTED_CLASS, false);
+    }
+
+    chart.fadeDeselected = function(e) {
+        d3.select(e).classed(SELECTED_CLASS, false);
+        d3.select(e).classed(DESELECTED_CLASS, true);
+    }
+
+    chart.resetHighlight = function(e) {
+        d3.select(e).classed(SELECTED_CLASS, false);
+        d3.select(e).classed(DESELECTED_CLASS, false);
+    }
 
     return chart;
 };
