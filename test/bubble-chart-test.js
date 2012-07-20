@@ -241,4 +241,23 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({
+    'bubble chart w/ no filter': {
+        topic: function() {
+            var chart = buildChart("chart3");
+            countryDimension.filter("ZZ");
+            chart.render();
+            return chart;
+        },
+        'should remove text if bubble has 0 r': function(chart) {
+            chart.selectAll("g.node text").each(function(d, i) {
+                assert.equal(d3.select(this).text(), "");
+            });
+        },
+        teardown: function(topic) {
+            resetAllFilters();
+        }
+    }
+});
+
 suite.export(module);

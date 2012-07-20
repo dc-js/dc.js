@@ -77,7 +77,7 @@ dc.bubbleChart = function(selector) {
                 .attr("dy", ".3em")
                 .on("click", onClick)
                 .text(function(d) {
-                    return chart.label()(d);
+                    return bubbleR(d)>0?chart.label()(d):"";
                 });
         }
 
@@ -93,6 +93,10 @@ dc.bubbleChart = function(selector) {
             .selectAll("circle." + BUBBLE_CLASS)
             .attr("r", function(d) {
                 return bubbleR(d);
+            });
+        bubbleG.selectAll("text")
+            .text(function(d) {
+                return bubbleR(d)>0?chart.label()(d):"";
             });
 
         // exit
