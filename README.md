@@ -2,7 +2,7 @@ dc.js
 =====
 
 Dimensional charting built to work natively with crossfilter rendered using d3.js. Check out
-our [example page](http://nickqizhu.github.com/dc.js/) with a quick five minutes how to guide.
+[example page](http://nickqizhu.github.com/dc.js/) with a quick five minutes how to guide.
 
 
 Install with npm

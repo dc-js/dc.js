@@ -3,14 +3,14 @@ require("./env");
 var vows = require('vows');
 var assert = require('assert');
 
-var suite = vows.describe('Line chart');
+var suite = vows.describe('Composite chart');
 
 var width = 1100;
 var height = 200;
 
 function buildChart(id, xdomain) {
     d3.select("body").append("div").attr("id", id);
-    var chart = dc.lineChart("#" + id);
+    var chart = dc.compositeChart("#" + id);
     chart.dimension(dateDimension).group(dateGroup)
         .width(width).height(height)
         .x(d3.time.scale().domain(xdomain))
@@ -21,7 +21,7 @@ function buildChart(id, xdomain) {
 }
 
 suite.addBatch({
-    'time line chart': {
+    'time line composite chart': {
         topic: function() {
             var chart = buildChart("chart", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
             chart.filter([new Date(2012, 5, 01), new Date(2012, 5, 30)]);
@@ -136,13 +136,11 @@ suite.addBatch({
             'extent width should be set based on filter set': function(chart) {
                 assert.equal(chart.select("g.brush rect.extent").attr("width"), 82);
             },
-            'path rendering': function(chart) {
-                assert.equal(chart.select("path.line").attr("d"), "M409.060502283105,107L448.5673515981735,107L454.21118721461187,0L513.4714611872146,107L538.8687214611872,53L626.3481735159817,53");
-            },
-            'selected bars should be push to foreground': function(chart) {
-                chart.selectAll("g rect.bar").each(function(d, i) {
-                    if (i == 1)
-                        assert.equal(d3.select(this).attr("class"), "bar");
+            'after reset all bars should be pushed to foreground': function(chart) {
+                chart.filterAll();
+                chart.redraw();
+                chart.selectAll("g rect.bar").each(function(d) {
+                    assert.equal(d3.select(this).attr("class"), "bar");
                 });
             },
             'x value should have default impl': function(chart) {
