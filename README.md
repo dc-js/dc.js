@@ -5,26 +5,36 @@ Dimensional charting built to work natively with crossfilter rendered using d3.j
 our [example page](http://nickqizhu.github.com/dc.js/) with a quick five minutes how to guide.
 
 
-How to build locally
+Install with npm
 --------------------
+npm install dc
+
+
+Install without npm
+--------------------
+Download
+* [d3.js](https://github.com/mbostock/d3)
+* [crossfilter.js](https://github.com/square/crossfilter)
+* [dc.js](https://github.com/NickQiZhu/dc.js)
+
+
+How to build dc.js locally
+---------------------------
 
 ### Prerequisite modules
 
 Make sure the following packages are installed on your machine
-* npm install eyes
-* npm install vows
-* npm install uglify-js
-* npm install jsdom
-* npm install sizzle
-* npm install d3
-* npm install crossfilter
-* npm install jquery
-* npm install sinon
-* ant # install apache ant make tool
+* node.js
+* npm
+* apache ant
 
-### Build
+### Install dependencies
 
-dc.js$ ant
+dc.js$ npm install
+
+### Build and Test
+
+dc.js$ ./make
 
 
 License

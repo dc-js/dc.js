@@ -15,6 +15,7 @@ require("util").puts(JSON.stringify({
   "devDependencies": {
     "uglify-js": "1.2.3",
     "vows": "0.6.x",
+    "jsdom": "0.2.14",
     "jquery": "1.7.3",
     "sinon": "1.4.2"
   },
