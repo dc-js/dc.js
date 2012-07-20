@@ -171,9 +171,9 @@ suite.addBatch({
                 pieChart.render();
                 pieChart.selectAll(".pie-slice path").each(function(d) {
                     if (d.data.key == "66")
-                        assert.equal(d3.select(this).attr("fill-opacity"), 1);
+                        assert.equal(d3.select(this).attr("class"), "selected");
                     else
-                        assert.isTrue(d3.select(this).attr("fill-opacity") < 1);
+                        assert.equal(d3.select(this).attr("class"), "deselected");
                 });
                 pieChart.filterAll();
             },
@@ -185,7 +185,7 @@ suite.addBatch({
                 pieChart.filterAll();
                 pieChart.redraw();
                 pieChart.selectAll(".pie-slice path").each(function(d) {
-                    assert.equal(d3.select(this).attr("fill-opacity"), "1");
+                    assert.equal(d3.select(this).attr("class"), "");
                 });
             },
             teardown: function(pieChart) {

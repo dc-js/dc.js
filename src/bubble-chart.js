@@ -1,6 +1,8 @@
 dc.bubbleChart = function(selector) {
     var NODE_CLASS = "node";
     var BUBBLE_CLASS = "bubble";
+    var SELECTED_CLASS = "selected";
+    var DESELECTED_CLASS = "deselected";
 
     var chart = dc.singleSelectionChart(dc.colorChart(dc.coordinateGridChart({})));
 
@@ -164,9 +166,11 @@ dc.bubbleChart = function(selector) {
         if (chart.hasFilter()) {
             chart.selectAll("g." + NODE_CLASS).select("circle").each(function(d) {
                 if (chart.isSelectedSlice(d)) {
-                    d3.select(this).classed("deselected", false);
+                    d3.select(this).classed(SELECTED_CLASS, true);
+                    d3.select(this).classed(DESELECTED_CLASS, false);
                 } else {
-                    d3.select(this).classed("deselected", true);
+                    d3.select(this).classed(SELECTED_CLASS, false);
+                    d3.select(this).classed(DESELECTED_CLASS, true);
                 }
             });
         } else {

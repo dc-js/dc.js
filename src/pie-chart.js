@@ -18,7 +18,9 @@ dc.pieChart = function(selector) {
         return chart.xValue()(d.data);
     });
     chart.renderLabel(true);
-    chart.title(function(d){return d.data.key + ": " + d.data.value;});
+    chart.title(function(d) {
+        return d.data.key + ": " + d.data.value;
+    });
     chart.transitionDuration(350);
 
     chart.render = function() {
@@ -110,25 +112,21 @@ dc.pieChart = function(selector) {
     };
 
     chart.highlightFilter = function() {
-        var normalOpacity = 1;
-        var highlightStrokeWidth = 3;
-        var fadeOpacity = 0.1;
-        var normalStrokeWidth = 0;
         if (chart.hasFilter()) {
             chart.selectAll("g." + sliceCssClass).select("path").each(function(d) {
                 if (chart.isSelectedSlice(d)) {
-                    d3.select(this).attr("fill-opacity", normalOpacity)
-                        .attr('stroke', "#ccc")
-                        .attr('stroke-width', highlightStrokeWidth);
+                    d3.select(this).classed("selected", true);
+                    d3.select(this).classed("deselected", false);
                 } else {
-                    d3.select(this).attr("fill-opacity", fadeOpacity)
-                        .attr('stroke-width', normalStrokeWidth);
+                    d3.select(this).classed("selected", false);
+                    d3.select(this).classed("deselected", true);
                 }
             });
         } else {
-            chart.selectAll("g." + sliceCssClass).selectAll("path")
-                .attr("fill-opacity", normalOpacity)
-                .attr('stroke-width', normalStrokeWidth);
+            chart.selectAll("g." + sliceCssClass).selectAll("path").each(function(d) {
+                d3.select(this).classed("selected", false);
+                d3.select(this).classed("deselected", false);
+            });
         }
     };
 
