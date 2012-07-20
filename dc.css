@@ -1,5 +1,5 @@
 body {
-    font-size: 12px;
+    font-size: 0.8em;
     font-family: Lucida;
 }
 
@@ -66,6 +66,15 @@ a {
     fill: none;
     stroke: steelblue;
     stroke-width: 2px;
+}
+
+.node {
+    font-size: 0.7em;
+}
+
+.bubble {
+    stroke: none;
+    fill-opacity: 0.6;
 }
 
 #data-count {
