@@ -78,23 +78,41 @@ dc.bubbleChart = function(selector) {
         renderTitles(bubbleGEnter);
     }
 
+    var labelFunction = function(d) {
+        return bubbleR(d) > 0 ? chart.label()(d) : "";
+    };
+
     function renderLabel(bubbleGEnter) {
         if (chart.renderLabel()) {
+
             bubbleGEnter.append("text")
                 .attr("text-anchor", "middle")
                 .attr("dy", ".3em")
                 .on("click", onClick)
-                .text(function(d) {
-                    return bubbleR(d) > 0 ? chart.label()(d) : "";
-                });
+                .text(labelFunction);
         }
     }
 
-    function renderTitles(bubbleGEnter) {
+    function updateLabels(bubbleGEnter) {
+        if (chart.renderLabel()) {
+            bubbleGEnter.selectAll("text")
+                .text(labelFunction);
+        }
+    }
+
+    var titleFunction = function(d) {
+        return chart.title()(d);
+    };
+
+    function renderTitles(g) {
         if (chart.renderTitle()) {
-            bubbleGEnter.append("title").text(function(d) {
-                return chart.title()(d);
-            });
+            g.append("title").text(titleFunction);
+        }
+    }
+
+    function updateTitles(g) {
+        if (chart.renderTitle()) {
+            g.selectAll("title").text(titleFunction);
         }
     }
 
@@ -105,14 +123,8 @@ dc.bubbleChart = function(selector) {
             .attr("r", function(d) {
                 return bubbleR(d);
             });
-        updateText(bubbleG);
-    }
-
-    function updateText(bubbleG) {
-        bubbleG.selectAll("text")
-            .text(function(d) {
-                return bubbleR(d) > 0 ? chart.label()(d) : "";
-            });
+        updateLabels(bubbleG);
+        updateTitles(bubbleG);
     }
 
     function removeNodes(bubbleG) {

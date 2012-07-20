@@ -242,6 +242,29 @@ suite.addBatch({
 });
 
 suite.addBatch({
+    'update bubble chart': {
+        topic: function() {
+            var chart = buildChart("chart3");
+            chart.render();
+            countryDimension.filter("CA");
+            chart.redraw();
+            return chart;
+        },
+        'should create correct label for each bubble': function(chart) {
+            chart.selectAll("g.node title").each(function(d, i) {
+                if (i == 0)
+                    assert.equal(d3.select(this).text(), "F: {count:0,value:0}");
+                if (i == 1)
+                    assert.equal(d3.select(this).text(), "T: {count:2,value:77}");
+            });
+        },
+        teardown: function(topic) {
+            resetAllFilters();
+        }
+    }
+});
+
+suite.addBatch({
     'bubble chart w/ no filter': {
         topic: function() {
             var chart = buildChart("chart3");
