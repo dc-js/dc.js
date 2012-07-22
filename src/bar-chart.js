@@ -7,14 +7,6 @@ dc.barChart = function(selector) {
 
     chart.transitionDuration(500);
 
-    chart.redraw = function() {
-        chart.plotData();
-        chart.redrawBrush(chart.g());
-        if (chart.elasticY())
-            chart.renderYAxis(chart.g());
-        return chart;
-    };
-
     chart.plotData = function() {
         bars = chart.g().selectAll("rect.bar")
             .data(chart.group().all());

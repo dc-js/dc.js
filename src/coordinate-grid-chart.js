@@ -234,5 +234,13 @@ dc.coordinateGridChart = function(chart) {
         return chart;
     };
 
+    chart.redraw = function() {
+        chart.plotData();
+        chart.redrawBrush(chart.g());
+        if (chart.elasticY())
+            chart.renderYAxis(chart.g());
+        return chart;
+    };
+
     return chart;
 };
