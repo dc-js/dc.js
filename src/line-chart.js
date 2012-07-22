@@ -3,40 +3,23 @@ dc.lineChart = function(parent) {
 
     chart.transitionDuration(500);
 
-    chart.render = function() {
-        chart.resetSvg();
-
-        if (chart.dataAreSet()) {
-            chart.generateG();
-
-            chart.renderXAxis(chart.g());
-            chart.renderYAxis(chart.g());
-
-            redrawLine();
-
-            chart.renderBrush(chart.g());
-        }
-
-        return chart;
-    };
-
     chart.subRender = function(){
         if (chart.dataAreSet()) {
-            redrawLine();
+            chart.plotData();
         }
 
         return chart;
     };
 
     chart.redraw = function() {
-        redrawLine();
+        chart.plotData();
         chart.redrawBrush(chart.g());
         if (chart.elasticY())
             chart.renderYAxis(chart.g());
         return chart;
     };
 
-    function redrawLine() {
+    chart.plotData = function() {
         chart.g().datum(chart.group().all());
 
         var path = chart.selectAll("path.line");

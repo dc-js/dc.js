@@ -223,19 +223,19 @@
             .filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
             .xAxis().ticks(5);
 
-    var compositeChartDate = dc.compositeChart("#composite-chart-date");
-    compositeChartDate.width(500)
-            .height(150)
-            .dimension(dateDimension)
-            .group(dateGroup)
-            .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
-            .xUnits(d3.time.days)
-            .filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
-            .compose([
-                dc.lineChart(compositeChartDate),
-                dc.lineChart(compositeChartDate).group(dateIdSumGroup),
-                dc.lineChart(compositeChartDate).group(dateValueSumGroup)
-            ]);
+//    var compositeChartDate = dc.compositeChart("#composite-chart-date");
+//    compositeChartDate.width(500)
+//            .height(150)
+//            .dimension(dateDimension)
+//            .group(dateGroup)
+//            .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
+//            .xUnits(d3.time.days)
+//            .filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
+//            .compose([
+//                dc.lineChart(compositeChartDate),
+//                dc.lineChart(compositeChartDate).group(dateIdSumGroup),
+//                dc.lineChart(compositeChartDate).group(dateValueSumGroup)
+//            ]);
 
     var bubbleChart = dc.bubbleChart("#bubble-chart");
     bubbleChart.width(990)

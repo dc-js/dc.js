@@ -217,5 +217,22 @@ dc.coordinateGridChart = function(chart) {
             + "V" + (2 * y - 8);
     };
 
+    chart.render = function() {
+        chart.resetSvg();
+
+        if (chart.dataAreSet()) {
+            chart.generateG();
+
+            chart.renderXAxis(chart.g());
+            chart.renderYAxis(chart.g());
+
+            chart.plotData();
+
+            chart.renderBrush(chart.g());
+        }
+
+        return chart;
+    };
+
     return chart;
 };
