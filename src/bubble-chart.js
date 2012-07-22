@@ -14,40 +14,13 @@ dc.bubbleChart = function(selector) {
 
     chart.transitionDuration(750);
 
-    chart.render = function() {
-        chart.resetSvg();
-
-        if (chart.dataAreSet()) {
-            chart.generateG();
-
-            chart.renderXAxis(chart.g());
-            chart.renderYAxis(chart.g());
-
-            _r.range([0, chart.xAxisLength() / 3]);
-
-            redrawBubbles();
-
-            chart.renderBrush(chart.g());
-
-            fadeDeselectedBubbles();
-        }
-
-        return chart;
-    };
-
-    chart.redraw = function() {
-        redrawBubbles();
-
-        chart.redrawBrush(chart.g());
-
-        return chart;
-    };
-
     var bubbleLocator = function(d) {
         return "translate(" + (bubbleX(d)) + "," + (bubbleY(d)) + ")";
     };
 
-    function redrawBubbles() {
+    chart.plotData = function() {
+         _r.range([0, chart.xAxisLength() / 3]);
+
         var bubbleG = chart.g().selectAll("g." + NODE_CLASS)
             .data(chart.group().all());
 
@@ -56,6 +29,8 @@ dc.bubbleChart = function(selector) {
         updateNodes(bubbleG);
 
         removeNodes(bubbleG);
+
+        chart.fadeDeselectedArea();
     }
 
     function renderNodes(bubbleG) {
@@ -158,10 +133,11 @@ dc.bubbleChart = function(selector) {
     };
 
     chart.redrawBrush = function(g) {
-        fadeDeselectedBubbles();
+        // override default x axis brush from parent chart
+        chart.fadeDeselectedArea();
     };
 
-    function fadeDeselectedBubbles() {
+    chart.fadeDeselectedArea = function() {
         var normalOpacity = 1;
         var fadeOpacity = 0.1;
         if (chart.hasFilter()) {

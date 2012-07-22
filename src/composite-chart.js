@@ -4,36 +4,7 @@ dc.compositeChart = function(selector) {
 
     chart.transitionDuration(500);
 
-    chart.render = function() {
-        chart.resetSvg();
-
-        if (chart.dataAreSet()) {
-            chart.generateG();
-
-            chart.renderXAxis(chart.g());
-            chart.renderYAxis(chart.g());
-
-            redrawChildCharts();
-
-            chart.renderBrush(chart.g());
-        }
-
-        return chart;
-    };
-
-    chart.redraw = function() {
-        redrawChildCharts();
-        chart.redrawBrush(chart.g());
-        if (chart.elasticY())
-            chart.renderYAxis(chart.g());
-        return chart;
-    };
-
-    function redrawChildCharts() {
-        for(var i = 0; i < children.length;++i){
-            var child = children[i];
-        }
-    }
+    chart.plotData = function(){};
 
     chart.compose = function(charts){
         children = charts;
