@@ -136,7 +136,7 @@ suite.addBatch({
             assert.equal(o.foo(), "foo");
         },
         'should expose existing function':function(o){
-            dc.override(o, "foo", function(){console.log(this);return this._foo() + "2";});
+            dc.override(o, "foo", function(_){return _() + "2";});
             assert.equal(o.foo(), "foo2");
         }
     }

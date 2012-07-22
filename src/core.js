@@ -62,6 +62,6 @@ dc.round.floor = function(n) {
 
 dc.override = function(obj, functionName, newFunction) {
     var existingFunction = obj[functionName];
-    obj["_" + functionName] = existingFunction;
-    obj[functionName] = newFunction;
+    newFunction._ = existingFunction;
+    obj[functionName] = function(){return newFunction(existingFunction);};
 }

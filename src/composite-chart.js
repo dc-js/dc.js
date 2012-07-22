@@ -1,17 +1,10 @@
-function override(chart, functionName, newFunction) {
-    var existingFunction = chart.functionName;
-    chart.functionName = function() {
-        return newFunction(_);
-    };
-}
-
 dc.compositeChart = function(selector) {
     var chart = dc.coordinateGridChart({});
     var children = [];
 
     chart.transitionDuration(500);
 
-    override(chart, "render", function(_){return _();});
+    dc.override(chart, "render", function(_super){return _super();});
 
     chart.plotData = function(){
          for(var i = 0; i < children.length;++i){
