@@ -126,6 +126,19 @@ suite.addBatch({
                 assert.equal(result, 0);
             }
         }
+    },
+
+    'dc.override':{
+        topic:function(){
+            return {foo: function(){return "foo";}};
+        },
+        'wo/ override function should work as expected':function(o){
+            assert.equal(o.foo(), "foo");
+        },
+        'should expose existing function':function(o){
+            dc.override(o, "foo", function(){console.log(this);return this._foo() + "2";});
+            assert.equal(o.foo(), "foo2");
+        }
     }
 });
 

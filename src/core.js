@@ -59,3 +59,9 @@ dc.round = {};
 dc.round.floor = function(n) {
     return Math.floor(n);
 };
+
+dc.override = function(obj, functionName, newFunction) {
+    var existingFunction = obj[functionName];
+    obj["_" + functionName] = existingFunction;
+    obj[functionName] = newFunction;
+}
