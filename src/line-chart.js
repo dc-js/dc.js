@@ -14,7 +14,7 @@ dc.lineChart = function(parent) {
     chart.plotData = function() {
         chart.g().datum(chart.group().all());
 
-        var path = chart.selectAll("path.line");
+        var path = chart.g().selectAll("path.line");
 
         if (path.empty())
             path = chart.g().append("path")

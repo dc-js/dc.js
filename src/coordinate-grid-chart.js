@@ -22,6 +22,7 @@ dc.coordinateGridChart = function(chart) {
     chart.generateG = function() {
         _g = chart.svg().append("g")
             .attr("transform", "translate(" + chart.margins().left + "," + chart.margins().top + ")");
+        return _g;
     };
 
     chart.g = function(_) {

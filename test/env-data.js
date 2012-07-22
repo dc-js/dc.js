@@ -64,7 +64,7 @@ dateDimension = data.dimension(function(d) {
 });
 dateGroup = dateDimension.group();
 dateValueSumGroup = dateDimension.group().reduceSum(function(d){return d.value;});
-dateIdSumGroup = dateDimension.group().reduceSum(function(d){return d.value;});
+dateIdSumGroup = dateDimension.group().reduceSum(function(d){return d.id;});
 
 resetAllFilters = function() {
     valueDimension.filterAll();
