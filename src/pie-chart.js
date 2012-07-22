@@ -29,7 +29,7 @@ dc.pieChart = function(selector) {
         chart.resetSvg();
 
         if (chart.dataAreSet()) {
-            g = chart.generateSvg()
+            g = chart.svg()
                 .append("g")
                 .attr("transform", "translate(" + chart.cx() + "," + chart.cy() + ")");
 

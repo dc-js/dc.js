@@ -4,6 +4,7 @@ dc.baseChart = function(chart) {
 
     var _anchor;
     var _root;
+    var _svg;
 
     var width = 200, height = 200;
 
@@ -77,18 +78,22 @@ dc.baseChart = function(chart) {
         return chart;
     };
 
-    chart.svg = function(){
-        return chart.select("svg");
+    chart.svg = function(_){
+        if(!arguments.length) return _svg;
+        _svg = _;
+        return chart;
     }
 
     chart.resetSvg = function() {
         chart.select("svg").remove();
+        return chart.generateSvg();
     };
 
     chart.generateSvg = function() {
-        return chart.root().append("svg")
+        _svg = chart.root().append("svg")
             .attr("width", chart.width())
             .attr("height", chart.height());
+        return _svg;
     };
 
     chart.turnOnReset = function() {

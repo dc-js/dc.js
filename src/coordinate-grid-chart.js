@@ -20,7 +20,7 @@ dc.coordinateGridChart = function(chart) {
     var _round;
 
     chart.generateG = function() {
-        _g = chart.generateSvg().append("g")
+        _g = chart.svg().append("g")
             .attr("transform", "translate(" + chart.margins().left + "," + chart.margins().top + ")");
     };
 
