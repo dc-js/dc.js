@@ -11,14 +11,6 @@ dc.lineChart = function(parent) {
         return chart;
     };
 
-    chart.redraw = function() {
-        chart.plotData();
-        chart.redrawBrush(chart.g());
-        if (chart.elasticY())
-            chart.renderYAxis(chart.g());
-        return chart;
-    };
-
     chart.plotData = function() {
         chart.g().datum(chart.group().all());
 
