@@ -63,6 +63,8 @@ dateDimension = data.dimension(function(d) {
     return d3.time.day(d.dd);
 });
 dateGroup = dateDimension.group();
+dateValueSumGroup = dateDimension.group().reduceSum(function(d){return d.value;});
+dateIdSumGroup = dateDimension.group().reduceSum(function(d){return d.value;});
 
 resetAllFilters = function() {
     valueDimension.filterAll();

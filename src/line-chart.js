@@ -1,4 +1,4 @@
-dc.lineChart = function(selector) {
+dc.lineChart = function(parent) {
     var chart = dc.coordinateGridChart({});
 
     chart.transitionDuration(500);
@@ -15,6 +15,14 @@ dc.lineChart = function(selector) {
             redrawLine();
 
             chart.renderBrush(chart.g());
+        }
+
+        return chart;
+    };
+
+    chart.subRender = function(){
+        if (chart.dataAreSet()) {
+            redrawLine();
         }
 
         return chart;
@@ -50,8 +58,7 @@ dc.lineChart = function(selector) {
 
         dc.transition(path, chart.transitionDuration(), function(t) {
             t.ease("linear")
-        })
-            .attr("d", line);
+        }).attr("d", line);
     }
 
     chart.redrawBrush = function(g) {
@@ -64,7 +71,11 @@ dc.lineChart = function(selector) {
 
     }
 
+    function isSubChart(parent) {
+        return (parent instanceof Object);
+    }
+
     dc.registerChart(chart);
 
-    return chart.anchor(selector);
+    return isSubChart(parent)?chart:chart.anchor(parent);
 };

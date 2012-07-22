@@ -15,6 +15,11 @@ function buildChart(id, xdomain) {
         .width(width).height(height)
         .x(d3.time.scale().domain(xdomain))
         .transitionDuration(0)
+        .compose([
+            dc.lineChart(chart),
+            dc.lineChart(chart).group(dateIdSumGroup),
+            dc.lineChart(chart).group(dateValueSumGroup)
+        ])
         .xUnits(d3.time.days);
     chart.render();
     return chart;

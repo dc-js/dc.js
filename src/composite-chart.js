@@ -1,5 +1,6 @@
 dc.compositeChart = function(selector) {
     var chart = dc.coordinateGridChart({});
+    var children;
 
     chart.transitionDuration(500);
 
@@ -29,7 +30,9 @@ dc.compositeChart = function(selector) {
     };
 
     function redrawChildCharts() {
-
+        for(var i = 0; i < children.length;++i){
+            var child = children[i];
+        }
     }
 
     chart.redrawBrush = function(g) {
@@ -40,6 +43,16 @@ dc.compositeChart = function(selector) {
 
     function fadeDeselectedArea() {
     }
+
+    chart.compose = function(charts){
+        children = charts;
+        for(var i = 0; i < children.length;++i){
+            var child = children[i];
+            if(child.dimension()==null) child.dimension(chart.dimension());
+            if(child.group()==null) child.group(chart.group());
+        }
+        return chart;
+    };
 
     dc.registerChart(chart);
 
