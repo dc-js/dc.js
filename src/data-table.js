@@ -101,6 +101,5 @@ dc.dataTable = function(selector) {
         return chart;
     };
 
-    dc.registerChart(chart);
     return chart.anchor(selector);
 };

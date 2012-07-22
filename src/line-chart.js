@@ -36,11 +36,5 @@ dc.lineChart = function(parent) {
         }).attr("d", line);
     }
 
-    function isSubChart(parent) {
-        return (parent instanceof Object);
-    }
-
-    dc.registerChart(chart);
-
-    return isSubChart(parent)?chart:chart.anchor(parent);
+    return chart.anchor(parent);
 };

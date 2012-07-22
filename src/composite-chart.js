@@ -16,7 +16,5 @@ dc.compositeChart = function(selector) {
         return chart;
     };
 
-    dc.registerChart(chart);
-
     return chart.anchor(selector);
 };

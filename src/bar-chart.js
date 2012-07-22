@@ -78,8 +78,5 @@ dc.barChart = function(selector) {
         }
     }
 
-
-    dc.registerChart(chart);
-
     return chart.anchor(selector);
 };

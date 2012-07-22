@@ -8,13 +8,21 @@ dc.baseChart = function(chart) {
 
     var width = 200, height = 200;
 
-    var _xValue = function(d){return d.key;};
-    var _yValue = function(d){return d.value;};
+    var _xValue = function(d) {
+        return d.key;
+    };
+    var _yValue = function(d) {
+        return d.value;
+    };
 
-    var _label = function(d) {return d.key;};
+    var _label = function(d) {
+        return d.key;
+    };
     var _renderLabel = false;
 
-    var _title = function(d) {return d.key + ": " + d.value;};
+    var _title = function(d) {
+        return d.key + ": " + d.value;
+    };
     var _renderTitle = false;
 
     var _transitionDuration = 750;
@@ -55,8 +63,14 @@ dc.baseChart = function(chart) {
 
     chart.anchor = function(a) {
         if (!arguments.length) return _anchor;
-        _anchor = a;
-        _root = d3.select(_anchor);
+        if (a instanceof Object) {
+            _anchor = a.anchor();
+            _root = a.root();
+        } else {
+            _anchor = a;
+            _root = d3.select(_anchor);
+            dc.registerChart(chart);
+        }
         return chart;
     };
 
@@ -78,8 +92,8 @@ dc.baseChart = function(chart) {
         return chart;
     };
 
-    chart.svg = function(_){
-        if(!arguments.length) return _svg;
+    chart.svg = function(_) {
+        if (!arguments.length) return _svg;
         _svg = _;
         return chart;
     }
@@ -126,38 +140,38 @@ dc.baseChart = function(chart) {
         return chart;
     };
 
-    chart.xValue = function(_){
-        if(!arguments.length) return _xValue;
+    chart.xValue = function(_) {
+        if (!arguments.length) return _xValue;
         _xValue = _;
         return chart;
     };
 
-    chart.yValue = function(_){
-        if(!arguments.length) return _yValue;
+    chart.yValue = function(_) {
+        if (!arguments.length) return _yValue;
         _yValue = _;
         return chart;
     };
 
     chart.label = function(_) {
-        if(!arguments.length) return _label;
+        if (!arguments.length) return _label;
         _label = _;
         return chart;
     };
 
     chart.renderLabel = function(_) {
-        if(!arguments.length) return _renderLabel;
+        if (!arguments.length) return _renderLabel;
         _renderLabel = _;
         return chart;
     };
 
     chart.title = function(_) {
-        if(!arguments.length) return _title;
+        if (!arguments.length) return _title;
         _title = _;
         return chart;
     };
 
     chart.renderTitle = function(_) {
-        if(!arguments.length) return _renderTitle;
+        if (!arguments.length) return _renderTitle;
         _renderTitle = _;
         return chart;
     };

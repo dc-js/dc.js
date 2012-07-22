@@ -202,7 +202,5 @@ dc.pieChart = function(selector) {
         dc.redrawAll();
     }
 
-    dc.registerChart(chart);
-
     return chart.anchor(selector);
 };

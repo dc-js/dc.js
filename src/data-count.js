@@ -13,6 +13,5 @@ dc.dataCount = function(selector) {
         return chart.render();
     };
 
-    dc.registerChart(chart);
     return chart.anchor(selector);
 };
