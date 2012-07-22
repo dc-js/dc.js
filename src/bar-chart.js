@@ -64,13 +64,7 @@ dc.barChart = function(selector) {
         return chart.yAxisHeight() - chart.y()(chart.yValue()(d)) - BAR_PADDING_BOTTOM;
     }
 
-    chart.redrawBrush = function(g) {
-        chart._redrawBrush(g);
-
-        fadeDeselectedBars();
-    };
-
-    function fadeDeselectedBars() {
+    chart.fadeDeselectedArea = function() {
         if (!chart.brush().empty() && chart.brush().extent() != null) {
             var start = chart.brush().extent()[0];
             var end = chart.brush().extent()[1];

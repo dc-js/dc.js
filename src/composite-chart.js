@@ -35,15 +35,6 @@ dc.compositeChart = function(selector) {
         }
     }
 
-    chart.redrawBrush = function(g) {
-        chart._redrawBrush(g);
-
-        fadeDeselectedArea();
-    }
-
-    function fadeDeselectedArea() {
-    }
-
     chart.compose = function(charts){
         children = charts;
         for(var i = 0; i < children.length;++i){

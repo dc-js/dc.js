@@ -194,14 +194,20 @@ dc.coordinateGridChart = function(chart) {
     function brushEnd(p) {
     }
 
-    chart._redrawBrush = function(g) {
+    chart.redrawBrush = function(g) {
         if (chart._filter() && chart.brush().empty())
             chart.brush().extent(chart._filter());
 
         var gBrush = g.select("g.brush");
         gBrush.call(chart.brush().x(chart.x()));
         gBrush.selectAll("rect").attr("height", chart.xAxisY());
+
+        chart.fadeDeselectedArea();
     };
+
+    chart.fadeDeselectedArea = function(){
+        // do nothing, sub-chart should override this function
+    }
 
     // borrowed from Crossfilter example
     chart.resizeHandlePath = function(d) {

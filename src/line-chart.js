@@ -36,16 +36,6 @@ dc.lineChart = function(parent) {
         }).attr("d", line);
     }
 
-    chart.redrawBrush = function(g) {
-        chart._redrawBrush(g);
-
-        fadeDeselectedArea();
-    }
-
-    function fadeDeselectedArea() {
-
-    }
-
     function isSubChart(parent) {
         return (parent instanceof Object);
     }
