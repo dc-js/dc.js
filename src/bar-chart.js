@@ -7,31 +7,15 @@ dc.barChart = function(selector) {
 
     chart.transitionDuration(500);
 
-    chart.render = function() {
-        chart.resetSvg();
-
-        if (chart.dataAreSet()) {
-            chart.generateG();
-            chart.renderXAxis(chart.g());
-            chart.renderYAxis(chart.g());
-
-            redrawBars();
-
-            chart.renderBrush(chart.g());
-        }
-
-        return chart;
-    };
-
     chart.redraw = function() {
-        redrawBars();
+        chart.plotData();
         chart.redrawBrush(chart.g());
         if (chart.elasticY())
             chart.renderYAxis(chart.g());
         return chart;
     };
 
-    function redrawBars() {
+    chart.plotData = function() {
         bars = chart.g().selectAll("rect.bar")
             .data(chart.group().all());
 
