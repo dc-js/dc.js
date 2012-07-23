@@ -31,7 +31,7 @@ function buildChart(id, xdomain) {
 suite.addBatch({
     'time line composite chart': {
         topic: function() {
-            var chart = buildChart("chart", [new Date(2012, 4, 20), new Date(2012, 07, 15)]);
+            var chart = buildChart("compositeChart", [new Date(2012, 4, 20), new Date(2012, 07, 15)]);
             chart.filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
             chart.redraw();
             return chart;
@@ -124,10 +124,16 @@ suite.addBatch({
         },
         'sub line chart path generation': function(chart){
             chart.selectAll("g.sub path").each(function(d, i){
-                console.log(i + ": " + d3.select(this).attr("d"));
                 switch(i){
                     case 0:
-//                    assert.equal(d3.select(this).attr("d"), "M24.71264367816092,73L93.90804597701148,55L103.79310344827586,0L207.58620689655172,73L252.06896551724137,64L405.28735632183907,46");
+                        assert.equal(d3.select(this).attr("d"), "M24.71264367816092,73L93.90804597701148,55L103.79310344827586,0L207.58620689655172,73L252.06896551724137,64L405.28735632183907,46");
+                        break;
+                    case 1:
+                        assert.equal(d3.select(this).attr("d"), "M24.71264367816092,109L93.90804597701148,105L103.79310344827586,96L207.58620689655172,107L252.06896551724137,98L405.28735632183907,100");
+                        break;
+                    case 2:
+                        assert.equal(d3.select(this).attr("d"), "M24.71264367816092,109L93.90804597701148,109L103.79310344827586,108L207.58620689655172,109L252.06896551724137,108L405.28735632183907,108");
+                        break;
                 }
             });
         },
@@ -179,7 +185,7 @@ suite.addBatch({
 suite.addBatch({'elastic y':{
     topic: function(chart) {
         countryDimension.filter("CA")
-        var chart = buildChart("chart2", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+        var chart = buildChart("compositeChart2", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
         chart.render();
         return chart;
     },
