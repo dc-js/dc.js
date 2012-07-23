@@ -14,15 +14,16 @@ function buildChart(id, xdomain) {
     chart
         .dimension(dateDimension)
         .group(dateValueSumGroup)
-        .width(width).height(height)
+        .width(width)
+        .height(height)
         .x(d3.time.scale().domain(xdomain))
         .transitionDuration(0)
+        .xUnits(d3.time.days)
         .compose([
                 dc.lineChart(chart),
                 dc.lineChart(chart).group(dateIdSumGroup),
                 dc.lineChart(chart).group(dateGroup)
-            ])
-        .xUnits(d3.time.days);
+            ]);
     chart.render();
     return chart;
 }
@@ -122,7 +123,7 @@ suite.addBatch({
             assert.equal(chart.selectAll("g.sub")[0].length, 3);
         },
         'sub line chart path generation': function(chart){
-            chart.selectAll("path.line").each(function(d, i){
+            chart.selectAll("g.sub path").each(function(d, i){
                 console.log(i + ": " + d3.select(this).attr("d"));
                 switch(i){
                     case 0:
@@ -170,6 +171,7 @@ suite.addBatch({
         },
         teardown: function(topic) {
             resetAllFilters();
+            resetBody();
         }
     }
 });
@@ -186,6 +188,7 @@ suite.addBatch({'elastic y':{
     },
     teardown: function(topic) {
         resetAllFilters();
+        resetBody();
     }
 }});
 

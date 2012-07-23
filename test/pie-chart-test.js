@@ -130,6 +130,7 @@ suite.addBatch({
             },
             teardown: function() {
                 resetAllFilters();
+                resetBody();
             }
         },
         'n/a filter' : {
@@ -143,6 +144,7 @@ suite.addBatch({
             },
             teardown: function() {
                 resetAllFilters();
+                resetBody();
             }
         },
         'slice selection' :{
@@ -190,6 +192,7 @@ suite.addBatch({
             },
             teardown: function(pieChart) {
                 resetAllFilters();
+                resetBody();
             }
         },
         'group order': {
@@ -221,6 +224,7 @@ suite.addBatch({
         },
         teardown:function(chart) {
             resetAllFilters();
+            resetBody();
         }
     },
 
@@ -255,6 +259,7 @@ suite.addBatch({
         },
         teardown:function(chart) {
             resetAllFilters();
+            resetBody();
         }
     }
 });
@@ -273,6 +278,7 @@ suite.addBatch({
         },
         teardown:function(chart) {
             resetAllFilters();
+            resetBody();
         }
     }
 });

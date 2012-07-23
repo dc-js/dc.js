@@ -154,6 +154,7 @@ suite.addBatch({
         },
         teardown: function(topic) {
             resetAllFilters();
+            resetBody();
         }
     }
 });
@@ -170,6 +171,7 @@ suite.addBatch({'elastic y':{
     },
     teardown: function(topic) {
         resetAllFilters();
+        resetBody();
     }
 }});
 

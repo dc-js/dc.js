@@ -194,6 +194,7 @@ suite.addBatch({
 
         teardown: function(topic) {
             resetAllFilters();
+            resetBody();
         }
     }
 });
@@ -215,6 +216,7 @@ suite.addBatch({
         },
         teardown: function(topic) {
             resetAllFilters();
+            resetBody();
         }
     }
 });
@@ -237,6 +239,7 @@ suite.addBatch({
         },
         teardown: function(topic) {
             resetAllFilters();
+            resetBody();
         }
     }
 });
@@ -260,6 +263,7 @@ suite.addBatch({
         },
         teardown: function(topic) {
             resetAllFilters();
+            resetBody();
         }
     }
 });
@@ -279,6 +283,7 @@ suite.addBatch({
         },
         teardown: function(topic) {
             resetAllFilters();
+            resetBody();
         }
     }
 });

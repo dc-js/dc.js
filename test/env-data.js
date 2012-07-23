@@ -73,3 +73,7 @@ resetAllFilters = function() {
     regionDimension.filterAll();
     dateDimension.filterAll();
 };
+
+resetBody = function(){
+    jQuery("body").html('');
+};

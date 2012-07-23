@@ -58,6 +58,7 @@ suite.addBatch({
         },
         'teardown': function() {
             resetAllFilters();
+            resetBody();
         }
     }
 });
@@ -79,6 +80,7 @@ suite.addBatch({
         },
         'teardown': function() {
             resetAllFilters();
+            resetBody();
         }
     }
 });

@@ -39,6 +39,7 @@ suite.addBatch({
         },
         teardown: function() {
             dc.deregisterAllCharts();
+            resetBody();
         }
     },
 
@@ -71,6 +72,7 @@ suite.addBatch({
         teardown: function(selections) {
             selections.transition.restore();
             selections.duration.restore();
+            resetBody();
         }
     },
 
@@ -103,6 +105,7 @@ suite.addBatch({
         teardown: function(selections) {
             selections.transition.restore();
             selections.duration.restore();
+            resetBody();
         }
     },
 
