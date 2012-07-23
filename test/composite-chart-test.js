@@ -5,21 +5,23 @@ var assert = require('assert');
 
 var suite = vows.describe('Composite chart');
 
-var width = 1100;
-var height = 200;
+var width = 500;
+var height = 150;
 
 function buildChart(id, xdomain) {
     d3.select("body").append("div").attr("id", id);
     var chart = dc.compositeChart("#" + id);
-    chart.dimension(dateDimension).group(dateGroup)
+    chart
+        .dimension(dateDimension)
+        .group(dateValueSumGroup)
         .width(width).height(height)
         .x(d3.time.scale().domain(xdomain))
         .transitionDuration(0)
         .compose([
-            dc.lineChart(chart),
-            dc.lineChart(chart).group(dateIdSumGroup),
-            dc.lineChart(chart).group(dateValueSumGroup)
-        ])
+                dc.lineChart(chart),
+                dc.lineChart(chart).group(dateIdSumGroup),
+                dc.lineChart(chart).group(dateGroup)
+            ])
         .xUnits(d3.time.days);
     chart.render();
     return chart;
@@ -46,7 +48,7 @@ suite.addBatch({
             assert.equal(chart.dimension(), dateDimension);
         },
         'group should be set': function(chart) {
-            assert.equal(chart.group(), dateGroup);
+            assert.equal(chart.group(), dateValueSumGroup);
         },
         'width should be set': function(chart) {
             assert.equal(chart.width(), width);
@@ -68,7 +70,7 @@ suite.addBatch({
         },
         'x range round is auto calculated based on width': function(chart) {
             assert.equal(chart.x().range()[0], 0);
-            assert.equal(chart.x().range()[1], 1030);
+            assert.equal(chart.x().range()[1], 430);
         },
         'x domain should be set': function(chart) {
             assert.equal(chart.x().domain()[0].getTime(), new Date(2012, 0, 1).getTime());
@@ -78,12 +80,12 @@ suite.addBatch({
             assert.isTrue(chart.y() != undefined);
         },
         'y range round is auto calculated based on height': function(chart) {
-            assert.equal(chart.y().range()[0], 160);
+            assert.equal(chart.y().range()[0], 110);
             assert.equal(chart.y().range()[1], 0);
         },
         'y domain is auto calculated based on height': function(chart) {
             assert.equal(chart.y().domain()[0], 0);
-            assert.equal(chart.y().domain()[1], 3);
+            assert.equal(chart.y().domain()[1], 132);
         },
         'root g should be created': function(chart) {
             assert.isFalse(chart.select("svg g").empty());
@@ -92,7 +94,7 @@ suite.addBatch({
             assert.equal(chart.select("svg g").attr("transform"), "translate(20,10)");
         },
         'axis x should be placed at the bottom': function(chart) {
-            assert.equal(chart.select("svg g g.x").attr("transform"), "translate(20,170)");
+            assert.equal(chart.select("svg g g.x").attr("transform"), "translate(20,120)");
         },
         'axis y should be placed on the left': function(chart) {
             assert.equal(chart.select("svg g g.y").attr("transform"), "translate(20,10)");
@@ -124,22 +126,22 @@ suite.addBatch({
             'brush fancy resize handle should be created': function(chart) {
                 chart.select("g.brush").selectAll(".resize path").each(function(d, i) {
                     if (i == 0)
-                        assert.equal(d3.select(this).attr("d"), "M0.5,56.666666666666664A6,6 0 0 1 6.5,62.666666666666664V107.33333333333333A6,6 0 0 1 0.5,113.33333333333333ZM2.5,64.66666666666666V105.33333333333333M4.5,64.66666666666666V105.33333333333333");
+                        assert.equal(d3.select(this).attr("d"), "M0.5,40A6,6 0 0 1 6.5,46V74A6,6 0 0 1 0.5,80ZM2.5,48V72M4.5,48V72");
                     else
-                        assert.equal(d3.select(this).attr("d"), "M-0.5,56.666666666666664A6,6 0 0 0 -6.5,62.666666666666664V107.33333333333333A6,6 0 0 0 -0.5,113.33333333333333ZM-2.5,64.66666666666666V105.33333333333333M-4.5,64.66666666666666V105.33333333333333");
+                        assert.equal(d3.select(this).attr("d"), "M-0.5,40A6,6 0 0 0 -6.5,46V74A6,6 0 0 0 -0.5,80ZM-2.5,48V72M-4.5,48V72");
                 });
             },
             'background should be stretched': function(chart) {
-                assert.equal(chart.select("g.brush rect.background").attr("width"), 1030);
+                assert.equal(chart.select("g.brush rect.background").attr("width"), 430);
             },
             'background height should be set to chart height': function(chart) {
-                assert.equal(chart.select("g.brush rect.background").attr("height"), 170);
+                assert.equal(chart.select("g.brush rect.background").attr("height"), 120);
             },
             'extent height should be set to chart height': function(chart) {
-                assert.equal(chart.select("g.brush rect.extent").attr("height"), 170);
+                assert.equal(chart.select("g.brush rect.extent").attr("height"), 120);
             },
             'extent width should be set based on filter set': function(chart) {
-                assert.equal(chart.select("g.brush rect.extent").attr("width"), 82);
+                assert.equal(chart.select("g.brush rect.extent").attr("width"), 34);
             },
             'after reset all bars should be pushed to foreground': function(chart) {
                 chart.filterAll();
@@ -169,7 +171,7 @@ suite.addBatch({'elastic y':{
         return chart;
     },
     'y axis should have shrunk triggered by filter': function(chart) {
-        assert.equal(chart.y().domain()[1], 1);
+        assert.equal(chart.y().domain()[1], 55);
     },
     teardown: function(topic) {
         resetAllFilters();
