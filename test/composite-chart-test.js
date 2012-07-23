@@ -118,6 +118,9 @@ suite.addBatch({
             chart.round(d3.time.day.round)
             assert.isNotNull(chart.round());
         },
+        'separate g should be created for each sub chart': function(chart){
+            assert.equal(chart.selectAll("g.sub")[0].length, 3);
+        },
 
         'with brush': {
             'be positioned with offset (left margin)': function(chart) {

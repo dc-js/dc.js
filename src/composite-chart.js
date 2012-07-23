@@ -1,4 +1,6 @@
 dc.compositeChart = function(selector) {
+    var SUB_CHART_G_CLASS = "sub";
+
     var chart = dc.coordinateGridChart({});
     var children = [];
 
@@ -13,6 +15,7 @@ dc.compositeChart = function(selector) {
             child.height(chart.height());
             child.width(chart.width());
             child.generateG();
+            child.g().attr("class", "sub");
         }
 
         return _super();
