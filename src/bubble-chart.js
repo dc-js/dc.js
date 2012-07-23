@@ -1,6 +1,7 @@
 dc.bubbleChart = function(selector) {
     var NODE_CLASS = "node";
     var BUBBLE_CLASS = "bubble";
+    var MIN_RADIUS = 10;
 
     var chart = dc.singleSelectionChart(dc.colorChart(dc.coordinateGridChart({})));
 
@@ -57,7 +58,7 @@ dc.bubbleChart = function(selector) {
     }
 
     var labelFunction = function(d) {
-        return bubbleR(d) > 0 ? chart.label()(d) : "";
+        return bubbleR(d) > MIN_RADIUS ? chart.label()(d) : "";
     };
 
     function renderLabel(bubbleGEnter) {

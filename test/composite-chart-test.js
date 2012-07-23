@@ -30,8 +30,8 @@ function buildChart(id, xdomain) {
 suite.addBatch({
     'time line composite chart': {
         topic: function() {
-            var chart = buildChart("chart", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
-            chart.filter([new Date(2012, 5, 01), new Date(2012, 5, 30)]);
+            var chart = buildChart("chart", [new Date(2012, 4, 20), new Date(2012, 07, 15)]);
+            chart.filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
             chart.redraw();
             return chart;
         },
@@ -73,8 +73,8 @@ suite.addBatch({
             assert.equal(chart.x().range()[1], 430);
         },
         'x domain should be set': function(chart) {
-            assert.equal(chart.x().domain()[0].getTime(), new Date(2012, 0, 1).getTime());
-            assert.equal(chart.x().domain()[1].getTime(), new Date(2012, 11, 31).getTime());
+            assert.equal(chart.x().domain()[0].getTime(), new Date(2012, 4, 20).getTime());
+            assert.equal(chart.x().domain()[1].getTime(), new Date(2012, 7, 15).getTime());
         },
         'y can be set': function(chart) {
             assert.isTrue(chart.y() != undefined);
@@ -121,7 +121,15 @@ suite.addBatch({
         'separate g should be created for each sub chart': function(chart){
             assert.equal(chart.selectAll("g.sub")[0].length, 3);
         },
-
+        'sub line chart path generation': function(chart){
+            chart.selectAll("path.line").each(function(d, i){
+                console.log(i + ": " + d3.select(this).attr("d"));
+                switch(i){
+                    case 0:
+//                    assert.equal(d3.select(this).attr("d"), "M24.71264367816092,73L93.90804597701148,55L103.79310344827586,0L207.58620689655172,73L252.06896551724137,64L405.28735632183907,46");
+                }
+            });
+        },
         'with brush': {
             'be positioned with offset (left margin)': function(chart) {
                 assert.equal(chart.select("g.brush").attr("transform"), "translate(" + chart.margins().left + ",0)");
@@ -144,7 +152,7 @@ suite.addBatch({
                 assert.equal(chart.select("g.brush rect.extent").attr("height"), 120);
             },
             'extent width should be set based on filter set': function(chart) {
-                assert.equal(chart.select("g.brush rect.extent").attr("width"), 34);
+                assert.equal(chart.select("g.brush rect.extent").attr("width"), 143);
             },
             'after reset all bars should be pushed to foreground': function(chart) {
                 chart.filterAll();

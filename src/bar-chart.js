@@ -1,6 +1,7 @@
 dc.barChart = function(selector) {
     var MIN_BAR_WIDTH = 1;
     var BAR_PADDING_BOTTOM = 1;
+    var BAR_PADDING_WIDTH = 2;
 
     var chart = dc.coordinateGridChart({});
     var bars;
@@ -19,8 +20,8 @@ dc.barChart = function(selector) {
                 return finalBarX(d);
             })
             .attr("y", chart.xAxisY())
-            .attr("width", function() {
-                return finalBarWidth();
+            .attr("width", function(d) {
+                return finalBarWidth(d);
             });
         dc.transition(bars, chart.transitionDuration())
             .attr("y", function(d) {
@@ -45,8 +46,9 @@ dc.barChart = function(selector) {
             .attr("height", 0);
     }
 
-    function finalBarWidth() {
-        var w = Math.floor(chart.xAxisLength() / chart.xUnits()(chart.x().domain()[0], chart.x().domain()[1]).length);
+    function finalBarWidth(d) {
+        var numberOfBars = chart.xUnits()(chart.x().domain()[0], chart.x().domain()[1]).length + BAR_PADDING_WIDTH;
+        var w = Math.floor(chart.xAxisLength() / numberOfBars);
         if (isNaN(w) || w < MIN_BAR_WIDTH)
             w = MIN_BAR_WIDTH;
         return w;

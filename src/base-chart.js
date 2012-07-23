@@ -155,6 +155,7 @@ dc.baseChart = function(chart) {
     chart.label = function(_) {
         if (!arguments.length) return _label;
         _label = _;
+        _renderLabel = true;
         return chart;
     };
 
@@ -167,6 +168,7 @@ dc.baseChart = function(chart) {
     chart.title = function(_) {
         if (!arguments.length) return _title;
         _title = _;
+        _renderTitle = true;
         return chart;
     };
 
