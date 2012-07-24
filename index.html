@@ -381,22 +381,22 @@ d3.csv("ndx.csv", function(data) {
                     })
                     .size(10)
                     .columns([
-                function(d) {
-                    return d.date;
-                },
-                function(d) {
-                    return d.open;
-                },
-                function(d) {
-                    return d.close;
-                },
-                function(d) {
-                    return numberFormat(d.close - d.open);
-                },
-                function(d) {
-                    return d.volume;
-                }
-            ])
+                        function(d) {
+                            return d.date;
+                        },
+                        function(d) {
+                            return d.open;
+                        },
+                        function(d) {
+                            return d.close;
+                        },
+                        function(d) {
+                            return numberFormat(d.close - d.open);
+                        },
+                        function(d) {
+                            return d.volume;
+                        }
+                    ])
                     .sortBy(function(d) {
                         return d.dd;
                     })
@@ -412,7 +412,7 @@ d3.csv("ndx.csv", function(data) {
 <h2>Quick 5 Mins How-To Guide</h2>
 
 <div>
-    <h3>Load your data</h3>
+<h3>Load your data</h3>
 
         <pre class="brush:js">
             /*
@@ -424,7 +424,7 @@ d3.csv("ndx.csv", function(data) {
             jQuery.getJson("data.json", function(data){...});
         </pre>
 
-    <h3>Generate dimension and group</h3>
+<h3>Generate dimension and group</h3>
 
     <pre class="brush:js">
         // since its a csv file we need to format the data a bit
@@ -443,7 +443,7 @@ d3.csv("ndx.csv", function(data) {
         var volumeByMonthGroup = volumeByMonth.group().reduceSum(function(d) { return d.volume; });
     </pre>
 
-    <h3>Anchor Div for Charts</h3>
+<h3>Anchor Div for Charts</h3>
 
     <pre class="brush:xml">
         <!-- A div anchor that can be identified by id -->
@@ -461,7 +461,7 @@ d3.csv("ndx.csv", function(data) {
         </div>
     </pre>
 
-    <h3>Pie/Donut Chart</h3>
+<h3>Pie/Donut Chart</h3>
 
     <pre class="brush:js">
         // create a pie chart and use the given css selector as anchor
@@ -489,7 +489,7 @@ d3.csv("ndx.csv", function(data) {
             .renderTitle(true);
     </pre>
 
-    <h3>Bar Chart</h3>
+<h3>Bar Chart</h3>
 
     <pre class="brush:js">
         // create a bar chart
@@ -511,7 +511,7 @@ d3.csv("ndx.csv", function(data) {
             .xUnits(d3.time.months);
     </pre>
 
-    <h3>Line Chart</h3>
+<h3>Line Chart</h3>
 
     <pre class="brush:js">
         // create a line chart
@@ -533,7 +533,7 @@ d3.csv("ndx.csv", function(data) {
             .xUnits(d3.time.months);
     </pre>
 
-    <h3>Bubble Chart</h3>
+<h3>Bubble Chart</h3>
 
     <pre class="brush:js">
         dc.bubbleChart("#yearly-bubble-chart")
@@ -576,7 +576,7 @@ d3.csv("ndx.csv", function(data) {
             });
     </pre>
 
-    <h3>Data Table</h3>
+<h3>Data Table</h3>
 
     <pre class="brush:xml">
         <!-- anchor div for data table -->
@@ -618,7 +618,7 @@ d3.csv("ndx.csv", function(data) {
             .order(d3.ascending);
     </pre>
 
-    <h3>Data Count</h3>
+<h3>Data Count</h3>
 
     <pre class="brush:xml">
         <div id="data-count">
@@ -632,7 +632,7 @@ d3.csv("ndx.csv", function(data) {
             .group(all); // set group to ndx.groupAll()
     </pre>
 
-    <h3>Rendering</h3>
+<h3>Rendering</h3>
 
     <pre class="brush:js">
         // simply call renderAll() to render all charts on the page
@@ -643,19 +643,36 @@ d3.csv("ndx.csv", function(data) {
         dc.redrawAll();
     </pre>
 
-    <p>
-        Try dc.js with your own data set and have fun!
-    </p>
+<p>
+    Try dc.js with your own data set and have fun!
+</p>
 
-    <a href="https://github.com/NickQiZhu/dc.js"><img style="position: absolute; top: 0; right: 0; border: 0;"
-                                                      src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"
-                                                      alt="Fork me on GitHub"></a>
+<a href="https://github.com/NickQiZhu/dc.js"><img style="position: absolute; top: 0; right: 0; border: 0;"
+                                                  src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"
+                                                  alt="Fork me on GitHub"></a>
 </div>
 
 </div>
 
 <script type="text/javascript">
     SyntaxHighlighter.all();
+</script>
+
+<script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-33628816-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+        var ga = document.createElement('script');
+        ga.type = 'text/javascript';
+        ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(ga, s);
+    })();
+
 </script>
 
 </body>
