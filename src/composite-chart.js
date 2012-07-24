@@ -6,7 +6,7 @@ dc.compositeChart = function(selector) {
 
     chart.transitionDuration(500);
 
-    dc.override(chart, "generateG", function(_super){
+    dc.override(chart, "generateG", function(_super) {
         for (var i = 0; i < children.length; ++i) {
             var child = children[i];
             if (child.dimension() == null) child.dimension(chart.dimension());
@@ -33,6 +33,15 @@ dc.compositeChart = function(selector) {
             child.yAxis(chart.yAxis());
 
             child.plotData();
+        }
+    };
+
+    chart.fadeDeselectedArea = function() {
+        for (var i = 0; i < children.length; ++i) {
+            var child = children[i];
+            child.brush(chart.brush());
+
+            child.fadeDeselectedArea();
         }
     };
 

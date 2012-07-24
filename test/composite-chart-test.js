@@ -179,6 +179,9 @@ suite.addBatch({
             'extent width should be set based on filter set': function(chart) {
                 assert.equal(chart.select("g.brush rect.extent").attr("width"), 143);
             },
+            'filterd bars should be faded into background': function(chart) {
+                assert.equal(chart.selectAll("g.sub rect.deselected")[0].length, 4);
+            },
             'after reset all bars should be pushed to foreground': function(chart) {
                 chart.filterAll();
                 chart.redraw();

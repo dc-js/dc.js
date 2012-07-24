@@ -17,27 +17,27 @@ dc.barChart = function(parent) {
             .append("rect")
             .attr("class", "bar")
             .attr("x", function(d) {
-                return finalBarX(d);
+                return barX(d);
             })
             .attr("y", chart.xAxisY())
             .attr("width", function(d) {
-                return finalBarWidth(d);
+                return barWidth(d);
             });
         dc.transition(bars, chart.transitionDuration())
             .attr("y", function(d) {
-                return finalBarY(d);
+                return barY(d);
             })
             .attr("height", function(d) {
-                return finalBarHeight(d);
+                return barHeight(d);
             });
 
         // update
         dc.transition(bars, chart.transitionDuration())
             .attr("y", function(d) {
-                return finalBarY(d);
+                return barY(d);
             })
             .attr("height", function(d) {
-                return finalBarHeight(d);
+                return barHeight(d);
             });
 
         // delete
@@ -46,7 +46,7 @@ dc.barChart = function(parent) {
             .attr("height", 0);
     }
 
-    function finalBarWidth(d) {
+    function barWidth(d) {
         var numberOfBars = chart.xUnits()(chart.x().domain()[0], chart.x().domain()[1]).length + BAR_PADDING_WIDTH;
         var w = Math.floor(chart.xAxisLength() / numberOfBars);
         if (isNaN(w) || w < MIN_BAR_WIDTH)
@@ -54,15 +54,15 @@ dc.barChart = function(parent) {
         return w;
     }
 
-    function finalBarX(d) {
+    function barX(d) {
         return chart.x()(chart.xValue()(d)) + chart.margins().left;
     }
 
-    function finalBarY(d) {
+    function barY(d) {
         return chart.margins().top + chart.y()(chart.yValue()(d));
     }
 
-    function finalBarHeight(d) {
+    function barHeight(d) {
         return chart.yAxisHeight() - chart.y()(chart.yValue()(d)) - BAR_PADDING_BOTTOM;
     }
 
