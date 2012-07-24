@@ -111,7 +111,7 @@
 
 <div id="monthly-move-chart" class="chart">
     <span>Monthly Index Abs Move & Volume/500,000 Chart</span>
-    <a class="reset" href="javascript:monthlyMoveChart.filterAll();dc.redrawAll();"
+    <a class="reset" href="javascript:volumeMoveChart.filterAll();dc.redrawAll();"
        style="display: none;">reset</a>
 
     <div class="clear"></div>
@@ -204,12 +204,7 @@ d3.csv("ndx.csv", function(data) {
                 return d3.time.month(d.dd);
             });
             var monthlyMoveGroup = moveMonths.group().reduceSum(function(d){return Math.abs(+d.close - +d.open);});
-
-            // map/reduce to group sum
-            var volumnMonths = ndx.dimension(function(d) {
-                return d3.time.month(d.dd);
-            });
-            var volumeByMonthGroup = volumnMonths.group().reduceSum(function(d) {
+            var volumeByMonthGroup = moveMonths.group().reduceSum(function(d) {
                 return d.volume / 500000;
             });
 
@@ -219,7 +214,7 @@ d3.csv("ndx.csv", function(data) {
             var gainOrLossGroup = gainOrLoss.group();
 
             var fluctuation = ndx.dimension(function(d) {
-                return Math.floor((d.close - d.open) / d.open * 100);
+                return Math.round((d.close - d.open) / d.open * 100);
             });
             var fluctuationGroup = fluctuation.group();
 
@@ -331,11 +326,12 @@ d3.csv("ndx.csv", function(data) {
             volumeMoveChart.width(990)
                     .height(180)
                     .margins({top: 10, right: 50, bottom: 30, left: 40})
-                    .dimension(volumnMonths)
+                    .dimension(moveMonths)
                     .group(monthlyMoveGroup)
                     .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
                     .round(d3.time.month.round)
                     .xUnits(d3.time.months)
+                    .elasticY(true)
                     .compose([
                         dc.barChart(volumeMoveChart).group(volumeByMonthGroup),
                         dc.lineChart(volumeMoveChart).group(monthlyMoveGroup)
@@ -353,22 +349,22 @@ d3.csv("ndx.csv", function(data) {
                     })
                     .size(10)
                     .columns([
-                function(d) {
-                    return d.date;
-                },
-                function(d) {
-                    return d.open;
-                },
-                function(d) {
-                    return d.close;
-                },
-                function(d) {
-                    return numberFormat(d.close - d.open);
-                },
-                function(d) {
-                    return d.volume;
-                }
-            ])
+                        function(d) {
+                            return d.date;
+                        },
+                        function(d) {
+                            return d.open;
+                        },
+                        function(d) {
+                            return d.close;
+                        },
+                        function(d) {
+                            return numberFormat(d.close - d.open);
+                        },
+                        function(d) {
+                            return d.volume;
+                        }
+                    ])
                     .sortBy(function(d) {
                         return d.dd;
                     })
