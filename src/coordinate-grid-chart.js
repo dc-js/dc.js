@@ -242,10 +242,12 @@ dc.coordinateGridChart = function(chart) {
     };
 
     chart.redraw = function() {
-        chart.plotData();
-        chart.redrawBrush(chart.g());
         if (chart.elasticY())
             chart.renderYAxis(chart.g());
+
+        chart.plotData();
+        chart.redrawBrush(chart.g());
+
         return chart;
     };
 
