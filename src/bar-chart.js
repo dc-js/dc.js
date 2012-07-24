@@ -1,4 +1,4 @@
-dc.barChart = function(selector) {
+dc.barChart = function(parent) {
     var MIN_BAR_WIDTH = 1;
     var BAR_PADDING_BOTTOM = 1;
     var BAR_PADDING_WIDTH = 2;
@@ -80,5 +80,5 @@ dc.barChart = function(selector) {
         }
     }
 
-    return chart.anchor(selector);
+    return chart.anchor(parent);
 };

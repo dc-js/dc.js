@@ -3,14 +3,6 @@ dc.lineChart = function(parent) {
 
     chart.transitionDuration(500);
 
-    chart.subRender = function(){
-        if (chart.dataAreSet()) {
-            chart.plotData();
-        }
-
-        return chart;
-    };
-
     chart.plotData = function() {
         chart.g().datum(chart.group().all());
 

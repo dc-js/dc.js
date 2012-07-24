@@ -249,5 +249,13 @@ dc.coordinateGridChart = function(chart) {
         return chart;
     };
 
+    chart.subRender = function(){
+        if (chart.dataAreSet()) {
+            chart.plotData();
+        }
+
+        return chart;
+    };
+
     return chart;
 };

@@ -20,7 +20,7 @@ function buildChart(id, xdomain) {
         .transitionDuration(0)
         .xUnits(d3.time.days)
         .compose([
-                dc.lineChart(chart),
+                dc.barChart(chart),
                 dc.lineChart(chart).group(dateIdSumGroup),
                 dc.lineChart(chart).group(dateGroup)
             ]);
@@ -126,13 +126,31 @@ suite.addBatch({
             chart.selectAll("g.sub path").each(function(d, i){
                 switch(i){
                     case 0:
-                        assert.equal(d3.select(this).attr("d"), "M24.71264367816092,73L93.90804597701148,55L103.79310344827586,0L207.58620689655172,73L252.06896551724137,64L405.28735632183907,46");
-                        break;
-                    case 1:
                         assert.equal(d3.select(this).attr("d"), "M24.71264367816092,109L93.90804597701148,105L103.79310344827586,96L207.58620689655172,107L252.06896551724137,98L405.28735632183907,100");
                         break;
-                    case 2:
+                    case 1:
                         assert.equal(d3.select(this).attr("d"), "M24.71264367816092,109L93.90804597701148,109L103.79310344827586,108L207.58620689655172,109L252.06896551724137,108L405.28735632183907,108");
+                        break;
+                }
+            });
+        },
+        'sub bar chart generation': function(chart){
+            assert.equal(chart.selectAll("g.sub rect.bar")[0].length, 6);
+        },
+        'sub bar chart rendering': function(chart){
+            chart.selectAll("g.sub rect.bar").each(function(d, i){
+                switch(i){
+                    case 0:
+                        assert.equal(d3.select(this).attr("x"), "44.712643678160916");
+                        assert.equal(d3.select(this).attr("y"), "83");
+                        assert.equal(d3.select(this).attr("width"), "4");
+                        assert.equal(d3.select(this).attr("height"), "36");
+                        break;
+                    case 5:
+                        assert.equal(d3.select(this).attr("x"), "425.28735632183907");
+                        assert.equal(d3.select(this).attr("y"), "56");
+                        assert.equal(d3.select(this).attr("width"), "4");
+                        assert.equal(d3.select(this).attr("height"), "63");
                         break;
                 }
             });

@@ -232,7 +232,7 @@
             .xUnits(d3.time.days)
             .filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
             .compose([
-                dc.lineChart(compositeChartDate),
+                dc.barChart(compositeChartDate),
                 dc.lineChart(compositeChartDate).group(dateIdSumGroup),
                 dc.lineChart(compositeChartDate).group(dateGroup)
             ])
