@@ -110,18 +110,8 @@
 <div class="clear"></div>
 
 <div id="monthly-move-chart" class="chart">
-    <span>Index Monthly Move(%)</span>
+    <span>Monthly Index Abs Move & Volume/500,000 Chart</span>
     <a class="reset" href="javascript:monthlyMoveChart.filterAll();dc.redrawAll();"
-       style="display: none;">reset</a>
-
-    <div class="clear"></div>
-</div>
-
-<div class="clear"></div>
-
-<div id="volume-month-chart" class="chart">
-    <span>Trade Volume by Month</span>
-    <a class="reset" href="javascript:volumeChart.filterAll();dc.redrawAll();"
        style="display: none;">reset</a>
 
     <div class="clear"></div>
@@ -149,12 +139,11 @@
 
 
 <script type="text/javascript">
-var volumeChart = dc.barChart("#volume-month-chart");
 var gainOrLossChart = dc.pieChart("#gain-loss-chart");
 var fluctuationChart = dc.barChart("#fluctuation-chart");
 var quarterChart = dc.pieChart("#quarter-chart");
 var dayOfWeekChart = dc.pieChart("#day-of-week-chart");
-var monthlyMoveChart = dc.lineChart("#monthly-move-chart");
+var volumeMoveChart = dc.compositeChart("#monthly-move-chart");
 var yearlyBubbleChart = dc.bubbleChart("#yearly-bubble-chart");
 
 // set dc.js version in title
@@ -214,33 +203,14 @@ d3.csv("ndx.csv", function(data) {
             var moveMonths = ndx.dimension(function(d) {
                 return d3.time.month(d.dd);
             });
-            var monthlyMoveGroup = moveMonths.group().reduce(
-                    //add
-                    function(p, v) {
-                        p.totalMove += (+v.close - +v.open);
-                        p.total = +v.close;
-                        p.movePercentage = (p.totalMove / p.total * 100);
-                        return p;
-                    },
-                    //remove
-                    function(p, v) {
-                        p.totalMove -= (+v.close - +v.open);
-                        p.total = +v.close;
-                        p.movePercentage = (p.totalMove / p.total * 100);
-                        return p;
-                    },
-                    //init
-                    function() {
-                        return {totalMove:0, total:0, movePercentage:0};
-                    }
-            );
+            var monthlyMoveGroup = moveMonths.group().reduceSum(function(d){return Math.abs(+d.close - +d.open);});
 
             // map/reduce to group sum
             var volumnMonths = ndx.dimension(function(d) {
                 return d3.time.month(d.dd);
             });
             var volumeByMonthGroup = volumnMonths.group().reduceSum(function(d) {
-                return d.volume;
+                return d.volume / 500000;
             });
 
             var gainOrLoss = ndx.dimension(function(d) {
@@ -358,33 +328,18 @@ d3.csv("ndx.csv", function(data) {
                         return v + "%";
                     });
 
-            volumeChart.width(990)
+            volumeMoveChart.width(990)
                     .height(180)
                     .margins({top: 10, right: 50, bottom: 30, left: 40})
                     .dimension(volumnMonths)
-                    .group(volumeByMonthGroup)
-                    .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
-                    .round(d3.time.month.round)
-                    .xUnits(d3.time.months);
-
-            monthlyMoveChart.width(990)
-                    .height(180)
-                    .margins({top: 10, right: 50, bottom: 30, left: 40})
-                    .dimension(moveMonths)
                     .group(monthlyMoveGroup)
-                    .elasticY(true)
-                    .xValue(function(d) {
-                        return d.key;
-                    })
-                    .yValue(function(d) {
-                        return d.value.movePercentage;
-                    })
                     .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
                     .round(d3.time.month.round)
                     .xUnits(d3.time.months)
-                    .yAxis().tickFormat(function(v) {
-                        return v + "%";
-                    });
+                    .compose([
+                        dc.barChart(volumeMoveChart).group(volumeByMonthGroup),
+                        dc.lineChart(volumeMoveChart).group(monthlyMoveGroup)
+                    ]);
 
             dc.dataCount("#data-count")
                     .dimension(ndx)

@@ -29,6 +29,11 @@ a {
     fill: #ccc;
 }
 
+.chart .sub .bar {
+    stroke: none;
+    fill: #ccc;
+}
+
 .clear {
     clear: both;
 }
