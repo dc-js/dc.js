@@ -218,6 +218,7 @@
             .height(150)
             .dimension(dateDimension)
             .group(dateGroup)
+            .stack([dateValueSumGroup])
             .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
             .xUnits(d3.time.days)
             .filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])

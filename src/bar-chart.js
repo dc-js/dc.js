@@ -3,13 +3,14 @@ dc.barChart = function(parent) {
     var BAR_PADDING_BOTTOM = 1;
     var BAR_PADDING_WIDTH = 2;
 
+    var _stack = [];
+
     var chart = dc.coordinateGridChart({});
-    var bars;
 
     chart.transitionDuration(500);
 
     chart.plotData = function() {
-        bars = chart.g().selectAll("rect.bar")
+        var bars = chart.g().selectAll("rect.bar")
             .data(chart.group().all());
 
         // new
@@ -67,6 +68,8 @@ dc.barChart = function(parent) {
     }
 
     chart.fadeDeselectedArea = function() {
+        var bars = chart.g().selectAll("rect.bar");
+
         if (!chart.brush().empty() && chart.brush().extent() != null) {
             var start = chart.brush().extent()[0];
             var end = chart.brush().extent()[1];
@@ -79,6 +82,12 @@ dc.barChart = function(parent) {
             bars.classed("deselected", false);
         }
     }
+
+    chart.stack = function(_){
+        if(!arguments.length) return _stack;
+        _stack = _;
+        return chart;
+    };
 
     return chart.anchor(parent);
 };
