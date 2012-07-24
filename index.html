@@ -501,6 +501,36 @@ d3.csv("ndx.csv", function(data) {
             .xUnits(d3.time.months);
     </pre>
 
+<h3>Composite Chart</h3>
+
+<pre class="brush:js">
+    dc.compositeChart("#montly-move-chart")
+        .width(990) // (optional) define chart width, :default = 200
+        .height(200) // (optional) define chart height, :default = 200
+        .transitionDuration(500) // (optional) define chart transition duration, :default = 500
+        // (optional) define margins
+        .margins({top: 10, right: 50, bottom: 30, left: 40})
+        .dimension(monthlyMove) // set dimension
+        .group(monthlyMoveGroup) // set group
+        // (optional) whether chart should rescale y axis to fit data, :default = false
+        .elasticY(true)
+        // define x scale
+        .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
+        // (optional) set filter brush rounding
+        .round(d3.time.month.round)
+        // define x axis units
+        .xUnits(d3.time.months)
+        // compose sub charts, currently composite chart only supports line chart & bar chart
+        .compose([
+            /* Pass the parent chart instance to sub-chart function instead of css selector.
+             * Sub-charts can have it's own group and dimension however usually it should
+             * share parent chart's dimension. If sub-chart's dimension or group is not
+             * explicitly defined here then it will simply inherent from it's parent. */
+            dc.barChart(volumeMoveChart).group(volumeByMonthGroup),
+            dc.lineChart(volumeMoveChart).group(monthlyMoveGroup)
+        ]);
+</pre>
+
 <h3>Bubble Chart</h3>
 
     <pre class="brush:js">
