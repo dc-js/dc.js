@@ -14,6 +14,7 @@ dc.compositeChart = function(selector) {
             child.svg(chart.svg());
             child.height(chart.height());
             child.width(chart.width());
+            child.margins(chart.margins());
             child.xUnits(chart.xUnits());
             child.transitionDuration(chart.transitionDuration());
             child.generateG();
