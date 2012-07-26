@@ -4,6 +4,8 @@
 <head>
     <title>dc.js - Dimensional Charting Javascript Library</title>
 
+    <meta charset="UTF-8">
+
     <script type="text/javascript" src="lib/d3.v2.js"></script>
     <script type="text/javascript" src="lib/crossfilter.js"></script>
 
@@ -259,13 +261,13 @@ d3.csv("ndx.csv", function(data) {
                     .dimension(yearlyDimension)
                     .group(yearlyPerformanceGroup)
                     .colors(d3.scale.category20c())
-                    .xValue(function(p) {
+                    .keyRetriever(function(p) {
                         return p.value.absGain;
                     })
-                    .yValue(function(p) {
+                    .valueRetriever(function(p) {
                         return p.value.percentageGain;
                     })
-                    .rValue(function(p) {
+                    .radiusValueRetriever(function(p) {
                         return p.value.fluctuationPercentage;
                     })
                     .x(d3.scale.linear().domain([-2500, 2500]))
@@ -547,11 +549,11 @@ d3.csv("ndx.csv", function(data) {
             // (optional) define color function or array for bubbles
             .colors(d3.scale.category20c())
             // closure used to retrieve x value from multi-value group
-            .xValue(function(p) {return p.value.absGain;})
+            .keyRetriever(function(p) {return p.value.absGain;})
             // closure used to retrieve y value from multi-value group
-            .yValue(function(p) {return p.value.percentageGain;})
+            .valueRetriever(function(p) {return p.value.percentageGain;})
             // closure used to retrieve radius value from multi-value group
-            .rValue(function(p) {return p.value.fluctuationPercentage;})
+            .radiusValueRetriever(function(p) {return p.value.fluctuationPercentage;})
             // set x scale
             .x(d3.scale.linear().domain([-2500, 2500]))
             // set y scale
