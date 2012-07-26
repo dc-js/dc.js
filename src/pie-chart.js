@@ -15,7 +15,7 @@ dc.pieChart = function(selector) {
     var chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
 
     chart.label(function(d) {
-        return chart.xValue()(d.data);
+        return chart.keyRetriever()(d.data);
     });
     chart.renderLabel(true);
 
@@ -130,7 +130,7 @@ dc.pieChart = function(selector) {
     };
 
     chart.isSelectedSlice = function(d) {
-        return chart.filter() == chart.xValue()(d.data);
+        return chart.filter() == chart.keyRetriever()(d.data);
     };
 
     chart.redraw = function() {
@@ -148,7 +148,7 @@ dc.pieChart = function(selector) {
 
     function calculateDataPie() {
         return d3.layout.pie().value(function(d) {
-            return chart.yValue()(d);
+            return chart.valueRetriever()(d);
         });
     }
 
@@ -167,7 +167,7 @@ dc.pieChart = function(selector) {
             .attr("text-anchor", "middle")
             .text(function(d) {
                 var data = d.data;
-                if (chart.yValue()(data) == 0)
+                if (chart.valueRetriever()(data) == 0)
                     return "";
                 return chart.label()(d);
             });
@@ -198,7 +198,7 @@ dc.pieChart = function(selector) {
     }
 
     function onClick(d) {
-        chart.filter(chart.xValue()(d.data));
+        chart.filter(chart.keyRetriever()(d.data));
         dc.redrawAll();
     }
 

@@ -14,10 +14,10 @@ dc.lineChart = function(parent) {
 
         var line = d3.svg.line()
             .x(function(d) {
-                return chart.x()(chart.xValue()(d));
+                return chart.x()(chart.keyRetriever()(d));
             })
             .y(function(d) {
-                return chart.y()(chart.yValue()(d));
+                return chart.y()(chart.valueRetriever()(d));
             });
 
         path = path
@@ -26,7 +26,7 @@ dc.lineChart = function(parent) {
         dc.transition(path, chart.transitionDuration(), function(t) {
             t.ease("linear")
         }).attr("d", line);
-    }
+    };
 
     return chart.anchor(parent);
 };

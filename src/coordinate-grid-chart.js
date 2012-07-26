@@ -110,7 +110,7 @@ dc.coordinateGridChart = function(chart) {
 
     chart.yAxisMin = function() {
         var min = d3.min(chart.group().all(), function(e) {
-            return chart.yValue()(e);
+            return chart.valueRetriever()(e);
         });
         if (min > 0) min = 0;
         return min;
@@ -118,7 +118,7 @@ dc.coordinateGridChart = function(chart) {
 
     chart.yAxisMax = function() {
         return d3.max(chart.group().all(), function(e) {
-            return chart.yValue()(e);
+            return chart.valueRetriever()(e);
         });
     };
 
@@ -208,7 +208,7 @@ dc.coordinateGridChart = function(chart) {
 
     chart.fadeDeselectedArea = function(){
         // do nothing, sub-chart should override this function
-    }
+    };
 
     // borrowed from Crossfilter example
     chart.resizeHandlePath = function(d) {

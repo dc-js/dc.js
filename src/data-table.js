@@ -20,7 +20,7 @@ dc.dataTable = function(selector) {
     function renderGroups() {
         var groups = chart.root().selectAll("div.group")
             .data(nestEntries(), function(d) {
-                return chart.xValue()(d);
+                return chart.keyRetriever()(d);
             });
 
         groups.enter().append("div")
@@ -28,7 +28,7 @@ dc.dataTable = function(selector) {
             .append("span")
             .attr("class", "label")
             .text(function(d) {
-                return chart.xValue()(d);
+                return chart.keyRetriever()(d);
             });
 
         groups.exit().remove();

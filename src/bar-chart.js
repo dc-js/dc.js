@@ -45,7 +45,7 @@ dc.barChart = function(parent) {
         dc.transition(bars.exit(), chart.transitionDuration())
             .attr("y", chart.xAxisY())
             .attr("height", 0);
-    }
+    };
 
     function barWidth(d) {
         var numberOfBars = chart.xUnits()(chart.x().domain()[0], chart.x().domain()[1]).length + BAR_PADDING_WIDTH;
@@ -56,15 +56,15 @@ dc.barChart = function(parent) {
     }
 
     function barX(d) {
-        return chart.x()(chart.xValue()(d)) + chart.margins().left;
+        return chart.x()(chart.keyRetriever()(d)) + chart.margins().left;
     }
 
     function barY(d) {
-        return chart.margins().top + chart.y()(chart.yValue()(d));
+        return chart.margins().top + chart.y()(chart.valueRetriever()(d));
     }
 
     function barHeight(d) {
-        return chart.yAxisHeight() - chart.y()(chart.yValue()(d)) - BAR_PADDING_BOTTOM;
+        return chart.yAxisHeight() - chart.y()(chart.valueRetriever()(d)) - BAR_PADDING_BOTTOM;
     }
 
     chart.fadeDeselectedArea = function() {
@@ -75,13 +75,13 @@ dc.barChart = function(parent) {
             var end = chart.brush().extent()[1];
 
             bars.classed("deselected", function(d) {
-                var xValue = chart.xValue()(d);
+                var xValue = chart.keyRetriever()(d);
                 return xValue < start || xValue >= end;
             });
         } else {
             bars.classed("deselected", false);
         }
-    }
+    };
 
     chart.stack = function(_){
         if(!arguments.length) return _stack;

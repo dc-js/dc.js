@@ -8,10 +8,10 @@ dc.baseChart = function(chart) {
 
     var width = 200, height = 200;
 
-    var _xValue = function(d) {
+    var _keyRetriever = function(d) {
         return d.key;
     };
-    var _yValue = function(d) {
+    var _valueRetriever = function(d) {
         return d.value;
     };
 
@@ -43,7 +43,7 @@ dc.baseChart = function(chart) {
         return _group.order(function(p) {
             return p.key;
         });
-    }
+    };
 
     chart.filterAll = function() {
         return chart.filter(null);
@@ -96,7 +96,7 @@ dc.baseChart = function(chart) {
         if (!arguments.length) return _svg;
         _svg = _;
         return chart;
-    }
+    };
 
     chart.resetSvg = function() {
         chart.select("svg").remove();
@@ -140,15 +140,15 @@ dc.baseChart = function(chart) {
         return chart;
     };
 
-    chart.xValue = function(_) {
-        if (!arguments.length) return _xValue;
-        _xValue = _;
+    chart.keyRetriever = function(_) {
+        if (!arguments.length) return _keyRetriever;
+        _keyRetriever = _;
         return chart;
     };
 
-    chart.yValue = function(_) {
-        if (!arguments.length) return _yValue;
-        _yValue = _;
+    chart.valueRetriever = function(_) {
+        if (!arguments.length) return _valueRetriever;
+        _valueRetriever = _;
         return chart;
     };
 

@@ -244,13 +244,13 @@
             .height(350)
             .dimension(statusDimension)
             .group(statusMultiGroup)
-            .xValue(function(p) {
+            .keyRetriever(function(p) {
                 return p.value.value;
             })
-            .yValue(function(p) {
+            .valueRetriever(function(p) {
                 return p.value.count;
             })
-            .rValue(function(p) {
+            .radiusValueRetriever(function(p) {
                 return p.value.count;
             })
             .x(d3.scale.linear().domain([0, 300]))

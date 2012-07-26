@@ -16,13 +16,13 @@ function buildChart(id) {
         .dimension(statusDimension)
         .group(statusMultiGroup)
         .colors(colors)
-        .xValue(function(p) {
+        .keyRetriever(function(p) {
             return p.value.value;
         })
-        .yValue(function(p) {
+        .valueRetriever(function(p) {
             return p.value.count;
         })
-        .rValue(function(p) {
+        .radiusValueRetriever(function(p) {
             return p.value.count;
         })
         .x(d3.scale.linear().domain([0, 300]))
@@ -103,7 +103,7 @@ suite.addBatch({
             assert.isNotNull(chart.r());
         },
         'rValue should be set': function(chart) {
-            assert.isNotNull(chart.rValue());
+            assert.isNotNull(chart.radiusValueRetriever());
         },
         'root g should be created': function(chart) {
             assert.isFalse(chart.select("svg g").empty());
@@ -133,7 +133,7 @@ suite.addBatch({
             assert.isTrue(chart.round() == null);
         },
         'round can be changed': function(chart) {
-            chart.round(d3.time.day.round)
+            chart.round(d3.time.day.round);
             assert.isNotNull(chart.round());
         },
 
@@ -174,15 +174,15 @@ suite.addBatch({
             'should create correct label for each bubble': function(chart) {
                 chart.selectAll("g.node text").each(function(d, i) {
                     if (i == 0)
-                        assert.equal(d3.select(this).text(), "T");
-                    if (i == 1)
                         assert.equal(d3.select(this).text(), "F");
+                    if (i == 1)
+                        assert.equal(d3.select(this).text(), "T");
                 });
             },
             'should generate right number of titles': function(chart) {
                 assert.equal(chart.selectAll("g.node title")[0].length, 2);
             },
-            'should create correct label for each bubble': function(chart) {
+            'should create correct title for each bubble': function(chart) {
                 chart.selectAll("g.node title").each(function(d, i) {
                     if (i == 0)
                         assert.equal(d3.select(this).text(), "F: {count:5,value:220}");
@@ -211,7 +211,7 @@ suite.addBatch({
         'should generate right number of labels': function(chart) {
             assert.equal(chart.selectAll("g.node text")[0].length, 0);
         },
-        'should generate right number of labels': function(chart) {
+        'should generate right number of titles': function(chart) {
             assert.equal(chart.selectAll("g.node title")[0].length, 0);
         },
         teardown: function(topic) {

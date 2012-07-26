@@ -9,7 +9,7 @@ dc.bubbleChart = function(selector) {
     chart.renderTitle(false);
 
     var _r = d3.scale.linear().domain([0, 100]);
-    var _rValue = function(d) {
+    var _rValueRetriever = function(d) {
         return d.r;
     };
 
@@ -32,7 +32,7 @@ dc.bubbleChart = function(selector) {
         removeNodes(bubbleG);
 
         chart.fadeDeselectedArea();
-    }
+    };
 
     function renderNodes(bubbleG) {
         var bubbleGEnter = bubbleG.enter().append("g");
@@ -118,15 +118,15 @@ dc.bubbleChart = function(selector) {
     };
 
     function bubbleX(d) {
-        return chart.x()(chart.xValue()(d)) + chart.margins().left;
+        return chart.x()(chart.keyRetriever()(d)) + chart.margins().left;
     }
 
     function bubbleY(d) {
-        return chart.margins().top + chart.y()(chart.yValue()(d));
+        return chart.margins().top + chart.y()(chart.valueRetriever()(d));
     }
 
     function bubbleR(d) {
-        return chart.r()(chart.rValue()(d));
+        return chart.r()(chart.radiusValueRetriever()(d));
     }
 
     chart.renderBrush = function(g) {
@@ -154,7 +154,7 @@ dc.bubbleChart = function(selector) {
                 chart.resetHighlight(this);
             });
         }
-    }
+    };
 
     chart.isSelectedSlice = function(d) {
         return chart.filter() == d.key;
@@ -166,9 +166,9 @@ dc.bubbleChart = function(selector) {
         return chart;
     };
 
-    chart.rValue = function(_) {
-        if (!arguments.length) return _rValue;
-        _rValue = _;
+    chart.radiusValueRetriever = function(_) {
+        if (!arguments.length) return _rValueRetriever;
+        _rValueRetriever = _;
         return chart;
     };
 

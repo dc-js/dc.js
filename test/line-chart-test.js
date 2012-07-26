@@ -146,10 +146,10 @@ suite.addBatch({
                 });
             },
             'x value should have default impl': function(chart) {
-                assert.isNotNull(chart.xValue());
+                assert.isNotNull(chart.keyRetriever());
             },
             'y value should have default impl': function(chart) {
-                assert.isNotNull(chart.yValue());
+                assert.isNotNull(chart.valueRetriever());
             }
         },
         teardown: function(topic) {

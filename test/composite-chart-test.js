@@ -31,8 +31,8 @@ function buildChart(id, xdomain) {
 suite.addBatch({
     'time line composite chart': {
         topic: function() {
-            var chart = buildChart("compositeChart", [new Date(2012, 4, 20), new Date(2012, 07, 15)]);
-            chart.filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
+            var chart = buildChart("compositeChart", [new Date(2012, 4, 20), new Date(2012, 7, 15)]);
+            chart.filter([new Date(2012, 5, 1), new Date(2012, 5, 30)]);
             chart.redraw();
             return chart;
         },
@@ -116,7 +116,7 @@ suite.addBatch({
             assert.isTrue(chart.round() == null);
         },
         'round can be changed': function(chart) {
-            chart.round(d3.time.day.round)
+            chart.round(d3.time.day.round);
             assert.isNotNull(chart.round());
         },
         'separate g should be created for each sub chart': function(chart){
@@ -190,10 +190,10 @@ suite.addBatch({
                 });
             },
             'x value should have default impl': function(chart) {
-                assert.isNotNull(chart.xValue());
+                assert.isNotNull(chart.keyRetriever());
             },
             'y value should have default impl': function(chart) {
-                assert.isNotNull(chart.yValue());
+                assert.isNotNull(chart.valueRetriever());
             }
         },
         teardown: function(topic) {
@@ -204,8 +204,8 @@ suite.addBatch({
 });
 
 suite.addBatch({'elastic y':{
-    topic: function(chart) {
-        countryDimension.filter("CA")
+    topic: function() {
+        countryDimension.filter("CA");
         var chart = buildChart("compositeChart2", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
         chart.render();
         return chart;
