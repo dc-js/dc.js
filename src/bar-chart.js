@@ -83,10 +83,49 @@ dc.barChart = function(parent) {
         }
     };
 
-    chart.stack = function(_){
-        if(!arguments.length) return _stack;
+    chart.stack = function(_) {
+        if (!arguments.length) return _stack;
         _stack = _;
         return chart;
+    };
+
+    // override y axis domain calculation to include stacked groups
+    function combineAllGroups() {
+        var allGroups = [chart.group()];
+
+        for (var i = 0; i < chart.stack().length; ++i)
+            allGroups.push(chart.stack()[i]);
+        return allGroups;
+    }
+
+    chart.yAxisMin = function() {
+        var min = 0;
+        var allGroups = combineAllGroups();
+
+        for (var i = 0; i < allGroups.length; ++i) {
+            var group = allGroups[i];
+            var m = d3.min(group.all(), function(e) {
+                return chart.valueRetriever()(e);
+            });
+            if(m < min) min = m;
+        }
+
+        return min;
+    };
+
+    chart.yAxisMax = function() {
+        var max = 0;
+        var allGroups = combineAllGroups();
+
+        for (var i = 0; i < allGroups.length; ++i) {
+            var group = allGroups[i];
+            var m = d3.max(group.all(), function(e) {
+                return chart.valueRetriever()(e);
+            });
+            if(m > max) max = m;
+        }
+
+        return max;
     };
 
     return chart.anchor(parent);

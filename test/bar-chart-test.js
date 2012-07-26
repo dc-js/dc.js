@@ -237,14 +237,32 @@ suite.addBatch({
 });
 
 suite.addBatch({'elastic y':{
-    topic: function(chart) {
+    topic: function() {
         countryDimension.filter("CA")
         var chart = buildChart("bar-chart2", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
-        chart.render();
+        chart.elasticY(true).render();
         return chart;
     },
     'y axis should have shrunk triggered by filter': function(chart) {
         assert.equal(chart.y().domain()[1], 1);
+    },
+    teardown: function(topic) {
+        resetAllFilters();
+        resetBody();
+    }
+}});
+
+suite.addBatch({'stacked':{
+    topic:function(){
+        var chart = buildChart("bar-chart-stack", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+        chart.stack([dateValueSumGroup]).elasticY(true);
+        chart.render();
+        return chart;
+    },
+    'y axis domain should encampass all groups in stack':function(chart){
+        var yDomain = chart.y().domain();
+        assert.equal(yDomain[0], 0);
+        assert.equal(yDomain[1], 132);
     },
     teardown: function(topic) {
         resetAllFilters();
