@@ -29,6 +29,11 @@
             fill: red;
         }
 
+        .chart .stack2{
+            stroke: none;
+            fill: green;
+        }
+
         .chart .deselected {
             stroke: none;
             fill: #ccc;
@@ -225,10 +230,10 @@
             .height(150)
             .dimension(dateDimension)
             .group(dateIdSumGroup)
-            .stack([dateValueSumGroup])
+            .stack([dateValueSumGroup, dateIdSumGroup])
             .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
+            .transitionDuration(0)
             .xUnits(d3.time.days)
-            .filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
             .xAxis().ticks(5);
 
     var compositeChartDate = dc.compositeChart("#composite-chart-date");
@@ -248,7 +253,7 @@
 
     var bubbleChart = dc.bubbleChart("#bubble-chart");
     bubbleChart.width(990)
-            .height(350)
+            .height(150)
             .dimension(statusDimension)
             .group(statusMultiGroup)
             .keyRetriever(function(p) {

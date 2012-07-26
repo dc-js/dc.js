@@ -12,9 +12,9 @@ dc.barChart = function(parent) {
     chart.plotData = function() {
         var baseData = chart.group().all();
         var groups = combineAllGroups();
-        var lastYByIndex = {};
+        var bottoms = {};
         for (var i = 0; i < baseData.length; ++i) {
-            lastYByIndex[i] = chart.margins().top + chart.yAxisHeight();
+            bottoms[i] = chart.margins().top + chart.yAxisHeight() - BAR_PADDING_BOTTOM;
         }
 
         for (var i = 0; i < groups.length; ++i) {
@@ -27,29 +27,21 @@ dc.barChart = function(parent) {
             bars.enter()
                 .append("rect")
                 .attr("class", "bar stack" + i)
-                .attr("x", function(d) {
-                    return barX(d);
-                })
+                .attr("x", barX)
                 .attr("y", chart.xAxisY())
-                .attr("width", function(d) {
-                    return barWidth(d);
-                });
+                .attr("width", barWidth);
             dc.transition(bars, chart.transitionDuration())
-                .attr("y", function(d, i) {
-                    return barY(d, i, lastYByIndex);
+                .attr("y", function(d, index) {
+                    return barY(d, index, bottoms);
                 })
-                .attr("height", function(d) {
-                    return barHeight(d, lastYByIndex);
-                });
+                .attr("height", barHeight);
 
             // update
             dc.transition(bars, chart.transitionDuration())
-                .attr("y", function(d, i) {
-                    return barY(d, i, lastYByIndex);
+                .attr("y", function(d, index) {
+                    return barY(d, index, bottoms);
                 })
-                .attr("height", function(d) {
-                    return barHeight(d, lastYByIndex);
-                });
+                .attr("height", barHeight);
 
             // delete
             dc.transition(bars.exit(), chart.transitionDuration())
@@ -70,21 +62,12 @@ dc.barChart = function(parent) {
         return chart.x()(chart.keyRetriever()(d)) + chart.margins().left;
     }
 
-    function barY(d, i, lastYByIndex) {
-        var existingBottom = lastYByIndex[i];
-        var originalY = chart.margins().top + chart.y()(chart.valueRetriever()(d));
-        if (existingBottom == 0) {
-            lastYByIndex[i] = originalY;
-        }else{
-            lastYByIndex[i] -= barHeight(d, lastYByIndex);
-        }
-
-        console.log("existing bottom: "+existingBottom+", original Y: "+originalY+", lastY[i]: " + lastYByIndex[i]);
-
-        return lastYByIndex[i];
+    function barY(d, i, bottoms) {
+        bottoms[i] -= barHeight(d);
+        return bottoms[i];
     }
 
-    function barHeight(d, lastYByIndex) {
+    function barHeight(d) {
         return chart.yAxisHeight() - chart.y()(chart.valueRetriever()(d)) - BAR_PADDING_BOTTOM;
     }
 
@@ -112,10 +95,13 @@ dc.barChart = function(parent) {
 
     // override y axis domain calculation to include stacked groups
     function combineAllGroups() {
-        var allGroups = [chart.group()];
+        var allGroups = [];
+
+        allGroups.push(chart.group());
 
         for (var i = 0; i < chart.stack().length; ++i)
             allGroups.push(chart.stack()[i]);
+
         return allGroups;
     }
 
