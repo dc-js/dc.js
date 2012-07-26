@@ -263,7 +263,7 @@ suite.addBatch({'stacked':{
     'y axis domain should encampass all groups in stack':function(chart){
         var yDomain = chart.y().domain();
         assert.equal(yDomain[0], 0);
-        assert.equal(yDomain[1], 132);
+        assert.equal(yDomain[1], 149);
     },
     'bar should be generated from all groups':function(chart){
         assert.equal(chart.selectAll("rect.stack0")[0].length, 6);

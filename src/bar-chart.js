@@ -125,10 +125,9 @@ dc.barChart = function(parent) {
 
         for (var i = 0; i < allGroups.length; ++i) {
             var group = allGroups[i];
-            var m = d3.max(group.all(), function(e) {
+            max += d3.max(group.all(), function(e) {
                 return chart.valueRetriever()(e);
             });
-            if (m > max) max = m;
         }
 
         return max;
