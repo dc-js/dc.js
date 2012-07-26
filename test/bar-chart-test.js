@@ -158,19 +158,19 @@ suite.addBatch({
                 assert.equal(chart.select("g.brush rect.extent").attr("width"), 82);
             },
             'unselected bars should be push to background': function(chart) {
-                assert.equal(chart.select("g rect.0").attr("class"), "bar 0 deselected");
+                assert.equal(chart.select("g rect.stack0").attr("class"), "bar stack0 deselected");
             },
             'selected bars should be push to foreground': function(chart) {
                 chart.selectAll("g rect.bar").each(function(d, i) {
                     if (i == 1)
-                        assert.equal(d3.select(this).attr("class"), "bar 0");
+                        assert.equal(d3.select(this).attr("class"), "bar stack0");
                 });
             },
             'after reset all bars should be pushed to foreground': function(chart) {
                 chart.filterAll();
                 chart.redraw();
                 chart.selectAll("g rect.bar").each(function(d) {
-                    assert.equal(d3.select(this).attr("class"), "bar 0");
+                    assert.equal(d3.select(this).attr("class"), "bar stack0");
                 });
             }
         },
@@ -189,7 +189,7 @@ suite.addBatch({
             },
             'no bar should be deselected': function(chart) {
                 chart.selectAll("svg g rect.bar").each(function(d) {
-                    assert.equal(d3.select(this).attr('class'), "bar 0");
+                    assert.equal(d3.select(this).attr('class'), "bar stack0");
                 });
             }
         },
@@ -255,6 +255,7 @@ suite.addBatch({'elastic y':{
 suite.addBatch({'stacked':{
     topic:function(){
         var chart = buildChart("bar-chart-stack", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+        chart.group(dateIdSumGroup)
         chart.stack([dateValueSumGroup]).elasticY(true);
         chart.render();
         return chart;
@@ -264,9 +265,12 @@ suite.addBatch({'stacked':{
         assert.equal(yDomain[0], 0);
         assert.equal(yDomain[1], 132);
     },
-    'stacked bar should be generated':function(chart){
-        assert.equal(chart.selectAll("rect.0")[0].length, 6);
-        assert.equal(chart.selectAll("rect.1")[0].length, 6);
+    'bar should be generated from all groups':function(chart){
+        assert.equal(chart.selectAll("rect.stack0")[0].length, 6);
+        assert.equal(chart.selectAll("rect.stack1")[0].length, 6);
+    },
+    'bar should be stacked':function(chart){
+        assert.equal(d3.select(chart.selectAll("rect.stack1")[0][2]).attr("y"), 10);
     },
     teardown: function(topic) {
         resetAllFilters();

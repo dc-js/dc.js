@@ -135,7 +135,7 @@ suite.addBatch({
             });
         },
         'sub bar chart generation': function(chart){
-            assert.equal(chart.selectAll("g.sub rect.0")[0].length, 6);
+            assert.equal(chart.selectAll("g.sub rect.stack0")[0].length, 6);
         },
         'sub bar chart rendering': function(chart){
             chart.selectAll("g.sub rect.bar").each(function(d, i){
@@ -186,7 +186,7 @@ suite.addBatch({
                 chart.filterAll();
                 chart.redraw();
                 chart.selectAll("g rect.bar").each(function(d) {
-                    assert.equal(d3.select(this).attr("class"), "bar 0");
+                    assert.equal(d3.select(this).attr("class"), "bar stack0");
                 });
             },
             'x value should have default impl': function(chart) {

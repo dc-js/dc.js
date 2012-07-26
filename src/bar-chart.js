@@ -15,13 +15,13 @@ dc.barChart = function(parent) {
         for (var i = 0; i < groups.length; ++i) {
             var group = groups[i];
 
-            var bars = chart.g().selectAll("rect." + i)
+            var bars = chart.g().selectAll("rect.stack" + i)
                 .data(group.all());
 
             // new
             bars.enter()
                 .append("rect")
-                .attr("class", "bar "  + i)
+                .attr("class", "bar stack"  + i)
                 .attr("x", function(d) {
                     return barX(d);
                 })
