@@ -10,41 +10,47 @@ dc.barChart = function(parent) {
     chart.transitionDuration(500);
 
     chart.plotData = function() {
-        var bars = chart.g().selectAll("rect.bar")
-            .data(chart.group().all());
+        var groups = combineAllGroups();
 
-        // new
-        bars.enter()
-            .append("rect")
-            .attr("class", "bar")
-            .attr("x", function(d) {
-                return barX(d);
-            })
-            .attr("y", chart.xAxisY())
-            .attr("width", function(d) {
-                return barWidth(d);
-            });
-        dc.transition(bars, chart.transitionDuration())
-            .attr("y", function(d) {
-                return barY(d);
-            })
-            .attr("height", function(d) {
-                return barHeight(d);
-            });
+        for (var i = 0; i < groups.length; ++i) {
+            var group = groups[i];
 
-        // update
-        dc.transition(bars, chart.transitionDuration())
-            .attr("y", function(d) {
-                return barY(d);
-            })
-            .attr("height", function(d) {
-                return barHeight(d);
-            });
+            var bars = chart.g().selectAll("rect." + i)
+                .data(group.all());
 
-        // delete
-        dc.transition(bars.exit(), chart.transitionDuration())
-            .attr("y", chart.xAxisY())
-            .attr("height", 0);
+            // new
+            bars.enter()
+                .append("rect")
+                .attr("class", "bar "  + i)
+                .attr("x", function(d) {
+                    return barX(d);
+                })
+                .attr("y", chart.xAxisY())
+                .attr("width", function(d) {
+                    return barWidth(d);
+                });
+            dc.transition(bars, chart.transitionDuration())
+                .attr("y", function(d) {
+                    return barY(d);
+                })
+                .attr("height", function(d) {
+                    return barHeight(d);
+                });
+
+            // update
+            dc.transition(bars, chart.transitionDuration())
+                .attr("y", function(d) {
+                    return barY(d);
+                })
+                .attr("height", function(d) {
+                    return barHeight(d);
+                });
+
+            // delete
+            dc.transition(bars.exit(), chart.transitionDuration())
+                .attr("y", chart.xAxisY())
+                .attr("height", 0);
+        }
     };
 
     function barWidth(d) {
@@ -107,7 +113,7 @@ dc.barChart = function(parent) {
             var m = d3.min(group.all(), function(e) {
                 return chart.valueRetriever()(e);
             });
-            if(m < min) min = m;
+            if (m < min) min = m;
         }
 
         return min;
@@ -122,7 +128,7 @@ dc.barChart = function(parent) {
             var m = d3.max(group.all(), function(e) {
                 return chart.valueRetriever()(e);
             });
-            if(m > max) max = m;
+            if (m > max) max = m;
         }
 
         return max;

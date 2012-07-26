@@ -158,19 +158,19 @@ suite.addBatch({
                 assert.equal(chart.select("g.brush rect.extent").attr("width"), 82);
             },
             'unselected bars should be push to background': function(chart) {
-                assert.equal(chart.select("g rect.bar").attr("class"), "bar deselected");
+                assert.equal(chart.select("g rect.0").attr("class"), "bar 0 deselected");
             },
             'selected bars should be push to foreground': function(chart) {
                 chart.selectAll("g rect.bar").each(function(d, i) {
                     if (i == 1)
-                        assert.equal(d3.select(this).attr("class"), "bar");
+                        assert.equal(d3.select(this).attr("class"), "bar 0");
                 });
             },
             'after reset all bars should be pushed to foreground': function(chart) {
                 chart.filterAll();
                 chart.redraw();
                 chart.selectAll("g rect.bar").each(function(d) {
-                    assert.equal(d3.select(this).attr("class"), "bar");
+                    assert.equal(d3.select(this).attr("class"), "bar 0");
                 });
             }
         },
@@ -189,7 +189,7 @@ suite.addBatch({
             },
             'no bar should be deselected': function(chart) {
                 chart.selectAll("svg g rect.bar").each(function(d) {
-                    assert.equal(d3.select(this).attr('class'), "bar");
+                    assert.equal(d3.select(this).attr('class'), "bar 0");
                 });
             }
         },
@@ -263,6 +263,10 @@ suite.addBatch({'stacked':{
         var yDomain = chart.y().domain();
         assert.equal(yDomain[0], 0);
         assert.equal(yDomain[1], 132);
+    },
+    'stacked bar should be generated':function(chart){
+        assert.equal(chart.selectAll("rect.0")[0].length, 6);
+        assert.equal(chart.selectAll("rect.1")[0].length, 6);
     },
     teardown: function(topic) {
         resetAllFilters();
