@@ -442,6 +442,7 @@ dc.coordinateGridChart = function(chart) {
     }
 
     function brushEnd(p) {
+	dc.redrawAll();
     }
 
     chart.redrawBrush = function(g) {
