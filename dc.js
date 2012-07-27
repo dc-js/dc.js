@@ -439,10 +439,10 @@ dc.coordinateGridChart = function(chart) {
         }
         extent = _brush.extent();
         chart.filter(_brush.empty() ? null : [extent[0], extent[1]]);
+        dc.redrawAll();
     }
 
     function brushEnd(p) {
-	dc.redrawAll();
     }
 
     chart.redrawBrush = function(g) {
