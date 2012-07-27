@@ -230,9 +230,8 @@
             .height(150)
             .dimension(dateDimension)
             .group(dateIdSumGroup)
-            .stack([dateValueSumGroup, dateIdSumGroup])
+            .stack([dateValueSumGroup, dateValueSumGroup])
             .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
-            .transitionDuration(0)
             .xUnits(d3.time.days)
             .xAxis().ticks(5);
 

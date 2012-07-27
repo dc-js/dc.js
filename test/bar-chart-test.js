@@ -270,7 +270,10 @@ suite.addBatch({'stacked':{
         assert.equal(chart.selectAll("rect.stack1")[0].length, 6);
     },
     'bar should be stacked':function(chart){
-        assert.equal(d3.select(chart.selectAll("rect.stack1")[0][2]).attr("y"), 10);
+        assert.equal(d3.select(chart.selectAll("rect.stack0")[0][2]).attr("y"), 152);
+        assert.equal(d3.select(chart.selectAll("rect.stack0")[0][4]).attr("y"), 154);
+        assert.equal(d3.select(chart.selectAll("rect.stack1")[0][2]).attr("y"), 11);
+        assert.equal(d3.select(chart.selectAll("rect.stack1")[0][4]).attr("y"), 96);
     },
     teardown: function(topic) {
         resetAllFilters();

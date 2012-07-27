@@ -2,44 +2,43 @@ dc.barChart = function(parent) {
     var MIN_BAR_WIDTH = 1;
     var BAR_PADDING_BOTTOM = 1;
     var BAR_PADDING_WIDTH = 2;
+    var GROUP_INDEX_NAME = "__group_index__";
 
     var _stack = [];
+    var _barPositionMatrix = [];
 
     var chart = dc.coordinateGridChart({});
 
     chart.transitionDuration(500);
 
     chart.plotData = function() {
-        var baseData = chart.group().all();
         var groups = combineAllGroups();
-        var bottoms = {};
-        for (var i = 0; i < baseData.length; ++i) {
-            bottoms[i] = chart.margins().top + chart.yAxisHeight() - BAR_PADDING_BOTTOM;
-        }
 
-        for (var i = 0; i < groups.length; ++i) {
-            var group = groups[i];
+        precalculateBarPosition(groups);
 
-            var bars = chart.g().selectAll("rect.stack" + i)
+        for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
+            var group = groups[groupIndex];
+
+            var bars = chart.g().selectAll("rect.stack" + groupIndex)
                 .data(group.all());
 
             // new
             bars.enter()
                 .append("rect")
-                .attr("class", "bar stack" + i)
-                .attr("x", barX)
+                .attr("class", "bar stack" + groupIndex)
+                .attr("x", function(data, dataIndex){return barX(this, data, groupIndex, dataIndex);})
                 .attr("y", chart.xAxisY())
                 .attr("width", barWidth);
             dc.transition(bars, chart.transitionDuration())
-                .attr("y", function(d, index) {
-                    return barY(d, index, bottoms);
+                .attr("y", function(data, dataIndex) {
+                    return barY(this, data, dataIndex);
                 })
                 .attr("height", barHeight);
 
             // update
             dc.transition(bars, chart.transitionDuration())
-                .attr("y", function(d, index) {
-                    return barY(d, index, bottoms);
+                .attr("y", function(data, dataIndex) {
+                    return barY(this, data, dataIndex);
                 })
                 .attr("height", barHeight);
 
@@ -50,6 +49,24 @@ dc.barChart = function(parent) {
         }
     };
 
+    function precalculateBarPosition(groups) {
+        for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
+            var data = groups[groupIndex].all();
+            _barPositionMatrix[groupIndex] = [];
+            for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
+                var d = data[dataIndex];
+                if (groupIndex == 0)
+                    _barPositionMatrix[groupIndex][dataIndex] = barBaseline() - barHeight(d);
+                else
+                    _barPositionMatrix[groupIndex][dataIndex] = _barPositionMatrix[groupIndex - 1][dataIndex] - barHeight(d);
+            }
+        }
+    }
+
+    function barBaseline() {
+        return chart.margins().top + chart.yAxisHeight() - BAR_PADDING_BOTTOM;
+    }
+
     function barWidth(d) {
         var numberOfBars = chart.xUnits()(chart.x().domain()[0], chart.x().domain()[1]).length + BAR_PADDING_WIDTH;
         var w = Math.floor(chart.xAxisLength() / numberOfBars);
@@ -58,13 +75,16 @@ dc.barChart = function(parent) {
         return w;
     }
 
-    function barX(d) {
-        return chart.x()(chart.keyRetriever()(d)) + chart.margins().left;
+    function barX(bar, data, groupIndex, dataIndex) {
+        // cache group index in each individual bar to avoid timing issue introduced by transition
+        bar[GROUP_INDEX_NAME] = groupIndex;
+        return chart.x()(chart.keyRetriever()(data)) + chart.margins().left;
     }
 
-    function barY(d, i, bottoms) {
-        bottoms[i] -= barHeight(d);
-        return bottoms[i];
+    function barY(bar, data, dataIndex) {
+        // cached group index can then be safely retrieved from bar wo/ worrying about transition
+        var groupIndex = bar[GROUP_INDEX_NAME];
+        return _barPositionMatrix[groupIndex][dataIndex];
     }
 
     function barHeight(d) {
