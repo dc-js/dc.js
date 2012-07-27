@@ -437,8 +437,10 @@ dc.coordinateGridChart = function(chart) {
             _g.select(".brush")
                 .call(_brush.extent(extent));
         }
-        chart.filter([_brush.extent()[0], _brush.extent()[1]]);
-        dc.redrawAll();
+        extent = _brush.extent();
+        // if extent is effectively empty because endpoints are equal, filter to null to reset.
+        // use <= && >= to handle date equality.
+        chart.filter((extent[0] <= extent[1] && extent[0] >= extent[1]) ? null : [extent[0], extent[1]]);
     }
 
     function brushEnd(p) {

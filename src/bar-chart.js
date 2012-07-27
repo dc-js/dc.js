@@ -1,6 +1,6 @@
 dc.barChart = function(parent) {
     var MIN_BAR_WIDTH = 1;
-    var BAR_PADDING_BOTTOM = 1;
+    var BAR_PADDING_BOTTOM = 0;
     var BAR_PADDING_WIDTH = 2;
 
     var _stack = [];
