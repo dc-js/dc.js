@@ -438,9 +438,7 @@ dc.coordinateGridChart = function(chart) {
                 .call(_brush.extent(extent));
         }
         extent = _brush.extent();
-        // if extent is effectively empty because endpoints are equal, filter to null to reset.
-        // use <= && >= to handle date equality.
-        chart.filter((extent[0] <= extent[1] && extent[0] >= extent[1]) ? null : [extent[0], extent[1]]);
+        chart.filter(_brush.empty() ? null : [extent[0], extent[1]]);
     }
 
     function brushEnd(p) {
@@ -780,6 +778,7 @@ dc.pieChart = function(selector) {
 };
 dc.barChart = function(parent) {
     var MIN_BAR_WIDTH = 1;
+    var MIN_BAR_HEIGHT = 0;
     var BAR_PADDING_BOTTOM = 1;
     var BAR_PADDING_WIDTH = 2;
 
@@ -844,7 +843,10 @@ dc.barChart = function(parent) {
     }
 
     function barHeight(d) {
-        return chart.yAxisHeight() - chart.y()(chart.valueRetriever()(d)) - BAR_PADDING_BOTTOM;
+        var h = (chart.yAxisHeight() - chart.y()(chart.valueRetriever()(d)) - BAR_PADDING_BOTTOM);
+	if ( isNaN(h) || h < MIN_BAR_HEIGHT ) 
+	    h = MIN_BAR_HEIGHT;
+	return h;
     }
 
     chart.fadeDeselectedArea = function() {

@@ -1,6 +1,7 @@
 dc.barChart = function(parent) {
     var MIN_BAR_WIDTH = 1;
-    var BAR_PADDING_BOTTOM = 0;
+    var MIN_BAR_HEIGHT = 0;
+    var BAR_PADDING_BOTTOM = 1;
     var BAR_PADDING_WIDTH = 2;
 
     var _stack = [];
@@ -64,7 +65,10 @@ dc.barChart = function(parent) {
     }
 
     function barHeight(d) {
-        return chart.yAxisHeight() - chart.y()(chart.valueRetriever()(d)) - BAR_PADDING_BOTTOM;
+        var h = (chart.yAxisHeight() - chart.y()(chart.valueRetriever()(d)) - BAR_PADDING_BOTTOM);
+	if ( isNaN(h) || h < MIN_BAR_HEIGHT ) 
+	    h = MIN_BAR_HEIGHT;
+	return h;
     }
 
     chart.fadeDeselectedArea = function() {
