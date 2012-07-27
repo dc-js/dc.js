@@ -138,6 +138,10 @@ dc.coordinateGridChart = function(chart) {
         return chart;
     };
 
+    chart.currentFilter = function() {
+        return _filter;
+    }
+
     chart.filter = function(_) {
         if (_) {
             chart._filter(_);
