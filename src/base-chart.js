@@ -110,12 +110,21 @@ dc.baseChart = function(chart) {
         return _svg;
     };
 
+    var _renderFilter = function(f) { 
+        if ( f == null ) { return ""; }
+	if ( Array.isArray(f) ) {
+	    return ">= " + f[0] + ", < " + f[1];
+	}
+	return f.toString();
+    };
     chart.turnOnReset = function() {
         chart.select("a.reset").style("display", null);
+        chart.select(".current-filter").text(_renderFilter(chart.currentFilter())).style("display", null);
     };
 
     chart.turnOffReset = function() {
         chart.select("a.reset").style("display", "none");
+        chart.select(".current-filter").style("display", "none").text(chart.currentFilter());
     };
 
     chart.transitionDuration = function(d) {
@@ -178,5 +187,9 @@ dc.baseChart = function(chart) {
         return chart;
     };
 
+    chart.currentFilter = function() { 
+       // return nothing, chart subclass should override
+       return null;
+    };
     return chart;
 };

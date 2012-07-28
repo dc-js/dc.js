@@ -138,6 +138,10 @@ dc.coordinateGridChart = function(chart) {
         return chart;
     };
 
+    chart.currentFilter = function() {
+        return _filter;
+    }
+
     chart.filter = function(_) {
         if (_) {
             chart._filter(_);
@@ -188,7 +192,8 @@ dc.coordinateGridChart = function(chart) {
             _g.select(".brush")
                 .call(_brush.extent(extent));
         }
-        chart.filter([_brush.extent()[0], _brush.extent()[1]]);
+        extent = _brush.extent();
+        chart.filter(_brush.empty() ? null : [extent[0], extent[1]]);
         dc.redrawAll();
     }
 
