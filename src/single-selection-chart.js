@@ -25,6 +25,10 @@ dc.singleSelectionChart = function(chart) {
         return chart;
     };
 
+    chart.currentFilter = function() { 
+       return _filter;
+    };
+
     chart.highlightSelected = function(e) {
         d3.select(e).classed(SELECTED_CLASS, true);
         d3.select(e).classed(DESELECTED_CLASS, false);

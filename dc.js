@@ -177,12 +177,21 @@ dc.baseChart = function(chart) {
         return _svg;
     };
 
+    var _renderFilter = function(f) { 
+        if ( f == null ) { return ""; }
+	if ( Array.isArray(f) ) {
+	    return ">= " + f[0] + ", < " + f[1];
+	}
+	return f.toString();
+    };
     chart.turnOnReset = function() {
         chart.select("a.reset").style("display", null);
+        chart.select(".current-filter").text(_renderFilter(chart.currentFilter())).style("display", null);
     };
 
     chart.turnOffReset = function() {
         chart.select("a.reset").style("display", "none");
+        chart.select(".current-filter").style("display", "none").text(chart.currentFilter());
     };
 
     chart.transitionDuration = function(d) {
@@ -245,6 +254,10 @@ dc.baseChart = function(chart) {
         return chart;
     };
 
+    chart.currentFilter = function() { 
+       // return nothing, chart subclass should override
+       return null;
+    };
     return chart;
 };
 dc.coordinateGridChart = function(chart) {
@@ -387,6 +400,10 @@ dc.coordinateGridChart = function(chart) {
         return chart;
     };
 
+    chart.currentFilter = function() {
+        return _filter;
+    }
+
     chart.filter = function(_) {
         if (_) {
             chart._filter(_);
@@ -437,7 +454,8 @@ dc.coordinateGridChart = function(chart) {
             _g.select(".brush")
                 .call(_brush.extent(extent));
         }
-        chart.filter([_brush.extent()[0], _brush.extent()[1]]);
+        extent = _brush.extent();
+        chart.filter(_brush.empty() ? null : [extent[0], extent[1]]);
         dc.redrawAll();
     }
 
@@ -551,6 +569,10 @@ dc.singleSelectionChart = function(chart) {
         }
 
         return chart;
+    };
+
+    chart.currentFilter = function() { 
+       return _filter;
     };
 
     chart.highlightSelected = function(e) {
@@ -778,6 +800,7 @@ dc.pieChart = function(selector) {
 };
 dc.barChart = function(parent) {
     var MIN_BAR_WIDTH = 1;
+    var MIN_BAR_HEIGHT = 0;
     var BAR_PADDING_BOTTOM = 1;
     var BAR_PADDING_WIDTH = 2;
 
@@ -842,7 +865,10 @@ dc.barChart = function(parent) {
     }
 
     function barHeight(d) {
-        return chart.yAxisHeight() - chart.y()(chart.valueRetriever()(d)) - BAR_PADDING_BOTTOM;
+        var h = (chart.yAxisHeight() - chart.y()(chart.valueRetriever()(d)) - BAR_PADDING_BOTTOM);
+	if ( isNaN(h) || h < MIN_BAR_HEIGHT ) 
+	    h = MIN_BAR_HEIGHT;
+	return h;
     }
 
     chart.fadeDeselectedArea = function() {
