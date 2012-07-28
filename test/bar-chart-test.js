@@ -9,7 +9,9 @@ var width = 1100;
 var height = 200;
 
 function buildChart(id, xdomain) {
-    d3.select("body").append("div").attr("id", id);
+    var div = d3.select("body").append("div").attr("id", id);
+    div.append("a").attr("class", "reset").style("display", "none");
+    div.append("span").attr("class", "filter").style("display", "none");
     var chart = dc.barChart("#" + id);
     chart.dimension(dateDimension).group(dateGroup)
         .width(width).height(height)
@@ -132,9 +134,24 @@ suite.addBatch({
             chart.round(d3.time.day.round)
             assert.isNotNull(chart.round());
         },
-        'current filter should be set correctly': function(chart){
-            assert.equal(chart.currentFilter()[0].getTime(), new Date(2012, 5, 1).getTime());
-            assert.equal(chart.currentFilter()[1].getTime(), new Date(2012, 5, 30).getTime());
+        'current filter should be set correctly': function(chart) {
+            assert.equal(chart.filter()[0].getTime(), new Date(2012, 5, 1).getTime());
+            assert.equal(chart.filter()[1].getTime(), new Date(2012, 5, 30).getTime());
+        },
+        'reset link on after init rendering': function(chart) {
+            assert.isEmpty(chart.select("a.reset").style("display"));
+        },
+        'filter printer should be set': function(chart) {
+            assert.isNotNull(chart.filterPrinter());
+        },
+        'filter info should be on': function(chart) {
+            assert.isEmpty(chart.select("span.filter").style("display"));
+        },
+        'reset link generated after slice selection': function(chart) {
+            assert.isEmpty(chart.select("a.reset").style("display"));
+        },
+        'filter info generated after slice selection': function(chart) {
+            assert.equal(chart.select("span.filter").text(), "[06/01/2012 -> 06/30/2012]");
         },
 
         'with brush': {
@@ -257,23 +274,23 @@ suite.addBatch({'elastic y':{
 }});
 
 suite.addBatch({'stacked':{
-    topic:function(){
+    topic:function() {
         var chart = buildChart("bar-chart-stack", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
         chart.group(dateIdSumGroup)
         chart.stack([dateValueSumGroup]).elasticY(true);
         chart.render();
         return chart;
     },
-    'y axis domain should encampass all groups in stack':function(chart){
+    'y axis domain should encampass all groups in stack':function(chart) {
         var yDomain = chart.y().domain();
         assert.equal(yDomain[0], 0);
         assert.equal(yDomain[1], 149);
     },
-    'bar should be generated from all groups':function(chart){
+    'bar should be generated from all groups':function(chart) {
         assert.equal(chart.selectAll("rect.stack0")[0].length, 6);
         assert.equal(chart.selectAll("rect.stack1")[0].length, 6);
     },
-    'bar should be stacked':function(chart){
+    'bar should be stacked':function(chart) {
         assert.equal(d3.select(chart.selectAll("rect.stack0")[0][2]).attr("y"), 152);
         assert.equal(d3.select(chart.selectAll("rect.stack0")[0][4]).attr("y"), 154);
         assert.equal(d3.select(chart.selectAll("rect.stack1")[0][2]).attr("y"), 11);

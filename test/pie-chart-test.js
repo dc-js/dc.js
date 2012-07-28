@@ -11,8 +11,9 @@ var radius = 100;
 var innerRadius = 30;
 
 function buildChart(id) {
-    d3.select("body").append("div").attr("id", id)
-        .append("a").attr("class", "reset").style("display", "none");
+    var div = d3.select("body").append("div").attr("id", id);
+    div.append("a").attr("class", "reset").style("display", "none");
+    div.append("span").attr("class", "filter").style("display", "none");
     var chart = dc.pieChart("#" + id);
     chart.dimension(valueDimension).group(valueGroup)
         .width(width)
@@ -110,6 +111,12 @@ suite.addBatch({
         'reset link hidden after init rendering': function(chart) {
             assert.equal(chart.select("a.reset").style("display"), "none");
         },
+        'filter printer should be set': function(chart){
+            assert.isNotNull(chart.filterPrinter());
+        },
+        'filter info should be hidden after init rendering': function(chart) {
+            assert.equal(chart.select("span.filter").style("display"), "none");
+        },
         're-render' : {
             topic: function(pieChart) {
                 pieChart.render();
@@ -182,6 +189,11 @@ suite.addBatch({
             'reset link generated after slice selection': function(chart) {
                 chart.filter("66");
                 assert.isEmpty(chart.select("a.reset").style("display"));
+            },
+            'filter info generated after slice selection': function(chart) {
+                chart.filter("66");
+                assert.isEmpty(chart.select("span.filter").style("display"));
+                assert.equal(chart.select("span.filter").text(), "66");
             },
             'should remove highlight if no slice selected': function(pieChart) {
                 pieChart.filterAll();

@@ -138,21 +138,19 @@ dc.coordinateGridChart = function(chart) {
         return chart;
     };
 
-    chart.currentFilter = function() {
-        return _filter;
-    }
-
     chart.filter = function(_) {
+        if (!arguments.length) return _filter;
+
         if (_) {
-            chart._filter(_);
+            _filter = _;
             chart.brush().extent(_);
             chart.dimension().filterRange(_);
-            chart.turnOnReset();
+            chart.turnOnControls();
         } else {
-            chart._filter(null);
+            _filter = null;
             chart.brush().clear();
             chart.dimension().filterAll();
-            chart.turnOffReset();
+            chart.turnOffControls();
         }
 
         return chart;

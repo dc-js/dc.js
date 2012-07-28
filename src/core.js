@@ -1,5 +1,8 @@
 dc = {
     version: "0.6.0",
+    defaultTimeFormat: function(d) {
+        return d3.time.format("%m/%d/%Y")(d);
+    },
     _charts: []
 };
 
@@ -63,5 +66,27 @@ dc.round.floor = function(n) {
 dc.override = function(obj, functionName, newFunction) {
     var existingFunction = obj[functionName];
     newFunction._ = existingFunction;
-    obj[functionName] = function(){return newFunction(existingFunction);};
+    obj[functionName] = function() {
+        return newFunction(existingFunction);
+    };
+}
+
+dc.printers = {};
+
+dc.printers.filter = function(filter) {
+    if (filter instanceof Array)
+        s = "[" + printSingleValue(filter[0]) + " -> " + printSingleValue(filter[1]) + "]";
+    else
+        s = printSingleValue(filter)
+
+    return s;
+};
+
+function printSingleValue(filter) {
+    var s = "" + filter;
+
+    if (filter instanceof Date)
+        s = dc.defaultTimeFormat(filter);
+
+    return s;
 }

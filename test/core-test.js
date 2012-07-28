@@ -142,6 +142,27 @@ suite.addBatch({
             dc.override(o, "foo", function(_){return _() + "2";});
             assert.equal(o.foo(), "foo2");
         }
+    },
+
+    'dc.printer.filter':{
+        topic:function(){
+            return dc.printers.filter;
+        },
+        'print simple string':function(printer){
+            assert.equal(dc.printers.filter("a"), "a");
+        },
+        'print date string':function(printer){
+            assert.equal(dc.printers.filter(new Date(2012, 1, 1)), "02/01/2012");
+        },
+        'print int range':function(printer){
+            assert.equal(dc.printers.filter([10, 30]), "[10 -> 30]");
+        },
+        'print date range':function(printer){
+            assert.equal(dc.printers.filter([new Date(2012, 1, 1), new Date(2012, 1, 15)]), "[02/01/2012 -> 02/15/2012]");
+        },
+        'print single element array':function(printer){
+            assert.equal(dc.printers.filter([new Date(2012, 1, 1)]), "02/01/2012");
+        }
     }
 });
 

@@ -112,8 +112,11 @@ suite.addBatch({
             assert.isNotNull(chart.round());
         },
         'current filter should be set correctly': function(chart){
-            assert.equal(chart.currentFilter()[0].getTime(), new Date(2012, 5, 1).getTime());
-            assert.equal(chart.currentFilter()[1].getTime(), new Date(2012, 5, 30).getTime());
+            assert.equal(chart.filter()[0].getTime(), new Date(2012, 5, 1).getTime());
+            assert.equal(chart.filter()[1].getTime(), new Date(2012, 5, 30).getTime());
+        },
+        'filter printer should be set': function(chart){
+            assert.isNotNull(chart.filterPrinter());
         },
 
         'with brush': {

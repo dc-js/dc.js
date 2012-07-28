@@ -17,9 +17,9 @@ dc.singleSelectionChart = function(chart) {
             chart.dimension().filter(_filter);
 
         if (f) {
-            chart.turnOnReset();
+            chart.turnOnControls();
         } else {
-            chart.turnOffReset();
+            chart.turnOffControls();
         }
 
         return chart;
