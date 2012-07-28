@@ -162,6 +162,9 @@ suite.addBatch({
         },
         'print single element array':function(printer){
             assert.equal(dc.printers.filter([new Date(2012, 1, 1)]), "02/01/2012");
+        },
+        'print null':function(printer){
+            assert.equal(dc.printers.filter(null), "");
         }
     }
 });

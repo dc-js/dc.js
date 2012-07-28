@@ -74,10 +74,18 @@ dc.override = function(obj, functionName, newFunction) {
 dc.printers = {};
 
 dc.printers.filter = function(filter) {
-    if (filter instanceof Array)
-        s = "[" + printSingleValue(filter[0]) + " -> " + printSingleValue(filter[1]) + "]";
-    else
-        s = printSingleValue(filter)
+    var s = "";
+
+    if (filter) {
+        if (filter instanceof Array) {
+            if (filter.length >= 2)
+                s = "[" + printSingleValue(filter[0]) + " -> " + printSingleValue(filter[1]) + "]";
+            else if (filter.length >= 1)
+                s = printSingleValue(filter[0]);
+        } else {
+            s = printSingleValue(filter)
+        }
+    }
 
     return s;
 };
