@@ -24,7 +24,7 @@ suite.addBatch({
     'time bar chart': {
         topic: function() {
             var chart = buildChart("bar-chart", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
-            chart.filter([new Date(2012, 5, 01), new Date(2012, 5, 30)]);
+            chart.filter([new Date(2012, 5, 1), new Date(2012, 5, 30)]);
             chart.redraw();
             return chart;
         },
@@ -131,6 +131,10 @@ suite.addBatch({
         'round can be changed': function(chart) {
             chart.round(d3.time.day.round)
             assert.isNotNull(chart.round());
+        },
+        'current filter should be set correctly': function(chart){
+            assert.equal(chart.currentFilter()[0].getTime(), new Date(2012, 5, 1).getTime());
+            assert.equal(chart.currentFilter()[1].getTime(), new Date(2012, 5, 30).getTime());
         },
 
         'with brush': {

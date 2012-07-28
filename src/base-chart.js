@@ -27,6 +27,16 @@ dc.baseChart = function(chart) {
 
     var _transitionDuration = 750;
 
+    var _renderFilter = function(f) {
+        if (f == null) {
+            return "";
+        }
+        if (Array.isArray(f)) {
+            return ">= " + f[0] + ", < " + f[1];
+        }
+        return f.toString();
+    };
+
     chart.dimension = function(d) {
         if (!arguments.length) return _dimension;
         _dimension = d;
@@ -110,13 +120,6 @@ dc.baseChart = function(chart) {
         return _svg;
     };
 
-    var _renderFilter = function(f) { 
-        if ( f == null ) { return ""; }
-	if ( Array.isArray(f) ) {
-	    return ">= " + f[0] + ", < " + f[1];
-	}
-	return f.toString();
-    };
     chart.turnOnReset = function() {
         chart.select("a.reset").style("display", null);
         chart.select(".current-filter").text(_renderFilter(chart.currentFilter())).style("display", null);
@@ -187,9 +190,10 @@ dc.baseChart = function(chart) {
         return chart;
     };
 
-    chart.currentFilter = function() { 
-       // return nothing, chart subclass should override
-       return null;
+    chart.currentFilter = function() {
+        // return nothing, chart subclass should override
+        return null;
     };
+
     return chart;
 };
