@@ -1,162 +1,162 @@
 dc.pieChart = function(selector) {
-    var sliceCssClass = "pie-slice";
+    var _sliceCssClass = "pie-slice";
 
-    var radius = 0, innerRadius = 0;
+    var _radius = 0, _innerRadius = 0;
 
-    var g;
+    var _g;
 
-    var arc;
-    var dataPie;
-    var slices;
-    var slicePaths;
+    var _arc;
+    var _dataPie;
+    var _slices;
+    var _slicePaths;
 
-    var labels;
+    var _labels;
 
-    var chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
+    var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
 
-    chart.label(function(d) {
-        return chart.keyRetriever()(d.data);
+    _chart.label(function(d) {
+        return _chart.keyRetriever()(d.data);
     });
-    chart.renderLabel(true);
+    _chart.renderLabel(true);
 
-    chart.title(function(d) {
+    _chart.title(function(d) {
         return d.data.key + ": " + d.data.value;
     });
 
-    chart.transitionDuration(350);
+    _chart.transitionDuration(350);
 
-    chart.render = function() {
-        chart.resetSvg();
+    _chart.render = function() {
+        _chart.resetSvg();
 
-        if (chart.dataAreSet()) {
-            g = chart.svg()
+        if (_chart.dataAreSet()) {
+            _g = _chart.svg()
                 .append("g")
-                .attr("transform", "translate(" + chart.cx() + "," + chart.cy() + ")");
+                .attr("transform", "translate(" + _chart.cx() + "," + _chart.cy() + ")");
 
-            dataPie = calculateDataPie();
+            _dataPie = calculateDataPie();
 
-            arc = chart.buildArcs();
+            _arc = _chart.buildArcs();
 
-            slices = chart.drawSlices(g, dataPie, arc);
+            _slices = _chart.drawSlices(_g, _dataPie, _arc);
 
-            chart.drawLabels(slices, arc);
-            chart.drawTitles(slices, arc);
+            _chart.drawLabels(_slices, _arc);
+            _chart.drawTitles(_slices, _arc);
 
-            chart.highlightFilter();
+            _chart.highlightFilter();
         }
 
-        return chart;
+        return _chart;
     };
 
-    chart.innerRadius = function(r) {
-        if (!arguments.length) return innerRadius;
-        innerRadius = r;
-        return chart;
+    _chart.innerRadius = function(r) {
+        if (!arguments.length) return _innerRadius;
+        _innerRadius = r;
+        return _chart;
     };
 
-    chart.radius = function(r) {
-        if (!arguments.length) return radius;
-        radius = r;
-        return chart;
+    _chart.radius = function(r) {
+        if (!arguments.length) return _radius;
+        _radius = r;
+        return _chart;
     };
 
-    chart.cx = function() {
-        return chart.width() / 2;
+    _chart.cx = function() {
+        return _chart.width() / 2;
     };
 
-    chart.cy = function() {
-        return chart.height() / 2;
+    _chart.cy = function() {
+        return _chart.height() / 2;
     };
 
-    chart.buildArcs = function() {
-        return d3.svg.arc().outerRadius(radius).innerRadius(innerRadius);
+    _chart.buildArcs = function() {
+        return d3.svg.arc().outerRadius(_radius).innerRadius(_innerRadius);
     };
 
-    chart.drawSlices = function(topG, dataPie, arcs) {
-        slices = topG.selectAll("g." + sliceCssClass)
-            .data(dataPie(chart.orderedGroup().top(Infinity)))
+    _chart.drawSlices = function(topG, dataPie, arcs) {
+        _slices = topG.selectAll("g." + _sliceCssClass)
+            .data(dataPie(_chart.orderedGroup().top(Infinity)))
             .enter()
             .append("g")
             .attr("class", function(d, i) {
-                return sliceCssClass + " " + i;
+                return _sliceCssClass + " " + i;
             });
 
-        slicePaths = slices.append("path")
+        _slicePaths = _slices.append("path")
             .attr("fill", function(d, i) {
-                return chart.colors()(i);
+                return _chart.colors()(i);
             })
             .attr("d", arcs);
 
-        slicePaths
+        _slicePaths
             .transition()
-            .duration(chart.transitionDuration())
+            .duration(_chart.transitionDuration())
             .attrTween("d", tweenPie);
 
-        slicePaths.on("click", onClick);
+        _slicePaths.on("click", onClick);
 
-        return slices;
+        return _slices;
     };
 
-    chart.drawLabels = function(slices, arc) {
-        if (chart.renderLabel()) {
-            labels = slices.append("text");
+    _chart.drawLabels = function(slices, arc) {
+        if (_chart.renderLabel()) {
+            _labels = slices.append("text");
             redrawLabels(arc);
-            labels.on("click", onClick);
+            _labels.on("click", onClick);
         }
     };
 
-    chart.drawTitles = function(slices, arc) {
-        if (chart.renderTitle()) {
+    _chart.drawTitles = function(slices, arc) {
+        if (_chart.renderTitle()) {
             slices.append("title").text(function(d) {
-                return chart.title()(d);
+                return _chart.title()(d);
             });
         }
     };
 
-    chart.highlightFilter = function() {
-        if (chart.hasFilter()) {
-            chart.selectAll("g." + sliceCssClass).select("path").each(function(d) {
-                if (chart.isSelectedSlice(d)) {
-                    chart.highlightSelected(this);
+    _chart.highlightFilter = function() {
+        if (_chart.hasFilter()) {
+            _chart.selectAll("g." + _sliceCssClass).select("path").each(function(d) {
+                if (_chart.isSelectedSlice(d)) {
+                    _chart.highlightSelected(this);
                 } else {
-                    chart.fadeDeselected(this);
+                    _chart.fadeDeselected(this);
                 }
             });
         } else {
-            chart.selectAll("g." + sliceCssClass).selectAll("path").each(function(d) {
-                chart.resetHighlight(this);
+            _chart.selectAll("g." + _sliceCssClass).selectAll("path").each(function(d) {
+                _chart.resetHighlight(this);
             });
         }
     };
 
-    chart.isSelectedSlice = function(d) {
-        return chart.filter() == chart.keyRetriever()(d.data);
+    _chart.isSelectedSlice = function(d) {
+        return _chart.filter() == _chart.keyRetriever()(d.data);
     };
 
-    chart.redraw = function() {
-        chart.highlightFilter();
-        var data = dataPie(chart.orderedGroup().top(Infinity));
-        slicePaths = slicePaths.data(data);
-        labels = labels.data(data);
-        dc.transition(slicePaths, chart.transitionDuration(), function(s) {
+    _chart.redraw = function() {
+        _chart.highlightFilter();
+        var data = _dataPie(_chart.orderedGroup().top(Infinity));
+        _slicePaths = _slicePaths.data(data);
+        _labels = _labels.data(data);
+        dc.transition(_slicePaths, _chart.transitionDuration(), function(s) {
             s.attrTween("d", tweenPie);
         });
-        redrawLabels(arc);
+        redrawLabels(_arc);
         redrawTitles();
-        return chart;
+        return _chart;
     };
 
     function calculateDataPie() {
         return d3.layout.pie().value(function(d) {
-            return chart.valueRetriever()(d);
+            return _chart.valueRetriever()(d);
         });
     }
 
     function redrawLabels(arc) {
-        dc.transition(labels, chart.transitionDuration())
+        dc.transition(_labels, _chart.transitionDuration())
             .attr("transform", function(d) {
-                d.innerRadius = chart.innerRadius();
-                d.outerRadius = radius;
+                d.innerRadius = _chart.innerRadius();
+                d.outerRadius = _radius;
                 var centroid = arc.centroid(d);
                 if (isNaN(centroid[0]) || isNaN(centroid[1])) {
                     return "translate(0,0)";
@@ -167,29 +167,29 @@ dc.pieChart = function(selector) {
             .attr("text-anchor", "middle")
             .text(function(d) {
                 var data = d.data;
-                if (chart.valueRetriever()(data) == 0)
+                if (_chart.valueRetriever()(data) == 0)
                     return "";
-                return chart.label()(d);
+                return _chart.label()(d);
             });
     }
 
     function redrawTitles() {
-        if (chart.renderTitle()) {
-            slices.selectAll("title").text(function(d) {
-                return chart.title()(d);
+        if (_chart.renderTitle()) {
+            _slices.selectAll("title").text(function(d) {
+                return _chart.title()(d);
             });
         }
     }
 
     function tweenPie(b) {
-        b.innerRadius = chart.innerRadius();
+        b.innerRadius = _chart.innerRadius();
         var current = this._current;
         if (isOffCanvas(current))
             current = {startAngle: 0, endAngle: 0};
         var i = d3.interpolate(current, b);
         this._current = i(0);
         return function(t) {
-            return arc(i(t));
+            return _arc(i(t));
         };
     }
 
@@ -198,9 +198,9 @@ dc.pieChart = function(selector) {
     }
 
     function onClick(d) {
-        chart.filter(chart.keyRetriever()(d.data));
+        _chart.filter(_chart.keyRetriever()(d.data));
         dc.redrawAll();
     }
 
-    return chart.anchor(selector);
+    return _chart.anchor(selector);
 };

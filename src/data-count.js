@@ -1,17 +1,17 @@
 dc.dataCount = function(selector) {
-    var formatNumber = d3.format(",d");
-    var chart = dc.baseChart({});
+    var _formatNumber = d3.format(",d");
+    var _chart = dc.baseChart({});
 
-    chart.render = function() {
-        chart.selectAll(".total-count").text(formatNumber(chart.dimension().size()));
-        chart.selectAll(".filter-count").text(formatNumber(chart.group().value()));
+    _chart.render = function() {
+        _chart.selectAll(".total-count").text(_formatNumber(_chart.dimension().size()));
+        _chart.selectAll(".filter-count").text(_formatNumber(_chart.group().value()));
 
-        return chart;
+        return _chart;
     };
 
-    chart.redraw = function(){
-        return chart.render();
+    _chart.redraw = function(){
+        return _chart.render();
     };
 
-    return chart.anchor(selector);
+    return _chart.anchor(selector);
 };

@@ -1,7 +1,7 @@
-dc.coordinateGridChart = function(chart) {
+dc.coordinateGridChart = function(_chart) {
     var DEFAULT_Y_AXIS_TICKS = 5;
 
-    chart = dc.baseChart(chart);
+    _chart = dc.baseChart(_chart);
 
     var _margin = {top: 10, right: 50, bottom: 30, left: 20};
 
@@ -19,163 +19,163 @@ dc.coordinateGridChart = function(chart) {
     var _brush = d3.svg.brush();
     var _round;
 
-    chart.generateG = function() {
-        _g = chart.svg().append("g")
-            .attr("transform", "translate(" + chart.margins().left + "," + chart.margins().top + ")");
+    _chart.generateG = function() {
+        _g = _chart.svg().append("g")
+            .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")");
         return _g;
     };
 
-    chart.g = function(_) {
+    _chart.g = function(_) {
         if (!arguments.length) return _g;
         _g = _;
-        return chart;
+        return _chart;
     };
 
-    chart.margins = function(m) {
+    _chart.margins = function(m) {
         if (!arguments.length) return _margin;
         _margin = m;
-        return chart;
+        return _chart;
     };
 
-    chart.x = function(_) {
+    _chart.x = function(_) {
         if (!arguments.length) return _x;
         _x = _;
-        return chart;
+        return _chart;
     };
 
-    chart.xAxis = function(_) {
+    _chart.xAxis = function(_) {
         if (!arguments.length) return _xAxis;
         _xAxis = _;
-        return chart;
+        return _chart;
     };
 
-    chart.renderXAxis = function(g) {
+    _chart.renderXAxis = function(g) {
         g.select("g.x").remove();
-        _x.range([0, chart.xAxisLength()]);
-        _xAxis = _xAxis.scale(chart.x()).orient("bottom");
+        _x.range([0, _chart.xAxisLength()]);
+        _xAxis = _xAxis.scale(_chart.x()).orient("bottom");
         g.append("g")
             .attr("class", "axis x")
-            .attr("transform", "translate(" + chart.margins().left + "," + chart.xAxisY() + ")")
+            .attr("transform", "translate(" + _chart.margins().left + "," + _chart.xAxisY() + ")")
             .call(_xAxis);
     };
 
-    chart.xAxisY = function() {
-        return (chart.height() - chart.margins().bottom);
+    _chart.xAxisY = function() {
+        return (_chart.height() - _chart.margins().bottom);
     };
 
-    chart.xAxisLength = function() {
-        return chart.width() - chart.margins().left - chart.margins().right;
+    _chart.xAxisLength = function() {
+        return _chart.width() - _chart.margins().left - _chart.margins().right;
     };
 
-    chart.xUnits = function(_) {
+    _chart.xUnits = function(_) {
         if (!arguments.length) return _xUnits;
         _xUnits = _;
-        return chart;
+        return _chart;
     };
 
-    chart.renderYAxis = function(g) {
+    _chart.renderYAxis = function(g) {
         g.select("g.y").remove();
 
-        if (_y == null || chart.elasticY()) {
+        if (_y == null || _chart.elasticY()) {
             _y = d3.scale.linear();
-            _y.domain([chart.yAxisMin(), chart.yAxisMax()]).rangeRound([chart.yAxisHeight(), 0]);
+            _y.domain([_chart.yAxisMin(), _chart.yAxisMax()]).rangeRound([_chart.yAxisHeight(), 0]);
         }
 
-        _y.range([chart.yAxisHeight(), 0]);
+        _y.range([_chart.yAxisHeight(), 0]);
         _yAxis = _yAxis.scale(_y).orient("left").ticks(DEFAULT_Y_AXIS_TICKS);
 
         g.append("g")
             .attr("class", "axis y")
-            .attr("transform", "translate(" + chart.margins().left + "," + chart.margins().top + ")")
+            .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")")
             .call(_yAxis);
     };
 
-    chart.y = function(_) {
+    _chart.y = function(_) {
         if (!arguments.length) return _y;
         _y = _;
-        return chart;
+        return _chart;
     };
 
-    chart.yAxis = function(y) {
+    _chart.yAxis = function(y) {
         if (!arguments.length) return _yAxis;
         _yAxis = y;
-        return chart;
+        return _chart;
     };
 
-    chart.elasticY = function(_) {
+    _chart.elasticY = function(_) {
         if (!arguments.length) return _yElasticity;
         _yElasticity = _;
-        return chart;
+        return _chart;
     };
 
-    chart.yAxisMin = function() {
-        var min = d3.min(chart.group().all(), function(e) {
-            return chart.valueRetriever()(e);
+    _chart.yAxisMin = function() {
+        var min = d3.min(_chart.group().all(), function(e) {
+            return _chart.valueRetriever()(e);
         });
         if (min > 0) min = 0;
         return min;
     };
 
-    chart.yAxisMax = function() {
-        return d3.max(chart.group().all(), function(e) {
-            return chart.valueRetriever()(e);
+    _chart.yAxisMax = function() {
+        return d3.max(_chart.group().all(), function(e) {
+            return _chart.valueRetriever()(e);
         });
     };
 
-    chart.yAxisHeight = function() {
-        return chart.height() - chart.margins().top - chart.margins().bottom;
+    _chart.yAxisHeight = function() {
+        return _chart.height() - _chart.margins().top - _chart.margins().bottom;
     };
 
-    chart.round = function(_) {
+    _chart.round = function(_) {
         if (!arguments.length) return _round;
         _round = _;
-        return chart;
+        return _chart;
     };
 
-    chart._filter = function(_) {
+    _chart._filter = function(_) {
         if (!arguments.length) return _filter;
         _filter = _;
-        return chart;
+        return _chart;
     };
 
-    chart.filter = function(_) {
+    _chart.filter = function(_) {
         if (!arguments.length) return _filter;
 
         if (_) {
             _filter = _;
-            chart.brush().extent(_);
-            chart.dimension().filterRange(_);
-            chart.turnOnControls();
+            _chart.brush().extent(_);
+            _chart.dimension().filterRange(_);
+            _chart.turnOnControls();
         } else {
             _filter = null;
-            chart.brush().clear();
-            chart.dimension().filterAll();
-            chart.turnOffControls();
+            _chart.brush().clear();
+            _chart.dimension().filterAll();
+            _chart.turnOffControls();
         }
 
-        return chart;
+        return _chart;
     };
 
-    chart.brush = function(_) {
+    _chart.brush = function(_) {
         if (!arguments.length) return _brush;
         _brush = _;
-        return chart;
+        return _chart;
     };
 
-    chart.renderBrush = function(g) {
+    _chart.renderBrush = function(g) {
         _brush.on("brushstart", brushStart)
             .on("brush", brushing)
             .on("brushend", brushEnd);
 
         var gBrush = g.append("g")
             .attr("class", "brush")
-            .attr("transform", "translate(" + chart.margins().left + ",0)")
-            .call(_brush.x(chart.x()));
-        gBrush.selectAll("rect").attr("height", chart.xAxisY());
-        gBrush.selectAll(".resize").append("path").attr("d", chart.resizeHandlePath);
+            .attr("transform", "translate(" + _chart.margins().left + ",0)")
+            .call(_brush.x(_chart.x()));
+        gBrush.selectAll("rect").attr("height", _chart.xAxisY());
+        gBrush.selectAll(".resize").append("path").attr("d", _chart.resizeHandlePath);
 
         if (_filter) {
-            chart.redrawBrush(g);
+            _chart.redrawBrush(g);
         }
     };
 
@@ -184,38 +184,38 @@ dc.coordinateGridChart = function(chart) {
 
     function brushing(p) {
         var extent = _brush.extent();
-        if (chart.round()) {
-            extent[0] = extent.map(chart.round())[0];
-            extent[1] = extent.map(chart.round())[1];
+        if (_chart.round()) {
+            extent[0] = extent.map(_chart.round())[0];
+            extent[1] = extent.map(_chart.round())[1];
             _g.select(".brush")
                 .call(_brush.extent(extent));
         }
         extent = _brush.extent();
-        chart.filter(_brush.empty() ? null : [extent[0], extent[1]]);
+        _chart.filter(_brush.empty() ? null : [extent[0], extent[1]]);
         dc.redrawAll();
     }
 
     function brushEnd(p) {
     }
 
-    chart.redrawBrush = function(g) {
-        if (chart._filter() && chart.brush().empty())
-            chart.brush().extent(chart._filter());
+    _chart.redrawBrush = function(g) {
+        if (_chart._filter() && _chart.brush().empty())
+            _chart.brush().extent(_chart._filter());
 
         var gBrush = g.select("g.brush");
-        gBrush.call(chart.brush().x(chart.x()));
-        gBrush.selectAll("rect").attr("height", chart.xAxisY());
+        gBrush.call(_chart.brush().x(_chart.x()));
+        gBrush.selectAll("rect").attr("height", _chart.xAxisY());
 
-        chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea();
     };
 
-    chart.fadeDeselectedArea = function(){
+    _chart.fadeDeselectedArea = function(){
         // do nothing, sub-chart should override this function
     };
 
     // borrowed from Crossfilter example
-    chart.resizeHandlePath = function(d) {
-        var e = +(d == "e"), x = e ? 1 : -1, y = chart.xAxisY() / 3;
+    _chart.resizeHandlePath = function(d) {
+        var e = +(d == "e"), x = e ? 1 : -1, y = _chart.xAxisY() / 3;
         return "M" + (.5 * x) + "," + y
             + "A6,6 0 0 " + e + " " + (6.5 * x) + "," + (y + 6)
             + "V" + (2 * y - 6)
@@ -227,40 +227,40 @@ dc.coordinateGridChart = function(chart) {
             + "V" + (2 * y - 8);
     };
 
-    chart.render = function() {
-        chart.resetSvg();
+    _chart.render = function() {
+        _chart.resetSvg();
 
-        if (chart.dataAreSet()) {
-            chart.generateG();
+        if (_chart.dataAreSet()) {
+            _chart.generateG();
 
-            chart.renderXAxis(chart.g());
-            chart.renderYAxis(chart.g());
+            _chart.renderXAxis(_chart.g());
+            _chart.renderYAxis(_chart.g());
 
-            chart.plotData();
+            _chart.plotData();
 
-            chart.renderBrush(chart.g());
+            _chart.renderBrush(_chart.g());
         }
 
-        return chart;
+        return _chart;
     };
 
-    chart.redraw = function() {
-        if (chart.elasticY())
-            chart.renderYAxis(chart.g());
+    _chart.redraw = function() {
+        if (_chart.elasticY())
+            _chart.renderYAxis(_chart.g());
 
-        chart.plotData();
-        chart.redrawBrush(chart.g());
+        _chart.plotData();
+        _chart.redrawBrush(_chart.g());
 
-        return chart;
+        return _chart;
     };
 
-    chart.subRender = function(){
-        if (chart.dataAreSet()) {
-            chart.plotData();
+    _chart.subRender = function(){
+        if (_chart.dataAreSet()) {
+            _chart.plotData();
         }
 
-        return chart;
+        return _chart;
     };
 
-    return chart;
+    return _chart;
 };

@@ -1,45 +1,45 @@
-dc.singleSelectionChart = function(chart) {
+dc.singleSelectionChart = function(_chart) {
     var _filter;
 
-    chart.hasFilter = function() {
+    _chart.hasFilter = function() {
         return _filter != null;
     };
 
-    chart.filter = function(f) {
+    _chart.filter = function(f) {
         if (!arguments.length) return _filter;
 
         _filter = f;
 
-        if (chart.dataAreSet())
-            chart.dimension().filter(_filter);
+        if (_chart.dataAreSet())
+            _chart.dimension().filter(_filter);
 
         if (f) {
-            chart.turnOnControls();
+            _chart.turnOnControls();
         } else {
-            chart.turnOffControls();
+            _chart.turnOffControls();
         }
 
-        return chart;
+        return _chart;
     };
 
-    chart.currentFilter = function() { 
+    _chart.currentFilter = function() {
        return _filter;
     };
 
-    chart.highlightSelected = function(e) {
+    _chart.highlightSelected = function(e) {
         d3.select(e).classed(dc.constants.SELECTED_CLASS, true);
         d3.select(e).classed(dc.constants.DESELECTED_CLASS, false);
     }
 
-    chart.fadeDeselected = function(e) {
+    _chart.fadeDeselected = function(e) {
         d3.select(e).classed(dc.constants.SELECTED_CLASS, false);
         d3.select(e).classed(dc.constants.DESELECTED_CLASS, true);
     }
 
-    chart.resetHighlight = function(e) {
+    _chart.resetHighlight = function(e) {
         d3.select(e).classed(dc.constants.SELECTED_CLASS, false);
         d3.select(e).classed(dc.constants.DESELECTED_CLASS, false);
     }
 
-    return chart;
+    return _chart;
 };

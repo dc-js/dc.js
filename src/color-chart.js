@@ -1,7 +1,7 @@
-dc.colorChart = function(chart) {
+dc.colorChart = function(_chart) {
     var _colors = d3.scale.category20c();
 
-    chart.colors = function(_) {
+    _chart.colors = function(_) {
         if (!arguments.length) return _colors;
 
         if(_ instanceof Array)
@@ -9,8 +9,8 @@ dc.colorChart = function(chart) {
         else
             _colors = _;
 
-        return chart;
+        return _chart;
     };
 
-    return chart;
+    return _chart;
 };

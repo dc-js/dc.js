@@ -2,13 +2,13 @@ dc.compositeChart = function(selector) {
     var SUB_CHART_G_CLASS = "sub";
 
     var _chart = dc.coordinateGridChart({});
-    var children = [];
+    var _children = [];
 
     _chart.transitionDuration(500);
 
     dc.override(_chart, "generateG", function(_super) {
-        for (var i = 0; i < children.length; ++i) {
-            var child = children[i];
+        for (var i = 0; i < _children.length; ++i) {
+            var child = _children[i];
             if (child.dimension() == null) child.dimension(_chart.dimension());
             if (child.group() == null) child.group(_chart.group());
             child.svg(_chart.svg());
@@ -25,8 +25,8 @@ dc.compositeChart = function(selector) {
     });
 
     _chart.plotData = function() {
-        for (var i = 0; i < children.length; ++i) {
-            var child = children[i];
+        for (var i = 0; i < _children.length; ++i) {
+            var child = _children[i];
             child.x(_chart.x());
             child.y(_chart.y());
             child.xAxis(_chart.xAxis());
@@ -37,8 +37,8 @@ dc.compositeChart = function(selector) {
     };
 
     _chart.fadeDeselectedArea = function() {
-        for (var i = 0; i < children.length; ++i) {
-            var child = children[i];
+        for (var i = 0; i < _children.length; ++i) {
+            var child = _children[i];
             child.brush(_chart.brush());
 
             child.fadeDeselectedArea();
@@ -46,7 +46,7 @@ dc.compositeChart = function(selector) {
     };
 
     _chart.compose = function(charts) {
-        children = charts;
+        _children = charts;
         return _chart;
     };
 
@@ -85,8 +85,8 @@ dc.compositeChart = function(selector) {
 
         allGroups.push(_chart.group());
 
-        for (var i = 0; i < children.length; ++i)
-            allGroups.push(children[i].group());
+        for (var i = 0; i < _children.length; ++i)
+            allGroups.push(_children[i].group());
 
         return allGroups;
     }

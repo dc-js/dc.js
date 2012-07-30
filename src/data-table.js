@@ -1,26 +1,26 @@
 dc.dataTable = function(selector) {
-    var chart = dc.baseChart({});
+    var _chart = dc.baseChart({});
 
-    var size = 25;
-    var columns = [];
-    var sortBy = function(d) {
+    var _size = 25;
+    var _columns = [];
+    var _sortBy = function(d) {
         return d;
     };
-    var order = d3.ascending;
-    var sort;
+    var _order = d3.ascending;
+    var _sort;
 
-    chart.render = function() {
-        chart.selectAll("div.row").remove();
+    _chart.render = function() {
+        _chart.selectAll("div.row").remove();
 
         renderRows(renderGroups());
 
-        return chart;
+        return _chart;
     };
 
     function renderGroups() {
-        var groups = chart.root().selectAll("div.group")
+        var groups = _chart.root().selectAll("div.group")
             .data(nestEntries(), function(d) {
-                return chart.keyRetriever()(d);
+                return _chart.keyRetriever()(d);
             });
 
         groups.enter().append("div")
@@ -28,7 +28,7 @@ dc.dataTable = function(selector) {
             .append("span")
             .attr("class", "label")
             .text(function(d) {
-                return chart.keyRetriever()(d);
+                return _chart.keyRetriever()(d);
             });
 
         groups.exit().remove();
@@ -37,15 +37,15 @@ dc.dataTable = function(selector) {
     }
 
     function nestEntries() {
-        if (!sort)
-            sort = crossfilter.quicksort.by(sortBy);
+        if (!_sort)
+            _sort = crossfilter.quicksort.by(_sortBy);
 
-        var entries = chart.dimension().top(size);
+        var entries = _chart.dimension().top(_size);
 
         return d3.nest()
-            .key(chart.group())
-            .sortKeys(order)
-            .entries(sort(entries, 0, entries.length));
+            .key(_chart.group())
+            .sortKeys(_order)
+            .entries(_sort(entries, 0, entries.length));
     }
 
     function renderRows(groups) {
@@ -59,8 +59,8 @@ dc.dataTable = function(selector) {
             .append("div")
             .attr("class", "row");
 
-        for (var i = 0; i < columns.length; ++i) {
-            var f = columns[i];
+        for (var i = 0; i < _columns.length; ++i) {
+            var f = _columns[i];
             rowEnter.append("span")
                 .attr("class", "column " + i)
                 .text(function(d) {
@@ -73,33 +73,33 @@ dc.dataTable = function(selector) {
         return rows;
     }
 
-    chart.redraw = function() {
-        return chart.render();
+    _chart.redraw = function() {
+        return _chart.render();
     };
 
-    chart.size = function(s) {
-        if (!arguments.length) return size;
-        size = s;
-        return chart;
+    _chart.size = function(s) {
+        if (!arguments.length) return _size;
+        _size = s;
+        return _chart;
     };
 
-    chart.columns = function(_) {
-        if (!arguments.length) return columns;
-        columns = _;
-        return chart;
+    _chart.columns = function(_) {
+        if (!arguments.length) return _columns;
+        _columns = _;
+        return _chart;
     };
 
-    chart.sortBy = function(_) {
-        if (!arguments.length) return sortBy;
-        sortBy = _;
-        return chart;
+    _chart.sortBy = function(_) {
+        if (!arguments.length) return _sortBy;
+        _sortBy = _;
+        return _chart;
     };
 
-    chart.order = function(_) {
-        if (!arguments.length) return order;
-        order = _;
-        return chart;
+    _chart.order = function(_) {
+        if (!arguments.length) return _order;
+        _order = _;
+        return _chart;
     };
 
-    return chart.anchor(selector);
+    return _chart.anchor(selector);
 };

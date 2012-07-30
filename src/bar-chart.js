@@ -1,4 +1,4 @@
-dc.barChart = function(parent) {
+dc.barChart = function(_parent) {
     var MIN_BAR_WIDTH = 1;
     var MIN_BAR_HEIGHT = 0;
     var BAR_PADDING_BOTTOM = 1;
@@ -18,35 +18,7 @@ dc.barChart = function(parent) {
         precalculateBarPosition(groups);
 
         for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
-            var group = groups[groupIndex];
-
-            var bars = _chart.g().selectAll("rect." + dc.constants.STACK_CLASS + groupIndex)
-                .data(group.all());
-
-            // new
-            bars.enter()
-                .append("rect")
-                .attr("class", "bar " + dc.constants.STACK_CLASS + groupIndex)
-                .attr("x", function(data, dataIndex){return barX(this, data, groupIndex, dataIndex);})
-                .attr("y", _chart.xAxisY())
-                .attr("width", barWidth);
-            dc.transition(bars, _chart.transitionDuration())
-                .attr("y", function(data, dataIndex) {
-                    return barY(this, data, dataIndex);
-                })
-                .attr("height", barHeight);
-
-            // update
-            dc.transition(bars, _chart.transitionDuration())
-                .attr("y", function(data, dataIndex) {
-                    return barY(this, data, dataIndex);
-                })
-                .attr("height", barHeight);
-
-            // delete
-            dc.transition(bars.exit(), _chart.transitionDuration())
-                .attr("y", _chart.xAxisY())
-                .attr("height", 0);
+            generateBarsPerGroup(groupIndex, groups[groupIndex]);
         }
     };
 
@@ -66,6 +38,38 @@ dc.barChart = function(parent) {
 
     function barBaseline() {
         return _chart.margins().top + _chart.yAxisHeight() - BAR_PADDING_BOTTOM;
+    }
+
+    function generateBarsPerGroup(groupIndex, group) {
+        var bars = _chart.g().selectAll("rect." + dc.constants.STACK_CLASS + groupIndex)
+            .data(group.all());
+
+        // new
+        bars.enter()
+            .append("rect")
+            .attr("class", "bar " + dc.constants.STACK_CLASS + groupIndex)
+            .attr("x", function(data, dataIndex) {
+                return barX(this, data, groupIndex, dataIndex);
+            })
+            .attr("y", _chart.xAxisY())
+            .attr("width", barWidth);
+        dc.transition(bars, _chart.transitionDuration())
+            .attr("y", function(data, dataIndex) {
+                return barY(this, data, dataIndex);
+            })
+            .attr("height", barHeight);
+
+        // update
+        dc.transition(bars, _chart.transitionDuration())
+            .attr("y", function(data, dataIndex) {
+                return barY(this, data, dataIndex);
+            })
+            .attr("height", barHeight);
+
+        // delete
+        dc.transition(bars.exit(), _chart.transitionDuration())
+            .attr("y", _chart.xAxisY())
+            .attr("height", 0);
     }
 
     function barWidth(d) {
@@ -90,9 +94,9 @@ dc.barChart = function(parent) {
 
     function barHeight(d) {
         var h = (_chart.yAxisHeight() - _chart.y()(_chart.valueRetriever()(d)) - BAR_PADDING_BOTTOM);
-	if ( isNaN(h) || h < MIN_BAR_HEIGHT )
-	    h = MIN_BAR_HEIGHT;
-	return h;
+        if (isNaN(h) || h < MIN_BAR_HEIGHT)
+            h = MIN_BAR_HEIGHT;
+        return h;
     }
 
     _chart.fadeDeselectedArea = function() {
@@ -158,5 +162,5 @@ dc.barChart = function(parent) {
         return max;
     };
 
-    return _chart.anchor(parent);
+    return _chart.anchor(_parent);
 };
