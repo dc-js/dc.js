@@ -119,13 +119,13 @@ dc.baseChart = function(chart) {
     };
 
     chart.turnOnControls = function() {
-        chart.select("a.reset").style("display", null);
-        chart.select(".filter").text(_filterPrinter(chart.filter())).style("display", null);
+        chart.selectAll(".reset").style("display", null);
+        chart.selectAll(".filter").text(_filterPrinter(chart.filter())).style("display", null);
     };
 
     chart.turnOffControls = function() {
-        chart.select("a.reset").style("display", "none");
-        chart.select(".filter").style("display", "none").text(chart.filter());
+        chart.selectAll(".reset").style("display", "none");
+        chart.selectAll(".filter").style("display", "none").text(chart.filter());
     };
 
     chart.transitionDuration = function(d) {
