@@ -194,6 +194,10 @@ suite.addBatch({'area chart':{
     },
     'area path should be generated':function(chart) {
         assert.equal(chart.selectAll("path.area")[0].length, 1)
+    },
+    'area path should be appended only once':function(chart) {
+        chart.redraw();
+        assert.equal(chart.selectAll("path.area")[0].length, 1)
     }
 }
 });

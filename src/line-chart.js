@@ -35,15 +35,19 @@ dc.lineChart = function(parent) {
             }).attr("d", line);
 
         if (_renderArea) {
+            var areaPath = _chart.g().selectAll("path.area");
+
+            if(areaPath.empty())
+                areaPath = _chart.g().append("path")
+                    .attr("class", "area")
+                    .attr("transform", translateByMargins);
+
             var area = d3.svg.area()
                 .x(line.x())
                 .y1(line.y())
                 .y0(_chart.y()(0) - AREA_BOTTOM_PADDING);
 
-            _chart.g().append("path")
-                .attr("class", "area")
-                .attr("transform", translateByMargins)
-                .attr("d", area);
+            areaPath.attr("d", area);
         }
     };
 
