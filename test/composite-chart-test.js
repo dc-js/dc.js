@@ -123,7 +123,7 @@ suite.addBatch({
             assert.equal(chart.selectAll("g.sub")[0].length, 3);
         },
         'sub line chart path generation': function(chart){
-            chart.selectAll("g.sub path").each(function(d, i){
+            chart.selectAll("g.sub path.line").each(function(d, i){
                 switch(i){
                     case 0:
                         assert.equal(d3.select(this).attr("d"), "M24.71264367816092,109L93.90804597701148,105L103.79310344827586,96L207.58620689655172,107L252.06896551724137,98L405.28735632183907,100");

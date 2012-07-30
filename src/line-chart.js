@@ -1,32 +1,54 @@
 dc.lineChart = function(parent) {
-    var chart = dc.coordinateGridChart({});
+    var AREA_BOTTOM_PADDING = 1;
 
-    chart.transitionDuration(500);
+    var _chart = dc.coordinateGridChart({});
 
-    chart.plotData = function() {
-        chart.g().datum(chart.group().all());
+    var _renderArea = false;
 
-        var path = chart.g().selectAll("path.line");
+    _chart.transitionDuration(500);
 
-        if (path.empty())
-            path = chart.g().append("path")
+    _chart.plotData = function() {
+        _chart.g().datum(_chart.group().all());
+
+        var linePath = _chart.g().selectAll("path.line");
+
+        if (linePath.empty())
+            linePath = _chart.g().append("path")
                 .attr("class", "line");
 
         var line = d3.svg.line()
             .x(function(d) {
-                return chart.x()(chart.keyRetriever()(d));
+                return _chart.x()(_chart.keyRetriever()(d));
             })
             .y(function(d) {
-                return chart.y()(chart.valueRetriever()(d));
+                return _chart.y()(_chart.valueRetriever()(d));
             });
 
-        path = path
-            .attr("transform", "translate(" + chart.margins().left + "," + chart.margins().top + ")");
+        var translateByMargins = "translate(" + _chart.margins().left + "," + _chart.margins().top + ")";
 
-        dc.transition(path, chart.transitionDuration(), function(t) {
+        linePath = linePath
+            .attr("transform", translateByMargins);
+
+        dc.transition(linePath, _chart.transitionDuration(), function(t) {
             t.ease("linear")
         }).attr("d", line);
+
+        var area = d3.svg.area()
+                .x(line.x())
+                .y1(line.y())
+                .y0(_chart.y()(0) - AREA_BOTTOM_PADDING);
+
+        _chart.g().append("path")
+            .attr("class", "area")
+            .attr("transform", translateByMargins)
+            .attr("d", area);
     };
 
-    return chart.anchor(parent);
+    _chart.renderArea = function(_){
+        if(!arguments.length) return _renderArea;
+        _renderArea = _;
+        return _chart;
+    };
+
+    return _chart.anchor(parent);
 };

@@ -23,7 +23,7 @@ function buildChart(id, xdomain) {
 suite.addBatch({
     'time line chart': {
         topic: function() {
-            var chart = buildChart("chart", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+            var chart = buildChart("line-chart", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
             chart.filter([new Date(2012, 5, 1), new Date(2012, 5, 30)]);
             chart.redraw();
             return chart;
@@ -111,11 +111,11 @@ suite.addBatch({
             chart.round(d3.time.day.round)
             assert.isNotNull(chart.round());
         },
-        'current filter should be set correctly': function(chart){
+        'current filter should be set correctly': function(chart) {
             assert.equal(chart.filter()[0].getTime(), new Date(2012, 5, 1).getTime());
             assert.equal(chart.filter()[1].getTime(), new Date(2012, 5, 30).getTime());
         },
-        'filter printer should be set': function(chart){
+        'filter printer should be set': function(chart) {
             assert.isNotNull(chart.filterPrinter());
         },
 
@@ -169,7 +169,7 @@ suite.addBatch({
 suite.addBatch({'elastic y':{
     topic: function(chart) {
         countryDimension.filter("CA")
-        var chart = buildChart("chart2", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+        var chart = buildChart("elastic-y-line-chart", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
         chart.render();
         return chart;
     },
@@ -181,5 +181,17 @@ suite.addBatch({'elastic y':{
         resetBody();
     }
 }});
+
+suite.addBatch({'area chart':{
+    topic:function() {
+        var chart = buildChart("area-chart", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+        chart.renderArea(true);
+        chart.render();
+        return chart;
+    },
+    'area path should be generated':function(chart) {
+    }
+}
+});
 
 suite.export(module);
