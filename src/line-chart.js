@@ -29,23 +29,26 @@ dc.lineChart = function(parent) {
         linePath = linePath
             .attr("transform", translateByMargins);
 
-        dc.transition(linePath, _chart.transitionDuration(), function(t) {
-            t.ease("linear")
-        }).attr("d", line);
+        dc.transition(linePath, _chart.transitionDuration(),
+            function(t) {
+                t.ease("linear")
+            }).attr("d", line);
 
-        var area = d3.svg.area()
+        if (_renderArea) {
+            var area = d3.svg.area()
                 .x(line.x())
                 .y1(line.y())
                 .y0(_chart.y()(0) - AREA_BOTTOM_PADDING);
 
-        _chart.g().append("path")
-            .attr("class", "area")
-            .attr("transform", translateByMargins)
-            .attr("d", area);
+            _chart.g().append("path")
+                .attr("class", "area")
+                .attr("transform", translateByMargins)
+                .attr("d", area);
+        }
     };
 
-    _chart.renderArea = function(_){
-        if(!arguments.length) return _renderArea;
+    _chart.renderArea = function(_) {
+        if (!arguments.length) return _renderArea;
         _renderArea = _;
         return _chart;
     };
