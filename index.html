@@ -73,7 +73,7 @@
 <h2>Nasdaq 100 Index 1985/11/01-2012/06/29</h2>
 
 <div id="yearly-bubble-chart" class="chart">
-    <span>Yearly Performance (x: index gain, y: index gain(%), radius: fluctuation/index ratio)</span>
+    <span class="title">Yearly Performance (x: index gain, y: index gain(%), radius: fluctuation/index ratio)</span>
     <a class="reset" href="javascript:yearlyBubbleChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
@@ -82,14 +82,14 @@
 <div class="clear"></div>
 
 <div id="gain-loss-chart" class="chart">
-    <span>Days by Gain or Loss</span>
+    <span class="title">Days by Gain or Loss</span>
     <a class="reset" href="javascript:gainOrLossChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
 </div>
 
 <div id="quarter-chart" class="chart">
-    <span>Quarters</span>
+    <span class="title">Quarters</span>
     <a class="reset" href="javascript:quarterChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
@@ -336,7 +336,7 @@ d3.csv("ndx.csv", function(data) {
                     .elasticY(true)
                     .compose([
                         dc.barChart(volumeMoveChart).group(volumeByMonthGroup),
-                        dc.lineChart(volumeMoveChart).group(monthlyMoveGroup)
+                        dc.lineChart(volumeMoveChart).group(monthlyMoveGroup).renderArea(true)
                     ]);
 
             dc.dataCount("#data-count")
