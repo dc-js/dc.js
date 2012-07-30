@@ -31,3 +31,8 @@ function printSingleValue(filter) {
 
     return s;
 }
+
+dc.constants = function(){};
+dc.constants.STACK_CLASS = "stack";
+dc.constants.DESELECTED_CLASS = "deselected";
+dc.constants.SELECTED_CLASS = "selected";

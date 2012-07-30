@@ -20,13 +20,13 @@ dc.barChart = function(parent) {
         for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
             var group = groups[groupIndex];
 
-            var bars = _chart.g().selectAll("rect.stack" + groupIndex)
+            var bars = _chart.g().selectAll("rect." + dc.constants.STACK_CLASS + groupIndex)
                 .data(group.all());
 
             // new
             bars.enter()
                 .append("rect")
-                .attr("class", "bar stack" + groupIndex)
+                .attr("class", "bar " + dc.constants.STACK_CLASS + groupIndex)
                 .attr("x", function(data, dataIndex){return barX(this, data, groupIndex, dataIndex);})
                 .attr("y", _chart.xAxisY())
                 .attr("width", barWidth);
@@ -90,7 +90,7 @@ dc.barChart = function(parent) {
 
     function barHeight(d) {
         var h = (_chart.yAxisHeight() - _chart.y()(_chart.valueRetriever()(d)) - BAR_PADDING_BOTTOM);
-	if ( isNaN(h) || h < MIN_BAR_HEIGHT ) 
+	if ( isNaN(h) || h < MIN_BAR_HEIGHT )
 	    h = MIN_BAR_HEIGHT;
 	return h;
     }
@@ -102,12 +102,12 @@ dc.barChart = function(parent) {
             var start = _chart.brush().extent()[0];
             var end = _chart.brush().extent()[1];
 
-            bars.classed("deselected", function(d) {
+            bars.classed(dc.constants.DESELECTED_CLASS, function(d) {
                 var xValue = _chart.keyRetriever()(d);
                 return xValue < start || xValue >= end;
             });
         } else {
-            bars.classed("deselected", false);
+            bars.classed(dc.constants.DESELECTED_CLASS, false);
         }
     };
 
