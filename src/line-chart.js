@@ -31,7 +31,7 @@ dc.lineChart = function(parent) {
 
         dc.transition(linePath, _chart.transitionDuration(),
             function(t) {
-                t.ease("linear")
+                t.ease("linear");
             }).attr("d", line);
 
         if (_renderArea) {
@@ -47,7 +47,9 @@ dc.lineChart = function(parent) {
                 .y1(line.y())
                 .y0(_chart.y()(0) - AREA_BOTTOM_PADDING);
 
-            areaPath.attr("d", area);
+            dc.transition(areaPath, _chart.transitionDuration(), function(t){
+                t.ease("linear");
+            }).attr("d", area);
         }
     };
 

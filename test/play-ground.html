@@ -234,6 +234,7 @@
             .x(d3.scale.linear().domain([10,80]))
             .xUnits(dc.units.integers)
             .elasticY(true)
+            .renderArea(true)
             .xAxis().ticks(5);
 
     var barChartDate = dc.barChart("#bar-chart-date");
