@@ -1,22 +1,22 @@
 dc.compositeChart = function(selector) {
     var SUB_CHART_G_CLASS = "sub";
 
-    var chart = dc.coordinateGridChart({});
+    var _chart = dc.coordinateGridChart({});
     var children = [];
 
-    chart.transitionDuration(500);
+    _chart.transitionDuration(500);
 
-    dc.override(chart, "generateG", function(_super) {
+    dc.override(_chart, "generateG", function(_super) {
         for (var i = 0; i < children.length; ++i) {
             var child = children[i];
-            if (child.dimension() == null) child.dimension(chart.dimension());
-            if (child.group() == null) child.group(chart.group());
-            child.svg(chart.svg());
-            child.height(chart.height());
-            child.width(chart.width());
-            child.margins(chart.margins());
-            child.xUnits(chart.xUnits());
-            child.transitionDuration(chart.transitionDuration());
+            if (child.dimension() == null) child.dimension(_chart.dimension());
+            if (child.group() == null) child.group(_chart.group());
+            child.svg(_chart.svg());
+            child.height(_chart.height());
+            child.width(_chart.width());
+            child.margins(_chart.margins());
+            child.xUnits(_chart.xUnits());
+            child.transitionDuration(_chart.transitionDuration());
             child.generateG();
             child.g().attr("class", "sub");
         }
@@ -24,31 +24,72 @@ dc.compositeChart = function(selector) {
         return _super();
     });
 
-    chart.plotData = function() {
+    _chart.plotData = function() {
         for (var i = 0; i < children.length; ++i) {
             var child = children[i];
-            child.x(chart.x());
-            child.y(chart.y());
-            child.xAxis(chart.xAxis());
-            child.yAxis(chart.yAxis());
+            child.x(_chart.x());
+            child.y(_chart.y());
+            child.xAxis(_chart.xAxis());
+            child.yAxis(_chart.yAxis());
 
             child.plotData();
         }
     };
 
-    chart.fadeDeselectedArea = function() {
+    _chart.fadeDeselectedArea = function() {
         for (var i = 0; i < children.length; ++i) {
             var child = children[i];
-            child.brush(chart.brush());
+            child.brush(_chart.brush());
 
             child.fadeDeselectedArea();
         }
     };
 
-    chart.compose = function(charts) {
+    _chart.compose = function(charts) {
         children = charts;
-        return chart;
+        return _chart;
     };
 
-    return chart.anchor(selector);
+    _chart.yAxisMin = function() {
+        var min = 0;
+        var allGroups = combineAllGroups();
+
+        for (var i = 0; i < allGroups.length; ++i) {
+            var group = allGroups[i];
+            var m = d3.min(group.all(), function(e) {
+                return _chart.valueRetriever()(e);
+            });
+            if (m < min) min = m;
+        }
+
+        return min;
+    };
+
+    _chart.yAxisMax = function() {
+        var max = 0;
+        var allGroups = combineAllGroups();
+
+        for (var i = 0; i < allGroups.length; ++i) {
+            var group = allGroups[i];
+            var m = d3.max(group.all(), function(e) {
+                return _chart.valueRetriever()(e);
+            });
+            if(m > max) max = m;
+        }
+
+        return max;
+    };
+
+    function combineAllGroups() {
+        var allGroups = [];
+
+        allGroups.push(_chart.group());
+
+        for (var i = 0; i < children.length; ++i)
+            allGroups.push(children[i].group());
+
+        return allGroups;
+    }
+
+    return _chart.anchor(selector);
 };

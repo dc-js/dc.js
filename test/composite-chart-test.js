@@ -13,15 +13,15 @@ function buildChart(id, xdomain) {
     var chart = dc.compositeChart("#" + id);
     chart
         .dimension(dateDimension)
-        .group(dateValueSumGroup)
+        .group(dateIdSumGroup)
         .width(width)
         .height(height)
         .x(d3.time.scale().domain(xdomain))
         .transitionDuration(0)
         .xUnits(d3.time.days)
         .compose([
-                dc.barChart(chart),
-                dc.lineChart(chart).group(dateIdSumGroup),
+                dc.barChart(chart).group(dateValueSumGroup),
+                dc.lineChart(chart),
                 dc.lineChart(chart).group(dateGroup)
             ]);
     chart.render();
@@ -49,7 +49,7 @@ suite.addBatch({
             assert.equal(chart.dimension(), dateDimension);
         },
         'group should be set': function(chart) {
-            assert.equal(chart.group(), dateValueSumGroup);
+            assert.equal(chart.group(), dateIdSumGroup);
         },
         'width should be set': function(chart) {
             assert.equal(chart.width(), width);
@@ -210,7 +210,7 @@ suite.addBatch({'elastic y':{
         chart.render();
         return chart;
     },
-    'y axis should have shrunk triggered by filter': function(chart) {
+    'y axis should have adjusted combining all child charts maxs & mins': function(chart) {
         assert.equal(chart.y().domain()[1], 55);
     },
     teardown: function(topic) {
