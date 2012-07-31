@@ -1,55 +1,77 @@
 dc.lineChart = function(parent) {
     var AREA_BOTTOM_PADDING = 1;
+    var MIN_BAR_HEIGHT = 0;
+    var BAR_PADDING_BOTTOM = 1;
+    var GROUP_INDEX_NAME = "__group_index__";
 
     var _chart = dc.coordinateGridChart({});
-
     var _renderArea = false;
+
+    var _stack = [];
+    var _dataPointMatrix = [];
 
     _chart.transitionDuration(500);
 
     _chart.plotData = function() {
-        _chart.g().datum(_chart.group().all());
+        var groups = _chart.allGroups();
 
-        var linePath = _chart.g().selectAll("path.line");
+        _chart.calculateDataPointMatrix(groups);
 
-        if (linePath.empty())
-            linePath = _chart.g().append("path")
-                .attr("class", "line");
+        for (var groupIndex = 0; groupIndex < groups.length; ++ groupIndex) {
+            var group = groups[groupIndex];
+            var stackedCssClass = dc.constants.STACK_CLASS + groupIndex;
+            var g = _chart.g().select("g." + stackedCssClass);
 
-        var line = d3.svg.line()
-            .x(function(d) {
-                return _chart.x()(_chart.keyRetriever()(d));
-            })
-            .y(function(d) {
-                return _chart.y()(_chart.valueRetriever()(d));
-            });
+            if (g.empty())
+                g = _chart.g().append("g").attr("class", stackedCssClass);
 
-        var translateByMargins = "translate(" + _chart.margins().left + "," + _chart.margins().top + ")";
+            g.datum(group.all());
 
-        linePath = linePath
-            .attr("transform", translateByMargins);
+            var linePath = g.select("path.line");
 
-        dc.transition(linePath, _chart.transitionDuration(),
-            function(t) {
-                t.ease("linear");
-            }).attr("d", line);
+            if (linePath.empty())
+                linePath = g.append("path")
+                    .attr("class", "line " + stackedCssClass);
 
-        if (_renderArea) {
-            var areaPath = _chart.g().selectAll("path.area");
+            linePath[0][0][GROUP_INDEX_NAME] = groupIndex;
 
-            if(areaPath.empty())
-                areaPath = _chart.g().append("path")
-                    .attr("class", "area")
-                    .attr("transform", translateByMargins);
+            var line = d3.svg.line()
+                .x(function(d) {
+                    return _chart.x()(_chart.keyRetriever()(d));
+                })
+                .y(function(d, dataIndex) {
+                    var groupIndex = this[GROUP_INDEX_NAME];
+                    return _dataPointMatrix[groupIndex][dataIndex];
+                });
 
-            var area = d3.svg.area()
-                .x(line.x())
-                .y1(line.y())
-                .y0(_chart.y()(0) - AREA_BOTTOM_PADDING);
+            dc.transition(linePath, _chart.transitionDuration(),
+                function(t) {
+                    t.ease("linear");
+                }).attr("d", line);
 
-            dc.transition(areaPath, _chart.transitionDuration(), function(t){
-                t.ease("linear");
-            }).attr("d", area);
+            if (_renderArea) {
+                var areaPath = g.selectAll("path.area");
+
+                if (areaPath.empty())
+                    areaPath = g.append("path")
+                        .attr("class", "area " + stackedCssClass);
+
+                areaPath[0][0][GROUP_INDEX_NAME] = groupIndex;
+
+                var area = d3.svg.area()
+                    .x(line.x())
+                    .y1(line.y())
+                    .y0(function(d, dataIndex) {
+                        var groupIndex = this[GROUP_INDEX_NAME];
+                        if (groupIndex == 0) return _chart.y()(0) - AREA_BOTTOM_PADDING + _chart.margins().top;
+                        return _dataPointMatrix[groupIndex - 1][dataIndex];
+                    });
+
+                dc.transition(areaPath, _chart.transitionDuration(),
+                    function(t) {
+                        t.ease("linear");
+                    }).attr("d", area);
+            }
         }
     };
 
@@ -57,6 +79,77 @@ dc.lineChart = function(parent) {
         if (!arguments.length) return _renderArea;
         _renderArea = _;
         return _chart;
+    };
+
+    _chart.stack = function(_) {
+        if (!arguments.length) return _stack;
+        _stack = _;
+        return _chart;
+    };
+
+    _chart.allGroups = function() {
+        var allGroups = [];
+
+        allGroups.push(_chart.group());
+
+        for (var i = 0; i < _chart.stack().length; ++i)
+            allGroups.push(_chart.stack()[i]);
+
+        return allGroups;
+    };
+
+    _chart.yAxisMin = function() {
+        var min = 0;
+        var allGroups = _chart.allGroups();
+
+        for (var i = 0; i < allGroups.length; ++i) {
+            var group = allGroups[i];
+            var m = d3.min(group.all(), function(e) {
+                return _chart.valueRetriever()(e);
+            });
+            if (m < min) min = m;
+        }
+
+        return min;
+    };
+
+    _chart.yAxisMax = function() {
+        var max = 0;
+        var allGroups = _chart.allGroups();
+
+        for (var i = 0; i < allGroups.length; ++i) {
+            var group = allGroups[i];
+            max += d3.max(group.all(), function(e) {
+                return _chart.valueRetriever()(e);
+            });
+        }
+
+        return max;
+    };
+
+    _chart.calculateDataPointMatrix = function(groups) {
+        for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
+            var data = groups[groupIndex].all();
+            _dataPointMatrix[groupIndex] = [];
+            for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
+                var d = data[dataIndex];
+                if (groupIndex == 0)
+                    _dataPointMatrix[groupIndex][dataIndex] = _chart.dataPointBaseline() - _chart.dataPointHeight(d);
+                else
+                    _dataPointMatrix[groupIndex][dataIndex] = _dataPointMatrix[groupIndex - 1][dataIndex] - _chart.dataPointHeight(d);
+            }
+        }
+    }
+
+    _chart.dataPointBaseline = function() {
+        return _chart.margins().top + _chart.yAxisHeight() - BAR_PADDING_BOTTOM;
+    };
+
+    _chart.dataPointHeight = function(d) {
+        var h = (_chart.yAxisHeight() - _chart.y()(_chart.valueRetriever()(d)) - BAR_PADDING_BOTTOM);
+        if (isNaN(h) || h < MIN_BAR_HEIGHT)
+            h = MIN_BAR_HEIGHT;
+        return h;
     };
 
     return _chart.anchor(parent);

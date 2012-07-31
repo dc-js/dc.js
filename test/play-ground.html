@@ -19,17 +19,17 @@
             float: left;
         }
 
-        .chart .bar {
+        .chart rect.bar {
             stroke: none;
             fill: steelblue;
         }
 
-        .chart .stack1{
+        .chart rect.stack1{
             stroke: none;
             fill: red;
         }
 
-        .chart .stack2{
+        .chart rect.stack2{
             stroke: none;
             fill: green;
         }
@@ -83,15 +83,32 @@
             stroke: #666;
         }
 
-        .line {
+        .chart path.line {
             fill: none;
             stroke: steelblue;
             stroke-width: 1.5px;
         }
 
-        .area{
+        .chart g.stack1 path.line{
+            stroke: red;
+        }
+
+        .chart g.stack2 path.line{
+            stroke: green;
+        }
+
+        .chart path.area{
             fill: steelblue;
             fill-opacity: .3;
+            stroke: none;
+        }
+
+        .chart g.stack1 path.area{
+            fill: red;
+        }
+
+        .chart g.stack2 path.area{
+            fill: green;
         }
 
         .node {
@@ -223,10 +240,11 @@
     var lineChartDate1 = dc.lineChart("#line-chart-date");
     lineChartDate1.width(500)
             .height(150)
-            .dimension(valueDimension)
-            .group(valueGroup)
-            .x(d3.scale.linear().domain([10,80]))
-            .xUnits(dc.units.integers)
+            .dimension(dateDimension)
+            .group(dateIdSumGroup)
+            .stack([dateValueSumGroup, dateValueSumGroup])
+            .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
+            .xUnits(d3.time.days)
             .elasticY(true)
             .renderArea(true)
             .xAxis().ticks(5);

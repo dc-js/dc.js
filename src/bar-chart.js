@@ -6,39 +6,46 @@ dc.barChart = function(_parent) {
     var GROUP_INDEX_NAME = "__group_index__";
 
     var _stack = [];
-    var _barPositionMatrix = [];
+    var _dataPointMatrix = [];
 
     var _chart = dc.coordinateGridChart({});
 
     _chart.transitionDuration(500);
 
     _chart.plotData = function() {
-        var groups = combineAllGroups();
+        var groups = _chart.allGroups();
 
-        precalculateBarPosition(groups);
+        _chart.calculateDataPointMatrix(groups);
 
         for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
             generateBarsPerGroup(groupIndex, groups[groupIndex]);
         }
     };
 
-    function precalculateBarPosition(groups) {
+    _chart.calculateDataPointMatrix = function(groups) {
         for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
             var data = groups[groupIndex].all();
-            _barPositionMatrix[groupIndex] = [];
+            _dataPointMatrix[groupIndex] = [];
             for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
                 var d = data[dataIndex];
                 if (groupIndex == 0)
-                    _barPositionMatrix[groupIndex][dataIndex] = barBaseline() - barHeight(d);
+                    _dataPointMatrix[groupIndex][dataIndex] = _chart.dataPointBaseline() - _chart.dataPointHeight(d);
                 else
-                    _barPositionMatrix[groupIndex][dataIndex] = _barPositionMatrix[groupIndex - 1][dataIndex] - barHeight(d);
+                    _dataPointMatrix[groupIndex][dataIndex] = _dataPointMatrix[groupIndex - 1][dataIndex] - _chart.dataPointHeight(d);
             }
         }
     }
 
-    function barBaseline() {
+    _chart.dataPointBaseline = function() {
         return _chart.margins().top + _chart.yAxisHeight() - BAR_PADDING_BOTTOM;
-    }
+    };
+
+    _chart.dataPointHeight = function(d) {
+        var h = (_chart.yAxisHeight() - _chart.y()(_chart.valueRetriever()(d)) - BAR_PADDING_BOTTOM);
+        if (isNaN(h) || h < MIN_BAR_HEIGHT)
+            h = MIN_BAR_HEIGHT;
+        return h;
+    };
 
     function generateBarsPerGroup(groupIndex, group) {
         var bars = _chart.g().selectAll("rect." + dc.constants.STACK_CLASS + groupIndex)
@@ -57,14 +64,14 @@ dc.barChart = function(_parent) {
             .attr("y", function(data, dataIndex) {
                 return barY(this, data, dataIndex);
             })
-            .attr("height", barHeight);
+            .attr("height", _chart.dataPointHeight);
 
         // update
         dc.transition(bars, _chart.transitionDuration())
             .attr("y", function(data, dataIndex) {
                 return barY(this, data, dataIndex);
             })
-            .attr("height", barHeight);
+            .attr("height", _chart.dataPointHeight);
 
         // delete
         dc.transition(bars.exit(), _chart.transitionDuration())
@@ -89,14 +96,7 @@ dc.barChart = function(_parent) {
     function barY(bar, data, dataIndex) {
         // cached group index can then be safely retrieved from bar wo/ worrying about transition
         var groupIndex = bar[GROUP_INDEX_NAME];
-        return _barPositionMatrix[groupIndex][dataIndex];
-    }
-
-    function barHeight(d) {
-        var h = (_chart.yAxisHeight() - _chart.y()(_chart.valueRetriever()(d)) - BAR_PADDING_BOTTOM);
-        if (isNaN(h) || h < MIN_BAR_HEIGHT)
-            h = MIN_BAR_HEIGHT;
-        return h;
+        return _dataPointMatrix[groupIndex][dataIndex];
     }
 
     _chart.fadeDeselectedArea = function() {
@@ -121,8 +121,7 @@ dc.barChart = function(_parent) {
         return _chart;
     };
 
-    // override y axis domain calculation to include stacked groups
-    function combineAllGroups() {
+    _chart.allGroups = function() {
         var allGroups = [];
 
         allGroups.push(_chart.group());
@@ -131,11 +130,11 @@ dc.barChart = function(_parent) {
             allGroups.push(_chart.stack()[i]);
 
         return allGroups;
-    }
+    };
 
     _chart.yAxisMin = function() {
         var min = 0;
-        var allGroups = combineAllGroups();
+        var allGroups = _chart.allGroups();
 
         for (var i = 0; i < allGroups.length; ++i) {
             var group = allGroups[i];
@@ -150,7 +149,7 @@ dc.barChart = function(_parent) {
 
     _chart.yAxisMax = function() {
         var max = 0;
-        var allGroups = combineAllGroups();
+        var allGroups = _chart.allGroups();
 
         for (var i = 0; i < allGroups.length; ++i) {
             var group = allGroups[i];
