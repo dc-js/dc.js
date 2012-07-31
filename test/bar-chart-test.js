@@ -302,6 +302,35 @@ suite.addBatch({'stacked':{
     }
 }});
 
+suite.addBatch({'stacked with custom value retriever':{
+    topic:function() {
+        var chart = buildChart("bar-chart-stack", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+        chart.group(dateIdSumGroup)
+        chart.stack([[dateValueSumGroup, function(d){return 0;}]]).elasticY(true);
+        chart.render();
+        return chart;
+    },
+    'y axis domain should encampass all groups in stack':function(chart) {
+        var yDomain = chart.y().domain();
+        assert.equal(yDomain[0], 0);
+        assert.equal(yDomain[1], 149);
+    },
+    'bar should be generated from all groups':function(chart) {
+        assert.equal(chart.selectAll("rect.stack0")[0].length, 6);
+        assert.equal(chart.selectAll("rect.stack1")[0].length, 6);
+    },
+    'bar should be stacked':function(chart) {
+        assert.equal(d3.select(chart.selectAll("rect.stack0")[0][2]).attr("y"), 152);
+        assert.equal(d3.select(chart.selectAll("rect.stack0")[0][4]).attr("y"), 154);
+        assert.equal(d3.select(chart.selectAll("rect.stack1")[0][2]).attr("y"), 11);
+        assert.equal(d3.select(chart.selectAll("rect.stack1")[0][4]).attr("y"), 96);
+    },
+    teardown: function(topic) {
+        resetAllFilters();
+        resetBody();
+    }
+}});
+
 suite.export(module);
 
 

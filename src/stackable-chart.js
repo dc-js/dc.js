@@ -2,13 +2,29 @@ dc.stackableChart = function(_chart) {
     var MIN_DATA_POINT_HEIGHT = 0;
     var DATA_POINT_PADDING_BOTTOM = 1;
 
-    var _stack = [];
+    var _groupStack = [];
+    var _valueRetrieverStack = [];
     var _dataPointMatrix = [];
 
     _chart.stack = function(_) {
-        if (!arguments.length) return _stack;
-        _stack = _;
-        return _chart;
+        if (!arguments.length) {
+            var stack = [];
+            for (var i = 0; i < _groupStack.length; i++) {
+                stack.push([_groupStack[i], _valueRetrieverStack[i]]);
+            }
+            return stack;
+        } else {
+            for (var i = 0; i < _.length; ++i) {
+                if (Array.isArray(_[i])) {
+                    _groupStack[i] = _[i][0];
+                    _valueRetrieverStack[i] = _[i][1];
+                } else {
+                    _groupStack[i] = _[i];
+                    _valueRetrieverStack[i] = _chart.valueRetriever();
+                }
+            }
+            return _chart;
+        }
     };
 
     _chart.allGroups = function() {
@@ -16,8 +32,8 @@ dc.stackableChart = function(_chart) {
 
         allGroups.push(_chart.group());
 
-        for (var i = 0; i < _chart.stack().length; ++i)
-            allGroups.push(_chart.stack()[i]);
+        for (var i = 0; i < _groupStack.length; ++i)
+            allGroups.push(_groupStack[i]);
 
         return allGroups;
     };
@@ -76,8 +92,8 @@ dc.stackableChart = function(_chart) {
         }
     };
 
-    _chart.dataPointMatrix = function(_){
-        if(!arguments.length) return _dataPointMatrix;
+    _chart.dataPointMatrix = function(_) {
+        if (!arguments.length) return _dataPointMatrix;
         _dataPointMatrix = _;
         return _chart;
     };
