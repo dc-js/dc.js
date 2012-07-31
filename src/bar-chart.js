@@ -5,10 +5,9 @@ dc.barChart = function(_parent) {
     var BAR_PADDING_WIDTH = 2;
     var GROUP_INDEX_NAME = "__group_index__";
 
-    var _stack = [];
     var _dataPointMatrix = [];
 
-    var _chart = dc.coordinateGridChart({});
+    var _chart = dc.stackableChart(dc.coordinateGridChart({}));
 
     _chart.transitionDuration(500);
 
@@ -113,12 +112,6 @@ dc.barChart = function(_parent) {
         } else {
             bars.classed(dc.constants.DESELECTED_CLASS, false);
         }
-    };
-
-    _chart.stack = function(_) {
-        if (!arguments.length) return _stack;
-        _stack = _;
-        return _chart;
     };
 
     _chart.allGroups = function() {

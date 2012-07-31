@@ -4,10 +4,9 @@ dc.lineChart = function(parent) {
     var BAR_PADDING_BOTTOM = 1;
     var GROUP_INDEX_NAME = "__group_index__";
 
-    var _chart = dc.coordinateGridChart({});
+    var _chart = dc.stackableChart(dc.coordinateGridChart({}));
     var _renderArea = false;
 
-    var _stack = [];
     var _dataPointMatrix = [];
 
     _chart.transitionDuration(500);
@@ -78,12 +77,6 @@ dc.lineChart = function(parent) {
     _chart.renderArea = function(_) {
         if (!arguments.length) return _renderArea;
         _renderArea = _;
-        return _chart;
-    };
-
-    _chart.stack = function(_) {
-        if (!arguments.length) return _stack;
-        _stack = _;
         return _chart;
     };
 

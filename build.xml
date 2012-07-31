@@ -31,6 +31,7 @@
             <file file="src/coordinate-grid-chart.js"/>
             <file file="src/color-chart.js"/>
             <file file="src/single-selection-chart.js"/>
+            <file file="src/stackable-chart.js"/>
             <file file="src/pie-chart.js"/>
             <file file="src/bar-chart.js"/>
             <file file="src/line-chart.js"/>
