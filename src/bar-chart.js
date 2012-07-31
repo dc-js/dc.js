@@ -1,7 +1,6 @@
 dc.barChart = function(_parent) {
     var MIN_BAR_WIDTH = 1;
     var BAR_PADDING_WIDTH = 2;
-    var GROUP_INDEX_NAME = "__group_index__";
 
     var _chart = dc.stackableChart(dc.coordinateGridChart({}));
 
@@ -59,13 +58,13 @@ dc.barChart = function(_parent) {
 
     function barX(bar, data, groupIndex, dataIndex) {
         // cache group index in each individual bar to avoid timing issue introduced by transition
-        bar[GROUP_INDEX_NAME] = groupIndex;
+        bar[dc.constants.GROUP_INDEX_NAME] = groupIndex;
         return _chart.x()(_chart.keyRetriever()(data)) + _chart.margins().left;
     }
 
     function barY(bar, data, dataIndex) {
         // cached group index can then be safely retrieved from bar wo/ worrying about transition
-        var groupIndex = bar[GROUP_INDEX_NAME];
+        var groupIndex = bar[dc.constants.GROUP_INDEX_NAME];
         return _chart.dataPointMatrix()[groupIndex][dataIndex];
     }
 

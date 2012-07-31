@@ -1,6 +1,5 @@
 dc.lineChart = function(parent) {
     var AREA_BOTTOM_PADDING = 1;
-    var GROUP_INDEX_NAME = "__group_index__";
 
     var _chart = dc.stackableChart(dc.coordinateGridChart({}));
     var _renderArea = false;
@@ -28,14 +27,14 @@ dc.lineChart = function(parent) {
                 linePath = g.append("path")
                     .attr("class", "line " + stackedCssClass);
 
-            linePath[0][0][GROUP_INDEX_NAME] = groupIndex;
+            linePath[0][0][dc.constants.GROUP_INDEX_NAME] = groupIndex;
 
             var line = d3.svg.line()
                 .x(function(d) {
                     return _chart.margins().left + _chart.x()(_chart.keyRetriever()(d));
                 })
                 .y(function(d, dataIndex) {
-                    var groupIndex = this[GROUP_INDEX_NAME];
+                    var groupIndex = this[dc.constants.GROUP_INDEX_NAME];
                     return _chart.dataPointMatrix()[groupIndex][dataIndex];
                 });
 
@@ -51,13 +50,13 @@ dc.lineChart = function(parent) {
                     areaPath = g.append("path")
                         .attr("class", "area " + stackedCssClass);
 
-                areaPath[0][0][GROUP_INDEX_NAME] = groupIndex;
+                areaPath[0][0][dc.constants.GROUP_INDEX_NAME] = groupIndex;
 
                 var area = d3.svg.area()
                     .x(line.x())
                     .y1(line.y())
                     .y0(function(d, dataIndex) {
-                        var groupIndex = this[GROUP_INDEX_NAME];
+                        var groupIndex = this[dc.constants.GROUP_INDEX_NAME];
                         if (groupIndex == 0) return _chart.y()(0) - AREA_BOTTOM_PADDING + _chart.margins().top;
                         return _chart.dataPointMatrix()[groupIndex - 1][dataIndex];
                     });

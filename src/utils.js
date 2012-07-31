@@ -36,3 +36,4 @@ dc.constants = function(){};
 dc.constants.STACK_CLASS = "stack";
 dc.constants.DESELECTED_CLASS = "deselected";
 dc.constants.SELECTED_CLASS = "selected";
+dc.constants.GROUP_INDEX_NAME = "__group_index__";
