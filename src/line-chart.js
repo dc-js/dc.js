@@ -37,7 +37,7 @@ dc.lineChart = function(parent) {
 
             var line = d3.svg.line()
                 .x(function(d) {
-                    return _chart.x()(_chart.keyRetriever()(d));
+                    return _chart.margins().left + _chart.x()(_chart.keyRetriever()(d));
                 })
                 .y(function(d, dataIndex) {
                     var groupIndex = this[GROUP_INDEX_NAME];

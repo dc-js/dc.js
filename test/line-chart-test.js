@@ -144,7 +144,7 @@ suite.addBatch({
                 assert.equal(chart.select("g.brush rect.extent").attr("width"), 82);
             },
             'path rendering': function(chart) {
-                assert.equal(chart.select("path.line").attr("d"), "M409.060502283105,107L448.5673515981735,107L454.21118721461187,0L513.4714611872146,107L538.8687214611872,53L626.3481735159817,53");
+                assert.equal(chart.select("path.line").attr("d"), "M429.060502283105,117L468.5673515981735,117L474.21118721461187,10L533.4714611872146,117L558.8687214611872,63L646.3481735159817,63");
             },
             'area path should not be there':function(chart) {
                 assert.equal(chart.selectAll("path.area")[0].length, 0)
@@ -201,5 +201,21 @@ suite.addBatch({'area chart':{
     }
 }
 });
+
+suite.addBatch({'stacked area chart':{
+    topic: function(){
+        var chart = buildChart("stacked-area-chart", [new Date(2012, 4, 20), new Date(2012, 07, 15)]);
+        chart.dimension(dateDimension)
+            .group(dateIdSumGroup)
+            .stack([dateValueSumGroup, dateValueSumGroup])
+            .elasticY(true)
+            .renderArea(true)
+        chart.render();
+        return chart;
+    },
+    'right number of lines should be rendered': function(chart){
+        assert.equal(jQuery("#stacked-area-chart path.line").size(), 3);
+    }
+}});
 
 suite.export(module);
