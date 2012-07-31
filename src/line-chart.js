@@ -80,46 +80,6 @@ dc.lineChart = function(parent) {
         return _chart;
     };
 
-    _chart.allGroups = function() {
-        var allGroups = [];
-
-        allGroups.push(_chart.group());
-
-        for (var i = 0; i < _chart.stack().length; ++i)
-            allGroups.push(_chart.stack()[i]);
-
-        return allGroups;
-    };
-
-    _chart.yAxisMin = function() {
-        var min = 0;
-        var allGroups = _chart.allGroups();
-
-        for (var i = 0; i < allGroups.length; ++i) {
-            var group = allGroups[i];
-            var m = d3.min(group.all(), function(e) {
-                return _chart.valueRetriever()(e);
-            });
-            if (m < min) min = m;
-        }
-
-        return min;
-    };
-
-    _chart.yAxisMax = function() {
-        var max = 0;
-        var allGroups = _chart.allGroups();
-
-        for (var i = 0; i < allGroups.length; ++i) {
-            var group = allGroups[i];
-            max += d3.max(group.all(), function(e) {
-                return _chart.valueRetriever()(e);
-            });
-        }
-
-        return max;
-    };
-
     _chart.calculateDataPointMatrix = function(groups) {
         for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
             var data = groups[groupIndex].all();
@@ -132,7 +92,7 @@ dc.lineChart = function(parent) {
                     _dataPointMatrix[groupIndex][dataIndex] = _dataPointMatrix[groupIndex - 1][dataIndex] - _chart.dataPointHeight(d);
             }
         }
-    }
+    };
 
     _chart.dataPointBaseline = function() {
         return _chart.margins().top + _chart.yAxisHeight() - BAR_PADDING_BOTTOM;
