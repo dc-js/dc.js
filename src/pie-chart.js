@@ -1,4 +1,4 @@
-dc.pieChart = function(selector) {
+dc.pieChart = function(_parent) {
     var _sliceCssClass = "pie-slice";
 
     var _radius = 0, _innerRadius = 0;
@@ -202,5 +202,5 @@ dc.pieChart = function(selector) {
         dc.redrawAll();
     }
 
-    return _chart.anchor(selector);
+    return _chart.anchor(_parent);
 };

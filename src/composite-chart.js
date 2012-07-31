@@ -1,5 +1,5 @@
-dc.compositeChart = function(selector) {
-    var SUB_CHART_G_CLASS = "sub";
+dc.compositeChart = function(_parent) {
+    var SUB_CHART_CLASS = "sub";
 
     var _chart = dc.coordinateGridChart({});
     var _children = [];
@@ -18,7 +18,7 @@ dc.compositeChart = function(selector) {
             child.xUnits(_chart.xUnits());
             child.transitionDuration(_chart.transitionDuration());
             child.generateG();
-            child.g().attr("class", "sub");
+            child.g().attr("class", SUB_CHART_CLASS);
         }
 
         return _super();
@@ -91,5 +91,5 @@ dc.compositeChart = function(selector) {
         return allGroups;
     }
 
-    return _chart.anchor(selector);
+    return _chart.anchor(_parent);
 };

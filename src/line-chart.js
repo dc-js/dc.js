@@ -1,4 +1,4 @@
-dc.lineChart = function(parent) {
+dc.lineChart = function(_parent) {
     var AREA_BOTTOM_PADDING = 1;
 
     var _chart = dc.stackableChart(dc.coordinateGridChart({}));
@@ -97,5 +97,5 @@ dc.lineChart = function(parent) {
         return _chart;
     };
 
-    return _chart.anchor(parent);
+    return _chart.anchor(_parent);
 };

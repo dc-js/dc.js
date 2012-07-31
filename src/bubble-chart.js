@@ -1,4 +1,4 @@
-dc.bubbleChart = function(selector) {
+dc.bubbleChart = function(_parent) {
     var NODE_CLASS = "node";
     var BUBBLE_CLASS = "bubble";
     var MIN_RADIUS = 10;
@@ -172,5 +172,5 @@ dc.bubbleChart = function(selector) {
         return _chart;
     };
 
-    return _chart.anchor(selector);
+    return _chart.anchor(_parent);
 };

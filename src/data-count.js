@@ -1,4 +1,4 @@
-dc.dataCount = function(selector) {
+dc.dataCount = function(_parent) {
     var _formatNumber = d3.format(",d");
     var _chart = dc.baseChart({});
 
@@ -13,5 +13,5 @@ dc.dataCount = function(selector) {
         return _chart.render();
     };
 
-    return _chart.anchor(selector);
+    return _chart.anchor(_parent);
 };
