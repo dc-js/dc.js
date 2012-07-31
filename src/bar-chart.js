@@ -1,7 +1,5 @@
 dc.barChart = function(_parent) {
     var MIN_BAR_WIDTH = 1;
-    var MIN_BAR_HEIGHT = 0;
-    var BAR_PADDING_BOTTOM = 1;
     var BAR_PADDING_WIDTH = 2;
     var GROUP_INDEX_NAME = "__group_index__";
 
@@ -33,17 +31,6 @@ dc.barChart = function(_parent) {
                     _dataPointMatrix[groupIndex][dataIndex] = _dataPointMatrix[groupIndex - 1][dataIndex] - _chart.dataPointHeight(d);
             }
         }
-    };
-
-    _chart.dataPointBaseline = function() {
-        return _chart.margins().top + _chart.yAxisHeight() - BAR_PADDING_BOTTOM;
-    };
-
-    _chart.dataPointHeight = function(d) {
-        var h = (_chart.yAxisHeight() - _chart.y()(_chart.valueRetriever()(d)) - BAR_PADDING_BOTTOM);
-        if (isNaN(h) || h < MIN_BAR_HEIGHT)
-            h = MIN_BAR_HEIGHT;
-        return h;
     };
 
     function generateBarsPerGroup(groupIndex, group) {
