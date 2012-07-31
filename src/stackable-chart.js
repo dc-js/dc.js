@@ -1,6 +1,6 @@
 dc.stackableChart = function(_chart) {
-    var MIN_BAR_HEIGHT = 0;
-    var BAR_PADDING_BOTTOM = 1;
+    var MIN_DATA_POINT_HEIGHT = 0;
+    var DATA_POINT_PADDING_BOTTOM = 1;
 
     var _stack = [];
     var _dataPointMatrix = [];
@@ -52,13 +52,13 @@ dc.stackableChart = function(_chart) {
     };
 
     _chart.dataPointBaseline = function() {
-        return _chart.margins().top + _chart.yAxisHeight() - BAR_PADDING_BOTTOM;
+        return _chart.margins().top + _chart.yAxisHeight() - DATA_POINT_PADDING_BOTTOM;
     };
 
     _chart.dataPointHeight = function(d) {
-        var h = (_chart.yAxisHeight() - _chart.y()(_chart.valueRetriever()(d)) - BAR_PADDING_BOTTOM);
-        if (isNaN(h) || h < MIN_BAR_HEIGHT)
-            h = MIN_BAR_HEIGHT;
+        var h = (_chart.yAxisHeight() - _chart.y()(_chart.valueRetriever()(d)) - DATA_POINT_PADDING_BOTTOM);
+        if (isNaN(h) || h < MIN_DATA_POINT_HEIGHT)
+            h = MIN_DATA_POINT_HEIGHT;
         return h;
     };
 
