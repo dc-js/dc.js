@@ -215,6 +215,15 @@ suite.addBatch({'stacked area chart':{
     },
     'right number of lines should be rendered': function(chart){
         assert.equal(jQuery("#stacked-area-chart path.line").size(), 3);
+    },
+    'correctly draw stack 0 line': function(chart){
+        assert.equal(jQuery("#stacked-area-chart g.stack0 path.line").attr("d"), "M79.19540229885058,169L244.94252873563218,167L268.6206896551724,160L517.2413793103448,168L623.7931034482758,161L990.8045977011494,163");
+    },
+    'correctly draw stack 1 line': function(chart){
+        assert.equal(jQuery("#stacked-area-chart g.stack1 path.line").attr("d"), "M79.19540229885058,145L244.94252873563218,130L268.6206896551724,86L517.2413793103448,144L623.7931034482758,131L990.8045977011494,120");
+    },
+    'correctly draw stack 2 line': function(chart){
+        assert.equal(jQuery("#stacked-area-chart g.stack2 path.line").attr("d"), "M79.19540229885058,121L244.94252873563218,93L268.6206896551724,12L517.2413793103448,120L623.7931034482758,101L990.8045977011494,77");
     }
 }});
 
