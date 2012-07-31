@@ -79,7 +79,7 @@ dc.stackableChart = function(_chart) {
     _chart.dataPointMatrix = function(_){
         if(!arguments.length) return _dataPointMatrix;
         _dataPointMatrix = _;
-        return chart;
+        return _chart;
     };
 
     return _chart;
