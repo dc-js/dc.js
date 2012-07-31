@@ -5,8 +5,6 @@ dc.lineChart = function(parent) {
     var _chart = dc.stackableChart(dc.coordinateGridChart({}));
     var _renderArea = false;
 
-    var _dataPointMatrix = [];
-
     _chart.transitionDuration(500);
 
     _chart.plotData = function() {
@@ -38,7 +36,7 @@ dc.lineChart = function(parent) {
                 })
                 .y(function(d, dataIndex) {
                     var groupIndex = this[GROUP_INDEX_NAME];
-                    return _dataPointMatrix[groupIndex][dataIndex];
+                    return _chart.dataPointMatrix()[groupIndex][dataIndex];
                 });
 
             dc.transition(linePath, _chart.transitionDuration(),
@@ -61,7 +59,7 @@ dc.lineChart = function(parent) {
                     .y0(function(d, dataIndex) {
                         var groupIndex = this[GROUP_INDEX_NAME];
                         if (groupIndex == 0) return _chart.y()(0) - AREA_BOTTOM_PADDING + _chart.margins().top;
-                        return _dataPointMatrix[groupIndex - 1][dataIndex];
+                        return _chart.dataPointMatrix()[groupIndex - 1][dataIndex];
                     });
 
                 dc.transition(areaPath, _chart.transitionDuration(),
@@ -76,20 +74,6 @@ dc.lineChart = function(parent) {
         if (!arguments.length) return _renderArea;
         _renderArea = _;
         return _chart;
-    };
-
-    _chart.calculateDataPointMatrix = function(groups) {
-        for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
-            var data = groups[groupIndex].all();
-            _dataPointMatrix[groupIndex] = [];
-            for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
-                var d = data[dataIndex];
-                if (groupIndex == 0)
-                    _dataPointMatrix[groupIndex][dataIndex] = _chart.dataPointBaseline() - _chart.dataPointHeight(d);
-                else
-                    _dataPointMatrix[groupIndex][dataIndex] = _dataPointMatrix[groupIndex - 1][dataIndex] - _chart.dataPointHeight(d);
-            }
-        }
     };
 
     return _chart.anchor(parent);

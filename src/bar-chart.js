@@ -3,8 +3,6 @@ dc.barChart = function(_parent) {
     var BAR_PADDING_WIDTH = 2;
     var GROUP_INDEX_NAME = "__group_index__";
 
-    var _dataPointMatrix = [];
-
     var _chart = dc.stackableChart(dc.coordinateGridChart({}));
 
     _chart.transitionDuration(500);
@@ -16,20 +14,6 @@ dc.barChart = function(_parent) {
 
         for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
             generateBarsPerGroup(groupIndex, groups[groupIndex]);
-        }
-    };
-
-    _chart.calculateDataPointMatrix = function(groups) {
-        for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
-            var data = groups[groupIndex].all();
-            _dataPointMatrix[groupIndex] = [];
-            for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
-                var d = data[dataIndex];
-                if (groupIndex == 0)
-                    _dataPointMatrix[groupIndex][dataIndex] = _chart.dataPointBaseline() - _chart.dataPointHeight(d);
-                else
-                    _dataPointMatrix[groupIndex][dataIndex] = _dataPointMatrix[groupIndex - 1][dataIndex] - _chart.dataPointHeight(d);
-            }
         }
     };
 
@@ -82,7 +66,7 @@ dc.barChart = function(_parent) {
     function barY(bar, data, dataIndex) {
         // cached group index can then be safely retrieved from bar wo/ worrying about transition
         var groupIndex = bar[GROUP_INDEX_NAME];
-        return _dataPointMatrix[groupIndex][dataIndex];
+        return _chart.dataPointMatrix()[groupIndex][dataIndex];
     }
 
     _chart.fadeDeselectedArea = function() {

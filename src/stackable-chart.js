@@ -3,6 +3,7 @@ dc.stackableChart = function(_chart) {
     var BAR_PADDING_BOTTOM = 1;
 
     var _stack = [];
+    var _dataPointMatrix = [];
 
     _chart.stack = function(_) {
         if (!arguments.length) return _stack;
@@ -59,6 +60,26 @@ dc.stackableChart = function(_chart) {
         if (isNaN(h) || h < MIN_BAR_HEIGHT)
             h = MIN_BAR_HEIGHT;
         return h;
+    };
+
+    _chart.calculateDataPointMatrix = function(groups) {
+        for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
+            var data = groups[groupIndex].all();
+            _dataPointMatrix[groupIndex] = [];
+            for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
+                var d = data[dataIndex];
+                if (groupIndex == 0)
+                    _dataPointMatrix[groupIndex][dataIndex] = _chart.dataPointBaseline() - _chart.dataPointHeight(d);
+                else
+                    _dataPointMatrix[groupIndex][dataIndex] = _dataPointMatrix[groupIndex - 1][dataIndex] - _chart.dataPointHeight(d);
+            }
+        }
+    };
+
+    _chart.dataPointMatrix = function(_){
+        if(!arguments.length) return _dataPointMatrix;
+        _dataPointMatrix = _;
+        return chart;
     };
 
     return _chart;
