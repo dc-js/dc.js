@@ -139,7 +139,7 @@ suite.addBatch({
             assert.equal(o.foo(), "foo");
         },
         'should expose existing function':function(o){
-            dc.override(o, "foo", function(_){return _() + "2";});
+            dc.override(o, "foo", function(args){return args[args.length]() + "2";});
             assert.equal(o.foo(), "foo2");
         }
     }
