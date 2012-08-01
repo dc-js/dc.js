@@ -533,6 +533,8 @@ d3.csv("ndx.csv", function(data) {
             .round(d3.time.month.round)
             // define x axis units
             .xUnits(d3.time.months)
+            // (optional) render as area chart, :default = false
+            .renderArea(true)
             // (optional) add stacked group and custom value retriever
             .stack(monthlyMoveGroup, function(d){return d.value;})
             // (optional) you can add multiple stacked group with or without custom value retriever
