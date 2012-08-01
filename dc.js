@@ -173,24 +173,32 @@ dc.utils.CulmulativeReduceTarget = function() {
     var _map = {};
 
     this.addValue = function(key, value) {
-        _keyIndex.push(key);
-        _map[key] = value;
+        if (!_map[key]) {
+            _keyIndex.push(key);
+            _map[key] = value;
+        } else {
+            _map[key] += value;
+        }
     };
 
     this.getValueByKey = function(key) {
         return _map[key];
     };
 
-    this.getPreviousValueByKey = function(key){
+    this.getPreviousValueByKey = function(key) {
         var keyIndex = _keyIndex.indexOf(key);
-        if(keyIndex <= 0) return 0;
+        if (keyIndex <= 0) return 0;
         var previousKey = _keyIndex[keyIndex - 1];
         return this.getValueByKey(previousKey);
     };
 
-    this.clear = function(){
+    this.clear = function() {
         _keyIndex = [];
         _map = {};
+    };
+
+    this.size = function() {
+        return _keyIndex.length;
     };
 };
 dc.baseChart = function(_chart) {

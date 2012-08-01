@@ -46,7 +46,9 @@ suite.addBatch({
             var key = "key";
             var value = 100;
             target.addValue(key, value);
-            assert.equal(target.getValueByKey(key), value);
+            target.addValue(key, value);
+            assert.equal(target.getValueByKey(key), value * 2);
+            assert.equal(target.size(), 1);
             target.clear();
         },
         'can retrieve value by key - 1':function(target){
