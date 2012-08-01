@@ -57,7 +57,7 @@ dc.lineChart = function(_parent) {
             })
             .y(function(d, dataIndex) {
                 var groupIndex = this[dc.constants.GROUP_INDEX_NAME];
-                return _chart.dataPointMatrix()[groupIndex][dataIndex];
+                return _chart.getChartStack().getDataPoint(groupIndex, dataIndex);
             });
 
         dc.transition(linePath, _chart.transitionDuration(),
@@ -82,7 +82,7 @@ dc.lineChart = function(_parent) {
             .y0(function(d, dataIndex) {
                 var groupIndex = this[dc.constants.GROUP_INDEX_NAME];
                 if (groupIndex == 0) return _chart.y()(0) - AREA_BOTTOM_PADDING + _chart.margins().top;
-                return _chart.dataPointMatrix()[groupIndex - 1][dataIndex];
+                return _chart.getChartStack().getDataPoint(groupIndex - 1, dataIndex);
             });
 
         dc.transition(areaPath, _chart.transitionDuration(),

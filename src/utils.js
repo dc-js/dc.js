@@ -37,3 +37,26 @@ dc.constants.STACK_CLASS = "stack";
 dc.constants.DESELECTED_CLASS = "deselected";
 dc.constants.SELECTED_CLASS = "selected";
 dc.constants.GROUP_INDEX_NAME = "__group_index__";
+
+dc.utils = {};
+dc.utils.ChartStack = function(){
+    var _dataPointMatrix = [];
+
+    function initializeDataPointRow(x) {
+        if (!_dataPointMatrix[x])
+            _dataPointMatrix[x] = [];
+    }
+
+    this.setDataPoint = function(x, y, data){
+        initializeDataPointRow(x);
+        _dataPointMatrix[x][y] = data;
+    };
+
+    this.getDataPoint = function(x, y){
+        initializeDataPointRow(x);
+        var dataPoint = _dataPointMatrix[x][y];
+        if(dataPoint == undefined)
+            dataPoint = 0;
+        return dataPoint;
+    };
+};

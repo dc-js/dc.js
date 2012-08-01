@@ -77,7 +77,7 @@ dc.barChart = function(_parent) {
 
     function barY(bar, data, dataIndex) {
         var groupIndex = getGroupIndexFromBar(bar);
-        return _chart.dataPointMatrix()[groupIndex][dataIndex];
+        return _chart.getChartStack().getDataPoint(groupIndex, dataIndex);
     }
 
     _chart.fadeDeselectedArea = function() {

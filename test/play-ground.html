@@ -242,7 +242,7 @@
             .height(150)
             .dimension(dateDimension)
             .group(dateIdSumGroup)
-            .stack([dateValueSumGroup, [dateValueSumGroup, function(d){return 2;}]])
+            .stack([dateValueSumGroup, [dateValueSumGroup, function(d){return 10;}]])
             .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
             .xUnits(d3.time.days)
             .elasticY(true)
@@ -254,7 +254,7 @@
             .height(150)
             .dimension(dateDimension)
             .group(dateIdSumGroup)
-            .stack([dateValueSumGroup, [dateValueSumGroup, function(d){return 2;}]])
+            .stack([dateValueSumGroup, [dateValueSumGroup, function(d){return 10;}]])
             .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
             .xUnits(d3.time.days)
             .xAxis().ticks(5);
