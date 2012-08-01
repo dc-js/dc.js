@@ -67,6 +67,16 @@ suite.addBatch({
             target.addValue("key", value);
             assert.equal(target.getPreviousValueByKey(key), 0);
             target.clear();
+        },
+        'can reduce value by key':function(target){
+            var key = "key";
+            var value = 100;
+            target.addValue(key, value);
+            target.addValue(key, value);
+            target.minusValue(key, value);
+            assert.equal(target.getValueByKey(key), value);
+            assert.equal(target.size(), 1);
+            target.clear();
         }
     }
 });

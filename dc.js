@@ -181,6 +181,10 @@ dc.utils.CulmulativeReduceTarget = function() {
         }
     };
 
+    this.minusValue= function(key, value){
+        _map[key] -= value;
+    };
+
     this.getValueByKey = function(key) {
         return _map[key];
     };
