@@ -58,6 +58,13 @@ suite.addBatch({
             target.addValue("4", 4);
             assert.equal(target.getPreviousValueByKey(key), value);
             target.clear();
+        },
+        'can retrieve value by out of range key':function(target){
+            var key = "key";
+            var value = 100;
+            target.addValue("key", value);
+            assert.equal(target.getPreviousValueByKey(key), 0);
+            target.clear();
         }
     }
 });

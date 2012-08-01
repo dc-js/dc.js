@@ -183,6 +183,7 @@ dc.utils.CulmulativeReduceTarget = function() {
 
     this.getPreviousValueByKey = function(key){
         var keyIndex = _keyIndex.indexOf(key);
+        if(keyIndex <= 0) return 0;
         var previousKey = _keyIndex[keyIndex - 1];
         return this.getValueByKey(previousKey);
     };
