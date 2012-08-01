@@ -39,8 +39,14 @@ suite.addBatch({
         topic:function(){
             return new dc.utils.CulmulativeReduceTarget();
         },
-        'print simple string':function(target){
+        'is a class':function(target){
             assert.isTrue(target instanceof dc.utils.CulmulativeReduceTarget);
+        },
+        'can store and retrieve value by key':function(target){
+            var key = "key";
+            var value = 100;
+            target.setValue(key, value);
+            assert.equal(target.getValueByKey(key), value);
         }
     }
 });

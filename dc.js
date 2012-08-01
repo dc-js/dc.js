@@ -140,7 +140,7 @@ dc.utils.GroupStack = function() {
     };
 
     this.addGroup = function(group, retriever) {
-        if(!retriever)
+        if (!retriever)
             retriever = _defaultRetriever;
         _groups.push([group, retriever]);
         return _groups.length - 1;
@@ -158,17 +158,27 @@ dc.utils.GroupStack = function() {
         return _groups.length;
     };
 
-    this.clear = function(){
+    this.clear = function() {
         _dataPointMatrix = [];
         _groups = [];
     };
 
-    this.setDefaultRetriever = function(retriever){
+    this.setDefaultRetriever = function(retriever) {
         _defaultRetriever = retriever;
     };
 };
 
-dc.utils.CulmulativeReduceTarget = function(){};
+dc.utils.CulmulativeReduceTarget = function() {
+    var _map = {};
+
+    this.setValue = function(key, value) {
+        _map[key] = value;
+    };
+
+    this.getValueByKey = function(key) {
+        return _map[key];
+    };
+};
 dc.baseChart = function(_chart) {
     var _dimension;
     var _group;
