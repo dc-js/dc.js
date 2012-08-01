@@ -25,6 +25,15 @@ suite.addBatch({
             var group = {};
             var index = stack.addGroup(group)
             assert.equal(stack.getGroupByIndex(index), group);
+            assert.equal(stack.size(), 1);
+            stack.clear();
+        },
+        'be able to add group with retriever': function(stack){
+            var retriever = {};
+            var index = stack.addGroup({}, retriever);
+            assert.equal(stack.getRetrieverByIndex(index), retriever);
+            assert.equal(stack.size(), 1);
+            stack.clear();
         }
     }
 });

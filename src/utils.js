@@ -1,4 +1,4 @@
-dc.dateFormat= d3.time.format("%m/%d/%Y");
+dc.dateFormat = d3.time.format("%m/%d/%Y");
 
 dc.printers = {};
 
@@ -24,22 +24,23 @@ function printSingleValue(filter) {
 
     if (filter instanceof Date)
         s = dc.dateFormat(filter);
-    else if(typeof(filter) == "string")
+    else if (typeof(filter) == "string")
         s = filter;
-    else if(typeof(filter) == "number")
+    else if (typeof(filter) == "number")
         s = Math.round(filter);
 
     return s;
 }
 
-dc.constants = function(){};
+dc.constants = function() {
+};
 dc.constants.STACK_CLASS = "stack";
 dc.constants.DESELECTED_CLASS = "deselected";
 dc.constants.SELECTED_CLASS = "selected";
 dc.constants.GROUP_INDEX_NAME = "__group_index__";
 
 dc.utils = {};
-dc.utils.GroupStack = function(){
+dc.utils.GroupStack = function() {
     var _dataPointMatrix = [];
     var _groups = [];
 
@@ -48,25 +49,38 @@ dc.utils.GroupStack = function(){
             _dataPointMatrix[x] = [];
     }
 
-    this.setDataPoint = function(x, y, data){
+    this.setDataPoint = function(x, y, data) {
         initializeDataPointRow(x);
         _dataPointMatrix[x][y] = data;
     };
 
-    this.getDataPoint = function(x, y){
+    this.getDataPoint = function(x, y) {
         initializeDataPointRow(x);
         var dataPoint = _dataPointMatrix[x][y];
-        if(dataPoint == undefined)
+        if (dataPoint == undefined)
             dataPoint = 0;
         return dataPoint;
     };
 
-    this.addGroup = function(group){
-        _groups.push(group);
+    this.addGroup = function(group, retriever) {
+        _groups.push([group, retriever]);
         return _groups.length - 1;
     };
 
-    this.getGroupByIndex = function(index){
-        return _groups[index];
+    this.getGroupByIndex = function(index) {
+        return _groups[index][0];
+    };
+
+    this.getRetrieverByIndex = function(index) {
+        return _groups[index][1];
+    };
+
+    this.size = function() {
+        return _groups.length;
+    };
+
+    this.clear = function(){
+        _dataPointMatrix = [];
+        _groups = [];
     };
 };
