@@ -21,7 +21,7 @@ function buildChart(id, xdomain) {
         .xUnits(d3.time.days)
         .compose([
                 dc.barChart(chart).group(dateValueSumGroup),
-                dc.lineChart(chart),
+                dc.lineChart(chart).stack(dateValueSumGroup).stack(dateValueSumGroup),
                 dc.lineChart(chart).group(dateGroup)
             ]);
     chart.render();
@@ -86,7 +86,7 @@ suite.addBatch({
         },
         'y domain is auto calculated based on height': function(chart) {
             assert.equal(chart.y().domain()[0], 0);
-            assert.equal(chart.y().domain()[1], 132);
+            assert.equal(chart.y().domain()[1], 281);
         },
         'root g should be created': function(chart) {
             assert.isFalse(chart.select("svg g").empty());
@@ -126,10 +126,10 @@ suite.addBatch({
             chart.selectAll("g.sub path.line").each(function(d, i){
                 switch(i){
                     case 0:
-                        assert.equal(d3.select(this).attr("d"), "M44.712643678160916,119L113.90804597701148,115L123.79310344827586,106L227.58620689655172,117L272.0689655172414,108L425.28735632183907,110");
+                        assert.equal(d3.select(this).attr("d"), "M44.712643678160916,119L113.90804597701148,118L123.79310344827586,113L227.58620689655172,118L272.0689655172414,114L425.28735632183907,115");
                         break;
                     case 1:
-                        assert.equal(d3.select(this).attr("d"), "M44.712643678160916,119L113.90804597701148,119L123.79310344827586,118L227.58620689655172,119L272.0689655172414,118L425.28735632183907,118");
+                        assert.equal(d3.select(this).attr("d"), "M44.712643678160916,103L113.90804597701148,93L123.79310344827586,62L227.58620689655172,102L272.0689655172414,93L425.28735632183907,86");
                         break;
                 }
             });
@@ -142,15 +142,15 @@ suite.addBatch({
                 switch(i){
                     case 0:
                         assert.equal(d3.select(this).attr("x"), "44.712643678160916");
-                        assert.equal(d3.select(this).attr("y"), "83");
+                        assert.equal(d3.select(this).attr("y"), "103");
                         assert.equal(d3.select(this).attr("width"), "4");
-                        assert.equal(d3.select(this).attr("height"), "36");
+                        assert.equal(d3.select(this).attr("height"), "16");
                         break;
                     case 5:
                         assert.equal(d3.select(this).attr("x"), "425.28735632183907");
-                        assert.equal(d3.select(this).attr("y"), "56");
+                        assert.equal(d3.select(this).attr("y"), "90");
                         assert.equal(d3.select(this).attr("width"), "4");
-                        assert.equal(d3.select(this).attr("height"), "63");
+                        assert.equal(d3.select(this).attr("height"), "29");
                         break;
                 }
             });
@@ -211,7 +211,7 @@ suite.addBatch({'elastic y':{
         return chart;
     },
     'y axis should have adjusted combining all child charts maxs & mins': function(chart) {
-        assert.equal(chart.y().domain()[1], 55);
+        assert.equal(chart.y().domain()[1], 117);
     },
     teardown: function(topic) {
         resetAllFilters();

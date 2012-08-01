@@ -1540,34 +1540,28 @@ dc.compositeChart = function(_parent) {
         return _chart;
     };
 
-    _chart.yAxisMin = function() {
-        var min = 0;
-        var allGroups = combineAllGroups();
-
-        for (var i = 0; i < allGroups.length; ++i) {
-            var group = allGroups[i];
-            var m = d3.min(group.all(), function(e) {
-                return _chart.valueRetriever()(e);
-            });
-            if (m < min) min = m;
+    function getAllYAxisMinFromChildCharts() {
+        var allMins = [];
+        for (var i = 0; i < _children.length; ++i) {
+            allMins.push(_children[i].yAxisMin());
         }
+        return allMins;
+    }
 
-        return min;
+    _chart.yAxisMin = function() {
+        return d3.min(getAllYAxisMinFromChildCharts());
     };
 
-    _chart.yAxisMax = function() {
-        var max = 0;
-        var allGroups = combineAllGroups();
-
-        for (var i = 0; i < allGroups.length; ++i) {
-            var group = allGroups[i];
-            var m = d3.max(group.all(), function(e) {
-                return _chart.valueRetriever()(e);
-            });
-            if(m > max) max = m;
+    function getAllYAxisMaxFromChildCharts() {
+        var allMaxs = [];
+        for (var i = 0; i < _children.length; ++i) {
+            allMaxs.push(_children[i].yAxisMax());
         }
+        return allMaxs;
+    }
 
-        return max;
+    _chart.yAxisMax = function() {
+        return d3.max(getAllYAxisMaxFromChildCharts());
     };
 
     function combineAllGroups() {
@@ -1575,8 +1569,11 @@ dc.compositeChart = function(_parent) {
 
         allGroups.push(_chart.group());
 
-        for (var i = 0; i < _children.length; ++i)
-            allGroups.push(_children[i].group());
+        for (var i = 0; i < _children.length; ++i) {
+            var groups = _children[i].allGroups();
+            for (var j = 0; j < groups.length; ++j)
+                allGroups.push(groups[j]);
+        }
 
         return allGroups;
     }
