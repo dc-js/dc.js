@@ -38,14 +38,29 @@ dc.stackableChart = function(_chart) {
         return allGroups;
     };
 
+    _chart.allValueRetrievers = function() {
+        var allRetrievers = [];
+
+        allRetrievers.push(_chart.valueRetriever());
+
+        for (var i = 0; i < _valueRetrieverStack.length; ++i)
+            allRetrievers.push(_valueRetrieverStack[i]);
+
+        return allRetrievers;
+    };
+
+    _chart.stackedValueRetriever = function(groupIndex){
+        return _chart.allValueRetrievers()[groupIndex];
+    };
+
     _chart.yAxisMin = function() {
         var min = 0;
         var allGroups = _chart.allGroups();
 
-        for (var i = 0; i < allGroups.length; ++i) {
-            var group = allGroups[i];
+        for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
+            var group = allGroups[groupIndex];
             var m = d3.min(group.all(), function(e) {
-                return _chart.valueRetriever()(e);
+                return _chart.stackedValueRetriever(groupIndex)(e);
             });
             if (m < min) min = m;
         }
@@ -57,10 +72,10 @@ dc.stackableChart = function(_chart) {
         var max = 0;
         var allGroups = _chart.allGroups();
 
-        for (var i = 0; i < allGroups.length; ++i) {
-            var group = allGroups[i];
+        for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
+            var group = allGroups[groupIndex];
             max += d3.max(group.all(), function(e) {
-                return _chart.valueRetriever()(e);
+                return _chart.stackedValueRetriever(groupIndex)(e);
             });
         }
 
