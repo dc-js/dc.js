@@ -277,7 +277,8 @@ suite.addBatch({'stacked':{
     topic:function() {
         var chart = buildChart("bar-chart-stack", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
         chart.group(dateIdSumGroup)
-        chart.stack([dateValueSumGroup]).elasticY(true);
+            .stack(dateValueSumGroup)
+            .elasticY(true);
         chart.render();
         return chart;
     },
@@ -306,7 +307,8 @@ suite.addBatch({'stacked with custom value retriever':{
     topic:function() {
         var chart = buildChart("bar-chart-stack", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
         chart.group(dateIdSumGroup)
-        chart.stack([[dateValueSumGroup, function(d){return 3;}]]).elasticY(true);
+            .stack(dateValueSumGroup, function(d){return 3;})
+            .elasticY(true);
         chart.render();
         return chart;
     },

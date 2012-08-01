@@ -207,7 +207,8 @@ suite.addBatch({'stacked area chart':{
         var chart = buildChart("stacked-area-chart", [new Date(2012, 4, 20), new Date(2012, 07, 15)]);
         chart.dimension(dateDimension)
             .group(dateIdSumGroup)
-            .stack([dateValueSumGroup, dateValueSumGroup])
+            .stack(dateValueSumGroup)
+            .stack(dateValueSumGroup)
             .elasticY(true)
             .renderArea(true)
         chart.render();

@@ -4,24 +4,10 @@ dc.stackableChart = function(_chart) {
 
     var _chartStack = new dc.utils.GroupStack();
 
-    _chart.stack = function(_) {
+    _chart.stack = function(group, retriever) {
         _chartStack.setDefaultRetriever(_chart.valueRetriever());
-        if (!arguments.length) {
-            var stack = [];
-            for (var i = 0; i < _chartStack.size(); i++) {
-                stack.push([_chartStack.getGroupByIndex(i), _chartStack.getRetrieverByIndex(i)]);
-            }
-            return stack;
-        } else {
-            for (var i = 0; i < _.length; ++i) {
-                if (Array.isArray(_[i])) {
-                    _chartStack.addGroup(_[i][0], _[i][1]);
-                } else {
-                    _chartStack.addGroup(_[i]);
-                }
-            }
-            return _chart;
-        }
+        _chartStack.addGroup(group, retriever);
+        return _chart;
     };
 
     _chart.allGroups = function() {
@@ -46,7 +32,7 @@ dc.stackableChart = function(_chart) {
         return allRetrievers;
     };
 
-    _chart.stackedValueRetriever = function(groupIndex){
+    _chart.stackedValueRetriever = function(groupIndex) {
         return _chart.allValueRetrievers()[groupIndex];
     };
 
