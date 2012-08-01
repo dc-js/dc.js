@@ -41,6 +41,7 @@ dc.constants.GROUP_INDEX_NAME = "__group_index__";
 dc.utils = {};
 dc.utils.ChartStack = function(){
     var _dataPointMatrix = [];
+    var _groups = [];
 
     function initializeDataPointRow(x) {
         if (!_dataPointMatrix[x])
@@ -58,5 +59,14 @@ dc.utils.ChartStack = function(){
         if(dataPoint == undefined)
             dataPoint = 0;
         return dataPoint;
+    };
+
+    this.addGroup = function(group){
+        _groups.push(group);
+        return _groups.length - 1;
+    };
+
+    this.getGroupByIndex = function(index){
+        return _groups[index];
     };
 };

@@ -20,6 +20,11 @@ suite.addBatch({
         },
         'does not cause error when retrieving uninitialized data point': function(stack){
             assert.equal(stack.getDataPoint(1, 2), 0);
+        },
+        'be able to add group to stack': function(stack){
+            var group = {};
+            var index = stack.addGroup(group)
+            assert.equal(stack.getGroupByIndex(index), group);
         }
     }
 });
