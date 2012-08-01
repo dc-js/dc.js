@@ -6,8 +6,7 @@ dc.compositeChart = function(_parent) {
 
     _chart.transitionDuration(500);
 
-    dc.override(_chart, "generateG", function(args) {
-        var _super = args[args.length];
+    dc.override(_chart, "generateG", function(_super) {
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
             if (child.dimension() == null) child.dimension(_chart.dimension());
