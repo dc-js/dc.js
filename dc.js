@@ -952,10 +952,19 @@ dc.pieChart = function(_parent) {
             .attr("text-anchor", "middle")
             .text(function(d) {
                 var data = d.data;
-                if (_chart.valueRetriever()(data) == 0)
+                if (sliceHasNoData(data) || sliceTooSmall(d))
                     return "";
                 return _chart.label()(d);
             });
+    }
+
+    function sliceTooSmall(d) {
+        var angle = (d.endAngle - d.startAngle);
+        return isNaN(angle) || angle < 1;
+    }
+
+    function sliceHasNoData(data) {
+        return _chart.valueRetriever()(data) == 0;
     }
 
     function redrawTitles() {

@@ -257,9 +257,10 @@ suite.addBatch({
             assert.equal(chart.selectAll("g.pie-slice text")[0].length, 5);
         },
         'custom function should be used to dynamically generate label': function(chart) {
-            chart.selectAll("g.pie-slice text").each(function(p) {
-                assert.equal(d3.select(this).text(), "custom");
-            });
+            assert.equal(d3.select(chart.selectAll("g.pie-slice text")[0][0]).text(), "custom");
+        },
+        'label should not be generated if the slice is too small': function(chart) {
+            assert.equal(d3.select(chart.selectAll("g.pie-slice text")[0][1]).text(), "");
         },
         'should render correct number of title': function(chart) {
             assert.equal(chart.selectAll("g.pie-slice title")[0].length, 5);
@@ -285,7 +286,7 @@ suite.addBatch({
             chart.render();
             return chart;
         },
-        'slice label should be created': function(pieChart) {
+        'slice label should not be created': function(pieChart) {
             assert.equal(pieChart.selectAll("svg g g.pie-slice text").data().length, 0);
         },
         teardown:function(chart) {
