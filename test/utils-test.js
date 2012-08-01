@@ -45,8 +45,19 @@ suite.addBatch({
         'can store and retrieve value by key':function(target){
             var key = "key";
             var value = 100;
-            target.setValue(key, value);
+            target.addValue(key, value);
             assert.equal(target.getValueByKey(key), value);
+            target.clear();
+        },
+        'can retrieve value by key - 1':function(target){
+            var key = "key";
+            var value = 100;
+            target.addValue("0", 0);
+            target.addValue("a", value);
+            target.addValue(key, 19);
+            target.addValue("4", 4);
+            assert.equal(target.getPreviousValueByKey(key), value);
+            target.clear();
         }
     }
 });

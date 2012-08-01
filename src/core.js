@@ -66,8 +66,8 @@ dc.override = function(obj, functionName, newFunction) {
     obj[functionName] = function() {
         var expression = "newFunction(";
 
-        for(var i = 0; i < arguments.length; ++i)
-            expression += "argument["+i+"],";
+        for (var i = 0; i < arguments.length; ++i)
+            expression += "argument[" + i + "],";
 
         expression += "existingFunction);";
 

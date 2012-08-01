@@ -66,8 +66,8 @@ dc.override = function(obj, functionName, newFunction) {
     obj[functionName] = function() {
         var expression = "newFunction(";
 
-        for(var i = 0; i < arguments.length; ++i)
-            expression += "argument["+i+"],";
+        for (var i = 0; i < arguments.length; ++i)
+            expression += "argument[" + i + "],";
 
         expression += "existingFunction);";
 
@@ -169,14 +169,27 @@ dc.utils.GroupStack = function() {
 };
 
 dc.utils.CulmulativeReduceTarget = function() {
+    var _keyIndex = [];
     var _map = {};
 
-    this.setValue = function(key, value) {
+    this.addValue = function(key, value) {
+        _keyIndex.push(key);
         _map[key] = value;
     };
 
     this.getValueByKey = function(key) {
         return _map[key];
+    };
+
+    this.getPreviousValueByKey = function(key){
+        var keyIndex = _keyIndex.indexOf(key);
+        var previousKey = _keyIndex[keyIndex - 1];
+        return this.getValueByKey(previousKey);
+    };
+
+    this.clear = function(){
+        _keyIndex = [];
+        _map = {};
     };
 };
 dc.baseChart = function(_chart) {
