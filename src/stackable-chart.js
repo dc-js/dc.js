@@ -115,3 +115,5 @@ dc.stackableChart = function(_chart) {
 
     return _chart;
 };
+
+dc.stackableChart.DataPointMatrix = function(){};
