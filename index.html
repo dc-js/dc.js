@@ -112,7 +112,7 @@
 <div class="clear"></div>
 
 <div id="monthly-move-chart" class="chart">
-    <span>Monthly Index Abs Move & Volume/500,000 Chart</span>
+    <span>Monthly Index Abs Move & Volume/500,000 Chart (Blue Line: Avg Index, Green Line: Index Fluctuation)</span>
     <a class="reset" href="javascript:volumeMoveChart.filterAll();dc.redrawAll();"
        style="display: none;">reset</a>
 
@@ -205,10 +205,29 @@ d3.csv("ndx.csv", function(data) {
             var moveMonths = ndx.dimension(function(d) {
                 return d3.time.month(d.dd);
             });
-            var monthlyMoveGroup = moveMonths.group().reduceSum(function(d){return Math.abs(+d.close - +d.open);});
+            var monthlyMoveGroup = moveMonths.group().reduceSum(function(d) {
+                return Math.abs(+d.close - +d.open);
+            });
             var volumeByMonthGroup = moveMonths.group().reduceSum(function(d) {
                 return d.volume / 500000;
             });
+            var indexAvgByMonthGroup = moveMonths.group().reduce(
+                    function(p, v) {
+                        ++p.days;
+                        p.total += (+v.open + +v.close) / 2;
+                        p.avg = Math.round(p.total / p.days);
+                        return p;
+                    },
+                    function(p, v) {
+                        --p.days;
+                        p.total -= (+v.open + +v.close) / 2;
+                        p.avg = p.days==0?0:Math.round(p.total / p.days);
+                        return p;
+                    },
+                    function() {
+                        return {days:0, total:0, avg:0};
+                    }
+            );
 
             var gainOrLoss = ndx.dimension(function(d) {
                 return +d.open > +d.close ? "Loss" : "Gain";
@@ -329,15 +348,18 @@ d3.csv("ndx.csv", function(data) {
                     .height(180)
                     .margins({top: 10, right: 50, bottom: 30, left: 40})
                     .dimension(moveMonths)
-                    .group(monthlyMoveGroup)
+                    .group(indexAvgByMonthGroup)
+                    .valueRetriever(function(d) {
+                        return d.value.avg;
+                    })
                     .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
                     .round(d3.time.month.round)
                     .xUnits(d3.time.months)
                     .elasticY(true)
                     .compose([
                         dc.barChart(volumeMoveChart).group(volumeByMonthGroup),
-                        dc.lineChart(volumeMoveChart).group(monthlyMoveGroup).renderArea(true)
-                    ]);
+                        dc.lineChart(volumeMoveChart).group(indexAvgByMonthGroup).valueRetriever(function(d){return d.value.avg;}).renderArea(true).stack(monthlyMoveGroup, function(d){return d.value;})
+            ]);
 
             dc.dataCount("#data-count")
                     .dimension(ndx)
@@ -351,22 +373,22 @@ d3.csv("ndx.csv", function(data) {
                     })
                     .size(10)
                     .columns([
-                        function(d) {
-                            return d.date;
-                        },
-                        function(d) {
-                            return d.open;
-                        },
-                        function(d) {
-                            return d.close;
-                        },
-                        function(d) {
-                            return numberFormat(d.close - d.open);
-                        },
-                        function(d) {
-                            return d.volume;
-                        }
-                    ])
+                function(d) {
+                    return d.date;
+                },
+                function(d) {
+                    return d.open;
+                },
+                function(d) {
+                    return d.close;
+                },
+                function(d) {
+                    return numberFormat(d.close - d.open);
+                },
+                function(d) {
+                    return d.volume;
+                }
+            ])
                     .sortBy(function(d) {
                         return d.dd;
                     })

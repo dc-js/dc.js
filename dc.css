@@ -1,5 +1,5 @@
 body {
-    font-size: 0.8em;
+    font-size: 0.9em;
     font-family: Lucida;
 }
 
@@ -19,9 +19,19 @@ a {
     float: left;
 }
 
-.chart .bar {
+.chart rect.bar {
     stroke: none;
     fill: steelblue;
+}
+
+.chart rect.stack1 {
+    stroke: none;
+    fill: red;
+}
+
+.chart rect.stack2 {
+    stroke: none;
+    fill: green;
 }
 
 .chart .deselected {
@@ -78,15 +88,32 @@ a {
     stroke: #666;
 }
 
-.line {
+.chart path.line {
     fill: none;
     stroke: steelblue;
-    stroke-width: 2px;
+    stroke-width: 1.5px;
 }
 
-.area {
+.chart g.stack1 path.line {
+    stroke: green;
+}
+
+.chart g.stack2 path.line {
+    stroke: red;
+}
+
+.chart path.area {
     fill: steelblue;
     fill-opacity: .3;
+    stroke: none;
+}
+
+.chart g.stack1 path.area {
+    fill: green;
+}
+
+.chart g.stack2 path.area {
+    fill: red;
 }
 
 .node {

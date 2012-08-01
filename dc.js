@@ -64,10 +64,17 @@ dc.override = function(obj, functionName, newFunction) {
     var existingFunction = obj[functionName];
     newFunction._ = existingFunction;
     obj[functionName] = function() {
-        return newFunction(existingFunction);
+        var expression = "newFunction(";
+
+        for(var i = 0; i < arguments.length; ++i)
+            expression += "argument["+i+"],";
+
+        expression += "existingFunction);"
+
+        return eval(expression);
     };
 }
-dc.dateFormat= d3.time.format("%m/%d/%Y");
+dc.dateFormat = d3.time.format("%m/%d/%Y");
 
 dc.printers = {};
 
@@ -93,19 +100,73 @@ function printSingleValue(filter) {
 
     if (filter instanceof Date)
         s = dc.dateFormat(filter);
-    else if(typeof(filter) == "string")
+    else if (typeof(filter) == "string")
         s = filter;
-    else if(typeof(filter) == "number")
+    else if (typeof(filter) == "number")
         s = Math.round(filter);
 
     return s;
 }
 
-dc.constants = function(){};
+dc.constants = function() {
+};
 dc.constants.STACK_CLASS = "stack";
 dc.constants.DESELECTED_CLASS = "deselected";
 dc.constants.SELECTED_CLASS = "selected";
 dc.constants.GROUP_INDEX_NAME = "__group_index__";
+
+dc.utils = {};
+dc.utils.GroupStack = function() {
+    var _dataPointMatrix = [];
+    var _groups = [];
+    var _defaultRetriever;
+
+    function initializeDataPointRow(x) {
+        if (!_dataPointMatrix[x])
+            _dataPointMatrix[x] = [];
+    }
+
+    this.setDataPoint = function(x, y, data) {
+        initializeDataPointRow(x);
+        _dataPointMatrix[x][y] = data;
+    };
+
+    this.getDataPoint = function(x, y) {
+        initializeDataPointRow(x);
+        var dataPoint = _dataPointMatrix[x][y];
+        if (dataPoint == undefined)
+            dataPoint = 0;
+        return dataPoint;
+    };
+
+    this.addGroup = function(group, retriever) {
+        if(!retriever)
+            retriever = _defaultRetriever;
+        _groups.push([group, retriever]);
+        return _groups.length - 1;
+    };
+
+    this.getGroupByIndex = function(index) {
+        return _groups[index][0];
+    };
+
+    this.getRetrieverByIndex = function(index) {
+        return _groups[index][1];
+    };
+
+    this.size = function() {
+        return _groups.length;
+    };
+
+    this.clear = function(){
+        _dataPointMatrix = [];
+        _groups = [];
+    };
+
+    this.setDefaultRetriever = function(retriever){
+        _defaultRetriever = retriever;
+    };
+};
 dc.baseChart = function(_chart) {
     var _dimension;
     var _group;
@@ -629,12 +690,11 @@ dc.stackableChart = function(_chart) {
     var MIN_DATA_POINT_HEIGHT = 0;
     var DATA_POINT_PADDING_BOTTOM = 1;
 
-    var _stack = [];
-    var _dataPointMatrix = [];
+    var _groupStack = new dc.utils.GroupStack();
 
-    _chart.stack = function(_) {
-        if (!arguments.length) return _stack;
-        _stack = _;
+    _chart.stack = function(group, retriever) {
+        _groupStack.setDefaultRetriever(_chart.valueRetriever());
+        _groupStack.addGroup(group, retriever);
         return _chart;
     };
 
@@ -643,20 +703,35 @@ dc.stackableChart = function(_chart) {
 
         allGroups.push(_chart.group());
 
-        for (var i = 0; i < _chart.stack().length; ++i)
-            allGroups.push(_chart.stack()[i]);
+        for (var i = 0; i < _groupStack.size(); ++i)
+            allGroups.push(_groupStack.getGroupByIndex(i));
 
         return allGroups;
+    };
+
+    _chart.allValueRetrievers = function() {
+        var allRetrievers = [];
+
+        allRetrievers.push(_chart.valueRetriever());
+
+        for (var i = 0; i < _groupStack.size(); ++i)
+            allRetrievers.push(_groupStack.getRetrieverByIndex(i));
+
+        return allRetrievers;
+    };
+
+    _chart.getValueRetrieverByIndex = function(groupIndex) {
+        return _chart.allValueRetrievers()[groupIndex];
     };
 
     _chart.yAxisMin = function() {
         var min = 0;
         var allGroups = _chart.allGroups();
 
-        for (var i = 0; i < allGroups.length; ++i) {
-            var group = allGroups[i];
+        for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
+            var group = allGroups[groupIndex];
             var m = d3.min(group.all(), function(e) {
-                return _chart.valueRetriever()(e);
+                return _chart.getValueRetrieverByIndex(groupIndex)(e);
             });
             if (m < min) min = m;
         }
@@ -668,10 +743,10 @@ dc.stackableChart = function(_chart) {
         var max = 0;
         var allGroups = _chart.allGroups();
 
-        for (var i = 0; i < allGroups.length; ++i) {
-            var group = allGroups[i];
+        for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
+            var group = allGroups[groupIndex];
             max += d3.max(group.all(), function(e) {
-                return _chart.valueRetriever()(e);
+                return _chart.getValueRetrieverByIndex(groupIndex)(e);
             });
         }
 
@@ -682,8 +757,8 @@ dc.stackableChart = function(_chart) {
         return _chart.margins().top + _chart.yAxisHeight() - DATA_POINT_PADDING_BOTTOM;
     };
 
-    _chart.dataPointHeight = function(d) {
-        var h = (_chart.yAxisHeight() - _chart.y()(_chart.valueRetriever()(d)) - DATA_POINT_PADDING_BOTTOM);
+    _chart.dataPointHeight = function(d, groupIndex) {
+        var h = (_chart.yAxisHeight() - _chart.y()(_chart.getValueRetrieverByIndex(groupIndex)(d)) - DATA_POINT_PADDING_BOTTOM);
         if (isNaN(h) || h < MIN_DATA_POINT_HEIGHT)
             h = MIN_DATA_POINT_HEIGHT;
         return h;
@@ -692,25 +767,23 @@ dc.stackableChart = function(_chart) {
     _chart.calculateDataPointMatrix = function(groups) {
         for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
             var data = groups[groupIndex].all();
-            _dataPointMatrix[groupIndex] = [];
             for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
                 var d = data[dataIndex];
                 if (groupIndex == 0)
-                    _dataPointMatrix[groupIndex][dataIndex] = _chart.dataPointBaseline() - _chart.dataPointHeight(d);
+                    _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline() - _chart.dataPointHeight(d, groupIndex));
                 else
-                    _dataPointMatrix[groupIndex][dataIndex] = _dataPointMatrix[groupIndex - 1][dataIndex] - _chart.dataPointHeight(d);
+                    _groupStack.setDataPoint(groupIndex, dataIndex, _groupStack.getDataPoint(groupIndex - 1, dataIndex) - _chart.dataPointHeight(d, groupIndex))
             }
         }
     };
 
-    _chart.dataPointMatrix = function(_){
-        if(!arguments.length) return _dataPointMatrix;
-        _dataPointMatrix = _;
-        return _chart;
+    _chart.getChartStack = function() {
+        return _groupStack;
     };
 
     return _chart;
-};dc.pieChart = function(_parent) {
+};
+dc.pieChart = function(_parent) {
     var _sliceCssClass = "pie-slice";
 
     var _radius = 0, _innerRadius = 0;
@@ -951,14 +1024,19 @@ dc.barChart = function(_parent) {
             .attr("y", function(data, dataIndex) {
                 return barY(this, data, dataIndex);
             })
-            .attr("height", _chart.dataPointHeight);
+            .attr("height", function(data) {
+                return _chart.dataPointHeight(data, getGroupIndexFromBar(this));
+            });
 
         // update
         dc.transition(bars, _chart.transitionDuration())
             .attr("y", function(data, dataIndex) {
+
                 return barY(this, data, dataIndex);
             })
-            .attr("height", _chart.dataPointHeight);
+            .attr("height", function(data) {
+                return _chart.dataPointHeight(data, getGroupIndexFromBar(this));
+            });
 
         // delete
         dc.transition(bars.exit(), _chart.transitionDuration())
@@ -974,16 +1052,23 @@ dc.barChart = function(_parent) {
         return w;
     }
 
-    function barX(bar, data, groupIndex, dataIndex) {
-        // cache group index in each individual bar to avoid timing issue introduced by transition
+    function setGroupIndexToBar(bar, groupIndex) {
         bar[dc.constants.GROUP_INDEX_NAME] = groupIndex;
+    }
+
+    function barX(bar, data, groupIndex, dataIndex) {
+        setGroupIndexToBar(bar, groupIndex);
         return _chart.x()(_chart.keyRetriever()(data)) + _chart.margins().left;
     }
 
-    function barY(bar, data, dataIndex) {
-        // cached group index can then be safely retrieved from bar wo/ worrying about transition
+    function getGroupIndexFromBar(bar) {
         var groupIndex = bar[dc.constants.GROUP_INDEX_NAME];
-        return _chart.dataPointMatrix()[groupIndex][dataIndex];
+        return groupIndex;
+    }
+
+    function barY(bar, data, dataIndex) {
+        var groupIndex = getGroupIndexFromBar(bar);
+        return _chart.getChartStack().getDataPoint(groupIndex, dataIndex);
     }
 
     _chart.fadeDeselectedArea = function() {
@@ -1063,7 +1148,7 @@ dc.lineChart = function(_parent) {
             })
             .y(function(d, dataIndex) {
                 var groupIndex = this[dc.constants.GROUP_INDEX_NAME];
-                return _chart.dataPointMatrix()[groupIndex][dataIndex];
+                return _chart.getChartStack().getDataPoint(groupIndex, dataIndex);
             });
 
         dc.transition(linePath, _chart.transitionDuration(),
@@ -1088,7 +1173,7 @@ dc.lineChart = function(_parent) {
             .y0(function(d, dataIndex) {
                 var groupIndex = this[dc.constants.GROUP_INDEX_NAME];
                 if (groupIndex == 0) return _chart.y()(0) - AREA_BOTTOM_PADDING + _chart.margins().top;
-                return _chart.dataPointMatrix()[groupIndex - 1][dataIndex];
+                return _chart.getChartStack().getDataPoint(groupIndex - 1, dataIndex);
             });
 
         dc.transition(areaPath, _chart.transitionDuration(),
@@ -1455,34 +1540,28 @@ dc.compositeChart = function(_parent) {
         return _chart;
     };
 
-    _chart.yAxisMin = function() {
-        var min = 0;
-        var allGroups = combineAllGroups();
-
-        for (var i = 0; i < allGroups.length; ++i) {
-            var group = allGroups[i];
-            var m = d3.min(group.all(), function(e) {
-                return _chart.valueRetriever()(e);
-            });
-            if (m < min) min = m;
+    function getAllYAxisMinFromChildCharts() {
+        var allMins = [];
+        for (var i = 0; i < _children.length; ++i) {
+            allMins.push(_children[i].yAxisMin());
         }
+        return allMins;
+    }
 
-        return min;
+    _chart.yAxisMin = function() {
+        return d3.min(getAllYAxisMinFromChildCharts());
     };
 
-    _chart.yAxisMax = function() {
-        var max = 0;
-        var allGroups = combineAllGroups();
-
-        for (var i = 0; i < allGroups.length; ++i) {
-            var group = allGroups[i];
-            var m = d3.max(group.all(), function(e) {
-                return _chart.valueRetriever()(e);
-            });
-            if(m > max) max = m;
+    function getAllYAxisMaxFromChildCharts() {
+        var allMaxs = [];
+        for (var i = 0; i < _children.length; ++i) {
+            allMaxs.push(_children[i].yAxisMax());
         }
+        return allMaxs;
+    }
 
-        return max;
+    _chart.yAxisMax = function() {
+        return d3.max(getAllYAxisMaxFromChildCharts());
     };
 
     function combineAllGroups() {
@@ -1490,8 +1569,11 @@ dc.compositeChart = function(_parent) {
 
         allGroups.push(_chart.group());
 
-        for (var i = 0; i < _children.length; ++i)
-            allGroups.push(_children[i].group());
+        for (var i = 0; i < _children.length; ++i) {
+            var groups = _children[i].allGroups();
+            for (var j = 0; j < groups.length; ++j)
+                allGroups.push(groups[j]);
+        }
 
         return allGroups;
     }
