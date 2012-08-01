@@ -6,13 +6,13 @@ var assert = require('assert');
 var suite = vows.describe('Stackable chart');
 
 suite.addBatch({
-    'dc.version': {
+    'chart stack': {
         topic: function () {
-            return dc.version
+            return new dc.stackableChart.ChartStack();
         },
 
-        'has the form major.minor.patch': function (version) {
-            assert.match(version, /^[0-9]+\.[0-9]+\.[0-9]+$/);
+        'is an object': function (stack) {
+            assert.isTrue(stack instanceof dc.stackableChart.ChartStack);
         }
     }
 });

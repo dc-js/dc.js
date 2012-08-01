@@ -8,7 +8,7 @@ var suite = vows.describe('Core');
 suite.addBatch({
     'dc.version': {
         topic: function () {
-            return dc.version
+            return dc.version;
         },
 
         'has the form major.minor.patch': function (version) {
