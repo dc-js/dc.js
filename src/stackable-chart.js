@@ -86,8 +86,8 @@ dc.stackableChart = function(_chart) {
         return _chart.margins().top + _chart.yAxisHeight() - DATA_POINT_PADDING_BOTTOM;
     };
 
-    _chart.dataPointHeight = function(d) {
-        var h = (_chart.yAxisHeight() - _chart.y()(_chart.valueRetriever()(d)) - DATA_POINT_PADDING_BOTTOM);
+    _chart.dataPointHeight = function(d, groupIndex) {
+        var h = (_chart.yAxisHeight() - _chart.y()(_chart.stackedValueRetriever(groupIndex)(d)) - DATA_POINT_PADDING_BOTTOM);
         if (isNaN(h) || h < MIN_DATA_POINT_HEIGHT)
             h = MIN_DATA_POINT_HEIGHT;
         return h;
@@ -100,9 +100,9 @@ dc.stackableChart = function(_chart) {
             for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
                 var d = data[dataIndex];
                 if (groupIndex == 0)
-                    _dataPointMatrix[groupIndex][dataIndex] = _chart.dataPointBaseline() - _chart.dataPointHeight(d);
+                    _dataPointMatrix[groupIndex][dataIndex] = _chart.dataPointBaseline() - _chart.dataPointHeight(d, groupIndex);
                 else
-                    _dataPointMatrix[groupIndex][dataIndex] = _dataPointMatrix[groupIndex - 1][dataIndex] - _chart.dataPointHeight(d);
+                    _dataPointMatrix[groupIndex][dataIndex] = _dataPointMatrix[groupIndex - 1][dataIndex] - _chart.dataPointHeight(d, groupIndex);
             }
         }
     };

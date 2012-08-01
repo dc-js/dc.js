@@ -33,14 +33,19 @@ dc.barChart = function(_parent) {
             .attr("y", function(data, dataIndex) {
                 return barY(this, data, dataIndex);
             })
-            .attr("height", _chart.dataPointHeight);
+            .attr("height", function(data) {
+                return _chart.dataPointHeight(data, getGroupIndexFromBar(this));
+            });
 
         // update
         dc.transition(bars, _chart.transitionDuration())
             .attr("y", function(data, dataIndex) {
+
                 return barY(this, data, dataIndex);
             })
-            .attr("height", _chart.dataPointHeight);
+            .attr("height", function(data) {
+                return _chart.dataPointHeight(data, getGroupIndexFromBar(this));
+            });
 
         // delete
         dc.transition(bars.exit(), _chart.transitionDuration())
@@ -56,15 +61,22 @@ dc.barChart = function(_parent) {
         return w;
     }
 
-    function barX(bar, data, groupIndex, dataIndex) {
-        // cache group index in each individual bar to avoid timing issue introduced by transition
+    function setGroupIndexToBar(bar, groupIndex) {
         bar[dc.constants.GROUP_INDEX_NAME] = groupIndex;
+    }
+
+    function barX(bar, data, groupIndex, dataIndex) {
+        setGroupIndexToBar(bar, groupIndex);
         return _chart.x()(_chart.keyRetriever()(data)) + _chart.margins().left;
     }
 
-    function barY(bar, data, dataIndex) {
-        // cached group index can then be safely retrieved from bar wo/ worrying about transition
+    function getGroupIndexFromBar(bar) {
         var groupIndex = bar[dc.constants.GROUP_INDEX_NAME];
+        return groupIndex;
+    }
+
+    function barY(bar, data, dataIndex) {
+        var groupIndex = getGroupIndexFromBar(bar);
         return _chart.dataPointMatrix()[groupIndex][dataIndex];
     }
 
