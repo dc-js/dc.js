@@ -34,6 +34,17 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({
+    'dc.printer.CulmulativeReduceTarget':{
+        topic:function(){
+            return new dc.utils.CulmulativeReduceTarget();
+        },
+        'print simple string':function(target){
+            assert.isTrue(target instanceof dc.utils.CulmulativeReduceTarget);
+        }
+    }
+});
+
 suite.export(module);
 
 

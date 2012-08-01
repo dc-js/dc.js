@@ -91,3 +91,5 @@ dc.utils.GroupStack = function() {
         _defaultRetriever = retriever;
     };
 };
+
+dc.utils.CulmulativeReduceTarget = function(){};

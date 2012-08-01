@@ -1,5 +1,5 @@
 dc = {
-    version: "0.6.0",
+    version: "0.7.0",
     _charts: []
 };
 
@@ -69,11 +69,11 @@ dc.override = function(obj, functionName, newFunction) {
         for(var i = 0; i < arguments.length; ++i)
             expression += "argument["+i+"],";
 
-        expression += "existingFunction);"
+        expression += "existingFunction);";
 
         return eval(expression);
     };
-}
+};
 dc.dateFormat = d3.time.format("%m/%d/%Y");
 
 dc.printers = {};
@@ -167,6 +167,8 @@ dc.utils.GroupStack = function() {
         _defaultRetriever = retriever;
     };
 };
+
+dc.utils.CulmulativeReduceTarget = function(){};
 dc.baseChart = function(_chart) {
     var _dimension;
     var _group;
