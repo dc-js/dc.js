@@ -359,7 +359,7 @@ d3.csv("ndx.csv", function(data) {
                     .compose([
                         dc.barChart(volumeMoveChart).group(volumeByMonthGroup),
                         dc.lineChart(volumeMoveChart).group(indexAvgByMonthGroup).valueRetriever(function(d){return d.value.avg;}).renderArea(true).stack(monthlyMoveGroup, function(d){return d.value;})
-            ]);
+                    ]);
 
             dc.dataCount("#data-count")
                     .dimension(ndx)
@@ -450,6 +450,11 @@ d3.csv("ndx.csv", function(data) {
              -->
             <a class="reset" href="javascript:gainOrLossChart.filterAll();dc.redrawAll();"
                style="display: none;">reset</a>
+            <!--
+                dc.js will also automatically inject applied current filter value into
+                any html element with css class set to "filter"
+            -->
+            <span class="reset" style="display: none;">Current filter: <span class="filter"></span></span>
         </div>
     </pre>
 
@@ -500,7 +505,12 @@ d3.csv("ndx.csv", function(data) {
             // (optional) set filter brush rounding
             .round(d3.time.month.round)
             // define x axis units
-            .xUnits(d3.time.months);
+            .xUnits(d3.time.months)
+            // (optional) add stacked group and custom value retriever
+            .stack(monthlyMoveGroup, function(d){return d.value;})
+            // (optional) you can add multiple stacked group with or without custom value retriever
+            // if no custom retriever provided base chart's value retriever will be used
+            .stack(monthlyMoveGroup);
     </pre>
 
 <h3>Line Chart</h3>
@@ -522,7 +532,12 @@ d3.csv("ndx.csv", function(data) {
             // (optional) set filter brush rounding
             .round(d3.time.month.round)
             // define x axis units
-            .xUnits(d3.time.months);
+            .xUnits(d3.time.months)
+            // (optional) add stacked group and custom value retriever
+            .stack(monthlyMoveGroup, function(d){return d.value;})
+            // (optional) you can add multiple stacked group with or without custom value retriever
+            // if no custom retriever provided base chart's value retriever will be used
+            .stack(monthlyMoveGroup);
     </pre>
 
 <h3>Composite Chart</h3>
@@ -551,7 +566,8 @@ d3.csv("ndx.csv", function(data) {
              * share parent chart's dimension. If sub-chart's dimension or group is not
              * explicitly defined here then it will simply inherent from it's parent. */
             dc.barChart(volumeMoveChart).group(volumeByMonthGroup),
-            dc.lineChart(volumeMoveChart).group(monthlyMoveGroup)
+            // you can even include stacked bar chart or line chart in a composite chart
+            dc.lineChart(volumeMoveChart).group(indexAvgByMonthGroup).valueRetriever(function(d){return d.value.avg;}).renderArea(true).stack(monthlyMoveGroup, function(d){return d.value;})
         ]);
 </pre>
 
