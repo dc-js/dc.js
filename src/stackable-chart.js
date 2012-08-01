@@ -116,4 +116,17 @@ dc.stackableChart = function(_chart) {
     return _chart;
 };
 
-dc.stackableChart.ChartStack = function(){};
+dc.stackableChart.ChartStack = function(){
+    var _dataPointMatrix = [];
+
+    this.setDataPoint = function(x, y, data){
+        if(!_dataPointMatrix[x])
+            _dataPointMatrix[x] = [];
+
+        _dataPointMatrix[x][y] = data;
+    };
+
+    this.getDataPoint = function(x, y){
+        return _dataPointMatrix[x][y];
+    };
+};
