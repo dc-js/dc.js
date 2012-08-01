@@ -8,11 +8,11 @@ var suite = vows.describe('Stackable chart');
 suite.addBatch({
     'chart stack': {
         topic: function () {
-            return new dc.utils.ChartStack();
+            return new dc.utils.GroupStack();
         },
 
         'is an object': function (stack) {
-            assert.isTrue(stack instanceof dc.utils.ChartStack);
+            assert.isTrue(stack instanceof dc.utils.GroupStack);
         },
         'is a data point matrix holder': function(stack){
             stack.setDataPoint(1, 1, 99);

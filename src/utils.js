@@ -39,7 +39,7 @@ dc.constants.SELECTED_CLASS = "selected";
 dc.constants.GROUP_INDEX_NAME = "__group_index__";
 
 dc.utils = {};
-dc.utils.ChartStack = function(){
+dc.utils.GroupStack = function(){
     var _dataPointMatrix = [];
     var _groups = [];
 

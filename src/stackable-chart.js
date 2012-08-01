@@ -2,7 +2,7 @@ dc.stackableChart = function(_chart) {
     var MIN_DATA_POINT_HEIGHT = 0;
     var DATA_POINT_PADDING_BOTTOM = 1;
 
-    var _chartStack = new dc.utils.ChartStack();
+    var _chartStack = new dc.utils.GroupStack();
     var _groupStack = [];
     var _valueRetrieverStack = [];
 
