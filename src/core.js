@@ -1,5 +1,5 @@
 dc = {
-    version: "0.6.0",
+    version: "0.7.0",
     _charts: []
 };
 
@@ -69,8 +69,8 @@ dc.override = function(obj, functionName, newFunction) {
         for(var i = 0; i < arguments.length; ++i)
             expression += "argument["+i+"],";
 
-        expression += "existingFunction);"
+        expression += "existingFunction);";
 
         return eval(expression);
     };
-}
+};
