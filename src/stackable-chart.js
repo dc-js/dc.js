@@ -2,11 +2,11 @@ dc.stackableChart = function(_chart) {
     var MIN_DATA_POINT_HEIGHT = 0;
     var DATA_POINT_PADDING_BOTTOM = 1;
 
-    var _chartStack = new dc.utils.GroupStack();
+    var _groupStack = new dc.utils.GroupStack();
 
     _chart.stack = function(group, retriever) {
-        _chartStack.setDefaultRetriever(_chart.valueRetriever());
-        _chartStack.addGroup(group, retriever);
+        _groupStack.setDefaultRetriever(_chart.valueRetriever());
+        _groupStack.addGroup(group, retriever);
         return _chart;
     };
 
@@ -15,8 +15,8 @@ dc.stackableChart = function(_chart) {
 
         allGroups.push(_chart.group());
 
-        for (var i = 0; i < _chartStack.size(); ++i)
-            allGroups.push(_chartStack.getGroupByIndex(i));
+        for (var i = 0; i < _groupStack.size(); ++i)
+            allGroups.push(_groupStack.getGroupByIndex(i));
 
         return allGroups;
     };
@@ -26,13 +26,13 @@ dc.stackableChart = function(_chart) {
 
         allRetrievers.push(_chart.valueRetriever());
 
-        for (var i = 0; i < _chartStack.size(); ++i)
-            allRetrievers.push(_chartStack.getRetrieverByIndex(i));
+        for (var i = 0; i < _groupStack.size(); ++i)
+            allRetrievers.push(_groupStack.getRetrieverByIndex(i));
 
         return allRetrievers;
     };
 
-    _chart.stackedValueRetriever = function(groupIndex) {
+    _chart.getValueRetrieverByIndex = function(groupIndex) {
         return _chart.allValueRetrievers()[groupIndex];
     };
 
@@ -43,7 +43,7 @@ dc.stackableChart = function(_chart) {
         for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
             var group = allGroups[groupIndex];
             var m = d3.min(group.all(), function(e) {
-                return _chart.stackedValueRetriever(groupIndex)(e);
+                return _chart.getValueRetrieverByIndex(groupIndex)(e);
             });
             if (m < min) min = m;
         }
@@ -58,7 +58,7 @@ dc.stackableChart = function(_chart) {
         for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
             var group = allGroups[groupIndex];
             max += d3.max(group.all(), function(e) {
-                return _chart.stackedValueRetriever(groupIndex)(e);
+                return _chart.getValueRetrieverByIndex(groupIndex)(e);
             });
         }
 
@@ -70,7 +70,7 @@ dc.stackableChart = function(_chart) {
     };
 
     _chart.dataPointHeight = function(d, groupIndex) {
-        var h = (_chart.yAxisHeight() - _chart.y()(_chart.stackedValueRetriever(groupIndex)(d)) - DATA_POINT_PADDING_BOTTOM);
+        var h = (_chart.yAxisHeight() - _chart.y()(_chart.getValueRetrieverByIndex(groupIndex)(d)) - DATA_POINT_PADDING_BOTTOM);
         if (isNaN(h) || h < MIN_DATA_POINT_HEIGHT)
             h = MIN_DATA_POINT_HEIGHT;
         return h;
@@ -82,15 +82,15 @@ dc.stackableChart = function(_chart) {
             for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
                 var d = data[dataIndex];
                 if (groupIndex == 0)
-                    _chartStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline() - _chart.dataPointHeight(d, groupIndex));
+                    _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline() - _chart.dataPointHeight(d, groupIndex));
                 else
-                    _chartStack.setDataPoint(groupIndex, dataIndex, _chartStack.getDataPoint(groupIndex - 1, dataIndex) - _chart.dataPointHeight(d, groupIndex))
+                    _groupStack.setDataPoint(groupIndex, dataIndex, _groupStack.getDataPoint(groupIndex - 1, dataIndex) - _chart.dataPointHeight(d, groupIndex))
             }
         }
     };
 
     _chart.getChartStack = function() {
-        return _chartStack;
+        return _groupStack;
     };
 
     return _chart;
