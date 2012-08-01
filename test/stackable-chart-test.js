@@ -34,6 +34,13 @@ suite.addBatch({
             assert.equal(stack.getRetrieverByIndex(index), retriever);
             assert.equal(stack.size(), 1);
             stack.clear();
+        },
+        'should use default retriever if custom retriever is missing': function(stack){
+            var retriever = {};
+            stack.setDefaultRetriever(retriever);
+            var index = stack.addGroup({});
+            assert.equal(stack.getRetrieverByIndex(index), retriever);
+            stack.clear();
         }
     }
 });
