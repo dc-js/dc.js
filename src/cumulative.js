@@ -1,4 +1,6 @@
-dc.utils.CulmulativeReduceTarget = function() {
+dc.cumulative = {};
+
+dc.cumulative.Sum = function() {
     var _keyIndex = [];
     var _map = {};
 

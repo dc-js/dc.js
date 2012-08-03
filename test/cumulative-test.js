@@ -8,10 +8,10 @@ var suite = vows.describe('Cumulative');
 suite.addBatch({
     'dc.cumulative.Sum':{
         topic:function(){
-            return new dc.utils.CulmulativeReduceTarget();
+            return new dc.cumulative.Sum();
         },
         'is a class':function(target){
-            assert.isTrue(target instanceof dc.utils.CulmulativeReduceTarget);
+            assert.isTrue(target instanceof dc.cumulative.Sum);
         },
         'can store and retrieve value by key':function(target){
             var key = "key";
