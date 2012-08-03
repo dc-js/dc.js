@@ -117,19 +117,23 @@ dc.constants.GROUP_INDEX_NAME = "__group_index__";
 dc.utils = {};
 dc.utils.add = function(l, r) {
     if (l instanceof Date) {
-        l.setDate(l.getDate() + r);
+        var d = new Date();
+        d.setTime(l.getTime());
+        d.setDate(l.getDate() + r);
+        return d;
     } else {
-        l += r;
+        return l + r;
     }
-    return l;
 };
 dc.utils.subtract = function(l, r) {
     if (l instanceof Date) {
-        l.setDate(l.getDate() - r);
+        var d = new Date();
+        d.setTime(l.getTime());
+        d.setDate(l.getDate() - r);
+        return d;
     } else {
-        l -= r;
+        return l - r;
     }
-    return l;
 };
 dc.utils.GroupStack = function() {
     var _dataPointMatrix = [];
@@ -645,9 +649,10 @@ dc.coordinateGridChart = function(_chart) {
     };
 
     _chart.yAxisMax = function() {
-        return d3.max(_chart.group().all(), function(e) {
+        var max = d3.max(_chart.group().all(), function(e) {
             return _chart.valueRetriever()(e);
-        }) + _yAxisPadding;
+        });
+        return dc.utils.add(max, _yAxisPadding);
     };
 
     _chart.xAxisPadding = function(_) {
@@ -932,7 +937,7 @@ dc.stackableChart = function(_chart) {
             });
         }
 
-        return max;
+        return dc.utils.add(max, _chart.yAxisPadding());
     };
 
     _chart.allKeyRetrievers = function() {
@@ -1741,8 +1746,6 @@ dc.compositeChart = function(_parent) {
             child.height(_chart.height());
             child.width(_chart.width());
             child.margins(_chart.margins());
-            child.yAxisPadding(_chart.yAxisPadding());
-            child.xAxisPadding(_chart.xAxisPadding());
             child.xUnits(_chart.xUnits());
             child.transitionDuration(_chart.transitionDuration());
             child.generateG();
@@ -1799,7 +1802,7 @@ dc.compositeChart = function(_parent) {
     }
 
     _chart.yAxisMax = function() {
-        return d3.max(getAllYAxisMaxFromChildCharts());
+        return dc.utils.add(d3.max(getAllYAxisMaxFromChildCharts()), _chart.yAxisPadding());
     };
 
     function getAllXAxisMinFromChildCharts() {
@@ -1811,7 +1814,7 @@ dc.compositeChart = function(_parent) {
     }
 
     _chart.xAxisMin = function() {
-        return d3.min(getAllXAxisMinFromChildCharts());
+        return dc.utils.subtract(d3.min(getAllXAxisMinFromChildCharts()), _chart.xAxisPadding());
     };
 
     function getAllXAxisMaxFromChildCharts() {
@@ -1823,7 +1826,7 @@ dc.compositeChart = function(_parent) {
     }
 
     _chart.xAxisMax = function() {
-        return d3.max(getAllXAxisMaxFromChildCharts());
+        return dc.utils.add(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding());
     };
 
     return _chart.anchor(_parent);
