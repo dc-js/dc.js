@@ -257,15 +257,24 @@ suite.addBatch({
     }
 });
 
-suite.addBatch({'elastic y':{
+suite.addBatch({'elastic axis':{
     topic: function() {
         countryDimension.filter("CA")
         var chart = buildChart("bar-chart2", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
-        chart.elasticY(true).render();
+        chart.elasticY(true)
+            .yAxisPadding(10)
+            .elasticX(true)
+            .xAxisPadding(30)
+            .redraw();
         return chart;
     },
-    'y axis should have shrunk triggered by filter': function(chart) {
-        assert.equal(chart.y().domain()[1], 1);
+    'y axis should have changed triggered by filter': function(chart) {
+        assert.equal(chart.y().domain()[0], 0);
+        assert.equal(chart.y().domain()[1], 11);
+    },
+    'x axis should have changed triggered by filter': function(chart) {
+        assert.equal(chart.x().domain()[0].getTime(), new Date("Wed, 25 Apr 2012 04:00:00 GMT").getTime());
+        assert.equal(chart.x().domain()[1].getTime(), new Date("Sun, 09 Sep 2012 04:00:00 GMT").getTime());
     },
     teardown: function(topic) {
         resetAllFilters();

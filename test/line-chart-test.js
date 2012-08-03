@@ -184,8 +184,8 @@ suite.addBatch({'elastic axis':{
         assert.equal(chart.y().domain()[1], 1);
     },
     'x domain should be set': function(chart) {
-        assert.equal(chart.x().domain()[0].getTime(), 1332734400000);
-        assert.equal(chart.x().domain()[1].getTime(), 1349755200000);
+        assert.equal(chart.x().domain()[0].getTime(), new Date("Mon, 26 Mar 2012 04:00:00 GMT").getTime());
+        assert.equal(chart.x().domain()[1].getTime(), new Date("Tue, 09 Oct 2012 04:00:00 GMT").getTime());
     },
     'correctly draw line': function(chart) {
         assert.equal(jQuery("#elastic-y-line-chart g.stack0 path.line").attr("d"), "M333.70558375634516,169L406.90355329949233,169L417.3604060913705,10L527.1573604060914,169L574.2131979695431,10L736.2944162436548,169");
