@@ -70,11 +70,11 @@ dc.cumulative.CountUnique = function() {
         return size;
     }
 
-    this.register = function(e) {
+    this.add = function(key, e) {
         _hash[e] = true;
     };
 
-    this.count = function() {
+    this.count = function(key) {
         return hashSize(_hash);
     };
 };

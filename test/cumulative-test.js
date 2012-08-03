@@ -73,14 +73,16 @@ suite.addBatch({
             assert.isTrue(count instanceof dc.cumulative.CountUnique);
         },
         'can register element':function(count){
-            count.register("abc");
-            assert.equal(count.count(), 1);
+            var key = 1;
+            count.add(key, "abc");
+            assert.equal(count.count(key), 1);
         },
         'can register the same element multiple times but count only once':function(count){
-            count.register("abc");
-            count.register("abc");
-            count.register("edf");
-            assert.equal(count.count(), 2);
+            var key = 1;
+            count.add(key, "abc");
+            count.add(key, "abc");
+            count.add(key, "edf");
+            assert.equal(count.count(key), 2);
         }
     }
 });
