@@ -16,8 +16,8 @@ suite.addBatch({
         'can store and retrieve value by key':function(target){
             var key = "key";
             var value = 100;
-            target.addValue(key, value);
-            target.addValue(key, value);
+            target.add(key, value);
+            target.add(key, value);
             assert.equal(target.getValueByKey(key), value * 2);
             assert.equal(target.size(), 1);
             target.clear();
@@ -25,10 +25,10 @@ suite.addBatch({
         'can retrieve cumulative value by key':function(target){
             var key = "key";
             var value = 100;
-            target.addValue("0", 10);
-            target.addValue("a", value);
-            target.addValue(key, 19);
-            target.addValue("4", 4);
+            target.add("0", 10);
+            target.add("a", value);
+            target.add(key, 19);
+            target.add("4", 4);
             assert.equal(target.getCumulativeValueByKey(key), value + 10 + 19);
             assert.equal(target.getCumulativeValueByKey("4"), value + 10 + 19 + 4);
             target.clear();
@@ -36,16 +36,16 @@ suite.addBatch({
         'can retrieve value by out of range key':function(target){
             var key = "key";
             var value = 100;
-            target.addValue("key", value);
+            target.add("key", value);
             assert.equal(target.getCumulativeValueByKey("not found"), 0);
             target.clear();
         },
         'can reduce value by key':function(target){
             var key = "key";
             var value = 100;
-            target.addValue(key, value);
-            target.addValue(key, value);
-            target.minusValue(key, value);
+            target.add(key, value);
+            target.add(key, value);
+            target.minus(key, value);
             assert.equal(target.getValueByKey(key), value);
             assert.equal(target.size(), 1);
             target.clear();
@@ -53,10 +53,10 @@ suite.addBatch({
         'can store and retrieve value by date key':function(target){
             var key = new Date(2012, 1, 1);
             var value = 100;
-            target.addValue(key, value);
-            target.addValue(key, value);
-            target.addValue(key, value);
-            target.minusValue(key, value);
+            target.add(key, value);
+            target.add(key, value);
+            target.add(key, value);
+            target.minus(key, value);
             assert.equal(target.getValueByKey(key), value * 2);
             assert.equal(target.size(), 1);
             target.clear();

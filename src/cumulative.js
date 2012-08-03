@@ -9,7 +9,7 @@ dc.cumulative.Sum = function() {
         return key;
     }
 
-    this.addValue = function(key, value) {
+    this.add = function(key, value) {
         key = sanitizeKey(key);
         if (_map[key] == null) {
             _keyIndex.push(key);
@@ -19,7 +19,7 @@ dc.cumulative.Sum = function() {
         }
     };
 
-    this.minusValue = function(key, value) {
+    this.minus = function(key, value) {
         key = sanitizeKey(key);
         _map[key] -= value;
     };
