@@ -58,3 +58,7 @@ dc.cumulative.Sum = function() {
         return _map;
     };
 };
+
+dc.cumulative.CountUnique = function(){
+
+};

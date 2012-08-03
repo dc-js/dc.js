@@ -64,6 +64,17 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({
+    'dc.cumulative.CountUnique':{
+        topic:function(){
+            return new dc.cumulative.CountUnique();
+        },
+        'is a class':function(count){
+            assert.isTrue(count instanceof dc.cumulative.CountUnique);
+        }
+    }
+});
+
 suite.export(module);
 
 
