@@ -59,9 +59,22 @@ dc.cumulative.Sum = function() {
     };
 };
 
-dc.cumulative.CountUnique = function(){
+dc.cumulative.CountUnique = function() {
     var _hash = {};
 
-    this.register = function(e){};
-    this.count = function(){return 1;};
+    function hashSize(hash) {
+        var size = 0, key;
+        for (key in hash) {
+            if (hash.hasOwnProperty(key)) size++;
+        }
+        return size;
+    }
+
+    this.register = function(e) {
+        _hash[e] = true;
+    };
+
+    this.count = function() {
+        return hashSize(_hash);
+    };
 };

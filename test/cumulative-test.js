@@ -74,7 +74,13 @@ suite.addBatch({
         },
         'can register element':function(count){
             count.register("abc");
-            assert.equal(count.count("abc"), 1);
+            assert.equal(count.count(), 1);
+        },
+        'can register the same element multiple times but count only once':function(count){
+            count.register("abc");
+            count.register("abc");
+            count.register("edf");
+            assert.equal(count.count(), 2);
         }
     }
 });
