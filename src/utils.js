@@ -41,19 +41,23 @@ dc.constants.GROUP_INDEX_NAME = "__group_index__";
 dc.utils = {};
 dc.utils.add = function(l, r) {
     if (l instanceof Date) {
-        l.setDate(l.getDate() + r);
+        var d = new Date();
+        d.setTime(l.getTime());
+        d.setDate(l.getDate() + r);
+        return d;
     } else {
-        l += r;
+        return l + r;
     }
-    return l;
 };
 dc.utils.subtract = function(l, r) {
     if (l instanceof Date) {
-        l.setDate(l.getDate() - r);
+        var d = new Date();
+        d.setTime(l.getTime());
+        d.setDate(l.getDate() - r);
+        return d;
     } else {
-        l -= r;
+        return l - r;
     }
-    return l;
 };
 dc.utils.GroupStack = function() {
     var _dataPointMatrix = [];

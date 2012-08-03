@@ -247,6 +247,9 @@
             .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
             .xUnits(d3.time.days)
             .elasticY(true)
+            .yAxisPadding(50)
+            .elasticX(true)
+            .xAxisPadding(50)
             .renderArea(true)
             .xAxis().ticks(5);
 

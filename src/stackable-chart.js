@@ -62,7 +62,7 @@ dc.stackableChart = function(_chart) {
             });
         }
 
-        return max;
+        return dc.utils.add(max, _chart.yAxisPadding());
     };
 
     _chart.allKeyRetrievers = function() {

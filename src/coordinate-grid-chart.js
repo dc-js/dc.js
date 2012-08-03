@@ -144,9 +144,10 @@ dc.coordinateGridChart = function(_chart) {
     };
 
     _chart.yAxisMax = function() {
-        return d3.max(_chart.group().all(), function(e) {
+        var max = d3.max(_chart.group().all(), function(e) {
             return _chart.valueRetriever()(e);
-        }) + _yAxisPadding;
+        });
+        return dc.utils.add(max, _yAxisPadding);
     };
 
     _chart.xAxisPadding = function(_) {
