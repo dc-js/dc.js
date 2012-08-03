@@ -60,5 +60,8 @@ dc.cumulative.Sum = function() {
 };
 
 dc.cumulative.CountUnique = function(){
+    var _hash = {};
 
+    this.register = function(e){};
+    this.count = function(){return 1;};
 };

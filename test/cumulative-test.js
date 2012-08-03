@@ -71,6 +71,10 @@ suite.addBatch({
         },
         'is a class':function(count){
             assert.isTrue(count instanceof dc.cumulative.CountUnique);
+        },
+        'can register element':function(count){
+            count.register("abc");
+            assert.equal(count.count("abc"), 1);
         }
     }
 });
