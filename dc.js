@@ -167,7 +167,6 @@ dc.utils.GroupStack = function() {
         _defaultRetriever = retriever;
     };
 };
-
 dc.utils.CulmulativeReduceTarget = function() {
     var _keyIndex = [];
     var _map = {};
