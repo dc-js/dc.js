@@ -87,7 +87,15 @@ dc.cumulative.CountUnique = function() {
     this.add = function(key, e) {
         if (this.getValueByKey(key) == null)
             this.setValueByKey(key, {});
+        if(this.getValueByKey(key)[e] == null)
+            this.getValueByKey(key)[e] = 0;
         this.getValueByKey(key)[e] += 1;
+    };
+
+    this.minus = function(key, e){
+        this.getValueByKey(key)[e] -= 1;
+        if(this.getValueByKey(key)[e] <= 0)
+            delete this.getValueByKey(key)[e];
     };
 
     this.count = function(key) {

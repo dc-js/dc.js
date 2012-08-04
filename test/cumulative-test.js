@@ -113,6 +113,15 @@ suite.addBatch({
             assert.equal(count.count(key), 1);
             assert.equal(count.count(key2), 1);
             count.clear();
+        },
+        'can register and deregister the same element multiple times w/ key but count only once':function(count){
+            var key = 1;
+            count.add(key, "abc");
+            count.add(key, "abc");
+            count.add(key, "edf");
+            count.minus(key, "edf");
+            assert.equal(count.count(key), 1);
+            count.clear();
         }
     }
 });
