@@ -1299,7 +1299,7 @@ dc.barChart = function(_parent) {
 
     function barX(bar, data, groupIndex, dataIndex) {
         setGroupIndexToBar(bar, groupIndex);
-        return _chart.x()(_chart.keyRetriever()(data)) + _chart.margins().left;
+        return _chart.x()(_chart.keyRetriever()(data)) + _chart.margins().left - barWidth(data)/2;
     }
 
     function getGroupIndexFromBar(bar) {
