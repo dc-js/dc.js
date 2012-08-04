@@ -292,6 +292,10 @@ d3.csv("ndx.csv", function(data) {
                     .x(d3.scale.linear().domain([-2500, 2500]))
                     .y(d3.scale.linear().domain([-100, 100]))
                     .r(d3.scale.linear().domain([0, 4000]))
+                    .elasticY(true)
+                    .yAxisPadding(100)
+                    .elasticX(true)
+                    .xAxisPadding(500)
                     .renderLabel(true)
                     .renderTitle(true)
                     .label(function(p) {

@@ -1,5 +1,5 @@
 dc = {
-    version: "0.6.0",
+    version: "0.7.0",
     _charts: []
 };
 
@@ -66,14 +66,14 @@ dc.override = function(obj, functionName, newFunction) {
     obj[functionName] = function() {
         var expression = "newFunction(";
 
-        for(var i = 0; i < arguments.length; ++i)
-            expression += "argument["+i+"],";
+        for (var i = 0; i < arguments.length; ++i)
+            expression += "argument[" + i + "],";
 
-        expression += "existingFunction);"
+        expression += "existingFunction);";
 
         return eval(expression);
     };
-}
+};
 dc.dateFormat = d3.time.format("%m/%d/%Y");
 
 dc.printers = {};
@@ -140,7 +140,7 @@ dc.utils.GroupStack = function() {
     };
 
     this.addGroup = function(group, retriever) {
-        if(!retriever)
+        if (!retriever)
             retriever = _defaultRetriever;
         _groups.push([group, retriever]);
         return _groups.length - 1;
@@ -158,15 +158,140 @@ dc.utils.GroupStack = function() {
         return _groups.length;
     };
 
-    this.clear = function(){
+    this.clear = function() {
         _dataPointMatrix = [];
         _groups = [];
     };
 
-    this.setDefaultRetriever = function(retriever){
+    this.setDefaultRetriever = function(retriever) {
         _defaultRetriever = retriever;
     };
 };
+dc.cumulative = {};
+
+dc.cumulative.Base = function() {
+    this._keyIndex = [];
+    this._map = {};
+
+    this.sanitizeKey = function(key) {
+        key = key + "";
+        return key;
+    };
+
+    this.clear = function() {
+        this._keyIndex = [];
+        this._map = {};
+    };
+
+    this.size = function() {
+        return this._keyIndex.length;
+    };
+
+    this.getValueByKey = function(key) {
+        key = this.sanitizeKey(key);
+        var value = this._map[key];
+        return value;
+    };
+
+    this.setValueByKey = function(key, value) {
+        key = this.sanitizeKey(key);
+        return this._map[key] = value;
+    };
+
+    this.indexOfKey = function(key) {
+        key = this.sanitizeKey(key);
+        return this._keyIndex.indexOf(key);
+    };
+
+    this.addToIndex = function(key) {
+        key = this.sanitizeKey(key);
+        this._keyIndex.push(key);
+    };
+
+    this.getKeyByIndex = function(index) {
+        return this._keyIndex[index];
+    };
+};
+
+dc.cumulative.Sum = function() {
+    dc.cumulative.Base.apply(this, arguments);
+
+    this.add = function(key, value) {
+        if (value == null)
+            value = 0;
+
+        if (this.getValueByKey(key) == null) {
+            this.addToIndex(key);
+            this.setValueByKey(key, value);
+        } else {
+            this.setValueByKey(key, this.getValueByKey(key) + value);
+        }
+    };
+
+    this.minus = function(key, value) {
+        this.setValueByKey(key, this.getValueByKey(key) - value);
+    };
+
+    this.cumulativeSum = function(key) {
+        var keyIndex = this.indexOfKey(key);
+        if (keyIndex < 0) return 0;
+        var cumulativeValue = 0;
+        for (var i = 0; i <= keyIndex; ++i) {
+            var k = this.getKeyByIndex(i);
+            cumulativeValue += this.getValueByKey(k);
+        }
+        return cumulativeValue;
+    };
+};
+dc.cumulative.Sum.prototype = new dc.cumulative.Base();
+
+dc.cumulative.CountUnique = function() {
+    dc.cumulative.Base.apply(this, arguments);
+
+    function hashSize(hash) {
+        var size = 0, key;
+        for (key in hash) {
+            if (hash.hasOwnProperty(key)) size++;
+        }
+        return size;
+    }
+
+    this.add = function(key, e) {
+        if (this.getValueByKey(key) == null) {
+            this.setValueByKey(key, {});
+            this.addToIndex(key);
+        }
+
+        if (e != null) {
+            if (this.getValueByKey(key)[e] == null)
+                this.getValueByKey(key)[e] = 0;
+
+            this.getValueByKey(key)[e] += 1;
+        }
+    };
+
+    this.minus = function(key, e) {
+        this.getValueByKey(key)[e] -= 1;
+        if (this.getValueByKey(key)[e] <= 0)
+            delete this.getValueByKey(key)[e];
+    };
+
+    this.count = function(key) {
+        return hashSize(this.getValueByKey(key));
+    };
+
+    this.cumulativeCount = function(key) {
+        var keyIndex = this.indexOfKey(key);
+        if (keyIndex < 0) return 0;
+        var cumulativeCount = 0;
+        for (var i = 0; i <= keyIndex; ++i) {
+            var k = this.getKeyByIndex(i);
+            cumulativeCount += this.count(k);
+        }
+        return cumulativeCount;
+    };
+};
+dc.cumulative.CountUnique.prototype = new dc.cumulative.Base();
 dc.baseChart = function(_chart) {
     var _dimension;
     var _group;
@@ -371,9 +496,12 @@ dc.coordinateGridChart = function(_chart) {
     var _x;
     var _xAxis = d3.svg.axis();
     var _xUnits = dc.units.integers;
+    var _xAxisPadding = 0;
+    var _xElasticity = false;
 
     var _y;
     var _yAxis = d3.svg.axis();
+    var _yAxisPadding = 0;
     var _yElasticity = false;
 
     var _filter;
@@ -412,6 +540,11 @@ dc.coordinateGridChart = function(_chart) {
 
     _chart.renderXAxis = function(g) {
         g.select("g.x").remove();
+
+        if (_chart.elasticX()) {
+            _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
+        }
+
         _x.range([0, _chart.xAxisLength()]);
         _xAxis = _xAxis.scale(_chart.x()).orient("bottom");
         g.append("g")
@@ -469,18 +602,48 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
+    _chart.elasticX = function(_) {
+        if (!arguments.length) return _xElasticity;
+        _xElasticity = _;
+        return _chart;
+    };
+
+    _chart.xAxisMin = function() {
+        var min = d3.min(_chart.group().all(), function(e) {
+            return _chart.keyRetriever()(e);
+        }) - _xAxisPadding;
+        return min;
+    };
+
+    _chart.xAxisMax = function() {
+        return d3.max(_chart.group().all(), function(e) {
+            return _chart.keyRetriever()(e);
+        }) + _xAxisPadding;
+    };
+
     _chart.yAxisMin = function() {
         var min = d3.min(_chart.group().all(), function(e) {
             return _chart.valueRetriever()(e);
-        });
-        if (min > 0) min = 0;
+        }) - _yAxisPadding;
         return min;
     };
 
     _chart.yAxisMax = function() {
         return d3.max(_chart.group().all(), function(e) {
             return _chart.valueRetriever()(e);
-        });
+        }) + _yAxisPadding;
+    };
+
+    _chart.xAxisPadding = function(_){
+        if(!arguments.length) return _xAxisPadding;
+        _xAxisPadding = _;
+        return _chart;
+    };
+
+    _chart.yAxisPadding = function(_){
+        if(!arguments.length) return _yAxisPadding;
+        _yAxisPadding = _;
+        return _chart;
     };
 
     _chart.yAxisHeight = function() {
@@ -608,6 +771,9 @@ dc.coordinateGridChart = function(_chart) {
     _chart.redraw = function() {
         if (_chart.elasticY())
             _chart.renderYAxis(_chart.g());
+
+        if (_chart.elasticX())
+            _chart.renderXAxis(_chart.g());
 
         _chart.plotData();
         _chart.redrawBrush(_chart.g());
@@ -952,10 +1118,19 @@ dc.pieChart = function(_parent) {
             .attr("text-anchor", "middle")
             .text(function(d) {
                 var data = d.data;
-                if (_chart.valueRetriever()(data) == 0)
+                if (sliceHasNoData(data) || sliceTooSmall(d))
                     return "";
                 return _chart.label()(d);
             });
+    }
+
+    function sliceTooSmall(d) {
+        var angle = (d.endAngle - d.startAngle);
+        return isNaN(angle) || angle < 1;
+    }
+
+    function sliceHasNoData(data) {
+        return _chart.valueRetriever()(data) == 0;
     }
 
     function redrawTitles() {
