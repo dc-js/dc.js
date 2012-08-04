@@ -70,6 +70,20 @@ suite.addBatch({
             assert.equal(target.getValueByKey(key), value * 2);
             assert.equal(target.size(), 1);
             target.clear();
+        },
+        'can retrieve cumulative value by key with empty key in between':function(target){
+            var key1 = "0";
+            var key2 = "a";
+            var key3 = "key";
+            var key4 = "4";
+            var value = 100;
+            target.add(key1, 10);
+            target.add(key2, value);
+            target.add(key3);
+            target.add(key4, 4);
+            assert.equal(target.cumulativeSum(key3), value + 10);
+            assert.equal(target.cumulativeSum("4"), value + 10 + 4);
+            target.clear();
         }
     }
 });
@@ -137,6 +151,23 @@ suite.addBatch({
             assert.equal(count.cumulativeCount(key), 1);
             assert.equal(count.cumulativeCount(key2), 2);
             assert.equal(count.cumulativeCount(key3), 4);
+            count.clear();
+        },
+        'can calculate cumulative count with empty key in between':function(count){
+            var key = 1;
+            var key2 = 2;
+            var key3 = 3;
+            count.add(key, "abc");
+            count.add(key, "abc");
+            count.add(key, "edf");
+            count.minus(key, "edf");
+            count.add(key2);
+            count.add(key3, "abc");
+            count.add(key3, "edf");
+            count.add(key3);
+            assert.equal(count.cumulativeCount(key), 1);
+            assert.equal(count.cumulativeCount(key2), 1);
+            assert.equal(count.cumulativeCount(key3), 3);
             count.clear();
         }
     }

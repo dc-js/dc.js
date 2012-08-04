@@ -48,6 +48,9 @@ dc.cumulative.Sum = function() {
     dc.cumulative.Base.apply(this, arguments);
 
     this.add = function(key, value) {
+        if (value == null)
+            value = 0;
+
         if (this.getValueByKey(key) == null) {
             this.addToIndex(key);
             this.setValueByKey(key, value);
@@ -90,10 +93,12 @@ dc.cumulative.CountUnique = function() {
             this.addToIndex(key);
         }
 
-        if (this.getValueByKey(key)[e] == null)
-            this.getValueByKey(key)[e] = 0;
+        if (e != null) {
+            if (this.getValueByKey(key)[e] == null)
+                this.getValueByKey(key)[e] = 0;
 
-        this.getValueByKey(key)[e] += 1;
+            this.getValueByKey(key)[e] += 1;
+        }
     };
 
     this.minus = function(key, e) {
