@@ -39,15 +39,15 @@ suite.addBatch({
             target.add("a", value);
             target.add(key, 19);
             target.add("4", 4);
-            assert.equal(target.getCumulativeValueByKey(key), value + 10 + 19);
-            assert.equal(target.getCumulativeValueByKey("4"), value + 10 + 19 + 4);
+            assert.equal(target.cumulativeSum(key), value + 10 + 19);
+            assert.equal(target.cumulativeSum("4"), value + 10 + 19 + 4);
             target.clear();
         },
         'can retrieve value by out of range key':function(target){
             var key = "key";
             var value = 100;
             target.add("key", value);
-            assert.equal(target.getCumulativeValueByKey("not found"), 0);
+            assert.equal(target.cumulativeSum("not found"), 0);
             target.clear();
         },
         'can reduce value by key':function(target){
@@ -121,6 +121,22 @@ suite.addBatch({
             count.add(key, "edf");
             count.minus(key, "edf");
             assert.equal(count.count(key), 1);
+            count.clear();
+        },
+        'can calculate cumulative count':function(count){
+            var key = 1;
+            var key2 = 2;
+            var key3 = 3;
+            count.add(key, "abc");
+            count.add(key, "abc");
+            count.add(key, "edf");
+            count.minus(key, "edf");
+            count.add(key2, "abc");
+            count.add(key3, "abc");
+            count.add(key3, "edf");
+            assert.equal(count.cumulativeCount(key), 1);
+            assert.equal(count.cumulativeCount(key2), 2);
+            assert.equal(count.cumulativeCount(key3), 4);
             count.clear();
         }
     }
