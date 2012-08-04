@@ -22,6 +22,20 @@ suite.addBatch({
             assert.equal(target.size(), 1);
             target.clear();
         },
+        'should not share internal data':function(target){
+            assert.notEqual(target.map(), (new dc.cumulative.Sum()).map());
+            target.clear();
+        },
+        'can store and retrieve value in separate sums':function(target){
+            var key = "key";
+            var value = 100;
+            target.add(key, value);
+            target.add(key, value);
+            var target2 = new dc.cumulative.Sum();
+            assert.equal(target2.getValueByKey(key), 0);
+            assert.equal(target2.size(), 0);
+            target.clear();
+        },
         'can retrieve cumulative value by key':function(target){
             var key = "key";
             var value = 100;
@@ -77,12 +91,26 @@ suite.addBatch({
             count.add(key, "abc");
             assert.equal(count.count(key), 1);
         },
+        'can register element w/ different keys':function(count){
+            count.add(1, "abc");
+            count.add(2, "abc");
+            count.add(2, "edf");
+            assert.equal(count.count(1), 1);
+            assert.equal(count.count(2), 2);
+        },
         'can register the same element multiple times but count only once':function(count){
             var key = 1;
             count.add(key, "abc");
             count.add(key, "abc");
             count.add(key, "edf");
             assert.equal(count.count(key), 2);
+        },
+        'can register the same element multiple times w/ key but count only once':function(count){
+            var key = 1;
+            count.add(key, "abc");
+            count.add(key, "abc");
+            count.add(2, "edf");
+            assert.equal(count.count(key), 1);
         }
     }
 });
