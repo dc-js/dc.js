@@ -504,6 +504,12 @@ d3.csv("ndx.csv", function(data) {
             .group(volumeByMonthGroup) // set group
             // (optional) whether chart should rescale y axis to fit data, :default = false
             .elasticY(true)
+            // (optional) when elasticY is on whether padding should be applied to y axis domain, :default=0
+            .yAxisPadding(100)
+            // (optional) whether chart should rescale x axis to fit data, :default = false
+            .elasticX(true)
+            // (optional) when elasticX is on whether padding should be applied to x axis domain, :default=0
+            .xAxisPadding(500)
             // define x scale
             .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
             // (optional) set filter brush rounding
@@ -531,6 +537,12 @@ d3.csv("ndx.csv", function(data) {
             .group(monthlyMoveGroup) // set group
             // (optional) whether chart should rescale y axis to fit data, :default = false
             .elasticY(true)
+            // (optional) when elasticY is on whether padding should be applied to y axis domain, :default=0
+            .yAxisPadding(100)
+            // (optional) whether chart should rescale x axis to fit data, :default = false
+            .elasticX(true)
+            // (optional) when elasticX is on whether padding should be applied to x axis domain, :default=0
+            .xAxisPadding(500)
             // define x scale
             .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
             // (optional) set filter brush rounding
@@ -559,6 +571,12 @@ d3.csv("ndx.csv", function(data) {
         .group(monthlyMoveGroup) // set group
         // (optional) whether chart should rescale y axis to fit data, :default = false
         .elasticY(true)
+        // (optional) when elasticY is on whether padding should be applied to y axis domain, :default=0
+        .yAxisPadding(100)
+        // (optional) whether chart should rescale x axis to fit data, :default = false
+        .elasticX(true)
+        // (optional) when elasticX is on whether padding should be applied to x axis domain, :default=0
+        .xAxisPadding(500)
         // define x scale
         .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
         // (optional) set filter brush rounding
@@ -602,6 +620,14 @@ d3.csv("ndx.csv", function(data) {
             .x(d3.scale.linear().domain([-2500, 2500]))
             // set y scale
             .y(d3.scale.linear().domain([-100, 100]))
+            // (optional) whether chart should rescale y axis to fit data, :default = false
+            .elasticY(true)
+            // (optional) when elasticY is on whether padding should be applied to y axis domain, :default=0
+            .yAxisPadding(100)
+            // (optional) whether chart should rescale x axis to fit data, :default = false
+            .elasticX(true)
+            // (optional) when elasticX is on whether padding should be applied to x axis domain, :default=0
+            .xAxisPadding(500)
             // set radius scale
             .r(d3.scale.linear().domain([0, 4000]))
             // (optional) whether chart should render labels, :default = true
