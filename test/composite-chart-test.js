@@ -141,13 +141,13 @@ suite.addBatch({
             chart.selectAll("g.sub rect.bar").each(function(d, i) {
                 switch (i) {
                     case 0:
-                        assert.equal(d3.select(this).attr("x"), "44.712643678160916");
+                        assert.equal(d3.select(this).attr("x"), "42.712643678160916");
                         assert.equal(d3.select(this).attr("y"), "103");
                         assert.equal(d3.select(this).attr("width"), "4");
                         assert.equal(d3.select(this).attr("height"), "16");
                         break;
                     case 5:
-                        assert.equal(d3.select(this).attr("x"), "425.28735632183907");
+                        assert.equal(d3.select(this).attr("x"), "423.28735632183907");
                         assert.equal(d3.select(this).attr("y"), "90");
                         assert.equal(d3.select(this).attr("width"), "4");
                         assert.equal(d3.select(this).attr("height"), "29");

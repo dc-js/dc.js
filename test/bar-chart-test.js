@@ -96,7 +96,8 @@ suite.addBatch({
         },
         'bar x should be set correctly': function(chart) {
             chart.selectAll("svg g rect.bar").each(function(d) {
-                assert.equal(d3.select(this).attr('x'), chart.x()(d.key) + chart.margins().left);
+                var halfBarWidth = 1;
+                assert.equal(d3.select(this).attr('x'), chart.x()(d.key) + chart.margins().left - halfBarWidth);
             });
         },
         'bar y should be set correctly': function(chart) {
