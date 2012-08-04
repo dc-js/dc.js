@@ -22,10 +22,6 @@ suite.addBatch({
             assert.equal(target.size(), 1);
             target.clear();
         },
-        'should not share internal data':function(target){
-            assert.notEqual(target.map(), (new dc.cumulative.Sum()).map());
-            target.clear();
-        },
         'can store and retrieve value in separate sums':function(target){
             var key = "key";
             var value = 100;

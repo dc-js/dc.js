@@ -9,14 +9,6 @@ dc.cumulative.Base = function() {
         return key;
     };
 
-    this.index = function() {
-        return this._keyIndex;
-    };
-
-    this.map = function() {
-        return this._map;
-    };
-
     this.clear = function() {
         this._keyIndex = [];
         this._map = {};
@@ -41,15 +33,23 @@ dc.cumulative.Base = function() {
         key = this.sanitizeKey(key);
         return this._keyIndex.indexOf(key);
     };
+
+    this.addToIndex = function(key){
+        key = this.sanitizeKey(key);
+        this._keyIndex.push(key);
+    };
+
+    this.getKeyByIndex = function(index){
+        return this._keyIndex[index];
+    };
 };
 
 dc.cumulative.Sum = function() {
     dc.cumulative.Base.apply(this, arguments);
 
     this.add = function(key, value) {
-        key = this.sanitizeKey(key);
         if (this.getValueByKey(key) == null) {
-            this.index().push(key);
+            this.addToIndex(key);
             this.setValueByKey(key, value);
         } else {
             this.setValueByKey(key, this.getValueByKey(key) + value);
@@ -65,7 +65,7 @@ dc.cumulative.Sum = function() {
         if (keyIndex < 0) return 0;
         var cumulativeValue = 0;
         for (var i = 0; i <= keyIndex; ++i) {
-            var k = this.index()[i];
+            var k = this.getKeyByIndex(i);
             cumulativeValue += this.getValueByKey(k);
         }
         return cumulativeValue;
@@ -85,13 +85,13 @@ dc.cumulative.CountUnique = function() {
     }
 
     this.add = function(key, e) {
-        if (this._map[key] == null)
-            this._map[key] = {};
-        this._map[key][e] += 1;
+        if (this.getValueByKey(key) == null)
+            this.setValueByKey(key, {});
+        this.getValueByKey(key)[e] += 1;
     };
 
     this.count = function(key) {
-        return hashSize(this._map[key]);
+        return hashSize(this.getValueByKey(key));
     };
 };
 dc.cumulative.CountUnique.prototype = new dc.cumulative.Base();
