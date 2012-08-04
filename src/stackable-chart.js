@@ -65,6 +65,51 @@ dc.stackableChart = function(_chart) {
         return max;
     };
 
+    _chart.allKeyRetrievers = function() {
+        var allRetrievers = [];
+
+        allRetrievers.push(_chart.keyRetriever());
+
+        for (var i = 0; i < _groupStack.size(); ++i)
+            allRetrievers.push(_chart.keyRetriever());
+
+        return allRetrievers;
+    };
+
+    _chart.getKeyRetrieverByIndex = function(groupIndex) {
+        return _chart.allKeyRetrievers()[groupIndex];
+    };
+
+    _chart.xAxisMin = function() {
+        var min = null;
+        var allGroups = _chart.allGroups();
+
+        for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
+            var group = allGroups[groupIndex];
+            var m = d3.min(group.all(), function(e) {
+                return _chart.getKeyRetrieverByIndex(groupIndex)(e);
+            });
+            if (min == null || min > m) min = m;
+        }
+
+        return dc.utils.subtract(min, _chart.xAxisPadding());
+    };
+
+    _chart.xAxisMax = function() {
+        var max = null;
+        var allGroups = _chart.allGroups();
+
+        for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
+            var group = allGroups[groupIndex];
+            var m = d3.max(group.all(), function(e) {
+                return _chart.getKeyRetrieverByIndex(groupIndex)(e);
+            });
+            if(max == null || max < m) max = m;
+        }
+
+        return dc.utils.add(max, _chart.xAxisPadding());
+    };
+
     _chart.dataPointBaseline = function() {
         return _chart.margins().top + _chart.yAxisHeight() - DATA_POINT_PADDING_BOTTOM;
     };

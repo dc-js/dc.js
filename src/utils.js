@@ -1,7 +1,6 @@
 dc.dateFormat = d3.time.format("%m/%d/%Y");
 
 dc.printers = {};
-
 dc.printers.filter = function(filter) {
     var s = "";
 
@@ -40,6 +39,22 @@ dc.constants.SELECTED_CLASS = "selected";
 dc.constants.GROUP_INDEX_NAME = "__group_index__";
 
 dc.utils = {};
+dc.utils.add = function(l, r) {
+    if (l instanceof Date) {
+        l.setDate(l.getDate() + r);
+    } else {
+        l += r;
+    }
+    return l;
+};
+dc.utils.subtract = function(l, r) {
+    if (l instanceof Date) {
+        l.setDate(l.getDate() - r);
+    } else {
+        l -= r;
+    }
+    return l;
+};
 dc.utils.GroupStack = function() {
     var _dataPointMatrix = [];
     var _groups = [];

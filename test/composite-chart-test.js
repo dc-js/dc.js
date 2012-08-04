@@ -20,10 +20,10 @@ function buildChart(id, xdomain) {
         .transitionDuration(0)
         .xUnits(d3.time.days)
         .compose([
-                dc.barChart(chart).group(dateValueSumGroup),
-                dc.lineChart(chart).stack(dateValueSumGroup).stack(dateValueSumGroup),
-                dc.lineChart(chart).group(dateGroup)
-            ]);
+        dc.barChart(chart).group(dateValueSumGroup),
+        dc.lineChart(chart).stack(dateValueSumGroup).stack(dateValueSumGroup),
+        dc.lineChart(chart).group(dateGroup)
+    ]);
     chart.render();
     return chart;
 }
@@ -119,12 +119,12 @@ suite.addBatch({
             chart.round(d3.time.day.round);
             assert.isNotNull(chart.round());
         },
-        'separate g should be created for each sub chart': function(chart){
+        'separate g should be created for each sub chart': function(chart) {
             assert.equal(chart.selectAll("g.sub")[0].length, 3);
         },
-        'sub line chart path generation': function(chart){
-            chart.selectAll("g.sub path.line").each(function(d, i){
-                switch(i){
+        'sub line chart path generation': function(chart) {
+            chart.selectAll("g.sub path.line").each(function(d, i) {
+                switch (i) {
                     case 0:
                         assert.equal(d3.select(this).attr("d"), "M44.712643678160916,119L113.90804597701148,118L123.79310344827586,113L227.58620689655172,118L272.0689655172414,114L425.28735632183907,115");
                         break;
@@ -134,12 +134,12 @@ suite.addBatch({
                 }
             });
         },
-        'sub bar chart generation': function(chart){
+        'sub bar chart generation': function(chart) {
             assert.equal(chart.selectAll("g.sub rect.stack0")[0].length, 6);
         },
-        'sub bar chart rendering': function(chart){
-            chart.selectAll("g.sub rect.bar").each(function(d, i){
-                switch(i){
+        'sub bar chart rendering': function(chart) {
+            chart.selectAll("g.sub rect.bar").each(function(d, i) {
+                switch (i) {
                     case 0:
                         assert.equal(d3.select(this).attr("x"), "44.712643678160916");
                         assert.equal(d3.select(this).attr("y"), "103");
@@ -203,15 +203,20 @@ suite.addBatch({
     }
 });
 
-suite.addBatch({'elastic y':{
+suite.addBatch({'elastic axises':{
     topic: function() {
         countryDimension.filter("CA");
         var chart = buildChart("compositeChart2", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+        chart.elasticY(true).elasticX(true);
         chart.render();
         return chart;
     },
     'y axis should have adjusted combining all child charts maxs & mins': function(chart) {
         assert.equal(chart.y().domain()[1], 117);
+    },
+    'x domain should be set': function(chart) {
+        assert.equal(chart.x().domain()[0].getTime(), 1337918400000);
+        assert.equal(chart.x().domain()[1].getTime(), 1344571200000);
     },
     teardown: function(topic) {
         resetAllFilters();

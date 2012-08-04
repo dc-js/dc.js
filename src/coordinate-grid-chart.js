@@ -125,14 +125,15 @@ dc.coordinateGridChart = function(_chart) {
     _chart.xAxisMin = function() {
         var min = d3.min(_chart.group().all(), function(e) {
             return _chart.keyRetriever()(e);
-        }) - _xAxisPadding;
-        return min;
+        });
+        return dc.utils.subtract(min, _xAxisPadding);
     };
 
     _chart.xAxisMax = function() {
-        return d3.max(_chart.group().all(), function(e) {
+        var max = d3.max(_chart.group().all(), function(e) {
             return _chart.keyRetriever()(e);
-        }) + _xAxisPadding;
+        });
+        return dc.utils.add(max, _xAxisPadding);
     };
 
     _chart.yAxisMin = function() {
@@ -148,14 +149,14 @@ dc.coordinateGridChart = function(_chart) {
         }) + _yAxisPadding;
     };
 
-    _chart.xAxisPadding = function(_){
-        if(!arguments.length) return _xAxisPadding;
+    _chart.xAxisPadding = function(_) {
+        if (!arguments.length) return _xAxisPadding;
         _xAxisPadding = _;
         return _chart;
     };
 
-    _chart.yAxisPadding = function(_){
-        if(!arguments.length) return _yAxisPadding;
+    _chart.yAxisPadding = function(_) {
+        if (!arguments.length) return _yAxisPadding;
         _yAxisPadding = _;
         return _chart;
     };
@@ -247,7 +248,7 @@ dc.coordinateGridChart = function(_chart) {
         _chart.fadeDeselectedArea();
     };
 
-    _chart.fadeDeselectedArea = function(){
+    _chart.fadeDeselectedArea = function() {
         // do nothing, sub-chart should override this function
     };
 
@@ -295,7 +296,7 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
-    _chart.subRender = function(){
+    _chart.subRender = function() {
         if (_chart.dataAreSet()) {
             _chart.plotData();
         }

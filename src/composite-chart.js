@@ -15,6 +15,8 @@ dc.compositeChart = function(_parent) {
             child.height(_chart.height());
             child.width(_chart.width());
             child.margins(_chart.margins());
+            child.yAxisPadding(_chart.yAxisPadding());
+            child.xAxisPadding(_chart.xAxisPadding());
             child.xUnits(_chart.xUnits());
             child.transitionDuration(_chart.transitionDuration());
             child.generateG();
@@ -63,30 +65,40 @@ dc.compositeChart = function(_parent) {
     };
 
     function getAllYAxisMaxFromChildCharts() {
-        var allMaxs = [];
+        var allMaxes = [];
         for (var i = 0; i < _children.length; ++i) {
-            allMaxs.push(_children[i].yAxisMax());
+            allMaxes.push(_children[i].yAxisMax());
         }
-        return allMaxs;
+        return allMaxes;
     }
 
     _chart.yAxisMax = function() {
         return d3.max(getAllYAxisMaxFromChildCharts());
     };
 
-    function combineAllGroups() {
-        var allGroups = [];
-
-        allGroups.push(_chart.group());
-
+    function getAllXAxisMinFromChildCharts() {
+        var allMins = [];
         for (var i = 0; i < _children.length; ++i) {
-            var groups = _children[i].allGroups();
-            for (var j = 0; j < groups.length; ++j)
-                allGroups.push(groups[j]);
+            allMins.push(_children[i].xAxisMin());
         }
-
-        return allGroups;
+        return allMins;
     }
+
+    _chart.xAxisMin = function() {
+        return d3.min(getAllXAxisMinFromChildCharts());
+    };
+
+    function getAllXAxisMaxFromChildCharts() {
+        var allMaxes = [];
+        for (var i = 0; i < _children.length; ++i) {
+            allMaxes.push(_children[i].xAxisMax());
+        }
+        return allMaxes;
+    }
+
+    _chart.xAxisMax = function() {
+        return d3.max(getAllXAxisMaxFromChildCharts());
+    };
 
     return _chart.anchor(_parent);
 };
