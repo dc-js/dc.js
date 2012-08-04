@@ -77,7 +77,6 @@ dc.override = function(obj, functionName, newFunction) {
 dc.dateFormat = d3.time.format("%m/%d/%Y");
 
 dc.printers = {};
-
 dc.printers.filter = function(filter) {
     var s = "";
 
@@ -116,6 +115,22 @@ dc.constants.SELECTED_CLASS = "selected";
 dc.constants.GROUP_INDEX_NAME = "__group_index__";
 
 dc.utils = {};
+dc.utils.add = function(l, r) {
+    if (l instanceof Date) {
+        l.setDate(l.getDate() + r);
+    } else {
+        l += r;
+    }
+    return l;
+};
+dc.utils.subtract = function(l, r) {
+    if (l instanceof Date) {
+        l.setDate(l.getDate() - r);
+    } else {
+        l -= r;
+    }
+    return l;
+};
 dc.utils.GroupStack = function() {
     var _dataPointMatrix = [];
     var _groups = [];
@@ -611,14 +626,15 @@ dc.coordinateGridChart = function(_chart) {
     _chart.xAxisMin = function() {
         var min = d3.min(_chart.group().all(), function(e) {
             return _chart.keyRetriever()(e);
-        }) - _xAxisPadding;
-        return min;
+        });
+        return dc.utils.subtract(min, _xAxisPadding);
     };
 
     _chart.xAxisMax = function() {
-        return d3.max(_chart.group().all(), function(e) {
+        var max = d3.max(_chart.group().all(), function(e) {
             return _chart.keyRetriever()(e);
-        }) + _xAxisPadding;
+        });
+        return dc.utils.add(max, _xAxisPadding);
     };
 
     _chart.yAxisMin = function() {
@@ -634,14 +650,14 @@ dc.coordinateGridChart = function(_chart) {
         }) + _yAxisPadding;
     };
 
-    _chart.xAxisPadding = function(_){
-        if(!arguments.length) return _xAxisPadding;
+    _chart.xAxisPadding = function(_) {
+        if (!arguments.length) return _xAxisPadding;
         _xAxisPadding = _;
         return _chart;
     };
 
-    _chart.yAxisPadding = function(_){
-        if(!arguments.length) return _yAxisPadding;
+    _chart.yAxisPadding = function(_) {
+        if (!arguments.length) return _yAxisPadding;
         _yAxisPadding = _;
         return _chart;
     };
@@ -733,7 +749,7 @@ dc.coordinateGridChart = function(_chart) {
         _chart.fadeDeselectedArea();
     };
 
-    _chart.fadeDeselectedArea = function(){
+    _chart.fadeDeselectedArea = function() {
         // do nothing, sub-chart should override this function
     };
 
@@ -781,7 +797,7 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
-    _chart.subRender = function(){
+    _chart.subRender = function() {
         if (_chart.dataAreSet()) {
             _chart.plotData();
         }
@@ -917,6 +933,51 @@ dc.stackableChart = function(_chart) {
         }
 
         return max;
+    };
+
+    _chart.allKeyRetrievers = function() {
+        var allRetrievers = [];
+
+        allRetrievers.push(_chart.keyRetriever());
+
+        for (var i = 0; i < _groupStack.size(); ++i)
+            allRetrievers.push(_chart.keyRetriever());
+
+        return allRetrievers;
+    };
+
+    _chart.getKeyRetrieverByIndex = function(groupIndex) {
+        return _chart.allKeyRetrievers()[groupIndex];
+    };
+
+    _chart.xAxisMin = function() {
+        var min = null;
+        var allGroups = _chart.allGroups();
+
+        for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
+            var group = allGroups[groupIndex];
+            var m = d3.min(group.all(), function(e) {
+                return _chart.getKeyRetrieverByIndex(groupIndex)(e);
+            });
+            if (min == null || min > m) min = m;
+        }
+
+        return dc.utils.subtract(min, _chart.xAxisPadding());
+    };
+
+    _chart.xAxisMax = function() {
+        var max = null;
+        var allGroups = _chart.allGroups();
+
+        for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
+            var group = allGroups[groupIndex];
+            var m = d3.max(group.all(), function(e) {
+                return _chart.getKeyRetrieverByIndex(groupIndex)(e);
+            });
+            if(max == null || max < m) max = m;
+        }
+
+        return dc.utils.add(max, _chart.xAxisPadding());
     };
 
     _chart.dataPointBaseline = function() {
@@ -1680,6 +1741,8 @@ dc.compositeChart = function(_parent) {
             child.height(_chart.height());
             child.width(_chart.width());
             child.margins(_chart.margins());
+            child.yAxisPadding(_chart.yAxisPadding());
+            child.xAxisPadding(_chart.xAxisPadding());
             child.xUnits(_chart.xUnits());
             child.transitionDuration(_chart.transitionDuration());
             child.generateG();
@@ -1728,30 +1791,40 @@ dc.compositeChart = function(_parent) {
     };
 
     function getAllYAxisMaxFromChildCharts() {
-        var allMaxs = [];
+        var allMaxes = [];
         for (var i = 0; i < _children.length; ++i) {
-            allMaxs.push(_children[i].yAxisMax());
+            allMaxes.push(_children[i].yAxisMax());
         }
-        return allMaxs;
+        return allMaxes;
     }
 
     _chart.yAxisMax = function() {
         return d3.max(getAllYAxisMaxFromChildCharts());
     };
 
-    function combineAllGroups() {
-        var allGroups = [];
-
-        allGroups.push(_chart.group());
-
+    function getAllXAxisMinFromChildCharts() {
+        var allMins = [];
         for (var i = 0; i < _children.length; ++i) {
-            var groups = _children[i].allGroups();
-            for (var j = 0; j < groups.length; ++j)
-                allGroups.push(groups[j]);
+            allMins.push(_children[i].xAxisMin());
         }
-
-        return allGroups;
+        return allMins;
     }
+
+    _chart.xAxisMin = function() {
+        return d3.min(getAllXAxisMinFromChildCharts());
+    };
+
+    function getAllXAxisMaxFromChildCharts() {
+        var allMaxes = [];
+        for (var i = 0; i < _children.length; ++i) {
+            allMaxes.push(_children[i].xAxisMax());
+        }
+        return allMaxes;
+    }
+
+    _chart.xAxisMax = function() {
+        return d3.max(getAllXAxisMaxFromChildCharts());
+    };
 
     return _chart.anchor(_parent);
 };
