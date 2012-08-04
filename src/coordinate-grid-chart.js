@@ -10,6 +10,8 @@ dc.coordinateGridChart = function(_chart) {
     var _x;
     var _xAxis = d3.svg.axis();
     var _xUnits = dc.units.integers;
+    var _xAxisPadding = 0;
+    var _xElasticity = false;
 
     var _y;
     var _yAxis = d3.svg.axis();
@@ -52,6 +54,11 @@ dc.coordinateGridChart = function(_chart) {
 
     _chart.renderXAxis = function(g) {
         g.select("g.x").remove();
+
+        if (_chart.elasticX()) {
+            _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
+        }
+
         _x.range([0, _chart.xAxisLength()]);
         _xAxis = _xAxis.scale(_chart.x()).orient("bottom");
         g.append("g")
@@ -109,11 +116,29 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
+    _chart.elasticX = function(_) {
+        if (!arguments.length) return _xElasticity;
+        _xElasticity = _;
+        return _chart;
+    };
+
+    _chart.xAxisMin = function() {
+        var min = d3.min(_chart.group().all(), function(e) {
+            return _chart.keyRetriever()(e);
+        }) - _xAxisPadding;
+        return min;
+    };
+
+    _chart.xAxisMax = function() {
+        return d3.max(_chart.group().all(), function(e) {
+            return _chart.keyRetriever()(e);
+        }) + _xAxisPadding;
+    };
+
     _chart.yAxisMin = function() {
         var min = d3.min(_chart.group().all(), function(e) {
             return _chart.valueRetriever()(e);
-        });
-        if (min > 0) min = 0;
+        }) - _yAxisPadding;
         return min;
     };
 
@@ -121,6 +146,12 @@ dc.coordinateGridChart = function(_chart) {
         return d3.max(_chart.group().all(), function(e) {
             return _chart.valueRetriever()(e);
         }) + _yAxisPadding;
+    };
+
+    _chart.xAxisPadding = function(_){
+        if(!arguments.length) return _xAxisPadding;
+        _xAxisPadding = _;
+        return _chart;
     };
 
     _chart.yAxisPadding = function(_){
@@ -254,6 +285,9 @@ dc.coordinateGridChart = function(_chart) {
     _chart.redraw = function() {
         if (_chart.elasticY())
             _chart.renderYAxis(_chart.g());
+
+        if (_chart.elasticX())
+            _chart.renderXAxis(_chart.g());
 
         _chart.plotData();
         _chart.redrawBrush(_chart.g());

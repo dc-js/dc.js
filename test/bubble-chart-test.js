@@ -288,4 +288,38 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({
+    'bubble chart w/ elastic axises': {
+        topic: function() {
+            var chart = buildChart("chart-elastic-axises");
+            chart.elasticY(true)
+                .yAxisPadding(3)
+                .elasticX(true)
+                .xAxisPadding(20);
+            chart.redraw();
+            return chart;
+        },
+        'x range round is auto calculated based on width': function(chart) {
+            assert.equal(chart.x().range()[0], 0);
+            assert.equal(chart.x().range()[1], 830);
+        },
+        'x domain should be set': function(chart) {
+            assert.equal(chart.x().domain()[0], 178);
+            assert.equal(chart.x().domain()[1], 240);
+        },
+        'y range round is auto calculated based on height': function(chart) {
+            assert.equal(chart.y().range()[0], 310);
+            assert.equal(chart.y().range()[1], 0);
+        },
+        'y domain should be set': function(chart) {
+            assert.equal(chart.y().domain()[0], 2);
+            assert.equal(chart.y().domain()[1], 8);
+        },
+        teardown: function(topic) {
+            resetAllFilters();
+            resetBody();
+        }
+    }
+});
+
 suite.export(module);
