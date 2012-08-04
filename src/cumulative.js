@@ -36,6 +36,11 @@ dc.cumulative.Base = function() {
         key = this.sanitizeKey(key);
         return this._map[key] = value;
     };
+
+    this.indexOfKey = function(key) {
+        key = this.sanitizeKey(key);
+        return this._keyIndex.indexOf(key);
+    };
 };
 
 dc.cumulative.Sum = function() {
@@ -56,8 +61,7 @@ dc.cumulative.Sum = function() {
     };
 
     this.getCumulativeValueByKey = function(key) {
-        key = this.sanitizeKey(key);
-        var keyIndex = this.index().indexOf(key);
+        var keyIndex = this.indexOfKey(key);
         if (keyIndex < 0) return 0;
         var cumulativeValue = 0;
         for (var i = 0; i <= keyIndex; ++i) {
@@ -81,7 +85,7 @@ dc.cumulative.CountUnique = function() {
     }
 
     this.add = function(key, e) {
-        if(this._map[key] == null)
+        if (this._map[key] == null)
             this._map[key] = {};
         this._map[key][e] += 1;
     };
