@@ -293,6 +293,8 @@
             .x(d3.scale.linear().domain([0, 300]))
             .y(d3.scale.linear().domain([0, 10]))
             .r(d3.scale.linear().domain([0, 30]))
+            .elasticY(true)
+            .yAxisPadding(3)
             .renderLabel(true)
             .renderTitle(true)
             .title(function(p) {
