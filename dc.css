@@ -34,7 +34,7 @@ a {
     fill: green;
 }
 
-.chart .deselected {
+.chart rect.deselected {
     stroke: none;
     fill: #ccc;
 }
