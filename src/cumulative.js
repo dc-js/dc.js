@@ -28,7 +28,8 @@ dc.cumulative.Base = function() {
 
     this.getValueByKey = function(key) {
         key = this.sanitizeKey(key);
-        return this._map[key];
+        var value = this._map[key];
+        return value;
     };
 
     this.setValueByKey = function(key, value) {
@@ -58,8 +59,8 @@ dc.cumulative.Sum = function() {
         key = this.sanitizeKey(key);
         var keyIndex = this.index().indexOf(key);
         if (keyIndex < 0) return 0;
-        var cumulativeValue = this.getValueByKey(key);
-        for (var i = 0; i < keyIndex; ++i) {
+        var cumulativeValue = 0;
+        for (var i = 0; i <= keyIndex; ++i) {
             var k = this.index()[i];
             cumulativeValue += this.getValueByKey(k);
         }
@@ -69,7 +70,7 @@ dc.cumulative.Sum = function() {
 dc.cumulative.Sum.prototype = new dc.cumulative.Base();
 
 dc.cumulative.CountUnique = function() {
-    var _hash = {};
+    dc.cumulative.Base.apply(this, arguments);
 
     function hashSize(hash) {
         var size = 0, key;
@@ -80,10 +81,13 @@ dc.cumulative.CountUnique = function() {
     }
 
     this.add = function(key, e) {
-        _hash[e] = true;
+        if(this._map[key] == null)
+            this._map[key] = {};
+        this._map[key][e] += 1;
     };
 
     this.count = function(key) {
-        return hashSize(_hash);
+        return hashSize(this._map[key]);
     };
 };
+dc.cumulative.CountUnique.prototype = new dc.cumulative.Base();

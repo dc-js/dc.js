@@ -32,7 +32,7 @@ suite.addBatch({
             target.add(key, value);
             target.add(key, value);
             var target2 = new dc.cumulative.Sum();
-            assert.equal(target2.getValueByKey(key), 0);
+            assert.equal(target2.getValueByKey(key), undefined);
             assert.equal(target2.size(), 0);
             target.clear();
         },
@@ -90,6 +90,7 @@ suite.addBatch({
             var key = 1;
             count.add(key, "abc");
             assert.equal(count.count(key), 1);
+            count.clear();
         },
         'can register element w/ different keys':function(count){
             count.add(1, "abc");
@@ -97,6 +98,7 @@ suite.addBatch({
             count.add(2, "edf");
             assert.equal(count.count(1), 1);
             assert.equal(count.count(2), 2);
+            count.clear();
         },
         'can register the same element multiple times but count only once':function(count){
             var key = 1;
@@ -104,13 +106,17 @@ suite.addBatch({
             count.add(key, "abc");
             count.add(key, "edf");
             assert.equal(count.count(key), 2);
+            count.clear();
         },
         'can register the same element multiple times w/ key but count only once':function(count){
             var key = 1;
+            var key2 = 2;
             count.add(key, "abc");
             count.add(key, "abc");
-            count.add(2, "edf");
+            count.add(key2, "edf");
             assert.equal(count.count(key), 1);
+            assert.equal(count.count(key2), 1);
+            count.clear();
         }
     }
 });
