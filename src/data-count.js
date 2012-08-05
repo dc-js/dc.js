@@ -6,6 +6,8 @@ dc.dataCount = function(_parent) {
         _chart.selectAll(".total-count").text(_formatNumber(_chart.dimension().size()));
         _chart.selectAll(".filter-count").text(_formatNumber(_chart.group().value()));
 
+        _chart.invokeRenderlet(_chart);
+
         return _chart;
     };
 
