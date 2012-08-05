@@ -9,12 +9,10 @@ dc.dataTable = function(_parent) {
     var _order = d3.ascending;
     var _sort;
 
-    _chart.render = function() {
+    _chart.doRender = function() {
         _chart.selectAll("div.row").remove();
 
         renderRows(renderGroups());
-
-        _chart.invokeRenderlet(_chart);
 
         return _chart;
     };

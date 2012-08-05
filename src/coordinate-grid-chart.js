@@ -267,7 +267,7 @@ dc.coordinateGridChart = function(_chart) {
             + "V" + (2 * y - 8);
     };
 
-    _chart.render = function() {
+    _chart.doRender = function() {
         _chart.resetSvg();
 
         if (_chart.dataAreSet()) {
@@ -280,8 +280,6 @@ dc.coordinateGridChart = function(_chart) {
 
             _chart.renderBrush(_chart.g());
         }
-
-        _chart.invokeRenderlet(_chart);
 
         return _chart;
     };

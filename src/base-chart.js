@@ -136,13 +136,21 @@ dc.baseChart = function(_chart) {
         return _chart;
     };
 
+    _chart.render = function() {
+        var result = _chart.doRender();
+
+        _chart.invokeRenderlet(_chart);
+
+        return result;
+    };
+
     // abstract function stub
     _chart.filter = function(f) {
         // do nothing in base, should be overridden by sub-function
         return _chart;
     };
 
-    _chart.render = function() {
+    _chart.doRender = function() {
         // do nothing in base, should be overridden by sub-function
         return _chart;
     };

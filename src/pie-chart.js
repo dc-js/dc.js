@@ -28,7 +28,7 @@ dc.pieChart = function(_parent) {
 
     _chart.transitionDuration(350);
 
-    _chart.render = function() {
+    _chart.doRender = function() {
         _chart.resetSvg();
 
         if (_chart.dataAreSet()) {
@@ -47,8 +47,6 @@ dc.pieChart = function(_parent) {
 
             _chart.highlightFilter();
         }
-
-        _chart.invokeRenderlet(_chart);
 
         return _chart;
     };
