@@ -14,6 +14,8 @@ dc.dataTable = function(_parent) {
 
         renderRows(renderGroups());
 
+        _chart.invokeRenderlet(_chart);
+
         return _chart;
     };
 
