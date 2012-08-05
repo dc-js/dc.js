@@ -45,6 +45,8 @@ dc.pieChart = function(_parent) {
             _chart.highlightFilter();
         }
 
+        _chart.invokeRenderlet(_chart);
+
         return _chart;
     };
 
@@ -135,14 +137,23 @@ dc.pieChart = function(_parent) {
 
     _chart.redraw = function() {
         _chart.highlightFilter();
+
         var data = _dataPie(_chart.orderedGroup().top(Infinity));
+
         _slicePaths = _slicePaths.data(data);
+
         _labels = _labels.data(data);
+
         dc.transition(_slicePaths, _chart.transitionDuration(), function(s) {
             s.attrTween("d", tweenPie);
         });
+
         redrawLabels(_arc);
+
         redrawTitles();
+
+        _chart.invokeRenderlet(_chart);
+
         return _chart;
     };
 

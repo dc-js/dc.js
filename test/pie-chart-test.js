@@ -296,6 +296,28 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({
+    'renderlet':{
+        topic:function(){
+            var chart = buildChart("chart-renderlet");
+            chart.renderlet(function(chart){chart.selectAll("path").attr("fill", "red");});
+            return chart;
+        },
+        'custom renderlet should be invoked with render': function(chart){
+            chart.render();
+            assert.equal(chart.selectAll("path").attr("fill"), "red");
+        },
+        'custom renderlet should be invoked with redraw': function(chart){
+            chart.redraw();
+            assert.equal(chart.selectAll("path").attr("fill"), "red");
+        },
+        teardown: function(topic) {
+            resetAllFilters();
+            resetBody();
+        }
+    }
+});
+
 suite.export(module);
 
 

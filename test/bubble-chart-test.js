@@ -325,7 +325,7 @@ suite.addBatch({
 suite.addBatch({
     'renderlet':{
         topic:function(){
-            var chart = buildChart("chart-elastic-axises");
+            var chart = buildChart("chart-renderlet");
             chart.renderlet(function(chart){chart.selectAll("circle").attr("fill", "red");});
             return chart;
         },
