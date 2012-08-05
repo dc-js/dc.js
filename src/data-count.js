@@ -9,8 +9,8 @@ dc.dataCount = function(_parent) {
         return _chart;
     };
 
-    _chart.redraw = function(){
-        return _chart.render();
+    _chart.doRedraw = function(){
+        return _chart.doRender();
     };
 
     return _chart.anchor(_parent);

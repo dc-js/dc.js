@@ -136,7 +136,7 @@ dc.pieChart = function(_parent) {
         return _chart.filter() == _chart.keyRetriever()(d.data);
     };
 
-    _chart.redraw = function() {
+    _chart.doRedraw = function() {
         _chart.highlightFilter();
 
         var data = _dataPie(_chart.orderedGroup().top(Infinity));
@@ -152,8 +152,6 @@ dc.pieChart = function(_parent) {
         redrawLabels(_arc);
 
         redrawTitles();
-
-        _chart.invokeRenderlet(_chart);
 
         return _chart;
     };

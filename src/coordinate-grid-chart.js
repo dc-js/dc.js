@@ -284,7 +284,7 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
-    _chart.redraw = function() {
+    _chart.doRedraw = function() {
         if (_chart.elasticY())
             _chart.renderYAxis(_chart.g());
 
@@ -293,8 +293,6 @@ dc.coordinateGridChart = function(_chart) {
 
         _chart.plotData();
         _chart.redrawBrush(_chart.g());
-
-        _chart.invokeRenderlet(_chart);
 
         return _chart;
     };

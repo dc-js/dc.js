@@ -73,8 +73,8 @@ dc.dataTable = function(_parent) {
         return rows;
     }
 
-    _chart.redraw = function() {
-        return _chart.render();
+    _chart.doRedraw = function() {
+        return _chart.doRender();
     };
 
     _chart.size = function(s) {

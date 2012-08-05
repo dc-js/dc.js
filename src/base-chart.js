@@ -144,6 +144,14 @@ dc.baseChart = function(_chart) {
         return result;
     };
 
+    _chart.redraw = function() {
+        var result = _chart.doRedraw();
+
+        _chart.invokeRenderlet(_chart);
+
+        return result;
+    };
+
     // abstract function stub
     _chart.filter = function(f) {
         // do nothing in base, should be overridden by sub-function
@@ -155,7 +163,7 @@ dc.baseChart = function(_chart) {
         return _chart;
     };
 
-    _chart.redraw = function() {
+    _chart.doRedraw = function() {
         // do nothing in base, should be overridden by sub-function
         return _chart;
     };
