@@ -29,6 +29,8 @@ dc.baseChart = function(_chart) {
 
     var _filterPrinter = dc.printers.filter;
 
+    var _renderlet;
+
     _chart.dimension = function(d) {
         if (!arguments.length) return _dimension;
         _dimension = d;
@@ -185,6 +187,12 @@ dc.baseChart = function(_chart) {
     _chart.renderTitle = function(_) {
         if (!arguments.length) return _renderTitle;
         _renderTitle = _;
+        return _chart;
+    };
+
+    _chart.renderlet = function(_){
+        if(!arguments.length) return _renderlet;
+        _renderlet = _;
         return _chart;
     };
 
