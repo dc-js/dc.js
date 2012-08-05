@@ -114,8 +114,8 @@ dc.baseChart = function(_chart) {
         return _svg;
     };
 
-    _chart.filterPrinter = function(_){
-        if(!arguments.length) return _filterPrinter;
+    _chart.filterPrinter = function(_) {
+        if (!arguments.length) return _filterPrinter;
         _filterPrinter = _;
         return _chart;
     };
@@ -190,10 +190,15 @@ dc.baseChart = function(_chart) {
         return _chart;
     };
 
-    _chart.renderlet = function(_){
-        if(!arguments.length) return _renderlet;
+    _chart.renderlet = function(_) {
+        if (!arguments.length) return _renderlet;
         _renderlet = _;
         return _chart;
+    };
+
+    _chart.invokeRenderlet = function(chart) {
+        if (chart.renderlet())
+            chart.renderlet()(chart);
     };
 
     return _chart;

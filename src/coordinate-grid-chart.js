@@ -281,7 +281,7 @@ dc.coordinateGridChart = function(_chart) {
             _chart.renderBrush(_chart.g());
         }
 
-        invokeRenderlet();
+        _chart.invokeRenderlet(_chart);
 
         return _chart;
     };
@@ -296,15 +296,10 @@ dc.coordinateGridChart = function(_chart) {
         _chart.plotData();
         _chart.redrawBrush(_chart.g());
 
-        invokeRenderlet();
+        _chart.invokeRenderlet(_chart);
 
         return _chart;
     };
-
-    function invokeRenderlet() {
-        if (_chart.renderlet())
-            _chart.renderlet()(_chart);
-    }
 
     _chart.subRender = function() {
         if (_chart.dataAreSet()) {
