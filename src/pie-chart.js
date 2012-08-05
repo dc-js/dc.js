@@ -1,4 +1,6 @@
 dc.pieChart = function(_parent) {
+    var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
+
     var _sliceCssClass = "pie-slice";
 
     var _radius = 0, _innerRadius = 0;
@@ -11,6 +13,7 @@ dc.pieChart = function(_parent) {
     var _slicePaths;
 
     var _labels;
+    var _minAngelForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
 
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
 
@@ -157,6 +160,12 @@ dc.pieChart = function(_parent) {
         return _chart;
     };
 
+    _chart.minAngelForLabel = function(_){
+        if(!arguments.length) return _minAngelForLabel;
+        _minAngelForLabel = _;
+        return _chart;
+    };
+
     function calculateDataPie() {
         return d3.layout.pie().value(function(d) {
             return _chart.valueRetriever()(d);
@@ -186,7 +195,7 @@ dc.pieChart = function(_parent) {
 
     function sliceTooSmall(d) {
         var angle = (d.endAngle - d.startAngle);
-        return isNaN(angle) || angle < 1;
+        return isNaN(angle) || angle < _minAngelForLabel;
     }
 
     function sliceHasNoData(data) {

@@ -244,11 +244,12 @@ suite.addBatch({
         topic: function() {
             var chart = buildChart("pie-chart3");
             chart.label(function(d) {
-                return "custom";
-            })
+                    return "custom";
+                })
                 .title(function(d) {
                     return "custom";
                 })
+                .minAngelForLabel(1)
                 .renderTitle(true);
             chart.render();
             return chart;
