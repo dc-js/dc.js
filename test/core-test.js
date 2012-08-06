@@ -152,8 +152,11 @@ suite.addBatch({
             sinon.spy(chart, "filterAll");
             sinon.spy(chart, "render");
             dc.pieChart("#b", "groupA");
-            dc.pieChart("#c", "groupB");
-            dc.pieChart("#d", "groupB");
+            dc.bubbleChart("#c", "groupA");
+            dc.barChart("#1", "groupB");
+            dc.lineChart("#2", "groupB");
+            dc.dataCount("#3", "groupB");
+            dc.dataTable("#4", "groupB");
             return chart;
         },
         'should register chart object': function(chart) {

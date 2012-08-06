@@ -1,4 +1,4 @@
-dc.pieChart = function(_parent, chartGroup) {
+dc.pieChart = function(parent, chartGroup) {
     var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
     var _sliceCssClass = "pie-slice";
@@ -227,5 +227,5 @@ dc.pieChart = function(_parent, chartGroup) {
         dc.redrawAll();
     }
 
-    return _chart.anchor(_parent, chartGroup);
+    return _chart.anchor(parent, chartGroup);
 };

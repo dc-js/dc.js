@@ -1,4 +1,4 @@
-dc.bubbleChart = function(_parent) {
+dc.bubbleChart = function(parent, chartGroup) {
     var NODE_CLASS = "node";
     var BUBBLE_CLASS = "bubble";
     var MIN_RADIUS = 10;
@@ -172,5 +172,5 @@ dc.bubbleChart = function(_parent) {
         return _chart;
     };
 
-    return _chart.anchor(_parent);
+    return _chart.anchor(parent, chartGroup);
 };

@@ -1,4 +1,4 @@
-dc.barChart = function(_parent) {
+dc.barChart = function(parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
     var BAR_PADDING_WIDTH = 2;
 
@@ -96,5 +96,5 @@ dc.barChart = function(_parent) {
         }
     };
 
-    return _chart.anchor(_parent);
+    return _chart.anchor(parent, chartGroup);
 };
