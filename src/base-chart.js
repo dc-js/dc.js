@@ -65,7 +65,7 @@ dc.baseChart = function(_chart) {
         return _root.selectAll(s);
     };
 
-    _chart.anchor = function(a) {
+    _chart.anchor = function(a, chartGroup) {
         if (!arguments.length) return _anchor;
         if (a instanceof Object) {
             _anchor = a.anchor();
@@ -73,7 +73,7 @@ dc.baseChart = function(_chart) {
         } else {
             _anchor = a;
             _root = d3.select(_anchor);
-            dc.registerChart(_chart);
+            dc.registerChart(_chart, chartGroup);
         }
         return _chart;
     };

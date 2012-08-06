@@ -145,6 +145,51 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({
+    'dc.charts w/ grouping': {
+        topic: function() {
+            var chart = dc.pieChart("#a", "groupA");
+            sinon.spy(chart, "filterAll");
+            sinon.spy(chart, "render");
+            dc.pieChart("#b", "groupA");
+            dc.pieChart("#c", "groupB");
+            dc.pieChart("#d", "groupB");
+            return chart;
+        },
+        'should register chart object': function(chart) {
+            assert.isTrue(dc.hasChart(chart));
+        },
+        'filterAll should not invoke filter on chart in groupA': function(chart) {
+            dc.filterAll();
+            assert.isFalse(chart.filterAll.calledOnce);
+            chart.filterAll.reset();
+        },
+        'renderAll should not invoke filter on chart in groupA': function(chart) {
+            dc.renderAll();
+            assert.isFalse(chart.render.calledOnce);
+            chart.filterAll.reset();
+        },
+        'filterAll by group should invoke filter on each chart within the group': function(chart) {
+            dc.filterAll("groupA");
+            assert.isTrue(chart.filterAll.calledOnce);
+            chart.filterAll.reset();
+        },
+        'renderAll by group should invoke filter on each chart within the group': function(chart) {
+            dc.renderAll("groupA");
+            assert.isTrue(chart.render.calledOnce);
+            chart.filterAll.reset();
+        },
+        'should be gone after remove all': function(chart) {
+            dc.deregisterAllCharts();
+            assert.isFalse(dc.hasChart(chart));
+        },
+        teardown: function() {
+            dc.deregisterAllCharts();
+            resetBody();
+        }
+    }
+});
+
 suite.export(module);
 
 
