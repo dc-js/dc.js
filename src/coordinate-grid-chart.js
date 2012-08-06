@@ -107,7 +107,7 @@ dc.coordinateGridChart = function(_chart) {
         if (_renderHorizontalGridLine) {
             g.selectAll("g.horizontal").remove();
 
-            var ticks = _y.ticks(_yAxis.ticks()[0]);
+            var ticks = _yAxis.tickValues()?_yAxis.tickValues():_y.ticks(_yAxis.ticks()[0]);
 
             var gridLineG = g.append("g")
                 .attr("class", "grid-line horizontal")

@@ -318,4 +318,37 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({
+    'horizontal grid lines drawing w/ custom ticks':{
+        topic:function(){
+            var chart = buildChart("chart-grid-line-custom-ticks", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+            chart.yAxis().tickValues([0, 1, 2]);
+            chart.renderHorizontalGridLines(true);
+            chart.render();
+            return chart;
+        },
+        'horizontal grid line g should be generated': function(chart){
+            assert.equal(chart.selectAll("g.horizontal")[0].length, 1);
+        },
+        'horizontal grid lines should be generated': function(chart){
+            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line").size(), 2);
+        },
+        'horizontal grid line x,y should be generated correctly': function(chart){
+            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[0].getAttribute("x1"), "1");
+            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[0].getAttribute("y1"), "107");
+            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[0].getAttribute("x2"), "1030");
+            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[0].getAttribute("y2"), "107");
+
+            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[1].getAttribute("x1"), "1");
+            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[1].getAttribute("y1"), "53");
+            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[1].getAttribute("x2"), "1030");
+            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[1].getAttribute("y2"), "53");
+        },
+        teardown: function(topic) {
+            resetAllFilters();
+            resetBody();
+        }
+    }
+});
+
 suite.export(module);
