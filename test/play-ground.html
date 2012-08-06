@@ -69,6 +69,12 @@
             font: 10px sans-serif;
         }
 
+        .grid-line line {
+            fill: none;
+            stroke: #ccc;
+            shape-rendering: crispEdges;
+        }
+
         .brush rect.background {
             z-index: -999;
         }
@@ -377,6 +383,7 @@
             .elasticX(true)
             .xAxisPadding(50)
             .renderArea(true)
+            .renderHorizontalGridLines(true)
             .xAxis().ticks(5);
 
     var barChartDateB = dc.barChart("#bar-chart-dateB", "groupB");
@@ -388,6 +395,7 @@
             .stack(dateValueSumGroup, function(d){return 10;})
             .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
             .xUnits(d3.time.days)
+            .renderHorizontalGridLines(true)
             .xAxis().ticks(5);
 
     var compositeChartDateB = dc.compositeChart("#composite-chart-dateB", "groupB");
@@ -397,6 +405,7 @@
             .group(dateIdSumGroup)
             .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
             .xUnits(d3.time.days)
+            .renderHorizontalGridLines(true)
             .compose([
                 dc.barChart(compositeChartDateB).group(dateValueSumGroup),
                 dc.lineChart(compositeChartDateB),
