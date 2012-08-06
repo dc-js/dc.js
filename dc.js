@@ -1,35 +1,85 @@
 dc = {
     version: "0.7.0",
-    _charts: []
+    constants : {
+        STACK_CLASS: "stack",
+        DESELECTED_CLASS: "deselected",
+        SELECTED_CLASS: "selected",
+        GROUP_INDEX_NAME: "__group_index__",
+        DEFAULT_CHART_GROUP: "__default_chart_group__"
+    }
 };
 
-dc.registerChart = function(chart) {
-    dc._charts.push(chart);
+dc.chartRegistry = function() {
+    // chartGroup:string => charts:array
+    var _chartMap = {};
+
+    this.has = function(chart) {
+        for(e in _chartMap){
+            if(_chartMap[e].indexOf(chart) >= 0)
+                return true;
+        }
+        return false;
+    };
+
+    function initializeChartGroup(group) {
+        group = group;
+
+        if (!group)
+            group = dc.constants.DEFAULT_CHART_GROUP;
+
+        if (!_chartMap[group])
+            _chartMap[group] = [];
+
+        return group;
+    }
+
+    this.register = function(chart, group) {
+        group = initializeChartGroup(group);
+        _chartMap[group].push(chart);
+    };
+
+    this.clear = function() {
+        _chartMap = {};
+    };
+
+    this.list = function(group) {
+        group = initializeChartGroup(group);
+        return _chartMap[group];
+    };
+
+    return this;
+}();
+
+dc.registerChart = function(chart, group) {
+    dc.chartRegistry.register(chart, group);
 };
 
 dc.hasChart = function(chart) {
-    return dc._charts.indexOf(chart) >= 0;
+    return dc.chartRegistry.has(chart);
 };
 
 dc.deregisterAllCharts = function() {
-    dc._charts = [];
+    dc.chartRegistry.clear();
 };
 
-dc.filterAll = function() {
-    for (var i = 0; i < dc._charts.length; ++i) {
-        dc._charts[i].filterAll();
+dc.filterAll = function(group) {
+    var charts = dc.chartRegistry.list(group);
+    for (var i = 0; i < charts.length; ++i) {
+        charts[i].filterAll();
     }
 };
 
-dc.renderAll = function() {
-    for (var i = 0; i < dc._charts.length; ++i) {
-        dc._charts[i].render();
+dc.renderAll = function(group) {
+    var charts = dc.chartRegistry.list(group);
+    for (var i = 0; i < charts.length; ++i) {
+        charts[i].render();
     }
 };
 
-dc.redrawAll = function() {
-    for (var i = 0; i < dc._charts.length; ++i) {
-        dc._charts[i].redraw();
+dc.redrawAll = function(group) {
+    var charts = dc.chartRegistry.list(group);
+    for (var i = 0; i < charts.length; ++i) {
+        charts[i].redraw();
     }
 };
 
@@ -49,20 +99,23 @@ dc.transition = function(selections, duration, callback) {
 };
 
 dc.units = {};
-
 dc.units.integers = function(s, e) {
     return new Array(Math.abs(e - s));
 };
 
 dc.round = {};
-
 dc.round.floor = function(n) {
     return Math.floor(n);
+};
+dc.round.ceil = function(n) {
+    return Math.ceil(n);
+};
+dc.round.round = function(n) {
+    return Math.round(n);
 };
 
 dc.override = function(obj, functionName, newFunction) {
     var existingFunction = obj[functionName];
-    newFunction._ = existingFunction;
     obj[functionName] = function() {
         var expression = "newFunction(";
 
@@ -106,13 +159,6 @@ function printSingleValue(filter) {
 
     return s;
 }
-
-dc.constants = function() {
-};
-dc.constants.STACK_CLASS = "stack";
-dc.constants.DESELECTED_CLASS = "deselected";
-dc.constants.SELECTED_CLASS = "selected";
-dc.constants.GROUP_INDEX_NAME = "__group_index__";
 
 dc.utils = {};
 dc.utils.add = function(l, r) {
@@ -344,6 +390,8 @@ dc.baseChart = function(_chart) {
 
     var _renderlet;
 
+    var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
+
     _chart.dimension = function(d) {
         if (!arguments.length) return _dimension;
         _dimension = d;
@@ -378,7 +426,7 @@ dc.baseChart = function(_chart) {
         return _root.selectAll(s);
     };
 
-    _chart.anchor = function(a) {
+    _chart.anchor = function(a, chartGroup) {
         if (!arguments.length) return _anchor;
         if (a instanceof Object) {
             _anchor = a.anchor();
@@ -386,8 +434,9 @@ dc.baseChart = function(_chart) {
         } else {
             _anchor = a;
             _root = d3.select(_anchor);
-            dc.registerChart(_chart);
+            dc.registerChart(_chart, chartGroup);
         }
+        _chartGroup = chartGroup;
         return _chart;
     };
 
@@ -528,6 +577,12 @@ dc.baseChart = function(_chart) {
     _chart.invokeRenderlet = function(chart) {
         if (chart.renderlet())
             chart.renderlet()(chart);
+    };
+
+    _chart.chartGroup = function(_){
+        if(!arguments.length) return _chartGroup;
+        _chartGroup = _;
+        return _chart;
     };
 
     return _chart;
@@ -766,7 +821,7 @@ dc.coordinateGridChart = function(_chart) {
         }
         extent = _brush.extent();
         _chart.filter(_brush.empty() ? null : [extent[0], extent[1]]);
-        dc.redrawAll();
+        dc.redrawAll(_chart.chartGroup());
     }
 
     function brushEnd(p) {
@@ -1044,7 +1099,7 @@ dc.stackableChart = function(_chart) {
 
     return _chart;
 };
-dc.pieChart = function(_parent) {
+dc.pieChart = function(parent, chartGroup) {
     var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
     var _sliceCssClass = "pie-slice";
@@ -1270,12 +1325,12 @@ dc.pieChart = function(_parent) {
 
     function onClick(d) {
         _chart.filter(_chart.keyRetriever()(d.data));
-        dc.redrawAll();
+        dc.redrawAll(_chart.chartGroup());
     }
 
-    return _chart.anchor(_parent);
+    return _chart.anchor(parent, chartGroup);
 };
-dc.barChart = function(_parent) {
+dc.barChart = function(parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
     var BAR_PADDING_WIDTH = 2;
 
@@ -1373,9 +1428,9 @@ dc.barChart = function(_parent) {
         }
     };
 
-    return _chart.anchor(_parent);
+    return _chart.anchor(parent, chartGroup);
 };
-dc.lineChart = function(_parent) {
+dc.lineChart = function(parent, chartGroup) {
     var AREA_BOTTOM_PADDING = 1;
 
     var _chart = dc.stackableChart(dc.coordinateGridChart({}));
@@ -1474,9 +1529,9 @@ dc.lineChart = function(_parent) {
         return _chart;
     };
 
-    return _chart.anchor(_parent);
+    return _chart.anchor(parent, chartGroup);
 };
-dc.dataCount = function(_parent) {
+dc.dataCount = function(parent, chartGroup) {
     var _formatNumber = d3.format(",d");
     var _chart = dc.baseChart({});
 
@@ -1491,9 +1546,9 @@ dc.dataCount = function(_parent) {
         return _chart.doRender();
     };
 
-    return _chart.anchor(_parent);
+    return _chart.anchor(parent, chartGroup);
 };
-dc.dataTable = function(_parent) {
+dc.dataTable = function(parent, chartGroup) {
     var _chart = dc.baseChart({});
 
     var _size = 25;
@@ -1596,9 +1651,9 @@ dc.dataTable = function(_parent) {
         return _chart;
     };
 
-    return _chart.anchor(_parent);
+    return _chart.anchor(parent, chartGroup);
 };
-dc.bubbleChart = function(_parent) {
+dc.bubbleChart = function(parent, chartGroup) {
     var NODE_CLASS = "node";
     var BUBBLE_CLASS = "bubble";
     var MIN_RADIUS = 10;
@@ -1714,7 +1769,7 @@ dc.bubbleChart = function(_parent) {
 
     var onClick = function(d) {
         _chart.filter(d.key);
-        dc.redrawAll();
+        dc.redrawAll(_chart.chartGroup());
     };
 
     function bubbleX(d) {
@@ -1772,9 +1827,9 @@ dc.bubbleChart = function(_parent) {
         return _chart;
     };
 
-    return _chart.anchor(_parent);
+    return _chart.anchor(parent, chartGroup);
 };
-dc.compositeChart = function(_parent) {
+dc.compositeChart = function(parent, chartGroup) {
     var SUB_CHART_CLASS = "sub";
 
     var _chart = dc.coordinateGridChart({});
@@ -1787,6 +1842,7 @@ dc.compositeChart = function(_parent) {
             var child = _children[i];
             if (child.dimension() == null) child.dimension(_chart.dimension());
             if (child.group() == null) child.group(_chart.group());
+            child.chartGroup(_chart.chartGroup());
             child.svg(_chart.svg());
             child.height(_chart.height());
             child.width(_chart.width());
@@ -1874,5 +1930,5 @@ dc.compositeChart = function(_parent) {
         return dc.utils.add(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding());
     };
 
-    return _chart.anchor(_parent);
+    return _chart.anchor(parent, chartGroup);
 };
