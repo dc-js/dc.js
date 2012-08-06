@@ -82,7 +82,7 @@
 <div class="clear"></div>
 
 <div id="gain-loss-chart" class="chart">
-    <span class="title">Days by Gain or Loss</span>
+    <span class="title">Days by Gain/Loss</span>
     <a class="reset" href="javascript:gainOrLossChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
@@ -112,7 +112,7 @@
 <div class="clear"></div>
 
 <div id="monthly-move-chart" class="chart">
-    <span>Monthly Index Abs Move & Volume/100,000 Chart (Blue Line: Avg Index, Green Line: Index Fluctuation)</span>
+    <span>Monthly Index Abs Move & Volume/500,000 Chart (Blue Line: Avg Index, Green Line: Index Fluctuation)</span>
     <a class="reset" href="javascript:volumeMoveChart.filterAll();dc.redrawAll();"
        style="display: none;">reset</a>
 
@@ -209,7 +209,7 @@ d3.csv("ndx.csv", function(data) {
                 return Math.abs(+d.close - +d.open);
             });
             var volumeByMonthGroup = moveMonths.group().reduceSum(function(d) {
-                return d.volume / 100000;
+                return d.volume / 500000;
             });
             var indexAvgByMonthGroup = moveMonths.group().reduce(
                     function(p, v) {
@@ -465,8 +465,11 @@ d3.csv("ndx.csv", function(data) {
 <h3>Pie/Donut Chart</h3>
 
     <pre class="brush:js">
-        // create a pie chart and use the given css selector as anchor
-        dc.pieChart("#gain-loss-chart")
+        /* Create a pie chart and use the given css selector as anchor. You can also specify
+         * an optional chart group for this chart to be scoped within. When a chart belongs
+         * to a specific group then any interaction with such chart will only trigger redraw
+         * on other charts within the same chart group. */
+        dc.pieChart("#gain-loss-chart", "chartGroup")
             .width(200) // (optional) define chart width, :default = 200
             .height(200) // (optional) define chart height, :default = 200
             .transitionDuration(500) // (optional) define chart transition duration, :default = 350
@@ -493,7 +496,10 @@ d3.csv("ndx.csv", function(data) {
 <h3>Bar Chart</h3>
 
     <pre class="brush:js">
-        // create a bar chart
+        /* Create a bar chart and use the given css selector as anchor. You can also specify
+         * an optional chart group for this chart to be scoped within. When a chart belongs
+         * to a specific group then any interaction with such chart will only trigger redraw
+         * on other charts within the same chart group. */
         dc.barChart("#volume-month-chart")
             .width(990) // (optional) define chart width, :default = 200
             .height(250) // (optional) define chart height, :default = 200
@@ -526,8 +532,11 @@ d3.csv("ndx.csv", function(data) {
 <h3>Line Chart</h3>
 
     <pre class="brush:js">
-        // create a line chart
-        dc.lineChart("#monthly-move-chart")
+        /* Create a line chart and use the given css selector as anchor. You can also specify
+         * an optional chart group for this chart to be scoped within. When a chart belongs
+         * to a specific group then any interaction with such chart will only trigger redraw
+         * on other charts within the same chart group. */
+        dc.lineChart("#monthly-move-chart", "chartGroup")
             .width(990) // (optional) define chart width, :default = 200
             .height(200) // (optional) define chart height, :default = 200
             .transitionDuration(500) // (optional) define chart transition duration, :default = 500
@@ -561,7 +570,11 @@ d3.csv("ndx.csv", function(data) {
 <h3>Composite Chart</h3>
 
 <pre class="brush:js">
-    dc.compositeChart("#montly-move-chart")
+    /* Create a composite chart and use the given css selector as anchor. You can also specify
+         * an optional chart group for this chart to be scoped within. When a chart belongs
+         * to a specific group then any interaction with such chart will only trigger redraw
+         * on other charts within the same chart group. */
+    dc.compositeChart("#montly-move-chart", "chartGroup")
         .width(990) // (optional) define chart width, :default = 200
         .height(200) // (optional) define chart height, :default = 200
         .transitionDuration(500) // (optional) define chart transition duration, :default = 500
@@ -598,7 +611,11 @@ d3.csv("ndx.csv", function(data) {
 <h3>Bubble Chart</h3>
 
     <pre class="brush:js">
-        dc.bubbleChart("#yearly-bubble-chart")
+        /* Create a bubble chart and use the given css selector as anchor. You can also specify
+         * an optional chart group for this chart to be scoped within. When a chart belongs
+         * to a specific group then any interaction with such chart will only trigger redraw
+         * on other charts within the same chart group. */
+        dc.bubbleChart("#yearly-bubble-chart", "chartGroup")
             .width(990) // (optional) define chart width, :default = 200
             .height(250) // (optional) define chart height, :default = 200
             .transitionDuration(1000) // (optional) define chart transition duration, :default = 1000
@@ -663,7 +680,10 @@ d3.csv("ndx.csv", function(data) {
         </div>
     </pre>
     <pre class="brush:js">
-        // create data table widget
+        /* Create a data table widget and use the given css selector as anchor. You can also specify
+         * an optional chart group for this chart to be scoped within. When a chart belongs
+         * to a specific group then any interaction with such chart will only trigger redraw
+         * on other charts within the same chart group. */
         dc.dataTable("#data-table")
             // set dimension
             .dimension(dateDimension)
@@ -696,7 +716,10 @@ d3.csv("ndx.csv", function(data) {
         </div>
     </pre>
     <pre class="brush:js">
-        // create a data count widget
+        /* Create a data count widget and use the given css selector as anchor. You can also specify
+         * an optional chart group for this chart to be scoped within. When a chart belongs
+         * to a specific group then any interaction with such chart will only trigger redraw
+         * on other charts within the same chart group. */
         dc.dataCount("#data-count")
             .dimension(ndx) // set dimension to all data
             .group(all); // set group to ndx.groupAll()
