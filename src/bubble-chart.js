@@ -114,7 +114,7 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     var onClick = function(d) {
         _chart.filter(d.key);
-        dc.redrawAll();
+        dc.redrawAll(_chart.chartGroup());
     };
 
     function bubbleX(d) {

@@ -232,7 +232,7 @@ dc.coordinateGridChart = function(_chart) {
         }
         extent = _brush.extent();
         _chart.filter(_brush.empty() ? null : [extent[0], extent[1]]);
-        dc.redrawAll();
+        dc.redrawAll(_chart.chartGroup());
     }
 
     function brushEnd(p) {

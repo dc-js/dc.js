@@ -224,7 +224,7 @@ dc.pieChart = function(parent, chartGroup) {
 
     function onClick(d) {
         _chart.filter(_chart.keyRetriever()(d.data));
-        dc.redrawAll();
+        dc.redrawAll(_chart.chartGroup());
     }
 
     return _chart.anchor(parent, chartGroup);

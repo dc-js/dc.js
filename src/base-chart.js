@@ -31,6 +31,8 @@ dc.baseChart = function(_chart) {
 
     var _renderlet;
 
+    var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
+
     _chart.dimension = function(d) {
         if (!arguments.length) return _dimension;
         _dimension = d;
@@ -75,6 +77,7 @@ dc.baseChart = function(_chart) {
             _root = d3.select(_anchor);
             dc.registerChart(_chart, chartGroup);
         }
+        _chartGroup = chartGroup;
         return _chart;
     };
 
@@ -215,6 +218,12 @@ dc.baseChart = function(_chart) {
     _chart.invokeRenderlet = function(chart) {
         if (chart.renderlet())
             chart.renderlet()(chart);
+    };
+
+    _chart.chartGroup = function(_){
+        if(!arguments.length) return _chartGroup;
+        _chartGroup = _;
+        return _chart;
     };
 
     return _chart;

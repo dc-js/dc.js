@@ -1,10 +1,15 @@
 dc = {
-    version: "0.7.0"
+    version: "0.7.0",
+    constants : {
+        STACK_CLASS: "stack",
+        DESELECTED_CLASS: "deselected",
+        SELECTED_CLASS: "selected",
+        GROUP_INDEX_NAME: "__group_index__",
+        DEFAULT_CHART_GROUP: "__default_chart_group__"
+    }
 };
 
 dc.chartRegistry = function() {
-    this.DEFAULT_GROUP = "__DEFAULT__";
-
     // chartGroup:string => charts:array
     var _chartMap = {};
 
@@ -20,7 +25,7 @@ dc.chartRegistry = function() {
         group = group;
 
         if (!group)
-            group = this.DEFAULT_GROUP;
+            group = dc.constants.DEFAULT_CHART_GROUP;
 
         if (!_chartMap[group])
             _chartMap[group] = [];
@@ -111,7 +116,6 @@ dc.round.round = function(n) {
 
 dc.override = function(obj, functionName, newFunction) {
     var existingFunction = obj[functionName];
-    newFunction._ = existingFunction;
     obj[functionName] = function() {
         var expression = "newFunction(";
 
