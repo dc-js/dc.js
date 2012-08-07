@@ -398,7 +398,7 @@
             .xUnits(d3.time.days)
             .renderHorizontalGridLines(true)
             .renderVerticalGridLines(true)
-            .xAxis().ticks(5);
+            .xAxis().tickValues([new Date(2012, 3, 1), new Date(2012, 6, 1), new Date(2012, 9, 1)]);
      barChartDateB.yAxis().tickValues([0, 75, 140]);
 
     var compositeChartDateB = dc.compositeChart("#composite-chart-dateB", "groupB");
