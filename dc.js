@@ -1,35 +1,85 @@
 dc = {
     version: "0.7.0",
-    _charts: []
+    constants : {
+        STACK_CLASS: "stack",
+        DESELECTED_CLASS: "deselected",
+        SELECTED_CLASS: "selected",
+        GROUP_INDEX_NAME: "__group_index__",
+        DEFAULT_CHART_GROUP: "__default_chart_group__"
+    }
 };
 
-dc.registerChart = function(chart) {
-    dc._charts.push(chart);
+dc.chartRegistry = function() {
+    // chartGroup:string => charts:array
+    var _chartMap = {};
+
+    this.has = function(chart) {
+        for(e in _chartMap){
+            if(_chartMap[e].indexOf(chart) >= 0)
+                return true;
+        }
+        return false;
+    };
+
+    function initializeChartGroup(group) {
+        group = group;
+
+        if (!group)
+            group = dc.constants.DEFAULT_CHART_GROUP;
+
+        if (!_chartMap[group])
+            _chartMap[group] = [];
+
+        return group;
+    }
+
+    this.register = function(chart, group) {
+        group = initializeChartGroup(group);
+        _chartMap[group].push(chart);
+    };
+
+    this.clear = function() {
+        _chartMap = {};
+    };
+
+    this.list = function(group) {
+        group = initializeChartGroup(group);
+        return _chartMap[group];
+    };
+
+    return this;
+}();
+
+dc.registerChart = function(chart, group) {
+    dc.chartRegistry.register(chart, group);
 };
 
 dc.hasChart = function(chart) {
-    return dc._charts.indexOf(chart) >= 0;
+    return dc.chartRegistry.has(chart);
 };
 
 dc.deregisterAllCharts = function() {
-    dc._charts = [];
+    dc.chartRegistry.clear();
 };
 
-dc.filterAll = function() {
-    for (var i = 0; i < dc._charts.length; ++i) {
-        dc._charts[i].filterAll();
+dc.filterAll = function(group) {
+    var charts = dc.chartRegistry.list(group);
+    for (var i = 0; i < charts.length; ++i) {
+        charts[i].filterAll();
     }
 };
 
-dc.renderAll = function() {
-    for (var i = 0; i < dc._charts.length; ++i) {
-        dc._charts[i].render();
+dc.renderAll = function(group) {
+    var charts = dc.chartRegistry.list(group);
+    for (var i = 0; i < charts.length; ++i) {
+        charts[i].render();
     }
 };
 
-dc.redrawAll = function() {
-    for (var i = 0; i < dc._charts.length; ++i) {
-        dc._charts[i].redraw();
+dc.redrawAll = function(group) {
+    var charts = dc.chartRegistry.list(group);
+    for (var i = 0; i < charts.length; ++i) {
+        charts[i].redraw();
     }
 };
 
@@ -49,20 +99,23 @@ dc.transition = function(selections, duration, callback) {
 };
 
 dc.units = {};
-
 dc.units.integers = function(s, e) {
     return new Array(Math.abs(e - s));
 };
 
 dc.round = {};
-
 dc.round.floor = function(n) {
     return Math.floor(n);
+};
+dc.round.ceil = function(n) {
+    return Math.ceil(n);
+};
+dc.round.round = function(n) {
+    return Math.round(n);
 };
 
 dc.override = function(obj, functionName, newFunction) {
     var existingFunction = obj[functionName];
-    newFunction._ = existingFunction;
     obj[functionName] = function() {
         var expression = "newFunction(";
 
@@ -106,13 +159,6 @@ function printSingleValue(filter) {
 
     return s;
 }
-
-dc.constants = function() {
-};
-dc.constants.STACK_CLASS = "stack";
-dc.constants.DESELECTED_CLASS = "deselected";
-dc.constants.SELECTED_CLASS = "selected";
-dc.constants.GROUP_INDEX_NAME = "__group_index__";
 
 dc.utils = {};
 dc.utils.add = function(l, r) {
@@ -342,6 +388,10 @@ dc.baseChart = function(_chart) {
 
     var _filterPrinter = dc.printers.filter;
 
+    var _renderlet;
+
+    var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
+
     _chart.dimension = function(d) {
         if (!arguments.length) return _dimension;
         _dimension = d;
@@ -376,7 +426,7 @@ dc.baseChart = function(_chart) {
         return _root.selectAll(s);
     };
 
-    _chart.anchor = function(a) {
+    _chart.anchor = function(a, chartGroup) {
         if (!arguments.length) return _anchor;
         if (a instanceof Object) {
             _anchor = a.anchor();
@@ -384,8 +434,9 @@ dc.baseChart = function(_chart) {
         } else {
             _anchor = a;
             _root = d3.select(_anchor);
-            dc.registerChart(_chart);
+            dc.registerChart(_chart, chartGroup);
         }
+        _chartGroup = chartGroup;
         return _chart;
     };
 
@@ -425,8 +476,8 @@ dc.baseChart = function(_chart) {
         return _svg;
     };
 
-    _chart.filterPrinter = function(_){
-        if(!arguments.length) return _filterPrinter;
+    _chart.filterPrinter = function(_) {
+        if (!arguments.length) return _filterPrinter;
         _filterPrinter = _;
         return _chart;
     };
@@ -447,18 +498,34 @@ dc.baseChart = function(_chart) {
         return _chart;
     };
 
+    _chart.render = function() {
+        var result = _chart.doRender();
+
+        _chart.invokeRenderlet(_chart);
+
+        return result;
+    };
+
+    _chart.redraw = function() {
+        var result = _chart.doRedraw();
+
+        _chart.invokeRenderlet(_chart);
+
+        return result;
+    };
+
     // abstract function stub
     _chart.filter = function(f) {
         // do nothing in base, should be overridden by sub-function
         return _chart;
     };
 
-    _chart.render = function() {
+    _chart.doRender = function() {
         // do nothing in base, should be overridden by sub-function
         return _chart;
     };
 
-    _chart.redraw = function() {
+    _chart.doRedraw = function() {
         // do nothing in base, should be overridden by sub-function
         return _chart;
     };
@@ -501,10 +568,30 @@ dc.baseChart = function(_chart) {
         return _chart;
     };
 
+    _chart.renderlet = function(_) {
+        if (!arguments.length) return _renderlet;
+        _renderlet = _;
+        return _chart;
+    };
+
+    _chart.invokeRenderlet = function(chart) {
+        if (chart.renderlet())
+            chart.renderlet()(chart);
+    };
+
+    _chart.chartGroup = function(_){
+        if(!arguments.length) return _chartGroup;
+        _chartGroup = _;
+        return _chart;
+    };
+
     return _chart;
 };
 dc.coordinateGridChart = function(_chart) {
     var DEFAULT_Y_AXIS_TICKS = 5;
+    var GRID_LINE_CLASS = "grid-line";
+    var HORIZONTAL_CLASS = "horizontal";
+    var VERTICAL_CLASS = "vertical";
 
     _chart = dc.baseChart(_chart);
 
@@ -526,6 +613,9 @@ dc.coordinateGridChart = function(_chart) {
     var _filter;
     var _brush = d3.svg.brush();
     var _round;
+
+    var _renderHorizontalGridLine = false;
+    var _renderVerticalGridLine = false;
 
     _chart.generateG = function() {
         _g = _chart.svg().append("g")
@@ -570,7 +660,30 @@ dc.coordinateGridChart = function(_chart) {
             .attr("class", "axis x")
             .attr("transform", "translate(" + _chart.margins().left + "," + _chart.xAxisY() + ")")
             .call(_xAxis);
+
+        renderVerticalGridLines(g);
     };
+
+    function renderVerticalGridLines(g) {
+        if (_renderVerticalGridLine) {
+            g.selectAll("g." + VERTICAL_CLASS).remove();
+
+            var ticks = _xAxis.tickValues()?_xAxis.tickValues():_x.ticks(_xAxis.ticks()[0]);
+
+            var gridLineG = g.append("g")
+                .attr("class", GRID_LINE_CLASS + " " + VERTICAL_CLASS)
+                .attr("transform", "translate(" + _chart.yAxisX() + "," + _chart.margins().top + ")");
+
+            for (var i = 0; i < ticks.length; ++i) {
+                var tick = ticks[i];
+                gridLineG.append("line")
+                    .attr("x1", _x(tick))
+                    .attr("y1", _chart.xAxisY() - _chart.margins().top)
+                    .attr("x2", _x(tick))
+                    .attr("y2", 0);
+            }
+        }
+    }
 
     _chart.xAxisY = function() {
         return (_chart.height() - _chart.margins().bottom);
@@ -599,8 +712,49 @@ dc.coordinateGridChart = function(_chart) {
 
         g.append("g")
             .attr("class", "axis y")
-            .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")")
+            .attr("transform", "translate(" + _chart.yAxisX() + "," + _chart.margins().top + ")")
             .call(_yAxis);
+
+
+        renderHorizontalGridLines(g);
+    };
+
+    function renderHorizontalGridLines(g) {
+        if (_renderHorizontalGridLine) {
+            g.selectAll("g." + HORIZONTAL_CLASS).remove();
+
+            var ticks = _yAxis.tickValues()?_yAxis.tickValues():_y.ticks(_yAxis.ticks()[0]);
+
+            var gridLineG = g.append("g")
+                .attr("class", GRID_LINE_CLASS + " " + HORIZONTAL_CLASS)
+                .attr("transform", "translate(" + _chart.yAxisX() + "," + _chart.margins().top + ")");
+
+            for (var i = 0; i < ticks.length; ++i) {
+                if (i == 0) continue;
+                var tick = ticks[i];
+                gridLineG.append("line")
+                    .attr("x1", 1)
+                    .attr("y1", _y(tick))
+                    .attr("x2", _chart.xAxisLength())
+                    .attr("y2", _y(tick));
+            }
+        }
+    }
+
+    _chart.renderHorizontalGridLines = function(_) {
+        if (!arguments.length) return _renderHorizontalGridLine;
+        _renderHorizontalGridLine = _;
+        return _chart;
+    };
+
+    _chart.renderVerticalGridLines = function(_){
+        if(!arguments.length) return _renderVerticalGridLine;
+        _renderVerticalGridLine = _;
+        return _chart;
+    };
+
+    _chart.yAxisX = function() {
+        return _chart.margins().left;
     };
 
     _chart.y = function(_) {
@@ -737,7 +891,7 @@ dc.coordinateGridChart = function(_chart) {
         }
         extent = _brush.extent();
         _chart.filter(_brush.empty() ? null : [extent[0], extent[1]]);
-        dc.redrawAll();
+        dc.redrawAll(_chart.chartGroup());
     }
 
     function brushEnd(p) {
@@ -772,7 +926,7 @@ dc.coordinateGridChart = function(_chart) {
             + "V" + (2 * y - 8);
     };
 
-    _chart.render = function() {
+    _chart.doRender = function() {
         _chart.resetSvg();
 
         if (_chart.dataAreSet()) {
@@ -789,7 +943,7 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
-    _chart.redraw = function() {
+    _chart.doRedraw = function() {
         if (_chart.elasticY())
             _chart.renderYAxis(_chart.g());
 
@@ -1015,7 +1169,9 @@ dc.stackableChart = function(_chart) {
 
     return _chart;
 };
-dc.pieChart = function(_parent) {
+dc.pieChart = function(parent, chartGroup) {
+    var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
+
     var _sliceCssClass = "pie-slice";
 
     var _radius = 0, _innerRadius = 0;
@@ -1028,6 +1184,7 @@ dc.pieChart = function(_parent) {
     var _slicePaths;
 
     var _labels;
+    var _minAngelForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
 
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
 
@@ -1042,7 +1199,7 @@ dc.pieChart = function(_parent) {
 
     _chart.transitionDuration(350);
 
-    _chart.render = function() {
+    _chart.doRender = function() {
         _chart.resetSvg();
 
         if (_chart.dataAreSet()) {
@@ -1150,16 +1307,29 @@ dc.pieChart = function(_parent) {
         return _chart.filter() == _chart.keyRetriever()(d.data);
     };
 
-    _chart.redraw = function() {
+    _chart.doRedraw = function() {
         _chart.highlightFilter();
+
         var data = _dataPie(_chart.orderedGroup().top(Infinity));
+
         _slicePaths = _slicePaths.data(data);
+
         _labels = _labels.data(data);
+
         dc.transition(_slicePaths, _chart.transitionDuration(), function(s) {
             s.attrTween("d", tweenPie);
         });
+
         redrawLabels(_arc);
+
         redrawTitles();
+
+        return _chart;
+    };
+
+    _chart.minAngelForLabel = function(_){
+        if(!arguments.length) return _minAngelForLabel;
+        _minAngelForLabel = _;
         return _chart;
     };
 
@@ -1192,7 +1362,7 @@ dc.pieChart = function(_parent) {
 
     function sliceTooSmall(d) {
         var angle = (d.endAngle - d.startAngle);
-        return isNaN(angle) || angle < 1;
+        return isNaN(angle) || angle < _minAngelForLabel;
     }
 
     function sliceHasNoData(data) {
@@ -1225,12 +1395,12 @@ dc.pieChart = function(_parent) {
 
     function onClick(d) {
         _chart.filter(_chart.keyRetriever()(d.data));
-        dc.redrawAll();
+        dc.redrawAll(_chart.chartGroup());
     }
 
-    return _chart.anchor(_parent);
+    return _chart.anchor(parent, chartGroup);
 };
-dc.barChart = function(_parent) {
+dc.barChart = function(parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
     var BAR_PADDING_WIDTH = 2;
 
@@ -1328,9 +1498,9 @@ dc.barChart = function(_parent) {
         }
     };
 
-    return _chart.anchor(_parent);
+    return _chart.anchor(parent, chartGroup);
 };
-dc.lineChart = function(_parent) {
+dc.lineChart = function(parent, chartGroup) {
     var AREA_BOTTOM_PADDING = 1;
 
     var _chart = dc.stackableChart(dc.coordinateGridChart({}));
@@ -1429,26 +1599,26 @@ dc.lineChart = function(_parent) {
         return _chart;
     };
 
-    return _chart.anchor(_parent);
+    return _chart.anchor(parent, chartGroup);
 };
-dc.dataCount = function(_parent) {
+dc.dataCount = function(parent, chartGroup) {
     var _formatNumber = d3.format(",d");
     var _chart = dc.baseChart({});
 
-    _chart.render = function() {
+    _chart.doRender = function() {
         _chart.selectAll(".total-count").text(_formatNumber(_chart.dimension().size()));
         _chart.selectAll(".filter-count").text(_formatNumber(_chart.group().value()));
 
         return _chart;
     };
 
-    _chart.redraw = function(){
-        return _chart.render();
+    _chart.doRedraw = function(){
+        return _chart.doRender();
     };
 
-    return _chart.anchor(_parent);
+    return _chart.anchor(parent, chartGroup);
 };
-dc.dataTable = function(_parent) {
+dc.dataTable = function(parent, chartGroup) {
     var _chart = dc.baseChart({});
 
     var _size = 25;
@@ -1459,7 +1629,7 @@ dc.dataTable = function(_parent) {
     var _order = d3.ascending;
     var _sort;
 
-    _chart.render = function() {
+    _chart.doRender = function() {
         _chart.selectAll("div.row").remove();
 
         renderRows(renderGroups());
@@ -1523,8 +1693,8 @@ dc.dataTable = function(_parent) {
         return rows;
     }
 
-    _chart.redraw = function() {
-        return _chart.render();
+    _chart.doRedraw = function() {
+        return _chart.doRender();
     };
 
     _chart.size = function(s) {
@@ -1551,9 +1721,9 @@ dc.dataTable = function(_parent) {
         return _chart;
     };
 
-    return _chart.anchor(_parent);
+    return _chart.anchor(parent, chartGroup);
 };
-dc.bubbleChart = function(_parent) {
+dc.bubbleChart = function(parent, chartGroup) {
     var NODE_CLASS = "node";
     var BUBBLE_CLASS = "bubble";
     var MIN_RADIUS = 10;
@@ -1669,7 +1839,7 @@ dc.bubbleChart = function(_parent) {
 
     var onClick = function(d) {
         _chart.filter(d.key);
-        dc.redrawAll();
+        dc.redrawAll(_chart.chartGroup());
     };
 
     function bubbleX(d) {
@@ -1727,9 +1897,9 @@ dc.bubbleChart = function(_parent) {
         return _chart;
     };
 
-    return _chart.anchor(_parent);
+    return _chart.anchor(parent, chartGroup);
 };
-dc.compositeChart = function(_parent) {
+dc.compositeChart = function(parent, chartGroup) {
     var SUB_CHART_CLASS = "sub";
 
     var _chart = dc.coordinateGridChart({});
@@ -1742,6 +1912,7 @@ dc.compositeChart = function(_parent) {
             var child = _children[i];
             if (child.dimension() == null) child.dimension(_chart.dimension());
             if (child.group() == null) child.group(_chart.group());
+            child.chartGroup(_chart.chartGroup());
             child.svg(_chart.svg());
             child.height(_chart.height());
             child.width(_chart.width());
@@ -1829,5 +2000,5 @@ dc.compositeChart = function(_parent) {
         return dc.utils.add(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding());
     };
 
-    return _chart.anchor(_parent);
+    return _chart.anchor(parent, chartGroup);
 };
