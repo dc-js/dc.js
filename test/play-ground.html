@@ -320,7 +320,7 @@
             .valueAccessor(function(p) {
                 return p.value.count;
             })
-            .radiusValueRetriever(function(p) {
+            .radiusValueAccessor(function(p) {
                 return p.value.count;
             })
             .x(d3.scale.linear().domain([0, 300]))

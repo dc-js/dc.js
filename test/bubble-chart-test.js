@@ -22,7 +22,7 @@ function buildChart(id) {
         .valueAccessor(function(p) {
             return p.value.count;
         })
-        .radiusValueRetriever(function(p) {
+        .radiusValueAccessor(function(p) {
             return p.value.count;
         })
         .x(d3.scale.linear().domain([0, 300]))
@@ -103,7 +103,7 @@ suite.addBatch({
             assert.isNotNull(chart.r());
         },
         'rValue should be set': function(chart) {
-            assert.isNotNull(chart.radiusValueRetriever());
+            assert.isNotNull(chart.radiusValueAccessor());
         },
         'root g should be created': function(chart) {
             assert.isFalse(chart.select("svg g").empty());

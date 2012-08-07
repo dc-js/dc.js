@@ -9,7 +9,7 @@ dc.bubbleChart = function(parent, chartGroup) {
     _chart.renderTitle(false);
 
     var _r = d3.scale.linear().domain([0, 100]);
-    var _rValueRetriever = function(d) {
+    var _rValueAccessor = function(d) {
         return d.r;
     };
 
@@ -126,7 +126,7 @@ dc.bubbleChart = function(parent, chartGroup) {
     }
 
     function bubbleR(d) {
-        return _chart.r()(_chart.radiusValueRetriever()(d));
+        return _chart.r()(_chart.radiusValueAccessor()(d));
     }
 
     _chart.renderBrush = function(g) {
@@ -166,9 +166,9 @@ dc.bubbleChart = function(parent, chartGroup) {
         return _chart;
     };
 
-    _chart.radiusValueRetriever = function(_) {
-        if (!arguments.length) return _rValueRetriever;
-        _rValueRetriever = _;
+    _chart.radiusValueAccessor = function(_) {
+        if (!arguments.length) return _rValueAccessor;
+        _rValueAccessor = _;
         return _chart;
     };
 
