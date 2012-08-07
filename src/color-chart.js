@@ -4,10 +4,16 @@ dc.colorChart = function(_chart) {
     _chart.colors = function(_) {
         if (!arguments.length) return _colors;
 
-        if(_ instanceof Array)
+        if (_ instanceof Array) {
             _colors = d3.scale.ordinal().range(_);
-        else
+            var domain = [];
+            for(var i = 0; i < _.length; ++i){
+                domain.push(i);
+            }
+            _colors.domain(domain);
+        } else {
             _colors = _;
+        }
 
         return _chart;
     };

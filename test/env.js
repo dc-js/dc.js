@@ -11,4 +11,5 @@ jQuery = require("jquery");
 
 require("../dc");
 
+require("./env-xhr");
 require("./env-data");
