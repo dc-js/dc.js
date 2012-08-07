@@ -414,6 +414,9 @@
                 dc.lineChart(compositeChartDateB),
                 dc.lineChart(compositeChartDateB).group(dateGroup)
             ])
+            .renderlet(function(chart){
+                chart.selectAll("rect.bar").attr("width", 8);
+            })
             .xAxis().ticks(5);
 
     dc.renderAll("groupB");
