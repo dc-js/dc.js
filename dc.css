@@ -75,6 +75,12 @@ a {
     font: 10px sans-serif;
 }
 
+.grid-line line {
+    fill: none;
+    stroke: #ccc;
+    opacity: .5;
+}
+
 .brush rect.background {
     z-index: -999;
 }

@@ -296,6 +296,8 @@ d3.csv("ndx.csv", function(data) {
                     .yAxisPadding(100)
                     .elasticX(true)
                     .xAxisPadding(500)
+                    .renderHorizontalGridLines(true)
+                    .renderVerticalGridLines(true)
                     .renderLabel(true)
                     .renderTitle(true)
                     .label(function(p) {
@@ -343,6 +345,7 @@ d3.csv("ndx.csv", function(data) {
                     .elasticY(true)
                     .round(dc.round.floor)
                     .x(d3.scale.linear().domain([-25, 25]))
+                    .renderHorizontalGridLines(true)
                     .xAxis()
                     .tickFormat(function(v) {
                         return v + "%";
@@ -360,6 +363,7 @@ d3.csv("ndx.csv", function(data) {
                     .round(d3.time.month.round)
                     .xUnits(d3.time.months)
                     .elasticY(true)
+                    .renderHorizontalGridLines(true)
                     .compose([
                         dc.barChart(volumeMoveChart).group(volumeByMonthGroup),
                         dc.lineChart(volumeMoveChart).group(indexAvgByMonthGroup).valueRetriever(function(d){return d.value.avg;}).renderArea(true).stack(monthlyMoveGroup, function(d){return d.value;})
@@ -522,6 +526,10 @@ d3.csv("ndx.csv", function(data) {
             .round(d3.time.month.round)
             // define x axis units
             .xUnits(d3.time.months)
+            // (optional) render horizontal grid lines, :default=false
+            .renderHorizontalGridLines(true)
+            // (optional) render vertical grid lines, :default=false
+            .renderVerticalGridLines(true)
             // (optional) add stacked group and custom value retriever
             .stack(monthlyMoveGroup, function(d){return d.value;})
             // (optional) you can add multiple stacked group with or without custom value retriever
@@ -558,6 +566,10 @@ d3.csv("ndx.csv", function(data) {
             .round(d3.time.month.round)
             // define x axis units
             .xUnits(d3.time.months)
+            // (optional) render horizontal grid lines, :default=false
+            .renderHorizontalGridLines(true)
+            // (optional) render vertical grid lines, :default=false
+            .renderVerticalGridLines(true)
             // (optional) render as area chart, :default = false
             .renderArea(true)
             // (optional) add stacked group and custom value retriever
@@ -596,6 +608,10 @@ d3.csv("ndx.csv", function(data) {
         .round(d3.time.month.round)
         // define x axis units
         .xUnits(d3.time.months)
+        // (optional) render horizontal grid lines, :default=false
+        .renderHorizontalGridLines(true)
+        // (optional) render vertical grid lines, :default=false
+        .renderVerticalGridLines(true)
         // compose sub charts, currently composite chart only supports line chart & bar chart
         .compose([
             /* Pass the parent chart instance to sub-chart function instead of css selector.
@@ -660,7 +676,11 @@ d3.csv("ndx.csv", function(data) {
                         + "Index Gain: " + numberFormat(p.value.absGain) + "\n"
                         + "Index Gain in Percentage: " + numberFormat(p.value.percentageGain) + "%\n"
                         + "Fluctuation / Index Ratio: " + numberFormat(p.value.fluctuationPercentage) + "%";
-            });
+            })
+            // (optional) render horizontal grid lines, :default=false
+            .renderHorizontalGridLines(true)
+            // (optional) render vertical grid lines, :default=false
+            .renderVerticalGridLines(true);
     </pre>
 
 <h3>Data Table</h3>
