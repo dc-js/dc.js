@@ -20,7 +20,7 @@ dc.dataTable = function(parent, chartGroup) {
     function renderGroups() {
         var groups = _chart.root().selectAll("div.group")
             .data(nestEntries(), function(d) {
-                return _chart.keyRetriever()(d);
+                return _chart.keyAccessor()(d);
             });
 
         groups.enter().append("div")
@@ -28,7 +28,7 @@ dc.dataTable = function(parent, chartGroup) {
             .append("span")
             .attr("class", "label")
             .text(function(d) {
-                return _chart.keyRetriever()(d);
+                return _chart.keyAccessor()(d);
             });
 
         groups.exit().remove();

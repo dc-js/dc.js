@@ -118,11 +118,11 @@ dc.bubbleChart = function(parent, chartGroup) {
     };
 
     function bubbleX(d) {
-        return _chart.x()(_chart.keyRetriever()(d)) + _chart.margins().left;
+        return _chart.x()(_chart.keyAccessor()(d)) + _chart.margins().left;
     }
 
     function bubbleY(d) {
-        return _chart.margins().top + _chart.y()(_chart.valueRetriever()(d));
+        return _chart.margins().top + _chart.y()(_chart.valueAccessor()(d));
     }
 
     function bubbleR(d) {

@@ -67,7 +67,7 @@ dc.barChart = function(parent, chartGroup) {
 
     function barX(bar, data, groupIndex, dataIndex) {
         setGroupIndexToBar(bar, groupIndex);
-        return _chart.x()(_chart.keyRetriever()(data)) + _chart.margins().left - barWidth(data)/2;
+        return _chart.x()(_chart.keyAccessor()(data)) + _chart.margins().left - barWidth(data)/2;
     }
 
     function getGroupIndexFromBar(bar) {
@@ -88,7 +88,7 @@ dc.barChart = function(parent, chartGroup) {
             var end = _chart.brush().extent()[1];
 
             bars.classed(dc.constants.DESELECTED_CLASS, function(d) {
-                var xValue = _chart.keyRetriever()(d);
+                var xValue = _chart.keyAccessor()(d);
                 return xValue < start || xValue >= end;
             });
         } else {

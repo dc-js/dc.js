@@ -16,10 +16,10 @@ function buildChart(id) {
         .dimension(statusDimension)
         .group(statusMultiGroup)
         .colors(colors)
-        .keyRetriever(function(p) {
+        .keyAccessor(function(p) {
             return p.value.value;
         })
-        .valueRetriever(function(p) {
+        .valueAccessor(function(p) {
             return p.value.count;
         })
         .radiusValueRetriever(function(p) {

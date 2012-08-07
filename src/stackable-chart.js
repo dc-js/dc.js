@@ -5,7 +5,7 @@ dc.stackableChart = function(_chart) {
     var _groupStack = new dc.utils.GroupStack();
 
     _chart.stack = function(group, retriever) {
-        _groupStack.setDefaultRetriever(_chart.valueRetriever());
+        _groupStack.setDefaultRetriever(_chart.valueAccessor());
         _groupStack.addGroup(group, retriever);
         return _chart;
     };
@@ -24,7 +24,7 @@ dc.stackableChart = function(_chart) {
     _chart.allValueRetrievers = function() {
         var allRetrievers = [];
 
-        allRetrievers.push(_chart.valueRetriever());
+        allRetrievers.push(_chart.valueAccessor());
 
         for (var i = 0; i < _groupStack.size(); ++i)
             allRetrievers.push(_groupStack.getRetrieverByIndex(i));
@@ -68,10 +68,10 @@ dc.stackableChart = function(_chart) {
     _chart.allKeyRetrievers = function() {
         var allRetrievers = [];
 
-        allRetrievers.push(_chart.keyRetriever());
+        allRetrievers.push(_chart.keyAccessor());
 
         for (var i = 0; i < _groupStack.size(); ++i)
-            allRetrievers.push(_chart.keyRetriever());
+            allRetrievers.push(_chart.keyAccessor());
 
         return allRetrievers;
     };

@@ -8,10 +8,10 @@ dc.baseChart = function(_chart) {
 
     var _width = 200, _height = 200;
 
-    var _keyRetriever = function(d) {
+    var _keyAccessor = function(d) {
         return d.key;
     };
-    var _valueRetriever = function(d) {
+    var _valueAccessor = function(d) {
         return d.value;
     };
 
@@ -171,15 +171,15 @@ dc.baseChart = function(_chart) {
         return _chart;
     };
 
-    _chart.keyRetriever = function(_) {
-        if (!arguments.length) return _keyRetriever;
-        _keyRetriever = _;
+    _chart.keyAccessor = function(_) {
+        if (!arguments.length) return _keyAccessor;
+        _keyAccessor = _;
         return _chart;
     };
 
-    _chart.valueRetriever = function(_) {
-        if (!arguments.length) return _valueRetriever;
-        _valueRetriever = _;
+    _chart.valueAccessor = function(_) {
+        if (!arguments.length) return _valueAccessor;
+        _valueAccessor = _;
         return _chart;
     };
 

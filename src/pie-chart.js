@@ -18,7 +18,7 @@ dc.pieChart = function(parent, chartGroup) {
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
 
     _chart.label(function(d) {
-        return _chart.keyRetriever()(d.data);
+        return _chart.keyAccessor()(d.data);
     });
     _chart.renderLabel(true);
 
@@ -133,7 +133,7 @@ dc.pieChart = function(parent, chartGroup) {
     };
 
     _chart.isSelectedSlice = function(d) {
-        return _chart.filter() == _chart.keyRetriever()(d.data);
+        return _chart.filter() == _chart.keyAccessor()(d.data);
     };
 
     _chart.doRedraw = function() {
@@ -164,7 +164,7 @@ dc.pieChart = function(parent, chartGroup) {
 
     function calculateDataPie() {
         return d3.layout.pie().value(function(d) {
-            return _chart.valueRetriever()(d);
+            return _chart.valueAccessor()(d);
         });
     }
 
@@ -195,7 +195,7 @@ dc.pieChart = function(parent, chartGroup) {
     }
 
     function sliceHasNoData(data) {
-        return _chart.valueRetriever()(data) == 0;
+        return _chart.valueAccessor()(data) == 0;
     }
 
     function redrawTitles() {
@@ -223,7 +223,7 @@ dc.pieChart = function(parent, chartGroup) {
     }
 
     function onClick(d) {
-        _chart.filter(_chart.keyRetriever()(d.data));
+        _chart.filter(_chart.keyAccessor()(d.data));
         dc.redrawAll(_chart.chartGroup());
     }
 

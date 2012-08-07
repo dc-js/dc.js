@@ -53,7 +53,7 @@ dc.lineChart = function(parent, chartGroup) {
 
         var line = d3.svg.line()
             .x(function(d) {
-                return _chart.margins().left + _chart.x()(_chart.keyRetriever()(d));
+                return _chart.margins().left + _chart.x()(_chart.keyAccessor()(d));
             })
             .y(function(d, dataIndex) {
                 var groupIndex = this[dc.constants.GROUP_INDEX_NAME];

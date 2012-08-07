@@ -190,10 +190,10 @@ suite.addBatch({
                 });
             },
             'x value should have default impl': function(chart) {
-                assert.isNotNull(chart.keyRetriever());
+                assert.isNotNull(chart.keyAccessor());
             },
             'y value should have default impl': function(chart) {
-                assert.isNotNull(chart.valueRetriever());
+                assert.isNotNull(chart.valueAccessor());
             }
         },
         teardown: function(topic) {

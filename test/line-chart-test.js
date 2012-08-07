@@ -108,7 +108,7 @@ suite.addBatch({
             assert.isTrue(chart.round() == null);
         },
         'round can be changed': function(chart) {
-            chart.round(d3.time.day.round)
+            chart.round(d3.time.day.round);
             assert.isNotNull(chart.round());
         },
         'current filter should be set correctly': function(chart) {
@@ -156,10 +156,10 @@ suite.addBatch({
                 });
             },
             'x value should have default impl': function(chart) {
-                assert.isNotNull(chart.keyRetriever());
+                assert.isNotNull(chart.keyAccessor());
             },
             'y value should have default impl': function(chart) {
-                assert.isNotNull(chart.valueRetriever());
+                assert.isNotNull(chart.valueAccessor());
             }
         },
         teardown: function(topic) {
@@ -170,8 +170,8 @@ suite.addBatch({
 });
 
 suite.addBatch({'elastic axis':{
-    topic: function(chart) {
-        countryDimension.filter("CA")
+    topic: function() {
+        countryDimension.filter("CA");
         var chart = buildChart("elastic-y-line-chart", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
         chart.yAxisPadding(10)
             .xAxisPadding(60)
@@ -228,13 +228,13 @@ suite.addBatch({'area chart':{
 
 suite.addBatch({'stacked area chart':{
     topic: function() {
-        var chart = buildChart("stacked-area-chart", [new Date(2012, 4, 20), new Date(2012, 07, 15)]);
+        var chart = buildChart("stacked-area-chart", [new Date(2012, 4, 20), new Date(2012, 7, 15)]);
         chart.dimension(dateDimension)
             .group(dateIdSumGroup)
             .stack(dateValueSumGroup)
             .stack(dateValueSumGroup)
             .elasticY(true)
-            .renderArea(true)
+            .renderArea(true);
         chart.render();
         return chart;
     },
