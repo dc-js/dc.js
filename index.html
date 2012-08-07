@@ -286,7 +286,7 @@ d3.csv("ndx.csv", function(data) {
                     .valueAccessor(function(p) {
                         return p.value.percentageGain;
                     })
-                    .radiusValueRetriever(function(p) {
+                    .radiusValueAccessor(function(p) {
                         return p.value.fluctuationPercentage;
                     })
                     .x(d3.scale.linear().domain([-2500, 2500]))
@@ -343,6 +343,7 @@ d3.csv("ndx.csv", function(data) {
                     .dimension(fluctuation)
                     .group(fluctuationGroup)
                     .elasticY(true)
+                    .centerBar(true)
                     .round(dc.round.floor)
                     .x(d3.scale.linear().domain([-25, 25]))
                     .renderHorizontalGridLines(true)
@@ -365,7 +366,7 @@ d3.csv("ndx.csv", function(data) {
                     .elasticY(true)
                     .renderHorizontalGridLines(true)
                     .compose([
-                        dc.barChart(volumeMoveChart).group(volumeByMonthGroup),
+                        dc.barChart(volumeMoveChart).group(volumeByMonthGroup).centerBar(true),
                         dc.lineChart(volumeMoveChart).group(indexAvgByMonthGroup).valueAccessor(function(d){return d.value.avg;}).renderArea(true).stack(monthlyMoveGroup, function(d){return d.value;})
                     ]);
 
@@ -648,7 +649,7 @@ d3.csv("ndx.csv", function(data) {
             // closure used to retrieve y value from multi-value group
             .valueAccessor(function(p) {return p.value.percentageGain;})
             // closure used to retrieve radius value from multi-value group
-            .radiusValueRetriever(function(p) {return p.value.fluctuationPercentage;})
+            .radiusValueAccessor(function(p) {return p.value.fluctuationPercentage;})
             // set x scale
             .x(d3.scale.linear().domain([-2500, 2500]))
             // set y scale
