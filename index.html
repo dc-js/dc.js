@@ -280,10 +280,10 @@ d3.csv("ndx.csv", function(data) {
                     .dimension(yearlyDimension)
                     .group(yearlyPerformanceGroup)
                     .colors(d3.scale.category20c())
-                    .keyRetriever(function(p) {
+                    .keyAccessor(function(p) {
                         return p.value.absGain;
                     })
-                    .valueRetriever(function(p) {
+                    .valueAccessor(function(p) {
                         return p.value.percentageGain;
                     })
                     .radiusValueRetriever(function(p) {
@@ -356,7 +356,7 @@ d3.csv("ndx.csv", function(data) {
                     .margins({top: 10, right: 50, bottom: 30, left: 40})
                     .dimension(moveMonths)
                     .group(indexAvgByMonthGroup)
-                    .valueRetriever(function(d) {
+                    .valueAccessor(function(d) {
                         return d.value.avg;
                     })
                     .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
@@ -366,7 +366,7 @@ d3.csv("ndx.csv", function(data) {
                     .renderHorizontalGridLines(true)
                     .compose([
                         dc.barChart(volumeMoveChart).group(volumeByMonthGroup),
-                        dc.lineChart(volumeMoveChart).group(indexAvgByMonthGroup).valueRetriever(function(d){return d.value.avg;}).renderArea(true).stack(monthlyMoveGroup, function(d){return d.value;})
+                        dc.lineChart(volumeMoveChart).group(indexAvgByMonthGroup).valueAccessor(function(d){return d.value.avg;}).renderArea(true).stack(monthlyMoveGroup, function(d){return d.value;})
                     ]);
 
             dc.dataCount("#data-count")
@@ -620,7 +620,7 @@ d3.csv("ndx.csv", function(data) {
              * explicitly defined here then it will simply inherent from it's parent. */
             dc.barChart(volumeMoveChart).group(volumeByMonthGroup),
             // you can even include stacked bar chart or line chart in a composite chart
-            dc.lineChart(volumeMoveChart).group(indexAvgByMonthGroup).valueRetriever(function(d){return d.value.avg;}).renderArea(true).stack(monthlyMoveGroup, function(d){return d.value;})
+            dc.lineChart(volumeMoveChart).group(indexAvgByMonthGroup).valueAccessor(function(d){return d.value.avg;}).renderArea(true).stack(monthlyMoveGroup, function(d){return d.value;})
         ]);
 </pre>
 
@@ -644,9 +644,9 @@ d3.csv("ndx.csv", function(data) {
             // (optional) define color function or array for bubbles
             .colors(d3.scale.category20c())
             // closure used to retrieve x value from multi-value group
-            .keyRetriever(function(p) {return p.value.absGain;})
+            .keyAccessor(function(p) {return p.value.absGain;})
             // closure used to retrieve y value from multi-value group
-            .valueRetriever(function(p) {return p.value.percentageGain;})
+            .valueAccessor(function(p) {return p.value.percentageGain;})
             // closure used to retrieve radius value from multi-value group
             .radiusValueRetriever(function(p) {return p.value.fluctuationPercentage;})
             // set x scale
