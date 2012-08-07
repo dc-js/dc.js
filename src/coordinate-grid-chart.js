@@ -1,5 +1,8 @@
 dc.coordinateGridChart = function(_chart) {
     var DEFAULT_Y_AXIS_TICKS = 5;
+    var GRID_LINE_CLASS = "grid-line";
+    var HORIZONTAL_CLASS = "horizontal";
+    var VERTICAL_CLASS = "vertical";
 
     _chart = dc.baseChart(_chart);
 
@@ -23,6 +26,7 @@ dc.coordinateGridChart = function(_chart) {
     var _round;
 
     var _renderHorizontalGridLine = false;
+    var _renderVerticalGridLine = false;
 
     _chart.generateG = function() {
         _g = _chart.svg().append("g")
@@ -67,7 +71,30 @@ dc.coordinateGridChart = function(_chart) {
             .attr("class", "axis x")
             .attr("transform", "translate(" + _chart.margins().left + "," + _chart.xAxisY() + ")")
             .call(_xAxis);
+
+        renderVerticalGridLines(g);
     };
+
+    function renderVerticalGridLines(g) {
+        if (_renderVerticalGridLine) {
+            g.selectAll("g." + VERTICAL_CLASS).remove();
+
+            var ticks = _xAxis.tickValues()?_xAxis.tickValues():_x.ticks(_xAxis.ticks()[0]);
+
+            var gridLineG = g.append("g")
+                .attr("class", GRID_LINE_CLASS + " " + VERTICAL_CLASS)
+                .attr("transform", "translate(" + _chart.yAxisX() + "," + _chart.margins().top + ")");
+
+            for (var i = 0; i < ticks.length; ++i) {
+                var tick = ticks[i];
+                gridLineG.append("line")
+                    .attr("x1", _x(tick))
+                    .attr("y1", _chart.xAxisY() - _chart.margins().top)
+                    .attr("x2", _x(tick))
+                    .attr("y2", 0);
+            }
+        }
+    }
 
     _chart.xAxisY = function() {
         return (_chart.height() - _chart.margins().bottom);
@@ -105,12 +132,12 @@ dc.coordinateGridChart = function(_chart) {
 
     function renderHorizontalGridLines(g) {
         if (_renderHorizontalGridLine) {
-            g.selectAll("g.horizontal").remove();
+            g.selectAll("g." + HORIZONTAL_CLASS).remove();
 
             var ticks = _yAxis.tickValues()?_yAxis.tickValues():_y.ticks(_yAxis.ticks()[0]);
 
             var gridLineG = g.append("g")
-                .attr("class", "grid-line horizontal")
+                .attr("class", GRID_LINE_CLASS + " " + HORIZONTAL_CLASS)
                 .attr("transform", "translate(" + _chart.yAxisX() + "," + _chart.margins().top + ")");
 
             for (var i = 0; i < ticks.length; ++i) {
@@ -128,6 +155,12 @@ dc.coordinateGridChart = function(_chart) {
     _chart.renderHorizontalGridLines = function(_) {
         if (!arguments.length) return _renderHorizontalGridLine;
         _renderHorizontalGridLine = _;
+        return _chart;
+    };
+
+    _chart.renderVerticalGridLines = function(_){
+        if(!arguments.length) return _renderVerticalGridLine;
+        _renderVerticalGridLine = _;
         return _chart;
     };
 

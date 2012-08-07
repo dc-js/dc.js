@@ -72,6 +72,7 @@
         .grid-line line {
             fill: none;
             stroke: #ccc;
+            opacity: .5;
             shape-rendering: crispEdges;
         }
 
@@ -396,6 +397,7 @@
             .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
             .xUnits(d3.time.days)
             .renderHorizontalGridLines(true)
+            .renderVerticalGridLines(true)
             .xAxis().ticks(5);
      barChartDateB.yAxis().tickValues([0, 75, 140]);
 
@@ -406,7 +408,7 @@
             .group(dateIdSumGroup)
             .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
             .xUnits(d3.time.days)
-            .renderHorizontalGridLines(true)
+            .renderVerticalGridLines(true)
             .compose([
                 dc.barChart(compositeChartDateB).group(dateValueSumGroup),
                 dc.lineChart(compositeChartDateB),

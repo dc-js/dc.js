@@ -351,4 +351,36 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({
+    'vertical grid lines drawing':{
+        topic:function(){
+            var chart = buildChart("chart-grid-line-vertical", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+            chart.renderVerticalGridLines(true);
+            chart.render();
+            return chart;
+        },
+        'vertical grid line g should be generated': function(chart){
+            assert.equal(chart.selectAll("g.vertical")[0].length, 1);
+        },
+        'vertical grid lines should be generated': function(chart){
+            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line").size(), 12);
+        },
+        'vertical grid line x,y should be generated correctly': function(chart){
+            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("x1"), "87.47945205479452");
+            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("y1"), "160");
+            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("x2"), "87.47945205479452");
+            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("y2"), "");
+
+            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[3].getAttribute("x1"), "256.6769406392694");
+            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[3].getAttribute("y1"), "160");
+            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[3].getAttribute("x2"), "256.6769406392694");
+            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[3].getAttribute("y2"), "");
+        },
+        teardown: function(topic) {
+            resetAllFilters();
+            resetBody();
+        }
+    }
+});
+
 suite.export(module);
