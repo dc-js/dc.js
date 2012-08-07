@@ -367,10 +367,10 @@ dc.baseChart = function(_chart) {
 
     var _width = 200, _height = 200;
 
-    var _keyRetriever = function(d) {
+    var _keyAccessor = function(d) {
         return d.key;
     };
-    var _valueRetriever = function(d) {
+    var _valueAccessor = function(d) {
         return d.value;
     };
 
@@ -530,15 +530,15 @@ dc.baseChart = function(_chart) {
         return _chart;
     };
 
-    _chart.keyRetriever = function(_) {
-        if (!arguments.length) return _keyRetriever;
-        _keyRetriever = _;
+    _chart.keyAccessor = function(_) {
+        if (!arguments.length) return _keyAccessor;
+        _keyAccessor = _;
         return _chart;
     };
 
-    _chart.valueRetriever = function(_) {
-        if (!arguments.length) return _valueRetriever;
-        _valueRetriever = _;
+    _chart.valueAccessor = function(_) {
+        if (!arguments.length) return _valueAccessor;
+        _valueAccessor = _;
         return _chart;
     };
 
@@ -783,28 +783,28 @@ dc.coordinateGridChart = function(_chart) {
 
     _chart.xAxisMin = function() {
         var min = d3.min(_chart.group().all(), function(e) {
-            return _chart.keyRetriever()(e);
+            return _chart.keyAccessor()(e);
         });
         return dc.utils.subtract(min, _xAxisPadding);
     };
 
     _chart.xAxisMax = function() {
         var max = d3.max(_chart.group().all(), function(e) {
-            return _chart.keyRetriever()(e);
+            return _chart.keyAccessor()(e);
         });
         return dc.utils.add(max, _xAxisPadding);
     };
 
     _chart.yAxisMin = function() {
         var min = d3.min(_chart.group().all(), function(e) {
-            return _chart.valueRetriever()(e);
+            return _chart.valueAccessor()(e);
         }) - _yAxisPadding;
         return min;
     };
 
     _chart.yAxisMax = function() {
         var max = d3.max(_chart.group().all(), function(e) {
-            return _chart.valueRetriever()(e);
+            return _chart.valueAccessor()(e);
         });
         return dc.utils.add(max, _yAxisPadding);
     };
@@ -1034,7 +1034,7 @@ dc.stackableChart = function(_chart) {
     var _groupStack = new dc.utils.GroupStack();
 
     _chart.stack = function(group, retriever) {
-        _groupStack.setDefaultRetriever(_chart.valueRetriever());
+        _groupStack.setDefaultRetriever(_chart.valueAccessor());
         _groupStack.addGroup(group, retriever);
         return _chart;
     };
@@ -1053,7 +1053,7 @@ dc.stackableChart = function(_chart) {
     _chart.allValueRetrievers = function() {
         var allRetrievers = [];
 
-        allRetrievers.push(_chart.valueRetriever());
+        allRetrievers.push(_chart.valueAccessor());
 
         for (var i = 0; i < _groupStack.size(); ++i)
             allRetrievers.push(_groupStack.getRetrieverByIndex(i));
@@ -1097,10 +1097,10 @@ dc.stackableChart = function(_chart) {
     _chart.allKeyRetrievers = function() {
         var allRetrievers = [];
 
-        allRetrievers.push(_chart.keyRetriever());
+        allRetrievers.push(_chart.keyAccessor());
 
         for (var i = 0; i < _groupStack.size(); ++i)
-            allRetrievers.push(_chart.keyRetriever());
+            allRetrievers.push(_chart.keyAccessor());
 
         return allRetrievers;
     };
@@ -1189,7 +1189,7 @@ dc.pieChart = function(parent, chartGroup) {
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
 
     _chart.label(function(d) {
-        return _chart.keyRetriever()(d.data);
+        return _chart.keyAccessor()(d.data);
     });
     _chart.renderLabel(true);
 
@@ -1304,7 +1304,7 @@ dc.pieChart = function(parent, chartGroup) {
     };
 
     _chart.isSelectedSlice = function(d) {
-        return _chart.filter() == _chart.keyRetriever()(d.data);
+        return _chart.filter() == _chart.keyAccessor()(d.data);
     };
 
     _chart.doRedraw = function() {
@@ -1335,7 +1335,7 @@ dc.pieChart = function(parent, chartGroup) {
 
     function calculateDataPie() {
         return d3.layout.pie().value(function(d) {
-            return _chart.valueRetriever()(d);
+            return _chart.valueAccessor()(d);
         });
     }
 
@@ -1366,7 +1366,7 @@ dc.pieChart = function(parent, chartGroup) {
     }
 
     function sliceHasNoData(data) {
-        return _chart.valueRetriever()(data) == 0;
+        return _chart.valueAccessor()(data) == 0;
     }
 
     function redrawTitles() {
@@ -1394,7 +1394,7 @@ dc.pieChart = function(parent, chartGroup) {
     }
 
     function onClick(d) {
-        _chart.filter(_chart.keyRetriever()(d.data));
+        _chart.filter(_chart.keyAccessor()(d.data));
         dc.redrawAll(_chart.chartGroup());
     }
 
@@ -1469,7 +1469,7 @@ dc.barChart = function(parent, chartGroup) {
 
     function barX(bar, data, groupIndex, dataIndex) {
         setGroupIndexToBar(bar, groupIndex);
-        return _chart.x()(_chart.keyRetriever()(data)) + _chart.margins().left - barWidth(data)/2;
+        return _chart.x()(_chart.keyAccessor()(data)) + _chart.margins().left - barWidth(data)/2;
     }
 
     function getGroupIndexFromBar(bar) {
@@ -1490,7 +1490,7 @@ dc.barChart = function(parent, chartGroup) {
             var end = _chart.brush().extent()[1];
 
             bars.classed(dc.constants.DESELECTED_CLASS, function(d) {
-                var xValue = _chart.keyRetriever()(d);
+                var xValue = _chart.keyAccessor()(d);
                 return xValue < start || xValue >= end;
             });
         } else {
@@ -1555,7 +1555,7 @@ dc.lineChart = function(parent, chartGroup) {
 
         var line = d3.svg.line()
             .x(function(d) {
-                return _chart.margins().left + _chart.x()(_chart.keyRetriever()(d));
+                return _chart.margins().left + _chart.x()(_chart.keyAccessor()(d));
             })
             .y(function(d, dataIndex) {
                 var groupIndex = this[dc.constants.GROUP_INDEX_NAME];
@@ -1640,7 +1640,7 @@ dc.dataTable = function(parent, chartGroup) {
     function renderGroups() {
         var groups = _chart.root().selectAll("div.group")
             .data(nestEntries(), function(d) {
-                return _chart.keyRetriever()(d);
+                return _chart.keyAccessor()(d);
             });
 
         groups.enter().append("div")
@@ -1648,7 +1648,7 @@ dc.dataTable = function(parent, chartGroup) {
             .append("span")
             .attr("class", "label")
             .text(function(d) {
-                return _chart.keyRetriever()(d);
+                return _chart.keyAccessor()(d);
             });
 
         groups.exit().remove();
@@ -1734,7 +1734,7 @@ dc.bubbleChart = function(parent, chartGroup) {
     _chart.renderTitle(false);
 
     var _r = d3.scale.linear().domain([0, 100]);
-    var _rValueRetriever = function(d) {
+    var _rValueAccessor = function(d) {
         return d.r;
     };
 
@@ -1843,15 +1843,15 @@ dc.bubbleChart = function(parent, chartGroup) {
     };
 
     function bubbleX(d) {
-        return _chart.x()(_chart.keyRetriever()(d)) + _chart.margins().left;
+        return _chart.x()(_chart.keyAccessor()(d)) + _chart.margins().left;
     }
 
     function bubbleY(d) {
-        return _chart.margins().top + _chart.y()(_chart.valueRetriever()(d));
+        return _chart.margins().top + _chart.y()(_chart.valueAccessor()(d));
     }
 
     function bubbleR(d) {
-        return _chart.r()(_chart.radiusValueRetriever()(d));
+        return _chart.r()(_chart.radiusValueAccessor()(d));
     }
 
     _chart.renderBrush = function(g) {
@@ -1891,9 +1891,9 @@ dc.bubbleChart = function(parent, chartGroup) {
         return _chart;
     };
 
-    _chart.radiusValueRetriever = function(_) {
-        if (!arguments.length) return _rValueRetriever;
-        _rValueRetriever = _;
+    _chart.radiusValueAccessor = function(_) {
+        if (!arguments.length) return _rValueAccessor;
+        _rValueAccessor = _;
         return _chart;
     };
 
