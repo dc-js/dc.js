@@ -415,7 +415,7 @@
                 dc.lineChart(compositeChartDateB).group(dateGroup)
             ])
             .renderlet(function(chart){
-                chart.selectAll("rect.bar").attr("width", 8);
+                chart.selectAll("rect.bar").attr("width", function(d){return Math.round(d.value/10);});
             })
             .xAxis().ticks(5);
 
