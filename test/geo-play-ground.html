@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<head>
+    <title>dc.js geo charts</title>
+
+    <meta charset="UTF-8">
+
+    <script type="text/javascript" src="../node_modules/jquery/tmp/jquery.js"></script>
+    <script type="text/javascript" src="../node_modules/d3/d3.v2.js"></script>
+    <script type="text/javascript" src="../node_modules/crossfilter/crossfilter.js"></script>
+
+    <script type="text/javascript" src="../dc.js"></script>
+
+    <script type="text/javascript" src="env-data.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="dc.css"/>
+    <link rel="stylesheet" type="text/css" href="colorbrewer.css"/>
+</head>
+<body>
+
+<div id="choropleth-chart" class="chart">
+    <span>Choropleth Chart</span>
+    <a class="reset" href="javascript:choroplethChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+    <br/><span class="reset" style="display: none;">Current filter: <span class="filter"></span></span>
+
+    <div class="clear"></div>
+</div>
+
+<div class="clear"></div>
+
+<div>
+    <a href="javascript:dc.renderAll();">Render All</a>
+    <a href="javascript:dc.filterAll(); dc.renderAll();">Filter All</a>
+</div>
+
+<script type="text/javascript">
+    var choroplethChart = dc.containerChart("#choropleth-chart")
+            .width(990)
+            .height(600);
+
+    d3.json("us-states.json", function(json) {
+        choroplethChart
+                .renderlet(function(chart) {
+                        var _geoPath = d3.geo.path();
+
+                        var states = chart.svg().append("g")
+                                .attr("class", "states Blues");
+
+                        states.selectAll("path")
+                                .data(json.features)
+                                .enter().append("path")
+                                .attr("class", "state")
+                                .attr("d", _geoPath);
+                })
+                .renderlet(function(chart) {
+                    function quantize(value) {
+                        return "q" + Math.min(8, ~~(value/12)) + "-9";
+                    }
+
+                    var data = {};
+                    var groupAll = stateValueSumGroup.all();
+                    for (var i = 0; i < groupAll.length; ++i) {
+                        data[groupAll[i].key] = groupAll[i].value;
+                    }
+                    chart.svg().selectAll("path.state").attr("class", function(d) {
+                        var key = d.properties.name;
+                        return "state " + key + " " + quantize(data[key]);
+                    });
+                });
+
+        dc.renderAll();
+    });
+</script>
+
+</body>
+</html>

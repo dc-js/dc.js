@@ -1,0 +1,194 @@
+body {
+    font-size: 0.9em;
+    font-family: Lucida;
+}
+
+a {
+    color: #3182bd;
+}
+
+.content {
+    width: 990px;
+    margin: 0 auto;
+    border-top: 0px;
+    background-color: #ffffff;
+    overflow: hidden;
+}
+
+.chart {
+    float: left;
+}
+
+.chart rect.bar {
+    stroke: none;
+    fill: steelblue;
+}
+
+.chart rect.stack1 {
+    stroke: none;
+    fill: red;
+}
+
+.chart rect.stack2 {
+    stroke: none;
+    fill: green;
+}
+
+.chart rect.deselected {
+    stroke: none;
+    fill: #ccc;
+}
+
+.clear {
+    clear: both;
+}
+
+.pie-slice {
+    fill: white;
+    font-size: 12px;
+}
+
+.pie-slice path.selected {
+    stroke-width: 3;
+    stroke: #ccc;
+    fill-opacity: 1;
+}
+
+.pie-slice path.deselected {
+    strok: none;
+    fill-opacity: .5;
+    fill: #ccc;
+}
+
+.axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font: 10px sans-serif;
+}
+
+.grid-line line {
+    fill: none;
+    stroke: #ccc;
+    opacity: .5;
+}
+
+.brush rect.background {
+    z-index: -999;
+}
+
+.brush rect.extent {
+    fill: steelblue;
+    fill-opacity: .125;
+}
+
+.brush .resize path {
+    fill: #eee;
+    stroke: #666;
+}
+
+.chart path.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}
+
+.chart g.stack1 path.line {
+    stroke: green;
+}
+
+.chart g.stack2 path.line {
+    stroke: red;
+}
+
+.chart path.area {
+    fill: steelblue;
+    fill-opacity: .3;
+    stroke: none;
+}
+
+.chart g.stack1 path.area {
+    fill: green;
+}
+
+.chart g.stack2 path.area {
+    fill: red;
+}
+
+.node {
+    font-size: 0.7em;
+}
+
+.node .selected {
+    stroke-width: 3;
+    stroke: #ccc;
+    fill-opacity: 1;
+}
+
+.node circle.deselected {
+    strok: none;
+    fill-opacity: .5;
+    fill: #ccc;
+}
+
+.bubble {
+    stroke: none;
+    fill-opacity: 0.6;
+}
+
+#data-count {
+    float: right;
+    margin-top: 15px;
+    margin-right: 15px;
+}
+
+#data-count .filter-count {
+    color: #3182bd;
+    font-weight: bold;
+}
+
+#data-count .total-count {
+    color: #3182bd;
+    font-weight: bold;
+}
+
+#data-table {
+    width: 700px;
+    margin-bottom: 50px;
+}
+
+#data-table span {
+    display: table-cell;
+    width: 135px;
+    text-align: center;
+    margin-left: 2px;
+    margin-right: 2px;
+    padding: 5px;
+    border: white solid 2px;
+}
+
+#data-table .header {
+    font-weight: bold;
+}
+
+#data-table .header span {
+    background-color: #c6dbef;
+    color: white;
+}
+
+#data-table .group span.label {
+    font-weight: bold;
+    font-size: larger;
+    float: inherit;
+}
+
+#data-table .column {
+}
+
+.states path{
+    stroke: white;
+    fill: #ccc;
+}

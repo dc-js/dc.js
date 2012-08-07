@@ -29,7 +29,7 @@ dc.baseChart = function(_chart) {
 
     var _filterPrinter = dc.printers.filter;
 
-    var _renderlet;
+    var _renderlets = [];
 
     var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
 
@@ -210,18 +210,18 @@ dc.baseChart = function(_chart) {
     };
 
     _chart.renderlet = function(_) {
-        if (!arguments.length) return _renderlet;
-        _renderlet = _;
+        _renderlets.push(_);
         return _chart;
     };
 
     _chart.invokeRenderlet = function(chart) {
-        if (chart.renderlet())
-            chart.renderlet()(chart);
+        for (var i = 0; i < _renderlets.length; ++i) {
+            _renderlets[i](chart);
+        }
     };
 
-    _chart.chartGroup = function(_){
-        if(!arguments.length) return _chartGroup;
+    _chart.chartGroup = function(_) {
+        if (!arguments.length) return _chartGroup;
         _chartGroup = _;
         return _chart;
     };
