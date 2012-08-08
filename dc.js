@@ -388,7 +388,7 @@ dc.baseChart = function(_chart) {
 
     var _filterPrinter = dc.printers.filter;
 
-    var _renderlet;
+    var _renderlets = [];
 
     var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
 
@@ -569,18 +569,18 @@ dc.baseChart = function(_chart) {
     };
 
     _chart.renderlet = function(_) {
-        if (!arguments.length) return _renderlet;
-        _renderlet = _;
+        _renderlets.push(_);
         return _chart;
     };
 
     _chart.invokeRenderlet = function(chart) {
-        if (chart.renderlet())
-            chart.renderlet()(chart);
+        for (var i = 0; i < _renderlets.length; ++i) {
+            _renderlets[i](chart);
+        }
     };
 
-    _chart.chartGroup = function(_){
-        if(!arguments.length) return _chartGroup;
+    _chart.chartGroup = function(_) {
+        if (!arguments.length) return _chartGroup;
         _chartGroup = _;
         return _chart;
     };
@@ -972,10 +972,16 @@ dc.colorChart = function(_chart) {
     _chart.colors = function(_) {
         if (!arguments.length) return _colors;
 
-        if(_ instanceof Array)
+        if (_ instanceof Array) {
             _colors = d3.scale.ordinal().range(_);
-        else
+            var domain = [];
+            for(var i = 0; i < _.length; ++i){
+                domain.push(i);
+            }
+            _colors.domain(domain);
+        } else {
             _colors = _;
+        }
 
         return _chart;
     };
@@ -1998,6 +2004,63 @@ dc.compositeChart = function(parent, chartGroup) {
 
     _chart.xAxisMax = function() {
         return dc.utils.add(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding());
+    };
+
+    return _chart.anchor(parent, chartGroup);
+};
+dc.geoChoroplethChart = function(parent, chartGroup) {
+    var _chart = dc.colorChart(dc.baseChart({}));
+
+    var _geoPath = d3.geo.path();
+
+    var _geoJson;
+
+    var _colorAccessor = function(value){
+        if(isNaN(value)) value = 0;
+        var colorsLength = _chart.colors().range().length;
+        var colorIndex = Math.min(colorsLength - 1, Math.round(value / colorsLength));
+        return _chart.colors()(colorIndex);
+    };
+
+    _chart.doRender = function() {
+        _chart.resetSvg();
+
+        var states = _chart.svg().append("g")
+            .attr("class", "layer");
+
+        states.selectAll("path")
+            .data(_geoJson.data)
+            .enter().append("path")
+            .attr("class", _geoJson.name)
+            .attr("d", _geoPath);
+
+        plotData();
+    };
+
+    function plotData() {
+        var data = {};
+        var groupAll = _chart.group().all();
+        for (var i = 0; i < groupAll.length; ++i) {
+            data[_chart.keyAccessor()(groupAll[i])] = _chart.valueAccessor()(groupAll[i]);
+        }
+
+        _chart.svg()
+            .selectAll("path.state")
+            .attr("class", function(d) {
+                return _geoJson.name + " " + _geoJson.keyAccessor(d);
+            })
+            .attr("fill", function(d) {
+                return _colorAccessor(data[_geoJson.keyAccessor(d)]);
+            });
+    }
+
+    _chart.doRedraw = function() {
+        plotData();
+    };
+
+    _chart.overlayGeoJson = function(json, name, keyAccessor) {
+        _geoJson = {name: name, data: json, keyAccessor: keyAccessor};
+        return _chart;
     };
 
     return _chart.anchor(parent, chartGroup);
