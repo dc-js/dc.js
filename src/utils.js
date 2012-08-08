@@ -55,7 +55,7 @@ dc.utils.subtract = function(l, r) {
 dc.utils.GroupStack = function() {
     var _dataPointMatrix = [];
     var _groups = [];
-    var _defaultRetriever;
+    var _defaultAccessor;
 
     function initializeDataPointRow(x) {
         if (!_dataPointMatrix[x])
@@ -77,7 +77,7 @@ dc.utils.GroupStack = function() {
 
     this.addGroup = function(group, retriever) {
         if (!retriever)
-            retriever = _defaultRetriever;
+            retriever = _defaultAccessor;
         _groups.push([group, retriever]);
         return _groups.length - 1;
     };
@@ -86,7 +86,7 @@ dc.utils.GroupStack = function() {
         return _groups[index][0];
     };
 
-    this.getRetrieverByIndex = function(index) {
+    this.getAccessorByIndex = function(index) {
         return _groups[index][1];
     };
 
@@ -99,8 +99,8 @@ dc.utils.GroupStack = function() {
         _groups = [];
     };
 
-    this.setDefaultRetriever = function(retriever) {
-        _defaultRetriever = retriever;
+    this.setDefaultAccessor = function(retriever) {
+        _defaultAccessor = retriever;
     };
 };
 

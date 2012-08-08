@@ -5,7 +5,7 @@ dc.stackableChart = function(_chart) {
     var _groupStack = new dc.utils.GroupStack();
 
     _chart.stack = function(group, retriever) {
-        _groupStack.setDefaultRetriever(_chart.valueAccessor());
+        _groupStack.setDefaultAccessor(_chart.valueAccessor());
         _groupStack.addGroup(group, retriever);
         return _chart;
     };
@@ -21,19 +21,19 @@ dc.stackableChart = function(_chart) {
         return allGroups;
     };
 
-    _chart.allValueRetrievers = function() {
-        var allRetrievers = [];
+    _chart.allValueAccessors = function() {
+        var allAccessors = [];
 
-        allRetrievers.push(_chart.valueAccessor());
+        allAccessors.push(_chart.valueAccessor());
 
         for (var i = 0; i < _groupStack.size(); ++i)
-            allRetrievers.push(_groupStack.getRetrieverByIndex(i));
+            allAccessors.push(_groupStack.getAccessorByIndex(i));
 
-        return allRetrievers;
+        return allAccessors;
     };
 
     _chart.getValueAccessorByIndex = function(groupIndex) {
-        return _chart.allValueRetrievers()[groupIndex];
+        return _chart.allValueAccessors()[groupIndex];
     };
 
     _chart.yAxisMin = function() {
@@ -63,19 +63,19 @@ dc.stackableChart = function(_chart) {
         return dc.utils.add(max, _chart.yAxisPadding());
     };
 
-    _chart.allKeyRetrievers = function() {
-        var allRetrievers = [];
+    _chart.allKeyAccessors = function() {
+        var allAccessors = [];
 
-        allRetrievers.push(_chart.keyAccessor());
+        allAccessors.push(_chart.keyAccessor());
 
         for (var i = 0; i < _groupStack.size(); ++i)
-            allRetrievers.push(_chart.keyAccessor());
+            allAccessors.push(_chart.keyAccessor());
 
-        return allRetrievers;
+        return allAccessors;
     };
 
     _chart.getKeyAccessorByIndex = function(groupIndex) {
-        return _chart.allKeyRetrievers()[groupIndex];
+        return _chart.allKeyAccessors()[groupIndex];
     };
 
     _chart.xAxisMin = function() {

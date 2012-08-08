@@ -23,7 +23,7 @@ suite.addBatch({
         },
         'be able to add group to stack': function(stack){
             var group = {};
-            var index = stack.addGroup(group)
+            var index = stack.addGroup(group);
             assert.equal(stack.getGroupByIndex(index), group);
             assert.equal(stack.size(), 1);
             stack.clear();
@@ -31,15 +31,15 @@ suite.addBatch({
         'be able to add group with retriever': function(stack){
             var retriever = {};
             var index = stack.addGroup({}, retriever);
-            assert.equal(stack.getRetrieverByIndex(index), retriever);
+            assert.equal(stack.getAccessorByIndex(index), retriever);
             assert.equal(stack.size(), 1);
             stack.clear();
         },
         'should use default retriever if custom retriever is missing': function(stack){
             var retriever = {};
-            stack.setDefaultRetriever(retriever);
+            stack.setDefaultAccessor(retriever);
             var index = stack.addGroup({});
-            assert.equal(stack.getRetrieverByIndex(index), retriever);
+            assert.equal(stack.getAccessorByIndex(index), retriever);
             stack.clear();
         }
     }
