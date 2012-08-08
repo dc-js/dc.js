@@ -103,3 +103,15 @@ dc.utils.GroupStack = function() {
         _defaultRetriever = retriever;
     };
 };
+
+dc.utils.groupMax = function(group, accessor) {
+    return d3.max(group.all(), function(e) {
+        return accessor(e);
+    });
+};
+
+dc.utils.groupMin = function(group, accessor) {
+    return d3.min(group.all(), function(e) {
+        return accessor(e);
+    });
+};
