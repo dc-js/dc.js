@@ -188,6 +188,6 @@ a {
 #data-table .column {
 }
 
-.layer path.state{
+.layer g.state path{
     stroke: white;
 }

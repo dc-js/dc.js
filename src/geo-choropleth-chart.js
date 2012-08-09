@@ -19,10 +19,12 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
         var states = _chart.svg().append("g")
             .attr("class", "layer");
 
-        states.selectAll("path")
+        states.selectAll("g." + _geoJson.name)
             .data(_geoJson.data)
-            .enter().append("path")
+            .enter()
+            .append("g")
             .attr("class", _geoJson.name)
+            .append("path")
             .attr("d", _geoPath);
 
         plotData();
@@ -37,10 +39,11 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
         }
 
         var paths = _chart.svg()
-            .selectAll("path." + _geoJson.name)
+            .selectAll("g." + _geoJson.name)
             .attr("class", function(d) {
                 return _geoJson.name + " " + _geoJson.keyAccessor(d);
             })
+            .select("path")
             .attr("fill", function(d) {
                 var currentFill = d3.select(this).attr("fill");
                 if (currentFill)
