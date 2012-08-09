@@ -151,7 +151,7 @@
         choroplethChart
                 .dimension(stateDimension)
                 .group(stateValueSumGroup)
-                .colors(["#E2F2FF","#C4E4FF","#9ED2FF","#81C5FF","#6BBAFF","#51AEFF","#36A2FF","#1E96FF","#0089FF"])
+                .colors(["#ccc", "#E2F2FF","#C4E4FF","#9ED2FF","#81C5FF","#6BBAFF","#51AEFF","#36A2FF","#1E96FF","#0089FF"])
                 .overlayGeoJson(json.features, "state", function(d) {
                     return d.properties.name;
                 })
