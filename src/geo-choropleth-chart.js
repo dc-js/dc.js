@@ -5,11 +5,12 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
 
     var _geoJson;
 
-    var _colorAccessor = function(value){
+    var _colorAccessor = function(value, maxValue){
         if(isNaN(value)) value = 0;
         var colorsLength = _chart.colors().range().length;
-        var colorIndex = Math.min(colorsLength - 1, Math.round(value / colorsLength));
-        return _chart.colors()(colorIndex);
+        var denominator = maxValue / colorsLength;
+        var colorValue = Math.min(colorsLength - 1, Math.round(value / denominator));
+        return _chart.colors()(colorValue);
     };
 
     _chart.doRender = function() {
@@ -28,6 +29,7 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
     };
 
     function plotData() {
+        var maxValue = dc.utils.groupMax(_chart.group(), _chart.valueAccessor());
         var data = {};
         var groupAll = _chart.group().all();
         for (var i = 0; i < groupAll.length; ++i) {
@@ -40,7 +42,7 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
                 return _geoJson.name + " " + _geoJson.keyAccessor(d);
             })
             .attr("fill", function(d) {
-                return _colorAccessor(data[_geoJson.keyAccessor(d)]);
+                return _colorAccessor(data[_geoJson.keyAccessor(d)], maxValue);
             });
     }
 

@@ -66,7 +66,7 @@ suite.addBatch({
             assert.equal(chart.selectAll("g.layer path.state")[0][5].getAttribute("class"), "state Colorado");
         },
         'correct color should be set [Colorado]': function(chart) {
-            assert.equal(chart.selectAll("g.layer path.state")[0][5].getAttribute("fill"), "#9ED2FF");
+            assert.equal(chart.selectAll("g.layer path.state")[0][5].getAttribute("fill"), "#C4E4FF");
         },
         'correct state boundary should be rendered [Colorado]': function(chart) {
             assert.equal(chart.selectAll("g.layer path.state")[0][5].getAttribute("d"), "M350.6558279386644,190.32747464076306L379.1417564600954,193.0766804542834L400.9842673748395,194.56648090187278L427.0604847196623,195.95426209201185L426.3080372819032,213.58455343256023L424.19976347803527,266.52898141920514L410.9873725131713,265.80322990122784L392.5653612831207,264.7996860372182L357.74429102638516,262.00822687585145L350.15212938381376,261.17850787049804L327.9017732133032,258.77384873712674L330.28515677736027,238.35229231520617L330.287518840727,236.40886491926926L332.0973188488354,221.5578841713215L335.99623347504,188.80082044863843Z");
