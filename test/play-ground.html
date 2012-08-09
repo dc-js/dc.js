@@ -22,6 +22,7 @@
     <span>Value DonutChart</span>
     <a class="reset" href="javascript:pieChartValue.filterAll();dc.redrawAll();" style="display: none;">reset</a>
     <br/><span class="reset" style="display: none;">Current filter: <span class="filter"></span></span>
+
     <div class="clear"></div>
 </div>
 
@@ -29,6 +30,15 @@
     <span>Country PieChart</span>
     <a class="reset" href="javascript:pieChartCountry.filterAll();dc.redrawAll();" style="display: none;">reset</a>
     <br/><span class="reset" style="display: none;">Current filter: <span class="filter"></span></span>
+
+    <div class="clear"></div>
+</div>
+
+<div id="choropleth-chart" class="chart">
+    <span>Choropleth Chart</span>
+    <a class="reset" href="javascript:choroplethChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+    <br/><span class="reset" style="display: none;">Current filter: <span class="filter"></span></span>
+
     <div class="clear"></div>
 </div>
 
@@ -38,6 +48,7 @@
     <span>Value LineChart</span>
     <a class="reset" href="javascript:lineChartDate1.filterAll();dc.redrawAll();" style="display: none;">reset</a>
     <br/><span class="reset" style="display: none;">Current filter: <span class="filter"></span></span>
+
     <div class="clear"></div>
 </div>
 
@@ -45,6 +56,7 @@
     <span>Date BarChart (3 months)</span>
     <a class="reset" href="javascript:barChartDate.filterAll();dc.redrawAll();" style="display: none;">reset</a>
     <br/><span class="reset" style="display: none;">Current filter: <span class="filter"></span></span>
+
     <div class="clear"></div>
 </div>
 
@@ -52,6 +64,7 @@
     <span>Date Composite Chart (3 months)</span>
     <a class="reset" href="javascript:compositeChartDate.filterAll();dc.redrawAll();" style="display: none;">reset</a>
     <br/><span class="reset" style="display: none;">Current filter: <span class="filter"></span></span>
+
     <div class="clear"></div>
 </div>
 
@@ -59,15 +72,19 @@
 
 <div id="line-chart-dateB" class="chart">
     <span>Value LineChart in GroupB</span>
-    <a class="reset" href="javascript:lineChartDateB.filterAll();dc.redrawAll('groupB');" style="display: none;">reset</a>
+    <a class="reset" href="javascript:lineChartDateB.filterAll();dc.redrawAll('groupB');"
+       style="display: none;">reset</a>
     <br/><span class="reset" style="display: none;">Current filter: <span class="filter"></span></span>
+
     <div class="clear"></div>
 </div>
 
 <div id="bar-chart-dateB" class="chart">
     <span>Date BarChart (3 months) in GroupB</span>
-    <a class="reset" href="javascript:barChartDateB.filterAll();dc.redrawAll('groupB');" style="display: none;">reset</a>
+    <a class="reset" href="javascript:barChartDateB.filterAll();dc.redrawAll('groupB');"
+       style="display: none;">reset</a>
     <br/><span class="reset" style="display: none;">Current filter: <span class="filter"></span></span>
+
     <div class="clear"></div>
 </div>
 
@@ -75,6 +92,7 @@
     <span>Date Composite Chart (3 months) in GroupB</span>
     <a class="reset" href="javascript:compositeChartDateB.filterAll();dc.redrawAll('groupB');" style="display: none;">reset</a>
     <br/><span class="reset" style="display: none;">Current filter: <span class="filter"></span></span>
+
     <div class="clear"></div>
 </div>
 
@@ -84,6 +102,7 @@
     <span>Bubble Chart (Value, Count, Count)</span>
     <a class="reset" href="javascript:bubbleChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
     <br/><span class="reset" style="display: none;">Current filter: <span class="filter"></span></span>
+
     <div class="clear"></div>
 </div>
 
@@ -124,13 +143,31 @@
             .group(countryGroup)
             .renderTitle(true);
 
+    var choroplethChart = dc.geoChoroplethChart("#choropleth-chart")
+            .width(990)
+            .height(600);
+
+    d3.json("us-states.json", function(json) {
+        choroplethChart
+                .dimension(stateDimension)
+                .group(stateValueSumGroup)
+                .colors(["#E2F2FF","#C4E4FF","#9ED2FF","#81C5FF","#6BBAFF","#51AEFF","#36A2FF","#1E96FF","#0089FF"])
+                .overlayGeoJson(json.features, "state", function(d) {
+                    return d.properties.name;
+                });
+
+        dc.renderAll();
+    });
+
     var lineChartDate1 = dc.lineChart("#line-chart-date");
     lineChartDate1.width(500)
             .height(150)
             .dimension(dateDimension)
             .group(dateIdSumGroup)
             .stack(dateValueSumGroup)
-            .stack(dateValueSumGroup, function(d){return 10;})
+            .stack(dateValueSumGroup, function(d) {
+                return 10;
+            })
             .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
             .xUnits(d3.time.days)
             .elasticY(true)
@@ -146,7 +183,9 @@
             .dimension(dateDimension)
             .group(dateIdSumGroup)
             .stack(dateValueSumGroup)
-            .stack(dateValueSumGroup, function(d){return 10;})
+            .stack(dateValueSumGroup, function(d) {
+                return 10;
+            })
             .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
             .xUnits(d3.time.days)
             .xAxis().ticks(5);
@@ -160,10 +199,10 @@
             .xUnits(d3.time.days)
             .filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
             .compose([
-                dc.barChart(compositeChartDate).group(dateValueSumGroup),
-                dc.lineChart(compositeChartDate),
-                dc.lineChart(compositeChartDate).group(dateGroup)
-            ])
+        dc.barChart(compositeChartDate).group(dateValueSumGroup),
+        dc.lineChart(compositeChartDate),
+        dc.lineChart(compositeChartDate).group(dateGroup)
+    ])
             .xAxis().ticks(5);
 
     var bubbleChart = dc.bubbleChart("#bubble-chart");
@@ -225,15 +264,15 @@
         }
     ]);
 
-    dc.renderAll();
-
     var lineChartDateB = dc.lineChart("#line-chart-dateB", "groupB");
     lineChartDateB.width(500)
             .height(150)
             .dimension(dateDimension)
             .group(dateIdSumGroup)
             .stack(dateValueSumGroup)
-            .stack(dateValueSumGroup, function(d){return 10;})
+            .stack(dateValueSumGroup, function(d) {
+                return 10;
+            })
             .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
             .xUnits(d3.time.days)
             .elasticY(true)
@@ -250,13 +289,15 @@
             .dimension(dateDimension)
             .group(dateIdSumGroup)
             .stack(dateValueSumGroup)
-            .stack(dateValueSumGroup, function(d){return 10;})
+            .stack(dateValueSumGroup, function(d) {
+                return 10;
+            })
             .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
             .xUnits(d3.time.days)
             .renderHorizontalGridLines(true)
             .renderVerticalGridLines(true)
             .xAxis().tickValues([new Date(2012, 3, 1), new Date(2012, 6, 1), new Date(2012, 9, 1)]);
-     barChartDateB.yAxis().tickValues([0, 75, 140]);
+    barChartDateB.yAxis().tickValues([0, 75, 140]);
 
     var compositeChartDateB = dc.compositeChart("#composite-chart-dateB", "groupB");
     compositeChartDateB.width(500)
@@ -267,12 +308,14 @@
             .xUnits(d3.time.days)
             .renderVerticalGridLines(true)
             .compose([
-                dc.barChart(compositeChartDateB).group(dateValueSumGroup),
-                dc.lineChart(compositeChartDateB),
-                dc.lineChart(compositeChartDateB).group(dateGroup)
-            ])
-            .renderlet(function(chart){
-                chart.selectAll("rect.bar").attr("width", function(d){return Math.round(d.value/10);});
+        dc.barChart(compositeChartDateB).group(dateValueSumGroup),
+        dc.lineChart(compositeChartDateB),
+        dc.lineChart(compositeChartDateB).group(dateGroup)
+    ])
+            .renderlet(function(chart) {
+                chart.selectAll("rect.bar").attr("width", function(d) {
+                    return Math.round(d.value / 10);
+                });
             })
             .xAxis().ticks(5);
 
