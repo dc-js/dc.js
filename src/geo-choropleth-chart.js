@@ -25,7 +25,8 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
             .append("g")
             .attr("class", _geoJson.name)
             .append("path")
-            .attr("d", _geoPath);
+            .attr("d", _geoPath)
+            .append("title");
 
         plotData();
     };
@@ -38,11 +39,13 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
             data[_chart.keyAccessor()(groupAll[i])] = _chart.valueAccessor()(groupAll[i]);
         }
 
-        var paths = _chart.svg()
+        var regionG = _chart.svg()
             .selectAll("g." + _geoJson.name)
             .attr("class", function(d) {
                 return _geoJson.name + " " + _geoJson.keyAccessor(d);
-            })
+            });
+
+        var paths = regionG
             .select("path")
             .attr("fill", function(d) {
                 var currentFill = d3.select(this).attr("fill");
@@ -54,6 +57,14 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
         dc.transition(paths, _chart.transitionDuration()).attr("fill", function(d) {
             return _colorAccessor(data[_geoJson.keyAccessor(d)], maxValue);
         });
+
+        if (_chart.renderTitle()) {
+            regionG.selectAll("title").text(function(d) {
+                var key = _geoJson.keyAccessor(d);
+                var value = data[key];
+                return _chart.title()({key: key, value: value});
+            });
+        }
     }
 
     _chart.doRedraw = function() {

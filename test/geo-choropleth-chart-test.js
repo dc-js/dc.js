@@ -22,7 +22,7 @@ function buildChart(id) {
             return d.properties.name;
         })
         .transitionDuration(0)
-        .title(function(d){return d.key + " : " + d.value});
+        .title(function(d){return d.key + " : " + (d.value?d.value:0);});
     chart.render();
     return chart;
 }
@@ -48,6 +48,9 @@ suite.addBatch({
         'correct css class should be set [Alaska]': function(chart) {
             assert.equal(chart.selectAll("g.layer g.state")[0][1].getAttribute("class"), "state Alaska");
         },
+        'correct title should be set [Alaska]': function(chart) {
+            assert.equal(chart.selectAll("g.layer g.state title")[0][1].innerHTML, "Alaska : 0");
+        },
         'correct color filling should be set [Alaska]': function(chart) {
             assert.equal(chart.selectAll("g.layer g.state path")[0][1].getAttribute("fill"), "#E2F2FF");
         },
@@ -57,6 +60,9 @@ suite.addBatch({
         'correct css class should be set [California]': function(chart) {
             assert.equal(chart.selectAll("g.layer g.state")[0][4].getAttribute("class"), "state California");
         },
+        'correct title should be set [California]': function(chart) {
+            assert.equal(chart.selectAll("g.layer g.state title")[0][4].innerHTML, "California : 154");
+        },
         'correct color should be set [California]': function(chart) {
             assert.equal(chart.selectAll("g.layer g.state path")[0][4].getAttribute("fill"), "#0089FF");
         },
@@ -65,6 +71,9 @@ suite.addBatch({
         },
         'correct css class should be set [Colorado]': function(chart) {
             assert.equal(chart.selectAll("g.layer g.state")[0][5].getAttribute("class"), "state Colorado");
+        },
+        'correct title should be set [Colorado]': function(chart) {
+            assert.equal(chart.selectAll("g.layer g.state title")[0][5].innerHTML, "Colorado : 22");
         },
         'correct color should be set [Colorado]': function(chart) {
             assert.equal(chart.selectAll("g.layer g.state path")[0][5].getAttribute("fill"), "#C4E4FF");
