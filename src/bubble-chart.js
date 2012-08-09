@@ -20,7 +20,7 @@ dc.bubbleChart = function(parent, chartGroup) {
     };
 
     _chart.plotData = function() {
-         _r.range([0, _chart.xAxisLength() / 3]);
+        _r.range([0, _chart.xAxisLength() / 3]);
 
         var bubbleG = _chart.g().selectAll("g." + NODE_CLASS)
             .data(_chart.group().all());
@@ -107,9 +107,7 @@ dc.bubbleChart = function(parent, chartGroup) {
     }
 
     function removeNodes(bubbleG) {
-        dc.transition(bubbleG.exit().selectAll("circle." + BUBBLE_CLASS), _chart.transitionDuration())
-            .attr("r", 0)
-            .remove();
+        bubbleG.exit().remove();
     }
 
     var onClick = function(d) {
