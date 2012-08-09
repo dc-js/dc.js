@@ -191,3 +191,8 @@ a {
 .chart g.state path{
     stroke: white;
 }
+
+.chart g.county path{
+    stroke: white;
+    fill: none;
+}

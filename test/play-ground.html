@@ -123,206 +123,209 @@
 </div>
 
 <script type="text/javascript">
-    var pieChartValue = dc.pieChart("#pie-chart-value")
-            .width(250)
-            .height(250)
-            .radius(100)
-            .innerRadius(40)
-            .dimension(valueDimension)
-            .group(valueGroup)
-            .title(function(d) {
-                return d.data.key + ": " + d.data.value;
-            })
-            .renderTitle(true);
+var pieChartValue = dc.pieChart("#pie-chart-value")
+        .width(250)
+        .height(250)
+        .radius(100)
+        .innerRadius(40)
+        .dimension(valueDimension)
+        .group(valueGroup)
+        .title(function(d) {
+            return d.data.key + ": " + d.data.value;
+        })
+        .renderTitle(true);
 
-    var pieChartCountry = dc.pieChart("#pie-chart-country")
-            .width(250)
-            .height(250)
-            .radius(100)
-            .dimension(countryDimension)
-            .group(countryGroup)
-            .renderTitle(true);
+var pieChartCountry = dc.pieChart("#pie-chart-country")
+        .width(250)
+        .height(250)
+        .radius(100)
+        .dimension(countryDimension)
+        .group(countryGroup)
+        .renderTitle(true);
 
-    var choroplethChart = dc.geoChoroplethChart("#choropleth-chart")
-            .width(990)
-            .height(600);
+var choroplethChart = dc.geoChoroplethChart("#choropleth-chart")
+        .width(990)
+        .height(600);
 
-    d3.json("us-states.json", function(json) {
+d3.json("us-states.json", function(states) {
+    d3.json("us-counties.json", function(counties) {
         choroplethChart
                 .dimension(stateDimension)
                 .group(stateValueSumGroup)
                 .colors(["#ccc", "#E2F2FF","#C4E4FF","#9ED2FF","#81C5FF","#6BBAFF","#51AEFF","#36A2FF","#1E96FF","#0089FF"])
-                .overlayGeoJson(json.features, "state", function(d) {
+                .overlayGeoJson(states.features, "state", function(d) {
                     return d.properties.name;
                 })
-                .title(function(d){
-                    return d.key + " : " + (d.value?d.value:0);
+                .overlayGeoJson(counties.features, "county")
+                .title(function(d) {
+                    return d.key + " : " + (d.value ? d.value : 0);
                 });
 
         dc.renderAll();
     });
+});
 
-    var lineChartDate1 = dc.lineChart("#line-chart-date");
-    lineChartDate1.width(500)
-            .height(150)
-            .dimension(dateDimension)
-            .group(dateIdSumGroup)
-            .stack(dateValueSumGroup)
-            .stack(dateValueSumGroup, function(d) {
-                return 10;
-            })
-            .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
-            .xUnits(d3.time.days)
-            .elasticY(true)
-            .yAxisPadding(50)
-            .elasticX(true)
-            .xAxisPadding(50)
-            .renderArea(true)
-            .xAxis().ticks(5);
+var lineChartDate1 = dc.lineChart("#line-chart-date");
+lineChartDate1.width(500)
+        .height(150)
+        .dimension(dateDimension)
+        .group(dateIdSumGroup)
+        .stack(dateValueSumGroup)
+        .stack(dateValueSumGroup, function(d) {
+            return 10;
+        })
+        .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
+        .xUnits(d3.time.days)
+        .elasticY(true)
+        .yAxisPadding(50)
+        .elasticX(true)
+        .xAxisPadding(50)
+        .renderArea(true)
+        .xAxis().ticks(5);
 
-    var barChartDate = dc.barChart("#bar-chart-date");
-    barChartDate.width(500)
-            .height(150)
-            .dimension(dateDimension)
-            .group(dateIdSumGroup)
-            .stack(dateValueSumGroup)
-            .stack(dateValueSumGroup, function(d) {
-                return 10;
-            })
-            .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
-            .xUnits(d3.time.days)
-            .xAxis().ticks(5);
+var barChartDate = dc.barChart("#bar-chart-date");
+barChartDate.width(500)
+        .height(150)
+        .dimension(dateDimension)
+        .group(dateIdSumGroup)
+        .stack(dateValueSumGroup)
+        .stack(dateValueSumGroup, function(d) {
+            return 10;
+        })
+        .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
+        .xUnits(d3.time.days)
+        .xAxis().ticks(5);
 
-    var compositeChartDate = dc.compositeChart("#composite-chart-date");
-    compositeChartDate.width(500)
-            .height(150)
-            .dimension(dateDimension)
-            .group(dateIdSumGroup)
-            .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
-            .xUnits(d3.time.days)
-            .filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
-            .compose([
-        dc.barChart(compositeChartDate).group(dateValueSumGroup),
-        dc.lineChart(compositeChartDate),
-        dc.lineChart(compositeChartDate).group(dateGroup)
-    ])
-            .xAxis().ticks(5);
+var compositeChartDate = dc.compositeChart("#composite-chart-date");
+compositeChartDate.width(500)
+        .height(150)
+        .dimension(dateDimension)
+        .group(dateIdSumGroup)
+        .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
+        .xUnits(d3.time.days)
+        .filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
+        .compose([
+    dc.barChart(compositeChartDate).group(dateValueSumGroup),
+    dc.lineChart(compositeChartDate),
+    dc.lineChart(compositeChartDate).group(dateGroup)
+])
+        .xAxis().ticks(5);
 
-    var bubbleChart = dc.bubbleChart("#bubble-chart");
-    bubbleChart.width(990)
-            .height(150)
-            .dimension(statusDimension)
-            .group(statusMultiGroup)
-            .keyAccessor(function(p) {
-                return p.value.value;
-            })
-            .valueAccessor(function(p) {
-                return p.value.count;
-            })
-            .radiusValueAccessor(function(p) {
-                return p.value.count;
-            })
-            .x(d3.scale.linear().domain([0, 300]))
-            .y(d3.scale.linear().domain([0, 10]))
-            .r(d3.scale.linear().domain([0, 30]))
-            .elasticY(true)
-            .yAxisPadding(3)
-            .elasticX(true)
-            .xAxisPadding(20)
-            .renderLabel(true)
-            .renderTitle(true)
-            .title(function(p) {
-                return p.key + ": {count:" + p.value.count + ",value:" + p.value.value + "}"
+var bubbleChart = dc.bubbleChart("#bubble-chart");
+bubbleChart.width(990)
+        .height(150)
+        .dimension(statusDimension)
+        .group(statusMultiGroup)
+        .keyAccessor(function(p) {
+            return p.value.value;
+        })
+        .valueAccessor(function(p) {
+            return p.value.count;
+        })
+        .radiusValueAccessor(function(p) {
+            return p.value.count;
+        })
+        .x(d3.scale.linear().domain([0, 300]))
+        .y(d3.scale.linear().domain([0, 10]))
+        .r(d3.scale.linear().domain([0, 30]))
+        .elasticY(true)
+        .yAxisPadding(3)
+        .elasticX(true)
+        .xAxisPadding(20)
+        .renderLabel(true)
+        .renderTitle(true)
+        .title(function(p) {
+            return p.key + ": {count:" + p.value.count + ",value:" + p.value.value + "}"
+        });
+;
+
+dc.dataCount("#data-count")
+        .dimension(data)
+        .group(groupAll);
+
+dc.dataTable("#data-table")
+        .dimension(dateDimension)
+        .group(function(d) {
+            return dateFormat(d3.time.day(d.dd));
+        })
+        .size(3)
+        .sortBy(function(d) {
+            return d.dd.getTime();
+        })
+        .columns([
+    function(d) {
+        return d.id;
+    },
+    function(d) {
+        return d.date;
+    },
+    function(d) {
+        return d.status;
+    },
+    function(d) {
+        return d.countrycode;
+    },
+    function(d) {
+        return d.value;
+    }
+]);
+
+var lineChartDateB = dc.lineChart("#line-chart-dateB", "groupB");
+lineChartDateB.width(500)
+        .height(150)
+        .dimension(dateDimension)
+        .group(dateIdSumGroup)
+        .stack(dateValueSumGroup)
+        .stack(dateValueSumGroup, function(d) {
+            return 10;
+        })
+        .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
+        .xUnits(d3.time.days)
+        .elasticY(true)
+        .yAxisPadding(50)
+        .elasticX(true)
+        .xAxisPadding(50)
+        .renderArea(true)
+        .renderHorizontalGridLines(true)
+        .xAxis().ticks(5);
+
+var barChartDateB = dc.barChart("#bar-chart-dateB", "groupB");
+barChartDateB.width(500)
+        .height(150)
+        .dimension(dateDimension)
+        .group(dateIdSumGroup)
+        .stack(dateValueSumGroup)
+        .stack(dateValueSumGroup, function(d) {
+            return 10;
+        })
+        .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
+        .xUnits(d3.time.days)
+        .renderHorizontalGridLines(true)
+        .renderVerticalGridLines(true)
+        .xAxis().tickValues([new Date(2012, 3, 1), new Date(2012, 6, 1), new Date(2012, 9, 1)]);
+barChartDateB.yAxis().tickValues([0, 75, 140]);
+
+var compositeChartDateB = dc.compositeChart("#composite-chart-dateB", "groupB");
+compositeChartDateB.width(500)
+        .height(150)
+        .dimension(dateDimension)
+        .group(dateIdSumGroup)
+        .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
+        .xUnits(d3.time.days)
+        .renderVerticalGridLines(true)
+        .compose([
+    dc.barChart(compositeChartDateB).group(dateValueSumGroup),
+    dc.lineChart(compositeChartDateB),
+    dc.lineChart(compositeChartDateB).group(dateGroup)
+])
+        .renderlet(function(chart) {
+            chart.selectAll("rect.bar").attr("width", function(d) {
+                return Math.round(d.value / 10);
             });
-    ;
+        })
+        .xAxis().ticks(5);
 
-    dc.dataCount("#data-count")
-            .dimension(data)
-            .group(groupAll);
-
-    dc.dataTable("#data-table")
-            .dimension(dateDimension)
-            .group(function(d) {
-                return dateFormat(d3.time.day(d.dd));
-            })
-            .size(3)
-            .sortBy(function(d) {
-                return d.dd.getTime();
-            })
-            .columns([
-        function(d) {
-            return d.id;
-        },
-        function(d) {
-            return d.date;
-        },
-        function(d) {
-            return d.status;
-        },
-        function(d) {
-            return d.countrycode;
-        },
-        function(d) {
-            return d.value;
-        }
-    ]);
-
-    var lineChartDateB = dc.lineChart("#line-chart-dateB", "groupB");
-    lineChartDateB.width(500)
-            .height(150)
-            .dimension(dateDimension)
-            .group(dateIdSumGroup)
-            .stack(dateValueSumGroup)
-            .stack(dateValueSumGroup, function(d) {
-                return 10;
-            })
-            .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
-            .xUnits(d3.time.days)
-            .elasticY(true)
-            .yAxisPadding(50)
-            .elasticX(true)
-            .xAxisPadding(50)
-            .renderArea(true)
-            .renderHorizontalGridLines(true)
-            .xAxis().ticks(5);
-
-    var barChartDateB = dc.barChart("#bar-chart-dateB", "groupB");
-    barChartDateB.width(500)
-            .height(150)
-            .dimension(dateDimension)
-            .group(dateIdSumGroup)
-            .stack(dateValueSumGroup)
-            .stack(dateValueSumGroup, function(d) {
-                return 10;
-            })
-            .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
-            .xUnits(d3.time.days)
-            .renderHorizontalGridLines(true)
-            .renderVerticalGridLines(true)
-            .xAxis().tickValues([new Date(2012, 3, 1), new Date(2012, 6, 1), new Date(2012, 9, 1)]);
-    barChartDateB.yAxis().tickValues([0, 75, 140]);
-
-    var compositeChartDateB = dc.compositeChart("#composite-chart-dateB", "groupB");
-    compositeChartDateB.width(500)
-            .height(150)
-            .dimension(dateDimension)
-            .group(dateIdSumGroup)
-            .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
-            .xUnits(d3.time.days)
-            .renderVerticalGridLines(true)
-            .compose([
-        dc.barChart(compositeChartDateB).group(dateValueSumGroup),
-        dc.lineChart(compositeChartDateB),
-        dc.lineChart(compositeChartDateB).group(dateGroup)
-    ])
-            .renderlet(function(chart) {
-                chart.selectAll("rect.bar").attr("width", function(d) {
-                    return Math.round(d.value / 10);
-                });
-            })
-            .xAxis().ticks(5);
-
-    dc.renderAll("groupB");
+dc.renderAll("groupB");
 </script>
 
 <div class="clear"></div>

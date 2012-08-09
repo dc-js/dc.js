@@ -32,6 +32,7 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
 
             regionG
                 .append("path")
+                .attr("fill", "none")
                 .attr("d", _geoPath);
 
             regionG.append("title");
@@ -39,6 +40,10 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
             plotData(layerIndex);
         }
     };
+
+    function isDataLayer(layerIndex) {
+        return geoJson(layerIndex).keyAccessor;
+    }
 
     function plotData(layerIndex) {
         var maxValue = dc.utils.groupMax(_chart.group(), _chart.valueAccessor());
@@ -48,31 +53,33 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
             data[_chart.keyAccessor()(groupAll[i])] = _chart.valueAccessor()(groupAll[i]);
         }
 
-        var regionG = _chart.svg()
-            .selectAll("g.layer" + layerIndex + " g." + geoJson(layerIndex).name)
-            .attr("class", function(d) {
-                return geoJson(layerIndex).name + " " + geoJson(layerIndex).keyAccessor(d);
+        if (isDataLayer(layerIndex)) {
+            var regionG = _chart.svg()
+                .selectAll("g.layer" + layerIndex + " g." + geoJson(layerIndex).name)
+                .attr("class", function(d) {
+                    return geoJson(layerIndex).name + " " + geoJson(layerIndex).keyAccessor(d);
+                });
+
+            var paths = regionG
+                .select("path")
+                .attr("fill", function(d) {
+                    var currentFill = d3.select(this).attr("fill");
+                    if (currentFill)
+                        return currentFill;
+                    return "white";
+                });
+
+            dc.transition(paths, _chart.transitionDuration()).attr("fill", function(d) {
+                return _colorAccessor(data[geoJson(layerIndex).keyAccessor(d)], maxValue);
             });
 
-        var paths = regionG
-            .select("path")
-            .attr("fill", function(d) {
-                var currentFill = d3.select(this).attr("fill");
-                if (currentFill)
-                    return currentFill;
-                return "white";
-            });
-
-        dc.transition(paths, _chart.transitionDuration()).attr("fill", function(d) {
-            return _colorAccessor(data[geoJson(layerIndex).keyAccessor(d)], maxValue);
-        });
-
-        if (_chart.renderTitle()) {
-            regionG.selectAll("title").text(function(d) {
-                var key = geoJson(layerIndex).keyAccessor(d);
-                var value = data[key];
-                return _chart.title()({key: key, value: value});
-            });
+            if (_chart.renderTitle()) {
+                regionG.selectAll("title").text(function(d) {
+                    var key = geoJson(layerIndex).keyAccessor(d);
+                    var value = data[key];
+                    return _chart.title()({key: key, value: value});
+                });
+            }
         }
     }
 
