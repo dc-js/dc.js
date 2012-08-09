@@ -5,8 +5,8 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
 
     var _geoJson;
 
-    var _colorAccessor = function(value, maxValue){
-        if(isNaN(value)) value = 0;
+    var _colorAccessor = function(value, maxValue) {
+        if (isNaN(value)) value = 0;
         var colorsLength = _chart.colors().range().length;
         var denominator = maxValue / colorsLength;
         var colorValue = Math.min(colorsLength - 1, Math.round(value / denominator));
@@ -36,14 +36,21 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
             data[_chart.keyAccessor()(groupAll[i])] = _chart.valueAccessor()(groupAll[i]);
         }
 
-        _chart.svg()
-            .selectAll("path.state")
+        var paths = _chart.svg()
+            .selectAll("path." + _geoJson.name)
             .attr("class", function(d) {
                 return _geoJson.name + " " + _geoJson.keyAccessor(d);
             })
             .attr("fill", function(d) {
-                return _colorAccessor(data[_geoJson.keyAccessor(d)], maxValue);
+                var currentFill = d3.select(this).attr("fill");
+                if (currentFill)
+                    return currentFill;
+                return "white";
             });
+
+        dc.transition(paths, _chart.transitionDuration()).attr("fill", function(d) {
+            return _colorAccessor(data[_geoJson.keyAccessor(d)], maxValue);
+        });
     }
 
     _chart.doRedraw = function() {
