@@ -40,7 +40,6 @@ dc.barChart = function(parent, chartGroup) {
         // update
         dc.transition(bars, _chart.transitionDuration())
             .attr("y", function(data, dataIndex) {
-
                 return barY(this, data, dataIndex);
             })
             .attr("height", function(data) {

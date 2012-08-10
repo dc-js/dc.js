@@ -188,11 +188,18 @@ a {
 #data-table .column {
 }
 
-.chart g.state path{
+.chart g.state path {
     stroke: white;
 }
 
-.chart g.county path{
+.chart g.state path.selected {
+}
+
+.chart g.state path.deselected {
+    fill: grey;
+}
+
+.chart g.county path {
     stroke: white;
     fill: none;
 }

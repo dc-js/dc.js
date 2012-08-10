@@ -1,5 +1,5 @@
 dc.geoChoroplethChart = function(parent, chartGroup) {
-    var _chart = dc.colorChart(dc.baseChart({}));
+    var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
 
     var _geoPath = d3.geo.path();
 
@@ -32,7 +32,7 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
 
             regionG
                 .append("path")
-                .attr("fill", "none")
+                .attr("fill", "white")
                 .attr("d", _geoPath);
 
             regionG.append("title");
@@ -40,10 +40,6 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
             plotData(layerIndex);
         }
     };
-
-    function isDataLayer(layerIndex) {
-        return geoJson(layerIndex).keyAccessor;
-    }
 
     function plotData(layerIndex) {
         var maxValue = dc.utils.groupMax(_chart.group(), _chart.valueAccessor());
@@ -55,7 +51,7 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
 
         if (isDataLayer(layerIndex)) {
             var regionG = _chart.svg()
-                .selectAll("g.layer" + layerIndex + " g." + geoJson(layerIndex).name)
+                .selectAll(layerSelector(layerIndex))
                 .attr("class", function(d) {
                     return geoJson(layerIndex).name + " " + geoJson(layerIndex).keyAccessor(d);
                 });
@@ -66,7 +62,14 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
                     var currentFill = d3.select(this).attr("fill");
                     if (currentFill)
                         return currentFill;
-                    return "white";
+                    return "none";
+                })
+                .classed("selected", function(d){return isSelected(layerIndex, d);})
+                .classed("deselected", function(d){return isDeselected(layerIndex, d);})
+                .on("click", function(d){
+                    var selectedRegion = geoJson(layerIndex).keyAccessor(d);
+                    _chart.filter(selectedRegion);
+                    dc.redrawAll(_chart.chartGroup());
                 });
 
             dc.transition(paths, _chart.transitionDuration()).attr("fill", function(d) {
@@ -75,12 +78,32 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
 
             if (_chart.renderTitle()) {
                 regionG.selectAll("title").text(function(d) {
-                    var key = geoJson(layerIndex).keyAccessor(d);
+                    var key = getKey(layerIndex, d);
                     var value = data[key];
                     return _chart.title()({key: key, value: value});
                 });
             }
         }
+    }
+
+    function isDataLayer(layerIndex) {
+        return geoJson(layerIndex).keyAccessor;
+    }
+
+    function isSelected(layerIndex, d) {
+        return _chart.hasFilter() && _chart.filter() == getKey(layerIndex, d);
+    }
+
+    function isDeselected(layerIndex, d) {
+        return _chart.hasFilter() && _chart.filter() != getKey(layerIndex, d);
+    }
+
+    function layerSelector(layerIndex) {
+        return "g.layer" + layerIndex + " g." + geoJson(layerIndex).name;
+    }
+
+    function getKey(layerIndex, d) {
+        return geoJson(layerIndex).keyAccessor(d);
     }
 
     _chart.doRedraw = function() {
