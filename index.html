@@ -344,6 +344,7 @@ d3.csv("ndx.csv", function(data) {
                     .group(fluctuationGroup)
                     .elasticY(true)
                     .centerBar(true)
+                    .barGap(1)
                     .round(dc.round.floor)
                     .x(d3.scale.linear().domain([-25, 25]))
                     .renderHorizontalGridLines(true)
@@ -527,6 +528,10 @@ d3.csv("ndx.csv", function(data) {
             .round(d3.time.month.round)
             // define x axis units
             .xUnits(d3.time.months)
+            // (optional) whether bar should be center to its x value, :default=false
+            .centerBar(true)
+            // (optional) set gap between bars manually in px, :default=5
+            .barGap(2)
             // (optional) render horizontal grid lines, :default=false
             .renderHorizontalGridLines(true)
             // (optional) render vertical grid lines, :default=false
