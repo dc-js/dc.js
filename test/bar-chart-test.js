@@ -15,6 +15,7 @@ function buildChart(id, xdomain) {
     var chart = dc.barChart("#" + id);
     chart.dimension(dateDimension).group(dateGroup)
         .width(width).height(height)
+        .centerBar(true)
         .x(d3.time.scale().domain(xdomain))
         .transitionDuration(0)
         .xUnits(d3.time.days);
@@ -223,6 +224,7 @@ suite.addBatch({
                 var chart = dc.barChart("#bar-chart3");
                 chart.dimension(valueDimension).group(valueGroup)
                     .width(400).height(150)
+                    .centerBar(true)
                     .x(d3.scale.linear().domain([10,80]))
                     .elasticY(true)
                     .transitionDuration(0);
@@ -369,7 +371,7 @@ suite.addBatch({
     'de-centering':{
         topic:function(){
             var chart = buildChart("chart-decenter", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
-            chart.centering(false);
+            chart.centerBar(false);
             chart.redraw();
             return chart;
         },

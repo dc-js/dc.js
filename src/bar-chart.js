@@ -4,9 +4,7 @@ dc.barChart = function(parent, chartGroup) {
 
     var _chart = dc.stackableChart(dc.coordinateGridChart({}));
 
-    var _centering = true;
-
-    _chart.transitionDuration(500);
+    var _centerBar = false;
 
     _chart.plotData = function() {
         var groups = _chart.allGroups();
@@ -72,7 +70,7 @@ dc.barChart = function(parent, chartGroup) {
     function barX(bar, data, groupIndex, dataIndex) {
         setGroupIndexToBar(bar, groupIndex);
         var position = _chart.x()(_chart.keyAccessor()(data)) + _chart.margins().left;
-        if(_centering)
+        if(_centerBar)
             position = position - barWidth(data)/2;
         return position;
     }
@@ -103,9 +101,9 @@ dc.barChart = function(parent, chartGroup) {
         }
     };
 
-    _chart.centering = function(_){
-        if(!arguments.length) return _centering;
-        _centering = _;
+    _chart.centerBar = function(_){
+        if(!arguments.length) return _centerBar;
+        _centerBar = _;
         return _chart;
     };
 
