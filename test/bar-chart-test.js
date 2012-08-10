@@ -17,6 +17,7 @@ function buildChart(id, xdomain) {
         .width(width).height(height)
         .centerBar(true)
         .x(d3.time.scale().domain(xdomain))
+        .barGap(1)
         .transitionDuration(0)
         .xUnits(d3.time.days);
     chart.render();
@@ -97,7 +98,7 @@ suite.addBatch({
         },
         'bar x should be set correctly': function(chart) {
             chart.selectAll("svg g rect.bar").each(function(d) {
-                var halfBarWidth = 1;
+                var halfBarWidth = .5;
                 assert.equal(d3.select(this).attr('x'), chart.x()(d.key) + chart.margins().left - halfBarWidth);
             });
         },
@@ -114,7 +115,7 @@ suite.addBatch({
         },
         'bar width should be set correctly': function(chart) {
             chart.selectAll("svg g rect.bar").each(function(d) {
-                assert.equal(d3.select(this).attr('width'), 2);
+                assert.equal(d3.select(this).attr('width'), 1);
             });
         },
         'x units should be set': function(chart) {

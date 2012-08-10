@@ -20,7 +20,7 @@ function buildChart(id, xdomain) {
         .transitionDuration(0)
         .xUnits(d3.time.days)
         .compose([
-        dc.barChart(chart).centerBar(true).group(dateValueSumGroup),
+        dc.barChart(chart).centerBar(true).group(dateValueSumGroup).barGap(1),
         dc.lineChart(chart).stack(dateValueSumGroup).stack(dateValueSumGroup),
         dc.lineChart(chart).group(dateGroup)
     ]);
@@ -141,15 +141,15 @@ suite.addBatch({
             chart.selectAll("g.sub rect.bar").each(function(d, i) {
                 switch (i) {
                     case 0:
-                        assert.equal(d3.select(this).attr("x"), "42.712643678160916");
+                        assert.equal(d3.select(this).attr("x"), "43.212643678160916");
                         assert.equal(d3.select(this).attr("y"), "103");
-                        assert.equal(d3.select(this).attr("width"), "4");
+                        assert.equal(d3.select(this).attr("width"), "3");
                         assert.equal(d3.select(this).attr("height"), "16");
                         break;
                     case 5:
-                        assert.equal(d3.select(this).attr("x"), "423.28735632183907");
+                        assert.equal(d3.select(this).attr("x"), "423.78735632183907");
                         assert.equal(d3.select(this).attr("y"), "90");
-                        assert.equal(d3.select(this).attr("width"), "4");
+                        assert.equal(d3.select(this).attr("width"), "3");
                         assert.equal(d3.select(this).attr("height"), "29");
                         break;
                 }

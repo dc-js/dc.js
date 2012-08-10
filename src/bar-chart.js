@@ -1,9 +1,10 @@
 dc.barChart = function(parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
-    var BAR_PADDING_WIDTH = 2;
+    var DEFAULT_GAP_BETWEEN_BARS = 5;
 
     var _chart = dc.stackableChart(dc.coordinateGridChart({}));
 
+    var _barGap = DEFAULT_GAP_BETWEEN_BARS;
     var _centerBar = false;
 
     _chart.plotData = function() {
@@ -56,8 +57,9 @@ dc.barChart = function(parent, chartGroup) {
     }
 
     function barWidth(d) {
-        var numberOfBars = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1]).length + BAR_PADDING_WIDTH;
+        var numberOfBars = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1]).length;
         var w = Math.floor(_chart.xAxisLength() / numberOfBars);
+        w -= _barGap;
         if (isNaN(w) || w < MIN_BAR_WIDTH)
             w = MIN_BAR_WIDTH;
         return w;
@@ -104,6 +106,12 @@ dc.barChart = function(parent, chartGroup) {
     _chart.centerBar = function(_){
         if(!arguments.length) return _centerBar;
         _centerBar = _;
+        return _chart;
+    };
+
+    _chart.barGap = function(_){
+        if(!arguments.length) return _barGap;
+        _barGap = _;
         return _chart;
     };
 
