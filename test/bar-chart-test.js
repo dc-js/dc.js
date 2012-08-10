@@ -365,6 +365,27 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({
+    'de-centering':{
+        topic:function(){
+            var chart = buildChart("chart-decenter", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+            chart.centering(false);
+            chart.redraw();
+            return chart;
+        },
+        'bar x should be set correctly': function(chart) {
+            chart.selectAll("svg g rect.bar").each(function(d) {
+                var halfBarWidth = 1;
+                assert.equal(d3.select(this).attr('x'), chart.x()(d.key) + chart.margins().left);
+            });
+        },
+        teardown: function(topic) {
+            resetAllFilters();
+            resetBody();
+        }
+    }
+});
+
 suite.export(module);
 
 

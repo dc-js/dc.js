@@ -1,5 +1,5 @@
 dc = {
-    version: "0.8.0",
+    version: "0.7.0",
     constants : {
         STACK_CLASS: "stack",
         DESELECTED_CLASS: "deselected",
@@ -184,7 +184,7 @@ dc.utils.subtract = function(l, r) {
 dc.utils.GroupStack = function() {
     var _dataPointMatrix = [];
     var _groups = [];
-    var _defaultRetriever;
+    var _defaultAccessor;
 
     function initializeDataPointRow(x) {
         if (!_dataPointMatrix[x])
@@ -206,7 +206,7 @@ dc.utils.GroupStack = function() {
 
     this.addGroup = function(group, retriever) {
         if (!retriever)
-            retriever = _defaultRetriever;
+            retriever = _defaultAccessor;
         _groups.push([group, retriever]);
         return _groups.length - 1;
     };
@@ -215,7 +215,7 @@ dc.utils.GroupStack = function() {
         return _groups[index][0];
     };
 
-    this.getRetrieverByIndex = function(index) {
+    this.getAccessorByIndex = function(index) {
         return _groups[index][1];
     };
 
@@ -228,9 +228,21 @@ dc.utils.GroupStack = function() {
         _groups = [];
     };
 
-    this.setDefaultRetriever = function(retriever) {
-        _defaultRetriever = retriever;
+    this.setDefaultAccessor = function(retriever) {
+        _defaultAccessor = retriever;
     };
+};
+
+dc.utils.groupMax = function(group, accessor) {
+    return d3.max(group.all(), function(e) {
+        return accessor(e);
+    });
+};
+
+dc.utils.groupMin = function(group, accessor) {
+    return d3.min(group.all(), function(e) {
+        return accessor(e);
+    });
 };
 dc.cumulative = {};
 
@@ -1040,7 +1052,7 @@ dc.stackableChart = function(_chart) {
     var _groupStack = new dc.utils.GroupStack();
 
     _chart.stack = function(group, retriever) {
-        _groupStack.setDefaultRetriever(_chart.valueAccessor());
+        _groupStack.setDefaultAccessor(_chart.valueAccessor());
         _groupStack.addGroup(group, retriever);
         return _chart;
     };
@@ -1056,19 +1068,19 @@ dc.stackableChart = function(_chart) {
         return allGroups;
     };
 
-    _chart.allValueRetrievers = function() {
-        var allRetrievers = [];
+    _chart.allValueAccessors = function() {
+        var allAccessors = [];
 
-        allRetrievers.push(_chart.valueAccessor());
+        allAccessors.push(_chart.valueAccessor());
 
         for (var i = 0; i < _groupStack.size(); ++i)
-            allRetrievers.push(_groupStack.getRetrieverByIndex(i));
+            allAccessors.push(_groupStack.getAccessorByIndex(i));
 
-        return allRetrievers;
+        return allAccessors;
     };
 
-    _chart.getValueRetrieverByIndex = function(groupIndex) {
-        return _chart.allValueRetrievers()[groupIndex];
+    _chart.getValueAccessorByIndex = function(groupIndex) {
+        return _chart.allValueAccessors()[groupIndex];
     };
 
     _chart.yAxisMin = function() {
@@ -1078,7 +1090,7 @@ dc.stackableChart = function(_chart) {
         for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
             var group = allGroups[groupIndex];
             var m = d3.min(group.all(), function(e) {
-                return _chart.getValueRetrieverByIndex(groupIndex)(e);
+                return _chart.getValueAccessorByIndex(groupIndex)(e);
             });
             if (m < min) min = m;
         }
@@ -1092,27 +1104,25 @@ dc.stackableChart = function(_chart) {
 
         for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
             var group = allGroups[groupIndex];
-            max += d3.max(group.all(), function(e) {
-                return _chart.getValueRetrieverByIndex(groupIndex)(e);
-            });
+            max += dc.utils.groupMax(group, _chart.getValueAccessorByIndex(groupIndex));
         }
 
         return dc.utils.add(max, _chart.yAxisPadding());
     };
 
-    _chart.allKeyRetrievers = function() {
-        var allRetrievers = [];
+    _chart.allKeyAccessors = function() {
+        var allAccessors = [];
 
-        allRetrievers.push(_chart.keyAccessor());
+        allAccessors.push(_chart.keyAccessor());
 
         for (var i = 0; i < _groupStack.size(); ++i)
-            allRetrievers.push(_chart.keyAccessor());
+            allAccessors.push(_chart.keyAccessor());
 
-        return allRetrievers;
+        return allAccessors;
     };
 
-    _chart.getKeyRetrieverByIndex = function(groupIndex) {
-        return _chart.allKeyRetrievers()[groupIndex];
+    _chart.getKeyAccessorByIndex = function(groupIndex) {
+        return _chart.allKeyAccessors()[groupIndex];
     };
 
     _chart.xAxisMin = function() {
@@ -1121,9 +1131,7 @@ dc.stackableChart = function(_chart) {
 
         for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
             var group = allGroups[groupIndex];
-            var m = d3.min(group.all(), function(e) {
-                return _chart.getKeyRetrieverByIndex(groupIndex)(e);
-            });
+            var m = dc.utils.groupMin(group, _chart.getKeyAccessorByIndex(groupIndex));
             if (min == null || min > m) min = m;
         }
 
@@ -1136,9 +1144,7 @@ dc.stackableChart = function(_chart) {
 
         for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
             var group = allGroups[groupIndex];
-            var m = d3.max(group.all(), function(e) {
-                return _chart.getKeyRetrieverByIndex(groupIndex)(e);
-            });
+            var m = dc.utils.groupMax(group, _chart.getKeyAccessorByIndex(groupIndex));
             if(max == null || max < m) max = m;
         }
 
@@ -1150,7 +1156,7 @@ dc.stackableChart = function(_chart) {
     };
 
     _chart.dataPointHeight = function(d, groupIndex) {
-        var h = (_chart.yAxisHeight() - _chart.y()(_chart.getValueRetrieverByIndex(groupIndex)(d)) - DATA_POINT_PADDING_BOTTOM);
+        var h = (_chart.yAxisHeight() - _chart.y()(_chart.getValueAccessorByIndex(groupIndex)(d)) - DATA_POINT_PADDING_BOTTOM);
         if (isNaN(h) || h < MIN_DATA_POINT_HEIGHT)
             h = MIN_DATA_POINT_HEIGHT;
         return h;
@@ -1412,6 +1418,8 @@ dc.barChart = function(parent, chartGroup) {
 
     var _chart = dc.stackableChart(dc.coordinateGridChart({}));
 
+    var _centering = true;
+
     _chart.transitionDuration(500);
 
     _chart.plotData = function() {
@@ -1447,8 +1455,10 @@ dc.barChart = function(parent, chartGroup) {
 
         // update
         dc.transition(bars, _chart.transitionDuration())
+            .attr("x", function(data, dataIndex) {
+                return barX(this, data, groupIndex, dataIndex);
+            })
             .attr("y", function(data, dataIndex) {
-
                 return barY(this, data, dataIndex);
             })
             .attr("height", function(data) {
@@ -1475,7 +1485,10 @@ dc.barChart = function(parent, chartGroup) {
 
     function barX(bar, data, groupIndex, dataIndex) {
         setGroupIndexToBar(bar, groupIndex);
-        return _chart.x()(_chart.keyAccessor()(data)) + _chart.margins().left - barWidth(data)/2;
+        var position = _chart.x()(_chart.keyAccessor()(data)) + _chart.margins().left;
+        if(_centering)
+            position = position - barWidth(data)/2;
+        return position;
     }
 
     function getGroupIndexFromBar(bar) {
@@ -1502,6 +1515,12 @@ dc.barChart = function(parent, chartGroup) {
         } else {
             bars.classed(dc.constants.DESELECTED_CLASS, false);
         }
+    };
+
+    _chart.centering = function(_){
+        if(!arguments.length) return _centering;
+        _centering = _;
+        return _chart;
     };
 
     return _chart.anchor(parent, chartGroup);
@@ -1751,7 +1770,7 @@ dc.bubbleChart = function(parent, chartGroup) {
     };
 
     _chart.plotData = function() {
-         _r.range([0, _chart.xAxisLength() / 3]);
+        _r.range([0, _chart.xAxisLength() / 3]);
 
         var bubbleG = _chart.g().selectAll("g." + NODE_CLASS)
             .data(_chart.group().all());
@@ -1838,9 +1857,7 @@ dc.bubbleChart = function(parent, chartGroup) {
     }
 
     function removeNodes(bubbleG) {
-        dc.transition(bubbleG.exit().selectAll("circle." + BUBBLE_CLASS), _chart.transitionDuration())
-            .attr("r", 0)
-            .remove();
+        bubbleG.exit().remove();
     }
 
     var onClick = function(d) {
@@ -2009,57 +2026,121 @@ dc.compositeChart = function(parent, chartGroup) {
     return _chart.anchor(parent, chartGroup);
 };
 dc.geoChoroplethChart = function(parent, chartGroup) {
-    var _chart = dc.colorChart(dc.baseChart({}));
+    var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
 
     var _geoPath = d3.geo.path();
 
-    var _geoJson;
+    var _geoJsons = [];
 
-    var _colorAccessor = function(value){
-        if(isNaN(value)) value = 0;
+    var _colorAccessor = function(value, maxValue) {
+        if (isNaN(value)) value = 0;
         var colorsLength = _chart.colors().range().length;
-        var colorIndex = Math.min(colorsLength - 1, Math.round(value / colorsLength));
-        return _chart.colors()(colorIndex);
+        var denominator = maxValue / colorsLength;
+        var colorValue = Math.min(colorsLength - 1, Math.round(value / denominator));
+        return _chart.colors()(colorValue);
     };
+
+    function geoJson(index) {
+        return _geoJsons[index];
+    }
 
     _chart.doRender = function() {
         _chart.resetSvg();
 
-        var states = _chart.svg().append("g")
-            .attr("class", "layer");
+        for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
+            var states = _chart.svg().append("g")
+                .attr("class", "layer" + layerIndex);
 
-        states.selectAll("path")
-            .data(_geoJson.data)
-            .enter().append("path")
-            .attr("class", _geoJson.name)
-            .attr("d", _geoPath);
+            var regionG = states.selectAll("g." + geoJson(layerIndex).name)
+                .data(geoJson(layerIndex).data)
+                .enter()
+                .append("g")
+                .attr("class", geoJson(layerIndex).name);
 
-        plotData();
+            regionG
+                .append("path")
+                .attr("fill", "white")
+                .attr("d", _geoPath);
+
+            regionG.append("title");
+
+            plotData(layerIndex);
+        }
     };
 
-    function plotData() {
+    function plotData(layerIndex) {
+        var maxValue = dc.utils.groupMax(_chart.group(), _chart.valueAccessor());
         var data = {};
         var groupAll = _chart.group().all();
         for (var i = 0; i < groupAll.length; ++i) {
             data[_chart.keyAccessor()(groupAll[i])] = _chart.valueAccessor()(groupAll[i]);
         }
 
-        _chart.svg()
-            .selectAll("path.state")
-            .attr("class", function(d) {
-                return _geoJson.name + " " + _geoJson.keyAccessor(d);
-            })
-            .attr("fill", function(d) {
-                return _colorAccessor(data[_geoJson.keyAccessor(d)]);
+        if (isDataLayer(layerIndex)) {
+            var regionG = _chart.svg()
+                .selectAll(layerSelector(layerIndex))
+                .attr("class", function(d) {
+                    return geoJson(layerIndex).name + " " + geoJson(layerIndex).keyAccessor(d);
+                });
+
+            var paths = regionG
+                .select("path")
+                .attr("fill", function(d) {
+                    var currentFill = d3.select(this).attr("fill");
+                    if (currentFill)
+                        return currentFill;
+                    return "none";
+                })
+                .classed("selected", function(d){return isSelected(layerIndex, d);})
+                .classed("deselected", function(d){return isDeselected(layerIndex, d);})
+                .on("click", function(d){
+                    var selectedRegion = geoJson(layerIndex).keyAccessor(d);
+                    _chart.filter(selectedRegion);
+                    dc.redrawAll(_chart.chartGroup());
+                });
+
+            dc.transition(paths, _chart.transitionDuration()).attr("fill", function(d) {
+                return _colorAccessor(data[geoJson(layerIndex).keyAccessor(d)], maxValue);
             });
+
+            if (_chart.renderTitle()) {
+                regionG.selectAll("title").text(function(d) {
+                    var key = getKey(layerIndex, d);
+                    var value = data[key];
+                    return _chart.title()({key: key, value: value});
+                });
+            }
+        }
+    }
+
+    function isDataLayer(layerIndex) {
+        return geoJson(layerIndex).keyAccessor;
+    }
+
+    function isSelected(layerIndex, d) {
+        return _chart.hasFilter() && _chart.filter() == getKey(layerIndex, d);
+    }
+
+    function isDeselected(layerIndex, d) {
+        return _chart.hasFilter() && _chart.filter() != getKey(layerIndex, d);
+    }
+
+    function layerSelector(layerIndex) {
+        return "g.layer" + layerIndex + " g." + geoJson(layerIndex).name;
+    }
+
+    function getKey(layerIndex, d) {
+        return geoJson(layerIndex).keyAccessor(d);
     }
 
     _chart.doRedraw = function() {
-        plotData();
+        for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
+            plotData(layerIndex);
+        }
     };
 
     _chart.overlayGeoJson = function(json, name, keyAccessor) {
-        _geoJson = {name: name, data: json, keyAccessor: keyAccessor};
+        _geoJsons.push({name: name, data: json, keyAccessor: keyAccessor});
         return _chart;
     };
 
