@@ -102,7 +102,13 @@ dc.pieChart = function(parent, chartGroup) {
 
     _chart.drawLabels = function(slices, arc) {
         if (_chart.renderLabel()) {
-            _labels = slices.append("text");
+            _labels = _g.selectAll("text." + _sliceCssClass)
+                .data(_dataPie(_chart.orderedGroup().top(Infinity)))
+                .enter()
+                .append("text")
+                .attr("class", function(d, i) {
+                    return _sliceCssClass + " " + i;
+                });
             redrawLabels(arc);
             _labels.on("click", onClick);
         }
@@ -156,8 +162,8 @@ dc.pieChart = function(parent, chartGroup) {
         return _chart;
     };
 
-    _chart.minAngelForLabel = function(_){
-        if(!arguments.length) return _minAngelForLabel;
+    _chart.minAngelForLabel = function(_) {
+        if (!arguments.length) return _minAngelForLabel;
         _minAngelForLabel = _;
         return _chart;
     };

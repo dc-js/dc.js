@@ -93,18 +93,18 @@ suite.addBatch({
             });
         },
         'slice label should be created': function(pieChart) {
-            assert.equal(pieChart.selectAll("svg g g.pie-slice text").data().length, 5);
+            assert.equal(pieChart.selectAll("svg text.pie-slice").data().length, 5);
         },
         'slice label transform to centroid': function(pieChart) {
-            assert.equal(pieChart.selectAll("svg g g.pie-slice text").attr("transform"), "translate(52.58610463437159,-38.20604139901075)");
+            assert.equal(pieChart.selectAll("svg g text.pie-slice").attr("transform"), "translate(52.58610463437159,-38.20604139901075)");
         },
         'slice label text should be set': function(pieChart) {
-            pieChart.selectAll("svg g g.pie-slice text").call(function(p) {
+            pieChart.selectAll("svg g text.pie-slice").call(function(p) {
                 assert.equal(p.text(), p.datum().data.key);
             });
         },
         'slice label should be middle anchored': function(pieChart) {
-            pieChart.selectAll("svg g g.pie-slice text").each(function(p) {
+            pieChart.selectAll("svg g text.pie-slice").each(function(p) {
                 assert.equal(d3.select(this).attr("text-anchor"), "middle");
             });
         },
@@ -133,7 +133,7 @@ suite.addBatch({
                 return pieChart;
             },
             'label should be hidden if filtered out': function(pieChart) {
-                assert.equal(pieChart.selectAll("svg g g.pie-slice text").text(), "");
+                assert.equal(pieChart.selectAll("svg g text.pie-slice").text(), "");
             },
             teardown: function() {
                 resetAllFilters();
@@ -147,7 +147,7 @@ suite.addBatch({
                 return pieChart;
             },
             'NaN centroid should be handled properly': function(pieChart) {
-                assert.equal(pieChart.selectAll("svg g g.pie-slice text").attr("transform"), "translate(0,0)");
+                assert.equal(pieChart.selectAll("svg g text.pie-slice").attr("transform"), "translate(0,0)");
             },
             teardown: function() {
                 resetAllFilters();
@@ -255,13 +255,13 @@ suite.addBatch({
             return chart;
         },
         'should render correct number of text': function(chart) {
-            assert.equal(chart.selectAll("g.pie-slice text")[0].length, 5);
+            assert.equal(chart.selectAll("text.pie-slice")[0].length, 5);
         },
         'custom function should be used to dynamically generate label': function(chart) {
-            assert.equal(d3.select(chart.selectAll("g.pie-slice text")[0][0]).text(), "custom");
+            assert.equal(d3.select(chart.selectAll("text.pie-slice")[0][0]).text(), "custom");
         },
         'label should not be generated if the slice is too small': function(chart) {
-            assert.equal(d3.select(chart.selectAll("g.pie-slice text")[0][1]).text(), "");
+            assert.equal(d3.select(chart.selectAll("text.pie-slice")[0][1]).text(), "");
         },
         'should render correct number of title': function(chart) {
             assert.equal(chart.selectAll("g.pie-slice title")[0].length, 5);
@@ -288,7 +288,7 @@ suite.addBatch({
             return chart;
         },
         'slice label should not be created': function(pieChart) {
-            assert.equal(pieChart.selectAll("svg g g.pie-slice text").data().length, 0);
+            assert.equal(pieChart.selectAll("svg g text.pie-slice").data().length, 0);
         },
         teardown:function(chart) {
             resetAllFilters();

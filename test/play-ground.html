@@ -130,10 +130,12 @@ var pieChartValue = dc.pieChart("#pie-chart-value")
         .innerRadius(40)
         .dimension(valueDimension)
         .group(valueGroup)
+        .label(function(d) {
+            return "Value: " + d.data.key + ", Count: " + d.data.value;
+        })
         .title(function(d) {
             return d.data.key + ": " + d.data.value;
-        })
-        .renderTitle(true);
+        });
 
 var pieChartCountry = dc.pieChart("#pie-chart-country")
         .width(250)
