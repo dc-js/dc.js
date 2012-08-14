@@ -51,6 +51,11 @@ a {
 .pie-slice {
     fill: white;
     font-size: 12px;
+    cursor: pointer;
+}
+
+.pie-slice :hover{
+    fill-opacity: .8;
 }
 
 .pie-slice path.selected {
@@ -125,6 +130,11 @@ a {
 
 .node {
     font-size: 0.7em;
+    cursor: pointer;
+}
+
+.node :hover{
+    fill-opacity: .8;
 }
 
 .node .selected {
@@ -191,4 +201,28 @@ a {
 }
 
 #data-table .column {
+}
+
+.chart g.state{
+    cursor: pointer;
+}
+
+.chart g.state :hover{
+    fill-opacity: .8;
+}
+
+.chart g.state path {
+    stroke: white;
+}
+
+.chart g.state path.selected {
+}
+
+.chart g.state path.deselected {
+    fill: grey;
+}
+
+.chart g.county path {
+    stroke: white;
+    fill: none;
 }
