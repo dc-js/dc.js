@@ -82,7 +82,7 @@ suite.addBatch({
         },
         'x range round is auto calculated based on width': function(chart) {
             assert.equal(chart.x().range()[0], 0);
-            assert.equal(chart.x().range()[1], 830);
+            assert.equal(chart.x().range()[1], 820);
         },
         'x domain should be set': function(chart) {
             assert.equal(chart.x().domain()[0], 0);
@@ -108,14 +108,11 @@ suite.addBatch({
         'root g should be created': function(chart) {
             assert.isFalse(chart.select("svg g").empty());
         },
-        'root g should be translated to left corner': function(chart) {
-            assert.equal(chart.select("svg g").attr("transform"), "translate(20,10)");
-        },
         'axis x should be placed at the bottom': function(chart) {
-            assert.equal(chart.select("svg g g.x").attr("transform"), "translate(20,320)");
+            assert.equal(chart.select("svg g g.x").attr("transform"), "translate(30,320)");
         },
         'axis y should be placed on the left': function(chart) {
-            assert.equal(chart.select("svg g g.y").attr("transform"), "translate(20,10)");
+            assert.equal(chart.select("svg g g.y").attr("transform"), "translate(30,10)");
         },
         'x units should be set': function(chart) {
             assert.equal(chart.xUnits(), dc.units.integers);
@@ -147,17 +144,17 @@ suite.addBatch({
             'should calculate right cx for each bubble': function(chart) {
                 chart.selectAll("g.node").each(function(d, i) {
                     if (i == 0)
-                        assert.equal(d3.select(this).attr("transform"), "translate(628.6666666666667,165)");
+                        assert.equal(d3.select(this).attr("transform"), "translate(631.3333333333334,165)");
                     if (i == 1)
-                        assert.equal(d3.select(this).attr("transform"), "translate(567.8000000000001,165)");
+                        assert.equal(d3.select(this).attr("transform"), "translate(571.2,165)");
                 });
             },
             'should calculate right r for each bubble': function(chart) {
                 chart.selectAll("circle.bubble").each(function(d, i) {
                     if (i == 0)
-                        assert.equal(d3.select(this).attr("r"), 46.111111111111114);
+                        assert.equal(d3.select(this).attr("r"), 45.55555555555555);
                     if (i == 1)
-                        assert.equal(d3.select(this).attr("r"), 46.111111111111114);
+                        assert.equal(d3.select(this).attr("r"), 45.55555555555555);
                 });
             },
             'should attach each bubble with index based class': function(chart) {
@@ -301,7 +298,7 @@ suite.addBatch({
         },
         'x range round is auto calculated based on width': function(chart) {
             assert.equal(chart.x().range()[0], 0);
-            assert.equal(chart.x().range()[1], 830);
+            assert.equal(chart.x().range()[1], 820);
         },
         'x domain should be set': function(chart) {
             assert.equal(chart.x().domain()[0], 178);

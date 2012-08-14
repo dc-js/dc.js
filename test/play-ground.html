@@ -274,6 +274,7 @@ dc.dataTable("#data-table")
 var lineChartDateB = dc.lineChart("#line-chart-dateB", "groupB");
 lineChartDateB.width(500)
         .height(150)
+        .margins({top: 50, right: 50, bottom: 30, left: 30})
         .dimension(dateDimension)
         .group(dateIdSumGroup)
         .stack(dateValueSumGroup)

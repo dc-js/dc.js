@@ -67,7 +67,7 @@ suite.addBatch({
         },
         'x range round is auto calculated based on width': function(chart) {
             assert.equal(chart.x().range()[0], 0);
-            assert.equal(chart.x().range()[1], 1030);
+            assert.equal(chart.x().range()[1], 1020);
         },
         'x domain should be set': function(chart) {
             assert.equal(chart.x().domain()[0].getTime(), new Date(2012, 0, 1).getTime());
@@ -87,14 +87,11 @@ suite.addBatch({
         'root g should be created': function(chart) {
             assert.isFalse(chart.select("svg g").empty());
         },
-        'root g should be translated to left corner': function(chart) {
-            assert.equal(chart.select("svg g").attr("transform"), "translate(20,10)");
-        },
         'axis x should be placed at the bottom': function(chart) {
-            assert.equal(chart.select("svg g g.x").attr("transform"), "translate(20,170)");
+            assert.equal(chart.select("svg g g.x").attr("transform"), "translate(30,170)");
         },
         'axis y should be placed on the left': function(chart) {
-            assert.equal(chart.select("svg g g.y").attr("transform"), "translate(20,10)");
+            assert.equal(chart.select("svg g g.y").attr("transform"), "translate(30,10)");
         },
         'bar x should be set correctly': function(chart) {
             chart.selectAll("svg g rect.bar").each(function(d) {
@@ -170,7 +167,7 @@ suite.addBatch({
                 });
             },
             'background should be stretched': function(chart) {
-                assert.equal(chart.select("g.brush rect.background").attr("width"), 1030);
+                assert.equal(chart.select("g.brush rect.background").attr("width"), 1020);
             },
             'background height should be set to chart height': function(chart) {
                 assert.equal(chart.select("g.brush rect.background").attr("height"), 170);
@@ -179,7 +176,7 @@ suite.addBatch({
                 assert.equal(chart.select("g.brush rect.extent").attr("height"), 170);
             },
             'extent width should be set based on filter set': function(chart) {
-                assert.equal(chart.select("g.brush rect.extent").attr("width"), 82);
+                assert.equal(chart.select("g.brush rect.extent").attr("width"), 81);
             },
             'unselected bars should be push to background': function(chart) {
                 assert.equal(chart.select("g rect.stack0").attr("class"), "bar stack0 deselected");

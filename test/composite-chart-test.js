@@ -71,7 +71,7 @@ suite.addBatch({
         },
         'x range round is auto calculated based on width': function(chart) {
             assert.equal(chart.x().range()[0], 0);
-            assert.equal(chart.x().range()[1], 430);
+            assert.equal(chart.x().range()[1], 420);
         },
         'x domain should be set': function(chart) {
             assert.equal(chart.x().domain()[0].getTime(), new Date(2012, 4, 20).getTime());
@@ -91,14 +91,11 @@ suite.addBatch({
         'root g should be created': function(chart) {
             assert.isFalse(chart.select("svg g").empty());
         },
-        'root g should be translated to left corner': function(chart) {
-            assert.equal(chart.select("svg g").attr("transform"), "translate(20,10)");
-        },
         'axis x should be placed at the bottom': function(chart) {
-            assert.equal(chart.select("svg g g.x").attr("transform"), "translate(20,120)");
+            assert.equal(chart.select("svg g g.x").attr("transform"), "translate(30,120)");
         },
         'axis y should be placed on the left': function(chart) {
-            assert.equal(chart.select("svg g g.y").attr("transform"), "translate(20,10)");
+            assert.equal(chart.select("svg g g.y").attr("transform"), "translate(30,10)");
         },
         'x units should be set': function(chart) {
             assert.equal(chart.xUnits(), d3.time.days);
@@ -126,10 +123,10 @@ suite.addBatch({
             chart.selectAll("g.sub path.line").each(function(d, i) {
                 switch (i) {
                     case 0:
-                        assert.equal(d3.select(this).attr("d"), "M44.712643678160916,119L113.90804597701148,118L123.79310344827586,113L227.58620689655172,118L272.0689655172414,114L425.28735632183907,115");
+                        assert.equal(d3.select(this).attr("d"), "M54.13793103448276,119L121.72413793103448,118L131.37931034482756,113L232.75862068965515,118L276.2068965517241,114L425.8620689655172,115");
                         break;
                     case 1:
-                        assert.equal(d3.select(this).attr("d"), "M44.712643678160916,103L113.90804597701148,93L123.79310344827586,62L227.58620689655172,102L272.0689655172414,93L425.28735632183907,86");
+                        assert.equal(d3.select(this).attr("d"), "M54.13793103448276,103L121.72413793103448,93L131.37931034482756,62L232.75862068965515,102L276.2068965517241,93L425.8620689655172,86");
                         break;
                 }
             });
@@ -141,13 +138,13 @@ suite.addBatch({
             chart.selectAll("g.sub rect.bar").each(function(d, i) {
                 switch (i) {
                     case 0:
-                        assert.equal(d3.select(this).attr("x"), "43.212643678160916");
+                        assert.equal(d3.select(this).attr("x"), "52.63793103448276");
                         assert.equal(d3.select(this).attr("y"), "103");
                         assert.equal(d3.select(this).attr("width"), "3");
                         assert.equal(d3.select(this).attr("height"), "16");
                         break;
                     case 5:
-                        assert.equal(d3.select(this).attr("x"), "423.78735632183907");
+                        assert.equal(d3.select(this).attr("x"), "424.3620689655172");
                         assert.equal(d3.select(this).attr("y"), "90");
                         assert.equal(d3.select(this).attr("width"), "3");
                         assert.equal(d3.select(this).attr("height"), "29");
@@ -168,7 +165,7 @@ suite.addBatch({
                 });
             },
             'background should be stretched': function(chart) {
-                assert.equal(chart.select("g.brush rect.background").attr("width"), 430);
+                assert.equal(chart.select("g.brush rect.background").attr("width"), 420);
             },
             'background height should be set to chart height': function(chart) {
                 assert.equal(chart.select("g.brush rect.background").attr("height"), 120);
@@ -177,7 +174,7 @@ suite.addBatch({
                 assert.equal(chart.select("g.brush rect.extent").attr("height"), 120);
             },
             'extent width should be set based on filter set': function(chart) {
-                assert.equal(chart.select("g.brush rect.extent").attr("width"), 143);
+                assert.equal(chart.select("g.brush rect.extent").attr("width"), 140);
             },
             'filterd bars should be faded into background': function(chart) {
                 assert.equal(chart.selectAll("g.sub rect.deselected")[0].length, 4);

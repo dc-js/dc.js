@@ -607,7 +607,7 @@ dc.coordinateGridChart = function(_chart) {
 
     _chart = dc.baseChart(_chart);
 
-    var _margin = {top: 10, right: 50, bottom: 30, left: 20};
+    var _margin = {top: 10, right: 50, bottom: 30, left: 30};
 
     var _g;
 
@@ -630,8 +630,8 @@ dc.coordinateGridChart = function(_chart) {
     var _renderVerticalGridLine = false;
 
     _chart.generateG = function() {
-        _g = _chart.svg().append("g")
-            .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")");
+        _g = _chart.svg().append("g");
+//            .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")");
         return _g;
     };
 

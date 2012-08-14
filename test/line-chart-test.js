@@ -63,7 +63,7 @@ suite.addBatch({
         },
         'x range round is auto calculated based on width': function(chart) {
             assert.equal(chart.x().range()[0], 0);
-            assert.equal(chart.x().range()[1], 1030);
+            assert.equal(chart.x().range()[1], 1020);
         },
         'x domain should be set': function(chart) {
             assert.equal(chart.x().domain()[0].getTime(), new Date(2012, 0, 1).getTime());
@@ -83,14 +83,11 @@ suite.addBatch({
         'root g should be created': function(chart) {
             assert.isFalse(chart.select("svg g").empty());
         },
-        'root g should be translated to left corner': function(chart) {
-            assert.equal(chart.select("svg g").attr("transform"), "translate(20,10)");
-        },
         'axis x should be placed at the bottom': function(chart) {
-            assert.equal(chart.select("svg g g.x").attr("transform"), "translate(20,170)");
+            assert.equal(chart.select("svg g g.x").attr("transform"), "translate(30,170)");
         },
         'axis y should be placed on the left': function(chart) {
-            assert.equal(chart.select("svg g g.y").attr("transform"), "translate(20,10)");
+            assert.equal(chart.select("svg g g.y").attr("transform"), "translate(30,10)");
         },
         'x units should be set': function(chart) {
             assert.equal(chart.xUnits(), d3.time.days);
@@ -132,7 +129,7 @@ suite.addBatch({
                 });
             },
             'background should be stretched': function(chart) {
-                assert.equal(chart.select("g.brush rect.background").attr("width"), 1030);
+                assert.equal(chart.select("g.brush rect.background").attr("width"), 1020);
             },
             'background height should be set to chart height': function(chart) {
                 assert.equal(chart.select("g.brush rect.background").attr("height"), 170);
@@ -141,10 +138,10 @@ suite.addBatch({
                 assert.equal(chart.select("g.brush rect.extent").attr("height"), 170);
             },
             'extent width should be set based on filter set': function(chart) {
-                assert.equal(chart.select("g.brush rect.extent").attr("width"), 82);
+                assert.equal(chart.select("g.brush rect.extent").attr("width"), 81);
             },
             'path rendering': function(chart) {
-                assert.equal(chart.select("path.line").attr("d"), "M429.060502283105,117L468.5673515981735,117L474.21118721461187,10L533.4714611872146,117L558.8687214611872,63L646.3481735159817,63");
+                assert.equal(chart.select("path.line").attr("d"), "M435.08904109589037,117L474.21232876712327,117L479.8013698630137,10L538.486301369863,117L563.6369863013698,63L650.2671232876712,63");
             },
             'area path should not be there':function(chart) {
                 assert.equal(chart.selectAll("path.area")[0].length, 0)
@@ -188,10 +185,10 @@ suite.addBatch({'elastic axis':{
         assert.equal(chart.x().domain()[1].getTime(), new Date("Tue, 09 Oct 2012 04:00:00 GMT").getTime());
     },
     'correctly draw line': function(chart) {
-        assert.equal(jQuery("#elastic-y-line-chart g.stack0 path.line").attr("d"), "M333.70558375634516,169L406.90355329949233,169L417.3604060913705,10L527.1573604060914,169L574.2131979695431,10L736.2944162436548,169");
+        assert.equal(jQuery("#elastic-y-line-chart g.stack0 path.line").attr("d"), "M340.65989847715736,169L413.14720812182736,169L423.502538071066,10L532.233502538071,169L578.8324873096446,10L739.3401015228426,169");
     },
     'correctly draw area': function(chart) {
-        assert.equal(jQuery("#elastic-y-line-chart g.stack0 path.area").attr("d"), "M333.70558375634516,169L406.90355329949233,169L417.3604060913705,10L527.1573604060914,169L574.2131979695431,10L736.2944162436548,169L736.2944162436548,169L574.2131979695431,169L527.1573604060914,169L417.3604060913705,169L406.90355329949233,169L333.70558375634516,169Z");
+        assert.equal(jQuery("#elastic-y-line-chart g.stack0 path.area").attr("d"), "M340.65989847715736,169L413.14720812182736,169L423.502538071066,10L532.233502538071,169L578.8324873096446,10L739.3401015228426,169L739.3401015228426,169L578.8324873096446,169L532.233502538071,169L423.502538071066,169L413.14720812182736,169L340.65989847715736,169Z");
     },
     teardown: function(topic) {
         resetAllFilters();
@@ -214,10 +211,10 @@ suite.addBatch({'area chart':{
         assert.equal(chart.selectAll("path.area")[0].length, 1)
     },
     'correctly draw line': function(chart) {
-        assert.equal(jQuery("#area-chart g.stack0 path.line").attr("d"), "M429.060502283105,117L468.5673515981735,117L474.21118721461187,10L533.4714611872146,117L558.8687214611872,63L646.3481735159817,63");
+        assert.equal(jQuery("#area-chart g.stack0 path.line").attr("d"), "M435.08904109589037,117L474.21232876712327,117L479.8013698630137,10L538.486301369863,117L563.6369863013698,63L650.2671232876712,63");
     },
     'correctly draw area': function(chart) {
-        assert.equal(jQuery("#area-chart g.stack0 path.area").attr("d"), "M429.060502283105,117L468.5673515981735,117L474.21118721461187,10L533.4714611872146,117L558.8687214611872,63L646.3481735159817,63L646.3481735159817,169L558.8687214611872,169L533.4714611872146,169L474.21118721461187,169L468.5673515981735,169L429.060502283105,169Z");
+        assert.equal(jQuery("#area-chart g.stack0 path.area").attr("d"), "M435.08904109589037,117L474.21232876712327,117L479.8013698630137,10L538.486301369863,117L563.6369863013698,63L650.2671232876712,63L650.2671232876712,169L563.6369863013698,169L538.486301369863,169L479.8013698630137,169L474.21232876712327,169L435.08904109589037,169Z");
     },
     teardown: function(topic) {
         resetAllFilters();
@@ -242,25 +239,25 @@ suite.addBatch({'stacked area chart':{
         assert.equal(jQuery("#stacked-area-chart path.line").size(), 3);
     },
     'correctly draw stack 0 line': function(chart) {
-        assert.equal(jQuery("#stacked-area-chart g.stack0 path.line").attr("d"), "M79.19540229885058,169L244.94252873563218,167L268.6206896551724,160L517.2413793103448,168L623.7931034482758,161L990.8045977011494,163");
+        assert.equal(jQuery("#stacked-area-chart g.stack0 path.line").attr("d"), "M88.62068965517241,169L252.75862068965515,167L276.2068965517241,160L522.4137931034483,168L627.9310344827586,161L991.3793103448276,163");
     },
     'correctly draw stack 1 line': function(chart) {
-        assert.equal(jQuery("#stacked-area-chart g.stack1 path.line").attr("d"), "M79.19540229885058,145L244.94252873563218,130L268.6206896551724,86L517.2413793103448,144L623.7931034482758,131L990.8045977011494,120");
+        assert.equal(jQuery("#stacked-area-chart g.stack1 path.line").attr("d"), "M88.62068965517241,145L252.75862068965515,130L276.2068965517241,86L522.4137931034483,144L627.9310344827586,131L991.3793103448276,120");
     },
     'correctly draw stack 2 line': function(chart) {
-        assert.equal(jQuery("#stacked-area-chart g.stack2 path.line").attr("d"), "M79.19540229885058,121L244.94252873563218,93L268.6206896551724,12L517.2413793103448,120L623.7931034482758,101L990.8045977011494,77");
+        assert.equal(jQuery("#stacked-area-chart g.stack2 path.line").attr("d"), "M88.62068965517241,121L252.75862068965515,93L276.2068965517241,12L522.4137931034483,120L627.9310344827586,101L991.3793103448276,77");
     },
     'right number of areas should be rendered': function(chart) {
         assert.equal(jQuery("#stacked-area-chart path.area").size(), 3);
     },
     'correctly draw stack 0 area': function(chart) {
-        assert.equal(jQuery("#stacked-area-chart g.stack0 path.area").attr("d"), "M79.19540229885058,169L244.94252873563218,167L268.6206896551724,160L517.2413793103448,168L623.7931034482758,161L990.8045977011494,163L990.8045977011494,169L623.7931034482758,169L517.2413793103448,169L268.6206896551724,169L244.94252873563218,169L79.19540229885058,169Z");
+        assert.equal(jQuery("#stacked-area-chart g.stack0 path.area").attr("d"), "M88.62068965517241,169L252.75862068965515,167L276.2068965517241,160L522.4137931034483,168L627.9310344827586,161L991.3793103448276,163L991.3793103448276,169L627.9310344827586,169L522.4137931034483,169L276.2068965517241,169L252.75862068965515,169L88.62068965517241,169Z");
     },
     'correctly draw stack 1 area': function(chart) {
-        assert.equal(jQuery("#stacked-area-chart g.stack1 path.area").attr("d"), "M79.19540229885058,145L244.94252873563218,130L268.6206896551724,86L517.2413793103448,144L623.7931034482758,131L990.8045977011494,120L990.8045977011494,163L623.7931034482758,161L517.2413793103448,168L268.6206896551724,160L244.94252873563218,167L79.19540229885058,169Z");
+        assert.equal(jQuery("#stacked-area-chart g.stack1 path.area").attr("d"), "M88.62068965517241,145L252.75862068965515,130L276.2068965517241,86L522.4137931034483,144L627.9310344827586,131L991.3793103448276,120L991.3793103448276,163L627.9310344827586,161L522.4137931034483,168L276.2068965517241,160L252.75862068965515,167L88.62068965517241,169Z");
     },
     'correctly draw stack 2 area': function(chart) {
-        assert.equal(jQuery("#stacked-area-chart g.stack2 path.area").attr("d"), "M79.19540229885058,121L244.94252873563218,93L268.6206896551724,12L517.2413793103448,120L623.7931034482758,101L990.8045977011494,77L990.8045977011494,120L623.7931034482758,131L517.2413793103448,144L268.6206896551724,86L244.94252873563218,130L79.19540229885058,145Z");
+        assert.equal(jQuery("#stacked-area-chart g.stack2 path.area").attr("d"), "M88.62068965517241,121L252.75862068965515,93L276.2068965517241,12L522.4137931034483,120L627.9310344827586,101L991.3793103448276,77L991.3793103448276,120L627.9310344827586,131L522.4137931034483,144L276.2068965517241,86L252.75862068965515,130L88.62068965517241,145Z");
     }
 }});
 
@@ -303,12 +300,12 @@ suite.addBatch({
         'horizontal grid line x,y should be generated correctly': function(chart){
             assert.equal(jQuery("#chart-grid-line g.horizontal line")[0].getAttribute("x1"), "1");
             assert.equal(jQuery("#chart-grid-line g.horizontal line")[0].getAttribute("y1"), "133");
-            assert.equal(jQuery("#chart-grid-line g.horizontal line")[0].getAttribute("x2"), "1030");
+            assert.equal(jQuery("#chart-grid-line g.horizontal line")[0].getAttribute("x2"), "1020");
             assert.equal(jQuery("#chart-grid-line g.horizontal line")[0].getAttribute("y2"), "133");
 
             assert.equal(jQuery("#chart-grid-line g.horizontal line")[3].getAttribute("x1"), "1");
             assert.equal(jQuery("#chart-grid-line g.horizontal line")[3].getAttribute("y1"), "53");
-            assert.equal(jQuery("#chart-grid-line g.horizontal line")[3].getAttribute("x2"), "1030");
+            assert.equal(jQuery("#chart-grid-line g.horizontal line")[3].getAttribute("x2"), "1020");
             assert.equal(jQuery("#chart-grid-line g.horizontal line")[3].getAttribute("y2"), "53");
         },
         teardown: function(topic) {
@@ -336,12 +333,12 @@ suite.addBatch({
         'horizontal grid line x,y should be generated correctly': function(chart){
             assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[0].getAttribute("x1"), "1");
             assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[0].getAttribute("y1"), "107");
-            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[0].getAttribute("x2"), "1030");
+            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[0].getAttribute("x2"), "1020");
             assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[0].getAttribute("y2"), "107");
 
             assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[1].getAttribute("x1"), "1");
             assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[1].getAttribute("y1"), "53");
-            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[1].getAttribute("x2"), "1030");
+            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[1].getAttribute("x2"), "1020");
             assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[1].getAttribute("y2"), "53");
         },
         teardown: function(topic) {
@@ -366,14 +363,14 @@ suite.addBatch({
             assert.equal(jQuery("#chart-grid-line-vertical g.vertical line").size(), 12);
         },
         'vertical grid line x,y should be generated correctly': function(chart){
-            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("x1"), "87.47945205479452");
+            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("x1"), "86.63013698630137");
             assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("y1"), "160");
-            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("x2"), "87.47945205479452");
+            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("x2"), "86.63013698630137");
             assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("y2"), "");
 
-            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[3].getAttribute("x1"), "256.6769406392694");
+            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[3].getAttribute("x1"), "254.18493150684932");
             assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[3].getAttribute("y1"), "160");
-            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[3].getAttribute("x2"), "256.6769406392694");
+            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[3].getAttribute("x2"), "254.18493150684932");
             assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[3].getAttribute("y2"), "");
         },
         teardown: function(topic) {
@@ -400,9 +397,9 @@ suite.addBatch({
             assert.equal(jQuery("#chart-grid-line-vertical g.vertical line").size(), 3);
         },
         'vertical grid line x,y should be generated correctly': function(chart){
-            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("x1"), "513.4714611872146");
+            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("x1"), "508.48630136986304");
             assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("y1"), "160");
-            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("x2"), "513.4714611872146");
+            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("x2"), "508.48630136986304");
             assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("y2"), "");
         },
         teardown: function(topic) {
