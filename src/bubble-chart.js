@@ -110,10 +110,14 @@ dc.bubbleChart = function(parent, chartGroup) {
         bubbleG.exit().remove();
     }
 
-    var onClick = function(d) {
-        _chart.filter(d.key);
+    function onClick(d) {
+        var toFilter = d.key;
+        if(toFilter == _chart.filter())
+            _chart.filter(null);
+        else
+            _chart.filter(toFilter);
         dc.redrawAll(_chart.chartGroup());
-    };
+    }
 
     function bubbleX(d) {
         return _chart.x()(_chart.keyAccessor()(d)) + _chart.margins().left;
@@ -137,8 +141,6 @@ dc.bubbleChart = function(parent, chartGroup) {
     };
 
     _chart.fadeDeselectedArea = function() {
-        var normalOpacity = 1;
-        var fadeOpacity = 0.1;
         if (_chart.hasFilter()) {
             _chart.selectAll("g." + NODE_CLASS).select("circle").each(function(d) {
                 if (_chart.isSelectedSlice(d)) {

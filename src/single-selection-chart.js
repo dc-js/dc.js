@@ -1,5 +1,9 @@
 dc.singleSelectionChart = function(_chart) {
     var _filter;
+    var _onClick = function(d){
+        _chart.filter(d.key);
+        dc.redrawAll(_chart.chartGroup());
+    };
 
     _chart.hasFilter = function() {
         return _filter != null;

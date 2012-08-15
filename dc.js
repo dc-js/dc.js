@@ -1002,6 +1002,10 @@ dc.colorChart = function(_chart) {
 };
 dc.singleSelectionChart = function(_chart) {
     var _filter;
+    var _onClick = function(d){
+        _chart.filter(d.key);
+        dc.redrawAll(_chart.chartGroup());
+    };
 
     _chart.hasFilter = function() {
         return _filter != null;
@@ -1412,7 +1416,12 @@ dc.pieChart = function(parent, chartGroup) {
     }
 
     function onClick(d) {
-        _chart.filter(_chart.keyAccessor()(d.data));
+        console.log("Clicked: " + d);
+        var toFilter = _chart.keyAccessor()(d.data);
+        if(toFilter == _chart.filter())
+            _chart.filter(null);
+        else
+            _chart.filter(toFilter);
         dc.redrawAll(_chart.chartGroup());
     }
 
@@ -1872,10 +1881,14 @@ dc.bubbleChart = function(parent, chartGroup) {
         bubbleG.exit().remove();
     }
 
-    var onClick = function(d) {
-        _chart.filter(d.key);
+    function onClick(d) {
+        var toFilter = d.key;
+        if(toFilter == _chart.filter())
+            _chart.filter(null);
+        else
+            _chart.filter(toFilter);
         dc.redrawAll(_chart.chartGroup());
-    };
+    }
 
     function bubbleX(d) {
         return _chart.x()(_chart.keyAccessor()(d)) + _chart.margins().left;
@@ -1899,8 +1912,6 @@ dc.bubbleChart = function(parent, chartGroup) {
     };
 
     _chart.fadeDeselectedArea = function() {
-        var normalOpacity = 1;
-        var fadeOpacity = 0.1;
         if (_chart.hasFilter()) {
             _chart.selectAll("g." + NODE_CLASS).select("circle").each(function(d) {
                 if (_chart.isSelectedSlice(d)) {
@@ -2146,15 +2157,20 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
             .classed("deselected", function(d) {
                 return isDeselected(layerIndex, d);
             })
-            .on("click", function(d) {
-                var selectedRegion = geoJson(layerIndex).keyAccessor(d);
-                _chart.filter(selectedRegion);
-                dc.redrawAll(_chart.chartGroup());
-            });
+            .on("click", function(d){return onClick(d, layerIndex);});
 
         dc.transition(paths, _chart.transitionDuration()).attr("fill", function(d) {
             return _colorAccessor(data[geoJson(layerIndex).keyAccessor(d)], maxValue);
         });
+    }
+
+    function onClick(d, layerIndex) {
+        var selectedRegion = geoJson(layerIndex).keyAccessor(d);
+        if(selectedRegion == _chart.filter())
+            _chart.filter(null);
+        else
+            _chart.filter(selectedRegion);
+        dc.redrawAll(_chart.chartGroup());
     }
 
     function renderTitle(regionG, layerIndex, data) {

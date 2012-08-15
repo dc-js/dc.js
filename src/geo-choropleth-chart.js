@@ -107,15 +107,20 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
             .classed("deselected", function(d) {
                 return isDeselected(layerIndex, d);
             })
-            .on("click", function(d) {
-                var selectedRegion = geoJson(layerIndex).keyAccessor(d);
-                _chart.filter(selectedRegion);
-                dc.redrawAll(_chart.chartGroup());
-            });
+            .on("click", function(d){return onClick(d, layerIndex);});
 
         dc.transition(paths, _chart.transitionDuration()).attr("fill", function(d) {
             return _colorAccessor(data[geoJson(layerIndex).keyAccessor(d)], maxValue);
         });
+    }
+
+    function onClick(d, layerIndex) {
+        var selectedRegion = geoJson(layerIndex).keyAccessor(d);
+        if(selectedRegion == _chart.filter())
+            _chart.filter(null);
+        else
+            _chart.filter(selectedRegion);
+        dc.redrawAll(_chart.chartGroup());
     }
 
     function renderTitle(regionG, layerIndex, data) {
