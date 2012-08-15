@@ -756,10 +756,14 @@ d3.csv("ndx.csv", function(data) {
     <pre class="brush:js">
         // simply call renderAll() to render all charts on the page
         dc.renderAll();
+        // or you can render charts belong to a specific chart group
+        dc.renderAll("group");
 
         // once rendered you can call redrawAll to update charts incrementally when data
         // change without re-rendering everything
         dc.redrawAll();
+        // or you can choose to redraw only those charts associated with a specific chart group
+        dc.redrawAll("group");
     </pre>
 
 <p>
