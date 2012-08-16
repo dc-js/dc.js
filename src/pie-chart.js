@@ -151,9 +151,12 @@ dc.pieChart = function(parent, chartGroup) {
 
         _labels = _labels.data(data);
 
-        dc.transition(_slicePaths, _chart.transitionDuration(), function(s) {
-            s.attrTween("d", tweenPie);
-        });
+        dc.transition(_slicePaths, _chart.transitionDuration(),
+            function(s) {
+                s.attrTween("d", tweenPie);
+            }).attr("fill", function(d, i) {
+                return _chart.getColor(d, i);
+            });
 
         redrawLabels(_arc);
 

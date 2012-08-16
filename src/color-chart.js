@@ -12,8 +12,7 @@ dc.colorChart = function(_chart) {
 
         var colorsLength = _chart.colors().range().length;
         var denominator = (maxValue - minValue) / colorsLength;
-        var colorValue = Math.min(colorsLength - 1, Math.round(value / denominator));
-//        console.log("value: " + value + ", min:" + minValue + ", max: " + maxValue +", colorValue: " + colorValue);
+        var colorValue = Math.abs(Math.min(colorsLength - 1, Math.round((value - minValue) / denominator)));
         return _chart.colors()(colorValue);
     };
 

@@ -1054,8 +1054,7 @@ dc.colorChart = function(_chart) {
 
         var colorsLength = _chart.colors().range().length;
         var denominator = (maxValue - minValue) / colorsLength;
-        var colorValue = Math.min(colorsLength - 1, Math.round(value / denominator));
-        console.log("value: " + value + ", min:" + minValue + ", max: " + maxValue +", colorValue: " + colorValue);
+        var colorValue = Math.abs(Math.min(colorsLength - 1, Math.round((value - minValue) / denominator)));
         return _chart.colors()(colorValue);
     };
 
@@ -1460,9 +1459,12 @@ dc.pieChart = function(parent, chartGroup) {
 
         _labels = _labels.data(data);
 
-        dc.transition(_slicePaths, _chart.transitionDuration(), function(s) {
-            s.attrTween("d", tweenPie);
-        });
+        dc.transition(_slicePaths, _chart.transitionDuration(),
+            function(s) {
+                s.attrTween("d", tweenPie);
+            }).attr("fill", function(d, i) {
+                return _chart.getColor(d, i);
+            });
 
         redrawLabels(_arc);
 
@@ -1997,6 +1999,9 @@ dc.bubbleChart = function(parent, chartGroup) {
         dc.transition(bubbleG, _chart.transitionDuration())
             .attr("transform", bubbleLocator)
             .selectAll("circle." + BUBBLE_CLASS)
+            .attr("fill", function(d, i) {
+                return _chart.getColor(d, i);
+            })
             .attr("r", function(d) {
                 return bubbleR(d);
             });
