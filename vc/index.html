@@ -35,6 +35,18 @@
 
 <h2>US Venture Capital Landscape 2011</h2>
 
+<p>
+    This is a <a href="../index.html">dc.js</a> example showing how GeoJson Polygon can be associated with crossfilter
+    dimension and group using a choropleth chart. Different regions can be color coded differently based on data driven
+    calculation. Like any other dc.js chart a choropleth chart can then be mixed with any other dc.js chart or widget
+    or your own custom d3 drawing. In this example we have shown how it can work with multiple bubble charts.
+</p>
+
+<p>
+    Public data source
+    <a href="http://buzzdata.com/azad2002/the-united-states-of-venture-capital-2011#!/data" target="_blank">BuzzData.com</a>.
+</p>
+
 <div id="us-chart" class="chart">
     <span class="title">VC Distribution by States (color: total amount raised)</span>
     <a class="reset" href="javascript:usChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -46,7 +58,7 @@
 <div class="clear"></div>
 
 <div id="industry-chart" class="chart">
-    <span class="title">By Industries (y: number of deals, x: total amount raised in millions, radius: number of deals)</span>
+    <span class="title">By Industries (y: number of deals, x: total amount raised in millions, radius: amount raised)</span>
     <a class="reset" href="javascript:industryChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
@@ -55,7 +67,7 @@
 <div class="clear"></div>
 
 <div id="round-chart" class="chart">
-    <span class="title">By Rounds (y: number of deals, x: total amount raised in millions, radius: number of deals)</span>
+    <span class="title">By Rounds (y: number of deals, x: total amount raised in millions, radius: amount raised)</span>
     <a class="reset" href="javascript:roundChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
@@ -91,6 +103,7 @@
                 },
                 function(p,v){
                     p.amountRaised -= +v["Raised"];
+                    if(p.amountRaised < 0.001) p.amountRaised = 0; // do some clean up
                     p.deals -= +v["Deals"];
                     return p;
                 },
@@ -106,6 +119,7 @@
                 },
                 function(p,v){
                     p.amountRaised -= +v["Raised"];
+                    if(p.amountRaised < 0.001) p.amountRaised = 0; // do some clean up
                     p.deals -= +v["Deals"];
                     return p;
                 },
@@ -128,18 +142,19 @@
 
             industryChart.width(990)
                     .height(200)
+                    .margins({top: 10, right: 50, bottom: 30, left: 60})
                     .dimension(industries)
                     .group(statsByIndustries)
                     .colors(d3.scale.category10())
                     .keyAccessor(function(p) {return p.value.amountRaised;})
                     .valueAccessor(function(p) {return p.value.deals;})
-                    .radiusValueAccessor(function(p) {return p.value.deals;})
+                    .radiusValueAccessor(function(p) {return p.value.amountRaised;})
                     .x(d3.scale.linear().domain([0, 5000]))
+                    .r(d3.scale.linear().domain([0, 4000]))
                     .elasticY(true)
-                    .yAxisPadding(200)
+                    .yAxisPadding(100)
                     .elasticX(true)
-                    .xAxisPadding(500)
-                    .elasticRadius(true)
+                    .xAxisPadding(200)
                     .maxBubbleRelativeSize(20)
                     .renderHorizontalGridLines(true)
                     .renderVerticalGridLines(true)
@@ -151,21 +166,24 @@
                                 + "Amount Raised: " + numberFormat(p.value.amountRaised) + "M\n"
                                 + "Number of Deals: " + numberFormat(p.value.deals);
                     });
+            industryChart.yAxis().tickFormat(function(s){return s + " deals";});
+            industryChart.xAxis().tickFormat(function(s){return s + "M";});
 
             roundChart.width(990)
                     .height(200)
+                    .margins({top: 10, right: 50, bottom: 30, left: 60})
                     .dimension(rounds)
                     .group(statsByRounds)
                     .colors(d3.scale.category10())
                     .keyAccessor(function(p) {return p.value.amountRaised;})
                     .valueAccessor(function(p) {return p.value.deals;})
-                    .radiusValueAccessor(function(p) {return p.value.deals;})
+                    .radiusValueAccessor(function(p) {return p.value.amountRaised;})
                     .x(d3.scale.linear().domain([0, 5000]))
+                    .r(d3.scale.linear().domain([0, 9000]))
                     .elasticY(true)
-                    .yAxisPadding(200)
+                    .yAxisPadding(150)
                     .elasticX(true)
-                    .xAxisPadding(500)
-                    .elasticRadius(true)
+                    .xAxisPadding(300)
                     .maxBubbleRelativeSize(20)
                     .renderHorizontalGridLines(true)
                     .renderVerticalGridLines(true)
@@ -177,6 +195,8 @@
                                 + "Amount Raised: " + numberFormat(p.value.amountRaised) + "M\n"
                                 + "Number of Deals: " + numberFormat(p.value.deals);
                     });
+            roundChart.yAxis().tickFormat(function(s){return s + " deals";});
+            roundChart.xAxis().tickFormat(function(s){return s + "M";});
 
             dc.renderAll();
         });
