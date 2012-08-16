@@ -1938,6 +1938,7 @@ dc.bubbleChart = function(parent, chartGroup) {
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.coordinateGridChart({})));
 
     var _maxBubbleRelativeSize = 5;
+    var _minRadiusWithLabel = 10;
 
     var _elasticRadius = false;
 
@@ -2025,7 +2026,7 @@ dc.bubbleChart = function(parent, chartGroup) {
     }
 
     var labelFunction = function(d) {
-        return bubbleR(d) > MIN_RADIUS ? _chart.label()(d) : "";
+        return bubbleR(d) > _minRadiusWithLabel? _chart.label()(d) : "";
     };
 
     function renderLabel(bubbleGEnter) {
@@ -2157,6 +2158,12 @@ dc.bubbleChart = function(parent, chartGroup) {
     _chart.radiusValueAccessor = function(_) {
         if (!arguments.length) return _rValueAccessor;
         _rValueAccessor = _;
+        return _chart;
+    };
+
+    _chart.minRadiusWithLabel = function(_){
+        if(!arguments.length) return _minRadiusWithLabel;
+        _minRadiusWithLabel = _;
         return _chart;
     };
 
