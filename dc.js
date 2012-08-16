@@ -2135,7 +2135,7 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     _chart.fadeDeselectedArea = function() {
         if (_chart.hasFilter()) {
-            _chart.selectAll("g." + NODE_CLASS).select("circle").each(function(d) {
+            _chart.selectAll("g." + NODE_CLASS).each(function(d) {
                 if (_chart.isSelectedSlice(d)) {
                     _chart.highlightSelected(this);
                 } else {
@@ -2143,7 +2143,7 @@ dc.bubbleChart = function(parent, chartGroup) {
                 }
             });
         } else {
-            _chart.selectAll("g." + NODE_CLASS).selectAll("circle").each(function(d) {
+            _chart.selectAll("g." + NODE_CLASS).each(function(d) {
                 _chart.resetHighlight(this);
             });
         }

@@ -239,11 +239,11 @@ suite.addBatch({
             return chart;
         },
         'should deselect bubble based on filter value': function(chart) {
-            chart.selectAll("circle.bubble").each(function(d, i) {
+            chart.selectAll("g.node").each(function(d, i) {
                 if (i == 0)
-                    assert.equal(d3.select(this).attr("class"), "bubble 0 selected");
+                    assert.equal(d3.select(this).attr("class"), "node selected");
                 if (i == 1)
-                    assert.equal(d3.select(this).attr("class"), "bubble 1 deselected");
+                    assert.equal(d3.select(this).attr("class"), "node deselected");
             });
         },
         teardown: function(topic) {
