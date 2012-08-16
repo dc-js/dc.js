@@ -244,13 +244,20 @@ dc.utils.groupMin = function(group, accessor) {
         return accessor(e);
     });
 };
-dc.events = {};
+dc.events = {
+    current: null
+};
 
-dc.events.trigger = function(closure, delay){
-    if(!delay)
+dc.events.trigger = function(closure, delay) {
+    dc.events.current = closure;
+
+    if (!delay)
         closure();
 
-    setTimeout(closure, delay);
+    setTimeout(function() {
+        if (closure == dc.events.current)
+            closure();
+    }, delay);
 };
 dc.cumulative = {};
 
