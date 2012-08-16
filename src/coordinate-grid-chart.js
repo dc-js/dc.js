@@ -320,6 +320,10 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
+    function brushHeight() {
+        return _chart.xAxisY() - _chart.margins().top;
+    }
+
     _chart.renderBrush = function(g) {
         _brush.on("brushstart", brushStart)
             .on("brush", brushing)
@@ -327,9 +331,9 @@ dc.coordinateGridChart = function(_chart) {
 
         var gBrush = g.append("g")
             .attr("class", "brush")
-            .attr("transform", "translate(" + _chart.margins().left + ",0)")
+            .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")")
             .call(_brush.x(_chart.x()));
-        gBrush.selectAll("rect").attr("height", _chart.xAxisY());
+        gBrush.selectAll("rect").attr("height", brushHeight());
         gBrush.selectAll(".resize").append("path").attr("d", _chart.resizeHandlePath);
 
         if (_filter) {
@@ -367,7 +371,7 @@ dc.coordinateGridChart = function(_chart) {
 
         var gBrush = g.select("g.brush");
         gBrush.call(_chart.brush().x(_chart.x()));
-        gBrush.selectAll("rect").attr("height", _chart.xAxisY());
+        gBrush.selectAll("rect").attr("height", brushHeight());
 
         _chart.fadeDeselectedArea();
     };
@@ -378,7 +382,7 @@ dc.coordinateGridChart = function(_chart) {
 
     // borrowed from Crossfilter example
     _chart.resizeHandlePath = function(d) {
-        var e = +(d == "e"), x = e ? 1 : -1, y = _chart.xAxisY() / 3;
+        var e = +(d == "e"), x = e ? 1 : -1, y = brushHeight() / 3;
         return "M" + (.5 * x) + "," + y
             + "A6,6 0 0 " + e + " " + (6.5 * x) + "," + (y + 6)
             + "V" + (2 * y - 6)

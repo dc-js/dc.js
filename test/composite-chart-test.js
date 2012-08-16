@@ -154,24 +154,24 @@ suite.addBatch({
         },
         'with brush': {
             'be positioned with offset (left margin)': function(chart) {
-                assert.equal(chart.select("g.brush").attr("transform"), "translate(" + chart.margins().left + ",0)");
+                assert.equal(chart.select("g.brush").attr("transform"), "translate(" + chart.margins().left + ",10)");
             },
             'brush fancy resize handle should be created': function(chart) {
                 chart.select("g.brush").selectAll(".resize path").each(function(d, i) {
                     if (i == 0)
-                        assert.equal(d3.select(this).attr("d"), "M0.5,40A6,6 0 0 1 6.5,46V74A6,6 0 0 1 0.5,80ZM2.5,48V72M4.5,48V72");
+                        assert.equal(d3.select(this).attr("d"), "M0.5,36.666666666666664A6,6 0 0 1 6.5,42.666666666666664V67.33333333333333A6,6 0 0 1 0.5,73.33333333333333ZM2.5,44.666666666666664V65.33333333333333M4.5,44.666666666666664V65.33333333333333");
                     else
-                        assert.equal(d3.select(this).attr("d"), "M-0.5,40A6,6 0 0 0 -6.5,46V74A6,6 0 0 0 -0.5,80ZM-2.5,48V72M-4.5,48V72");
+                        assert.equal(d3.select(this).attr("d"), "M-0.5,36.666666666666664A6,6 0 0 0 -6.5,42.666666666666664V67.33333333333333A6,6 0 0 0 -0.5,73.33333333333333ZM-2.5,44.666666666666664V65.33333333333333M-4.5,44.666666666666664V65.33333333333333");
                 });
             },
             'background should be stretched': function(chart) {
                 assert.equal(chart.select("g.brush rect.background").attr("width"), 420);
             },
             'background height should be set to chart height': function(chart) {
-                assert.equal(chart.select("g.brush rect.background").attr("height"), 120);
+                assert.equal(chart.select("g.brush rect.background").attr("height"), 110);
             },
             'extent height should be set to chart height': function(chart) {
-                assert.equal(chart.select("g.brush rect.extent").attr("height"), 120);
+                assert.equal(chart.select("g.brush rect.extent").attr("height"), 110);
             },
             'extent width should be set based on filter set': function(chart) {
                 assert.equal(chart.select("g.brush rect.extent").attr("width"), 140);
