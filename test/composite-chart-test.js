@@ -20,7 +20,7 @@ function buildChart(id, xdomain) {
         .transitionDuration(0)
         .xUnits(d3.time.days)
         .compose([
-        dc.barChart(chart).centerBar(true).group(dateValueSumGroup).barGap(1),
+        dc.barChart(chart).centerBar(true).group(dateValueSumGroup).gap(1),
         dc.lineChart(chart).stack(dateValueSumGroup).stack(dateValueSumGroup),
         dc.lineChart(chart).group(dateGroup)
     ]);

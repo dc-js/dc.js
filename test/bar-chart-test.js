@@ -17,7 +17,7 @@ function buildChart(id, xdomain) {
         .width(width).height(height)
         .centerBar(true)
         .x(d3.time.scale().domain(xdomain))
-        .barGap(1)
+        .gap(1)
         .transitionDuration(0)
         .xUnits(d3.time.days);
     chart.render();
