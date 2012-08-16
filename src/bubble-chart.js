@@ -5,6 +5,8 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.coordinateGridChart({})));
 
+    _chart.colorAccessor(function(d){return d;});
+
     _chart.renderLabel(true);
     _chart.renderTitle(false);
 

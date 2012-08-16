@@ -1,6 +1,8 @@
 dc.geoChoroplethChart = function(parent, chartGroup) {
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
 
+    _chart.colorAccessor(function(d){return d;});
+
     var _geoPath = d3.geo.path();
 
     var _geoJsons = [];

@@ -17,6 +17,8 @@ dc.pieChart = function(parent, chartGroup) {
 
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
 
+    _chart.colorAccessor(function(d){return d;});
+
     _chart.label(function(d) {
         return _chart.keyAccessor()(d.data);
     });

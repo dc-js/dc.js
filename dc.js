@@ -1043,7 +1043,7 @@ dc.coordinateGridChart = function(_chart) {
 dc.colorChart = function(_chart) {
     var _colors = d3.scale.category20c();
 
-    var _colorAccessor = function(value, maxValue) {
+    var _colorCalculator = function(value, maxValue) {
         if (isNaN(value)) value = 0;
         if(maxValue == null) return _colors(value);
 
@@ -1052,6 +1052,8 @@ dc.colorChart = function(_chart) {
         var colorValue = Math.min(colorsLength - 1, Math.round(value / denominator));
         return _chart.colors()(colorValue);
     };
+
+    var _colorAccessor = function(d){return d.value;};
 
     _chart.colors = function(_) {
         if (!arguments.length) return _colors;
@@ -1070,14 +1072,20 @@ dc.colorChart = function(_chart) {
         return _chart;
     };
 
+    _chart.colorCalculator = function(_){
+        if(!arguments.length) return _colorCalculator;
+        _colorCalculator = _;
+        return _chart;
+    };
+
+    _chart.getColor = function(d, max){
+        return _colorCalculator(_colorAccessor(d), max);
+    };
+
     _chart.colorAccessor = function(_){
         if(!arguments.length) return _colorAccessor;
         _colorAccessor = _;
         return _chart;
-    };
-
-    _chart.getColor = function(value, max){
-        return _colorAccessor(value, max);
     };
 
     return _chart;
@@ -1303,6 +1311,8 @@ dc.pieChart = function(parent, chartGroup) {
     var _minAngelForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
 
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
+
+    _chart.colorAccessor(function(d){return d;});
 
     _chart.label(function(d) {
         return _chart.keyAccessor()(d.data);
@@ -1881,6 +1891,8 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.coordinateGridChart({})));
 
+    _chart.colorAccessor(function(d){return d;});
+
     _chart.renderLabel(true);
     _chart.renderTitle(false);
 
@@ -2172,6 +2184,8 @@ dc.compositeChart = function(parent, chartGroup) {
 };
 dc.geoChoroplethChart = function(parent, chartGroup) {
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
+
+    _chart.colorAccessor(function(d){return d;});
 
     var _geoPath = d3.geo.path();
 
