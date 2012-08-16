@@ -3,6 +3,8 @@ dc.colorChart = function(_chart) {
 
     var _colorAccessor = function(value, maxValue) {
         if (isNaN(value)) value = 0;
+        if(maxValue == null) return _colors(value);
+
         var colorsLength = _chart.colors().range().length;
         var denominator = maxValue / colorsLength;
         var colorValue = Math.min(colorsLength - 1, Math.round(value / denominator));
@@ -30,6 +32,10 @@ dc.colorChart = function(_chart) {
         if(!arguments.length) return _colorAccessor;
         _colorAccessor = _;
         return _chart;
+    };
+
+    _chart.getColor = function(value, max){
+        return _colorAccessor(value, max);
     };
 
     return _chart;

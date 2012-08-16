@@ -86,7 +86,7 @@ dc.pieChart = function(parent, chartGroup) {
 
         _slicePaths = _slices.append("path")
             .attr("fill", function(d, i) {
-                return _chart.colors()(i);
+                return _chart.getColor(i);
             })
             .attr("d", arcs);
 

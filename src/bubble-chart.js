@@ -44,7 +44,7 @@ dc.bubbleChart = function(parent, chartGroup) {
             })
             .on("click", onClick)
             .attr("fill", function(d, i) {
-                return _chart.colors()(i);
+                return _chart.getColor(i);
             })
             .attr("r", 0);
         dc.transition(bubbleG, _chart.transitionDuration())

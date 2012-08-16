@@ -1045,6 +1045,8 @@ dc.colorChart = function(_chart) {
 
     var _colorAccessor = function(value, maxValue) {
         if (isNaN(value)) value = 0;
+        if(maxValue == null) return _colors(value);
+
         var colorsLength = _chart.colors().range().length;
         var denominator = maxValue / colorsLength;
         var colorValue = Math.min(colorsLength - 1, Math.round(value / denominator));
@@ -1072,6 +1074,10 @@ dc.colorChart = function(_chart) {
         if(!arguments.length) return _colorAccessor;
         _colorAccessor = _;
         return _chart;
+    };
+
+    _chart.getColor = function(value, max){
+        return _colorAccessor(value, max);
     };
 
     return _chart;
@@ -1367,7 +1373,7 @@ dc.pieChart = function(parent, chartGroup) {
 
         _slicePaths = _slices.append("path")
             .attr("fill", function(d, i) {
-                return _chart.colors()(i);
+                return _chart.getColor(i);
             })
             .attr("d", arcs);
 
@@ -1914,7 +1920,7 @@ dc.bubbleChart = function(parent, chartGroup) {
             })
             .on("click", onClick)
             .attr("fill", function(d, i) {
-                return _chart.colors()(i);
+                return _chart.getColor(i);
             })
             .attr("r", 0);
         dc.transition(bubbleG, _chart.transitionDuration())
@@ -2270,7 +2276,7 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
             });
 
         dc.transition(paths, _chart.transitionDuration()).attr("fill", function(d) {
-            return _chart.colorAccessor()(data[geoJson(layerIndex).keyAccessor(d)], maxValue);
+            return _chart.getColor(data[geoJson(layerIndex).keyAccessor(d)], maxValue);
         });
     }
 

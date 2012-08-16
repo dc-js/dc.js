@@ -104,7 +104,7 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
             });
 
         dc.transition(paths, _chart.transitionDuration()).attr("fill", function(d) {
-            return _chart.colorAccessor()(data[geoJson(layerIndex).keyAccessor(d)], maxValue);
+            return _chart.getColor(data[geoJson(layerIndex).keyAccessor(d)], maxValue);
         });
     }
 
