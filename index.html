@@ -277,6 +277,7 @@ d3.csv("ndx.csv", function(data) {
 
             yearlyBubbleChart.width(990)
                     .height(250)
+                    .margins({top: 10, right: 50, bottom: 30, left: 40})
                     .dimension(yearlyDimension)
                     .group(yearlyPerformanceGroup)
                     .colors(d3.scale.category20c())
@@ -340,6 +341,7 @@ d3.csv("ndx.csv", function(data) {
 
             fluctuationChart.width(420)
                     .height(180)
+                    .margins({top: 10, right: 50, bottom: 30, left: 40})
                     .dimension(fluctuation)
                     .group(fluctuationGroup)
                     .elasticY(true)
