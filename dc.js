@@ -244,6 +244,11 @@ dc.utils.groupMin = function(group, accessor) {
         return accessor(e);
     });
 };
+dc.events = {};
+
+dc.events.trigger = function(closure){
+    closure();
+};
 dc.cumulative = {};
 
 dc.cumulative.Base = function() {
@@ -396,7 +401,7 @@ dc.baseChart = function(_chart) {
     };
     var _renderTitle = false;
 
-    var _transitionDuration = 0;
+    var _transitionDuration = 750;
 
     var _filterPrinter = dc.printers.filter;
 
