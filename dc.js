@@ -1043,6 +1043,14 @@ dc.coordinateGridChart = function(_chart) {
 dc.colorChart = function(_chart) {
     var _colors = d3.scale.category20c();
 
+    var _colorAccessor = function(value, maxValue) {
+        if (isNaN(value)) value = 0;
+        var colorsLength = _chart.colors().range().length;
+        var denominator = maxValue / colorsLength;
+        var colorValue = Math.min(colorsLength - 1, Math.round(value / denominator));
+        return _chart.colors()(colorValue);
+    };
+
     _chart.colors = function(_) {
         if (!arguments.length) return _colors;
 
@@ -1057,6 +1065,12 @@ dc.colorChart = function(_chart) {
             _colors = _;
         }
 
+        return _chart;
+    };
+
+    _chart.colorAccessor = function(_){
+        if(!arguments.length) return _colorAccessor;
+        _colorAccessor = _;
         return _chart;
     };
 
@@ -2157,14 +2171,6 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
 
     var _geoJsons = [];
 
-    var _colorAccessor = function(value, maxValue) {
-        if (isNaN(value)) value = 0;
-        var colorsLength = _chart.colors().range().length;
-        var denominator = maxValue / colorsLength;
-        var colorValue = Math.min(colorsLength - 1, Math.round(value / denominator));
-        return _chart.colors()(colorValue);
-    };
-
     _chart.doRender = function() {
         _chart.resetSvg();
 
@@ -2264,7 +2270,7 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
             });
 
         dc.transition(paths, _chart.transitionDuration()).attr("fill", function(d) {
-            return _colorAccessor(data[geoJson(layerIndex).keyAccessor(d)], maxValue);
+            return _chart.colorAccessor()(data[geoJson(layerIndex).keyAccessor(d)], maxValue);
         });
     }
 
