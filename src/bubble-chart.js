@@ -120,15 +120,24 @@ dc.bubbleChart = function(parent, chartGroup) {
     }
 
     function bubbleX(d) {
-        return _chart.x()(_chart.keyAccessor()(d)) + _chart.margins().left;
+        var x = _chart.x()(_chart.keyAccessor()(d)) + _chart.margins().left;
+        if(isNaN(x))
+            x = 0;
+        return x;
     }
 
     function bubbleY(d) {
-        return _chart.margins().top + _chart.y()(_chart.valueAccessor()(d));
+        var y = _chart.margins().top + _chart.y()(_chart.valueAccessor()(d));
+        if(isNaN(y))
+            y = 0;
+        return y;
     }
 
     function bubbleR(d) {
-        return _chart.r()(_chart.radiusValueAccessor()(d));
+        var r = _chart.r()(_chart.radiusValueAccessor()(d));
+        if(isNaN(r))
+            r = 0;
+        return r;
     }
 
     _chart.renderBrush = function(g) {
