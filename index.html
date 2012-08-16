@@ -279,7 +279,9 @@ d3.csv("ndx.csv", function(data) {
                     .height(250)
                     .dimension(yearlyDimension)
                     .group(yearlyPerformanceGroup)
-                    .colors(d3.scale.category20c())
+                    .colors(["#ccc", "#E2F2FF","#C4E4FF","#9ED2FF","#81C5FF","#6BBAFF","#51AEFF","#36A2FF","#1E96FF","#0089FF"])
+                    .colorDomain([-1750, 1644])
+                    .colorAccessor(function(d){return d.value.absGain;})
                     .keyAccessor(function(p) {
                         return p.value.absGain;
                     })
