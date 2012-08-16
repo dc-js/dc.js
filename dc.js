@@ -1,5 +1,5 @@
 dc = {
-    version: "0.8.1",
+    version: "0.9.0",
     constants : {
         STACK_CLASS: "stack",
         DESELECTED_CLASS: "deselected",
@@ -8,7 +8,8 @@ dc = {
         GROUP_INDEX_NAME: "__group_index__",
         DEFAULT_CHART_GROUP: "__default_chart_group__",
         EVENT_DELAY: 40
-    }
+    },
+    _renderlet : null
 };
 
 dc.chartRegistry = function() {
@@ -74,6 +75,9 @@ dc.renderAll = function(group) {
     for (var i = 0; i < charts.length; ++i) {
         charts[i].render();
     }
+
+    if(dc._renderlet != null)
+        dc._renderlet(group);
 };
 
 dc.redrawAll = function(group) {
@@ -81,6 +85,9 @@ dc.redrawAll = function(group) {
     for (var i = 0; i < charts.length; ++i) {
         charts[i].redraw();
     }
+
+    if(dc._renderlet != null)
+        dc._renderlet(group);
 };
 
 dc.transition = function(selections, duration, callback) {
@@ -126,6 +133,12 @@ dc.override = function(obj, functionName, newFunction) {
 
         return eval(expression);
     };
+};
+
+dc.renderlet = function(_){
+    if(!arguments.length) return dc._renderlet;
+    dc._renderlet = _;
+    return dc;
 };
 dc.dateFormat = d3.time.format("%m/%d/%Y");
 
@@ -1925,6 +1938,7 @@ dc.bubbleChart = function(parent, chartGroup) {
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.coordinateGridChart({})));
 
     var _maxBubbleRelativeSize = 5;
+    var _minRadiusWithLabel = 10;
 
     var _elasticRadius = false;
 
@@ -2012,7 +2026,7 @@ dc.bubbleChart = function(parent, chartGroup) {
     }
 
     var labelFunction = function(d) {
-        return bubbleR(d) > MIN_RADIUS ? _chart.label()(d) : "";
+        return bubbleR(d) > _minRadiusWithLabel? _chart.label()(d) : "";
     };
 
     function renderLabel(bubbleGEnter) {
@@ -2144,6 +2158,12 @@ dc.bubbleChart = function(parent, chartGroup) {
     _chart.radiusValueAccessor = function(_) {
         if (!arguments.length) return _rValueAccessor;
         _rValueAccessor = _;
+        return _chart;
+    };
+
+    _chart.minRadiusWithLabel = function(_){
+        if(!arguments.length) return _minRadiusWithLabel;
+        _minRadiusWithLabel = _;
         return _chart;
     };
 
