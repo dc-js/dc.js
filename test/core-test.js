@@ -193,6 +193,37 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({'render/redraw all call back': {
+    topic:function(){
+        dc.renderlet(function(group){dc.__test_result.called = group?group:true;});
+        return dc;
+    },
+    'renderAll call back should be triggered':function(topic){
+        dc.__test_result = {called: false};
+        dc.renderAll();
+        assert.isTrue(dc.__test_result.called);
+    },
+    'redrawAll call back should be triggered':function(topic){
+        dc.__test_result = {called: false};
+        dc.redrawAll();
+        assert.isTrue(dc.__test_result.called);
+    },
+    'renderAll by group call back should be triggered':function(topic){
+        dc.__test_result = {called: false};
+        dc.renderAll("group");
+        assert.equal("group", dc.__test_result.called);
+    },
+    'redrawAll by group call back should be triggered':function(topic){
+        dc.__test_result = {called: false};
+        dc.redrawAll("group");
+        assert.equal("group", dc.__test_result.called);
+    },
+    teardown:function(){
+        delete dc.__test_result;
+        dc.renderlet(null);
+    }
+}});
+
 suite.export(module);
 
 

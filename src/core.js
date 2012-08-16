@@ -8,7 +8,8 @@ dc = {
         GROUP_INDEX_NAME: "__group_index__",
         DEFAULT_CHART_GROUP: "__default_chart_group__",
         EVENT_DELAY: 40
-    }
+    },
+    _renderlet : null
 };
 
 dc.chartRegistry = function() {
@@ -74,6 +75,9 @@ dc.renderAll = function(group) {
     for (var i = 0; i < charts.length; ++i) {
         charts[i].render();
     }
+
+    if(dc._renderlet != null)
+        dc._renderlet(group);
 };
 
 dc.redrawAll = function(group) {
@@ -81,6 +85,9 @@ dc.redrawAll = function(group) {
     for (var i = 0; i < charts.length; ++i) {
         charts[i].redraw();
     }
+
+    if(dc._renderlet != null)
+        dc._renderlet(group);
 };
 
 dc.transition = function(selections, duration, callback) {
@@ -126,4 +133,10 @@ dc.override = function(obj, functionName, newFunction) {
 
         return eval(expression);
     };
+};
+
+dc.renderlet = function(_){
+    if(!arguments.length) return dc._renderlet;
+    dc._renderlet = _;
+    return dc;
 };
