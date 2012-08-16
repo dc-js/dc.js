@@ -112,30 +112,36 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     function onClick(d) {
         var toFilter = d.key;
-        if(toFilter == _chart.filter())
-            _chart.filter(null);
-        else
-            _chart.filter(toFilter);
-        dc.redrawAll(_chart.chartGroup());
+        if (toFilter == _chart.filter()) {
+            dc.events.trigger(function() {
+                _chart.filter(null);
+                dc.redrawAll(_chart.chartGroup());
+            });
+        } else {
+            dc.events.trigger(function() {
+                _chart.filter(toFilter);
+                dc.redrawAll(_chart.chartGroup());
+            });
+        }
     }
 
     function bubbleX(d) {
         var x = _chart.x()(_chart.keyAccessor()(d)) + _chart.margins().left;
-        if(isNaN(x))
+        if (isNaN(x))
             x = 0;
         return x;
     }
 
     function bubbleY(d) {
         var y = _chart.margins().top + _chart.y()(_chart.valueAccessor()(d));
-        if(isNaN(y))
+        if (isNaN(y))
             y = 0;
         return y;
     }
 
     function bubbleR(d) {
         var r = _chart.r()(_chart.radiusValueAccessor()(d));
-        if(isNaN(r))
+        if (isNaN(r))
             r = 0;
         return r;
     }

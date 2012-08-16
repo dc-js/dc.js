@@ -5,7 +5,8 @@ dc = {
         DESELECTED_CLASS: "deselected",
         SELECTED_CLASS: "selected",
         GROUP_INDEX_NAME: "__group_index__",
-        DEFAULT_CHART_GROUP: "__default_chart_group__"
+        DEFAULT_CHART_GROUP: "__default_chart_group__",
+        EVENT_DELAY: 30
     }
 };
 

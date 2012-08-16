@@ -230,11 +230,17 @@ dc.pieChart = function(parent, chartGroup) {
 
     function onClick(d) {
         var toFilter = _chart.keyAccessor()(d.data);
-        if(toFilter == _chart.filter())
-            _chart.filter(null);
-        else
-            _chart.filter(toFilter);
-        dc.redrawAll(_chart.chartGroup());
+        if (toFilter == _chart.filter()) {
+            dc.events.trigger(function() {
+                _chart.filter(null);
+                dc.redrawAll(_chart.chartGroup());
+            });
+        } else {
+            dc.events.trigger(function() {
+                _chart.filter(toFilter);
+                dc.redrawAll(_chart.chartGroup());
+            });
+        }
     }
 
     return _chart.anchor(parent, chartGroup);

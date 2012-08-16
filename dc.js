@@ -5,7 +5,8 @@ dc = {
         DESELECTED_CLASS: "deselected",
         SELECTED_CLASS: "selected",
         GROUP_INDEX_NAME: "__group_index__",
-        DEFAULT_CHART_GROUP: "__default_chart_group__"
+        DEFAULT_CHART_GROUP: "__default_chart_group__",
+        EVENT_DELAY: 30
     }
 };
 
@@ -710,15 +711,23 @@ dc.coordinateGridChart = function(_chart) {
             // enter
             lines.enter()
                 .append("line")
-                .attr("x1", function(d){return _x(d);})
+                .attr("x1", function(d) {
+                    return _x(d);
+                })
                 .attr("y1", _chart.xAxisY() - _chart.margins().top)
-                .attr("x2", function(d){return _x(d);})
+                .attr("x2", function(d) {
+                    return _x(d);
+                })
                 .attr("y2", 0);
 
             // update
-            lines.attr("x1", function(d){return _x(d);})
+            lines.attr("x1", function(d) {
+                return _x(d);
+            })
                 .attr("y1", _chart.xAxisY() - _chart.margins().top)
-                .attr("x2", function(d){return _x(d);})
+                .attr("x2", function(d) {
+                    return _x(d);
+                })
                 .attr("y2", 0);
 
             // exit
@@ -780,15 +789,23 @@ dc.coordinateGridChart = function(_chart) {
             lines.enter()
                 .append("line")
                 .attr("x1", 1)
-                .attr("y1", function(d){return _y(d);})
+                .attr("y1", function(d) {
+                    return _y(d);
+                })
                 .attr("x2", _chart.xAxisLength())
-                .attr("y2", function(d){return _y(d);});
+                .attr("y2", function(d) {
+                    return _y(d);
+                });
 
             // update
             lines.attr("x1", 1)
-                .attr("y1", function(d){return _y(d);})
+                .attr("y1", function(d) {
+                    return _y(d);
+                })
                 .attr("x2", _chart.xAxisLength())
-                .attr("y2", function(d){return _y(d);});
+                .attr("y2", function(d) {
+                    return _y(d);
+                });
 
             // exit
             lines.exit().remove();
@@ -944,8 +961,11 @@ dc.coordinateGridChart = function(_chart) {
                 .call(_brush.extent(extent));
         }
         extent = _brush.extent();
-        _chart.filter(_brush.empty() ? null : [extent[0], extent[1]]);
-        dc.redrawAll(_chart.chartGroup());
+
+        dc.events.trigger(function() {
+            _chart.filter(_brush.empty() ? null : [extent[0], extent[1]]);
+            dc.redrawAll(_chart.chartGroup());
+        }, dc.constants.EVENT_DELAY);
     }
 
     function brushEnd(p) {
@@ -1477,11 +1497,17 @@ dc.pieChart = function(parent, chartGroup) {
 
     function onClick(d) {
         var toFilter = _chart.keyAccessor()(d.data);
-        if(toFilter == _chart.filter())
-            _chart.filter(null);
-        else
-            _chart.filter(toFilter);
-        dc.redrawAll(_chart.chartGroup());
+        if (toFilter == _chart.filter()) {
+            dc.events.trigger(function() {
+                _chart.filter(null);
+                dc.redrawAll(_chart.chartGroup());
+            });
+        } else {
+            dc.events.trigger(function() {
+                _chart.filter(toFilter);
+                dc.redrawAll(_chart.chartGroup());
+            });
+        }
     }
 
     return _chart.anchor(parent, chartGroup);
@@ -1942,30 +1968,36 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     function onClick(d) {
         var toFilter = d.key;
-        if(toFilter == _chart.filter())
-            _chart.filter(null);
-        else
-            _chart.filter(toFilter);
-        dc.redrawAll(_chart.chartGroup());
+        if (toFilter == _chart.filter()) {
+            dc.events.trigger(function() {
+                _chart.filter(null);
+                dc.redrawAll(_chart.chartGroup());
+            });
+        } else {
+            dc.events.trigger(function() {
+                _chart.filter(toFilter);
+                dc.redrawAll(_chart.chartGroup());
+            });
+        }
     }
 
     function bubbleX(d) {
         var x = _chart.x()(_chart.keyAccessor()(d)) + _chart.margins().left;
-        if(isNaN(x))
+        if (isNaN(x))
             x = 0;
         return x;
     }
 
     function bubbleY(d) {
         var y = _chart.margins().top + _chart.y()(_chart.valueAccessor()(d));
-        if(isNaN(y))
+        if (isNaN(y))
             y = 0;
         return y;
     }
 
     function bubbleR(d) {
         var r = _chart.r()(_chart.radiusValueAccessor()(d));
-        if(isNaN(r))
+        if (isNaN(r))
             r = 0;
         return r;
     }
@@ -2227,7 +2259,9 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
             .classed("deselected", function(d) {
                 return isDeselected(layerIndex, d);
             })
-            .on("click", function(d){return onClick(d, layerIndex);});
+            .on("click", function(d) {
+                return onClick(d, layerIndex);
+            });
 
         dc.transition(paths, _chart.transitionDuration()).attr("fill", function(d) {
             return _colorAccessor(data[geoJson(layerIndex).keyAccessor(d)], maxValue);
@@ -2236,11 +2270,17 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
 
     function onClick(d, layerIndex) {
         var selectedRegion = geoJson(layerIndex).keyAccessor(d);
-        if(selectedRegion == _chart.filter())
-            _chart.filter(null);
-        else
-            _chart.filter(selectedRegion);
-        dc.redrawAll(_chart.chartGroup());
+        if (selectedRegion == _chart.filter()) {
+            dc.events.trigger(function() {
+                _chart.filter(null);
+                dc.redrawAll(_chart.chartGroup());
+            });
+        } else {
+            dc.events.trigger(function() {
+                _chart.filter(selectedRegion);
+                dc.redrawAll(_chart.chartGroup());
+            });
+        }
     }
 
     function renderTitle(regionG, layerIndex, data) {

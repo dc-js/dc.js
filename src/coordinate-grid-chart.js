@@ -94,15 +94,23 @@ dc.coordinateGridChart = function(_chart) {
             // enter
             lines.enter()
                 .append("line")
-                .attr("x1", function(d){return _x(d);})
+                .attr("x1", function(d) {
+                    return _x(d);
+                })
                 .attr("y1", _chart.xAxisY() - _chart.margins().top)
-                .attr("x2", function(d){return _x(d);})
+                .attr("x2", function(d) {
+                    return _x(d);
+                })
                 .attr("y2", 0);
 
             // update
-            lines.attr("x1", function(d){return _x(d);})
+            lines.attr("x1", function(d) {
+                return _x(d);
+            })
                 .attr("y1", _chart.xAxisY() - _chart.margins().top)
-                .attr("x2", function(d){return _x(d);})
+                .attr("x2", function(d) {
+                    return _x(d);
+                })
                 .attr("y2", 0);
 
             // exit
@@ -164,15 +172,23 @@ dc.coordinateGridChart = function(_chart) {
             lines.enter()
                 .append("line")
                 .attr("x1", 1)
-                .attr("y1", function(d){return _y(d);})
+                .attr("y1", function(d) {
+                    return _y(d);
+                })
                 .attr("x2", _chart.xAxisLength())
-                .attr("y2", function(d){return _y(d);});
+                .attr("y2", function(d) {
+                    return _y(d);
+                });
 
             // update
             lines.attr("x1", 1)
-                .attr("y1", function(d){return _y(d);})
+                .attr("y1", function(d) {
+                    return _y(d);
+                })
                 .attr("x2", _chart.xAxisLength())
-                .attr("y2", function(d){return _y(d);});
+                .attr("y2", function(d) {
+                    return _y(d);
+                });
 
             // exit
             lines.exit().remove();
@@ -328,8 +344,11 @@ dc.coordinateGridChart = function(_chart) {
                 .call(_brush.extent(extent));
         }
         extent = _brush.extent();
-        _chart.filter(_brush.empty() ? null : [extent[0], extent[1]]);
-        dc.redrawAll(_chart.chartGroup());
+
+        dc.events.trigger(function() {
+            _chart.filter(_brush.empty() ? null : [extent[0], extent[1]]);
+            dc.redrawAll(_chart.chartGroup());
+        }, dc.constants.EVENT_DELAY);
     }
 
     function brushEnd(p) {
