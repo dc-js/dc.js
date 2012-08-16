@@ -295,18 +295,18 @@ suite.addBatch({
             assert.equal(chart.selectAll("g.horizontal")[0].length, 1);
         },
         'horizontal grid lines should be generated': function(chart){
-            assert.equal(jQuery("#chart-grid-line g.horizontal line").size(), 6);
+            assert.equal(jQuery("#chart-grid-line g.horizontal line").size(), 7);
         },
         'horizontal grid line x,y should be generated correctly': function(chart){
             assert.equal(jQuery("#chart-grid-line g.horizontal line")[0].getAttribute("x1"), "1");
-            assert.equal(jQuery("#chart-grid-line g.horizontal line")[0].getAttribute("y1"), "133");
+            assert.equal(jQuery("#chart-grid-line g.horizontal line")[0].getAttribute("y1"), "160");
             assert.equal(jQuery("#chart-grid-line g.horizontal line")[0].getAttribute("x2"), "1020");
-            assert.equal(jQuery("#chart-grid-line g.horizontal line")[0].getAttribute("y2"), "133");
+            assert.equal(jQuery("#chart-grid-line g.horizontal line")[0].getAttribute("y2"), "160");
 
             assert.equal(jQuery("#chart-grid-line g.horizontal line")[3].getAttribute("x1"), "1");
-            assert.equal(jQuery("#chart-grid-line g.horizontal line")[3].getAttribute("y1"), "53");
+            assert.equal(jQuery("#chart-grid-line g.horizontal line")[3].getAttribute("y1"), "80");
             assert.equal(jQuery("#chart-grid-line g.horizontal line")[3].getAttribute("x2"), "1020");
-            assert.equal(jQuery("#chart-grid-line g.horizontal line")[3].getAttribute("y2"), "53");
+            assert.equal(jQuery("#chart-grid-line g.horizontal line")[3].getAttribute("y2"), "80");
         },
         teardown: function(topic) {
             resetAllFilters();
@@ -328,18 +328,18 @@ suite.addBatch({
             assert.equal(chart.selectAll("g.horizontal")[0].length, 1);
         },
         'horizontal grid lines should be generated': function(chart){
-            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line").size(), 2);
+            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line").size(), 3);
         },
         'horizontal grid line x,y should be generated correctly': function(chart){
             assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[0].getAttribute("x1"), "1");
-            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[0].getAttribute("y1"), "107");
+            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[0].getAttribute("y1"), "160");
             assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[0].getAttribute("x2"), "1020");
-            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[0].getAttribute("y2"), "107");
+            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[0].getAttribute("y2"), "160");
 
             assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[1].getAttribute("x1"), "1");
-            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[1].getAttribute("y1"), "53");
+            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[1].getAttribute("y1"), "107");
             assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[1].getAttribute("x2"), "1020");
-            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[1].getAttribute("y2"), "53");
+            assert.equal(jQuery("#chart-grid-line-custom-ticks g.horizontal line")[1].getAttribute("y2"), "107");
         },
         teardown: function(topic) {
             resetAllFilters();

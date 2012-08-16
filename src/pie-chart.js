@@ -229,7 +229,6 @@ dc.pieChart = function(parent, chartGroup) {
     }
 
     function onClick(d) {
-        console.log("Clicked: " + d);
         var toFilter = _chart.keyAccessor()(d.data);
         if(toFilter == _chart.filter())
             _chart.filter(null);

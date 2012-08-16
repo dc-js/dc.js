@@ -30,7 +30,6 @@ dc.coordinateGridChart = function(_chart) {
 
     _chart.generateG = function() {
         _g = _chart.svg().append("g");
-//            .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")");
         return _g;
     };
 
@@ -59,40 +58,55 @@ dc.coordinateGridChart = function(_chart) {
     };
 
     _chart.renderXAxis = function(g) {
-        g.select("g.x").remove();
-
         if (_chart.elasticX()) {
             _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
         }
 
+        var axisXG = g.selectAll("g.x");
+
+        if (axisXG.empty())
+            axisXG = g.append("g")
+                .attr("class", "axis x")
+                .attr("transform", "translate(" + _chart.margins().left + "," + _chart.xAxisY() + ")");
+
         _x.range([0, _chart.xAxisLength()]);
         _xAxis = _xAxis.scale(_chart.x()).orient("bottom");
-        g.append("g")
-            .attr("class", "axis x")
-            .attr("transform", "translate(" + _chart.margins().left + "," + _chart.xAxisY() + ")")
-            .call(_xAxis);
+
+        axisXG.call(_xAxis);
 
         renderVerticalGridLines(g);
     };
 
     function renderVerticalGridLines(g) {
         if (_renderVerticalGridLine) {
-            g.selectAll("g." + VERTICAL_CLASS).remove();
+            var gridLineG = g.selectAll("g." + VERTICAL_CLASS);
 
-            var ticks = _xAxis.tickValues()?_xAxis.tickValues():_x.ticks(_xAxis.ticks()[0]);
+            if (gridLineG.empty())
+                gridLineG = g.append("g")
+                    .attr("class", GRID_LINE_CLASS + " " + VERTICAL_CLASS)
+                    .attr("transform", "translate(" + _chart.yAxisX() + "," + _chart.margins().top + ")");
 
-            var gridLineG = g.append("g")
-                .attr("class", GRID_LINE_CLASS + " " + VERTICAL_CLASS)
-                .attr("transform", "translate(" + _chart.yAxisX() + "," + _chart.margins().top + ")");
+            var ticks = _xAxis.tickValues() ? _xAxis.tickValues() : _x.ticks(_xAxis.ticks()[0]);
 
-            for (var i = 0; i < ticks.length; ++i) {
-                var tick = ticks[i];
-                gridLineG.append("line")
-                    .attr("x1", _x(tick))
-                    .attr("y1", _chart.xAxisY() - _chart.margins().top)
-                    .attr("x2", _x(tick))
-                    .attr("y2", 0);
-            }
+            var lines = gridLineG.selectAll("line")
+                .data(ticks);
+
+            // enter
+            lines.enter()
+                .append("line")
+                .attr("x1", function(d){return _x(d);})
+                .attr("y1", _chart.xAxisY() - _chart.margins().top)
+                .attr("x2", function(d){return _x(d);})
+                .attr("y2", 0);
+
+            // update
+            lines.attr("x1", function(d){return _x(d);})
+                .attr("y1", _chart.xAxisY() - _chart.margins().top)
+                .attr("x2", function(d){return _x(d);})
+                .attr("y2", 0);
+
+            // exit
+            lines.exit().remove();
         }
     }
 
@@ -111,7 +125,7 @@ dc.coordinateGridChart = function(_chart) {
     };
 
     _chart.renderYAxis = function(g) {
-        g.select("g.y").remove();
+        var axisYG = g.selectAll("g.y");
 
         if (_y == null || _chart.elasticY()) {
             _y = d3.scale.linear();
@@ -121,10 +135,12 @@ dc.coordinateGridChart = function(_chart) {
         _y.range([_chart.yAxisHeight(), 0]);
         _yAxis = _yAxis.scale(_y).orient("left").ticks(DEFAULT_Y_AXIS_TICKS);
 
-        g.append("g")
-            .attr("class", "axis y")
-            .attr("transform", "translate(" + _chart.yAxisX() + "," + _chart.margins().top + ")")
-            .call(_yAxis);
+        if (axisYG.empty())
+            axisYG = g.append("g")
+                .attr("class", "axis y")
+                .attr("transform", "translate(" + _chart.yAxisX() + "," + _chart.margins().top + ")");
+
+        axisYG.call(_yAxis);
 
 
         renderHorizontalGridLines(g);
@@ -132,23 +148,34 @@ dc.coordinateGridChart = function(_chart) {
 
     function renderHorizontalGridLines(g) {
         if (_renderHorizontalGridLine) {
-            g.selectAll("g." + HORIZONTAL_CLASS).remove();
+            var gridLineG = g.selectAll("g." + HORIZONTAL_CLASS);
 
-            var ticks = _yAxis.tickValues()?_yAxis.tickValues():_y.ticks(_yAxis.ticks()[0]);
+            var ticks = _yAxis.tickValues() ? _yAxis.tickValues() : _y.ticks(_yAxis.ticks()[0]);
 
-            var gridLineG = g.append("g")
-                .attr("class", GRID_LINE_CLASS + " " + HORIZONTAL_CLASS)
-                .attr("transform", "translate(" + _chart.yAxisX() + "," + _chart.margins().top + ")");
+            if (gridLineG.empty())
+                gridLineG = g.append("g")
+                    .attr("class", GRID_LINE_CLASS + " " + HORIZONTAL_CLASS)
+                    .attr("transform", "translate(" + _chart.yAxisX() + "," + _chart.margins().top + ")");
 
-            for (var i = 0; i < ticks.length; ++i) {
-                if (i == 0) continue;
-                var tick = ticks[i];
-                gridLineG.append("line")
-                    .attr("x1", 1)
-                    .attr("y1", _y(tick))
-                    .attr("x2", _chart.xAxisLength())
-                    .attr("y2", _y(tick));
-            }
+            var lines = gridLineG.selectAll("line")
+                .data(ticks);
+
+            // enter
+            lines.enter()
+                .append("line")
+                .attr("x1", 1)
+                .attr("y1", function(d){return _y(d);})
+                .attr("x2", _chart.xAxisLength())
+                .attr("y2", function(d){return _y(d);});
+
+            // update
+            lines.attr("x1", 1)
+                .attr("y1", function(d){return _y(d);})
+                .attr("x2", _chart.xAxisLength())
+                .attr("y2", function(d){return _y(d);});
+
+            // exit
+            lines.exit().remove();
         }
     }
 
@@ -158,8 +185,8 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
-    _chart.renderVerticalGridLines = function(_){
-        if(!arguments.length) return _renderVerticalGridLine;
+    _chart.renderVerticalGridLines = function(_) {
+        if (!arguments.length) return _renderVerticalGridLine;
         _renderVerticalGridLine = _;
         return _chart;
     };

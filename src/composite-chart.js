@@ -7,6 +7,8 @@ dc.compositeChart = function(parent, chartGroup) {
     _chart.transitionDuration(500);
 
     dc.override(_chart, "generateG", function(_super) {
+        var g = _super();
+
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
             if (child.dimension() == null) child.dimension(_chart.dimension());
@@ -22,7 +24,7 @@ dc.compositeChart = function(parent, chartGroup) {
             child.g().attr("class", SUB_CHART_CLASS);
         }
 
-        return _super();
+        return g;
     });
 
     _chart.plotData = function() {
