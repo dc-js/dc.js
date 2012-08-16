@@ -344,7 +344,7 @@ d3.csv("ndx.csv", function(data) {
                     .group(fluctuationGroup)
                   //  .elasticY(true)
                     .centerBar(true)
-                    .barGap(1)
+                    .gap(1)
                     .round(dc.round.floor)
                     .x(d3.scale.linear().domain([-25, 25]))
                     .renderHorizontalGridLines(true)
