@@ -1,5 +1,5 @@
 dc = {
-    version: "0.8.1",
+    version: "0.9.0",
     constants : {
         STACK_CLASS: "stack",
         DESELECTED_CLASS: "deselected",
