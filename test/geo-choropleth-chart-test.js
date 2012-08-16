@@ -118,10 +118,10 @@ suite.addBatch({
             return chart;
         },
         'correct color should be set [California]': function(chart) {
-            assert.equal(chart.selectAll("g.layer0 g.state path")[0][4].getAttribute("class"), "deselected");
+            assert.equal(chart.selectAll("g.layer0 g.state")[0][4].getAttribute("class"), "state California deselected");
         },
         'correct color should be set [Colorado]': function(chart) {
-            assert.equal(chart.selectAll("g.layer0 g.state path")[0][5].getAttribute("class"), "selected");
+            assert.equal(chart.selectAll("g.layer0 g.state")[0][5].getAttribute("class"), "state Colorado selected");
         },
         teardown: function(topic) {
             resetAllFilters();

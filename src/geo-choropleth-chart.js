@@ -60,8 +60,17 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
     function renderRegionG(layerIndex) {
         var regionG = _chart.svg()
             .selectAll(layerSelector(layerIndex))
+            .classed("selected", function(d) {
+                return isSelected(layerIndex, d);
+            })
+            .classed("deselected", function(d) {
+                return isDeselected(layerIndex, d);
+            })
             .attr("class", function(d) {
-                return geoJson(layerIndex).name + " " + geoJson(layerIndex).keyAccessor(d);
+                var baseClasses = geoJson(layerIndex).name + " " + geoJson(layerIndex).keyAccessor(d);
+                if(isSelected(layerIndex, d)) baseClasses += " selected";
+                if(isDeselected(layerIndex, d)) baseClasses += " deselected";
+                return baseClasses;
             });
         return regionG;
     }
@@ -94,12 +103,6 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
                 if (currentFill)
                     return currentFill;
                 return "none";
-            })
-            .classed("selected", function(d) {
-                return isSelected(layerIndex, d);
-            })
-            .classed("deselected", function(d) {
-                return isDeselected(layerIndex, d);
             })
             .on("click", function(d) {
                 return onClick(d, layerIndex);
