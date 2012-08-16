@@ -92,6 +92,12 @@ suite.addBatch({
                 assert.isTrue(d3.select(this).attr("d") != "");
             });
         },
+        'slice path fill should be set correctly': function(pieChart) {
+            assert.equal(d3.select(pieChart.selectAll("g.pie-slice path")[0][0]).attr("fill"), "#3182bd");
+            assert.equal(d3.select(pieChart.selectAll("g.pie-slice path")[0][1]).attr("fill"), "#6baed6");
+            assert.equal(d3.select(pieChart.selectAll("g.pie-slice path")[0][2]).attr("fill"), "#9ecae1");
+            assert.equal(d3.select(pieChart.selectAll("g.pie-slice path")[0][3]).attr("fill"), "#c6dbef");
+        },
         'slice label should be created': function(pieChart) {
             assert.equal(pieChart.selectAll("svg text.pie-slice").data().length, 5);
         },

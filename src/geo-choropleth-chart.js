@@ -1,7 +1,7 @@
 dc.geoChoroplethChart = function(parent, chartGroup) {
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
 
-    _chart.colorAccessor(function(d){return d;});
+    _chart.colorAccessor(function(d, i){return d;});
 
     var _geoPath = d3.geo.path();
 
@@ -105,8 +105,8 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
                 return onClick(d, layerIndex);
             });
 
-        dc.transition(paths, _chart.transitionDuration()).attr("fill", function(d) {
-            return _chart.getColor(data[geoJson(layerIndex).keyAccessor(d)], maxValue);
+        dc.transition(paths, _chart.transitionDuration()).attr("fill", function(d, i) {
+            return _chart.getColor(data[geoJson(layerIndex).keyAccessor(d)], i);
         });
     }
 

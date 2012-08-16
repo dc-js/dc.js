@@ -1043,17 +1043,23 @@ dc.coordinateGridChart = function(_chart) {
 dc.colorChart = function(_chart) {
     var _colors = d3.scale.category20c();
 
-    var _colorCalculator = function(value, maxValue) {
+    var _colorDomain = [0, _colors.range().length];
+
+    var _colorCalculator = function(value) {
+        var minValue = _colorDomain[0];
+        var maxValue = _colorDomain[1];
+
         if (isNaN(value)) value = 0;
         if(maxValue == null) return _colors(value);
 
         var colorsLength = _chart.colors().range().length;
-        var denominator = maxValue / colorsLength;
+        var denominator = (maxValue - minValue) / colorsLength;
         var colorValue = Math.min(colorsLength - 1, Math.round(value / denominator));
+        console.log("value: " + value + ", min:" + minValue + ", max: " + maxValue +", colorValue: " + colorValue);
         return _chart.colors()(colorValue);
     };
 
-    var _colorAccessor = function(d){return d.value;};
+    var _colorAccessor = function(d, i){return i;};
 
     _chart.colors = function(_) {
         if (!arguments.length) return _colors;
@@ -1069,6 +1075,8 @@ dc.colorChart = function(_chart) {
             _colors = _;
         }
 
+        _colorDomain = [0, _colors.range().length]
+
         return _chart;
     };
 
@@ -1078,13 +1086,19 @@ dc.colorChart = function(_chart) {
         return _chart;
     };
 
-    _chart.getColor = function(d, max){
-        return _colorCalculator(_colorAccessor(d), max);
+    _chart.getColor = function(d, i){
+        return _colorCalculator(_colorAccessor(d, i));
     };
 
     _chart.colorAccessor = function(_){
         if(!arguments.length) return _colorAccessor;
         _colorAccessor = _;
+        return _chart;
+    };
+
+    _chart.colorDomain = function(_){
+        if(!arguments.length) return _colorDomain;
+        _colorDomain = _;
         return _chart;
     };
 
@@ -1312,8 +1326,6 @@ dc.pieChart = function(parent, chartGroup) {
 
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
 
-    _chart.colorAccessor(function(d){return d;});
-
     _chart.label(function(d) {
         return _chart.keyAccessor()(d.data);
     });
@@ -1383,7 +1395,7 @@ dc.pieChart = function(parent, chartGroup) {
 
         _slicePaths = _slices.append("path")
             .attr("fill", function(d, i) {
-                return _chart.getColor(i);
+                return _chart.getColor(d, i);
             })
             .attr("d", arcs);
 
@@ -1891,8 +1903,6 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.coordinateGridChart({})));
 
-    _chart.colorAccessor(function(d){return d;});
-
     _chart.renderLabel(true);
     _chart.renderTitle(false);
 
@@ -1932,7 +1942,7 @@ dc.bubbleChart = function(parent, chartGroup) {
             })
             .on("click", onClick)
             .attr("fill", function(d, i) {
-                return _chart.getColor(i);
+                return _chart.getColor(d, i);
             })
             .attr("r", 0);
         dc.transition(bubbleG, _chart.transitionDuration())
@@ -2185,7 +2195,7 @@ dc.compositeChart = function(parent, chartGroup) {
 dc.geoChoroplethChart = function(parent, chartGroup) {
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
 
-    _chart.colorAccessor(function(d){return d;});
+    _chart.colorAccessor(function(d, i){return d;});
 
     var _geoPath = d3.geo.path();
 
@@ -2289,8 +2299,8 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
                 return onClick(d, layerIndex);
             });
 
-        dc.transition(paths, _chart.transitionDuration()).attr("fill", function(d) {
-            return _chart.getColor(data[geoJson(layerIndex).keyAccessor(d)], maxValue);
+        dc.transition(paths, _chart.transitionDuration()).attr("fill", function(d, i) {
+            return _chart.getColor(data[geoJson(layerIndex).keyAccessor(d)], i);
         });
     }
 

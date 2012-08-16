@@ -1,17 +1,23 @@
 dc.colorChart = function(_chart) {
     var _colors = d3.scale.category20c();
 
-    var _colorCalculator = function(value, maxValue) {
+    var _colorDomain = [0, _colors.range().length];
+
+    var _colorCalculator = function(value) {
+        var minValue = _colorDomain[0];
+        var maxValue = _colorDomain[1];
+
         if (isNaN(value)) value = 0;
         if(maxValue == null) return _colors(value);
 
         var colorsLength = _chart.colors().range().length;
-        var denominator = maxValue / colorsLength;
+        var denominator = (maxValue - minValue) / colorsLength;
         var colorValue = Math.min(colorsLength - 1, Math.round(value / denominator));
+//        console.log("value: " + value + ", min:" + minValue + ", max: " + maxValue +", colorValue: " + colorValue);
         return _chart.colors()(colorValue);
     };
 
-    var _colorAccessor = function(d){return d.value;};
+    var _colorAccessor = function(d, i){return i;};
 
     _chart.colors = function(_) {
         if (!arguments.length) return _colors;
@@ -27,6 +33,8 @@ dc.colorChart = function(_chart) {
             _colors = _;
         }
 
+        _colorDomain = [0, _colors.range().length]
+
         return _chart;
     };
 
@@ -36,13 +44,19 @@ dc.colorChart = function(_chart) {
         return _chart;
     };
 
-    _chart.getColor = function(d, max){
-        return _colorCalculator(_colorAccessor(d), max);
+    _chart.getColor = function(d, i){
+        return _colorCalculator(_colorAccessor(d, i));
     };
 
     _chart.colorAccessor = function(_){
         if(!arguments.length) return _colorAccessor;
         _colorAccessor = _;
+        return _chart;
+    };
+
+    _chart.colorDomain = function(_){
+        if(!arguments.length) return _colorDomain;
+        _colorDomain = _;
         return _chart;
     };
 

@@ -17,8 +17,6 @@ dc.pieChart = function(parent, chartGroup) {
 
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
 
-    _chart.colorAccessor(function(d){return d;});
-
     _chart.label(function(d) {
         return _chart.keyAccessor()(d.data);
     });
@@ -88,7 +86,7 @@ dc.pieChart = function(parent, chartGroup) {
 
         _slicePaths = _slices.append("path")
             .attr("fill", function(d, i) {
-                return _chart.getColor(i);
+                return _chart.getColor(d, i);
             })
             .attr("d", arcs);
 

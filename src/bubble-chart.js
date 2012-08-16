@@ -5,8 +5,6 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.coordinateGridChart({})));
 
-    _chart.colorAccessor(function(d){return d;});
-
     _chart.renderLabel(true);
     _chart.renderTitle(false);
 
@@ -46,7 +44,7 @@ dc.bubbleChart = function(parent, chartGroup) {
             })
             .on("click", onClick)
             .attr("fill", function(d, i) {
-                return _chart.getColor(i);
+                return _chart.getColor(d, i);
             })
             .attr("r", 0);
         dc.transition(bubbleG, _chart.transitionDuration())
