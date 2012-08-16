@@ -163,6 +163,7 @@ d3.csv("ndx.csv", function(data) {
 
             data.forEach(function(e) {
                 e.dd = dateFormat.parse(e.date);
+                e.month = d3.time.month(e.dd); // pre-calculate month for better performance
             });
 
             // feed it through crossfilter
@@ -207,7 +208,7 @@ d3.csv("ndx.csv", function(data) {
 
             // monthly index avg fluctuation in percentage
             var moveMonths = ndx.dimension(function(d) {
-                return d3.time.month(d.dd);
+                return d.month;
             });
             var monthlyMoveGroup = moveMonths.group().reduceSum(function(d) {
                 return Math.abs(+d.close - +d.open);
