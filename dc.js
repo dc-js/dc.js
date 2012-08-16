@@ -1,5 +1,5 @@
 dc = {
-    version: "0.8.0",
+    version: "0.8.1",
     constants : {
         STACK_CLASS: "stack",
         DESELECTED_CLASS: "deselected",
@@ -1574,6 +1574,7 @@ dc.barChart = function(parent, chartGroup) {
 
     var _chart = dc.stackableChart(dc.coordinateGridChart({}));
 
+    var _numberOfBars;
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
     var _centerBar = false;
 
@@ -1626,8 +1627,14 @@ dc.barChart = function(parent, chartGroup) {
             .attr("height", 0);
     }
 
+    function getNumberOfBars() {
+        if(_numberOfBars == null)
+            _numberOfBars = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1]).length;
+        return _numberOfBars;
+    }
+
     function barWidth(d) {
-        var numberOfBars = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1]).length;
+        var numberOfBars = getNumberOfBars();
         var w = Math.floor(_chart.xAxisLength() / numberOfBars);
         w -= _gap;
         if (isNaN(w) || w < MIN_BAR_WIDTH)
