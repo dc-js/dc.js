@@ -67,13 +67,17 @@
 </p>
 
 <p>
-    Try it out; select a slice or drag your mouse over a chart.
+    Try it out or checkout other examples.
+
+    <ul>
+        <li><a href="vc/index.html">US Venture Capital Landscape 2011 (choropleth chart, bubble chart)</a></li>
+    </ul>
 </p>
 
 <h2>Nasdaq 100 Index 1985/11/01-2012/06/29</h2>
 
 <div id="yearly-bubble-chart" class="chart">
-    <span class="title">Yearly Performance (x: index gain, y: index gain(%), radius: fluctuation/index ratio)</span>
+    <span class="title">Yearly Performance (x: index gain, y: index gain(%), radius: fluctuation/index ratio, color: gain/loss)</span>
     <a class="reset" href="javascript:yearlyBubbleChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
@@ -280,7 +284,10 @@ d3.csv("ndx.csv", function(data) {
                     .margins({top: 10, right: 50, bottom: 30, left: 40})
                     .dimension(yearlyDimension)
                     .group(yearlyPerformanceGroup)
-                    .colors(d3.scale.category20c())
+                    .transitionDuration(1500)
+                    .colors(["#a60000","#ff0000", "#ff4040","#ff7373","#67e667","#39e639","#00cc00"])
+                    .colorDomain([-12000, 12000])
+                    .colorAccessor(function(d){return d.value.absGain;})
                     .keyAccessor(function(p) {
                         return p.value.absGain;
                     })
@@ -290,6 +297,7 @@ d3.csv("ndx.csv", function(data) {
                     .radiusValueAccessor(function(p) {
                         return p.value.fluctuationPercentage;
                     })
+                    .maxBubbleRelativeSize(5)
                     .x(d3.scale.linear().domain([-2500, 2500]))
                     .y(d3.scale.linear().domain([-100, 100]))
                     .r(d3.scale.linear().domain([0, 4000]))
@@ -483,6 +491,10 @@ d3.csv("ndx.csv", function(data) {
             .transitionDuration(500) // (optional) define chart transition duration, :default = 350
             // (optional) define color array for slices
             .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+            // (optional) define color domain to match your data domain if you want to bind data or color
+            .colorDomain([-1750, 1644])
+            // (optional) define color value accessor
+            .colorAccessor(function(d, i){return d.value;})
             .radius(90) // define pie radius
             // (optional) if inner radius is used then a donut chart will
             // be generated instead of pie chart
@@ -532,8 +544,8 @@ d3.csv("ndx.csv", function(data) {
             .xUnits(d3.time.months)
             // (optional) whether bar should be center to its x value, :default=false
             .centerBar(true)
-            // (optional) set gap between bars manually in px, :default=5
-            .barGap(2)
+            // (optional) set gap between bars manually in px, :default=2
+            .barGap(1)
             // (optional) render horizontal grid lines, :default=false
             .renderHorizontalGridLines(true)
             // (optional) render vertical grid lines, :default=false
@@ -650,7 +662,11 @@ d3.csv("ndx.csv", function(data) {
              * to generate x, y, and radius for each key (bubble) in the group */
             .group(yearlyPerformanceGroup)
             // (optional) define color function or array for bubbles
-            .colors(d3.scale.category20c())
+            .colors(["red", "#ccc","steelblue","green"])
+            // (optional) define color domain to match your data domain if you want to bind data or color
+            .colorDomain([-1750, 1644])
+            // (optional) define color value accessor
+            .colorAccessor(function(d, i){return d.value.absGain;})
             // closure used to retrieve x value from multi-value group
             .keyAccessor(function(p) {return p.value.absGain;})
             // closure used to retrieve y value from multi-value group
@@ -690,6 +706,40 @@ d3.csv("ndx.csv", function(data) {
             // (optional) render vertical grid lines, :default=false
             .renderVerticalGridLines(true);
     </pre>
+
+<h3>Geo Choropleth Chart</h3>
+
+<pre class="brush:js">
+    /* Create a choropleth chart and use the given css selector as anchor. You can also specify
+     * an optional chart group for this chart to be scoped within. When a chart belongs
+     * to a specific group then any interaction with such chart will only trigger redraw
+     * on other charts within the same chart group. */
+    dc.geoChoroplethChart("#us-chart")
+        .width(990) // (optional) define chart width, :default = 200
+        .height(500) // (optional) define chart height, :default = 200
+        .transitionDuration(1000) // (optional) define chart transition duration, :default = 1000
+        .dimension(states) // set crossfilter dimension, dimension key should match the name retrieved in geo json layer
+        .group(stateRaisedSum) // set crossfilter group
+        // (optional) define color function or array for bubbles
+        .colors(["#ccc", "#E2F2FF","#C4E4FF","#9ED2FF","#81C5FF","#6BBAFF","#51AEFF","#36A2FF","#1E96FF","#0089FF","#0061B5"])
+        // (optional) define color domain to match your data domain if you want to bind data or color
+        .colorDomain([-5, 200])
+        // (optional) define color value accessor
+        .colorAccessor(function(d, i){return d.value;})
+        /* Project the given geojson. You can call this function mutliple times with different geojson feed to generate
+         * multiple layers of geo paths.
+         * 1st param - geo json data
+         * 2nd param - name of the layer which will be used to generate css class
+         * 3rd param - (optional) a function used to generate key for geo path, it should match the dimension key
+         * in order for the coloring to work properly */
+        .overlayGeoJson(statesJson.features, "state", function(d) {
+            return d.properties.name;
+        })
+        // (optional) closure to generate title for path, :default = d.key + ": " + d.value
+        .title(function(d) {
+            return "State: " + d.key + "\nTotal Amount Raised: " + numberFormat(d.value ? d.value : 0) + "M";
+        });
+</pre>
 
 <h3>Data Table</h3>
 
