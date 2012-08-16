@@ -124,7 +124,7 @@ dc.pieChart = function(parent, chartGroup) {
 
     _chart.highlightFilter = function() {
         if (_chart.hasFilter()) {
-            _chart.selectAll("g." + _sliceCssClass).select("path").each(function(d) {
+            _chart.selectAll("g." + _sliceCssClass).each(function(d) {
                 if (_chart.isSelectedSlice(d)) {
                     _chart.highlightSelected(this);
                 } else {
@@ -132,7 +132,7 @@ dc.pieChart = function(parent, chartGroup) {
                 }
             });
         } else {
-            _chart.selectAll("g." + _sliceCssClass).selectAll("path").each(function(d) {
+            _chart.selectAll("g." + _sliceCssClass).each(function(d) {
                 _chart.resetHighlight(this);
             });
         }

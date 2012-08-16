@@ -184,11 +184,11 @@ suite.addBatch({
             'should highlight selected slice': function(pieChart) {
                 pieChart.filter("66");
                 pieChart.render();
-                pieChart.selectAll(".pie-slice path").each(function(d) {
+                pieChart.selectAll("g.pie-slice").each(function(d) {
                     if (d.data.key == "66")
-                        assert.equal(d3.select(this).attr("class"), "selected");
+                        assert.isTrue(d3.select(this).attr("class").indexOf("selected") > 0);
                     else
-                        assert.equal(d3.select(this).attr("class"), "deselected");
+                        assert.isTrue(d3.select(this).attr("class").indexOf("deselected") > 0);
                 });
                 pieChart.filterAll();
             },
