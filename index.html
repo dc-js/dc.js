@@ -73,7 +73,7 @@
 <h2>Nasdaq 100 Index 1985/11/01-2012/06/29</h2>
 
 <div id="yearly-bubble-chart" class="chart">
-    <span class="title">Yearly Performance (x: index gain, y: index gain(%), radius: fluctuation/index ratio)</span>
+    <span class="title">Yearly Performance (x: index gain, y: index gain(%), radius: fluctuation/index ratio, color: gain/loss)</span>
     <a class="reset" href="javascript:yearlyBubbleChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
@@ -484,6 +484,10 @@ d3.csv("ndx.csv", function(data) {
             .transitionDuration(500) // (optional) define chart transition duration, :default = 350
             // (optional) define color array for slices
             .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+            // (optional) define color domain to match your data domain if you want to bind data or color
+            .colorDomain([-1750, 1644])
+            // (optional) define color value accessor
+            .colorAccessor(function(d, i){return d.value;})
             .radius(90) // define pie radius
             // (optional) if inner radius is used then a donut chart will
             // be generated instead of pie chart
@@ -651,7 +655,11 @@ d3.csv("ndx.csv", function(data) {
              * to generate x, y, and radius for each key (bubble) in the group */
             .group(yearlyPerformanceGroup)
             // (optional) define color function or array for bubbles
-            .colors(d3.scale.category20c())
+            .colors(["red", "#ccc","steelblue","green"])
+            // (optional) define color domain to match your data domain if you want to bind data or color
+            .colorDomain([-1750, 1644])
+            // (optional) define color value accessor
+            .colorAccessor(function(d, i){return d.value.absGain;})
             // closure used to retrieve x value from multi-value group
             .keyAccessor(function(p) {return p.value.absGain;})
             // closure used to retrieve y value from multi-value group
