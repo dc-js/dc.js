@@ -15,6 +15,12 @@ suite.addBatch({
             var triggered = false;
             engine.trigger(function(){triggered = true;});
             assert.isTrue(triggered);
+        },
+
+        'event can be dispatched with delay': function (engine) {
+            var triggered = false;
+            engine.trigger(function(){triggered = true;}, 100);
+            assert.isFalse(triggered);
         }
     }
 });
