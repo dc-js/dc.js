@@ -16,16 +16,14 @@ dc.chartRegistry = function() {
     var _chartMap = {};
 
     this.has = function(chart) {
-        for(e in _chartMap){
-            if(_chartMap[e].indexOf(chart) >= 0)
+        for (e in _chartMap) {
+            if (_chartMap[e].indexOf(chart) >= 0)
                 return true;
         }
         return false;
     };
 
     function initializeChartGroup(group) {
-        group = group;
-
         if (!group)
             group = dc.constants.DEFAULT_CHART_GROUP;
 
@@ -1089,7 +1087,7 @@ dc.colorChart = function(_chart) {
             _colors = _;
         }
 
-        _colorDomain = [0, _colors.range().length]
+        _colorDomain = [0, _colors.range().length];
 
         return _chart;
     };
@@ -1153,17 +1151,17 @@ dc.singleSelectionChart = function(_chart) {
     _chart.highlightSelected = function(e) {
         d3.select(e).classed(dc.constants.SELECTED_CLASS, true);
         d3.select(e).classed(dc.constants.DESELECTED_CLASS, false);
-    }
+    };
 
     _chart.fadeDeselected = function(e) {
         d3.select(e).classed(dc.constants.SELECTED_CLASS, false);
         d3.select(e).classed(dc.constants.DESELECTED_CLASS, true);
-    }
+    };
 
     _chart.resetHighlight = function(e) {
         d3.select(e).classed(dc.constants.SELECTED_CLASS, false);
         d3.select(e).classed(dc.constants.DESELECTED_CLASS, false);
-    }
+    };
 
     return _chart;
 };
@@ -2094,8 +2092,9 @@ dc.bubbleChart = function(parent, chartGroup) {
     }
 
     function bubbleR(d) {
-        var r = _chart.r()(_chart.radiusValueAccessor()(d));
-        if (isNaN(r))
+        var value = _chart.radiusValueAccessor()(d);
+        var r = _chart.r()(value);
+        if (isNaN(r) || value <= 0)
             r = 0;
         return r;
     }

@@ -33,17 +33,17 @@ dc.singleSelectionChart = function(_chart) {
     _chart.highlightSelected = function(e) {
         d3.select(e).classed(dc.constants.SELECTED_CLASS, true);
         d3.select(e).classed(dc.constants.DESELECTED_CLASS, false);
-    }
+    };
 
     _chart.fadeDeselected = function(e) {
         d3.select(e).classed(dc.constants.SELECTED_CLASS, false);
         d3.select(e).classed(dc.constants.DESELECTED_CLASS, true);
-    }
+    };
 
     _chart.resetHighlight = function(e) {
         d3.select(e).classed(dc.constants.SELECTED_CLASS, false);
         d3.select(e).classed(dc.constants.DESELECTED_CLASS, false);
-    }
+    };
 
     return _chart;
 };

@@ -180,8 +180,9 @@ dc.bubbleChart = function(parent, chartGroup) {
     }
 
     function bubbleR(d) {
-        var r = _chart.r()(_chart.radiusValueAccessor()(d));
-        if (isNaN(r))
+        var value = _chart.radiusValueAccessor()(d);
+        var r = _chart.r()(value);
+        if (isNaN(r) || value <= 0)
             r = 0;
         return r;
     }

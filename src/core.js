@@ -16,16 +16,14 @@ dc.chartRegistry = function() {
     var _chartMap = {};
 
     this.has = function(chart) {
-        for(e in _chartMap){
-            if(_chartMap[e].indexOf(chart) >= 0)
+        for (e in _chartMap) {
+            if (_chartMap[e].indexOf(chart) >= 0)
                 return true;
         }
         return false;
     };
 
     function initializeChartGroup(group) {
-        group = group;
-
         if (!group)
             group = dc.constants.DEFAULT_CHART_GROUP;
 
