@@ -1,6 +1,5 @@
 dc.stackableChart = function(_chart) {
     var MIN_DATA_POINT_HEIGHT = 0;
-    var DATA_POINT_PADDING_BOTTOM = 1;
 
     var _groupStack = new dc.utils.GroupStack();
     var _allGroups;
@@ -123,11 +122,11 @@ dc.stackableChart = function(_chart) {
     };
 
     _chart.dataPointBaseline = function() {
-        return _chart.margins().top + _chart.yAxisHeight() - DATA_POINT_PADDING_BOTTOM;
+        return _chart.margins().top + _chart.yAxisHeight();
     };
 
     _chart.dataPointHeight = function(d, groupIndex) {
-        var h = (_chart.yAxisHeight() - _chart.y()(_chart.getValueAccessorByIndex(groupIndex)(d)) - DATA_POINT_PADDING_BOTTOM);
+        var h = (_chart.yAxisHeight() - _chart.y()(_chart.getValueAccessorByIndex(groupIndex)(d)));
         if (isNaN(h) || h < MIN_DATA_POINT_HEIGHT)
             h = MIN_DATA_POINT_HEIGHT;
         return h;

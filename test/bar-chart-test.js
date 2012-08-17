@@ -107,7 +107,7 @@ suite.addBatch({
         'bar height should be set correctly': function(chart) {
             chart.selectAll("svg g rect.bar").each(function(d) {
                 assert.equal(d3.select(this).attr('height'),
-                    chart.height() - chart.margins().top - chart.margins().bottom - chart.y()(d.value) - 1);
+                    chart.height() - chart.margins().top - chart.margins().bottom - chart.y()(d.value));
             });
         },
         'bar width should be set correctly': function(chart) {
@@ -304,8 +304,8 @@ suite.addBatch({'stacked':{
     'bar should be stacked':function(chart) {
         assert.equal(d3.select(chart.selectAll("rect.stack0")[0][2]).attr("y"), 152);
         assert.equal(d3.select(chart.selectAll("rect.stack0")[0][4]).attr("y"), 154);
-        assert.equal(d3.select(chart.selectAll("rect.stack1")[0][2]).attr("y"), 11);
-        assert.equal(d3.select(chart.selectAll("rect.stack1")[0][4]).attr("y"), 96);
+        assert.equal(d3.select(chart.selectAll("rect.stack1")[0][2]).attr("y"), 10);
+        assert.equal(d3.select(chart.selectAll("rect.stack1")[0][4]).attr("y"), 95);
     },
     teardown: function(topic) {
         resetAllFilters();
@@ -334,8 +334,8 @@ suite.addBatch({'stacked with custom value retriever':{
     'bar should be stacked':function(chart) {
         assert.equal(d3.select(chart.selectAll("rect.stack0")[0][2]).attr("y"), 34);
         assert.equal(d3.select(chart.selectAll("rect.stack0")[0][4]).attr("y"), 50);
-        assert.equal(d3.select(chart.selectAll("rect.stack1")[0][2]).attr("y"), 11);
-        assert.equal(d3.select(chart.selectAll("rect.stack1")[0][4]).attr("y"), 27);
+        assert.equal(d3.select(chart.selectAll("rect.stack1")[0][2]).attr("y"), 10);
+        assert.equal(d3.select(chart.selectAll("rect.stack1")[0][4]).attr("y"), 26);
     },
     teardown: function(topic) {
         resetAllFilters();

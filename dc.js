@@ -674,11 +674,18 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
-    _chart.renderXAxis = function(g) {
+    function prepareXAxis(g) {
         if (_chart.elasticX()) {
             _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
         }
 
+        _x.range([0, _chart.xAxisLength()]);
+        _xAxis = _xAxis.scale(_chart.x()).orient("bottom");
+
+        renderVerticalGridLines(g);
+    }
+
+    _chart.renderXAxis = function(g) {
         var axisXG = g.selectAll("g.x");
 
         if (axisXG.empty())
@@ -686,12 +693,7 @@ dc.coordinateGridChart = function(_chart) {
                 .attr("class", "axis x")
                 .attr("transform", "translate(" + _chart.margins().left + "," + _chart.xAxisY() + ")");
 
-        _x.range([0, _chart.xAxisLength()]);
-        _xAxis = _xAxis.scale(_chart.x()).orient("bottom");
-
         axisXG.call(_xAxis);
-
-        renderVerticalGridLines(g);
     };
 
     function renderVerticalGridLines(g) {
@@ -749,9 +751,7 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
-    _chart.renderYAxis = function(g) {
-        var axisYG = g.selectAll("g.y");
-
+    function prepareYAxis(g) {
         if (_y == null || _chart.elasticY()) {
             _y = d3.scale.linear();
             _y.domain([_chart.yAxisMin(), _chart.yAxisMax()]).rangeRound([_chart.yAxisHeight(), 0]);
@@ -760,15 +760,17 @@ dc.coordinateGridChart = function(_chart) {
         _y.range([_chart.yAxisHeight(), 0]);
         _yAxis = _yAxis.scale(_y).orient("left").ticks(DEFAULT_Y_AXIS_TICKS);
 
+        renderHorizontalGridLines(g);
+    }
+
+    _chart.renderYAxis = function(g) {
+        var axisYG = g.selectAll("g.y");
         if (axisYG.empty())
             axisYG = g.append("g")
                 .attr("class", "axis y")
                 .attr("transform", "translate(" + _chart.yAxisX() + "," + _chart.margins().top + ")");
 
         axisYG.call(_yAxis);
-
-
-        renderHorizontalGridLines(g);
     };
 
     function renderHorizontalGridLines(g) {
@@ -1008,10 +1010,13 @@ dc.coordinateGridChart = function(_chart) {
         if (_chart.dataAreSet()) {
             _chart.generateG();
 
-            _chart.renderXAxis(_chart.g());
-            _chart.renderYAxis(_chart.g());
+            prepareXAxis(_chart.g());
+            prepareYAxis(_chart.g());
 
             _chart.plotData();
+
+            _chart.renderXAxis(_chart.g());
+            _chart.renderYAxis(_chart.g());
 
             _chart.renderBrush(_chart.g());
         }
@@ -1020,13 +1025,17 @@ dc.coordinateGridChart = function(_chart) {
     };
 
     _chart.doRedraw = function() {
+        prepareXAxis(_chart.g());
+        prepareYAxis(_chart.g());
+
+        _chart.plotData();
+
         if (_chart.elasticY())
             _chart.renderYAxis(_chart.g());
 
         if (_chart.elasticX())
             _chart.renderXAxis(_chart.g());
 
-        _chart.plotData();
         _chart.redrawBrush(_chart.g());
 
         return _chart;
@@ -1156,7 +1165,6 @@ dc.singleSelectionChart = function(_chart) {
 };
 dc.stackableChart = function(_chart) {
     var MIN_DATA_POINT_HEIGHT = 0;
-    var DATA_POINT_PADDING_BOTTOM = 1;
 
     var _groupStack = new dc.utils.GroupStack();
     var _allGroups;
@@ -1279,11 +1287,11 @@ dc.stackableChart = function(_chart) {
     };
 
     _chart.dataPointBaseline = function() {
-        return _chart.margins().top + _chart.yAxisHeight() - DATA_POINT_PADDING_BOTTOM;
+        return _chart.margins().top + _chart.yAxisHeight();
     };
 
     _chart.dataPointHeight = function(d, groupIndex) {
-        var h = (_chart.yAxisHeight() - _chart.y()(_chart.getValueAccessorByIndex(groupIndex)(d)) - DATA_POINT_PADDING_BOTTOM);
+        var h = (_chart.yAxisHeight() - _chart.y()(_chart.getValueAccessorByIndex(groupIndex)(d)));
         if (isNaN(h) || h < MIN_DATA_POINT_HEIGHT)
             h = MIN_DATA_POINT_HEIGHT;
         return h;

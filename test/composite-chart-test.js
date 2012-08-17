@@ -123,10 +123,10 @@ suite.addBatch({
             chart.selectAll("g.sub path.line").each(function(d, i) {
                 switch (i) {
                     case 0:
-                        assert.equal(d3.select(this).attr("d"), "M54.13793103448276,119L121.72413793103448,118L131.37931034482756,113L232.75862068965515,118L276.2068965517241,114L425.8620689655172,115");
+                        assert.equal(d3.select(this).attr("d"), "M54.13793103448276,120L121.72413793103448,118L131.37931034482756,113L232.75862068965515,118L276.2068965517241,114L425.8620689655172,115");
                         break;
                     case 1:
-                        assert.equal(d3.select(this).attr("d"), "M54.13793103448276,103L121.72413793103448,93L131.37931034482756,62L232.75862068965515,102L276.2068965517241,93L425.8620689655172,86");
+                        assert.equal(d3.select(this).attr("d"), "M54.13793103448276,103L121.72413793103448,92L131.37931034482756,61L232.75862068965515,101L276.2068965517241,92L425.8620689655172,85");
                         break;
                 }
             });
@@ -141,13 +141,13 @@ suite.addBatch({
                         assert.equal(d3.select(this).attr("x"), "52.63793103448276");
                         assert.equal(d3.select(this).attr("y"), "103");
                         assert.equal(d3.select(this).attr("width"), "3");
-                        assert.equal(d3.select(this).attr("height"), "16");
+                        assert.equal(d3.select(this).attr("height"), "17");
                         break;
                     case 5:
                         assert.equal(d3.select(this).attr("x"), "424.3620689655172");
                         assert.equal(d3.select(this).attr("y"), "90");
                         assert.equal(d3.select(this).attr("width"), "3");
-                        assert.equal(d3.select(this).attr("height"), "29");
+                        assert.equal(d3.select(this).attr("height"), "30");
                         break;
                 }
             });
