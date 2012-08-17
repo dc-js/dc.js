@@ -5,10 +5,15 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.coordinateGridChart({})));
 
+    var _maxBubbleRelativeSize = 5;
+
+    var _elasticRadius = false;
+
     _chart.renderLabel(true);
     _chart.renderTitle(false);
 
     var _r = d3.scale.linear().domain([0, 100]);
+
     var _rValueAccessor = function(d) {
         return d.r;
     };
@@ -19,8 +24,23 @@ dc.bubbleChart = function(parent, chartGroup) {
         return "translate(" + (bubbleX(d)) + "," + (bubbleY(d)) + ")";
     };
 
+    _chart.maxBubbleRelativeSize = function(_){
+        if(!arguments.length) return _maxBubbleRelativeSize;
+        _maxBubbleRelativeSize = _;
+        return _chart;
+    };
+
+    _chart.elasticRadius = function(_){
+        if(!arguments.length) return _elasticRadius;
+        _elasticRadius = _;
+        return _chart;
+    };
+
     _chart.plotData = function() {
-        _r.range([0, _chart.xAxisLength() / 3]);
+        if(_elasticRadius)
+            _r.domain([_chart.rMin(), _chart.rMax()]);
+
+        _r.range([MIN_RADIUS, _chart.xAxisLength() / _maxBubbleRelativeSize]);
 
         var bubbleG = _chart.g().selectAll("g." + NODE_CLASS)
             .data(_chart.group().all());
@@ -32,6 +52,20 @@ dc.bubbleChart = function(parent, chartGroup) {
         removeNodes(bubbleG);
 
         _chart.fadeDeselectedArea();
+    };
+
+    _chart.rMin = function() {
+        var min = d3.min(_chart.group().all(), function(e) {
+            return _chart.radiusValueAccessor()(e);
+        });
+        return min;
+    };
+
+    _chart.rMax = function() {
+        var max = d3.max(_chart.group().all(), function(e) {
+            return _chart.radiusValueAccessor()(e);
+        });
+        return max;
     };
 
     function renderNodes(bubbleG) {
