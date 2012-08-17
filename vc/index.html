@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>dc.js - Venture Capitals</title>
+
+    <meta charset="UTF-8">
+
+    <script type="text/javascript" src="../lib/d3.v2.js"></script>
+    <script type="text/javascript" src="../lib/crossfilter.js"></script>
+
+    <script type="text/javascript" src="../dc.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../dc.css"/>
+
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-33628816-1']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+
+    </script>
+</head>
+<body>
+<div class="content">
+
+<h2>Venture Capitals Landscape in US 2011</h2>
+
+<div id="us-chart" class="chart">
+    <span class="title">VC Distribution by States (color: total amount raised)</span>
+    <a class="reset" href="javascript:usChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+    <span class="reset" style="display: none;"> | Current filter: <span class="filter"></span></span>
+
+    <div class="clear"></div>
+</div>
+
+<div class="clear"></div>
+
+<div id="industry-chart" class="chart">
+    <span class="title">Total Amount Raised</span>
+    <a class="reset" href="javascript:industryChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+    <span class="reset" style="display: none;"> | Current filter: <span class="filter"></span></span>
+
+    <div class="clear"></div>
+</div>
+
+</div>
+
+<script type="text/javascript">
+    var numberFormat = d3.format(".2f");
+
+    var usChart = dc.geoChoroplethChart("#us-chart");
+    var industryChart = dc.bubbleChart("#industry-chart");
+
+    d3.csv("vc.csv", function(csv) {
+        var data = crossfilter(csv);
+
+        var states = data.dimension(function(d){return d["State"];});
+        var stateRaisedSum = states.group().reduceSum(function(d){return d["Raised"];});
+
+        var industries = data.dimension(function(d){return d["Industry Group"];});
+        var statsByIndustries = industries.group().reduce(
+                function(p,v){
+                    p.amountRaised += +v["Raised"];
+                    p.deals += +v["Deals"];
+                    return p;
+                },
+                function(p,v){
+                    p.amountRaised -= +v["Raised"];
+                    p.deals -= +v["Deals"];
+                    return p;
+                },
+                function(){return {amountRaised:0, deals:0}}
+        );
+
+        d3.json("us-states.json", function(statesJson) {
+            usChart .width(990)
+                    .height(500)
+                    .dimension(states)
+                    .group(stateRaisedSum)
+                    .colors(["#ccc", "#E2F2FF","#C4E4FF","#9ED2FF","#81C5FF","#6BBAFF","#51AEFF","#36A2FF","#1E96FF","#0089FF","#0061B5"])
+                    .colorDomain([-5, 200])
+                    .overlayGeoJson(statesJson.features, "state", function(d) {
+                        return d.properties.name;
+                    })
+                    .title(function(d) {
+                        return "State: " + d.key + "\nTotal Amount Raised: " + numberFormat(d.value ? d.value : 0) + "M";
+                    });
+
+            industryChart.width(990)
+                    .height(200)
+                    .dimension(industries)
+                    .group(statsByIndustries)
+                    .colors(d3.scale.category10())
+                    .keyAccessor(function(p) {
+                        return p.value.amountRaised;
+                    })
+                    .valueAccessor(function(p) {
+                        return p.value.deals;
+                    })
+                    .radiusValueAccessor(function(p) {
+                        return p.value.deals;
+                    })
+                    .x(d3.scale.linear().domain([0, 5000]))
+                    .y(d3.scale.linear().domain([0, 700]))
+                    .r(d3.scale.linear().domain([0, 2000]))
+                    .elasticY(true)
+                    .yAxisPadding(100)
+                    .elasticX(true)
+                    .xAxisPadding(500)
+                    .renderHorizontalGridLines(true)
+                    .renderVerticalGridLines(true)
+                    .renderLabel(true)
+                    .renderTitle(true)
+                    .label(function(p) {
+                        return p.key;
+                    })
+                    .title(function(p) {
+                        return p.key
+                                + "\n"
+                                + "Amount Raised: " + numberFormat(p.value.amountRaised) + "\n"
+                                + "Number of Deals: " + numberFormat(p.value.deals);
+                    });
+
+            dc.renderAll();
+        });
+    });
+</script>
+
+</body>
+</html>
