@@ -297,6 +297,7 @@ d3.csv("ndx.csv", function(data) {
                     .radiusValueAccessor(function(p) {
                         return p.value.fluctuationPercentage;
                     })
+                    .maxBubbleRelativeSize(5)
                     .x(d3.scale.linear().domain([-2500, 2500]))
                     .y(d3.scale.linear().domain([-100, 100]))
                     .r(d3.scale.linear().domain([0, 4000]))
