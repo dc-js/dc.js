@@ -44,6 +44,7 @@ dc.bubbleChart = function(parent, chartGroup) {
             })
             .on("click", onClick)
             .attr("fill", function(d, i) {
+                this[dc.constants.NODE_INDEX_NAME] = i;
                 return _chart.getColor(d, i);
             })
             .attr("r", 0);
@@ -100,7 +101,9 @@ dc.bubbleChart = function(parent, chartGroup) {
             .attr("transform", bubbleLocator)
             .selectAll("circle." + BUBBLE_CLASS)
             .attr("fill", function(d, i) {
-                return _chart.getColor(d, i);
+                // a work around to get correct node index since
+                // d3 does not send i correctly here
+                return _chart.getColor(d, this[dc.constants.NODE_INDEX_NAME]);
             })
             .attr("r", function(d) {
                 return bubbleR(d);

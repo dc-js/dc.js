@@ -1957,6 +1957,7 @@ dc.bubbleChart = function(parent, chartGroup) {
             })
             .on("click", onClick)
             .attr("fill", function(d, i) {
+                this["__index__"] = i;
                 return _chart.getColor(d, i);
             })
             .attr("r", 0);
@@ -2013,7 +2014,7 @@ dc.bubbleChart = function(parent, chartGroup) {
             .attr("transform", bubbleLocator)
             .selectAll("circle." + BUBBLE_CLASS)
             .attr("fill", function(d, i) {
-                return _chart.getColor(d, i);
+                return _chart.getColor(d, this["__index__"]);
             })
             .attr("r", function(d) {
                 return bubbleR(d);
