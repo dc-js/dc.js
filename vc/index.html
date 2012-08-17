@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <title>dc.js - Venture Capitals</title>
+    <title>dc.js - US Venture Capital Landscape 2011</title>
 
     <meta charset="UTF-8">
 
@@ -46,11 +46,16 @@
 <div class="clear"></div>
 
 <div id="industry-chart" class="chart">
-    <span class="title">Total Amount Raised</span>
+    <span class="title">Total Amount Raised by Industry (y: number of deals, x: total amount raised in millions, radius: total amount raised)</span>
     <a class="reset" href="javascript:industryChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-    <span class="reset" style="display: none;"> | Current filter: <span class="filter"></span></span>
 
     <div class="clear"></div>
+</div>
+
+<div class="clear"></div>
+
+<div>
+    <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
 </div>
 
 </div>
