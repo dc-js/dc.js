@@ -6,7 +6,7 @@ dc = {
         SELECTED_CLASS: "selected",
         GROUP_INDEX_NAME: "__group_index__",
         DEFAULT_CHART_GROUP: "__default_chart_group__",
-        EVENT_DELAY: 30
+        EVENT_DELAY: 40
     }
 };
 
@@ -250,10 +250,10 @@ dc.events = {
 };
 
 dc.events.trigger = function(closure, delay) {
-    dc.events.current = closure;
-
     if (!delay)
         closure();
+
+    dc.events.current = closure;
 
     setTimeout(function() {
         if (closure == dc.events.current)
@@ -961,6 +961,8 @@ dc.coordinateGridChart = function(_chart) {
                 .call(_brush.extent(extent));
         }
         extent = _brush.extent();
+
+        _chart.redrawBrush(_g);
 
         dc.events.trigger(function() {
             _chart.filter(_brush.empty() ? null : [extent[0], extent[1]]);

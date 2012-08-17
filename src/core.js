@@ -6,7 +6,7 @@ dc = {
         SELECTED_CLASS: "selected",
         GROUP_INDEX_NAME: "__group_index__",
         DEFAULT_CHART_GROUP: "__default_chart_group__",
-        EVENT_DELAY: 30
+        EVENT_DELAY: 40
     }
 };
 

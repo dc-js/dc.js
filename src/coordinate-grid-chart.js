@@ -345,6 +345,8 @@ dc.coordinateGridChart = function(_chart) {
         }
         extent = _brush.extent();
 
+        _chart.redrawBrush(_g);
+
         dc.events.trigger(function() {
             _chart.filter(_brush.empty() ? null : [extent[0], extent[1]]);
             dc.redrawAll(_chart.chartGroup());
