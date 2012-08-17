@@ -4,6 +4,7 @@ dc = {
         STACK_CLASS: "stack",
         DESELECTED_CLASS: "deselected",
         SELECTED_CLASS: "selected",
+        NODE_INDEX_NAME: "__index__",
         GROUP_INDEX_NAME: "__group_index__",
         DEFAULT_CHART_GROUP: "__default_chart_group__",
         EVENT_DELAY: 40
@@ -15,16 +16,14 @@ dc.chartRegistry = function() {
     var _chartMap = {};
 
     this.has = function(chart) {
-        for(e in _chartMap){
-            if(_chartMap[e].indexOf(chart) >= 0)
+        for (e in _chartMap) {
+            if (_chartMap[e].indexOf(chart) >= 0)
                 return true;
         }
         return false;
     };
 
     function initializeChartGroup(group) {
-        group = group;
-
         if (!group)
             group = dc.constants.DEFAULT_CHART_GROUP;
 
@@ -1088,7 +1087,7 @@ dc.colorChart = function(_chart) {
             _colors = _;
         }
 
-        _colorDomain = [0, _colors.range().length]
+        _colorDomain = [0, _colors.range().length];
 
         return _chart;
     };
@@ -1152,17 +1151,17 @@ dc.singleSelectionChart = function(_chart) {
     _chart.highlightSelected = function(e) {
         d3.select(e).classed(dc.constants.SELECTED_CLASS, true);
         d3.select(e).classed(dc.constants.DESELECTED_CLASS, false);
-    }
+    };
 
     _chart.fadeDeselected = function(e) {
         d3.select(e).classed(dc.constants.SELECTED_CLASS, false);
         d3.select(e).classed(dc.constants.DESELECTED_CLASS, true);
-    }
+    };
 
     _chart.resetHighlight = function(e) {
         d3.select(e).classed(dc.constants.SELECTED_CLASS, false);
         d3.select(e).classed(dc.constants.DESELECTED_CLASS, false);
-    }
+    };
 
     return _chart;
 };
@@ -1918,10 +1917,15 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.coordinateGridChart({})));
 
+    var _maxBubbleRelativeSize = 5;
+
+    var _elasticRadius = false;
+
     _chart.renderLabel(true);
     _chart.renderTitle(false);
 
     var _r = d3.scale.linear().domain([0, 100]);
+
     var _rValueAccessor = function(d) {
         return d.r;
     };
@@ -1932,8 +1936,23 @@ dc.bubbleChart = function(parent, chartGroup) {
         return "translate(" + (bubbleX(d)) + "," + (bubbleY(d)) + ")";
     };
 
+    _chart.maxBubbleRelativeSize = function(_){
+        if(!arguments.length) return _maxBubbleRelativeSize;
+        _maxBubbleRelativeSize = _;
+        return _chart;
+    };
+
+    _chart.elasticRadius = function(_){
+        if(!arguments.length) return _elasticRadius;
+        _elasticRadius = _;
+        return _chart;
+    };
+
     _chart.plotData = function() {
-        _r.range([0, _chart.xAxisLength() / 3]);
+        if(_elasticRadius)
+            _r.domain([_chart.rMin(), _chart.rMax()]);
+
+        _r.range([MIN_RADIUS, _chart.xAxisLength() / _maxBubbleRelativeSize]);
 
         var bubbleG = _chart.g().selectAll("g." + NODE_CLASS)
             .data(_chart.group().all());
@@ -1947,6 +1966,20 @@ dc.bubbleChart = function(parent, chartGroup) {
         _chart.fadeDeselectedArea();
     };
 
+    _chart.rMin = function() {
+        var min = d3.min(_chart.group().all(), function(e) {
+            return _chart.radiusValueAccessor()(e);
+        });
+        return min;
+    };
+
+    _chart.rMax = function() {
+        var max = d3.max(_chart.group().all(), function(e) {
+            return _chart.radiusValueAccessor()(e);
+        });
+        return max;
+    };
+
     function renderNodes(bubbleG) {
         var bubbleGEnter = bubbleG.enter().append("g");
         bubbleGEnter
@@ -1957,7 +1990,7 @@ dc.bubbleChart = function(parent, chartGroup) {
             })
             .on("click", onClick)
             .attr("fill", function(d, i) {
-                this["__index__"] = i;
+                this[dc.constants.NODE_INDEX_NAME] = i;
                 return _chart.getColor(d, i);
             })
             .attr("r", 0);
@@ -2014,7 +2047,9 @@ dc.bubbleChart = function(parent, chartGroup) {
             .attr("transform", bubbleLocator)
             .selectAll("circle." + BUBBLE_CLASS)
             .attr("fill", function(d, i) {
-                return _chart.getColor(d, this["__index__"]);
+                // a work around to get correct node index since
+                // d3 does not send i correctly here
+                return _chart.getColor(d, this[dc.constants.NODE_INDEX_NAME]);
             })
             .attr("r", function(d) {
                 return bubbleR(d);
@@ -2057,8 +2092,9 @@ dc.bubbleChart = function(parent, chartGroup) {
     }
 
     function bubbleR(d) {
-        var r = _chart.r()(_chart.radiusValueAccessor()(d));
-        if (isNaN(r))
+        var value = _chart.radiusValueAccessor()(d);
+        var r = _chart.r()(value);
+        if (isNaN(r) || value <= 0)
             r = 0;
         return r;
     }

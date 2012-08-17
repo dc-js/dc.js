@@ -297,6 +297,7 @@ d3.csv("ndx.csv", function(data) {
                     .radiusValueAccessor(function(p) {
                         return p.value.fluctuationPercentage;
                     })
+                    .maxBubbleRelativeSize(5)
                     .x(d3.scale.linear().domain([-2500, 2500]))
                     .y(d3.scale.linear().domain([-100, 100]))
                     .r(d3.scale.linear().domain([0, 4000]))
@@ -705,6 +706,40 @@ d3.csv("ndx.csv", function(data) {
             // (optional) render vertical grid lines, :default=false
             .renderVerticalGridLines(true);
     </pre>
+
+<h3>Geo Choropleth Chart</h3>
+
+<pre class="brush:js">
+    /* Create a choropleth chart and use the given css selector as anchor. You can also specify
+     * an optional chart group for this chart to be scoped within. When a chart belongs
+     * to a specific group then any interaction with such chart will only trigger redraw
+     * on other charts within the same chart group. */
+    dc.geoChoroplethChart("#us-chart")
+        .width(990) // (optional) define chart width, :default = 200
+        .height(500) // (optional) define chart height, :default = 200
+        .transitionDuration(1000) // (optional) define chart transition duration, :default = 1000
+        .dimension(states) // set crossfilter dimension, dimension key should match the name retrieved in geo json layer
+        .group(stateRaisedSum) // set crossfilter group
+        // (optional) define color function or array for bubbles
+        .colors(["#ccc", "#E2F2FF","#C4E4FF","#9ED2FF","#81C5FF","#6BBAFF","#51AEFF","#36A2FF","#1E96FF","#0089FF","#0061B5"])
+        // (optional) define color domain to match your data domain if you want to bind data or color
+        .colorDomain([-5, 200])
+        // (optional) define color value accessor
+        .colorAccessor(function(d, i){return d.value;})
+        /* Project the given geojson. You can call this function mutliple times with different geojson feed to generate
+         * multiple layers of geo paths.
+         * 1st param - geo json data
+         * 2nd param - name of the layer which will be used to generate css class
+         * 3rd param - (optional) a function used to generate key for geo path, it should match the dimension key
+         * in order for the coloring to work properly */
+        .overlayGeoJson(statesJson.features, "state", function(d) {
+            return d.properties.name;
+        })
+        // (optional) closure to generate title for path, :default = d.key + ": " + d.value
+        .title(function(d) {
+            return "State: " + d.key + "\nTotal Amount Raised: " + numberFormat(d.value ? d.value : 0) + "M";
+        });
+</pre>
 
 <h3>Data Table</h3>
 
