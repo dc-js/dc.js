@@ -235,7 +235,7 @@ d3.csv("ndx.csv", function(data) {
             var gainOrLossGroup = gainOrLoss.group();
 
             var fluctuation = ndx.dimension(function(d) {
-                return Math.round((d.close - d.open) / d.open * 100);
+                return Math.abs(Math.round((d.close - d.open) / d.open * 100));
             });
             var fluctuationGroup = fluctuation.group();
 
@@ -277,6 +277,7 @@ d3.csv("ndx.csv", function(data) {
 
             yearlyBubbleChart.width(990)
                     .height(250)
+                    .margins({top: 10, right: 50, bottom: 30, left: 40})
                     .dimension(yearlyDimension)
                     .group(yearlyPerformanceGroup)
                     .colors(["#a60000","#ff0000", "#ff4040","#ff7373","#67e667","#39e639","#00cc00"])
@@ -342,13 +343,14 @@ d3.csv("ndx.csv", function(data) {
 
             fluctuationChart.width(420)
                     .height(180)
+                    .margins({top: 10, right: 50, bottom: 30, left: 40})
                     .dimension(fluctuation)
                     .group(fluctuationGroup)
                     .elasticY(true)
-                    .centerBar(true)
+                    .centerBar(false)
                     .gap(1)
                     .round(dc.round.floor)
-                    .x(d3.scale.linear().domain([-25, 25]))
+                    .x(d3.scale.linear().domain([0, 25]))
                     .renderHorizontalGridLines(true)
                     .xAxis()
                     .tickFormat(function(v) {
