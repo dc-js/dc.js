@@ -1560,7 +1560,7 @@ dc.pieChart = function(parent, chartGroup) {
 };
 dc.barChart = function(parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
-    var DEFAULT_GAP_BETWEEN_BARS = 5;
+    var DEFAULT_GAP_BETWEEN_BARS = 2;
 
     var _chart = dc.stackableChart(dc.coordinateGridChart({}));
 
