@@ -7,7 +7,6 @@ var suite = vows.describe('Bubble chart');
 
 var width = 900;
 var height = 350;
-var colors = d3.scale.category20c();
 
 function buildChart(id) {
     d3.select("body").append("div").attr("id", id);
@@ -15,7 +14,11 @@ function buildChart(id) {
     chart.width(width).height(height)
         .dimension(statusDimension)
         .group(statusMultiGroup)
-        .colors(colors)
+        .colors(["#a60000","#ff0000", "#ff4040","#ff7373","#67e667","#39e639","#00cc00"])
+        .colorDomain([0, 220])
+        .colorAccessor(function(p) {
+            return p.value.value;
+        })
         .keyAccessor(function(p) {
             return p.value.value;
         })
@@ -186,6 +189,14 @@ suite.addBatch({
                     if (i == 1)
                         assert.equal(d3.select(this).text(), "T: {count:5,value:198}");
                 });
+            },
+            'should fill bubbles with correct colors': function(chart) {
+                chart.selectAll("circle.bubble").each(function(d, i) {
+                    if (i == 0)
+                        assert.equal(d3.select(this).attr("fill"), "#00cc00");
+                    if (i == 1)
+                        assert.equal(d3.select(this).attr("fill"), "#00cc00");
+                });
             }
         },
 
@@ -258,6 +269,14 @@ suite.addBatch({
                     assert.equal(d3.select(this).text(), "T: {count:2,value:77}");
             });
         },
+        'should fill bubbles with correct colors': function(chart) {
+            chart.selectAll("circle.bubble").each(function(d, i) {
+                if (i == 0)
+                    assert.equal(d3.select(this).attr("fill"), "#a60000");
+                if (i == 1)
+                    assert.equal(d3.select(this).attr("fill"), "#ff4040");
+            });
+        },
         teardown: function(topic) {
             resetAllFilters();
             resetBody();
@@ -321,16 +340,18 @@ suite.addBatch({
 
 suite.addBatch({
     'renderlet':{
-        topic:function(){
+        topic:function() {
             var chart = buildChart("chart-renderlet");
-            chart.renderlet(function(chart){chart.selectAll("circle").attr("fill", "red");});
+            chart.renderlet(function(chart) {
+                chart.selectAll("circle").attr("fill", "red");
+            });
             return chart;
         },
-        'custom renderlet should be invoked with render': function(chart){
+        'custom renderlet should be invoked with render': function(chart) {
             chart.render();
             assert.equal(chart.selectAll("circle").attr("fill"), "red");
         },
-        'custom renderlet should be invoked with redraw': function(chart){
+        'custom renderlet should be invoked with redraw': function(chart) {
             chart.redraw();
             assert.equal(chart.selectAll("circle").attr("fill"), "red");
         },

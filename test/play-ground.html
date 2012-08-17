@@ -220,6 +220,11 @@ bubbleChart.width(990)
         .height(150)
         .dimension(statusDimension)
         .group(statusMultiGroup)
+        .colors(["#a60000","#ff0000", "#ff4040","#ff7373","#67e667","#39e639","#00cc00"])
+        .colorDomain([0, 220])
+        .colorAccessor(function(p) {
+            return p.value.value;
+        })
         .keyAccessor(function(p) {
             return p.value.value;
         })
@@ -241,7 +246,6 @@ bubbleChart.width(990)
         .title(function(p) {
             return p.key + ": {count:" + p.value.count + ",value:" + p.value.value + "}"
         });
-;
 
 dc.dataCount("#data-count")
         .dimension(data)
