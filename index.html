@@ -279,8 +279,8 @@ d3.csv("ndx.csv", function(data) {
                     .height(250)
                     .dimension(yearlyDimension)
                     .group(yearlyPerformanceGroup)
-                    .colors(["red", "#ccc","steelblue","green"])
-                    .colorDomain([-1750, 1644])
+                    .colors(["#a60000","#ff0000", "#ff4040","#ff7373","#67e667","#39e639","#00cc00"])
+                    .colorDomain([-12000, 12000])
                     .colorAccessor(function(d){return d.value.absGain;})
                     .keyAccessor(function(p) {
                         return p.value.absGain;
@@ -536,8 +536,8 @@ d3.csv("ndx.csv", function(data) {
             .xUnits(d3.time.months)
             // (optional) whether bar should be center to its x value, :default=false
             .centerBar(true)
-            // (optional) set gap between bars manually in px, :default=5
-            .barGap(2)
+            // (optional) set gap between bars manually in px, :default=2
+            .barGap(1)
             // (optional) render horizontal grid lines, :default=false
             .renderHorizontalGridLines(true)
             // (optional) render vertical grid lines, :default=false

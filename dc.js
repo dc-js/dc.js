@@ -6,7 +6,7 @@ dc = {
         SELECTED_CLASS: "selected",
         GROUP_INDEX_NAME: "__group_index__",
         DEFAULT_CHART_GROUP: "__default_chart_group__",
-        EVENT_DELAY: 30
+        EVENT_DELAY: 40
     }
 };
 
@@ -250,10 +250,10 @@ dc.events = {
 };
 
 dc.events.trigger = function(closure, delay) {
-    dc.events.current = closure;
-
     if (!delay)
         closure();
+
+    dc.events.current = closure;
 
     setTimeout(function() {
         if (closure == dc.events.current)
@@ -962,6 +962,8 @@ dc.coordinateGridChart = function(_chart) {
         }
         extent = _brush.extent();
 
+        _chart.redrawBrush(_g);
+
         dc.events.trigger(function() {
             _chart.filter(_brush.empty() ? null : [extent[0], extent[1]]);
             dc.redrawAll(_chart.chartGroup());
@@ -1055,6 +1057,7 @@ dc.colorChart = function(_chart) {
         var colorsLength = _chart.colors().range().length;
         var denominator = (maxValue - minValue) / colorsLength;
         var colorValue = Math.abs(Math.min(colorsLength - 1, Math.round((value - minValue) / denominator)));
+        console.log("value: " + value + ", denominator: " + denominator + ", colorsLength: " + colorsLength + ", min:" + minValue + ", max: " + maxValue +", colorValue: " + colorValue);
         return _chart.colors()(colorValue);
     };
 
@@ -1558,7 +1561,7 @@ dc.pieChart = function(parent, chartGroup) {
 };
 dc.barChart = function(parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
-    var DEFAULT_GAP_BETWEEN_BARS = 5;
+    var DEFAULT_GAP_BETWEEN_BARS = 2;
 
     var _chart = dc.stackableChart(dc.coordinateGridChart({}));
 
