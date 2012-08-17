@@ -28,8 +28,11 @@ dc.coordinateGridChart = function(_chart) {
     var _renderHorizontalGridLine = false;
     var _renderVerticalGridLine = false;
 
-    _chart.generateG = function() {
-        _g = _chart.svg().append("g");
+    _chart.generateG = function(parent) {
+        if(parent == null)
+            parent = _chart.svg();
+
+        _g = parent.append("g");
         return _g;
     };
 

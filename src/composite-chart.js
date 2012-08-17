@@ -20,8 +20,6 @@ dc.compositeChart = function(parent, chartGroup) {
             child.margins(_chart.margins());
             child.xUnits(_chart.xUnits());
             child.transitionDuration(_chart.transitionDuration());
-            child.generateG();
-            child.g().attr("class", SUB_CHART_CLASS);
         }
 
         return g;
@@ -30,6 +28,12 @@ dc.compositeChart = function(parent, chartGroup) {
     _chart.plotData = function() {
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
+
+            if (child.g() == null) {
+                child.generateG(_chart.g());
+                child.g().attr("class", SUB_CHART_CLASS);
+            }
+
             child.x(_chart.x());
             child.y(_chart.y());
             child.xAxis(_chart.xAxis());
