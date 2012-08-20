@@ -14,3 +14,12 @@ a {
     background-color: #ffffff;
     overflow: hidden;
 }
+
+.debug{
+    fill-opacity: .2;
+}
+
+.bubble{
+    fill: red;
+    fill-opacity: .3;
+}
