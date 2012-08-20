@@ -269,9 +269,9 @@
             x="411.16797"
             y="204.97363"
             >
-        Orakzai
+        Orazkai
     </text>
-    <g id="orakzai"
+    <g id="orazkai"
        class="bubble" transform="translate(422,190)"/>
 </g>
 
@@ -289,7 +289,7 @@
         Kurram Agency
     </text>
     <g id="kurram_agency"
-       class="bubble" transform="translate(390,182)"/>
+       class="bubble" transform="translate(390,183)"/>
 </g>
 
 <g class="city">
@@ -306,7 +306,7 @@
         Khyber Agency
     </text>
     <g id="khyber_agency"
-       class="bubble" transform="translate(428,178)"/>
+       class="bubble" transform="translate(428,177)"/>
 </g>
 
 <g class="city">
@@ -348,8 +348,16 @@
 </div>
 
 <script type="text/javascript">
+    var BUBBLE_RADIUS_MIN = 60;
+    var BUBBLE_RADIUS_CAP = 350;
+
     function toId(s) {
-        return s.toLowerCase().replace(" ", "_");
+        var id = s.toLowerCase().replace(/ /g, "_");
+        if (id == "khyber")
+            id = "khyber_agency";
+        if (id == "lower_kurram_agency")
+            id = "kurram_agency";
+        return id;
     }
 
     function turnOnDebugLayer(svgMap) {
@@ -375,14 +383,25 @@
         var svgMap = d3.select("#map");
 
         var bubbles = svgMap.selectAll("circle.bubble").data(maxCasualtiesByCity.all());
-
+        var rScale = d3.scale.linear().domain([0,250]).rangeRound([0,15]);
         // enter
         bubbles.enter().append("circle")
-                .attr("class", "bubble")
-                .attr("transform", function(d) {
-                    d3.select(this).attr("transform", d3.select("#" + d.key).attr("transform"));
+                .attr("class", function(d) {
+                    return "bubble " + d.key;
                 })
-                .attr("r", 20);
+                .attr("transform", function(d) {
+                    return d3.select("#" + d.key).attr("transform");
+                })
+                .attr("r", function(d) {
+                    var value = d.value;
+                    if (value > BUBBLE_RADIUS_CAP) value = BUBBLE_RADIUS_CAP;
+                    if (value < BUBBLE_RADIUS_MIN) value = BUBBLE_RADIUS_MIN;
+                    return rScale(value);
+                })
+                .append("title").text(function(d){
+                    return "Location: " + d.key + "\n"
+                            + "Total Casualty: " + d.value;
+                });
 
         // update
 
