@@ -13,23 +13,112 @@ a {
     border-top: 0px;
     background-color: #ffffff;
     overflow: hidden;
+    position: relative
 }
 
-.map{
+.map {
     text-align: center;
 }
 
-.boundaries path{
+.boundaries path {
     stroke: grey;
     fill: none;
     stroke-width: 1;
 }
 
-.debug{
+.chart {
+    float: left;
+}
+
+.chart rect.bar {
+    stroke: none;
+    fill: #ff7373;
+}
+
+.chart rect.stack1 {
+    stroke: none;
+    fill: #39e639;
+}
+
+.chart rect.stack2 {
+    stroke: none;
+    fill: #269926;
+}
+
+.chart rect.deselected {
+    stroke: none;
+    fill: #ccc;
+}
+
+.chart .sub .bar {
+    stroke: none;
+    fill: #ccc;
+}
+
+.clear {
+    clear: both;
+}
+
+.axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font: 10px sans-serif;
+}
+
+.grid-line line {
+    fill: none;
+    stroke: #ccc;
+    opacity: .5;
+}
+
+.brush rect.background {
+    z-index: -999;
+}
+
+.brush rect.extent {
+    fill: steelblue;
+    fill-opacity: .125;
+}
+
+.brush .resize path {
+    fill: #eee;
+    stroke: #666;
+}
+
+.debug {
     fill-opacity: .2;
 }
 
-.bubble{
+.bubble {
     fill: red;
     fill-opacity: .5;
+}
+
+#trend_container {
+    position: absolute;
+    top: 0;
+    left: 300;
+}
+
+.legend{
+    font-size: 0.6em;
+}
+
+.legend .civilian{
+    background-color: #ff7373;
+    width: 10px;
+}
+
+.legend .taliban{
+    background-color: #39e639;
+    width: 10px;
+}
+
+.legend .alqaida{
+    background-color: #269926;
+    width: 10px;
 }
