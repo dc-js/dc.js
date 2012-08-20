@@ -15,6 +15,16 @@ a {
     overflow: hidden;
 }
 
+.map{
+    text-align: center;
+}
+
+.boundaries path{
+    stroke: grey;
+    fill: none;
+    stroke-width: 1;
+}
+
 .debug{
     fill-opacity: .2;
 }
