@@ -345,11 +345,17 @@
 </svg>
 </div>
 
+<div id="trend" class="chart">
+    <span class="title">Trending over Years</span>
+    <a class="reset" href="javascript:trendChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+</div>
+
 </div>
 
 <script type="text/javascript">
     var BUBBLE_RADIUS_MIN = 60;
     var BUBBLE_RADIUS_CAP = 350;
+    var TRANSITION_DURATION = 750;
 
     function toId(s) {
         var id = s.toLowerCase().replace(/ /g, "_");
@@ -370,6 +376,41 @@
         });
     }
 
+    function renderBubbles(svgMap, maxCasualtiesByCity) {
+        var bubbles = svgMap.selectAll("circle.bubble").data(maxCasualtiesByCity.all());
+        var rScale = d3.scale.linear().domain([0,250]).rangeRound([0,15]);
+
+        var bubbleRadius = function(d) {
+            var value = d.value;
+            if (value > BUBBLE_RADIUS_CAP) value = BUBBLE_RADIUS_CAP;
+            if (value < BUBBLE_RADIUS_MIN) value = BUBBLE_RADIUS_MIN;
+            return rScale(value);
+        };
+
+        var bubbleTitle = function(d) {
+            return "Location: " + d.key + "\n"
+                    + "Total Casualty: " + d.value;
+        };
+
+        // enter
+        bubbles.enter().append("circle")
+                .attr("class", function(d) {
+                    return "bubble " + d.key;
+                })
+                .attr("transform", function(d) {
+                    return d3.select("#" + d.key).attr("transform");
+                })
+                .attr("r", bubbleRadius)
+                .append("title").text(bubbleTitle);
+
+        // update
+        bubbles.attr("r", bubbleRadius)
+                .select("title").text(bubbleTitle);
+
+        //exit
+        bubbles.exit().transition(TRANSITION_DURATION).attr("r", 0).remove();
+    }
+
     d3.json("data.json", function(json) {
         var data = crossfilter(json.data);
 
@@ -382,32 +423,7 @@
 
         var svgMap = d3.select("#map");
 
-        var bubbles = svgMap.selectAll("circle.bubble").data(maxCasualtiesByCity.all());
-        var rScale = d3.scale.linear().domain([0,250]).rangeRound([0,15]);
-        // enter
-        bubbles.enter().append("circle")
-                .attr("class", function(d) {
-                    return "bubble " + d.key;
-                })
-                .attr("transform", function(d) {
-                    return d3.select("#" + d.key).attr("transform");
-                })
-                .attr("r", function(d) {
-                    var value = d.value;
-                    if (value > BUBBLE_RADIUS_CAP) value = BUBBLE_RADIUS_CAP;
-                    if (value < BUBBLE_RADIUS_MIN) value = BUBBLE_RADIUS_MIN;
-                    return rScale(value);
-                })
-                .append("title").text(function(d){
-                    return "Location: " + d.key + "\n"
-                            + "Total Casualty: " + d.value;
-                });
-
-        // update
-
-        //exit
-        bubbles.exit().remove();
-
+        renderBubbles(svgMap, maxCasualtiesByCity);
 //        turnOnDebugLayer(svgMap);
     });
 
