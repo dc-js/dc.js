@@ -374,6 +374,7 @@
     var TRANSITION_DURATION = 750;
 
     var trendChart = dc.barChart("#trend");
+    var selectedCity;
 
     function toId(s) {
         var id = s.toLowerCase().replace(/ /g, "_");
@@ -394,7 +395,7 @@
         });
     }
 
-    function renderBubbles(svgMap, maxCasualtiesByCity) {
+    function renderBubbles(svgMap, maxCasualtiesByCity, cities) {
         var bubbles = svgMap.selectAll("circle.bubble").data(maxCasualtiesByCity.all());
         var rScale = d3.scale.linear().domain([0,250]).rangeRound([0,15]);
 
@@ -419,10 +420,27 @@
                     return d3.select("#" + d.key).attr("transform");
                 })
                 .attr("r", bubbleRadius)
+                .on("click", function(d) {
+                    if (d.key == selectedCity) {
+                        selectedCity = null;
+                        cities.filter();
+                    } else {
+                        selectedCity = d.key;
+                        cities.filter(selectedCity);
+                    }
+                    dc.redrawAll();
+                    renderBubbles(svgMap, maxCasualtiesByCity, cities);
+                })
                 .append("title").text(bubbleTitle);
 
         // update
-        bubbles.transition(TRANSITION_DURATION).attr("r", bubbleRadius)
+        bubbles.classed("selected", function(d) {
+            return d.key == selectedCity
+        })
+                .classed("deselected", function(d) {
+                    return selectedCity != null && d.key != selectedCity
+                })
+                .transition(TRANSITION_DURATION).attr("r", bubbleRadius)
                 .select("title").text(bubbleTitle);
 
         //exit
@@ -454,7 +472,7 @@
 
         var svgMap = d3.select("#map");
 
-        renderBubbles(svgMap, maxCasualtiesByCity);
+        renderBubbles(svgMap, maxCasualtiesByCity, cities);
 
         trendChart.width(380)
                 .height(250)
@@ -462,6 +480,7 @@
                 .group(civilianDeathsByYear)
                 .stack(talibanDeathsByYear)
                 .stack(alqaidaDeathsByYear)
+                .elasticY(true)
                 .x(d3.scale.linear().domain([2003, 2013]))
                 .centerBar(true);
         trendChart.xAxis().tickValues([2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012]);
@@ -469,8 +488,8 @@
             return s;
         });
 
-        trendChart.renderlet(function(chart){
-           renderBubbles(svgMap, maxCasualtiesByCity);
+        trendChart.renderlet(function(chart) {
+            renderBubbles(svgMap, maxCasualtiesByCity, cities);
         });
 
         dc.renderAll();

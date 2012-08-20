@@ -98,6 +98,19 @@ a {
     fill-opacity: .5;
 }
 
+.selected {
+    stroke-width: 3;
+    fill: #ff7373;
+    stroke: #ccc;
+    fill-opacity: .8;
+}
+
+.deselected {
+    strok: none;
+    fill-opacity: .5;
+    fill: #ccc;
+}
+
 #trend_container {
     position: absolute;
     top: 0;
