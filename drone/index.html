@@ -369,8 +369,8 @@
 </div>
 
 <script type="text/javascript">
-    var BUBBLE_RADIUS_MIN = 60;
-    var BUBBLE_RADIUS_CAP = 350;
+    var BUBBLE_RADIUS_MIN = 200;
+    var BUBBLE_RADIUS_CAP = 1000;
     var TRANSITION_DURATION = 750;
 
     var trendChart = dc.barChart("#trend");
@@ -397,7 +397,7 @@
 
     function renderBubbles(svgMap, maxCasualtiesByCity, cities) {
         var bubbles = svgMap.selectAll("circle.bubble").data(maxCasualtiesByCity.all());
-        var rScale = d3.scale.linear().domain([0,250]).rangeRound([0,15]);
+        var rScale = d3.scale.linear().domain([0,250]).rangeRound([0,6]);
 
         var bubbleRadius = function(d) {
             var value = d.value;
