@@ -177,6 +177,7 @@ lineChartDate1.width(500)
         .stack(dateValueSumGroup, function(d) {
             return 10;
         })
+        .brushOn(false)
         .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
         .xUnits(d3.time.days)
         .elasticY(true)
@@ -308,6 +309,7 @@ barChartDateB.width(500)
         .stack(dateValueSumGroup, function(d) {
             return 10;
         })
+        .brushOn(false)
         .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
         .xUnits(d3.time.days)
         .renderHorizontalGridLines(true)
