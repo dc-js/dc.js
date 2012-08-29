@@ -22,15 +22,27 @@ dc.barChart = function(parent, chartGroup) {
         var bars = _chart.g().selectAll("rect." + dc.constants.STACK_CLASS + groupIndex)
             .data(group.all());
 
-        // new
-        bars.enter()
-            .append("rect")
-            .attr("class", "bar " + dc.constants.STACK_CLASS + groupIndex)
+        addNewBars(bars, groupIndex);
+
+        updateBars(bars, groupIndex);
+
+        deleteBars(bars);
+    }
+
+    function addNewBars(bars, groupIndex) {
+        var bars = bars.enter().append("rect");
+
+        bars.attr("class", "bar " + dc.constants.STACK_CLASS + groupIndex)
             .attr("x", function(data, dataIndex) {
                 return barX(this, data, groupIndex, dataIndex);
             })
             .attr("y", _chart.xAxisY())
             .attr("width", barWidth);
+
+        if (_chart.renderTitle()) {
+            bars.append("title").text(_chart.title());
+        }
+
         dc.transition(bars, _chart.transitionDuration())
             .attr("y", function(data, dataIndex) {
                 return barY(this, data, dataIndex);
@@ -38,8 +50,9 @@ dc.barChart = function(parent, chartGroup) {
             .attr("height", function(data) {
                 return _chart.dataPointHeight(data, getGroupIndexFromBar(this));
             });
+    }
 
-        // update
+    function updateBars(bars, groupIndex) {
         dc.transition(bars, _chart.transitionDuration())
             .attr("x", function(data, dataIndex) {
                 return barX(this, data, groupIndex, dataIndex);
@@ -50,15 +63,16 @@ dc.barChart = function(parent, chartGroup) {
             .attr("height", function(data) {
                 return _chart.dataPointHeight(data, getGroupIndexFromBar(this));
             });
+    }
 
-        // delete
+    function deleteBars(bars) {
         dc.transition(bars.exit(), _chart.transitionDuration())
             .attr("y", _chart.xAxisY())
             .attr("height", 0);
     }
 
     function getNumberOfBars() {
-        if(_numberOfBars == null)
+        if (_numberOfBars == null)
             _numberOfBars = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1]).length;
         return _numberOfBars;
     }
@@ -79,8 +93,8 @@ dc.barChart = function(parent, chartGroup) {
     function barX(bar, data, groupIndex, dataIndex) {
         setGroupIndexToBar(bar, groupIndex);
         var position = _chart.x()(_chart.keyAccessor()(data)) + _chart.margins().left;
-        if(_centerBar)
-            position = position - barWidth(data)/2;
+        if (_centerBar)
+            position = position - barWidth(data) / 2;
         return position;
     }
 
@@ -110,14 +124,14 @@ dc.barChart = function(parent, chartGroup) {
         }
     };
 
-    _chart.centerBar = function(_){
-        if(!arguments.length) return _centerBar;
+    _chart.centerBar = function(_) {
+        if (!arguments.length) return _centerBar;
         _centerBar = _;
         return _chart;
     };
 
-    _chart.gap = function(_){
-        if(!arguments.length) return _gap;
+    _chart.gap = function(_) {
+        if (!arguments.length) return _gap;
         _gap = _;
         return _chart;
     };

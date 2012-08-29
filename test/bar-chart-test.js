@@ -386,6 +386,27 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({
+    'custom title':{
+        topic:function(){
+            var chart = buildChart("chart-custom-title", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+            chart.brushOn(false)
+                .title(function(){return "custom title";})
+                .render();
+            return chart;
+        },
+        'custom title should be created per bar': function(chart) {
+            chart.selectAll("rect.bar").each(function(d) {
+                assert.equal(d3.select(this).select("title").text(), "custom title");
+            });
+        },
+        teardown: function(topic) {
+            resetAllFilters();
+            resetBody();
+        }
+    }
+});
+
 suite.export(module);
 
 

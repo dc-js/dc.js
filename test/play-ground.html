@@ -310,6 +310,7 @@ barChartDateB.width(500)
             return 10;
         })
         .brushOn(false)
+        .title(function(d){return d.value;})
         .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
         .xUnits(d3.time.days)
         .renderHorizontalGridLines(true)
