@@ -327,10 +327,11 @@ compositeChartDateB.width(500)
         .xUnits(d3.time.days)
         .renderVerticalGridLines(true)
         .compose([
-    dc.barChart(compositeChartDateB).group(dateValueSumGroup),
-    dc.lineChart(compositeChartDateB),
-    dc.lineChart(compositeChartDateB).group(dateGroup)
-])
+            dc.barChart(compositeChartDateB).group(dateValueSumGroup).title(function(d){return "Bar key: " + d.key + "\nBar value: " + d.value;}),
+            dc.lineChart(compositeChartDateB),
+            dc.lineChart(compositeChartDateB).group(dateGroup)
+        ])
+        .brushOn(false)
         .renderlet(function(chart) {
             chart.selectAll("rect.bar").attr("width", function(d) {
                 return Math.round(d.value / 10);

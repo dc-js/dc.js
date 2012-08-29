@@ -24,6 +24,10 @@ a {
     fill: steelblue;
 }
 
+.chart rect.bar:hover {
+    fill-opacity: .5;
+}
+
 .chart rect.stack1 {
     stroke: none;
     fill: red;
