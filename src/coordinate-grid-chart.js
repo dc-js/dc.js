@@ -23,13 +23,14 @@ dc.coordinateGridChart = function(_chart) {
 
     var _filter;
     var _brush = d3.svg.brush();
+    var _brushOn = true;
     var _round;
 
     var _renderHorizontalGridLine = false;
     var _renderVerticalGridLine = false;
 
     _chart.generateG = function(parent) {
-        if(parent == null)
+        if (parent == null)
             parent = _chart.svg();
 
         _g = parent.append("g");
@@ -325,19 +326,21 @@ dc.coordinateGridChart = function(_chart) {
     }
 
     _chart.renderBrush = function(g) {
-        _brush.on("brushstart", brushStart)
-            .on("brush", brushing)
-            .on("brushend", brushEnd);
+        if (_brushOn) {
+            _brush.on("brushstart", brushStart)
+                .on("brush", brushing)
+                .on("brushend", brushEnd);
 
-        var gBrush = g.append("g")
-            .attr("class", "brush")
-            .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")")
-            .call(_brush.x(_chart.x()));
-        gBrush.selectAll("rect").attr("height", brushHeight());
-        gBrush.selectAll(".resize").append("path").attr("d", _chart.resizeHandlePath);
+            var gBrush = g.append("g")
+                .attr("class", "brush")
+                .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")")
+                .call(_brush.x(_chart.x()));
+            gBrush.selectAll("rect").attr("height", brushHeight());
+            gBrush.selectAll(".resize").append("path").attr("d", _chart.resizeHandlePath);
 
-        if (_filter) {
-            _chart.redrawBrush(g);
+            if (_filter) {
+                _chart.redrawBrush(g);
+            }
         }
     };
 
@@ -366,14 +369,16 @@ dc.coordinateGridChart = function(_chart) {
     }
 
     _chart.redrawBrush = function(g) {
-        if (_chart._filter() && _chart.brush().empty())
-            _chart.brush().extent(_chart._filter());
+        if (_brushOn) {
+            if (_chart._filter() && _chart.brush().empty())
+                _chart.brush().extent(_chart._filter());
 
-        var gBrush = g.select("g.brush");
-        gBrush.call(_chart.brush().x(_chart.x()));
-        gBrush.selectAll("rect").attr("height", brushHeight());
+            var gBrush = g.select("g.brush");
+            gBrush.call(_chart.brush().x(_chart.x()));
+            gBrush.selectAll("rect").attr("height", brushHeight());
 
-        _chart.fadeDeselectedArea();
+            _chart.fadeDeselectedArea();
+        }
     };
 
     _chart.fadeDeselectedArea = function() {
@@ -436,6 +441,12 @@ dc.coordinateGridChart = function(_chart) {
             _chart.plotData();
         }
 
+        return _chart;
+    };
+
+    _chart.brushOn = function(_) {
+        if (!arguments.length) return _brushOn;
+        _brushOn = _;
         return _chart;
     };
 

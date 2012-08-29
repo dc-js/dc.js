@@ -382,25 +382,14 @@ suite.addBatch({
 
 
 suite.addBatch({
-    'vertical grid lines drawing':{
+    'turn off brush':{
         topic:function(){
-            var chart = buildChart("chart-grid-line-vertical", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
-            chart.xAxis().tickValues([new Date(2012, 3, 1), new Date(2012, 6, 1), new Date(2012, 9, 1)]);
-            chart.renderVerticalGridLines(true);
-            chart.render();
+            var chart = buildChart("chart-brush-off", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+            chart.brushOn(false).render();
             return chart;
         },
-        'vertical grid line g should be generated': function(chart){
-            assert.equal(chart.selectAll("g.vertical")[0].length, 1);
-        },
-        'vertical grid lines should be generated': function(chart){
-            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line").size(), 3);
-        },
-        'vertical grid line x,y should be generated correctly': function(chart){
-            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("x1"), "508.48630136986304");
-            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("y1"), "160");
-            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("x2"), "508.48630136986304");
-            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("y2"), "");
+        'g.brush should not be generated': function(chart){
+            assert.equal(chart.selectAll("g.brush")[0].length, 0);
         },
         teardown: function(topic) {
             resetAllFilters();
