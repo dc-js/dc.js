@@ -9,6 +9,9 @@ var width = 1100;
 var height = 200;
 
 function buildChart(id, xdomain) {
+    if(!xdomain)
+        xdomain = [new Date(2012, 0, 1), new Date(2012, 11, 31)];
+
     d3.select("body").append("div").attr("id", id);
     var chart = dc.lineChart("#" + id);
     chart.dimension(dateDimension).group(dateGroup)
@@ -23,7 +26,7 @@ function buildChart(id, xdomain) {
 suite.addBatch({
     'time line chart': {
         topic: function() {
-            var chart = buildChart("line-chart", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+            var chart = buildChart("line-chart");
             chart.filter([new Date(2012, 5, 1), new Date(2012, 5, 30)]);
             chart.redraw();
             return chart;
@@ -169,7 +172,7 @@ suite.addBatch({
 suite.addBatch({'elastic axis':{
     topic: function() {
         countryDimension.filter("CA");
-        var chart = buildChart("elastic-y-line-chart", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+        var chart = buildChart("elastic-y-line-chart");
         chart.yAxisPadding(10)
             .xAxisPadding(60)
             .elasticX(true)
@@ -198,7 +201,7 @@ suite.addBatch({'elastic axis':{
 
 suite.addBatch({'area chart':{
     topic:function() {
-        var chart = buildChart("area-chart", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+        var chart = buildChart("area-chart");
         chart.renderArea(true);
         chart.render();
         return chart;
@@ -264,7 +267,7 @@ suite.addBatch({'stacked area chart':{
 suite.addBatch({
     'renderlet':{
         topic:function(){
-            var chart = buildChart("chart-renderlet", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+            var chart = buildChart("chart-renderlet");
             chart.renderlet(function(chart){chart.selectAll("path").attr("fill", "red");});
             return chart;
         },
@@ -286,7 +289,7 @@ suite.addBatch({
 suite.addBatch({
     'horizontal grid lines drawing':{
         topic:function(){
-            var chart = buildChart("chart-grid-line", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+            var chart = buildChart("chart-grid-line");
             chart.renderHorizontalGridLines(true);
             chart.render();
             return chart;
@@ -318,7 +321,7 @@ suite.addBatch({
 suite.addBatch({
     'horizontal grid lines drawing w/ custom ticks':{
         topic:function(){
-            var chart = buildChart("chart-grid-line-custom-ticks", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+            var chart = buildChart("chart-grid-line-custom-ticks");
             chart.yAxis().tickValues([0, 1, 2]);
             chart.renderHorizontalGridLines(true);
             chart.render();
@@ -351,7 +354,7 @@ suite.addBatch({
 suite.addBatch({
     'vertical grid lines drawing':{
         topic:function(){
-            var chart = buildChart("chart-grid-line-vertical", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+            var chart = buildChart("chart-grid-line-vertical");
             chart.renderVerticalGridLines(true);
             chart.render();
             return chart;
@@ -384,7 +387,7 @@ suite.addBatch({
 suite.addBatch({
     'turn off brush':{
         topic:function(){
-            var chart = buildChart("chart-brush-off", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+            var chart = buildChart("chart-brush-off");
             chart.brushOn(false).render();
             return chart;
         },
