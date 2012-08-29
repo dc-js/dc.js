@@ -558,7 +558,15 @@ d3.csv("ndx.csv", function(data) {
             .stack(monthlyMoveGroup, function(d){return d.value;})
             // (optional) you can add multiple stacked group with or without custom value retriever
             // if no custom retriever provided base chart's value retriever will be used
-            .stack(monthlyMoveGroup);
+            .stack(monthlyMoveGroup)
+            // (optional) whether this chart should generate user interactive brush to allow range
+            // selection, :default=true.
+            .brushOn(true)
+            // (optional) whether svg title element(tooltip) should be generated for each bar using
+            // the given function, :default=no
+            .title(function(d) { return "Value: " + d.value; })
+            // (optional) whether chart should render titles, :default = false
+            .renderTitle(true);
     </pre>
 
 <h3>Line Chart</h3>
@@ -600,7 +608,10 @@ d3.csv("ndx.csv", function(data) {
             .stack(monthlyMoveGroup, function(d){return d.value;})
             // (optional) you can add multiple stacked group with or without custom value retriever
             // if no custom retriever provided base chart's value retriever will be used
-            .stack(monthlyMoveGroup);
+            .stack(monthlyMoveGroup)
+            // (optional) whether this chart should generate user interactive brush to allow range
+            // selection, :default=true.
+            .brushOn(true);
     </pre>
 
 <h3>Composite Chart</h3>
@@ -645,7 +656,10 @@ d3.csv("ndx.csv", function(data) {
             dc.barChart(volumeMoveChart).group(volumeByMonthGroup),
             // you can even include stacked bar chart or line chart in a composite chart
             dc.lineChart(volumeMoveChart).group(indexAvgByMonthGroup).valueAccessor(function(d){return d.value.avg;}).renderArea(true).stack(monthlyMoveGroup, function(d){return d.value;})
-        ]);
+        ])
+        // (optional) whether this chart should generate user interactive brush to allow range
+        // selection, :default=true.
+        .brushOn(true);
 </pre>
 
 <h3>Bubble Chart</h3>
