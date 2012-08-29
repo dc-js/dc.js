@@ -9,6 +9,9 @@ var width = 1100;
 var height = 200;
 
 function buildChart(id, xdomain) {
+    if(!xdomain)
+        xdomain = [new Date(2012, 0, 1), new Date(2012, 11, 31)];
+
     var div = d3.select("body").append("div").attr("id", id);
     div.append("a").attr("class", "reset").style("display", "none");
     div.append("span").attr("class", "filter").style("display", "none");
@@ -27,7 +30,7 @@ function buildChart(id, xdomain) {
 suite.addBatch({
     'time bar chart': {
         topic: function() {
-            var chart = buildChart("bar-chart", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+            var chart = buildChart("bar-chart");
             chart.filter([new Date(2012, 5, 1), new Date(2012, 5, 30)]);
             chart.redraw();
             return chart;
@@ -261,7 +264,7 @@ suite.addBatch({
 suite.addBatch({'elastic axis':{
     topic: function() {
         countryDimension.filter("CA")
-        var chart = buildChart("bar-chart2", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+        var chart = buildChart("bar-chart2");
         chart.elasticY(true)
             .yAxisPadding(10)
             .elasticX(true)
@@ -285,7 +288,7 @@ suite.addBatch({'elastic axis':{
 
 suite.addBatch({'stacked':{
     topic:function() {
-        var chart = buildChart("bar-chart-stack", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+        var chart = buildChart("bar-chart-stack");
         chart.group(dateIdSumGroup)
             .stack(dateValueSumGroup)
             .elasticY(true);
@@ -315,7 +318,7 @@ suite.addBatch({'stacked':{
 
 suite.addBatch({'stacked with custom value retriever':{
     topic:function() {
-        var chart = buildChart("bar-chart-stack", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+        var chart = buildChart("bar-chart-stack");
         chart.group(dateIdSumGroup)
             .stack(dateValueSumGroup, function(d){return 3;})
             .elasticY(true);
@@ -346,7 +349,7 @@ suite.addBatch({'stacked with custom value retriever':{
 suite.addBatch({
     'renderlet':{
         topic:function(){
-            var chart = buildChart("chart-renderlet", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+            var chart = buildChart("chart-renderlet");
             chart.renderlet(function(chart){chart.selectAll("rect").attr("fill", "red");});
             return chart;
         },
@@ -368,7 +371,7 @@ suite.addBatch({
 suite.addBatch({
     'de-centering':{
         topic:function(){
-            var chart = buildChart("chart-decenter", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+            var chart = buildChart("chart-decenter");
             chart.centerBar(false);
             chart.redraw();
             return chart;
@@ -389,7 +392,7 @@ suite.addBatch({
 suite.addBatch({
     'custom title':{
         topic:function(){
-            var chart = buildChart("chart-custom-title", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+            var chart = buildChart("chart-custom-title");
             chart.brushOn(false)
                 .title(function(){return "custom title";})
                 .render();
