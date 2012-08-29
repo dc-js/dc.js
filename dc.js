@@ -949,6 +949,10 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
+    function brushHeight() {
+        return _chart.xAxisY() - _chart.margins().top;
+    }
+
     _chart.renderBrush = function(g) {
         _brush.on("brushstart", brushStart)
             .on("brush", brushing)
@@ -956,9 +960,9 @@ dc.coordinateGridChart = function(_chart) {
 
         var gBrush = g.append("g")
             .attr("class", "brush")
-            .attr("transform", "translate(" + _chart.margins().left + ",0)")
+            .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")")
             .call(_brush.x(_chart.x()));
-        gBrush.selectAll("rect").attr("height", _chart.xAxisY());
+        gBrush.selectAll("rect").attr("height", brushHeight());
         gBrush.selectAll(".resize").append("path").attr("d", _chart.resizeHandlePath);
 
         if (_filter) {
@@ -996,7 +1000,7 @@ dc.coordinateGridChart = function(_chart) {
 
         var gBrush = g.select("g.brush");
         gBrush.call(_chart.brush().x(_chart.x()));
-        gBrush.selectAll("rect").attr("height", _chart.xAxisY());
+        gBrush.selectAll("rect").attr("height", brushHeight());
 
         _chart.fadeDeselectedArea();
     };
@@ -1007,7 +1011,7 @@ dc.coordinateGridChart = function(_chart) {
 
     // borrowed from Crossfilter example
     _chart.resizeHandlePath = function(d) {
-        var e = +(d == "e"), x = e ? 1 : -1, y = _chart.xAxisY() / 3;
+        var e = +(d == "e"), x = e ? 1 : -1, y = brushHeight() / 3;
         return "M" + (.5 * x) + "," + y
             + "A6,6 0 0 " + e + " " + (6.5 * x) + "," + (y + 6)
             + "V" + (2 * y - 6)
@@ -1457,7 +1461,7 @@ dc.pieChart = function(parent, chartGroup) {
 
     _chart.highlightFilter = function() {
         if (_chart.hasFilter()) {
-            _chart.selectAll("g." + _sliceCssClass).select("path").each(function(d) {
+            _chart.selectAll("g." + _sliceCssClass).each(function(d) {
                 if (_chart.isSelectedSlice(d)) {
                     _chart.highlightSelected(this);
                 } else {
@@ -1465,7 +1469,7 @@ dc.pieChart = function(parent, chartGroup) {
                 }
             });
         } else {
-            _chart.selectAll("g." + _sliceCssClass).selectAll("path").each(function(d) {
+            _chart.selectAll("g." + _sliceCssClass).each(function(d) {
                 _chart.resetHighlight(this);
             });
         }
@@ -2131,7 +2135,7 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     _chart.fadeDeselectedArea = function() {
         if (_chart.hasFilter()) {
-            _chart.selectAll("g." + NODE_CLASS).select("circle").each(function(d) {
+            _chart.selectAll("g." + NODE_CLASS).each(function(d) {
                 if (_chart.isSelectedSlice(d)) {
                     _chart.highlightSelected(this);
                 } else {
@@ -2139,7 +2143,7 @@ dc.bubbleChart = function(parent, chartGroup) {
                 }
             });
         } else {
-            _chart.selectAll("g." + NODE_CLASS).selectAll("circle").each(function(d) {
+            _chart.selectAll("g." + NODE_CLASS).each(function(d) {
                 _chart.resetHighlight(this);
             });
         }
@@ -2340,8 +2344,19 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
     function renderRegionG(layerIndex) {
         var regionG = _chart.svg()
             .selectAll(layerSelector(layerIndex))
+            .classed("selected", function(d) {
+                return isSelected(layerIndex, d);
+            })
+            .classed("deselected", function(d) {
+                return isDeselected(layerIndex, d);
+            })
             .attr("class", function(d) {
-                return geoJson(layerIndex).name + " " + geoJson(layerIndex).keyAccessor(d);
+                var layerNameClass = geoJson(layerIndex).name;
+                var regionClass = geoJson(layerIndex).keyAccessor(d).toLowerCase().replace(/ /g, "_");
+                var baseClasses = layerNameClass + " " + regionClass;
+                if(isSelected(layerIndex, d)) baseClasses += " selected";
+                if(isDeselected(layerIndex, d)) baseClasses += " deselected";
+                return baseClasses;
             });
         return regionG;
     }
@@ -2374,12 +2389,6 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
                 if (currentFill)
                     return currentFill;
                 return "none";
-            })
-            .classed("selected", function(d) {
-                return isSelected(layerIndex, d);
-            })
-            .classed("deselected", function(d) {
-                return isDeselected(layerIndex, d);
             })
             .on("click", function(d) {
                 return onClick(d, layerIndex);

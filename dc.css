@@ -58,13 +58,13 @@ a {
     fill-opacity: .8;
 }
 
-.pie-slice path.selected {
+.selected path{
     stroke-width: 3;
     stroke: #ccc;
     fill-opacity: 1;
 }
 
-.pie-slice path.deselected {
+.deselected path{
     strok: none;
     fill-opacity: .5;
     fill: #ccc;
@@ -137,13 +137,13 @@ a {
     fill-opacity: .8;
 }
 
-.node .selected {
+.selected circle {
     stroke-width: 3;
     stroke: #ccc;
     fill-opacity: 1;
 }
 
-.node circle.deselected {
+.deselected circle {
     strok: none;
     fill-opacity: .5;
     fill: #ccc;
