@@ -380,9 +380,18 @@ d3.csv("ndx.csv", function(data) {
                     .xUnits(d3.time.months)
                     .elasticY(true)
                     .renderHorizontalGridLines(true)
+                    .brushOn(false)
                     .compose([
                         dc.barChart(volumeMoveChart).group(volumeByMonthGroup).centerBar(true),
-                        dc.lineChart(volumeMoveChart).group(indexAvgByMonthGroup).valueAccessor(function(d){return d.value.avg;}).renderArea(true).stack(monthlyMoveGroup, function(d){return d.value;})
+                        dc.lineChart(volumeMoveChart).group(indexAvgByMonthGroup)
+                                .valueAccessor(function(d){return d.value.avg;})
+                                .renderArea(true)
+                                .stack(monthlyMoveGroup, function(d){return d.value;})
+                                .title(function(d){
+                                    var value = d.value.avg?d.value.avg:d.value;
+                                    if(isNaN(value)) value = 0;
+                                    return numberFormat(value);
+                                })
                     ]);
 
             dc.dataCount("#data-count")

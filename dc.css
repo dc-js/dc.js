@@ -24,6 +24,10 @@ a {
     fill: steelblue;
 }
 
+.chart rect.bar:hover {
+    fill-opacity: .5;
+}
+
 .chart rect.stack1 {
     stroke: none;
     fill: red;
@@ -106,12 +110,24 @@ a {
     stroke-width: 1.5px;
 }
 
+.chart circle.dot{
+    fill: steelblue;
+}
+
 .chart g.stack1 path.line {
     stroke: green;
 }
 
+.chart g.stack1 circle.dot{
+    fill: green;
+}
+
 .chart g.stack2 path.line {
     stroke: red;
+}
+
+.chart g.stack2 circle.dot{
+    fill: red;
 }
 
 .chart path.area {
