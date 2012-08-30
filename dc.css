@@ -88,6 +88,7 @@ a {
     fill: none;
     stroke: #ccc;
     opacity: .5;
+    shape-rendering: crispEdges;
 }
 
 .brush rect.background {
@@ -128,6 +129,12 @@ a {
 
 .chart g.stack2 circle.dot{
     fill: red;
+}
+
+.chart g.tooltip path{
+    fill: none;
+    stroke: grey;
+    stroke-opacity: .8;
 }
 
 .chart path.area {
