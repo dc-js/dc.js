@@ -26,6 +26,24 @@ dc.lineChart = function(parent, chartGroup) {
 
         if (_renderArea)
             drawArea(g, stackedCssClass, groupIndex, line);
+
+        g.selectAll("circle.dot")
+            .data(g.datum())
+            .enter()
+            .append("circle")
+            .attr("class", "dot")
+            .attr("r", 5)
+            .style("fill-opacity", 1e-6)
+            .attr("cx", lineX)
+            .attr("cy", function(d, dataIndex){
+                return lineY(d, dataIndex, groupIndex);
+            })
+            .on("mouseover", function(d) {
+                d3.select(this).style("fill-opacity", .8)
+            })
+            .on("mouseout", function(d) {
+                d3.select(this).style("fill-opacity", 1e-6)
+            });
     }
 
     function getStackedCssClass(groupIndex) {
@@ -39,6 +57,7 @@ dc.lineChart = function(parent, chartGroup) {
             g = _chart.g().append("g").attr("class", stackedCssClass);
 
         g.datum(group.all());
+
         return g;
     }
 
@@ -52,20 +71,27 @@ dc.lineChart = function(parent, chartGroup) {
         linePath[0][0][dc.constants.GROUP_INDEX_NAME] = groupIndex;
 
         var line = d3.svg.line()
-            .x(function(d) {
-                return _chart.margins().left + _chart.x()(_chart.keyAccessor()(d));
-            })
-            .y(function(d, dataIndex) {
+            .x(lineX)
+            .y(function(d, dataIndex){
                 var groupIndex = this[dc.constants.GROUP_INDEX_NAME];
-                return _chart.getChartStack().getDataPoint(groupIndex, dataIndex);
+                return lineY(d, dataIndex, groupIndex);
             });
 
         dc.transition(linePath, _chart.transitionDuration(),
             function(t) {
                 t.ease("linear");
             }).attr("d", line);
+
         return line;
     }
+
+    var lineX = function(d) {
+        return _chart.margins().left + _chart.x()(_chart.keyAccessor()(d));
+    };
+
+    var lineY = function(d, dataIndex, groupIndex) {
+        return _chart.getChartStack().getDataPoint(groupIndex, dataIndex);
+    };
 
     function drawArea(g, stackedCssClass, groupIndex, line) {
         var areaPath = g.selectAll("path.area");
@@ -82,7 +108,7 @@ dc.lineChart = function(parent, chartGroup) {
             .y0(function(d, dataIndex) {
                 var groupIndex = this[dc.constants.GROUP_INDEX_NAME];
                 if (groupIndex == 0) return _chart.y()(0) - AREA_BOTTOM_PADDING + _chart.margins().top;
-                return _chart.getChartStack().getDataPoint(groupIndex - 1, dataIndex);
+                return _chart.getChartStack().getDataPoint(--groupIndex, dataIndex) - AREA_BOTTOM_PADDING;
             });
 
         dc.transition(areaPath, _chart.transitionDuration(),

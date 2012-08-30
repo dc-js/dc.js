@@ -110,12 +110,24 @@ a {
     stroke-width: 1.5px;
 }
 
+.chart circle.dot{
+    fill: steelblue;
+}
+
 .chart g.stack1 path.line {
     stroke: green;
 }
 
+.chart g.stack1 circle.dot{
+    fill: green;
+}
+
 .chart g.stack2 path.line {
     stroke: red;
+}
+
+.chart g.stack2 circle.dot{
+    fill: red;
 }
 
 .chart path.area {
