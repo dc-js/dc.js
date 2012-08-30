@@ -374,7 +374,7 @@ d3.csv("ndx.csv", function(data) {
 
             moveChart.width(990)
                     .height(180)
-                    .margins({top: 10, right: 50, bottom: 10, left: 40})
+                    .margins({top: 10, right: 50, bottom: 5, left: 40})
                     .dimension(moveMonths)
                     .group(indexAvgByMonthGroup)
                     .valueAccessor(function(d) {
@@ -399,8 +399,8 @@ d3.csv("ndx.csv", function(data) {
                     ])
                     .xAxis().tickValues([]);
             volumeChart.width(990)
-                    .height(50)
-                    .margins({top: 0, right: 50, bottom: 30, left: 40})
+                    .height(40)
+                    .margins({top: 0, right: 50, bottom: 20, left: 40})
                     .dimension(moveMonths)
                     .group(volumeByMonthGroup)
                     .centerBar(true)
