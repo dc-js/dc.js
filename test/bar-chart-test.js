@@ -41,6 +41,9 @@ suite.addBatch({
         'should be registered':function(chart) {
             assert.isTrue(dc.hasChart(chart));
         },
+        'dc-chart class should be turned on for parent div': function(chart){
+            assert.equal(jQuery("#bar-chart").attr("class"), "dc-chart");
+        },
         'svg should be created': function(chart) {
             assert.isFalse(chart.select("svg").empty());
         },

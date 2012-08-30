@@ -77,6 +77,7 @@ dc.baseChart = function(_chart) {
         } else {
             _anchor = a;
             _root = d3.select(_anchor);
+            _root.classed(dc.constants.CHART_CLASS, true);
             dc.registerChart(_chart, chartGroup);
         }
         _chartGroup = chartGroup;

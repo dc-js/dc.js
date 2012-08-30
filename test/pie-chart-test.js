@@ -38,6 +38,9 @@ suite.addBatch({
         'should be registered':function(chart) {
             assert.isTrue(dc.hasChart(chart));
         },
+        'dc-chart class should be turned on for parent div': function(chart){
+            assert.equal(jQuery("#pie-chart-age").attr("class"), "dc-chart");
+        },
         'inner radius can be set': function(chart) {
             assert.equal(chart.innerRadius(), innerRadius);
         },

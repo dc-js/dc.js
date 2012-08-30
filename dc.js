@@ -1,6 +1,7 @@
 dc = {
     version: "0.9.0",
     constants : {
+        CHART_CLASS: "dc-chart",
         STACK_CLASS: "stack",
         DESELECTED_CLASS: "deselected",
         SELECTED_CLASS: "selected",
@@ -484,6 +485,7 @@ dc.baseChart = function(_chart) {
         } else {
             _anchor = a;
             _root = d3.select(_anchor);
+            _root.classed(dc.constants.CHART_CLASS, true);
             dc.registerChart(_chart, chartGroup);
         }
         _chartGroup = chartGroup;
