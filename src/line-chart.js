@@ -111,23 +111,29 @@ dc.lineChart = function(parent, chartGroup) {
     };
 
     function drawDots(g, groupIndex) {
-        g.selectAll("circle.dot")
-            .data(g.datum())
-            .enter()
+        var dots = g.selectAll("circle.dot")
+            .data(g.datum());
+
+        dots.enter()
             .append("circle")
             .attr("class", "dot")
             .attr("r", _dotRadius)
             .style("fill-opacity", 1e-6)
-            .attr("cx", lineX)
-            .attr("cy", function(d, dataIndex) {
-                return lineY(d, dataIndex, groupIndex);
-            })
             .on("mouseover", function(d) {
                 d3.select(this).style("fill-opacity", .8)
             })
             .on("mouseout", function(d) {
                 d3.select(this).style("fill-opacity", 1e-6)
+            })
+            .append("title")
+            .text(_chart.title());
+
+        dots.attr("cx", lineX)
+            .attr("cy", function(d, dataIndex) {
+                return lineY(d, dataIndex, groupIndex);
             });
+
+        dots.exit().remove();
     }
 
     _chart.dotRadius = function(_){

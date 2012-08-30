@@ -112,7 +112,6 @@ a {
 
 .chart circle.dot{
     fill: steelblue;
-    radius: 100;
 }
 
 .chart g.stack1 path.line {

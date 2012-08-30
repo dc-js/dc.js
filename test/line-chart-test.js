@@ -408,6 +408,16 @@ suite.addBatch({
                 assert.equal(d3.select(this).attr("r"), 10);
             });
         },
+        'circle.dot should be almost invisible by default': function(chart){
+            chart.selectAll("circle.dot").each(function(){
+                assert.equal(d3.select(this).style("fill-opacity"), 1e-6);
+            });
+        },
+        'circle.dot title should be generated per data point': function(chart){
+            chart.selectAll("circle.dot").each(function(d){
+                assert.equal(d3.select(this).select("title").text(), d.value);
+            });
+        },
         teardown: function(topic) {
             resetAllFilters();
             resetBody();
