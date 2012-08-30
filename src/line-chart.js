@@ -128,13 +128,13 @@ dc.lineChart = function(parent, chartGroup) {
                 d3.select(this).style("fill-opacity", 1e-6);
                 d3.select(this).style("stroke-opacity", 1e-6);
             })
-            .append("title")
-            .text(_chart.title());
+            .append("title").text(_chart.title());
 
         dots.attr("cx", lineX)
             .attr("cy", function(d, dataIndex) {
                 return lineY(d, dataIndex, groupIndex);
-            });
+            })
+            .select("title").text(_chart.title());
 
         dots.exit().remove();
     }
