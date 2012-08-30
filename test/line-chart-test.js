@@ -411,6 +411,7 @@ suite.addBatch({
         'circle.dot should be almost invisible by default': function(chart){
             chart.selectAll("circle.dot").each(function(){
                 assert.equal(d3.select(this).style("fill-opacity"), 1e-6);
+                assert.equal(d3.select(this).style("stroke-opacity"), 1e-6);
             });
         },
         'circle.dot title should be generated per data point': function(chart){

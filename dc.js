@@ -1857,11 +1857,14 @@ dc.lineChart = function(parent, chartGroup) {
             .attr("class", "dot")
             .attr("r", _dotRadius)
             .style("fill-opacity", 1e-6)
+            .style("stroke-opacity", 1e-6)
             .on("mouseover", function(d) {
-                d3.select(this).style("fill-opacity", .8)
+                d3.select(this).style("fill-opacity", .8);
+                d3.select(this).style("stroke-opacity", .8);
             })
             .on("mouseout", function(d) {
-                d3.select(this).style("fill-opacity", 1e-6)
+                d3.select(this).style("fill-opacity", 1e-6);
+                d3.select(this).style("stroke-opacity", 1e-6);
             })
             .append("title")
             .text(_chart.title());
