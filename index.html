@@ -120,10 +120,14 @@
 
 <div id="monthly-move-chart" class="chart">
     <span>Monthly Index Abs Move & Volume/500,000 Chart (Blue Line: Avg Index, Green Line: Index Fluctuation)</span>
-    <a class="reset" href="javascript:volumeMoveChart.filterAll();dc.redrawAll();"
+    <a class="reset" href="javascript:volumeChart.filterAll();dc.redrawAll();"
        style="display: none;">reset</a>
 
     <div class="clear"></div>
+</div>
+
+<div id="monthly-volume-chart" class="chart">
+
 </div>
 
 <div class="clear"></div>
@@ -152,7 +156,8 @@ var gainOrLossChart = dc.pieChart("#gain-loss-chart");
 var fluctuationChart = dc.barChart("#fluctuation-chart");
 var quarterChart = dc.pieChart("#quarter-chart");
 var dayOfWeekChart = dc.pieChart("#day-of-week-chart");
-var volumeMoveChart = dc.compositeChart("#monthly-move-chart");
+var moveChart = dc.compositeChart("#monthly-move-chart");
+var volumeChart = dc.barChart("#monthly-volume-chart");
 var yearlyBubbleChart = dc.bubbleChart("#yearly-bubble-chart");
 
 // set dc.js version in title
@@ -367,9 +372,9 @@ d3.csv("ndx.csv", function(data) {
                         return v + "%";
                     });
 
-            volumeMoveChart.width(990)
+            moveChart.width(990)
                     .height(180)
-                    .margins({top: 10, right: 50, bottom: 30, left: 40})
+                    .margins({top: 10, right: 50, bottom: 10, left: 40})
                     .dimension(moveMonths)
                     .group(indexAvgByMonthGroup)
                     .valueAccessor(function(d) {
@@ -382,8 +387,7 @@ d3.csv("ndx.csv", function(data) {
                     .renderHorizontalGridLines(true)
                     .brushOn(false)
                     .compose([
-                        dc.barChart(volumeMoveChart).group(volumeByMonthGroup).centerBar(true),
-                        dc.lineChart(volumeMoveChart).group(indexAvgByMonthGroup)
+                        dc.lineChart(moveChart).group(indexAvgByMonthGroup)
                                 .valueAccessor(function(d){return d.value.avg;})
                                 .renderArea(true)
                                 .stack(monthlyMoveGroup, function(d){return d.value;})
@@ -392,7 +396,22 @@ d3.csv("ndx.csv", function(data) {
                                     if(isNaN(value)) value = 0;
                                     return numberFormat(value);
                                 })
-                    ]);
+                    ])
+                    .xAxis().tickValues([]);
+            volumeChart.width(990)
+                    .height(50)
+                    .margins({top: 0, right: 50, bottom: 30, left: 40})
+                    .dimension(moveMonths)
+                    .group(volumeByMonthGroup)
+                    .centerBar(true)
+                    .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
+                    .round(d3.time.month.round)
+                    .xUnits(d3.time.months)
+                    .renderlet(function(chart){
+                        chart.select("g.y").style("display", "none");
+                        moveChart.filter(chart.filter());
+                    });
+
 
             dc.dataCount("#data-count")
                     .dimension(ndx)
