@@ -1,6 +1,7 @@
 dc = {
     version: "0.9.0",
     constants : {
+        CHART_CLASS: "dc-chart",
         STACK_CLASS: "stack",
         DESELECTED_CLASS: "deselected",
         SELECTED_CLASS: "selected",
@@ -417,8 +418,6 @@ dc.baseChart = function(_chart) {
 
     var _width = 200, _height = 200;
 
-    var _viewRange;
-
     var _keyAccessor = function(d) {
         return d.key;
     };
@@ -486,6 +485,7 @@ dc.baseChart = function(_chart) {
         } else {
             _anchor = a;
             _root = d3.select(_anchor);
+            _root.classed(dc.constants.CHART_CLASS, true);
             dc.registerChart(_chart, chartGroup);
         }
         _chartGroup = chartGroup;
@@ -634,12 +634,6 @@ dc.baseChart = function(_chart) {
     _chart.chartGroup = function(_) {
         if (!arguments.length) return _chartGroup;
         _chartGroup = _;
-        return _chart;
-    };
-
-    _chart.viewRange = function(_) {
-        if (!arguments.length) return _viewRange;
-        _viewRange = _;
         return _chart;
     };
 
@@ -1310,9 +1304,7 @@ dc.stackableChart = function(_chart) {
             if (min == null || min > m) min = m;
         }
 
-        var paddedMin = dc.utils.subtract(min, _chart.xAxisPadding());
-        var viewRangeMin = _chart.viewRange() ? _chart.viewRange()[0] : paddedMin;
-        return viewRangeMin > paddedMin ? viewRangeMin : paddedMin;
+        return dc.utils.subtract(min, _chart.xAxisPadding());
     };
 
     _chart.xAxisMax = function() {
@@ -1325,9 +1317,7 @@ dc.stackableChart = function(_chart) {
             if (max == null || max < m) max = m;
         }
 
-        var paddedMax = dc.utils.add(max, _chart.xAxisPadding());
-        var viewRangeMax = _chart.viewRange() ? _chart.viewRange()[1] : paddedMax;
-        return viewRangeMax < paddedMax ? viewRangeMax : paddedMax;
+        return dc.utils.add(max, _chart.xAxisPadding());
     };
 
     _chart.dataPointBaseline = function() {
@@ -1343,7 +1333,7 @@ dc.stackableChart = function(_chart) {
 
     _chart.calculateDataPointMatrix = function(groups) {
         for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
-            var data = _chart.loadViewableData(groups[groupIndex], groupIndex);
+            var data = groups[groupIndex].all();
             for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
                 var d = data[dataIndex];
                 if (groupIndex == 0)
@@ -1353,22 +1343,6 @@ dc.stackableChart = function(_chart) {
             }
         }
     };
-
-    _chart.loadViewableData = function(group, groupIndex) {
-        var data = [];
-        var all = group.all();
-        if (_chart.viewRange()) {
-            all.forEach(function(d) {
-                var key = _chart.getKeyAccessorByIndex(groupIndex)(d);
-                if (key > _chart.viewRange()[0] && key < _chart.viewRange()[1])
-                    data.push(d);
-            });
-        } else {
-            data = all;
-        }
-
-        return data;
-    }
 
     _chart.getChartStack = function() {
         return _groupStack;
@@ -1807,7 +1781,7 @@ dc.barChart = function(parent, chartGroup) {
 
     function generateBarsPerGroup(groupIndex, group) {
         var bars = _chart.g().selectAll("rect." + dc.constants.STACK_CLASS + groupIndex)
-            .data(_chart.loadViewableData(group, groupIndex));
+            .data(group.all());
 
         addNewBars(bars, groupIndex);
 
@@ -1953,12 +1927,12 @@ dc.lineChart = function(parent, chartGroup) {
     function plotDataByGroup(groupIndex, group) {
         var stackedCssClass = getStackedCssClass(groupIndex);
 
-        var g = createGrouping(stackedCssClass, group, groupIndex);
+        var g = createGrouping(stackedCssClass, group);
 
         var line = drawLine(g, stackedCssClass, groupIndex);
 
         if (_renderArea)
-            drawArea(g, stackedCssClass, groupIndex, line, group);
+            drawArea(g, stackedCssClass, groupIndex, line);
 
         if (_chart.renderTitle())
             drawDots(g, groupIndex);
@@ -1968,19 +1942,19 @@ dc.lineChart = function(parent, chartGroup) {
         return dc.constants.STACK_CLASS + groupIndex;
     }
 
-    function createGrouping(stackedCssClass, group, groupIndex) {
+    function createGrouping(stackedCssClass, group) {
         var g = _chart.g().select("g." + stackedCssClass);
 
         if (g.empty())
             g = _chart.g().append("g").attr("class", stackedCssClass);
 
-        g.datum(_chart.loadViewableData(group, groupIndex));
+        g.datum(group.all());
 
         return g;
     }
 
     function drawLine(g, stackedCssClass, groupIndex) {
-        var linePath = g.select("path.line").datum(g.datum());
+        var linePath = g.select("path.line");
 
         if (linePath.empty())
             linePath = g.append("path")
@@ -2003,7 +1977,7 @@ dc.lineChart = function(parent, chartGroup) {
         return line;
     }
 
-    var lineX = function(d, i) {
+    var lineX = function(d) {
         return _chart.margins().left + _chart.x()(_chart.keyAccessor()(d));
     };
 
@@ -2011,8 +1985,8 @@ dc.lineChart = function(parent, chartGroup) {
         return _chart.getChartStack().getDataPoint(groupIndex, dataIndex);
     };
 
-    function drawArea(g, stackedCssClass, groupIndex, line, group) {
-        var areaPath = g.selectAll("path.area").datum(g.datum());
+    function drawArea(g, stackedCssClass, groupIndex, line) {
+        var areaPath = g.selectAll("path.area");
 
         if (areaPath.empty())
             areaPath = g.append("path")
@@ -2031,7 +2005,7 @@ dc.lineChart = function(parent, chartGroup) {
 
         dc.transition(areaPath, _chart.transitionDuration(),
             function(t) {
-//                t.ease("linear");
+                t.ease("linear");
             }).attr("d", area);
     }
 
@@ -2365,9 +2339,6 @@ dc.compositeChart = function(parent, chartGroup) {
             child.margins(_chart.margins());
             child.xUnits(_chart.xUnits());
             child.transitionDuration(_chart.transitionDuration());
-            child.elasticY(_chart.elasticY());
-            child.elasticX(_chart.elasticX());
-            child.viewRange(_chart.viewRange());
         }
 
         return g;
@@ -2382,7 +2353,6 @@ dc.compositeChart = function(parent, chartGroup) {
                 child.g().attr("class", SUB_CHART_CLASS);
             }
 
-            child.viewRange(_chart.viewRange());
             child.x(_chart.x());
             child.y(_chart.y());
             child.xAxis(_chart.xAxis());

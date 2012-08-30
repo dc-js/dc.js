@@ -89,28 +89,28 @@
 
 <div class="clear"></div>
 
-<div id="gain-loss-chart" class="dc-chart">
+<div id="gain-loss-chart" >
     <span class="title">Days by Gain/Loss</span>
     <a class="reset" href="javascript:gainOrLossChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
 </div>
 
-<div id="quarter-chart" class="dc-chart">
+<div id="quarter-chart" >
     <span class="title">Quarters</span>
     <a class="reset" href="javascript:quarterChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
 </div>
 
-<div id="day-of-week-chart" class="dc-chart">
+<div id="day-of-week-chart" >
     <span>Day of Week</span>
     <a class="reset" href="javascript:dayOfWeekChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
 </div>
 
-<div id="fluctuation-chart" class="dc-chart">
+<div id="fluctuation-chart" >
     <span>Days by Fluctuation(%)</span>
     <a class="reset" href="javascript:fluctuationChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
@@ -119,7 +119,7 @@
 
 <div class="clear"></div>
 
-<div id="monthly-move-chart" class="dc-chart">
+<div id="monthly-move-chart" >
     <span>Monthly Index Abs Move & Volume/500,000 Chart (Blue Line: Avg Index, Green Line: Index Fluctuation)</span>
     <a class="reset" href="javascript:volumeChart.filterAll();dc.redrawAll();"
        style="display: none;">reset</a>
@@ -127,22 +127,22 @@
     <div class="clear"></div>
 </div>
 
-<div id="monthly-volume-chart" class="dc-chart">
+<div id="monthly-volume-chart" >
 
 </div>
 
 <div class="clear"></div>
 
-<div class="dc-chart">
-    <div class="data-count">
+<div >
+    <div class="dc-data-count">
         <span class="filter-count"></span> selected out of <span class="total-count"></span> records | <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
     </div>
 </div>
 
 <div class="clear"></div>
 
-<div class="dc-chart">
-    <table class="data-table">
+<div >
+    <table class="dc-data-table">
         <thead>
         <tr class="header">
             <td>Date</td>
@@ -417,11 +417,11 @@ d3.csv("ndx.csv", function(data) {
                     });
 
 
-            dc.dataCount(".data-count")
+            dc.dataCount(".dc-data-count")
                     .dimension(ndx)
                     .group(all);
 
-            dc.dataTable(".data-table")
+            dc.dataTable(".dc-data-table")
                     .dimension(dateDimension)
                     .group(function(d) {
                         var format = d3.format("02d");
@@ -495,7 +495,7 @@ d3.csv("ndx.csv", function(data) {
 
     <pre class="brush:xml">
         <!-- A div anchor that can be identified by id -->
-        <div id="your-chart" class="dc-chart">
+        <div id="your-chart">
             <!-- Title or anything you want to add before the chart -->
             <span>Days by Gain or Loss</span>
             <!--

@@ -48,7 +48,7 @@
     <a href="http://buzzdata.com/azad2002/the-united-states-of-venture-capital-2011#!/data" target="_blank">BuzzData.com</a>.
 </p>
 
-<div id="us-chart" class="dc-chart">
+<div id="us-chart" >
     <span class="title">VC Distribution by States (color: total amount raised)</span>
     <a class="reset" href="javascript:usChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
     <span class="reset" style="display: none;"> | Current filter: <span class="filter"></span></span>
@@ -58,7 +58,7 @@
 
 <div class="clear"></div>
 
-<div id="industry-chart" class="dc-chart">
+<div id="industry-chart" >
     <span class="title">By Industries (y: number of deals, x: total amount raised in millions, radius: amount raised)</span>
     <a class="reset" href="javascript:industryChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
@@ -67,7 +67,7 @@
 
 <div class="clear"></div>
 
-<div id="round-chart" class="dc-chart">
+<div id="round-chart" >
     <span class="title">By Rounds (y: number of deals, x: total amount raised in millions, radius: amount raised)</span>
     <a class="reset" href="javascript:roundChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
@@ -157,7 +157,7 @@
                     .yAxisPadding(100)
                     .elasticX(true)
                     .xAxisPadding(200)
-                    .maxBubbleRelativeSize(0.1)
+                    .maxBubbleRelativeSize(0.07)
                     .renderHorizontalGridLines(true)
                     .renderVerticalGridLines(true)
                     .renderLabel(true)
@@ -187,7 +187,7 @@
                     .yAxisPadding(150)
                     .elasticX(true)
                     .xAxisPadding(300)
-                    .maxBubbleRelativeSize(0.1)
+                    .maxBubbleRelativeSize(0.07)
                     .renderHorizontalGridLines(true)
                     .renderVerticalGridLines(true)
                     .renderLabel(true)

@@ -156,28 +156,28 @@
     fill-opacity: 0.6;
 }
 
-.dc-chart .data-count {
+.dc-data-count {
     float: right;
     margin-top: 15px;
     margin-right: 15px;
 }
 
-.dc-chart .data-count .filter-count {
+.dc-data-count .filter-count {
     color: #3182bd;
     font-weight: bold;
 }
 
-.dc-chart .data-count .total-count {
+.dc-data-count .total-count {
     color: #3182bd;
     font-weight: bold;
 }
 
-.dc-chart .data-table {
+.dc-data-table {
     width: 700px;
     margin-bottom: 50px;
 }
 
-.dc-chart .data-table td {
+.dc-data-table td {
     display: table-cell;
     width: 135px;
     text-align: center;
@@ -187,16 +187,16 @@
     border: white solid 2px;
 }
 
-.dc-chart .data-table thead {
+.dc-data-table thead {
     font-weight: bold;
 }
 
-.dc-chart .data-table thead td {
+.dc-data-table thead td {
     background-color: #c6dbef;
     color: white;
 }
 
-.dc-chart .data-table tr.group td.label {
+.dc-data-table tr.group td.label {
     font-weight: bold;
     font-size: larger;
     float: inherit;
