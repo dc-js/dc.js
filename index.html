@@ -611,7 +611,14 @@ d3.csv("ndx.csv", function(data) {
             .stack(monthlyMoveGroup)
             // (optional) whether this chart should generate user interactive brush to allow range
             // selection, :default=true.
-            .brushOn(true);
+            .brushOn(true)
+            // (optional) whether dot and title should be generated on the line using
+            // the given function, :default=no
+            .title(function(d) { return "Value: " + d.value; })
+            // (optional) whether chart should render titles, :default = false
+            .renderTitle(true)
+            // (optional) radius used to generate title dot, :default = 5
+            .dotRadius(10);
     </pre>
 
 <h3>Composite Chart</h3>
