@@ -1738,9 +1738,11 @@ dc.barChart = function(parent, chartGroup) {
 };
 dc.lineChart = function(parent, chartGroup) {
     var AREA_BOTTOM_PADDING = 1;
+    var DEFAULT_DOT_RADIUS = 5;
 
     var _chart = dc.stackableChart(dc.coordinateGridChart({}));
     var _renderArea = false;
+    var _dotRadius = DEFAULT_DOT_RADIUS;
 
     _chart.transitionDuration(500);
 
@@ -1765,23 +1767,8 @@ dc.lineChart = function(parent, chartGroup) {
         if (_renderArea)
             drawArea(g, stackedCssClass, groupIndex, line);
 
-        g.selectAll("circle.dot")
-            .data(g.datum())
-            .enter()
-            .append("circle")
-            .attr("class", "dot")
-            .attr("r", 5)
-            .style("fill-opacity", 1e-6)
-            .attr("cx", lineX)
-            .attr("cy", function(d, dataIndex){
-                return lineY(d, dataIndex, groupIndex);
-            })
-            .on("mouseover", function(d) {
-                d3.select(this).style("fill-opacity", .8)
-            })
-            .on("mouseout", function(d) {
-                d3.select(this).style("fill-opacity", 1e-6)
-            });
+        if (_chart.renderTitle())
+            drawDots(g, groupIndex);
     }
 
     function getStackedCssClass(groupIndex) {
@@ -1810,7 +1797,7 @@ dc.lineChart = function(parent, chartGroup) {
 
         var line = d3.svg.line()
             .x(lineX)
-            .y(function(d, dataIndex){
+            .y(function(d, dataIndex) {
                 var groupIndex = this[dc.constants.GROUP_INDEX_NAME];
                 return lineY(d, dataIndex, groupIndex);
             });
@@ -1858,6 +1845,32 @@ dc.lineChart = function(parent, chartGroup) {
     _chart.renderArea = function(_) {
         if (!arguments.length) return _renderArea;
         _renderArea = _;
+        return _chart;
+    };
+
+    function drawDots(g, groupIndex) {
+        g.selectAll("circle.dot")
+            .data(g.datum())
+            .enter()
+            .append("circle")
+            .attr("class", "dot")
+            .attr("r", _dotRadius)
+            .style("fill-opacity", 1e-6)
+            .attr("cx", lineX)
+            .attr("cy", function(d, dataIndex) {
+                return lineY(d, dataIndex, groupIndex);
+            })
+            .on("mouseover", function(d) {
+                d3.select(this).style("fill-opacity", .8)
+            })
+            .on("mouseout", function(d) {
+                d3.select(this).style("fill-opacity", 1e-6)
+            });
+    }
+
+    _chart.dotRadius = function(_){
+        if(!arguments.length) return _dotRadius;
+        _dotRadius = _;
         return _chart;
     };
 
