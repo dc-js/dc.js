@@ -1,6 +1,10 @@
 dc.lineChart = function(parent, chartGroup) {
     var AREA_BOTTOM_PADDING = 1;
     var DEFAULT_DOT_RADIUS = 5;
+    var TOOLTIP_G_CLASS = "tooltip";
+    var DOT_CIRCLE_CLASS = "dot";
+    var Y_AXIS_REF_LINE_CLASS = "yRef";
+    var X_AXIS_REF_LINE_CLASS = "xRef";
 
     var _chart = dc.stackableChart(dc.coordinateGridChart({}));
     var _renderArea = false;
@@ -110,23 +114,32 @@ dc.lineChart = function(parent, chartGroup) {
         return _chart;
     };
 
-    function drawDots(g, groupIndex) {
-        var dots = g.selectAll("circle.dot")
+    function drawDots(parentG, groupIndex) {
+        var g = parentG.select("g." + TOOLTIP_G_CLASS);
+
+        if (g.empty())
+            g = parentG.append("g").attr("class", TOOLTIP_G_CLASS);
+
+        createRefLines(g);
+
+        var dots = g.selectAll("circle." + DOT_CIRCLE_CLASS)
             .data(g.datum());
 
         dots.enter()
             .append("circle")
-            .attr("class", "dot")
+            .attr("class", DOT_CIRCLE_CLASS)
             .attr("r", _dotRadius)
             .style("fill-opacity", 1e-6)
             .style("stroke-opacity", 1e-6)
-            .on("mouseover", function(d) {
-                d3.select(this).style("fill-opacity", .8);
-                d3.select(this).style("stroke-opacity", .8);
+            .on("mousemove", function(d) {
+                var dot = d3.select(this);
+                showDot(dot);
+                showRefLines(dot, g);
             })
             .on("mouseout", function(d) {
-                d3.select(this).style("fill-opacity", 1e-6);
-                d3.select(this).style("stroke-opacity", 1e-6);
+                var dot = d3.select(this);
+                hideDot(dot);
+                hideRefLines(g);
             })
             .append("title").text(_chart.title());
 
@@ -139,8 +152,38 @@ dc.lineChart = function(parent, chartGroup) {
         dots.exit().remove();
     }
 
-    _chart.dotRadius = function(_){
-        if(!arguments.length) return _dotRadius;
+    function createRefLines(g) {
+        var yRefLine = g.select("path." + Y_AXIS_REF_LINE_CLASS).empty() ? g.append("path").attr("class", Y_AXIS_REF_LINE_CLASS) : g.select("path." + Y_AXIS_REF_LINE_CLASS);
+        yRefLine.style("display", "none").attr("stroke-dasharray", "5,5");
+
+        var xRefLine = g.select("path." + X_AXIS_REF_LINE_CLASS).empty() ? g.append("path").attr("class", X_AXIS_REF_LINE_CLASS) : g.select("path." + X_AXIS_REF_LINE_CLASS);
+        xRefLine.style("display", "none").attr("stroke-dasharray", "5,5");
+    }
+
+    function showDot(dot) {
+        dot.style("fill-opacity", .8);
+        dot.style("stroke-opacity", .8);
+        return dot;
+    }
+
+    function showRefLines(dot, g) {
+        var x = dot.attr("cx");
+        var y = dot.attr("cy");
+        g.select("path." + Y_AXIS_REF_LINE_CLASS).style("display", "").attr("d", "M" + _chart.margins().left + " " + y + "L" + (x) + " " + (y));
+        g.select("path." + X_AXIS_REF_LINE_CLASS).style("display", "").attr("d", "M" + x + " " + (_chart.height() - _chart.margins().bottom) + "L" + x + " " + y);
+    }
+
+    function hideDot(dot) {
+        dot.style("fill-opacity", 1e-6).style("stroke-opacity", 1e-6);
+    }
+
+    function hideRefLines(g) {
+        g.select("path." + Y_AXIS_REF_LINE_CLASS).style("display", "none");
+        g.select("path." + X_AXIS_REF_LINE_CLASS).style("display", "none");
+    }
+
+    _chart.dotRadius = function(_) {
+        if (!arguments.length) return _dotRadius;
         _dotRadius = _;
         return _chart;
     };

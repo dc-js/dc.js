@@ -419,6 +419,14 @@ suite.addBatch({
                 assert.equal(d3.select(this).select("title").text(), d.value);
             });
         },
+        'hidden ref lines should be generated': function(chart){
+            assert.equal(chart.select("path.xRef").style("display"), "none");
+            assert.equal(chart.select("path.yRef").style("display"), "none");
+        },
+        'ref lines should be generated as dash path': function(chart){
+            assert.equal(chart.select("path.xRef").attr("stroke-dasharray"), "5,5");
+            assert.equal(chart.select("path.yRef").attr("stroke-dasharray"), "5,5");
+        },
         teardown: function(topic) {
             resetAllFilters();
             resetBody();
