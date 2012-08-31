@@ -15,7 +15,13 @@ suite.addBatch({
             var chart = dc.bubbleOverlay("#" + id)
                 .svg(svg)
                 .dimension(regionDimension)
-                .group(regionGroup);
+                .group(regionGroup)
+                .point("california", 100, 120)
+                .point("colorado", 100, 120)
+                .point("delaware", 100, 120)
+                .point("ontario", 100, 120)
+                .point("mississippi", 100, 120)
+                .point("oklahoma", 100, 120);
             chart.render();
             return chart;
         },
@@ -24,6 +30,9 @@ suite.addBatch({
         },
         'should be registered':function(chart) {
             assert.isTrue(dc.hasChart(chart));
+        },
+        'correct number of overlay g should be generated':function(chart){
+            assert.equal(chart.selectAll("g.bubble-overlay")[0].length, 6);
         },
 
         'teardown': function() {
