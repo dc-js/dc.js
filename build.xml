@@ -42,6 +42,7 @@
             <file file="src/bubble-chart.js"/>
             <file file="src/composite-chart.js"/>
             <file file="src/geo-choropleth-chart.js"/>
+            <file file="src/bubble-overlay.js"/>
         </concat>
         <echo>Compiling dc.min.js</echo>
         <exec executable="bash">

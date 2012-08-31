@@ -1,4 +1,6 @@
 dc.baseChart = function(_chart) {
+    _chart.__dc_flag__ = true;
+
     var _dimension;
     var _group;
 
@@ -67,9 +69,13 @@ dc.baseChart = function(_chart) {
         return _root.selectAll(s);
     };
 
+    _chart.instanceOfChart = function (a) {
+        return a instanceof Object && a.__dc_flag__;
+    };
+
     _chart.anchor = function(a, chartGroup) {
         if (!arguments.length) return _anchor;
-        if (a instanceof Object) {
+        if (_chart.instanceOfChart(a)) {
             _anchor = a.anchor();
             _root = a.root();
         } else {
