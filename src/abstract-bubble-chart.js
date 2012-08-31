@@ -23,5 +23,27 @@ dc.abstractBubbleChart = function(_chart) {
         return _chart;
     };
 
+    _chart.rMin = function() {
+        var min = d3.min(_chart.group().all(), function(e) {
+            return _chart.radiusValueAccessor()(e);
+        });
+        return min;
+    };
+
+    _chart.rMax = function() {
+        var max = d3.max(_chart.group().all(), function(e) {
+            return _chart.radiusValueAccessor()(e);
+        });
+        return max;
+    };
+
+    _chart.bubbleR = function(d) {
+        var value = _chart.radiusValueAccessor()(d);
+        var r = _chart.r()(value);
+        if (isNaN(r) || value <= 0)
+            r = 0;
+        return r;
+    };
+
     return _chart;
 };

@@ -1,11 +1,7 @@
 dc.bubbleChart = function(parent, chartGroup) {
     var _chart = dc.abstractBubbleChart(dc.coordinateGridChart({}));
 
-    var BUBBLE_NODE_CLASS = _chart.BUBBLE_NODE_CLASS;
-    var BUBBLE_CLASS = _chart.BUBBLE_CLASS;
-    var MIN_RADIUS = _chart.MIN_RADIUS;
-
-    var _maxBubbleRelativeSize = 5;
+    var _maxBubbleRelativeSize = 0.3;
     var _minRadiusWithLabel = 10;
 
     var _elasticRadius = false;
@@ -35,9 +31,9 @@ dc.bubbleChart = function(parent, chartGroup) {
         if(_elasticRadius)
             _chart.r().domain([_chart.rMin(), _chart.rMax()]);
 
-        _chart.r().range([MIN_RADIUS, _chart.xAxisLength() / _maxBubbleRelativeSize]);
+        _chart.r().range([_chart.MIN_RADIUS, _chart.xAxisLength() * _maxBubbleRelativeSize]);
 
-        var bubbleG = _chart.g().selectAll("g." + BUBBLE_NODE_CLASS)
+        var bubbleG = _chart.g().selectAll("g." + _chart.BUBBLE_NODE_CLASS)
             .data(_chart.group().all());
 
         renderNodes(bubbleG);
@@ -49,27 +45,13 @@ dc.bubbleChart = function(parent, chartGroup) {
         _chart.fadeDeselectedArea();
     };
 
-    _chart.rMin = function() {
-        var min = d3.min(_chart.group().all(), function(e) {
-            return _chart.radiusValueAccessor()(e);
-        });
-        return min;
-    };
-
-    _chart.rMax = function() {
-        var max = d3.max(_chart.group().all(), function(e) {
-            return _chart.radiusValueAccessor()(e);
-        });
-        return max;
-    };
-
     function renderNodes(bubbleG) {
         var bubbleGEnter = bubbleG.enter().append("g");
         bubbleGEnter
-            .attr("class", BUBBLE_NODE_CLASS)
+            .attr("class", _chart.BUBBLE_NODE_CLASS)
             .attr("transform", bubbleLocator)
             .append("circle").attr("class", function(d, i) {
-                return BUBBLE_CLASS + " " + i;
+                return _chart.BUBBLE_CLASS + " " + i;
             })
             .on("click", onClick)
             .attr("fill", function(d, i) {
@@ -79,7 +61,7 @@ dc.bubbleChart = function(parent, chartGroup) {
             .attr("r", 0);
         dc.transition(bubbleG, _chart.transitionDuration())
             .attr("r", function(d) {
-                return bubbleR(d);
+                return _chart.bubbleR(d);
             });
 
         renderLabel(bubbleGEnter);
@@ -88,7 +70,7 @@ dc.bubbleChart = function(parent, chartGroup) {
     }
 
     var labelFunction = function(d) {
-        return bubbleR(d) > _minRadiusWithLabel? _chart.label()(d) : "";
+        return _chart.bubbleR(d) > _minRadiusWithLabel? _chart.label()(d) : "";
     };
 
     function renderLabel(bubbleGEnter) {
@@ -127,14 +109,14 @@ dc.bubbleChart = function(parent, chartGroup) {
     function updateNodes(bubbleG) {
         dc.transition(bubbleG, _chart.transitionDuration())
             .attr("transform", bubbleLocator)
-            .selectAll("circle." + BUBBLE_CLASS)
+            .selectAll("circle." + _chart.BUBBLE_CLASS)
             .attr("fill", function(d, i) {
                 // a work around to get correct node index since
                 // d3 does not send i correctly here
                 return _chart.getColor(d, this[dc.constants.NODE_INDEX_NAME]);
             })
             .attr("r", function(d) {
-                return bubbleR(d);
+                return _chart.bubbleR(d);
             });
         updateLabels(bubbleG);
         updateTitles(bubbleG);
@@ -173,14 +155,6 @@ dc.bubbleChart = function(parent, chartGroup) {
         return y;
     }
 
-    function bubbleR(d) {
-        var value = _chart.radiusValueAccessor()(d);
-        var r = _chart.r()(value);
-        if (isNaN(r) || value <= 0)
-            r = 0;
-        return r;
-    }
-
     _chart.renderBrush = function(g) {
         // override default x axis brush from parent chart
     };
@@ -192,7 +166,7 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     _chart.fadeDeselectedArea = function() {
         if (_chart.hasFilter()) {
-            _chart.selectAll("g." + BUBBLE_NODE_CLASS).each(function(d) {
+            _chart.selectAll("g." + _chart.BUBBLE_NODE_CLASS).each(function(d) {
                 if (_chart.isSelectedSlice(d)) {
                     _chart.highlightSelected(this);
                 } else {
@@ -200,7 +174,7 @@ dc.bubbleChart = function(parent, chartGroup) {
                 }
             });
         } else {
-            _chart.selectAll("g." + BUBBLE_NODE_CLASS).each(function(d) {
+            _chart.selectAll("g." + _chart.BUBBLE_NODE_CLASS).each(function(d) {
                 _chart.resetHighlight(this);
             });
         }

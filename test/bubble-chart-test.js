@@ -31,7 +31,7 @@ function buildChart(id) {
         .x(d3.scale.linear().domain([0, 300]))
         .y(d3.scale.linear().domain([0, 10]))
         .r(d3.scale.linear().domain([0, 30]))
-        .maxBubbleRelativeSize(3)
+        .maxBubbleRelativeSize(0.3)
         .transitionDuration(0)
         .renderLabel(true)
         .renderTitle(true)
@@ -156,9 +156,9 @@ suite.addBatch({
             'should calculate right r for each bubble': function(chart) {
                 chart.selectAll("circle.bubble").each(function(d, i) {
                     if (i == 0)
-                        assert.equal(d3.select(this).attr("r"), 53.888888888888886);
+                        assert.equal(d3.select(this).attr("r"), 49.33333333333333);
                     if (i == 1)
-                        assert.equal(d3.select(this).attr("r"), 53.888888888888886);
+                        assert.equal(d3.select(this).attr("r"), 49.33333333333333);
                 });
             },
             'should attach each bubble with index based class': function(chart) {
