@@ -17,11 +17,11 @@ suite.addBatch({
                 .dimension(regionDimension)
                 .group(regionGroup)
                 .point("California", 100, 120)
-                .point("Colorado", 100, 120)
-                .point("Delaware", 100, 120)
-                .point("Ontario", 100, 120)
-                .point("Mississippi", 100, 120)
-                .point("Oklahoma", 100, 120);
+                .point("Colorado", 300, 420)
+                .point("Delaware", 500, 220)
+                .point("Ontario", 180, 400)
+                .point("Mississippi", 120, 220)
+                .point("Oklahoma", 200, 550);
             chart.render();
             return chart;
         },
@@ -40,6 +40,10 @@ suite.addBatch({
         },
         'correct number of overlay bubble should be generated':function(chart){
             assert.equal(chart.selectAll("circle.bubble")[0].length, 6);
+        },
+        'correct translate for overlay g should be generated':function(chart){
+            assert.equal(d3.select(chart.selectAll("g.node")[0][0]).attr("transform"), "translate(100,120)");
+            assert.equal(d3.select(chart.selectAll("g.node")[0][3]).attr("transform"), "translate(180,400)");
         },
 
         'teardown': function() {

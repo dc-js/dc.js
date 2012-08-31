@@ -19,7 +19,8 @@ dc.bubbleOverlay = function(root, chartGroup){
 
         _points.forEach(function(point){
             var nodeG = _g.append("g")
-                .attr("class",BUBBLE_NODE_CLASS + " " + dc.utils.nameToId(point.name));
+                .attr("class",BUBBLE_NODE_CLASS + " " + dc.utils.nameToId(point.name))
+                .attr("transform","translate("+point.x+","+point.y+")");
             nodeG.append("circle").attr("class",BUBBLE_CLASS);
         });
 
