@@ -765,14 +765,15 @@ dc.renderAll("groupB");
 
 var bubbleOverlay = dc.bubbleOverlay("#bubble-overlay")
             .svg(d3.select("#bubble-overlay svg"))
-            .dimension(regionDimension)
-            .group(regionGroup)
+            .dimension(stateDimension)
+            .group(stateValueSumGroup)
+            .r(d3.scale.linear().domain([0, 3]))
             .point("California", 100, 120)
-            .point("Colorado", 300, 420)
+            .point("Colorado", 300, 120)
             .point("Delaware", 500, 220)
-            .point("Ontario", 180, 400)
+            .point("Ontario", 180, 90)
             .point("Mississippi", 120, 220)
-            .point("Oklahoma", 200, 550);
+            .point("Oklahoma", 200, 350);
 </script>
 
 <div class="clear"></div>

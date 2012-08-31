@@ -14,15 +14,15 @@ suite.addBatch({
             var svg = div.append("svg");
             var chart = dc.bubbleOverlay("#" + id)
                 .svg(svg)
-                .dimension(regionDimension)
-                .group(regionGroup)
-                .r(d3.scale.linear().domain([0, 30]))
+                .dimension(stateDimension)
+                .group(stateValueSumGroup)
+                .r(d3.scale.linear().domain([0, 3]))
                 .point("California", 100, 120)
-                .point("Colorado", 300, 420)
+                .point("Colorado", 300, 120)
                 .point("Delaware", 500, 220)
-                .point("Ontario", 180, 400)
+                .point("Ontario", 180, 90)
                 .point("Mississippi", 120, 220)
-                .point("Oklahoma", 200, 550);
+                .point("Oklahoma", 200, 350);
             chart.render();
             return chart;
         },
@@ -47,8 +47,8 @@ suite.addBatch({
             assert.equal(d3.select(chart.selectAll("g.node")[0][3]).attr("transform"), "translate(180,400)");
         },
         'correct translate for overlay g should be generated':function(chart){
-            assert.equal(d3.select(chart.selectAll("circle.bubble")[0][0]).attr("r"), "30");
-            assert.equal(d3.select(chart.selectAll("circle.bubble")[0][3]).attr("r"), "10");
+            assert.equal(d3.select(chart.selectAll("circle.bubble")[0][0]).attr("r"), "51.33333333333333");
+            assert.equal(d3.select(chart.selectAll("circle.bubble")[0][3]).attr("r"), "25.666666666666664");
         },
 
         'teardown': function() {
