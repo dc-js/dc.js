@@ -6,7 +6,8 @@ dc.bubbleOverlay = function(root, chartGroup){
     _chart.anchor(root, chartGroup);
 
     _chart.point = function(name, x, y){
-        _chart.svg().append("g").attr("class",BUBBLE_OVERLAY_G_CLASS);
+        var g = _chart.svg().append("g").attr("class",BUBBLE_OVERLAY_G_CLASS);
+        g.append("circle").attr("class","bubble");
         return _chart;
     };
 

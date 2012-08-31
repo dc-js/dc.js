@@ -34,6 +34,9 @@ suite.addBatch({
         'correct number of overlay g should be generated':function(chart){
             assert.equal(chart.selectAll("g.bubble-overlay")[0].length, 6);
         },
+        'correct number of overlay bubble should be generated':function(chart){
+            assert.equal(chart.selectAll("circle.bubble")[0].length, 6);
+        },
 
         'teardown': function() {
             resetAllFilters();
