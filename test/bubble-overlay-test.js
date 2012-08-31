@@ -16,6 +16,7 @@ suite.addBatch({
                 .svg(svg)
                 .dimension(stateDimension)
                 .group(stateValueSumGroup)
+                .transitionDuration(0)
                 .r(d3.scale.linear().domain([0, 3]))
                 .point("California", 100, 120)
                 .point("Colorado", 300, 120)
