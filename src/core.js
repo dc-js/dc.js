@@ -140,3 +140,7 @@ dc.renderlet = function(_){
     dc._renderlet = _;
     return dc;
 };
+
+dc.instanceOfChart = function (o) {
+    return o instanceof Object && o.__dc_flag__;
+};

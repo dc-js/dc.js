@@ -140,6 +140,10 @@ dc.renderlet = function(_){
     dc._renderlet = _;
     return dc;
 };
+
+dc.instanceOfChart = function (o) {
+    return o instanceof Object && o.__dc_flag__;
+};
 dc.dateFormat = d3.time.format("%m/%d/%Y");
 
 dc.printers = {};
@@ -468,13 +472,9 @@ dc.baseChart = function(_chart) {
         return _root.selectAll(s);
     };
 
-    _chart.instanceOfChart = function (a) {
-        return a instanceof Object && a.__dc_flag__;
-    };
-
     _chart.anchor = function(a, chartGroup) {
         if (!arguments.length) return _anchor;
-        if (_chart.instanceOfChart(a)) {
+        if (dc.instanceOfChart(a)) {
             _anchor = a.anchor();
             _root = a.root();
         } else {

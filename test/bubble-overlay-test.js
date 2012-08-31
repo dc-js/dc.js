@@ -19,9 +19,13 @@ suite.addBatch({
             chart.render();
             return chart;
         },
+        'an instance of dc chart should be generated':function(chart){
+            assert.isTrue(dc.instanceOfChart(chart));
+        },
         'should be registered':function(chart) {
             assert.isTrue(dc.hasChart(chart));
         },
+
         'teardown': function() {
             resetAllFilters();
             resetBody();
