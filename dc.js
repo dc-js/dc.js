@@ -2559,10 +2559,10 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
 
     return _chart.anchor(parent, chartGroup);
 };
-dc.bubbleOverlay = function(){
+dc.bubbleOverlay = function(root, chartGroup){
     var _chart = dc.baseChart({});
 
-    dc.anchor
+    _chart.anchor(root, chartGroup);
 
     return _chart;
 };

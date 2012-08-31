@@ -12,8 +12,7 @@ suite.addBatch({
             var id = "bubble-overlay";
             var div = d3.select("body").append("div").attr("id", id);
             var svg = div.append("svg");
-            var chart = dc.bubbleOverlay()
-                .root(div)
+            var chart = dc.bubbleOverlay("#" + id)
                 .svg(svg)
                 .dimension(regionDimension)
                 .group(regionGroup);
