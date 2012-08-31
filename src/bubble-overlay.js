@@ -3,7 +3,7 @@ dc.bubbleOverlay = function(root, chartGroup){
     var BUBBLE_NODE_CLASS = "node";
     var BUBBLE_CLASS = "bubble";
 
-    var _chart = dc.baseChart({});
+    var _chart = dc.abstractBubbleChart(dc.baseChart({}));
     var _g;
     var _points = [];
 

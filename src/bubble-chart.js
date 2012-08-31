@@ -1,9 +1,9 @@
 dc.bubbleChart = function(parent, chartGroup) {
-    var BUBBLE_NODE_CLASS = "node";
-    var BUBBLE_CLASS = "bubble";
-    var MIN_RADIUS = 10;
+    var _chart = dc.abstractBubbleChart(dc.coordinateGridChart({}));
 
-    var _chart = dc.singleSelectionChart(dc.colorChart(dc.coordinateGridChart({})));
+    var BUBBLE_NODE_CLASS = _chart.BUBBLE_NODE_CLASS;
+    var BUBBLE_CLASS = _chart.BUBBLE_CLASS;
+    var MIN_RADIUS = _chart.MIN_RADIUS;
 
     var _maxBubbleRelativeSize = 5;
     var _minRadiusWithLabel = 10;
@@ -12,12 +12,6 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     _chart.renderLabel(true);
     _chart.renderTitle(false);
-
-    var _r = d3.scale.linear().domain([0, 100]);
-
-    var _rValueAccessor = function(d) {
-        return d.r;
-    };
 
     _chart.transitionDuration(750);
 
@@ -39,9 +33,9 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     _chart.plotData = function() {
         if(_elasticRadius)
-            _r.domain([_chart.rMin(), _chart.rMax()]);
+            _chart.r().domain([_chart.rMin(), _chart.rMax()]);
 
-        _r.range([MIN_RADIUS, _chart.xAxisLength() / _maxBubbleRelativeSize]);
+        _chart.r().range([MIN_RADIUS, _chart.xAxisLength() / _maxBubbleRelativeSize]);
 
         var bubbleG = _chart.g().selectAll("g." + BUBBLE_NODE_CLASS)
             .data(_chart.group().all());
@@ -214,18 +208,6 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     _chart.isSelectedSlice = function(d) {
         return _chart.filter() == d.key;
-    };
-
-    _chart.r = function(_) {
-        if (!arguments.length) return _r;
-        _r = _;
-        return _chart;
-    };
-
-    _chart.radiusValueAccessor = function(_) {
-        if (!arguments.length) return _rValueAccessor;
-        _rValueAccessor = _;
-        return _chart;
     };
 
     _chart.minRadiusWithLabel = function(_){

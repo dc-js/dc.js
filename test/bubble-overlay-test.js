@@ -16,6 +16,7 @@ suite.addBatch({
                 .svg(svg)
                 .dimension(regionDimension)
                 .group(regionGroup)
+                .r(d3.scale.linear().domain([0, 30]))
                 .point("California", 100, 120)
                 .point("Colorado", 300, 420)
                 .point("Delaware", 500, 220)
@@ -44,6 +45,10 @@ suite.addBatch({
         'correct translate for overlay g should be generated':function(chart){
             assert.equal(d3.select(chart.selectAll("g.node")[0][0]).attr("transform"), "translate(100,120)");
             assert.equal(d3.select(chart.selectAll("g.node")[0][3]).attr("transform"), "translate(180,400)");
+        },
+        'correct translate for overlay g should be generated':function(chart){
+            assert.equal(d3.select(chart.selectAll("circle.bubble")[0][0]).attr("r"), "30");
+            assert.equal(d3.select(chart.selectAll("circle.bubble")[0][3]).attr("r"), "10");
         },
 
         'teardown': function() {
