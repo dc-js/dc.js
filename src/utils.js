@@ -115,3 +115,7 @@ dc.utils.groupMin = function(group, accessor) {
         return accessor(e);
     });
 };
+
+dc.utils.nameToId = function(name){
+    return name.toLowerCase().replace(/ /g, "_");
+};

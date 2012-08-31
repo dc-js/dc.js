@@ -20,6 +20,7 @@ dc.pieChart = function(parent, chartGroup) {
     _chart.label(function(d) {
         return _chart.keyAccessor()(d.data);
     });
+
     _chart.renderLabel(true);
 
     _chart.title(function(d) {

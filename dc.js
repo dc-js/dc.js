@@ -261,6 +261,10 @@ dc.utils.groupMin = function(group, accessor) {
         return accessor(e);
     });
 };
+
+dc.utils.nameToId = function(name){
+    return name.toLowerCase().replace(/ /g, "_");
+};
 dc.events = {
     current: null
 };
@@ -1152,10 +1156,6 @@ dc.colorChart = function(_chart) {
 };
 dc.singleSelectionChart = function(_chart) {
     var _filter;
-    var _onClick = function(d){
-        _chart.filter(d.key);
-        dc.redrawAll(_chart.chartGroup());
-    };
 
     _chart.hasFilter = function() {
         return _filter != null;
@@ -1374,6 +1374,7 @@ dc.pieChart = function(parent, chartGroup) {
     _chart.label(function(d) {
         return _chart.keyAccessor()(d.data);
     });
+
     _chart.renderLabel(true);
 
     _chart.title(function(d) {
@@ -2057,7 +2058,7 @@ dc.dataTable = function(parent, chartGroup) {
     return _chart.anchor(parent, chartGroup);
 };
 dc.bubbleChart = function(parent, chartGroup) {
-    var NODE_CLASS = "node";
+    var BUBBLE_NODE_CLASS = "node";
     var BUBBLE_CLASS = "bubble";
     var MIN_RADIUS = 10;
 
@@ -2101,7 +2102,7 @@ dc.bubbleChart = function(parent, chartGroup) {
 
         _r.range([MIN_RADIUS, _chart.xAxisLength() / _maxBubbleRelativeSize]);
 
-        var bubbleG = _chart.g().selectAll("g." + NODE_CLASS)
+        var bubbleG = _chart.g().selectAll("g." + BUBBLE_NODE_CLASS)
             .data(_chart.group().all());
 
         renderNodes(bubbleG);
@@ -2130,7 +2131,7 @@ dc.bubbleChart = function(parent, chartGroup) {
     function renderNodes(bubbleG) {
         var bubbleGEnter = bubbleG.enter().append("g");
         bubbleGEnter
-            .attr("class", NODE_CLASS)
+            .attr("class", BUBBLE_NODE_CLASS)
             .attr("transform", bubbleLocator)
             .append("circle").attr("class", function(d, i) {
                 return BUBBLE_CLASS + " " + i;
@@ -2157,7 +2158,6 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     function renderLabel(bubbleGEnter) {
         if (_chart.renderLabel()) {
-
             bubbleGEnter.append("text")
                 .attr("text-anchor", "middle")
                 .attr("dy", ".3em")
@@ -2257,7 +2257,7 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     _chart.fadeDeselectedArea = function() {
         if (_chart.hasFilter()) {
-            _chart.selectAll("g." + NODE_CLASS).each(function(d) {
+            _chart.selectAll("g." + BUBBLE_NODE_CLASS).each(function(d) {
                 if (_chart.isSelectedSlice(d)) {
                     _chart.highlightSelected(this);
                 } else {
@@ -2265,7 +2265,7 @@ dc.bubbleChart = function(parent, chartGroup) {
                 }
             });
         } else {
-            _chart.selectAll("g." + NODE_CLASS).each(function(d) {
+            _chart.selectAll("g." + BUBBLE_NODE_CLASS).each(function(d) {
                 _chart.resetHighlight(this);
             });
         }
@@ -2474,7 +2474,7 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
             })
             .attr("class", function(d) {
                 var layerNameClass = geoJson(layerIndex).name;
-                var regionClass = geoJson(layerIndex).keyAccessor(d).toLowerCase().replace(/ /g, "_");
+                var regionClass = dc.utils.nameToId(geoJson(layerIndex).keyAccessor(d));
                 var baseClasses = layerNameClass + " " + regionClass;
                 if(isSelected(layerIndex, d)) baseClasses += " selected";
                 if(isDeselected(layerIndex, d)) baseClasses += " deselected";
@@ -2560,15 +2560,33 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
     return _chart.anchor(parent, chartGroup);
 };
 dc.bubbleOverlay = function(root, chartGroup){
-    var BUBBLE_OVERLAY_G_CLASS = "bubble-overlay";
+    var BUBBLE_OVERLAY_CLASS = "bubble-overlay";
+    var BUBBLE_NODE_CLASS = "node";
+    var BUBBLE_CLASS = "bubble";
 
     var _chart = dc.baseChart({});
+    var _g;
+    var _points = [];
 
     _chart.anchor(root, chartGroup);
 
     _chart.point = function(name, x, y){
-        var g = _chart.svg().append("g").attr("class",BUBBLE_OVERLAY_G_CLASS);
-        g.append("circle").attr("class","bubble");
+        _points.push({name: name, x: x, y: y});
+        return _chart;
+    };
+
+    _chart.doRender = function() {
+        _g = _chart.svg().append("g").attr("class",BUBBLE_OVERLAY_CLASS);
+
+        _points.forEach(function(point){
+            var nodeG = _g.append("g").attr("class",BUBBLE_NODE_CLASS + " " + dc.utils.nameToId(point.name));
+            nodeG.append("circle").attr("class",BUBBLE_CLASS);
+        });
+
+        return _chart;
+    };
+
+    _chart.doRedraw = function() {
         return _chart;
     };
 

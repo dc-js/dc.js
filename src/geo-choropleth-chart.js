@@ -68,7 +68,7 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
             })
             .attr("class", function(d) {
                 var layerNameClass = geoJson(layerIndex).name;
-                var regionClass = geoJson(layerIndex).keyAccessor(d).toLowerCase().replace(/ /g, "_");
+                var regionClass = dc.utils.nameToId(geoJson(layerIndex).keyAccessor(d));
                 var baseClasses = layerNameClass + " " + regionClass;
                 if(isSelected(layerIndex, d)) baseClasses += " selected";
                 if(isDeselected(layerIndex, d)) baseClasses += " deselected";

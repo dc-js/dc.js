@@ -16,12 +16,12 @@ suite.addBatch({
                 .svg(svg)
                 .dimension(regionDimension)
                 .group(regionGroup)
-                .point("california", 100, 120)
-                .point("colorado", 100, 120)
-                .point("delaware", 100, 120)
-                .point("ontario", 100, 120)
-                .point("mississippi", 100, 120)
-                .point("oklahoma", 100, 120);
+                .point("California", 100, 120)
+                .point("Colorado", 100, 120)
+                .point("Delaware", 100, 120)
+                .point("Ontario", 100, 120)
+                .point("Mississippi", 100, 120)
+                .point("Oklahoma", 100, 120);
             chart.render();
             return chart;
         },
@@ -32,7 +32,11 @@ suite.addBatch({
             assert.isTrue(dc.hasChart(chart));
         },
         'correct number of overlay g should be generated':function(chart){
-            assert.equal(chart.selectAll("g.bubble-overlay")[0].length, 6);
+            assert.equal(chart.selectAll("g.node")[0].length, 6);
+        },
+        'correct class name for overlay g should be generated':function(chart){
+            assert.equal(d3.select(chart.selectAll("g.node")[0][0]).attr("class"), "node california");
+            assert.equal(d3.select(chart.selectAll("g.node")[0][3]).attr("class"), "node ontario");
         },
         'correct number of overlay bubble should be generated':function(chart){
             assert.equal(chart.selectAll("circle.bubble")[0].length, 6);
