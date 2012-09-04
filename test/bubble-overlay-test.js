@@ -17,6 +17,7 @@ suite.addBatch({
                 .dimension(stateDimension)
                 .group(stateValueSumGroup)
                 .transitionDuration(0)
+                .title(function(d){return "Title: " + d.key;})
                 .r(d3.scale.linear().domain([0, 3]))
                 .point("California", 100, 120)
                 .point("Colorado", 300, 120)
@@ -58,6 +59,14 @@ suite.addBatch({
         'label should only be generated once':function(chart){
             chart.redraw();
             assert.equal(chart.selectAll("g.node text")[0].length, 6);
+        },
+        'correct title should be generated':function(chart){
+            assert.equal(d3.select(chart.selectAll("g.node title")[0][0]).text(), "Title: California");
+            assert.equal(d3.select(chart.selectAll("g.node title")[0][3]).text(), "Title: Ontario");
+        },
+        'title should only be generated once':function(chart){
+            chart.redraw();
+            assert.equal(chart.selectAll("g.node title")[0].length, 6);
         },
 
         'teardown': function() {

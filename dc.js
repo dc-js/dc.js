@@ -1437,7 +1437,10 @@ dc.abstractBubbleChart = function(_chart) {
 
     _chart.doRenderTitles = function(g) {
         if (_chart.renderTitle()) {
-            g.append("title").text(titleFunction);
+            var title = g.select("title");
+
+            if(title.empty())
+                g.append("title").text(titleFunction);
         }
     };
 
