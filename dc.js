@@ -2600,7 +2600,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
     _chart.doRender = function() {
         _g = initOverlayG();
 
-        overlayBubbles();
+        initializeBubbles();
 
         return _chart;
     };
@@ -2612,7 +2612,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
         return _g;
     }
 
-    function overlayBubbles() {
+    function initializeBubbles() {
         var data = mapData();
 
         _points.forEach(function(point) {
@@ -2663,9 +2663,29 @@ dc.bubbleOverlay = function(root, chartGroup) {
     }
 
     _chart.doRedraw = function() {
-        overlayBubbles();
+        updateBubbles();
         return _chart;
     };
+
+    function updateBubbles() {
+        var data = mapData();
+
+        _points.forEach(function(point) {
+            var nodeG = getNodeG(point, data);
+
+            var circle = nodeG.select("circle." + BUBBLE_CLASS);
+
+            dc.transition(circle, _chart.transitionDuration())
+                .attr("r", function(d) {
+                    return _chart.bubbleR(d);
+                })
+                .attr("fill", _chart.updateBubbleColor);
+
+            _chart.doUpdateLabels(nodeG);
+
+            _chart.doUpdateTitles(nodeG);
+        });
+    }
 
     _chart.anchor(root, chartGroup);
 
