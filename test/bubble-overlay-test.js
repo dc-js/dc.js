@@ -55,6 +55,10 @@ suite.addBatch({
             assert.equal(d3.select(chart.selectAll("g.node text")[0][0]).text(), "California");
             assert.equal(d3.select(chart.selectAll("g.node text")[0][3]).text(), "Ontario");
         },
+        'label should only be generated once':function(chart){
+            chart.redraw();
+            assert.equal(chart.selectAll("g.node text")[0].length, 6);
+        },
 
         'teardown': function() {
             resetAllFilters();

@@ -57,8 +57,12 @@ dc.abstractBubbleChart = function(_chart) {
 
     _chart.doRenderLabel = function(bubbleGEnter) {
         if (_chart.renderLabel()) {
-            bubbleGEnter.append("text")
-                .attr("text-anchor", "middle")
+            var label = bubbleGEnter.select("text");
+
+            if(label.empty())
+                label = bubbleGEnter.append("text");
+
+            label.attr("text-anchor", "middle")
                 .attr("dy", ".3em")
                 .on("click", _chart.onClick)
                 .text(labelFunction);
