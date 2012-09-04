@@ -12,6 +12,7 @@
     <script type="text/javascript" src="dc.js"></script>
 
     <link rel="stylesheet" type="text/css" href="dc.css"/>
+    <link rel="stylesheet" type="text/css" href="example.css"/>
 
     <link href='highlighter/shCore.css' rel='stylesheet' type='text/css'/>
     <link href='highlighter/shThemeDefault.css' rel='stylesheet' type='text/css'/>
@@ -79,7 +80,7 @@
 
 <h2>Nasdaq 100 Index 1985/11/01-2012/06/29</h2>
 
-<div id="yearly-bubble-chart" class="chart">
+<div id="yearly-bubble-chart" class="dc-chart">
     <span class="title">Yearly Performance (x: index gain, y: index gain(%), radius: fluctuation/index ratio, color: gain/loss)</span>
     <a class="reset" href="javascript:yearlyBubbleChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
@@ -88,28 +89,28 @@
 
 <div class="clear"></div>
 
-<div id="gain-loss-chart" class="chart">
+<div id="gain-loss-chart" class="dc-chart">
     <span class="title">Days by Gain/Loss</span>
     <a class="reset" href="javascript:gainOrLossChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
 </div>
 
-<div id="quarter-chart" class="chart">
+<div id="quarter-chart" class="dc-chart">
     <span class="title">Quarters</span>
     <a class="reset" href="javascript:quarterChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
 </div>
 
-<div id="day-of-week-chart" class="chart">
+<div id="day-of-week-chart" class="dc-chart">
     <span>Day of Week</span>
     <a class="reset" href="javascript:dayOfWeekChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
 </div>
 
-<div id="fluctuation-chart" class="chart">
+<div id="fluctuation-chart" class="dc-chart">
     <span>Days by Fluctuation(%)</span>
     <a class="reset" href="javascript:fluctuationChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
@@ -118,7 +119,7 @@
 
 <div class="clear"></div>
 
-<div id="monthly-move-chart" class="chart">
+<div id="monthly-move-chart" class="dc-chart">
     <span>Monthly Index Abs Move & Volume/500,000 Chart (Blue Line: Avg Index, Green Line: Index Fluctuation)</span>
     <a class="reset" href="javascript:volumeChart.filterAll();dc.redrawAll();"
        style="display: none;">reset</a>
@@ -126,30 +127,31 @@
     <div class="clear"></div>
 </div>
 
-<div id="monthly-volume-chart" class="chart">
+<div id="monthly-volume-chart" class="dc-chart">
 
 </div>
 
 <div class="clear"></div>
 
-<div id="data-count">
-    <span class="filter-count"></span> selected out of <span class="total-count"/> records
-</div>
-
-<div>
-    <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
-</div>
-
-<div id="data-table">
-    <div class="header">
-        <span>Date</span>
-        <span>Open</span>
-        <span>Close</span>
-        <span>Change</span>
-        <span>Volume</span>
+<div class="dc-chart">
+    <div class="data-count">
+        <span class="filter-count"></span> selected out of <span class="total-count"></span> records | <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
     </div>
 </div>
 
+<div class="clear"></div>
+
+<div class="dc-chart">
+    <div class="data-table">
+        <div class="header">
+            <span>Date</span>
+            <span>Open</span>
+            <span>Close</span>
+            <span>Change</span>
+            <span>Volume</span>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
 var gainOrLossChart = dc.pieChart("#gain-loss-chart");
@@ -394,7 +396,7 @@ d3.csv("ndx.csv", function(data) {
                                 .title(function(d){
                                     var value = d.value.avg?d.value.avg:d.value;
                                     if(isNaN(value)) value = 0;
-                                    return numberFormat(value);
+                                    return dateFormat(d.key) + "\n" + numberFormat(value);
                                 })
                     ])
                     .xAxis().tickValues([]);
@@ -413,11 +415,11 @@ d3.csv("ndx.csv", function(data) {
                     });
 
 
-            dc.dataCount("#data-count")
+            dc.dataCount(".data-count")
                     .dimension(ndx)
                     .group(all);
 
-            dc.dataTable("#data-table")
+            dc.dataTable(".data-table")
                     .dimension(dateDimension)
                     .group(function(d) {
                         var format = d3.format("02d");
@@ -491,7 +493,7 @@ d3.csv("ndx.csv", function(data) {
 
     <pre class="brush:xml">
         <!-- A div anchor that can be identified by id -->
-        <div id="your-chart" class="chart">
+        <div id="your-chart" class="dc-chart">
             <!-- Title or anything you want to add before the chart -->
             <span>Days by Gain or Loss</span>
             <!--

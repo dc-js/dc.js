@@ -1,204 +1,183 @@
-body {
-    font-size: 0.9em;
-    font-family: Lucida;
-}
-
-a {
-    color: #3182bd;
-}
-
-.content {
-    width: 990px;
-    margin: 0 auto;
-    border-top: 0px;
-    background-color: #ffffff;
-    overflow: hidden;
-}
-
-.chart {
+.dc-chart {
     float: left;
 }
 
-.chart rect.bar {
+.dc-chart rect.bar {
     stroke: none;
     fill: steelblue;
 }
 
-.chart rect.bar:hover {
+.dc-chart rect.bar:hover {
     fill-opacity: .5;
 }
 
-.chart rect.stack1 {
+.dc-chart rect.stack1 {
     stroke: none;
     fill: red;
 }
 
-.chart rect.stack2 {
+.dc-chart rect.stack2 {
     stroke: none;
     fill: green;
 }
 
-.chart rect.deselected {
+.dc-chart rect.deselected {
     stroke: none;
     fill: #ccc;
 }
 
-.chart .sub .bar {
+.dc-chart .sub .bar {
     stroke: none;
     fill: #ccc;
 }
 
-.clear {
-    clear: both;
-}
-
-.pie-slice {
+.dc-chart .pie-slice {
     fill: white;
     font-size: 12px;
     cursor: pointer;
 }
 
-.pie-slice :hover{
+.dc-chart .pie-slice :hover{
     fill-opacity: .8;
 }
 
-.selected path{
+.dc-chart .selected path{
     stroke-width: 3;
     stroke: #ccc;
     fill-opacity: 1;
 }
 
-.deselected path{
+.dc-chart .deselected path{
     strok: none;
     fill-opacity: .5;
     fill: #ccc;
 }
 
-.axis path, .axis line {
+.dc-chart .axis path, .axis line {
     fill: none;
     stroke: #000;
     shape-rendering: crispEdges;
 }
 
-.axis text {
+.dc-chart .axis text {
     font: 10px sans-serif;
 }
 
-.grid-line line {
+.dc-chart .grid-line line {
     fill: none;
     stroke: #ccc;
     opacity: .5;
     shape-rendering: crispEdges;
 }
 
-.brush rect.background {
+.dc-chart .brush rect.background {
     z-index: -999;
 }
 
-.brush rect.extent {
+.dc-chart .brush rect.extent {
     fill: steelblue;
     fill-opacity: .125;
 }
 
-.brush .resize path {
+.dc-chart .brush .resize path {
     fill: #eee;
     stroke: #666;
 }
 
-.chart path.line {
+.dc-chart path.line {
     fill: none;
     stroke: steelblue;
     stroke-width: 1.5px;
 }
 
-.chart circle.dot{
+.dc-chart circle.dot{
     fill: steelblue;
 }
 
-.chart g.stack1 path.line {
+.dc-chart g.stack1 path.line {
     stroke: green;
 }
 
-.chart g.stack1 circle.dot{
+.dc-chart g.stack1 circle.dot{
     fill: green;
 }
 
-.chart g.stack2 path.line {
+.dc-chart g.stack2 path.line {
     stroke: red;
 }
 
-.chart g.stack2 circle.dot{
+.dc-chart g.stack2 circle.dot{
     fill: red;
 }
 
-.chart g.tooltip path{
+.dc-chart g.tooltip path{
     fill: none;
     stroke: grey;
     stroke-opacity: .8;
 }
 
-.chart path.area {
+.dc-chart path.area {
     fill: steelblue;
     fill-opacity: .3;
     stroke: none;
 }
 
-.chart g.stack1 path.area {
+.dc-chart g.stack1 path.area {
     fill: green;
 }
 
-.chart g.stack2 path.area {
+.dc-chart g.stack2 path.area {
     fill: red;
 }
 
-.node {
+.dc-chart .node {
     font-size: 0.7em;
     cursor: pointer;
 }
 
-.node :hover{
+.dc-chart .node :hover{
     fill-opacity: .8;
 }
 
-.selected circle {
+.dc-chart .selected circle {
     stroke-width: 3;
     stroke: #ccc;
     fill-opacity: 1;
 }
 
-.deselected circle {
+.dc-chart .deselected circle {
     strok: none;
     fill-opacity: .5;
     fill: #ccc;
 }
 
-.bubble {
+.dc-chart .bubble {
     stroke: none;
     fill-opacity: 0.6;
 }
 
-#data-count {
+.dc-chart .data-count {
     float: right;
     margin-top: 15px;
     margin-right: 15px;
 }
 
-#data-count .filter-count {
+.dc-chart .data-count .filter-count {
     color: #3182bd;
     font-weight: bold;
 }
 
-#data-count .total-count {
+.dc-chart .data-count .total-count {
     color: #3182bd;
     font-weight: bold;
 }
 
-#data-table {
+.dc-chart .data-table {
     width: 700px;
     margin-bottom: 50px;
 }
 
-#data-table span {
+.dc-chart .data-table span {
     display: table-cell;
     width: 135px;
     text-align: center;
@@ -208,44 +187,44 @@ a {
     border: white solid 2px;
 }
 
-#data-table .header {
+.dc-chart .data-table .header {
     font-weight: bold;
 }
 
-#data-table .header span {
+.dc-chart .data-table .header span {
     background-color: #c6dbef;
     color: white;
 }
 
-#data-table .group span.label {
+.dc-chart .data-table .group span.label {
     font-weight: bold;
     font-size: larger;
     float: inherit;
 }
 
-#data-table .column {
+.dc-chart .data-table .column {
 }
 
-.chart g.state{
+.dc-chart g.state{
     cursor: pointer;
 }
 
-.chart g.state :hover{
+.dc-chart g.state :hover{
     fill-opacity: .8;
 }
 
-.chart g.state path {
+.dc-chart g.state path {
     stroke: white;
 }
 
-.chart g.state path.selected {
+.dc-chart g.state path.selected {
 }
 
-.chart g.state path.deselected {
+.dc-chart g.state path.deselected {
     fill: grey;
 }
 
-.chart g.county path {
+.dc-chart g.county path {
     stroke: white;
     fill: none;
 }
