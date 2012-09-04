@@ -3,9 +3,6 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     var _elasticRadius = false;
 
-    _chart.renderLabel(true);
-    _chart.renderTitle(false);
-
     _chart.transitionDuration(750);
 
     var bubbleLocator = function(d) {

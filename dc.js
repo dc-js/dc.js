@@ -1362,6 +1362,9 @@ dc.abstractBubbleChart = function(_chart) {
 
     _chart = dc.singleSelectionChart(dc.colorChart(_chart));
 
+    _chart.renderLabel(true);
+    _chart.renderTitle(false);
+
     var _r = d3.scale.linear().domain([0, 100]);
 
     var _rValueAccessor = function(d) {
@@ -2178,9 +2181,6 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     var _elasticRadius = false;
 
-    _chart.renderLabel(true);
-    _chart.renderTitle(false);
-
     _chart.transitionDuration(750);
 
     var bubbleLocator = function(d) {
@@ -2613,7 +2613,13 @@ dc.bubbleOverlay = function(root, chartGroup) {
                     .attr("r", 0);
 
             dc.transition(circle, _chart.transitionDuration())
-                .attr("r", function(d){return _chart.bubbleR(d);});
+                .attr("r", function(d) {
+                    return _chart.bubbleR(d);
+                });
+
+            _chart.doRenderLabel(nodeG);
+
+            _chart.doRenderTitles(nodeG);
         });
     }
 

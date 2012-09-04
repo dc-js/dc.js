@@ -45,11 +45,15 @@ suite.addBatch({
         },
         'correct translate for overlay g should be generated':function(chart){
             assert.equal(d3.select(chart.selectAll("g.node")[0][0]).attr("transform"), "translate(100,120)");
-            assert.equal(d3.select(chart.selectAll("g.node")[0][3]).attr("transform"), "translate(180,400)");
+            assert.equal(d3.select(chart.selectAll("g.node")[0][3]).attr("transform"), "translate(180,90)");
         },
-        'correct translate for overlay g should be generated':function(chart){
+        'correct translate for circle should be generated':function(chart){
             assert.equal(d3.select(chart.selectAll("circle.bubble")[0][0]).attr("r"), "51.33333333333333");
             assert.equal(d3.select(chart.selectAll("circle.bubble")[0][3]).attr("r"), "25.666666666666664");
+        },
+        'correct label should be generated':function(chart){
+            assert.equal(d3.select(chart.selectAll("g.node text")[0][0]).text(), "California");
+            assert.equal(d3.select(chart.selectAll("g.node text")[0][3]).text(), "Ontario");
         },
 
         'teardown': function() {

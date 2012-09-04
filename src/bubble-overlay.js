@@ -47,7 +47,13 @@ dc.bubbleOverlay = function(root, chartGroup) {
                     .attr("r", 0);
 
             dc.transition(circle, _chart.transitionDuration())
-                .attr("r", function(d){return _chart.bubbleR(d);});
+                .attr("r", function(d) {
+                    return _chart.bubbleR(d);
+                });
+
+            _chart.doRenderLabel(nodeG);
+
+            _chart.doRenderTitles(nodeG);
         });
     }
 

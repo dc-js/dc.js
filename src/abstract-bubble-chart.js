@@ -8,6 +8,9 @@ dc.abstractBubbleChart = function(_chart) {
 
     _chart = dc.singleSelectionChart(dc.colorChart(_chart));
 
+    _chart.renderLabel(true);
+    _chart.renderTitle(false);
+
     var _r = d3.scale.linear().domain([0, 100]);
 
     var _rValueAccessor = function(d) {
