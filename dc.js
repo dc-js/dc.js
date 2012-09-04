@@ -1413,11 +1413,11 @@ dc.abstractBubbleChart = function(_chart) {
         if (_chart.renderLabel()) {
             var label = bubbleGEnter.select("text");
 
-            if(label.empty()){
+            if (label.empty()) {
                 label = bubbleGEnter.append("text")
-                .attr("text-anchor", "middle")
-                .attr("dy", ".3em")
-                .on("click", _chart.onClick);
+                    .attr("text-anchor", "middle")
+                    .attr("dy", ".3em")
+                    .on("click", _chart.onClick);
             }
 
             label.text(labelFunction);
@@ -1439,7 +1439,7 @@ dc.abstractBubbleChart = function(_chart) {
         if (_chart.renderTitle()) {
             var title = g.select("title");
 
-            if(title.empty())
+            if (title.empty())
                 g.append("title").text(titleFunction);
         }
     };
@@ -1465,16 +1465,27 @@ dc.abstractBubbleChart = function(_chart) {
         }
     };
 
-    _chart.minRadiusWithLabel = function(_){
-        if(!arguments.length) return _minRadiusWithLabel;
+    _chart.minRadiusWithLabel = function(_) {
+        if (!arguments.length) return _minRadiusWithLabel;
         _minRadiusWithLabel = _;
         return _chart;
     };
 
-    _chart.maxBubbleRelativeSize = function(_){
-        if(!arguments.length) return _maxBubbleRelativeSize;
+    _chart.maxBubbleRelativeSize = function(_) {
+        if (!arguments.length) return _maxBubbleRelativeSize;
         _maxBubbleRelativeSize = _;
         return _chart;
+    };
+
+    _chart.initBubbleColor = function(d, i) {
+        this[dc.constants.NODE_INDEX_NAME] = i;
+        return _chart.getColor(d, i);
+    };
+
+    _chart.updateBubbleColor = function(d, i) {
+        // a work around to get correct node index since
+        // d3 does not send i correctly here
+        return _chart.getColor(d, this[dc.constants.NODE_INDEX_NAME]);
     };
 
     return _chart;
@@ -2195,14 +2206,14 @@ dc.bubbleChart = function(parent, chartGroup) {
         return "translate(" + (bubbleX(d)) + "," + (bubbleY(d)) + ")";
     };
 
-    _chart.elasticRadius = function(_){
-        if(!arguments.length) return _elasticRadius;
+    _chart.elasticRadius = function(_) {
+        if (!arguments.length) return _elasticRadius;
         _elasticRadius = _;
         return _chart;
     };
 
     _chart.plotData = function() {
-        if(_elasticRadius)
+        if (_elasticRadius)
             _chart.r().domain([_chart.rMin(), _chart.rMax()]);
 
         _chart.r().range([_chart.MIN_RADIUS, _chart.xAxisLength() * _chart.maxBubbleRelativeSize()]);
@@ -2221,6 +2232,7 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     function renderNodes(bubbleG) {
         var bubbleGEnter = bubbleG.enter().append("g");
+
         bubbleGEnter
             .attr("class", _chart.BUBBLE_NODE_CLASS)
             .attr("transform", bubbleLocator)
@@ -2228,10 +2240,7 @@ dc.bubbleChart = function(parent, chartGroup) {
                 return _chart.BUBBLE_CLASS + " " + i;
             })
             .on("click", _chart.onClick)
-            .attr("fill", function(d, i) {
-                this[dc.constants.NODE_INDEX_NAME] = i;
-                return _chart.getColor(d, i);
-            })
+            .attr("fill", _chart.initBubbleColor)
             .attr("r", 0);
         dc.transition(bubbleG, _chart.transitionDuration())
             .attr("r", function(d) {
@@ -2247,11 +2256,7 @@ dc.bubbleChart = function(parent, chartGroup) {
         dc.transition(bubbleG, _chart.transitionDuration())
             .attr("transform", bubbleLocator)
             .selectAll("circle." + _chart.BUBBLE_CLASS)
-            .attr("fill", function(d, i) {
-                // a work around to get correct node index since
-                // d3 does not send i correctly here
-                return _chart.getColor(d, this[dc.constants.NODE_INDEX_NAME]);
-            })
+            .attr("fill", _chart.updateBubbleColor)
             .attr("r", function(d) {
                 return _chart.bubbleR(d);
             });
@@ -2619,6 +2624,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
                 circle = nodeG.append("circle")
                     .attr("class", BUBBLE_CLASS)
                     .attr("r", 0)
+                    .attr("fill", _chart.initBubbleColor)
                     .on("click", _chart.onClick);
 
             dc.transition(circle, _chart.transitionDuration())

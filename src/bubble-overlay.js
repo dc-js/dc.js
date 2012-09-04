@@ -45,6 +45,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
                 circle = nodeG.append("circle")
                     .attr("class", BUBBLE_CLASS)
                     .attr("r", 0)
+                    .attr("fill", _chart.initBubbleColor)
                     .on("click", _chart.onClick);
 
             dc.transition(circle, _chart.transitionDuration())

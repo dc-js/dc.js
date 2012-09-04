@@ -59,11 +59,11 @@ dc.abstractBubbleChart = function(_chart) {
         if (_chart.renderLabel()) {
             var label = bubbleGEnter.select("text");
 
-            if(label.empty()){
+            if (label.empty()) {
                 label = bubbleGEnter.append("text")
-                .attr("text-anchor", "middle")
-                .attr("dy", ".3em")
-                .on("click", _chart.onClick);
+                    .attr("text-anchor", "middle")
+                    .attr("dy", ".3em")
+                    .on("click", _chart.onClick);
             }
 
             label.text(labelFunction);
@@ -85,7 +85,7 @@ dc.abstractBubbleChart = function(_chart) {
         if (_chart.renderTitle()) {
             var title = g.select("title");
 
-            if(title.empty())
+            if (title.empty())
                 g.append("title").text(titleFunction);
         }
     };
@@ -111,16 +111,27 @@ dc.abstractBubbleChart = function(_chart) {
         }
     };
 
-    _chart.minRadiusWithLabel = function(_){
-        if(!arguments.length) return _minRadiusWithLabel;
+    _chart.minRadiusWithLabel = function(_) {
+        if (!arguments.length) return _minRadiusWithLabel;
         _minRadiusWithLabel = _;
         return _chart;
     };
 
-    _chart.maxBubbleRelativeSize = function(_){
-        if(!arguments.length) return _maxBubbleRelativeSize;
+    _chart.maxBubbleRelativeSize = function(_) {
+        if (!arguments.length) return _maxBubbleRelativeSize;
         _maxBubbleRelativeSize = _;
         return _chart;
+    };
+
+    _chart.initBubbleColor = function(d, i) {
+        this[dc.constants.NODE_INDEX_NAME] = i;
+        return _chart.getColor(d, i);
+    };
+
+    _chart.updateBubbleColor = function(d, i) {
+        // a work around to get correct node index since
+        // d3 does not send i correctly here
+        return _chart.getColor(d, this[dc.constants.NODE_INDEX_NAME]);
     };
 
     return _chart;

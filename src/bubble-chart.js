@@ -9,14 +9,14 @@ dc.bubbleChart = function(parent, chartGroup) {
         return "translate(" + (bubbleX(d)) + "," + (bubbleY(d)) + ")";
     };
 
-    _chart.elasticRadius = function(_){
-        if(!arguments.length) return _elasticRadius;
+    _chart.elasticRadius = function(_) {
+        if (!arguments.length) return _elasticRadius;
         _elasticRadius = _;
         return _chart;
     };
 
     _chart.plotData = function() {
-        if(_elasticRadius)
+        if (_elasticRadius)
             _chart.r().domain([_chart.rMin(), _chart.rMax()]);
 
         _chart.r().range([_chart.MIN_RADIUS, _chart.xAxisLength() * _chart.maxBubbleRelativeSize()]);
@@ -35,6 +35,7 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     function renderNodes(bubbleG) {
         var bubbleGEnter = bubbleG.enter().append("g");
+
         bubbleGEnter
             .attr("class", _chart.BUBBLE_NODE_CLASS)
             .attr("transform", bubbleLocator)
@@ -42,10 +43,7 @@ dc.bubbleChart = function(parent, chartGroup) {
                 return _chart.BUBBLE_CLASS + " " + i;
             })
             .on("click", _chart.onClick)
-            .attr("fill", function(d, i) {
-                this[dc.constants.NODE_INDEX_NAME] = i;
-                return _chart.getColor(d, i);
-            })
+            .attr("fill", _chart.initBubbleColor)
             .attr("r", 0);
         dc.transition(bubbleG, _chart.transitionDuration())
             .attr("r", function(d) {
@@ -61,11 +59,7 @@ dc.bubbleChart = function(parent, chartGroup) {
         dc.transition(bubbleG, _chart.transitionDuration())
             .attr("transform", bubbleLocator)
             .selectAll("circle." + _chart.BUBBLE_CLASS)
-            .attr("fill", function(d, i) {
-                // a work around to get correct node index since
-                // d3 does not send i correctly here
-                return _chart.getColor(d, this[dc.constants.NODE_INDEX_NAME]);
-            })
+            .attr("fill", _chart.updateBubbleColor)
             .attr("r", function(d) {
                 return _chart.bubbleR(d);
             });

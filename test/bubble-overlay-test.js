@@ -19,6 +19,7 @@ suite.addBatch({
                 .transitionDuration(0)
                 .title(function(d){return "Title: " + d.key;})
                 .r(d3.scale.linear().domain([0, 3]))
+                .colors(['blue'])
                 .point("California", 100, 120)
                 .point("Colorado", 300, 120)
                 .point("Delaware", 500, 220)
@@ -67,6 +68,10 @@ suite.addBatch({
         'title should only be generated once':function(chart){
             chart.redraw();
             assert.equal(chart.selectAll("g.node title")[0].length, 6);
+        },
+        'correct color for circle should be filled':function(chart){
+            assert.equal(d3.select(chart.selectAll("circle.bubble")[0][0]).attr("fill"), "blue");
+            assert.equal(d3.select(chart.selectAll("circle.bubble")[0][3]).attr("fill"), "blue");
         },
 
         'teardown': function() {
