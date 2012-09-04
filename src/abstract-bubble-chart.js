@@ -1,4 +1,7 @@
 dc.abstractBubbleChart = function(_chart) {
+    var _maxBubbleRelativeSize = 0.3;
+    var _minRadiusWithLabel = 10;
+
     _chart.BUBBLE_NODE_CLASS = "node";
     _chart.BUBBLE_CLASS = "bubble";
     _chart.MIN_RADIUS = 10;
@@ -43,6 +46,70 @@ dc.abstractBubbleChart = function(_chart) {
         if (isNaN(r) || value <= 0)
             r = 0;
         return r;
+    };
+
+    var labelFunction = function(d) {
+        return _chart.bubbleR(d) > _minRadiusWithLabel ? _chart.label()(d) : "";
+    };
+
+    _chart.doRenderLabel = function(bubbleGEnter) {
+        if (_chart.renderLabel()) {
+            bubbleGEnter.append("text")
+                .attr("text-anchor", "middle")
+                .attr("dy", ".3em")
+                .on("click", _chart.onClick)
+                .text(labelFunction);
+        }
+    };
+
+    _chart.updateLabels = function(bubbleGEnter) {
+        if (_chart.renderLabel()) {
+            bubbleGEnter.selectAll("text")
+                .text(labelFunction);
+        }
+    };
+
+    var titleFunction = function(d) {
+        return _chart.title()(d);
+    };
+
+    _chart.doRenderTitles = function(g) {
+        if (_chart.renderTitle()) {
+            g.append("title").text(titleFunction);
+        }
+    };
+
+    _chart.updateTitles = function(g) {
+        if (_chart.renderTitle()) {
+            g.selectAll("title").text(titleFunction);
+        }
+    };
+
+    _chart.onClick = function(d) {
+        var toFilter = d.key;
+        if (toFilter == _chart.filter()) {
+            dc.events.trigger(function() {
+                _chart.filter(null);
+                dc.redrawAll(_chart.chartGroup());
+            });
+        } else {
+            dc.events.trigger(function() {
+                _chart.filter(toFilter);
+                dc.redrawAll(_chart.chartGroup());
+            });
+        }
+    };
+
+    _chart.minRadiusWithLabel = function(_){
+        if(!arguments.length) return _minRadiusWithLabel;
+        _minRadiusWithLabel = _;
+        return _chart;
+    };
+
+    _chart.maxBubbleRelativeSize = function(_){
+        if(!arguments.length) return _maxBubbleRelativeSize;
+        _maxBubbleRelativeSize = _;
+        return _chart;
     };
 
     return _chart;

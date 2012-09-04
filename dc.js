@@ -1353,6 +1353,9 @@ dc.stackableChart = function(_chart) {
     return _chart;
 };
 dc.abstractBubbleChart = function(_chart) {
+    var _maxBubbleRelativeSize = 0.3;
+    var _minRadiusWithLabel = 10;
+
     _chart.BUBBLE_NODE_CLASS = "node";
     _chart.BUBBLE_CLASS = "bubble";
     _chart.MIN_RADIUS = 10;
@@ -1397,6 +1400,70 @@ dc.abstractBubbleChart = function(_chart) {
         if (isNaN(r) || value <= 0)
             r = 0;
         return r;
+    };
+
+    var labelFunction = function(d) {
+        return _chart.bubbleR(d) > _minRadiusWithLabel ? _chart.label()(d) : "";
+    };
+
+    _chart.doRenderLabel = function(bubbleGEnter) {
+        if (_chart.renderLabel()) {
+            bubbleGEnter.append("text")
+                .attr("text-anchor", "middle")
+                .attr("dy", ".3em")
+                .on("click", _chart.onClick)
+                .text(labelFunction);
+        }
+    };
+
+    _chart.updateLabels = function(bubbleGEnter) {
+        if (_chart.renderLabel()) {
+            bubbleGEnter.selectAll("text")
+                .text(labelFunction);
+        }
+    };
+
+    var titleFunction = function(d) {
+        return _chart.title()(d);
+    };
+
+    _chart.doRenderTitles = function(g) {
+        if (_chart.renderTitle()) {
+            g.append("title").text(titleFunction);
+        }
+    };
+
+    _chart.updateTitles = function(g) {
+        if (_chart.renderTitle()) {
+            g.selectAll("title").text(titleFunction);
+        }
+    };
+
+    _chart.onClick = function(d) {
+        var toFilter = d.key;
+        if (toFilter == _chart.filter()) {
+            dc.events.trigger(function() {
+                _chart.filter(null);
+                dc.redrawAll(_chart.chartGroup());
+            });
+        } else {
+            dc.events.trigger(function() {
+                _chart.filter(toFilter);
+                dc.redrawAll(_chart.chartGroup());
+            });
+        }
+    };
+
+    _chart.minRadiusWithLabel = function(_){
+        if(!arguments.length) return _minRadiusWithLabel;
+        _minRadiusWithLabel = _;
+        return _chart;
+    };
+
+    _chart.maxBubbleRelativeSize = function(_){
+        if(!arguments.length) return _maxBubbleRelativeSize;
+        _maxBubbleRelativeSize = _;
+        return _chart;
     };
 
     return _chart;
@@ -2109,9 +2176,6 @@ dc.dataTable = function(parent, chartGroup) {
 dc.bubbleChart = function(parent, chartGroup) {
     var _chart = dc.abstractBubbleChart(dc.coordinateGridChart({}));
 
-    var _maxBubbleRelativeSize = 0.3;
-    var _minRadiusWithLabel = 10;
-
     var _elasticRadius = false;
 
     _chart.renderLabel(true);
@@ -2121,12 +2185,6 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     var bubbleLocator = function(d) {
         return "translate(" + (bubbleX(d)) + "," + (bubbleY(d)) + ")";
-    };
-
-    _chart.maxBubbleRelativeSize = function(_){
-        if(!arguments.length) return _maxBubbleRelativeSize;
-        _maxBubbleRelativeSize = _;
-        return _chart;
     };
 
     _chart.elasticRadius = function(_){
@@ -2139,7 +2197,7 @@ dc.bubbleChart = function(parent, chartGroup) {
         if(_elasticRadius)
             _chart.r().domain([_chart.rMin(), _chart.rMax()]);
 
-        _chart.r().range([_chart.MIN_RADIUS, _chart.xAxisLength() * _maxBubbleRelativeSize]);
+        _chart.r().range([_chart.MIN_RADIUS, _chart.xAxisLength() * _chart.maxBubbleRelativeSize()]);
 
         var bubbleG = _chart.g().selectAll("g." + _chart.BUBBLE_NODE_CLASS)
             .data(_chart.group().all());
@@ -2161,7 +2219,7 @@ dc.bubbleChart = function(parent, chartGroup) {
             .append("circle").attr("class", function(d, i) {
                 return _chart.BUBBLE_CLASS + " " + i;
             })
-            .on("click", onClick)
+            .on("click", _chart.onClick)
             .attr("fill", function(d, i) {
                 this[dc.constants.NODE_INDEX_NAME] = i;
                 return _chart.getColor(d, i);
@@ -2172,46 +2230,9 @@ dc.bubbleChart = function(parent, chartGroup) {
                 return _chart.bubbleR(d);
             });
 
-        renderLabel(bubbleGEnter);
+        _chart.doRenderLabel(bubbleGEnter);
 
-        renderTitles(bubbleGEnter);
-    }
-
-    var labelFunction = function(d) {
-        return _chart.bubbleR(d) > _minRadiusWithLabel? _chart.label()(d) : "";
-    };
-
-    var renderLabel = function(bubbleGEnter) {
-        if (_chart.renderLabel()) {
-            bubbleGEnter.append("text")
-                .attr("text-anchor", "middle")
-                .attr("dy", ".3em")
-                .on("click", onClick)
-                .text(labelFunction);
-        }
-    }
-
-    var updateLabels = function(bubbleGEnter) {
-        if (_chart.renderLabel()) {
-            bubbleGEnter.selectAll("text")
-                .text(labelFunction);
-        }
-    }
-
-    var titleFunction = function(d) {
-        return _chart.title()(d);
-    };
-
-    var renderTitles = function(g) {
-        if (_chart.renderTitle()) {
-            g.append("title").text(titleFunction);
-        }
-    }
-
-    var updateTitles = function(g) {
-        if (_chart.renderTitle()) {
-            g.selectAll("title").text(titleFunction);
-        }
+        _chart.doRenderTitles(bubbleGEnter);
     }
 
     function updateNodes(bubbleG) {
@@ -2226,27 +2247,12 @@ dc.bubbleChart = function(parent, chartGroup) {
             .attr("r", function(d) {
                 return _chart.bubbleR(d);
             });
-        updateLabels(bubbleG);
-        updateTitles(bubbleG);
+        _chart.updateLabels(bubbleG);
+        _chart.updateTitles(bubbleG);
     }
 
     function removeNodes(bubbleG) {
         bubbleG.exit().remove();
-    }
-
-    function onClick(d) {
-        var toFilter = d.key;
-        if (toFilter == _chart.filter()) {
-            dc.events.trigger(function() {
-                _chart.filter(null);
-                dc.redrawAll(_chart.chartGroup());
-            });
-        } else {
-            dc.events.trigger(function() {
-                _chart.filter(toFilter);
-                dc.redrawAll(_chart.chartGroup());
-            });
-        }
     }
 
     function bubbleX(d) {
@@ -2275,7 +2281,7 @@ dc.bubbleChart = function(parent, chartGroup) {
     _chart.fadeDeselectedArea = function() {
         if (_chart.hasFilter()) {
             _chart.selectAll("g." + _chart.BUBBLE_NODE_CLASS).each(function(d) {
-                if (_chart.isSelectedSlice(d)) {
+                if (_chart.isSelectedNode(d)) {
                     _chart.highlightSelected(this);
                 } else {
                     _chart.fadeDeselected(this);
@@ -2288,14 +2294,8 @@ dc.bubbleChart = function(parent, chartGroup) {
         }
     };
 
-    _chart.isSelectedSlice = function(d) {
+    _chart.isSelectedNode = function(d) {
         return _chart.filter() == d.key;
-    };
-
-    _chart.minRadiusWithLabel = function(_){
-        if(!arguments.length) return _minRadiusWithLabel;
-        _minRadiusWithLabel = _;
-        return _chart;
     };
 
     return _chart.anchor(parent, chartGroup);
