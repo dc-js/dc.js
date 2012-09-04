@@ -73,7 +73,7 @@ dc.bubbleChart = function(parent, chartGroup) {
         return _chart.bubbleR(d) > _minRadiusWithLabel? _chart.label()(d) : "";
     };
 
-    function renderLabel(bubbleGEnter) {
+    var renderLabel = function(bubbleGEnter) {
         if (_chart.renderLabel()) {
             bubbleGEnter.append("text")
                 .attr("text-anchor", "middle")
@@ -83,7 +83,7 @@ dc.bubbleChart = function(parent, chartGroup) {
         }
     }
 
-    function updateLabels(bubbleGEnter) {
+    var updateLabels = function(bubbleGEnter) {
         if (_chart.renderLabel()) {
             bubbleGEnter.selectAll("text")
                 .text(labelFunction);
@@ -94,13 +94,13 @@ dc.bubbleChart = function(parent, chartGroup) {
         return _chart.title()(d);
     };
 
-    function renderTitles(g) {
+    var renderTitles = function(g) {
         if (_chart.renderTitle()) {
             g.append("title").text(titleFunction);
         }
     }
 
-    function updateTitles(g) {
+    var updateTitles = function(g) {
         if (_chart.renderTitle()) {
             g.selectAll("title").text(titleFunction);
         }
