@@ -59,13 +59,14 @@ dc.abstractBubbleChart = function(_chart) {
         if (_chart.renderLabel()) {
             var label = bubbleGEnter.select("text");
 
-            if(label.empty())
-                label = bubbleGEnter.append("text");
-
-            label.attr("text-anchor", "middle")
+            if(label.empty()){
+                label = bubbleGEnter.append("text")
+                .attr("text-anchor", "middle")
                 .attr("dy", ".3em")
-                .on("click", _chart.onClick)
-                .text(labelFunction);
+                .on("click", _chart.onClick);
+            }
+
+            label.text(labelFunction);
         }
     };
 

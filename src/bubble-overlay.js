@@ -44,7 +44,8 @@ dc.bubbleOverlay = function(root, chartGroup) {
             if (circle.empty())
                 circle = nodeG.append("circle")
                     .attr("class", BUBBLE_CLASS)
-                    .attr("r", 0);
+                    .attr("r", 0)
+                    .on("click", _chart.onClick);
 
             dc.transition(circle, _chart.transitionDuration())
                 .attr("r", function(d) {
