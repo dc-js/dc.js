@@ -1416,7 +1416,7 @@ dc.abstractBubbleChart = function(_chart) {
         }
     };
 
-    _chart.updateLabels = function(bubbleGEnter) {
+    _chart.doUpdateLabels = function(bubbleGEnter) {
         if (_chart.renderLabel()) {
             bubbleGEnter.selectAll("text")
                 .text(labelFunction);
@@ -1433,7 +1433,7 @@ dc.abstractBubbleChart = function(_chart) {
         }
     };
 
-    _chart.updateTitles = function(g) {
+    _chart.doUpdateTitles = function(g) {
         if (_chart.renderTitle()) {
             g.selectAll("title").text(titleFunction);
         }
@@ -2247,8 +2247,8 @@ dc.bubbleChart = function(parent, chartGroup) {
             .attr("r", function(d) {
                 return _chart.bubbleR(d);
             });
-        _chart.updateLabels(bubbleG);
-        _chart.updateTitles(bubbleG);
+        _chart.doUpdateLabels(bubbleG);
+        _chart.doUpdateTitles(bubbleG);
     }
 
     function removeNodes(bubbleG) {

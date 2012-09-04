@@ -72,8 +72,8 @@ dc.bubbleChart = function(parent, chartGroup) {
             .attr("r", function(d) {
                 return _chart.bubbleR(d);
             });
-        _chart.updateLabels(bubbleG);
-        _chart.updateTitles(bubbleG);
+        _chart.doUpdateLabels(bubbleG);
+        _chart.doUpdateTitles(bubbleG);
     }
 
     function removeNodes(bubbleG) {

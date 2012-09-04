@@ -62,7 +62,7 @@ dc.abstractBubbleChart = function(_chart) {
         }
     };
 
-    _chart.updateLabels = function(bubbleGEnter) {
+    _chart.doUpdateLabels = function(bubbleGEnter) {
         if (_chart.renderLabel()) {
             bubbleGEnter.selectAll("text")
                 .text(labelFunction);
@@ -79,7 +79,7 @@ dc.abstractBubbleChart = function(_chart) {
         }
     };
 
-    _chart.updateTitles = function(g) {
+    _chart.doUpdateTitles = function(g) {
         if (_chart.renderTitle()) {
             g.selectAll("title").text(titleFunction);
         }
