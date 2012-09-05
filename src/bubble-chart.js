@@ -94,25 +94,5 @@ dc.bubbleChart = function(parent, chartGroup) {
         _chart.fadeDeselectedArea();
     };
 
-    _chart.fadeDeselectedArea = function() {
-        if (_chart.hasFilter()) {
-            _chart.selectAll("g." + _chart.BUBBLE_NODE_CLASS).each(function(d) {
-                if (_chart.isSelectedNode(d)) {
-                    _chart.highlightSelected(this);
-                } else {
-                    _chart.fadeDeselected(this);
-                }
-            });
-        } else {
-            _chart.selectAll("g." + _chart.BUBBLE_NODE_CLASS).each(function(d) {
-                _chart.resetHighlight(this);
-            });
-        }
-    };
-
-    _chart.isSelectedNode = function(d) {
-        return _chart.filter() == d.key;
-    };
-
     return _chart.anchor(parent, chartGroup);
 };

@@ -5,25 +5,21 @@ dc.singleSelectionChart = function(_chart) {
         return _filter != null;
     };
 
-    _chart.filter = function(f) {
+    _chart.filter = function(_) {
         if (!arguments.length) return _filter;
 
-        _filter = f;
+        _filter = _;
 
         if (_chart.dataAreSet())
             _chart.dimension().filter(_filter);
 
-        if (f) {
+        if (_) {
             _chart.turnOnControls();
         } else {
             _chart.turnOffControls();
         }
 
         return _chart;
-    };
-
-    _chart.currentFilter = function() {
-       return _filter;
     };
 
     _chart.highlightSelected = function(e) {

@@ -1161,25 +1161,21 @@ dc.singleSelectionChart = function(_chart) {
         return _filter != null;
     };
 
-    _chart.filter = function(f) {
+    _chart.filter = function(_) {
         if (!arguments.length) return _filter;
 
-        _filter = f;
+        _filter = _;
 
         if (_chart.dataAreSet())
             _chart.dimension().filter(_filter);
 
-        if (f) {
+        if (_) {
             _chart.turnOnControls();
         } else {
             _chart.turnOffControls();
         }
 
         return _chart;
-    };
-
-    _chart.currentFilter = function() {
-       return _filter;
     };
 
     _chart.highlightSelected = function(e) {
@@ -1486,6 +1482,26 @@ dc.abstractBubbleChart = function(_chart) {
         // a work around to get correct node index since
         // d3 does not send i correctly here
         return _chart.getColor(d, this[dc.constants.NODE_INDEX_NAME]);
+    };
+
+    _chart.fadeDeselectedArea = function() {
+        if (_chart.hasFilter()) {
+            _chart.selectAll("g." + _chart.BUBBLE_NODE_CLASS).each(function(d) {
+                if (_chart.isSelectedNode(d)) {
+                    _chart.highlightSelected(this);
+                } else {
+                    _chart.fadeDeselected(this);
+                }
+            });
+        } else {
+            _chart.selectAll("g." + _chart.BUBBLE_NODE_CLASS).each(function(d) {
+                _chart.resetHighlight(this);
+            });
+        }
+    };
+
+    _chart.isSelectedNode = function(d) {
+        return _chart.filter() == d.key;
     };
 
     return _chart;
@@ -2291,26 +2307,6 @@ dc.bubbleChart = function(parent, chartGroup) {
         _chart.fadeDeselectedArea();
     };
 
-    _chart.fadeDeselectedArea = function() {
-        if (_chart.hasFilter()) {
-            _chart.selectAll("g." + _chart.BUBBLE_NODE_CLASS).each(function(d) {
-                if (_chart.isSelectedNode(d)) {
-                    _chart.highlightSelected(this);
-                } else {
-                    _chart.fadeDeselected(this);
-                }
-            });
-        } else {
-            _chart.selectAll("g." + _chart.BUBBLE_NODE_CLASS).each(function(d) {
-                _chart.resetHighlight(this);
-            });
-        }
-    };
-
-    _chart.isSelectedNode = function(d) {
-        return _chart.filter() == d.key;
-    };
-
     return _chart.anchor(parent, chartGroup);
 };
 dc.compositeChart = function(parent, chartGroup) {
@@ -2602,6 +2598,8 @@ dc.bubbleOverlay = function(root, chartGroup) {
 
         initializeBubbles();
 
+        _chart.fadeDeselectedArea();
+
         return _chart;
     };
 
@@ -2664,6 +2662,9 @@ dc.bubbleOverlay = function(root, chartGroup) {
 
     _chart.doRedraw = function() {
         updateBubbles();
+
+        _chart.fadeDeselectedArea();
+
         return _chart;
     };
 

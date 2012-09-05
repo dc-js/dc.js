@@ -73,6 +73,12 @@ suite.addBatch({
             assert.equal(d3.select(chart.selectAll("circle.bubble")[0][0]).attr("fill"), "blue");
             assert.equal(d3.select(chart.selectAll("circle.bubble")[0][3]).attr("fill"), "blue");
         },
+        'correct bubble should be highlighted when filter is active':function(chart){
+            chart.filter("California");
+            chart.redraw();
+            assert.equal(d3.select(chart.selectAll("g.node")[0][0]).attr("class"), "node california selected");
+            assert.equal(d3.select(chart.selectAll("g.node")[0][3]).attr("class"), "node ontario deselected");
+        },
 
         'teardown': function() {
             resetAllFilters();
