@@ -2140,6 +2140,7 @@ dc.dataTable = function(parent, chartGroup) {
             .attr("class", "group")
                 .append("td")
                 .attr("class", "label")
+                .attr("colspan", _columns.length)
                 .text(function(d) {
                     return _chart.keyAccessor()(d);
                 });

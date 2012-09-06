@@ -46,6 +46,9 @@ suite.addBatch({
         'order should be set':function(chart) {
             assert.equal(chart.order(), d3.ascending);
         },
+        'should have column span set on group tr':function(chart) {
+            assert.equal(chart.selectAll("tr.group td")[0][0].getAttribute("colspan"), "2");
+        },
         'should have id column created':function(chart) {
             assert.equal(chart.selectAll("td.0")[0][0].innerHTML, 8);
             assert.equal(chart.selectAll("td.0")[0][1].innerHTML, 3);
