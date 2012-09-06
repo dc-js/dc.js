@@ -2118,7 +2118,7 @@ dc.dataTable = function(parent, chartGroup) {
     var _sort;
 
     _chart.doRender = function() {
-        _chart.selectAll("div.row").remove();
+        _chart.selectAll("tbody").remove();
 
         renderRows(renderGroups());
 
@@ -2126,22 +2126,27 @@ dc.dataTable = function(parent, chartGroup) {
     };
 
     function renderGroups() {
-        var groups = _chart.root().selectAll("div.group")
+        var groups = _chart.root().selectAll("tbody")
             .data(nestEntries(), function(d) {
                 return _chart.keyAccessor()(d);
             });
 
-        groups.enter().append("div")
+        var rowGroup = groups
+            .enter()
+            .append("tbody");
+
+        rowGroup
+            .append("tr")
             .attr("class", "group")
-            .append("span")
-            .attr("class", "label")
-            .text(function(d) {
-                return _chart.keyAccessor()(d);
-            });
+                .append("td")
+                .attr("class", "label")
+                .text(function(d) {
+                    return _chart.keyAccessor()(d);
+                });
 
         groups.exit().remove();
 
-        return groups;
+        return rowGroup;
     }
 
     function nestEntries() {
@@ -2158,18 +2163,18 @@ dc.dataTable = function(parent, chartGroup) {
 
     function renderRows(groups) {
         var rows = groups.order()
-            .selectAll("div.row")
+            .selectAll("tr.row")
             .data(function(d) {
                 return d.values;
             });
 
         var rowEnter = rows.enter()
-            .append("div")
+            .append("tr")
             .attr("class", "row");
 
         for (var i = 0; i < _columns.length; ++i) {
             var f = _columns[i];
-            rowEnter.append("span")
+            rowEnter.append("td")
                 .attr("class", "column " + i)
                 .text(function(d) {
                     return f(d);
