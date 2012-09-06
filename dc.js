@@ -140,6 +140,10 @@ dc.renderlet = function(_){
     dc._renderlet = _;
     return dc;
 };
+
+dc.instanceOfChart = function (o) {
+    return o instanceof Object && o.__dc_flag__;
+};
 dc.dateFormat = d3.time.format("%m/%d/%Y");
 
 dc.printers = {};
@@ -256,6 +260,10 @@ dc.utils.groupMin = function(group, accessor) {
     return d3.min(group.all(), function(e) {
         return accessor(e);
     });
+};
+
+dc.utils.nameToId = function(name){
+    return name.toLowerCase().replace(/ /g, "_");
 };
 dc.events = {
     current: null
@@ -398,6 +406,8 @@ dc.cumulative.CountUnique = function() {
 };
 dc.cumulative.CountUnique.prototype = new dc.cumulative.Base();
 dc.baseChart = function(_chart) {
+    _chart.__dc_flag__ = true;
+
     var _dimension;
     var _group;
 
@@ -468,7 +478,7 @@ dc.baseChart = function(_chart) {
 
     _chart.anchor = function(a, chartGroup) {
         if (!arguments.length) return _anchor;
-        if (a instanceof Object) {
+        if (dc.instanceOfChart(a)) {
             _anchor = a.anchor();
             _root = a.root();
         } else {
@@ -1146,34 +1156,26 @@ dc.colorChart = function(_chart) {
 };
 dc.singleSelectionChart = function(_chart) {
     var _filter;
-    var _onClick = function(d){
-        _chart.filter(d.key);
-        dc.redrawAll(_chart.chartGroup());
-    };
 
     _chart.hasFilter = function() {
         return _filter != null;
     };
 
-    _chart.filter = function(f) {
+    _chart.filter = function(_) {
         if (!arguments.length) return _filter;
 
-        _filter = f;
+        _filter = _;
 
         if (_chart.dataAreSet())
             _chart.dimension().filter(_filter);
 
-        if (f) {
+        if (_) {
             _chart.turnOnControls();
         } else {
             _chart.turnOffControls();
         }
 
         return _chart;
-    };
-
-    _chart.currentFilter = function() {
-       return _filter;
     };
 
     _chart.highlightSelected = function(e) {
@@ -1346,6 +1348,164 @@ dc.stackableChart = function(_chart) {
 
     return _chart;
 };
+dc.abstractBubbleChart = function(_chart) {
+    var _maxBubbleRelativeSize = 0.3;
+    var _minRadiusWithLabel = 10;
+
+    _chart.BUBBLE_NODE_CLASS = "node";
+    _chart.BUBBLE_CLASS = "bubble";
+    _chart.MIN_RADIUS = 10;
+
+    _chart = dc.singleSelectionChart(dc.colorChart(_chart));
+
+    _chart.renderLabel(true);
+    _chart.renderTitle(false);
+
+    var _r = d3.scale.linear().domain([0, 100]);
+
+    var _rValueAccessor = function(d) {
+        return d.r;
+    };
+
+    _chart.r = function(_) {
+        if (!arguments.length) return _r;
+        _r = _;
+        return _chart;
+    };
+
+    _chart.radiusValueAccessor = function(_) {
+        if (!arguments.length) return _rValueAccessor;
+        _rValueAccessor = _;
+        return _chart;
+    };
+
+    _chart.rMin = function() {
+        var min = d3.min(_chart.group().all(), function(e) {
+            return _chart.radiusValueAccessor()(e);
+        });
+        return min;
+    };
+
+    _chart.rMax = function() {
+        var max = d3.max(_chart.group().all(), function(e) {
+            return _chart.radiusValueAccessor()(e);
+        });
+        return max;
+    };
+
+    _chart.bubbleR = function(d) {
+        var value = _chart.radiusValueAccessor()(d);
+        var r = _chart.r()(value);
+        if (isNaN(r) || value <= 0)
+            r = 0;
+        return r;
+    };
+
+    var labelFunction = function(d) {
+        return _chart.bubbleR(d) > _minRadiusWithLabel ? _chart.label()(d) : "";
+    };
+
+    _chart.doRenderLabel = function(bubbleGEnter) {
+        if (_chart.renderLabel()) {
+            var label = bubbleGEnter.select("text");
+
+            if (label.empty()) {
+                label = bubbleGEnter.append("text")
+                    .attr("text-anchor", "middle")
+                    .attr("dy", ".3em")
+                    .on("click", _chart.onClick);
+            }
+
+            label.text(labelFunction);
+        }
+    };
+
+    _chart.doUpdateLabels = function(bubbleGEnter) {
+        if (_chart.renderLabel()) {
+            bubbleGEnter.selectAll("text")
+                .text(labelFunction);
+        }
+    };
+
+    var titleFunction = function(d) {
+        return _chart.title()(d);
+    };
+
+    _chart.doRenderTitles = function(g) {
+        if (_chart.renderTitle()) {
+            var title = g.select("title");
+
+            if (title.empty())
+                g.append("title").text(titleFunction);
+        }
+    };
+
+    _chart.doUpdateTitles = function(g) {
+        if (_chart.renderTitle()) {
+            g.selectAll("title").text(titleFunction);
+        }
+    };
+
+    _chart.onClick = function(d) {
+        var toFilter = d.key;
+        if (toFilter == _chart.filter()) {
+            dc.events.trigger(function() {
+                _chart.filter(null);
+                dc.redrawAll(_chart.chartGroup());
+            });
+        } else {
+            dc.events.trigger(function() {
+                _chart.filter(toFilter);
+                dc.redrawAll(_chart.chartGroup());
+            });
+        }
+    };
+
+    _chart.minRadiusWithLabel = function(_) {
+        if (!arguments.length) return _minRadiusWithLabel;
+        _minRadiusWithLabel = _;
+        return _chart;
+    };
+
+    _chart.maxBubbleRelativeSize = function(_) {
+        if (!arguments.length) return _maxBubbleRelativeSize;
+        _maxBubbleRelativeSize = _;
+        return _chart;
+    };
+
+    _chart.initBubbleColor = function(d, i) {
+        this[dc.constants.NODE_INDEX_NAME] = i;
+        return _chart.getColor(d, i);
+    };
+
+    _chart.updateBubbleColor = function(d, i) {
+        // a work around to get correct node index since
+        // d3 does not send i correctly here
+        return _chart.getColor(d, this[dc.constants.NODE_INDEX_NAME]);
+    };
+
+    _chart.fadeDeselectedArea = function() {
+        if (_chart.hasFilter()) {
+            _chart.selectAll("g." + _chart.BUBBLE_NODE_CLASS).each(function(d) {
+                if (_chart.isSelectedNode(d)) {
+                    _chart.highlightSelected(this);
+                } else {
+                    _chart.fadeDeselected(this);
+                }
+            });
+        } else {
+            _chart.selectAll("g." + _chart.BUBBLE_NODE_CLASS).each(function(d) {
+                _chart.resetHighlight(this);
+            });
+        }
+    };
+
+    _chart.isSelectedNode = function(d) {
+        return _chart.filter() == d.key;
+    };
+
+    return _chart;
+};
 dc.pieChart = function(parent, chartGroup) {
     var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
@@ -1368,6 +1528,7 @@ dc.pieChart = function(parent, chartGroup) {
     _chart.label(function(d) {
         return _chart.keyAccessor()(d.data);
     });
+
     _chart.renderLabel(true);
 
     _chart.title(function(d) {
@@ -1957,7 +2118,7 @@ dc.dataTable = function(parent, chartGroup) {
     var _sort;
 
     _chart.doRender = function() {
-        _chart.selectAll("div.row").remove();
+        _chart.selectAll("tr.row").remove();
 
         renderRows(renderGroups());
 
@@ -1965,14 +2126,18 @@ dc.dataTable = function(parent, chartGroup) {
     };
 
     function renderGroups() {
-        var groups = _chart.root().selectAll("div.group")
+        var groups = _chart.root().selectAll("tbody")
             .data(nestEntries(), function(d) {
                 return _chart.keyAccessor()(d);
             });
 
-        groups.enter().append("div")
+        var groupTables = groups.enter()
+            .append("tbody");
+
+            groupTables
+            .append("tr")
             .attr("class", "group")
-            .append("span")
+            .append("td")
             .attr("class", "label")
             .text(function(d) {
                 return _chart.keyAccessor()(d);
@@ -1980,7 +2145,7 @@ dc.dataTable = function(parent, chartGroup) {
 
         groups.exit().remove();
 
-        return groups;
+        return groupTables;
     }
 
     function nestEntries() {
@@ -1997,18 +2162,18 @@ dc.dataTable = function(parent, chartGroup) {
 
     function renderRows(groups) {
         var rows = groups.order()
-            .selectAll("div.row")
+            .selectAll("tr.row")
             .data(function(d) {
                 return d.values;
             });
 
         var rowEnter = rows.enter()
-            .append("div")
+            .append("tr")
             .attr("class", "row");
 
         for (var i = 0; i < _columns.length; ++i) {
             var f = _columns[i];
-            rowEnter.append("span")
+            rowEnter.append("td")
                 .attr("class", "column " + i)
                 .text(function(d) {
                     return f(d);
@@ -2051,25 +2216,9 @@ dc.dataTable = function(parent, chartGroup) {
     return _chart.anchor(parent, chartGroup);
 };
 dc.bubbleChart = function(parent, chartGroup) {
-    var NODE_CLASS = "node";
-    var BUBBLE_CLASS = "bubble";
-    var MIN_RADIUS = 10;
-
-    var _chart = dc.singleSelectionChart(dc.colorChart(dc.coordinateGridChart({})));
-
-    var _maxBubbleRelativeSize = 5;
-    var _minRadiusWithLabel = 10;
+    var _chart = dc.abstractBubbleChart(dc.coordinateGridChart({}));
 
     var _elasticRadius = false;
-
-    _chart.renderLabel(true);
-    _chart.renderTitle(false);
-
-    var _r = d3.scale.linear().domain([0, 100]);
-
-    var _rValueAccessor = function(d) {
-        return d.r;
-    };
 
     _chart.transitionDuration(750);
 
@@ -2077,25 +2226,19 @@ dc.bubbleChart = function(parent, chartGroup) {
         return "translate(" + (bubbleX(d)) + "," + (bubbleY(d)) + ")";
     };
 
-    _chart.maxBubbleRelativeSize = function(_){
-        if(!arguments.length) return _maxBubbleRelativeSize;
-        _maxBubbleRelativeSize = _;
-        return _chart;
-    };
-
-    _chart.elasticRadius = function(_){
-        if(!arguments.length) return _elasticRadius;
+    _chart.elasticRadius = function(_) {
+        if (!arguments.length) return _elasticRadius;
         _elasticRadius = _;
         return _chart;
     };
 
     _chart.plotData = function() {
-        if(_elasticRadius)
-            _r.domain([_chart.rMin(), _chart.rMax()]);
+        if (_elasticRadius)
+            _chart.r().domain([_chart.rMin(), _chart.rMax()]);
 
-        _r.range([MIN_RADIUS, _chart.xAxisLength() / _maxBubbleRelativeSize]);
+        _chart.r().range([_chart.MIN_RADIUS, _chart.xAxisLength() * _chart.maxBubbleRelativeSize()]);
 
-        var bubbleG = _chart.g().selectAll("g." + NODE_CLASS)
+        var bubbleG = _chart.g().selectAll("g." + _chart.BUBBLE_NODE_CLASS)
             .data(_chart.group().all());
 
         renderNodes(bubbleG);
@@ -2107,115 +2250,42 @@ dc.bubbleChart = function(parent, chartGroup) {
         _chart.fadeDeselectedArea();
     };
 
-    _chart.rMin = function() {
-        var min = d3.min(_chart.group().all(), function(e) {
-            return _chart.radiusValueAccessor()(e);
-        });
-        return min;
-    };
-
-    _chart.rMax = function() {
-        var max = d3.max(_chart.group().all(), function(e) {
-            return _chart.radiusValueAccessor()(e);
-        });
-        return max;
-    };
-
     function renderNodes(bubbleG) {
         var bubbleGEnter = bubbleG.enter().append("g");
+
         bubbleGEnter
-            .attr("class", NODE_CLASS)
+            .attr("class", _chart.BUBBLE_NODE_CLASS)
             .attr("transform", bubbleLocator)
             .append("circle").attr("class", function(d, i) {
-                return BUBBLE_CLASS + " " + i;
+                return _chart.BUBBLE_CLASS + " " + i;
             })
-            .on("click", onClick)
-            .attr("fill", function(d, i) {
-                this[dc.constants.NODE_INDEX_NAME] = i;
-                return _chart.getColor(d, i);
-            })
+            .on("click", _chart.onClick)
+            .attr("fill", _chart.initBubbleColor)
             .attr("r", 0);
         dc.transition(bubbleG, _chart.transitionDuration())
             .attr("r", function(d) {
-                return bubbleR(d);
+                return _chart.bubbleR(d);
             });
 
-        renderLabel(bubbleGEnter);
+        _chart.doRenderLabel(bubbleGEnter);
 
-        renderTitles(bubbleGEnter);
-    }
-
-    var labelFunction = function(d) {
-        return bubbleR(d) > _minRadiusWithLabel? _chart.label()(d) : "";
-    };
-
-    function renderLabel(bubbleGEnter) {
-        if (_chart.renderLabel()) {
-
-            bubbleGEnter.append("text")
-                .attr("text-anchor", "middle")
-                .attr("dy", ".3em")
-                .on("click", onClick)
-                .text(labelFunction);
-        }
-    }
-
-    function updateLabels(bubbleGEnter) {
-        if (_chart.renderLabel()) {
-            bubbleGEnter.selectAll("text")
-                .text(labelFunction);
-        }
-    }
-
-    var titleFunction = function(d) {
-        return _chart.title()(d);
-    };
-
-    function renderTitles(g) {
-        if (_chart.renderTitle()) {
-            g.append("title").text(titleFunction);
-        }
-    }
-
-    function updateTitles(g) {
-        if (_chart.renderTitle()) {
-            g.selectAll("title").text(titleFunction);
-        }
+        _chart.doRenderTitles(bubbleGEnter);
     }
 
     function updateNodes(bubbleG) {
         dc.transition(bubbleG, _chart.transitionDuration())
             .attr("transform", bubbleLocator)
-            .selectAll("circle." + BUBBLE_CLASS)
-            .attr("fill", function(d, i) {
-                // a work around to get correct node index since
-                // d3 does not send i correctly here
-                return _chart.getColor(d, this[dc.constants.NODE_INDEX_NAME]);
-            })
+            .selectAll("circle." + _chart.BUBBLE_CLASS)
+            .attr("fill", _chart.updateBubbleColor)
             .attr("r", function(d) {
-                return bubbleR(d);
+                return _chart.bubbleR(d);
             });
-        updateLabels(bubbleG);
-        updateTitles(bubbleG);
+        _chart.doUpdateLabels(bubbleG);
+        _chart.doUpdateTitles(bubbleG);
     }
 
     function removeNodes(bubbleG) {
         bubbleG.exit().remove();
-    }
-
-    function onClick(d) {
-        var toFilter = d.key;
-        if (toFilter == _chart.filter()) {
-            dc.events.trigger(function() {
-                _chart.filter(null);
-                dc.redrawAll(_chart.chartGroup());
-            });
-        } else {
-            dc.events.trigger(function() {
-                _chart.filter(toFilter);
-                dc.redrawAll(_chart.chartGroup());
-            });
-        }
     }
 
     function bubbleX(d) {
@@ -2232,14 +2302,6 @@ dc.bubbleChart = function(parent, chartGroup) {
         return y;
     }
 
-    function bubbleR(d) {
-        var value = _chart.radiusValueAccessor()(d);
-        var r = _chart.r()(value);
-        if (isNaN(r) || value <= 0)
-            r = 0;
-        return r;
-    }
-
     _chart.renderBrush = function(g) {
         // override default x axis brush from parent chart
     };
@@ -2247,44 +2309,6 @@ dc.bubbleChart = function(parent, chartGroup) {
     _chart.redrawBrush = function(g) {
         // override default x axis brush from parent chart
         _chart.fadeDeselectedArea();
-    };
-
-    _chart.fadeDeselectedArea = function() {
-        if (_chart.hasFilter()) {
-            _chart.selectAll("g." + NODE_CLASS).each(function(d) {
-                if (_chart.isSelectedSlice(d)) {
-                    _chart.highlightSelected(this);
-                } else {
-                    _chart.fadeDeselected(this);
-                }
-            });
-        } else {
-            _chart.selectAll("g." + NODE_CLASS).each(function(d) {
-                _chart.resetHighlight(this);
-            });
-        }
-    };
-
-    _chart.isSelectedSlice = function(d) {
-        return _chart.filter() == d.key;
-    };
-
-    _chart.r = function(_) {
-        if (!arguments.length) return _r;
-        _r = _;
-        return _chart;
-    };
-
-    _chart.radiusValueAccessor = function(_) {
-        if (!arguments.length) return _rValueAccessor;
-        _rValueAccessor = _;
-        return _chart;
-    };
-
-    _chart.minRadiusWithLabel = function(_){
-        if(!arguments.length) return _minRadiusWithLabel;
-        _minRadiusWithLabel = _;
-        return _chart;
     };
 
     return _chart.anchor(parent, chartGroup);
@@ -2468,7 +2492,7 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
             })
             .attr("class", function(d) {
                 var layerNameClass = geoJson(layerIndex).name;
-                var regionClass = geoJson(layerIndex).keyAccessor(d).toLowerCase().replace(/ /g, "_");
+                var regionClass = dc.utils.nameToId(geoJson(layerIndex).keyAccessor(d));
                 var baseClasses = layerNameClass + " " + regionClass;
                 if(isSelected(layerIndex, d)) baseClasses += " selected";
                 if(isDeselected(layerIndex, d)) baseClasses += " deselected";
@@ -2552,4 +2576,123 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
     };
 
     return _chart.anchor(parent, chartGroup);
+};
+dc.bubbleOverlay = function(root, chartGroup) {
+    var BUBBLE_OVERLAY_CLASS = "bubble-overlay";
+    var BUBBLE_NODE_CLASS = "node";
+    var BUBBLE_CLASS = "bubble";
+
+    var _chart = dc.abstractBubbleChart(dc.baseChart({}));
+    var _g;
+    var _points = [];
+
+    _chart.transitionDuration(750);
+
+    _chart.radiusValueAccessor(function(d) {
+        return d.value;
+    });
+
+    _chart.point = function(name, x, y) {
+        _points.push({name: name, x: x, y: y});
+        return _chart;
+    };
+
+    _chart.doRender = function() {
+        _g = initOverlayG();
+
+        initializeBubbles();
+
+        _chart.fadeDeselectedArea();
+
+        return _chart;
+    };
+
+    function initOverlayG() {
+        _g = _chart.select("g." + BUBBLE_OVERLAY_CLASS);
+        if (_g.empty())
+            _g = _chart.svg().append("g").attr("class", BUBBLE_OVERLAY_CLASS);
+        return _g;
+    }
+
+    function initializeBubbles() {
+        var data = mapData();
+
+        _points.forEach(function(point) {
+            var nodeG = getNodeG(point, data);
+
+            var circle = nodeG.select("circle." + BUBBLE_CLASS);
+
+            if (circle.empty())
+                circle = nodeG.append("circle")
+                    .attr("class", BUBBLE_CLASS)
+                    .attr("r", 0)
+                    .attr("fill", _chart.initBubbleColor)
+                    .on("click", _chart.onClick);
+
+            dc.transition(circle, _chart.transitionDuration())
+                .attr("r", function(d) {
+                    return _chart.bubbleR(d);
+                });
+
+            _chart.doRenderLabel(nodeG);
+
+            _chart.doRenderTitles(nodeG);
+        });
+    }
+
+    function mapData() {
+        var data = {};
+        _chart.group().all().forEach(function(datum) {
+            data[_chart.keyAccessor()(datum)] = datum;
+        });
+        return data;
+    }
+
+    function getNodeG(point, data) {
+        var bubbleNodeClass = BUBBLE_NODE_CLASS + " " + dc.utils.nameToId(point.name);
+
+        var nodeG = _g.select("g." + dc.utils.nameToId(point.name));
+
+        if (nodeG.empty()) {
+            nodeG = _g.append("g")
+                .attr("class", bubbleNodeClass)
+                .attr("transform", "translate(" + point.x + "," + point.y + ")");
+        }
+
+        nodeG.datum(data[point.name]);
+
+        return nodeG;
+    }
+
+    _chart.doRedraw = function() {
+        updateBubbles();
+
+        _chart.fadeDeselectedArea();
+
+        return _chart;
+    };
+
+    function updateBubbles() {
+        var data = mapData();
+
+        _points.forEach(function(point) {
+            var nodeG = getNodeG(point, data);
+
+            var circle = nodeG.select("circle." + BUBBLE_CLASS);
+
+            dc.transition(circle, _chart.transitionDuration())
+                .attr("r", function(d) {
+                    return _chart.bubbleR(d);
+                })
+                .attr("fill", _chart.updateBubbleColor);
+
+            _chart.doUpdateLabels(nodeG);
+
+            _chart.doUpdateTitles(nodeG);
+        });
+    }
+
+    _chart.anchor(root, chartGroup);
+
+    return _chart;
 };

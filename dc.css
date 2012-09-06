@@ -177,7 +177,7 @@
     margin-bottom: 50px;
 }
 
-.dc-chart .data-table span {
+.dc-chart .data-table td {
     display: table-cell;
     width: 135px;
     text-align: center;
@@ -187,22 +187,19 @@
     border: white solid 2px;
 }
 
-.dc-chart .data-table .header {
+.dc-chart .data-table thead {
     font-weight: bold;
 }
 
-.dc-chart .data-table .header span {
+.dc-chart .data-table thead td {
     background-color: #c6dbef;
     color: white;
 }
 
-.dc-chart .data-table .group span.label {
+.dc-chart .data-table tr.group td.label {
     font-weight: bold;
     font-size: larger;
     float: inherit;
-}
-
-.dc-chart .data-table .column {
 }
 
 .dc-chart g.state{

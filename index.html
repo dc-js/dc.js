@@ -142,15 +142,17 @@
 <div class="clear"></div>
 
 <div class="dc-chart">
-    <div class="data-table">
-        <div class="header">
-            <span>Date</span>
-            <span>Open</span>
-            <span>Close</span>
-            <span>Change</span>
-            <span>Volume</span>
-        </div>
-    </div>
+    <table class="data-table">
+        <thead>
+        <tr class="header">
+            <td>Date</td>
+            <td>Open</td>
+            <td>Close</td>
+            <td>Change</td>
+            <td>Volume</td>
+        </tr>
+        </thead>
+    </table>
 </div>
 
 <script type="text/javascript">
@@ -308,7 +310,7 @@ d3.csv("ndx.csv", function(data) {
                     .radiusValueAccessor(function(p) {
                         return p.value.fluctuationPercentage;
                     })
-                    .maxBubbleRelativeSize(5)
+                    .maxBubbleRelativeSize(0.3)
                     .x(d3.scale.linear().domain([-2500, 2500]))
                     .y(d3.scale.linear().domain([-100, 100]))
                     .r(d3.scale.linear().domain([0, 4000]))
