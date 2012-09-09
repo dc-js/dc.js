@@ -815,6 +815,8 @@ dc.renderAll("groupB");
 
 var bubbleOverlay = dc.bubbleOverlay("#bubble-overlay")
         .svg(d3.select("#bubble-overlay svg"))
+        .width(600)
+        .height(450)
         .dimension(stateDimension)
         .group(stateValueSumGroup)
         .r(d3.scale.linear().domain([0, 3]))

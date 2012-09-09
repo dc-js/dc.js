@@ -113,6 +113,35 @@ dc.bubbleOverlay = function(root, chartGroup) {
         });
     }
 
+    _chart.debug = function(flag) {
+        if(flag){
+            var debugG = _chart.select("g." + dc.constants.DEBUG_GROUP_CLASS);
+
+            if(debugG.empty())
+                debugG = _chart.svg()
+                    .append("g")
+                    .attr("class", dc.constants.DEBUG_GROUP_CLASS);
+
+            var debugText = debugG.append("text")
+                .attr("x", 10)
+                .attr("y", 20);
+
+            debugG
+                .append("rect")
+                .attr("width", _chart.width())
+                .attr("height", _chart.height())
+                .on("mousemove", function() {
+                    var position = d3.mouse(debugG.node());
+                    var msg = position[0] + ", " + position[1];
+                    debugText.text(msg);
+                });
+        }else{
+            _chart.selectAll(".debug").remove();
+        }
+
+        return _chart;
+    };
+
     _chart.anchor(root, chartGroup);
 
     return _chart;

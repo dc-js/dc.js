@@ -2,6 +2,7 @@ dc = {
     version: "0.9.0",
     constants : {
         CHART_CLASS: "dc-chart",
+        DEBUG_GROUP_CLASS: "debug",
         STACK_CLASS: "stack",
         DESELECTED_CLASS: "deselected",
         SELECTED_CLASS: "selected",

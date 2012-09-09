@@ -225,3 +225,8 @@
     stroke: white;
     fill: none;
 }
+
+.dc-chart g.debug rect{
+    fill: blue;
+    fill-opacity: .2;
+}
