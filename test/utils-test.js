@@ -34,6 +34,15 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({
+    'dc.utils.nameToId':{
+        topic:function(){return dc.utils.nameToId("St. John's");},
+        'id should be escaped properly':function(id){
+            assert.equal(id,"st_johns");
+        }
+    }
+});
+
 suite.export(module);
 
 

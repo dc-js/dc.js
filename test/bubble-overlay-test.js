@@ -18,7 +18,7 @@ suite.addBatch({
                 .group(stateValueSumGroup)
                 .transitionDuration(0)
                 .title(function(d){return "Title: " + d.key;})
-                .r(d3.scale.linear().domain([0, 3]))
+                .r(d3.scale.linear().domain([0, 500]))
                 .colors(['blue'])
                 .point("California", 100, 120)
                 .point("Colorado", 300, 120)
@@ -50,8 +50,8 @@ suite.addBatch({
             assert.equal(d3.select(chart.selectAll("g.node")[0][3]).attr("transform"), "translate(180,90)");
         },
         'correct translate for circle should be generated':function(chart){
-            assert.equal(d3.select(chart.selectAll("circle.bubble")[0][0]).attr("r"), "51.33333333333333");
-            assert.equal(d3.select(chart.selectAll("circle.bubble")[0][3]).attr("r"), "25.666666666666664");
+            assert.equal(d3.select(chart.selectAll("circle.bubble")[0][0]).attr("r"), "25.4");
+            assert.equal(d3.select(chart.selectAll("circle.bubble")[0][3]).attr("r"), "17.7");
         },
         'correct label should be generated':function(chart){
             assert.equal(d3.select(chart.selectAll("g.node text")[0][0]).text(), "California");

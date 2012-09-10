@@ -21,6 +21,8 @@ dc.bubbleOverlay = function(root, chartGroup) {
     _chart.doRender = function() {
         _g = initOverlayG();
 
+        _chart.r().range([_chart.MIN_RADIUS, _chart.width() * _chart.maxBubbleRelativeSize()]);
+
         initializeBubbles();
 
         _chart.fadeDeselectedArea();

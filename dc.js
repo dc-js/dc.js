@@ -265,7 +265,7 @@ dc.utils.groupMin = function(group, accessor) {
 };
 
 dc.utils.nameToId = function(name){
-    return name.toLowerCase().replace(/ /g, "_");
+    return name.toLowerCase().replace(/[\s]/g, "_").replace(/[\.']/g, "");
 };
 dc.events = {
     current: null
@@ -2604,6 +2604,8 @@ dc.bubbleOverlay = function(root, chartGroup) {
 
     _chart.doRender = function() {
         _g = initOverlayG();
+
+        _chart.r().range([_chart.MIN_RADIUS, _chart.width() * _chart.maxBubbleRelativeSize()]);
 
         initializeBubbles();
 
