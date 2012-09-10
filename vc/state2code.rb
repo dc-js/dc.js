@@ -59,7 +59,7 @@ state_code_map = {
     'VIRGIN ISLANDS'=>'VI'
 }
 
-File.open("us-states.json", 'r') { |file|
+File.open(ARGV[0], 'r') { |file|
   file.each_line { |line|
     new_line = line
     line =~ /"name":"([\w\s]+)"/

@@ -214,14 +214,26 @@
     stroke: white;
 }
 
-.dc-chart g.state path.selected {
+.dc-chart g.selected path {
 }
 
-.dc-chart g.state path.deselected {
+.dc-chart g.deselected path {
     fill: grey;
+}
+
+.dc-chart g.selected text {
+}
+
+.dc-chart g.deselected text {
+    display: none;
 }
 
 .dc-chart g.county path {
     stroke: white;
     fill: none;
+}
+
+.dc-chart g.debug rect{
+    fill: blue;
+    fill-opacity: .2;
 }
