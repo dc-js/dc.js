@@ -18,6 +18,10 @@
         div#incident-chart {
             float: right;
         }
+
+        div#timeline-chart {
+            float: right;
+        }
     </style>
 
     <script type="text/javascript">
@@ -301,10 +305,14 @@
 </div>
 
 <div id="incident-chart">
-    <span class="title">Crime Incident by Year (blue: total crime incident, red: violent crime incident)</span>
+    <span class="title">Crime Incident by Year</span>
     <a class="reset" href="javascript:incidentChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
+</div>
+
+
+<div id="timeline-chart">
 </div>
 
 <div class="clear"></div>
@@ -322,6 +330,8 @@
             .svg(d3.select("#ca-chart svg"));
 
     var incidentChart = dc.barChart("#incident-chart");
+
+    var timelineChart = dc.barChart("#timeline-chart");
 
     function isTotalCrimeRateRecord(v) {
         return v.type == "Total, all violations" && v.sub_type == "Rate per 100,000 population";
@@ -458,6 +468,27 @@
                 .renderHorizontalGridLines(true)
                 .centerBar(true)
                 .elasticY(true)
+                .brushOn(false)
+                .title(function(d){
+                    return d.key
+                            + "\nViolent crime incidents: " + Math.round(d.value.violentCrimeIncident)
+                            + "\nTotal crime incidents: " + Math.round(d.value.totalCrimeIncident);
+                })
+                .xAxis().ticks(5);
+
+        timelineChart
+                .width(350)
+                .height(60)
+                .margins({top: 10, right: 50, bottom: 30, left: 50})
+                .dimension(years)
+                .group(crimeIncidentByYear)
+                .valueAccessor(function(d) {
+                    return d.value.totalCrimeIncident;
+                })
+                .x(d3.scale.linear().domain([1997, 2012]))
+                .centerBar(true)
+                .yAxis().tickValues([]);
+        timelineChart
                 .xAxis().ticks(5);
 
         dc.renderAll();
