@@ -19,7 +19,8 @@
             float: right;
         }
 
-        div#timeline-chart {
+        div#homicide-chart {
+            margin-top: 35px;
             float: right;
         }
     </style>
@@ -311,8 +312,32 @@
     <div class="clear"></div>
 </div>
 
+<div style="float: right; text-align: left; width: 300px">
+    <table>
+        <tr>
+            <td style="background-color: #4682b4;width:10px;height:10px;"></td>
+            <td>violent crime</td>
+            <td></td>
+            <td style="background-color: red;width:10px;height:10px;"></td>
+            <td>all other crime</td>
+        </tr>
+    </table>
+</div>
 
-<div id="timeline-chart">
+<div id="homicide-chart">
+    <span class="title">Homicide Rate by Year</span>
+    <a class="reset" href="javascript:homicideChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+    <div class="clear"></div>
+</div>
+
+<div style="float: right; text-align: left; width: 300px">
+    <table>
+        <tr>
+            <td style="background-color: #4682b4;width:10px;height:10px;"></td>
+            <td>homicide</td>
+        </tr>
+    </table>
 </div>
 
 <div class="clear"></div>
@@ -331,14 +356,30 @@
 
     var incidentChart = dc.barChart("#incident-chart");
 
-    var timelineChart = dc.barChart("#timeline-chart");
+    var homicideChart = dc.lineChart("#homicide-chart");
 
     function isTotalCrimeRateRecord(v) {
         return v.type == "Total, all violations" && v.sub_type == "Rate per 100,000 population";
     }
 
+    function isTotalCrimeIncidentRecord(v) {
+        return v.type == "Total, all violations" && v.sub_type == "Actual incidents";
+    }
+
     function isViolentCrimeRateRecord(v) {
         return v.type == "Total violent Criminal Code violations" && v.sub_type == "Rate per 100,000 population";
+    }
+
+    function isViolentCrimeIncidentRecord(v) {
+        return v.type == "Total violent Criminal Code violations" && v.sub_type == "Actual incidents";
+    }
+
+    function isHomicideRateRecord(v) {
+        return v.type == "Homicide" && v.sub_type == "Rate per 100,000 population";
+    }
+
+    function isHomicideIncidentRecord(v) {
+        return v.type == "Homicide" && v.sub_type == "Actual incidents";
     }
 
     d3.csv("crime.csv", function(csv) {
@@ -390,31 +431,37 @@
         });
         var crimeIncidentByYear = years.group().reduce(
                 function(p, v) {
-                    if (isTotalCrimeRateRecord(v)) {
-                        p.totalCrimeRecords++;
+                    if (isTotalCrimeIncidentRecord(v)) {
                         p.totalCrimeIncident += +v.number;
                     }
-                    if (isViolentCrimeRateRecord(v)) {
-                        p.violentCrimeRecords++;
+                    if (isViolentCrimeIncidentRecord(v)) {
                         p.violentCrimeIncident += +v.number;
                     }
+                    if(isHomicideIncidentRecord(v)){
+                        p.homicideIncident += +v.number;
+                    }
+                    p.nonViolentCrimeIncident = p.totalCrimeIncident - p.violentCrimeIncident;
                     return p;
                 },
                 function(p, v) {
-                    if (isTotalCrimeRateRecord(v)) {
-                        p.totalCrimeRecords--;
+                    if (isTotalCrimeIncidentRecord(v)) {
                         p.totalCrimeIncident -= +v.number;
                     }
-                    if (isViolentCrimeRateRecord(v)) {
-                        p.violentCrimeRecords--;
+                    if (isViolentCrimeIncidentRecord(v)) {
                         p.violentCrimeIncident -= +v.number;
                     }
+                    if(isHomicideIncidentRecord(v)){
+                        p.homicideIncident -= +v.number;
+                    }
+                    p.nonViolentCrimeIncident = p.totalCrimeIncident - p.violentCrimeIncident;
                     return p;
                 },
                 function() {
                     return {
-                        totalCrimeRecords:0,totalCrimeIncident:0,
-                        violentCrimeRecords:0,violentCrimeIncident:0
+                        totalCrimeIncident:0,
+                        violentCrimeIncident:0,
+                        homicideIncident:0,
+                        nonViolentCrimeIncident:0
                     };
                 }
         );
@@ -455,13 +502,13 @@
                 .debug(false);
 
         incidentChart
-                .width(350)
+                .width(360)
                 .height(150)
-                .margins({top: 10, right: 50, bottom: 30, left: 50})
+                .margins({top: 10, right: 50, bottom: 30, left: 60})
                 .dimension(years)
                 .group(crimeIncidentByYear)
                 .valueAccessor(function(d) {
-                    return d.value.totalCrimeIncident;
+                    return d.value.nonViolentCrimeIncident;
                 })
                 .stack(crimeIncidentByYear, function(d){return d.value.violentCrimeIncident;})
                 .x(d3.scale.linear().domain([1997, 2012]))
@@ -472,24 +519,28 @@
                 .title(function(d){
                     return d.key
                             + "\nViolent crime incidents: " + Math.round(d.value.violentCrimeIncident)
-                            + "\nTotal crime incidents: " + Math.round(d.value.totalCrimeIncident);
+                            + "\nNon-Violent crime incidents: " + Math.round(d.value.nonViolentCrimeIncident);
                 })
                 .xAxis().ticks(5);
 
-        timelineChart
-                .width(350)
-                .height(60)
-                .margins({top: 10, right: 50, bottom: 30, left: 50})
+        homicideChart
+               .width(360)
+                .height(150)
+                .margins({top: 10, right: 50, bottom: 30, left: 60})
                 .dimension(years)
                 .group(crimeIncidentByYear)
                 .valueAccessor(function(d) {
-                    return d.value.totalCrimeIncident;
+                    return d.value.homicideIncident;
                 })
                 .x(d3.scale.linear().domain([1997, 2012]))
-                .centerBar(true)
-                .yAxis().tickValues([]);
-        timelineChart
-                .xAxis().ticks(5);
+                .renderHorizontalGridLines(true)
+                .elasticY(true)
+                .brushOn(false)
+                .title(function(d){
+                    return d.key
+                            + "\nHomicide incidents: " + Math.round(d.value.homicideIncident);
+                })
+                .xAxis().ticks(5);;
 
         dc.renderAll();
     });
