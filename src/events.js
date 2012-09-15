@@ -3,8 +3,10 @@ dc.events = {
 };
 
 dc.events.trigger = function(closure, delay) {
-    if (!delay)
+    if (!delay){
         closure();
+        return;
+    }
 
     dc.events.current = closure;
 
