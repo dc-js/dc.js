@@ -16,6 +16,7 @@
 
     <style type="text/css">
         div#incident-chart {
+            margin-top: 35px;
             float: right;
         }
 
@@ -48,8 +49,10 @@
 <h2>Major Canadian City Crime Stats 1998-2011</h2>
 
 <p>
-    This is a <a href="../index.html">dc.js</a> example showing how a bubble overlay chart can be used with
-    a custom svg map to generate flexible geographic data visualization combined with other dc.js charts.
+    This is a <a href="../index.html">dc.js</a> example demonstrating crime rate differences among major Canadian
+    cities. This visualization reveals overall crime rate, including both violent and non-violent crime,
+    have been in decline among most of the major cities in Canada. This particular example utilizes a bubble overlay chart
+    with a custom svg map to generate flexible geographic data visualization combined with other dc.js charts.
 </p>
 
 <p>
@@ -59,7 +62,10 @@
 </p>
 
 <div id="ca-chart">
-<span class="title">Crime Rate by City (radius: total crime rate, color: violent crime ratio)</span>
+<span class="title">
+    Crime Rate by City <br/>
+    radius: total crime rate per 100k population <br/>
+    color: violent/non-violent crime ratio</span>
 <a class="reset" href="javascript:caChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
 <p></p>
@@ -306,7 +312,7 @@
 </div>
 
 <div id="incident-chart">
-    <span class="title">Crime Incident by Year</span>
+    <span class="title">Crime Per 100K Population by Year</span>
     <a class="reset" href="javascript:incidentChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
@@ -316,16 +322,16 @@
     <table>
         <tr>
             <td style="background-color: #4682b4;width:10px;height:10px;"></td>
-            <td>violent crime</td>
+            <td>non-violent crime</td>
             <td></td>
             <td style="background-color: red;width:10px;height:10px;"></td>
-            <td>all other crime</td>
+            <td>violent crime</td>
         </tr>
     </table>
 </div>
 
 <div id="homicide-chart">
-    <span class="title">Homicide Rate by Year</span>
+    <span class="title">Homicide Incidents by Year</span>
     <a class="reset" href="javascript:homicideChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
     <div class="clear"></div>
@@ -431,37 +437,49 @@
         });
         var crimeIncidentByYear = years.group().reduce(
                 function(p, v) {
-                    if (isTotalCrimeIncidentRecord(v)) {
-                        p.totalCrimeIncident += +v.number;
+                    if (isTotalCrimeRateRecord(v)) {
+                        p.totalCrimeRecords++;
+                        p.totalCrime += +v.number;
+                        p.totalCrimeAvg = p.totalCrime / p.totalCrimeRecords;
                     }
-                    if (isViolentCrimeIncidentRecord(v)) {
-                        p.violentCrimeIncident += +v.number;
+                    if (isViolentCrimeRateRecord(v)) {
+                        p.violentCrimeRecords++;
+                        p.violentCrime += +v.number;
+                        p.violentCrimeAvg = p.violentCrime / p.violentCrimeRecords;
                     }
                     if(isHomicideIncidentRecord(v)){
-                        p.homicideIncident += +v.number;
+                        p.homicide += +v.number;
                     }
-                    p.nonViolentCrimeIncident = p.totalCrimeIncident - p.violentCrimeIncident;
+                    p.nonViolentCrimeAvg = p.totalCrimeAvg - p.violentCrimeAvg;
                     return p;
                 },
                 function(p, v) {
-                    if (isTotalCrimeIncidentRecord(v)) {
-                        p.totalCrimeIncident -= +v.number;
+                    if (isTotalCrimeRateRecord(v)) {
+                        p.totalCrimeRecords--;
+                        p.totalCrime -= +v.number;
+                        p.totalCrimeAvg = p.totalCrime / p.totalCrimeRecords;
                     }
-                    if (isViolentCrimeIncidentRecord(v)) {
-                        p.violentCrimeIncident -= +v.number;
+                    if (isViolentCrimeRateRecord(v)) {
+                        p.violentCrimeRecords--;
+                        p.violentCrime -= +v.number;
+                        p.violentCrimeAvg = p.violentCrime / p.violentCrimeRecords;
                     }
                     if(isHomicideIncidentRecord(v)){
-                        p.homicideIncident -= +v.number;
+                        p.homicide -= +v.number;
                     }
-                    p.nonViolentCrimeIncident = p.totalCrimeIncident - p.violentCrimeIncident;
+                    p.nonViolentCrimeAvg = p.totalCrimeAvg - p.violentCrimeAvg;
                     return p;
                 },
                 function() {
                     return {
-                        totalCrimeIncident:0,
-                        violentCrimeIncident:0,
-                        homicideIncident:0,
-                        nonViolentCrimeIncident:0
+                        totalCrimeRecords:0,
+                        totalCrime:0,
+                        totalCrimeAvg:0,
+                        violentCrimeRecords:0,
+                        violentCrime:0,
+                        violentCrimeAvg:0,
+                        homicide:0,
+                        nonViolentCrimeAvg:0
                     };
                 }
         );
@@ -481,8 +499,8 @@
                 })
                 .title(function(d) {
                     return "City: " + d.key
-                            + "\nTotal crime rate per 100k population: " + numberFormat(d.value.avgTotalCrimeRate)
-                            + "\nViolent crime rate per 100k population: " + numberFormat(d.value.avgViolentCrimeRate)
+                            + "\nTotal crime per 100k population: " + numberFormat(d.value.avgTotalCrimeRate)
+                            + "\nViolent crime per 100k population: " + numberFormat(d.value.avgViolentCrimeRate)
                             + "\nViolent/Total crime ratio: " + numberFormat(d.value.violentCrimeRatio) + "%";
                 })
                 .point("Toronto", 364, 400)
@@ -508,9 +526,9 @@
                 .dimension(years)
                 .group(crimeIncidentByYear)
                 .valueAccessor(function(d) {
-                    return d.value.nonViolentCrimeIncident;
+                    return d.value.nonViolentCrimeAvg;
                 })
-                .stack(crimeIncidentByYear, function(d){return d.value.violentCrimeIncident;})
+                .stack(crimeIncidentByYear, function(d){return d.value.violentCrimeAvg;})
                 .x(d3.scale.linear().domain([1997, 2012]))
                 .renderHorizontalGridLines(true)
                 .centerBar(true)
@@ -518,8 +536,8 @@
                 .brushOn(false)
                 .title(function(d){
                     return d.key
-                            + "\nViolent crime incidents: " + Math.round(d.value.violentCrimeIncident)
-                            + "\nNon-Violent crime incidents: " + Math.round(d.value.nonViolentCrimeIncident);
+                            + "\nViolent crime per 100k population: " + Math.round(d.value.violentCrimeAvg)
+                            + "\nNon-Violent crime per 100k population: " + Math.round(d.value.nonViolentCrimeAvg);
                 })
                 .xAxis().ticks(5);
 
@@ -530,7 +548,7 @@
                 .dimension(years)
                 .group(crimeIncidentByYear)
                 .valueAccessor(function(d) {
-                    return d.value.homicideIncident;
+                    return d.value.homicide;
                 })
                 .x(d3.scale.linear().domain([1997, 2012]))
                 .renderHorizontalGridLines(true)
@@ -538,7 +556,7 @@
                 .brushOn(false)
                 .title(function(d){
                     return d.key
-                            + "\nHomicide incidents: " + Math.round(d.value.homicideIncident);
+                            + "\nHomicide incidents: " + Math.round(d.value.homicide);
                 })
                 .xAxis().ticks(5);;
 
