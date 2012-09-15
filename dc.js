@@ -1815,6 +1815,10 @@ dc.barChart = function(parent, chartGroup) {
     }
 
     function updateBars(bars, groupIndex) {
+        if (_chart.renderTitle()) {
+            bars.select("title").text(_chart.title());
+        }
+
         dc.transition(bars, _chart.transitionDuration())
             .attr("x", function(data, dataIndex) {
                 return barX(this, data, groupIndex, dataIndex);
