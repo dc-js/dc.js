@@ -203,7 +203,7 @@ suite.addBatch({
 suite.addBatch({'elastic axises':{
     topic: function() {
         countryDimension.filter("CA");
-        var chart = buildChart("compositeChart2", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+        var chart = buildChart("composite-chart-elastic", [new Date(2012, 0, 1), new Date(2012, 11, 31)]);
         chart.elasticY(true).elasticX(true);
         chart.render();
         return chart;
@@ -219,6 +219,57 @@ suite.addBatch({'elastic axises':{
         resetAllFilters();
         resetBody();
     }
+}});
+
+
+suite.addBatch({
+    'time line composite chart': {
+        topic: function() {
+            var chart = buildChart("composite-chart-rerender", [new Date(2012, 4, 20), new Date(2012, 7, 15)]);
+            chart.render();
+            dc.renderAll();
+            return chart;
+        },
+        'separate g should be created for each sub chart': function(chart) {
+            assert.equal(chart.selectAll("g.sub")[0].length, 3);
+        },
+        'sub line chart path generation': function(chart) {
+            chart.selectAll("g.sub path.line").each(function(d, i) {
+                switch (i) {
+                    case 0:
+                        assert.equal(d3.select(this).attr("d"), "M54.13793103448276,120L121.72413793103448,118L131.37931034482756,113L232.75862068965515,118L276.2068965517241,114L425.8620689655172,115");
+                        break;
+                    case 1:
+                        assert.equal(d3.select(this).attr("d"), "M54.13793103448276,103L121.72413793103448,92L131.37931034482756,61L232.75862068965515,101L276.2068965517241,92L425.8620689655172,85");
+                        break;
+                }
+            });
+        },
+        'sub bar chart generation': function(chart) {
+            assert.equal(chart.selectAll("g.sub rect.stack0")[0].length, 6);
+        },
+        'sub bar chart rendering': function(chart) {
+            chart.selectAll("g.sub rect.bar").each(function(d, i) {
+                switch (i) {
+                    case 0:
+                        assert.equal(d3.select(this).attr("x"), "52.63793103448276");
+                        assert.equal(d3.select(this).attr("y"), "103");
+                        assert.equal(d3.select(this).attr("width"), "3");
+                        assert.equal(d3.select(this).attr("height"), "17");
+                        break;
+                    case 5:
+                        assert.equal(d3.select(this).attr("x"), "424.3620689655172");
+                        assert.equal(d3.select(this).attr("y"), "90");
+                        assert.equal(d3.select(this).attr("width"), "3");
+                        assert.equal(d3.select(this).attr("height"), "30");
+                        break;
+                }
+            });
+        },
+        teardown: function(topic) {
+            resetAllFilters();
+            resetBody();
+        }
 }});
 
 suite.export(module);

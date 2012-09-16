@@ -2337,6 +2337,9 @@ dc.compositeChart = function(parent, chartGroup) {
 
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
+
+            generateChildG(child);
+
             if (child.dimension() == null) child.dimension(_chart.dimension());
             if (child.group() == null) child.group(_chart.group());
             child.chartGroup(_chart.chartGroup());
@@ -2351,13 +2354,17 @@ dc.compositeChart = function(parent, chartGroup) {
         return g;
     });
 
+    function generateChildG(child) {
+        child.generateG(_chart.g());
+        child.g().attr("class", SUB_CHART_CLASS);
+    }
+
     _chart.plotData = function() {
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
 
             if (child.g() == null) {
-                child.generateG(_chart.g());
-                child.g().attr("class", SUB_CHART_CLASS);
+                generateChildG(child);
             }
 
             child.x(_chart.x());
@@ -2373,7 +2380,6 @@ dc.compositeChart = function(parent, chartGroup) {
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
             child.brush(_chart.brush());
-
             child.fadeDeselectedArea();
         }
     };
