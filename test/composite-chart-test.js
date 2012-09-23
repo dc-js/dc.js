@@ -119,6 +119,10 @@ suite.addBatch({
         'separate g should be created for each sub chart': function(chart) {
             assert.equal(chart.selectAll("g.sub")[0].length, 3);
         },
+        'sub chart g should be indexed by css class': function(chart) {
+            assert.equal(d3.select(chart.selectAll("g.sub")[0][0]).attr("class"), "sub 0");
+            assert.equal(d3.select(chart.selectAll("g.sub")[0][1]).attr("class"), "sub 1");
+        },
         'sub line chart path generation': function(chart) {
             chart.selectAll("g.sub path.line").each(function(d, i) {
                 switch (i) {

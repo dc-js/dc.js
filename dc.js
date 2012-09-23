@@ -12,7 +12,7 @@
  *  limitations under the License.
  */
 dc = {
-    version: "0.9.0",
+    version: "0.9.1",
     constants : {
         CHART_CLASS: "dc-chart",
         DEBUG_GROUP_CLASS: "debug",
@@ -2351,7 +2351,7 @@ dc.compositeChart = function(parent, chartGroup) {
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
 
-            generateChildG(child);
+            generateChildG(child, i);
 
             if (child.dimension() == null) child.dimension(_chart.dimension());
             if (child.group() == null) child.group(_chart.group());
@@ -2367,9 +2367,9 @@ dc.compositeChart = function(parent, chartGroup) {
         return g;
     });
 
-    function generateChildG(child) {
+    function generateChildG(child, i) {
         child.generateG(_chart.g());
-        child.g().attr("class", SUB_CHART_CLASS);
+        child.g().attr("class", SUB_CHART_CLASS + " " + i);
     }
 
     _chart.plotData = function() {

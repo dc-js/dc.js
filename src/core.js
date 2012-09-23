@@ -12,7 +12,7 @@
  *  limitations under the License.
  */
 dc = {
-    version: "0.9.0",
+    version: "0.9.1",
     constants : {
         CHART_CLASS: "dc-chart",
         DEBUG_GROUP_CLASS: "debug",
