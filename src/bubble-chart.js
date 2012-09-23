@@ -40,7 +40,7 @@ dc.bubbleChart = function(parent, chartGroup) {
             .attr("class", _chart.BUBBLE_NODE_CLASS)
             .attr("transform", bubbleLocator)
             .append("circle").attr("class", function(d, i) {
-                return _chart.BUBBLE_CLASS + " " + i;
+                return _chart.BUBBLE_CLASS + " _" + i;
             })
             .on("click", _chart.onClick)
             .attr("fill", _chart.initBubbleColor)

@@ -164,9 +164,9 @@ suite.addBatch({
             'should attach each bubble with index based class': function(chart) {
                 chart.selectAll("circle.bubble").each(function(d, i) {
                     if (i == 0)
-                        assert.equal(d3.select(this).attr("class"), "bubble 0");
+                        assert.equal(d3.select(this).attr("class"), "bubble _0");
                     if (i == 1)
-                        assert.equal(d3.select(this).attr("class"), "bubble 1");
+                        assert.equal(d3.select(this).attr("class"), "bubble _1");
                 });
             },
             'should generate right number of labels': function(chart) {

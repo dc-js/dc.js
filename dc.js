@@ -2281,7 +2281,7 @@ dc.bubbleChart = function(parent, chartGroup) {
             .attr("class", _chart.BUBBLE_NODE_CLASS)
             .attr("transform", bubbleLocator)
             .append("circle").attr("class", function(d, i) {
-                return _chart.BUBBLE_CLASS + " " + i;
+                return _chart.BUBBLE_CLASS + " _" + i;
             })
             .on("click", _chart.onClick)
             .attr("fill", _chart.initBubbleColor)
@@ -2369,7 +2369,7 @@ dc.compositeChart = function(parent, chartGroup) {
 
     function generateChildG(child, i) {
         child.generateG(_chart.g());
-        child.g().attr("class", SUB_CHART_CLASS + " " + i);
+        child.g().attr("class", SUB_CHART_CLASS + " _" + i);
     }
 
     _chart.plotData = function() {
