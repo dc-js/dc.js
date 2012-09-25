@@ -159,6 +159,22 @@ dc.pieChart = function(parent, chartGroup) {
                 return _chart.getColor(d, i);
             });
 
+        _g.selectAll("g." + _sliceCssClass)
+            .data(data)
+            .enter()
+            .append("g")
+            .attr("class", function(d, i) {
+                return _sliceCssClass + " " + i;
+            }).append("path")
+            .attr("fill", function(d, i) {
+                return _chart.getColor(d, i);
+            })
+            .attr("d", _arc)
+            .on("click", onClick)
+            .transition()
+            .duration(_chart.transitionDuration())
+            .attrTween("d", tweenPie);
+
         redrawLabels(_arc);
 
         redrawTitles();
