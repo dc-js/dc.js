@@ -328,6 +328,31 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({
+    'pie chart label and title w/ value accessor': {
+        topic: function() {
+            var chart = buildChart("pie-chart-default-label-title");
+            chart.dimension(statusGroup)
+                .group(statusMultiGroup)
+                .valueAccessor(function(d){return d.value.count;})
+                .renderLabel(true).renderTitle(true);
+            chart.render();
+            return chart;
+        },
+        'default function should be used to dynamically generate label': function(chart) {
+            assert.equal(d3.select(chart.selectAll("text.pie-slice")[0][0]).text(), "F");
+        },
+        'default function should be used to dynamically generate title': function(chart) {
+            assert.equal(d3.select(chart.selectAll("g.pie-slice title")[0][0]).text(), "F: 5");
+        },
+        teardown:function(chart) {
+            resetAllFilters();
+            resetBody();
+        }
+    }
+});
+
+
 suite.export(module);
 
 

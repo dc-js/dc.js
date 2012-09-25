@@ -24,7 +24,7 @@ dc.pieChart = function(parent, chartGroup) {
     _chart.renderLabel(true);
 
     _chart.title(function(d) {
-        return d.data.key + ": " + d.data.value;
+        return _chart.keyAccessor()(d.data) + ": " + _chart.valueAccessor()(d.data);
     });
 
     _chart.transitionDuration(350);
