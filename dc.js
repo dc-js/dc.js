@@ -159,7 +159,21 @@ dc.renderlet = function(_){
 dc.instanceOfChart = function (o) {
     return o instanceof Object && o.__dc_flag__;
 };
-dc.dateFormat = d3.time.format("%m/%d/%Y");
+dc.errors = {};
+
+dc.errors.Exception = function(msg) {
+    var _msg = msg != null ? msg : "Unexpected internal error";
+
+    this.message = _msg;
+
+    this.toString = function(){
+        return _msg;
+    };
+};
+
+dc.errors.InvalidStateException = function() {
+    dc.errors.Exception.apply(this, arguments);
+};dc.dateFormat = d3.time.format("%m/%d/%Y");
 
 dc.printers = {};
 dc.printers.filter = function(filter) {
@@ -567,6 +581,14 @@ dc.baseChart = function(_chart) {
     };
 
     _chart.render = function() {
+        if(_dimension == null)
+            throw new dc.errors.InvalidStateException("Mandatory attribute chart.dimension is missing on chart["
+                + _chart.anchor() + "]");
+
+        if (_group == null)
+            throw new dc.errors.InvalidStateException("Mandatory attribute chart.group is missing on chart["
+                + _chart.anchor() + "]");
+
         var result = _chart.doRender();
 
         _chart.invokeRenderlet(_chart);
@@ -745,7 +767,7 @@ dc.coordinateGridChart = function(_chart) {
             var gridLineG = g.selectAll("g." + VERTICAL_CLASS);
 
             if (gridLineG.empty())
-                gridLineG = g.append("g")
+                gridLineG = g.insert("g", ":first-child")
                     .attr("class", GRID_LINE_CLASS + " " + VERTICAL_CLASS)
                     .attr("transform", "translate(" + _chart.yAxisX() + "," + _chart.margins().top + ")");
 
@@ -824,7 +846,7 @@ dc.coordinateGridChart = function(_chart) {
             var ticks = _yAxis.tickValues() ? _yAxis.tickValues() : _y.ticks(_yAxis.ticks()[0]);
 
             if (gridLineG.empty())
-                gridLineG = g.append("g")
+                gridLineG = g.insert("g", ":first-child")
                     .attr("class", GRID_LINE_CLASS + " " + HORIZONTAL_CLASS)
                     .attr("transform", "translate(" + _chart.yAxisX() + "," + _chart.margins().top + ")");
 
@@ -948,12 +970,6 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
-    _chart._filter = function(_) {
-        if (!arguments.length) return _filter;
-        _filter = _;
-        return _chart;
-    };
-
     _chart.filter = function(_) {
         if (!arguments.length) return _filter;
 
@@ -1016,10 +1032,17 @@ dc.coordinateGridChart = function(_chart) {
 
         _chart.redrawBrush(_g);
 
-        dc.events.trigger(function() {
-            _chart.filter(_brush.empty() ? null : [extent[0], extent[1]]);
-            dc.redrawAll(_chart.chartGroup());
-        }, dc.constants.EVENT_DELAY);
+        if(_brush.empty()){
+            dc.events.trigger(function() {
+                _chart.filter(null);
+                dc.redrawAll(_chart.chartGroup());
+            });
+        }else{
+            dc.events.trigger(function() {
+                _chart.filter([extent[0], extent[1]]);
+                dc.redrawAll(_chart.chartGroup());
+            }, dc.constants.EVENT_DELAY);
+        }
     }
 
     function brushEnd(p) {
@@ -1027,8 +1050,8 @@ dc.coordinateGridChart = function(_chart) {
 
     _chart.redrawBrush = function(g) {
         if (_brushOn) {
-            if (_chart._filter() && _chart.brush().empty())
-                _chart.brush().extent(_chart._filter());
+            if (_chart.filter() && _chart.brush().empty())
+                _chart.brush().extent(_chart.filter());
 
             var gBrush = g.select("g.brush");
             gBrush.call(_chart.brush().x(_chart.x()));
@@ -1057,6 +1080,10 @@ dc.coordinateGridChart = function(_chart) {
     };
 
     _chart.doRender = function() {
+        if(_x == null)
+            throw new dc.errors.InvalidStateException("Mandatory attribute chart.x is missing on chart["
+                + _chart.anchor() + "]");
+
         _chart.resetSvg();
 
         if (_chart.dataAreSet()) {
@@ -2393,7 +2420,7 @@ dc.compositeChart = function(parent, chartGroup) {
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
 
-//            generateChildG(child, i);
+            generateChildG(child, i);
 
             if (child.dimension() == null) child.dimension(_chart.dimension());
             if (child.group() == null) child.group(_chart.group());
