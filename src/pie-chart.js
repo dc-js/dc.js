@@ -8,7 +8,6 @@ dc.pieChart = function(parent, chartGroup) {
     var _g;
 
     var _arc;
-    var _dataPie;
     var _slices;
     var _slicePaths;
 
@@ -37,14 +36,14 @@ dc.pieChart = function(parent, chartGroup) {
                 .append("g")
                 .attr("transform", "translate(" + _chart.cx() + "," + _chart.cy() + ")");
 
-            _dataPie = calculateDataPie();
+            var dataPie = calculateDataPie();
 
             _arc = _chart.buildArcs();
 
-            _slices = _chart.drawSlices(_g, _dataPie, _arc);
+            _slices = _chart.drawSlices(_g, dataPie, _arc);
 
-            _chart.drawLabels(_slices, _arc);
-            _chart.drawTitles(_slices, _arc);
+            _chart.drawLabels(_slices, _arc, dataPie);
+            _chart.drawTitles(_slices);
 
             _chart.highlightFilter();
         }
@@ -101,10 +100,10 @@ dc.pieChart = function(parent, chartGroup) {
         return _slices;
     };
 
-    _chart.drawLabels = function(slices, arc) {
+    _chart.drawLabels = function(slices, arc, dataPie) {
         if (_chart.renderLabel()) {
             _labels = _g.selectAll("text." + _sliceCssClass)
-                .data(_dataPie(_chart.orderedGroup().top(Infinity)))
+                .data(dataPie(_chart.orderedGroup().top(Infinity)))
                 .enter()
                 .append("text")
                 .attr("class", function(d, i) {
@@ -115,7 +114,7 @@ dc.pieChart = function(parent, chartGroup) {
         }
     };
 
-    _chart.drawTitles = function(slices, arc) {
+    _chart.drawTitles = function(slices) {
         if (_chart.renderTitle()) {
             slices.append("title").text(function(d) {
                 return _chart.title()(d);
@@ -146,7 +145,8 @@ dc.pieChart = function(parent, chartGroup) {
     _chart.doRedraw = function() {
         _chart.highlightFilter();
 
-        var data = _dataPie(_chart.orderedGroup().top(Infinity));
+        var dataPie = calculateDataPie();
+        var data = dataPie(_chart.orderedGroup().top(Infinity));
 
         _slicePaths = _slicePaths.data(data);
 
