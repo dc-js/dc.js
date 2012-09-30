@@ -1534,7 +1534,6 @@ dc.pieChart = function(parent, chartGroup) {
     var _g;
 
     var _arc;
-    var _slices;
     var _slicePaths;
 
     var _labels;
@@ -1566,10 +1565,10 @@ dc.pieChart = function(parent, chartGroup) {
 
             _arc = _chart.buildArcs();
 
-            _slices = _chart.drawSlices(_g, dataPie, _arc);
+            var slices = _chart.drawSlices(_g, dataPie, _arc);
 
-            _chart.drawLabels(_slices, _arc, dataPie);
-            _chart.drawTitles(_slices);
+            _chart.drawLabels(slices, _arc, dataPie);
+            _chart.drawTitles(slices);
 
             _chart.highlightFilter();
         }
@@ -1601,8 +1600,8 @@ dc.pieChart = function(parent, chartGroup) {
         return d3.svg.arc().outerRadius(_radius).innerRadius(_innerRadius);
     };
 
-    _chart.drawSlices = function(topG, dataPie, arcs) {
-        _slices = topG.selectAll("g." + _sliceCssClass)
+    _chart.drawSlices = function(g, dataPie, arcs) {
+        var slices = g.selectAll("g." + _sliceCssClass)
             .data(dataPie(_chart.orderedGroup().top(Infinity)))
             .enter()
             .append("g")
@@ -1610,7 +1609,7 @@ dc.pieChart = function(parent, chartGroup) {
                 return _sliceCssClass + " " + i;
             });
 
-        _slicePaths = _slices.append("path")
+        _slicePaths = slices.append("path")
             .attr("fill", function(d, i) {
                 return _chart.getColor(d, i);
             })
@@ -1623,7 +1622,7 @@ dc.pieChart = function(parent, chartGroup) {
 
         _slicePaths.on("click", onClick);
 
-        return _slices;
+        return slices;
     };
 
     _chart.drawLabels = function(slices, arc, dataPie) {
@@ -1674,6 +1673,8 @@ dc.pieChart = function(parent, chartGroup) {
         var dataPie = calculateDataPie();
         var data = dataPie(_chart.orderedGroup().top(Infinity));
 
+        var slices = _g.selectAll("g." + _sliceCssClass)
+            .data(data);
         _slicePaths = _slicePaths.data(data);
 
         _labels = _labels.data(data);
@@ -1703,7 +1704,7 @@ dc.pieChart = function(parent, chartGroup) {
 
         redrawLabels(_arc);
 
-        redrawTitles();
+        redrawTitles(slices);
 
         return _chart;
     };
@@ -1750,9 +1751,9 @@ dc.pieChart = function(parent, chartGroup) {
         return _chart.valueAccessor()(data) == 0;
     }
 
-    function redrawTitles() {
+    function redrawTitles(slices) {
         if (_chart.renderTitle()) {
-            _slices.selectAll("title").text(function(d) {
+            slices.selectAll("title").text(function(d) {
                 return _chart.title()(d);
             });
         }
