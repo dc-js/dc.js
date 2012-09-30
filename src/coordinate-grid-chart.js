@@ -291,12 +291,6 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
-    _chart._filter = function(_) {
-        if (!arguments.length) return _filter;
-        _filter = _;
-        return _chart;
-    };
-
     _chart.filter = function(_) {
         if (!arguments.length) return _filter;
 
@@ -359,10 +353,17 @@ dc.coordinateGridChart = function(_chart) {
 
         _chart.redrawBrush(_g);
 
-        dc.events.trigger(function() {
-            _chart.filter(_brush.empty() ? null : [extent[0], extent[1]]);
-            dc.redrawAll(_chart.chartGroup());
-        }, dc.constants.EVENT_DELAY);
+        if(_brush.empty()){
+            dc.events.trigger(function() {
+                _chart.filter(null);
+                dc.redrawAll(_chart.chartGroup());
+            });
+        }else{
+            dc.events.trigger(function() {
+                _chart.filter([extent[0], extent[1]]);
+                dc.redrawAll(_chart.chartGroup());
+            }, dc.constants.EVENT_DELAY);
+        }
     }
 
     function brushEnd(p) {
@@ -370,8 +371,8 @@ dc.coordinateGridChart = function(_chart) {
 
     _chart.redrawBrush = function(g) {
         if (_brushOn) {
-            if (_chart._filter() && _chart.brush().empty())
-                _chart.brush().extent(_chart._filter());
+            if (_chart.filter() && _chart.brush().empty())
+                _chart.brush().extent(_chart.filter());
 
             var gBrush = g.select("g.brush");
             gBrush.call(_chart.brush().x(_chart.x()));
