@@ -143,6 +143,12 @@ dc.baseChart = function(_chart) {
     };
 
     _chart.render = function() {
+        if(_dimension == null)
+            throw new dc.errors.InvalidStateException("Mandatory attribute chart.dimension is not set");
+
+        if(_group == null)
+            throw new dc.errors.InvalidStateException("Mandatory attribute chart.group is not set");
+
         var result = _chart.doRender();
 
         _chart.invokeRenderlet(_chart);

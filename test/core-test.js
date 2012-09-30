@@ -17,7 +17,7 @@ suite.addBatch({
     },
     'dc.charts': {
         topic: function() {
-            var chart = dc.pieChart("#id");
+            var chart = dc.pieChart("#id").dimension(valueDimension).group(valueGroup);
             sinon.spy(chart, "filterAll");
             sinon.spy(chart, "render");
             return chart;
@@ -148,15 +148,15 @@ suite.addBatch({
 suite.addBatch({
     'dc.charts w/ grouping': {
         topic: function() {
-            var chart = dc.pieChart("#a", "groupA");
+            var chart = dc.pieChart("#a", "groupA").dimension(valueDimension).group(valueGroup);
             sinon.spy(chart, "filterAll");
             sinon.spy(chart, "render");
-            dc.pieChart("#b", "groupA");
-            dc.bubbleChart("#c", "groupA");
-            dc.barChart("#1", "groupB");
-            dc.lineChart("#2", "groupB");
-            dc.dataCount("#3", "groupB");
-            dc.dataTable("#4", "groupB");
+            dc.pieChart("#b", "groupA").dimension(valueDimension).group(valueGroup);
+            dc.bubbleChart("#c", "groupB").dimension(valueDimension).group(valueGroup);
+            dc.barChart("#1", "groupB").dimension(valueDimension).group(valueGroup);
+            dc.lineChart("#2", "groupB").dimension(valueDimension).group(valueGroup);
+            dc.dataCount("#3", "groupB").dimension(valueDimension).group(valueGroup);
+            dc.dataTable("#4", "groupB").dimension(valueDimension).group(valueGroup);
             return chart;
         },
         'should register chart object': function(chart) {

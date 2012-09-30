@@ -26,6 +26,7 @@
         <echo>Compiling dc.js</echo>
         <concat destfile="dc.js">
             <file file="src/core.js"/>
+            <file file="src/errors.js"/>
             <file file="src/utils.js"/>
             <file file="src/events.js"/>
             <file file="src/cumulative.js"/>

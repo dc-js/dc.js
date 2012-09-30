@@ -159,7 +159,17 @@ dc.renderlet = function(_){
 dc.instanceOfChart = function (o) {
     return o instanceof Object && o.__dc_flag__;
 };
-dc.dateFormat = d3.time.format("%m/%d/%Y");
+dc.errors = {};
+
+dc.errors.Exception = function(msg) {
+    var _msg = msg != null ? msg : "Unexpected internal error";
+
+    this.message = _msg;
+};
+
+dc.errors.InvalidStateException = function() {
+    dc.errors.Exception.apply(this, arguments);
+};dc.dateFormat = d3.time.format("%m/%d/%Y");
 
 dc.printers = {};
 dc.printers.filter = function(filter) {
@@ -567,6 +577,12 @@ dc.baseChart = function(_chart) {
     };
 
     _chart.render = function() {
+        if(_dimension == null)
+            throw new dc.errors.InvalidStateException("Mandatory attribute chart.dimension is not set");
+
+        if(_group == null)
+            throw new dc.errors.InvalidStateException("Mandatory attribute chart.group is not set");
+
         var result = _chart.doRender();
 
         _chart.invokeRenderlet(_chart);
