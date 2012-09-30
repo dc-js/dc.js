@@ -49,7 +49,7 @@ suite.addBatch({
             assert.equal(d3.select(chart.selectAll("text.pie-slice")[0][0]).text(), "66");
         },
         'default function should be used to dynamically generate title': function(chart) {
-            assert.equal(d3.select(chart.selectAll("g.pie-slice title")[0][0]).text(), "44: 3");
+            assert.equal(d3.select(chart.selectAll("g.pie-slice title")[0][0]).text(), "66: 1");
         },
         teardown:function(chart) {
             resetAllFilters();
