@@ -2428,6 +2428,8 @@ dc.compositeChart = function(parent, chartGroup) {
             child.yAxis(_chart.yAxis());
 
             child.plotData();
+
+            child.invokeRenderlet(child);
         }
     };
 
@@ -2442,6 +2444,10 @@ dc.compositeChart = function(parent, chartGroup) {
     _chart.compose = function(charts) {
         _children = charts;
         return _chart;
+    };
+
+    _chart.children = function(){
+        return _children;
     };
 
     function getAllYAxisMinFromChildCharts() {

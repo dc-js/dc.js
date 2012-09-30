@@ -19,7 +19,7 @@
 </head>
 <body>
 
-<div><input type="button" value="Add Data" onclick="data.add(json2);alert('Data injected');dc.redrawAll();" /></div>
+<div><input type="button" value="Add Data" onclick="data.add(json2);alert('Data injected');dc.renderAll();" /></div>
 
 <div id="bubble-overlay">
 <span>Bubble Overlay</span>
@@ -680,10 +680,14 @@ compositeChartDate.width(500)
         .xUnits(d3.time.days)
         .filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
         .compose([
-    dc.barChart(compositeChartDate).group(dateValueSumGroup),
-    dc.lineChart(compositeChartDate),
-    dc.lineChart(compositeChartDate).group(dateGroup)
-])
+            dc.barChart(compositeChartDate).group(dateValueSumGroup).renderlet(function(chart) {
+                    chart.selectAll("rect.bar").attr("width", function(d) {
+                        return Math.round(d.value / 10);
+                    });
+                }),
+            dc.lineChart(compositeChartDate),
+            dc.lineChart(compositeChartDate).group(dateGroup)
+        ])
         .xAxis().ticks(5);
 
 var bubbleChart = dc.bubbleChart("#bubble-chart");

@@ -9,6 +9,9 @@ var width = 500;
 var height = 150;
 
 function buildChart(id, xdomain) {
+    if(xdomain == null)
+        xdomain = [new Date(2012, 4, 20), new Date(2012, 7, 15)];
+
     d3.select("body").append("div").attr("id", id);
     var chart = dc.compositeChart("#" + id);
     chart
@@ -31,7 +34,7 @@ function buildChart(id, xdomain) {
 suite.addBatch({
     'time line composite chart': {
         topic: function() {
-            var chart = buildChart("compositeChart", [new Date(2012, 4, 20), new Date(2012, 7, 15)]);
+            var chart = buildChart("compositeChart");
             chart.filter([new Date(2012, 5, 1), new Date(2012, 5, 30)]);
             chart.redraw();
             return chart;
@@ -225,11 +228,30 @@ suite.addBatch({'elastic axises':{
     }
 }});
 
+suite.addBatch({'sub renderlet':{
+    topic: function() {
+        var chart = buildChart("composite-chart-sub-renderlet");
+        chart.children()[0].renderlet(function(chart) {
+            chart.selectAll("rect.bar").attr("width", function(d) {
+                return 10;
+            });
+        });
+        chart.redraw();
+        return chart;
+    },
+    'sub-chart renderlet should be triggered': function(chart) {
+        assert.equal(d3.select(chart.selectAll("rect")[0][0]).attr("width"), 10);
+    },
+    teardown: function(topic) {
+        resetAllFilters();
+        resetBody();
+    }
+}});
 
 suite.addBatch({
     'time line composite chart': {
         topic: function() {
-            var chart = buildChart("composite-chart-rerender", [new Date(2012, 4, 20), new Date(2012, 7, 15)]);
+            var chart = buildChart("composite-chart-rerender");
             chart.render();
             dc.renderAll();
             return chart;
