@@ -29,7 +29,7 @@ suite.addBatch({
                 assert.fail("Exception should have been triggered");
             }catch(e){
                 assert.isTrue(e instanceof dc.errors.InvalidStateException);
-                assert.equal("Mandatory attribute chart.dimension is not set", e.message);
+                assert.equal("Mandatory attribute chart.dimension is missing on chart[undefined]", e.toString());
             }
         }
     }
@@ -47,7 +47,7 @@ suite.addBatch({
                 assert.fail("Exception should have been triggered");
             }catch(e){
                 assert.isTrue(e instanceof dc.errors.InvalidStateException);
-                assert.equal("Mandatory attribute chart.group is not set", e.message);
+                assert.equal("Mandatory attribute chart.group is missing on chart[undefined]", e.toString());
             }
         }
     }

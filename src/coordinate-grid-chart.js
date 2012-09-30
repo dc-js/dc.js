@@ -400,6 +400,10 @@ dc.coordinateGridChart = function(_chart) {
     };
 
     _chart.doRender = function() {
+        if(_x == null)
+            throw new dc.errors.InvalidStateException("Mandatory attribute chart.x is missing on chart["
+                + _chart.anchor() + "]");
+
         _chart.resetSvg();
 
         if (_chart.dataAreSet()) {

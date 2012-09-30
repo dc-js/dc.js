@@ -144,10 +144,12 @@ dc.baseChart = function(_chart) {
 
     _chart.render = function() {
         if(_dimension == null)
-            throw new dc.errors.InvalidStateException("Mandatory attribute chart.dimension is not set");
+            throw new dc.errors.InvalidStateException("Mandatory attribute chart.dimension is missing on chart["
+                + _chart.anchor() + "]");
 
-        if(_group == null)
-            throw new dc.errors.InvalidStateException("Mandatory attribute chart.group is not set");
+        if (_group == null)
+            throw new dc.errors.InvalidStateException("Mandatory attribute chart.group is missing on chart["
+                + _chart.anchor() + "]");
 
         var result = _chart.doRender();
 

@@ -165,6 +165,10 @@ dc.errors.Exception = function(msg) {
     var _msg = msg != null ? msg : "Unexpected internal error";
 
     this.message = _msg;
+
+    this.toString = function(){
+        return _msg;
+    };
 };
 
 dc.errors.InvalidStateException = function() {
@@ -578,10 +582,12 @@ dc.baseChart = function(_chart) {
 
     _chart.render = function() {
         if(_dimension == null)
-            throw new dc.errors.InvalidStateException("Mandatory attribute chart.dimension is not set");
+            throw new dc.errors.InvalidStateException("Mandatory attribute chart.dimension is missing on chart["
+                + _chart.anchor() + "]");
 
-        if(_group == null)
-            throw new dc.errors.InvalidStateException("Mandatory attribute chart.group is not set");
+        if (_group == null)
+            throw new dc.errors.InvalidStateException("Mandatory attribute chart.group is missing on chart["
+                + _chart.anchor() + "]");
 
         var result = _chart.doRender();
 
@@ -1073,6 +1079,10 @@ dc.coordinateGridChart = function(_chart) {
     };
 
     _chart.doRender = function() {
+        if(_x == null)
+            throw new dc.errors.InvalidStateException("Mandatory attribute chart.x is missing on chart["
+                + _chart.anchor() + "]");
+
         _chart.resetSvg();
 
         if (_chart.dataAreSet()) {
