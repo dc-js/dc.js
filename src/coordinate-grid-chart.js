@@ -88,7 +88,7 @@ dc.coordinateGridChart = function(_chart) {
             var gridLineG = g.selectAll("g." + VERTICAL_CLASS);
 
             if (gridLineG.empty())
-                gridLineG = g.append("g")
+                gridLineG = g.insert("g", ":first-child")
                     .attr("class", GRID_LINE_CLASS + " " + VERTICAL_CLASS)
                     .attr("transform", "translate(" + _chart.yAxisX() + "," + _chart.margins().top + ")");
 
@@ -167,7 +167,7 @@ dc.coordinateGridChart = function(_chart) {
             var ticks = _yAxis.tickValues() ? _yAxis.tickValues() : _y.ticks(_yAxis.ticks()[0]);
 
             if (gridLineG.empty())
-                gridLineG = g.append("g")
+                gridLineG = g.insert("g", ":first-child")
                     .attr("class", GRID_LINE_CLASS + " " + HORIZONTAL_CLASS)
                     .attr("transform", "translate(" + _chart.yAxisX() + "," + _chart.margins().top + ")");
 

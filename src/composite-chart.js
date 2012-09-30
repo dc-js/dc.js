@@ -38,7 +38,7 @@ dc.compositeChart = function(parent, chartGroup) {
             var child = _children[i];
 
             if (child.g() == null) {
-                generateChildG(child);
+                generateChildG(child, i);
             }
 
             child.x(_chart.x());
