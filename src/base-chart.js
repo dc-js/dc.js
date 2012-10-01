@@ -129,11 +129,13 @@ dc.baseChart = function(_chart) {
     _chart.turnOnControls = function() {
         _chart.selectAll(".reset").style("display", null);
         _chart.selectAll(".filter").text(_filterPrinter(_chart.filter())).style("display", null);
+        return _chart;
     };
 
     _chart.turnOffControls = function() {
         _chart.selectAll(".reset").style("display", "none");
         _chart.selectAll(".filter").style("display", "none").text(_chart.filter());
+        return _chart;
     };
 
     _chart.transitionDuration = function(d) {
