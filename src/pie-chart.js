@@ -3,7 +3,7 @@ dc.pieChart = function(parent, chartGroup) {
 
     var _sliceCssClass = "pie-slice";
 
-    var _radius = 0, _innerRadius = 0;
+    var _radius = 90, _innerRadius = 0;
 
     var _g;
 
