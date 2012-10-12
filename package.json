@@ -1,6 +1,6 @@
 {
   "name": "dc",
-  "version": "0.9.1",
+  "version": "1.0.0",
   "description": "A multi-dimensional charting built to work natively with crossfilter rendered using d3.js ",
   "keywords": [
     "visualization",
