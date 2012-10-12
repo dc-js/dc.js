@@ -110,7 +110,7 @@
     fill: red;
 }
 
-.dc-chart g.tooltip path{
+.dc-chart g.dc-tooltip path{
     fill: none;
     stroke: grey;
     stroke-opacity: .8;
