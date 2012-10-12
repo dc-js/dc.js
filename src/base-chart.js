@@ -35,6 +35,18 @@ dc.baseChart = function(_chart) {
 
     var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
 
+    _chart.width = function(w) {
+        if (!arguments.length) return _width;
+        _width = w;
+        return _chart;
+    };
+
+    _chart.height = function(h) {
+        if (!arguments.length) return _height;
+        _height = h;
+        return _chart;
+    };
+
     _chart.dimension = function(d) {
         if (!arguments.length) return _dimension;
         _dimension = d;
@@ -87,18 +99,6 @@ dc.baseChart = function(_chart) {
     _chart.root = function(r) {
         if (!arguments.length) return _root;
         _root = r;
-        return _chart;
-    };
-
-    _chart.width = function(w) {
-        if (!arguments.length) return _width;
-        _width = w;
-        return _chart;
-    };
-
-    _chart.height = function(h) {
-        if (!arguments.length) return _height;
-        _height = h;
         return _chart;
     };
 
