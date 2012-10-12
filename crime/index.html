@@ -15,12 +15,10 @@
 
     <style type="text/css">
         div#incident-chart {
-            margin-top: 35px;
             float: right;
         }
 
         div#homicide-chart {
-            margin-top: 35px;
             float: right;
         }
     </style>
@@ -61,10 +59,13 @@
 </p>
 
 <div id="ca-chart">
-<span class="title">
-    Crime Rate by City <br/>
-    radius: total crime rate per 100k population <br/>
-    color: violent/non-violent crime ratio</span>
+<h4>Crime Rate by City</h4>
+<dl class="dl-horizontal">
+    <dt>radius</dt>
+    <dd>total crime rate per 100k population</dd>
+    <dt>color</dt>
+    <dd>violent/non-violent crime ratio</dd>
+</dl>
 <a class="reset" href="javascript:caChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
 <p></p>
@@ -314,7 +315,7 @@
 
     <div class="span4">
         <div id="incident-chart">
-            <span class="title">Crime Per 100K Population by Year</span>
+            <h5>Crime Per 100K Population by Year</h5>
             <a class="reset" href="javascript:incidentChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
             <div class="clearfix"></div>
@@ -324,16 +325,16 @@
             <table>
                 <tr>
                     <td style="background-color: #4682b4;width:10px;height:10px;"></td>
-                    <td>non-violent crime</td>
+                    <td>&nbsp;non-violent crime</td>
                     <td></td>
                     <td style="background-color: red;width:10px;height:10px;"></td>
-                    <td>violent crime</td>
+                    <td>&nbsp;violent crime</td>
                 </tr>
             </table>
         </div>
 
         <div id="homicide-chart">
-            <span class="title">Homicide Incidents by Year</span>
+            <h5>Homicide Incidents by Year</h5>
             <a class="reset" href="javascript:homicideChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
             <div class="clearfix"></div>
@@ -342,8 +343,8 @@
         <div style="float: right; text-align: left; width: 300px">
             <table>
                 <tr>
-                    <td style="background-color: #4682b4;width:10px;height:10px;"></td>
-                    <td>homicide</td>
+                    <td style="background-color: #4682b4;width:10px;height:5px;"></td>
+                    <td>&nbsp;homicide</td>
                 </tr>
             </table>
         </div>
