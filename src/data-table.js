@@ -1,4 +1,9 @@
 dc.dataTable = function(parent, chartGroup) {
+    var LABEL_CSS_CLASS = "dc-table-label";
+    var ROW_CSS_CLASS = "dc-table-row";
+    var COLUMN_CSS_CLASS = "dc-table-column";
+    var GROUP_CSS_CLASS = "dc-table-group";
+
     var _chart = dc.baseChart({});
 
     var _size = 25;
@@ -29,9 +34,9 @@ dc.dataTable = function(parent, chartGroup) {
 
         rowGroup
             .append("tr")
-            .attr("class", "group")
+            .attr("class", GROUP_CSS_CLASS)
                 .append("td")
-                .attr("class", "label")
+                .attr("class", LABEL_CSS_CLASS)
                 .attr("colspan", _columns.length)
                 .text(function(d) {
                     return _chart.keyAccessor()(d);
@@ -56,19 +61,19 @@ dc.dataTable = function(parent, chartGroup) {
 
     function renderRows(groups) {
         var rows = groups.order()
-            .selectAll("tr.row")
+            .selectAll("tr." + ROW_CSS_CLASS)
             .data(function(d) {
                 return d.values;
             });
 
         var rowEnter = rows.enter()
             .append("tr")
-            .attr("class", "row");
+            .attr("class", ROW_CSS_CLASS);
 
         for (var i = 0; i < _columns.length; ++i) {
             var f = _columns[i];
             rowEnter.append("td")
-                .attr("class", "column " + i)
+                .attr("class", COLUMN_CSS_CLASS + " _" + i)
                 .text(function(d) {
                     return f(d);
                 });
