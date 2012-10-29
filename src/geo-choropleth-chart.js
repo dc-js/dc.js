@@ -151,5 +151,10 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
         return _chart;
     };
 
+    _chart.projection = function(projection) {
+        _geoPath.projection(projection);
+        return _chart;
+    };
+
     return _chart.anchor(parent, chartGroup);
 };
