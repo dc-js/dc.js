@@ -30,6 +30,31 @@ function buildChart(id) {
     return chart;
 }
 
+function buildChartWithCustomProjection(id) {
+    var div = d3.select("body").append("div").attr("id", id);
+    div.append("a").attr("class", "reset").style("display", "none");
+    div.append("span").attr("class", "filter").style("display", "none");
+    var chart = dc.geoChoroplethChart("#" + id);
+    chart.dimension(districtDimension)
+        .group(districtValueEnrollGroup)
+        .projection(d3.geo.mercator()
+            .scale(26778)
+            .translate([8227, 3207]))
+        .width(990)
+        .height(600)
+        .colors(["#ccc", "#E2F2FF","#C4E4FF","#9ED2FF","#81C5FF","#6BBAFF","#51AEFF","#36A2FF","#1E96FF","#0089FF"])
+        .colorDomain([0, 155])
+        .overlayGeoJson(geoJson3.features, "district", function(d) {
+            return d.properties.NAME;
+        })
+        .transitionDuration(0)
+        .title(function(d) {
+            return d.key + " : " + (d.value ? d.value : 0);
+        });
+    chart.render();
+    return chart;
+}
+
 
 suite.addBatch({
     'creation': {
@@ -125,6 +150,25 @@ suite.addBatch({
         },
         'correct color should be set [Colorado]': function(chart) {
             assert.equal(chart.selectAll("g.layer0 g.state")[0][5].getAttribute("class"), "state colorado selected");
+        },
+        teardown: function(topic) {
+            resetAllFilters();
+            resetBody();
+        }
+    }
+});
+
+suite.addBatch({
+    'custom projection': {
+        topic: function () {
+            var chart = buildChartWithCustomProjection("choropleth-chart-with-projection");
+            return chart;
+        },
+        'should return not null': function (chart) {
+            assert.isNotNull(chart);
+        },
+        'svg is created': function(chart) {
+            assert.isNotEmpty(chart.selectAll("svg"));
         },
         teardown: function(topic) {
             resetAllFilters();
