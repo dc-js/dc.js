@@ -778,6 +778,10 @@ d3.csv("ndx.csv", function(data) {
         .transitionDuration(1000) // (optional) define chart transition duration, :default = 1000
         .dimension(states) // set crossfilter dimension, dimension key should match the name retrieved in geo json layer
         .group(stateRaisedSum) // set crossfilter group
+        // (optional) adjust the path projections as necessary
+        .projection(d3.geo.mercator()
+            .scale(200)
+            .translate([150, 150]))
         // (optional) define color function or array for bubbles
         .colors(["#ccc", "#E2F2FF","#C4E4FF","#9ED2FF","#81C5FF","#6BBAFF","#51AEFF","#36A2FF","#1E96FF","#0089FF","#0061B5"])
         // (optional) define color domain to match your data domain if you want to bind data or color
