@@ -1447,7 +1447,11 @@ dc.abstractBubbleChart = function(_chart) {
     };
 
     var labelFunction = function(d) {
-        return _chart.bubbleR(d) > _minRadiusWithLabel ? _chart.label()(d) : "";
+        return _chart.label()(d);
+    };
+
+    var labelOpacity = function(d) {
+        return (_chart.bubbleR(d) > _minRadiusWithLabel) ? 1 : 0;
     };
 
     _chart.doRenderLabel = function(bubbleGEnter) {
@@ -1461,14 +1465,20 @@ dc.abstractBubbleChart = function(_chart) {
                     .on("click", _chart.onClick);
             }
 
-            label.text(labelFunction);
+            label
+                .attr("opacity", 0)
+                .text(labelFunction);
+            dc.transition(label, _chart.transitionDuration())
+                .attr("opacity", labelOpacity);
         }
     };
 
     _chart.doUpdateLabels = function(bubbleGEnter) {
         if (_chart.renderLabel()) {
-            bubbleGEnter.selectAll("text")
+            var labels = bubbleGEnter.selectAll("text")
                 .text(labelFunction);
+            dc.transition(labels, _chart.transitionDuration())
+                .attr("opacity", labelOpacity);
         }
     };
 
@@ -2358,6 +2368,9 @@ dc.bubbleChart = function(parent, chartGroup) {
         dc.transition(bubbleG, _chart.transitionDuration())
             .attr("r", function(d) {
                 return _chart.bubbleR(d);
+            })
+            .attr("opacity", function(d) {
+                return (_chart.bubbleR(d) > 0) ? 1 : 0;
             });
 
         _chart.doRenderLabel(bubbleGEnter);
@@ -2372,7 +2385,11 @@ dc.bubbleChart = function(parent, chartGroup) {
             .attr("fill", _chart.updateBubbleColor)
             .attr("r", function(d) {
                 return _chart.bubbleR(d);
+            })
+            .attr("opacity", function(d) {
+                return (_chart.bubbleR(d) > 0) ? 1 : 0;
             });
+
         _chart.doUpdateLabels(bubbleG);
         _chart.doUpdateTitles(bubbleG);
     }
