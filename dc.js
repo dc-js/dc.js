@@ -32,7 +32,7 @@ dc.chartRegistry = function() {
     var _chartMap = {};
 
     this.has = function(chart) {
-        for (e in _chartMap) {
+        for (var e in _chartMap) {
             if (_chartMap[e].indexOf(chart) >= 0)
                 return true;
         }
@@ -91,7 +91,7 @@ dc.renderAll = function(group) {
         charts[i].render();
     }
 
-    if(dc._renderlet != null)
+    if(dc._renderlet !== null)
         dc._renderlet(group);
 };
 
@@ -101,12 +101,12 @@ dc.redrawAll = function(group) {
         charts[i].redraw();
     }
 
-    if(dc._renderlet != null)
+    if(dc._renderlet !== null)
         dc._renderlet(group);
 };
 
 dc.transition = function(selections, duration, callback) {
-    if (duration <= 0)
+    if (duration <= 0 || duration === undefined)
         return selections;
 
     var s = selections
@@ -759,7 +759,8 @@ dc.coordinateGridChart = function(_chart) {
                 .attr("class", "axis x")
                 .attr("transform", "translate(" + _chart.margins().left + "," + _chart.xAxisY() + ")");
 
-        axisXG.call(_xAxis);
+		dc.transition(axisXG, _chart.transitionDuration())
+			.call(_xAxis);
     };
 
     function renderVerticalGridLines(g) {
@@ -777,7 +778,7 @@ dc.coordinateGridChart = function(_chart) {
                 .data(ticks);
 
             // enter
-            lines.enter()
+            var linesGEnter = lines.enter()
                 .append("line")
                 .attr("x1", function(d) {
                     return _x(d);
@@ -786,12 +787,16 @@ dc.coordinateGridChart = function(_chart) {
                 .attr("x2", function(d) {
                     return _x(d);
                 })
-                .attr("y2", 0);
+                .attr("y2", 0)
+				.attr("opacity", 0);
+			dc.transition(linesGEnter, _chart.transitionDuration())
+				.attr("opacity", 1);
 
             // update
-            lines.attr("x1", function(d) {
-                return _x(d);
-            })
+			dc.transition(lines, _chart.transitionDuration())
+				.attr("x1", function(d) {
+					return _x(d);
+				})
                 .attr("y1", _chart.xAxisY() - _chart.margins().top)
                 .attr("x2", function(d) {
                     return _x(d);
@@ -799,7 +804,7 @@ dc.coordinateGridChart = function(_chart) {
                 .attr("y2", 0);
 
             // exit
-            lines.exit().remove();
+			lines.exit().remove();
         }
     }
 
@@ -836,7 +841,8 @@ dc.coordinateGridChart = function(_chart) {
                 .attr("class", "axis y")
                 .attr("transform", "translate(" + _chart.yAxisX() + "," + _chart.margins().top + ")");
 
-        axisYG.call(_yAxis);
+		dc.transition(axisYG, _chart.transitionDuration())
+			.call(_yAxis);
     };
 
     function renderHorizontalGridLines(g) {
@@ -854,7 +860,7 @@ dc.coordinateGridChart = function(_chart) {
                 .data(ticks);
 
             // enter
-            lines.enter()
+            var linesGEnter = lines.enter()
                 .append("line")
                 .attr("x1", 1)
                 .attr("y1", function(d) {
@@ -863,10 +869,14 @@ dc.coordinateGridChart = function(_chart) {
                 .attr("x2", _chart.xAxisLength())
                 .attr("y2", function(d) {
                     return _y(d);
-                });
+                })
+				.attr("opacity", 0);
+			dc.transition(linesGEnter, _chart.transitionDuration())
+				.attr("opacity", 1);
 
             // update
-            lines.attr("x1", 1)
+			dc.transition(lines, _chart.transitionDuration())
+				.attr("x1", 1)
                 .attr("y1", function(d) {
                     return _y(d);
                 })
@@ -876,7 +886,7 @@ dc.coordinateGridChart = function(_chart) {
                 });
 
             // exit
-            lines.exit().remove();
+			lines.exit().remove();
         }
     }
 

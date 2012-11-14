@@ -32,7 +32,7 @@ dc.chartRegistry = function() {
     var _chartMap = {};
 
     this.has = function(chart) {
-        for (e in _chartMap) {
+        for (var e in _chartMap) {
             if (_chartMap[e].indexOf(chart) >= 0)
                 return true;
         }
@@ -91,7 +91,7 @@ dc.renderAll = function(group) {
         charts[i].render();
     }
 
-    if(dc._renderlet != null)
+    if(dc._renderlet !== null)
         dc._renderlet(group);
 };
 
@@ -101,12 +101,12 @@ dc.redrawAll = function(group) {
         charts[i].redraw();
     }
 
-    if(dc._renderlet != null)
+    if(dc._renderlet !== null)
         dc._renderlet(group);
 };
 
 dc.transition = function(selections, duration, callback) {
-    if (duration <= 0)
+    if (duration <= 0 || duration === undefined)
         return selections;
 
     var s = selections
