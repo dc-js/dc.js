@@ -7,7 +7,7 @@ dc.pieChart = function(parent, chartGroup) {
 
     var _g;
 
-    var _minAngelForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
+    var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
 
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
 
@@ -237,9 +237,9 @@ dc.pieChart = function(parent, chartGroup) {
         return _chart;
     };
 
-    _chart.minAngelForLabel = function(_) {
-        if (!arguments.length) return _minAngelForLabel;
-        _minAngelForLabel = _;
+    _chart.minAngleForLabel = function(_) {
+        if (!arguments.length) return _minAngleForLabel;
+        _minAngleForLabel = _;
         return _chart;
     };
 
@@ -251,7 +251,7 @@ dc.pieChart = function(parent, chartGroup) {
 
     function sliceTooSmall(d) {
         var angle = (d.endAngle - d.startAngle);
-        return isNaN(angle) || angle < _minAngelForLabel;
+        return isNaN(angle) || angle < _minAngleForLabel;
     }
 
     function sliceHasNoData(data) {

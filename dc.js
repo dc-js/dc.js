@@ -1790,7 +1790,7 @@ dc.pieChart = function(parent, chartGroup) {
         return _chart;
     };
 
-    _chart.minAngelForLabel = function(_) {
+    _chart.minAngleForLabel = function(_) {
         if (!arguments.length) return _minAngelForLabel;
         _minAngelForLabel = _;
         return _chart;

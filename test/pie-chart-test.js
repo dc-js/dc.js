@@ -258,7 +258,7 @@ suite.addBatch({
                 .title(function(d) {
                     return "custom";
                 })
-                .minAngelForLabel(1)
+                .minAngleForLabel(1)
                 .renderTitle(true);
             chart.render();
             return chart;
