@@ -55,9 +55,27 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
+     _chart.xUnits = function(_) {
+        if (!arguments.length) return _xUnits;
+        _xUnits = _;
+        return _chart;
+    };
+
     _chart.xAxis = function(_) {
         if (!arguments.length) return _xAxis;
         _xAxis = _;
+        return _chart;
+    };
+
+    _chart.elasticX = function(_) {
+        if (!arguments.length) return _xElasticity;
+        _xElasticity = _;
+        return _chart;
+    };
+
+    _chart.xAxisPadding = function(_) {
+        if (!arguments.length) return _xAxisPadding;
+        _xAxisPadding = _;
         return _chart;
     };
 
@@ -132,12 +150,6 @@ dc.coordinateGridChart = function(_chart) {
         return _chart.width() - _chart.margins().left - _chart.margins().right;
     };
 
-    _chart.xUnits = function(_) {
-        if (!arguments.length) return _xUnits;
-        _xUnits = _;
-        return _chart;
-    };
-
     function prepareYAxis(g) {
         if (_y == null || _chart.elasticY()) {
             _y = d3.scale.linear();
@@ -201,18 +213,6 @@ dc.coordinateGridChart = function(_chart) {
         }
     }
 
-    _chart.renderHorizontalGridLines = function(_) {
-        if (!arguments.length) return _renderHorizontalGridLine;
-        _renderHorizontalGridLine = _;
-        return _chart;
-    };
-
-    _chart.renderVerticalGridLines = function(_) {
-        if (!arguments.length) return _renderVerticalGridLine;
-        _renderVerticalGridLine = _;
-        return _chart;
-    };
-
     _chart.yAxisX = function() {
         return _chart.margins().left;
     };
@@ -235,9 +235,15 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
-    _chart.elasticX = function(_) {
-        if (!arguments.length) return _xElasticity;
-        _xElasticity = _;
+    _chart.renderHorizontalGridLines = function(_) {
+        if (!arguments.length) return _renderHorizontalGridLine;
+        _renderHorizontalGridLine = _;
+        return _chart;
+    };
+
+    _chart.renderVerticalGridLines = function(_) {
+        if (!arguments.length) return _renderVerticalGridLine;
+        _renderVerticalGridLine = _;
         return _chart;
     };
 
@@ -267,12 +273,6 @@ dc.coordinateGridChart = function(_chart) {
             return _chart.valueAccessor()(e);
         });
         return dc.utils.add(max, _yAxisPadding);
-    };
-
-    _chart.xAxisPadding = function(_) {
-        if (!arguments.length) return _xAxisPadding;
-        _xAxisPadding = _;
-        return _chart;
     };
 
     _chart.yAxisPadding = function(_) {
