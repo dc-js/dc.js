@@ -2268,7 +2268,7 @@ dc.dataTable = function(parent, chartGroup) {
             var f = _columns[i];
             rowEnter.append("td")
                 .attr("class", "column " + i)
-                .text(function(d) {
+                .html(function(d) {
                     return f(d);
                 });
         }
