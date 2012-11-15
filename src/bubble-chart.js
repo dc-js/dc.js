@@ -48,6 +48,9 @@ dc.bubbleChart = function(parent, chartGroup) {
         dc.transition(bubbleG, _chart.transitionDuration())
             .attr("r", function(d) {
                 return _chart.bubbleR(d);
+            })
+            .attr("opacity", function(d) {
+                return (_chart.bubbleR(d) > 0) ? 1 : 0;
             });
 
         _chart.doRenderLabel(bubbleGEnter);
@@ -62,7 +65,11 @@ dc.bubbleChart = function(parent, chartGroup) {
             .attr("fill", _chart.updateBubbleColor)
             .attr("r", function(d) {
                 return _chart.bubbleR(d);
+            })
+            .attr("opacity", function(d) {
+                return (_chart.bubbleR(d) > 0) ? 1 : 0;
             });
+
         _chart.doUpdateLabels(bubbleG);
         _chart.doUpdateTitles(bubbleG);
     }
