@@ -2,6 +2,13 @@
 
 The entire dc.js library is scoped under **dc** name space. It does not introduce anything else into the global name space.
 
+* [Base Chart [abstract]](#base-chart)
+* [Color Chart [abstract]](#color-chart)
+* [Single Selection Chart [abstract]](#single-selection-chart)
+* [Stackable Chart [abstract]](#stackable-chart)
+* [Coordinate Grid Chart [abstract] < Base Chart](#coordinate-grid-chart)
+* [Pie Chart [concrete] < Single Selection Chart < Color Chart < Base Chart](#pie-chart)
+
 ### Function Chain
 Majority of dc functions are designed to allow function chaining, meaning it will return the current chart instance whenever it is appropriate. Therefore configuration of a chart can be written in the following style.
 ```js
@@ -11,7 +18,7 @@ chart.width(300)
 ```
 The API references will highlight the fact if a particular function is not chainable.
 
-## Base Chart [Abstract]
+## <a name="base-chart" href="#base-chart">#</a> Base Chart [Abstract]
 Base chart is an abstract functional object representing a basic dc chart object for all chart and widget implementation. Every function on base chart are also inherited available on all concrete chart implementation in dc library.
 
 #### .width([value])
@@ -134,7 +141,7 @@ chart.renderlet(function(chart){
 });
 ```
 
-## Color Chart [Abstract]
+## <a name="color-chart" href="#color-chart">#</a> Color Chart [Abstract]
 Color chart is an abstract chart functional class created to provide universal coloring support as a mix-in for any concrete chart implementation.
 
 #### .colors([colorScale or colorArray])
@@ -164,7 +171,7 @@ chart.colorDomain([0, 11])
 chart.colorDomain([0, 364])
 ```
 
-## Single Selection Chart [Abstract]
+## <a name="single-selection-chart" href="#single-selection-chart">#</a> Single Selection Chart [Abstract]
 Single selection chart is an abstract functional class created to provide cross-chart support for single value filtering capability.
 
 #### .filter([filterValue])
@@ -179,7 +186,7 @@ chart.filter(18);
 #### .hasFilter()
 Check whether is an active filter associated with particular chart instance. This function is **not chainable**.
 
-## Stackable Chart [Abstract]
+## <a name="stackable-chart" href="#stackable-chart">#</a> Stackable Chart [Abstract]
 Stackable chart is an abstract chart introduced to provide cross-chart support of stackability. Concrete implementation of charts can then selectively mix-in this capability.
 
 #### .stack(group[, retriever])
@@ -191,7 +198,7 @@ chart.stack(valueSumGroup)
 .stack(avgByDayGroup, function(d){return d.value.avgByDay;});
 ```
 
-## CoordinateGrid Chart [Abstract] < Base Chart
+## <a name="coordinate-grid-chart" href="#coordinate-grid-chart">#</a> CoordinateGrid Chart [Abstract] < [Base Chart](#base-chart)
 Coordinate grid chart is an abstract base chart designed to support a number of coordinate grid based concrete chart types, i.e. bar chart, line chart, and bubble chart.
 
 #### .g([gElement])
@@ -201,7 +208,7 @@ Get or set the root g element. This method is usually used to retrieve the g ele
 Get or set the margins for a particular coordinate grid chart instance. The margins is stored as an associative Javascript array. Default margins: {top: 10, right: 50, bottom: 30, left: 30}.
 
 #### .x([xScale]) - **mandatory**
-Get or set the x scale. x scale is typically a time scale for histogram or a d3 linear/ordinal scale for visualizing data distribution.
+Get or set the x scale. x scale could be any [d3 quatitive scales](https://github.com/mbostock/d3/wiki/Quantitative-Scales). For example a time scale for histogram or a linear/ordinal scale for visualizing data distribution.
 ```js
 // set x to a linear scale
 chart.x(d3.scale.linear().domain([-2500, 2500]))
@@ -268,7 +275,7 @@ Turn on/off vertical grid lines.
 #### .brushOn([boolean])
 Turn on/off the brush based in-place range filter. When the brush is on then user will be able to  simply drag the mouse across the chart to perform range filtering based on the extend of the brush. However turning on brush filter will essentially disable other interactive elements on the chart such as the highlighting, tooltip, and reference lines on a chart. Default value is "true".
 
-## Pie Chart [Concrete] < Single Selection Chart < Color Chart < Base Chart
+## <a name="pie-chart" href="#pie-chart">#</a> Pie Chart [Concrete] < [Single Selection Chart](#single-selection-chart) < [Color Chart](#color-chart) < [Base Chart](#base-chart)
 This chart is a concrete pie chart implementation usually used to visualize small number of categorical distributions. Pie chart implementation uses keyAccessor to generate slices, and valueAccessor to calculate the size of each slice(key) relatively to the total sum of all values.
 
 #### .radius([radius])
