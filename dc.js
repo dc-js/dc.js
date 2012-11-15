@@ -473,6 +473,18 @@ dc.baseChart = function(_chart) {
 
     var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
 
+    _chart.width = function(w) {
+        if (!arguments.length) return _width;
+        _width = w;
+        return _chart;
+    };
+
+    _chart.height = function(h) {
+        if (!arguments.length) return _height;
+        _height = h;
+        return _chart;
+    };
+
     _chart.dimension = function(d) {
         if (!arguments.length) return _dimension;
         _dimension = d;
@@ -528,18 +540,6 @@ dc.baseChart = function(_chart) {
         return _chart;
     };
 
-    _chart.width = function(w) {
-        if (!arguments.length) return _width;
-        _width = w;
-        return _chart;
-    };
-
-    _chart.height = function(h) {
-        if (!arguments.length) return _height;
-        _height = h;
-        return _chart;
-    };
-
     _chart.svg = function(_) {
         if (!arguments.length) return _svg;
         _svg = _;
@@ -567,11 +567,13 @@ dc.baseChart = function(_chart) {
     _chart.turnOnControls = function() {
         _chart.selectAll(".reset").style("display", null);
         _chart.selectAll(".filter").text(_filterPrinter(_chart.filter())).style("display", null);
+        return _chart;
     };
 
     _chart.turnOffControls = function() {
         _chart.selectAll(".reset").style("display", "none");
         _chart.selectAll(".filter").style("display", "none").text(_chart.filter());
+        return _chart;
     };
 
     _chart.transitionDuration = function(d) {
@@ -734,9 +736,27 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
+     _chart.xUnits = function(_) {
+        if (!arguments.length) return _xUnits;
+        _xUnits = _;
+        return _chart;
+    };
+
     _chart.xAxis = function(_) {
         if (!arguments.length) return _xAxis;
         _xAxis = _;
+        return _chart;
+    };
+
+    _chart.elasticX = function(_) {
+        if (!arguments.length) return _xElasticity;
+        _xElasticity = _;
+        return _chart;
+    };
+
+    _chart.xAxisPadding = function(_) {
+        if (!arguments.length) return _xAxisPadding;
+        _xAxisPadding = _;
         return _chart;
     };
 
@@ -811,12 +831,6 @@ dc.coordinateGridChart = function(_chart) {
         return _chart.width() - _chart.margins().left - _chart.margins().right;
     };
 
-    _chart.xUnits = function(_) {
-        if (!arguments.length) return _xUnits;
-        _xUnits = _;
-        return _chart;
-    };
-
     function prepareYAxis(g) {
         if (_y == null || _chart.elasticY()) {
             _y = d3.scale.linear();
@@ -880,18 +894,6 @@ dc.coordinateGridChart = function(_chart) {
         }
     }
 
-    _chart.renderHorizontalGridLines = function(_) {
-        if (!arguments.length) return _renderHorizontalGridLine;
-        _renderHorizontalGridLine = _;
-        return _chart;
-    };
-
-    _chart.renderVerticalGridLines = function(_) {
-        if (!arguments.length) return _renderVerticalGridLine;
-        _renderVerticalGridLine = _;
-        return _chart;
-    };
-
     _chart.yAxisX = function() {
         return _chart.margins().left;
     };
@@ -914,9 +916,15 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
-    _chart.elasticX = function(_) {
-        if (!arguments.length) return _xElasticity;
-        _xElasticity = _;
+    _chart.renderHorizontalGridLines = function(_) {
+        if (!arguments.length) return _renderHorizontalGridLine;
+        _renderHorizontalGridLine = _;
+        return _chart;
+    };
+
+    _chart.renderVerticalGridLines = function(_) {
+        if (!arguments.length) return _renderVerticalGridLine;
+        _renderVerticalGridLine = _;
         return _chart;
     };
 
@@ -946,12 +954,6 @@ dc.coordinateGridChart = function(_chart) {
             return _chart.valueAccessor()(e);
         });
         return dc.utils.add(max, _yAxisPadding);
-    };
-
-    _chart.xAxisPadding = function(_) {
-        if (!arguments.length) return _xAxisPadding;
-        _xAxisPadding = _;
-        return _chart;
     };
 
     _chart.yAxisPadding = function(_) {
@@ -1560,7 +1562,7 @@ dc.pieChart = function(parent, chartGroup) {
 
     var _g;
 
-    var _minAngelForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
+    var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
 
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
 
@@ -1791,8 +1793,8 @@ dc.pieChart = function(parent, chartGroup) {
     };
 
     _chart.minAngleForLabel = function(_) {
-        if (!arguments.length) return _minAngelForLabel;
-        _minAngelForLabel = _;
+        if (!arguments.length) return _minAngleForLabel;
+        _minAngleForLabel = _;
         return _chart;
     };
 
@@ -1804,7 +1806,7 @@ dc.pieChart = function(parent, chartGroup) {
 
     function sliceTooSmall(d) {
         var angle = (d.endAngle - d.startAngle);
-        return isNaN(angle) || angle < _minAngelForLabel;
+        return isNaN(angle) || angle < _minAngleForLabel;
     }
 
     function sliceHasNoData(data) {
