@@ -2255,19 +2255,19 @@ dc.dataTable = function(parent, chartGroup) {
 
     function renderRows(groups) {
         var rows = groups.order()
-            .selectAll("tr.row")
+            .selectAll("tr.dc-row")
             .data(function(d) {
                 return d.values;
             });
 
         var rowEnter = rows.enter()
             .append("tr")
-            .attr("class", "row");
+            .attr("class", "dc-row");
 
         for (var i = 0; i < _columns.length; ++i) {
             var f = _columns[i];
             rowEnter.append("td")
-                .attr("class", "column " + i)
+                .attr("class", "dc-column " + i)
                 .text(function(d) {
                     return f(d);
                 });
