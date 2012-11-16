@@ -363,7 +363,7 @@ dc.coordinateGridChart = function(_chart) {
 
         _chart.redrawBrush(_g);
 
-        if(_brush.empty()){
+        if(_brush.empty() || !extent || extent[1] <= extent[0]){
             dc.events.trigger(function() {
                 _chart.filter(null);
                 dc.redrawAll(_chart.chartGroup());
