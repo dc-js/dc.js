@@ -38,7 +38,7 @@ dc.dataTable = function(parent, chartGroup) {
                 .append("td")
                 .attr("class", LABEL_CSS_CLASS)
                 .attr("colspan", _columns.length)
-                .text(function(d) {
+                .html(function(d) {
                     return _chart.keyAccessor()(d);
                 });
 
@@ -74,7 +74,7 @@ dc.dataTable = function(parent, chartGroup) {
             var f = _columns[i];
             rowEnter.append("td")
                 .attr("class", COLUMN_CSS_CLASS + " _" + i)
-                .text(function(d) {
+                .html(function(d) {
                     return f(d);
                 });
         }

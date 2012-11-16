@@ -244,7 +244,7 @@ dc.pieChart = function(parent, chartGroup) {
     };
 
     function calculateDataPie() {
-        return d3.layout.pie().value(function(d) {
+        return d3.layout.pie().sort(null).value(function(d) {
             return _chart.valueAccessor()(d);
         });
     }

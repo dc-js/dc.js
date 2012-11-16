@@ -293,9 +293,9 @@ suite.addBatch({
             chart.render();
             return chart;
         },
-        'should remove text if bubble has 0 r': function(chart) {
+        'should set invisible if bubble has 0 r': function(chart) {
             chart.selectAll("g.node text").each(function(d, i) {
-                assert.equal(d3.select(this).text(), "");
+                assert.equal(d3.select(this).attr("opacity"), 0);
             });
         },
         teardown: function(topic) {
