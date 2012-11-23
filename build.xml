@@ -1,6 +1,7 @@
 <project name="dc.js" default="make">
     <property environment="env"/>
     <property name="node.path" value="node_modules"/>
+    <property name="es.path" value="/mnt/DAV"/>
     <property name="js.compiler" value="${node.path}/.bin/uglifyjs"/>
     <property name="js.tester" value="${node.path}/.bin/vows"/>
 
@@ -56,6 +57,11 @@
         <exec executable="bash">
             <arg value="-c"/>
             <arg value="node ${basedir}/src/package.js > ${basedir}/package.json"/>
+        </exec>
+        <echo>Copy to eSmile lib</echo>
+        <exec executable="bash">
+            <arg value="-c"/>
+            <arg value="sudo cp -fr ${basedir}/dc.js ${es.path}/es.master/lib/dc/dc.js"/>
         </exec>
     </target>
 
