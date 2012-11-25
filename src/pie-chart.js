@@ -1,4 +1,4 @@
-dc.pieChart = function(parent, chartGroup) {
+dc.pieChart = function(parent, chartGroup, cfg) {
     var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
     var _sliceCssClass = "pie-slice";
@@ -9,7 +9,7 @@ dc.pieChart = function(parent, chartGroup) {
 
     var _minAngelForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
 
-    var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
+    var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({}))).applyConfig(cfg);
 
     _chart.label(function(d) {
         return _chart.keyAccessor()(d.data);

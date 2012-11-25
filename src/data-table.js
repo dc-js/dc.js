@@ -1,4 +1,4 @@
-dc.dataTable = function(parent, chartGroup) {
+dc.dataTable = function(parent, chartGroup, cfg) {
     var _chart = dc.baseChart({});
 
     var _size = 25;
@@ -107,5 +107,5 @@ dc.dataTable = function(parent, chartGroup) {
         return _chart;
     };
 
-    return _chart.anchor(parent, chartGroup);
+    return _chart.anchor(parent, chartGroup, cfg);
 };

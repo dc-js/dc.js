@@ -1,4 +1,4 @@
-dc.bubbleChart = function(parent, chartGroup) {
+dc.bubbleChart = function(parent, chartGroup, cfg) {
     var _chart = dc.abstractBubbleChart(dc.coordinateGridChart({}));
 
     var _elasticRadius = false;
@@ -101,5 +101,5 @@ dc.bubbleChart = function(parent, chartGroup) {
         _chart.fadeDeselectedArea();
     };
 
-    return _chart.anchor(parent, chartGroup);
+    return _chart.anchor(parent, chartGroup, cfg);
 };
