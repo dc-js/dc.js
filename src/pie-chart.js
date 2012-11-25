@@ -9,7 +9,7 @@ dc.pieChart = function(parent, chartGroup, cfg) {
 
     var _minAngelForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
 
-    var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({}))).applyConfig(cfg);
+    var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
 
     _chart.label(function(d) {
         return _chart.keyAccessor()(d.data);
@@ -289,5 +289,5 @@ dc.pieChart = function(parent, chartGroup, cfg) {
         }
     }
 
-    return _chart.anchor(parent, chartGroup);
+    return _chart.anchor(parent, chartGroup, cfg);
 };

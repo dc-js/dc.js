@@ -240,8 +240,8 @@ dc.baseChart = function(_chart) {
     
     _chart.applyConfig= function(cfg){
         for (var p in cfg) {
-            if (typeof chart[p] === 'function' && !!cfg[p] ) {
-                chart[p](cfg[p])
+            if (typeof _chart[p] === 'function' && !!cfg[p] ) {
+                _chart[p](cfg[p])
             }
         }
         return _chart;

@@ -6,7 +6,7 @@ dc.lineChart = function(parent, chartGroup,cfg) {
     var Y_AXIS_REF_LINE_CLASS = "yRef";
     var X_AXIS_REF_LINE_CLASS = "xRef";
 
-    var _chart = dc.stackableChart(dc.coordinateGridChart({})).applyConfig(cfg);
+    var _chart = dc.stackableChart(dc.coordinateGridChart({}));
     var _renderArea = false;
     var _dotRadius = DEFAULT_DOT_RADIUS;
 
@@ -188,5 +188,5 @@ dc.lineChart = function(parent, chartGroup,cfg) {
         return _chart;
     };
 
-    return _chart.anchor(parent, chartGroup);
+    return _chart.anchor(parent, chartGroup, cfg);
 };

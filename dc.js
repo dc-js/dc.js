@@ -507,7 +507,7 @@ dc.baseChart = function(_chart) {
         return _root.selectAll(s);
     };
 
-    _chart.anchor = function(a, chartGroup) {
+    _chart.anchor = function(a, chartGroup, cfg) {
         if (!arguments.length) return _anchor;
         if (dc.instanceOfChart(a)) {
             _anchor = a.anchor();
@@ -519,6 +519,7 @@ dc.baseChart = function(_chart) {
             dc.registerChart(_chart, chartGroup);
         }
         _chartGroup = chartGroup;
+        if(cfg) {_chart.applyConfig(cfg)}
         return _chart;
     };
 
@@ -672,6 +673,15 @@ dc.baseChart = function(_chart) {
     _chart.chartGroup = function(_) {
         if (!arguments.length) return _chartGroup;
         _chartGroup = _;
+        return _chart;
+    };
+    
+    _chart.applyConfig= function(cfg){
+        for (var p in cfg) {
+            if (typeof _chart[p] === 'function' && !!cfg[p] ) {
+                _chart[p](cfg[p])
+            }
+        }
         return _chart;
     };
 
@@ -1267,14 +1277,11 @@ dc.stackableChart = function(_chart) {
     };
 
     _chart.series = function(pivotGroup, fn, group) {
-         //_groupStack.clear();  // to prevent group values to be plotted.
         if(!pivotGroup) {
             _plotFirstGroup = true;
             return _chart;
             }
-           
         _plotFirstGroup = false;
-      //  expireCache()
         pivotGroup.all().map(function(pivotGr, i) {
             _chart.stack(_chart.group(), function(d) { 
                 return fn(d, pivotGr, i)
@@ -1595,7 +1602,7 @@ dc.abstractBubbleChart = function(_chart) {
 
     return _chart;
 };
-dc.pieChart = function(parent, chartGroup) {
+dc.pieChart = function(parent, chartGroup, cfg) {
     var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
     var _sliceCssClass = "pie-slice";
@@ -1886,9 +1893,9 @@ dc.pieChart = function(parent, chartGroup) {
         }
     }
 
-    return _chart.anchor(parent, chartGroup);
+    return _chart.anchor(parent, chartGroup, cfg);
 };
-dc.barChart = function(parent, chartGroup) {
+dc.barChart = function(parent, chartGroup, cfg) {
     var MIN_BAR_WIDTH = 1;
     var DEFAULT_GAP_BETWEEN_BARS = 2;
 
@@ -2030,9 +2037,9 @@ dc.barChart = function(parent, chartGroup) {
         return _chart;
     };
 
-    return _chart.anchor(parent, chartGroup);
+    return _chart.anchor(parent, chartGroup, cfg);
 };
-dc.lineChart = function(parent, chartGroup) {
+dc.lineChart = function(parent, chartGroup,cfg) {
     var AREA_BOTTOM_PADDING = 1;
     var DEFAULT_DOT_RADIUS = 5;
     var TOOLTIP_G_CLASS = "tooltip";
@@ -2222,9 +2229,9 @@ dc.lineChart = function(parent, chartGroup) {
         return _chart;
     };
 
-    return _chart.anchor(parent, chartGroup);
+    return _chart.anchor(parent, chartGroup, cfg);
 };
-dc.dataCount = function(parent, chartGroup) {
+dc.dataCount = function(parent, chartGroup, cfg) {
     var _formatNumber = d3.format(",d");
     var _chart = dc.baseChart({});
 
@@ -2239,9 +2246,9 @@ dc.dataCount = function(parent, chartGroup) {
         return _chart.doRender();
     };
 
-    return _chart.anchor(parent, chartGroup);
+    return _chart.anchor(parent, chartGroup, cfg);
 };
-dc.dataTable = function(parent, chartGroup) {
+dc.dataTable = function(parent, chartGroup, cfg) {
     var _chart = dc.baseChart({});
 
     var _size = 25;
@@ -2350,9 +2357,9 @@ dc.dataTable = function(parent, chartGroup) {
         return _chart;
     };
 
-    return _chart.anchor(parent, chartGroup);
+    return _chart.anchor(parent, chartGroup, cfg);
 };
-dc.bubbleChart = function(parent, chartGroup) {
+dc.bubbleChart = function(parent, chartGroup, cfg) {
     var _chart = dc.abstractBubbleChart(dc.coordinateGridChart({}));
 
     var _elasticRadius = false;
@@ -2455,9 +2462,9 @@ dc.bubbleChart = function(parent, chartGroup) {
         _chart.fadeDeselectedArea();
     };
 
-    return _chart.anchor(parent, chartGroup);
+    return _chart.anchor(parent, chartGroup, cfg);
 };
-dc.compositeChart = function(parent, chartGroup) {
+dc.compositeChart = function(parent, chartGroup, cfg) {
     var SUB_CHART_CLASS = "sub";
 
     var _chart = dc.coordinateGridChart({});
@@ -2576,9 +2583,9 @@ dc.compositeChart = function(parent, chartGroup) {
         return dc.utils.add(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding());
     };
 
-    return _chart.anchor(parent, chartGroup);
+    return _chart.anchor(parent, chartGroup, cfg);
 };
-dc.geoChoroplethChart = function(parent, chartGroup) {
+dc.geoChoroplethChart = function(parent, chartGroup, cfg) {
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
 
     _chart.colorAccessor(function(d, i){return d;});
@@ -2736,9 +2743,9 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
         return _chart;
     };
 
-    return _chart.anchor(parent, chartGroup);
+    return _chart.anchor(parent, chartGroup, cfg);
 };
-dc.bubbleOverlay = function(root, chartGroup) {
+dc.bubbleOverlay = function(root, chartGroup, cfg) {
     var BUBBLE_OVERLAY_CLASS = "bubble-overlay";
     var BUBBLE_NODE_CLASS = "node";
     var BUBBLE_CLASS = "bubble";
@@ -2884,7 +2891,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
         return _chart;
     };
 
-    _chart.anchor(root, chartGroup);
+    _chart.anchor(root, chartGroup, cfg);
 
     return _chart;
 };
