@@ -122,8 +122,8 @@ dc.lineChart = function(parent, chartGroup) {
 
         createRefLines(g);
 
-        var dots = g.selectAll("circle." + DOT_CIRCLE_CLASS)
-            .data(g.datum());
+        var  dots = g.selectAll("circle." + DOT_CIRCLE_CLASS)
+            .data(g.datum().map(function(d) {d.groupIndex = groupIndex ; return d}));
 
         dots.enter()
             .append("circle")

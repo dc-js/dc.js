@@ -14,7 +14,7 @@ dc.stackableChart = function(_chart) {
         return _chart;
     };
 
-    _chart.series = function(pivotGroup, fn, group) {
+    _chart.series = function(pivotGroup, fn) {
         if(!pivotGroup) {
             _plotFirstGroup = true;
             return _chart;
@@ -22,7 +22,7 @@ dc.stackableChart = function(_chart) {
         _plotFirstGroup = false;
         pivotGroup.all().map(function(pivotGr, i) {
             _chart.stack(_chart.group(), function(d) { 
-                return fn(d, pivotGr, i)
+                return fn(d, i, pivotGr)
             })
         })
         return _chart
@@ -88,12 +88,14 @@ dc.stackableChart = function(_chart) {
     };
 
     _chart.yAxisMax = function() {
-        var max = 0;
-        var allGroups = _chart.allGroups();
+        var max = 0,
+            m,
+        allGroups = _chart.allGroups();
 
         for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
             var group = allGroups[groupIndex];
-            max += dc.utils.groupMax(group, _chart.getValueAccessorByIndex(groupIndex));
+            m = dc.utils.groupMax(group, _chart.getValueAccessorByIndex(groupIndex));
+            max = _useYBaseline ? d3.max([max, m]) : (max + m);
         }
 
         return dc.utils.add(max, _chart.yAxisPadding());
