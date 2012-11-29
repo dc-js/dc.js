@@ -11,6 +11,7 @@ The entire dc.js library is scoped under **dc** name space. It does not introduc
 * [Bar Chart [concrete] < Stackable Chart < CoordinateGrid Chart](#bar-chart)
 * [Line Chart [concrete] < Stackable Chart < CoordinateGrid Chart](#line-chart)
 * [Composite Chart [concrete] < CoordinateGrid Chart](#composite-chart)
+* [Abstract Bubble Chart [abstract] < Single Selection Chart < Color Chart](#abstract-bubble-chart)
 
 ### Function Chain
 Majority of dc functions are designed to allow function chaining, meaning it will return the current chart instance
@@ -499,3 +500,24 @@ moveChart.compose([
         .centerBar(true)
 ]);
 ```
+
+## <a name="abstract-bubble-chart" href="#abstract-bubble-chart">#</a> Abstract Bubble Chart [Abstract] < [Single Selection Chart](#single-selection-chart) < [Color Chart](#color-chart)
+An abstraction provides reusable functionalities for any chart that needs to visualize data using bubbles.
+
+#### .r([bubbleRadiusScale])
+Get or set bubble radius scale. By default bubble chart uses ```d3.scale.linear().domain([0, 100])``` as it's r scale .
+
+#### .radiusValueAccessor([radiusValueAccessor])
+Get or set the radius value accessor function. The radius value accessor function if set will be used to retrieve data value
+for each and every bubble rendered. The data retrieved then will be mapped using r scale to be used as the actual bubble
+radius. In other words, this allows you to encode a data dimension using bubble size.
+
+#### .minRadiusWithLabel([radius])
+Get or set the minimum radius for label rendering. If a bubble's radius is less than this value then no label will be rendered.
+Default value: 10.
+
+#### .maxBubbleRelativeSize([relativeSize])
+Get or set the maximum relative size of a bubble to the length of x axis. This value is useful when the radius differences among
+different bubbles are too great. Default value: 0.3
+
+## <a name="bubble-chart" href="#bubble-chart">#</a> Bubble Chart [Concrete] < [Abstract Bubble Chart](#abstract-bubble-chart) < [CoordinateGrid Chart](#coordinate-grid-chart)
