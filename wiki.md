@@ -363,6 +363,13 @@ Parameters:
 Return:
 A newly created pie chart instance
 
+```js
+// create a pie chart under #chart-container1 element using the default global chart group
+var chart1 = dc.pieChart("#chart-container1");
+// create a pie chart under #chart-container2 element using chart group A
+var chart2 = dc.pieChart("#chart-container2", "chartGroupA");
+```
+
 #### .radius([radius])
 Get or set the radius on a particular pie chart instance. Default radius is 90px.
 
@@ -396,6 +403,15 @@ Parameters:
 Return:
 A newly created bar chart instance
 
+```js
+// create a bar chart under #chart-container1 element using the default global chart group
+var chart1 = dc.barChart("#chart-container1");
+// create a bar chart under #chart-container2 element using chart group A
+var chart2 = dc.barChart("#chart-container2", "chartGroupA");
+// create a sub-chart under a composite parent chart
+var chart3 = dc.barChart(compositeChart);
+```
+
 #### .centerBar(boolean)
 Whether the bar chart will render each bar centered around the data position on x axis. Default to false.
 
@@ -418,6 +434,15 @@ Parameters:
 
 Return:
 A newly created line chart instance
+
+```js
+// create a line chart under #chart-container1 element using the default global chart group
+var chart1 = dc.lineChart("#chart-container1");
+// create a line chart under #chart-container2 element using chart group A
+var chart2 = dc.lineChart("#chart-container2", "chartGroupA");
+// create a sub-chart under a composite parent chart
+var chart3 = dc.lineChart(compositeChart);
+```
 
 #### .renderArea([boolean])
 Get or set render area flag. If the flag is set to true then the chart will render the area beneath each line and effectively
@@ -443,6 +468,13 @@ Parameters:
 
 Return:
 A newly created composite chart instance
+
+```js
+// create a composite chart under #chart-container1 element using the default global chart group
+var compositeChart1 = dc.compositeChart("#chart-container1");
+// create a composite chart under #chart-container2 element using chart group A
+var compositeChart2 = dc.compositeChart("#chart-container2", "chartGroupA");
+```
 
 #### .compose(subChartArray)
 Combine the given charts into one single composite coordinate grid chart.
