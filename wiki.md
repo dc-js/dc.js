@@ -12,6 +12,7 @@ The entire dc.js library is scoped under **dc** name space. It does not introduc
 * [Line Chart [concrete] < Stackable Chart < CoordinateGrid Chart](#line-chart)
 * [Composite Chart [concrete] < CoordinateGrid Chart](#composite-chart)
 * [Abstract Bubble Chart [abstract] < Single Selection Chart < Color Chart](#abstract-bubble-chart)
+* [Bubble Chart [concrete] < Abstract Bubble Chart < CoordinateGrid Chart](#bubble-chart)
 
 ### Function Chain
 Majority of dc functions are designed to allow function chaining, meaning it will return the current chart instance
@@ -352,7 +353,7 @@ Pie chart implementation uses keyAccessor to generate slices, and valueAccessor 
 relatively to the total sum of all values.
 
 #### dc.pieChart(parent[, chartGroup])
-Create a pie chart instance and attache it to the given parent element.
+Create a pie chart instance and attach it to the given parent element.
 
 Parameters:
 * parent : string - any valid d3 single selector representing typically a dom block element such
@@ -392,7 +393,7 @@ Default min angel is 0.5.
 Concrete bar chart/histogram implementation.
 
 #### dc.barChart(parent[, chartGroup])
-Create a bar chart instance and attache it to the given parent element.
+Create a bar chart instance and attach it to the given parent element.
 
 Parameters:
 * parent : string|compositeChart - any valid d3 single selector representing typically a dom block element such
@@ -424,7 +425,7 @@ implementation will calculate and set the gap automatically based on the number 
 Concrete line/area chart implementation.
 
 #### dc.lineChart(parent[, chartGroup])
-Create a line chart instance and attache it to the given parent element.
+Create a line chart instance and attach it to the given parent element.
 
 Parameters:
 * parent : string|compositeChart - any valid d3 single selector representing typically a dom block element such
@@ -459,7 +460,7 @@ overlay(compose) different bar/line/area charts in a single composite chart to a
 effects.
 
 #### dc.compositeChart(parent[, chartGroup])
-Create a composite chart instance and attache it to the given parent element.
+Create a composite chart instance and attach it to the given parent element.
 
 Parameters:
 * parent : string - any valid d3 single selector representing typically a dom block element such as a div.
@@ -521,3 +522,32 @@ Get or set the maximum relative size of a bubble to the length of x axis. This v
 different bubbles are too great. Default value: 0.3
 
 ## <a name="bubble-chart" href="#bubble-chart">#</a> Bubble Chart [Concrete] < [Abstract Bubble Chart](#abstract-bubble-chart) < [CoordinateGrid Chart](#coordinate-grid-chart)
+A concrete implementation of a general purpose bubble chart that allows data visualization using the following dimensions:
+
+* x axis position
+* y axis position
+* bubble radius
+* color
+
+#### dc.bubbleChart(parent[, chartGroup])
+Create a bubble chart instance and attach it to the given parent element.
+
+Parameters:
+* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
+   in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
+   chart group.
+
+Return:
+A newly created bubble chart instance
+
+```js
+// create a bubble chart under #chart-container1 element using the default global chart group
+var bubbleChart1 = dc.compositeChart("#chart-container1");
+// create a bubble chart under #chart-container2 element using chart group A
+var bubbleChart2 = dc.compositeChart("#chart-container2", "chartGroupA");
+```
+
+#### .elasticRadius([boolean])
+Turn on or off elastic bubble radius feature. If this feature is turned on, then bubble radiuses will be automatically rescaled
+to fit the chart better.
