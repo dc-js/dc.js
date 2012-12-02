@@ -14,6 +14,7 @@ The entire dc.js library is scoped under **dc** name space. It does not introduc
 * [Abstract Bubble Chart [abstract] < Single Selection Chart < Color Chart](#abstract-bubble-chart)
 * [Bubble Chart [concrete] < Abstract Bubble Chart < CoordinateGrid Chart](#bubble-chart)
 * [Bubble Overlay Chart [concrete] < Abstract Bubble Chart < Base Chart](#bubble-overlay-chart)
+* [Geo Choropleth Chart [concrete] < Single Selection Chart < Color Chart < Base Chart](#geo-choropleth-chart)
 
 ### Function Chain
 Majority of dc functions are designed to allow function chaining, meaning it will return the current chart instance
@@ -614,3 +615,51 @@ chart.svg(d3.select("#chart svg"));
 Set up a data point on the overlay. The name of a data point should match a specific "key" among data groups generated using keyAccessor.
 If a match is found (point name <-> data group key) then a bubble will be automatically generated at the position specified by the
 function. x and y value specified here are relative to the underlying svg.
+
+## <a name="geo-choropleth-chart" href="#geo-choropleth-chart">#</a> Geo Choropleth Chart [Concrete] < [Single Selection Chart](#single-selection-chart) < [Color Chart](#color-chart) < [Base Chart](#base-chart)
+Geo choropleth chart is design to make creating crossfilter driven choropleth map from GeoJson data an easy process. This
+chart implementation was inspired by [the great d3 choropleth example](http://bl.ocks.org/4060606).
+
+Examples:
+* [US Venture Capital Landscape 2011](http://nickqizhu.github.com/dc.js/vc/index.html)
+
+#### .dc.geoChoroplethChart(parent[, chartGroup])
+Create a choropleth chart instance and attach it to the given parent element.
+
+Parameters:
+* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
+   in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
+   chart group.
+
+Return:
+A newly created choropleth chart instance
+
+```js
+// create a choropleth chart under "#us-chart" element using the default global chart group
+var chart1 = dc.geoChoroplethChart("#us-chart");
+// create a choropleth chart under "#us-chart2" element using chart group A
+var chart2 = dc.compositeChart("#us-chart2", "chartGroupA");
+```
+
+#### .overlayGeoJson(json, name, keyAccessor) - **mandatory**
+Use this function to insert a new GeoJson map layer. This function can be invoked multiple times if you have multiple GeoJson
+data layer to render on top of each other.
+
+Parameters:
+* json - GeoJson feed
+* name - name of the layer
+* keyAccessor - accessor function used to extract "key" from the GeoJson data. Key extracted by this function should match
+ the keys generated in crossfilter groups.
+
+```js
+// insert a layer for rendering US states
+chart.overlayGeoJson(statesJson.features, "state", function(d) {
+    return d.properties.name;
+});
+```
+
+#### .projection(projection)
+Set custom geo projection function. Available [d3 geo projection functions](https://github.com/mbostock/d3/wiki/Geo-Projections).
+Default value: albersUsa.
+
