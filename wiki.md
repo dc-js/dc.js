@@ -13,6 +13,7 @@ The entire dc.js library is scoped under **dc** name space. It does not introduc
 * [Composite Chart [concrete] < CoordinateGrid Chart](#composite-chart)
 * [Abstract Bubble Chart [abstract] < Single Selection Chart < Color Chart](#abstract-bubble-chart)
 * [Bubble Chart [concrete] < Abstract Bubble Chart < CoordinateGrid Chart](#bubble-chart)
+* [Bubble Overlay Chart [concrete] < Abstract Bubble Chart < Base Chart](#bubble-overlay-chart)
 
 ### Function Chain
 Majority of dc functions are designed to allow function chaining, meaning it will return the current chart instance
@@ -352,6 +353,9 @@ This chart is a concrete pie chart implementation usually used to visualize smal
 Pie chart implementation uses keyAccessor to generate slices, and valueAccessor to calculate the size of each slice(key)
 relatively to the total sum of all values.
 
+Examples:
+* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
+
 #### dc.pieChart(parent[, chartGroup])
 Create a pie chart instance and attach it to the given parent element.
 
@@ -392,6 +396,10 @@ Default min angel is 0.5.
 ## <a name="bar-chart" href="#bar-chart">#</a> Bar Chart [Concrete] < [Stackable Chart](#stackable-chart) < [CoordinateGrid Chart](#coordinate-grid-chart)
 Concrete bar chart/histogram implementation.
 
+Examples:
+* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
+* [Canadian City Crime Stats](http://nickqizhu.github.com/dc.js/crime/index.html)
+
 #### dc.barChart(parent[, chartGroup])
 Create a bar chart instance and attach it to the given parent element.
 
@@ -423,6 +431,10 @@ implementation will calculate and set the gap automatically based on the number 
 
 ## <a name="line-chart" href="#line-chart">#</a> Line Chart [Concrete] < [Stackable Chart](#stackable-chart) < [CoordinateGrid Chart](#coordinate-grid-chart)
 Concrete line/area chart implementation.
+
+Examples:
+* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
+* [Canadian City Crime Stats](http://nickqizhu.github.com/dc.js/crime/index.html)
 
 #### dc.lineChart(parent[, chartGroup])
 Create a line chart instance and attach it to the given parent element.
@@ -458,6 +470,9 @@ Composite chart is a special kind of chart that resides somewhere between abstra
 generate data visualization directly, but rather working with other concrete charts to do the job. You can essentially
 overlay(compose) different bar/line/area charts in a single composite chart to achieve some quite flexible charting
 effects.
+
+Examples:
+* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
 
 #### dc.compositeChart(parent[, chartGroup])
 Create a composite chart instance and attach it to the given parent element.
@@ -529,6 +544,10 @@ A concrete implementation of a general purpose bubble chart that allows data vis
 * bubble radius
 * color
 
+Examples:
+* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
+* [US Venture Capital Landscape 2011](http://nickqizhu.github.com/dc.js/vc/index.html)
+
 #### dc.bubbleChart(parent[, chartGroup])
 Create a bubble chart instance and attach it to the given parent element.
 
@@ -543,11 +562,55 @@ A newly created bubble chart instance
 
 ```js
 // create a bubble chart under #chart-container1 element using the default global chart group
-var bubbleChart1 = dc.compositeChart("#chart-container1");
+var bubbleChart1 = dc.bubbleChart("#chart-container1");
 // create a bubble chart under #chart-container2 element using chart group A
-var bubbleChart2 = dc.compositeChart("#chart-container2", "chartGroupA");
+var bubbleChart2 = dc.bubbleChart("#chart-container2", "chartGroupA");
 ```
 
 #### .elasticRadius([boolean])
 Turn on or off elastic bubble radius feature. If this feature is turned on, then bubble radiuses will be automatically rescaled
 to fit the chart better.
+
+## <a name="bubble-overlay-chart" href="#bubble-overlay-chart">#</a> Bubble Overlay Chart [Concrete] < [Abstract Bubble Chart](#abstract-bubble-chart) < [Base Chart](#base-chart)
+Bubble overlay chart is quite different from the typical bubble chart. With bubble overlay chart you can arbitrarily place
+a finite number of bubbles on an existing svg or bitmap image (overlay on top of it), thus losing the typical x and y
+positioning that we are used to whiling retaining the capability to visualize data using it's bubble radius and
+coloring.
+
+Examples:
+* [Canadian City Crime Stats](http://nickqizhu.github.com/dc.js/crime/index.html)
+
+#### .dc.bubbleOverlay(parent[, chartGroup])
+Create a bubble overlay chart instance and attach it to the given parent element.
+
+Parameters:
+* parent : string - any valid d3 single selector representing typically a dom block element such as a div. Typically
+   this element should also be the parent of the underlying image.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
+   in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
+   chart group.
+
+Return:
+A newly created bubble overlay chart instance
+
+```js
+// create a bubble overlay chart on top of "#chart-container1 svg" element using the default global chart group
+var bubbleChart1 = dc.bubbleOverlayChart("#chart-container1").svg(d3.select("#chart-container1 svg"));
+// create a bubble overlay chart on top of "#chart-container2 svg" element using chart group A
+var bubbleChart2 = dc.compositeChart("#chart-container2", "chartGroupA").svg(d3.select("#chart-container2 svg"));
+```
+
+#### .svg(imageElement) - **mandatory**
+Set the underlying svg image element. Unlike other dc charts this chart will not generate svg element therefore bubble overlay
+chart will not work if this function is not properly invoked. If the underlying image is a bitmap, then an empty svg will need
+to be manually created on top of the image.
+
+```js
+// set up underlying svg element
+chart.svg(d3.select("#chart svg"));
+```
+
+#### .point(name, x, y) - **mandatory**
+Set up a data point on the overlay. The name of a data point should match a specific "key" among data groups generated using keyAccessor.
+If a match is found (point name <-> data group key) then a bubble will be automatically generated at the position specified by the
+function. x and y value specified here are relative to the underlying svg.
