@@ -16,6 +16,7 @@ The entire dc.js library is scoped under **dc** name space. It does not introduc
 * [Bubble Overlay Chart [concrete] < Abstract Bubble Chart < Base Chart](#bubble-overlay-chart)
 * [Geo Choropleth Chart [concrete] < Single Selection Chart < Color Chart < Base Chart](#geo-choropleth-chart)
 * [Data Count Widget [concrete] < Base Chart](#data-count)
+* [Data Table Widget [concrete] < Base Chart](#data-table)
 
 ### Function Chain
 Majority of dc functions are designed to allow function chaining, meaning it will return the current chart instance
@@ -700,4 +701,68 @@ var all = ndx.groupAll();
 dc.dataCount(".dc-data-count")
     .dimension(ndx)
     .group(all);
+```
+
+## <a name="data-table" href="#data-table">#</a> Data Table Widget [Concrete] < [Base Chart](#base-chart)
+Data table is a simple widget designed to list crossfilter focused data set (rows being filtered) in a good old tabular
+fashion.
+
+Examples:
+* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
+
+#### dc.dataTable(parent[, chartGroup])
+Create a data table widget instance and attach it to the given parent element.
+
+Parameters:
+* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
+   in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
+   chart group.
+
+Return:
+A newly created data table widget instance
+
+#### .size([size])
+Get or set the table size which determines the number of rows displayed by the widget.
+
+#### .columns([columnFunctionArray])
+Get or set column functions. Data table widget uses an array of functions to generate dynamic columns. Column functions are
+simple javascript function with only one input argument d which represents a row in the data set, and the return value of
+these functions will be used directly to generate table content for each cell.
+
+```js
+    chart.columns([
+        function(d) {
+            return d.date;
+        },
+        function(d) {
+            return d.open;
+        },
+        function(d) {
+            return d.close;
+        },
+        function(d) {
+            return numberFormat(d.close - d.open);
+        },
+        function(d) {
+            return d.volume;
+        }
+    ]);
+```
+
+#### .sortBy([sortByFunction])
+Get or set sort-by function. This function works as a value accessor at row level and returns a particular field to be sorted
+by. Default value: ``` function(d) {return d;}; ```
+
+```js
+   chart.sortBy(function(d) {
+        return d.date;
+    });
+```
+
+#### .order([order])
+Get or set sort order. Default value: ``` d3.ascending ```
+
+```js
+    chart.order(d3.descending);
 ```
