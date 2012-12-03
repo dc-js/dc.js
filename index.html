@@ -1,18 +1,17 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-        "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <title>dc.js - Dimensional Charting Javascript Library</title>
 
     <meta charset="UTF-8">
 
-    <script type="text/javascript" src="lib/d3.v2.js"></script>
-    <script type="text/javascript" src="lib/crossfilter.js"></script>
+    <script type="text/javascript" src="js/d3.v2.js"></script>
+    <script type="text/javascript" src="js/crossfilter.js"></script>
 
-    <script type="text/javascript" src="dc.js"></script>
+    <script type="text/javascript" src="js/dc.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="dc.css"/>
-    <link rel="stylesheet" type="text/css" href="example.css"/>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/dc.css"/>
 
     <link href='highlighter/shCore.css' rel='stylesheet' type='text/css'/>
     <link href='highlighter/shThemeDefault.css' rel='stylesheet' type='text/css'/>
@@ -40,7 +39,7 @@
 </head>
 <body>
 
-<div class="content">
+<div class="container">
 
 <h1>dc.js - Dimensional Charting Javascript Library v<span id="version"></span></h1>
 
@@ -83,76 +82,74 @@
 
 <h2>Nasdaq 100 Index 1985/11/01-2012/06/29</h2>
 
-<div id="yearly-bubble-chart" class="dc-chart">
-    <span class="title">Yearly Performance (x: index gain, y: index gain(%), radius: fluctuation/index ratio, color: gain/loss)</span>
-    <a class="reset" href="javascript:yearlyBubbleChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+<div class="row">
+    <div id="yearly-bubble-chart" class="dc-chart">
+        <strong>Yearly Performance</strong> (x: index gain, y: index gain(%), radius: fluctuation/index ratio, color: gain/loss)
+        <a class="reset" href="javascript:yearlyBubbleChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
-    <div class="clear"></div>
-</div>
-
-<div class="clear"></div>
-
-<div id="gain-loss-chart" >
-    <span class="title">Days by Gain/Loss</span>
-    <a class="reset" href="javascript:gainOrLossChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-
-    <div class="clear"></div>
-</div>
-
-<div id="quarter-chart" >
-    <span class="title">Quarters</span>
-    <a class="reset" href="javascript:quarterChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-
-    <div class="clear"></div>
-</div>
-
-<div id="day-of-week-chart" >
-    <span>Day of Week</span>
-    <a class="reset" href="javascript:dayOfWeekChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-
-    <div class="clear"></div>
-</div>
-
-<div id="fluctuation-chart" >
-    <span>Days by Fluctuation(%)</span>
-    <a class="reset" href="javascript:fluctuationChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
-
-    <div class="clear"></div>
-</div>
-
-<div class="clear"></div>
-
-<div id="monthly-move-chart" >
-    <span>Monthly Index Abs Move & Volume/500,000 Chart (Blue Line: Avg Index, Green Line: Index Fluctuation)</span>
-    <a class="reset" href="javascript:volumeChart.filterAll();dc.redrawAll();"
-       style="display: none;">reset</a>
-
-    <div class="clear"></div>
-</div>
-
-<div id="monthly-volume-chart" >
-
-</div>
-
-<div class="clear"></div>
-
-<div >
-    <div class="dc-data-count">
-        <span class="filter-count"></span> selected out of <span class="total-count"></span> records | <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
+        <div class="clearfix"></div>
     </div>
 </div>
 
-<div class="clear"></div>
+<div class="row">
+    <div id="gain-loss-chart" >
+        <strong>Days by Gain/Loss</strong>
+        <a class="reset" href="javascript:gainOrLossChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
-<div >
-    <table class="dc-data-table">
+        <div class="clearfix"></div>
+    </div>
+
+    <div id="quarter-chart" >
+        <strong>Quarters</strong>
+        <a class="reset" href="javascript:quarterChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+        <div class="clearfix"></div>
+    </div>
+
+    <div id="day-of-week-chart" >
+        <strong>Day of Week</strong>
+        <a class="reset" href="javascript:dayOfWeekChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+        <div class="clearfix"></div>
+    </div>
+
+    <div id="fluctuation-chart" >
+        <strong>Days by Fluctuation(%)</strong>
+        <a class="reset" href="javascript:fluctuationChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div id="monthly-move-chart" >
+        <strong>Monthly Index Abs Move & Volume/500,000 Chart</strong> (Blue Line: Avg Index, Green Line: Index Fluctuation)
+        <a class="reset" href="javascript:volumeChart.filterAll();dc.redrawAll();"
+           style="display: none;">reset</a>
+
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div id="monthly-volume-chart" >
+    </div>
+</div>
+
+<div class="row">
+    <div >
+        <div class="dc-data-count">
+            <span class="filter-count"></span> selected out of <span class="total-count"></span> records | <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
+        </div>
+    </div>
+    <table class="table table-hover dc-data-table">
         <thead>
         <tr class="header">
-            <td>Date</td>
-            <td>Open</td>
-            <td>Close</td>
-            <td>Change</td>
-            <td>Volume</td>
+            <th>Date</th>
+            <th>Open</th>
+            <th>Close</th>
+            <th>Change</th>
+            <th>Volume</th>
         </tr>
         </thead>
     </table>
@@ -432,33 +429,36 @@ d3.csv("ndx.csv", function(data) {
                     })
                     .size(10)
                     .columns([
-                function(d) {
-                    return d.date;
-                },
-                function(d) {
-                    return d.open;
-                },
-                function(d) {
-                    return d.close;
-                },
-                function(d) {
-                    return numberFormat(d.close - d.open);
-                },
-                function(d) {
-                    return d.volume;
-                }
-            ])
+                        function(d) {
+                            return d.date;
+                        },
+                        function(d) {
+                            return d.open;
+                        },
+                        function(d) {
+                            return d.close;
+                        },
+                        function(d) {
+                            return numberFormat(d.close - d.open);
+                        },
+                        function(d) {
+                            return d.volume;
+                        }
+                    ])
                     .sortBy(function(d) {
                         return d.dd;
                     })
-                    .order(d3.ascending);
+                    .order(d3.ascending)
+                    .renderlet(function(table){
+                        table.selectAll(".dc-table-group").classed("info", true);
+                    });
 
             dc.renderAll();
         }
 );
 </script>
 
-<div class="clear"></div>
+<div class="clearfix"></div>
 
 <h2>Quick 5 Mins How-To Guide (<a href="https://github.com/NickQiZhu/dc.js/wiki/API">API Reference</a>)</h2>
 
@@ -939,6 +939,9 @@ d3.csv("ndx.csv", function(data) {
 </div>
 
 </div>
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="js/bootstrap.min.js"></script>
 
 <script type="text/javascript">
     SyntaxHighlighter.all();

@@ -1,18 +1,17 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-        "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <title>dc.js - US Venture Capital Landscape 2011</title>
 
     <meta charset="UTF-8">
 
-    <script type="text/javascript" src="../lib/d3.v2.js"></script>
-    <script type="text/javascript" src="../lib/crossfilter.js"></script>
+    <script type="text/javascript" src="../js/d3.v2.js"></script>
+    <script type="text/javascript" src="../js/crossfilter.js"></script>
 
-    <script type="text/javascript" src="../dc.js"></script>
+    <script type="text/javascript" src="../js/dc.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="../dc.css"/>
-    <link rel="stylesheet" type="text/css" href="../example.css"/>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
 
     <script type="text/javascript">
 
@@ -32,7 +31,7 @@
     </script>
 </head>
 <body>
-<div class="content">
+<div class="container">
 
 <h2>US Venture Capital Landscape 2011</h2>
 
@@ -49,32 +48,32 @@
 </p>
 
 <div id="us-chart" >
-    <span class="title">VC Distribution by States (color: total amount raised)</span>
+    <strong>VC Distribution by States (color: total amount raised)</strong>
     <a class="reset" href="javascript:usChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
     <span class="reset" style="display: none;"> | Current filter: <span class="filter"></span></span>
 
-    <div class="clear"></div>
+    <div class="clearfix"></div>
 </div>
 
-<div class="clear"></div>
+<div class="clearfix"></div>
 
 <div id="industry-chart" >
-    <span class="title">By Industries (y: number of deals, x: total amount raised in millions, radius: amount raised)</span>
+    <strong>By Industries</strong> (y: number of deals, x: total amount raised in millions, radius: amount raised)
     <a class="reset" href="javascript:industryChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
-    <div class="clear"></div>
+    <div class="clearfix"></div>
 </div>
 
-<div class="clear"></div>
+<div class="clearfix"></div>
 
 <div id="round-chart" >
-    <span class="title">By Rounds (y: number of deals, x: total amount raised in millions, radius: amount raised)</span>
+    <strong>By Rounds</strong> (y: number of deals, x: total amount raised in millions, radius: amount raised)
     <a class="reset" href="javascript:roundChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
-    <div class="clear"></div>
+    <div class="clearfix"></div>
 </div>
 
-<div class="clear"></div>
+<div class="clearfix"></div>
 
 <div>
     <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
@@ -205,6 +204,14 @@
         });
     });
 </script>
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+
+<a href="https://github.com/NickQiZhu/dc.js"><img style="position: absolute; top: 0; right: 0; border: 0;"
+                                                  src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"
+                                                  alt="Fork me on GitHub"></a>
+
 
 </body>
 </html>

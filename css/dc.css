@@ -110,7 +110,7 @@
     fill: red;
 }
 
-.dc-chart g.tooltip path{
+.dc-chart g.dc-tooltip path{
     fill: none;
     stroke: grey;
     stroke-opacity: .8;
@@ -172,35 +172,7 @@
     font-weight: bold;
 }
 
-.dc-data-table {
-    width: 700px;
-    margin-bottom: 50px;
-}
-
-.dc-data-table td {
-    display: table-cell;
-    width: 135px;
-    text-align: center;
-    margin-left: 2px;
-    margin-right: 2px;
-    padding: 5px;
-    border: white solid 2px;
-}
-
-.dc-data-table thead {
-    font-weight: bold;
-}
-
-.dc-data-table thead td {
-    background-color: #c6dbef;
-    color: white;
-}
-
-.dc-data-table tr.group td.label {
-    font-weight: bold;
-    font-size: larger;
-    float: inherit;
-}
+.dc-data-table {}
 
 .dc-chart g.state{
     cursor: pointer;
