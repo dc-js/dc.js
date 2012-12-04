@@ -158,6 +158,9 @@ suite.addBatch({
             'NaN centroid should be handled properly': function(pieChart) {
                 assert.equal(pieChart.selectAll("svg g text.pie-slice").attr("transform"), "translate(0,0)");
             },
+            'slice path should not contain NaN': function(pieChart) {
+                assert.equal(pieChart.selectAll("g.pie-slice path").attr("d"), "M0,0");
+            },
             teardown: function() {
                 resetAllFilters();
                 resetBody();

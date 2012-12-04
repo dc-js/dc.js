@@ -82,7 +82,9 @@ dc.pieChart = function(parent, chartGroup) {
                 return _chart.getColor(d, i);
             })
             .on("click", onClick)
-            .attr("d", arc);
+            .attr("d", function(d, i) {
+                return safeArc(d, i, arc);
+            });
         slicePath.transition()
             .duration(_chart.transitionDuration())
             .attrTween("d", tweenPie);
@@ -139,7 +141,9 @@ dc.pieChart = function(parent, chartGroup) {
         var slicePaths = _g.selectAll("g." + _sliceCssClass)
             .data(pieData)
             .select("path")
-            .attr("d", arc);
+            .attr("d", function(d, i) {
+                return safeArc(d, i, arc);
+            });
         dc.transition(slicePaths, _chart.transitionDuration(),
             function(s) {
                 s.attrTween("d", tweenPie);
@@ -266,7 +270,7 @@ dc.pieChart = function(parent, chartGroup) {
         var i = d3.interpolate(current, b);
         this._current = i(0);
         return function(t) {
-            return _chart.buildArcs()(i(t));
+            return safeArc(i(t), 0, _chart.buildArcs());
         };
     }
 
@@ -287,6 +291,13 @@ dc.pieChart = function(parent, chartGroup) {
                 dc.redrawAll(_chart.chartGroup());
             });
         }
+    }
+
+    function safeArc(d, i, arc) {
+        var path = arc(d, i);
+        if(path.indexOf("NaN") >= 0)
+            path = "M0,0";
+        return path;
     }
 
     return _chart.anchor(parent, chartGroup);
