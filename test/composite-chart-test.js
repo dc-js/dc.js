@@ -220,7 +220,7 @@ suite.addBatch({'elastic axises':{
     },
     'x domain should be set': function(chart) {
         assert.isTrue(chart.x().domain()[0].getTime() >= 1337904000000);
-        assert.equal(chart.x().domain()[1].getTime(), new Date("Fri, 10 Aug 2012 04:00:00 GMT").getTime());
+        assert.isTrue(chart.x().domain()[1].getTime() >= 1344556800000);
     },
     teardown: function(topic) {
         resetAllFilters();
