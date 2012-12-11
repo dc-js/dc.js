@@ -156,7 +156,7 @@ dc.barChart = function(parent, chartGroup) {
         return extent;
     };
 
-    dc.override(_chart, "setOrdinalRange", function(_super) {
+    dc.override(_chart, "prepareOrdinalXAxis", function(_super) {
         return _super(_chart.xUnitCount() + 1);
     });
 

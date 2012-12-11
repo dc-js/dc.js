@@ -87,7 +87,7 @@ dc.coordinateGridChart = function(_chart) {
         return _chart.xUnits() === dc.units.ordinal;
     };
 
-    _chart.setOrdinalRange = function(count) {
+    _chart.prepareOrdinalXAxis = function(count) {
         if(!count)
             count = _chart.xUnitCount();
         var range = [];
@@ -101,12 +101,12 @@ dc.coordinateGridChart = function(_chart) {
     };
 
     function prepareXAxis(g) {
-        if (_chart.elasticX()) {
+        if (_chart.elasticX() && !_chart.isOrdinal()) {
             _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
         }
 
         if (_chart.isOrdinal()) {
-            _chart.setOrdinalRange();
+            _chart.prepareOrdinalXAxis();
         } else {
             _x.range([0, _chart.xAxisLength()]);
         }
@@ -356,6 +356,9 @@ dc.coordinateGridChart = function(_chart) {
     }
 
     _chart.renderBrush = function(g) {
+        if (_chart.isOrdinal())
+            _brushOn = false;
+
         if (_brushOn) {
             _brush.on("brushstart", brushStart)
                 .on("brush", brushing)

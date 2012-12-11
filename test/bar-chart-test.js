@@ -452,6 +452,9 @@ suite.addBatch({'ordinal bar chart':{
         var chart = buildOrdinalChart("bar-chart-ordinal");
         return chart;
     },
+    'should have brush turned off': function(chart) {
+        assert.isFalse(chart.brushOn());
+    },
     'should generate correct number of bars': function(chart) {
         assert.equal(chart.selectAll("rect.bar")[0].length, 6);
     },

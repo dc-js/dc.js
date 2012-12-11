@@ -755,12 +755,13 @@ ordinalBarChart.width(500)
         .xUnits(dc.units.ordinal);
 
 var ordinalLineChart = dc.lineChart("#ordinal-line-chart");
-ordinalLineChart.width(500)
+ordinalLineChart.width(1100)
         .height(250)
         .dimension(stateDimension)
         .group(stateGroup)
         .elasticY(true)
-        .x(d3.scale.ordinal().domain(["California", "Colorado", "Delaware", "Ontario", "Mississippi", "Oklahoma"]))
+        .renderArea(true)
+        .x(d3.scale.ordinal().domain(["California", "Colorado", "Delaware", "Mississippi", "Oklahoma", "Ontario"]))
         .xUnits(dc.units.ordinal);
 
 dc.dataCount(".dc-data-count")
