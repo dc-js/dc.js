@@ -507,6 +507,10 @@
 
 <div class="clear"></div>
 
+Country filter: <input id="custom-filter" type="text"/><button onclick="countryDimension.filter($('#custom-filter').val());dc.redrawAll();">go</button>
+
+<div class="clear"></div>
+
 <div id="line-chart-date">
     <span>Value LineChart</span>
     <a class="reset" href="javascript:lineChartDate1.filterAll();dc.redrawAll();" style="display: none;">reset</a>

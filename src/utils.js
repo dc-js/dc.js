@@ -105,15 +105,21 @@ dc.utils.GroupStack = function() {
 };
 
 dc.utils.groupMax = function(group, accessor) {
-    return d3.max(group.all(), function(e) {
+    var max = d3.max(group.all(), function(e) {
         return accessor(e);
     });
+//    if(max < 3e-13 || max === undefined) max = 0;
+//    console.log("max: "+max);
+    return max;
 };
 
 dc.utils.groupMin = function(group, accessor) {
-    return d3.min(group.all(), function(e) {
+    var min = d3.min(group.all(), function(e) {
         return accessor(e);
     });
+//    if(min < -2e-13 || min === undefined) min = 0;
+//    console.log("min: "+min);
+    return min;
 };
 
 dc.utils.nameToId = function(name){

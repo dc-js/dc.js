@@ -289,6 +289,24 @@ suite.addBatch({'elastic axis':{
     }
 }});
 
+suite.addBatch({'elastic y axis with no data in focus':{
+    topic: function() {
+        countryDimension.filter("CC")
+        var chart = buildChart("bar-chart-no-data");
+        chart.elasticY(true)
+            .redraw();
+        return chart;
+    },
+    'y axis should have been set to empty': function(chart) {
+        assert.equal(chart.y().domain()[0], 0);
+        assert.equal(chart.y().domain()[1], 0);
+    },
+    teardown: function(topic) {
+        resetAllFilters();
+        resetBody();
+    }
+}});
+
 suite.addBatch({'stacked':{
     topic:function() {
         var chart = buildChart("bar-chart-stack");
