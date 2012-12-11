@@ -79,12 +79,38 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
+    _chart.xUnitCount = function() {
+        return _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain()).length;
+    };
+
+    _chart.isOrdinal = function() {
+        return _chart.xUnits() === dc.units.ordinal;
+    };
+
+    _chart.setOrdinalRange = function(count) {
+        if(!count)
+            count = _chart.xUnitCount();
+        var range = [];
+        var currentPosition = 0;
+        var increment = _chart.xAxisLength() / count;
+        for (var i = 0; i < count; i++) {
+            range[i] = currentPosition;
+            currentPosition += increment;
+        }
+        _x.range(range);
+    };
+
     function prepareXAxis(g) {
         if (_chart.elasticX()) {
             _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
         }
 
-        _x.range([0, _chart.xAxisLength()]);
+        if (_chart.isOrdinal()) {
+            _chart.setOrdinalRange();
+        } else {
+            _x.range([0, _chart.xAxisLength()]);
+        }
+
         _xAxis = _xAxis.scale(_chart.x()).orient("bottom");
 
         renderVerticalGridLines(g);
@@ -351,7 +377,7 @@ dc.coordinateGridChart = function(_chart) {
     function brushStart(p) {
     }
 
-    _chart.extendBrush = function(){
+    _chart.extendBrush = function() {
         var extent = _brush.extent();
         if (_chart.round()) {
             extent[0] = extent.map(_chart.round())[0];

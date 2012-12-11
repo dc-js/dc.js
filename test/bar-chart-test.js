@@ -27,6 +27,23 @@ function buildChart(id, xdomain) {
     return chart;
 }
 
+function buildOrdinalChart(id, xdomain) {
+    if(!xdomain)
+        xdomain = ["California", "Colorado", "Delaware", "Ontario", "Mississippi", "Oklahoma"];
+
+    var div = d3.select("body").append("div").attr("id", id);
+    div.append("a").attr("class", "reset").style("display", "none");
+    div.append("span").attr("class", "filter").style("display", "none");
+    var chart = dc.barChart("#" + id);
+    chart.dimension(stateDimension).group(stateGroup)
+        .width(width).height(height)
+        .x(d3.scale.ordinal().domain(xdomain))
+        .transitionDuration(0)
+        .xUnits(dc.units.ordinal);
+    chart.render();
+    return chart;
+}
+
 suite.addBatch({
     'time bar chart': {
         topic: function() {
@@ -429,6 +446,25 @@ suite.addBatch({
         }
     }
 });
+
+suite.addBatch({'ordinal bar chart':{
+    topic: function() {
+        var chart = buildOrdinalChart("bar-chart-ordinal");
+        return chart;
+    },
+    'bar width should be correct': function(chart) {
+        assert.equal(chart.select("rect.bar").attr("width"), "143");
+    },
+    'bar position should be correct': function(chart) {
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][0]).attr("x"), /30/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][3]).attr("x"), /612.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][5]).attr("x"), /467.\d+/);
+    },
+    teardown: function(topic) {
+        resetAllFilters();
+        resetBody();
+    }
+}});
 
 suite.export(module);
 
