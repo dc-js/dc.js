@@ -2,7 +2,7 @@ dc.barChart = function(parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
     var DEFAULT_GAP_BETWEEN_BARS = 2;
 
-    var _chart = dc.stackableChart(dc.coordinateGridChart({}));
+    var _chart = dc.stackableChart(dc.coordinateGridChart(dc.singleSelectionChart({})));
 
     var _numberOfBars;
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
@@ -38,6 +38,9 @@ dc.barChart = function(parent, chartGroup) {
             })
             .attr("y", _chart.xAxisY())
             .attr("width", barWidth);
+
+        if (_chart.isOrdinal())
+            bars.on("click", _chart.onClick);
 
         if (_chart.renderTitle()) {
             bars.append("title").text(_chart.title());
@@ -118,17 +121,28 @@ dc.barChart = function(parent, chartGroup) {
 
     _chart.fadeDeselectedArea = function() {
         var bars = _chart.g().selectAll("rect.bar");
+        var extent = _chart.brush().extent();
 
-        if (!_chart.brush().empty() && _chart.brush().extent() != null) {
-            var start = _chart.brush().extent()[0];
-            var end = _chart.brush().extent()[1];
-
-            bars.classed(dc.constants.DESELECTED_CLASS, function(d) {
-                var xValue = _chart.keyAccessor()(d);
-                return xValue < start || xValue > end;
-            });
+        if (_chart.isOrdinal()) {
+            if (_chart.filter() != null)
+                bars.classed(dc.constants.DESELECTED_CLASS, function(d) {
+                    var key = _chart.keyAccessor()(d);
+                    return key != _chart.filter();
+                });
+            else
+                bars.classed(dc.constants.DESELECTED_CLASS, false);
         } else {
-            bars.classed(dc.constants.DESELECTED_CLASS, false);
+            if (!_chart.brushIsEmpty(extent)) {
+                var start = extent[0];
+                var end = extent[1];
+
+                bars.classed(dc.constants.DESELECTED_CLASS, function(d) {
+                    var xValue = _chart.keyAccessor()(d);
+                    return xValue < start || xValue > end;
+                });
+            } else {
+                bars.classed(dc.constants.DESELECTED_CLASS, false);
+            }
         }
     };
 

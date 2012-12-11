@@ -466,6 +466,11 @@ suite.addBatch({'ordinal bar chart':{
         assert.match(d3.select(chart.selectAll("rect.bar")[0][3]).attr("x"), /612.\d+/);
         assert.match(d3.select(chart.selectAll("rect.bar")[0][5]).attr("x"), /467.\d+/);
     },
+    'should fade deselected bars': function(chart) {
+        chart.filter("Ontario").redraw();
+        assert.isTrue(d3.select(chart.selectAll("rect.bar")[0][0]).classed("deselected"));
+        assert.isFalse(d3.select(chart.selectAll("rect.bar")[0][5]).classed("deselected"));
+    },
     teardown: function(topic) {
         resetAllFilters();
         resetBody();

@@ -107,7 +107,7 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
                 return "none";
             })
             .on("click", function(d) {
-                return onClick(d, layerIndex);
+                return _chart.onClick(d, layerIndex);
             });
 
         dc.transition(paths, _chart.transitionDuration()).attr("fill", function(d, i) {
@@ -115,7 +115,7 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
         });
     }
 
-    function onClick(d, layerIndex) {
+    _chart.onClick = function(d, layerIndex) {
         var selectedRegion = geoJson(layerIndex).keyAccessor(d);
         if (selectedRegion == _chart.filter()) {
             dc.events.trigger(function() {
@@ -128,7 +128,7 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
                 dc.redrawAll(_chart.chartGroup());
             });
         }
-    }
+    };
 
     function renderTitle(regionG, layerIndex, data) {
         if (_chart.renderTitle()) {

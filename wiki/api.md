@@ -8,7 +8,7 @@ The entire dc.js library is scoped under **dc** name space. It does not introduc
 * [Stackable Chart [abstract]](#stackable-chart)
 * [Coordinate Grid Chart [abstract] < Base Chart](#coordinate-grid-chart)
 * [Pie Chart [concrete] < Single Selection Chart < Color Chart < Base Chart](#pie-chart)
-* [Bar Chart [concrete] < Stackable Chart < CoordinateGrid Chart](#bar-chart)
+* [Bar Chart [concrete] < Single Selection Chart < Stackable Chart < CoordinateGrid Chart](#bar-chart)
 * [Line Chart [concrete] < Stackable Chart < CoordinateGrid Chart](#line-chart)
 * [Composite Chart [concrete] < CoordinateGrid Chart](#composite-chart)
 * [Abstract Bubble Chart [abstract] < Single Selection Chart < Color Chart](#abstract-bubble-chart)
@@ -396,7 +396,7 @@ Get center y coordinate position. This function is **not chainable**.
 Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not render slice label.
 Default min angel is 0.5.
 
-## <a name="bar-chart" href="#bar-chart">#</a> Bar Chart [Concrete] < [Stackable Chart](#stackable-chart) < [CoordinateGrid Chart](#coordinate-grid-chart)
+## <a name="bar-chart" href="#bar-chart">#</a> Bar Chart [Concrete] < [Single Selection Chart](#single-selection-chart) < [Stackable Chart](#stackable-chart) < [CoordinateGrid Chart](#coordinate-grid-chart)
 Concrete bar chart/histogram implementation.
 
 Examples:

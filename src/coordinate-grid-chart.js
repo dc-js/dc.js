@@ -88,7 +88,7 @@ dc.coordinateGridChart = function(_chart) {
     };
 
     _chart.prepareOrdinalXAxis = function(count) {
-        if(!count)
+        if (!count)
             count = _chart.xUnitCount();
         var range = [];
         var currentPosition = 0;
@@ -392,12 +392,16 @@ dc.coordinateGridChart = function(_chart) {
         return extent;
     };
 
+    _chart.brushIsEmpty = function (extent) {
+        return _brush.empty() || !extent || extent[1] <= extent[0];
+    };
+
     function brushing(p) {
         var extent = _chart.extendBrush();
 
         _chart.redrawBrush(_g);
 
-        if (_brush.empty() || !extent || extent[1] <= extent[0]) {
+        if (_chart.brushIsEmpty(extent)) {
             dc.events.trigger(function() {
                 _chart.filter(null);
                 dc.redrawAll(_chart.chartGroup());
@@ -421,9 +425,9 @@ dc.coordinateGridChart = function(_chart) {
             var gBrush = g.select("g.brush");
             gBrush.call(_chart.brush().x(_chart.x()));
             gBrush.selectAll("rect").attr("height", brushHeight());
-
-            _chart.fadeDeselectedArea();
         }
+
+        _chart.fadeDeselectedArea();
     };
 
     _chart.fadeDeselectedArea = function() {
