@@ -23,6 +23,21 @@ function buildChart(id, xdomain) {
     return chart;
 }
 
+function buildOrdinalChart(id, xdomain) {
+    if(!xdomain)
+        xdomain = ["California", "Colorado", "Delaware", "Mississippi", "Oklahoma", "Ontario"];
+
+    d3.select("body").append("div").attr("id", id);
+    var chart = dc.lineChart("#" + id);
+    chart.dimension(stateDimension).group(stateGroup)
+        .width(width).height(height)
+        .x(d3.scale.ordinal().domain(xdomain))
+        .transitionDuration(0)
+        .xUnits(dc.units.ordinal);
+    chart.render();
+    return chart;
+}
+
 suite.addBatch({
     'time line chart': {
         topic: function() {
@@ -433,5 +448,22 @@ suite.addBatch({
         }
     }
 });
+
+suite.addBatch({'ordinal line chart':{
+    topic: function() {
+        var chart = buildOrdinalChart("line-chart-ordinal");
+        return chart;
+    },
+    'should have brush turned off': function(chart) {
+        assert.isFalse(chart.brushOn());
+    },
+    'should generate correct line path': function(chart) {
+        assert.equal(chart.select("path.line").attr("d"), "M30,10L200,117L370,117L540,63L710,117L880,63");
+    },
+    teardown: function(topic) {
+        resetAllFilters();
+        resetBody();
+    }
+}});
 
 suite.export(module);

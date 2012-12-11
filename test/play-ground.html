@@ -751,16 +751,17 @@ ordinalBarChart.width(500)
         .dimension(stateDimension)
         .group(stateGroup)
         .elasticY(true)
-        .x(d3.scale.ordinal().domain(["California", "Colorado", "Delaware", "Ontario", "Mississippi", "Oklahoma"]))
+        .x(d3.scale.ordinal().domain(["California", "Colorado", "Delaware", "Mississippi", "Oklahoma", "Ontario"]))
         .xUnits(dc.units.ordinal);
 
 var ordinalLineChart = dc.lineChart("#ordinal-line-chart");
-ordinalLineChart.width(1100)
+ordinalLineChart.width(500)
         .height(250)
         .dimension(stateDimension)
         .group(stateGroup)
         .elasticY(true)
         .renderArea(true)
+        .renderTitle(true)
         .x(d3.scale.ordinal().domain(["California", "Colorado", "Delaware", "Mississippi", "Oklahoma", "Ontario"]))
         .xUnits(dc.units.ordinal);
 
