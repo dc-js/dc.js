@@ -77,7 +77,7 @@ dc.barChart = function(parent, chartGroup) {
 
     function getNumberOfBars() {
         if (_numberOfBars == null)
-            _numberOfBars = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1]).length;
+            _numberOfBars = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain()).length;
         return _numberOfBars;
     }
 

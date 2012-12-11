@@ -117,6 +117,14 @@ suite.addBatch({
             'units should be based on subtraction': function(units) {
                 assert.equal(units.length, 100);
             }
+        },
+        '.ordinal': {
+            topic: function() {
+                return dc.units.ordinal("a", "d", ["a", "b", "c", "d"]);
+            },
+            'units should be based on count': function(units) {
+                assert.equal(units.length, 4);
+            }
         }
     },
 

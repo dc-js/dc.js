@@ -126,6 +126,10 @@ dc.units.integers = function(s, e) {
     return new Array(Math.abs(e - s));
 };
 
+dc.units.ordinal = function(s, e, domain){
+    return domain;
+};
+
 dc.round = {};
 dc.round.floor = function(n) {
     return Math.floor(n);

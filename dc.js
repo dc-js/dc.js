@@ -126,6 +126,10 @@ dc.units.integers = function(s, e) {
     return new Array(Math.abs(e - s));
 };
 
+dc.units.ordinal = function(s, e, domain){
+    return domain;
+};
+
 dc.round = {};
 dc.round.floor = function(n) {
     return Math.floor(n);
@@ -1970,7 +1974,7 @@ dc.barChart = function(parent, chartGroup) {
 
     function getNumberOfBars() {
         if (_numberOfBars == null)
-            _numberOfBars = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1]).length;
+            _numberOfBars = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain()).length;
         return _numberOfBars;
     }
 

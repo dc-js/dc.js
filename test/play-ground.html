@@ -575,6 +575,16 @@ Country filter: <input id="custom-filter" type="text"/><button onclick="countryD
 
 <div class="clear"></div>
 
+<div id="ordinal-chart">
+    <span>Ordinal Bar Chart</span>
+    <a class="reset" href="javascript:ordinal.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+    <br/><span class="reset" style="display: none;">Current filter: <span class="filter"></span></span>
+
+    <div class="clear"></div>
+</div>
+
+<div class="clear"></div>
+
 <div class="dc-data-count">
     <span class="filter-count"></span> selected out of <span class="total-count"></span>
 </div>
@@ -726,6 +736,14 @@ bubbleChart.width(990)
         .title(function(p) {
             return p.key + ": {count:" + p.value.count + ",value:" + p.value.value + "}"
         });
+
+var ordinalChart = dc.barChart("#ordinal-chart");
+ordinalChart.width(250)
+        .height(250)
+        .dimension(stateDimension)
+        .group(stateGroup)
+        .x(d3.scale.ordinal().domain(["California", "Colorado", "Delaware", "Ontario", "Mississippi", "Oklahoma"]))
+        .xUnits(dc.units.ordinal);
 
 dc.dataCount(".dc-data-count")
         .dimension(data)
