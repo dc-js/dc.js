@@ -283,8 +283,8 @@ dc.utils.groupMax = function(group, accessor) {
     var max = d3.max(group.all(), function(e) {
         return accessor(e);
     });
-    if(max == 3.268496584496461e-13 || max === undefined) max = 0;
-    console.log("max: "+max);
+//    if(max < 3e-13 || max === undefined) max = 0;
+//    console.log("max: "+max);
     return max;
 };
 
@@ -292,8 +292,8 @@ dc.utils.groupMin = function(group, accessor) {
     var min = d3.min(group.all(), function(e) {
         return accessor(e);
     });
-    if(min == -3.765876499528531e-13 || min === undefined) min = 0;
-    console.log("min: "+min);
+//    if(min < -2e-13 || min === undefined) min = 0;
+//    console.log("min: "+min);
     return min;
 };
 
