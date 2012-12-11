@@ -104,12 +104,15 @@ dc.utils.GroupStack = function() {
     };
 };
 
+function isNegligible(max) {
+    return max === undefined || (max < dc.constants.NEGLIGIBLE_NUMBER && max > -dc.constants.NEGLIGIBLE_NUMBER);
+}
+
 dc.utils.groupMax = function(group, accessor) {
     var max = d3.max(group.all(), function(e) {
         return accessor(e);
     });
-//    if(max < 3e-13 || max === undefined) max = 0;
-//    console.log("max: "+max);
+    if(isNegligible(max)) max = 0;
     return max;
 };
 
@@ -117,8 +120,7 @@ dc.utils.groupMin = function(group, accessor) {
     var min = d3.min(group.all(), function(e) {
         return accessor(e);
     });
-//    if(min < -2e-13 || min === undefined) min = 0;
-//    console.log("min: "+min);
+    if(isNegligible(min)) min = 0;
     return min;
 };
 

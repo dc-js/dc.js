@@ -61,8 +61,6 @@ dc.stackableChart = function(_chart) {
             if (m < min) min = m;
         }
 
-        console.log("y axis min: " + min);
-
         return min;
     };
 
@@ -76,8 +74,6 @@ dc.stackableChart = function(_chart) {
         }
 
         max = dc.utils.add(max, _chart.yAxisPadding());
-
-        console.log("y axis max: " + max);
 
         return max;
     };

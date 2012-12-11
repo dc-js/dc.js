@@ -293,8 +293,7 @@ suite.addBatch({'elastic y axis with no data in focus':{
     topic: function() {
         countryDimension.filter("CC")
         var chart = buildChart("bar-chart-no-data");
-        chart.elasticY(true)
-            .redraw();
+        chart.elasticY(true).redraw();
         return chart;
     },
     'y axis should have been set to empty': function(chart) {

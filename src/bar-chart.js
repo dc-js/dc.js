@@ -121,7 +121,7 @@ dc.barChart = function(parent, chartGroup) {
 
             bars.classed(dc.constants.DESELECTED_CLASS, function(d) {
                 var xValue = _chart.keyAccessor()(d);
-                return xValue < start || xValue >= end;
+                return xValue < start || xValue > end;
             });
         } else {
             bars.classed(dc.constants.DESELECTED_CLASS, false);
@@ -138,6 +138,18 @@ dc.barChart = function(parent, chartGroup) {
         if (!arguments.length) return _gap;
         _gap = _;
         return _chart;
+    };
+
+    _chart.extendBrush = function(){
+        var extent = _chart.brush().extent();
+        if (_chart.round() && !_centerBar) {
+            extent[0] = extent.map(_chart.round())[0];
+            extent[1] = extent.map(_chart.round())[1];
+
+            _chart.g().select(".brush")
+                .call(_chart.brush().extent(extent));
+        }
+        return extent;
     };
 
     return _chart.anchor(parent, chartGroup);
