@@ -452,10 +452,13 @@ suite.addBatch({'ordinal bar chart':{
         var chart = buildOrdinalChart("bar-chart-ordinal");
         return chart;
     },
-    'bar width should be correct': function(chart) {
+    'should generate correct number of bars': function(chart) {
+        assert.equal(chart.selectAll("rect.bar")[0].length, 6);
+    },
+    'should auto size bar width': function(chart) {
         assert.equal(chart.select("rect.bar").attr("width"), "143");
     },
-    'bar position should be correct': function(chart) {
+    'should position bars based on ordinal range': function(chart) {
         assert.match(d3.select(chart.selectAll("rect.bar")[0][0]).attr("x"), /30/);
         assert.match(d3.select(chart.selectAll("rect.bar")[0][3]).attr("x"), /612.\d+/);
         assert.match(d3.select(chart.selectAll("rect.bar")[0][5]).attr("x"), /467.\d+/);
