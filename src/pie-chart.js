@@ -28,7 +28,7 @@ dc.pieChart = function(parent, chartGroup, cfg) {
 
         _g = _chart.svg()
             .append("g")
-            .attr("transform", "translate(" + _chart.cx() + "," + _chart.cy() + ")");
+            //.attr("transform", "translate(" + _chart.cx() + "," + _chart.cy() + ")");
 
         drawChart();
 
@@ -37,6 +37,7 @@ dc.pieChart = function(parent, chartGroup, cfg) {
 
     function drawChart() {
         if (_chart.dataAreSet()) {
+        	_g.attr("transform", "translate(" + _chart.cx() + "," + _chart.cy() + ")");
             var pie = calculateDataPie();
 
             var arc = _chart.buildArcs();
