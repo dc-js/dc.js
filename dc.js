@@ -1027,7 +1027,7 @@ dc.coordinateGridChart = function(_chart) {
         if (_) {
             _filter = _;
             _chart.brush().extent(_);
-            _chart.dimension().filterRange(_);
+            _chart.dimension().filter(_);
             _chart.turnOnControls();
         } else {
             _filter = null;

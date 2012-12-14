@@ -38,7 +38,7 @@ dc.singleSelectionChart = function(_chart) {
     };
 
     _chart.onClick = function(d) {
-        var toFilter = d.key;
+        var toFilter = d.key != null ? d.key : d.data.key;
         if (toFilter == _chart.filter()) {
             dc.events.trigger(function() {
                 _chart.filter(null);
