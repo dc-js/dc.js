@@ -104,16 +104,24 @@ dc.utils.GroupStack = function() {
     };
 };
 
+function isNegligible(max) {
+    return max === undefined || (max < dc.constants.NEGLIGIBLE_NUMBER && max > -dc.constants.NEGLIGIBLE_NUMBER);
+}
+
 dc.utils.groupMax = function(group, accessor) {
-    return d3.max(group.all(), function(e) {
+    var max = d3.max(group.all(), function(e) {
         return accessor(e);
     });
+    if(isNegligible(max)) max = 0;
+    return max;
 };
 
 dc.utils.groupMin = function(group, accessor) {
-    return d3.min(group.all(), function(e) {
+    var min = d3.min(group.all(), function(e) {
         return accessor(e);
     });
+    if(isNegligible(min)) min = 0;
+    return min;
 };
 
 dc.utils.nameToId = function(name){

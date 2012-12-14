@@ -106,21 +106,6 @@ dc.abstractBubbleChart = function(_chart) {
         }
     };
 
-    _chart.onClick = function(d) {
-        var toFilter = d.key;
-        if (toFilter == _chart.filter()) {
-            dc.events.trigger(function() {
-                _chart.filter(null);
-                dc.redrawAll(_chart.chartGroup());
-            });
-        } else {
-            dc.events.trigger(function() {
-                _chart.filter(toFilter);
-                dc.redrawAll(_chart.chartGroup());
-            });
-        }
-    };
-
     _chart.minRadiusWithLabel = function(_) {
         if (!arguments.length) return _minRadiusWithLabel;
         _minRadiusWithLabel = _;

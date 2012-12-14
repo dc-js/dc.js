@@ -23,6 +23,21 @@ function buildChart(id, xdomain) {
     return chart;
 }
 
+function buildOrdinalChart(id, xdomain) {
+    if(!xdomain)
+        xdomain = ["California", "Colorado", "Delaware", "Mississippi", "Oklahoma", "Ontario"];
+
+    d3.select("body").append("div").attr("id", id);
+    var chart = dc.lineChart("#" + id);
+    chart.dimension(stateDimension).group(stateGroup)
+        .width(width).height(height)
+        .x(d3.scale.ordinal().domain(xdomain))
+        .transitionDuration(0)
+        .xUnits(dc.units.ordinal);
+    chart.render();
+    return chart;
+}
+
 suite.addBatch({
     'time line chart': {
         topic: function() {
@@ -147,7 +162,7 @@ suite.addBatch({
                 assert.equal(chart.select("g.brush rect.extent").attr("width"), 81);
             },
             'path rendering': function(chart) {
-                assert.equal(chart.select("path.line").attr("d"), "M435.08904109589037,117L474.21232876712327,117L479.8013698630137,10L538.486301369863,117L563.6369863013698,63L650.2671232876712,63");
+                assert.matches(chart.select("path.line").attr("d"), /M435.\d+,117L474.\d+,117L479.\d+,10L538.\d+,117L563.\d+,63L650.\d+,63/);
             },
             'area path should not be there':function(chart) {
                 assert.equal(chart.selectAll("path.area")[0].length, 0)
@@ -187,8 +202,8 @@ suite.addBatch({'elastic axis':{
         assert.equal(chart.y().domain()[1], 1);
     },
     'x domain should be set': function(chart) {
-        assert.equal(chart.x().domain()[0].getTime(), new Date("Mon, 26 Mar 2012 04:00:00 GMT").getTime());
-        assert.equal(chart.x().domain()[1].getTime(), new Date("Tue, 09 Oct 2012 04:00:00 GMT").getTime());
+        assert.isTrue(chart.x().domain()[0].getTime() >= 1332720000000);
+        assert.isTrue(chart.x().domain()[1].getTime() >= 1349740800000);
     },
     'correctly draw line': function(chart) {
         assert.equal(jQuery("#elastic-y-line-chart g.stack0 path.line").attr("d"), "M340.65989847715736,170L413.14720812182736,170L423.502538071066,10L532.233502538071,170L578.8324873096446,10L739.3401015228426,170");
@@ -217,10 +232,10 @@ suite.addBatch({'area chart':{
         assert.equal(chart.selectAll("path.area")[0].length, 1)
     },
     'correctly draw line': function(chart) {
-        assert.equal(jQuery("#area-chart g.stack0 path.line").attr("d"), "M435.08904109589037,117L474.21232876712327,117L479.8013698630137,10L538.486301369863,117L563.6369863013698,63L650.2671232876712,63");
+        assert.matches(jQuery("#area-chart g.stack0 path.line").attr("d"), /M435.\d+,117L474.\d+,117L479.\d+,10L538.\d+,117L563.\d+,63L650.\d+,63/);
     },
     'correctly draw area': function(chart) {
-        assert.equal(jQuery("#area-chart g.stack0 path.area").attr("d"), "M435.08904109589037,117L474.21232876712327,117L479.8013698630137,10L538.486301369863,117L563.6369863013698,63L650.2671232876712,63L650.2671232876712,169L563.6369863013698,169L538.486301369863,169L479.8013698630137,169L474.21232876712327,169L435.08904109589037,169Z");
+        assert.matches(jQuery("#area-chart g.stack0 path.area").attr("d"), /M435.\d+,117L474.\d+,117L479.\d+,10L538.\d+,117L563.\d+,63L650.\d+,63L650.\d+,169L563.\d+,169L538.\d+,169L479.\d+,169L474.\d+,169L435.\d+,169Z/);
     },
     teardown: function(topic) {
         resetAllFilters();
@@ -369,14 +384,14 @@ suite.addBatch({
             assert.equal(jQuery("#chart-grid-line-vertical g.vertical line").size(), 12);
         },
         'vertical grid line x,y should be generated correctly': function(chart){
-            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("x1"), "86.63013698630137");
+            assert.matches(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("x1"), /86.\d+/);
             assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("y1"), "160");
-            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("x2"), "86.63013698630137");
+            assert.matches(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("x2"), /86.\d+/);
             assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[1].getAttribute("y2"), "");
 
-            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[3].getAttribute("x1"), "254.18493150684932");
+            assert.matches(jQuery("#chart-grid-line-vertical g.vertical line")[3].getAttribute("x1"), /254.\d+/);
             assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[3].getAttribute("y1"), "160");
-            assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[3].getAttribute("x2"), "254.18493150684932");
+            assert.matches(jQuery("#chart-grid-line-vertical g.vertical line")[3].getAttribute("x2"), /254.\d+/);
             assert.equal(jQuery("#chart-grid-line-vertical g.vertical line")[3].getAttribute("y2"), "");
         },
         teardown: function(topic) {
@@ -433,5 +448,22 @@ suite.addBatch({
         }
     }
 });
+
+suite.addBatch({'ordinal line chart':{
+    topic: function() {
+        var chart = buildOrdinalChart("line-chart-ordinal");
+        return chart;
+    },
+    'should have brush turned off': function(chart) {
+        assert.isFalse(chart.brushOn());
+    },
+    'should generate correct line path': function(chart) {
+        assert.equal(chart.select("path.line").attr("d"), "M30,10L200,117L370,117L540,63L710,117L880,63");
+    },
+    teardown: function(topic) {
+        resetAllFilters();
+        resetBody();
+    }
+}});
 
 suite.export(module);

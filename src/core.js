@@ -12,7 +12,7 @@
  *  limitations under the License.
  */
 dc = {
-    version: "0.9.1",
+    version: "1.1.0",
     constants : {
         CHART_CLASS: "dc-chart",
         DEBUG_GROUP_CLASS: "debug",
@@ -22,7 +22,8 @@ dc = {
         NODE_INDEX_NAME: "__index__",
         GROUP_INDEX_NAME: "__group_index__",
         DEFAULT_CHART_GROUP: "__default_chart_group__",
-        EVENT_DELAY: 40
+        EVENT_DELAY: 40,
+        NEGLIGIBLE_NUMBER: 1e-10
     },
     _renderlet : null
 };
@@ -123,6 +124,10 @@ dc.transition = function(selections, duration, callback) {
 dc.units = {};
 dc.units.integers = function(s, e) {
     return new Array(Math.abs(e - s));
+};
+
+dc.units.ordinal = function(s, e, domain){
+    return domain;
 };
 
 dc.round = {};

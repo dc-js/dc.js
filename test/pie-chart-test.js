@@ -158,6 +158,9 @@ suite.addBatch({
             'NaN centroid should be handled properly': function(pieChart) {
                 assert.equal(pieChart.selectAll("svg g text.pie-slice").attr("transform"), "translate(0,0)");
             },
+            'slice path should not contain NaN': function(pieChart) {
+                assert.equal(pieChart.selectAll("g.pie-slice path").attr("d"), "M0,0");
+            },
             teardown: function() {
                 resetAllFilters();
                 resetBody();
@@ -258,7 +261,7 @@ suite.addBatch({
                 .title(function(d) {
                     return "custom";
                 })
-                .minAngelForLabel(1)
+                .minAngleForLabel(1)
                 .renderTitle(true);
             chart.render();
             return chart;

@@ -27,6 +27,23 @@ function buildChart(id, xdomain) {
     return chart;
 }
 
+function buildOrdinalChart(id, xdomain) {
+    if(!xdomain)
+        xdomain = ["California", "Colorado", "Delaware", "Ontario", "Mississippi", "Oklahoma"];
+
+    var div = d3.select("body").append("div").attr("id", id);
+    div.append("a").attr("class", "reset").style("display", "none");
+    div.append("span").attr("class", "filter").style("display", "none");
+    var chart = dc.barChart("#" + id);
+    chart.dimension(stateDimension).group(stateGroup)
+        .width(width).height(height)
+        .x(d3.scale.ordinal().domain(xdomain))
+        .transitionDuration(0)
+        .xUnits(dc.units.ordinal);
+    chart.render();
+    return chart;
+}
+
 suite.addBatch({
     'time bar chart': {
         topic: function() {
@@ -280,8 +297,25 @@ suite.addBatch({'elastic axis':{
         assert.equal(chart.y().domain()[1], 11);
     },
     'x axis should have changed triggered by filter': function(chart) {
-        assert.equal(chart.x().domain()[0].getTime(), new Date("Wed, 25 Apr 2012 04:00:00 GMT").getTime());
-        assert.equal(chart.x().domain()[1].getTime(), new Date("Sun, 09 Sep 2012 04:00:00 GMT").getTime());
+        assert.isTrue(chart.x().domain()[0].getTime() >= 1335312000000);
+        assert.isTrue(chart.x().domain()[1].getTime() >= 1347148800000);
+    },
+    teardown: function(topic) {
+        resetAllFilters();
+        resetBody();
+    }
+}});
+
+suite.addBatch({'elastic y axis with no data in focus':{
+    topic: function() {
+        countryDimension.filter("CC")
+        var chart = buildChart("bar-chart-no-data");
+        chart.elasticY(true).redraw();
+        return chart;
+    },
+    'y axis should have been set to empty': function(chart) {
+        assert.equal(chart.y().domain()[0], 0);
+        assert.equal(chart.y().domain()[1], 0);
     },
     teardown: function(topic) {
         resetAllFilters();
@@ -412,6 +446,36 @@ suite.addBatch({
         }
     }
 });
+
+suite.addBatch({'ordinal bar chart':{
+    topic: function() {
+        var chart = buildOrdinalChart("bar-chart-ordinal");
+        return chart;
+    },
+    'should have brush turned off': function(chart) {
+        assert.isFalse(chart.brushOn());
+    },
+    'should generate correct number of bars': function(chart) {
+        assert.equal(chart.selectAll("rect.bar")[0].length, 6);
+    },
+    'should auto size bar width': function(chart) {
+        assert.equal(chart.select("rect.bar").attr("width"), "143");
+    },
+    'should position bars based on ordinal range': function(chart) {
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][0]).attr("x"), /30/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][3]).attr("x"), /612.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][5]).attr("x"), /467.\d+/);
+    },
+    'should fade deselected bars': function(chart) {
+        chart.filter("Ontario").redraw();
+        assert.isTrue(d3.select(chart.selectAll("rect.bar")[0][0]).classed("deselected"));
+        assert.isFalse(d3.select(chart.selectAll("rect.bar")[0][5]).classed("deselected"));
+    },
+    teardown: function(topic) {
+        resetAllFilters();
+        resetBody();
+    }
+}});
 
 suite.export(module);
 

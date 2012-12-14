@@ -78,9 +78,7 @@ dc.stackableChart = function(_chart) {
 
         for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
             var group = allGroups[groupIndex];
-            var m = d3.min(group.all(), function(e) {
-                return _chart.getValueAccessorByIndex(groupIndex)(e);
-            });
+            var m = dc.utils.groupMin(group, _chart.getValueAccessorByIndex(groupIndex));
             if (m < min) min = m;
         }
 
@@ -96,7 +94,9 @@ dc.stackableChart = function(_chart) {
             max += dc.utils.groupMax(group, _chart.getValueAccessorByIndex(groupIndex));
         }
 
-        return dc.utils.add(max, _chart.yAxisPadding());
+        max = dc.utils.add(max, _chart.yAxisPadding());
+
+        return max;
     };
 
     _chart.allKeyAccessors = function() {
@@ -156,6 +156,7 @@ dc.stackableChart = function(_chart) {
     _chart.calculateDataPointMatrix = function(groups) {
         for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
             var data = groups[groupIndex].all();
+
             for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
                 var d = data[dataIndex];
                 if (groupIndex == 0 || _useYBaseline)  // allow calculate position from baseline when _stackActive = false

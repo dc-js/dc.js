@@ -3,11 +3,11 @@ dc.pieChart = function(parent, chartGroup, cfg) {
 
     var _sliceCssClass = "pie-slice";
 
-    var _radius = 0, _innerRadius = 0;
+    var _radius = 90, _innerRadius = 0;
 
     var _g;
 
-    var _minAngelForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
+    var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
 
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
 
@@ -82,8 +82,10 @@ dc.pieChart = function(parent, chartGroup, cfg) {
             .attr("fill", function(d, i) {
                 return _chart.getColor(d, i);
             })
-            .on("click", onClick)
-            .attr("d", arc);
+            .on("click", _chart.onClick)
+            .attr("d", function(d, i) {
+                return safeArc(d, i, arc);
+            });
         slicePath.transition()
             .duration(_chart.transitionDuration())
             .attrTween("d", tweenPie);
@@ -108,7 +110,7 @@ dc.pieChart = function(parent, chartGroup, cfg) {
                 .attr("class", function(d, i) {
                     return _sliceCssClass + " " + i;
                 })
-                .on("click", onClick);
+                .on("click", _chart.onClick);
             dc.transition(labelsEnter, _chart.transitionDuration())
                 .attr("transform", function(d) {
                     d.innerRadius = _chart.innerRadius();
@@ -140,7 +142,9 @@ dc.pieChart = function(parent, chartGroup, cfg) {
         var slicePaths = _g.selectAll("g." + _sliceCssClass)
             .data(pieData)
             .select("path")
-            .attr("d", arc);
+            .attr("d", function(d, i) {
+                return safeArc(d, i, arc);
+            });
         dc.transition(slicePaths, _chart.transitionDuration(),
             function(s) {
                 s.attrTween("d", tweenPie);
@@ -238,9 +242,9 @@ dc.pieChart = function(parent, chartGroup, cfg) {
         return _chart;
     };
 
-    _chart.minAngelForLabel = function(_) {
-        if (!arguments.length) return _minAngelForLabel;
-        _minAngelForLabel = _;
+    _chart.minAngleForLabel = function(_) {
+        if (!arguments.length) return _minAngleForLabel;
+        _minAngleForLabel = _;
         return _chart;
     };
 
@@ -252,7 +256,7 @@ dc.pieChart = function(parent, chartGroup, cfg) {
 
     function sliceTooSmall(d) {
         var angle = (d.endAngle - d.startAngle);
-        return isNaN(angle) || angle < _minAngelForLabel;
+        return isNaN(angle) || angle < _minAngleForLabel;
     }
 
     function sliceHasNoData(data) {
@@ -267,7 +271,7 @@ dc.pieChart = function(parent, chartGroup, cfg) {
         var i = d3.interpolate(current, b);
         this._current = i(0);
         return function(t) {
-            return _chart.buildArcs()(i(t));
+            return safeArc(i(t), 0, _chart.buildArcs());
         };
     }
 
@@ -275,19 +279,11 @@ dc.pieChart = function(parent, chartGroup, cfg) {
         return current == null || isNaN(current.startAngle) || isNaN(current.endAngle);
     }
 
-    function onClick(d) {
-        var toFilter = _chart.keyAccessor()(d.data);
-        if (toFilter == _chart.filter()) {
-            dc.events.trigger(function() {
-                _chart.filter(null);
-                dc.redrawAll(_chart.chartGroup());
-            });
-        } else {
-            dc.events.trigger(function() {
-                _chart.filter(toFilter);
-                dc.redrawAll(_chart.chartGroup());
-            });
-        }
+    function safeArc(d, i, arc) {
+        var path = arc(d, i);
+        if(path.indexOf("NaN") >= 0)
+            path = "M0,0";
+        return path;
     }
 
     return _chart.anchor(parent, chartGroup, cfg);

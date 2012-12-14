@@ -2,7 +2,7 @@ dc.barChart = function(parent, chartGroup, cfg) {
     var MIN_BAR_WIDTH = 1;
     var DEFAULT_GAP_BETWEEN_BARS = 2;
 
-    var _chart = dc.stackableChart(dc.coordinateGridChart({}));
+    var _chart = dc.stackableChart(dc.coordinateGridChart(dc.singleSelectionChart({})));
 
     var _numberOfBars;
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
@@ -38,6 +38,9 @@ dc.barChart = function(parent, chartGroup, cfg) {
             })
             .attr("y", _chart.xAxisY())
             .attr("width", barWidth);
+
+        if (_chart.isOrdinal())
+            bars.on("click", _chart.onClick);
 
         if (_chart.renderTitle()) {
             bars.append("title").text(_chart.title());
@@ -77,13 +80,17 @@ dc.barChart = function(parent, chartGroup, cfg) {
 
     function getNumberOfBars() {
         if (_numberOfBars == null)
-            _numberOfBars = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1]).length;
+            _numberOfBars = _chart.xUnitCount();
         return _numberOfBars;
     }
 
     function barWidth(d) {
         var numberOfBars = getNumberOfBars();
-        var w = Math.floor(_chart.xAxisLength() / numberOfBars);
+        var w = MIN_BAR_WIDTH;
+        if (_chart.isOrdinal())
+            w = Math.floor(_chart.xAxisLength() / (numberOfBars + 1));
+        else
+            w = Math.floor(_chart.xAxisLength() / numberOfBars);
         w -= _gap;
         if (isNaN(w) || w < MIN_BAR_WIDTH)
             w = MIN_BAR_WIDTH;
@@ -114,17 +121,28 @@ dc.barChart = function(parent, chartGroup, cfg) {
 
     _chart.fadeDeselectedArea = function() {
         var bars = _chart.g().selectAll("rect.bar");
+        var extent = _chart.brush().extent();
 
-        if (!_chart.brush().empty() && _chart.brush().extent() != null) {
-            var start = _chart.brush().extent()[0];
-            var end = _chart.brush().extent()[1];
-
-            bars.classed(dc.constants.DESELECTED_CLASS, function(d) {
-                var xValue = _chart.keyAccessor()(d);
-                return xValue < start || xValue >= end;
-            });
+        if (_chart.isOrdinal()) {
+            if (_chart.filter() != null)
+                bars.classed(dc.constants.DESELECTED_CLASS, function(d) {
+                    var key = _chart.keyAccessor()(d);
+                    return key != _chart.filter();
+                });
+            else
+                bars.classed(dc.constants.DESELECTED_CLASS, false);
         } else {
-            bars.classed(dc.constants.DESELECTED_CLASS, false);
+            if (!_chart.brushIsEmpty(extent)) {
+                var start = extent[0];
+                var end = extent[1];
+
+                bars.classed(dc.constants.DESELECTED_CLASS, function(d) {
+                    var xValue = _chart.keyAccessor()(d);
+                    return xValue < start || xValue > end;
+                });
+            } else {
+                bars.classed(dc.constants.DESELECTED_CLASS, false);
+            }
         }
     };
 
@@ -139,6 +157,22 @@ dc.barChart = function(parent, chartGroup, cfg) {
         _gap = _;
         return _chart;
     };
+
+    _chart.extendBrush = function() {
+        var extent = _chart.brush().extent();
+        if (_chart.round() && !_centerBar) {
+            extent[0] = extent.map(_chart.round())[0];
+            extent[1] = extent.map(_chart.round())[1];
+
+            _chart.g().select(".brush")
+                .call(_chart.brush().extent(extent));
+        }
+        return extent;
+    };
+
+    dc.override(_chart, "prepareOrdinalXAxis", function(_super) {
+        return _super(_chart.xUnitCount() + 1);
+    });
 
     return _chart.anchor(parent, chartGroup, cfg);
 };
