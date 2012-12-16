@@ -1027,7 +1027,7 @@ dc.coordinateGridChart = function(_chart) {
         if (_) {
             _filter = _;
             _chart.brush().extent(_);
-            _chart.dimension().filterRange(_);
+            _chart.dimension().filter(_);
             _chart.turnOnControls();
         } else {
             _filter = null;
@@ -1302,7 +1302,7 @@ dc.singleSelectionChart = function(_chart) {
     };
 
     _chart.onClick = function(d) {
-        var toFilter = d.key;
+        var toFilter = _chart.keyAccessor()(d);
         if (toFilter == _chart.filter()) {
             dc.events.trigger(function() {
                 _chart.filter(null);
@@ -1708,7 +1708,7 @@ dc.pieChart = function(parent, chartGroup) {
             .attr("fill", function(d, i) {
                 return _chart.getColor(d, i);
             })
-            .on("click", _chart.onClick)
+            .on("click", onClick)
             .attr("d", function(d, i) {
                 return safeArc(d, i, arc);
             });
@@ -1736,7 +1736,7 @@ dc.pieChart = function(parent, chartGroup) {
                 .attr("class", function(d, i) {
                     return _sliceCssClass + " " + i;
                 })
-                .on("click", _chart.onClick);
+                .on("click", onClick);
             dc.transition(labelsEnter, _chart.transitionDuration())
                 .attr("transform", function(d) {
                     d.innerRadius = _chart.innerRadius();
@@ -1905,6 +1905,10 @@ dc.pieChart = function(parent, chartGroup) {
         return current == null || isNaN(current.startAngle) || isNaN(current.endAngle);
     }
 
+    function onClick(d) {
+        _chart.onClick(d.data);
+    }
+
     function safeArc(d, i, arc) {
         var path = arc(d, i);
         if(path.indexOf("NaN") >= 0)
@@ -2054,7 +2058,7 @@ dc.barChart = function(parent, chartGroup) {
 
                 bars.classed(dc.constants.DESELECTED_CLASS, function(d) {
                     var xValue = _chart.keyAccessor()(d);
-                    return xValue < start || xValue > end;
+                    return xValue < start || xValue >= end;
                 });
             } else {
                 bars.classed(dc.constants.DESELECTED_CLASS, false);
