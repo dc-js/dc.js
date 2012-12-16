@@ -1302,7 +1302,10 @@ dc.singleSelectionChart = function(_chart) {
     };
 
     _chart.onClick = function(d) {
-        var toFilter = d.key;
+        var toFilter = _chart.keyAccessor()(d);
+        console.log(toFilter);
+        console.log(d.key);
+        console.log(d);
         if (toFilter == _chart.filter()) {
             dc.events.trigger(function() {
                 _chart.filter(null);
@@ -1708,7 +1711,7 @@ dc.pieChart = function(parent, chartGroup) {
             .attr("fill", function(d, i) {
                 return _chart.getColor(d, i);
             })
-            .on("click", _chart.onClick)
+            .on("click", onClick)
             .attr("d", function(d, i) {
                 return safeArc(d, i, arc);
             });
@@ -1736,7 +1739,7 @@ dc.pieChart = function(parent, chartGroup) {
                 .attr("class", function(d, i) {
                     return _sliceCssClass + " " + i;
                 })
-                .on("click", _chart.onClick);
+                .on("click", onClick);
             dc.transition(labelsEnter, _chart.transitionDuration())
                 .attr("transform", function(d) {
                     d.innerRadius = _chart.innerRadius();
@@ -1903,6 +1906,10 @@ dc.pieChart = function(parent, chartGroup) {
 
     function isOffCanvas(current) {
         return current == null || isNaN(current.startAngle) || isNaN(current.endAngle);
+    }
+
+    function onClick(d) {
+        _chart.onClick(d.data);
     }
 
     function safeArc(d, i, arc) {
@@ -2422,6 +2429,7 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     var _elasticRadius = false;
 
+    _chart.keyAccessor(function(d){return d.key;});
     _chart.transitionDuration(750);
 
     var bubbleLocator = function(d) {

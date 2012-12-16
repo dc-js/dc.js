@@ -81,7 +81,7 @@ dc.pieChart = function(parent, chartGroup) {
             .attr("fill", function(d, i) {
                 return _chart.getColor(d, i);
             })
-            .on("click", _chart.onClick)
+            .on("click", onClick)
             .attr("d", function(d, i) {
                 return safeArc(d, i, arc);
             });
@@ -109,7 +109,7 @@ dc.pieChart = function(parent, chartGroup) {
                 .attr("class", function(d, i) {
                     return _sliceCssClass + " " + i;
                 })
-                .on("click", _chart.onClick);
+                .on("click", onClick);
             dc.transition(labelsEnter, _chart.transitionDuration())
                 .attr("transform", function(d) {
                     d.innerRadius = _chart.innerRadius();
@@ -276,6 +276,10 @@ dc.pieChart = function(parent, chartGroup) {
 
     function isOffCanvas(current) {
         return current == null || isNaN(current.startAngle) || isNaN(current.endAngle);
+    }
+
+    function onClick(d) {
+        _chart.onClick(d.data);
     }
 
     function safeArc(d, i, arc) {
