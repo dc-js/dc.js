@@ -1027,7 +1027,7 @@ dc.coordinateGridChart = function(_chart) {
         if (_) {
             _filter = _;
             _chart.brush().extent(_);
-            _chart.dimension().filterRange(_);
+            _chart.dimension().filter(_);
             _chart.turnOnControls();
         } else {
             _filter = null;
@@ -1303,9 +1303,6 @@ dc.singleSelectionChart = function(_chart) {
 
     _chart.onClick = function(d) {
         var toFilter = _chart.keyAccessor()(d);
-        console.log(toFilter);
-        console.log(d.key);
-        console.log(d);
         if (toFilter == _chart.filter()) {
             dc.events.trigger(function() {
                 _chart.filter(null);
@@ -2429,7 +2426,6 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     var _elasticRadius = false;
 
-    _chart.keyAccessor(function(d){return d.key;});
     _chart.transitionDuration(750);
 
     var bubbleLocator = function(d) {

@@ -470,6 +470,7 @@ suite.addBatch({'ordinal bar chart':{
         chart.filter("Ontario").redraw();
         assert.isTrue(d3.select(chart.selectAll("rect.bar")[0][0]).classed("deselected"));
         assert.isFalse(d3.select(chart.selectAll("rect.bar")[0][5]).classed("deselected"));
+        assert.equal(stateDimension.top(Infinity).length, 2);
     },
     teardown: function(topic) {
         resetAllFilters();
