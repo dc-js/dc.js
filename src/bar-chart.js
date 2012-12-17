@@ -138,7 +138,7 @@ dc.barChart = function(parent, chartGroup, cfg) {
 
                 bars.classed(dc.constants.DESELECTED_CLASS, function(d) {
                     var xValue = _chart.keyAccessor()(d);
-                    return xValue < start || xValue > end;
+                    return xValue < start || xValue >= end;
                 });
             } else {
                 bars.classed(dc.constants.DESELECTED_CLASS, false);

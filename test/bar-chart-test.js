@@ -48,7 +48,7 @@ suite.addBatch({
     'time bar chart': {
         topic: function() {
             var chart = buildChart("bar-chart");
-            chart.filter([new Date(2012, 5, 1), new Date(2012, 5, 30)]);
+            chart.filter([new Date(2012, 5, 1), new Date(2012, 6, 1)]);
             chart.redraw();
             return chart;
         },
@@ -159,7 +159,7 @@ suite.addBatch({
         },
         'current filter should be set correctly': function(chart) {
             assert.equal(chart.filter()[0].getTime(), new Date(2012, 5, 1).getTime());
-            assert.equal(chart.filter()[1].getTime(), new Date(2012, 5, 30).getTime());
+            assert.equal(chart.filter()[1].getTime(), new Date(2012, 6, 1).getTime());
         },
         'reset link on after init rendering': function(chart) {
             assert.isEmpty(chart.select("a.reset").style("display"));
@@ -174,7 +174,7 @@ suite.addBatch({
             assert.isEmpty(chart.select("a.reset").style("display"));
         },
         'filter info generated after slice selection': function(chart) {
-            assert.equal(chart.select("span.filter").text(), "[06/01/2012 -> 06/30/2012]");
+            assert.equal(chart.select("span.filter").text(), "[06/01/2012 -> 07/01/2012]");
         },
 
         'with brush': {
@@ -199,10 +199,12 @@ suite.addBatch({
                 assert.equal(chart.select("g.brush rect.extent").attr("height"), 160);
             },
             'extent width should be set based on filter set': function(chart) {
-                assert.equal(chart.select("g.brush rect.extent").attr("width"), 81);
+                assert.equal(chart.select("g.brush rect.extent").attr("width"), 84);
             },
             'unselected bars should be push to background': function(chart) {
-                assert.equal(chart.select("g rect.stack0").attr("class"), "bar stack0 deselected");
+                assert.equal(d3.select(chart.selectAll("g rect.stack0")[0][0]).attr("class"), "bar stack0 deselected");
+                assert.equal(d3.select(chart.selectAll("g rect.stack0")[0][1]).attr("class"), "bar stack0");
+                assert.equal(d3.select(chart.selectAll("g rect.stack0")[0][3]).attr("class"), "bar stack0 deselected");
             },
             'selected bars should be push to foreground': function(chart) {
                 chart.selectAll("g rect.bar").each(function(d, i) {
@@ -470,6 +472,7 @@ suite.addBatch({'ordinal bar chart':{
         chart.filter("Ontario").redraw();
         assert.isTrue(d3.select(chart.selectAll("rect.bar")[0][0]).classed("deselected"));
         assert.isFalse(d3.select(chart.selectAll("rect.bar")[0][5]).classed("deselected"));
+        assert.equal(stateDimension.top(Infinity).length, 2);
     },
     teardown: function(topic) {
         resetAllFilters();

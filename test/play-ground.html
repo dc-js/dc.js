@@ -680,8 +680,8 @@ lineChartDate1.width(500)
         .xAxis().ticks(5);
 
 var barChartDate = dc.barChart("#bar-chart-date");
-barChartDate.width(500)
-        .height(150)
+barChartDate.width(1100)
+        .height(200)
         .dimension(dateDimension)
         .group(dateIdSumGroup)
         .stack(dateValueSumGroup)
@@ -723,7 +723,7 @@ bubbleChart.width(990)
             return p.value.value;
         })
         .keyAccessor(function(p) {
-            return p.value.value;
+            return p.key;
         })
         .valueAccessor(function(p) {
             return p.value.count;
@@ -731,7 +731,8 @@ bubbleChart.width(990)
         .radiusValueAccessor(function(p) {
             return p.value.count;
         })
-        .x(d3.scale.linear().domain([0, 300]))
+        .x(d3.scale.ordinal().domain(["A", "T", "F", "Z"]))
+        .xUnits(dc.units.ordinal)
         .y(d3.scale.linear().domain([0, 10]))
         .r(d3.scale.linear().domain([0, 30]))
         .maxBubbleRelativeSize(0.3)
