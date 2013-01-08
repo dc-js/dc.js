@@ -1274,7 +1274,7 @@ dc.singleSelectionChart = function(_chart) {
 
         _filter = _;
 
-        if (_chart.dataAreSet())
+        if (_chart.dataAreSet() && _chart.dimension() != undefined)
             _chart.dimension().filter(_filter);
 
         if (_) {
