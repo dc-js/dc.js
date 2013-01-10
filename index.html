@@ -378,7 +378,7 @@ d3.csv("ndx.csv", function(data) {
 
             moveChart.width(990)
                     .height(180)
-                    .margins({top: 10, right: 50, bottom: 5, left: 40})
+                    .margins({top: 10, right: 50, bottom: 25, left: 40})
                     .dimension(moveMonths)
                     .group(indexAvgByMonthGroup)
                     .valueAccessor(function(d) {
@@ -401,7 +401,8 @@ d3.csv("ndx.csv", function(data) {
                                     return dateFormat(d.key) + "\n" + numberFormat(value);
                                 })
                     ])
-                    .xAxis().tickValues([]);
+                    .xAxis();
+
             volumeChart.width(990)
                     .height(40)
                     .margins({top: 0, right: 50, bottom: 20, left: 40})
@@ -414,6 +415,9 @@ d3.csv("ndx.csv", function(data) {
                     .renderlet(function(chart){
                         chart.select("g.y").style("display", "none");
                         moveChart.filter(chart.filter());
+                    })
+                    .renderlet(function(chart){
+                        moveChart.focus(chart.filter());
                     });
 
 
