@@ -20,7 +20,7 @@ dc.barChart = function(parent, chartGroup) {
 
     function generateBarsPerGroup(groupIndex, group) {
         var bars = _chart.g().selectAll("rect." + dc.constants.STACK_CLASS + groupIndex)
-            .data(group.all());
+            .data(_chart.getDataWithinXDomain(group));
 
         addNewBars(bars, groupIndex);
 

@@ -670,7 +670,7 @@ lineChartDate1.width(500)
         .title(function(d) {
             return d.value;
         })
-        .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
+        .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
         .xUnits(d3.time.days)
         .elasticY(true)
         .yAxisPadding(50)
@@ -689,7 +689,7 @@ barChartDate.width(1100)
             return 10;
         })
         .gap(1)
-        .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
+        .x(d3.time.scale().domain([new Date(2012, 5, 11), new Date(2012, 6, 9)]))
         .xUnits(d3.time.days)
         .xAxis().ticks(5);
 
@@ -698,7 +698,7 @@ compositeChartDate.width(500)
         .height(150)
         .dimension(dateDimension)
         .group(dateIdSumGroup)
-        .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
+        .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
         .xUnits(d3.time.days)
         .filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
         .compose([

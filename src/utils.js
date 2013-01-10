@@ -102,6 +102,10 @@ dc.utils.GroupStack = function() {
     this.setDefaultAccessor = function(retriever) {
         _defaultAccessor = retriever;
     };
+
+    this.getDataPoints = function(){
+        return _dataPointMatrix;
+    };
 };
 
 function isNegligible(max) {

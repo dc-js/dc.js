@@ -480,6 +480,22 @@ suite.addBatch({'ordinal bar chart':{
     }
 }});
 
+suite.addBatch({
+    'out of x range drawing':{
+        topic:function(){
+            var chart = buildChart("chart-out-of-range", [new Date(2012, 5, 11), new Date(2012, 6, 9)]);
+            return chart;
+        },
+        'chart should only render one bar': function(chart) {
+            assert.equal(chart.selectAll("rect.bar")[0].length, 1);
+        },
+        teardown: function(topic) {
+            resetAllFilters();
+            resetBody();
+        }
+    }
+});
+
 suite.export(module);
 
 

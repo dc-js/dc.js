@@ -282,6 +282,10 @@ dc.utils.GroupStack = function() {
     this.setDefaultAccessor = function(retriever) {
         _defaultAccessor = retriever;
     };
+
+    this.getDataPoints = function(){
+        return _dataPointMatrix;
+    };
 };
 
 function isNegligible(max) {
@@ -1197,6 +1201,22 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
+    _chart.getDataWithinXDomain=function(group){
+        var data = [];
+
+        if(_chart.isOrdinal()){
+            data = group.all();
+        }else{
+            group.all().forEach(function(d){
+                var key = _chart.keyAccessor()(d);
+                if(key >= _chart.x().domain()[0] && key <= _chart.x().domain()[1])
+                    data.push(d);
+            });
+        }
+
+        return data;
+    };
+
     return _chart;
 };
 dc.colorChart = function(_chart) {
@@ -1454,7 +1474,8 @@ dc.stackableChart = function(_chart) {
 
     _chart.calculateDataPointMatrix = function(groups) {
         for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
-            var data = groups[groupIndex].all();
+            var group = groups[groupIndex];
+            var data = _chart.getDataWithinXDomain(group);
 
             for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
                 var d = data[dataIndex];
@@ -1955,7 +1976,7 @@ dc.barChart = function(parent, chartGroup) {
 
     function generateBarsPerGroup(groupIndex, group) {
         var bars = _chart.g().selectAll("rect." + dc.constants.STACK_CLASS + groupIndex)
-            .data(group.all());
+            .data(_chart.getDataWithinXDomain(group));
 
         addNewBars(bars, groupIndex);
 

@@ -134,7 +134,8 @@ dc.stackableChart = function(_chart) {
 
     _chart.calculateDataPointMatrix = function(groups) {
         for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
-            var data = groups[groupIndex].all();
+            var group = groups[groupIndex];
+            var data = _chart.getDataWithinXDomain(group);
 
             for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
                 var d = data[dataIndex];

@@ -503,5 +503,21 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
+    _chart.getDataWithinXDomain=function(group){
+        var data = [];
+
+        if(_chart.isOrdinal()){
+            data = group.all();
+        }else{
+            group.all().forEach(function(d){
+                var key = _chart.keyAccessor()(d);
+                if(key >= _chart.x().domain()[0] && key <= _chart.x().domain()[1])
+                    data.push(d);
+            });
+        }
+
+        return data;
+    };
+
     return _chart;
 };
