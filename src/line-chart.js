@@ -42,10 +42,10 @@ dc.lineChart = function(parent, chartGroup) {
     }
 
     function createGrouping(stackedCssClass, group) {
-        var g = _chart.g().select("g." + stackedCssClass);
+        var g = _chart.chartBodyG().select("g." + stackedCssClass);
 
         if (g.empty())
-            g = _chart.g().append("g").attr("class", stackedCssClass);
+            g = _chart.chartBodyG().append("g").attr("class", stackedCssClass);
 
         g.datum(group.all());
 

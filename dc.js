@@ -707,6 +707,7 @@ dc.coordinateGridChart = function(_chart) {
     var _margin = {top: 10, right: 50, bottom: 30, left: 30};
 
     var _g;
+    var _chartBodyG;
 
     var _x;
     var _xOriginalDomain;
@@ -735,12 +736,28 @@ dc.coordinateGridChart = function(_chart) {
             parent = _chart.svg();
 
         _g = parent.append("g");
+        var chartBodyClip = parent.append("defs").append("svg:clipPath")
+                .attr("id", "clip")
+                .append("svg:rect")
+                .attr("id", "clip-rect")
+                .attr("x", _chart.margins().left)
+                .attr("y", _chart.margins().top)
+                .attr("width", _chart.xAxisLength())
+                .attr("height", _chart.yAxisHeight());
+        _chartBodyG = _g.append("g").attr("class", "chartBody").attr("clip-path", "url(#clip)");
+
         return _g;
     };
 
     _chart.g = function(_) {
         if (!arguments.length) return _g;
         _g = _;
+        return _chart;
+    };
+
+    _chart.chartBodyG = function(_) {
+        if (!arguments.length) return _chartBodyG;
+        _chartBodyG = _;
         return _chart;
     };
 
@@ -2210,10 +2227,10 @@ dc.lineChart = function(parent, chartGroup) {
     }
 
     function createGrouping(stackedCssClass, group) {
-        var g = _chart.g().select("g." + stackedCssClass);
+        var g = _chart.chartBodyG().select("g." + stackedCssClass);
 
         if (g.empty())
-            g = _chart.g().append("g").attr("class", stackedCssClass);
+            g = _chart.chartBodyG().append("g").attr("class", stackedCssClass);
 
         g.datum(group.all());
 
