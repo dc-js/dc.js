@@ -141,7 +141,7 @@ suite.addBatch({
 
     'dc.override':{
         topic:function(){
-            return {foo: function(){return "foo";}};
+            return {foo: function(){return "foo";}, goo: function(i){return i;}};
         },
         'wo/ override function should work as expected':function(o){
             assert.equal(o.foo(), "foo");
@@ -149,6 +149,10 @@ suite.addBatch({
         'should expose existing function':function(o){
             dc.override(o, "foo", function(_super){return _super() + "2";});
             assert.equal(o.foo(), "foo2");
+        },
+        'should expose existing function with args':function(o){
+            dc.override(o, "goo", function(i, _super){return _super(i) + 2;});
+            assert.equal(o.goo(1), 3);
         }
     }
 });

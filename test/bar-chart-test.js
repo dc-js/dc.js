@@ -505,6 +505,17 @@ suite.addBatch({
             assert.equal(chart.x().domain()[0].toISOString(), new Date(2012, 0, 1).toISOString());
             assert.equal(chart.x().domain()[1].toISOString(), new Date(2012, 11, 31).toISOString());
         },
+        'focus should reset if [] is passed': function (chart) {
+            chart.focus([]);
+            assert.equal(chart.x().domain()[0].toISOString(), new Date(2012, 0, 1).toISOString());
+            assert.equal(chart.x().domain()[1].toISOString(), new Date(2012, 11, 31).toISOString());
+        },
+        'focus should redraw x axis scale and ticks': function (chart) {
+            chart.focus(null);
+            assert.equal(d3.select(chart.selectAll("g.x text")[0][0]).text(), "July");
+            assert.equal(d3.select(chart.selectAll("g.x text")[0][1]).text(), "2012");
+            assert.equal(d3.select(chart.selectAll("g.x text")[0][3]).text(), "March");
+        },
         teardown: function (topic) {
             resetAllFilters();
             resetBody();

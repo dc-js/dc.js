@@ -171,14 +171,17 @@ dc.barChart = function(parent, chartGroup) {
         return extent;
     };
 
-    _chart.focus = function(range){
-        if(range != null && range != undefined){
+    dc.override(_chart, "focus", function(range, _super) {
+        _super(range);
+
+        if(range != null && range != undefined && range instanceof Array && range.length > 1){
             _chart.x().domain(range);
         }else{
             _chart.x().domain(_chart.xOriginalDomain());
         }
+
         _chart.redraw();
-    };
+    });
 
     dc.override(_chart, "prepareOrdinalXAxis", function(_super) {
         return _super(_chart.xUnitCount() + 1);

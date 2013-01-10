@@ -147,7 +147,7 @@ dc.override = function(obj, functionName, newFunction) {
         var expression = "newFunction(";
 
         for (var i = 0; i < arguments.length; ++i)
-            expression += "argument[" + i + "],";
+            expression += "arguments[" + i + "],";
 
         expression += "existingFunction);";
 
@@ -728,6 +728,8 @@ dc.coordinateGridChart = function(_chart) {
     var _renderHorizontalGridLine = false;
     var _renderVerticalGridLine = false;
 
+    var _refocused = false;
+
     _chart.generateG = function(parent) {
         if (parent == null)
             parent = _chart.svg();
@@ -1185,7 +1187,7 @@ dc.coordinateGridChart = function(_chart) {
         if (_chart.elasticY())
             _chart.renderYAxis(_chart.g());
 
-        if (_chart.elasticX())
+        if (_chart.elasticX() || _refocused)
             _chart.renderXAxis(_chart.g());
 
         _chart.redrawBrush(_chart.g());
@@ -1221,6 +1223,10 @@ dc.coordinateGridChart = function(_chart) {
         }
 
         return data;
+    };
+
+    _chart.focus = function(range){
+        _refocused = true;
     };
 
     return _chart;
@@ -2133,14 +2139,17 @@ dc.barChart = function(parent, chartGroup) {
         return extent;
     };
 
-    _chart.focus = function(range){
-        if(range != null && range != undefined){
+    dc.override(_chart, "focus", function(range, _super) {
+        _super(range);
+
+        if(range != null && range != undefined && range instanceof Array && range.length > 1){
             _chart.x().domain(range);
         }else{
             _chart.x().domain(_chart.xOriginalDomain());
         }
+
         _chart.redraw();
-    };
+    });
 
     dc.override(_chart, "prepareOrdinalXAxis", function(_super) {
         return _super(_chart.xUnitCount() + 1);

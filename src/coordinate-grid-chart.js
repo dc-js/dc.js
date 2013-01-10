@@ -30,6 +30,8 @@ dc.coordinateGridChart = function(_chart) {
     var _renderHorizontalGridLine = false;
     var _renderVerticalGridLine = false;
 
+    var _refocused = false;
+
     _chart.generateG = function(parent) {
         if (parent == null)
             parent = _chart.svg();
@@ -487,7 +489,7 @@ dc.coordinateGridChart = function(_chart) {
         if (_chart.elasticY())
             _chart.renderYAxis(_chart.g());
 
-        if (_chart.elasticX())
+        if (_chart.elasticX() || _refocused)
             _chart.renderXAxis(_chart.g());
 
         _chart.redrawBrush(_chart.g());
@@ -523,6 +525,10 @@ dc.coordinateGridChart = function(_chart) {
         }
 
         return data;
+    };
+
+    _chart.focus = function(range){
+        _refocused = true;
     };
 
     return _chart;
