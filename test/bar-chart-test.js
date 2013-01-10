@@ -500,6 +500,11 @@ suite.addBatch({
         'bar width should be resized accordingly': function (chart) {
             assert.equal(chart.selectAll("rect.bar").attr("width"), 35);
         },
+        'focus should reset if null is passed': function (chart) {
+            chart.focus(null);
+            assert.equal(chart.x().domain()[0].toISOString(), new Date(2012, 0, 1).toISOString());
+            assert.equal(chart.x().domain()[1].toISOString(), new Date(2012, 11, 31).toISOString());
+        },
         teardown: function (topic) {
             resetAllFilters();
             resetBody();

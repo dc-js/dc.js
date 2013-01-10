@@ -174,8 +174,10 @@ dc.barChart = function(parent, chartGroup) {
     _chart.focus = function(range){
         if(range != null && range != undefined){
             _chart.x().domain(range);
-            _chart.redraw();
+        }else{
+            _chart.x().domain(_chart.xOriginalDomain());
         }
+        _chart.redraw();
     };
 
     dc.override(_chart, "prepareOrdinalXAxis", function(_super) {

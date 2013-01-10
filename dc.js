@@ -709,6 +709,7 @@ dc.coordinateGridChart = function(_chart) {
     var _g;
 
     var _x;
+    var _xOriginalDomain;
     var _xAxis = d3.svg.axis();
     var _xUnits = dc.units.integers;
     var _xAxisPadding = 0;
@@ -750,7 +751,12 @@ dc.coordinateGridChart = function(_chart) {
     _chart.x = function(_) {
         if (!arguments.length) return _x;
         _x = _;
+        _xOriginalDomain = _x.domain();
         return _chart;
+    };
+
+    _chart.xOriginalDomain = function(){
+        return _xOriginalDomain;
     };
 
     _chart.xUnits = function(_) {
@@ -2130,8 +2136,10 @@ dc.barChart = function(parent, chartGroup) {
     _chart.focus = function(range){
         if(range != null && range != undefined){
             _chart.x().domain(range);
-            _chart.redraw();
+        }else{
+            _chart.x().domain(_chart.xOriginalDomain());
         }
+        _chart.redraw();
     };
 
     dc.override(_chart, "prepareOrdinalXAxis", function(_super) {
