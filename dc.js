@@ -1960,7 +1960,6 @@ dc.barChart = function(parent, chartGroup) {
 
     var _chart = dc.stackableChart(dc.coordinateGridChart(dc.singleSelectionChart({})));
 
-    var _numberOfBars;
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
     var _centerBar = false;
 
@@ -2025,7 +2024,8 @@ dc.barChart = function(parent, chartGroup) {
             })
             .attr("height", function(data) {
                 return _chart.dataPointHeight(data, getGroupIndexFromBar(this));
-            });
+            })
+            .attr("width", barWidth);
     }
 
     function deleteBars(bars) {
@@ -2035,9 +2035,7 @@ dc.barChart = function(parent, chartGroup) {
     }
 
     function getNumberOfBars() {
-        if (_numberOfBars == null)
-            _numberOfBars = _chart.xUnitCount();
-        return _numberOfBars;
+        return _chart.xUnitCount();
     }
 
     function barWidth(d) {
@@ -2047,9 +2045,12 @@ dc.barChart = function(parent, chartGroup) {
             w = Math.floor(_chart.xAxisLength() / (numberOfBars + 1));
         else
             w = Math.floor(_chart.xAxisLength() / numberOfBars);
+
         w -= _gap;
+
         if (isNaN(w) || w < MIN_BAR_WIDTH)
             w = MIN_BAR_WIDTH;
+
         return w;
     }
 
@@ -2124,6 +2125,13 @@ dc.barChart = function(parent, chartGroup) {
                 .call(_chart.brush().extent(extent));
         }
         return extent;
+    };
+
+    _chart.focus = function(range){
+        if(range != null && range != undefined){
+            _chart.x().domain(range);
+            _chart.redraw();
+        }
     };
 
     dc.override(_chart, "prepareOrdinalXAxis", function(_super) {
