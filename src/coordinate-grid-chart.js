@@ -529,6 +529,14 @@ dc.coordinateGridChart = function(_chart) {
 
     _chart.focus = function(range){
         _refocused = true;
+
+        if(range != null && range != undefined && range instanceof Array && range.length > 1){
+            _chart.x().domain(range);
+        }else{
+            _chart.x().domain(_chart.xOriginalDomain());
+        }
+
+        _chart.redraw();
     };
 
     return _chart;

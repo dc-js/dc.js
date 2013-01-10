@@ -1227,6 +1227,14 @@ dc.coordinateGridChart = function(_chart) {
 
     _chart.focus = function(range){
         _refocused = true;
+
+        if(range != null && range != undefined && range instanceof Array && range.length > 1){
+            _chart.x().domain(range);
+        }else{
+            _chart.x().domain(_chart.xOriginalDomain());
+        }
+
+        _chart.redraw();
     };
 
     return _chart;
@@ -1484,18 +1492,31 @@ dc.stackableChart = function(_chart) {
         return h;
     };
 
-    _chart.calculateDataPointMatrix = function(groups) {
+    function calculateDataPointMatrix(data, groupIndex) {
+        for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
+            var d = data[dataIndex];
+            if (groupIndex == 0)
+                _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline() - _chart.dataPointHeight(d, groupIndex));
+            else
+                _groupStack.setDataPoint(groupIndex, dataIndex, _groupStack.getDataPoint(groupIndex - 1, dataIndex) - _chart.dataPointHeight(d, groupIndex))
+        }
+    }
+
+    _chart.calculateDataPointMatrixForAll = function(groups) {
+        for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
+            var group = groups[groupIndex];
+            var data = group.all();
+
+            calculateDataPointMatrix(data, groupIndex);
+        }
+    };
+
+    _chart.calculateDataPointMatrixWithinXDomain = function(groups) {
         for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
             var group = groups[groupIndex];
             var data = _chart.getDataWithinXDomain(group);
 
-            for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
-                var d = data[dataIndex];
-                if (groupIndex == 0)
-                    _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline() - _chart.dataPointHeight(d, groupIndex));
-                else
-                    _groupStack.setDataPoint(groupIndex, dataIndex, _groupStack.getDataPoint(groupIndex - 1, dataIndex) - _chart.dataPointHeight(d, groupIndex))
-            }
+            calculateDataPointMatrix(data, groupIndex);
         }
     };
 
@@ -1978,7 +1999,7 @@ dc.barChart = function(parent, chartGroup) {
     _chart.plotData = function() {
         var groups = _chart.allGroups();
 
-        _chart.calculateDataPointMatrix(groups);
+        _chart.calculateDataPointMatrixWithinXDomain(groups);
 
         for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
             generateBarsPerGroup(groupIndex, groups[groupIndex]);
@@ -2139,18 +2160,6 @@ dc.barChart = function(parent, chartGroup) {
         return extent;
     };
 
-    dc.override(_chart, "focus", function(range, _super) {
-        _super(range);
-
-        if(range != null && range != undefined && range instanceof Array && range.length > 1){
-            _chart.x().domain(range);
-        }else{
-            _chart.x().domain(_chart.xOriginalDomain());
-        }
-
-        _chart.redraw();
-    });
-
     dc.override(_chart, "prepareOrdinalXAxis", function(_super) {
         return _super(_chart.xUnitCount() + 1);
     });
@@ -2174,7 +2183,7 @@ dc.lineChart = function(parent, chartGroup) {
     _chart.plotData = function() {
         var groups = _chart.allGroups();
 
-        _chart.calculateDataPointMatrix(groups);
+        _chart.calculateDataPointMatrixForAll(groups);
 
         for (var groupIndex = 0; groupIndex < groups.length; ++ groupIndex) {
             var group = groups[groupIndex];

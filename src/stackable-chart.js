@@ -132,18 +132,31 @@ dc.stackableChart = function(_chart) {
         return h;
     };
 
-    _chart.calculateDataPointMatrix = function(groups) {
+    function calculateDataPointMatrix(data, groupIndex) {
+        for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
+            var d = data[dataIndex];
+            if (groupIndex == 0)
+                _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline() - _chart.dataPointHeight(d, groupIndex));
+            else
+                _groupStack.setDataPoint(groupIndex, dataIndex, _groupStack.getDataPoint(groupIndex - 1, dataIndex) - _chart.dataPointHeight(d, groupIndex))
+        }
+    }
+
+    _chart.calculateDataPointMatrixForAll = function(groups) {
+        for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
+            var group = groups[groupIndex];
+            var data = group.all();
+
+            calculateDataPointMatrix(data, groupIndex);
+        }
+    };
+
+    _chart.calculateDataPointMatrixWithinXDomain = function(groups) {
         for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
             var group = groups[groupIndex];
             var data = _chart.getDataWithinXDomain(group);
 
-            for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
-                var d = data[dataIndex];
-                if (groupIndex == 0)
-                    _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline() - _chart.dataPointHeight(d, groupIndex));
-                else
-                    _groupStack.setDataPoint(groupIndex, dataIndex, _groupStack.getDataPoint(groupIndex - 1, dataIndex) - _chart.dataPointHeight(d, groupIndex))
-            }
+            calculateDataPointMatrix(data, groupIndex);
         }
     };
 

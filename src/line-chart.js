@@ -15,7 +15,7 @@ dc.lineChart = function(parent, chartGroup) {
     _chart.plotData = function() {
         var groups = _chart.allGroups();
 
-        _chart.calculateDataPointMatrix(groups);
+        _chart.calculateDataPointMatrixForAll(groups);
 
         for (var groupIndex = 0; groupIndex < groups.length; ++ groupIndex) {
             var group = groups[groupIndex];

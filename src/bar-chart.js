@@ -10,7 +10,7 @@ dc.barChart = function(parent, chartGroup) {
     _chart.plotData = function() {
         var groups = _chart.allGroups();
 
-        _chart.calculateDataPointMatrix(groups);
+        _chart.calculateDataPointMatrixWithinXDomain(groups);
 
         for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
             generateBarsPerGroup(groupIndex, groups[groupIndex]);
@@ -170,18 +170,6 @@ dc.barChart = function(parent, chartGroup) {
         }
         return extent;
     };
-
-    dc.override(_chart, "focus", function(range, _super) {
-        _super(range);
-
-        if(range != null && range != undefined && range instanceof Array && range.length > 1){
-            _chart.x().domain(range);
-        }else{
-            _chart.x().domain(_chart.xOriginalDomain());
-        }
-
-        _chart.redraw();
-    });
 
     dc.override(_chart, "prepareOrdinalXAxis", function(_super) {
         return _super(_chart.xUnitCount() + 1);
