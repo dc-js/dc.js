@@ -282,6 +282,10 @@ dc.utils.GroupStack = function() {
     this.setDefaultAccessor = function(retriever) {
         _defaultAccessor = retriever;
     };
+
+    this.getDataPoints = function(){
+        return _dataPointMatrix;
+    };
 };
 
 function isNegligible(max) {
@@ -1454,7 +1458,14 @@ dc.stackableChart = function(_chart) {
 
     _chart.calculateDataPointMatrix = function(groups) {
         for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
-            var data = groups[groupIndex].all();
+            var all = groups[groupIndex].all();
+            var data = [];
+
+            all.forEach(function(d){
+                var key = _chart.keyAccessor()(d);
+                if(key >= _chart.x().domain()[0] && key <= _chart.x().domain()[1])
+                    data.push(d);
+            });
 
             for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
                 var d = data[dataIndex];
@@ -1954,8 +1965,17 @@ dc.barChart = function(parent, chartGroup) {
     };
 
     function generateBarsPerGroup(groupIndex, group) {
+        var all = group.all();
+        var data = [];
+
+        all.forEach(function(d){
+            var key = _chart.keyAccessor()(d);
+            if(key >= _chart.x().domain()[0] && key <= _chart.x().domain()[1])
+                data.push(d);
+        });
+
         var bars = _chart.g().selectAll("rect." + dc.constants.STACK_CLASS + groupIndex)
-            .data(group.all());
+            .data(data);
 
         addNewBars(bars, groupIndex);
 
