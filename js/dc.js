@@ -311,6 +311,12 @@ dc.utils.groupMin = function(group, accessor) {
 dc.utils.nameToId = function(name){
     return name.toLowerCase().replace(/[\s]/g, "_").replace(/[\.']/g, "");
 };
+
+dc.utils.appendOrSelect = function(parent, name) {
+    var element = parent.select(name);
+    if (element.empty()) element = parent.append(name);
+    return element;
+};
 dc.events = {
     current: null
 };
@@ -736,14 +742,18 @@ dc.coordinateGridChart = function(_chart) {
             parent = _chart.svg();
 
         _g = parent.append("g");
-        var chartBodyClip = parent.append("defs").append("svg:clipPath")
-                .attr("id", "clip")
+
+        var defs = dc.utils.appendOrSelect(parent, "defs");
+
+        var chartBodyClip =  dc.utils.appendOrSelect(defs, "clipPath");
+        chartBodyClip.attr("id", "clip")
                 .append("svg:rect")
                 .attr("id", "clip-rect")
                 .attr("x", _chart.margins().left)
                 .attr("y", _chart.margins().top)
                 .attr("width", _chart.xAxisLength())
                 .attr("height", _chart.yAxisHeight());
+
         _chartBodyG = _g.append("g").attr("class", "chartBody").attr("clip-path", "url(#clip)");
 
         return _g;
@@ -1252,6 +1262,10 @@ dc.coordinateGridChart = function(_chart) {
         }
 
         _chart.redraw();
+    };
+
+    _chart.refocused = function(){
+        return _refocused;
     };
 
     return _chart;
@@ -2013,6 +2027,8 @@ dc.barChart = function(parent, chartGroup) {
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
     var _centerBar = false;
 
+    var _numberOfBars;
+
     _chart.plotData = function() {
         var groups = _chart.allGroups();
 
@@ -2024,7 +2040,7 @@ dc.barChart = function(parent, chartGroup) {
     };
 
     function generateBarsPerGroup(groupIndex, group) {
-        var bars = _chart.g().selectAll("rect." + dc.constants.STACK_CLASS + groupIndex)
+        var bars = _chart.chartBodyG().selectAll("rect." + dc.constants.STACK_CLASS + groupIndex)
             .data(_chart.getDataWithinXDomain(group));
 
         addNewBars(bars, groupIndex);
@@ -2085,7 +2101,9 @@ dc.barChart = function(parent, chartGroup) {
     }
 
     function getNumberOfBars() {
-        return _chart.xUnitCount();
+        if(_numberOfBars == null || _chart.refocused())
+            _numberOfBars = _chart.xUnitCount();
+        return _numberOfBars;
     }
 
     function barWidth(d) {
@@ -2127,7 +2145,7 @@ dc.barChart = function(parent, chartGroup) {
     }
 
     _chart.fadeDeselectedArea = function() {
-        var bars = _chart.g().selectAll("rect.bar");
+        var bars = _chart.chartBodyG().selectAll("rect.bar");
         var extent = _chart.brush().extent();
 
         if (_chart.isOrdinal()) {
@@ -2171,7 +2189,7 @@ dc.barChart = function(parent, chartGroup) {
             extent[0] = extent.map(_chart.round())[0];
             extent[1] = extent.map(_chart.round())[1];
 
-            _chart.g().select(".brush")
+            _chart.chartBodyG().select(".brush")
                 .call(_chart.brush().extent(extent));
         }
         return extent;

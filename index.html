@@ -404,7 +404,7 @@ d3.csv("ndx.csv", function(data) {
                     .xAxis();
 
             volumeChart.width(990)
-                    .height(40)
+                    .height(400)
                     .margins({top: 0, right: 50, bottom: 20, left: 40})
                     .dimension(moveMonths)
                     .group(volumeByMonthGroup)
@@ -417,7 +417,9 @@ d3.csv("ndx.csv", function(data) {
                         moveChart.filter(chart.filter());
                     })
                     .renderlet(function(chart){
-                        moveChart.focus(chart.filter());
+                        dc.events.trigger(function(){
+                            moveChart.focus(chart.filter());
+                        });
                     });
 
 
