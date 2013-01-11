@@ -378,6 +378,7 @@ d3.csv("ndx.csv", function(data) {
 
             moveChart.width(990)
                     .height(180)
+                    .transitionDuration(1000)
                     .margins({top: 10, right: 50, bottom: 25, left: 40})
                     .dimension(moveMonths)
                     .group(indexAvgByMonthGroup)
@@ -404,7 +405,7 @@ d3.csv("ndx.csv", function(data) {
                     .xAxis();
 
             volumeChart.width(990)
-                    .height(400)
+                    .height(40)
                     .margins({top: 0, right: 50, bottom: 20, left: 40})
                     .dimension(moveMonths)
                     .group(volumeByMonthGroup)
