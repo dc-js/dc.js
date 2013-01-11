@@ -466,4 +466,42 @@ suite.addBatch({'ordinal line chart':{
     }
 }});
 
+suite.addBatch({'clip path':{
+    topic: function() {
+        var chart = buildChart("chart-clip-path");
+        return chart;
+    },
+    'only one defs should be created': function(chart) {
+        assert.equal(chart.selectAll("defs")[0].length, 1);
+    },
+    'only one clip path should be created': function(chart) {
+        assert.equal(chart.selectAll("defs clipPath")[0].length, 1);
+    },
+    'only one clip rect should be created': function(chart) {
+        assert.equal(chart.selectAll("defs clipPath rect")[0].length, 1);
+    },
+    'clip rect size should be correct': function(chart) {
+        var rect = chart.select("defs clipPath rect");
+        assert.equal(rect.attr("width"), 1020);
+        assert.equal(rect.attr("height"), 160);
+    },
+    'clip rect position should be correct': function(chart) {
+        var rect = chart.select("defs clipPath rect");
+        assert.equal(rect.attr("x"), 30);
+        assert.equal(rect.attr("y"), 10);
+    },
+    'clip id should be correct': function(chart) {
+        assert.equal(chart.select("defs clipPath").attr("id"), "chart-clip-path-clip");
+    },
+    'chart body g should have clip path refs': function(chart) {
+        chart.selectAll("g.chartBody").each(function(){
+            assert.equal(d3.select(this).attr("clip-path"),"url(#chart-clip-path-clip)");
+        });
+    },
+    teardown: function(topic) {
+        resetAllFilters();
+        resetBody();
+    }
+}});
+
 suite.export(module);

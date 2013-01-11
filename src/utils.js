@@ -131,3 +131,9 @@ dc.utils.groupMin = function(group, accessor) {
 dc.utils.nameToId = function(name){
     return name.toLowerCase().replace(/[\s]/g, "_").replace(/[\.']/g, "");
 };
+
+dc.utils.appendOrSelect = function(parent, name) {
+    var element = parent.select(name);
+    if (element.empty()) element = parent.append(name);
+    return element;
+};

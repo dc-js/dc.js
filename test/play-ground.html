@@ -705,8 +705,10 @@ compositeChartDate.width(500)
             dc.lineChart(compositeChartDate).group(dateGroup)
         ])
         .renderlet(function(chart){
-            barChartDate.focus(chart.filter());
-            lineChartDate.focus(chart.filter());
+            dc.events.trigger(function(){
+                barChartDate.focus(chart.filter());
+                lineChartDate.focus(chart.filter());
+            });
         })
         .xAxis().ticks(5);
 

@@ -1,4 +1,4 @@
-dc.coordinateGridChart = function(_chart) {
+dc.coordinateGridChart = function (_chart) {
     var DEFAULT_Y_AXIS_TICKS = 5;
     var GRID_LINE_CLASS = "grid-line";
     var HORIZONTAL_CLASS = "horizontal";
@@ -8,6 +8,7 @@ dc.coordinateGridChart = function(_chart) {
 
     var _margin = {top: 10, right: 50, bottom: 30, left: 30};
 
+    var _parent;
     var _g;
     var _chartBodyG;
 
@@ -33,88 +34,81 @@ dc.coordinateGridChart = function(_chart) {
 
     var _refocused = false;
 
-    _chart.generateG = function(parent) {
+    _chart.generateG = function (parent) {
         if (parent == null)
-            parent = _chart.svg();
+            _parent = _chart.svg();
+        else
+            _parent = parent;
 
-        _g = parent.append("g");
+        _g = _parent.append("g");
 
-        var chartBodyClip = parent.append("defs").append("svg:clipPath")
-                .attr("id", "clip")
-                .append("svg:rect")
-                .attr("id", "clip-rect")
-                .attr("x", _chart.margins().left)
-                .attr("y", _chart.margins().top)
-                .attr("width", _chart.xAxisLength())
-                .attr("height", _chart.yAxisHeight());
-
-        _chartBodyG = _g.append("g").attr("class", "chartBody").attr("clip-path", "url(#clip)");
+        _chartBodyG = _g.append("g").attr("class", "chartBody").attr("clip-path", "url(#" + getClipPathId() + ")");
 
         return _g;
     };
 
-    _chart.g = function(_) {
+    _chart.g = function (_) {
         if (!arguments.length) return _g;
         _g = _;
         return _chart;
     };
 
-    _chart.chartBodyG = function(_) {
+    _chart.chartBodyG = function (_) {
         if (!arguments.length) return _chartBodyG;
         _chartBodyG = _;
         return _chart;
     };
 
-    _chart.margins = function(m) {
+    _chart.margins = function (m) {
         if (!arguments.length) return _margin;
         _margin = m;
         return _chart;
     };
 
-    _chart.x = function(_) {
+    _chart.x = function (_) {
         if (!arguments.length) return _x;
         _x = _;
         _xOriginalDomain = _x.domain();
         return _chart;
     };
 
-    _chart.xOriginalDomain = function(){
+    _chart.xOriginalDomain = function () {
         return _xOriginalDomain;
     };
 
-    _chart.xUnits = function(_) {
+    _chart.xUnits = function (_) {
         if (!arguments.length) return _xUnits;
         _xUnits = _;
         return _chart;
     };
 
-    _chart.xAxis = function(_) {
+    _chart.xAxis = function (_) {
         if (!arguments.length) return _xAxis;
         _xAxis = _;
         return _chart;
     };
 
-    _chart.elasticX = function(_) {
+    _chart.elasticX = function (_) {
         if (!arguments.length) return _xElasticity;
         _xElasticity = _;
         return _chart;
     };
 
-    _chart.xAxisPadding = function(_) {
+    _chart.xAxisPadding = function (_) {
         if (!arguments.length) return _xAxisPadding;
         _xAxisPadding = _;
         return _chart;
     };
 
-    _chart.xUnitCount = function() {
+    _chart.xUnitCount = function () {
         return _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain()).length;
     };
 
-    _chart.isOrdinal = function() {
+    _chart.isOrdinal = function () {
         return _chart.xUnits() === dc.units.ordinal;
     };
 
-    _chart.prepareOrdinalXAxis = function(count) {
+    _chart.prepareOrdinalXAxis = function (count) {
         if (!count)
             count = _chart.xUnitCount();
         var range = [];
@@ -143,7 +137,7 @@ dc.coordinateGridChart = function(_chart) {
         renderVerticalGridLines(g);
     }
 
-    _chart.renderXAxis = function(g) {
+    _chart.renderXAxis = function (g) {
         var axisXG = g.selectAll("g.x");
 
         if (axisXG.empty())
@@ -172,11 +166,11 @@ dc.coordinateGridChart = function(_chart) {
             // enter
             var linesGEnter = lines.enter()
                 .append("line")
-                .attr("x1", function(d) {
+                .attr("x1", function (d) {
                     return _x(d);
                 })
                 .attr("y1", _chart.xAxisY() - _chart.margins().top)
-                .attr("x2", function(d) {
+                .attr("x2", function (d) {
                     return _x(d);
                 })
                 .attr("y2", 0)
@@ -186,11 +180,11 @@ dc.coordinateGridChart = function(_chart) {
 
             // update
             dc.transition(lines, _chart.transitionDuration())
-                .attr("x1", function(d) {
+                .attr("x1", function (d) {
                     return _x(d);
                 })
                 .attr("y1", _chart.xAxisY() - _chart.margins().top)
-                .attr("x2", function(d) {
+                .attr("x2", function (d) {
                     return _x(d);
                 })
                 .attr("y2", 0);
@@ -200,11 +194,11 @@ dc.coordinateGridChart = function(_chart) {
         }
     }
 
-    _chart.xAxisY = function() {
+    _chart.xAxisY = function () {
         return (_chart.height() - _chart.margins().bottom);
     };
 
-    _chart.xAxisLength = function() {
+    _chart.xAxisLength = function () {
         return _chart.width() - _chart.margins().left - _chart.margins().right;
     };
 
@@ -220,7 +214,7 @@ dc.coordinateGridChart = function(_chart) {
         renderHorizontalGridLines(g);
     }
 
-    _chart.renderYAxis = function(g) {
+    _chart.renderYAxis = function (g) {
         var axisYG = g.selectAll("g.y");
         if (axisYG.empty())
             axisYG = g.append("g")
@@ -249,11 +243,11 @@ dc.coordinateGridChart = function(_chart) {
             var linesGEnter = lines.enter()
                 .append("line")
                 .attr("x1", 1)
-                .attr("y1", function(d) {
+                .attr("y1", function (d) {
                     return _y(d);
                 })
                 .attr("x2", _chart.xAxisLength())
-                .attr("y2", function(d) {
+                .attr("y2", function (d) {
                     return _y(d);
                 })
                 .attr("opacity", 0);
@@ -263,11 +257,11 @@ dc.coordinateGridChart = function(_chart) {
             // update
             dc.transition(lines, _chart.transitionDuration())
                 .attr("x1", 1)
-                .attr("y1", function(d) {
+                .attr("y1", function (d) {
                     return _y(d);
                 })
                 .attr("x2", _chart.xAxisLength())
-                .attr("y2", function(d) {
+                .attr("y2", function (d) {
                     return _y(d);
                 });
 
@@ -276,85 +270,85 @@ dc.coordinateGridChart = function(_chart) {
         }
     }
 
-    _chart.yAxisX = function() {
+    _chart.yAxisX = function () {
         return _chart.margins().left;
     };
 
-    _chart.y = function(_) {
+    _chart.y = function (_) {
         if (!arguments.length) return _y;
         _y = _;
         return _chart;
     };
 
-    _chart.yAxis = function(y) {
+    _chart.yAxis = function (y) {
         if (!arguments.length) return _yAxis;
         _yAxis = y;
         return _chart;
     };
 
-    _chart.elasticY = function(_) {
+    _chart.elasticY = function (_) {
         if (!arguments.length) return _yElasticity;
         _yElasticity = _;
         return _chart;
     };
 
-    _chart.renderHorizontalGridLines = function(_) {
+    _chart.renderHorizontalGridLines = function (_) {
         if (!arguments.length) return _renderHorizontalGridLine;
         _renderHorizontalGridLine = _;
         return _chart;
     };
 
-    _chart.renderVerticalGridLines = function(_) {
+    _chart.renderVerticalGridLines = function (_) {
         if (!arguments.length) return _renderVerticalGridLine;
         _renderVerticalGridLine = _;
         return _chart;
     };
 
-    _chart.xAxisMin = function() {
-        var min = d3.min(_chart.group().all(), function(e) {
+    _chart.xAxisMin = function () {
+        var min = d3.min(_chart.group().all(), function (e) {
             return _chart.keyAccessor()(e);
         });
         return dc.utils.subtract(min, _xAxisPadding);
     };
 
-    _chart.xAxisMax = function() {
-        var max = d3.max(_chart.group().all(), function(e) {
+    _chart.xAxisMax = function () {
+        var max = d3.max(_chart.group().all(), function (e) {
             return _chart.keyAccessor()(e);
         });
         return dc.utils.add(max, _xAxisPadding);
     };
 
-    _chart.yAxisMin = function() {
-        var min = d3.min(_chart.group().all(), function(e) {
+    _chart.yAxisMin = function () {
+        var min = d3.min(_chart.group().all(), function (e) {
             return _chart.valueAccessor()(e);
         }) - _yAxisPadding;
         return min;
     };
 
-    _chart.yAxisMax = function() {
-        var max = d3.max(_chart.group().all(), function(e) {
+    _chart.yAxisMax = function () {
+        var max = d3.max(_chart.group().all(), function (e) {
             return _chart.valueAccessor()(e);
         });
         return dc.utils.add(max, _yAxisPadding);
     };
 
-    _chart.yAxisPadding = function(_) {
+    _chart.yAxisPadding = function (_) {
         if (!arguments.length) return _yAxisPadding;
         _yAxisPadding = _;
         return _chart;
     };
 
-    _chart.yAxisHeight = function() {
+    _chart.yAxisHeight = function () {
         return _chart.height() - _chart.margins().top - _chart.margins().bottom;
     };
 
-    _chart.round = function(_) {
+    _chart.round = function (_) {
         if (!arguments.length) return _round;
         _round = _;
         return _chart;
     };
 
-    _chart.filter = function(_) {
+    _chart.filter = function (_) {
         if (!arguments.length) return _filter;
 
         if (_) {
@@ -372,7 +366,7 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
-    _chart.brush = function(_) {
+    _chart.brush = function (_) {
         if (!arguments.length) return _brush;
         _brush = _;
         return _chart;
@@ -382,7 +376,7 @@ dc.coordinateGridChart = function(_chart) {
         return _chart.xAxisY() - _chart.margins().top;
     }
 
-    _chart.renderBrush = function(g) {
+    _chart.renderBrush = function (g) {
         if (_chart.isOrdinal())
             _brushOn = false;
 
@@ -407,7 +401,7 @@ dc.coordinateGridChart = function(_chart) {
     function brushStart(p) {
     }
 
-    _chart.extendBrush = function() {
+    _chart.extendBrush = function () {
         var extent = _brush.extent();
         if (_chart.round()) {
             extent[0] = extent.map(_chart.round())[0];
@@ -429,12 +423,12 @@ dc.coordinateGridChart = function(_chart) {
         _chart.redrawBrush(_g);
 
         if (_chart.brushIsEmpty(extent)) {
-            dc.events.trigger(function() {
+            dc.events.trigger(function () {
                 _chart.filter(null);
                 dc.redrawAll(_chart.chartGroup());
             });
         } else {
-            dc.events.trigger(function() {
+            dc.events.trigger(function () {
                 _chart.filter([extent[0], extent[1]]);
                 dc.redrawAll(_chart.chartGroup());
             }, dc.constants.EVENT_DELAY);
@@ -444,7 +438,7 @@ dc.coordinateGridChart = function(_chart) {
     function brushEnd(p) {
     }
 
-    _chart.redrawBrush = function(g) {
+    _chart.redrawBrush = function (g) {
         if (_brushOn) {
             if (_chart.filter() && _chart.brush().empty())
                 _chart.brush().extent(_chart.filter());
@@ -457,12 +451,12 @@ dc.coordinateGridChart = function(_chart) {
         _chart.fadeDeselectedArea();
     };
 
-    _chart.fadeDeselectedArea = function() {
+    _chart.fadeDeselectedArea = function () {
         // do nothing, sub-chart should override this function
     };
 
     // borrowed from Crossfilter example
-    _chart.resizeHandlePath = function(d) {
+    _chart.resizeHandlePath = function (d) {
         var e = +(d == "e"), x = e ? 1 : -1, y = brushHeight() / 3;
         return "M" + (.5 * x) + "," + y
             + "A6,6 0 0 " + e + " " + (6.5 * x) + "," + (y + 6)
@@ -475,7 +469,23 @@ dc.coordinateGridChart = function(_chart) {
             + "V" + (2 * y - 8);
     };
 
-    _chart.doRender = function() {
+    function getClipPathId() {
+        return _chart.anchor().replace('#', '') + "-clip";
+    }
+
+    function generateClipPath() {
+        var defs = dc.utils.appendOrSelect(_parent, "defs");
+
+        var chartBodyClip = dc.utils.appendOrSelect(defs, "clipPath").attr("id", getClipPathId());
+
+        dc.utils.appendOrSelect(chartBodyClip, "rect")
+            .attr("x", _chart.margins().left)
+            .attr("y", _chart.margins().top)
+            .attr("width", _chart.xAxisLength())
+            .attr("height", _chart.yAxisHeight());
+    }
+
+    _chart.doRender = function () {
         if (_x == null)
             throw new dc.errors.InvalidStateException("Mandatory attribute chart.x is missing on chart["
                 + _chart.anchor() + "]");
@@ -485,6 +495,7 @@ dc.coordinateGridChart = function(_chart) {
         if (_chart.dataAreSet()) {
             _chart.generateG();
 
+            generateClipPath();
             prepareXAxis(_chart.g());
             prepareYAxis(_chart.g());
 
@@ -499,7 +510,7 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
-    _chart.doRedraw = function() {
+    _chart.doRedraw = function () {
         prepareXAxis(_chart.g());
         prepareYAxis(_chart.g());
 
@@ -516,7 +527,7 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
-    _chart.subRender = function() {
+    _chart.subRender = function () {
         if (_chart.dataAreSet()) {
             _chart.plotData();
         }
@@ -524,21 +535,21 @@ dc.coordinateGridChart = function(_chart) {
         return _chart;
     };
 
-    _chart.brushOn = function(_) {
+    _chart.brushOn = function (_) {
         if (!arguments.length) return _brushOn;
         _brushOn = _;
         return _chart;
     };
 
-    _chart.getDataWithinXDomain=function(group){
+    _chart.getDataWithinXDomain = function (group) {
         var data = [];
 
-        if(_chart.isOrdinal()){
+        if (_chart.isOrdinal()) {
             data = group.all();
-        }else{
-            group.all().forEach(function(d){
+        } else {
+            group.all().forEach(function (d) {
                 var key = _chart.keyAccessor()(d);
-                if(key >= _chart.x().domain()[0] && key <= _chart.x().domain()[1])
+                if (key >= _chart.x().domain()[0] && key <= _chart.x().domain()[1])
                     data.push(d);
             });
         }
@@ -546,16 +557,20 @@ dc.coordinateGridChart = function(_chart) {
         return data;
     };
 
-    _chart.focus = function(range){
+    _chart.focus = function (range) {
         _refocused = true;
 
-        if(range != null && range != undefined && range instanceof Array && range.length > 1){
+        if (range != null && range != undefined && range instanceof Array && range.length > 1) {
             _chart.x().domain(range);
-        }else{
+        } else {
             _chart.x().domain(_chart.xOriginalDomain());
         }
 
         _chart.redraw();
+    };
+
+    _chart.refocused = function () {
+        return _refocused;
     };
 
     return _chart;
