@@ -746,7 +746,8 @@ dc.coordinateGridChart = function (_chart) {
 
         _g = _parent.append("g");
 
-        _chartBodyG = _g.append("g").attr("class", "chartBody").attr("clip-path", "url(#" + getClipPathId() + ")");
+        _chartBodyG = _g.append("g").attr("class", "chartBody")
+            .attr("clip-path", "url(#" + getClipPathId() + ")");
 
         return _g;
     };
@@ -2310,7 +2311,7 @@ dc.lineChart = function(parent, chartGroup) {
             .y1(line.y())
             .y0(function(d, dataIndex) {
                 var groupIndex = this[dc.constants.GROUP_INDEX_NAME];
-                if (groupIndex == 0) return _chart.y()(0) - AREA_BOTTOM_PADDING + _chart.margins().top;
+                if (groupIndex == 0) return _chart.xAxisY() - AREA_BOTTOM_PADDING;
                 return _chart.getChartStack().getDataPoint(--groupIndex, dataIndex) - AREA_BOTTOM_PADDING;
             });
 

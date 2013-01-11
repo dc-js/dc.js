@@ -42,7 +42,8 @@ dc.coordinateGridChart = function (_chart) {
 
         _g = _parent.append("g");
 
-        _chartBodyG = _g.append("g").attr("class", "chartBody").attr("clip-path", "url(#" + getClipPathId() + ")");
+        _chartBodyG = _g.append("g").attr("class", "chartBody")
+            .attr("clip-path", "url(#" + getClipPathId() + ")");
 
         return _g;
     };
