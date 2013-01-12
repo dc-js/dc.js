@@ -85,7 +85,7 @@ dc.lineChart = function(parent, chartGroup) {
     };
 
     function drawArea(g, stackedCssClass, groupIndex, line) {
-        var areaPath = g.selectAll("path.area");
+        var areaPath = g.select("path.area");
 
         if (areaPath.empty())
             areaPath = g.append("path")
