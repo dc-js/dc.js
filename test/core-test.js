@@ -115,7 +115,7 @@ suite.addBatch({
                 return dc.units.integers(0, 100);
             },
             'units should be based on subtraction': function(units) {
-                assert.equal(units.length, 100);
+                assert.equal(units, 100);
             }
         },
         '.ordinal': {

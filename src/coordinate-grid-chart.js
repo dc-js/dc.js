@@ -102,7 +102,11 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     _chart.xUnitCount = function () {
-        return _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain()).length;
+        var units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain());
+        if(units instanceof Array)
+            return units.length;
+        else
+            return units;
     };
 
     _chart.isOrdinal = function () {

@@ -44,6 +44,23 @@ function buildOrdinalChart(id, xdomain) {
     return chart;
 }
 
+function buildLinearChart(id, xdomain) {
+    if (!xdomain)
+        xdomain = [20, 70];
+
+    var div = d3.select("body").append("div").attr("id", id);
+    div.append("a").attr("class", "reset").style("display", "none");
+    div.append("span").attr("class", "filter").style("display", "none");
+    var chart = dc.barChart("#" + id);
+    chart.dimension(valueDimension).group(valueGroup)
+        .width(width).height(height)
+        .x(d3.scale.linear().domain(xdomain))
+        .transitionDuration(0)
+        .xUnits(dc.units.integers);
+    chart.render();
+    return chart;
+}
+
 suite.addBatch({
     'time bar chart': {
         topic: function () {
@@ -479,6 +496,28 @@ suite.addBatch({'ordinal bar chart': {
         assert.isTrue(d3.select(chart.selectAll("rect.bar")[0][0]).classed("deselected"));
         assert.isFalse(d3.select(chart.selectAll("rect.bar")[0][5]).classed("deselected"));
         assert.equal(stateDimension.top(Infinity).length, 2);
+    },
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
+    }
+}});
+
+suite.addBatch({'linear integers bar chart': {
+    topic: function () {
+        var chart = buildLinearChart("bar-chart-linear-integers");
+        return chart;
+    },
+    'should generate correct number of bars': function (chart) {
+        assert.equal(chart.selectAll("rect.bar")[0].length, 5);
+    },
+    'should auto size bar width': function (chart) {
+        assert.equal(chart.select("rect.bar").attr("width"), "18");
+    },
+    'should position bars based on linear range': function (chart) {
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][0]).attr("x"), /70.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][2]).attr("x"), /519.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][4]).attr("x"), /968.\d+/);
     },
     teardown: function (topic) {
         resetAllFilters();

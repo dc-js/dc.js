@@ -123,7 +123,7 @@ dc.transition = function(selections, duration, callback) {
 
 dc.units = {};
 dc.units.integers = function(s, e) {
-    return new Array(Math.abs(e - s));
+    return Math.abs(e - s);
 };
 
 dc.units.ordinal = function(s, e, domain){
@@ -806,7 +806,11 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     _chart.xUnitCount = function () {
-        return _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain()).length;
+        var units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain());
+        if(units instanceof Array)
+            return units.length;
+        else
+            return units;
     };
 
     _chart.isOrdinal = function () {

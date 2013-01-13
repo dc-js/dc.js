@@ -591,6 +591,14 @@ Country filter: <input id="custom-filter" type="text"/><button onclick="countryD
     <div class="clear"></div>
 </div>
 
+<div id="linear-bar-chart">
+    <span>Linear Bar Chart</span>
+    <a class="reset" href="javascript:linearBarChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+    <br/><span class="reset" style="display: none;">Current filter: <span class="filter"></span></span>
+
+    <div class="clear"></div>
+</div>
+
 <div class="clear"></div>
 
 <div class="dc-data-count">
@@ -772,6 +780,15 @@ ordinalLineChart.width(500)
         .renderTitle(true)
         .x(d3.scale.ordinal().domain(["California", "Colorado", "Delaware", "Mississippi", "Oklahoma", "Ontario"]))
         .xUnits(dc.units.ordinal);
+
+var linearBarChart = dc.barChart("#linear-bar-chart");
+linearBarChart.width(500)
+        .height(150)
+        .dimension(valueDimension)
+        .group(valueGroup)
+        .elasticY(true)
+        .x(d3.scale.linear().domain([20, 70]))
+        .xUnits(dc.units.integers);
 
 dc.dataCount(".dc-data-count")
         .dimension(data)
