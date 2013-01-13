@@ -18,19 +18,38 @@ suite.addBatch({
 });
 
 suite.addBatch({
-    'listeners': {
+    'render listeners': {
         topic: function () {
             var chart = dc.baseChart({out: ""});
             chart.dimension(valueDimension)
                 .group(valueGroup)
                 .on("preRender", function(chart){chart.out+="preRender";})
-                .on("postRender", function(chart){chart.out+=":postRender";});
+                .on("postRender", function(chart){chart.out+=":postRender";})
             chart.render();
             return chart;
         },
 
         'listeners invocation': function (chart) {
             assert.equal(chart.out, "preRender:postRender");
+        }
+    }
+});
+
+suite.addBatch({
+    'redraw listeners': {
+        topic: function () {
+            var chart = dc.baseChart({out: ""});
+            chart.dimension(valueDimension)
+                .group(valueGroup)
+                .on("preRedraw", function(chart){chart.out+="preRedraw";})
+                .on("postRedraw", function(chart){chart.out+=":postRedraw";})
+            chart.render();
+            chart.redraw();
+            return chart;
+        },
+
+        'listeners invocation': function (chart) {
+            assert.equal(chart.out, "preRedraw:postRedraw");
         }
     }
 });

@@ -36,7 +36,7 @@ dc.baseChart = function(_chart) {
     var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
 
     var NULL_LISTENER = function(chart){};
-    var _listeners = {preRender:NULL_LISTENER, postRender:NULL_LISTENER};
+    var _listeners = {preRender:NULL_LISTENER, postRender:NULL_LISTENER, preRedraw:NULL_LISTENER, postRedraw:NULL_LISTENER};
 
     _chart.width = function(w) {
         if (!arguments.length) return _width;
@@ -168,9 +168,13 @@ dc.baseChart = function(_chart) {
     };
 
     _chart.redraw = function() {
+        _listeners.preRedraw(_chart);
+
         var result = _chart.doRedraw();
 
         _chart.invokeRenderlet(_chart);
+
+        _listeners.postRedraw(_chart);
 
         return result;
     };
