@@ -283,6 +283,20 @@ chart.xUnits(d3.time.days);
 // set x units to month for a histogram
 chart.xUnits(d3.time.months);
 ```
+Custom xUnits function can be easily created using as long as it follows the following inteface:
+```js
+// units in integer
+function(start, end, xDomain) {
+    // simply calculates how many integers in the domain
+    return Math.abs(end - start);
+};
+
+// fixed units
+function(start, end, xDomain) {
+    // be aware using fixed units will disable the focus/zoom ability on the chart
+    return 1000;
+};
+```
 
 #### .round([rounding function])
 Set or get the rounding function for x axis. Rounding is mainly used to provide stepping capability when in place
@@ -798,6 +812,10 @@ belong to the default chart group will be reset.
 This function can be used to in [Coordinate Grid Chart](#coordinate-grid-chart) to define units on x axis.
 dc.units.integers is the default x unit scale used by [Coordinate Grid Chart](#coordinate-grid-chart) and should be
 used when x range is a sequential of integers.
+
+### dc.units.float.precision(precision)
+This function generates xunit function in floating-point numbers with the given precision. For example if the function
+is invoked with 0.001 precision then the function created will devide a range [0.5, 1.0] with 500 units.
 
 ### dc.units.ordinal
 This function can be used to in [Coordinate Grid Chart](#coordinate-grid-chart) to define ordinal units on x axis.
