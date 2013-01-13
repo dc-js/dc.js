@@ -36,7 +36,13 @@ dc.baseChart = function(_chart) {
     var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
 
     var NULL_LISTENER = function(chart){};
-    var _listeners = {preRender:NULL_LISTENER, postRender:NULL_LISTENER, preRedraw:NULL_LISTENER, postRedraw:NULL_LISTENER};
+    var _listeners = {
+        preRender:NULL_LISTENER,
+        postRender:NULL_LISTENER,
+        preRedraw:NULL_LISTENER,
+        postRedraw:NULL_LISTENER,
+        filtered:NULL_LISTENER
+    };
 
     _chart.width = function(w) {
         if (!arguments.length) return _width;
@@ -179,8 +185,16 @@ dc.baseChart = function(_chart) {
         return result;
     };
 
-    // abstract function stub
     _chart.filter = function(f) {
+        var result = _chart.doFilter(f);
+
+        if(arguments.length) _listeners.filtered(_chart, f);
+
+        return result;
+    };
+
+    // abstract function stub
+    _chart.doFilter = function(f) {
         // do nothing in base, should be overridden by sub-function
         return _chart;
     };
