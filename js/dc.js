@@ -129,6 +129,12 @@ dc.units.integers = function(s, e) {
 dc.units.ordinal = function(s, e, domain){
     return domain;
 };
+dc.units.float = {};
+dc.units.float.precision= function(precision){
+    var _f = function(s, e, domain){return Math.ceil(Math.abs((e-s)/_f.resolution));};
+    _f.resolution = precision;
+    return _f;
+};
 
 dc.round = {};
 dc.round.floor = function(n) {
@@ -496,6 +502,15 @@ dc.baseChart = function(_chart) {
 
     var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
 
+    var NULL_LISTENER = function(chart){};
+    var _listeners = {
+        preRender:NULL_LISTENER,
+        postRender:NULL_LISTENER,
+        preRedraw:NULL_LISTENER,
+        postRedraw:NULL_LISTENER,
+        filtered:NULL_LISTENER
+    };
+
     _chart.width = function(w) {
         if (!arguments.length) return _width;
         _width = w;
@@ -606,6 +621,8 @@ dc.baseChart = function(_chart) {
     };
 
     _chart.render = function() {
+        _listeners.preRender(_chart);
+
         if(_dimension == null)
             throw new dc.errors.InvalidStateException("Mandatory attribute chart.dimension is missing on chart["
                 + _chart.anchor() + "]");
@@ -618,19 +635,33 @@ dc.baseChart = function(_chart) {
 
         _chart.invokeRenderlet(_chart);
 
+        _listeners.postRender(_chart);
+
         return result;
     };
 
     _chart.redraw = function() {
+        _listeners.preRedraw(_chart);
+
         var result = _chart.doRedraw();
 
         _chart.invokeRenderlet(_chart);
+
+        _listeners.postRedraw(_chart);
+
+        return result;
+    };
+
+    _chart.filter = function(f) {
+        var result = _chart.doFilter(f);
+
+        if(arguments.length) _listeners.filtered(_chart, f);
 
         return result;
     };
 
     // abstract function stub
-    _chart.filter = function(f) {
+    _chart.doFilter = function(f) {
         // do nothing in base, should be overridden by sub-function
         return _chart;
     };
@@ -697,6 +728,11 @@ dc.baseChart = function(_chart) {
     _chart.chartGroup = function(_) {
         if (!arguments.length) return _chartGroup;
         _chartGroup = _;
+        return _chart;
+    };
+
+    _chart.on = function(event, listener){
+        _listeners[event] = listener;
         return _chart;
     };
 
