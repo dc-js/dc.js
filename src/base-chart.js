@@ -35,6 +35,9 @@ dc.baseChart = function(_chart) {
 
     var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
 
+    var NULL_LISTENER = function(chart){};
+    var _listeners = {preRender:NULL_LISTENER, postRender:NULL_LISTENER};
+
     _chart.width = function(w) {
         if (!arguments.length) return _width;
         _width = w;
@@ -145,6 +148,8 @@ dc.baseChart = function(_chart) {
     };
 
     _chart.render = function() {
+        _listeners.preRender(_chart);
+
         if(_dimension == null)
             throw new dc.errors.InvalidStateException("Mandatory attribute chart.dimension is missing on chart["
                 + _chart.anchor() + "]");
@@ -156,6 +161,8 @@ dc.baseChart = function(_chart) {
         var result = _chart.doRender();
 
         _chart.invokeRenderlet(_chart);
+
+        _listeners.postRender(_chart);
 
         return result;
     };
@@ -236,6 +243,11 @@ dc.baseChart = function(_chart) {
     _chart.chartGroup = function(_) {
         if (!arguments.length) return _chartGroup;
         _chartGroup = _;
+        return _chart;
+    };
+
+    _chart.on = function(event, listener){
+        _listeners[event] = listener;
         return _chart;
     };
 

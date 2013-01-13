@@ -18,6 +18,24 @@ suite.addBatch({
 });
 
 suite.addBatch({
+    'listeners': {
+        topic: function () {
+            var chart = dc.baseChart({out: ""});
+            chart.dimension(valueDimension)
+                .group(valueGroup)
+                .on("preRender", function(chart){chart.out+="preRender";})
+                .on("postRender", function(chart){chart.out+=":postRender";});
+            chart.render();
+            return chart;
+        },
+
+        'listeners invocation': function (chart) {
+            assert.equal(chart.out, "preRender:postRender");
+        }
+    }
+});
+
+suite.addBatch({
     'missing dimension': {
         topic: function () {
             return dc.baseChart({}).group(valueGroup);
