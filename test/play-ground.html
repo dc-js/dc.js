@@ -753,7 +753,14 @@ ordinalBarChart.width(500)
         .group(stateGroup)
         .elasticY(true)
         .x(d3.scale.ordinal().domain(["California", "Colorado", "Delaware", "Mississippi", "Oklahoma", "Ontario"]))
-        .xUnits(dc.units.ordinal);
+        .xUnits(dc.units.ordinal)
+        .renderlet(function(chart){
+            var colors =d3.scale.ordinal().domain(["California", "Colorado", "Delaware", "Mississippi", "Oklahoma", "Ontario"])
+                .range(["steelblue", "brown", "red", "green", "yellow", "grey"]);
+            chart.selectAll('rect.bar').each(function(d){
+                 d3.select(this).attr("style", "fill: " + colors(d.key));
+            });
+        });
 
 var ordinalLineChart = dc.lineChart("#ordinal-line-chart");
 ordinalLineChart.width(500)
