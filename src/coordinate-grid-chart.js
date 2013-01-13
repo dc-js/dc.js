@@ -368,6 +368,8 @@ dc.coordinateGridChart = function (_chart) {
             _chart.turnOffControls();
         }
 
+        _chart.invokeFilteredListener(_chart, _);
+
         return _chart;
     };
 

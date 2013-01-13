@@ -15,6 +15,7 @@ The entire dc.js library is scoped under **dc** name space. It does not introduc
 * [Geo Choropleth Chart [concrete] < Single Selection Chart < Color Chart < Base Chart](#geo-choropleth-chart)
 * [Data Count Widget [concrete] < Base Chart](#data-count)
 * [Data Table Widget [concrete] < Base Chart](#data-table)
+* [Listeners](#listeners)
 * [Utilities](#utilities)
 
 ### Function Chain
@@ -792,6 +793,25 @@ Get or set sort order. Default value: ``` d3.ascending ```
 ```js
     chart.order(d3.descending);
 ```
+
+## <a name="listeners" href="#listeners">#</a> Listeners
+All dc chart instance supports the following listeners.
+
+### .on("preRender", function(chart){...})
+This listener function will be invoked before chart rendering.
+
+### .on("postRender", function(chart){...})
+This listener function will be invoked after chart finish rendering including all renderlets' logic.
+
+### .on("preRedraw", function(chart){...})
+This listener function will be invoked before chart redrawing.
+
+### .on("postRedraw", function(chart){...})
+This listener function will be invoked after chart finish redrawing including all renderlets' logic.
+
+### .on("filtered", function(chart, filter){...})
+This listener function will be invoked after a filter is applied.
+
 
 ## <a name="utilities" href="#utilities">#</a> Utilities
 

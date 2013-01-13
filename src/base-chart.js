@@ -185,17 +185,14 @@ dc.baseChart = function(_chart) {
         return result;
     };
 
-    _chart.filter = function(f) {
-        var result = _chart.doFilter(f);
-
-        if(arguments.length) _listeners.filtered(_chart, f);
-
-        return result;
+    _chart.invokeFilteredListener = function(chart, f) {
+        if(f !== undefined) _listeners.filtered(_chart, f);
     };
 
     // abstract function stub
-    _chart.doFilter = function(f) {
+    _chart.filter = function(f) {
         // do nothing in base, should be overridden by sub-function
+        _chart.invokeFilteredListener(_chart, f);
         return _chart;
     };
 
