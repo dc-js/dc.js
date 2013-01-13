@@ -123,7 +123,7 @@ dc.transition = function(selections, duration, callback) {
 
 dc.units = {};
 dc.units.integers = function(s, e) {
-    return new Array(Math.abs(e - s));
+    return Math.abs(e - s);
 };
 
 dc.units.ordinal = function(s, e, domain){
@@ -746,7 +746,8 @@ dc.coordinateGridChart = function (_chart) {
 
         _g = _parent.append("g");
 
-        _chartBodyG = _g.append("g").attr("class", "chartBody").attr("clip-path", "url(#" + getClipPathId() + ")");
+        _chartBodyG = _g.append("g").attr("class", "chartBody")
+            .attr("clip-path", "url(#" + getClipPathId() + ")");
 
         return _g;
     };
@@ -805,7 +806,11 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     _chart.xUnitCount = function () {
-        return _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain()).length;
+        var units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain());
+        if(units instanceof Array)
+            return units.length;
+        else
+            return units;
     };
 
     _chart.isOrdinal = function () {
@@ -2297,7 +2302,7 @@ dc.lineChart = function(parent, chartGroup) {
     };
 
     function drawArea(g, stackedCssClass, groupIndex, line) {
-        var areaPath = g.selectAll("path.area");
+        var areaPath = g.select("path.area");
 
         if (areaPath.empty())
             areaPath = g.append("path")
@@ -2310,7 +2315,7 @@ dc.lineChart = function(parent, chartGroup) {
             .y1(line.y())
             .y0(function(d, dataIndex) {
                 var groupIndex = this[dc.constants.GROUP_INDEX_NAME];
-                if (groupIndex == 0) return _chart.y()(0) - AREA_BOTTOM_PADDING + _chart.margins().top;
+                if (groupIndex == 0) return _chart.xAxisY() - AREA_BOTTOM_PADDING;
                 return _chart.getChartStack().getDataPoint(--groupIndex, dataIndex) - AREA_BOTTOM_PADDING;
             });
 
