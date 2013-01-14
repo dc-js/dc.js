@@ -209,7 +209,7 @@ suite.addBatch({'elastic axis':{
         assert.equal(jQuery("#elastic-y-line-chart g.stack0 path.line").attr("d"), "M340.65989847715736,170L413.14720812182736,170L423.502538071066,10L532.233502538071,170L578.8324873096446,10L739.3401015228426,170");
     },
     'correctly draw area': function(chart) {
-        assert.equal(jQuery("#elastic-y-line-chart g.stack0 path.area").attr("d"), "M340.65989847715736,170L413.14720812182736,170L423.502538071066,10L532.233502538071,170L578.8324873096446,10L739.3401015228426,170L739.3401015228426,169L578.8324873096446,169L532.233502538071,169L423.502538071066,169L413.14720812182736,169L340.65989847715736,169Z");
+        assert.matches(jQuery("#elastic-y-line-chart g.stack0 path.area").attr("d"), /M340.\d+,170L413.\d+,170L423.\d+,10L532.\d+,170L578.\d+,10L739.\d+,170L739.\d+,169L578.\d+,169L532.\d+,169L423.\d+,169L413.\d+,169L340.\d+,169Z/);
     },
     teardown: function(topic) {
         resetAllFilters();
@@ -459,6 +459,44 @@ suite.addBatch({'ordinal line chart':{
     },
     'should generate correct line path': function(chart) {
         assert.equal(chart.select("path.line").attr("d"), "M30,10L200,117L370,117L540,63L710,117L880,63");
+    },
+    teardown: function(topic) {
+        resetAllFilters();
+        resetBody();
+    }
+}});
+
+suite.addBatch({'clip path':{
+    topic: function() {
+        var chart = buildChart("chart-clip-path");
+        return chart;
+    },
+    'only one defs should be created': function(chart) {
+        assert.equal(chart.selectAll("defs")[0].length, 1);
+    },
+    'only one clip path should be created': function(chart) {
+        assert.equal(chart.selectAll("defs clipPath")[0].length, 1);
+    },
+    'only one clip rect should be created': function(chart) {
+        assert.equal(chart.selectAll("defs clipPath rect")[0].length, 1);
+    },
+    'clip rect size should be correct': function(chart) {
+        var rect = chart.select("defs clipPath rect");
+        assert.equal(rect.attr("width"), 1020);
+        assert.equal(rect.attr("height"), 160);
+    },
+    'clip rect position should be correct': function(chart) {
+        var rect = chart.select("defs clipPath rect");
+        assert.equal(rect.attr("x"), 30);
+        assert.equal(rect.attr("y"), 10);
+    },
+    'clip id should be correct': function(chart) {
+        assert.equal(chart.select("defs clipPath").attr("id"), "chart-clip-path-clip");
+    },
+    'chart body g should have clip path refs': function(chart) {
+        chart.selectAll("g.chartBody").each(function(){
+            assert.equal(d3.select(this).attr("clip-path"),"url(#chart-clip-path-clip)");
+        });
     },
     teardown: function(topic) {
         resetAllFilters();

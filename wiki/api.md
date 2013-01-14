@@ -1,5 +1,3 @@
-### [Work in Progress]
-
 The entire dc.js library is scoped under **dc** name space. It does not introduce anything else into the global name space.
 
 * [Base Chart [abstract]](#base-chart)
@@ -17,6 +15,8 @@ The entire dc.js library is scoped under **dc** name space. It does not introduc
 * [Geo Choropleth Chart [concrete] < Single Selection Chart < Color Chart < Base Chart](#geo-choropleth-chart)
 * [Data Count Widget [concrete] < Base Chart](#data-count)
 * [Data Table Widget [concrete] < Base Chart](#data-table)
+* [Listeners](#listeners)
+* [Utilities](#utilities)
 
 ### Function Chain
 Majority of dc functions are designed to allow function chaining, meaning it will return the current chart instance
@@ -276,13 +276,27 @@ chart.x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
 Set or get the xUnits function. xUnits function is the coordinate grid chart uses to calculate number of data
 projections on x axis such as number bars for a bar chart and number of dots for a line chart. This function is
 expected to return an Javascript array of all data points on x axis. d3 time range functions d3.time.days, d3.time.months,
-and d3.time.years are all valid xUnits function. dc.js also provides a simple dc.units.integers function to support
-linear sequential units in integer. Default xUnits function is dc.units.integers.
+and d3.time.years are all valid xUnits function. dc.js also provides a few units function, see [Utilities](#utilities)
+section for a list of built-in units functions. Default xUnits function is dc.units.integers.
 ```js
 // set x units to day for a histogram
 chart.xUnits(d3.time.days);
 // set x units to month for a histogram
 chart.xUnits(d3.time.months);
+```
+Custom xUnits function can be easily created using as long as it follows the following inteface:
+```js
+// units in integer
+function(start, end, xDomain) {
+    // simply calculates how many integers in the domain
+    return Math.abs(end - start);
+};
+
+// fixed units
+function(start, end, xDomain) {
+    // be aware using fixed units will disable the focus/zoom ability on the chart
+    return 1000;
+};
 ```
 
 #### .round([rounding function])
@@ -350,6 +364,19 @@ Turn on/off the brush based in-place range filter. When the brush is on then use
 across the chart to perform range filtering based on the extend of the brush. However turning on brush filter will essentially
 disable other interactive elements on the chart such as the highlighting, tool-tip, and reference lines on a chart. Default
 value is "true".
+
+#### .focus([range])
+Zoom this chart to focus on the given range. The given range should be an array containing only 2 element([start, end])
+defining an range in x domain. If the range is not given or set to null, then the zoom will be reset.
+```js
+chart.renderlet(function(chart){
+    // smooth the rendering through event throttling
+    dc.events.trigger(function(){
+        // focus some other chart to the range selected by user on this chart
+        someOtherChart.focus(chart.filter());
+    });
+})
+```
 
 ## <a name="pie-chart" href="#pie-chart">#</a> Pie Chart [Concrete] < [Single Selection Chart](#single-selection-chart) < [Color Chart](#color-chart) < [Base Chart](#base-chart)
 This chart is a concrete pie chart implementation usually used to visualize small number of categorical distributions.
@@ -765,4 +792,67 @@ Get or set sort order. Default value: ``` d3.ascending ```
 
 ```js
     chart.order(d3.descending);
+```
+
+## <a name="listeners" href="#listeners">#</a> Listeners
+All dc chart instance supports the following listeners.
+
+### .on("preRender", function(chart){...})
+This listener function will be invoked before chart rendering.
+
+### .on("postRender", function(chart){...})
+This listener function will be invoked after chart finish rendering including all renderlets' logic.
+
+### .on("preRedraw", function(chart){...})
+This listener function will be invoked before chart redrawing.
+
+### .on("postRedraw", function(chart){...})
+This listener function will be invoked after chart finish redrawing including all renderlets' logic.
+
+### .on("filtered", function(chart, filter){...})
+This listener function will be invoked after a filter is applied.
+
+
+## <a name="utilities" href="#utilities">#</a> Utilities
+
+### dc.renderAll([chartGroup])
+Re-render all charts belong to the given chart group. If the chart group is not given then only charts that belong to
+ the default chart group will be re-rendered.
+
+### dc.redrawAll([chartGroup])
+Redraw all charts belong to the given chart group. If the chart group is not given then only charts that belong to the
+  default chart group will be re-drawn. Redraw is different from re-render since when redrawing dc charts try to update
+  the graphic incrementally instead of starting from scratch.
+
+### dc.filterAll([chartGroup])
+Clear all filters on every chart within the given chart group. If the chart group is not given then only charts that
+belong to the default chart group will be reset.
+
+### dc.units.integers
+This function can be used to in [Coordinate Grid Chart](#coordinate-grid-chart) to define units on x axis.
+dc.units.integers is the default x unit scale used by [Coordinate Grid Chart](#coordinate-grid-chart) and should be
+used when x range is a sequential of integers.
+
+### dc.units.float.precision(precision)
+This function generates xunit function in floating-point numbers with the given precision. For example if the function
+is invoked with 0.001 precision then the function created will devide a range [0.5, 1.0] with 500 units.
+
+### dc.units.ordinal
+This function can be used to in [Coordinate Grid Chart](#coordinate-grid-chart) to define ordinal units on x axis.
+Usually this function is used in combination with d3.scale.ordinal() on x axis.
+
+### dc.events.trigger(function[, delay])
+This function is design to trigger throttled event function optionally with certain amount of delay(in milli-seconds).
+Events that are triggered repetitively due to user interaction such as the dragging of the brush might over flood
+library and cause too much rendering being scheduled. In this case, using this function to wrap your event function
+allows the library to smooth out the rendering by throttling event flood and only respond to the most recent event.
+
+```js
+chart.renderlet(function(chart){
+    // smooth the rendering through event throttling
+    dc.events.trigger(function(){
+        // focus some other chart to the range selected by user on this chart
+        someOtherChart.focus(chart.filter());
+    });
+})
 ```

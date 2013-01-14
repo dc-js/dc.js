@@ -10,7 +10,7 @@ dc.singleSelectionChart = function(_chart) {
 
         _filter = _;
 
-        if (_chart.dataAreSet())
+        if (_chart.dataAreSet() && _chart.dimension().filter != undefined)
             _chart.dimension().filter(_filter);
 
         if (_) {
@@ -18,6 +18,8 @@ dc.singleSelectionChart = function(_chart) {
         } else {
             _chart.turnOffControls();
         }
+
+        _chart.invokeFilteredListener(_chart, _);
 
         return _chart;
     };

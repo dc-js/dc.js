@@ -21,7 +21,7 @@ dc.bubbleChart = function(parent, chartGroup, cfg) {
 
         _chart.r().range([_chart.MIN_RADIUS, _chart.xAxisLength() * _chart.maxBubbleRelativeSize()]);
 
-        var bubbleG = _chart.g().selectAll("g." + _chart.BUBBLE_NODE_CLASS)
+        var bubbleG = _chart.chartBodyG().selectAll("g." + _chart.BUBBLE_NODE_CLASS)
             .data(_chart.group().all());
 
         renderNodes(bubbleG);

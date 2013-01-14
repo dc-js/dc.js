@@ -35,6 +35,15 @@ dc.baseChart = function(_chart) {
 
     var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
 
+    var NULL_LISTENER = function(chart){};
+    var _listeners = {
+        preRender:NULL_LISTENER,
+        postRender:NULL_LISTENER,
+        preRedraw:NULL_LISTENER,
+        postRedraw:NULL_LISTENER,
+        filtered:NULL_LISTENER
+    };
+
     _chart.width = function(w) {
         if (!arguments.length) return _width;
         _width = w;
@@ -146,6 +155,8 @@ dc.baseChart = function(_chart) {
     };
 
     _chart.render = function() {
+        _listeners.preRender(_chart);
+
         if(_dimension == null)
             throw new dc.errors.InvalidStateException("Mandatory attribute chart.dimension is missing on chart["
                 + _chart.anchor() + "]");
@@ -158,20 +169,31 @@ dc.baseChart = function(_chart) {
 
         _chart.invokeRenderlet(_chart);
 
+        _listeners.postRender(_chart);
+
         return result;
     };
 
     _chart.redraw = function() {
+        _listeners.preRedraw(_chart);
+
         var result = _chart.doRedraw();
 
         _chart.invokeRenderlet(_chart);
 
+        _listeners.postRedraw(_chart);
+
         return result;
+    };
+
+    _chart.invokeFilteredListener = function(chart, f) {
+        if(f !== undefined) _listeners.filtered(_chart, f);
     };
 
     // abstract function stub
     _chart.filter = function(f) {
         // do nothing in base, should be overridden by sub-function
+        _chart.invokeFilteredListener(_chart, f);
         return _chart;
     };
 
@@ -246,6 +268,11 @@ dc.baseChart = function(_chart) {
                 _chart[p](cfg[p])
             }
         }
+        return _chart;
+    };
+
+    _chart.on = function(event, listener){
+        _listeners[event] = listener;
         return _chart;
     };
 
