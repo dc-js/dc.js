@@ -123,7 +123,7 @@ dc.baseChart = function(_chart) {
         return _chart.generateSvg();
     };
 
-    _chart.generateSvg = function() {
+   _chart.generateSvg = function() {
         _svg = _chart.root().append("svg")
             .attr("width", _chart.width())
             .attr("height", _chart.height());
@@ -177,6 +177,7 @@ dc.baseChart = function(_chart) {
         if(_svg) {
             _svg.attr("width", _chart.width())
             _svg.attr("height", _chart.height());
+            }
     }
     
     _chart.redraw = function() {
