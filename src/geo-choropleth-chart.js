@@ -23,8 +23,9 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
             regionG
                 .append("path")
                 .attr("fill", "white")
-                .attr("d", _geoPath);
-
+               // .attr("d", _geoPath);
+            
+            updatePath(regionG); 
             regionG.append("title");
 
             plotData(layerIndex);
@@ -152,8 +153,12 @@ dc.geoChoroplethChart = function(parent, chartGroup) {
     };
 
     _chart.projection = function(projection) {
+        if (!arguments.length) return _geoPath.projection();
         _geoPath.projection(projection);
+        updatePath();
         return _chart;
+      /*  _geoPath.projection(projection);
+        return _chart;*/
     };
 
     return _chart.anchor(parent, chartGroup);
