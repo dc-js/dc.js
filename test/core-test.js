@@ -16,40 +16,40 @@ suite.addBatch({
         }
     },
     'dc.charts': {
-        topic: function() {
+        topic: function () {
             var chart = dc.pieChart("#id").dimension(valueDimension).group(valueGroup);
             sinon.spy(chart, "filterAll");
             sinon.spy(chart, "render");
             return chart;
         },
-        'should register chart object': function(chart) {
+        'should register chart object': function (chart) {
             assert.isTrue(dc.hasChart(chart));
         },
-        'filterAll should invoke filter on each chart': function(chart) {
+        'filterAll should invoke filter on each chart': function (chart) {
             dc.filterAll();
             assert.isTrue(chart.filterAll.calledOnce);
         },
-        'renderAll should invoke filter on each chart': function(chart) {
+        'renderAll should invoke filter on each chart': function (chart) {
             dc.renderAll();
             assert.isTrue(chart.render.calledOnce);
         },
-        'should be gone after remove all': function(chart) {
+        'should be gone after remove all': function (chart) {
             dc.deregisterAllCharts();
             assert.isFalse(dc.hasChart(chart));
         },
-        teardown: function() {
+        teardown: function () {
             dc.deregisterAllCharts();
             resetBody();
         }
     },
 
     'dc.transition normal': {
-        topic:function() {
+        topic: function () {
             var selections = {
-                transition:function() {
+                transition: function () {
                     return selections;
                 },
-                duration:function() {
+                duration: function () {
                     return selections;
                 }
             };
@@ -57,19 +57,19 @@ suite.addBatch({
             sinon.spy(selections, "duration");
             return selections;
         },
-        'transition should be activated with duration': function(selections) {
+        'transition should be activated with duration': function (selections) {
             dc.transition(selections, 100);
             assert.isTrue(selections.transition.calledOnce);
             assert.isTrue(selections.duration.calledOnce);
         },
-        'transition callback should be triggered': function(selections) {
+        'transition callback should be triggered': function (selections) {
             var triggered = false;
-            dc.transition(selections, 100, function() {
+            dc.transition(selections, 100, function () {
                 triggered = true;
             });
             assert.isTrue(triggered);
         },
-        teardown: function(selections) {
+        teardown: function (selections) {
             selections.transition.restore();
             selections.duration.restore();
             resetBody();
@@ -77,12 +77,12 @@ suite.addBatch({
     },
 
     'dc.transition skip': {
-        topic:function() {
+        topic: function () {
             var selections = {
-                transition:function() {
+                transition: function () {
                     return selections;
                 },
-                duration:function() {
+                duration: function () {
                     return selections;
                 }
             };
@@ -90,72 +90,92 @@ suite.addBatch({
             sinon.spy(selections, "duration");
             return selections;
         },
-        'transition should not be activated with 0 duration': function(selections) {
+        'transition should not be activated with 0 duration': function (selections) {
             dc.transition(selections, 0);
             assert.isFalse(selections.transition.called);
             assert.isFalse(selections.duration.called);
         },
-        'transition callback should not be triggered': function(selections) {
+        'transition callback should not be triggered': function (selections) {
             var triggered = false;
-            dc.transition(selections, 0, function() {
+            dc.transition(selections, 0, function () {
                 triggered = true;
             });
             assert.isFalse(triggered);
         },
-        teardown: function(selections) {
+        teardown: function (selections) {
             selections.transition.restore();
             selections.duration.restore();
             resetBody();
         }
     },
 
-    'dc.units':{
+    'dc.units': {
         '.integers': {
-            topic: function() {
+            topic: function () {
                 return dc.units.integers(0, 100);
             },
-            'units should be based on subtraction': function(units) {
-                assert.equal(units.length, 100);
+            'units should be based on subtraction': function (units) {
+                assert.equal(units, 100);
+            }
+        },
+        '.float': {
+            topic: function () {
+                return dc.units.float.precision(0.001)(0.49999, 1.0);
+            },
+            'units should be generated according to the precision': function (units) {
+                assert.equal(units, 501);
             }
         },
         '.ordinal': {
-            topic: function() {
+            topic: function () {
                 return dc.units.ordinal("a", "d", ["a", "b", "c", "d"]);
             },
-            'units should be based on count': function(units) {
+            'units should be based on count': function (units) {
                 assert.equal(units.length, 4);
             }
         }
     },
 
-    'dc.round':{
+    'dc.round': {
         '.floor': {
-            topic: function() {
+            topic: function () {
                 return dc.round.floor(0.33);
             },
-            'should floored number': function(result) {
+            'should floored number': function (result) {
                 assert.equal(result, 0);
             }
         }
     },
 
-    'dc.override':{
-        topic:function(){
-            return {foo: function(){return "foo";}};
+    'dc.override': {
+        topic: function () {
+            return {foo: function () {
+                return "foo";
+            }, goo: function (i) {
+                return i;
+            }};
         },
-        'wo/ override function should work as expected':function(o){
+        'wo/ override function should work as expected': function (o) {
             assert.equal(o.foo(), "foo");
         },
-        'should expose existing function':function(o){
-            dc.override(o, "foo", function(_super){return _super() + "2";});
+        'should expose existing function': function (o) {
+            dc.override(o, "foo", function (_super) {
+                return _super() + "2";
+            });
             assert.equal(o.foo(), "foo2");
+        },
+        'should expose existing function with args': function (o) {
+            dc.override(o, "goo", function (i, _super) {
+                return _super(i) + 2;
+            });
+            assert.equal(o.goo(1), 3);
         }
     }
 });
 
 suite.addBatch({
     'dc.charts w/ grouping': {
-        topic: function() {
+        topic: function () {
             var chart = dc.pieChart("#a", "groupA").dimension(valueDimension).group(valueGroup);
             sinon.spy(chart, "filterAll");
             sinon.spy(chart, "render");
@@ -167,34 +187,34 @@ suite.addBatch({
             dc.dataTable("#4", "groupB").dimension(valueDimension).group(valueGroup);
             return chart;
         },
-        'should register chart object': function(chart) {
+        'should register chart object': function (chart) {
             assert.isTrue(dc.hasChart(chart));
         },
-        'filterAll should not invoke filter on chart in groupA': function(chart) {
+        'filterAll should not invoke filter on chart in groupA': function (chart) {
             dc.filterAll();
             assert.isFalse(chart.filterAll.calledOnce);
             chart.filterAll.reset();
         },
-        'renderAll should not invoke filter on chart in groupA': function(chart) {
+        'renderAll should not invoke filter on chart in groupA': function (chart) {
             dc.renderAll();
             assert.isFalse(chart.render.calledOnce);
             chart.filterAll.reset();
         },
-        'filterAll by group should invoke filter on each chart within the group': function(chart) {
+        'filterAll by group should invoke filter on each chart within the group': function (chart) {
             dc.filterAll("groupA");
             assert.isTrue(chart.filterAll.calledOnce);
             chart.filterAll.reset();
         },
-        'renderAll by group should invoke filter on each chart within the group': function(chart) {
+        'renderAll by group should invoke filter on each chart within the group': function (chart) {
             dc.renderAll("groupA");
             assert.isTrue(chart.render.calledOnce);
             chart.filterAll.reset();
         },
-        'should be gone after remove all': function(chart) {
+        'should be gone after remove all': function (chart) {
             dc.deregisterAllCharts();
             assert.isFalse(dc.hasChart(chart));
         },
-        teardown: function() {
+        teardown: function () {
             dc.deregisterAllCharts();
             resetBody();
         }
@@ -202,31 +222,33 @@ suite.addBatch({
 });
 
 suite.addBatch({'render/redraw all call back': {
-    topic:function(){
-        dc.renderlet(function(group){dc.__test_result.called = group?group:true;});
+    topic: function () {
+        dc.renderlet(function (group) {
+            dc.__test_result.called = group ? group : true;
+        });
         return dc;
     },
-    'renderAll call back should be triggered':function(topic){
+    'renderAll call back should be triggered': function (topic) {
         dc.__test_result = {called: false};
         dc.renderAll();
         assert.isTrue(dc.__test_result.called);
     },
-    'redrawAll call back should be triggered':function(topic){
+    'redrawAll call back should be triggered': function (topic) {
         dc.__test_result = {called: false};
         dc.redrawAll();
         assert.isTrue(dc.__test_result.called);
     },
-    'renderAll by group call back should be triggered':function(topic){
+    'renderAll by group call back should be triggered': function (topic) {
         dc.__test_result = {called: false};
         dc.renderAll("group");
         assert.equal("group", dc.__test_result.called);
     },
-    'redrawAll by group call back should be triggered':function(topic){
+    'redrawAll by group call back should be triggered': function (topic) {
         dc.__test_result = {called: false};
         dc.redrawAll("group");
         assert.equal("group", dc.__test_result.called);
     },
-    teardown:function(){
+    teardown: function () {
         delete dc.__test_result;
         dc.renderlet(null);
     }

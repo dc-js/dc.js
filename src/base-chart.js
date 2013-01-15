@@ -35,6 +35,15 @@ dc.baseChart = function(_chart) {
 
     var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
 
+    var NULL_LISTENER = function(chart){};
+    var _listeners = {
+        preRender:NULL_LISTENER,
+        postRender:NULL_LISTENER,
+        preRedraw:NULL_LISTENER,
+        postRedraw:NULL_LISTENER,
+        filtered:NULL_LISTENER
+    };
+
     _chart.width = function(w) {
         if (!arguments.length) return _width;
         _width = w;
@@ -81,7 +90,7 @@ dc.baseChart = function(_chart) {
         return _root.selectAll(s);
     };
 
-    _chart.anchor = function(a, chartGroup) {
+    _chart.anchor = function(a, chartGroup, cfg) {
         if (!arguments.length) return _anchor;
         if (dc.instanceOfChart(a)) {
             _anchor = a.anchor();
@@ -93,6 +102,7 @@ dc.baseChart = function(_chart) {
             dc.registerChart(_chart, chartGroup);
         }
         _chartGroup = chartGroup;
+        if(cfg) {_chart.applyConfig(cfg)}
         return _chart;
     };
 
@@ -113,10 +123,11 @@ dc.baseChart = function(_chart) {
         return _chart.generateSvg();
     };
 
-    _chart.generateSvg = function() {
+   _chart.generateSvg = function() {
         _svg = _chart.root().append("svg")
-            .attr("width", _chart.width())
-            .attr("height", _chart.height());
+         _chart.resize()
+            //.attr("width", _chart.width())
+            //.attr("height", _chart.height());
         return _svg;
     };
 
@@ -145,6 +156,8 @@ dc.baseChart = function(_chart) {
     };
 
     _chart.render = function() {
+        _listeners.preRender(_chart);
+
         if(_dimension == null)
             throw new dc.errors.InvalidStateException("Mandatory attribute chart.dimension is missing on chart["
                 + _chart.anchor() + "]");
@@ -157,20 +170,40 @@ dc.baseChart = function(_chart) {
 
         _chart.invokeRenderlet(_chart);
 
+        _listeners.postRender(_chart);
+
+        return result;
+    };
+    _chart.resize = function() {
+        if(_svg) {
+            _svg.attr("width", _chart.width())
+            _svg.attr("height", _chart.height());
+            }
+         return _chart;    
+    }
+    
+    _chart.redraw = function() {
+        _listeners.preRedraw(_chart);
+        
+        _chart.resize()
+        
+        var result = _chart.doRedraw();
+        
+        _chart.invokeRenderlet(_chart);
+
+        _listeners.postRedraw(_chart);
+
         return result;
     };
 
-    _chart.redraw = function() {
-        var result = _chart.doRedraw();
-
-        _chart.invokeRenderlet(_chart);
-
-        return result;
+    _chart.invokeFilteredListener = function(chart, f) {
+        if(f !== undefined) _listeners.filtered(_chart, f);
     };
 
     // abstract function stub
     _chart.filter = function(f) {
         // do nothing in base, should be overridden by sub-function
+        _chart.invokeFilteredListener(_chart, f);
         return _chart;
     };
 
@@ -236,6 +269,20 @@ dc.baseChart = function(_chart) {
     _chart.chartGroup = function(_) {
         if (!arguments.length) return _chartGroup;
         _chartGroup = _;
+        return _chart;
+    };
+    
+    _chart.applyConfig= function(cfg){
+        for (var p in cfg) {
+            if (typeof _chart[p] === 'function' && !!cfg[p] ) {
+                _chart[p](cfg[p])
+            }
+        }
+        return _chart;
+    };
+
+    _chart.on = function(event, listener){
+        _listeners[event] = listener;
         return _chart;
     };
 

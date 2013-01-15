@@ -1,4 +1,4 @@
-dc.bubbleChart = function(parent, chartGroup) {
+dc.bubbleChart = function(parent, chartGroup, cfg) {
     var _chart = dc.abstractBubbleChart(dc.coordinateGridChart({}));
 
     var _elasticRadius = false;
@@ -21,7 +21,7 @@ dc.bubbleChart = function(parent, chartGroup) {
 
         _chart.r().range([_chart.MIN_RADIUS, _chart.xAxisLength() * _chart.maxBubbleRelativeSize()]);
 
-        var bubbleG = _chart.g().selectAll("g." + _chart.BUBBLE_NODE_CLASS)
+        var bubbleG = _chart.chartBodyG().selectAll("g." + _chart.BUBBLE_NODE_CLASS)
             .data(_chart.group().all());
 
         renderNodes(bubbleG);
@@ -101,5 +101,5 @@ dc.bubbleChart = function(parent, chartGroup) {
         _chart.fadeDeselectedArea();
     };
 
-    return _chart.anchor(parent, chartGroup);
+    return _chart.anchor(parent, chartGroup, cfg);
 };

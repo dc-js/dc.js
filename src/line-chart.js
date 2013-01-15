@@ -1,4 +1,4 @@
-dc.lineChart = function(parent, chartGroup) {
+dc.lineChart = function(parent, chartGroup,cfg) {
     var AREA_BOTTOM_PADDING = 1;
     var DEFAULT_DOT_RADIUS = 5;
     var TOOLTIP_G_CLASS = "dc-tooltip";
@@ -15,7 +15,7 @@ dc.lineChart = function(parent, chartGroup) {
     _chart.plotData = function() {
         var groups = _chart.allGroups();
 
-        _chart.calculateDataPointMatrix(groups);
+        _chart.calculateDataPointMatrixForAll(groups);
 
         for (var groupIndex = 0; groupIndex < groups.length; ++ groupIndex) {
             var group = groups[groupIndex];
@@ -42,10 +42,10 @@ dc.lineChart = function(parent, chartGroup) {
     }
 
     function createGrouping(stackedCssClass, group) {
-        var g = _chart.g().select("g." + stackedCssClass);
+        var g = _chart.chartBodyG().select("g." + stackedCssClass);
 
         if (g.empty())
-            g = _chart.g().append("g").attr("class", stackedCssClass);
+            g = _chart.chartBodyG().append("g").attr("class", stackedCssClass);
 
         g.datum(group.all());
 
@@ -85,7 +85,7 @@ dc.lineChart = function(parent, chartGroup) {
     };
 
     function drawArea(g, stackedCssClass, groupIndex, line) {
-        var areaPath = g.selectAll("path.area");
+        var areaPath = g.select("path.area");
 
         if (areaPath.empty())
             areaPath = g.append("path")
@@ -98,7 +98,7 @@ dc.lineChart = function(parent, chartGroup) {
             .y1(line.y())
             .y0(function(d, dataIndex) {
                 var groupIndex = this[dc.constants.GROUP_INDEX_NAME];
-                if (groupIndex == 0) return _chart.y()(0) - AREA_BOTTOM_PADDING + _chart.margins().top;
+                if (groupIndex == 0) return _chart.xAxisY() - AREA_BOTTOM_PADDING;
                 return _chart.getChartStack().getDataPoint(--groupIndex, dataIndex) - AREA_BOTTOM_PADDING;
             });
 
@@ -188,5 +188,5 @@ dc.lineChart = function(parent, chartGroup) {
         return _chart;
     };
 
-    return _chart.anchor(parent, chartGroup);
+    return _chart.anchor(parent, chartGroup, cfg);
 };

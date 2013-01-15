@@ -12,7 +12,7 @@
  *  limitations under the License.
  */
 dc = {
-    version: "1.1.0",
+    version: "1.2.0",
     constants : {
         CHART_CLASS: "dc-chart",
         DEBUG_GROUP_CLASS: "debug",
@@ -123,11 +123,17 @@ dc.transition = function(selections, duration, callback) {
 
 dc.units = {};
 dc.units.integers = function(s, e) {
-    return new Array(Math.abs(e - s));
+    return Math.abs(e - s);
 };
 
 dc.units.ordinal = function(s, e, domain){
     return domain;
+};
+dc.units.float = {};
+dc.units.float.precision= function(precision){
+    var _f = function(s, e, domain){return Math.ceil(Math.abs((e-s)/_f.resolution));};
+    _f.resolution = precision;
+    return _f;
 };
 
 dc.round = {};
@@ -147,7 +153,7 @@ dc.override = function(obj, functionName, newFunction) {
         var expression = "newFunction(";
 
         for (var i = 0; i < arguments.length; ++i)
-            expression += "argument[" + i + "],";
+            expression += "arguments[" + i + "],";
 
         expression += "existingFunction);";
 

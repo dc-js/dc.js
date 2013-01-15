@@ -1,4 +1,4 @@
-dc.abstractBubbleChart = function(_chart) {
+dc.abstractBubbleChart = function (_chart) {
     var _maxBubbleRelativeSize = 0.3;
     var _minRadiusWithLabel = 10;
 
@@ -13,37 +13,37 @@ dc.abstractBubbleChart = function(_chart) {
 
     var _r = d3.scale.linear().domain([0, 100]);
 
-    var _rValueAccessor = function(d) {
+    var _rValueAccessor = function (d) {
         return d.r;
     };
 
-    _chart.r = function(_) {
+    _chart.r = function (_) {
         if (!arguments.length) return _r;
         _r = _;
         return _chart;
     };
 
-    _chart.radiusValueAccessor = function(_) {
+    _chart.radiusValueAccessor = function (_) {
         if (!arguments.length) return _rValueAccessor;
         _rValueAccessor = _;
         return _chart;
     };
 
-    _chart.rMin = function() {
-        var min = d3.min(_chart.group().all(), function(e) {
+    _chart.rMin = function () {
+        var min = d3.min(_chart.group().all(), function (e) {
             return _chart.radiusValueAccessor()(e);
         });
         return min;
     };
 
-    _chart.rMax = function() {
-        var max = d3.max(_chart.group().all(), function(e) {
+    _chart.rMax = function () {
+        var max = d3.max(_chart.group().all(), function (e) {
             return _chart.radiusValueAccessor()(e);
         });
         return max;
     };
 
-    _chart.bubbleR = function(d) {
+    _chart.bubbleR = function (d) {
         var value = _chart.radiusValueAccessor()(d);
         var r = _chart.r()(value);
         if (isNaN(r) || value <= 0)
@@ -51,15 +51,15 @@ dc.abstractBubbleChart = function(_chart) {
         return r;
     };
 
-    var labelFunction = function(d) {
+    var labelFunction = function (d) {
         return _chart.label()(d);
     };
 
-    var labelOpacity = function(d) {
+    var labelOpacity = function (d) {
         return (_chart.bubbleR(d) > _minRadiusWithLabel) ? 1 : 0;
     };
 
-    _chart.doRenderLabel = function(bubbleGEnter) {
+    _chart.doRenderLabel = function (bubbleGEnter) {
         if (_chart.renderLabel()) {
             var label = bubbleGEnter.select("text");
 
@@ -78,7 +78,7 @@ dc.abstractBubbleChart = function(_chart) {
         }
     };
 
-    _chart.doUpdateLabels = function(bubbleGEnter) {
+    _chart.doUpdateLabels = function (bubbleGEnter) {
         if (_chart.renderLabel()) {
             var labels = bubbleGEnter.selectAll("text")
                 .text(labelFunction);
@@ -87,11 +87,11 @@ dc.abstractBubbleChart = function(_chart) {
         }
     };
 
-    var titleFunction = function(d) {
+    var titleFunction = function (d) {
         return _chart.title()(d);
     };
 
-    _chart.doRenderTitles = function(g) {
+    _chart.doRenderTitles = function (g) {
         if (_chart.renderTitle()) {
             var title = g.select("title");
 
@@ -100,38 +100,38 @@ dc.abstractBubbleChart = function(_chart) {
         }
     };
 
-    _chart.doUpdateTitles = function(g) {
+    _chart.doUpdateTitles = function (g) {
         if (_chart.renderTitle()) {
             g.selectAll("title").text(titleFunction);
         }
     };
 
-    _chart.minRadiusWithLabel = function(_) {
+    _chart.minRadiusWithLabel = function (_) {
         if (!arguments.length) return _minRadiusWithLabel;
         _minRadiusWithLabel = _;
         return _chart;
     };
 
-    _chart.maxBubbleRelativeSize = function(_) {
+    _chart.maxBubbleRelativeSize = function (_) {
         if (!arguments.length) return _maxBubbleRelativeSize;
         _maxBubbleRelativeSize = _;
         return _chart;
     };
 
-    _chart.initBubbleColor = function(d, i) {
+    _chart.initBubbleColor = function (d, i) {
         this[dc.constants.NODE_INDEX_NAME] = i;
         return _chart.getColor(d, i);
     };
 
-    _chart.updateBubbleColor = function(d, i) {
+    _chart.updateBubbleColor = function (d, i) {
         // a work around to get correct node index since
         // d3 does not send i correctly here
         return _chart.getColor(d, this[dc.constants.NODE_INDEX_NAME]);
     };
 
-    _chart.fadeDeselectedArea = function() {
+    _chart.fadeDeselectedArea = function () {
         if (_chart.hasFilter()) {
-            _chart.selectAll("g." + _chart.BUBBLE_NODE_CLASS).each(function(d) {
+            _chart.selectAll("g." + _chart.BUBBLE_NODE_CLASS).each(function (d) {
                 if (_chart.isSelectedNode(d)) {
                     _chart.highlightSelected(this);
                 } else {
@@ -139,14 +139,29 @@ dc.abstractBubbleChart = function(_chart) {
                 }
             });
         } else {
-            _chart.selectAll("g." + _chart.BUBBLE_NODE_CLASS).each(function(d) {
+            _chart.selectAll("g." + _chart.BUBBLE_NODE_CLASS).each(function (d) {
                 _chart.resetHighlight(this);
             });
         }
     };
 
-    _chart.isSelectedNode = function(d) {
+    _chart.isSelectedNode = function (d) {
         return _chart.filter() == d.key;
+    };
+
+    _chart.onClick = function (d) {
+        var toFilter = d.key;
+        if (toFilter == _chart.filter()) {
+            dc.events.trigger(function () {
+                _chart.filter(null);
+                dc.redrawAll(_chart.chartGroup());
+            });
+        } else {
+            dc.events.trigger(function () {
+                _chart.filter(toFilter);
+                dc.redrawAll(_chart.chartGroup());
+            });
+        }
     };
 
     return _chart;

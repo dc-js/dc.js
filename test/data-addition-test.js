@@ -32,6 +32,32 @@ function buildPieChart(id) {
     return chart;
 }
 
+var baseData2 = crossfilter(json);
+
+var timeDimension = baseData2.dimension(function(d) {
+    return d.dd;
+});
+var timeGroup = timeDimension.group();
+
+function buildLineChart(id) {
+    d3.select("body").append("div").attr("id", id);
+    var chart = dc.lineChart("#" + id);
+    chart.dimension(timeDimension).group(timeGroup)
+        .width(width).height(height)
+        .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
+        .transitionDuration(0)
+        .xUnits(d3.time.days)
+        .renderArea(true)
+        .renderTitle(true);
+    chart.render();
+    baseData2.add(json2);
+    return chart;
+}
+
+function occurrences(str, value) {
+    return (str.split(value)).length - 1;
+}
+
 suite.addBatch({
     'pie chart slice addition': {
         topic: function() {
@@ -50,6 +76,28 @@ suite.addBatch({
         },
         'default function should be used to dynamically generate title': function(chart) {
             assert.equal(d3.select(chart.selectAll("g.pie-slice title")[0][0]).text(), "66: 1");
+        },
+        teardown:function(chart) {
+            resetAllFilters();
+            resetBody();
+        }
+    },
+    'line chart segment addition': {
+        topic: function() {
+            var chart = buildLineChart("line-chart");
+            chart.redraw();
+            return chart;
+        },
+        'number of dots should equal the size of the group': function(lineChart) {
+            assert.equal(lineChart.selectAll("circle.dot")[0].length, timeGroup.size());
+        },
+        'number of line segments should equal the size of the group': function(lineChart) {
+            var path = lineChart.selectAll("path.line").attr("d");
+            assert.equal(occurrences(path, 'L') + 1, timeGroup.size());
+        },
+        'number of area segments should equal twice the size of the group': function(lineChart) {
+            var path = lineChart.selectAll("path.area").attr("d");
+            assert.equal(occurrences(path, 'L') + 1, timeGroup.size() * 2);
         },
         teardown:function(chart) {
             resetAllFilters();
