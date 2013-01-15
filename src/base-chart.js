@@ -173,7 +173,12 @@ dc.baseChart = function(_chart) {
 
         return result;
     };
-
+    _chart.resize = function() {
+        if(_svg) {
+            _svg.attr("width", _chart.width())
+            _svg.attr("height", _chart.height());
+    }
+    
     _chart.redraw = function() {
         _listeners.preRedraw(_chart);
 
