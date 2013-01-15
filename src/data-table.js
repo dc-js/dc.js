@@ -1,4 +1,4 @@
-dc.dataTable = function(parent, chartGroup) {
+dc.dataTable = function(parent, chartGroup, cfg) {
     var LABEL_CSS_CLASS = "dc-table-label";
     var ROW_CSS_CLASS = "dc-table-row";
     var COLUMN_CSS_CLASS = "dc-table-column";
@@ -112,5 +112,5 @@ dc.dataTable = function(parent, chartGroup) {
         return _chart;
     };
 
-    return _chart.anchor(parent, chartGroup);
+    return _chart.anchor(parent, chartGroup, cfg);
 };

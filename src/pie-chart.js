@@ -1,4 +1,4 @@
-dc.pieChart = function(parent, chartGroup) {
+dc.pieChart = function(parent, chartGroup, cfg) {
     var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
     var _sliceCssClass = "pie-slice";
@@ -28,7 +28,7 @@ dc.pieChart = function(parent, chartGroup) {
 
         _g = _chart.svg()
             .append("g")
-            .attr("transform", "translate(" + _chart.cx() + "," + _chart.cy() + ")");
+            //.attr("transform", "translate(" + _chart.cx() + "," + _chart.cy() + ")");
 
         drawChart();
 
@@ -37,6 +37,7 @@ dc.pieChart = function(parent, chartGroup) {
 
     function drawChart() {
         if (_chart.dataAreSet()) {
+        	_g.attr("transform", "translate(" + _chart.cx() + "," + _chart.cy() + ")");
             var pie = calculateDataPie();
 
             var arc = _chart.buildArcs();
@@ -289,5 +290,5 @@ dc.pieChart = function(parent, chartGroup) {
         return path;
     }
 
-    return _chart.anchor(parent, chartGroup);
+    return _chart.anchor(parent, chartGroup, cfg);
 };

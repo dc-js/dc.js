@@ -1,4 +1,4 @@
-dc.compositeChart = function(parent, chartGroup) {
+dc.compositeChart = function(parent, chartGroup, cfg) {
     var SUB_CHART_CLASS = "sub";
 
     var _chart = dc.coordinateGridChart({});
@@ -117,5 +117,5 @@ dc.compositeChart = function(parent, chartGroup) {
         return dc.utils.add(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding());
     };
 
-    return _chart.anchor(parent, chartGroup);
+    return _chart.anchor(parent, chartGroup, cfg);
 };

@@ -1,4 +1,4 @@
-dc.bubbleOverlay = function(root, chartGroup) {
+dc.bubbleOverlay = function(root, chartGroup, cfg) {
     var BUBBLE_OVERLAY_CLASS = "bubble-overlay";
     var BUBBLE_NODE_CLASS = "node";
     var BUBBLE_CLASS = "bubble";
@@ -144,7 +144,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
         return _chart;
     };
 
-    _chart.anchor(root, chartGroup);
+    _chart.anchor(root, chartGroup, cfg);
 
     return _chart;
 };

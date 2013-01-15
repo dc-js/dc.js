@@ -1,4 +1,4 @@
-dc.lineChart = function(parent, chartGroup) {
+dc.lineChart = function(parent, chartGroup,cfg) {
     var AREA_BOTTOM_PADDING = 1;
     var DEFAULT_DOT_RADIUS = 5;
     var TOOLTIP_G_CLASS = "dc-tooltip";
@@ -188,5 +188,5 @@ dc.lineChart = function(parent, chartGroup) {
         return _chart;
     };
 
-    return _chart.anchor(parent, chartGroup);
+    return _chart.anchor(parent, chartGroup, cfg);
 };
