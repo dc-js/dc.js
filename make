@@ -1,4 +1,4 @@
 #!/bin/sh
 ant
-./node_modules/.bin/vows
+# ./node_modules/.bin/vows
 
