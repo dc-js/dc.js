@@ -1,4 +1,4 @@
-dc.lineChart = function(parent, chartGroup) {
+dc.lineChart = function(parent, chartGroup, cfg) {
     var AREA_BOTTOM_PADDING = 1;
     var DEFAULT_DOT_RADIUS = 5;
     var TOOLTIP_G_CLASS = "dc-tooltip";
@@ -6,7 +6,7 @@ dc.lineChart = function(parent, chartGroup) {
     var Y_AXIS_REF_LINE_CLASS = "yRef";
     var X_AXIS_REF_LINE_CLASS = "xRef";
 
-    var _chart = dc.stackableChart(dc.coordinateGridChart({}));
+    var _chart =dc.stackableChart(dc.coordinateGridChart({})).applyConfig(cfg); 
     var _renderArea = false;
     var _dotRadius = DEFAULT_DOT_RADIUS;
 
