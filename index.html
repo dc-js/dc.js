@@ -134,6 +134,7 @@
 <div class="row">
     <div id="monthly-volume-chart" >
     </div>
+    <p class="muted pull-right" style="margin-right: 15px;">select a time range to zoom in</p>
 </div>
 
 <div class="row">
@@ -410,6 +411,7 @@ d3.csv("ndx.csv", function(data) {
                     .dimension(moveMonths)
                     .group(volumeByMonthGroup)
                     .centerBar(true)
+                    .gap(0)
                     .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
                     .round(d3.time.month.round)
                     .xUnits(d3.time.months)
