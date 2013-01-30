@@ -326,7 +326,8 @@ dc.coordinateGridChart = function (_chart) {
     _chart.yAxisMin = function () {
         var min = d3.min(_chart.group().all(), function (e) {
             return _chart.valueAccessor()(e);
-        }) - _yAxisPadding;
+        });
+        min = dc.utils.subtract(min, _yAxisPadding);
         return min;
     };
 
@@ -334,7 +335,8 @@ dc.coordinateGridChart = function (_chart) {
         var max = d3.max(_chart.group().all(), function (e) {
             return _chart.valueAccessor()(e);
         });
-        return dc.utils.add(max, _yAxisPadding);
+        max = dc.utils.add(max, _yAxisPadding);
+        return max;
     };
 
     _chart.yAxisPadding = function (_) {

@@ -810,6 +810,8 @@ negativeBarChart.width(1100)
         .stack(dateNegativeValueSumGroup, function(d) {
             return -10;
          })
+//        .yAxisPadding(30)
+        .elasticY(true)
         .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
         .renderHorizontalGridLines(true)
         .xUnits(d3.time.days);
