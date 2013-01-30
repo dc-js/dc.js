@@ -44,6 +44,23 @@ function buildOrdinalChart(id, xdomain) {
     return chart;
 }
 
+function buildNegativeChart(id, xdomain) {
+    if (!xdomain)
+        xdomain = [new Date(2012, 4, 20), new Date(2012, 7, 15)];
+
+    var div = d3.select("body").append("div").attr("id", id);
+    div.append("a").attr("class", "reset").style("display", "none");
+    div.append("span").attr("class", "filter").style("display", "none");
+    var chart = dc.barChart("#" + id);
+    chart.dimension(dateDimension).group(dateNegativeValueSumGroup)
+        .width(width).height(height)
+        .x(d3.scale.ordinal().domain(xdomain))
+        .transitionDuration(0)
+        .xUnits(d3.time.days);
+    chart.render();
+    return chart;
+}
+
 function buildLinearChart(id, xdomain) {
     if (!xdomain)
         xdomain = [20, 70];
@@ -518,6 +535,23 @@ suite.addBatch({'linear integers bar chart': {
         assert.match(d3.select(chart.selectAll("rect.bar")[0][0]).attr("x"), /70.\d+/);
         assert.match(d3.select(chart.selectAll("rect.bar")[0][2]).attr("x"), /519.\d+/);
         assert.match(d3.select(chart.selectAll("rect.bar")[0][4]).attr("x"), /968.\d+/);
+    },
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
+    }
+}});
+
+suite.addBatch({'negative bar chart': {
+    topic: function () {
+        var chart = buildNegativeChart("bar-chart-negative");
+        return chart;
+    },
+    'should generate correct number of bars': function (chart) {
+        assert.equal(chart.selectAll("rect.bar")[0].length, 6);
+    },
+    'should auto size bar width': function (chart) {
+        assert.equal(chart.select("rect.bar").attr("width"), "9");
     },
     teardown: function (topic) {
         resetAllFilters();

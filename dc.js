@@ -12,7 +12,7 @@
  *  limitations under the License.
  */
 dc = {
-    version: "1.1.0",
+    version: "1.2.0",
     constants : {
         CHART_CLASS: "dc-chart",
         DEBUG_GROUP_CLASS: "debug",
@@ -1563,24 +1563,55 @@ dc.stackableChart = function(_chart) {
         return dc.utils.add(max, _chart.xAxisPadding());
     };
 
-    _chart.dataPointBaseline = function() {
-        return _chart.margins().top + _chart.yAxisHeight();
+    _chart.dataPointBaseline = function(value) {
+        if(value > 0)
+            return _chart.margins().top + _chart.yAxisHeight();
+        else
+            return _chart.margins().top;
     };
 
+    function getValueFromData(groupIndex, d) {
+        return _chart.getValueAccessorByIndex(groupIndex)(d);
+    }
+
     _chart.dataPointHeight = function(d, groupIndex) {
-        var h = (_chart.yAxisHeight() - _chart.y()(_chart.getValueAccessorByIndex(groupIndex)(d)));
+        var value = getValueFromData(groupIndex, d);
+        var yPosition = _chart.y()(value);
+        var zeroPosition = _chart.y()(0);
+        var h = 0;
+
+        if(value > 0)
+            h = _chart.yAxisHeight() - yPosition;
+        else if(value < 0)
+            h = zeroPosition + yPosition;
+        else // value == 0
+            h = 0;
+
         if (isNaN(h) || h < MIN_DATA_POINT_HEIGHT)
             h = MIN_DATA_POINT_HEIGHT;
+
         return h;
     };
 
     function calculateDataPointMatrix(data, groupIndex) {
         for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
             var d = data[dataIndex];
-            if (groupIndex == 0)
-                _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline() - _chart.dataPointHeight(d, groupIndex));
-            else
-                _groupStack.setDataPoint(groupIndex, dataIndex, _groupStack.getDataPoint(groupIndex - 1, dataIndex) - _chart.dataPointHeight(d, groupIndex))
+            var value = getValueFromData(groupIndex, d);
+            if (groupIndex == 0){
+                if(value > 0)
+                    _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline(value) - _chart.dataPointHeight(d, groupIndex));
+                else if(value < 0)
+                    _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline(value) + _chart.y()(0));
+                else // value == 0
+                    _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline(value) + _chart.y()(0));
+            }else{
+                if(value > 0)
+                    _groupStack.setDataPoint(groupIndex, dataIndex, _groupStack.getDataPoint(groupIndex - 1, dataIndex) - _chart.dataPointHeight(d, groupIndex))
+                else if(value < 0)
+                    _groupStack.setDataPoint(groupIndex, dataIndex, _groupStack.getDataPoint(groupIndex - 1, dataIndex) + _chart.dataPointHeight(d, groupIndex - 1))
+                else // value == 0
+                    _groupStack.setDataPoint(groupIndex, dataIndex, _groupStack.getDataPoint(groupIndex - 1, dataIndex))
+            }
         }
     }
 
