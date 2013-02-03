@@ -9,6 +9,7 @@ dc.lineChart = function(parent, chartGroup) {
     var _chart = dc.stackableChart(dc.coordinateGridChart({}));
     var _renderArea = false;
     var _dotRadius = DEFAULT_DOT_RADIUS;
+    var _areaZeroLine = false;
 
     _chart.transitionDuration(500);
 
@@ -98,7 +99,13 @@ dc.lineChart = function(parent, chartGroup) {
             .y1(line.y())
             .y0(function(d, dataIndex) {
                 var groupIndex = this[dc.constants.GROUP_INDEX_NAME];
-                if (groupIndex == 0) return _chart.xAxisY() - AREA_BOTTOM_PADDING;
+                if (groupIndex == 0) {
+			if (_areaZeroLine) {
+				var chartDomain=_chart.y().domain(); 
+				return _chart.xAxisY()+chartDomain[0]*(_chart.xAxisY()-_chart.margins().top)/(chartDomain[1]-chartDomain[0]) + 1 - AREA_BOTTOM_PADDING;		
+			} else
+				return _chart.xAxisY() - AREA_BOTTOM_PADDING;
+		}
                 return _chart.getChartStack().getDataPoint(--groupIndex, dataIndex) - AREA_BOTTOM_PADDING;
             });
 
@@ -113,6 +120,12 @@ dc.lineChart = function(parent, chartGroup) {
         _renderArea = _;
         return _chart;
     };
+
+    _chart.renderAreaAtZeroLine = function(_) {
+        if (!arguments.length) return _areaZeroLine;
+        _areaZeroLine = _;
+        return _chart;
+    };	
 
     function drawDots(parentG, groupIndex) {
         var g = parentG.select("g." + TOOLTIP_G_CLASS);
