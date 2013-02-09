@@ -1505,6 +1505,8 @@ dc.stackableChart = function(_chart) {
             if (m < min) min = m;
         }
 
+        if(min < 0) min = dc.utils.subtract(min, _chart.yAxisPadding());
+
         return min;
     };
 
@@ -1518,6 +1520,8 @@ dc.stackableChart = function(_chart) {
         }
 
         max = dc.utils.add(max, _chart.yAxisPadding());
+
+        if(max < 0) max = 0;
 
         return max;
     };
