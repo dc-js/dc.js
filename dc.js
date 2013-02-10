@@ -1513,6 +1513,8 @@ dc.stackableChart = function (_chart) {
             }
         }
 
+        min = dc.utils.subtract(min, _chart.yAxisPadding());
+
         return min;
     };
 
@@ -1525,10 +1527,7 @@ dc.stackableChart = function (_chart) {
             max += dc.utils.groupMax(group, _chart.getValueAccessorByIndex(groupIndex));
         }
 
-        if (max > 0)
-            max = dc.utils.add(max, _chart.yAxisPadding());
-        else
-            max = 0;
+        max = dc.utils.add(max, _chart.yAxisPadding());
 
         return max;
     };
@@ -1576,11 +1575,12 @@ dc.stackableChart = function (_chart) {
         return dc.utils.add(max, _chart.xAxisPadding());
     };
 
+    _chart.baseLineY = function() {
+        return _chart.y()(0);
+    }
+
     _chart.dataPointBaseline = function (value) {
-        if (value > 0)
-            return _chart.margins().top + _chart.yAxisHeight();
-        else
-            return _chart.margins().top;
+        return _chart.margins().top + _chart.baseLineY();
     };
 
     function getValueFromData(groupIndex, d) {
@@ -1590,15 +1590,13 @@ dc.stackableChart = function (_chart) {
     _chart.dataPointHeight = function (d, groupIndex) {
         var value = getValueFromData(groupIndex, d);
         var yPosition = _chart.y()(value);
-        var zeroPosition = _chart.y()(0);
+        var zeroPosition = _chart.baseLineY();
         var h = 0;
 
         if (value > 0)
-            h = _chart.yAxisHeight() - yPosition;
-        else if (value < 0)
-            h = zeroPosition + yPosition;
-        else // value == 0
-            h = 0;
+            h = zeroPosition - yPosition;
+        else
+            h = yPosition - zeroPosition;
 
         if (isNaN(h) || h < MIN_DATA_POINT_HEIGHT)
             h = MIN_DATA_POINT_HEIGHT;
@@ -1613,10 +1611,8 @@ dc.stackableChart = function (_chart) {
             if (groupIndex == 0) {
                 if (value > 0)
                     _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline(value) - _chart.dataPointHeight(d, groupIndex));
-                else if (value < 0)
-                    _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline(value) + _chart.y()(0));
-                else // value == 0
-                    _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline(value) + _chart.y()(0));
+                else
+                    _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline(value));
             } else {
                 if (value > 0)
                     _groupStack.setDataPoint(groupIndex, dataIndex, _groupStack.getDataPoint(groupIndex - 1, dataIndex) - _chart.dataPointHeight(d, groupIndex))
@@ -2152,7 +2148,7 @@ dc.barChart = function(parent, chartGroup) {
             .attr("x", function(data, dataIndex) {
                 return barX(this, data, groupIndex, dataIndex);
             })
-            .attr("y", _chart.xAxisY())
+            .attr("y", _chart.baseLineY())
             .attr("width", barWidth);
 
         if (_chart.isOrdinal())

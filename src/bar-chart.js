@@ -37,7 +37,7 @@ dc.barChart = function(parent, chartGroup) {
             .attr("x", function(data, dataIndex) {
                 return barX(this, data, groupIndex, dataIndex);
             })
-            .attr("y", _chart.xAxisY())
+            .attr("y", _chart.baseLineY())
             .attr("width", barWidth);
 
         if (_chart.isOrdinal())

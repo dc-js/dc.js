@@ -59,10 +59,8 @@ function buildNegativeChart(id, xdomain) {
         .dimension(dateDimension)
         .group(dateNegativeValueSumGroup)
         .stack(dateNegativeValueSumGroup)
-        .stack(dateNegativeValueSumGroup, function (d) {
-            return -10;
-        })
-        .yAxisPadding(30)
+        .stack(dateNegativeValueSumGroup)
+        .yAxisPadding(5)
         .elasticY(true)
         .x(d3.time.scale().domain(xdomain))
         .renderHorizontalGridLines(true)
@@ -339,7 +337,7 @@ suite.addBatch({'elastic axis': {
         return chart;
     },
     'y axis should have changed triggered by filter': function (chart) {
-        assert.equal(chart.y().domain()[0], 0);
+        assert.equal(chart.y().domain()[0], -10);
         assert.equal(chart.y().domain()[1], 11);
     },
     'x axis should have changed triggered by filter': function (chart) {
@@ -562,34 +560,34 @@ suite.addBatch({'negative bar chart': {
     },
     'should generate correct bars in stack 0': function (chart) {
         assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][0]).attr("x"), /88\.\d+/);
-        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][0]).attr("y"), /30/);
-        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][0]).attr("height"), /19/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][0]).attr("y"), /103/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][0]).attr("height"), /8/);
 
         assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][3]).attr("x"), /522\.\d+/);
-        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][3]).attr("y"), /30/);
-        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][3]).attr("height"), /14/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][3]).attr("y"), /103/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][3]).attr("height"), /6/);
 
         assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][5]).attr("x"), /991\.\d+/);
-        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][5]).attr("y"), /30/);
-        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][5]).attr("height"), /14/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][5]).attr("y"), /97/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][5]).attr("height"), /6/);
     },
     'should generate correct bars in stack 1': function (chart) {
         assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][0]).attr("x"), /88\.\d+/);
-        assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][0]).attr("y"), /49/);
-        assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][0]).attr("height"), /19/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][0]).attr("y"), /111/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][0]).attr("height"), /8/);
 
         assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][3]).attr("x"), /522\.\d+/);
-        assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][3]).attr("y"), /44/);
-        assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][3]).attr("height"), /14/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][3]).attr("y"), /109/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][3]).attr("height"), /6/);
 
         assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][5]).attr("x"), /991\.\d+/);
-        assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][5]).attr("y"), /44/);
-        assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][5]).attr("height"), /14/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][5]).attr("y"), /91/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][5]).attr("height"), /6/);
     },
     'should generate y axis domain dynamically': function(chart){
-        assert.equal(d3.select(chart.selectAll("g.y text")[0][0]).text(), "−30");
-        assert.equal(d3.select(chart.selectAll("g.y text")[0][3]).text(), "−15");
-        assert.equal(d3.select(chart.selectAll("g.y text")[0][6]).text(), "0");
+        assert.equal(d3.select(chart.selectAll("g.y text")[0][0]).text(), "−20");
+        assert.equal(d3.select(chart.selectAll("g.y text")[0][1]).text(), "0");
+        assert.equal(d3.select(chart.selectAll("g.y text")[0][2]).text(), "20");
     },
     teardown: function (topic) {
         resetAllFilters();
