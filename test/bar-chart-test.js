@@ -54,6 +54,7 @@ function buildNegativeChart(id, xdomain) {
     var chart = dc.barChart("#" + id);
     chart.width(1100)
         .height(200)
+        .transitionDuration(0)
         .margins({top: 30, right: 50, bottom: 30, left: 30})
         .dimension(dateDimension)
         .group(dateNegativeValueSumGroup)
@@ -500,8 +501,7 @@ suite.addBatch({
 
 suite.addBatch({'ordinal bar chart': {
     topic: function () {
-        var chart = buildOrdinalChart("bar-chart-ordinal");
-        return chart;
+        return buildOrdinalChart("bar-chart-ordinal");
     },
     'should have brush turned off': function (chart) {
         assert.isFalse(chart.brushOn());
@@ -531,8 +531,7 @@ suite.addBatch({'ordinal bar chart': {
 
 suite.addBatch({'linear integers bar chart': {
     topic: function () {
-        var chart = buildLinearChart("bar-chart-linear-integers");
-        return chart;
+        return buildLinearChart("bar-chart-linear-integers");
     },
     'should generate correct number of bars': function (chart) {
         assert.equal(chart.selectAll("rect.bar")[0].length, 5);
@@ -553,8 +552,7 @@ suite.addBatch({'linear integers bar chart': {
 
 suite.addBatch({'negative bar chart': {
     topic: function () {
-        var chart = buildNegativeChart("bar-chart-negative");
-        return chart;
+        return buildNegativeChart("bar-chart-negative");
     },
     'should generate correct number of bars': function (chart) {
         assert.equal(chart.selectAll("rect.bar")[0].length, 18);
@@ -562,16 +560,36 @@ suite.addBatch({'negative bar chart': {
     'should auto size bar width': function (chart) {
         assert.equal(chart.select("rect.bar").attr("width"), "9");
     },
-    'should generate correct bar x': function (chart) {
+    'should generate correct bars in stack 0': function (chart) {
         assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][0]).attr("x"), /88\.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][0]).attr("y"), /30/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][0]).attr("height"), /19/);
+
         assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][3]).attr("x"), /522\.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][3]).attr("y"), /30/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][3]).attr("height"), /14/);
+
         assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][5]).attr("x"), /991\.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][5]).attr("y"), /30/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][5]).attr("height"), /14/);
+    },
+    'should generate correct bars in stack 1': function (chart) {
         assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][0]).attr("x"), /88\.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][0]).attr("y"), /49/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][0]).attr("height"), /19/);
+
         assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][3]).attr("x"), /522\.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][3]).attr("y"), /44/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][3]).attr("height"), /14/);
+
         assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][5]).attr("x"), /991\.\d+/);
-        assert.match(d3.select(chart.selectAll("rect.bar.stack2")[0][0]).attr("x"), /88\.\d+/);
-        assert.match(d3.select(chart.selectAll("rect.bar.stack2")[0][3]).attr("x"), /522\.\d+/);
-        assert.match(d3.select(chart.selectAll("rect.bar.stack2")[0][5]).attr("x"), /991\.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][5]).attr("y"), /44/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][5]).attr("height"), /14/);
+    },
+    'should generate y axis domain dynamically': function(chart){
+        assert.equal(d3.select(chart.selectAll("g.y text")[0][0]).text(), "−30");
+        assert.equal(d3.select(chart.selectAll("g.y text")[0][3]).text(), "−15");
+        assert.equal(d3.select(chart.selectAll("g.y text")[0][6]).text(), "0");
     },
     teardown: function (topic) {
         resetAllFilters();
@@ -618,8 +636,7 @@ suite.addBatch({
 
 suite.addBatch({'clip path': {
     topic: function () {
-        var chart = buildChart("chart-clip-path");
-        return chart;
+        return buildChart("chart-clip-path");
     },
     'only one defs should be created': function (chart) {
         assert.equal(chart.selectAll("defs")[0].length, 1);
