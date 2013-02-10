@@ -52,10 +52,19 @@ function buildNegativeChart(id, xdomain) {
     div.append("a").attr("class", "reset").style("display", "none");
     div.append("span").attr("class", "filter").style("display", "none");
     var chart = dc.barChart("#" + id);
-    chart.dimension(dateDimension).group(dateNegativeValueSumGroup)
-        .width(width).height(height)
-        .x(d3.scale.ordinal().domain(xdomain))
-        .transitionDuration(0)
+    chart.width(1100)
+        .height(200)
+        .margins({top: 30, right: 50, bottom: 30, left: 30})
+        .dimension(dateDimension)
+        .group(dateNegativeValueSumGroup)
+        .stack(dateNegativeValueSumGroup)
+        .stack(dateNegativeValueSumGroup, function (d) {
+            return -10;
+        })
+        .yAxisPadding(30)
+        .elasticY(true)
+        .x(d3.time.scale().domain(xdomain))
+        .renderHorizontalGridLines(true)
         .xUnits(d3.time.days);
     chart.render();
     return chart;
@@ -548,10 +557,21 @@ suite.addBatch({'negative bar chart': {
         return chart;
     },
     'should generate correct number of bars': function (chart) {
-        assert.equal(chart.selectAll("rect.bar")[0].length, 6);
+        assert.equal(chart.selectAll("rect.bar")[0].length, 18);
     },
     'should auto size bar width': function (chart) {
         assert.equal(chart.select("rect.bar").attr("width"), "9");
+    },
+    'should generate correct bar x': function (chart) {
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][0]).attr("x"), /88\.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][3]).attr("x"), /522\.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][5]).attr("x"), /991\.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][0]).attr("x"), /88\.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][3]).attr("x"), /522\.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][5]).attr("x"), /991\.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack2")[0][0]).attr("x"), /88\.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack2")[0][3]).attr("x"), /522\.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack2")[0][5]).attr("x"), /991\.\d+/);
     },
     teardown: function (topic) {
         resetAllFilters();
@@ -596,39 +616,39 @@ suite.addBatch({
     }
 });
 
-suite.addBatch({'clip path':{
-    topic: function() {
+suite.addBatch({'clip path': {
+    topic: function () {
         var chart = buildChart("chart-clip-path");
         return chart;
     },
-    'only one defs should be created': function(chart) {
+    'only one defs should be created': function (chart) {
         assert.equal(chart.selectAll("defs")[0].length, 1);
     },
-    'only one clip path should be created': function(chart) {
+    'only one clip path should be created': function (chart) {
         assert.equal(chart.selectAll("defs clipPath")[0].length, 1);
     },
-    'only one clip rect should be created': function(chart) {
+    'only one clip rect should be created': function (chart) {
         assert.equal(chart.selectAll("defs clipPath rect")[0].length, 1);
     },
-    'clip rect size should be correct': function(chart) {
+    'clip rect size should be correct': function (chart) {
         var rect = chart.select("defs clipPath rect");
         assert.equal(rect.attr("width"), 1020);
         assert.equal(rect.attr("height"), 160);
     },
-    'clip rect position should be correct': function(chart) {
+    'clip rect position should be correct': function (chart) {
         var rect = chart.select("defs clipPath rect");
         assert.equal(rect.attr("x"), 30);
         assert.equal(rect.attr("y"), 10);
     },
-    'clip id should be correct': function(chart) {
+    'clip id should be correct': function (chart) {
         assert.equal(chart.select("defs clipPath").attr("id"), "chart-clip-path-clip");
     },
-    'chart body g should have clip path refs': function(chart) {
-        chart.selectAll("g.chartBody").each(function(){
-            assert.equal(d3.select(this).attr("clip-path"),"url(#chart-clip-path-clip)");
+    'chart body g should have clip path refs': function (chart) {
+        chart.selectAll("g.chartBody").each(function () {
+            assert.equal(d3.select(this).attr("clip-path"), "url(#chart-clip-path-clip)");
         });
     },
-    teardown: function(topic) {
+    teardown: function (topic) {
         resetAllFilters();
         resetBody();
     }
