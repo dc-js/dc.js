@@ -81,7 +81,9 @@ dc.lineChart = function(parent, chartGroup) {
     };
 
     var lineY = function(d, dataIndex, groupIndex) {
-        return _chart.getChartStack().getDataPoint(groupIndex, dataIndex);
+        var y = _chart.getChartStack().getDataPoint(groupIndex, dataIndex);
+        if(y == _chart.dataPointBaseline()) y += _chart.dataPointHeight(d, groupIndex);
+        return y;
     };
 
     function drawArea(g, stackedCssClass, groupIndex, line) {
@@ -98,7 +100,7 @@ dc.lineChart = function(parent, chartGroup) {
             .y1(line.y())
             .y0(function(d, dataIndex) {
                 var groupIndex = this[dc.constants.GROUP_INDEX_NAME];
-                if (groupIndex == 0) return _chart.xAxisY() - AREA_BOTTOM_PADDING;
+                if (groupIndex == 0) return _chart.dataPointBaseline() - AREA_BOTTOM_PADDING;
                 return _chart.getChartStack().getDataPoint(--groupIndex, dataIndex) - AREA_BOTTOM_PADDING;
             });
 

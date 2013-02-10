@@ -585,7 +585,7 @@ suite.addBatch({'negative bar chart': {
         assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][5]).attr("height"), /6/);
     },
     'should generate y axis domain dynamically': function(chart){
-        assert.equal(d3.select(chart.selectAll("g.y text")[0][0]).text(), "−20");
+        assert.match(d3.select(chart.selectAll("g.y text")[0][0]).text(), /[−-]20/);
         assert.equal(d3.select(chart.selectAll("g.y text")[0][1]).text(), "0");
         assert.equal(d3.select(chart.selectAll("g.y text")[0][2]).text(), "20");
     },

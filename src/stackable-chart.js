@@ -135,7 +135,7 @@ dc.stackableChart = function (_chart) {
         return _chart.y()(0);
     }
 
-    _chart.dataPointBaseline = function (value) {
+    _chart.dataPointBaseline = function () {
         return _chart.margins().top + _chart.baseLineY();
     };
 
@@ -166,9 +166,9 @@ dc.stackableChart = function (_chart) {
             var value = getValueFromData(groupIndex, d);
             if (groupIndex == 0) {
                 if (value > 0)
-                    _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline(value) - _chart.dataPointHeight(d, groupIndex));
+                    _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline() - _chart.dataPointHeight(d, groupIndex));
                 else
-                    _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline(value));
+                    _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline());
             } else {
                 if (value > 0)
                     _groupStack.setDataPoint(groupIndex, dataIndex, _groupStack.getDataPoint(groupIndex - 1, dataIndex) - _chart.dataPointHeight(d, groupIndex))

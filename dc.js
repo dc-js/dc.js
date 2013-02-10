@@ -1579,7 +1579,7 @@ dc.stackableChart = function (_chart) {
         return _chart.y()(0);
     }
 
-    _chart.dataPointBaseline = function (value) {
+    _chart.dataPointBaseline = function () {
         return _chart.margins().top + _chart.baseLineY();
     };
 
@@ -1610,9 +1610,9 @@ dc.stackableChart = function (_chart) {
             var value = getValueFromData(groupIndex, d);
             if (groupIndex == 0) {
                 if (value > 0)
-                    _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline(value) - _chart.dataPointHeight(d, groupIndex));
+                    _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline() - _chart.dataPointHeight(d, groupIndex));
                 else
-                    _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline(value));
+                    _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline());
             } else {
                 if (value > 0)
                     _groupStack.setDataPoint(groupIndex, dataIndex, _groupStack.getDataPoint(groupIndex - 1, dataIndex) - _chart.dataPointHeight(d, groupIndex))
@@ -2375,7 +2375,9 @@ dc.lineChart = function(parent, chartGroup) {
     };
 
     var lineY = function(d, dataIndex, groupIndex) {
-        return _chart.getChartStack().getDataPoint(groupIndex, dataIndex);
+        var y = _chart.getChartStack().getDataPoint(groupIndex, dataIndex);
+        if(y == _chart.dataPointBaseline()) y += _chart.dataPointHeight(d, groupIndex);
+        return y;
     };
 
     function drawArea(g, stackedCssClass, groupIndex, line) {
@@ -2392,7 +2394,7 @@ dc.lineChart = function(parent, chartGroup) {
             .y1(line.y())
             .y0(function(d, dataIndex) {
                 var groupIndex = this[dc.constants.GROUP_INDEX_NAME];
-                if (groupIndex == 0) return _chart.xAxisY() - AREA_BOTTOM_PADDING;
+                if (groupIndex == 0) return _chart.dataPointBaseline() - AREA_BOTTOM_PADDING;
                 return _chart.getChartStack().getDataPoint(--groupIndex, dataIndex) - AREA_BOTTOM_PADDING;
             });
 
