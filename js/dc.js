@@ -2376,7 +2376,8 @@ dc.lineChart = function(parent, chartGroup) {
 
     var lineY = function(d, dataIndex, groupIndex) {
         var y = _chart.getChartStack().getDataPoint(groupIndex, dataIndex);
-        if(y == _chart.dataPointBaseline()) y += _chart.dataPointHeight(d, groupIndex);
+        if(y >= _chart.dataPointBaseline())
+            y += _chart.dataPointHeight(d, groupIndex);
         return y;
     };
 
@@ -2394,8 +2395,16 @@ dc.lineChart = function(parent, chartGroup) {
             .y1(line.y())
             .y0(function(d, dataIndex) {
                 var groupIndex = this[dc.constants.GROUP_INDEX_NAME];
-                if (groupIndex == 0) return _chart.dataPointBaseline() - AREA_BOTTOM_PADDING;
-                return _chart.getChartStack().getDataPoint(--groupIndex, dataIndex) - AREA_BOTTOM_PADDING;
+
+                if (groupIndex == 0)
+                    return _chart.dataPointBaseline() - AREA_BOTTOM_PADDING;
+
+                var y = _chart.getChartStack().getDataPoint(groupIndex-1, dataIndex);
+
+                if(y < _chart.dataPointBaseline())
+                    return y - AREA_BOTTOM_PADDING;
+                else
+                    return y + _chart.dataPointHeight(d, groupIndex-1);
             });
 
         dc.transition(areaPath, _chart.transitionDuration(),
