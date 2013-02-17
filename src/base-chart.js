@@ -78,7 +78,7 @@ dc.baseChart = function(_chart) {
         return _chart.filter(null);
     };
 
-    _chart.dataAreSet = function() {
+    _chart.dataSet = function() {
         return _dimension != undefined && _group != undefined;
     };
 

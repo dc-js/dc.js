@@ -545,7 +545,7 @@ dc.baseChart = function(_chart) {
         return _chart.filter(null);
     };
 
-    _chart.dataAreSet = function() {
+    _chart.dataSet = function() {
         return _dimension != undefined && _group != undefined;
     };
 
@@ -1238,7 +1238,7 @@ dc.coordinateGridChart = function (_chart) {
 
         _chart.resetSvg();
 
-        if (_chart.dataAreSet()) {
+        if (_chart.dataSet()) {
             _chart.generateG();
 
             generateClipPath();
@@ -1274,7 +1274,7 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     _chart.subRender = function () {
-        if (_chart.dataAreSet()) {
+        if (_chart.dataSet()) {
             _chart.plotData();
         }
 
@@ -1396,7 +1396,7 @@ dc.singleSelectionChart = function(_chart) {
 
         _filter = _;
 
-        if (_chart.dataAreSet() && _chart.dimension().filter != undefined)
+        if (_chart.dataSet() && _chart.dimension().filter != undefined)
             _chart.dimension().filter(_filter);
 
         if (_) {
@@ -1854,7 +1854,7 @@ dc.pieChart = function(parent, chartGroup) {
     };
 
     function drawChart() {
-        if (_chart.dataAreSet()) {
+        if (_chart.dataSet()) {
             var pie = calculateDataPie();
 
             var arc = _chart.buildArcs();
@@ -1889,7 +1889,7 @@ dc.pieChart = function(parent, chartGroup) {
             .enter()
             .append("g")
             .attr("class", function(d, i) {
-                return _sliceCssClass + " " + i;
+                return _sliceCssClass + " _" + i;
             });
         return slicesEnter;
     }
@@ -1925,7 +1925,7 @@ dc.pieChart = function(parent, chartGroup) {
                 .enter()
                 .append("text")
                 .attr("class", function(d, i) {
-                    return _sliceCssClass + " " + i;
+                    return _sliceCssClass + " _" + i;
                 })
                 .on("click", onClick);
             dc.transition(labelsEnter, _chart.transitionDuration())
