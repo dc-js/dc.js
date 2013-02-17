@@ -39,7 +39,7 @@ suite.addBatch({
             assert.isTrue(dc.hasChart(chart));
         },
         'dc-chart class should be turned on for parent div': function (chart) {
-            assert.equal(jQuery("#pie-chart-age").attr("class"), "dc-chart");
+            assert.equal(d3.select("#pie-chart-age").attr("class"), "dc-chart");
         },
         'inner radius can be set': function (chart) {
             assert.equal(chart.innerRadius(), innerRadius);
@@ -132,7 +132,7 @@ suite.addBatch({
                 return pieChart;
             },
             'multiple invocation of render should update chart': function (pieChart) {
-                assert.equal(jQuery("#pie-chart-age svg").length, 1);
+                assert.equal(d3.selectAll("#pie-chart-age svg")[0].length, 1);
             }
         },
         'filter': {
