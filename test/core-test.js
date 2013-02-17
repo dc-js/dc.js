@@ -1,9 +1,9 @@
 require("./env");
 
-var vows = require('vows');
-var assert = require('assert');
+var vows = require("vows"),
+    assert = require("assert");
 
-var suite = vows.describe('Core');
+var suite = vows.describe("ns");
 
 suite.addBatch({
     'dc.version': {
@@ -181,10 +181,10 @@ suite.addBatch({
             sinon.spy(chart, "render");
             dc.pieChart("#b", "groupA").dimension(valueDimension).group(valueGroup);
             dc.bubbleChart("#c", "groupB").dimension(valueDimension).group(valueGroup);
-            dc.barChart("#1", "groupB").dimension(valueDimension).group(valueGroup);
-            dc.lineChart("#2", "groupB").dimension(valueDimension).group(valueGroup);
-            dc.dataCount("#3", "groupB").dimension(valueDimension).group(valueGroup);
-            dc.dataTable("#4", "groupB").dimension(valueDimension).group(valueGroup);
+            dc.barChart("#b1", "groupB").dimension(valueDimension).group(valueGroup);
+            dc.lineChart("#b2", "groupB").dimension(valueDimension).group(valueGroup);
+            dc.dataCount("#b3", "groupB").dimension(valueDimension).group(valueGroup);
+            dc.dataTable("#b4", "groupB").dimension(valueDimension).group(valueGroup);
             return chart;
         },
         'should register chart object': function (chart) {

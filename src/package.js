@@ -10,14 +10,14 @@ require("util").puts(JSON.stringify({
   "repository": {"type": "git", "url": "https://github.com/NickQiZhu/dc.js.git"},
   "dependencies": {
     "crossfilter": "1.1.0",
-    "d3": "2.10.3"
+    "d3": "3.0.6"
   },
   "devDependencies": {
-    "uglify-js": "2.2.1",
+    "uglify-js": "2.2.3",
     "vows": "0.7.0",
-    "jsdom": "0.2.19",
+    "jsdom": "0.3.4",
     "jquery": "1.8.3",
-    "sinon": "1.5   .2"
+    "sinon": "1.5.2"
   },
   "scripts": {"test": "./node_modules/vows/bin/vows"}
 }, null, 2));
