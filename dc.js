@@ -1427,17 +1427,14 @@ dc.singleSelectionChart = function(_chart) {
 
     _chart.onClick = function(d) {
         var toFilter = _chart.keyAccessor()(d);
-        if (toFilter == _chart.filter()) {
-            dc.events.trigger(function() {
-                _chart.filter(null);
-                dc.redrawAll(_chart.chartGroup());
-            });
-        } else {
-            dc.events.trigger(function() {
-                _chart.filter(toFilter);
-                dc.redrawAll(_chart.chartGroup());
-            });
-        }
+        dc.events.trigger(function() {
+            _chart.filterTo(toFilter == _chart.filter() ? null : toFilter);
+        });
+    };
+
+    _chart.filterTo = function(toFilter) {
+        _chart.filter(toFilter);
+        dc.redrawAll(_chart.chartGroup());
     };
 
     return _chart;

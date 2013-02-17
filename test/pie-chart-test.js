@@ -227,6 +227,10 @@ suite.addBatch({
                 pieChart.onClick(pieChart.group().all()[0]);
                 assert.equal(pieChart.filter(), "22");
             },
+            'onClick should reset filter if clicked twice': function (pieChart) {
+                pieChart.onClick(pieChart.group().all()[0]);
+                assert.equal(pieChart.filter(), null);
+            },
             teardown: function () {
                 resetAllFilters();
                 resetBody();
