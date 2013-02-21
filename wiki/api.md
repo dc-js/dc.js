@@ -235,6 +235,25 @@ chart.filter(18);
 #### .hasFilter()
 Check whether is an active filter associated with particular chart instance. This function is **not chainable**.
 
+#### .filterHandler([function])
+Set or get filter handler. Filter handler is a function that performs the filter action on a specific dimension. Using
+custom filter handler give you the flexibility to perform additional logic before or after filtering.
+
+```js
+// default filter handler
+function(dimension, filter){
+    dimension.filter(filter); // perform filtering
+    return filter; // return the actual filter value
+}
+
+// custom filter handler
+chart.filterHandler(function(dimension, filter){
+    var newFilter = filter + 10;
+    dimension.filter(newFilter);
+    return newFilter; // set the actual filter value to the new value
+});
+```
+
 ## <a name="stackable-chart" href="#stackable-chart">#</a> Stackable Chart [Abstract]
 Stackable chart is an abstract chart introduced to provide cross-chart support of stackability. Concrete implementation of
 charts can then selectively mix-in this capability.

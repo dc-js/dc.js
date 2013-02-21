@@ -377,6 +377,28 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({
+    'custom filter handler': {
+        topic: function () {
+            var chart = buildChart("pie-chart-filter-handler");
+            chart.filterHandler(function(dimension, filter){
+                var newFilter = filter + 6;
+                dimension.filter(newFilter);
+                return newFilter;
+            });
+            return chart;
+        },
+        'default function should be used to dynamically generate label': function (chart) {
+            chart.filter(60);
+            assert.equal(chart.filter(), 66);
+        },
+        teardown: function (chart) {
+            resetAllFilters();
+            resetBody();
+        }
+    }
+});
+
 
 suite.export(module);
 
