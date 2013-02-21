@@ -212,7 +212,7 @@ suite.addBatch({
                 pieChart.redraw();
                 pieChart.selectAll(".pie-slice path").each(function (d) {
                     var cls = d3.select(this).attr("class");
-                    assert.isTrue(cls == null && cls == "");
+                    assert.isTrue(cls == null || cls == "");
                 });
             },
             teardown: function (pieChart) {
