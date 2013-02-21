@@ -55,30 +55,6 @@ suite.addBatch({
     }
 });
 
-suite.addBatch({
-    'renderlet':{
-        topic:function() {
-            var chart = buildChart("chart-renderlet");
-            chart.renderlet(function(chart) {
-                chart.selectAll("span.total-count").text("changed");
-            });
-            return chart;
-        },
-        'custom renderlet should be invoked with render': function(chart) {
-            chart.render();
-            assert.equal(chart.select("span.total-count").text(), "changed");
-        },
-        'custom renderlet should be invoked with redraw': function(chart) {
-            chart.redraw();
-            assert.equal(chart.select("span.total-count").text(), "changed");
-        },
-        teardown: function(topic) {
-            resetAllFilters();
-            resetBody();
-        }
-    }
-});
-
 suite.export(module);
 
 
