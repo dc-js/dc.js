@@ -66,11 +66,11 @@ suite.addBatch({
         },
         'custom renderlet should be invoked with render': function(chart) {
             chart.render();
-            assert.equal(chart.selectAll("span.total-count").text(), "changed");
+            assert.equal(chart.select("span.total-count").text(), "changed");
         },
         'custom renderlet should be invoked with redraw': function(chart) {
             chart.redraw();
-            assert.equal(chart.selectAll("span.total-count").text(), "changed");
+            assert.equal(chart.select("span.total-count").text(), "changed");
         },
         teardown: function(topic) {
             resetAllFilters();
