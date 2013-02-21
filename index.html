@@ -19,23 +19,6 @@
     <script src="highlighter/shAutoloader.js" type="text/javascript"></script>
     <script src='highlighter/shBrushJScript.js' type='text/javascript'></script>
     <script src='highlighter/shBrushXml.js' type='text/javascript'></script>
-
-    <script type="text/javascript">
-
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', 'UA-33628816-1']);
-        _gaq.push(['_trackPageview']);
-
-        (function() {
-            var ga = document.createElement('script');
-            ga.type = 'text/javascript';
-            ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(ga, s);
-        })();
-
-    </script>
 </head>
 <body>
 
@@ -75,46 +58,49 @@
 <p>
     Try it out or checkout other examples.
 
-    <ul>
-        <li><a href="vc/index.html">US Venture Capital Landscape 2011 (choropleth chart, bubble chart)</a></li>
-        <li><a href="crime/index.html">Major Canadian City Crime Stats 1998-2011 (bubble overlay, bar chart, line chart)</a></li>
-    </ul>
+<ul>
+    <li><a href="vc/index.html">US Venture Capital Landscape 2011 (choropleth chart, bubble chart)</a></li>
+    <li><a href="crime/index.html">Major Canadian City Crime Stats 1998-2011 (bubble overlay, bar chart, line chart)</a>
+    </li>
+</ul>
 </p>
 
 <h2>Nasdaq 100 Index 1985/11/01-2012/06/29</h2>
 
 <div class="row">
     <div id="yearly-bubble-chart" class="dc-chart">
-        <strong>Yearly Performance</strong> (x: index gain, y: index gain(%), radius: fluctuation/index ratio, color: gain/loss)
-        <a class="reset" href="javascript:yearlyBubbleChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+        <strong>Yearly Performance</strong> (x: index gain, y: index gain(%), radius: fluctuation/index ratio, color:
+        gain/loss)
+        <a class="reset" href="javascript:yearlyBubbleChart.filterAll();dc.redrawAll();"
+           style="display: none;">reset</a>
 
         <div class="clearfix"></div>
     </div>
 </div>
 
 <div class="row">
-    <div id="gain-loss-chart" >
+    <div id="gain-loss-chart">
         <strong>Days by Gain/Loss</strong>
         <a class="reset" href="javascript:gainOrLossChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
         <div class="clearfix"></div>
     </div>
 
-    <div id="quarter-chart" >
+    <div id="quarter-chart">
         <strong>Quarters</strong>
         <a class="reset" href="javascript:quarterChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
         <div class="clearfix"></div>
     </div>
 
-    <div id="day-of-week-chart" >
+    <div id="day-of-week-chart">
         <strong>Day of Week</strong>
         <a class="reset" href="javascript:dayOfWeekChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
         <div class="clearfix"></div>
     </div>
 
-    <div id="fluctuation-chart" >
+    <div id="fluctuation-chart">
         <strong>Days by Fluctuation(%)</strong>
         <a class="reset" href="javascript:fluctuationChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
@@ -123,8 +109,9 @@
 </div>
 
 <div class="row">
-    <div id="monthly-move-chart" >
-        <strong>Monthly Index Abs Move & Volume/500,000 Chart</strong> (Blue Line: Avg Index, Green Line: Index Fluctuation)
+    <div id="monthly-move-chart">
+        <strong>Monthly Index Abs Move & Volume/500,000 Chart</strong> (Blue Line: Avg Index, Green Line: Index
+        Fluctuation)
         <a class="reset" href="javascript:volumeChart.filterAll();dc.redrawAll();"
            style="display: none;">reset</a>
 
@@ -133,15 +120,16 @@
 </div>
 
 <div class="row">
-    <div id="monthly-volume-chart" >
+    <div id="monthly-volume-chart">
     </div>
     <p class="muted pull-right" style="margin-right: 15px;">select a time range to zoom in</p>
 </div>
 
 <div class="row">
-    <div >
+    <div>
         <div class="dc-data-count">
-            <span class="filter-count"></span> selected out of <span class="total-count"></span> records | <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
+            <span class="filter-count"></span> selected out of <span class="total-count"></span> records | <a
+                href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
         </div>
     </div>
     <table class="table table-hover dc-data-table">
@@ -170,12 +158,12 @@ var yearlyBubbleChart = dc.bubbleChart("#yearly-bubble-chart");
 d3.selectAll("#version").text(dc.version);
 
 // load data from a csv file
-d3.csv("ndx.csv", function(data) {
+d3.csv("ndx.csv", function (data) {
             // since its a csv file we need to format the data a bit
             var dateFormat = d3.time.format("%m/%d/%Y");
             var numberFormat = d3.format(".2f");
 
-            data.forEach(function(e) {
+            data.forEach(function (e) {
                 e.dd = dateFormat.parse(e.date);
                 e.month = d3.time.month(e.dd); // pre-calculate month for better performance
             });
@@ -184,12 +172,12 @@ d3.csv("ndx.csv", function(data) {
             var ndx = crossfilter(data);
             var all = ndx.groupAll();
 
-            var yearlyDimension = ndx.dimension(function(d) {
+            var yearlyDimension = ndx.dimension(function (d) {
                 return d3.time.year(d.dd);
             });
             var yearlyPerformanceGroup = yearlyDimension.group().reduce(
                     //add
-                    function(p, v) {
+                    function (p, v) {
                         ++p.count;
                         p.absGain += +v.close - +v.open;
                         p.fluctuation += Math.abs(+v.close - +v.open);
@@ -200,7 +188,7 @@ d3.csv("ndx.csv", function(data) {
                         return p;
                     },
                     //remove
-                    function(p, v) {
+                    function (p, v) {
                         --p.count;
                         p.absGain -= +v.close - +v.open;
                         p.fluctuation -= Math.abs(+v.close - +v.open);
@@ -211,54 +199,54 @@ d3.csv("ndx.csv", function(data) {
                         return p;
                     },
                     //init
-                    function() {
-                        return {count:0, absGain:0, fluctuation:0, fluctuationPercentage:0, sumIndex:0, avgIndex:0, percentageGain:0};
+                    function () {
+                        return {count: 0, absGain: 0, fluctuation: 0, fluctuationPercentage: 0, sumIndex: 0, avgIndex: 0, percentageGain: 0};
                     }
             );
 
-            var dateDimension = ndx.dimension(function(d) {
+            var dateDimension = ndx.dimension(function (d) {
                 return d.dd;
             });
 
             // monthly index avg fluctuation in percentage
-            var moveMonths = ndx.dimension(function(d) {
+            var moveMonths = ndx.dimension(function (d) {
                 return d.month;
             });
-            var monthlyMoveGroup = moveMonths.group().reduceSum(function(d) {
+            var monthlyMoveGroup = moveMonths.group().reduceSum(function (d) {
                 return Math.abs(+d.close - +d.open);
             });
-            var volumeByMonthGroup = moveMonths.group().reduceSum(function(d) {
+            var volumeByMonthGroup = moveMonths.group().reduceSum(function (d) {
                 return d.volume / 500000;
             });
             var indexAvgByMonthGroup = moveMonths.group().reduce(
-                    function(p, v) {
+                    function (p, v) {
                         ++p.days;
                         p.total += (+v.open + +v.close) / 2;
                         p.avg = Math.round(p.total / p.days);
                         return p;
                     },
-                    function(p, v) {
+                    function (p, v) {
                         --p.days;
                         p.total -= (+v.open + +v.close) / 2;
-                        p.avg = p.days==0?0:Math.round(p.total / p.days);
+                        p.avg = p.days == 0 ? 0 : Math.round(p.total / p.days);
                         return p;
                     },
-                    function() {
-                        return {days:0, total:0, avg:0};
+                    function () {
+                        return {days: 0, total: 0, avg: 0};
                     }
             );
 
-            var gainOrLoss = ndx.dimension(function(d) {
+            var gainOrLoss = ndx.dimension(function (d) {
                 return +d.open > +d.close ? "Loss" : "Gain";
             });
             var gainOrLossGroup = gainOrLoss.group();
 
-            var fluctuation = ndx.dimension(function(d) {
+            var fluctuation = ndx.dimension(function (d) {
                 return Math.round((d.close - d.open) / d.open * 100);
             });
             var fluctuationGroup = fluctuation.group();
 
-            var quarter = ndx.dimension(function(d) {
+            var quarter = ndx.dimension(function (d) {
                 var month = d.dd.getMonth();
                 if (month <= 3)
                     return "Q1";
@@ -269,11 +257,11 @@ d3.csv("ndx.csv", function(data) {
                 else
                     return "Q4";
             });
-            var quarterGroup = quarter.group().reduceSum(function(d) {
+            var quarterGroup = quarter.group().reduceSum(function (d) {
                 return d.volume;
             });
 
-            var dayOfWeek = ndx.dimension(function(d) {
+            var dayOfWeek = ndx.dimension(function (d) {
                 var day = d.dd.getDay();
                 switch (day) {
                     case 0:
@@ -300,16 +288,18 @@ d3.csv("ndx.csv", function(data) {
                     .dimension(yearlyDimension)
                     .group(yearlyPerformanceGroup)
                     .transitionDuration(1500)
-                    .colors(["#a60000","#ff0000", "#ff4040","#ff7373","#67e667","#39e639","#00cc00"])
+                    .colors(["#a60000", "#ff0000", "#ff4040", "#ff7373", "#67e667", "#39e639", "#00cc00"])
                     .colorDomain([-12000, 12000])
-                    .colorAccessor(function(d){return d.value.absGain;})
-                    .keyAccessor(function(p) {
+                    .colorAccessor(function (d) {
+                        return d.value.absGain;
+                    })
+                    .keyAccessor(function (p) {
                         return p.value.absGain;
                     })
-                    .valueAccessor(function(p) {
+                    .valueAccessor(function (p) {
                         return p.value.percentageGain;
                     })
-                    .radiusValueAccessor(function(p) {
+                    .radiusValueAccessor(function (p) {
                         return p.value.fluctuationPercentage;
                     })
                     .maxBubbleRelativeSize(0.3)
@@ -324,17 +314,17 @@ d3.csv("ndx.csv", function(data) {
                     .renderVerticalGridLines(true)
                     .renderLabel(true)
                     .renderTitle(true)
-                    .label(function(p) {
+                    .label(function (p) {
                         return p.key.getFullYear();
                     })
-                    .title(function(p) {
+                    .title(function (p) {
                         return p.key.getFullYear()
                                 + "\n"
                                 + "Index Gain: " + numberFormat(p.value.absGain) + "\n"
                                 + "Index Gain in Percentage: " + numberFormat(p.value.percentageGain) + "%\n"
                                 + "Fluctuation / Index Ratio: " + numberFormat(p.value.fluctuationPercentage) + "%";
                     })
-                    .yAxis().tickFormat(function(v) {
+                    .yAxis().tickFormat(function (v) {
                         return v + "%";
                     });
 
@@ -343,7 +333,7 @@ d3.csv("ndx.csv", function(data) {
                     .radius(80)
                     .dimension(gainOrLoss)
                     .group(gainOrLossGroup)
-                    .label(function(d) {
+                    .label(function (d) {
                         return d.data.key + "(" + Math.floor(d.data.value / all.value() * 100) + "%)";
                     });
 
@@ -374,7 +364,7 @@ d3.csv("ndx.csv", function(data) {
                     .x(d3.scale.linear().domain([-25, 25]))
                     .renderHorizontalGridLines(true)
                     .xAxis()
-                    .tickFormat(function(v) {
+                    .tickFormat(function (v) {
                         return v + "%";
                     });
 
@@ -384,7 +374,7 @@ d3.csv("ndx.csv", function(data) {
                     .margins({top: 10, right: 50, bottom: 25, left: 40})
                     .dimension(moveMonths)
                     .group(indexAvgByMonthGroup)
-                    .valueAccessor(function(d) {
+                    .valueAccessor(function (d) {
                         return d.value.avg;
                     })
                     .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
@@ -395,12 +385,16 @@ d3.csv("ndx.csv", function(data) {
                     .brushOn(false)
                     .compose([
                         dc.lineChart(moveChart).group(indexAvgByMonthGroup)
-                                .valueAccessor(function(d){return d.value.avg;})
+                                .valueAccessor(function (d) {
+                                    return d.value.avg;
+                                })
                                 .renderArea(true)
-                                .stack(monthlyMoveGroup, function(d){return d.value;})
-                                .title(function(d){
-                                    var value = d.value.avg?d.value.avg:d.value;
-                                    if(isNaN(value)) value = 0;
+                                .stack(monthlyMoveGroup, function (d) {
+                                    return d.value;
+                                })
+                                .title(function (d) {
+                                    var value = d.value.avg ? d.value.avg : d.value;
+                                    if (isNaN(value)) value = 0;
                                     return dateFormat(d.key) + "\n" + numberFormat(value);
                                 })
                     ])
@@ -416,12 +410,12 @@ d3.csv("ndx.csv", function(data) {
                     .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
                     .round(d3.time.month.round)
                     .xUnits(d3.time.months)
-                    .renderlet(function(chart){
+                    .renderlet(function (chart) {
                         chart.select("g.y").style("display", "none");
                         moveChart.filter(chart.filter());
                     })
-                    .renderlet(function(chart){
-                        dc.events.trigger(function(){
+                    .renderlet(function (chart) {
+                        dc.events.trigger(function () {
                             moveChart.focus(chart.filter());
                         });
                     });
@@ -433,33 +427,33 @@ d3.csv("ndx.csv", function(data) {
 
             dc.dataTable(".dc-data-table")
                     .dimension(dateDimension)
-                    .group(function(d) {
+                    .group(function (d) {
                         var format = d3.format("02d");
                         return d.dd.getFullYear() + "/" + format((d.dd.getMonth() + 1));
                     })
                     .size(10)
                     .columns([
-                        function(d) {
+                        function (d) {
                             return d.date;
                         },
-                        function(d) {
+                        function (d) {
                             return d.open;
                         },
-                        function(d) {
+                        function (d) {
                             return d.close;
                         },
-                        function(d) {
+                        function (d) {
                             return numberFormat(d.close - d.open);
                         },
-                        function(d) {
+                        function (d) {
                             return d.volume;
                         }
                     ])
-                    .sortBy(function(d) {
+                    .sortBy(function (d) {
                         return d.dd;
                     })
                     .order(d3.ascending)
-                    .renderlet(function(table){
+                    .renderlet(function (table) {
                         table.selectAll(".dc-table-group").classed("info", true);
                     });
 
@@ -955,6 +949,23 @@ d3.csv("ndx.csv", function(data) {
 
 <script type="text/javascript">
     SyntaxHighlighter.all();
+</script>
+
+<script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-33628816-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function () {
+        var ga = document.createElement('script');
+        ga.type = 'text/javascript';
+        ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(ga, s);
+    })();
+
 </script>
 
 </body>
