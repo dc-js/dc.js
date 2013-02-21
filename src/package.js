@@ -9,8 +9,8 @@ require("util").puts(JSON.stringify({
   "author": {"name": "Nick Zhu", "url": "http://nzhu.blogspot.ca/"},
   "repository": {"type": "git", "url": "https://github.com/NickQiZhu/dc.js.git"},
   "dependencies": {
-    "crossfilter": "1.1.0",
-    "d3": "3.0.6"
+    "crossfilter": "1.1.1",
+    "d3": "3.0.7"
   },
   "devDependencies": {
     "uglify-js": "2.2.3",
