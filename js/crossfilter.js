@@ -1,5 +1,5 @@
 (function(exports){
-crossfilter.version = "1.0.3";
+crossfilter.version = "1.1.1";
 function crossfilter_identity(d) {
   return d;
 }
@@ -23,15 +23,18 @@ function bisect_by(f) {
   // present in a, the insertion point will be before (to the left of) any
   // existing entries. The return value is suitable for use as the first
   // argument to `array.splice` assuming that a is already sorted.
+  // Incomparable values such as NaN and undefined are assumed to be at the end
+  // of the array.
   //
   // The returned insertion point i partitions the array a into two halves so
   // that all v < x for v in a[lo:i] for the left side and all v >= x for v in
   // a[i:hi] for the right side.
   function bisectLeft(a, x, lo, hi) {
     while (lo < hi) {
-      var mid = lo + hi >> 1;
-      if (f(a[mid]) < x) lo = mid + 1;
-      else hi = mid;
+      var mid = lo + hi >>> 1,
+          y = f(a[mid]);
+      if (x <= y || !(y <= y)) hi = mid;
+      else lo = mid + 1;
     }
     return lo;
   }
@@ -44,8 +47,9 @@ function bisect_by(f) {
   // a[i:hi] for the right side.
   function bisectRight(a, x, lo, hi) {
     while (lo < hi) {
-      var mid = lo + hi >> 1;
-      if (x < f(a[mid])) hi = mid;
+      var mid = lo + hi >>> 1,
+          y = f(a[mid]);
+      if (x < y || !(y <= y)) hi = mid;
       else lo = mid + 1;
     }
     return lo;
@@ -143,7 +147,7 @@ function insertionsort_by(f) {
 
   function insertionsort(a, lo, hi) {
     for (var i = lo + 1; i < hi; ++i) {
-      for (var j = i, t = a[i], x = f(t); j > lo && f(a[j - 1]) > x; --j) {
+      for (var j = i, t = a[i], x = f(t), y; j > lo && ((y = f(a[j - 1])) > x || !(y <= y)); --j) {
         a[j] = a[j - 1];
       }
       a[j] = t;
@@ -170,6 +174,16 @@ function quicksort_by(f) {
   }
 
   function quicksort(a, lo, hi) {
+    // First move NaN and undefined to the end.
+    var x, y;
+    while (lo < hi && !((x = f(a[hi - 1])) <= x)) hi--;
+    for (var i = hi; --i >= lo; ) {
+      x = f(y = a[i]);
+      if (!(x <= x)) {
+        a[i] = a[--hi];
+        a[hi] = y;
+      }
+    }
 
     // Compute the two pivots by looking at 5 elements.
     var sixth = (hi - lo) / 6 | 0,
@@ -557,6 +571,7 @@ function crossfilter() {
       filterRange: filterRange,
       filterAll: filterAll,
       top: top,
+      bottom: bottom,
       group: group,
       groupAll: groupAll
     };
@@ -721,7 +736,7 @@ function crossfilter() {
       return filterIndex((refilter = crossfilter_filterAll)(values));
     }
 
-    // Returns the top K selected records, based on this dimension's order.
+    // Returns the top K selected records based on this dimension's order.
     // Note: observes this dimension's filter, unlike group and groupAll.
     function top(k) {
       var array = [],
@@ -733,6 +748,24 @@ function crossfilter() {
           array.push(data[j]);
           --k;
         }
+      }
+
+      return array;
+    }
+
+    // Returns the bottom K selected records based on this dimension's order.
+    // Note: observes this dimension's filter, unlike group and groupAll.
+    function bottom(k) {
+      var array = [],
+          i = lo0,
+          j;
+
+      while (i < hi0 && k > 0) {
+        if (!filters[j = index[i]]) {
+          array.push(data[j]);
+          --k;
+        }
+        i++;
       }
 
       return array;
@@ -804,8 +837,8 @@ function crossfilter() {
         // Get the first old key (x0 of g0), if it exists.
         if (k0) x0 = (g0 = oldGroups[0]).key;
 
-        // Find the first new key (x1), skipping NaN keys.
-        while (i1 < n1 && !((x1 = key(newValues[i1])) >= x1)) ++i1;
+        // Find the first new key (x1).
+        x1 = key(newValues[i1]);
 
         // While new keys remain…
         while (i1 < n1) {
@@ -829,7 +862,7 @@ function crossfilter() {
 
           // Add any selected records belonging to the added group, while
           // advancing the new key and populating the associated group index.
-          while (!(x1 > x)) {
+          while (x1 <= x || !(x1 <= x1) && !(x <= x)) {
             groupIndex[j = newIndex[i1] + n0] = k;
             if (!(filters[j] & zero)) g.value = add(g.value, data[j]);
             if (++i1 >= n1) break;
@@ -1068,7 +1101,7 @@ function crossfilter() {
     add(data, 0, n);
 
     // Incorporates the specified new values into this group.
-    function add(newData, n0, n1) {
+    function add(newData, n0) {
       var i;
 
       if (resetNeeded) return;
