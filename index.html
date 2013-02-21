@@ -415,7 +415,7 @@ d3.csv("ndx.csv", function (data) {
                         chart.select("g.y").style("display", "none");
                         moveChart.filter(chart.filter());
                     })
-                    .renderlet(function (chart) {
+                    .on("filtered", function (chart) {
                         dc.events.trigger(function () {
                             moveChart.focus(chart.filter());
                         });
