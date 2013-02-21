@@ -211,7 +211,7 @@ suite.addBatch({
                 pieChart.filterAll();
                 pieChart.redraw();
                 pieChart.selectAll(".pie-slice path").each(function (d) {
-                    assert.equal(d3.select(this).attr("class"), "");
+                    assert.isNull(d3.select(this).attr("class"));
                 });
             },
             teardown: function (pieChart) {
