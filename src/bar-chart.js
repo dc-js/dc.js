@@ -175,8 +175,8 @@ dc.barChart = function(parent, chartGroup) {
         return extent;
     };
 
-    dc.override(_chart, "prepareOrdinalXAxis", function(_super) {
-        return _super(_chart.xUnitCount() + 1);
+    dc.override(_chart, "prepareOrdinalXAxis", function() {
+        return this._prepareOrdinalXAxis(_chart.xUnitCount() + 1);
     });
 
     return _chart.anchor(parent, chartGroup);

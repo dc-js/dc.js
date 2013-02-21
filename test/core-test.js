@@ -159,14 +159,14 @@ suite.addBatch({
             assert.equal(o.foo(), "foo");
         },
         'should expose existing function': function (o) {
-            dc.override(o, "foo", function (_super) {
-                return _super() + "2";
+            dc.override(o, "foo", function () {
+                return this._foo() + "2";
             });
             assert.equal(o.foo(), "foo2");
         },
         'should expose existing function with args': function (o) {
-            dc.override(o, "goo", function (i, _super) {
-                return _super(i) + 2;
+            dc.override(o, "goo", function (i) {
+                return this._goo(i) + 2;
             });
             assert.equal(o.goo(1), 3);
         }

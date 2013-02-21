@@ -12,6 +12,7 @@ function buildChart(id) {
         .group(function(d) {
             return dateFormat(d3.time.day(d.dd));
         })
+        .transitionDuration(0)
         .size(3)
         .sortBy(function(d){return d.dd.getTime();})
         .columns(

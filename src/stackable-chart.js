@@ -131,7 +131,7 @@ dc.stackableChart = function (_chart) {
         return dc.utils.add(max, _chart.xAxisPadding());
     };
 
-    _chart.baseLineY = function() {
+    _chart.baseLineY = function () {
         return _chart.y()(0);
     }
 
@@ -201,6 +201,18 @@ dc.stackableChart = function (_chart) {
     _chart.getChartStack = function () {
         return _groupStack;
     };
+
+    dc.override(_chart, "valueAccessor", function (_) {
+        if (!arguments.length) return _chart._valueAccessor();
+        expireCache();
+        return _chart._valueAccessor(_);
+    });
+
+    dc.override(_chart, "keyAccessor", function (_) {
+        if (!arguments.length) return _chart._keyAccessor();
+        expireCache();
+        return _chart._keyAccessor(_);
+    });
 
     return _chart;
 };
