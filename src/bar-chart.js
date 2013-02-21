@@ -1,4 +1,4 @@
-dc.barChart = function(parent, chartGroup) {
+dc.barChart = function (parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
     var DEFAULT_GAP_BETWEEN_BARS = 2;
 
@@ -8,8 +8,9 @@ dc.barChart = function(parent, chartGroup) {
     var _centerBar = false;
 
     var _numberOfBars;
+    var _barWidth;
 
-    _chart.plotData = function() {
+    _chart.plotData = function () {
         var groups = _chart.allGroups();
 
         _chart.calculateDataPointMatrixWithinXDomain(groups);
@@ -34,7 +35,7 @@ dc.barChart = function(parent, chartGroup) {
         var bars = bars.enter().append("rect");
 
         bars.attr("class", "bar " + dc.constants.STACK_CLASS + groupIndex)
-            .attr("x", function(data, dataIndex) {
+            .attr("x", function (data, dataIndex) {
                 return barX(this, data, groupIndex, dataIndex);
             })
             .attr("y", _chart.baseLineY())
@@ -48,10 +49,10 @@ dc.barChart = function(parent, chartGroup) {
         }
 
         dc.transition(bars, _chart.transitionDuration())
-            .attr("y", function(data, dataIndex) {
+            .attr("y", function (data, dataIndex) {
                 return barY(this, data, dataIndex);
             })
-            .attr("height", function(data) {
+            .attr("height", function (data) {
                 return _chart.dataPointHeight(data, getGroupIndexFromBar(this));
             });
     }
@@ -62,13 +63,13 @@ dc.barChart = function(parent, chartGroup) {
         }
 
         dc.transition(bars, _chart.transitionDuration())
-            .attr("x", function(data, dataIndex) {
+            .attr("x", function (data, dataIndex) {
                 return barX(this, data, groupIndex, dataIndex);
             })
-            .attr("y", function(data, dataIndex) {
+            .attr("y", function (data, dataIndex) {
                 return barY(this, data, dataIndex);
             })
-            .attr("height", function(data) {
+            .attr("height", function (data) {
                 return _chart.dataPointHeight(data, getGroupIndexFromBar(this));
             })
             .attr("width", barWidth);
@@ -81,25 +82,29 @@ dc.barChart = function(parent, chartGroup) {
     }
 
     function getNumberOfBars() {
-        if(_numberOfBars == null || _chart.refocused())
+        if (_numberOfBars == null || _chart.refocused())
             _numberOfBars = _chart.xUnitCount();
         return _numberOfBars;
     }
 
     function barWidth(d) {
-        var numberOfBars = getNumberOfBars();
-        var w = MIN_BAR_WIDTH;
-        if (_chart.isOrdinal())
-            w = Math.floor(_chart.xAxisLength() / (numberOfBars + 1));
-        else
-            w = Math.floor(_chart.xAxisLength() / numberOfBars);
+        if (_barWidth == null || _chart.refocused()) {
+            var numberOfBars = getNumberOfBars();
+            var w = MIN_BAR_WIDTH;
+            if (_chart.isOrdinal())
+                w = Math.floor(_chart.xAxisLength() / (numberOfBars + 1));
+            else
+                w = Math.floor(_chart.xAxisLength() / numberOfBars);
 
-        w -= _gap;
+            w -= _gap;
 
-        if (isNaN(w) || w < MIN_BAR_WIDTH)
-            w = MIN_BAR_WIDTH;
+            if (isNaN(w) || w < MIN_BAR_WIDTH)
+                w = MIN_BAR_WIDTH;
 
-        return w;
+            _barWidth = w;
+        }
+
+        return _barWidth;
     }
 
     function setGroupIndexToBar(bar, groupIndex) {
@@ -124,13 +129,13 @@ dc.barChart = function(parent, chartGroup) {
         return _chart.getChartStack().getDataPoint(groupIndex, dataIndex);
     }
 
-    _chart.fadeDeselectedArea = function() {
+    _chart.fadeDeselectedArea = function () {
         var bars = _chart.chartBodyG().selectAll("rect.bar");
         var extent = _chart.brush().extent();
 
         if (_chart.isOrdinal()) {
             if (_chart.filter() != null)
-                bars.classed(dc.constants.DESELECTED_CLASS, function(d) {
+                bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
                     var key = _chart.keyAccessor()(d);
                     return key != _chart.filter();
                 });
@@ -141,7 +146,7 @@ dc.barChart = function(parent, chartGroup) {
                 var start = extent[0];
                 var end = extent[1];
 
-                bars.classed(dc.constants.DESELECTED_CLASS, function(d) {
+                bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
                     var xValue = _chart.keyAccessor()(d);
                     return xValue < start || xValue >= end;
                 });
@@ -151,19 +156,19 @@ dc.barChart = function(parent, chartGroup) {
         }
     };
 
-    _chart.centerBar = function(_) {
+    _chart.centerBar = function (_) {
         if (!arguments.length) return _centerBar;
         _centerBar = _;
         return _chart;
     };
 
-    _chart.gap = function(_) {
+    _chart.gap = function (_) {
         if (!arguments.length) return _gap;
         _gap = _;
         return _chart;
     };
 
-    _chart.extendBrush = function() {
+    _chart.extendBrush = function () {
         var extent = _chart.brush().extent();
         if (_chart.round() && !_centerBar) {
             extent[0] = extent.map(_chart.round())[0];
@@ -175,7 +180,7 @@ dc.barChart = function(parent, chartGroup) {
         return extent;
     };
 
-    dc.override(_chart, "prepareOrdinalXAxis", function() {
+    dc.override(_chart, "prepareOrdinalXAxis", function () {
         return this._prepareOrdinalXAxis(_chart.xUnitCount() + 1);
     });
 

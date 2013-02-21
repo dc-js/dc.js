@@ -102,6 +102,7 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     _chart.xUnitCount = function () {
+        console.log("calculate xunits");
         var units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain());
         if(units instanceof Array)
             return units.length;
@@ -566,16 +567,23 @@ dc.coordinateGridChart = function (_chart) {
         return data;
     };
 
+    function hasRangeSelected(range) {
+        return range != null && range != undefined && range instanceof Array && range.length > 1;
+    }
+
     _chart.focus = function (range) {
         _refocused = true;
 
-        if (range != null && range != undefined && range instanceof Array && range.length > 1) {
+        if (hasRangeSelected(range)) {
             _chart.x().domain(range);
         } else {
             _chart.x().domain(_chart.xOriginalDomain());
         }
 
         _chart.redraw();
+
+        if (!hasRangeSelected(range))
+            _refocused = false;
     };
 
     _chart.refocused = function () {

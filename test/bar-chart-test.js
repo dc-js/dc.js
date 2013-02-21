@@ -532,7 +532,9 @@ suite.addBatch({'dynamic accessor switch': {
         return buildOrdinalChart("bar-chart-accessor");
     },
     'should position bars based on ordinal range': function (chart) {
-        chart.valueAccessor(function(){return 30;});
+        chart.valueAccessor(function () {
+            return 30;
+        });
         chart.redraw();
         assert.match(d3.select(chart.selectAll("rect.bar")[0][0]).attr("height"), /160/);
         assert.match(d3.select(chart.selectAll("rect.bar")[0][1]).attr("height"), /160/);
@@ -601,7 +603,7 @@ suite.addBatch({'negative bar chart': {
         assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][5]).attr("y"), /91/);
         assert.match(d3.select(chart.selectAll("rect.bar.stack1")[0][5]).attr("height"), /6/);
     },
-    'should generate y axis domain dynamically': function(chart){
+    'should generate y axis domain dynamically': function (chart) {
         assert.match(d3.select(chart.selectAll("g.y text")[0][0]).text(), /[−-]20/);
         assert.equal(d3.select(chart.selectAll("g.y text")[0][1]).text(), "0");
         assert.equal(d3.select(chart.selectAll("g.y text")[0][2]).text(), "20");
@@ -611,6 +613,29 @@ suite.addBatch({'negative bar chart': {
         resetBody();
     }
 }});
+
+suite.addBatch({
+    'refocus flag': {
+        topic: function () {
+            return buildChart("chart-refocus-flag");
+        },
+        'chart should be by default not focused': function (chart) {
+            assert.isFalse(chart.refocused());
+        },
+        'chart should set its focus flag': function (chart) {
+            chart.focus([new Date(2012, 5, 11), new Date(2012, 6, 9)]);
+            assert.isTrue(chart.refocused());
+        },
+        'chart should be able to reset its focus flag': function (chart) {
+            chart.focus(null);
+            assert.isFalse(chart.refocused());
+        },
+        teardown: function (topic) {
+            resetAllFilters();
+            resetBody();
+        }
+    }
+});
 
 suite.addBatch({
     'out of x range drawing': {
