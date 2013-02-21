@@ -681,7 +681,8 @@ var chart2 = dc.compositeChart("#us-chart2", "chartGroupA");
 
 #### .overlayGeoJson(json, name, keyAccessor) - **mandatory**
 Use this function to insert a new GeoJson map layer. This function can be invoked multiple times if you have multiple GeoJson
-data layer to render on top of each other.
+data layer to render on top of each other. If you overlay mutiple layers with the same name the new overlay will simply
+override the existing one.
 
 Parameters:
 * json - GeoJson feed
@@ -699,6 +700,19 @@ chart.overlayGeoJson(statesJson.features, "state", function(d) {
 #### .projection(projection)
 Set custom geo projection function. Available [d3 geo projection functions](https://github.com/mbostock/d3/wiki/Geo-Projections).
 Default value: albersUsa.
+
+#### .geoJsons()
+Return all GeoJson layers currently registered with thit chart. The returned array is a reference to this chart's internal
+registration data structure without copying thus any modification to this array will also modify this chart's internal
+registration.
+
+Return:
+An array of objects containing fields {name, data, accessor}
+
+#### .removeGeoJson(name)
+Remove a GeoJson layer from this chart by name
+
+Return: chart instance
 
 ## <a name="data-count" href="#data-count">#</a> Data Count Widget [Concrete] < [Base Chart](#base-chart)
 Data count is a simple widget designed to display total number records in the data set vs. the number records selected
