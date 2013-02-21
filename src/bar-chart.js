@@ -82,8 +82,9 @@ dc.barChart = function (parent, chartGroup) {
     }
 
     function getNumberOfBars() {
-        if (_numberOfBars == null || _chart.refocused())
+        if (_numberOfBars == null || _chart.refocused()){
             _numberOfBars = _chart.xUnitCount();
+        }
         return _numberOfBars;
     }
 

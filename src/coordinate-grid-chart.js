@@ -33,6 +33,7 @@ dc.coordinateGridChart = function (_chart) {
     var _renderVerticalGridLine = false;
 
     var _refocused = false;
+    var _unitCount;
 
     _chart.generateG = function (parent) {
         if (parent == null)
@@ -102,12 +103,16 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     _chart.xUnitCount = function () {
-        console.log("calculate xunits");
-        var units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain());
-        if(units instanceof Array)
-            return units.length;
-        else
-            return units;
+        if (_unitCount == null || _chart.refocused()) {
+            var units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain());
+
+            if (units instanceof Array)
+                _unitCount = units.length;
+            else
+                _unitCount = units;
+        }
+
+        return _unitCount;
     };
 
     _chart.isOrdinal = function () {
