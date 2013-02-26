@@ -149,16 +149,8 @@ dc.round.round = function(n) {
 
 dc.override = function(obj, functionName, newFunction) {
     var existingFunction = obj[functionName];
-    obj[functionName] = function() {
-        var expression = "newFunction(";
-
-        for (var i = 0; i < arguments.length; ++i)
-            expression += "arguments[" + i + "],";
-
-        expression += "existingFunction);";
-
-        return eval(expression);
-    };
+    obj["_" + functionName] = existingFunction;
+    obj[functionName] = newFunction;
 };
 
 dc.renderlet = function(_){

@@ -149,16 +149,8 @@ dc.round.round = function(n) {
 
 dc.override = function(obj, functionName, newFunction) {
     var existingFunction = obj[functionName];
-    obj[functionName] = function() {
-        var expression = "newFunction(";
-
-        for (var i = 0; i < arguments.length; ++i)
-            expression += "arguments[" + i + "],";
-
-        expression += "existingFunction);";
-
-        return eval(expression);
-    };
+    obj["_" + functionName] = existingFunction;
+    obj[functionName] = newFunction;
 };
 
 dc.renderlet = function(_){
@@ -1572,7 +1564,7 @@ dc.stackableChart = function (_chart) {
         return dc.utils.add(max, _chart.xAxisPadding());
     };
 
-    _chart.baseLineY = function() {
+    _chart.baseLineY = function () {
         return _chart.y()(0);
     }
 
@@ -1642,6 +1634,18 @@ dc.stackableChart = function (_chart) {
     _chart.getChartStack = function () {
         return _groupStack;
     };
+
+    dc.override(_chart, "valueAccessor", function (_) {
+        if (!arguments.length) return _chart._valueAccessor();
+        expireCache();
+        return _chart._valueAccessor(_);
+    });
+
+    dc.override(_chart, "keyAccessor", function (_) {
+        if (!arguments.length) return _chart._keyAccessor();
+        expireCache();
+        return _chart._keyAccessor(_);
+    });
 
     return _chart;
 };
@@ -2283,8 +2287,8 @@ dc.barChart = function(parent, chartGroup) {
         return extent;
     };
 
-    dc.override(_chart, "prepareOrdinalXAxis", function(_super) {
-        return _super(_chart.xUnitCount() + 1);
+    dc.override(_chart, "prepareOrdinalXAxis", function() {
+        return this._prepareOrdinalXAxis(_chart.xUnitCount() + 1);
     });
 
     return _chart.anchor(parent, chartGroup);
@@ -2738,8 +2742,8 @@ dc.compositeChart = function(parent, chartGroup) {
 
     _chart.transitionDuration(500);
 
-    dc.override(_chart, "generateG", function(_super) {
-        var g = _super();
+    dc.override(_chart, "generateG", function() {
+        var g = this._generateG();
 
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];

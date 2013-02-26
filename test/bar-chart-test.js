@@ -527,6 +527,23 @@ suite.addBatch({'ordinal bar chart': {
     }
 }});
 
+suite.addBatch({'dynamic accessor switch': {
+    topic: function () {
+        return buildOrdinalChart("bar-chart-accessor");
+    },
+    'should position bars based on ordinal range': function (chart) {
+        chart.valueAccessor(function(){return 30;});
+        chart.redraw();
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][0]).attr("height"), /160/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][1]).attr("height"), /160/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][1]).attr("height"), /160/);
+    },
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
+    }
+}});
+
 suite.addBatch({'linear integers bar chart': {
     topic: function () {
         return buildLinearChart("bar-chart-linear-integers");
