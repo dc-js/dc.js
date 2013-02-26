@@ -501,7 +501,7 @@ dc.coordinateGridChart = function (_chart) {
 
         _chart.resetSvg();
 
-        if (_chart.dataAreSet()) {
+        if (_chart.dataSet()) {
             _chart.generateG();
 
             generateClipPath();
@@ -537,7 +537,7 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     _chart.subRender = function () {
-        if (_chart.dataAreSet()) {
+        if (_chart.dataSet()) {
             _chart.plotData();
         }
 

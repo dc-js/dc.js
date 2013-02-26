@@ -36,7 +36,7 @@ dc.pieChart = function(parent, chartGroup) {
     };
 
     function drawChart() {
-        if (_chart.dataAreSet()) {
+        if (_chart.dataSet()) {
             var pie = calculateDataPie();
 
             var arc = _chart.buildArcs();
@@ -71,7 +71,7 @@ dc.pieChart = function(parent, chartGroup) {
             .enter()
             .append("g")
             .attr("class", function(d, i) {
-                return _sliceCssClass + " " + i;
+                return _sliceCssClass + " _" + i;
             });
         return slicesEnter;
     }
@@ -107,7 +107,7 @@ dc.pieChart = function(parent, chartGroup) {
                 .enter()
                 .append("text")
                 .attr("class", function(d, i) {
-                    return _sliceCssClass + " " + i;
+                    return _sliceCssClass + " _" + i;
                 })
                 .on("click", onClick);
             dc.transition(labelsEnter, _chart.transitionDuration())

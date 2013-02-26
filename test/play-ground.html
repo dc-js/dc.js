@@ -609,6 +609,14 @@ Country filter: <input id="custom-filter" type="text"/><button onclick="countryD
     <div class="clear"></div>
 </div>
 
+<div id="negative-line-chart">
+    <span>Negative Line Chart</span>
+    <a class="reset" href="javascript:negativeLineChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+    <br/><span class="reset" style="display: none;">Current filter: <span class="filter"></span></span>
+
+    <div class="clear"></div>
+</div>
+
 <div class="clear"></div>
 
 <div class="dc-data-count">
@@ -690,8 +698,7 @@ lineChartDate.width(500)
         })
         .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
         .xUnits(d3.time.days)
-        .elasticY(true)
-        .yAxisPadding(50)
+        .y(d3.scale.linear().domain([0, 200]))
         .renderArea(true)
         .xAxis().ticks(5);
 
@@ -716,7 +723,6 @@ compositeChartDate.width(500)
         .group(dateIdSumGroup)
         .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
         .xUnits(d3.time.days)
-        .filter([new Date(2012, 5, 01), new Date(2012, 5, 30)])
         .compose([
             dc.barChart(compositeChartDate).group(dateValueSumGroup),
             dc.lineChart(compositeChartDate),
@@ -785,7 +791,7 @@ ordinalLineChart.width(500)
         .height(150)
         .dimension(stateDimension)
         .group(stateGroup)
-        .y(d3.scale.linear().domain([1, 3]))
+        .y(d3.scale.linear().domain([0, 3]))
         .renderArea(true)
         .renderTitle(true)
         .x(d3.scale.ordinal().domain(["California", "Colorado", "Delaware", "Mississippi", "Oklahoma", "Ontario"]))
@@ -807,10 +813,23 @@ negativeBarChart.width(1100)
         .dimension(dateDimension)
         .group(dateNegativeValueSumGroup)
         .stack(dateNegativeValueSumGroup)
-        .stack(dateNegativeValueSumGroup, function(d) {
-            return -10;
-         })
-        .yAxisPadding(30)
+        .stack(dateNegativeValueSumGroup)
+        .yAxisPadding(5)
+        .elasticY(true)
+        .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
+        .renderHorizontalGridLines(true)
+        .xUnits(d3.time.days);
+
+var negativeLineChart = dc.lineChart("#negative-line-chart");
+negativeLineChart.width(1100)
+        .height(200)
+        .margins({top: 30, right: 50, bottom: 30, left: 30})
+        .dimension(dateDimension)
+        .group(dateNegativeValueSumGroup)
+        .renderArea(true)
+        .stack(dateNegativeValueSumGroup)
+        .stack(dateNegativeValueSumGroup)
+        .yAxisPadding(5)
         .elasticY(true)
         .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
         .renderHorizontalGridLines(true)
@@ -859,8 +878,7 @@ lineChartDateB.width(500)
         })
         .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
         .xUnits(d3.time.days)
-        .elasticY(true)
-        .yAxisPadding(50)
+        .y(d3.scale.linear().domain([0, 200]))
         .elasticX(true)
         .xAxisPadding(50)
         .renderArea(true)
