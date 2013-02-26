@@ -1,4 +1,4 @@
 #!/bin/sh
 ant
-./node_modules/.bin/vows
+npm test
 

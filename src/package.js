@@ -17,7 +17,7 @@ require("util").puts(JSON.stringify({
     "vows": "0.7.0",
     "jsdom": "0.2.19",
     "jquery": "1.8.3",
-    "sinon": "1.5   .2"
+    "sinon": "1.5.2"
   },
   "scripts": {"test": "./node_modules/vows/bin/vows"}
 }, null, 2));
