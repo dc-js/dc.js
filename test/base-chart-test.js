@@ -24,6 +24,7 @@ suite.addBatch({
             var chart = dc.baseChart({out: ""});
             chart.dimension(valueDimension)
                 .group(valueGroup)
+                .transitionDuration(0)
                 .on("preRender", function (chart) {
                     chart.out += "preRender";
                 })

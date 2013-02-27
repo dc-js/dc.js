@@ -11,6 +11,7 @@ function buildChart(id) {
     div.append("span").attr("class", "total-count");
     countryDimension.filter("CA");
     var chart = dc.dataCount("#" + id)
+        .transitionDuration(0)
         .dimension(data)
         .group(groupAll);
     chart.render();
