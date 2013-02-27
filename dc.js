@@ -221,7 +221,8 @@ dc.utils.add = function (l, r) {
         d.setDate(l.getDate() + r);
         return d;
     } else if (typeof r === "string") {
-        return l * (1 + (+r / 100));
+        var percentage = (+r / 100);
+        return l > 0 ? l * (1 + percentage) : l * (1 - percentage);
     } else {
         return l + r;
     }
@@ -237,7 +238,8 @@ dc.utils.subtract = function (l, r) {
         d.setDate(l.getDate() - r);
         return d;
     } else if (typeof r === "string") {
-        return l * (1 - (+r / 100));
+        var percentage = (+r / 100);
+        return l < 0 ? l * (1 + percentage) : l * (1 - percentage);
     } else {
         return l - r;
     }
