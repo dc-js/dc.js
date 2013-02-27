@@ -216,6 +216,8 @@ dc.utils.add = function(l, r) {
         d.setTime(l.getTime());
         d.setDate(l.getDate() + r);
         return d;
+    } else if(typeof r === "string"){
+        return l * (1 + (+(r.replace("%", "")) / 100));
     } else {
         return l + r;
     }

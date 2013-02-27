@@ -57,6 +57,10 @@ suite.addBatch({
         'should be able to add numbers': function (add) {
             var num = add(10, 10);
             assert.equal(num, 20);
+        },
+        'should be able to add numbers w/ %': function (add) {
+            var num = add(10, "10%");
+            assert.equal(num, 11);
         }
     }
 });
