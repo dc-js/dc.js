@@ -33,13 +33,17 @@ function printSingleValue(filter) {
 
 dc.utils = {};
 dc.utils.add = function(l, r) {
+    if(typeof r === "string")
+        r = r.replace("%", "")
+
     if (l instanceof Date) {
+        if(typeof r === "string") r = +r
         var d = new Date();
         d.setTime(l.getTime());
         d.setDate(l.getDate() + r);
         return d;
     } else if(typeof r === "string"){
-        return l * (1 + (+(r.replace("%", "")) / 100));
+        return l * (1 + (+r / 100));
     } else {
         return l + r;
     }

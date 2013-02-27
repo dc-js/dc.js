@@ -61,6 +61,10 @@ suite.addBatch({
         'should be able to add numbers w/ %': function (add) {
             var num = add(10, "10%");
             assert.equal(num, 11);
+        },
+        'should ignore % when adding dates': function (add) {
+            var date = add(new Date(2012, 0, 1), "10%");
+            assert.equal(date.toString(), new Date(2012, 0, 11).toString());
         }
     }
 });
