@@ -81,6 +81,14 @@ suite.addBatch({
         'should be able to subtract numbers': function (subtract) {
             var num = subtract(10, 10);
             assert.equal(num, 0);
+        },
+        'should be able to subtract numbers w/ %': function (subtract) {
+            var num = subtract(10, "10%");
+            assert.equal(num, 9);
+        },
+        'should ignore % when subtracting dates': function (subtract) {
+            var date = subtract(new Date(2012, 0, 11), "10%");
+            assert.equal(date.toString(), new Date(2012, 0, 1).toString());
         }
     }
 });

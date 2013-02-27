@@ -1,7 +1,7 @@
 dc.dateFormat = d3.time.format("%m/%d/%Y");
 
 dc.printers = {};
-dc.printers.filter = function(filter) {
+dc.printers.filter = function (filter) {
     var s = "";
 
     if (filter) {
@@ -32,33 +32,39 @@ function printSingleValue(filter) {
 }
 
 dc.utils = {};
-dc.utils.add = function(l, r) {
-    if(typeof r === "string")
+dc.utils.add = function (l, r) {
+    if (typeof r === "string")
         r = r.replace("%", "")
 
     if (l instanceof Date) {
-        if(typeof r === "string") r = +r
+        if (typeof r === "string") r = +r
         var d = new Date();
         d.setTime(l.getTime());
         d.setDate(l.getDate() + r);
         return d;
-    } else if(typeof r === "string"){
+    } else if (typeof r === "string") {
         return l * (1 + (+r / 100));
     } else {
         return l + r;
     }
 };
-dc.utils.subtract = function(l, r) {
+dc.utils.subtract = function (l, r) {
+    if (typeof r === "string")
+        r = r.replace("%", "")
+
     if (l instanceof Date) {
+        if (typeof r === "string") r = +r
         var d = new Date();
         d.setTime(l.getTime());
         d.setDate(l.getDate() - r);
         return d;
+    } else if (typeof r === "string") {
+        return l * (1 - (+r / 100));
     } else {
         return l - r;
     }
 };
-dc.utils.GroupStack = function() {
+dc.utils.GroupStack = function () {
     var _dataPointMatrix = [];
     var _groups = [];
     var _defaultAccessor;
@@ -68,12 +74,12 @@ dc.utils.GroupStack = function() {
             _dataPointMatrix[x] = [];
     }
 
-    this.setDataPoint = function(x, y, data) {
+    this.setDataPoint = function (x, y, data) {
         initializeDataPointRow(x);
         _dataPointMatrix[x][y] = data;
     };
 
-    this.getDataPoint = function(x, y) {
+    this.getDataPoint = function (x, y) {
         initializeDataPointRow(x);
         var dataPoint = _dataPointMatrix[x][y];
         if (dataPoint == undefined)
@@ -81,35 +87,35 @@ dc.utils.GroupStack = function() {
         return dataPoint;
     };
 
-    this.addGroup = function(group, retriever) {
+    this.addGroup = function (group, retriever) {
         if (!retriever)
             retriever = _defaultAccessor;
         _groups.push([group, retriever]);
         return _groups.length - 1;
     };
 
-    this.getGroupByIndex = function(index) {
+    this.getGroupByIndex = function (index) {
         return _groups[index][0];
     };
 
-    this.getAccessorByIndex = function(index) {
+    this.getAccessorByIndex = function (index) {
         return _groups[index][1];
     };
 
-    this.size = function() {
+    this.size = function () {
         return _groups.length;
     };
 
-    this.clear = function() {
+    this.clear = function () {
         _dataPointMatrix = [];
         _groups = [];
     };
 
-    this.setDefaultAccessor = function(retriever) {
+    this.setDefaultAccessor = function (retriever) {
         _defaultAccessor = retriever;
     };
 
-    this.getDataPoints = function(){
+    this.getDataPoints = function () {
         return _dataPointMatrix;
     };
 };
@@ -118,27 +124,27 @@ function isNegligible(max) {
     return max === undefined || (max < dc.constants.NEGLIGIBLE_NUMBER && max > -dc.constants.NEGLIGIBLE_NUMBER);
 }
 
-dc.utils.groupMax = function(group, accessor) {
-    var max = d3.max(group.all(), function(e) {
+dc.utils.groupMax = function (group, accessor) {
+    var max = d3.max(group.all(), function (e) {
         return accessor(e);
     });
-    if(isNegligible(max)) max = 0;
+    if (isNegligible(max)) max = 0;
     return max;
 };
 
-dc.utils.groupMin = function(group, accessor) {
-    var min = d3.min(group.all(), function(e) {
+dc.utils.groupMin = function (group, accessor) {
+    var min = d3.min(group.all(), function (e) {
         return accessor(e);
     });
-    if(isNegligible(min)) min = 0;
+    if (isNegligible(min)) min = 0;
     return min;
 };
 
-dc.utils.nameToId = function(name){
+dc.utils.nameToId = function (name) {
     return name.toLowerCase().replace(/[\s]/g, "_").replace(/[\.']/g, "");
 };
 
-dc.utils.appendOrSelect = function(parent, name) {
+dc.utils.appendOrSelect = function (parent, name) {
     var element = parent.select(name);
     if (element.empty()) element = parent.append(name);
     return element;
