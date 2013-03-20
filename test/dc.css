@@ -209,3 +209,12 @@
     fill: blue;
     fill-opacity: .2;
 }
+
+.dc-chart g.row rect {
+    fill: steelblue;
+}
+
+.dc-chart g.row text {
+    fill: white;
+    font-size: 1.2em;
+}
