@@ -8,6 +8,8 @@ dc.pieChart = function(parent, chartGroup) {
     var _g;
 
     var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
+    
+    var _hasLabelsOutside = false;
 
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
 
@@ -110,24 +112,124 @@ dc.pieChart = function(parent, chartGroup) {
                     return _sliceCssClass + " _" + i;
                 })
                 .on("click", onClick);
-            dc.transition(labelsEnter, _chart.transitionDuration())
-                .attr("transform", function(d) {
-                    d.innerRadius = _chart.innerRadius();
-                    d.outerRadius = _radius;
-                    var centroid = arc.centroid(d);
-                    if (isNaN(centroid[0]) || isNaN(centroid[1])) {
-                        return "translate(0,0)";
-                    } else {
-                        return "translate(" + centroid + ")";
-                    }
-                })
-                .attr("text-anchor", "middle")
+            
+            if(_hasLabelsOutside)
+            {
+                var labelr = _radius;
+                
+	            dc.transition(labelsEnter, _chart.transitionDuration())
+                .attr("x", function(d) {
+                      var c = arc.centroid(d),
+                      x = c[0],
+                      y = c[1],
+                      // pythagorean theorem for hypotenuse
+                      h = Math.sqrt(x*x + y*y);
+                      
+                      approxTextWidth = 20;
+                      if(_chart.label()(d).length > 10)
+                      approxTextWidth = 40;
+                      
+                      w = _chart.width() / 2 - approxTextWidth;
+                      return (d.endAngle + d.startAngle)/2 > Math.PI ? -w : w;
+                      })
+                .attr("y", function(d){
+                      var c = arc.centroid(d),
+                      x = c[0],
+                      y = c[1],
+                      // pythagorean theorem for hypotenuse
+                      h = Math.sqrt(x*x + y*y);
+                      return (y/h * labelr);
+                      })
+                .attr("text-anchor", function(d) {
+                      // are we past the center?
+                      return (d.endAngle + d.startAngle)/2 > Math.PI ? "end" : "start";
+                      })
+                .attr("class",function(d){
+                      var data = d.data;
+                      if (sliceHasNoData(data) || sliceTooSmall(d))
+                      return $(this).attr("class") + " tooSmall";
+                      else
+                      return $(this).attr("class") + " outside";
+                      })
                 .text(function(d) {
-                    var data = d.data;
-                    if (sliceHasNoData(data) || sliceTooSmall(d))
-                        return "";
-                    return _chart.label()(d);
-                });
+                      return  _chart.label()(d);
+                      });
+	            
+                
+                //Draw the lines for the labels
+	            var labelsPathEnter = labels
+                    .enter()
+                    .append("line")
+                    .attr("class", function(d, i) {
+                          var tooSmall = "";
+                          if(sliceTooSmall(d))
+                            tooSmall = " tooSmall"
+                          return _sliceCssClass + " _" + i + " titleLine" + tooSmall;
+                          })
+	            
+	            dc.transition(labelsPathEnter, _chart.transitionDuration())
+                .attr('x1',function(d){
+                      var c = arc.centroid(d),
+                      x = c[0],
+                      y = c[1],
+                      // pythagorean theorem for hypotenuse
+                      h = Math.sqrt(x*x + y*y);
+                      
+                      return (x/h * labelr);
+                      })
+                .attr('y1',function(d){
+                      var c = arc.centroid(d),
+                      x = c[0],
+                      y = c[1],
+                      // pythagorean theorem for hypotenuse
+                      h = Math.sqrt(x*x + y*y);
+                      return (y/h * labelr);
+                      })
+                .attr('x2',function(d){
+                      var c = arc.centroid(d),
+                      x = c[0],
+                      y = c[1],
+                      // pythagorean theorem for hypotenuse
+                      h = Math.sqrt(x*x + y*y);
+                      w = _chart.width() / 2 - 20;
+                      x2 = (d.endAngle + d.startAngle)/2 > Math.PI ? -w : w;
+                      x1 = (x/h * labelr);
+                      if(x1 < x2)
+                      return x1;
+                      else
+                      return x2;
+                      })
+                .attr('y2',function(d){
+                      var c = arc.centroid(d),
+                      x = c[0],
+                      y = c[1],
+                      // pythagorean theorem for hypotenuse
+                      h = Math.sqrt(x*x + y*y);
+                      return (y/h * labelr);
+                      });
+	            
+	        }
+            else
+        	{
+                dc.transition(labelsEnter, _chart.transitionDuration())
+                    .attr("transform", function(d) {
+                        d.innerRadius = _chart.innerRadius();
+                        d.outerRadius = _radius;
+                        var centroid = arc.centroid(d);
+                        if (isNaN(centroid[0]) || isNaN(centroid[1])) {
+                            return "translate(0,0)";
+                        } else {
+                            return "translate(" + centroid + ")";
+                        }
+                    })
+                    .attr("text-anchor", "middle")
+                    .text(function(d) {
+                        var data = d.data;
+                        if (sliceHasNoData(data) || sliceTooSmall(d))
+                            return "";
+                        return _chart.label()(d);
+                    });
+            }
         }
     }
 
@@ -156,24 +258,124 @@ dc.pieChart = function(parent, chartGroup) {
         if (_chart.renderLabel()) {
             var labels = _g.selectAll("text." + _sliceCssClass)
                 .data(pieData);
-            dc.transition(labels, _chart.transitionDuration())
-                .attr("transform", function(d) {
-                    d.innerRadius = _chart.innerRadius();
-                    d.outerRadius = _radius;
-                    var centroid = arc.centroid(d);
-                    if (isNaN(centroid[0]) || isNaN(centroid[1])) {
-                        return "translate(0,0)";
-                    } else {
-                        return "translate(" + centroid + ")";
-                    }
-                })
-                .attr("text-anchor", "middle")
+            
+            if(_hasLabelsOutside)
+            {
+                var labelr = _radius;
+                
+	            dc.transition(labels, _chart.transitionDuration())
+                .attr("x", function(d) {
+                      var c = arc.centroid(d),
+                      x = c[0],
+                      y = c[1],
+                      // pythagorean theorem for hypotenuse
+                      h = Math.sqrt(x*x + y*y);
+                      w = _chart.width() / 2 - 10; //10 for the margin
+                      return (d.endAngle + d.startAngle)/2 > Math.PI ?
+                      -w : w;
+                      })
+                .attr("y", function(d){
+                      var c = arc.centroid(d),
+                      x = c[0],
+                      y = c[1],
+                      // pythagorean theorem for hypotenuse
+                      h = Math.sqrt(x*x + y*y);
+                      return (y/h * labelr) + 3;
+                      })
+                .attr("text-anchor", function(d) {
+                      if(d.startAngle == 0)
+                        return "end";
+                      // are we past the center?
+                      return (d.endAngle + d.startAngle)/2 < Math.PI ?
+                      "end" : "start";
+                      })
+                .attr("class",function(d){
+                      var data = d.data;
+                      if (sliceHasNoData(data) || sliceTooSmall(d))
+                        return $(this).attr("class") + " tooSmall";
+                      else
+                        return $(this).attr("class") + " outside";
+                      })
                 .text(function(d) {
-                    var data = d.data;
-                    if (sliceHasNoData(data) || sliceTooSmall(d))
-                        return "";
-                    return _chart.label()(d);
-                });
+                      return _chart.label()(d);
+                      });
+	            
+	            var lines = _g.selectAll("line." + _sliceCssClass).data(pieData);
+	            
+	            dc.transition(lines, _chart.transitionDuration())
+                .attr('x1',function(d){
+                      var c = arc.centroid(d),
+                      x = c[0],
+                      y = c[1],
+                      // pythagorean theorem for hypotenuse
+                      h = Math.sqrt(x*x + y*y);
+                      
+                      return (x/h * labelr);
+                      })
+                .attr('y1',function(d){
+                      var c = arc.centroid(d),
+                      x = c[0],
+                      y = c[1],
+                      // pythagorean theorem for hypotenuse
+                      h = Math.sqrt(x*x + y*y);
+                      return (y/h * labelr);
+                      })
+                .attr('x2',function(d){
+                      var c = arc.centroid(d),
+                      x = c[0],
+                      y = c[1],
+                      // pythagorean theorem for hypotenuse
+                      h = Math.sqrt(x*x + y*y);
+                      
+                      //We have to cheat and put the text into the box before it was ready
+                      //Then we get the width. Give it a bonus of 20 because it was a bit off :)
+                      var className = $(this).attr('class').split(' ');
+                      slice = $("text.pie-slice." + className[1]);
+                      slice.text(_chart.label()(d));
+                      width = slice.width() + 20;
+                      
+                      w = _chart.width() / 2 - width;
+                      onLeft = (d.endAngle + d.startAngle)/2 > Math.PI
+                      x2 = onLeft ? -w : w;
+                      x1 = (x/h * labelr);
+                      
+                      //This prevents the line from being drawn from the outside of the chart to the inside
+                      //In that case that the text was too long and had to be rendered on the chart itself
+                      if( (x1 < x2 && onLeft)  || (x1 > x2 && !onLeft) )
+                        return x1;
+                      else
+                        return x2;
+                      })
+                .attr('y2',function(d){
+                      var c = arc.centroid(d),
+                      x = c[0],
+                      y = c[1],
+                      // pythagorean theorem for hypotenuse
+                      h = Math.sqrt(x*x + y*y);
+                      return (y/h * labelr);
+                      });
+	        }
+            else
+        	{
+                dc.transition(labels, _chart.transitionDuration())
+                    .attr("transform", function(d) {
+                        d.innerRadius = _chart.innerRadius();
+                        d.outerRadius = _radius;
+                        var centroid = arc.centroid(d);
+                        if (isNaN(centroid[0]) || isNaN(centroid[1])) {
+                            return "translate(0,0)";
+                        } else {
+                            return "translate(" + centroid + ")";
+                        }
+                    })
+                    .attr("text-anchor", "middle")
+                    .text(function(d) {
+                        var data = d.data;
+                        if (sliceHasNoData(data) || sliceTooSmall(d))
+                            return "";
+                        return _chart.label()(d);
+                    });
+            }
         }
     }
 
@@ -246,6 +448,12 @@ dc.pieChart = function(parent, chartGroup) {
         _minAngleForLabel = _;
         return _chart;
     };
+    
+    _chart.hasLabelsOutside = function (_){
+        if (!arguments.length) return _hasLabelsOutside;
+        _hasLabelsOutside = _;
+        return _chart;
+    }
 
     function calculateDataPie() {
         return d3.layout.pie().sort(null).value(function(d) {

@@ -658,7 +658,8 @@ var pieChartCountry = dc.pieChart("#pie-chart-country")
         .radius(100)
         .dimension(countryDimension)
         .group(countryGroup)
-        .renderTitle(true);
+        .renderTitle(true)
+        .hasLabelsOutside(true);
 
 var choroplethChart = dc.geoChoroplethChart("#choropleth-chart")
         .width(990)

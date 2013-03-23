@@ -431,6 +431,10 @@ Get center y coordinate position. This function is **not chainable**.
 Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not render slice label.
 Default min angel is 0.5.
 
+#### .hasLabelsOutside([labelsOutside])
+Get or set whether or not the labels will be displayed outside the pie chart
+Default false.
+
 ## <a name="bar-chart" href="#bar-chart">#</a> Bar Chart [Concrete] < [Single Selection Chart](#single-selection-chart) < [Stackable Chart](#stackable-chart) < [CoordinateGrid Chart](#coordinate-grid-chart)
 Concrete bar chart/histogram implementation.
 

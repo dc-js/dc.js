@@ -209,3 +209,23 @@
     fill: blue;
     fill-opacity: .2;
 }
+
+.dc-chart text.pie-slice.outside
+{
+	fill: #000;
+}
+
+.dc-chart text.pie-slice.tooSmall
+{
+	stroke: #000;
+}
+
+.dc-chart line.titleLine
+{
+	stroke: #CCC;
+}
+
+.dc-chart line.tooSmall
+{
+	stroke: #FFF;
+}
