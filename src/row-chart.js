@@ -6,19 +6,20 @@ dc.rowChart = function(parent, chartGroup) {
 
     var _rowCssClass = "row";
 
-    var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
+    var _chart = dc.marginable(dc.singleSelectionChart(dc.colorChart(dc.baseChart({}))));
 
     var _xScale;
 
     var _gap = 5;
 
     _chart.doRender = function() {
-        _xScale = d3.scale.linear().domain([0, d3.max(_chart.group().all(), _chart.valueAccessor())]).range([0, _chart.width()]);
+        _xScale = d3.scale.linear().domain([0, d3.max(_chart.group().all(), _chart.valueAccessor())]).range([0, _chart.effectiveWidth()]);
 
         _chart.resetSvg();
 
         _g = _chart.svg()
-            .append("g");
+            .append("g")
+            .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")");
 
         drawChart();
 
@@ -53,7 +54,7 @@ dc.rowChart = function(parent, chartGroup) {
 
     function updateElements(rows) {
         var n = _chart.group().all().length;
-        var height = (_chart.height() - (n + 1) * _gap) / n;
+        var height = (_chart.effectiveHeight() - (n + 1) * _gap) / n;
 
         var rect = rows.attr("transform", function(d, i) { return "translate(0," + ((i + 1) * _gap + i * height) + ")"; })
                        .select("rect")
@@ -84,7 +85,7 @@ dc.rowChart = function(parent, chartGroup) {
 
     function rowHeight() {
         var n = numberOfRows();
-        return (_chart.height() - (n + 1) * _gap) / n;
+        return (_chart.effectiveHeight() - (n + 1) * _gap) / n;
     }
 
     _chart.doRedraw = function() {

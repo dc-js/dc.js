@@ -202,7 +202,7 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     _chart.xAxisLength = function () {
-        return _chart.width() - _chart.margins().left - _chart.margins().right;
+        return _chart.effectiveWidth();
     };
 
     function prepareYAxis(g) {
@@ -344,7 +344,7 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     _chart.yAxisHeight = function () {
-        return _chart.height() - _chart.margins().top - _chart.margins().bottom;
+        return _chart.effectiveHeight();
     };
 
     _chart.round = function (_) {

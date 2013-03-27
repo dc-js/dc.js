@@ -758,6 +758,14 @@ dc.marginable = function (_chart) {
         return _chart;
     };
 
+    _chart.effectiveWidth = function () {
+        return _chart.width() - _chart.margins().left - _chart.margins().right;
+    };
+
+    _chart.effectiveHeight = function () {
+        return _chart.height() - _chart.margins().top - _chart.margins().bottom;
+    };
+
     return _chart;
 };dc.coordinateGridChart = function (_chart) {
     var DEFAULT_Y_AXIS_TICKS = 5;
@@ -963,7 +971,7 @@ dc.marginable = function (_chart) {
     };
 
     _chart.xAxisLength = function () {
-        return _chart.width() - _chart.margins().left - _chart.margins().right;
+        return _chart.effectiveWidth();
     };
 
     function prepareYAxis(g) {
@@ -1105,7 +1113,7 @@ dc.marginable = function (_chart) {
     };
 
     _chart.yAxisHeight = function () {
-        return _chart.height() - _chart.margins().top - _chart.margins().bottom;
+        return _chart.effectiveHeight();
     };
 
     _chart.round = function (_) {
@@ -3255,19 +3263,20 @@ dc.bubbleOverlay = function(root, chartGroup) {
 
     var _rowCssClass = "row";
 
-    var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
+    var _chart = dc.marginable(dc.singleSelectionChart(dc.colorChart(dc.baseChart({}))));
 
     var _xScale;
 
     var _gap = 5;
 
     _chart.doRender = function() {
-        _xScale = d3.scale.linear().domain([0, d3.max(_chart.group().all(), _chart.valueAccessor())]).range([0, _chart.width()]);
+        _xScale = d3.scale.linear().domain([0, d3.max(_chart.group().all(), _chart.valueAccessor())]).range([0, _chart.effectiveWidth()]);
 
         _chart.resetSvg();
 
         _g = _chart.svg()
-            .append("g");
+            .append("g")
+            .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")");
 
         drawChart();
 
@@ -3302,7 +3311,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
 
     function updateElements(rows) {
         var n = _chart.group().all().length;
-        var height = (_chart.height() - (n + 1) * _gap) / n;
+        var height = (_chart.effectiveHeight() - (n + 1) * _gap) / n;
 
         var rect = rows.attr("transform", function(d, i) { return "translate(0," + ((i + 1) * _gap + i * height) + ")"; })
                        .select("rect")
@@ -3333,7 +3342,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
 
     function rowHeight() {
         var n = numberOfRows();
-        return (_chart.height() - (n + 1) * _gap) / n;
+        return (_chart.effectiveHeight() - (n + 1) * _gap) / n;
     }
 
     _chart.doRedraw = function() {

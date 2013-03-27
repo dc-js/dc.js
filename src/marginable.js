@@ -7,5 +7,13 @@ dc.marginable = function (_chart) {
         return _chart;
     };
 
+    _chart.effectiveWidth = function () {
+        return _chart.width() - _chart.margins().left - _chart.margins().right;
+    };
+
+    _chart.effectiveHeight = function () {
+        return _chart.height() - _chart.margins().top - _chart.margins().bottom;
+    };
+
     return _chart;
 };

@@ -848,8 +848,9 @@ negativeLineChart.width(1100)
 var rowChart = dc.rowChart("#row-chart");
 rowChart.width(1000)
         .height(200)
+        .margins({top: 50, left: 200, right: 500, bottom: 50})
         .dimension(valueDimension)
-        .group(valueGroup)
+        .group(valueGroup);
 
 dc.dataCount(".dc-data-count")
         .dimension(data)
