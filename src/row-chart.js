@@ -21,6 +21,14 @@ dc.rowChart = function(parent, chartGroup) {
             .append("g")
             .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")");
 
+        var xAxis = d3.svg.axis()
+                    .orient("bottom")
+                    .scale(_xScale);
+
+        _g.append("g").attr("class", "axis")
+                        .attr("transform", "translate(0, " + _chart.effectiveHeight() + ")")
+                        .call(xAxis);
+
         drawChart();
 
         return _chart;
