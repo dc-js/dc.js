@@ -749,15 +749,23 @@ dc.baseChart = function (_chart) {
 
     return _chart;
 };
-dc.coordinateGridChart = function (_chart) {
+dc.marginable = function (_chart) {
+    var _margin = {top: 10, right: 50, bottom: 30, left: 30};
+
+    _chart.margins = function (m) {
+        if (!arguments.length) return _margin;
+        _margin = m;
+        return _chart;
+    };
+
+    return _chart;
+};dc.coordinateGridChart = function (_chart) {
     var DEFAULT_Y_AXIS_TICKS = 5;
     var GRID_LINE_CLASS = "grid-line";
     var HORIZONTAL_CLASS = "horizontal";
     var VERTICAL_CLASS = "vertical";
 
-    _chart = dc.baseChart(_chart);
-
-    var _margin = {top: 10, right: 50, bottom: 30, left: 30};
+    _chart = dc.marginable(dc.baseChart(_chart));
 
     var _parent;
     var _g;
@@ -809,12 +817,6 @@ dc.coordinateGridChart = function (_chart) {
     _chart.chartBodyG = function (_) {
         if (!arguments.length) return _chartBodyG;
         _chartBodyG = _;
-        return _chart;
-    };
-
-    _chart.margins = function (m) {
-        if (!arguments.length) return _margin;
-        _margin = m;
         return _chart;
     };
 
@@ -3292,7 +3294,6 @@ dc.bubbleOverlay = function(root, chartGroup) {
         rowEnter.append("rect").attr("width", 0);
         createLabels(rowEnter);
         updateLabels(rows);
-
     }
 
     function removeElements(rows) {

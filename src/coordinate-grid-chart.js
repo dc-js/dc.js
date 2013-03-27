@@ -4,9 +4,7 @@ dc.coordinateGridChart = function (_chart) {
     var HORIZONTAL_CLASS = "horizontal";
     var VERTICAL_CLASS = "vertical";
 
-    _chart = dc.baseChart(_chart);
-
-    var _margin = {top: 10, right: 50, bottom: 30, left: 30};
+    _chart = dc.marginable(dc.baseChart(_chart));
 
     var _parent;
     var _g;
@@ -58,12 +56,6 @@ dc.coordinateGridChart = function (_chart) {
     _chart.chartBodyG = function (_) {
         if (!arguments.length) return _chartBodyG;
         _chartBodyG = _;
-        return _chart;
-    };
-
-    _chart.margins = function (m) {
-        if (!arguments.length) return _margin;
-        _margin = m;
         return _chart;
     };
 
