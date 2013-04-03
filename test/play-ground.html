@@ -846,11 +846,12 @@ negativeLineChart.width(1100)
         .xUnits(d3.time.days);
 
 var rowChart = dc.rowChart("#row-chart");
-rowChart.width(1000)
+rowChart.width(1100)
         .height(200)
-        .margins({top: 50, left: 200, right: 500, bottom: 50})
+        .margins({top: 30, left: 10, right: 30, bottom: 30})
         .dimension(valueDimension)
-        .group(valueGroup);
+        .group(valueGroup)
+        .colors(d3.scale.category20b());
 
 dc.dataCount(".dc-data-count")
         .dimension(data)
