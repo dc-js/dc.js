@@ -28,7 +28,7 @@ dc = {
     _renderlet : null
 };
 
-dc.chartRegistry = function() {
+dc.chartRegistry = new function() {
     // chartGroup:string => charts:array
     var _chartMap = {};
 
