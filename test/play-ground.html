@@ -851,6 +851,8 @@ rowChart.width(1100)
         .margins({top: 30, left: 10, right: 30, bottom: 30})
         .dimension(valueDimension)
         .group(valueGroup)
+        .renderTitle(true)
+        .renderLabel(true)
         .colors(d3.scale.category20b());
 
 dc.dataCount(".dc-data-count")

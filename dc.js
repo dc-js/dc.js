@@ -3351,6 +3351,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
 
     function updateElements(rows) {
         var n = _chart.group().all().length;
+
         var height = (_chart.effectiveHeight() - (n + 1) * _gap) / n;
 
         var rect = rows.attr("transform", function(d, i) { return "translate(0," + ((i + 1) * _gap + i * height) + ")"; })
@@ -3368,25 +3369,31 @@ dc.bubbleOverlay = function(root, chartGroup) {
     }
 
     function createTitles(rowEnter) {
-        rowEnter.append("title").text(function(d) {
-            return _chart.title()(d);
-        });
+        if (_chart.renderTitle()) {
+            rowEnter.append("title").text(function(d) {
+                return _chart.title()(d);
+            });
+        }
     }
 
     function createLabels(rowEnter) {
-        rowEnter.append("text");
+        if (_chart.renderLabel()) {
+            rowEnter.append("text");
+        }
     }
 
     function updateLabels(rows) {
-        rows.select("text")
-                    .attr("x", _labelOffsetX)
-                    .attr("y", _labelOffsetY)
-                    .attr("class", function (d, i) {
-                        return _rowCssClass + " _" + i;
-                    })
-                    .text(function(d) {
-                        return _chart.label()(d);
-                    });
+        if (_chart.renderLabel()) {
+            rows.select("text")
+                        .attr("x", _labelOffsetX)
+                        .attr("y", _labelOffsetY)
+                        .attr("class", function (d, i) {
+                            return _rowCssClass + " _" + i;
+                        })
+                        .text(function(d) {
+                            return _chart.label()(d);
+                        });
+        }
     }
 
     function numberOfRows() {
