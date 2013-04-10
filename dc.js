@@ -3356,7 +3356,10 @@ dc.bubbleOverlay = function(root, chartGroup) {
         var rect = rows.attr("transform", function(d, i) { return "translate(0," + ((i + 1) * _gap + i * height) + ")"; })
                        .select("rect")
                            .attr("height", height)
-                           .attr("fill", _chart.getColor);
+                           .attr("fill", _chart.getColor)
+                           .on("click", onClick)
+                           .classed("deselected", function (d) { return (_chart.hasFilter()) ? !_chart.isSelectedRow(d) : false; })
+                           .classed("selected", function (d) { return (_chart.hasFilter()) ? _chart.isSelectedRow(d) : false; });
 
         dc.transition(rect, _chart.transitionDuration())
                .attr("width", function(d) {
@@ -3395,6 +3398,10 @@ dc.bubbleOverlay = function(root, chartGroup) {
         return (_chart.effectiveHeight() - (n + 1) * _gap) / n;
     }
 
+    function onClick(d) {
+        _chart.onClick(d);
+    }
+
     _chart.doRedraw = function() {
         drawChart();
         return _chart;
@@ -3418,6 +3425,9 @@ dc.bubbleOverlay = function(root, chartGroup) {
         return _chart;
     };
 
+    _chart.isSelectedRow = function (d) {
+        return _chart.filter() == _chart.keyAccessor()(d);
+    };
 
     return _chart.anchor(parent, chartGroup);
 };
