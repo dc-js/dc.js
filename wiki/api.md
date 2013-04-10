@@ -6,6 +6,7 @@ The entire dc.js library is scoped under **dc** name space. It does not introduc
 * [Stackable Chart [abstract]](#stackable-chart)
 * [Coordinate Grid Chart [abstract] < Base Chart](#coordinate-grid-chart)
 * [Pie Chart [concrete] < Single Selection Chart < Color Chart < Base Chart](#pie-chart)
+* [Row Chart [concrete] < Single Selection Chart < Colro Chart < Base chart](#row-chart)
 * [Bar Chart [concrete] < Single Selection Chart < Stackable Chart < CoordinateGrid Chart](#bar-chart)
 * [Line Chart [concrete] < Stackable Chart < CoordinateGrid Chart](#line-chart)
 * [Composite Chart [concrete] < CoordinateGrid Chart](#composite-chart)
@@ -449,6 +450,34 @@ Get center y coordinate position. This function is **not chainable**.
 #### .minAngelForLabel([minAngle])
 Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not render slice label.
 Default min angel is 0.5.
+
+## <a name="row-chart" href="#row-chart">#</a> Row Chart [Concrete] < [SingleSelectionChart](#single-selection-chart) < [Color Chart](#color-chart) < [Base Chart](#base-chart)
+Concrete row chart implementation.
+
+#### dc.rowChart(parent[, chartGroup])
+Create a row chart instance and attach it to the given parent element.
+
+Parameters:
+* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed in a certain chart group then any interaction with such instance will only trigger events and redraw within the same chart group.
+
+Return a newly created row chart instance
+
+```js
+// create a row chart under #chart-container1 element using the default global chart group
+var chart1 = dc.rowChart("#chart-container1");
+// create a row chart under #chart-container2 element using chart group A
+var chart2 = dc.rowChart("#chart-container2", "chartGroupA");
+```
+
+#### .gap([gap])
+Get or set the vertical gap space between rows on a particular row chart instance. Default gap is 5px;
+
+#### .labelOffsetX([x])
+Get or set the x offset (horizontal space to the top left corner of a row) for labels on a particular row chart. Default x offset is 10px;
+
+#### .labelOffsetY([y])
+Get of set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart. Default y offset is 15px;
 
 ## <a name="bar-chart" href="#bar-chart">#</a> Bar Chart [Concrete] < [Single Selection Chart](#single-selection-chart) < [Stackable Chart](#stackable-chart) < [CoordinateGrid Chart](#coordinate-grid-chart)
 Concrete bar chart/histogram implementation.
