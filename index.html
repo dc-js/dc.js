@@ -150,7 +150,7 @@
 var gainOrLossChart = dc.pieChart("#gain-loss-chart");
 var fluctuationChart = dc.barChart("#fluctuation-chart");
 var quarterChart = dc.pieChart("#quarter-chart");
-var dayOfWeekChart = dc.pieChart("#day-of-week-chart");
+var dayOfWeekChart = dc.rowChart("#day-of-week-chart");
 var moveChart = dc.compositeChart("#monthly-move-chart");
 var volumeChart = dc.barChart("#monthly-volume-chart");
 var yearlyBubbleChart = dc.bubbleChart("#yearly-bubble-chart");
@@ -266,19 +266,19 @@ d3.csv("ndx.csv", function (data) {
                 var day = d.dd.getDay();
                 switch (day) {
                     case 0:
-                        return "Sun";
+                        return "0.Sun";
                     case 1:
-                        return "Mon";
+                        return "1.Mon";
                     case 2:
-                        return "Tue";
+                        return "2.Tue";
                     case 3:
-                        return "Wed";
+                        return "3.Wed";
                     case 4:
-                        return "Thu";
+                        return "4.Thu";
                     case 5:
-                        return "Fri";
+                        return "5.Fri";
                     case 6:
-                        return "Sat";
+                        return "6.Sat";
                 }
             });
             var dayOfWeekGroup = dayOfWeek.group();
@@ -346,12 +346,15 @@ d3.csv("ndx.csv", function (data) {
                     .group(quarterGroup);
 
             dayOfWeekChart.width(180)
-                    .height(180)
-                    .radius(80)
-                    .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
-                    .innerRadius(30)
-                    .dimension(dayOfWeek)
-                    .group(dayOfWeekGroup);
+                .height(180)
+                .margins({top: 20, left: 10, right: 10, bottom: 20})
+                .group(dayOfWeekGroup)
+                .dimension(dayOfWeek)
+                .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+                .label(function (d){
+                    return d.key.split(".")[1];
+                })
+                .xAxis().ticks(4);
 
             fluctuationChart.width(420)
                     .height(180)
@@ -607,6 +610,39 @@ d3.csv("ndx.csv", function (data) {
             .title(function(d) { return "Value: " + d.value; })
             // (optional) whether chart should render titles, :default = false
             .renderTitle(true);
+    </pre>
+
+<h3>Row Chart</h3>
+
+    <pre class="brush:js">
+        /* Create a row chart and use the given css selector as anchor. You can also specify
+         * an optional chart group for this chart to be scoped within. When a chart belongs
+         * to a specific group then any interaction with such chart will only trigger redraw
+         * on other charts within the same chart group. */
+        dc.rowChart("#days-of-week-chart", "chartGroup")
+            .width(180) // (optional) define chart width, :default = 200
+            .height(180) // (optional) define chart height, :default = 200
+            .group(dayOfWeekGroup) // set group
+            .dimension(dayOfWeek) // set dimension
+            // (optional) define margins
+            .margins({top: 20, left: 10, right: 10, bottom: 20})
+            // (optional) define color array for slices
+            .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+            // (optional) set gap between rows, default is 5
+            gap(7)
+            // (optional) set x offset for labels, default is 10
+            labelOffSetX(5)
+            // (optional) set y offset for labels, default is 15
+            labelOffSetY(10)
+            // (optional) whether chart should render labels, :default = true
+            .renderLabel(true)
+            // (optional) by default pie chart will use group.key and group.value as its title
+            // you can overwrite it with a closure
+            .title(function(d) { return d.data.key + "(" + Math.floor(d.data.value / all.value() * 100) + "%)"; })
+            // (optional) whether chart should render titles, :default = false
+            .renderTitle(true);
+            // (optional) specify the number of ticks for the X axis
+            .xAxis().ticks(4);
     </pre>
 
 <h3>Line Chart</h3>
