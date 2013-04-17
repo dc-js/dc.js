@@ -211,7 +211,7 @@
 }
 
 .dc-chart g.row rect {
-    fill: steelblue;
+    fill-opacity: 0.8;
 }
 
 .dc-chart g.row text {

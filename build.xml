@@ -31,6 +31,7 @@
             <file file="src/events.js"/>
             <file file="src/cumulative.js"/>
             <file file="src/base-chart.js"/>
+            <file file="src/marginable.js"/>
             <file file="src/coordinate-grid-chart.js"/>
             <file file="src/color-chart.js"/>
             <file file="src/single-selection-chart.js"/>

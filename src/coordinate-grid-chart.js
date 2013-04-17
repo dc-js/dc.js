@@ -4,9 +4,7 @@ dc.coordinateGridChart = function (_chart) {
     var HORIZONTAL_CLASS = "horizontal";
     var VERTICAL_CLASS = "vertical";
 
-    _chart = dc.baseChart(_chart);
-
-    var _margin = {top: 10, right: 50, bottom: 30, left: 30};
+    _chart = dc.marginable(dc.baseChart(_chart));
 
     var _parent;
     var _g;
@@ -58,12 +56,6 @@ dc.coordinateGridChart = function (_chart) {
     _chart.chartBodyG = function (_) {
         if (!arguments.length) return _chartBodyG;
         _chartBodyG = _;
-        return _chart;
-    };
-
-    _chart.margins = function (m) {
-        if (!arguments.length) return _margin;
-        _margin = m;
         return _chart;
     };
 
@@ -210,7 +202,7 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     _chart.xAxisLength = function () {
-        return _chart.width() - _chart.margins().left - _chart.margins().right;
+        return _chart.effectiveWidth();
     };
 
     function prepareYAxis(g) {
@@ -352,7 +344,7 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     _chart.yAxisHeight = function () {
-        return _chart.height() - _chart.margins().top - _chart.margins().bottom;
+        return _chart.effectiveHeight();
     };
 
     _chart.round = function (_) {

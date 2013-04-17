@@ -10,7 +10,7 @@ require("util").puts(JSON.stringify({
   "repository": {"type": "git", "url": "https://github.com/NickQiZhu/dc.js.git"},
   "dependencies": {
     "crossfilter": "1.x",
-    "d3": "3.x"
+    "d3": "3.0.x"
   },
   "devDependencies": {
     "uglify-js": "2.2.x",
