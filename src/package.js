@@ -9,15 +9,15 @@ require("util").puts(JSON.stringify({
   "author": {"name": "Nick Zhu", "url": "http://nzhu.blogspot.ca/"},
   "repository": {"type": "git", "url": "https://github.com/NickQiZhu/dc.js.git"},
   "dependencies": {
-    "crossfilter": "1.1.1",
-    "d3": "3.0.7"
+    "crossfilter": "1.x",
+    "d3": "3.x"
   },
   "devDependencies": {
-    "uglify-js": "2.2.3",
-    "vows": "0.7.0",
-    "jsdom": "0.5.1",
-    "jquery": "1.8.3",
-    "sinon": "1.5.2"
+    "uglify-js": "2.2.x",
+    "vows": "0.7.x",
+    "jsdom": "0.5.x",
+    "jquery": "1.8.x",
+    "sinon": "1.5.x"
   },
   "scripts": {"test": "./node_modules/vows/bin/vows"}
 }, null, 2));
