@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "crossfilter": "1.x",
-    "d3": "3.0.x"
+    "d3": "3.x"
   },
   "devDependencies": {
     "uglify-js": "2.2.x",
