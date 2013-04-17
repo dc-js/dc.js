@@ -14,7 +14,7 @@ dc.rowChart = function(parent, chartGroup) {
 
     var _xScale;
 
-    var _xAxis;
+    var _xAxis = d3.svg.axis().orient("bottom");
 
     _chart.doRender = function() {
         _xScale = d3.scale.linear().domain([0, d3.max(_chart.group().all(), _chart.valueAccessor())]).range([0, _chart.effectiveWidth()]);
@@ -25,9 +25,7 @@ dc.rowChart = function(parent, chartGroup) {
             .append("g")
             .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")");
 
-        _xAxis = d3.svg.axis()
-                    .orient("bottom")
-                    .scale(_xScale);
+        _xAxis.scale(_xScale);
 
         _g.append("g").attr("class", "axis")
                         .attr("transform", "translate(0, " + _chart.effectiveHeight() + ")")
@@ -155,6 +153,10 @@ dc.rowChart = function(parent, chartGroup) {
     _chart.doRedraw = function() {
         drawChart();
         return _chart;
+    };
+
+    _chart.xAxis = function () {
+        return _xAxis;
     };
 
     _chart.gap = function(g) {
