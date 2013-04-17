@@ -1517,7 +1517,7 @@ dc.stackableChart = function (_chart) {
         _allValueAccessors = null;
         _allKeyAccessors = null;
         return _chart;
-    }
+    };
 
     _chart.allGroups = function () {
         if (_allGroups == null) {
