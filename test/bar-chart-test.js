@@ -567,6 +567,46 @@ suite.addBatch({'linear integers bar chart': {
     }
 }});
 
+suite.addBatch({'runtime dimension & group switch': {
+    topic: function () {
+        var chart = buildChart("bar-chart-switch", [new Date(2012, 4, 20), new Date(2012, 7, 15)]);
+        chart.dimension(dateDimension)
+            .group(dateNegativeValueSumGroup)
+            .elasticY(true)
+            .centerBar(false)
+            .render();
+        return chart;
+    },
+    'should generate correct number of bars': function (chart) {
+        assert.equal(chart.selectAll("rect.bar")[0].length, 6);
+    },
+    'should auto size bar width': function (chart) {
+        assert.equal(chart.select("rect.bar").attr("width"), "10");
+    },
+    'should generate correct bars in stack 0': function (chart) {
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][0]).attr("x"), /88\.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][0]).attr("y"), /94/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][0]).attr("height"), /30/);
+
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][3]).attr("x"), /522\.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][3]).attr("y"), /94/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][3]).attr("height"), /23/);
+
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][5]).attr("x"), /991\.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][5]).attr("y"), /71/);
+        assert.match(d3.select(chart.selectAll("rect.bar.stack0")[0][5]).attr("height"), /23/);
+    },
+    'should generate y axis domain dynamically': function (chart) {
+        assert.match(d3.select(chart.selectAll("g.y text")[0][0]).text(), /[−-]10/);
+        assert.match(d3.select(chart.selectAll("g.y text")[0][1]).text(), /[−-]5/);
+        assert.equal(d3.select(chart.selectAll("g.y text")[0][2]).text(), "0");
+    },
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
+    }
+}});
+
 suite.addBatch({'negative bar chart': {
     topic: function () {
         return buildNegativeChart("bar-chart-negative");

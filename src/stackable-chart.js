@@ -10,16 +10,17 @@ dc.stackableChart = function (_chart) {
         _groupStack.setDefaultAccessor(_chart.valueAccessor());
         _groupStack.addGroup(group, retriever);
 
-        expireCache();
+        _chart.expireCache();
 
         return _chart;
     };
 
-    function expireCache() {
+    _chart.expireCache = function(){
         _allGroups = null;
         _allValueAccessors = null;
         _allKeyAccessors = null;
-    }
+        return _chart;
+    };
 
     _chart.allGroups = function () {
         if (_allGroups == null) {
@@ -204,13 +205,13 @@ dc.stackableChart = function (_chart) {
 
     dc.override(_chart, "valueAccessor", function (_) {
         if (!arguments.length) return _chart._valueAccessor();
-        expireCache();
+        _chart.expireCache();
         return _chart._valueAccessor(_);
     });
 
     dc.override(_chart, "keyAccessor", function (_) {
         if (!arguments.length) return _chart._keyAccessor();
-        expireCache();
+        _chart.expireCache();
         return _chart._keyAccessor(_);
     });
 

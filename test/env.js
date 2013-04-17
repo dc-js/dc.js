@@ -12,7 +12,6 @@ CSSStyleDeclaration_prototype.setProperty = function(name, value, priority) {
 
 require("./env-xhr");
 
-var jsdom = require("jsdom");
 
 document.createRange = function() {
   return {

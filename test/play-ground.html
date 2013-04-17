@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
 
     <script type="text/javascript" src="../node_modules/jquery/tmp/jquery.js"></script>
-    <script type="text/javascript" src="../node_modules/d3/d3.v2.js"></script>
+    <script type="text/javascript" src="../node_modules/d3/d3.js"></script>
     <script type="text/javascript" src="../node_modules/crossfilter/crossfilter.js"></script>
 
     <script type="text/javascript" src="../dc.js"></script>
@@ -565,6 +565,17 @@ Country filter: <input id="custom-filter" type="text"/><button onclick="countryD
 
 <div class="clear"></div>
 
+<div id="bar-chart-switch">
+    <span>Bar Chart Runtime Switch</span>
+    <a class="reset" href="javascript:barSwitchChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+    <br/><span class="reset" style="display: none;">Current filter: <span class="filter"></span></span>
+    <button onclick="barSwitchChart.group(dateNegativeValueSumGroup).redraw()">Switch</button>
+    <button onclick="barSwitchChart.group(dateValueSumGroup).redraw()">Switch Back</button>
+    <div class="clear"></div>
+</div>
+
+<div class="clear"></div>
+
 <div id="bubble-chart">
     <span>Bubble Chart (Value, Count, Count)</span>
     <a class="reset" href="javascript:bubbleChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
@@ -815,6 +826,18 @@ linearBarChart.width(500)
         .elasticY(true)
         .x(d3.scale.linear().domain([20, 70]))
         .xUnits(dc.units.float.precision(1));
+
+var barSwitchChart = dc.barChart("#bar-chart-switch");
+barSwitchChart.width(500)
+        .height(150)
+        .dimension(dateDimension)
+        .group(dateValueSumGroup)
+        .gap(1)
+        .renderHorizontalGridLines(true)
+        .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
+        .xUnits(d3.time.days)
+        .elasticY(true)
+        .xAxis().ticks(5);
 
 var negativeBarChart = dc.barChart("#negative-bar-chart");
 negativeBarChart.width(1100)

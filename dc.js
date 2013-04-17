@@ -533,12 +533,14 @@ dc.baseChart = function (_chart) {
     _chart.dimension = function (d) {
         if (!arguments.length) return _dimension;
         _dimension = d;
+        _chart.expireCache();
         return _chart;
     };
 
     _chart.group = function (g) {
         if (!arguments.length) return _group;
         _group = g;
+        _chart.expireCache();
         return _chart;
     };
 
@@ -744,6 +746,11 @@ dc.baseChart = function (_chart) {
 
     _chart.on = function (event, listener) {
         _listeners[event] = listener;
+        return _chart;
+    };
+
+    _chart.expireCache = function(){
+         // do nothing in base, should be overridden by sub-function
         return _chart;
     };
 
@@ -1500,15 +1507,16 @@ dc.stackableChart = function (_chart) {
         _groupStack.setDefaultAccessor(_chart.valueAccessor());
         _groupStack.addGroup(group, retriever);
 
-        expireCache();
+        _chart.expireCache();
 
         return _chart;
     };
 
-    function expireCache() {
+    _chart.expireCache = function(){
         _allGroups = null;
         _allValueAccessors = null;
         _allKeyAccessors = null;
+        return _chart;
     }
 
     _chart.allGroups = function () {
@@ -1694,13 +1702,13 @@ dc.stackableChart = function (_chart) {
 
     dc.override(_chart, "valueAccessor", function (_) {
         if (!arguments.length) return _chart._valueAccessor();
-        expireCache();
+        _chart.expireCache();
         return _chart._valueAccessor(_);
     });
 
     dc.override(_chart, "keyAccessor", function (_) {
         if (!arguments.length) return _chart._keyAccessor();
-        expireCache();
+        _chart.expireCache();
         return _chart._keyAccessor(_);
     });
 
