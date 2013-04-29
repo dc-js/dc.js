@@ -10,6 +10,13 @@ dc.barChart = function (parent, chartGroup) {
     var _numberOfBars;
     var _barWidth;
 
+    _chart.resetBarProperties = function () {
+        _numberOfBars = null;
+        _barWidth = null;
+        getNumberOfBars();
+        barWidth();
+    }
+
     _chart.plotData = function () {
         var groups = _chart.allGroups();
 
@@ -82,14 +89,14 @@ dc.barChart = function (parent, chartGroup) {
     }
 
     function getNumberOfBars() {
-        if (_numberOfBars == null || _chart.refocused()){
+        if (_numberOfBars == null /*|| _chart.refocused()*/){
             _numberOfBars = _chart.xUnitCount();
         }
         return _numberOfBars;
     }
 
     function barWidth(d) {
-        if (_barWidth == null || _chart.refocused()) {
+        if (_barWidth == null /*|| _chart.refocused()*/) {
             var numberOfBars = getNumberOfBars();
             var w = MIN_BAR_WIDTH;
             if (_chart.isOrdinal())
