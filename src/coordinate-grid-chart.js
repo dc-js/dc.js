@@ -379,6 +379,8 @@ dc.coordinateGridChart = function (_chart) {
             _chart.brush().clear();
             _chart.dimension().filterAll();
             _chart.turnOffControls();
+            // restore orig domain in case it was expanded by drag action
+            _chart.focus(_chart.xOriginalDomain());
         }
 
         _chart.invokeFilteredListener(_chart, _);
@@ -553,8 +555,8 @@ dc.coordinateGridChart = function (_chart) {
                     var newDom = [
                         refDom[0] < origDom[0] ? refDom[0] : origDom[0],
                         refDom[1] > origDom[1] ? refDom[1] : origDom[1]];
-                    _rangeSelChart.brush().extent(refDom);
                     _rangeSelChart.focus(newDom);
+                    _rangeSelChart.filter(refDom);
                 }
             }
         }
