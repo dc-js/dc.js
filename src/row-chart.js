@@ -172,7 +172,7 @@ dc.rowChart = function(parent, chartGroup) {
     };
 
     _chart.labelOffsetY = function (o) {
-        if (!aruguments.length) return _labelOffsetY;
+        if (!arguments.length) return _labelOffsetY;
         _labelOffset = o;
         return _chart;
     };
