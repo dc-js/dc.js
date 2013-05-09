@@ -12,7 +12,7 @@
  *  limitations under the License.
  */
 dc = {
-    version: "1.3.0",
+    version: "1.4.0",
     constants : {
         CHART_CLASS: "dc-chart",
         DEBUG_GROUP_CLASS: "debug",
@@ -897,7 +897,7 @@ dc.marginable = function (_chart) {
     };
 
     _chart.xUnitCount = function () {
-        if (_unitCount == null /*|| _chart.refocused()*/) {
+        if (_unitCount == null) {
             var units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain());
 
             if (units instanceof Array)
@@ -1970,14 +1970,11 @@ dc.pieChart = function(parent, chartGroup, howMany, titleOther) {
         } else {
             var topRows = _chart.group().top(_howMany); // ordered by value
 
-            var allRowsSum = 0.0, topRowsSum = 0.0;
-            for (var i in topRows) {
-                topRowsSum += topRows[i].value;
-            }
+            var topRowsSum = d3.sum(topRows, function(row){row.value;});
+
             var allRows = _chart.group().all();
-            for (var i in allRows) {
-                allRowsSum += allRows[i].value;
-            }
+            var allRowsSum = d3.sum(allRows, function(row){row.value;});
+
             topRows.push({"key" : _titleOther, "value" : allRowsSum - topRowsSum });
             return topRows;
         }
@@ -2354,14 +2351,14 @@ dc.barChart = function (parent, chartGroup) {
     }
 
     function getNumberOfBars() {
-        if (_numberOfBars == null /*|| _chart.refocused()*/){
+        if (_numberOfBars == null){
             _numberOfBars = _chart.xUnitCount();
         }
         return _numberOfBars;
     }
 
     function barWidth(d) {
-        if (_barWidth == null /*|| _chart.refocused()*/) {
+        if (_barWidth == null) {
             var numberOfBars = getNumberOfBars();
             var w = MIN_BAR_WIDTH;
             if (_chart.isOrdinal())
