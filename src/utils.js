@@ -18,7 +18,9 @@ dc.printers.filter = function (filter) {
     return s;
 };
 
-dc.utils.printSingleValue(filter) {
+dc.utils = {};
+
+dc.utils.printSingleValue = function(filter) {
     var s = "" + filter;
 
     if (filter instanceof Date)
@@ -29,9 +31,8 @@ dc.utils.printSingleValue(filter) {
         s = Math.round(filter);
 
     return s;
-}
+};
 
-dc.utils = {};
 dc.utils.add = function (l, r) {
     if (typeof r === "string")
         r = r.replace("%", "")
@@ -49,6 +50,7 @@ dc.utils.add = function (l, r) {
         return l + r;
     }
 };
+
 dc.utils.subtract = function (l, r) {
     if (typeof r === "string")
         r = r.replace("%", "")
@@ -66,6 +68,7 @@ dc.utils.subtract = function (l, r) {
         return l - r;
     }
 };
+
 dc.utils.GroupStack = function () {
     var _dataPointMatrix = [];
     var _groups = [];
