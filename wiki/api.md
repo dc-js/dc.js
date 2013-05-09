@@ -411,8 +411,8 @@ chart.renderlet(function(chart){
 
 #### .rangeSelChart([chart])
 Get or set the range selection chart associated with this instance. Setting the range selection chart using this function
-will automatically update its selection brush when the current chart zooms in. See the [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
-example for this effect in action.
+will automatically update its selection brush when the current chart zooms in or being dragged. See the
+[Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/) example for this effect in action.
 
 ## <a name="pie-chart" href="#pie-chart">#</a> Pie Chart [Concrete] < [Single Selection Chart](#single-selection-chart) < [Color Chart](#color-chart) < [Base Chart](#base-chart)
 This chart is a concrete pie chart implementation usually used to visualize small number of categorical distributions.
