@@ -2311,14 +2311,35 @@ dc.barChart = function (parent, chartGroup) {
     };
 
     function generateBarsPerGroup(groupIndex, group) {
+        var data = _chart.getDataWithinXDomain(group);
+
+        console.log(data);
+        calculateBarWidth(_chart.x()(_chart.keyAccessor()(data[0])));
+
         var bars = _chart.chartBodyG().selectAll("rect." + dc.constants.STACK_CLASS + groupIndex)
-            .data(_chart.getDataWithinXDomain(group));
+            .data(data);
 
         addNewBars(bars, groupIndex);
 
         updateBars(bars, groupIndex);
 
         deleteBars(bars);
+    }
+
+    function calculateBarWidth(offset) {
+        if (_barWidth == null) {
+            var numberOfBars = _chart.isOrdinal() ? getNumberOfBars() + 1 : getNumberOfBars();
+
+            var w = Math.floor((_chart.xAxisLength() - offset - (numberOfBars - 1) * _gap) / numberOfBars);
+
+
+            if (isNaN(w) || w < MIN_BAR_WIDTH)
+                w = MIN_BAR_WIDTH;
+
+            _barWidth = w;
+
+            console.log(offset);
+        }
     }
 
     function addNewBars(bars, groupIndex) {
@@ -2353,8 +2374,8 @@ dc.barChart = function (parent, chartGroup) {
         }
 
         dc.transition(bars, _chart.transitionDuration())
-            .attr("x", function (data, dataIndex) {
-                return barX(this, data, groupIndex, dataIndex);
+            .attr("x", function (data) {
+                return barX(this, data, groupIndex);
             })
             .attr("y", function (data, dataIndex) {
                 return barY(this, data, dataIndex);
@@ -2372,27 +2393,14 @@ dc.barChart = function (parent, chartGroup) {
     }
 
     function getNumberOfBars() {
-        if (_numberOfBars == null){
+        if (_numberOfBars == null) {
             _numberOfBars = _chart.xUnitCount();
-            console.log("_numberOfBars: " + _numberOfBars);
         }
 
         return _numberOfBars;
     }
 
-    function barWidth() {
-        if (_barWidth == null) {
-            var numberOfBars = _chart.isOrdinal() ? getNumberOfBars() + 1 : getNumberOfBars();
-
-            var w = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
-
-            if (isNaN(w) || w < MIN_BAR_WIDTH)
-                w = MIN_BAR_WIDTH;
-
-            _barWidth = w;
-            console.log("width: " + _barWidth);
-        }
-
+    function barWidth(d) {
         return _barWidth;
     }
 

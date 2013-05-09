@@ -410,7 +410,7 @@ d3.csv("ndx.csv", function (data) {
                     .margins({top: 0, right: 50, bottom: 20, left: 40})
                     .dimension(moveMonths)
                     .group(volumeByMonthGroup)
-                    .centerBar(false)
+                    .centerBar(true)
                     .gap(1)
                     .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
                     .round(d3.time.month.round)
