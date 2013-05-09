@@ -1,4 +1,7 @@
-The entire dc.js library is scoped under **dc** name space. It does not introduce anything else into the global name space.
+### Version 1.4
+
+The entire dc.js library is scoped under **dc** name space. It does not introduce anything else into the global
+name space.
 
 * [Base Chart [abstract]](#base-chart)
 * [Color Chart [abstract]](#color-chart)
@@ -450,6 +453,23 @@ Get center y coordinate position. This function is **not chainable**.
 #### .minAngelForLabel([minAngle])
 Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not render slice label.
 Default min angel is 0.5.
+
+#### .slicesCap([cap])
+Get or set the maximum number of slices the pie chart will generate. Slices are ordered by its value from high to low.
+ Other slices exeeding the cap will be rolled up into one single *Others* slice.
+
+#### .othersHandler([handlerFunction])
+Get or set the handler funciton that will perform the insersion of data for the *Others* slice if the slices cap is
+ specified. By default the handler function implements the following logic, you can and should change this function to
+ match your data structure.
+ ```js
+function (data, value) {
+    data.push({"key": _othersLabel, "value": value });
+};
+ ```
+
+#### .othersLabel([label])
+Get or set the label for *Others* slice when slices cap is specified. Default label is **Others**.
 
 ## <a name="row-chart" href="#row-chart">#</a> Row Chart [Concrete] < [SingleSelectionChart](#single-selection-chart) < [Color Chart](#color-chart) < [Base Chart](#base-chart)
 Concrete row chart implementation.

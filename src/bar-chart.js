@@ -89,14 +89,14 @@ dc.barChart = function (parent, chartGroup) {
     }
 
     function getNumberOfBars() {
-        if (_numberOfBars == null /*|| _chart.refocused()*/){
+        if (_numberOfBars == null){
             _numberOfBars = _chart.xUnitCount();
         }
         return _numberOfBars;
     }
 
     function barWidth(d) {
-        if (_barWidth == null /*|| _chart.refocused()*/) {
+        if (_barWidth == null) {
             var numberOfBars = getNumberOfBars();
             var w = MIN_BAR_WIDTH;
             if (_chart.isOrdinal())

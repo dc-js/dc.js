@@ -666,8 +666,9 @@ var pieChartValue = dc.pieChart("#pie-chart-value")
         .innerRadius(40)
         .dimension(valueDimension)
         .group(valueGroup)
+        .slicesCap(3)
         .label(function(d) {
-            return "Value: " + d.data.key + ", Count: " + d.data.value;
+            return d.data.key;
         })
         .title(function(d) {
             return d.data.key + ": " + d.data.value;
@@ -876,6 +877,7 @@ rowChart.width(1100)
         .group(valueGroup)
         .renderTitle(true)
         .renderLabel(true)
+        .elasticX(true)
         .colors(d3.scale.category20b());
 
 dc.dataCount(".dc-data-count")
