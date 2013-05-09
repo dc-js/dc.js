@@ -902,6 +902,12 @@ This listener function will be invoked after chart finish redrawing including al
 ### .on("filtered", function(chart, filter){...})
 This listener function will be invoked after a filter is applied.
 
+### .on("zoomed", function(chart, filter){...})
+This listener function will be invoked after a zoom is triggered.
+
+### .on("dragged", function(chart, filter){...})
+This listener function will be invoked after a drag motion is triggered.
+
 
 ## <a name="utilities" href="#utilities">#</a> Utilities
 

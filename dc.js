@@ -2375,19 +2375,15 @@ dc.barChart = function (parent, chartGroup) {
         if (_numberOfBars == null){
             _numberOfBars = _chart.xUnitCount();
         }
+
         return _numberOfBars;
     }
 
-    function barWidth(d) {
+    function barWidth() {
         if (_barWidth == null) {
-            var numberOfBars = getNumberOfBars();
-            var w = MIN_BAR_WIDTH;
-            if (_chart.isOrdinal())
-                w = Math.floor(_chart.xAxisLength() / (numberOfBars + 1));
-            else
-                w = Math.floor(_chart.xAxisLength() / numberOfBars);
+            var numberOfBars = _chart.isOrdinal() ? getNumberOfBars() + 1 : getNumberOfBars();
 
-            w -= _gap;
+            var w = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
 
             if (isNaN(w) || w < MIN_BAR_WIDTH)
                 w = MIN_BAR_WIDTH;
@@ -2402,17 +2398,16 @@ dc.barChart = function (parent, chartGroup) {
         bar[dc.constants.GROUP_INDEX_NAME] = groupIndex;
     }
 
-    function barX(bar, data, groupIndex, dataIndex) {
+    function barX(bar, data, groupIndex) {
         setGroupIndexToBar(bar, groupIndex);
         var position = _chart.x()(_chart.keyAccessor()(data)) + _chart.margins().left;
         if (_centerBar)
-            position = position - barWidth(data) / 2;
+            position -= barWidth() / 2;
         return position;
     }
 
     function getGroupIndexFromBar(bar) {
-        var groupIndex = bar[dc.constants.GROUP_INDEX_NAME];
-        return groupIndex;
+        return bar[dc.constants.GROUP_INDEX_NAME];
     }
 
     function barY(bar, data, dataIndex) {

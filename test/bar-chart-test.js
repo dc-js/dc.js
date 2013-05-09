@@ -508,7 +508,7 @@ suite.addBatch({'ordinal bar chart': {
         assert.equal(chart.selectAll("rect.bar")[0].length, 6);
     },
     'should auto size bar width': function (chart) {
-        assert.equal(chart.select("rect.bar").attr("width"), "143");
+        assert.equal(chart.select("rect.bar").attr("width"), "144");
     },
     'should position bars based on ordinal range': function (chart) {
         assert.match(d3.select(chart.selectAll("rect.bar")[0][0]).attr("x"), /30/);
