@@ -42,7 +42,9 @@ dc.baseChart = function (_chart) {
         postRender: NULL_LISTENER,
         preRedraw: NULL_LISTENER,
         postRedraw: NULL_LISTENER,
-        filtered: NULL_LISTENER
+        filtered: NULL_LISTENER,
+        zoomed: NULL_LISTENER,
+        dragged: NULL_LISTENER
     };
 
     _chart.width = function (w) {
@@ -197,6 +199,14 @@ dc.baseChart = function (_chart) {
 
     _chart.invokeFilteredListener = function (chart, f) {
         if (f !== undefined) _listeners.filtered(_chart, f);
+    };
+
+    _chart.invokeZoomedListener = function (chart) {
+        _listeners.zoomed(_chart);
+    };
+
+    _chart.invokeDraggedListener = function (chart) {
+        _listeners.dragged(_chart);
     };
 
     // abstract function stub

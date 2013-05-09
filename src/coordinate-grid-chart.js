@@ -33,6 +33,19 @@ dc.coordinateGridChart = function (_chart) {
     var _refocused = false;
     var _unitCount;
 
+    _chart.resetUnitCount = function () {
+        _unitCount = null;
+        _chart.xUnitCount();
+    }
+
+    var _rangeSelChart;  // chart that's used for range selection on this chart
+
+    _chart.rangeSelChart = function (_) {
+        if (!arguments.length) return _rangeSelChart;
+        _rangeSelChart = _;
+        return _chart;
+    }
+
     _chart.generateG = function (parent) {
         if (parent == null)
             _parent = _chart.svg();
@@ -95,7 +108,7 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     _chart.xUnitCount = function () {
-        if (_unitCount == null || _chart.refocused()) {
+        if (_unitCount == null /*|| _chart.refocused()*/) {
             var units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain());
 
             if (units instanceof Array)
@@ -366,6 +379,8 @@ dc.coordinateGridChart = function (_chart) {
             _chart.brush().clear();
             _chart.dimension().filterAll();
             _chart.turnOffControls();
+            // restore orig domain in case it was expanded by drag action
+            _chart.focus(_chart.xOriginalDomain());
         }
 
         _chart.invokeFilteredListener(_chart, _);
@@ -512,6 +527,38 @@ dc.coordinateGridChart = function (_chart) {
             _chart.renderYAxis(_chart.g());
 
             _chart.renderBrush(_chart.g());
+
+            _chart.root().call(d3.behavior.zoom()
+                    .x(_chart.x())
+                    .scaleExtent([1, 100])
+                    .on("zoom", function() {
+                        _chart.focus(_chart.x().domain());
+                        _chart.invokeZoomedListener(_chart);
+                        updateRangeSelChart();
+                    }));
+
+            _chart.chartBodyG().call(d3.behavior.drag()
+                    .on("drag", function() {
+                        var deltaX = d3.event.dx;
+                        var curDomain = _chart.x().domain();
+                        var xMin = _chart.x()(curDomain[0]);
+                        var xMax = _chart.x()(curDomain[1]);
+                        _chart.focus([_chart.x().invert(xMin - deltaX), _chart.x().invert(xMax - deltaX)]);
+                        _chart.invokeDraggedListener(_chart);
+                        updateRangeSelChart();
+                    }));
+
+            function updateRangeSelChart() {
+                if (_rangeSelChart) {
+                    var refDom = _chart.x().domain();
+                    var origDom = _rangeSelChart.xOriginalDomain();
+                    var newDom = [
+                        refDom[0] < origDom[0] ? refDom[0] : origDom[0],
+                        refDom[1] > origDom[1] ? refDom[1] : origDom[1]];
+                    _rangeSelChart.focus(newDom);
+                    _rangeSelChart.filter(refDom);
+                }
+            }
         }
 
         return _chart;
@@ -577,6 +624,12 @@ dc.coordinateGridChart = function (_chart) {
             _chart.x().domain(_chart.xOriginalDomain());
         }
 
+        if (typeof(_chart.resetUnitCount) != 'undefined') {
+            _chart.resetUnitCount();
+        }
+        if (typeof(_chart.resetBarProperties) != 'undefined') {
+            _chart.resetBarProperties();
+        }
         _chart.redraw();
 
         if (!hasRangeSelected(range))

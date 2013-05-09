@@ -1,4 +1,4 @@
-dc.pieChart = function(parent, chartGroup) {
+dc.pieChart = function(parent, chartGroup, howMany, titleOther) {
     var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
     var _sliceCssClass = "pie-slice";
@@ -10,6 +10,28 @@ dc.pieChart = function(parent, chartGroup) {
     var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
 
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
+
+    var _howMany = typeof howMany != 'undefined' ? howMany : Infinity;
+    var _titleOther = typeof titleOther != 'undefined' ? titleOther : "Others";
+
+    function assemblePieData() {
+        if (_howMany == Infinity) {
+            return _chart.orderedGroup().top(_howMany); // ordered by keys
+        } else {
+            var topRows = _chart.group().top(_howMany); // ordered by value
+
+            var allRowsSum = 0.0, topRowsSum = 0.0;
+            for (var i in topRows) {
+                topRowsSum += topRows[i].value;
+            }
+            var allRows = _chart.group().all();
+            for (var i in allRows) {
+                allRowsSum += allRows[i].value;
+            }
+            topRows.push({"key" : _titleOther, "value" : allRowsSum - topRowsSum });
+            return topRows;
+        }
+    }
 
     _chart.label(function(d) {
         return _chart.keyAccessor()(d.data);
@@ -41,7 +63,7 @@ dc.pieChart = function(parent, chartGroup) {
 
             var arc = _chart.buildArcs();
 
-            var pieData = pie(_chart.orderedGroup().top(Infinity));
+            var pieData = pie(assemblePieData());
 
             var slices = _g.selectAll("g." + _sliceCssClass)
                 .data(pieData);
