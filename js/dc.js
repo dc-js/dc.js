@@ -28,7 +28,7 @@ dc = {
     _renderlet : null
 };
 
-dc.chartRegistry = new function() {
+dc.chartRegistry = function() {
     // chartGroup:string => charts:array
     var _chartMap = {};
 
@@ -533,12 +533,14 @@ dc.baseChart = function (_chart) {
     _chart.dimension = function (d) {
         if (!arguments.length) return _dimension;
         _dimension = d;
+        _chart.expireCache();
         return _chart;
     };
 
     _chart.group = function (g) {
         if (!arguments.length) return _group;
         _group = g;
+        _chart.expireCache();
         return _chart;
     };
 
@@ -744,6 +746,11 @@ dc.baseChart = function (_chart) {
 
     _chart.on = function (event, listener) {
         _listeners[event] = listener;
+        return _chart;
+    };
+
+    _chart.expireCache = function(){
+         // do nothing in base, should be overridden by sub-function
         return _chart;
     };
 
@@ -1500,16 +1507,17 @@ dc.stackableChart = function (_chart) {
         _groupStack.setDefaultAccessor(_chart.valueAccessor());
         _groupStack.addGroup(group, retriever);
 
-        expireCache();
+        _chart.expireCache();
 
         return _chart;
     };
 
-    function expireCache() {
+    _chart.expireCache = function(){
         _allGroups = null;
         _allValueAccessors = null;
         _allKeyAccessors = null;
-    }
+        return _chart;
+    };
 
     _chart.allGroups = function () {
         if (_allGroups == null) {
@@ -1694,13 +1702,13 @@ dc.stackableChart = function (_chart) {
 
     dc.override(_chart, "valueAccessor", function (_) {
         if (!arguments.length) return _chart._valueAccessor();
-        expireCache();
+        _chart.expireCache();
         return _chart._valueAccessor(_);
     });
 
     dc.override(_chart, "keyAccessor", function (_) {
         if (!arguments.length) return _chart._keyAccessor();
-        expireCache();
+        _chart.expireCache();
         return _chart._keyAccessor(_);
     });
 
@@ -3271,7 +3279,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
 
     var _xScale;
 
-    var _xAxis;
+    var _xAxis = d3.svg.axis().orient("bottom");
 
     _chart.doRender = function() {
         _xScale = d3.scale.linear().domain([0, d3.max(_chart.group().all(), _chart.valueAccessor())]).range([0, _chart.effectiveWidth()]);
@@ -3282,9 +3290,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
             .append("g")
             .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")");
 
-        _xAxis = d3.svg.axis()
-                    .orient("bottom")
-                    .scale(_xScale);
+        _xAxis.scale(_xScale);
 
         _g.append("g").attr("class", "axis")
                         .attr("transform", "translate(0, " + _chart.effectiveHeight() + ")")
@@ -3412,6 +3418,10 @@ dc.bubbleOverlay = function(root, chartGroup) {
     _chart.doRedraw = function() {
         drawChart();
         return _chart;
+    };
+
+    _chart.xAxis = function () {
+        return _xAxis;
     };
 
     _chart.gap = function(g) {
