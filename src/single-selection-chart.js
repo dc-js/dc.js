@@ -54,7 +54,10 @@ dc.singleSelectionChart = function(_chart) {
 
     _chart.filterTo = function(toFilter) {
         _chart.filter(toFilter);
-        dc.redrawAll(_chart.chartGroup());
+        // use renderAll() instead of redrawAll() to
+        // redo axes, titles and everything as per the filter.
+        //dc.redrawAll(_chart.chartGroup());
+        dc.renderAll(_chart.chartGroup());
     };
 
     _chart.filterHandler = function(_){
