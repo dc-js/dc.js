@@ -7,18 +7,20 @@ dc.printers.filter = function (filter) {
     if (filter) {
         if (filter instanceof Array) {
             if (filter.length >= 2)
-                s = "[" + printSingleValue(filter[0]) + " -> " + printSingleValue(filter[1]) + "]";
+                s = "[" + dc.utils.printSingleValue(filter[0]) + " -> " + dc.utils.printSingleValue(filter[1]) + "]";
             else if (filter.length >= 1)
-                s = printSingleValue(filter[0]);
+                s = dc.utils.printSingleValue(filter[0]);
         } else {
-            s = printSingleValue(filter)
+            s = dc.utils.printSingleValue(filter)
         }
     }
 
     return s;
 };
 
-function printSingleValue(filter) {
+dc.utils = {};
+
+dc.utils.printSingleValue = function(filter) {
     var s = "" + filter;
 
     if (filter instanceof Date)
@@ -29,9 +31,8 @@ function printSingleValue(filter) {
         s = Math.round(filter);
 
     return s;
-}
+};
 
-dc.utils = {};
 dc.utils.add = function (l, r) {
     if (typeof r === "string")
         r = r.replace("%", "")
@@ -49,6 +50,7 @@ dc.utils.add = function (l, r) {
         return l + r;
     }
 };
+
 dc.utils.subtract = function (l, r) {
     if (typeof r === "string")
         r = r.replace("%", "")
@@ -66,6 +68,7 @@ dc.utils.subtract = function (l, r) {
         return l - r;
     }
 };
+
 dc.utils.GroupStack = function () {
     var _dataPointMatrix = [];
     var _groups = [];
@@ -122,7 +125,7 @@ dc.utils.GroupStack = function () {
     };
 };
 
-function isNegligible(max) {
+dc.utils.isNegligible = function(max) {
     return max === undefined || (max < dc.constants.NEGLIGIBLE_NUMBER && max > -dc.constants.NEGLIGIBLE_NUMBER);
 }
 
@@ -130,7 +133,7 @@ dc.utils.groupMax = function (group, accessor) {
     var max = d3.max(group.all(), function (e) {
         return accessor(e);
     });
-    if (isNegligible(max)) max = 0;
+    if (dc.utils.isNegligible(max)) max = 0;
     return max;
 };
 
@@ -138,7 +141,7 @@ dc.utils.groupMin = function (group, accessor) {
     var min = d3.min(group.all(), function (e) {
         return accessor(e);
     });
-    if (isNegligible(min)) min = 0;
+    if (dc.utils.isNegligible(min)) min = 0;
     return min;
 };
 

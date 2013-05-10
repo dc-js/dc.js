@@ -12,7 +12,7 @@
  *  limitations under the License.
  */
 dc = {
-    version: "1.3.0",
+    version: "1.4.0",
     constants : {
         CHART_CLASS: "dc-chart",
         DEBUG_GROUP_CLASS: "debug",
@@ -185,18 +185,20 @@ dc.printers.filter = function (filter) {
     if (filter) {
         if (filter instanceof Array) {
             if (filter.length >= 2)
-                s = "[" + printSingleValue(filter[0]) + " -> " + printSingleValue(filter[1]) + "]";
+                s = "[" + dc.utils.printSingleValue(filter[0]) + " -> " + dc.utils.printSingleValue(filter[1]) + "]";
             else if (filter.length >= 1)
-                s = printSingleValue(filter[0]);
+                s = dc.utils.printSingleValue(filter[0]);
         } else {
-            s = printSingleValue(filter)
+            s = dc.utils.printSingleValue(filter)
         }
     }
 
     return s;
 };
 
-function printSingleValue(filter) {
+dc.utils = {};
+
+dc.utils.printSingleValue = function(filter) {
     var s = "" + filter;
 
     if (filter instanceof Date)
@@ -207,9 +209,8 @@ function printSingleValue(filter) {
         s = Math.round(filter);
 
     return s;
-}
+};
 
-dc.utils = {};
 dc.utils.add = function (l, r) {
     if (typeof r === "string")
         r = r.replace("%", "")
@@ -227,6 +228,7 @@ dc.utils.add = function (l, r) {
         return l + r;
     }
 };
+
 dc.utils.subtract = function (l, r) {
     if (typeof r === "string")
         r = r.replace("%", "")
@@ -244,6 +246,7 @@ dc.utils.subtract = function (l, r) {
         return l - r;
     }
 };
+
 dc.utils.GroupStack = function () {
     var _dataPointMatrix = [];
     var _groups = [];
@@ -300,7 +303,7 @@ dc.utils.GroupStack = function () {
     };
 };
 
-function isNegligible(max) {
+dc.utils.isNegligible = function(max) {
     return max === undefined || (max < dc.constants.NEGLIGIBLE_NUMBER && max > -dc.constants.NEGLIGIBLE_NUMBER);
 }
 
@@ -308,7 +311,7 @@ dc.utils.groupMax = function (group, accessor) {
     var max = d3.max(group.all(), function (e) {
         return accessor(e);
     });
-    if (isNegligible(max)) max = 0;
+    if (dc.utils.isNegligible(max)) max = 0;
     return max;
 };
 
@@ -316,7 +319,7 @@ dc.utils.groupMin = function (group, accessor) {
     var min = d3.min(group.all(), function (e) {
         return accessor(e);
     });
-    if (isNegligible(min)) min = 0;
+    if (dc.utils.isNegligible(min)) min = 0;
     return min;
 };
 
@@ -515,7 +518,9 @@ dc.baseChart = function (_chart) {
         postRender: NULL_LISTENER,
         preRedraw: NULL_LISTENER,
         postRedraw: NULL_LISTENER,
-        filtered: NULL_LISTENER
+        filtered: NULL_LISTENER,
+        zoomed: NULL_LISTENER,
+        dragged: NULL_LISTENER
     };
 
     _chart.width = function (w) {
@@ -672,6 +677,14 @@ dc.baseChart = function (_chart) {
         if (f !== undefined) _listeners.filtered(_chart, f);
     };
 
+    _chart.invokeZoomedListener = function (chart) {
+        _listeners.zoomed(_chart);
+    };
+
+    _chart.invokeDraggedListener = function (chart) {
+        _listeners.dragged(_chart);
+    };
+
     // abstract function stub
     _chart.filter = function (f) {
         // do nothing in base, should be overridden by sub-function
@@ -809,6 +822,19 @@ dc.marginable = function (_chart) {
     var _refocused = false;
     var _unitCount;
 
+    _chart.resetUnitCount = function () {
+        _unitCount = null;
+        _chart.xUnitCount();
+    }
+
+    var _rangeSelChart;  // chart that's used for range selection on this chart
+
+    _chart.rangeSelChart = function (_) {
+        if (!arguments.length) return _rangeSelChart;
+        _rangeSelChart = _;
+        return _chart;
+    }
+
     _chart.generateG = function (parent) {
         if (parent == null)
             _parent = _chart.svg();
@@ -871,7 +897,7 @@ dc.marginable = function (_chart) {
     };
 
     _chart.xUnitCount = function () {
-        if (_unitCount == null || _chart.refocused()) {
+        if (_unitCount == null) {
             var units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain());
 
             if (units instanceof Array)
@@ -1142,6 +1168,8 @@ dc.marginable = function (_chart) {
             _chart.brush().clear();
             _chart.dimension().filterAll();
             _chart.turnOffControls();
+            // restore orig domain in case it was expanded by drag action
+            _chart.focus(_chart.xOriginalDomain());
         }
 
         _chart.invokeFilteredListener(_chart, _);
@@ -1288,6 +1316,38 @@ dc.marginable = function (_chart) {
             _chart.renderYAxis(_chart.g());
 
             _chart.renderBrush(_chart.g());
+
+            _chart.root().call(d3.behavior.zoom()
+                    .x(_chart.x())
+                    .scaleExtent([1, 100])
+                    .on("zoom", function() {
+                        _chart.focus(_chart.x().domain());
+                        _chart.invokeZoomedListener(_chart);
+                        updateRangeSelChart();
+                    }));
+
+            _chart.chartBodyG().call(d3.behavior.drag()
+                    .on("drag", function() {
+                        var deltaX = d3.event.dx;
+                        var curDomain = _chart.x().domain();
+                        var xMin = _chart.x()(curDomain[0]);
+                        var xMax = _chart.x()(curDomain[1]);
+                        _chart.focus([_chart.x().invert(xMin - deltaX), _chart.x().invert(xMax - deltaX)]);
+                        _chart.invokeDraggedListener(_chart);
+                        updateRangeSelChart();
+                    }));
+
+            function updateRangeSelChart() {
+                if (_rangeSelChart) {
+                    var refDom = _chart.x().domain();
+                    var origDom = _rangeSelChart.xOriginalDomain();
+                    var newDom = [
+                        refDom[0] < origDom[0] ? refDom[0] : origDom[0],
+                        refDom[1] > origDom[1] ? refDom[1] : origDom[1]];
+                    _rangeSelChart.focus(newDom);
+                    _rangeSelChart.filter(refDom);
+                }
+            }
         }
 
         return _chart;
@@ -1353,6 +1413,12 @@ dc.marginable = function (_chart) {
             _chart.x().domain(_chart.xOriginalDomain());
         }
 
+        if (typeof(_chart.resetUnitCount) != 'undefined') {
+            _chart.resetUnitCount();
+        }
+        if (typeof(_chart.resetBarProperties) != 'undefined') {
+            _chart.resetBarProperties();
+        }
         _chart.redraw();
 
         if (!hasRangeSelected(range))
@@ -1882,7 +1948,7 @@ dc.abstractBubbleChart = function (_chart) {
 
     return _chart;
 };
-dc.pieChart = function(parent, chartGroup) {
+dc.pieChart = function (parent, chartGroup) {
     var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
     var _sliceCssClass = "pie-slice";
@@ -1895,19 +1961,41 @@ dc.pieChart = function(parent, chartGroup) {
 
     var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
 
-    _chart.label(function(d) {
+    var _slicesCap = Infinity;
+    var _othersLabel = "Others";
+    var _othersHandler = function (data, value) {
+        data.push({"key": _othersLabel, "value": value });
+    };
+
+    function assemblePieData() {
+        if (_slicesCap == Infinity) {
+            return _chart.orderedGroup().top(_slicesCap); // ordered by keys
+        } else {
+            var topRows = _chart.group().top(_slicesCap); // ordered by value
+            var topRowsSum = d3.sum(topRows, _chart.valueAccessor());
+
+            var allRows = _chart.group().all();
+            var allRowsSum = d3.sum(allRows, _chart.valueAccessor());
+
+            _othersHandler(topRows, allRowsSum - topRowsSum);
+
+            return topRows;
+        }
+    }
+
+    _chart.label(function (d) {
         return _chart.keyAccessor()(d.data);
     });
 
     _chart.renderLabel(true);
 
-    _chart.title(function(d) {
+    _chart.title(function (d) {
         return _chart.keyAccessor()(d.data) + ": " + _chart.valueAccessor()(d.data);
     });
 
     _chart.transitionDuration(350);
 
-    _chart.doRender = function() {
+    _chart.doRender = function () {
         _chart.resetSvg();
 
         _g = _chart.svg()
@@ -1925,7 +2013,7 @@ dc.pieChart = function(parent, chartGroup) {
 
             var arc = _chart.buildArcs();
 
-            var pieData = pie(_chart.orderedGroup().top(Infinity));
+            var pieData = pie(assemblePieData());
 
             var slices = _g.selectAll("g." + _sliceCssClass)
                 .data(pieData);
@@ -1954,7 +2042,7 @@ dc.pieChart = function(parent, chartGroup) {
         var slicesEnter = slices
             .enter()
             .append("g")
-            .attr("class", function(d, i) {
+            .attr("class", function (d, i) {
                 return _sliceCssClass + " _" + i;
             });
         return slicesEnter;
@@ -1962,11 +2050,11 @@ dc.pieChart = function(parent, chartGroup) {
 
     function createSlicePath(slicesEnter, arc) {
         var slicePath = slicesEnter.append("path")
-            .attr("fill", function(d, i) {
+            .attr("fill", function (d, i) {
                 return _chart.getColor(d, i);
             })
             .on("click", onClick)
-            .attr("d", function(d, i) {
+            .attr("d", function (d, i) {
                 return safeArc(d, i, arc);
             });
         slicePath.transition()
@@ -1976,7 +2064,7 @@ dc.pieChart = function(parent, chartGroup) {
 
     function createTitles(slicesEnter) {
         if (_chart.renderTitle()) {
-            slicesEnter.append("title").text(function(d) {
+            slicesEnter.append("title").text(function (d) {
                 return _chart.title()(d);
             });
         }
@@ -1990,12 +2078,12 @@ dc.pieChart = function(parent, chartGroup) {
             var labelsEnter = labels
                 .enter()
                 .append("text")
-                .attr("class", function(d, i) {
+                .attr("class", function (d, i) {
                     return _sliceCssClass + " _" + i;
                 })
                 .on("click", onClick);
             dc.transition(labelsEnter, _chart.transitionDuration())
-                .attr("transform", function(d) {
+                .attr("transform", function (d) {
                     d.innerRadius = _chart.innerRadius();
                     d.outerRadius = _radius;
                     var centroid = arc.centroid(d);
@@ -2006,7 +2094,7 @@ dc.pieChart = function(parent, chartGroup) {
                     }
                 })
                 .attr("text-anchor", "middle")
-                .text(function(d) {
+                .text(function (d) {
                     var data = d.data;
                     if (sliceHasNoData(data) || sliceTooSmall(d))
                         return "";
@@ -2025,13 +2113,13 @@ dc.pieChart = function(parent, chartGroup) {
         var slicePaths = _g.selectAll("g." + _sliceCssClass)
             .data(pieData)
             .select("path")
-            .attr("d", function(d, i) {
+            .attr("d", function (d, i) {
                 return safeArc(d, i, arc);
             });
         dc.transition(slicePaths, _chart.transitionDuration(),
-            function(s) {
+            function (s) {
                 s.attrTween("d", tweenPie);
-            }).attr("fill", function(d, i) {
+            }).attr("fill", function (d, i) {
                 return _chart.getColor(d, i);
             });
     }
@@ -2041,7 +2129,7 @@ dc.pieChart = function(parent, chartGroup) {
             var labels = _g.selectAll("text." + _sliceCssClass)
                 .data(pieData);
             dc.transition(labels, _chart.transitionDuration())
-                .attr("transform", function(d) {
+                .attr("transform", function (d) {
                     d.innerRadius = _chart.innerRadius();
                     d.outerRadius = _radius;
                     var centroid = arc.centroid(d);
@@ -2052,7 +2140,7 @@ dc.pieChart = function(parent, chartGroup) {
                     }
                 })
                 .attr("text-anchor", "middle")
-                .text(function(d) {
+                .text(function (d) {
                     var data = d.data;
                     if (sliceHasNoData(data) || sliceTooSmall(d))
                         return "";
@@ -2066,7 +2154,7 @@ dc.pieChart = function(parent, chartGroup) {
             _g.selectAll("g." + _sliceCssClass)
                 .data(pieData)
                 .select("title")
-                .text(function(d) {
+                .text(function (d) {
                     return _chart.title()(d);
                 });
         }
@@ -2078,7 +2166,7 @@ dc.pieChart = function(parent, chartGroup) {
 
     function highlightFilter() {
         if (_chart.hasFilter()) {
-            _chart.selectAll("g." + _sliceCssClass).each(function(d) {
+            _chart.selectAll("g." + _sliceCssClass).each(function (d) {
                 if (_chart.isSelectedSlice(d)) {
                     _chart.highlightSelected(this);
                 } else {
@@ -2086,53 +2174,71 @@ dc.pieChart = function(parent, chartGroup) {
                 }
             });
         } else {
-            _chart.selectAll("g." + _sliceCssClass).each(function(d) {
+            _chart.selectAll("g." + _sliceCssClass).each(function (d) {
                 _chart.resetHighlight(this);
             });
         }
     }
 
-    _chart.innerRadius = function(r) {
+    _chart.innerRadius = function (r) {
         if (!arguments.length) return _innerRadius;
         _innerRadius = r;
         return _chart;
     };
 
-    _chart.radius = function(r) {
+    _chart.radius = function (r) {
         if (!arguments.length) return _radius;
         _radius = r;
         return _chart;
     };
 
-    _chart.cx = function() {
+    _chart.cx = function () {
         return _chart.width() / 2;
     };
 
-    _chart.cy = function() {
+    _chart.cy = function () {
         return _chart.height() / 2;
     };
 
-    _chart.buildArcs = function() {
+    _chart.buildArcs = function () {
         return d3.svg.arc().outerRadius(_radius).innerRadius(_innerRadius);
     };
 
-    _chart.isSelectedSlice = function(d) {
+    _chart.isSelectedSlice = function (d) {
         return _chart.filter() == _chart.keyAccessor()(d.data);
     };
 
-    _chart.doRedraw = function() {
+    _chart.doRedraw = function () {
         drawChart();
         return _chart;
     };
 
-    _chart.minAngleForLabel = function(_) {
+    _chart.minAngleForLabel = function (_) {
         if (!arguments.length) return _minAngleForLabel;
         _minAngleForLabel = _;
         return _chart;
     };
 
+    _chart.slicesCap = function (_) {
+        if (!arguments.length) return _slicesCap;
+        _slicesCap = _;
+        return _chart;
+    };
+
+    _chart.othersLabel = function (_) {
+        if (!arguments.length) return _othersLabel;
+        _othersLabel = _;
+        return _chart;
+    };
+
+    _chart.othersHandler = function (_) {
+        if (!arguments.length) return _othersHandler;
+        _othersHandler = _;
+        return _chart;
+    };
+
     function calculateDataPie() {
-        return d3.layout.pie().sort(null).value(function(d) {
+        return d3.layout.pie().sort(null).value(function (d) {
             return _chart.valueAccessor()(d);
         });
     }
@@ -2153,7 +2259,7 @@ dc.pieChart = function(parent, chartGroup) {
             current = {startAngle: 0, endAngle: 0};
         var i = d3.interpolate(current, b);
         this._current = i(0);
-        return function(t) {
+        return function (t) {
             return safeArc(i(t), 0, _chart.buildArcs());
         };
     }
@@ -2168,7 +2274,7 @@ dc.pieChart = function(parent, chartGroup) {
 
     function safeArc(d, i, arc) {
         var path = arc(d, i);
-        if(path.indexOf("NaN") >= 0)
+        if (path.indexOf("NaN") >= 0)
             path = "M0,0";
         return path;
     }
@@ -2187,6 +2293,13 @@ dc.barChart = function (parent, chartGroup) {
     var _numberOfBars;
     var _barWidth;
 
+    _chart.resetBarProperties = function () {
+        _numberOfBars = null;
+        _barWidth = null;
+        getNumberOfBars();
+        barWidth();
+    }
+
     _chart.plotData = function () {
         var groups = _chart.allGroups();
 
@@ -2198,14 +2311,32 @@ dc.barChart = function (parent, chartGroup) {
     };
 
     function generateBarsPerGroup(groupIndex, group) {
+        var data = _chart.getDataWithinXDomain(group);
+
+        calculateBarWidth(_chart.x()(_chart.keyAccessor()(data[0])));
+
         var bars = _chart.chartBodyG().selectAll("rect." + dc.constants.STACK_CLASS + groupIndex)
-            .data(_chart.getDataWithinXDomain(group));
+            .data(data);
 
         addNewBars(bars, groupIndex);
 
         updateBars(bars, groupIndex);
 
         deleteBars(bars);
+    }
+
+    function calculateBarWidth(offset) {
+        if (_barWidth == null) {
+            var numberOfBars = _chart.isOrdinal() ? getNumberOfBars() + 1 : getNumberOfBars();
+
+            var w = Math.floor((_chart.xAxisLength() - offset - (numberOfBars - 1) * _gap) / numberOfBars);
+
+
+            if (isNaN(w) || w < MIN_BAR_WIDTH)
+                w = MIN_BAR_WIDTH;
+
+            _barWidth = w;
+        }
     }
 
     function addNewBars(bars, groupIndex) {
@@ -2240,8 +2371,8 @@ dc.barChart = function (parent, chartGroup) {
         }
 
         dc.transition(bars, _chart.transitionDuration())
-            .attr("x", function (data, dataIndex) {
-                return barX(this, data, groupIndex, dataIndex);
+            .attr("x", function (data) {
+                return barX(this, data, groupIndex);
             })
             .attr("y", function (data, dataIndex) {
                 return barY(this, data, dataIndex);
@@ -2259,29 +2390,14 @@ dc.barChart = function (parent, chartGroup) {
     }
 
     function getNumberOfBars() {
-        if (_numberOfBars == null || _chart.refocused()){
+        if (_numberOfBars == null) {
             _numberOfBars = _chart.xUnitCount();
         }
+
         return _numberOfBars;
     }
 
     function barWidth(d) {
-        if (_barWidth == null || _chart.refocused()) {
-            var numberOfBars = getNumberOfBars();
-            var w = MIN_BAR_WIDTH;
-            if (_chart.isOrdinal())
-                w = Math.floor(_chart.xAxisLength() / (numberOfBars + 1));
-            else
-                w = Math.floor(_chart.xAxisLength() / numberOfBars);
-
-            w -= _gap;
-
-            if (isNaN(w) || w < MIN_BAR_WIDTH)
-                w = MIN_BAR_WIDTH;
-
-            _barWidth = w;
-        }
-
         return _barWidth;
     }
 
@@ -2289,17 +2405,16 @@ dc.barChart = function (parent, chartGroup) {
         bar[dc.constants.GROUP_INDEX_NAME] = groupIndex;
     }
 
-    function barX(bar, data, groupIndex, dataIndex) {
+    function barX(bar, data, groupIndex) {
         setGroupIndexToBar(bar, groupIndex);
         var position = _chart.x()(_chart.keyAccessor()(data)) + _chart.margins().left;
         if (_centerBar)
-            position = position - barWidth(data) / 2;
+            position -= barWidth() / 2;
         return position;
     }
 
     function getGroupIndexFromBar(bar) {
-        var groupIndex = bar[dc.constants.GROUP_INDEX_NAME];
-        return groupIndex;
+        return bar[dc.constants.GROUP_INDEX_NAME];
     }
 
     function barY(bar, data, dataIndex) {
@@ -3437,7 +3552,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
     };
 
     _chart.labelOffsetY = function (o) {
-        if (!aruguments.length) return _labelOffsetY;
+        if (!arguments.length) return _labelOffsetY;
         _labelOffset = o;
         return _chart;
     };

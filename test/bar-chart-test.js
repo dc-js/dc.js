@@ -508,7 +508,7 @@ suite.addBatch({'ordinal bar chart': {
         assert.equal(chart.selectAll("rect.bar")[0].length, 6);
     },
     'should auto size bar width': function (chart) {
-        assert.equal(chart.select("rect.bar").attr("width"), "143");
+        assert.equal(chart.select("rect.bar").attr("width"), "144");
     },
     'should position bars based on ordinal range': function (chart) {
         assert.match(d3.select(chart.selectAll("rect.bar")[0][0]).attr("x"), /30/);
@@ -554,7 +554,7 @@ suite.addBatch({'linear integers bar chart': {
         assert.equal(chart.selectAll("rect.bar")[0].length, 5);
     },
     'should auto size bar width': function (chart) {
-        assert.equal(chart.select("rect.bar").attr("width"), "18");
+        assert.equal(chart.select("rect.bar").attr("width"), "17");
     },
     'should position bars based on linear range': function (chart) {
         assert.match(d3.select(chart.selectAll("rect.bar")[0][0]).attr("x"), /70.\d+/);
@@ -689,7 +689,7 @@ suite.addBatch({
             assert.equal(chart.selectAll("rect.bar")[0].length, 1);
         },
         'bar width should be resized accordingly': function (chart) {
-            assert.equal(chart.selectAll("rect.bar").attr("width"), 35);
+            assert.equal(chart.selectAll("rect.bar").attr("width"), 9);
         },
         'focus should reset if null is passed': function (chart) {
             chart.focus(null);

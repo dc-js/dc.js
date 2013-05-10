@@ -1,4 +1,7 @@
-The entire dc.js library is scoped under **dc** name space. It does not introduce anything else into the global name space.
+### Version 1.4
+
+The entire dc.js library is scoped under **dc** name space. It does not introduce anything else into the global
+name space.
 
 * [Base Chart [abstract]](#base-chart)
 * [Color Chart [abstract]](#color-chart)
@@ -406,6 +409,11 @@ chart.renderlet(function(chart){
 })
 ```
 
+#### .rangeSelChart([chart])
+Get or set the range selection chart associated with this instance. Setting the range selection chart using this function
+will automatically update its selection brush when the current chart zooms in. See the [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
+example for this effect in action.
+
 ## <a name="pie-chart" href="#pie-chart">#</a> Pie Chart [Concrete] < [Single Selection Chart](#single-selection-chart) < [Color Chart](#color-chart) < [Base Chart](#base-chart)
 This chart is a concrete pie chart implementation usually used to visualize small number of categorical distributions.
 Pie chart implementation uses keyAccessor to generate slices, and valueAccessor to calculate the size of each slice(key)
@@ -450,6 +458,23 @@ Get center y coordinate position. This function is **not chainable**.
 #### .minAngelForLabel([minAngle])
 Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not render slice label.
 Default min angel is 0.5.
+
+#### .slicesCap([cap])
+Get or set the maximum number of slices the pie chart will generate. Slices are ordered by its value from high to low.
+ Other slices exeeding the cap will be rolled up into one single *Others* slice.
+
+#### .othersHandler([handlerFunction])
+Get or set the handler funciton that will perform the insersion of data for the *Others* slice if the slices cap is
+ specified. By default the handler function implements the following logic, you can and should change this function to
+ match your data structure.
+ ```js
+function (data, value) {
+    data.push({"key": _othersLabel, "value": value });
+};
+ ```
+
+#### .othersLabel([label])
+Get or set the label for *Others* slice when slices cap is specified. Default label is **Others**.
 
 ## <a name="row-chart" href="#row-chart">#</a> Row Chart [Concrete] < [SingleSelectionChart](#single-selection-chart) < [Color Chart](#color-chart) < [Base Chart](#base-chart)
 Concrete row chart implementation.
@@ -881,6 +906,12 @@ This listener function will be invoked after chart finish redrawing including al
 
 ### .on("filtered", function(chart, filter){...})
 This listener function will be invoked after a filter is applied.
+
+### .on("zoomed", function(chart, filter){...})
+This listener function will be invoked after a zoom is triggered.
+
+### .on("dragged", function(chart, filter){...})
+This listener function will be invoked after a drag motion is triggered.
 
 
 ## <a name="utilities" href="#utilities">#</a> Utilities
