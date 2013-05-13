@@ -397,8 +397,7 @@ disable other interactive elements on the chart such as the highlighting, tool-t
 value is "true".
 
 #### .focus([range])
-Zoom this chart to focus on the given range. The given range should be an array containing only 2 element([start, end])
-defining an range in x domain. If the range is not given or set to null, then the zoom will be reset.
+Zoom this chart to focus on the given range. The given range should be an array containing only 2 element([start, end]) defining an range in x domain. If the range is not given or set to null, then the zoom will be reset. _For focus to work elasticX has to be turned off otherwise focus will be ignored._
 ```js
 chart.renderlet(function(chart){
     // smooth the rendering through event throttling
@@ -957,3 +956,4 @@ chart.renderlet(function(chart){
     });
 })
 ```
+
