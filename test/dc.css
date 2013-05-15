@@ -63,6 +63,13 @@
     font: 10px sans-serif;
 }
 
+.dc-chart .grid-line {
+    fill: none;
+    stroke: #ccc;
+    opacity: .5;
+    shape-rendering: crispEdges;
+}
+
 .dc-chart .grid-line line {
     fill: none;
     stroke: #ccc;

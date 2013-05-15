@@ -149,5 +149,13 @@ dc.abstractBubbleChart = function (_chart) {
         return _chart.filter() == d.key;
     };
 
+    _chart.onClick = function (d) {
+        var filter = d.key;
+        dc.events.trigger(function () {
+            _chart.filter(filter);
+            dc.redrawAll(_chart.group());
+        });
+    };
+
     return _chart;
 };

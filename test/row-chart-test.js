@@ -15,9 +15,10 @@ function buildChart(id) {
     div.append("span").attr("class", "filter").style("display", "none");
     var chart = dc.rowChart("#" + id);
     chart.dimension(valueDimension).group(valueGroup)
-         .width(width)
-         .height(height)
-         .gap(gap);
+        .width(width)
+        .height(height)
+        .transitionDuration(0)
+        .gap(gap);
     chart.render();
     return chart;
 }
@@ -166,8 +167,8 @@ suite.addBatch({
             },
 
             teardown: function () {
-               resetAllFilters();
-               resetBody();
+                resetAllFilters();
+                resetBody();
             }
         },
 
@@ -228,8 +229,12 @@ suite.addBatch({
         'custom title & label generation': {
             topic: function (chart) {
                 var chart = buildChart("pie-chart-custom-label-title");
-                chart.title(function (d) { return "custom title"; })
-                     .label(function (d) { return "custom label"; });
+                chart.title(function (d) {
+                    return "custom title";
+                })
+                    .label(function (d) {
+                        return "custom label";
+                    });
 
                 chart.render();
                 return chart;
@@ -262,11 +267,11 @@ suite.addBatch({
             topic: function () {
                 var chart = buildChart('pie-chart-default-label-title');
                 chart.dimension(statusGroup)
-                     .group(statusMultiGroup)
-                     .valueAccessor(function (d) {
+                    .group(statusMultiGroup)
+                    .valueAccessor(function (d) {
                         return d.value.count;
-                     })
-                     .renderLabel(true).renderTitle(true);
+                    })
+                    .renderLabel(true).renderTitle(true);
                 chart.render();
                 return chart;
             },
@@ -287,10 +292,14 @@ suite.addBatch({
         'render with no label & title': {
             topic: function (chart) {
                 var chart = buildChart("pie-chart-no-label-title");
-                chart.title(function (d) { return "custom title"; })
-                     .label(function (d) { return "custom label"; })
-                     .renderLabel(false)
-                     .renderTitle(false);
+                chart.title(function (d) {
+                    return "custom title";
+                })
+                    .label(function (d) {
+                        return "custom label";
+                    })
+                    .renderLabel(false)
+                    .renderTitle(false);
 
                 chart.render();
                 return chart;
