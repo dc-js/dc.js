@@ -20,6 +20,7 @@ suite.addBatch({
             var chart = dc.pieChart("#id").dimension(valueDimension).group(valueGroup);
             sinon.spy(chart, "filterAll");
             sinon.spy(chart, "render");
+            sinon.spy(chart, "redraw");
             return chart;
         },
         'should register chart object': function (chart) {

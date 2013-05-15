@@ -151,6 +151,7 @@ suite.addBatch({
                 });
             },
             'filter info generated after slice selection': function (chart) {
+                chart.filter(null);
                 chart.filter('66');
                 assert.isEmpty(chart.select("span.filter").style("display"));
                 assert.equal(chart.select("span.filter").text(), "66");

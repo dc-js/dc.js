@@ -203,6 +203,7 @@ suite.addBatch({
                 assert.isEmpty(chart.select("a.reset").style("display"));
             },
             'filter info generated after slice selection': function (chart) {
+                chart.filter(null);
                 chart.filter("66");
                 assert.isEmpty(chart.select("span.filter").style("display"));
                 assert.equal(chart.select("span.filter").text(), "66");
@@ -381,15 +382,14 @@ suite.addBatch({
     'custom filter handler': {
         topic: function () {
             var chart = buildChart("pie-chart-filter-handler");
-            chart.filterHandler(function(dimension, filter){
-                var newFilter = filter + 6;
-                dimension.filter(newFilter);
-                return newFilter;
+            chart.filterHandler(function(dimension, filters){
+                dimension.filter("66");
+                return ["66"];
             });
             return chart;
         },
         'default function should be used to dynamically generate label': function (chart) {
-            chart.filter(60);
+            chart.filter(6);
             assert.equal(chart.filter(), 66);
         },
         teardown: function (chart) {

@@ -65,16 +65,18 @@ dc.pieChart = function (parent, chartGroup) {
 
             var pieData = pie(assemblePieData());
 
-            var slices = _g.selectAll("g." + _sliceCssClass)
-                .data(pieData);
+            if (_g) {
+                var slices = _g.selectAll("g." + _sliceCssClass)
+                    .data(pieData);
 
-            createElements(slices, arc, pieData);
+                createElements(slices, arc, pieData);
 
-            updateElements(pieData, arc);
+                updateElements(pieData, arc);
 
-            removeElements(slices);
+                removeElements(slices);
 
-            highlightFilter();
+                highlightFilter();
+            }
         }
     }
 
