@@ -462,13 +462,13 @@ Default min angel is 0.5.
 Get or set the maximum number of slices the pie chart will generate. Slices are ordered by its value from high to low.
  Other slices exeeding the cap will be rolled up into one single *Others* slice.
 
-#### .othersHandler([handlerFunction])
-Get or set the handler funciton that will perform the insersion of data for the *Others* slice if the slices cap is
- specified. By default the handler function implements the following logic, you can and should change this function to
+#### .othersGrouper([grouperFunction])
+Get or set the grouper funciton that will perform the insersion of data for the *Others* slice if the slices cap is
+ specified. By default the grouper function implements the following logic, you can and should change this function to
  match your data structure.
  ```js
-function (data, value) {
-    data.push({"key": _othersLabel, "value": value });
+function (data, sum) {
+    data.push({"key": _othersLabel, "value": sum });
 };
  ```
 

@@ -13,8 +13,8 @@ dc.pieChart = function (parent, chartGroup) {
 
     var _slicesCap = Infinity;
     var _othersLabel = "Others";
-    var _othersHandler = function (data, value) {
-        data.push({"key": _othersLabel, "value": value });
+    var _othersGrouper = function (data, sum) {
+        data.push({"key": _othersLabel, "value": sum });
     };
 
     function assemblePieData() {
@@ -27,7 +27,7 @@ dc.pieChart = function (parent, chartGroup) {
             var allRows = _chart.group().all();
             var allRowsSum = d3.sum(allRows, _chart.valueAccessor());
 
-            _othersHandler(topRows, allRowsSum - topRowsSum);
+            _othersGrouper(topRows, allRowsSum - topRowsSum);
 
             return topRows;
         }
@@ -281,9 +281,9 @@ dc.pieChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    _chart.othersHandler = function (_) {
-        if (!arguments.length) return _othersHandler;
-        _othersHandler = _;
+    _chart.othersGrouper = function (_) {
+        if (!arguments.length) return _othersGrouper;
+        _othersGrouper = _;
         return _chart;
     };
 
