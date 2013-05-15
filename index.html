@@ -23,6 +23,12 @@
 <script src='highlighter/shBrushXml.js' type='text/javascript'></script>
 
 
+<style>
+    #monthly-volume-chart g.y{
+        display: none;
+    }
+</style>
+
 <div class="container">
 
 <h1>dc.js - Dimensional Charting Javascript Library v<span id="version"></span></h1>
@@ -416,10 +422,6 @@ d3.csv("ndx.csv", function (data) {
                     .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
                     .round(d3.time.month.round)
                     .xUnits(d3.time.months)
-                    .renderlet(function (chart) {
-                        chart.select("g.y").style("display", "none");
-                        moveChart.filter(chart.filter());
-                    })
                     .on("filtered", function (chart) {
                         dc.events.trigger(function () {
                             moveChart.focus(chart.filter());

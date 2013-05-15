@@ -1497,7 +1497,7 @@ dc.colorChart = function(_chart) {
 dc.selectableChart = function (_chart) {
     var _filters = [];
     var _filterHandler = function (dimension, filters) {
-        if(filters.length == 0)
+        if (filters.length == 0)
             dimension.filter(null);
         else
             dimension.filter(filters[0]);
@@ -1525,21 +1525,21 @@ dc.selectableChart = function (_chart) {
     _chart.filter = function (_) {
         if (!arguments.length) return _filters.length > 0 ? _filters[0] : null;
 
-        if (_ == null){
+        if (_ == null) {
             resetFilters();
         } else {
             if (_chart.hasFilter(_))
                 removeFilter(_);
             else
                 addFilter(_);
-
-            if (_chart.dataSet() && _chart.dimension().filter != undefined) {
-                var fs = _filterHandler(_chart.dimension(), _filters);
-                _filters = fs ? fs : _filters;
-            }
-
-            _chart.invokeFilteredListener(_chart, _);
         }
+
+        if (_chart.dataSet() && _chart.dimension().filter != undefined) {
+            var fs = _filterHandler(_chart.dimension(), _filters);
+            _filters = fs ? fs : _filters;
+        }
+
+        _chart.invokeFilteredListener(_chart, _);
 
         if (_chart.hasFilter()) {
             _chart.turnOnControls();
