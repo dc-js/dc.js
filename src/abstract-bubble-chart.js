@@ -6,7 +6,7 @@ dc.abstractBubbleChart = function (_chart) {
     _chart.BUBBLE_CLASS = "bubble";
     _chart.MIN_RADIUS = 10;
 
-    _chart = dc.singleSelectionChart(dc.colorChart(_chart));
+    _chart = dc.selectableChart(dc.colorChart(_chart));
 
     _chart.renderLabel(true);
     _chart.renderTitle(false);

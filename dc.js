@@ -1494,7 +1494,7 @@ dc.colorChart = function(_chart) {
 
     return _chart;
 };
-dc.singleSelectionChart = function(_chart) {
+dc.selectableChart = function(_chart) {
     var _filter;
     var _filterHandler = function(dimension, filter){
         dimension.filter(filter);
@@ -1788,7 +1788,7 @@ dc.abstractBubbleChart = function (_chart) {
     _chart.BUBBLE_CLASS = "bubble";
     _chart.MIN_RADIUS = 10;
 
-    _chart = dc.singleSelectionChart(dc.colorChart(_chart));
+    _chart = dc.selectableChart(dc.colorChart(_chart));
 
     _chart.renderLabel(true);
     _chart.renderTitle(false);
@@ -1959,7 +1959,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
 
-    var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
+    var _chart = dc.selectableChart(dc.colorChart(dc.baseChart({})));
 
     var _slicesCap = Infinity;
     var _othersLabel = "Others";
@@ -2285,7 +2285,7 @@ dc.barChart = function (parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
     var DEFAULT_GAP_BETWEEN_BARS = 2;
 
-    var _chart = dc.stackableChart(dc.coordinateGridChart(dc.singleSelectionChart({})));
+    var _chart = dc.stackableChart(dc.coordinateGridChart(dc.selectableChart({})));
 
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
     var _centerBar = false;
@@ -3042,7 +3042,7 @@ dc.compositeChart = function(parent, chartGroup) {
     return _chart.anchor(parent, chartGroup);
 };
 dc.geoChoroplethChart = function (parent, chartGroup) {
-    var _chart = dc.singleSelectionChart(dc.colorChart(dc.baseChart({})));
+    var _chart = dc.selectableChart(dc.colorChart(dc.baseChart({})));
 
     _chart.colorAccessor(function (d, i) {
         return d;
@@ -3390,7 +3390,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
 
     var _rowCssClass = "row";
 
-    var _chart = dc.marginable(dc.singleSelectionChart(dc.colorChart(dc.baseChart({}))));
+    var _chart = dc.marginable(dc.selectableChart(dc.colorChart(dc.baseChart({}))));
 
     var _xScale;
 

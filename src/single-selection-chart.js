@@ -1,4 +1,4 @@
-dc.singleSelectionChart = function(_chart) {
+dc.selectableChart = function(_chart) {
     var _filter;
     var _filterHandler = function(dimension, filter){
         dimension.filter(filter);
