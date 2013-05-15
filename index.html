@@ -354,6 +354,7 @@ d3.csv("ndx.csv", function (data) {
                 .label(function (d){
                     return d.key.split(".")[1];
                 })
+                .elasticX(true)
                 .xAxis().ticks(4);
 
             fluctuationChart.width(420)

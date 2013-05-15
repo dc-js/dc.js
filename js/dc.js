@@ -3407,15 +3407,23 @@ dc.bubbleOverlay = function(root, chartGroup) {
 
     var _xScale;
 
+    var _elasticX;
+
     var _xAxis = d3.svg.axis().orient("bottom");
+
+    function calculateAxisScale() {
+        if (!_xScale || _elasticX) {
+            _xScale = d3.scale.linear().domain([0, d3.max(_chart.group().all(), _chart.valueAccessor())])
+                .range([0, _chart.effectiveWidth()]);
+
+            _xAxis.scale(_xScale);
+        }
+    }
 
     function drawAxis() {
         var axisG = _g.select("g.axis");
 
-        _xScale = d3.scale.linear().domain([0, d3.max(_chart.group().all(), _chart.valueAccessor())])
-            .range([0, _chart.effectiveWidth()]);
-
-        _xAxis.scale(_xScale);
+        calculateAxisScale();
 
         if (axisG.empty())
             axisG = _g.append("g").attr("class", "axis")
@@ -3452,7 +3460,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
             .select("line.grid-line")
             .remove();
 
-        var lines = _g.selectAll("g.tick")
+        _g.selectAll("g.tick")
             .append("line")
             .attr("class", "grid-line")
             .attr("x1", 0)
@@ -3495,9 +3503,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
     }
 
     function updateElements(rows) {
-        var n = _chart.group().all().length;
-
-        var height = (_chart.effectiveHeight() - (n + 1) * _gap) / n;
+        var height = rowHeight();
 
         var rect = rows.attr("transform", function (d, i) {
             return "translate(0," + ((i + 1) * _gap + i * height) + ")";
@@ -3572,6 +3578,12 @@ dc.bubbleOverlay = function(root, chartGroup) {
     _chart.gap = function (g) {
         if (!arguments.length) return _gap;
         _gap = g;
+        return _chart;
+    };
+
+    _chart.elasticX = function (_) {
+        if (!arguments.length) return _elasticX;
+        _elasticX = _;
         return _chart;
     };
 
