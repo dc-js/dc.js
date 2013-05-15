@@ -59,7 +59,7 @@ dc.rowChart = function (parent, chartGroup) {
             .select("line.grid-line")
             .remove();
 
-        var lines = _g.selectAll("g.tick")
+        _g.selectAll("g.tick")
             .append("line")
             .attr("class", "grid-line")
             .attr("x1", 0)
