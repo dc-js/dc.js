@@ -475,7 +475,7 @@ function (data, sum) {
 #### .othersLabel([label])
 Get or set the label for *Others* slice when slices cap is specified. Default label is **Others**.
 
-## <a name="row-chart" href="#row-chart">#</a> Row Chart [Concrete] < [SingleSelectionChart](#selectable-chart) < [Color Chart](#color-chart) < [Base Chart](#base-chart)
+## <a name="row-chart" href="#row-chart">#</a> Row Chart [Concrete] < [SelectableChart](#selectable-chart) < [Color Chart](#color-chart) < [Base Chart](#base-chart)
 Concrete row chart implementation.
 
 #### dc.rowChart(parent[, chartGroup])
@@ -502,6 +502,10 @@ Get or set the x offset (horizontal space to the top left corner of a row) for l
 
 #### .labelOffsetY([y])
 Get of set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart. Default y offset is 15px;
+
+#### .elasticX([boolean])
+Get or set the elasticity on x axis. If this attribute is set to true, then the x axis will rescle to auto-fit the data
+range when filtered.
 
 ## <a name="bar-chart" href="#bar-chart">#</a> Bar Chart [Concrete] < [Selectable Chart](#selectable-chart) < [Stackable Chart](#stackable-chart) < [CoordinateGrid Chart](#coordinate-grid-chart)
 Concrete bar chart/histogram implementation.
