@@ -18,7 +18,8 @@ Install without npm
 Download
 * [d3.js](https://github.com/mbostock/d3)
 * [crossfilter.js](https://github.com/square/crossfilter)
-* [dc.js](https://github.com/NickQiZhu/dc.js)
+* [dc.js - stable](https://github.com/NickQiZhu/dc.js/tags)
+* [dc.js - bleeding edge (master)](https://github.com/NickQiZhu/dc.js)
 
 
 How to build dc.js locally
