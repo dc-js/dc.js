@@ -820,6 +820,7 @@ dc.marginable = function (_chart) {
     var _renderVerticalGridLine = false;
 
     var _refocused = false;
+    var _mouseZoomEnabled = true;
     var _unitCount;
 
     _chart.resetUnitCount = function () {
@@ -1317,7 +1318,8 @@ dc.marginable = function (_chart) {
 
             _chart.renderBrush(_chart.g());
 
-            _chart.root().call(d3.behavior.zoom()
+            if(_chart.mouseZoomEnabled()) {
+                _chart.root().call(d3.behavior.zoom()
                     .x(_chart.x())
                     .scaleExtent([1, 100])
                     .on("zoom", function() {
@@ -1325,6 +1327,7 @@ dc.marginable = function (_chart) {
                         _chart.invokeZoomedListener(_chart);
                         updateRangeSelChart();
                     }));
+            }
 
             _chart.chartBodyG().call(d3.behavior.drag()
                     .on("drag", function() {
@@ -1424,6 +1427,12 @@ dc.marginable = function (_chart) {
         if (!hasRangeSelected(range))
             _refocused = false;
     };
+
+    _chart.mouseZoomEnabled = function (_) {
+        if (!arguments.length) return _mouseZoomEnabled;
+        _mouseZoomEnabled = _;
+        return _chart;
+    }
 
     _chart.refocused = function () {
         return _refocused;
