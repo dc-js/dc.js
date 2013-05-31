@@ -2,6 +2,17 @@
     float: left;
 }
 
+.dc-chart g text {
+	/* Makes it so the user can't accidentally click and select text that is meant as a label only */
+	-webkit-user-select: none; /* Chrome/Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+ */
+	-o-user-select: none;
+    user-select: none;
+
+    pointer-events: none;
+}
+
 .dc-chart rect.bar {
     stroke: none;
     fill: steelblue;
