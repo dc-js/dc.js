@@ -29,7 +29,7 @@ dc.baseChart = function (_chart) {
 
     var _transitionDuration = 750;
 
-    var _filterPrinter = dc.printers.filter;
+    var _filterPrinter = dc.printers.filters;
 
     var _renderlets = [];
 
@@ -142,7 +142,7 @@ dc.baseChart = function (_chart) {
 
     _chart.turnOnControls = function () {
         _chart.selectAll(".reset").style("display", null);
-        _chart.selectAll(".filter").text(_filterPrinter(_chart.filter())).style("display", null);
+        _chart.selectAll(".filter").text(_filterPrinter(_chart.filters())).style("display", null);
         return _chart;
     };
 
@@ -210,6 +210,11 @@ dc.baseChart = function (_chart) {
     };
 
     // abstract function stub
+    _chart.filters = function (f) {
+        // do nothing in base, should be overridden by sub-function
+        return [];
+    };
+
     _chart.filter = function (f) {
         // do nothing in base, should be overridden by sub-function
         _chart.invokeFilteredListener(_chart, f);
@@ -286,8 +291,8 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
-    _chart.expireCache = function(){
-         // do nothing in base, should be overridden by sub-function
+    _chart.expireCache = function () {
+        // do nothing in base, should be overridden by sub-function
         return _chart;
     };
 

@@ -1,6 +1,18 @@
 dc.dateFormat = d3.time.format("%m/%d/%Y");
 
 dc.printers = {};
+
+dc.printers.filters = function (filters) {
+    var s = "";
+
+    for (var i = 0; i < filters.length; ++i) {
+        if (i > 0) s += ", ";
+        s += dc.printers.filter(filters[i]);
+    }
+
+    return s;
+};
+
 dc.printers.filter = function (filter) {
     var s = "";
 
@@ -20,7 +32,7 @@ dc.printers.filter = function (filter) {
 
 dc.utils = {};
 
-dc.utils.printSingleValue = function(filter) {
+dc.utils.printSingleValue = function (filter) {
     var s = "" + filter;
 
     if (filter instanceof Date)
@@ -125,7 +137,7 @@ dc.utils.GroupStack = function () {
     };
 };
 
-dc.utils.isNegligible = function(max) {
+dc.utils.isNegligible = function (max) {
     return max === undefined || (max < dc.constants.NEGLIGIBLE_NUMBER && max > -dc.constants.NEGLIGIBLE_NUMBER);
 }
 

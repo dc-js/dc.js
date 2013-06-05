@@ -179,6 +179,18 @@ dc.errors.InvalidStateException = function() {
 };dc.dateFormat = d3.time.format("%m/%d/%Y");
 
 dc.printers = {};
+
+dc.printers.filters = function (filters) {
+    var s = "";
+
+    for (var i = 0; i < filters.length; ++i) {
+        if (i > 0) s += ", ";
+        s += dc.printers.filter(filters[i]);
+    }
+
+    return s;
+};
+
 dc.printers.filter = function (filter) {
     var s = "";
 
@@ -198,7 +210,7 @@ dc.printers.filter = function (filter) {
 
 dc.utils = {};
 
-dc.utils.printSingleValue = function(filter) {
+dc.utils.printSingleValue = function (filter) {
     var s = "" + filter;
 
     if (filter instanceof Date)
@@ -303,7 +315,7 @@ dc.utils.GroupStack = function () {
     };
 };
 
-dc.utils.isNegligible = function(max) {
+dc.utils.isNegligible = function (max) {
     return max === undefined || (max < dc.constants.NEGLIGIBLE_NUMBER && max > -dc.constants.NEGLIGIBLE_NUMBER);
 }
 
@@ -505,7 +517,7 @@ dc.baseChart = function (_chart) {
 
     var _transitionDuration = 750;
 
-    var _filterPrinter = dc.printers.filter;
+    var _filterPrinter = dc.printers.filters;
 
     var _renderlets = [];
 
@@ -618,7 +630,7 @@ dc.baseChart = function (_chart) {
 
     _chart.turnOnControls = function () {
         _chart.selectAll(".reset").style("display", null);
-        _chart.selectAll(".filter").text(_filterPrinter(_chart.filter())).style("display", null);
+        _chart.selectAll(".filter").text(_filterPrinter(_chart.filters())).style("display", null);
         return _chart;
     };
 
@@ -686,6 +698,11 @@ dc.baseChart = function (_chart) {
     };
 
     // abstract function stub
+    _chart.filters = function (f) {
+        // do nothing in base, should be overridden by sub-function
+        return [];
+    };
+
     _chart.filter = function (f) {
         // do nothing in base, should be overridden by sub-function
         _chart.invokeFilteredListener(_chart, f);
@@ -762,8 +779,8 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
-    _chart.expireCache = function(){
-         // do nothing in base, should be overridden by sub-function
+    _chart.expireCache = function () {
+        // do nothing in base, should be overridden by sub-function
         return _chart;
     };
 
@@ -1497,7 +1514,7 @@ dc.colorChart = function(_chart) {
 dc.selectableChart = function (_chart) {
     var _filters = [];
     var _filterHandler = function (dimension, filters) {
-//        dimension.filter(null);
+        dimension.filter(null);
 
         if (filters.length == 0)
             dimension.filter(null);
