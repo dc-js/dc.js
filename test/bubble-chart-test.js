@@ -14,18 +14,18 @@ function buildChart(id) {
     chart.width(width).height(height)
         .dimension(statusDimension)
         .group(statusMultiGroup)
-        .colors(["#a60000","#ff0000", "#ff4040","#ff7373","#67e667","#39e639","#00cc00"])
+        .colors(["#a60000", "#ff0000", "#ff4040", "#ff7373", "#67e667", "#39e639", "#00cc00"])
         .colorDomain([0, 220])
-        .colorAccessor(function(p) {
+        .colorAccessor(function (p) {
             return p.value.value;
         })
-        .keyAccessor(function(p) {
+        .keyAccessor(function (p) {
             return p.value.value;
         })
-        .valueAccessor(function(p) {
+        .valueAccessor(function (p) {
             return p.value.count;
         })
-        .radiusValueAccessor(function(p) {
+        .radiusValueAccessor(function (p) {
             return p.value.count;
         })
         .x(d3.scale.linear().domain([0, 300]))
@@ -35,7 +35,7 @@ function buildChart(id) {
         .transitionDuration(0)
         .renderLabel(true)
         .renderTitle(true)
-        .title(function(p) {
+        .title(function (p) {
             return p.key + ": {count:" + p.value.count + ",value:" + p.value.value + "}"
         });
     chart.render();
@@ -44,155 +44,155 @@ function buildChart(id) {
 
 suite.addBatch({
     'bubble chart': {
-        topic: function() {
+        topic: function () {
             var chart = buildChart("chart");
             return chart;
         },
-        'we get something': function(chart) {
+        'we get something': function (chart) {
             assert.isNotNull(chart);
         },
-        'should be registered':function(chart) {
+        'should be registered': function (chart) {
             assert.isTrue(dc.hasChart(chart));
         },
-        'svg should be created': function(chart) {
+        'svg should be created': function (chart) {
             assert.isFalse(chart.select("svg").empty());
         },
-        'dimension should be set': function(chart) {
+        'dimension should be set': function (chart) {
             assert.equal(chart.dimension(), statusDimension);
         },
-        'group should be set': function(chart) {
+        'group should be set': function (chart) {
             assert.equal(chart.group(), statusMultiGroup);
         },
-        'colors should be': function(chart) {
+        'colors should be': function (chart) {
             assert.isNotNull(chart.colors());
         },
-        'width should be set': function(chart) {
+        'width should be set': function (chart) {
             assert.equal(chart.width(), width);
         },
-        'height should be set': function(chart) {
+        'height should be set': function (chart) {
             assert.equal(chart.height(), height);
         },
-        'height should be used for svg': function(chart) {
+        'height should be used for svg': function (chart) {
             assert.equal(chart.select("svg").attr("height"), height);
         },
-        'transition duration should be set': function(chart) {
+        'transition duration should be set': function (chart) {
             assert.equal(chart.transitionDuration(), 0);
         },
-        'margin should be set': function(chart) {
+        'margin should be set': function (chart) {
             assert.isNotNull(chart.margins());
         },
-        'x can be set': function(chart) {
+        'x can be set': function (chart) {
             assert.isTrue(chart.x() != undefined);
         },
-        'x range round is auto calculated based on width': function(chart) {
+        'x range round is auto calculated based on width': function (chart) {
             assert.equal(chart.x().range()[0], 0);
             assert.equal(chart.x().range()[1], 820);
         },
-        'x domain should be set': function(chart) {
+        'x domain should be set': function (chart) {
             assert.equal(chart.x().domain()[0], 0);
             assert.equal(chart.x().domain()[1], 300);
         },
-        'y can be set': function(chart) {
+        'y can be set': function (chart) {
             assert.isTrue(chart.y() != undefined);
         },
-        'y range round is auto calculated based on height': function(chart) {
+        'y range round is auto calculated based on height': function (chart) {
             assert.equal(chart.y().range()[0], 310);
             assert.equal(chart.y().range()[1], 0);
         },
-        'y domain should be set': function(chart) {
+        'y domain should be set': function (chart) {
             assert.equal(chart.y().domain()[0], 0);
             assert.equal(chart.y().domain()[1], 10);
         },
-        'r should be set': function(chart) {
+        'r should be set': function (chart) {
             assert.isNotNull(chart.r());
         },
-        'rValue should be set': function(chart) {
+        'rValue should be set': function (chart) {
             assert.isNotNull(chart.radiusValueAccessor());
         },
-        'root g should be created': function(chart) {
+        'root g should be created': function (chart) {
             assert.isFalse(chart.select("svg g").empty());
         },
-        'axis x should be placed at the bottom': function(chart) {
+        'axis x should be placed at the bottom': function (chart) {
             assert.equal(chart.select("svg g g.x").attr("transform"), "translate(30,320)");
         },
-        'axis y should be placed on the left': function(chart) {
+        'axis y should be placed on the left': function (chart) {
             assert.equal(chart.select("svg g g.y").attr("transform"), "translate(30,10)");
         },
-        'x units should be set': function(chart) {
+        'x units should be set': function (chart) {
             assert.equal(chart.xUnits(), dc.units.integers);
         },
-        'x axis should be created': function(chart) {
+        'x axis should be created': function (chart) {
             assert.isNotNull(chart.xAxis());
         },
-        'y axis should be created': function(chart) {
+        'y axis should be created': function (chart) {
             assert.isNotNull(chart.yAxis());
         },
-        'brush should be created': function(chart) {
+        'brush should be created': function (chart) {
             assert.isNotNull(chart.select("g.brush"));
         },
-        'round should be off by default': function(chart) {
+        'round should be off by default': function (chart) {
             assert.isTrue(chart.round() == null);
         },
-        'round can be changed': function(chart) {
+        'round can be changed': function (chart) {
             chart.round(d3.time.day.round);
             assert.isNotNull(chart.round());
         },
 
-        'bubble rendering':{
-            topic: function(chart) {
+        'bubble rendering': {
+            topic: function (chart) {
                 return chart;
             },
-            'should generate right number of bubbles': function(chart) {
+            'should generate right number of bubbles': function (chart) {
                 assert.equal(chart.selectAll("circle.bubble")[0].length, 2);
             },
-            'should calculate right cx for each bubble': function(chart) {
-                chart.selectAll("g.node").each(function(d, i) {
+            'should calculate right cx for each bubble': function (chart) {
+                chart.selectAll("g.node").each(function (d, i) {
                     if (i == 0)
                         assert.equal(d3.select(this).attr("transform"), "translate(631.3333333333334,165)");
                     if (i == 1)
                         assert.equal(d3.select(this).attr("transform"), "translate(571.2,165)");
                 });
             },
-            'should calculate right r for each bubble': function(chart) {
-                chart.selectAll("circle.bubble").each(function(d, i) {
+            'should calculate right r for each bubble': function (chart) {
+                chart.selectAll("circle.bubble").each(function (d, i) {
                     if (i == 0)
                         assert.equal(d3.select(this).attr("r"), 49.33333333333333);
                     if (i == 1)
                         assert.equal(d3.select(this).attr("r"), 49.33333333333333);
                 });
             },
-            'should attach each bubble with index based class': function(chart) {
-                chart.selectAll("circle.bubble").each(function(d, i) {
+            'should attach each bubble with index based class': function (chart) {
+                chart.selectAll("circle.bubble").each(function (d, i) {
                     if (i == 0)
                         assert.equal(d3.select(this).attr("class"), "bubble _0");
                     if (i == 1)
                         assert.equal(d3.select(this).attr("class"), "bubble _1");
                 });
             },
-            'should generate right number of labels': function(chart) {
+            'should generate right number of labels': function (chart) {
                 assert.equal(chart.selectAll("g.node text")[0].length, 2);
             },
-            'should create correct label for each bubble': function(chart) {
-                chart.selectAll("g.node text").each(function(d, i) {
+            'should create correct label for each bubble': function (chart) {
+                chart.selectAll("g.node text").each(function (d, i) {
                     if (i == 0)
                         assert.equal(d3.select(this).text(), "F");
                     if (i == 1)
                         assert.equal(d3.select(this).text(), "T");
                 });
             },
-            'should generate right number of titles': function(chart) {
+            'should generate right number of titles': function (chart) {
                 assert.equal(chart.selectAll("g.node title")[0].length, 2);
             },
-            'should create correct title for each bubble': function(chart) {
-                chart.selectAll("g.node title").each(function(d, i) {
+            'should create correct title for each bubble': function (chart) {
+                chart.selectAll("g.node title").each(function (d, i) {
                     if (i == 0)
                         assert.equal(d3.select(this).text(), "F: {count:5,value:220}");
                     if (i == 1)
                         assert.equal(d3.select(this).text(), "T: {count:5,value:198}");
                 });
             },
-            'should fill bubbles with correct colors': function(chart) {
-                chart.selectAll("circle.bubble").each(function(d, i) {
+            'should fill bubbles with correct colors': function (chart) {
+                chart.selectAll("circle.bubble").each(function (d, i) {
                     if (i == 0)
                         assert.equal(d3.select(this).attr("fill"), "#00cc00");
                     if (i == 1)
@@ -201,7 +201,7 @@ suite.addBatch({
             }
         },
 
-        teardown: function(topic) {
+        teardown: function (topic) {
             resetAllFilters();
             resetBody();
         }
@@ -210,20 +210,20 @@ suite.addBatch({
 
 suite.addBatch({
     'bubble chart wo/ label & title': {
-        topic: function() {
+        topic: function () {
             var chart = buildChart("chart2");
             chart.renderLabel(false);
             chart.renderTitle(false);
             chart.render();
             return chart;
         },
-        'should generate right number of labels': function(chart) {
+        'should generate right number of labels': function (chart) {
             assert.equal(chart.selectAll("g.node text")[0].length, 0);
         },
-        'should generate right number of titles': function(chart) {
+        'should generate right number of titles': function (chart) {
             assert.equal(chart.selectAll("g.node title")[0].length, 0);
         },
-        teardown: function(topic) {
+        teardown: function (topic) {
             resetAllFilters();
             resetBody();
         }
@@ -232,21 +232,28 @@ suite.addBatch({
 
 suite.addBatch({
     'bubble chart w/ filter': {
-        topic: function() {
+        topic: function () {
             var chart = buildChart("chart3");
             chart.filter("F");
             chart.render();
             return chart;
         },
-        'should deselect bubble based on filter value': function(chart) {
-            chart.selectAll("g.node").each(function(d, i) {
+        'should deselect bubble based on filter value': function (chart) {
+            chart.selectAll("g.node").each(function (d, i) {
                 if (i == 0)
                     assert.equal(d3.select(this).attr("class"), "node selected");
                 if (i == 1)
                     assert.equal(d3.select(this).attr("class"), "node deselected");
             });
         },
-        teardown: function(topic) {
+        'should handle multi-selection highlight': function (chart) {
+            chart.filter("T");
+            chart.redraw();
+            chart.selectAll("g.node").each(function (d, i) {
+                assert.equal(d3.select(this).attr("class"), "node selected");
+            });
+        },
+        teardown: function (topic) {
             resetAllFilters();
             resetBody();
         }
@@ -255,30 +262,30 @@ suite.addBatch({
 
 suite.addBatch({
     'update bubble chart': {
-        topic: function() {
+        topic: function () {
             var chart = buildChart("chart3");
             chart.render();
             countryDimension.filter("CA");
             chart.redraw();
             return chart;
         },
-        'should create correct label for each bubble': function(chart) {
-            chart.selectAll("g.node title").each(function(d, i) {
+        'should create correct label for each bubble': function (chart) {
+            chart.selectAll("g.node title").each(function (d, i) {
                 if (i == 0)
                     assert.equal(d3.select(this).text(), "F: {count:0,value:0}");
                 if (i == 1)
                     assert.equal(d3.select(this).text(), "T: {count:2,value:77}");
             });
         },
-        'should fill bubbles with correct colors': function(chart) {
-            chart.selectAll("circle.bubble").each(function(d, i) {
+        'should fill bubbles with correct colors': function (chart) {
+            chart.selectAll("circle.bubble").each(function (d, i) {
                 if (i == 0)
                     assert.equal(d3.select(this).attr("fill"), "#a60000");
                 if (i == 1)
                     assert.equal(d3.select(this).attr("fill"), "#ff4040");
             });
         },
-        teardown: function(topic) {
+        teardown: function (topic) {
             resetAllFilters();
             resetBody();
         }
@@ -287,18 +294,18 @@ suite.addBatch({
 
 suite.addBatch({
     'bubble chart w/ no filter': {
-        topic: function() {
+        topic: function () {
             var chart = buildChart("chart3");
             countryDimension.filter("ZZ");
             chart.render();
             return chart;
         },
-        'should set invisible if bubble has 0 r': function(chart) {
-            chart.selectAll("g.node text").each(function(d, i) {
+        'should set invisible if bubble has 0 r': function (chart) {
+            chart.selectAll("g.node text").each(function (d, i) {
                 assert.equal(d3.select(this).attr("opacity"), 0);
             });
         },
-        teardown: function(topic) {
+        teardown: function (topic) {
             resetAllFilters();
             resetBody();
         }
@@ -307,7 +314,7 @@ suite.addBatch({
 
 suite.addBatch({
     'bubble chart w/ elastic axises': {
-        topic: function() {
+        topic: function () {
             var chart = buildChart("chart-elastic-axises");
             chart.elasticY(true)
                 .yAxisPadding(3)
@@ -316,23 +323,23 @@ suite.addBatch({
             chart.redraw();
             return chart;
         },
-        'x range round is auto calculated based on width': function(chart) {
+        'x range round is auto calculated based on width': function (chart) {
             assert.equal(chart.x().range()[0], 0);
             assert.equal(chart.x().range()[1], 820);
         },
-        'x domain should be set': function(chart) {
+        'x domain should be set': function (chart) {
             assert.equal(chart.x().domain()[0], 178);
             assert.equal(chart.x().domain()[1], 240);
         },
-        'y range round is auto calculated based on height': function(chart) {
+        'y range round is auto calculated based on height': function (chart) {
             assert.equal(chart.y().range()[0], 310);
             assert.equal(chart.y().range()[1], 0);
         },
-        'y domain should be set': function(chart) {
+        'y domain should be set': function (chart) {
             assert.equal(chart.y().domain()[0], 2);
             assert.equal(chart.y().domain()[1], 8);
         },
-        teardown: function(topic) {
+        teardown: function (topic) {
             resetAllFilters();
             resetBody();
         }
@@ -340,23 +347,23 @@ suite.addBatch({
 });
 
 suite.addBatch({
-    'renderlet':{
-        topic:function() {
+    'renderlet': {
+        topic: function () {
             var chart = buildChart("chart-renderlet");
-            chart.renderlet(function(chart) {
+            chart.renderlet(function (chart) {
                 chart.selectAll("circle").attr("fill", "red");
             });
             return chart;
         },
-        'custom renderlet should be invoked with render': function(chart) {
+        'custom renderlet should be invoked with render': function (chart) {
             chart.render();
             assert.equal(chart.selectAll("circle").attr("fill"), "red");
         },
-        'custom renderlet should be invoked with redraw': function(chart) {
+        'custom renderlet should be invoked with redraw': function (chart) {
             chart.redraw();
             assert.equal(chart.selectAll("circle").attr("fill"), "red");
         },
-        teardown: function(topic) {
+        teardown: function (topic) {
             resetAllFilters();
             resetBody();
         }

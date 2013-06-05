@@ -143,7 +143,7 @@ dc.abstractBubbleChart = function (_chart) {
     };
 
     _chart.isSelectedNode = function (d) {
-        return _chart.filter() == d.key;
+        return _chart.hasFilter(d.key);
     };
 
     _chart.onClick = function (d) {
