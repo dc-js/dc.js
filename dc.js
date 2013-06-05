@@ -1499,8 +1499,10 @@ dc.selectableChart = function (_chart) {
     var _filterHandler = function (dimension, filters) {
         if (filters.length == 0)
             dimension.filter(null);
-        else
+        else if(filters.length == 1)
             dimension.filter(filters[0]);
+        else
+            dimension.filterFunction(function (d) { return filters.indexOf(d) >= 0; });
 
         return filters;
     };
@@ -2225,7 +2227,7 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     _chart.isSelectedSlice = function (d) {
-        return _chart.filter() == _chart.keyAccessor()(d.data);
+        return _chart.hasFilter(_chart.keyAccessor()(d.data));
     };
 
     _chart.doRedraw = function () {

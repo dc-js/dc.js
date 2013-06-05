@@ -3,8 +3,10 @@ dc.selectableChart = function (_chart) {
     var _filterHandler = function (dimension, filters) {
         if (filters.length == 0)
             dimension.filter(null);
-        else
+        else if(filters.length == 1)
             dimension.filter(filters[0]);
+        else
+            dimension.filterFunction(function (d) { return filters.indexOf(d) >= 0; });
 
         return filters;
     };

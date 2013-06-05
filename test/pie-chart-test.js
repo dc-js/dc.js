@@ -187,11 +187,12 @@ suite.addBatch({
                 assert.equal(pieChart.dimension().top(Infinity).length, 1);
                 pieChart.filterAll();
             },
-            'should highlight selected slice': function (pieChart) {
+            'should highlight selected slices': function (pieChart) {
                 pieChart.filter("66");
+                pieChart.filter("22");
                 pieChart.render();
                 pieChart.selectAll("g.pie-slice").each(function (d) {
-                    if (d.data.key == "66")
+                    if (d.data.key == "66" || d.data.key == "22")
                         assert.isTrue(d3.select(this).attr("class").indexOf("selected") > 0);
                     else
                         assert.isTrue(d3.select(this).attr("class").indexOf("deselected") > 0);
@@ -232,6 +233,12 @@ suite.addBatch({
             'onClick should reset filter if clicked twice': function (pieChart) {
                 pieChart.onClick(pieChart.group().all()[0]);
                 assert.equal(pieChart.filter(), null);
+            },
+            'multiple onClick should trigger filtering of according groups': function (pieChart) {
+                pieChart.onClick(pieChart.group().all()[0]);
+                pieChart.onClick(pieChart.group().all()[1]);
+                assert.isTrue(pieChart.hasFilter("22"));
+                assert.isTrue(pieChart.hasFilter("33"));
             },
             teardown: function () {
                 resetAllFilters();
@@ -382,7 +389,7 @@ suite.addBatch({
     'custom filter handler': {
         topic: function () {
             var chart = buildChart("pie-chart-filter-handler");
-            chart.filterHandler(function(dimension, filters){
+            chart.filterHandler(function (dimension, filters) {
                 dimension.filter("66");
                 return ["66"];
             });
