@@ -246,6 +246,7 @@ dc.baseChart = function (_chart) {
 
     function resetFilters() {
         _filters = [];
+        applyFilters();
     }
 
     function applyFilters() {
