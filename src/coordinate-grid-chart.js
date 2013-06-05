@@ -32,16 +32,18 @@ dc.coordinateGridChart = function (_chart) {
     var _refocused = false;
     var _unitCount;
 
+    var _rangeChart;  // chart that's used for range selection on this chart
+
+    var _mouseZoomable = false;
+
     _chart.resetUnitCount = function () {
         _unitCount = null;
         _chart.xUnitCount();
     }
 
-    var _rangeSelChart;  // chart that's used for range selection on this chart
-
-    _chart.rangeSelChart = function (_) {
-        if (!arguments.length) return _rangeSelChart;
-        _rangeSelChart = _;
+    _chart.rangeChart = function (_) {
+        if (!arguments.length) return _rangeChart;
+        _rangeChart = _;
         return _chart;
     }
 
@@ -62,6 +64,12 @@ dc.coordinateGridChart = function (_chart) {
     _chart.g = function (_) {
         if (!arguments.length) return _g;
         _g = _;
+        return _chart;
+    };
+
+    _chart.mouseZoomable = function (z) {
+        if (!arguments.length) return _mouseZoomable;
+        _mouseZoomable = z;
         return _chart;
     };
 
@@ -522,6 +530,14 @@ dc.coordinateGridChart = function (_chart) {
 
             _chart.renderBrush(_chart.g());
 
+            enableMouseZoom();
+        }
+
+        return _chart;
+    };
+
+    function enableMouseZoom() {
+        if (_mouseZoomable) {
             _chart.root().call(d3.behavior.zoom()
                 .x(_chart.x())
                 .scaleExtent([1, 100])
@@ -537,27 +553,30 @@ dc.coordinateGridChart = function (_chart) {
                     var curDomain = _chart.x().domain();
                     var xMin = _chart.x()(curDomain[0]);
                     var xMax = _chart.x()(curDomain[1]);
-                    if(typeof _chart.x().invert === "function")
+                    if (typeof _chart.x().invert === "function")
                         _chart.focus([_chart.x().invert(xMin - deltaX), _chart.x().invert(xMax - deltaX)]);
                     _chart.invokeDraggedListener(_chart);
                     updateRangeSelChart();
                 }));
-
-            function updateRangeSelChart() {
-                if (_rangeSelChart) {
-                    var refDom = _chart.x().domain();
-                    var origDom = _rangeSelChart.xOriginalDomain();
-                    var newDom = [
-                        refDom[0] < origDom[0] ? refDom[0] : origDom[0],
-                        refDom[1] > origDom[1] ? refDom[1] : origDom[1]];
-                    _rangeSelChart.focus(newDom);
-                    _rangeSelChart.filter(refDom);
-                }
-            }
         }
+    }
 
-        return _chart;
-    };
+    function updateRangeSelChart() {
+        if (_rangeChart) {
+            var refDom = _chart.x().domain();
+            var origDom = _rangeChart.xOriginalDomain();
+            var newDom = [
+                refDom[0] < origDom[0] ? refDom[0] : origDom[0],
+                refDom[1] > origDom[1] ? refDom[1] : origDom[1]];
+            _rangeChart.focus(newDom);
+            _rangeChart.filter(null);
+            _rangeChart.filter(refDom);
+
+            dc.events.trigger(function(){
+                dc.redrawAll(_chart.chartGroup());
+            });
+        }
+    }
 
     _chart.doRedraw = function () {
         prepareXAxis(_chart.g());

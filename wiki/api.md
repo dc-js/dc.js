@@ -408,7 +408,12 @@ chart.renderlet(function(chart){
 })
 ```
 
-#### .rangeSelChart([chart])
+#### .mouseZoomable([boolean])
+Set or get mouse zoom capability flag (default: false). When turned on the chart will be zoomable through mouse wheel
+ and also becomes draggable. If range selector chart is also attached zooming and dragging will also update the range
+ selection brush on associated range selector chart.
+
+#### .rangeChart([chart])
 Get or set the range selection chart associated with this instance. Setting the range selection chart using this function
 will automatically update its selection brush when the current chart zooms in or being dragged. See the
 [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/) example for this effect in action.
