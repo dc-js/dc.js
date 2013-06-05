@@ -3605,7 +3605,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
     };
 
     _chart.isSelectedRow = function (d) {
-        return _chart.filter() == _chart.keyAccessor()(d);
+        return _chart.hasFilter(_chart.keyAccessor()(d));
     };
 
     return _chart.anchor(parent, chartGroup);

@@ -143,12 +143,13 @@ suite.addBatch({
             },
             'highlight selected row': function (chart) {
                 chart.filter('66');
+                chart.filter('22');
                 chart.render();
                 chart.selectAll("g.row rect").each(function (d) {
-                    if (d.key == '66')
-                        assert.isTrue(d3.select(this).attr('class').indexOf('selected') >= 0);
+                    if (d.key == 66 || d.key == 22)
+                        assert.equal(d3.select(this).attr('class'), 'selected');
                     else
-                        assert.isTrue(d3.select(this).attr('class').indexOf('deselected') >= 0);
+                        assert.equal(d3.select(this).attr('class'), 'deselected');
                 });
             },
             'filter info generated after slice selection': function (chart) {
