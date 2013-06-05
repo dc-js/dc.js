@@ -388,13 +388,14 @@ d3.csv("ndx.csv", function (data) {
                     .valueAccessor(function (d) {
                         return d.value.avg;
                     })
+                    .mouseZoomable(true)
                     .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
                     .round(d3.time.month.round)
                     .xUnits(d3.time.months)
                     .elasticY(true)
                     .renderHorizontalGridLines(true)
                     .brushOn(false)
-                    .rangeSelChart(volumeChart)
+                    .rangeChart(volumeChart)
                     .compose([
                         dc.lineChart(moveChart).group(indexAvgByMonthGroup)
                                 .valueAccessor(function (d) {
@@ -425,6 +426,7 @@ d3.csv("ndx.csv", function (data) {
                     .on("filtered", function (chart) {
                         dc.events.trigger(function () {
                             moveChart.focus(chart.filter());
+                            dc.redrawAll(chart.chartGroup());
                         });
                     });
 
