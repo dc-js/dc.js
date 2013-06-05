@@ -119,11 +119,13 @@ dc.abstractBubbleChart = function (_chart) {
     };
 
     _chart.initBubbleColor = function (d, i) {
+        this[dc.constants.NODE_INDEX_NAME] = i;
         return _chart.getColor(d, i);
     };
 
     _chart.updateBubbleColor = function (d, i) {
-        return _chart.getColor(d, i);
+        // a work around to get correct node index since
+        return _chart.getColor(d, this[dc.constants.NODE_INDEX_NAME]);
     };
 
     _chart.fadeDeselectedArea = function () {

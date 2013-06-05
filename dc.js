@@ -19,6 +19,7 @@ dc = {
         STACK_CLASS: "stack",
         DESELECTED_CLASS: "deselected",
         SELECTED_CLASS: "selected",
+        NODE_INDEX_NAME: "__index__",
         GROUP_INDEX_NAME: "__group_index__",
         DEFAULT_CHART_GROUP: "__default_chart_group__",
         EVENT_DELAY: 40,
@@ -1935,11 +1936,13 @@ dc.abstractBubbleChart = function (_chart) {
     };
 
     _chart.initBubbleColor = function (d, i) {
+        this[dc.constants.NODE_INDEX_NAME] = i;
         return _chart.getColor(d, i);
     };
 
     _chart.updateBubbleColor = function (d, i) {
-        return _chart.getColor(d, i);
+        // a work around to get correct node index since
+        return _chart.getColor(d, this[dc.constants.NODE_INDEX_NAME]);
     };
 
     _chart.fadeDeselectedArea = function () {
