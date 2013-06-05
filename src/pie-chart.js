@@ -9,7 +9,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
 
-    var _chart = dc.selectableChart(dc.colorChart(dc.baseChart({})));
+    var _chart = dc.colorChart(dc.baseChart({}));
 
     var _slicesCap = Infinity;
     var _othersLabel = "Others";

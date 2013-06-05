@@ -10,7 +10,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     var _rowCssClass = "row";
 
-    var _chart = dc.marginable(dc.selectableChart(dc.colorChart(dc.baseChart({}))));
+    var _chart = dc.marginable(dc.colorChart(dc.baseChart({})));
 
     var _xScale;
 

@@ -1,5 +1,5 @@
 dc.geoChoroplethChart = function (parent, chartGroup) {
-    var _chart = dc.selectableChart(dc.colorChart(dc.baseChart({})));
+    var _chart = dc.colorChart(dc.baseChart({}));
 
     _chart.colorAccessor(function (d, i) {
         return d;

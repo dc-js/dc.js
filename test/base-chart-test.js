@@ -15,6 +15,11 @@ suite.addBatch({
         'should be set': function (chart) {
             assert.isNotNull(chart.renderlet());
         }
+    },
+
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
     }
 });
 
@@ -38,6 +43,11 @@ suite.addBatch({
         'listeners invocation': function (chart) {
             assert.equal(chart.out, "preRender:postRender");
         }
+    },
+
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
     }
 });
 
@@ -48,10 +58,10 @@ suite.addBatch({
             chart.dimension(valueDimension)
                 .group(valueGroup)
                 .on("filtered", function (chart, filter) {
-                    chart.out += filter;
+                    chart.out = filter;
                 });
-            chart.render();
-            chart.filter(11);
+            console.log(chart.out);
+            chart.render().filter(11)
             return chart;
         },
 
@@ -63,6 +73,11 @@ suite.addBatch({
             chart.filter();
             assert.equal(chart.out, "11");
         }
+    },
+
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
     }
 });
 
@@ -86,6 +101,11 @@ suite.addBatch({
         'listeners invocation': function (chart) {
             assert.equal(chart.out, "preRedraw:postRedraw");
         }
+    },
+
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
     }
 });
 
@@ -104,6 +124,11 @@ suite.addBatch({
                 assert.equal("Mandatory attribute chart.dimension is missing on chart[undefined]", e.toString());
             }
         }
+    },
+
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
     }
 });
 
@@ -122,6 +147,11 @@ suite.addBatch({
                 assert.equal("Mandatory attribute chart.group is missing on chart[undefined]", e.toString());
             }
         }
+    },
+
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
     }
 });
 

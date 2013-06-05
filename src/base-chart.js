@@ -47,6 +47,22 @@ dc.baseChart = function (_chart) {
         dragged: NULL_LISTENER
     };
 
+    var _filters = [];
+    var _filterHandler = function (dimension, filters) {
+        dimension.filter(null);
+
+        if (filters.length == 0)
+            dimension.filter(null);
+        else if (filters.length == 1)
+            dimension.filter(filters[0]);
+        else
+            dimension.filterFunction(function (d) {
+                return filters.indexOf(d) >= 0;
+            });
+
+        return filters;
+    };
+
     _chart.width = function (w) {
         if (!arguments.length) return _width;
         _width = w;
@@ -92,7 +108,7 @@ dc.baseChart = function (_chart) {
     };
 
     _chart.selectAll = function (s) {
-        return _root.selectAll(s);
+        return _root ? _root.selectAll(s) : null;
     };
 
     _chart.anchor = function (a, chartGroup) {
@@ -141,14 +157,18 @@ dc.baseChart = function (_chart) {
     };
 
     _chart.turnOnControls = function () {
-        _chart.selectAll(".reset").style("display", null);
-        _chart.selectAll(".filter").text(_filterPrinter(_chart.filters())).style("display", null);
+        if (_root) {
+            _chart.selectAll(".reset").style("display", null);
+            _chart.selectAll(".filter").text(_filterPrinter(_chart.filters())).style("display", null);
+        }
         return _chart;
     };
 
     _chart.turnOffControls = function () {
-        _chart.selectAll(".reset").style("display", "none");
-        _chart.selectAll(".filter").style("display", "none").text(_chart.filter());
+        if (_root) {
+            _chart.selectAll(".reset").style("display", "none");
+            _chart.selectAll(".filter").style("display", "none").text(_chart.filter());
+        }
         return _chart;
     };
 
@@ -170,7 +190,6 @@ dc.baseChart = function (_chart) {
                 + _chart.anchor() + "]");
 
         var result = _chart.doRender();
-
 
         if (_chart.transitionDuration() > 0) {
             setTimeout(function () {
@@ -209,18 +228,87 @@ dc.baseChart = function (_chart) {
         _listeners.dragged(_chart);
     };
 
-    // abstract function stub
-    _chart.filters = function (f) {
-        // do nothing in base, should be overridden by sub-function
-        return [];
+    _chart.hasFilter = function (filter) {
+        if (!arguments.length) return _filters.length > 0;
+        return _filters.indexOf(filter) >= 0;
     };
 
-    _chart.filter = function (f) {
-        // do nothing in base, should be overridden by sub-function
-        _chart.invokeFilteredListener(_chart, f);
+    function removeFilter(_) {
+        _filters.splice(_filters.indexOf(_), 1);
+        applyFilters();
+    }
+
+    function addFilter(_) {
+        _filters.push(_);
+        applyFilters();
+        _chart.invokeFilteredListener(_chart, _);
+    }
+
+    function resetFilters() {
+        _filters = [];
+    }
+
+    function applyFilters() {
+        if (_chart.dataSet() && _chart.dimension().filter != undefined) {
+            var fs = _filterHandler(_chart.dimension(), _filters);
+            _filters = fs ? fs : _filters;
+        }
+    }
+
+    _chart.filter = function (_) {
+        if (!arguments.length) return _filters.length > 0 ? _filters[0] : null;
+
+        if (_ == null) {
+            resetFilters();
+        } else {
+            if (_chart.hasFilter(_))
+                removeFilter(_);
+            else
+                addFilter(_);
+        }
+
+        if (_root != null && _chart.hasFilter()) {
+            _chart.turnOnControls();
+        } else {
+            _chart.turnOffControls();
+        }
+
         return _chart;
     };
 
+    _chart.filters = function () {
+        return _filters;
+    };
+
+    _chart.highlightSelected = function (e) {
+        d3.select(e).classed(dc.constants.SELECTED_CLASS, true);
+        d3.select(e).classed(dc.constants.DESELECTED_CLASS, false);
+    };
+
+    _chart.fadeDeselected = function (e) {
+        d3.select(e).classed(dc.constants.SELECTED_CLASS, false);
+        d3.select(e).classed(dc.constants.DESELECTED_CLASS, true);
+    };
+
+    _chart.resetHighlight = function (e) {
+        d3.select(e).classed(dc.constants.SELECTED_CLASS, false);
+        d3.select(e).classed(dc.constants.DESELECTED_CLASS, false);
+    };
+
+    _chart.onClick = function (d) {
+        var filter = _chart.keyAccessor()(d);
+        dc.events.trigger(function () {
+            _chart.filter(filter);
+        });
+    };
+
+    _chart.filterHandler = function (_) {
+        if (!arguments.length) return _filterHandler;
+        _filterHandler = _;
+        return _chart;
+    };
+
+    // abstract function stub
     _chart.doRender = function () {
         // do nothing in base, should be overridden by sub-function
         return _chart;

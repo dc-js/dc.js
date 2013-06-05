@@ -535,6 +535,22 @@ dc.baseChart = function (_chart) {
         dragged: NULL_LISTENER
     };
 
+    var _filters = [];
+    var _filterHandler = function (dimension, filters) {
+        dimension.filter(null);
+
+        if (filters.length == 0)
+            dimension.filter(null);
+        else if (filters.length == 1)
+            dimension.filter(filters[0]);
+        else
+            dimension.filterFunction(function (d) {
+                return filters.indexOf(d) >= 0;
+            });
+
+        return filters;
+    };
+
     _chart.width = function (w) {
         if (!arguments.length) return _width;
         _width = w;
@@ -580,7 +596,7 @@ dc.baseChart = function (_chart) {
     };
 
     _chart.selectAll = function (s) {
-        return _root.selectAll(s);
+        return _root ? _root.selectAll(s) : null;
     };
 
     _chart.anchor = function (a, chartGroup) {
@@ -629,14 +645,18 @@ dc.baseChart = function (_chart) {
     };
 
     _chart.turnOnControls = function () {
-        _chart.selectAll(".reset").style("display", null);
-        _chart.selectAll(".filter").text(_filterPrinter(_chart.filters())).style("display", null);
+        if (_root) {
+            _chart.selectAll(".reset").style("display", null);
+            _chart.selectAll(".filter").text(_filterPrinter(_chart.filters())).style("display", null);
+        }
         return _chart;
     };
 
     _chart.turnOffControls = function () {
-        _chart.selectAll(".reset").style("display", "none");
-        _chart.selectAll(".filter").style("display", "none").text(_chart.filter());
+        if (_root) {
+            _chart.selectAll(".reset").style("display", "none");
+            _chart.selectAll(".filter").style("display", "none").text(_chart.filter());
+        }
         return _chart;
     };
 
@@ -658,7 +678,6 @@ dc.baseChart = function (_chart) {
                 + _chart.anchor() + "]");
 
         var result = _chart.doRender();
-
 
         if (_chart.transitionDuration() > 0) {
             setTimeout(function () {
@@ -697,18 +716,87 @@ dc.baseChart = function (_chart) {
         _listeners.dragged(_chart);
     };
 
-    // abstract function stub
-    _chart.filters = function (f) {
-        // do nothing in base, should be overridden by sub-function
-        return [];
+    _chart.hasFilter = function (filter) {
+        if (!arguments.length) return _filters.length > 0;
+        return _filters.indexOf(filter) >= 0;
     };
 
-    _chart.filter = function (f) {
-        // do nothing in base, should be overridden by sub-function
-        _chart.invokeFilteredListener(_chart, f);
+    function removeFilter(_) {
+        _filters.splice(_filters.indexOf(_), 1);
+        applyFilters();
+    }
+
+    function addFilter(_) {
+        _filters.push(_);
+        applyFilters();
+        _chart.invokeFilteredListener(_chart, _);
+    }
+
+    function resetFilters() {
+        _filters = [];
+    }
+
+    function applyFilters() {
+        if (_chart.dataSet() && _chart.dimension().filter != undefined) {
+            var fs = _filterHandler(_chart.dimension(), _filters);
+            _filters = fs ? fs : _filters;
+        }
+    }
+
+    _chart.filter = function (_) {
+        if (!arguments.length) return _filters.length > 0 ? _filters[0] : null;
+
+        if (_ == null) {
+            resetFilters();
+        } else {
+            if (_chart.hasFilter(_))
+                removeFilter(_);
+            else
+                addFilter(_);
+        }
+
+        if (_root != null && _chart.hasFilter()) {
+            _chart.turnOnControls();
+        } else {
+            _chart.turnOffControls();
+        }
+
         return _chart;
     };
 
+    _chart.filters = function () {
+        return _filters;
+    };
+
+    _chart.highlightSelected = function (e) {
+        d3.select(e).classed(dc.constants.SELECTED_CLASS, true);
+        d3.select(e).classed(dc.constants.DESELECTED_CLASS, false);
+    };
+
+    _chart.fadeDeselected = function (e) {
+        d3.select(e).classed(dc.constants.SELECTED_CLASS, false);
+        d3.select(e).classed(dc.constants.DESELECTED_CLASS, true);
+    };
+
+    _chart.resetHighlight = function (e) {
+        d3.select(e).classed(dc.constants.SELECTED_CLASS, false);
+        d3.select(e).classed(dc.constants.DESELECTED_CLASS, false);
+    };
+
+    _chart.onClick = function (d) {
+        var filter = _chart.keyAccessor()(d);
+        dc.events.trigger(function () {
+            _chart.filter(filter);
+        });
+    };
+
+    _chart.filterHandler = function (_) {
+        if (!arguments.length) return _filterHandler;
+        _filterHandler = _;
+        return _chart;
+    };
+
+    // abstract function stub
     _chart.doRender = function () {
         // do nothing in base, should be overridden by sub-function
         return _chart;
@@ -828,7 +916,6 @@ dc.marginable = function (_chart) {
     var _yAxisPadding = 0;
     var _yElasticity = false;
 
-    var _filter;
     var _brush = d3.svg.brush();
     var _brushOn = true;
     var _round;
@@ -1172,27 +1259,21 @@ dc.marginable = function (_chart) {
         return _chart;
     };
 
-    _chart.filter = function (_) {
-        if (!arguments.length) return _filter;
+    dc.override(_chart, "filter", function (_) {
+        if (!arguments.length) return _chart._filter();
+
+        _chart._filter(_);
 
         if (_) {
-            _filter = _;
             _chart.brush().extent(_);
-            _chart.dimension().filter(_);
-            _chart.turnOnControls();
         } else {
-            _filter = null;
             _chart.brush().clear();
-            _chart.dimension().filterAll();
-            _chart.turnOffControls();
             // restore orig domain in case it was expanded by drag action
             _chart.focus(_chart.xOriginalDomain());
         }
 
-        _chart.invokeFilteredListener(_chart, _);
-
         return _chart;
-    };
+    });
 
     _chart.brush = function (_) {
         if (!arguments.length) return _brush;
@@ -1220,7 +1301,7 @@ dc.marginable = function (_chart) {
             gBrush.selectAll("rect").attr("height", brushHeight());
             gBrush.selectAll(".resize").append("path").attr("d", _chart.resizeHandlePath);
 
-            if (_filter) {
+            if (_chart.hasFilter()) {
                 _chart.redrawBrush(g);
             }
         }
@@ -1257,6 +1338,7 @@ dc.marginable = function (_chart) {
             });
         } else {
             dc.events.trigger(function () {
+                _chart.filter(null);
                 _chart.filter([extent[0], extent[1]]);
                 dc.redrawAll(_chart.chartGroup());
             }, dc.constants.EVENT_DELAY);
@@ -1335,24 +1417,24 @@ dc.marginable = function (_chart) {
             _chart.renderBrush(_chart.g());
 
             _chart.root().call(d3.behavior.zoom()
-                    .x(_chart.x())
-                    .scaleExtent([1, 100])
-                    .on("zoom", function() {
-                        _chart.focus(_chart.x().domain());
-                        _chart.invokeZoomedListener(_chart);
-                        updateRangeSelChart();
-                    }));
+                .x(_chart.x())
+                .scaleExtent([1, 100])
+                .on("zoom", function () {
+                    _chart.focus(_chart.x().domain());
+                    _chart.invokeZoomedListener(_chart);
+                    updateRangeSelChart();
+                }));
 
             _chart.chartBodyG().call(d3.behavior.drag()
-                    .on("drag", function() {
-                        var deltaX = d3.event.dx;
-                        var curDomain = _chart.x().domain();
-                        var xMin = _chart.x()(curDomain[0]);
-                        var xMax = _chart.x()(curDomain[1]);
-                        _chart.focus([_chart.x().invert(xMin - deltaX), _chart.x().invert(xMax - deltaX)]);
-                        _chart.invokeDraggedListener(_chart);
-                        updateRangeSelChart();
-                    }));
+                .on("drag", function () {
+                    var deltaX = d3.event.dx;
+                    var curDomain = _chart.x().domain();
+                    var xMin = _chart.x()(curDomain[0]);
+                    var xMax = _chart.x()(curDomain[1]);
+                    _chart.focus([_chart.x().invert(xMin - deltaX), _chart.x().invert(xMax - deltaX)]);
+                    _chart.invokeDraggedListener(_chart);
+                    updateRangeSelChart();
+                }));
 
             function updateRangeSelChart() {
                 if (_rangeSelChart) {
@@ -1506,102 +1588,6 @@ dc.colorChart = function(_chart) {
     _chart.colorDomain = function(_){
         if(!arguments.length) return _colorDomain;
         _colorDomain = _;
-        return _chart;
-    };
-
-    return _chart;
-};
-dc.selectableChart = function (_chart) {
-    var _filters = [];
-    var _filterHandler = function (dimension, filters) {
-        dimension.filter(null);
-
-        if (filters.length == 0)
-            dimension.filter(null);
-        else if(filters.length == 1)
-            dimension.filter(filters[0]);
-        else
-            dimension.filterFunction(function (d) { return filters.indexOf(d) >= 0; });
-
-        return filters;
-    };
-
-    _chart.hasFilter = function (filter) {
-        if (!arguments.length) return _filters.length > 0;
-        return _filters.indexOf(filter) >= 0;
-    };
-
-    function removeFilter(_) {
-        _filters.splice(_filters.indexOf(_), 1);
-    }
-
-    function addFilter(_) {
-        _filters.push(_);
-    }
-
-    function resetFilters() {
-        _filters = [];
-    }
-
-    _chart.filter = function (_) {
-        if (!arguments.length) return _filters.length > 0 ? _filters[0] : null;
-
-        if (_ == null) {
-            resetFilters();
-        } else {
-            if (_chart.hasFilter(_))
-                removeFilter(_);
-            else
-                addFilter(_);
-        }
-
-        if (_chart.dataSet() && _chart.dimension().filter != undefined) {
-            var fs = _filterHandler(_chart.dimension(), _filters);
-            _filters = fs ? fs : _filters;
-        }
-
-        _chart.invokeFilteredListener(_chart, _);
-
-        if (_chart.hasFilter()) {
-            _chart.turnOnControls();
-        } else {
-            _chart.turnOffControls();
-        }
-
-        dc.redrawAll(_chart.chartGroup());
-
-        return _chart;
-    };
-
-    _chart.filters = function () {
-        return _filters;
-    };
-
-    _chart.highlightSelected = function (e) {
-        d3.select(e).classed(dc.constants.SELECTED_CLASS, true);
-        d3.select(e).classed(dc.constants.DESELECTED_CLASS, false);
-    };
-
-    _chart.fadeDeselected = function (e) {
-        d3.select(e).classed(dc.constants.SELECTED_CLASS, false);
-        d3.select(e).classed(dc.constants.DESELECTED_CLASS, true);
-    };
-
-    _chart.resetHighlight = function (e) {
-        d3.select(e).classed(dc.constants.SELECTED_CLASS, false);
-        d3.select(e).classed(dc.constants.DESELECTED_CLASS, false);
-    };
-
-    _chart.onClick = function (d) {
-        var filter = _chart.keyAccessor()(d);
-        dc.events.trigger(function () {
-            _chart.filter(filter);
-        });
-    };
-
-    _chart.filterHandler = function (_) {
-        if (!arguments.length) return _filterHandler;
-        _filterHandler = _;
         return _chart;
     };
 
@@ -1834,7 +1820,7 @@ dc.abstractBubbleChart = function (_chart) {
     _chart.BUBBLE_CLASS = "bubble";
     _chart.MIN_RADIUS = 10;
 
-    _chart = dc.selectableChart(dc.colorChart(_chart));
+    _chart = dc.colorChart(_chart);
 
     _chart.renderLabel(true);
     _chart.renderTitle(false);
@@ -1998,7 +1984,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
 
-    var _chart = dc.selectableChart(dc.colorChart(dc.baseChart({})));
+    var _chart = dc.colorChart(dc.baseChart({}));
 
     var _slicesCap = Infinity;
     var _othersLabel = "Others";
@@ -2326,7 +2312,7 @@ dc.barChart = function (parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
     var DEFAULT_GAP_BETWEEN_BARS = 2;
 
-    var _chart = dc.stackableChart(dc.coordinateGridChart(dc.selectableChart({})));
+    var _chart = dc.stackableChart(dc.coordinateGridChart({}));
 
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
     var _centerBar = false;
@@ -3083,7 +3069,7 @@ dc.compositeChart = function(parent, chartGroup) {
     return _chart.anchor(parent, chartGroup);
 };
 dc.geoChoroplethChart = function (parent, chartGroup) {
-    var _chart = dc.selectableChart(dc.colorChart(dc.baseChart({})));
+    var _chart = dc.colorChart(dc.baseChart({}));
 
     _chart.colorAccessor(function (d, i) {
         return d;
@@ -3424,7 +3410,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
 
     var _rowCssClass = "row";
 
-    var _chart = dc.marginable(dc.selectableChart(dc.colorChart(dc.baseChart({}))));
+    var _chart = dc.marginable(dc.colorChart(dc.baseChart({})));
 
     var _xScale;
 

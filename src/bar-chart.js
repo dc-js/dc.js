@@ -2,7 +2,7 @@ dc.barChart = function (parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
     var DEFAULT_GAP_BETWEEN_BARS = 2;
 
-    var _chart = dc.stackableChart(dc.coordinateGridChart(dc.selectableChart({})));
+    var _chart = dc.stackableChart(dc.coordinateGridChart({}));
 
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
     var _centerBar = false;
