@@ -19,6 +19,7 @@ dc = {
         STACK_CLASS: "stack",
         DESELECTED_CLASS: "deselected",
         SELECTED_CLASS: "selected",
+        NODE_INDEX_NAME: "__index__",
         GROUP_INDEX_NAME: "__group_index__",
         DEFAULT_CHART_GROUP: "__default_chart_group__",
         EVENT_DELAY: 40,
@@ -1432,7 +1433,8 @@ dc.marginable = function (_chart) {
                     var curDomain = _chart.x().domain();
                     var xMin = _chart.x()(curDomain[0]);
                     var xMax = _chart.x()(curDomain[1]);
-                    _chart.focus([_chart.x().invert(xMin - deltaX), _chart.x().invert(xMax - deltaX)]);
+                    if(typeof _chart.x().invert === "function")
+                        _chart.focus([_chart.x().invert(xMin - deltaX), _chart.x().invert(xMax - deltaX)]);
                     _chart.invokeDraggedListener(_chart);
                     updateRangeSelChart();
                 }));
@@ -1934,11 +1936,13 @@ dc.abstractBubbleChart = function (_chart) {
     };
 
     _chart.initBubbleColor = function (d, i) {
+        this[dc.constants.NODE_INDEX_NAME] = i;
         return _chart.getColor(d, i);
     };
 
     _chart.updateBubbleColor = function (d, i) {
-        return _chart.getColor(d, i);
+        // a work around to get correct node index since
+        return _chart.getColor(d, this[dc.constants.NODE_INDEX_NAME]);
     };
 
     _chart.fadeDeselectedArea = function () {
@@ -1958,7 +1962,7 @@ dc.abstractBubbleChart = function (_chart) {
     };
 
     _chart.isSelectedNode = function (d) {
-        return _chart.filter() == d.key;
+        return _chart.hasFilter(d.key);
     };
 
     _chart.onClick = function (d) {
@@ -2452,13 +2456,17 @@ dc.barChart = function (parent, chartGroup) {
         var extent = _chart.brush().extent();
 
         if (_chart.isOrdinal()) {
-            if (_chart.filter() != null)
-                bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
-                    var key = _chart.keyAccessor()(d);
-                    return key != _chart.filter();
+            if (_chart.hasFilter()) {
+                bars.classed(dc.constants.SELECTED_CLASS, function (d) {
+                    return _chart.hasFilter(_chart.keyAccessor()(d));
                 });
-            else
+                bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
+                    return !_chart.hasFilter(_chart.keyAccessor()(d));
+                });
+            } else {
+                bars.classed(dc.constants.SELECTED_CLASS, false);
                 bars.classed(dc.constants.DESELECTED_CLASS, false);
+            }
         } else {
             if (!_chart.brushIsEmpty(extent)) {
                 var start = extent[0];
@@ -3152,11 +3160,11 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     }
 
     function isSelected(layerIndex, d) {
-        return _chart.hasFilter() && _chart.filter() == getKey(layerIndex, d);
+        return _chart.hasFilter() && _chart.hasFilter(getKey(layerIndex, d));
     }
 
     function isDeselected(layerIndex, d) {
-        return _chart.hasFilter() && _chart.filter() != getKey(layerIndex, d);
+        return _chart.hasFilter() && !_chart.hasFilter(getKey(layerIndex, d));
     }
 
     function getKey(layerIndex, d) {
@@ -3605,7 +3613,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
     };
 
     _chart.isSelectedRow = function (d) {
-        return _chart.filter() == _chart.keyAccessor()(d);
+        return _chart.hasFilter(_chart.keyAccessor()(d));
     };
 
     return _chart.anchor(parent, chartGroup);
