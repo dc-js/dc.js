@@ -299,6 +299,7 @@ dc.baseChart = function (_chart) {
         var filter = _chart.keyAccessor()(d);
         dc.events.trigger(function () {
             _chart.filter(filter);
+            dc.redrawAll(_chart.chartGroup());
         });
     };
 

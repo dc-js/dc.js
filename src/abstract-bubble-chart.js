@@ -153,7 +153,7 @@ dc.abstractBubbleChart = function (_chart) {
         var filter = d.key;
         dc.events.trigger(function () {
             _chart.filter(filter);
-            dc.redrawAll(_chart.group());
+            dc.redrawAll(_chart.chartGroup());
         });
     };
 
