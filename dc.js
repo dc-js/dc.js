@@ -1497,6 +1497,8 @@ dc.colorChart = function(_chart) {
 dc.selectableChart = function (_chart) {
     var _filters = [];
     var _filterHandler = function (dimension, filters) {
+//        dimension.filter(null);
+
         if (filters.length == 0)
             dimension.filter(null);
         else if(filters.length == 1)

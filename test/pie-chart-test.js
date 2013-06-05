@@ -182,9 +182,25 @@ suite.addBatch({
                 assert.isTrue(pieChart.hasFilter());
                 pieChart.filterAll();
             },
-            'should filter dimension by selection': function (pieChart) {
+            'should filter dimension by single selection': function (pieChart) {
+                pieChart.filter("22");
+                assert.equal(countryGroup.all()[0].value, 1);
+                assert.equal(countryGroup.all()[1].value, 1);
+                pieChart.filterAll();
+            },
+            'should filter dimension by multiple selections': function (pieChart) {
                 pieChart.filter("66");
-                assert.equal(pieChart.dimension().top(Infinity).length, 1);
+                pieChart.filter("22");
+                assert.equal(countryGroup.all()[0].value, 1);
+                assert.equal(countryGroup.all()[1].value, 2);
+                pieChart.filterAll();
+            },
+            'should filter dimension with deselection': function (pieChart) {
+                pieChart.filter("22");
+                pieChart.filter("66");
+                pieChart.filter("22");
+                assert.equal(countryGroup.all()[0].value, 0);
+                assert.equal(countryGroup.all()[1].value, 1);
                 pieChart.filterAll();
             },
             'should highlight selected slices': function (pieChart) {
