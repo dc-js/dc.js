@@ -60,7 +60,6 @@ suite.addBatch({
                 .on("filtered", function (chart, filter) {
                     chart.out = filter;
                 });
-            console.log(chart.out);
             chart.render().filter(11)
             return chart;
         },
