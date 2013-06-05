@@ -1432,7 +1432,8 @@ dc.marginable = function (_chart) {
                     var curDomain = _chart.x().domain();
                     var xMin = _chart.x()(curDomain[0]);
                     var xMax = _chart.x()(curDomain[1]);
-                    _chart.focus([_chart.x().invert(xMin - deltaX), _chart.x().invert(xMax - deltaX)]);
+                    if(typeof _chart.x().invert === "function")
+                        _chart.focus([_chart.x().invert(xMin - deltaX), _chart.x().invert(xMax - deltaX)]);
                     _chart.invokeDraggedListener(_chart);
                     updateRangeSelChart();
                 }));
@@ -3156,11 +3157,11 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     }
 
     function isSelected(layerIndex, d) {
-        return _chart.hasFilter() && _chart.filter() == getKey(layerIndex, d);
+        return _chart.hasFilter() && _chart.hasFilter(getKey(layerIndex, d));
     }
 
     function isDeselected(layerIndex, d) {
-        return _chart.hasFilter() && _chart.filter() != getKey(layerIndex, d);
+        return _chart.hasFilter() && !_chart.hasFilter(getKey(layerIndex, d));
     }
 
     function getKey(layerIndex, d) {

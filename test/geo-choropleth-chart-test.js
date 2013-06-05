@@ -142,13 +142,16 @@ suite.addBatch({
         topic: function () {
             var chart = buildChart("choropleth-chart-with-filter");
             chart.filter("Colorado");
+            chart.filter("California");
             chart.redraw();
             return chart;
         },
         'correct color should be set [California]': function (chart) {
-            assert.equal(chart.selectAll("g.layer0 g.state")[0][4].getAttribute("class"), "state california deselected");
+            assert.equal(chart.selectAll("g.layer0 g.state")[0][0].getAttribute("class"), "state alabama deselected");
+            assert.equal(chart.selectAll("g.layer0 g.state")[0][1].getAttribute("class"), "state alaska deselected");
         },
-        'correct color should be set [Colorado]': function (chart) {
+        'correct color should be set [California, Colorado]': function (chart) {
+            assert.equal(chart.selectAll("g.layer0 g.state")[0][4].getAttribute("class"), "state california selected");
             assert.equal(chart.selectAll("g.layer0 g.state")[0][5].getAttribute("class"), "state colorado selected");
         },
         teardown: function (topic) {

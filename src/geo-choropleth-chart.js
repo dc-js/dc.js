@@ -84,11 +84,11 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     }
 
     function isSelected(layerIndex, d) {
-        return _chart.hasFilter() && _chart.filter() == getKey(layerIndex, d);
+        return _chart.hasFilter() && _chart.hasFilter(getKey(layerIndex, d));
     }
 
     function isDeselected(layerIndex, d) {
-        return _chart.hasFilter() && _chart.filter() != getKey(layerIndex, d);
+        return _chart.hasFilter() && !_chart.hasFilter(getKey(layerIndex, d));
     }
 
     function getKey(layerIndex, d) {
