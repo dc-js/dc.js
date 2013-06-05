@@ -5,18 +5,17 @@ name space.
 
 * [Base Chart [abstract]](#base-chart)
 * [Color Chart [abstract]](#color-chart)
-* [Selectable Chart [abstract]](#selectable-chart)
 * [Stackable Chart [abstract]](#stackable-chart)
 * [Coordinate Grid Chart [abstract] < Base Chart](#coordinate-grid-chart)
-* [Pie Chart [concrete] < Selectable Chart < Color Chart < Base Chart](#pie-chart)
-* [Row Chart [concrete] < Selectable Chart < Colro Chart < Base chart](#row-chart)
-* [Bar Chart [concrete] < Selectable Chart < Stackable Chart < CoordinateGrid Chart](#bar-chart)
+* [Pie Chart [concrete] < Color Chart < Base Chart](#pie-chart)
+* [Row Chart [concrete] < Colro Chart < Base chart](#row-chart)
+* [Bar Chart [concrete] < Stackable Chart < CoordinateGrid Chart](#bar-chart)
 * [Line Chart [concrete] < Stackable Chart < CoordinateGrid Chart](#line-chart)
 * [Composite Chart [concrete] < CoordinateGrid Chart](#composite-chart)
-* [Abstract Bubble Chart [abstract] < Selectable Chart < Color Chart](#abstract-bubble-chart)
+* [Abstract Bubble Chart [abstract] < Color Chart](#abstract-bubble-chart)
 * [Bubble Chart [concrete] < Abstract Bubble Chart < CoordinateGrid Chart](#bubble-chart)
 * [Bubble Overlay Chart [concrete] < Abstract Bubble Chart < Base Chart](#bubble-overlay-chart)
-* [Geo Choropleth Chart [concrete] < Selectable Chart < Color Chart < Base Chart](#geo-choropleth-chart)
+* [Geo Choropleth Chart [concrete] < Color Chart < Base Chart](#geo-choropleth-chart)
 * [Data Count Widget [concrete] < Base Chart](#data-count)
 * [Data Table Widget [concrete] < Base Chart](#data-table)
 * [Listeners](#listeners)
@@ -187,6 +186,42 @@ chart.renderlet(function(chart){
 });
 ```
 
+#### .filter([filterValue])
+Filter the chart by the given value or return the current filter if the input parameter is missing.
+```js
+// filter by a single string
+chart.filter("Sunday");
+// filter by a single age
+chart.filter(18);
+```
+
+#### .filters()
+Return all current filters. This method does not perform defensive cloning of the internal filter array before returning
+therefore any modification of returned array will affact chart's internal filter storage.
+
+#### .hasFilter([filter])
+Check whether is any active filter or a specific filter is associated with particular chart instance.
+This function is **not chainable**.
+
+#### .filterHandler([function])
+Set or get filter handler. Filter handler is a function that performs the filter action on a specific dimension. Using
+custom filter handler give you the flexibility to perform additional logic before or after filtering.
+
+```js
+// default filter handler
+function(dimension, filter){
+    dimension.filter(filter); // perform filtering
+    return filter; // return the actual filter value
+}
+
+// custom filter handler
+chart.filterHandler(function(dimension, filter){
+    var newFilter = filter + 10;
+    dimension.filter(newFilter);
+    return newFilter; // set the actual filter value to the new value
+});
+```
+
 ## <a name="color-chart" href="#color-chart">#</a> Color Chart [Abstract]
 Color chart is an abstract chart functional class created to provide universal coloring support as a mix-in for any concrete
 chart implementation.
@@ -221,41 +256,6 @@ color scale.
 chart.colorDomain([0, 11])
 // custom domain for day of year
 chart.colorDomain([0, 364])
-```
-
-## <a name="selectable-chart" href="#selectable-chart">#</a> Selectable Chart [Abstract]
-Single selection chart is an abstract functional class created to provide cross-chart support for single value filtering
-capability.
-
-#### .filter([filterValue])
-Filter the chart by the given value or return the current filter if the input parameter is missing.
-```js
-// filter by a single string
-chart.filter("Sunday");
-// filter by a single age
-chart.filter(18);
-```
-
-#### .hasFilter()
-Check whether is an active filter associated with particular chart instance. This function is **not chainable**.
-
-#### .filterHandler([function])
-Set or get filter handler. Filter handler is a function that performs the filter action on a specific dimension. Using
-custom filter handler give you the flexibility to perform additional logic before or after filtering.
-
-```js
-// default filter handler
-function(dimension, filter){
-    dimension.filter(filter); // perform filtering
-    return filter; // return the actual filter value
-}
-
-// custom filter handler
-chart.filterHandler(function(dimension, filter){
-    var newFilter = filter + 10;
-    dimension.filter(newFilter);
-    return newFilter; // set the actual filter value to the new value
-});
 ```
 
 ## <a name="stackable-chart" href="#stackable-chart">#</a> Stackable Chart [Abstract]
@@ -413,7 +413,7 @@ Get or set the range selection chart associated with this instance. Setting the 
 will automatically update its selection brush when the current chart zooms in or being dragged. See the
 [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/) example for this effect in action.
 
-## <a name="pie-chart" href="#pie-chart">#</a> Pie Chart [Concrete] < [Selectable Chart](#selectable-chart) < [Color Chart](#color-chart) < [Base Chart](#base-chart)
+## <a name="pie-chart" href="#pie-chart">#</a> Pie Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
 This chart is a concrete pie chart implementation usually used to visualize small number of categorical distributions.
 Pie chart implementation uses keyAccessor to generate slices, and valueAccessor to calculate the size of each slice(key)
 relatively to the total sum of all values.
@@ -475,7 +475,7 @@ function (data, sum) {
 #### .othersLabel([label])
 Get or set the label for *Others* slice when slices cap is specified. Default label is **Others**.
 
-## <a name="row-chart" href="#row-chart">#</a> Row Chart [Concrete] < [SelectableChart](#selectable-chart) < [Color Chart](#color-chart) < [Base Chart](#base-chart)
+## <a name="row-chart" href="#row-chart">#</a> Row Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
 Concrete row chart implementation.
 
 #### dc.rowChart(parent[, chartGroup])
@@ -507,7 +507,7 @@ Get of set the y offset (vertical space to the top left corner of a row) for lab
 Get or set the elasticity on x axis. If this attribute is set to true, then the x axis will rescle to auto-fit the data
 range when filtered.
 
-## <a name="bar-chart" href="#bar-chart">#</a> Bar Chart [Concrete] < [Selectable Chart](#selectable-chart) < [Stackable Chart](#stackable-chart) < [CoordinateGrid Chart](#coordinate-grid-chart)
+## <a name="bar-chart" href="#bar-chart">#</a> Bar Chart [Concrete] < [Stackable Chart](#stackable-chart) < [CoordinateGrid Chart](#coordinate-grid-chart)
 Concrete bar chart/histogram implementation.
 
 Examples:
@@ -631,7 +631,7 @@ moveChart.compose([
 ]);
 ```
 
-## <a name="abstract-bubble-chart" href="#abstract-bubble-chart">#</a> Abstract Bubble Chart [Abstract] < [Selectable Chart](#selectable-chart) < [Color Chart](#color-chart)
+## <a name="abstract-bubble-chart" href="#abstract-bubble-chart">#</a> Abstract Bubble Chart [Abstract] < [Color Chart](#color-chart)
 An abstraction provides reusable functionalities for any chart that needs to visualize data using bubbles.
 
 #### .r([bubbleRadiusScale])
@@ -729,7 +729,7 @@ Set up a data point on the overlay. The name of a data point should match a spec
 If a match is found (point name <-> data group key) then a bubble will be automatically generated at the position specified by the
 function. x and y value specified here are relative to the underlying svg.
 
-## <a name="geo-choropleth-chart" href="#geo-choropleth-chart">#</a> Geo Choropleth Chart [Concrete] < [Selectable Chart](#selectable-chart) < [Color Chart](#color-chart) < [Base Chart](#base-chart)
+## <a name="geo-choropleth-chart" href="#geo-choropleth-chart">#</a> Geo Choropleth Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
 Geo choropleth chart is design to make creating crossfilter driven choropleth map from GeoJson data an easy process. This
 chart implementation was inspired by [the great d3 choropleth example](http://bl.ocks.org/4060606).
 
