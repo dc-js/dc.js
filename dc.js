@@ -2543,6 +2543,7 @@ dc.lineChart = function(parent, chartGroup) {
     var _renderArea = false;
     var _dotRadius = DEFAULT_DOT_RADIUS;
     var _interpolate = 'linear';
+    var _tension = 0.7;
 
     _chart.transitionDuration(500);
 
@@ -2560,6 +2561,12 @@ dc.lineChart = function(parent, chartGroup) {
     _chart.interpolate = function(_){
         if (!arguments.length) return _interpolate;
         _interpolate = _;
+        return _chart;
+    };
+    
+    _chart.tension = function(_){
+        if (!arguments.length) return _tension;
+        _tension = _;
         return _chart;
     };
 
@@ -2607,7 +2614,8 @@ dc.lineChart = function(parent, chartGroup) {
                 var groupIndex = this[dc.constants.GROUP_INDEX_NAME];
                 return lineY(d, dataIndex, groupIndex);
             })
-            .interpolate(_interpolate);
+            .interpolate(_interpolate)
+            .tension(_tension);
 
         dc.transition(linePath, _chart.transitionDuration(),
             function(t) {
