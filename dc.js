@@ -2542,6 +2542,7 @@ dc.lineChart = function(parent, chartGroup) {
     var _chart = dc.stackableChart(dc.coordinateGridChart({}));
     var _renderArea = false;
     var _dotRadius = DEFAULT_DOT_RADIUS;
+    var _interpolate = 'linear';
 
     _chart.transitionDuration(500);
 
@@ -2554,6 +2555,12 @@ dc.lineChart = function(parent, chartGroup) {
             var group = groups[groupIndex];
             plotDataByGroup(groupIndex, group);
         }
+    };
+    
+    _chart.interpolate = function(_){
+        if (!arguments.length) return _interpolate;
+        _interpolate = _;
+        return _chart;
     };
 
     function plotDataByGroup(groupIndex, group) {
@@ -2599,7 +2606,8 @@ dc.lineChart = function(parent, chartGroup) {
             .y(function(d, dataIndex) {
                 var groupIndex = this[dc.constants.GROUP_INDEX_NAME];
                 return lineY(d, dataIndex, groupIndex);
-            });
+            })
+            .interpolate(_interpolate);
 
         dc.transition(linePath, _chart.transitionDuration(),
             function(t) {
