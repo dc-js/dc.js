@@ -805,11 +805,13 @@ dc.marginable = function (_chart) {
     var _xUnits = dc.units.integers;
     var _xAxisPadding = 0;
     var _xElasticity = false;
+    var _xTickFormat;
 
     var _y;
     var _yAxis = d3.svg.axis();
     var _yAxisPadding = 0;
     var _yElasticity = false;
+    var _yTickFormat;
 
     var _filter;
     var _brush = d3.svg.brush();
@@ -908,6 +910,18 @@ dc.marginable = function (_chart) {
 
         return _unitCount;
     };
+    
+    _chart.xTickFormat = function(_) {
+        if (!arguments.length) return _xTickFormat;
+        _xTickFormat = _;
+        return _chart;
+    }
+
+    _chart.yTickFormat = function(_) {
+      if (!arguments.length) return _yTickFormat;
+      _yTickFormat = _;
+      return _chart;
+  }
 
     _chart.isOrdinal = function () {
         return _chart.xUnits() === dc.units.ordinal;
@@ -938,6 +952,9 @@ dc.marginable = function (_chart) {
         }
 
         _xAxis = _xAxis.scale(_chart.x()).orient("bottom");
+        if (_xTickFormat) {
+          _xAxis.tickFormat(_xTickFormat);
+        }
 
         renderVerticalGridLines(g);
     }
@@ -1015,6 +1032,9 @@ dc.marginable = function (_chart) {
 
         _y.range([_chart.yAxisHeight(), 0]);
         _yAxis = _yAxis.scale(_y).orient("left").ticks(DEFAULT_Y_AXIS_TICKS);
+        if (_yTickFormat) {
+          _yAxis.tickFormat(_yTickFormat);
+        }
 
         renderHorizontalGridLines(g);
     }
