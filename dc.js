@@ -531,8 +531,7 @@ dc.baseChart = function (_chart) {
         preRedraw: NULL_LISTENER,
         postRedraw: NULL_LISTENER,
         filtered: NULL_LISTENER,
-        zoomed: NULL_LISTENER,
-        dragged: NULL_LISTENER
+        zoomed: NULL_LISTENER
     };
 
     var _filters = [];
@@ -710,10 +709,6 @@ dc.baseChart = function (_chart) {
 
     _chart.invokeZoomedListener = function (chart) {
         _listeners.zoomed(_chart);
-    };
-
-    _chart.invokeDraggedListener = function (chart) {
-        _listeners.dragged(_chart);
     };
 
     _chart.hasFilter = function (filter) {
@@ -3568,7 +3563,8 @@ dc.bubbleOverlay = function(root, chartGroup) {
 
     function createLabels(rowEnter) {
         if (_chart.renderLabel()) {
-            rowEnter.append("text");
+            rowEnter.append("text")
+                .on("click", onClick);
         }
     }
 

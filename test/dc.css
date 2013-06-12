@@ -230,4 +230,5 @@
 .dc-chart g.row text {
     fill: white;
     font-size: 12px;
+    cursor: pointer;
 }

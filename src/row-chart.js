@@ -142,7 +142,8 @@ dc.rowChart = function (parent, chartGroup) {
 
     function createLabels(rowEnter) {
         if (_chart.renderLabel()) {
-            rowEnter.append("text");
+            rowEnter.append("text")
+                .on("click", onClick);
         }
     }
 
