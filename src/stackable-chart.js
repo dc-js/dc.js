@@ -165,15 +165,16 @@ dc.stackableChart = function (_chart) {
         for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
             var d = data[dataIndex];
             var value = getValueFromData(groupIndex, d);
+            var pseudoZero = 1e-13;
             if (groupIndex == 0) {
-                if (value > 1e-13)
+                if (value > pseudoZero)
                     _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline() - _chart.dataPointHeight(d, groupIndex));
                 else
                     _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline());
             } else {
-                if (value > 1e-13)
+                if (value > pseudoZero)
                     _groupStack.setDataPoint(groupIndex, dataIndex, _groupStack.getDataPoint(groupIndex - 1, dataIndex) - _chart.dataPointHeight(d, groupIndex))
-                else if (value < -1e-13)
+                else if (value < -pseudoZero)
                     _groupStack.setDataPoint(groupIndex, dataIndex, _groupStack.getDataPoint(groupIndex - 1, dataIndex) + _chart.dataPointHeight(d, groupIndex - 1))
                 else // value ~= 0
                     _groupStack.setDataPoint(groupIndex, dataIndex, _groupStack.getDataPoint(groupIndex - 1, dataIndex))
