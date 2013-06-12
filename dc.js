@@ -683,15 +683,20 @@ dc.baseChart = function (_chart) {
         return result;
     };
 
-    _chart.activateRenderlets = function(event) {
-        if (_chart.transitionDuration() > 0) {
-            setTimeout(function () {
-                runAllRenderlets();
-                if(event) _listeners[event](_chart);
-            }, _chart.transitionDuration());
+    _chart.activateRenderlets = function (event) {
+        if (_chart.transitionDuration() > 0 && _svg) {
+            _svg.transition().duration(_chart.transitionDuration())
+                .each("end", function () {
+                    runAllRenderlets();
+                    if (event) _listeners[event](_chart);
+                });
+//            setTimeout(function () {
+//                runAllRenderlets();
+//                if (event) _listeners[event](_chart);
+//            }, _chart.transitionDuration() + 50);
         } else {
             runAllRenderlets();
-            if(event) _listeners[event](_chart);
+            if (event) _listeners[event](_chart);
         }
     }
 
