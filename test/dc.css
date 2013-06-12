@@ -38,17 +38,17 @@
     cursor: pointer;
 }
 
-.dc-chart .pie-slice :hover{
+.dc-chart .pie-slice :hover {
     fill-opacity: .8;
 }
 
-.dc-chart .selected path{
+.dc-chart .selected path {
     stroke-width: 3;
     stroke: #ccc;
     fill-opacity: 1;
 }
 
-.dc-chart .deselected path{
+.dc-chart .deselected path {
     strok: none;
     fill-opacity: .5;
     fill: #ccc;
@@ -98,7 +98,7 @@
     stroke-width: 1.5px;
 }
 
-.dc-chart circle.dot{
+.dc-chart circle.dot {
     fill: steelblue;
 }
 
@@ -106,7 +106,7 @@
     stroke: green;
 }
 
-.dc-chart g.stack1 circle.dot{
+.dc-chart g.stack1 circle.dot {
     fill: green;
 }
 
@@ -114,11 +114,11 @@
     stroke: red;
 }
 
-.dc-chart g.stack2 circle.dot{
+.dc-chart g.stack2 circle.dot {
     fill: red;
 }
 
-.dc-chart g.dc-tooltip path{
+.dc-chart g.dc-tooltip path {
     fill: none;
     stroke: grey;
     stroke-opacity: .8;
@@ -143,7 +143,7 @@
     cursor: pointer;
 }
 
-.dc-chart .node :hover{
+.dc-chart .node :hover {
     fill-opacity: .8;
 }
 
@@ -180,13 +180,14 @@
     font-weight: bold;
 }
 
-.dc-data-table {}
+.dc-data-table {
+}
 
-.dc-chart g.state{
+.dc-chart g.state {
     cursor: pointer;
 }
 
-.dc-chart g.state :hover{
+.dc-chart g.state :hover {
     fill-opacity: .8;
 }
 
@@ -213,7 +214,7 @@
     fill: none;
 }
 
-.dc-chart g.debug rect{
+.dc-chart g.debug rect {
     fill: blue;
     fill-opacity: .2;
 }
@@ -231,4 +232,15 @@
     fill: white;
     font-size: 12px;
     cursor: pointer;
+}
+
+.dc-chart g text {
+    /* Makes it so the user can't accidentally click and select text that is meant as a label only */
+    -webkit-user-select: none; /* Chrome/Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10 */
+    -o-user-select: none;
+    user-select: none;
+
+    pointer-events: none;
 }
