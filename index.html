@@ -31,7 +31,9 @@
 
 <div class="container">
 
-<h1>dc.js - Dimensional Charting Javascript Library v<span id="version"></span></h1>
+<h2>dc.js - Dimensional Charting Javascript Library v<span id="version"></span> (unstable)</h2>
+
+<h4><a href="https://github.com/NickQiZhu/dc.js/tags">[Find Stable Releases]</a></h4>
 
 <p>
     dc.js is a javascript charting library with native <a
@@ -341,6 +343,8 @@ d3.csv("ndx.csv", function (data) {
                     .dimension(gainOrLoss)
                     .group(gainOrLossGroup)
                     .label(function (d) {
+                        if(gainOrLossChart.hasFilter() && !gainOrLossChart.hasFilter(d.data.key))
+                            return d.data.key + "(0%)";
                         return d.data.key + "(" + Math.floor(d.data.value / all.value() * 100) + "%)";
                     });
 
@@ -422,13 +426,7 @@ d3.csv("ndx.csv", function (data) {
                     .gap(1)
                     .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
                     .round(d3.time.month.round)
-                    .xUnits(d3.time.months)
-                    .on("filtered", function (chart) {
-                        dc.events.trigger(function () {
-                            moveChart.focus(chart.filter());
-                            dc.redrawAll(chart.chartGroup());
-                        });
-                    });
+                    .xUnits(d3.time.months);
 
 
             dc.dataCount(".dc-data-count")
