@@ -190,27 +190,29 @@ dc.baseChart = function (_chart) {
 
         var result = _chart.doRender();
 
-        if (_chart.transitionDuration() > 0) {
-            setTimeout(function () {
-                _chart.invokeRenderlet(_chart);
-                _listeners.postRender(_chart);
-            }, _chart.transitionDuration());
-        } else {
-            _chart.invokeRenderlet(_chart);
-            _listeners.postRender(_chart);
-        }
+        _chart.activateRenderlets("postRender");
 
         return result;
     };
+
+    _chart.activateRenderlets = function(event) {
+        if (_chart.transitionDuration() > 0) {
+            setTimeout(function () {
+                runAllRenderlets();
+                if(event) _listeners[event](_chart);
+            }, _chart.transitionDuration());
+        } else {
+            runAllRenderlets();
+            if(event) _listeners[event](_chart);
+        }
+    }
 
     _chart.redraw = function () {
         _listeners.preRedraw(_chart);
 
         var result = _chart.doRedraw();
 
-        _chart.invokeRenderlet(_chart);
-
-        _listeners.postRedraw(_chart);
+        _chart.activateRenderlets("postRedraw");
 
         return result;
     };
@@ -360,9 +362,9 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
-    _chart.invokeRenderlet = function (chart) {
+    function runAllRenderlets() {
         for (var i = 0; i < _renderlets.length; ++i) {
-            _renderlets[i](chart);
+            _renderlets[i](_chart);
         }
     };
 

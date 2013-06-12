@@ -48,7 +48,7 @@ dc.compositeChart = function(parent, chartGroup) {
 
             child.plotData();
 
-            child.invokeRenderlet(child);
+            child.activateRenderlets();
         }
     };
 

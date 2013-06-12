@@ -86,6 +86,7 @@ suite.addBatch({
             var chart = dc.baseChart({out: ""});
             chart.dimension(valueDimension)
                 .group(valueGroup)
+                .transitionDuration(0)
                 .on("preRedraw", function (chart) {
                     chart.out += "preRedraw";
                 })
