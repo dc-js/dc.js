@@ -3538,10 +3538,9 @@ dc.bubbleOverlay = function(root, chartGroup) {
     function updateElements(rows) {
         var height = rowHeight();
 
-        var rect = rows.attr("transform", function (d, i) {
-            return "translate(0," + ((i + 1) * _gap + i * height) + ")";
-        })
-            .select("rect")
+        var rect = rows.attr("transform",function (d, i) {
+                return "translate(0," + ((i + 1) * _gap + i * height) + ")";
+            }).select("rect")
             .attr("height", height)
             .attr("fill", _chart.getColor)
             .on("click", onClick)
@@ -3556,10 +3555,13 @@ dc.bubbleOverlay = function(root, chartGroup) {
             .attr("width", function (d) {
                 return _xScale(_chart.valueAccessor()(d));
             });
+
+        createTitles(rows);
     }
 
     function createTitles(rowEnter) {
         if (_chart.renderTitle()) {
+            rowEnter.select("title").remove();
             rowEnter.append("title").text(function (d) {
                 return _chart.title()(d);
             });

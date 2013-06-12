@@ -230,12 +230,12 @@ suite.addBatch({
         'custom title & label generation': {
             topic: function (chart) {
                 var chart = buildChart("pie-chart-custom-label-title");
+
                 chart.title(function (d) {
                     return "custom title";
-                })
-                    .label(function (d) {
-                        return "custom label";
-                    });
+                }).label(function (d) {
+                    return "custom label";
+                });
 
                 chart.render();
                 return chart;
