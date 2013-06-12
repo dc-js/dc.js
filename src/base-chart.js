@@ -43,8 +43,7 @@ dc.baseChart = function (_chart) {
         preRedraw: NULL_LISTENER,
         postRedraw: NULL_LISTENER,
         filtered: NULL_LISTENER,
-        zoomed: NULL_LISTENER,
-        dragged: NULL_LISTENER
+        zoomed: NULL_LISTENER
     };
 
     var _filters = [];
@@ -224,10 +223,6 @@ dc.baseChart = function (_chart) {
         _listeners.zoomed(_chart);
     };
 
-    _chart.invokeDraggedListener = function (chart) {
-        _listeners.dragged(_chart);
-    };
-
     _chart.hasFilter = function (filter) {
         if (!arguments.length) return _filters.length > 0;
         return _filters.indexOf(filter) >= 0;
@@ -247,6 +242,7 @@ dc.baseChart = function (_chart) {
     function resetFilters() {
         _filters = [];
         applyFilters();
+        _chart.invokeFilteredListener(_chart, null);
     }
 
     function applyFilters() {

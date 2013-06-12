@@ -410,12 +410,13 @@ chart.renderlet(function(chart){
 
 #### .mouseZoomable([boolean])
 Set or get mouse zoom capability flag (default: false). When turned on the chart will be zoomable through mouse wheel
- and also becomes draggable. If range selector chart is also attached zooming and dragging will also update the range
- selection brush on associated range selector chart.
+ . If range selector chart is also attached zooming will also update the range selection brush on associated range
+ selector chart.
 
 #### .rangeChart([chart])
 Get or set the range selection chart associated with this instance. Setting the range selection chart using this function
-will automatically update its selection brush when the current chart zooms in or being dragged. See the
+will automatically update its selection brush when the current chart zooms in. In return the given range chart will also
+automatically attach this chart as its focus chart hence zoom in when range brush updates. See the
 [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/) example for this effect in action.
 
 ## <a name="pie-chart" href="#pie-chart">#</a> Pie Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
@@ -917,9 +918,6 @@ This listener function will be invoked after a filter is applied.
 
 ### .on("zoomed", function(chart, filter){...})
 This listener function will be invoked after a zoom is triggered.
-
-### .on("dragged", function(chart, filter){...})
-This listener function will be invoked after a drag motion is triggered.
 
 
 ## <a name="utilities" href="#utilities">#</a> Utilities
