@@ -241,7 +241,7 @@ suite.addBatch({
                 return chart;
             },
 
-            'should render corret number of label': function (chart) {
+            'should render correct number of label': function (chart) {
                 assert.equal(chart.selectAll("text.row")[0].length, 5);
             },
             'custom function should be used to dynamically generate label': function (chart) {

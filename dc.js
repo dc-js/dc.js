@@ -3511,12 +3511,12 @@ dc.bubbleOverlay = function(root, chartGroup) {
         var rows = _g.selectAll("g." + _rowCssClass)
             .data(_chart.group().all());
 
-        createElements(rows, _chart.group().all());
+        createElements(rows);
         removeElements(rows);
         updateElements(rows);
     }
 
-    function createElements(rows, rowData) {
+    function createElements(rows) {
         var rowEnter = rows.enter()
             .append("g")
             .attr("class", function (d, i) {
@@ -3524,8 +3524,6 @@ dc.bubbleOverlay = function(root, chartGroup) {
             });
 
         rowEnter.append("rect").attr("width", 0);
-
-        createTitles(rowEnter);
 
         createLabels(rowEnter);
         updateLabels(rows);
@@ -3538,7 +3536,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
     function updateElements(rows) {
         var height = rowHeight();
 
-        var rect = rows.attr("transform",function (d, i) {
+        rows = rows.attr("transform",function (d, i) {
                 return "translate(0," + ((i + 1) * _gap + i * height) + ")";
             }).select("rect")
             .attr("height", height)
@@ -3551,7 +3549,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
                 return (_chart.hasFilter()) ? _chart.isSelectedRow(d) : false;
             });
 
-        dc.transition(rect, _chart.transitionDuration())
+        dc.transition(rows, _chart.transitionDuration())
             .attr("width", function (d) {
                 return _xScale(_chart.valueAccessor()(d));
             });
@@ -3559,10 +3557,10 @@ dc.bubbleOverlay = function(root, chartGroup) {
         createTitles(rows);
     }
 
-    function createTitles(rowEnter) {
+    function createTitles(rows) {
         if (_chart.renderTitle()) {
-            rowEnter.select("title").remove();
-            rowEnter.append("title").text(function (d) {
+            rows.selectAll("title").remove();
+            rows.append("title").text(function (d) {
                 return _chart.title()(d);
             });
         }
