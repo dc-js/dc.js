@@ -531,8 +531,7 @@ dc.baseChart = function (_chart) {
         preRedraw: NULL_LISTENER,
         postRedraw: NULL_LISTENER,
         filtered: NULL_LISTENER,
-        zoomed: NULL_LISTENER,
-        dragged: NULL_LISTENER
+        zoomed: NULL_LISTENER
     };
 
     var _filters = [];
@@ -679,27 +678,30 @@ dc.baseChart = function (_chart) {
 
         var result = _chart.doRender();
 
-        if (_chart.transitionDuration() > 0) {
-            setTimeout(function () {
-                _chart.invokeRenderlet(_chart);
-                _listeners.postRender(_chart);
-            }, _chart.transitionDuration());
-        } else {
-            _chart.invokeRenderlet(_chart);
-            _listeners.postRender(_chart);
-        }
+        _chart.activateRenderlets("postRender");
 
         return result;
     };
+
+    _chart.activateRenderlets = function (event) {
+        if (_chart.transitionDuration() > 0 && _svg) {
+            _svg.transition().duration(_chart.transitionDuration())
+                .each("end", function () {
+                    runAllRenderlets();
+                    if (event) _listeners[event](_chart);
+                });
+        } else {
+            runAllRenderlets();
+            if (event) _listeners[event](_chart);
+        }
+    }
 
     _chart.redraw = function () {
         _listeners.preRedraw(_chart);
 
         var result = _chart.doRedraw();
 
-        _chart.invokeRenderlet(_chart);
-
-        _listeners.postRedraw(_chart);
+        _chart.activateRenderlets("postRedraw");
 
         return result;
     };
@@ -710,10 +712,6 @@ dc.baseChart = function (_chart) {
 
     _chart.invokeZoomedListener = function (chart) {
         _listeners.zoomed(_chart);
-    };
-
-    _chart.invokeDraggedListener = function (chart) {
-        _listeners.dragged(_chart);
     };
 
     _chart.hasFilter = function (filter) {
@@ -853,9 +851,9 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
-    _chart.invokeRenderlet = function (chart) {
+    function runAllRenderlets() {
         for (var i = 0; i < _renderlets.length; ++i) {
-            _renderlets[i](chart);
+            _renderlets[i](_chart);
         }
     };
 
@@ -1783,17 +1781,18 @@ dc.stackableChart = function (_chart) {
         for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
             var d = data[dataIndex];
             var value = getValueFromData(groupIndex, d);
+            var pseudoZero = 1e-13;
             if (groupIndex == 0) {
-                if (value > 0)
+                if (value > pseudoZero)
                     _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline() - _chart.dataPointHeight(d, groupIndex));
                 else
                     _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline());
             } else {
-                if (value > 0)
+                if (value > pseudoZero)
                     _groupStack.setDataPoint(groupIndex, dataIndex, _groupStack.getDataPoint(groupIndex - 1, dataIndex) - _chart.dataPointHeight(d, groupIndex))
-                else if (value < 0)
+                else if (value < -pseudoZero)
                     _groupStack.setDataPoint(groupIndex, dataIndex, _groupStack.getDataPoint(groupIndex - 1, dataIndex) + _chart.dataPointHeight(d, groupIndex - 1))
-                else // value == 0
+                else // value ~= 0
                     _groupStack.setDataPoint(groupIndex, dataIndex, _groupStack.getDataPoint(groupIndex - 1, dataIndex))
             }
         }
@@ -2810,6 +2809,7 @@ dc.dataTable = function(parent, chartGroup) {
         return d3.nest()
             .key(_chart.group())
             .sortKeys(_order)
+            .sortValues(_order)
             .entries(_sort(entries, 0, entries.length));
     }
 
@@ -3023,7 +3023,7 @@ dc.compositeChart = function(parent, chartGroup) {
 
             child.plotData();
 
-            child.invokeRenderlet(child);
+            child.activateRenderlets();
         }
     };
 
@@ -3568,7 +3568,8 @@ dc.bubbleOverlay = function(root, chartGroup) {
 
     function createLabels(rowEnter) {
         if (_chart.renderLabel()) {
-            rowEnter.append("text");
+            rowEnter.append("text")
+                .on("click", onClick);
         }
     }
 
