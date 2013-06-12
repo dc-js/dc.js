@@ -3525,8 +3525,6 @@ dc.bubbleOverlay = function(root, chartGroup) {
 
         rowEnter.append("rect").attr("width", 0);
 
-        createTitles(rowEnter);
-
         createLabels(rowEnter);
         updateLabels(rows);
     }
@@ -3560,9 +3558,8 @@ dc.bubbleOverlay = function(root, chartGroup) {
     }
 
     function createTitles(rows) {
-        rows.select("title").remove();
-
         if (_chart.renderTitle()) {
+            rows.selectAll("title").remove();
             rows.append("title").text(function (d) {
                 return _chart.title()(d);
             });
