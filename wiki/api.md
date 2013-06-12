@@ -419,6 +419,11 @@ will automatically update its selection brush when the current chart zooms in. I
 automatically attach this chart as its focus chart hence zoom in when range brush updates. See the
 [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/) example for this effect in action.
 
+#### .clipPadding([padding])
+Get or set padding in pixel for clip path. Once set padding will be applied evenly to top, left, right, and bottom padding
+ when clip path is generated. If set to zero, then the clip area will be exactly the chart body area minus the margins.
+ Default: 5
+
 ## <a name="pie-chart" href="#pie-chart">#</a> Pie Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
 This chart is a concrete pie chart implementation usually used to visualize small number of categorical distributions.
 Pie chart implementation uses keyAccessor to generate slices, and valueAccessor to calculate the size of each slice(key)

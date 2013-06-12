@@ -931,6 +931,7 @@ dc.marginable = function (_chart) {
     var _focusChart;
 
     var _mouseZoomable = false;
+    var _clipPadding = 5;
 
     _chart.resetUnitCount = function () {
         _unitCount = null;
@@ -1392,16 +1393,22 @@ dc.marginable = function (_chart) {
         return _chart.anchor().replace('#', '') + "-clip";
     }
 
+    _chart.clipPadding = function (p) {
+        if (!arguments.length) return _clipPadding;
+        _clipPadding = p;
+        return _chart;
+    };
+
     function generateClipPath() {
         var defs = dc.utils.appendOrSelect(_parent, "defs");
 
         var chartBodyClip = dc.utils.appendOrSelect(defs, "clipPath").attr("id", getClipPathId());
 
         dc.utils.appendOrSelect(chartBodyClip, "rect")
-            .attr("x", _chart.margins().left)
-            .attr("y", _chart.margins().top)
-            .attr("width", _chart.xAxisLength())
-            .attr("height", _chart.yAxisHeight());
+            .attr("x", _chart.margins().left - _clipPadding)
+            .attr("y", _chart.margins().top - _clipPadding)
+            .attr("width", _chart.xAxisLength() + _clipPadding*2)
+            .attr("height", _chart.yAxisHeight() + _clipPadding*2);
     }
 
     _chart.doRender = function () {
