@@ -735,6 +735,7 @@ dc.baseChart = function (_chart) {
     function resetFilters() {
         _filters = [];
         applyFilters();
+        _chart.invokeFilteredListener(_chart, null);
     }
 
     function applyFilters() {
@@ -928,7 +929,8 @@ dc.marginable = function (_chart) {
     var _refocused = false;
     var _unitCount;
 
-    var _rangeChart;  // chart that's used for range selection on this chart
+    var _rangeChart;
+    var _focusChart;
 
     var _mouseZoomable = false;
 
@@ -940,6 +942,7 @@ dc.marginable = function (_chart) {
     _chart.rangeChart = function (_) {
         if (!arguments.length) return _rangeChart;
         _rangeChart = _;
+        _rangeChart.focusChart(_chart);
         return _chart;
     }
 
@@ -1278,8 +1281,6 @@ dc.marginable = function (_chart) {
             _chart.brush().extent(_);
         } else {
             _chart.brush().clear();
-            // restore orig domain in case it was expanded by drag action
-            _chart.focus(_chart.xOriginalDomain());
         }
 
         return _chart;
@@ -1442,18 +1443,6 @@ dc.marginable = function (_chart) {
                     _chart.invokeZoomedListener(_chart);
                     updateRangeSelChart();
                 }));
-
-            _chart.chartBodyG().call(d3.behavior.drag()
-                .on("drag", function () {
-                    var deltaX = d3.event.dx;
-                    var curDomain = _chart.x().domain();
-                    var xMin = _chart.x()(curDomain[0]);
-                    var xMax = _chart.x()(curDomain[1]);
-                    if (typeof _chart.x().invert === "function")
-                        _chart.focus([_chart.x().invert(xMin - deltaX), _chart.x().invert(xMax - deltaX)]);
-                    _chart.invokeDraggedListener(_chart);
-                    updateRangeSelChart();
-                }));
         }
     }
 
@@ -1468,7 +1457,7 @@ dc.marginable = function (_chart) {
             _rangeChart.filter(null);
             _rangeChart.filter(refDom);
 
-            dc.events.trigger(function(){
+            dc.events.trigger(function () {
                 dc.redrawAll(_chart.chartGroup());
             });
         }
@@ -1548,6 +1537,18 @@ dc.marginable = function (_chart) {
 
     _chart.refocused = function () {
         return _refocused;
+    };
+
+    _chart.focusChart = function (c) {
+        if (!arguments.length) return _focusChart;
+        _focusChart = c;
+        _chart.on("filtered", function (chart) {
+            dc.events.trigger(function () {
+                _focusChart.focus(chart.filter());
+                dc.redrawAll(chart.chartGroup());
+            });
+        });
+        return _chart;
     };
 
     return _chart;
