@@ -3511,12 +3511,12 @@ dc.bubbleOverlay = function(root, chartGroup) {
         var rows = _g.selectAll("g." + _rowCssClass)
             .data(_chart.group().all());
 
-        createElements(rows, _chart.group().all());
+        createElements(rows);
         removeElements(rows);
         updateElements(rows);
     }
 
-    function createElements(rows, rowData) {
+    function createElements(rows) {
         var rowEnter = rows.enter()
             .append("g")
             .attr("class", function (d, i) {
@@ -3538,10 +3538,9 @@ dc.bubbleOverlay = function(root, chartGroup) {
     function updateElements(rows) {
         var height = rowHeight();
 
-        var rect = rows.attr("transform", function (d, i) {
-            return "translate(0," + ((i + 1) * _gap + i * height) + ")";
-        })
-            .select("rect")
+        rows = rows.attr("transform",function (d, i) {
+                return "translate(0," + ((i + 1) * _gap + i * height) + ")";
+            }).select("rect")
             .attr("height", height)
             .attr("fill", _chart.getColor)
             .on("click", onClick)
@@ -3552,15 +3551,19 @@ dc.bubbleOverlay = function(root, chartGroup) {
                 return (_chart.hasFilter()) ? _chart.isSelectedRow(d) : false;
             });
 
-        dc.transition(rect, _chart.transitionDuration())
+        dc.transition(rows, _chart.transitionDuration())
             .attr("width", function (d) {
                 return _xScale(_chart.valueAccessor()(d));
             });
+
+        createTitles(rows);
     }
 
-    function createTitles(rowEnter) {
+    function createTitles(rows) {
+        rows.select("title").remove();
+
         if (_chart.renderTitle()) {
-            rowEnter.append("title").text(function (d) {
+            rows.append("title").text(function (d) {
                 return _chart.title()(d);
             });
         }

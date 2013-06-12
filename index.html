@@ -364,6 +364,7 @@ d3.csv("ndx.csv", function (data) {
                 .label(function (d){
                     return d.key.split(".")[1];
                 })
+                .title(function(d){return d.value;})
                 .elasticX(true)
                 .xAxis().ticks(4);
 
