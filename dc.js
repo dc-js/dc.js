@@ -1428,9 +1428,11 @@ dc.marginable = function (_chart) {
 
         var chartBodyClip = dc.utils.appendOrSelect(defs, "clipPath").attr("id", getClipPathId());
 
+        var padding = _clipPadding * 2;
+
         dc.utils.appendOrSelect(chartBodyClip, "rect")
-            .attr("width", _chart.xAxisLength() + _clipPadding * 2)
-            .attr("height", _chart.yAxisHeight() + _clipPadding * 2);
+            .attr("width", _chart.xAxisLength() + padding)
+            .attr("height", _chart.yAxisHeight() + padding);
     }
 
     _chart.doRender = function () {
@@ -2648,8 +2650,8 @@ dc.lineChart = function (parent, chartGroup) {
     function showRefLines(dot, g) {
         var x = dot.attr("cx");
         var y = dot.attr("cy");
-        g.select("path." + Y_AXIS_REF_LINE_CLASS).style("display", "").attr("d", "M" + _chart.margins().left + " " + y + "L" + (x) + " " + (y));
-        g.select("path." + X_AXIS_REF_LINE_CLASS).style("display", "").attr("d", "M" + x + " " + (_chart.height() - _chart.margins().bottom) + "L" + x + " " + y);
+        g.select("path." + Y_AXIS_REF_LINE_CLASS).style("display", "").attr("d", "M0 " + y + "L" + (x) + " " + (y));
+        g.select("path." + X_AXIS_REF_LINE_CLASS).style("display", "").attr("d", "M" + x + " " +  _chart.yAxisHeight() + "L" + x + " " + y);
     }
 
     function hideDot(dot) {
