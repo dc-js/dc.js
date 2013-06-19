@@ -19,33 +19,6 @@ dc.lineChart = function (parent, chartGroup) {
 
         var stackedLayers = _chart.stackedLayers();
 
-        console.log(stackedLayers);
-
-        var line = d3.svg.line()
-            .x(function (d) {
-                return d.x;
-            })
-            .y(function (d) {
-                return d.y;
-            });
-
-        var area = d3.svg.area()
-            .x(function (d) {
-                return d.x;
-            })
-            .y1(function (d) {
-                return d.y;
-            })
-            .y0(function (d) {
-                var yBase = _chart.y()(0);
-                var y0 = d.y0;
-
-                if (d.y0 == 0 || d.y == yBase)
-                    y0 = yBase;
-
-                return y0;
-            });
-
         var layers = _chart.chartBodyG().selectAll("g.stack")
             .data(stackedLayers);
 
@@ -54,6 +27,28 @@ dc.lineChart = function (parent, chartGroup) {
             .append("g")
             .attr("class", function (d, i) {
                 return "stack " + "_" + i;
+            });
+
+        drawLine(layersEnter, layers);
+
+        drawArea(layersEnter, layers);
+
+        drawDots(layersEnter);
+    };
+
+    _chart.renderArea = function (_) {
+        if (!arguments.length) return _renderArea;
+        _renderArea = _;
+        return _chart;
+    };
+
+    function drawLine(layersEnter, layers) {
+        var line = d3.svg.line()
+            .x(function (d) {
+                return d.x;
+            })
+            .y(function (d) {
+                return d.y;
             });
 
         layersEnter.append("path")
@@ -66,69 +61,88 @@ dc.lineChart = function (parent, chartGroup) {
             .attr("d", function (d) {
                 return line(d.points);
             });
+    }
 
-        layersEnter.append("path")
-            .attr("class", "area")
-            .attr("fill", function (d, i) {
-                return _chart.colors()(i);
-            })
-            .attr("d", function (d) {
-                return area(d.points);
-            });
-
-        dc.transition(layers.select("path.area"), _chart.transitionDuration())
-            .attr("d", function (d) {
-                return area(d.points);
-            });
-
-        layersEnter.each(function (d, i) {
-            var layer = d3.select(this);
-
-            var g = layer.append("g").attr("class", TOOLTIP_G_CLASS);
-
-            createRefLines(g);
-
-            var dots = g.selectAll("circle." + DOT_CIRCLE_CLASS)
-                .data(g.datum().points);
-
-            dots.enter()
-                .append("circle")
-                .attr("class", DOT_CIRCLE_CLASS)
-                .attr("r", _dotRadius)
-                .attr("fill", function (d) {
-                    return _chart.colors()(i);
+    function drawArea(layersEnter, layers) {
+        if (_renderArea) {
+            var area = d3.svg.area()
+                .x(function (d) {
+                    return d.x;
                 })
-                .style("fill-opacity", 1e-6)
-                .style("stroke-opacity", 1e-6)
-                .on("mousemove", function (d) {
-                    var dot = d3.select(this);
-                    showDot(dot);
-                    showRefLines(dot, g);
-                })
-                .on("mouseout", function (d) {
-                    var dot = d3.select(this);
-                    hideDot(dot);
-                    hideRefLines(g);
-                })
-                .append("title").text(_chart.title());
-
-            dots.attr("cx", function (d) {
-                return d.x;
-            })
-                .attr("cy", function (d) {
+                .y1(function (d) {
                     return d.y;
                 })
-                .select("title").text(_chart.title());
+                .y0(function (d) {
+                    var yBase = _chart.y()(0);
+                    var y0 = d.y0;
 
-            dots.exit().remove();
-        });
-    };
+                    if (d.y0 == 0 || d.y == yBase)
+                        y0 = yBase;
 
-    _chart.renderArea = function (_) {
-        if (!arguments.length) return _renderArea;
-        _renderArea = _;
-        return _chart;
-    };
+                    return y0;
+                });
+
+            layersEnter.append("path")
+                .attr("class", "area")
+                .attr("fill", function (d, i) {
+                    return _chart.colors()(i);
+                })
+                .attr("d", function (d) {
+                    return area(d.points);
+                });
+
+            dc.transition(layers.select("path.area"), _chart.transitionDuration())
+                .attr("d", function (d) {
+                    return area(d.points);
+                });
+        }
+    }
+
+    function drawDots(layersEnter) {
+        if (!_chart.brushOn()) {
+            layersEnter.each(function (d, i) {
+                var layer = d3.select(this);
+
+                var g = layer.append("g").attr("class", TOOLTIP_G_CLASS);
+
+                createRefLines(g);
+
+                var dots = g.selectAll("circle." + DOT_CIRCLE_CLASS)
+                    .data(g.datum().points);
+
+                dots.enter()
+                    .append("circle")
+                    .attr("class", DOT_CIRCLE_CLASS)
+                    .attr("r", _dotRadius)
+                    .attr("fill", function (d) {
+                        return _chart.colors()(i);
+                    })
+                    .style("fill-opacity", 1e-6)
+                    .style("stroke-opacity", 1e-6)
+                    .on("mousemove", function (d) {
+                        var dot = d3.select(this);
+                        showDot(dot);
+                        showRefLines(dot, g);
+                    })
+                    .on("mouseout", function (d) {
+                        var dot = d3.select(this);
+                        hideDot(dot);
+                        hideRefLines(g);
+                    })
+                    .append("title").text(_chart.title());
+
+                dots.attr("cx", function (d) {
+                    return d.x;
+                })
+                    .attr("cy", function (d) {
+                        return d.y;
+                    })
+                    .select("title").text(_chart.title());
+
+                dots.exit().remove();
+            });
+        }
+    }
 
     function createRefLines(g) {
         var yRefLine = g.select("path." + Y_AXIS_REF_LINE_CLASS).empty() ? g.append("path").attr("class", Y_AXIS_REF_LINE_CLASS) : g.select("path." + Y_AXIS_REF_LINE_CLASS);
