@@ -1,6 +1,8 @@
 dc.stackableChart = function (_chart) {
     var _groupStack = new dc.utils.GroupStack();
     var _stackLayout = d3.layout.stack()
+        .offset("zero")
+        .order("default")
         .values(function (d) {
             return d.points;
         });
@@ -148,7 +150,7 @@ dc.stackableChart = function (_chart) {
             var key = getKeyFromData(groupIndex, d);
             var value = getValueFromData(groupIndex, d);
 
-            _groupStack.setDataPoint(groupIndex, dataIndex, {data: d, x: _chart.x()(key), y: _chart.y()(value), y0: _chart.y()(0)});
+            _groupStack.setDataPoint(groupIndex, dataIndex, {data: d, x: _chart.x()(key), y: _chart.y()(value)});
         }
     }
 

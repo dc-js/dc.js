@@ -1648,6 +1648,8 @@ dc.colorChart = function(_chart) {
 dc.stackableChart = function (_chart) {
     var _groupStack = new dc.utils.GroupStack();
     var _stackLayout = d3.layout.stack()
+        .offset("zero")
+        .order("default")
         .values(function (d) {
             return d.points;
         });
@@ -1795,7 +1797,7 @@ dc.stackableChart = function (_chart) {
             var key = getKeyFromData(groupIndex, d);
             var value = getValueFromData(groupIndex, d);
 
-            _groupStack.setDataPoint(groupIndex, dataIndex, {data: d, x: _chart.x()(key), y: _chart.y()(value), y0: _chart.y()(0)});
+            _groupStack.setDataPoint(groupIndex, dataIndex, {data: d, x: _chart.x()(key), y: _chart.y()(value)});
         }
     }
 
@@ -2513,6 +2515,8 @@ dc.lineChart = function (parent, chartGroup) {
 
         var stackedLayers = _chart.stackedLayers();
 
+        console.log(stackedLayers);
+
         var layers = _chart.chartBodyG().selectAll("g.stack")
             .data(stackedLayers);
 
@@ -2557,6 +2561,16 @@ dc.lineChart = function (parent, chartGroup) {
             });
     }
 
+    function calculateY0(d) {
+        var yBase = _chart.y()(0);
+        var y0 = d.y0;
+
+        if (d.y0 == 0 || d.y == yBase)
+            y0 = yBase;
+
+        return y0;
+    }
+
     function drawArea(layersEnter, layers) {
         if (_renderArea) {
             var area = d3.svg.area()
@@ -2566,15 +2580,7 @@ dc.lineChart = function (parent, chartGroup) {
                 .y1(function (d) {
                     return d.y;
                 })
-                .y0(function (d) {
-                    var yBase = _chart.y()(0);
-                    var y0 = d.y0;
-
-                    if (d.y0 == 0 || d.y == yBase)
-                        y0 = yBase;
-
-                    return y0;
-                });
+                .y0(calculateY0);
 
             layersEnter.append("path")
                 .attr("class", "area")
@@ -2656,7 +2662,7 @@ dc.lineChart = function (parent, chartGroup) {
         var x = dot.attr("cx");
         var y = dot.attr("cy");
         g.select("path." + Y_AXIS_REF_LINE_CLASS).style("display", "").attr("d", "M0 " + y + "L" + (x) + " " + (y));
-        g.select("path." + X_AXIS_REF_LINE_CLASS).style("display", "").attr("d", "M" + x + " " +  _chart.yAxisHeight() + "L" + x + " " + y);
+        g.select("path." + X_AXIS_REF_LINE_CLASS).style("display", "").attr("d", "M" + x + " " + _chart.yAxisHeight() + "L" + x + " " + y);
     }
 
     function hideDot(dot) {
