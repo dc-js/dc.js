@@ -4,7 +4,10 @@ dc.coordinateGridChart = function (_chart) {
     var HORIZONTAL_CLASS = "horizontal";
     var VERTICAL_CLASS = "vertical";
 
-    _chart = dc.marginable(dc.baseChart(_chart));
+
+    _chart = dc.colorChart(dc.marginable(dc.baseChart(_chart)));
+
+    _chart.colors(d3.scale.category10());
 
     var _parent;
     var _g;

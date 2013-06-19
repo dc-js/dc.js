@@ -9,6 +9,7 @@
 </head>
 <body>
 <div id="stackChart"></div>
+<div id="barChart"></div>
 <script type="text/javascript">
     var data = [
         {
@@ -118,13 +119,13 @@
         return 0;
     });
 
-    var chart = dc.lineChart("#stackChart")
+    var chart1 = dc.lineChart("#stackChart")
             .width(900)
             .height(250)
             .dimension(day)
             .group(stack0)
             .stack(stack1)
-            .elasticY(false)
+            .elasticY(true)
             .x(d3.time.scale().domain([new Date(1371600000000), new Date(1370995200000)]))
             .round(d3.time.day.round)
             .xUnits(d3.time.days)
@@ -133,6 +134,21 @@
             .brushOn(false)
             .renderTitle(true)
             .dotRadius(10);
+
+    var chart2 = dc.barChart("#barChart")
+                .width(900)
+                .height(250)
+                .dimension(day)
+                .group(stack0)
+                .stack(stack1)
+                .elasticY(false)
+                .x(d3.time.scale().domain([new Date(1371600000000), new Date(1370995200000)]))
+                .round(d3.time.day.round)
+                .xUnits(d3.time.days)
+                .renderHorizontalGridLines(true)
+                .brushOn(false)
+                .renderTitle(true);
+
     dc.renderAll();
 
 

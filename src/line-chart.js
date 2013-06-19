@@ -5,11 +5,10 @@ dc.lineChart = function (parent, chartGroup) {
     var Y_AXIS_REF_LINE_CLASS = "yRef";
     var X_AXIS_REF_LINE_CLASS = "xRef";
 
-    var _chart = dc.colorChart(dc.stackableChart(dc.coordinateGridChart({})));
+    var _chart = dc.stackableChart(dc.coordinateGridChart({}));
     var _renderArea = false;
     var _dotRadius = DEFAULT_DOT_RADIUS;
 
-    _chart.colors(d3.scale.category10());
     _chart.transitionDuration(500);
 
     _chart.plotData = function () {

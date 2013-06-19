@@ -14,96 +14,76 @@ dc.barChart = function (parent, chartGroup) {
         _numberOfBars = null;
         _barWidth = null;
         getNumberOfBars();
-        barWidth();
-    }
+    };
 
     _chart.plotData = function () {
         var groups = _chart.allGroups();
 
         _chart.calculateDataPointMatrixForAll(groups);
 
-        for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
-            generateBarsPerGroup(groupIndex, groups[groupIndex]);
-        }
+        var stackedLayers = _chart.stackedLayers();
+
+        console.log(stackedLayers);
+
+        calculateBarWidth();
+
+        var layers = _chart.chartBodyG().selectAll("g.stack")
+            .data(stackedLayers);
+
+        var layersEnter = layers
+            .enter()
+            .append("g")
+            .attr("class", function (d, i) {
+                return "stack " + "_" + i;
+            });
+
+        layersEnter.each(function (d, i) {
+            var layer = d3.select(this);
+
+            var bars = layer.selectAll("rect.bar")
+                .data(layer.datum().points);
+
+            bars.enter()
+                .append("rect")
+                .attr("class", "bar")
+                .attr("fill", function (d) {
+                    return _chart.colors()(i);
+                })
+                .append("title").text(_chart.title());
+
+            bars.attr("x", function (d) {
+                return d.x;
+            })
+                .attr("y", function (d) {
+                    return d.y;
+                })
+                .attr("width", _barWidth)
+                .attr("height", function (d) {
+                    var yBase = _chart.y()(0);
+                    var y0 = d.y0;
+
+                    if (d.y0 == 0 || d.y == yBase)
+                        y0 = yBase;
+
+                    return Math.abs(y0 - d.y);
+                })
+                .select("title").text(_chart.title());
+
+            bars.exit().remove();
+        });
     };
 
-    function generateBarsPerGroup(groupIndex, group) {
-        var data = _chart.getDataWithinXDomain(group);
-
-        calculateBarWidth(_chart.x()(_chart.keyAccessor()(data[0])));
-
-        var bars = _chart.chartBodyG().selectAll("rect." + dc.constants.STACK_CLASS + groupIndex)
-            .data(data);
-
-        addNewBars(bars, groupIndex);
-
-        updateBars(bars, groupIndex);
-
-        deleteBars(bars);
-    }
-
-    function calculateBarWidth(offset) {
+    function calculateBarWidth() {
         if (_barWidth == null) {
             var numberOfBars = _chart.isOrdinal() ? getNumberOfBars() + 1 : getNumberOfBars();
 
-            var w = Math.floor((_chart.xAxisLength() - offset - (numberOfBars - 1) * _gap) / numberOfBars);
+            var w = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
 
-
-            if (isNaN(w) || w < MIN_BAR_WIDTH)
+            if (w == Infinity || isNaN(w) || w < MIN_BAR_WIDTH)
                 w = MIN_BAR_WIDTH;
 
             _barWidth = w;
         }
-    }
-
-    function addNewBars(bars, groupIndex) {
-        var bars = bars.enter().append("rect");
-
-        bars.attr("class", "bar " + dc.constants.STACK_CLASS + groupIndex)
-            .attr("x", function (data, dataIndex) {
-                return barX(this, data, groupIndex, dataIndex);
-            })
-            .attr("y", _chart.baseLineY())
-            .attr("width", barWidth);
-
-        if (_chart.isOrdinal())
-            bars.on("click", _chart.onClick);
-
-        if (_chart.renderTitle()) {
-            bars.append("title").text(_chart.title());
-        }
-
-        dc.transition(bars, _chart.transitionDuration())
-            .attr("y", function (data, dataIndex) {
-                return barY(this, data, dataIndex);
-            })
-            .attr("height", function (data) {
-                return _chart.dataPointHeight(data, getGroupIndexFromBar(this));
-            });
-    }
-
-    function updateBars(bars, groupIndex) {
-        if (_chart.renderTitle()) {
-            bars.select("title").text(_chart.title());
-        }
-
-        dc.transition(bars, _chart.transitionDuration())
-            .attr("x", function (data) {
-                return barX(this, data, groupIndex);
-            })
-            .attr("y", function (data, dataIndex) {
-                return barY(this, data, dataIndex);
-            })
-            .attr("height", function (data) {
-                return _chart.dataPointHeight(data, getGroupIndexFromBar(this));
-            })
-            .attr("width", barWidth);
-    }
-
-    function deleteBars(bars) {
-        dc.transition(bars.exit(), _chart.transitionDuration())
-            .attr("y", _chart.xAxisY())
-            .attr("height", 0);
     }
 
     function getNumberOfBars() {
@@ -112,31 +92,6 @@ dc.barChart = function (parent, chartGroup) {
         }
 
         return _numberOfBars;
-    }
-
-    function barWidth(d) {
-        return _barWidth;
-    }
-
-    function setGroupIndexToBar(bar, groupIndex) {
-        bar[dc.constants.GROUP_INDEX_NAME] = groupIndex;
-    }
-
-    function barX(bar, data, groupIndex) {
-        setGroupIndexToBar(bar, groupIndex);
-        var position = _chart.x()(_chart.keyAccessor()(data)) + _chart.margins().left;
-        if (_centerBar)
-            position -= barWidth() / 2;
-        return position;
-    }
-
-    function getGroupIndexFromBar(bar) {
-        return bar[dc.constants.GROUP_INDEX_NAME];
-    }
-
-    function barY(bar, data, dataIndex) {
-        var groupIndex = getGroupIndexFromBar(bar);
-        return _chart.getChartStack().getDataPoint(groupIndex, dataIndex);
     }
 
     _chart.fadeDeselectedArea = function () {

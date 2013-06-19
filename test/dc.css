@@ -4,7 +4,6 @@
 
 .dc-chart rect.bar {
     stroke: none;
-    fill: steelblue;
     cursor: pointer;
 }
 
