@@ -517,11 +517,11 @@ dc.coordinateGridChart = function (_chart) {
 
         var chartBodyClip = dc.utils.appendOrSelect(defs, "clipPath").attr("id", getClipPathId());
 
+        var padding = _clipPadding * 2;
+
         dc.utils.appendOrSelect(chartBodyClip, "rect")
-            .attr("x", _chart.margins().left - _clipPadding)
-            .attr("y", _chart.margins().top - _clipPadding)
-            .attr("width", _chart.xAxisLength() + _clipPadding * 2)
-            .attr("height", _chart.yAxisHeight() + _clipPadding * 2);
+            .attr("width", _chart.xAxisLength() + padding)
+            .attr("height", _chart.yAxisHeight() + padding);
     }
 
     _chart.doRender = function () {

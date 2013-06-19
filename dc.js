@@ -1429,8 +1429,6 @@ dc.marginable = function (_chart) {
         var chartBodyClip = dc.utils.appendOrSelect(defs, "clipPath").attr("id", getClipPathId());
 
         dc.utils.appendOrSelect(chartBodyClip, "rect")
-            .attr("x", _chart.margins().left - _clipPadding)
-            .attr("y", _chart.margins().top - _clipPadding)
             .attr("width", _chart.xAxisLength() + _clipPadding * 2)
             .attr("height", _chart.yAxisHeight() + _clipPadding * 2);
     }
@@ -2347,7 +2345,7 @@ dc.barChart = function (parent, chartGroup) {
         _numberOfBars = null;
         _barWidth = null;
         getNumberOfBars();
-    }
+    };
 
     _chart.plotData = function () {
         var groups = _chart.allGroups();
@@ -2358,7 +2356,7 @@ dc.barChart = function (parent, chartGroup) {
 
         console.log(stackedLayers);
 
-        calculateBarWidth(1);
+        calculateBarWidth();
 
         var layers = _chart.chartBodyG().selectAll("g.stack")
             .data(stackedLayers);
