@@ -126,7 +126,7 @@
             .group(stack0)
             .stack(stack1)
             .elasticY(true)
-            .x(d3.time.scale().domain([new Date(1370995200000), new Date(1371600000000)]))
+            .x(d3.time.scale().domain([new Date(1370995200000), new Date(1371700000000)]))
             .round(d3.time.day.round)
             .xUnits(d3.time.days)
             .renderHorizontalGridLines(true)
@@ -138,15 +138,14 @@
     var chart2 = dc.barChart("#barChart")
                 .width(900)
                 .height(250)
+                .gap(5)
                 .dimension(day)
                 .group(stack0)
                 .stack(stack1)
                 .elasticY(false)
-                .x(d3.time.scale().domain([new Date(1370995200000), new Date(1371600000000)]))
-                .round(d3.time.day.round)
+                .x(d3.time.scale().domain([new Date(1370995200000), new Date(1371700000000)]))
                 .xUnits(d3.time.days)
                 .renderHorizontalGridLines(true)
-                .brushOn(false)
                 .renderTitle(true);
 
     dc.renderAll();

@@ -23,55 +23,60 @@ dc.barChart = function (parent, chartGroup) {
 
         var stackedLayers = _chart.stackedLayers();
 
-        console.log(stackedLayers);
-
         calculateBarWidth();
 
         var layers = _chart.chartBodyG().selectAll("g.stack")
             .data(stackedLayers);
 
-        var layersEnter = layers
+        layers
             .enter()
             .append("g")
             .attr("class", function (d, i) {
                 return "stack " + "_" + i;
             });
 
-        layersEnter.each(function (d, i) {
+        layers.each(function (d, i) {
             var layer = d3.select(this);
 
-            var bars = layer.selectAll("rect.bar")
-                .data(layer.datum().points);
-
-            bars.enter()
-                .append("rect")
-                .attr("class", "bar")
-                .attr("fill", function (d) {
-                    return _chart.colors()(i);
-                })
-                .append("title").text(_chart.title());
-
-            bars.attr("x", function (d) {
-                return d.x;
-            })
-                .attr("y", function (d) {
-                    return d.y;
-                })
-                .attr("width", _barWidth)
-                .attr("height", function (d) {
-                    var yBase = _chart.y()(0);
-                    var y0 = d.y0;
-
-                    if (d.y0 == 0 || d.y == yBase)
-                        y0 = yBase;
-
-                    return Math.abs(y0 - d.y);
-                })
-                .select("title").text(_chart.title());
-
-            bars.exit().remove();
+            renderBars(layer, d, i);
         });
     };
+
+    function renderBars(layer, d, i) {
+        var bars = layer.selectAll("rect.bar")
+            .data(d.points);
+
+        bars.enter()
+            .append("rect")
+            .attr("class", "bar")
+            .attr("fill", function (d) {
+                return _chart.colors()(i);
+            })
+            .append("title").text(_chart.title());
+
+        dc.transition(bars, _chart.transitionDuration())
+            .attr("x", function (d) {
+                return d.x;
+            })
+            .attr("y", function (d) {
+                return d.y;
+            })
+            .attr("width", _barWidth)
+            .attr("height", function (d) {
+                var yBase = _chart.y()(0);
+                var y0 = d.y0;
+
+                if (d.y0 == 0 || d.y == yBase)
+                    y0 = yBase;
+
+                return Math.abs(y0 - d.y);
+            })
+            .select("title").text(_chart.title());
+
+        dc.transition(bars.exit(), _chart.transitionDuration())
+            .attr("height", 0)
+            .remove();
+    }
 
     function calculateBarWidth() {
         if (_barWidth == null) {
@@ -101,10 +106,10 @@ dc.barChart = function (parent, chartGroup) {
         if (_chart.isOrdinal()) {
             if (_chart.hasFilter()) {
                 bars.classed(dc.constants.SELECTED_CLASS, function (d) {
-                    return _chart.hasFilter(_chart.keyAccessor()(d));
+                    return _chart.hasFilter(_chart.keyAccessor()(d.data));
                 });
                 bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
-                    return !_chart.hasFilter(_chart.keyAccessor()(d));
+                    return !_chart.hasFilter(_chart.keyAccessor()(d.data));
                 });
             } else {
                 bars.classed(dc.constants.SELECTED_CLASS, false);
@@ -116,7 +121,7 @@ dc.barChart = function (parent, chartGroup) {
                 var end = extent[1];
 
                 bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
-                    var xValue = _chart.keyAccessor()(d);
+                    var xValue = _chart.keyAccessor()(d.data);
                     return xValue < start || xValue >= end;
                 });
             } else {
