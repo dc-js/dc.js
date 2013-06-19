@@ -1,7 +1,9 @@
 dc.stackableChart = function (_chart) {
-    var MIN_DATA_POINT_HEIGHT = 0;
-
     var _groupStack = new dc.utils.GroupStack();
+    var _stackLayout = d3.layout.stack()
+        .values(function (d) {
+            return d.points;
+        });
     var _allGroups;
     var _allValueAccessors;
     var _allKeyAccessors;
@@ -15,7 +17,7 @@ dc.stackableChart = function (_chart) {
         return _chart;
     };
 
-    _chart.expireCache = function(){
+    _chart.expireCache = function () {
         _allGroups = null;
         _allValueAccessors = null;
         _allKeyAccessors = null;
@@ -132,53 +134,21 @@ dc.stackableChart = function (_chart) {
         return dc.utils.add(max, _chart.xAxisPadding());
     };
 
-    _chart.baseLineY = function () {
-        return _chart.y()(0);
+    function getKeyFromData(groupIndex, d) {
+        return _chart.getKeyAccessorByIndex(groupIndex)(d);
     }
-
-    _chart.dataPointBaseline = function () {
-        return _chart.margins().top + _chart.baseLineY();
-    };
 
     function getValueFromData(groupIndex, d) {
         return _chart.getValueAccessorByIndex(groupIndex)(d);
     }
 
-    _chart.dataPointHeight = function (d, groupIndex) {
-        var value = getValueFromData(groupIndex, d);
-        var yPosition = _chart.y()(value);
-        var zeroPosition = _chart.baseLineY();
-        var h = 0;
-
-        if (value > 0)
-            h = zeroPosition - yPosition;
-        else
-            h = yPosition - zeroPosition;
-
-        if (isNaN(h) || h < MIN_DATA_POINT_HEIGHT)
-            h = MIN_DATA_POINT_HEIGHT;
-
-        return h;
-    };
-
     function calculateDataPointMatrix(data, groupIndex) {
         for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
             var d = data[dataIndex];
+            var key = getKeyFromData(groupIndex, d);
             var value = getValueFromData(groupIndex, d);
-            var pseudoZero = 1e-13;
-            if (groupIndex == 0) {
-                if (value > pseudoZero)
-                    _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline() - _chart.dataPointHeight(d, groupIndex));
-                else
-                    _groupStack.setDataPoint(groupIndex, dataIndex, _chart.dataPointBaseline());
-            } else {
-                if (value > pseudoZero)
-                    _groupStack.setDataPoint(groupIndex, dataIndex, _groupStack.getDataPoint(groupIndex - 1, dataIndex) - _chart.dataPointHeight(d, groupIndex))
-                else if (value < -pseudoZero)
-                    _groupStack.setDataPoint(groupIndex, dataIndex, _groupStack.getDataPoint(groupIndex - 1, dataIndex) + _chart.dataPointHeight(d, groupIndex - 1))
-                else // value ~= 0
-                    _groupStack.setDataPoint(groupIndex, dataIndex, _groupStack.getDataPoint(groupIndex - 1, dataIndex))
-            }
+
+            _groupStack.setDataPoint(groupIndex, dataIndex, {data: d, x: _chart.x()(key), y: _chart.y()(value), y0: _chart.y()(0)});
         }
     }
 
@@ -186,15 +156,6 @@ dc.stackableChart = function (_chart) {
         for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
             var group = groups[groupIndex];
             var data = group.all();
-
-            calculateDataPointMatrix(data, groupIndex);
-        }
-    };
-
-    _chart.calculateDataPointMatrixWithinXDomain = function (groups) {
-        for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
-            var group = groups[groupIndex];
-            var data = _chart.getDataWithinXDomain(group);
 
             calculateDataPointMatrix(data, groupIndex);
         }
@@ -215,6 +176,16 @@ dc.stackableChart = function (_chart) {
         _chart.expireCache();
         return _chart._keyAccessor(_);
     });
+
+    _chart.stackLayout = function (stack) {
+        if(!arguments.length) return _stackLayout;
+        _stackLayout = stack;
+        return _chart;
+    };
+
+    _chart.stackedLayers = function () {
+        return _chart.stackLayout()(_groupStack.toLayers());
+    };
 
     return _chart;
 };

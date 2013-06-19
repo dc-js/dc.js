@@ -1,167 +1,134 @@
-dc.lineChart = function(parent, chartGroup) {
-    var AREA_BOTTOM_PADDING = 1;
+dc.lineChart = function (parent, chartGroup) {
     var DEFAULT_DOT_RADIUS = 5;
     var TOOLTIP_G_CLASS = "dc-tooltip";
     var DOT_CIRCLE_CLASS = "dot";
     var Y_AXIS_REF_LINE_CLASS = "yRef";
     var X_AXIS_REF_LINE_CLASS = "xRef";
 
-    var _chart = dc.stackableChart(dc.coordinateGridChart({}));
+    var _chart = dc.colorChart(dc.stackableChart(dc.coordinateGridChart({})));
     var _renderArea = false;
     var _dotRadius = DEFAULT_DOT_RADIUS;
 
+    _chart.colors(d3.scale.category10());
     _chart.transitionDuration(500);
 
-    _chart.plotData = function() {
+    _chart.plotData = function () {
         var groups = _chart.allGroups();
 
         _chart.calculateDataPointMatrixForAll(groups);
 
-        for (var groupIndex = 0; groupIndex < groups.length; ++ groupIndex) {
-            var group = groups[groupIndex];
-            plotDataByGroup(groupIndex, group);
-        }
-    };
+        var stackedLayers = _chart.stackedLayers();
 
-    function plotDataByGroup(groupIndex, group) {
-        var stackedCssClass = getStackedCssClass(groupIndex);
-
-        var g = createGrouping(stackedCssClass, group);
-
-        var line = drawLine(g, stackedCssClass, groupIndex);
-
-        if (_renderArea)
-            drawArea(g, stackedCssClass, groupIndex, line);
-
-        if (_chart.renderTitle())
-            drawDots(g, groupIndex);
-    }
-
-    function getStackedCssClass(groupIndex) {
-        return dc.constants.STACK_CLASS + groupIndex;
-    }
-
-    function createGrouping(stackedCssClass, group) {
-        var g = _chart.chartBodyG().select("g." + stackedCssClass);
-
-        if (g.empty())
-            g = _chart.chartBodyG().append("g").attr("class", stackedCssClass);
-
-        g.datum(group.all());
-
-        return g;
-    }
-
-    function drawLine(g, stackedCssClass, groupIndex) {
-        var linePath = g.select("path.line");
-
-        if (linePath.empty())
-            linePath = g.append("path")
-                .attr("class", "line " + stackedCssClass);
-
-        linePath[0][0][dc.constants.GROUP_INDEX_NAME] = groupIndex;
+        console.log(stackedLayers);
 
         var line = d3.svg.line()
-            .x(lineX)
-            .y(function(d, dataIndex) {
-                var groupIndex = this[dc.constants.GROUP_INDEX_NAME];
-                return lineY(d, dataIndex, groupIndex);
+            .x(function (d) {
+                return d.x;
+            })
+            .y(function (d) {
+                return d.y;
             });
-
-        dc.transition(linePath, _chart.transitionDuration(),
-            function(t) {
-                t.ease("linear");
-            }).attr("d", line);
-
-        return line;
-    }
-
-    var lineX = function(d) {
-        return _chart.margins().left + _chart.x()(_chart.keyAccessor()(d));
-    };
-
-    var lineY = function(d, dataIndex, groupIndex) {
-        var y = _chart.getChartStack().getDataPoint(groupIndex, dataIndex);
-        if(y >= _chart.dataPointBaseline())
-            y += _chart.dataPointHeight(d, groupIndex);
-        return y;
-    };
-
-    function drawArea(g, stackedCssClass, groupIndex, line) {
-        var areaPath = g.select("path.area");
-
-        if (areaPath.empty())
-            areaPath = g.append("path")
-                .attr("class", "area " + stackedCssClass);
-
-        areaPath[0][0][dc.constants.GROUP_INDEX_NAME] = groupIndex;
 
         var area = d3.svg.area()
-            .x(line.x())
-            .y1(line.y())
-            .y0(function(d, dataIndex) {
-                var groupIndex = this[dc.constants.GROUP_INDEX_NAME];
+            .x(function (d) {
+                return d.x;
+            })
+            .y1(function (d) {
+                return d.y;
+            })
+            .y0(function (d) {
+                var yBase = _chart.y()(0);
+                var y0 = d.y0;
 
-                if (groupIndex == 0)
-                    return _chart.dataPointBaseline() - AREA_BOTTOM_PADDING;
+                if (d.y0 == 0 || d.y == yBase)
+                    y0 = yBase;
 
-                var y = _chart.getChartStack().getDataPoint(groupIndex-1, dataIndex);
-
-                if(y < _chart.dataPointBaseline())
-                    return y - AREA_BOTTOM_PADDING;
-                else
-                    return y + _chart.dataPointHeight(d, groupIndex-1);
+                return y0;
             });
 
-        dc.transition(areaPath, _chart.transitionDuration(),
-            function(t) {
-                t.ease("linear");
-            }).attr("d", area);
-    }
+        var layers = _chart.chartBodyG().selectAll("g.stack")
+            .data(stackedLayers);
 
-    _chart.renderArea = function(_) {
+        var layersEnter = layers
+            .enter()
+            .append("g")
+            .attr("class", function (d, i) {
+                return "stack " + "_" + i;
+            });
+
+        layersEnter.append("path")
+            .attr("class", "line")
+            .attr("stroke", function (d, i) {
+                return _chart.colors()(i);
+            });
+
+        dc.transition(layers.select("path.line"), _chart.transitionDuration())
+            .attr("d", function (d) {
+                return line(d.points);
+            });
+
+        layersEnter.append("path")
+            .attr("class", "area")
+            .attr("fill", function (d, i) {
+                return _chart.colors()(i);
+            })
+            .attr("d", function (d) {
+                return area(d.points);
+            });
+
+        dc.transition(layers.select("path.area"), _chart.transitionDuration())
+            .attr("d", function (d) {
+                return area(d.points);
+            });
+
+        layersEnter.each(function (d, i) {
+            var layer = d3.select(this);
+
+            var g = layer.append("g").attr("class", TOOLTIP_G_CLASS);
+
+            createRefLines(g);
+
+            var dots = g.selectAll("circle." + DOT_CIRCLE_CLASS)
+                .data(g.datum().points);
+
+            dots.enter()
+                .append("circle")
+                .attr("class", DOT_CIRCLE_CLASS)
+                .attr("r", _dotRadius)
+                .attr("fill", function (d) {
+                    return _chart.colors()(i);
+                })
+                .style("fill-opacity", 1e-6)
+                .style("stroke-opacity", 1e-6)
+                .on("mousemove", function (d) {
+                    var dot = d3.select(this);
+                    showDot(dot);
+                    showRefLines(dot, g);
+                })
+                .on("mouseout", function (d) {
+                    var dot = d3.select(this);
+                    hideDot(dot);
+                    hideRefLines(g);
+                })
+                .append("title").text(_chart.title());
+
+            dots.attr("cx", function (d) {
+                return d.x;
+            })
+                .attr("cy", function (d) {
+                    return d.y;
+                })
+                .select("title").text(_chart.title());
+
+            dots.exit().remove();
+        });
+    };
+
+    _chart.renderArea = function (_) {
         if (!arguments.length) return _renderArea;
         _renderArea = _;
         return _chart;
     };
-
-    function drawDots(parentG, groupIndex) {
-        var g = parentG.select("g." + TOOLTIP_G_CLASS);
-
-        if (g.empty())
-            g = parentG.append("g").attr("class", TOOLTIP_G_CLASS);
-
-        createRefLines(g);
-
-        var dots = g.selectAll("circle." + DOT_CIRCLE_CLASS)
-            .data(g.datum());
-
-        dots.enter()
-            .append("circle")
-            .attr("class", DOT_CIRCLE_CLASS)
-            .attr("r", _dotRadius)
-            .style("fill-opacity", 1e-6)
-            .style("stroke-opacity", 1e-6)
-            .on("mousemove", function(d) {
-                var dot = d3.select(this);
-                showDot(dot);
-                showRefLines(dot, g);
-            })
-            .on("mouseout", function(d) {
-                var dot = d3.select(this);
-                hideDot(dot);
-                hideRefLines(g);
-            })
-            .append("title").text(_chart.title());
-
-        dots.attr("cx", lineX)
-            .attr("cy", function(d, dataIndex) {
-                return lineY(d, dataIndex, groupIndex);
-            })
-            .select("title").text(_chart.title());
-
-        dots.exit().remove();
-    }
 
     function createRefLines(g) {
         var yRefLine = g.select("path." + Y_AXIS_REF_LINE_CLASS).empty() ? g.append("path").attr("class", Y_AXIS_REF_LINE_CLASS) : g.select("path." + Y_AXIS_REF_LINE_CLASS);
@@ -193,7 +160,7 @@ dc.lineChart = function(parent, chartGroup) {
         g.select("path." + X_AXIS_REF_LINE_CLASS).style("display", "none");
     }
 
-    _chart.dotRadius = function(_) {
+    _chart.dotRadius = function (_) {
         if (!arguments.length) return _dotRadius;
         _dotRadius = _;
         return _chart;

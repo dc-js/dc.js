@@ -38,6 +38,10 @@ dc.coordinateGridChart = function (_chart) {
     var _mouseZoomable = false;
     var _clipPadding = 5;
 
+    _chart.title(function (d) {
+        return d.data.key + ": " + d.data.value;
+    });
+
     _chart.resetUnitCount = function () {
         _unitCount = null;
         _chart.xUnitCount();
@@ -59,6 +63,7 @@ dc.coordinateGridChart = function (_chart) {
         _g = _parent.append("g");
 
         _chartBodyG = _g.append("g").attr("class", "chartBody")
+            .attr("transform", "translate(" + _chart.margins().left + ", " + _chart.margins().top + ")")
             .attr("clip-path", "url(#" + getClipPathId() + ")");
 
         return _g;
@@ -512,8 +517,8 @@ dc.coordinateGridChart = function (_chart) {
         dc.utils.appendOrSelect(chartBodyClip, "rect")
             .attr("x", _chart.margins().left - _clipPadding)
             .attr("y", _chart.margins().top - _clipPadding)
-            .attr("width", _chart.xAxisLength() + _clipPadding*2)
-            .attr("height", _chart.yAxisHeight() + _clipPadding*2);
+            .attr("width", _chart.xAxisLength() + _clipPadding * 2)
+            .attr("height", _chart.yAxisHeight() + _clipPadding * 2);
     }
 
     _chart.doRender = function () {

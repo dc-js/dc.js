@@ -82,32 +82,32 @@ dc.utils.subtract = function (l, r) {
 };
 
 dc.utils.GroupStack = function () {
-    var _dataPointMatrix = [];
+    var _dataLayers = [];
     var _groups = [];
     var _defaultAccessor;
 
-    function initializeDataPointRow(x) {
-        if (!_dataPointMatrix[x])
-            _dataPointMatrix[x] = [];
+    function initializeDataLayer(i) {
+        if (!_dataLayers[i])
+            _dataLayers[i] = [];
     }
 
-    this.setDataPoint = function (x, y, data) {
-        initializeDataPointRow(x);
-        _dataPointMatrix[x][y] = data;
+    this.setDataPoint = function (layerIndex, pointIndex, data) {
+        initializeDataLayer(layerIndex);
+        _dataLayers[layerIndex][pointIndex] = data;
     };
 
     this.getDataPoint = function (x, y) {
-        initializeDataPointRow(x);
-        var dataPoint = _dataPointMatrix[x][y];
+        initializeDataLayer(x);
+        var dataPoint = _dataLayers[x][y];
         if (dataPoint == undefined)
             dataPoint = 0;
         return dataPoint;
     };
 
-    this.addGroup = function (group, retriever) {
-        if (!retriever)
-            retriever = _defaultAccessor;
-        _groups.push([group, retriever]);
+    this.addGroup = function (group, accessor) {
+        if (!accessor)
+            accessor = _defaultAccessor;
+        _groups.push([group, accessor]);
         return _groups.length - 1;
     };
 
@@ -124,7 +124,7 @@ dc.utils.GroupStack = function () {
     };
 
     this.clear = function () {
-        _dataPointMatrix = [];
+        _dataLayers = [];
         _groups = [];
     };
 
@@ -132,8 +132,24 @@ dc.utils.GroupStack = function () {
         _defaultAccessor = retriever;
     };
 
-    this.getDataPoints = function () {
-        return _dataPointMatrix;
+    this.getDataLayers = function () {
+        return _dataLayers;
+    };
+
+    this.toLayers = function(){
+        var layers = [];
+
+        for(var i = 0; i<_dataLayers.length; ++i){
+            var layer = {index: i, points: []};
+            var dataPoints = _dataLayers[i];
+
+            for(var j = 0; j < dataPoints.length; ++j)
+                layer.points.push(dataPoints[j]);
+
+            layers.push(layer);
+        }
+
+        return layers;
     };
 };
 

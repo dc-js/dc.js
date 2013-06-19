@@ -20,7 +20,7 @@ dc.barChart = function (parent, chartGroup) {
     _chart.plotData = function () {
         var groups = _chart.allGroups();
 
-        _chart.calculateDataPointMatrixWithinXDomain(groups);
+        _chart.calculateDataPointMatrixForAll(groups);
 
         for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
             generateBarsPerGroup(groupIndex, groups[groupIndex]);
