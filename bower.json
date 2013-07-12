@@ -1,0 +1,21 @@
+{
+  "name": "dcjs",
+  "version": "1.4.0",
+  "main": ["dc.js", "dc.css"],
+  "ignore": [
+    ".gitignore",
+    ".travis.yml",
+    "build.xml",
+    "globals.js",
+    "index.js",
+    "make",
+    "package.json",
+    "test",
+    "src",
+    "wiki"
+  ],
+  "dependencies": {
+    "d3": "~3.2.3",
+    "crossfilter": "~1.2.0"
+  }
+}
