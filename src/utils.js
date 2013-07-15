@@ -2,28 +2,28 @@ dc.dateFormat = d3.time.format("%m/%d/%Y");
 
 dc.printers = {};
 
-dc.printers.filters = function (filters) {
+dc.printers.filters = function (filters,lookupHandler) {
     var s = "";
 
     for (var i = 0; i < filters.length; ++i) {
         if (i > 0) s += ", ";
-        s += dc.printers.filter(filters[i]);
+        s += dc.printers.filter(filters[i],lookupHandler);
     }
 
     return s;
 };
 
-dc.printers.filter = function (filter) {
+dc.printers.filter = function (filter, lookupHandler) {
     var s = "";
 
     if (filter) {
         if (filter instanceof Array) {
             if (filter.length >= 2)
-                s = "[" + dc.utils.printSingleValue(filter[0]) + " -> " + dc.utils.printSingleValue(filter[1]) + "]";
+                s = "[" + dc.utils.printSingleValue(lookupHandler(filter[0]) + " -> " + dc.utils.printSingleValue(lookupHandler(filter[1]) + "]";
             else if (filter.length >= 1)
-                s = dc.utils.printSingleValue(filter[0]);
+                s = dc.utils.printSingleValue(lookupHandler(filter[0]);
         } else {
-            s = dc.utils.printSingleValue(filter)
+            s = dc.utils.printSingleValue(lookupHandler(filter))
         }
     }
 
@@ -31,6 +31,10 @@ dc.printers.filter = function (filter) {
 };
 
 dc.utils = {};
+
+dc.utils.identity = function(d) {
+    return d
+};
 
 dc.utils.printSingleValue = function (filter) {
     var s = "" + filter;
