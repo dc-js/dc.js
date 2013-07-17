@@ -1,7 +1,7 @@
 dc.colorChart = function(_chart) {
     var _colors = d3.scale.category20c();
 
-    var _colorDomain = [0, _colors.range().length];
+    var _colorDomain ;
 
     var _colorCalculator = function(value) {
         var minValue = _colorDomain[0];
@@ -32,7 +32,8 @@ dc.colorChart = function(_chart) {
             _colors = _;
         }
 
-        _colorDomain = [0, _colors.range().length];
+        _colorDomain = _chart.colorDomainReset(_colors);
+        //_colorDomain = [0, _colors.range().length];
 
         return _chart;
     };
@@ -57,6 +58,10 @@ dc.colorChart = function(_chart) {
         if(!arguments.length) return _colorDomain;
         _colorDomain = _;
         return _chart;
+    };
+
+    _chart.colorDomainReset = function(colors) {
+        return [0, colors.range().length];
     };
 
     return _chart;

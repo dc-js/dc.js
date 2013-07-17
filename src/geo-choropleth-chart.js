@@ -177,5 +177,12 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         return _chart;
     };
 
+    _chart.colorDomainReset = function(colors, colorDomain) {
+        if(colorDomain) {return colorDomain} 
+        return [dc.utils.groupMin(_chart.group(), _chart.valueAccessor()), dc.utils.groupMax(_chart.group(), _chart.valueAccessor())];
+    };
+
+
+
     return _chart.anchor(parent, chartGroup);
 };
