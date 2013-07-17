@@ -19,9 +19,9 @@ dc.printers.filter = function (filter, lookupHandler) {
     if (filter) {
         if (filter instanceof Array) {
             if (filter.length >= 2)
-                s = "[" + dc.utils.printSingleValue(lookupHandler(filter[0]) + " -> " + dc.utils.printSingleValue(lookupHandler(filter[1]) + "]";
+                s = "[" + dc.utils.printSingleValue(lookupHandler(filter[0])) + " -> " + dc.utils.printSingleValue(lookupHandler(filter[1])) + "]";
             else if (filter.length >= 1)
-                s = dc.utils.printSingleValue(lookupHandler(filter[0]);
+                s = dc.utils.printSingleValue(lookupHandler(filter[0]));
         } else {
             s = dc.utils.printSingleValue(lookupHandler(filter))
         }
