@@ -55,11 +55,11 @@ dc.rowChart = function (parent, chartGroup) {
     };
 
     _chart.title(function (d) {
-        return _chart.keyAccessor()(d) + ": " + _chart.valueAccessor()(d);
+        return _chart.lookupHandler(_chart.keyAccessor()(d)) + ": " + _chart.valueAccessor()(d);
     });
 
     _chart.label(function (d) {
-        return _chart.keyAccessor()(d);
+        return _chart.lookupHandler(_chart.keyAccessor()(d));
     });
 
     function drawGridLines() {
