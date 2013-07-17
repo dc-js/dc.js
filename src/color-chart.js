@@ -64,5 +64,9 @@ dc.colorChart = function(_chart) {
         return [0, colors.range().length];
     };
 
+    _chart.expireCache = function () {
+        _colorDomain = _chart.colorDomainReset(_colors);
+    };
+
     return _chart;
 };
