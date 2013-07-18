@@ -140,7 +140,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
             plotData(layerIndex);
             if(_projectionFlag) {
-                _chart.svg().selectAll("g." + geoJson(layerIndex).name + "path").attr("d", _geoPath)
+                _chart.svg().selectAll("g." + geoJson(layerIndex).name + " path").attr("d", _geoPath)
             };
         }
         _projectionFlag = false
