@@ -117,8 +117,8 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         });
     }
 
-    _chart.colorDomainReset = function(colors, colorDomain) {
-        if(colorDomain) {return colorDomain} 
+    _chart.prepareColorDomain = function(colorDomain) {
+        if(colorDomain) {return colorDomain}
         return [dc.utils.groupMin(_chart.group(), _chart.valueAccessor()), dc.utils.groupMax(_chart.group(), _chart.valueAccessor())];
     };
 
