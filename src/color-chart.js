@@ -32,7 +32,7 @@ dc.colorChart = function(_chart) {
             _colors = _;
         }
 
-        _colorDomain = _chart.prepareColorDomain(_colors, _colorDomain);
+        _chart.prepareColorDomain(_colorDomain);
         //_colorDomain = [0, _colors.range().length];
 
         return _chart;
@@ -61,7 +61,7 @@ dc.colorChart = function(_chart) {
     };
 
     _chart.prepareColorDomain = function(colorDomain) {
-        return [0, _colors.range().length];
+        return _chart.colorDomain([0, _colors.range().length]);
     };
 
     return _chart;

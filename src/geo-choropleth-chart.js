@@ -118,8 +118,8 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     }
 
     _chart.prepareColorDomain = function(colorDomain) {
-        if(colorDomain) {return colorDomain}
-        return [dc.utils.groupMin(_chart.group(), _chart.valueAccessor()), dc.utils.groupMax(_chart.group(), _chart.valueAccessor())];
+        colorDomain = colorDomain || [dc.utils.groupMin(_chart.group(), _chart.valueAccessor()), dc.utils.groupMax(_chart.group(), _chart.valueAccessor())];
+        return _chart.colorDomain(colorDomain)
     };
 
     _chart.onClick = function (d, layerIndex) {
