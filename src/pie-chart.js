@@ -19,7 +19,17 @@ dc.pieChart = function (parent, chartGroup) {
 
     function assemblePieData() {
         if (_slicesCap == Infinity) {
-            return _chart.orderedGroup().top(_slicesCap); // ordered by keys
+            var rows = _chart.group().all();
+            var sortedArray = [];
+            for(var i = 0; i<rows.length; i++) {
+                sortedArray.push(rows[i]);
+            }
+            sortedArray.sort(function(a,b) {
+               if(typeof a.key == "object") {
+                   return a.key.valueOf() > b.key.valueOf();
+               }
+               return a.key > b.key;
+            });
         } else {
             var topRows = _chart.group().top(_slicesCap); // ordered by value
             var topRowsSum = d3.sum(topRows, _chart.valueAccessor());
