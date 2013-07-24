@@ -2394,7 +2394,7 @@ dc.barChart = function (parent, chartGroup) {
                 return _chart.x()(d.x);
             })
             .attr("y", function (d) {
-                return _chart.y()(d.y + d.y0);
+                return _chart.y()(d.y);
             })
             .attr("width", _barWidth)
             .attr("height", function (d) {

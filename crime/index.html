@@ -520,8 +520,8 @@
                 .brushOn(false)
                 .title(function(d){
                     return d.key
-                            + "\nViolent crime per 100k population: " + Math.round(d.value.violentCrimeAvg)
-                            + "\nNon-Violent crime per 100k population: " + Math.round(d.value.nonViolentCrimeAvg);
+                            + "\nViolent crime per 100k population: " + Math.round(d.data.value.violentCrimeAvg)
+                            + "\nNon-Violent crime per 100k population: " + Math.round(d.data.value.nonViolentCrimeAvg);
                 })
                 .xAxis().ticks(5);
 
@@ -540,7 +540,7 @@
                 .brushOn(false)
                 .title(function(d){
                     return d.key
-                            + "\nHomicide incidents: " + Math.round(d.value.homicide);
+                            + "\nHomicide incidents: " + Math.round(d.data.value.homicide);
                 })
                 .xAxis().ticks(5);;
 
