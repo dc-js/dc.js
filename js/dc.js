@@ -950,7 +950,7 @@ dc.marginable = function (_chart) {
     var _focusChart;
 
     var _mouseZoomable = false;
-    var _clipPadding = 5;
+    var _clipPadding = 0;
 
     _chart.title(function (d) {
         return d.data.key + ": " + d.data.value;
@@ -2394,11 +2394,11 @@ dc.barChart = function (parent, chartGroup) {
                 return _chart.x()(d.x);
             })
             .attr("y", function (d) {
-                return _chart.y()(d.y);
+                return _chart.y()(d.y + d.y0);
             })
             .attr("width", _barWidth)
             .attr("height", function (d) {
-                return Math.abs(_chart.y()(d.y) - _chart.y()(d.y0));
+                return Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0));
             })
             .select("title").text(_chart.title());
 
@@ -2616,10 +2616,10 @@ dc.lineChart = function (parent, chartGroup) {
                     .append("title").text(_chart.title());
 
                 dots.attr("cx", function (d) {
-                    return d.x;
-                })
+                        return _chart.x()(d.x);
+                    })
                     .attr("cy", function (d) {
-                        return d.y;
+                        return _chart.y()(d.y + d.y0);
                     })
                     .select("title").text(_chart.title());
 
@@ -2925,9 +2925,6 @@ dc.compositeChart = function(parent, chartGroup) {
             if (child.group() == null) child.group(_chart.group());
             child.chartGroup(_chart.chartGroup());
             child.svg(_chart.svg());
-            child.height(_chart.height());
-            child.width(_chart.width());
-            child.margins(_chart.margins());
             child.xUnits(_chart.xUnits());
             child.transitionDuration(_chart.transitionDuration());
         }
@@ -2969,6 +2966,12 @@ dc.compositeChart = function(parent, chartGroup) {
 
     _chart.compose = function(charts) {
         _children = charts;
+        for (var i = 0; i < _children.length; ++i) {
+            var child = _children[i];
+            child.height(_chart.height());
+            child.width(_chart.width());
+            child.margins(_chart.margins());
+        }
         return _chart;
     };
 
