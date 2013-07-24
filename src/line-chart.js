@@ -18,8 +18,6 @@ dc.lineChart = function (parent, chartGroup) {
 
         var stackedLayers = _chart.stackedLayers();
 
-        console.log(stackedLayers);
-
         var layers = _chart.chartBodyG().selectAll("g.stack")
             .data(stackedLayers);
 
@@ -46,10 +44,10 @@ dc.lineChart = function (parent, chartGroup) {
     function drawLine(layersEnter, layers) {
         var line = d3.svg.line()
             .x(function (d) {
-                return d.x;
+                return _chart.x()(d.x);
             })
             .y(function (d) {
-                return d.y;
+                return _chart.y()(d.y + d.y0);
             });
 
         layersEnter.append("path")
@@ -64,26 +62,18 @@ dc.lineChart = function (parent, chartGroup) {
             });
     }
 
-    function calculateY0(d) {
-        var yBase = _chart.y()(0);
-        var y0 = d.y0;
-
-        if (d.y0 == 0 || d.y == yBase)
-            y0 = yBase;
-
-        return y0;
-    }
-
     function drawArea(layersEnter, layers) {
         if (_renderArea) {
             var area = d3.svg.area()
                 .x(function (d) {
-                    return d.x;
+                    return _chart.x()(d.x);
                 })
-                .y1(function (d) {
-                    return d.y;
+                .y(function (d) {
+                    return _chart.y()(d.y + d.y0);
                 })
-                .y0(calculateY0);
+                .y0(function(d){
+                    return _chart.y()(d.y0);
+                });
 
             layersEnter.append("path")
                 .attr("class", "area")

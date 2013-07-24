@@ -1,7 +1,7 @@
 {
   "name": "dc",
   "version": "1.5.0",
-  "description": "A multi-dimensional charting built to work natively with crossfilter rendered using d3.js ",
+  "description": "A multi-dimensional charting library built to work natively with crossfilter and rendered using d3.js ",
   "keywords": [
     "visualization",
     "svg",
@@ -10,7 +10,7 @@
     "chart",
     "dimensional"
   ],
-  "homepage": "http://nickqizhu.github.com/dc.js/",
+  "homepage": "http://nickqizhu.github.io/dc.js/",
   "author": {
     "name": "Nick Zhu",
     "url": "http://nzhu.blogspot.ca/"

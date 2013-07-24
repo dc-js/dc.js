@@ -150,7 +150,7 @@ dc.stackableChart = function (_chart) {
             var key = getKeyFromData(groupIndex, d);
             var value = getValueFromData(groupIndex, d);
 
-            _groupStack.setDataPoint(groupIndex, dataIndex, {data: d, x: _chart.x()(key), y: _chart.y()(value)});
+            _groupStack.setDataPoint(groupIndex, dataIndex, {data: d, x: key, y: value});
         }
     }
 
