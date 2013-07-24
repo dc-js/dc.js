@@ -129,8 +129,8 @@ dc.units.integers = function(s, e) {
 dc.units.ordinal = function(s, e, domain){
     return domain;
 };
-dc.units.float = {};
-dc.units.float.precision= function(precision){
+dc.units.fp = {};
+dc.units.fp.precision= function(precision){
     var _f = function(s, e, domain){return Math.ceil(Math.abs((e-s)/_f.resolution));};
     _f.resolution = precision;
     return _f;
@@ -1576,6 +1576,7 @@ dc.marginable = function (_chart) {
         _chart.on("filtered", function (chart) {
             dc.events.trigger(function () {
                 _focusChart.focus(chart.filter());
+                _focusChart.filter(chart.filter());
                 dc.redrawAll(chart.chartGroup());
             });
         });
@@ -3571,13 +3572,13 @@ dc.bubbleOverlay = function(root, chartGroup) {
 
     _chart.labelOffsetX = function (o) {
         if (!arguments.length) return _labelOffsetX;
-        _labelOffset = o;
+        _labelOffsetX = o;
         return _chart;
     };
 
     _chart.labelOffsetY = function (o) {
         if (!arguments.length) return _labelOffsetY;
-        _labelOffset = o;
+        _labelOffsetY = o;
         return _chart;
     };
 

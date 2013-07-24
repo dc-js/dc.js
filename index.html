@@ -111,6 +111,7 @@
 
     <div id="fluctuation-chart">
         <strong>Days by Fluctuation(%)</strong>
+        <span class="reset" style="display: none;">range: <span class="filter"></span></span>
         <a class="reset" href="javascript:fluctuationChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
 
         <div class="clearfix"></div>
@@ -120,8 +121,8 @@
 <div class="row">
     <div id="monthly-move-chart">
         <strong>Monthly Index Abs Move & Volume/500,000 Chart</strong> (Blue Line: Avg Index, Green Line: Index
-        Fluctuation)
-        <a class="reset" href="javascript:volumeChart.filterAll();dc.redrawAll();"
+        Fluctuation) <span class="reset" style="display: none;">range: <span class="filter"></span></span>
+        <a class="reset" href="javascript:moveChart.filterAll();volumeChart.filterAll();dc.redrawAll();"
            style="display: none;">reset</a>
 
         <div class="clearfix"></div>
@@ -379,6 +380,11 @@ d3.csv("ndx.csv", function (data) {
                     .round(dc.round.floor)
                     .x(d3.scale.linear().domain([-25, 25]))
                     .renderHorizontalGridLines(true)
+                    .filterPrinter(function (filters) {
+                        var filter = filters[0], s = "";
+                        s += numberFormat(filter[0]) + "% -> " + numberFormat(filter[1]) + "%";
+                        return s;
+                    })
                     .xAxis()
                     .tickFormat(function (v) {
                         return v + "%";
