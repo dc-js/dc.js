@@ -2391,20 +2391,14 @@ dc.barChart = function (parent, chartGroup) {
 
         dc.transition(bars, _chart.transitionDuration())
             .attr("x", function (d) {
-                return d.x;
+                return _chart.x()(d.x);
             })
             .attr("y", function (d) {
-                return d.y;
+                return _chart.y()(d.y + d.y0);
             })
             .attr("width", _barWidth)
             .attr("height", function (d) {
-                var yBase = _chart.y()(0);
-                var y0 = d.y0;
-
-                if (d.y0 == 0 || d.y == yBase)
-                    y0 = yBase;
-
-                return Math.abs(y0 - d.y);
+                return Math.abs(_chart.y()(d.y) - _chart.y()(d.y0));
             })
             .select("title").text(_chart.title());
 
