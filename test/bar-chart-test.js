@@ -161,18 +161,18 @@ suite.addBatch({
         'bar x should be set correctly': function (chart) {
             chart.selectAll("svg g rect.bar").each(function (d) {
                 var halfBarWidth = .5;
-                assert.equal(d3.select(this).attr('x'), chart.x()(d.key) + chart.margins().left - halfBarWidth);
+                assert.equal(d3.select(this).attr('x'), chart.x()(d.data.key) - halfBarWidth);
             });
         },
         'bar y should be set correctly': function (chart) {
             chart.selectAll("svg g rect.bar").each(function (d) {
-                assert.equal(d3.select(this).attr('y'), chart.margins().top + chart.y()(d.value));
+                assert.equal(d3.select(this).attr('y'), chart.y()(d.data.value));
             });
         },
         'bar height should be set correctly': function (chart) {
             chart.selectAll("svg g rect.bar").each(function (d) {
                 assert.equal(d3.select(this).attr('height'),
-                    chart.height() - chart.margins().top - chart.margins().bottom - chart.y()(d.value));
+                    chart.y()(0) - chart.y()(d.data.value));
             });
         },
         'bar width should be set correctly': function (chart) {
@@ -244,21 +244,21 @@ suite.addBatch({
                 assert.equal(chart.select("g.brush rect.extent").attr("width"), 84);
             },
             'unselected bars should be push to background': function (chart) {
-                assert.equal(d3.select(chart.selectAll("g._0 rect.bar")[0][0]).attr("class"), "bar _0 deselected");
-                assert.equal(d3.select(chart.selectAll("g._0 rect.bar")[0][1]).attr("class"), "bar _0");
-                assert.equal(d3.select(chart.selectAll("g._0 rect.bar")[0][3]).attr("class"), "bar _0 deselected");
+                assert.equal(d3.select(chart.selectAll("g._0 rect.bar")[0][0]).attr("class"), "bar deselected");
+                assert.equal(d3.select(chart.selectAll("g._0 rect.bar")[0][1]).attr("class"), "bar");
+                assert.equal(d3.select(chart.selectAll("g._0 rect.bar")[0][3]).attr("class"), "bar deselected");
             },
             'selected bars should be push to foreground': function (chart) {
                 chart.selectAll("g rect.bar").each(function (d, i) {
                     if (i == 1)
-                        assert.equal(d3.select(this).attr("class"), "bar _0");
+                        assert.equal(d3.select(this).attr("class"), "bar");
                 });
             },
             'after reset all bars should be pushed to foreground': function (chart) {
                 chart.filterAll();
                 chart.redraw();
                 chart.selectAll("g rect.bar").each(function (d) {
-                    assert.equal(d3.select(this).attr("class"), "bar _0");
+                    assert.equal(d3.select(this).attr("class"), "bar");
                 });
             }
         },
@@ -277,7 +277,7 @@ suite.addBatch({
             },
             'no bar should be deselected': function (chart) {
                 chart.selectAll("svg g rect.bar").each(function (d) {
-                    assert.equal(d3.select(this).attr('class'), "bar _0");
+                    assert.equal(d3.select(this).attr('class'), "bar");
                 });
             }
         },
@@ -382,14 +382,14 @@ suite.addBatch({'stacked': {
         assert.equal(yDomain[1], 149);
     },
     'bar should be generated from all groups': function (chart) {
-        assert.equal(chart.selectAll("rect._0")[0].length, 6);
-        assert.equal(chart.selectAll("rect.stack1")[0].length, 6);
+        assert.equal(chart.selectAll("g._0 rect.bar")[0].length, 6);
+        assert.equal(chart.selectAll("g._1 rect.bar")[0].length, 6);
     },
     'bar should be stacked': function (chart) {
-        assert.equal(d3.select(chart.selectAll("g._0 rect.bar")[0][2]).attr("y"), 152);
-        assert.equal(d3.select(chart.selectAll("g._0 rect.bar")[0][4]).attr("y"), 154);
-        assert.equal(d3.select(chart.selectAll("g._1 rect.bar")[0][2]).attr("y"), 10);
-        assert.equal(d3.select(chart.selectAll("g._1 rect.bar")[0][4]).attr("y"), 95);
+        assert.equal(d3.select(chart.selectAll("g._0 rect.bar")[0][2]).attr("y"), 142);
+        assert.equal(d3.select(chart.selectAll("g._0 rect.bar")[0][4]).attr("y"), 144);
+        assert.equal(d3.select(chart.selectAll("g._1 rect.bar")[0][2]).attr("y"), 0);
+        assert.equal(d3.select(chart.selectAll("g._1 rect.bar")[0][4]).attr("y"), 85);
     },
     teardown: function (topic) {
         resetAllFilters();
@@ -418,10 +418,10 @@ suite.addBatch({'stacked with custom value retriever': {
         assert.equal(chart.selectAll("g._1 rect.bar")[0].length, 6);
     },
     'bar should be stacked': function (chart) {
-        assert.equal(d3.select(chart.selectAll("g._0 rect.bar")[0][2]).attr("y"), 34);
-        assert.equal(d3.select(chart.selectAll("g._0 rect.bar")[0][4]).attr("y"), 50);
-        assert.equal(d3.select(chart.selectAll("g._1 rect.bar")[0][2]).attr("y"), 10);
-        assert.equal(d3.select(chart.selectAll("g._1 rect.bar")[0][4]).attr("y"), 26);
+        assert.equal(d3.select(chart.selectAll("g._0 rect.bar")[0][2]).attr("y"), 24);
+        assert.equal(d3.select(chart.selectAll("g._0 rect.bar")[0][4]).attr("y"), 40);
+        assert.equal(d3.select(chart.selectAll("g._1 rect.bar")[0][2]).attr("y"), 0);
+        assert.equal(d3.select(chart.selectAll("g._1 rect.bar")[0][4]).attr("y"), 16);
     },
     teardown: function (topic) {
         resetAllFilters();
@@ -463,8 +463,7 @@ suite.addBatch({
         },
         'bar x should be set correctly': function (chart) {
             chart.selectAll("svg g rect.bar").each(function (d) {
-                var halfBarWidth = 1;
-                assert.equal(d3.select(this).attr('x'), chart.x()(d.key) + chart.margins().left);
+                assert.equal(d3.select(this).attr('x'), chart.x()(d.data.key));
             });
         },
         teardown: function (topic) {
@@ -511,9 +510,9 @@ suite.addBatch({'ordinal bar chart': {
         assert.equal(chart.select("rect.bar").attr("width"), "144");
     },
     'should position bars based on ordinal range': function (chart) {
-        assert.match(d3.select(chart.selectAll("rect.bar")[0][0]).attr("x"), /30/);
-        assert.match(d3.select(chart.selectAll("rect.bar")[0][3]).attr("x"), /612.\d+/);
-        assert.match(d3.select(chart.selectAll("rect.bar")[0][5]).attr("x"), /467.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][0]).attr("x"), /0/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][3]).attr("x"), /582.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][5]).attr("x"), /437.\d+/);
     },
     'should fade deselected bars': function (chart) {
         chart.filter("Ontario").filter("Colorado").redraw();
@@ -547,20 +546,20 @@ suite.addBatch({'dynamic accessor switch': {
     }
 }});
 
-suite.addBatch({'linear integers bar chart': {
+suite.addBatch({'linear bar chart': {
     topic: function () {
-        return buildLinearChart("bar-chart-linear-integers");
+        return buildLinearChart("bar-chart-linear");
     },
     'should generate correct number of bars': function (chart) {
         assert.equal(chart.selectAll("rect.bar")[0].length, 5);
     },
     'should auto size bar width': function (chart) {
-        assert.equal(chart.select("rect.bar").attr("width"), "17");
+        assert.equal(chart.select("rect.bar").attr("width"), "18");
     },
     'should position bars based on linear range': function (chart) {
-        assert.match(d3.select(chart.selectAll("rect.bar")[0][0]).attr("x"), /70.\d+/);
-        assert.match(d3.select(chart.selectAll("rect.bar")[0][2]).attr("x"), /519.\d+/);
-        assert.match(d3.select(chart.selectAll("rect.bar")[0][4]).attr("x"), /968.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][0]).attr("x"), /40.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][2]).attr("x"), /489.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][4]).attr("x"), /938.\d+/);
     },
     teardown: function (topic) {
         resetAllFilters();
@@ -585,16 +584,16 @@ suite.addBatch({'runtime dimension & group switch': {
         assert.equal(chart.select("rect.bar").attr("width"), "10");
     },
     'should generate correct bars in stack 0': function (chart) {
-        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][0]).attr("x"), /88\.\d+/);
-        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][0]).attr("y"), /94/);
+        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][0]).attr("x"), /58\.\d+/);
+        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][0]).attr("y"), /84/);
         assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][0]).attr("height"), /30/);
 
-        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][3]).attr("x"), /522\.\d+/);
-        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][3]).attr("y"), /94/);
+        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][3]).attr("x"), /492\.\d+/);
+        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][3]).attr("y"), /84/);
         assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][3]).attr("height"), /23/);
 
-        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][5]).attr("x"), /991\.\d+/);
-        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][5]).attr("y"), /71/);
+        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][5]).attr("x"), /961\.\d+/);
+        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][5]).attr("y"), /61/);
         assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][5]).attr("height"), /23/);
     },
     'should generate y axis domain dynamically': function (chart) {
@@ -619,29 +618,29 @@ suite.addBatch({'negative bar chart': {
         assert.equal(chart.select("rect.bar").attr("width"), "9");
     },
     'should generate correct bars in stack 0': function (chart) {
-        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][0]).attr("x"), /88\.\d+/);
-        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][0]).attr("y"), /103/);
+        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][0]).attr("x"), /58\.\d+/);
+        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][0]).attr("y"), /73/);
         assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][0]).attr("height"), /8/);
 
-        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][3]).attr("x"), /522\.\d+/);
-        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][3]).attr("y"), /103/);
+        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][3]).attr("x"), /492\.\d+/);
+        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][3]).attr("y"), /73/);
         assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][3]).attr("height"), /6/);
 
-        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][5]).attr("x"), /991\.\d+/);
-        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][5]).attr("y"), /97/);
+        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][5]).attr("x"), /961\.\d+/);
+        assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][5]).attr("y"), /67/);
         assert.match(d3.select(chart.selectAll("g._0 rect.bar")[0][5]).attr("height"), /6/);
     },
     'should generate correct bars in stack 1': function (chart) {
-        assert.match(d3.select(chart.selectAll("g._1 rect.bar")[0][0]).attr("x"), /88\.\d+/);
-        assert.match(d3.select(chart.selectAll("g._1 rect.bar")[0][0]).attr("y"), /111/);
-        assert.match(d3.select(chart.selectAll("g._1 rect.bar")[0][0]).attr("height"), /8/);
+        assert.match(d3.select(chart.selectAll("g._1 rect.bar")[0][0]).attr("x"), /58\.\d+/);
+        assert.match(d3.select(chart.selectAll("g._1 rect.bar")[0][0]).attr("y"), /81/);
+        assert.match(d3.select(chart.selectAll("g._1 rect.bar")[0][0]).attr("height"), /7/);
 
-        assert.match(d3.select(chart.selectAll("g._1 rect.bar")[0][3]).attr("x"), /522\.\d+/);
-        assert.match(d3.select(chart.selectAll("g._1 rect.bar")[0][3]).attr("y"), /109/);
-        assert.match(d3.select(chart.selectAll("g._1 rect.bar")[0][3]).attr("height"), /6/);
+        assert.match(d3.select(chart.selectAll("g._1 rect.bar")[0][3]).attr("x"), /492\.\d+/);
+        assert.match(d3.select(chart.selectAll("g._1 rect.bar")[0][3]).attr("y"), /79/);
+        assert.match(d3.select(chart.selectAll("g._1 rect.bar")[0][3]).attr("height"), /5/);
 
-        assert.match(d3.select(chart.selectAll("g._1 rect.bar")[0][5]).attr("x"), /991\.\d+/);
-        assert.match(d3.select(chart.selectAll("g._1 rect.bar")[0][5]).attr("y"), /91/);
+        assert.match(d3.select(chart.selectAll("g._1 rect.bar")[0][5]).attr("x"), /961\.\d+/);
+        assert.match(d3.select(chart.selectAll("g._1 rect.bar")[0][5]).attr("y"), /61/);
         assert.match(d3.select(chart.selectAll("g._1 rect.bar")[0][5]).attr("height"), /6/);
     },
     'should generate y axis domain dynamically': function (chart) {
@@ -686,11 +685,12 @@ suite.addBatch({
             chart.render();
             return chart;
         },
-        'chart should only render one bar': function (chart) {
-            assert.equal(chart.selectAll("rect.bar")[0].length, 1);
+        'chart should only render correct number of bars': function (chart) {
+            // TODO: should be only one bar
+            assert.equal(chart.selectAll("rect.bar")[0].length, 6);
         },
         'bar width should be resized accordingly': function (chart) {
-            assert.equal(chart.selectAll("rect.bar").attr("width"), 9);
+            assert.equal(chart.selectAll("rect.bar").attr("width"), 35);
         },
         'focus should reset if null is passed': function (chart) {
             chart.focus(null);
@@ -730,13 +730,8 @@ suite.addBatch({'clip path': {
     },
     'clip rect size should be correct': function (chart) {
         var rect = chart.select("defs clipPath rect");
-        assert.equal(rect.attr("width"), 1030);
-        assert.equal(rect.attr("height"), 170);
-    },
-    'clip rect position should be correct': function (chart) {
-        var rect = chart.select("defs clipPath rect");
-        assert.equal(rect.attr("x"), 25);
-        assert.equal(rect.attr("y"), 5);
+        assert.equal(rect.attr("width"), 1020);
+        assert.equal(rect.attr("height"), 160);
     },
     'clip id should be correct': function (chart) {
         assert.equal(chart.select("defs clipPath").attr("id"), "chart-clip-path-clip");

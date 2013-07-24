@@ -60,7 +60,9 @@ dc.barChart = function (parent, chartGroup) {
 
         dc.transition(bars, _chart.transitionDuration())
             .attr("x", function (d) {
-                return _chart.x()(d.x);
+                var x = _chart.x()(d.x);
+                if(_centerBar) x -= _barWidth / 2;
+                return  x;
             })
             .attr("y", function (d) {
                 var y = _chart.y()(d.y + d.y0);

@@ -130,29 +130,29 @@ suite.addBatch({
             chart.selectAll("g.sub path.line").each(function(d, i) {
                 switch (i) {
                     case 0:
-                        assert.equal(d3.select(this).attr("d"), "M54.13793103448276,120L121.72413793103448,118L131.37931034482756,113L232.75862068965515,118L276.2068965517241,114L425.8620689655172,115");
+                        assert.equal(d3.select(this).attr("d"), "M24.137931034482758,110L91.72413793103448,108L101.37931034482757,103L202.75862068965515,108L246.20689655172413,104L395.8620689655172,105");
                         break;
                     case 1:
-                        assert.equal(d3.select(this).attr("d"), "M54.13793103448276,103L121.72413793103448,92L131.37931034482756,61L232.75862068965515,101L276.2068965517241,92L425.8620689655172,85");
+                        assert.equal(d3.select(this).attr("d"), "M24.137931034482758,92L91.72413793103448,82L101.37931034482757,52L202.75862068965515,91L246.20689655172413,83L395.8620689655172,75");
                         break;
                 }
             });
         },
         'sub bar chart generation': function(chart) {
-            assert.equal(chart.selectAll("g.sub rect.stack0")[0].length, 6);
+            assert.equal(chart.selectAll("g.sub g._0 rect")[0].length, 6);
         },
         'sub bar chart rendering': function(chart) {
             chart.selectAll("g.sub rect.bar").each(function(d, i) {
                 switch (i) {
                     case 0:
-                        assert.equal(d3.select(this).attr("x"), "52.63793103448276");
-                        assert.equal(d3.select(this).attr("y"), "103");
+                        assert.equal(d3.select(this).attr("x"), "22.637931034482758");
+                        assert.equal(d3.select(this).attr("y"), "93");
                         assert.equal(d3.select(this).attr("width"), "3");
                         assert.equal(d3.select(this).attr("height"), "17");
                         break;
                     case 5:
-                        assert.equal(d3.select(this).attr("x"), "424.3620689655172");
-                        assert.equal(d3.select(this).attr("y"), "90");
+                        assert.equal(d3.select(this).attr("x"), "394.3620689655172");
+                        assert.equal(d3.select(this).attr("y"), "80");
                         assert.equal(d3.select(this).attr("width"), "3");
                         assert.equal(d3.select(this).attr("height"), "30");
                         break;
@@ -190,7 +190,7 @@ suite.addBatch({
                 chart.filterAll();
                 chart.redraw();
                 chart.selectAll("g rect.bar").each(function(d) {
-                    assert.equal(d3.select(this).attr("class"), "bar stack0");
+                    assert.equal(d3.select(this).attr("class"), "bar");
                 });
             },
             'x value should have default impl': function(chart) {
@@ -263,29 +263,29 @@ suite.addBatch({
             chart.selectAll("g.sub path.line").each(function(d, i) {
                 switch (i) {
                     case 0:
-                        assert.equal(d3.select(this).attr("d"), "M54.13793103448276,120L121.72413793103448,118L131.37931034482756,113L232.75862068965515,118L276.2068965517241,114L425.8620689655172,115");
+                        assert.equal(d3.select(this).attr("d"), "M24.137931034482758,110L91.72413793103448,108L101.37931034482757,103L202.75862068965515,108L246.20689655172413,104L395.8620689655172,105");
                         break;
                     case 1:
-                        assert.equal(d3.select(this).attr("d"), "M54.13793103448276,103L121.72413793103448,92L131.37931034482756,61L232.75862068965515,101L276.2068965517241,92L425.8620689655172,85");
+                        assert.equal(d3.select(this).attr("d"), "M24.137931034482758,92L91.72413793103448,82L101.37931034482757,52L202.75862068965515,91L246.20689655172413,83L395.8620689655172,75");
                         break;
                 }
             });
         },
         'sub bar chart generation': function(chart) {
-            assert.equal(chart.selectAll("g.sub rect.stack0")[0].length, 6);
+            assert.equal(chart.selectAll("g.sub g._0 rect.bar")[0].length, 6);
         },
         'sub bar chart rendering': function(chart) {
             chart.selectAll("g.sub rect.bar").each(function(d, i) {
                 switch (i) {
                     case 0:
-                        assert.equal(d3.select(this).attr("x"), "52.63793103448276");
-                        assert.equal(d3.select(this).attr("y"), "103");
+                        assert.equal(d3.select(this).attr("x"), "22.637931034482758");
+                        assert.equal(d3.select(this).attr("y"), "93");
                         assert.equal(d3.select(this).attr("width"), "3");
                         assert.equal(d3.select(this).attr("height"), "17");
                         break;
                     case 5:
-                        assert.equal(d3.select(this).attr("x"), "424.3620689655172");
-                        assert.equal(d3.select(this).attr("y"), "90");
+                        assert.equal(d3.select(this).attr("x"), "394.3620689655172");
+                        assert.equal(d3.select(this).attr("y"), "80");
                         assert.equal(d3.select(this).attr("width"), "3");
                         assert.equal(d3.select(this).attr("height"), "30");
                         break;

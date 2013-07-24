@@ -85,7 +85,7 @@ suite.addBatch({
     'line chart segment addition': {
         topic: function() {
             var chart = buildLineChart("line-chart");
-            chart.redraw();
+            chart.render();
             return chart;
         },
         'number of dots should equal the size of the group': function(lineChart) {
