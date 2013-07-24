@@ -2616,10 +2616,10 @@ dc.lineChart = function (parent, chartGroup) {
                     .append("title").text(_chart.title());
 
                 dots.attr("cx", function (d) {
-                    return d.x;
-                })
+                        return _chart.x()(d.x);
+                    })
                     .attr("cy", function (d) {
-                        return d.y;
+                        return _chart.y()(d.y + d.y0);
                     })
                     .select("title").text(_chart.title());
 
