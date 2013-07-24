@@ -256,10 +256,10 @@ suite.addBatch({'area chart': {
         assert.equal(chart.selectAll("path.area")[0].length, 1)
     },
     'correctly draw line': function (chart) {
-        assert.matches(d3.select("#area-chart g._0 path.line").attr("d"), /M435.\d+,117L474.\d+,117L479.\d+,10L538.\d+,117L563.\d+,63L650.\d+,63/);
+        assert.matches(d3.select("#area-chart g._0 path.line").attr("d"), /M405.\d+,107L444.\d+,107L449.\d+,0L508.\d+,107L533.\d+,53L620.\d+,53/);
     },
     'correctly draw area': function (chart) {
-        assert.matches(d3.select("#area-chart g._0 path.area").attr("d"), /M435.\d+,117L474.\d+,117L479.\d+,10L538.\d+,117L563.\d+,63L650.\d+,63L650.\d+,169L563.\d+,169L538.\d+,169L479.\d+,169L474.\d+,169L435.\d+,169Z/);
+        assert.matches(d3.select("#area-chart g._0 path.area").attr("d"), /M405.\d+,107L444.\d+,107L449.\d+,0L508.\d+,107L533.\d+,53L620.\d+,53L620.\d+,160L533.\d+,160L508.\d+,160L449.\d+,160L444.\d+,160L405.\d+,160Z/);
     },
     teardown: function (topic) {
         resetAllFilters();
@@ -284,25 +284,25 @@ suite.addBatch({'stacked area chart': {
         assert.equal(d3.selectAll("#stacked-area-chart path.line")[0].length, 3);
     },
     'correctly draw stack 0 line': function (chart) {
-        assert.equal(d3.select("#stacked-area-chart g._0 path.line").attr("d"), "M88.62068965517241,169L252.75862068965515,167L276.2068965517241,160L522.4137931034483,168L627.9310344827586,161L991.3793103448276,163");
+        assert.equal(d3.select("#stacked-area-chart g._0 path.line").attr("d"), "M58.62068965517241,159L222.75862068965515,157L246.20689655172413,150L492.41379310344826,158L597.9310344827586,151L961.3793103448276,153");
     },
     'correctly draw stack 1 line': function (chart) {
-        assert.equal(d3.select("#stacked-area-chart g._1 path.line").attr("d"), "M88.62068965517241,144L252.75862068965515,129L276.2068965517241,85L522.4137931034483,143L627.9310344827586,130L991.3793103448276,119");
+        assert.equal(d3.select("#stacked-area-chart g._1 path.line").attr("d"), "M58.62068965517241,134L222.75862068965515,119L246.20689655172413,75L492.41379310344826,133L597.9310344827586,120L961.3793103448276,109");
     },
     'correctly draw stack 2 line': function (chart) {
-        assert.equal(d3.select("#stacked-area-chart g._2 path.line").attr("d"), "M88.62068965517241,119L252.75862068965515,91L276.2068965517241,10L522.4137931034483,118L627.9310344827586,99L991.3793103448276,75");
+        assert.equal(d3.select("#stacked-area-chart g._2 path.line").attr("d"), "M58.62068965517241,109L222.75862068965515,81L246.20689655172413,0L492.41379310344826,108L597.9310344827586,89L961.3793103448276,65");
     },
     'right number of areas should be rendered': function (chart) {
         assert.equal(d3.selectAll("#stacked-area-chart path.area")[0].length, 3);
     },
     'correctly draw stack 0 area': function (chart) {
-        assert.equal(d3.select("#stacked-area-chart g._0 path.area").attr("d"), "M88.62068965517241,169L252.75862068965515,167L276.2068965517241,160L522.4137931034483,168L627.9310344827586,161L991.3793103448276,163L991.3793103448276,169L627.9310344827586,169L522.4137931034483,169L276.2068965517241,169L252.75862068965515,169L88.62068965517241,169Z");
+        assert.equal(d3.select("#stacked-area-chart g._0 path.area").attr("d"), "M58.62068965517241,159L222.75862068965515,157L246.20689655172413,150L492.41379310344826,158L597.9310344827586,151L961.3793103448276,153L961.3793103448276,160L597.9310344827586,160L492.41379310344826,160L246.20689655172413,160L222.75862068965515,160L58.62068965517241,160Z");
     },
     'correctly draw stack 1 area': function (chart) {
-        assert.equal(d3.select("#stacked-area-chart g._1 path.area").attr("d"), "M88.62068965517241,144L252.75862068965515,129L276.2068965517241,85L522.4137931034483,143L627.9310344827586,130L991.3793103448276,119L991.3793103448276,162L627.9310344827586,160L522.4137931034483,167L276.2068965517241,159L252.75862068965515,166L88.62068965517241,168Z");
+        assert.equal(d3.select("#stacked-area-chart g._1 path.area").attr("d"), "M58.62068965517241,134L222.75862068965515,119L246.20689655172413,75L492.41379310344826,133L597.9310344827586,120L961.3793103448276,109L961.3793103448276,153L597.9310344827586,151L492.41379310344826,158L246.20689655172413,150L222.75862068965515,157L58.62068965517241,159Z");
     },
     'correctly draw stack 2 area': function (chart) {
-        assert.equal(d3.select("#stacked-area-chart g._2 path.area").attr("d"), "M88.62068965517241,119L252.75862068965515,91L276.2068965517241,10L522.4137931034483,118L627.9310344827586,99L991.3793103448276,75L991.3793103448276,118L627.9310344827586,129L522.4137931034483,142L276.2068965517241,84L252.75862068965515,128L88.62068965517241,143Z");
+        assert.equal(d3.select("#stacked-area-chart g._2 path.area").attr("d"), "M58.62068965517241,109L222.75862068965515,81L246.20689655172413,0L492.41379310344826,108L597.9310344827586,89L961.3793103448276,65L961.3793103448276,109L597.9310344827586,120L492.41379310344826,133L246.20689655172413,75L222.75862068965515,119L58.62068965517241,134Z");
     }
 }});
 
@@ -440,7 +440,7 @@ suite.addBatch({
             var chart = buildChart("chart-tooltip");
             chart.brushOn(false)
                 .title(function (d) {
-                    return d.value;
+                    return d.data.value;
                 })
                 .dotRadius(10)
                 .render();
@@ -465,7 +465,7 @@ suite.addBatch({
         },
         'circle.dot title should be generated per data point': function (chart) {
             chart.selectAll("circle.dot").each(function (d) {
-                assert.equal(d3.select(this).select("title").text(), d.value);
+                assert.equal(d3.select(this).select("title").text(), d.data.value);
             });
         },
         'hidden ref lines should be generated': function (chart) {
@@ -492,7 +492,7 @@ suite.addBatch({'ordinal line chart': {
         assert.isFalse(chart.brushOn());
     },
     'should generate correct line path': function (chart) {
-        assert.equal(chart.select("path.line").attr("d"), "M30,10L200,117L370,117L540,63L710,117L880,63");
+        assert.equal(chart.select("path.line").attr("d"), "M0,0L170,107L340,107L510,53L680,107L850,53");
     },
     teardown: function (topic) {
         resetAllFilters();
@@ -509,12 +509,12 @@ suite.addBatch({'negative bar chart': {
         assert.equal(chart.selectAll("path.area")[0].length, 3);
     },
     'should generate correct bars in stack 0': function (chart) {
-        assert.match(d3.select(chart.selectAll("g._0 path.line")[0][0]).attr("d"), /M88.\d+,111L252.\d+,111L276.\d+,122L522.\d+,109L627.\d+,82L991.\d+,97/);
-        assert.match(d3.select(chart.selectAll("g._0 path.area")[0][0]).attr("d"), /M88.\d+,111L252.\d+,111L276.\d+,122L522.\d+,109L627.\d+,82L991.\d+,97L991.\d+,102L627.\d+,102L522.\d+,102L276.\d+,102L252.\d+,102L88.\d+,102Z/);
+        assert.match(d3.select(chart.selectAll("g._0 path.line")[0][0]).attr("d"), /M58.\d+,81L222.\d+,81L246.\d+,92L492.\d+,79L597.\d+,52L961.\d+,67/);
+        assert.match(d3.select(chart.selectAll("g._0 path.area")[0][0]).attr("d"), /M58.\d+,81L222.\d+,81L246.\d+,92L492.\d+,79L597.\d+,52L961.\d+,67L961.\d+,73L597.\d+,73L492.\d+,73L246.\d+,73L222.\d+,73L58.\d+,73Z/);
     },
     'should generate correct bars in stack 1': function (chart) {
-        assert.match(d3.select(chart.selectAll("g._1 path.line")[0][0]).attr("d"), /M88.\d+,119L252.\d+,119L276.\d+,141L522.\d+,115L627.\d+,61L991.\d+,91/);
-        assert.match(d3.select(chart.selectAll("g._1 path.area")[0][0]).attr("d"), /M88.\d+,119L252.\d+,119L276.\d+,141L522.\d+,115L627.\d+,61L991.\d+,91L991.\d+,96L627.\d+,81L522.\d+,109L276.\d+,122L252.\d+,111L88.\d+,111Z/);
+        assert.match(d3.select(chart.selectAll("g._1 path.line")[0][0]).attr("d"), /M58.\d+,88L222.\d+,88L246.\d+,111L492.\d+,84L597.\d+,31L961.\d+,61/);
+        assert.match(d3.select(chart.selectAll("g._1 path.area")[0][0]).attr("d"), /M58.\d+,88L222.\d+,88L246.\d+,111L492.\d+,84L597.\d+,31L961.\d+,61L961.\d+,67L597.\d+,52L492.\d+,79L246.\d+,92L222.\d+,81L58.\d+,81Z/);
     },
     'should generate y axis domain dynamically': function (chart) {
         assert.match(d3.select(chart.selectAll("g.y text")[0][0]).text(), /[−-]20/);
@@ -543,13 +543,8 @@ suite.addBatch({'clip path': {
     },
     'clip rect size should be correct': function (chart) {
         var rect = chart.select("defs clipPath rect");
-        assert.equal(rect.attr("width"), 1030);
-        assert.equal(rect.attr("height"), 170);
-    },
-    'clip rect position should be correct': function (chart) {
-        var rect = chart.select("defs clipPath rect");
-        assert.equal(rect.attr("x"), 25);
-        assert.equal(rect.attr("y"), 5);
+        assert.equal(rect.attr("width"), 1020);
+        assert.equal(rect.attr("height"), 160);
     },
     'clip id should be correct': function (chart) {
         assert.equal(chart.select("defs clipPath").attr("id"), "chart-clip-path-clip");

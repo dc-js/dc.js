@@ -8,7 +8,6 @@ var suite = vows.describe('Dynamic data addition in crossfilter');
 var width = 200;
 var height = 200;
 var radius = 100;
-var innerRadius = 30;
 
 var baseData = crossfilter(json);
 
@@ -47,6 +46,7 @@ function buildLineChart(id) {
         .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
         .transitionDuration(0)
         .xUnits(d3.time.days)
+        .brushOn(false)
         .renderArea(true)
         .renderTitle(true);
     chart.render();

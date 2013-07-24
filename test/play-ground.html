@@ -962,7 +962,7 @@ compositeChartDateB.width(500)
         .brushOn(false)
         .renderlet(function(chart) {
             chart.selectAll("rect.bar").attr("width", function(d) {
-                return Math.round(d.value / 10);
+                return Math.round(d.data.value / 10);
             });
         })
         .xAxis().ticks(5);
