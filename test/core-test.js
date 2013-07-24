@@ -121,7 +121,7 @@ suite.addBatch({
         },
         '.float': {
             topic: function () {
-                return dc.units.float.precision(0.001)(0.49999, 1.0);
+                return dc.units.fp.precision(0.001)(0.49999, 1.0);
             },
             'units should be generated according to the precision': function (units) {
                 assert.equal(units, 501);

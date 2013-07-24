@@ -129,8 +129,8 @@ dc.units.integers = function(s, e) {
 dc.units.ordinal = function(s, e, domain){
     return domain;
 };
-dc.units.float = {};
-dc.units.float.precision= function(precision){
+dc.units.fp = {};
+dc.units.fp.precision= function(precision){
     var _f = function(s, e, domain){return Math.ceil(Math.abs((e-s)/_f.resolution));};
     _f.resolution = precision;
     return _f;
