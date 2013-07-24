@@ -1552,12 +1552,14 @@ dc.marginable = function (_chart) {
             _chart.x().domain(_chart.xOriginalDomain());
         }
 
-        if (typeof(_chart.resetUnitCount) != 'undefined') {
+        if (typeof(_chart.resetUnitCount) === 'function') {
             _chart.resetUnitCount();
         }
-        if (typeof(_chart.resetBarProperties) != 'undefined') {
+
+        if (typeof(_chart.resetBarProperties) === 'function') {
             _chart.resetBarProperties();
         }
+
         _chart.redraw();
 
         if (!hasRangeSelected(range))
@@ -2377,6 +2379,10 @@ dc.barChart = function (parent, chartGroup) {
         });
     };
 
+    function barHeight(d) {
+        return Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0));
+    }
+
     function renderBars(layer, d, i) {
         var bars = layer.selectAll("rect.bar")
             .data(d.points);
@@ -2391,14 +2397,21 @@ dc.barChart = function (parent, chartGroup) {
 
         dc.transition(bars, _chart.transitionDuration())
             .attr("x", function (d) {
-                return _chart.x()(d.x);
+                var x = _chart.x()(d.x);
+                if(_centerBar) x -= _barWidth / 2;
+                return  x;
             })
             .attr("y", function (d) {
-                return _chart.y()(d.y + d.y0);
+                var y = _chart.y()(d.y + d.y0);
+
+                if(d.y < 0)
+                    y -= barHeight(d);
+
+                return y;
             })
             .attr("width", _barWidth)
             .attr("height", function (d) {
-                return Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0));
+                return barHeight(d);
             })
             .select("title").text(_chart.title());
 
