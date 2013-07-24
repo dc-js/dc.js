@@ -186,7 +186,7 @@ suite.addBatch({
                 assert.equal(chart.select("g.brush rect.extent").attr("width"), 81);
             },
             'path rendering': function (chart) {
-                assert.matches(chart.select("path.line").attr("d"), /M435.\d+,117L474.\d+,117L479.\d+,10L538.\d+,117L563.\d+,63L650.\d+,63/);
+                assert.matches(chart.select("path.line").attr("d"), /M405.\d+,107L444.\d+,107L449.\d+,0L508.\d+,107L533.\d+,53L620.\d+,53/);
             },
             'area path should not be there': function (chart) {
                 assert.equal(chart.selectAll("path.area")[0].length, 0)
@@ -219,7 +219,7 @@ suite.addBatch({'elastic axis': {
             .xAxisPadding(60)
             .elasticX(true)
             .renderArea(true)
-            .redraw();
+            .render();
         return chart;
     },
     'y axis should have shrunk triggered by filter': function (chart) {
@@ -230,10 +230,10 @@ suite.addBatch({'elastic axis': {
         assert.isTrue(chart.x().domain()[1].getTime() >= 1349740800000);
     },
     'correctly draw line': function (chart) {
-        assert.equal(d3.select("#elastic-y-line-chart g.stack0 path.line").attr("d"), "M340.65989847715736,170L413.14720812182736,170L423.502538071066,10L532.233502538071,170L578.8324873096446,10L739.3401015228426,170");
+        assert.matches(d3.select("#elastic-y-line-chart path.line").attr("d"), /M310.\d+,160L383.\d+,160L393.\d+,0L502.\d+,160L548.\d+,0L709.\d+,160/);
     },
     'correctly draw area': function (chart) {
-        assert.matches(d3.select("#elastic-y-line-chart g.stack0 path.area").attr("d"), /M340.\d+,170L413.\d+,170L423.\d+,10L532.\d+,170L578.\d+,10L739.\d+,170L739.\d+,169L578.\d+,169L532.\d+,169L423.\d+,169L413.\d+,169L340.\d+,169Z/);
+        assert.matches(d3.select("#elastic-y-line-chart path.area").attr("d"), /M310.\d+,160L383.\d+,160L393.\d+,0L502.\d+,160L548.\d+,0L709.\d+,160L709.\d+,160L548.\d+,160L502.\d+,160L393.\d+,160L383.\d+,160L310.\d+,160Z/);
     },
     teardown: function (topic) {
         resetAllFilters();
