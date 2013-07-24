@@ -950,7 +950,7 @@ dc.marginable = function (_chart) {
     var _focusChart;
 
     var _mouseZoomable = false;
-    var _clipPadding = 5;
+    var _clipPadding = 0;
 
     _chart.title(function (d) {
         return d.data.key + ": " + d.data.value;
@@ -2925,9 +2925,6 @@ dc.compositeChart = function(parent, chartGroup) {
             if (child.group() == null) child.group(_chart.group());
             child.chartGroup(_chart.chartGroup());
             child.svg(_chart.svg());
-            child.height(_chart.height());
-            child.width(_chart.width());
-            child.margins(_chart.margins());
             child.xUnits(_chart.xUnits());
             child.transitionDuration(_chart.transitionDuration());
         }
@@ -2969,6 +2966,12 @@ dc.compositeChart = function(parent, chartGroup) {
 
     _chart.compose = function(charts) {
         _children = charts;
+        for (var i = 0; i < _children.length; ++i) {
+            var child = _children[i];
+            child.height(_chart.height());
+            child.width(_chart.width());
+            child.margins(_chart.margins());
+        }
         return _chart;
     };
 

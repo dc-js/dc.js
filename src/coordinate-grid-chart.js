@@ -39,7 +39,7 @@ dc.coordinateGridChart = function (_chart) {
     var _focusChart;
 
     var _mouseZoomable = false;
-    var _clipPadding = 5;
+    var _clipPadding = 0;
 
     _chart.title(function (d) {
         return d.data.key + ": " + d.data.value;
