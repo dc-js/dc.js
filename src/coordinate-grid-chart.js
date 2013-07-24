@@ -665,6 +665,7 @@ dc.coordinateGridChart = function (_chart) {
         _chart.on("filtered", function (chart) {
             dc.events.trigger(function () {
                 _focusChart.focus(chart.filter());
+                _focusChart.filter(chart.filter());
                 dc.redrawAll(chart.chartGroup());
             });
         });
