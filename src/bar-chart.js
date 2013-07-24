@@ -42,6 +42,10 @@ dc.barChart = function (parent, chartGroup) {
         });
     };
 
+    function barHeight(d) {
+        return Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0));
+    }
+
     function renderBars(layer, d, i) {
         var bars = layer.selectAll("rect.bar")
             .data(d.points);
@@ -59,11 +63,16 @@ dc.barChart = function (parent, chartGroup) {
                 return _chart.x()(d.x);
             })
             .attr("y", function (d) {
-                return _chart.y()(d.y + d.y0);
+                var y = _chart.y()(d.y + d.y0);
+
+                if(d.y < 0)
+                    y -= barHeight(d);
+
+                return y;
             })
             .attr("width", _barWidth)
             .attr("height", function (d) {
-                return Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0));
+                return barHeight(d);
             })
             .select("title").text(_chart.title());
 
