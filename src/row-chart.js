@@ -197,13 +197,13 @@ dc.rowChart = function (parent, chartGroup) {
 
     _chart.labelOffsetX = function (o) {
         if (!arguments.length) return _labelOffsetX;
-        _labelOffset = o;
+        _labelOffsetX = o;
         return _chart;
     };
 
     _chart.labelOffsetY = function (o) {
         if (!arguments.length) return _labelOffsetY;
-        _labelOffset = o;
+        _labelOffsetY = o;
         return _chart;
     };
 
