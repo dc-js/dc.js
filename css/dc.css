@@ -4,7 +4,6 @@
 
 .dc-chart rect.bar {
     stroke: none;
-    fill: steelblue;
     cursor: pointer;
 }
 
@@ -94,28 +93,11 @@
 
 .dc-chart path.line {
     fill: none;
-    stroke: steelblue;
     stroke-width: 1.5px;
 }
 
 .dc-chart circle.dot {
-    fill: steelblue;
-}
-
-.dc-chart g.stack1 path.line {
-    stroke: green;
-}
-
-.dc-chart g.stack1 circle.dot {
-    fill: green;
-}
-
-.dc-chart g.stack2 path.line {
-    stroke: red;
-}
-
-.dc-chart g.stack2 circle.dot {
-    fill: red;
+    stroke: none;
 }
 
 .dc-chart g.dc-tooltip path {
@@ -125,17 +107,8 @@
 }
 
 .dc-chart path.area {
-    fill: steelblue;
     fill-opacity: .3;
     stroke: none;
-}
-
-.dc-chart g.stack1 path.area {
-    fill: green;
-}
-
-.dc-chart g.stack2 path.area {
-    fill: red;
 }
 
 .dc-chart .node {
