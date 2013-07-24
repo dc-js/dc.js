@@ -314,13 +314,8 @@ suite.addBatch({'clip path':{
     },
     'clip rect size should be correct': function(chart) {
         var rect = chart.select("defs clipPath rect");
-        assert.equal(rect.attr("width"), 430);
-        assert.equal(rect.attr("height"), 120);
-    },
-    'clip rect position should be correct': function(chart) {
-        var rect = chart.select("defs clipPath rect");
-        assert.equal(rect.attr("x"), 25);
-        assert.equal(rect.attr("y"), 5);
+        assert.equal(rect.attr("width"), 420);
+        assert.equal(rect.attr("height"), 110);
     },
     'clip id should be correct': function(chart) {
         assert.equal(chart.select("defs clipPath").attr("id"), "composite-chart-clip-path-clip");
