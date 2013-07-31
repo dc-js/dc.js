@@ -20,6 +20,7 @@ dc.compositeChart = function(parent, chartGroup) {
             child.svg(_chart.svg());
             child.xUnits(_chart.xUnits());
             child.transitionDuration(_chart.transitionDuration());
+            child.brushOn(_chart.brushOn());
         }
 
         return g;
