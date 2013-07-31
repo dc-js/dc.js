@@ -919,7 +919,7 @@ This listener function will be invoked before chart redrawing.
 This listener function will be invoked after chart finish redrawing including all renderlets' logic.
 
 ### .on("filtered", function(chart, filter){...})
-This listener function will be invoked after a filter is applied.
+This listener function will be invoked after a filter is applied, added or removed.
 
 ### .on("zoomed", function(chart, filter){...})
 This listener function will be invoked after a zoom is triggered.
