@@ -222,6 +222,12 @@ chart.filterHandler(function(dimension, filter){
 });
 ```
 
+#### .expireCache()
+Expire internal chart cache. dc.js chart cache some data internally on a per chart basis so it can speed up rendering
+and avoid unnecessary calculation however under certain circumstances it might be useful to clear the cache e.g. after
+you invoke crossfilter.add function or if you reset group or dimension post render it is always a good idea to clear
+the cache to make sure charts are rendered properly.
+
 ## <a name="color-chart" href="#color-chart">#</a> Color Chart [Abstract]
 Color chart is an abstract chart functional class created to provide universal coloring support as a mix-in for any concrete
 chart implementation.

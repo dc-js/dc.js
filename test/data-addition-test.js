@@ -28,6 +28,7 @@ function buildPieChart(id) {
         .transitionDuration(0);
     chart.render();
     baseData.add(json2);
+    chart.expireCache();
     return chart;
 }
 
@@ -51,6 +52,7 @@ function buildLineChart(id) {
         .renderTitle(true);
     chart.render();
     baseData2.add(json2);
+    chart.expireCache();
     return chart;
 }
 

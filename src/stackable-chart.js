@@ -9,6 +9,7 @@ dc.stackableChart = function (_chart) {
     var _allGroups;
     var _allValueAccessors;
     var _allKeyAccessors;
+    var _stackedLayers;
 
     _chart.stack = function (group, retriever) {
         _groupStack.setDefaultAccessor(_chart.valueAccessor());
@@ -23,6 +24,7 @@ dc.stackableChart = function (_chart) {
         _allGroups = null;
         _allValueAccessors = null;
         _allKeyAccessors = null;
+        _stackedLayers = null;
         return _chart;
     };
 
@@ -186,7 +188,9 @@ dc.stackableChart = function (_chart) {
     };
 
     _chart.stackedLayers = function () {
-        return _chart.stackLayout()(_groupStack.toLayers());
+        if(_stackedLayers == null)
+            _stackedLayers = _chart.stackLayout()(_groupStack.toLayers());
+        return _stackedLayers;
     };
 
     return _chart;
