@@ -738,6 +738,7 @@ dc.baseChart = function (_chart) {
     function removeFilter(_) {
         _filters.splice(_filters.indexOf(_), 1);
         applyFilters();
+        _chart.invokeFilteredListener(_chart, _);
     }
 
     function addFilter(_) {
@@ -956,7 +957,7 @@ dc.marginable = function (_chart) {
         return d.data.key + ": " + d.data.value;
     });
 
-    _chart.resetUnitCount = function () {
+    _chart.rescale = function () {
         _unitCount = null;
         _chart.xUnitCount();
     }
@@ -1095,9 +1096,9 @@ dc.marginable = function (_chart) {
     };
 
     function renderVerticalGridLines(g) {
-        if (_renderVerticalGridLine) {
-            var gridLineG = g.selectAll("g." + VERTICAL_CLASS);
+        var gridLineG = g.selectAll("g." + VERTICAL_CLASS);
 
+        if (_renderVerticalGridLine) {
             if (gridLineG.empty())
                 gridLineG = g.insert("g", ":first-child")
                     .attr("class", GRID_LINE_CLASS + " " + VERTICAL_CLASS)
@@ -1137,6 +1138,9 @@ dc.marginable = function (_chart) {
             // exit
             lines.exit().remove();
         }
+        else {
+            gridLineG.selectAll("line").remove()
+        }
     }
 
     _chart.xAxisY = function () {
@@ -1170,10 +1174,11 @@ dc.marginable = function (_chart) {
             .call(_yAxis);
     };
 
-    function renderHorizontalGridLines(g) {
-        if (_renderHorizontalGridLine) {
-            var gridLineG = g.selectAll("g." + HORIZONTAL_CLASS);
 
+    function renderHorizontalGridLines(g) {
+        var gridLineG = g.selectAll("g." + HORIZONTAL_CLASS);
+       
+        if (_renderHorizontalGridLine) {
             var ticks = _yAxis.tickValues() ? _yAxis.tickValues() : _y.ticks(_yAxis.ticks()[0]);
 
             if (gridLineG.empty())
@@ -1212,6 +1217,9 @@ dc.marginable = function (_chart) {
 
             // exit
             lines.exit().remove();
+        }
+        else {
+            gridLineG.selectAll("line").remove()
         }
     }
 
@@ -1552,13 +1560,7 @@ dc.marginable = function (_chart) {
             _chart.x().domain(_chart.xOriginalDomain());
         }
 
-        if (typeof(_chart.resetUnitCount) === 'function') {
-            _chart.resetUnitCount();
-        }
-
-        if (typeof(_chart.resetBarProperties) === 'function') {
-            _chart.resetBarProperties();
-        }
+        _chart.rescale();
 
         _chart.redraw();
 
@@ -2006,7 +2008,8 @@ dc.pieChart = function (parent, chartGroup) {
 
     var _sliceCssClass = "pie-slice";
 
-    var _radius = 90, _innerRadius = 0;
+    var _radius,
+        _innerRadius = 0;
 
     var _g;
 
@@ -2063,6 +2066,9 @@ dc.pieChart = function (parent, chartGroup) {
     function drawChart() {
         if (_chart.dataSet()) {
             var pie = calculateDataPie();
+
+            // set radius on basis of chart dimension if missing
+            _radius = _radius ? _radius : d3.min([_chart.width(), _chart.height()]) /2;
 
             var arc = _chart.buildArcs();
 
@@ -2348,11 +2354,12 @@ dc.barChart = function (parent, chartGroup) {
     var _numberOfBars;
     var _barWidth;
 
-    _chart.resetBarProperties = function () {
+    dc.override(_chart, 'rescale', function () {
+        _chart._rescale();
         _numberOfBars = null;
         _barWidth = null;
         getNumberOfBars();
-    };
+    });
 
     _chart.plotData = function () {
         var groups = _chart.allGroups();
@@ -2399,13 +2406,13 @@ dc.barChart = function (parent, chartGroup) {
         dc.transition(bars, _chart.transitionDuration())
             .attr("x", function (d) {
                 var x = _chart.x()(d.x);
-                if(_centerBar) x -= _barWidth / 2;
+                if (_centerBar) x -= _barWidth / 2;
                 return  x;
             })
             .attr("y", function (d) {
                 var y = _chart.y()(d.y + d.y0);
 
-                if(d.y < 0)
+                if (d.y < 0)
                     y -= barHeight(d);
 
                 return y;
@@ -3051,12 +3058,12 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     });
 
     var _geoPath = d3.geo.path();
+    var _projectionFlag;
 
     var _geoJsons = [];
 
     _chart.doRender = function () {
         _chart.resetSvg();
-
         for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
             var states = _chart.svg().append("g")
                 .attr("class", "layer" + layerIndex);
@@ -3076,6 +3083,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
             plotData(layerIndex);
         }
+        _projectionFlag = false;
     };
 
     function plotData(layerIndex) {
@@ -3183,7 +3191,11 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     _chart.doRedraw = function () {
         for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
             plotData(layerIndex);
+            if(_projectionFlag) {
+                _chart.svg().selectAll("g." + geoJson(layerIndex).name + " path").attr("d", _geoPath)
+            };
         }
+        _projectionFlag = false
     };
 
     _chart.overlayGeoJson = function (json, name, keyAccessor) {
@@ -3200,6 +3212,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
     _chart.projection = function (projection) {
         _geoPath.projection(projection);
+        _projectionFlag = true;
         return _chart;
     };
 
