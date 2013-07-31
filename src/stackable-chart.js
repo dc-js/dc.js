@@ -81,18 +81,21 @@ dc.stackableChart = function (_chart) {
         return min;
     };
 
-    _chart.yAxisMax = function () {
-        var max, all = [];
+    function flattenStack() {
+        var all = [];
 
         _chart.stackLayers().forEach(function (e) {
-            e.points.forEach(function (p) {
-                all.push(p);
-            });
+            all = all.concat(e.points);
         });
+        
+        return all;
+    }
 
-        max = d3.max(all, function (p) {
-            return p.y + p.y0;
-        });
+    _chart.yAxisMax = function () {
+        var max, all = flattenStack();
+
+        max = d3.max(all, function (p) {return p.y + p.y0;});
+
         max = dc.utils.add(max, _chart.yAxisPadding());
 
         return max;
