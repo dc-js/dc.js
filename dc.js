@@ -1096,9 +1096,9 @@ dc.marginable = function (_chart) {
     };
 
     function renderVerticalGridLines(g) {
-        if (_renderVerticalGridLine) {
-            var gridLineG = g.selectAll("g." + VERTICAL_CLASS);
+        var gridLineG = g.selectAll("g." + VERTICAL_CLASS);
 
+        if (_renderVerticalGridLine) {
             if (gridLineG.empty())
                 gridLineG = g.insert("g", ":first-child")
                     .attr("class", GRID_LINE_CLASS + " " + VERTICAL_CLASS)
@@ -1138,6 +1138,9 @@ dc.marginable = function (_chart) {
             // exit
             lines.exit().remove();
         }
+        else {
+            gridLineG.selectAll("line").remove()
+        }
     }
 
     _chart.xAxisY = function () {
@@ -1171,10 +1174,11 @@ dc.marginable = function (_chart) {
             .call(_yAxis);
     };
 
-    function renderHorizontalGridLines(g) {
-        if (_renderHorizontalGridLine) {
-            var gridLineG = g.selectAll("g." + HORIZONTAL_CLASS);
 
+    function renderHorizontalGridLines(g) {
+        var gridLineG = g.selectAll("g." + HORIZONTAL_CLASS);
+       
+        if (_renderHorizontalGridLine) {
             var ticks = _yAxis.tickValues() ? _yAxis.tickValues() : _y.ticks(_yAxis.ticks()[0]);
 
             if (gridLineG.empty())
@@ -1213,6 +1217,9 @@ dc.marginable = function (_chart) {
 
             // exit
             lines.exit().remove();
+        }
+        else {
+            gridLineG.selectAll("line").remove()
         }
     }
 
@@ -1541,7 +1548,7 @@ dc.marginable = function (_chart) {
     };
 
     function hasRangeSelected(range) {
-        return range != null && range != undefined && range instanceof Array && range.length > 1;
+        return range instanceof Array && range.length > 1;
     }
 
     _chart.focus = function (range) {
@@ -2001,7 +2008,8 @@ dc.pieChart = function (parent, chartGroup) {
 
     var _sliceCssClass = "pie-slice";
 
-    var _radius = 90, _innerRadius = 0;
+    var _radius,
+        _innerRadius = 0;
 
     var _g;
 
@@ -2058,6 +2066,9 @@ dc.pieChart = function (parent, chartGroup) {
     function drawChart() {
         if (_chart.dataSet()) {
             var pie = calculateDataPie();
+
+            // set radius on basis of chart dimension if missing
+            _radius = _radius ? _radius : d3.min([_chart.width(), _chart.height()]) /2;
 
             var arc = _chart.buildArcs();
 
@@ -3047,12 +3058,12 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     });
 
     var _geoPath = d3.geo.path();
+    var _projectionFlag;
 
     var _geoJsons = [];
 
     _chart.doRender = function () {
         _chart.resetSvg();
-
         for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
             var states = _chart.svg().append("g")
                 .attr("class", "layer" + layerIndex);
@@ -3072,6 +3083,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
             plotData(layerIndex);
         }
+        _projectionFlag = false;
     };
 
     function plotData(layerIndex) {
@@ -3179,7 +3191,11 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     _chart.doRedraw = function () {
         for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
             plotData(layerIndex);
+            if(_projectionFlag) {
+                _chart.svg().selectAll("g." + geoJson(layerIndex).name + " path").attr("d", _geoPath)
+            };
         }
+        _projectionFlag = false
     };
 
     _chart.overlayGeoJson = function (json, name, keyAccessor) {
@@ -3196,6 +3212,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
     _chart.projection = function (projection) {
         _geoPath.projection(projection);
+        _projectionFlag = true;
         return _chart;
     };
 

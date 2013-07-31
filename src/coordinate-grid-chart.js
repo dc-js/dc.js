@@ -636,7 +636,7 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     function hasRangeSelected(range) {
-        return range != null && range != undefined && range instanceof Array && range.length > 1;
+        return range instanceof Array && range.length > 1;
     }
 
     _chart.focus = function (range) {

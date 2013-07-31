@@ -819,7 +819,7 @@ linearBarChart.width(500)
         .group(valueGroup)
         .elasticY(true)
         .x(d3.scale.linear().domain([20, 70]))
-        .xUnits(dc.units.float.precision(1));
+        .xUnits(dc.units.fp.precision(1));
 
 var barSwitchChart = dc.barChart("#bar-chart-switch");
 barSwitchChart.width(500)
