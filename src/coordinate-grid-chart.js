@@ -184,9 +184,9 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     function renderVerticalGridLines(g) {
-        if (_renderVerticalGridLine) {
-            var gridLineG = g.selectAll("g." + VERTICAL_CLASS);
+        var gridLineG = g.selectAll("g." + VERTICAL_CLASS);
 
+        if (_renderVerticalGridLine) {
             if (gridLineG.empty())
                 gridLineG = g.insert("g", ":first-child")
                     .attr("class", GRID_LINE_CLASS + " " + VERTICAL_CLASS)
@@ -226,6 +226,9 @@ dc.coordinateGridChart = function (_chart) {
             // exit
             lines.exit().remove();
         }
+        else {
+            gridLineG.selectAll("line").remove()
+        }
     }
 
     _chart.xAxisY = function () {
@@ -259,10 +262,11 @@ dc.coordinateGridChart = function (_chart) {
             .call(_yAxis);
     };
 
-    function renderHorizontalGridLines(g) {
-        if (_renderHorizontalGridLine) {
-            var gridLineG = g.selectAll("g." + HORIZONTAL_CLASS);
 
+    function renderHorizontalGridLines(g) {
+        var gridLineG = g.selectAll("g." + HORIZONTAL_CLASS);
+       
+        if (_renderHorizontalGridLine) {
             var ticks = _yAxis.tickValues() ? _yAxis.tickValues() : _y.ticks(_yAxis.ticks()[0]);
 
             if (gridLineG.empty())
@@ -301,6 +305,9 @@ dc.coordinateGridChart = function (_chart) {
 
             // exit
             lines.exit().remove();
+        }
+        else {
+            gridLineG.selectAll("line").remove()
         }
     }
 
