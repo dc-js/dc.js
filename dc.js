@@ -2553,7 +2553,7 @@ dc.lineChart = function (parent, chartGroup) {
 
         drawArea(layersEnter, layers);
 
-        drawDots(layersEnter);
+        drawDots(layers);
 
         _chart.stackLayers(null);
     };
@@ -2959,6 +2959,7 @@ dc.compositeChart = function(parent, chartGroup) {
             child.svg(_chart.svg());
             child.xUnits(_chart.xUnits());
             child.transitionDuration(_chart.transitionDuration());
+            child.brushOn(_chart.brushOn());
         }
 
         return g;

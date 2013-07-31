@@ -26,7 +26,7 @@ dc.lineChart = function (parent, chartGroup) {
 
         drawArea(layersEnter, layers);
 
-        drawDots(layersEnter);
+        drawDots(layers);
 
         _chart.stackLayers(null);
     };
