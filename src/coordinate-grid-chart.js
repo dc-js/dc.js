@@ -45,7 +45,7 @@ dc.coordinateGridChart = function (_chart) {
         return d.data.key + ": " + d.data.value;
     });
 
-    _chart.resetUnitCount = function () {
+    _chart.rescale = function () {
         _unitCount = null;
         _chart.xUnitCount();
     }
@@ -641,8 +641,8 @@ dc.coordinateGridChart = function (_chart) {
             _chart.x().domain(_chart.xOriginalDomain());
         }
 
-        if (typeof(_chart.resetUnitCount) === 'function') {
-            _chart.resetUnitCount();
+        if (typeof(_chart.rescale) === 'function') {
+            _chart.rescale();
         }
 
         if (typeof(_chart.resetBarProperties) === 'function') {

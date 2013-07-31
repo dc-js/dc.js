@@ -10,6 +10,7 @@ dc.barChart = function (parent, chartGroup) {
     var _numberOfBars;
     var _barWidth;
 
+    
     _chart.resetBarProperties = function () {
         _numberOfBars = null;
         _barWidth = null;
