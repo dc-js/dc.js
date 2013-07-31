@@ -641,13 +641,7 @@ dc.coordinateGridChart = function (_chart) {
             _chart.x().domain(_chart.xOriginalDomain());
         }
 
-        if (typeof(_chart.rescale) === 'function') {
-            _chart.rescale();
-        }
-
-        if (typeof(_chart.resetBarProperties) === 'function') {
-            _chart.resetBarProperties();
-        }
+        _chart.rescale();
 
         _chart.redraw();
 

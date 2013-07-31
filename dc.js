@@ -1552,13 +1552,7 @@ dc.marginable = function (_chart) {
             _chart.x().domain(_chart.xOriginalDomain());
         }
 
-        if (typeof(_chart.rescale) === 'function') {
-            _chart.rescale();
-        }
-
-        if (typeof(_chart.resetBarProperties) === 'function') {
-            _chart.resetBarProperties();
-        }
+        _chart.rescale();
 
         _chart.redraw();
 
@@ -2348,12 +2342,12 @@ dc.barChart = function (parent, chartGroup) {
     var _numberOfBars;
     var _barWidth;
 
-    
-    _chart.resetBarProperties = function () {
+    dc.override(_chart, 'rescale', function () {
+        _chart._rescale();
         _numberOfBars = null;
         _barWidth = null;
         getNumberOfBars();
-    };
+    });
 
     _chart.plotData = function () {
         var groups = _chart.allGroups();
@@ -2400,13 +2394,13 @@ dc.barChart = function (parent, chartGroup) {
         dc.transition(bars, _chart.transitionDuration())
             .attr("x", function (d) {
                 var x = _chart.x()(d.x);
-                if(_centerBar) x -= _barWidth / 2;
+                if (_centerBar) x -= _barWidth / 2;
                 return  x;
             })
             .attr("y", function (d) {
                 var y = _chart.y()(d.y + d.y0);
 
-                if(d.y < 0)
+                if (d.y < 0)
                     y -= barHeight(d);
 
                 return y;
