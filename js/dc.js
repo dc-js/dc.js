@@ -1711,22 +1711,11 @@ dc.stackableChart = function (_chart) {
     };
 
     _chart.yAxisMin = function () {
-        var min = 0;
-        var allGroups = _chart.allGroups();
+        var min, all = flattenStack();
 
-        for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
-            var group = allGroups[groupIndex];
-            var m = dc.utils.groupMin(group, _chart.getValueAccessorByIndex(groupIndex));
-            if (m < min) min = m;
-        }
-
-        if (min < 0) {
-            min = 0;
-            for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
-                var group = allGroups[groupIndex];
-                min += dc.utils.groupMin(group, _chart.getValueAccessorByIndex(groupIndex));
-            }
-        }
+        min = d3.min(all, function (p) {
+            return  (p.y + p.y0 < p.y0) ? (p.y + p.y0) : p.y0;
+        });
 
         min = dc.utils.subtract(min, _chart.yAxisPadding());
 
@@ -1734,27 +1723,26 @@ dc.stackableChart = function (_chart) {
     };
 
     _chart.yAxisMax = function () {
-        var max, all = [];
-
-        _chart.stackLayers().forEach(function (e) {
-            e.points.forEach(function (p) {
-                all.push(p);
-            });
-        });
+        var max, all = flattenStack();
 
         max = d3.max(all, function (p) {
             return p.y + p.y0;
         });
 
-        console.log(max);
-
         max = dc.utils.add(max, _chart.yAxisPadding());
-
-        console.log(_chart.yAxisPadding());
-        console.log(max);
 
         return max;
     };
+
+    function flattenStack() {
+        var all = [];
+
+        _chart.stackLayers().forEach(function (e) {
+            all = all.concat(e.points);
+        });
+
+        return all;
+    }
 
     _chart.allKeyAccessors = function () {
         if (_allKeyAccessors == null) {
