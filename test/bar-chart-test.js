@@ -678,19 +678,23 @@ suite.addBatch({
 });
 
 suite.addBatch({
-    'out of x range drawing': {
+    'focus': {
         topic: function () {
             var chart = buildChart("chart-out-of-range");
-            chart.focus([new Date(2012, 5, 11), new Date(2012, 6, 9)]);
+            chart.elasticY(true).focus([new Date(2012, 5, 11), new Date(2012, 6, 9)]);
             chart.render();
             return chart;
         },
         'chart should only render correct number of bars': function (chart) {
-            // TODO: should be only one bar
+            // TODO: will be nice to only render what is necessary - only one bar
             assert.equal(chart.selectAll("rect.bar")[0].length, 6);
         },
         'bar width should be resized accordingly': function (chart) {
             assert.equal(chart.selectAll("rect.bar").attr("width"), 35);
+        },
+        'y axis domain should be reset based on focus range': function(chart){
+            assert.equal(chart.y().domain()[0], 0);
+            assert.equal(chart.y().domain()[1], 1);
         },
         'focus should reset if null is passed': function (chart) {
             chart.focus(null);

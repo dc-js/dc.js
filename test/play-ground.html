@@ -720,7 +720,7 @@ lineChartDate.width(500)
         })
         .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
         .xUnits(d3.time.days)
-        .y(d3.scale.linear().domain([0, 200]))
+        .elasticY(true)
         .renderArea(true)
         .xAxis().ticks(5);
 
@@ -730,6 +730,7 @@ barChartDate.width(500)
         .dimension(dateDimension)
         .group(dateIdSumGroup)
         .stack(dateValueSumGroup)
+        .elasticY(true)
         .stack(dateValueSumGroup, function(d) {
             return 10;
         })

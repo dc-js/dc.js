@@ -1737,9 +1737,20 @@ dc.stackableChart = function (_chart) {
     function flattenStack() {
         var all = [];
 
-        _chart.stackLayers().forEach(function (e) {
-            all = all.concat(e.points);
-        });
+        if (_chart.x()) {
+            var xDomain = _chart.x().domain();
+
+            _chart.stackLayers().forEach(function (e) {
+                e.points.forEach(function (p) {
+                    if (p.x >= xDomain[0] && p.x <= xDomain[1])
+                        all.push(p);
+                });
+            });
+        } else {
+            _chart.stackLayers().forEach(function (e) {
+                all = all.concat(e.points);
+            });
+        }
 
         return all;
     }
