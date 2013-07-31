@@ -234,6 +234,7 @@ dc.baseChart = function (_chart) {
     function removeFilter(_) {
         _filters.splice(_filters.indexOf(_), 1);
         applyFilters();
+        _chart.invokeFilteredListener(_chart, _);
     }
 
     function addFilter(_) {

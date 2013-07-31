@@ -3,7 +3,8 @@ dc.pieChart = function (parent, chartGroup) {
 
     var _sliceCssClass = "pie-slice";
 
-    var _radius = 90, _innerRadius = 0;
+    var _radius,
+        _innerRadius = 0;
 
     var _g;
 
@@ -60,6 +61,9 @@ dc.pieChart = function (parent, chartGroup) {
     function drawChart() {
         if (_chart.dataSet()) {
             var pie = calculateDataPie();
+
+            // set radius on basis of chart dimension if missing
+            _radius = _radius ? _radius : d3.min([_chart.width(), _chart.height()]) /2;
 
             var arc = _chart.buildArcs();
 
