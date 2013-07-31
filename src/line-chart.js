@@ -12,14 +12,8 @@ dc.lineChart = function (parent, chartGroup) {
     _chart.transitionDuration(500);
 
     _chart.plotData = function () {
-        var groups = _chart.allGroups();
-
-        _chart.calculateDataPointMatrixForAll(groups);
-
-        var stackedLayers = _chart.stackedLayers();
-
         var layers = _chart.chartBodyG().selectAll("g.stack")
-            .data(stackedLayers);
+            .data(_chart.stackLayers());
 
         var layersEnter = layers
             .enter()
@@ -33,6 +27,8 @@ dc.lineChart = function (parent, chartGroup) {
         drawArea(layersEnter, layers);
 
         drawDots(layersEnter);
+
+        _chart.stackLayers(null);
     };
 
     _chart.renderArea = function (_) {

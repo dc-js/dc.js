@@ -216,7 +216,7 @@ suite.addBatch({'elastic axises':{
         return chart;
     },
     'y axis should have adjusted combining all child charts maxs & mins': function(chart) {
-        assert.equal(chart.y().domain()[1], 117);
+        assert.equal(chart.y().domain()[1], 115);
     },
     'x domain should be set': function(chart) {
         assert.isTrue(chart.x().domain()[0].getTime() >= 1337904000000);

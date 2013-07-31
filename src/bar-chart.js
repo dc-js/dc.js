@@ -18,16 +18,10 @@ dc.barChart = function (parent, chartGroup) {
     });
 
     _chart.plotData = function () {
-        var groups = _chart.allGroups();
-
-        _chart.calculateDataPointMatrixForAll(groups);
-
-        var stackedLayers = _chart.stackedLayers();
+        var layers = _chart.chartBodyG().selectAll("g.stack")
+            .data(_chart.stackLayers());
 
         calculateBarWidth();
-
-        var layers = _chart.chartBodyG().selectAll("g.stack")
-            .data(stackedLayers);
 
         layers
             .enter()
@@ -41,6 +35,8 @@ dc.barChart = function (parent, chartGroup) {
 
             renderBars(layer, d, i);
         });
+
+        _chart.stackLayers(null);
     };
 
     function barHeight(d) {
