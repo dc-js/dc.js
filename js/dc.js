@@ -1548,7 +1548,7 @@ dc.marginable = function (_chart) {
     };
 
     function hasRangeSelected(range) {
-        return range != null && range != undefined && range instanceof Array && range.length > 1;
+        return range instanceof Array && range.length > 1;
     }
 
     _chart.focus = function (range) {
@@ -1661,6 +1661,7 @@ dc.stackableChart = function (_chart) {
     var _allGroups;
     var _allValueAccessors;
     var _allKeyAccessors;
+    var _stackedLayers;
 
     _chart.stack = function (group, retriever) {
         _groupStack.setDefaultAccessor(_chart.valueAccessor());
@@ -1675,6 +1676,7 @@ dc.stackableChart = function (_chart) {
         _allGroups = null;
         _allValueAccessors = null;
         _allKeyAccessors = null;
+        _stackedLayers = null;
         return _chart;
     };
 
@@ -1732,14 +1734,15 @@ dc.stackableChart = function (_chart) {
     };
 
     _chart.yAxisMax = function () {
-        var max = 0;
-        var allGroups = _chart.allGroups();
+        var max, all = [];
 
-        for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
-            var group = allGroups[groupIndex];
-            max += dc.utils.groupMax(group, _chart.getValueAccessorByIndex(groupIndex));
-        }
+        _chart.stackedLayers().forEach(function(e){
+            e.points.forEach(function(p){
+                all.push(p);
+            });
+        });
 
+        max = d3.max(all, function(p){return p.y + p.y0;});
         max = dc.utils.add(max, _chart.yAxisPadding());
 
         return max;
@@ -1806,7 +1809,8 @@ dc.stackableChart = function (_chart) {
         }
     }
 
-    _chart.calculateDataPointMatrixForAll = function (groups) {
+    _chart.calculateDataPointMatrixForAll = function () {
+        var groups = _chart.allGroups();
         for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
             var group = groups[groupIndex];
             var data = group.all();
@@ -1838,7 +1842,12 @@ dc.stackableChart = function (_chart) {
     };
 
     _chart.stackedLayers = function () {
-        return _chart.stackLayout()(_groupStack.toLayers());
+//        if(_stackedLayers == null){
+            _chart.calculateDataPointMatrixForAll();
+            _stackedLayers = _chart.stackLayout()(_groupStack.toLayers());
+//        }
+
+        return _stackedLayers;
     };
 
     return _chart;
@@ -2362,16 +2371,12 @@ dc.barChart = function (parent, chartGroup) {
     });
 
     _chart.plotData = function () {
-        var groups = _chart.allGroups();
-
-        _chart.calculateDataPointMatrixForAll(groups);
-
-        var stackedLayers = _chart.stackedLayers();
+        _chart.calculateDataPointMatrixForAll();
 
         calculateBarWidth();
 
         var layers = _chart.chartBodyG().selectAll("g.stack")
-            .data(stackedLayers);
+            .data(_chart.stackedLayers());
 
         layers
             .enter()
@@ -2524,14 +2529,10 @@ dc.lineChart = function (parent, chartGroup) {
     _chart.transitionDuration(500);
 
     _chart.plotData = function () {
-        var groups = _chart.allGroups();
-
-        _chart.calculateDataPointMatrixForAll(groups);
-
-        var stackedLayers = _chart.stackedLayers();
+        _chart.calculateDataPointMatrixForAll();
 
         var layers = _chart.chartBodyG().selectAll("g.stack")
-            .data(stackedLayers);
+            .data(_chart.stackedLayers());
 
         var layersEnter = layers
             .enter()
