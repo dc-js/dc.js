@@ -509,7 +509,7 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     function getClipPathId() {
-        return _chart.anchor().replace('#', '') + "-clip";
+        return _chart.anchorName() + "-clip";
     }
 
     _chart.clipPadding = function (p) {
@@ -532,8 +532,8 @@ dc.coordinateGridChart = function (_chart) {
 
     _chart.doRender = function () {
         if (_x === undefined)
-            throw new dc.errors.InvalidStateException("Mandatory attribute chart.x is missing on chart["
-                + _chart.anchor() + "]");
+            throw new dc.errors.InvalidStateException("Mandatory attribute chart.x is missing on chart[#"
+                + _chart.anchorName() + "]");
 
         _chart.resetSvg();
 
