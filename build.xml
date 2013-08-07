@@ -46,6 +46,7 @@
             <file file="src/geo-choropleth-chart.js"/>
             <file file="src/bubble-overlay.js"/>
             <file file="src/row-chart.js"/>
+            <file file="src/legend.js"/>
         </concat>
         <echo>Compiling dc.min.js</echo>
         <exec executable="bash">

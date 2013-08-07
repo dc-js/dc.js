@@ -11,7 +11,12 @@ dc.stackableChart = function (_chart) {
     var _allKeyAccessors;
     var _stackLayers;
 
-    _chart.stack = function (group, retriever) {
+    _chart.stack = function (group, name, retriever) {
+        if(name instanceof String)
+            group.__name__ = name;
+        else if(typeof name === 'function')
+            retriever = name;
+
         _groupStack.setDefaultAccessor(_chart.valueAccessor());
         _groupStack.addGroup(group, retriever);
 

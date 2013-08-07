@@ -709,9 +709,9 @@ var lineChartDate = dc.lineChart("#line-chart-date");
 lineChartDate.width(500)
         .height(150)
         .dimension(dateDimension)
-        .group(dateIdSumGroup)
-        .stack(dateValueSumGroup)
-        .stack(dateValueSumGroup, function(d) {
+        .group(dateIdSumGroup, "ID")
+        .stack(dateValueSumGroup, "Sum")
+        .stack(dateValueSumGroup, "Fixed", function(d) {
             return 10;
         })
         .brushOn(false)
@@ -722,6 +722,7 @@ lineChartDate.width(500)
         .xUnits(d3.time.days)
         .elasticY(true)
         .renderArea(true)
+        .legend(dc.legend())
         .xAxis().ticks(5);
 
 var barChartDate = dc.barChart("#bar-chart-date");

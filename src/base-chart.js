@@ -45,6 +45,7 @@ dc.baseChart = function (_chart) {
         filtered: NULL_LISTENER,
         zoomed: NULL_LISTENER
     };
+    var _legend;
 
     var _filters = [];
     var _filterHandler = function (dimension, filters) {
@@ -81,10 +82,11 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
-    _chart.group = function (g) {
+    _chart.group = function (g, name) {
         if (!arguments.length) return _group;
         _group = g;
         _chart.expireCache();
+        if(!name) _group.__name__ = name;
         return _chart;
     };
 
@@ -189,6 +191,8 @@ dc.baseChart = function (_chart) {
                 + _chart.anchor() + "]");
 
         var result = _chart.doRender();
+
+        if(_legend) _legend.render();
 
         _chart.activateRenderlets("postRender");
 
@@ -383,6 +387,13 @@ dc.baseChart = function (_chart) {
 
     _chart.expireCache = function () {
         // do nothing in base, should be overridden by sub-function
+        return _chart;
+    };
+
+    _chart.legend = function(l){
+        if(!arguments.length) return _legend;
+        _legend = l;
+        _legend.parent(_chart);
         return _chart;
     };
 
