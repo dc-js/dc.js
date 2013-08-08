@@ -220,3 +220,7 @@
 .dc-legend {
     font-size: smaller;
 }
+
+.dc-legend-item {
+    text-anchor: start;
+}

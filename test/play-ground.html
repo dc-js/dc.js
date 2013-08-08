@@ -710,9 +710,9 @@ lineChartDate.width(500)
         .height(180)
         .margins({top: 30, right: 50, bottom: 30, left: 30})
         .dimension(dateDimension)
-        .group(dateIdSumGroup, "ID")
-        .stack(dateValueSumGroup, "Sum")
-        .stack(dateValueSumGroup, "Fixed", function(d) {
+        .group(dateIdSumGroup, "Id Sum")
+        .stack(dateValueSumGroup, "Value Sum")
+        .stack(dateFixedSumGroup, "Fixed", function(d) {
             return 10;
         })
         .brushOn(false)

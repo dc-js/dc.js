@@ -1883,8 +1883,10 @@ dc.stackableChart = function (_chart) {
 
     _chart.legendables = function () {
         var items = [];
-        _allGroups.forEach(function (g) {
-            items.push({name: g.__name__, data: g});
+        _allGroups.forEach(function (g, i) {
+            var legendable = {name: g.__name__, data: g};
+            if(typeof _chart.colors === 'function') legendable.color = _chart.colors()(i);
+            items.push(legendable);
         });
         return items;
     };
@@ -3643,11 +3645,13 @@ dc.bubbleOverlay = function(root, chartGroup) {
     return _chart.anchor(parent, chartGroup);
 };
 dc.legend = function () {
+    var LABEL_GAP = 2;
+
     var _legend = {},
         _parent,
         _x = 0,
         _y = 0,
-        _gap = 3;
+        _gap = 5;
 
     var _g;
 
@@ -3662,20 +3666,36 @@ dc.legend = function () {
             .attr("class", "dc-legend")
             .attr("transform", "translate(" + _x + "," + _y + ")");
 
-        var itemHeight, itemPosition = 0;
+        var itemPosition = 0;
 
         _parent.legendables().forEach(function (e) {
+            console.log(e);
+
             var itemG = _g.append("g")
                 .attr("class", "dc-legend-item")
-                .attr("transform", "translate("+[0, itemPosition]+")");
-            var text = itemG
-                .append("text")
-                .text(e.name);
+                .attr("transform", "translate(" + [0, itemPosition] + ")");
 
-            itemHeight = _gap + text.node().clientHeight;
-            itemPosition += itemHeight;
+            var text = itemG.append("text").text(e.name);
+
+            itemG.append("rect")
+                .attr("width", textHeight(text))
+                .attr("height", textHeight(text))
+                .attr("fill", e.color);
+
+            text.attr("x", textHeight(text) + LABEL_GAP)
+                .attr("y", textHeight(text));
+
+            itemPosition += legendItemHeight(text);
         });
     };
+
+    function textHeight(text) {
+        return text.node().clientHeight;
+    }
+
+    function legendItemHeight(text) {
+        return _gap + textHeight(text);
+    }
 
     _legend.x = function (x) {
         if (!arguments.length) return _x;

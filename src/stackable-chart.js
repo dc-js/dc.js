@@ -215,8 +215,10 @@ dc.stackableChart = function (_chart) {
 
     _chart.legendables = function () {
         var items = [];
-        _allGroups.forEach(function (g) {
-            items.push({name: g.__name__, data: g});
+        _allGroups.forEach(function (g, i) {
+            var legendable = {name: g.__name__, data: g};
+            if(typeof _chart.colors === 'function') legendable.color = _chart.colors()(i);
+            items.push(legendable);
         });
         return items;
     };
