@@ -65,7 +65,7 @@ dc.coordinateGridChart = function (_chart) {
 
         _g = _parent.append("g");
 
-        _chartBodyG = _g.append("g").attr("class", "chartBody")
+        _chartBodyG = _g.append("g").attr("class", "chart-body")
             .attr("transform", "translate(" + _chart.margins().left + ", " + _chart.margins().top + ")")
             .attr("clip-path", "url(#" + getClipPathId() + ")");
 

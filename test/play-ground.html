@@ -723,7 +723,7 @@ lineChartDate.width(500)
         .xUnits(d3.time.days)
         .elasticY(true)
         .renderArea(true)
-        .legend(dc.legend().x(400).y(10))
+        .legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
         .xAxis().ticks(5);
 
 var barChartDate = dc.barChart("#bar-chart-date");

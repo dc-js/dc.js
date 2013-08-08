@@ -993,7 +993,7 @@ dc.marginable = function (_chart) {
 
         _g = _parent.append("g");
 
-        _chartBodyG = _g.append("g").attr("class", "chartBody")
+        _chartBodyG = _g.append("g").attr("class", "chart-body")
             .attr("transform", "translate(" + _chart.margins().left + ", " + _chart.margins().top + ")")
             .attr("clip-path", "url(#" + getClipPathId() + ")");
 
@@ -3685,7 +3685,7 @@ dc.legend = function () {
         itemEnter.append("text")
                 .text(function(d){return d.name;})
                 .attr("x", _itemHeight + LABEL_GAP)
-                .attr("y", _itemHeight);
+                .attr("y", function(){return _itemHeight / 2 + this.clientHeight / 3});
     };
 
     function legendItemHeight() {
@@ -3707,6 +3707,12 @@ dc.legend = function () {
     _legend.gap = function (gap) {
         if (!arguments.length) return _gap;
         _gap = gap;
+        return _legend;
+    };
+
+    _legend.itemHeight = function (h) {
+        if (!arguments.length) return _itemHeight;
+        _itemHeight = h;
         return _legend;
     };
 

@@ -321,7 +321,7 @@ suite.addBatch({'clip path':{
         assert.equal(chart.select("defs clipPath").attr("id"), "composite-chart-clip-path-clip");
     },
     'chart body g should have clip path refs': function(chart) {
-        chart.selectAll("g.chartBody").each(function(){
+        chart.selectAll("g.chart-body").each(function(){
             assert.equal(d3.select(this).attr("clip-path"),"url(#composite-chart-clip-path-clip)");
         });
     },

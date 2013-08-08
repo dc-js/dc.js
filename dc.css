@@ -207,7 +207,15 @@
     cursor: pointer;
 }
 
-.dc-chart g text {
+.dc-legend {
+    font-size: 11px;
+}
+
+.dc-legend-item {
+    cursor: pointer;
+}
+
+.dc-chart g.axis text {
     /* Makes it so the user can't accidentally click and select text that is meant as a label only */
     -webkit-user-select: none; /* Chrome/Safari */
     -moz-user-select: none; /* Firefox */
@@ -215,12 +223,4 @@
     -o-user-select: none;
     user-select: none;
     pointer-events: none;
-}
-
-.dc-legend {
-    font-size: smaller;
-}
-
-.dc-legend-item {
-    text-anchor: start;
 }

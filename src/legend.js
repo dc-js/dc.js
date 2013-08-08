@@ -39,7 +39,7 @@ dc.legend = function () {
         itemEnter.append("text")
                 .text(function(d){return d.name;})
                 .attr("x", _itemHeight + LABEL_GAP)
-                .attr("y", _itemHeight);
+                .attr("y", function(){return _itemHeight / 2 + this.clientHeight / 3});
     };
 
     function legendItemHeight() {
@@ -61,6 +61,12 @@ dc.legend = function () {
     _legend.gap = function (gap) {
         if (!arguments.length) return _gap;
         _gap = gap;
+        return _legend;
+    };
+
+    _legend.itemHeight = function (h) {
+        if (!arguments.length) return _itemHeight;
+        _itemHeight = h;
         return _legend;
     };
 
