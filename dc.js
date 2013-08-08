@@ -3651,6 +3651,7 @@ dc.legend = function () {
         _parent,
         _x = 0,
         _y = 0,
+        _itemHeight = 7,
         _gap = 5;
 
     var _g;
@@ -3666,35 +3667,29 @@ dc.legend = function () {
             .attr("class", "dc-legend")
             .attr("transform", "translate(" + _x + "," + _y + ")");
 
-        var itemPosition = 0;
+        var itemEnter = _g.selectAll('g.dc-legend-item')
+            .data(_parent.legendables())
+            .enter()
+            .append("g")
+            .attr("class", "dc-legend-item")
+            .attr("transform", function (d, i) {
+                return "translate(0," + i * legendItemHeight() + ")";
+            });
 
-        _parent.legendables().forEach(function (e) {
-            console.log(e);
+        itemEnter
+            .append("rect")
+                .attr("width", _itemHeight)
+                .attr("height", _itemHeight)
+                .attr("fill", function(d){return d.color;});
 
-            var itemG = _g.append("g")
-                .attr("class", "dc-legend-item")
-                .attr("transform", "translate(" + [0, itemPosition] + ")");
-
-            var text = itemG.append("text").text(e.name);
-
-            itemG.append("rect")
-                .attr("width", textHeight(text))
-                .attr("height", textHeight(text))
-                .attr("fill", e.color);
-
-            text.attr("x", textHeight(text) + LABEL_GAP)
-                .attr("y", textHeight(text));
-
-            itemPosition += legendItemHeight(text);
-        });
+        itemEnter.append("text")
+                .text(function(d){return d.name;})
+                .attr("x", _itemHeight + LABEL_GAP)
+                .attr("y", _itemHeight);
     };
 
-    function textHeight(text) {
-        return text.node().clientHeight;
-    }
-
-    function legendItemHeight(text) {
-        return _gap + textHeight(text);
+    function legendItemHeight() {
+        return _gap + _itemHeight;
     }
 
     _legend.x = function (x) {
