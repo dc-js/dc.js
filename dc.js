@@ -590,7 +590,7 @@ dc.baseChart = function (_chart) {
         if (!arguments.length) return _group;
         _group = g;
         _chart.expireCache();
-        if(typeof name === 'string') _group.__name__ = name;
+        if (typeof name === 'string') _group.__name__ = name;
         return _chart;
     };
 
@@ -696,7 +696,7 @@ dc.baseChart = function (_chart) {
 
         var result = _chart.doRender();
 
-        if(_legend) _legend.render();
+        if (_legend) _legend.render();
 
         _chart.activateRenderlets("postRender");
 
@@ -834,6 +834,14 @@ dc.baseChart = function (_chart) {
         return [];
     };
 
+    _chart.legendHighlight = function (d) {
+        // do nothing in base, should be overridden by sub-function
+    };
+
+    _chart.legendReset = function (d) {
+        // do nothing in base, should be overridden by sub-function
+    };
+
     _chart.keyAccessor = function (_) {
         if (!arguments.length) return _keyAccessor;
         _keyAccessor = _;
@@ -899,8 +907,8 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
-    _chart.legend = function(l){
-        if(!arguments.length) return _legend;
+    _chart.legend = function (l) {
+        if (!arguments.length) return _legend;
         _legend = l;
         _legend.parent(_chart);
         return _chart;
@@ -2608,6 +2616,9 @@ dc.lineChart = function (parent, chartGroup) {
             .attr("class", "line")
             .attr("stroke", function (d, i) {
                 return _chart.colors()(i);
+            })
+            .attr("fill", function (d, i) {
+                return _chart.colors()(i);
             });
 
         dc.transition(layers.select("path.line"), _chart.transitionDuration())
@@ -2625,7 +2636,7 @@ dc.lineChart = function (parent, chartGroup) {
                 .y(function (d) {
                     return _chart.y()(d.y + d.y0);
                 })
-                .y0(function(d){
+                .y0(function (d) {
                     return _chart.y()(d.y0);
                 });
 
@@ -2679,8 +2690,8 @@ dc.lineChart = function (parent, chartGroup) {
                     .append("title").text(_chart.title());
 
                 dots.attr("cx", function (d) {
-                        return _chart.x()(d.x);
-                    })
+                    return _chart.x()(d.x);
+                })
                     .attr("cy", function (d) {
                         return _chart.y()(d.y + d.y0);
                     })
@@ -2725,6 +2736,18 @@ dc.lineChart = function (parent, chartGroup) {
         if (!arguments.length) return _dotRadius;
         _dotRadius = _;
         return _chart;
+    };
+
+    _chart.legendHighlight = function (d) {
+        _chart.select('.chart-body').selectAll('path').filter(function () {
+            return d3.select(this).attr('fill') == d.color;
+        }).classed('highlight', true);
+    };
+
+    _chart.legendReset = function (d) {
+        _chart.select('.chart-body').selectAll('path').filter(function () {
+            return d3.select(this).attr('fill') == d.color;
+        }).classed('highlight', false);
     };
 
     return _chart.anchor(parent, chartGroup);
@@ -3674,6 +3697,12 @@ dc.legend = function () {
             .attr("class", "dc-legend-item")
             .attr("transform", function (d, i) {
                 return "translate(0," + i * legendItemHeight() + ")";
+            })
+            .on("mouseover", function(d){
+                    _parent.legendHighlight(d);
+            })
+            .on("mouseout", function (d) {
+                    _parent.legendReset(d);
             });
 
         itemEnter

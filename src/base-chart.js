@@ -86,7 +86,7 @@ dc.baseChart = function (_chart) {
         if (!arguments.length) return _group;
         _group = g;
         _chart.expireCache();
-        if(typeof name === 'string') _group.__name__ = name;
+        if (typeof name === 'string') _group.__name__ = name;
         return _chart;
     };
 
@@ -192,7 +192,7 @@ dc.baseChart = function (_chart) {
 
         var result = _chart.doRender();
 
-        if(_legend) _legend.render();
+        if (_legend) _legend.render();
 
         _chart.activateRenderlets("postRender");
 
@@ -330,6 +330,14 @@ dc.baseChart = function (_chart) {
         return [];
     };
 
+    _chart.legendHighlight = function (d) {
+        // do nothing in base, should be overridden by sub-function
+    };
+
+    _chart.legendReset = function (d) {
+        // do nothing in base, should be overridden by sub-function
+    };
+
     _chart.keyAccessor = function (_) {
         if (!arguments.length) return _keyAccessor;
         _keyAccessor = _;
@@ -395,8 +403,8 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
-    _chart.legend = function(l){
-        if(!arguments.length) return _legend;
+    _chart.legend = function (l) {
+        if (!arguments.length) return _legend;
         _legend = l;
         _legend.parent(_chart);
         return _chart;

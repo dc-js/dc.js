@@ -50,6 +50,9 @@ dc.lineChart = function (parent, chartGroup) {
             .attr("class", "line")
             .attr("stroke", function (d, i) {
                 return _chart.colors()(i);
+            })
+            .attr("fill", function (d, i) {
+                return _chart.colors()(i);
             });
 
         dc.transition(layers.select("path.line"), _chart.transitionDuration())
@@ -67,7 +70,7 @@ dc.lineChart = function (parent, chartGroup) {
                 .y(function (d) {
                     return _chart.y()(d.y + d.y0);
                 })
-                .y0(function(d){
+                .y0(function (d) {
                     return _chart.y()(d.y0);
                 });
 
@@ -121,8 +124,8 @@ dc.lineChart = function (parent, chartGroup) {
                     .append("title").text(_chart.title());
 
                 dots.attr("cx", function (d) {
-                        return _chart.x()(d.x);
-                    })
+                    return _chart.x()(d.x);
+                })
                     .attr("cy", function (d) {
                         return _chart.y()(d.y + d.y0);
                     })
@@ -167,6 +170,18 @@ dc.lineChart = function (parent, chartGroup) {
         if (!arguments.length) return _dotRadius;
         _dotRadius = _;
         return _chart;
+    };
+
+    _chart.legendHighlight = function (d) {
+        _chart.select('.chart-body').selectAll('path').filter(function () {
+            return d3.select(this).attr('fill') == d.color;
+        }).classed('highlight', true);
+    };
+
+    _chart.legendReset = function (d) {
+        _chart.select('.chart-body').selectAll('path').filter(function () {
+            return d3.select(this).attr('fill') == d.color;
+        }).classed('highlight', false);
     };
 
     return _chart.anchor(parent, chartGroup);

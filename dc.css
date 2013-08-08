@@ -224,3 +224,9 @@
     user-select: none;
     pointer-events: none;
 }
+
+.dc-chart path.highlight {
+    stroke-width: 5;
+    fill-opacity: 1;
+    stroke-opacity: 1;
+}
