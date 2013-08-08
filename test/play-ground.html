@@ -707,7 +707,8 @@ d3.json("us-states.json", function(states) {
 
 var lineChartDate = dc.lineChart("#line-chart-date");
 lineChartDate.width(500)
-        .height(150)
+        .height(180)
+        .margins({top: 30, right: 50, bottom: 30, left: 30})
         .dimension(dateDimension)
         .group(dateIdSumGroup, "ID")
         .stack(dateValueSumGroup, "Sum")
@@ -722,7 +723,7 @@ lineChartDate.width(500)
         .xUnits(d3.time.days)
         .elasticY(true)
         .renderArea(true)
-        .legend(dc.legend())
+        .legend(dc.legend().x(400).y(10))
         .xAxis().ticks(5);
 
 var barChartDate = dc.barChart("#bar-chart-date");
