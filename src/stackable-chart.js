@@ -11,11 +11,11 @@ dc.stackableChart = function (_chart) {
     var _allKeyAccessors;
     var _stackLayers;
 
-    _chart.stack = function (group, name, retriever) {
-        if(name instanceof String)
-            group.__name__ = name;
-        else if(typeof name === 'function')
-            retriever = name;
+    _chart.stack = function (group, p2, retriever) {
+        if (typeof p2 === 'string')
+            group.__name__ = p2;
+        else if (typeof p2 === 'function')
+            retriever = p2;
 
         _groupStack.setDefaultAccessor(_chart.valueAccessor());
         _groupStack.addGroup(group, retriever);
@@ -211,6 +211,14 @@ dc.stackableChart = function (_chart) {
         } else {
             _stackLayers = _;
         }
+    };
+
+    _chart.legendables = function () {
+        var items = [];
+        _allGroups.forEach(function (g) {
+            items.push({name: g.__name__, data: g});
+        });
+        return items;
     };
 
     return _chart;

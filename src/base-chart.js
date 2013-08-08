@@ -86,7 +86,7 @@ dc.baseChart = function (_chart) {
         if (!arguments.length) return _group;
         _group = g;
         _chart.expireCache();
-        if(!name) _group.__name__ = name;
+        if(typeof name === 'string') _group.__name__ = name;
         return _chart;
     };
 
@@ -325,6 +325,11 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
+    _chart.legendables = function () {
+        // do nothing in base, should be overridden by sub-function
+        return [];
+    };
+
     _chart.keyAccessor = function (_) {
         if (!arguments.length) return _keyAccessor;
         _keyAccessor = _;
@@ -372,7 +377,7 @@ dc.baseChart = function (_chart) {
         for (var i = 0; i < _renderlets.length; ++i) {
             _renderlets[i](_chart);
         }
-    };
+    }
 
     _chart.chartGroup = function (_) {
         if (!arguments.length) return _chartGroup;

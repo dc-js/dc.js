@@ -590,7 +590,7 @@ dc.baseChart = function (_chart) {
         if (!arguments.length) return _group;
         _group = g;
         _chart.expireCache();
-        if(!name) _group.__name__ = name;
+        if(typeof name === 'string') _group.__name__ = name;
         return _chart;
     };
 
@@ -829,6 +829,11 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
+    _chart.legendables = function () {
+        // do nothing in base, should be overridden by sub-function
+        return [];
+    };
+
     _chart.keyAccessor = function (_) {
         if (!arguments.length) return _keyAccessor;
         _keyAccessor = _;
@@ -876,7 +881,7 @@ dc.baseChart = function (_chart) {
         for (var i = 0; i < _renderlets.length; ++i) {
             _renderlets[i](_chart);
         }
-    };
+    }
 
     _chart.chartGroup = function (_) {
         if (!arguments.length) return _chartGroup;
@@ -1674,11 +1679,11 @@ dc.stackableChart = function (_chart) {
     var _allKeyAccessors;
     var _stackLayers;
 
-    _chart.stack = function (group, name, retriever) {
-        if(name instanceof String)
-            group.__name__ = name;
-        else if(typeof name === 'function')
-            retriever = name;
+    _chart.stack = function (group, p2, retriever) {
+        if (typeof p2 === 'string')
+            group.__name__ = p2;
+        else if (typeof p2 === 'function')
+            retriever = p2;
 
         _groupStack.setDefaultAccessor(_chart.valueAccessor());
         _groupStack.addGroup(group, retriever);
@@ -1874,6 +1879,14 @@ dc.stackableChart = function (_chart) {
         } else {
             _stackLayers = _;
         }
+    };
+
+    _chart.legendables = function () {
+        var items = [];
+        _allGroups.forEach(function (g) {
+            items.push({name: g.__name__, data: g});
+        });
+        return items;
     };
 
     return _chart;
@@ -3629,21 +3642,42 @@ dc.bubbleOverlay = function(root, chartGroup) {
 
     return _chart.anchor(parent, chartGroup);
 };
-dc.legend = function() {
-    var _legend = {};
-    var _parent;
+dc.legend = function () {
+    var _legend = {},
+        _parent,
+        _x = 0,
+        _y = 0;
 
     var _g;
 
-    _legend.parent = function(p){
-        if(!arguments.length) return _parent;
+    _legend.parent = function (p) {
+        if (!arguments.length) return _parent;
         _parent = p;
         return _legend;
     };
 
-    _legend.render = function(){
+    _legend.render = function () {
         _g = _parent.svg().append("g")
-            .attr("class", "dc-legend");
+            .attr("class", "dc-legend")
+            .attr("transform", "translate(" + _x + "," + _y + ")");
+
+        _parent.legendables().forEach(function (e) {
+            console.log(e);
+            _g.append("g")
+                .attr("class", "dc-legend-item");
+        });
+    };
+
+    _legend.x = function (x) {
+        if (!arguments.length) return _x;
+        _x = x;
+        return _chart;
+    };
+
+    _legend.y = function (y) {
+        if (!arguments.length) return _y;
+        _y = y;
+        return _chart;
     };
 
     return _legend;
