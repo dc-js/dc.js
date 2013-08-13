@@ -633,6 +633,11 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
+    _chart.anchorName = function () {
+        var anchor = this.anchor();
+        return _.isObject(anchor) ? anchor.id : _chart.anchor().replace('#', '');
+    };
+
     _chart.root = function (r) {
         if (!arguments.length) return _root;
         _root = r;
@@ -689,12 +694,12 @@ dc.baseChart = function (_chart) {
         _listeners.preRender(_chart);
 
         if (_dimension == null)
-            throw new dc.errors.InvalidStateException("Mandatory attribute chart.dimension is missing on chart["
-                + _chart.anchor() + "]");
+            throw new dc.errors.InvalidStateException("Mandatory attribute chart.dimension is missing on chart[#"
+                + _chart.anchorName() + "]");
 
         if (_group == null)
-            throw new dc.errors.InvalidStateException("Mandatory attribute chart.group is missing on chart["
-                + _chart.anchor() + "]");
+            throw new dc.errors.InvalidStateException("Mandatory attribute chart.group is missing on chart[#"
+                + _chart.anchorName() + "]");
 
         var result = _chart.doRender();
 
@@ -1426,7 +1431,7 @@ dc.marginable = function (_chart) {
     };
 
     function getClipPathId() {
-        return _chart.anchor().replace('#', '') + "-clip";
+        return _chart.anchorName() + "-clip";
     }
 
     _chart.clipPadding = function (p) {
@@ -1449,8 +1454,8 @@ dc.marginable = function (_chart) {
 
     _chart.doRender = function () {
         if (_x == null)
-            throw new dc.errors.InvalidStateException("Mandatory attribute chart.x is missing on chart["
-                + _chart.anchor() + "]");
+            throw new dc.errors.InvalidStateException("Mandatory attribute chart.x is missing on chart[#"
+                + _chart.anchorName() + "]");
 
         _chart.resetSvg();
 
