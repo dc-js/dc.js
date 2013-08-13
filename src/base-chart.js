@@ -16,6 +16,9 @@ dc.baseChart = function (_chart) {
     var _valueAccessor = function (d) {
         return d.value;
     };
+    var _ordering = function (p) {
+        return p.key;
+    };
 
     var _label = function (d) {
         return d.key;
@@ -88,10 +91,11 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
-    _chart.orderedGroup = function () {
-        return _group.order(function (p) {
-            return p.key;
-        });
+    _chart.ordering = function(o) {
+        if (!arguments.length) return _ordering;
+        _ordering = o;
+        _chart.expireCache();
+        return _chart;
     };
 
     _chart.filterAll = function () {

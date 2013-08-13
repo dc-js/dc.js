@@ -20,7 +20,14 @@ dc.pieChart = function (parent, chartGroup) {
 
     function assemblePieData() {
         if (_slicesCap == Infinity) {
-            return _chart.orderedGroup().top(_slicesCap); // ordered by keys
+            var data = _chart.group().all().slice(0); // clone
+            if(data.length < 2)
+                return data;
+            var compf = _.isNumber(_chart.ordering()(data[0]))
+                    ? function(a, b) { return _chart.ordering()(a) - _chart.ordering()(b); }
+                : function(a, b) { return _chart.ordering()(a).localeCompare(_chart.ordering()(b)); };
+            data.sort(compf);
+            return data;
         } else {
             var topRows = _chart.group().top(_slicesCap); // ordered by value
             var topRowsSum = d3.sum(topRows, _chart.valueAccessor());
