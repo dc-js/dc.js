@@ -160,5 +160,14 @@ dc.barChart = function (parent, chartGroup) {
         return this._prepareOrdinalXAxis(_chart.xUnitCount() + 1);
     });
 
+    dc.override(_chart, "xAxisMax", function() {
+        var max = this._xAxisMax();
+        if('resolution' in _chart.xUnits()) {
+            var res = _chart.xUnits().resolution;
+            max += res;
+        }
+        return max;
+    });
+
     return _chart.anchor(parent, chartGroup);
 };
