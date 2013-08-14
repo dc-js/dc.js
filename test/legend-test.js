@@ -32,6 +32,10 @@ function legend(chart) {
     return chart.select("g.dc-legend");
 }
 
+function legendItems(chart){
+    return legend(chart).selectAll('g.dc-legend-item')
+}
+
 suite.addBatch({
     'line chart legend': {
         topic: function () {
@@ -43,8 +47,13 @@ suite.addBatch({
         'should generate legend g transform for correct placement': function (chart) {
             assert.equal(legend(chart).attr("transform"), "translate(400,10)");
         },
-        'should generate correct number of legend items': function(chart){
-            assert.equal(legend(chart).selectAll('g.dc-legend-item').size(), 3);
+        'should generate correct number of legend items': function (chart) {
+            assert.equal(legendItems(chart).size(), 3);
+        },
+        'should place legend items vertically with gap in between': function (chart) {
+            assert.equal(d3.select(legendItems(chart)[0][0]).attr("transform"), "translate(0,0)");
+            assert.equal(d3.select(legendItems(chart)[0][1]).attr("transform"), "translate(0,18)");
+            assert.equal(d3.select(legendItems(chart)[0][2]).attr("transform"), "translate(0,36)");
         },
         teardown: function (topic) {
             resetAllFilters();
