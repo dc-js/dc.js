@@ -3674,7 +3674,7 @@ dc.legend = function () {
         _parent,
         _x = 0,
         _y = 0,
-        _itemHeight = 7,
+        _itemHeight = 12,
         _gap = 5;
 
     var _g;
