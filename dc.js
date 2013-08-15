@@ -2768,10 +2768,6 @@ dc.lineChart = function (parent, chartGroup) {
         _chart.selectAll('.chart-body').selectAll('path').filter(function () {
             return d3.select(this).attr('fill') != d.color;
         }).classed('fadeout', true);
-
-        showDot(_chart.selectAll('.chart-body').selectAll('circle.dot').filter(function () {
-            return d3.select(this).attr('fill') == d.color;
-        }));
     };
 
     _chart.legendReset = function (d) {
@@ -2781,8 +2777,6 @@ dc.lineChart = function (parent, chartGroup) {
         _chart.selectAll('.chart-body').selectAll('path').filter(function () {
             return d3.select(this).attr('fill') != d.color;
         }).classed('fadeout', false);
-
-        hideDot(_chart.selectAll('.chart-body').selectAll('circle.dot'));
     };
 
     return _chart.anchor(parent, chartGroup);
