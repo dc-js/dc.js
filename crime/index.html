@@ -302,30 +302,9 @@
             <div class="clearfix"></div>
         </div>
 
-        <div style="float: right; text-align: left; width: 300px">
-            <table>
-                <tr>
-                    <td style="background-color: #4682b4;width:10px;height:10px;"></td>
-                    <td>&nbsp;non-violent crime</td>
-                    <td></td>
-                    <td style="background-color: red;width:10px;height:10px;"></td>
-                    <td>&nbsp;violent crime</td>
-                </tr>
-            </table>
-        </div>
-
         <div id="homicide-chart">
             <strong>Homicide Incidents by Year</strong>
             <div class="clearfix"></div>
-        </div>
-
-        <div style="float: right; text-align: left; width: 300px">
-            <table>
-                <tr>
-                    <td style="background-color: #4682b4;width:10px;height:5px;"></td>
-                    <td>&nbsp;homicide</td>
-                </tr>
-            </table>
         </div>
     </div>
 </div>
@@ -505,19 +484,20 @@
 
         incidentChart
                 .width(360)
-                .height(150)
-                .margins({top: 10, right: 50, bottom: 30, left: 60})
+                .height(180)
+                .margins({top: 40, right: 50, bottom: 30, left: 60})
                 .dimension(years)
-                .group(crimeIncidentByYear)
+                .group(crimeIncidentByYear, "Non-Violent Crime")
                 .valueAccessor(function(d) {
                     return d.value.nonViolentCrimeAvg;
                 })
-                .stack(crimeIncidentByYear, function(d){return d.value.violentCrimeAvg;})
+                .stack(crimeIncidentByYear, "Violent Crime", function(d){return d.value.violentCrimeAvg;})
                 .x(d3.scale.linear().domain([1997, 2012]))
                 .renderHorizontalGridLines(true)
                 .centerBar(true)
                 .elasticY(true)
                 .brushOn(false)
+                .legend(dc.legend().x(250).y(10))
                 .title(function(d){
                     return d.key
                             + "\nViolent crime per 100k population: " + Math.round(d.data.value.violentCrimeAvg)
