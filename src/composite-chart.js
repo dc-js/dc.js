@@ -126,12 +126,26 @@ dc.compositeChart = function (parent, chartGroup) {
 
         for (var j = 0; j < _children.length; ++j) {
             var childChart = _children[j];
-            childChart.allGroups().forEach(function(g, i){
+            childChart.allGroups().forEach(function (g, i) {
                 items.push(dc.utils.createLegendable(childChart, g, i));
             });
         }
 
         return items;
+    };
+
+    _chart.legendHighlight = function (d) {
+        for (var j = 0; j < _children.length; ++j) {
+            var child = _children[j];
+            child.legendHighlight(d);
+        }
+    };
+
+    _chart.legendReset = function (d) {
+        for (var j = 0; j < _children.length; ++j) {
+            var child = _children[j];
+            child.legendReset(d);
+        }
     };
 
     return _chart.anchor(parent, chartGroup);

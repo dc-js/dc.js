@@ -95,7 +95,8 @@ dc.lineChart = function (parent, chartGroup) {
             layersEnter.each(function (d, i) {
                 var layer = d3.select(this);
 
-                var g = layer.append("g").attr("class", TOOLTIP_G_CLASS);
+                var g = layer.select("g." + TOOLTIP_G_CLASS);
+                if (g.empty()) g = layer.append("g").attr("class", TOOLTIP_G_CLASS);
 
                 createRefLines(g);
 
@@ -173,19 +174,19 @@ dc.lineChart = function (parent, chartGroup) {
     };
 
     _chart.legendHighlight = function (d) {
-        _chart.select('.chart-body').selectAll('path').filter(function () {
+        _chart.selectAll('.chart-body').selectAll('path').filter(function () {
             return d3.select(this).attr('fill') == d.color;
         }).classed('highlight', true);
-        _chart.select('.chart-body').selectAll('path').filter(function () {
+        _chart.selectAll('.chart-body').selectAll('path').filter(function () {
             return d3.select(this).attr('fill') != d.color;
         }).classed('fadeout', true);
     };
 
     _chart.legendReset = function (d) {
-        _chart.select('.chart-body').selectAll('path').filter(function () {
+        _chart.selectAll('.chart-body').selectAll('path').filter(function () {
             return d3.select(this).attr('fill') == d.color;
         }).classed('highlight', false);
-        _chart.select('.chart-body').selectAll('path').filter(function () {
+        _chart.selectAll('.chart-body').selectAll('path').filter(function () {
             return d3.select(this).attr('fill') != d.color;
         }).classed('fadeout', false);
     };

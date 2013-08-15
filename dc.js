@@ -2576,10 +2576,10 @@ dc.barChart = function (parent, chartGroup) {
     };
 
     _chart.legendReset = function (d) {
-        _chart.select('.chart-body').selectAll('rect.bar').filter(function () {
+        _chart.selectAll('.chart-body').selectAll('rect.bar').filter(function () {
             return d3.select(this).attr('fill') == d.color;
         }).classed('highlight', false);
-        _chart.select('.chart-body').selectAll('rect.bar').filter(function () {
+        _chart.selectAll('.chart-body').selectAll('rect.bar').filter(function () {
             return d3.select(this).attr('fill') != d.color;
         }).classed('fadeout', false);
     };
@@ -2683,7 +2683,8 @@ dc.lineChart = function (parent, chartGroup) {
             layersEnter.each(function (d, i) {
                 var layer = d3.select(this);
 
-                var g = layer.append("g").attr("class", TOOLTIP_G_CLASS);
+                var g = layer.select("g." + TOOLTIP_G_CLASS);
+                if (g.empty()) g = layer.append("g").attr("class", TOOLTIP_G_CLASS);
 
                 createRefLines(g);
 
@@ -2761,21 +2762,27 @@ dc.lineChart = function (parent, chartGroup) {
     };
 
     _chart.legendHighlight = function (d) {
-        _chart.select('.chart-body').selectAll('path').filter(function () {
+        _chart.selectAll('.chart-body').selectAll('path').filter(function () {
             return d3.select(this).attr('fill') == d.color;
         }).classed('highlight', true);
-        _chart.select('.chart-body').selectAll('path').filter(function () {
+        _chart.selectAll('.chart-body').selectAll('path').filter(function () {
             return d3.select(this).attr('fill') != d.color;
         }).classed('fadeout', true);
+
+        showDot(_chart.selectAll('.chart-body').selectAll('circle.dot').filter(function () {
+            return d3.select(this).attr('fill') == d.color;
+        }));
     };
 
     _chart.legendReset = function (d) {
-        _chart.select('.chart-body').selectAll('path').filter(function () {
+        _chart.selectAll('.chart-body').selectAll('path').filter(function () {
             return d3.select(this).attr('fill') == d.color;
         }).classed('highlight', false);
-        _chart.select('.chart-body').selectAll('path').filter(function () {
+        _chart.selectAll('.chart-body').selectAll('path').filter(function () {
             return d3.select(this).attr('fill') != d.color;
         }).classed('fadeout', false);
+
+        hideDot(_chart.selectAll('.chart-body').selectAll('circle.dot'));
     };
 
     return _chart.anchor(parent, chartGroup);
@@ -3147,12 +3154,26 @@ dc.compositeChart = function (parent, chartGroup) {
 
         for (var j = 0; j < _children.length; ++j) {
             var childChart = _children[j];
-            childChart.allGroups().forEach(function(g, i){
+            childChart.allGroups().forEach(function (g, i) {
                 items.push(dc.utils.createLegendable(childChart, g, i));
             });
         }
 
         return items;
+    };
+
+    _chart.legendHighlight = function (d) {
+        for (var j = 0; j < _children.length; ++j) {
+            var child = _children[j];
+            child.legendHighlight(d);
+        }
+    };
+
+    _chart.legendReset = function (d) {
+        for (var j = 0; j < _children.length; ++j) {
+            var child = _children[j];
+            child.legendReset(d);
+        }
     };
 
     return _chart.anchor(parent, chartGroup);

@@ -170,10 +170,10 @@ dc.barChart = function (parent, chartGroup) {
     };
 
     _chart.legendReset = function (d) {
-        _chart.select('.chart-body').selectAll('rect.bar').filter(function () {
+        _chart.selectAll('.chart-body').selectAll('rect.bar').filter(function () {
             return d3.select(this).attr('fill') == d.color;
         }).classed('highlight', false);
-        _chart.select('.chart-body').selectAll('rect.bar').filter(function () {
+        _chart.selectAll('.chart-body').selectAll('rect.bar').filter(function () {
             return d3.select(this).attr('fill') != d.color;
         }).classed('fadeout', false);
     };
