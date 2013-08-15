@@ -14,16 +14,25 @@ function buildLineChart(id, xdomain) {
 
     d3.select("body").append("div").attr("id", id);
     var chart = dc.lineChart("#" + id);
-    chart.dimension(dateDimension).group(dateGroup)
+    chart.width(500)
+        .height(180)
+        .margins({top: 30, right: 50, bottom: 30, left: 30})
+        .dimension(dateDimension)
+        .group(dateIdSumGroup, "Id Sum")
         .stack(dateValueSumGroup, "Value Sum")
-        .stack(dateFixedSumGroup, "Fixed", function () {
+        .stack(dateFixedSumGroup, "Fixed", function (d) {
             return 10;
         })
-        .width(width).height(height)
-        .x(d3.time.scale().domain(xdomain))
-        .transitionDuration(0)
+        .brushOn(false)
+        .title(function (d) {
+            return d.value;
+        })
+        .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
+        .xUnits(d3.time.days)
+        .elasticY(true)
+        .renderArea(true)
         .legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
-        .xUnits(d3.time.days);
+        .xAxis().ticks(5);
     chart.render();
     return chart;
 }
@@ -32,8 +41,16 @@ function legend(chart) {
     return chart.select("g.dc-legend");
 }
 
-function legendItems(chart){
+function legendItems(chart) {
     return legend(chart).selectAll('g.dc-legend-item')
+}
+
+function legendIcon(chart) {
+    return legend(chart).selectAll("rect");
+}
+
+function legendLabels(chart) {
+    return chart.selectAll("g.dc-legend-item text");
 }
 
 suite.addBatch({
@@ -54,6 +71,23 @@ suite.addBatch({
             assert.equal(d3.select(legendItems(chart)[0][0]).attr("transform"), "translate(0,0)");
             assert.equal(d3.select(legendItems(chart)[0][1]).attr("transform"), "translate(0,18)");
             assert.equal(d3.select(legendItems(chart)[0][2]).attr("transform"), "translate(0,36)");
+        },
+        'should generate legend rect': function (chart) {
+            assert.equal(d3.select(legendIcon(chart)[0][0]).attr("width"), "13");
+            assert.equal(d3.select(legendIcon(chart)[0][1]).attr("height"), "13");
+        },
+        'should color legend rect correctly': function (chart) {
+            assert.equal(d3.select(legendIcon(chart)[0][0]).attr("fill"), "#1f77b4");
+            assert.equal(d3.select(legendIcon(chart)[0][1]).attr("fill"), "#ff7f0e");
+            assert.equal(d3.select(legendIcon(chart)[0][2]).attr("fill"), "#2ca02c");
+        },
+        'should generate correct number of legend labels': function (chart) {
+            assert.equal(3, legendLabels(chart).size());
+        },
+        'should place legend labels correctly': function (chart) {
+            assert.equal("15", d3.select(legendLabels(chart)[0][0]).attr("x"));
+            assert.equal("4.333333333333333", d3.select(legendLabels(chart)[0][1]).attr("y"));
+            assert.equal("4.333333333333333", d3.select(legendLabels(chart)[0][2]).attr("y"));
         },
         teardown: function (topic) {
             resetAllFilters();
