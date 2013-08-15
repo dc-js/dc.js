@@ -136,14 +136,14 @@ dc.utils.GroupStack = function () {
         return _dataLayers;
     };
 
-    this.toLayers = function(){
+    this.toLayers = function () {
         var layers = [];
 
-        for(var i = 0; i<_dataLayers.length; ++i){
+        for (var i = 0; i < _dataLayers.length; ++i) {
             var layer = {index: i, points: []};
             var dataPoints = _dataLayers[i];
 
-            for(var j = 0; j < dataPoints.length; ++j)
+            for (var j = 0; j < dataPoints.length; ++j)
                 layer.points.push(dataPoints[j]);
 
             layers.push(layer);
@@ -181,4 +181,10 @@ dc.utils.appendOrSelect = function (parent, name) {
     var element = parent.select(name);
     if (element.empty()) element = parent.append(name);
     return element;
+};
+
+dc.utils.createLegendable = function (chart, group, index) {
+    var legendable = {name: group.__name__, data: group};
+    if (typeof chart.colors === 'function') legendable.color = chart.colors()(index);
+    return legendable;
 };

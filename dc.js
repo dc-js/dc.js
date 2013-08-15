@@ -314,14 +314,14 @@ dc.utils.GroupStack = function () {
         return _dataLayers;
     };
 
-    this.toLayers = function(){
+    this.toLayers = function () {
         var layers = [];
 
-        for(var i = 0; i<_dataLayers.length; ++i){
+        for (var i = 0; i < _dataLayers.length; ++i) {
             var layer = {index: i, points: []};
             var dataPoints = _dataLayers[i];
 
-            for(var j = 0; j < dataPoints.length; ++j)
+            for (var j = 0; j < dataPoints.length; ++j)
                 layer.points.push(dataPoints[j]);
 
             layers.push(layer);
@@ -359,6 +359,12 @@ dc.utils.appendOrSelect = function (parent, name) {
     var element = parent.select(name);
     if (element.empty()) element = parent.append(name);
     return element;
+};
+
+dc.utils.createLegendable = function (chart, group, index) {
+    var legendable = {name: group.__name__, data: group};
+    if (typeof chart.colors === 'function') legendable.color = chart.colors()(index);
+    return legendable;
 };
 dc.events = {
     current: null
@@ -1892,9 +1898,7 @@ dc.stackableChart = function (_chart) {
     _chart.legendables = function () {
         var items = [];
         _allGroups.forEach(function (g, i) {
-            var legendable = {name: g.__name__, data: g};
-            if(typeof _chart.colors === 'function') legendable.color = _chart.colors()(i);
-            items.push(legendable);
+            items.push(dc.utils.createLegendable(_chart, g, i));
         });
         return items;
     };
@@ -3015,7 +3019,7 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     return _chart.anchor(parent, chartGroup);
 };
-dc.compositeChart = function(parent, chartGroup) {
+dc.compositeChart = function (parent, chartGroup) {
     var SUB_CHART_CLASS = "sub";
 
     var _chart = dc.coordinateGridChart({});
@@ -3023,7 +3027,7 @@ dc.compositeChart = function(parent, chartGroup) {
 
     _chart.transitionDuration(500);
 
-    dc.override(_chart, "generateG", function() {
+    dc.override(_chart, "generateG", function () {
         var g = this._generateG();
 
         for (var i = 0; i < _children.length; ++i) {
@@ -3048,7 +3052,7 @@ dc.compositeChart = function(parent, chartGroup) {
         child.g().attr("class", SUB_CHART_CLASS + " _" + i);
     }
 
-    _chart.plotData = function() {
+    _chart.plotData = function () {
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
 
@@ -3067,7 +3071,7 @@ dc.compositeChart = function(parent, chartGroup) {
         }
     };
 
-    _chart.fadeDeselectedArea = function() {
+    _chart.fadeDeselectedArea = function () {
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
             child.brush(_chart.brush());
@@ -3075,7 +3079,7 @@ dc.compositeChart = function(parent, chartGroup) {
         }
     };
 
-    _chart.compose = function(charts) {
+    _chart.compose = function (charts) {
         _children = charts;
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
@@ -3086,7 +3090,7 @@ dc.compositeChart = function(parent, chartGroup) {
         return _chart;
     };
 
-    _chart.children = function(){
+    _chart.children = function () {
         return _children;
     };
 
@@ -3098,7 +3102,7 @@ dc.compositeChart = function(parent, chartGroup) {
         return allMins;
     }
 
-    _chart.yAxisMin = function() {
+    _chart.yAxisMin = function () {
         return d3.min(getAllYAxisMinFromChildCharts());
     };
 
@@ -3110,7 +3114,7 @@ dc.compositeChart = function(parent, chartGroup) {
         return allMaxes;
     }
 
-    _chart.yAxisMax = function() {
+    _chart.yAxisMax = function () {
         return dc.utils.add(d3.max(getAllYAxisMaxFromChildCharts()), _chart.yAxisPadding());
     };
 
@@ -3122,7 +3126,7 @@ dc.compositeChart = function(parent, chartGroup) {
         return allMins;
     }
 
-    _chart.xAxisMin = function() {
+    _chart.xAxisMin = function () {
         return dc.utils.subtract(d3.min(getAllXAxisMinFromChildCharts()), _chart.xAxisPadding());
     };
 
@@ -3134,8 +3138,21 @@ dc.compositeChart = function(parent, chartGroup) {
         return allMaxes;
     }
 
-    _chart.xAxisMax = function() {
+    _chart.xAxisMax = function () {
         return dc.utils.add(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding());
+    };
+
+    _chart.legendables = function () {
+        var items = [];
+
+        for (var j = 0; j < _children.length; ++j) {
+            var childChart = _children[j];
+            childChart.allGroups().forEach(function(g, i){
+                items.push(dc.utils.createLegendable(childChart, g, i));
+            });
+        }
+
+        return items;
     };
 
     return _chart.anchor(parent, chartGroup);
@@ -3738,7 +3755,7 @@ dc.legend = function () {
         itemEnter.append("text")
                 .text(function(d){return d.name;})
                 .attr("x", _itemHeight + LABEL_GAP)
-                .attr("y", function(){return _itemHeight / 2 + this.clientHeight?this.clientHeight:13 / 3});
+                .attr("y", function(){return _itemHeight / 2 + (this.clientHeight?this.clientHeight:13) / 2 - 2});
     };
 
     function legendItemHeight() {

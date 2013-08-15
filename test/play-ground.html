@@ -760,15 +760,16 @@ barChartDate.width(500)
 
 var compositeChartDate = dc.compositeChart("#composite-chart-date");
 compositeChartDate.width(500)
-        .height(150)
+        .height(180)
+        .margins({top: 30, right: 50, bottom: 30, left: 30})
         .dimension(dateDimension)
-        .group(dateIdSumGroup)
+        .group(dateIdSumGroup, "Id Sum")
         .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
         .xUnits(d3.time.days)
         .compose([
-            dc.barChart(compositeChartDate).group(dateValueSumGroup),
+            dc.barChart(compositeChartDate).group(dateValueSumGroup, "Value Sum"),
             dc.lineChart(compositeChartDate),
-            dc.lineChart(compositeChartDate).group(dateGroup)
+            dc.lineChart(compositeChartDate).group(dateGroup, "Date Group")
         ])
         .renderlet(function (chart) {
             dc.events.trigger(function () {
@@ -776,6 +777,7 @@ compositeChartDate.width(500)
                 lineChartDate.focus(chart.filter());
             });
         })
+        .legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
         .xAxis().ticks(5);
 
 var bubbleChart = dc.bubbleChart("#bubble-chart");

@@ -26,11 +26,6 @@
     fill: #ccc;
 }
 
-.dc-chart .sub .bar {
-    stroke: none;
-    fill: #ccc;
-}
-
 .dc-chart .pie-slice {
     fill: white;
     font-size: 12px;
