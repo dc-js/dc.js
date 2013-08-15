@@ -15,7 +15,7 @@
 
 <script type="text/javascript" src="js/d3.js"></script>
 <script type="text/javascript" src="js/crossfilter.js"></script>
-<script type="text/javascript" src="js/dc.js?06100340"></script>
+<script type="text/javascript" src="js/dc.js?06100341"></script>
 
 <script src='highlighter/shCore.js' type='text/javascript'></script>
 <script src="highlighter/shAutoloader.js" type="text/javascript"></script>
@@ -391,11 +391,11 @@ d3.csv("ndx.csv", function (data) {
                     });
 
             moveChart.width(990)
-                    .height(180)
+                    .height(200)
                     .transitionDuration(1000)
-                    .margins({top: 10, right: 50, bottom: 25, left: 40})
+                    .margins({top: 30, right: 50, bottom: 25, left: 40})
                     .dimension(moveMonths)
-                    .group(indexAvgByMonthGroup)
+                    .group(indexAvgByMonthGroup, "Monthly Index Average")
                     .valueAccessor(function (d) {
                         return d.value.avg;
                     })
@@ -405,6 +405,7 @@ d3.csv("ndx.csv", function (data) {
                     .xUnits(d3.time.months)
                     .elasticY(true)
                     .renderHorizontalGridLines(true)
+                    .legend(dc.legend().x(800).y(10).itemHeight(13).gap(5))
                     .brushOn(false)
                     .rangeChart(volumeChart)
                     .compose([
@@ -413,7 +414,7 @@ d3.csv("ndx.csv", function (data) {
                                     return d.value.avg;
                                 })
                                 .renderArea(true)
-                                .stack(monthlyMoveGroup, function (d) {
+                                .stack(monthlyMoveGroup, "Monthly Index Move", function (d) {
                                     return d.value;
                                 })
                                 .title(function (d) {

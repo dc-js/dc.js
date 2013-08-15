@@ -26,11 +26,6 @@
     fill: #ccc;
 }
 
-.dc-chart .sub .bar {
-    stroke: none;
-    fill: #ccc;
-}
-
 .dc-chart .pie-slice {
     fill: white;
     font-size: 12px;
@@ -207,7 +202,15 @@
     cursor: pointer;
 }
 
-.dc-chart g text {
+.dc-legend {
+    font-size: 11px;
+}
+
+.dc-legend-item {
+    cursor: pointer;
+}
+
+.dc-chart g.axis text {
     /* Makes it so the user can't accidentally click and select text that is meant as a label only */
     -webkit-user-select: none; /* Chrome/Safari */
     -moz-user-select: none; /* Firefox */
@@ -215,4 +218,20 @@
     -o-user-select: none;
     user-select: none;
     pointer-events: none;
+}
+
+.dc-chart path.highlight {
+    stroke-width: 3;
+    fill-opacity: 1;
+    stroke-opacity: 1;
+}
+
+.dc-chart .highlight {
+    fill-opacity: 1;
+    stroke-opacity: 1;
+}
+
+.dc-chart .fadeout {
+    fill-opacity: 0.2;
+    stroke-opacity: 0.2;
 }
