@@ -549,6 +549,7 @@ dc.baseChart = function (_chart) {
         filtered: NULL_LISTENER,
         zoomed: NULL_LISTENER
     };
+    var _legend;
 
     var _filters = [];
     var _filterHandler = function (dimension, filters) {
@@ -585,10 +586,11 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
-    _chart.group = function (g) {
+    _chart.group = function (g, name) {
         if (!arguments.length) return _group;
         _group = g;
         _chart.expireCache();
+        if (typeof name === 'string') _group.__name__ = name;
         return _chart;
     };
 
@@ -693,6 +695,8 @@ dc.baseChart = function (_chart) {
                 + _chart.anchor() + "]");
 
         var result = _chart.doRender();
+
+        if (_legend) _legend.render();
 
         _chart.activateRenderlets("postRender");
 
@@ -825,6 +829,19 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
+    _chart.legendables = function () {
+        // do nothing in base, should be overridden by sub-function
+        return [];
+    };
+
+    _chart.legendHighlight = function (d) {
+        // do nothing in base, should be overridden by sub-function
+    };
+
+    _chart.legendReset = function (d) {
+        // do nothing in base, should be overridden by sub-function
+    };
+
     _chart.keyAccessor = function (_) {
         if (!arguments.length) return _keyAccessor;
         _keyAccessor = _;
@@ -872,7 +889,7 @@ dc.baseChart = function (_chart) {
         for (var i = 0; i < _renderlets.length; ++i) {
             _renderlets[i](_chart);
         }
-    };
+    }
 
     _chart.chartGroup = function (_) {
         if (!arguments.length) return _chartGroup;
@@ -887,6 +904,13 @@ dc.baseChart = function (_chart) {
 
     _chart.expireCache = function () {
         // do nothing in base, should be overridden by sub-function
+        return _chart;
+    };
+
+    _chart.legend = function (l) {
+        if (!arguments.length) return _legend;
+        _legend = l;
+        _legend.parent(_chart);
         return _chart;
     };
 
@@ -977,7 +1001,7 @@ dc.marginable = function (_chart) {
 
         _g = _parent.append("g");
 
-        _chartBodyG = _g.append("g").attr("class", "chartBody")
+        _chartBodyG = _g.append("g").attr("class", "chart-body")
             .attr("transform", "translate(" + _chart.margins().left + ", " + _chart.margins().top + ")")
             .attr("clip-path", "url(#" + getClipPathId() + ")");
 
@@ -1663,7 +1687,12 @@ dc.stackableChart = function (_chart) {
     var _allKeyAccessors;
     var _stackLayers;
 
-    _chart.stack = function (group, retriever) {
+    _chart.stack = function (group, p2, retriever) {
+        if (typeof p2 === 'string')
+            group.__name__ = p2;
+        else if (typeof p2 === 'function')
+            retriever = p2;
+
         _groupStack.setDefaultAccessor(_chart.valueAccessor());
         _groupStack.addGroup(group, retriever);
 
@@ -1858,6 +1887,16 @@ dc.stackableChart = function (_chart) {
         } else {
             _stackLayers = _;
         }
+    };
+
+    _chart.legendables = function () {
+        var items = [];
+        _allGroups.forEach(function (g, i) {
+            var legendable = {name: g.__name__, data: g};
+            if(typeof _chart.colors === 'function') legendable.color = _chart.colors()(i);
+            items.push(legendable);
+        });
+        return items;
     };
 
     return _chart;
@@ -2577,6 +2616,9 @@ dc.lineChart = function (parent, chartGroup) {
             .attr("class", "line")
             .attr("stroke", function (d, i) {
                 return _chart.colors()(i);
+            })
+            .attr("fill", function (d, i) {
+                return _chart.colors()(i);
             });
 
         dc.transition(layers.select("path.line"), _chart.transitionDuration())
@@ -2594,7 +2636,7 @@ dc.lineChart = function (parent, chartGroup) {
                 .y(function (d) {
                     return _chart.y()(d.y + d.y0);
                 })
-                .y0(function(d){
+                .y0(function (d) {
                     return _chart.y()(d.y0);
                 });
 
@@ -2648,8 +2690,8 @@ dc.lineChart = function (parent, chartGroup) {
                     .append("title").text(_chart.title());
 
                 dots.attr("cx", function (d) {
-                        return _chart.x()(d.x);
-                    })
+                    return _chart.x()(d.x);
+                })
                     .attr("cy", function (d) {
                         return _chart.y()(d.y + d.y0);
                     })
@@ -2694,6 +2736,18 @@ dc.lineChart = function (parent, chartGroup) {
         if (!arguments.length) return _dotRadius;
         _dotRadius = _;
         return _chart;
+    };
+
+    _chart.legendHighlight = function (d) {
+        _chart.select('.chart-body').selectAll('path').filter(function () {
+            return d3.select(this).attr('fill') == d.color;
+        }).classed('highlight', true);
+    };
+
+    _chart.legendReset = function (d) {
+        _chart.select('.chart-body').selectAll('path').filter(function () {
+            return d3.select(this).attr('fill') == d.color;
+        }).classed('highlight', false);
     };
 
     return _chart.anchor(parent, chartGroup);
@@ -3612,4 +3666,84 @@ dc.bubbleOverlay = function(root, chartGroup) {
     };
 
     return _chart.anchor(parent, chartGroup);
+};
+dc.legend = function () {
+    var LABEL_GAP = 2;
+
+    var _legend = {},
+        _parent,
+        _x = 0,
+        _y = 0,
+        _itemHeight = 12,
+        _gap = 5;
+
+    var _g;
+
+    _legend.parent = function (p) {
+        if (!arguments.length) return _parent;
+        _parent = p;
+        return _legend;
+    };
+
+    _legend.render = function () {
+        _g = _parent.svg().append("g")
+            .attr("class", "dc-legend")
+            .attr("transform", "translate(" + _x + "," + _y + ")");
+
+        var itemEnter = _g.selectAll('g.dc-legend-item')
+            .data(_parent.legendables())
+            .enter()
+            .append("g")
+            .attr("class", "dc-legend-item")
+            .attr("transform", function (d, i) {
+                return "translate(0," + i * legendItemHeight() + ")";
+            })
+            .on("mouseover", function(d){
+                    _parent.legendHighlight(d);
+            })
+            .on("mouseout", function (d) {
+                    _parent.legendReset(d);
+            });
+
+        itemEnter
+            .append("rect")
+                .attr("width", _itemHeight)
+                .attr("height", _itemHeight)
+                .attr("fill", function(d){return d.color;});
+
+        itemEnter.append("text")
+                .text(function(d){return d.name;})
+                .attr("x", _itemHeight + LABEL_GAP)
+                .attr("y", function(){return _itemHeight / 2 + this.clientHeight?this.clientHeight:_itemHeight / 3});
+    };
+
+    function legendItemHeight() {
+        return _gap + _itemHeight;
+    }
+
+    _legend.x = function (x) {
+        if (!arguments.length) return _x;
+        _x = x;
+        return _legend;
+    };
+
+    _legend.y = function (y) {
+        if (!arguments.length) return _y;
+        _y = y;
+        return _legend;
+    };
+
+    _legend.gap = function (gap) {
+        if (!arguments.length) return _gap;
+        _gap = gap;
+        return _legend;
+    };
+
+    _legend.itemHeight = function (h) {
+        if (!arguments.length) return _itemHeight;
+        _itemHeight = h;
+        return _legend;
+    };
+
+    return _legend;
 };
