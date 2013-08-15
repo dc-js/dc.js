@@ -226,7 +226,17 @@
 }
 
 .dc-chart path.highlight {
-    stroke-width: 5;
+    stroke-width: 3;
     fill-opacity: 1;
     stroke-opacity: 1;
+}
+
+.dc-chart .highlight {
+    fill-opacity: 1;
+    stroke-opacity: 1;
+}
+
+.dc-chart .fadeout {
+    fill-opacity: 0.2;
+    stroke-opacity: 0.2;
 }

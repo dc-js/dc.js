@@ -160,5 +160,23 @@ dc.barChart = function (parent, chartGroup) {
         return this._prepareOrdinalXAxis(_chart.xUnitCount() + 1);
     });
 
+    _chart.legendHighlight = function (d) {
+        _chart.select('.chart-body').selectAll('rect.bar').filter(function () {
+            return d3.select(this).attr('fill') == d.color;
+        }).classed('highlight', true);
+        _chart.select('.chart-body').selectAll('rect.bar').filter(function () {
+            return d3.select(this).attr('fill') != d.color;
+        }).classed('fadeout', true);
+    };
+
+    _chart.legendReset = function (d) {
+        _chart.select('.chart-body').selectAll('rect.bar').filter(function () {
+            return d3.select(this).attr('fill') == d.color;
+        }).classed('highlight', false);
+        _chart.select('.chart-body').selectAll('rect.bar').filter(function () {
+            return d3.select(this).attr('fill') != d.color;
+        }).classed('fadeout', false);
+    };
+
     return _chart.anchor(parent, chartGroup);
 };
