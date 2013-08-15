@@ -89,6 +89,11 @@ suite.addBatch({
             assert.equal("4.333333333333333", d3.select(legendLabels(chart)[0][1]).attr("y"));
             assert.equal("4.333333333333333", d3.select(legendLabels(chart)[0][2]).attr("y"));
         },
+        'should generate legend labels correctly': function (chart) {
+            assert.equal("Id Sum", d3.select(legendLabels(chart)[0][0]).text());
+            assert.equal("Value Sum", d3.select(legendLabels(chart)[0][1]).text());
+            assert.equal("Fixed", d3.select(legendLabels(chart)[0][2]).text());
+        },
         teardown: function (topic) {
             resetAllFilters();
             resetBody();
