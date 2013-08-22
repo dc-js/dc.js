@@ -86,8 +86,23 @@ dc.baseChart = function (_chart) {
         if (!arguments.length) return _group;
         _group = g;
         _chart.expireCache();
-        if (typeof name === 'string') _group.__name__ = name;
+        if (typeof name === 'string') _chart.setGroupName(_group, name);
         return _chart;
+    };
+
+    _chart.setGroupName = function (g, name, accessor) {
+        if (!g.__names__) g.__names__ = {};
+        g.__names__[groupNameKey(accessor)] = name;
+    };
+
+    function groupNameKey(accessor) {
+        var defaultKey = "default";
+        return accessor ? (accessor == _chart.valueAccessor() ? defaultKey : accessor) : defaultKey;
+    }
+
+    _chart.getGroupName = function (g, accessor) {
+        if (!g.__names__) g.__names__ = {};
+        return g.__names__[groupNameKey(accessor)];
     };
 
     _chart.orderedGroup = function () {

@@ -13,7 +13,7 @@ dc.stackableChart = function (_chart) {
 
     _chart.stack = function (group, p2, retriever) {
         if (typeof p2 === 'string')
-            group.__name__ = p2;
+            _chart.setGroupName(group, p2, retriever);
         else if (typeof p2 === 'function')
             retriever = p2;
 
@@ -216,7 +216,7 @@ dc.stackableChart = function (_chart) {
     _chart.legendables = function () {
         var items = [];
         _allGroups.forEach(function (g, i) {
-            items.push(dc.utils.createLegendable(_chart, g, i));
+            items.push(dc.utils.createLegendable(_chart, g, i, _chart.getValueAccessorByIndex(i)));
         });
         return items;
     };
