@@ -20,7 +20,7 @@ function buildLineChart(id, xdomain) {
         .dimension(dateDimension)
         .group(dateIdSumGroup, "Id Sum")
         .stack(dateValueSumGroup, "Value Sum")
-        .stack(dateFixedSumGroup, "Fixed", function (d) {
+        .stack(dateValueSumGroup, "Fixed", function (d) {
             return 10;
         })
         .brushOn(false)
