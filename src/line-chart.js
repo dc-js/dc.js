@@ -57,7 +57,7 @@ dc.lineChart = function (parent, chartGroup) {
 
         dc.transition(layers.select("path.line"), _chart.transitionDuration())
             .attr("d", function (d) {
-                return line(d.points);
+                return safeD(line(d.points));
             });
     }
 
@@ -80,15 +80,19 @@ dc.lineChart = function (parent, chartGroup) {
                     return _chart.colors()(i);
                 })
                 .attr("d", function (d) {
-                    return area(d.points);
+                    return safeD(area(d.points));
                 });
 
             dc.transition(layers.select("path.area"), _chart.transitionDuration())
                 .attr("d", function (d) {
-                    return area(d.points);
+                    return safeD(area(d.points));
                 });
         }
     }
+
+    function safeD(d){
+        return d.indexOf("NaN") >= 0 ? "M0,0" : d;
+    };
 
     function drawDots(layersEnter) {
         if (!_chart.brushOn()) {
@@ -125,10 +129,10 @@ dc.lineChart = function (parent, chartGroup) {
                     .append("title").text(_chart.title());
 
                 dots.attr("cx", function (d) {
-                    return _chart.x()(d.x);
+                    return dc.utils.safeNumber(_chart.x()(d.x));
                 })
                     .attr("cy", function (d) {
-                        return _chart.y()(d.y + d.y0);
+                        return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
                     })
                     .select("title").text(_chart.title());
 

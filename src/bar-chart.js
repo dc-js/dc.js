@@ -40,7 +40,7 @@ dc.barChart = function (parent, chartGroup) {
     };
 
     function barHeight(d) {
-        return Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0));
+        return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
     }
 
     function renderBars(layer, d, i) {
@@ -59,7 +59,7 @@ dc.barChart = function (parent, chartGroup) {
             .attr("x", function (d) {
                 var x = _chart.x()(d.x);
                 if (_centerBar) x -= _barWidth / 2;
-                return  x;
+                return  dc.utils.safeNumber(x);
             })
             .attr("y", function (d) {
                 var y = _chart.y()(d.y + d.y0);
@@ -67,7 +67,7 @@ dc.barChart = function (parent, chartGroup) {
                 if (d.y < 0)
                     y -= barHeight(d);
 
-                return y;
+                return dc.utils.safeNumber(y);
             })
             .attr("width", _barWidth)
             .attr("height", function (d) {

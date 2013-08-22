@@ -366,6 +366,8 @@ dc.utils.createLegendable = function (chart, group, index, accessor) {
     if (typeof chart.colors === 'function') legendable.color = chart.colors()(index);
     return legendable;
 };
+
+dc.utils.safeNumber = function(n){return isNaN(n)?0:n;};
 dc.events = {
     current: null
 };
@@ -2461,7 +2463,7 @@ dc.barChart = function (parent, chartGroup) {
     };
 
     function barHeight(d) {
-        return Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0));
+        return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
     }
 
     function renderBars(layer, d, i) {
@@ -2480,7 +2482,7 @@ dc.barChart = function (parent, chartGroup) {
             .attr("x", function (d) {
                 var x = _chart.x()(d.x);
                 if (_centerBar) x -= _barWidth / 2;
-                return  x;
+                return  dc.utils.safeNumber(x);
             })
             .attr("y", function (d) {
                 var y = _chart.y()(d.y + d.y0);
@@ -2488,7 +2490,7 @@ dc.barChart = function (parent, chartGroup) {
                 if (d.y < 0)
                     y -= barHeight(d);
 
-                return y;
+                return dc.utils.safeNumber(y);
             })
             .attr("width", _barWidth)
             .attr("height", function (d) {
@@ -2660,7 +2662,7 @@ dc.lineChart = function (parent, chartGroup) {
 
         dc.transition(layers.select("path.line"), _chart.transitionDuration())
             .attr("d", function (d) {
-                return line(d.points);
+                return safeD(line(d.points));
             });
     }
 
@@ -2683,15 +2685,19 @@ dc.lineChart = function (parent, chartGroup) {
                     return _chart.colors()(i);
                 })
                 .attr("d", function (d) {
-                    return area(d.points);
+                    return safeD(area(d.points));
                 });
 
             dc.transition(layers.select("path.area"), _chart.transitionDuration())
                 .attr("d", function (d) {
-                    return area(d.points);
+                    return safeD(area(d.points));
                 });
         }
     }
+
+    function safeD(d){
+        return d.indexOf("NaN") >= 0 ? "M0,0" : d;
+    };
 
     function drawDots(layersEnter) {
         if (!_chart.brushOn()) {
@@ -2728,10 +2734,10 @@ dc.lineChart = function (parent, chartGroup) {
                     .append("title").text(_chart.title());
 
                 dots.attr("cx", function (d) {
-                    return _chart.x()(d.x);
+                    return dc.utils.safeNumber(_chart.x()(d.x));
                 })
                     .attr("cy", function (d) {
-                        return _chart.y()(d.y + d.y0);
+                        return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
                     })
                     .select("title").text(_chart.title());
 

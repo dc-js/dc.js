@@ -188,3 +188,5 @@ dc.utils.createLegendable = function (chart, group, index, accessor) {
     if (typeof chart.colors === 'function') legendable.color = chart.colors()(index);
     return legendable;
 };
+
+dc.utils.safeNumber = function(n){return isNaN(n)?0:n;};
