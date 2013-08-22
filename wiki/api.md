@@ -18,6 +18,7 @@ name space.
 * [Geo Choropleth Chart [concrete] < Color Chart < Base Chart](#geo-choropleth-chart)
 * [Data Count Widget [concrete] < Base Chart](#data-count)
 * [Data Table Widget [concrete] < Base Chart](#data-table)
+* [Legend [concrete]](#legend)
 * [Listeners](#listeners)
 * [Utilities](#utilities)
 
@@ -52,13 +53,14 @@ then it will be used as the new dimension.
 
 If no value specified then the current dimension will be returned.
 
-#### .group([value]) - **mandatory**
+#### .group([value], [name]) - **mandatory**
 Set or get group attribute of a chart. In dc a group is a
 [crossfilter group](https://github.com/square/crossfilter/wiki/API-Reference#wiki-group). Usually the group should be
 created from the particular dimension associated with the same chart. If the value is given, then it will be used as
 the new group.
 
 If no value specified then the current group will be returned.
+If name is specified then it will be used to generate legend label.
 
 #### .filterAll()
 Clear all filters associated with this chart.
@@ -228,6 +230,14 @@ and avoid unnecessary calculation however under certain circumstances it might b
 you invoke crossfilter.add function or if you reset group or dimension post render it is always a good idea to clear
 the cache to make sure charts are rendered properly.
 
+#### .legend([dc.legend])
+Attach dc.legend widget to this chart. Legend widget will automatically draw legend labels based on the color setting
+and names associated with each group.
+
+```js
+chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
+```
+
 ## <a name="color-chart" href="#color-chart">#</a> Color Chart [Abstract]
 Color chart is an abstract chart functional class created to provide universal coloring support as a mix-in for any concrete
 chart implementation.
@@ -268,10 +278,11 @@ chart.colorDomain([0, 364])
 Stackable chart is an abstract chart introduced to provide cross-chart support of stackability. Concrete implementation of
 charts can then selectively mix-in this capability.
 
-#### .stack(group[, retriever])
+#### .stack(group[, name, retriever])
 Stack a new crossfilter group into this chart with optionally a custom value retriever. All stacks in the same chart will
 share the same key accessor therefore share the same set of keys. In more concrete words, imagine in a stacked bar chart
-all bars will be positioned using the same set of keys on the x axis while stacked vertically.
+all bars will be positioned using the same set of keys on the x axis while stacked vertically. If name is specified then
+it will be used to generate legend label.
 ```js
 // stack group using default accessor
 chart.stack(valueSumGroup)
@@ -908,6 +919,29 @@ Get or set sort order. Default value: ``` d3.ascending ```
 ```js
     chart.order(d3.descending);
 ```
+
+## <a name="legend" href="#legend">#</a> Legend [Concrete]
+Legend is a attachable widget that can be added to other dc charts to render horizontal legend labels.
+
+```js
+chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
+```
+
+Examples:
+* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
+* [Canadian City Crime Stats](http://nickqizhu.github.com/dc.js/crime/index.html)
+
+#### .x([value])
+Set or get x coordinate for legend widget. Default value: 0.
+
+#### .y([value])
+Set or get y coordinate for legend widget. Default value: 0.
+
+#### .gap([value])
+Set or get gap between legend items. Default value: 5.
+
+#### .itemHeight([value])
+Set or get legend item height. Default value: 12.
 
 ## <a name="listeners" href="#listeners">#</a> Listeners
 All dc chart instance supports the following listeners.
