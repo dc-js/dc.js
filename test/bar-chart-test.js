@@ -22,7 +22,8 @@ function buildChart(id, xdomain) {
         .x(d3.time.scale().domain(xdomain))
         .gap(1)
         .transitionDuration(0)
-        .xUnits(d3.time.days);
+        .xUnits(d3.time.days)
+        .yAxis().ticks(5);
     chart.render();
     return chart;
 }
@@ -64,7 +65,8 @@ function buildNegativeChart(id, xdomain) {
         .elasticY(true)
         .x(d3.time.scale().domain(xdomain))
         .renderHorizontalGridLines(true)
-        .xUnits(d3.time.days);
+        .xUnits(d3.time.days)
+        .yAxis().ticks(5);
     chart.render();
     return chart;
 }

@@ -1,5 +1,4 @@
 dc.coordinateGridChart = function (_chart) {
-    var DEFAULT_Y_AXIS_TICKS = 5;
     var GRID_LINE_CLASS = "grid-line";
     var HORIZONTAL_CLASS = "horizontal";
     var VERTICAL_CLASS = "vertical";
@@ -246,7 +245,7 @@ dc.coordinateGridChart = function (_chart) {
         }
 
         _y.range([_chart.yAxisHeight(), 0]);
-        _yAxis = _yAxis.scale(_y).orient("left").ticks(DEFAULT_Y_AXIS_TICKS);
+        _yAxis = _yAxis.scale(_y).orient("left");
 
         renderHorizontalGridLines(g);
     }
