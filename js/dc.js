@@ -361,8 +361,8 @@ dc.utils.appendOrSelect = function (parent, name) {
     return element;
 };
 
-dc.utils.createLegendable = function (chart, group, index) {
-    var legendable = {name: group.__name__, data: group};
+dc.utils.createLegendable = function (chart, group, index, accessor) {
+    var legendable = {name: chart.getGroupName(group, accessor), data: group};
     if (typeof chart.colors === 'function') legendable.color = chart.colors()(index);
     return legendable;
 };
@@ -596,8 +596,23 @@ dc.baseChart = function (_chart) {
         if (!arguments.length) return _group;
         _group = g;
         _chart.expireCache();
-        if (typeof name === 'string') _group.__name__ = name;
+        if (typeof name === 'string') _chart.setGroupName(_group, name);
         return _chart;
+    };
+
+    _chart.setGroupName = function (g, name, accessor) {
+        if (!g.__names__) g.__names__ = {};
+        g.__names__[groupNameKey(accessor)] = name;
+    };
+
+    function groupNameKey(accessor) {
+        var defaultKey = "default";
+        return accessor ? (accessor == _chart.valueAccessor() ? defaultKey : accessor) : defaultKey;
+    }
+
+    _chart.getGroupName = function (g, accessor) {
+        if (!g.__names__) g.__names__ = {};
+        return g.__names__[groupNameKey(accessor)];
     };
 
     _chart.orderedGroup = function () {
@@ -1695,7 +1710,7 @@ dc.stackableChart = function (_chart) {
 
     _chart.stack = function (group, p2, retriever) {
         if (typeof p2 === 'string')
-            group.__name__ = p2;
+            _chart.setGroupName(group, p2, retriever);
         else if (typeof p2 === 'function')
             retriever = p2;
 
@@ -1898,7 +1913,7 @@ dc.stackableChart = function (_chart) {
     _chart.legendables = function () {
         var items = [];
         _allGroups.forEach(function (g, i) {
-            items.push(dc.utils.createLegendable(_chart, g, i));
+            items.push(dc.utils.createLegendable(_chart, g, i, _chart.getValueAccessorByIndex(i)));
         });
         return items;
     };
@@ -3149,7 +3164,7 @@ dc.compositeChart = function (parent, chartGroup) {
         for (var j = 0; j < _children.length; ++j) {
             var childChart = _children[j];
             childChart.allGroups().forEach(function (g, i) {
-                items.push(dc.utils.createLegendable(childChart, g, i));
+                items.push(dc.utils.createLegendable(childChart, g, i, childChart.getValueAccessorByIndex(i)));
             });
         }
 
