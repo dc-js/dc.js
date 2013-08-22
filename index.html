@@ -24,7 +24,7 @@
 
 
 <style>
-    #monthly-volume-chart g.y{
+    #monthly-volume-chart g.y {
         display: none;
     }
 </style>
@@ -185,7 +185,7 @@ d3.csv("ndx.csv", function (data) {
             var all = ndx.groupAll();
 
             var yearlyDimension = ndx.dimension(function (d) {
-                return d3.time.year(d.dd);
+                return d3.time.year(d.dd).getFullYear();
             });
             var yearlyPerformanceGroup = yearlyDimension.group().reduce(
                     //add
@@ -260,11 +260,11 @@ d3.csv("ndx.csv", function (data) {
 
             var quarter = ndx.dimension(function (d) {
                 var month = d.dd.getMonth();
-                if (month <= 3)
+                if (month <= 2)
                     return "Q1";
                 else if (month > 3 && month <= 5)
                     return "Q2";
-                else if (month > 5 && month <= 7)
+                else if (month > 5 && month <= 8)
                     return "Q3";
                 else
                     return "Q4";
@@ -327,10 +327,10 @@ d3.csv("ndx.csv", function (data) {
                     .renderLabel(true)
                     .renderTitle(true)
                     .label(function (p) {
-                        return p.key.getFullYear();
+                        return p.key;
                     })
                     .title(function (p) {
-                        return p.key.getFullYear()
+                        return p.key
                                 + "\n"
                                 + "Index Gain: " + numberFormat(p.value.absGain) + "\n"
                                 + "Index Gain in Percentage: " + numberFormat(p.value.percentageGain) + "%\n"
@@ -346,7 +346,7 @@ d3.csv("ndx.csv", function (data) {
                     .dimension(gainOrLoss)
                     .group(gainOrLossGroup)
                     .label(function (d) {
-                        if(gainOrLossChart.hasFilter() && !gainOrLossChart.hasFilter(d.data.key))
+                        if (gainOrLossChart.hasFilter() && !gainOrLossChart.hasFilter(d.data.key))
                             return d.data.key + "(0%)";
                         return d.data.key + "(" + Math.floor(d.data.value / all.value() * 100) + "%)";
                     });
@@ -359,17 +359,19 @@ d3.csv("ndx.csv", function (data) {
                     .group(quarterGroup);
 
             dayOfWeekChart.width(180)
-                .height(180)
-                .margins({top: 20, left: 10, right: 10, bottom: 20})
-                .group(dayOfWeekGroup)
-                .dimension(dayOfWeek)
-                .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
-                .label(function (d){
-                    return d.key.split(".")[1];
-                })
-                .title(function(d){return d.value;})
-                .elasticX(true)
-                .xAxis().ticks(4);
+                    .height(180)
+                    .margins({top: 20, left: 10, right: 10, bottom: 20})
+                    .group(dayOfWeekGroup)
+                    .dimension(dayOfWeek)
+                    .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+                    .label(function (d) {
+                        return d.key.split(".")[1];
+                    })
+                    .title(function (d) {
+                        return d.value;
+                    })
+                    .elasticX(true)
+                    .xAxis().ticks(4);
 
             fluctuationChart.width(420)
                     .height(180)
