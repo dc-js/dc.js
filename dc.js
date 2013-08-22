@@ -3543,18 +3543,18 @@ dc.bubbleOverlay = function(root, chartGroup) {
 
     var _chart = dc.marginable(dc.colorChart(dc.baseChart({})));
 
-    var _xScale;
+    var _x;
 
     var _elasticX;
 
     var _xAxis = d3.svg.axis().orient("bottom");
 
     function calculateAxisScale() {
-        if (!_xScale || _elasticX) {
-            _xScale = d3.scale.linear().domain([0, d3.max(_chart.group().all(), _chart.valueAccessor())])
+        if (!_x || _elasticX) {
+            _x = d3.scale.linear().domain([0, d3.max(_chart.group().all(), _chart.valueAccessor())])
                 .range([0, _chart.effectiveWidth()]);
 
-            _xAxis.scale(_xScale);
+            _xAxis.scale(_x);
         }
     }
 
@@ -3592,6 +3592,12 @@ dc.bubbleOverlay = function(root, chartGroup) {
     _chart.label(function (d) {
         return _chart.keyAccessor()(d);
     });
+
+    _chart.x = function(x){
+        if(!arguments.length) return _x;
+        _x = x;
+        return _chart;
+    };
 
     function drawGridLines() {
         _g.selectAll("g.tick")
@@ -3656,7 +3662,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
 
         dc.transition(rows, _chart.transitionDuration())
             .attr("width", function (d) {
-                return _xScale(_chart.valueAccessor()(d));
+                return _x(_chart.valueAccessor()(d));
             });
 
         createTitles(rows);
