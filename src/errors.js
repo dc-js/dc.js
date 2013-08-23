@@ -1,7 +1,7 @@
 dc.errors = {};
 
 dc.errors.Exception = function(msg) {
-    var _msg = msg != null ? msg : "Unexpected internal error";
+    var _msg = msg !== undefined ? msg : "Unexpected internal error";
 
     this.message = _msg;
 
