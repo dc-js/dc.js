@@ -36,7 +36,8 @@ function buildChart(id) {
         .renderLabel(true)
         .renderTitle(true)
         .title(function (p) {
-            return p.key + ": {count:" + p.value.count + ",value:" + p.value.value + "}"
+            return p.key + ": {count:" + p.value.count + ",value:" + p.value.value + "}";
+
         });
     chart.render();
     return chart;
@@ -82,7 +83,7 @@ suite.addBatch({
             assert.isNotNull(chart.margins());
         },
         'x can be set': function (chart) {
-            assert.isTrue(chart.x() != undefined);
+            assert.isTrue(chart.x() !== undefined);
         },
         'x range round is auto calculated based on width': function (chart) {
             assert.equal(chart.x().range()[0], 0);
@@ -93,7 +94,7 @@ suite.addBatch({
             assert.equal(chart.x().domain()[1], 300);
         },
         'y can be set': function (chart) {
-            assert.isTrue(chart.y() != undefined);
+            assert.isTrue(chart.y() !== undefined);
         },
         'y range round is auto calculated based on height': function (chart) {
             assert.equal(chart.y().range()[0], 310);
@@ -131,7 +132,7 @@ suite.addBatch({
             assert.isNotNull(chart.select("g.brush"));
         },
         'round should be off by default': function (chart) {
-            assert.isTrue(chart.round() == null);
+            assert.isTrue(chart.round() === undefined);
         },
         'round can be changed': function (chart) {
             chart.round(d3.time.day.round);
@@ -143,59 +144,59 @@ suite.addBatch({
                 return chart;
             },
             'should generate right number of bubbles': function (chart) {
-                assert.equal(chart.selectAll("circle.bubble")[0].length, 2);
+                assert.lengthOf(chart.selectAll("circle.bubble")[0], 2);
             },
             'should calculate right cx for each bubble': function (chart) {
                 chart.selectAll("g.node").each(function (d, i) {
-                    if (i == 0)
+                    if (i === 0)
                         assert.equal(d3.select(this).attr("transform"), "translate(631.3333333333334,165)");
-                    if (i == 1)
+                    if (i === 1)
                         assert.equal(d3.select(this).attr("transform"), "translate(571.2,165)");
                 });
             },
             'should calculate right r for each bubble': function (chart) {
                 chart.selectAll("circle.bubble").each(function (d, i) {
-                    if (i == 0)
+                    if (i === 0)
                         assert.equal(d3.select(this).attr("r"), 49.33333333333333);
-                    if (i == 1)
+                    if (i === 1)
                         assert.equal(d3.select(this).attr("r"), 49.33333333333333);
                 });
             },
             'should attach each bubble with index based class': function (chart) {
                 chart.selectAll("circle.bubble").each(function (d, i) {
-                    if (i == 0)
+                    if (i === 0)
                         assert.equal(d3.select(this).attr("class"), "bubble _0");
-                    if (i == 1)
+                    if (i === 1)
                         assert.equal(d3.select(this).attr("class"), "bubble _1");
                 });
             },
             'should generate right number of labels': function (chart) {
-                assert.equal(chart.selectAll("g.node text")[0].length, 2);
+                assert.lengthOf(chart.selectAll("g.node text")[0], 2);
             },
             'should create correct label for each bubble': function (chart) {
                 chart.selectAll("g.node text").each(function (d, i) {
-                    if (i == 0)
+                    if (i === 0)
                         assert.equal(d3.select(this).text(), "F");
-                    if (i == 1)
+                    if (i === 1)
                         assert.equal(d3.select(this).text(), "T");
                 });
             },
             'should generate right number of titles': function (chart) {
-                assert.equal(chart.selectAll("g.node title")[0].length, 2);
+                assert.lengthOf(chart.selectAll("g.node title")[0], 2);
             },
             'should create correct title for each bubble': function (chart) {
                 chart.selectAll("g.node title").each(function (d, i) {
-                    if (i == 0)
+                    if (i === 0)
                         assert.equal(d3.select(this).text(), "F: {count:5,value:220}");
-                    if (i == 1)
+                    if (i === 1)
                         assert.equal(d3.select(this).text(), "T: {count:5,value:198}");
                 });
             },
             'should fill bubbles with correct colors': function (chart) {
                 chart.selectAll("circle.bubble").each(function (d, i) {
-                    if (i == 0)
+                    if (i === 0)
                         assert.equal(d3.select(this).attr("fill"), "#00cc00");
-                    if (i == 1)
+                    if (i === 1)
                         assert.equal(d3.select(this).attr("fill"), "#00cc00");
                 });
             }
@@ -218,10 +219,10 @@ suite.addBatch({
             return chart;
         },
         'should generate right number of labels': function (chart) {
-            assert.equal(chart.selectAll("g.node text")[0].length, 0);
+            assert.lengthOf(chart.selectAll("g.node text")[0], 0);
         },
         'should generate right number of titles': function (chart) {
-            assert.equal(chart.selectAll("g.node title")[0].length, 0);
+            assert.lengthOf(chart.selectAll("g.node title")[0], 0);
         },
         teardown: function (topic) {
             resetAllFilters();
@@ -240,9 +241,9 @@ suite.addBatch({
         },
         'should deselect bubble based on filter value': function (chart) {
             chart.selectAll("g.node").each(function (d, i) {
-                if (i == 0)
+                if (i === 0)
                     assert.equal(d3.select(this).attr("class"), "node selected");
-                if (i == 1)
+                if (i === 1)
                     assert.equal(d3.select(this).attr("class"), "node deselected");
             });
         },
@@ -271,17 +272,17 @@ suite.addBatch({
         },
         'should create correct label for each bubble': function (chart) {
             chart.selectAll("g.node title").each(function (d, i) {
-                if (i == 0)
+                if (i === 0)
                     assert.equal(d3.select(this).text(), "F: {count:0,value:0}");
-                if (i == 1)
+                if (i === 1)
                     assert.equal(d3.select(this).text(), "T: {count:2,value:77}");
             });
         },
         'should fill bubbles with correct colors': function (chart) {
             chart.selectAll("circle.bubble").each(function (d, i) {
-                if (i == 0)
+                if (i === 0)
                     assert.equal(d3.select(this).attr("fill"), "#a60000");
-                if (i == 1)
+                if (i === 1)
                     assert.equal(d3.select(this).attr("fill"), "#ff4040");
             });
         },
