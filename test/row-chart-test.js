@@ -75,7 +75,7 @@ suite.addBatch({
         },
         'row path should be filled': function (chart) {
             chart.selectAll("svg g g.row rect").each(function (r) {
-                assert.isTrue(d3.select(this).attr("fill") != "");
+                assert.isTrue(d3.select(this).attr("fill") !== "");
             });
         },
         'row path fill should be set correctly': function (chart) {
@@ -131,7 +131,7 @@ suite.addBatch({
             },
 
             'on click function should be defined': function (chart) {
-                assert.isTrue(chart.selectAll("g.row rect").on("click") != undefined);
+                assert.isTrue(chart.selectAll("g.row rect").on("click") !== undefined);
             },
             'by default no row should be selected': function (chart) {
                 assert.isFalse(chart.hasFilter());
@@ -146,7 +146,7 @@ suite.addBatch({
                 chart.filter('22');
                 chart.render();
                 chart.selectAll("g.row rect").each(function (d) {
-                    if (d.key == 66 || d.key == 22)
+                    if (d.key === '66' || d.key === '22')
                         assert.equal(d3.select(this).attr('class'), 'selected');
                     else
                         assert.equal(d3.select(this).attr('class'), 'deselected');
@@ -228,7 +228,7 @@ suite.addBatch({
         },
 
         'custom title & label generation': {
-            topic: function (chart) {
+            topic: function () {
                 var chart = buildChart("pie-chart-custom-label-title");
 
                 chart.title(function (d) {
@@ -291,7 +291,7 @@ suite.addBatch({
         },
 
         'render with no label & title': {
-            topic: function (chart) {
+            topic: function () {
                 var chart = buildChart("pie-chart-no-label-title");
                 chart.title(function (d) {
                     return "custom title";

@@ -42,7 +42,7 @@ function legend(chart) {
 }
 
 function legendItems(chart) {
-    return legend(chart).selectAll('g.dc-legend-item')
+    return legend(chart).selectAll('g.dc-legend-item');
 }
 
 function legendIcon(chart) {

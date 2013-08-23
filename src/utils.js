@@ -23,7 +23,7 @@ dc.printers.filter = function (filter) {
             else if (filter.length >= 1)
                 s = dc.utils.printSingleValue(filter[0]);
         } else {
-            s = dc.utils.printSingleValue(filter)
+            s = dc.utils.printSingleValue(filter);
         }
     }
 
@@ -47,10 +47,10 @@ dc.utils.printSingleValue = function (filter) {
 
 dc.utils.add = function (l, r) {
     if (typeof r === "string")
-        r = r.replace("%", "")
+        r = r.replace("%", "");
 
     if (l instanceof Date) {
-        if (typeof r === "string") r = +r
+        if (typeof r === "string") r = +r;
         var d = new Date();
         d.setTime(l.getTime());
         d.setDate(l.getDate() + r);
@@ -65,10 +65,10 @@ dc.utils.add = function (l, r) {
 
 dc.utils.subtract = function (l, r) {
     if (typeof r === "string")
-        r = r.replace("%", "")
+        r = r.replace("%", "");
 
     if (l instanceof Date) {
-        if (typeof r === "string") r = +r
+        if (typeof r === "string") r = +r;
         var d = new Date();
         d.setTime(l.getTime());
         d.setDate(l.getDate() - r);
@@ -99,7 +99,7 @@ dc.utils.GroupStack = function () {
     this.getDataPoint = function (x, y) {
         initializeDataLayer(x);
         var dataPoint = _dataLayers[x][y];
-        if (dataPoint == undefined)
+        if (dataPoint === undefined)
             dataPoint = 0;
         return dataPoint;
     };
@@ -155,7 +155,7 @@ dc.utils.GroupStack = function () {
 
 dc.utils.isNegligible = function (max) {
     return max === undefined || (max < dc.constants.NEGLIGIBLE_NUMBER && max > -dc.constants.NEGLIGIBLE_NUMBER);
-}
+};
 
 dc.utils.groupMax = function (group, accessor) {
     var max = d3.max(group.all(), function (e) {
