@@ -60,7 +60,7 @@ suite.addBatch({
                 .on("filtered", function (chart, filter) {
                     chart.out = filter;
                 });
-            chart.render().filter(11)
+            chart.render().filter(11);
             return chart;
         },
 
@@ -135,7 +135,7 @@ suite.addBatch({
 suite.addBatch({
     'missing group': {
         topic: function () {
-            return dc.baseChart({}).dimension(valueDimension)
+            return dc.baseChart({}).dimension(valueDimension);
         },
 
         'should trigger descriptive exception': function (chart) {

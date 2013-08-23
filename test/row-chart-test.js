@@ -32,7 +32,7 @@ suite.addBatch({
         },
 
         'we get something': function (chart) {
-            assert.isNotNull(chart);
+            assert.isObject(chart);
         },
         'should be registered': function (chart) {
             assert.isTrue(dc.hasChart(chart));
@@ -66,7 +66,7 @@ suite.addBatch({
             assert.isFalse(chart.select("svg g").empty());
         },
         'rect g should be created with class': function (chart) {
-            assert.equal(chart.selectAll("svg g g.row").data().length, 5);
+            assert.lengthOf(chart.selectAll("svg g g.row").data(), 5);
         },
         'rect row css class should be numbered with index': function (chart) {
             chart.selectAll("svg g g.row").each(function (r, i) {
@@ -75,7 +75,7 @@ suite.addBatch({
         },
         'row path should be filled': function (chart) {
             chart.selectAll("svg g g.row rect").each(function (r) {
-                assert.isTrue(d3.select(this).attr("fill") != "");
+                assert.isTrue(d3.select(this).attr("fill") !== "");
             });
         },
         'row path fill should be set correctly': function (chart) {
@@ -86,7 +86,7 @@ suite.addBatch({
             assert.equal(d3.select(chart.selectAll("g.row rect")[0][4]).attr("fill"), "#e6550d");
         },
         'row label should be created': function (chart) {
-            assert.equal(chart.selectAll("svg text.row").data().length, 5);
+            assert.lengthOf(chart.selectAll("svg text.row").data(), 5);
         },
         'row label text should be set': function (chart) {
             chart.selectAll("svg g text.row").call(function (t) {
@@ -102,7 +102,7 @@ suite.addBatch({
             },
 
             'multiple invocation of render should update chart': function (chart) {
-                assert.equal(d3.selectAll("#row-chart svg")[0].length, 1);
+                assert.lengthOf(d3.selectAll("#row-chart svg")[0], 1);
             }
         },
 
@@ -131,7 +131,7 @@ suite.addBatch({
             },
 
             'on click function should be defined': function (chart) {
-                assert.isTrue(chart.selectAll("g.row rect").on("click") != undefined);
+                assert.isTrue(chart.selectAll("g.row rect").on("click") !== undefined);
             },
             'by default no row should be selected': function (chart) {
                 assert.isFalse(chart.hasFilter());
@@ -146,7 +146,7 @@ suite.addBatch({
                 chart.filter('22');
                 chart.render();
                 chart.selectAll("g.row rect").each(function (d) {
-                    if (d.key == 66 || d.key == 22)
+                    if (d.key === '66' || d.key === '22')
                         assert.equal(d3.select(this).attr('class'), 'selected');
                     else
                         assert.equal(d3.select(this).attr('class'), 'deselected');
@@ -228,7 +228,7 @@ suite.addBatch({
         },
 
         'custom title & label generation': {
-            topic: function (chart) {
+            topic: function () {
                 var chart = buildChart("pie-chart-custom-label-title");
 
                 chart.title(function (d) {
@@ -242,7 +242,7 @@ suite.addBatch({
             },
 
             'should render correct number of label': function (chart) {
-                assert.equal(chart.selectAll("text.row")[0].length, 5);
+                assert.lengthOf(chart.selectAll("text.row")[0], 5);
             },
             'custom function should be used to dynamically generate label': function (chart) {
                 chart.selectAll("text.row").each(function (r) {
@@ -250,7 +250,7 @@ suite.addBatch({
                 });
             },
             'should render correct number of title': function (chart) {
-                assert.equal(chart.selectAll("g.row title")[0].length, 5);
+                assert.lengthOf(chart.selectAll("g.row title")[0], 5);
             },
             'custom function should be used to dynamically generate title': function (chart) {
                 chart.selectAll("g.row title").each(function (t) {
@@ -264,7 +264,7 @@ suite.addBatch({
             }
         },
 
-        'pei chart label and title with value accessor': {
+        'chart label and title with value accessor': {
             topic: function () {
                 var chart = buildChart('pie-chart-default-label-title');
                 chart.dimension(statusGroup)
@@ -291,7 +291,7 @@ suite.addBatch({
         },
 
         'render with no label & title': {
-            topic: function (chart) {
+            topic: function () {
                 var chart = buildChart("pie-chart-no-label-title");
                 chart.title(function (d) {
                     return "custom title";
@@ -307,8 +307,8 @@ suite.addBatch({
             },
 
             'row label and title should not be created': function (chart) {
-                assert.equal(chart.selectAll("text.row")[0].length, 0);
-                assert.equal(chart.selectAll("g.row title")[0].length, 0);
+                assert.lengthOf(chart.selectAll("text.row")[0], 0);
+                assert.lengthOf(chart.selectAll("g.row title")[0], 0);
             },
 
             teardown: function (chart) {
