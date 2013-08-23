@@ -186,7 +186,7 @@ suite.addBatch({
             var chart = buildChart("choropleth-chart-replace-layer");
             chart.overlayGeoJson(geoJson3.features, "state", function (d) {
                 return d.properties.name;
-            })
+            });
             return chart;
         },
         'geo json layer with the same name should be replaced': function (chart) {

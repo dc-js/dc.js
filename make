@@ -1,4 +1,5 @@
 #!/bin/sh
-ant
-npm test
+
+grunt
+grunt vows
 

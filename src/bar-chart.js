@@ -12,8 +12,8 @@ dc.barChart = function (parent, chartGroup) {
 
     dc.override(_chart, 'rescale', function () {
         _chart._rescale();
-        _numberOfBars = null;
-        _barWidth = null;
+        _numberOfBars = undefined;
+        _barWidth = undefined;
         getNumberOfBars();
     });
 
@@ -81,7 +81,7 @@ dc.barChart = function (parent, chartGroup) {
     }
 
     function calculateBarWidth() {
-        if (_barWidth == null) {
+        if (_barWidth === undefined) {
             var numberOfBars = _chart.isOrdinal() ? getNumberOfBars() + 1 : getNumberOfBars();
 
             var w = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
@@ -94,7 +94,7 @@ dc.barChart = function (parent, chartGroup) {
     }
 
     function getNumberOfBars() {
-        if (_numberOfBars == null) {
+        if (_numberOfBars === undefined) {
             _numberOfBars = _chart.xUnitCount();
         }
 

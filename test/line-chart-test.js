@@ -102,7 +102,7 @@ suite.addBatch({
             assert.isNotNull(chart.margins());
         },
         'x can be set': function (chart) {
-            assert.isTrue(chart.x() != undefined);
+            assert.isTrue(chart.x() !== undefined);
         },
         'x range round is auto calculated based on width': function (chart) {
             assert.equal(chart.x().range()[0], 0);
@@ -113,7 +113,7 @@ suite.addBatch({
             assert.equal(chart.x().domain()[1].getTime(), new Date(2012, 11, 31).getTime());
         },
         'y can be set': function (chart) {
-            assert.isTrue(chart.y() != undefined);
+            assert.isTrue(chart.y() !== undefined);
         },
         'y range round is auto calculated based on height': function (chart) {
             assert.equal(chart.y().range()[0], 160);
@@ -145,7 +145,7 @@ suite.addBatch({
             assert.isNotNull(chart.select("g.brush"));
         },
         'round should be off by default': function (chart) {
-            assert.isTrue(chart.round() == null);
+            assert.isTrue(chart.round() === undefined);
         },
         'round can be changed': function (chart) {
             chart.round(d3.time.day.round);
@@ -168,7 +168,7 @@ suite.addBatch({
             },
             'brush fancy resize handle should be created': function (chart) {
                 chart.select("g.brush").selectAll(".resize path").each(function (d, i) {
-                    if (i == 0)
+                    if (i === 0)
                         assert.equal(d3.select(this).attr("d"), "M0.5,53.333333333333336A6,6 0 0 1 6.5,59.333333333333336V100.66666666666667A6,6 0 0 1 0.5,106.66666666666667ZM2.5,61.333333333333336V98.66666666666667M4.5,61.333333333333336V98.66666666666667");
                     else
                         assert.equal(d3.select(this).attr("d"), "M-0.5,53.333333333333336A6,6 0 0 0 -6.5,59.333333333333336V100.66666666666667A6,6 0 0 0 -0.5,106.66666666666667ZM-2.5,61.333333333333336V98.66666666666667M-4.5,61.333333333333336V98.66666666666667");
@@ -190,11 +190,11 @@ suite.addBatch({
                 assert.matches(chart.select("path.line").attr("d"), /M405.\d+,107L444.\d+,107L449.\d+,0L508.\d+,107L533.\d+,53L620.\d+,53/);
             },
             'area path should not be there': function (chart) {
-                assert.equal(chart.selectAll("path.area")[0].length, 0)
+                assert.equal(chart.selectAll("path.area")[0].length, 0);
             },
             'selected bars should be push to foreground': function (chart) {
                 chart.selectAll("g rect.bar").each(function (d, i) {
-                    if (i == 1)
+                    if (i === 1)
                         assert.equal(d3.select(this).attr("class"), "bar");
                 });
             },
@@ -250,11 +250,11 @@ suite.addBatch({'area chart': {
         return chart;
     },
     'area path should be generated': function (chart) {
-        assert.equal(chart.selectAll("path.area")[0].length, 1)
+        assert.equal(chart.selectAll("path.area")[0].length, 1);
     },
     'area path should be appended only once': function (chart) {
         chart.redraw();
-        assert.equal(chart.selectAll("path.area")[0].length, 1)
+        assert.equal(chart.selectAll("path.area")[0].length, 1);
     },
     'correctly draw line': function (chart) {
         assert.matches(d3.select("#area-chart g._0 path.line").attr("d"), /M405.\d+,107L444.\d+,107L449.\d+,0L508.\d+,107L533.\d+,53L620.\d+,53/);

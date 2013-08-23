@@ -94,12 +94,19 @@ suite.addBatch({
             var chart = buildChart("bar-chart");
             chart.filter([new Date(2012, 5, 1), new Date(2012, 6, 1)]);
             chart.redraw();
+            //console.log("topic");
             return chart;
         },
         'we get something': function (chart) {
-            assert.isNotNull(chart);
+            assert.isObject(chart);
         },
         'should be registered': function (chart) {
+            /*console.log(chart);
+            var cs = dc.chartRegistry.list();
+            var out = null;
+            cs.forEach(function(c){
+              out = c;
+            });*/
             assert.isTrue(dc.hasChart(chart));
         },
         'dc-chart class should be turned on for parent div': function (chart) {
@@ -130,7 +137,7 @@ suite.addBatch({
             assert.isNotNull(chart.margins());
         },
         'x can be set': function (chart) {
-            assert.isTrue(chart.x() != undefined);
+            assert.isTrue(chart.x() !== undefined);
         },
         'x range round is auto calculated based on width': function (chart) {
             assert.equal(chart.x().range()[0], 0);
@@ -141,7 +148,7 @@ suite.addBatch({
             assert.equal(chart.x().domain()[1].getTime(), new Date(2012, 11, 31).getTime());
         },
         'y can be set': function (chart) {
-            assert.isTrue(chart.y() != undefined);
+            assert.isTrue(chart.y() !== undefined);
         },
         'y range round is auto calculated based on height': function (chart) {
             assert.equal(chart.y().range()[0], 160);
@@ -162,7 +169,7 @@ suite.addBatch({
         },
         'bar x should be set correctly': function (chart) {
             chart.selectAll("svg g rect.bar").each(function (d) {
-                var halfBarWidth = .5;
+                var halfBarWidth = 0.5;
                 assert.equal(d3.select(this).attr('x'), chart.x()(d.data.key) - halfBarWidth);
             });
         },
@@ -195,10 +202,10 @@ suite.addBatch({
             assert.isNotNull(chart.select("g.brush"));
         },
         'round should be off by default': function (chart) {
-            assert.isTrue(chart.round() == null);
+            assert.isTrue(chart.round() === undefined);
         },
         'round can be changed': function (chart) {
-            chart.round(d3.time.day.round)
+            chart.round(d3.time.day.round);
             assert.isNotNull(chart.round());
         },
         'current filter should be set correctly': function (chart) {
@@ -227,7 +234,7 @@ suite.addBatch({
             },
             'brush fancy resize handle should be created': function (chart) {
                 chart.select("g.brush").selectAll(".resize path").each(function (d, i) {
-                    if (i == 0)
+                    if (i === 0)
                         assert.equal(d3.select(this).attr("d"), "M0.5,53.333333333333336A6,6 0 0 1 6.5,59.333333333333336V100.66666666666667A6,6 0 0 1 0.5,106.66666666666667ZM2.5,61.333333333333336V98.66666666666667M4.5,61.333333333333336V98.66666666666667");
                     else
                         assert.equal(d3.select(this).attr("d"), "M-0.5,53.333333333333336A6,6 0 0 0 -6.5,59.333333333333336V100.66666666666667A6,6 0 0 0 -0.5,106.66666666666667ZM-2.5,61.333333333333336V98.66666666666667M-4.5,61.333333333333336V98.66666666666667");
@@ -329,7 +336,7 @@ suite.addBatch({
 
 suite.addBatch({'elastic axis': {
     topic: function () {
-        countryDimension.filter("CA")
+        countryDimension.filter("CA");
         var chart = buildChart("bar-chart2");
         chart.elasticY(true)
             .yAxisPadding(10)
@@ -354,7 +361,7 @@ suite.addBatch({'elastic axis': {
 
 suite.addBatch({'elastic y axis with no data in focus': {
     topic: function () {
-        countryDimension.filter("CC")
+        countryDimension.filter("CC");
         var chart = buildChart("bar-chart-no-data");
         chart.elasticY(true).redraw();
         return chart;
@@ -692,6 +699,7 @@ suite.addBatch({
             assert.equal(chart.selectAll("rect.bar")[0].length, 6);
         },
         'bar width should be resized accordingly': function (chart) {
+            //console.log(chart.selectAll("rect.bar")[0][0].attr("width"));
             assert.equal(chart.selectAll("rect.bar").attr("width"), 35);
         },
         'y axis domain should be reset based on focus range': function(chart){

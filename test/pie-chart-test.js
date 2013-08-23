@@ -87,12 +87,12 @@ suite.addBatch({
         },
         'slice path should be filled': function (pieChart) {
             pieChart.selectAll("svg g g.pie-slice path").each(function (p) {
-                assert.isTrue(d3.select(this).attr("fill") != "");
+                assert.isTrue(d3.select(this).attr("fill") !== "");
             });
         },
         'slice path d should be created': function (pieChart) {
             pieChart.selectAll("svg g g.pie-slice path").each(function (p) {
-                assert.isTrue(d3.select(this).attr("d") != "");
+                assert.isTrue(d3.select(this).attr("d") !== "");
             });
         },
         'slice path fill should be set correctly': function (pieChart) {
@@ -172,7 +172,7 @@ suite.addBatch({
                 return pieChart;
             },
             'on click function should be defined': function (pieChart) {
-                assert.isTrue(pieChart.selectAll("svg g g.pie-slice path").on("click") != undefined);
+                assert.isTrue(pieChart.selectAll("svg g g.pie-slice path").on("click") !== undefined);
             },
             'by default no slice should be selected': function (pieChart) {
                 assert.isFalse(pieChart.hasFilter());
@@ -208,7 +208,7 @@ suite.addBatch({
                 pieChart.filter("22");
                 pieChart.render();
                 pieChart.selectAll("g.pie-slice").each(function (d) {
-                    if (d.data.key == "66" || d.data.key == "22")
+                    if (d.data.key === "66" || d.data.key === "22")
                         assert.isTrue(d3.select(this).attr("class").indexOf("selected") > 0);
                     else
                         assert.isTrue(d3.select(this).attr("class").indexOf("deselected") > 0);
@@ -230,7 +230,7 @@ suite.addBatch({
                 pieChart.redraw();
                 pieChart.selectAll(".pie-slice path").each(function (d) {
                     var cls = d3.select(this).attr("class");
-                    assert.isTrue(cls == null || cls == "");
+                    assert.isTrue(cls === null || cls === "");
                 });
             },
             teardown: function (pieChart) {
@@ -278,7 +278,7 @@ suite.addBatch({
         topic: function () {
             var chart = buildChart("pie-chart2");
             dateDimension.filter([new Date(2010, 0, 1), new Date(2010, 0, 3)]);
-            chart.redraw()
+            chart.redraw();
             dateDimension.filter([new Date(2012, 0, 1), new Date(2012, 11, 30)]);
             chart.redraw();
             return chart;
