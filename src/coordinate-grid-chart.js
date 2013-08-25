@@ -1,5 +1,4 @@
 dc.coordinateGridChart = function (_chart) {
-    var DEFAULT_Y_AXIS_TICKS = 5;
     var GRID_LINE_CLASS = "grid-line";
     var HORIZONTAL_CLASS = "horizontal";
     var VERTICAL_CLASS = "vertical";
@@ -46,26 +45,26 @@ dc.coordinateGridChart = function (_chart) {
     });
 
     _chart.rescale = function () {
-        _unitCount = null;
+        _unitCount = undefined;
         _chart.xUnitCount();
-    }
+    };
 
     _chart.rangeChart = function (_) {
         if (!arguments.length) return _rangeChart;
         _rangeChart = _;
         _rangeChart.focusChart(_chart);
         return _chart;
-    }
+    };
 
     _chart.generateG = function (parent) {
-        if (parent == null)
+        if (parent === undefined)
             _parent = _chart.svg();
         else
             _parent = parent;
 
         _g = _parent.append("g");
 
-        _chartBodyG = _g.append("g").attr("class", "chartBody")
+        _chartBodyG = _g.append("g").attr("class", "chart-body")
             .attr("transform", "translate(" + _chart.margins().left + ", " + _chart.margins().top + ")")
             .attr("clip-path", "url(#" + getClipPathId() + ")");
 
@@ -126,7 +125,7 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     _chart.xUnitCount = function () {
-        if (_unitCount == null) {
+        if (_unitCount === undefined) {
             var units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain());
 
             if (units instanceof Array)
@@ -227,7 +226,7 @@ dc.coordinateGridChart = function (_chart) {
             lines.exit().remove();
         }
         else {
-            gridLineG.selectAll("line").remove()
+            gridLineG.selectAll("line").remove();
         }
     }
 
@@ -240,13 +239,13 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     function prepareYAxis(g) {
-        if (_y == null || _chart.elasticY()) {
+        if (_y === undefined || _chart.elasticY()) {
             _y = d3.scale.linear();
             _y.domain([_chart.yAxisMin(), _chart.yAxisMax()]).rangeRound([_chart.yAxisHeight(), 0]);
         }
 
         _y.range([_chart.yAxisHeight(), 0]);
-        _yAxis = _yAxis.scale(_y).orient("left").ticks(DEFAULT_Y_AXIS_TICKS);
+        _yAxis = _yAxis.scale(_y).orient("left");
 
         renderHorizontalGridLines(g);
     }
@@ -307,7 +306,7 @@ dc.coordinateGridChart = function (_chart) {
             lines.exit().remove();
         }
         else {
-            gridLineG.selectAll("line").remove()
+            gridLineG.selectAll("line").remove();
         }
     }
 
@@ -498,10 +497,10 @@ dc.coordinateGridChart = function (_chart) {
     // borrowed from Crossfilter example
     _chart.resizeHandlePath = function (d) {
         var e = +(d == "e"), x = e ? 1 : -1, y = brushHeight() / 3;
-        return "M" + (.5 * x) + "," + y
+        return "M" + (0.5 * x) + "," + y
             + "A6,6 0 0 " + e + " " + (6.5 * x) + "," + (y + 6)
             + "V" + (2 * y - 6)
-            + "A6,6 0 0 " + e + " " + (.5 * x) + "," + (2 * y)
+            + "A6,6 0 0 " + e + " " + (0.5 * x) + "," + (2 * y)
             + "Z"
             + "M" + (2.5 * x) + "," + (y + 8)
             + "V" + (2 * y - 8)
@@ -532,7 +531,7 @@ dc.coordinateGridChart = function (_chart) {
     }
 
     _chart.doRender = function () {
-        if (_x == null)
+        if (_x === undefined)
             throw new dc.errors.InvalidStateException("Mandatory attribute chart.x is missing on chart["
                 + _chart.anchor() + "]");
 

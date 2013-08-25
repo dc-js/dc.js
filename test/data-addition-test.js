@@ -68,10 +68,10 @@ suite.addBatch({
             return chart;
         },
         'slice g should be created with class': function(pieChart) {
-            assert.equal(pieChart.selectAll("svg g g.pie-slice").data().length, 7);
+            assert.lengthOf(pieChart.selectAll("svg g g.pie-slice").data(), 7);
         },
         'slice path should be created': function(pieChart) {
-            assert.equal(pieChart.selectAll("svg g g.pie-slice path").data().length, 7);
+            assert.lengthOf(pieChart.selectAll("svg g g.pie-slice path").data(), 7);
         },
         'default function should be used to dynamically generate label': function(chart) {
             assert.equal(d3.select(chart.selectAll("text.pie-slice")[0][0]).text(), "66");
@@ -91,7 +91,7 @@ suite.addBatch({
             return chart;
         },
         'number of dots should equal the size of the group': function(lineChart) {
-            assert.equal(lineChart.selectAll("circle.dot")[0].length, timeGroup.size());
+            assert.lengthOf(lineChart.selectAll("circle.dot")[0], timeGroup.size());
         },
         'number of line segments should equal the size of the group': function(lineChart) {
             var path = lineChart.selectAll("path.line").attr("d");

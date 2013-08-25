@@ -132,7 +132,7 @@ suite.addBatch({
                 return dc.units.ordinal("a", "d", ["a", "b", "c", "d"]);
             },
             'units should be based on count': function (units) {
-                assert.equal(units.length, 4);
+                assert.lengthOf(units, 4);
             }
         }
     },

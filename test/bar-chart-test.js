@@ -22,7 +22,8 @@ function buildChart(id, xdomain) {
         .x(d3.time.scale().domain(xdomain))
         .gap(1)
         .transitionDuration(0)
-        .xUnits(d3.time.days);
+        .xUnits(d3.time.days)
+        .yAxis().ticks(5);
     chart.render();
     return chart;
 }
@@ -64,7 +65,8 @@ function buildNegativeChart(id, xdomain) {
         .elasticY(true)
         .x(d3.time.scale().domain(xdomain))
         .renderHorizontalGridLines(true)
-        .xUnits(d3.time.days);
+        .xUnits(d3.time.days)
+        .yAxis().ticks(5);
     chart.render();
     return chart;
 }
@@ -92,12 +94,19 @@ suite.addBatch({
             var chart = buildChart("bar-chart");
             chart.filter([new Date(2012, 5, 1), new Date(2012, 6, 1)]);
             chart.redraw();
+            //console.log("topic");
             return chart;
         },
         'we get something': function (chart) {
-            assert.isNotNull(chart);
+            assert.isObject(chart);
         },
         'should be registered': function (chart) {
+            /*console.log(chart);
+            var cs = dc.chartRegistry.list();
+            var out = null;
+            cs.forEach(function(c){
+              out = c;
+            });*/
             assert.isTrue(dc.hasChart(chart));
         },
         'dc-chart class should be turned on for parent div': function (chart) {
@@ -128,7 +137,7 @@ suite.addBatch({
             assert.isNotNull(chart.margins());
         },
         'x can be set': function (chart) {
-            assert.isTrue(chart.x() != undefined);
+            assert.isTrue(chart.x() !== undefined);
         },
         'x range round is auto calculated based on width': function (chart) {
             assert.equal(chart.x().range()[0], 0);
@@ -139,7 +148,7 @@ suite.addBatch({
             assert.equal(chart.x().domain()[1].getTime(), new Date(2012, 11, 31).getTime());
         },
         'y can be set': function (chart) {
-            assert.isTrue(chart.y() != undefined);
+            assert.isTrue(chart.y() !== undefined);
         },
         'y range round is auto calculated based on height': function (chart) {
             assert.equal(chart.y().range()[0], 160);
@@ -160,7 +169,7 @@ suite.addBatch({
         },
         'bar x should be set correctly': function (chart) {
             chart.selectAll("svg g rect.bar").each(function (d) {
-                var halfBarWidth = .5;
+                var halfBarWidth = 0.5;
                 assert.equal(d3.select(this).attr('x'), chart.x()(d.data.key) - halfBarWidth);
             });
         },
@@ -193,10 +202,10 @@ suite.addBatch({
             assert.isNotNull(chart.select("g.brush"));
         },
         'round should be off by default': function (chart) {
-            assert.isTrue(chart.round() == null);
+            assert.isTrue(chart.round() === undefined);
         },
         'round can be changed': function (chart) {
-            chart.round(d3.time.day.round)
+            chart.round(d3.time.day.round);
             assert.isNotNull(chart.round());
         },
         'current filter should be set correctly': function (chart) {
@@ -225,7 +234,7 @@ suite.addBatch({
             },
             'brush fancy resize handle should be created': function (chart) {
                 chart.select("g.brush").selectAll(".resize path").each(function (d, i) {
-                    if (i == 0)
+                    if (i === 0)
                         assert.equal(d3.select(this).attr("d"), "M0.5,53.333333333333336A6,6 0 0 1 6.5,59.333333333333336V100.66666666666667A6,6 0 0 1 0.5,106.66666666666667ZM2.5,61.333333333333336V98.66666666666667M4.5,61.333333333333336V98.66666666666667");
                     else
                         assert.equal(d3.select(this).attr("d"), "M-0.5,53.333333333333336A6,6 0 0 0 -6.5,59.333333333333336V100.66666666666667A6,6 0 0 0 -0.5,106.66666666666667ZM-2.5,61.333333333333336V98.66666666666667M-4.5,61.333333333333336V98.66666666666667");
@@ -327,7 +336,7 @@ suite.addBatch({
 
 suite.addBatch({'elastic axis': {
     topic: function () {
-        countryDimension.filter("CA")
+        countryDimension.filter("CA");
         var chart = buildChart("bar-chart2");
         chart.elasticY(true)
             .yAxisPadding(10)
@@ -352,7 +361,7 @@ suite.addBatch({'elastic axis': {
 
 suite.addBatch({'elastic y axis with no data in focus': {
     topic: function () {
-        countryDimension.filter("CC")
+        countryDimension.filter("CC");
         var chart = buildChart("bar-chart-no-data");
         chart.elasticY(true).redraw();
         return chart;
@@ -382,8 +391,8 @@ suite.addBatch({'stacked': {
         assert.equal(yDomain[1], 149);
     },
     'bar should be generated from all groups': function (chart) {
-        assert.equal(chart.selectAll("g._0 rect.bar")[0].length, 6);
-        assert.equal(chart.selectAll("g._1 rect.bar")[0].length, 6);
+        assert.lengthOf(chart.selectAll("g._0 rect.bar")[0], 6);
+        assert.lengthOf(chart.selectAll("g._1 rect.bar")[0], 6);
     },
     'bar should be stacked': function (chart) {
         assert.equal(d3.select(chart.selectAll("g._0 rect.bar")[0][2]).attr("y"), 142);
@@ -414,8 +423,8 @@ suite.addBatch({'stacked with custom value retriever': {
         assert.equal(yDomain[1], 20);
     },
     'bar should be generated from all groups': function (chart) {
-        assert.equal(chart.selectAll("g._0 rect.bar")[0].length, 6);
-        assert.equal(chart.selectAll("g._1 rect.bar")[0].length, 6);
+        assert.lengthOf(chart.selectAll("g._0 rect.bar")[0], 6);
+        assert.lengthOf(chart.selectAll("g._1 rect.bar")[0], 6);
     },
     'bar should be stacked': function (chart) {
         assert.equal(d3.select(chart.selectAll("g._0 rect.bar")[0][2]).attr("y"), 24);
@@ -504,7 +513,7 @@ suite.addBatch({'ordinal bar chart': {
         assert.isFalse(chart.brushOn());
     },
     'should generate correct number of bars': function (chart) {
-        assert.equal(chart.selectAll("rect.bar")[0].length, 6);
+        assert.lengthOf(chart.selectAll("rect.bar")[0], 6);
     },
     'should auto size bar width': function (chart) {
         assert.equal(chart.select("rect.bar").attr("width"), "144");
@@ -519,7 +528,7 @@ suite.addBatch({'ordinal bar chart': {
         assert.isTrue(d3.select(chart.selectAll("rect.bar")[0][0]).classed("deselected"));
         assert.isFalse(d3.select(chart.selectAll("rect.bar")[0][1]).classed("deselected"));
         assert.isFalse(d3.select(chart.selectAll("rect.bar")[0][5]).classed("deselected"));
-        assert.equal(stateDimension.top(Infinity).length, 3);
+        assert.lengthOf(stateDimension.top(Infinity), 3);
     },
     teardown: function (topic) {
         resetAllFilters();
@@ -551,7 +560,7 @@ suite.addBatch({'linear bar chart': {
         return buildLinearChart("bar-chart-linear");
     },
     'should generate correct number of bars': function (chart) {
-        assert.equal(chart.selectAll("rect.bar")[0].length, 5);
+        assert.lengthOf(chart.selectAll("rect.bar")[0], 5);
     },
     'should auto size bar width': function (chart) {
         assert.equal(chart.select("rect.bar").attr("width"), "18");
@@ -578,7 +587,7 @@ suite.addBatch({'runtime dimension & group switch': {
         return chart;
     },
     'should generate correct number of bars': function (chart) {
-        assert.equal(chart.selectAll("rect.bar")[0].length, 6);
+        assert.lengthOf(chart.selectAll("rect.bar")[0], 6);
     },
     'should auto size bar width': function (chart) {
         assert.equal(chart.select("rect.bar").attr("width"), "10");
@@ -612,7 +621,7 @@ suite.addBatch({'negative bar chart': {
         return buildNegativeChart("bar-chart-negative");
     },
     'should generate correct number of bars': function (chart) {
-        assert.equal(chart.selectAll("rect.bar")[0].length, 18);
+        assert.lengthOf(chart.selectAll("rect.bar")[0], 18);
     },
     'should auto size bar width': function (chart) {
         assert.equal(chart.select("rect.bar").attr("width"), "9");
@@ -687,9 +696,10 @@ suite.addBatch({
         },
         'chart should only render correct number of bars': function (chart) {
             // TODO: will be nice to only render what is necessary - only one bar
-            assert.equal(chart.selectAll("rect.bar")[0].length, 6);
+            assert.lengthOf(chart.selectAll("rect.bar")[0], 6);
         },
         'bar width should be resized accordingly': function (chart) {
+            //console.log(chart.selectAll("rect.bar")[0][0].attr("width"));
             assert.equal(chart.selectAll("rect.bar").attr("width"), 35);
         },
         'y axis domain should be reset based on focus range': function(chart){
@@ -724,13 +734,13 @@ suite.addBatch({'clip path': {
         return buildChart("chart-clip-path");
     },
     'only one defs should be created': function (chart) {
-        assert.equal(chart.selectAll("defs")[0].length, 1);
+        assert.lengthOf(chart.selectAll("defs")[0], 1);
     },
     'only one clip path should be created': function (chart) {
-        assert.equal(chart.selectAll("defs clipPath")[0].length, 1);
+        assert.lengthOf(chart.selectAll("defs clipPath")[0], 1);
     },
     'only one clip rect should be created': function (chart) {
-        assert.equal(chart.selectAll("defs clipPath rect")[0].length, 1);
+        assert.lengthOf(chart.selectAll("defs clipPath rect")[0], 1);
     },
     'clip rect size should be correct': function (chart) {
         var rect = chart.select("defs clipPath rect");
@@ -741,7 +751,7 @@ suite.addBatch({'clip path': {
         assert.equal(chart.select("defs clipPath").attr("id"), "chart-clip-path-clip");
     },
     'chart body g should have clip path refs': function (chart) {
-        chart.selectAll("g.chartBody").each(function () {
+        chart.selectAll("g.chart-body").each(function () {
             assert.equal(d3.select(this).attr("clip-path"), "url(#chart-clip-path-clip)");
         });
     },

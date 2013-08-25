@@ -45,14 +45,15 @@ dc.baseChart = function (_chart) {
         filtered: NULL_LISTENER,
         zoomed: NULL_LISTENER
     };
+    var _legend;
 
     var _filters = [];
     var _filterHandler = function (dimension, filters) {
         dimension.filter(null);
 
-        if (filters.length == 0)
+        if (filters.length === 0)
             dimension.filter(null);
-        else if (filters.length == 1)
+        else if (filters.length === 1)
             dimension.filter(filters[0]);
         else
             dimension.filterFunction(function (d) {
@@ -81,11 +82,27 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
-    _chart.group = function (g) {
+    _chart.group = function (g, name) {
         if (!arguments.length) return _group;
         _group = g;
         _chart.expireCache();
+        if (typeof name === 'string') _chart.setGroupName(_group, name);
         return _chart;
+    };
+
+    _chart.setGroupName = function (g, name, accessor) {
+        if (!g.__names__) g.__names__ = {};
+        g.__names__[groupNameKey(accessor)] = name;
+    };
+
+    function groupNameKey(accessor) {
+        var defaultKey = "default";
+        return accessor ? (accessor == _chart.valueAccessor() ? defaultKey : accessor) : defaultKey;
+    }
+
+    _chart.getGroupName = function (g, accessor) {
+        if (!g.__names__) g.__names__ = {};
+        return g.__names__[groupNameKey(accessor)];
     };
 
     _chart.orderedGroup = function () {
@@ -99,7 +116,7 @@ dc.baseChart = function (_chart) {
     };
 
     _chart.dataSet = function () {
-        return _dimension != undefined && _group != undefined;
+        return _dimension !== undefined && _group !== undefined;
     };
 
     _chart.select = function (s) {
@@ -180,15 +197,17 @@ dc.baseChart = function (_chart) {
     _chart.render = function () {
         _listeners.preRender(_chart);
 
-        if (_dimension == null)
+        if (_dimension === undefined)
             throw new dc.errors.InvalidStateException("Mandatory attribute chart.dimension is missing on chart["
                 + _chart.anchor() + "]");
 
-        if (_group == null)
+        if (_group === undefined)
             throw new dc.errors.InvalidStateException("Mandatory attribute chart.group is missing on chart["
                 + _chart.anchor() + "]");
 
         var result = _chart.doRender();
+
+        if (_legend) _legend.render();
 
         _chart.activateRenderlets("postRender");
 
@@ -206,7 +225,7 @@ dc.baseChart = function (_chart) {
             runAllRenderlets();
             if (event) _listeners[event](_chart);
         }
-    }
+    };
 
     _chart.redraw = function () {
         _listeners.preRedraw(_chart);
@@ -250,7 +269,7 @@ dc.baseChart = function (_chart) {
     }
 
     function applyFilters() {
-        if (_chart.dataSet() && _chart.dimension().filter != undefined) {
+        if (_chart.dataSet() && _chart.dimension().filter !== undefined) {
             var fs = _filterHandler(_chart.dimension(), _filters);
             _filters = fs ? fs : _filters;
         }
@@ -259,7 +278,7 @@ dc.baseChart = function (_chart) {
     _chart.filter = function (_) {
         if (!arguments.length) return _filters.length > 0 ? _filters[0] : null;
 
-        if (_ == null) {
+        if (_ === null) {
             resetFilters();
         } else {
             if (_chart.hasFilter(_))
@@ -268,7 +287,7 @@ dc.baseChart = function (_chart) {
                 addFilter(_);
         }
 
-        if (_root != null && _chart.hasFilter()) {
+        if (_root !== null && _chart.hasFilter()) {
             _chart.turnOnControls();
         } else {
             _chart.turnOffControls();
@@ -321,6 +340,19 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
+    _chart.legendables = function () {
+        // do nothing in base, should be overridden by sub-function
+        return [];
+    };
+
+    _chart.legendHighlight = function (d) {
+        // do nothing in base, should be overridden by sub-function
+    };
+
+    _chart.legendReset = function (d) {
+        // do nothing in base, should be overridden by sub-function
+    };
+
     _chart.keyAccessor = function (_) {
         if (!arguments.length) return _keyAccessor;
         _keyAccessor = _;
@@ -368,7 +400,7 @@ dc.baseChart = function (_chart) {
         for (var i = 0; i < _renderlets.length; ++i) {
             _renderlets[i](_chart);
         }
-    };
+    }
 
     _chart.chartGroup = function (_) {
         if (!arguments.length) return _chartGroup;
@@ -383,6 +415,13 @@ dc.baseChart = function (_chart) {
 
     _chart.expireCache = function () {
         // do nothing in base, should be overridden by sub-function
+        return _chart;
+    };
+
+    _chart.legend = function (l) {
+        if (!arguments.length) return _legend;
+        _legend = l;
+        _legend.parent(_chart);
         return _chart;
     };
 

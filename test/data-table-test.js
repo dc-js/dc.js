@@ -76,7 +76,7 @@ suite.addBatch({
             return chart;
         },
         'should only render filtered data set': function(chart) {
-            assert.equal(chart.selectAll("td._0")[0].length, 2);
+            assert.lengthOf(chart.selectAll("td._0")[0], 2);
         },
         'should render the correctly filtered records': function(chart) {
             assert.equal(chart.selectAll("td._0")[0][0].innerHTML, 5);

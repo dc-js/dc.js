@@ -11,7 +11,12 @@ dc.stackableChart = function (_chart) {
     var _allKeyAccessors;
     var _stackLayers;
 
-    _chart.stack = function (group, retriever) {
+    _chart.stack = function (group, p2, retriever) {
+        if (typeof p2 === 'string')
+            _chart.setGroupName(group, p2, retriever);
+        else if (typeof p2 === 'function')
+            retriever = p2;
+
         _groupStack.setDefaultAccessor(_chart.valueAccessor());
         _groupStack.addGroup(group, retriever);
 
@@ -29,7 +34,7 @@ dc.stackableChart = function (_chart) {
     };
 
     _chart.allGroups = function () {
-        if (_allGroups == null) {
+        if (_allGroups === null) {
             _allGroups = [];
 
             _allGroups.push(_chart.group());
@@ -42,7 +47,7 @@ dc.stackableChart = function (_chart) {
     };
 
     _chart.allValueAccessors = function () {
-        if (_allValueAccessors == null) {
+        if (_allValueAccessors === null) {
             _allValueAccessors = [];
 
             _allValueAccessors.push(_chart.valueAccessor());
@@ -104,7 +109,7 @@ dc.stackableChart = function (_chart) {
     }
 
     _chart.allKeyAccessors = function () {
-        if (_allKeyAccessors == null) {
+        if (_allKeyAccessors === null) {
             _allKeyAccessors = [];
 
             _allKeyAccessors.push(_chart.keyAccessor());
@@ -127,7 +132,7 @@ dc.stackableChart = function (_chart) {
         for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
             var group = allGroups[groupIndex];
             var m = dc.utils.groupMin(group, _chart.getKeyAccessorByIndex(groupIndex));
-            if (min == null || min > m) min = m;
+            if (min === null || min > m) min = m;
         }
 
         return dc.utils.subtract(min, _chart.xAxisPadding());
@@ -140,7 +145,7 @@ dc.stackableChart = function (_chart) {
         for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
             var group = allGroups[groupIndex];
             var m = dc.utils.groupMax(group, _chart.getKeyAccessorByIndex(groupIndex));
-            if (max == null || max < m) max = m;
+            if (max === null || max < m) max = m;
         }
 
         return dc.utils.add(max, _chart.xAxisPadding());
@@ -198,7 +203,7 @@ dc.stackableChart = function (_chart) {
 
     _chart.stackLayers = function (_) {
         if (!arguments.length) {
-            if (_stackLayers == null) {
+            if (_stackLayers === null) {
                 _chart.calculateDataPointMatrixForAll();
                 _stackLayers = _chart.stackLayout()(_groupStack.toLayers());
             }
@@ -206,6 +211,14 @@ dc.stackableChart = function (_chart) {
         } else {
             _stackLayers = _;
         }
+    };
+
+    _chart.legendables = function () {
+        var items = [];
+        _allGroups.forEach(function (g, i) {
+            items.push(dc.utils.createLegendable(_chart, g, i, _chart.getValueAccessorByIndex(i)));
+        });
+        return items;
     };
 
     return _chart;

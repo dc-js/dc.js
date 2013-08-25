@@ -9,7 +9,7 @@ var width = 500;
 var height = 150;
 
 function buildChart(id, xdomain) {
-    if(xdomain == null)
+    if(xdomain === undefined)
         xdomain = [new Date(2012, 4, 20), new Date(2012, 7, 15)];
 
     d3.select("body").append("div").attr("id", id);
@@ -70,7 +70,7 @@ suite.addBatch({
             assert.isNotNull(chart.margins());
         },
         'x can be set': function(chart) {
-            assert.isTrue(chart.x() != undefined);
+            assert.isDefined(chart.x());
         },
         'x range round is auto calculated based on width': function(chart) {
             assert.equal(chart.x().range()[0], 0);
@@ -81,7 +81,7 @@ suite.addBatch({
             assert.equal(chart.x().domain()[1].getTime(), new Date(2012, 7, 15).getTime());
         },
         'y can be set': function(chart) {
-            assert.isTrue(chart.y() != undefined);
+            assert.isDefined(chart.y());
         },
         'y range round is auto calculated based on height': function(chart) {
             assert.equal(chart.y().range()[0], 110);
@@ -113,14 +113,14 @@ suite.addBatch({
             assert.isNotNull(chart.select("g.brush"));
         },
         'round should be off by default': function(chart) {
-            assert.isTrue(chart.round() == null);
+            assert.isUndefined(chart.round());
         },
         'round can be changed': function(chart) {
             chart.round(d3.time.day.round);
             assert.isNotNull(chart.round());
         },
         'separate g should be created for each sub chart': function(chart) {
-            assert.equal(chart.selectAll("g.sub")[0].length, 3);
+            assert.lengthOf(chart.selectAll("g.sub")[0], 3);
         },
         'sub chart g should be indexed by css class': function(chart) {
             assert.equal(d3.select(chart.selectAll("g.sub")[0][0]).attr("class"), "sub _0");
@@ -139,7 +139,7 @@ suite.addBatch({
             });
         },
         'sub bar chart generation': function(chart) {
-            assert.equal(chart.selectAll("g.sub g._0 rect")[0].length, 6);
+            assert.lengthOf(chart.selectAll("g.sub g._0 rect")[0], 6);
         },
         'sub bar chart rendering': function(chart) {
             chart.selectAll("g.sub rect.bar").each(function(d, i) {
@@ -165,7 +165,7 @@ suite.addBatch({
             },
             'brush fancy resize handle should be created': function(chart) {
                 chart.select("g.brush").selectAll(".resize path").each(function(d, i) {
-                    if (i == 0)
+                    if (i === 0)
                         assert.equal(d3.select(this).attr("d"), "M0.5,36.666666666666664A6,6 0 0 1 6.5,42.666666666666664V67.33333333333333A6,6 0 0 1 0.5,73.33333333333333ZM2.5,44.666666666666664V65.33333333333333M4.5,44.666666666666664V65.33333333333333");
                     else
                         assert.equal(d3.select(this).attr("d"), "M-0.5,36.666666666666664A6,6 0 0 0 -6.5,42.666666666666664V67.33333333333333A6,6 0 0 0 -0.5,73.33333333333333ZM-2.5,44.666666666666664V65.33333333333333M-4.5,44.666666666666664V65.33333333333333");
@@ -184,7 +184,7 @@ suite.addBatch({
                 assert.equal(chart.select("g.brush rect.extent").attr("width"), 140);
             },
             'filterd bars should be faded into background': function(chart) {
-                assert.equal(chart.selectAll("g.sub rect.deselected")[0].length, 4);
+                assert.lengthOf(chart.selectAll("g.sub rect.deselected")[0], 4);
             },
             'after reset all bars should be pushed to foreground': function(chart) {
                 chart.filterAll();
@@ -257,7 +257,7 @@ suite.addBatch({
             return chart;
         },
         'separate g should be created for each sub chart': function(chart) {
-            assert.equal(chart.selectAll("g.sub")[0].length, 3);
+            assert.lengthOf(chart.selectAll("g.sub")[0], 3);
         },
         'sub line chart path generation': function(chart) {
             chart.selectAll("g.sub path.line").each(function(d, i) {
@@ -272,7 +272,7 @@ suite.addBatch({
             });
         },
         'sub bar chart generation': function(chart) {
-            assert.equal(chart.selectAll("g.sub g._0 rect.bar")[0].length, 6);
+            assert.lengthOf(chart.selectAll("g.sub g._0 rect.bar")[0], 6);
         },
         'sub bar chart rendering': function(chart) {
             chart.selectAll("g.sub rect.bar").each(function(d, i) {
@@ -304,13 +304,13 @@ suite.addBatch({'clip path':{
         return chart;
     },
     'only one defs should be created': function(chart) {
-        assert.equal(chart.selectAll("defs")[0].length, 1);
+        assert.lengthOf(chart.selectAll("defs")[0], 1);
     },
     'only one clip path should be created': function(chart) {
-        assert.equal(chart.selectAll("defs clipPath")[0].length, 1);
+        assert.lengthOf(chart.selectAll("defs clipPath")[0], 1);
     },
     'only one clip rect should be created': function(chart) {
-        assert.equal(chart.selectAll("defs clipPath rect")[0].length, 1);
+        assert.lengthOf(chart.selectAll("defs clipPath rect")[0], 1);
     },
     'clip rect size should be correct': function(chart) {
         var rect = chart.select("defs clipPath rect");
@@ -321,7 +321,7 @@ suite.addBatch({'clip path':{
         assert.equal(chart.select("defs clipPath").attr("id"), "composite-chart-clip-path-clip");
     },
     'chart body g should have clip path refs': function(chart) {
-        chart.selectAll("g.chartBody").each(function(){
+        chart.selectAll("g.chart-body").each(function(){
             assert.equal(d3.select(this).attr("clip-path"),"url(#composite-chart-clip-path-clip)");
         });
     },

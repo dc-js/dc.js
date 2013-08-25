@@ -8,7 +8,7 @@ dc.colorChart = function(_chart) {
         var maxValue = _colorDomain[1];
 
         if (isNaN(value)) value = 0;
-        if(maxValue == null) return _colors(value);
+        if(maxValue === null) return _colors(value);
 
         var colorsLength = _chart.colors().range().length;
         var denominator = (maxValue - minValue) / colorsLength;
