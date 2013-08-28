@@ -323,7 +323,7 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     function isOffCanvas(current) {
-        return current === null || isNaN(current.startAngle) || isNaN(current.endAngle);
+        return !current || isNaN(current.startAngle) || isNaN(current.endAngle);
     }
 
     function onClick(d) {
