@@ -2227,6 +2227,8 @@ dc.pieChart = function (parent, chartGroup) {
             var labels = _g.selectAll("text." + _sliceCssClass)
                 .data(pieData);
 
+            labels.exit().remove();
+
             var labelsEnter = labels
                 .enter()
                 .append("text")
