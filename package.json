@@ -1,6 +1,6 @@
 {
   "name": "dc",
-  "version": "1.5.0",
+  "version": "1.6.0-dev",
   "description": "A multi-dimensional charting library built to work natively with crossfilter and rendered using d3.js ",
   "keywords": [
     "visualization",

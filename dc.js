@@ -12,7 +12,7 @@
  *  limitations under the License.
  */
 dc = {
-    version: "1.5.0",
+    version: "1.6.0-dev",
     constants : {
         CHART_CLASS: "dc-chart",
         DEBUG_GROUP_CLASS: "debug",
@@ -64,7 +64,7 @@ dc.chartRegistry = function() {
             group = initializeChartGroup(group);
             return _chartMap[group];
         }
-    }
+    };
 }();
 
 dc.registerChart = function(chart, group) {
