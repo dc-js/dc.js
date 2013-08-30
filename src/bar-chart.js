@@ -55,6 +55,9 @@ dc.barChart = function (parent, chartGroup) {
             })
             .append("title").text(_chart.title());
 
+        if (_chart.isOrdinal())
+            bars.on("click", onClick);
+
         dc.transition(bars, _chart.transitionDuration())
             .attr("x", function (d) {
                 var x = _chart.x()(d.x);
@@ -137,6 +140,10 @@ dc.barChart = function (parent, chartGroup) {
         _centerBar = _;
         return _chart;
     };
+
+    function onClick(d) {
+        _chart.onClick(d.data);
+    }
 
     _chart.gap = function (_) {
         if (!arguments.length) return _gap;
