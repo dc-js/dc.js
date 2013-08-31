@@ -20,7 +20,9 @@ dc.rowChart = function (parent, chartGroup) {
 
     function calculateAxisScale() {
         if (!_x || _elasticX) {
-            _x = d3.scale.linear().domain([0, d3.max(_chart.group().all(), _chart.valueAccessor())])
+            var extent = d3.extent(_chart.group().all(), _chart.valueAccessor());
+            if (extent[0] > 0) extent[0] = 0;
+            _x = d3.scale.linear().domain(extent)
                 .range([0, _chart.effectiveWidth()]);
 
             _xAxis.scale(_x);
@@ -116,7 +118,7 @@ dc.rowChart = function (parent, chartGroup) {
     function updateElements(rows) {
         var height = rowHeight();
 
-        rows = rows.attr("transform",function (d, i) {
+        rect = rows.attr("transform",function (d, i) {
                 return "translate(0," + ((i + 1) * _gap + i * height) + ")";
             }).select("rect")
             .attr("height", height)
@@ -129,12 +131,14 @@ dc.rowChart = function (parent, chartGroup) {
                 return (_chart.hasFilter()) ? _chart.isSelectedRow(d) : false;
             });
 
-        dc.transition(rows, _chart.transitionDuration())
+        dc.transition(rect, _chart.transitionDuration())
             .attr("width", function (d) {
-                return _x(_chart.valueAccessor()(d));
-            });
+                return Math.abs(_x(0) - _x(_chart.valueAccessor()(d)));
+            })
+            .attr("transform", translateX);
 
         createTitles(rows);
+        updateLabels(rows);
     }
 
     function createTitles(rows) {
@@ -155,7 +159,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     function updateLabels(rows) {
         if (_chart.renderLabel()) {
-            rows.select("text")
+            lab = rows.select("text")
                 .attr("x", _labelOffsetX)
                 .attr("y", _labelOffsetY)
                 .attr("class", function (d, i) {
@@ -164,6 +168,8 @@ dc.rowChart = function (parent, chartGroup) {
                 .text(function (d) {
                     return _chart.label()(d);
                 });
+            dc.transition(lab, _chart.transitionDuration())
+            .attr("transform", translateX);
         }
     }
 
@@ -178,6 +184,13 @@ dc.rowChart = function (parent, chartGroup) {
 
     function onClick(d) {
         _chart.onClick(d);
+    }
+
+    function translateX(d) {
+        var x = _x(_chart.valueAccessor()(d)),
+            x0 = _x(0),
+            s = x > x0 ? x0 : x;
+        return "translate("+s+",0)";
     }
 
     _chart.doRedraw = function () {
