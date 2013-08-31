@@ -2654,6 +2654,8 @@ dc.lineChart = function (parent, chartGroup) {
     var _chart = dc.stackableChart(dc.coordinateGridChart({}));
     var _renderArea = false;
     var _dotRadius = DEFAULT_DOT_RADIUS;
+    var _interpolate = 'linear';
+    var _tension = 0.7;
 
     _chart.transitionDuration(500);
 
@@ -2677,6 +2679,18 @@ dc.lineChart = function (parent, chartGroup) {
         _chart.stackLayers(null);
     };
 
+    _chart.interpolate = function(_){
+        if (!arguments.length) return _interpolate;
+        _interpolate = _;
+        return _chart;
+    };
+
+    _chart.tension = function(_){
+        if (!arguments.length) return _tension;
+        _tension = _;
+        return _chart;
+    };
+
     _chart.renderArea = function (_) {
         if (!arguments.length) return _renderArea;
         _renderArea = _;
@@ -2690,7 +2704,9 @@ dc.lineChart = function (parent, chartGroup) {
             })
             .y(function (d) {
                 return _chart.y()(d.y + d.y0);
-            });
+            })
+            .interpolate(_interpolate)
+            .tension(_tension);
 
         layersEnter.append("path")
             .attr("class", "line")
