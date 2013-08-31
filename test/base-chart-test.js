@@ -121,7 +121,7 @@ suite.addBatch({
                 assert.fail("Exception should have been triggered");
             } catch (e) {
                 assert.isTrue(e instanceof dc.errors.InvalidStateException);
-                assert.equal("Mandatory attribute chart.dimension is missing on chart[undefined]", e.toString());
+                assert.equal("Mandatory attribute chart.dimension is missing on chart[#]", e.toString());
             }
         }
     },
@@ -144,7 +144,7 @@ suite.addBatch({
                 assert.fail("Exception should have been triggered");
             } catch (e) {
                 assert.isTrue(e instanceof dc.errors.InvalidStateException);
-                assert.equal("Mandatory attribute chart.group is missing on chart[undefined]", e.toString());
+                assert.equal("Mandatory attribute chart.group is missing on chart[#]", e.toString());
             }
         }
     },
@@ -155,6 +155,29 @@ suite.addBatch({
     }
 });
 
-suite.export(module);
+suite.addBatch({
+    'anchor grabs the correct dom': {
+        topic: function () { return dc.baseChart({}); },
 
+        'anchor name from element id': function (chart) {
+            var div = d3.select("body").append("div").attr("id", "ele").node();
+            chart.anchor(div);
+            assert.equal('ele',chart.anchorName());
+        },
+
+        'anchor name from string': function (chart) {
+            d3.select("body").append("div").attr("id", "strele");
+            chart.anchor('#strele');
+            assert.equal('strele',chart.anchorName());
+        }
+    },
+
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
+        dc.chartRegistry.clear();
+    }
+});
+
+suite.export(module);
 
