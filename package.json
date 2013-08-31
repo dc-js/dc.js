@@ -32,7 +32,7 @@
     "jquery": "1.8.x",
     "jsdom": "0.5.x",
     "sinon": "1.5.x",
-    "uglify-js": "2.2.x",
+    "uglify-js": "2.4.x",
     "vows": "0.7.x"
   },
   "scripts": {
