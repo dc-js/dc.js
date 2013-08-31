@@ -220,11 +220,14 @@ dc.utils.printSingleValue = function (filter) {
         s = dc.dateFormat(filter);
     else if (typeof(filter) == "string")
         s = filter;
-    else if (typeof(filter) == "number")
+    else if (dc.utils.isFloat(filter))
+        s = dc.utils.printSingleValue.fformat(filter);
+    else if (dc.utils.isInteger(filter))
         s = Math.round(filter);
 
     return s;
 };
+dc.utils.printSingleValue.fformat = d3.format(".2f");
 
 dc.utils.add = function (l, r) {
     if (typeof r === "string")
@@ -332,6 +335,14 @@ dc.utils.GroupStack = function () {
 
         return layers;
     };
+};
+
+dc.utils.isFloat = function (n) {
+    return n===+n && n!==(n|0);
+};
+
+dc.utils.isInteger = function (n) {
+    return n===+n && n===(n|0);
 };
 
 dc.utils.isNegligible = function (max) {
@@ -3589,7 +3600,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     function calculateAxisScale() {
         if (!_x || _elasticX) {
-            var extent = d3.extent(_chart.group().all(), _chart.valueAccessor())
+            var extent = d3.extent(_chart.group().all(), _chart.valueAccessor());
             if (extent[0] > 0) extent[0] = 0;
             _x = d3.scale.linear().domain(extent)
                 .range([0, _chart.effectiveWidth()]);
@@ -3756,9 +3767,9 @@ dc.rowChart = function (parent, chartGroup) {
     }
 
     function translateX(d) {
-        var x = _x(_chart.valueAccessor()(d))
-          , x0 = _x(0)
-          , s = x > x0 ? x0 : x;
+        var x = _x(_chart.valueAccessor()(d)),
+            x0 = _x(0),
+            s = x > x0 ? x0 : x;
         return "translate("+s+",0)";
     }
 
