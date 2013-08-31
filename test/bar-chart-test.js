@@ -94,19 +94,12 @@ suite.addBatch({
             var chart = buildChart("bar-chart");
             chart.filter([new Date(2012, 5, 1), new Date(2012, 6, 1)]);
             chart.redraw();
-            //console.log("topic");
             return chart;
         },
         'we get something': function (chart) {
             assert.isObject(chart);
         },
         'should be registered': function (chart) {
-            /*console.log(chart);
-            var cs = dc.chartRegistry.list();
-            var out = null;
-            cs.forEach(function(c){
-              out = c;
-            });*/
             assert.isTrue(dc.hasChart(chart));
         },
         'dc-chart class should be turned on for parent div': function (chart) {
