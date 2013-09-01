@@ -30,7 +30,6 @@ How to build dc.js locally
 Make sure the following packages are installed on your machine
 * node.js
 * npm
-* apache ant
 
 ### Install dependencies
 

@@ -4,7 +4,6 @@
 
 .dc-chart rect.bar {
     stroke: none;
-    fill: steelblue;
     cursor: pointer;
 }
 
@@ -27,11 +26,6 @@
     fill: #ccc;
 }
 
-.dc-chart .sub .bar {
-    stroke: none;
-    fill: #ccc;
-}
-
 .dc-chart .pie-slice {
     fill: white;
     font-size: 12px;
@@ -49,7 +43,7 @@
 }
 
 .dc-chart .deselected path {
-    stroke: none;
+    strok: none;
     fill-opacity: .5;
     fill: #ccc;
 }
@@ -94,28 +88,11 @@
 
 .dc-chart path.line {
     fill: none;
-    stroke: steelblue;
     stroke-width: 1.5px;
 }
 
 .dc-chart circle.dot {
-    fill: steelblue;
-}
-
-.dc-chart g.stack1 path.line {
-    stroke: green;
-}
-
-.dc-chart g.stack1 circle.dot {
-    fill: green;
-}
-
-.dc-chart g.stack2 path.line {
-    stroke: red;
-}
-
-.dc-chart g.stack2 circle.dot {
-    fill: red;
+    stroke: none;
 }
 
 .dc-chart g.dc-tooltip path {
@@ -125,17 +102,8 @@
 }
 
 .dc-chart path.area {
-    fill: steelblue;
     fill-opacity: .3;
     stroke: none;
-}
-
-.dc-chart g.stack1 path.area {
-    fill: green;
-}
-
-.dc-chart g.stack2 path.area {
-    fill: red;
 }
 
 .dc-chart .node {
@@ -234,7 +202,15 @@
     cursor: pointer;
 }
 
-.dc-chart g text {
+.dc-legend {
+    font-size: 11px;
+}
+
+.dc-legend-item {
+    cursor: pointer;
+}
+
+.dc-chart g.axis text {
     /* Makes it so the user can't accidentally click and select text that is meant as a label only */
     -webkit-user-select: none; /* Chrome/Safari */
     -moz-user-select: none; /* Firefox */
@@ -242,4 +218,20 @@
     -o-user-select: none;
     user-select: none;
     pointer-events: none;
+}
+
+.dc-chart path.highlight {
+    stroke-width: 3;
+    fill-opacity: 1;
+    stroke-opacity: 1;
+}
+
+.dc-chart .highlight {
+    fill-opacity: 1;
+    stroke-opacity: 1;
+}
+
+.dc-chart .fadeout {
+    fill-opacity: 0.2;
+    stroke-opacity: 0.2;
 }

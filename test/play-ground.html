@@ -14,12 +14,26 @@
 
     <script type="text/javascript" src="env-data.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="dc.css"/>
-    <link rel="stylesheet" type="text/css" href="example.css"/>
+    <link rel="stylesheet" type="text/css" href="../dc.css"/>
 </head>
 <body>
 
-<div><input type="button" value="Add Data" onclick="data.add(json2);alert('Data injected');dc.renderAll();" /></div>
+<style>
+    body {
+        font-size: 0.9em;
+        font-family: Lucida;
+    }
+
+    a {
+        color: #3182bd;
+    }
+
+    .clear {
+        clear: both;
+    }
+</style>
+
+<div><input type="button" value="Add Data" onclick="data.add(json2);alert('Data injected');dc.renderAll();"/></div>
 
 <div id="bubble-overlay">
 <span>Bubble Overlay</span>
@@ -264,7 +278,7 @@
         inkscape:connector-curvature="0"/>
 </g>
 <g>
-    <text
+<text
             xml:space="preserve"
             style="font-size:13.76904011px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial"
             x="106.74419"
@@ -414,23 +428,23 @@
                 y="411.63855">PE
         </tspan>
     </text>
-    <path
-            style="fill:none;stroke:#000000;stroke-width:0.76494664;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-            d="m 523.94083,358.45959 -35.13276,-4.11762"
-            id="CA-PE Line"
-            sodipodi:nodetypes="cc"
-            inkscape:connector-curvature="0"/>
-    <path
-            sodipodi:type="arc"
-            style="opacity:0.75;fill:none;stroke:#000000;stroke-width:3;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
-            id="CA-PE Circle"
-            sodipodi:cx="1545.4756"
-            sodipodi:cy="1266.3573"
-            sodipodi:rx="21.316904"
-            sodipodi:ry="15.987679"
-            d="m 1566.7925,1266.3573 a 21.316904,15.987679 0 1 1 -42.6338,0 21.316904,15.987679 0 1 1 42.6338,0 z"
-            transform="matrix(0.76269028,0,0,0.51043086,-639.31236,-289.54589)"/>
-    <text
+<path
+        style="fill:none;stroke:#000000;stroke-width:0.76494664;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+        d="m 523.94083,358.45959 -35.13276,-4.11762"
+        id="CA-PE Line"
+        sodipodi:nodetypes="cc"
+        inkscape:connector-curvature="0"/>
+<path
+        sodipodi:type="arc"
+        style="opacity:0.75;fill:none;stroke:#000000;stroke-width:3;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0"
+        id="CA-PE Circle"
+        sodipodi:cx="1545.4756"
+        sodipodi:cy="1266.3573"
+        sodipodi:rx="21.316904"
+        sodipodi:ry="15.987679"
+        d="m 1566.7925,1266.3573 a 21.316904,15.987679 0 1 1 -42.6338,0 21.316904,15.987679 0 1 1 42.6338,0 z"
+        transform="matrix(0.76269028,0,0,0.51043086,-639.31236,-289.54589)"/>
+<text
             xml:space="preserve"
             style="font-size:13.76904011px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Arial"
             x="346.70166"
@@ -507,7 +521,8 @@
 
 <div class="clear"></div>
 
-Country filter: <input id="custom-filter" type="text"/><button onclick="countryDimension.filter($('#custom-filter').val());dc.redrawAll();">go</button>
+Country filter: <input id="custom-filter" type="text"/>
+<button onclick="countryDimension.filter($('#custom-filter').val());dc.redrawAll();">go</button>
 
 <div class="clear"></div>
 
@@ -667,10 +682,10 @@ var pieChartValue = dc.pieChart("#pie-chart-value")
         .dimension(valueDimension)
         .group(valueGroup)
 //        .slicesCap(3)
-        .label(function(d) {
+        .label(function (d) {
             return d.data.key;
         })
-        .title(function(d) {
+        .title(function (d) {
             return d.data.key + ": " + d.data.value;
         });
 
@@ -686,18 +701,18 @@ var choroplethChart = dc.geoChoroplethChart("#choropleth-chart")
         .width(990)
         .height(600);
 
-d3.json("us-states.json", function(states) {
-    d3.json("us-counties.json", function(counties) {
+d3.json("us-states.json", function (states) {
+    d3.json("us-counties.json", function (counties) {
         choroplethChart
                 .dimension(stateDimension)
                 .group(stateValueSumGroup)
-                .colors(["#ccc", "#E2F2FF","#C4E4FF","#9ED2FF","#81C5FF","#6BBAFF","#51AEFF","#36A2FF","#1E96FF","#0089FF"])
+                .colors(["#ccc", "#E2F2FF", "#C4E4FF", "#9ED2FF", "#81C5FF", "#6BBAFF", "#51AEFF", "#36A2FF", "#1E96FF", "#0089FF"])
                 .colorDomain([0, 155])
-                .overlayGeoJson(states.features, "state", function(d) {
+                .overlayGeoJson(states.features, "state", function (d) {
                     return d.properties.name;
                 })
                 .overlayGeoJson(counties.features, "county")
-                .title(function(d) {
+                .title(function (d) {
                     return d.key + " : " + (d.value ? d.value : 0);
                 });
 
@@ -707,56 +722,62 @@ d3.json("us-states.json", function(states) {
 
 var lineChartDate = dc.lineChart("#line-chart-date");
 lineChartDate.width(500)
-        .height(150)
+        .height(180)
+        .margins({top: 30, right: 50, bottom: 30, left: 30})
         .dimension(dateDimension)
-        .group(dateIdSumGroup)
-        .stack(dateValueSumGroup)
-        .stack(dateValueSumGroup, function(d) {
+        .group(dateIdSumGroup, "Id Sum")
+        .stack(dateValueSumGroup, "Value Sum")
+        .stack(dateIdSumGroup, "Fixed", function (d) {
             return 10;
         })
         .brushOn(false)
-        .title(function(d) {
+        .title(function (d) {
             return d.value;
         })
         .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
         .xUnits(d3.time.days)
         .elasticY(true)
         .renderArea(true)
+        .legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
         .xAxis().ticks(5);
 
 var barChartDate = dc.barChart("#bar-chart-date");
 barChartDate.width(500)
-        .height(150)
+        .height(180)
+        .margins({top: 30, right: 50, bottom: 30, left: 30})
         .dimension(dateDimension)
-        .group(dateIdSumGroup)
-        .stack(dateValueSumGroup)
+        .group(dateIdSumGroup, "Id Sum")
+        .stack(dateValueSumGroup, "Value Sum")
         .elasticY(true)
-        .stack(dateValueSumGroup, function(d) {
+        .stack(dateFixedSumGroup, "Fixed", function (d) {
             return 10;
         })
         .gap(1)
         .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
+        .legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
         .xUnits(d3.time.days)
         .xAxis().ticks(5);
 
 var compositeChartDate = dc.compositeChart("#composite-chart-date");
 compositeChartDate.width(500)
-        .height(150)
+        .height(180)
+        .margins({top: 30, right: 50, bottom: 30, left: 30})
         .dimension(dateDimension)
-        .group(dateIdSumGroup)
+        .group(dateIdSumGroup, "Id Sum")
         .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
         .xUnits(d3.time.days)
         .compose([
-            dc.barChart(compositeChartDate).group(dateValueSumGroup),
+            dc.barChart(compositeChartDate).group(dateValueSumGroup, "Value Sum"),
             dc.lineChart(compositeChartDate),
-            dc.lineChart(compositeChartDate).group(dateGroup)
+            dc.lineChart(compositeChartDate).group(dateGroup, "Date Group")
         ])
-        .renderlet(function(chart){
-            dc.events.trigger(function(){
+        .renderlet(function (chart) {
+            dc.events.trigger(function () {
                 barChartDate.focus(chart.filter());
                 lineChartDate.focus(chart.filter());
             });
         })
+        .legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
         .xAxis().ticks(5);
 
 var bubbleChart = dc.bubbleChart("#bubble-chart");
@@ -764,18 +785,18 @@ bubbleChart.width(990)
         .height(150)
         .dimension(statusDimension)
         .group(statusMultiGroup)
-        .colors(["#a60000","#ff0000", "#ff4040","#ff7373","#67e667","#39e639","#00cc00"])
+        .colors(["#a60000", "#ff0000", "#ff4040", "#ff7373", "#67e667", "#39e639", "#00cc00"])
         .colorDomain([0, 220])
-        .colorAccessor(function(p) {
+        .colorAccessor(function (p) {
             return p.value.value;
         })
-        .keyAccessor(function(p) {
+        .keyAccessor(function (p) {
             return p.key;
         })
-        .valueAccessor(function(p) {
+        .valueAccessor(function (p) {
             return p.value.count;
         })
-        .radiusValueAccessor(function(p) {
+        .radiusValueAccessor(function (p) {
             return p.value.count;
         })
         .x(d3.scale.ordinal().domain(["A", "T", "F", "Z"]))
@@ -789,7 +810,7 @@ bubbleChart.width(990)
         .xAxisPadding("10%")
         .renderLabel(true)
         .renderTitle(true)
-        .title(function(p) {
+        .title(function (p) {
             return p.key + ": {count:" + p.value.count + ",value:" + p.value.value + "}"
         });
 
@@ -871,7 +892,9 @@ rowChart.width(1100)
         .group(valueGroup)
         .renderTitle(true)
         .renderLabel(true)
-        .title(function(d){return d.value;})
+        .title(function (d) {
+            return d.value;
+        })
         .colors(d3.scale.category20b());
 
 dc.dataCount(".dc-data-count")
@@ -880,30 +903,30 @@ dc.dataCount(".dc-data-count")
 
 dc.dataTable(".dc-data-table")
         .dimension(dateDimension)
-        .group(function(d) {
+        .group(function (d) {
             return dateFormat(d3.time.day(d.dd));
         })
         .size(3)
-        .sortBy(function(d) {
+        .sortBy(function (d) {
             return d.dd.getTime();
         })
         .columns([
-    function(d) {
-        return d.id;
-    },
-    function(d) {
-        return d.date;
-    },
-    function(d) {
-        return d.status;
-    },
-    function(d) {
-        return d.countrycode;
-    },
-    function(d) {
-        return d.value;
-    }
-]);
+            function (d) {
+                return d.id;
+            },
+            function (d) {
+                return d.date;
+            },
+            function (d) {
+                return d.status;
+            },
+            function (d) {
+                return d.countrycode;
+            },
+            function (d) {
+                return d.value;
+            }
+        ]);
 
 var lineChartDateB = dc.lineChart("#line-chart-dateB", "groupB");
 lineChartDateB.width(500)
@@ -912,7 +935,7 @@ lineChartDateB.width(500)
         .dimension(dateDimension)
         .group(dateIdSumGroup)
         .stack(dateValueSumGroup)
-        .stack(dateValueSumGroup, function(d) {
+        .stack(dateValueSumGroup, function (d) {
             return 10;
         })
         .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
@@ -930,11 +953,11 @@ barChartDateB.width(500)
         .dimension(dateDimension)
         .group(dateIdSumGroup)
         .stack(dateValueSumGroup)
-        .stack(dateValueSumGroup, function(d) {
+        .stack(dateValueSumGroup, function (d) {
             return 10;
         })
         .brushOn(false)
-        .title(function(d) {
+        .title(function (d) {
             return d.value;
         })
         .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 07, 15)]))
@@ -954,15 +977,15 @@ compositeChartDateB.width(500)
         .xUnits(d3.time.days)
         .renderVerticalGridLines(true)
         .compose([
-            dc.barChart(compositeChartDateB).gap(0).group(dateValueSumGroup).title(function(d) {
+            dc.barChart(compositeChartDateB).gap(0).group(dateValueSumGroup).title(function (d) {
                 return "Bar key: " + d.key + "\nBar value: " + d.value;
             }),
             dc.lineChart(compositeChartDateB),
             dc.lineChart(compositeChartDateB).group(dateGroup)
         ])
         .brushOn(false)
-        .renderlet(function(chart) {
-            chart.selectAll("rect.bar").attr("width", function(d) {
+        .renderlet(function (chart) {
+            chart.selectAll("rect.bar").attr("width", function (d) {
                 return Math.round(d.data.value / 10);
             });
         })
@@ -977,7 +1000,7 @@ var bubbleOverlay = dc.bubbleOverlay("#bubble-overlay")
         .dimension(stateDimension)
         .group(stateValueSumGroup)
         .r(d3.scale.linear().domain([0, 300]))
-        .title(function(d) {
+        .title(function (d) {
             return "Title: " + d.key;
         })
         .point("California", 100, 120)

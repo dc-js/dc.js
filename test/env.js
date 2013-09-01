@@ -1,7 +1,7 @@
 process.env.TZ = "America/Los_Angeles";
 
 var document = global.document = require("jsdom").jsdom("<html><head></head><body></body></html>"),
-    window = global.window = document.createWindow();
+    window = global.window = document.parentWindow;
 
 // https://github.com/chad3814/CSSStyleDeclaration/issues/3
 var CSSStyleDeclaration_prototype = window.CSSStyleDeclaration.prototype,

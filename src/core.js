@@ -12,7 +12,7 @@
  *  limitations under the License.
  */
 dc = {
-    version: "1.5.0",
+    version: "1.6.0-dev",
     constants : {
         CHART_CLASS: "dc-chart",
         DEBUG_GROUP_CLASS: "debug",
@@ -32,14 +32,6 @@ dc.chartRegistry = function() {
     // chartGroup:string => charts:array
     var _chartMap = {};
 
-    this.has = function(chart) {
-        for (var e in _chartMap) {
-            if (_chartMap[e].indexOf(chart) >= 0)
-                return true;
-        }
-        return false;
-    };
-
     function initializeChartGroup(group) {
         if (!group)
             group = dc.constants.DEFAULT_CHART_GROUP;
@@ -50,21 +42,29 @@ dc.chartRegistry = function() {
         return group;
     }
 
-    this.register = function(chart, group) {
-        group = initializeChartGroup(group);
-        _chartMap[group].push(chart);
-    };
+    return {
+        has: function(chart) {
+            for (var e in _chartMap) {
+                if (_chartMap[e].indexOf(chart) >= 0)
+                    return true;
+            }
+            return false;
+        },
 
-    this.clear = function() {
-        _chartMap = {};
-    };
+        register: function(chart, group) {
+            group = initializeChartGroup(group);
+            _chartMap[group].push(chart);
+        },
 
-    this.list = function(group) {
-        group = initializeChartGroup(group);
-        return _chartMap[group];
-    };
+        clear: function() {
+            _chartMap = {};
+        },
 
-    return this;
+        list: function(group) {
+            group = initializeChartGroup(group);
+            return _chartMap[group];
+        }
+    };
 }();
 
 dc.registerChart = function(chart, group) {

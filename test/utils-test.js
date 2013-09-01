@@ -37,7 +37,7 @@ suite.addBatch({
             assert.equal(printer([10, 30]), "[10 -> 30]");
         },
         'print float range': function (printer) {
-            assert.equal(printer([10.124244, 30.635623]), "[10 -> 31]");
+            assert.equal(printer([10.124244, 30.635623]), "[10.12 -> 30.64]");
         },
         'print date range': function (printer) {
             assert.equal(printer([new Date(2012, 1, 1), new Date(2012, 1, 15)]), "[02/01/2012 -> 02/15/2012]");

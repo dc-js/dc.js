@@ -12,8 +12,8 @@ dc.barChart = function (parent, chartGroup) {
 
     dc.override(_chart, 'rescale', function () {
         _chart._rescale();
-        _numberOfBars = null;
-        _barWidth = null;
+        _numberOfBars = undefined;
+        _barWidth = undefined;
         getNumberOfBars();
     });
 
@@ -40,7 +40,7 @@ dc.barChart = function (parent, chartGroup) {
     };
 
     function barHeight(d) {
-        return Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0));
+        return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
     }
 
     function renderBars(layer, d, i) {
@@ -55,11 +55,14 @@ dc.barChart = function (parent, chartGroup) {
             })
             .append("title").text(_chart.title());
 
+        if (_chart.isOrdinal())
+            bars.on("click", onClick);
+
         dc.transition(bars, _chart.transitionDuration())
             .attr("x", function (d) {
                 var x = _chart.x()(d.x);
                 if (_centerBar) x -= _barWidth / 2;
-                return  x;
+                return  dc.utils.safeNumber(x);
             })
             .attr("y", function (d) {
                 var y = _chart.y()(d.y + d.y0);
@@ -67,7 +70,7 @@ dc.barChart = function (parent, chartGroup) {
                 if (d.y < 0)
                     y -= barHeight(d);
 
-                return y;
+                return dc.utils.safeNumber(y);
             })
             .attr("width", _barWidth)
             .attr("height", function (d) {
@@ -81,7 +84,7 @@ dc.barChart = function (parent, chartGroup) {
     }
 
     function calculateBarWidth() {
-        if (_barWidth == null) {
+        if (_barWidth === undefined) {
             var numberOfBars = _chart.isOrdinal() ? getNumberOfBars() + 1 : getNumberOfBars();
 
             var w = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
@@ -94,7 +97,7 @@ dc.barChart = function (parent, chartGroup) {
     }
 
     function getNumberOfBars() {
-        if (_numberOfBars == null) {
+        if (_numberOfBars === undefined) {
             _numberOfBars = _chart.xUnitCount();
         }
 
@@ -138,6 +141,10 @@ dc.barChart = function (parent, chartGroup) {
         return _chart;
     };
 
+    function onClick(d) {
+        _chart.onClick(d.data);
+    }
+
     _chart.gap = function (_) {
         if (!arguments.length) return _gap;
         _gap = _;
@@ -159,6 +166,24 @@ dc.barChart = function (parent, chartGroup) {
     dc.override(_chart, "prepareOrdinalXAxis", function () {
         return this._prepareOrdinalXAxis(_chart.xUnitCount() + 1);
     });
+
+    _chart.legendHighlight = function (d) {
+        _chart.select('.chart-body').selectAll('rect.bar').filter(function () {
+            return d3.select(this).attr('fill') == d.color;
+        }).classed('highlight', true);
+        _chart.select('.chart-body').selectAll('rect.bar').filter(function () {
+            return d3.select(this).attr('fill') != d.color;
+        }).classed('fadeout', true);
+    };
+
+    _chart.legendReset = function (d) {
+        _chart.selectAll('.chart-body').selectAll('rect.bar').filter(function () {
+            return d3.select(this).attr('fill') == d.color;
+        }).classed('highlight', false);
+        _chart.selectAll('.chart-body').selectAll('rect.bar').filter(function () {
+            return d3.select(this).attr('fill') != d.color;
+        }).classed('fadeout', false);
+    };
 
     dc.override(_chart, "xAxisMax", function() {
         var max = this._xAxisMax();

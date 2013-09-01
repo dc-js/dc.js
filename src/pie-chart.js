@@ -138,6 +138,8 @@ dc.pieChart = function (parent, chartGroup) {
             var labels = _g.selectAll("text." + _sliceCssClass)
                 .data(pieData);
 
+            labels.exit().remove();
+
             var labelsEnter = labels
                 .enter()
                 .append("text")
@@ -312,7 +314,7 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     function sliceHasNoData(data) {
-        return _chart.valueAccessor()(data) == 0;
+        return _chart.valueAccessor()(data) === 0;
     }
 
     function tweenPie(b) {
@@ -328,7 +330,7 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     function isOffCanvas(current) {
-        return current == null || isNaN(current.startAngle) || isNaN(current.endAngle);
+        return !current || isNaN(current.startAngle) || isNaN(current.endAngle);
     }
 
     function onClick(d) {
