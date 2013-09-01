@@ -100,7 +100,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         return _geoJsons[index];
     }
 
-    function renderPaths(regionG, layerIndex, data, maxValue) {
+    function renderPaths(regionG, layerIndex, data) {
         var paths = regionG
             .select("path")
             .attr("fill", function (d) {
