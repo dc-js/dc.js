@@ -1,4 +1,4 @@
-dc = {
+var dc = {
     version: "%VERSION%",
     constants: {
         CHART_CLASS: "dc-chart",

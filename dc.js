@@ -16,7 +16,9 @@
  *  limitations under the License.
  */
 
-dc = {
+
+dc = (function(){
+var dc = {
     version: "1.6.0-dev",
     constants: {
         CHART_CLASS: "dc-chart",
@@ -3914,3 +3916,4 @@ dc.legend = function () {
 
     return _legend;
 };
+return dc;})();

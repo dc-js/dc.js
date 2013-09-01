@@ -46,8 +46,10 @@ grunt.initConfig({
         ' *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.',
         ' *  See the License for the specific language governing permissions and',
         ' *  limitations under the License.',
-        ' */\n\n'
-      ].join('\n')
+        ' */\n\n',
+        'dc = (function(){\n'
+      ].join('\n'),
+      footer: 'return dc;})();'
     },
     js: {
       src: jsFiles,
@@ -60,7 +62,7 @@ grunt.initConfig({
         mangle: true,
         compress: true
       },
-      src: jsFiles,
+      src: '<%= concat.js.dest %>',
       dest: './<%= pkg.name %>.min.js'
     }
   },
