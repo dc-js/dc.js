@@ -1,10 +1,6 @@
 module.exports = function(grunt) {
 
-grunt.initConfig({
-  pkg: grunt.file.readJSON('package.json'),
-  concat: {
-    dist: {
-      src: [
+var jsFiles = [
         "src/core.js",
         "src/errors.js",
         "src/utils.js",
@@ -27,17 +23,52 @@ grunt.initConfig({
         "src/bubble-overlay.js",
         "src/row-chart.js",
         "src/legend.js"
-      ],
+];
+
+grunt.initConfig({
+  pkg: grunt.file.readJSON('package.json'),
+
+  concat: {
+    options: {
+      banner: ['/*!',
+        ' *  <%= pkg.name %> <%= pkg.version %>',
+        ' *  <%= pkg.homepage %>',
+        ' *  Copyright <%= pkg.copyright %> <%= pkg.author.name %> and other contributors',
+        ' *',
+        ' *  Licensed under the Apache License, Version 2.0 (the "License");',
+        ' *  you may not use this file except in compliance with the License.',
+        ' *  You may obtain a copy of the License at',
+        ' *',
+        ' *      http://www.apache.org/licenses/LICENSE-2.0',
+        ' *',
+        ' *  Unless required by applicable law or agreed to in writing, software',
+        ' *  distributed under the License is distributed on an "AS IS" BASIS,',
+        ' *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.',
+        ' *  See the License for the specific language governing permissions and',
+        ' *  limitations under the License.',
+        ' */\n\n'
+      ].join('\n')
+    },
+    js: {
+      src: jsFiles,
       dest: './<%= pkg.name %>.js'
     }
   },
   uglify: {
-    options: {
-      banner: '<%= banner %>'
-    },
-    dist: {
-      src: '<%= concat.dist.dest %>',
+    jsmin: {
+      options: {
+        mangle: true,
+        compress: true
+      },
+      src: jsFiles,
       dest: './<%= pkg.name %>.min.js'
+    }
+  },
+  sed: {
+    version: {
+      pattern: '%VERSION%',
+      replacement: '<%= pkg.version %>',
+      path: ['<%= concat.js.dest %>', '<%= uglify.jsmin.dest %>']
     }
   },
   jshint: {
@@ -56,11 +87,12 @@ grunt.initConfig({
 
 // These plugins provide necessary tasks.
 grunt.loadNpmTasks('grunt-contrib-concat');
-grunt.loadNpmTasks('grunt-contrib-uglify');
 grunt.loadNpmTasks('grunt-contrib-jshint');
+grunt.loadNpmTasks('grunt-contrib-uglify');
+grunt.loadNpmTasks('grunt-sed');
 grunt.loadNpmTasks('grunt-vows');
 
 // Default task.
-grunt.registerTask('default', ['concat', 'uglify']);
+grunt.registerTask('default', ['concat','uglify','sed']);
 
 };

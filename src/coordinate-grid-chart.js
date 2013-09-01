@@ -564,7 +564,7 @@ dc.coordinateGridChart = function (_chart) {
                 .scaleExtent([1, 100])
                 .on("zoom", function () {
                     _chart.focus(_chart.x().domain());
-                    _chart.invokeZoomedListener(_chart);
+                    _chart.invokeZoomedListener();
                     updateRangeSelChart();
                 }));
         }

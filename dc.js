@@ -1,9 +1,13 @@
-/*
- *  Copyright 2012 the original author or authors.
+/*!
+ *  dc 1.6.0-dev
+ *  http://nickqizhu.github.io/dc.js/
+ *  Copyright 2012 Nick Zhu and other contributors
+ *
  *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
  *  You may obtain a copy of the License at
  *
- *        http://www.apache.org/licenses/LICENSE-2.0
+ *      http://www.apache.org/licenses/LICENSE-2.0
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -11,9 +15,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 dc = {
     version: "1.6.0-dev",
-    constants : {
+    constants: {
         CHART_CLASS: "dc-chart",
         DEBUG_GROUP_CLASS: "debug",
         STACK_CLASS: "stack",
@@ -25,7 +30,7 @@ dc = {
         EVENT_DELAY: 40,
         NEGLIGIBLE_NUMBER: 1e-10
     },
-    _renderlet : null
+    _renderlet: null
 };
 
 dc.chartRegistry = function() {
@@ -130,8 +135,8 @@ dc.units.ordinal = function(s, e, domain){
     return domain;
 };
 dc.units.fp = {};
-dc.units.fp.precision= function(precision){
-    var _f = function(s, e, domain){return Math.ceil(Math.abs((e-s)/_f.resolution));};
+dc.units.fp.precision = function(precision){
+    var _f = function(s, e){return Math.ceil(Math.abs((e-s)/_f.resolution));};
     _f.resolution = precision;
     return _f;
 };
@@ -773,11 +778,11 @@ dc.baseChart = function (_chart) {
         return result;
     };
 
-    _chart.invokeFilteredListener = function (chart, f) {
+    _chart.invokeFilteredListener = function (f) {
         if (f !== undefined) _listeners.filtered(_chart, f);
     };
 
-    _chart.invokeZoomedListener = function (chart) {
+    _chart.invokeZoomedListener = function () {
         _listeners.zoomed(_chart);
     };
 
@@ -789,19 +794,19 @@ dc.baseChart = function (_chart) {
     function removeFilter(_) {
         _filters.splice(_filters.indexOf(_), 1);
         applyFilters();
-        _chart.invokeFilteredListener(_chart, _);
+        _chart.invokeFilteredListener(_);
     }
 
     function addFilter(_) {
         _filters.push(_);
         applyFilters();
-        _chart.invokeFilteredListener(_chart, _);
+        _chart.invokeFilteredListener(_);
     }
 
     function resetFilters() {
         _filters = [];
         applyFilters();
-        _chart.invokeFilteredListener(_chart, null);
+        _chart.invokeFilteredListener(null);
     }
 
     function applyFilters() {
@@ -1550,7 +1555,7 @@ dc.coordinateGridChart = function (_chart) {
                 .scaleExtent([1, 100])
                 .on("zoom", function () {
                     _chart.focus(_chart.x().domain());
-                    _chart.invokeZoomedListener(_chart);
+                    _chart.invokeZoomedListener();
                     updateRangeSelChart();
                 }));
         }
@@ -3357,7 +3362,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         return _geoJsons[index];
     }
 
-    function renderPaths(regionG, layerIndex, data, maxValue) {
+    function renderPaths(regionG, layerIndex, data) {
         var paths = regionG
             .select("path")
             .attr("fill", function (d) {
