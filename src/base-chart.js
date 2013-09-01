@@ -244,11 +244,11 @@ dc.baseChart = function (_chart) {
         return result;
     };
 
-    _chart.invokeFilteredListener = function (chart, f) {
+    _chart.invokeFilteredListener = function (f) {
         if (f !== undefined) _listeners.filtered(_chart, f);
     };
 
-    _chart.invokeZoomedListener = function (chart) {
+    _chart.invokeZoomedListener = function () {
         _listeners.zoomed(_chart);
     };
 
@@ -260,19 +260,19 @@ dc.baseChart = function (_chart) {
     function removeFilter(_) {
         _filters.splice(_filters.indexOf(_), 1);
         applyFilters();
-        _chart.invokeFilteredListener(_chart, _);
+        _chart.invokeFilteredListener(_);
     }
 
     function addFilter(_) {
         _filters.push(_);
         applyFilters();
-        _chart.invokeFilteredListener(_chart, _);
+        _chart.invokeFilteredListener(_);
     }
 
     function resetFilters() {
         _filters = [];
         applyFilters();
-        _chart.invokeFilteredListener(_chart, null);
+        _chart.invokeFilteredListener(null);
     }
 
     function applyFilters() {
