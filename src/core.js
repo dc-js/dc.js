@@ -1,3 +1,5 @@
+'use strict';
+
 var dc = {
     version: "%VERSION%",
     constants: {

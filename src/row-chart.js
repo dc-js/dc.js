@@ -118,7 +118,7 @@ dc.rowChart = function (parent, chartGroup) {
     function updateElements(rows) {
         var height = rowHeight();
 
-        rect = rows.attr("transform",function (d, i) {
+        var rect = rows.attr("transform",function (d, i) {
                 return "translate(0," + ((i + 1) * _gap + i * height) + ")";
             }).select("rect")
             .attr("height", height)
@@ -159,7 +159,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     function updateLabels(rows) {
         if (_chart.renderLabel()) {
-            lab = rows.select("text")
+            var lab = rows.select("text")
                 .attr("x", _labelOffsetX)
                 .attr("y", _labelOffsetY)
                 .attr("class", function (d, i) {
