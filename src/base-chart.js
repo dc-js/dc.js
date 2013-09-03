@@ -108,10 +108,6 @@ dc.baseChart = function (_chart) {
         return g.__names__[groupNameKey(accessor)];
     };
 
-    _chart.orderedGroup = function () {
-        return _group.order(function (p) {
-            return p.key;
-        });
     _chart.ordering = function(o) {
         if (!arguments.length) return _ordering;
         _ordering = o;
