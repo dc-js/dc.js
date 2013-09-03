@@ -156,6 +156,10 @@ dc.utils.GroupStack = function () {
     };
 };
 
+dc.utils.isNumber = function(n) {
+    return n===+n;
+};
+
 dc.utils.isFloat = function (n) {
     return n===+n && n!==(n|0);
 };
