@@ -23,7 +23,8 @@ module.exports = function (grunt) {
         "src/bubble-overlay.js",
         "src/row-chart.js",
         "src/legend.js",
-        "src/scatter-plot.js"
+        "src/scatter-plot.js",
+        "src/number-display.js"
     ],
     output = {
       js: './<%= pkg.name %>.js',
