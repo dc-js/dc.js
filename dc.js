@@ -1831,7 +1831,7 @@ dc.stackableChart = function (_chart) {
 
             _chart.stackLayers().forEach(function (e) {
                 e.points.forEach(function (p) {
-                    if (p.x >= xDomain[0] && p.x <= xDomain[1])
+                    if (p.x >= xDomain[0] && p.x <= xDomain[xDomain.length-1])
                         all.push(p);
                 });
             });
