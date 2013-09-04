@@ -1,4 +1,5 @@
-[![build status](https://secure.travis-ci.org/NickQiZhu/dc.js.png)](http://travis-ci.org/NickQiZhu/dc.js)
+[![Build Status](https://secure.travis-ci.org/NickQiZhu/dc.js.png)](http://travis-ci.org/NickQiZhu/dc.js)
+[![NPM Status](https://badge.fury.io/js/dc.png)](http://badge.fury.io/js/dc)
 
 dc.js
 =====
@@ -30,7 +31,6 @@ How to build dc.js locally
 Make sure the following packages are installed on your machine
 * node.js
 * npm
-* apache ant
 
 ### Install dependencies
 

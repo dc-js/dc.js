@@ -8,6 +8,8 @@ dc.lineChart = function (parent, chartGroup) {
     var _chart = dc.stackableChart(dc.coordinateGridChart({}));
     var _renderArea = false;
     var _dotRadius = DEFAULT_DOT_RADIUS;
+    var _interpolate = 'linear';
+    var _tension = 0.7;
 
     _chart.transitionDuration(500);
 
@@ -31,6 +33,18 @@ dc.lineChart = function (parent, chartGroup) {
         _chart.stackLayers(null);
     };
 
+    _chart.interpolate = function(_){
+        if (!arguments.length) return _interpolate;
+        _interpolate = _;
+        return _chart;
+    };
+
+    _chart.tension = function(_){
+        if (!arguments.length) return _tension;
+        _tension = _;
+        return _chart;
+    };
+
     _chart.renderArea = function (_) {
         if (!arguments.length) return _renderArea;
         _renderArea = _;
@@ -44,7 +58,9 @@ dc.lineChart = function (parent, chartGroup) {
             })
             .y(function (d) {
                 return _chart.y()(d.y + d.y0);
-            });
+            })
+            .interpolate(_interpolate)
+            .tension(_tension);
 
         layersEnter.append("path")
             .attr("class", "line")
@@ -92,7 +108,7 @@ dc.lineChart = function (parent, chartGroup) {
 
     function safeD(d){
         return d.indexOf("NaN") >= 0 ? "M0,0" : d;
-    };
+    }
 
     function drawDots(layersEnter) {
         if (!_chart.brushOn()) {
@@ -129,8 +145,8 @@ dc.lineChart = function (parent, chartGroup) {
                     .append("title").text(_chart.title());
 
                 dots.attr("cx", function (d) {
-                    return dc.utils.safeNumber(_chart.x()(d.x));
-                })
+                        return dc.utils.safeNumber(_chart.x()(d.x));
+                    })
                     .attr("cy", function (d) {
                         return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
                     })
@@ -150,8 +166,8 @@ dc.lineChart = function (parent, chartGroup) {
     }
 
     function showDot(dot) {
-        dot.style("fill-opacity", .8);
-        dot.style("stroke-opacity", .8);
+        dot.style("fill-opacity", 0.8);
+        dot.style("stroke-opacity", 0.8);
         return dot;
     }
 

@@ -23,7 +23,7 @@ dc.printers.filter = function (filter) {
             else if (filter.length >= 1)
                 s = dc.utils.printSingleValue(filter[0]);
         } else {
-            s = dc.utils.printSingleValue(filter)
+            s = dc.utils.printSingleValue(filter);
         }
     }
 
@@ -39,18 +39,21 @@ dc.utils.printSingleValue = function (filter) {
         s = dc.dateFormat(filter);
     else if (typeof(filter) == "string")
         s = filter;
-    else if (typeof(filter) == "number")
+    else if (dc.utils.isFloat(filter))
+        s = dc.utils.printSingleValue.fformat(filter);
+    else if (dc.utils.isInteger(filter))
         s = Math.round(filter);
 
     return s;
 };
+dc.utils.printSingleValue.fformat = d3.format(".2f");
 
 dc.utils.add = function (l, r) {
     if (typeof r === "string")
-        r = r.replace("%", "")
+        r = r.replace("%", "");
 
     if (l instanceof Date) {
-        if (typeof r === "string") r = +r
+        if (typeof r === "string") r = +r;
         var d = new Date();
         d.setTime(l.getTime());
         d.setDate(l.getDate() + r);
@@ -65,10 +68,10 @@ dc.utils.add = function (l, r) {
 
 dc.utils.subtract = function (l, r) {
     if (typeof r === "string")
-        r = r.replace("%", "")
+        r = r.replace("%", "");
 
     if (l instanceof Date) {
-        if (typeof r === "string") r = +r
+        if (typeof r === "string") r = +r;
         var d = new Date();
         d.setTime(l.getTime());
         d.setDate(l.getDate() - r);
@@ -99,7 +102,7 @@ dc.utils.GroupStack = function () {
     this.getDataPoint = function (x, y) {
         initializeDataLayer(x);
         var dataPoint = _dataLayers[x][y];
-        if (dataPoint == undefined)
+        if (dataPoint === undefined)
             dataPoint = 0;
         return dataPoint;
     };
@@ -153,9 +156,17 @@ dc.utils.GroupStack = function () {
     };
 };
 
+dc.utils.isFloat = function (n) {
+    return n===+n && n!==(n|0);
+};
+
+dc.utils.isInteger = function (n) {
+    return n===+n && n===(n|0);
+};
+
 dc.utils.isNegligible = function (max) {
     return max === undefined || (max < dc.constants.NEGLIGIBLE_NUMBER && max > -dc.constants.NEGLIGIBLE_NUMBER);
-}
+};
 
 dc.utils.groupMax = function (group, accessor) {
     var max = d3.max(group.all(), function (e) {

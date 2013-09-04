@@ -71,7 +71,7 @@ suite.addBatch({
             assert.isNotEmpty(chart.selectAll("g.layer0"));
         },
         'correct number of states should be generated': function (chart) {
-            assert.equal(chart.selectAll("g.layer0 g.state")[0].length, 52);
+            assert.lengthOf(chart.selectAll("g.layer0 g.state")[0], 52);
         },
         'correct css class should be set [Alaska]': function (chart) {
             assert.equal(chart.selectAll("g.layer0 g.state")[0][1].getAttribute("class"), "state alaska");
@@ -116,7 +116,7 @@ suite.addBatch({
             assert.isNotEmpty(chart.selectAll("g.layer1"));
         },
         'correct number of counties should be generated': function (chart) {
-            assert.equal(chart.selectAll("g.layer1 g.county")[0].length, 5);
+            assert.lengthOf(chart.selectAll("g.layer1 g.county")[0], 5);
         },
         'correct css class should be set [county]': function (chart) {
             assert.equal(chart.selectAll("g.layer1 g.county")[0][1].getAttribute("class"), "county");
@@ -186,7 +186,7 @@ suite.addBatch({
             var chart = buildChart("choropleth-chart-replace-layer");
             chart.overlayGeoJson(geoJson3.features, "state", function (d) {
                 return d.properties.name;
-            })
+            });
             return chart;
         },
         'geo json layer with the same name should be replaced': function (chart) {

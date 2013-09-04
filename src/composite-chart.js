@@ -14,8 +14,8 @@ dc.compositeChart = function (parent, chartGroup) {
 
             generateChildG(child, i);
 
-            if (child.dimension() == null) child.dimension(_chart.dimension());
-            if (child.group() == null) child.group(_chart.group());
+            if (child.dimension() === undefined) child.dimension(_chart.dimension());
+            if (child.group() === undefined) child.group(_chart.group());
             child.chartGroup(_chart.chartGroup());
             child.svg(_chart.svg());
             child.xUnits(_chart.xUnits());
@@ -35,7 +35,7 @@ dc.compositeChart = function (parent, chartGroup) {
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
 
-            if (child.g() == null) {
+            if (child.g() === undefined) {
                 generateChildG(child, i);
             }
 

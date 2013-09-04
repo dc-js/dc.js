@@ -1,19 +1,8 @@
-/*
- *  Copyright 2012 the original author or authors.
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
-dc = {
-    version: "1.6.0",
-    constants : {
+'use strict';
+
+var dc = {
+    version: "%VERSION%",
+    constants: {
         CHART_CLASS: "dc-chart",
         DEBUG_GROUP_CLASS: "debug",
         STACK_CLASS: "stack",
@@ -25,20 +14,12 @@ dc = {
         EVENT_DELAY: 40,
         NEGLIGIBLE_NUMBER: 1e-10
     },
-    _renderlet : null
+    _renderlet: null
 };
 
 dc.chartRegistry = function() {
     // chartGroup:string => charts:array
     var _chartMap = {};
-
-    this.has = function(chart) {
-        for (var e in _chartMap) {
-            if (_chartMap[e].indexOf(chart) >= 0)
-                return true;
-        }
-        return false;
-    };
 
     function initializeChartGroup(group) {
         if (!group)
@@ -50,21 +31,29 @@ dc.chartRegistry = function() {
         return group;
     }
 
-    this.register = function(chart, group) {
-        group = initializeChartGroup(group);
-        _chartMap[group].push(chart);
-    };
+    return {
+        has: function(chart) {
+            for (var e in _chartMap) {
+                if (_chartMap[e].indexOf(chart) >= 0)
+                    return true;
+            }
+            return false;
+        },
 
-    this.clear = function() {
-        _chartMap = {};
-    };
+        register: function(chart, group) {
+            group = initializeChartGroup(group);
+            _chartMap[group].push(chart);
+        },
 
-    this.list = function(group) {
-        group = initializeChartGroup(group);
-        return _chartMap[group];
-    };
+        clear: function() {
+            _chartMap = {};
+        },
 
-    return this;
+        list: function(group) {
+            group = initializeChartGroup(group);
+            return _chartMap[group];
+        }
+    };
 }();
 
 dc.registerChart = function(chart, group) {
@@ -130,8 +119,8 @@ dc.units.ordinal = function(s, e, domain){
     return domain;
 };
 dc.units.fp = {};
-dc.units.fp.precision= function(precision){
-    var _f = function(s, e, domain){return Math.ceil(Math.abs((e-s)/_f.resolution));};
+dc.units.fp.precision = function(precision){
+    var _f = function(s, e){return Math.ceil(Math.abs((e-s)/_f.resolution));};
     _f.resolution = precision;
     return _f;
 };

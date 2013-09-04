@@ -11,8 +11,14 @@ suite.addBatch({
             return dc.version;
         },
 
-        'has the form major.minor.patch': function (version) {
-            assert.match(version, /^[0-9]+\.[0-9]+\.[0-9]+$/);
+        'should use semantic versions': function (version) {
+            // from https://raw.github.com/coolaj86/semver-utils/v1.0.3/semver-utils.js
+            //               |optional 'v'
+            //               | | 3 segment version
+            //               | |                    |optional release prefixed by '-'
+            //               | |                    |                                        |optional build prefixed by '+'
+            var reSemver = /^v?((\d+)\.(\d+)\.(\d+))(?:-([\dA-Za-z\-]+(?:\.[\dA-Za-z\-]+)*))?(?:\+([\dA-Za-z\-]+(?:\.[\dA-Za-z\-]+)*))?$/ 
+            assert.match(version, reSemver);
         }
     },
     'dc.charts': {
@@ -132,7 +138,7 @@ suite.addBatch({
                 return dc.units.ordinal("a", "d", ["a", "b", "c", "d"]);
             },
             'units should be based on count': function (units) {
-                assert.equal(units.length, 4);
+                assert.lengthOf(units, 4);
             }
         }
     },

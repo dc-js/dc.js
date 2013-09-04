@@ -32,7 +32,7 @@ suite.addBatch({
         'should fill in the total count': function(chart) {
             assert.equal(chart.select("span.total-count").text(), "10");
         },
-        'should fill in the total count': function(chart) {
+        'should fill in the filter count': function(chart) {
             assert.equal(chart.select("span.filter-count").text(), "2");
         },
         'redraw':{
@@ -44,7 +44,7 @@ suite.addBatch({
             'should fill in the updated total count': function(chart) {
                 assert.equal(chart.select("span.total-count").text(), "10");
             },
-            'should fill in the updated total count': function(chart) {
+            'should fill in the updated filter count': function(chart) {
                 assert.equal(chart.select("span.filter-count").text(), "10");
             }
         },

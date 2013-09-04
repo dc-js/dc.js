@@ -51,9 +51,9 @@ dc.baseChart = function (_chart) {
     var _filterHandler = function (dimension, filters) {
         dimension.filter(null);
 
-        if (filters.length == 0)
+        if (filters.length === 0)
             dimension.filter(null);
-        else if (filters.length == 1)
+        else if (filters.length === 1)
             dimension.filter(filters[0]);
         else
             dimension.filterFunction(function (d) {
@@ -116,7 +116,7 @@ dc.baseChart = function (_chart) {
     };
 
     _chart.dataSet = function () {
-        return _dimension != undefined && _group != undefined;
+        return _dimension !== undefined && _group !== undefined;
     };
 
     _chart.select = function (s) {
@@ -140,6 +140,13 @@ dc.baseChart = function (_chart) {
         }
         _chartGroup = chartGroup;
         return _chart;
+    };
+
+    _chart.anchorName = function () {
+        var a = _chart.anchor();
+        if (a && a.id) return a.id;
+        if (a) return a.replace('#','');
+        return '';
     };
 
     _chart.root = function (r) {
@@ -197,13 +204,13 @@ dc.baseChart = function (_chart) {
     _chart.render = function () {
         _listeners.preRender(_chart);
 
-        if (_dimension == null)
-            throw new dc.errors.InvalidStateException("Mandatory attribute chart.dimension is missing on chart["
-                + _chart.anchor() + "]");
+        if (_dimension === undefined)
+            throw new dc.errors.InvalidStateException("Mandatory attribute chart.dimension is missing on chart[#"
+                + _chart.anchorName() + "]");
 
-        if (_group == null)
-            throw new dc.errors.InvalidStateException("Mandatory attribute chart.group is missing on chart["
-                + _chart.anchor() + "]");
+        if (_group === undefined)
+            throw new dc.errors.InvalidStateException("Mandatory attribute chart.group is missing on chart[#"
+                + _chart.anchorName() + "]");
 
         var result = _chart.doRender();
 
@@ -225,7 +232,7 @@ dc.baseChart = function (_chart) {
             runAllRenderlets();
             if (event) _listeners[event](_chart);
         }
-    }
+    };
 
     _chart.redraw = function () {
         _listeners.preRedraw(_chart);
@@ -237,11 +244,11 @@ dc.baseChart = function (_chart) {
         return result;
     };
 
-    _chart.invokeFilteredListener = function (chart, f) {
+    _chart.invokeFilteredListener = function (f) {
         if (f !== undefined) _listeners.filtered(_chart, f);
     };
 
-    _chart.invokeZoomedListener = function (chart) {
+    _chart.invokeZoomedListener = function () {
         _listeners.zoomed(_chart);
     };
 
@@ -253,23 +260,23 @@ dc.baseChart = function (_chart) {
     function removeFilter(_) {
         _filters.splice(_filters.indexOf(_), 1);
         applyFilters();
-        _chart.invokeFilteredListener(_chart, _);
+        _chart.invokeFilteredListener(_);
     }
 
     function addFilter(_) {
         _filters.push(_);
         applyFilters();
-        _chart.invokeFilteredListener(_chart, _);
+        _chart.invokeFilteredListener(_);
     }
 
     function resetFilters() {
         _filters = [];
         applyFilters();
-        _chart.invokeFilteredListener(_chart, null);
+        _chart.invokeFilteredListener(null);
     }
 
     function applyFilters() {
-        if (_chart.dataSet() && _chart.dimension().filter != undefined) {
+        if (_chart.dataSet() && _chart.dimension().filter !== undefined) {
             var fs = _filterHandler(_chart.dimension(), _filters);
             _filters = fs ? fs : _filters;
         }
@@ -278,7 +285,7 @@ dc.baseChart = function (_chart) {
     _chart.filter = function (_) {
         if (!arguments.length) return _filters.length > 0 ? _filters[0] : null;
 
-        if (_ == null) {
+        if (_ === null) {
             resetFilters();
         } else {
             if (_chart.hasFilter(_))
@@ -287,7 +294,7 @@ dc.baseChart = function (_chart) {
                 addFilter(_);
         }
 
-        if (_root != null && _chart.hasFilter()) {
+        if (_root !== null && _chart.hasFilter()) {
             _chart.turnOnControls();
         } else {
             _chart.turnOffControls();
