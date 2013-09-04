@@ -394,6 +394,8 @@ d3.csv("ndx.csv", function (data) {
                         return v + "%";
                     });
 
+            fluctuationChart.yAxis().ticks(5);
+
             moveChart.width(990)
                     .height(200)
                     .transitionDuration(1000)
