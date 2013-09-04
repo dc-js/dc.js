@@ -1163,6 +1163,9 @@ dc.coordinateGridChart = function (_chart) {
         if (_chart.elasticX() && !_chart.isOrdinal()) {
             _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
         }
+        else if (_chart.isOrdinal() && _x.domain().length===0) {
+            _x.domain(_chart.computeOrderedGroups().map(function(kv) { return kv.key; }));
+        }
 
         if (_chart.isOrdinal()) {
             _chart.prepareOrdinalXAxis();
