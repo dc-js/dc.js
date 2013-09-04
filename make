@@ -1,5 +1,5 @@
 #!/bin/sh
 
 grunt
-grunt vows
+npm test
 
