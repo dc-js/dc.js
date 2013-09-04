@@ -34,6 +34,9 @@ dc.coordinateGridChart = function (_chart) {
     var _refocused = false;
     var _unitCount;
 
+    var _zoomScale = [-10, 100];  // -10 to allow zoom out of the original domain
+    var _zoomOutRestrict = false; // restrict zoomOut to the original domain?
+
     var _rangeChart;
     var _focusChart;
 
@@ -55,6 +58,18 @@ dc.coordinateGridChart = function (_chart) {
         _rangeChart.focusChart(_chart);
         return _chart;
     };
+
+    _chart.zoomScale = function (_) {
+        if (!arguments.length) return _zoomScale;
+        _zoomScale = _;
+        return _chart;
+    }
+
+    _chart.zoomOutRestrict = function (_) {
+        if (!arguments.length) return _zoomOutRestrict;
+        _zoomOutRestrict = _;
+        return _chart;
+    }
 
     _chart.generateG = function (parent) {
         if (parent === undefined)
@@ -561,7 +576,7 @@ dc.coordinateGridChart = function (_chart) {
         if (_mouseZoomable) {
             _chart.root().call(d3.behavior.zoom()
                 .x(_chart.x())
-                .scaleExtent([1, 100])
+                .scaleExtent(_zoomScale)
                 .on("zoom", function () {
                     _chart.focus(_chart.x().domain());
                     _chart.invokeZoomedListener();
@@ -573,11 +588,15 @@ dc.coordinateGridChart = function (_chart) {
     function updateRangeSelChart() {
         if (_rangeChart) {
             var refDom = _chart.x().domain();
-            var origDom = _rangeChart.xOriginalDomain();
-            var newDom = [
-                refDom[0] < origDom[0] ? refDom[0] : origDom[0],
-                refDom[1] > origDom[1] ? refDom[1] : origDom[1]];
-            _rangeChart.focus(newDom);
+            if (_zoomOutRestrict) {
+                var origDom = _rangeChart.xOriginalDomain();
+                var newDom = [
+                  refDom[0] < origDom[0] ? refDom[0] : origDom[0],
+                  refDom[1] > origDom[1] ? refDom[1] : origDom[1]];
+                _rangeChart.focus(newDom);
+            } else {
+              _rangeChart.focus(refDom);
+            }
             _rangeChart.filter(null);
             _rangeChart.filter(refDom);
 
