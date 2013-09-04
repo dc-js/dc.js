@@ -24,7 +24,11 @@ module.exports = function (grunt) {
         "src/row-chart.js",
         "src/legend.js",
         "src/scatter-plot.js"
-    ];
+    ],
+    output = {
+      js: './<%= pkg.name %>.js',
+      jsmin: './<%= pkg.name %>.min.js',
+    };
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -54,7 +58,7 @@ module.exports = function (grunt) {
             },
             js: {
                 src: jsFiles,
-                dest: './<%= pkg.name %>.js'
+                dest: output.js
             }
         },
         uglify: {
@@ -63,15 +67,15 @@ module.exports = function (grunt) {
                     mangle: true,
                     compress: true
                 },
-                src: '<%= concat.js.dest %>',
-                dest: './<%= pkg.name %>.min.js'
+                src: output.js,
+                dest: output.jsmin
             }
         },
         sed: {
             version: {
                 pattern: '%VERSION%',
                 replacement: '<%= pkg.version %>',
-                path: ['<%= concat.js.dest %>', '<%= uglify.jsmin.dest %>']
+                path: [output.js, output.jsmin]
             }
         },
         jshint: {
@@ -85,17 +89,32 @@ module.exports = function (grunt) {
                 },
                 src: ["test/*.js", "spec/*"]
             }
+        },
+        copy: {
+            'dc-to-gh' : {
+                src: output.js,
+                dest: 'web/js/'
+            }
+        },
+        'gh-pages': {
+            options: {
+                base: 'web'
+            },
+            src: ['**']
         }
     });
 
     // These plugins provide necessary tasks.
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-gh-pages');
     grunt.loadNpmTasks('grunt-sed');
     grunt.loadNpmTasks('grunt-vows');
 
     // Default task.
     grunt.registerTask('default', ['concat', 'uglify', 'sed']);
+    grunt.registerTask('update-web', ['copy:dc-to-gh', 'gh-pages']);
 
 };
