@@ -155,9 +155,9 @@ var rowChartVows = function(group) {
                     return chart;
                 },
                 'group should be order': function (chart) {
-                    var group = chart.orderedGroup().top(Infinity);
+                    var group = chart.computeOrderedGroups();
                     countryDimension.filter("US");
-                    var group2 = chart.orderedGroup().top(Infinity);
+                    var group2 = chart.computeOrderedGroups();
                     assert.equal(group2[0].key, group[0].key);
                 }
             }

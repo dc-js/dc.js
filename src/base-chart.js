@@ -115,6 +115,17 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
+    _chart.computeOrderedGroups = function() {
+        var data = _chart.group().all().slice(0); // clone
+        if(data.length < 2)
+            return data;
+        var compf = dc.utils.isNumber(_chart.ordering()(data[0]))
+                ? function(a, b) { return _chart.ordering()(a) - _chart.ordering()(b); }
+            : function(a, b) { return _chart.ordering()(a).localeCompare(_chart.ordering()(b)); };
+        data.sort(compf);
+        return data;
+    };
+
     _chart.filterAll = function () {
         return _chart.filter(null);
     };
