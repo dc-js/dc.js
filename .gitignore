@@ -17,3 +17,6 @@ node_modules
 
 # ctag
 .tags
+
+# files for gh-pages
+.grunt

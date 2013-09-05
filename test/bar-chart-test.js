@@ -242,9 +242,9 @@ suite.addBatch({
             'extent height should be set to chart height': function (chart) {
                 assert.equal(chart.select("g.brush rect.extent").attr("height"), 160);
             },
-            'extent width should be set based on filter set': "pending" /*function (chart) {
-                assert.equal(chart.select("g.brush rect.extent").attr("width"), 84);
-            }*/,
+            'extent width should be set based on filter set': function (chart) {
+                assert.equal(chart.select("g.brush rect.extent").attr("width"), 83.83561643835617);
+            },
             'unselected bars should be push to background': function (chart) {
                 assert.equal(d3.select(chart.selectAll("g._0 rect.bar")[0][0]).attr("class"), "bar deselected");
                 assert.equal(d3.select(chart.selectAll("g._0 rect.bar")[0][1]).attr("class"), "bar");

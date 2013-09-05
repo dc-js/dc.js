@@ -235,3 +235,8 @@
     fill-opacity: 0.2;
     stroke-opacity: 0.2;
 }
+
+.dc-chart path.dc-symbol {
+    fill-opacity: 0.5;
+    stroke-opacity: 0.5;
+}

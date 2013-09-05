@@ -1,6 +1,8 @@
 {
   "name": "dc",
   "version": "1.6.0-dev",
+  "license": "Apache-2.0",
+  "copyright": "2012",
   "description": "A multi-dimensional charting library built to work natively with crossfilter and rendered using d3.js ",
   "keywords": [
     "visualization",
@@ -8,9 +10,12 @@
     "animation",
     "canvas",
     "chart",
-    "dimensional"
+    "dimensional",
+    "crossfilter",
+    "d3"
   ],
   "homepage": "http://nickqizhu.github.io/dc.js/",
+  "bugs": "https://github.com/NickQiZhu/dc.js/issues",
   "author": {
     "name": "Nick Zhu",
     "url": "http://nzhu.blogspot.ca/"
@@ -28,12 +33,15 @@
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-jshint": "~0.6.3",
     "grunt-contrib-uglify": "~0.2.2",
+    "grunt-gh-pages": "~0.7.1",
+    "grunt-sed": "~0.1.1",
     "grunt-vows": "~0.4.0",
     "jquery": "1.8.x",
-    "jsdom": "0.5.x",
-    "sinon": "1.5.x",
+    "jsdom": "0.8.x",
+    "sinon": "1.7.x",
     "uglify-js": "2.4.x",
-    "vows": "0.7.x"
+    "vows": "0.7.x",
+    "grunt-contrib-copy": "~0.4.1"
   },
   "scripts": {
     "test": "./node_modules/vows/bin/vows"

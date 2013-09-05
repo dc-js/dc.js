@@ -1,4 +1,4 @@
-### Version 1.4
+### Version 1.5
 
 The entire dc.js library is scoped under **dc** name space. It does not introduce anything else into the global
 name space.
@@ -6,7 +6,7 @@ name space.
 * [Base Chart [abstract]](#base-chart)
 * [Color Chart [abstract]](#color-chart)
 * [Stackable Chart [abstract]](#stackable-chart)
-* [Coordinate Grid Chart [abstract] < Base Chart](#coordinate-grid-chart)
+* [Coordinate Grid Chart [abstract] < Color Chart < Base Chart](#coordinate-grid-chart)
 * [Pie Chart [concrete] < Color Chart < Base Chart](#pie-chart)
 * [Row Chart [concrete] < Colro Chart < Base chart](#row-chart)
 * [Bar Chart [concrete] < Stackable Chart < CoordinateGrid Chart](#bar-chart)
@@ -290,7 +290,7 @@ chart.stack(valueSumGroup)
 .stack(avgByDayGroup, function(d){return d.value.avgByDay;});
 ```
 
-## <a name="coordinate-grid-chart" href="#coordinate-grid-chart">#</a> CoordinateGrid Chart [Abstract] < [Base Chart](#base-chart)
+## <a name="coordinate-grid-chart" href="#coordinate-grid-chart">#</a> CoordinateGrid Chart [Abstract] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
 Coordinate grid chart is an abstract base chart designed to support a number of coordinate grid based concrete chart types,
 i.e. bar chart, line chart, and bubble chart.
 
