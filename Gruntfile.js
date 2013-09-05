@@ -91,9 +91,19 @@ module.exports = function (grunt) {
             }
         },
         copy: {
-            'dc-to-gh' : {
-                src: output.js,
-                dest: 'web/js/'
+            'dc-to-gh': {
+                files: [
+                    { expand: true, flatten: true, src: 'dc.css', dest: 'web/css/'},
+                    { expand: true,
+                      flatten: true,
+                      src: [output.js,
+                            'node_modules/jquery/tmp/jquery.js',
+                            'node_modules/d3/d3.js',
+                            'node_modules/crossfilter/crossfilter.js',
+                            'test/env-data.js'],
+                      dest: 'web/js/'
+                    }
+                ],
             }
         },
         'gh-pages': {
@@ -114,7 +124,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-vows');
 
     // Default task.
-    grunt.registerTask('default', ['concat', 'uglify', 'sed']);
+    grunt.registerTask('default', ['concat', 'uglify', 'sed', 'copy']);
     grunt.registerTask('update-web', ['copy:dc-to-gh', 'gh-pages']);
 
 };
