@@ -74,10 +74,14 @@ suite.addBatch({
             assert.lengthOf(pieChart.selectAll("svg g g.pie-slice path").data(), 7);
         },
         'default function should be used to dynamically generate label': function(chart) {
-            assert.equal(d3.select(chart.selectAll("text.pie-slice")[0][0]).text(), "66");
+            assert.equal(d3.select(chart.selectAll("text.pie-slice")[0][0]).text(), "11");
+        },
+        'pie chart slices should be in numerical order': function(chart) {
+            assert.deepEqual(chart.selectAll("text.pie-slice").data().map(function(slice) { return slice.data.key; }),
+                             ["11","22","33","44","55","66","76"]);
         },
         'default function should be used to dynamically generate title': function(chart) {
-            assert.equal(d3.select(chart.selectAll("g.pie-slice title")[0][0]).text(), "66: 1");
+            assert.equal(d3.select(chart.selectAll("g.pie-slice title")[0][0]).text(), "11: 1");
         },
         teardown:function(chart) {
             resetAllFilters();

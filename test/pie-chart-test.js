@@ -105,7 +105,7 @@ suite.addBatch({
             assert.lengthOf(pieChart.selectAll("svg text.pie-slice").data(), 5);
         },
         'slice label transform to centroid': function (pieChart) {
-            assert.equal(pieChart.selectAll("svg g text.pie-slice").attr("transform"), "translate(52.58610463437159,-38.20604139901075)");
+            assert.equal(pieChart.selectAll("svg g text.pie-slice").attr("transform"), "translate(38.20604139901075,-52.58610463437159)");
         },
         'slice label text should be set': function (pieChart) {
             pieChart.selectAll("svg g text.pie-slice").call(function (p) {
@@ -266,9 +266,9 @@ suite.addBatch({
                 return chart;
             },
             'group should be order': function (chart) {
-                var group = chart.orderedGroup().top(Infinity);
+                var group = chart.computeOrderedGroups();
                 countryDimension.filter("US");
-                var group2 = chart.orderedGroup().top(Infinity);
+                var group2 = chart.computeOrderedGroups();
                 assert.equal(group2[0].key, group[0].key);
             }
         }
@@ -315,7 +315,8 @@ suite.addBatch({
             assert.equal(d3.select(chart.selectAll("text.pie-slice")[0][0]).text(), "custom");
         },
         'label should not be generated if the slice is too small': function (chart) {
-            assert.equal(d3.select(chart.selectAll("text.pie-slice")[0][1]).text(), "");
+            // slice '66'
+            assert.equal(d3.select(chart.selectAll("text.pie-slice")[0][4]).text(), "");
         },
         'should render correct number of title': function (chart) {
             assert.lengthOf(chart.selectAll("g.pie-slice title")[0], 5);
@@ -324,6 +325,30 @@ suite.addBatch({
             chart.selectAll("g.pie-slice title").each(function (p) {
                 assert.equal(d3.select(this).text(), "custom");
             });
+        },
+        teardown: function (chart) {
+            resetAllFilters();
+            resetBody();
+        }
+    },
+    'pie chart slices cap': {
+        topic: function (pieChart) {
+            var chart = buildChart("pie-chart4");
+            chart.slicesCap(3)
+                .renderTitle(true)
+                .othersLabel("small");
+            chart.render();
+            return chart;
+        },
+        'produce expected number of slices': function(chart) {
+            assert.lengthOf(chart.selectAll("text.pie-slice")[0], 4);
+        },
+        'others slice should use custom name': function(chart) {
+            assert.equal(d3.select(chart.selectAll("text.pie-slice")[0][3]).text(), "small");
+        },
+        'remaining slices should be in numerical order': function(chart) {
+            assert.deepEqual(chart.selectAll("text.pie-slice").data().map(function(slice) { return slice.data.key; }),
+                             ["22","33","44","small"]);
         },
         teardown: function (chart) {
             resetAllFilters();

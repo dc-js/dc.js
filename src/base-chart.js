@@ -16,6 +16,9 @@ dc.baseChart = function (_chart) {
     var _valueAccessor = function (d) {
         return d.value;
     };
+    var _ordering = function (p) {
+        return p.key;
+    };
 
     var _label = function (d) {
         return d.key;
@@ -105,10 +108,19 @@ dc.baseChart = function (_chart) {
         return g.__names__[groupNameKey(accessor)];
     };
 
-    _chart.orderedGroup = function () {
-        return _group.order(function (p) {
-            return p.key;
-        });
+    _chart.ordering = function(o) {
+        if (!arguments.length) return _ordering;
+        _ordering = o;
+        _chart.expireCache();
+        return _chart;
+    };
+
+    _chart.computeOrderedGroups = function(arr) {
+        var data = arr ? arr : _chart.group().all().slice(0); // clone
+        if(data.length < 2)
+            return data;
+        var sort = crossfilter.quicksort.by(_chart.ordering());
+        return sort(data,0,data.length);
     };
 
     _chart.filterAll = function () {
