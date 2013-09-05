@@ -330,6 +330,30 @@ suite.addBatch({
             resetAllFilters();
             resetBody();
         }
+    },
+    'pie chart slices cap': {
+        topic: function (pieChart) {
+            var chart = buildChart("pie-chart4");
+            chart.slicesCap(3)
+                .renderTitle(true)
+                .othersLabel("small");
+            chart.render();
+            return chart;
+        },
+        'produce expected number of slices': function(chart) {
+            assert.lengthOf(chart.selectAll("text.pie-slice")[0], 4);
+        },
+        'others slice should use custom name': function(chart) {
+            assert.equal(d3.select(chart.selectAll("text.pie-slice")[0][3]).text(), "small");
+        },
+        'remaining slices should be in numerical order': function(chart) {
+            assert.deepEqual(chart.selectAll("text.pie-slice").data().map(function(slice) { return slice.data.key; }),
+                             ["22","33","44","small"]);
+        },
+        teardown: function (chart) {
+            resetAllFilters();
+            resetBody();
+        }
     }
 });
 
