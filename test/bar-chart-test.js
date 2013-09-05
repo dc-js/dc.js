@@ -29,16 +29,16 @@ function buildChart(id, xdomain) {
 }
 
 function buildOrdinalChart(id, xdomain) {
-    if (!xdomain)
-        xdomain = ["California", "Colorado", "Delaware", "Ontario", "Mississippi", "Oklahoma"];
-
     var div = d3.select("body").append("div").attr("id", id);
     div.append("a").attr("class", "reset").style("display", "none");
     div.append("span").attr("class", "filter").style("display", "none");
     var chart = dc.barChart("#" + id);
+    var xscale = d3.scale.ordinal();
+    if (xdomain)
+        xscale.domain(xdomain);
     chart.dimension(stateDimension).group(stateGroup)
         .width(width).height(height)
-        .x(d3.scale.ordinal().domain(xdomain))
+        .x(xscale)
         .transitionDuration(0)
         .xUnits(dc.units.ordinal);
     chart.render();
@@ -500,7 +500,8 @@ suite.addBatch({
 
 suite.addBatch({'ordinal bar chart': {
     topic: function () {
-        return buildOrdinalChart("bar-chart-ordinal");
+        var xdomain = ["California", "Colorado", "Delaware", "Ontario", "Mississippi", "Oklahoma"];
+        return buildOrdinalChart("bar-chart-ordinal", xdomain);
     },
     'should have brush turned off': function (chart) {
         assert.isFalse(chart.brushOn());
@@ -516,6 +517,9 @@ suite.addBatch({'ordinal bar chart': {
         assert.match(d3.select(chart.selectAll("rect.bar")[0][3]).attr("x"), /582.\d+/);
         assert.match(d3.select(chart.selectAll("rect.bar")[0][5]).attr("x"), /437.\d+/);
     },
+    'should respect specified domain order': function (chart) {
+        assert.equal(d3.select(chart.selectAll("rect.bar")[0][3]).text(), "Ontario");
+    },
     'should fade deselected bars': function (chart) {
         chart.filter("Ontario").filter("Colorado").redraw();
         assert.isTrue(d3.select(chart.selectAll("rect.bar")[0][0]).classed("deselected"));
@@ -528,6 +532,22 @@ suite.addBatch({'ordinal bar chart': {
         resetBody();
     }
 }});
+
+suite.addBatch({'ordinal bar chart auto domain': {
+    topic: function () {
+        return buildOrdinalChart("bar-chart-ordinal");
+    },
+    'should use alphabetical ordering': function(chart) {
+        assert.deepEqual(chart.selectAll("rect.bar").data().map(function(slice) { return slice.data.key; }),
+                         ["California", "Colorado", "Delaware", "Mississippi", "Oklahoma", "Ontario"]);
+
+    },
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
+    }
+}});
+
 
 suite.addBatch({'dynamic accessor switch': {
     topic: function () {
