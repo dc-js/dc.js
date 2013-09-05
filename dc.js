@@ -346,6 +346,10 @@ dc.utils.GroupStack = function () {
     };
 };
 
+dc.utils.isNumber = function(n) {
+    return n===+n;
+};
+
 dc.utils.isFloat = function (n) {
     return n===+n && n!==(n|0);
 };
@@ -554,6 +558,9 @@ dc.baseChart = function (_chart) {
     var _valueAccessor = function (d) {
         return d.value;
     };
+    var _ordering = function (p) {
+        return p.key;
+    };
 
     var _label = function (d) {
         return d.key;
@@ -643,10 +650,19 @@ dc.baseChart = function (_chart) {
         return g.__names__[groupNameKey(accessor)];
     };
 
-    _chart.orderedGroup = function () {
-        return _group.order(function (p) {
-            return p.key;
-        });
+    _chart.ordering = function(o) {
+        if (!arguments.length) return _ordering;
+        _ordering = o;
+        _chart.expireCache();
+        return _chart;
+    };
+
+    _chart.computeOrderedGroups = function(arr) {
+        var data = arr ? arr : _chart.group().all().slice(0); // clone
+        if(data.length < 2)
+            return data;
+        var sort = crossfilter.quicksort.by(_chart.ordering());
+        return sort(data,0,data.length);
     };
 
     _chart.filterAll = function () {
@@ -1167,6 +1183,9 @@ dc.coordinateGridChart = function (_chart) {
     function prepareXAxis(g) {
         if (_chart.elasticX() && !_chart.isOrdinal()) {
             _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
+        }
+        else if (_chart.isOrdinal() && _x.domain().length===0) {
+            _x.domain(_chart.computeOrderedGroups().map(function(kv) { return kv.key; }));
         }
 
         if (_chart.isOrdinal()) {
@@ -2156,22 +2175,20 @@ dc.pieChart = function (parent, chartGroup) {
 
     var _slicesCap = Infinity;
     var _othersLabel = "Others";
-    var _othersGrouper = function (data, sum) {
-        data.push({"key": _othersLabel, "value": sum });
+    var _othersGrouper = function (topRows) {
+        var topRowsSum = d3.sum(topRows, _chart.valueAccessor());
+        var allRows = _chart.group().all();
+        var allRowsSum = d3.sum(allRows, _chart.valueAccessor());
+        topRows.push({"key": _othersLabel, "value": allRowsSum - topRowsSum });
     };
 
     function assemblePieData() {
         if (_slicesCap == Infinity) {
-            return _chart.orderedGroup().top(_slicesCap); // ordered by keys
+            return _chart.computeOrderedGroups();
         } else {
             var topRows = _chart.group().top(_slicesCap); // ordered by value
-            var topRowsSum = d3.sum(topRows, _chart.valueAccessor());
-
-            var allRows = _chart.group().all();
-            var allRowsSum = d3.sum(allRows, _chart.valueAccessor());
-
-            _othersGrouper(topRows, allRowsSum - topRowsSum);
-
+            topRows = _chart.computeOrderedGroups(topRows); // re-order by key
+            _othersGrouper(topRows);
             return topRows;
         }
     }
