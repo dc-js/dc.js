@@ -648,15 +648,12 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
-    _chart.computeOrderedGroups = function() {
-        var data = _chart.group().all().slice(0); // clone
+    _chart.computeOrderedGroups = function(arr) {
+        var data = arr ? arr : _chart.group().all().slice(0); // clone
         if(data.length < 2)
             return data;
-        var compf = dc.utils.isNumber(_chart.ordering()(data[0]))
-                ? function(a, b) { return _chart.ordering()(a) - _chart.ordering()(b); }
-            : function(a, b) { return _chart.ordering()(a).localeCompare(_chart.ordering()(b)); };
-        data.sort(compf);
-        return data;
+        var sort = crossfilter.quicksort.by(_chart.ordering());
+        return sort(data,0,data.length);
     };
 
     _chart.filterAll = function () {
@@ -2150,8 +2147,11 @@ dc.pieChart = function (parent, chartGroup) {
 
     var _slicesCap = Infinity;
     var _othersLabel = "Others";
-    var _othersGrouper = function (data, sum) {
-        data.push({"key": _othersLabel, "value": sum });
+    var _othersGrouper = function (topRows) {
+        var topRowsSum = d3.sum(topRows, _chart.valueAccessor());
+        var allRows = _chart.group().all();
+        var allRowsSum = d3.sum(allRows, _chart.valueAccessor());
+        topRows.push({"key": _othersLabel, "value": allRowsSum - topRowsSum });
     };
 
     function assemblePieData() {
@@ -2159,13 +2159,8 @@ dc.pieChart = function (parent, chartGroup) {
             return _chart.computeOrderedGroups();
         } else {
             var topRows = _chart.group().top(_slicesCap); // ordered by value
-            var topRowsSum = d3.sum(topRows, _chart.valueAccessor());
-
-            var allRows = _chart.group().all();
-            var allRowsSum = d3.sum(allRows, _chart.valueAccessor());
-
-            _othersGrouper(topRows, allRowsSum - topRowsSum);
-
+            topRows = _chart.computeOrderedGroups(topRows); // re-order by key
+            _othersGrouper(topRows);
             return topRows;
         }
     }
@@ -2662,15 +2657,6 @@ dc.barChart = function (parent, chartGroup) {
             return d3.select(this).attr('fill') != d.color;
         }).classed('fadeout', false);
     };
-
-    dc.override(_chart, "xAxisMax", function() {
-        var max = this._xAxisMax();
-        if('resolution' in _chart.xUnits()) {
-            var res = _chart.xUnits().resolution;
-            max += res;
-        }
-        return max;
-    });
 
     return _chart.anchor(parent, chartGroup);
 };
