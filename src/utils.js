@@ -198,8 +198,8 @@ dc.utils.appendOrSelect = function (parent, name) {
     return element;
 };
 
-dc.utils.createLegendable = function (chart, group, index, accessor) {
-    var legendable = {name: chart.getGroupName(group, accessor), data: group};
+dc.utils.createLegendable = function (chart, group, index) {
+    var legendable = {name: chart.getGroupName(group,index), data: group};
     if (typeof chart.colors === 'function') legendable.color = chart.colors()(index);
     return legendable;
 };

@@ -216,7 +216,7 @@ dc.stackableChart = function (_chart) {
     _chart.legendables = function () {
         var items = [];
         _allGroups.forEach(function (g, i) {
-            items.push(dc.utils.createLegendable(_chart, g, i, _chart.getValueAccessorByIndex(i)));
+            items.push(dc.utils.createLegendable(_chart, g, i));
         });
         return items;
     };
