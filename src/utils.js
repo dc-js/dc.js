@@ -82,7 +82,7 @@ dc.utils.subtract = function (l, r) {
 };
 
 dc.utils.GroupStack = function () {
-    var _dataLayers = [];
+    var _dataLayers = [[ ]];
     var _groups = [];
     var _defaultAccessor;
 
