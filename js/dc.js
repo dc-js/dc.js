@@ -394,7 +394,7 @@ dc.utils.createLegendable = function (chart, group, index, accessor) {
     return legendable;
 };
 
-dc.utils.safeNumber = function(n){return isNaN(n)?0:n;};
+dc.utils.safeNumber = function(n){return dc.utils.isNumber(+n)?+n:0;};
 
 dc.events = {
     current: null
@@ -2798,7 +2798,7 @@ dc.lineChart = function (parent, chartGroup) {
     }
 
     function safeD(d){
-        return d.indexOf("NaN") >= 0 ? "M0,0" : d;
+        return (!d || d.indexOf("NaN") >= 0) ? "M0,0" : d;
     }
 
     function drawDots(layersEnter) {
