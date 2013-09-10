@@ -107,7 +107,7 @@ dc.lineChart = function (parent, chartGroup) {
     }
 
     function safeD(d){
-        return d.indexOf("NaN") >= 0 ? "M0,0" : d;
+        return (!d || d.indexOf("NaN") >= 0) ? "M0,0" : d;
     }
 
     function drawDots(layersEnter) {

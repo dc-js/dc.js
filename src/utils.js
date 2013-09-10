@@ -204,4 +204,4 @@ dc.utils.createLegendable = function (chart, group, index, accessor) {
     return legendable;
 };
 
-dc.utils.safeNumber = function(n){return isNaN(n)?0:n;};
+dc.utils.safeNumber = function(n){return dc.utils.isNumber(+n)?+n:0;};
