@@ -108,7 +108,8 @@ module.exports = function (grunt) {
         },
         'gh-pages': {
             options: {
-                base: 'web'
+                base: 'web',
+                message: "Synced from from master branch."
             },
             src: ['**']
         }
@@ -125,6 +126,6 @@ module.exports = function (grunt) {
 
     // Default task.
     grunt.registerTask('default', ['concat', 'uglify', 'sed', 'copy']);
-    grunt.registerTask('update-web', ['copy:dc-to-gh', 'gh-pages']);
+    grunt.registerTask('web', ['copy:dc-to-gh', 'gh-pages']);
 
 };
