@@ -8,7 +8,7 @@ name space.
 * [Stackable Chart [abstract]](#stackable-chart)
 * [Coordinate Grid Chart [abstract] < Color Chart < Base Chart](#coordinate-grid-chart)
 * [Pie Chart [concrete] < Color Chart < Base Chart](#pie-chart)
-* [Row Chart [concrete] < Colro Chart < Base chart](#row-chart)
+* [Row Chart [concrete] < Color Chart < Base chart](#row-chart)
 * [Bar Chart [concrete] < Stackable Chart < CoordinateGrid Chart](#bar-chart)
 * [Line Chart [concrete] < Stackable Chart < CoordinateGrid Chart](#line-chart)
 * [Composite Chart [concrete] < CoordinateGrid Chart](#composite-chart)
@@ -985,7 +985,7 @@ This function can be used to in [Coordinate Grid Chart](#coordinate-grid-chart) 
 dc.units.integers is the default x unit scale used by [Coordinate Grid Chart](#coordinate-grid-chart) and should be
 used when x range is a sequential of integers.
 
-### dc.units.float.precision(precision)
+### dc.units.fp.precision(precision)
 This function generates xunit function in floating-point numbers with the given precision. For example if the function
 is invoked with 0.001 precision then the function created will devide a range [0.5, 1.0] with 500 units.
 
