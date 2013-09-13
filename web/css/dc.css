@@ -244,3 +244,24 @@ div.dc-chart {
 .dc-hard .number-display {
     float: none;
 }
+
+.dc-chart .box {
+  font: 10px sans-serif;
+}
+
+.dc-chart .box line,
+.dc-chart .box rect,
+.dc-chart .box circle {
+  fill: #fff;
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+.dc-chart .box .center {
+  stroke-dasharray: 3,3;
+}
+
+.dc-chart .box .outlier {
+  fill: none;
+  stroke: #ccc;
+}

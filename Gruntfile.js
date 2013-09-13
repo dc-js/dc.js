@@ -146,5 +146,7 @@ module.exports.jsFiles = [
     "src/scatter-plot.js",
     "src/number-display.js",
     "src/heatmap.js",
+    "src/d3.box.js",
+    "src/box-plot.js",
     "src/footer.js"
 ];
