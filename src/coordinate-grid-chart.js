@@ -160,8 +160,8 @@ dc.coordinateGridChart = function (_chart) {
         if (!count)
             count = _chart.xUnitCount();
         var range = [];
-        var currentPosition = 0;
-        var increment = _chart.xAxisLength() / count;
+        var increment = _chart.xAxisLength() / (count + 1);
+        var currentPosition = increment/2;
         for (var i = 0; i < count; i++) {
             range[i] = currentPosition;
             currentPosition += increment;
