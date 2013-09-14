@@ -330,9 +330,11 @@ suite.addBatch({
             resetAllFilters();
             resetBody();
         }
-    },
+    }
+});
+suite.addBatch({
     'pie chart slices cap': {
-        topic: function (pieChart) {
+        topic: function () {
             var chart = buildChart("pie-chart4");
             chart.slicesCap(3)
                 .renderTitle(true)
@@ -349,6 +351,14 @@ suite.addBatch({
         'remaining slices should be in numerical order': function(chart) {
             assert.deepEqual(chart.selectAll("text.pie-slice").data().map(function(slice) { return slice.data.key; }),
                              ["22","33","44","small"]);
+        },
+        'clicking others sclice should filter all groups slices': function(chart) {
+            var event = document.createEvent("SVGEvents");
+            event.initEvent("click",true,true);
+            chart.selectAll(".pie-slice path")[0][3].dispatchEvent(event);
+            assert.deepEqual(chart.filters(),["55","66","small"]);
+            chart.selectAll(".pie-slice path")[0][3].dispatchEvent(event);
+            assert.deepEqual(chart.filters(),[]);
         },
         teardown: function (chart) {
             resetAllFilters();
