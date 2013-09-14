@@ -32,6 +32,7 @@ d3.csv("morley.csv", function(error, experiments) {
     .interpolate('step-before')
     .renderArea(true)
     .brushOn(false)
+    .yAxisLabel("This is the Y Axis!")
     .dimension(runDimension)
     .group(speedSumGroup);
 

@@ -498,6 +498,50 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({
+    'axis labels': {
+        topic: function () {
+            var chart = buildChart("chart-with-axis-lables");
+            return chart;
+        },
+        'add x label default pad': function (chart) {
+            assert.equal(chart.effectiveHeight(),160);
+            chart.xAxisLabel("x axis test");
+            chart.render();
+            assert.equal(chart.effectiveHeight(),148);
+            assert.equal(chart.selectAll("text.x-axis-label").text(),"x axis test");
+        },
+        'add y label default pad': function (chart) {
+            assert.equal(chart.effectiveWidth(),1020);
+            chart.yAxisLabel("y axis test");
+            chart.render();
+            assert.equal(chart.effectiveWidth(),1008);
+            assert.equal(chart.selectAll("text.y-axis-label").text(),"y axis test");
+        },
+        'add x and y axis': function (chart) {
+            chart.xAxisLabel("x axis");
+            chart.yAxisLabel("y axis");
+            chart.render();
+            assert.equal(chart.selectAll("text.x-axis-label").text(),"x axis");
+            assert.equal(chart.selectAll("text.y-axis-label").text(),"y axis");
+        },
+        'x label custom padding': function (chart) {
+            chart.xAxisLabel("x axis",50);
+            chart.render();
+            assert.equal(chart.effectiveHeight(),110);
+        },
+        'y label custom padding': function (chart) {
+            chart.yAxisLabel("y axis",50)
+            chart.render();
+            assert.equal(chart.effectiveWidth(),970);
+        },
+        teardown: function (topic) {
+            resetAllFilters();
+            resetBody();
+        }
+    }
+});
+
 suite.addBatch({'ordinal bar chart': {
     topic: function () {
         var xdomain = ["California", "Colorado", "Delaware", "Ontario", "Mississippi", "Oklahoma"];
@@ -513,9 +557,9 @@ suite.addBatch({'ordinal bar chart': {
         assert.equal(chart.select("rect.bar").attr("width"), "144");
     },
     'should position bars based on ordinal range': function (chart) {
-        assert.match(d3.select(chart.selectAll("rect.bar")[0][0]).attr("x"), /0.\d+/);
-        assert.match(d3.select(chart.selectAll("rect.bar")[0][3]).attr("x"), /583.\d+/);
-        assert.match(d3.select(chart.selectAll("rect.bar")[0][5]).attr("x"), /438.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][0]).attr("x"), /0\.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][3]).attr("x"), /583\.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][5]).attr("x"), /438\.\d+/);
     },
     'should respect specified domain order': function (chart) {
         // note bar chart works differently from pie chart in that the bars objects don't
@@ -582,9 +626,9 @@ suite.addBatch({'linear bar chart': {
         assert.equal(chart.select("rect.bar").attr("width"), "18");
     },
     'should position bars based on linear range': function (chart) {
-        assert.match(d3.select(chart.selectAll("rect.bar")[0][0]).attr("x"), /40.\d+/);
-        assert.match(d3.select(chart.selectAll("rect.bar")[0][2]).attr("x"), /489.\d+/);
-        assert.match(d3.select(chart.selectAll("rect.bar")[0][4]).attr("x"), /938.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][0]).attr("x"), /40\.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][2]).attr("x"), /489\.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][4]).attr("x"), /938\.\d+/);
     },
     teardown: function (topic) {
         resetAllFilters();
