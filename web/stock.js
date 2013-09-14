@@ -168,6 +168,8 @@ d3.csv("ndx.csv", function (data) {
                     .renderVerticalGridLines(true)
                     .renderLabel(true)
                     .renderTitle(true)
+                    .xAxisLabel('Index Gain')
+                    .yAxisLabel('Index Gain %')
                     .label(function (p) {
                         return p.key;
                     })
