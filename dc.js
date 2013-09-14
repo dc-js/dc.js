@@ -2787,7 +2787,9 @@ dc.lineChart = function (parent, chartGroup) {
                 })
                 .y0(function (d) {
                     return _chart.y()(d.y0);
-                });
+                })
+                .interpolate(_interpolate)
+                .tension(_tension);
 
             layersEnter.append("path")
                 .attr("class", "area")
