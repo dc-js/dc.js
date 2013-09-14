@@ -1830,6 +1830,9 @@ dc.stackableChart = function (_chart) {
     var _stackLayers;
 
     _chart.stack = function (group, p2, retriever) {
+        if(!arguments.length)
+            _groupStack.clear();
+
         if (typeof p2 === 'string')
             _chart.setGroupName(group, p2, retriever);
         else if (typeof p2 === 'function')
