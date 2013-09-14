@@ -61,7 +61,7 @@ dc.barChart = function (parent, chartGroup) {
         dc.transition(bars, _chart.transitionDuration())
             .attr("x", function (d) {
                 var x = _chart.x()(d.x);
-                if (_centerBar) x -= _barWidth / 2;
+                if (_centerBar || _chart.isOrdinal()) x -= _barWidth / 2;
                 return  dc.utils.safeNumber(x);
             })
             .attr("y", function (d) {
@@ -162,10 +162,6 @@ dc.barChart = function (parent, chartGroup) {
         }
         return extent;
     };
-
-    dc.override(_chart, "prepareOrdinalXAxis", function () {
-        return this._prepareOrdinalXAxis(_chart.xUnitCount() + 1);
-    });
 
     _chart.legendHighlight = function (d) {
         _chart.select('.chart-body').selectAll('rect.bar').filter(function () {
