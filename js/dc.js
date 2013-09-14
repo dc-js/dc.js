@@ -1171,8 +1171,8 @@ dc.coordinateGridChart = function (_chart) {
         if (!count)
             count = _chart.xUnitCount();
         var range = [];
-        var currentPosition = 0;
-        var increment = _chart.xAxisLength() / count;
+        var increment = _chart.xAxisLength() / (count + 1);
+        var currentPosition = increment/2;
         for (var i = 0; i < count; i++) {
             range[i] = currentPosition;
             currentPosition += increment;
@@ -2176,10 +2176,14 @@ dc.pieChart = function (parent, chartGroup) {
     var _slicesCap = Infinity;
     var _othersLabel = "Others";
     var _othersGrouper = function (topRows) {
-        var topRowsSum = d3.sum(topRows, _chart.valueAccessor());
-        var allRows = _chart.group().all();
-        var allRowsSum = d3.sum(allRows, _chart.valueAccessor());
-        topRows.push({"key": _othersLabel, "value": allRowsSum - topRowsSum });
+        var topRowsSum = d3.sum(topRows, _chart.valueAccessor()),
+            allRows = _chart.group().all(),
+            allRowsSum = d3.sum(allRows, _chart.valueAccessor()),
+            topKeys = topRows.map(_chart.keyAccessor()),
+            allKeys = allRows.map(_chart.keyAccessor()),
+            topSet = d3.set(topKeys),
+            others = allKeys.filter(function(d){return !topSet.has(d);});
+        topRows.push({"others": others,"key": _othersLabel, "value": allRowsSum - topRowsSum });
     };
 
     function assemblePieData() {
@@ -2486,6 +2490,10 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     function onClick(d) {
+        if (d.data.others)
+            d.data.others.forEach(function(f) {
+                _chart.filter(f);
+            });
         _chart.onClick(d.data);
     }
 
