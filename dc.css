@@ -43,7 +43,7 @@
 }
 
 .dc-chart .deselected path {
-    strok: none;
+    stroke: none;
     fill-opacity: .5;
     fill: #ccc;
 }
@@ -122,7 +122,7 @@
 }
 
 .dc-chart .deselected circle {
-    strok: none;
+    stroke: none;
     fill-opacity: .5;
     fill: #ccc;
 }
