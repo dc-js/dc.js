@@ -127,7 +127,7 @@ dc.compositeChart = function (parent, chartGroup) {
         for (var j = 0; j < _children.length; ++j) {
             var childChart = _children[j];
             childChart.allGroups().forEach(function (g, i) {
-                items.push(dc.utils.createLegendable(childChart, g, i, childChart.getValueAccessorByIndex(i)));
+                items.push(dc.utils.createLegendable(childChart, g, i));
             });
         }
 
