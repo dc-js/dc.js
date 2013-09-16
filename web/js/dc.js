@@ -635,19 +635,28 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
-    _chart.setGroupName = function (g, name, accessor) {
-        if (!g.__names__) g.__names__ = {};
-        g.__names__[groupNameKey(accessor)] = name;
-    };
-
-    function groupNameKey(accessor) {
-        var defaultKey = "default";
-        return accessor ? (accessor == _chart.valueAccessor() ? defaultKey : accessor) : defaultKey;
+    function groupName(chart, g, accessor) {
+        var c = chart.anchor(),
+            k = '__names__';
+        if (!accessor || accessor == chart.valueAccessor())
+            accessor = "default";
+        if (!g[k]) g[k] = {};
+        if (!g[k][c]) g[k][c] = {a:[],n:[]};
+        var i = g[k][c].a.indexOf(accessor);
+        if (i == -1) {
+          i = g[k][c].a.length;
+          g[k][c].a[i] = accessor;
+          g[k][c].n[i] = {name:''};
+        }
+        return g[k][c].n[i];
     }
 
     _chart.getGroupName = function (g, accessor) {
-        if (!g.__names__) g.__names__ = {};
-        return g.__names__[groupNameKey(accessor)];
+      return groupName(_chart, g, accessor).name;
+    };
+
+    _chart.setGroupName = function (g, name, accessor) {
+      groupName(_chart, g, accessor).name = name;
     };
 
     _chart.ordering = function(o) {
@@ -3207,6 +3216,7 @@ dc.compositeChart = function (parent, chartGroup) {
     var _children = [];
 
     _chart.transitionDuration(500);
+    _chart.group({});
 
     dc.override(_chart, "generateG", function () {
         var g = this._generateG();

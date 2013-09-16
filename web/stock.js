@@ -245,10 +245,6 @@ d3.csv("ndx.csv", function (data) {
                     .transitionDuration(1000)
                     .margins({top: 30, right: 50, bottom: 25, left: 40})
                     .dimension(moveMonths)
-                    .group(indexAvgByMonthGroup, "Monthly Index Average")
-                    .valueAccessor(function (d) {
-                        return d.value.avg;
-                    })
                     .mouseZoomable(true)
                     .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
                     .round(d3.time.month.round)
@@ -259,7 +255,8 @@ d3.csv("ndx.csv", function (data) {
                     .brushOn(false)
                     .rangeChart(volumeChart)
                     .compose([
-                        dc.lineChart(moveChart).group(indexAvgByMonthGroup)
+                        dc.lineChart(moveChart)
+                                .group(indexAvgByMonthGroup, "Monthly Index Average")
                                 .valueAccessor(function (d) {
                                     return d.value.avg;
                                 })

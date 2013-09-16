@@ -5,6 +5,7 @@ dc.compositeChart = function (parent, chartGroup) {
     var _children = [];
 
     _chart.transitionDuration(500);
+    _chart.group({});
 
     dc.override(_chart, "generateG", function () {
         var g = this._generateG();
@@ -127,7 +128,7 @@ dc.compositeChart = function (parent, chartGroup) {
         for (var j = 0; j < _children.length; ++j) {
             var childChart = _children[j];
             childChart.allGroups().forEach(function (g, i) {
-                items.push(dc.utils.createLegendable(childChart, g, i));
+                items.push(dc.utils.createLegendable(childChart, g, i, childChart.getValueAccessorByIndex(i)));
             });
         }
 

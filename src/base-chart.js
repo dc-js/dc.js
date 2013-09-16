@@ -93,16 +93,28 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
-    _chart.setGroupName = function (g, name, accessor) {
-        if (!g.__names__)
-            g.__names__ = new Array();
-        g.__names__[g.__names__.length] = { name: name, accessor : accessor};
+    function groupName(chart, g, accessor) {
+        var c = chart.anchor(),
+            k = '__names__';
+        if (!accessor || accessor == chart.valueAccessor())
+            accessor = "default";
+        if (!g[k]) g[k] = {};
+        if (!g[k][c]) g[k][c] = {a:[],n:[]};
+        var i = g[k][c].a.indexOf(accessor);
+        if (i == -1) {
+          i = g[k][c].a.length;
+          g[k][c].a[i] = accessor;
+          g[k][c].n[i] = {name:''};
+        }
+        return g[k][c].n[i];
+    }
+
+    _chart.getGroupName = function (g, accessor) {
+      return groupName(_chart, g, accessor).name;
     };
 
-
-    _chart.getGroupName = function (g,index) {
-        if (!g.__names__) g.__names__ = new Array();
-        return g.__names__[index].name;
+    _chart.setGroupName = function (g, name, accessor) {
+      groupName(_chart, g, accessor).name = name;
     };
 
     _chart.ordering = function(o) {
