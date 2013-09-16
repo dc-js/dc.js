@@ -16,6 +16,10 @@
         div#homicide-chart {
             float: right;
         }
+        .dc-chart .deselected circle {
+          stroke: none;
+          fill: rgba(200,0,0,0.2);
+        }
     </style>
 </head>
 
@@ -294,6 +298,7 @@
             inkscape:connector-curvature="0"/>
     </g>
     </svg>
+    <span class="reset" style="display: none;">Selected: <span class="filter"></span></span>
     </div>
 
     <div class="span4">
@@ -503,7 +508,7 @@
                             + "\nViolent crime per 100k population: " + Math.round(d.data.value.violentCrimeAvg)
                             + "\nNon-Violent crime per 100k population: " + Math.round(d.data.value.nonViolentCrimeAvg);
                 })
-                .xAxis().ticks(5);
+                .xAxis().ticks(5).tickFormat(d3.format("d"));
 
         homicideChart
                .width(360)
@@ -517,12 +522,12 @@
                 .x(d3.scale.linear().domain([1997, 2012]))
                 .renderHorizontalGridLines(true)
                 .elasticY(true)
-                .brushOn(false)
+                .brushOn(true)
                 .title(function(d){
                     return d.key
                             + "\nHomicide incidents: " + Math.round(d.data.value.homicide);
                 })
-                .xAxis().ticks(5);;
+                .xAxis().ticks(5).tickFormat(d3.format("d"));
 
         dc.renderAll();
     });

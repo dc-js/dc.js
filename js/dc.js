@@ -635,19 +635,28 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
-    _chart.setGroupName = function (g, name, accessor) {
-        if (!g.__names__) g.__names__ = {};
-        g.__names__[groupNameKey(accessor)] = name;
-    };
-
-    function groupNameKey(accessor) {
-        var defaultKey = "default";
-        return accessor ? (accessor == _chart.valueAccessor() ? defaultKey : accessor) : defaultKey;
+    function groupName(chart, g, accessor) {
+        var c = chart.anchor(),
+            k = '__names__';
+        if (!accessor || accessor == chart.valueAccessor())
+            accessor = "default";
+        if (!g[k]) g[k] = {};
+        if (!g[k][c]) g[k][c] = {a:[],n:[]};
+        var i = g[k][c].a.indexOf(accessor);
+        if (i == -1) {
+          i = g[k][c].a.length;
+          g[k][c].a[i] = accessor;
+          g[k][c].n[i] = {name:''};
+        }
+        return g[k][c].n[i];
     }
 
     _chart.getGroupName = function (g, accessor) {
-        if (!g.__names__) g.__names__ = {};
-        return g.__names__[groupNameKey(accessor)];
+      return groupName(_chart, g, accessor).name;
+    };
+
+    _chart.setGroupName = function (g, name, accessor) {
+      groupName(_chart, g, accessor).name = name;
     };
 
     _chart.ordering = function(o) {
@@ -1830,6 +1839,9 @@ dc.stackableChart = function (_chart) {
     var _stackLayers;
 
     _chart.stack = function (group, p2, retriever) {
+        if(!arguments.length)
+            _groupStack.clear();
+
         if (typeof p2 === 'string')
             _chart.setGroupName(group, p2, retriever);
         else if (typeof p2 === 'function')
@@ -3204,6 +3216,7 @@ dc.compositeChart = function (parent, chartGroup) {
     var _children = [];
 
     _chart.transitionDuration(500);
+    _chart.group({});
 
     dc.override(_chart, "generateG", function () {
         var g = this._generateG();
@@ -4022,4 +4035,54 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     return _chart.anchor(parent, chartGroup);
 };
+
+dc.numberDisplay = function (parent, chartGroup) {
+    var SPAN_CLASS = 'number-display';
+    var _formatNumber = d3.format(".2s");
+    var _chart = dc.baseChart({});
+
+    _chart.dimension({}); // dummy dimension to remove warnings
+
+    _chart.value = function () {
+         var valObj = _chart.group().all && _chart.group().all()[0] || _chart.group().value();
+         return _chart.valueAccessor()(valObj);
+    };
+
+    _chart.doRender = function () {
+        var newValue = _chart.value(),
+            span     = _chart.selectAll("."+SPAN_CLASS);
+
+        if(span.empty())
+            span = span.data([0])
+                .enter()
+                .append("span")
+                .attr("class", SPAN_CLASS);
+
+        span.transition()
+            .duration(250)
+            .ease('quad-out-in')
+            .tween("text", function () {
+                var interp = d3.interpolateNumber(this.lastValue || 0, newValue);
+                this.lastValue = newValue;
+                return function (t) {
+                    this.textContent = _chart.formatNumber()(interp(t));
+                };
+            });
+
+        return _chart;
+    };
+
+    _chart.doRedraw = function(){
+        return _chart.doRender();
+    };
+
+    _chart.formatNumber = function (_) {
+        if (!arguments.length) return _formatNumber;
+        _formatNumber = _;
+        return _chart;
+    };
+
+    return _chart.anchor(parent, chartGroup);
+};
+
 return dc;})();
