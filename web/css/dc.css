@@ -1,4 +1,4 @@
-.dc-chart {
+div.dc-chart {
     float: left;
 }
 
@@ -239,4 +239,8 @@
 .dc-chart path.dc-symbol {
     fill-opacity: 0.5;
     stroke-opacity: 0.5;
+}
+
+.dc-hard .number-display {
+    float: none;
 }
