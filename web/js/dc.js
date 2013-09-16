@@ -3837,7 +3837,8 @@ dc.rowChart = function (parent, chartGroup) {
 
         dc.transition(rect, _chart.transitionDuration())
             .attr("width", function (d) {
-                return Math.abs(_x(0) - _x(_chart.valueAccessor()(d)));
+                var start = _x(0) == -Infinity ? _x(1) : _x(0);
+                return Math.abs(start - _x(_chart.valueAccessor()(d)));
             })
             .attr("transform", translateX);
 

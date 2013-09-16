@@ -316,6 +316,24 @@ var rowChartVows = function(group) {
             }
         },
 
+        'log x axis' : {
+            topic: newRowChart("row-chart-log", function(chart) {
+                chart.elasticX(false);
+                chart.x(d3.scale.log());
+                chart.render();
+                return chart;
+            }),
+            'rect width is correct (not -infinity)': function (chart) {
+                assert.isObject(chart);
+                if (group == valuePosValSumGroup)
+                    assert.match(d3.select(chart.selectAll("g.row rect")[0][0]).attr("width"), /0\.9\d+/);
+            },
+            teardown: function (chart) {
+                resetAllFilters();
+                resetBody();
+            }
+        },
+
         teardown: function (chart) {
             resetAllFilters();
             resetBody();
