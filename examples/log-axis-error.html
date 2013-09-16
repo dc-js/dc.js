@@ -52,8 +52,9 @@ theChart.width(420)
     .dimension(theDimension)
     .group(theGroup)
     .elasticX(false)
-    .x(d3.scale.log().domain([1, 10000]).range([0,420]).nice())
-    .xAxis().ticks(3).scale(theChart.x());
+    .x(d3.scale.log())
+    //.x(d3.scale.log().domain([1, 10000]).range([0,421]).nice())
+    //.xAxis().ticks(1).scale(theChart.x()).tickFormat(d3.format('.1s'));
 
 dc.renderAll();
 
