@@ -10,7 +10,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     var _rowCssClass = "row";
 
-    var _chart = dc.marginable(dc.colorChart(dc.baseChart({})));
+    var _chart = dc.capped(dc.marginable(dc.colorChart(dc.baseChart({}))));
 
     var _x;
 
@@ -18,30 +18,9 @@ dc.rowChart = function (parent, chartGroup) {
 
     var _xAxis = d3.svg.axis().orient("bottom");
 
-    var _rowsCap = Infinity;
+    var _rowData;
 
-    var _othersLabel = "Others";
-
-    var _othersHandler = function (data, value) {
-        data.push({"key": _othersLabel, "value": value });
-    };
-
-    var _rowData = null;
-
-    function assembleData() {
-        if (_rowsCap == Infinity) {
-            _rowData = _chart.computeOrderedGroups(); // ordered by keys
-        } else {
-            var topRows = _chart.group().top(_rowsCap); // ordered by value
-            if (_othersHandler) {
-                var topRowsSum = d3.sum(topRows, _chart.valueAccessor());
-                var allRows = _chart.group().all();
-                var allRowsSum = d3.sum(allRows, _chart.valueAccessor());
-                _othersHandler(topRows,allRowsSum - topRowsSum);
-            }
-            _rowData = topRows;
-        }
-    }
+    _chart.rowsCap = _chart.cap;
 
     function calculateAxisScale() {
         if (!_x || _elasticX) {
@@ -68,7 +47,6 @@ dc.rowChart = function (parent, chartGroup) {
     }
 
     _chart.doRender = function () {
-
         _chart.resetSvg();
 
         _g = _chart.svg()
@@ -111,7 +89,7 @@ dc.rowChart = function (parent, chartGroup) {
     }
 
     function drawChart() {
-        assembleData();
+        _rowData = _chart.assembleCappedData();
 
         drawAxis();
         drawGridLines();
@@ -167,6 +145,7 @@ dc.rowChart = function (parent, chartGroup) {
             .attr("transform", translateX);
 
         createTitles(rows);
+        updateLabels(rows);
     }
 
     function createTitles(rows) {
@@ -248,25 +227,6 @@ dc.rowChart = function (parent, chartGroup) {
 
     _chart.isSelectedRow = function (d) {
         return _chart.hasFilter(_chart.keyAccessor()(d));
-    };
-
-    _chart.rowsCap = function (_) {
-        if (!arguments.length) return _rowsCap;
-        _rowsCap = _;
-        return _chart;
-    };
-
-    _chart.othersLabel = function (_) {
-        if (!arguments.length) return _othersLabel;
-        _othersLabel = _;
-        return _chart;
-    };
-
-    // if set to falsy value, no others row will be added
-    _chart.othersHandler = function (_) {
-        if (!arguments.length) return _othersHandler;
-        _othersHandler = _;
-        return _chart;
     };
 
     return _chart.anchor(parent, chartGroup);

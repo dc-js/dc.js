@@ -10,31 +10,9 @@ dc.pieChart = function (parent, chartGroup) {
 
     var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
 
-    var _chart = dc.colorChart(dc.baseChart({}));
+    var _chart = dc.capped(dc.colorChart(dc.baseChart({})));
 
-    var _slicesCap = Infinity;
-    var _othersLabel = "Others";
-    var _othersGrouper = function (topRows) {
-        var topRowsSum = d3.sum(topRows, _chart.valueAccessor()),
-            allRows = _chart.group().all(),
-            allRowsSum = d3.sum(allRows, _chart.valueAccessor()),
-            topKeys = topRows.map(_chart.keyAccessor()),
-            allKeys = allRows.map(_chart.keyAccessor()),
-            topSet = d3.set(topKeys),
-            others = allKeys.filter(function(d){return !topSet.has(d);});
-        topRows.push({"others": others,"key": _othersLabel, "value": allRowsSum - topRowsSum });
-    };
-
-    function assemblePieData() {
-        if (_slicesCap == Infinity) {
-            return _chart.computeOrderedGroups();
-        } else {
-            var topRows = _chart.group().top(_slicesCap); // ordered by value
-            topRows = _chart.computeOrderedGroups(topRows); // re-order by key
-            _othersGrouper(topRows);
-            return topRows;
-        }
-    }
+    _chart.slicesCap = _chart.cap;
 
     _chart.label(function (d) {
         return _chart.keyAccessor()(d.data);
@@ -69,7 +47,7 @@ dc.pieChart = function (parent, chartGroup) {
 
             var arc = _chart.buildArcs();
 
-            var pieData = pie(assemblePieData());
+            var pieData = pie(_chart.assembleCappedData());
 
             if (_g) {
                 var slices = _g.selectAll("g." + _sliceCssClass)
@@ -279,24 +257,6 @@ dc.pieChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    _chart.slicesCap = function (_) {
-        if (!arguments.length) return _slicesCap;
-        _slicesCap = _;
-        return _chart;
-    };
-
-    _chart.othersLabel = function (_) {
-        if (!arguments.length) return _othersLabel;
-        _othersLabel = _;
-        return _chart;
-    };
-
-    _chart.othersGrouper = function (_) {
-        if (!arguments.length) return _othersGrouper;
-        _othersGrouper = _;
-        return _chart;
-    };
-
     function calculateDataPie() {
         return d3.layout.pie().sort(null).value(function (d) {
             return _chart.valueAccessor()(d);
@@ -329,10 +289,6 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     function onClick(d) {
-        if (d.data.others)
-            d.data.others.forEach(function(f) {
-                _chart.filter(f);
-            });
         _chart.onClick(d.data);
     }
 

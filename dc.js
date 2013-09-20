@@ -2227,31 +2227,9 @@ dc.pieChart = function (parent, chartGroup) {
 
     var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
 
-    var _chart = dc.colorChart(dc.baseChart({}));
+    var _chart = dc.capped(dc.colorChart(dc.baseChart({})));
 
-    var _slicesCap = Infinity;
-    var _othersLabel = "Others";
-    var _othersGrouper = function (topRows) {
-        var topRowsSum = d3.sum(topRows, _chart.valueAccessor()),
-            allRows = _chart.group().all(),
-            allRowsSum = d3.sum(allRows, _chart.valueAccessor()),
-            topKeys = topRows.map(_chart.keyAccessor()),
-            allKeys = allRows.map(_chart.keyAccessor()),
-            topSet = d3.set(topKeys),
-            others = allKeys.filter(function(d){return !topSet.has(d);});
-        topRows.push({"others": others,"key": _othersLabel, "value": allRowsSum - topRowsSum });
-    };
-
-    function assemblePieData() {
-        if (_slicesCap == Infinity) {
-            return _chart.computeOrderedGroups();
-        } else {
-            var topRows = _chart.group().top(_slicesCap); // ordered by value
-            topRows = _chart.computeOrderedGroups(topRows); // re-order by key
-            _othersGrouper(topRows);
-            return topRows;
-        }
-    }
+    _chart.slicesCap = _chart.cap;
 
     _chart.label(function (d) {
         return _chart.keyAccessor()(d.data);
@@ -2286,7 +2264,7 @@ dc.pieChart = function (parent, chartGroup) {
 
             var arc = _chart.buildArcs();
 
-            var pieData = pie(assemblePieData());
+            var pieData = pie(_chart.assembleCappedData());
 
             if (_g) {
                 var slices = _g.selectAll("g." + _sliceCssClass)
@@ -2496,24 +2474,6 @@ dc.pieChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    _chart.slicesCap = function (_) {
-        if (!arguments.length) return _slicesCap;
-        _slicesCap = _;
-        return _chart;
-    };
-
-    _chart.othersLabel = function (_) {
-        if (!arguments.length) return _othersLabel;
-        _othersLabel = _;
-        return _chart;
-    };
-
-    _chart.othersGrouper = function (_) {
-        if (!arguments.length) return _othersGrouper;
-        _othersGrouper = _;
-        return _chart;
-    };
-
     function calculateDataPie() {
         return d3.layout.pie().sort(null).value(function (d) {
             return _chart.valueAccessor()(d);
@@ -2546,10 +2506,6 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     function onClick(d) {
-        if (d.data.others)
-            d.data.others.forEach(function(f) {
-                _chart.filter(f);
-            });
         _chart.onClick(d.data);
     }
 
@@ -3714,7 +3670,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     var _rowCssClass = "row";
 
-    var _chart = dc.marginable(dc.colorChart(dc.baseChart({})));
+    var _chart = dc.capped(dc.marginable(dc.colorChart(dc.baseChart({}))));
 
     var _x;
 
@@ -3722,30 +3678,9 @@ dc.rowChart = function (parent, chartGroup) {
 
     var _xAxis = d3.svg.axis().orient("bottom");
 
-    var _rowsCap = Infinity;
+    var _rowData;
 
-    var _othersLabel = "Others";
-
-    var _othersHandler = function (data, value) {
-        data.push({"key": _othersLabel, "value": value });
-    };
-
-    var _rowData = null;
-
-    function assembleData() {
-        if (_rowsCap == Infinity) {
-            _rowData = _chart.computeOrderedGroups(); // ordered by keys
-        } else {
-            var topRows = _chart.group().top(_rowsCap); // ordered by value
-            if (_othersHandler) {
-                var topRowsSum = d3.sum(topRows, _chart.valueAccessor());
-                var allRows = _chart.group().all();
-                var allRowsSum = d3.sum(allRows, _chart.valueAccessor());
-                _othersHandler(topRows,allRowsSum - topRowsSum);
-            }
-            _rowData = topRows;
-        }
-    }
+    _chart.rowsCap = _chart.cap;
 
     function calculateAxisScale() {
         if (!_x || _elasticX) {
@@ -3772,7 +3707,6 @@ dc.rowChart = function (parent, chartGroup) {
     }
 
     _chart.doRender = function () {
-
         _chart.resetSvg();
 
         _g = _chart.svg()
@@ -3815,7 +3749,7 @@ dc.rowChart = function (parent, chartGroup) {
     }
 
     function drawChart() {
-        assembleData();
+        _rowData = _chart.assembleCappedData();
 
         drawAxis();
         drawGridLines();
@@ -3871,6 +3805,7 @@ dc.rowChart = function (parent, chartGroup) {
             .attr("transform", translateX);
 
         createTitles(rows);
+        updateLabels(rows);
     }
 
     function createTitles(rows) {
@@ -3952,25 +3887,6 @@ dc.rowChart = function (parent, chartGroup) {
 
     _chart.isSelectedRow = function (d) {
         return _chart.hasFilter(_chart.keyAccessor()(d));
-    };
-
-    _chart.rowsCap = function (_) {
-        if (!arguments.length) return _rowsCap;
-        _rowsCap = _;
-        return _chart;
-    };
-
-    _chart.othersLabel = function (_) {
-        if (!arguments.length) return _othersLabel;
-        _othersLabel = _;
-        return _chart;
-    };
-
-    // if set to falsy value, no others row will be added
-    _chart.othersHandler = function (_) {
-        if (!arguments.length) return _othersHandler;
-        _othersHandler = _;
-        return _chart;
     };
 
     return _chart.anchor(parent, chartGroup);
@@ -4055,6 +3971,64 @@ dc.legend = function () {
     };
 
     return _legend;
+};
+
+dc.capped = function (_chart) {
+
+    var _cap = Infinity;
+
+    var _othersLabel = "Others";
+
+    var _othersGrouper = function (topRows) {
+        var topRowsSum = d3.sum(topRows, _chart.valueAccessor()),
+            allRows = _chart.group().all(),
+            allRowsSum = d3.sum(allRows, _chart.valueAccessor()),
+            topKeys = topRows.map(_chart.keyAccessor()),
+            allKeys = allRows.map(_chart.keyAccessor()),
+            topSet = d3.set(topKeys),
+            others = allKeys.filter(function(d){return !topSet.has(d);});
+        topRows.push({"others": others,"key": _othersLabel, "value": allRowsSum - topRowsSum });
+    };
+
+    _chart.assembleCappedData = function() {
+        if (_cap == Infinity) {
+            return _chart.computeOrderedGroups();
+        } else {
+            var topRows = _chart.group().top(_cap); // ordered by value
+            topRows = _chart.computeOrderedGroups(topRows); // re-order by key
+            if (_othersGrouper) _othersGrouper(topRows);
+            return topRows;
+        }
+    };
+
+    _chart.cap = function (_) {
+        if (!arguments.length) return _cap;
+        _cap = _;
+        return _chart;
+    };
+
+    _chart.othersLabel = function (_) {
+        if (!arguments.length) return _othersLabel;
+        _othersLabel = _;
+        return _chart;
+    };
+
+    // if set to falsy value, no others row will be added
+    _chart.othersGrouper = function (_) {
+        if (!arguments.length) return _othersGrouper;
+        _othersGrouper = _;
+        return _chart;
+    };
+
+    dc.override(_chart, "onClick", function (d) {
+        if (d.others)
+            d.others.forEach(function(f) {
+                _chart.filter(f);
+            });
+        _chart._onClick(d);
+    });
+
+    return _chart;
 };
 
 dc.scatterPlot = function (parent, chartGroup) {
