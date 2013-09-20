@@ -4,8 +4,6 @@
     <title>dc.js - Number Display Example</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
-    <style>
-    </style>
 </head>
 <body>
 
@@ -50,7 +48,8 @@ var ndx = crossfilter(spendData),
 yearRingChart
     .width(200).height(200)
     .dimension(yearDim)
-    .group(spendPerYear);
+    .group(spendPerYear)
+    .cap(2);
 
 spendHistChart
     .width(300).height(200)
@@ -65,9 +64,9 @@ spendHistChart.yAxis().ticks(2);
 spenderRowChart
     .width(350).height(200)
     .dimension(nameDim)
-    .group(spendPerName);
-
-    console.log(spendPerName.all());
+    .group(spendPerName)
+    .rowsCap(1)
+    .elasticX(true);
 
 dc.renderAll();
 
