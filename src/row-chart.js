@@ -11,8 +11,6 @@ dc.rowChart = function (parent, chartGroup) {
     var _rowCssClass = "row";
 
     var _chart = dc.marginable(dc.colorChart(dc.baseChart({})));
-    
-    var _xScale;
 
     var _x;
 
@@ -21,8 +19,6 @@ dc.rowChart = function (parent, chartGroup) {
     var _xAxis = d3.svg.axis().orient("bottom");
 
     var _rowsCap = Infinity;
-    
-    var _rowOther = true;
 
     var _othersLabel = "Others";
 
@@ -37,19 +33,19 @@ dc.rowChart = function (parent, chartGroup) {
             _rowData = _chart.computeOrderedGroups(); // ordered by keys
         } else {
             var topRows = _chart.group().top(_rowsCap); // ordered by value
-            if (_rowOther) {
+            if (_othersHandler) {
                 var topRowsSum = d3.sum(topRows, _chart.valueAccessor());
                 var allRows = _chart.group().all();
                 var allRowsSum = d3.sum(allRows, _chart.valueAccessor());
                 _othersHandler(topRows,allRowsSum - topRowsSum);
- 			}
+            }
             _rowData = topRows;
         }
     }
 
     function calculateAxisScale() {
         if (!_x || _elasticX) {
-            var extent = d3.extent(_chart.group().all(), _chart.valueAccessor());
+            var extent = d3.extent(_rowData, _chart.valueAccessor());
             if (extent[0] > 0) extent[0] = 0;
             _x = d3.scale.linear().domain(extent)
                 .range([0, _chart.effectiveWidth()]);
@@ -75,15 +71,9 @@ dc.rowChart = function (parent, chartGroup) {
 
         _chart.resetSvg();
 
-        assembleData();
- 
         _g = _chart.svg()
             .append("g")
             .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")");
-
-        _g.append("g").attr("class", "axis")
-                        .attr("transform", "translate(0, " + _chart.effectiveHeight() + ")")
-                        .call(_xAxis);
 
         drawChart();
 
@@ -121,16 +111,15 @@ dc.rowChart = function (parent, chartGroup) {
     }
 
     function drawChart() {
-        _xScale = d3.scale.linear().domain([0, d3.max(_rowData, _chart.valueAccessor())]).range([0, _chart.effectiveWidth()]);
-        _xAxis.scale(_xScale);
+        assembleData();
 
         drawAxis();
         drawGridLines();
 
         var rows = _g.selectAll("g." + _rowCssClass)
-                     .data(_rowData);
+            .data(_rowData);
 
-        createElements(rows, _rowData);
+        createElements(rows);
         removeElements(rows);
         updateElements(rows);
     }
@@ -175,6 +164,7 @@ dc.rowChart = function (parent, chartGroup) {
                 var start = _x(0) == -Infinity ? _x(1) : _x(0);
                 return Math.abs(start - _x(_chart.valueAccessor()(d)));
             })
+            .attr("transform", translateX);
 
         createTitles(rows);
     }
@@ -205,22 +195,11 @@ dc.rowChart = function (parent, chartGroup) {
                     return _rowCssClass + " _" + i;
                 })
                 .text(function (d) {
-                            if (_chart.valueAccessor()(d) > 0) {
-                                return _chart.label()(d);
-                            } else {
-                                return "";
-                            }
+                    return _chart.label()(d);
                 });
+            dc.transition(lab, _chart.transitionDuration())
+                .attr("transform", translateX);
         }
-    }
-
-    function numberOfRows() {
-        return _rowData.length;
-    }
-
-    function rowHeight() {
-        var n = numberOfRows();
-        return (_chart.effectiveHeight() - (n + 1) * _gap) / n;
     }
 
     function onClick(d) {
@@ -276,12 +255,6 @@ dc.rowChart = function (parent, chartGroup) {
         _rowsCap = _;
         return _chart;
     };
-    
-    _chart.rowOther = function (_) {
-    	if (!arguments.length) return _rowOther;
-    	_rowOther = _;
-    	return _chart;
-    }
 
     _chart.othersLabel = function (_) {
         if (!arguments.length) return _othersLabel;
@@ -289,6 +262,7 @@ dc.rowChart = function (parent, chartGroup) {
         return _chart;
     };
 
+    // if set to falsy value, no others row will be added
     _chart.othersHandler = function (_) {
         if (!arguments.length) return _othersHandler;
         _othersHandler = _;
