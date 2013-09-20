@@ -1,5 +1,5 @@
 (function(exports){
-crossfilter.version = "1.3.1";
+crossfilter.version = "1.3.5";
 function crossfilter_identity(d) {
   return d;
 }
@@ -634,10 +634,10 @@ function crossfilter() {
       newValues = permute(newValues, newIndex);
 
       // Bisect newValues to determine which new records are selected.
-      var bounds = refilter(newValues), lo1 = bounds[0], hi1 = bounds[1], i, k;
+      var bounds = refilter(newValues), lo1 = bounds[0], hi1 = bounds[1], i;
       if (refilterFunction) {
         for (i = 0; i < n1; ++i) {
-          if (!refilterFunction(newValues[i], k = newIndex[i] + n0)) filters[k] |= one;
+          if (!refilterFunction(newValues[i], i)) filters[newIndex[i] + n0] |= one;
         }
       } else {
         for (i = 0; i < lo1; ++i) filters[newIndex[i] + n0] |= one;
@@ -699,7 +699,8 @@ function crossfilter() {
     function removeData(reIndex) {
       for (var i = 0, j = 0, k; i < n; ++i) {
         if (filters[k = index[i]]) {
-          if (i !== j) values[j] = values[i], index[j] = reIndex[k];
+          if (i !== j) values[j] = values[i];
+          index[j] = reIndex[k];
           ++j;
         }
       }
@@ -811,7 +812,7 @@ function crossfilter() {
           removed = [];
 
       for (i = 0; i < n; ++i) {
-        if (!(filters[k = index[i]] & one) ^ (x = f(values[i], k))) {
+        if (!(filters[k = index[i]] & one) ^ (x = f(values[i], i))) {
           if (x) filters[k] &= zero, added.push(k);
           else filters[k] |= one, removed.push(k);
         }
@@ -1008,11 +1009,46 @@ function crossfilter() {
       }
 
       function removeData() {
-        for (var i = 0, j = 0; i < n; ++i) {
-          if (filters[i]) {
-            if (i !== j) groupIndex[j] = groupIndex[i];
-            ++j;
+        if (k > 1) {
+          var oldK = k,
+              oldGroups = groups,
+              seenGroups = crossfilter_index(oldK, oldK);
+
+          // Filter out non-matches by copying matching group index entries to
+          // the beginning of the array.
+          for (var i = 0, j = 0; i < n; ++i) {
+            if (filters[i]) {
+              seenGroups[groupIndex[j] = groupIndex[i]] = 1;
+              ++j;
+            }
           }
+
+          // Reassemble groups including only those groups that were referred
+          // to by matching group index entries.  Note the new group index in
+          // seenGroups.
+          groups = [], k = 0;
+          for (i = 0; i < oldK; ++i) {
+            if (seenGroups[i]) {
+              seenGroups[i] = k++;
+              groups.push(oldGroups[i]);
+            }
+          }
+
+          if (k > 1) {
+            // Reindex the group index using seenGroups to find the new index.
+            for (var i = 0; i < j; ++i) groupIndex[i] = seenGroups[groupIndex[i]];
+          } else {
+            groupIndex = null;
+          }
+          filterListeners[filterListeners.indexOf(update)] = k > 1
+              ? (reset = resetMany, update = updateMany)
+              : k === 1 ? (reset = resetOne, update = updateOne)
+              : reset = update = crossfilter_null;
+        } else if (k === 1) {
+          for (var i = 0; i < n; ++i) if (filters[i]) return;
+          groups = [], k = 0;
+          filterListeners[filterListeners.indexOf(update)] =
+          update = reset = crossfilter_null;
         }
       }
 
