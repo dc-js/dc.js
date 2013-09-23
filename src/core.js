@@ -122,7 +122,7 @@ dc.units.fp = {};
 dc.units.fp.precision = function(precision){
     var _f = function(s, e){
         var d = Math.abs((e-s)/_f.resolution);
-        if(d - Math.floor(d) < 0.000000001)
+        if(dc.utils.isNegligible(d - Math.floor(d)))
             return Math.floor(d);
         else
             return Math.ceil(d);
