@@ -2702,6 +2702,15 @@ dc.barChart = function (parent, chartGroup) {
         }).classed('fadeout', false);
     };
 
+    dc.override(_chart, "xAxisMax", function() {
+        var max = this._xAxisMax();
+        if('resolution' in _chart.xUnits()) {
+            var res = _chart.xUnits().resolution;
+            max += res;
+        }
+        return max;
+    });
+
     return _chart.anchor(parent, chartGroup);
 };
 
