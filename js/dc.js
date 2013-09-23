@@ -140,7 +140,13 @@ dc.units.ordinal = function(s, e, domain){
 };
 dc.units.fp = {};
 dc.units.fp.precision = function(precision){
-    var _f = function(s, e){return Math.ceil(Math.abs((e-s)/_f.resolution));};
+    var _f = function(s, e){
+        var d = Math.abs((e-s)/_f.resolution);
+        if(dc.utils.isNegligible(d - Math.floor(d)))
+            return Math.floor(d);
+        else
+            return Math.ceil(d);
+    };
     _f.resolution = precision;
     return _f;
 };
@@ -1922,10 +1928,19 @@ dc.stackableChart = function (_chart) {
 
         if (_chart.x()) {
             var xDomain = _chart.x().domain();
-
+            var test;
+            if(_chart.isOrdinal()) {
+                var domainSet = d3.set(xDomain);
+                test = function(p) {
+                    return domainSet.has(p.x);
+                };
+            }
+            else test = function(p) {
+                return p.x >= xDomain[0] && p.x <= xDomain[xDomain.length-1];
+            };
             _chart.stackLayers().forEach(function (e) {
                 e.points.forEach(function (p) {
-                    if (p.x >= xDomain[0] && p.x <= xDomain[xDomain.length-1])
+                    if (test(p))
                         all.push(p);
                 });
             });
