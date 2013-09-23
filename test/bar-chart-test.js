@@ -595,6 +595,24 @@ suite.addBatch({'ordinal bar chart auto domain': {
     }
 }});
 
+suite.addBatch({'ordinal bar chart, elastic y': {
+    topic: function () {
+        var xdomain = ["Colorado", "Delaware", "California", "Ontario", "Mississippi", "Oklahoma"];
+        var chart = buildOrdinalChart("bar-chart-ordinal", xdomain);
+        chart.elasticY(true)
+            .render();
+        return chart;
+    },
+    'should use all ordinal keys to determine max y': function(chart) {
+        assert.equal(chart.y().domain()[0], 0);
+        assert.equal(chart.y().domain()[1], 3);
+    },
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
+    }
+}});
+
 
 suite.addBatch({'dynamic accessor switch': {
     topic: function () {
