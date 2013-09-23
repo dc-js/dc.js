@@ -120,7 +120,13 @@ dc.units.ordinal = function(s, e, domain){
 };
 dc.units.fp = {};
 dc.units.fp.precision = function(precision){
-    var _f = function(s, e){return Math.ceil(Math.abs((e-s)/_f.resolution));};
+    var _f = function(s, e){
+        var d = Math.abs((e-s)/_f.resolution);
+        if(d - Math.floor(d) < 0.000000001)
+            return Math.floor(d);
+        else
+            return Math.ceil(d);
+    };
     _f.resolution = precision;
     return _f;
 };
