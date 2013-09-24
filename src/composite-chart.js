@@ -1,3 +1,33 @@
+/**
+## <a name="composite-chart" href="#composite-chart">#</a> Composite Chart [Concrete] < [CoordinateGrid Chart](#coordinate-grid-chart)
+Composite chart is a special kind of chart that resides somewhere between abstract and concrete charts. It does not
+generate data visualization directly, but rather working with other concrete charts to do the job. You can essentially
+overlay(compose) different bar/line/area charts in a single composite chart to achieve some quite flexible charting
+effects.
+
+Examples:
+* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
+
+#### dc.compositeChart(parent[, chartGroup])
+Create a composite chart instance and attach it to the given parent element.
+
+Parameters:
+* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
+   in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
+   chart group.
+
+Return:
+A newly created composite chart instance
+
+```js
+// create a composite chart under #chart-container1 element using the default global chart group
+var compositeChart1 = dc.compositeChart("#chart-container1");
+// create a composite chart under #chart-container2 element using chart group A
+var compositeChart2 = dc.compositeChart("#chart-container2", "chartGroupA");
+```
+
+**/
 dc.compositeChart = function (parent, chartGroup) {
     var SUB_CHART_CLASS = "sub";
 
@@ -59,6 +89,32 @@ dc.compositeChart = function (parent, chartGroup) {
         }
     };
 
+    /**
+    #### .compose(subChartArray)
+    Combine the given charts into one single composite coordinate grid chart.
+
+    ```js
+    // compose the given charts in the array into one single composite chart
+    moveChart.compose([
+        // when creating sub-chart you need to pass in the parent chart
+        dc.lineChart(moveChart)
+            .group(indexAvgByMonthGroup) // if group is missing then parent's group will be used
+            .valueAccessor(function(d){return d.value.avg;})
+            // most of the normal functions will continue to work in a composed chart
+            .renderArea(true)
+            .stack(monthlyMoveGroup, function(d){return d.value;})
+            .title(function(d){
+                var value = d.value.avg?d.value.avg:d.value;
+                if(isNaN(value)) value = 0;
+                return dateFormat(d.key) + "\n" + numberFormat(value);
+            }),
+        dc.barChart(moveChart)
+            .group(volumeByMonthGroup)
+            .centerBar(true)
+    ]);
+    ```
+
+    **/
     _chart.compose = function (charts) {
         _children = charts;
         for (var i = 0; i < _children.length; ++i) {

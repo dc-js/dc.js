@@ -1,3 +1,36 @@
+/**
+## <a name="bubble-chart" href="#bubble-chart">#</a> Bubble Chart [Concrete] < [Abstract Bubble Chart](#abstract-bubble-chart) < [CoordinateGrid Chart](#coordinate-grid-chart)
+A concrete implementation of a general purpose bubble chart that allows data visualization using the following dimensions:
+
+* x axis position
+* y axis position
+* bubble radius
+* color
+
+Examples:
+* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
+* [US Venture Capital Landscape 2011](http://nickqizhu.github.com/dc.js/vc/index.html)
+
+#### dc.bubbleChart(parent[, chartGroup])
+Create a bubble chart instance and attach it to the given parent element.
+
+Parameters:
+* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
+   in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
+   chart group.
+
+Return:
+A newly created bubble chart instance
+
+```js
+// create a bubble chart under #chart-container1 element using the default global chart group
+var bubbleChart1 = dc.bubbleChart("#chart-container1");
+// create a bubble chart under #chart-container2 element using chart group A
+var bubbleChart2 = dc.bubbleChart("#chart-container2", "chartGroupA");
+```
+
+**/
 dc.bubbleChart = function(parent, chartGroup) {
     var _chart = dc.abstractBubbleChart(dc.coordinateGridChart({}));
 
@@ -9,6 +42,12 @@ dc.bubbleChart = function(parent, chartGroup) {
         return "translate(" + (bubbleX(d)) + "," + (bubbleY(d)) + ")";
     };
 
+    /**
+    #### .elasticRadius([boolean])
+    Turn on or off elastic bubble radius feature. If this feature is turned on, then bubble radiuses will be automatically rescaled
+    to fit the chart better.
+
+    **/
     _chart.elasticRadius = function(_) {
         if (!arguments.length) return _elasticRadius;
         _elasticRadius = _;

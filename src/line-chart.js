@@ -1,3 +1,34 @@
+/**
+## <a name="line-chart" href="#line-chart">#</a> Line Chart [Concrete] < [Stackable Chart](#stackable-chart) < [CoordinateGrid Chart](#coordinate-grid-chart)
+Concrete line/area chart implementation.
+
+Examples:
+* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
+* [Canadian City Crime Stats](http://nickqizhu.github.com/dc.js/crime/index.html)
+
+#### dc.lineChart(parent[, chartGroup])
+Create a line chart instance and attach it to the given parent element.
+
+Parameters:
+* parent : string|compositeChart - any valid d3 single selector representing typically a dom block element such
+   as a div, or if this line chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
+   in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
+   chart group.
+
+Return:
+A newly created line chart instance
+
+```js
+// create a line chart under #chart-container1 element using the default global chart group
+var chart1 = dc.lineChart("#chart-container1");
+// create a line chart under #chart-container2 element using chart group A
+var chart2 = dc.lineChart("#chart-container2", "chartGroupA");
+// create a sub-chart under a composite parent chart
+var chart3 = dc.lineChart(compositeChart);
+```
+
+**/
 dc.lineChart = function (parent, chartGroup) {
     var DEFAULT_DOT_RADIUS = 5;
     var TOOLTIP_G_CLASS = "dc-tooltip";
@@ -45,6 +76,12 @@ dc.lineChart = function (parent, chartGroup) {
         return _chart;
     };
 
+    /**
+    #### .renderArea([boolean])
+    Get or set render area flag. If the flag is set to true then the chart will render the area beneath each line and effectively
+    becomes an area chart.
+
+    **/
     _chart.renderArea = function (_) {
         if (!arguments.length) return _renderArea;
         _renderArea = _;
@@ -189,6 +226,11 @@ dc.lineChart = function (parent, chartGroup) {
         g.select("path." + X_AXIS_REF_LINE_CLASS).style("display", "none");
     }
 
+    /**
+    #### .dotRadius([dotRadius])
+    Get or set the radius (in px) for data points. Default dot radius is 5.
+
+    **/
     _chart.dotRadius = function (_) {
         if (!arguments.length) return _dotRadius;
         _dotRadius = _;

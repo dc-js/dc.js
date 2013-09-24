@@ -1,3 +1,9 @@
+/**
+## <a name="stackable-chart" href="#stackable-chart">#</a> Stackable Chart [Abstract]
+Stackable chart is an abstract chart introduced to provide cross-chart support of stackability. Concrete implementation of
+charts can then selectively mix-in this capability.
+
+**/
 dc.stackableChart = function (_chart) {
     var _groupStack = new dc.utils.GroupStack();
     var _stackLayout = d3.layout.stack()
@@ -11,6 +17,20 @@ dc.stackableChart = function (_chart) {
     var _allKeyAccessors;
     var _stackLayers;
 
+    /**
+    #### .stack(group[, name, retriever])
+    Stack a new crossfilter group into this chart with optionally a custom value retriever. All stacks in the same chart will
+    share the same key accessor therefore share the same set of keys. In more concrete words, imagine in a stacked bar chart
+    all bars will be positioned using the same set of keys on the x axis while stacked vertically. If name is specified then
+    it will be used to generate legend label.
+    ```js
+    // stack group using default accessor
+    chart.stack(valueSumGroup)
+    // stack group using custom accessor
+    .stack(avgByDayGroup, function(d){return d.value.avgByDay;});
+    ```
+
+    **/
     _chart.stack = function (group, p2, retriever) {
         if(!arguments.length)
             _groupStack.clear();

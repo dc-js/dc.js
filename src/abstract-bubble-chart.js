@@ -1,3 +1,8 @@
+/**
+## <a name="abstract-bubble-chart" href="#abstract-bubble-chart">#</a> Abstract Bubble Chart [Abstract] < [Color Chart](#color-chart)
+An abstraction provides reusable functionalities for any chart that needs to visualize data using bubbles.
+
+**/
 dc.abstractBubbleChart = function (_chart) {
     var _maxBubbleRelativeSize = 0.3;
     var _minRadiusWithLabel = 10;
@@ -17,12 +22,24 @@ dc.abstractBubbleChart = function (_chart) {
         return d.r;
     };
 
+    /**
+    #### .r([bubbleRadiusScale])
+    Get or set bubble radius scale. By default bubble chart uses ```d3.scale.linear().domain([0, 100])``` as it's r scale .
+
+    **/
     _chart.r = function (_) {
         if (!arguments.length) return _r;
         _r = _;
         return _chart;
     };
 
+    /**
+    #### .radiusValueAccessor([radiusValueAccessor])
+    Get or set the radius value accessor function. The radius value accessor function if set will be used to retrieve data value
+    for each and every bubble rendered. The data retrieved then will be mapped using r scale to be used as the actual bubble
+    radius. In other words, this allows you to encode a data dimension using bubble size.
+
+    **/
     _chart.radiusValueAccessor = function (_) {
         if (!arguments.length) return _rValueAccessor;
         _rValueAccessor = _;
@@ -106,12 +123,24 @@ dc.abstractBubbleChart = function (_chart) {
         }
     };
 
+    /**
+    #### .minRadiusWithLabel([radius])
+    Get or set the minimum radius for label rendering. If a bubble's radius is less than this value then no label will be rendered.
+    Default value: 10.
+
+    **/
     _chart.minRadiusWithLabel = function (_) {
         if (!arguments.length) return _minRadiusWithLabel;
         _minRadiusWithLabel = _;
         return _chart;
     };
 
+    /**
+    #### .maxBubbleRelativeSize([relativeSize])
+    Get or set the maximum relative size of a bubble to the length of x axis. This value is useful when the radius differences among
+    different bubbles are too great. Default value: 0.3
+
+    **/
     _chart.maxBubbleRelativeSize = function (_) {
         if (!arguments.length) return _maxBubbleRelativeSize;
         _maxBubbleRelativeSize = _;
