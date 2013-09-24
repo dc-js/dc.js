@@ -1,14 +1,15 @@
 module.exports = function (grunt) {
     var jsFiles = module.exports.jsFiles,
     output = {
-      js: './<%= pkg.name %>.js',
-      jsmin: './<%= pkg.name %>.min.js',
+      js: '<%= pkg.name %>.js',
+      jsmin: '<%= pkg.name %>.min.js',
+      map: '<%= pkg.name %>.min.js.map'
     };
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
-        concat_sourcemap: {
+        concat: {
             js: {
                 src: jsFiles,
                 dest: output.js
@@ -18,7 +19,8 @@ module.exports = function (grunt) {
             jsmin: {
                 options: {
                     mangle: true,
-                    compress: true
+                    compress: true,
+                    sourceMap: output.map
                 },
                 src: output.js,
                 dest: output.jsmin
@@ -83,7 +85,7 @@ module.exports = function (grunt) {
     });
 
     // These plugins provide necessary tasks.
-    grunt.loadNpmTasks('grunt-concat-sourcemap');
+    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -102,7 +104,7 @@ module.exports = function (grunt) {
         grunt.log.writeln('File "' + destFile + '" created.');
     });
 
-    grunt.registerTask('default', ['concat_sourcemap', 'uglify', 'sed', 'copy']);
+    grunt.registerTask('default', ['concat', 'uglify', 'sed', 'copy']);
     grunt.registerTask('docs', ['default', 'emu', 'markdown']);
     grunt.registerTask('web', ['default', 'docs', 'gh-pages']);
 };

@@ -5348,5 +5348,3 @@ dc.numberDisplay = function (parent, chartGroup) {
 
 
 return dc;})();
-
-//@ sourceMappingURL=dc.js.map
