@@ -1,32 +1,5 @@
 module.exports = function (grunt) {
-
-    var jsFiles = [
-        "src/core.js",
-        "src/errors.js",
-        "src/utils.js",
-        "src/events.js",
-        "src/cumulative.js",
-        "src/base-chart.js",
-        "src/marginable.js",
-        "src/coordinate-grid-chart.js",
-        "src/color-chart.js",
-        "src/stackable-chart.js",
-        "src/abstract-bubble-chart.js",
-        "src/pie-chart.js",
-        "src/bar-chart.js",
-        "src/line-chart.js",
-        "src/data-count.js",
-        "src/data-table.js",
-        "src/bubble-chart.js",
-        "src/composite-chart.js",
-        "src/geo-choropleth-chart.js",
-        "src/bubble-overlay.js",
-        "src/row-chart.js",
-        "src/legend.js",
-        "src/capped.js",
-        "src/scatter-plot.js",
-        "src/number-display.js"
-    ],
+    var jsFiles = module.exports.jsFiles,
     output = {
       js: './<%= pkg.name %>.js',
       jsmin: './<%= pkg.name %>.min.js',
@@ -35,29 +8,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
-        concat: {
-            options: {
-                banner: ['/*!',
-                    ' *  <%= pkg.name %> <%= pkg.version %>',
-                    ' *  <%= pkg.homepage %>',
-                    ' *  Copyright <%= pkg.copyright %> <%= pkg.author.name %> and other contributors',
-                    ' *',
-                    ' *  Licensed under the Apache License, Version 2.0 (the "License");',
-                    ' *  you may not use this file except in compliance with the License.',
-                    ' *  You may obtain a copy of the License at',
-                    ' *',
-                    ' *      http://www.apache.org/licenses/LICENSE-2.0',
-                    ' *',
-                    ' *  Unless required by applicable law or agreed to in writing, software',
-                    ' *  distributed under the License is distributed on an "AS IS" BASIS,',
-                    ' *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.',
-                    ' *  See the License for the specific language governing permissions and',
-                    ' *  limitations under the License.',
-                    ' */\n\n',
-                    'dc = (function(){\n'
-                ].join('\n'),
-                footer: 'return dc;})();'
-            },
+        concat_sourcemap: {
             js: {
                 src: jsFiles,
                 dest: output.js
@@ -92,6 +43,19 @@ module.exports = function (grunt) {
                 src: ["test/*.js", "spec/*"]
             }
         },
+        emu: {
+            doc: {
+                src: output.js,
+                dest: 'web/docs/api-<%= pkg.version %>.md'
+            }
+        },
+        markdown: {
+            html: {
+                src: '<%= emu.doc.dest %>',
+                dest: 'web/docs/index.html'
+            },
+            options: {markdownOptions: {highlight: 'manual'}}
+        },
         copy: {
             'dc-to-gh': {
                 files: [
@@ -99,6 +63,7 @@ module.exports = function (grunt) {
                     { expand: true,
                       flatten: true,
                       src: [output.js,
+                            output.js + ".map",
                             'node_modules/jquery/tmp/jquery.js',
                             'node_modules/d3/d3.js',
                             'node_modules/crossfilter/crossfilter.js',
@@ -118,16 +83,56 @@ module.exports = function (grunt) {
     });
 
     // These plugins provide necessary tasks.
-    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-concat-sourcemap');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-gh-pages');
+    grunt.loadNpmTasks('grunt-markdown');
     grunt.loadNpmTasks('grunt-sed');
     grunt.loadNpmTasks('grunt-vows');
+    grunt.registerMultiTask('emu', 'Documentation extraction by emu.', function() {
+      console.log(this.files[0].src, this.files[0].dest);
+        var emu = require('emu'),
+            fs = require('fs'),
+            srcFile = this.files[0].src[0],
+            destFile = this.files[0].dest,
+            source = grunt.file.read(srcFile);
+        grunt.file.write(destFile, emu.getComments(source));
+        grunt.log.writeln('File "' + destFile + '" created.');
+    });
 
-    // Default task.
-    grunt.registerTask('default', ['concat', 'uglify', 'sed', 'copy']);
-    grunt.registerTask('web', ['copy:dc-to-gh', 'gh-pages']);
-
+    grunt.registerTask('default', ['concat_sourcemap', 'uglify', 'sed', 'copy']);
+    grunt.registerTask('docs', ['default', 'emu', 'markdown']);
+    grunt.registerTask('web', ['default', 'docs', 'gh-pages']);
 };
+
+module.exports.jsFiles = [
+    "src/banner.js",
+    "src/core.js",
+    "src/errors.js",
+    "src/utils.js",
+    "src/events.js",
+    "src/cumulative.js",
+    "src/base-chart.js",
+    "src/marginable.js",
+    "src/coordinate-grid-chart.js",
+    "src/color-chart.js",
+    "src/stackable-chart.js",
+    "src/abstract-bubble-chart.js",
+    "src/pie-chart.js",
+    "src/bar-chart.js",
+    "src/line-chart.js",
+    "src/data-count.js",
+    "src/data-table.js",
+    "src/bubble-chart.js",
+    "src/composite-chart.js",
+    "src/geo-choropleth-chart.js",
+    "src/bubble-overlay.js",
+    "src/row-chart.js",
+    "src/legend.js",
+    "src/capped.js",
+    "src/scatter-plot.js",
+    "src/number-display.js",
+    "src/footer.js"
+];

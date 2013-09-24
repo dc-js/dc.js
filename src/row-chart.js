@@ -1,3 +1,24 @@
+/**
+## <a name="row-chart" href="#row-chart">#</a> Row Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
+Concrete row chart implementation.
+
+#### dc.rowChart(parent[, chartGroup])
+Create a row chart instance and attach it to the given parent element.
+
+Parameters:
+* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed in a certain chart group then any interaction with such instance will only trigger events and redraw within the same chart group.
+
+Return a newly created row chart instance
+
+```js
+// create a row chart under #chart-container1 element using the default global chart group
+var chart1 = dc.rowChart("#chart-container1");
+// create a row chart under #chart-container2 element using chart group A
+var chart2 = dc.rowChart("#chart-container2", "chartGroupA");
+```
+
+**/
 dc.rowChart = function (parent, chartGroup) {
 
     var _g;
@@ -201,24 +222,45 @@ dc.rowChart = function (parent, chartGroup) {
         return _xAxis;
     };
 
+    /**
+    #### .gap([gap])
+    Get or set the vertical gap space between rows on a particular row chart instance. Default gap is 5px;
+
+    **/
     _chart.gap = function (g) {
         if (!arguments.length) return _gap;
         _gap = g;
         return _chart;
     };
 
+    /**
+    #### .elasticX([boolean])
+    Get or set the elasticity on x axis. If this attribute is set to true, then the x axis will rescle to auto-fit the data
+    range when filtered.
+
+    **/
     _chart.elasticX = function (_) {
         if (!arguments.length) return _elasticX;
         _elasticX = _;
         return _chart;
     };
 
+    /**
+    #### .labelOffsetX([x])
+    Get or set the x offset (horizontal space to the top left corner of a row) for labels on a particular row chart. Default x offset is 10px;
+
+    **/
     _chart.labelOffsetX = function (o) {
         if (!arguments.length) return _labelOffsetX;
         _labelOffsetX = o;
         return _chart;
     };
 
+    /**
+    #### .labelOffsetY([y])
+    Get of set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart. Default y offset is 15px;
+
+    **/
     _chart.labelOffsetY = function (o) {
         if (!arguments.length) return _labelOffsetY;
         _labelOffsetY = o;

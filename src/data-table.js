@@ -1,3 +1,24 @@
+/**
+## <a name="data-table" href="#data-table">#</a> Data Table Widget [Concrete] < [Base Chart](#base-chart)
+Data table is a simple widget designed to list crossfilter focused data set (rows being filtered) in a good old tabular
+fashion.
+
+Examples:
+* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
+
+#### dc.dataTable(parent[, chartGroup])
+Create a data table widget instance and attach it to the given parent element.
+
+Parameters:
+* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
+   in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
+   chart group.
+
+Return:
+A newly created data table widget instance
+
+**/
 dc.dataTable = function(parent, chartGroup) {
     var LABEL_CSS_CLASS = "dc-table-label";
     var ROW_CSS_CLASS = "dc-table-row";
@@ -89,24 +110,77 @@ dc.dataTable = function(parent, chartGroup) {
         return _chart.doRender();
     };
 
+    /**
+    #### .size([size])
+    Get or set the table size which determines the number of rows displayed by the widget.
+
+    **/
     _chart.size = function(s) {
         if (!arguments.length) return _size;
         _size = s;
         return _chart;
     };
 
+    /**
+    #### .columns([columnFunctionArray])
+    Get or set column functions. Data table widget uses an array of functions to generate dynamic columns. Column functions are
+    simple javascript function with only one input argument d which represents a row in the data set, and the return value of
+    these functions will be used directly to generate table content for each cell.
+
+    ```js
+        chart.columns([
+            function(d) {
+                return d.date;
+            },
+            function(d) {
+                return d.open;
+            },
+            function(d) {
+                return d.close;
+            },
+            function(d) {
+                return numberFormat(d.close - d.open);
+            },
+            function(d) {
+                return d.volume;
+            }
+        ]);
+    ```
+
+    **/
     _chart.columns = function(_) {
         if (!arguments.length) return _columns;
         _columns = _;
         return _chart;
     };
 
+    /**
+    #### .sortBy([sortByFunction])
+    Get or set sort-by function. This function works as a value accessor at row level and returns a particular field to be sorted
+    by. Default value: ``` function(d) {return d;}; ```
+
+    ```js
+       chart.sortBy(function(d) {
+            return d.date;
+        });
+    ```
+
+    **/
     _chart.sortBy = function(_) {
         if (!arguments.length) return _sortBy;
         _sortBy = _;
         return _chart;
     };
 
+    /**
+    #### .order([order])
+    Get or set sort order. Default value: ``` d3.ascending ```
+
+    ```js
+        chart.order(d3.descending);
+    ```
+
+    **/
     _chart.order = function(_) {
         if (!arguments.length) return _order;
         _order = _;

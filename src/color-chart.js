@@ -1,3 +1,9 @@
+/**
+## <a name="color-chart" href="#color-chart">#</a> Color Chart [Abstract]
+Color chart is an abstract chart functional class created to provide universal coloring support as a mix-in for any concrete
+chart implementation.
+
+**/
 dc.colorChart = function(_chart) {
     var _colors = d3.scale.category20c();
 
@@ -18,6 +24,18 @@ dc.colorChart = function(_chart) {
 
     var _colorAccessor = function(d, i){return i;};
 
+    /**
+    #### .colors([colorScale or colorArray])
+    Retrieve current color scale or set a new color scale. This function accepts both d3 color scale and arbitrary color
+    array. By default d3.scale.category20c() is used.
+    ```js
+    // color scale
+    chart.colors(d3.scale.category20b());
+    // arbitrary color array
+    chart.colors(["#a60000","#ff0000", "#ff4040","#ff7373","#67e667","#39e639","#00cc00"]);
+    ```
+
+    **/
     _chart.colors = function(_) {
         if (!arguments.length) return _colors;
 
@@ -47,12 +65,38 @@ dc.colorChart = function(_chart) {
         return _colorCalculator(_colorAccessor(d, i));
     };
 
+    /**
+    #### .colorAccessor([colorAccessorFunction])
+    Set or get color accessor function. This function will be used to map a data point on crossfilter group to a specific
+    color value on the color scale. Default implementation of this function simply returns the next color on the scale using
+    the index of a group.
+    ```js
+    // default index based color accessor
+    .colorAccessor(function(d, i){return i;})
+    // color accessor for a multi-value crossfilter reduction
+    .colorAccessor(function(d){return d.value.absGain;})
+    ```
+
+    **/
     _chart.colorAccessor = function(_){
         if(!arguments.length) return _colorAccessor;
         _colorAccessor = _;
         return _chart;
     };
 
+    /**
+    #### .colorDomain([domain])
+    Set or get the current domain for the color mapping function. This allows user to provide a custom domain for the mapping
+    function used to map the return value of the colorAccessor function to the target color range calculated based on the
+    color scale.
+    ```js
+    // custom domain for month of year
+    chart.colorDomain([0, 11])
+    // custom domain for day of year
+    chart.colorDomain([0, 364])
+    ```
+
+    **/
     _chart.colorDomain = function(_){
         if(!arguments.length) return _colorDomain;
         _colorDomain = _;
