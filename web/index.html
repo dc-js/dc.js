@@ -5,44 +5,54 @@
 
     <meta charset="UTF-8">
 
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css?%">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/dc.css"/>
 
     <link rel="stylesheet" type="text/css" href='highlighter/shCore.css'/>
     <link rel="stylesheet" type="text/css" href='highlighter/shThemeDefault.css'/>
+
+    <style>
+        #monthly-volume-chart g.y {
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
-
-<style>
-    #monthly-volume-chart g.y {
-        display: none;
-    }
-</style>
-
 <div class="container">
 
-<h2>dc.js - Dimensional Charting Javascript Library v<span id="version"></span></h2>
-
-<h4>[<a href="https://github.com/NickQiZhu/dc.js/releases">Get Stable Releases</a>]</h4>
+<h2>dc.js - Dimensional Charting Javascript Library</h2>
 
 <p>
-    dc.js is a javascript charting library with native <a
-        href="http://square.github.com/crossfilter/">crossfilter</a>
+    dc.js is a javascript charting library with native <a href="http://square.github.com/crossfilter/">crossfilter</a>
     support and allowing highly efficient exploration on large multi-dimensional dataset (inspired by crossfilter's
     demo). It leverages <a href="http://d3js.org/">d3</a> engine to render charts in css friendly svg format. Charts
     rendered using dc.js are naturally data driven and reactive therefore providing instant feedback on user's
     interaction. The main objective of this project is to provide an easy yet powerful javascript library which can be
-    utilized to perform data visualization and analysis in browser as well as on mobile device. For more information
-    please check out our <a href="https://github.com/NickQiZhu/dc.js/wiki">Wiki</a> and
-    <a href="https://github.com/NickQiZhu/dc.js/wiki/API">API Reference</a>. For your questions and answers please
-    try <a href="https://groups.google.com/forum/?fromgroups#!forum/dc-js-user-group">dc.js user group</a>.
+    utilized to perform data visualization and analysis in browser as well as on mobile device.
 </p>
+
+<h4>Version Status</h4>
+<p>This page is running version: v<span id="version"></span>. The lastest stable version is 1.5.0.</p>
+
+<h4>For more information and assistance</h4>
+<ul>
+  <li><a href="http://github.com/NickQiZhu/dc.js/releases/">Release Notes</a></li>
+  <li><a href="https://github.com/NickQiZhu/dc.js/wiki">Wiki</a> - Additional examples</li>
+  <li><a href="https://github.com/NickQiZhu/dc.js/wiki/Roadmap">Roadmap</a> - Future Plans</li>
+  <li><a href="https://github.com/NickQiZhu/dc.js/blob/master/web/docs/api-1.5.0.md">Stable API</a> - Documentation</li>
+  <li><a href="https://github.com/NickQiZhu/dc.js/blob/master/web/docs/api-1.6.0-dev.md">Master API</a> - Bleeding Edge</li>
+  <li><a href="https://groups.google.com/forum/?fromgroups#!forum/dc-js-user-group">Mailing List</a> - The users group and best place to post support questions.</li>
+  <li><a href="https://github.com/NickQiZhu/dc.js/issues">Issues</a> - Please post any issues you have found or enhancements you would like to see. Usage questions should be directed to the mailing list</li>
+</ul>
 
 <p>
     Fork me @ <a href="https://github.com/NickQiZhu/dc.js">https://github.com/NickQiZhu/dc.js</a> and also feel free
     to report any issue or request a new type of chart to be included in the next release.
 </p>
+
+
+<h3>Examples</h3>
 
 <p>
     The following charts provide a live example of dc.js used against Nasdaq 100 index for the last 27 years. (You
@@ -57,13 +67,11 @@
 
 <p>
     Try it out or checkout other examples.
-
+</p>
 <ul>
     <li><a href="vc/index.html">US Venture Capital Landscape 2011 (choropleth chart, bubble chart)</a></li>
-    <li><a href="crime/index.html">Major Canadian City Crime Stats 1998-2011 (bubble overlay, bar chart, line chart)</a>
-    </li>
+    <li><a href="crime/index.html">Major Canadian City Crime Stats 1998-2011 (bubble overlay, bar chart, line chart)</a></li>
 </ul>
-</p>
 
 <h2>Nasdaq 100 Index 1985/11/01-2012/06/29</h2>
 
@@ -147,7 +155,7 @@
 
 <div class="clearfix"></div>
 
-<h2>Quick 5 Mins How-To Guide (<a href="https://github.com/NickQiZhu/dc.js/wiki/API">API Reference</a>)</h2>
+<h2>Getting Started and How-To Guide</h2>
 
 <div>
 <h3>Load your data</h3>

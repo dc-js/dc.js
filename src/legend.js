@@ -1,3 +1,16 @@
+/**
+## <a name="legend" href="#legend">#</a> Legend [Concrete]
+Legend is a attachable widget that can be added to other dc charts to render horizontal legend labels.
+
+```js
+chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
+```
+
+Examples:
+* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
+* [Canadian City Crime Stats](http://nickqizhu.github.com/dc.js/crime/index.html)
+
+**/
 dc.legend = function () {
     var LABEL_GAP = 2;
 
@@ -52,24 +65,40 @@ dc.legend = function () {
         return _gap + _itemHeight;
     }
 
+    /**
+    #### .x([value])
+    Set or get x coordinate for legend widget. Default value: 0.
+    **/
     _legend.x = function (x) {
         if (!arguments.length) return _x;
         _x = x;
         return _legend;
     };
 
+    /**
+    #### .y([value])
+    Set or get y coordinate for legend widget. Default value: 0.
+    **/
     _legend.y = function (y) {
         if (!arguments.length) return _y;
         _y = y;
         return _legend;
     };
 
+    /**
+    #### .gap([value])
+    Set or get gap between legend items. Default value: 5.
+    **/
     _legend.gap = function (gap) {
         if (!arguments.length) return _gap;
         _gap = gap;
         return _legend;
     };
 
+    /**
+    #### .itemHeight([value])
+    Set or get legend item height. Default value: 12.
+    **/
     _legend.itemHeight = function (h) {
         if (!arguments.length) return _itemHeight;
         _itemHeight = h;

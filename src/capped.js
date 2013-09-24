@@ -32,13 +32,27 @@ dc.capped = function (_chart) {
         return _chart;
     };
 
+    /**
+    #### .othersLabel([label])
+    Get or set the label for *Others* slice when slices cap is specified. Default label is **Others**.
+    **/
     _chart.othersLabel = function (_) {
         if (!arguments.length) return _othersLabel;
         _othersLabel = _;
         return _chart;
     };
 
-    // if set to falsy value, no others row will be added
+    /**
+    #### .othersGrouper([grouperFunction])
+    Get or set the grouper funciton that will perform the insersion of data for the *Others* slice if the slices cap is
+    specified. By default the grouper function implements the following logic, you can and should change this function to
+    match your data structure. If set to a falsy value, no others will be added;
+    ```js
+    function (data, sum) {
+        data.push({"key": _othersLabel, "value": sum });
+    };
+    ```
+    **/
     _chart.othersGrouper = function (_) {
         if (!arguments.length) return _othersGrouper;
         _othersGrouper = _;
