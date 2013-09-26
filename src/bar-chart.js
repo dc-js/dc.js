@@ -3,6 +3,7 @@
 Concrete bar chart/histogram implementation.
 
 Examples:
+
 * [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
 * [Canadian City Crime Stats](http://nickqizhu.github.com/dc.js/crime/index.html)
 

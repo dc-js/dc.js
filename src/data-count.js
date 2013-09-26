@@ -8,12 +8,14 @@ under the parent element.
 * ".filter-count" - number of records matched by the current filters
 
 Examples:
+
 * [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
 
 #### dc.dataCount(parent[, chartGroup])
 Create a data count widget instance and attach it to the given parent element.
 
 Parameters:
+
 * parent : string - any valid d3 single selector representing typically a dom block element such as a div.
 * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
    in a certain chart group then any interaction with such instance will only trigger events and redraw within the same

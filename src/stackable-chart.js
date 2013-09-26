@@ -36,7 +36,7 @@ dc.stackableChart = function (_chart) {
             _groupStack.clear();
 
         if (typeof p2 === 'string')
-            _chart.setGroupName(group, p2, retriever);
+            _chart._setGroupName(group, p2, retriever);
         else if (typeof p2 === 'function')
             retriever = p2;
 

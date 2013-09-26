@@ -44,8 +44,8 @@ dc.baseChart = function (_chart) {
 
     var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
 
-    var NULL_LISTENER = function (chart) {
-    };
+    var NULL_LISTENER = function () {};
+
     var _listeners = {
         preRender: NULL_LISTENER,
         postRender: NULL_LISTENER,
@@ -54,6 +54,7 @@ dc.baseChart = function (_chart) {
         filtered: NULL_LISTENER,
         zoomed: NULL_LISTENER
     };
+
     var _legend;
 
     var _filters = [];
@@ -129,7 +130,7 @@ dc.baseChart = function (_chart) {
         if (!arguments.length) return _group;
         _group = g;
         _chart.expireCache();
-        if (typeof name === 'string') _chart.setGroupName(_group, name);
+        if (typeof name === 'string') _chart._setGroupName(_group, name);
         return _chart;
     };
 
@@ -149,11 +150,12 @@ dc.baseChart = function (_chart) {
         return g[k][c].n[i];
     }
 
-    _chart.getGroupName = function (g, accessor) {
+
+    _chart._getGroupName = function (g, accessor) {
       return groupName(_chart, g, accessor).name;
     };
 
-    _chart.setGroupName = function (g, name, accessor) {
+    _chart._setGroupName = function (g, name, accessor) {
       groupName(_chart, g, accessor).name = name;
     };
 
@@ -213,6 +215,11 @@ dc.baseChart = function (_chart) {
         return _root ? _root.selectAll(s) : null;
     };
 
+    /**
+    #### .anchor([anchorChart/anchorSelector], [chartGroup])
+    Set the svg root to either be an existing chart's root or the first element returned from a d3 css string selector. Optionally registers the chart within the chartGroup. This class is called internally on chart initialization, but be called again to relocate the chart. However, it will orphan any previously created SVG elements.
+
+    **/
     _chart.anchor = function (a, chartGroup) {
         if (!arguments.length) return _anchor;
         if (dc.instanceOfChart(a)) {
@@ -228,6 +235,11 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
+    /**
+    #### .anchorName()
+    Return the dom ID for chart's anchored location
+
+    **/
     _chart.anchorName = function () {
         var a = _chart.anchor();
         if (a && a.id) return a.id;
@@ -261,12 +273,16 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
+    /**
+    #### .resetSvg()
+    Remove the chart's SVG elements from the dom and recreate the container SVG element.
+    **/
     _chart.resetSvg = function () {
         _chart.select("svg").remove();
-        return _chart.generateSvg();
+        return generateSvg();
     };
 
-    _chart.generateSvg = function () {
+    function generateSvg() {
         _svg = _chart.root().append("svg")
             .attr("width", _chart.width())
             .attr("height", _chart.height());
@@ -287,8 +303,9 @@ dc.baseChart = function (_chart) {
     };
 
     /**
-    #### .turnOnControls() & .turnOffControls
+    #### .turnOnControls() & .turnOffControls()
     Turn on/off optional control elements within the root element. dc.js currently support the following html control elements.
+
     * root.selectAll(".reset") elements are turned on if the chart has an active filter. This type of control elements are usually used to store reset link to allow user to reset filter on a certain chart. This element will be turned off automatically if the filter is cleared.
     * root.selectAll(".filter") elements are turned on if the chart has an active filter. The text content of this element is then replaced with the current filter value using the filter printer function. This type of element will be turned off automatically if the filter is cleared.
 
@@ -379,11 +396,11 @@ dc.baseChart = function (_chart) {
         return result;
     };
 
-    _chart.invokeFilteredListener = function (f) {
+    _chart._invokeFilteredListener = function (f) {
         if (f !== undefined) _listeners.filtered(_chart, f);
     };
 
-    _chart.invokeZoomedListener = function () {
+    _chart._invokeZoomedListener = function () {
         _listeners.zoomed(_chart);
     };
 
@@ -401,19 +418,19 @@ dc.baseChart = function (_chart) {
     function removeFilter(_) {
         _filters.splice(_filters.indexOf(_), 1);
         applyFilters();
-        _chart.invokeFilteredListener(_);
+        _chart._invokeFilteredListener(_);
     }
 
     function addFilter(_) {
         _filters.push(_);
         applyFilters();
-        _chart.invokeFilteredListener(_);
+        _chart._invokeFilteredListener(_);
     }
 
     function resetFilters() {
         _filters = [];
         applyFilters();
-        _chart.invokeFilteredListener(null);
+        _chart._invokeFilteredListener(null);
     }
 
     function applyFilters() {

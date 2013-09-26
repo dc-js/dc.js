@@ -37,8 +37,8 @@ dc.compositeChart = function (parent, chartGroup) {
     _chart.transitionDuration(500);
     _chart.group({});
 
-    dc.override(_chart, "generateG", function () {
-        var g = this._generateG();
+    dc.override(_chart, "_generateG", function () {
+        var g = this.__generateG();
 
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
@@ -58,7 +58,7 @@ dc.compositeChart = function (parent, chartGroup) {
     });
 
     function generateChildG(child, i) {
-        child.generateG(_chart.g());
+        child._generateG(_chart.g());
         child.g().attr("class", SUB_CHART_CLASS + " _" + i);
     }
 

@@ -470,7 +470,7 @@ dc.utils.appendOrSelect = function (parent, name) {
 };
 
 dc.utils.createLegendable = function (chart, group, index, accessor) {
-    var legendable = {name: chart.getGroupName(group, accessor), data: group};
+    var legendable = {name: chart._getGroupName(group, accessor), data: group};
     if (typeof chart.colors === 'function') legendable.color = chart.colors()(index);
     return legendable;
 };
@@ -684,8 +684,8 @@ dc.baseChart = function (_chart) {
 
     var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
 
-    var NULL_LISTENER = function (chart) {
-    };
+    var NULL_LISTENER = function () {};
+
     var _listeners = {
         preRender: NULL_LISTENER,
         postRender: NULL_LISTENER,
@@ -694,6 +694,7 @@ dc.baseChart = function (_chart) {
         filtered: NULL_LISTENER,
         zoomed: NULL_LISTENER
     };
+
     var _legend;
 
     var _filters = [];
@@ -769,7 +770,7 @@ dc.baseChart = function (_chart) {
         if (!arguments.length) return _group;
         _group = g;
         _chart.expireCache();
-        if (typeof name === 'string') _chart.setGroupName(_group, name);
+        if (typeof name === 'string') _chart._setGroupName(_group, name);
         return _chart;
     };
 
@@ -789,11 +790,12 @@ dc.baseChart = function (_chart) {
         return g[k][c].n[i];
     }
 
-    _chart.getGroupName = function (g, accessor) {
+
+    _chart._getGroupName = function (g, accessor) {
       return groupName(_chart, g, accessor).name;
     };
 
-    _chart.setGroupName = function (g, name, accessor) {
+    _chart._setGroupName = function (g, name, accessor) {
       groupName(_chart, g, accessor).name = name;
     };
 
@@ -853,6 +855,11 @@ dc.baseChart = function (_chart) {
         return _root ? _root.selectAll(s) : null;
     };
 
+    /**
+    #### .anchor([anchorChart/anchorSelector], [chartGroup])
+    Set the svg root to either be an existing chart's root or the first element returned from a d3 css string selector. Optionally registers the chart within the chartGroup. This class is called internally on chart initialization, but be called again to relocate the chart. However, it will orphan any previously created SVG elements.
+
+    **/
     _chart.anchor = function (a, chartGroup) {
         if (!arguments.length) return _anchor;
         if (dc.instanceOfChart(a)) {
@@ -868,6 +875,11 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
+    /**
+    #### .anchorName()
+    Return the dom ID for chart's anchored location
+
+    **/
     _chart.anchorName = function () {
         var a = _chart.anchor();
         if (a && a.id) return a.id;
@@ -901,12 +913,16 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
+    /**
+    #### .resetSvg()
+    Remove the chart's SVG elements from the dom and recreate the container SVG element.
+    **/
     _chart.resetSvg = function () {
         _chart.select("svg").remove();
-        return _chart.generateSvg();
+        return generateSvg();
     };
 
-    _chart.generateSvg = function () {
+    function generateSvg() {
         _svg = _chart.root().append("svg")
             .attr("width", _chart.width())
             .attr("height", _chart.height());
@@ -927,8 +943,9 @@ dc.baseChart = function (_chart) {
     };
 
     /**
-    #### .turnOnControls() & .turnOffControls
+    #### .turnOnControls() & .turnOffControls()
     Turn on/off optional control elements within the root element. dc.js currently support the following html control elements.
+
     * root.selectAll(".reset") elements are turned on if the chart has an active filter. This type of control elements are usually used to store reset link to allow user to reset filter on a certain chart. This element will be turned off automatically if the filter is cleared.
     * root.selectAll(".filter") elements are turned on if the chart has an active filter. The text content of this element is then replaced with the current filter value using the filter printer function. This type of element will be turned off automatically if the filter is cleared.
 
@@ -1019,11 +1036,11 @@ dc.baseChart = function (_chart) {
         return result;
     };
 
-    _chart.invokeFilteredListener = function (f) {
+    _chart._invokeFilteredListener = function (f) {
         if (f !== undefined) _listeners.filtered(_chart, f);
     };
 
-    _chart.invokeZoomedListener = function () {
+    _chart._invokeZoomedListener = function () {
         _listeners.zoomed(_chart);
     };
 
@@ -1041,19 +1058,19 @@ dc.baseChart = function (_chart) {
     function removeFilter(_) {
         _filters.splice(_filters.indexOf(_), 1);
         applyFilters();
-        _chart.invokeFilteredListener(_);
+        _chart._invokeFilteredListener(_);
     }
 
     function addFilter(_) {
         _filters.push(_);
         applyFilters();
-        _chart.invokeFilteredListener(_);
+        _chart._invokeFilteredListener(_);
     }
 
     function resetFilters() {
         _filters = [];
         applyFilters();
-        _chart.invokeFilteredListener(null);
+        _chart._invokeFilteredListener(null);
     }
 
     function applyFilters() {
@@ -1469,7 +1486,7 @@ dc.coordinateGridChart = function (_chart) {
     var _unitCount;
 
     var _zoomScale = [-10, 100];  // -10 to allow zoom out of the original domain
-    var _zoomOutRestrict = false; // restrict zoomOut to the original domain?
+    var _zoomOutRestrict = true; // restrict zoomOut to the original domain?
 
     var _rangeChart;
     var _focusChart;
@@ -1501,19 +1518,28 @@ dc.coordinateGridChart = function (_chart) {
         return _chart;
     };
 
+    /**
+    #### .zoomScale([extent])
+    Get or set the scale extent for mouse zooms.
+
+    **/
     _chart.zoomScale = function (_) {
         if (!arguments.length) return _zoomScale;
         _zoomScale = _;
         return _chart;
     };
 
+    /**
+    #### .zoomOutRestrict([true/false])
+    Get or set the a zoom restriction to be limited at the origional extent of the range chart
+    **/
     _chart.zoomOutRestrict = function (_) {
         if (!arguments.length) return _zoomOutRestrict;
         _zoomOutRestrict = _;
         return _chart;
     };
 
-    _chart.generateG = function (parent) {
+    _chart._generateG = function (parent) {
         if (parent === undefined)
             _parent = _chart.svg();
         else
@@ -1553,6 +1579,10 @@ dc.coordinateGridChart = function (_chart) {
         return _chart;
     };
 
+    /**
+    #### .chartBodyG()
+    Retreive the svg group for the chart body.
+    **/
     _chart.chartBodyG = function (_) {
         if (!arguments.length) return _chartBodyG;
         _chartBodyG = _;
@@ -2059,9 +2089,7 @@ dc.coordinateGridChart = function (_chart) {
             _brushOn = false;
 
         if (_brushOn) {
-            _brush.on("brushstart", brushStart)
-                .on("brush", brushing)
-                .on("brushend", brushEnd);
+            _brush.on("brush", brushing)
 
             var gBrush = g.append("g")
                 .attr("class", "brush")
@@ -2075,9 +2103,6 @@ dc.coordinateGridChart = function (_chart) {
             }
         }
     };
-
-    function brushStart(p) {
-    }
 
     _chart.extendBrush = function () {
         var extent = _brush.extent();
@@ -2112,9 +2137,6 @@ dc.coordinateGridChart = function (_chart) {
                 dc.redrawAll(_chart.chartGroup());
             }, dc.constants.EVENT_DELAY);
         }
-    }
-
-    function brushEnd(p) {
     }
 
     _chart.redrawBrush = function (g) {
@@ -2185,7 +2207,7 @@ dc.coordinateGridChart = function (_chart) {
         _chart.resetSvg();
 
         if (_chart.dataSet()) {
-            _chart.generateG();
+            _chart._generateG();
 
             generateClipPath();
             prepareXAxis(_chart.g());
@@ -2211,7 +2233,7 @@ dc.coordinateGridChart = function (_chart) {
                 .scaleExtent(_zoomScale)
                 .on("zoom", function () {
                     _chart.focus(_chart.x().domain());
-                    _chart.invokeZoomedListener();
+                    _chart._invokeZoomedListener();
                     updateRangeSelChart();
                 }));
         }
@@ -2489,7 +2511,7 @@ dc.stackableChart = function (_chart) {
             _groupStack.clear();
 
         if (typeof p2 === 'string')
-            _chart.setGroupName(group, p2, retriever);
+            _chart._setGroupName(group, p2, retriever);
         else if (typeof p2 === 'function')
             retriever = p2;
 
@@ -2908,12 +2930,14 @@ Pie chart implementation uses keyAccessor to generate slices, and valueAccessor 
 relatively to the total sum of all values.
 
 Examples:
+
 * [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
 
 #### dc.pieChart(parent[, chartGroup])
 Create a pie chart instance and attach it to the given parent element.
 
 Parameters:
+
 * parent : string - any valid d3 single selector representing typically a dom block element such
    as a div.
 * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
@@ -3272,6 +3296,7 @@ dc.pieChart = function (parent, chartGroup) {
 Concrete bar chart/histogram implementation.
 
 Examples:
+
 * [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
 * [Canadian City Crime Stats](http://nickqizhu.github.com/dc.js/crime/index.html)
 
@@ -3505,6 +3530,7 @@ Examples:
 Create a line chart instance and attach it to the given parent element.
 
 Parameters:
+
 * parent : string|compositeChart - any valid d3 single selector representing typically a dom block element such
    as a div, or if this line chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
 * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
@@ -3768,12 +3794,14 @@ under the parent element.
 * ".filter-count" - number of records matched by the current filters
 
 Examples:
+
 * [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
 
 #### dc.dataCount(parent[, chartGroup])
 Create a data count widget instance and attach it to the given parent element.
 
 Parameters:
+
 * parent : string - any valid d3 single selector representing typically a dom block element such as a div.
 * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
    in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
@@ -4192,8 +4220,8 @@ dc.compositeChart = function (parent, chartGroup) {
     _chart.transitionDuration(500);
     _chart.group({});
 
-    dc.override(_chart, "generateG", function () {
-        var g = this._generateG();
+    dc.override(_chart, "_generateG", function () {
+        var g = this.__generateG();
 
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
@@ -4213,7 +4241,7 @@ dc.compositeChart = function (parent, chartGroup) {
     });
 
     function generateChildG(child, i) {
-        child.generateG(_chart.g());
+        child._generateG(_chart.g());
         child.g().attr("class", SUB_CHART_CLASS + " _" + i);
     }
 
@@ -4827,6 +4855,7 @@ Concrete row chart implementation.
 Create a row chart instance and attach it to the given parent element.
 
 Parameters:
+
 * parent : string - any valid d3 single selector representing typically a dom block element such as a div.
 * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed in a certain chart group then any interaction with such instance will only trigger events and redraw within the same chart group.
 
@@ -4925,7 +4954,7 @@ dc.rowChart = function (parent, chartGroup) {
             .attr("x1", 0)
             .attr("y1", 0)
             .attr("x2", 0)
-            .attr("y2", function (d) {
+            .attr("y2", function () {
                 return -_chart.effectiveHeight();
             });
     }
@@ -5295,6 +5324,35 @@ dc.scatterPlot = function (parent, chartGroup) {
     return _chart.anchor(parent, chartGroup);
 };
 
+/**
+## <a name="number-display" href="#number-display">#</a> Number Display [Concrete] < [Base Chart](#base-chart)
+A display of a single numeric value.
+
+Examples:
+
+* [Test Example](http://nickqizhu.github.io/dc.js/examples/number.html)
+
+#### dc.numberDisplay(parent[, chartGroup])
+Create a Number Display instance and attach it to the given parent element.
+
+Unlike other charts, you do not need to set a dimension. Instead a valid group object must be provided and valueAccessor that is expected to return a single value.
+
+Parameters:
+
+* parent : string - any valid d3 single selector representing typically a dom block element such as a div or span
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
+   in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
+   chart group.
+
+Return:
+A newly created number display instance
+
+```js
+// create a number display under #chart-container1 element using the default global chart group
+var display1 = dc.numberDisplay("#chart-container1");
+```
+
+**/
 dc.numberDisplay = function (parent, chartGroup) {
     var SPAN_CLASS = 'number-display';
     var _formatNumber = d3.format(".2s");
@@ -5302,6 +5360,10 @@ dc.numberDisplay = function (parent, chartGroup) {
 
     _chart.dimension({}); // dummy dimension to remove warnings
 
+    /**
+    #### .value()
+    Calculate and return the underlying value of the display
+    **/
     _chart.value = function () {
          var valObj = _chart.group().all && _chart.group().all()[0] || _chart.group().value();
          return _chart.valueAccessor()(valObj);
@@ -5335,6 +5397,11 @@ dc.numberDisplay = function (parent, chartGroup) {
         return _chart.doRender();
     };
 
+    /**
+    #### .formatNumber([formatter])
+    Get or set a function to format the value for the display. By default `d3.format(".2s");` is used.
+
+    **/
     _chart.formatNumber = function (_) {
         if (!arguments.length) return _formatNumber;
         _formatNumber = _;

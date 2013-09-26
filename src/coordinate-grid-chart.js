@@ -47,7 +47,7 @@ dc.coordinateGridChart = function (_chart) {
     var _unitCount;
 
     var _zoomScale = [-10, 100];  // -10 to allow zoom out of the original domain
-    var _zoomOutRestrict = false; // restrict zoomOut to the original domain?
+    var _zoomOutRestrict = true; // restrict zoomOut to the original domain?
 
     var _rangeChart;
     var _focusChart;
@@ -79,19 +79,28 @@ dc.coordinateGridChart = function (_chart) {
         return _chart;
     };
 
+    /**
+    #### .zoomScale([extent])
+    Get or set the scale extent for mouse zooms.
+
+    **/
     _chart.zoomScale = function (_) {
         if (!arguments.length) return _zoomScale;
         _zoomScale = _;
         return _chart;
     };
 
+    /**
+    #### .zoomOutRestrict([true/false])
+    Get or set the a zoom restriction to be limited at the origional extent of the range chart
+    **/
     _chart.zoomOutRestrict = function (_) {
         if (!arguments.length) return _zoomOutRestrict;
         _zoomOutRestrict = _;
         return _chart;
     };
 
-    _chart.generateG = function (parent) {
+    _chart._generateG = function (parent) {
         if (parent === undefined)
             _parent = _chart.svg();
         else
@@ -131,6 +140,10 @@ dc.coordinateGridChart = function (_chart) {
         return _chart;
     };
 
+    /**
+    #### .chartBodyG()
+    Retreive the svg group for the chart body.
+    **/
     _chart.chartBodyG = function (_) {
         if (!arguments.length) return _chartBodyG;
         _chartBodyG = _;
@@ -637,9 +650,7 @@ dc.coordinateGridChart = function (_chart) {
             _brushOn = false;
 
         if (_brushOn) {
-            _brush.on("brushstart", brushStart)
-                .on("brush", brushing)
-                .on("brushend", brushEnd);
+            _brush.on("brush", brushing)
 
             var gBrush = g.append("g")
                 .attr("class", "brush")
@@ -653,9 +664,6 @@ dc.coordinateGridChart = function (_chart) {
             }
         }
     };
-
-    function brushStart(p) {
-    }
 
     _chart.extendBrush = function () {
         var extent = _brush.extent();
@@ -690,9 +698,6 @@ dc.coordinateGridChart = function (_chart) {
                 dc.redrawAll(_chart.chartGroup());
             }, dc.constants.EVENT_DELAY);
         }
-    }
-
-    function brushEnd(p) {
     }
 
     _chart.redrawBrush = function (g) {
@@ -763,7 +768,7 @@ dc.coordinateGridChart = function (_chart) {
         _chart.resetSvg();
 
         if (_chart.dataSet()) {
-            _chart.generateG();
+            _chart._generateG();
 
             generateClipPath();
             prepareXAxis(_chart.g());
@@ -789,7 +794,7 @@ dc.coordinateGridChart = function (_chart) {
                 .scaleExtent(_zoomScale)
                 .on("zoom", function () {
                     _chart.focus(_chart.x().domain());
-                    _chart.invokeZoomedListener();
+                    _chart._invokeZoomedListener();
                     updateRangeSelChart();
                 }));
         }

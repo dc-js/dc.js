@@ -5,12 +5,14 @@ Pie chart implementation uses keyAccessor to generate slices, and valueAccessor 
 relatively to the total sum of all values.
 
 Examples:
+
 * [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
 
 #### dc.pieChart(parent[, chartGroup])
 Create a pie chart instance and attach it to the given parent element.
 
 Parameters:
+
 * parent : string - any valid d3 single selector representing typically a dom block element such
    as a div.
 * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
