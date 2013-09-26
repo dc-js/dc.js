@@ -145,6 +145,11 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         });
     }
 
+    _chart.prepareColorDomain = function(colorDomain) {
+        colorDomain = colorDomain || [dc.utils.groupMin(_chart.group(), _chart.valueAccessor()), dc.utils.groupMax(_chart.group(), _chart.valueAccessor())];
+        return _chart.colorDomain(colorDomain)
+    };
+
     _chart.onClick = function (d, layerIndex) {
         var selectedRegion = geoJson(layerIndex).keyAccessor(d);
         dc.events.trigger(function () {

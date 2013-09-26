@@ -8,8 +8,8 @@ chart implementation.
 dc.colorChart = function(_chart) {
     var _colors = d3.scale.category20c();
 
-    var _colorDomain = [0, _colors.range().length];
-
+    var _colorDomain ;
+    
     var _colorCalculator = function(value) {
         var domain = _colorDomain;
         if (typeof _colorDomain === 'function')
@@ -55,7 +55,8 @@ dc.colorChart = function(_chart) {
             _colors = _;
         }
 
-        _colorDomain = [0, _colors.range().length];
+        _chart.prepareColorDomain(_colorDomain);
+        //_colorDomain = [0, _colors.range().length];
 
         return _chart;
     };
@@ -112,6 +113,10 @@ dc.colorChart = function(_chart) {
         if(!arguments.length) return _colorDomain;
         _colorDomain = _;
         return _chart;
+    };
+
+    _chart.prepareColorDomain = function(colorDomain) {
+        return _chart.colorDomain([0, _colors.range().length]);
     };
 
     return _chart;
