@@ -487,11 +487,17 @@ the index of a group.</p>
 <h4>.colorDomain([domain])</h4>
 <p>Set or get the current domain for the color mapping function. This allows user to provide a custom domain for the mapping
 function used to map the return value of the colorAccessor function to the target color range calculated based on the
-color scale.</p>
-<pre><code class="lang-js">// custom domain <span class="keyword">for</span> <span class="property">month</span> <span class="keyword">of</span> <span class="property">year</span>
-chart.colorDomain([<span class="number">0</span>, <span class="number">11</span>])
-// custom domain <span class="keyword">for</span> <span class="property">day</span> <span class="keyword">of</span> <span class="property">year</span>
-chart.colorDomain([<span class="number">0</span>, <span class="number">364</span>])</code></pre>
+color scale. You value can either be an array with the start and end of the range or a function returning an array. Functions
+are passed the chart in their <code>this</code> context.</p>
+<pre><code class="lang-js"><span class="comment">// custom domain for month of year</span>
+chart<span class="variable">.colorDomain</span>([<span class="number">0</span>, <span class="number">11</span>])
+<span class="comment">// custom domain for day of year</span>
+chart<span class="variable">.colorDomain</span>([<span class="number">0</span>, <span class="number">364</span>])
+<span class="comment">// custom domain function that scales with the group value range</span>
+chart<span class="variable">.colorDomain</span>(function() {
+    [dc<span class="variable">.utils</span><span class="variable">.groupMin</span>(<span class="keyword">this</span><span class="variable">.group</span>(), <span class="keyword">this</span><span class="variable">.valueAccessor</span>()),
+     dc<span class="variable">.utils</span><span class="variable">.groupMax</span>(<span class="keyword">this</span><span class="variable">.group</span>(), <span class="keyword">this</span><span class="variable">.valueAccessor</span>())];
+});</code></pre>
 <h2><a name="stackable-chart" href="#stackable-chart">#</a> Stackable Chart [Abstract]</h2>
 <p>Stackable chart is an abstract chart introduced to provide cross-chart support of stackability. Concrete implementation of
 charts can then selectively mix-in this capability.</p>

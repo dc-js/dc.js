@@ -493,12 +493,18 @@ the index of a group.
 #### .colorDomain([domain])
 Set or get the current domain for the color mapping function. This allows user to provide a custom domain for the mapping
 function used to map the return value of the colorAccessor function to the target color range calculated based on the
-color scale.
+color scale. You value can either be an array with the start and end of the range or a function returning an array. Functions
+are passed the chart in their `this` context.
 ```js
 // custom domain for month of year
 chart.colorDomain([0, 11])
 // custom domain for day of year
 chart.colorDomain([0, 364])
+// custom domain function that scales with the group value range
+chart.colorDomain(function() {
+    [dc.utils.groupMin(this.group(), this.valueAccessor()),
+     dc.utils.groupMax(this.group(), this.valueAccessor())];
+});
 ```
 
 ## <a name="stackable-chart" href="#stackable-chart">#</a> Stackable Chart [Abstract]
