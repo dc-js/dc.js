@@ -197,7 +197,7 @@ dc.stackableChart = function (_chart) {
             var key = getKeyFromData(groupIndex, d);
             var value = getValueFromData(groupIndex, d);
 
-            _groupStack.setDataPoint(groupIndex, dataIndex, {data: d, x: key, y: value});
+            _groupStack.setDataPoint(groupIndex, dataIndex, {data: d, x: key, y: value, layer: groupIndex});
         }
     }
 
@@ -244,6 +244,8 @@ dc.stackableChart = function (_chart) {
             _stackLayers = _;
         }
     };
+
+    _chart.colorAccessor(function(d){return d.layer || d.index;});
 
     _chart.legendables = function () {
         var items = [];

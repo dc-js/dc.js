@@ -17,7 +17,7 @@ suite.addBatch({
             //               | | 3 segment version
             //               | |                    |optional release prefixed by '-'
             //               | |                    |                                        |optional build prefixed by '+'
-            var reSemver = /^v?((\d+)\.(\d+)\.(\d+))(?:-([\dA-Za-z\-]+(?:\.[\dA-Za-z\-]+)*))?(?:\+([\dA-Za-z\-]+(?:\.[\dA-Za-z\-]+)*))?$/ 
+            var reSemver = /^v?((\d+)\.(\d+)\.(\d+))(?:-([\dA-Za-z\-]+(?:\.[\dA-Za-z\-]+)*))?(?:\+([\dA-Za-z\-]+(?:\.[\dA-Za-z\-]+)*))?$/;
             assert.match(version, reSemver);
         }
     },

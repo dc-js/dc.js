@@ -180,14 +180,13 @@ dc.compositeChart = function (parent, chartGroup) {
 
     _chart.legendables = function () {
         var items = [];
-
-        for (var j = 0; j < _children.length; ++j) {
-            var childChart = _children[j];
-            childChart.allGroups().forEach(function (g, i) {
-                items.push(dc.utils.createLegendable(childChart, g, i, childChart.getValueAccessorByIndex(i)));
-            });
-        }
-
+        _children.forEach(function(childChart, j) {
+            var childLegendables = childChart.legendables();
+            if (childLegendables.length > 1)
+                items.push.apply(items,childLegendables);
+            else
+                items.push(dc.utils.createLegendable(childChart, childChart.group(), j, childChart.valueAccessor()));
+        });
         return items;
     };
 

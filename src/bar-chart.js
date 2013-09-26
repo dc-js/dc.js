@@ -81,9 +81,7 @@ dc.barChart = function (parent, chartGroup) {
         bars.enter()
             .append("rect")
             .attr("class", "bar")
-            .attr("fill", function (d) {
-                return _chart.colors()(i);
-            })
+            .attr("fill", _chart.getColor)
             .append("title").text(_chart.title());
 
         if (_chart.isOrdinal())

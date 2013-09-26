@@ -63,13 +63,12 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     };
 
     function plotData(layerIndex) {
-        var maxValue = dc.utils.groupMax(_chart.group(), _chart.valueAccessor());
         var data = generateLayeredData();
 
         if (isDataLayer(layerIndex)) {
             var regionG = renderRegionG(layerIndex);
 
-            renderPaths(regionG, layerIndex, data, maxValue);
+            renderPaths(regionG, layerIndex, data);
 
             renderTitle(regionG, layerIndex, data);
         }

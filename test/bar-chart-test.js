@@ -531,7 +531,7 @@ suite.addBatch({
             assert.equal(chart.effectiveHeight(),110);
         },
         'y label custom padding': function (chart) {
-            chart.yAxisLabel("y axis",50)
+            chart.yAxisLabel("y axis",50);
             chart.render();
             assert.equal(chart.effectiveWidth(),970);
         },

@@ -111,12 +111,8 @@ dc.lineChart = function (parent, chartGroup) {
 
         layersEnter.append("path")
             .attr("class", "line")
-            .attr("stroke", function (d, i) {
-                return _chart.getColor(d,i);
-            })
-            .attr("fill", function (d, i) {
-                return _chart.getColor(d,i);
-            });
+            .attr("stroke", _chart.getColor)
+            .attr("fill", _chart.getColor);
 
         dc.transition(layers.select("path.line"), _chart.transitionDuration())
             .attr("d", function (d) {
@@ -144,9 +140,7 @@ dc.lineChart = function (parent, chartGroup) {
 
             layersEnter.append("path")
                 .attr("class", "area")
-                .attr("fill", function (d, i) {
-                    return _chart.getColor(d,i);
-                })
+                .attr("fill", _chart.getColor)
                 .attr("d", function (d) {
                     return safeD(area(d.points));
                 });
@@ -179,9 +173,7 @@ dc.lineChart = function (parent, chartGroup) {
                     .append("circle")
                     .attr("class", DOT_CIRCLE_CLASS)
                     .attr("r", _dotRadius)
-                    .attr("fill", function (d) {
-                        return _chart.getColor(d,i);
-                    })
+                    .attr("fill", _chart.getColor)
                     .style("fill-opacity", 1e-6)
                     .style("stroke-opacity", 1e-6)
                     .on("mousemove", function (d) {

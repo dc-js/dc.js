@@ -2338,21 +2338,26 @@ Color chart is an abstract chart functional class created to provide universal c
 chart implementation.
 
 **/
+
 dc.colorChart = function(_chart) {
     var _colors = d3.scale.category20c();
 
     var _colorDomain = [0, _colors.range().length];
 
     var _colorCalculator = function(value) {
-        var minValue = _colorDomain[0];
-        var maxValue = _colorDomain[1];
+        var domain = _colorDomain;
+        if (typeof _colorDomain === 'function')
+            domain = _colorDomain.call(_chart);
+        var minValue = domain[0];
+        var maxValue = domain[1];
 
         if (isNaN(value)) value = 0;
-        if(maxValue === null) return _colors(value);
+        if (!dc.utils.isNumber(maxValue)) return _colors(value);
 
         var colorsLength = _chart.colors().range().length;
         var denominator = (maxValue - minValue) / colorsLength;
         var colorValue = Math.abs(Math.min(colorsLength - 1, Math.round((value - minValue) / denominator)));
+        //var colorValue = Math.abs(Math.round((value - minValue) / denominator)) % colorsLength;
         return _chart.colors()(colorValue);
     };
 
@@ -2422,12 +2427,18 @@ dc.colorChart = function(_chart) {
     #### .colorDomain([domain])
     Set or get the current domain for the color mapping function. This allows user to provide a custom domain for the mapping
     function used to map the return value of the colorAccessor function to the target color range calculated based on the
-    color scale.
+    color scale. You value can either be an array with the start and end of the range or a function returning an array. Functions
+    are passed the chart in their `this` context.
     ```js
     // custom domain for month of year
     chart.colorDomain([0, 11])
     // custom domain for day of year
     chart.colorDomain([0, 364])
+    // custom domain function that scales with the group value range
+    chart.colorDomain(function() {
+        [dc.utils.groupMin(this.group(), this.valueAccessor()),
+         dc.utils.groupMax(this.group(), this.valueAccessor())];
+    });
     ```
 
     **/
@@ -2639,7 +2650,7 @@ dc.stackableChart = function (_chart) {
             var key = getKeyFromData(groupIndex, d);
             var value = getValueFromData(groupIndex, d);
 
-            _groupStack.setDataPoint(groupIndex, dataIndex, {data: d, x: key, y: value});
+            _groupStack.setDataPoint(groupIndex, dataIndex, {data: d, x: key, y: value, layer: groupIndex});
         }
     }
 
@@ -2686,6 +2697,8 @@ dc.stackableChart = function (_chart) {
             _stackLayers = _;
         }
     };
+
+    _chart.colorAccessor(function(d){return d.layer || d.index;});
 
     _chart.legendables = function () {
         var items = [];
@@ -3337,9 +3350,7 @@ dc.barChart = function (parent, chartGroup) {
         bars.enter()
             .append("rect")
             .attr("class", "bar")
-            .attr("fill", function (d) {
-                return _chart.colors()(i);
-            })
+            .attr("fill", _chart.getColor)
             .append("title").text(_chart.title());
 
         if (_chart.isOrdinal())
@@ -3595,12 +3606,8 @@ dc.lineChart = function (parent, chartGroup) {
 
         layersEnter.append("path")
             .attr("class", "line")
-            .attr("stroke", function (d, i) {
-                return _chart.getColor(d,i);
-            })
-            .attr("fill", function (d, i) {
-                return _chart.getColor(d,i);
-            });
+            .attr("stroke", _chart.getColor)
+            .attr("fill", _chart.getColor);
 
         dc.transition(layers.select("path.line"), _chart.transitionDuration())
             .attr("d", function (d) {
@@ -3628,9 +3635,7 @@ dc.lineChart = function (parent, chartGroup) {
 
             layersEnter.append("path")
                 .attr("class", "area")
-                .attr("fill", function (d, i) {
-                    return _chart.getColor(d,i);
-                })
+                .attr("fill", _chart.getColor)
                 .attr("d", function (d) {
                     return safeD(area(d.points));
                 });
@@ -3663,9 +3668,7 @@ dc.lineChart = function (parent, chartGroup) {
                     .append("circle")
                     .attr("class", DOT_CIRCLE_CLASS)
                     .attr("r", _dotRadius)
-                    .attr("fill", function (d) {
-                        return _chart.getColor(d,i);
-                    })
+                    .attr("fill", _chart.getColor)
                     .style("fill-opacity", 1e-6)
                     .style("stroke-opacity", 1e-6)
                     .on("mousemove", function (d) {
@@ -4332,14 +4335,13 @@ dc.compositeChart = function (parent, chartGroup) {
 
     _chart.legendables = function () {
         var items = [];
-
-        for (var j = 0; j < _children.length; ++j) {
-            var childChart = _children[j];
-            childChart.allGroups().forEach(function (g, i) {
-                items.push(dc.utils.createLegendable(childChart, g, i, childChart.getValueAccessorByIndex(i)));
-            });
-        }
-
+        _children.forEach(function(childChart, j) {
+            var childLegendables = childChart.legendables();
+            if (childLegendables.length > 1)
+                items.push.apply(items,childLegendables);
+            else
+                items.push(dc.utils.createLegendable(childChart, childChart.group(), j, childChart.valueAccessor()));
+        });
         return items;
     };
 
@@ -4425,13 +4427,12 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     };
 
     function plotData(layerIndex) {
-        var maxValue = dc.utils.groupMax(_chart.group(), _chart.valueAccessor());
         var data = generateLayeredData();
 
         if (isDataLayer(layerIndex)) {
             var regionG = renderRegionG(layerIndex);
 
-            renderPaths(regionG, layerIndex, data, maxValue);
+            renderPaths(regionG, layerIndex, data);
 
             renderTitle(regionG, layerIndex, data);
         }
