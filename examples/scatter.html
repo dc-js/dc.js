@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>dc.js - Bar Chart Example</title>
+    <title>dc.js - Scatter Plot Example</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
 </head>
@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = dc.barChart("#test");
+var chart = dc.scatterPlot("#test");
 d3.csv("morley.csv", function(error, experiments) {
 
   experiments.forEach(function(x) {
