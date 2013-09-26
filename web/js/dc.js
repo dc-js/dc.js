@@ -3525,6 +3525,7 @@ dc.lineChart = function (parent, chartGroup) {
     var _dotRadius = DEFAULT_DOT_RADIUS;
     var _interpolate = 'linear';
     var _tension = 0.7;
+    var _defined;
 
     _chart.transitionDuration(500);
 
@@ -3560,6 +3561,12 @@ dc.lineChart = function (parent, chartGroup) {
         return _chart;
     };
 
+    _chart.defined = function(_){
+        if (!arguments.length) return _defined;
+        _defined = _;
+        return _chart;
+    };
+
     /**
     #### .renderArea([boolean])
     Get or set render area flag. If the flag is set to true then the chart will render the area beneath each line and effectively
@@ -3582,14 +3589,17 @@ dc.lineChart = function (parent, chartGroup) {
             })
             .interpolate(_interpolate)
             .tension(_tension);
+        if (_defined)
+            line.defined(_defined);
+
 
         layersEnter.append("path")
             .attr("class", "line")
             .attr("stroke", function (d, i) {
-                return _chart.colors()(i);
+                return _chart.getColor(d,i);
             })
             .attr("fill", function (d, i) {
-                return _chart.colors()(i);
+                return _chart.getColor(d,i);
             });
 
         dc.transition(layers.select("path.line"), _chart.transitionDuration())
@@ -3612,11 +3622,14 @@ dc.lineChart = function (parent, chartGroup) {
                 })
                 .interpolate(_interpolate)
                 .tension(_tension);
+            if (_defined)
+                area.defined(_defined);
+
 
             layersEnter.append("path")
                 .attr("class", "area")
                 .attr("fill", function (d, i) {
-                    return _chart.colors()(i);
+                    return _chart.getColor(d,i);
                 })
                 .attr("d", function (d) {
                     return safeD(area(d.points));
@@ -3651,7 +3664,7 @@ dc.lineChart = function (parent, chartGroup) {
                     .attr("class", DOT_CIRCLE_CLASS)
                     .attr("r", _dotRadius)
                     .attr("fill", function (d) {
-                        return _chart.colors()(i);
+                        return _chart.getColor(d,i);
                     })
                     .style("fill-opacity", 1e-6)
                     .style("stroke-opacity", 1e-6)
