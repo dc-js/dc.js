@@ -46,17 +46,24 @@ module.exports = function (grunt) {
             }
         },
         emu: {
-            doc: {
+            api: {
                 src: output.js,
                 dest: 'web/docs/api-<%= pkg.version %>.md'
             }
         },
         markdown: {
             html: {
-                src: '<%= emu.doc.dest %>',
+                src: '<%= emu.api.dest %>',
                 dest: 'web/docs/index.html'
             },
             options: {markdownOptions: {highlight: 'manual'}}
+        },
+        docco: {
+            howto: {
+                src: 'web/stock.js',
+                dest: 'web/docs',
+                options: {basepath:'web'}
+            }
         },
         copy: {
             'dc-to-gh': {
@@ -89,6 +96,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-docco2');
     grunt.loadNpmTasks('grunt-gh-pages');
     grunt.loadNpmTasks('grunt-markdown');
     grunt.loadNpmTasks('grunt-sed');
@@ -105,8 +113,9 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('default', ['concat', 'uglify', 'sed', 'copy']);
-    grunt.registerTask('docs', ['default', 'emu', 'markdown']);
+    grunt.registerTask('docs', ['default', 'emu', 'markdown', 'docco']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
+    grunt.registerTask('test', ['default', 'vows']);
 };
 
 module.exports.jsFiles = [

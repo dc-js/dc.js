@@ -1,3 +1,12 @@
+//# dc.js Getting Started and How-To Guide
+'use strict';
+
+/* jshint globalstrict: true */
+/* global dc,d3,crossfilter */
+
+// ### Create Chart Objects
+// Create chart objects assocated with the container elements identified by the css selector.
+// Note: It is often a good idea to have these objects accessible at the global scope so that they can be modified or filtered by other page controls.
 var gainOrLossChart = dc.pieChart("#gain-loss-chart");
 var fluctuationChart = dc.barChart("#fluctuation-chart");
 var quarterChart = dc.pieChart("#quarter-chart");
@@ -6,14 +15,38 @@ var moveChart = dc.compositeChart("#monthly-move-chart");
 var volumeChart = dc.barChart("#monthly-volume-chart");
 var yearlyBubbleChart = dc.bubbleChart("#yearly-bubble-chart");
 
-var g;
+// ### Anchor Div for Charts
+/*
+// A div anchor that can be identified by id
+    <div id="your-chart"></div>
+// Title or anything you want to add above the chart
+    <div id="chart"><span>Days by Gain or Loss</span></div>
+// #### .turnOnControls()
+// If a link with css class "reset" is present then the chart
+// will automatically turn it on/off based on whether there is filter
+// set on this chart (slice selection for pie chart and brush
+// selection for bar chart)
+     <div id="chart">
+       <a class="reset" href="javascript:myChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+     </div>
+// dc.js will also automatically inject applied current filter value into
+// any html element with css class set to "filter"
+    <div id="chart">
+        <span class="reset" style="display: none;">Current filter: <span class="filter"></span></span>
+    </div>
+*/
 
-// set dc.js version in title
-d3.selectAll("#version").text(dc.version);
-
-// load data from a csv file
+//### Load your data
+//Data can be loaded through regular means with your
+//favorite javascript library
+//
+//```javascript
+//d3.csv("data.csv", function(data) {...};
+//d3.json("data.json", function(data) {...};
+//jQuery.getJson("data.json", function(data){...});
+//```
 d3.csv("ndx.csv", function (data) {
-            // since its a csv file we need to format the data a bit
+            /* since its a csv file we need to format the data a bit */
             var dateFormat = d3.time.format("%m/%d/%Y");
             var numberFormat = d3.format(".2f");
 
@@ -22,7 +55,8 @@ d3.csv("ndx.csv", function (data) {
                 e.month = d3.time.month(e.dd); // pre-calculate month for better performance
             });
 
-            // feed it through crossfilter
+            //### Create Crossfilter Dimensions and Groups
+            //See the [crossfilter API](https://github.com/square/crossfilter/wiki/API-Reference) for reference.
             var ndx = crossfilter(data);
             var all = ndx.groupAll();
 
@@ -30,7 +64,7 @@ d3.csv("ndx.csv", function (data) {
                 return d3.time.year(d.dd).getFullYear();
             });
             var yearlyPerformanceGroup = yearlyDimension.group().reduce(
-                    //add
+                    /* callback for when data is added to the current filter results */
                     function (p, v) {
                         ++p.count;
                         p.absGain += +v.close - +v.open;
@@ -41,7 +75,7 @@ d3.csv("ndx.csv", function (data) {
                         p.fluctuationPercentage = (p.fluctuation / p.avgIndex) * 100;
                         return p;
                     },
-                    //remove
+                    /* callback for when data is removed from the current filter results */
                     function (p, v) {
                         --p.count;
                         p.absGain -= +v.close - +v.open;
@@ -52,7 +86,7 @@ d3.csv("ndx.csv", function (data) {
                         p.fluctuationPercentage = (p.fluctuation / p.avgIndex) * 100;
                         return p;
                     },
-                    //init
+                    /* initialize p */
                     function () {
                         return {count: 0, absGain: 0, fluctuation: 0, fluctuationPercentage: 0, sumIndex: 0, avgIndex: 0, percentageGain: 0};
                     }
@@ -62,7 +96,7 @@ d3.csv("ndx.csv", function (data) {
                 return d.dd;
             });
 
-            // monthly index avg fluctuation in percentage
+            /* monthly index avg fluctuation in percentage */
             var moveMonths = ndx.dimension(function (d) {
                 return d.month;
             });
@@ -136,6 +170,11 @@ d3.csv("ndx.csv", function (data) {
             });
             var dayOfWeekGroup = dayOfWeek.group();
 
+            //### Define Chart Attributes
+            //Define chart attributes using fluent methods. See the [dc API Reference](https://github.com/NickQiZhu/dc.js/blob/master/web/docs/api-1.6.0-dev.md) for more information
+            //
+
+            //#### Bubble Chart
             yearlyBubbleChart.width(990)
                     .height(250)
                     .margins({top: 10, right: 50, bottom: 30, left: 40})
@@ -184,16 +223,38 @@ d3.csv("ndx.csv", function (data) {
                         return v + "%";
                     });
 
-            gainOrLossChart.width(180)
-                    .height(180)
-                    .radius(80)
-                    .dimension(gainOrLoss)
-                    .group(gainOrLossGroup)
+            // #### Pie/Donut Chart
+            // Create a pie chart and use the given css selector as anchor. You can also specify
+            // an optional chart group for this chart to be scoped within. When a chart belongs
+            // to a specific group then any interaction with such chart will only trigger redraw
+            // on other charts within the same chart group.
+
+            gainOrLossChart
+                    .width(180) // (optional) define chart width, :default = 200
+                    .height(180) // (optional) define chart height, :default = 200
+                    .radius(80) // define pie radius
+                    .dimension(gainOrLoss) // set dimension
+                    .group(gainOrLossGroup) // set group
+                    /* (optional) by default pie chart will use group.key as it's label
+                     * but you can overwrite it with a closure */
                     .label(function (d) {
                         if (gainOrLossChart.hasFilter() && !gainOrLossChart.hasFilter(d.data.key))
                             return d.data.key + "(0%)";
                         return d.data.key + "(" + Math.floor(d.data.value / all.value() * 100) + "%)";
-                    });
+                    }) /*
+                    // (optional) whether chart should render labels, :default = true
+                    .renderLabel(true)
+                    // (optional) if inner radius is used then a donut chart will be generated instead of pie chart
+                    .innerRadius(40)
+                    // (optional) define chart transition duration, :default = 350
+                    .transitionDuration(500)
+                    // (optional) define color array for slices
+                    .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+                    // (optional) define color domain to match your data domain if you want to bind data or color
+                    .colorDomain([-1750, 1644])
+                    // (optional) define color value accessor
+                    .colorAccessor(function(d, i){return d.value;})
+                    */;
 
             quarterChart.width(180)
                     .height(180)
@@ -283,9 +344,6 @@ d3.csv("ndx.csv", function (data) {
                     .round(d3.time.month.round)
                     .xUnits(d3.time.months);
 
-            g = monthlyMoveGroup;
-
-
             dc.dataCount(".dc-data-count")
                     .dimension(ndx)
                     .group(all);
@@ -325,3 +383,6 @@ d3.csv("ndx.csv", function (data) {
             dc.renderAll();
         }
 );
+
+// Determine the current version of dc with `dc.version`
+d3.selectAll("#version").text(dc.version);
