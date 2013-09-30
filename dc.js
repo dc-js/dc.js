@@ -1,5 +1,5 @@
 /*!
- *  dc 1.6.0
+ *  dc 1.7.0-dev
  *  http://nickqizhu.github.io/dc.js/
  *  Copyright 2012 Nick Zhu and other contributors
  *
@@ -20,7 +20,7 @@ dc = (function(){
 'use strict';
 
 /**
-#### Version 1.6.0
+#### Version 1.7.0-dev
 
 The entire dc.js library is scoped under **dc** name space. It does not introduce anything else into the global
 name space.
@@ -57,7 +57,7 @@ The API references will highlight the fact if a particular function is not chain
 
 **/
 var dc = {
-    version: "1.6.0",
+    version: "1.7.0-dev",
     constants: {
         CHART_CLASS: "dc-chart",
         DEBUG_GROUP_CLASS: "debug",
@@ -5305,6 +5305,24 @@ dc.capped = function (_chart) {
     });
 
     return _chart;
+};
+
+dc.scatterPlot = function (parent, chartGroup) {
+    var _chart = dc.coordinateGridChart({});
+
+    _chart.plotData = function(){
+        _chart.chartBodyG().selectAll("path.dc-symbol")
+                .data(_chart.group().all())
+            .enter()
+            .append("path")
+            .attr("class", "dc-symbol")
+            .attr("transform", function(d){
+                return "translate("+_chart.x()(_chart.keyAccessor()(d))+","+_chart.y()(_chart.valueAccessor()(d))+")";
+            })
+            .attr("d", d3.svg.symbol());
+    };
+
+    return _chart.anchor(parent, chartGroup);
 };
 
 /**
