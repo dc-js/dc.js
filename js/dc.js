@@ -1,5 +1,5 @@
 /*!
- *  dc 1.6.0-dev
+ *  dc 1.7.0-dev
  *  http://nickqizhu.github.io/dc.js/
  *  Copyright 2012 Nick Zhu and other contributors
  *
@@ -20,7 +20,7 @@ dc = (function(){
 'use strict';
 
 /**
-#### Version 1.6.0-dev
+#### Version 1.7.0-dev
 
 The entire dc.js library is scoped under **dc** name space. It does not introduce anything else into the global
 name space.
@@ -40,6 +40,7 @@ name space.
 * [Geo Choropleth Chart [concrete] < Color Chart < Base Chart](#geo-choropleth-chart)
 * [Data Count Widget [concrete] < Base Chart](#data-count)
 * [Data Table Widget [concrete] < Base Chart](#data-table)
+* [Number Display [Concrete] < Base Chart](#number-display)
 * [Legend [concrete]](#legend)
 * [Listeners](#listeners)
 * [Utilities](#util)
@@ -56,7 +57,7 @@ The API references will highlight the fact if a particular function is not chain
 
 **/
 var dc = {
-    version: "1.6.0-dev",
+    version: "1.7.0-dev",
     constants: {
         CHART_CLASS: "dc-chart",
         DEBUG_GROUP_CLASS: "debug",
@@ -5369,6 +5370,8 @@ dc.numberDisplay = function (parent, chartGroup) {
          return _chart.valueAccessor()(valObj);
     };
 
+    _chart.transitionDuration(250); // good default
+
     _chart.doRender = function () {
         var newValue = _chart.value(),
             span     = _chart.selectAll("."+SPAN_CLASS);
@@ -5380,7 +5383,7 @@ dc.numberDisplay = function (parent, chartGroup) {
                 .attr("class", SPAN_CLASS);
 
         span.transition()
-            .duration(250)
+            .duration(_chart.transitionDuration())
             .ease('quad-out-in')
             .tween("text", function () {
                 var interp = d3.interpolateNumber(this.lastValue || 0, newValue);
