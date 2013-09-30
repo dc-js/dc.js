@@ -113,7 +113,7 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('default', ['concat', 'uglify', 'sed', 'copy']);
-    grunt.registerTask('docs', ['default', 'emu', 'markdown', 'docco']);
+    grunt.registerTask('docs', ['default', 'emu', 'markdown']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('test', ['default', 'vows']);
 };
