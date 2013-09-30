@@ -5370,6 +5370,8 @@ dc.numberDisplay = function (parent, chartGroup) {
          return _chart.valueAccessor()(valObj);
     };
 
+    _chart.transitionDuration(250); // good default
+
     _chart.doRender = function () {
         var newValue = _chart.value(),
             span     = _chart.selectAll("."+SPAN_CLASS);
@@ -5381,7 +5383,7 @@ dc.numberDisplay = function (parent, chartGroup) {
                 .attr("class", SPAN_CLASS);
 
         span.transition()
-            .duration(250)
+            .duration(_chart.transitionDuration())
             .ease('quad-out-in')
             .tween("text", function () {
                 var interp = d3.interpolateNumber(this.lastValue || 0, newValue);
