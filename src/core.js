@@ -19,6 +19,7 @@ name space.
 * [Geo Choropleth Chart [concrete] < Color Chart < Base Chart](#geo-choropleth-chart)
 * [Data Count Widget [concrete] < Base Chart](#data-count)
 * [Data Table Widget [concrete] < Base Chart](#data-table)
+* [Number Display [Concrete] < Base Chart](#number-display)
 * [Legend [concrete]](#legend)
 * [Listeners](#listeners)
 * [Utilities](#util)
