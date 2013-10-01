@@ -145,5 +145,7 @@ module.exports.jsFiles = [
     "src/capped.js",
     "src/scatter-plot.js",
     "src/number-display.js",
+    "src/d3.box.js",
+    "src/box-plot.js",
     "src/footer.js"
 ];
