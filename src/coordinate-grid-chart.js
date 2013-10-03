@@ -555,21 +555,21 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     _chart.xAxisMin = function () {
-        var min = d3.min(_chart.group().all(), function (e) {
+        var min = d3.min(_chart.data(), function (e) {
             return _chart.keyAccessor()(e);
         });
         return dc.utils.subtract(min, _xAxisPadding);
     };
 
     _chart.xAxisMax = function () {
-        var max = d3.max(_chart.group().all(), function (e) {
+        var max = d3.max(_chart.data(), function (e) {
             return _chart.keyAccessor()(e);
         });
         return dc.utils.add(max, _xAxisPadding);
     };
 
     _chart.yAxisMin = function () {
-        var min = d3.min(_chart.group().all(), function (e) {
+        var min = d3.min(_chart.data(), function (e) {
             return _chart.valueAccessor()(e);
         });
         min = dc.utils.subtract(min, _yAxisPadding);
@@ -577,7 +577,7 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     _chart.yAxisMax = function () {
-        var max = d3.max(_chart.group().all(), function (e) {
+        var max = d3.max(_chart.data(), function (e) {
             return _chart.valueAccessor()(e);
         });
         max = dc.utils.add(max, _yAxisPadding);

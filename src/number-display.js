@@ -39,9 +39,13 @@ dc.numberDisplay = function (parent, chartGroup) {
     Calculate and return the underlying value of the display
     **/
     _chart.value = function () {
+        return _chart.data();
+    };
+
+    _chart.data(function () {
          var valObj = _chart.group().all && _chart.group().all()[0] || _chart.group().value();
          return _chart.valueAccessor()(valObj);
-    };
+    });
 
     _chart.transitionDuration(250); // good default
 

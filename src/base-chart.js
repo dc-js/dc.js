@@ -73,6 +73,10 @@ dc.baseChart = function (_chart) {
         return filters;
     };
 
+    var _data = function () {
+        return _group.all();
+    };
+
     /**
     #### .width([value])
     Set or get width attribute of a chart. If the value is given, then it will be used as the new width.
@@ -111,6 +115,13 @@ dc.baseChart = function (_chart) {
     _chart.dimension = function (d) {
         if (!arguments.length) return _dimension;
         _dimension = d;
+        _chart.expireCache();
+        return _chart;
+    };
+
+    _chart.data = function(d) {
+        if (!arguments.length) return _data();
+        _data = d3.functor(d);
         _chart.expireCache();
         return _chart;
     };
@@ -167,7 +178,7 @@ dc.baseChart = function (_chart) {
     };
 
     _chart.computeOrderedGroups = function(arr) {
-        var data = arr ? arr : _chart.group().all().slice(0); // clone
+        var data = arr ? arr : _chart.data().slice(0); // clone
         if(data.length < 2)
             return data;
         var sort = crossfilter.quicksort.by(_chart.ordering());

@@ -113,7 +113,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
 
     function mapData() {
         var data = {};
-        _chart.group().all().forEach(function(datum) {
+        _chart.data().forEach(function(datum) {
             data[_chart.keyAccessor()(datum)] = datum;
         });
         return data;

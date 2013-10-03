@@ -6,7 +6,7 @@ dc.capped = function (_chart) {
 
     var _othersGrouper = function (topRows) {
         var topRowsSum = d3.sum(topRows, _chart.valueAccessor()),
-            allRows = _chart.group().all(),
+            allRows = _chart.data(),
             allRowsSum = d3.sum(allRows, _chart.valueAccessor()),
             topKeys = topRows.map(_chart.keyAccessor()),
             allKeys = allRows.map(_chart.keyAccessor()),

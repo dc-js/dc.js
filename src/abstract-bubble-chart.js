@@ -16,6 +16,10 @@ dc.abstractBubbleChart = function (_chart) {
     _chart.renderLabel(true);
     _chart.renderTitle(false);
 
+    _chart.data(function() {
+        return _chart.group().top(Infinity);
+    });
+
     var _r = d3.scale.linear().domain([0, 100]);
 
     var _rValueAccessor = function (d) {
@@ -47,14 +51,14 @@ dc.abstractBubbleChart = function (_chart) {
     };
 
     _chart.rMin = function () {
-        var min = d3.min(_chart.group().all(), function (e) {
+        var min = d3.min(_chart.data(), function (e) {
             return _chart.radiusValueAccessor()(e);
         });
         return min;
     };
 
     _chart.rMax = function () {
-        var max = d3.max(_chart.group().all(), function (e) {
+        var max = d3.max(_chart.data(), function (e) {
             return _chart.radiusValueAccessor()(e);
         });
         return max;

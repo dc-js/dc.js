@@ -13,7 +13,7 @@ function buildChart(id) {
     var chart = dc.bubbleChart("#" + id);
     chart.width(width).height(height)
         .dimension(statusDimension)
-        .group(statusMultiGroup)
+        .group(statusMultiGroup.order(function(d){return d.value;}))
         .colors(["#a60000", "#ff0000", "#ff4040", "#ff7373", "#67e667", "#39e639", "#00cc00"])
         .colorDomain([0, 220])
         .colorAccessor(function (p) {

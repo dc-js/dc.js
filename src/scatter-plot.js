@@ -3,7 +3,7 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     _chart.plotData = function(){
         _chart.chartBodyG().selectAll("path.dc-symbol")
-                .data(_chart.group().all())
+                .data(_chart.data())
             .enter()
             .append("path")
             .attr("class", "dc-symbol")
