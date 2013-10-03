@@ -714,6 +714,10 @@ dc.baseChart = function (_chart) {
         return filters;
     };
 
+    var _data = function () {
+        return _group.all();
+    };
+
     /**
     #### .width([value])
     Set or get width attribute of a chart. If the value is given, then it will be used as the new width.
@@ -752,6 +756,13 @@ dc.baseChart = function (_chart) {
     _chart.dimension = function (d) {
         if (!arguments.length) return _dimension;
         _dimension = d;
+        _chart.expireCache();
+        return _chart;
+    };
+
+    _chart.data = function(d) {
+        if (!arguments.length) return _data();
+        _data = d3.functor(d);
         _chart.expireCache();
         return _chart;
     };
@@ -808,7 +819,7 @@ dc.baseChart = function (_chart) {
     };
 
     _chart.computeOrderedGroups = function(arr) {
-        var data = arr ? arr : _chart.group().all().slice(0); // clone
+        var data = arr ? arr : _chart.data().slice(0); // clone
         if(data.length < 2)
             return data;
         var sort = crossfilter.quicksort.by(_chart.ordering());
@@ -1995,21 +2006,21 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     _chart.xAxisMin = function () {
-        var min = d3.min(_chart.group().all(), function (e) {
+        var min = d3.min(_chart.data(), function (e) {
             return _chart.keyAccessor()(e);
         });
         return dc.utils.subtract(min, _xAxisPadding);
     };
 
     _chart.xAxisMax = function () {
-        var max = d3.max(_chart.group().all(), function (e) {
+        var max = d3.max(_chart.data(), function (e) {
             return _chart.keyAccessor()(e);
         });
         return dc.utils.add(max, _xAxisPadding);
     };
 
     _chart.yAxisMin = function () {
-        var min = d3.min(_chart.group().all(), function (e) {
+        var min = d3.min(_chart.data(), function (e) {
             return _chart.valueAccessor()(e);
         });
         min = dc.utils.subtract(min, _yAxisPadding);
@@ -2017,7 +2028,7 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     _chart.yAxisMax = function () {
-        var max = d3.max(_chart.group().all(), function (e) {
+        var max = d3.max(_chart.data(), function (e) {
             return _chart.valueAccessor()(e);
         });
         max = dc.utils.add(max, _yAxisPadding);
@@ -2752,6 +2763,10 @@ dc.abstractBubbleChart = function (_chart) {
     _chart.renderLabel(true);
     _chart.renderTitle(false);
 
+    _chart.data(function() {
+        return _chart.group().top(Infinity);
+    });
+
     var _r = d3.scale.linear().domain([0, 100]);
 
     var _rValueAccessor = function (d) {
@@ -2783,14 +2798,14 @@ dc.abstractBubbleChart = function (_chart) {
     };
 
     _chart.rMin = function () {
-        var min = d3.min(_chart.group().all(), function (e) {
+        var min = d3.min(_chart.data(), function (e) {
             return _chart.radiusValueAccessor()(e);
         });
         return min;
     };
 
     _chart.rMax = function () {
-        var max = d3.max(_chart.group().all(), function (e) {
+        var max = d3.max(_chart.data(), function (e) {
             return _chart.radiusValueAccessor()(e);
         });
         return max;
@@ -4100,7 +4115,7 @@ dc.bubbleChart = function(parent, chartGroup) {
         _chart.r().range([_chart.MIN_RADIUS, _chart.xAxisLength() * _chart.maxBubbleRelativeSize()]);
 
         var bubbleG = _chart.chartBodyG().selectAll("g." + _chart.BUBBLE_NODE_CLASS)
-            .data(_chart.group().all());
+            .data(_chart.data());
 
         renderNodes(bubbleG);
 
@@ -4469,7 +4484,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
     function generateLayeredData() {
         var data = {};
-        var groupAll = _chart.group().all();
+        var groupAll = _chart.data();
         for (var i = 0; i < groupAll.length; ++i) {
             data[_chart.keyAccessor()(groupAll[i])] = _chart.valueAccessor()(groupAll[i]);
         }
@@ -4764,7 +4779,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
 
     function mapData() {
         var data = {};
-        _chart.group().all().forEach(function(datum) {
+        _chart.data().forEach(function(datum) {
             data[_chart.keyAccessor()(datum)] = datum;
         });
         return data;
@@ -5243,7 +5258,7 @@ dc.capped = function (_chart) {
 
     var _othersGrouper = function (topRows) {
         var topRowsSum = d3.sum(topRows, _chart.valueAccessor()),
-            allRows = _chart.group().all(),
+            allRows = _chart.data(),
             allRowsSum = d3.sum(allRows, _chart.valueAccessor()),
             topKeys = topRows.map(_chart.keyAccessor()),
             allKeys = allRows.map(_chart.keyAccessor()),
@@ -5312,7 +5327,7 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     _chart.plotData = function(){
         _chart.chartBodyG().selectAll("path.dc-symbol")
-                .data(_chart.group().all())
+                .data(_chart.data())
             .enter()
             .append("path")
             .attr("class", "dc-symbol")
@@ -5366,9 +5381,13 @@ dc.numberDisplay = function (parent, chartGroup) {
     Calculate and return the underlying value of the display
     **/
     _chart.value = function () {
+        return _chart.data();
+    };
+
+    _chart.data(function () {
          var valObj = _chart.group().all && _chart.group().all()[0] || _chart.group().value();
          return _chart.valueAccessor()(valObj);
-    };
+    });
 
     _chart.transitionDuration(250); // good default
 
