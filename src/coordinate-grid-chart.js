@@ -650,7 +650,7 @@ dc.coordinateGridChart = function (_chart) {
             _brushOn = false;
 
         if (_brushOn) {
-            _brush.on("brush", brushing)
+            _brush.on("brush", _chart._brushing);
 
             var gBrush = g.append("g")
                 .attr("class", "brush")
@@ -681,10 +681,18 @@ dc.coordinateGridChart = function (_chart) {
         return _brush.empty() || !extent || extent[1] <= extent[0];
     };
 
-    function brushing(p) {
+    _chart.brushHasNoLength = function(extent) {
+        return extent[0] == extent[1];
+    };
+
+    _chart._brushing = function() {
         var extent = _chart.extendBrush();
 
         _chart.redrawBrush(_g);
+
+        if (_chart.brushHasNoLength(extent)) {
+          return;
+        }
 
         if (_chart.brushIsEmpty(extent)) {
             dc.events.trigger(function () {
@@ -698,7 +706,7 @@ dc.coordinateGridChart = function (_chart) {
                 dc.redrawAll(_chart.chartGroup());
             }, dc.constants.EVENT_DELAY);
         }
-    }
+    };
 
     _chart.redrawBrush = function (g) {
         if (_brushOn) {

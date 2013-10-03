@@ -22,6 +22,21 @@ suite.addBatch({
                 assert.equal("Mandatory attribute chart.x is missing on chart[#]", e.message);
             }
         }
+    },
+
+    'brushing with equal dates': {
+        topic: function () {
+            var chart = dc.coordinateGridChart({});
+            sinon.spy(chart, "filter");
+            sinon.stub(chart, "redrawBrush");
+            sinon.stub(chart, "extendBrush").returns([1, 1]);
+            return chart;
+        },
+
+        'should not trigger a filter event': function(chart) {
+            chart._brushing();
+            assert.isTrue(chart.filter.notCalled);
+        }
     }
 });
 
