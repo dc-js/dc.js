@@ -80,8 +80,12 @@ dc.chartRegistry = function() {
             _chartMap[group].push(chart);
         },
 
-        clear: function() {
-            _chartMap = {};
+        clear: function(group) {
+            if (group) {
+                delete _chartMap[group];
+            } else {
+                _chartMap = {};
+            }
         },
 
         list: function(group) {
@@ -99,8 +103,8 @@ dc.hasChart = function(chart) {
     return dc.chartRegistry.has(chart);
 };
 
-dc.deregisterAllCharts = function() {
-    dc.chartRegistry.clear();
+dc.deregisterAllCharts = function(group) {
+    dc.chartRegistry.clear(group);
 };
 
 /**
