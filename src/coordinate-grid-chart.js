@@ -682,7 +682,11 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     _chart.brushHasNoLength = function(extent) {
-        return extent[0] == extent[1];
+        if (extent[0] instanceof Date && extent[1] instanceof Date) {
+            return extent[0].getTime() == extent[1].getTime();
+        } else {
+            return extent[0] == extent[1];
+        }
     };
 
     _chart._brushing = function() {

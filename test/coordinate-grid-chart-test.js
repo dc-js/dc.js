@@ -29,7 +29,7 @@ suite.addBatch({
             var chart = dc.coordinateGridChart({});
             sinon.spy(chart, "filter");
             sinon.stub(chart, "redrawBrush");
-            sinon.stub(chart, "extendBrush").returns([1, 1]);
+            sinon.stub(chart, "extendBrush").returns([new Date("2013/1/1"), new Date("2013/1/1")]);
             return chart;
         },
 
