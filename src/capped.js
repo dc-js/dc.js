@@ -12,7 +12,8 @@ dc.capped = function (_chart) {
             allKeys = allRows.map(_chart.keyAccessor()),
             topSet = d3.set(topKeys),
             others = allKeys.filter(function(d){return !topSet.has(d);});
-        topRows.push({"others": others,"key": _othersLabel, "value": allRowsSum - topRowsSum });
+        if (allRowsSum > topRowsSum)
+            topRows.push({"others": others,"key": _othersLabel, "value": allRowsSum - topRowsSum });
     };
 
     _chart.assembleCappedData = function() {
