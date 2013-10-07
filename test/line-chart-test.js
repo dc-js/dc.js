@@ -273,6 +273,7 @@ suite.addBatch({'stacked area chart': {
     topic: function () {
         var chart = buildChart("stacked-area-chart", [new Date(2012, 4, 20), new Date(2012, 7, 15)]);
         chart.dimension(dateDimension)
+            .brushOn(false)
             .group(dateIdSumGroup)
             .stack(dateValueSumGroup)
             .stack(dateValueSumGroup)
@@ -304,6 +305,31 @@ suite.addBatch({'stacked area chart': {
     },
     'correctly draw stack 2 area': function (chart) {
         assert.equal(d3.select("#stacked-area-chart g._2 path.area").attr("d"), "M58.62068965517241,109L222.75862068965515,81L246.20689655172413,0L492.41379310344826,108L597.9310344827586,89L961.3793103448276,65L961.3793103448276,109L597.9310344827586,120L492.41379310344826,133L246.20689655172413,75L222.75862068965515,119L58.62068965517241,134Z");
+    },
+    'tooltip dots should always be drawn on top of paths': function(chart) {
+        var list = d3.select("#stacked-area-chart").selectAll("circle.dot, path.line, path.area");
+
+        var indexOfLastLine = list[0].indexOf(list.filter("path.line")[0][2]);
+        var indexOfLastArea = list[0].indexOf(list.filter("path.area")[0][2]);
+        var indexOfDot = list[0].indexOf(list.filter("circle.dot")[0][0]);
+
+        assert.equal(indexOfLastLine < indexOfDot, true);
+        assert.equal(indexOfLastArea < indexOfDot, true);
+    },
+    'tooltip ref lines should always be drawn on top of paths': function(chart) {
+        var list = d3.select("#stacked-area-chart").selectAll("path.yRef, path.xRef, path.line, path.area");
+
+        var indexOfLastLine = list[0].indexOf(list.filter("path.line")[0][2]);
+        var indexOfLastArea = list[0].indexOf(list.filter("path.area")[0][2]);
+
+        var indexOfFirstYRef = list[0].indexOf(list.filter("path.yRef")[0][0]);
+        var indexOfFirstXRef = list[0].indexOf(list.filter("path.xRef")[0][0]);
+
+        assert.equal(indexOfLastLine < indexOfFirstXRef, true);
+        assert.equal(indexOfLastLine < indexOfFirstYRef, true);
+
+        assert.equal(indexOfLastArea < indexOfFirstXRef, true);
+        assert.equal(indexOfLastArea < indexOfFirstYRef, true);
     }
 }});
 
