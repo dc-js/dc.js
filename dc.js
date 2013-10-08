@@ -415,6 +415,10 @@ dc.utils.GroupStack = function () {
         return _dataLayers;
     };
 
+    this.clearDataLayers = function() {
+      _dataLayers = [[ ]];
+    };
+
     this.toLayers = function () {
         var layers = [];
 
@@ -2705,6 +2709,8 @@ dc.stackableChart = function (_chart) {
     }
 
     _chart.calculateDataPointMatrixForAll = function () {
+        _groupStack.clearDataLayers();
+
         var groups = _chart.allGroups();
         for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
             var group = groups[groupIndex];
