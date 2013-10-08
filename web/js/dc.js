@@ -3599,8 +3599,12 @@ dc.lineChart = function (parent, chartGroup) {
     _chart.transitionDuration(500);
 
     _chart.plotData = function () {
-        var layers = _chart.chartBodyG().selectAll("g.stack")
-            .data(_chart.stackLayers());
+        var chartBody = _chart.chartBodyG();
+        var layersList = chartBody.selectAll("g.stack-list");
+
+        if (layersList.empty()) layersList = chartBody.append("g").attr("class", "stack-list");
+
+        var layers = layersList.selectAll("g.stack").data(_chart.stackLayers());
 
         var layersEnter = layers
             .enter()
@@ -3613,7 +3617,7 @@ dc.lineChart = function (parent, chartGroup) {
 
         drawArea(layersEnter, layers);
 
-        drawDots(layers);
+        drawDots(chartBody, layers);
 
         _chart.stackLayers(null);
     };
@@ -3709,18 +3713,24 @@ dc.lineChart = function (parent, chartGroup) {
         return (!d || d.indexOf("NaN") >= 0) ? "M0,0" : d;
     }
 
-    function drawDots(layersEnter) {
+    function drawDots(chartBody, layers) {
         if (!_chart.brushOn()) {
-            layersEnter.each(function (d, i) {
-                var layer = d3.select(this);
 
-                var g = layer.select("g." + TOOLTIP_G_CLASS);
-                if (g.empty()) g = layer.append("g").attr("class", TOOLTIP_G_CLASS);
+            var tooltipListClass = TOOLTIP_G_CLASS + "-list";
+            var tooltips = chartBody.select("g." + tooltipListClass);
+
+            if (tooltips.empty()) tooltips = chartBody.append("g").attr("class", tooltipListClass);
+
+            layers.each(function (d, i) {
+                var layer = d3.select(this);
+                var points = layer.datum().points;
+
+                var g = tooltips.select("g." + TOOLTIP_G_CLASS + "._" + i);
+                if (g.empty()) g = tooltips.append("g").attr("class", TOOLTIP_G_CLASS + " _" + i);
 
                 createRefLines(g);
 
-                var dots = g.selectAll("circle." + DOT_CIRCLE_CLASS)
-                    .data(g.datum().points);
+                var dots = g.selectAll("circle." + DOT_CIRCLE_CLASS).data(points);
 
                 dots.enter()
                     .append("circle")
