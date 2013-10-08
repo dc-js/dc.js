@@ -109,6 +109,19 @@ suite.addBatch({
             resetAllFilters();
             resetBody();
         }
+    },
+    'resetting line chart with fewer data points': {
+        'it should not contain stale data points': function() {
+            var chart = buildLineChart("stackable-line-chart");
+            chart.render();
+
+            timeDimension.filterAll();
+            baseData2.remove();
+            baseData2.add(json2);
+            chart.render();
+
+            assert.equal(chart.getChartStack().getDataLayers()[0].length, 2);
+        }
     }
 });
 

@@ -139,6 +139,10 @@ dc.utils.GroupStack = function () {
         return _dataLayers;
     };
 
+    this.clearDataLayers = function() {
+      _dataLayers = [[ ]];
+    };
+
     this.toLayers = function () {
         var layers = [];
 
