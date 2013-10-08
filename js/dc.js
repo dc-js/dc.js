@@ -2105,7 +2105,7 @@ dc.coordinateGridChart = function (_chart) {
             _brushOn = false;
 
         if (_brushOn) {
-            _brush.on("brush", brushing)
+            _brush.on("brush", _chart._brushing);
 
             var gBrush = g.append("g")
                 .attr("class", "brush")
@@ -2136,10 +2136,22 @@ dc.coordinateGridChart = function (_chart) {
         return _brush.empty() || !extent || extent[1] <= extent[0];
     };
 
-    function brushing(p) {
+    _chart.brushHasNoLength = function(extent) {
+        if (extent[0] instanceof Date && extent[1] instanceof Date) {
+            return extent[0].getTime() == extent[1].getTime();
+        } else {
+            return extent[0] == extent[1];
+        }
+    };
+
+    _chart._brushing = function() {
         var extent = _chart.extendBrush();
 
         _chart.redrawBrush(_g);
+
+        if (_chart.brushHasNoLength(extent)) {
+          return;
+        }
 
         if (_chart.brushIsEmpty(extent)) {
             dc.events.trigger(function () {
@@ -2153,7 +2165,7 @@ dc.coordinateGridChart = function (_chart) {
                 dc.redrawAll(_chart.chartGroup());
             }, dc.constants.EVENT_DELAY);
         }
-    }
+    };
 
     _chart.redrawBrush = function (g) {
         if (_brushOn) {
@@ -3587,8 +3599,12 @@ dc.lineChart = function (parent, chartGroup) {
     _chart.transitionDuration(500);
 
     _chart.plotData = function () {
-        var layers = _chart.chartBodyG().selectAll("g.stack")
-            .data(_chart.stackLayers());
+        var chartBody = _chart.chartBodyG();
+        var layersList = chartBody.selectAll("g.stack-list");
+
+        if (layersList.empty()) layersList = chartBody.append("g").attr("class", "stack-list");
+
+        var layers = layersList.selectAll("g.stack").data(_chart.stackLayers());
 
         var layersEnter = layers
             .enter()
@@ -3601,7 +3617,7 @@ dc.lineChart = function (parent, chartGroup) {
 
         drawArea(layersEnter, layers);
 
-        drawDots(layers);
+        drawDots(chartBody, layers);
 
         _chart.stackLayers(null);
     };
@@ -3697,18 +3713,24 @@ dc.lineChart = function (parent, chartGroup) {
         return (!d || d.indexOf("NaN") >= 0) ? "M0,0" : d;
     }
 
-    function drawDots(layersEnter) {
+    function drawDots(chartBody, layers) {
         if (!_chart.brushOn()) {
-            layersEnter.each(function (d, i) {
-                var layer = d3.select(this);
 
-                var g = layer.select("g." + TOOLTIP_G_CLASS);
-                if (g.empty()) g = layer.append("g").attr("class", TOOLTIP_G_CLASS);
+            var tooltipListClass = TOOLTIP_G_CLASS + "-list";
+            var tooltips = chartBody.select("g." + tooltipListClass);
+
+            if (tooltips.empty()) tooltips = chartBody.append("g").attr("class", tooltipListClass);
+
+            layers.each(function (d, i) {
+                var layer = d3.select(this);
+                var points = layer.datum().points;
+
+                var g = tooltips.select("g." + TOOLTIP_G_CLASS + "._" + i);
+                if (g.empty()) g = tooltips.append("g").attr("class", TOOLTIP_G_CLASS + " _" + i);
 
                 createRefLines(g);
 
-                var dots = g.selectAll("circle." + DOT_CIRCLE_CLASS)
-                    .data(g.datum().points);
+                var dots = g.selectAll("circle." + DOT_CIRCLE_CLASS).data(points);
 
                 dots.enter()
                     .append("circle")
@@ -5268,7 +5290,8 @@ dc.capped = function (_chart) {
             allKeys = allRows.map(_chart.keyAccessor()),
             topSet = d3.set(topKeys),
             others = allKeys.filter(function(d){return !topSet.has(d);});
-        topRows.push({"others": others,"key": _othersLabel, "value": allRowsSum - topRowsSum });
+        if (allRowsSum > topRowsSum)
+            topRows.push({"others": others,"key": _othersLabel, "value": allRowsSum - topRowsSum });
     };
 
     _chart.assembleCappedData = function() {
