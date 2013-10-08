@@ -943,7 +943,7 @@ dc.baseChart = function (_chart) {
             .attr("width", _chart.width())
             .attr("height", _chart.height());
         return _svg;
-    };
+    }
 
     /**
     #### .filterPrinter([filterPrinterFunction])
