@@ -891,12 +891,19 @@ range when filtered.</p>
 <p>Set or get gap between legend items. Default value: 5.</p>
 <h4>.itemHeight([value])</h4>
 <p>Set or get legend item height. Default value: 12.</p>
+<h2><a name="capped" href="#capped">#</a>  Capped</h2>
+<p>Capped is a mixin that groups small data elements below a <em>cap</em> into an <em>others</em> grouping for both the Row and Pie Charts.</p>
+<p>The top ordered elements in the group up to the cap amount will be kept in the chart and
+the sum of those below will be added to the <em>others</em> element. The keys of the elements below the cap limit are recorded
+in order to repsond to onClick events and trigger filtering of all the within that grouping.</p>
+<h4>.cap([count])</h4>
+<p>Get or set the count of elements to that will be included in the cap.</p>
 <h4>.othersLabel([label])</h4>
 <p>Get or set the label for <em>Others</em> slice when slices cap is specified. Default label is <strong>Others</strong>.</p>
 <h4>.othersGrouper([grouperFunction])</h4>
 <p>Get or set the grouper funciton that will perform the insersion of data for the <em>Others</em> slice if the slices cap is
-specified. By default the grouper function implements the following logic, you can and should change this function to
-match your data structure. If set to a falsy value, no others will be added;</p>
+specified. If set to a falsy value, no others will be added. By default the grouper function implements the following
+logic, you will need change this function to match your data structure if you are not using the a crossfilter group.</p>
 <pre><code class="lang-js"><span class="title">function</span> (<span class="typedef"><span class="keyword">data</span>, sum) <span class="container">{
     <span class="title">data</span>.<span class="title">push</span>({"<span class="title">key</span>": <span class="title">_othersLabel</span>, "<span class="title">value</span>": <span class="title">sum</span> }</span>);</span>
 };</code></pre>

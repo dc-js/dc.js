@@ -85,7 +85,7 @@ dc.pieChart = function (parent, chartGroup) {
 
             var arc = _chart.buildArcs();
 
-            var pieData = pie(_chart.assembleCappedData());
+            var pieData = pie(_chart._assembleCappedData());
 
             if (_g) {
                 var slices = _g.selectAll("g." + _sliceCssClass)

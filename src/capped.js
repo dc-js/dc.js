@@ -1,3 +1,13 @@
+/**
+## <a name="capped" href="#capped">#</a>  Capped
+
+Capped is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the Row and Pie Charts.
+
+The top ordered elements in the group up to the cap amount will be kept in the chart and
+the sum of those below will be added to the *others* element. The keys of the elements below the cap limit are recorded
+in order to repsond to onClick events and trigger filtering of all the within that grouping.
+
+**/
 dc.capped = function (_chart) {
 
     var _cap = Infinity;
@@ -16,7 +26,7 @@ dc.capped = function (_chart) {
             topRows.push({"others": others,"key": _othersLabel, "value": allRowsSum - topRowsSum });
     };
 
-    _chart.assembleCappedData = function() {
+    _chart._assembleCappedData = function() {
         if (_cap == Infinity) {
             return _chart.computeOrderedGroups();
         } else {
@@ -27,6 +37,10 @@ dc.capped = function (_chart) {
         }
     };
 
+    /**
+    #### .cap([count])
+    Get or set the count of elements to that will be included in the cap.
+    **/
     _chart.cap = function (_) {
         if (!arguments.length) return _cap;
         _cap = _;
@@ -46,8 +60,8 @@ dc.capped = function (_chart) {
     /**
     #### .othersGrouper([grouperFunction])
     Get or set the grouper funciton that will perform the insersion of data for the *Others* slice if the slices cap is
-    specified. By default the grouper function implements the following logic, you can and should change this function to
-    match your data structure. If set to a falsy value, no others will be added;
+    specified. If set to a falsy value, no others will be added. By default the grouper function implements the following
+    logic, you will need change this function to match your data structure if you are not using the a crossfilter group.
     ```js
     function (data, sum) {
         data.push({"key": _othersLabel, "value": sum });

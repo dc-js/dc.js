@@ -111,7 +111,7 @@ dc.rowChart = function (parent, chartGroup) {
     }
 
     function drawChart() {
-        _rowData = _chart.assembleCappedData();
+        _rowData = _chart._assembleCappedData();
 
         drawAxis();
         drawGridLines();
