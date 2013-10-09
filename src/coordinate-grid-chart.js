@@ -15,6 +15,7 @@ dc.coordinateGridChart = function (_chart) {
     _chart = dc.colorChart(dc.marginable(dc.baseChart(_chart)));
 
     _chart.colors(d3.scale.category10());
+    _chart._mandatoryAttributes().push('x');
 
     var _parent;
     var _g;
@@ -773,10 +774,6 @@ dc.coordinateGridChart = function (_chart) {
     }
 
     _chart.doRender = function () {
-        if (_x === undefined)
-            throw new dc.errors.InvalidStateException("Mandatory attribute chart.x is missing on chart[#"
-                + _chart.anchorName() + "]");
-
         _chart.resetSvg();
 
         if (_chart.dataSet()) {

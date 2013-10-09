@@ -32,7 +32,8 @@ dc.numberDisplay = function (parent, chartGroup) {
     var _formatNumber = d3.format(".2s");
     var _chart = dc.baseChart({});
 
-    _chart.dimension({}); // dummy dimension to remove warnings
+    // dimension not required
+    _chart._mandatoryAttributes(['group']);
 
     /**
     #### .value()

@@ -41,6 +41,7 @@ dc.baseChart = function (_chart) {
     var _filterPrinter = dc.printers.filters;
 
     var _renderlets = [];
+    var _mandatoryAttributes = ['dimension', 'group'];
 
     var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
 
@@ -348,6 +349,18 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
+    _chart._mandatoryAttributes = function (_) {
+        if (!arguments.length) return _mandatoryAttributes;
+        _mandatoryAttributes = _;
+        return _chart;
+    };
+
+    function checkForMandatoryAttributes(a) {
+        if (!_chart[a] || !_chart[a]())
+            throw new dc.errors.InvalidStateException("Mandatory attribute chart." + a +
+                                                      " is missing on chart[#" + _chart.anchorName() + "]");
+    }
+
     /**
     #### .render()
     Invoke this method will force the chart to re-render everything from scratch. Generally it should be only used to
@@ -358,13 +371,7 @@ dc.baseChart = function (_chart) {
     _chart.render = function () {
         _listeners.preRender(_chart);
 
-        if (_dimension === undefined)
-            throw new dc.errors.InvalidStateException("Mandatory attribute chart.dimension is missing on chart[#"
-                + _chart.anchorName() + "]");
-
-        if (_group === undefined)
-            throw new dc.errors.InvalidStateException("Mandatory attribute chart.group is missing on chart[#"
-                + _chart.anchorName() + "]");
+        _mandatoryAttributes.forEach(checkForMandatoryAttributes);
 
         var result = _chart.doRender();
 
