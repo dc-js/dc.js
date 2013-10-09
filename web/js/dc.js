@@ -5499,6 +5499,10 @@ dc.heatMap = function (parent, chartGroup) {
     _chart._mandatoryAttributes(['group']);
     _chart.title(_fillAccessor);
 
+    _chart.boxOnClick = function () {};
+    _chart.xAxisOnClick = function () {};
+    _chart.yAxisOnClick = function () {};
+
     function uniq(d,i,a) {
         return !i || a[i-1] != d;
     }
@@ -5569,7 +5573,8 @@ dc.heatMap = function (parent, chartGroup) {
         var gEnter = boxes.enter().append("g")
             .attr("class", "box-group");
         gEnter.append("rect")
-            .attr("fill", "white");
+            .attr("fill", "white")
+            .on("click", _chart.boxOnClick);
         gEnter.append("title")
             .text(function (d) { return _chart.title()(d); });
 
@@ -5594,6 +5599,7 @@ dc.heatMap = function (parent, chartGroup) {
               .style("text-anchor", "middle")
               .attr("y", _chart.effectiveHeight())
               .attr("dy", 12)
+              .on("click", _chart.xAxisOnClick)
               .text(function(d) { return d; });
         var gRows = _chartBody.selectAll("g.rows");
         if (gRows.empty())
@@ -5605,6 +5611,7 @@ dc.heatMap = function (parent, chartGroup) {
               .style("text-anchor", "end")
               .attr("x", 0)
               .attr("dx", -2)
+              .on("click", _chart.yAxisOnClick)
               .text(function(d) { return d; });
     };
 
