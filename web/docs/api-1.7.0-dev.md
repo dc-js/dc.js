@@ -543,6 +543,12 @@ chart.stack(valueSumGroup)
 .stack(avgByDayGroup, function(d){return d.value.avgByDay;});
 ```
 
+#### .hideStack(name)
+Hide all stacks with a particular name from the chart. The chart must be re-rendered for this change to appear.
+
+#### .showStack(name)
+Show all stacks with a particular name from the chart. The chart must be re-rendered for this change to appear.
+
 ## <a name="abstract-bubble-chart" href="#abstract-bubble-chart">#</a> Abstract Bubble Chart [Abstract] < [Color Chart](#color-chart)
 An abstraction provides reusable functionalities for any chart that needs to visualize data using bubbles.
 
