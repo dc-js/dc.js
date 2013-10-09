@@ -145,5 +145,6 @@ module.exports.jsFiles = [
     "src/capped.js",
     "src/scatter-plot.js",
     "src/number-display.js",
+    "src/heatmap.js",
     "src/footer.js"
 ];
