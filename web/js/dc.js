@@ -261,7 +261,7 @@ dc.instanceOfChart = function (o) {
 dc.errors = {};
 
 dc.errors.Exception = function(msg) {
-    var _msg = msg !== undefined ? msg : "Unexpected internal error";
+    var _msg = msg || "Unexpected internal error";
 
     this.message = _msg;
 
@@ -690,6 +690,7 @@ dc.baseChart = function (_chart) {
     var _filterPrinter = dc.printers.filters;
 
     var _renderlets = [];
+    var _mandatoryAttributes = ['dimension', 'group'];
 
     var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
 
@@ -997,6 +998,18 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
+    _chart._mandatoryAttributes = function (_) {
+        if (!arguments.length) return _mandatoryAttributes;
+        _mandatoryAttributes = _;
+        return _chart;
+    };
+
+    function checkForMandatoryAttributes(a) {
+        if (!_chart[a] || !_chart[a]())
+            throw new dc.errors.InvalidStateException("Mandatory attribute chart." + a +
+                                                      " is missing on chart[#" + _chart.anchorName() + "]");
+    }
+
     /**
     #### .render()
     Invoke this method will force the chart to re-render everything from scratch. Generally it should be only used to
@@ -1007,13 +1020,7 @@ dc.baseChart = function (_chart) {
     _chart.render = function () {
         _listeners.preRender(_chart);
 
-        if (_dimension === undefined)
-            throw new dc.errors.InvalidStateException("Mandatory attribute chart.dimension is missing on chart[#"
-                + _chart.anchorName() + "]");
-
-        if (_group === undefined)
-            throw new dc.errors.InvalidStateException("Mandatory attribute chart.group is missing on chart[#"
-                + _chart.anchorName() + "]");
+        _mandatoryAttributes.forEach(checkForMandatoryAttributes);
 
         var result = _chart.doRender();
 
@@ -1474,6 +1481,7 @@ dc.coordinateGridChart = function (_chart) {
     _chart = dc.colorChart(dc.marginable(dc.baseChart(_chart)));
 
     _chart.colors(d3.scale.category10());
+    _chart._mandatoryAttributes().push('x');
 
     var _parent;
     var _g;
@@ -2232,10 +2240,6 @@ dc.coordinateGridChart = function (_chart) {
     }
 
     _chart.doRender = function () {
-        if (_x === undefined)
-            throw new dc.errors.InvalidStateException("Mandatory attribute chart.x is missing on chart[#"
-                + _chart.anchorName() + "]");
-
         _chart.resetSvg();
 
         if (_chart.dataSet()) {
@@ -3986,14 +3990,11 @@ dc.dataTable = function(parent, chartGroup) {
             .append("tr")
             .attr("class", ROW_CSS_CLASS);
 
-        for (var i = 0; i < _columns.length; ++i) {
-            var f = _columns[i];
+        _columns.forEach(function(f,i) {
             rowEnter.append("td")
                 .attr("class", COLUMN_CSS_CLASS + " _" + i)
-                .html(function(d) {
-                    return f(d);
-                });
-        }
+                .html(f);
+        });
 
         rows.exit().remove();
 
@@ -5421,7 +5422,8 @@ dc.numberDisplay = function (parent, chartGroup) {
     var _formatNumber = d3.format(".2s");
     var _chart = dc.baseChart({});
 
-    _chart.dimension({}); // dummy dimension to remove warnings
+    // dimension not required
+    _chart._mandatoryAttributes(['group']);
 
     /**
     #### .value()
