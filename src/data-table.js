@@ -92,14 +92,11 @@ dc.dataTable = function(parent, chartGroup) {
             .append("tr")
             .attr("class", ROW_CSS_CLASS);
 
-        for (var i = 0; i < _columns.length; ++i) {
-            var f = _columns[i];
+        _columns.forEach(function(f,i) {
             rowEnter.append("td")
                 .attr("class", COLUMN_CSS_CLASS + " _" + i)
-                .html(function(d) {
-                    return f(d);
-                });
-        }
+                .html(f);
+        });
 
         rows.exit().remove();
 
