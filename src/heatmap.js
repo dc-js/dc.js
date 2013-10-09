@@ -82,9 +82,9 @@ dc.heatMap = function (parent, chartGroup) {
             return _chart.keyAccessor()(d,i) + '\0' + _chart.valueAccessor()(d,i);
         });
         var gEnter = boxes.enter().append("g")
-            .attr("class", "box-group")
+            .attr("class", "box-group");
         gEnter.append("rect")
-            .attr("fill", "white")
+            .attr("fill", "white");
         gEnter.append("title")
             .text(function (d) { return _chart.title()(d); });
 
