@@ -35,13 +35,16 @@ dc.stackableChart = function (_chart) {
         if(!arguments.length)
             _groupStack.clear();
 
-        if (typeof name === 'string')
-            _chart._setGroupName(group, name, accessor);
-        else if (typeof name === 'function')
-            accessor = name;
-
         _groupStack.setDefaultAccessor(_chart.valueAccessor());
-        _groupStack.addGroup(group, accessor);
+
+        if (typeof name === 'string') {
+            _chart._setGroupName(group, name, accessor);
+            _groupStack.addNamedGroup(group, name, accessor);
+        }
+        else {
+            accessor = name;
+            _groupStack.addGroup(group, accessor);
+        }
 
         _chart.expireCache();
 
@@ -245,6 +248,14 @@ dc.stackableChart = function (_chart) {
         } else {
             _stackLayers = _;
         }
+    };
+
+    _chart.hideStack = function (stackName) {
+        _groupStack.hideGroups(stackName, _chart._getGroupName(_chart.group()) == stackName);
+    };
+
+    _chart.showStack = function (stackName) {
+        _groupStack.showGroups(stackName, _chart._getGroupName(_chart.group()) == stackName);
     };
 
     _chart.colorAccessor(function(d){return d.layer || d.index;});

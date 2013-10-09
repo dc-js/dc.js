@@ -364,6 +364,7 @@ dc.utils.GroupStack = function () {
     var _dataLayers = [[ ]];
     var _groups = [];
     var _defaultAccessor;
+    var _hideChartGroup;
 
     function initializeDataLayer(i) {
         if (!_dataLayers[i])
@@ -388,6 +389,11 @@ dc.utils.GroupStack = function () {
             accessor = _defaultAccessor;
         _groups.push([group, accessor]);
         return _groups.length - 1;
+    };
+
+    this.addNamedGroup = function (group, name, accessor) {
+        var groupIndex = this.addGroup(group, accessor);
+        return _groups[groupIndex].name = name;
     };
 
     this.getGroupByIndex = function (index) {
@@ -416,13 +422,35 @@ dc.utils.GroupStack = function () {
     };
 
     this.clearDataLayers = function() {
-      _dataLayers = [[ ]];
+        _dataLayers = [[ ]];
+    };
+
+    this.showGroups = function(name, showChartGroup) {
+        if (showChartGroup) _hideChartGroup = false;
+        this.toggleGroups(name, false);
+    };
+
+    this.hideGroups = function(name, hideChartGroup) {
+        if (hideChartGroup) _hideChartGroup = true;
+        this.toggleGroups(name, true);
+    };
+
+    this.toggleGroups = function(name, value) {
+        for (var i = 0; i < _groups.length; ++i) {
+            if (_groups[i].name === name)
+                _groups[i].hidden = value;
+        }
     };
 
     this.toLayers = function () {
         var layers = [];
 
         for (var i = 0; i < _dataLayers.length; ++i) {
+            if (i == 0 && _hideChartGroup)
+                continue;
+            if (i > 0 && _groups[i-1].hidden)
+                continue;
+
             var layer = {index: i, points: []};
             var dataPoints = _dataLayers[i];
 
@@ -2546,13 +2574,16 @@ dc.stackableChart = function (_chart) {
         if(!arguments.length)
             _groupStack.clear();
 
-        if (typeof name === 'string')
-            _chart._setGroupName(group, name, accessor);
-        else if (typeof name === 'function')
-            accessor = name;
-
         _groupStack.setDefaultAccessor(_chart.valueAccessor());
-        _groupStack.addGroup(group, accessor);
+
+        if (typeof name === 'string') {
+            _chart._setGroupName(group, name, accessor);
+            _groupStack.addNamedGroup(group, name, accessor);
+        }
+        else {
+            accessor = name;
+            _groupStack.addGroup(group, accessor);
+        }
 
         _chart.expireCache();
 
@@ -2756,6 +2787,14 @@ dc.stackableChart = function (_chart) {
         } else {
             _stackLayers = _;
         }
+    };
+
+    _chart.hideStack = function (stackName) {
+        _groupStack.hideGroups(stackName, _chart._getGroupName(_chart.group()) == stackName);
+    };
+
+    _chart.showStack = function (stackName) {
+        _groupStack.showGroups(stackName, _chart._getGroupName(_chart.group()) == stackName);
     };
 
     _chart.colorAccessor(function(d){return d.layer || d.index;});
