@@ -204,7 +204,7 @@ dc.utils.appendOrSelect = function (parent, name) {
 
 dc.utils.createLegendable = function (chart, group, index, accessor) {
     var legendable = {name: chart._getGroupName(group, accessor), data: group};
-    if (typeof chart.colors === 'function') legendable.color = chart.colors()(index);
+    if (typeof chart.colors === 'function') legendable.color = chart.getColor(chart.colorAccessor());
     return legendable;
 };
 
