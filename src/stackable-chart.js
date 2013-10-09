@@ -18,8 +18,8 @@ dc.stackableChart = function (_chart) {
     var _stackLayers;
 
     /**
-    #### .stack(group[, name, retriever])
-    Stack a new crossfilter group into this chart with optionally a custom value retriever. All stacks in the same chart will
+    #### .stack(group[, name, accessor])
+    Stack a new crossfilter group into this chart with optionally a custom value accessor. All stacks in the same chart will
     share the same key accessor therefore share the same set of keys. In more concrete words, imagine in a stacked bar chart
     all bars will be positioned using the same set of keys on the x axis while stacked vertically. If name is specified then
     it will be used to generate legend label.
@@ -31,17 +31,17 @@ dc.stackableChart = function (_chart) {
     ```
 
     **/
-    _chart.stack = function (group, p2, retriever) {
+    _chart.stack = function (group, name, accessor) {
         if(!arguments.length)
             _groupStack.clear();
 
-        if (typeof p2 === 'string')
-            _chart._setGroupName(group, p2, retriever);
-        else if (typeof p2 === 'function')
-            retriever = p2;
+        if (typeof name === 'string')
+            _chart._setGroupName(group, name, accessor);
+        else if (typeof name === 'function')
+            accessor = name;
 
         _groupStack.setDefaultAccessor(_chart.valueAccessor());
-        _groupStack.addGroup(group, retriever);
+        _groupStack.addGroup(group, accessor);
 
         _chart.expireCache();
 
