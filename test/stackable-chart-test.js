@@ -35,6 +35,46 @@ suite.addBatch({
             assert.equal(stack.size(), 1);
             stack.clear();
         },
+        'be able to hide and show stacked groups': function(stack) {
+            stack.addNamedGroup({}, "first group");
+            stack.addNamedGroup({}, "second group");
+
+            stack.setDataPoint(0, 0, 77);
+            stack.setDataPoint(1, 0, 55);
+            stack.setDataPoint(2, 0, 33);
+            stack.hideGroups("first group");
+
+            var layers = stack.toLayers();
+            assert.equal(layers.length, 2);
+            assert.equal(layers[0].points[0], 77);
+            assert.equal(layers[1].points[0], 33);
+
+            stack.showGroups("first group");
+
+            assert.equal(stack.toLayers().length, 3);
+
+            stack.clear();
+        },
+        'be able to hide and show the main group': function(stack) {
+            stack.addNamedGroup({}, "first group");
+            stack.addNamedGroup({}, "second group");
+
+            stack.setDataPoint(0, 0, 77);
+            stack.setDataPoint(1, 0, 55);
+            stack.setDataPoint(2, 0, 33);
+            stack.hideGroups("main group", true);
+
+            var layers = stack.toLayers();
+            assert.equal(layers.length, 2);
+            assert.equal(layers[0].points[0], 55);
+            assert.equal(layers[1].points[0], 33);
+
+            stack.showGroups("main group", true);
+
+            assert.equal(stack.toLayers().length, 3);
+
+            stack.clear();
+        },
         'should use default retriever if custom retriever is missing': function(stack){
             var retriever = {};
             stack.setDefaultAccessor(retriever);

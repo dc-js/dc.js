@@ -274,9 +274,9 @@ suite.addBatch({'stacked area chart': {
         var chart = buildChart("stacked-area-chart", [new Date(2012, 4, 20), new Date(2012, 7, 15)]);
         chart.dimension(dateDimension)
             .brushOn(false)
-            .group(dateIdSumGroup)
-            .stack(dateValueSumGroup)
-            .stack(dateValueSumGroup)
+            .group(dateIdSumGroup, "stack 0")
+            .stack(dateValueSumGroup, "stack 1")
+            .stack(dateValueSumGroup, "stack 2")
             .elasticY(true)
             .renderArea(true);
         chart.render();
@@ -305,6 +305,26 @@ suite.addBatch({'stacked area chart': {
     },
     'correctly draw stack 2 area': function (chart) {
         assert.equal(d3.select("#stacked-area-chart g._2 path.area").attr("d"), "M58.62068965517241,109L222.75862068965515,81L246.20689655172413,0L492.41379310344826,108L597.9310344827586,89L961.3793103448276,65L961.3793103448276,109L597.9310344827586,120L492.41379310344826,133L246.20689655172413,75L222.75862068965515,119L58.62068965517241,134Z");
+    },
+    'the initial stack may be hidden and shown': function (chart) {
+        chart.hideStack("stack 0");
+        chart.render();
+        assert.equal(d3.select("#stacked-area-chart g._0 path.line").attr("d"), "M58.62068965517241,133L222.75862068965515,120L246.20689655172413,80L492.41379310344826,133L597.9310344827586,127L961.3793103448276,113");
+        assert.equal(d3.selectAll("#stacked-area-chart path.line")[0].length, 2);
+        chart.showStack("stack 0");
+        chart.render();
+        assert.equal(d3.select("#stacked-area-chart g._0 path.line").attr("d"), "M58.62068965517241,159L222.75862068965515,157L246.20689655172413,150L492.41379310344826,158L597.9310344827586,151L961.3793103448276,153");
+        assert.equal(d3.selectAll("#stacked-area-chart path.line")[0].length, 3);
+    },
+    'extra stacks may be hidden and shown': function (chart) {
+        chart.hideStack("stack 1");
+        chart.render();
+        assert.equal(d3.select("#stacked-area-chart g._1 path.line").attr("d"), "M58.62068965517241,112L222.75862068965515,83L246.20689655172413,0L492.41379310344826,108L597.9310344827586,85L961.3793103448276,64");
+        assert.equal(d3.selectAll("#stacked-area-chart path.line")[0].length, 2);
+        chart.showStack("stack 1");
+        chart.render();
+        assert.equal(d3.select("#stacked-area-chart g._1 path.line").attr("d"), "M58.62068965517241,134L222.75862068965515,119L246.20689655172413,75L492.41379310344826,133L597.9310344827586,120L961.3793103448276,109");
+        assert.equal(d3.selectAll("#stacked-area-chart path.line")[0].length, 3);
     },
     'tooltip dots should always be drawn on top of paths': function(chart) {
         var list = d3.select("#stacked-area-chart").selectAll("circle.dot, path.line, path.area");
