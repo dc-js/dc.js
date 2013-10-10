@@ -2590,6 +2590,26 @@ dc.stackableChart = function (_chart) {
         return _chart;
     };
 
+    /**
+    #### .hideStack(name)
+    Hide all stacks on the chart with the given name.
+    The chart must be re-rendered for this change to appear.
+
+    **/
+    _chart.hideStack = function (stackName) {
+        _groupStack.hideGroups(stackName, _chart._getGroupName(_chart.group()) == stackName);
+    };
+
+    /**
+    #### .showStack(name)
+    Show all stacks on the chart with the given name.
+    The chart must be re-rendered for this change to appear.
+
+    **/
+    _chart.showStack = function (stackName) {
+        _groupStack.showGroups(stackName, _chart._getGroupName(_chart.group()) == stackName);
+    };
+
     _chart.expireCache = function () {
         _allGroups = null;
         _allValueAccessors = null;
@@ -2787,14 +2807,6 @@ dc.stackableChart = function (_chart) {
         } else {
             _stackLayers = _;
         }
-    };
-
-    _chart.hideStack = function (stackName) {
-        _groupStack.hideGroups(stackName, _chart._getGroupName(_chart.group()) == stackName);
-    };
-
-    _chart.showStack = function (stackName) {
-        _groupStack.showGroups(stackName, _chart._getGroupName(_chart.group()) == stackName);
     };
 
     _chart.colorAccessor(function(d){return d.layer || d.index;});
