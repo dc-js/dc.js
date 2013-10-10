@@ -364,6 +364,7 @@ dc.utils.GroupStack = function () {
     var _dataLayers = [[ ]];
     var _groups = [];
     var _defaultAccessor;
+    var _hideChartGroup;
 
     function initializeDataLayer(i) {
         if (!_dataLayers[i])
@@ -388,6 +389,11 @@ dc.utils.GroupStack = function () {
             accessor = _defaultAccessor;
         _groups.push([group, accessor]);
         return _groups.length - 1;
+    };
+
+    this.addNamedGroup = function (group, name, accessor) {
+        var groupIndex = this.addGroup(group, accessor);
+        return _groups[groupIndex].name = name;
     };
 
     this.getGroupByIndex = function (index) {
@@ -416,13 +422,35 @@ dc.utils.GroupStack = function () {
     };
 
     this.clearDataLayers = function() {
-      _dataLayers = [[ ]];
+        _dataLayers = [[ ]];
+    };
+
+    this.showGroups = function(name, showChartGroup) {
+        if (showChartGroup) _hideChartGroup = false;
+        this.toggleGroups(name, false);
+    };
+
+    this.hideGroups = function(name, hideChartGroup) {
+        if (hideChartGroup) _hideChartGroup = true;
+        this.toggleGroups(name, true);
+    };
+
+    this.toggleGroups = function(name, value) {
+        for (var i = 0; i < _groups.length; ++i) {
+            if (_groups[i].name === name)
+                _groups[i].hidden = value;
+        }
     };
 
     this.toLayers = function () {
         var layers = [];
 
         for (var i = 0; i < _dataLayers.length; ++i) {
+            if (i == 0 && _hideChartGroup)
+                continue;
+            if (i > 0 && _groups[i-1].hidden)
+                continue;
+
             var layer = {index: i, points: []};
             var dataPoints = _dataLayers[i];
 
@@ -2529,8 +2557,8 @@ dc.stackableChart = function (_chart) {
     var _stackLayers;
 
     /**
-    #### .stack(group[, name, retriever])
-    Stack a new crossfilter group into this chart with optionally a custom value retriever. All stacks in the same chart will
+    #### .stack(group[, name, accessor])
+    Stack a new crossfilter group into this chart with optionally a custom value accessor. All stacks in the same chart will
     share the same key accessor therefore share the same set of keys. In more concrete words, imagine in a stacked bar chart
     all bars will be positioned using the same set of keys on the x axis while stacked vertically. If name is specified then
     it will be used to generate legend label.
@@ -2542,21 +2570,44 @@ dc.stackableChart = function (_chart) {
     ```
 
     **/
-    _chart.stack = function (group, p2, retriever) {
+    _chart.stack = function (group, name, accessor) {
         if(!arguments.length)
             _groupStack.clear();
 
-        if (typeof p2 === 'string')
-            _chart._setGroupName(group, p2, retriever);
-        else if (typeof p2 === 'function')
-            retriever = p2;
-
         _groupStack.setDefaultAccessor(_chart.valueAccessor());
-        _groupStack.addGroup(group, retriever);
+
+        if (typeof name === 'string') {
+            _chart._setGroupName(group, name, accessor);
+            _groupStack.addNamedGroup(group, name, accessor);
+        }
+        else {
+            accessor = name;
+            _groupStack.addGroup(group, accessor);
+        }
 
         _chart.expireCache();
 
         return _chart;
+    };
+
+    /**
+    #### .hideStack(name)
+    Hide all stacks on the chart with the given name.
+    The chart must be re-rendered for this change to appear.
+
+    **/
+    _chart.hideStack = function (stackName) {
+        _groupStack.hideGroups(stackName, _chart._getGroupName(_chart.group()) == stackName);
+    };
+
+    /**
+    #### .showStack(name)
+    Show all stacks on the chart with the given name.
+    The chart must be re-rendered for this change to appear.
+
+    **/
+    _chart.showStack = function (stackName) {
+        _groupStack.showGroups(stackName, _chart._getGroupName(_chart.group()) == stackName);
     };
 
     _chart.expireCache = function () {
