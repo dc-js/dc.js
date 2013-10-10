@@ -3785,6 +3785,7 @@ dc.lineChart = function (parent, chartGroup) {
             layers.each(function (d, i) {
                 var layer = d3.select(this);
                 var points = layer.datum().points;
+                if (_defined) points = points.filter(_defined);
 
                 var g = tooltips.select("g." + TOOLTIP_G_CLASS + "._" + i);
                 if (g.empty()) g = tooltips.append("g").attr("class", TOOLTIP_G_CLASS + " _" + i);

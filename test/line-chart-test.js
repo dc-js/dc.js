@@ -378,6 +378,28 @@ suite.addBatch({
 });
 
 suite.addBatch({
+    'defined hides undefined points': {
+        topic: function () {
+            var chart = buildChart("chart-defeined");
+            chart.defined(function(d) { return d.x.valueOf() != 1339311600000;});
+            chart.brushOn(false);
+            chart.render();
+            return chart;
+        },
+        'path should be broken where not defined': function (chart) {
+            assert.notEqual(chart.select("path.line").attr("d").indexOf("M",1),-1);
+        },
+        'dots should not be drawn on undefined points': function (chart) {
+            assert.equal(chart.selectAll(".dot").size(),5);
+        },
+        teardown: function (topic) {
+            resetAllFilters();
+            resetBody();
+        }
+    }
+});
+
+suite.addBatch({
     'horizontal grid lines drawing': {
         topic: function () {
             var chart = buildChart("chart-grid-line");
