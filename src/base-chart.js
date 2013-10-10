@@ -15,6 +15,13 @@ dc.baseChart = function (_chart) {
     var _svg;
 
     var _width = 200, _height = 200;
+    var _calculateWidth = false, _calculateHeight = false;
+    var _widthCalculation = function (element) {
+        return element.getBoundingClientRect().width;
+    };
+    var _heightCalculation = function (element) {
+        return element.getBoundingClientRect().height;
+    };
 
     var _keyAccessor = function (d) {
         return d.key;
@@ -103,6 +110,71 @@ dc.baseChart = function (_chart) {
         _height = h;
         return _chart;
     };
+
+    /**
+    #### .calculateWidth([value])
+    Set or get chart's auto-width flag.
+    If set to a truthy value, chart width will be automatically calculated each time chart is rendered.
+    Calculation is determined by widthCalculation(), and by default is width of anchor element.
+
+    If no value is specified then the current setting will be returned.
+    **/
+    _chart.calculateWidth = function (d) {
+        if (!arguments.length) return _calculateWidth;
+        _calculateWidth = d;
+        return _chart;
+    };
+
+    /**
+    #### .calculateHeight([value])
+    Set or get chart's auto-height function.
+    If set to a truthy value, chart height will be automatically calculated each time chart is rendered.
+    Calculation is determined by heightCalculation(), and by default is height of anchor element.
+
+    If no value is specified then the current setting will be returned.
+    **/
+    _chart.calculateHeight = function (d) {
+        if (!arguments.length) return _calculateHeight;
+        _calculateHeight = d;
+        return _chart;
+    };
+
+    /**
+    #### .widthCalculation
+    Set or get chart's auto-width function, which will be used to set width on render if calculateWidth is true.
+
+    This function will be passed the anchor element as an argument.
+
+    Defaults to returning the anchor element's width.
+
+    Example which sets width to be 30px greater than parent element:
+    ```js
+    chart.widthCalculation(function (element) {
+       return element.parentNode.offsetWidth + 30;
+    });
+    ```
+    **/
+    _chart.widthCalculation = function(_) {
+        if (!arguments.length) return _widthCalculation;
+    _widthCalculation = _;
+        return _chart;
+    }
+
+    /**
+    #### .heightCalculation
+    Set or get chart's auto-height function, which will be used to set height on render if calculateHeight is true.
+
+    This function will be passed the anchor element height and anchor element itself as arguments
+    Defaults to:
+    ```js
+    return elementHeight
+    ```
+    **/
+    _chart.heightCalculation = function(_) {
+       if (!arguments.length) return _heightCalculation;
+       _heightCalculation = _;
+       return _chart;
+    }
 
     /**
     #### .dimension([value]) - **mandatory**
@@ -372,6 +444,16 @@ dc.baseChart = function (_chart) {
         _listeners.preRender(_chart);
 
         _mandatoryAttributes.forEach(checkForMandatoryAttributes);
+
+        if (_calculateWidth) {
+            var element = d3.select(_chart.anchorName()).node();
+            _chart.width(_widthCalculation(element));
+        };
+
+        if (_calculateHeight) {
+            var element = d3.select(_chart.anchorName()).node();
+            _chart.height(_heightCalculation(element));
+        };
 
         var result = _chart.doRender();
 
