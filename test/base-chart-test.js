@@ -20,6 +20,7 @@ suite.addBatch({
     teardown: function (topic) {
         resetAllFilters();
         resetBody();
+        dc.chartRegistry.clear();
     }
 });
 
@@ -48,6 +49,7 @@ suite.addBatch({
     teardown: function (topic) {
         resetAllFilters();
         resetBody();
+        dc.chartRegistry.clear();
     }
 });
 
@@ -77,6 +79,7 @@ suite.addBatch({
     teardown: function (topic) {
         resetAllFilters();
         resetBody();
+        dc.chartRegistry.clear();
     }
 });
 
@@ -106,6 +109,7 @@ suite.addBatch({
     teardown: function (topic) {
         resetAllFilters();
         resetBody();
+        dc.chartRegistry.clear();
     }
 });
 
@@ -129,6 +133,7 @@ suite.addBatch({
     teardown: function (topic) {
         resetAllFilters();
         resetBody();
+        dc.chartRegistry.clear();
     }
 });
 
@@ -152,6 +157,7 @@ suite.addBatch({
     teardown: function (topic) {
         resetAllFilters();
         resetBody();
+        dc.chartRegistry.clear();
     }
 });
 
@@ -182,48 +188,33 @@ suite.addBatch({
 suite.addBatch({
     'calculation of dimensions': {
         topic: function () {
-            var chart = dc.baseChart({});
-            d3.select("body").append("div").attr("id", "ele").node();
-            chart.anchor("#ele").dimension(valueDimension).group(valueGroup);
-            return chart;
+            d3.select("body").append("div").attr("id", "ele");
+            return dc.baseChart({}).anchor('#ele').dimension(valueDimension).group(valueGroup);
         },
 
-        'height is determined using supplied function when height calculation is enabled': function (chart) {
-            var calculation = sinon.stub().returns(800);
-            chart.calculateHeight(true).heightCalculation(calculation);
+        'set automatically': function (chart) {
+            chart.height(null);
+            chart.width(null);
             chart.render();
-
-            assert.isTrue(calculation.called)
-            assert.equal(chart.height(), 800);
+            assert.equal(chart.height(), 200);
+            assert.equal(chart.width(), 200);
         },
 
-        'width is determined using supplied function when width calculation is enabled': function (chart) {
-            var calculation = sinon.stub().returns(800);
-            chart.calculateWidth(true).widthCalculation(calculation);
+        'set to a specific number': function (chart) {
+            chart.height(300);
+            chart.width(500);
             chart.render();
+            assert.equal(chart.height(), 300);
+            assert.equal(chart.width(), 500);
+        },
 
-            assert.isTrue(calculation.called)
+        'set to a callback': function (chart) {
+            var calculation = sinon.stub().returns(800);
+            chart.width(calculation);
+            chart.render();
+            assert.isFalse(calculation.called)
             assert.equal(chart.width(), 800);
-        },
-
-        'height not calculated when height calculation is disabled': function (chart) {
-            var calculation = sinon.stub().returns(800);
-            chart.height(400);
-            chart.calculateHeight(false).heightCalculation(calculation);
-            chart.render();
-
-            assert.isFalse(calculation.called)
-            assert.equal(chart.height(), 400);
-        },
-
-        'width not calculated when width calculation is disabled': function (chart) {
-            var calculation = sinon.stub().returns(800);
-            chart.width(400);
-            chart.calculateWidth(false).widthCalculation(calculation);
-            chart.render();
-
-            assert.isFalse(calculation.called)
-            assert.equal(chart.width(), 400);
+            assert.isTrue(calculation.called)
         }
     },
 
@@ -235,4 +226,3 @@ suite.addBatch({
 });
 
 suite.export(module);
-
