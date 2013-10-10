@@ -20,6 +20,7 @@ suite.addBatch({
     teardown: function (topic) {
         resetAllFilters();
         resetBody();
+        dc.chartRegistry.clear();
     }
 });
 
@@ -48,6 +49,7 @@ suite.addBatch({
     teardown: function (topic) {
         resetAllFilters();
         resetBody();
+        dc.chartRegistry.clear();
     }
 });
 
@@ -77,6 +79,7 @@ suite.addBatch({
     teardown: function (topic) {
         resetAllFilters();
         resetBody();
+        dc.chartRegistry.clear();
     }
 });
 
@@ -106,6 +109,7 @@ suite.addBatch({
     teardown: function (topic) {
         resetAllFilters();
         resetBody();
+        dc.chartRegistry.clear();
     }
 });
 
@@ -129,6 +133,7 @@ suite.addBatch({
     teardown: function (topic) {
         resetAllFilters();
         resetBody();
+        dc.chartRegistry.clear();
     }
 });
 
@@ -152,6 +157,7 @@ suite.addBatch({
     teardown: function (topic) {
         resetAllFilters();
         resetBody();
+        dc.chartRegistry.clear();
     }
 });
 
@@ -179,5 +185,44 @@ suite.addBatch({
     }
 });
 
-suite.export(module);
+suite.addBatch({
+    'calculation of dimensions': {
+        topic: function () {
+            d3.select("body").append("div").attr("id", "ele");
+            return dc.baseChart({}).anchor('#ele').dimension(valueDimension).group(valueGroup);
+        },
 
+        'set automatically': function (chart) {
+            chart.height(null);
+            chart.width(null);
+            chart.render();
+            assert.equal(chart.height(), 200);
+            assert.equal(chart.width(), 200);
+        },
+
+        'set to a specific number': function (chart) {
+            chart.height(300);
+            chart.width(500);
+            chart.render();
+            assert.equal(chart.height(), 300);
+            assert.equal(chart.width(), 500);
+        },
+
+        'set to a callback': function (chart) {
+            var calculation = sinon.stub().returns(800);
+            chart.width(calculation);
+            chart.render();
+            assert.isFalse(calculation.called)
+            assert.equal(chart.width(), 800);
+            assert.isTrue(calculation.called)
+        }
+    },
+
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
+        dc.chartRegistry.clear();
+    }
+});
+
+suite.export(module);
