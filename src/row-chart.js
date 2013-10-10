@@ -50,9 +50,8 @@ dc.rowChart = function (parent, chartGroup) {
             if (extent[0] > 0) extent[0] = 0;
             _x = d3.scale.linear().domain(extent)
                 .range([0, _chart.effectiveWidth()]);
-
-            _xAxis.scale(_x);
         }
+        _xAxis.scale(_x);
     }
 
     function drawAxis() {
