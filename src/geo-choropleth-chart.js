@@ -30,7 +30,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     var _chart = dc.colorChart(dc.baseChart({}));
 
     _chart.colorAccessor(function (d, i) {
-        return d;
+        return d || 0;
     });
 
     var _geoPath = d3.geo.path();

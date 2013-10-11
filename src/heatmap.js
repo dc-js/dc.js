@@ -5,18 +5,16 @@ dc.heatMap = function (parent, chartGroup) {
     var _cols;
     var _rows;
 
-    var _fillAccessor = function(d,i) { return i; };
-    var _fill;
-    var _fillDefault = d3.scale.quantize().range(["#a50026","#d73027","#f46d43","#fdae61","#fee08b",
-                                        "#ffffbf","#d9ef8b","#a6d96a","#66bd63","#1a9850","#006837"]);
-
-    var _chart = dc.coordinateGridChart({});
+    var _chart = dc.colorChart(dc.marginable(dc.baseChart({})));
     _chart._mandatoryAttributes(['group']);
-    _chart.title(_fillAccessor);
+    _chart.title(_chart.colorAccessor());
 
     _chart.boxOnClick = function () {};
     _chart.xAxisOnClick = function () {};
     _chart.yAxisOnClick = function () {};
+
+    //_chart.colors(d3.scale.quantize().range(["#a50026","#d73027","#f46d43","#fdae61","#fee08b",
+    //                                         "#ffffbf","#d9ef8b","#a6d96a","#66bd63","#1a9850","#006837"]));
 
     function uniq(d,i,a) {
         return !i || a[i-1] != d;
@@ -44,21 +42,6 @@ dc.heatMap = function (parent, chartGroup) {
         return d3.scale.ordinal().domain(colValues.filter(uniq));
     };
 
-    _chart.fill = function (_) {
-        if (arguments.length) {
-            _fill = _;
-            return _chart;
-        }
-        if (_fill) return _fill;
-        return _fillDefault.domain(d3.extent(_chart.data(),_fillAccessor));
-    };
-
-    _chart.fillAccessor = function (_) {
-        if (!arguments.length) return _fillAccessor;
-        _fillAccessor = _;
-        return _chart;
-    };
-
     _chart.doRender = function () {
         _chart.resetSvg();
 
@@ -73,7 +56,6 @@ dc.heatMap = function (parent, chartGroup) {
     _chart.doRedraw = function () {
         var rows = _chart.rows(),
             cols = _chart.cols(),
-            fill = _chart.fill(),
             rowCount = rows.domain().length,
             colCount = cols.domain().length,
             boxWidth = Math.floor(_chart.effectiveWidth() / colCount),
@@ -81,6 +63,7 @@ dc.heatMap = function (parent, chartGroup) {
 
         cols.rangeRoundBands([0, _chart.effectiveWidth()]);
         rows.rangeRoundBands([_chart.effectiveHeight(), 0]);
+        //_chart.colors().domain(d3.extent(_chart.data(),_chart.colorAccessor()));
 
         var boxes = _chartBody.selectAll("g.box-group").data(_chart.data(), function(d,i) {
             return _chart.keyAccessor()(d,i) + '\0' + _chart.valueAccessor()(d,i);
@@ -99,7 +82,7 @@ dc.heatMap = function (parent, chartGroup) {
             .attr("y", function(d,i) { return rows(_chart.valueAccessor()(d,i)); })
             .attr("rx", 0.15 * boxWidth)
             .attr("ry", 0.15 * boxHeight)
-            .attr("fill", function(d,i) { return fill(_fillAccessor(d,i)); })
+            .attr("fill", _chart.getColor)
             .attr("width", boxWidth)
             .attr("height", boxHeight);
 

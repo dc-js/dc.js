@@ -44,6 +44,8 @@ dc.pieChart = function (parent, chartGroup) {
 
     var _chart = dc.capped(dc.colorChart(dc.baseChart({})));
 
+    _chart.colorAccessor(function(d) { return _chart.keyAccessor()(d.data); });
+
     /**
     #### .slicesCap([cap])
     Get or set the maximum number of slices the pie chart will generate. Slices are ordered by its value from high to low.

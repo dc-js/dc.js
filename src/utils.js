@@ -205,17 +205,13 @@ dc.utils.isNegligible = function (max) {
 };
 
 dc.utils.groupMax = function (group, accessor) {
-    var max = d3.max(group.all(), function (e) {
-        return accessor(e);
-    });
+    var max = d3.max(group.all(), accessor);
     if (dc.utils.isNegligible(max)) max = 0;
     return max;
 };
 
 dc.utils.groupMin = function (group, accessor) {
-    var min = d3.min(group.all(), function (e) {
-        return accessor(e);
-    });
+    var min = d3.min(group.all(), accessor);
     if (dc.utils.isNegligible(min)) min = 0;
     return min;
 };

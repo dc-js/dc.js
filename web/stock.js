@@ -11,7 +11,7 @@ var gainOrLossChart = dc.pieChart("#gain-loss-chart");
 var fluctuationChart = dc.barChart("#fluctuation-chart");
 var quarterChart = dc.pieChart("#quarter-chart");
 var dayOfWeekChart = dc.rowChart("#day-of-week-chart");
-var moveChart = dc.compositeChart("#monthly-move-chart");
+var moveChart = dc.lineChart("#monthly-move-chart");
 var volumeChart = dc.barChart("#monthly-volume-chart");
 var yearlyBubbleChart = dc.bubbleChart("#yearly-bubble-chart");
 
@@ -181,8 +181,8 @@ d3.csv("ndx.csv", function (data) {
                     .dimension(yearlyDimension)
                     .group(yearlyPerformanceGroup)
                     .transitionDuration(1500)
-                    .colors(["#a60000", "#ff0000", "#ff4040", "#ff7373", "#67e667", "#39e639", "#00cc00"])
-                    .colorDomain([-12000, 12000])
+                    .colors(colorbrewer.RdYlGn[9])
+                    .colorDomain([-500, 500])
                     .colorAccessor(function (d) {
                         return d.value.absGain;
                     })
@@ -268,7 +268,7 @@ d3.csv("ndx.csv", function (data) {
                     .margins({top: 20, left: 10, right: 10, bottom: 20})
                     .group(dayOfWeekGroup)
                     .dimension(dayOfWeek)
-                    .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
+                    .ordinalColors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
                     .label(function (d) {
                         return d.key.split(".")[1];
                     })
@@ -315,23 +315,19 @@ d3.csv("ndx.csv", function (data) {
                     .legend(dc.legend().x(800).y(10).itemHeight(13).gap(5))
                     .brushOn(false)
                     .rangeChart(volumeChart)
-                    .compose([
-                        dc.lineChart(moveChart)
-                                .group(indexAvgByMonthGroup, "Monthly Index Average")
-                                .valueAccessor(function (d) {
-                                    return d.value.avg;
-                                })
-                                .renderArea(true)
-                                .stack(monthlyMoveGroup, "Monthly Index Move", function (d) {
-                                    return d.value;
-                                })
-                                .title(function (d) {
-                                    var value = d.data.value.avg ? d.data.value.avg : d.data.value;
-                                    if (isNaN(value)) value = 0;
-                                    return dateFormat(d.data.key) + "\n" + numberFormat(value);
-                                })
-                    ])
-                    .xAxis();
+                    .group(indexAvgByMonthGroup, "Monthly Index Average")
+                    .valueAccessor(function (d) {
+                        return d.value.avg;
+                    })
+                    .renderArea(true)
+                    .stack(monthlyMoveGroup, "Monthly Index Move", function (d) {
+                        return d.value;
+                    })
+                    .title(function (d) {
+                        var value = d.data.value.avg ? d.data.value.avg : d.data.value;
+                        if (isNaN(value)) value = 0;
+                        return dateFormat(d.data.key) + "\n" + numberFormat(value);
+                    });
 
             volumeChart.width(990)
                     .height(40)

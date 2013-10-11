@@ -97,7 +97,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
                 circle = nodeG.append("circle")
                     .attr("class", BUBBLE_CLASS)
                     .attr("r", 0)
-                    .attr("fill", _chart.initBubbleColor)
+                    .attr("fill", _chart.getColor)
                     .on("click", _chart.onClick);
 
             dc.transition(circle, _chart.transitionDuration())
@@ -155,7 +155,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
                 .attr("r", function(d) {
                     return _chart.bubbleR(d);
                 })
-                .attr("fill", _chart.updateBubbleColor);
+                .attr("fill", _chart.getColor);
 
             _chart.doUpdateLabels(nodeG);
 
