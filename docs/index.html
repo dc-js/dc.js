@@ -198,7 +198,7 @@ chart.height(null); // reset <span class="keyword">the</span> height <span class
 <a href="https://github.com/square/crossfilter/wiki/API-Reference#wiki-dimension">crossfilter dimension</a>. If the value is given,
 then it will be used as the new dimension.</p>
 <p>If no value specified then the current dimension will be returned.</p>
-<h4>.group([value], [name]) - <strong>mandatory</strong></h4>
+<h4>.group([value, [name]]) - <strong>mandatory</strong></h4>
 <p>Set or get group attribute of a chart. In dc a group is a
 <a href="https://github.com/square/crossfilter/wiki/API-Reference#wiki-group">crossfilter group</a>. Usually the group should be
 created from the particular dimension associated with the same chart. If the value is given, then it will be used as
@@ -492,13 +492,24 @@ value is &quot;true&quot;.</p>
 <h2><a name="color-chart" href="#color-chart">#</a> Color Chart [Abstract]</h2>
 <p>Color chart is an abstract chart functional class created to provide universal coloring support as a mix-in for any concrete
 chart implementation.</p>
-<h4>.colors([colorScale or colorArray])</h4>
-<p>Retrieve current color scale or set a new color scale. This function accepts both d3 color scale and arbitrary color
-array. By default d3.scale.category20c() is used.</p>
-<pre><code class="lang-js"><span class="comment">// color scale</span>
-chart<span class="variable">.colors</span>(d3<span class="variable">.scale</span><span class="variable">.category20b</span>());
-<span class="comment">// arbitrary color array</span>
-chart<span class="variable">.colors</span>([<span class="string">"#a60000"</span>,<span class="string">"#ff0000"</span>, <span class="string">"#ff4040"</span>,<span class="string">"#ff7373"</span>,<span class="string">"#67e667"</span>,<span class="string">"#39e639"</span>,<span class="string">"#00cc00"</span>]);</code></pre>
+<h4>.colors([colorScale])</h4>
+<p>Retrieve current color scale or set a new color scale. This methods accepts any
+function the operate like a d3 scale. If not set the default is
+<code>d3.scale.category20c()</code>.</p>
+<pre><code class="lang-js">// alternate categorical scale
+chart.colors(d3.scale.category20b());
+
+// ordinal scale
+chart.colors(d3.scale.ordinal().<span class="keyword">range</span>([<span class="attribute">'red</span>',<span class="attribute">'green</span>',<span class="attribute">'blue</span>']);
+// convience method, the same as above
+chart.ordinalColors([<span class="attribute">'red</span>',<span class="attribute">'green</span>',<span class="attribute">'blue</span>']);
+
+// set a linear scale
+chart.linearColors([<span class="string">"#4575b4"</span>, <span class="string">"#ffffbf"</span>, <span class="string">"#a50026"</span>]);</code></pre>
+<h4>.ordinalColors(r)</h4>
+<p>Convenience method to set the color scale to d3.scale.ordinal with range <code>r</code>.</p>
+<h4>.linearColors(r)</h4>
+<p>Convenience method to set the color scale to an Hcl interpolated linear scale with range <code>r</code>.</p>
 <h4>.colorAccessor([colorAccessorFunction])</h4>
 <p>Set or get color accessor function. This function will be used to map a data point on crossfilter group to a specific
 color value on the color scale. Default implementation of this function simply returns the next color on the scale using
@@ -508,19 +519,12 @@ the index of a group.</p>
 <span class="comment">// color accessor for a multi-value crossfilter reduction</span>
 <span class="variable">.colorAccessor</span>(function(d){<span class="keyword">return</span> d<span class="variable">.value</span><span class="variable">.absGain</span>;})</code></pre>
 <h4>.colorDomain([domain])</h4>
-<p>Set or get the current domain for the color mapping function. This allows user to provide a custom domain for the mapping
-function used to map the return value of the colorAccessor function to the target color range calculated based on the
-color scale. You value can either be an array with the start and end of the range or a function returning an array. Functions
-are passed the chart in their <code>this</code> context.</p>
-<pre><code class="lang-js"><span class="comment">// custom domain for month of year</span>
-chart<span class="variable">.colorDomain</span>([<span class="number">0</span>, <span class="number">11</span>])
-<span class="comment">// custom domain for day of year</span>
-chart<span class="variable">.colorDomain</span>([<span class="number">0</span>, <span class="number">364</span>])
-<span class="comment">// custom domain function that scales with the group value range</span>
-chart<span class="variable">.colorDomain</span>(function() {
-    [dc<span class="variable">.utils</span><span class="variable">.groupMin</span>(<span class="keyword">this</span><span class="variable">.group</span>(), <span class="keyword">this</span><span class="variable">.valueAccessor</span>()),
-     dc<span class="variable">.utils</span><span class="variable">.groupMax</span>(<span class="keyword">this</span><span class="variable">.group</span>(), <span class="keyword">this</span><span class="variable">.valueAccessor</span>())];
-});</code></pre>
+<p>Set or get the current domain for the color mapping function. The domain must be supplied as an arrary.</p>
+<p>Note: previously this method accepted a callback function. Instead you may use a custom scale set by <code>.colors</code>.</p>
+<h4>.calculateColorDomain()</h4>
+<p>Set the domain by determining the min and max values as retrived by <code>.colorAccessor</code> over the chart&#39;s dataset.</p>
+<h4>.getColor(d [, i])</h4>
+<p>Get the color for the datum d and counter i. This is used internaly by charts to retreive a color.</p>
 <h2><a name="stackable-chart" href="#stackable-chart">#</a> Stackable Chart [Abstract]</h2>
 <p>Stackable chart is an abstract chart introduced to provide cross-chart support of stackability. Concrete implementation of
 charts can then selectively mix-in this capability.</p>
