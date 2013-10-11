@@ -8,66 +8,55 @@ chart implementation.
 dc.colorChart = function(_chart) {
     var _colors = d3.scale.category20c();
 
-    var _colorDomain = [0, _colors.range().length];
+    var _colorAccessor = function(d) { return _chart.keyAccessor()(d); };
 
     var _colorCalculator = function(value) {
-        var domain = _colorDomain;
-        if (typeof _colorDomain === 'function')
-            domain = _colorDomain.call(_chart);
-        var minValue = domain[0];
-        var maxValue = domain[1];
-
-        if (isNaN(value)) value = 0;
-        if (!dc.utils.isNumber(maxValue)) return _colors(value);
-
-        var colorsLength = _chart.colors().range().length;
-        var denominator = (maxValue - minValue) / colorsLength;
-        var colorValue = Math.abs(Math.min(colorsLength - 1, Math.round((value - minValue) / denominator)));
-        //var colorValue = Math.abs(Math.round((value - minValue) / denominator)) % colorsLength;
-        return _chart.colors()(colorValue);
+       return _colors(value,_chart);
     };
 
-    var _colorAccessor = function(d, i){return i;};
-
     /**
-    #### .colors([colorScale or colorArray])
-    Retrieve current color scale or set a new color scale. This function accepts both d3 color scale and arbitrary color
-    array. By default d3.scale.category20c() is used.
+    #### .colors([colorScale])
+    Retrieve current color scale or set a new color scale. This methods accepts any
+    function the operate like a d3 scale. If not set the default is
+    `d3.scale.category20c()`.
     ```js
-    // color scale
+    // alternate categorical scale
     chart.colors(d3.scale.category20b());
-    // arbitrary color array
-    chart.colors(["#a60000","#ff0000", "#ff4040","#ff7373","#67e667","#39e639","#00cc00"]);
-    ```
 
+    // ordinal scale
+    chart.colors(d3.scale.ordinal().range(['red','green','blue']);
+    // convience method, the same as above
+    chart.ordinalColors(['red','green','blue']);
+
+    // set a linear scale
+    chart.linearColors(["#4575b4", "#ffffbf", "#a50026"]);
+    ```
     **/
     _chart.colors = function(_) {
         if (!arguments.length) return _colors;
-
-        if (_ instanceof Array) {
-            _colors = d3.scale.ordinal().range(_);
-            var domain = [];
-            for(var i = 0; i < _.length; ++i){
-                domain.push(i);
-            }
-            _colors.domain(domain);
-        } else {
-            _colors = _;
-        }
-
-        _colorDomain = [0, _colors.range().length];
-
+        if (_ instanceof Array) _colors = d3.scale.quantize().range(_); // depricated legacy support
+        else _colors = _;
         return _chart;
     };
 
-    _chart.colorCalculator = function(_){
-        if(!arguments.length) return _colorCalculator;
-        _colorCalculator = _;
-        return _chart;
+    /**
+    #### .ordinalColors(r)
+    Convenience method to set the color scale to d3.scale.ordinal with range `r`.
+
+    **/
+    _chart.ordinalColors = function(r) {
+        return _chart.colors(d3.scale.ordinal().range(r));
     };
 
-    _chart.getColor = function(d, i){
-        return _colorCalculator(_colorAccessor(d, i));
+    /**
+    #### .linearColors(r)
+    Convenience method to set the color scale to an Hcl interpolated linear scale with range `r`.
+
+    **/
+    _chart.linearColors = function(r) {
+        return _chart.colors(d3.scale.linear()
+                             .range(r)
+                             .interpolate(d3.interpolateHcl));
     };
 
     /**
@@ -81,7 +70,6 @@ dc.colorChart = function(_chart) {
     // color accessor for a multi-value crossfilter reduction
     .colorAccessor(function(d){return d.value.absGain;})
     ```
-
     **/
     _chart.colorAccessor = function(_){
         if(!arguments.length) return _colorAccessor;
@@ -91,26 +79,40 @@ dc.colorChart = function(_chart) {
 
     /**
     #### .colorDomain([domain])
-    Set or get the current domain for the color mapping function. This allows user to provide a custom domain for the mapping
-    function used to map the return value of the colorAccessor function to the target color range calculated based on the
-    color scale. You value can either be an array with the start and end of the range or a function returning an array. Functions
-    are passed the chart in their `this` context.
-    ```js
-    // custom domain for month of year
-    chart.colorDomain([0, 11])
-    // custom domain for day of year
-    chart.colorDomain([0, 364])
-    // custom domain function that scales with the group value range
-    chart.colorDomain(function() {
-        [dc.utils.groupMin(this.group(), this.valueAccessor()),
-         dc.utils.groupMax(this.group(), this.valueAccessor())];
-    });
-    ```
+    Set or get the current domain for the color mapping function. The domain must be supplied as an arrary.
+
+    Note: previously this method accepted a callback function. Instead you may use a custom scale set by `.colors`.
 
     **/
     _chart.colorDomain = function(_){
-        if(!arguments.length) return _colorDomain;
-        _colorDomain = _;
+        if(!arguments.length) return _colors.domain();
+        _colors.domain(_);
+        return _chart;
+    };
+
+    /**
+    #### .calculateColorDomain()
+    Set the domain by determining the min and max values as retrived by `.colorAccessor` over the chart's dataset.
+
+    **/
+    _chart.calculateColorDomain = function () {
+        var newDomain = [d3.min(_chart.data(), _chart.colorAccessor()),
+                         d3.max(_chart.data(), _chart.colorAccessor())];
+        _colors.domain(newDomain);
+    };
+
+    /**
+    #### .getColor(d [, i])
+    Get the color for the datum d and counter i. This is used internaly by charts to retreive a color.
+
+    **/
+    _chart.getColor = function(d, i){
+        return _colorCalculator(_colorAccessor(d, i));
+    };
+
+    _chart.colorCalculator = function(_){
+        if(!arguments.length) return _colorCalculator;
+        _colorCalculator = _;
         return _chart;
     };
 

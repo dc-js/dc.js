@@ -31,7 +31,7 @@ d3.csv("morley.csv", function(error, experiments) {
     .height(45*5+40)
     .keyAccessor(function(d) {return +d.Run;})
     .valueAccessor(function(d) {return +d.Expt;})
-    .fillAccessor(function(d) {return +d.Speed;})
+    .colorAccessor(function(d) {return +d.Speed;})
     .title(function(d) {
         return "Run:   " + d.Run + "\n" +
                "Expt:  " + d.Expt + "\n" +
@@ -40,7 +40,8 @@ d3.csv("morley.csv", function(error, experiments) {
     .data(function() {
       return runDim.top(Infinity);
     })
-    .fill().range(["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"]);
+    .colors(["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"])
+    .calculateColorDomain();
 
   chart.render();
 

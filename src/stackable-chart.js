@@ -181,59 +181,34 @@ dc.stackableChart = function (_chart) {
     };
 
     _chart.xAxisMin = function () {
-        var min = null;
-        var allGroups = _chart.allGroups();
-
-        for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
-            var group = allGroups[groupIndex];
+        var min = _chart.allGroups().reduce(function(min,group,groupIndex) {
             var m = dc.utils.groupMin(group, _chart.getKeyAccessorByIndex(groupIndex));
-            if (min === null || min > m) min = m;
-        }
+            return (min === null || min > m) ? m : min;
+        },null);
 
         return dc.utils.subtract(min, _chart.xAxisPadding());
     };
 
     _chart.xAxisMax = function () {
-        var max = null;
-        var allGroups = _chart.allGroups();
-
-        for (var groupIndex = 0; groupIndex < allGroups.length; ++groupIndex) {
-            var group = allGroups[groupIndex];
+        var max = _chart.allGroups().reduce(function(max,group,groupIndex) {
             var m = dc.utils.groupMax(group, _chart.getKeyAccessorByIndex(groupIndex));
-            if (max === null || max < m) max = m;
-        }
+            return (max === null || max < m) ? m : max;
+        },null);
 
         return dc.utils.add(max, _chart.xAxisPadding());
     };
 
-    function getKeyFromData(groupIndex, d) {
-        return _chart.getKeyAccessorByIndex(groupIndex)(d);
-    }
-
-    function getValueFromData(groupIndex, d) {
-        return _chart.getValueAccessorByIndex(groupIndex)(d);
-    }
-
-    function calculateDataPointMatrix(data, groupIndex) {
-        for (var dataIndex = 0; dataIndex < data.length; ++dataIndex) {
-            var d = data[dataIndex];
-            var key = getKeyFromData(groupIndex, d);
-            var value = getValueFromData(groupIndex, d);
-
+    function calculateDataPointMatrix(group, groupIndex) {
+        group.all().forEach(function(d, dataIndex) {
+            var key = _chart.getKeyAccessorByIndex(groupIndex)(d);
+            var value = _chart.getValueAccessorByIndex(groupIndex)(d);
             _groupStack.setDataPoint(groupIndex, dataIndex, {data: d, x: key, y: value, layer: groupIndex});
-        }
+        });
     }
 
     _chart.calculateDataPointMatrixForAll = function () {
         _groupStack.clearDataLayers();
-
-        var groups = _chart.allGroups();
-        for (var groupIndex = 0; groupIndex < groups.length; ++groupIndex) {
-            var group = groups[groupIndex];
-            var data = group.all();
-
-            calculateDataPointMatrix(data, groupIndex);
-        }
+        _chart.allGroups().forEach(calculateDataPointMatrix);
     };
 
     _chart.getChartStack = function () {
@@ -274,7 +249,7 @@ dc.stackableChart = function (_chart) {
 
     _chart.legendables = function () {
         var items = [];
-        _allGroups.forEach(function (g, i) {
+        _chart.allGroups().forEach(function (g, i) {
             items.push(dc.utils.createLegendable(_chart, g, i, _chart.getValueAccessorByIndex(i)));
         });
         return items;

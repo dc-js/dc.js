@@ -147,7 +147,7 @@ dc.baseChart = function (_chart) {
     };
 
     /**
-    #### .group([value], [name]) - **mandatory**
+    #### .group([value, [name]]) - **mandatory**
     Set or get group attribute of a chart. In dc a group is a
     [crossfilter group](https://github.com/square/crossfilter/wiki/API-Reference#wiki-group). Usually the group should be
     created from the particular dimension associated with the same chart. If the value is given, then it will be used as
@@ -165,6 +165,10 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
+    // store groups names in the group itself
+    // __names__ ->
+    //    chart (in referenced by multiple charts) ->
+    //        array of accessors, array of names
     function groupName(chart, g, accessor) {
         var c = chart.anchor(),
             k = '__names__';
@@ -390,7 +394,7 @@ dc.baseChart = function (_chart) {
     _chart.render = function () {
         _listeners.preRender(_chart);
 
-        _mandatoryAttributes.forEach(checkForMandatoryAttributes);
+        _mandatoryAttributes && _mandatoryAttributes.forEach(checkForMandatoryAttributes);
 
         var result = _chart.doRender();
 

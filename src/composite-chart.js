@@ -34,8 +34,8 @@ dc.compositeChart = function (parent, chartGroup) {
     var _chart = dc.coordinateGridChart({});
     var _children = [];
 
+    _chart._mandatoryAttributes([]);
     _chart.transitionDuration(500);
-    _chart.group({});
 
     dc.override(_chart, "_generateG", function () {
         var g = this.__generateG();
@@ -45,8 +45,8 @@ dc.compositeChart = function (parent, chartGroup) {
 
             generateChildG(child, i);
 
-            if (child.dimension() === undefined) child.dimension(_chart.dimension());
-            if (child.group() === undefined) child.group(_chart.group());
+            if (!child.dimension()) child.dimension(_chart.dimension());
+            if (!child.group()) child.group(_chart.group());
             child.chartGroup(_chart.chartGroup());
             child.svg(_chart.svg());
             child.xUnits(_chart.xUnits());
