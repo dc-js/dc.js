@@ -230,7 +230,7 @@ dc.lineChart = function (parent, chartGroup) {
     function showRefLines(dot, g) {
         var x = dot.attr("cx");
         var y = dot.attr("cy");
-        g.select("path." + Y_AXIS_REF_LINE_CLASS).style("display", "").attr("d", "M0 " + y + "L" + (x) + " " + (y));
+        g.select("path." + Y_AXIS_REF_LINE_CLASS).style("display", "").attr("d", "M1 " + y + "L" + (x) + " " + (y));
         g.select("path." + X_AXIS_REF_LINE_CLASS).style("display", "").attr("d", "M" + x + " " + _chart.yAxisHeight() + "L" + x + " " + y);
     }
 
