@@ -141,21 +141,6 @@ dc.compositeChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    /**
-    #### .createSeries(chartFunction, seriesAccessor)
-    Compose a new child chart using `chartFunction` for every unique value returned by `seriesAccessor`.
-    **/
-    _chart.createSeries = function (chartFun, key) {
-        var children = d3.nest().key(key).entries(_chart.data())
-            .map(function(sub) {
-                return chartFun(chart)
-                    .group({all:d3.functor(sub.values)},sub.key)
-                    .keyAccessor(_chart.keyAccessor())
-                    .valueAccessor(_chart.valueAccessor());
-        });
-        return _chart.compose(children);
-    };
-
     function getAllYAxisMinFromChildCharts() {
         var allMins = [];
         for (var i = 0; i < _children.length; ++i) {

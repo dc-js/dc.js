@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Series Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+
+<div id="test"></div>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript">
+
+var chart = dc.seriesChart("#test");
+d3.csv("morley.csv", function(error, experiments) {
+
+  var ndx          = crossfilter(experiments),
+      runDimension = ndx.dimension(function(d) {return +d.Run;})
+
+  chart
+    .width(768)
+    .height(480)
+    .x(d3.scale.linear().domain([0,20]))
+    .brushOn(false)
+    .yAxisLabel("Measured Speed km/s")
+    .xAxisLabel("Run")
+    .elasticY(true)
+    .dimension(runDimension)
+    .data(function() { return experiments; })
+    .seriesAccessor(function(d) {return "Expt: " + d.Expt;})
+    .keyAccessor(function(d) {return +d.Run;})
+    .valueAccessor(function(d) {return +d.Speed - 500;})
+    .legend(dc.legend().x(700).y(300).itemHeight(13).gap(5));
+  chart.yAxis().tickFormat(function(d) {return d3.format(',d')(d+299500);});
+  chart.margins().left += 40;
+
+  dc.renderAll();
+  dc.renderAll();
+
+});
+
+</script>
+
+</body>
+</html>

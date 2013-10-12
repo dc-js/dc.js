@@ -138,6 +138,7 @@ module.exports.jsFiles = [
     "src/data-table.js",
     "src/bubble-chart.js",
     "src/composite-chart.js",
+    "src/series-chart.js",
     "src/geo-choropleth-chart.js",
     "src/bubble-overlay.js",
     "src/row-chart.js",
