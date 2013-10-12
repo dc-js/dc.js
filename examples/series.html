@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>dc.js - Line Chart Example</title>
+    <title>dc.js - Series Example</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
 </head>
@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = dc.compositeChart("#test");
+var chart = dc.seriesChart("#test");
 d3.csv("morley.csv", function(error, experiments) {
 
   var ndx          = crossfilter(experiments),
@@ -30,13 +30,14 @@ d3.csv("morley.csv", function(error, experiments) {
     .elasticY(true)
     .dimension(runDimension)
     .data(function() { return experiments; })
+    .seriesAccessor(function(d) {return "Expt: " + d.Expt;})
     .keyAccessor(function(d) {return +d.Run;})
     .valueAccessor(function(d) {return +d.Speed - 500;})
-    .legend(dc.legend().x(700).y(300).itemHeight(13).gap(5))
-    .createSeries(dc.lineChart,function(d) {return "Expt: " + d.Expt;});
+    .legend(dc.legend().x(700).y(300).itemHeight(13).gap(5));
   chart.yAxis().tickFormat(function(d) {return d3.format(',d')(d+299500);});
   chart.margins().left += 40;
 
+  dc.renderAll();
   dc.renderAll();
 
 });

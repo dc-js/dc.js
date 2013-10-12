@@ -904,8 +904,7 @@ moveChart.compose([
 ]);
 ```
 
-#### .createSeries(chartFunction, seriesAccessor)
-Compose a new child chart using `chartFunction` for every unique value returned by `seriesAccessor`.
+## <a name="series-chart" href="#Series-chart">#</a> Series Chart [Concrete]
 
 ## <a name="geo-choropleth-chart" href="#geo-choropleth-chart">#</a> Geo Choropleth Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
 Geo choropleth chart is design to make creating crossfilter driven choropleth map from GeoJson data an easy process. This
