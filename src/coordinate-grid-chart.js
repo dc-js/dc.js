@@ -776,22 +776,20 @@ dc.coordinateGridChart = function (_chart) {
     _chart.doRender = function () {
         _chart.resetSvg();
 
-        if (_chart.dataSet()) {
-            _chart._generateG();
+        _chart._generateG();
 
-            generateClipPath();
-            prepareXAxis(_chart.g());
-            prepareYAxis(_chart.g());
+        generateClipPath();
+        prepareXAxis(_chart.g());
+        prepareYAxis(_chart.g());
 
-            _chart.plotData();
+        _chart.plotData();
 
-            _chart.renderXAxis(_chart.g());
-            _chart.renderYAxis(_chart.g());
+        _chart.renderXAxis(_chart.g());
+        _chart.renderYAxis(_chart.g());
 
-            _chart.renderBrush(_chart.g());
+        _chart.renderBrush(_chart.g());
 
-            enableMouseZoom();
-        }
+        enableMouseZoom();
 
         return _chart;
     };
@@ -848,9 +846,7 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     _chart.subRender = function () {
-        if (_chart.dataSet()) {
-            _chart.plotData();
-        }
+        _chart.plotData();
 
         return _chart;
     };

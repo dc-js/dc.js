@@ -34,6 +34,8 @@ dc.compositeChart = function (parent, chartGroup) {
     var _chart = dc.coordinateGridChart({});
     var _children = [];
 
+    var _shareColors = false;
+
     _chart._mandatoryAttributes([]);
     _chart.transitionDuration(500);
 
@@ -66,9 +68,12 @@ dc.compositeChart = function (parent, chartGroup) {
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
 
-            if (child.g() === undefined) {
+            if (!child.g()) {
                 generateChildG(child, i);
             }
+
+            if (_shareColors)
+              child.colors(_chart.colors());
 
             child.x(_chart.x());
             child.y(_chart.y());
@@ -128,6 +133,27 @@ dc.compositeChart = function (parent, chartGroup) {
 
     _chart.children = function () {
         return _children;
+    };
+
+    _chart.shareColors = function (_) {
+        if (!arguments.length) return _shareColors;
+        _shareColors = _;
+        return _chart;
+    };
+
+    /**
+    #### .createSeries(chartFunction, seriesAccessor)
+    Compose a new child chart using `chartFunction` for every unique value returned by `seriesAccessor`.
+    **/
+    _chart.createSeries = function (chartFun, key) {
+        var children = d3.nest().key(key).entries(_chart.data())
+            .map(function(sub) {
+                return chartFun(chart)
+                    .group({all:d3.functor(sub.values)},sub.key)
+                    .keyAccessor(_chart.keyAccessor())
+                    .valueAccessor(_chart.valueAccessor());
+        });
+        return _chart.compose(children);
     };
 
     function getAllYAxisMinFromChildCharts() {

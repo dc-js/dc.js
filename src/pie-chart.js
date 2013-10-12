@@ -79,28 +79,26 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     function drawChart() {
-        if (_chart.dataSet()) {
-            var pie = calculateDataPie();
+        var pie = calculateDataPie();
 
-            // set radius on basis of chart dimension if missing
-            _radius = _radius ? _radius : d3.min([_chart.width(), _chart.height()]) /2;
+        // set radius on basis of chart dimension if missing
+        _radius = _radius ? _radius : d3.min([_chart.width(), _chart.height()]) /2;
 
-            var arc = _chart.buildArcs();
+        var arc = _chart.buildArcs();
 
-            var pieData = pie(_chart._assembleCappedData());
+        var pieData = pie(_chart._assembleCappedData());
 
-            if (_g) {
-                var slices = _g.selectAll("g." + _sliceCssClass)
-                    .data(pieData);
+        if (_g) {
+            var slices = _g.selectAll("g." + _sliceCssClass)
+                .data(pieData);
 
-                createElements(slices, arc, pieData);
+            createElements(slices, arc, pieData);
 
-                updateElements(pieData, arc);
+            updateElements(pieData, arc);
 
-                removeElements(slices);
+            removeElements(slices);
 
-                highlightFilter();
-            }
+            highlightFilter();
         }
     }
 

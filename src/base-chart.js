@@ -475,7 +475,7 @@ dc.baseChart = function (_chart) {
     }
 
     function applyFilters() {
-        if (_chart.dataSet() && _chart.dimension().filter !== undefined) {
+        if (_chart.dimension() && _chart.dimension().filter) {
             var fs = _filterHandler(_chart.dimension(), _filters);
             _filters = fs ? fs : _filters;
         }

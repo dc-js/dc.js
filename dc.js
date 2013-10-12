@@ -1148,7 +1148,7 @@ dc.baseChart = function (_chart) {
     }
 
     function applyFilters() {
-        if (_chart.dataSet() && _chart.dimension().filter !== undefined) {
+        if (_chart.dimension() && _chart.dimension().filter) {
             var fs = _filterHandler(_chart.dimension(), _filters);
             _filters = fs ? fs : _filters;
         }
@@ -2289,22 +2289,20 @@ dc.coordinateGridChart = function (_chart) {
     _chart.doRender = function () {
         _chart.resetSvg();
 
-        if (_chart.dataSet()) {
-            _chart._generateG();
+        _chart._generateG();
 
-            generateClipPath();
-            prepareXAxis(_chart.g());
-            prepareYAxis(_chart.g());
+        generateClipPath();
+        prepareXAxis(_chart.g());
+        prepareYAxis(_chart.g());
 
-            _chart.plotData();
+        _chart.plotData();
 
-            _chart.renderXAxis(_chart.g());
-            _chart.renderYAxis(_chart.g());
+        _chart.renderXAxis(_chart.g());
+        _chart.renderYAxis(_chart.g());
 
-            _chart.renderBrush(_chart.g());
+        _chart.renderBrush(_chart.g());
 
-            enableMouseZoom();
-        }
+        enableMouseZoom();
 
         return _chart;
     };
@@ -2361,9 +2359,7 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     _chart.subRender = function () {
-        if (_chart.dataSet()) {
-            _chart.plotData();
-        }
+        _chart.plotData();
 
         return _chart;
     };
@@ -3083,28 +3079,26 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     function drawChart() {
-        if (_chart.dataSet()) {
-            var pie = calculateDataPie();
+        var pie = calculateDataPie();
 
-            // set radius on basis of chart dimension if missing
-            _radius = _radius ? _radius : d3.min([_chart.width(), _chart.height()]) /2;
+        // set radius on basis of chart dimension if missing
+        _radius = _radius ? _radius : d3.min([_chart.width(), _chart.height()]) /2;
 
-            var arc = _chart.buildArcs();
+        var arc = _chart.buildArcs();
 
-            var pieData = pie(_chart._assembleCappedData());
+        var pieData = pie(_chart._assembleCappedData());
 
-            if (_g) {
-                var slices = _g.selectAll("g." + _sliceCssClass)
-                    .data(pieData);
+        if (_g) {
+            var slices = _g.selectAll("g." + _sliceCssClass)
+                .data(pieData);
 
-                createElements(slices, arc, pieData);
+            createElements(slices, arc, pieData);
 
-                updateElements(pieData, arc);
+            updateElements(pieData, arc);
 
-                removeElements(slices);
+            removeElements(slices);
 
-                highlightFilter();
-            }
+            highlightFilter();
         }
     }
 
@@ -4315,6 +4309,8 @@ dc.compositeChart = function (parent, chartGroup) {
     var _chart = dc.coordinateGridChart({});
     var _children = [];
 
+    var _shareColors = false;
+
     _chart._mandatoryAttributes([]);
     _chart.transitionDuration(500);
 
@@ -4347,9 +4343,12 @@ dc.compositeChart = function (parent, chartGroup) {
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
 
-            if (child.g() === undefined) {
+            if (!child.g()) {
                 generateChildG(child, i);
             }
+
+            if (_shareColors)
+              child.colors(_chart.colors());
 
             child.x(_chart.x());
             child.y(_chart.y());
@@ -4409,6 +4408,27 @@ dc.compositeChart = function (parent, chartGroup) {
 
     _chart.children = function () {
         return _children;
+    };
+
+    _chart.shareColors = function (_) {
+        if (!arguments.length) return _shareColors;
+        _shareColors = _;
+        return _chart;
+    };
+
+    /**
+    #### .createSeries(chartFunction, seriesAccessor)
+    Compose a new child chart using `chartFunction` for every unique value returned by `seriesAccessor`.
+    **/
+    _chart.createSeries = function (chartFun, key) {
+        var children = d3.nest().key(key).entries(_chart.data())
+            .map(function(sub) {
+                return chartFun(chart)
+                    .group({all:d3.functor(sub.values)},sub.key)
+                    .keyAccessor(_chart.keyAccessor())
+                    .valueAccessor(_chart.valueAccessor());
+        });
+        return _chart.compose(children);
     };
 
     function getAllYAxisMinFromChildCharts() {
