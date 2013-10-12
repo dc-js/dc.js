@@ -504,7 +504,7 @@
                 .brushOn(false)
                 .legend(dc.legend().x(250).y(10))
                 .title(function(d){
-                    return d.key
+                    return d.data.key
                             + "\nViolent crime per 100k population: " + Math.round(d.data.value.violentCrimeAvg)
                             + "\nNon-Violent crime per 100k population: " + Math.round(d.data.value.nonViolentCrimeAvg);
                 })

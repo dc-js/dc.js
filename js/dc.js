@@ -502,9 +502,9 @@ dc.utils.appendOrSelect = function (parent, name) {
     return element;
 };
 
-dc.utils.createLegendable = function (chart, group, index, accessor) {
+dc.utils.createLegendable = function (chart, group, accessor, color) {
     var legendable = {name: chart._getGroupName(group, accessor), data: group};
-    if (typeof chart.colors === 'function') legendable.color = chart.colors()(index);
+    if (color) legendable.color = color;
     return legendable;
 };
 
@@ -2801,14 +2801,13 @@ dc.stackableChart = function (_chart) {
         }
     };
 
-    _chart.colorAccessor(function(d){return d.layer || d.index;});
+    _chart._layerColorAccessor = function(d){return d.layer === undefined ? d.index : d.layer;};
+    _chart.colorAccessor(_chart._layerColorAccessor);
 
     _chart.legendables = function () {
-        var items = [];
-        _chart.allGroups().forEach(function (g, i) {
-            items.push(dc.utils.createLegendable(_chart, g, i, _chart.getValueAccessorByIndex(i)));
+        return _chart.allGroups().map(function (g, i) {
+            return dc.utils.createLegendable(_chart, g, _chart.getValueAccessorByIndex(i), _chart.colorCalculator()(i));
         });
-        return items;
     };
 
     return _chart;
@@ -3430,10 +3429,10 @@ dc.barChart = function (parent, chartGroup) {
                 return "stack " + "_" + i;
             });
 
-        layers.each(function (d, i) {
+        layers.each(function (d) {
             var layer = d3.select(this);
 
-            renderBars(layer, d, i);
+            renderBars(layer, d);
         });
 
         _chart.stackLayers(null);
@@ -3443,7 +3442,7 @@ dc.barChart = function (parent, chartGroup) {
         return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
     }
 
-    function renderBars(layer, d, i) {
+    function renderBars(layer, d) {
         var bars = layer.selectAll("rect.bar")
             .data(d.points);
 
@@ -3773,13 +3772,13 @@ dc.lineChart = function (parent, chartGroup) {
 
             if (tooltips.empty()) tooltips = chartBody.append("g").attr("class", tooltipListClass);
 
-            layers.each(function (d, i) {
+            layers.each(function (d, layerIndex) {
                 var layer = d3.select(this);
                 var points = layer.datum().points;
                 if (_defined) points = points.filter(_defined);
 
-                var g = tooltips.select("g." + TOOLTIP_G_CLASS + "._" + i);
-                if (g.empty()) g = tooltips.append("g").attr("class", TOOLTIP_G_CLASS + " _" + i);
+                var g = tooltips.select("g." + TOOLTIP_G_CLASS + "._" + layerIndex);
+                if (g.empty()) g = tooltips.append("g").attr("class", TOOLTIP_G_CLASS + " _" + layerIndex);
 
                 createRefLines(g);
 
@@ -3789,7 +3788,7 @@ dc.lineChart = function (parent, chartGroup) {
                     .append("circle")
                     .attr("class", DOT_CIRCLE_CLASS)
                     .attr("r", _dotRadius)
-                    .attr("fill", _chart.getColor)
+                    .attr("fill", function() {return _chart.colorCalculator()(layerIndex);})
                     .style("fill-opacity", 1e-6)
                     .style("stroke-opacity", 1e-6)
                     .on("mousemove", function (d) {
@@ -4397,12 +4396,15 @@ dc.compositeChart = function (parent, chartGroup) {
     **/
     _chart.compose = function (charts) {
         _children = charts;
-        for (var i = 0; i < _children.length; ++i) {
-            var child = _children[i];
+        _children.forEach(function(child, i) {
             child.height(_chart.height());
             child.width(_chart.width());
             child.margins(_chart.margins());
-        }
+
+            if (_shareColors && child.colorAccessor() === child._layerColorAccessor)
+              child.colorCalculator(function() {return child.colors()(i);});
+
+        });
         return _chart;
     };
 
@@ -4410,6 +4412,13 @@ dc.compositeChart = function (parent, chartGroup) {
         return _children;
     };
 
+    /**
+    #### .shareColors([[boolean])
+    Get or set color sharing for the chart. If set, the `.colors()` value from this chart
+    will be shared with composed children. Additionally if the child chart implements
+    Stackable and has not set a custom .colorAccesor, then it will generate a color
+    specific to its order in the composition.
+    **/
     _chart.shareColors = function (_) {
         if (!arguments.length) return _shareColors;
         _shareColors = _;
@@ -4466,12 +4475,15 @@ dc.compositeChart = function (parent, chartGroup) {
 
     _chart.legendables = function () {
         var items = [];
-        _children.forEach(function(childChart, j) {
-            var childLegendables = childChart.legendables();
-            if (childLegendables.length > 1)
+        _children.forEach(function(child, i) {
+            if (_shareColors)
+              child.colors(_chart.colors());
+
+            var childLegendables = child.legendables();
+            if (childLegendables.length)
                 items.push.apply(items,childLegendables);
             else
-                items.push(dc.utils.createLegendable(childChart, childChart.group(), j, childChart.valueAccessor()));
+                items.push(dc.utils.createLegendable(child, child.group(), child.valueAccessor(), child.colorCalculator()(i)));
         });
         return items;
     };
@@ -4509,11 +4521,12 @@ dc.seriesChart = function (parent, chartGroup) {
         dc.deregisterAllCharts(_chart.anchorName());
         var children = d3.nest().key(_seriesAccessor).entries(_chart.data())
             .map(function(sub,i) {
-                return _chartFunction(_chart,_chart.anchorName())
+                var subChart = _chartFunction(_chart,_chart.anchorName());
+                return subChart
                     .group({all:d3.functor(sub.values)}, sub.key)
                     .keyAccessor(_chart.keyAccessor())
                     .valueAccessor(_chart.valueAccessor())
-                    .colorAccessor(function() {return i;});
+                    .colorCalculator(function() {return subChart.colors()(sub.key);});
         });
         _chart._compose(children);
         _chart._plotData();
