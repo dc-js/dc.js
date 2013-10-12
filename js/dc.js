@@ -4509,7 +4509,6 @@ dc.seriesChart = function (parent, chartGroup) {
         dc.deregisterAllCharts(_chart.anchorName());
         var children = d3.nest().key(_seriesAccessor).entries(_chart.data())
             .map(function(sub,i) {
-                console.log(sub.values.map(_chart.valueAccessor()));
                 return _chartFunction(_chart,_chart.anchorName())
                     .group({all:d3.functor(sub.values)}, sub.key)
                     .keyAccessor(_chart.keyAccessor())
