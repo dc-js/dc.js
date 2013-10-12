@@ -122,12 +122,15 @@ dc.compositeChart = function (parent, chartGroup) {
     **/
     _chart.compose = function (charts) {
         _children = charts;
-        for (var i = 0; i < _children.length; ++i) {
-            var child = _children[i];
+        _children.forEach(function(child, i) {
             child.height(_chart.height());
             child.width(_chart.width());
             child.margins(_chart.margins());
-        }
+
+            if (_shareColors && child.colorAccessor() === child._layerColorAccessor)
+              child.colorCalculator(function() {return child.colors()(i);});
+
+        });
         return _chart;
     };
 
@@ -135,6 +138,13 @@ dc.compositeChart = function (parent, chartGroup) {
         return _children;
     };
 
+    /**
+    #### .shareColors([[boolean])
+    Get or set color sharing for the chart. If set, the `.colors()` value from this chart
+    will be shared with composed children. Additionally if the child chart implements
+    Stackable and has not set a custom .colorAccesor, then it will generate a color
+    specific to its order in the composition.
+    **/
     _chart.shareColors = function (_) {
         if (!arguments.length) return _shareColors;
         _shareColors = _;
@@ -191,12 +201,15 @@ dc.compositeChart = function (parent, chartGroup) {
 
     _chart.legendables = function () {
         var items = [];
-        _children.forEach(function(childChart, j) {
-            var childLegendables = childChart.legendables();
-            if (childLegendables.length > 1)
+        _children.forEach(function(child, i) {
+            if (_shareColors)
+              child.colors(_chart.colors());
+
+            var childLegendables = child.legendables();
+            if (childLegendables.length)
                 items.push.apply(items,childLegendables);
             else
-                items.push(dc.utils.createLegendable(childChart, childChart.group(), j, childChart.valueAccessor()));
+                items.push(dc.utils.createLegendable(child, child.group(), child.valueAccessor(), child.colorCalculator()(i)));
         });
         return items;
     };

@@ -226,9 +226,9 @@ dc.utils.appendOrSelect = function (parent, name) {
     return element;
 };
 
-dc.utils.createLegendable = function (chart, group, index, accessor) {
+dc.utils.createLegendable = function (chart, group, accessor, color) {
     var legendable = {name: chart._getGroupName(group, accessor), data: group};
-    if (typeof chart.colors === 'function') legendable.color = chart.colors()(index);
+    if (color) legendable.color = color;
     return legendable;
 };
 

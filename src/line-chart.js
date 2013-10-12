@@ -169,13 +169,13 @@ dc.lineChart = function (parent, chartGroup) {
 
             if (tooltips.empty()) tooltips = chartBody.append("g").attr("class", tooltipListClass);
 
-            layers.each(function (d, i) {
+            layers.each(function (d, layerIndex) {
                 var layer = d3.select(this);
                 var points = layer.datum().points;
                 if (_defined) points = points.filter(_defined);
 
-                var g = tooltips.select("g." + TOOLTIP_G_CLASS + "._" + i);
-                if (g.empty()) g = tooltips.append("g").attr("class", TOOLTIP_G_CLASS + " _" + i);
+                var g = tooltips.select("g." + TOOLTIP_G_CLASS + "._" + layerIndex);
+                if (g.empty()) g = tooltips.append("g").attr("class", TOOLTIP_G_CLASS + " _" + layerIndex);
 
                 createRefLines(g);
 
@@ -185,7 +185,7 @@ dc.lineChart = function (parent, chartGroup) {
                     .append("circle")
                     .attr("class", DOT_CIRCLE_CLASS)
                     .attr("r", _dotRadius)
-                    .attr("fill", _chart.getColor)
+                    .attr("fill", function() {return _chart.colorCalculator()(layerIndex);})
                     .style("fill-opacity", 1e-6)
                     .style("stroke-opacity", 1e-6)
                     .on("mousemove", function (d) {

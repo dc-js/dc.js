@@ -904,6 +904,12 @@ moveChart.compose([
 ]);
 ```
 
+#### .shareColors([[boolean])
+Get or set color sharing for the chart. If set, the `.colors()` value from this chart
+will be shared with composed children. Additionally if the child chart implements
+Stackable and has not set a custom .colorAccesor, then it will generate a color
+specific to its order in the composition.
+
 ## <a name="series-chart" href="#Series-chart">#</a> Series Chart [Concrete]
 
 ## <a name="geo-choropleth-chart" href="#geo-choropleth-chart">#</a> Geo Choropleth Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)

@@ -62,10 +62,10 @@ dc.barChart = function (parent, chartGroup) {
                 return "stack " + "_" + i;
             });
 
-        layers.each(function (d, i) {
+        layers.each(function (d) {
             var layer = d3.select(this);
 
-            renderBars(layer, d, i);
+            renderBars(layer, d);
         });
 
         _chart.stackLayers(null);
@@ -75,7 +75,7 @@ dc.barChart = function (parent, chartGroup) {
         return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
     }
 
-    function renderBars(layer, d, i) {
+    function renderBars(layer, d) {
         var bars = layer.selectAll("rect.bar")
             .data(d.points);
 

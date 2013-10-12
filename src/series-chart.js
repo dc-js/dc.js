@@ -14,11 +14,12 @@ dc.seriesChart = function (parent, chartGroup) {
         dc.deregisterAllCharts(_chart.anchorName());
         var children = d3.nest().key(_seriesAccessor).entries(_chart.data())
             .map(function(sub,i) {
-                return _chartFunction(_chart,_chart.anchorName())
+                var subChart = _chartFunction(_chart,_chart.anchorName());
+                return subChart
                     .group({all:d3.functor(sub.values)}, sub.key)
                     .keyAccessor(_chart.keyAccessor())
                     .valueAccessor(_chart.valueAccessor())
-                    .colorAccessor(function() {return i;});
+                    .colorCalculator(function() {return subChart.colors()(sub.key);});
         });
         _chart._compose(children);
         _chart._plotData();

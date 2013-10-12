@@ -245,14 +245,13 @@ dc.stackableChart = function (_chart) {
         }
     };
 
-    _chart.colorAccessor(function(d){return d.layer || d.index;});
+    _chart._layerColorAccessor = function(d){return d.layer === undefined ? d.index : d.layer;};
+    _chart.colorAccessor(_chart._layerColorAccessor);
 
     _chart.legendables = function () {
-        var items = [];
-        _chart.allGroups().forEach(function (g, i) {
-            items.push(dc.utils.createLegendable(_chart, g, i, _chart.getValueAccessorByIndex(i)));
+        return _chart.allGroups().map(function (g, i) {
+            return dc.utils.createLegendable(_chart, g, _chart.getValueAccessorByIndex(i), _chart.colorCalculator()(i));
         });
-        return items;
     };
 
     return _chart;
