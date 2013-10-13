@@ -150,24 +150,10 @@ d3.csv("ndx.csv", function (data) {
             });
 
             var dayOfWeek = ndx.dimension(function (d) {
-                var day = d.dd.getDay();
-                switch (day) {
-                    case 0:
-                        return "0.Sun";
-                    case 1:
-                        return "1.Mon";
-                    case 2:
-                        return "2.Tue";
-                    case 3:
-                        return "3.Wed";
-                    case 4:
-                        return "4.Thu";
-                    case 5:
-                        return "5.Fri";
-                    case 6:
-                        return "6.Sat";
-                }
-            });
+                var day = d.dd.getDay(); 
+                var name=["Sun", "Mon","Tue","Wed","Thu","Fri","Sat"];
+                return day+"."+name[day];
+             });
             var dayOfWeekGroup = dayOfWeek.group();
 
             //### Define Chart Attributes
