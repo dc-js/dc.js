@@ -30,6 +30,12 @@ dc.printers.filter = function (filter) {
     return s;
 };
 
+dc.pluck = function(n,f) {
+    return function(d) {
+        return f ? f.call(this,d[n]) : d[n];
+    };
+};
+
 dc.utils = {};
 
 dc.utils.printSingleValue = function (filter) {
