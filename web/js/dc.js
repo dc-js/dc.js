@@ -306,6 +306,12 @@ dc.printers.filter = function (filter) {
     return s;
 };
 
+dc.pluck = function(n,f) {
+    return function(d) {
+        return f ? f.call(this,d[n]) : d[n];
+    };
+};
+
 dc.utils = {};
 
 dc.utils.printSingleValue = function (filter) {
@@ -697,19 +703,11 @@ dc.baseChart = function (_chart) {
     };
     var _height = _default_height;
 
-    var _keyAccessor = function (d) {
-        return d.key;
-    };
-    var _valueAccessor = function (d) {
-        return d.value;
-    };
-    var _ordering = function (p) {
-        return p.key;
-    };
+    var _keyAccessor = dc.pluck('key');
+    var _valueAccessor = dc.pluck('value');
+    var _ordering = dc.pluck('key');
+    var _label = dc.pluck('key');
 
-    var _label = function (d) {
-        return d.key;
-    };
     var _renderLabel = false;
 
     var _title = function (d) {
@@ -755,8 +753,8 @@ dc.baseChart = function (_chart) {
         return filters;
     };
 
-    var _data = function () {
-        return _group.all();
+    var _data = function (group) {
+        return group.all();
     };
 
     /**
@@ -813,7 +811,7 @@ dc.baseChart = function (_chart) {
     };
 
     _chart.data = function(d) {
-        if (!arguments.length) return _data();
+        if (!arguments.length) return _data(_group);
         _data = d3.functor(d);
         _chart.expireCache();
         return _chart;
@@ -3444,13 +3442,16 @@ dc.barChart = function (parent, chartGroup) {
 
     function renderBars(layer, d) {
         var bars = layer.selectAll("rect.bar")
-            .data(d.points);
+            .data(d.points, dc.pluck('data', _chart.keyAccessor()));
 
         bars.enter()
             .append("rect")
             .attr("class", "bar")
-            .attr("fill", _chart.getColor)
-            .append("title").text(_chart.title());
+            .attr("fill", _chart.getColor);
+
+        if (_chart.renderTitle()) {
+            bars.append("title").text(_chart.title());
+        }
 
         if (_chart.isOrdinal())
             bars.on("click", onClick);
@@ -5562,8 +5563,8 @@ dc.numberDisplay = function (parent, chartGroup) {
         return _chart.data();
     };
 
-    _chart.data(function () {
-         var valObj = _chart.group().all && _chart.group().all()[0] || _chart.group().value();
+    _chart.data(function (group) {
+         var valObj = group.value && group.value() || group.top(1)[0];
          return _chart.valueAccessor()(valObj);
     });
 
