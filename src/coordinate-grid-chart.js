@@ -57,7 +57,7 @@ dc.coordinateGridChart = function (_chart) {
     var _clipPadding = 0;
 
     _chart.title(function (d) {
-        return d.data.key + ": " + d.data.value;
+        return _chart.keyAccessor()(d.data) + ": " + _chart.valueAccessor()(d.data);
     });
 
     _chart.rescale = function () {
