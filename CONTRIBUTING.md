@@ -19,7 +19,7 @@ Ensure origin looks like this in `.git/confg`. The key element here is the secon
 [remote "origin"]
   url = git@github.com:NickQiZhu/dc.js.git
   fetch = +refs/heads/*:refs/remotes/origin/*
-  fetch = +refs/pull/*/head:refs/remoteses/origin/pr/*
+  fetch = +refs/pull/*/head:refs/remotes/origin/pr/*
 ```
 
 Run these commands (or their approximation):
