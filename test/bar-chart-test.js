@@ -495,6 +495,20 @@ suite.addBatch({
             resetAllFilters();
             resetBody();
         }
+    },
+    'with renderTitle false': {
+        topic: function () {
+            var chart = buildChart("no-title");
+            chart.renderTitle(false).brushOn(false).render();
+            return chart;
+        },
+        'no title elements should be added': function (chart) {
+            assert.equal(chart.selectAll("rect title").size(), 0);
+        },
+        teardown: function (topic) {
+            resetAllFilters();
+            resetBody();
+        }
     }
 });
 

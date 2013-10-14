@@ -77,13 +77,16 @@ dc.barChart = function (parent, chartGroup) {
 
     function renderBars(layer, d) {
         var bars = layer.selectAll("rect.bar")
-            .data(d.points);
+            .data(d.points, dc.pluck('data', _chart.keyAccessor()));
 
         bars.enter()
             .append("rect")
             .attr("class", "bar")
-            .attr("fill", _chart.getColor)
-            .append("title").text(_chart.title());
+            .attr("fill", _chart.getColor);
+
+        if (_chart.renderTitle()) {
+            bars.append("title").text(_chart.title());
+        }
 
         if (_chart.isOrdinal())
             bars.on("click", onClick);
