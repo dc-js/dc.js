@@ -43,8 +43,8 @@ dc.numberDisplay = function (parent, chartGroup) {
         return _chart.data();
     };
 
-    _chart.data(function () {
-         var valObj = _chart.group().all && _chart.group().all()[0] || _chart.group().value();
+    _chart.data(function (group) {
+         var valObj = group.value && group.value() || group.top(1)[0];
          return _chart.valueAccessor()(valObj);
     });
 
