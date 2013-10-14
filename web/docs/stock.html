@@ -278,8 +278,8 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="keyword">fu
             });
 
             <span class="keyword">var</span> dayOfWeek = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-                <span class="keyword">var</span> day = d.dd.getDay(); 
-                <span class="keyword">var</span> name=[<span class="string">"Sun"</span>, <span class="string">"Mon"</span>,<span class="string">"Tue"</span>,<span class="string">"Wed"</span>,<span class="string">"Thu"</span>,<span class="string">"Fri"</span>,<span class="string">"Sat"</span>];
+                <span class="keyword">var</span> day = d.dd.getDay();
+                <span class="keyword">var</span> name=[<span class="string">"Sun"</span>,<span class="string">"Mon"</span>,<span class="string">"Tue"</span>,<span class="string">"Wed"</span>,<span class="string">"Thu"</span>,<span class="string">"Fri"</span>,<span class="string">"Sat"</span>];
                 <span class="keyword">return</span> day+<span class="string">"."</span>+name[day];
              });
             <span class="keyword">var</span> dayOfWeekGroup = dayOfWeek.group();</pre></div></div>
