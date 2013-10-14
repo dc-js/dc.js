@@ -278,24 +278,10 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="keyword">fu
             });
 
             <span class="keyword">var</span> dayOfWeek = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-                <span class="keyword">var</span> day = d.dd.getDay();
-                <span class="keyword">switch</span> (day) {
-                    <span class="keyword">case</span> <span class="number">0</span>:
-                        <span class="keyword">return</span> <span class="string">"0.Sun"</span>;
-                    <span class="keyword">case</span> <span class="number">1</span>:
-                        <span class="keyword">return</span> <span class="string">"1.Mon"</span>;
-                    <span class="keyword">case</span> <span class="number">2</span>:
-                        <span class="keyword">return</span> <span class="string">"2.Tue"</span>;
-                    <span class="keyword">case</span> <span class="number">3</span>:
-                        <span class="keyword">return</span> <span class="string">"3.Wed"</span>;
-                    <span class="keyword">case</span> <span class="number">4</span>:
-                        <span class="keyword">return</span> <span class="string">"4.Thu"</span>;
-                    <span class="keyword">case</span> <span class="number">5</span>:
-                        <span class="keyword">return</span> <span class="string">"5.Fri"</span>;
-                    <span class="keyword">case</span> <span class="number">6</span>:
-                        <span class="keyword">return</span> <span class="string">"6.Sat"</span>;
-                }
-            });
+                <span class="keyword">var</span> day = d.dd.getDay(); 
+                <span class="keyword">var</span> name=[<span class="string">"Sun"</span>, <span class="string">"Mon"</span>,<span class="string">"Tue"</span>,<span class="string">"Wed"</span>,<span class="string">"Thu"</span>,<span class="string">"Fri"</span>,<span class="string">"Sat"</span>];
+                <span class="keyword">return</span> day+<span class="string">"."</span>+name[day];
+             });
             <span class="keyword">var</span> dayOfWeekGroup = dayOfWeek.group();</pre></div></div>
             
         </li>
