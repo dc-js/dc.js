@@ -591,7 +591,7 @@ different bubbles are too great. Default value: 0.3
 ## <a name="pie-chart" href="#pie-chart">#</a> Pie Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
 This chart is a concrete pie chart implementation usually used to visualize small number of categorical distributions.
 Pie chart implementation uses keyAccessor to generate slices, and valueAccessor to calculate the size of each slice(key)
-relatively to the total sum of all values.
+relatively to the total sum of all values. Slices are ordered by `.ordering` which defaults to sorting by key.
 
 Examples:
 
@@ -619,8 +619,9 @@ var chart2 = dc.pieChart("#chart-container2", "chartGroupA");
 ```
 
 #### .slicesCap([cap])
-Get or set the maximum number of slices the pie chart will generate. Slices are ordered by its value from high to low.
- Other slices exeeding the cap will be rolled up into one single *Others* slice.
+Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
+value from high to low. Other slices exeeding the cap will be rolled up into one single *Others* slice.
+The resulting data will still be sorted by .ordering (default by key).
 
 #### .innerRadius([innerRadius])
 Get or set the inner radius on a particular pie chart instance. If inner radius is greater than 0px then the pie chart
@@ -1088,13 +1089,20 @@ Get or set the count of elements to that will be included in the cap.
 Get or set the label for *Others* slice when slices cap is specified. Default label is **Others**.
 
 #### .othersGrouper([grouperFunction])
-Get or set the grouper funciton that will perform the insersion of data for the *Others* slice if the slices cap is
-specified. If set to a falsy value, no others will be added. By default the grouper function implements the following
-logic, you will need change this function to match your data structure if you are not using the a crossfilter group.
+Get or set the grouper function that will perform the insertion of data for the *Others* slice if the slices cap is
+specified. If set to a falsy value, no others will be added. By default the grouper function computes the sum of all
+values below the cap.
 ```js
-function (data, sum) {
-    data.push({"key": _othersLabel, "value": sum });
-};
+chart.othersGrouper(function (data) {
+    // compute the value for others, presumably the sum of all values below the cap
+    var othersSum  = yourComputeOthersValueLogic(data)
+
+    // the keys are needed to properly filter when the others element is clicked
+    var othersKeys = yourComputeOthersKeysArrayLogic(data);
+
+    // add the others row to the dataset
+    data.push({"key": "Others", "value": othersSum, "others": othersKeys });
+});
 ```
 
 ## <a name="number-display" href="#number-display">#</a> Number Display [Concrete] < [Base Chart](#base-chart)
