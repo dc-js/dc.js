@@ -24,19 +24,11 @@ dc.baseChart = function (_chart) {
     };
     var _height = _default_height;
 
-    var _keyAccessor = function (d) {
-        return d.key;
-    };
-    var _valueAccessor = function (d) {
-        return d.value;
-    };
-    var _ordering = function (p) {
-        return p.key;
-    };
+    var _keyAccessor = dc.pluck('key');
+    var _valueAccessor = dc.pluck('value');
+    var _ordering = dc.pluck('key');
+    var _label = dc.pluck('key');
 
-    var _label = function (d) {
-        return d.key;
-    };
     var _renderLabel = false;
 
     var _title = function (d) {
@@ -82,8 +74,8 @@ dc.baseChart = function (_chart) {
         return filters;
     };
 
-    var _data = function () {
-        return _group.all();
+    var _data = function (group) {
+        return group.all();
     };
 
     /**
@@ -140,7 +132,7 @@ dc.baseChart = function (_chart) {
     };
 
     _chart.data = function(d) {
-        if (!arguments.length) return _data();
+        if (!arguments.length) return _data(_group);
         _data = d3.functor(d);
         _chart.expireCache();
         return _chart;
