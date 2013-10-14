@@ -44,9 +44,10 @@
     "sinon": "1.7.x",
     "uglify-js": "2.4.x",
     "vows": "0.7.x",
-    "grunt-docco2": "~0.1.5"
+    "grunt-docco2": "~0.1.5",
+    "grunt-cli": "~0.1.9"
   },
   "scripts": {
-    "test": "./node_modules/vows/bin/vows"
+    "test": "grunt test"
   }
 }

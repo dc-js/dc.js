@@ -4,7 +4,7 @@
 dc.js
 =====
 
-Dimensional charting built to work natively with crossfilter rendered using d3.js. Check out
+Dimensional charting built to work natively with crossfilter rendered using d3.js. Check out the
 [example page](http://nickqizhu.github.com/dc.js/) with a quick five minutes how to guide. For a
 detailed [API reference](https://github.com/NickQiZhu/dc.js/blob/master/web/docs/api-1.6.0.md) and
 more please visit the [Wiki](https://github.com/NickQiZhu/dc.js/wiki).
@@ -12,7 +12,9 @@ more please visit the [Wiki](https://github.com/NickQiZhu/dc.js/wiki).
 
 Install with npm
 --------------------
+```
 npm install dc
+```
 
 
 Install without npm
@@ -34,13 +36,14 @@ Make sure the following packages are installed on your machine
 * npm
 
 ### Install dependencies
-
+```
 dc.js$ npm install
+```
 
 ### Build and Test
-
-dc.js$ ./make
-
+```
+dc.js$ grunt test
+```
 
 License
 --------------------

@@ -1,5 +1,3 @@
 #!/bin/sh
 
-grunt
-npm test
-
+grunt test

@@ -40,7 +40,7 @@ module.exports = function (grunt) {
         vows: {
             all: {
                 options: {
-                    reporter: "spec"
+                    /* reporter: "spec" */
                 },
                 src: ["test/*.js", "spec/*"]
             }
