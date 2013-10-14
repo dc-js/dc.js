@@ -46,7 +46,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     function calculateAxisScale() {
         if (!_x || _elasticX) {
-            var extent = d3.extent(_rowData, _chart.valueAccessor());
+            var extent = d3.extent(_rowData, _chart.cappedValueAccessor);
             if (extent[0] > 0) extent[0] = 0;
             _x = d3.scale.linear().domain(extent)
                 .range([0, _chart.effectiveWidth()]);
@@ -80,12 +80,10 @@ dc.rowChart = function (parent, chartGroup) {
     };
 
     _chart.title(function (d) {
-        return _chart.keyAccessor()(d) + ": " + _chart.valueAccessor()(d);
+        return _chart.cappedKeyAccessor(d) + ": " + _chart.cappedValueAccessor(d);
     });
 
-    _chart.label(function (d) {
-        return _chart.keyAccessor()(d);
-    });
+    _chart.label(_chart.cappedKeyAccessor);
 
     _chart.x = function(x){
         if(!arguments.length) return _x;
@@ -110,7 +108,7 @@ dc.rowChart = function (parent, chartGroup) {
     }
 
     function drawChart() {
-        _rowData = _chart._assembleCappedData();
+        _rowData = _chart.data();
 
         drawAxis();
         drawGridLines();
@@ -152,10 +150,10 @@ dc.rowChart = function (parent, chartGroup) {
             .attr("fill", _chart.getColor)
             .on("click", onClick)
             .classed("deselected", function (d) {
-                return (_chart.hasFilter()) ? !_chart.isSelectedRow(d) : false;
+                return (_chart.hasFilter()) ? !isSelectedRow(d) : false;
             })
             .classed("selected", function (d) {
-                return (_chart.hasFilter()) ? _chart.isSelectedRow(d) : false;
+                return (_chart.hasFilter()) ? isSelectedRow(d) : false;
             });
 
         dc.transition(rect, _chart.transitionDuration())
@@ -172,9 +170,7 @@ dc.rowChart = function (parent, chartGroup) {
     function createTitles(rows) {
         if (_chart.renderTitle()) {
             rows.selectAll("title").remove();
-            rows.append("title").text(function (d) {
-                return _chart.title()(d);
-            });
+            rows.append("title").text(_chart.title());
         }
     }
 
@@ -207,7 +203,7 @@ dc.rowChart = function (parent, chartGroup) {
     }
 
     function translateX(d) {
-        var x = _x(_chart.valueAccessor()(d)),
+        var x = _x(_chart.cappedValueAccessor(d)),
             x0 = _x(0),
             s = x > x0 ? x0 : x;
         return "translate("+s+",0)";
@@ -267,9 +263,9 @@ dc.rowChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    _chart.isSelectedRow = function (d) {
-        return _chart.hasFilter(_chart.keyAccessor()(d));
-    };
+    function isSelectedRow (d) {
+        return _chart.hasFilter(_chart.cappedKeyAccessor(d));
+    }
 
     return _chart.anchor(parent, chartGroup);
 };

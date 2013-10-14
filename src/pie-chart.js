@@ -2,7 +2,7 @@
 ## <a name="pie-chart" href="#pie-chart">#</a> Pie Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
 This chart is a concrete pie chart implementation usually used to visualize small number of categorical distributions.
 Pie chart implementation uses keyAccessor to generate slices, and valueAccessor to calculate the size of each slice(key)
-relatively to the total sum of all values.
+relatively to the total sum of all values. Slices are ordered by `.ordering` which defaults to sorting by key.
 
 Examples:
 
@@ -44,25 +44,23 @@ dc.pieChart = function (parent, chartGroup) {
 
     var _chart = dc.capped(dc.colorChart(dc.baseChart({})));
 
-    _chart.colorAccessor(function(d) { return _chart.keyAccessor()(d.data); });
+    _chart.colorAccessor(_chart.cappedKeyAccessor);
+
+    _chart.title(function (d) {
+        return _chart.cappedKeyAccessor(d) + ": " + _chart.cappedValueAccessor(d);
+    });
 
     /**
     #### .slicesCap([cap])
-    Get or set the maximum number of slices the pie chart will generate. Slices are ordered by its value from high to low.
-     Other slices exeeding the cap will be rolled up into one single *Others* slice.
+    Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
+    value from high to low. Other slices exeeding the cap will be rolled up into one single *Others* slice.
+    The resulting data will still be sorted by .ordering (default by key).
 
     **/
     _chart.slicesCap = _chart.cap;
 
-    _chart.label(function (d) {
-        return _chart.keyAccessor()(d.data);
-    });
-
+    _chart.label(_chart.cappedKeyAccessor);
     _chart.renderLabel(true);
-
-    _chart.title(function (d) {
-        return _chart.keyAccessor()(d.data) + ": " + _chart.valueAccessor()(d.data);
-    });
 
     _chart.transitionDuration(350);
 
@@ -79,14 +77,13 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     function drawChart() {
-        var pie = calculateDataPie();
-
         // set radius on basis of chart dimension if missing
         _radius = _radius ? _radius : d3.min([_chart.width(), _chart.height()]) /2;
 
-        var arc = _chart.buildArcs();
+        var arc = buildArcs();
 
-        var pieData = pie(_chart._assembleCappedData());
+        var pie = pieLayout();
+        var pieData = pie(_chart.data());
 
         if (_g) {
             var slices = _g.selectAll("g." + _sliceCssClass)
@@ -124,9 +121,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     function createSlicePath(slicesEnter, arc) {
         var slicePath = slicesEnter.append("path")
-            .attr("fill", function (d, i) {
-                return _chart.getColor(d, i);
-            })
+            .attr("fill", fill)
             .on("click", onClick)
             .attr("d", function (d, i) {
                 return safeArc(d, i, arc);
@@ -161,7 +156,7 @@ dc.pieChart = function (parent, chartGroup) {
             dc.transition(labelsEnter, _chart.transitionDuration())
                 .attr("transform", function (d) {
                     d.innerRadius = _chart.innerRadius();
-                    d.outerRadius = _radius;
+                    d.outerRadius = _chart.radius();
                     var centroid = arc.centroid(d);
                     if (isNaN(centroid[0]) || isNaN(centroid[1])) {
                         return "translate(0,0)";
@@ -174,7 +169,7 @@ dc.pieChart = function (parent, chartGroup) {
                     var data = d.data;
                     if (sliceHasNoData(data) || sliceTooSmall(d))
                         return "";
-                    return _chart.label()(d);
+                    return _chart.label()(d.data);
                 });
         }
     }
@@ -195,9 +190,7 @@ dc.pieChart = function (parent, chartGroup) {
         dc.transition(slicePaths, _chart.transitionDuration(),
             function (s) {
                 s.attrTween("d", tweenPie);
-            }).attr("fill", function (d, i) {
-                return _chart.getColor(d, i);
-            });
+            }).attr("fill", fill);
     }
 
     function updateLabels(pieData, arc) {
@@ -206,7 +199,7 @@ dc.pieChart = function (parent, chartGroup) {
                 .data(pieData);
             dc.transition(labels, _chart.transitionDuration())
                 .attr("transform", function (d) {
-                    d.innerRadius = _chart.innerRadius();
+                    d.innerRadius = _innerRadius;
                     d.outerRadius = _radius;
                     var centroid = arc.centroid(d);
                     if (isNaN(centroid[0]) || isNaN(centroid[1])) {
@@ -220,7 +213,7 @@ dc.pieChart = function (parent, chartGroup) {
                     var data = d.data;
                     if (sliceHasNoData(data) || sliceTooSmall(d))
                         return "";
-                    return _chart.label()(d);
+                    return _chart.label()(d.data);
                 });
         }
     }
@@ -231,7 +224,7 @@ dc.pieChart = function (parent, chartGroup) {
                 .data(pieData)
                 .select("title")
                 .text(function (d) {
-                    return _chart.title()(d);
+                    return _chart.title()(d.data);
                 });
         }
     }
@@ -243,7 +236,7 @@ dc.pieChart = function (parent, chartGroup) {
     function highlightFilter() {
         if (_chart.hasFilter()) {
             _chart.selectAll("g." + _sliceCssClass).each(function (d) {
-                if (_chart.isSelectedSlice(d)) {
+                if (isSelectedSlice(d)) {
                     _chart.highlightSelected(this);
                 } else {
                     _chart.fadeDeselected(this);
@@ -297,13 +290,13 @@ dc.pieChart = function (parent, chartGroup) {
         return _chart.height() / 2;
     };
 
-    _chart.buildArcs = function () {
+    function buildArcs() {
         return d3.svg.arc().outerRadius(_radius).innerRadius(_innerRadius);
-    };
+    }
 
-    _chart.isSelectedSlice = function (d) {
-        return _chart.hasFilter(_chart.keyAccessor()(d.data));
-    };
+    function isSelectedSlice(d) {
+        return _chart.hasFilter(_chart.cappedKeyAccessor(d.data));
+    }
 
     _chart.doRedraw = function () {
         drawChart();
@@ -321,10 +314,8 @@ dc.pieChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    function calculateDataPie() {
-        return d3.layout.pie().sort(null).value(function (d) {
-            return _chart.valueAccessor()(d);
-        });
+    function pieLayout() {
+        return d3.layout.pie().sort(null).value(_chart.cappedValueAccessor);
     }
 
     function sliceTooSmall(d) {
@@ -332,19 +323,19 @@ dc.pieChart = function (parent, chartGroup) {
         return isNaN(angle) || angle < _minAngleForLabel;
     }
 
-    function sliceHasNoData(data) {
-        return _chart.valueAccessor()(data) === 0;
+    function sliceHasNoData(d) {
+        return _chart.cappedValueAccessor(d) === 0;
     }
 
     function tweenPie(b) {
-        b.innerRadius = _chart.innerRadius();
+        b.innerRadius = _innerRadius;
         var current = this._current;
         if (isOffCanvas(current))
             current = {startAngle: 0, endAngle: 0};
         var i = d3.interpolate(current, b);
         this._current = i(0);
         return function (t) {
-            return safeArc(i(t), 0, _chart.buildArcs());
+            return safeArc(i(t), 0, buildArcs());
         };
     }
 
@@ -352,8 +343,12 @@ dc.pieChart = function (parent, chartGroup) {
         return !current || isNaN(current.startAngle) || isNaN(current.endAngle);
     }
 
-    function onClick(d) {
-        _chart.onClick(d.data);
+    function fill(d, i) {
+        return _chart.getColor(d.data, i);
+    }
+
+    function onClick(d, i) {
+        _chart.onClick(d.data, i);
     }
 
     function safeArc(d, i, arc) {

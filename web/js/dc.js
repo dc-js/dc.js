@@ -872,8 +872,8 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
-    _chart.computeOrderedGroups = function(arr) {
-        var data = arr ? arr : _chart.data().slice(0); // clone
+    _chart.computeOrderedGroups = function(ga) {
+        var data = ga.slice(0); // clone
         if(data.length < 2)
             return data;
         var sort = crossfilter.quicksort.by(_chart.ordering());
@@ -1804,7 +1804,8 @@ dc.coordinateGridChart = function (_chart) {
             _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
         }
         else if (_chart.isOrdinal() && _x.domain().length===0) {
-            _x.domain(_chart.computeOrderedGroups().map(function(kv) { return kv.key; }));
+            var orderedData = _chart.computeOrderedGroups(_chart.data());
+            _x.domain(orderedData.map(_chart.keyAccessor()));
         }
 
         if (_chart.isOrdinal()) {
@@ -2999,7 +3000,7 @@ dc.abstractBubbleChart = function (_chart) {
 ## <a name="pie-chart" href="#pie-chart">#</a> Pie Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
 This chart is a concrete pie chart implementation usually used to visualize small number of categorical distributions.
 Pie chart implementation uses keyAccessor to generate slices, and valueAccessor to calculate the size of each slice(key)
-relatively to the total sum of all values.
+relatively to the total sum of all values. Slices are ordered by `.ordering` which defaults to sorting by key.
 
 Examples:
 
@@ -3041,25 +3042,23 @@ dc.pieChart = function (parent, chartGroup) {
 
     var _chart = dc.capped(dc.colorChart(dc.baseChart({})));
 
-    _chart.colorAccessor(function(d) { return _chart.keyAccessor()(d.data); });
+    _chart.colorAccessor(_chart.cappedKeyAccessor);
+
+    _chart.title(function (d) {
+        return _chart.cappedKeyAccessor(d) + ": " + _chart.cappedValueAccessor(d);
+    });
 
     /**
     #### .slicesCap([cap])
-    Get or set the maximum number of slices the pie chart will generate. Slices are ordered by its value from high to low.
-     Other slices exeeding the cap will be rolled up into one single *Others* slice.
+    Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
+    value from high to low. Other slices exeeding the cap will be rolled up into one single *Others* slice.
+    The resulting data will still be sorted by .ordering (default by key).
 
     **/
     _chart.slicesCap = _chart.cap;
 
-    _chart.label(function (d) {
-        return _chart.keyAccessor()(d.data);
-    });
-
+    _chart.label(_chart.cappedKeyAccessor);
     _chart.renderLabel(true);
-
-    _chart.title(function (d) {
-        return _chart.keyAccessor()(d.data) + ": " + _chart.valueAccessor()(d.data);
-    });
 
     _chart.transitionDuration(350);
 
@@ -3076,14 +3075,13 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     function drawChart() {
-        var pie = calculateDataPie();
-
         // set radius on basis of chart dimension if missing
         _radius = _radius ? _radius : d3.min([_chart.width(), _chart.height()]) /2;
 
-        var arc = _chart.buildArcs();
+        var arc = buildArcs();
 
-        var pieData = pie(_chart._assembleCappedData());
+        var pie = pieLayout();
+        var pieData = pie(_chart.data());
 
         if (_g) {
             var slices = _g.selectAll("g." + _sliceCssClass)
@@ -3121,9 +3119,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     function createSlicePath(slicesEnter, arc) {
         var slicePath = slicesEnter.append("path")
-            .attr("fill", function (d, i) {
-                return _chart.getColor(d, i);
-            })
+            .attr("fill", fill)
             .on("click", onClick)
             .attr("d", function (d, i) {
                 return safeArc(d, i, arc);
@@ -3158,7 +3154,7 @@ dc.pieChart = function (parent, chartGroup) {
             dc.transition(labelsEnter, _chart.transitionDuration())
                 .attr("transform", function (d) {
                     d.innerRadius = _chart.innerRadius();
-                    d.outerRadius = _radius;
+                    d.outerRadius = _chart.radius();
                     var centroid = arc.centroid(d);
                     if (isNaN(centroid[0]) || isNaN(centroid[1])) {
                         return "translate(0,0)";
@@ -3171,7 +3167,7 @@ dc.pieChart = function (parent, chartGroup) {
                     var data = d.data;
                     if (sliceHasNoData(data) || sliceTooSmall(d))
                         return "";
-                    return _chart.label()(d);
+                    return _chart.label()(d.data);
                 });
         }
     }
@@ -3192,9 +3188,7 @@ dc.pieChart = function (parent, chartGroup) {
         dc.transition(slicePaths, _chart.transitionDuration(),
             function (s) {
                 s.attrTween("d", tweenPie);
-            }).attr("fill", function (d, i) {
-                return _chart.getColor(d, i);
-            });
+            }).attr("fill", fill);
     }
 
     function updateLabels(pieData, arc) {
@@ -3203,7 +3197,7 @@ dc.pieChart = function (parent, chartGroup) {
                 .data(pieData);
             dc.transition(labels, _chart.transitionDuration())
                 .attr("transform", function (d) {
-                    d.innerRadius = _chart.innerRadius();
+                    d.innerRadius = _innerRadius;
                     d.outerRadius = _radius;
                     var centroid = arc.centroid(d);
                     if (isNaN(centroid[0]) || isNaN(centroid[1])) {
@@ -3217,7 +3211,7 @@ dc.pieChart = function (parent, chartGroup) {
                     var data = d.data;
                     if (sliceHasNoData(data) || sliceTooSmall(d))
                         return "";
-                    return _chart.label()(d);
+                    return _chart.label()(d.data);
                 });
         }
     }
@@ -3228,7 +3222,7 @@ dc.pieChart = function (parent, chartGroup) {
                 .data(pieData)
                 .select("title")
                 .text(function (d) {
-                    return _chart.title()(d);
+                    return _chart.title()(d.data);
                 });
         }
     }
@@ -3240,7 +3234,7 @@ dc.pieChart = function (parent, chartGroup) {
     function highlightFilter() {
         if (_chart.hasFilter()) {
             _chart.selectAll("g." + _sliceCssClass).each(function (d) {
-                if (_chart.isSelectedSlice(d)) {
+                if (isSelectedSlice(d)) {
                     _chart.highlightSelected(this);
                 } else {
                     _chart.fadeDeselected(this);
@@ -3294,13 +3288,13 @@ dc.pieChart = function (parent, chartGroup) {
         return _chart.height() / 2;
     };
 
-    _chart.buildArcs = function () {
+    function buildArcs() {
         return d3.svg.arc().outerRadius(_radius).innerRadius(_innerRadius);
-    };
+    }
 
-    _chart.isSelectedSlice = function (d) {
-        return _chart.hasFilter(_chart.keyAccessor()(d.data));
-    };
+    function isSelectedSlice(d) {
+        return _chart.hasFilter(_chart.cappedKeyAccessor(d.data));
+    }
 
     _chart.doRedraw = function () {
         drawChart();
@@ -3318,10 +3312,8 @@ dc.pieChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    function calculateDataPie() {
-        return d3.layout.pie().sort(null).value(function (d) {
-            return _chart.valueAccessor()(d);
-        });
+    function pieLayout() {
+        return d3.layout.pie().sort(null).value(_chart.cappedValueAccessor);
     }
 
     function sliceTooSmall(d) {
@@ -3329,19 +3321,19 @@ dc.pieChart = function (parent, chartGroup) {
         return isNaN(angle) || angle < _minAngleForLabel;
     }
 
-    function sliceHasNoData(data) {
-        return _chart.valueAccessor()(data) === 0;
+    function sliceHasNoData(d) {
+        return _chart.cappedValueAccessor(d) === 0;
     }
 
     function tweenPie(b) {
-        b.innerRadius = _chart.innerRadius();
+        b.innerRadius = _innerRadius;
         var current = this._current;
         if (isOffCanvas(current))
             current = {startAngle: 0, endAngle: 0};
         var i = d3.interpolate(current, b);
         this._current = i(0);
         return function (t) {
-            return safeArc(i(t), 0, _chart.buildArcs());
+            return safeArc(i(t), 0, buildArcs());
         };
     }
 
@@ -3349,8 +3341,12 @@ dc.pieChart = function (parent, chartGroup) {
         return !current || isNaN(current.startAngle) || isNaN(current.endAngle);
     }
 
-    function onClick(d) {
-        _chart.onClick(d.data);
+    function fill(d, i) {
+        return _chart.getColor(d.data, i);
+    }
+
+    function onClick(d, i) {
+        _chart.onClick(d.data, i);
     }
 
     function safeArc(d, i, arc) {
@@ -5075,7 +5071,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     function calculateAxisScale() {
         if (!_x || _elasticX) {
-            var extent = d3.extent(_rowData, _chart.valueAccessor());
+            var extent = d3.extent(_rowData, _chart.cappedValueAccessor);
             if (extent[0] > 0) extent[0] = 0;
             _x = d3.scale.linear().domain(extent)
                 .range([0, _chart.effectiveWidth()]);
@@ -5109,12 +5105,10 @@ dc.rowChart = function (parent, chartGroup) {
     };
 
     _chart.title(function (d) {
-        return _chart.keyAccessor()(d) + ": " + _chart.valueAccessor()(d);
+        return _chart.cappedKeyAccessor(d) + ": " + _chart.cappedValueAccessor(d);
     });
 
-    _chart.label(function (d) {
-        return _chart.keyAccessor()(d);
-    });
+    _chart.label(_chart.cappedKeyAccessor);
 
     _chart.x = function(x){
         if(!arguments.length) return _x;
@@ -5139,7 +5133,7 @@ dc.rowChart = function (parent, chartGroup) {
     }
 
     function drawChart() {
-        _rowData = _chart._assembleCappedData();
+        _rowData = _chart.data();
 
         drawAxis();
         drawGridLines();
@@ -5181,10 +5175,10 @@ dc.rowChart = function (parent, chartGroup) {
             .attr("fill", _chart.getColor)
             .on("click", onClick)
             .classed("deselected", function (d) {
-                return (_chart.hasFilter()) ? !_chart.isSelectedRow(d) : false;
+                return (_chart.hasFilter()) ? !isSelectedRow(d) : false;
             })
             .classed("selected", function (d) {
-                return (_chart.hasFilter()) ? _chart.isSelectedRow(d) : false;
+                return (_chart.hasFilter()) ? isSelectedRow(d) : false;
             });
 
         dc.transition(rect, _chart.transitionDuration())
@@ -5201,9 +5195,7 @@ dc.rowChart = function (parent, chartGroup) {
     function createTitles(rows) {
         if (_chart.renderTitle()) {
             rows.selectAll("title").remove();
-            rows.append("title").text(function (d) {
-                return _chart.title()(d);
-            });
+            rows.append("title").text(_chart.title());
         }
     }
 
@@ -5236,7 +5228,7 @@ dc.rowChart = function (parent, chartGroup) {
     }
 
     function translateX(d) {
-        var x = _x(_chart.valueAccessor()(d)),
+        var x = _x(_chart.cappedValueAccessor(d)),
             x0 = _x(0),
             s = x > x0 ? x0 : x;
         return "translate("+s+",0)";
@@ -5296,9 +5288,9 @@ dc.rowChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    _chart.isSelectedRow = function (d) {
-        return _chart.hasFilter(_chart.keyAccessor()(d));
-    };
+    function isSelectedRow (d) {
+        return _chart.hasFilter(_chart.cappedKeyAccessor(d));
+    }
 
     return _chart.anchor(parent, chartGroup);
 };
@@ -5431,26 +5423,38 @@ dc.capped = function (_chart) {
 
     var _othersGrouper = function (topRows) {
         var topRowsSum = d3.sum(topRows, _chart.valueAccessor()),
-            allRows = _chart.data(),
+            allRows = _chart.group().all(),
             allRowsSum = d3.sum(allRows, _chart.valueAccessor()),
             topKeys = topRows.map(_chart.keyAccessor()),
             allKeys = allRows.map(_chart.keyAccessor()),
             topSet = d3.set(topKeys),
             others = allKeys.filter(function(d){return !topSet.has(d);});
         if (allRowsSum > topRowsSum)
-            topRows.push({"others": others,"key": _othersLabel, "value": allRowsSum - topRowsSum });
+            topRows.push({"others": others, "key": _othersLabel, "value": allRowsSum - topRowsSum});
     };
 
-    _chart._assembleCappedData = function() {
+    _chart.cappedKeyAccessor = function(d,i) {
+        if (d.others)
+            return d.key;
+        return _chart.keyAccessor()(d,i);
+    };
+
+    _chart.cappedValueAccessor = function(d,i) {
+        if (d.others)
+            return d.value;
+        return _chart.valueAccessor()(d,i);
+    };
+
+    _chart.data(function(group) {
         if (_cap == Infinity) {
-            return _chart.computeOrderedGroups();
+            return _chart.computeOrderedGroups(group.all());
         } else {
-            var topRows = _chart.group().top(_cap); // ordered by value
+            var topRows = group.top(_cap); // ordered by value
             topRows = _chart.computeOrderedGroups(topRows); // re-order by key
             if (_othersGrouper) _othersGrouper(topRows);
             return topRows;
         }
-    };
+    });
 
     /**
     #### .cap([count])
@@ -5474,13 +5478,20 @@ dc.capped = function (_chart) {
 
     /**
     #### .othersGrouper([grouperFunction])
-    Get or set the grouper funciton that will perform the insersion of data for the *Others* slice if the slices cap is
-    specified. If set to a falsy value, no others will be added. By default the grouper function implements the following
-    logic, you will need change this function to match your data structure if you are not using the a crossfilter group.
+    Get or set the grouper function that will perform the insertion of data for the *Others* slice if the slices cap is
+    specified. If set to a falsy value, no others will be added. By default the grouper function computes the sum of all
+    values below the cap.
     ```js
-    function (data, sum) {
-        data.push({"key": _othersLabel, "value": sum });
-    };
+    chart.othersGrouper(function (data) {
+        // compute the value for others, presumably the sum of all values below the cap
+        var othersSum  = yourComputeOthersValueLogic(data)
+
+        // the keys are needed to properly filter when the others element is clicked
+        var othersKeys = yourComputeOthersKeysArrayLogic(data);
+
+        // add the others row to the dataset
+        data.push({"key": "Others", "value": othersSum, "others": othersKeys });
+    });
     ```
     **/
     _chart.othersGrouper = function (_) {

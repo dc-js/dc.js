@@ -265,10 +265,10 @@ suite.addBatch({
             topic: function (chart) {
                 return chart;
             },
-            'group should be order': function (chart) {
-                var group = chart.computeOrderedGroups();
+            'group should be orderd': function (chart) {
+                var group = chart.computeOrderedGroups(chart.group().all());
                 countryDimension.filter("US");
-                var group2 = chart.computeOrderedGroups();
+                var group2 = chart.computeOrderedGroups(chart.group().all());
                 assert.equal(group2[0].key, group[0].key);
             }
         }
@@ -333,33 +333,59 @@ suite.addBatch({
     }
 });
 suite.addBatch({
-    'pie chart slices cap': {
+    'pie chart slices cap and group switching': {
         topic: function () {
             var chart = buildChart("pie-chart4");
-            chart.slicesCap(3)
+            chart.slicesCap(2)
                 .renderTitle(true)
                 .othersLabel("small");
             chart.render();
             return chart;
         },
-        'produce expected number of slices': function(chart) {
-            assert.lengthOf(chart.selectAll("text.pie-slice")[0], 4);
-        },
-        'others slice should use custom name': function(chart) {
-            assert.equal(d3.select(chart.selectAll("text.pie-slice")[0][3]).text(), "small");
-        },
-        'remaining slices should be in numerical order': function(chart) {
-            assert.deepEqual(chart.selectAll("text.pie-slice").data().map(function(slice) { return slice.data.key; }),
-                             ["22","33","44","small"]);
-        },
-        'clicking others sclice should filter all groups slices': function(chart) {
-            var event = document.createEvent("SVGEvents");
-            event.initEvent("click",true,true);
-            chart.selectAll(".pie-slice path")[0][3].dispatchEvent(event);
-            assert.deepEqual(chart.filters(),["55","66","small"]);
-            chart.selectAll(".pie-slice path")[0][3].dispatchEvent(event);
-            assert.deepEqual(chart.filters(),[]);
-        },
+        'with normal valueAccessor': {
+            topic: function (chart) {
+                chart.dimension(valueDimension).group(valueGroup)
+                    .valueAccessor(dc.pluck('value'))
+                    .render();
+                return chart;
+            },
+            'produce expected number of slices': function(chart) {
+                assert.lengthOf(chart.selectAll("text.pie-slice")[0], 3);
+            },
+            'others slice should use custom name': function(chart) {
+                assert.equal(d3.select(chart.selectAll("text.pie-slice")[0][2]).text(), "small");
+            },
+            'remaining slices should be in numerical order': function(chart) {
+                assert.deepEqual(chart.selectAll("text.pie-slice").data().map(dc.pluck('value')),
+                                 [2,3,5]);
+            },
+            'clicking others slice should filter all groups slices': function(chart) {
+                var event = document.createEvent("SVGEvents");
+                event.initEvent("click",true,true);
+                chart.selectAll(".pie-slice path")[0][2].dispatchEvent(event);
+                assert.deepEqual(chart.filters(),["22","55","66","small"]);
+                chart.selectAll(".pie-slice path")[0][2].dispatchEvent(event);
+                assert.deepEqual(chart.filters(),[]);
+            }
+        },/*
+        'with custom valueAccessor': {
+            topic: function (chart) {
+                chart.dimension(statusDimension).group(statusMultiGroup)
+                    .valueAccessor(function(d) {return d.value.value;})
+                    .render();
+                return chart;
+            },
+            'correct values, no others row': function(chart) {
+                assert.deepEqual(chart.selectAll("g.pie-slice").data().map(dc.pluck('value')),
+                                 [220, 198]);
+            },
+            'correct values, others row': function(chart) {
+                chart.cap(1).render();
+                assert.deepEqual(chart.selectAll("title")[0].map(function(t) {return d3.select(t).text();}),
+                                 [ 'F: 220', 'small: 198' ]);
+                chart.cap(3); //teardown
+            }
+        },*/
         teardown: function (chart) {
             resetAllFilters();
             resetBody();

@@ -560,7 +560,7 @@ different bubbles are too great. Default value: 0.3</p>
 <h2><a name="pie-chart" href="#pie-chart">#</a> Pie Chart [Concrete] &lt; <a href="#color-chart">Color Chart</a> &lt; <a href="#base-chart">Base Chart</a></h2>
 <p>This chart is a concrete pie chart implementation usually used to visualize small number of categorical distributions.
 Pie chart implementation uses keyAccessor to generate slices, and valueAccessor to calculate the size of each slice(key)
-relatively to the total sum of all values.</p>
+relatively to the total sum of all values. Slices are ordered by <code>.ordering</code> which defaults to sorting by key.</p>
 <p>Examples:</p>
 <ul>
 <li><a href="http://nickqizhu.github.com/dc.js/">Nasdaq 100 Index</a></li>
@@ -582,8 +582,9 @@ var chart1 = dc.pieChart(<span class="string">"#chart-container1"</span>);</span
 // <span class="operator"><span class="keyword">create</span> a pie chart under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
 var chart2 = dc.pieChart(<span class="string">"#chart-container2"</span>, <span class="string">"chartGroupA"</span>);</span></code></pre>
 <h4>.slicesCap([cap])</h4>
-<p>Get or set the maximum number of slices the pie chart will generate. Slices are ordered by its value from high to low.
- Other slices exeeding the cap will be rolled up into one single <em>Others</em> slice.</p>
+<p>Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
+value from high to low. Other slices exeeding the cap will be rolled up into one single <em>Others</em> slice.
+The resulting data will still be sorted by .ordering (default by key).</p>
 <h4>.innerRadius([innerRadius])</h4>
 <p>Get or set the inner radius on a particular pie chart instance. If inner radius is greater than 0px then the pie chart
 will be essentially rendered as a doughnut chart. Default inner radius is 0px.</p>
@@ -925,12 +926,19 @@ in order to repsond to onClick events and trigger filtering of all the within th
 <h4>.othersLabel([label])</h4>
 <p>Get or set the label for <em>Others</em> slice when slices cap is specified. Default label is <strong>Others</strong>.</p>
 <h4>.othersGrouper([grouperFunction])</h4>
-<p>Get or set the grouper funciton that will perform the insersion of data for the <em>Others</em> slice if the slices cap is
-specified. If set to a falsy value, no others will be added. By default the grouper function implements the following
-logic, you will need change this function to match your data structure if you are not using the a crossfilter group.</p>
-<pre><code class="lang-js"><span class="title">function</span> (<span class="typedef"><span class="keyword">data</span>, sum) <span class="container">{
-    <span class="title">data</span>.<span class="title">push</span>({"<span class="title">key</span>": <span class="title">_othersLabel</span>, "<span class="title">value</span>": <span class="title">sum</span> }</span>);</span>
-};</code></pre>
+<p>Get or set the grouper function that will perform the insertion of data for the <em>Others</em> slice if the slices cap is
+specified. If set to a falsy value, no others will be added. By default the grouper function computes the sum of all
+values below the cap.</p>
+<pre><code class="lang-js"><span class="title">chart</span>.othersGrouper(function (<span class="typedef"><span class="keyword">data</span>) <span class="container">{
+    // <span class="title">compute</span> <span class="title">the</span> <span class="title">value</span> <span class="title">for</span> <span class="title">others</span>, <span class="title">presumably</span> <span class="title">the</span> <span class="title">sum</span> <span class="title">of</span> <span class="title">all</span> <span class="title">values</span> <span class="title">below</span> <span class="title">the</span> <span class="title">cap</span>
+    <span class="title">var</span> <span class="title">othersSum</span>  = <span class="title">yourComputeOthersValueLogic</span>(<span class="title">data</span>)
+
+    // <span class="title">the</span> <span class="title">keys</span> <span class="title">are</span> <span class="title">needed</span> <span class="title">to</span> <span class="title">properly</span> <span class="title">filter</span> <span class="title">when</span> <span class="title">the</span> <span class="title">others</span> <span class="title">element</span> <span class="title">is</span> <span class="title">clicked</span>
+    <span class="title">var</span> <span class="title">othersKeys</span> = <span class="title">yourComputeOthersKeysArrayLogic</span>(<span class="title">data</span>);
+
+    // <span class="title">add</span> <span class="title">the</span> <span class="title">others</span> <span class="title">row</span> <span class="title">to</span> <span class="title">the</span> <span class="title">dataset</span>
+    <span class="title">data</span>.<span class="title">push</span>({"<span class="title">key</span>": "<span class="type">Others</span>", "<span class="title">value</span>": <span class="title">othersSum</span>, "<span class="title">others</span>": <span class="title">othersKeys</span> }</span>);</span>
+});</code></pre>
 <h2><a name="number-display" href="#number-display">#</a> Number Display [Concrete] &lt; <a href="#base-chart">Base Chart</a></h2>
 <p>A display of a single numeric value.</p>
 <p>Examples:</p>

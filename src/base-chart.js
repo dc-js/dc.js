@@ -193,8 +193,8 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
-    _chart.computeOrderedGroups = function(arr) {
-        var data = arr ? arr : _chart.data().slice(0); // clone
+    _chart.computeOrderedGroups = function(ga) {
+        var data = ga.slice(0); // clone
         if(data.length < 2)
             return data;
         var sort = crossfilter.quicksort.by(_chart.ordering());

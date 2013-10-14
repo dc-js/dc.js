@@ -293,7 +293,8 @@ dc.coordinateGridChart = function (_chart) {
             _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
         }
         else if (_chart.isOrdinal() && _x.domain().length===0) {
-            _x.domain(_chart.computeOrderedGroups().map(function(kv) { return kv.key; }));
+            var orderedData = _chart.computeOrderedGroups(_chart.data());
+            _x.domain(orderedData.map(_chart.keyAccessor()));
         }
 
         if (_chart.isOrdinal()) {
