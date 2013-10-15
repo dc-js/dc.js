@@ -34,7 +34,7 @@ dc.colorChart = function(_chart) {
     **/
     _chart.colors = function(_) {
         if (!arguments.length) return _colors;
-        if (_ instanceof Array) _colors = d3.scale.quantize().range(_); // depricated legacy support
+        if (_ instanceof Array) _colors = d3.scale.quantize().range(_); // depricated legacy support, note: this fails for ordinal domains
         else _colors = _;
         return _chart;
     };

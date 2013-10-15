@@ -176,7 +176,7 @@ dc.utils.GroupStack = function () {
         var layers = [];
 
         for (var i = 0; i < _dataLayers.length; ++i) {
-            if (i == 0 && _hideChartGroup)
+            if (i === 0 && _hideChartGroup)
                 continue;
             if (i > 0 && _groups[i-1].hidden)
                 continue;

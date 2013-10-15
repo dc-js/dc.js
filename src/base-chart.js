@@ -386,7 +386,8 @@ dc.baseChart = function (_chart) {
     _chart.render = function () {
         _listeners.preRender(_chart);
 
-        _mandatoryAttributes && _mandatoryAttributes.forEach(checkForMandatoryAttributes);
+        if (_mandatoryAttributes)
+          _mandatoryAttributes.forEach(checkForMandatoryAttributes);
 
         var result = _chart.doRender();
 

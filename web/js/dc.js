@@ -452,7 +452,7 @@ dc.utils.GroupStack = function () {
         var layers = [];
 
         for (var i = 0; i < _dataLayers.length; ++i) {
-            if (i == 0 && _hideChartGroup)
+            if (i === 0 && _hideChartGroup)
                 continue;
             if (i > 0 && _groups[i-1].hidden)
                 continue;
@@ -1065,7 +1065,8 @@ dc.baseChart = function (_chart) {
     _chart.render = function () {
         _listeners.preRender(_chart);
 
-        _mandatoryAttributes && _mandatoryAttributes.forEach(checkForMandatoryAttributes);
+        if (_mandatoryAttributes)
+          _mandatoryAttributes.forEach(checkForMandatoryAttributes);
 
         var result = _chart.doRender();
 
@@ -2468,7 +2469,7 @@ dc.colorChart = function(_chart) {
     **/
     _chart.colors = function(_) {
         if (!arguments.length) return _colors;
-        if (_ instanceof Array) _colors = d3.scale.quantize().range(_); // depricated legacy support
+        if (_ instanceof Array) _colors = d3.scale.quantize().range(_); // depricated legacy support, note: this fails for ordinal domains
         else _colors = _;
         return _chart;
     };
@@ -2830,8 +2831,8 @@ dc.abstractBubbleChart = function (_chart) {
     _chart.renderLabel(true);
     _chart.renderTitle(false);
 
-    _chart.data(function() {
-        return _chart.group().top(Infinity);
+    _chart.data(function(group) {
+        return group.top(Infinity);
     });
 
     var _r = d3.scale.linear().domain([0, 100]);

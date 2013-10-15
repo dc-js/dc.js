@@ -19,7 +19,7 @@ suite.addBatch({
                 .transitionDuration(0)
                 .title(function(d){return "Title: " + d.key;})
                 .r(d3.scale.linear().domain([0, 500]))
-                .colors(['blue'])
+                .ordinalColors(['blue'])
                 .point("California", 100, 120)
                 .point("Colorado", 300, 120)
                 .point("Delaware", 500, 220)
@@ -69,10 +69,10 @@ suite.addBatch({
             chart.redraw();
             assert.lengthOf(chart.selectAll("g.node title")[0], 6);
         },
-        'correct color for circle should be filled': 'pending', /*function(chart){
+        'correct color for circle should be filled': function(chart){
             assert.equal(d3.select(chart.selectAll("circle.bubble")[0][0]).attr("fill"), "blue");
             assert.equal(d3.select(chart.selectAll("circle.bubble")[0][3]).attr("fill"), "blue");
-        },*/
+        },
         'correct bubble should be highlighted when filter is active':function(chart){
             chart.filter("Colorado");
             chart.filter("California");
