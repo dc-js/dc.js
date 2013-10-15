@@ -49,6 +49,15 @@ dc.coordinateGridChart = function (_chart) {
 
     var _zoomScale = [-10, 100];  // -10 to allow zoom out of the original domain
     var _zoomOutRestrict = true; // restrict zoomOut to the original domain?
+    var _zoomed = function () {
+        dc.events.trigger(function () {
+            _chart.focus(_chart.x().domain());
+            _chart._invokeZoomedListener();
+            updateRangeSelChart();
+        });
+    };
+    var _zoom = d3.behavior.zoom().on("zoom", _zoomed);
+    var _nullZoom = d3.behavior.zoom().on("zoom", null);
 
     var _rangeChart;
     var _focusChart;
@@ -648,6 +657,8 @@ dc.coordinateGridChart = function (_chart) {
 
         if (_brushOn) {
             _brush.on("brush", _chart._brushing);
+            _brush.on("brushstart", function () { _chart.root().call(_nullZoom); });
+            _brush.on("brushend", configureMouseZoom);
 
             var gBrush = g.append("g")
                 .attr("class", "brush")
@@ -780,21 +791,18 @@ dc.coordinateGridChart = function (_chart) {
 
         _chart.renderBrush(_chart.g());
 
-        enableMouseZoom();
+        configureMouseZoom();
 
         return _chart;
     };
 
-    function enableMouseZoom() {
+    function configureMouseZoom () {
         if (_mouseZoomable) {
-            _chart.root().call(d3.behavior.zoom()
-                .x(_chart.x())
-                .scaleExtent(_zoomScale)
-                .on("zoom", function () {
-                    _chart.focus(_chart.x().domain());
-                    _chart._invokeZoomedListener();
-                    updateRangeSelChart();
-                }));
+            _zoom.x(_chart.x()).scaleExtent(_zoomScale);
+            _chart.root().call(_zoom);
+        }
+        else {
+            _chart.root().call(_nullZoom);
         }
     }
 
