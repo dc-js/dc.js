@@ -236,7 +236,7 @@ div.dc-chart {
     stroke-opacity: 0.2;
 }
 
-.dc-chart path.dc-symbol {
+.dc-chart path.dc-mbolmbol {
     fill-opacity: 0.5;
     stroke-opacity: 0.5;
 }
@@ -264,4 +264,9 @@ div.dc-chart {
 .dc-chart .box .outlier {
   fill: none;
   stroke: #ccc;
+}
+
+.dc-chart .symbol{
+    fill: steelblue;
+    stroke: none;
 }
