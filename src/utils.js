@@ -31,8 +31,8 @@ dc.printers.filter = function (filter) {
 };
 
 dc.pluck = function(n,f) {
-    return function(d) {
-        return f ? f.call(this,d[n]) : d[n];
+    return function(d,i) {
+        return f ? f.call(this,d[n],i) : d[n];
     };
 };
 

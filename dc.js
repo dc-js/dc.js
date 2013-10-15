@@ -307,8 +307,8 @@ dc.printers.filter = function (filter) {
 };
 
 dc.pluck = function(n,f) {
-    return function(d) {
-        return f ? f.call(this,d[n]) : d[n];
+    return function(d,i) {
+        return f ? f.call(this,d[n],i) : d[n];
     };
 };
 
@@ -718,7 +718,7 @@ dc.baseChart = function (_chart) {
     var _renderLabel = false;
 
     var _title = function (d) {
-        return d.key + ": " + d.value;
+        _chart.keyAccessor()(d) + ": " + _chart.valueAccessor()(d);
     };
     var _renderTitle = false;
 
@@ -1578,10 +1578,6 @@ dc.coordinateGridChart = function (_chart) {
 
     var _mouseZoomable = false;
     var _clipPadding = 0;
-
-    _chart.title(function (d) {
-        return _chart.keyAccessor()(d.data) + ": " + _chart.valueAccessor()(d.data);
-    });
 
     _chart.rescale = function () {
         _unitCount = undefined;
@@ -3463,7 +3459,7 @@ dc.barChart = function (parent, chartGroup) {
             .attr("fill", _chart.getColor);
 
         if (_chart.renderTitle()) {
-            bars.append("title").text(_chart.title());
+            bars.append("title").text(dc.pluck('data',_chart.title()));
         }
 
         if (_chart.isOrdinal())
@@ -3487,7 +3483,7 @@ dc.barChart = function (parent, chartGroup) {
             .attr("height", function (d) {
                 return barHeight(d);
             })
-            .select("title").text(_chart.title());
+            .select("title").text(dc.pluck('data',_chart.title()));
 
         dc.transition(bars.exit(), _chart.transitionDuration())
             .attr("height", 0)
@@ -3815,7 +3811,7 @@ dc.lineChart = function (parent, chartGroup) {
                         hideDot(dot);
                         hideRefLines(g);
                     })
-                    .append("title").text(_chart.title());
+                    .append("title").text(dc.pluck('data',_chart.title()));
 
                 dots.attr("cx", function (d) {
                         return dc.utils.safeNumber(_chart.x()(d.x));
@@ -3823,7 +3819,7 @@ dc.lineChart = function (parent, chartGroup) {
                     .attr("cy", function (d) {
                         return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
                     })
-                    .select("title").text(_chart.title());
+                    .select("title").text(dc.pluck('data',_chart.title()));
 
                 dots.exit().remove();
             });

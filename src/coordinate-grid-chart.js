@@ -56,10 +56,6 @@ dc.coordinateGridChart = function (_chart) {
     var _mouseZoomable = false;
     var _clipPadding = 0;
 
-    _chart.title(function (d) {
-        return _chart.keyAccessor()(d.data) + ": " + _chart.valueAccessor()(d.data);
-    });
-
     _chart.rescale = function () {
         _unitCount = undefined;
         _chart.xUnitCount();
