@@ -535,7 +535,7 @@ the index of a group.
 ```
 
 #### .colorDomain([domain])
-Set or get the current domain for the color mapping function. The domain must be supplied as an arrary.
+Set or get the current domain for the color mapping function. The domain must be supplied as an array.
 
 Note: previously this method accepted a callback function. Instead you may use a custom scale set by `.colors`.
 
@@ -543,7 +543,7 @@ Note: previously this method accepted a callback function. Instead you may use a
 Set the domain by determining the min and max values as retrived by `.colorAccessor` over the chart's dataset.
 
 #### .getColor(d [, i])
-Get the color for the datum d and counter i. This is used internaly by charts to retreive a color.
+Get the color for the datum d and counter i. This is used internaly by charts to retrieve a color.
 
 ## <a name="stackable-chart" href="#stackable-chart">#</a> Stackable Chart [Abstract]
 Stackable chart is an abstract chart introduced to provide cross-chart support of stackability. Concrete implementation of

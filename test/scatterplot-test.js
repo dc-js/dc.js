@@ -41,9 +41,15 @@ suite.addBatch({
         },
 
         'should correctly place symbols': function (chart) {
-            assert.equal("translate(166.8013698630137,140)", symbol_by_index(chart, 0).attr("transform"));
-            assert.equal("translate(209.37671232876713,114)", symbol_by_index(chart, 3).attr("transform"));
-            assert.equal("translate(255.40410958904107,44)", symbol_by_index(chart, 5).attr("transform"));
+            assert.equal(symbol_by_index(chart, 0).attr("transform"), "translate(166.8013698630137,140)");
+            assert.equal(symbol_by_index(chart, 3).attr("transform"), "translate(209.37671232876713,114)");
+            assert.equal(symbol_by_index(chart, 5).attr("transform"), "translate(255.40410958904107,44)");
+        },
+
+        'should generate color fill for symbols': function(chart){
+            assert.equal(symbol_by_index(chart, 0).attr("fill"), '#1f77b4');
+            assert.equal(symbol_by_index(chart, 3).attr("fill"), '#1f77b4');
+            assert.equal(symbol_by_index(chart, 5).attr("fill"), '#1f77b4');
         }
     },
 

@@ -267,6 +267,5 @@ div.dc-chart {
 }
 
 .dc-chart .symbol{
-    fill: steelblue;
     stroke: none;
 }

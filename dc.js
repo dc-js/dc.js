@@ -2528,7 +2528,7 @@ dc.colorChart = function(_chart) {
 
     /**
     #### .colorDomain([domain])
-    Set or get the current domain for the color mapping function. The domain must be supplied as an arrary.
+    Set or get the current domain for the color mapping function. The domain must be supplied as an array.
 
     Note: previously this method accepted a callback function. Instead you may use a custom scale set by `.colors`.
 
@@ -2552,7 +2552,7 @@ dc.colorChart = function(_chart) {
 
     /**
     #### .getColor(d [, i])
-    Get the color for the datum d and counter i. This is used internaly by charts to retreive a color.
+    Get the color for the datum d and counter i. This is used internaly by charts to retrieve a color.
 
     **/
     _chart.getColor = function(d, i){
@@ -5545,6 +5545,7 @@ dc.scatterPlot = function (parent, chartGroup) {
             .enter()
         .append("circle")
             .attr("class", "symbol")
+            .attr("fill", _chart.getColor(0))
             .attr("transform", _locator);
 
         dc.transition(symbols, _chart.transitionDuration())

@@ -519,12 +519,12 @@ the index of a group.</p>
 <span class="comment">// color accessor for a multi-value crossfilter reduction</span>
 <span class="variable">.colorAccessor</span>(function(d){<span class="keyword">return</span> d<span class="variable">.value</span><span class="variable">.absGain</span>;})</code></pre>
 <h4>.colorDomain([domain])</h4>
-<p>Set or get the current domain for the color mapping function. The domain must be supplied as an arrary.</p>
+<p>Set or get the current domain for the color mapping function. The domain must be supplied as an array.</p>
 <p>Note: previously this method accepted a callback function. Instead you may use a custom scale set by <code>.colors</code>.</p>
 <h4>.calculateColorDomain()</h4>
 <p>Set the domain by determining the min and max values as retrived by <code>.colorAccessor</code> over the chart&#39;s dataset.</p>
 <h4>.getColor(d [, i])</h4>
-<p>Get the color for the datum d and counter i. This is used internaly by charts to retreive a color.</p>
+<p>Get the color for the datum d and counter i. This is used internaly by charts to retrieve a color.</p>
 <h2><a name="stackable-chart" href="#stackable-chart">#</a> Stackable Chart [Abstract]</h2>
 <p>Stackable chart is an abstract chart introduced to provide cross-chart support of stackability. Concrete implementation of
 charts can then selectively mix-in this capability.</p>

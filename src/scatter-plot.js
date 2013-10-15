@@ -15,6 +15,7 @@ dc.scatterPlot = function (parent, chartGroup) {
             .enter()
         .append("circle")
             .attr("class", "symbol")
+            .attr("fill", _chart.getColor(0))
             .attr("transform", _locator);
 
         dc.transition(symbols, _chart.transitionDuration())
