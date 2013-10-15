@@ -386,9 +386,9 @@ on other charts within the same chart group.</p>
                     <span class="comment">/* (optional) by default pie chart will use group.key as it's label
                      * but you can overwrite it with a closure */</span>
                     .label(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-                        <span class="keyword">if</span> (gainOrLossChart.hasFilter() &amp;&amp; !gainOrLossChart.hasFilter(d.data.key))
-                            <span class="keyword">return</span> d.data.key + <span class="string">"(0%)"</span>;
-                        <span class="keyword">return</span> d.data.key + <span class="string">"("</span> + Math.floor(d.data.value / all.value() * <span class="number">100</span>) + <span class="string">"%)"</span>;
+                        <span class="keyword">if</span> (gainOrLossChart.hasFilter() &amp;&amp; !gainOrLossChart.hasFilter(d.key))
+                            <span class="keyword">return</span> d.key + <span class="string">"(0%)"</span>;
+                        <span class="keyword">return</span> d.key + <span class="string">"("</span> + Math.floor(d.value / all.value() * <span class="number">100</span>) + <span class="string">"%)"</span>;
                     }) <span class="comment">/*</pre></div></div>
             
         </li>
