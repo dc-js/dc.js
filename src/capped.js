@@ -76,7 +76,7 @@ dc.capped = function (_chart) {
 
     dc.override(_chart, "onClick", function (d) {
         if (d.others)
-            _chart.filter(d.others);
+            _chart.filter([d.others]);
         _chart._onClick(d);
     });
 
