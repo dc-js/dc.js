@@ -310,9 +310,9 @@ d3.csv("ndx.csv", function (data) {
                         return d.value;
                     })
                     .title(function (d) {
-                        var value = d.data.value.avg ? d.data.value.avg : d.data.value;
+                        var value = d.value.avg ? d.value.avg : d.value;
                         if (isNaN(value)) value = 0;
-                        return dateFormat(d.data.key) + "\n" + numberFormat(value);
+                        return dateFormat(d.key) + "\n" + numberFormat(value);
                     });
 
             volumeChart.width(990)

@@ -26,7 +26,8 @@ dc.cumulative.Base = function() {
 
     this.setValueByKey = function(key, value) {
         key = this.sanitizeKey(key);
-        return this._map[key] = value;
+        this._map[key] = value;
+        return value;
     };
 
     this.indexOfKey = function(key) {

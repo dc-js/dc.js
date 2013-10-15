@@ -509,7 +509,7 @@ suite.addBatch({
             var chart = buildChart("chart-tooltip");
             chart.brushOn(false)
                 .title(function (d) {
-                    return d.data.value;
+                    return d.value;
                 })
                 .dotRadius(10)
                 .render();

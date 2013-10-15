@@ -24,7 +24,7 @@ dc.seriesChart = function (parent, chartGroup) {
                     .keyAccessor(_chart.keyAccessor())
                     .valueAccessor(_chart.valueAccessor())
                     .colorCalculator(function() {return subChart.colors()(sub.key);});
-        });
+            });
         Object.keys(_charts)
             .filter(function(c) {return keep.indexOf(c) === -1;})
             .map(function(c) {return _charts[c].resetSvg();});
