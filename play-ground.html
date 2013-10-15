@@ -688,14 +688,7 @@ var pieChartValue = dc.pieChart("#pie-chart-value")
         .radius(100)
         .innerRadius(40)
         .dimension(valueDimension)
-        .group(valueGroup)
-//        .slicesCap(3)
-        .label(function (d) {
-            return d.data.key;
-        })
-        .title(function (d) {
-            return d.data.key + ": " + d.data.value;
-        });
+        .group(valueGroup);
 
 var pieChartCountry = dc.pieChart("#pie-chart-country")
         .width(250)
