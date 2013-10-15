@@ -32,7 +32,7 @@ dc.baseChart = function (_chart) {
     var _renderLabel = false;
 
     var _title = function (d) {
-        return d.key + ": " + d.value;
+        _chart.keyAccessor()(d) + ": " + _chart.valueAccessor()(d);
     };
     var _renderTitle = false;
 
