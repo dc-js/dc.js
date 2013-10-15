@@ -4515,7 +4515,7 @@ dc.seriesChart = function (parent, chartGroup) {
     _chart._mandatoryAttributes().push('seriesAccessor','chart');
     _chart.shareColors(true);
 
-    dc.override(_chart, "plotData", function () {
+    dc.override(_chart, "doRender", function () {
         dc.deregisterAllCharts(_chart.anchorName());
         var keep = [];
         var children = d3.nest().key(_seriesAccessor).entries(_chart.data())
@@ -4533,7 +4533,7 @@ dc.seriesChart = function (parent, chartGroup) {
             .filter(function(c) {return keep.indexOf(c) === -1;})
             .map(function(c) {return _charts[c].resetSvg();});
         _chart._compose(children);
-        _chart._plotData();
+        _chart._doRender();
     });
 
     function clearChart(c) {
