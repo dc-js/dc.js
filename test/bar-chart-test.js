@@ -578,8 +578,8 @@ suite.addBatch({'ordinal bar chart': {
     'should respect specified domain order': function (chart) {
         // note bar chart works differently from pie chart in that the bars objects don't
         // get reordered by the custom ordering, but they get placed by the domain
-        assert.ok(d3.select(chart.selectAll("rect.bar")[0][5]).attr("x") // ontario
-                  < d3.select(chart.selectAll("rect.bar")[0][3]).attr("x")); // mississippi
+        assert.ok(d3.select(chart.selectAll("rect.bar")[0][5]).attr("x") < // ontario
+                  d3.select(chart.selectAll("rect.bar")[0][3]).attr("x")); // mississippi
     },
     'should fade deselected bars': function (chart) {
         chart.filter("Ontario").filter("Colorado").redraw();

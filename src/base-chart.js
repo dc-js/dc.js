@@ -170,20 +170,20 @@ dc.baseChart = function (_chart) {
         if (!g[k][c]) g[k][c] = {a:[],n:[]};
         var i = g[k][c].a.indexOf(accessor);
         if (i == -1) {
-          i = g[k][c].a.length;
-          g[k][c].a[i] = accessor;
-          g[k][c].n[i] = {name:''};
+            i = g[k][c].a.length;
+            g[k][c].a[i] = accessor;
+            g[k][c].n[i] = {name:''};
         }
         return g[k][c].n[i];
     }
 
 
     _chart._getGroupName = function (g, accessor) {
-      return groupName(_chart, g, accessor).name;
+        return groupName(_chart, g, accessor).name;
     };
 
     _chart._setGroupName = function (g, name, accessor) {
-      groupName(_chart, g, accessor).name = name;
+        groupName(_chart, g, accessor).name = name;
     };
 
     _chart.ordering = function(o) {
@@ -387,7 +387,7 @@ dc.baseChart = function (_chart) {
         _listeners.preRender(_chart);
 
         if (_mandatoryAttributes)
-          _mandatoryAttributes.forEach(checkForMandatoryAttributes);
+            _mandatoryAttributes.forEach(checkForMandatoryAttributes);
 
         var result = _chart.doRender();
 

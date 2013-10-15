@@ -399,7 +399,8 @@ dc.utils.GroupStack = function () {
 
     this.addNamedGroup = function (group, name, accessor) {
         var groupIndex = this.addGroup(group, accessor);
-        return _groups[groupIndex].name = name;
+        _groups[groupIndex].name = name;
+        return name;
     };
 
     this.getGroupByIndex = function (index) {
@@ -579,7 +580,8 @@ dc.cumulative.Base = function() {
 
     this.setValueByKey = function(key, value) {
         key = this.sanitizeKey(key);
-        return this._map[key] = value;
+        this._map[key] = value;
+        return value;
     };
 
     this.indexOfKey = function(key) {
@@ -849,20 +851,20 @@ dc.baseChart = function (_chart) {
         if (!g[k][c]) g[k][c] = {a:[],n:[]};
         var i = g[k][c].a.indexOf(accessor);
         if (i == -1) {
-          i = g[k][c].a.length;
-          g[k][c].a[i] = accessor;
-          g[k][c].n[i] = {name:''};
+            i = g[k][c].a.length;
+            g[k][c].a[i] = accessor;
+            g[k][c].n[i] = {name:''};
         }
         return g[k][c].n[i];
     }
 
 
     _chart._getGroupName = function (g, accessor) {
-      return groupName(_chart, g, accessor).name;
+        return groupName(_chart, g, accessor).name;
     };
 
     _chart._setGroupName = function (g, name, accessor) {
-      groupName(_chart, g, accessor).name = name;
+        groupName(_chart, g, accessor).name = name;
     };
 
     _chart.ordering = function(o) {
@@ -1066,7 +1068,7 @@ dc.baseChart = function (_chart) {
         _listeners.preRender(_chart);
 
         if (_mandatoryAttributes)
-          _mandatoryAttributes.forEach(checkForMandatoryAttributes);
+            _mandatoryAttributes.forEach(checkForMandatoryAttributes);
 
         var result = _chart.doRender();
 
@@ -1830,11 +1832,11 @@ dc.coordinateGridChart = function (_chart) {
 
         var axisXLab = g.selectAll("text."+X_AXIS_LABEL_CLASS);
         if (axisXLab.empty() && _chart.xAxisLabel())
-        axisXLab = g.append('text')
-            .attr("transform", "translate(" + _chart.xAxisLength() / 2 + "," + (_chart.height() - _xAxisLabelPadding) + ")")
-            .attr('class', X_AXIS_LABEL_CLASS)
-            .attr('text-anchor', 'middle')
-            .text(_chart.xAxisLabel());
+            axisXLab = g.append('text')
+                .attr("transform", "translate(" + _chart.xAxisLength() / 2 + "," + (_chart.height() - _xAxisLabelPadding) + ")")
+                .attr('class', X_AXIS_LABEL_CLASS)
+                .attr('text-anchor', 'middle')
+                .text(_chart.xAxisLabel());
         if (_chart.xAxisLabel() && axisXLab.text() != _chart.xAxisLabel())
             axisYLab.text(_chart.xAxisLabel());
 
@@ -1928,11 +1930,11 @@ dc.coordinateGridChart = function (_chart) {
 
         var axisYLab = g.selectAll("text."+Y_AXIS_LABEL_CLASS);
         if (axisYLab.empty() && _chart.yAxisLabel())
-        axisYLab = g.append('text')
-            .attr("transform", "translate(" + _yAxisLabelPadding + "," + _chart.yAxisHeight()/2 + "),rotate(-90)")
-            .attr('class', Y_AXIS_LABEL_CLASS)
-            .attr('text-anchor', 'middle')
-            .text(_chart.yAxisLabel());
+            axisYLab = g.append('text')
+                .attr("transform", "translate(" + _yAxisLabelPadding + "," + _chart.yAxisHeight()/2 + "),rotate(-90)")
+                .attr('class', Y_AXIS_LABEL_CLASS)
+                .attr('text-anchor', 'middle')
+                .text(_chart.yAxisLabel());
         if (_chart.yAxisLabel() && axisYLab.text() != _chart.yAxisLabel())
             axisYLab.text(_chart.yAxisLabel());
 
@@ -2209,7 +2211,7 @@ dc.coordinateGridChart = function (_chart) {
         _chart.redrawBrush(_g);
 
         if (_chart.brushHasNoLength(extent)) {
-          return;
+            return;
         }
 
         if (_chart.brushIsEmpty(extent)) {
@@ -2246,6 +2248,7 @@ dc.coordinateGridChart = function (_chart) {
     // borrowed from Crossfilter example
     _chart.resizeHandlePath = function (d) {
         var e = +(d == "e"), x = e ? 1 : -1, y = brushHeight() / 3;
+        /*jshint -W014 */
         return "M" + (0.5 * x) + "," + y
             + "A6,6 0 0 " + e + " " + (6.5 * x) + "," + (y + 6)
             + "V" + (2 * y - 6)
@@ -2255,6 +2258,7 @@ dc.coordinateGridChart = function (_chart) {
             + "V" + (2 * y - 8)
             + "M" + (4.5 * x) + "," + (y + 8)
             + "V" + (2 * y - 8);
+        /*jshint +W014 */
     };
 
     function getClipPathId() {
@@ -2326,11 +2330,12 @@ dc.coordinateGridChart = function (_chart) {
             if (_zoomOutRestrict) {
                 var origDom = _rangeChart.xOriginalDomain();
                 var newDom = [
-                  refDom[0] < origDom[0] ? refDom[0] : origDom[0],
-                  refDom[1] > origDom[1] ? refDom[1] : origDom[1]];
+                    refDom[0] < origDom[0] ? refDom[0] : origDom[0],
+                    refDom[1] > origDom[1] ? refDom[1] : origDom[1]
+                ];
                 _rangeChart.focus(newDom);
             } else {
-              _rangeChart.focus(refDom);
+                _rangeChart.focus(refDom);
             }
             _rangeChart.filter(null);
             _rangeChart.filter(refDom);
@@ -2446,7 +2451,7 @@ dc.colorChart = function(_chart) {
     var _colorAccessor = function(d) { return _chart.keyAccessor()(d); };
 
     var _colorCalculator = function(value) {
-       return _colors(value,_chart);
+        return _colors(value,_chart);
     };
 
     /**
@@ -2701,9 +2706,11 @@ dc.stackableChart = function (_chart) {
                     return domainSet.has(p.x);
                 };
             }
-            else test = function(p) {
-                return p.x >= xDomain[0] && p.x <= xDomain[xDomain.length-1];
-            };
+            else {
+                test = function(p) {
+                    return p.x >= xDomain[0] && p.x <= xDomain[xDomain.length-1];
+                };
+            }
             _chart.stackLayers().forEach(function (e) {
                 e.points.forEach(function (p) {
                     if (test(p))
@@ -4345,7 +4352,7 @@ dc.compositeChart = function (parent, chartGroup) {
             }
 
             if (_shareColors)
-              child.colors(_chart.colors());
+                child.colors(_chart.colors());
 
             child.x(_chart.x());
             child.y(_chart.y());
@@ -4400,7 +4407,7 @@ dc.compositeChart = function (parent, chartGroup) {
             child.margins(_chart.margins());
 
             if (_shareColors && child.colorAccessor() === child._layerColorAccessor)
-              child.colorCalculator(function() {return child.colors()(i);});
+                child.colorCalculator(function() {return child.colors()(i);});
 
         });
         return _chart;
@@ -4475,7 +4482,7 @@ dc.compositeChart = function (parent, chartGroup) {
         var items = [];
         _children.forEach(function(child, i) {
             if (_shareColors)
-              child.colors(_chart.colors());
+                child.colors(_chart.colors());
 
             var childLegendables = child.legendables();
             if (childLegendables.length)
@@ -4529,7 +4536,7 @@ dc.seriesChart = function (parent, chartGroup) {
                     .keyAccessor(_chart.keyAccessor())
                     .valueAccessor(_chart.valueAccessor())
                     .colorCalculator(function() {return subChart.colors()(sub.key);});
-        });
+            });
         Object.keys(_charts)
             .filter(function(c) {return keep.indexOf(c) === -1;})
             .map(function(c) {return _charts[c].resetSvg();});
@@ -5341,10 +5348,10 @@ dc.legend = function () {
                 return "translate(0," + i * legendItemHeight() + ")";
             })
             .on("mouseover", function(d){
-                    _parent.legendHighlight(d);
+                _parent.legendHighlight(d);
             })
             .on("mouseout", function (d) {
-                    _parent.legendReset(d);
+                _parent.legendReset(d);
             });
 
         itemEnter
@@ -5576,8 +5583,8 @@ dc.numberDisplay = function (parent, chartGroup) {
     };
 
     _chart.data(function (group) {
-         var valObj = group.value && group.value() || group.top(1)[0];
-         return _chart.valueAccessor()(valObj);
+        var valObj = group.value && group.value() || group.top(1)[0];
+        return _chart.valueAccessor()(valObj);
     });
 
     _chart.transitionDuration(250); // good default

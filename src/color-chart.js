@@ -11,7 +11,7 @@ dc.colorChart = function(_chart) {
     var _colorAccessor = function(d) { return _chart.keyAccessor()(d); };
 
     var _colorCalculator = function(value) {
-       return _colors(value,_chart);
+        return _colors(value,_chart);
     };
 
     /**

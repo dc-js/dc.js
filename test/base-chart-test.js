@@ -212,9 +212,9 @@ suite.addBatch({
             var calculation = sinon.stub().returns(800);
             chart.width(calculation);
             chart.render();
-            assert.isFalse(calculation.called)
+            assert.isFalse(calculation.called);
             assert.equal(chart.width(), 800);
-            assert.isTrue(calculation.called)
+            assert.isTrue(calculation.called);
         }
     },
 

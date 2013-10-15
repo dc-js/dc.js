@@ -123,7 +123,8 @@ dc.utils.GroupStack = function () {
 
     this.addNamedGroup = function (group, name, accessor) {
         var groupIndex = this.addGroup(group, accessor);
-        return _groups[groupIndex].name = name;
+        _groups[groupIndex].name = name;
+        return name;
     };
 
     this.getGroupByIndex = function (index) {
