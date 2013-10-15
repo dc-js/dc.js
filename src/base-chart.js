@@ -270,7 +270,7 @@ dc.baseChart = function (_chart) {
     _chart.anchorName = function () {
         var a = _chart.anchor();
         if (a && a.id) return a.id;
-        if (a) return a.replace('#','');
+        if (a) return a.toString().replace('#','');
         return '';
     };
 
