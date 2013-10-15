@@ -1105,6 +1105,9 @@ chart.othersGrouper(function (data) {
 });
 ```
 
+#### .symbolSize([radius])
+Set or get radius for symbols, default: 3.
+
 ## <a name="number-display" href="#number-display">#</a> Number Display [Concrete] < [Base Chart](#base-chart)
 A display of a single numeric value.
 
