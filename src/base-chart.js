@@ -5,7 +5,7 @@ Every function on base chart are also inherited available on all concrete chart 
 
 **/
 dc.baseChart = function (_chart) {
-    _chart.__dc_flag__ = true;
+    _chart.__dc_flag__ = dc.utils.uniqueId();
 
     var _dimension;
     var _group;
@@ -271,7 +271,7 @@ dc.baseChart = function (_chart) {
         var a = _chart.anchor();
         if (a && a.id) return a.id;
         if (a && a.replace) return a.replace('#','');
-        return ""+dc.utils.uniqueId();
+        return "" + _chart.chartID();
     };
 
     /**
@@ -787,6 +787,10 @@ dc.baseChart = function (_chart) {
     _chart.on = function (event, listener) {
         _listeners[event] = listener;
         return _chart;
+    };
+
+    _chart.chartID = function () {
+        return _chart.__dc_flag__;
     };
 
     return _chart;

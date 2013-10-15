@@ -125,7 +125,7 @@ suite.addBatch({
                 assert.fail("Exception should have been triggered");
             } catch (e) {
                 assert.isTrue(e instanceof dc.errors.InvalidStateException);
-                assert.match(e.toString(), /Mandatory attribute chart.dimension is missing on chart\[#\d\]/);
+                assert.match(e.toString(), /Mandatory attribute chart.dimension is missing on chart\[#\d+\]/);
             }
         }
     },
@@ -149,7 +149,7 @@ suite.addBatch({
                 assert.fail("Exception should have been triggered");
             } catch (e) {
                 assert.isTrue(e instanceof dc.errors.InvalidStateException);
-                assert.match(e.toString(), /Mandatory attribute chart.group is missing on chart\[#\d\]/);
+                assert.match(e.toString(), /Mandatory attribute chart.group is missing on chart\[#\d+\]/);
             }
         }
     },

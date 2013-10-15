@@ -234,5 +234,5 @@ dc.renderlet = function(_){
 };
 
 dc.instanceOfChart = function (o) {
-    return o instanceof Object && o.__dc_flag__;
+    return o instanceof Object && o.__dc_flag__ && true;
 };
