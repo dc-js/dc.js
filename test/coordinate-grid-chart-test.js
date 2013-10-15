@@ -19,7 +19,7 @@ suite.addBatch({
                 assert.fail("Exception should have been triggered");
             }catch(e){
                 assert.isTrue(e instanceof dc.errors.InvalidStateException);
-                assert.equal("Mandatory attribute chart.x is missing on chart[#]", e.message);
+                assert.match(e.toString(), /Mandatory attribute chart.x is missing on chart\[#\d\]/);
             }
         }
     },

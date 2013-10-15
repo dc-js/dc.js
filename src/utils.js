@@ -211,6 +211,11 @@ dc.utils.isNegligible = function (max) {
     return max === undefined || (max < dc.constants.NEGLIGIBLE_NUMBER && max > -dc.constants.NEGLIGIBLE_NUMBER);
 };
 
+var _idCounter = 0;
+dc.utils.uniqueId = function () {
+  return ++_idCounter;
+}
+
 dc.utils.groupMax = function (group, accessor) {
     var max = d3.max(group.all(), accessor);
     if (dc.utils.isNegligible(max)) max = 0;

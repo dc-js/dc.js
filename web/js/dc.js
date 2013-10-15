@@ -487,6 +487,11 @@ dc.utils.isNegligible = function (max) {
     return max === undefined || (max < dc.constants.NEGLIGIBLE_NUMBER && max > -dc.constants.NEGLIGIBLE_NUMBER);
 };
 
+var _idCounter = 0;
+dc.utils.uniqueId = function () {
+  return ++_idCounter;
+}
+
 dc.utils.groupMax = function (group, accessor) {
     var max = d3.max(group.all(), accessor);
     if (dc.utils.isNegligible(max)) max = 0;
@@ -951,8 +956,8 @@ dc.baseChart = function (_chart) {
     _chart.anchorName = function () {
         var a = _chart.anchor();
         if (a && a.id) return a.id;
-        if (a) return a.toString().replace('#','');
-        return '';
+        if (a && a.replace) return a.replace('#','');
+        return ""+dc.utils.uniqueId();
     };
 
     /**

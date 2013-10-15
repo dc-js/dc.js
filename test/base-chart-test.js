@@ -125,7 +125,7 @@ suite.addBatch({
                 assert.fail("Exception should have been triggered");
             } catch (e) {
                 assert.isTrue(e instanceof dc.errors.InvalidStateException);
-                assert.equal("Mandatory attribute chart.dimension is missing on chart[#]", e.toString());
+                assert.match(e.toString(), /Mandatory attribute chart.dimension is missing on chart\[#\d\]/);
             }
         }
     },
@@ -149,7 +149,7 @@ suite.addBatch({
                 assert.fail("Exception should have been triggered");
             } catch (e) {
                 assert.isTrue(e instanceof dc.errors.InvalidStateException);
-                assert.equal("Mandatory attribute chart.group is missing on chart[#]", e.toString());
+                assert.match(e.toString(), /Mandatory attribute chart.group is missing on chart\[#\d\]/);
             }
         }
     },
@@ -175,6 +175,12 @@ suite.addBatch({
             d3.select("body").append("div").attr("id", "strele");
             chart.anchor('#strele');
             assert.equal('strele',chart.anchorName());
+        },
+        'anchor from dom without id': function (chart) {
+            var div = d3.select("body").append("div").attr("class", "no-id").node();
+            chart.anchor(div);
+            assert.isFalse(dc.utils.isNumber(chart.anchorName()));
+            assert.match(chart.anchorName(),/\d+/);
         }
     },
 
