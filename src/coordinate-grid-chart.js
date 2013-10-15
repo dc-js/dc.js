@@ -318,11 +318,11 @@ dc.coordinateGridChart = function (_chart) {
 
         var axisXLab = g.selectAll("text."+X_AXIS_LABEL_CLASS);
         if (axisXLab.empty() && _chart.xAxisLabel())
-        axisXLab = g.append('text')
-            .attr("transform", "translate(" + _chart.xAxisLength() / 2 + "," + (_chart.height() - _xAxisLabelPadding) + ")")
-            .attr('class', X_AXIS_LABEL_CLASS)
-            .attr('text-anchor', 'middle')
-            .text(_chart.xAxisLabel());
+            axisXLab = g.append('text')
+                .attr("transform", "translate(" + _chart.xAxisLength() / 2 + "," + (_chart.height() - _xAxisLabelPadding) + ")")
+                .attr('class', X_AXIS_LABEL_CLASS)
+                .attr('text-anchor', 'middle')
+                .text(_chart.xAxisLabel());
         if (_chart.xAxisLabel() && axisXLab.text() != _chart.xAxisLabel())
             axisYLab.text(_chart.xAxisLabel());
 
@@ -416,11 +416,11 @@ dc.coordinateGridChart = function (_chart) {
 
         var axisYLab = g.selectAll("text."+Y_AXIS_LABEL_CLASS);
         if (axisYLab.empty() && _chart.yAxisLabel())
-        axisYLab = g.append('text')
-            .attr("transform", "translate(" + _yAxisLabelPadding + "," + _chart.yAxisHeight()/2 + "),rotate(-90)")
-            .attr('class', Y_AXIS_LABEL_CLASS)
-            .attr('text-anchor', 'middle')
-            .text(_chart.yAxisLabel());
+            axisYLab = g.append('text')
+                .attr("transform", "translate(" + _yAxisLabelPadding + "," + _chart.yAxisHeight()/2 + "),rotate(-90)")
+                .attr('class', Y_AXIS_LABEL_CLASS)
+                .attr('text-anchor', 'middle')
+                .text(_chart.yAxisLabel());
         if (_chart.yAxisLabel() && axisYLab.text() != _chart.yAxisLabel())
             axisYLab.text(_chart.yAxisLabel());
 
@@ -697,7 +697,7 @@ dc.coordinateGridChart = function (_chart) {
         _chart.redrawBrush(_g);
 
         if (_chart.brushHasNoLength(extent)) {
-          return;
+            return;
         }
 
         if (_chart.brushIsEmpty(extent)) {
@@ -734,6 +734,7 @@ dc.coordinateGridChart = function (_chart) {
     // borrowed from Crossfilter example
     _chart.resizeHandlePath = function (d) {
         var e = +(d == "e"), x = e ? 1 : -1, y = brushHeight() / 3;
+        /*jshint -W014 */
         return "M" + (0.5 * x) + "," + y
             + "A6,6 0 0 " + e + " " + (6.5 * x) + "," + (y + 6)
             + "V" + (2 * y - 6)
@@ -743,6 +744,7 @@ dc.coordinateGridChart = function (_chart) {
             + "V" + (2 * y - 8)
             + "M" + (4.5 * x) + "," + (y + 8)
             + "V" + (2 * y - 8);
+        /*jshint +W014 */
     };
 
     function getClipPathId() {
@@ -814,11 +816,12 @@ dc.coordinateGridChart = function (_chart) {
             if (_zoomOutRestrict) {
                 var origDom = _rangeChart.xOriginalDomain();
                 var newDom = [
-                  refDom[0] < origDom[0] ? refDom[0] : origDom[0],
-                  refDom[1] > origDom[1] ? refDom[1] : origDom[1]];
+                    refDom[0] < origDom[0] ? refDom[0] : origDom[0],
+                    refDom[1] > origDom[1] ? refDom[1] : origDom[1]
+                ];
                 _rangeChart.focus(newDom);
             } else {
-              _rangeChart.focus(refDom);
+                _rangeChart.focus(refDom);
             }
             _rangeChart.filter(null);
             _rangeChart.filter(refDom);

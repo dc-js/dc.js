@@ -43,10 +43,10 @@ dc.legend = function () {
                 return "translate(0," + i * legendItemHeight() + ")";
             })
             .on("mouseover", function(d){
-                    _parent.legendHighlight(d);
+                _parent.legendHighlight(d);
             })
             .on("mouseout", function (d) {
-                    _parent.legendReset(d);
+                _parent.legendReset(d);
             });
 
         itemEnter

@@ -145,9 +145,11 @@ dc.stackableChart = function (_chart) {
                     return domainSet.has(p.x);
                 };
             }
-            else test = function(p) {
-                return p.x >= xDomain[0] && p.x <= xDomain[xDomain.length-1];
-            };
+            else {
+                test = function(p) {
+                    return p.x >= xDomain[0] && p.x <= xDomain[xDomain.length-1];
+                };
+            }
             _chart.stackLayers().forEach(function (e) {
                 e.points.forEach(function (p) {
                     if (test(p))
