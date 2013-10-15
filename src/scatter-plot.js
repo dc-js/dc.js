@@ -17,14 +17,12 @@ dc.scatterPlot = function (parent, chartGroup) {
             .attr("class", "symbol")
             .attr("transform", _locator);
 
-        dc.transition(symbols, _chart.transitionDuration(), function (symbols) {
-            symbols.attr("transform", _locator)
-                .attr("r", _symbolSize);
-        });
+        dc.transition(symbols, _chart.transitionDuration())
+            .attr("transform", _locator)
+            .attr("r", _symbolSize);
 
-        dc.transition(symbols.exit(), _chart.transitionDuration(), function (symbols) {
-            symbols.attr("r", 0).remove();
-        });
+        dc.transition(symbols.exit(), _chart.transitionDuration())
+            .attr("r", 0).remove();
     };
 
     /**

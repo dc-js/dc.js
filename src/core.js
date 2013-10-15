@@ -162,7 +162,7 @@ dc.transition = function(selections, duration, callback) {
         .transition()
         .duration(duration);
 
-    if (callback instanceof Function) {
+    if (typeof(callback) === 'function') {
         callback(s);
     }
 

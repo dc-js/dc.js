@@ -58,7 +58,7 @@ suite.addBatch({
         topic: function () {
             var chart = buildChart('scatter-plot-update');
             valueDimension.filter(66);
-            chart.render();
+            chart.redraw();
             return chart;
         },
 
