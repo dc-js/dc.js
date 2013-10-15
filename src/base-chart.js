@@ -496,6 +496,7 @@ dc.baseChart = function (_chart) {
                 }  
             });
             applyFilters();
+            _chart._invokeFilteredListener(_);
         } else if (_ === null) {
             resetFilters();
         } else {
