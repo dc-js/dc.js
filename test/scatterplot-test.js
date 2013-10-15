@@ -46,7 +46,7 @@ suite.addBatch({
             assert.equal(symbol_by_index(chart, 5).attr("transform"), "translate(255.40410958904107,44)");
         },
 
-        'should generate color fill for symbols': function(chart){
+        'should generate color fill for symbols': function (chart) {
             assert.equal(symbol_by_index(chart, 0).attr("fill"), '#1f77b4');
             assert.equal(symbol_by_index(chart, 3).attr("fill"), '#1f77b4');
             assert.equal(symbol_by_index(chart, 5).attr("fill"), '#1f77b4');
@@ -68,10 +68,12 @@ suite.addBatch({
             return chart;
         },
 
+        'should remove empty groups': function (chart) {
+            assert.equal(chart.selectAll('circle.symbol').size(), 1);
+        },
+
         'should correctly place symbols': function (chart) {
-            assert.equal("translate(182.91095890410958,96)", symbol_by_index(chart, 1).attr("transform"));
-            assert.equal("translate(209.37671232876713,149)", symbol_by_index(chart, 3).attr("transform"));
-            assert.equal("translate(255.40410958904107,149)", symbol_by_index(chart, 5).attr("transform"));
+            assert.equal(symbol_by_index(chart, 0).attr("transform"), "translate(182.91095890410958,96)");
         }
     },
 

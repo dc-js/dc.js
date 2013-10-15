@@ -5533,6 +5533,8 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     var _symbolSize = 3;
 
+    _chart.transitionDuration(0); // turn off transition by default for scatterplot
+
     _chart.plotData = function () {
         var symbols = _chart.chartBodyG().selectAll("circle.symbol")
             .data(_chart.data());
@@ -5547,6 +5549,9 @@ dc.scatterPlot = function (parent, chartGroup) {
         dc.transition(symbols, _chart.transitionDuration())
             .attr("transform", _locator)
             .attr("r", _symbolSize);
+
+        dc.transition(symbols.filter(function(d){return _chart.valueAccessor()(d) == 0;}), _chart.transitionDuration())
+                    .attr("r", 0).remove(); // remove empty groups
 
         dc.transition(symbols.exit(), _chart.transitionDuration())
             .attr("r", 0).remove();
