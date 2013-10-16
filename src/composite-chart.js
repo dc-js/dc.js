@@ -126,6 +126,7 @@ dc.compositeChart = function (parent, chartGroup) {
             child.height(_chart.height());
             child.width(_chart.width());
             child.margins(_chart.margins());
+            child.title(_chart.title());
 
             if (_shareColors && child.colorAccessor() === child._layerColorAccessor)
                 child.colorCalculator(function() {return child.colors()(i);});
