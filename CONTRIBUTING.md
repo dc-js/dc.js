@@ -26,7 +26,7 @@
 
 _for maintainers_
 
-Ensure origin looks like this in `.git/confg`. The key element here is the second fetch statement
+Ensure origin looks like this in `.git/config`. The key element here is the second fetch statement
 ```
 [remote "origin"]
   url = git@github.com:NickQiZhu/dc.js.git
