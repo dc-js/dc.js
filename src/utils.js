@@ -31,8 +31,8 @@ dc.printers.filter = function (filter) {
 };
 
 dc.pluck = function(n,f) {
-    return function(d) {
-        return f ? f.call(this,d[n]) : d[n];
+    return function(d,i) {
+        return f ? f.call(this,d[n],i) : d[n];
     };
 };
 
@@ -123,7 +123,8 @@ dc.utils.GroupStack = function () {
 
     this.addNamedGroup = function (group, name, accessor) {
         var groupIndex = this.addGroup(group, accessor);
-        return _groups[groupIndex].name = name;
+        _groups[groupIndex].name = name;
+        return name;
     };
 
     this.getGroupByIndex = function (index) {
@@ -176,7 +177,7 @@ dc.utils.GroupStack = function () {
         var layers = [];
 
         for (var i = 0; i < _dataLayers.length; ++i) {
-            if (i == 0 && _hideChartGroup)
+            if (i === 0 && _hideChartGroup)
                 continue;
             if (i > 0 && _groups[i-1].hidden)
                 continue;
@@ -209,6 +210,11 @@ dc.utils.isInteger = function (n) {
 dc.utils.isNegligible = function (max) {
     return max === undefined || (max < dc.constants.NEGLIGIBLE_NUMBER && max > -dc.constants.NEGLIGIBLE_NUMBER);
 };
+
+var _idCounter = 0;
+dc.utils.uniqueId = function () {
+  return ++_idCounter;
+}
 
 dc.utils.groupMax = function (group, accessor) {
     var max = d3.max(group.all(), accessor);

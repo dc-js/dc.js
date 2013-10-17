@@ -16,8 +16,8 @@ dc.abstractBubbleChart = function (_chart) {
     _chart.renderLabel(true);
     _chart.renderTitle(false);
 
-    _chart.data(function() {
-        return _chart.group().top(Infinity);
+    _chart.data(function(group) {
+        return group.top(Infinity);
     });
 
     var _r = d3.scale.linear().domain([0, 100]);

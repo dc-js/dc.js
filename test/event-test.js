@@ -31,12 +31,14 @@ suite.addBatch({
             var times = 0;
             var i = 0;
 
+            /* jshint -W083 */
             while (i < 10) {
                 engine.trigger(function() {
                     times++;
                 }, 10);
                 i++;
             }
+            /* jshint +W083 */
 
             setTimeout(function() {
                 assert.equal(times, 1);

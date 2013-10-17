@@ -34,8 +34,17 @@ module.exports = function (grunt) {
             }
         },
         jshint: {
-            all: ['Gruntfile.js', 'src/**/*.js', 'test/**/*.js'],
-            options: { '-W014': true /*'-W041': true*/ }
+            source: {
+                src: ['src/**/*.js'],
+                options: {
+                    indent:4,
+                    ignores: ['src/banner.js','src/footer.js','src/d3.box.js']
+                }
+            },
+            testAndBuld: {
+                src: ['Gruntfile.js', 'test/**/*.js'],
+                options: { '-W041': true }
+            }
         },
         vows: {
             all: {
@@ -112,10 +121,12 @@ module.exports = function (grunt) {
         grunt.log.writeln('File "' + destFile + '" created.');
     });
 
-    grunt.registerTask('default', ['concat', 'uglify', 'sed', 'copy']);
-    grunt.registerTask('docs', ['default', 'emu', 'markdown', 'docco']);
+    grunt.registerTask('build', ['concat', 'uglify', 'sed']);
+    grunt.registerTask('docs', ['build', 'copy', 'emu', 'markdown', 'docco']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
-    grunt.registerTask('test', ['default', 'vows']);
+    grunt.registerTask('test', ['docs', 'vows']);
+    grunt.registerTask('lint', ['build', 'jshint']);
+    grunt.registerTask('default', ['build']);
 };
 
 module.exports.jsFiles = [

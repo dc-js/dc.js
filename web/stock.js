@@ -224,9 +224,9 @@ d3.csv("ndx.csv", function (data) {
                     /* (optional) by default pie chart will use group.key as it's label
                      * but you can overwrite it with a closure */
                     .label(function (d) {
-                        if (gainOrLossChart.hasFilter() && !gainOrLossChart.hasFilter(d.data.key))
-                            return d.data.key + "(0%)";
-                        return d.data.key + "(" + Math.floor(d.data.value / all.value() * 100) + "%)";
+                        if (gainOrLossChart.hasFilter() && !gainOrLossChart.hasFilter(d.key))
+                            return d.key + "(0%)";
+                        return d.key + "(" + Math.floor(d.value / all.value() * 100) + "%)";
                     }) /*
                     // (optional) whether chart should render labels, :default = true
                     .renderLabel(true)
@@ -310,9 +310,9 @@ d3.csv("ndx.csv", function (data) {
                         return d.value;
                     })
                     .title(function (d) {
-                        var value = d.data.value.avg ? d.data.value.avg : d.data.value;
+                        var value = d.value.avg ? d.value.avg : d.value;
                         if (isNaN(value)) value = 0;
-                        return dateFormat(d.data.key) + "\n" + numberFormat(value);
+                        return dateFormat(d.key) + "\n" + numberFormat(value);
                     });
 
             volumeChart.width(990)

@@ -688,14 +688,7 @@ var pieChartValue = dc.pieChart("#pie-chart-value")
         .radius(100)
         .innerRadius(40)
         .dimension(valueDimension)
-        .group(valueGroup)
-//        .slicesCap(3)
-        .label(function (d) {
-            return d.data.key;
-        })
-        .title(function (d) {
-            return d.data.key + ": " + d.data.value;
-        });
+        .group(valueGroup);
 
 var pieChartCountry = dc.pieChart("#pie-chart-country")
         .width(250)
@@ -912,7 +905,7 @@ scatterPlot.width(500)
             .dimension(dateDimension)
             .group(dateIdSumGroup)
             .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
-            .xUnits(d3.time.days);
+            .symbolSize(2);
 
 
 dc.dataCount(".dc-data-count")

@@ -11,7 +11,7 @@ dc.colorChart = function(_chart) {
     var _colorAccessor = function(d) { return _chart.keyAccessor()(d); };
 
     var _colorCalculator = function(value) {
-       return _colors(value,_chart);
+        return _colors(value,_chart);
     };
 
     /**
@@ -34,7 +34,7 @@ dc.colorChart = function(_chart) {
     **/
     _chart.colors = function(_) {
         if (!arguments.length) return _colors;
-        if (_ instanceof Array) _colors = d3.scale.quantize().range(_); // depricated legacy support
+        if (_ instanceof Array) _colors = d3.scale.quantize().range(_); // depricated legacy support, note: this fails for ordinal domains
         else _colors = _;
         return _chart;
     };
@@ -79,7 +79,7 @@ dc.colorChart = function(_chart) {
 
     /**
     #### .colorDomain([domain])
-    Set or get the current domain for the color mapping function. The domain must be supplied as an arrary.
+    Set or get the current domain for the color mapping function. The domain must be supplied as an array.
 
     Note: previously this method accepted a callback function. Instead you may use a custom scale set by `.colors`.
 
@@ -103,7 +103,7 @@ dc.colorChart = function(_chart) {
 
     /**
     #### .getColor(d [, i])
-    Get the color for the datum d and counter i. This is used internaly by charts to retreive a color.
+    Get the color for the datum d and counter i. This is used internaly by charts to retrieve a color.
 
     **/
     _chart.getColor = function(d, i){
