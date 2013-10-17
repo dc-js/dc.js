@@ -8,14 +8,13 @@
 <body>
 
 <div id="test"></div>
+<button onclick="button1()">1</button>
+<button onclick="button2()">2</button>
+<button onclick="button3()">3</button>
 
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
-
-<button onclick="button1()">1</button>
-<button onclick="button2()">2</button>
-<button onclick="button3()">3</button>
 <script type="text/javascript">
 
 var chart = dc.seriesChart("#test");
@@ -25,7 +24,7 @@ d3.csv("morley.csv", function(error, experiments) {
 
   ndx = crossfilter(experiments);
   runDimension = ndx.dimension(function(d) {return [+d.Expt, +d.Run]; });
-  runGroup = runDimension.group().reduceSum(function(d) { return d.Speed; });
+  runGroup = runDimension.group().reduceSum(function(d) { return +d.Speed; });
 
   chart
     .width(768)

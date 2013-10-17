@@ -8,18 +8,16 @@ dc.seriesChart = function (parent, chartGroup) {
     var _chartFunction = dc.lineChart;
     var _seriesAccessor;
     var _seriesSort = d3.ascending;
-    var _valueSort = sort_key_pair;
+    var _valueSort = keySort;
 
     _chart._mandatoryAttributes().push('seriesAccessor','chart');
     _chart.shareColors(true);
 
-    function sort_key_pair(a,b) {
-        var ret = d3.ascending(a.key[0], b.key[0]) || d3.ascending(a.key[1], b.key[1]);
-        return ret;
+    function keySort(a,b) {
+        return d3.ascending(_chart.keyAccessor()(a), _chart.keyAccessor()(b));
     }
 
-
-    dc.override(_chart, "_preprocessData", function () {
+    _chart._preprocessData = function () {
         var keep = [];
         var children_changed;
         var nester = d3.nest().key(_seriesAccessor);
@@ -47,20 +45,18 @@ dc.seriesChart = function (parent, chartGroup) {
         Object.keys(_charts)
             .filter(function(c) {return keep.indexOf(c) === -1;})
             .forEach(function(c) {
-                if(_charts[c].g()) {
-                    _charts[c].g().remove();
-                    delete _charts[c];
-                    children_changed = true;
-                }
+                clearChart(c);
+                children_changed = true;
             });
         _chart._compose(children);
         if(children_changed && _chart.legend())
             _chart.legend().render();
-        _chart.__preprocessData();
-    });
+    };
 
     function clearChart(c) {
-        return _charts[c].resetSvg();
+        if(_charts[c].g())
+          _charts[c].g().remove();
+        delete _charts[c];
     }
 
     function resetChildren() {
