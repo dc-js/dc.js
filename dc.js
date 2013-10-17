@@ -1174,7 +1174,17 @@ dc.baseChart = function (_chart) {
     _chart.filter = function (_) {
         if (!arguments.length) return _filters.length > 0 ? _filters[0] : null;
 
-        if (_ === null) {
+        if (_ instanceof Array && _[0] instanceof Array) {
+            _[0].forEach(function(d){
+                if (_chart.hasFilter(d)) {
+                    _filters.splice(_filters.indexOf(d), 1);
+                } else {
+                    _filters.push(d);
+                }
+            });
+            applyFilters();
+            _chart._invokeFilteredListener(_);
+        } else if (_ === null) {
             resetFilters();
         } else {
             if (_chart.hasFilter(_))
@@ -5516,9 +5526,7 @@ dc.capped = function (_chart) {
 
     dc.override(_chart, "onClick", function (d) {
         if (d.others)
-            d.others.forEach(function(f) {
-                _chart.filter(f);
-            });
+            _chart.filter([d.others]);
         _chart._onClick(d);
     });
 
