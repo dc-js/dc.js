@@ -183,7 +183,7 @@ dc.transition = function(selections, duration, callback) {
         .transition()
         .duration(duration);
 
-    if (callback instanceof Function) {
+    if (typeof(callback) === 'function') {
         callback(s);
     }
 
@@ -818,7 +818,7 @@ dc.baseChart = function (_chart) {
     };
 
     _chart.data = function(d) {
-        if (!arguments.length) return _data(_group);
+        if (!arguments.length) return _data.call(_chart,_group);
         _data = d3.functor(d);
         _chart.expireCache();
         return _chart;
@@ -1174,7 +1174,17 @@ dc.baseChart = function (_chart) {
     _chart.filter = function (_) {
         if (!arguments.length) return _filters.length > 0 ? _filters[0] : null;
 
-        if (_ === null) {
+        if (_ instanceof Array && _[0] instanceof Array) {
+            _[0].forEach(function(d){
+                if (_chart.hasFilter(d)) {
+                    _filters.splice(_filters.indexOf(d), 1);
+                } else {
+                    _filters.push(d);
+                }
+            });
+            applyFilters();
+            _chart._invokeFilteredListener(_);
+        } else if (_ === null) {
             resetFilters();
         } else {
             if (_chart.hasFilter(_))
@@ -2295,12 +2305,15 @@ dc.coordinateGridChart = function (_chart) {
             .attr("height", _chart.yAxisHeight() + padding);
     }
 
+    _chart._preprocessData = function() {};
+
     _chart.doRender = function () {
         _chart.resetSvg();
 
         _chart._generateG();
 
         generateClipPath();
+        _chart._preprocessData();
         prepareXAxis(_chart.g());
         prepareYAxis(_chart.g());
 
@@ -2352,6 +2365,7 @@ dc.coordinateGridChart = function (_chart) {
     }
 
     _chart.doRedraw = function () {
+        _chart._preprocessData();
         prepareXAxis(_chart.g());
         prepareYAxis(_chart.g());
 
@@ -2524,7 +2538,7 @@ dc.colorChart = function(_chart) {
 
     /**
     #### .colorDomain([domain])
-    Set or get the current domain for the color mapping function. The domain must be supplied as an arrary.
+    Set or get the current domain for the color mapping function. The domain must be supplied as an array.
 
     Note: previously this method accepted a callback function. Instead you may use a custom scale set by `.colors`.
 
@@ -2548,7 +2562,7 @@ dc.colorChart = function(_chart) {
 
     /**
     #### .getColor(d [, i])
-    Get the color for the datum d and counter i. This is used internaly by charts to retreive a color.
+    Get the color for the datum d and counter i. This is used internaly by charts to retrieve a color.
 
     **/
     _chart.getColor = function(d, i){
@@ -4410,6 +4424,7 @@ dc.compositeChart = function (parent, chartGroup) {
             child.height(_chart.height());
             child.width(_chart.width());
             child.margins(_chart.margins());
+            child.title(_chart.title());
 
             if (_shareColors && child.colorAccessor() === child._layerColorAccessor)
                 child.colorCalculator(function() {return child.colors()(i);});
@@ -4524,38 +4539,61 @@ dc.seriesChart = function (parent, chartGroup) {
     var _charts = {};
     var _chartFunction = dc.lineChart;
     var _seriesAccessor;
+    var _seriesSort = d3.ascending;
+    var _valueSort = keySort;
 
     _chart._mandatoryAttributes().push('seriesAccessor','chart');
     _chart.shareColors(true);
 
-    dc.override(_chart, "plotData", function () {
-        dc.deregisterAllCharts(_chart.anchorName());
+    function keySort(a,b) {
+        return d3.ascending(_chart.keyAccessor()(a), _chart.keyAccessor()(b));
+    }
+
+    _chart._preprocessData = function () {
         var keep = [];
-        var children = d3.nest().key(_seriesAccessor).entries(_chart.data())
-            .map(function(sub,i) {
-                var subChart = _charts[sub.key] || _chartFunction(_chart,_chart.anchorName());
+        var children_changed;
+        var nester = d3.nest().key(_seriesAccessor);
+        if(_seriesSort)
+            nester.sortKeys(_seriesSort);
+        if(_valueSort)
+            nester.sortValues(_valueSort);
+        var nesting = nester.entries(_chart.data());
+        var children =
+            nesting.map(function(sub,i) {
+                var subChart = _charts[sub.key] || _chartFunction(_chart);
+                if(!_charts[sub.key])
+                    children_changed = true;
                 _charts[sub.key] = subChart;
                 keep.push(sub.key);
                 return subChart
+                    .dimension(_chart.dimension())
                     .group({all:d3.functor(sub.values)}, sub.key)
                     .keyAccessor(_chart.keyAccessor())
                     .valueAccessor(_chart.valueAccessor())
                     .colorCalculator(function() {return subChart.colors()(sub.key);});
             });
+        // this works around the fact compositeChart doesn't really
+        // have a removal interface
         Object.keys(_charts)
             .filter(function(c) {return keep.indexOf(c) === -1;})
-            .map(function(c) {return _charts[c].resetSvg();});
+            .forEach(function(c) {
+                clearChart(c);
+                children_changed = true;
+            });
         _chart._compose(children);
-        _chart._plotData();
-    });
+        if(children_changed && _chart.legend())
+            _chart.legend().render();
+    };
 
     function clearChart(c) {
-        return _charts[c].resetSvg();
+        if(_charts[c].g())
+          _charts[c].g().remove();
+        delete _charts[c];
     }
 
     function resetChildren() {
         Object.keys(_charts).map(clearChart);
-        _charts = [];
+        _charts = {};
     }
 
     _chart.chart = function(_) {
@@ -4568,6 +4606,20 @@ dc.seriesChart = function (parent, chartGroup) {
     _chart.seriesAccessor = function(_) {
         if (!arguments.length) return _seriesAccessor;
         _seriesAccessor = _;
+        resetChildren();
+        return _chart;
+    };
+
+    _chart.seriesSort = function(_) {
+        if (!arguments.length) return _seriesSort;
+        _seriesSort = _;
+        resetChildren();
+        return _chart;
+    };
+
+    _chart.valueSort = function(_) {
+        if (!arguments.length) return _valueSort;
+        _valueSort = _;
         resetChildren();
         return _chart;
     };
@@ -5340,6 +5392,7 @@ dc.legend = function () {
     };
 
     _legend.render = function () {
+        _parent.svg().select("g.dc-legend").remove();
         _g = _parent.svg().append("g")
             .attr("class", "dc-legend")
             .attr("transform", "translate(" + _x + "," + _y + ")");
@@ -5515,9 +5568,7 @@ dc.capped = function (_chart) {
 
     dc.override(_chart, "onClick", function (d) {
         if (d.others)
-            d.others.forEach(function(f) {
-                _chart.filter(f);
-            });
+            _chart.filter([d.others]);
         _chart._onClick(d);
     });
 
@@ -5527,16 +5578,45 @@ dc.capped = function (_chart) {
 dc.scatterPlot = function (parent, chartGroup) {
     var _chart = dc.coordinateGridChart({});
 
-    _chart.plotData = function(){
-        _chart.chartBodyG().selectAll("path.dc-symbol")
-                .data(_chart.data())
+    var _locator = function (d) {
+        return "translate(" + _chart.x()(_chart.keyAccessor()(d)) + "," + _chart.y()(_chart.valueAccessor()(d)) + ")";
+    };
+
+    var _symbolSize = 3;
+
+    _chart.transitionDuration(0); // turn off transition by default for scatterplot
+
+    _chart.plotData = function () {
+        var symbols = _chart.chartBodyG().selectAll("circle.symbol")
+            .data(_chart.data());
+
+        symbols
             .enter()
-            .append("path")
-            .attr("class", "dc-symbol")
-            .attr("transform", function(d){
-                return "translate("+_chart.x()(_chart.keyAccessor()(d))+","+_chart.y()(_chart.valueAccessor()(d))+")";
-            })
-            .attr("d", d3.svg.symbol());
+        .append("circle")
+            .attr("class", "symbol")
+            .attr("fill", _chart.getColor(0))
+            .attr("transform", _locator);
+
+        dc.transition(symbols, _chart.transitionDuration())
+            .attr("transform", _locator)
+            .attr("r", _symbolSize);
+
+        dc.transition(symbols.filter(function(d){return _chart.valueAccessor()(d) == 0;}), _chart.transitionDuration())
+                    .attr("r", 0).remove(); // remove empty groups
+
+        dc.transition(symbols.exit(), _chart.transitionDuration())
+            .attr("r", 0).remove();
+    };
+
+    /**
+    #### .symbolSize([radius])
+    Set or get radius for symbols, default: 3.
+
+    **/
+    _chart.symbolSize = function(s){
+        if(!arguments.length) return _symbolSize;
+        _symbolSize = s;
+        return _chart;
     };
 
     return _chart.anchor(parent, chartGroup);

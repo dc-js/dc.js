@@ -36,11 +36,11 @@ d3.csv("morley.csv", function(error, experiments) {
     .xAxisLabel("Run")
     .elasticY(true)
     .dimension(runDimension)
-    .group(runGroup)
+    .data(experiments)
     .mouseZoomable(true)
-    .seriesAccessor(function(d) {return "Expt: " + d.key[0];})
-    .keyAccessor(function(d) {return +d.key[1];})
-    .valueAccessor(function(d) {return +d.value - 500;})
+    .seriesAccessor(function(d) {return "Expt: " + d.Expt;})
+    .keyAccessor(function(d) {return +d.Run;})
+    .valueAccessor(function(d) {return +d.Speed - 500;})
     .legend(dc.legend().x(700).y(300).itemHeight(13).gap(5));
   chart.yAxis().tickFormat(function(d) {return d3.format(',d')(d+299500);});
   chart.margins().left += 40;
