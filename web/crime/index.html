@@ -504,9 +504,9 @@
                 .brushOn(false)
                 .legend(dc.legend().x(250).y(10))
                 .title(function(d){
-                    return d.data.key
-                            + "\nViolent crime per 100k population: " + Math.round(d.data.value.violentCrimeAvg)
-                            + "\nNon-Violent crime per 100k population: " + Math.round(d.data.value.nonViolentCrimeAvg);
+                    return d.key
+                            + "\nViolent crime per 100k population: " + Math.round(d.value.violentCrimeAvg)
+                            + "\nNon-Violent crime per 100k population: " + Math.round(d.value.nonViolentCrimeAvg);
                 })
                 .xAxis().ticks(5).tickFormat(d3.format("d"));
 
@@ -525,7 +525,7 @@
                 .brushOn(true)
                 .title(function(d){
                     return d.key
-                            + "\nHomicide incidents: " + Math.round(d.data.value.homicide);
+                            + "\nHomicide incidents: " + Math.round(d.value.homicide);
                 })
                 .xAxis().ticks(5).tickFormat(d3.format("d"));
 
