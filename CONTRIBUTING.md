@@ -10,6 +10,7 @@
 * Commit your changes to `src/*` and `test/*` but not any build
   artifacts
 * Submit a pull request
+* If you merge master or another branch into your patchset, please rebase against master.
 * The DC maintainer team will review and build the artifacts when
   merging
 
