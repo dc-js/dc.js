@@ -132,7 +132,7 @@ dc.baseChart = function (_chart) {
     };
 
     _chart.data = function(d) {
-        if (!arguments.length) return _data(_group);
+        if (!arguments.length) return _data.call(_chart,_group);
         _data = d3.functor(d);
         _chart.expireCache();
         return _chart;
