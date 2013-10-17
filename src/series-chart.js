@@ -28,7 +28,7 @@ dc.seriesChart = function (parent, chartGroup) {
         var nesting = nester.entries(_chart.data());
         var children =
             nesting.map(function(sub,i) {
-                var subChart = _charts[sub.key] || _chartFunction(_chart);
+                var subChart = _charts[sub.key] || _chartFunction.call(_chart,_chart,chartGroup,sub.key,i);
                 if(!_charts[sub.key])
                     children_changed = true;
                 _charts[sub.key] = subChart;
