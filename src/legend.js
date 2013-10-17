@@ -30,6 +30,7 @@ dc.legend = function () {
     };
 
     _legend.render = function () {
+        _parent.svg().select("g.dc-legend").remove();
         _g = _parent.svg().append("g")
             .attr("class", "dc-legend")
             .attr("transform", "translate(" + _x + "," + _y + ")");
