@@ -11,11 +11,19 @@ dc.seriesChart = function (parent, chartGroup) {
     _chart._mandatoryAttributes().push('seriesAccessor','chart');
     _chart.shareColors(true);
 
+    function sort_key_pair(a,b) {
+        var ret = d3.ascending(a.key[0], b.key[0]) || d3.ascending(a.key[1], b.key[1]);
+        return ret;
+    }
+
     dc.override(_chart, "doRender", function () {
         dc.deregisterAllCharts(_chart.anchorName());
         var keep = [];
-        var children = d3.nest().key(_seriesAccessor).entries(_chart.data())
-            .map(function(sub,i) {
+        var nesting = d3.nest().key(_seriesAccessor)
+                .sortKeys(d3.ascending).sortValues(sort_key_pair)
+                .entries(_chart.data());
+        var children =
+            nesting.map(function(sub,i) {
                 var subChart = _charts[sub.key] || _chartFunction(_chart,_chart.anchorName());
                 _charts[sub.key] = subChart;
                 keep.push(sub.key);
