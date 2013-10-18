@@ -37,18 +37,17 @@ Ensure origin looks like this in `.git/config`. The key element here is the seco
 Run these commands (or their approximation):
 ```
 # clean master branch
+git stash
+
+# double check your aren't going to blow away local commits
 git fetch origin
 git checkout master
-git reset --hard origin/master
+git diff origin/master
 
-# merge
-git merge --no-ff origin/pr/$1 -m "Merge pull request #$1"
+# Merge - subsitute the PR number for $PR. Warning this runs git reset --hard, ensure you are ready
+grunt merge:$PR
 
-# build 
-grunt test docs
-
-# add build artifacts to merge commit
-git commit --amend --no-edit
+# manually verify the changes and review the demos/examples
 
 # deploy
 git push origin master
