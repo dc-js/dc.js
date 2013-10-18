@@ -1357,7 +1357,7 @@ dc.baseChart = function (_chart) {
 
     /**
     #### .title([titleFunction])
-    Set or get the title function. Chart class will use this function to render svg title(usually interrupted by browser
+    Set or get the title function. Chart class will use this function to render svg title(usually interpreted by browser
     as tooltips) for each child element in the chart, i.e. a slice in a pie chart or a bubble in a bubble chart. Almost
     every chart supports title function however in grid coordinate chart you need to turn off brush in order to use title
     otherwise the brush layer will block tooltip trigger.
