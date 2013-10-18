@@ -42,7 +42,7 @@ git checkout master
 git reset --hard origin/master
 
 # merge
-git merge -no-ff origin/pr/$1 -M "Merge pull request #$1"
+git merge --no-ff origin/pr/$1 -m "Merge pull request #$1"
 
 # build 
 grunt test docs
