@@ -213,8 +213,8 @@ dc.utils.isNegligible = function (max) {
 
 var _idCounter = 0;
 dc.utils.uniqueId = function () {
-  return ++_idCounter;
-}
+    return ++_idCounter;
+};
 
 dc.utils.groupMax = function (group, accessor) {
     var max = d3.max(group.all(), accessor);

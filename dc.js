@@ -489,8 +489,8 @@ dc.utils.isNegligible = function (max) {
 
 var _idCounter = 0;
 dc.utils.uniqueId = function () {
-  return ++_idCounter;
-}
+    return ++_idCounter;
+};
 
 dc.utils.groupMax = function (group, accessor) {
     var max = d3.max(group.all(), accessor);
@@ -718,7 +718,7 @@ dc.baseChart = function (_chart) {
     var _renderLabel = false;
 
     var _title = function (d) {
-        _chart.keyAccessor()(d) + ": " + _chart.valueAccessor()(d);
+        return _chart.keyAccessor()(d) + ": " + _chart.valueAccessor()(d);
     };
     var _renderTitle = false;
 
@@ -4587,7 +4587,7 @@ dc.seriesChart = function (parent, chartGroup) {
 
     function clearChart(c) {
         if(_charts[c].g())
-          _charts[c].g().remove();
+            _charts[c].g().remove();
         delete _charts[c];
     }
 
@@ -5601,7 +5601,7 @@ dc.scatterPlot = function (parent, chartGroup) {
             .attr("transform", _locator)
             .attr("r", _symbolSize);
 
-        dc.transition(symbols.filter(function(d){return _chart.valueAccessor()(d) == 0;}), _chart.transitionDuration())
+        dc.transition(symbols.filter(function(d){return _chart.valueAccessor()(d) === 0;}), _chart.transitionDuration())
                     .attr("r", 0).remove(); // remove empty groups
 
         dc.transition(symbols.exit(), _chart.transitionDuration())

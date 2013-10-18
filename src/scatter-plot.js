@@ -24,7 +24,7 @@ dc.scatterPlot = function (parent, chartGroup) {
             .attr("transform", _locator)
             .attr("r", _symbolSize);
 
-        dc.transition(symbols.filter(function(d){return _chart.valueAccessor()(d) == 0;}), _chart.transitionDuration())
+        dc.transition(symbols.filter(function(d){return _chart.valueAccessor()(d) === 0;}), _chart.transitionDuration())
                     .attr("r", 0).remove(); // remove empty groups
 
         dc.transition(symbols.exit(), _chart.transitionDuration())

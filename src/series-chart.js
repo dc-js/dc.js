@@ -55,7 +55,7 @@ dc.seriesChart = function (parent, chartGroup) {
 
     function clearChart(c) {
         if(_charts[c].g())
-          _charts[c].g().remove();
+            _charts[c].g().remove();
         delete _charts[c];
     }
 
