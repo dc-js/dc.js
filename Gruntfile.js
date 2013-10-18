@@ -97,6 +97,23 @@ module.exports = function (grunt) {
                 message: "Synced from from master branch."
             },
             src: ['**']
+        },
+        shell: {
+            merge: {
+                command: function(pr) {
+                    return ['git fetch origin',
+                            'git checkout master',
+                            'git reset --hard origin/master',
+                            'git fetch origin',
+                            'git merge --no-ff origin/pr/'+pr+' -m "Merge pull request #'+pr+'"'
+                    ].join('&&');
+                },
+                options: { stdout: true, failOnError: true }
+            },
+            amend: {
+                command: 'git commit -a --amend --no-edit',
+                options: { stdout: true, failOnError: true }
+            }
         }
     });
 
@@ -109,9 +126,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-gh-pages');
     grunt.loadNpmTasks('grunt-markdown');
     grunt.loadNpmTasks('grunt-sed');
+    grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-vows');
     grunt.registerMultiTask('emu', 'Documentation extraction by emu.', function() {
-      console.log(this.files[0].src, this.files[0].dest);
         var emu = require('emu'),
             fs = require('fs'),
             srcFile = this.files[0].src[0],
@@ -120,7 +137,10 @@ module.exports = function (grunt) {
         grunt.file.write(destFile, emu.getComments(source));
         grunt.log.writeln('File "' + destFile + '" created.');
     });
-
+    grunt.registerTask('merge', 'Merge a github pull request.', function(pr) {
+        grunt.log.writeln('Merge Github Pull Request #' + pr);
+        grunt.task.run(['shell:merge:'+pr,'test','shell:amend'])
+    });
     grunt.registerTask('build', ['concat', 'uglify', 'sed']);
     grunt.registerTask('docs', ['build', 'copy', 'emu', 'markdown', 'docco']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
