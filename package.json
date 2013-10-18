@@ -45,7 +45,8 @@
     "uglify-js": "2.4.x",
     "vows": "0.7.x",
     "grunt-docco2": "~0.1.5",
-    "grunt-cli": "~0.1.9"
+    "grunt-cli": "~0.1.9",
+    "grunt-shell": "~0.5.0"
   },
   "scripts": {
     "test": "grunt test"
