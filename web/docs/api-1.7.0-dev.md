@@ -911,6 +911,10 @@ will be shared with composed children. Additionally if the child chart implement
 Stackable and has not set a custom .colorAccesor, then it will generate a color
 specific to its order in the composition.
 
+#### .shareTitle([[boolean])
+Get or set title sharing for the chart. If set, the `.title()` value from this chart
+will be shared with composed children. Default value is true.
+
 ## <a name="series-chart" href="#Series-chart">#</a> Series Chart [Concrete]
 
 ## <a name="geo-choropleth-chart" href="#geo-choropleth-chart">#</a> Geo Choropleth Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)

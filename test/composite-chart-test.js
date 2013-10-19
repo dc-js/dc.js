@@ -23,10 +23,59 @@ function buildChart(id, xdomain) {
         .transitionDuration(0)
         .xUnits(d3.time.days)
         .compose([
-        dc.barChart(chart).centerBar(true).group(dateValueSumGroup).gap(1),
-        dc.lineChart(chart).stack(dateValueSumGroup).stack(dateValueSumGroup),
-        dc.lineChart(chart).group(dateGroup)
-    ]);
+            dc.barChart(chart).centerBar(true).group(dateValueSumGroup).gap(1),
+            dc.lineChart(chart).stack(dateValueSumGroup).stack(dateValueSumGroup),
+            dc.lineChart(chart).group(dateGroup)
+        ]);
+    chart.render();
+    return chart;
+}
+
+function buildSharedChart(id, xdomain) {
+    if(xdomain === undefined)
+        xdomain = [new Date(2012, 4, 25), new Date(2012, 7, 10)];
+
+    var dimension = statusGroup;
+    var group = statusMultiGroup;
+    var numberFormat = d3.format("d");
+
+    d3.select("body").append("div").attr("id", id);
+    var chart = dc.compositeChart("#" + id);
+    chart
+        .dimension(dimension)
+        .width(500)
+        .height(180)
+        .x(d3.time.scale().domain(xdomain))
+        .transitionDuration(0)
+        .xUnits(d3.time.days)
+
+        .legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
+        .brushOn(false)
+        .shareTitle(false)
+
+        .compose([
+            dc.lineChart(chart)
+                .group(group, "Series 1")
+                .valueAccessor(function (d) {
+                    return d.value.count;
+                })
+                .title(function (d) {
+                    var value = d.value.count;
+                    if (isNaN(value)) value = 0;
+                    return "Count: " + numberFormat(value);
+                }),
+            dc.lineChart(chart)
+                .group(group, "Series 2")
+                .valueAccessor(function (d) {
+                    return d.value.value;
+                })
+                .title(function (d) {
+                    var value = d.value.value;
+                    if (isNaN(value)) value = 0;
+                    return "Value: " + numberFormat(value);
+                })
+        ]);
+
     chart.render();
     return chart;
 }
@@ -330,5 +379,22 @@ suite.addBatch({'clip path':{
         resetBody();
     }
 }});
+
+suite.addBatch({
+    'sub charts tooltip when one crossfilter group is shared between 2+ sub charts': {
+        topic: function() {
+            var chart = buildSharedChart("composite-shared-chart");
+            return chart;
+        },
+        'tooltip should be correct': function(chart) {
+            assert.equal(chart.select(".sub._0 .dc-tooltip._0 .dot title").text(), "Count: 5");
+            assert.equal(chart.select(".sub._1 .dc-tooltip._0 .dot title").text(), "Value: 220");
+        },
+        teardown: function(topic) {
+            resetAllFilters();
+            resetBody();
+        }
+    }
+});
 
 suite.export(module);
