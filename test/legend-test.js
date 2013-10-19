@@ -37,6 +37,43 @@ function buildLineChart(id, xdomain) {
     return chart;
 }
 
+function buildCompositeChart(id, xdomain) {
+    if(xdomain === undefined)
+        xdomain = [new Date(2012, 0, 1), new Date(2012, 11, 31)];
+
+    var dimension = statusGroup;
+    var group = statusMultiGroup;
+
+    d3.select("body").append("div").attr("id", id);
+    var chart = dc.compositeChart("#" + id);
+    chart
+        .dimension(dimension)
+        .width(500)
+        .height(180)
+        .x(d3.time.scale().domain(xdomain))
+        .transitionDuration(0)
+        .xUnits(d3.time.days)
+
+        .legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
+        .brushOn(false)
+
+        .compose([
+            dc.lineChart(chart)
+                .group(group, "Series 1")
+                .valueAccessor(function (d) {
+                    return d.value.count;
+                }),
+            dc.lineChart(chart)
+                .group(group, "Series 2")
+                .valueAccessor(function (d) {
+                    return d.value.value;
+                })
+        ]);
+
+    chart.render();
+    return chart;
+}
+
 function legend(chart) {
     return chart.select("g.dc-legend");
 }
@@ -93,6 +130,22 @@ suite.addBatch({
             assert.equal("Id Sum", d3.select(legendLabels(chart)[0][0]).text());
             assert.equal("Value Sum", d3.select(legendLabels(chart)[0][1]).text());
             assert.equal("Fixed", d3.select(legendLabels(chart)[0][2]).text());
+        },
+        teardown: function (topic) {
+            resetAllFilters();
+            resetBody();
+        }
+    }
+});
+
+suite.addBatch({
+    'composite chart legend when one crossfilter group is shared between 2+ sub charts': {
+        topic: function () {
+            return buildCompositeChart("legend-composite-chart");
+        },
+        'should generate legend labels correctly': function (chart) {
+            assert.equal("Series 1", d3.select(legendLabels(chart)[0][0]).text());
+            assert.equal("Series 2", d3.select(legendLabels(chart)[0][1]).text());
         },
         teardown: function (topic) {
             resetAllFilters();
