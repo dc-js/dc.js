@@ -162,7 +162,7 @@ dc.baseChart = function (_chart) {
     //    chart (in referenced by multiple charts) ->
     //        array of accessors, array of names
     function groupName(chart, g, accessor) {
-        var c = chart.anchor(),
+        var c = chart.chartID(),
             k = '__names__';
         if (!accessor || accessor == chart.valueAccessor())
             accessor = "default";
