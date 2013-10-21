@@ -679,22 +679,10 @@ dc.coordinateGridChart = function (_chart) {
         return _brush.empty() || !extent || extent[1] <= extent[0];
     };
 
-    _chart.brushHasNoLength = function(extent) {
-        if (extent[0] instanceof Date && extent[1] instanceof Date) {
-            return extent[0].getTime() == extent[1].getTime();
-        } else {
-            return extent[0] == extent[1];
-        }
-    };
-
     _chart._brushing = function() {
         var extent = _chart.extendBrush();
 
         _chart.redrawBrush(_g);
-
-        if (_chart.brushHasNoLength(extent)) {
-            return;
-        }
 
         if (_chart.brushIsEmpty(extent)) {
             dc.events.trigger(function () {

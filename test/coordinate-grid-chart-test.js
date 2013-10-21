@@ -35,7 +35,7 @@ suite.addBatch({
 
         'should not trigger a filter event': function(chart) {
             chart._brushing();
-            assert.isTrue(chart.filter.notCalled);
+            assert.isTrue(chart.filter.calledWith(null));
         }
     }
 });
