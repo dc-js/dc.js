@@ -24,8 +24,6 @@ d3 = require("d3");
 crossfilter = require("crossfilter");
 sinon = require("sinon");
 
-$ = jQuery = require("jquery");
-
 require("../dc");
 
 require("./env-data");
