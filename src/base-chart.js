@@ -32,7 +32,7 @@ dc.baseChart = function (_chart) {
     var _renderLabel = false;
 
     var _title = function (d) {
-        _chart.keyAccessor()(d) + ": " + _chart.valueAccessor()(d);
+        return _chart.keyAccessor()(d) + ": " + _chart.valueAccessor()(d);
     };
     var _renderTitle = false;
 
@@ -132,7 +132,7 @@ dc.baseChart = function (_chart) {
     };
 
     _chart.data = function(d) {
-        if (!arguments.length) return _data(_group);
+        if (!arguments.length) return _data.call(_chart,_group);
         _data = d3.functor(d);
         _chart.expireCache();
         return _chart;
@@ -488,7 +488,17 @@ dc.baseChart = function (_chart) {
     _chart.filter = function (_) {
         if (!arguments.length) return _filters.length > 0 ? _filters[0] : null;
 
-        if (_ === null) {
+        if (_ instanceof Array && _[0] instanceof Array) {
+            _[0].forEach(function(d){
+                if (_chart.hasFilter(d)) {
+                    _filters.splice(_filters.indexOf(d), 1);
+                } else {
+                    _filters.push(d);
+                }
+            });
+            applyFilters();
+            _chart._invokeFilteredListener(_);
+        } else if (_ === null) {
             resetFilters();
         } else {
             if (_chart.hasFilter(_))
@@ -661,7 +671,7 @@ dc.baseChart = function (_chart) {
 
     /**
     #### .title([titleFunction])
-    Set or get the title function. Chart class will use this function to render svg title(usually interrupted by browser
+    Set or get the title function. Chart class will use this function to render svg title(usually interpreted by browser
     as tooltips) for each child element in the chart, i.e. a slice in a pie chart or a bubble in a bubble chart. Almost
     every chart supports title function however in grid coordinate chart you need to turn off brush in order to use title
     otherwise the brush layer will block tooltip trigger.

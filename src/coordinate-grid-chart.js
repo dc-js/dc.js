@@ -760,12 +760,15 @@ dc.coordinateGridChart = function (_chart) {
             .attr("height", _chart.yAxisHeight() + padding);
     }
 
+    _chart._preprocessData = function() {};
+
     _chart.doRender = function () {
         _chart.resetSvg();
 
         _chart._generateG();
 
         generateClipPath();
+        _chart._preprocessData();
         prepareXAxis(_chart.g());
         prepareYAxis(_chart.g());
 
@@ -817,6 +820,7 @@ dc.coordinateGridChart = function (_chart) {
     }
 
     _chart.doRedraw = function () {
+        _chart._preprocessData();
         prepareXAxis(_chart.g());
         prepareYAxis(_chart.g());
 

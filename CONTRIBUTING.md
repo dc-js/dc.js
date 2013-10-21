@@ -10,6 +10,7 @@
 * Commit your changes to `src/*` and `test/*` but not any build
   artifacts
 * Submit a pull request
+* If you merge master or another branch into your patchset, please rebase against master.
 * The DC maintainer team will review and build the artifacts when
   merging
 
@@ -25,7 +26,7 @@
 
 _for maintainers_
 
-Ensure origin looks like this in `.git/confg`. The key element here is the second fetch statement
+Ensure origin looks like this in `.git/config`. The key element here is the second fetch statement
 ```
 [remote "origin"]
   url = git@github.com:NickQiZhu/dc.js.git
@@ -36,18 +37,17 @@ Ensure origin looks like this in `.git/confg`. The key element here is the secon
 Run these commands (or their approximation):
 ```
 # clean master branch
+git stash
+
+# double check your aren't going to blow away local commits
 git fetch origin
 git checkout master
-git reset --hard origin/master
+git diff origin/master
 
-# merge
-git merge -no-ff origin/pr/$1 -M "Merge pull request #$1"
+# Merge - subsitute the PR number for $PR. Warning this runs git reset --hard, ensure you are ready
+grunt merge:$PR
 
-# build 
-grunt test docs
-
-# add build artifacts to merge commit
-git commit --amend --no-edit
+# manually verify the changes and review the demos/examples
 
 # deploy
 git push origin master
