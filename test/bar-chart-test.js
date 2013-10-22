@@ -378,7 +378,7 @@ suite.addBatch({'stacked': {
         chart.render();
         return chart;
     },
-    'y axis domain should encampass all groups in stack': function (chart) {
+    'y axis domain should encompass all groups in stack': function (chart) {
         var yDomain = chart.y().domain();
         assert.equal(yDomain[0], 0);
         assert.equal(yDomain[1], 149);
@@ -410,7 +410,7 @@ suite.addBatch({'stacked with custom value retriever': {
         chart.render();
         return chart;
     },
-    'y axis domain should encampass all groups in stack': function (chart) {
+    'y axis domain should encompass all groups in stack': function (chart) {
         var yDomain = chart.y().domain();
         assert.equal(yDomain[0], 0);
         assert.equal(yDomain[1], 20);

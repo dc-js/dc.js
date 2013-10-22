@@ -59,7 +59,7 @@ Usually this function is used in combination with d3.scale.ordinal() on x axis.
 
 #### dc.units.fp.precision(precision)
 This function generates xunit function in floating-point numbers with the given precision. For example if the function
-is invoked with 0.001 precision then the function created will devide a range [0.5, 1.0] with 500 units.
+is invoked with 0.001 precision then the function created will divide a range [0.5, 1.0] with 500 units.
 
 #### dc.events.trigger(function[, delay])
 This function is design to trigger throttled event function optionally with certain amount of delay(in milli-seconds).
