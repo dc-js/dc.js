@@ -128,6 +128,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-sed');
     grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-vows');
+
+    // custom tasks
     grunt.registerMultiTask('emu', 'Documentation extraction by emu.', function() {
         var emu = require('emu'),
             fs = require('fs'),
@@ -141,6 +143,12 @@ module.exports = function (grunt) {
         grunt.log.writeln('Merge Github Pull Request #' + pr);
         grunt.task.run(['shell:merge:'+pr,'test','shell:amend']);
     });
+    grunt.registerTask('web-baseline', 'Rerender the example baselines.', function() {
+        var render = require('./test/web-test');
+        render(grunt.log.writeln);
+    });
+
+    // task aliases
     grunt.registerTask('build', ['concat', 'uglify', 'sed']);
     grunt.registerTask('docs', ['build', 'copy', 'emu', 'markdown', 'docco']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
