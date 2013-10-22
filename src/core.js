@@ -154,8 +154,9 @@ dc.redrawAll = function(group) {
         dc._renderlet(group);
 };
 
+dc.disableTransitions = false;
 dc.transition = function(selections, duration, callback) {
-    if (duration <= 0 || duration === undefined)
+    if (duration <= 0 || duration === undefined || dc.disableTransitions)
         return selections;
 
     var s = selections
