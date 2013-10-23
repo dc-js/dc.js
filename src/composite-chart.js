@@ -140,10 +140,10 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .shareColors([[boolean])
+    #### .shareColors([boolean])
     Get or set color sharing for the chart. If set, the `.colors()` value from this chart
     will be shared with composed children. Additionally if the child chart implements
-    Stackable and has not set a custom .colorAccesor, then it will generate a color
+    Stackable and has not set a custom .colorAccessor, then it will generate a color
     specific to its order in the composition.
     **/
     _chart.shareColors = function (_) {
