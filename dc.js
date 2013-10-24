@@ -3484,7 +3484,6 @@ dc.barChart = function (parent, chartGroup) {
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
     var _centerBar = false;
 
-    var _numberOfBars;
     var _barWidth;
 
     dc.override(_chart, 'rescale', function () {
@@ -3737,13 +3736,14 @@ dc.lineChart = function (parent, chartGroup) {
     var DOT_CIRCLE_CLASS = "dot";
     var Y_AXIS_REF_LINE_CLASS = "yRef";
     var X_AXIS_REF_LINE_CLASS = "xRef";
+    var DEFAULT_DOT_OPACITY = 1e-6;
 
     var _chart = dc.stackableChart(dc.coordinateGridChart({}));
     var _renderArea = false;
     var _dotRadius = DEFAULT_DOT_RADIUS;
     var _dataPointRadius = null;
-    var _dataPointFillOpacity = 1e-6;
-    var _dataPointStrokeOpacity = 1e-6;
+    var _dataPointFillOpacity = DEFAULT_DOT_OPACITY;
+    var _dataPointStrokeOpacity = DEFAULT_DOT_OPACITY;
     var _interpolate = 'linear';
     var _tension = 0.7;
     var _defined;
@@ -3962,17 +3962,38 @@ dc.lineChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .renderDataPoints([{radius: 2}])
-    Always show individual dots for each datapoint. Default dot radius is 2.
+    #### .renderDataPoints([options])
+    Always show individual dots for each datapoint.
 
+    Options, if given, is an object that can contain the following:
+
+    * fillOpacity (default 0.8)
+    * strokeOpacity (default 0.8)
+    * radius (default 2)
+
+    If `options` is falsy, it disable data point rendering.
+
+    If no `options` are provded, the current `options` values are instead returned
+
+    Example:
+    ```
+    chart.renderDataPoints([{radius: 2}])
+    ```
     **/
     _chart.renderDataPoints = function (options) {
-        _dataPointFillOpacity = 0.8;
-        _dataPointStrokeOpacity = 0.8;
-        if (options && options.radius) {
-            _dataPointRadius = options.radius;
+        if (!arguments.length) return {
+                fillOpacity: _dataPointFillOpacity,
+                strokeOpacity: _dataPointStrokeOpacity,
+                radius: _dataPointRadius
+            };
+        if (!options) {
+            _dataPointFillOpacity = DEFAULT_DOT_OPACITY;
+            _dataPointStrokeOpacity = DEFAULT_DOT_OPACITY;
+            _dataPointRadius = null;
         } else {
-            _dataPointRadius = 2;
+            _dataPointFillOpacity = options.fillOpacity || 0.8;
+            _dataPointStrokeOpacity = options.strokeOpacity || 0.8;
+            _dataPointRadius = options.radius || 2;
         }
         return _chart;
     };

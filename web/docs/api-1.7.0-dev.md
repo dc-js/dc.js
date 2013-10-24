@@ -742,8 +742,23 @@ becomes an area chart.
 #### .dotRadius([dotRadius])
 Get or set the radius (in px) for data points. Default dot radius is 5.
 
-#### .renderDataPoints([{radius: 2}])
-Always show individual dots for each datapoint. Default dot radius is 2.
+#### .renderDataPoints([options])
+Always show individual dots for each datapoint.
+
+Options, if given, is an object that can contain the following:
+
+* fillOpacity (default 0.8)
+* strokeOpacity (default 0.8)
+* radius (default 2)
+
+If `options` is falsy, it disable data point rendering.
+
+If no `options` are provded, the current `options` values are instead returned
+
+Example:
+```
+chart.renderDataPoints([{radius: 2}])
+```
 
 ## <a name="data-count" href="#data-count">#</a> Data Count Widget [Concrete] < [Base Chart](#base-chart)
 Data count is a simple widget designed to display total number records in the data set vs. the number records selected
