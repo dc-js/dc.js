@@ -719,13 +719,17 @@ dc.baseChart = function (_chart) {
     var _root;
     var _svg;
 
+    var _minWidth = 200;
     var _default_width = function (element) {
-        return element && element.getBoundingClientRect && element.getBoundingClientRect().width || 200;
+        var width = element && element.getBoundingClientRect && element.getBoundingClientRect().width;
+        return (width && width > _minWidth) ? width : _minWidth;
     };
     var _width = _default_width;
 
+    var _minHeight = 200;
     var _default_height = function (element) {
-        return element && element.getBoundingClientRect && element.getBoundingClientRect().height || 200;
+        var height = element && element.getBoundingClientRect && element.getBoundingClientRect().height;
+        return (height && height > _minHeight) ? height : _minHeight;
     };
     var _height = _default_height;
 
@@ -817,6 +821,28 @@ dc.baseChart = function (_chart) {
     _chart.height = function (h) {
         if (!arguments.length) return _height(_root.node());
         _height = d3.functor(h || _default_height);
+        return _chart;
+    };
+
+    /**
+    #### .minWidth([value])
+    Set or get minimum width attribute of a chart. This only applicable if the width is calculated by DC.
+
+    **/
+    _chart.minWidth = function (w) {
+        if (!arguments.length) return _minWidth;
+        _minWidth = w;
+        return _chart;
+    };
+
+    /**
+    #### .minHeight([value])
+    Set or get minimum height attribute of a chart. This only applicable if the height is calculated by DC.
+
+    **/
+    _chart.minHeight = function (w) {
+        if (!arguments.length) return _minHeight;
+        _minHeight = w;
         return _chart;
     };
 
