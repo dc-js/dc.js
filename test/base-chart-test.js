@@ -195,7 +195,8 @@ suite.addBatch({
     'calculation of dimensions': {
         topic: function () {
             d3.select("body").append("div").attr("id", "ele");
-            return dc.baseChart({}).anchor('#ele').dimension(valueDimension).group(valueGroup);
+            chart = dc.baseChart({}).anchor('#ele');
+            return chart.dimension(valueDimension).group(valueGroup).minWidth(100);
         },
 
         'set automatically': function (chart) {
@@ -203,7 +204,7 @@ suite.addBatch({
             chart.width(null);
             chart.render();
             assert.equal(chart.height(), 200);
-            assert.equal(chart.width(), 200);
+            assert.equal(chart.width(), 100);
         },
 
         'set to a specific number': function (chart) {
