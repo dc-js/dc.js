@@ -572,6 +572,34 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({'line chart with data markers': {
+    topic: function () {
+        var chart = buildChart("chart-tooltip");
+        chart.brushOn(false)
+            .title(function (d) {
+                return d.value;
+            })
+            .renderDataPoints({radius: 3})
+            .render();
+        return chart;
+    },
+    'circle.dot are visible when renderDataPoints is supplied with options': function(chart) {
+        chart.selectAll("circle.dot").each(function () {
+            assert.equal(d3.select(this).style("fill-opacity"), 0.8);
+            assert.equal(d3.select(this).style("stroke-opacity"), 0.8);
+        });
+    },
+    'circle.dot have set radius when given': function(chart) {
+        chart.selectAll("circle.dot").each(function () {
+            assert.equal(d3.select(this).attr("r"), 3);
+        });
+    },
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
+    }
+}});
+
 suite.addBatch({'ordinal line chart': {
     topic: function () {
         var chart = buildOrdinalChart("line-chart-ordinal");
