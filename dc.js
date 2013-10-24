@@ -175,8 +175,9 @@ dc.redrawAll = function(group) {
         dc._renderlet(group);
 };
 
+dc.disableTransitions = false;
 dc.transition = function(selections, duration, callback) {
-    if (duration <= 0 || duration === undefined)
+    if (duration <= 0 || duration === undefined || dc.disableTransitions)
         return selections;
 
     var s = selections
@@ -411,6 +412,10 @@ dc.utils.GroupStack = function () {
         return _groups[index][1];
     };
 
+    this.getNameByIndex = function (index) {
+        return _groups[index].name;
+    };
+
     this.size = function () {
         return _groups.length;
     };
@@ -446,6 +451,20 @@ dc.utils.GroupStack = function () {
         for (var i = 0; i < _groups.length; ++i) {
             if (_groups[i].name === name)
                 _groups[i].hidden = value;
+        }
+    };
+
+    this.setTitle = function(name, titleAccessor) {
+        for (var i = 0; i < _groups.length; ++i) {
+            if (_groups[i].name === name)
+                _groups[i].title = titleAccessor;
+        }
+    };
+
+    this.getTitle = function(name) {
+        for (var i = 0; i < _groups.length; ++i) {
+            if (_groups[i].name === name)
+                return _groups[i].title;
         }
     };
 
@@ -2797,6 +2816,57 @@ dc.stackableChart = function (_chart) {
         return _chart._keyAccessor(_);
     });
 
+    /**
+     #### .title([stackName], [titleFunction])
+     Set or get the title function. Chart class will use this function to render svg title (usually interpreted by browser
+     as tooltips) for each child element in the chart, i.e. a slice in a pie chart or a bubble in a bubble chart. Almost
+     every chart supports title function however in grid coordinate chart you need to turn off brush in order to use title
+     otherwise the brush layer will block tooltip trigger.
+
+     If the first argument is a stack name, the title function will get or set the title for that stack. If stackName
+     is not provided, the first stack is implied.
+     ```js
+     // set a title function on "first stack"
+     chart.title("first stack", function(d) { return d.key + ": " + d.value; });
+     // get a title function from "second stack"
+     var secondTitleFunction = chart.title("second stack");
+    });
+     ```
+
+     **/
+    dc.override(_chart, "title", function (stackName, titleAccessor) {
+        if (!stackName) return _chart._title();
+
+        var firstStack = _chart.group() && stackName === _chart._getGroupName(_chart.group());
+
+        if (typeof stackName === 'function') {
+            return _chart._title(stackName);
+        }
+        else if (!titleAccessor) {
+            if (firstStack)
+                return _chart._title();
+            else
+                return _groupStack.getTitle(stackName);
+        }
+
+        if (firstStack)
+            return _chart._title(titleAccessor);
+        else
+            _groupStack.setTitle(stackName, titleAccessor);
+
+        return _chart;
+    });
+
+    _chart.getTitleByIndex = function (index) {
+        if (index === 0) {
+            return _chart.title();
+        }
+        else {
+            var stackTitle = _chart.title(_groupStack.getNameByIndex(index - 1));
+            return stackTitle || _chart.title();
+        }
+    };
+
     _chart.stackLayout = function (stack) {
         if (!arguments.length) return _stackLayout;
         _stackLayout = stack;
@@ -3813,7 +3883,7 @@ dc.lineChart = function (parent, chartGroup) {
                         hideDot(dot);
                         hideRefLines(g);
                     })
-                    .append("title").text(dc.pluck('data',_chart.title()));
+                    .append("title").text(dc.pluck('data', _chart.getTitleByIndex(layerIndex)));
 
                 dots.attr("cx", function (d) {
                         return dc.utils.safeNumber(_chart.x()(d.x));
@@ -3821,7 +3891,7 @@ dc.lineChart = function (parent, chartGroup) {
                     .attr("cy", function (d) {
                         return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
                     })
-                    .select("title").text(dc.pluck('data',_chart.title()));
+                    .select("title").text(dc.pluck('data', _chart.getTitleByIndex(layerIndex)));
 
                 dots.exit().remove();
             });

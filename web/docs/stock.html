@@ -28,7 +28,7 @@
             <div class="content"><div class='highlight'><pre><span class="string">'use strict'</span>;
 
 <span class="comment">/* jshint globalstrict: true */</span>
-<span class="comment">/* global dc,d3,crossfilter */</span></pre></div></div>
+<span class="comment">/* global dc,d3,crossfilter,colorbrewer */</span></pre></div></div>
             
         </li>
         
@@ -106,14 +106,14 @@ Note: It is often a good idea to have these objects accessible at the global sco
         <li id="section-6">
             <div class="annotation">
               
-              <div class="pilwrap for-h4">
+              <div class="pilwrap for-h5">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <h4>.turnOnControls()</h4>
+              <h5>.turnOnControls()</h5>
 <p>If a link with css class “reset” is present then the chart
 will automatically turn it on/off based on whether there is filter
 set on this chart (slice selection for pie chart and brush
-selection for bar chart)</p>
+selection for bar chart). Enable this with <code>chart.turnOnControls(true)</code></p>
 
             </div>
             
@@ -162,14 +162,16 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="keyword">fu
             </div>
             
             <div class="content"><div class='highlight'><pre>d3.csv(<span class="string">"ndx.csv"</span>, <span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
-            <span class="comment">/* since its a csv file we need to format the data a bit */</span>
-            <span class="keyword">var</span> dateFormat = d3.time.format(<span class="string">"%m/%d/%Y"</span>);
-            <span class="keyword">var</span> numberFormat = d3.format(<span class="string">".2f"</span>);
+    <span class="comment">/* since its a csv file we need to format the data a bit */</span>
+    <span class="keyword">var</span> dateFormat = d3.time.format(<span class="string">"%m/%d/%Y"</span>);
+    <span class="keyword">var</span> numberFormat = d3.format(<span class="string">".2f"</span>);
 
-            data.forEach(<span class="function"><span class="keyword">function</span> <span class="params">(e)</span> {</span>
-                e.dd = dateFormat.parse(e.date);
-                e.month = d3.time.month(e.dd); <span class="comment">// pre-calculate month for better performance</span>
-            });</pre></div></div>
+    data.forEach(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+        d.dd = dateFormat.parse(d.date);
+        d.month = d3.time.month(d.dd); <span class="comment">// pre-calculate month for better performance</span>
+        d.close = +d.close; <span class="comment">// coerce to number</span>
+        d.open = +d.open;
+    });</pre></div></div>
             
         </li>
         
@@ -185,104 +187,8 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="keyword">fu
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            <span class="keyword">var</span> ndx = crossfilter(data);
-            <span class="keyword">var</span> all = ndx.groupAll();
-
-            <span class="keyword">var</span> yearlyDimension = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-                <span class="keyword">return</span> d3.time.year(d.dd).getFullYear();
-            });
-            <span class="keyword">var</span> yearlyPerformanceGroup = yearlyDimension.group().reduce(
-                    <span class="comment">/* callback for when data is added to the current filter results */</span>
-                    <span class="function"><span class="keyword">function</span> <span class="params">(p, v)</span> {</span>
-                        ++p.count;
-                        p.absGain += +v.close - +v.open;
-                        p.fluctuation += Math.abs(+v.close - +v.open);
-                        p.sumIndex += (+v.open + +v.close) / <span class="number">2</span>;
-                        p.avgIndex = p.sumIndex / p.count;
-                        p.percentageGain = (p.absGain / p.avgIndex) * <span class="number">100</span>;
-                        p.fluctuationPercentage = (p.fluctuation / p.avgIndex) * <span class="number">100</span>;
-                        <span class="keyword">return</span> p;
-                    },
-                    <span class="comment">/* callback for when data is removed from the current filter results */</span>
-                    <span class="function"><span class="keyword">function</span> <span class="params">(p, v)</span> {</span>
-                        --p.count;
-                        p.absGain -= +v.close - +v.open;
-                        p.fluctuation -= Math.abs(+v.close - +v.open);
-                        p.sumIndex -= (+v.open + +v.close) / <span class="number">2</span>;
-                        p.avgIndex = p.sumIndex / p.count;
-                        p.percentageGain = (p.absGain / p.avgIndex) * <span class="number">100</span>;
-                        p.fluctuationPercentage = (p.fluctuation / p.avgIndex) * <span class="number">100</span>;
-                        <span class="keyword">return</span> p;
-                    },
-                    <span class="comment">/* initialize p */</span>
-                    <span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span>
-                        <span class="keyword">return</span> {count: <span class="number">0</span>, absGain: <span class="number">0</span>, fluctuation: <span class="number">0</span>, fluctuationPercentage: <span class="number">0</span>, sumIndex: <span class="number">0</span>, avgIndex: <span class="number">0</span>, percentageGain: <span class="number">0</span>};
-                    }
-            );
-
-            <span class="keyword">var</span> dateDimension = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-                <span class="keyword">return</span> d.dd;
-            });
-
-            <span class="comment">/* monthly index avg fluctuation in percentage */</span>
-            <span class="keyword">var</span> moveMonths = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-                <span class="keyword">return</span> d.month;
-            });
-            <span class="keyword">var</span> monthlyMoveGroup = moveMonths.group().reduceSum(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-                <span class="keyword">return</span> Math.abs(+d.close - +d.open);
-            });
-            <span class="keyword">var</span> volumeByMonthGroup = moveMonths.group().reduceSum(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-                <span class="keyword">return</span> d.volume / <span class="number">500000</span>;
-            });
-            <span class="keyword">var</span> indexAvgByMonthGroup = moveMonths.group().reduce(
-                    <span class="function"><span class="keyword">function</span> <span class="params">(p, v)</span> {</span>
-                        ++p.days;
-                        p.total += (+v.open + +v.close) / <span class="number">2</span>;
-                        p.avg = Math.round(p.total / p.days);
-                        <span class="keyword">return</span> p;
-                    },
-                    <span class="function"><span class="keyword">function</span> <span class="params">(p, v)</span> {</span>
-                        --p.days;
-                        p.total -= (+v.open + +v.close) / <span class="number">2</span>;
-                        p.avg = (p.days == <span class="number">0</span>) ? <span class="number">0</span> : Math.round(p.total / p.days);
-                        <span class="keyword">return</span> p;
-                    },
-                    <span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span>
-                        <span class="keyword">return</span> {days: <span class="number">0</span>, total: <span class="number">0</span>, avg: <span class="number">0</span>};
-                    }
-            );
-
-            <span class="keyword">var</span> gainOrLoss = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-                <span class="keyword">return</span> +d.open &gt; +d.close ? <span class="string">"Loss"</span> : <span class="string">"Gain"</span>;
-            });
-            <span class="keyword">var</span> gainOrLossGroup = gainOrLoss.group();
-
-            <span class="keyword">var</span> fluctuation = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-                <span class="keyword">return</span> Math.round((d.close - d.open) / d.open * <span class="number">100</span>);
-            });
-            <span class="keyword">var</span> fluctuationGroup = fluctuation.group();
-
-            <span class="keyword">var</span> quarter = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-                <span class="keyword">var</span> month = d.dd.getMonth();
-                <span class="keyword">if</span> (month &lt;= <span class="number">2</span>)
-                    <span class="keyword">return</span> <span class="string">"Q1"</span>;
-                <span class="keyword">else</span> <span class="keyword">if</span> (month &gt; <span class="number">3</span> &amp;&amp; month &lt;= <span class="number">5</span>)
-                    <span class="keyword">return</span> <span class="string">"Q2"</span>;
-                <span class="keyword">else</span> <span class="keyword">if</span> (month &gt; <span class="number">5</span> &amp;&amp; month &lt;= <span class="number">8</span>)
-                    <span class="keyword">return</span> <span class="string">"Q3"</span>;
-                <span class="keyword">else</span>
-                    <span class="keyword">return</span> <span class="string">"Q4"</span>;
-            });
-            <span class="keyword">var</span> quarterGroup = quarter.group().reduceSum(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-                <span class="keyword">return</span> d.volume;
-            });
-
-            <span class="keyword">var</span> dayOfWeek = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-                <span class="keyword">var</span> day = d.dd.getDay();
-                <span class="keyword">var</span> name=[<span class="string">"Sun"</span>,<span class="string">"Mon"</span>,<span class="string">"Tue"</span>,<span class="string">"Wed"</span>,<span class="string">"Thu"</span>,<span class="string">"Fri"</span>,<span class="string">"Sat"</span>];
-                <span class="keyword">return</span> day+<span class="string">"."</span>+name[day];
-             });
-            <span class="keyword">var</span> dayOfWeekGroup = dayOfWeek.group();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> ndx = crossfilter(data);
+    <span class="keyword">var</span> all = ndx.groupAll();</pre></div></div>
             
         </li>
         
@@ -290,13 +196,16 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="keyword">fu
         <li id="section-10">
             <div class="annotation">
               
-              <div class="pilwrap for-h3">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <h3>Define Chart Attributes</h3>
-<p>Define chart attributes using fluent methods. See the <a href="https://github.com/NickQiZhu/dc.js/blob/master/web/docs/api-1.7.0.md">dc API Reference</a> for more information</p>
+              <p>dimension by year</p>
 
             </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> yearlyDimension = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+        <span class="keyword">return</span> d3.time.year(d.dd).getFullYear();
+    });</pre></div></div>
             
         </li>
         
@@ -304,60 +213,41 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="keyword">fu
         <li id="section-11">
             <div class="annotation">
               
-              <div class="pilwrap for-h4">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-11">&#182;</a>
               </div>
-              <h4>Bubble Chart</h4>
+              <p>maintain running tallies by year as filters are applied or removed</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            yearlyBubbleChart.width(<span class="number">990</span>)
-                    .height(<span class="number">250</span>)
-                    .margins({top: <span class="number">10</span>, right: <span class="number">50</span>, bottom: <span class="number">30</span>, left: <span class="number">40</span>})
-                    .dimension(yearlyDimension)
-                    .group(yearlyPerformanceGroup)
-                    .transitionDuration(<span class="number">1500</span>)
-                    .colors(colorbrewer.RdYlGn[<span class="number">9</span>])
-                    .colorDomain([-<span class="number">500</span>, <span class="number">500</span>])
-                    .colorAccessor(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-                        <span class="keyword">return</span> d.value.absGain;
-                    })
-                    .keyAccessor(<span class="function"><span class="keyword">function</span> <span class="params">(p)</span> {</span>
-                        <span class="keyword">return</span> p.value.absGain;
-                    })
-                    .valueAccessor(<span class="function"><span class="keyword">function</span> <span class="params">(p)</span> {</span>
-                        <span class="keyword">return</span> p.value.percentageGain;
-                    })
-                    .radiusValueAccessor(<span class="function"><span class="keyword">function</span> <span class="params">(p)</span> {</span>
-                        <span class="keyword">return</span> p.value.fluctuationPercentage;
-                    })
-                    .maxBubbleRelativeSize(<span class="number">0.3</span>)
-                    .x(d3.scale.linear().domain([-<span class="number">2500</span>, <span class="number">2500</span>]))
-                    .y(d3.scale.linear().domain([-<span class="number">100</span>, <span class="number">100</span>]))
-                    .r(d3.scale.linear().domain([<span class="number">0</span>, <span class="number">4000</span>]))
-                    .elasticY(<span class="literal">true</span>)
-                    .yAxisPadding(<span class="number">100</span>)
-                    .elasticX(<span class="literal">true</span>)
-                    .xAxisPadding(<span class="number">500</span>)
-                    .renderHorizontalGridLines(<span class="literal">true</span>)
-                    .renderVerticalGridLines(<span class="literal">true</span>)
-                    .renderLabel(<span class="literal">true</span>)
-                    .renderTitle(<span class="literal">true</span>)
-                    .xAxisLabel(<span class="string">'Index Gain'</span>)
-                    .yAxisLabel(<span class="string">'Index Gain %'</span>)
-                    .label(<span class="function"><span class="keyword">function</span> <span class="params">(p)</span> {</span>
-                        <span class="keyword">return</span> p.key;
-                    })
-                    .title(<span class="function"><span class="keyword">function</span> <span class="params">(p)</span> {</span>
-                        <span class="keyword">return</span> p.key
-                                + <span class="string">"\n"</span>
-                                + <span class="string">"Index Gain: "</span> + numberFormat(p.value.absGain) + <span class="string">"\n"</span>
-                                + <span class="string">"Index Gain in Percentage: "</span> + numberFormat(p.value.percentageGain) + <span class="string">"%\n"</span>
-                                + <span class="string">"Fluctuation / Index Ratio: "</span> + numberFormat(p.value.fluctuationPercentage) + <span class="string">"%"</span>;
-                    })
-                    .yAxis().tickFormat(<span class="function"><span class="keyword">function</span> <span class="params">(v)</span> {</span>
-                        <span class="keyword">return</span> v + <span class="string">"%"</span>;
-                    });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> yearlyPerformanceGroup = yearlyDimension.group().reduce(
+        <span class="comment">/* callback for when data is added to the current filter results */</span>
+        <span class="function"><span class="keyword">function</span> <span class="params">(p, v)</span> {</span>
+            ++p.count;
+            p.absGain += v.close - v.open;
+            p.fluctuation += Math.abs(v.close - v.open);
+            p.sumIndex += (v.open + v.close) / <span class="number">2</span>;
+            p.avgIndex = p.sumIndex / p.count;
+            p.percentageGain = (p.absGain / p.avgIndex) * <span class="number">100</span>;
+            p.fluctuationPercentage = (p.fluctuation / p.avgIndex) * <span class="number">100</span>;
+            <span class="keyword">return</span> p;
+        },
+        <span class="comment">/* callback for when data is removed from the current filter results */</span>
+        <span class="function"><span class="keyword">function</span> <span class="params">(p, v)</span> {</span>
+            --p.count;
+            p.absGain -= v.close - v.open;
+            p.fluctuation -= Math.abs(v.close - v.open);
+            p.sumIndex -= (v.open + v.close) / <span class="number">2</span>;
+            p.avgIndex = p.sumIndex / p.count;
+            p.percentageGain = (p.absGain / p.avgIndex) * <span class="number">100</span>;
+            p.fluctuationPercentage = (p.fluctuation / p.avgIndex) * <span class="number">100</span>;
+            <span class="keyword">return</span> p;
+        },
+        <span class="comment">/* initialize p */</span>
+        <span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span>
+            <span class="keyword">return</span> {count: <span class="number">0</span>, absGain: <span class="number">0</span>, fluctuation: <span class="number">0</span>, fluctuationPercentage: <span class="number">0</span>, sumIndex: <span class="number">0</span>, avgIndex: <span class="number">0</span>, percentageGain: <span class="number">0</span>};
+        }
+    );</pre></div></div>
             
         </li>
         
@@ -365,31 +255,16 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="keyword">fu
         <li id="section-12">
             <div class="annotation">
               
-              <div class="pilwrap for-h4">
+              <div class="pilwrap ">
                 <a class="pilcrow" href="#section-12">&#182;</a>
               </div>
-              <h4>Pie/Donut Chart</h4>
-<p>Create a pie chart and use the given css selector as anchor. You can also specify
-an optional chart group for this chart to be scoped within. When a chart belongs
-to a specific group then any interaction with such chart will only trigger redraw
-on other charts within the same chart group.</p>
+              <p>dimension by full date</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>
-            gainOrLossChart
-                    .width(<span class="number">180</span>) <span class="comment">// (optional) define chart width, :default = 200</span>
-                    .height(<span class="number">180</span>) <span class="comment">// (optional) define chart height, :default = 200</span>
-                    .radius(<span class="number">80</span>) <span class="comment">// define pie radius</span>
-                    .dimension(gainOrLoss) <span class="comment">// set dimension</span>
-                    .group(gainOrLossGroup) <span class="comment">// set group</span>
-                    <span class="comment">/* (optional) by default pie chart will use group.key as it's label
-                     * but you can overwrite it with a closure */</span>
-                    .label(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-                        <span class="keyword">if</span> (gainOrLossChart.hasFilter() &amp;&amp; !gainOrLossChart.hasFilter(d.key))
-                            <span class="keyword">return</span> d.key + <span class="string">"(0%)"</span>;
-                        <span class="keyword">return</span> d.key + <span class="string">"("</span> + Math.floor(d.value / all.value() * <span class="number">100</span>) + <span class="string">"%)"</span>;
-                    }) <span class="comment">/*</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> dateDimension = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+        <span class="keyword">return</span> d.dd;
+    });</pre></div></div>
             
         </li>
         
@@ -400,11 +275,13 @@ on other charts within the same chart group.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-13">&#182;</a>
               </div>
-              <p>(optional) whether chart should render labels, :default = true</p>
+              <p>dimension by month</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    .renderLabel(<span class="literal">true</span>)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> moveMonths = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+        <span class="keyword">return</span> d.month;
+    });</pre></div></div>
             
         </li>
         
@@ -415,11 +292,13 @@ on other charts within the same chart group.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-14">&#182;</a>
               </div>
-              <p>(optional) if inner radius is used then a donut chart will be generated instead of pie chart</p>
+              <p>group by total movement within month</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    .innerRadius(<span class="number">40</span>)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> monthlyMoveGroup = moveMonths.group().reduceSum(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+        <span class="keyword">return</span> Math.abs(d.close - d.open);
+    });</pre></div></div>
             
         </li>
         
@@ -430,11 +309,30 @@ on other charts within the same chart group.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-15">&#182;</a>
               </div>
-              <p>(optional) define chart transition duration, :default = 350</p>
+              <p>group by total volume within move, and scale down result</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    .transitionDuration(<span class="number">500</span>)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> volumeByMonthGroup = moveMonths.group().reduceSum(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+        <span class="keyword">return</span> d.volume / <span class="number">500000</span>;
+    });
+    <span class="keyword">var</span> indexAvgByMonthGroup = moveMonths.group().reduce(
+        <span class="function"><span class="keyword">function</span> <span class="params">(p, v)</span> {</span>
+            ++p.days;
+            p.total += (v.open + v.close) / <span class="number">2</span>;
+            p.avg = Math.round(p.total / p.days);
+            <span class="keyword">return</span> p;
+        },
+        <span class="function"><span class="keyword">function</span> <span class="params">(p, v)</span> {</span>
+            --p.days;
+            p.total -= (v.open + v.close) / <span class="number">2</span>;
+            p.avg = p.days ? Math.round(p.total / p.days) : <span class="number">0</span>;
+            <span class="keyword">return</span> p;
+        },
+        <span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span>
+            <span class="keyword">return</span> {days: <span class="number">0</span>, total: <span class="number">0</span>, avg: <span class="number">0</span>};
+        }
+    );</pre></div></div>
             
         </li>
         
@@ -445,11 +343,13 @@ on other charts within the same chart group.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-16">&#182;</a>
               </div>
-              <p>(optional) define color array for slices</p>
+              <p>create categorical dimension</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    .colors([<span class="string">'#3182bd'</span>, <span class="string">'#6baed6'</span>, <span class="string">'#9ecae1'</span>, <span class="string">'#c6dbef'</span>, <span class="string">'#dadaeb'</span>])</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> gainOrLoss = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+        <span class="keyword">return</span> d.open &gt; d.close ? <span class="string">"Loss"</span> : <span class="string">"Gain"</span>;
+    });</pre></div></div>
             
         </li>
         
@@ -460,11 +360,11 @@ on other charts within the same chart group.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
-              <p>(optional) define color domain to match your data domain if you want to bind data or color</p>
+              <p>produce counts records in the dimension</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    .colorDomain([-<span class="number">1750</span>, <span class="number">1644</span>])</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> gainOrLossGroup = gainOrLoss.group();</pre></div></div>
             
         </li>
         
@@ -475,136 +375,14 @@ on other charts within the same chart group.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
-              <p>(optional) define color value accessor</p>
+              <p>determine a histogram of percent changes</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>                    .colorAccessor(function(d, i){return d.value;})
-                    */;
-
-            quarterChart.width(180)
-                    .height(180)
-                    .radius(80)
-                    .innerRadius(30)
-                    .dimension(quarter)
-                    .group(quarterGroup);
-
-            dayOfWeekChart.width(180)
-                    .height(180)
-                    .margins({top: 20, left: 10, right: 10, bottom: 20})
-                    .group(dayOfWeekGroup)
-                    .dimension(dayOfWeek)
-                    .ordinalColors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
-                    .label(function (d) {
-                        return d.key.split(".")[1];
-                    })
-                    .title(function (d) {
-                        return d.value;
-                    })
-                    .elasticX(true)
-                    .xAxis().ticks(4);
-
-            fluctuationChart.width(420)
-                    .height(180)
-                    .margins({top: 10, right: 50, bottom: 30, left: 40})
-                    .dimension(fluctuation)
-                    .group(fluctuationGroup)
-                    .elasticY(true)
-                    .centerBar(true)
-                    .gap(1)
-                    .round(dc.round.floor)
-                    .x(d3.scale.linear().domain([-25, 25]))
-                    .renderHorizontalGridLines(true)
-                    .filterPrinter(function (filters) {
-                        var filter = filters[0], s = "";
-                        s += numberFormat(filter[0]) + "% -&gt; " + numberFormat(filter[1]) + "%";
-                        return s;
-                    })
-                    .xAxis()
-                    .tickFormat(function (v) {
-                        return v + "%";
-                    });
-
-            fluctuationChart.yAxis().ticks(5);
-
-            moveChart.width(990)
-                    .height(200)
-                    .transitionDuration(1000)
-                    .margins({top: 30, right: 50, bottom: 25, left: 40})
-                    .dimension(moveMonths)
-                    .mouseZoomable(true)
-                    .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
-                    .round(d3.time.month.round)
-                    .xUnits(d3.time.months)
-                    .elasticY(true)
-                    .renderHorizontalGridLines(true)
-                    .legend(dc.legend().x(800).y(10).itemHeight(13).gap(5))
-                    .brushOn(false)
-                    .rangeChart(volumeChart)
-                    .group(indexAvgByMonthGroup, "Monthly Index Average")
-                    .valueAccessor(function (d) {
-                        return d.value.avg;
-                    })
-                    .renderArea(true)
-                    .stack(monthlyMoveGroup, "Monthly Index Move", function (d) {
-                        return d.value;
-                    })
-                    .title(function (d) {
-                        var value = d.value.avg ? d.value.avg : d.value;
-                        if (isNaN(value)) value = 0;
-                        return dateFormat(d.key) + "\n" + numberFormat(value);
-                    });
-
-            volumeChart.width(990)
-                    .height(40)
-                    .margins({top: 0, right: 50, bottom: 20, left: 40})
-                    .dimension(moveMonths)
-                    .group(volumeByMonthGroup)
-                    .centerBar(true)
-                    .gap(1)
-                    .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
-                    .round(d3.time.month.round)
-                    .xUnits(d3.time.months);
-
-            dc.dataCount(".dc-data-count")
-                    .dimension(ndx)
-                    .group(all);
-
-            dc.dataTable(".dc-data-table")
-                    .dimension(dateDimension)
-                    .group(function (d) {
-                        var format = d3.format("02d");
-                        return d.dd.getFullYear() + "/" + format((d.dd.getMonth() + 1));
-                    })
-                    .size(10)
-                    .columns([
-                        function (d) {
-                            return d.date;
-                        },
-                        function (d) {
-                            return d.open;
-                        },
-                        function (d) {
-                            return d.close;
-                        },
-                        function (d) {
-                            return numberFormat(d.close - d.open);
-                        },
-                        function (d) {
-                            return d.volume;
-                        }
-                    ])
-                    .sortBy(function (d) {
-                        return d.dd;
-                    })
-                    .order(d3.ascending)
-                    .renderlet(function (table) {
-                        table.selectAll(".dc-table-group").classed("info", true);
-                    });
-
-            dc.renderAll();
-        }
-);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> fluctuation = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+        <span class="keyword">return</span> Math.round((d.close - d.open) / d.open * <span class="number">100</span>);
+    });
+    <span class="keyword">var</span> fluctuationGroup = fluctuation.group();</pre></div></div>
             
         </li>
         
@@ -615,7 +393,1209 @@ on other charts within the same chart group.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
-              <p>Determine the current version of dc with <code>dc.version</code></p>
+              <p>summerize volume by quarter</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> quarter = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+        <span class="keyword">var</span> month = d.dd.getMonth();
+        <span class="keyword">if</span> (month &lt;= <span class="number">2</span>)
+            <span class="keyword">return</span> <span class="string">"Q1"</span>;
+        <span class="keyword">else</span> <span class="keyword">if</span> (month &gt; <span class="number">3</span> &amp;&amp; month &lt;= <span class="number">5</span>)
+            <span class="keyword">return</span> <span class="string">"Q2"</span>;
+        <span class="keyword">else</span> <span class="keyword">if</span> (month &gt; <span class="number">5</span> &amp;&amp; month &lt;= <span class="number">8</span>)
+            <span class="keyword">return</span> <span class="string">"Q3"</span>;
+        <span class="keyword">else</span>
+            <span class="keyword">return</span> <span class="string">"Q4"</span>;
+    });
+    <span class="keyword">var</span> quarterGroup = quarter.group().reduceSum(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+        <span class="keyword">return</span> d.volume;
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>counts per weekday</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> dayOfWeek = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+        <span class="keyword">var</span> day = d.dd.getDay();
+        <span class="keyword">var</span> name=[<span class="string">"Sun"</span>,<span class="string">"Mon"</span>,<span class="string">"Tue"</span>,<span class="string">"Wed"</span>,<span class="string">"Thu"</span>,<span class="string">"Fri"</span>,<span class="string">"Sat"</span>];
+        <span class="keyword">return</span> day+<span class="string">"."</span>+name[day];
+     });
+    <span class="keyword">var</span> dayOfWeekGroup = dayOfWeek.group();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h3">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <h3>Define Chart Attributes</h3>
+<p>Define chart attributes using fluent methods. See the <a href="https://github.com/NickQiZhu/dc.js/blob/master/web/docs/api-1.7.0.md">dc API Reference</a> for more information</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h4">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <h4>Bubble Chart</h4>
+<p>Create a bubble chart and use the given css selector as anchor. You can also specify
+an optional chart group for this chart to be scoped within. When a chart belongs
+to a specific group then any interaction with such chart will only trigger redraw
+on other charts within the same chart group.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="comment">/* dc.bubbleChart("#yearly-bubble-chart", "chartGroup") */</span>
+    yearlyBubbleChart
+        .width(<span class="number">990</span>) <span class="comment">// (optional) define chart width, :default = 200</span>
+        .height(<span class="number">250</span>)  <span class="comment">// (optional) define chart height, :default = 200</span>
+        .transitionDuration(<span class="number">1500</span>) <span class="comment">// (optional) define chart transition duration, :default = 750</span>
+        .margins({top: <span class="number">10</span>, right: <span class="number">50</span>, bottom: <span class="number">30</span>, left: <span class="number">40</span>})
+        .dimension(yearlyDimension)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Bubble chart expect the groups are reduced to multiple values which would then be used
+to generate x, y, and radius for each key (bubble) in the group</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .group(yearlyPerformanceGroup)
+        .colors(colorbrewer.RdYlGn[<span class="number">9</span>]) <span class="comment">// (optional) define color function or array for bubbles</span>
+        .colorDomain([-<span class="number">500</span>, <span class="number">500</span>]) <span class="comment">//(optional) define color domain to match your data domain if you want to bind data or color</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h5">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <h5>Accessors</h5>
+<p>Accessor functions are applied to each value returned by the grouping</p>
+<ul>
+<li><code>.colorAccessor</code> The returned value will be mapped to an internal scale to determine a fill color</li>
+<li><code>.keyAccessor</code> Identifies the <code>X</code> value that will be applied against the <code>.x()</code> to identify pixel location</li>
+<li><code>.valueAccessor</code> Identifies the <code>Y</code> value that will be applied agains the <code>.y()</code> to identify pixel location</li>
+<li><code>.radiusValueAccessor</code> Identifies the value that will be applied agains the <code>.r()</code> determine radius size, by default this maps linearly to [0,100]</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .colorAccessor(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+            <span class="keyword">return</span> d.value.absGain;
+        })
+        .keyAccessor(<span class="function"><span class="keyword">function</span> <span class="params">(p)</span> {</span>
+            <span class="keyword">return</span> p.value.absGain;
+        })
+        .valueAccessor(<span class="function"><span class="keyword">function</span> <span class="params">(p)</span> {</span>
+            <span class="keyword">return</span> p.value.percentageGain;
+        })
+        .radiusValueAccessor(<span class="function"><span class="keyword">function</span> <span class="params">(p)</span> {</span>
+            <span class="keyword">return</span> p.value.fluctuationPercentage;
+        })
+        .maxBubbleRelativeSize(<span class="number">0.3</span>)
+        .x(d3.scale.linear().domain([-<span class="number">2500</span>, <span class="number">2500</span>]))
+        .y(d3.scale.linear().domain([-<span class="number">100</span>, <span class="number">100</span>]))
+        .r(d3.scale.linear().domain([<span class="number">0</span>, <span class="number">4000</span>]))</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h5">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <h5>Elastic Scaling</h5>
+<p><code>.elasticX</code> and <code>.elasticX</code> determine whether the chart should rescale each axis to fit data.
+The <code>.yAxisPadding</code> and <code>.xAxisPadding</code> add padding to data above and below their max values in the same unit domains as the Accessors.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .elasticY(<span class="literal">true</span>)
+        .elasticX(<span class="literal">true</span>)
+        .yAxisPadding(<span class="number">100</span>)
+        .xAxisPadding(<span class="number">500</span>)
+        .renderHorizontalGridLines(<span class="literal">true</span>) <span class="comment">// (optional) render horizontal grid lines, :default=false</span>
+        .renderVerticalGridLines(<span class="literal">true</span>) <span class="comment">// (optional) render vertical grid lines, :default=false</span>
+        .xAxisLabel(<span class="string">'Index Gain'</span>) <span class="comment">// (optional) render an axis label below the x axis</span>
+        .yAxisLabel(<span class="string">'Index Gain %'</span>) <span class="comment">// (optional) render a vertical axis lable left of the y axis</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h4">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <h4>Labels and  Titles</h4>
+<p>Labels are displaed on the chart for each bubble. Titles displayed on mouseover.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .renderLabel(<span class="literal">true</span>) <span class="comment">// (optional) whether chart should render labels, :default = true</span>
+        .label(<span class="function"><span class="keyword">function</span> <span class="params">(p)</span> {</span>
+            <span class="keyword">return</span> p.key;
+        })
+        .renderTitle(<span class="literal">true</span>) <span class="comment">// (optional) whether chart should render titles, :default = false</span>
+        .title(<span class="function"><span class="keyword">function</span> <span class="params">(p)</span> {</span>
+            <span class="keyword">return</span> [p.key,
+                   <span class="string">"Index Gain: "</span> + numberFormat(p.value.absGain),
+                   <span class="string">"Index Gain in Percentage: "</span> + numberFormat(p.value.percentageGain) + <span class="string">"%"</span>,
+                   <span class="string">"Fluctuation / Index Ratio: "</span> + numberFormat(p.value.fluctuationPercentage) + <span class="string">"%"</span>]
+                   .join(<span class="string">"\n"</span>);
+        })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h4">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <h4>Customize Axis</h4>
+<p>Set a custom tick format. Note <code>.yAxis()</code> returns an axis object, so any additional method chaining applies to the axis, not the chart.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .yAxis().tickFormat(<span class="function"><span class="keyword">function</span> <span class="params">(v)</span> {</span>
+            <span class="keyword">return</span> v + <span class="string">"%"</span>;
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h4">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <h4>Pie/Donut Chart</h4>
+<p>Create a pie chart and use the given css selector as anchor. You can also specify
+an optional chart group for this chart to be scoped within. When a chart belongs
+to a specific group then any interaction with such chart will only trigger redraw
+on other charts within the same chart group.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+    gainOrLossChart
+        .width(<span class="number">180</span>) <span class="comment">// (optional) define chart width, :default = 200</span>
+        .height(<span class="number">180</span>) <span class="comment">// (optional) define chart height, :default = 200</span>
+        .radius(<span class="number">80</span>) <span class="comment">// define pie radius</span>
+        .dimension(gainOrLoss) <span class="comment">// set dimension</span>
+        .group(gainOrLossGroup) <span class="comment">// set group</span>
+        <span class="comment">/* (optional) by default pie chart will use group.key as it's label
+         * but you can overwrite it with a closure */</span>
+        .label(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+            <span class="keyword">if</span> (gainOrLossChart.hasFilter() &amp;&amp; !gainOrLossChart.hasFilter(d.key))
+                <span class="keyword">return</span> d.key + <span class="string">"(0%)"</span>;
+            <span class="keyword">return</span> d.key + <span class="string">"("</span> + Math.floor(d.value / all.value() * <span class="number">100</span>) + <span class="string">"%)"</span>;
+        }) <span class="comment">/*</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>(optional) whether chart should render labels, :default = true</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .renderLabel(<span class="literal">true</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>(optional) if inner radius is used then a donut chart will be generated instead of pie chart</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .innerRadius(<span class="number">40</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>(optional) define chart transition duration, :default = 350</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .transitionDuration(<span class="number">500</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>(optional) define color array for slices</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .colors([<span class="string">'#3182bd'</span>, <span class="string">'#6baed6'</span>, <span class="string">'#9ecae1'</span>, <span class="string">'#c6dbef'</span>, <span class="string">'#dadaeb'</span>])</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>(optional) define color domain to match your data domain if you want to bind data or color</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .colorDomain([-<span class="number">1750</span>, <span class="number">1644</span>])</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>(optional) define color value accessor</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .colorAccessor(function(d, i){return d.value;})
+        */;
+
+    quarterChart.width(180)
+        .height(180)
+        .radius(80)
+        .innerRadius(30)
+        .dimension(quarter)
+        .group(quarterGroup);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h4">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <h4>Row Chart</h4>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    dayOfWeekChart.width(<span class="number">180</span>)
+        .height(<span class="number">180</span>)
+        .margins({top: <span class="number">20</span>, left: <span class="number">10</span>, right: <span class="number">10</span>, bottom: <span class="number">20</span>})
+        .group(dayOfWeekGroup)
+        .dimension(dayOfWeek)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p>assign colors to each value in the x scale domain</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .ordinalColors([<span class="string">'#3182bd'</span>, <span class="string">'#6baed6'</span>, <span class="string">'#9ecae1'</span>, <span class="string">'#c6dbef'</span>, <span class="string">'#dadaeb'</span>])
+        .label(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+            <span class="keyword">return</span> d.key.split(<span class="string">"."</span>)[<span class="number">1</span>];
+        })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>title sets the row text</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .title(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+            <span class="keyword">return</span> d.value;
+        })
+        .elasticX(<span class="literal">true</span>)
+        .xAxis().ticks(<span class="number">4</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h4">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <h4>Bar Chart</h4>
+<p>Create a bar chart and use the given css selector as anchor. You can also specify
+an optional chart group for this chart to be scoped within. When a chart belongs
+to a specific group then any interaction with such chart will only trigger redraw
+on other charts within the same chart group.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="comment">/* dc.barChart("#volume-month-chart") */</span>
+    fluctuationChart.width(<span class="number">420</span>)
+        .height(<span class="number">180</span>)
+        .margins({top: <span class="number">10</span>, right: <span class="number">50</span>, bottom: <span class="number">30</span>, left: <span class="number">40</span>})
+        .dimension(fluctuation)
+        .group(fluctuationGroup)
+        .elasticY(<span class="literal">true</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>(optional) whether bar should be center to its x value. Not needed for ordinal chart, :default=false</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .centerBar(<span class="literal">true</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>(optional) set gap between bars manually in px, :default=2</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .gap(<span class="number">1</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>(optional) set filter brush rounding</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .round(dc.round.floor)
+        .x(d3.scale.linear().domain([-<span class="number">25</span>, <span class="number">25</span>]))
+        .renderHorizontalGridLines(<span class="literal">true</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>customize the filter displayed in the control span</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .filterPrinter(<span class="function"><span class="keyword">function</span> <span class="params">(filters)</span> {</span>
+            <span class="keyword">var</span> filter = filters[<span class="number">0</span>], s = <span class="string">""</span>;
+            s += numberFormat(filter[<span class="number">0</span>]) + <span class="string">"% -&gt; "</span> + numberFormat(filter[<span class="number">1</span>]) + <span class="string">"%"</span>;
+            <span class="keyword">return</span> s;
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <p>Customize axis</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    fluctuationChart.xAxis().tickFormat(
+        <span class="function"><span class="keyword">function</span> <span class="params">(v)</span> {</span> <span class="keyword">return</span> v + <span class="string">"%"</span>; });
+    fluctuationChart.yAxis().ticks(<span class="number">5</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h4">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              <h4>Stacked Area Chart</h4>
+<p>Specify an area chart, by using a line chart with <code>.renderArea(true)</code></p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    moveChart
+        .renderArea(<span class="literal">true</span>)
+        .width(<span class="number">990</span>)
+        .height(<span class="number">200</span>)
+        .transitionDuration(<span class="number">1000</span>)
+        .margins({top: <span class="number">30</span>, right: <span class="number">50</span>, bottom: <span class="number">25</span>, left: <span class="number">40</span>})
+        .dimension(moveMonths)
+        .mouseZoomable(<span class="literal">true</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>Specify a range chart to link the brush extent of the range with the zoom focue of the current chart.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .rangeChart(volumeChart)
+        .x(d3.time.scale().domain([<span class="keyword">new</span> Date(<span class="number">1985</span>, <span class="number">0</span>, <span class="number">1</span>), <span class="keyword">new</span> Date(<span class="number">2012</span>, <span class="number">11</span>, <span class="number">31</span>)]))
+        .round(d3.time.month.round)
+        .xUnits(d3.time.months)
+        .elasticY(<span class="literal">true</span>)
+        .renderHorizontalGridLines(<span class="literal">true</span>)
+        .legend(dc.legend().x(<span class="number">800</span>).y(<span class="number">10</span>).itemHeight(<span class="number">13</span>).gap(<span class="number">5</span>))
+        .brushOn(<span class="literal">false</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>Add the base layer of the stack with group. The second parameter specifies a series name for use in the legend
+The <code>.valueAccessor</code> will be used for the base layer</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .group(indexAvgByMonthGroup, <span class="string">"Monthly Index Average"</span>)
+        .valueAccessor(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+            <span class="keyword">return</span> d.value.avg;
+        })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <p>stack additional layers with <code>.stack</code>. The first paramenter is a new group.
+The second parameter is the series name. The third is a value accessor.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .stack(monthlyMoveGroup, <span class="string">"Monthly Index Move"</span>, <span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+            <span class="keyword">return</span> d.value;
+        })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p>title can be called by any stack layer.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .title(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+            <span class="keyword">var</span> value = d.value.avg ? d.value.avg : d.value;
+            <span class="keyword">if</span> (isNaN(value)) value = <span class="number">0</span>;
+            <span class="keyword">return</span> dateFormat(d.key) + <span class="string">"\n"</span> + numberFormat(value);
+        });
+
+    volumeChart.width(<span class="number">990</span>)
+        .height(<span class="number">40</span>)
+        .margins({top: <span class="number">0</span>, right: <span class="number">50</span>, bottom: <span class="number">20</span>, left: <span class="number">40</span>})
+        .dimension(moveMonths)
+        .group(volumeByMonthGroup)
+        .centerBar(<span class="literal">true</span>)
+        .gap(<span class="number">1</span>)
+        .x(d3.time.scale().domain([<span class="keyword">new</span> Date(<span class="number">1985</span>, <span class="number">0</span>, <span class="number">1</span>), <span class="keyword">new</span> Date(<span class="number">2012</span>, <span class="number">11</span>, <span class="number">31</span>)]))
+        .round(d3.time.month.round)
+        .xUnits(d3.time.months);
+
+    <span class="comment">/*</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h4">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <h4>Data Count</h4>
+<p>Create a data count widget and use the given css selector as anchor. You can also specify
+an optional chart group for this chart to be scoped within. When a chart belongs
+to a specific group then any interaction with such chart will only trigger redraw
+on other charts within the same chart group.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    &lt;div id=<span class="string">"data-count"</span>&gt;
+        <span class="xml"><span class="tag">&lt;<span class="title">span</span> <span class="attribute">class</span>=<span class="value">"filter-count"</span>&gt;</span><span class="tag">&lt;/<span class="title">span</span>&gt;</span> selected out of <span class="tag">&lt;<span class="title">span</span> <span class="attribute">class</span>=<span class="value">"total-count"</span>&gt;</span><span class="tag">&lt;/<span class="title">span</span>&gt;</span> records
+    <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+    */
+    dc.dataCount(".dc-data-count")
+        .dimension(ndx)
+        .group(all);
+
+    /*
+</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h4">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <h4>Data Table</h4>
+<p>Create a data table widget and use the given css selector as anchor. You can also specify
+an optional chart group for this chart to be scoped within. When a chart belongs
+to a specific group then any interaction with such chart will only trigger redraw
+on other charts within the same chart group.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    &lt;!-- anchor div <span class="keyword">for</span> data table --&gt;
+    <span class="xml"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"data-table"</span>&gt;</span>
+        <span class="comment">&lt;!-- create a custom header --&gt;</span>
+        <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"header"</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">span</span>&gt;</span>Date<span class="tag">&lt;/<span class="title">span</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">span</span>&gt;</span>Open<span class="tag">&lt;/<span class="title">span</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">span</span>&gt;</span>Close<span class="tag">&lt;/<span class="title">span</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">span</span>&gt;</span>Change<span class="tag">&lt;/<span class="title">span</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">span</span>&gt;</span>Volume<span class="tag">&lt;/<span class="title">span</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+        <span class="comment">&lt;!-- data rows will filled in here --&gt;</span>
+    <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+    */
+    dc.dataTable(".dc-data-table")
+        .dimension(dateDimension)
+</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <p>data table does not use crossfilter group but rather a closure
+as a grouping function</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .group(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+            <span class="keyword">var</span> format = d3.format(<span class="string">"02d"</span>);
+            <span class="keyword">return</span> d.dd.getFullYear() + <span class="string">"/"</span> + format((d.dd.getMonth() + <span class="number">1</span>));
+        })
+        .size(<span class="number">10</span>) <span class="comment">// (optional) max number of records to be shown, :default = 25</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p>dynamic columns creation using an array of closures</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .columns([
+            <span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+                <span class="keyword">return</span> d.date;
+            },
+            <span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+                <span class="keyword">return</span> numberFormat(d.open);
+            },
+            <span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+                <span class="keyword">return</span> numberFormat(d.close);
+            },
+            <span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+                <span class="keyword">return</span> numberFormat(d.close - d.open);
+            },
+            <span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+                <span class="keyword">return</span> d.volume;
+            }
+        ])</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p>(optional) sort using the given field, :default = function(d){return d;}</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .sortBy(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+            <span class="keyword">return</span> d.dd;
+        })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              <p>(optional) sort order, :default ascending</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .order(d3.ascending)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <p>(optional) custom renderlet to post-process chart using D3</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .renderlet(<span class="function"><span class="keyword">function</span> <span class="params">(table)</span> {</span>
+            table.selectAll(<span class="string">".dc-table-group"</span>).classed(<span class="string">"info"</span>, <span class="literal">true</span>);
+        });
+
+    <span class="comment">/*</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-56">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h4">
+                <a class="pilcrow" href="#section-56">&#182;</a>
+              </div>
+              <h4>Geo Choropleth Chart</h4>
+<p>Create a choropleth chart and use the given css selector as anchor. You can also specify
+an optional chart group for this chart to be scoped within. When a chart belongs
+to a specific group then any interaction with such chart will only trigger redraw
+on other charts within the same chart group.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    dc.geoChoroplethChart(<span class="string">"#us-chart"</span>)
+        .width(<span class="number">990</span>) <span class="comment">// (optional) define chart width, :default = 200</span>
+        .height(<span class="number">500</span>) <span class="comment">// (optional) define chart height, :default = 200</span>
+        .transitionDuration(<span class="number">1000</span>) <span class="comment">// (optional) define chart transition duration, :default = 1000</span>
+        .dimension(states) <span class="comment">// set crossfilter dimension, dimension key should match the name retrieved in geo json layer</span>
+        .group(stateRaisedSum) <span class="comment">// set crossfilter group</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-57">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-57">&#182;</a>
+              </div>
+              <p>(optional) define color function or array for bubbles</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .colors([<span class="string">"#ccc"</span>, <span class="string">"#E2F2FF"</span>,<span class="string">"#C4E4FF"</span>,<span class="string">"#9ED2FF"</span>,<span class="string">"#81C5FF"</span>,<span class="string">"#6BBAFF"</span>,<span class="string">"#51AEFF"</span>,<span class="string">"#36A2FF"</span>,<span class="string">"#1E96FF"</span>,<span class="string">"#0089FF"</span>,<span class="string">"#0061B5"</span>])</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-58">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-58">&#182;</a>
+              </div>
+              <p>(optional) define color domain to match your data domain if you want to bind data or color</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .colorDomain([-<span class="number">5</span>, <span class="number">200</span>])</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-59">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-59">&#182;</a>
+              </div>
+              <p>(optional) define color value accessor</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .colorAccessor(<span class="keyword">function</span>(d, i){<span class="keyword">return</span> d.value;})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-60">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-60">&#182;</a>
+              </div>
+              <p>Project the given geojson. You can call this function mutliple times with different geojson feed to generate
+multiple layers of geo paths.</p>
+<ul>
+<li>1st param - geo json data</li>
+<li>2nd param - name of the layer which will be used to generate css class</li>
+<li>3rd param - (optional) a function used to generate key for geo path, it should match the dimension key
+in order for the coloring to work properly</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .overlayGeoJson(statesJson.features, <span class="string">"state"</span>, <span class="keyword">function</span>(d) {
+            <span class="keyword">return</span> d.properties.name;
+        })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-61">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-61">&#182;</a>
+              </div>
+              <p>(optional) closure to generate title for path, :default = d.key + “: ” + d.value</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        .title(<span class="keyword">function</span>(d) {
+            <span class="keyword">return</span> <span class="string">"State: "</span> + d.key + <span class="string">"\nTotal Amount Raised: "</span> + numberFormat(d.value ? d.value : <span class="number">0</span>) + <span class="string">"M"</span>;
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-62">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h4">
+                <a class="pilcrow" href="#section-62">&#182;</a>
+              </div>
+              <h4>Bubble Overlay Chart</h4>
+<p>Create a overlay bubble chart and use the given css selector as anchor. You can also specify
+an optional chart group for this chart to be scoped within. When a chart belongs
+to a specific group then any interaction with such chart will only trigger redraw
+on other charts within the same chart group.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        dc.bubbleOverlay(<span class="string">"#bubble-overlay"</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-63">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-63">&#182;</a>
+              </div>
+              <p>bubble overlay chart does not generate it‘s own svg element but rather resue an existing
+svg to generate it’s overlay layer</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            .svg(d3.select(<span class="string">"#bubble-overlay svg"</span>))
+            .width(<span class="number">990</span>) <span class="comment">// (optional) define chart width, :default = 200</span>
+            .height(<span class="number">500</span>) <span class="comment">// (optional) define chart height, :default = 200</span>
+            .transitionDuration(<span class="number">1000</span>) <span class="comment">// (optional) define chart transition duration, :default = 1000</span>
+            .dimension(states) <span class="comment">// set crossfilter dimension, dimension key should match the name retrieved in geo json layer</span>
+            .group(stateRaisedSum) <span class="comment">// set crossfilter group</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-64">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-64">&#182;</a>
+              </div>
+              <p>closure used to retrieve x value from multi-value group</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            .keyAccessor(<span class="keyword">function</span>(p) {<span class="keyword">return</span> p.value.absGain;})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-65">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-65">&#182;</a>
+              </div>
+              <p>closure used to retrieve y value from multi-value group</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            .valueAccessor(<span class="keyword">function</span>(p) {<span class="keyword">return</span> p.value.percentageGain;})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-66">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-66">&#182;</a>
+              </div>
+              <p>(optional) define color function or array for bubbles</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            .colors([<span class="string">"#ccc"</span>, <span class="string">"#E2F2FF"</span>,<span class="string">"#C4E4FF"</span>,<span class="string">"#9ED2FF"</span>,<span class="string">"#81C5FF"</span>,<span class="string">"#6BBAFF"</span>,<span class="string">"#51AEFF"</span>,<span class="string">"#36A2FF"</span>,<span class="string">"#1E96FF"</span>,<span class="string">"#0089FF"</span>,<span class="string">"#0061B5"</span>])</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-67">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-67">&#182;</a>
+              </div>
+              <p>(optional) define color domain to match your data domain if you want to bind data or color</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            .colorDomain([-<span class="number">5</span>, <span class="number">200</span>])</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-68">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-68">&#182;</a>
+              </div>
+              <p>(optional) define color value accessor</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            .colorAccessor(<span class="keyword">function</span>(d, i){<span class="keyword">return</span> d.value;})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-69">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-69">&#182;</a>
+              </div>
+              <p>closure used to retrieve radius value from multi-value group</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            .radiusValueAccessor(<span class="keyword">function</span>(p) {<span class="keyword">return</span> p.value.fluctuationPercentage;})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-70">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-70">&#182;</a>
+              </div>
+              <p>set radius scale</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            .r(d3.scale.linear().domain([<span class="number">0</span>, <span class="number">3</span>]))</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-71">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-71">&#182;</a>
+              </div>
+              <p>(optional) whether chart should render labels, :default = true</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            .renderLabel(<span class="literal">true</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-72">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-72">&#182;</a>
+              </div>
+              <p>(optional) closure to generate label per bubble, :default = group.key</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            .label(<span class="keyword">function</span>(p) {<span class="keyword">return</span> p.key.getFullYear();})</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-73">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-73">&#182;</a>
+              </div>
+              <p>(optional) whether chart should render titles, :default = false</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            .renderTitle(<span class="literal">true</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-74">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-74">&#182;</a>
+              </div>
+              <p>(optional) closure to generate title per bubble, :default = d.key + “: ” + d.value</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            .title(<span class="keyword">function</span>(d) {
+                <span class="keyword">return</span> <span class="string">"Title: "</span> + d.key;
+            })</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-75">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-75">&#182;</a>
+              </div>
+              <p>add data point to it&#39;s layer dimension key that matches point name will be used to
+generate bubble. multiple data points can be added to bubble overlay to generate
+multiple bubbles</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            .point(<span class="string">"California"</span>, <span class="number">100</span>, <span class="number">120</span>)
+            .point(<span class="string">"Colorado"</span>, <span class="number">300</span>, <span class="number">120</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-76">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-76">&#182;</a>
+              </div>
+              <p>(optional) setting debug flag to true will generate a transparent layer on top of
+bubble overlay which can be used to obtain relative x,y coordinate for specific
+data point, :default = false</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            .debug(true);
+    */</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-77">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h4">
+                <a class="pilcrow" href="#section-77">&#182;</a>
+              </div>
+              <h4>Rendering</h4>
+<p>simply call renderAll() to render all charts on the page</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    dc.renderAll();
+    <span class="comment">/*</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-78">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-78">&#182;</a>
+              </div>
+              <p>or you can render charts belong to a specific chart group</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    dc.renderAll(<span class="string">"group"</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-79">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-79">&#182;</a>
+              </div>
+              <p>once rendered you can call redrawAll to update charts incrementally when data
+change without re-rendering everything</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    dc.redrawAll();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-80">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-80">&#182;</a>
+              </div>
+              <p>or you can choose to redraw only those charts associated with a specific chart group</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    dc.redrawAll("group");
+    */
+});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-81">
+            <div class="annotation">
+              
+              <div class="pilwrap for-h4">
+                <a class="pilcrow" href="#section-81">&#182;</a>
+              </div>
+              <h4>Version</h4>
+<p>Determine the current version of dc with <code>dc.version</code></p>
 
             </div>
             

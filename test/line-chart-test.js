@@ -275,7 +275,9 @@ suite.addBatch({'stacked area chart': {
         chart.dimension(dateDimension)
             .brushOn(false)
             .group(dateIdSumGroup, "stack 0")
+            .title("stack 0", function (d) { return "stack 0: " + d.value; })
             .stack(dateValueSumGroup, "stack 1")
+            .title("stack 1", function (d) { return "stack 1: " + d.value; })
             .stack(dateValueSumGroup, "stack 2")
             .elasticY(true)
             .renderArea(true);
@@ -325,6 +327,24 @@ suite.addBatch({'stacked area chart': {
         chart.render();
         assert.equal(d3.select("#stacked-area-chart g._1 path.line").attr("d"), "M58.62068965517241,134L222.75862068965515,119L246.20689655172413,75L492.41379310344826,133L597.9310344827586,120L961.3793103448276,109");
         assert.equal(d3.selectAll("#stacked-area-chart path.line")[0].length, 3);
+    },
+    'stacks have their own titles accessors': function (chart) {
+        assert.equal(chart.title()({value: 1}), "stack 0: 1");
+        assert.equal(chart.title("stack 0")({value: 2}), "stack 0: 2");
+        assert.equal(chart.title("stack 1")({value: 3}), "stack 1: 3");
+    },
+    'stacks should have titles rendered to their individual stacks': function (chart) {
+        chart.selectAll("#stacked-area-chart g._0 circle.dot").each(function (d) {
+            assert.equal(d3.select(this).select("title").text(), "stack 0: " + d.data.value);
+        });
+        chart.selectAll("#stacked-area-chart g._1 circle.dot").each(function (d) {
+            assert.equal(d3.select(this).select("title").text(), "stack 1: " + d.data.value);
+        });
+    },
+    'stack titles should default to the first stack title, even for unnamed stacks': function (chart) {
+        chart.selectAll("#stacked-area-chart g._2 circle.dot").each(function (d) {
+            assert.equal(d3.select(this).select("title").text(), "stack 0: " + d.data.value);
+        });
     },
     'tooltip dots should always be drawn on top of paths': function(chart) {
         var list = d3.select("#stacked-area-chart").selectAll("circle.dot, path.line, path.area");

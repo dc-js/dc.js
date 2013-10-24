@@ -543,6 +543,18 @@ The chart must be re-rendered for this change to appear.</p>
 <h4>.showStack(name)</h4>
 <p>Show all stacks on the chart with the given name.
 The chart must be re-rendered for this change to appear.</p>
+<h4>.title([stackName], [titleFunction])</h4>
+<p> Set or get the title function. Chart class will use this function to render svg title (usually interpreted by browser
+ as tooltips) for each child element in the chart, i.e. a slice in a pie chart or a bubble in a bubble chart. Almost
+ every chart supports title function however in grid coordinate chart you need to turn off brush in order to use title
+ otherwise the brush layer will block tooltip trigger.</p>
+<p> If the first argument is a stack name, the title function will get or set the title for that stack. If stackName
+ is not provided, the first stack is implied.</p>
+<pre><code class="lang-js"> // set a title <span class="function"><span class="keyword">function</span> <span class="title">on</span> "<span class="title">first</span> <span class="title">stack</span>"
+ <span class="title">chart.title</span><span class="params">("first stack", function(d)</span></span> { <span class="keyword">return</span> d.key + <span class="string">": "</span> + d.value; });
+ // get a title <span class="function"><span class="keyword">function</span> <span class="title">from</span> "<span class="title">second</span> <span class="title">stack</span>"
+ <span class="title">var</span> <span class="title">secondTitleFunction</span> = <span class="title">chart.title</span><span class="params">("second stack")</span></span>;
+});</code></pre>
 <h2><a name="abstract-bubble-chart" href="#abstract-bubble-chart">#</a> Abstract Bubble Chart [Abstract] &lt; <a href="#color-chart">Color Chart</a></h2>
 <p>An abstraction provides reusable functionalities for any chart that needs to visualize data using bubbles.</p>
 <h4>.r([bubbleRadiusScale])</h4>

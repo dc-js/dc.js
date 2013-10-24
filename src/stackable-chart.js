@@ -229,6 +229,57 @@ dc.stackableChart = function (_chart) {
         return _chart._keyAccessor(_);
     });
 
+    /**
+     #### .title([stackName], [titleFunction])
+     Set or get the title function. Chart class will use this function to render svg title (usually interpreted by browser
+     as tooltips) for each child element in the chart, i.e. a slice in a pie chart or a bubble in a bubble chart. Almost
+     every chart supports title function however in grid coordinate chart you need to turn off brush in order to use title
+     otherwise the brush layer will block tooltip trigger.
+
+     If the first argument is a stack name, the title function will get or set the title for that stack. If stackName
+     is not provided, the first stack is implied.
+     ```js
+     // set a title function on "first stack"
+     chart.title("first stack", function(d) { return d.key + ": " + d.value; });
+     // get a title function from "second stack"
+     var secondTitleFunction = chart.title("second stack");
+    });
+     ```
+
+     **/
+    dc.override(_chart, "title", function (stackName, titleAccessor) {
+        if (!stackName) return _chart._title();
+
+        var firstStack = _chart.group() && stackName === _chart._getGroupName(_chart.group());
+
+        if (typeof stackName === 'function') {
+            return _chart._title(stackName);
+        }
+        else if (!titleAccessor) {
+            if (firstStack)
+                return _chart._title();
+            else
+                return _groupStack.getTitle(stackName);
+        }
+
+        if (firstStack)
+            return _chart._title(titleAccessor);
+        else
+            _groupStack.setTitle(stackName, titleAccessor);
+
+        return _chart;
+    });
+
+    _chart.getTitleByIndex = function (index) {
+        if (index === 0) {
+            return _chart.title();
+        }
+        else {
+            var stackTitle = _chart.title(_groupStack.getNameByIndex(index - 1));
+            return stackTitle || _chart.title();
+        }
+    };
+
     _chart.stackLayout = function (stack) {
         if (!arguments.length) return _stackLayout;
         _stackLayout = stack;
