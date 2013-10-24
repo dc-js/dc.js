@@ -561,7 +561,7 @@ suite.addBatch({'ordinal line chart': {
         assert.isFalse(chart.brushOn());
     },
     'should generate correct line path': function (chart) {
-        assert.match(chart.select("path.line").attr("d"), /M72.\d+,0L218.\d+,107L364.\d+,107L510.\d+,53L655.\d+,107L801.\d+,53/);
+        assert.match(chart.select("path.line").attr("d"), /M72.\d+,0L218.\d+,107L364.\d+,107L510(\.\d+)?,53L655.\d+,107L801.\d+,53/);
     },
     teardown: function (topic) {
         resetAllFilters();

@@ -44,9 +44,7 @@ dc.barChart = function (parent, chartGroup) {
 
     dc.override(_chart, 'rescale', function () {
         _chart._rescale();
-        _numberOfBars = undefined;
         _barWidth = undefined;
-        getNumberOfBars();
     });
 
     _chart.plotData = function () {
@@ -94,7 +92,8 @@ dc.barChart = function (parent, chartGroup) {
         dc.transition(bars, _chart.transitionDuration())
             .attr("x", function (d) {
                 var x = _chart.x()(d.x);
-                if (_centerBar || _chart.isOrdinal()) x -= _barWidth / 2;
+                if (_centerBar) x -= _barWidth / 2;
+                if (_chart.isOrdinal()) x += _gap/2;
                 return  dc.utils.safeNumber(x);
             })
             .attr("y", function (d) {
@@ -118,23 +117,18 @@ dc.barChart = function (parent, chartGroup) {
 
     function calculateBarWidth() {
         if (_barWidth === undefined) {
-            var numberOfBars = _chart.isOrdinal() ? getNumberOfBars() + 1 : getNumberOfBars();
+            var numberOfBars = _chart.xUnitCount();
 
-            var w = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
+            if (_chart.isOrdinal() && !_gap)
+                _barWidth = Math.floor(_chart.x().rangeBand());
+            else if (_gap)
+                _barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
+            else
+                _barWidth = Math.floor(_chart.xAxisLength() / (1 + _chart.barPadding()) / numberOfBars);
 
-            if (w == Infinity || isNaN(w) || w < MIN_BAR_WIDTH)
-                w = MIN_BAR_WIDTH;
-
-            _barWidth = w;
+            if (_barWidth == Infinity || isNaN(_barWidth) || _barWidth < MIN_BAR_WIDTH)
+                _barWidth = MIN_BAR_WIDTH;
         }
-    }
-
-    function getNumberOfBars() {
-        if (_numberOfBars === undefined) {
-            _numberOfBars = _chart.xUnitCount();
-        }
-
-        return _numberOfBars;
     }
 
     _chart.fadeDeselectedArea = function () {
@@ -182,6 +176,29 @@ dc.barChart = function (parent, chartGroup) {
     function onClick(d) {
         _chart.onClick(d.data);
     }
+
+    /**
+    ### .barPadding([padding])
+    Get or set the spacing between bars as a fraction of bar size. Valid values are within 0-1.
+    Setting this value will also remove any previously set `gap`. See the
+    [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
+    for a visual description of how the padding is applied.
+    **/
+    _chart.barPadding = function (_) {
+        if (!arguments.length) return _chart._rangeBandPadding();
+        _chart._rangeBandPadding(_);
+        _gap = 0;
+        return _chart;
+    };
+
+    /**
+    ### .outerPadding([padding])
+    Get or set the outer padding on an ordinal bar chart. This setting has no effect on non-ordinal charts.
+    Padding equivlent in width to `padding * barWidth` will be added on each side of the chart.
+
+    Default: 0.5
+    **/
+    _chart.outerPadding = _chart._outerRangeBandPadding;
 
     /**
     #### .gap(gapBetweenBars)
