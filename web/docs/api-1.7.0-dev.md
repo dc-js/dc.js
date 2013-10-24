@@ -905,10 +905,10 @@ moveChart.compose([
 ]);
 ```
 
-#### .shareColors([[boolean])
+#### .shareColors([boolean])
 Get or set color sharing for the chart. If set, the `.colors()` value from this chart
 will be shared with composed children. Additionally if the child chart implements
-Stackable and has not set a custom .colorAccesor, then it will generate a color
+Stackable and has not set a custom .colorAccessor, then it will generate a color
 specific to its order in the composition.
 
 ## <a name="series-chart" href="#Series-chart">#</a> Series Chart [Concrete]
@@ -1140,3 +1140,30 @@ Calculate and return the underlying value of the display
 
 #### .formatNumber([formatter])
 Get or set a function to format the value for the display. By default `d3.format(".2s");` is used.
+
+## <a name="boxplot" href="#boxplot">#</a> Box Plot [Concrete] < [CoordinateGrid Chart](#coordinate-grid-chart)
+A box plot is a chart that depicts numerical data via their quartile ranges.
+
+#### dc.boxPlot(parent[, chartGroup])
+Create a box plot instance and attach it to the given parent element.
+
+Parameters:
+* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
+in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
+chart group.
+
+Return:
+A newly created box plot instance
+
+```js
+// create a box plot under #chart-container1 element using the default global chart group
+var boxPlot1 = dc.boxPlot("#chart-container1");
+// create a box plot under #chart-container2 element using chart group A
+var boxPlot2 = dc.boxPlot("#chart-container2", "chartGroupA");
+```
+
+#### .boxWidth(width || function(innerChartWidth, xUnits) { ... })
+Get or set the numerical width of the boxplot box. Provided width may also be a function.
+This function takes as parameters the chart width without the right and left margins
+as well as the number of x units.
