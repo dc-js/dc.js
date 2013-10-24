@@ -102,6 +102,12 @@ chart.height(function(anchor) { return doSomethingWith(anchor); }); // set the c
 chart.height(null); // reset the height to the default auto calculation
 ```
 
+#### .minWidth([value])
+Set or get minimum width attribute of a chart. This only applicable if the width is calculated by DC.
+
+#### .minHeight([value])
+Set or get minimum height attribute of a chart. This only applicable if the height is calculated by DC.
+
 #### .dimension([value]) - **mandatory**
 Set or get dimension attribute of a chart. In dc a dimension can be any valid
 [crossfilter dimension](https://github.com/square/crossfilter/wiki/API-Reference#wiki-dimension). If the value is given,

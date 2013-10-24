@@ -193,6 +193,10 @@ of its anchor element. If that isn&#39;t possible it defaults to 200;</p>
 <pre><code class="lang-js">chart.height(<span class="number">250</span>); // Set <span class="keyword">the</span> chart's height <span class="keyword">to</span> <span class="number">250</span>px;
 chart.height(function(anchor) { <span class="constant">return</span> doSomethingWith(anchor); }); // <span class="keyword">set</span> <span class="keyword">the</span> chart's height <span class="keyword">with</span> a function
 chart.height(null); // reset <span class="keyword">the</span> height <span class="keyword">to</span> <span class="keyword">the</span> default auto calculation</code></pre>
+<h4>.minWidth([value])</h4>
+<p>Set or get minimum width attribute of a chart. This only applicable if the width is calculated by DC.</p>
+<h4>.minHeight([value])</h4>
+<p>Set or get minimum height attribute of a chart. This only applicable if the height is calculated by DC.</p>
 <h4>.dimension([value]) - <strong>mandatory</strong></h4>
 <p>Set or get dimension attribute of a chart. In dc a dimension can be any valid
 <a href="https://github.com/square/crossfilter/wiki/API-Reference#wiki-dimension">crossfilter dimension</a>. If the value is given,
