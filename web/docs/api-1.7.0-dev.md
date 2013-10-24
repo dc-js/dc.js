@@ -742,6 +742,9 @@ becomes an area chart.
 #### .dotRadius([dotRadius])
 Get or set the radius (in px) for data points. Default dot radius is 5.
 
+#### .renderDataPoints([{radius: 2}])
+Always show individual dots for each datapoint. Default dot radius is 2.
+
 ## <a name="data-count" href="#data-count">#</a> Data Count Widget [Concrete] < [Base Chart](#base-chart)
 Data count is a simple widget designed to display total number records in the data set vs. the number records selected
 by the current filters. Once created data count widget will automatically update the text content of the following elements

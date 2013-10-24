@@ -3741,6 +3741,9 @@ dc.lineChart = function (parent, chartGroup) {
     var _chart = dc.stackableChart(dc.coordinateGridChart({}));
     var _renderArea = false;
     var _dotRadius = DEFAULT_DOT_RADIUS;
+    var _dataPointRadius = null;
+    var _dataPointFillOpacity = 1e-6;
+    var _dataPointStrokeOpacity = 1e-6;
     var _interpolate = 'linear';
     var _tension = 0.7;
     var _defined;
@@ -3885,10 +3888,10 @@ dc.lineChart = function (parent, chartGroup) {
                 dots.enter()
                     .append("circle")
                     .attr("class", DOT_CIRCLE_CLASS)
-                    .attr("r", _dotRadius)
+                    .attr("r", _dataPointRadius || _dotRadius)
                     .attr("fill", function() {return _chart.colorCalculator()(layerIndex);})
-                    .style("fill-opacity", 1e-6)
-                    .style("stroke-opacity", 1e-6)
+                    .style("fill-opacity", _dataPointFillOpacity)
+                    .style("stroke-opacity", _dataPointStrokeOpacity)
                     .on("mousemove", function (d) {
                         var dot = d3.select(this);
                         showDot(dot);
@@ -3925,6 +3928,7 @@ dc.lineChart = function (parent, chartGroup) {
     function showDot(dot) {
         dot.style("fill-opacity", 0.8);
         dot.style("stroke-opacity", 0.8);
+        dot.attr("r", _dotRadius);
         return dot;
     }
 
@@ -3936,7 +3940,9 @@ dc.lineChart = function (parent, chartGroup) {
     }
 
     function hideDot(dot) {
-        dot.style("fill-opacity", 1e-6).style("stroke-opacity", 1e-6);
+        dot.style("fill-opacity", _dataPointFillOpacity)
+            .style("stroke-opacity", _dataPointStrokeOpacity)
+            .attr("r", _dataPointRadius);
     }
 
     function hideRefLines(g) {
@@ -3952,6 +3958,22 @@ dc.lineChart = function (parent, chartGroup) {
     _chart.dotRadius = function (_) {
         if (!arguments.length) return _dotRadius;
         _dotRadius = _;
+        return _chart;
+    };
+
+    /**
+    #### .renderDataPoints([{radius: 2}])
+    Always show individual dots for each datapoint. Default dot radius is 2.
+
+    **/
+    _chart.renderDataPoints = function (options) {
+        _dataPointFillOpacity = 0.8;
+        _dataPointStrokeOpacity = 0.8;
+        if (options && options.radius) {
+            _dataPointRadius = options.radius;
+        } else {
+            _dataPointRadius = 2;
+        }
         return _chart;
     };
 
