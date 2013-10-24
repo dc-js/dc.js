@@ -17,6 +17,7 @@ function buildChart(id) {
         .width(width)
         .height(height)
         .margins({top: 0, right: 0, bottom: 0, left: 0})
+        .boxPadding(0)
         .x(d3.scale.ordinal())
         .xUnits(dc.units.ordinal);
 
@@ -41,8 +42,8 @@ suite.addBatch({
         },
 
         'should create an offset box for each dimension in the group': function (chart) {
-            assert.equal(chart.selectAll("g.box:nth-of-type(1)").attr("transform"), "translate(0,0)");
-            assert.equal(chart.selectAll("g.box:nth-of-type(2)").attr("transform"), "translate(100,0)");
+            assert.equal(chart.selectAll("g.box:nth-of-type(1)").attr("transform"), "translate(50,0)");
+            assert.equal(chart.selectAll("g.box:nth-of-type(2)").attr("transform"), "translate(150,0)");
         },
 
         'should correctly place median line': function (chart) {
