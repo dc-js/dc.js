@@ -51,5 +51,8 @@ grunt merge:$PR
 
 # deploy
 git push origin master
+
+# review changes before site deployment
+git diff origin/gh-pages master:web
 grunt web
 ```
