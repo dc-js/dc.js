@@ -35,8 +35,10 @@ chart
   .xUnits(dc.units.ordinal)
   .brushOn(false)
   .xAxisLabel("Fruit")
+  .yAxisLabel("Quantity Sold")
   .dimension(fruitDimension)
-  .gap(10)
+  .barPadding(0.1)
+  .outerPadding(0.05)
   .group(sumGroup);
 
 chart.render();

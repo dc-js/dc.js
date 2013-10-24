@@ -163,7 +163,7 @@ used when x range is a sequential of integers.</p>
 Usually this function is used in combination with d3.scale.ordinal() on x axis.</p>
 <h4>dc.units.fp.precision(precision)</h4>
 <p>This function generates xunit function in floating-point numbers with the given precision. For example if the function
-is invoked with 0.001 precision then the function created will devide a range [0.5, 1.0] with 500 units.</p>
+is invoked with 0.001 precision then the function created will divide a range [0.5, 1.0] with 500 units.</p>
 <h4>dc.events.trigger(function[, delay])</h4>
 <p>This function is design to trigger throttled event function optionally with certain amount of delay(in milli-seconds).
 Events that are triggered repetitively due to user interaction such as the dragging of the brush might over flood
@@ -458,8 +458,8 @@ y axis range whenever redraw event is triggered.</p>
 <h4>.renderVerticalGridLines([boolean])</h4>
 <p>Turn on/off vertical grid lines.</p>
 <h4>.yAxisPadding([padding])</h4>
-<p>Set or get y axis padding when elastic y axis is turned on. The padding will be added to the top of the y axis if and only
-if elasticY is turned on otherwise it will be simply ignored.</p>
+<p>if elasticY is turned on otherwise it will be simply ignored.
+Set or get y axis padding when elastic y axis is turned on. The padding will be added to the top of the y axis if and only</p>
 <ul>
 <li>padding - could be integer or percentage in string (e.g. &quot;10%&quot;). Padding can be applied to number or date.
 When padding with date, integer represents number of days being padded while percentage string will be treated
@@ -543,6 +543,18 @@ The chart must be re-rendered for this change to appear.</p>
 <h4>.showStack(name)</h4>
 <p>Show all stacks on the chart with the given name.
 The chart must be re-rendered for this change to appear.</p>
+<h4>.title([stackName], [titleFunction])</h4>
+<p> Set or get the title function. Chart class will use this function to render svg title (usually interpreted by browser
+ as tooltips) for each child element in the chart, i.e. a slice in a pie chart or a bubble in a bubble chart. Almost
+ every chart supports title function however in grid coordinate chart you need to turn off brush in order to use title
+ otherwise the brush layer will block tooltip trigger.</p>
+<p> If the first argument is a stack name, the title function will get or set the title for that stack. If stackName
+ is not provided, the first stack is implied.</p>
+<pre><code class="lang-js"> // set a title <span class="function"><span class="keyword">function</span> <span class="title">on</span> "<span class="title">first</span> <span class="title">stack</span>"
+ <span class="title">chart.title</span><span class="params">("first stack", function(d)</span></span> { <span class="keyword">return</span> d.key + <span class="string">": "</span> + d.value; });
+ // get a title <span class="function"><span class="keyword">function</span> <span class="title">from</span> "<span class="title">second</span> <span class="title">stack</span>"
+ <span class="title">var</span> <span class="title">secondTitleFunction</span> = <span class="title">chart.title</span><span class="params">("second stack")</span></span>;
+});</code></pre>
 <h2><a name="abstract-bubble-chart" href="#abstract-bubble-chart">#</a> Abstract Bubble Chart [Abstract] &lt; <a href="#color-chart">Color Chart</a></h2>
 <p>An abstraction provides reusable functionalities for any chart that needs to visualize data using bubbles.</p>
 <h4>.r([bubbleRadiusScale])</h4>
@@ -622,6 +634,15 @@ var chart2 = dc.barChart(<span class="string">"#chart-container2"</span>, <span 
 var chart3 = dc.barChart(compositeChart);</span></code></pre>
 <h4>.centerBar(boolean)</h4>
 <p>Whether the bar chart will render each bar centered around the data position on x axis. Default to false.</p>
+<h3>.barPadding([padding])</h3>
+<p>Get or set the spacing between bars as a fraction of bar size. Valid values are within 0-1.
+Setting this value will also remove any previously set <code>gap</code>. See the
+<a href="https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands">d3 docs</a>
+for a visual description of how the padding is applied.</p>
+<h3>.outerPadding([padding])</h3>
+<p>Get or set the outer padding on an ordinal bar chart. This setting has no effect on non-ordinal charts.
+Padding equivlent in width to <code>padding * barWidth</code> will be added on each side of the chart.</p>
+<p>Default: 0.5</p>
 <h4>.gap(gapBetweenBars)</h4>
 <p>Manually set fixed gap (in px) between bars instead of relying on the default auto-generated gap. By default bar chart
 implementation will calculate and set the gap automatically based on the number of data points and the length of the x axis.</p>
@@ -799,10 +820,10 @@ moveChart<span class="variable">.compose</span>([
         <span class="variable">.group</span>(volumeByMonthGroup)
         <span class="variable">.centerBar</span>(<span class="literal">true</span>)
 ]);</code></pre>
-<h4>.shareColors([[boolean])</h4>
+<h4>.shareColors([boolean])</h4>
 <p>Get or set color sharing for the chart. If set, the <code>.colors()</code> value from this chart
 will be shared with composed children. Additionally if the child chart implements
-Stackable and has not set a custom .colorAccesor, then it will generate a color
+Stackable and has not set a custom .colorAccessor, then it will generate a color
 specific to its order in the composition.</p>
 <h2><a name="series-chart" href="#Series-chart">#</a> Series Chart [Concrete]</h2>
 <h2><a name="geo-choropleth-chart" href="#geo-choropleth-chart">#</a> Geo Choropleth Chart [Concrete] &lt; <a href="#color-chart">Color Chart</a> &lt; <a href="#base-chart">Base Chart</a></h2>
@@ -965,6 +986,35 @@ var display1 = dc.numberDisplay(<span class="string">"#chart-container1"</span>)
 <p>Calculate and return the underlying value of the display</p>
 <h4>.formatNumber([formatter])</h4>
 <p>Get or set a function to format the value for the display. By default <code>d3.format(&quot;.2s&quot;);</code> is used.</p>
+<h2><a name="boxplot" href="#boxplot">#</a> Box Plot [Concrete] &lt; <a href="#coordinate-grid-chart">CoordinateGrid Chart</a></h2>
+<p>A box plot is a chart that depicts numerical data via their quartile ranges.</p>
+<h4>dc.boxPlot(parent[, chartGroup])</h4>
+<p>Create a box plot instance and attach it to the given parent element.</p>
+<p>Parameters:
+<em> parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+</em> chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
+in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
+chart group.</p>
+<p>Return:
+A newly created box plot instance</p>
+<pre><code class="lang-js">// <span class="operator"><span class="keyword">create</span> a box plot under #chart-container1 element <span class="keyword">using</span> the <span class="keyword">default</span> <span class="keyword">global</span> chart <span class="keyword">group</span>
+var boxPlot1 = dc.boxPlot(<span class="string">"#chart-container1"</span>);</span>
+// <span class="operator"><span class="keyword">create</span> a box plot under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
+var boxPlot2 = dc.boxPlot(<span class="string">"#chart-container2"</span>, <span class="string">"chartGroupA"</span>);</span></code></pre>
+<h3>.boxPadding([padding])</h3>
+<p>Get or set the spacing between boxes as a fraction of bar size. Valid values are within 0-1.
+See the <a href="https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands">d3 docs</a>
+for a visual description of how the padding is applied.</p>
+<p>Default: 0.8</p>
+<h3>.outerPadding([padding])</h3>
+<p>Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
+or on charts with a custom <code>.boxWidth</code>. Padding equivlent in width to <code>padding * barWidth</code> will be
+added on each side of the chart.</p>
+<p>Default: 0.5</p>
+<h4>.boxWidth(width || function(innerChartWidth, xUnits) { ... })</h4>
+<p>Get or set the numerical width of the boxplot box. Provided width may also be a function.
+This function takes as parameters the chart width without the right and left margins
+as well as the number of x units.</p>
 
   </body>
 </html>

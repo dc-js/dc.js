@@ -59,7 +59,7 @@ Usually this function is used in combination with d3.scale.ordinal() on x axis.
 
 #### dc.units.fp.precision(precision)
 This function generates xunit function in floating-point numbers with the given precision. For example if the function
-is invoked with 0.001 precision then the function created will devide a range [0.5, 1.0] with 500 units.
+is invoked with 0.001 precision then the function created will divide a range [0.5, 1.0] with 500 units.
 
 #### dc.events.trigger(function[, delay])
 This function is design to trigger throttled event function optionally with certain amount of delay(in milli-seconds).
@@ -457,8 +457,8 @@ Turn on/off horizontal grid lines.
 Turn on/off vertical grid lines.
 
 #### .yAxisPadding([padding])
-Set or get y axis padding when elastic y axis is turned on. The padding will be added to the top of the y axis if and only
 if elasticY is turned on otherwise it will be simply ignored.
+Set or get y axis padding when elastic y axis is turned on. The padding will be added to the top of the y axis if and only
 
 * padding - could be integer or percentage in string (e.g. "10%"). Padding can be applied to number or date.
 When padding with date, integer represents number of days being padded while percentage string will be treated
@@ -569,6 +569,22 @@ The chart must be re-rendered for this change to appear.
 Show all stacks on the chart with the given name.
 The chart must be re-rendered for this change to appear.
 
+ #### .title([stackName], [titleFunction])
+ Set or get the title function. Chart class will use this function to render svg title (usually interpreted by browser
+ as tooltips) for each child element in the chart, i.e. a slice in a pie chart or a bubble in a bubble chart. Almost
+ every chart supports title function however in grid coordinate chart you need to turn off brush in order to use title
+ otherwise the brush layer will block tooltip trigger.
+
+ If the first argument is a stack name, the title function will get or set the title for that stack. If stackName
+ is not provided, the first stack is implied.
+ ```js
+ // set a title function on "first stack"
+ chart.title("first stack", function(d) { return d.key + ": " + d.value; });
+ // get a title function from "second stack"
+ var secondTitleFunction = chart.title("second stack");
+});
+ ```
+
 ## <a name="abstract-bubble-chart" href="#abstract-bubble-chart">#</a> Abstract Bubble Chart [Abstract] < [Color Chart](#color-chart)
 An abstraction provides reusable functionalities for any chart that needs to visualize data using bubbles.
 
@@ -672,6 +688,18 @@ var chart3 = dc.barChart(compositeChart);
 
 #### .centerBar(boolean)
 Whether the bar chart will render each bar centered around the data position on x axis. Default to false.
+
+### .barPadding([padding])
+Get or set the spacing between bars as a fraction of bar size. Valid values are within 0-1.
+Setting this value will also remove any previously set `gap`. See the
+[d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
+for a visual description of how the padding is applied.
+
+### .outerPadding([padding])
+Get or set the outer padding on an ordinal bar chart. This setting has no effect on non-ordinal charts.
+Padding equivlent in width to `padding * barWidth` will be added on each side of the chart.
+
+Default: 0.5
 
 #### .gap(gapBetweenBars)
 Manually set fixed gap (in px) between bars instead of relying on the default auto-generated gap. By default bar chart
@@ -905,10 +933,10 @@ moveChart.compose([
 ]);
 ```
 
-#### .shareColors([[boolean])
+#### .shareColors([boolean])
 Get or set color sharing for the chart. If set, the `.colors()` value from this chart
 will be shared with composed children. Additionally if the child chart implements
-Stackable and has not set a custom .colorAccesor, then it will generate a color
+Stackable and has not set a custom .colorAccessor, then it will generate a color
 specific to its order in the composition.
 
 ## <a name="series-chart" href="#Series-chart">#</a> Series Chart [Concrete]
@@ -1140,3 +1168,44 @@ Calculate and return the underlying value of the display
 
 #### .formatNumber([formatter])
 Get or set a function to format the value for the display. By default `d3.format(".2s");` is used.
+
+## <a name="boxplot" href="#boxplot">#</a> Box Plot [Concrete] < [CoordinateGrid Chart](#coordinate-grid-chart)
+A box plot is a chart that depicts numerical data via their quartile ranges.
+
+#### dc.boxPlot(parent[, chartGroup])
+Create a box plot instance and attach it to the given parent element.
+
+Parameters:
+* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
+in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
+chart group.
+
+Return:
+A newly created box plot instance
+
+```js
+// create a box plot under #chart-container1 element using the default global chart group
+var boxPlot1 = dc.boxPlot("#chart-container1");
+// create a box plot under #chart-container2 element using chart group A
+var boxPlot2 = dc.boxPlot("#chart-container2", "chartGroupA");
+```
+
+### .boxPadding([padding])
+Get or set the spacing between boxes as a fraction of bar size. Valid values are within 0-1.
+See the [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
+for a visual description of how the padding is applied.
+
+Default: 0.8
+
+### .outerPadding([padding])
+Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
+or on charts with a custom `.boxWidth`. Padding equivlent in width to `padding * barWidth` will be
+added on each side of the chart.
+
+Default: 0.5
+
+#### .boxWidth(width || function(innerChartWidth, xUnits) { ... })
+Get or set the numerical width of the boxplot box. Provided width may also be a function.
+This function takes as parameters the chart width without the right and left margins
+as well as the number of x units.

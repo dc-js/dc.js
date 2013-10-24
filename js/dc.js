@@ -175,8 +175,9 @@ dc.redrawAll = function(group) {
         dc._renderlet(group);
 };
 
+dc.disableTransitions = false;
 dc.transition = function(selections, duration, callback) {
-    if (duration <= 0 || duration === undefined)
+    if (duration <= 0 || duration === undefined || dc.disableTransitions)
         return selections;
 
     var s = selections
@@ -215,7 +216,7 @@ dc.units.ordinal = function(s, e, domain){
 /**
 #### dc.units.fp.precision(precision)
 This function generates xunit function in floating-point numbers with the given precision. For example if the function
-is invoked with 0.001 precision then the function created will devide a range [0.5, 1.0] with 500 units.
+is invoked with 0.001 precision then the function created will divide a range [0.5, 1.0] with 500 units.
 
 **/
 dc.units.fp = {};
@@ -411,6 +412,10 @@ dc.utils.GroupStack = function () {
         return _groups[index][1];
     };
 
+    this.getNameByIndex = function (index) {
+        return _groups[index].name;
+    };
+
     this.size = function () {
         return _groups.length;
     };
@@ -446,6 +451,20 @@ dc.utils.GroupStack = function () {
         for (var i = 0; i < _groups.length; ++i) {
             if (_groups[i].name === name)
                 _groups[i].hidden = value;
+        }
+    };
+
+    this.setTitle = function(name, titleAccessor) {
+        for (var i = 0; i < _groups.length; ++i) {
+            if (_groups[i].name === name)
+                _groups[i].title = titleAccessor;
+        }
+    };
+
+    this.getTitle = function(name) {
+        for (var i = 0; i < _groups.length; ++i) {
+            if (_groups[i].name === name)
+                return _groups[i].title;
         }
     };
 
@@ -1589,9 +1608,11 @@ dc.coordinateGridChart = function (_chart) {
     var _mouseZoomable = false;
     var _clipPadding = 0;
 
+    var _outerRangeBandPadding = 0.5;
+    var _rangeBandPadding = 0;
+
     _chart.rescale = function () {
         _unitCount = undefined;
-        _chart.xUnitCount();
     };
 
     /**
@@ -1804,19 +1825,6 @@ dc.coordinateGridChart = function (_chart) {
         return _chart.xUnits() === dc.units.ordinal;
     };
 
-    _chart.prepareOrdinalXAxis = function (count) {
-        if (!count)
-            count = _chart.xUnitCount();
-        var range = [];
-        var increment = _chart.xAxisLength() / (count + 1);
-        var currentPosition = increment/2;
-        for (var i = 0; i < count; i++) {
-            range[i] = currentPosition;
-            currentPosition += increment;
-        }
-        _x.range(range);
-    };
-
     function prepareXAxis(g) {
         if (_chart.elasticX() && !_chart.isOrdinal()) {
             _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
@@ -1827,7 +1835,7 @@ dc.coordinateGridChart = function (_chart) {
         }
 
         if (_chart.isOrdinal()) {
-            _chart.prepareOrdinalXAxis();
+            _x.rangeBands([0,_chart.xAxisLength()],_rangeBandPadding,_outerRangeBandPadding);
         } else {
             _x.range([0, _chart.xAxisLength()]);
         }
@@ -1848,7 +1856,7 @@ dc.coordinateGridChart = function (_chart) {
         var axisXLab = g.selectAll("text."+X_AXIS_LABEL_CLASS);
         if (axisXLab.empty() && _chart.xAxisLabel())
             axisXLab = g.append('text')
-                .attr("transform", "translate(" + _chart.xAxisLength() / 2 + "," + (_chart.height() - _xAxisLabelPadding) + ")")
+                .attr("transform", "translate(" + (_chart.margins().left + _chart.xAxisLength() / 2) + "," + (_chart.height() - _xAxisLabelPadding) + ")")
                 .attr('class', X_AXIS_LABEL_CLASS)
                 .attr('text-anchor', 'middle')
                 .text(_chart.xAxisLabel());
@@ -1946,7 +1954,7 @@ dc.coordinateGridChart = function (_chart) {
         var axisYLab = g.selectAll("text."+Y_AXIS_LABEL_CLASS);
         if (axisYLab.empty() && _chart.yAxisLabel())
             axisYLab = g.append('text')
-                .attr("transform", "translate(" + _yAxisLabelPadding + "," + _chart.yAxisHeight()/2 + "),rotate(-90)")
+                .attr("transform", "translate(" + _yAxisLabelPadding + "," + (_chart.margins().top + _chart.yAxisHeight()/2) + "),rotate(-90)")
                 .attr('class', Y_AXIS_LABEL_CLASS)
                 .attr('text-anchor', 'middle')
                 .text(_chart.yAxisLabel());
@@ -2103,22 +2111,20 @@ dc.coordinateGridChart = function (_chart) {
         var min = d3.min(_chart.data(), function (e) {
             return _chart.valueAccessor()(e);
         });
-        min = dc.utils.subtract(min, _yAxisPadding);
-        return min;
+        return dc.utils.subtract(min, _yAxisPadding);
     };
 
     _chart.yAxisMax = function () {
         var max = d3.max(_chart.data(), function (e) {
             return _chart.valueAccessor()(e);
         });
-        max = dc.utils.add(max, _yAxisPadding);
-        return max;
+        return dc.utils.add(max, _yAxisPadding);
     };
 
     /**
     #### .yAxisPadding([padding])
-    Set or get y axis padding when elastic y axis is turned on. The padding will be added to the top of the y axis if and only
     if elasticY is turned on otherwise it will be simply ignored.
+    Set or get y axis padding when elastic y axis is turned on. The padding will be added to the top of the y axis if and only
 
     * padding - could be integer or percentage in string (e.g. "10%"). Padding can be applied to number or date.
     When padding with date, integer represents number of days being padded while percentage string will be treated
@@ -2149,6 +2155,18 @@ dc.coordinateGridChart = function (_chart) {
     _chart.round = function (_) {
         if (!arguments.length) return _round;
         _round = _;
+        return _chart;
+    };
+
+    _chart._rangeBandPadding = function (_) {
+        if (!arguments.length) return _rangeBandPadding;
+        _rangeBandPadding = _;
+        return _chart;
+    };
+
+    _chart._outerRangeBandPadding = function (_) {
+        if (!arguments.length) return _outerRangeBandPadding;
+        _outerRangeBandPadding = _;
         return _chart;
     };
 
@@ -2212,22 +2230,10 @@ dc.coordinateGridChart = function (_chart) {
         return _brush.empty() || !extent || extent[1] <= extent[0];
     };
 
-    _chart.brushHasNoLength = function(extent) {
-        if (extent[0] instanceof Date && extent[1] instanceof Date) {
-            return extent[0].getTime() == extent[1].getTime();
-        } else {
-            return extent[0] == extent[1];
-        }
-    };
-
     _chart._brushing = function() {
         var extent = _chart.extendBrush();
 
         _chart.redrawBrush(_g);
-
-        if (_chart.brushHasNoLength(extent)) {
-            return;
-        }
 
         if (_chart.brushIsEmpty(extent)) {
             dc.events.trigger(function () {
@@ -2808,6 +2814,57 @@ dc.stackableChart = function (_chart) {
         _chart.expireCache();
         return _chart._keyAccessor(_);
     });
+
+    /**
+     #### .title([stackName], [titleFunction])
+     Set or get the title function. Chart class will use this function to render svg title (usually interpreted by browser
+     as tooltips) for each child element in the chart, i.e. a slice in a pie chart or a bubble in a bubble chart. Almost
+     every chart supports title function however in grid coordinate chart you need to turn off brush in order to use title
+     otherwise the brush layer will block tooltip trigger.
+
+     If the first argument is a stack name, the title function will get or set the title for that stack. If stackName
+     is not provided, the first stack is implied.
+     ```js
+     // set a title function on "first stack"
+     chart.title("first stack", function(d) { return d.key + ": " + d.value; });
+     // get a title function from "second stack"
+     var secondTitleFunction = chart.title("second stack");
+    });
+     ```
+
+     **/
+    dc.override(_chart, "title", function (stackName, titleAccessor) {
+        if (!stackName) return _chart._title();
+
+        var firstStack = _chart.group() && stackName === _chart._getGroupName(_chart.group());
+
+        if (typeof stackName === 'function') {
+            return _chart._title(stackName);
+        }
+        else if (!titleAccessor) {
+            if (firstStack)
+                return _chart._title();
+            else
+                return _groupStack.getTitle(stackName);
+        }
+
+        if (firstStack)
+            return _chart._title(titleAccessor);
+        else
+            _groupStack.setTitle(stackName, titleAccessor);
+
+        return _chart;
+    });
+
+    _chart.getTitleByIndex = function (index) {
+        if (index === 0) {
+            return _chart.title();
+        }
+        else {
+            var stackTitle = _chart.title(_groupStack.getNameByIndex(index - 1));
+            return stackTitle || _chart.title();
+        }
+    };
 
     _chart.stackLayout = function (stack) {
         if (!arguments.length) return _stackLayout;
@@ -3432,9 +3489,7 @@ dc.barChart = function (parent, chartGroup) {
 
     dc.override(_chart, 'rescale', function () {
         _chart._rescale();
-        _numberOfBars = undefined;
         _barWidth = undefined;
-        getNumberOfBars();
     });
 
     _chart.plotData = function () {
@@ -3482,7 +3537,8 @@ dc.barChart = function (parent, chartGroup) {
         dc.transition(bars, _chart.transitionDuration())
             .attr("x", function (d) {
                 var x = _chart.x()(d.x);
-                if (_centerBar || _chart.isOrdinal()) x -= _barWidth / 2;
+                if (_centerBar) x -= _barWidth / 2;
+                if (_chart.isOrdinal()) x += _gap/2;
                 return  dc.utils.safeNumber(x);
             })
             .attr("y", function (d) {
@@ -3506,23 +3562,18 @@ dc.barChart = function (parent, chartGroup) {
 
     function calculateBarWidth() {
         if (_barWidth === undefined) {
-            var numberOfBars = _chart.isOrdinal() ? getNumberOfBars() + 1 : getNumberOfBars();
+            var numberOfBars = _chart.xUnitCount();
 
-            var w = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
+            if (_chart.isOrdinal() && !_gap)
+                _barWidth = Math.floor(_chart.x().rangeBand());
+            else if (_gap)
+                _barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
+            else
+                _barWidth = Math.floor(_chart.xAxisLength() / (1 + _chart.barPadding()) / numberOfBars);
 
-            if (w == Infinity || isNaN(w) || w < MIN_BAR_WIDTH)
-                w = MIN_BAR_WIDTH;
-
-            _barWidth = w;
+            if (_barWidth == Infinity || isNaN(_barWidth) || _barWidth < MIN_BAR_WIDTH)
+                _barWidth = MIN_BAR_WIDTH;
         }
-    }
-
-    function getNumberOfBars() {
-        if (_numberOfBars === undefined) {
-            _numberOfBars = _chart.xUnitCount();
-        }
-
-        return _numberOfBars;
     }
 
     _chart.fadeDeselectedArea = function () {
@@ -3570,6 +3621,29 @@ dc.barChart = function (parent, chartGroup) {
     function onClick(d) {
         _chart.onClick(d.data);
     }
+
+    /**
+    ### .barPadding([padding])
+    Get or set the spacing between bars as a fraction of bar size. Valid values are within 0-1.
+    Setting this value will also remove any previously set `gap`. See the
+    [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
+    for a visual description of how the padding is applied.
+    **/
+    _chart.barPadding = function (_) {
+        if (!arguments.length) return _chart._rangeBandPadding();
+        _chart._rangeBandPadding(_);
+        _gap = 0;
+        return _chart;
+    };
+
+    /**
+    ### .outerPadding([padding])
+    Get or set the outer padding on an ordinal bar chart. This setting has no effect on non-ordinal charts.
+    Padding equivlent in width to `padding * barWidth` will be added on each side of the chart.
+
+    Default: 0.5
+    **/
+    _chart.outerPadding = _chart._outerRangeBandPadding;
 
     /**
     #### .gap(gapBetweenBars)
@@ -3825,7 +3899,7 @@ dc.lineChart = function (parent, chartGroup) {
                         hideDot(dot);
                         hideRefLines(g);
                     })
-                    .append("title").text(dc.pluck('data',_chart.title()));
+                    .append("title").text(dc.pluck('data', _chart.getTitleByIndex(layerIndex)));
 
                 dots.attr("cx", function (d) {
                         return dc.utils.safeNumber(_chart.x()(d.x));
@@ -3833,7 +3907,7 @@ dc.lineChart = function (parent, chartGroup) {
                     .attr("cy", function (d) {
                         return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
                     })
-                    .select("title").text(dc.pluck('data',_chart.title()));
+                    .select("title").text(dc.pluck('data', _chart.getTitleByIndex(layerIndex)));
 
                 dots.exit().remove();
             });
@@ -4438,10 +4512,10 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .shareColors([[boolean])
+    #### .shareColors([boolean])
     Get or set color sharing for the chart. If set, the `.colors()` value from this chart
     will be shared with composed children. Additionally if the child chart implements
-    Stackable and has not set a custom .colorAccesor, then it will generate a color
+    Stackable and has not set a custom .colorAccessor, then it will generate a color
     specific to its order in the composition.
     **/
     _chart.shareColors = function (_) {
@@ -5668,7 +5742,7 @@ dc.numberDisplay = function (parent, chartGroup) {
     };
 
     _chart.data(function (group) {
-        var valObj = group.value && group.value() || group.top(1)[0];
+        var valObj = group.value ? group.value() : group.top(1)[0];
         return _chart.valueAccessor()(valObj);
     });
 
@@ -6138,6 +6212,30 @@ function boxQuartiles(d) {
 
 })();
 
+/**
+ ## <a name="boxplot" href="#boxplot">#</a> Box Plot [Concrete] < [CoordinateGrid Chart](#coordinate-grid-chart)
+ A box plot is a chart that depicts numerical data via their quartile ranges.
+
+ #### dc.boxPlot(parent[, chartGroup])
+ Create a box plot instance and attach it to the given parent element.
+
+ Parameters:
+ * parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+ * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
+ in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
+ chart group.
+
+ Return:
+ A newly created box plot instance
+
+ ```js
+ // create a box plot under #chart-container1 element using the default global chart group
+ var boxPlot1 = dc.boxPlot("#chart-container1");
+ // create a box plot under #chart-container2 element using chart group A
+ var boxPlot2 = dc.boxPlot("#chart-container2", "chartGroupA");
+ ```
+
+ **/
 dc.boxPlot = function (parent, chartGroup) {
     var _chart = dc.coordinateGridChart({});
 
@@ -6146,52 +6244,97 @@ dc.boxPlot = function (parent, chartGroup) {
     var _whiskers = _whiskers_iqr(_whisker_iqr_factor);
 
     var _box = d3.box();
-    var _boxWidth;
+    var _boxWidth = function (innerChartWidth, xUnits) {
+        if (_chart.isOrdinal())
+            return _chart.x().rangeBand();
+        else
+            return innerChartWidth / (1 + _chart.boxPadding()) / xUnits;
+    };
 
-    // defaut padding to handle min/max whisker text
+    // default padding to handle min/max whisker text
     _chart.yAxisPadding(12);
 
-    function groupData() {
-        return _chart.group().all().map(function (kv) {
-            kv.map = function () { return _chart.valueAccessor()(kv); };
-            return kv;
+    // default to ordinal
+    _chart.x(d3.scale.ordinal());
+    _chart.xUnits(dc.units.ordinal);
+
+    // valueAccessor should return an array of values that can be coerced into numbers
+    //  or if data is overloaded for a static array of arrays, it should be `Number`
+    _chart.data(function(group) {
+        return group.all().map(function (d) {
+            d.map = function(accessor) { return accessor.call(d,d); };
+            return d;
         });
-    }
+    });
+
+    /**
+    ### .boxPadding([padding])
+    Get or set the spacing between boxes as a fraction of bar size. Valid values are within 0-1.
+    See the [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
+    for a visual description of how the padding is applied.
+
+    Default: 0.8
+    **/
+    _chart.boxPadding = _chart._rangeBandPadding;
+    _chart.boxPadding(0.8);
+
+    /**
+    ### .outerPadding([padding])
+    Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
+    or on charts with a custom `.boxWidth`. Padding equivlent in width to `padding * barWidth` will be
+    added on each side of the chart.
+
+    Default: 0.5
+    **/
+    _chart.outerPadding = _chart._outerRangeBandPadding;
+    _chart.outerPadding(0.5);
+
+    /**
+     #### .boxWidth(width || function(innerChartWidth, xUnits) { ... })
+     Get or set the numerical width of the boxplot box. Provided width may also be a function.
+     This function takes as parameters the chart width without the right and left margins
+     as well as the number of x units.
+     **/
+    _chart.boxWidth = function(_) {
+        if (!arguments.length) return _boxWidth;
+        _boxWidth = d3.functor(_);
+        return _chart;
+    };
 
     _chart.plotData = function () {
-        // TODO: expose to customize
-        _boxWidth = 0.2 * _chart.effectiveWidth() / (_chart.xUnitCount() + 1);
+        var _calculatedBoxWidth = _boxWidth(_chart.effectiveWidth(), _chart.xUnitCount());
 
         _box.whiskers(_whiskers)
-            .width(_boxWidth)
+            .width(_calculatedBoxWidth)
             .height(_chart.effectiveHeight())
+            .value(_chart.valueAccessor())
             .domain(_chart.y().domain());
 
-        // TODO: figure out why the .data call end up cause numbers to be added to the domain
-        var saveDomain = Array.prototype.slice.call(_chart.x().domain(), 0);
+        var boxTransform = function (d, i) {
+            var xOffset = _chart.x()(_chart.keyAccessor()(d,i));
+            return "translate(" + xOffset + ",0)";
+        };
+
         _chart.chartBodyG().selectAll('g.box')
-            .data(groupData())
+            .data(_chart.data())
           .enter().append("g")
             .attr("class", "box")
-            .attr("transform", function (d, i) { return "translate(" + (_chart.x()(i) - _boxWidth / 2) + ",0)"; }) //-"+_chart.margins().bottom+")"; })
+            .attr("transform", boxTransform)
             .call(_box);
-        _chart.x().domain(saveDomain);
     };
 
     _chart.yAxisMin = function () {
-        var min = d3.min(_chart.group().all(), function (e) {
+        var min = d3.min(_chart.data(), function (e) {
             return d3.min(_chart.valueAccessor()(e));
         });
-        min = dc.utils.subtract(min, _chart.yAxisPadding());
-        return min;
+        return dc.utils.subtract(min, _chart.yAxisPadding());
     };
 
     _chart.yAxisMax = function () {
-        var max = d3.max(_chart.group().all(), function (e) {
+        var max = d3.max(_chart.data(), function (e) {
             return d3.max(_chart.valueAccessor()(e));
         });
-        max = dc.utils.add(max, _chart.yAxisPadding());
-        return max;
+        return dc.utils.add(max, _chart.yAxisPadding());
     };
 
     // Returns a function to compute the interquartile range.
