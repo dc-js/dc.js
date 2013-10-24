@@ -135,6 +135,10 @@ dc.utils.GroupStack = function () {
         return _groups[index][1];
     };
 
+    this.getNameByIndex = function (index) {
+        return _groups[index].name;
+    };
+
     this.size = function () {
         return _groups.length;
     };
@@ -170,6 +174,20 @@ dc.utils.GroupStack = function () {
         for (var i = 0; i < _groups.length; ++i) {
             if (_groups[i].name === name)
                 _groups[i].hidden = value;
+        }
+    };
+
+    this.setTitle = function(name, titleAccessor) {
+        for (var i = 0; i < _groups.length; ++i) {
+            if (_groups[i].name === name)
+                _groups[i].title = titleAccessor;
+        }
+    };
+
+    this.getTitle = function(name) {
+        for (var i = 0; i < _groups.length; ++i) {
+            if (_groups[i].name === name)
+                return _groups[i].title;
         }
     };
 
