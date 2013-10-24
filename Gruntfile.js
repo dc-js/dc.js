@@ -41,8 +41,8 @@ module.exports = function (grunt) {
                     ignores: ['src/banner.js','src/footer.js','src/d3.box.js']
                 }
             },
-            testAndBuld: {
-                src: ['Gruntfile.js', 'test/**/*.js'],
+            others: {
+                src: ['Gruntfile.js', 'test/**/*.js', 'web/stock.js'],
                 options: { '-W041': true }
             }
         },
