@@ -674,6 +674,18 @@ var chart3 = dc.lineChart(compositeChart);</span></code></pre>
 becomes an area chart.</p>
 <h4>.dotRadius([dotRadius])</h4>
 <p>Get or set the radius (in px) for data points. Default dot radius is 5.</p>
+<h4>.renderDataPoints([options])</h4>
+<p>Always show individual dots for each datapoint.</p>
+<p>Options, if given, is an object that can contain the following:</p>
+<ul>
+<li>fillOpacity (default 0.8)</li>
+<li>strokeOpacity (default 0.8)</li>
+<li>radius (default 2)</li>
+</ul>
+<p>If <code>options</code> is falsy, it disable data point rendering.</p>
+<p>If no <code>options</code> are provded, the current <code>options</code> values are instead returned</p>
+<p>Example:</p>
+<pre><code><span class="attribute">chart.renderDataPoints([{radius</span>: <span class="string">2}])</span></code></pre>
 <h2><a name="data-count" href="#data-count">#</a> Data Count Widget [Concrete] &lt; <a href="#base-chart">Base Chart</a></h2>
 <p>Data count is a simple widget designed to display total number records in the data set vs. the number records selected
 by the current filters. Once created data count widget will automatically update the text content of the following elements

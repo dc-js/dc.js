@@ -3484,7 +3484,6 @@ dc.barChart = function (parent, chartGroup) {
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
     var _centerBar = false;
 
-    var _numberOfBars;
     var _barWidth;
 
     dc.override(_chart, 'rescale', function () {
@@ -3737,10 +3736,14 @@ dc.lineChart = function (parent, chartGroup) {
     var DOT_CIRCLE_CLASS = "dot";
     var Y_AXIS_REF_LINE_CLASS = "yRef";
     var X_AXIS_REF_LINE_CLASS = "xRef";
+    var DEFAULT_DOT_OPACITY = 1e-6;
 
     var _chart = dc.stackableChart(dc.coordinateGridChart({}));
     var _renderArea = false;
     var _dotRadius = DEFAULT_DOT_RADIUS;
+    var _dataPointRadius = null;
+    var _dataPointFillOpacity = DEFAULT_DOT_OPACITY;
+    var _dataPointStrokeOpacity = DEFAULT_DOT_OPACITY;
     var _interpolate = 'linear';
     var _tension = 0.7;
     var _defined;
@@ -3885,10 +3888,10 @@ dc.lineChart = function (parent, chartGroup) {
                 dots.enter()
                     .append("circle")
                     .attr("class", DOT_CIRCLE_CLASS)
-                    .attr("r", _dotRadius)
+                    .attr("r", _dataPointRadius || _dotRadius)
                     .attr("fill", function() {return _chart.colorCalculator()(layerIndex);})
-                    .style("fill-opacity", 1e-6)
-                    .style("stroke-opacity", 1e-6)
+                    .style("fill-opacity", _dataPointFillOpacity)
+                    .style("stroke-opacity", _dataPointStrokeOpacity)
                     .on("mousemove", function (d) {
                         var dot = d3.select(this);
                         showDot(dot);
@@ -3925,6 +3928,7 @@ dc.lineChart = function (parent, chartGroup) {
     function showDot(dot) {
         dot.style("fill-opacity", 0.8);
         dot.style("stroke-opacity", 0.8);
+        dot.attr("r", _dotRadius);
         return dot;
     }
 
@@ -3936,7 +3940,9 @@ dc.lineChart = function (parent, chartGroup) {
     }
 
     function hideDot(dot) {
-        dot.style("fill-opacity", 1e-6).style("stroke-opacity", 1e-6);
+        dot.style("fill-opacity", _dataPointFillOpacity)
+            .style("stroke-opacity", _dataPointStrokeOpacity)
+            .attr("r", _dataPointRadius);
     }
 
     function hideRefLines(g) {
@@ -3952,6 +3958,43 @@ dc.lineChart = function (parent, chartGroup) {
     _chart.dotRadius = function (_) {
         if (!arguments.length) return _dotRadius;
         _dotRadius = _;
+        return _chart;
+    };
+
+    /**
+    #### .renderDataPoints([options])
+    Always show individual dots for each datapoint.
+
+    Options, if given, is an object that can contain the following:
+
+    * fillOpacity (default 0.8)
+    * strokeOpacity (default 0.8)
+    * radius (default 2)
+
+    If `options` is falsy, it disable data point rendering.
+
+    If no `options` are provded, the current `options` values are instead returned
+
+    Example:
+    ```
+    chart.renderDataPoints([{radius: 2}])
+    ```
+    **/
+    _chart.renderDataPoints = function (options) {
+        if (!arguments.length) return {
+                fillOpacity: _dataPointFillOpacity,
+                strokeOpacity: _dataPointStrokeOpacity,
+                radius: _dataPointRadius
+            };
+        if (!options) {
+            _dataPointFillOpacity = DEFAULT_DOT_OPACITY;
+            _dataPointStrokeOpacity = DEFAULT_DOT_OPACITY;
+            _dataPointRadius = null;
+        } else {
+            _dataPointFillOpacity = options.fillOpacity || 0.8;
+            _dataPointStrokeOpacity = options.strokeOpacity || 0.8;
+            _dataPointRadius = options.radius || 2;
+        }
         return _chart;
     };
 

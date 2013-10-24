@@ -24,8 +24,6 @@ d3.csv("morley.csv", function(error, experiments) {
   var ndx                 = crossfilter(experiments),
       runDimension        = ndx.dimension(function(d) {return +d.Run;})
       speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
-      expDimension        = ndx.dimension(function(d) {return d.Expt;})
-      speedSumGroup2      = expDimension.group().reduceSum(function(d) {return -d.Speed * d.Run / 100;});
 
   chart
     .width(768)
@@ -34,13 +32,11 @@ d3.csv("morley.csv", function(error, experiments) {
     .interpolate('step-before')
     .renderArea(true)
     .brushOn(false)
+    .renderDataPoints(true)
     .yAxisLabel("This is the Y Axis!")
     .dimension(runDimension)
     .group(speedSumGroup);
 
-  chart.render();
-
-  chart.group(speedSumGroup2).dimension(expDimension);
   chart.render();
 
 });
