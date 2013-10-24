@@ -31,18 +31,49 @@ dc.boxPlot = function (parent, chartGroup) {
 
     var _box = d3.box();
     var _boxWidth = function (innerChartWidth, xUnits) {
-        return innerChartWidth / (xUnits + 1);
+        if (_chart.isOrdinal())
+            return _chart.x().rangeBand();
+        else
+            return innerChartWidth / (1 + _chart.boxPadding()) / xUnits;
     };
 
     // default padding to handle min/max whisker text
     _chart.yAxisPadding(12);
 
-    function groupData() {
-        return _chart.group().all().map(function (kv) {
-            kv.map = function () { return _chart.valueAccessor()(kv); };
-            return kv;
+    // default to ordinal
+    _chart.x(d3.scale.ordinal());
+    _chart.xUnits(dc.units.ordinal);
+
+    // valueAccessor should return an array of values that can be coerced into numbers
+    //  or if data is overloaded for a static array of arrays, it should be `Number`
+    _chart.data(function(group) {
+        return group.all().map(function (d) {
+            d.map = function(accessor) { return accessor.call(d,d); };
+            return d;
         });
-    }
+    });
+
+    /**
+    ### .boxPadding([padding])
+    Get or set the spacing between boxes as a fraction of bar size. Valid values are within 0-1.
+    See the [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
+    for a visual description of how the padding is applied.
+
+    Default: 0.8
+    **/
+    _chart.boxPadding = _chart._rangeBandPadding;
+    _chart.boxPadding(0.8);
+
+    /**
+    ### .outerPadding([padding])
+    Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
+    or on charts with a custom `.boxWidth`. Padding equivlent in width to `padding * barWidth` will be
+    added on each side of the chart.
+
+    Default: 0.5
+    **/
+    _chart.outerPadding = _chart._outerRangeBandPadding;
+    _chart.outerPadding(0.5);
 
     /**
      #### .boxWidth(width || function(innerChartWidth, xUnits) { ... })
@@ -52,12 +83,7 @@ dc.boxPlot = function (parent, chartGroup) {
      **/
     _chart.boxWidth = function(_) {
         if (!arguments.length) return _boxWidth;
-
-        if (typeof _ !== "function")
-            _boxWidth = function() { return _; };
-        else
-            _boxWidth = _;
-
+        _boxWidth = d3.functor(_);
         return _chart;
     };
 
@@ -67,32 +93,31 @@ dc.boxPlot = function (parent, chartGroup) {
         _box.whiskers(_whiskers)
             .width(_calculatedBoxWidth)
             .height(_chart.effectiveHeight())
+            .value(_chart.valueAccessor())
             .domain(_chart.y().domain());
 
-        // TODO: figure out why the .data call end up causing numbers to be added to the domain
-        var saveDomain = Array.prototype.slice.call(_chart.x().domain(), 0);
         var boxTransform = function (d, i) {
-            return "translate(" + (_chart.x()(i) - _calculatedBoxWidth / 2) + ",0)";
+            var xOffset = _chart.x()(_chart.keyAccessor()(d,i));
+            return "translate(" + xOffset + ",0)";
         };
 
         _chart.chartBodyG().selectAll('g.box')
-            .data(groupData())
+            .data(_chart.data())
           .enter().append("g")
             .attr("class", "box")
             .attr("transform", boxTransform)
             .call(_box);
-        _chart.x().domain(saveDomain);
     };
 
     _chart.yAxisMin = function () {
-        var min = d3.min(_chart.group().all(), function (e) {
+        var min = d3.min(_chart.data(), function (e) {
             return d3.min(_chart.valueAccessor()(e));
         });
         return dc.utils.subtract(min, _chart.yAxisPadding());
     };
 
     _chart.yAxisMax = function () {
-        var max = d3.max(_chart.group().all(), function (e) {
+        var max = d3.max(_chart.data(), function (e) {
             return d3.max(_chart.valueAccessor()(e));
         });
         return dc.utils.add(max, _chart.yAxisPadding());

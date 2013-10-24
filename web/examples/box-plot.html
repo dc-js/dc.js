@@ -44,8 +44,6 @@ d3.csv("morley.csv", function(error, experiments) {
     .margins({top: 10, right: 50, bottom: 30, left: 50})
     .dimension(experimentDimension)
     .group(speedArrayGroup)
-    .x(d3.scale.ordinal())
-    .xUnits(dc.units.ordinal)
     .elasticY(true);
 
   chart.render();

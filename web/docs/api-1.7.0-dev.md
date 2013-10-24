@@ -457,8 +457,8 @@ Turn on/off horizontal grid lines.
 Turn on/off vertical grid lines.
 
 #### .yAxisPadding([padding])
-Set or get y axis padding when elastic y axis is turned on. The padding will be added to the top of the y axis if and only
 if elasticY is turned on otherwise it will be simply ignored.
+Set or get y axis padding when elastic y axis is turned on. The padding will be added to the top of the y axis if and only
 
 * padding - could be integer or percentage in string (e.g. "10%"). Padding can be applied to number or date.
 When padding with date, integer represents number of days being padded while percentage string will be treated
@@ -688,6 +688,18 @@ var chart3 = dc.barChart(compositeChart);
 
 #### .centerBar(boolean)
 Whether the bar chart will render each bar centered around the data position on x axis. Default to false.
+
+### .barPadding([padding])
+Get or set the spacing between bars as a fraction of bar size. Valid values are within 0-1.
+Setting this value will also remove any previously set `gap`. See the
+[d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
+for a visual description of how the padding is applied.
+
+### .outerPadding([padding])
+Get or set the outer padding on an ordinal bar chart. This setting has no effect on non-ordinal charts.
+Padding equivlent in width to `padding * barWidth` will be added on each side of the chart.
+
+Default: 0.5
 
 #### .gap(gapBetweenBars)
 Manually set fixed gap (in px) between bars instead of relying on the default auto-generated gap. By default bar chart
@@ -1178,6 +1190,20 @@ var boxPlot1 = dc.boxPlot("#chart-container1");
 // create a box plot under #chart-container2 element using chart group A
 var boxPlot2 = dc.boxPlot("#chart-container2", "chartGroupA");
 ```
+
+### .boxPadding([padding])
+Get or set the spacing between boxes as a fraction of bar size. Valid values are within 0-1.
+See the [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
+for a visual description of how the padding is applied.
+
+Default: 0.8
+
+### .outerPadding([padding])
+Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
+or on charts with a custom `.boxWidth`. Padding equivlent in width to `padding * barWidth` will be
+added on each side of the chart.
+
+Default: 0.5
 
 #### .boxWidth(width || function(innerChartWidth, xUnits) { ... })
 Get or set the numerical width of the boxplot box. Provided width may also be a function.

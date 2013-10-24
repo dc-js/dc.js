@@ -39,6 +39,8 @@ function buildOrdinalChart(id, xdomain) {
     chart.dimension(stateDimension).group(stateGroup)
         .width(width).height(height)
         .x(xscale)
+        .barPadding(0)
+        .outerPadding(0.1)
         .transitionDuration(0)
         .xUnits(dc.units.ordinal);
     chart.render();
@@ -568,12 +570,12 @@ suite.addBatch({'ordinal bar chart': {
         assert.lengthOf(chart.selectAll("rect.bar")[0], 6);
     },
     'should auto size bar width': function (chart) {
-        assert.equal(chart.select("rect.bar").attr("width"), "144");
+        assert.equal(chart.select("rect.bar").attr("width"), 164);
     },
     'should position bars based on ordinal range': function (chart) {
-        assert.match(d3.select(chart.selectAll("rect.bar")[0][0]).attr("x"), /0\.\d+/);
-        assert.match(d3.select(chart.selectAll("rect.bar")[0][3]).attr("x"), /583\.\d+/);
-        assert.match(d3.select(chart.selectAll("rect.bar")[0][5]).attr("x"), /438\.\d+/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][0]).attr("x"), /16(\.\d+)?/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][3]).attr("x"), /674(\.\d+)?/);
+        assert.match(d3.select(chart.selectAll("rect.bar")[0][5]).attr("x"), /509(\.\d+)?/);
     },
     'should respect specified domain order': function (chart) {
         // note bar chart works differently from pie chart in that the bars objects don't

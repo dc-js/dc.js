@@ -458,8 +458,8 @@ y axis range whenever redraw event is triggered.</p>
 <h4>.renderVerticalGridLines([boolean])</h4>
 <p>Turn on/off vertical grid lines.</p>
 <h4>.yAxisPadding([padding])</h4>
-<p>Set or get y axis padding when elastic y axis is turned on. The padding will be added to the top of the y axis if and only
-if elasticY is turned on otherwise it will be simply ignored.</p>
+<p>if elasticY is turned on otherwise it will be simply ignored.
+Set or get y axis padding when elastic y axis is turned on. The padding will be added to the top of the y axis if and only</p>
 <ul>
 <li>padding - could be integer or percentage in string (e.g. &quot;10%&quot;). Padding can be applied to number or date.
 When padding with date, integer represents number of days being padded while percentage string will be treated
@@ -634,6 +634,15 @@ var chart2 = dc.barChart(<span class="string">"#chart-container2"</span>, <span 
 var chart3 = dc.barChart(compositeChart);</span></code></pre>
 <h4>.centerBar(boolean)</h4>
 <p>Whether the bar chart will render each bar centered around the data position on x axis. Default to false.</p>
+<h3>.barPadding([padding])</h3>
+<p>Get or set the spacing between bars as a fraction of bar size. Valid values are within 0-1.
+Setting this value will also remove any previously set <code>gap</code>. See the
+<a href="https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands">d3 docs</a>
+for a visual description of how the padding is applied.</p>
+<h3>.outerPadding([padding])</h3>
+<p>Get or set the outer padding on an ordinal bar chart. This setting has no effect on non-ordinal charts.
+Padding equivlent in width to <code>padding * barWidth</code> will be added on each side of the chart.</p>
+<p>Default: 0.5</p>
 <h4>.gap(gapBetweenBars)</h4>
 <p>Manually set fixed gap (in px) between bars instead of relying on the default auto-generated gap. By default bar chart
 implementation will calculate and set the gap automatically based on the number of data points and the length of the x axis.</p>
@@ -992,6 +1001,16 @@ A newly created box plot instance</p>
 var boxPlot1 = dc.boxPlot(<span class="string">"#chart-container1"</span>);</span>
 // <span class="operator"><span class="keyword">create</span> a box plot under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
 var boxPlot2 = dc.boxPlot(<span class="string">"#chart-container2"</span>, <span class="string">"chartGroupA"</span>);</span></code></pre>
+<h3>.boxPadding([padding])</h3>
+<p>Get or set the spacing between boxes as a fraction of bar size. Valid values are within 0-1.
+See the <a href="https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands">d3 docs</a>
+for a visual description of how the padding is applied.</p>
+<p>Default: 0.8</p>
+<h3>.outerPadding([padding])</h3>
+<p>Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
+or on charts with a custom <code>.boxWidth</code>. Padding equivlent in width to <code>padding * barWidth</code> will be
+added on each side of the chart.</p>
+<p>Default: 0.5</p>
 <h4>.boxWidth(width || function(innerChartWidth, xUnits) { ... })</h4>
 <p>Get or set the numerical width of the boxplot box. Provided width may also be a function.
 This function takes as parameters the chart width without the right and left margins
