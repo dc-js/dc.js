@@ -57,7 +57,7 @@ module.exports = function (grunt) {
         emu: {
             api: {
                 src: output.js,
-                dest: 'web/docs/api-<%= pkg.version %>.md'
+                dest: 'web/docs/api-latest.md'
             }
         },
         markdown: {
