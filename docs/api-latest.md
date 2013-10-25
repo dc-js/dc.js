@@ -1,4 +1,4 @@
-#### Version 1.7.0-dev
+#### Version 2.0.0-dev
 
 The entire dc.js library is scoped under **dc** name space. It does not introduce anything else into the global
 name space.
