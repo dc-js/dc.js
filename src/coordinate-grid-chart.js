@@ -47,16 +47,10 @@ dc.coordinateGridChart = function (_chart) {
     var _refocused = false;
     var _unitCount;
 
-    var _zoomScale = [-10, 100];  // -10 to allow zoom out of the original domain
-    var _zoomOutRestrict = true; // restrict zoomOut to the original domain?
-    var _zoomed = function () {
-        dc.events.trigger(function () {
-            _chart.focus(_chart.x().domain());
-            _chart._invokeZoomedListener();
-            updateRangeSelChart();
-        });
-    };
-    var _zoom = d3.behavior.zoom().on("zoom", _zoomed);
+    var _zoomScale = [1, Infinity];
+    var _zoomOutRestrict = true;
+
+    var _zoom = d3.behavior.zoom().on("zoom", zoomHandler);
     var _nullZoom = d3.behavior.zoom().on("zoom", null);
 
     var _rangeChart;
@@ -100,11 +94,11 @@ dc.coordinateGridChart = function (_chart) {
 
     /**
     #### .zoomOutRestrict([true/false])
-    Get or set the a zoom restriction to be limited at the origional extent of the range chart
+    Get or set the zoom restriction for the chart. If true limits the zoom to origional domain of the chart.
     **/
-    _chart.zoomOutRestrict = function (_) {
+    _chart.zoomOutRestrict = function (r) {
         if (!arguments.length) return _zoomOutRestrict;
-        _zoomOutRestrict = _;
+        _zoomScale[0] = r ? 1 : 0;
         return _chart;
     };
 
@@ -657,8 +651,8 @@ dc.coordinateGridChart = function (_chart) {
 
         if (_brushOn) {
             _brush.on("brush", _chart._brushing);
-            _brush.on("brushstart", function () { _chart.root().call(_nullZoom); });
-            _brush.on("brushend", configureMouseZoom);
+            //_brush.on("brushstart", function () { _chart.root().call(_nullZoom); });
+            //_brush.on("brushend", configureMouseZoom);
 
             var gBrush = g.append("g")
                 .attr("class", "brush")
@@ -697,15 +691,16 @@ dc.coordinateGridChart = function (_chart) {
         if (_chart.brushIsEmpty(extent)) {
             dc.events.trigger(function () {
                 _chart.filter(null);
-                dc.redrawAll(_chart.chartGroup());
+                _chart.redraw();
             });
         } else {
             var rangedFilter = dc.filters.RangedFilter(extent[0], extent[1]);
 
             dc.events.trigger(function () {
-                _chart.filter(null);
-                _chart.filter(rangedFilter);
-                dc.redrawAll(_chart.chartGroup());
+                //_chart.filter(rangedFilter);
+                //dc.redrawAll(_chart.chartGroup());
+                _chart.replaceFilter([extent[0], extent[1]]);
+                _chart.redraw();
             }, dc.constants.EVENT_DELAY);
         }
     };
@@ -798,7 +793,9 @@ dc.coordinateGridChart = function (_chart) {
 
     function configureMouseZoom () {
         if (_mouseZoomable) {
-            _zoom.x(_chart.x()).scaleExtent(_zoomScale);
+            _zoom.x(_chart.x())
+                .scaleExtent(_zoomScale)
+                .size([_chart.width(),_chart.height()]);
             _chart.root().call(_zoom);
         }
         else {
@@ -806,30 +803,46 @@ dc.coordinateGridChart = function (_chart) {
         }
     }
 
-    function updateRangeSelChart() {
+    function zoomHandler() {
+        var tx = _zoom.translate()[0];
+        tx = dc.utils.clamp(tx, -1 * _chart.effectiveWidth(), 0);
+        _zoom.translate([tx, 0]);
+
+        var domain = _chart.x().domain();
         if (_rangeChart) {
-            var refDom = _chart.x().domain();
             if (_zoomOutRestrict) {
                 var origDom = _rangeChart.xOriginalDomain();
-                var newDom = [
-                    refDom[0] < origDom[0] ? refDom[0] : origDom[0],
-                    refDom[1] > origDom[1] ? refDom[1] : origDom[1]
+                domain = [
+                    d3.max([domain[0], origDom[0]]),
+                    d3.min([domain[1], origDom[1]])
                 ];
-                _rangeChart.focus(newDom);
-            } else {
-                _rangeChart.focus(refDom);
             }
-            _rangeChart.filter(null);
-            var refDomFilter = dc.filters.RangedFilter(refDom[0], refDom[1]);
-            _rangeChart.filter(refDomFilter);
-
-            dc.events.trigger(function () {
-                dc.redrawAll(_chart.chartGroup());
-            });
+            //var refDomFilter = dc.filters.RangedFilter(refDom[0], refDom[1]);
+            _rangeChart.replaceFilter(domain);
+            _rangeChart.redraw();
+            _chart.replaceFilter(domain);
+        } else {
+            _chart.replaceFilter(domain);
+            _chart.focus(domain);
         }
+        _chart._invokeZoomedListener();
+    }
+
+    function resetZoom(newDomain) {
+        var newExtent = newDomain.map(_x),
+            oldExtent = _x.range(),
+            newSpan   = Math.abs(newExtent[1] - newExtent[0]),
+            oldSpan   = Math.abs(oldExtent[1] - oldExtent[0]),
+            scale     = oldSpan / newSpan,
+            trans     = oldExtent[0] - newExtent[1];
+
+            console.log(_chart.chartID(), scale,trans,_zoom.scale(),_zoom.translate()[0],newExtent);
+            //_zoom.scale(scale);
+            //_zoom.translate([trans,0]);
     }
 
     _chart.doRedraw = function () {
+        console.log("render:",_chart.chartID());
         _chart._preprocessData();
         prepareXAxis(_chart.g());
         prepareYAxis(_chart.g());
@@ -843,12 +856,6 @@ dc.coordinateGridChart = function (_chart) {
             _chart.renderXAxis(_chart.g());
 
         _chart.redrawBrush(_chart.g());
-
-        return _chart;
-    };
-
-    _chart.subRender = function () {
-        _chart.plotData();
 
         return _chart;
     };
@@ -889,6 +896,7 @@ dc.coordinateGridChart = function (_chart) {
         _refocused = true;
 
         if (hasRangeSelected(range)) {
+            resetZoom(range);
             _chart.x().domain(range);
         } else {
             _chart.x().domain(_chart.xOriginalDomain());
@@ -911,9 +919,8 @@ dc.coordinateGridChart = function (_chart) {
         _focusChart = c;
         _chart.on("filtered", function (chart) {
             dc.events.trigger(function () {
+                _focusChart.replaceFilter(chart.filter());
                 _focusChart.focus(chart.filter());
-                _focusChart.filter(chart.filter());
-                dc.redrawAll(chart.chartGroup());
             });
         });
         return _chart;

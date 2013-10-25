@@ -238,6 +238,10 @@ dc.utils.isNegligible = function (max) {
     return max === undefined || (max < dc.constants.NEGLIGIBLE_NUMBER && max > -dc.constants.NEGLIGIBLE_NUMBER);
 };
 
+dc.utils.clamp = function (val, min, max) {
+    return val < min ? min : (val > max ? max : val);
+};
+
 var _idCounter = 0;
 dc.utils.uniqueId = function () {
     return ++_idCounter;

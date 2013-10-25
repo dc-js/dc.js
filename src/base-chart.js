@@ -514,6 +514,11 @@ dc.baseChart = function (_chart) {
         }
     }
 
+    _chart.replaceFilter = function (_) {
+        _filters = [];
+        _chart.filter(_);
+    };
+
     /**
     #### .filter([filterValue])
     Filter the chart by the given value or return the current filter if the input parameter is missing.
