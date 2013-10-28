@@ -34,6 +34,27 @@ function buildLineChart(id) {
     return chart;
 }
 
+
+function buildBarChart(id) {
+    var div = d3.select("body").append("div").attr("id", id);
+    var chart = dc.barChart("#" + id);
+    chart.width(width)
+        .height(height)
+        .dimension(dateDimension)
+        .group(dateIdSumGroup, "Id Sum")
+        .stack(dateValueSumGroup, "Value Sum")
+        .centerBar(true)
+        .x(d3.time.scale().domain([new Date(2012, 0, 1), new Date(2012, 11, 31)]))
+        .gap(1)
+        .transitionDuration(0)
+        .xUnits(d3.time.days)
+        .legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
+        .yAxis().ticks(5);
+    chart.render();
+    return chart;
+}
+
+
 function buildCompositeChart(id) {
     d3.select("body").append("div").attr("id", id);
     var chart = dc.compositeChart("#" + id);
@@ -67,9 +88,9 @@ function legendLabels(chart) {
 }
 
 suite.addBatch({
-    'line chart legend': {
+    'render': {
         topic: function () {
-            return buildLineChart("legend-line-chart");
+            return buildLineChart("legend-chart");
         },
         'should generate legend g': function (chart) {
             assert.isFalse(legend(chart).empty());
@@ -106,6 +127,14 @@ suite.addBatch({
             assert.equal("Id Sum", d3.select(legendLabels(chart)[0][0]).text());
             assert.equal("Value Sum", d3.select(legendLabels(chart)[0][1]).text());
             assert.equal("Fixed", d3.select(legendLabels(chart)[0][2]).text());
+        }
+    }
+});
+
+suite.addBatch({
+    'line chart legend': {
+        topic: function () {
+            return buildLineChart("legend-line-chart");
         },
         'should highlight lines and areas when corresponding legend item is hovered over': function (chart) {
             var firstItem = legend(chart).select('g.dc-legend-item');
@@ -129,6 +158,35 @@ suite.addBatch({
             assert.equal("area", chartAreas[0][0].getAttribute("class"));
             assert.equal("line", chartLines[0][1].getAttribute("class"));
             assert.equal("area", chartAreas[0][1].getAttribute("class"));
+        },
+        teardown: function (topic) {
+            resetAllFilters();
+            resetBody();
+        }
+    }
+});
+
+suite.addBatch({
+    'bar chart legend': {
+        topic: function () {
+            return buildBarChart("legend-bar-chart");
+        },
+        'should highlight bars when corresponding legend item is hovered over': function (chart) {
+            var firstItem = legend(chart).select('g.dc-legend-item');
+            var chartStacks = chart.selectAll(".stack");
+
+            firstItem.on("mouseover")(firstItem.datum());
+            assert.equal("highlight", chartStacks[0][0].getElementsByClassName("bar")[0].getAttribute("class").split(" ")[1]);
+            assert.equal("fadeout", chartStacks[0][1].getElementsByClassName("bar")[0].getAttribute("class").split(" ")[1]);
+        },
+        'should remove highlighting when legend items are hovered out': function (chart) {
+            var firstItem = legend(chart).select('g.dc-legend-item');
+            var chartStacks = chart.selectAll(".stack");
+
+            firstItem.on("mouseover")(firstItem.datum());
+            firstItem.on("mouseout")(firstItem.datum());
+            assert.equal("bar", chartStacks[0][0].getElementsByClassName("bar")[0].getAttribute("class"));
+            assert.equal("bar", chartStacks[0][1].getElementsByClassName("bar")[0].getAttribute("class"));
         },
         teardown: function (topic) {
             resetAllFilters();
