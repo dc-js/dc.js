@@ -59,4 +59,25 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({
+    'series sorting': {
+        topic: function () {
+            return buildChart("series-chart-series-sort")
+                    .seriesSort(d3.descending)
+                    .render();
+        },
+        'should order lineCharts in the order specified': function (chart) {
+            var lines = chart.selectAll("path.line");
+
+            assert.equal(d3.select(lines[0][1]).attr("d"), "M0,128L130,85");
+            assert.equal(d3.select(lines[0][0]).attr("d"), "M0,43L130,0");
+        }
+    },
+
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
+    }
+});
+
 suite.export(module);
