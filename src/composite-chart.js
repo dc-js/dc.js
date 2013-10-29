@@ -34,7 +34,8 @@ dc.compositeChart = function (parent, chartGroup) {
     var _chart = dc.coordinateGridChart({});
     var _children = [];
 
-    var _shareColors = false;
+    var _shareColors = false,
+        _shareTitle = true;
 
     _chart._mandatoryAttributes([]);
     _chart.transitionDuration(500);
@@ -126,7 +127,10 @@ dc.compositeChart = function (parent, chartGroup) {
             child.height(_chart.height());
             child.width(_chart.width());
             child.margins(_chart.margins());
-            child.title(_chart.title());
+
+            if (_shareTitle) {
+                child.title(_chart.title());
+            }
 
             if (_shareColors && child.colorAccessor() === child._layerColorAccessor)
                 child.colorCalculator(function() {return child.colors()(i);});
@@ -149,6 +153,17 @@ dc.compositeChart = function (parent, chartGroup) {
     _chart.shareColors = function (_) {
         if (!arguments.length) return _shareColors;
         _shareColors = _;
+        return _chart;
+    };
+
+    /**
+     #### .shareTitle([[boolean])
+     Get or set title sharing for the chart. If set, the `.title()` value from this chart
+     will be shared with composed children. Default value is true.
+     **/
+    _chart.shareTitle = function (_) {
+        if (!arguments.length) return _shareTitle;
+        _shareTitle = _;
         return _chart;
     };
 

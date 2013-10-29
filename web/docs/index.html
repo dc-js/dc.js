@@ -841,6 +841,9 @@ moveChart<span class="variable">.compose</span>([
 will be shared with composed children. Additionally if the child chart implements
 Stackable and has not set a custom .colorAccessor, then it will generate a color
 specific to its order in the composition.</p>
+<h4>.shareTitle([[boolean])</h4>
+<p>Get or set title sharing for the chart. If set, the <code>.title()</code> value from this chart
+will be shared with composed children. Default value is true.</p>
 <h2><a name="series-chart" href="#Series-chart">#</a> Series Chart [Concrete]</h2>
 <h2><a name="geo-choropleth-chart" href="#geo-choropleth-chart">#</a> Geo Choropleth Chart [Concrete] &lt; <a href="#color-chart">Color Chart</a> &lt; <a href="#base-chart">Base Chart</a></h2>
 <p>Geo choropleth chart is design to make creating crossfilter driven choropleth map from GeoJson data an easy process. This

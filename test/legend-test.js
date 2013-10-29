@@ -151,6 +151,14 @@ suite.addBatch({
         'should be placed according to its own legend option, ignoring the sub-charts': function (chart) {
             assert.equal(legend(chart).attr("transform"), "translate(200,10)");
         },
+        'should generate legend labels correctly': function (chart) {
+            assert.equal("Id Sum",    d3.select(legendLabels(chart)[0][0]).text());
+            assert.equal("Value Sum", d3.select(legendLabels(chart)[0][1]).text());
+            assert.equal("Fixed",     d3.select(legendLabels(chart)[0][2]).text());
+            assert.equal("Id Sum",    d3.select(legendLabels(chart)[0][3]).text());
+            assert.equal("Value Sum", d3.select(legendLabels(chart)[0][4]).text());
+            assert.equal("Fixed",     d3.select(legendLabels(chart)[0][5]).text());
+        },
         'should properly delegate highlighting to its children': function (chart) {
             var firstItem = legend(chart).select('g.dc-legend-item');
             var firstLine = chart.children()[0].select("path.line");
