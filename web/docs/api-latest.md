@@ -1193,6 +1193,28 @@ Calculate and return the underlying value of the display
 #### .formatNumber([formatter])
 Get or set a function to format the value for the display. By default `d3.format(".2s");` is used.
 
+## <a name="heatmap" href="#heatmap">#</a> Heat Map [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
+A heat map is matrix that represents the values of two dimensions of data using colors.
+
+#### dc.heatMap(parent[, chartGroup])
+Create a heat map instance and attach it to the given parent element.
+
+Parameters:
+* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
+in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
+chart group.
+
+Return:
+A newly created heat map instance
+
+```js
+// create a heat map under #chart-container1 element using the default global chart group
+var heatMap1 = dc.heatMap("#chart-container1");
+// create a heat map under #chart-container2 element using chart group A
+var heatMap2 = dc.heatMap("#chart-container2", "chartGroupA");
+```
+
 ## <a name="boxplot" href="#boxplot">#</a> Box Plot [Concrete] < [CoordinateGrid Chart](#coordinate-grid-chart)
 A box plot is a chart that depicts numerical data via their quartile ranges.
 
