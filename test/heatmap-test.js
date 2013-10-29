@@ -13,8 +13,8 @@ function buildChart(id) {
 
     var chart = dc.heatMap("#" + id);
     chart
-        .dimension(dimensionHeatMap)
-        .group(groupHeatMap)
+        .dimension(dimensionColorData)
+        .group(groupColorData)
         .keyAccessor(function(d) { return d.key[0]; })
         .valueAccessor(function(d) { return d.key[1]; })
         .colorAccessor(function(d) { return d.value; })
