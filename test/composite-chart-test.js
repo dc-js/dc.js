@@ -22,10 +22,18 @@ function buildChart(id, xdomain) {
         .x(d3.time.scale().domain(xdomain))
         .transitionDuration(0)
         .xUnits(d3.time.days)
+        .legend(dc.legend().x(200).y(10).itemHeight(13).gap(5))
         .compose([
-            dc.barChart(chart).centerBar(true).group(dateValueSumGroup).gap(1),
-            dc.lineChart(chart).stack(dateValueSumGroup).stack(dateValueSumGroup),
-            dc.lineChart(chart).group(dateGroup)
+            dc.barChart(chart)
+                .centerBar(true)
+                .group(dateValueSumGroup, "Date Value Group")
+                .gap(1),
+            dc.lineChart(chart)
+                .group(dateIdSumGroup, "Date ID Group")
+                .stack(dateValueSumGroup, "Date Value Group")
+                .stack(dateValueSumGroup, "Date Value Group"),
+            dc.lineChart(chart)
+                .group(dateGroup, "Date Group")
         ]);
     chart.render();
     return chart;
@@ -391,6 +399,44 @@ suite.addBatch({
             assert.equal(chart.select(".sub._1 .dc-tooltip._0 .dot title").text(), "Value: 220");
         },
         teardown: function(topic) {
+            resetAllFilters();
+            resetBody();
+        }
+    }
+});
+
+suite.addBatch({
+    'legends': {
+        topic: function() {
+            return buildChart("legend-composite-chart");
+        },
+        'should generate legend items for each sub-chart': function (chart) {
+            assert.equal(5, chart.selectAll('g.dc-legend g.dc-legend-item').size());
+        },
+        'should generate legend labels for each sub-chart': function (chart) {
+            assert.equal(5, chart.selectAll("g.dc-legend-item text").size());
+        },
+        'should be placed according to its own legend option, ignoring the sub-charts': function (chart) {
+            assert.equal("translate(200,10)", chart.select("g.dc-legend").attr("transform"));
+        },
+        'should generate legend labels correctly': function (chart) {
+            var legendText = chart.selectAll("g.dc-legend g.dc-legend-item text");
+            assert.equal("Date Value Group", d3.select(legendText[0][0]).text());
+            assert.equal("Date ID Group",    d3.select(legendText[0][1]).text());
+            assert.equal("Date Value Group", d3.select(legendText[0][2]).text());
+            assert.equal("Date Value Group", d3.select(legendText[0][3]).text());
+            assert.equal("Date Group",       d3.select(legendText[0][4]).text());
+        },
+        'should properly delegate highlighting to its children': function (chart) {
+            var firstItem = chart.select('g.dc-legend g.dc-legend-item');
+            var firstLine = chart.children()[0].select("path.line");
+
+            firstItem.on("mouseover")(firstItem.datum());
+            assert.isTrue(firstLine.classed("highlight"));
+            firstItem.on("mouseout")(firstItem.datum());
+            assert.isFalse(firstLine.classed("highlight"));
+        },
+        teardown: function (topic) {
             resetAllFilters();
             resetBody();
         }

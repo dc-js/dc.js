@@ -42,6 +42,7 @@ function buildNegativeChart(id, xdomain) {
         .elasticY(true)
         .x(d3.time.scale().domain(xdomain))
         .renderHorizontalGridLines(true)
+        .legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
         .xUnits(d3.time.days)
         .yAxis().ticks(5);
     chart.render();
@@ -676,5 +677,40 @@ suite.addBatch({'clip path': {
         resetBody();
     }
 }});
+
+suite.addBatch({'legend': {
+        topic: function () {
+            return buildNegativeChart("legend-line-chart");
+        },
+        'should highlight lines and areas when corresponding legend item is hovered over': function (chart) {
+            var firstItem = chart.select('g.dc-legend g.dc-legend-item');
+            var chartLines = chart.selectAll("path.line");
+            var chartAreas = chart.selectAll("path.area");
+
+            firstItem.on("mouseover")(firstItem.datum());
+            assert.equal("highlight", chartLines[0][0].getAttribute("class").split(" ")[1]);
+            assert.equal("highlight", chartAreas[0][0].getAttribute("class").split(" ")[1]);
+            assert.equal("fadeout", chartLines[0][1].getAttribute("class").split(" ")[1]);
+            assert.equal("fadeout", chartAreas[0][1].getAttribute("class").split(" ")[1]);
+        },
+        'should remove highlighting when legend items are hovered out': function (chart) {
+            var firstItem = chart.select('g.dc-legend g.dc-legend-item');
+            var chartLines = chart.selectAll("path.line");
+            var chartAreas = chart.selectAll("path.area");
+
+            firstItem.on("mouseover")(firstItem.datum());
+            firstItem.on("mouseout")(firstItem.datum());
+            assert.equal("line", chartLines[0][0].getAttribute("class"));
+            assert.equal("area", chartAreas[0][0].getAttribute("class"));
+            assert.equal("line", chartLines[0][1].getAttribute("class"));
+            assert.equal("area", chartAreas[0][1].getAttribute("class"));
+        },
+        teardown: function (topic) {
+            resetAllFilters();
+            resetBody();
+        }
+    }
+});
+
 
 suite.export(module);
