@@ -287,6 +287,10 @@ dc.lineChart = function (parent, chartGroup) {
                 strokeOpacity: _dataPointStrokeOpacity,
                 radius: _dataPointRadius
             };
+        } else if (!options) {
+            _dataPointFillOpacity = DEFAULT_DOT_OPACITY;
+            _dataPointStrokeOpacity = DEFAULT_DOT_OPACITY;
+            _dataPointRadius = null;
         } else {
             _dataPointFillOpacity = options.fillOpacity || 0.8;
             _dataPointStrokeOpacity = options.strokeOpacity || 0.8;

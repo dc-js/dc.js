@@ -627,6 +627,37 @@ suite.addBatch({'line chart with data markers': {
             assert.equal(dot.attr("r"), 3);
         });
     },
+    'renderDataPoints reapplied with a falsey argument': {
+        topic: function(chart) {
+            chart.renderDataPoints(false).render();
+            return chart;
+        },
+        'circle.dot return to default opacity and radius': function(chart) {
+            chart.selectAll("circle.dot").each(function () {
+                var dot = d3.select(this);
+                assert.equal(dot.style("fill-opacity"), 1e-6);
+                assert.equal(dot.style("stroke-opacity"), 1e-6);
+                assert.equal(dot.attr("r"), 5);
+            });
+        },
+        'circle.dot becomes visible on mousemove': function(chart) {
+            chart.selectAll("circle.dot").each(function() {
+                var dot = d3.select(this);
+                dot.on("mousemove").call(this);
+                assert.equal(dot.style("fill-opacity"), .8);
+                assert.equal(dot.style("stroke-opacity"),.8);
+            });
+        },
+        'circle.dot becomes invisible on mousout': function(chart) {
+            chart.selectAll("circle.dot").each(function() {
+                var dot = d3.select(this);
+                dot.on("mousemove").call(this);
+                dot.on("mouseout").call(this);
+                assert.equal(dot.style("fill-opacity"), 1e-6);
+                assert.equal(dot.style("stroke-opacity"), 1e-6);
+            });
+        }
+    },
     teardown: function (topic) {
         resetAllFilters();
         resetBody();
