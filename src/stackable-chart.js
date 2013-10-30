@@ -270,14 +270,8 @@ dc.stackableChart = function (_chart) {
         return _chart;
     });
 
-    _chart.getTitleByIndex = function (index) {
-        if (index === 0) {
-            return _chart.title();
-        }
-        else {
-            var stackTitle = _chart.title(_groupStack.getNameByIndex(index - 1));
-            return stackTitle || _chart.title();
-        }
+    _chart.getTitleOfVisibleByIndex = function (index) {
+        return _chart.title(_groupStack.getNameOfVisibleByIndex(index - 1)) || _chart.title();
     };
 
     _chart.stackLayout = function (stack) {

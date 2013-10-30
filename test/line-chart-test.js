@@ -341,6 +341,16 @@ suite.addBatch({'stacked area chart': {
         chart.render();
         assert.equal(d3.selectAll("#stacked-area-chart path.line")[0].length, 3);
     },
+    'charts retain their own titles when other stacks are hidden': function (chart) {
+        chart.hideStack("stack 0");
+        chart.render();
+        chart.selectAll("#stacked-area-chart g._0 circle.dot").each(function (d) {
+            assert.equal(d3.select(this).select("title").text(), "stack 1: " + d.data.value);
+        });
+
+        chart.showStack("stack 0");
+        chart.render();
+    },
     'stacks have their own titles accessors': function (chart) {
         assert.equal(chart.title()({value: 1}), "stack 0: 1");
         assert.equal(chart.title("stack 0")({value: 2}), "stack 0: 2");

@@ -82,11 +82,12 @@ suite.addBatch({
             assert.equal(stack.getAccessorByIndex(index), retriever);
             stack.clear();
         },
-        'should be able to get stack names by index': function (stack) {
+        'should be able to get visible stack names by index': function (stack) {
             stack.addNamedGroup({}, "first group");
             stack.addNamedGroup({}, "second group");
-            assert.equal(stack.getNameByIndex(0),"first group");
-            assert.equal(stack.getNameByIndex(1),"second group");
+            stack.hideGroups("first group");
+            assert.equal(stack.getNameOfVisibleByIndex(0), "second group");
+            stack.clear();
         },
         'should be able to get and set title accessor functions by name': function(stack) {
             var firstTitle = function() {};

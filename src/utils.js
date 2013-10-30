@@ -135,8 +135,17 @@ dc.utils.GroupStack = function () {
         return _groups[index][1];
     };
 
-    this.getNameByIndex = function (index) {
-        return _groups[index].name;
+    this.getNameOfVisibleByIndex = function (index) {
+        if (index === -1) {
+            if (_hideChartGroup) index++;
+            else return;
+        }
+
+        var visible = _groups.filter(function(group) {
+            return !group.hidden;
+        });
+
+        return visible[index].name;
     };
 
     this.size = function () {
