@@ -766,7 +766,7 @@ dc.baseChart = function (_chart) {
     //    chart (in referenced by multiple charts) ->
     //        array of accessors, array of names
     function groupName(chart, g, accessor) {
-        var c = chart.anchor(),
+        var c = chart.chartID(),
             k = '__names__';
         if (!accessor || accessor == chart.valueAccessor())
             accessor = "default";
@@ -2215,10 +2215,10 @@ dc.coordinateGridChart = function (_chart) {
     _chart.doRender = function () {
         _chart.resetSvg();
 
-        _chart._generateG();
-
-        generateClipPath();
         _chart._preprocessData();
+
+        _chart._generateG();
+        generateClipPath();
         prepareXAxis(_chart.g());
         prepareYAxis(_chart.g());
 
@@ -4348,7 +4348,8 @@ dc.compositeChart = function (parent, chartGroup) {
     var _chart = dc.coordinateGridChart({});
     var _children = [];
 
-    var _shareColors = false;
+    var _shareColors = false,
+        _shareTitle = true;
 
     _chart._mandatoryAttributes([]);
     _chart.transitionDuration(500);
@@ -4440,7 +4441,10 @@ dc.compositeChart = function (parent, chartGroup) {
             child.height(_chart.height());
             child.width(_chart.width());
             child.margins(_chart.margins());
-            child.title(_chart.title());
+
+            if (_shareTitle) {
+                child.title(_chart.title());
+            }
 
             if (_shareColors && child.colorAccessor() === child._layerColorAccessor)
                 child.colorCalculator(function() {return child.colors()(i);});
@@ -4463,6 +4467,17 @@ dc.compositeChart = function (parent, chartGroup) {
     _chart.shareColors = function (_) {
         if (!arguments.length) return _shareColors;
         _shareColors = _;
+        return _chart;
+    };
+
+    /**
+     #### .shareTitle([[boolean])
+     Get or set title sharing for the chart. If set, the `.title()` value from this chart
+     will be shared with composed children. Default value is true.
+     **/
+    _chart.shareTitle = function (_) {
+        if (!arguments.length) return _shareTitle;
+        _shareTitle = _;
         return _chart;
     };
 
@@ -4547,8 +4562,30 @@ dc.compositeChart = function (parent, chartGroup) {
 };
 
 /**
-## <a name="series-chart" href="#Series-chart">#</a> Series Chart [Concrete]
-**/
+## <a name="series-chart" href="#Series-chart">#</a> Series Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
+ A series chart is a chart that shows multiple series of data as lines, where the series
+ is specified in the data.
+
+ #### dc.seriesChart(parent[, chartGroup])
+ Create a series chart instance and attach it to the given parent element.
+
+ Parameters:
+ * parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+ * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
+ in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
+ chart group.
+
+ Return:
+ A newly created series chart instance
+
+ ```js
+ // create a series chart under #chart-container1 element using the default global chart group
+ var seriesChart1 = dc.seriesChart("#chart-container1");
+ // create a series chart under #chart-container2 element using chart group A
+ var seriesChart2 = dc.seriesChart("#chart-container2", "chartGroupA");
+ ```
+
+ **/
 dc.seriesChart = function (parent, chartGroup) {
     var _chart = dc.compositeChart(parent, chartGroup);
 
@@ -4619,6 +4656,11 @@ dc.seriesChart = function (parent, chartGroup) {
         return _chart;
     };
 
+    /**
+     #### .seriesAccessor([accessor])
+     Get or set accessor function for the displayed series. Given a datum, this function
+     should return the series that datum belongs to.
+     **/
     _chart.seriesAccessor = function(_) {
         if (!arguments.length) return _seriesAccessor;
         _seriesAccessor = _;
@@ -4626,6 +4668,15 @@ dc.seriesChart = function (parent, chartGroup) {
         return _chart;
     };
 
+    /**
+     #### .seriesSort([sortFunction])
+     Get or set a function to sort the list of series by, given series values.
+
+     Example:
+     ```
+     chart.seriesSort(d3.descending);
+     ```
+     **/
     _chart.seriesSort = function(_) {
         if (!arguments.length) return _seriesSort;
         _seriesSort = _;
@@ -5733,6 +5784,30 @@ dc.numberDisplay = function (parent, chartGroup) {
 };
 
 
+/**
+ ## <a name="heatmap" href="#heatmap">#</a> Heat Map [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
+ A heat map is matrix that represents the values of two dimensions of data using colors.
+
+ #### dc.heatMap(parent[, chartGroup])
+ Create a heat map instance and attach it to the given parent element.
+
+ Parameters:
+ * parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+ * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
+ in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
+ chart group.
+
+ Return:
+ A newly created heat map instance
+
+ ```js
+ // create a heat map under #chart-container1 element using the default global chart group
+ var heatMap1 = dc.heatMap("#chart-container1");
+ // create a heat map under #chart-container2 element using chart group A
+ var heatMap2 = dc.heatMap("#chart-container2", "chartGroupA");
+ ```
+
+ **/
 dc.heatMap = function (parent, chartGroup) {
 
     var _chartBody;

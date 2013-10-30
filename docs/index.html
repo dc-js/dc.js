@@ -841,7 +841,32 @@ moveChart<span class="variable">.compose</span>([
 will be shared with composed children. Additionally if the child chart implements
 Stackable and has not set a custom .colorAccessor, then it will generate a color
 specific to its order in the composition.</p>
-<h2><a name="series-chart" href="#Series-chart">#</a> Series Chart [Concrete]</h2>
+<h4>.shareTitle([[boolean])</h4>
+<p>Get or set title sharing for the chart. If set, the <code>.title()</code> value from this chart
+will be shared with composed children. Default value is true.</p>
+<h2><a name="series-chart" href="#Series-chart">#</a> Series Chart [Concrete] &lt; <a href="#color-chart">Color Chart</a> &lt; <a href="#base-chart">Base Chart</a></h2>
+<p>A series chart is a chart that shows multiple series of data as lines, where the series
+is specified in the data.</p>
+<h4>dc.seriesChart(parent[, chartGroup])</h4>
+<p>Create a series chart instance and attach it to the given parent element.</p>
+<p>Parameters:
+<em> parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+</em> chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
+in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
+chart group.</p>
+<p>Return:
+A newly created series chart instance</p>
+<pre><code class="lang-js">// <span class="operator"><span class="keyword">create</span> a series chart under #chart-container1 element <span class="keyword">using</span> the <span class="keyword">default</span> <span class="keyword">global</span> chart <span class="keyword">group</span>
+var seriesChart1 = dc.seriesChart(<span class="string">"#chart-container1"</span>);</span>
+// <span class="operator"><span class="keyword">create</span> a series chart under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
+var seriesChart2 = dc.seriesChart(<span class="string">"#chart-container2"</span>, <span class="string">"chartGroupA"</span>);</span></code></pre>
+<h4>.seriesAccessor([accessor])</h4>
+<p>Get or set accessor function for the displayed series. Given a datum, this function
+should return the series that datum belongs to.</p>
+<h4>.seriesSort([sortFunction])</h4>
+<p>Get or set a function to sort the list of series by, given series values.</p>
+<p>Example:</p>
+<pre><code>chart<span class="preprocessor">.seriesSort</span>(d3<span class="preprocessor">.descending</span>)<span class="comment">;</span></code></pre>
 <h2><a name="geo-choropleth-chart" href="#geo-choropleth-chart">#</a> Geo Choropleth Chart [Concrete] &lt; <a href="#color-chart">Color Chart</a> &lt; <a href="#base-chart">Base Chart</a></h2>
 <p>Geo choropleth chart is design to make creating crossfilter driven choropleth map from GeoJson data an easy process. This
 chart implementation was inspired by <a href="http://bl.ocks.org/4060606">the great d3 choropleth example</a>.</p>
@@ -1002,6 +1027,21 @@ var display1 = dc.numberDisplay(<span class="string">"#chart-container1"</span>)
 <p>Calculate and return the underlying value of the display</p>
 <h4>.formatNumber([formatter])</h4>
 <p>Get or set a function to format the value for the display. By default <code>d3.format(&quot;.2s&quot;);</code> is used.</p>
+<h2><a name="heatmap" href="#heatmap">#</a> Heat Map [Concrete] &lt; <a href="#color-chart">Color Chart</a> &lt; <a href="#base-chart">Base Chart</a></h2>
+<p>A heat map is matrix that represents the values of two dimensions of data using colors.</p>
+<h4>dc.heatMap(parent[, chartGroup])</h4>
+<p>Create a heat map instance and attach it to the given parent element.</p>
+<p>Parameters:
+<em> parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+</em> chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
+in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
+chart group.</p>
+<p>Return:
+A newly created heat map instance</p>
+<pre><code class="lang-js">// <span class="operator"><span class="keyword">create</span> a heat map under #chart-container1 element <span class="keyword">using</span> the <span class="keyword">default</span> <span class="keyword">global</span> chart <span class="keyword">group</span>
+var heatMap1 = dc.heatMap(<span class="string">"#chart-container1"</span>);</span>
+// <span class="operator"><span class="keyword">create</span> a heat map under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
+var heatMap2 = dc.heatMap(<span class="string">"#chart-container2"</span>, <span class="string">"chartGroupA"</span>);</span></code></pre>
 <h2><a name="boxplot" href="#boxplot">#</a> Box Plot [Concrete] &lt; <a href="#coordinate-grid-chart">CoordinateGrid Chart</a></h2>
 <p>A box plot is a chart that depicts numerical data via their quartile ranges.</p>
 <h4>dc.boxPlot(parent[, chartGroup])</h4>
