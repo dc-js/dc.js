@@ -23,6 +23,8 @@ dc.legend = function () {
 
     var _g;
 
+    var hiddenStacks = [];
+
     _legend.parent = function (p) {
         if (!arguments.length) return _parent;
         _parent = p;
@@ -48,6 +50,20 @@ dc.legend = function () {
             })
             .on("mouseout", function (d) {
                 _parent.legendReset(d);
+            })
+            .on("click", function (d) {
+                if (_parent._hidableStacks) {
+                    var index;
+                    if ((index = hiddenStacks.indexOf(d.name)) !== -1) {
+                        hiddenStacks.splice(index, 1);
+                        _parent.showStack(d.name);
+                    }
+                    else {
+                        hiddenStacks.push(d.name);
+                        _parent.hideStack(d.name);
+                    }
+                    _parent.render();
+                }
             });
 
         itemEnter

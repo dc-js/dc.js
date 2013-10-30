@@ -17,6 +17,8 @@ dc.stackableChart = function (_chart) {
     var _allKeyAccessors;
     var _stackLayers;
 
+    _chart._hidableStacks = false;
+
     /**
     #### .stack(group[, name, accessor])
     Stack a new crossfilter group into this chart with optionally a custom value accessor. All stacks in the same chart will
@@ -48,6 +50,12 @@ dc.stackableChart = function (_chart) {
 
         _chart.expireCache();
 
+        return _chart;
+    };
+
+    _chart.hidableStacks = function(_) {
+        if (!arguments.length) return _chart._hidableStacks;
+        _chart._hidableStacks = _;
         return _chart;
     };
 

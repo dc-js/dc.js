@@ -84,4 +84,30 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({
+    'hidableStacks': {
+        topic: function () {
+            return buildLineChart("legend-chart-hidable");
+        },
+        'should not apply by default': function (chart) {
+            chart.select("g.dc-legend-item").on("click")();
+            assert.equal(chart.selectAll("path.line")[0].length, 3);
+        },
+        'should hide and show stacks when their legend item is clicked': function(chart) {
+            chart.hidableStacks(true).render();
+
+            var firstLegendItem = chart.select("g.dc-legend-item");
+            firstLegendItem.on("click").call(firstLegendItem[0][0], firstLegendItem.datum());
+            assert.equal(chart.selectAll("path.line")[0].length, 2);
+
+            var newFirstLegendItem = chart.select("g.dc-legend-item");
+            newFirstLegendItem.on("click").call(newFirstLegendItem[0][0], newFirstLegendItem.datum());
+            assert.equal(chart.selectAll("path.line")[0].length, 3);
+        },
+        teardown: function (topic) {
+            resetAllFilters();
+            resetBody();
+        }
+    }
+});
 suite.export(module);
