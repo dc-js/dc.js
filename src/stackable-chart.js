@@ -238,23 +238,23 @@ dc.stackableChart = function (_chart) {
     });
 
     /**
-     #### .title([stackName], [titleFunction])
-     Set or get the title function. Chart class will use this function to render svg title (usually interpreted by browser
-     as tooltips) for each child element in the chart, i.e. a slice in a pie chart or a bubble in a bubble chart. Almost
-     every chart supports title function however in grid coordinate chart you need to turn off brush in order to use title
-     otherwise the brush layer will block tooltip trigger.
+    #### .title([stackName], [titleFunction])
+    Set or get the title function. Chart class will use this function to render svg title (usually interpreted by browser
+    as tooltips) for each child element in the chart, i.e. a slice in a pie chart or a bubble in a bubble chart. Almost
+    every chart supports title function however in grid coordinate chart you need to turn off brush in order to use title
+    otherwise the brush layer will block tooltip trigger.
 
-     If the first argument is a stack name, the title function will get or set the title for that stack. If stackName
-     is not provided, the first stack is implied.
-     ```js
-     // set a title function on "first stack"
-     chart.title("first stack", function(d) { return d.key + ": " + d.value; });
-     // get a title function from "second stack"
-     var secondTitleFunction = chart.title("second stack");
-    });
-     ```
+    If the first argument is a stack name, the title function will get or set the title for that stack. If stackName
+    is not provided, the first stack is implied.
+    ```js
+    // set a title function on "first stack"
+    chart.title("first stack", function(d) { return d.key + ": " + d.value; });
+    // get a title function from "second stack"
+    var secondTitleFunction = chart.title("second stack");
+    );
+    ```
 
-     **/
+    **/
     dc.override(_chart, "title", function (stackName, titleAccessor) {
         if (!stackName) return _chart._title();
 
