@@ -243,6 +243,10 @@ dc.compositeChart = function (parent, chartGroup) {
             child.legendReset(d);
         }
     };
+    // Only need to call this once
+    _chart.legendClick = function (d) {
+        _children[0].legendClick(d);
+    };
 
     return _chart.anchor(parent, chartGroup);
 };

@@ -266,6 +266,24 @@ div.dc-chart {
   stroke: #ccc;
 }
 
+.dc-chart path.line.deselected, .dc-chart path.area.deselected {
+    display: none;
+}
+
 .dc-chart .symbol{
     stroke: none;
+}.dc-legend g.dc-legend-item.deselected rect {
+    fill: #ccc !important;
 }
+
+.dc-legend-item.deselected text {
+    display: block !important;
+    fill: #ccc;
+}
+
+.reset, .filter {
+    color:steelblue;
+}
+
+
+
