@@ -42,6 +42,9 @@ dc.legend = function () {
             .enter()
             .append("g")
             .attr("class", "dc-legend-item")
+            .classed("fadeout", function(d) {
+                return hiddenStacks.indexOf(d.name) !== -1;
+            })
             .attr("transform", function (d, i) {
                 return "translate(0," + i * legendItemHeight() + ")";
             })

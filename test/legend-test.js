@@ -93,6 +93,17 @@ suite.addBatch({
             chart.select("g.dc-legend-item").on("click")();
             assert.equal(chart.selectAll("path.line")[0].length, 3);
         },
+        'should fade out legend items when they are clicked': function(chart) {
+            chart.hidableStacks(true).render();
+
+            var firstLegendItem = chart.select("g.dc-legend-item");
+            firstLegendItem.on("click").call(firstLegendItem[0][0], firstLegendItem.datum());
+            assert.equal(chart.select("g.dc-legend-item").classed("fadeout"), true);
+
+            var newFirstLegendItem = chart.select("g.dc-legend-item");
+            newFirstLegendItem.on("click").call(newFirstLegendItem[0][0], newFirstLegendItem.datum());
+            assert.equal(chart.select("g.dc-legend-item").classed("fadeout"), false);
+        },
         'should hide and show stacks when their legend item is clicked': function(chart) {
             chart.hidableStacks(true).render();
 
