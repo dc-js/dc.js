@@ -48,6 +48,13 @@ dc.legend = function () {
             })
             .on("mouseout", function (d) {
                 _parent.legendReset(d);
+            })
+            .on("click", function (d) {
+                _parent.legendClick(d);
+                d3.select(this).classed('deselected', function () {
+                    return !(this.classList.contains('deselected'));
+                });
+
             });
 
         itemEnter
