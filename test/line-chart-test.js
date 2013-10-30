@@ -523,7 +523,6 @@ suite.addBatch({
     }
 });
 
-
 suite.addBatch({
     'tooltip and data point highlight': {
         topic: function () {
@@ -553,6 +552,23 @@ suite.addBatch({
                 assert.equal(d3.select(this).style("stroke-opacity"), 1e-6);
             });
         },
+        'circle.dot changes opacity on mousemove': function(chart) {
+            chart.selectAll("circle.dot").each(function() {
+                var dot = d3.select(this);
+                dot.on("mousemove").call(this);
+                assert.equal(dot.style("fill-opacity"), .8);
+                assert.equal(dot.style("stroke-opacity"), .8);
+            });
+        },
+        'circle.dot changes back to almost invisible on mouseout': function(chart) {
+            chart.selectAll("circle.dot").each(function() {
+                var dot = d3.select(this);
+                dot.on("mousemove").call(this);
+                dot.on("mouseout").call(this);
+                assert.equal(dot.style("fill-opacity"), 1e-6);
+                assert.equal(dot.style("stroke-opacity"), 1e-6);
+            });
+        },
         'circle.dot title should be generated per data point': function (chart) {
             chart.selectAll("circle.dot").each(function (d) {
                 assert.equal(d3.select(this).select("title").text(), d.data.value);
@@ -580,14 +596,15 @@ suite.addBatch({'line chart with data markers': {
             .title(function (d) {
                 return d.value;
             })
-            .renderDataPoints({radius: 3})
+            .dotRadius(5)
+            .renderDataPoints({radius: 3, fillOpacity: 1, strokeOpacity: 1})
             .render();
         return chart;
     },
-    'circle.dot are visible when renderDataPoints is supplied with options': function(chart) {
+    'circle.dot uses supplied options': function(chart) {
         chart.selectAll("circle.dot").each(function () {
-            assert.equal(d3.select(this).style("fill-opacity"), 0.8);
-            assert.equal(d3.select(this).style("stroke-opacity"), 0.8);
+            assert.equal(d3.select(this).style("fill-opacity"), 1);
+            assert.equal(d3.select(this).style("stroke-opacity"), 1);
         });
     },
     'circle.dot have set radius when given': function(chart) {
@@ -595,9 +612,83 @@ suite.addBatch({'line chart with data markers': {
             assert.equal(d3.select(this).attr("r"), 3);
         });
     },
+    'circle.dot changes radius on mousemove': function(chart) {
+        chart.selectAll("circle.dot").each(function() {
+            var dot = d3.select(this);
+            dot.on("mousemove").call(this);
+            assert.equal(dot.attr("r"), 5);
+        });
+    },
+    'circle.dot changes back to datapoint radius on mouseout': function(chart) {
+        chart.selectAll("circle.dot").each(function() {
+            var dot = d3.select(this);
+            dot.on("mousemove").call(this);
+            dot.on("mouseout").call(this);
+            assert.equal(dot.attr("r"), 3);
+        });
+    },
+    'renderDataPoints reapplied with a falsey argument': {
+        topic: function(chart) {
+            chart.renderDataPoints(false).render();
+            return chart;
+        },
+        'circle.dot return to default opacity and radius': function(chart) {
+            chart.selectAll("circle.dot").each(function () {
+                var dot = d3.select(this);
+                assert.equal(dot.style("fill-opacity"), 1e-6);
+                assert.equal(dot.style("stroke-opacity"), 1e-6);
+                assert.equal(dot.attr("r"), 5);
+            });
+        },
+        'circle.dot becomes visible on mousemove': function(chart) {
+            chart.selectAll("circle.dot").each(function() {
+                var dot = d3.select(this);
+                dot.on("mousemove").call(this);
+                assert.equal(dot.style("fill-opacity"), .8);
+                assert.equal(dot.style("stroke-opacity"),.8);
+            });
+        },
+        'circle.dot becomes invisible on mousout': function(chart) {
+            chart.selectAll("circle.dot").each(function() {
+                var dot = d3.select(this);
+                dot.on("mousemove").call(this);
+                dot.on("mouseout").call(this);
+                assert.equal(dot.style("fill-opacity"), 1e-6);
+                assert.equal(dot.style("stroke-opacity"), 1e-6);
+            });
+        }
+    },
     teardown: function (topic) {
         resetAllFilters();
         resetBody();
+    }
+}});
+
+suite.addBatch({'default options for line chart with data markers': {
+    topic: function () {
+        var chart = buildChart("chart-tooltip");
+        chart.brushOn(false)
+            .title(function (d) {
+                return d.value;
+            })
+            .renderDataPoints({})
+            .render();
+        return chart;
+    },
+    'should have a default fill opacity': function (chart) {
+        chart.selectAll("circle.dot").each(function () {
+            assert.equal(d3.select(this).style("fill-opacity"), 0.8);
+        });
+    },
+    'should have a default stroke opacity': function (chart) {
+        chart.selectAll("circle.dot").each(function () {
+            assert.equal(d3.select(this).style("stroke-opacity"), 0.8);
+        });
+    },
+    'should have a default dot radius': function (chart) {
+        chart.selectAll("circle.dot").each(function () {
+            assert.equal(d3.select(this).attr("r"), 2);
+        });
     }
 }});
 

@@ -277,16 +277,17 @@ dc.lineChart = function (parent, chartGroup) {
 
     Example:
     ```
-    chart.renderDataPoints([{radius: 2}])
+    chart.renderDataPoints([{radius: 2, fillOpacity: 0.8, strokeOpacity: 0.8}])
     ```
     **/
     _chart.renderDataPoints = function (options) {
-        if (!arguments.length) return {
+        if (!arguments.length) {
+            return {
                 fillOpacity: _dataPointFillOpacity,
                 strokeOpacity: _dataPointStrokeOpacity,
                 radius: _dataPointRadius
             };
-        if (!options) {
+        } else if (!options) {
             _dataPointFillOpacity = DEFAULT_DOT_OPACITY;
             _dataPointStrokeOpacity = DEFAULT_DOT_OPACITY;
             _dataPointRadius = null;

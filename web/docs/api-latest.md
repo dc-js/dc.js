@@ -763,7 +763,7 @@ If no `options` are provded, the current `options` values are instead returned
 
 Example:
 ```
-chart.renderDataPoints([{radius: 2}])
+chart.renderDataPoints([{radius: 2, fillOpacity: 0.8, strokeOpacity: 0.8}])
 ```
 
 ## <a name="data-count" href="#data-count">#</a> Data Count Widget [Concrete] < [Base Chart](#base-chart)
