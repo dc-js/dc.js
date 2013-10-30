@@ -193,6 +193,9 @@ suite.addBatch({
             'area path should not be there': function (chart) {
                 assert.lengthOf(chart.selectAll("path.area")[0], 0);
             },
+            'dash style should be solid': function (chart) {
+                assert.equal(chart.selectAll("path.line").attr("stroke-dasharray"), "");
+            },
             'selected bars should be push to foreground': function (chart) {
                 chart.selectAll("g rect.bar").each(function (d, i) {
                     if (i === 1)
@@ -556,8 +559,8 @@ suite.addBatch({
             chart.selectAll("circle.dot").each(function() {
                 var dot = d3.select(this);
                 dot.on("mousemove").call(this);
-                assert.equal(dot.style("fill-opacity"), .8);
-                assert.equal(dot.style("stroke-opacity"), .8);
+                assert.equal(dot.style("fill-opacity"), 0.8);
+                assert.equal(dot.style("stroke-opacity"), 0.8);
             });
         },
         'circle.dot changes back to almost invisible on mouseout': function(chart) {
@@ -644,8 +647,8 @@ suite.addBatch({'line chart with data markers': {
             chart.selectAll("circle.dot").each(function() {
                 var dot = d3.select(this);
                 dot.on("mousemove").call(this);
-                assert.equal(dot.style("fill-opacity"), .8);
-                assert.equal(dot.style("stroke-opacity"),.8);
+                assert.equal(dot.style("fill-opacity"), 0.8);
+                assert.equal(dot.style("stroke-opacity"),0.8);
             });
         },
         'circle.dot becomes invisible on mousout': function(chart) {
@@ -801,6 +804,28 @@ suite.addBatch({'legend': {
             resetBody();
         }
     }
+});
+
+suite.addBatch({'line chart with dashStyle': {
+    topic: function () {
+        var chart = buildChart("chart-tooltip");
+        chart.brushOn(false)
+            .title(function (d) {
+                return d.value;
+            })
+            .dashStyle([3,1,1,1])
+            .render();
+        return chart;
+    },
+    'dash style should be Dash Dot Dot Dot': function (chart) {
+        assert.equal(chart.selectAll("path.line").attr("stroke-dasharray"), "3,1,1,1");
+
+    },
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
+    }
+}
 });
 
 
