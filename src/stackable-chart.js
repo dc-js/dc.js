@@ -290,7 +290,9 @@ dc.stackableChart = function (_chart) {
         if (!arguments.length) {
             if (_stackLayers === null) {
                 _chart.calculateDataPointMatrixForAll();
-                _stackLayers = _chart.stackLayout()(_groupStack.toLayers());
+                var layers = _groupStack.toLayers();
+                if (layers.length === 0) return [];
+                _stackLayers = _chart.stackLayout()(layers);
             }
             return _stackLayers;
         } else {

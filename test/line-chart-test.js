@@ -329,6 +329,18 @@ suite.addBatch({'stacked area chart': {
         assert.equal(d3.select("#stacked-area-chart g._1 path.line").attr("d"), "M58.62068965517241,134L222.75862068965515,119L246.20689655172413,75L492.41379310344826,133L597.9310344827586,120L961.3793103448276,109");
         assert.equal(d3.selectAll("#stacked-area-chart path.line")[0].length, 3);
     },
+    'all stacks may be hidden': function (chart) {
+        chart.hideStack("stack 0");
+        chart.hideStack("stack 1");
+        chart.hideStack("stack 2");
+        chart.render();
+        assert.equal(d3.selectAll("#stacked-area-chart path.line")[0].length, 0);
+        chart.showStack("stack 2");
+        chart.showStack("stack 1");
+        chart.showStack("stack 0");
+        chart.render();
+        assert.equal(d3.selectAll("#stacked-area-chart path.line")[0].length, 3);
+    },
     'stacks have their own titles accessors': function (chart) {
         assert.equal(chart.title()({value: 1}), "stack 0: 1");
         assert.equal(chart.title("stack 0")({value: 2}), "stack 0: 2");
@@ -371,6 +383,10 @@ suite.addBatch({'stacked area chart': {
 
         assert.equal(indexOfLastArea < indexOfFirstXRef, true);
         assert.equal(indexOfLastArea < indexOfFirstYRef, true);
+    },
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
     }
 }});
 
