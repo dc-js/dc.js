@@ -189,7 +189,7 @@ dc.lineChart = function (parent, chartGroup) {
                     .append("circle")
                     .attr("class", DOT_CIRCLE_CLASS)
                     .attr("r", _dataPointRadius || _dotRadius)
-                    .attr("fill", function() {return _chart.colorCalculator()(layerIndex);})
+                    .attr("fill", _chart.getColor)
                     .style("fill-opacity", _dataPointFillOpacity)
                     .style("stroke-opacity", _dataPointStrokeOpacity)
                     .on("mousemove", function (d) {

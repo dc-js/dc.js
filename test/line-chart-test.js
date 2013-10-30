@@ -341,6 +341,15 @@ suite.addBatch({'stacked area chart': {
         chart.render();
         assert.equal(d3.selectAll("#stacked-area-chart path.line")[0].length, 3);
     },
+    'chart dots are colored properly after stacks are hidden': function (chart) {
+        chart.hideStack("stack 0");
+        chart.render();
+        var lineColor = d3.select("#stacked-area-chart g._0 path.line").attr("fill");
+        assert.equal(d3.select("#stacked-area-chart g._0 circle.dot").attr("fill"), lineColor);
+
+        chart.showStack("stack 0");
+        chart.render();
+    },
     'charts retain their own titles when other stacks are hidden': function (chart) {
         chart.hideStack("stack 0");
         chart.render();
