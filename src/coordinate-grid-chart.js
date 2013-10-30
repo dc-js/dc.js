@@ -764,10 +764,10 @@ dc.coordinateGridChart = function (_chart) {
     _chart.doRender = function () {
         _chart.resetSvg();
 
-        _chart._generateG();
-
-        generateClipPath();
         _chart._preprocessData();
+
+        _chart._generateG();
+        generateClipPath();
         prepareXAxis(_chart.g());
         prepareYAxis(_chart.g());
 

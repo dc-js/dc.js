@@ -967,7 +967,40 @@ specific to its order in the composition.
 Get or set title sharing for the chart. If set, the `.title()` value from this chart
 will be shared with composed children. Default value is true.
 
-## <a name="series-chart" href="#Series-chart">#</a> Series Chart [Concrete]
+## <a name="series-chart" href="#Series-chart">#</a> Series Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
+A series chart is a chart that shows multiple series of data as lines, where the series
+is specified in the data.
+
+#### dc.seriesChart(parent[, chartGroup])
+Create a series chart instance and attach it to the given parent element.
+
+Parameters:
+* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
+in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
+chart group.
+
+Return:
+A newly created series chart instance
+
+```js
+// create a series chart under #chart-container1 element using the default global chart group
+var seriesChart1 = dc.seriesChart("#chart-container1");
+// create a series chart under #chart-container2 element using chart group A
+var seriesChart2 = dc.seriesChart("#chart-container2", "chartGroupA");
+```
+
+#### .seriesAccessor([accessor])
+Get or set accessor function for the displayed series. Given a datum, this function
+should return the series that datum belongs to.
+
+#### .seriesSort([sortFunction])
+Get or set a function to sort the list of series by, given series values.
+
+Example:
+```
+chart.seriesSort(d3.descending);
+```
 
 ## <a name="geo-choropleth-chart" href="#geo-choropleth-chart">#</a> Geo Choropleth Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
 Geo choropleth chart is design to make creating crossfilter driven choropleth map from GeoJson data an easy process. This
