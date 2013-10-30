@@ -53,6 +53,12 @@ dc.stackableChart = function (_chart) {
         return _chart;
     };
 
+    /**
+    #### .hidableStacks([boolean])
+    Allow named stacks to be hidden or shown by clicking on legend items.
+    This does not affect the behavior of hideStack or showStack.
+
+    **/
     _chart.hidableStacks = function(_) {
         if (!arguments.length) return _chart._hidableStacks;
         _chart._hidableStacks = _;
