@@ -14,6 +14,8 @@
 * The DC maintainer team will review and build the artifacts when
   merging
 
+Note: when adding tests, charts must set `.transitionDuration(0)` as the dom library used for testing [does not support](https://github.com/tmpvar/jsdom/issues/300) the SVG animation APIs.
+
 ## Issue Submission Guidlines
 
 * If you have a problem with your code, please ask your question on stackoverflow.com or the [user group](https://groups.google.com/forum/?fromgroups#!forum/dc-js-user-group)
