@@ -59,10 +59,10 @@ dc.barChart = function (parent, chartGroup) {
                 return "stack " + "_" + i;
             });
 
-        layers.each(function (d) {
+        layers.each(function (d, i) {
             var layer = d3.select(this);
 
-            renderBars(layer, d);
+            renderBars(layer, i, d);
         });
 
         _chart.stackLayers(null);
@@ -72,7 +72,7 @@ dc.barChart = function (parent, chartGroup) {
         return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
     }
 
-    function renderBars(layer, d) {
+    function renderBars(layer, layerIndex, d) {
         var bars = layer.selectAll("rect.bar")
             .data(d.points, dc.pluck('data', _chart.keyAccessor()));
 
@@ -82,7 +82,8 @@ dc.barChart = function (parent, chartGroup) {
             .attr("fill", _chart.getColor);
 
         if (_chart.renderTitle()) {
-            bars.append("title").text(dc.pluck('data',_chart.title()));
+            bars.append("title").text(dc.pluck('data', _chart.getTitleOfVisibleByIndex(layerIndex)));
+
         }
 
         if (_chart.isOrdinal())
@@ -107,7 +108,7 @@ dc.barChart = function (parent, chartGroup) {
             .attr("height", function (d) {
                 return barHeight(d);
             })
-            .select("title").text(dc.pluck('data',_chart.title()));
+            .select("title").text(dc.pluck('data', _chart.getTitleOfVisibleByIndex(layerIndex)));
 
         dc.transition(bars.exit(), _chart.transitionDuration())
             .attr("height", 0)

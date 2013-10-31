@@ -412,8 +412,17 @@ dc.utils.GroupStack = function () {
         return _groups[index][1];
     };
 
-    this.getNameByIndex = function (index) {
-        return _groups[index].name;
+    this.getNameOfVisibleByIndex = function (index) {
+        if (index === -1) {
+            if (_hideChartGroup) index++;
+            else return;
+        }
+
+        var visible = _groups.filter(function(group) {
+            return !group.hidden;
+        });
+
+        return visible[index].name;
     };
 
     this.size = function () {
@@ -2509,6 +2518,8 @@ dc.stackableChart = function (_chart) {
     var _allKeyAccessors;
     var _stackLayers;
 
+    _chart._hidableStacks = false;
+
     /**
     #### .stack(group[, name, accessor])
     Stack a new crossfilter group into this chart with optionally a custom value accessor. All stacks in the same chart will
@@ -2540,6 +2551,18 @@ dc.stackableChart = function (_chart) {
 
         _chart.expireCache();
 
+        return _chart;
+    };
+
+    /**
+    #### .hidableStacks([boolean])
+    Allow named stacks to be hidden or shown by clicking on legend items.
+    This does not affect the behavior of hideStack or showStack.
+
+    **/
+    _chart.hidableStacks = function(_) {
+        if (!arguments.length) return _chart._hidableStacks;
+        _chart._hidableStacks = _;
         return _chart;
     };
 
@@ -2722,23 +2745,23 @@ dc.stackableChart = function (_chart) {
     });
 
     /**
-     #### .title([stackName], [titleFunction])
-     Set or get the title function. Chart class will use this function to render svg title (usually interpreted by browser
-     as tooltips) for each child element in the chart, i.e. a slice in a pie chart or a bubble in a bubble chart. Almost
-     every chart supports title function however in grid coordinate chart you need to turn off brush in order to use title
-     otherwise the brush layer will block tooltip trigger.
+    #### .title([stackName], [titleFunction])
+    Set or get the title function. Chart class will use this function to render svg title (usually interpreted by browser
+    as tooltips) for each child element in the chart, i.e. a slice in a pie chart or a bubble in a bubble chart. Almost
+    every chart supports title function however in grid coordinate chart you need to turn off brush in order to use title
+    otherwise the brush layer will block tooltip trigger.
 
-     If the first argument is a stack name, the title function will get or set the title for that stack. If stackName
-     is not provided, the first stack is implied.
-     ```js
-     // set a title function on "first stack"
-     chart.title("first stack", function(d) { return d.key + ": " + d.value; });
-     // get a title function from "second stack"
-     var secondTitleFunction = chart.title("second stack");
-    });
-     ```
+    If the first argument is a stack name, the title function will get or set the title for that stack. If stackName
+    is not provided, the first stack is implied.
+    ```js
+    // set a title function on "first stack"
+    chart.title("first stack", function(d) { return d.key + ": " + d.value; });
+    // get a title function from "second stack"
+    var secondTitleFunction = chart.title("second stack");
+    );
+    ```
 
-     **/
+    **/
     dc.override(_chart, "title", function (stackName, titleAccessor) {
         if (!stackName) return _chart._title();
 
@@ -2762,14 +2785,8 @@ dc.stackableChart = function (_chart) {
         return _chart;
     });
 
-    _chart.getTitleByIndex = function (index) {
-        if (index === 0) {
-            return _chart.title();
-        }
-        else {
-            var stackTitle = _chart.title(_groupStack.getNameByIndex(index - 1));
-            return stackTitle || _chart.title();
-        }
+    _chart.getTitleOfVisibleByIndex = function (index) {
+        return _chart.title(_groupStack.getNameOfVisibleByIndex(index - 1)) || _chart.title();
     };
 
     _chart.stackLayout = function (stack) {
@@ -2782,7 +2799,9 @@ dc.stackableChart = function (_chart) {
         if (!arguments.length) {
             if (_stackLayers === null) {
                 _chart.calculateDataPointMatrixForAll();
-                _stackLayers = _chart.stackLayout()(_groupStack.toLayers());
+                var layers = _groupStack.toLayers();
+                if (layers.length === 0) return [];
+                _stackLayers = _chart.stackLayout()(layers);
             }
             return _stackLayers;
         } else {
@@ -3410,10 +3429,10 @@ dc.barChart = function (parent, chartGroup) {
                 return "stack " + "_" + i;
             });
 
-        layers.each(function (d) {
+        layers.each(function (d, i) {
             var layer = d3.select(this);
 
-            renderBars(layer, d);
+            renderBars(layer, i, d);
         });
 
         _chart.stackLayers(null);
@@ -3423,7 +3442,7 @@ dc.barChart = function (parent, chartGroup) {
         return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
     }
 
-    function renderBars(layer, d) {
+    function renderBars(layer, layerIndex, d) {
         var bars = layer.selectAll("rect.bar")
             .data(d.points, dc.pluck('data', _chart.keyAccessor()));
 
@@ -3433,7 +3452,8 @@ dc.barChart = function (parent, chartGroup) {
             .attr("fill", _chart.getColor);
 
         if (_chart.renderTitle()) {
-            bars.append("title").text(dc.pluck('data',_chart.title()));
+            bars.append("title").text(dc.pluck('data', _chart.getTitleOfVisibleByIndex(layerIndex)));
+
         }
 
         if (_chart.isOrdinal())
@@ -3458,7 +3478,7 @@ dc.barChart = function (parent, chartGroup) {
             .attr("height", function (d) {
                 return barHeight(d);
             })
-            .select("title").text(dc.pluck('data',_chart.title()));
+            .select("title").text(dc.pluck('data', _chart.getTitleOfVisibleByIndex(layerIndex)));
 
         dc.transition(bars.exit(), _chart.transitionDuration())
             .attr("height", 0)
@@ -3824,7 +3844,7 @@ dc.lineChart = function (parent, chartGroup) {
                         hideDot(dot);
                         hideRefLines(g);
                     })
-                    .append("title").text(dc.pluck('data', _chart.getTitleByIndex(layerIndex)));
+                    .append("title").text(dc.pluck('data', _chart.getTitleOfVisibleByIndex(layerIndex)));
 
                 dots.attr("cx", function (d) {
                         return dc.utils.safeNumber(_chart.x()(d.x));
@@ -3832,7 +3852,7 @@ dc.lineChart = function (parent, chartGroup) {
                     .attr("cy", function (d) {
                         return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
                     })
-                    .select("title").text(dc.pluck('data', _chart.getTitleByIndex(layerIndex)));
+                    .select("title").text(dc.pluck('data', _chart.getTitleOfVisibleByIndex(layerIndex)));
 
                 dots.exit().remove();
             });
@@ -5475,6 +5495,8 @@ dc.legend = function () {
 
     var _g;
 
+    var hiddenStacks = [];
+
     _legend.parent = function (p) {
         if (!arguments.length) return _parent;
         _parent = p;
@@ -5492,14 +5514,32 @@ dc.legend = function () {
             .enter()
             .append("g")
             .attr("class", "dc-legend-item")
+            .classed("fadeout", function(d) {
+                return hiddenStacks.indexOf(d.name) !== -1;
+            })
             .attr("transform", function (d, i) {
                 return "translate(0," + i * legendItemHeight() + ")";
             })
-            .on("mouseover", function(d){
-                _parent.legendHighlight(d);
+            .on("mouseover", function(d) {
+                if (hiddenStacks.indexOf(d.name) === -1)
+                    _parent.legendHighlight(d);
             })
             .on("mouseout", function (d) {
                 _parent.legendReset(d);
+            })
+            .on("click", function (d) {
+                if (_parent._hidableStacks) {
+                    var index;
+                    if ((index = hiddenStacks.indexOf(d.name)) !== -1) {
+                        hiddenStacks.splice(index, 1);
+                        _parent.showStack(d.name);
+                    }
+                    else {
+                        hiddenStacks.push(d.name);
+                        _parent.hideStack(d.name);
+                    }
+                    _parent.render();
+                }
             });
 
         itemEnter

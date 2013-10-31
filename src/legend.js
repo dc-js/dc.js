@@ -23,6 +23,8 @@ dc.legend = function () {
 
     var _g;
 
+    var hiddenStacks = [];
+
     _legend.parent = function (p) {
         if (!arguments.length) return _parent;
         _parent = p;
@@ -40,14 +42,32 @@ dc.legend = function () {
             .enter()
             .append("g")
             .attr("class", "dc-legend-item")
+            .classed("fadeout", function(d) {
+                return hiddenStacks.indexOf(d.name) !== -1;
+            })
             .attr("transform", function (d, i) {
                 return "translate(0," + i * legendItemHeight() + ")";
             })
-            .on("mouseover", function(d){
-                _parent.legendHighlight(d);
+            .on("mouseover", function(d) {
+                if (hiddenStacks.indexOf(d.name) === -1)
+                    _parent.legendHighlight(d);
             })
             .on("mouseout", function (d) {
                 _parent.legendReset(d);
+            })
+            .on("click", function (d) {
+                if (_parent._hidableStacks) {
+                    var index;
+                    if ((index = hiddenStacks.indexOf(d.name)) !== -1) {
+                        hiddenStacks.splice(index, 1);
+                        _parent.showStack(d.name);
+                    }
+                    else {
+                        hiddenStacks.push(d.name);
+                        _parent.hideStack(d.name);
+                    }
+                    _parent.render();
+                }
             });
 
         itemEnter

@@ -236,7 +236,7 @@ div.dc-chart {
     stroke-opacity: 0.2;
 }
 
-.dc-chart path.dc-mbolmbol {
+.dc-chart path.dc-mbolmbol, g.dc-legend-item.fadeout {
     fill-opacity: 0.5;
     stroke-opacity: 0.5;
 }
