@@ -115,6 +115,16 @@ suite.addBatch({
             newFirstLegendItem.on("click").call(newFirstLegendItem[0][0], newFirstLegendItem.datum());
             assert.equal(chart.selectAll("path.line")[0].length, 3);
         },
+        'should not fadeout stacks when a hidden legend item is hovered': function(chart) {
+            chart.hidableStacks(true).render();
+
+            var firstLegendItem = chart.select("g.dc-legend-item");
+            firstLegendItem.on("click").call(firstLegendItem[0][0], firstLegendItem.datum());
+
+            var newFirstLegendItem = chart.select("g.dc-legend-item");
+            newFirstLegendItem.on("mouseover")(newFirstLegendItem.datum());
+            assert.isFalse(d3.select(chart.selectAll("path.line")[0][1]).classed("fadeout"));
+        },
         teardown: function (topic) {
             resetAllFilters();
             resetBody();

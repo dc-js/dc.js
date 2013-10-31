@@ -48,8 +48,9 @@ dc.legend = function () {
             .attr("transform", function (d, i) {
                 return "translate(0," + i * legendItemHeight() + ")";
             })
-            .on("mouseover", function(d){
-                _parent.legendHighlight(d);
+            .on("mouseover", function(d) {
+                if (hiddenStacks.indexOf(d.name) === -1)
+                    _parent.legendHighlight(d);
             })
             .on("mouseout", function (d) {
                 _parent.legendReset(d);
