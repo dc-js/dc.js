@@ -152,16 +152,27 @@ var rowChartVows = function(group) {
 
             'group order': {
                 topic: function (chart) {
-                    return chart;
+                    resetAllFilters();
+                    return chart.ordering(dc.pluck('value'));
                 },
-                'group should be order': function (chart) {
-                    var group = chart.computeOrderedGroups(chart.group().all());
-                    countryDimension.filter("US");
-                    var group2 = chart.computeOrderedGroups(chart.group().all());
-                    assert.equal(group2[0].key, group[0].key);
+                'group should be orderd': function (chart) {
+                    resetAllFilters();
+                    assert.deepEqual(chart.data().map(dc.pluck('value')).sort(d3.ascending),
+                                     chart.data().map(dc.pluck('value')));
+                    chart.ordering(dc.pluck('key'));
+                    assert.deepEqual(['22','33','44','55','66'], chart.data().map(dc.pluck('key')));
+                },
+                teardown: function (chart) {
+                    chart.ordering(dc.pluck('key'));
                 }
+            },
+
+            teardown: function () {
+              resetAllFilters();
+              resetBody();
             }
         },
+
         'row selection': {
             topic: newRowChart("row-chart-row-selection"),
 

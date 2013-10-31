@@ -124,6 +124,9 @@ the new group.
 If no value specified then the current group will be returned.
 If name is specified then it will be used to generate legend label.
 
+#### .ordering([orderFunction])
+Get or set an accessor to order ordinal charts
+
 #### .filterAll()
 Clear all filters associated with this chart.
 
@@ -1191,6 +1194,8 @@ chart.othersGrouper(function (data) {
 
     // add the others row to the dataset
     data.push({"key": "Others", "value": othersSum, "others": othersKeys });
+
+    return data;
 });
 ```
 

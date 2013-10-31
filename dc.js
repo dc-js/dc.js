@@ -608,8 +608,10 @@ dc.baseChart = function (_chart) {
 
     var _keyAccessor = dc.pluck('key');
     var _valueAccessor = dc.pluck('value');
-    var _ordering = dc.pluck('key');
     var _label = dc.pluck('key');
+
+    var _ordering = dc.pluck('key');
+    var _orderSort;
 
     var _renderLabel = false;
 
@@ -790,19 +792,23 @@ dc.baseChart = function (_chart) {
         groupName(_chart, g, accessor).name = name;
     };
 
+    /**
+    #### .ordering([orderFunction])
+    Get or set an accessor to order ordinal charts
+    **/
     _chart.ordering = function(o) {
         if (!arguments.length) return _ordering;
         _ordering = o;
+        _orderSort = crossfilter.quicksort.by(_ordering);
         _chart.expireCache();
         return _chart;
     };
 
-    _chart.computeOrderedGroups = function(ga) {
-        var data = ga.slice(0); // clone
-        if(data.length < 2)
+    _chart.computeOrderedGroups = function(data) {
+        if (data.length <= 1)
             return data;
-        var sort = crossfilter.quicksort.by(_chart.ordering());
-        return sort(data,0,data.length);
+        if (!_orderSort) _orderSort = crossfilter.quicksort.by(_ordering);
+        return _orderSort(data,0,data.length);
     };
 
     /**
@@ -5564,7 +5570,8 @@ dc.capped = function (_chart) {
             topSet = d3.set(topKeys),
             others = allKeys.filter(function(d){return !topSet.has(d);});
         if (allRowsSum > topRowsSum)
-            topRows.push({"others": others, "key": _othersLabel, "value": allRowsSum - topRowsSum});
+            return topRows.concat([{"others": others, "key": _othersLabel, "value": allRowsSum - topRowsSum}]);
+        return topRows;
     };
 
     _chart.cappedKeyAccessor = function(d,i) {
@@ -5583,9 +5590,9 @@ dc.capped = function (_chart) {
         if (_cap == Infinity) {
             return _chart.computeOrderedGroups(group.all());
         } else {
-            var topRows = group.top(_cap); // ordered by value
-            topRows = _chart.computeOrderedGroups(topRows); // re-order by key
-            if (_othersGrouper) _othersGrouper(topRows);
+            var topRows = group.top(_cap); // ordered by crossfilter group order (default value)
+            topRows = _chart.computeOrderedGroups(topRows); // re-order using ordering (default key)
+            if (_othersGrouper) return _othersGrouper(topRows);
             return topRows;
         }
     });
@@ -5625,6 +5632,8 @@ dc.capped = function (_chart) {
 
         // add the others row to the dataset
         data.push({"key": "Others", "value": othersSum, "others": othersKeys });
+
+        return data;
     });
     ```
     **/

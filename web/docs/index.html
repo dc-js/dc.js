@@ -209,6 +209,8 @@ created from the particular dimension associated with the same chart. If the val
 the new group.</p>
 <p>If no value specified then the current group will be returned.
 If name is specified then it will be used to generate legend label.</p>
+<h4>.ordering([orderFunction])</h4>
+<p>Get or set an accessor to order ordinal charts</p>
 <h4>.filterAll()</h4>
 <p>Clear all filters associated with this chart.</p>
 <h4>.select(selector)</h4>
@@ -1000,6 +1002,8 @@ values below the cap.</p>
 
     // <span class="title">add</span> <span class="title">the</span> <span class="title">others</span> <span class="title">row</span> <span class="title">to</span> <span class="title">the</span> <span class="title">dataset</span>
     <span class="title">data</span>.<span class="title">push</span>({"<span class="title">key</span>": "<span class="type">Others</span>", "<span class="title">value</span>": <span class="title">othersSum</span>, "<span class="title">others</span>": <span class="title">othersKeys</span> }</span>);</span>
+
+    return <span class="typedef"><span class="keyword">data</span>;</span>
 });</code></pre>
 <h4>.symbolSize([radius])</h4>
 <p>Set or get radius for symbols, default: 3.</p>

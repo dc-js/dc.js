@@ -263,13 +263,15 @@ suite.addBatch({
         },
         'group order': {
             topic: function (chart) {
-                return chart;
+                return chart.cap(4).ordering(dc.pluck('value'));
             },
             'group should be orderd': function (chart) {
-                var group = chart.computeOrderedGroups(chart.group().all());
-                countryDimension.filter("US");
-                var group2 = chart.computeOrderedGroups(chart.group().all());
-                assert.equal(group2[0].key, group[0].key);
+                assert.deepEqual([ '33','55','22','44','Others'], chart.data().map(dc.pluck('key')));
+                chart.ordering(dc.pluck('key'));
+                assert.deepEqual([ '22','33','44','55','Others'], chart.data().map(dc.pluck('key')));
+            },
+            teardown: function (chart) {
+                chart.cap(Infinity).ordering(dc.pluck('key'));
             }
         }
     },

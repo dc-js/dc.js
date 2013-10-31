@@ -23,7 +23,8 @@ dc.capped = function (_chart) {
             topSet = d3.set(topKeys),
             others = allKeys.filter(function(d){return !topSet.has(d);});
         if (allRowsSum > topRowsSum)
-            topRows.push({"others": others, "key": _othersLabel, "value": allRowsSum - topRowsSum});
+            return topRows.concat([{"others": others, "key": _othersLabel, "value": allRowsSum - topRowsSum}]);
+        return topRows;
     };
 
     _chart.cappedKeyAccessor = function(d,i) {
@@ -42,9 +43,9 @@ dc.capped = function (_chart) {
         if (_cap == Infinity) {
             return _chart.computeOrderedGroups(group.all());
         } else {
-            var topRows = group.top(_cap); // ordered by value
-            topRows = _chart.computeOrderedGroups(topRows); // re-order by key
-            if (_othersGrouper) _othersGrouper(topRows);
+            var topRows = group.top(_cap); // ordered by crossfilter group order (default value)
+            topRows = _chart.computeOrderedGroups(topRows); // re-order using ordering (default key)
+            if (_othersGrouper) return _othersGrouper(topRows);
             return topRows;
         }
     });
@@ -84,6 +85,8 @@ dc.capped = function (_chart) {
 
         // add the others row to the dataset
         data.push({"key": "Others", "value": othersSum, "others": othersKeys });
+
+        return data;
     });
     ```
     **/
