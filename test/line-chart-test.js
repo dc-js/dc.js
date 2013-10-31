@@ -194,7 +194,7 @@ suite.addBatch({
                 assert.lengthOf(chart.selectAll("path.area")[0], 0);
             },
             'dash style should be solid': function (chart) {
-                assert.equal(chart.selectAll("path.line").attr("stroke-dasharray"), "");
+                assert.isNull(chart.selectAll("path.line").attr("stroke-dasharray"));
             },
             'selected bars should be push to foreground': function (chart) {
                 chart.selectAll("g rect.bar").each(function (d, i) {

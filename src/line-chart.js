@@ -47,7 +47,7 @@ dc.lineChart = function (parent, chartGroup) {
     var _interpolate = 'linear';
     var _tension = 0.7;
     var _defined;
-    var _dashStyle = [];
+    var _dashStyle;
 
     _chart.transitionDuration(500);
 
@@ -132,11 +132,12 @@ dc.lineChart = function (parent, chartGroup) {
             line.defined(_defined);
 
 
-        layersEnter.append("path")
+        var path = layersEnter.append("path")
             .attr("class", "line")
             .attr("stroke", _chart.getColor)
-            .attr("fill", _chart.getColor)
-            .attr("stroke-dasharray", _dashStyle);
+            .attr("fill", _chart.getColor);
+        if (_dashStyle)
+            path.attr("stroke-dasharray", _dashStyle);
 
         dc.transition(layers.select("path.line"), _chart.transitionDuration())
             .attr("d", function (d) {

@@ -536,6 +536,7 @@ dc.utils.appendOrSelect = function (parent, name) {
 dc.utils.createLegendable = function (chart, group, accessor, color) {
     var legendable = {name: chart._getGroupName(group, accessor), data: group};
     if (color) legendable.color = color;
+    //(typeof chart.dashStyle === 'function') ? legendable.dashstyle = chart.dashStyle() : [];
     return legendable;
 };
 
@@ -3652,6 +3653,7 @@ dc.lineChart = function (parent, chartGroup) {
     var _interpolate = 'linear';
     var _tension = 0.7;
     var _defined;
+    var _dashStyle;
 
     _chart.transitionDuration(500);
 
@@ -3696,6 +3698,19 @@ dc.lineChart = function (parent, chartGroup) {
         _defined = _;
         return _chart;
     };
+    /**
+    #### .dashStyle([array])
+    Set the line's d3 dashstyle. This value becomes "stroke-dasharray" of line. Defaults to empty array (solid line).
+     ```js
+     // create a Dash Dot Dot Dot
+     chart.dashStyle([3,1,1,1]);
+     ```
+    **/
+    _chart.dashStyle = function (_) {
+        if (!arguments.length) return _dashStyle;
+        _dashStyle = _;
+        return _chart;
+    };
 
     /**
     #### .renderArea([boolean])
@@ -3723,10 +3738,12 @@ dc.lineChart = function (parent, chartGroup) {
             line.defined(_defined);
 
 
-        layersEnter.append("path")
+        var path = layersEnter.append("path")
             .attr("class", "line")
             .attr("stroke", _chart.getColor)
             .attr("fill", _chart.getColor);
+        if (_dashStyle)
+            path.attr("stroke-dasharray", _dashStyle);
 
         dc.transition(layers.select("path.line"), _chart.transitionDuration())
             .attr("d", function (d) {
@@ -3794,7 +3811,7 @@ dc.lineChart = function (parent, chartGroup) {
                     .append("circle")
                     .attr("class", DOT_CIRCLE_CLASS)
                     .attr("r", _dataPointRadius || _dotRadius)
-                    .attr("fill", function() {return _chart.colorCalculator()(layerIndex);})
+                    .attr("fill", _chart.getColor)
                     .style("fill-opacity", _dataPointFillOpacity)
                     .style("stroke-opacity", _dataPointStrokeOpacity)
                     .on("mousemove", function (d) {
@@ -3858,7 +3875,6 @@ dc.lineChart = function (parent, chartGroup) {
     /**
     #### .dotRadius([dotRadius])
     Get or set the radius (in px) for data points. Default dot radius is 5.
-
     **/
     _chart.dotRadius = function (_) {
         if (!arguments.length) return _dotRadius;

@@ -744,6 +744,13 @@ var chart2 = dc.lineChart("#chart-container2", "chartGroupA");
 var chart3 = dc.lineChart(compositeChart);
 ```
 
+#### .dashStyle([array])
+Set the line's d3 dashstyle. This value becomes "stroke-dasharray" of line. Defaults to empty array (solid line).
+ ```js
+ // create a Dash Dot Dot Dot
+ chart.dashStyle([3,1,1,1]);
+ ```
+
 #### .renderArea([boolean])
 Get or set render area flag. If the flag is set to true then the chart will render the area beneath each line and effectively
 becomes an area chart.
