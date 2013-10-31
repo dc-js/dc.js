@@ -209,6 +209,8 @@ created from the particular dimension associated with the same chart. If the val
 the new group.</p>
 <p>If no value specified then the current group will be returned.
 If name is specified then it will be used to generate legend label.</p>
+<h4>.ordering([orderFunction])</h4>
+<p>Get or set an accessor to order ordinal charts</p>
 <h4>.filterAll()</h4>
 <p>Clear all filters associated with this chart.</p>
 <h4>.select(selector)</h4>
@@ -673,6 +675,10 @@ var chart1 = dc.lineChart(<span class="string">"#chart-container1"</span>);</spa
 var chart2 = dc.lineChart(<span class="string">"#chart-container2"</span>, <span class="string">"chartGroupA"</span>);</span>
 // <span class="operator"><span class="keyword">create</span> a sub-chart under a composite parent chart
 var chart3 = dc.lineChart(compositeChart);</span></code></pre>
+<h4>.dashStyle([array])</h4>
+<p>Set the line&#39;s d3 dashstyle. This value becomes &quot;stroke-dasharray&quot; of line. Defaults to empty array (solid line).</p>
+<pre><code class="lang-js"> // <span class="operator"><span class="keyword">create</span> a Dash Dot Dot Dot
+ chart.dashStyle([<span class="number">3</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>]);</span></code></pre>
 <h4>.renderArea([boolean])</h4>
 <p>Get or set render area flag. If the flag is set to true then the chart will render the area beneath each line and effectively
 becomes an area chart.</p>
@@ -689,7 +695,7 @@ becomes an area chart.</p>
 <p>If <code>options</code> is falsy, it disable data point rendering.</p>
 <p>If no <code>options</code> are provded, the current <code>options</code> values are instead returned</p>
 <p>Example:</p>
-<pre><code><span class="attribute">chart.renderDataPoints([{radius</span>: <span class="string">2}])</span></code></pre>
+<pre><code>chart.renderDataPoints([{<span class="method">radius:</span> <span class="number">2</span>, <span class="method">fillOpacity:</span> <span class="number">0.8</span>, <span class="method">strokeOpacity:</span> <span class="number">0.8</span>}])</code></pre>
 <h2><a name="data-count" href="#data-count">#</a> Data Count Widget [Concrete] &lt; <a href="#base-chart">Base Chart</a></h2>
 <p>Data count is a simple widget designed to display total number records in the data set vs. the number records selected
 by the current filters. Once created data count widget will automatically update the text content of the following elements
@@ -1000,6 +1006,8 @@ values below the cap.</p>
 
     // <span class="title">add</span> <span class="title">the</span> <span class="title">others</span> <span class="title">row</span> <span class="title">to</span> <span class="title">the</span> <span class="title">dataset</span>
     <span class="title">data</span>.<span class="title">push</span>({"<span class="title">key</span>": "<span class="type">Others</span>", "<span class="title">value</span>": <span class="title">othersSum</span>, "<span class="title">others</span>": <span class="title">othersKeys</span> }</span>);</span>
+
+    return <span class="typedef"><span class="keyword">data</span>;</span>
 });</code></pre>
 <h4>.symbolSize([radius])</h4>
 <p>Set or get radius for symbols, default: 3.</p>

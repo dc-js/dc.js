@@ -124,6 +124,9 @@ the new group.
 If no value specified then the current group will be returned.
 If name is specified then it will be used to generate legend label.
 
+#### .ordering([orderFunction])
+Get or set an accessor to order ordinal charts
+
 #### .filterAll()
 Clear all filters associated with this chart.
 
@@ -741,6 +744,13 @@ var chart2 = dc.lineChart("#chart-container2", "chartGroupA");
 var chart3 = dc.lineChart(compositeChart);
 ```
 
+#### .dashStyle([array])
+Set the line's d3 dashstyle. This value becomes "stroke-dasharray" of line. Defaults to empty array (solid line).
+ ```js
+ // create a Dash Dot Dot Dot
+ chart.dashStyle([3,1,1,1]);
+ ```
+
 #### .renderArea([boolean])
 Get or set render area flag. If the flag is set to true then the chart will render the area beneath each line and effectively
 becomes an area chart.
@@ -763,7 +773,7 @@ If no `options` are provded, the current `options` values are instead returned
 
 Example:
 ```
-chart.renderDataPoints([{radius: 2}])
+chart.renderDataPoints([{radius: 2, fillOpacity: 0.8, strokeOpacity: 0.8}])
 ```
 
 ## <a name="data-count" href="#data-count">#</a> Data Count Widget [Concrete] < [Base Chart](#base-chart)
@@ -1191,6 +1201,8 @@ chart.othersGrouper(function (data) {
 
     // add the others row to the dataset
     data.push({"key": "Others", "value": othersSum, "others": othersKeys });
+
+    return data;
 });
 ```
 
