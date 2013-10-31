@@ -479,19 +479,26 @@ suite.addBatch({
 });
 
 suite.addBatch({
-    'custom title': {
+    'custom titles': {
         topic: function () {
             var chart = buildChart("chart-custom-title");
             chart.brushOn(false)
                 .title(function () {
                     return "custom title";
                 })
+                .stack(dateGroup, "extra stack", function (d) { return d.value; })
+                .title("extra stack", function () {
+                    return "extra stack title";
+                })
                 .render();
             return chart;
         },
         'custom title should be created per bar': function (chart) {
-            chart.selectAll("rect.bar").each(function (d) {
+            chart.selectAll(".stack._0 rect.bar").each(function (d) {
                 assert.equal(d3.select(this).select("title").text(), "custom title");
+            });
+            chart.selectAll(".stack._1 rect.bar").each(function (d) {
+                assert.equal(d3.select(this).select("title").text(), "extra stack title");
             });
         },
         teardown: function (topic) {

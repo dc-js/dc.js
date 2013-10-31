@@ -17,6 +17,8 @@ dc.stackableChart = function (_chart) {
     var _allKeyAccessors;
     var _stackLayers;
 
+    _chart._hidableStacks = false;
+
     /**
     #### .stack(group[, name, accessor])
     Stack a new crossfilter group into this chart with optionally a custom value accessor. All stacks in the same chart will
@@ -48,6 +50,18 @@ dc.stackableChart = function (_chart) {
 
         _chart.expireCache();
 
+        return _chart;
+    };
+
+    /**
+    #### .hidableStacks([boolean])
+    Allow named stacks to be hidden or shown by clicking on legend items.
+    This does not affect the behavior of hideStack or showStack.
+
+    **/
+    _chart.hidableStacks = function(_) {
+        if (!arguments.length) return _chart._hidableStacks;
+        _chart._hidableStacks = _;
         return _chart;
     };
 
@@ -230,23 +244,23 @@ dc.stackableChart = function (_chart) {
     });
 
     /**
-     #### .title([stackName], [titleFunction])
-     Set or get the title function. Chart class will use this function to render svg title (usually interpreted by browser
-     as tooltips) for each child element in the chart, i.e. a slice in a pie chart or a bubble in a bubble chart. Almost
-     every chart supports title function however in grid coordinate chart you need to turn off brush in order to use title
-     otherwise the brush layer will block tooltip trigger.
+    #### .title([stackName], [titleFunction])
+    Set or get the title function. Chart class will use this function to render svg title (usually interpreted by browser
+    as tooltips) for each child element in the chart, i.e. a slice in a pie chart or a bubble in a bubble chart. Almost
+    every chart supports title function however in grid coordinate chart you need to turn off brush in order to use title
+    otherwise the brush layer will block tooltip trigger.
 
-     If the first argument is a stack name, the title function will get or set the title for that stack. If stackName
-     is not provided, the first stack is implied.
-     ```js
-     // set a title function on "first stack"
-     chart.title("first stack", function(d) { return d.key + ": " + d.value; });
-     // get a title function from "second stack"
-     var secondTitleFunction = chart.title("second stack");
-    });
-     ```
+    If the first argument is a stack name, the title function will get or set the title for that stack. If stackName
+    is not provided, the first stack is implied.
+    ```js
+    // set a title function on "first stack"
+    chart.title("first stack", function(d) { return d.key + ": " + d.value; });
+    // get a title function from "second stack"
+    var secondTitleFunction = chart.title("second stack");
+    );
+    ```
 
-     **/
+    **/
     dc.override(_chart, "title", function (stackName, titleAccessor) {
         if (!stackName) return _chart._title();
 
@@ -270,14 +284,8 @@ dc.stackableChart = function (_chart) {
         return _chart;
     });
 
-    _chart.getTitleByIndex = function (index) {
-        if (index === 0) {
-            return _chart.title();
-        }
-        else {
-            var stackTitle = _chart.title(_groupStack.getNameByIndex(index - 1));
-            return stackTitle || _chart.title();
-        }
+    _chart.getTitleOfVisibleByIndex = function (index) {
+        return _chart.title(_groupStack.getNameOfVisibleByIndex(index - 1)) || _chart.title();
     };
 
     _chart.stackLayout = function (stack) {
@@ -290,7 +298,9 @@ dc.stackableChart = function (_chart) {
         if (!arguments.length) {
             if (_stackLayers === null) {
                 _chart.calculateDataPointMatrixForAll();
-                _stackLayers = _chart.stackLayout()(_groupStack.toLayers());
+                var layers = _groupStack.toLayers();
+                if (layers.length === 0) return [];
+                _stackLayers = _chart.stackLayout()(layers);
             }
             return _stackLayers;
         } else {
