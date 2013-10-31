@@ -53,6 +53,8 @@ dc.boxPlot = function (parent, chartGroup) {
         });
     });
 
+    _chart.colorAccessor(function(d, i) { return i; });
+
     /**
     ### .boxPadding([padding])
     Get or set the spacing between boxes as a fraction of bar size. Valid values are within 0-1.
@@ -107,6 +109,10 @@ dc.boxPlot = function (parent, chartGroup) {
             .attr("class", "box")
             .attr("transform", boxTransform)
             .call(_box);
+
+        d3.selectAll('rect.box').style("fill", function(d, i) {
+            return _chart.getColor(d, i);
+        });
     };
 
     _chart.yAxisMin = function () {

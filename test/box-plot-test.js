@@ -78,6 +78,20 @@ suite.addBatch({
         'should set the whiskers values correctly' : function  (chart) {
             assert.equal(chart.select("g.box:nth-of-type(2)").selectAll("text.whisker")[0][0].textContent, "22");
             assert.equal(chart.select("g.box:nth-of-type(2)").selectAll("text.whisker")[0][1].textContent, "66");
+        },
+
+        'should assign a fill color to the boxes' : function (chart) {
+            chart.getColor = function() { return '#eeeeee'; };
+            chart.render();
+            assert.equal(chart.selectAll("rect.box").style("fill"), "#eeeeee");
+        },
+
+        'colorAccessor' : {
+            'should return the index value' : function (chart) {
+                chart.selectAll("rect.box").each(function(d, i) {
+                    assert.equal(chart.colorAccessor()(d, i), i);
+                });
+            }
         }
     },
 
