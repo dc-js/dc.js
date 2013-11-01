@@ -20,12 +20,40 @@ function buildLineChart(id) {
     return chart;
 }
 
+function buildComposedDashedLineChart(id) {
+    d3.select("body").append("div").attr("id", id);
+    var chart1 = dc.lineChart();
+    chart1
+        .dimension(dateDimension)
+        .group(dateIdSumGroup, "Id Sum")
+        .dashStyle([10,1])
+
+    var chart2 = dc.lineChart();
+    chart2
+        .dimension(dateDimension)
+        .group(dateValueSumGroup, "Value Sum")
+        .dashStyle([2,1])
+
+    var composite = dc.compositeChart("#" + id);
+    composite
+        .x(d3.scale.linear().domain([0,20]))
+        .legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
+        .compose([chart1, chart2])
+        .render();
+
+    return composite;
+}
+
 function legend(chart) {
     return chart.select("g.dc-legend");
 }
 
 function legendItems(chart) {
     return legend(chart).selectAll('g.dc-legend-item');
+}
+
+function legendLine(chart) {
+    return legend(chart).selectAll("line");
 }
 
 function legendIcon(chart) {
@@ -35,6 +63,18 @@ function legendIcon(chart) {
 function legendLabels(chart) {
     return chart.selectAll("g.dc-legend-item text");
 }
+
+suite.addBatch({
+    'renderDashedLine': {
+        topic: function () {
+            return buildComposedDashedLineChart("legend-chart");
+        },
+        'should style legend line correctly': function (chart) {
+            assert.equal(d3.select(legendLine(chart)[0][0]).attr("stroke-dasharray"), [10,1]);
+            assert.equal(d3.select(legendLine(chart)[0][1]).attr("stroke-dasharray"), [2,1]);
+        }
+    }
+});
 
 suite.addBatch({
     'render': {
