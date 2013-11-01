@@ -70,11 +70,23 @@ dc.legend = function () {
                 }
             });
 
-        itemEnter
-            .append("rect")
+        if (_parent.legendables().some(function (legendItem) { return legendItem.dashstyle })) {
+            itemEnter
+                .append("line")
+                .attr("x1", 0)
+                .attr("y1", _itemHeight / 2)
+                .attr("x2", _itemHeight)
+                .attr("y2", _itemHeight / 2)
+                .attr("stroke-width", 2)
+                .attr("stroke-dasharray", function(d){return d.dashstyle;})
+                .attr("stroke", function(d){return d.color;});
+        } else {
+            itemEnter
+                .append("rect")
                 .attr("width", _itemHeight)
                 .attr("height", _itemHeight)
                 .attr("fill", function(d){return d.color;});
+        }
 
         itemEnter.append("text")
                 .text(function(d){return d.name;})
