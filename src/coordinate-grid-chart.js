@@ -23,6 +23,7 @@ dc.coordinateGridChart = function (_chart) {
 
     var _x;
     var _xOriginalDomain;
+    var _xDomainConstraints;
     var _xAxis = d3.svg.axis();
     var _xUnits = dc.units.integers;
     var _xAxisPadding = 0;
@@ -174,6 +175,28 @@ dc.coordinateGridChart = function (_chart) {
     _chart.xOriginalDomain = function () {
         return _xOriginalDomain;
     };
+
+    _chart.updateXDomain = function(domain) {
+        if (_zoomOutRestrict) {
+            var clampedStart = dc.utils.clamp(domain[0], _xOriginalDomain[0], _xOriginalDomain[1]);
+            var clampedEnd = dc.utils.clamp(domain[1], _xOriginalDomain[0], _xOriginalDomain[1]);
+            _chart._x.domain([clampedStart, clampledEnd]);
+        }
+        else {
+            _chart._x.domain(_);
+        }
+    };
+
+    function applyXRestrictions() {
+        if (_xDomainConstraints) {
+            _xDomainConstraints.forEach(function (restriction) {
+                _x.domain([
+                    d3.max([restriction[0], _x.domain()[0]]),
+                    d3.min([restriction[1], _x.domain()[1]])
+                ]);
+            });
+        }
+    }
 
     /**
     #### .xUnits([xUnits function])
@@ -770,12 +793,21 @@ dc.coordinateGridChart = function (_chart) {
     _chart._preprocessData = function() {};
 
     _chart.doRender = function () {
+        _xDomainConstraints = [];
+        if (_zoomOutRestrict) {
+            _xDomainConstraints.push(_xOriginalDomain);
+            if (_rangeChart) {
+                _xDomainConstraints.push(_rangeChart.xOriginalDomain());
+            }
+        }
+
         _chart.resetSvg();
 
         _chart._preprocessData();
 
         _chart._generateG();
         generateClipPath();
+
         prepareXAxis(_chart.g());
         prepareYAxis(_chart.g());
 
@@ -804,46 +836,133 @@ dc.coordinateGridChart = function (_chart) {
     }
 
     function zoomHandler() {
-        var tx = _zoom.translate()[0];
-        tx = dc.utils.clamp(tx, -1 * _chart.effectiveWidth(), 0);
-        _zoom.translate([tx, 0]);
-
         var domain = _chart.x().domain();
-        if (_rangeChart) {
-            if (_zoomOutRestrict) {
-                var origDom = _rangeChart.xOriginalDomain();
-                domain = [
-                    d3.max([domain[0], origDom[0]]),
-                    d3.min([domain[1], origDom[1]])
-                ];
-            }
             //var refDomFilter = dc.filters.RangedFilter(refDom[0], refDom[1]);
-            _rangeChart.replaceFilter(domain);
-            _rangeChart.redraw();
-            _chart.replaceFilter(domain);
-        } else {
-            _chart.replaceFilter(domain);
-            _chart.focus(domain);
+
+        _chart.replaceFilter(domain);
+        _chart.rescale();
+        _chart.redraw();
+
+        if (_rangeChart && !rangeFiltersEqual(_chart.filter(), _rangeChart.filter())) {
+            dc.events.trigger( function () {
+                _rangeChart.replaceFilter(domain);
+                _rangeChart.redraw();
+            });
         }
+
         _chart._invokeZoomedListener();
+
+        dc.events.trigger(function () {
+            dc.redrawAll();
+        }, 500);
+
+        //var tx = _zoom.translate()[0];
+        //tx = dc.utils.clamp(tx, -1 * _chart.effectiveWidth(), 0);
+        //_zoom.translate([tx, 0]);
+
+        //var domain = _chart.x().domain();
+        //if (_rangeChart) {
+            //if (_zoomOutRestrict) {
+                //var origDom = _rangeChart.xOriginalDomain();
+                //domain = [
+                    //d3.max([domain[0], origDom[0]]),
+                    //d3.min([domain[1], origDom[1]])
+                //];
+            //}
+            //_rangeChart.replaceFilter(domain);
+            //_rangeChart.redraw();
+            //_chart.replaceFilter(domain);
+        //} else {
+            //_chart.replaceFilter(domain);
+            //_chart.focus(domain);
+        //}
     }
 
     function resetZoom(newDomain) {
-        var newExtent = newDomain.map(_x),
-            oldExtent = _x.range(),
-            newSpan   = Math.abs(newExtent[1] - newExtent[0]),
-            oldSpan   = Math.abs(oldExtent[1] - oldExtent[0]),
-            scale     = oldSpan / newSpan,
-            trans     = oldExtent[0] - newExtent[1];
+        //var newExtent = newDomain.map(_x),
+            //oldExtent = _x.range(),
+            //newSpan   = Math.abs(newExtent[1] - newExtent[0]),
+            //oldSpan   = Math.abs(oldExtent[1] - oldExtent[0]),
+            //scale     = oldSpan / newSpan,
+            //trans     = oldExtent[0] - newExtent[1];
 
-            console.log(_chart.chartID(), scale,trans,_zoom.scale(),_zoom.translate()[0],newExtent);
+            //console.log(_chart.chartID(), scale,trans,_zoom.scale(),_zoom.translate()[0],newExtent);
             //_zoom.scale(scale);
             //_zoom.translate([trans,0]);
     }
 
+    /**
+    #### .focus([range])
+    Zoom this chart to focus on the given range. The given range should be an array containing only 2 element([start, end]) defining an range in x domain. If the range is not given or set to null, then the zoom will be reset. _For focus to work elasticX has to be turned off otherwise focus will be ignored._
+    ```js
+    chart.renderlet(function(chart){
+        // smooth the rendering through event throttling
+        dc.events.trigger(function(){
+            // focus some other chart to the range selected by user on this chart
+            someOtherChart.focus(chart.filter());
+        });
+    })
+    ```
+
+    **/
+    _chart.focus = function (range) {
+        if (hasRangeSelected(range)) {
+            _chart.x().domain(range);
+            _refocused = true;
+        } else {
+            _chart.x().domain(_chart.xOriginalDomain());
+            _refocused = false;
+        }
+
+        _zoom.x(_chart.x());
+        zoomHandler();
+    };
+
+    _chart.refocused = function () {
+        return _refocused;
+    };
+
+    _chart.focusChart = function (c) {
+        if (!arguments.length) return _focusChart;
+        _focusChart = c;
+        _chart.on("filtered", function (chart) {
+            var rangeFilter = chart.filter();
+            var focusFilter = _focusChart.filter();
+            if (!rangeFiltersEqual(rangeFilter, focusFilter)) {
+                dc.events.trigger(function () {
+                    _focusChart.replaceFilter(rangeFilter);
+                    _focusChart.focus(rangeFilter);
+                });
+            }
+        });
+        return _chart;
+    };
+
+    function rangeFiltersEqual(filter1, filter2) {
+        if (!filter1 && !filter2) {
+            return true;
+        }
+
+        if (filter1.length === 0 && filter2.length === 0) {
+            return true;
+        }
+
+        if (filter1 && filter2 &&
+            filter1[0].valueOf() === filter2[0].valueOf() &&
+            filter1[1].valueOf() === filter2[1].valueOf()) {
+            return true;
+        }
+
+        return false;
+    };
+
     _chart.doRedraw = function () {
         console.log("render:",_chart.chartID());
+
         _chart._preprocessData();
+
+        applyXRestrictions();
+
         prepareXAxis(_chart.g());
         prepareYAxis(_chart.g());
 
@@ -852,7 +971,7 @@ dc.coordinateGridChart = function (_chart) {
         if (_chart.elasticY())
             _chart.renderYAxis(_chart.g());
 
-        if (_chart.elasticX() || _refocused)
+        if (_chart.elasticX() || _chart.refocused())
             _chart.renderXAxis(_chart.g());
 
         _chart.redrawBrush(_chart.g());
@@ -877,54 +996,6 @@ dc.coordinateGridChart = function (_chart) {
     function hasRangeSelected(range) {
         return range instanceof Array && range.length > 1;
     }
-
-    /**
-    #### .focus([range])
-    Zoom this chart to focus on the given range. The given range should be an array containing only 2 element([start, end]) defining an range in x domain. If the range is not given or set to null, then the zoom will be reset. _For focus to work elasticX has to be turned off otherwise focus will be ignored._
-    ```js
-    chart.renderlet(function(chart){
-        // smooth the rendering through event throttling
-        dc.events.trigger(function(){
-            // focus some other chart to the range selected by user on this chart
-            someOtherChart.focus(chart.filter());
-        });
-    })
-    ```
-
-    **/
-    _chart.focus = function (range) {
-        _refocused = true;
-
-        if (hasRangeSelected(range)) {
-            resetZoom(range);
-            _chart.x().domain(range);
-        } else {
-            _chart.x().domain(_chart.xOriginalDomain());
-        }
-
-        _chart.rescale();
-
-        _chart.redraw();
-
-        if (!hasRangeSelected(range))
-            _refocused = false;
-    };
-
-    _chart.refocused = function () {
-        return _refocused;
-    };
-
-    _chart.focusChart = function (c) {
-        if (!arguments.length) return _focusChart;
-        _focusChart = c;
-        _chart.on("filtered", function (chart) {
-            dc.events.trigger(function () {
-                _focusChart.replaceFilter(chart.filter());
-                _focusChart.focus(chart.filter());
-            });
-        });
-        return _chart;
-    };
 
     return _chart;
 };
