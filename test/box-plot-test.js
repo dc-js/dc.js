@@ -84,14 +84,6 @@ suite.addBatch({
             chart.getColor = function() { return '#eeeeee'; };
             chart.render();
             assert.equal(chart.selectAll("rect.box").style("fill"), "#eeeeee");
-        },
-
-        'colorAccessor' : {
-            'should return the index value' : function (chart) {
-                chart.selectAll("rect.box").each(function(d, i) {
-                    assert.equal(chart.colorAccessor()(d, i), i);
-                });
-            }
         }
     },
 
