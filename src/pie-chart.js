@@ -155,14 +155,8 @@ dc.pieChart = function (parent, chartGroup) {
                 .on("click", onClick);
             dc.transition(labelsEnter, _chart.transitionDuration())
                 .attr("transform", function (d) {
-                    d.innerRadius = _chart.innerRadius();
-                    d.outerRadius = _chart.radius();
-                    var centroid = arc.centroid(d);
-                    if (isNaN(centroid[0]) || isNaN(centroid[1])) {
-                        return "translate(0,0)";
-                    } else {
-                        return "translate(" + centroid + ")";
-                    }
+                    return labelPosition(d, arc);
+
                 })
                 .attr("text-anchor", "middle")
                 .text(function (d) {
@@ -199,14 +193,7 @@ dc.pieChart = function (parent, chartGroup) {
                 .data(pieData);
             dc.transition(labels, _chart.transitionDuration())
                 .attr("transform", function (d) {
-                    d.innerRadius = _innerRadius;
-                    d.outerRadius = _radius;
-                    var centroid = arc.centroid(d);
-                    if (isNaN(centroid[0]) || isNaN(centroid[1])) {
-                        return "translate(0,0)";
-                    } else {
-                        return "translate(" + centroid + ")";
-                    }
+                    return labelPosition(d, arc);
                 })
                 .attr("text-anchor", "middle")
                 .text(function (d) {
@@ -356,6 +343,15 @@ dc.pieChart = function (parent, chartGroup) {
         if (path.indexOf("NaN") >= 0)
             path = "M0,0";
         return path;
+    }
+
+    function labelPosition(d, arc) {
+        var centroid = arc.centroid(d);
+        if (isNaN(centroid[0]) || isNaN(centroid[1])) {
+            return "translate(0,0)";
+        } else {
+            return "translate(" + centroid + ")";
+        }
     }
 
     return _chart.anchor(parent, chartGroup);
