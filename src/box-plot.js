@@ -113,9 +113,6 @@ dc.boxPlot = function (parent, chartGroup) {
                return _chart.getColor(d);
            });
         });
-//        d3.selectAll('rect.box').style("fill", function(d, i) {
-//            return _chart.getColor(d, i);
-//        });
     };
 
     _chart.yAxisMin = function () {
