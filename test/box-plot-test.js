@@ -84,14 +84,6 @@ suite.addBatch({
             chart.getColor = function() { return '#eeeeee'; };
             chart.render();
             assert.equal(chart.selectAll("rect.box").style("fill"), "#eeeeee");
-        },
-
-        'colorAccessor' : {
-            'should return the index value' : function (chart) {
-                chart.selectAll("rect.box").each(function(d, i) {
-                    assert.equal(chart.colorAccessor()(d, i), i);
-                });
-            }
         }
     },
 
@@ -117,6 +109,51 @@ suite.addBatch({
                return innerChartWidth / (xUnits + 2);
            }).render();
             assert.equal(chart.selectAll("rect.box").attr("width"), "75");
+        }
+    },
+
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
+    }
+});
+
+suite.addBatch({
+    'with filters': {
+        topic: function () {
+            var chart = buildChart("box-plot-with-filter");
+            chart.filter("CA");
+            chart.redraw();
+            return chart;
+        },
+
+        'should select box based on the filter value' : function (chart) {
+            chart.selectAll("g.box").each(function (d) {
+                if (d.key == "CA") {
+                    assert.equal(d3.select(this).attr("class"), "box selected");
+                } else {
+                    assert.equal(d3.select(this).attr("class"), "box deselected");
+                }
+            });
+        }
+    },
+
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
+    }
+});
+
+suite.addBatch({
+    'click' : {
+        topic: function () {
+            return buildChart("box-plot-with-filter");
+        },
+
+        'clicking on a box should apply a filter to the chart' : function (chart) {
+            var box = chart.select('g.box');
+            box.on("click").call(chart, box.datum());
+            assert.equal(chart.hasFilter("CA"), true);
         }
     },
 
