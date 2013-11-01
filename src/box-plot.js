@@ -108,9 +108,9 @@ dc.boxPlot = function (parent, chartGroup) {
             .attr("transform", boxTransform)
             .call(_box);
 
-        d3.selectAll('g.box').each( function(d) {
+        d3.selectAll('g.box').each(function(d, i) {
            d3.select(this).select('rect.box').style("fill", function() {
-               return _chart.getColor(d);
+               return _chart.getColor(d, i);
            });
         });
     };

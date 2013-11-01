@@ -81,9 +81,9 @@ suite.addBatch({
         },
 
         'should assign a fill color to the boxes' : function (chart) {
-            chart.getColor = function() { return '#eeeeee'; };
+            chart.colorAccessor(function() { return 0; });
             chart.render();
-            assert.equal(chart.selectAll("rect.box").style("fill"), "#eeeeee");
+            assert.equal(chart.selectAll("rect.box").style("fill"), chart.colorCalculator()(0));
         }
     },
 
