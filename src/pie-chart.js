@@ -371,17 +371,18 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     _chart.legendHighlight = function(d) {
-        _chart.selectAll('g.pie-slice').each(function (sliceData) {
-            if (d.name == sliceData.data.key) {
-                d3.select(this).classed("highlight", true);
-            }
-        });
+        highlightSliceFromLegendable(d, true);
+
     };
 
     _chart.legendReset = function(d) {
-        _chart.selectAll('g.pie-slice').each(function (sliceData) {
-            if (d.name == sliceData.data.key) {
-                d3.select(this).classed("highlight", false);
+        highlightSliceFromLegendable(d, false);
+    }
+
+    function highlightSliceFromLegendable(legendable, highlighted) {
+        _chart.selectAll('g.pie-slice').each(function (d) {
+            if (legendable.name == d.data.key) {
+                d3.select(this).classed("highlight", highlighted);
             }
         });
     }
