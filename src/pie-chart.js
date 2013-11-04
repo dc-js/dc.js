@@ -42,6 +42,8 @@ dc.pieChart = function (parent, chartGroup) {
 
     var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
 
+    var _externalLabelRadius;
+
     var _chart = dc.capped(dc.colorChart(dc.baseChart({})));
 
     _chart.colorAccessor(_chart.cappedKeyAccessor);
@@ -156,7 +158,6 @@ dc.pieChart = function (parent, chartGroup) {
             dc.transition(labelsEnter, _chart.transitionDuration())
                 .attr("transform", function (d) {
                     return labelPosition(d, arc);
-
                 })
                 .attr("text-anchor", "middle")
                 .text(function (d) {
@@ -345,8 +346,34 @@ dc.pieChart = function (parent, chartGroup) {
         return path;
     }
 
+    /**
+     #### .externalLabels([radius])
+     Position slice labels offset from the outer edge of the chart
+
+     The given argument sets the radial offset.
+     */
+    _chart.externalLabels = function(radius) {
+        if (arguments.length === 0) {
+            return _externalLabelRadius;
+        } else if(radius) {
+            _externalLabelRadius = radius;
+        } else {
+            _externalLabelRadius = undefined;
+        }
+
+        return _chart;
+    };
+
     function labelPosition(d, arc) {
-        var centroid = arc.centroid(d);
+        var centroid
+        if( _externalLabelRadius ) {
+            centroid = d3.svg.arc()
+                .outerRadius(_radius+_externalLabelRadius)
+                .innerRadius(_radius+_externalLabelRadius)
+                .centroid(d);
+        } else {
+            centroid = arc.centroid(d);
+        }
         if (isNaN(centroid[0]) || isNaN(centroid[1])) {
             return "translate(0,0)";
         } else {
