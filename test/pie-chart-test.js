@@ -525,6 +525,10 @@ suite.addBatch({
 
                 assert.isFalse(chart.select('.pie-slice._'+i).classed("highlight") );
             });
+        },
+        teardown: function (chart) {
+            resetAllFilters();
+            resetBody();
         }
     }
 });

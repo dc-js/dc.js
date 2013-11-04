@@ -315,12 +315,14 @@ dc.lineChart = function (parent, chartGroup) {
     };
 
     _chart.legendHighlight = function (d) {
-        _chart.selectAll('.chart-body').selectAll('path').filter(function () {
-            return d3.select(this).attr('fill') == d.color;
-        }).classed('highlight', true);
-        _chart.selectAll('.chart-body').selectAll('path').filter(function () {
-            return d3.select(this).attr('fill') != d.color;
-        }).classed('fadeout', true);
+        if(!_chart.isStackHidden(d)) {
+            _chart.selectAll('.chart-body').selectAll('path').filter(function () {
+                return d3.select(this).attr('fill') == d.color;
+            }).classed('highlight', true);
+            _chart.selectAll('.chart-body').selectAll('path').filter(function () {
+                return d3.select(this).attr('fill') != d.color;
+            }).classed('fadeout', true);
+        }
     };
 
     _chart.legendReset = function (d) {

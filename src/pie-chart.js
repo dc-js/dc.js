@@ -377,7 +377,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     _chart.legendReset = function(d) {
         highlightSliceFromLegendable(d, false);
-    }
+    };
 
     function highlightSliceFromLegendable(legendable, highlighted) {
         _chart.selectAll('g.pie-slice').each(function (d) {
