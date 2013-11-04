@@ -485,6 +485,31 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({
+    'legends': {
+        topic: function () {
+            return buildChart("pie-chart-legend")
+                .cap(3)
+                .legend(dc.legend())
+                .render();
+        },
+        'should generate items for each slice': function (chart) {
+            assert.equal(chart.selectAll('g.dc-legend g.dc-legend-item').size(), chart.data().length);
+        },
+        'should include "others" item': function (chart) {
+            var numOthersGroups = chart.selectAll('g.dc-legend g.dc-legend-item text').filter(function(d, i) {
+                return d.name == "Others";
+            }).size();
+
+            assert.equal(numOthersGroups, 1);
+        },
+        'items should be colored': function (chart) {
+            chart.selectAll('g.dc-legend g.dc-legend-item').each(function() {
+                assert.notEqual(d3.select(this).select('rect').attr('fill'), undefined);
+            });
+        }
+    }
+});
 
 suite.export(module);
 
