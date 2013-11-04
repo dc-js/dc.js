@@ -360,7 +360,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     _chart.legendables = function() {
         return _chart.data().map(function (d, i) {
-            var legendable = {name: d.key, data: d.value};
+            var legendable = { name: d.key, data: d.value };
             legendable.color = _chart.getColor(d,i);
             return legendable;
         });
@@ -368,6 +368,22 @@ dc.pieChart = function (parent, chartGroup) {
 
     _chart.getColor = function(d,i) {
         return _chart.colorCalculator()(_chart.colorAccessor()(d, i));
+    };
+
+    _chart.legendHighlight = function(d) {
+        _chart.selectAll('g.pie-slice').each(function (sliceData) {
+            if (d.name == sliceData.data.key) {
+                d3.select(this).classed("highlight", true);
+            }
+        });
+    };
+
+    _chart.legendReset = function(d) {
+        _chart.selectAll('g.pie-slice').each(function (sliceData) {
+            if (d.name == sliceData.data.key) {
+                d3.select(this).classed("highlight", false);
+            }
+        });
     }
 
     return _chart.anchor(parent, chartGroup);
