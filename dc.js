@@ -5542,7 +5542,7 @@ dc.legend = function () {
                 }
             });
 
-        if (_parent.legendables().some(function (legendItem) { return legendItem.dashstyle })) {
+        if (_parent.legendables().some(function (legendItem) { return legendItem.dashstyle; })) {
             itemEnter
                 .append("line")
                 .attr("x1", 0)

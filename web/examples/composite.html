@@ -9,66 +9,54 @@
 
 <div id="test_composed"></div>
 
+<script type="text/javascript" src="http://d3js.org/queue.v1.min.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-    var chart1 = dc.lineChart();
-    var chart2 = dc.lineChart();
+var composite = dc.compositeChart("#test_composed");
 
-    var chartsLoaded = 0;
+var q = queue()
+    .defer(d3.csv, "morley.csv")
+    .defer(d3.csv, "morley2.csv");
 
-    function chartLoaded() {
-        chartsLoaded++;
-        if (chartsLoaded < 2) return;
+q.await(function(error, exp1, exp2) {
 
-        var composite = dc.compositeChart("#test_composed");
-        composite
-                .width(768)
-                .height(480)
-                .x(d3.scale.linear().domain([0,20]))
-                .yAxisLabel("The Y Axis")
-                .legend(dc.legend().x(80).y(20).itemHeight(13).gap(5))
-                .compose([chart1, chart2])
-                .render();
-    }
+    var ndx = crossfilter();
+    ndx.add(exp1.map(function(d) {
+        return {x: +d.Run, y2:0, y1: d.Speed * d.Run / 1000};
+    }));
+    ndx.add(exp2.map(function(d) {
+        return {x: +d.Run, y1:0, y2: d.Speed * d.Run / 1000};
+    }));
 
-    d3.csv("morley.csv", function(error, experiments) {
-        experiments.forEach(function(x) {
-            x.Speed = +x.Speed;
-        });
+    var dim  = ndx.dimension(dc.pluck('x')),
+        grp1 = dim.group().reduceSum(dc.pluck('y1')),
+        grp2 = dim.group().reduceSum(dc.pluck('y2'));
 
-        var ndx                 = crossfilter(experiments),
-            runDimension        = ndx.dimension(function(d) {return +d.Run;})
-        speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
-        chart1
-                .dimension(runDimension)
-                .colors(['red'])
-                .group(speedSumGroup, "Top Line")
-                .dashStyle([2,2]);
+    var chart1 = dc.lineChart()
+        .dimension(dim)
+        .colors(['red'])
+        .group(grp1, "Top Line")
+        .dashStyle([2,2]);
 
-        chartLoaded();
-    });
+    var chart2 = dc.lineChart()
+        .dimension(dim)
+        .colors(['blue'])
+        .group(grp2, "Bottom Line")
+        .dashStyle([5,5]);
 
-    d3.csv("morley2.csv", function(error, experiments) {
-        experiments.forEach(function(x) {
-            x.Speed = +x.Speed;
-        });
+    composite
+        .width(768)
+        .height(480)
+        .x(d3.scale.linear().domain([0,20]))
+        .yAxisLabel("The Y Axis")
+        .legend(dc.legend().x(80).y(20).itemHeight(13).gap(5))
+        .compose([chart1, chart2])
+        .render();
 
-        var ndx                 = crossfilter(experiments),
-                runDimension        = ndx.dimension(function(d) {return +d.Run;})
-        speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
-
-        chart2
-                .dimension(runDimension)
-                .colors(['blue'])
-                .group(speedSumGroup, "Bottom Line")
-                .dashStyle([5,5]);
-
-        chartLoaded();
-    });
+});
 </script>
-
 </body>
 </html>

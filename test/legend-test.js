@@ -26,13 +26,13 @@ function buildComposedDashedLineChart(id) {
     chart1
         .dimension(dateDimension)
         .group(dateIdSumGroup, "Id Sum")
-        .dashStyle([10,1])
+        .dashStyle([10,1]);
 
     var chart2 = dc.lineChart();
     chart2
         .dimension(dateDimension)
         .group(dateValueSumGroup, "Value Sum")
-        .dashStyle([2,1])
+        .dashStyle([2,1]);
 
     var composite = dc.compositeChart("#" + id);
     composite
