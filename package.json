@@ -37,6 +37,7 @@
     "grunt-contrib-jshint": "~0.6.4",
     "grunt-contrib-uglify": "~0.2.4",
     "grunt-contrib-jasmine": "https://github.com/sheelc/grunt-contrib-jasmine/tarball/update_for_v2",
+    "grunt-template-jasmine-istanbul": "https://github.com/sclevine/grunt-template-jasmine-istanbul/tarball/master",
     "grunt-docco2": "~0.1.5",
     "grunt-gh-pages": "~0.8.0",
     "grunt-markdown": "https://github.com/willkan/grunt-markdown/tarball/master",
