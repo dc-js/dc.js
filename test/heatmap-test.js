@@ -118,4 +118,35 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({
+    'filters': {
+        topic: function () {
+            return buildChart("heat-map-new");
+        },
+        'clicking on a cell toggles a filter for the key': function (chart) {
+            chart.selectAll("#heat-map-new .box-group").each( function(d,i) {
+                var cell = d3.select(this).select("rect");
+                cell.on("click")(d);
+                assert.isTrue(chart.hasFilter(d.key));
+                cell.on("click")(d);
+                assert.isFalse(chart.hasFilter(d.key));
+            });
+        },
+        'when the key is filtered, cells have appropriate class': function (chart) {
+            var filterValue = Math.ceil(Math.random() * 2);
+            chart.filter(filterValue).render();
+            chart.selectAll("#heat-map-new .box-group").each( function(d,i) {
+                var cell = d3.select(this);
+                assert.equal(cell.classed("selected"), chart.hasFilter(d.key));
+                assert.equal(cell.classed("deselected"), !chart.hasFilter(d.key));
+            });
+            chart.filter(filterValue).render();
+        }
+    },
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
+    }
+});
+
 suite.export(module);

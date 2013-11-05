@@ -689,9 +689,11 @@ dc.coordinateGridChart = function (_chart) {
                 dc.redrawAll(_chart.chartGroup());
             });
         } else {
+            var rangedFilter = dc.utils.RangedFilter(extent[0], extent[1]);
+
             dc.events.trigger(function () {
                 _chart.filter(null);
-                _chart.filter([extent[0], extent[1]]);
+                _chart.filter(rangedFilter);
                 dc.redrawAll(_chart.chartGroup());
             }, dc.constants.EVENT_DELAY);
         }

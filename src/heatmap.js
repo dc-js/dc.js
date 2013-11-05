@@ -33,9 +33,18 @@ dc.heatMap = function (parent, chartGroup) {
     _chart._mandatoryAttributes(['group']);
     _chart.title(_chart.colorAccessor());
 
-    _chart.boxOnClick = function () {};
-    _chart.xAxisOnClick = function () {};
+    _chart.boxOnClick = function (d) {
+        var filter = d.key;
+        dc.events.trigger(function() {
+            _chart.filter(filter);
+            dc.redrawAll(_chart.chartGroup());
+        });
+    };
+    _chart.xAxisOnClick = function () {  };
     _chart.yAxisOnClick = function () {};
+    _chart.keyAccessor(function(d) {
+        return d.key[0];
+    });
 
     //_chart.colors(d3.scale.quantize().range(["#a50026","#d73027","#f46d43","#fdae61","#fee08b",
     //                                         "#ffffbf","#d9ef8b","#a6d96a","#66bd63","#1a9850","#006837"]));
@@ -135,6 +144,24 @@ dc.heatMap = function (parent, chartGroup) {
               .attr("dx", -2)
               .on("click", _chart.yAxisOnClick)
               .text(function(d) { return d; });
+
+        if (_chart.hasFilter()) {
+            _chart.selectAll("g.box-group").each(function (d) {
+                if (_chart.isSelectedNode(d)) {
+                    _chart.highlightSelected(this);
+                } else {
+                    _chart.fadeDeselected(this);
+                }
+            });
+        } else {
+            _chart.selectAll("g.box-group").each(function (d) {
+                _chart.resetHighlight(this);
+            });
+        }
+    };
+
+    _chart.isSelectedNode = function (d) {
+        return _chart.hasFilter(d.key);
     };
 
     return _chart.anchor(parent, chartGroup);
