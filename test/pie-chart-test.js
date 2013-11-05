@@ -526,6 +526,14 @@ suite.addBatch({
                 assert.isFalse(chart.select('.pie-slice._'+i).classed("highlight") );
             });
         },
+        'clicking on items filters them': function (chart) {
+            chart.selectAll('g.dc-legend g.dc-legend-item').each( function(d, i) {
+                var legendItem = d3.select(this);
+                legendItem.on("click")(legendItem.datum());
+
+                assert.isTrue(chart.hasFilter(d.name));
+            });
+        },
         teardown: function (chart) {
             resetAllFilters();
             resetBody();

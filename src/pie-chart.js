@@ -360,7 +360,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     _chart.legendables = function() {
         return _chart.data().map(function (d, i) {
-            var legendable = { name: d.key, data: d.value };
+            var legendable = { name: d.key, data: d.value, others: d.others};
             legendable.color = _chart.getColor(d,i);
             return legendable;
         });
@@ -377,6 +377,10 @@ dc.pieChart = function (parent, chartGroup) {
 
     _chart.legendReset = function(d) {
         highlightSliceFromLegendable(d, false);
+    };
+
+    _chart.legendToggle = function(d) {
+        _chart.onClick({ key: d.name, others: d.others });
     };
 
     function highlightSliceFromLegendable(legendable, highlighted) {
