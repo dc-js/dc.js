@@ -155,7 +155,7 @@ dc.pieChart = function (parent, chartGroup) {
                     var classes = _sliceCssClass + " _" + i;
                     if(_externalLabelRadius)
                         classes += " external";
-                    return classes
+                    return classes;
                 })
                 .on("click", onClick);
             dc.transition(labelsEnter, _chart.transitionDuration())
