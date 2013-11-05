@@ -16,8 +16,9 @@ dc.stackableChart = function (_chart) {
     var _allValueAccessors;
     var _allKeyAccessors;
     var _stackLayers;
+    var _hiddenStacks = [];
 
-    _chart._hidableStacks = false;
+    var _hidableStacks = false;
 
     /**
     #### .stack(group[, name, accessor])
@@ -60,8 +61,8 @@ dc.stackableChart = function (_chart) {
 
     **/
     _chart.hidableStacks = function(_) {
-        if (!arguments.length) return _chart._hidableStacks;
-        _chart._hidableStacks = _;
+        if (!arguments.length) return _hidableStacks;
+        _hidableStacks = _;
         return _chart;
     };
 
@@ -315,6 +316,25 @@ dc.stackableChart = function (_chart) {
         return _chart.allGroups().map(function (g, i) {
             return dc.utils.createLegendable(_chart, g, _chart.getValueAccessorByIndex(i), _chart.colorCalculator()(i));
         });
+    };
+
+    _chart.isLegendableHidden = function (d) {
+        return _hiddenStacks.indexOf(d.name) !== -1;
+    };
+
+    _chart.legendToggle = function (d) {
+        if(_hidableStacks) {
+            var index;
+            if ((index = _hiddenStacks.indexOf(d.name)) !== -1) {
+                _hiddenStacks.splice(index, 1);
+                _chart.showStack(d.name);
+            }
+            else {
+                _hiddenStacks.push(d.name);
+                _chart.hideStack(d.name);
+            }
+        }
+        _chart.render();
     };
 
     return _chart;
