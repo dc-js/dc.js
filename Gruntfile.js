@@ -51,7 +51,24 @@ module.exports = function (grunt) {
                 options: {
                     /* reporter: "spec" */
                 },
-                src: ["test/*.js", "spec/*"]
+                src: "test/*.js"
+            }
+        },
+        jasmine: {
+            all: {
+                options: {
+                    specs:  "spec/*-spec.js",
+                    helpers: "spec/helpers/*.js",
+                    version: "2.0.0-rc5",
+                    keepRunner: true,
+                    outfile: "jasmine-runner.html"
+                },
+               src: [
+                    "web/js/d3.js",
+                    "web/js/crossfilter.js",
+                    "web/js/colorbrewer.js",
+                    "dc.js"
+               ]
             }
         },
         emu: {
@@ -88,7 +105,7 @@ module.exports = function (grunt) {
                             'test/env-data.js'],
                       dest: 'web/js/'
                     }
-                ],
+                ]
             }
         },
         'gh-pages': {
@@ -122,6 +139,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-docco2');
     grunt.loadNpmTasks('grunt-gh-pages');
     grunt.loadNpmTasks('grunt-markdown');
@@ -152,7 +170,7 @@ module.exports = function (grunt) {
     grunt.registerTask('build', ['concat', 'uglify', 'sed']);
     grunt.registerTask('docs', ['build', 'copy', 'emu', 'markdown', 'docco']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
-    grunt.registerTask('test', ['docs', 'vows']);
+    grunt.registerTask('test', ['docs', 'vows', 'jasmine']);
     grunt.registerTask('lint', ['build', 'jshint']);
     grunt.registerTask('default', ['build']);
 };
