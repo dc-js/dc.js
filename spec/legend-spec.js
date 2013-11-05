@@ -45,6 +45,19 @@ describe("dc.legend", function() {
             });
         });
 
+        describe('with .horizontal(true)', function () {
+            beforeEach(function () {
+                chart.legend(dc.legend().horizontal(true));
+                chart.render();
+            });
+
+            it('should place legend items horizontally', function() {
+                expect(legendItem(0).attr("transform")).toBe("translate(0,0)");
+                expect(legendItem(1).attr("transform")).toBe("translate(65,0)");
+                expect(legendItem(2).attr("transform")).toBe("translate(155,0)");
+            });
+        });
+
         it('should generate legend item boxes', function() {
             expect(legendIcon(0).attr("width")).toBe("13");
             expect(legendIcon(0).attr("height")).toBe("13");
