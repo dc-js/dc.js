@@ -365,7 +365,7 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     function labelPosition(d, arc) {
-        var centroid
+        var centroid;
         if( _externalLabelRadius ) {
             centroid = d3.svg.arc()
                 .outerRadius(_radius+_externalLabelRadius)
