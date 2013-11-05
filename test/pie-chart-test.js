@@ -504,19 +504,28 @@ suite.addBatch({
             assert.equal(label.attr("transform"), "translate(" + centroid + ")");
 
         },
+        'gives labels class "external"': function (chart) {
+            d3.selectAll("#pie-chart-external-labeling svg g text.pie-slice").each( function () {
+                assert.isTrue(d3.select(this).classed("external"));
+            });
+        },
         'returns radius when given no arguments': function (chart) {
             assert.equal(chart.externalLabels(), 10);
         },
         'resets to default when given falsey argument': function (chart) {
             chart.externalLabels(false).render();
-            var label = d3.select("#pie-chart-external-labeling svg g text.pie-slice");
 
-            var centroid = d3.svg.arc()
-                .outerRadius(chart.radius())
-                .innerRadius(chart.innerRadius())
-                .centroid(label.datum());
+            d3.selectAll("#pie-chart-external-labeling svg g text.pie-slice").each( function(){
+                var label = d3.select(this);
 
-            assert.equal(label.attr("transform"), "translate(" + centroid + ")");
+                var centroid = d3.svg.arc()
+                    .outerRadius(chart.radius())
+                    .innerRadius(chart.innerRadius())
+                    .centroid(label.datum());
+
+                assert.equal(label.attr("transform"), "translate(" + centroid + ")");
+                assert.isFalse(label.classed("external"));
+            });
         },
         teardown: function (chart) {
             resetAllFilters();
