@@ -315,7 +315,7 @@ dc.lineChart = function (parent, chartGroup) {
     };
 
     _chart.legendHighlight = function (d) {
-        if(!_chart.isStackHidden(d)) {
+        if(!_chart.isLegendableHidden(d)) {
             _chart.selectAll('.chart-body').selectAll('path').filter(function () {
                 return d3.select(this).attr('fill') == d.color;
             }).classed('highlight', true);

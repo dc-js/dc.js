@@ -41,8 +41,7 @@ dc.legend = function () {
             .append("g")
             .attr("class", "dc-legend-item")
             .classed("fadeout", function(d) {
-                if(_parent.isStackHidden)
-                    return _parent.isStackHidden(d);
+                return _parent.isLegendableHidden(d);
             })
             .attr("transform", function (d, i) {
                 return "translate(0," + i * legendItemHeight() + ")";

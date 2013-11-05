@@ -318,7 +318,7 @@ dc.stackableChart = function (_chart) {
         });
     };
 
-    _chart.isStackHidden = function (d) {
+    _chart.isLegendableHidden = function (d) {
         return _hiddenStacks.indexOf(d.name) !== -1;
     };
 
@@ -336,7 +336,6 @@ dc.stackableChart = function (_chart) {
         }
         _chart.render();
     };
-
 
     return _chart;
 };
