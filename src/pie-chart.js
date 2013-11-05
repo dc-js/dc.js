@@ -141,6 +141,20 @@ dc.pieChart = function (parent, chartGroup) {
         }
     }
 
+    function positionLabels(labelsEnter, arc) {
+        dc.transition(labelsEnter, _chart.transitionDuration())
+            .attr("transform", function (d) {
+                return labelPosition(d, arc);
+            })
+            .attr("text-anchor", "middle")
+            .text(function (d) {
+                var data = d.data;
+                if (sliceHasNoData(data) || sliceTooSmall(d))
+                    return "";
+                return _chart.label()(d.data);
+            });
+    }
+
     function createLabels(pieData, arc) {
         if (_chart.renderLabel()) {
             var labels = _g.selectAll("text." + _sliceCssClass)
@@ -158,17 +172,7 @@ dc.pieChart = function (parent, chartGroup) {
                     return classes;
                 })
                 .on("click", onClick);
-            dc.transition(labelsEnter, _chart.transitionDuration())
-                .attr("transform", function (d) {
-                    return labelPosition(d, arc);
-                })
-                .attr("text-anchor", "middle")
-                .text(function (d) {
-                    var data = d.data;
-                    if (sliceHasNoData(data) || sliceTooSmall(d))
-                        return "";
-                    return _chart.label()(d.data);
-                });
+            positionLabels(labelsEnter, arc);
         }
     }
 
@@ -195,17 +199,7 @@ dc.pieChart = function (parent, chartGroup) {
         if (_chart.renderLabel()) {
             var labels = _g.selectAll("text." + _sliceCssClass)
                 .data(pieData);
-            dc.transition(labels, _chart.transitionDuration())
-                .attr("transform", function (d) {
-                    return labelPosition(d, arc);
-                })
-                .attr("text-anchor", "middle")
-                .text(function (d) {
-                    var data = d.data;
-                    if (sliceHasNoData(data) || sliceTooSmall(d))
-                        return "";
-                    return _chart.label()(d.data);
-                });
+            positionLabels(labels, arc);
         }
     }
 

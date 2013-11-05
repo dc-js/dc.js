@@ -502,7 +502,6 @@ suite.addBatch({
                 .centroid(label.datum());
 
             assert.equal(label.attr("transform"), "translate(" + centroid + ")");
-
         },
         'gives labels class "external"': function (chart) {
             d3.selectAll("#pie-chart-external-labeling svg g text.pie-slice").each( function () {
@@ -515,7 +514,7 @@ suite.addBatch({
         'resets to default when given falsey argument': function (chart) {
             chart.externalLabels(false).render();
 
-            d3.selectAll("#pie-chart-external-labeling svg g text.pie-slice").each( function(){
+            d3.selectAll("#pie-chart-external-labeling svg g text.pie-slice").each( function () {
                 var label = d3.select(this);
 
                 var centroid = d3.svg.arc()
