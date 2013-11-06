@@ -23,8 +23,6 @@ dc.legend = function () {
 
     var _g;
 
-    var hiddenStacks = [];
-
     _legend.parent = function (p) {
         if (!arguments.length) return _parent;
         _parent = p;
@@ -43,38 +41,38 @@ dc.legend = function () {
             .append("g")
             .attr("class", "dc-legend-item")
             .classed("fadeout", function(d) {
-                return hiddenStacks.indexOf(d.name) !== -1;
+                return _parent.isLegendableHidden(d);
             })
             .attr("transform", function (d, i) {
                 return "translate(0," + i * legendItemHeight() + ")";
             })
             .on("mouseover", function(d) {
-                if (hiddenStacks.indexOf(d.name) === -1)
-                    _parent.legendHighlight(d);
+                _parent.legendHighlight(d);
             })
             .on("mouseout", function (d) {
                 _parent.legendReset(d);
             })
             .on("click", function (d) {
-                if (_parent._hidableStacks) {
-                    var index;
-                    if ((index = hiddenStacks.indexOf(d.name)) !== -1) {
-                        hiddenStacks.splice(index, 1);
-                        _parent.showStack(d.name);
-                    }
-                    else {
-                        hiddenStacks.push(d.name);
-                        _parent.hideStack(d.name);
-                    }
-                    _parent.render();
-                }
+                _parent.legendToggle(d);
             });
 
-        itemEnter
-            .append("rect")
+        if (_parent.legendables().some(function (legendItem) { return legendItem.dashstyle; })) {
+            itemEnter
+                .append("line")
+                .attr("x1", 0)
+                .attr("y1", _itemHeight / 2)
+                .attr("x2", _itemHeight)
+                .attr("y2", _itemHeight / 2)
+                .attr("stroke-width", 2)
+                .attr("stroke-dasharray", function(d){return d.dashstyle;})
+                .attr("stroke", function(d){return d.color;});
+        } else {
+            itemEnter
+                .append("rect")
                 .attr("width", _itemHeight)
                 .attr("height", _itemHeight)
                 .attr("fill", function(d){return d.color;});
+        }
 
         itemEnter.append("text")
                 .text(function(d){return d.name;})
