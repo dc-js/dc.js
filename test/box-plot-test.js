@@ -78,6 +78,12 @@ suite.addBatch({
         'should set the whiskers values correctly' : function  (chart) {
             assert.equal(chart.select("g.box:nth-of-type(2)").selectAll("text.whisker")[0][0].textContent, "22");
             assert.equal(chart.select("g.box:nth-of-type(2)").selectAll("text.whisker")[0][1].textContent, "66");
+        },
+
+        'should assign a fill color to the boxes' : function (chart) {
+            chart.colorAccessor(function() { return 0; });
+            chart.render();
+            assert.equal(chart.selectAll("rect.box").style("fill"), chart.colorCalculator()(0));
         }
     },
 
