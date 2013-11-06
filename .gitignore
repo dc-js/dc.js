@@ -18,5 +18,11 @@ node_modules
 # ctag
 .tags
 
-# files for gh-pages
+# files for gh-pages and grunt-contrib-jasmine
 .grunt
+
+# jasmine spec runner
+web/jasmine-runner.html
+
+# test coverage reports
+coverage

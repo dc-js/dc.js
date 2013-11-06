@@ -19,7 +19,8 @@ dc.legend = function () {
         _x = 0,
         _y = 0,
         _itemHeight = 12,
-        _gap = 5;
+        _gap = 5,
+        _horizontal = false;
 
     var _g;
 
@@ -42,9 +43,6 @@ dc.legend = function () {
             .attr("class", "dc-legend-item")
             .classed("fadeout", function(d) {
                 return _parent.isLegendableHidden(d);
-            })
-            .attr("transform", function (d, i) {
-                return "translate(0," + i * legendItemHeight() + ")";
             })
             .on("mouseover", function(d) {
                 _parent.legendHighlight(d);
@@ -78,6 +76,19 @@ dc.legend = function () {
                 .text(function(d){return d.name;})
                 .attr("x", _itemHeight + LABEL_GAP)
                 .attr("y", function(){return _itemHeight / 2 + (this.clientHeight?this.clientHeight:13) / 2 - 2;});
+
+        var _cumulativeLegendTextWidth = 0;
+
+        itemEnter.attr("transform", function(d, i) {
+            if(_horizontal) {
+                var translateBy = "translate(" + _cumulativeLegendTextWidth + ",0)";
+                _cumulativeLegendTextWidth += this.getBBox().width + _gap;
+                return translateBy;
+            }
+            else {
+                return "translate(0," + i * legendItemHeight() + ")";
+            }
+        });
     };
 
     function legendItemHeight() {
@@ -121,6 +132,16 @@ dc.legend = function () {
     _legend.itemHeight = function (h) {
         if (!arguments.length) return _itemHeight;
         _itemHeight = h;
+        return _legend;
+    };
+
+    /**
+    #### .horizontal([boolean])
+    Position legend horizontally instead of vertically
+    **/
+    _legend.horizontal = function(_) {
+        if (!arguments.length) return _horizontal;
+        _horizontal = _;
         return _legend;
     };
 
