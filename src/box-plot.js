@@ -167,14 +167,14 @@ dc.boxPlot = function (parent, chartGroup) {
      ```
      **/
     _chart.tickFormat = function(x) {
-      if (!arguments.length) return _tickFormat;
-      _tickFormat = x;
-      return _chart;
+        if (!arguments.length) return _tickFormat;
+        _tickFormat = x;
+        return _chart;
     };
     _chart.duration = function(x) {
-      if (!arguments.length) return _duration;
-      _duration = x;
-      return _chart;
+        if (!arguments.length) return _duration;
+        _duration = x;
+        return _chart;
     };
 
     // Returns a function to compute the interquartile range.
