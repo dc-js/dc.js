@@ -108,11 +108,35 @@ dc.boxPlot = function (parent, chartGroup) {
             .attr("transform", boxTransform)
             .call(_box);
 
-        d3.selectAll('g.box').each(function(d, i) {
-           d3.select(this).select('rect.box').style("fill", function() {
-               return _chart.getColor(d, i);
-           });
-        });
+        _chart.chartBodyG().selectAll('g.box')
+            .each(function() {
+                d3.select(this).select('rect.box').attr("fill", _chart.getColor);
+            })
+            .on("click", function(d) {
+                _chart.filter(d.key);
+                _chart.focus(_chart.filter());
+                dc.redrawAll(_chart.chartGroup());
+            });
+    };
+
+    _chart.fadeDeselectedArea = function () {
+        if (_chart.hasFilter()) {
+            _chart.selectAll("g.box").each(function (d) {
+                if (_chart.isSelectedNode(d)) {
+                    _chart.highlightSelected(this);
+                } else {
+                    _chart.fadeDeselected(this);
+                }
+            });
+        } else {
+            _chart.selectAll("g.box").each(function () {
+                _chart.resetHighlight(this);
+            });
+        }
+    };
+
+    _chart.isSelectedNode = function (d) {
+        return _chart.hasFilter(d.key);
     };
 
     _chart.yAxisMin = function () {
