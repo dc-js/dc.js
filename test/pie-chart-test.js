@@ -334,6 +334,7 @@ suite.addBatch({
         }
     }
 });
+
 suite.addBatch({
     'pie chart slices cap and group switching': {
         topic: function () {
@@ -486,6 +487,56 @@ suite.addBatch({
 });
 
 suite.addBatch({
+    'external labeling': {
+        topic: function () {
+            return buildChart("pie-chart-external-labeling")
+                .externalLabels(10)
+                .render();
+        },
+        'should place labels outside of pie offset by given radius': function (chart) {
+            var label = d3.select("#pie-chart-external-labeling svg g text.pie-slice");
+
+            var centroid = d3.svg.arc()
+                .outerRadius(chart.radius() + 10)
+                .innerRadius(chart.radius() + 10)
+                .centroid(label.datum());
+
+            assert.equal(label.attr("transform"), "translate(" + centroid + ")");
+        },
+        'gives labels class "external"': function (chart) {
+            d3.selectAll("#pie-chart-external-labeling svg g text.pie-slice").each(function () {
+                assert.isTrue(d3.select(this).classed("external"));
+            });
+        },
+        'returns radius when given no arguments': function (chart) {
+            assert.equal(chart.externalLabels(), 10);
+        },
+        'resets to default when given falsey argument': function (chart) {
+            chart.externalLabels(false).render();
+
+            d3.selectAll("#pie-chart-external-labeling svg g text.pie-slice").each(function () {
+                var label = d3.select(this);
+
+                var centroid = d3.svg.arc()
+                    .outerRadius(chart.radius())
+                    .innerRadius(chart.innerRadius())
+                    .centroid(label.datum());
+
+                assert.equal(label.attr("transform"), "translate(" + centroid + ")");
+                assert.isFalse(label.classed("external"));
+            });
+        },
+        teardown: function (chart) {
+            resetAllFilters();
+            resetBody();
+        }
+    }
+});
+
+
+suite.addBatch({
+
+
     'legends': {
         topic: function () {
             return buildChart("pie-chart-legend")
@@ -497,7 +548,7 @@ suite.addBatch({
             assert.equal(chart.selectAll('g.dc-legend g.dc-legend-item').size(), chart.data().length);
         },
         'should include "others" item': function (chart) {
-            var numOthersGroups = chart.selectAll('g.dc-legend g.dc-legend-item text').filter(function(d, i) {
+            var numOthersGroups = chart.selectAll('g.dc-legend g.dc-legend-item text').filter(function (d, i) {
                 return d.name == "Others";
             }).size();
 
@@ -509,29 +560,30 @@ suite.addBatch({
             });
         },
         'hovering on items should highlight corresponding slice': function (chart) {
-            chart.selectAll('g.dc-legend g.dc-legend-item').each( function(d, i) {
+            chart.selectAll('g.dc-legend g.dc-legend-item').each(function (d, i) {
                 var legendItem = d3.select(this);
                 legendItem.on("mouseover")(legendItem.datum());
 
-                assert.isTrue(chart.select('.pie-slice._'+i).classed("highlight") );
+                assert.isTrue(chart.select('.pie-slice._' + i).classed("highlight"));
                 legendItem.on("mouseout")(legendItem.datum());
             });
         },
         'unhovering removes highlight from corresponding slice': function (chart) {
-            chart.selectAll('g.dc-legend g.dc-legend-item').each( function(d, i) {
+            chart.selectAll('g.dc-legend g.dc-legend-item').each(function (d, i) {
                 var legendItem = d3.select(this);
                 legendItem.on("mouseover")(legendItem.datum());
                 legendItem.on("mouseout")(legendItem.datum());
 
-                assert.isFalse(chart.select('.pie-slice._'+i).classed("highlight") );
+                assert.isFalse(chart.select('.pie-slice._' + i).classed("highlight"));
             });
         },
         'clicking on items filters them': function (chart) {
-            chart.selectAll('g.dc-legend g.dc-legend-item').each( function(d, i) {
+            chart.selectAll('g.dc-legend g.dc-legend-item').each(function (d, i) {
                 var legendItem = d3.select(this);
                 legendItem.on("click")(legendItem.datum());
 
                 assert.isTrue(chart.hasFilter(d.name));
+
             });
         },
         teardown: function (chart) {
