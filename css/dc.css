@@ -32,6 +32,10 @@ div.dc-chart {
     cursor: pointer;
 }
 
+.dc-chart .pie-slice.external{
+    fill: black;
+}
+
 .dc-chart .pie-slice :hover {
     fill-opacity: .8;
 }
