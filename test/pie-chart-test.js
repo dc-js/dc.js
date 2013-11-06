@@ -485,6 +485,61 @@ suite.addBatch({
     }
 });
 
+suite.addBatch({
+    'legends': {
+        topic: function () {
+            return buildChart("pie-chart-legend")
+                .cap(3)
+                .legend(dc.legend())
+                .render();
+        },
+        'should generate items for each slice': function (chart) {
+            assert.equal(chart.selectAll('g.dc-legend g.dc-legend-item').size(), chart.data().length);
+        },
+        'should include "others" item': function (chart) {
+            var numOthersGroups = chart.selectAll('g.dc-legend g.dc-legend-item text').filter(function(d, i) {
+                return d.name == "Others";
+            }).size();
+
+            assert.equal(numOthersGroups, 1);
+        },
+        'items should be colored': function (chart) {
+            chart.selectAll('g.dc-legend g.dc-legend-item').each(function () {
+                assert.notEqual(d3.select(this).select('rect').attr('fill'), undefined);
+            });
+        },
+        'hovering on items should highlight corresponding slice': function (chart) {
+            chart.selectAll('g.dc-legend g.dc-legend-item').each( function(d, i) {
+                var legendItem = d3.select(this);
+                legendItem.on("mouseover")(legendItem.datum());
+
+                assert.isTrue(chart.select('.pie-slice._'+i).classed("highlight") );
+                legendItem.on("mouseout")(legendItem.datum());
+            });
+        },
+        'unhovering removes highlight from corresponding slice': function (chart) {
+            chart.selectAll('g.dc-legend g.dc-legend-item').each( function(d, i) {
+                var legendItem = d3.select(this);
+                legendItem.on("mouseover")(legendItem.datum());
+                legendItem.on("mouseout")(legendItem.datum());
+
+                assert.isFalse(chart.select('.pie-slice._'+i).classed("highlight") );
+            });
+        },
+        'clicking on items filters them': function (chart) {
+            chart.selectAll('g.dc-legend g.dc-legend-item').each( function(d, i) {
+                var legendItem = d3.select(this);
+                legendItem.on("click")(legendItem.datum());
+
+                assert.isTrue(chart.hasFilter(d.name));
+            });
+        },
+        teardown: function (chart) {
+            resetAllFilters();
+            resetBody();
+        }
+    }
+});
 
 suite.export(module);
 

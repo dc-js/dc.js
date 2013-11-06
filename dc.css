@@ -36,6 +36,10 @@ div.dc-chart {
     fill-opacity: .8;
 }
 
+.dc-chart .pie-slice.highlight {
+    fill-opacity: .8;
+}
+
 .dc-chart .selected path {
     stroke-width: 3;
     stroke: #ccc;
