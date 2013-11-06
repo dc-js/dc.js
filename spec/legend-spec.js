@@ -39,9 +39,9 @@ describe("dc.legend", function() {
 
         describe('without .horizontal(true)', function () {
             it('should place legend items vertically', function() {
-                expect(legendItem(0).attr("transform")).toBe("translate(0,0)");
-                expect(legendItem(1).attr("transform")).toBe("translate(0,18)");
-                expect(legendItem(2).attr("transform")).toBe("translate(0,36)");
+                expect(grepTranslation(legendItem(0).attr("transform")).y).toBeWithinDelta(0, 1);
+                expect(grepTranslation(legendItem(1).attr("transform")).y).toBeWithinDelta(18, 2);
+                expect(grepTranslation(legendItem(2).attr("transform")).y).toBeWithinDelta(36, 4);
             });
         });
 
@@ -52,15 +52,15 @@ describe("dc.legend", function() {
             });
 
             it('should place legend items horizontally', function() {
-                expect(legendItem(0).attr("transform")).toBe("translate(0,0)");
-                expect(legendItem(1).attr("transform")).toBe("translate(65,0)");
-                expect(legendItem(2).attr("transform")).toBe("translate(155,0)");
+                expect(grepTranslation(legendItem(0).attr("transform")).x).toBeWithinDelta(0, 1);
+                expect(grepTranslation(legendItem(1).attr("transform")).x).toBeWithinDelta(65, 5);
+                expect(grepTranslation(legendItem(2).attr("transform")).x).toBeWithinDelta(155, 15);
             });
         });
 
         it('should generate legend item boxes', function() {
-            expect(legendIcon(0).attr("width")).toBe("13");
-            expect(legendIcon(0).attr("height")).toBe("13");
+            expect(legendIcon(0).attr("width")).toBeWithinDelta(13,2);
+            expect(legendIcon(0).attr("height")).toBeWithinDelta(13, 2);
         });
 
         it('should color the legend item boxes using the chart line colors', function() {
@@ -74,12 +74,12 @@ describe("dc.legend", function() {
         });
 
         it('should position the legend labels', function() {
-            expect(legendLabel(0).attr("x")).toBe("15");
-            expect(legendLabel(0).attr("y")).toBe("13");
-            expect(legendLabel(1).attr("x")).toBe("15");
-            expect(legendLabel(1).attr("y")).toBe("13");
-            expect(legendLabel(2).attr("x")).toBe("15");
-            expect(legendLabel(2).attr("y")).toBe("13");
+            expect(legendLabel(0).attr("x")).toBeWithinDelta(15, 2);
+            expect(legendLabel(0).attr("y")).toBeWithinDelta(13, 2);
+            expect(legendLabel(1).attr("x")).toBeWithinDelta(15, 2);
+            expect(legendLabel(1).attr("y")).toBeWithinDelta(13, 2);
+            expect(legendLabel(2).attr("x")).toBeWithinDelta(15, 2);
+            expect(legendLabel(2).attr("y")).toBeWithinDelta(13, 2);
         });
 
         it('should label the legend items with the names of their associated stacks', function() {
@@ -175,6 +175,13 @@ describe("dc.legend", function() {
     }
     function legendLine(n) {
         return d3.select(chart.selectAll("g.dc-legend g.dc-legend-item line")[0][n]);
+    }
+
+    function grepTranslation(translationString){
+        var regex = /translate\((.+),(.+)\)/;
+        var result = regex.exec(translationString);
+
+        return { x: result[1], y: result[2] };
     }
 });
 
