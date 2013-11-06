@@ -1,4 +1,5 @@
 /**
+
 ## <a name="coordinate-grid-chart" href="#coordinate-grid-chart">#</a> CoordinateGrid Chart [Abstract] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
 Coordinate grid chart is an abstract base chart designed to support a number of coordinate grid based concrete chart types,
 i.e. bar chart, line chart, and bubble chart.
@@ -23,7 +24,6 @@ dc.coordinateGridChart = function (_chart) {
 
     var _x;
     var _xOriginalDomain;
-    var _xDomainConstraints;
     var _xAxis = d3.svg.axis();
     var _xUnits = dc.units.integers;
     var _xAxisPadding = 0;
@@ -100,6 +100,7 @@ dc.coordinateGridChart = function (_chart) {
     _chart.zoomOutRestrict = function (r) {
         if (!arguments.length) return _zoomOutRestrict;
         _zoomScale[0] = r ? 1 : 0;
+        _zoomOutRestrict = r;
         return _chart;
     };
 
@@ -175,28 +176,6 @@ dc.coordinateGridChart = function (_chart) {
     _chart.xOriginalDomain = function () {
         return _xOriginalDomain;
     };
-
-    _chart.updateXDomain = function(domain) {
-        if (_zoomOutRestrict) {
-            var clampedStart = dc.utils.clamp(domain[0], _xOriginalDomain[0], _xOriginalDomain[1]);
-            var clampedEnd = dc.utils.clamp(domain[1], _xOriginalDomain[0], _xOriginalDomain[1]);
-            _chart._x.domain([clampedStart, clampledEnd]);
-        }
-        else {
-            _chart._x.domain(_);
-        }
-    };
-
-    function applyXRestrictions() {
-        if (_xDomainConstraints) {
-            _xDomainConstraints.forEach(function (restriction) {
-                _x.domain([
-                    d3.max([restriction[0], _x.domain()[0]]),
-                    d3.min([restriction[1], _x.domain()[1]])
-                ]);
-            });
-        }
-    }
 
     /**
     #### .xUnits([xUnits function])
@@ -674,8 +653,8 @@ dc.coordinateGridChart = function (_chart) {
 
         if (_brushOn) {
             _brush.on("brush", _chart._brushing);
-            //_brush.on("brushstart", function () { _chart.root().call(_nullZoom); });
-            //_brush.on("brushend", configureMouseZoom);
+            _brush.on("brushstart", _chart._disableMouseZoom);
+            _brush.on("brushend", configureMouseZoom);
 
             var gBrush = g.append("g")
                 .attr("class", "brush")
@@ -714,16 +693,14 @@ dc.coordinateGridChart = function (_chart) {
         if (_chart.brushIsEmpty(extent)) {
             dc.events.trigger(function () {
                 _chart.filter(null);
-                _chart.redraw();
-            });
+                dc.redrawAll(_chart.chartGroup());
+            }, dc.constants.EVENT_DELAY);
         } else {
             var rangedFilter = dc.filters.RangedFilter(extent[0], extent[1]);
 
             dc.events.trigger(function () {
-                //_chart.filter(rangedFilter);
-                //dc.redrawAll(_chart.chartGroup());
-                _chart.replaceFilter([extent[0], extent[1]]);
-                _chart.redraw();
+                _chart.replaceFilter(rangedFilter);
+                dc.redrawAll(_chart.chartGroup());
             }, dc.constants.EVENT_DELAY);
         }
     };
@@ -793,14 +770,6 @@ dc.coordinateGridChart = function (_chart) {
     _chart._preprocessData = function() {};
 
     _chart.doRender = function () {
-        _xDomainConstraints = [];
-        if (_zoomOutRestrict) {
-            _xDomainConstraints.push(_xOriginalDomain);
-            if (_rangeChart) {
-                _xDomainConstraints.push(_rangeChart.xOriginalDomain());
-            }
-        }
-
         _chart.resetSvg();
 
         _chart._preprocessData();
@@ -808,44 +777,76 @@ dc.coordinateGridChart = function (_chart) {
         _chart._generateG();
         generateClipPath();
 
-        prepareXAxis(_chart.g());
-        prepareYAxis(_chart.g());
-
-        _chart.plotData();
-
-        _chart.renderXAxis(_chart.g());
-        _chart.renderYAxis(_chart.g());
-
-        _chart.renderBrush(_chart.g());
+        drawChart(true);
 
         configureMouseZoom();
 
         return _chart;
     };
 
-    function configureMouseZoom () {
-        if (_mouseZoomable) {
-            _zoom.x(_chart.x())
-                .scaleExtent(_zoomScale)
-                .size([_chart.width(),_chart.height()]);
-            _chart.root().call(_zoom);
-        }
-        else {
-            _chart.root().call(_nullZoom);
-        }
+    _chart.doRedraw = function () {
+        _chart._preprocessData();
+
+        drawChart(false);
+
+        return _chart;
+    };
+
+    function drawChart (render) {
+        prepareXAxis(_chart.g());
+        prepareYAxis(_chart.g());
+
+        _chart.plotData();
+
+        if (_chart.elasticX() || _refocused || render)
+            _chart.renderXAxis(_chart.g());
+
+        if (_chart.elasticY() || render)
+            _chart.renderYAxis(_chart.g());
+
+        if (render)
+            _chart.renderBrush(_chart.g());
+        else
+            _chart.redrawBrush(_chart.g());
     }
 
-    function zoomHandler() {
-        var domain = _chart.x().domain();
-            //var refDomFilter = dc.filters.RangedFilter(refDom[0], refDom[1]);
+    function configureMouseZoom () {
+        if (_mouseZoomable)
+            _chart._enableMouseZoom();
+        else
+            _chart._disableMouseZoom();
+    }
 
-        _chart.replaceFilter(domain);
+    _chart._enableMouseZoom = function () {
+        _zoom.x(_chart.x())
+            .scaleExtent(_zoomScale)
+            .size([_chart.width(),_chart.height()]);
+        _chart.root().call(_zoom);
+    };
+
+    _chart._disableMouseZoom = function () {
+        _chart.root().call(_nullZoom);
+    };
+
+    function zoomHandler() {
+        _refocused = true;
+        if (_zoomOutRestrict) {
+            _chart.x().domain(constrainRange(_chart.x().domain(), _xOriginalDomain));
+            if (_rangeChart) {
+                _chart.x().domain(constrainRange(_chart.x().domain(), _rangeChart.x().domain()));
+            }
+        }
+
+        var domain = _chart.x().domain();
+        var domFilter = dc.filters.RangedFilter(domain[0], domain[1]);
+
+        _chart.replaceFilter(domFilter);
         _chart.rescale();
         _chart.redraw();
 
-        if (_rangeChart && !rangeFiltersEqual(_chart.filter(), _rangeChart.filter())) {
+        if (_rangeChart && !rangesEqual(_chart.filter(), _rangeChart.filter())) {
             dc.events.trigger( function () {
-                _rangeChart.replaceFilter(domain);
+                _rangeChart.replaceFilter(domFilter);
                 _rangeChart.redraw();
             });
         }
@@ -853,42 +854,17 @@ dc.coordinateGridChart = function (_chart) {
         _chart._invokeZoomedListener();
 
         dc.events.trigger(function () {
-            dc.redrawAll();
-        }, 500);
+            dc.redrawAll(_chart.chartGroup());
+        }, dc.constants.EVENT_DELAY);
 
-        //var tx = _zoom.translate()[0];
-        //tx = dc.utils.clamp(tx, -1 * _chart.effectiveWidth(), 0);
-        //_zoom.translate([tx, 0]);
-
-        //var domain = _chart.x().domain();
-        //if (_rangeChart) {
-            //if (_zoomOutRestrict) {
-                //var origDom = _rangeChart.xOriginalDomain();
-                //domain = [
-                    //d3.max([domain[0], origDom[0]]),
-                    //d3.min([domain[1], origDom[1]])
-                //];
-            //}
-            //_rangeChart.replaceFilter(domain);
-            //_rangeChart.redraw();
-            //_chart.replaceFilter(domain);
-        //} else {
-            //_chart.replaceFilter(domain);
-            //_chart.focus(domain);
-        //}
+        _refocused = !rangesEqual(domain, _xOriginalDomain);
     }
 
-    function resetZoom(newDomain) {
-        //var newExtent = newDomain.map(_x),
-            //oldExtent = _x.range(),
-            //newSpan   = Math.abs(newExtent[1] - newExtent[0]),
-            //oldSpan   = Math.abs(oldExtent[1] - oldExtent[0]),
-            //scale     = oldSpan / newSpan,
-            //trans     = oldExtent[0] - newExtent[1];
-
-            //console.log(_chart.chartID(), scale,trans,_zoom.scale(),_zoom.translate()[0],newExtent);
-            //_zoom.scale(scale);
-            //_zoom.translate([trans,0]);
+    function constrainRange(range, constraint) {
+        var constrainedRange = [];
+        constrainedRange[0] = d3.max([range[0], constraint[0]]);
+        constrainedRange[1] = d3.min([range[1], constraint[1]]);
+        return constrainedRange;
     }
 
     /**
@@ -906,13 +882,10 @@ dc.coordinateGridChart = function (_chart) {
 
     **/
     _chart.focus = function (range) {
-        if (hasRangeSelected(range)) {
+        if (hasRangeSelected(range))
             _chart.x().domain(range);
-            _refocused = true;
-        } else {
-            _chart.x().domain(_chart.xOriginalDomain());
-            _refocused = false;
-        }
+        else
+            _chart.x().domain(_xOriginalDomain);
 
         _zoom.x(_chart.x());
         zoomHandler();
@@ -926,58 +899,32 @@ dc.coordinateGridChart = function (_chart) {
         if (!arguments.length) return _focusChart;
         _focusChart = c;
         _chart.on("filtered", function (chart) {
-            var rangeFilter = chart.filter();
-            var focusFilter = _focusChart.filter();
-            if (!rangeFiltersEqual(rangeFilter, focusFilter)) {
+            if (!rangesEqual(chart.filter(), _focusChart.filter())) {
                 dc.events.trigger(function () {
-                    _focusChart.replaceFilter(rangeFilter);
-                    _focusChart.focus(rangeFilter);
+                    _focusChart.focus(chart.filter());
                 });
             }
         });
         return _chart;
     };
 
-    function rangeFiltersEqual(filter1, filter2) {
-        if (!filter1 && !filter2) {
+    function rangesEqual(range1, range2) {
+        if (!range1 && !range2) {
             return true;
         }
 
-        if (filter1.length === 0 && filter2.length === 0) {
+        if (range1.length === 0 && range2.length === 0) {
             return true;
         }
 
-        if (filter1 && filter2 &&
-            filter1[0].valueOf() === filter2[0].valueOf() &&
-            filter1[1].valueOf() === filter2[1].valueOf()) {
+        if (range1 && range2 &&
+            range1[0].valueOf() === range2[0].valueOf() &&
+            range1[1].valueOf() === range2[1].valueOf()) {
             return true;
         }
 
         return false;
-    };
-
-    _chart.doRedraw = function () {
-        console.log("render:",_chart.chartID());
-
-        _chart._preprocessData();
-
-        applyXRestrictions();
-
-        prepareXAxis(_chart.g());
-        prepareYAxis(_chart.g());
-
-        _chart.plotData();
-
-        if (_chart.elasticY())
-            _chart.renderYAxis(_chart.g());
-
-        if (_chart.elasticX() || _chart.refocused())
-            _chart.renderXAxis(_chart.g());
-
-        _chart.redrawBrush(_chart.g());
-
-        return _chart;
-    };
+    }
 
     /**
     #### .brushOn([boolean])
