@@ -78,6 +78,11 @@ suite.addBatch({
         'should set the whiskers values correctly' : function  (chart) {
             assert.equal(chart.select("g.box:nth-of-type(2)").selectAll("text.whisker")[0][0].textContent, "22");
             assert.equal(chart.select("g.box:nth-of-type(2)").selectAll("text.whisker")[0][1].textContent, "66");
+        },
+        'should assign a fill color to the boxes' : function (chart) {
+            chart.getColor = function() { return '#eeeeee'; };
+            chart.render();
+            assert.equal(chart.selectAll("rect.box").attr("fill"), "#eeeeee");
         }
     },
 
@@ -103,6 +108,51 @@ suite.addBatch({
                return innerChartWidth / (xUnits + 2);
            }).render();
             assert.equal(chart.selectAll("rect.box").attr("width"), "75");
+        }
+    },
+
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
+    }
+});
+
+suite.addBatch({
+    'with filters': {
+        topic: function () {
+            var chart = buildChart("box-plot-with-filter");
+            chart.filter("CA");
+            chart.redraw();
+            return chart;
+        },
+
+        'should select box based on the filter value' : function (chart) {
+            chart.selectAll("g.box").each(function (d) {
+                if (d.key == "CA") {
+                    assert.equal(d3.select(this).attr("class"), "box selected");
+                } else {
+                    assert.equal(d3.select(this).attr("class"), "box deselected");
+                }
+            });
+        }
+    },
+
+    teardown: function (topic) {
+        resetAllFilters();
+        resetBody();
+    }
+});
+
+suite.addBatch({
+    'click' : {
+        topic: function () {
+            return buildChart("box-plot-with-filter");
+        },
+
+        'clicking on a box should apply a filter to the chart' : function (chart) {
+            var box = chart.select('g.box');
+            box.on("click").call(chart, box.datum());
+            assert.equal(chart.hasFilter("CA"), true);
         }
     },
 

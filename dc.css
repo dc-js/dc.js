@@ -254,11 +254,15 @@ div.dc-chart {
 }
 
 .dc-chart .box line,
-.dc-chart .box rect,
 .dc-chart .box circle {
   fill: #fff;
   stroke: #000;
   stroke-width: 1.5px;
+}
+
+.dc-chart .box rect {
+    stroke: #000;
+    stroke-width: 1.5px;
 }
 
 .dc-chart .box .center {
@@ -268,6 +272,14 @@ div.dc-chart {
 .dc-chart .box .outlier {
   fill: none;
   stroke: #ccc;
+}
+
+.dc-chart .box.deselected .box {
+    fill: #ccc;
+}
+
+.dc-chart .box.deselected {
+    opacity: .5;
 }
 
 .dc-chart .symbol{
