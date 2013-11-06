@@ -4165,7 +4165,6 @@ dc.dataTable = function(parent, chartGroup) {
         return d3.nest()
             .key(_chart.group())
             .sortKeys(_order)
-            .sortValues(_order)
             .entries(_sort(entries, 0, entries.length));
     }
 

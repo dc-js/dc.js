@@ -10,11 +10,11 @@ function buildChart(id) {
     var chart = dc.dataTable("#" + id)
         .dimension(dateDimension)
         .group(function(d) {
-            return dateFormat(d3.time.day(d.dd));
+            return "Data Table";
         })
         .transitionDuration(0)
         .size(3)
-        .sortBy(function(d){return d.dd.getTime();})
+        .sortBy(function(d){return d.id;})
         .columns(
         [function(d) {
             return d.id;
@@ -51,13 +51,13 @@ suite.addBatch({
             assert.equal(chart.selectAll("tr.dc-table-group td")[0][0].getAttribute("colspan"), "2");
         },
         'should have id column created':function(chart) {
-            assert.equal(chart.selectAll("td._0")[0][0].innerHTML, 8);
-            assert.equal(chart.selectAll("td._0")[0][1].innerHTML, 3);
+            assert.equal(chart.selectAll("td._0")[0][0].innerHTML, 3);
+            assert.equal(chart.selectAll("td._0")[0][1].innerHTML, 8);
             assert.equal(chart.selectAll("td._0")[0][2].innerHTML, 9);
         },
         'should have status column created':function(chart) {
-            assert.equal(chart.selectAll("td._1")[0][0].innerHTML, "F");
-            assert.equal(chart.selectAll("td._1")[0][1].innerHTML, "T");
+            assert.equal(chart.selectAll("td._1")[0][0].innerHTML, "T");
+            assert.equal(chart.selectAll("td._1")[0][1].innerHTML, "F");
             assert.equal(chart.selectAll("td._1")[0][2].innerHTML, "T");
         },
         'teardown': function() {

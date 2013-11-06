@@ -18,10 +18,10 @@
         <li id="section-1">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h1">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <h1 id="dc-js-getting-started-and-how-to-guide">dc.js Getting Started and How-To Guide</h1>
+              <h1>dc.js Getting Started and How-To Guide</h1>
 
             </div>
             
@@ -36,10 +36,10 @@
         <li id="section-2">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <h3 id="create-chart-objects">Create Chart Objects</h3>
+              <h3>Create Chart Objects</h3>
 <p>Create chart objects assocated with the container elements identified by the css selector.
 Note: It is often a good idea to have these objects accessible at the global scope so that they can be modified or filtered by other page controls.</p>
 
@@ -59,10 +59,10 @@ Note: It is often a good idea to have these objects accessible at the global sco
         <li id="section-3">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <h3 id="anchor-div-for-charts">Anchor Div for Charts</h3>
+              <h3>Anchor Div for Charts</h3>
 
             </div>
             
@@ -106,10 +106,10 @@ Note: It is often a good idea to have these objects accessible at the global sco
         <li id="section-6">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h5">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <h5 id="-turnoncontrols-">.turnOnControls()</h5>
+              <h5>.turnOnControls()</h5>
 <p>If a link with css class “reset” is present then the chart
 will automatically turn it on/off based on whether there is filter
 set on this chart (slice selection for pie chart and brush
@@ -149,15 +149,15 @@ any html element with css class set to “filter”</p>
         <li id="section-8">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-8">&#182;</a>
               </div>
-              <h3 id="load-your-data">Load your data</h3>
+              <h3>Load your data</h3>
 <p>Data can be loaded through regular means with your
 favorite javascript library</p>
-<pre><code class="lang-javascript">d3.csv(<span class="string">"data.csv"</span>, <span class="function"><span class="keyword">function</span><span class="params">(data)</span> {</span>...};
-d3.json(<span class="string">"data.json"</span>, <span class="function"><span class="keyword">function</span><span class="params">(data)</span> {</span>...};
-jQuery.getJson(<span class="string">"data.json"</span>, <span class="function"><span class="keyword">function</span><span class="params">(data)</span>{</span>...});</code></pre>
+<pre><code class="lang-javascript">d3.csv(<span class="string">"data.csv"</span>, <span class="keyword">function</span>(data) {...};
+d3.json(<span class="string">"data.json"</span>, <span class="keyword">function</span>(data) {...};
+jQuery.getJson(<span class="string">"data.json"</span>, <span class="keyword">function</span>(data){...});</code></pre>
 
             </div>
             
@@ -179,10 +179,10 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="function"><
         <li id="section-9">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-9">&#182;</a>
               </div>
-              <h3 id="create-crossfilter-dimensions-and-groups">Create Crossfilter Dimensions and Groups</h3>
+              <h3>Create Crossfilter Dimensions and Groups</h3>
 <p>See the <a href="https://github.com/square/crossfilter/wiki/API-Reference">crossfilter API</a> for reference.</p>
 
             </div>
@@ -438,10 +438,10 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="function"><
         <li id="section-21">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h3">
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
-              <h3 id="define-chart-attributes">Define Chart Attributes</h3>
+              <h3>Define Chart Attributes</h3>
 <p>Define chart attributes using fluent methods. See the <a href="https://github.com/NickQiZhu/dc.js/blob/master/web/docs/api-1.7.0.md">dc API Reference</a> for more information</p>
 
             </div>
@@ -452,10 +452,10 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="function"><
         <li id="section-22">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h4">
                 <a class="pilcrow" href="#section-22">&#182;</a>
               </div>
-              <h4 id="bubble-chart">Bubble Chart</h4>
+              <h4>Bubble Chart</h4>
 <p>Create a bubble chart and use the given css selector as anchor. You can also specify
 an optional chart group for this chart to be scoped within. When a chart belongs
 to a specific group then any interaction with such chart will only trigger redraw
@@ -495,10 +495,10 @@ to generate x, y, and radius for each key (bubble) in the group</p>
         <li id="section-24">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h5">
                 <a class="pilcrow" href="#section-24">&#182;</a>
               </div>
-              <h5 id="accessors">Accessors</h5>
+              <h5>Accessors</h5>
 <p>Accessor functions are applied to each value returned by the grouping</p>
 <ul>
 <li><code>.colorAccessor</code> The returned value will be mapped to an internal scale to determine a fill color</li>
@@ -532,10 +532,10 @@ to generate x, y, and radius for each key (bubble) in the group</p>
         <li id="section-25">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h5">
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
-              <h5 id="elastic-scaling">Elastic Scaling</h5>
+              <h5>Elastic Scaling</h5>
 <p><code>.elasticX</code> and <code>.elasticX</code> determine whether the chart should rescale each axis to fit data.
 The <code>.yAxisPadding</code> and <code>.xAxisPadding</code> add padding to data above and below their max values in the same unit domains as the Accessors.</p>
 
@@ -556,10 +556,10 @@ The <code>.yAxisPadding</code> and <code>.xAxisPadding</code> add padding to dat
         <li id="section-26">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h4">
                 <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <h4 id="labels-and-titles">Labels and  Titles</h4>
+              <h4>Labels and  Titles</h4>
 <p>Labels are displaed on the chart for each bubble. Titles displayed on mouseover.</p>
 
             </div>
@@ -583,10 +583,10 @@ The <code>.yAxisPadding</code> and <code>.xAxisPadding</code> add padding to dat
         <li id="section-27">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h4">
                 <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <h4 id="customize-axis">Customize Axis</h4>
+              <h4>Customize Axis</h4>
 <p>Set a custom tick format. Note <code>.yAxis()</code> returns an axis object, so any additional method chaining applies to the axis, not the chart.</p>
 
             </div>
@@ -601,10 +601,10 @@ The <code>.yAxisPadding</code> and <code>.xAxisPadding</code> add padding to dat
         <li id="section-28">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h4">
                 <a class="pilcrow" href="#section-28">&#182;</a>
               </div>
-              <h4 id="pie-donut-chart">Pie/Donut Chart</h4>
+              <h4>Pie/Donut Chart</h4>
 <p>Create a pie chart and use the given css selector as anchor. You can also specify
 an optional chart group for this chart to be scoped within. When a chart belongs
 to a specific group then any interaction with such chart will only trigger redraw
@@ -731,10 +731,10 @@ on other charts within the same chart group.</p>
         <li id="section-35">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h4">
                 <a class="pilcrow" href="#section-35">&#182;</a>
               </div>
-              <h4 id="row-chart">Row Chart</h4>
+              <h4>Row Chart</h4>
 
             </div>
             
@@ -787,10 +787,10 @@ on other charts within the same chart group.</p>
         <li id="section-38">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h4">
                 <a class="pilcrow" href="#section-38">&#182;</a>
               </div>
-              <h4 id="bar-chart">Bar Chart</h4>
+              <h4>Bar Chart</h4>
 <p>Create a bar chart and use the given css selector as anchor. You can also specify
 an optional chart group for this chart to be scoped within. When a chart belongs
 to a specific group then any interaction with such chart will only trigger redraw
@@ -895,10 +895,10 @@ on other charts within the same chart group.</p>
         <li id="section-44">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h4">
                 <a class="pilcrow" href="#section-44">&#182;</a>
               </div>
-              <h4 id="stacked-area-chart">Stacked Area Chart</h4>
+              <h4>Stacked Area Chart</h4>
 <p>Specify an area chart, by using a line chart with <code>.renderArea(true)</code></p>
 
             </div>
@@ -1009,10 +1009,10 @@ The second parameter is the series name. The third is a value accessor.</p>
         <li id="section-49">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h4">
                 <a class="pilcrow" href="#section-49">&#182;</a>
               </div>
-              <h4 id="data-count">Data Count</h4>
+              <h4>Data Count</h4>
 <p>Create a data count widget and use the given css selector as anchor. You can also specify
 an optional chart group for this chart to be scoped within. When a chart belongs
 to a specific group then any interaction with such chart will only trigger redraw
@@ -1037,10 +1037,10 @@ on other charts within the same chart group.</p>
         <li id="section-50">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h4">
                 <a class="pilcrow" href="#section-50">&#182;</a>
               </div>
-              <h4 id="data-table">Data Table</h4>
+              <h4>Data Table</h4>
 <p>Create a data table widget and use the given css selector as anchor. You can also specify
 an optional chart group for this chart to be scoped within. When a chart belongs
 to a specific group then any interaction with such chart will only trigger redraw
@@ -1173,10 +1173,10 @@ as a grouping function</p>
         <li id="section-56">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h4">
                 <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
-              <h4 id="geo-choropleth-chart">Geo Choropleth Chart</h4>
+              <h4>Geo Choropleth Chart</h4>
 <p>Create a choropleth chart and use the given css selector as anchor. You can also specify
 an optional chart group for this chart to be scoped within. When a chart belongs
 to a specific group then any interaction with such chart will only trigger redraw
@@ -1234,7 +1234,7 @@ on other charts within the same chart group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .colorAccessor(<span class="function"><span class="keyword">function</span><span class="params">(d, i)</span>{</span><span class="keyword">return</span> d.value;})</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        .colorAccessor(<span class="keyword">function</span>(d, i){<span class="keyword">return</span> d.value;})</pre></div></div>
             
         </li>
         
@@ -1256,7 +1256,7 @@ in order for the coloring to work properly</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .overlayGeoJson(statesJson.features, <span class="string">"state"</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> {</span>
+            <div class="content"><div class='highlight'><pre>        .overlayGeoJson(statesJson.features, <span class="string">"state"</span>, <span class="keyword">function</span>(d) {
             <span class="keyword">return</span> d.properties.name;
         })</pre></div></div>
             
@@ -1269,11 +1269,11 @@ in order for the coloring to work properly</li>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
-              <p>(optional) closure to generate title for path, :default = d.key + “: “ + d.value</p>
+              <p>(optional) closure to generate title for path, :default = d.key + “: ” + d.value</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .title(<span class="function"><span class="keyword">function</span><span class="params">(d)</span> {</span>
+            <div class="content"><div class='highlight'><pre>        .title(<span class="keyword">function</span>(d) {
             <span class="keyword">return</span> <span class="string">"State: "</span> + d.key + <span class="string">"\nTotal Amount Raised: "</span> + numberFormat(d.value ? d.value : <span class="number">0</span>) + <span class="string">"M"</span>;
         });</pre></div></div>
             
@@ -1283,10 +1283,10 @@ in order for the coloring to work properly</li>
         <li id="section-62">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h4">
                 <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
-              <h4 id="bubble-overlay-chart">Bubble Overlay Chart</h4>
+              <h4>Bubble Overlay Chart</h4>
 <p>Create a overlay bubble chart and use the given css selector as anchor. You can also specify
 an optional chart group for this chart to be scoped within. When a chart belongs
 to a specific group then any interaction with such chart will only trigger redraw
@@ -1305,7 +1305,7 @@ on other charts within the same chart group.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
-              <p>bubble overlay chart does not generate it’s own svg element but rather resue an existing
+              <p>bubble overlay chart does not generate it‘s own svg element but rather resue an existing
 svg to generate it’s overlay layer</p>
 
             </div>
@@ -1330,7 +1330,7 @@ svg to generate it’s overlay layer</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .keyAccessor(<span class="function"><span class="keyword">function</span><span class="params">(p)</span> {</span><span class="keyword">return</span> p.value.absGain;})</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            .keyAccessor(<span class="keyword">function</span>(p) {<span class="keyword">return</span> p.value.absGain;})</pre></div></div>
             
         </li>
         
@@ -1345,7 +1345,7 @@ svg to generate it’s overlay layer</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .valueAccessor(<span class="function"><span class="keyword">function</span><span class="params">(p)</span> {</span><span class="keyword">return</span> p.value.percentageGain;})</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            .valueAccessor(<span class="keyword">function</span>(p) {<span class="keyword">return</span> p.value.percentageGain;})</pre></div></div>
             
         </li>
         
@@ -1390,7 +1390,7 @@ svg to generate it’s overlay layer</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .colorAccessor(<span class="function"><span class="keyword">function</span><span class="params">(d, i)</span>{</span><span class="keyword">return</span> d.value;})</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            .colorAccessor(<span class="keyword">function</span>(d, i){<span class="keyword">return</span> d.value;})</pre></div></div>
             
         </li>
         
@@ -1405,7 +1405,7 @@ svg to generate it’s overlay layer</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .radiusValueAccessor(<span class="function"><span class="keyword">function</span><span class="params">(p)</span> {</span><span class="keyword">return</span> p.value.fluctuationPercentage;})</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            .radiusValueAccessor(<span class="keyword">function</span>(p) {<span class="keyword">return</span> p.value.fluctuationPercentage;})</pre></div></div>
             
         </li>
         
@@ -1450,7 +1450,7 @@ svg to generate it’s overlay layer</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .label(<span class="function"><span class="keyword">function</span><span class="params">(p)</span> {</span><span class="keyword">return</span> p.key.getFullYear();})</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            .label(<span class="keyword">function</span>(p) {<span class="keyword">return</span> p.key.getFullYear();})</pre></div></div>
             
         </li>
         
@@ -1476,11 +1476,11 @@ svg to generate it’s overlay layer</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
-              <p>(optional) closure to generate title per bubble, :default = d.key + “: “ + d.value</p>
+              <p>(optional) closure to generate title per bubble, :default = d.key + “: ” + d.value</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .title(<span class="function"><span class="keyword">function</span><span class="params">(d)</span> {</span>
+            <div class="content"><div class='highlight'><pre>            .title(<span class="keyword">function</span>(d) {
                 <span class="keyword">return</span> <span class="string">"Title: "</span> + d.key;
             })</pre></div></div>
             
@@ -1493,7 +1493,7 @@ svg to generate it’s overlay layer</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
-              <p>add data point to it’s layer dimension key that matches point name will be used to
+              <p>add data point to it&#39;s layer dimension key that matches point name will be used to
 generate bubble. multiple data points can be added to bubble overlay to generate
 multiple bubbles</p>
 
@@ -1526,10 +1526,10 @@ data point, :default = false</p>
         <li id="section-77">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h4">
                 <a class="pilcrow" href="#section-77">&#182;</a>
               </div>
-              <h4 id="rendering">Rendering</h4>
+              <h4>Rendering</h4>
 <p>simply call renderAll() to render all charts on the page</p>
 
             </div>
@@ -1591,10 +1591,10 @@ change without re-rendering everything</p>
         <li id="section-81">
             <div class="annotation">
               
-              <div class="pilwrap ">
+              <div class="pilwrap for-h4">
                 <a class="pilcrow" href="#section-81">&#182;</a>
               </div>
-              <h4 id="version">Version</h4>
+              <h4>Version</h4>
 <p>Determine the current version of dc with <code>dc.version</code></p>
 
             </div>
