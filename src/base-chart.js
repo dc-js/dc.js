@@ -632,6 +632,15 @@ dc.baseChart = function (_chart) {
         // do nothing in base, should be overridden by sub-function
     };
 
+    _chart.legendToggle = function (d) {
+        // do nothing in base, should be overriden by sub-function
+    };
+
+    _chart.isLegendableHidden = function (d) {
+        // do nothing in base, should be overridden by sub-function
+        return false;
+    };
+
     /**
     #### .keyAccessor([keyAccessorFunction])
     Set or get the key accessor function. Key accessor function is used to retrieve key value in crossfilter group. Key

@@ -1220,6 +1220,15 @@ dc.baseChart = function (_chart) {
         // do nothing in base, should be overridden by sub-function
     };
 
+    _chart.legendToggle = function (d) {
+        // do nothing in base, should be overriden by sub-function
+    };
+
+    _chart.isLegendableHidden = function (d) {
+        // do nothing in base, should be overridden by sub-function
+        return false;
+    };
+
     /**
     #### .keyAccessor([keyAccessorFunction])
     Set or get the key accessor function. Key accessor function is used to retrieve key value in crossfilter group. Key
@@ -2517,8 +2526,9 @@ dc.stackableChart = function (_chart) {
     var _allValueAccessors;
     var _allKeyAccessors;
     var _stackLayers;
+    var _hiddenStacks = [];
 
-    _chart._hidableStacks = false;
+    var _hidableStacks = false;
 
     /**
     #### .stack(group[, name, accessor])
@@ -2561,8 +2571,8 @@ dc.stackableChart = function (_chart) {
 
     **/
     _chart.hidableStacks = function(_) {
-        if (!arguments.length) return _chart._hidableStacks;
-        _chart._hidableStacks = _;
+        if (!arguments.length) return _hidableStacks;
+        _hidableStacks = _;
         return _chart;
     };
 
@@ -2816,6 +2826,25 @@ dc.stackableChart = function (_chart) {
         return _chart.allGroups().map(function (g, i) {
             return dc.utils.createLegendable(_chart, g, _chart.getValueAccessorByIndex(i), _chart.colorCalculator()(i));
         });
+    };
+
+    _chart.isLegendableHidden = function (d) {
+        return _hiddenStacks.indexOf(d.name) !== -1;
+    };
+
+    _chart.legendToggle = function (d) {
+        if(_hidableStacks) {
+            var index;
+            if ((index = _hiddenStacks.indexOf(d.name)) !== -1) {
+                _hiddenStacks.splice(index, 1);
+                _chart.showStack(d.name);
+            }
+            else {
+                _hiddenStacks.push(d.name);
+                _chart.hideStack(d.name);
+            }
+        }
+        _chart.render();
     };
 
     return _chart;
@@ -3365,6 +3394,38 @@ dc.pieChart = function (parent, chartGroup) {
         return path;
     }
 
+    _chart.legendables = function() {
+        return _chart.data().map(function (d, i) {
+            var legendable = { name: d.key, data: d.value, others: d.others };
+            legendable.color = _chart.getColor(d,i);
+            return legendable;
+        });
+    };
+
+    _chart.getColor = function(d,i) {
+        return _chart.colorCalculator()(_chart.colorAccessor()(d, i));
+    };
+
+    _chart.legendHighlight = function(d) {
+        highlightSliceFromLegendable(d, true);
+    };
+
+    _chart.legendReset = function(d) {
+        highlightSliceFromLegendable(d, false);
+    };
+
+    _chart.legendToggle = function(d) {
+        _chart.onClick({ key: d.name, others: d.others });
+    };
+
+    function highlightSliceFromLegendable(legendable, highlighted) {
+        _chart.selectAll('g.pie-slice').each(function (d) {
+            if (legendable.name == d.data.key) {
+                d3.select(this).classed("highlight", highlighted);
+            }
+        });
+    }
+
     return _chart.anchor(parent, chartGroup);
 };
 
@@ -3595,12 +3656,14 @@ dc.barChart = function (parent, chartGroup) {
     };
 
     _chart.legendHighlight = function (d) {
-        _chart.select('.chart-body').selectAll('rect.bar').filter(function () {
-            return d3.select(this).attr('fill') == d.color;
-        }).classed('highlight', true);
-        _chart.select('.chart-body').selectAll('rect.bar').filter(function () {
-            return d3.select(this).attr('fill') != d.color;
-        }).classed('fadeout', true);
+        if(!_chart.isLegendableHidden(d)) {
+            _chart.select('.chart-body').selectAll('rect.bar').filter(function () {
+                return d3.select(this).attr('fill') == d.color;
+            }).classed('highlight', true);
+            _chart.select('.chart-body').selectAll('rect.bar').filter(function () {
+                return d3.select(this).attr('fill') != d.color;
+            }).classed('fadeout', true);
+        }
     };
 
     _chart.legendReset = function (d) {
@@ -3941,12 +4004,14 @@ dc.lineChart = function (parent, chartGroup) {
     };
 
     _chart.legendHighlight = function (d) {
-        _chart.selectAll('.chart-body').selectAll('path').filter(function () {
-            return d3.select(this).attr('fill') == d.color;
-        }).classed('highlight', true);
-        _chart.selectAll('.chart-body').selectAll('path').filter(function () {
-            return d3.select(this).attr('fill') != d.color;
-        }).classed('fadeout', true);
+        if(!_chart.isLegendableHidden(d)) {
+            _chart.selectAll('.chart-body').selectAll('path').filter(function () {
+                return d3.select(this).attr('fill') == d.color;
+            }).classed('highlight', true);
+            _chart.selectAll('.chart-body').selectAll('path').filter(function () {
+                return d3.select(this).attr('fill') != d.color;
+            }).classed('fadeout', true);
+        }
     };
 
     _chart.legendReset = function (d) {
@@ -5495,8 +5560,6 @@ dc.legend = function () {
 
     var _g;
 
-    var hiddenStacks = [];
-
     _legend.parent = function (p) {
         if (!arguments.length) return _parent;
         _parent = p;
@@ -5515,34 +5578,22 @@ dc.legend = function () {
             .append("g")
             .attr("class", "dc-legend-item")
             .classed("fadeout", function(d) {
-                return hiddenStacks.indexOf(d.name) !== -1;
+                return _parent.isLegendableHidden(d);
             })
             .attr("transform", function (d, i) {
                 return "translate(0," + i * legendItemHeight() + ")";
             })
             .on("mouseover", function(d) {
-                if (hiddenStacks.indexOf(d.name) === -1)
-                    _parent.legendHighlight(d);
+                _parent.legendHighlight(d);
             })
             .on("mouseout", function (d) {
                 _parent.legendReset(d);
             })
             .on("click", function (d) {
-                if (_parent._hidableStacks) {
-                    var index;
-                    if ((index = hiddenStacks.indexOf(d.name)) !== -1) {
-                        hiddenStacks.splice(index, 1);
-                        _parent.showStack(d.name);
-                    }
-                    else {
-                        hiddenStacks.push(d.name);
-                        _parent.hideStack(d.name);
-                    }
-                    _parent.render();
-                }
+                _parent.legendToggle(d);
             });
 
-        if (_parent.legendables().some(function (legendItem) { return legendItem.dashstyle })) {
+        if (_parent.legendables().some(function (legendItem) { return legendItem.dashstyle; })) {
             itemEnter
                 .append("line")
                 .attr("x1", 0)
@@ -6416,6 +6467,36 @@ dc.boxPlot = function (parent, chartGroup) {
             .attr("class", "box")
             .attr("transform", boxTransform)
             .call(_box);
+
+        _chart.chartBodyG().selectAll('g.box')
+            .each(function() {
+                d3.select(this).select('rect.box').attr("fill", _chart.getColor);
+            })
+            .on("click", function(d) {
+                _chart.filter(d.key);
+                _chart.focus(_chart.filter());
+                dc.redrawAll(_chart.chartGroup());
+            });
+    };
+
+    _chart.fadeDeselectedArea = function () {
+        if (_chart.hasFilter()) {
+            _chart.selectAll("g.box").each(function (d) {
+                if (_chart.isSelectedNode(d)) {
+                    _chart.highlightSelected(this);
+                } else {
+                    _chart.fadeDeselected(this);
+                }
+            });
+        } else {
+            _chart.selectAll("g.box").each(function () {
+                _chart.resetHighlight(this);
+            });
+        }
+    };
+
+    _chart.isSelectedNode = function (d) {
+        return _chart.hasFilter(d.key);
     };
 
     _chart.yAxisMin = function () {
