@@ -267,11 +267,7 @@ dc.utils.appendOrSelect = function (parent, name) {
 
 dc.utils.createLegendable = function (chart, group, accessor, color) {
     var legendable = {name: chart._getGroupName(group, accessor), data: group};
-    if (chart.colors().range()[0] == "#1f77b4") {  //Default Category Palette
-        legendable.color =  color ;
-    } else {
-        legendable.color = chart.getColor(chart.colorAccessor());
-    }
+    if (color) legendable.color = color;
     if (chart.dashStyle && chart.dashStyle()) legendable.dashstyle = chart.dashStyle();
     return legendable;
 };
