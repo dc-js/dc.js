@@ -82,9 +82,6 @@ module.exports = function (grunt) {
                                 options: {
                                     dir: 'coverage/jasmine'
                                 }
-                            },
-                            {
-                                type: 'text-summary'
                             }
                         ]
                     }
@@ -152,7 +149,13 @@ module.exports = function (grunt) {
                 options: { stdout: true, failOnError: true }
             },
             vows_coverage: {
-                command: "istanbul cover --dir coverage/vows node_modules/vows/bin/vows",
+                command: "istanbul cover --print none --dir coverage/vows node_modules/vows/bin/vows",
+                options: {
+                  stdout: true
+                }
+            },
+            merge_coverage: {
+                command: "cd coverage && node merge_coverage.js",
                 options: {
                   stdout: true
                 }
@@ -198,7 +201,7 @@ module.exports = function (grunt) {
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('test', ['docs', 'vows:tests', 'jasmine:specs']);
     grunt.registerTask('vows:coverage', ['shell:vows_coverage']);
-    grunt.registerTask('coverage', ['vows:coverage', 'jasmine:coverage']);
+    grunt.registerTask('coverage', ['vows:coverage', 'jasmine:coverage', 'shell:merge_coverage']);
     grunt.registerTask('lint', ['build', 'jshint']);
     grunt.registerTask('default', ['build']);
 };

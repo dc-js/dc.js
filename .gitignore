@@ -23,6 +23,3 @@ node_modules
 
 # jasmine spec runner
 web/jasmine-runner.html
-
-# test coverage reports
-coverage
