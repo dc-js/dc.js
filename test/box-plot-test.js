@@ -79,11 +79,6 @@ suite.addBatch({
             assert.equal(chart.select("g.box:nth-of-type(2)").selectAll("text.whisker")[0][0].textContent, "22");
             assert.equal(chart.select("g.box:nth-of-type(2)").selectAll("text.whisker")[0][1].textContent, "66");
         },
-
-        'should set the default tickFormat to integers' : function  (chart) {
-            assert.equal(chart.select("g.box:nth-of-type(2)").selectAll("text.whisker")[0][0].textContent, "22");
-            assert.equal(chart.select("g.box:nth-of-type(2)").selectAll("text.whisker")[0][1].textContent, "66");
-        }
     },
 
     teardown: function (topic) {
@@ -162,32 +157,4 @@ suite.addBatch({
     }
 });
 
-suite.addBatch({
-    'tickFormat': {
-        topic: function () {
-            var chart = buildChart("box-plot-with-tickFormat");
-            chart.tickFormat(d3.format(".2f"));
-            chart.render();
-            return chart;
-        },
-        'should set the median value correctly': function (chart) {
-            assert.equal(chart.select("g.box:nth-of-type(2)").selectAll("text.box:nth-of-type(2)").text(), "44.00");
-        },
-
-        'should set the box values correctly' : function (chart) {
-            assert.equal(chart.select("g.box:nth-of-type(2)").selectAll("text.box:nth-of-type(1)").text(), "33.00");
-            assert.equal(chart.select("g.box:nth-of-type(2)").selectAll("text.box:nth-of-type(3)").text(), "49.50");
-        },
-
-        'should set the whiskers values correctly' : function  (chart) {
-            assert.equal(chart.select("g.box:nth-of-type(2)").selectAll("text.whisker")[0][0].textContent, "22.00");
-            assert.equal(chart.select("g.box:nth-of-type(2)").selectAll("text.whisker")[0][1].textContent, "66.00");
-        }
-    },
-
-    teardown: function (topic) {
-        resetAllFilters();
-        resetBody();
-    }
-});
 suite.export(module);
