@@ -301,3 +301,8 @@ div.dc-chart {
     fill-opacity: .5;
     fill: #ccc;
 }
+
+.dc-chart .heatmap g.axis text {
+    pointer-events: all;
+    cursor: pointer;
+}

@@ -74,6 +74,10 @@
                 .width(45 * 20 + 80)
                 .height(45 * 5 + 40)
                 .x(d3.scale.linear().domain([1,21]))
+                .y(d3.scale.linear().domain(
+                        [d3.min(experiments, function (d) { return +d.Speed; }) - 100,
+                         d3.max(experiments, function (d) { return +d.Speed; }) + 100]
+                ))
                 .dimension(actualRunDim)
                 .valueAccessor( function (d) { return d.value.avg; })
                 .colorAccessor( function(d) {

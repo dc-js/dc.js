@@ -40,8 +40,31 @@ dc.heatMap = function (parent, chartGroup) {
             dc.redrawAll(_chart.chartGroup());
         });
     };
-    _chart.xAxisOnClick = function () {  };
-    _chart.yAxisOnClick = function () {};
+
+    function filterAxis(axis, value) {
+        var cellsOnAxis = _chart.selectAll(".box-group").filter( function (d) {
+            return d.key[axis] == value;
+        });
+        var unfilteredCellsOnAxis = cellsOnAxis.filter( function (d) {
+            return !_chart.hasFilter(d.key);
+        });
+        dc.events.trigger(function() {
+            if(unfilteredCellsOnAxis.empty()) {
+                cellsOnAxis.each( function (d) {
+                    _chart.filter(d.key);
+                });
+            } else {
+                unfilteredCellsOnAxis.each( function (d) {
+                    _chart.filter(d.key);
+                });
+            }
+            dc.redrawAll(_chart.chartGroup());
+        });
+    }
+
+    _chart.xAxisOnClick = function (d) { filterAxis(0, d); };
+    _chart.yAxisOnClick = function (d) { filterAxis(1, d); };
+
     _chart.keyAccessor(function(d) {
         return d.key[0];
     });

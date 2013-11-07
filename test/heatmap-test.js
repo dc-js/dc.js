@@ -31,6 +31,16 @@ function buildChart(id) {
     return chart;
 }
 
+function assertOnlyThisAxisIsFiltered(chart, axis, value) {
+    chart.selectAll(".box-group").each( function(d, i) {
+        if (d.key[axis] == value) {
+            assert.isTrue(chart.hasFilter(d.key));
+        } else {
+            assert.isFalse(chart.hasFilter(d.key));
+        }
+    });
+}
+
 suite.addBatch({
     'render': {
         topic: function () {
@@ -141,6 +151,68 @@ suite.addBatch({
                 assert.equal(cell.classed("deselected"), !chart.hasFilter(d.key));
             });
             chart.filter(filterValue).render();
+        },
+        'dimensional filters': {
+            topic: function(chart) {
+                return chart.filter(null);
+            },
+            'when selecting an axis, should filter all cells on that axis': function (chart) {
+                d3.selectAll("#heat-map-new .cols.axis text").each( function(d, i) {
+                    var axisLabel = d3.select(this);
+                    axisLabel.on("click")(d);
+                    assertOnlyThisAxisIsFiltered(chart, 0, d);
+                    axisLabel.on("click")(d);
+                });
+                d3.selectAll("#heat-map-new .rows.axis text").each( function(d, i) {
+                    var axisLabel = d3.select(this);
+                    axisLabel.on("click")(d);
+                    assertOnlyThisAxisIsFiltered(chart, 1, d);
+                    axisLabel.on("click")(d);
+                });
+            },
+            'when selecting an axis with a cell already filtered, cell should remain filtered': function (chart) {
+                var boxes = chart.selectAll("#heat-map-new .box-group");
+                var box = d3.select(boxes[0][Math.floor(Math.random() * boxes.length)]);
+
+                box.select("rect").on("click")(box.datum());
+
+                assert.isTrue(chart.hasFilter(box.datum().key));
+
+                var xVal = box.datum().key[0];
+
+                var columns = chart.selectAll("#heat-map-new .cols.axis text");
+                var column = columns.filter( function (columnData) {
+                    return columnData == xVal;
+                });
+
+                column.on("click")(column.datum());
+
+                assertOnlyThisAxisIsFiltered(chart, 0, xVal);
+
+                column.on("click")(column.datum());
+            },
+            'when selecting an axis with all the cells already filtered, it should unfilter all of those cells': function (chart) {
+                var xVal = 1;
+                chart.selectAll(".box-group").each( function(d,i) {
+                    var box = d3.select(this);
+                    if (d.key[0] == xVal) {
+                        box.select("rect").on("click")(box.datum());
+                    }
+                });
+
+                assertOnlyThisAxisIsFiltered(chart, 0, xVal);
+
+                var columns = chart.selectAll("#heat-map-new .cols.axis text");
+                var column = columns.filter( function (columnData) {
+                    return columnData == xVal;
+                });
+
+                column.on("click")(column.datum());
+
+                chart.select(".box-group").each( function(d, i) {
+                    assert.isFalse(chart.hasFilter(d.key));
+                });
+            }
         }
     },
     teardown: function (topic) {
