@@ -9,3 +9,10 @@ afterEach(function () {
 function appendChartID(id) {
     d3.select("#test-content").append("div").attr("id", id);
 }
+
+function coordsFromTranslate(translationString){
+    var regex = /translate\((.+),(.+)\)/;
+    var result = regex.exec(translationString);
+
+    return { x: +result[1], y: +result[2] };
+}

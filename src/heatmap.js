@@ -126,14 +126,16 @@ dc.heatMap = function (parent, chartGroup) {
         });
         var gEnter = boxes.enter().append("g")
             .attr("class", "box-group");
+
         gEnter.append("rect")
+            .attr("class","heat-box")
             .attr("fill", "white")
             .on("click", _chart.boxOnClick);
+
         gEnter.append("title")
             .text(function (d) { return _chart.title()(d); });
 
         dc.transition(boxes.select("rect"), _chart.transitionDuration())
-            .attr("class","heat-box")
             .attr("x", function(d,i) { return cols(_chart.keyAccessor()(d,i)); })
             .attr("y", function(d,i) { return rows(_chart.valueAccessor()(d,i)); })
             .attr("rx", 0.15 * boxWidth)
