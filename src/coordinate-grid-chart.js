@@ -812,7 +812,8 @@ dc.coordinateGridChart = function (_chart) {
                 _rangeChart.focus(refDom);
             }
             _rangeChart.filter(null);
-            _rangeChart.filter(refDom);
+            var refDomFilter = dc.utils.RangedFilter(refDom[0], refDom[1]);
+            _rangeChart.filter(refDomFilter);
 
             dc.events.trigger(function () {
                 dc.redrawAll(_chart.chartGroup());
