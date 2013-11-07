@@ -3913,7 +3913,7 @@ dc.lineChart = function (parent, chartGroup) {
                 dots.enter()
                     .append("circle")
                     .attr("class", DOT_CIRCLE_CLASS)
-                    .attr("r", _dataPointRadius || _dotRadius)
+                    .attr("r", getDotRadius())
                     .attr("fill", _chart.getColor)
                     .style("fill-opacity", _dataPointFillOpacity)
                     .style("stroke-opacity", _dataPointStrokeOpacity)
@@ -3964,10 +3964,14 @@ dc.lineChart = function (parent, chartGroup) {
         g.select("path." + X_AXIS_REF_LINE_CLASS).style("display", "").attr("d", "M" + x + " " + _chart.yAxisHeight() + "L" + x + " " + y);
     }
 
+    function getDotRadius() {
+        return _dataPointRadius || _dotRadius;
+    }
+
     function hideDot(dot) {
         dot.style("fill-opacity", _dataPointFillOpacity)
             .style("stroke-opacity", _dataPointStrokeOpacity)
-            .attr("r", _dataPointRadius);
+            .attr("r", getDotRadius());
     }
 
     function hideRefLines(g) {
