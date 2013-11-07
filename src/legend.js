@@ -20,7 +20,8 @@ dc.legend = function () {
         _y = 0,
         _itemHeight = 12,
         _gap = 5,
-        _horizontal = false;
+        _horizontal = false,
+        _legendWidth = 500;
 
     var _g;
 
@@ -78,11 +79,16 @@ dc.legend = function () {
                 .attr("y", function(){return _itemHeight / 2 + (this.clientHeight?this.clientHeight:13) / 2 - 2;});
 
         var _cumulativeLegendTextWidth = 0;
-
+        var row = 0;
         itemEnter.attr("transform", function(d, i) {
             if(_horizontal) {
-                var translateBy = "translate(" + _cumulativeLegendTextWidth + ",0)";
-                _cumulativeLegendTextWidth += this.getBBox().width + _gap;
+                var translateBy = "translate(" + _cumulativeLegendTextWidth  + "," + row * legendItemHeight() + ")";
+                if (_cumulativeLegendTextWidth > _legendWidth) {
+                    ++row ;
+                    _cumulativeLegendTextWidth = 0 ;
+                } else {
+                    _cumulativeLegendTextWidth += _itemWidth;
+                }
                 return translateBy;
             }
             else {
