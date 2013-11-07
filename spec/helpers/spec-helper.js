@@ -3,7 +3,7 @@ beforeEach(function() {
 });
 
 afterEach(function () {
-    d3.select("#test-content").html('');
+    d3.selectAll("#test-content").remove();
 });
 
 function appendChartID(id) {
