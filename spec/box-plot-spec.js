@@ -22,7 +22,9 @@ describe('dc.boxPlot', function() {
             .height(144)
             .margins({top: 0, right: 0, bottom: 0, left: 0})
             .boxPadding(0)
-            .y(d3.scale.ordinal().domain([0, 144]));
+            .y(d3.scale.ordinal().domain([0, 144]))
+            .colors(['#eeeeee'])
+            .colorAccessor(function(){ return 0; });
     });
 
     describe('rendering the box plot', function () {
@@ -94,6 +96,11 @@ describe('dc.boxPlot', function() {
         it('should label the whiskers using their calculated values', function() {
             expect(box(1).whiskerText(0).text()).toBe('22');
             expect(box(1).whiskerText(1).text()).toBe('66');
+        });
+
+        it('should assign a fill color to the boxes', function() {
+            expect(box(0).select('rect.box').attr("fill")).toBe("#eeeeee");
+            expect(box(1).select('rect.box').attr("fill")).toBe("#eeeeee");
         });
     });
 
