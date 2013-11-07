@@ -47,11 +47,48 @@ module.exports = function (grunt) {
             }
         },
         vows: {
-            all: {
+            tests: {
+                src: "test/*.js"
+            }
+        },
+        jasmine: {
+            specs: {
                 options: {
-                    /* reporter: "spec" */
+                    specs:  "spec/*-spec.js",
+                    helpers: "spec/helpers/*.js",
+                    version: "2.0.0-rc5",
+                    keepRunner: true,
+                    outfile: "web/jasmine-runner.html"
                 },
-                src: ["test/*.js", "spec/*"]
+               src: [
+                    "web/js/d3.js",
+                    "web/js/crossfilter.js",
+                    "web/js/colorbrewer.js",
+                    "dc.js"
+               ]
+            },
+            coverage:{
+                src: '<%= jasmine.specs.src %>',
+                options:{
+                    specs: '<%= jasmine.specs.options.specs %>',
+                    helpers: '<%= jasmine.specs.options.helpers %>',
+                    version: '<%= jasmine.specs.options.version %>',
+                    template: require('grunt-template-jasmine-istanbul'),
+                    templateOptions: {
+                        coverage: 'coverage/jasmine/coverage.json',
+                        report: [
+                            {
+                                type: 'html',
+                                options: {
+                                    dir: 'coverage/jasmine'
+                                }
+                            },
+                            {
+                                type: 'text-summary'
+                            }
+                        ]
+                    }
+                }
             }
         },
         emu: {
@@ -88,7 +125,7 @@ module.exports = function (grunt) {
                             'test/env-data.js'],
                       dest: 'web/js/'
                     }
-                ],
+                ]
             }
         },
         'gh-pages': {
@@ -113,6 +150,12 @@ module.exports = function (grunt) {
             amend: {
                 command: 'git commit -a --amend --no-edit',
                 options: { stdout: true, failOnError: true }
+            },
+            vows_coverage: {
+                command: "istanbul cover --dir coverage/vows node_modules/vows/bin/vows",
+                options: {
+                  stdout: true
+                }
             }
         }
     });
@@ -122,6 +165,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-docco2');
     grunt.loadNpmTasks('grunt-gh-pages');
     grunt.loadNpmTasks('grunt-markdown');
@@ -152,7 +196,9 @@ module.exports = function (grunt) {
     grunt.registerTask('build', ['concat', 'uglify', 'sed']);
     grunt.registerTask('docs', ['build', 'copy', 'emu', 'markdown', 'docco']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
-    grunt.registerTask('test', ['docs', 'vows']);
+    grunt.registerTask('test', ['docs', 'vows:tests', 'jasmine:specs']);
+    grunt.registerTask('vows:coverage', ['shell:vows_coverage']);
+    grunt.registerTask('coverage', ['vows:coverage', 'jasmine:coverage']);
     grunt.registerTask('lint', ['build', 'jshint']);
     grunt.registerTask('default', ['build']);
 };

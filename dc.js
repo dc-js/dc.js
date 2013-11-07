@@ -3078,6 +3078,8 @@ dc.pieChart = function (parent, chartGroup) {
 
     var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
 
+    var _externalLabelRadius;
+
     var _chart = dc.capped(dc.colorChart(dc.baseChart({})));
 
     _chart.colorAccessor(_chart.cappedKeyAccessor);
@@ -3175,6 +3177,20 @@ dc.pieChart = function (parent, chartGroup) {
         }
     }
 
+    function positionLabels(labelsEnter, arc) {
+        dc.transition(labelsEnter, _chart.transitionDuration())
+            .attr("transform", function (d) {
+                return labelPosition(d, arc);
+            })
+            .attr("text-anchor", "middle")
+            .text(function (d) {
+                var data = d.data;
+                if (sliceHasNoData(data) || sliceTooSmall(d))
+                    return "";
+                return _chart.label()(d.data);
+            });
+    }
+
     function createLabels(pieData, arc) {
         if (_chart.renderLabel()) {
             var labels = _g.selectAll("text." + _sliceCssClass)
@@ -3186,27 +3202,13 @@ dc.pieChart = function (parent, chartGroup) {
                 .enter()
                 .append("text")
                 .attr("class", function (d, i) {
-                    return _sliceCssClass + " _" + i;
+                    var classes = _sliceCssClass + " _" + i;
+                    if(_externalLabelRadius)
+                        classes += " external";
+                    return classes;
                 })
                 .on("click", onClick);
-            dc.transition(labelsEnter, _chart.transitionDuration())
-                .attr("transform", function (d) {
-                    d.innerRadius = _chart.innerRadius();
-                    d.outerRadius = _chart.radius();
-                    var centroid = arc.centroid(d);
-                    if (isNaN(centroid[0]) || isNaN(centroid[1])) {
-                        return "translate(0,0)";
-                    } else {
-                        return "translate(" + centroid + ")";
-                    }
-                })
-                .attr("text-anchor", "middle")
-                .text(function (d) {
-                    var data = d.data;
-                    if (sliceHasNoData(data) || sliceTooSmall(d))
-                        return "";
-                    return _chart.label()(d.data);
-                });
+            positionLabels(labelsEnter, arc);
         }
     }
 
@@ -3233,24 +3235,7 @@ dc.pieChart = function (parent, chartGroup) {
         if (_chart.renderLabel()) {
             var labels = _g.selectAll("text." + _sliceCssClass)
                 .data(pieData);
-            dc.transition(labels, _chart.transitionDuration())
-                .attr("transform", function (d) {
-                    d.innerRadius = _innerRadius;
-                    d.outerRadius = _radius;
-                    var centroid = arc.centroid(d);
-                    if (isNaN(centroid[0]) || isNaN(centroid[1])) {
-                        return "translate(0,0)";
-                    } else {
-                        return "translate(" + centroid + ")";
-                    }
-                })
-                .attr("text-anchor", "middle")
-                .text(function (d) {
-                    var data = d.data;
-                    if (sliceHasNoData(data) || sliceTooSmall(d))
-                        return "";
-                    return _chart.label()(d.data);
-                });
+            positionLabels(labels, arc);
         }
     }
 
@@ -3392,6 +3377,41 @@ dc.pieChart = function (parent, chartGroup) {
         if (path.indexOf("NaN") >= 0)
             path = "M0,0";
         return path;
+    }
+
+    /**
+     #### .externalLabels([radius])
+     Position slice labels offset from the outer edge of the chart
+
+     The given argument sets the radial offset.
+     */
+    _chart.externalLabels = function(radius) {
+        if (arguments.length === 0) {
+            return _externalLabelRadius;
+        } else if(radius) {
+            _externalLabelRadius = radius;
+        } else {
+            _externalLabelRadius = undefined;
+        }
+
+        return _chart;
+    };
+
+    function labelPosition(d, arc) {
+        var centroid;
+        if( _externalLabelRadius ) {
+            centroid = d3.svg.arc()
+                .outerRadius(_radius+_externalLabelRadius)
+                .innerRadius(_radius+_externalLabelRadius)
+                .centroid(d);
+        } else {
+            centroid = arc.centroid(d);
+        }
+        if (isNaN(centroid[0]) || isNaN(centroid[1])) {
+            return "translate(0,0)";
+        } else {
+            return "translate(" + centroid + ")";
+        }
     }
 
     _chart.legendables = function() {
@@ -4165,7 +4185,6 @@ dc.dataTable = function(parent, chartGroup) {
         return d3.nest()
             .key(_chart.group())
             .sortKeys(_order)
-            .sortValues(_order)
             .entries(_sort(entries, 0, entries.length));
     }
 
@@ -5556,7 +5575,8 @@ dc.legend = function () {
         _x = 0,
         _y = 0,
         _itemHeight = 12,
-        _gap = 5;
+        _gap = 5,
+        _horizontal = false;
 
     var _g;
 
@@ -5579,9 +5599,6 @@ dc.legend = function () {
             .attr("class", "dc-legend-item")
             .classed("fadeout", function(d) {
                 return _parent.isLegendableHidden(d);
-            })
-            .attr("transform", function (d, i) {
-                return "translate(0," + i * legendItemHeight() + ")";
             })
             .on("mouseover", function(d) {
                 _parent.legendHighlight(d);
@@ -5615,6 +5632,19 @@ dc.legend = function () {
                 .text(function(d){return d.name;})
                 .attr("x", _itemHeight + LABEL_GAP)
                 .attr("y", function(){return _itemHeight / 2 + (this.clientHeight?this.clientHeight:13) / 2 - 2;});
+
+        var _cumulativeLegendTextWidth = 0;
+
+        itemEnter.attr("transform", function(d, i) {
+            if(_horizontal) {
+                var translateBy = "translate(" + _cumulativeLegendTextWidth + ",0)";
+                _cumulativeLegendTextWidth += this.getBBox().width + _gap;
+                return translateBy;
+            }
+            else {
+                return "translate(0," + i * legendItemHeight() + ")";
+            }
+        });
     };
 
     function legendItemHeight() {
@@ -5658,6 +5688,16 @@ dc.legend = function () {
     _legend.itemHeight = function (h) {
         if (!arguments.length) return _itemHeight;
         _itemHeight = h;
+        return _legend;
+    };
+
+    /**
+    #### .horizontal([boolean])
+    Position legend horizontally instead of vertically
+    **/
+    _legend.horizontal = function(_) {
+        if (!arguments.length) return _horizontal;
+        _horizontal = _;
         return _legend;
     };
 
