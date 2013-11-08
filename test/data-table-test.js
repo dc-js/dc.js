@@ -15,6 +15,7 @@ function buildChart(id) {
         .transitionDuration(0)
         .size(3)
         .sortBy(function(d){return d.id;})
+        .order(d3.descending)
         .columns(
         [function(d) {
             return d.id;
@@ -45,15 +46,15 @@ suite.addBatch({
             assert.isNotNull(chart.sortBy());
         },
         'order should be set':function(chart) {
-            assert.equal(chart.order(), d3.ascending);
+            assert.equal(chart.order(), d3.descending);
         },
         'should have column span set on group tr':function(chart) {
             assert.equal(chart.selectAll("tr.dc-table-group td")[0][0].getAttribute("colspan"), "2");
         },
         'should have id column created':function(chart) {
-            assert.equal(chart.selectAll("td._0")[0][0].innerHTML, 3);
+            assert.equal(chart.selectAll("td._0")[0][0].innerHTML, 9);
             assert.equal(chart.selectAll("td._0")[0][1].innerHTML, 8);
-            assert.equal(chart.selectAll("td._0")[0][2].innerHTML, 9);
+            assert.equal(chart.selectAll("td._0")[0][2].innerHTML, 3);
         },
         'should have status column created':function(chart) {
             assert.equal(chart.selectAll("td._1")[0][0].innerHTML, "T");
@@ -79,8 +80,8 @@ suite.addBatch({
             assert.lengthOf(chart.selectAll("td._0")[0], 2);
         },
         'should render the correctly filtered records': function(chart) {
-            assert.equal(chart.selectAll("td._0")[0][0].innerHTML, 5);
-            assert.equal(chart.selectAll("td._0")[0][1].innerHTML, 7);
+            assert.equal(chart.selectAll("td._0")[0][0].innerHTML, 7);
+            assert.equal(chart.selectAll("td._0")[0][1].innerHTML, 5);
         },
         'teardown': function() {
             resetAllFilters();

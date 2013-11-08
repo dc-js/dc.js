@@ -4145,7 +4145,6 @@ dc.dataTable = function(parent, chartGroup) {
         return d;
     };
     var _order = d3.ascending;
-    var _sort;
 
     _chart.doRender = function() {
         _chart.selectAll("tbody").remove();
@@ -4181,15 +4180,14 @@ dc.dataTable = function(parent, chartGroup) {
     }
 
     function nestEntries() {
-        if (!_sort)
-            _sort = crossfilter.quicksort.by(_sortBy);
-
         var entries = _chart.dimension().top(_size);
 
         return d3.nest()
             .key(_chart.group())
             .sortKeys(_order)
-            .entries(_sort(entries, 0, entries.length));
+            .entries(entries.sort(function(a, b){
+                return _order(_sortBy(a), _sortBy(b));
+            }));
     }
 
     function renderRows(groups) {
