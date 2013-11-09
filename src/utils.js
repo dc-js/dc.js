@@ -273,12 +273,3 @@ dc.utils.createLegendable = function (chart, group, accessor, color) {
 };
 
 dc.utils.safeNumber = function(n){return dc.utils.isNumber(+n)?+n:0;};
-
-dc.utils.RangedFilter = function(low, high) {
-    var range = Array(low, high);
-    range.inRange = function(value) {
-        return value >= this[0] && value < this[1];
-    };
-
-    return range;
-};

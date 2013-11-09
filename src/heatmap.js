@@ -62,6 +62,15 @@ dc.heatMap = function (parent, chartGroup) {
         });
     }
 
+    dc.override(_chart, "filter", function(filter) {
+        if(filter) {
+            return _chart._filter(dc.filters.TwoDimensionalFilter(filter));
+        } else {
+            return _chart._filter();
+        }
+
+    });
+
     _chart.xAxisOnClick = function (d) { filterAxis(0, d); };
     _chart.yAxisOnClick = function (d) { filterAxis(1, d); };
 

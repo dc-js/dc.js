@@ -1,8 +1,8 @@
 describe("dc.heatmap", function() {
-    var id, chart, chartHeight, chartWidth;
+    var id, data, chart, chartHeight, chartWidth;
 
     beforeEach(function() {
-        var data = crossfilter(loadColorFixture());
+        data = crossfilter(loadColorFixture());
         var dimension = data.dimension(function (d) { return [+d.colData, +d.rowData]; });
         var group = dimension.group().reduceSum(function (d) { return +d.colorData; });
 
@@ -112,16 +112,43 @@ describe("dc.heatmap", function() {
     });
 
     describe('filters', function() {
+        var filterX, filterY;
         beforeEach( function() {
-            var filterValue = Math.ceil(Math.random() * 2);
-            chart.filter(filterValue).render();
+            filterX = Math.ceil(Math.random() * 2);
+            filterY = Math.ceil(Math.random() * 2);
+            chart.render();
         });
+
+        function clickCellOnChart(chart, x, y) {
+            var oneCell = chart.selectAll(".box-group").filter(function (d) {
+                return d.key[0] == x && d.key[1] == y;
+            });
+            oneCell.select("rect").on("click")(oneCell.datum());
+            return oneCell;
+        }
+
         it('cells should have the appropriate class', function() {
+            clickCellOnChart(chart, filterX, filterY);
             chart.selectAll(".box-group").each( function(d) {
                 var cell = d3.select(this);
-                expect(cell.classed("selected")).toEqual(chart.hasFilter(d.key));
-                expect(cell.classed("deselected")).not.toEqual(chart.hasFilter(d.key));
+                if (d.key[0] == filterX && d.key[1] == filterY) {
+                    expect(cell.classed("selected")).toBeTruthy();
+                    expect(chart.hasFilter(d.key)).toBeTruthy();
+                } else {
+                    expect(cell.classed("deselected")).toBeTruthy();
+                    expect(chart.hasFilter(d.key)).toBeFalsy();
+                }
             });
+        });
+
+        it('should keep all data points for that cell', function () {
+            var otherDimension = data.dimension(function (d) { return +d.colData; });
+            var otherGroup = otherDimension.group().reduceSum(function (d) { return +d.colorData; });
+            var otherChart = dc.baseChart({}).dimension(otherDimension).group(otherGroup);
+
+            otherChart.render();
+            var clickedCell = clickCellOnChart(chart, filterX, filterY);
+            expect(otherChart.data()[filterX - 1].value).toEqual(clickedCell.datum().value);
         });
     });
 

@@ -689,7 +689,7 @@ dc.coordinateGridChart = function (_chart) {
                 dc.redrawAll(_chart.chartGroup());
             });
         } else {
-            var rangedFilter = dc.utils.RangedFilter(extent[0], extent[1]);
+            var rangedFilter = dc.filters.RangedFilter(extent[0], extent[1]);
 
             dc.events.trigger(function () {
                 _chart.filter(null);
@@ -812,7 +812,7 @@ dc.coordinateGridChart = function (_chart) {
                 _rangeChart.focus(refDom);
             }
             _rangeChart.filter(null);
-            var refDomFilter = dc.utils.RangedFilter(refDom[0], refDom[1]);
+            var refDomFilter = dc.filters.RangedFilter(refDom[0], refDom[1]);
             _rangeChart.filter(refDomFilter);
 
             dc.events.trigger(function () {

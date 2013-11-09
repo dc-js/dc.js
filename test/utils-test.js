@@ -118,23 +118,6 @@ suite.addBatch({
     }
 });
 
-suite.addBatch({
-    'dc.utils.RangedFilter': {
-        topic: function() {
-            return dc.utils.RangedFilter(0,10);
-        },
-        'should act like an array': function (rangedFilter) {
-            assert.deepEqual([rangedFilter[0], rangedFilter[1]], [0,10]);
-        },
-        'should validate numbers out of range': function (rangedFilter) {
-            assert.isFalse(rangedFilter.inRange(13245));
-        },
-        'should validate numbers that are in range': function (rangedFilter) {
-            assert.isTrue(rangedFilter.inRange(4.1));
-        }
-    }
-});
-
 suite.export(module);
 
 
