@@ -5990,12 +5990,9 @@ dc.heatMap = function (parent, chartGroup) {
     _chart._mandatoryAttributes(['group']);
     _chart.title(_chart.colorAccessor());
 
-    _chart.boxOnClick = function () {};
-    _chart.xAxisOnClick = function () {};
-    _chart.yAxisOnClick = function () {};
-
-    //_chart.colors(d3.scale.quantize().range(["#a50026","#d73027","#f46d43","#fdae61","#fee08b",
-    //                                         "#ffffbf","#d9ef8b","#a6d96a","#66bd63","#1a9850","#006837"]));
+    var _boxOnClick = function () {};
+    var _xAxisOnClick = function () {};
+    var _yAxisOnClick = function () {};
 
     function uniq(d,i,a) {
         return !i || a[i-1] != d;
@@ -6044,7 +6041,6 @@ dc.heatMap = function (parent, chartGroup) {
 
         cols.rangeRoundBands([0, _chart.effectiveWidth()]);
         rows.rangeRoundBands([_chart.effectiveHeight(), 0]);
-        //_chart.colors().domain(d3.extent(_chart.data(),_chart.colorAccessor()));
 
         var boxes = _chartBody.selectAll("g.box-group").data(_chart.data(), function(d,i) {
             return _chart.keyAccessor()(d,i) + '\0' + _chart.valueAccessor()(d,i);
@@ -6053,11 +6049,11 @@ dc.heatMap = function (parent, chartGroup) {
             .attr("class", "box-group");
         gEnter.append("rect")
             .attr("fill", "white")
-            .on("click", _chart.boxOnClick);
+            .on("click", _chart.boxOnClick());
         gEnter.append("title")
-            .text(function (d) { return _chart.title()(d); });
+            .text(_chart.title());
 
-        dc.transition(boxes.select("rect"), _chart.transitionDuration())
+        dc.transition(boxes.selectAll("rect"), _chart.transitionDuration())
             .attr("class","heat-box")
             .attr("x", function(d,i) { return cols(_chart.keyAccessor()(d,i)); })
             .attr("y", function(d,i) { return rows(_chart.valueAccessor()(d,i)); })
@@ -6078,20 +6074,40 @@ dc.heatMap = function (parent, chartGroup) {
               .style("text-anchor", "middle")
               .attr("y", _chart.effectiveHeight())
               .attr("dy", 12)
-              .on("click", _chart.xAxisOnClick)
+              .on("click", _chart.xAxisOnClick())
               .text(function(d) { return d; });
         var gRows = _chartBody.selectAll("g.rows");
         if (gRows.empty())
             gRows = _chartBody.append("g").attr("class", "rows axis");
         gRows.selectAll('text').data(rows.domain())
             .enter().append("text")
-              .attr("y", function(d) { return rows(d) + boxHeight/2; })
               .attr("dy", 6)
               .style("text-anchor", "end")
               .attr("x", 0)
               .attr("dx", -2)
-              .on("click", _chart.yAxisOnClick)
+              .on("click", _chart.yAxisOnClick())
               .text(function(d) { return d; });
+        dc.transition(gRows.selectAll('text'), _chart.transitionDuration())
+              .text(function(d) { return d; })
+              .attr("y", function(d) { return rows(d) + boxHeight/2; });
+    };
+
+    _chart.boxOnClick = function (f) {
+        if (!arguments.length) return _boxOnClick;
+        _boxOnClick = f;
+        return _chart;
+    };
+
+    _chart.xAxisOnClick = function (f) {
+        if (!arguments.length) return _xAxisOnClick;
+        _xAxisOnClick = f;
+        return _chart;
+    };
+
+    _chart.yAxisOnClick = function (f) {
+        if (!arguments.length) return _yAxisOnClick;
+        _yAxisOnClick = f;
+        return _chart;
     };
 
     return _chart.anchor(parent, chartGroup);
