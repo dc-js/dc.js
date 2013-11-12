@@ -154,6 +154,11 @@ describe('dc.compositeChart', function() {
             expect(d3.select(chart.selectAll('g.sub')[0][1]).attr('class')).toBe('sub _1');
         });
 
+        it('should only render a left y axis', function () {
+            expect(chart.selectAll('.axis.y').empty()).toBeFalsy();
+            expect(chart.selectAll('.axis.yr').empty()).toBeTruthy();
+        });
+
         it('should generate sub line chart paths', function () {
             expect(chart.selectAll('g.sub path.line').size()).not.toBe(0);
             chart.selectAll('g.sub path.line').each(function(d, i) {
@@ -408,6 +413,65 @@ describe('dc.compositeChart', function() {
         it('should set a tooltip based on the shared group', function () {
             expect(chart.select(".sub._0 .dc-tooltip._0 .dot title").text()).toBe("Count: 5");
             expect(chart.select(".sub._1 .dc-tooltip._0 .dot title").text()).toBe("Value: 220");
+        });
+    });
+
+    describe('when using a right y-axis', function () {
+        var rightChart;
+
+        beforeEach(function () {
+            chart
+                .compose([
+                    dc.barChart(chart)
+                        .group(dateValueSumGroup, 'Date Value Group'),
+                    rightChart = dc.lineChart(chart)
+                        .group(dateIdSumGroup, 'Date ID Group')
+                        .stack(dateValueSumGroup, 'Date Value Group')
+                        .stack(dateValueSumGroup, 'Date Value Group')
+                        .useRightYAxis(true)
+                ])
+                .render();
+        });
+
+        it('should render two y-axes', function () {
+            expect(chart.selectAll('.axis').size()).toBe(3);
+        });
+
+        it('should render a right and a left label', function () {
+            chart.yAxisLabel("Left Label").rightYAxisLabel("Right Label").render();
+
+            expect(chart.selectAll('.y-axis-label').size()).toBe(2);
+            expect(chart.selectAll('.y-axis-label.y-label').empty()).toBeFalsy();
+            expect(chart.selectAll('.y-axis-label.yr-label').empty()).toBeFalsy();
+        });
+
+        it('should scale "right" charts according to the right y-axis' , function () {
+            expect(rightChart.y()).toBe(chart.rightY());
+        });
+
+        it('should set the domain of the right axis', function () {
+            expect(rightChart.yAxisMin()).toBe(0);
+            expect(rightChart.yAxisMax()).toBe(281);
+        });
+
+        it('domain', function () {
+            expect(chart.rightY().domain()).toEqual([0, 281]);
+            expect(chart.y().domain()).toEqual([0, 132]);
+        });
+
+        it('should set "right" chart y-axes to the composite chart right y-axis', function () {
+            expect(rightChart.yAxis()).toBe(chart.rightYAxis());
+        });
+
+        describe('when only right y-axis sub charts are present', function () {
+            beforeEach(function () {
+                chart.compose([rightChart]).render();
+            });
+
+            it('should only render a right y axis', function () {
+                expect(chart.selectAll('.axis.y').empty()).toBeTruthy();
+                expect(chart.selectAll('.axis.yr').empty()).toBeFalsy();
+            });
         });
     });
 });
