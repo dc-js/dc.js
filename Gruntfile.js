@@ -42,7 +42,7 @@ module.exports = function (grunt) {
                 }
             },
             others: {
-                src: ['Gruntfile.js', 'test/**/*.js', 'web/stock.js'],
+                src: ['Gruntfile.js', 'test/**/*.js', 'spec/**/*.js', 'web/stock.js'],
                 options: { '-W041': true }
             }
         },
