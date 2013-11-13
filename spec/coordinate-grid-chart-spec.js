@@ -81,6 +81,23 @@ describe('dc.coordinateGridChart', function() {
                     expect(firstGridLine.attr('x2')).toBe('490');
                     expect(firstGridLine.attr('y1')).toBe(firstGridLine.attr('y2'));
                 });
+
+                describe('with custom tick values', function () {
+                    beforeEach(function () {
+                        chart.yAxis().tickValues([0, 1, 2]);
+                        chart.render();
+                    });
+
+                    it('should draws lines associated with the data using the custom ticks', function () {
+                        var nthGridLine = function (n) { return d3.select(chart.selectAll('.grid-line.horizontal line')[0][n]); };
+
+                        expect(chart.selectAll('.grid-line.horizontal line').size()).toBe(3);
+                        expect(nthGridLine(0).attr('y2')).toBe('130');
+                        expect(nthGridLine(0).attr('y1')).toBe('130');
+                        expect(nthGridLine(1).attr('y1')).toBe('87');
+                        expect(nthGridLine(2).attr('y1')).toBe('43');
+                    });
+                });
             });
 
             describe('vertical grid lines', function () {
@@ -99,6 +116,23 @@ describe('dc.coordinateGridChart', function() {
                     expect(firstGridLine.attr('y1')).toBe('130');
                     expect(firstGridLine.attr('y2')).toBe('0');
                     expect(firstGridLine.attr('x1')).toBe(firstGridLine.attr('x2'));
+                });
+
+                describe('with custom tick values', function () {
+                    beforeEach(function () {
+                        chart.xAxis().tickValues([new Date("2012/05/21"), new Date("2012/06/20"), new Date("2012/07/01")]);
+                        chart.render()
+                    });
+
+                    it('should draw lines associated with the data using the custom ticks', function () {
+                        var nthGridLine = function (n) { return d3.select(chart.selectAll('.grid-line.vertical line')[0][n]); };
+
+                        expect(chart.selectAll('.grid-line.vertical line').size()).toBe(3);
+                        expect(nthGridLine(0).attr('x2')).toBeWithinDelta(6, 1);
+                        expect(nthGridLine(0).attr('x1')).toBeWithinDelta(6, 1);
+                        expect(nthGridLine(1).attr('x1')).toBeWithinDelta(175, 1);
+                        expect(nthGridLine(2).attr('x1')).toBeWithinDelta(237, 1);
+                    });
                 });
             });
         });
@@ -142,10 +176,6 @@ describe('dc.coordinateGridChart', function() {
 
             it('should position the axis to the right of the chart', function () {
                 expect(chart.select('.axis.y').attr('transform')).toBe('translate(490,20)');
-            });
-
-            xit('should associate the ref lines with the right axis', function () {
-                // TODO: This is a line chart test!!!
             });
 
             describe('y-axis labels', function () {

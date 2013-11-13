@@ -3,6 +3,7 @@ beforeEach(function() {
 });
 
 afterEach(function () {
+    dc.deregisterAllCharts();
     d3.selectAll("#test-content").remove();
 });
 
