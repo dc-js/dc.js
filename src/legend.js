@@ -20,7 +20,9 @@ dc.legend = function () {
         _y = 0,
         _itemHeight = 12,
         _gap = 5,
-        _horizontal = false;
+        _horizontal = false,
+        _legendWidth = 560,
+        _itemWidth = 70;
 
     var _g;
 
@@ -78,11 +80,16 @@ dc.legend = function () {
                 .attr("y", function(){return _itemHeight / 2 + (this.clientHeight?this.clientHeight:13) / 2 - 2;});
 
         var _cumulativeLegendTextWidth = 0;
-
+        var row = 0;
         itemEnter.attr("transform", function(d, i) {
             if(_horizontal) {
-                var translateBy = "translate(" + _cumulativeLegendTextWidth + ",0)";
-                _cumulativeLegendTextWidth += this.getBBox().width + _gap;
+                var translateBy = "translate(" + _cumulativeLegendTextWidth  + "," + row * legendItemHeight() + ")";
+                if ((_cumulativeLegendTextWidth + _itemWidth) >= _legendWidth) {
+                    ++row ;
+                    _cumulativeLegendTextWidth = 0 ;
+                } else {
+                    _cumulativeLegendTextWidth += _itemWidth;
+                }
                 return translateBy;
             }
             else {
@@ -142,6 +149,26 @@ dc.legend = function () {
     _legend.horizontal = function(_) {
         if (!arguments.length) return _horizontal;
         _horizontal = _;
+        return _legend;
+    };
+
+    /**
+    #### .legendWidth([value])
+    Maximum width for horizontal legend. Default value: 560.
+    **/
+    _legend.legendWidth = function(_) {
+        if (!arguments.length) return _legendWidth;
+        _legendWidth = _;
+        return _legend;
+    };
+
+    /**
+    #### .itemWidth([value])
+    legendItem width for horizontal legend. Default value: 70.
+    **/
+    _legend.itemWidth = function(_) {
+        if (!arguments.length) return _itemWidth;
+        _itemWidth = _;
         return _legend;
     };
 
