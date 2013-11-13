@@ -24,10 +24,14 @@
  **/
 dc.heatMap = function (parent, chartGroup) {
 
+    var DEFAULT_BORDER_RADIUS = 6.75;
+
     var _chartBody;
 
     var _cols;
     var _rows;
+    var _xBorderRadius = DEFAULT_BORDER_RADIUS;
+    var _yBorderRadius = DEFAULT_BORDER_RADIUS;
 
     var _chart = dc.colorChart(dc.marginable(dc.baseChart({})));
     _chart._mandatoryAttributes(['group']);
@@ -78,9 +82,6 @@ dc.heatMap = function (parent, chartGroup) {
         return d.key[0];
     });
 
-    //_chart.colors(d3.scale.quantize().range(["#a50026","#d73027","#f46d43","#fdae61","#fee08b",
-    //                                         "#ffffbf","#d9ef8b","#a6d96a","#66bd63","#1a9850","#006837"]));
-
     function uniq(d,i,a) {
         return !i || a[i-1] != d;
     }
@@ -128,7 +129,6 @@ dc.heatMap = function (parent, chartGroup) {
 
         cols.rangeRoundBands([0, _chart.effectiveWidth()]);
         rows.rangeRoundBands([_chart.effectiveHeight(), 0]);
-        //_chart.colors().domain(d3.extent(_chart.data(),_chart.colorAccessor()));
 
         var boxes = _chartBody.selectAll("g.box-group").data(_chart.data(), function(d,i) {
             return _chart.keyAccessor()(d,i) + '\0' + _chart.valueAccessor()(d,i);
@@ -147,8 +147,8 @@ dc.heatMap = function (parent, chartGroup) {
         dc.transition(boxes.select("rect"), _chart.transitionDuration())
             .attr("x", function(d,i) { return cols(_chart.keyAccessor()(d,i)); })
             .attr("y", function(d,i) { return rows(_chart.valueAccessor()(d,i)); })
-            .attr("rx", 0.15 * boxWidth)
-            .attr("ry", 0.15 * boxHeight)
+            .attr("rx", _xBorderRadius)
+            .attr("ry", _yBorderRadius)
             .attr("fill", _chart.getColor)
             .attr("width", boxWidth)
             .attr("height", boxHeight);
@@ -192,6 +192,20 @@ dc.heatMap = function (parent, chartGroup) {
                 _chart.resetHighlight(this);
             });
         }
+    };
+
+    _chart.xBorderRadius = function (d) {
+        if (arguments.length) {
+            _xBorderRadius = d;
+        }
+        return _xBorderRadius;
+    };
+
+    _chart.yBorderRadius = function (d) {
+        if (arguments.length) {
+            _yBorderRadius = d;
+        }
+        return _yBorderRadius;
     };
 
     _chart.isSelectedNode = function (d) {

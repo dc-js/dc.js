@@ -5,16 +5,12 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
     <style>
-        .heat-box {
-            stroke: #E6E6E6;
-            stroke-width: 2px;
-        }
     </style>
 </head>
 <body>
 <h2>Michelson–Morley experiment</h2>
-<div id="test"></div>
-<div id="barTest"></div>
+<div id="heatmap"></div>
+<div id="barchart"></div>
 
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
@@ -22,72 +18,108 @@
 <script type="text/javascript">
 
     var chartGroup = "chartGroup";
-    var heatmapChart = dc.heatMap("#test", chartGroup);
-    var barChart = dc.barChart("#barTest", chartGroup);
+    var heatmapChart = dc.heatMap("#heatmap", chartGroup);
+    var barChart = dc.barChart("#barchart", chartGroup);
 
-    d3.csv("morley.csv", function(error, experiments) {
+    d3.csv("../ndx.csv", function(error, data) {
 
-        var ndx    = crossfilter(experiments),
-                runDim = ndx.dimension(function(d) { return [+d.Run, +d.Expt]; }),
-                runGroup = runDim.group().reduceSum(function(d) { return +d.Speed; });
+        var dateFormat = d3.time.format("%m/%d/%Y");
+
+        data.forEach(function (d) {
+            d.dd = dateFormat.parse(d.date);
+            d.month = d3.time.month(d.dd).getMonth(); // pre-calculate month for better performance
+            d.year = d3.time.year(d.dd).getFullYear();
+            d.close = +d.close; // coerce to number
+            d.open = +d.open;
+        });
+
+        var ndx = crossfilter(data),
+            monthOfTheYearDimension = ndx.dimension(function(d) { return [+d.month, +d.year]; }),
+            percentageGainByMonthOfYearGroup = monthOfTheYearDimension.group().reduce(
+                /* callback for when data is added to the current filter results */
+                function (p, v) {
+                    ++p.count;
+                    p.absGain += v.close - v.open;
+                    p.fluctuation += Math.abs(v.close - v.open);
+                    p.sumIndex += (v.open + v.close) / 2;
+                    p.avgIndex = p.count ? p.sumIndex / p.count : 0;
+                    p.percentageGain = p.avgIndex ? (p.absGain / p.avgIndex) * 100 : 0;
+                    p.fluctuationPercentage = p.avgIndex ? (p.fluctuation / p.avgIndex) * 100 : 0;
+                    return p;
+                },
+                /* callback for when data is removed from the current filter results */
+                function (p, v) {
+                    --p.count;
+                    p.absGain -= v.close - v.open;
+                    p.fluctuation -= Math.abs(v.close - v.open);
+                    p.sumIndex -= (v.open + v.close) / 2;
+                    p.avgIndex = p.count ? p.sumIndex / p.count : 0;
+                    p.percentageGain = p.avgIndex ? (p.absGain / p.avgIndex) * 100 : 0;
+                    p.fluctuationPercentage = p.avgIndex ? (p.fluctuation / p.avgIndex) * 100 : 0;
+                    return p;
+                },
+                /* initialize p */
+                function () {
+                    return {count: 0, absGain: 0, fluctuation: 0, fluctuationPercentage: 0, sumIndex: 0, avgIndex: 0, percentageGain: 0};
+                }
+            );
+
+        var heatColorMapping = function(d) {
+            if (d < 0) {
+                return d3.scale.linear().domain([-23,0]).range(["red", "#e5e5e5"])(d);
+            }
+            else {
+                return d3.scale.linear().domain([0,23]).range(["#e5e5e5", "green"])(d);
+            }
+        };
+        heatColorMapping.domain = function() {
+            return [-23,23];
+        };
 
         heatmapChart
-                .width(45 * 20 + 80)
-                .height(45 * 5 + 40)
-                .dimension(runDim)
-                .group(runGroup)
+                .width(12 * 80 + 80)
+                .height(27 * 10 + 40)
+                .dimension(monthOfTheYearDimension)
+                .group(percentageGainByMonthOfYearGroup)
                 .keyAccessor(function(d) { return +d.key[0]; })
                 .valueAccessor(function(d) { return +d.key[1]; })
-                .colorAccessor(function(d) { return +d.value; })
+                .colorAccessor(function(d) { return +d.value.percentageGain; })
                 .title(function(d) {
-                    return "Run:   " + d.key[0] + "\n" +
-                            "Expt:  " + d.key[1] + "\n" +
-                            "Speed: " + (299000 + d.value) + " km/s";})
-                .colors(["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"])
+                    return " Month:   " + d.key[0] + "\n" +
+                           "  Year:   " + d.key[1] + "\n" +
+                           "  Gain:   " + d.value.percentageGain + "%";})
+                .colors(heatColorMapping)
                 .calculateColorDomain();
+
 
         heatmapChart.render();
 
-        var actualRunDim = ndx.dimension( function(d) {
-            return +d.Run;
-        });
-
-        var actualRunGroup = actualRunDim.group().reduce(
-            function reduceAdd(p,v) {
-                ++p.expts;
-                p.total += +v.Speed;
-                p.avg = Math.round(p.total / p.expts);
-                return p;
+        var monthlyDimension = ndx.dimension(function (d) { return +d.month; });
+        var percentageGainByMonthArrayGroup = monthlyDimension.group().reduce(
+            function(p,v) {
+                var absGain = v.close - v.open;
+                var percentageGain = v.open ? (absGain / v.open) * 100 : 0;
+                return p + percentageGain;
             },
-            function reduceRemove(p,v) {
-                --p.expts;
-                p.total -= +v.Speed;
-                p.avg = p.expts ?  Math.round(p.total / p.expts) : 0;
-                return p;
+            function(p,v) {
+                var absGain = v.close - v.open;
+                var percentageGain = v.open ? (absGain / v.open) * 100 : 0;
+                return p - percentageGain;
             },
-            function reduceInitial() {
-                return {expts: 0, total: 0, avg: 0};
+            function() {
+                return 0;
             }
         );
 
         barChart
-                .width(45 * 20 + 80)
-                .height(45 * 5 + 40)
-                .x(d3.scale.linear().domain([1,21]))
-                .y(d3.scale.linear().domain(
-                        [d3.min(experiments, function (d) { return +d.Speed; }) - 100,
-                         d3.max(experiments, function (d) { return +d.Speed; }) + 100]
-                ))
-                .dimension(actualRunDim)
-                .valueAccessor( function (d) { return d.value.avg; })
-                .colorAccessor( function(d) {
-                    if(d.value == undefined) return d.data.value.avg;
-                    return d.value.avg;
-                })
-                .group(actualRunGroup)
-                .colors(["#ffffd9","#edf8b1","#c7e9b4","#7fcdbb","#41b6c4","#1d91c0","#225ea8","#253494","#081d58"])
-                .colorDomain(heatmapChart.colorDomain());
-
+                .dimension(monthlyDimension)
+                .group(percentageGainByMonthArrayGroup)
+                .width(12 * 80 + 80)
+                .height(480)
+                .y(d3.scale.linear().domain([-10.0,100.0]))
+                .x(d3.scale.linear().domain([-0.5,11.5]))
+                .elasticY(true)
+                .centerBar(true);
         barChart.render();
     });
 

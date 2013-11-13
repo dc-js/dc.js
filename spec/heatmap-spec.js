@@ -75,13 +75,6 @@ describe("dc.heatmap", function() {
             });
         });
 
-        it('should round the corners of the boxes based on the box widths', function () {
-            chart.selectAll("rect.heat-box").each(function() {
-                expect(+this.getAttribute("rx")).toEqual(15);
-                expect(+this.getAttribute("ry")).toEqual(15);
-            });
-        });
-
         it('should position the y-axis labels with their associated rows', function() {
             var yaxisTexts = chart.selectAll(".rows.axis text");
             expect(+yaxisTexts[0][0].getAttribute("y")).toEqual(150 );
@@ -108,6 +101,38 @@ describe("dc.heatmap", function() {
             var xaxisTexts = chart.selectAll(".cols.axis text");
             expect(xaxisTexts[0][0].textContent).toEqual('1');
             expect(xaxisTexts[0][1].textContent).toEqual('2');
+        });
+
+        describe('box radius', function() {
+            it('should default the x', function () {
+                chart.select('rect.heat-box').each(function () {
+                    expect(this.getAttribute('rx')).toBe('6.75');
+                });
+            });
+
+            it('should default the y', function () {
+                chart.select('rect.heat-box').each(function () {
+                    expect(this.getAttribute('ry')).toBe('6.75');
+                });
+            });
+
+            it('should set the radius to an overridden x', function(){
+                chart.xBorderRadius(7);
+                chart.render();
+
+                chart.select('rect.heat-box').each(function () {
+                    expect(this.getAttribute('rx')).toBe('7');
+                });
+            });
+
+            it('should set the radius to an overridden y', function() {
+                chart.yBorderRadius(7);
+                chart.render();
+
+                chart.select('rect.heat-box').each(function () {
+                    expect(this.getAttribute('ry')).toBe('7');
+                })
+            });
         });
     });
 
