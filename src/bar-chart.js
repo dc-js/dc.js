@@ -108,6 +108,7 @@ dc.barChart = function (parent, chartGroup) {
             .attr("height", function (d) {
                 return barHeight(d);
             })
+            .attr("fill", _chart.getColor)
             .select("title").text(dc.pluck('data', _chart.getTitleOfVisibleByIndex(layerIndex)));
 
         dc.transition(bars.exit(), _chart.transitionDuration())

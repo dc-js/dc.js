@@ -24,18 +24,58 @@
  **/
 dc.heatMap = function (parent, chartGroup) {
 
+    var DEFAULT_BORDER_RADIUS = 6.75;
+
     var _chartBody;
 
     var _cols;
     var _rows;
+    var _xBorderRadius = DEFAULT_BORDER_RADIUS;
+    var _yBorderRadius = DEFAULT_BORDER_RADIUS;
 
     var _chart = dc.colorChart(dc.marginable(dc.baseChart({})));
     _chart._mandatoryAttributes(['group']);
     _chart.title(_chart.colorAccessor());
 
-    var _boxOnClick = function () {};
-    var _xAxisOnClick = function () {};
-    var _yAxisOnClick = function () {};
+    var _xAxisOnClick = function (d) { filterAxis(0, d); };
+    var _yAxisOnClick = function (d) { filterAxis(1, d); };
+    var _boxOnClick = function (d) {
+        var filter = d.key;
+        dc.events.trigger(function() {
+            _chart.filter(filter);
+            dc.redrawAll(_chart.chartGroup());
+        });
+    };
+
+    function filterAxis(axis, value) {
+        var cellsOnAxis = _chart.selectAll(".box-group").filter( function (d) {
+            return d.key[axis] == value;
+        });
+        var unfilteredCellsOnAxis = cellsOnAxis.filter( function (d) {
+            return !_chart.hasFilter(d.key);
+        });
+        dc.events.trigger(function() {
+            if(unfilteredCellsOnAxis.empty()) {
+                cellsOnAxis.each( function (d) {
+                    _chart.filter(d.key);
+                });
+            } else {
+                unfilteredCellsOnAxis.each( function (d) {
+                    _chart.filter(d.key);
+                });
+            }
+            dc.redrawAll(_chart.chartGroup());
+        });
+    }
+
+    dc.override(_chart, "filter", function(filter) {
+        if(filter) {
+            return _chart._filter(dc.filters.TwoDimensionalFilter(filter));
+        } else {
+            return _chart._filter();
+        }
+
+    });
 
     function uniq(d,i,a) {
         return !i || a[i-1] != d;
@@ -90,18 +130,20 @@ dc.heatMap = function (parent, chartGroup) {
         });
         var gEnter = boxes.enter().append("g")
             .attr("class", "box-group");
+
         gEnter.append("rect")
+            .attr("class","heat-box")
             .attr("fill", "white")
             .on("click", _chart.boxOnClick());
+
         gEnter.append("title")
             .text(_chart.title());
 
         dc.transition(boxes.selectAll("rect"), _chart.transitionDuration())
-            .attr("class","heat-box")
             .attr("x", function(d,i) { return cols(_chart.keyAccessor()(d,i)); })
             .attr("y", function(d,i) { return rows(_chart.valueAccessor()(d,i)); })
-            .attr("rx", 0.15 * boxWidth)
-            .attr("ry", 0.15 * boxHeight)
+            .attr("rx", _xBorderRadius)
+            .attr("ry", _yBorderRadius)
             .attr("fill", _chart.getColor)
             .attr("width", boxWidth)
             .attr("height", boxHeight);
@@ -133,6 +175,20 @@ dc.heatMap = function (parent, chartGroup) {
         dc.transition(gRows.selectAll('text'), _chart.transitionDuration())
               .text(function(d) { return d; })
               .attr("y", function(d) { return rows(d) + boxHeight/2; });
+
+        if (_chart.hasFilter()) {
+            _chart.selectAll("g.box-group").each(function (d) {
+                if (_chart.isSelectedNode(d)) {
+                    _chart.highlightSelected(this);
+                } else {
+                    _chart.fadeDeselected(this);
+                }
+            });
+        } else {
+            _chart.selectAll("g.box-group").each(function (d) {
+                _chart.resetHighlight(this);
+            });
+        }
     };
 
     _chart.boxOnClick = function (f) {
@@ -151,6 +207,24 @@ dc.heatMap = function (parent, chartGroup) {
         if (!arguments.length) return _yAxisOnClick;
         _yAxisOnClick = f;
         return _chart;
+    };
+
+    _chart.xBorderRadius = function (d) {
+        if (arguments.length) {
+            _xBorderRadius = d;
+        }
+        return _xBorderRadius;
+    };
+
+    _chart.yBorderRadius = function (d) {
+        if (arguments.length) {
+            _yBorderRadius = d;
+        }
+        return _yBorderRadius;
+    };
+
+    _chart.isSelectedNode = function (d) {
+        return _chart.hasFilter(d.key);
     };
 
     return _chart.anchor(parent, chartGroup);

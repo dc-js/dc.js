@@ -169,7 +169,7 @@ describe("dc.baseChart", function () {
                     expect(dc.utils.isNumber(chart.anchorName())).toBeFalsy();
                     expect(chart.anchorName()).toMatch(/\d+/);
                 });
-            })
+            });
         });
 
         describe('using an id selector', function () {

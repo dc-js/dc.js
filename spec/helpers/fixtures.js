@@ -36,6 +36,18 @@ function loadBoxPlotFixture() {
         "]");
 }
 
+function loadColorFixture() {
+    return JSON.parse("[" +
+        "{\"colData\":\"1\", \"rowData\": \"1\", \"colorData\": \"1\"}," +
+        "{\"colData\":\"1\", \"rowData\": \"1\", \"colorData\": \"1\"}," +
+        "{\"colData\":\"1\", \"rowData\": \"2\", \"colorData\": \"2\"}," +
+        "{\"colData\":\"1\", \"rowData\": \"2\", \"colorData\": \"2\"}," +
+        "{\"colData\":\"2\", \"rowData\": \"1\", \"colorData\": \"3\"}," +
+        "{\"colData\":\"2\", \"rowData\": \"1\", \"colorData\": \"3\"}," +
+        "{\"colData\":\"2\", \"rowData\": \"2\", \"colorData\": \"4\"}," +
+        "{\"colData\":\"2\", \"rowData\": \"2\", \"colorData\": \"4\"}" +
+        "]");
+}
 
 function dateCleaner(e) {
     e.dd = d3.time.format.iso.parse(e.date);

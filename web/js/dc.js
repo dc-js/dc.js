@@ -658,15 +658,23 @@ dc.baseChart = function (_chart) {
 
         if (filters.length === 0)
             dimension.filter(null);
-        else if (filters.length === 1)
-            dimension.filter(filters[0]);
         else
             dimension.filterFunction(function (d) {
-                return filters.indexOf(d) >= 0;
+                for(var i = 0; i < filters.length; i++) {
+                    var filter = filters[i];
+                    if (filter.isFiltered && filter.isFiltered(d)) {
+                        return true;
+                    } else if (filter == d) {
+                        return true;
+                    }
+                }
+                return false;
             });
 
         return filters;
     };
+
+
 
     var _data = function (group) {
         return group.all();
@@ -1107,7 +1115,6 @@ dc.baseChart = function (_chart) {
     **/
     _chart.filter = function (_) {
         if (!arguments.length) return _filters.length > 0 ? _filters[0] : null;
-
         if (_ instanceof Array && _[0] instanceof Array) {
             _[0].forEach(function(d){
                 if (_chart.hasFilter(d)) {
@@ -2165,9 +2172,11 @@ dc.coordinateGridChart = function (_chart) {
                 dc.redrawAll(_chart.chartGroup());
             });
         } else {
+            var rangedFilter = dc.filters.RangedFilter(extent[0], extent[1]);
+
             dc.events.trigger(function () {
                 _chart.filter(null);
-                _chart.filter([extent[0], extent[1]]);
+                _chart.filter(rangedFilter);
                 dc.redrawAll(_chart.chartGroup());
             }, dc.constants.EVENT_DELAY);
         }
@@ -2286,7 +2295,8 @@ dc.coordinateGridChart = function (_chart) {
                 _rangeChart.focus(refDom);
             }
             _rangeChart.filter(null);
-            _rangeChart.filter(refDom);
+            var refDomFilter = dc.filters.RangedFilter(refDom[0], refDom[1]);
+            _rangeChart.filter(refDomFilter);
 
             dc.events.trigger(function () {
                 dc.redrawAll(_chart.chartGroup());
@@ -3559,6 +3569,7 @@ dc.barChart = function (parent, chartGroup) {
             .attr("height", function (d) {
                 return barHeight(d);
             })
+            .attr("fill", _chart.getColor)
             .select("title").text(dc.pluck('data', _chart.getTitleOfVisibleByIndex(layerIndex)));
 
         dc.transition(bars.exit(), _chart.transitionDuration())
@@ -6008,18 +6019,58 @@ dc.numberDisplay = function (parent, chartGroup) {
  **/
 dc.heatMap = function (parent, chartGroup) {
 
+    var DEFAULT_BORDER_RADIUS = 6.75;
+
     var _chartBody;
 
     var _cols;
     var _rows;
+    var _xBorderRadius = DEFAULT_BORDER_RADIUS;
+    var _yBorderRadius = DEFAULT_BORDER_RADIUS;
 
     var _chart = dc.colorChart(dc.marginable(dc.baseChart({})));
     _chart._mandatoryAttributes(['group']);
     _chart.title(_chart.colorAccessor());
 
-    var _boxOnClick = function () {};
-    var _xAxisOnClick = function () {};
-    var _yAxisOnClick = function () {};
+    var _xAxisOnClick = function (d) { filterAxis(0, d); };
+    var _yAxisOnClick = function (d) { filterAxis(1, d); };
+    var _boxOnClick = function (d) {
+        var filter = d.key;
+        dc.events.trigger(function() {
+            _chart.filter(filter);
+            dc.redrawAll(_chart.chartGroup());
+        });
+    };
+
+    function filterAxis(axis, value) {
+        var cellsOnAxis = _chart.selectAll(".box-group").filter( function (d) {
+            return d.key[axis] == value;
+        });
+        var unfilteredCellsOnAxis = cellsOnAxis.filter( function (d) {
+            return !_chart.hasFilter(d.key);
+        });
+        dc.events.trigger(function() {
+            if(unfilteredCellsOnAxis.empty()) {
+                cellsOnAxis.each( function (d) {
+                    _chart.filter(d.key);
+                });
+            } else {
+                unfilteredCellsOnAxis.each( function (d) {
+                    _chart.filter(d.key);
+                });
+            }
+            dc.redrawAll(_chart.chartGroup());
+        });
+    }
+
+    dc.override(_chart, "filter", function(filter) {
+        if(filter) {
+            return _chart._filter(dc.filters.TwoDimensionalFilter(filter));
+        } else {
+            return _chart._filter();
+        }
+
+    });
 
     function uniq(d,i,a) {
         return !i || a[i-1] != d;
@@ -6074,18 +6125,20 @@ dc.heatMap = function (parent, chartGroup) {
         });
         var gEnter = boxes.enter().append("g")
             .attr("class", "box-group");
+
         gEnter.append("rect")
+            .attr("class","heat-box")
             .attr("fill", "white")
             .on("click", _chart.boxOnClick());
+
         gEnter.append("title")
             .text(_chart.title());
 
         dc.transition(boxes.selectAll("rect"), _chart.transitionDuration())
-            .attr("class","heat-box")
             .attr("x", function(d,i) { return cols(_chart.keyAccessor()(d,i)); })
             .attr("y", function(d,i) { return rows(_chart.valueAccessor()(d,i)); })
-            .attr("rx", 0.15 * boxWidth)
-            .attr("ry", 0.15 * boxHeight)
+            .attr("rx", _xBorderRadius)
+            .attr("ry", _yBorderRadius)
             .attr("fill", _chart.getColor)
             .attr("width", boxWidth)
             .attr("height", boxHeight);
@@ -6117,6 +6170,20 @@ dc.heatMap = function (parent, chartGroup) {
         dc.transition(gRows.selectAll('text'), _chart.transitionDuration())
               .text(function(d) { return d; })
               .attr("y", function(d) { return rows(d) + boxHeight/2; });
+
+        if (_chart.hasFilter()) {
+            _chart.selectAll("g.box-group").each(function (d) {
+                if (_chart.isSelectedNode(d)) {
+                    _chart.highlightSelected(this);
+                } else {
+                    _chart.fadeDeselected(this);
+                }
+            });
+        } else {
+            _chart.selectAll("g.box-group").each(function (d) {
+                _chart.resetHighlight(this);
+            });
+        }
     };
 
     _chart.boxOnClick = function (f) {
@@ -6135,6 +6202,24 @@ dc.heatMap = function (parent, chartGroup) {
         if (!arguments.length) return _yAxisOnClick;
         _yAxisOnClick = f;
         return _chart;
+    };
+
+    _chart.xBorderRadius = function (d) {
+        if (arguments.length) {
+            _xBorderRadius = d;
+        }
+        return _xBorderRadius;
+    };
+
+    _chart.yBorderRadius = function (d) {
+        if (arguments.length) {
+            _yBorderRadius = d;
+        }
+        return _yBorderRadius;
+    };
+
+    _chart.isSelectedNode = function (d) {
+        return _chart.hasFilter(d.key);
     };
 
     return _chart.anchor(parent, chartGroup);
@@ -6616,3 +6701,24 @@ dc.boxPlot = function (parent, chartGroup) {
 };
 
 return dc;})();
+
+dc.filters = {};
+
+dc.filters.RangedFilter = function(low, high) {
+    var range = Array(low, high);
+    range.isFiltered = function(value) {
+        return value >= this[0] && value < this[1];
+    };
+
+    return range;
+};
+
+dc.filters.TwoDimensionalFilter = function(array) {
+    var filter = array;
+    filter.isFiltered = function(value) {
+        return value.length && value.length == filter.length &&
+               value[0] == filter[0] && value[1] == filter[1];
+    };
+
+    return filter;
+};

@@ -39,9 +39,9 @@ describe("dc.legend", function() {
 
         describe('without .horizontal(true)', function () {
             it('should place legend items vertically', function() {
-                expect(grepTranslation(legendItem(0).attr("transform")).y).toBeWithinDelta(0, 1);
-                expect(grepTranslation(legendItem(1).attr("transform")).y).toBeWithinDelta(18, 2);
-                expect(grepTranslation(legendItem(2).attr("transform")).y).toBeWithinDelta(36, 4);
+                expect(coordsFromTranslate(legendItem(0).attr("transform")).y).toBeWithinDelta(0, 1);
+                expect(coordsFromTranslate(legendItem(1).attr("transform")).y).toBeWithinDelta(18, 2);
+                expect(coordsFromTranslate(legendItem(2).attr("transform")).y).toBeWithinDelta(36, 4);
             });
         });
 
@@ -52,9 +52,9 @@ describe("dc.legend", function() {
             });
 
             it('should place legend items horizontally', function() {
-                expect(grepTranslation(legendItem(0).attr("transform")).x).toBeWithinDelta(0, 1);
-                expect(grepTranslation(legendItem(1).attr("transform")).x).toBeWithinDelta(65, 5);
-                expect(grepTranslation(legendItem(2).attr("transform")).x).toBeWithinDelta(155, 15);
+                expect(coordsFromTranslate(legendItem(0).attr("transform")).x).toBeWithinDelta(0, 1);
+                expect(coordsFromTranslate(legendItem(1).attr("transform")).x).toBeWithinDelta(65, 5);
+                expect(coordsFromTranslate(legendItem(2).attr("transform")).x).toBeWithinDelta(155, 15);
             });
         });
 
@@ -65,12 +65,12 @@ describe("dc.legend", function() {
             });
 
             it('should place legend items in two columns. third item is new row', function() {
-                expect(grepTranslation(legendItem(0).attr("transform")).x).toBeWithinDelta(0, 1);
-                expect(grepTranslation(legendItem(1).attr("transform")).x).toBeWithinDelta(30, 5);
-                expect(grepTranslation(legendItem(2).attr("transform")).x).toBeWithinDelta(0, 1);
-                expect(grepTranslation(legendItem(0).attr("transform")).y).toBeWithinDelta(0, 1);
-                expect(grepTranslation(legendItem(1).attr("transform")).y).toBeWithinDelta(0, 1);
-                expect(grepTranslation(legendItem(2).attr("transform")).y).toBeWithinDelta(13, 5);
+                expect(coordsFromTranslate(legendItem(0).attr("transform")).x).toBeWithinDelta(0, 1);
+                expect(coordsFromTranslate(legendItem(1).attr("transform")).x).toBeWithinDelta(30, 5);
+                expect(coordsFromTranslate(legendItem(2).attr("transform")).x).toBeWithinDelta(0, 1);
+                expect(coordsFromTranslate(legendItem(0).attr("transform")).y).toBeWithinDelta(0, 1);
+                expect(coordsFromTranslate(legendItem(1).attr("transform")).y).toBeWithinDelta(0, 1);
+                expect(coordsFromTranslate(legendItem(2).attr("transform")).y).toBeWithinDelta(13, 5);
             });
         });
 
@@ -191,13 +191,6 @@ describe("dc.legend", function() {
     }
     function legendLine(n) {
         return d3.select(chart.selectAll("g.dc-legend g.dc-legend-item line")[0][n]);
-    }
-
-    function grepTranslation(translationString){
-        var regex = /translate\((.+),(.+)\)/;
-        var result = regex.exec(translationString);
-
-        return { x: result[1], y: result[2] };
     }
 });
 

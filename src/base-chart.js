@@ -70,15 +70,23 @@ dc.baseChart = function (_chart) {
 
         if (filters.length === 0)
             dimension.filter(null);
-        else if (filters.length === 1)
-            dimension.filter(filters[0]);
         else
             dimension.filterFunction(function (d) {
-                return filters.indexOf(d) >= 0;
+                for(var i = 0; i < filters.length; i++) {
+                    var filter = filters[i];
+                    if (filter.isFiltered && filter.isFiltered(d)) {
+                        return true;
+                    } else if (filter == d) {
+                        return true;
+                    }
+                }
+                return false;
             });
 
         return filters;
     };
+
+
 
     var _data = function (group) {
         return group.all();
@@ -519,7 +527,6 @@ dc.baseChart = function (_chart) {
     **/
     _chart.filter = function (_) {
         if (!arguments.length) return _filters.length > 0 ? _filters[0] : null;
-
         if (_ instanceof Array && _[0] instanceof Array) {
             _[0].forEach(function(d){
                 if (_chart.hasFilter(d)) {
