@@ -7,6 +7,8 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     var _symbolSize = 3;
 
+    _chart.colors(function() { return "#1f77b4"; });
+
     _chart.transitionDuration(0); // turn off transition by default for scatterplot
 
     _chart.plotData = function () {
@@ -17,7 +19,7 @@ dc.scatterPlot = function (parent, chartGroup) {
             .enter()
         .append("circle")
             .attr("class", "symbol")
-            .attr("fill", _chart.getColor(0))
+            .attr("fill", _chart.getColor)
             .attr("transform", _locator);
 
         dc.transition(symbols, _chart.transitionDuration())
