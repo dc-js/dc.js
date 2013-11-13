@@ -58,6 +58,22 @@ describe("dc.legend", function() {
             });
         });
 
+        describe('with .horizontal(true) and defined legendWidth and itemWidth', function () {
+            beforeEach(function () {
+                chart.legend(dc.legend().horizontal(true).legendWidth(60).itemWidth(30));
+                chart.render();
+            });
+
+            it('should place legend items in two columns. third item is new row', function() {
+                expect(grepTranslation(legendItem(0).attr("transform")).x).toBeWithinDelta(0, 1);
+                expect(grepTranslation(legendItem(1).attr("transform")).x).toBeWithinDelta(30, 5);
+                expect(grepTranslation(legendItem(2).attr("transform")).x).toBeWithinDelta(0, 1);
+                expect(grepTranslation(legendItem(0).attr("transform")).y).toBeWithinDelta(0, 1);
+                expect(grepTranslation(legendItem(1).attr("transform")).y).toBeWithinDelta(0, 1);
+                expect(grepTranslation(legendItem(2).attr("transform")).y).toBeWithinDelta(13, 5);
+            });
+        });
+
         it('should generate legend item boxes', function() {
             expect(legendIcon(0).attr("width")).toBeWithinDelta(13,2);
             expect(legendIcon(0).attr("height")).toBeWithinDelta(13, 2);
