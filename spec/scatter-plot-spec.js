@@ -1,17 +1,17 @@
 describe('dc.scatterPlot', function() {
-    var id, chart, data;
+    var id, chart;
+    var data, group, dimension;
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
-        var dimension = data.dimension(function(d) {
+        dimension = data.dimension(function(d) {
             return d3.time.day(d.dd);
         });
-        var group = dimension.group().reduceSum(function(d){return d.id;});
+        group = dimension.group().reduceSum(function(d){return d.id;});
 
         id = 'scatter-plot';
         appendChartID(id);
 
-        d3.select("body").append("div").attr("id", id);
         chart = dc.scatterPlot("#" + id);
         chart.dimension(dimension)
             .group(group)
@@ -79,6 +79,81 @@ describe('dc.scatterPlot', function() {
         function nthSymbol(i) {
             return d3.select(chart.selectAll('circle.symbol')[0][i]);
         }
+    });
+
+    describe('legend hovering', function () {
+        var compositeChart, id;
+        var firstItem;
+
+        beforeEach(function () {
+            id = 'scatter-plot-composite';
+            appendChartID(id);
+
+            compositeChart = dc.compositeChart("#" + id);
+            compositeChart
+                .dimension(dimension)
+                .group(group)
+                .x(d3.time.scale().domain([new Date(2012, 0, 1), new Date(2012, 11, 31)]))
+                .transitionDuration(0)
+                .legend(dc.legend())
+                .compose([
+                    dc.scatterPlot(compositeChart).colors(['red']),
+                    dc.scatterPlot(compositeChart).colors(['blue'])
+                ]).render();
+
+            firstItem = compositeChart.select('g.dc-legend g.dc-legend-item');
+            firstItem.on("mouseover")(firstItem.datum());
+        });
+
+        describe('when a legend item is hovered over', function () {
+            it('should highlight corresponding plot', function () {
+                nthChart(0).expectPlotSymbolsToHaveRadius("4");
+
+            });
+
+            it('should fade out non-corresponding lines and areas', function () {
+                nthChart(1).expectPlotSymbolsToHaveClass("fadeout");
+            });
+        });
+
+        describe('when a legend item is hovered out', function () {
+            beforeEach(function () {
+                firstItem.on("mouseout")(firstItem.datum());
+            });
+
+            it('should remove highlighting from corresponding lines and areas', function () {
+                nthChart(0).expectPlotSymbolsToHaveRadius("3");
+            });
+
+            it('should fade in non-corresponding lines and areas', function () {
+                nthChart(1).expectPlotSymbolsNotToHaveClass("fadeout");
+            });
+        });
+
+        function nthChart(n) {
+            var subChart = d3.select(compositeChart.selectAll("g.sub")[0][n]);
+
+            subChart.expectPlotSymbolsToHaveClass = function(className) {
+                subChart.selectAll("circle.symbol").each(function () {
+                    expect(d3.select(this).classed(className)).toBeTruthy();
+                });
+            };
+
+            subChart.expectPlotSymbolsToHaveRadius = function(radius) {
+                subChart.selectAll("circle.symbol").each(function () {
+                    expect(d3.select(this).attr("r")).toBe(radius);
+                });
+            };
+
+            subChart.expectPlotSymbolsNotToHaveClass = function(className){
+                subChart.selectAll("circle.symbol").each(function () {
+                    expect(d3.select(this).classed(className)).toBeFalsy();
+                });
+            };
+
+            return subChart;
+        }
+
 
     });
 });
