@@ -154,6 +154,12 @@ suite.addBatch({
                         assert.equal(d3.select(this).attr("transform"), "translate(541.2,155)");
                 });
             },
+            'should generate opaque groups and circles for each bubble': function (chart) {
+                chart.selectAll("g.node").each(function (d, i) {
+                    assert.equal(d3.select(this).attr("opacity"), null);
+                    assert.equal(d3.select(this).select('circle').attr("opacity"), '1');
+                });
+            },
             'should calculate right r for each bubble': function (chart) {
                 chart.selectAll("circle.bubble").each(function (d, i) {
                     if (i === 0)
