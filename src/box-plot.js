@@ -107,8 +107,7 @@ dc.boxPlot = function (parent, chartGroup) {
             .tickFormat(_tickFormat);
 
 
-        var boxesG = _chart.chartBodyG().selectAll('g.box')
-            .data(_chart.data());
+        var boxesG = _chart.chartBodyG().selectAll('g.box').data(_chart.data());
 
         renderBoxes(boxesG);
         updateBoxes(boxesG);
