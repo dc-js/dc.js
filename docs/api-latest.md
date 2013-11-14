@@ -1177,6 +1177,15 @@ Set or get gap between legend items. Default value: 5.
 #### .itemHeight([value])
 Set or get legend item height. Default value: 12.
 
+#### .horizontal([boolean])
+Position legend horizontally instead of vertically
+
+#### .legendWidth([value])
+Maximum width for horizontal legend. Default value: 560.
+
+#### .itemWidth([value])
+legendItem width for horizontal legend. Default value: 70.
+
 ## <a name="capped" href="#capped">#</a>  Capped
 
 Capped is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the Row and Pie Charts.

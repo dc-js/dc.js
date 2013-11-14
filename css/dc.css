@@ -295,3 +295,14 @@ div.dc-chart {
 .dc-chart .symbol{
     stroke: none;
 }
+
+.dc-chart .heatmap .box-group.deselected rect {
+    stroke: none;
+    fill-opacity: .5;
+    fill: #ccc;
+}
+
+.dc-chart .heatmap g.axis text {
+    pointer-events: all;
+    cursor: pointer;
+}
