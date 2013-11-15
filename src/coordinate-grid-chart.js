@@ -930,8 +930,8 @@ dc.coordinateGridChart = function (_chart) {
     #### .brushOn([boolean])
     Turn on/off the brush based in-place range filter. When the brush is on then user will be able to  simply drag the mouse
     across the chart to perform range filtering based on the extend of the brush. However turning on brush filter will essentially
-    disable other interactive elements on the chart such as the highlighting, tool-tip, and reference lines on a chart. Default
-    value is "true".
+    disable other interactive elements on the chart such as the highlighting, tool-tip, and reference lines on a chart. Zooming will still
+    be possible if enabled, but only via scrolling (panning will be disabled.) Default value is "true".
 
     **/
     _chart.brushOn = function (_) {
