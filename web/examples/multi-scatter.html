@@ -22,8 +22,8 @@ d3.csv("morley.csv", function(error, experiments) {
   });
 
   var ndx                 = crossfilter(experiments),
-      runDimension        = ndx.dimension(function(d) {return +d.Run;}),
-      speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
+      runDimension        = ndx.dimension(function(d) {return [+d.Run, d.Speed * d.Run / 1000];}),
+      speedSumGroup       = runDimension.group();
 
     chart
         .width(768)
@@ -39,7 +39,7 @@ d3.csv("morley.csv", function(error, experiments) {
             dc.scatterPlot(chart)
                 .group(speedSumGroup, "Red Group")
                 .colors(["red"])
-                .valueAccessor(function (d) { return d.value + 5; })
+                .valueAccessor(function (d) { return d.key[1] + 5; })
         ]);
 
   chart.render();

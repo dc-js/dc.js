@@ -136,7 +136,7 @@ describe("dc.heatmap", function() {
         });
     });
 
-    describe('filters', function() {
+    describe('filtering', function() {
         var filterX, filterY;
         beforeEach( function() {
             filterX = Math.ceil(Math.random() * 2);

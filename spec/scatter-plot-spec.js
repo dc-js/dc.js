@@ -4,10 +4,8 @@ describe('dc.scatterPlot', function() {
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
-        dimension = data.dimension(function(d) {
-            return d3.time.day(d.dd);
-        });
-        group = dimension.group().reduceSum(function(d){return d.id;});
+        dimension = data.dimension(function(d) { return [+d.value, +d.nvalue]; });
+        group = dimension.group();
 
         id = 'scatter-plot';
         appendChartID(id);
@@ -16,9 +14,8 @@ describe('dc.scatterPlot', function() {
         chart.dimension(dimension)
             .group(group)
             .width(500).height(180)
-            .x(d3.time.scale().domain([new Date(2012, 0, 1), new Date(2012, 11, 31)]))
+            .x(d3.scale.linear().domain([0, 70]))
             .transitionDuration(0);
-
     });
 
     describe('rendering the scatter plot', function () {
@@ -35,15 +32,15 @@ describe('dc.scatterPlot', function() {
         });
 
         it('should correctly place the symbols', function () {
-            expect(nthSymbol(0).attr("transform")).toBe("translate(166.8013698630137,140)");
-            expect(nthSymbol(3).attr("transform")).toBe("translate(209.37671232876713,114)");
-            expect(nthSymbol(5).attr("transform")).toBe("translate(255.40410958904107,44)");
+            expect(nthSymbol(4).attr("transform")).toBe("translate(264,131)");
+            expect(nthSymbol(5).attr("transform")).toBe("translate(264,75)");
+            expect(nthSymbol(8).attr("transform")).toBe("translate(396,131)");
         });
 
         it('should generate a default color fill for symbols', function () {
-            expect(nthSymbol(0).attr("fill")).toBe('#1f77b4');
-            expect(nthSymbol(3).attr("fill")).toBe('#1f77b4');
+            expect(nthSymbol(4).attr("fill")).toBe('#1f77b4');
             expect(nthSymbol(5).attr("fill")).toBe('#1f77b4');
+            expect(nthSymbol(8).attr("fill")).toBe('#1f77b4');
         });
 
         describe('with a custom color', function () {
@@ -52,33 +49,67 @@ describe('dc.scatterPlot', function() {
             });
 
             it('should color the symbols to the provided color', function () {
-                expect(nthSymbol(0).attr("fill")).toBe('red');
-                expect(nthSymbol(3).attr("fill")).toBe('red');
+                expect(nthSymbol(4).attr("fill")).toBe('red');
                 expect(nthSymbol(5).attr("fill")).toBe('red');
-            });
-        });
-
-        describe('filtering a dimension', function () {
-            beforeEach(function () {
-                data.dimension(function(d) {
-                    return d.value;
-                }).filter(66);
-
-                chart.redraw();
-            });
-
-            it('should remove unfiltered data points', function () {
-                expect(chart.selectAll('circle.symbol').size()).toBe(1);
-            });
-
-            it('should place the remaining data point by its value', function () {
-                expect(nthSymbol(0).attr("transform")).toBe("translate(182.91095890410958,96)");
+                expect(nthSymbol(8).attr("fill")).toBe('red');
             });
         });
 
         function nthSymbol(i) {
             return d3.select(chart.selectAll('circle.symbol')[0][i]);
         }
+
+        describe('filtering the chart', function () {
+            var otherDimension;
+
+            beforeEach(function () {
+                otherDimension = data.dimension(function(d) { return [+d.value, +d.nvalue]; });
+
+                chart.filterAll();
+                chart.filter([[22, -3], [44, 2]]);
+            });
+
+            it('should filter dimensions based on the same data', function () {
+                expect(otherDimension.top(Infinity).length).toBe(3);
+            });
+
+            describe('when filtering with null', function () {
+                beforeEach(function () {
+                    chart.filter(null);
+                });
+
+                it('should remove all filtering from the dimensions based on the same data', function () {
+                    expect(otherDimension.top(Infinity).length).toBe(10);
+                });
+
+            });
+        });
+
+        describe('brushing', function () {
+            var otherDimension;
+
+            beforeEach(function () {
+                otherDimension = data.dimension(function(d) { return [+d.value, +d.nvalue]; });
+
+                chart.brush().extent([[22, -3], [44, 2]]);
+                chart.brush().on("brush")();
+                chart.redraw();
+            });
+
+            it('should filter dimensions based on the same data', function () {
+                expect(otherDimension.top(Infinity).length).toBe(3);
+            });
+
+            it('should set the height of the brush to the height implied by the extent', function () {
+                expect(chart.select("g.brush rect.extent").attr("height")).toBe('46');
+            });
+
+            it('should not add handles to the brush', function () {
+                expect(chart.select(".resize path").empty()).toBeTruthy();
+            });
+
+
+        });
     });
 
     describe('legend hovering', function () {
@@ -153,8 +184,6 @@ describe('dc.scatterPlot', function() {
 
             return subChart;
         }
-
-
     });
 });
 
