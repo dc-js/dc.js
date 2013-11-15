@@ -74,7 +74,7 @@ describe("a coordinate grid chart", function() {
 
     describe("disabling zoom out restriction", function () {
         beforeEach(function () {
-            chart.zoomScale([-1,10])
+            chart.zoomScale([-1,10]);
             chart.zoomOutRestrict(false);
         });
 
@@ -119,7 +119,7 @@ describe("a coordinate grid chart", function() {
         describe("when x units are ordinal", function () {
             beforeEach(function () {
                 chart.xUnits(dc.units.ordinal);
-            })
+            });
             it("is true", function () {
                 expect(chart.isOrdinal()).toBeTruthy();
             });
@@ -167,7 +167,7 @@ describe("a coordinate grid chart", function() {
     describe("zooming", function () {
         var zoomCallback, context;
 
-        function context () { return { chart: chart, zoomCallback: zoomCallback } };
+        context = function () { return { chart: chart, zoomCallback: zoomCallback }; };
 
         beforeEach(function () {
             zoomCallback = jasmine.createSpy();
@@ -223,12 +223,12 @@ describe("a coordinate grid chart", function() {
                 spyOn(chart, '_enableMouseZoom');
                 chart.mouseZoomable(true);
                 chart.render();
-                chart.brush().extent([new Date(2012, 6, 1), new Date(2012, 6, 15)])
+                chart.brush().extent([new Date(2012, 6, 1), new Date(2012, 6, 15)]);
                 chart.brush().event(chart.root());
             });
 
             it("disables mouse zooming on brush start, and re-enables it afterwards", function () {
-                chart.brush().extent([new Date(2012, 6, 1), new Date(2012, 6, 15)])
+                chart.brush().extent([new Date(2012, 6, 1), new Date(2012, 6, 15)]);
                 chart.brush().event(chart.root());
                 expect(chart._disableMouseZoom).toHaveBeenCalled();
                 expect(chart._enableMouseZoom).toHaveBeenCalled();
@@ -240,7 +240,7 @@ describe("a coordinate grid chart", function() {
                 spyOn(chart, "_enableMouseZoom");
                 chart.mouseZoomable(false);
                 chart.render();
-                chart.brush().extent([new Date(2012, 6, 1), new Date(2012, 6, 15)])
+                chart.brush().extent([new Date(2012, 6, 1), new Date(2012, 6, 15)]);
                 chart.brush().event(chart.root());
             });
 
