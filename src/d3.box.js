@@ -15,19 +15,11 @@ d3.box = function() {
   // For each small multiple…
   function box(g) {
     g.each(function(d, i) {
-      var op = 1; //box is visible
-      if (d.value.length == 0) {   //check if group has values
-          d = [0];
-          op = 1e-6;
-      } else {
-          d = d.map(value).sort(d3.ascending);
-      }
+      d = d.map(value).sort(d3.ascending);
       var g = d3.select(this),
           n = d.length,
           min = d[0],
           max = d[n - 1];
-
-      g.style("opacity",op);  //hide box if no data
 
       // Compute quartiles. Must return exactly 3 elements.
       var quartileData = d.quartiles = quartiles(d);
@@ -182,7 +174,7 @@ d3.box = function() {
 
       outlier.exit().transition()
           .duration(duration)
-          .attr("cy", 0)
+          .attr("cy", function(i) { return x1(d[i]); })
           .style("opacity", 1e-6)
           .remove();
 
@@ -241,7 +233,7 @@ d3.box = function() {
           .style("opacity", 1e-6)
           .remove();
     });
-
+    d3.timer.flush();
   }
 
   box.width = function(x) {

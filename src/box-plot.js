@@ -123,20 +123,20 @@ dc.boxPlot = function (parent, chartGroup) {
             .attr("class", "box")
             .attr("transform", boxTransform)
             .call(_box)
-            .attr("fill", _chart.getColor)
             .on("click", function(d) {
                 _chart.filter(d.key);
                 //_chart.focus(_chart.filter());
                 dc.redrawAll(_chart.chartGroup());
             });
-
     }
 
     function updateBoxes(boxesG) {
         dc.transition(boxesG, _chart.transitionDuration())
             .attr("transform", boxTransform)
-            .call(_box);
-
+            .call(_box)
+            .each(function() {
+                d3.select(this).select('rect.box').attr("fill", _chart.getColor);
+            });
     }
 
     function removeBoxes(boxesG) {

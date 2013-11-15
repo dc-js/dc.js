@@ -23,9 +23,8 @@ describe('dc.boxPlot', function() {
             .margins({top: 0, right: 0, bottom: 0, left: 0})
             .boxPadding(0)
             .transitionDuration(0)
-            .y(d3.scale.ordinal().domain([0, 144]))
-            .colors(['#eeeeee'])
-            .colorAccessor(function(){ return 0; });
+            .y(d3.scale.linear().domain([0, 144]))
+            .ordinalColors(['#01','#02']);
     });
 
     describe('rendering the box plot', function () {
@@ -115,8 +114,8 @@ describe('dc.boxPlot', function() {
         });
 
         it('should assign a fill color to the boxes', function() {
-            expect(box(0).select('rect.box').attr("fill")).toBe("#eeeeee");
-            expect(box(1).select('rect.box').attr("fill")).toBe("#eeeeee");
+            expect(box(0).select('rect.box').attr("fill")).toBe("#01");
+            expect(box(1).select('rect.box').attr("fill")).toBe("#02");
         });
     });
 

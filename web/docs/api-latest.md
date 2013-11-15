@@ -1317,3 +1317,10 @@ Default: 0.5
 Get or set the numerical width of the boxplot box. Provided width may also be a function.
 This function takes as parameters the chart width without the right and left margins
 as well as the number of x units.
+
+#### .tickFormat()
+Set the numerical format of the boxplot median, whiskers and quartile labels. Defaults to integer.
+```js
+// format ticks to 2 decimal places
+chart.tickFormat(d3.format(".2f"));
+```

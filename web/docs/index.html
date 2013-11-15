@@ -1122,6 +1122,10 @@ added on each side of the chart.</p>
 <p>Get or set the numerical width of the boxplot box. Provided width may also be a function.
 This function takes as parameters the chart width without the right and left margins
 as well as the number of x units.</p>
+<h4 id="-tickformat-">.tickFormat()</h4>
+<p>Set the numerical format of the boxplot median, whiskers and quartile labels. Defaults to integer.</p>
+<pre><code class="lang-js"><span class="comment">// format ticks to 2 decimal places</span>
+chart<span class="variable">.tickFormat</span>(d3<span class="variable">.format</span>(<span class="string">".2f"</span>));</code></pre>
 
   </body>
 </html>
