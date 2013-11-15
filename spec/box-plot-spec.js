@@ -22,6 +22,7 @@ describe('dc.boxPlot', function() {
             .height(144)
             .margins({top: 0, right: 0, bottom: 0, left: 0})
             .boxPadding(0)
+            .transitionDuration(0)
             .y(d3.scale.ordinal().domain([0, 144]))
             .colors(['#eeeeee'])
             .colorAccessor(function(){ return 0; });
@@ -73,6 +74,21 @@ describe('dc.boxPlot', function() {
                     return innerChartWidth / (xUnits + 2);
                 }).render();
                 expect(box(1).select('rect.box').attr('width')).toBe('75');
+            });
+        });
+
+        describe('the tickFormat of the box plot', function () {
+            it('should default to whole number', function() {
+                expect(box(1).boxText(1).text()).toBe('44');
+                expect(box(1).whiskerText(0).text()).toBe('22');
+                expect(box(1).whiskerText(1).text()).toBe('66');
+            });
+
+            it('should be settable to a d3.format', function() {
+                chart.tickFormat(d3.format(".2f")).render();
+                expect(box(1).boxText(1).text()).toBe('44.00');
+                expect(box(1).whiskerText(0).text()).toBe('22.00');
+                expect(box(1).whiskerText(1).text()).toBe('66.00');
             });
         });
 
