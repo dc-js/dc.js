@@ -4436,6 +4436,7 @@ dc.bubbleChart = function(parent, chartGroup) {
             .attr("fill", _chart.getColor)
             .attr("r", 0);
         dc.transition(bubbleG, _chart.transitionDuration())
+            .selectAll("circle." + _chart.BUBBLE_CLASS)
             .attr("r", function(d) {
                 return _chart.bubbleR(d);
             })
