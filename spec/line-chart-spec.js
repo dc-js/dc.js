@@ -74,7 +74,7 @@ describe('dc.lineChart', function() {
         });
 
         it('should set the x domain to endpoint dates', function () {
-            expect(chart.x().domain()).toEqual([new Date(2012, 0, 1), new Date(2012, 11, 31)]);
+            expect(chart.x().domain()).toEqual([new Date("2012/1/1"), new Date("2012/12/31")]);
         });
 
         it('should set the x units', function(){
@@ -350,7 +350,7 @@ describe('dc.lineChart', function() {
 
         describe('undefined points', function () {
             beforeEach(function () {
-                chart.defined(function(d) { return d.x.valueOf() != 1339311600000; });
+                chart.defined(function(d) { return d.x.valueOf() != new Date("2012/06/10"); });
                 chart.brushOn(false).render();
             });
 
@@ -430,7 +430,7 @@ describe('dc.lineChart', function() {
                 beforeEach(function () {
                     chart.dimension(dateDimension)
                         .brushOn(false)
-                        .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
+                        .x(d3.time.scale().domain([new Date("2012/5/20"), new Date("2012/8/15")]))
                         .group(dateIdSumGroup, "stack 0")
                         .title("stack 0", function (d) { return "stack 0: " + d.value; })
                         .stack(dateValueSumGroup, "stack 1")
@@ -592,7 +592,7 @@ describe('dc.lineChart', function() {
                     var negativeGroup = dateDimension.group().reduceSum(function(d){ return d.nvalue; });
 
                     chart.group(negativeGroup).stack(negativeGroup).stack(negativeGroup);
-                    chart.x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]));
+                    chart.x(d3.time.scale().domain([new Date("2012/5/20"), new Date("2012/8/15")]));
 
                     chart.margins({top: 30, right: 50, bottom: 30, left: 30})
                         .renderArea(true)
@@ -696,11 +696,11 @@ describe('dc.lineChart', function() {
 
         describe('filtering', function () {
             beforeEach(function () {
-                chart.filter([new Date(2012, 5, 1), new Date(2012, 5, 30)]).redraw();
+                chart.filter([new Date("2012/6/1"), new Date("2012/6/30")]).redraw();
             });
 
             it('should set the chart filter', function () {
-                expect(chart.filter()).toEqual([new Date(2012, 5, 1), new Date(2012, 5, 30)])
+                expect(chart.filter()).toEqual([new Date("2012/6/1"), new Date("2012/6/30")])
             });
 
             it('should set the filter printer', function () {
