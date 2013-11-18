@@ -478,4 +478,41 @@ describe('dc.compositeChart', function() {
             });
         });
     });
+
+	describe('compositing scatterplots', function() {
+
+        var scatterGroup, scatterDimension;
+
+        beforeEach(function () {
+
+            scatterDimension = data.dimension(function(d) { return [+d.value, +d.nvalue]; });
+            scatterGroup = scatterDimension.group();
+
+            chart
+                .dimension(scatterDimension)
+                .group(scatterGroup)
+                .brushOn(true)
+                .compose([
+                    dc.scatterPlot(chart)
+                        .x(d3.scale.linear().domain([0, 70])),
+                    dc.scatterPlot(chart)
+                        .x(d3.scale.linear().domain([0, 70]))
+                ]).render();
+        });
+
+        describe('brushing on a composited scatter plots', function () {
+            var otherDimension;
+
+            beforeEach(function () {
+                otherDimension = data.dimension(function(d) { return [+d.value, +d.nvalue]; });
+                chart.brush().extent([22, 33]);
+                chart.brush().on("brush")();
+                chart.redraw();
+            });
+
+            it('should filter the child charts', function() {
+                expect(otherDimension.top(Infinity).length).toBe(2);
+            });
+        });
+    });
 });

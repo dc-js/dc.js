@@ -67,6 +67,14 @@ dc.compositeChart = function (parent, chartGroup) {
         return g;
     });
 
+    dc.override(_chart, "_brushing", function () {
+        for (var i = 0; i < _children.length; ++i) {
+            var child = _children[i];
+            child.filterAll();
+            child.filter(_chart.brush().extent());
+        }
+    });
+
     _chart.prepareYAxis = function () {
         if (leftYAxisChildren().length !== 0) { prepareLeftYAxis(); }
         if (rightYAxisChildren().length !== 0) { prepareRightYAxis(); }

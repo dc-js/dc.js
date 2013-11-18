@@ -98,5 +98,29 @@ describe('dc.filters', function () {
                 expect(filter.isFiltered([-1,-1])).toBeFalsy();
             });
         });
+
+        describe('one-dimensional filtering', function () {
+            beforeEach(function () {
+                filter = dc.filters.RangedTwoDimensionalFilter([10, 20])
+            });
+
+            it('should return true while inside the range', function () {
+                expect(filter.isFiltered([15,10])).toBeTruthy();
+            });
+
+            it('should return false while to the left of the range', function () {
+                expect(filter.isFiltered([5,10])).toBeFalsy();
+            });
+
+            it('should return true while on the left edge of the range', function () {
+                expect(filter.isFiltered([10,10])).toBeTruthy();
+            });
+
+            it('should return false while on the right edge of the range', function () {
+                expect(filter.isFiltered([20,10])).toBeFalsy();
+            });
+
+        });
+
     });
 });

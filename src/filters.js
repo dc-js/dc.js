@@ -24,12 +24,16 @@ dc.filters.TwoDimensionalFilter = function(array) {
  */
 dc.filters.RangedTwoDimensionalFilter = function(array){
     if (array == null) { return null; }
-
     var filter = array;
-    var fromTopLeft = [[Math.min(array[0][0], array[1][0]),
-                       Math.min(array[0][1], array[1][1])],
-                      [Math.max(array[0][0], array[1][0]),
-                       Math.max(array[0][1], array[1][1])]];
+    var fromTopLeft;
+    if (array[0] instanceof Array) {
+        fromTopLeft = [[Math.min(array[0][0], array[1][0]),
+                        Math.min(array[0][1], array[1][1])],
+                       [Math.max(array[0][0], array[1][0]),
+                        Math.max(array[0][1], array[1][1])]];
+    } else {
+        fromTopLeft = [[array[0], -Infinity],[array[1], Infinity]];
+    }
 
     filter.isFiltered = function(value) {
         var x = value[0];
