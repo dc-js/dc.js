@@ -46,6 +46,26 @@ module.exports = function (grunt) {
                 options: { '-W041': true }
             }
         },
+        watch: {
+          scripts: {
+            files: ['src/**/*.js'],
+            tasks: ['build', 'copy']
+          },
+          tests: {
+            files: ['spec/**/*.js', 'test/**/*.js'],
+            tasks: ['test']
+          },
+          jasmine_runner: {
+            files: ['spec/**/*.js'],
+            tasks: ['jasmine:specs:build']
+          },
+          reload: {
+            files: ['dc.js', 'dc.css', 'web/js/dc.js', 'web/css/dc.css', 'dc.min.js'],
+            options: {
+              livereload: true
+            }
+          }
+        },
         vows: {
             tests: {
                 src: "test/*.js"
@@ -169,6 +189,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-docco2');
     grunt.loadNpmTasks('grunt-gh-pages');
     grunt.loadNpmTasks('grunt-markdown');
