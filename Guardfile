@@ -2,6 +2,10 @@
 #   watch(%r{file/path}) { `command(s)` }
 #
 guard 'shell' do
-  watch(%r{^src/(.+)\.js$}) { |m| puts `make` }
-  watch(%r{^test/(.+)\.js$}) { |m| puts `make` }
+  watch(%r{^src/(.+)\.js$}) { |m| puts `./make` }
+  watch(%r{^test/(.+)\.js$}) { |m| puts `./make` }
+end
+
+guard 'livereload' do
+  watch(%r{^dc.js$})
 end

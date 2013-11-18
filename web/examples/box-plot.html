@@ -8,13 +8,15 @@
 <body>
 
 <div id="box-test"></div>
+<div id="pie-chart"></div>
 
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = dc.boxPlot("#box-test");
+var chart = dc.boxPlot("#box-test"),
+    pie = dc.pieChart("#pie-chart");
 d3.csv("morley.csv", function(error, experiments) {
 
   experiments.forEach(function(x) {
@@ -22,7 +24,8 @@ d3.csv("morley.csv", function(error, experiments) {
   });
 
   var ndx                 = crossfilter(experiments),
-      runDimension        = ndx.dimension(function(d) {return +d.Run;})
+      runDimension        = ndx.dimension(function(d) {return +d.Run;}),
+      runGroup            = runDimension.group(),
       experimentDimension = ndx.dimension(function(d) {return "exp-" + d.Expt;}),
       speedArrayGroup     = experimentDimension.group().reduce(
         function(p,v) {
@@ -46,7 +49,14 @@ d3.csv("morley.csv", function(error, experiments) {
     .group(speedArrayGroup)
     .elasticY(true);
 
-  chart.render();
+  pie
+    .width(140)
+    .height(140)
+    .radius(70)
+    .dimension(runDimension)
+    .group(runGroup);
+
+  dc.renderAll();
 /*
   var i=0;
   setInterval(function() {
