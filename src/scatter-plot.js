@@ -10,6 +10,7 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     var _symbolSize = 3;
+    var _highlightedSize = 4;
 
     _chart.colors(function() { return "#1f77b4"; });
 
@@ -36,7 +37,9 @@ dc.scatterPlot = function (parent, chartGroup) {
 
         dc.transition(symbols, _chart.transitionDuration())
             .attr("transform", _locator)
-            .attr("r", _symbolSize);
+            .attr("r", function (d) {
+                return d.filtered ? _highlightedSize : _symbolSize;
+            });
 
         dc.transition(symbols.filter(function(d){return _chart.valueAccessor()(d) === 0;}), _chart.transitionDuration())
                     .attr("r", 0).remove(); // remove empty groups
@@ -56,19 +59,30 @@ dc.scatterPlot = function (parent, chartGroup) {
         return _chart;
     };
 
+    /**
+    #### .highlightedSize([radius])
+    Set or get radius for highlighted symbols, default: 4.
+
+    **/
+    _chart.highlightedSize = function(s){
+        if(!arguments.length) return _highlightedSize;
+        _highlightedSize = s;
+        return _chart;
+    };
+
     _chart.legendHighlight = function (d) {
-        _chart.selectAll('.chart-body').selectAll('circle.symbol').filter(function () {
-            return d3.select(this).attr('fill') == d.color;
-        }).attr("r", 4);
+        resizeSymbolsWhere(function (symbol) {
+            return symbol.attr('fill') == d.color;
+        }, _highlightedSize);
         _chart.selectAll('.chart-body').selectAll('circle.symbol').filter(function () {
             return d3.select(this).attr('fill') != d.color;
         }).classed('fadeout', true);
     };
 
     _chart.legendReset = function (d) {
-        _chart.selectAll('.chart-body').selectAll('circle.symbol').filter(function () {
-            return d3.select(this).attr('fill') == d.color;
-        }).attr("r", 3);
+        resizeSymbolsWhere(function (symbol) {
+            return symbol.attr('fill') == d.color;
+        }, _symbolSize);
         _chart.selectAll('.chart-body').selectAll('circle.symbol').filter(function () {
             return d3.select(this).attr('fill') != d.color;
         }).classed('fadeout', false);
@@ -78,11 +92,32 @@ dc.scatterPlot = function (parent, chartGroup) {
         // no handle paths for poly-brushes
     };
 
+    _chart.extendBrush = function () {
+        var extent = _chart.brush().extent();
+        if (_chart.round()) {
+            extent[0] = extent[0].map(_chart.round());
+            extent[1] = extent[1].map(_chart.round());
+
+            _chart.g().select(".brush")
+                .call(_chart.brush().extent(extent));
+        }
+        return extent;
+    };
+
     _chart.brushIsEmpty = function (extent) {
         return _chart.brush().empty() || !extent || extent[0][0] >= extent[1][0] || extent[0][1] >= extent[1][1];
     };
 
-    _chart._brushing = function() {
+    function resizeSymbolsWhere(condition, size, filteredValue) {
+        var symbols = _chart.selectAll('.chart-body').selectAll('circle.symbol').filter(function (d) {
+            var shouldResize = condition(d3.select(this));
+            if (filteredValue !== undefined && shouldResize) {  d.filtered = filteredValue;  }
+            return shouldResize;
+        });
+        dc.transition(symbols, _chart.transitionDuration()).attr("r", size);
+    }
+
+    _chart._brushing = function () {
         var extent = _chart.extendBrush();
 
         _chart.redrawBrush(_chart.g());
@@ -92,14 +127,24 @@ dc.scatterPlot = function (parent, chartGroup) {
                 _chart.filter(null);
                 dc.redrawAll(_chart.chartGroup());
             });
+
+            resizeSymbolsWhere(function () { return true; }, _symbolSize, false);
+
         } else {
             var ranged2DFilter = dc.filters.RangedTwoDimensionalFilter(extent);
-
             dc.events.trigger(function () {
                 _chart.filter(null);
                 _chart.filter(ranged2DFilter);
                 dc.redrawAll(_chart.chartGroup());
             }, dc.constants.EVENT_DELAY);
+
+            resizeSymbolsWhere(function (symbol) {
+                return ranged2DFilter.isFiltered(symbol.datum().key);
+            }, _highlightedSize, true);
+
+            resizeSymbolsWhere(function (symbol) {
+                return !ranged2DFilter.isFiltered(symbol.datum().key);
+            }, _symbolSize, false);
         }
     };
 

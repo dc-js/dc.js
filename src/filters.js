@@ -23,10 +23,10 @@ dc.filters.TwoDimensionalFilter = function(array) {
  * @param array in the form [[x1,y1],[x2,y2]]
  */
 dc.filters.RangedTwoDimensionalFilter = function(array){
-    if (array == null) { return array; }
+    if (array == null) { return null; }
 
     var filter = array;
-    var topToRight = [[Math.min(array[0][0], array[1][0]),
+    var fromTopLeft = [[Math.min(array[0][0], array[1][0]),
                        Math.min(array[0][1], array[1][1])],
                       [Math.max(array[0][0], array[1][0]),
                        Math.max(array[0][1], array[1][1])]];
@@ -36,8 +36,8 @@ dc.filters.RangedTwoDimensionalFilter = function(array){
         var y = value[1];
 
         return value.length == 2 &&
-            x >= topToRight[0][0] && x < topToRight[1][0] &&
-            y >= topToRight[0][1] && y < topToRight[1][1];
+            x >= fromTopLeft[0][0] && x < fromTopLeft[1][0] &&
+            y >= fromTopLeft[0][1] && y < fromTopLeft[1][1];
     };
 
     return filter;

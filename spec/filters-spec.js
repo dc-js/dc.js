@@ -56,4 +56,47 @@ describe('dc.filters', function () {
             });
         });
     });
+
+    describe('RangedTwoDimensionalFilter', function () {
+        var filter;
+
+
+        it('should return null if filtered with null', function () {
+            expect(dc.filters.RangedTwoDimensionalFilter(null)).toBe(null);
+        });
+
+        describe('two-dimensional filtering', function () {
+            beforeEach(function () {
+                filter = dc.filters.RangedTwoDimensionalFilter([[0, 1],[10, 20]])
+            });
+
+            it('should return false if on top left of filter rectangle', function () {
+                expect(filter.isFiltered([0,1])).toBeTruthy();
+            });
+
+            it('should return false if on top right of filter rectangle', function () {
+                expect(filter.isFiltered([10,1])).toBeFalsy();
+            });
+
+            it('should return false for the bottom left of filter rectangle', function () {
+                expect(filter.isFiltered([0,20])).toBeFalsy();
+            });
+
+            it('should return true for the bottom right of filter rectangle', function () {
+                expect(filter.isFiltered([10,20])).toBeFalsy();
+            });
+
+            it('should return true for a point inside the filter rectangle', function () {
+                expect(filter.isFiltered([5,5])).toBeTruthy();
+            });
+
+            it('should return false for a point to the right and below the filter rectangle', function () {
+                expect(filter.isFiltered([11,21])).toBeFalsy();
+            });
+
+            it('should return false for a point to the left and above the filter rectangle', function () {
+                expect(filter.isFiltered([-1,-1])).toBeFalsy();
+            });
+        });
+    });
 });

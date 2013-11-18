@@ -108,7 +108,37 @@ describe('dc.scatterPlot', function() {
                 expect(chart.select(".resize path").empty()).toBeTruthy();
             });
 
+            describe('highlighting', function () {
+                var selectedPoints;
 
+                beforeEach(function () {
+                    selectedPoints = selectedSymbols();
+                });
+
+                it('should highlight the selected points', function () {
+                    expect(selectedPoints.length).toBe(2);
+                    expect(selectedPoints[0].key).toEqual([22, -2]);
+                    expect(selectedPoints[1].key).toEqual([33, 1]);
+                });
+
+                it('should remove highlighting when the brush is removed from the selected points', function () {
+                    chart.brush().extent([[22, 2], [22, -3]]);
+                    chart.brush().on("brush")();
+                    selectedPoints = selectedSymbols();
+                    expect(selectedPoints.length).toBe(0);
+                    chart.redraw();
+                    selectedPoints = selectedSymbols();
+                    expect(selectedPoints.length).toBe(0);
+                });
+
+                function selectedSymbols() {
+                    return chart.selectAll('circle.symbol').filter(function () {
+                                return d3.select(this).attr("r") == 4;
+                            })[0].map(function (symbol) {
+                                return d3.select(symbol).datum();
+                            });
+                }
+            });
         });
     });
 
