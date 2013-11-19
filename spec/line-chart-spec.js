@@ -350,7 +350,7 @@ describe('dc.lineChart', function() {
 
         describe('undefined points', function () {
             beforeEach(function () {
-                chart.defined(function(d) { return d.x.valueOf() != new Date("2012/06/10"); });
+                chart.defined(function(d) { return d.x.valueOf() != new Date("2012/06/10").getTime(); });
                 chart.brushOn(false).render();
             });
 
