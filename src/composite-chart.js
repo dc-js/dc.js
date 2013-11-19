@@ -70,7 +70,8 @@ dc.compositeChart = function (parent, chartGroup) {
     _chart._brushing = function () {
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
-            child._filter(null); // normal child.filter clears shared brush.
+            var childBaseChartFilter = child._filter;
+            childBaseChartFilter(null); // normal child.filter clears shared brush.
             child.filter(_chart.brush().extent());
         }
     };
