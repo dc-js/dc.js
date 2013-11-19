@@ -36,7 +36,7 @@ describe('dc.coordinateGridChart', function() {
                 .transitionDuration(0)
                 .brushOn(false)
                 .margins({ top: 20, bottom: 0, right: 10, left: 0 })
-                .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
+                .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]));
         });
 
 
@@ -105,7 +105,7 @@ describe('dc.coordinateGridChart', function() {
                 describe('with custom tick values', function () {
                     beforeEach(function () {
                         chart.xAxis().tickValues([new Date("2012/05/21"), new Date("2012/06/20"), new Date("2012/07/01")]);
-                        chart.render()
+                        chart.render();
                     });
 
                     it('should draw lines associated with the data using the custom ticks', function () {

@@ -253,7 +253,7 @@ describe('dc.lineChart', function() {
             });
 
             it('should be generated per data point', function () {
-                expect(chart.selectAll("circle.dot").size()).toBe(6)
+                expect(chart.selectAll("circle.dot").size()).toBe(6);
             });
 
             it('should have configurable radius', function () {
@@ -424,7 +424,7 @@ describe('dc.lineChart', function() {
                 expect(chart.select("path.line").attr("d")).toMatch(/M72.\d+,0L218.\d+,107L364.\d+,107L510(\.\d+)?,53L655.\d+,107L801.\d+,53/);
             });
         });
-        
+
         describe('with stacked data', function () {
             describe('with positive data', function () {
                 beforeEach(function () {
@@ -445,15 +445,15 @@ describe('dc.lineChart', function() {
                 });
 
                 it('should set the path for stack 0 line', function () {
-                    expect(chart.select('g._0 path.line').attr("d")).toMatch(/M58\.\d+,159L222\.\d+,157L246\.\d+,150L492\.\d+,158L597\.\d+,151L961\.\d+,153/)
+                    expect(chart.select('g._0 path.line').attr("d")).toMatch(/M58\.\d+,159L222\.\d+,157L246\.\d+,150L492\.\d+,158L597\.\d+,151L961\.\d+,153/);
                 });
 
                 it('should set the path for stack 1 line', function () {
-                    expect(chart.select('g._1 path.line').attr("d")).toMatch(/M58\.\d+,134L222\.\d+,119L246\.\d+,75L492\.\d+,133L597\.\d+,120L961\.\d+,109/)
+                    expect(chart.select('g._1 path.line').attr("d")).toMatch(/M58\.\d+,134L222\.\d+,119L246\.\d+,75L492\.\d+,133L597\.\d+,120L961\.\d+,109/);
                 });
 
                 it('should set the path for stack 2 line', function () {
-                    expect(chart.select('g._2 path.line').attr("d")).toMatch(/M58\.\d+,109L222\.\d+,81L246\.\d+,0L492\.\d+,108L597\.\d+,89L961\.\d+,65/)
+                    expect(chart.select('g._2 path.line').attr("d")).toMatch(/M58\.\d+,109L222\.\d+,81L246\.\d+,0L492\.\d+,108L597\.\d+,89L961\.\d+,65/);
                 });
 
                 it('should have its own title accessor', function () {
@@ -568,7 +568,7 @@ describe('dc.lineChart', function() {
                         it('should still show the title for a visible stack', function () {
                             chart.selectAll("g._1 circle.dot").each(function (d) {
                                 expect(d3.select(this).select("title").text()).toBe("stack 2: " + d.data.value);
-                            })
+                            });
                         });
                     });
 
@@ -609,8 +609,8 @@ describe('dc.lineChart', function() {
                 });
 
                 it('should generate negative lines and area for stack 0', function () {
-                    expect(chart.select('g._0 path.line').attr('d')).toMatch(/M58.\d+,81L222.\d+,81L246.\d+,92L492.\d+,79L597.\d+,52L961.\d+,67/)
-                    expect(chart.select('g._0 path.area').attr('d')).toMatch(/M58.\d+,81L222.\d+,81L246.\d+,92L492.\d+,79L597.\d+,52L961.\d+,67L961.\d+,73L597.\d+,73L492.\d+,73L246.\d+,73L222.\d+,73L58.\d+,73Z/)
+                    expect(chart.select('g._0 path.line').attr('d')).toMatch(/M58.\d+,81L222.\d+,81L246.\d+,92L492.\d+,79L597.\d+,52L961.\d+,67/);
+                    expect(chart.select('g._0 path.area').attr('d')).toMatch(/M58.\d+,81L222.\d+,81L246.\d+,92L492.\d+,79L597.\d+,52L961.\d+,67L961.\d+,73L597.\d+,73L492.\d+,73L246.\d+,73L222.\d+,73L58.\d+,73Z/);
                 });
 
                 it('should generate negative lines and area for stack 1', function () {
@@ -700,7 +700,7 @@ describe('dc.lineChart', function() {
             });
 
             it('should set the chart filter', function () {
-                expect(chart.filter()).toEqual([new Date("2012/6/1"), new Date("2012/6/30")])
+                expect(chart.filter()).toEqual([new Date("2012/6/1"), new Date("2012/6/30")]);
             });
 
             it('should set the filter printer', function () {

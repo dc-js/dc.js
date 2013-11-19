@@ -305,7 +305,7 @@ describe('dc.compositeChart', function() {
 
             it('should generate legend labels with their associated group text', function () {
                 function legendText(n) {
-                    return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item text')[0][n]).text()
+                    return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item text')[0][n]).text();
                 }
                 expect(legendText(0)).toBe('Date Value Group');
                 expect(legendText(1)).toBe('Date ID Group');

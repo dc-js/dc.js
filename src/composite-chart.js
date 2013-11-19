@@ -68,17 +68,17 @@ dc.compositeChart = function (parent, chartGroup) {
     });
 
     _chart.prepareYAxis = function () {
-        if (!(leftYAxisChildren().length === 0)) { prepareLeftYAxis(); }
-        if (!(rightYAxisChildren().length === 0)) { prepareRightYAxis(); }
+        if (leftYAxisChildren().length !== 0) { prepareLeftYAxis(); }
+        if (rightYAxisChildren().length !== 0) { prepareRightYAxis(); }
     };
 
     _chart.renderYAxis = function () {
-        if (!(leftYAxisChildren().length === 0)) {
+        if (leftYAxisChildren().length !== 0) {
             _chart.renderYAxisAt("y", _chart.yAxis(), _chart.margins().left);
             _chart.renderYAxisLabel("y", _chart.yAxisLabel(), -90);
         }
 
-        if (!(rightYAxisChildren().length === 0)) {
+        if (rightYAxisChildren().length !== 0) {
             _chart.renderYAxisAt("yr", _chart.rightYAxis(), _chart.width() - _chart.margins().right);
             _chart.renderYAxisLabel("yr", _chart.rightYAxisLabel(), 90, _chart.width() - _rightYAxisLabelPadding);
         }
