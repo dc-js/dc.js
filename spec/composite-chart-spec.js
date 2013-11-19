@@ -479,11 +479,11 @@ describe('dc.compositeChart', function() {
         });
     });
 
-	describe('compositing scatterplots', function() {
-
+    describe('compositing scatterplots', function() {
         var scatterGroup, scatterDimension;
 
         beforeEach(function () {
+            data = crossfilter(loadDateFixture());
 
             scatterDimension = data.dimension(function(d) { return [+d.value, +d.nvalue]; });
             scatterGroup = scatterDimension.group();
@@ -491,6 +491,7 @@ describe('dc.compositeChart', function() {
             chart
                 .dimension(scatterDimension)
                 .group(scatterGroup)
+                .x(d3.scale.linear().domain([0,70]))
                 .brushOn(true)
                 .compose([
                     dc.scatterPlot(chart)
@@ -500,19 +501,34 @@ describe('dc.compositeChart', function() {
                 ]).render();
         });
 
-        describe('brushing on a composited scatter plots', function () {
+        describe('brushing on a composite chart', function () {
             var otherDimension;
 
             beforeEach(function () {
                 otherDimension = data.dimension(function(d) { return [+d.value, +d.nvalue]; });
-                chart.brush().extent([22, 33]);
+                chart.brush().extent([22, 35]);
                 chart.brush().on("brush")();
                 chart.redraw();
             });
 
             it('should filter the child charts', function() {
-                expect(otherDimension.top(Infinity).length).toBe(2);
+                expect(otherDimension.top(Infinity).length).toBe(4);
             });
+
+            describe('brush decreases in size', function () {
+                beforeEach(function () {
+                    chart.brush().extent([22, 33]);
+                    chart.brush().on("brush")();
+                    chart.redraw();
+                });
+
+                it('should filter down to fewer points', function() {
+                  expect(otherDimension.top(Infinity).length).toBe(2);
+                });
+
+            });
+
         });
     });
+
 });
