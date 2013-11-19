@@ -3,6 +3,10 @@ beforeEach(function(){
         toBeWithinDelta: function(_) {
             return {
                 compare: function(actual, expected, delta){
+                    if (delta === undefined) {
+                        delta = 1e-6;
+                    }
+
                     var result = {};
 
                     result.pass = actual >= (expected-delta) && actual <= (expected+delta);

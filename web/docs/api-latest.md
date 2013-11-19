@@ -363,7 +363,7 @@ automatically attach this chart as its focus chart hence zoom in when range brus
 Get or set the scale extent for mouse zooms.
 
 #### .zoomOutRestrict([true/false])
-Get or set the zoom restriction for the chart. If true limits the zoom to origional domain of the chart.
+Get or set the a zoom restriction to be limited at the origional extent of the range chart
 
 #### .g([gElement])
 Get or set the root g element. This method is usually used to retrieve the g element in order to overlay custom svg drawing
@@ -487,6 +487,12 @@ Get or set padding in pixel for clip path. Once set padding will be applied even
  when clip path is generated. If set to zero, then the clip area will be exactly the chart body area minus the margins.
  Default: 5
 
+#### .brushOn([boolean])
+Turn on/off the brush based in-place range filter. When the brush is on then user will be able to  simply drag the mouse
+across the chart to perform range filtering based on the extend of the brush. However turning on brush filter will essentially
+disable other interactive elements on the chart such as the highlighting, tool-tip, and reference lines on a chart. Default
+value is "true".
+
 #### .focus([range])
 Zoom this chart to focus on the given range. The given range should be an array containing only 2 element([start, end]) defining an range in x domain. If the range is not given or set to null, then the zoom will be reset. _For focus to work elasticX has to be turned off otherwise focus will be ignored._
 ```js
@@ -498,12 +504,6 @@ chart.renderlet(function(chart){
     });
 })
 ```
-
-#### .brushOn([boolean])
-Turn on/off the brush based in-place range filter. When the brush is on then user will be able to  simply drag the mouse
-across the chart to perform range filtering based on the extend of the brush. However turning on brush filter will essentially
-disable other interactive elements on the chart such as the highlighting, tool-tip, and reference lines on a chart. Zooming will still
-be possible if enabled, but only via scrolling (panning will be disabled.) Default value is "true".
 
 ## <a name="color-chart" href="#color-chart">#</a> Color Chart [Abstract]
 Color chart is an abstract chart functional class created to provide universal coloring support as a mix-in for any concrete
@@ -1317,10 +1317,3 @@ Default: 0.5
 Get or set the numerical width of the boxplot box. Provided width may also be a function.
 This function takes as parameters the chart width without the right and left margins
 as well as the number of x units.
-
-#### .tickFormat()
-Set the numerical format of the boxplot median, whiskers and quartile labels. Defaults to integer.
-```js
-// format ticks to 2 decimal places
-chart.tickFormat(d3.format(".2f"));
-```

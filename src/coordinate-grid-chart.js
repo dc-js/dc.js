@@ -1,5 +1,4 @@
 /**
-
 ## <a name="coordinate-grid-chart" href="#coordinate-grid-chart">#</a> CoordinateGrid Chart [Abstract] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
 Coordinate grid chart is an abstract base chart designed to support a number of coordinate grid based concrete chart types,
 i.e. bar chart, line chart, and bubble chart.
@@ -11,7 +10,7 @@ dc.coordinateGridChart = function (_chart) {
     var VERTICAL_CLASS = "vertical";
     var Y_AXIS_LABEL_CLASS = 'y-axis-label';
     var X_AXIS_LABEL_CLASS = 'x-axis-label';
-    var DEFAULT_AXIS_LABLEL_PADDING = 12;
+    var DEFAULT_AXIS_LABEL_PADDING = 12;
 
     _chart = dc.colorChart(dc.marginable(dc.baseChart(_chart)));
 
@@ -62,6 +61,8 @@ dc.coordinateGridChart = function (_chart) {
 
     var _outerRangeBandPadding = 0.5;
     var _rangeBandPadding = 0;
+
+    var _useRightYAxis = false;
 
     _chart.rescale = function () {
         _unitCount = undefined;
@@ -274,6 +275,12 @@ dc.coordinateGridChart = function (_chart) {
         return _unitCount;
     };
 
+    _chart.useRightYAxis = function (_) {
+        if (!arguments.length) return _useRightYAxis;
+        _useRightYAxis = _;
+        return _chart;
+    };
+
     _chart.isOrdinal = function () {
         return _chart.xUnits() === dc.units.ordinal;
     };
@@ -327,7 +334,7 @@ dc.coordinateGridChart = function (_chart) {
             if (gridLineG.empty())
                 gridLineG = g.insert("g", ":first-child")
                     .attr("class", GRID_LINE_CLASS + " " + VERTICAL_CLASS)
-                    .attr("transform", "translate(" + _chart.yAxisX() + "," + _chart.margins().top + ")");
+                    .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")");
 
             var ticks = _xAxis.tickValues() ? _xAxis.tickValues() : _x.ticks(_xAxis.ticks()[0]);
 
@@ -376,48 +383,70 @@ dc.coordinateGridChart = function (_chart) {
         return _chart.effectiveWidth();
     };
 
-    _chart.xAxisLabel = function (_,pad) {
+    _chart.xAxisLabel = function (_, padding) {
         if (!arguments.length) return _xAxisLabel;
         _xAxisLabel = _;
         _chart.margins().bottom -= _xAxisLabelPadding;
-        _xAxisLabelPadding = (pad===undefined) ? DEFAULT_AXIS_LABLEL_PADDING : pad;
+        _xAxisLabelPadding = (padding === undefined) ? DEFAULT_AXIS_LABEL_PADDING : padding;
         _chart.margins().bottom += _xAxisLabelPadding;
         return _chart;
     };
 
-    function prepareYAxis(g) {
+    _chart.prepareYAxis = function(g) {
         if (_y === undefined || _chart.elasticY()) {
             _y = d3.scale.linear();
             _y.domain([_chart.yAxisMin(), _chart.yAxisMax()]).rangeRound([_chart.yAxisHeight(), 0]);
         }
 
         _y.range([_chart.yAxisHeight(), 0]);
-        _yAxis = _yAxis.scale(_y).orient("left");
+        _yAxis = _yAxis.scale(_y);
+
+        if (_useRightYAxis) {
+            _yAxis.orient("right");
+        }
+        else {
+            _yAxis.orient("left");
+        }
 
         renderHorizontalGridLines(g);
-    }
-
-    _chart.renderYAxis = function (g) {
-        var axisYG = g.selectAll("g.y");
-        if (axisYG.empty())
-            axisYG = g.append("g")
-                .attr("class", "axis y")
-                .attr("transform", "translate(" + _chart.yAxisX() + "," + _chart.margins().top + ")");
-
-        var axisYLab = g.selectAll("text."+Y_AXIS_LABEL_CLASS);
-        if (axisYLab.empty() && _chart.yAxisLabel())
-            axisYLab = g.append('text')
-                .attr("transform", "translate(" + _yAxisLabelPadding + "," + (_chart.margins().top + _chart.yAxisHeight()/2) + "),rotate(-90)")
-                .attr('class', Y_AXIS_LABEL_CLASS)
-                .attr('text-anchor', 'middle')
-                .text(_chart.yAxisLabel());
-        if (_chart.yAxisLabel() && axisYLab.text() != _chart.yAxisLabel())
-            axisYLab.text(_chart.yAxisLabel());
-
-        dc.transition(axisYG, _chart.transitionDuration())
-            .call(_yAxis);
     };
 
+    _chart.renderYAxisLabel = function(axisClass, text, rotation, labelXPosition) {
+        labelXPosition = labelXPosition || _yAxisLabelPadding;
+
+        var axisYLab = _chart.g().selectAll("text." + Y_AXIS_LABEL_CLASS + "." + axisClass + "-label");
+        if (axisYLab.empty() && text) {
+
+            var labelYPosition = (_chart.margins().top + _chart.yAxisHeight() / 2);
+            axisYLab = _chart.g().append('text')
+                .attr("transform", "translate(" + labelXPosition + "," + labelYPosition + "),rotate(" + rotation + ")")
+                .attr('class', Y_AXIS_LABEL_CLASS + " " + axisClass + "-label")
+                .attr('text-anchor', 'middle')
+                .text(text);
+        }
+        if (text && axisYLab.text() != text) {
+            axisYLab.text(text);
+        }
+    };
+
+    _chart.renderYAxisAt = function (axisClass, axis, position){
+        var axisYG = _chart.g().selectAll("g." + axisClass);
+        if (axisYG.empty()) {
+            axisYG = _chart.g().append("g")
+                .attr("class", "axis " + axisClass)
+                .attr("transform", "translate(" + position + "," + _chart.margins().top + ")");
+        }
+
+        dc.transition(axisYG, _chart.transitionDuration()).call(axis);
+    };
+
+    _chart.renderYAxis = function () {
+        var axisPosition = _useRightYAxis ? (_chart.width() - _chart.margins().right) : _chart.yAxisX();
+        _chart.renderYAxisAt("y", _yAxis, axisPosition);
+        var labelPosition = _useRightYAxis ? (_chart.width() - _yAxisLabelPadding) : _yAxisLabelPadding;
+        var rotation = _useRightYAxis ? 90 : -90;
+        _chart.renderYAxisLabel("y", _chart.yAxisLabel(), rotation, labelPosition);
+    };
 
     function renderHorizontalGridLines(g) {
         var gridLineG = g.selectAll("g." + HORIZONTAL_CLASS);
@@ -425,10 +454,11 @@ dc.coordinateGridChart = function (_chart) {
         if (_renderHorizontalGridLine) {
             var ticks = _yAxis.tickValues() ? _yAxis.tickValues() : _y.ticks(_yAxis.ticks()[0]);
 
-            if (gridLineG.empty())
+            if (gridLineG.empty()) {
                 gridLineG = g.insert("g", ":first-child")
                     .attr("class", GRID_LINE_CLASS + " " + HORIZONTAL_CLASS)
-                    .attr("transform", "translate(" + _chart.yAxisX() + "," + _chart.margins().top + ")");
+                    .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")");
+            }
 
             var lines = gridLineG.selectAll("line")
                 .data(ticks);
@@ -468,14 +498,19 @@ dc.coordinateGridChart = function (_chart) {
     }
 
     _chart.yAxisX = function () {
-        return _chart.margins().left;
+        return _chart.useRightYAxis() ? _chart.width() - _chart.margins().right : _chart.margins().left;
     };
 
-    _chart.yAxisLabel = function (_,pad) {
+
+    /**
+    #### .yAxisLabel([labelText])
+    Set or get the y axis label.
+    **/
+    _chart.yAxisLabel = function (_, padding) {
         if (!arguments.length) return _yAxisLabel;
         _yAxisLabel = _;
         _chart.margins().left -= _yAxisLabelPadding;
-        _yAxisLabelPadding = (pad===undefined) ? DEFAULT_AXIS_LABLEL_PADDING : pad;
+        _yAxisLabelPadding = (padding === undefined) ? DEFAULT_AXIS_LABEL_PADDING : padding;
         _chart.margins().left += _yAxisLabelPadding;
         return _chart;
     };
@@ -794,7 +829,7 @@ dc.coordinateGridChart = function (_chart) {
 
     function drawChart (render) {
         prepareXAxis(_chart.g());
-        prepareYAxis(_chart.g());
+        _chart.prepareYAxis(_chart.g());
 
         _chart.plotData();
 

@@ -515,10 +515,6 @@ dc.utils.isNegligible = function (max) {
     return max === undefined || (max < dc.constants.NEGLIGIBLE_NUMBER && max > -dc.constants.NEGLIGIBLE_NUMBER);
 };
 
-dc.utils.clamp = function (val, min, max) {
-    return val < min ? min : (val > max ? max : val);
-};
-
 var _idCounter = 0;
 dc.utils.uniqueId = function () {
     return ++_idCounter;
@@ -1106,11 +1102,6 @@ dc.baseChart = function (_chart) {
         }
     }
 
-    _chart.replaceFilter = function (_) {
-        _filters = [];
-        _chart.filter(_);
-    };
-
     /**
     #### .filter([filterValue])
     Filter the chart by the given value or return the current filter if the input parameter is missing.
@@ -1491,7 +1482,6 @@ dc.marginable = function (_chart) {
 };
 
 /**
-
 ## <a name="coordinate-grid-chart" href="#coordinate-grid-chart">#</a> CoordinateGrid Chart [Abstract] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
 Coordinate grid chart is an abstract base chart designed to support a number of coordinate grid based concrete chart types,
 i.e. bar chart, line chart, and bubble chart.
@@ -1540,11 +1530,8 @@ dc.coordinateGridChart = function (_chart) {
     var _refocused = false;
     var _unitCount;
 
-    var _zoomScale = [1, Infinity];
-    var _zoomOutRestrict = true;
-
-    var _zoom = d3.behavior.zoom().on("zoom", zoomHandler);
-    var _nullZoom = d3.behavior.zoom().on("zoom", null);
+    var _zoomScale = [-10, 100];  // -10 to allow zoom out of the original domain
+    var _zoomOutRestrict = true; // restrict zoomOut to the original domain?
 
     var _rangeChart;
     var _focusChart;
@@ -1587,12 +1574,11 @@ dc.coordinateGridChart = function (_chart) {
 
     /**
     #### .zoomOutRestrict([true/false])
-    Get or set the zoom restriction for the chart. If true limits the zoom to origional domain of the chart.
+    Get or set the a zoom restriction to be limited at the origional extent of the range chart
     **/
-    _chart.zoomOutRestrict = function (r) {
+    _chart.zoomOutRestrict = function (_) {
         if (!arguments.length) return _zoomOutRestrict;
-        _zoomScale[0] = r ? 1 : 0;
-        _zoomOutRestrict = r;
+        _zoomOutRestrict = _;
         return _chart;
     };
 
@@ -2145,8 +2131,6 @@ dc.coordinateGridChart = function (_chart) {
 
         if (_brushOn) {
             _brush.on("brush", _chart._brushing);
-            _brush.on("brushstart", _chart._disableMouseZoom);
-            _brush.on("brushend", configureMouseZoom);
 
             var gBrush = g.append("g")
                 .attr("class", "brush")
@@ -2186,12 +2170,13 @@ dc.coordinateGridChart = function (_chart) {
             dc.events.trigger(function () {
                 _chart.filter(null);
                 dc.redrawAll(_chart.chartGroup());
-            }, dc.constants.EVENT_DELAY);
+            });
         } else {
             var rangedFilter = dc.filters.RangedFilter(extent[0], extent[1]);
 
             dc.events.trigger(function () {
-                _chart.replaceFilter(rangedFilter);
+                _chart.filter(null);
+                _chart.filter(rangedFilter);
                 dc.redrawAll(_chart.chartGroup());
             }, dc.constants.EVENT_DELAY);
         }
@@ -2268,95 +2253,97 @@ dc.coordinateGridChart = function (_chart) {
 
         _chart._generateG();
         generateClipPath();
-
-        drawChart(true);
-
-        configureMouseZoom();
-
-        return _chart;
-    };
-
-    _chart.doRedraw = function () {
-        _chart._preprocessData();
-
-        drawChart(false);
-
-        return _chart;
-    };
-
-    function drawChart (render) {
         prepareXAxis(_chart.g());
         prepareYAxis(_chart.g());
 
         _chart.plotData();
 
-        if (_chart.elasticX() || _refocused || render)
-            _chart.renderXAxis(_chart.g());
+        _chart.renderXAxis(_chart.g());
+        _chart.renderYAxis(_chart.g());
 
-        if (_chart.elasticY() || render)
-            _chart.renderYAxis(_chart.g());
+        _chart.renderBrush(_chart.g());
 
-        if (render)
-            _chart.renderBrush(_chart.g());
-        else
-            _chart.redrawBrush(_chart.g());
-    }
+        enableMouseZoom();
 
-    function configureMouseZoom () {
-        if (_mouseZoomable)
-            _chart._enableMouseZoom();
-        else
-            _chart._disableMouseZoom();
-    }
-
-    _chart._enableMouseZoom = function () {
-        _zoom.x(_chart.x())
-            .scaleExtent(_zoomScale)
-            .size([_chart.width(),_chart.height()]);
-        _chart.root().call(_zoom);
+        return _chart;
     };
 
-    _chart._disableMouseZoom = function () {
-        _chart.root().call(_nullZoom);
-    };
-
-    function zoomHandler() {
-        _refocused = true;
-        if (_zoomOutRestrict) {
-            _chart.x().domain(constrainRange(_chart.x().domain(), _xOriginalDomain));
-            if (_rangeChart) {
-                _chart.x().domain(constrainRange(_chart.x().domain(), _rangeChart.x().domain()));
-            }
+    function enableMouseZoom() {
+        if (_mouseZoomable) {
+            _chart.root().call(d3.behavior.zoom()
+                .x(_chart.x())
+                .scaleExtent(_zoomScale)
+                .on("zoom", function () {
+                    _chart.focus(_chart.x().domain());
+                    _chart._invokeZoomedListener();
+                    updateRangeSelChart();
+                }));
         }
+    }
 
-        var domain = _chart.x().domain();
-        var domFilter = dc.filters.RangedFilter(domain[0], domain[1]);
+    function updateRangeSelChart() {
+        if (_rangeChart) {
+            var refDom = _chart.x().domain();
+            if (_zoomOutRestrict) {
+                var origDom = _rangeChart.xOriginalDomain();
+                var newDom = [
+                    refDom[0] < origDom[0] ? refDom[0] : origDom[0],
+                    refDom[1] > origDom[1] ? refDom[1] : origDom[1]
+                ];
+                _rangeChart.focus(newDom);
+            } else {
+                _rangeChart.focus(refDom);
+            }
+            _rangeChart.filter(null);
+            var refDomFilter = dc.filters.RangedFilter(refDom[0], refDom[1]);
+            _rangeChart.filter(refDomFilter);
 
-        _chart.replaceFilter(domFilter);
-        _chart.rescale();
-        _chart.redraw();
-
-        if (_rangeChart && !rangesEqual(_chart.filter(), _rangeChart.filter())) {
-            dc.events.trigger( function () {
-                _rangeChart.replaceFilter(domFilter);
-                _rangeChart.redraw();
+            dc.events.trigger(function () {
+                dc.redrawAll(_chart.chartGroup());
             });
         }
-
-        _chart._invokeZoomedListener();
-
-        dc.events.trigger(function () {
-            dc.redrawAll(_chart.chartGroup());
-        }, dc.constants.EVENT_DELAY);
-
-        _refocused = !rangesEqual(domain, _xOriginalDomain);
     }
 
-    function constrainRange(range, constraint) {
-        var constrainedRange = [];
-        constrainedRange[0] = d3.max([range[0], constraint[0]]);
-        constrainedRange[1] = d3.min([range[1], constraint[1]]);
-        return constrainedRange;
+    _chart.doRedraw = function () {
+        _chart._preprocessData();
+        prepareXAxis(_chart.g());
+        prepareYAxis(_chart.g());
+
+        _chart.plotData();
+
+        if (_chart.elasticY())
+            _chart.renderYAxis(_chart.g());
+
+        if (_chart.elasticX() || _refocused)
+            _chart.renderXAxis(_chart.g());
+
+        _chart.redrawBrush(_chart.g());
+
+        return _chart;
+    };
+
+    _chart.subRender = function () {
+        _chart.plotData();
+
+        return _chart;
+    };
+
+    /**
+    #### .brushOn([boolean])
+    Turn on/off the brush based in-place range filter. When the brush is on then user will be able to  simply drag the mouse
+    across the chart to perform range filtering based on the extend of the brush. However turning on brush filter will essentially
+    disable other interactive elements on the chart such as the highlighting, tool-tip, and reference lines on a chart. Default
+    value is "true".
+
+    **/
+    _chart.brushOn = function (_) {
+        if (!arguments.length) return _brushOn;
+        _brushOn = _;
+        return _chart;
+    };
+
+    function hasRangeSelected(range) {
+        return range instanceof Array && range.length > 1;
     }
 
     /**
@@ -2374,13 +2361,20 @@ dc.coordinateGridChart = function (_chart) {
 
     **/
     _chart.focus = function (range) {
-        if (hasRangeSelected(range))
-            _chart.x().domain(range);
-        else
-            _chart.x().domain(_xOriginalDomain);
+        _refocused = true;
 
-        _zoom.x(_chart.x());
-        zoomHandler();
+        if (hasRangeSelected(range)) {
+            _chart.x().domain(range);
+        } else {
+            _chart.x().domain(_chart.xOriginalDomain());
+        }
+
+        _chart.rescale();
+
+        _chart.redraw();
+
+        if (!hasRangeSelected(range))
+            _refocused = false;
     };
 
     _chart.refocused = function () {
@@ -2391,50 +2385,14 @@ dc.coordinateGridChart = function (_chart) {
         if (!arguments.length) return _focusChart;
         _focusChart = c;
         _chart.on("filtered", function (chart) {
-            if (!rangesEqual(chart.filter(), _focusChart.filter())) {
-                dc.events.trigger(function () {
-                    _focusChart.focus(chart.filter());
-                });
-            }
+            dc.events.trigger(function () {
+                _focusChart.focus(chart.filter());
+                _focusChart.filter(chart.filter());
+                dc.redrawAll(chart.chartGroup());
+            });
         });
         return _chart;
     };
-
-    function rangesEqual(range1, range2) {
-        if (!range1 && !range2) {
-            return true;
-        }
-
-        if (range1.length === 0 && range2.length === 0) {
-            return true;
-        }
-
-        if (range1 && range2 &&
-            range1[0].valueOf() === range2[0].valueOf() &&
-            range1[1].valueOf() === range2[1].valueOf()) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-    #### .brushOn([boolean])
-    Turn on/off the brush based in-place range filter. When the brush is on then user will be able to  simply drag the mouse
-    across the chart to perform range filtering based on the extend of the brush. However turning on brush filter will essentially
-    disable other interactive elements on the chart such as the highlighting, tool-tip, and reference lines on a chart. Zooming will still
-    be possible if enabled, but only via scrolling (panning will be disabled.) Default value is "true".
-
-    **/
-    _chart.brushOn = function (_) {
-        if (!arguments.length) return _brushOn;
-        _brushOn = _;
-        return _chart;
-    };
-
-    function hasRangeSelected(range) {
-        return range instanceof Array && range.length > 1;
-    }
 
     return _chart;
 };
@@ -4436,7 +4394,6 @@ dc.bubbleChart = function(parent, chartGroup) {
             .attr("fill", _chart.getColor)
             .attr("r", 0);
         dc.transition(bubbleG, _chart.transitionDuration())
-            .selectAll("circle." + _chart.BUBBLE_CLASS)
             .attr("r", function(d) {
                 return _chart.bubbleR(d);
             })
@@ -6603,9 +6560,6 @@ dc.boxPlot = function (parent, chartGroup) {
     var _whiskers = _whiskers_iqr(_whisker_iqr_factor);
 
     var _box = d3.box();
-    var _tickFormat = null;
-
-
     var _boxWidth = function (innerChartWidth, xUnits) {
         if (_chart.isOrdinal())
             return _chart.x().rangeBand();
@@ -6663,11 +6617,6 @@ dc.boxPlot = function (parent, chartGroup) {
         return _chart;
     };
 
-    var boxTransform = function (d, i) {
-        var xOffset = _chart.x()(_chart.keyAccessor()(d,i));
-        return "translate(" + xOffset + ",0)";
-    };
-
     _chart.plotData = function () {
         var _calculatedBoxWidth = _boxWidth(_chart.effectiveWidth(), _chart.xUnitCount());
 
@@ -6675,46 +6624,30 @@ dc.boxPlot = function (parent, chartGroup) {
             .width(_calculatedBoxWidth)
             .height(_chart.effectiveHeight())
             .value(_chart.valueAccessor())
-            .domain(_chart.y().domain())
-            .duration(_chart.transitionDuration())
-            .tickFormat(_tickFormat);
+            .domain(_chart.y().domain());
 
+        var boxTransform = function (d, i) {
+            var xOffset = _chart.x()(_chart.keyAccessor()(d,i));
+            return "translate(" + xOffset + ",0)";
+        };
 
-        var boxesG = _chart.chartBodyG().selectAll('g.box').data(_chart.data());
-
-        renderBoxes(boxesG);
-        updateBoxes(boxesG);
-        removeBoxes(boxesG);
-
-        _chart.fadeDeselectedArea();
-    };
-
-    function renderBoxes(boxesG) {
-        var boxesGEnter = boxesG.enter().append("g");
-
-        boxesGEnter
+        _chart.chartBodyG().selectAll('g.box')
+            .data(_chart.data())
+          .enter().append("g")
             .attr("class", "box")
             .attr("transform", boxTransform)
-            .call(_box)
-            .on("click", function(d) {
-                _chart.filter(d.key);
-                //_chart.focus(_chart.filter());
-                dc.redrawAll(_chart.chartGroup());
-            });
-    }
+            .call(_box);
 
-    function updateBoxes(boxesG) {
-        dc.transition(boxesG, _chart.transitionDuration())
-            .attr("transform", boxTransform)
-            .call(_box)
+        _chart.chartBodyG().selectAll('g.box')
             .each(function() {
                 d3.select(this).select('rect.box').attr("fill", _chart.getColor);
+            })
+            .on("click", function(d) {
+                _chart.filter(d.key);
+                _chart.focus(_chart.filter());
+                dc.redrawAll(_chart.chartGroup());
             });
-    }
-
-    function removeBoxes(boxesG) {
-        boxesG.exit().remove().call(_box);
-    }
+    };
 
     _chart.fadeDeselectedArea = function () {
         if (_chart.hasFilter()) {
@@ -6748,20 +6681,6 @@ dc.boxPlot = function (parent, chartGroup) {
             return d3.max(_chart.valueAccessor()(e));
         });
         return dc.utils.add(max, _chart.yAxisPadding());
-    };
-
-    /**
-     #### .tickFormat()
-     Set the numerical format of the boxplot median, whiskers and quartile labels. Defaults to integer.
-     ```js
-     // format ticks to 2 decimal places
-     chart.tickFormat(d3.format(".2f"));
-     ```
-     **/
-    _chart.tickFormat = function(x) {
-        if (!arguments.length) return _tickFormat;
-        _tickFormat = x;
-        return _chart;
     };
 
     // Returns a function to compute the interquartile range.
