@@ -198,13 +198,7 @@ dc.compositeChart = function (parent, chartGroup) {
             child.width(_chart.width());
             child.margins(_chart.margins());
 
-            if (_shareTitle) {
-                child.title(_chart.title());
-            }
-
-            if (_shareColors && child.colorAccessor() === child._layerColorAccessor) {
-                child.colorCalculator(function() {return child.colors()(i);});
-            }
+            if (_shareTitle) child.title(_chart.title());
         });
         return _chart;
     };
@@ -261,11 +255,9 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     function getYAxisMin(charts) {
-        var allMins = [];
-        for (var i = 0; i < charts.length; ++i) {
-            allMins.push(charts[i].yAxisMin());
-        }
-        return allMins;
+        return charts.map(function(c) {
+            return c.yAxisMin();
+        });
     }
 
     function yAxisMin() {
@@ -277,11 +269,9 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     function getYAxisMax(charts) {
-        var allMaxes = [];
-        for (var i = 0; i < charts.length; ++i) {
-            allMaxes.push(charts[i].yAxisMax());
-        }
-        return allMaxes;
+        return charts.map(function(c) {
+            return c.yAxisMax();
+        });
     }
 
     function yAxisMax() {
@@ -293,11 +283,9 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     function getAllXAxisMinFromChildCharts() {
-        var allMins = [];
-        for (var i = 0; i < _children.length; ++i) {
-            allMins.push(_children[i].xAxisMin());
-        }
-        return allMins;
+        return _children.map(function(c) {
+            return c.xAxisMin();
+        });
     }
 
     _chart.xAxisMin = function () {
@@ -305,11 +293,9 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     function getAllXAxisMaxFromChildCharts() {
-        var allMaxes = [];
-        for (var i = 0; i < _children.length; ++i) {
-            allMaxes.push(_children[i].xAxisMax());
-        }
-        return allMaxes;
+        return _children.map(function(c) {
+            return c.xAxisMax();
+        });
     }
 
     _chart.xAxisMax = function () {
@@ -317,18 +303,11 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     _chart.legendables = function () {
-        var items = [];
-        _children.forEach(function(child, i) {
-            if (_shareColors)
-                child.colors(_chart.colors());
-
-            var childLegendables = child.legendables();
-            if (childLegendables.length)
-                items.push.apply(items,childLegendables);
-            else
-                items.push(dc.utils.createLegendable(child, child.group(), child.valueAccessor(), child.colorCalculator()(i)));
-        });
-        return items;
+        return _children.reduce(function(items,child) {
+            if (_shareColors) child.colors(_chart.colors());
+            items.push.apply(items, child.legendables());
+            return items;
+        },[]);
     };
 
     _chart.legendHighlight = function (d) {

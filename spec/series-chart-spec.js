@@ -24,7 +24,7 @@ describe('dc.seriesChart', function() {
             .x(d3.scale.linear().domain([1,2]))
             .dimension(dimensionColorData)
             .group(groupColorData)
-            .colors(["#000001", "#000002"])
+            .ordinalColors(["#000001", "#000002"])
             .seriesAccessor(function(d) { return +d.key[0];})
             .keyAccessor(function(d) { return +d.key[1];})
             .valueAccessor(function(d) { return +d.value ;})
@@ -50,9 +50,7 @@ describe('dc.seriesChart', function() {
         it('should color lines using the colors in the data', function() {
             var lines = chart.selectAll("path.line");
 
-            expect(d3.select(lines[0][0]).attr("fill")).toBe("#000001");
             expect(d3.select(lines[0][0]).attr("stroke")).toBe("#000001");
-            expect(d3.select(lines[0][1]).attr("fill")).toBe("#000002");
             expect(d3.select(lines[0][1]).attr("stroke")).toBe("#000002");
         });
     });

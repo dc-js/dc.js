@@ -57,7 +57,7 @@ dc.lineChart = function (parent, chartGroup) {
 
         if (layersList.empty()) layersList = chartBody.append("g").attr("class", "stack-list");
 
-        var layers = layersList.selectAll("g.stack").data(_chart.stackLayers());
+        var layers = layersList.selectAll("g.stack").data(_chart.data());
 
         var layersEnter = layers
             .enter()
@@ -71,8 +71,6 @@ dc.lineChart = function (parent, chartGroup) {
         drawArea(layersEnter, layers);
 
         drawDots(chartBody, layers);
-
-        _chart.stackLayers(null);
     };
 
     _chart.interpolate = function(_){
@@ -118,6 +116,10 @@ dc.lineChart = function (parent, chartGroup) {
         return _chart;
     };
 
+    function colors(d, i) {
+        return _chart.getColor.call(d,d.values,i);
+    }
+
     function drawLine(layersEnter, layers) {
         var line = d3.svg.line()
             .x(function (d) {
@@ -131,17 +133,17 @@ dc.lineChart = function (parent, chartGroup) {
         if (_defined)
             line.defined(_defined);
 
-
         var path = layersEnter.append("path")
             .attr("class", "line")
-            .attr("stroke", _chart.getColor)
-            .attr("fill", _chart.getColor);
+            .attr("stroke", colors);
         if (_dashStyle)
             path.attr("stroke-dasharray", _dashStyle);
 
         dc.transition(layers.select("path.line"), _chart.transitionDuration())
+            //.ease("linear")
+            .attr("stroke", colors)
             .attr("d", function (d) {
-                return safeD(line(d.points));
+                return safeD(line(d.values));
             });
     }
 
@@ -162,17 +164,18 @@ dc.lineChart = function (parent, chartGroup) {
             if (_defined)
                 area.defined(_defined);
 
-
             layersEnter.append("path")
                 .attr("class", "area")
-                .attr("fill", _chart.getColor)
+                .attr("fill", colors)
                 .attr("d", function (d) {
-                    return safeD(area(d.points));
+                    return safeD(area(d.values));
                 });
 
             dc.transition(layers.select("path.area"), _chart.transitionDuration())
+                //.ease("linear")
+                .attr("fill", colors)
                 .attr("d", function (d) {
-                    return safeD(area(d.points));
+                    return safeD(area(d.values));
                 });
         }
     }
@@ -190,8 +193,7 @@ dc.lineChart = function (parent, chartGroup) {
             if (tooltips.empty()) tooltips = chartBody.append("g").attr("class", tooltipListClass);
 
             layers.each(function (d, layerIndex) {
-                var layer = d3.select(this);
-                var points = layer.datum().points;
+                var points = d.values;
                 if (_defined) points = points.filter(_defined);
 
                 var g = tooltips.select("g." + TOOLTIP_G_CLASS + "._" + layerIndex);
@@ -199,7 +201,8 @@ dc.lineChart = function (parent, chartGroup) {
 
                 createRefLines(g);
 
-                var dots = g.selectAll("circle." + DOT_CIRCLE_CLASS).data(points);
+                var dots = g.selectAll("circle." + DOT_CIRCLE_CLASS)
+                    .data(points,dc.pluck('x'));
 
                 dots.enter()
                     .append("circle")
@@ -218,7 +221,7 @@ dc.lineChart = function (parent, chartGroup) {
                         hideDot(dot);
                         hideRefLines(g);
                     })
-                    .append("title").text(dc.pluck('data', _chart.getTitleOfVisibleByIndex(layerIndex)));
+                    .append("title").text(dc.pluck('data', _chart.title(d.name)));
 
                 dots.attr("cx", function (d) {
                         return dc.utils.safeNumber(_chart.x()(d.x));
@@ -226,7 +229,7 @@ dc.lineChart = function (parent, chartGroup) {
                     .attr("cy", function (d) {
                         return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
                     })
-                    .select("title").text(dc.pluck('data', _chart.getTitleOfVisibleByIndex(layerIndex)));
+                    .select("title").text(dc.pluck('data', _chart.title(d.name)));
 
                 dots.exit().remove();
             });
@@ -321,25 +324,37 @@ dc.lineChart = function (parent, chartGroup) {
         return _chart;
     };
 
+    function colorFilter(color,inv) {
+        return function() {
+            var item = d3.select(this);
+            var match = item.attr('stroke') == color || item.attr('fill') == color;
+            return inv ? !match : match;
+        };
+    }
+
     _chart.legendHighlight = function (d) {
         if(!_chart.isLegendableHidden(d)) {
-            _chart.selectAll('.chart-body').selectAll('path').filter(function () {
-                return d3.select(this).attr('fill') == d.color;
-            }).classed('highlight', true);
-            _chart.selectAll('.chart-body').selectAll('path').filter(function () {
-                return d3.select(this).attr('fill') != d.color;
-            }).classed('fadeout', true);
+            _chart.selectAll('path.line, path.area')
+                .classed('highlight', colorFilter(d.color))
+                .classed('fadeout', colorFilter(d.color,true));
+
         }
     };
 
     _chart.legendReset = function (d) {
-        _chart.selectAll('.chart-body').selectAll('path').filter(function () {
-            return d3.select(this).attr('fill') == d.color;
-        }).classed('highlight', false);
-        _chart.selectAll('.chart-body').selectAll('path').filter(function () {
-            return d3.select(this).attr('fill') != d.color;
-        }).classed('fadeout', false);
+        _chart.selectAll('path.line, path.area')
+            .classed('highlight', false)
+            .classed('fadeout', false);
     };
+
+    dc.override(_chart,'legendables', function() {
+        var legendables = _chart._legendables();
+        if (!_dashStyle) return legendables;
+        return legendables.map(function(l) {
+            l.dashstyle = _dashStyle;
+            return l;
+        });
+    });
 
     return _chart.anchor(parent, chartGroup);
 };

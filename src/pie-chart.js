@@ -380,14 +380,10 @@ dc.pieChart = function (parent, chartGroup) {
 
     _chart.legendables = function() {
         return _chart.data().map(function (d, i) {
-            var legendable = { name: d.key, data: d.value, others: d.others };
+            var legendable = { name: d.key, data: d.value, others: d.others, chart:_chart };
             legendable.color = _chart.getColor(d,i);
             return legendable;
         });
-    };
-
-    _chart.getColor = function(d,i) {
-        return _chart.colorCalculator()(_chart.colorAccessor()(d, i));
     };
 
     _chart.legendHighlight = function(d) {
