@@ -20,15 +20,16 @@ describe('dc.compositeChart', function() {
             .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
             .transitionDuration(0)
             .xUnits(d3.time.days)
+            .shareColors(true)
             .compose([
                 dc.barChart(chart)
                     .centerBar(true)
-                    .group(dateValueSumGroup, 'Date Value Group')
+                    .group(dateValueSumGroup, 'Date Value Group Bar')
                     .gap(1),
                 dc.lineChart(chart)
                     .group(dateIdSumGroup, 'Date ID Group')
-                    .stack(dateValueSumGroup, 'Date Value Group')
-                    .stack(dateValueSumGroup, 'Date Value Group'),
+                    .stack(dateValueSumGroup, 'Date Value Group Line 1')
+                    .stack(dateValueSumGroup, 'Date Value Group Line 2'),
                 dc.lineChart(chart)
                     .group(dateGroup, 'Date Group')
             ]);
@@ -307,21 +308,22 @@ describe('dc.compositeChart', function() {
                 function legendText(n) {
                     return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item text')[0][n]).text();
                 }
-                expect(legendText(0)).toBe('Date Value Group');
+                expect(legendText(0)).toBe('Date Value Group Bar');
                 expect(legendText(1)).toBe('Date ID Group');
-                expect(legendText(2)).toBe('Date Value Group');
-                expect(legendText(3)).toBe('Date Value Group');
+                expect(legendText(2)).toBe('Date Value Group Line 1');
+                expect(legendText(3)).toBe('Date Value Group Line 2');
                 expect(legendText(4)).toBe('Date Group');
             });
 
             it('should properly delegate highlighting to its children', function () {
                 var firstItem = chart.select('g.dc-legend g.dc-legend-item');
-                var firstLine = chart.children()[0].select("path.line");
 
                 firstItem.on("mouseover")(firstItem.datum());
-                expect(firstLine.classed("highlight")).toBeTruthy();
+                expect(chart.selectAll("rect.highlight").size()).toBe(6);
+                expect(chart.selectAll("path.fadeout").size()).toBe(4);
                 firstItem.on("mouseout")(firstItem.datum());
-                expect(firstLine.classed("highlight")).toBeFalsy();
+                expect(chart.selectAll("rect.highlight").size()).toBe(0);
+                expect(chart.selectAll("path.fadeout").size()).toBe(0);
             });
 
         });
@@ -385,6 +387,8 @@ describe('dc.compositeChart', function() {
                 .brushOn(false)
                 .dimension(dimension)
                 .shareTitle(false)
+                .x(d3.scale.ordinal())
+                .xUnits(dc.units.ordinal)
                 .compose([
                     dc.lineChart(chart)
                         .group(group, "Series 1")

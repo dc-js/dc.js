@@ -120,7 +120,7 @@ suite.addBatch({
             baseData2.add(json2);
             chart.render();
 
-            assert.equal(chart.getChartStack().getDataLayers()[0].length, 2);
+            assert.equal(chart.data()[0].values.length, 2);
         }
     }
 });

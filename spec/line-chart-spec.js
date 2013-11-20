@@ -525,7 +525,7 @@ describe('dc.lineChart', function() {
                 });
 
                 describe('stack hiding', function () {
-                    describe('hiding first stack', function () {
+                    describe('first stack', function () {
                         beforeEach(function () {
                             chart.hideStack("stack 0");
                             chart.render();
@@ -542,7 +542,7 @@ describe('dc.lineChart', function() {
                         });
                     });
 
-                    describe('hiding any other stack', function () {
+                    describe('any other stack', function () {
                         beforeEach(function () {
                             chart.title("stack 2", function (d) { return "stack 2: " + d.value; });
                             chart.hideStack("stack 1");
@@ -560,7 +560,7 @@ describe('dc.lineChart', function() {
                         });
 
                         it('should color chart dots the same as line paths', function () {
-                            var lineColor = chart.select('g._1 path.line').attr("fill");
+                            var lineColor = chart.select('g._1 path.line').attr("stroke");
                             var circleColor = chart.select('g._1 circle.dot').attr("fill");
                             expect(lineColor).toEqual(circleColor);
                         });

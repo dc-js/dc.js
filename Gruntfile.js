@@ -136,7 +136,6 @@ module.exports = function (grunt) {
                       flatten: true,
                       src: [output.js,
                             output.js + ".map",
-                            'node_modules/jquery/tmp/jquery.js',
                             'node_modules/d3/d3.js',
                             'node_modules/crossfilter/crossfilter.js',
                             'test/env-data.js'],
