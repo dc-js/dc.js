@@ -2280,7 +2280,7 @@ dc.coordinateGridChart = function (_chart) {
 
     /**
     #### .brushOn([boolean])
-    Turn on/off the brush based in-place range filter. When the brush is on then user will be able to  simply drag the mouse
+    Turn on/off the brush based in-place range filter. When the brush is on then user will be able to simply drag the mouse
     across the chart to perform range filtering based on the extend of the brush. However turning on brush filter will essentially
     disable other interactive elements on the chart such as the highlighting, tool-tip, and reference lines on a chart. Zooming will still
     be possible if enabled, but only via scrolling (panning will be disabled.) Default value is "true".
@@ -2561,7 +2561,7 @@ dc.stackableChart = function (_chart) {
 
     _chart.yAxisMin = function () {
         var min = d3.min(flattenStack(), function (p) {
-            return  (p.y + p.y0 < p.y0) ? (p.y + p.y0) : p.y0;
+            return (p.y + p.y0 < p.y0) ? (p.y + p.y0) : p.y0;
         });
 
         return dc.utils.subtract(min, _chart.yAxisPadding());
@@ -2639,11 +2639,11 @@ dc.stackableChart = function (_chart) {
         return layers.length ? _chart.stackLayout()(layers) : [];
     });
 
-    _chart._ordinalXDomain = function() {
+    _chart._ordinalXDomain = function () {
         return flattenStack().map(dc.pluck('x'));
     };
 
-    _chart.colorAccessor(function(d,i) {
+    _chart.colorAccessor(function (d) {
         var layer = this.layer || this.name || d.name || d.layer;
         return layer;
     });
@@ -3358,7 +3358,7 @@ dc.barChart = function (parent, chartGroup) {
                 var x = _chart.x()(d.x);
                 if (_centerBar) x -= _barWidth / 2;
                 if (_chart.isOrdinal()) x += _gap/2;
-                return  dc.utils.safeNumber(x);
+                return dc.utils.safeNumber(x);
             })
             .attr("y", function (d) {
                 var y = _chart.y()(d.y + d.y0);
@@ -3501,11 +3501,10 @@ dc.barChart = function (parent, chartGroup) {
             _chart.selectAll('rect.bar')
                 .classed('highlight', colorFilter(d.color))
                 .classed('fadeout', colorFilter(d.color,true));
-
         }
     };
 
-    _chart.legendReset = function (d) {
+    _chart.legendReset = function () {
         _chart.selectAll('rect.bar')
             .classed('highlight', false)
             .classed('fadeout', false);
@@ -3862,11 +3861,10 @@ dc.lineChart = function (parent, chartGroup) {
             _chart.selectAll('path.line, path.area')
                 .classed('highlight', colorFilter(d.color))
                 .classed('fadeout', colorFilter(d.color,true));
-
         }
     };
 
-    _chart.legendReset = function (d) {
+    _chart.legendReset = function () {
         _chart.selectAll('path.line, path.area')
             .classed('highlight', false)
             .classed('fadeout', false);
@@ -4471,7 +4469,7 @@ dc.compositeChart = function (parent, chartGroup) {
     **/
     _chart.compose = function (charts) {
         _children = charts;
-        _children.forEach(function(child, i) {
+        _children.forEach(function(child) {
             child.height(_chart.height());
             child.width(_chart.width());
             child.margins(_chart.margins());
@@ -4793,7 +4791,7 @@ var chart2 = dc.compositeChart("#us-chart2", "chartGroupA");
 dc.geoChoroplethChart = function (parent, chartGroup) {
     var _chart = dc.colorChart(dc.baseChart({}));
 
-    _chart.colorAccessor(function (d, i) {
+    _chart.colorAccessor(function (d) {
         return d || 0;
     });
 
@@ -4894,7 +4892,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     function renderPaths(regionG, layerIndex, data) {
         var paths = regionG
             .select("path")
-            .attr("fill", function (d) {
+            .attr("fill", function () {
                 var currentFill = d3.select(this).attr("fill");
                 if (currentFill)
                     return currentFill;
@@ -5579,7 +5577,7 @@ dc.legend = function () {
         var row = 0;
         itemEnter.attr("transform", function(d, i) {
             if(_horizontal) {
-                var translateBy = "translate(" + _cumulativeLegendTextWidth  + "," + row * legendItemHeight() + ")";
+                var translateBy = "translate(" + _cumulativeLegendTextWidth + "," + row * legendItemHeight() + ")";
                 if ((_cumulativeLegendTextWidth + _itemWidth) >= _legendWidth) {
                     ++row ;
                     _cumulativeLegendTextWidth = 0 ;
@@ -6107,7 +6105,7 @@ dc.heatMap = function (parent, chartGroup) {
                 }
             });
         } else {
-            _chart.selectAll("g.box-group").each(function (d) {
+            _chart.selectAll("g.box-group").each(function () {
                 _chart.resetHighlight(this);
             });
         }

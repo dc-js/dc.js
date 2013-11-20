@@ -137,7 +137,7 @@ dc.stackableChart = function (_chart) {
 
     _chart.yAxisMin = function () {
         var min = d3.min(flattenStack(), function (p) {
-            return  (p.y + p.y0 < p.y0) ? (p.y + p.y0) : p.y0;
+            return (p.y + p.y0 < p.y0) ? (p.y + p.y0) : p.y0;
         });
 
         return dc.utils.subtract(min, _chart.yAxisPadding());
@@ -215,11 +215,11 @@ dc.stackableChart = function (_chart) {
         return layers.length ? _chart.stackLayout()(layers) : [];
     });
 
-    _chart._ordinalXDomain = function() {
+    _chart._ordinalXDomain = function () {
         return flattenStack().map(dc.pluck('x'));
     };
 
-    _chart.colorAccessor(function(d,i) {
+    _chart.colorAccessor(function (d) {
         var layer = this.layer || this.name || d.name || d.layer;
         return layer;
     });

@@ -185,7 +185,7 @@ dc.heatMap = function (parent, chartGroup) {
                 }
             });
         } else {
-            _chart.selectAll("g.box-group").each(function (d) {
+            _chart.selectAll("g.box-group").each(function () {
                 _chart.resetHighlight(this);
             });
         }

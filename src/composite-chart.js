@@ -193,7 +193,7 @@ dc.compositeChart = function (parent, chartGroup) {
     **/
     _chart.compose = function (charts) {
         _children = charts;
-        _children.forEach(function(child, i) {
+        _children.forEach(function(child) {
             child.height(_chart.height());
             child.width(_chart.width());
             child.margins(_chart.margins());

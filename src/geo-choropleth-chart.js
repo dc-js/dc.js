@@ -29,7 +29,7 @@ var chart2 = dc.compositeChart("#us-chart2", "chartGroupA");
 dc.geoChoroplethChart = function (parent, chartGroup) {
     var _chart = dc.colorChart(dc.baseChart({}));
 
-    _chart.colorAccessor(function (d, i) {
+    _chart.colorAccessor(function (d) {
         return d || 0;
     });
 
@@ -130,7 +130,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     function renderPaths(regionG, layerIndex, data) {
         var paths = regionG
             .select("path")
-            .attr("fill", function (d) {
+            .attr("fill", function () {
                 var currentFill = d3.select(this).attr("fill");
                 if (currentFill)
                     return currentFill;

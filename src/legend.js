@@ -86,7 +86,7 @@ dc.legend = function () {
         var row = 0;
         itemEnter.attr("transform", function(d, i) {
             if(_horizontal) {
-                var translateBy = "translate(" + _cumulativeLegendTextWidth  + "," + row * legendItemHeight() + ")";
+                var translateBy = "translate(" + _cumulativeLegendTextWidth + "," + row * legendItemHeight() + ")";
                 if ((_cumulativeLegendTextWidth + _itemWidth) >= _legendWidth) {
                     ++row ;
                     _cumulativeLegendTextWidth = 0 ;

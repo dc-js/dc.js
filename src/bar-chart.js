@@ -90,7 +90,7 @@ dc.barChart = function (parent, chartGroup) {
                 var x = _chart.x()(d.x);
                 if (_centerBar) x -= _barWidth / 2;
                 if (_chart.isOrdinal()) x += _gap/2;
-                return  dc.utils.safeNumber(x);
+                return dc.utils.safeNumber(x);
             })
             .attr("y", function (d) {
                 var y = _chart.y()(d.y + d.y0);
@@ -233,11 +233,10 @@ dc.barChart = function (parent, chartGroup) {
             _chart.selectAll('rect.bar')
                 .classed('highlight', colorFilter(d.color))
                 .classed('fadeout', colorFilter(d.color,true));
-
         }
     };
 
-    _chart.legendReset = function (d) {
+    _chart.legendReset = function () {
         _chart.selectAll('rect.bar')
             .classed('highlight', false)
             .classed('fadeout', false);
