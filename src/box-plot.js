@@ -126,7 +126,7 @@ dc.boxPlot = function (parent, chartGroup) {
             .on("click", function(d) {
                 _chart.filter(d.key);
                 //_chart.focus(_chart.filter());
-                dc.redrawAll(_chart.chartGroup());
+                _chart.redrawGroup();
             });
     }
 

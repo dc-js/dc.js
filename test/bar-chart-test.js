@@ -797,8 +797,7 @@ suite.addBatch({
             return chart;
         },
         'chart should only render correct number of bars': function (chart) {
-            // TODO: will be nice to only render what is necessary - only one bar
-            assert.lengthOf(chart.selectAll("rect.bar")[0], 6);
+            assert.lengthOf(chart.selectAll("rect.bar")[0], 1);
         },
         'bar width should be resized accordingly': function (chart) {
             //console.log(chart.selectAll("rect.bar")[0][0].attr("width"));

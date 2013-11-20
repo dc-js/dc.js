@@ -43,7 +43,7 @@ dc.heatMap = function (parent, chartGroup) {
         var filter = d.key;
         dc.events.trigger(function() {
             _chart.filter(filter);
-            dc.redrawAll(_chart.chartGroup());
+            _chart.redrawGroup();
         });
     };
 
@@ -64,7 +64,7 @@ dc.heatMap = function (parent, chartGroup) {
                     _chart.filter(d.key);
                 });
             }
-            dc.redrawAll(_chart.chartGroup());
+            _chart.redrawGroup();
         });
     }
 

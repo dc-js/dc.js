@@ -188,38 +188,9 @@ dc.baseChart = function (_chart) {
     _chart.group = function (g, name) {
         if (!arguments.length) return _group;
         _group = g;
+        _chart._groupName = name;
         _chart.expireCache();
-        if (typeof name === 'string') _chart._setGroupName(_group, name);
         return _chart;
-    };
-
-    // store groups names in the group itself
-    // __names__ ->
-    //    chart (in referenced by multiple charts) ->
-    //        array of accessors, array of names
-    function groupName(chart, g, accessor) {
-        var c = chart.chartID(),
-            k = '__names__';
-        if (!accessor || accessor == chart.valueAccessor())
-            accessor = "default";
-        if (!g[k]) g[k] = {};
-        if (!g[k][c]) g[k][c] = {a:[],n:[]};
-        var i = g[k][c].a.indexOf(accessor);
-        if (i == -1) {
-            i = g[k][c].a.length;
-            g[k][c].a[i] = accessor;
-            g[k][c].n[i] = {name:''};
-        }
-        return g[k][c].n[i];
-    }
-
-
-    _chart._getGroupName = function (g, accessor) {
-        return groupName(_chart, g, accessor).name;
-    };
-
-    _chart._setGroupName = function (g, name, accessor) {
-        groupName(_chart, g, accessor).name = name;
     };
 
     /**
@@ -465,9 +436,15 @@ dc.baseChart = function (_chart) {
 
         var result = _chart.doRedraw();
 
+        if (_legend) _legend.render();
+
         _chart.activateRenderlets("postRedraw");
 
         return result;
+    };
+
+    _chart.redrawGroup = function () {
+        dc.redrawAll(_chart.chartGroup());
     };
 
     _chart._invokeFilteredListener = function (f) {
@@ -589,7 +566,7 @@ dc.baseChart = function (_chart) {
         var filter = _chart.keyAccessor()(d);
         dc.events.trigger(function () {
             _chart.filter(filter);
-            dc.redrawAll(_chart.chartGroup());
+            _chart.redrawGroup();
         });
     };
 

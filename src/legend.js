@@ -37,15 +37,13 @@ dc.legend = function () {
         _g = _parent.svg().append("g")
             .attr("class", "dc-legend")
             .attr("transform", "translate(" + _x + "," + _y + ")");
+        var legendables = _parent.legendables();
 
         var itemEnter = _g.selectAll('g.dc-legend-item')
-            .data(_parent.legendables())
+            .data(legendables)
             .enter()
             .append("g")
             .attr("class", "dc-legend-item")
-            .classed("fadeout", function(d) {
-                return _parent.isLegendableHidden(d);
-            })
             .on("mouseover", function(d) {
                 _parent.legendHighlight(d);
             })
@@ -56,7 +54,12 @@ dc.legend = function () {
                 _parent.legendToggle(d);
             });
 
-        if (_parent.legendables().some(function (legendItem) { return legendItem.dashstyle; })) {
+        _g.selectAll('g.dc-legend-item')
+            .classed("fadeout", function(d) {
+                return d.chart.isLegendableHidden(d);
+            });
+
+        if (legendables.some(dc.pluck('dashstyle'))) {
             itemEnter
                 .append("line")
                 .attr("x1", 0)
@@ -64,18 +67,18 @@ dc.legend = function () {
                 .attr("x2", _itemHeight)
                 .attr("y2", _itemHeight / 2)
                 .attr("stroke-width", 2)
-                .attr("stroke-dasharray", function(d){return d.dashstyle;})
-                .attr("stroke", function(d){return d.color;});
+                .attr("stroke-dasharray", dc.pluck('dashstyle'))
+                .attr("stroke", dc.pluck('color'));
         } else {
             itemEnter
                 .append("rect")
                 .attr("width", _itemHeight)
                 .attr("height", _itemHeight)
-                .attr("fill", function(d){return d.color;});
+                .attr("fill", function(d){return d?d.color:"blue";});
         }
 
         itemEnter.append("text")
-                .text(function(d){return d.name;})
+                .text(dc.pluck('name'))
                 .attr("x", _itemHeight + LABEL_GAP)
                 .attr("y", function(){return _itemHeight / 2 + (this.clientHeight?this.clientHeight:13) / 2 - 2;});
 

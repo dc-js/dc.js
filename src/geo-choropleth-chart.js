@@ -149,7 +149,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         var selectedRegion = geoJson(layerIndex).keyAccessor(d);
         dc.events.trigger(function () {
             _chart.filter(selectedRegion);
-            dc.redrawAll(_chart.chartGroup());
+            _chart.redrawGroup();
         });
     };
 
