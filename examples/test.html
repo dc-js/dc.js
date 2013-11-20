@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Number Display Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+
+<div id="chart"></div>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript">
+
+var barChart = dc.barChart("#chart");
+
+var testData = [
+    {"type": "A", "cost": "30",loc:1},
+    {"type": "B", "cost": "20",loc:1},
+    {"type": "B", "cost": "30",loc:2},
+    {"type": "A", "cost": "30",loc:2}
+];
+
+var ndx = crossfilter(testData),
+    resultDim  = ndx.dimension(dc.pluck('type')),
+    locDim = ndx.dimension(dc.pluck('loc')),
+    totPerResult = resultDim.group().reduceSum(dc.pluck('cost'));
+
+barChart
+    .width(400).height(300)
+    .dimension(resultDim)
+    .group(totPerResult)
+.colorAccessor(function(d) {return d.key;})
+    .x(d3.scale.ordinal())
+    .xUnits(dc.units.ordinal);
+
+dc.renderAll();
+
+</script>
+
+</body>
+</html>
