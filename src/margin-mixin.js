@@ -1,10 +1,10 @@
 /**
-## <a name="marginable" href="#marginable">#</a>  Marginable
+## Margin Mixin
 
-Marginable is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid Charts.
+Margin is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid Charts.
 
 **/
-dc.marginable = function (_chart) {
+dc.marginMixin = function (_chart) {
     var _margin = {top: 10, right: 50, bottom: 30, left: 30};
 
     /**

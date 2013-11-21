@@ -1,5 +1,5 @@
 dc.scatterPlot = function (parent, chartGroup) {
-    var _chart = dc.coordinateGridChart({});
+    var _chart = dc.coordinateGridMixin({});
 
     var _locator = function (d) {
         return "translate(" + _chart.x()(_chart.keyAccessor()(d)) + "," + _chart.y()(_chart.valueAccessor()(d)) + ")";

@@ -1,14 +1,14 @@
 /**
-## <a name="capped" href="#capped">#</a>  Capped
+## Cap Mixin
 
-Capped is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the Row and Pie Charts.
+Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the Row and Pie Charts.
 
 The top ordered elements in the group up to the cap amount will be kept in the chart and
 the sum of those below will be added to the *others* element. The keys of the elements below the cap limit are recorded
 in order to repsond to onClick events and trigger filtering of all the within that grouping.
 
 **/
-dc.capped = function (_chart) {
+dc.capMixin = function (_chart) {
 
     var _cap = Infinity;
 

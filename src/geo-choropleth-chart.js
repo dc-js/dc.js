@@ -1,7 +1,11 @@
 /**
-## <a name="geo-choropleth-chart" href="#geo-choropleth-chart">#</a> Geo Choropleth Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
-Geo choropleth chart is design to make creating crossfilter driven choropleth map from GeoJson data an easy process. This
-chart implementation was inspired by [the great d3 choropleth example](http://bl.ocks.org/4060606).
+## Geo Choropleth Chart
+
+Includes: [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
+
+Geo choropleth chart is designed to make creating crossfilter driven choropleth
+map from GeoJson data an easy process. This chart implementation was inspired by
+[the great d3 choropleth example](http://bl.ocks.org/4060606).
 
 Examples:
 * [US Venture Capital Landscape 2011](http://nickqizhu.github.com/dc.js/vc/index.html)
@@ -27,7 +31,7 @@ var chart2 = dc.compositeChart("#us-chart2", "chartGroupA");
 
 **/
 dc.geoChoroplethChart = function (parent, chartGroup) {
-    var _chart = dc.colorChart(dc.baseChart({}));
+    var _chart = dc.colorMixin(dc.baseMixin({}));
 
     _chart.colorAccessor(function (d) {
         return d || 0;

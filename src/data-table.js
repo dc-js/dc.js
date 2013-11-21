@@ -1,5 +1,8 @@
 /**
-## <a name="data-table" href="#data-table">#</a> Data Table Widget [Concrete] < [Base Chart](#base-chart)
+## Data Table Widget
+
+Includes: [Base Mixin](#base-mixin)
+
 Data table is a simple widget designed to list crossfilter focused data set (rows being filtered) in a good old tabular
 fashion.
 
@@ -25,7 +28,7 @@ dc.dataTable = function(parent, chartGroup) {
     var COLUMN_CSS_CLASS = "dc-table-column";
     var GROUP_CSS_CLASS = "dc-table-group";
 
-    var _chart = dc.baseChart({});
+    var _chart = dc.baseMixin({});
 
     var _size = 25;
     var _columns = [];

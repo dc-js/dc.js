@@ -1,10 +1,10 @@
 /**
-## <a name="stackable-chart" href="#stackable-chart">#</a> Stackable Chart [Abstract]
-Stackable chart is an abstract chart introduced to provide cross-chart support of stackability. Concrete implementation of
-charts can then selectively mix-in this capability.
+## Stack Mixin
+
+Stack Mixin is an mixin that provides cross-chart support of stackability using d3.layout.stack.
 
 **/
-dc.stackableChart = function (_chart) {
+dc.stackMixin = function (_chart) {
 
     var _stackLayout = d3.layout.stack()
         .values(prepareValues);

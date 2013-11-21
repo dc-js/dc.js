@@ -1,12 +1,12 @@
 /**
-## <a name="composite-chart" href="#composite-chart">#</a> Composite Chart [Concrete] < [CoordinateGrid Chart](#coordinate-grid-chart)
-Composite chart is a special kind of chart that resides somewhere between abstract and concrete charts. It does not
-generate data visualization directly, but rather working with other concrete charts to do the job. You can essentially
-overlay(compose) different bar/line/area charts in a single composite chart to achieve some quite flexible charting
-effects.
+## Composite Chart
 
-Examples:
-* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
+Includes: [Coordinate Grid Mixin](#coordinate-grid-mixin)
+
+Composite charts are a special kind of chart that allow you to render multiple
+charts on the same Coordinate Grid. You can overlay(compose) different
+bar/line/area charts in a single composite chart to achieve some quite flexible
+charting effects.
 
 #### dc.compositeChart(parent[, chartGroup])
 Create a composite chart instance and attach it to the given parent element.
@@ -32,7 +32,7 @@ dc.compositeChart = function (parent, chartGroup) {
     var SUB_CHART_CLASS = "sub";
     var DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING = 12;
 
-    var _chart = dc.coordinateGridChart({});
+    var _chart = dc.coordinateGridMixin({});
     var _children = [];
 
     var _shareColors = false,

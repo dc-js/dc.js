@@ -1,10 +1,13 @@
 /**
-## <a name="coordinate-grid-chart" href="#coordinate-grid-chart">#</a> CoordinateGrid Chart [Abstract] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
-Coordinate grid chart is an abstract base chart designed to support a number of coordinate grid based concrete chart types,
+## Coordinate Grid Mixin
+
+Includes: [Color Mixin](#color-mixin), [Margin Mixin](#margin-mixin), [Base Mixin](#base-mixin)
+
+Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based concrete chart types,
 i.e. bar chart, line chart, and bubble chart.
 
 **/
-dc.coordinateGridChart = function (_chart) {
+dc.coordinateGridMixin = function (_chart) {
     var GRID_LINE_CLASS = "grid-line";
     var HORIZONTAL_CLASS = "horizontal";
     var VERTICAL_CLASS = "vertical";
@@ -12,7 +15,7 @@ dc.coordinateGridChart = function (_chart) {
     var X_AXIS_LABEL_CLASS = 'x-axis-label';
     var DEFAULT_AXIS_LABEL_PADDING = 12;
 
-    _chart = dc.colorChart(dc.marginable(dc.baseChart(_chart)));
+    _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin(_chart)));
 
     _chart.colors(d3.scale.category10());
     _chart._mandatoryAttributes().push('x');

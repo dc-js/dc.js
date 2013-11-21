@@ -1,7 +1,11 @@
 /**
-## <a name="series-chart" href="#Series-chart">#</a> Series Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
+ ## Series Chart
+
+ Includes: [Composite Chart](#composite chart)
+
  A series chart is a chart that shows multiple series of data as lines, where the series
- is specified in the data.
+ is specified in the data. It is a special implementation Composite Chart and inherits
+ all composite features other than recomposing the chart.
 
  #### dc.seriesChart(parent[, chartGroup])
  Create a series chart instance and attach it to the given parent element.

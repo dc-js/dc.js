@@ -1,5 +1,8 @@
 /**
-## <a name="data-count" href="#data-count">#</a> Data Count Widget [Concrete] < [Base Chart](#base-chart)
+## Data Count Widget
+
+Includes: [Base Mixin](#base-mixin)
+
 Data count is a simple widget designed to display total number records in the data set vs. the number records selected
 by the current filters. Once created data count widget will automatically update the text content of the following elements
 under the parent element.
@@ -42,7 +45,7 @@ dc.dataCount(".dc-data-count")
 **/
 dc.dataCount = function(parent, chartGroup) {
     var _formatNumber = d3.format(",d");
-    var _chart = dc.baseChart({});
+    var _chart = dc.baseMixin({});
 
     _chart.doRender = function() {
         _chart.selectAll(".total-count").text(_formatNumber(_chart.dimension().size()));

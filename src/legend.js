@@ -1,5 +1,5 @@
 /**
-## <a name="legend" href="#legend">#</a> Legend [Concrete]
+## Legend
 Legend is a attachable widget that can be added to other dc charts to render horizontal legend labels.
 
 ```js

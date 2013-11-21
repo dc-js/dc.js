@@ -1,5 +1,8 @@
 /**
-## <a name="number-display" href="#number-display">#</a> Number Display [Concrete] < [Base Chart](#base-chart)
+## Number Display Widget
+
+Includes: [Base Mixin](#base-mixin)
+
 A display of a single numeric value.
 
 Examples:
@@ -30,7 +33,7 @@ var display1 = dc.numberDisplay("#chart-container1");
 dc.numberDisplay = function (parent, chartGroup) {
     var SPAN_CLASS = 'number-display';
     var _formatNumber = d3.format(".2s");
-    var _chart = dc.baseChart({});
+    var _chart = dc.baseMixin({});
 
     // dimension not required
     _chart._mandatoryAttributes(['group']);

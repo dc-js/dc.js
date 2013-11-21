@@ -1,5 +1,8 @@
 /**
- ## <a name="boxplot" href="#boxplot">#</a> Box Plot [Concrete] < [CoordinateGrid Chart](#coordinate-grid-chart)
+ ## Box Plot
+
+ Includes: [Coordinate Grid Mixin](#coordinate-grid-mixin)
+
  A box plot is a chart that depicts numerical data via their quartile ranges.
 
  #### dc.boxPlot(parent[, chartGroup])
@@ -23,7 +26,7 @@
 
  **/
 dc.boxPlot = function (parent, chartGroup) {
-    var _chart = dc.coordinateGridChart({});
+    var _chart = dc.coordinateGridMixin({});
 
     var _whisker_iqr_factor = 1.5;
     var _whiskers_iqr = default_whiskers_iqr;
@@ -31,7 +34,6 @@ dc.boxPlot = function (parent, chartGroup) {
 
     var _box = d3.box();
     var _tickFormat = null;
-
 
     var _boxWidth = function (innerChartWidth, xUnits) {
         if (_chart.isOrdinal())

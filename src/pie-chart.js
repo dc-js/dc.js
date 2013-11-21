@@ -1,7 +1,10 @@
 /**
-## <a name="pie-chart" href="#pie-chart">#</a> Pie Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
-This chart is a concrete pie chart implementation usually used to visualize small number of categorical distributions.
-Pie chart implementation uses keyAccessor to generate slices, and valueAccessor to calculate the size of each slice(key)
+## Pie Chart
+
+Includes: [Cap Mixin](#cap-mixin), [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
+
+The pie chart implementation is usually used to visualize small number of categorical distributions.
+Pie chart uses keyAccessor to generate slices, and valueAccessor to calculate the size of each slice(key)
 relatively to the total sum of all values. Slices are ordered by `.ordering` which defaults to sorting by key.
 
 Examples:
@@ -44,7 +47,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     var _externalLabelRadius;
 
-    var _chart = dc.capped(dc.colorChart(dc.baseChart({})));
+    var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
 
     _chart.colorAccessor(_chart.cappedKeyAccessor);
 

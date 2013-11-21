@@ -1,5 +1,8 @@
 /**
-## <a name="line-chart" href="#line-chart">#</a> Line Chart [Concrete] < [Stackable Chart](#stackable-chart) < [CoordinateGrid Chart](#coordinate-grid-chart)
+## Line Chart
+
+Includes [Stack Mixin](#stack-mixin), [Coordinate Grid Mixin](#coordinate-grid-mixin)
+
 Concrete line/area chart implementation.
 
 Examples:
@@ -38,7 +41,7 @@ dc.lineChart = function (parent, chartGroup) {
     var X_AXIS_REF_LINE_CLASS = "xRef";
     var DEFAULT_DOT_OPACITY = 1e-6;
 
-    var _chart = dc.stackableChart(dc.coordinateGridChart({}));
+    var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
     var _renderArea = false;
     var _dotRadius = DEFAULT_DOT_RADIUS;
     var _dataPointRadius = null;

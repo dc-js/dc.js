@@ -1,9 +1,12 @@
 /**
-## <a name="abstract-bubble-chart" href="#abstract-bubble-chart">#</a> Abstract Bubble Chart [Abstract] < [Color Chart](#color-chart)
-An abstraction provides reusable functionalities for any chart that needs to visualize data using bubbles.
+## Bubble Mixin
+
+Includes: [Color Mixin](#color-mixin)
+
+This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.
 
 **/
-dc.abstractBubbleChart = function (_chart) {
+dc.bubbleMixin = function (_chart) {
     var _maxBubbleRelativeSize = 0.3;
     var _minRadiusWithLabel = 10;
 
@@ -11,7 +14,7 @@ dc.abstractBubbleChart = function (_chart) {
     _chart.BUBBLE_CLASS = "bubble";
     _chart.MIN_RADIUS = 10;
 
-    _chart = dc.colorChart(_chart);
+    _chart = dc.colorMixin(_chart);
 
     _chart.renderLabel(true);
     _chart.renderTitle(false);

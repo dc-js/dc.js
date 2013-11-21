@@ -1,5 +1,8 @@
 /**
-## <a name="row-chart" href="#row-chart">#</a> Row Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
+## Row Chart
+
+Includes: [Cap Mixin](#cap-mixin), [Margin Mixin](#margin-mixin), [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
+
 Concrete row chart implementation.
 
 #### dc.rowChart(parent[, chartGroup])
@@ -25,14 +28,13 @@ dc.rowChart = function (parent, chartGroup) {
     var _g;
 
     var _labelOffsetX = 10;
-
     var _labelOffsetY = 15;
 
     var _gap = 5;
 
     var _rowCssClass = "row";
 
-    var _chart = dc.capped(dc.marginable(dc.colorChart(dc.baseChart({}))));
+    var _chart = dc.capMixin(dc.marginMixin(dc.colorMixin(dc.baseMixin({}))));
 
     var _x;
 

@@ -1,10 +1,10 @@
 /**
-## <a name="base-chart" href="#base-chart">#</a> Base Chart [Abstract]
-Base chart is an abstract functional object representing a basic dc chart object for all chart and widget implementation.
-Every function on base chart are also inherited available on all concrete chart implementation in dc library.
-
+## Base Mixin
+Base Mixin is an abstract functional object representing a basic dc chart object
+for all chart and widget implementations. Methods from the Base Mixin are inherited
+and available on all chart implementation in the DC library.
 **/
-dc.baseChart = function (_chart) {
+dc.baseMixin = function (_chart) {
     _chart.__dc_flag__ = dc.utils.uniqueId();
 
     var _dimension;

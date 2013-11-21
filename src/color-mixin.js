@@ -1,11 +1,12 @@
 /**
-## <a name="color-chart" href="#color-chart">#</a> Color Chart [Abstract]
-Color chart is an abstract chart functional class created to provide universal coloring support as a mix-in for any concrete
+## Color Mixin
+
+Color Mixin is an abstract chart functional class created to provide universal coloring support as a mix-in for any concrete
 chart implementation.
 
 **/
 
-dc.colorChart = function(_chart) {
+dc.colorMixin = function(_chart) {
     var _colors = d3.scale.category20c();
     var _defaultAccessor = true;
 

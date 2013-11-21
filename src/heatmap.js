@@ -1,5 +1,8 @@
 /**
- ## <a name="heatmap" href="#heatmap">#</a> Heat Map [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
+ ## Heat Map
+
+ Includes: [Color Mixin](#color-mixin), [Margin Mixin](#margin-mixin), [Base Mixin](#base-mixin)
+
  A heat map is matrix that represents the values of two dimensions of data using colors.
 
  #### dc.heatMap(parent[, chartGroup])
@@ -33,7 +36,7 @@ dc.heatMap = function (parent, chartGroup) {
     var _xBorderRadius = DEFAULT_BORDER_RADIUS;
     var _yBorderRadius = DEFAULT_BORDER_RADIUS;
 
-    var _chart = dc.colorChart(dc.marginable(dc.baseChart({})));
+    var _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin({})));
     _chart._mandatoryAttributes(['group']);
     _chart.title(_chart.colorAccessor());
 
