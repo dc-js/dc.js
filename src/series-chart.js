@@ -124,6 +124,12 @@ dc.seriesChart = function (parent, chartGroup) {
         return _chart;
     };
 
+    /**
+     #### .valueSort([sortFunction])
+     Get or set a function to the sort each series values by. By default this is
+     the key accessor which, for example, a will ensure lineChart a series connects
+     its points in increasing key/x order, rather than haphazardly.
+    **/
     _chart.valueSort = function(_) {
         if (!arguments.length) return _valueSort;
         _valueSort = _;

@@ -41,10 +41,10 @@ dc.capMixin = function (_chart) {
 
     _chart.data(function(group) {
         if (_cap == Infinity) {
-            return _chart.computeOrderedGroups(group.all());
+            return _chart._computeOrderedGroups(group.all());
         } else {
             var topRows = group.top(_cap); // ordered by crossfilter group order (default value)
-            topRows = _chart.computeOrderedGroups(topRows); // re-order using ordering (default key)
+            topRows = _chart._computeOrderedGroups(topRows); // re-order using ordering (default key)
             if (_othersGrouper) return _othersGrouper(topRows);
             return topRows;
         }

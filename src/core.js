@@ -4,26 +4,6 @@
 The entire dc.js library is scoped under **dc** name space. It does not introduce anything else into the global
 name space.
 
-* [Base Chart [abstract]](#base-chart)
-* [Color Chart [abstract]](#color-chart)
-* [Stackable Chart [abstract]](#stackable-chart)
-* [Coordinate Grid Chart [abstract] < Color Chart < Base Chart](#coordinate-grid-chart)
-* [Pie Chart [concrete] < Color Chart < Base Chart](#pie-chart)
-* [Row Chart [concrete] < Color Chart < Base chart](#row-chart)
-* [Bar Chart [concrete] < Stackable Chart < CoordinateGrid Chart](#bar-chart)
-* [Line Chart [concrete] < Stackable Chart < CoordinateGrid Chart](#line-chart)
-* [Composite Chart [concrete] < CoordinateGrid Chart](#composite-chart)
-* [Abstract Bubble Chart [abstract] < Color Chart](#abstract-bubble-chart)
-* [Bubble Chart [concrete] < Abstract Bubble Chart < CoordinateGrid Chart](#bubble-chart)
-* [Bubble Overlay Chart [concrete] < Abstract Bubble Chart < Base Chart](#bubble-overlay-chart)
-* [Geo Choropleth Chart [concrete] < Color Chart < Base Chart](#geo-choropleth-chart)
-* [Data Count Widget [concrete] < Base Chart](#data-count)
-* [Data Table Widget [concrete] < Base Chart](#data-table)
-* [Number Display [Concrete] < Base Chart](#number-display)
-* [Legend [concrete]](#legend)
-* [Listeners](#listeners)
-* [Utilities](#util)
-
 #### Function Chain
 Majority of dc functions are designed to allow function chaining, meaning it will return the current chart instance
 whenever it is appropriate. Therefore configuration of a chart can be written in the following style.
@@ -108,7 +88,7 @@ dc.deregisterAllCharts = function(group) {
 };
 
 /**
-## <a name="util" href="#util">#</a> Utilities
+## Utilities
 **/
 
 /**

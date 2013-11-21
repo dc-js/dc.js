@@ -1,4 +1,5 @@
 module.exports = function (grunt) {
+    'use strict';
     var jsFiles = module.exports.jsFiles,
     output = {
       js: '<%= pkg.name %>.js',
@@ -114,6 +115,12 @@ module.exports = function (grunt) {
                 dest: 'web/docs/api-latest.md'
             }
         },
+        toc: {
+            api: {
+                src: '<%= emu.api.dest %>',
+                dest: '<%= emu.api.dest %>'
+            }
+        },
         markdown: {
             html: {
                 src: '<%= emu.api.dest %>',
@@ -185,9 +192,9 @@ module.exports = function (grunt) {
     // These plugins provide necessary tasks.
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-docco2');
     grunt.loadNpmTasks('grunt-gh-pages');
@@ -214,10 +221,25 @@ module.exports = function (grunt) {
         var render = require('./test/web-test');
         render(grunt.log.writeln);
     });
+    grunt.registerMultiTask('toc', 'Generate a markdown table of contents.', function() {
+        var marked = require('marked'),
+            slugify = function(s) { return s.trim().replace(/[-_\s]+/g, '-').toLowerCase(); },
+            srcFile = this.files[0].src[0],
+            destFile = this.files[0].dest,
+            source = grunt.file.read(srcFile),
+            tokens = marked.lexer(source),
+            toc = tokens.filter(function (item) {
+                return item.type == "heading" && item.depth == 2;
+            }).reduce(function(toc, item) {
+                return toc + "  * [" + item.text + "](#" + slugify(item.text) + ")\n";
+            }, "");
 
+        grunt.file.write(destFile, "# DC API\n" + toc +"\n"+ source);
+        grunt.log.writeln('Added TOC to "' + destFile + '".');
+    });
     // task aliases
     grunt.registerTask('build', ['concat', 'uglify', 'sed']);
-    grunt.registerTask('docs', ['build', 'copy', 'emu', 'markdown', 'docco']);
+    grunt.registerTask('docs', ['build', 'copy', 'emu', 'toc', 'markdown', 'docco']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('test', ['docs', 'vows:tests', 'jasmine:specs']);
     grunt.registerTask('vows:coverage', ['shell:vows_coverage']);

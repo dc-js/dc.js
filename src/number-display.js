@@ -53,7 +53,7 @@ dc.numberDisplay = function (parent, chartGroup) {
 
     _chart.transitionDuration(250); // good default
 
-    _chart.doRender = function () {
+    _chart._doRender = function () {
         var newValue = _chart.value(),
             span     = _chart.selectAll("."+SPAN_CLASS);
 
@@ -73,12 +73,10 @@ dc.numberDisplay = function (parent, chartGroup) {
                     this.textContent = _chart.formatNumber()(interp(t));
                 };
             });
-
-        return _chart;
     };
 
-    _chart.doRedraw = function(){
-        return _chart.doRender();
+    _chart._doRedraw = function(){
+        return _chart._doRender();
     };
 
     /**

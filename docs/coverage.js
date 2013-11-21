@@ -84,14 +84,12 @@ var mixinDocs = (function () {
             }
 
             var aligned = value.split(prefix).join('\n').replace(/^\n+/, ''),
-                assignment = c.
-            for +"." + DOC + "=",
-            doc = {
-                value: aligned,
-                for: c.
-                for,
-                from: c. in
-            };
+                assignment = c.for +"." + DOC + "=",
+                doc = {
+                    value: aligned,
+                    for: c.for,
+                    from: c.in
+                };
 
             if (fileName) {
                 doc.file = fileName;
@@ -100,7 +98,7 @@ var mixinDocs = (function () {
 
             return {
                 index: c.range[1] + 1,
-                text: "\n" + assignment + JSON.stringify(doc) + "\n"
+                text: "\n" + assignment + JSON.stringify(doc) + ";\n"
             };
         });
 
@@ -117,31 +115,39 @@ var fs = require('fs'),
     dc, // ignore dc from test/env, we just want the d3/crossfilter environment
     charts = [
         'barChart',
+        'boxPlot',
         'bubbleChart',
         'compositeChart',
         'dataCount',
         'dataTable',
         'geoChoroplethChart',
+        'heatMap',
         'lineChart',
         'numberDisplay',
         'pieChart',
         'rowChart',
-        'scatterPlot'
+        'scatterPlot',
+        'seriesChart'
     ],
     files = require("../Gruntfile").jsFiles; //fs.readdirSync(dir).map(function(f){return dir + f;});
 
 var instrumented = [];
 files.forEach(function (file) {
     console.log("Instrumenting " + file)
-    var rawSource = fs.readFileSync('../' + file, 'utf-8');
+    var rawSource = fs.readFileSync(file, 'utf-8');
     try {
-        instrumented.push(mixinDocs.instrumentSource(rawSource, file));
+        var src = mixinDocs.instrumentSource(rawSource, file);
+        instrumented.push(src);
     } catch (e) {
         console.log("  Ignoring: " + file + " (unable to parse)");
     }
 });
+//console.log(instrumented.join("\n"));
 eval(instrumented.join("\n"));
 
+//Object.keys(dc).filter(function(p) {
+//  return typeof dc[p] == 'function';
+//}).forEach(documentChart);
 charts.forEach(documentChart);
 
 function extend(obj, copy) {
@@ -160,16 +166,17 @@ function documentChart(chartName) {
             covered: [],
             missing: [],
         };
-        Object.keys(chart).filter(function(m) {
-            return typeof chart[m] == 'function' &&
-                   (m[0] != '_' || chart[m][mixinDocs.DOC]);
-        }).forEach(function(m) {
-            var method = m[0] == '_' ? m.substr(1) : m;
-            if (chart[m][mixinDocs.DOC])
-                model.covered.push(method);
-            else
-                model.missing.push(method);
-        });
+    if (!chart || chart.render === undefined) return;
+    Object.keys(chart).filter(function(m) {
+        return typeof chart[m] == 'function' &&
+               (m[0] != '_' || chart[m][mixinDocs.DOC]);
+    }).forEach(function(m) {
+        var method = m[0] == '_' ? m.substr(1) : m;
+        if (chart[m][mixinDocs.DOC])
+            model.covered.push(method);
+        else
+            model.missing.push(method);
+    });
     model.covered.sort();
     model.missing.sort();
     model.coverage = model.covered.length / (model.covered.length + model.missing.length);

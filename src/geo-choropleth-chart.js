@@ -42,7 +42,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
     var _geoJsons = [];
 
-    _chart.doRender = function () {
+    _chart._doRender = function () {
         _chart.resetSvg();
         for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
             var states = _chart.svg().append("g")
@@ -167,7 +167,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         }
     }
 
-    _chart.doRedraw = function () {
+    _chart._doRedraw = function () {
         for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
             plotData(layerIndex);
             if(_projectionFlag) {

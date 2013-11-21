@@ -37,7 +37,7 @@ dc.dataTable = function(parent, chartGroup) {
     };
     var _order = d3.ascending;
 
-    _chart.doRender = function() {
+    _chart._doRender = function() {
         _chart.selectAll("tbody").remove();
 
         renderRows(renderGroups());
@@ -103,8 +103,8 @@ dc.dataTable = function(parent, chartGroup) {
         return rows;
     }
 
-    _chart.doRedraw = function() {
-        return _chart.doRender();
+    _chart._doRedraw = function() {
+        return _chart._doRender();
     };
 
     /**

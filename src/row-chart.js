@@ -69,7 +69,7 @@ dc.rowChart = function (parent, chartGroup) {
             .call(_xAxis);
     }
 
-    _chart.doRender = function () {
+    _chart._doRender = function () {
         _chart.resetSvg();
 
         _g = _chart.svg()
@@ -211,7 +211,7 @@ dc.rowChart = function (parent, chartGroup) {
         return "translate("+s+",0)";
     }
 
-    _chart.doRedraw = function () {
+    _chart._doRedraw = function () {
         drawChart();
         return _chart;
     };

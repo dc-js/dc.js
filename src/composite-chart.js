@@ -260,6 +260,7 @@ dc.compositeChart = function (parent, chartGroup) {
         });
     }
 
+    delete _chart.yAxisMin;
     function yAxisMin() {
         return d3.min(getYAxisMin(leftYAxisChildren()));
     }
@@ -274,6 +275,7 @@ dc.compositeChart = function (parent, chartGroup) {
         });
     }
 
+    delete _chart.yAxisMax;
     function yAxisMax() {
         return dc.utils.add(d3.max(getYAxisMax(leftYAxisChildren())), _chart.yAxisPadding());
     }
@@ -288,9 +290,9 @@ dc.compositeChart = function (parent, chartGroup) {
         });
     }
 
-    _chart.xAxisMin = function () {
+    dc.override('xAxisMin',function () {
         return dc.utils.subtract(d3.min(getAllXAxisMinFromChildCharts()), _chart.xAxisPadding());
-    };
+    });
 
     function getAllXAxisMaxFromChildCharts() {
         return _children.map(function(c) {
@@ -298,9 +300,9 @@ dc.compositeChart = function (parent, chartGroup) {
         });
     }
 
-    _chart.xAxisMax = function () {
+    dc.override('xAxisMax',function () {
         return dc.utils.add(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding());
-    };
+    });
 
     _chart.legendables = function () {
         return _children.reduce(function(items,child) {

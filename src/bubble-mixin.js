@@ -83,7 +83,7 @@ dc.bubbleMixin = function (_chart) {
         return (_chart.bubbleR(d) > _minRadiusWithLabel) ? 1 : 0;
     };
 
-    _chart.doRenderLabel = function (bubbleGEnter) {
+    _chart._doRenderLabel = function (bubbleGEnter) {
         if (_chart.renderLabel()) {
             var label = bubbleGEnter.select("text");
 
@@ -115,7 +115,7 @@ dc.bubbleMixin = function (_chart) {
         return _chart.title()(d);
     };
 
-    _chart.doRenderTitles = function (g) {
+    _chart._doRenderTitles = function (g) {
         if (_chart.renderTitle()) {
             var title = g.select("title");
 

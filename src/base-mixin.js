@@ -86,8 +86,6 @@ dc.baseMixin = function (_chart) {
         return filters;
     };
 
-
-
     var _data = function (group) {
         return group.all();
     };
@@ -167,6 +165,16 @@ dc.baseMixin = function (_chart) {
         return _chart;
     };
 
+    /**
+    #### .data([callback])
+    Get the data callback or retreive the charts data set. The data callback is passed the chart's group and by default
+    will return `group.all()`. This behavior may be modified to, for instance, return only the top 5 groups:
+    ```
+        chart.data(function(group) {
+            return group.top(5);
+        });
+    ```
+    **/
     _chart.data = function(d) {
         if (!arguments.length) return _data.call(_chart,_group);
         _data = d3.functor(d);
@@ -205,7 +213,7 @@ dc.baseMixin = function (_chart) {
         return _chart;
     };
 
-    _chart.computeOrderedGroups = function(data) {
+    _chart._computeOrderedGroups = function(data) {
         if (data.length <= 1)
             return data;
         if (!_orderSort) _orderSort = crossfilter.quicksort.by(_ordering);
@@ -219,10 +227,6 @@ dc.baseMixin = function (_chart) {
     **/
     _chart.filterAll = function () {
         return _chart.filter(null);
-    };
-
-    _chart.dataSet = function () {
-        return _dimension !== undefined && _group !== undefined;
     };
 
     /**
@@ -400,7 +404,7 @@ dc.baseMixin = function (_chart) {
         if (_mandatoryAttributes)
             _mandatoryAttributes.forEach(checkForMandatoryAttributes);
 
-        var result = _chart.doRender();
+        var result = _chart._doRender();
 
         if (_legend) _legend.render();
 
@@ -434,7 +438,7 @@ dc.baseMixin = function (_chart) {
     _chart.redraw = function () {
         _listeners.preRedraw(_chart);
 
-        var result = _chart.doRedraw();
+        var result = _chart._doRedraw();
 
         if (_legend) _legend.render();
 
@@ -562,6 +566,11 @@ dc.baseMixin = function (_chart) {
         d3.select(e).classed(dc.constants.DESELECTED_CLASS, false);
     };
 
+    /**
+    #### .onClick(datum)
+    This function is passed to d3 as the onClick handler for each chart. By default it will filter the on the clicked datum
+    (as passed back to the callback) and redraw the chart group.
+    **/
     _chart.onClick = function (d) {
         var filter = _chart.keyAccessor()(d);
         dc.events.trigger(function () {
@@ -598,12 +607,12 @@ dc.baseMixin = function (_chart) {
     };
 
     // abstract function stub
-    _chart.doRender = function () {
+    _chart._doRender = function () {
         // do nothing in base, should be overridden by sub-function
         return _chart;
     };
 
-    _chart.doRedraw = function () {
+    _chart._doRedraw = function () {
         // do nothing in base, should be overridden by sub-function
         return _chart;
     };
@@ -765,6 +774,11 @@ dc.baseMixin = function (_chart) {
         }
     }
 
+    /**
+    #### .chartGroup([group])
+    Get or set the chart group with which this chart belongs. Chart groups share common rendering events since it is
+    expected they share the same underlying crossfilter data set.
+    **/
     _chart.chartGroup = function (_) {
         if (!arguments.length) return _chartGroup;
         _chartGroup = _;
@@ -802,7 +816,15 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    ## <a name="listeners" href="#listeners">#</a> Listeners
+    #### .chartID()
+    Return the internal numeric ID of the chart.
+    **/
+    _chart.chartID = function () {
+        return _chart.__dc_flag__;
+    };
+
+    /**
+    ## Listeners
     All dc chart instance supports the following listeners.
 
     #### .on("preRender", function(chart){...})
@@ -827,10 +849,6 @@ dc.baseMixin = function (_chart) {
     _chart.on = function (event, listener) {
         _listeners[event] = listener;
         return _chart;
-    };
-
-    _chart.chartID = function () {
-        return _chart.__dc_flag__;
     };
 
     return _chart;

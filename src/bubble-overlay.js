@@ -69,7 +69,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
         return _chart;
     };
 
-    _chart.doRender = function() {
+    _chart._doRender = function() {
         _g = initOverlayG();
 
         _chart.r().range([_chart.MIN_RADIUS, _chart.width() * _chart.maxBubbleRelativeSize()]);
@@ -108,9 +108,9 @@ dc.bubbleOverlay = function(root, chartGroup) {
                     return _chart.bubbleR(d);
                 });
 
-            _chart.doRenderLabel(nodeG);
+            _chart._doRenderLabel(nodeG);
 
-            _chart.doRenderTitles(nodeG);
+            _chart._doRenderTitles(nodeG);
         });
     }
 
@@ -138,7 +138,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
         return nodeG;
     }
 
-    _chart.doRedraw = function() {
+    _chart._doRedraw = function() {
         updateBubbles();
 
         _chart.fadeDeselectedArea();

@@ -96,9 +96,9 @@ dc.bubbleChart = function(parent, chartGroup) {
                 return (_chart.bubbleR(d) > 0) ? 1 : 0;
             });
 
-        _chart.doRenderLabel(bubbleGEnter);
+        _chart._doRenderLabel(bubbleGEnter);
 
-        _chart.doRenderTitles(bubbleGEnter);
+        _chart._doRenderTitles(bubbleGEnter);
     }
 
     function updateNodes(bubbleG) {

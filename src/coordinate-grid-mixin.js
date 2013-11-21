@@ -265,6 +265,10 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
+    /**
+    #### .xUnitCount()
+    Returns the number of units displayed on the x axis using the unit measure configured by .xUnits.
+    **/
     _chart.xUnitCount = function () {
         if (_unitCount === undefined) {
             var units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain());
@@ -284,12 +288,17 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
+    /**
+    #### isOrdinal()
+    Returns true if the chart is using ordinal xUnits, false otherwise. Most charts must behave somewhat
+    differently when with ordinal data and use the result of this method to trigger those special case.
+    **/
     _chart.isOrdinal = function () {
         return _chart.xUnits() === dc.units.ordinal;
     };
 
     _chart._ordinalXDomain = function() {
-        var groups = _chart.computeOrderedGroups(_chart.data());
+        var groups = _chart._computeOrderedGroups(_chart.data());
         return groups.map(_chart.keyAccessor());
     };
 
@@ -318,7 +327,7 @@ dc.coordinateGridMixin = function (_chart) {
         if (axisXG.empty())
             axisXG = g.append("g")
                 .attr("class", "axis x")
-                .attr("transform", "translate(" + _chart.margins().left + "," + _chart.xAxisY() + ")");
+                .attr("transform", "translate(" + _chart.margins().left + "," + _chart._xAxisY() + ")");
 
         var axisXLab = g.selectAll("text."+X_AXIS_LABEL_CLASS);
         if (axisXLab.empty() && _chart.xAxisLabel())
@@ -354,7 +363,7 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr("x1", function (d) {
                     return _x(d);
                 })
-                .attr("y1", _chart.xAxisY() - _chart.margins().top)
+                .attr("y1", _chart._xAxisY() - _chart.margins().top)
                 .attr("x2", function (d) {
                     return _x(d);
                 })
@@ -368,7 +377,7 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr("x1", function (d) {
                     return _x(d);
                 })
-                .attr("y1", _chart.xAxisY() - _chart.margins().top)
+                .attr("y1", _chart._xAxisY() - _chart.margins().top)
                 .attr("x2", function (d) {
                     return _x(d);
                 })
@@ -382,7 +391,7 @@ dc.coordinateGridMixin = function (_chart) {
         }
     }
 
-    _chart.xAxisY = function () {
+    _chart._xAxisY = function () {
         return (_chart.height() - _chart.margins().bottom);
     };
 
@@ -390,6 +399,11 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart.effectiveWidth();
     };
 
+    /**
+    #### .xAxisLabel([labelText, [, padding]])
+    Set or get the x axis label. If setting the label, you may optionally include additional padding to
+    the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.
+    **/
     _chart.xAxisLabel = function (_, padding) {
         if (!arguments.length) return _xAxisLabel;
         _xAxisLabel = _;
@@ -444,7 +458,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart.renderYAxis = function () {
-        var axisPosition = _useRightYAxis ? (_chart.width() - _chart.margins().right) : _chart.yAxisX();
+        var axisPosition = _useRightYAxis ? (_chart.width() - _chart.margins().right) : _chart._yAxisX();
         _chart.renderYAxisAt("y", _yAxis, axisPosition);
         var labelPosition = _useRightYAxis ? (_chart.width() - _yAxisLabelPadding) : _yAxisLabelPadding;
         var rotation = _useRightYAxis ? 90 : -90;
@@ -500,14 +514,15 @@ dc.coordinateGridMixin = function (_chart) {
         }
     }
 
-    _chart.yAxisX = function () {
+    _chart._yAxisX = function () {
         return _chart.useRightYAxis() ? _chart.width() - _chart.margins().right : _chart.margins().left;
     };
 
 
     /**
-    #### .yAxisLabel([labelText])
-    Set or get the y axis label.
+    #### .yAxisLabel([labelText, [, padding]])
+    Set or get the y axis label. If setting the label, you may optionally include additional padding to
+    the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.
     **/
     _chart.yAxisLabel = function (_, padding) {
         if (!arguments.length) return _yAxisLabel;
@@ -584,6 +599,10 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
+    /**
+    #### .xAxisMin()
+    Return the minimum x value to diplay in the chart. Includes xAxisPadding if set.
+    **/
     _chart.xAxisMin = function () {
         var min = d3.min(_chart.data(), function (e) {
             return _chart.keyAccessor()(e);
@@ -591,6 +610,10 @@ dc.coordinateGridMixin = function (_chart) {
         return dc.utils.subtract(min, _xAxisPadding);
     };
 
+    /**
+    #### .xAxisMin()
+    Return the maximum x value to diplay in the chart. Includes xAxisPadding if set.
+    **/
     _chart.xAxisMax = function () {
         var max = d3.max(_chart.data(), function (e) {
             return _chart.keyAccessor()(e);
@@ -598,6 +621,10 @@ dc.coordinateGridMixin = function (_chart) {
         return dc.utils.add(max, _xAxisPadding);
     };
 
+    /**
+    #### .xAxisMin()
+    Return the minimum y value to diplay in the chart. Includes yAxisPadding if set.
+    **/
     _chart.yAxisMin = function () {
         var min = d3.min(_chart.data(), function (e) {
             return _chart.valueAccessor()(e);
@@ -605,6 +632,10 @@ dc.coordinateGridMixin = function (_chart) {
         return dc.utils.subtract(min, _yAxisPadding);
     };
 
+    /**
+    #### .yAxisMax()
+    Return the maximum y value to diplay in the chart. Includes yAxisPadding if set.
+    **/
     _chart.yAxisMax = function () {
         var max = d3.max(_chart.data(), function (e) {
             return _chart.valueAccessor()(e);
@@ -682,7 +713,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function brushHeight() {
-        return _chart.xAxisY() - _chart.margins().top;
+        return _chart._xAxisY() - _chart.margins().top;
     }
 
     _chart.renderBrush = function (g) {
@@ -807,7 +838,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart._preprocessData = function() {};
 
-    _chart.doRender = function () {
+    _chart._doRender = function () {
         _chart.resetSvg();
 
         _chart._preprocessData();
@@ -822,7 +853,7 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    _chart.doRedraw = function () {
+    _chart._doRedraw = function () {
         _chart._preprocessData();
 
         drawChart(false);

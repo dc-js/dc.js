@@ -106,7 +106,7 @@ dc.heatMap = function (parent, chartGroup) {
         return d3.scale.ordinal().domain(colValues.filter(uniq));
     };
 
-    _chart.doRender = function () {
+    _chart._doRender = function () {
         _chart.resetSvg();
 
         _chartBody = _chart.svg()
@@ -114,10 +114,10 @@ dc.heatMap = function (parent, chartGroup) {
           .attr("class", "heatmap")
           .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")");
 
-        return _chart.doRedraw();
+        return _chart._doRedraw();
     };
 
-    _chart.doRedraw = function () {
+    _chart._doRedraw = function () {
         var rows = _chart.rows(),
             cols = _chart.cols(),
             rowCount = rows.domain().length,
@@ -192,6 +192,7 @@ dc.heatMap = function (parent, chartGroup) {
                 _chart.resetHighlight(this);
             });
         }
+        return _chart;
     };
 
     _chart.boxOnClick = function (f) {

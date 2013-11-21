@@ -48,7 +48,8 @@
     "jsdom": "0.8.x",
     "sinon": "1.7.x",
     "uglify-js": "2.4.x",
-    "vows": "0.7.x"
+    "vows": "0.7.x",
+    "marked": "~0.2.10"
   },
   "scripts": {
     "test": "grunt test"

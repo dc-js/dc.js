@@ -59,7 +59,7 @@ dc.boxPlot = function (parent, chartGroup) {
     });
 
     /**
-    ### .boxPadding([padding])
+    #### .boxPadding([padding])
     Get or set the spacing between boxes as a fraction of bar size. Valid values are within 0-1.
     See the [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
     for a visual description of how the padding is applied.
@@ -70,7 +70,7 @@ dc.boxPlot = function (parent, chartGroup) {
     _chart.boxPadding(0.8);
 
     /**
-    ### .outerPadding([padding])
+    #### .outerPadding([padding])
     Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
     or on charts with a custom `.boxWidth`. Padding equivlent in width to `padding * barWidth` will be
     added on each side of the chart.

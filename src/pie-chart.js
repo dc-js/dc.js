@@ -69,7 +69,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     _chart.transitionDuration(350);
 
-    _chart.doRender = function () {
+    _chart._doRender = function () {
         _chart.resetSvg();
 
         _g = _chart.svg()
@@ -286,7 +286,7 @@ dc.pieChart = function (parent, chartGroup) {
         return _chart.hasFilter(_chart.cappedKeyAccessor(d.data));
     }
 
-    _chart.doRedraw = function () {
+    _chart._doRedraw = function () {
         drawChart();
         return _chart;
     };
