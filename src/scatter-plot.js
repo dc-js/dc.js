@@ -4,6 +4,7 @@ dc.scatterPlot = function (parent, chartGroup) {
     var originalKeyAccessor = _chart.keyAccessor();
     _chart.keyAccessor(function (d) { return originalKeyAccessor(d)[0]; });
     _chart.valueAccessor(function (d) { return originalKeyAccessor(d)[1]; });
+    _chart.colorAccessor(function () { return 0; });
 
     var _locator = function (d) {
         return "translate(" + _chart.x()(_chart.keyAccessor()(d)) + "," + _chart.y()(_chart.valueAccessor()(d)) + ")";
@@ -11,10 +12,6 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     var _symbolSize = 3;
     var _highlightedSize = 4;
-
-    _chart.colors(function() { return "#1f77b4"; });
-
-    _chart.transitionDuration(0); // turn off transition by default for scatterplot
 
     dc.override(_chart, "_filter", function(filter) {
         if (filter !== undefined) {
@@ -32,7 +29,7 @@ dc.scatterPlot = function (parent, chartGroup) {
             .enter()
         .append("circle")
             .attr("class", "symbol")
-            .attr("fill", _chart.getColor)
+            .attr("fill", _chart.getColor())
             .attr("transform", _locator);
 
         dc.transition(symbols, _chart.transitionDuration())
@@ -68,6 +65,10 @@ dc.scatterPlot = function (parent, chartGroup) {
         if(!arguments.length) return _highlightedSize;
         _highlightedSize = s;
         return _chart;
+    };
+
+    _chart.legendables = function () {
+        return [{chart: _chart, name: _chart._groupName, color: _chart.getColor()}];
     };
 
     _chart.legendHighlight = function (d) {

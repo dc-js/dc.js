@@ -147,7 +147,7 @@ dc.boxPlot = function (parent, chartGroup) {
 
     _chart.fadeDeselectedArea = function () {
         if (_chart.hasFilter()) {
-            _chart.selectAll("g.box").each(function (d) {
+            _chart.g().selectAll("g.box").each(function (d) {
                 if (_chart.isSelectedNode(d)) {
                     _chart.highlightSelected(this);
                 } else {
@@ -155,7 +155,7 @@ dc.boxPlot = function (parent, chartGroup) {
                 }
             });
         } else {
-            _chart.selectAll("g.box").each(function () {
+            _chart.g().selectAll("g.box").each(function () {
                 _chart.resetHighlight(this);
             });
         }

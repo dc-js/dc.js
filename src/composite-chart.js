@@ -68,11 +68,17 @@ dc.compositeChart = function (parent, chartGroup) {
     });
 
     _chart._brushing = function () {
+        var extent = _chart.extendBrush();
+
         for (var i = 0; i < _children.length; ++i) {
-            var child = _children[i];
-            var childBaseChartFilter = child._filter;
+            var childBaseChartFilter = _children[i]._filter;
             childBaseChartFilter(null); // normal child.filter clears shared brush.
-            child.filter(_chart.brush().extent());
+        }
+
+        if (!_chart.brushIsEmpty(extent)) {
+            for (var i = 0; i < _children.length; ++i) {
+                _children[i].filter(extent);
+            }
         }
     };
 
