@@ -849,12 +849,12 @@ dc.baseMixin = function (_chart) {
 
         if (_legend) _legend.render();
 
-        _chart.activateRenderlets("postRender");
+        _chart._activateRenderlets("postRender");
 
         return result;
     };
 
-    _chart.activateRenderlets = function (event) {
+    _chart._activateRenderlets = function (event) {
         if (_chart.transitionDuration() > 0 && _svg) {
             _svg.transition().duration(_chart.transitionDuration())
                 .each("end", function () {
@@ -883,7 +883,7 @@ dc.baseMixin = function (_chart) {
 
         if (_legend) _legend.render();
 
-        _chart.activateRenderlets("postRedraw");
+        _chart._activateRenderlets("postRedraw");
 
         return result;
     };
@@ -4598,7 +4598,7 @@ dc.compositeChart = function (parent, chartGroup) {
 
             child.plotData();
 
-            child.activateRenderlets();
+            child._activateRenderlets();
         }
     };
 

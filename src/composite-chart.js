@@ -140,7 +140,7 @@ dc.compositeChart = function (parent, chartGroup) {
 
             child.plotData();
 
-            child.activateRenderlets();
+            child._activateRenderlets();
         }
     };
 
