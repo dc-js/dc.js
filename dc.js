@@ -6663,8 +6663,6 @@ dc.boxPlot = function (parent, chartGroup) {
     return _chart.anchor(parent, chartGroup);
 };
 
-return dc;})();
-
 dc.filters = {};
 
 dc.filters.RangedFilter = function(low, high) {
@@ -6685,3 +6683,5 @@ dc.filters.TwoDimensionalFilter = function(array) {
 
     return filter;
 };
+
+return dc;})();
