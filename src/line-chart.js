@@ -327,10 +327,10 @@ dc.lineChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    function colorFilter(color,inv) {
+    function colorFilter(color, dashstyle, inv) {
         return function() {
             var item = d3.select(this);
-            var match = item.attr('stroke') == color || item.attr('fill') == color;
+            var match = (item.attr('stroke') == color && item.attr("stroke-dasharray") == ((dashstyle instanceof Array) ? dashstyle.join(",") : null) )|| item.attr('fill') == color;
             return inv ? !match : match;
         };
     }
@@ -338,8 +338,8 @@ dc.lineChart = function (parent, chartGroup) {
     _chart.legendHighlight = function (d) {
         if(!_chart.isLegendableHidden(d)) {
             _chart.selectAll('path.line, path.area')
-                .classed('highlight', colorFilter(d.color))
-                .classed('fadeout', colorFilter(d.color,true));
+                .classed('highlight', colorFilter(d.color, d.dashstyle))
+                .classed('fadeout', colorFilter(d.color, d.dashstyle, true));
         }
     };
 
