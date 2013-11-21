@@ -1,5 +1,5 @@
 (function(exports){
-crossfilter.version = "1.3.5";
+crossfilter.version = "1.3.6";
 function crossfilter_identity(d) {
   return d;
 }
@@ -439,8 +439,8 @@ var quicksort_sizeThreshold = 32;
 var crossfilter_array8 = crossfilter_arrayUntyped,
     crossfilter_array16 = crossfilter_arrayUntyped,
     crossfilter_array32 = crossfilter_arrayUntyped,
-    crossfilter_arrayLengthen = crossfilter_identity,
-    crossfilter_arrayWiden = crossfilter_identity;
+    crossfilter_arrayLengthen = crossfilter_arrayLengthenUntyped,
+    crossfilter_arrayWiden = crossfilter_arrayWidenUntyped;
 
 if (typeof Uint8Array !== "undefined") {
   crossfilter_array8 = function(n) { return new Uint8Array(n); };
@@ -467,7 +467,20 @@ if (typeof Uint8Array !== "undefined") {
 }
 
 function crossfilter_arrayUntyped(n) {
-  return new Array(n);
+  var array = new Array(n), i = -1;
+  while (++i < n) array[i] = 0;
+  return array;
+}
+
+function crossfilter_arrayLengthenUntyped(array, length) {
+  var n = array.length;
+  while (n < length) array[n++] = 0;
+  return array;
+}
+
+function crossfilter_arrayWidenUntyped(array, width) {
+  if (width > 32) throw new Error("invalid array width!");
+  return array;
 }
 function crossfilter_filterExact(bisect, value) {
   return function(values) {

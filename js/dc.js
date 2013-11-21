@@ -25,26 +25,6 @@ dc = (function(){
 The entire dc.js library is scoped under **dc** name space. It does not introduce anything else into the global
 name space.
 
-* [Base Chart [abstract]](#base-chart)
-* [Color Chart [abstract]](#color-chart)
-* [Stackable Chart [abstract]](#stackable-chart)
-* [Coordinate Grid Chart [abstract] < Color Chart < Base Chart](#coordinate-grid-chart)
-* [Pie Chart [concrete] < Color Chart < Base Chart](#pie-chart)
-* [Row Chart [concrete] < Color Chart < Base chart](#row-chart)
-* [Bar Chart [concrete] < Stackable Chart < CoordinateGrid Chart](#bar-chart)
-* [Line Chart [concrete] < Stackable Chart < CoordinateGrid Chart](#line-chart)
-* [Composite Chart [concrete] < CoordinateGrid Chart](#composite-chart)
-* [Abstract Bubble Chart [abstract] < Color Chart](#abstract-bubble-chart)
-* [Bubble Chart [concrete] < Abstract Bubble Chart < CoordinateGrid Chart](#bubble-chart)
-* [Bubble Overlay Chart [concrete] < Abstract Bubble Chart < Base Chart](#bubble-overlay-chart)
-* [Geo Choropleth Chart [concrete] < Color Chart < Base Chart](#geo-choropleth-chart)
-* [Data Count Widget [concrete] < Base Chart](#data-count)
-* [Data Table Widget [concrete] < Base Chart](#data-table)
-* [Number Display [Concrete] < Base Chart](#number-display)
-* [Legend [concrete]](#legend)
-* [Listeners](#listeners)
-* [Utilities](#util)
-
 #### Function Chain
 Majority of dc functions are designed to allow function chaining, meaning it will return the current chart instance
 whenever it is appropriate. Therefore configuration of a chart can be written in the following style.
@@ -129,7 +109,7 @@ dc.deregisterAllCharts = function(group) {
 };
 
 /**
-## <a name="util" href="#util">#</a> Utilities
+## Utilities
 **/
 
 /**
@@ -438,13 +418,34 @@ dc.events.trigger = function(closure, delay) {
     }, delay);
 };
 
-/**
-## <a name="base-chart" href="#base-chart">#</a> Base Chart [Abstract]
-Base chart is an abstract functional object representing a basic dc chart object for all chart and widget implementation.
-Every function on base chart are also inherited available on all concrete chart implementation in dc library.
+dc.filters = {};
 
+dc.filters.RangedFilter = function(low, high) {
+    var range = Array(low, high);
+    range.isFiltered = function(value) {
+        return value >= this[0] && value < this[1];
+    };
+
+    return range;
+};
+
+dc.filters.TwoDimensionalFilter = function(array) {
+    var filter = array;
+    filter.isFiltered = function(value) {
+        return value.length && value.length == filter.length &&
+               value[0] == filter[0] && value[1] == filter[1];
+    };
+
+    return filter;
+};
+
+/**
+## Base Mixin
+Base Mixin is an abstract functional object representing a basic dc chart object
+for all chart and widget implementations. Methods from the Base Mixin are inherited
+and available on all chart implementation in the DC library.
 **/
-dc.baseChart = function (_chart) {
+dc.baseMixin = function (_chart) {
     _chart.__dc_flag__ = dc.utils.uniqueId();
 
     var _dimension;
@@ -526,8 +527,6 @@ dc.baseChart = function (_chart) {
         return filters;
     };
 
-
-
     var _data = function (group) {
         return group.all();
     };
@@ -607,6 +606,16 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
+    /**
+    #### .data([callback])
+    Get the data callback or retreive the charts data set. The data callback is passed the chart's group and by default
+    will return `group.all()`. This behavior may be modified to, for instance, return only the top 5 groups:
+    ```
+        chart.data(function(group) {
+            return group.top(5);
+        });
+    ```
+    **/
     _chart.data = function(d) {
         if (!arguments.length) return _data.call(_chart,_group);
         _data = d3.functor(d);
@@ -645,7 +654,7 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
-    _chart.computeOrderedGroups = function(data) {
+    _chart._computeOrderedGroups = function(data) {
         if (data.length <= 1)
             return data;
         if (!_orderSort) _orderSort = crossfilter.quicksort.by(_ordering);
@@ -659,10 +668,6 @@ dc.baseChart = function (_chart) {
     **/
     _chart.filterAll = function () {
         return _chart.filter(null);
-    };
-
-    _chart.dataSet = function () {
-        return _dimension !== undefined && _group !== undefined;
     };
 
     /**
@@ -840,16 +845,16 @@ dc.baseChart = function (_chart) {
         if (_mandatoryAttributes)
             _mandatoryAttributes.forEach(checkForMandatoryAttributes);
 
-        var result = _chart.doRender();
+        var result = _chart._doRender();
 
         if (_legend) _legend.render();
 
-        _chart.activateRenderlets("postRender");
+        _chart._activateRenderlets("postRender");
 
         return result;
     };
 
-    _chart.activateRenderlets = function (event) {
+    _chart._activateRenderlets = function (event) {
         if (_chart.transitionDuration() > 0 && _svg) {
             _svg.transition().duration(_chart.transitionDuration())
                 .each("end", function () {
@@ -874,11 +879,11 @@ dc.baseChart = function (_chart) {
     _chart.redraw = function () {
         _listeners.preRedraw(_chart);
 
-        var result = _chart.doRedraw();
+        var result = _chart._doRedraw();
 
         if (_legend) _legend.render();
 
-        _chart.activateRenderlets("postRedraw");
+        _chart._activateRenderlets("postRedraw");
 
         return result;
     };
@@ -1002,6 +1007,11 @@ dc.baseChart = function (_chart) {
         d3.select(e).classed(dc.constants.DESELECTED_CLASS, false);
     };
 
+    /**
+    #### .onClick(datum)
+    This function is passed to d3 as the onClick handler for each chart. By default it will filter the on the clicked datum
+    (as passed back to the callback) and redraw the chart group.
+    **/
     _chart.onClick = function (d) {
         var filter = _chart.keyAccessor()(d);
         dc.events.trigger(function () {
@@ -1038,12 +1048,12 @@ dc.baseChart = function (_chart) {
     };
 
     // abstract function stub
-    _chart.doRender = function () {
+    _chart._doRender = function () {
         // do nothing in base, should be overridden by sub-function
         return _chart;
     };
 
-    _chart.doRedraw = function () {
+    _chart._doRedraw = function () {
         // do nothing in base, should be overridden by sub-function
         return _chart;
     };
@@ -1205,6 +1215,11 @@ dc.baseChart = function (_chart) {
         }
     }
 
+    /**
+    #### .chartGroup([group])
+    Get or set the chart group with which this chart belongs. Chart groups share common rendering events since it is
+    expected they share the same underlying crossfilter data set.
+    **/
     _chart.chartGroup = function (_) {
         if (!arguments.length) return _chartGroup;
         _chartGroup = _;
@@ -1242,7 +1257,15 @@ dc.baseChart = function (_chart) {
     };
 
     /**
-    ## <a name="listeners" href="#listeners">#</a> Listeners
+    #### .chartID()
+    Return the internal numeric ID of the chart.
+    **/
+    _chart.chartID = function () {
+        return _chart.__dc_flag__;
+    };
+
+    /**
+    ## Listeners
     All dc chart instance supports the following listeners.
 
     #### .on("preRender", function(chart){...})
@@ -1269,20 +1292,16 @@ dc.baseChart = function (_chart) {
         return _chart;
     };
 
-    _chart.chartID = function () {
-        return _chart.__dc_flag__;
-    };
-
     return _chart;
 };
 
 /**
-## <a name="marginable" href="#marginable">#</a>  Marginable
+## Margin Mixin
 
-Marginable is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid Charts.
+Margin is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid Charts.
 
 **/
-dc.marginable = function (_chart) {
+dc.marginMixin = function (_chart) {
     var _margin = {top: 10, right: 50, bottom: 30, left: 30};
 
     /**
@@ -1316,12 +1335,139 @@ dc.marginable = function (_chart) {
 };
 
 /**
-## <a name="coordinate-grid-chart" href="#coordinate-grid-chart">#</a> CoordinateGrid Chart [Abstract] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
-Coordinate grid chart is an abstract base chart designed to support a number of coordinate grid based concrete chart types,
+## Color Mixin
+
+Color Mixin is an abstract chart functional class created to provide universal coloring support as a mix-in for any concrete
+chart implementation.
+
+**/
+
+dc.colorMixin = function(_chart) {
+    var _colors = d3.scale.category20c();
+    var _defaultAccessor = true;
+
+    var _colorAccessor = function(d) { return _chart.keyAccessor()(d); };
+
+    /**
+    #### .colors([colorScale])
+    Retrieve current color scale or set a new color scale. This methods accepts any
+    function the operate like a d3 scale. If not set the default is
+    `d3.scale.category20c()`.
+    ```js
+    // alternate categorical scale
+    chart.colors(d3.scale.category20b());
+
+    // ordinal scale
+    chart.colors(d3.scale.ordinal().range(['red','green','blue']);
+    // convience method, the same as above
+    chart.ordinalColors(['red','green','blue']);
+
+    // set a linear scale
+    chart.linearColors(["#4575b4", "#ffffbf", "#a50026"]);
+    ```
+    **/
+    _chart.colors = function(_) {
+        if (!arguments.length) return _colors;
+        if (_ instanceof Array) _colors = d3.scale.quantize().range(_); // depricated legacy support, note: this fails for ordinal domains
+        else _colors = d3.functor(_);
+        return _chart;
+    };
+
+    /**
+    #### .ordinalColors(r)
+    Convenience method to set the color scale to d3.scale.ordinal with range `r`.
+
+    **/
+    _chart.ordinalColors = function(r) {
+        return _chart.colors(d3.scale.ordinal().range(r));
+    };
+
+    /**
+    #### .linearColors(r)
+    Convenience method to set the color scale to an Hcl interpolated linear scale with range `r`.
+
+    **/
+    _chart.linearColors = function(r) {
+        return _chart.colors(d3.scale.linear()
+                             .range(r)
+                             .interpolate(d3.interpolateHcl));
+    };
+
+    /**
+    #### .colorAccessor([colorAccessorFunction])
+    Set or get color accessor function. This function will be used to map a data point on crossfilter group to a specific
+    color value on the color scale. Default implementation of this function simply returns the next color on the scale using
+    the index of a group.
+    ```js
+    // default index based color accessor
+    .colorAccessor(function(d, i){return i;})
+    // color accessor for a multi-value crossfilter reduction
+    .colorAccessor(function(d){return d.value.absGain;})
+    ```
+    **/
+    _chart.colorAccessor = function(_){
+        if(!arguments.length) return _colorAccessor;
+        _colorAccessor = _;
+        _defaultAccessor = false;
+        return _chart;
+    };
+
+    _chart.defaultColorAccessor = function() {
+        return _defaultAccessor;
+    };
+
+    /**
+    #### .colorDomain([domain])
+    Set or get the current domain for the color mapping function. The domain must be supplied as an array.
+
+    Note: previously this method accepted a callback function. Instead you may use a custom scale set by `.colors`.
+
+    **/
+    _chart.colorDomain = function(_){
+        if(!arguments.length) return _colors.domain();
+        _colors.domain(_);
+        return _chart;
+    };
+
+    /**
+    #### .calculateColorDomain()
+    Set the domain by determining the min and max values as retrived by `.colorAccessor` over the chart's dataset.
+
+    **/
+    _chart.calculateColorDomain = function () {
+        var newDomain = [d3.min(_chart.data(), _chart.colorAccessor()),
+                         d3.max(_chart.data(), _chart.colorAccessor())];
+        _colors.domain(newDomain);
+    };
+
+    /**
+    #### .getColor(d [, i])
+    Get the color for the datum d and counter i. This is used internaly by charts to retrieve a color.
+
+    **/
+    _chart.getColor = function(d, i){
+        return _colors(_colorAccessor.call(this,d, i));
+    };
+
+    _chart.colorCalculator = function(_){
+        if(!arguments.length) return _chart.getColor;
+        _chart.getColor = _;
+        return _chart;
+    };
+
+    return _chart;
+};
+
+/**
+## Coordinate Grid Mixin
+
+Includes: [Color Mixin](#color-mixin), [Margin Mixin](#margin-mixin), [Base Mixin](#base-mixin)
+
+Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based concrete chart types,
 i.e. bar chart, line chart, and bubble chart.
 
 **/
-dc.coordinateGridChart = function (_chart) {
+dc.coordinateGridMixin = function (_chart) {
     var GRID_LINE_CLASS = "grid-line";
     var HORIZONTAL_CLASS = "horizontal";
     var VERTICAL_CLASS = "vertical";
@@ -1329,7 +1475,7 @@ dc.coordinateGridChart = function (_chart) {
     var X_AXIS_LABEL_CLASS = 'x-axis-label';
     var DEFAULT_AXIS_LABEL_PADDING = 12;
 
-    _chart = dc.colorChart(dc.marginable(dc.baseChart(_chart)));
+    _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin(_chart)));
 
     _chart.colors(d3.scale.category10());
     _chart._mandatoryAttributes().push('x');
@@ -1579,6 +1725,10 @@ dc.coordinateGridChart = function (_chart) {
         return _chart;
     };
 
+    /**
+    #### .xUnitCount()
+    Returns the number of units displayed on the x axis using the unit measure configured by .xUnits.
+    **/
     _chart.xUnitCount = function () {
         if (_unitCount === undefined) {
             var units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain());
@@ -1598,12 +1748,17 @@ dc.coordinateGridChart = function (_chart) {
         return _chart;
     };
 
+    /**
+    #### isOrdinal()
+    Returns true if the chart is using ordinal xUnits, false otherwise. Most charts must behave somewhat
+    differently when with ordinal data and use the result of this method to trigger those special case.
+    **/
     _chart.isOrdinal = function () {
         return _chart.xUnits() === dc.units.ordinal;
     };
 
     _chart._ordinalXDomain = function() {
-        var groups = _chart.computeOrderedGroups(_chart.data());
+        var groups = _chart._computeOrderedGroups(_chart.data());
         return groups.map(_chart.keyAccessor());
     };
 
@@ -1632,7 +1787,7 @@ dc.coordinateGridChart = function (_chart) {
         if (axisXG.empty())
             axisXG = g.append("g")
                 .attr("class", "axis x")
-                .attr("transform", "translate(" + _chart.margins().left + "," + _chart.xAxisY() + ")");
+                .attr("transform", "translate(" + _chart.margins().left + "," + _chart._xAxisY() + ")");
 
         var axisXLab = g.selectAll("text."+X_AXIS_LABEL_CLASS);
         if (axisXLab.empty() && _chart.xAxisLabel())
@@ -1668,7 +1823,7 @@ dc.coordinateGridChart = function (_chart) {
                 .attr("x1", function (d) {
                     return _x(d);
                 })
-                .attr("y1", _chart.xAxisY() - _chart.margins().top)
+                .attr("y1", _chart._xAxisY() - _chart.margins().top)
                 .attr("x2", function (d) {
                     return _x(d);
                 })
@@ -1682,7 +1837,7 @@ dc.coordinateGridChart = function (_chart) {
                 .attr("x1", function (d) {
                     return _x(d);
                 })
-                .attr("y1", _chart.xAxisY() - _chart.margins().top)
+                .attr("y1", _chart._xAxisY() - _chart.margins().top)
                 .attr("x2", function (d) {
                     return _x(d);
                 })
@@ -1696,7 +1851,7 @@ dc.coordinateGridChart = function (_chart) {
         }
     }
 
-    _chart.xAxisY = function () {
+    _chart._xAxisY = function () {
         return (_chart.height() - _chart.margins().bottom);
     };
 
@@ -1704,6 +1859,11 @@ dc.coordinateGridChart = function (_chart) {
         return _chart.effectiveWidth();
     };
 
+    /**
+    #### .xAxisLabel([labelText, [, padding]])
+    Set or get the x axis label. If setting the label, you may optionally include additional padding to
+    the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.
+    **/
     _chart.xAxisLabel = function (_, padding) {
         if (!arguments.length) return _xAxisLabel;
         _xAxisLabel = _;
@@ -1758,7 +1918,7 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     _chart.renderYAxis = function () {
-        var axisPosition = _useRightYAxis ? (_chart.width() - _chart.margins().right) : _chart.yAxisX();
+        var axisPosition = _useRightYAxis ? (_chart.width() - _chart.margins().right) : _chart._yAxisX();
         _chart.renderYAxisAt("y", _yAxis, axisPosition);
         var labelPosition = _useRightYAxis ? (_chart.width() - _yAxisLabelPadding) : _yAxisLabelPadding;
         var rotation = _useRightYAxis ? 90 : -90;
@@ -1814,14 +1974,15 @@ dc.coordinateGridChart = function (_chart) {
         }
     }
 
-    _chart.yAxisX = function () {
+    _chart._yAxisX = function () {
         return _chart.useRightYAxis() ? _chart.width() - _chart.margins().right : _chart.margins().left;
     };
 
 
     /**
-    #### .yAxisLabel([labelText])
-    Set or get the y axis label.
+    #### .yAxisLabel([labelText, [, padding]])
+    Set or get the y axis label. If setting the label, you may optionally include additional padding to
+    the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.
     **/
     _chart.yAxisLabel = function (_, padding) {
         if (!arguments.length) return _yAxisLabel;
@@ -1898,6 +2059,10 @@ dc.coordinateGridChart = function (_chart) {
         return _chart;
     };
 
+    /**
+    #### .xAxisMin()
+    Return the minimum x value to diplay in the chart. Includes xAxisPadding if set.
+    **/
     _chart.xAxisMin = function () {
         var min = d3.min(_chart.data(), function (e) {
             return _chart.keyAccessor()(e);
@@ -1905,6 +2070,10 @@ dc.coordinateGridChart = function (_chart) {
         return dc.utils.subtract(min, _xAxisPadding);
     };
 
+    /**
+    #### .xAxisMin()
+    Return the maximum x value to diplay in the chart. Includes xAxisPadding if set.
+    **/
     _chart.xAxisMax = function () {
         var max = d3.max(_chart.data(), function (e) {
             return _chart.keyAccessor()(e);
@@ -1912,6 +2081,10 @@ dc.coordinateGridChart = function (_chart) {
         return dc.utils.add(max, _xAxisPadding);
     };
 
+    /**
+    #### .xAxisMin()
+    Return the minimum y value to diplay in the chart. Includes yAxisPadding if set.
+    **/
     _chart.yAxisMin = function () {
         var min = d3.min(_chart.data(), function (e) {
             return _chart.valueAccessor()(e);
@@ -1919,6 +2092,10 @@ dc.coordinateGridChart = function (_chart) {
         return dc.utils.subtract(min, _yAxisPadding);
     };
 
+    /**
+    #### .yAxisMax()
+    Return the maximum y value to diplay in the chart. Includes yAxisPadding if set.
+    **/
     _chart.yAxisMax = function () {
         var max = d3.max(_chart.data(), function (e) {
             return _chart.valueAccessor()(e);
@@ -1996,7 +2173,7 @@ dc.coordinateGridChart = function (_chart) {
     };
 
     function brushHeight() {
-        return _chart.xAxisY() - _chart.margins().top;
+        return _chart._xAxisY() - _chart.margins().top;
     }
 
     _chart.renderBrush = function (g) {
@@ -2121,7 +2298,7 @@ dc.coordinateGridChart = function (_chart) {
 
     _chart._preprocessData = function() {};
 
-    _chart.doRender = function () {
+    _chart._doRender = function () {
         _chart.resetSvg();
 
         _chart._preprocessData();
@@ -2136,7 +2313,7 @@ dc.coordinateGridChart = function (_chart) {
         return _chart;
     };
 
-    _chart.doRedraw = function () {
+    _chart._doRedraw = function () {
         _chart._preprocessData();
 
         drawChart(false);
@@ -2280,7 +2457,7 @@ dc.coordinateGridChart = function (_chart) {
 
     /**
     #### .brushOn([boolean])
-    Turn on/off the brush based in-place range filter. When the brush is on then user will be able to  simply drag the mouse
+    Turn on/off the brush based in-place range filter. When the brush is on then user will be able to simply drag the mouse
     across the chart to perform range filtering based on the extend of the brush. However turning on brush filter will essentially
     disable other interactive elements on the chart such as the highlighting, tool-tip, and reference lines on a chart. Zooming will still
     be possible if enabled, but only via scrolling (panning will be disabled.) Default value is "true".
@@ -2300,135 +2477,12 @@ dc.coordinateGridChart = function (_chart) {
 };
 
 /**
-## <a name="color-chart" href="#color-chart">#</a> Color Chart [Abstract]
-Color chart is an abstract chart functional class created to provide universal coloring support as a mix-in for any concrete
-chart implementation.
+## Stack Mixin
+
+Stack Mixin is an mixin that provides cross-chart support of stackability using d3.layout.stack.
 
 **/
-
-dc.colorChart = function(_chart) {
-    var _colors = d3.scale.category20c();
-    var _defaultAccessor = true;
-
-    var _colorAccessor = function(d) { return _chart.keyAccessor()(d); };
-
-    /**
-    #### .colors([colorScale])
-    Retrieve current color scale or set a new color scale. This methods accepts any
-    function the operate like a d3 scale. If not set the default is
-    `d3.scale.category20c()`.
-    ```js
-    // alternate categorical scale
-    chart.colors(d3.scale.category20b());
-
-    // ordinal scale
-    chart.colors(d3.scale.ordinal().range(['red','green','blue']);
-    // convience method, the same as above
-    chart.ordinalColors(['red','green','blue']);
-
-    // set a linear scale
-    chart.linearColors(["#4575b4", "#ffffbf", "#a50026"]);
-    ```
-    **/
-    _chart.colors = function(_) {
-        if (!arguments.length) return _colors;
-        if (_ instanceof Array) _colors = d3.scale.quantize().range(_); // depricated legacy support, note: this fails for ordinal domains
-        else _colors = d3.functor(_);
-        return _chart;
-    };
-
-    /**
-    #### .ordinalColors(r)
-    Convenience method to set the color scale to d3.scale.ordinal with range `r`.
-
-    **/
-    _chart.ordinalColors = function(r) {
-        return _chart.colors(d3.scale.ordinal().range(r));
-    };
-
-    /**
-    #### .linearColors(r)
-    Convenience method to set the color scale to an Hcl interpolated linear scale with range `r`.
-
-    **/
-    _chart.linearColors = function(r) {
-        return _chart.colors(d3.scale.linear()
-                             .range(r)
-                             .interpolate(d3.interpolateHcl));
-    };
-
-    /**
-    #### .colorAccessor([colorAccessorFunction])
-    Set or get color accessor function. This function will be used to map a data point on crossfilter group to a specific
-    color value on the color scale. Default implementation of this function simply returns the next color on the scale using
-    the index of a group.
-    ```js
-    // default index based color accessor
-    .colorAccessor(function(d, i){return i;})
-    // color accessor for a multi-value crossfilter reduction
-    .colorAccessor(function(d){return d.value.absGain;})
-    ```
-    **/
-    _chart.colorAccessor = function(_){
-        if(!arguments.length) return _colorAccessor;
-        _colorAccessor = _;
-        _defaultAccessor = false;
-        return _chart;
-    };
-
-    _chart.defaultColorAccessor = function() {
-        return _defaultAccessor;
-    };
-
-    /**
-    #### .colorDomain([domain])
-    Set or get the current domain for the color mapping function. The domain must be supplied as an array.
-
-    Note: previously this method accepted a callback function. Instead you may use a custom scale set by `.colors`.
-
-    **/
-    _chart.colorDomain = function(_){
-        if(!arguments.length) return _colors.domain();
-        _colors.domain(_);
-        return _chart;
-    };
-
-    /**
-    #### .calculateColorDomain()
-    Set the domain by determining the min and max values as retrived by `.colorAccessor` over the chart's dataset.
-
-    **/
-    _chart.calculateColorDomain = function () {
-        var newDomain = [d3.min(_chart.data(), _chart.colorAccessor()),
-                         d3.max(_chart.data(), _chart.colorAccessor())];
-        _colors.domain(newDomain);
-    };
-
-    /**
-    #### .getColor(d [, i])
-    Get the color for the datum d and counter i. This is used internaly by charts to retrieve a color.
-
-    **/
-    _chart.getColor = function(d, i){
-        return _colors(_colorAccessor.call(this,d, i));
-    };
-
-    _chart.colorCalculator = function(_){
-        if(!arguments.length) return _chart.getColor;
-        _chart.getColor = _;
-        return _chart;
-    };
-
-    return _chart;
-};
-
-/**
-## <a name="stackable-chart" href="#stackable-chart">#</a> Stackable Chart [Abstract]
-Stackable chart is an abstract chart introduced to provide cross-chart support of stackability. Concrete implementation of
-charts can then selectively mix-in this capability.
-
-**/
-dc.stackableChart = function (_chart) {
+dc.stackMixin = function (_chart) {
 
     var _stackLayout = d3.layout.stack()
         .values(prepareValues);
@@ -2561,7 +2615,7 @@ dc.stackableChart = function (_chart) {
 
     _chart.yAxisMin = function () {
         var min = d3.min(flattenStack(), function (p) {
-            return  (p.y + p.y0 < p.y0) ? (p.y + p.y0) : p.y0;
+            return (p.y + p.y0 < p.y0) ? (p.y + p.y0) : p.y0;
         });
 
         return dc.utils.subtract(min, _chart.yAxisPadding());
@@ -2639,11 +2693,11 @@ dc.stackableChart = function (_chart) {
         return layers.length ? _chart.stackLayout()(layers) : [];
     });
 
-    _chart._ordinalXDomain = function() {
+    _chart._ordinalXDomain = function () {
         return flattenStack().map(dc.pluck('x'));
     };
 
-    _chart.colorAccessor(function(d,i) {
+    _chart.colorAccessor(function (d) {
         var layer = this.layer || this.name || d.name || d.layer;
         return layer;
     });
@@ -2672,11 +2726,121 @@ dc.stackableChart = function (_chart) {
 };
 
 /**
-## <a name="abstract-bubble-chart" href="#abstract-bubble-chart">#</a> Abstract Bubble Chart [Abstract] < [Color Chart](#color-chart)
-An abstraction provides reusable functionalities for any chart that needs to visualize data using bubbles.
+## Cap Mixin
+
+Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the Row and Pie Charts.
+
+The top ordered elements in the group up to the cap amount will be kept in the chart and
+the sum of those below will be added to the *others* element. The keys of the elements below the cap limit are recorded
+in order to repsond to onClick events and trigger filtering of all the within that grouping.
 
 **/
-dc.abstractBubbleChart = function (_chart) {
+dc.capMixin = function (_chart) {
+
+    var _cap = Infinity;
+
+    var _othersLabel = "Others";
+
+    var _othersGrouper = function (topRows) {
+        var topRowsSum = d3.sum(topRows, _chart.valueAccessor()),
+            allRows = _chart.group().all(),
+            allRowsSum = d3.sum(allRows, _chart.valueAccessor()),
+            topKeys = topRows.map(_chart.keyAccessor()),
+            allKeys = allRows.map(_chart.keyAccessor()),
+            topSet = d3.set(topKeys),
+            others = allKeys.filter(function(d){return !topSet.has(d);});
+        if (allRowsSum > topRowsSum)
+            return topRows.concat([{"others": others, "key": _othersLabel, "value": allRowsSum - topRowsSum}]);
+        return topRows;
+    };
+
+    _chart.cappedKeyAccessor = function(d,i) {
+        if (d.others)
+            return d.key;
+        return _chart.keyAccessor()(d,i);
+    };
+
+    _chart.cappedValueAccessor = function(d,i) {
+        if (d.others)
+            return d.value;
+        return _chart.valueAccessor()(d,i);
+    };
+
+    _chart.data(function(group) {
+        if (_cap == Infinity) {
+            return _chart._computeOrderedGroups(group.all());
+        } else {
+            var topRows = group.top(_cap); // ordered by crossfilter group order (default value)
+            topRows = _chart._computeOrderedGroups(topRows); // re-order using ordering (default key)
+            if (_othersGrouper) return _othersGrouper(topRows);
+            return topRows;
+        }
+    });
+
+    /**
+    #### .cap([count])
+    Get or set the count of elements to that will be included in the cap.
+    **/
+    _chart.cap = function (_) {
+        if (!arguments.length) return _cap;
+        _cap = _;
+        return _chart;
+    };
+
+    /**
+    #### .othersLabel([label])
+    Get or set the label for *Others* slice when slices cap is specified. Default label is **Others**.
+    **/
+    _chart.othersLabel = function (_) {
+        if (!arguments.length) return _othersLabel;
+        _othersLabel = _;
+        return _chart;
+    };
+
+    /**
+    #### .othersGrouper([grouperFunction])
+    Get or set the grouper function that will perform the insertion of data for the *Others* slice if the slices cap is
+    specified. If set to a falsy value, no others will be added. By default the grouper function computes the sum of all
+    values below the cap.
+    ```js
+    chart.othersGrouper(function (data) {
+        // compute the value for others, presumably the sum of all values below the cap
+        var othersSum  = yourComputeOthersValueLogic(data)
+
+        // the keys are needed to properly filter when the others element is clicked
+        var othersKeys = yourComputeOthersKeysArrayLogic(data);
+
+        // add the others row to the dataset
+        data.push({"key": "Others", "value": othersSum, "others": othersKeys });
+
+        return data;
+    });
+    ```
+    **/
+    _chart.othersGrouper = function (_) {
+        if (!arguments.length) return _othersGrouper;
+        _othersGrouper = _;
+        return _chart;
+    };
+
+    dc.override(_chart, "onClick", function (d) {
+        if (d.others)
+            _chart.filter([d.others]);
+        _chart._onClick(d);
+    });
+
+    return _chart;
+};
+
+/**
+## Bubble Mixin
+
+Includes: [Color Mixin](#color-mixin)
+
+This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.
+
+**/
+dc.bubbleMixin = function (_chart) {
     var _maxBubbleRelativeSize = 0.3;
     var _minRadiusWithLabel = 10;
 
@@ -2684,7 +2848,7 @@ dc.abstractBubbleChart = function (_chart) {
     _chart.BUBBLE_CLASS = "bubble";
     _chart.MIN_RADIUS = 10;
 
-    _chart = dc.colorChart(_chart);
+    _chart = dc.colorMixin(_chart);
 
     _chart.renderLabel(true);
     _chart.renderTitle(false);
@@ -2753,7 +2917,7 @@ dc.abstractBubbleChart = function (_chart) {
         return (_chart.bubbleR(d) > _minRadiusWithLabel) ? 1 : 0;
     };
 
-    _chart.doRenderLabel = function (bubbleGEnter) {
+    _chart._doRenderLabel = function (bubbleGEnter) {
         if (_chart.renderLabel()) {
             var label = bubbleGEnter.select("text");
 
@@ -2785,7 +2949,7 @@ dc.abstractBubbleChart = function (_chart) {
         return _chart.title()(d);
     };
 
-    _chart.doRenderTitles = function (g) {
+    _chart._doRenderTitles = function (g) {
         if (_chart.renderTitle()) {
             var title = g.select("title");
 
@@ -2856,9 +3020,12 @@ dc.abstractBubbleChart = function (_chart) {
 };
 
 /**
-## <a name="pie-chart" href="#pie-chart">#</a> Pie Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
-This chart is a concrete pie chart implementation usually used to visualize small number of categorical distributions.
-Pie chart implementation uses keyAccessor to generate slices, and valueAccessor to calculate the size of each slice(key)
+## Pie Chart
+
+Includes: [Cap Mixin](#cap-mixin), [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
+
+The pie chart implementation is usually used to visualize small number of categorical distributions.
+Pie chart uses keyAccessor to generate slices, and valueAccessor to calculate the size of each slice(key)
 relatively to the total sum of all values. Slices are ordered by `.ordering` which defaults to sorting by key.
 
 Examples:
@@ -2901,7 +3068,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     var _externalLabelRadius;
 
-    var _chart = dc.capped(dc.colorChart(dc.baseChart({})));
+    var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
 
     _chart.colorAccessor(_chart.cappedKeyAccessor);
 
@@ -2923,7 +3090,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     _chart.transitionDuration(350);
 
-    _chart.doRender = function () {
+    _chart._doRender = function () {
         _chart.resetSvg();
 
         _g = _chart.svg()
@@ -3140,7 +3307,7 @@ dc.pieChart = function (parent, chartGroup) {
         return _chart.hasFilter(_chart.cappedKeyAccessor(d.data));
     }
 
-    _chart.doRedraw = function () {
+    _chart._doRedraw = function () {
         drawChart();
         return _chart;
     };
@@ -3267,7 +3434,10 @@ dc.pieChart = function (parent, chartGroup) {
 };
 
 /**
-## <a name="bar-chart" href="#bar-chart">#</a> Bar Chart [Concrete] < [Stackable Chart](#stackable-chart) < [CoordinateGrid Chart](#coordinate-grid-chart)
+## Bar Chart
+
+Includes: [Stack Mixin](#stack Mixin), [Coordinate Grid Mixin](#coordinate-grid-mixin)
+
 Concrete bar chart/histogram implementation.
 
 Examples:
@@ -3302,7 +3472,7 @@ dc.barChart = function (parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
     var DEFAULT_GAP_BETWEEN_BARS = 2;
 
-    var _chart = dc.stackableChart(dc.coordinateGridChart({}));
+    var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
 
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
     var _centerBar = false;
@@ -3358,7 +3528,7 @@ dc.barChart = function (parent, chartGroup) {
                 var x = _chart.x()(d.x);
                 if (_centerBar) x -= _barWidth / 2;
                 if (_chart.isOrdinal()) x += _gap/2;
-                return  dc.utils.safeNumber(x);
+                return dc.utils.safeNumber(x);
             })
             .attr("y", function (d) {
                 var y = _chart.y()(d.y + d.y0);
@@ -3442,7 +3612,7 @@ dc.barChart = function (parent, chartGroup) {
     }
 
     /**
-    ### .barPadding([padding])
+    #### .barPadding([padding])
     Get or set the spacing between bars as a fraction of bar size. Valid values are within 0-1.
     Setting this value will also remove any previously set `gap`. See the
     [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
@@ -3456,7 +3626,7 @@ dc.barChart = function (parent, chartGroup) {
     };
 
     /**
-    ### .outerPadding([padding])
+    #### .outerPadding([padding])
     Get or set the outer padding on an ordinal bar chart. This setting has no effect on non-ordinal charts.
     Padding equivlent in width to `padding * barWidth` will be added on each side of the chart.
 
@@ -3501,11 +3671,10 @@ dc.barChart = function (parent, chartGroup) {
             _chart.selectAll('rect.bar')
                 .classed('highlight', colorFilter(d.color))
                 .classed('fadeout', colorFilter(d.color,true));
-
         }
     };
 
-    _chart.legendReset = function (d) {
+    _chart.legendReset = function () {
         _chart.selectAll('rect.bar')
             .classed('highlight', false)
             .classed('fadeout', false);
@@ -3524,7 +3693,10 @@ dc.barChart = function (parent, chartGroup) {
 };
 
 /**
-## <a name="line-chart" href="#line-chart">#</a> Line Chart [Concrete] < [Stackable Chart](#stackable-chart) < [CoordinateGrid Chart](#coordinate-grid-chart)
+## Line Chart
+
+Includes [Stack Mixin](#stack-mixin), [Coordinate Grid Mixin](#coordinate-grid-mixin)
+
 Concrete line/area chart implementation.
 
 Examples:
@@ -3563,7 +3735,7 @@ dc.lineChart = function (parent, chartGroup) {
     var X_AXIS_REF_LINE_CLASS = "xRef";
     var DEFAULT_DOT_OPACITY = 1e-6;
 
-    var _chart = dc.stackableChart(dc.coordinateGridChart({}));
+    var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
     var _renderArea = false;
     var _dotRadius = DEFAULT_DOT_RADIUS;
     var _dataPointRadius = null;
@@ -3779,7 +3951,7 @@ dc.lineChart = function (parent, chartGroup) {
     function showRefLines(dot, g) {
         var x = dot.attr("cx");
         var y = dot.attr("cy");
-        var yAxisX = (_chart.yAxisX() - _chart.margins().left);
+        var yAxisX = (_chart._yAxisX() - _chart.margins().left);
         var yAxisRefPathD = "M" + yAxisX + " " + y + "L" + (x) + " " + (y);
         var xAxisRefPathD = "M" + x + " " + _chart.yAxisHeight() + "L" + x + " " + y;
         g.select("path." + Y_AXIS_REF_LINE_CLASS).style("display", "").attr("d", yAxisRefPathD);
@@ -3862,11 +4034,10 @@ dc.lineChart = function (parent, chartGroup) {
             _chart.selectAll('path.line, path.area')
                 .classed('highlight', colorFilter(d.color))
                 .classed('fadeout', colorFilter(d.color,true));
-
         }
     };
 
-    _chart.legendReset = function (d) {
+    _chart.legendReset = function () {
         _chart.selectAll('path.line, path.area')
             .classed('highlight', false)
             .classed('fadeout', false);
@@ -3885,7 +4056,10 @@ dc.lineChart = function (parent, chartGroup) {
 };
 
 /**
-## <a name="data-count" href="#data-count">#</a> Data Count Widget [Concrete] < [Base Chart](#base-chart)
+## Data Count Widget
+
+Includes: [Base Mixin](#base-mixin)
+
 Data count is a simple widget designed to display total number records in the data set vs. the number records selected
 by the current filters. Once created data count widget will automatically update the text content of the following elements
 under the parent element.
@@ -3928,24 +4102,27 @@ dc.dataCount(".dc-data-count")
 **/
 dc.dataCount = function(parent, chartGroup) {
     var _formatNumber = d3.format(",d");
-    var _chart = dc.baseChart({});
+    var _chart = dc.baseMixin({});
 
-    _chart.doRender = function() {
+    _chart._doRender = function() {
         _chart.selectAll(".total-count").text(_formatNumber(_chart.dimension().size()));
         _chart.selectAll(".filter-count").text(_formatNumber(_chart.group().value()));
 
         return _chart;
     };
 
-    _chart.doRedraw = function(){
-        return _chart.doRender();
+    _chart._doRedraw = function(){
+        return _chart._doRender();
     };
 
     return _chart.anchor(parent, chartGroup);
 };
 
 /**
-## <a name="data-table" href="#data-table">#</a> Data Table Widget [Concrete] < [Base Chart](#base-chart)
+## Data Table Widget
+
+Includes: [Base Mixin](#base-mixin)
+
 Data table is a simple widget designed to list crossfilter focused data set (rows being filtered) in a good old tabular
 fashion.
 
@@ -3971,7 +4148,7 @@ dc.dataTable = function(parent, chartGroup) {
     var COLUMN_CSS_CLASS = "dc-table-column";
     var GROUP_CSS_CLASS = "dc-table-group";
 
-    var _chart = dc.baseChart({});
+    var _chart = dc.baseMixin({});
 
     var _size = 25;
     var _columns = [];
@@ -3980,7 +4157,7 @@ dc.dataTable = function(parent, chartGroup) {
     };
     var _order = d3.ascending;
 
-    _chart.doRender = function() {
+    _chart._doRender = function() {
         _chart.selectAll("tbody").remove();
 
         renderRows(renderGroups());
@@ -4046,8 +4223,8 @@ dc.dataTable = function(parent, chartGroup) {
         return rows;
     }
 
-    _chart.doRedraw = function() {
-        return _chart.doRender();
+    _chart._doRedraw = function() {
+        return _chart._doRender();
     };
 
     /**
@@ -4131,7 +4308,10 @@ dc.dataTable = function(parent, chartGroup) {
 };
 
 /**
-## <a name="bubble-chart" href="#bubble-chart">#</a> Bubble Chart [Concrete] < [Abstract Bubble Chart](#abstract-bubble-chart) < [CoordinateGrid Chart](#coordinate-grid-chart)
+## Bubble Chart
+
+Includes: [Bubble Mixin](#bubble-mixin), [Coordinate Grid Mixin](#coordinate-grid-mixin)
+
 A concrete implementation of a general purpose bubble chart that allows data visualization using the following dimensions:
 
 * x axis position
@@ -4164,7 +4344,7 @@ var bubbleChart2 = dc.bubbleChart("#chart-container2", "chartGroupA");
 
 **/
 dc.bubbleChart = function(parent, chartGroup) {
-    var _chart = dc.abstractBubbleChart(dc.coordinateGridChart({}));
+    var _chart = dc.bubbleMixin(dc.coordinateGridMixin({}));
 
     var _elasticRadius = false;
 
@@ -4225,9 +4405,9 @@ dc.bubbleChart = function(parent, chartGroup) {
                 return (_chart.bubbleR(d) > 0) ? 1 : 0;
             });
 
-        _chart.doRenderLabel(bubbleGEnter);
+        _chart._doRenderLabel(bubbleGEnter);
 
-        _chart.doRenderTitles(bubbleGEnter);
+        _chart._doRenderTitles(bubbleGEnter);
     }
 
     function updateNodes(bubbleG) {
@@ -4277,14 +4457,14 @@ dc.bubbleChart = function(parent, chartGroup) {
 };
 
 /**
-## <a name="composite-chart" href="#composite-chart">#</a> Composite Chart [Concrete] < [CoordinateGrid Chart](#coordinate-grid-chart)
-Composite chart is a special kind of chart that resides somewhere between abstract and concrete charts. It does not
-generate data visualization directly, but rather working with other concrete charts to do the job. You can essentially
-overlay(compose) different bar/line/area charts in a single composite chart to achieve some quite flexible charting
-effects.
+## Composite Chart
 
-Examples:
-* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
+Includes: [Coordinate Grid Mixin](#coordinate-grid-mixin)
+
+Composite charts are a special kind of chart that allow you to render multiple
+charts on the same Coordinate Grid. You can overlay(compose) different
+bar/line/area charts in a single composite chart to achieve some quite flexible
+charting effects.
 
 #### dc.compositeChart(parent[, chartGroup])
 Create a composite chart instance and attach it to the given parent element.
@@ -4310,7 +4490,7 @@ dc.compositeChart = function (parent, chartGroup) {
     var SUB_CHART_CLASS = "sub";
     var DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING = 12;
 
-    var _chart = dc.coordinateGridChart({});
+    var _chart = dc.coordinateGridMixin({});
     var _children = [];
 
     var _shareColors = false,
@@ -4418,7 +4598,7 @@ dc.compositeChart = function (parent, chartGroup) {
 
             child.plotData();
 
-            child.activateRenderlets();
+            child._activateRenderlets();
         }
     };
 
@@ -4471,7 +4651,7 @@ dc.compositeChart = function (parent, chartGroup) {
     **/
     _chart.compose = function (charts) {
         _children = charts;
-        _children.forEach(function(child, i) {
+        _children.forEach(function(child) {
             child.height(_chart.height());
             child.width(_chart.width());
             child.margins(_chart.margins());
@@ -4538,6 +4718,7 @@ dc.compositeChart = function (parent, chartGroup) {
         });
     }
 
+    delete _chart.yAxisMin;
     function yAxisMin() {
         return d3.min(getYAxisMin(leftYAxisChildren()));
     }
@@ -4552,6 +4733,7 @@ dc.compositeChart = function (parent, chartGroup) {
         });
     }
 
+    delete _chart.yAxisMax;
     function yAxisMax() {
         return dc.utils.add(d3.max(getYAxisMax(leftYAxisChildren())), _chart.yAxisPadding());
     }
@@ -4566,9 +4748,9 @@ dc.compositeChart = function (parent, chartGroup) {
         });
     }
 
-    _chart.xAxisMin = function () {
+    dc.override('xAxisMin',function () {
         return dc.utils.subtract(d3.min(getAllXAxisMinFromChildCharts()), _chart.xAxisPadding());
-    };
+    });
 
     function getAllXAxisMaxFromChildCharts() {
         return _children.map(function(c) {
@@ -4576,9 +4758,9 @@ dc.compositeChart = function (parent, chartGroup) {
         });
     }
 
-    _chart.xAxisMax = function () {
+    dc.override('xAxisMax',function () {
         return dc.utils.add(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding());
-    };
+    });
 
     _chart.legendables = function () {
         return _children.reduce(function(items,child) {
@@ -4627,9 +4809,13 @@ dc.compositeChart = function (parent, chartGroup) {
 };
 
 /**
-## <a name="series-chart" href="#Series-chart">#</a> Series Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
+ ## Series Chart
+
+ Includes: [Composite Chart](#composite chart)
+
  A series chart is a chart that shows multiple series of data as lines, where the series
- is specified in the data.
+ is specified in the data. It is a special implementation Composite Chart and inherits
+ all composite features other than recomposing the chart.
 
  #### dc.seriesChart(parent[, chartGroup])
  Create a series chart instance and attach it to the given parent element.
@@ -4748,6 +4934,12 @@ dc.seriesChart = function (parent, chartGroup) {
         return _chart;
     };
 
+    /**
+     #### .valueSort([sortFunction])
+     Get or set a function to the sort each series values by. By default this is
+     the key accessor which, for example, a will ensure lineChart a series connects
+     its points in increasing key/x order, rather than haphazardly.
+    **/
     _chart.valueSort = function(_) {
         if (!arguments.length) return _valueSort;
         _valueSort = _;
@@ -4763,9 +4955,13 @@ dc.seriesChart = function (parent, chartGroup) {
 };
 
 /**
-## <a name="geo-choropleth-chart" href="#geo-choropleth-chart">#</a> Geo Choropleth Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
-Geo choropleth chart is design to make creating crossfilter driven choropleth map from GeoJson data an easy process. This
-chart implementation was inspired by [the great d3 choropleth example](http://bl.ocks.org/4060606).
+## Geo Choropleth Chart
+
+Includes: [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
+
+Geo choropleth chart is designed to make creating crossfilter driven choropleth
+map from GeoJson data an easy process. This chart implementation was inspired by
+[the great d3 choropleth example](http://bl.ocks.org/4060606).
 
 Examples:
 * [US Venture Capital Landscape 2011](http://nickqizhu.github.com/dc.js/vc/index.html)
@@ -4791,9 +4987,9 @@ var chart2 = dc.compositeChart("#us-chart2", "chartGroupA");
 
 **/
 dc.geoChoroplethChart = function (parent, chartGroup) {
-    var _chart = dc.colorChart(dc.baseChart({}));
+    var _chart = dc.colorMixin(dc.baseMixin({}));
 
-    _chart.colorAccessor(function (d, i) {
+    _chart.colorAccessor(function (d) {
         return d || 0;
     });
 
@@ -4802,7 +4998,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
     var _geoJsons = [];
 
-    _chart.doRender = function () {
+    _chart._doRender = function () {
         _chart.resetSvg();
         for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
             var states = _chart.svg().append("g")
@@ -4894,7 +5090,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     function renderPaths(regionG, layerIndex, data) {
         var paths = regionG
             .select("path")
-            .attr("fill", function (d) {
+            .attr("fill", function () {
                 var currentFill = d3.select(this).attr("fill");
                 if (currentFill)
                     return currentFill;
@@ -4927,7 +5123,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         }
     }
 
-    _chart.doRedraw = function () {
+    _chart._doRedraw = function () {
         for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
             plotData(layerIndex);
             if(_projectionFlag) {
@@ -5021,7 +5217,10 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 };
 
 /**
-## <a name="bubble-overlay-chart" href="#bubble-overlay-chart">#</a> Bubble Overlay Chart [Concrete] < [Abstract Bubble Chart](#abstract-bubble-chart) < [Base Chart](#base-chart)
+## Bubble Overlay Chart
+
+Includes: [Bubble Mixin](#bubble-mixin), [Base Mixin](#base-mixin)
+
 Bubble overlay chart is quite different from the typical bubble chart. With bubble overlay chart you can arbitrarily place
 a finite number of bubbles on an existing svg or bitmap image (overlay on top of it), thus losing the typical x and y
 positioning that we are used to whiling retaining the capability to visualize data using it's bubble radius and
@@ -5066,7 +5265,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
     var BUBBLE_NODE_CLASS = "node";
     var BUBBLE_CLASS = "bubble";
 
-    var _chart = dc.abstractBubbleChart(dc.baseChart({}));
+    var _chart = dc.bubbleMixin(dc.baseMixin({}));
     var _g;
     var _points = [];
 
@@ -5088,7 +5287,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
         return _chart;
     };
 
-    _chart.doRender = function() {
+    _chart._doRender = function() {
         _g = initOverlayG();
 
         _chart.r().range([_chart.MIN_RADIUS, _chart.width() * _chart.maxBubbleRelativeSize()]);
@@ -5127,9 +5326,9 @@ dc.bubbleOverlay = function(root, chartGroup) {
                     return _chart.bubbleR(d);
                 });
 
-            _chart.doRenderLabel(nodeG);
+            _chart._doRenderLabel(nodeG);
 
-            _chart.doRenderTitles(nodeG);
+            _chart._doRenderTitles(nodeG);
         });
     }
 
@@ -5157,7 +5356,7 @@ dc.bubbleOverlay = function(root, chartGroup) {
         return nodeG;
     }
 
-    _chart.doRedraw = function() {
+    _chart._doRedraw = function() {
         updateBubbles();
 
         _chart.fadeDeselectedArea();
@@ -5220,7 +5419,10 @@ dc.bubbleOverlay = function(root, chartGroup) {
 };
 
 /**
-## <a name="row-chart" href="#row-chart">#</a> Row Chart [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
+## Row Chart
+
+Includes: [Cap Mixin](#cap-mixin), [Margin Mixin](#margin-mixin), [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
+
 Concrete row chart implementation.
 
 #### dc.rowChart(parent[, chartGroup])
@@ -5246,14 +5448,13 @@ dc.rowChart = function (parent, chartGroup) {
     var _g;
 
     var _labelOffsetX = 10;
-
     var _labelOffsetY = 15;
 
     var _gap = 5;
 
     var _rowCssClass = "row";
 
-    var _chart = dc.capped(dc.marginable(dc.colorChart(dc.baseChart({}))));
+    var _chart = dc.capMixin(dc.marginMixin(dc.colorMixin(dc.baseMixin({}))));
 
     var _x;
 
@@ -5288,7 +5489,7 @@ dc.rowChart = function (parent, chartGroup) {
             .call(_xAxis);
     }
 
-    _chart.doRender = function () {
+    _chart._doRender = function () {
         _chart.resetSvg();
 
         _g = _chart.svg()
@@ -5430,7 +5631,7 @@ dc.rowChart = function (parent, chartGroup) {
         return "translate("+s+",0)";
     }
 
-    _chart.doRedraw = function () {
+    _chart._doRedraw = function () {
         drawChart();
         return _chart;
     };
@@ -5492,7 +5693,7 @@ dc.rowChart = function (parent, chartGroup) {
 };
 
 /**
-## <a name="legend" href="#legend">#</a> Legend [Concrete]
+## Legend
 Legend is a attachable widget that can be added to other dc charts to render horizontal legend labels.
 
 ```js
@@ -5579,7 +5780,7 @@ dc.legend = function () {
         var row = 0;
         itemEnter.attr("transform", function(d, i) {
             if(_horizontal) {
-                var translateBy = "translate(" + _cumulativeLegendTextWidth  + "," + row * legendItemHeight() + ")";
+                var translateBy = "translate(" + _cumulativeLegendTextWidth + "," + row * legendItemHeight() + ")";
                 if ((_cumulativeLegendTextWidth + _itemWidth) >= _legendWidth) {
                     ++row ;
                     _cumulativeLegendTextWidth = 0 ;
@@ -5671,115 +5872,8 @@ dc.legend = function () {
     return _legend;
 };
 
-/**
-## <a name="capped" href="#capped">#</a>  Capped
-
-Capped is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the Row and Pie Charts.
-
-The top ordered elements in the group up to the cap amount will be kept in the chart and
-the sum of those below will be added to the *others* element. The keys of the elements below the cap limit are recorded
-in order to repsond to onClick events and trigger filtering of all the within that grouping.
-
-**/
-dc.capped = function (_chart) {
-
-    var _cap = Infinity;
-
-    var _othersLabel = "Others";
-
-    var _othersGrouper = function (topRows) {
-        var topRowsSum = d3.sum(topRows, _chart.valueAccessor()),
-            allRows = _chart.group().all(),
-            allRowsSum = d3.sum(allRows, _chart.valueAccessor()),
-            topKeys = topRows.map(_chart.keyAccessor()),
-            allKeys = allRows.map(_chart.keyAccessor()),
-            topSet = d3.set(topKeys),
-            others = allKeys.filter(function(d){return !topSet.has(d);});
-        if (allRowsSum > topRowsSum)
-            return topRows.concat([{"others": others, "key": _othersLabel, "value": allRowsSum - topRowsSum}]);
-        return topRows;
-    };
-
-    _chart.cappedKeyAccessor = function(d,i) {
-        if (d.others)
-            return d.key;
-        return _chart.keyAccessor()(d,i);
-    };
-
-    _chart.cappedValueAccessor = function(d,i) {
-        if (d.others)
-            return d.value;
-        return _chart.valueAccessor()(d,i);
-    };
-
-    _chart.data(function(group) {
-        if (_cap == Infinity) {
-            return _chart.computeOrderedGroups(group.all());
-        } else {
-            var topRows = group.top(_cap); // ordered by crossfilter group order (default value)
-            topRows = _chart.computeOrderedGroups(topRows); // re-order using ordering (default key)
-            if (_othersGrouper) return _othersGrouper(topRows);
-            return topRows;
-        }
-    });
-
-    /**
-    #### .cap([count])
-    Get or set the count of elements to that will be included in the cap.
-    **/
-    _chart.cap = function (_) {
-        if (!arguments.length) return _cap;
-        _cap = _;
-        return _chart;
-    };
-
-    /**
-    #### .othersLabel([label])
-    Get or set the label for *Others* slice when slices cap is specified. Default label is **Others**.
-    **/
-    _chart.othersLabel = function (_) {
-        if (!arguments.length) return _othersLabel;
-        _othersLabel = _;
-        return _chart;
-    };
-
-    /**
-    #### .othersGrouper([grouperFunction])
-    Get or set the grouper function that will perform the insertion of data for the *Others* slice if the slices cap is
-    specified. If set to a falsy value, no others will be added. By default the grouper function computes the sum of all
-    values below the cap.
-    ```js
-    chart.othersGrouper(function (data) {
-        // compute the value for others, presumably the sum of all values below the cap
-        var othersSum  = yourComputeOthersValueLogic(data)
-
-        // the keys are needed to properly filter when the others element is clicked
-        var othersKeys = yourComputeOthersKeysArrayLogic(data);
-
-        // add the others row to the dataset
-        data.push({"key": "Others", "value": othersSum, "others": othersKeys });
-
-        return data;
-    });
-    ```
-    **/
-    _chart.othersGrouper = function (_) {
-        if (!arguments.length) return _othersGrouper;
-        _othersGrouper = _;
-        return _chart;
-    };
-
-    dc.override(_chart, "onClick", function (d) {
-        if (d.others)
-            _chart.filter([d.others]);
-        _chart._onClick(d);
-    });
-
-    return _chart;
-};
-
 dc.scatterPlot = function (parent, chartGroup) {
-    var _chart = dc.coordinateGridChart({});
+    var _chart = dc.coordinateGridMixin({});
 
     var _locator = function (d) {
         return "translate(" + _chart.x()(_chart.keyAccessor()(d)) + "," + _chart.y()(_chart.valueAccessor()(d)) + ")";
@@ -5826,7 +5920,10 @@ dc.scatterPlot = function (parent, chartGroup) {
 };
 
 /**
-## <a name="number-display" href="#number-display">#</a> Number Display [Concrete] < [Base Chart](#base-chart)
+## Number Display Widget
+
+Includes: [Base Mixin](#base-mixin)
+
 A display of a single numeric value.
 
 Examples:
@@ -5857,7 +5954,7 @@ var display1 = dc.numberDisplay("#chart-container1");
 dc.numberDisplay = function (parent, chartGroup) {
     var SPAN_CLASS = 'number-display';
     var _formatNumber = d3.format(".2s");
-    var _chart = dc.baseChart({});
+    var _chart = dc.baseMixin({});
 
     // dimension not required
     _chart._mandatoryAttributes(['group']);
@@ -5877,7 +5974,7 @@ dc.numberDisplay = function (parent, chartGroup) {
 
     _chart.transitionDuration(250); // good default
 
-    _chart.doRender = function () {
+    _chart._doRender = function () {
         var newValue = _chart.value(),
             span     = _chart.selectAll("."+SPAN_CLASS);
 
@@ -5897,12 +5994,10 @@ dc.numberDisplay = function (parent, chartGroup) {
                     this.textContent = _chart.formatNumber()(interp(t));
                 };
             });
-
-        return _chart;
     };
 
-    _chart.doRedraw = function(){
-        return _chart.doRender();
+    _chart._doRedraw = function(){
+        return _chart._doRender();
     };
 
     /**
@@ -5921,7 +6016,10 @@ dc.numberDisplay = function (parent, chartGroup) {
 
 
 /**
- ## <a name="heatmap" href="#heatmap">#</a> Heat Map [Concrete] < [Color Chart](#color-chart) < [Base Chart](#base-chart)
+ ## Heat Map
+
+ Includes: [Color Mixin](#color-mixin), [Margin Mixin](#margin-mixin), [Base Mixin](#base-mixin)
+
  A heat map is matrix that represents the values of two dimensions of data using colors.
 
  #### dc.heatMap(parent[, chartGroup])
@@ -5955,7 +6053,7 @@ dc.heatMap = function (parent, chartGroup) {
     var _xBorderRadius = DEFAULT_BORDER_RADIUS;
     var _yBorderRadius = DEFAULT_BORDER_RADIUS;
 
-    var _chart = dc.colorChart(dc.marginable(dc.baseChart({})));
+    var _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin({})));
     _chart._mandatoryAttributes(['group']);
     _chart.title(_chart.colorAccessor());
 
@@ -6025,7 +6123,7 @@ dc.heatMap = function (parent, chartGroup) {
         return d3.scale.ordinal().domain(colValues.filter(uniq));
     };
 
-    _chart.doRender = function () {
+    _chart._doRender = function () {
         _chart.resetSvg();
 
         _chartBody = _chart.svg()
@@ -6033,10 +6131,10 @@ dc.heatMap = function (parent, chartGroup) {
           .attr("class", "heatmap")
           .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")");
 
-        return _chart.doRedraw();
+        return _chart._doRedraw();
     };
 
-    _chart.doRedraw = function () {
+    _chart._doRedraw = function () {
         var rows = _chart.rows(),
             cols = _chart.cols(),
             rowCount = rows.domain().length,
@@ -6107,10 +6205,11 @@ dc.heatMap = function (parent, chartGroup) {
                 }
             });
         } else {
-            _chart.selectAll("g.box-group").each(function (d) {
+            _chart.selectAll("g.box-group").each(function () {
                 _chart.resetHighlight(this);
             });
         }
+        return _chart;
     };
 
     _chart.boxOnClick = function (f) {
@@ -6456,7 +6555,10 @@ function boxQuartiles(d) {
 })();
 
 /**
- ## <a name="boxplot" href="#boxplot">#</a> Box Plot [Concrete] < [CoordinateGrid Chart](#coordinate-grid-chart)
+ ## Box Plot
+
+ Includes: [Coordinate Grid Mixin](#coordinate-grid-mixin)
+
  A box plot is a chart that depicts numerical data via their quartile ranges.
 
  #### dc.boxPlot(parent[, chartGroup])
@@ -6480,7 +6582,7 @@ function boxQuartiles(d) {
 
  **/
 dc.boxPlot = function (parent, chartGroup) {
-    var _chart = dc.coordinateGridChart({});
+    var _chart = dc.coordinateGridMixin({});
 
     var _whisker_iqr_factor = 1.5;
     var _whiskers_iqr = default_whiskers_iqr;
@@ -6488,7 +6590,6 @@ dc.boxPlot = function (parent, chartGroup) {
 
     var _box = d3.box();
     var _tickFormat = null;
-
 
     var _boxWidth = function (innerChartWidth, xUnits) {
         if (_chart.isOrdinal())
@@ -6514,7 +6615,7 @@ dc.boxPlot = function (parent, chartGroup) {
     });
 
     /**
-    ### .boxPadding([padding])
+    #### .boxPadding([padding])
     Get or set the spacing between boxes as a fraction of bar size. Valid values are within 0-1.
     See the [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
     for a visual description of how the padding is applied.
@@ -6525,7 +6626,7 @@ dc.boxPlot = function (parent, chartGroup) {
     _chart.boxPadding(0.8);
 
     /**
-    ### .outerPadding([padding])
+    #### .outerPadding([padding])
     Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
     or on charts with a custom `.boxWidth`. Padding equivlent in width to `padding * barWidth` will be
     added on each side of the chart.
@@ -6665,25 +6766,14 @@ dc.boxPlot = function (parent, chartGroup) {
     return _chart.anchor(parent, chartGroup);
 };
 
+// Renamed functions
+
+dc.abstractBubbleChart = dc.bubbleMixin;
+dc.baseChart = dc.baseMixin;
+dc.capped = dc.capMixin;
+dc.colorChart = dc.colorMixin;
+dc.coordinateGridChart = dc.coordinateGridMixin;
+dc.marginable = dc.marginMixin;
+dc.stackableChart = dc.stackMixin;
+
 return dc;})();
-
-dc.filters = {};
-
-dc.filters.RangedFilter = function(low, high) {
-    var range = Array(low, high);
-    range.isFiltered = function(value) {
-        return value >= this[0] && value < this[1];
-    };
-
-    return range;
-};
-
-dc.filters.TwoDimensionalFilter = function(array) {
-    var filter = array;
-    filter.isFiltered = function(value) {
-        return value.length && value.length == filter.length &&
-               value[0] == filter[0] && value[1] == filter[1];
-    };
-
-    return filter;
-};

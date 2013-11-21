@@ -112,30 +112,36 @@
     </style>
   </head>
   <body>  
-    <h4 id="version-2-0-0-dev">Version 2.0.0-dev</h4>
+    <h1 id="dc-api">DC API</h1>
+<ul>
+<li><a href="#utilities">Utilities</a></li>
+<li><a href="#base-mixin">Base Mixin</a></li>
+<li><a href="#listeners">Listeners</a></li>
+<li><a href="#margin-mixin">Margin Mixin</a></li>
+<li><a href="#color-mixin">Color Mixin</a></li>
+<li><a href="#coordinate-grid-mixin">Coordinate Grid Mixin</a></li>
+<li><a href="#stack-mixin">Stack Mixin</a></li>
+<li><a href="#cap-mixin">Cap Mixin</a></li>
+<li><a href="#bubble-mixin">Bubble Mixin</a></li>
+<li><a href="#pie-chart">Pie Chart</a></li>
+<li><a href="#bar-chart">Bar Chart</a></li>
+<li><a href="#line-chart">Line Chart</a></li>
+<li><a href="#data-count-widget">Data Count Widget</a></li>
+<li><a href="#data-table-widget">Data Table Widget</a></li>
+<li><a href="#bubble-chart">Bubble Chart</a></li>
+<li><a href="#composite-chart">Composite Chart</a></li>
+<li><a href="#series-chart">Series Chart</a></li>
+<li><a href="#geo-choropleth-chart">Geo Choropleth Chart</a></li>
+<li><a href="#bubble-overlay-chart">Bubble Overlay Chart</a></li>
+<li><a href="#row-chart">Row Chart</a></li>
+<li><a href="#legend">Legend</a></li>
+<li><a href="#number-display-widget">Number Display Widget</a></li>
+<li><a href="#heat-map">Heat Map</a></li>
+<li><a href="#box-plot">Box Plot</a></li>
+</ul>
+<h4 id="version-2-0-0-dev">Version 2.0.0-dev</h4>
 <p>The entire dc.js library is scoped under <strong>dc</strong> name space. It does not introduce anything else into the global
 name space.</p>
-<ul>
-<li><a href="#base-chart">Base Chart [abstract]</a></li>
-<li><a href="#color-chart">Color Chart [abstract]</a></li>
-<li><a href="#stackable-chart">Stackable Chart [abstract]</a></li>
-<li><a href="#coordinate-grid-chart">Coordinate Grid Chart [abstract] &lt; Color Chart &lt; Base Chart</a></li>
-<li><a href="#pie-chart">Pie Chart [concrete] &lt; Color Chart &lt; Base Chart</a></li>
-<li><a href="#row-chart">Row Chart [concrete] &lt; Color Chart &lt; Base chart</a></li>
-<li><a href="#bar-chart">Bar Chart [concrete] &lt; Stackable Chart &lt; CoordinateGrid Chart</a></li>
-<li><a href="#line-chart">Line Chart [concrete] &lt; Stackable Chart &lt; CoordinateGrid Chart</a></li>
-<li><a href="#composite-chart">Composite Chart [concrete] &lt; CoordinateGrid Chart</a></li>
-<li><a href="#abstract-bubble-chart">Abstract Bubble Chart [abstract] &lt; Color Chart</a></li>
-<li><a href="#bubble-chart">Bubble Chart [concrete] &lt; Abstract Bubble Chart &lt; CoordinateGrid Chart</a></li>
-<li><a href="#bubble-overlay-chart">Bubble Overlay Chart [concrete] &lt; Abstract Bubble Chart &lt; Base Chart</a></li>
-<li><a href="#geo-choropleth-chart">Geo Choropleth Chart [concrete] &lt; Color Chart &lt; Base Chart</a></li>
-<li><a href="#data-count">Data Count Widget [concrete] &lt; Base Chart</a></li>
-<li><a href="#data-table">Data Table Widget [concrete] &lt; Base Chart</a></li>
-<li><a href="#number-display">Number Display [Concrete] &lt; Base Chart</a></li>
-<li><a href="#legend">Legend [concrete]</a></li>
-<li><a href="#listeners">Listeners</a></li>
-<li><a href="#util">Utilities</a></li>
-</ul>
 <h4 id="function-chain">Function Chain</h4>
 <p>Majority of dc functions are designed to allow function chaining, meaning it will return the current chart instance
 whenever it is appropriate. Therefore configuration of a chart can be written in the following style.</p>
@@ -143,7 +149,7 @@ whenever it is appropriate. Therefore configuration of a chart can be written in
 <span class="variable">.height</span>(<span class="number">300</span>)
 <span class="variable">.filter</span>(<span class="string">"sunday"</span>)</code></pre>
 <p>The API references will highlight the fact if a particular function is not chainable.</p>
-<h2 id="-a-name-util-href-util-a-utilities"><a name="util" href="#util">#</a> Utilities</h2>
+<h2 id="utilities">Utilities</h2>
 <h4 id="dc-filterall-chartgroup-">dc.filterAll([chartGroup])</h4>
 <p>Clear all filters on every chart within the given chart group. If the chart group is not given then only charts that
 belong to the default chart group will be reset.</p>
@@ -176,9 +182,10 @@ allows the library to smooth out the rendering by throttling event flood and onl
         someOtherChart.focus(chart.filter());
     });
 })</code></pre>
-<h2 id="-a-name-base-chart-href-base-chart-a-base-chart-abstract-"><a name="base-chart" href="#base-chart">#</a> Base Chart [Abstract]</h2>
-<p>Base chart is an abstract functional object representing a basic dc chart object for all chart and widget implementation.
-Every function on base chart are also inherited available on all concrete chart implementation in dc library.</p>
+<h2 id="base-mixin">Base Mixin</h2>
+<p>Base Mixin is an abstract functional object representing a basic dc chart object
+for all chart and widget implementations. Methods from the Base Mixin are inherited
+and available on all chart implementation in the DC library.</p>
 <h4 id="-width-value-">.width([value])</h4>
 <p>Set or get width attribute of a chart. See <code>.height</code> below for further description of the behavior.</p>
 <h4 id="-height-value-">.height([value])</h4>
@@ -202,6 +209,12 @@ chart.height(null); // reset <span class="keyword">the</span> height <span class
 <a href="https://github.com/square/crossfilter/wiki/API-Reference#wiki-dimension">crossfilter dimension</a>. If the value is given,
 then it will be used as the new dimension.</p>
 <p>If no value specified then the current dimension will be returned.</p>
+<h4 id="-data-callback-">.data([callback])</h4>
+<p>Get the data callback or retreive the charts data set. The data callback is passed the chart&#39;s group and by default
+will return <code>group.all()</code>. This behavior may be modified to, for instance, return only the top 5 groups:</p>
+<pre><code>    chart.<span class="typedef"><span class="keyword">data</span><span class="container">(<span class="title">function</span>(<span class="title">group</span>)</span> <span class="container">{
+        <span class="title">return</span> <span class="title">group</span>.<span class="title">top</span>(5);
+    }</span>);</span></code></pre>
 <h4 id="-group-value-name-mandatory-">.group([value, [name]]) - <strong>mandatory</strong></h4>
 <p>Set or get group attribute of a chart. In dc a group is a
 <a href="https://github.com/square/crossfilter/wiki/API-Reference#wiki-group">crossfilter group</a>. Usually the group should be
@@ -271,6 +284,9 @@ chart<span class="variable">.filter</span>(<span class="number">18</span>);</cod
 <h4 id="-filters-">.filters()</h4>
 <p>Return all current filters. This method does not perform defensive cloning of the internal filter array before returning
 therefore any modification of returned array will affact chart&#39;s internal filter storage.</p>
+<h4 id="-onclick-datum-">.onClick(datum)</h4>
+<p>This function is passed to d3 as the onClick handler for each chart. By default it will filter the on the clicked datum
+(as passed back to the callback) and redraw the chart group.</p>
 <h4 id="-filterhandler-function-">.filterHandler([function])</h4>
 <p>Set or get filter handler. Filter handler is a function that performs the filter action on a specific dimension. Using
 custom filter handler give you the flexibility to perform additional logic before or after filtering.</p>
@@ -341,6 +357,9 @@ chart<span class="preprocessor">.renderlet</span>(function(chart){
     // its a closure so you can also access other chart variable available <span class="keyword">in</span> the closure scope
     moveChart<span class="preprocessor">.filter</span>(chart<span class="preprocessor">.filter</span>())<span class="comment">;</span>
 })<span class="comment">;</span></code></pre>
+<h4 id="-chartgroup-group-">.chartGroup([group])</h4>
+<p>Get or set the chart group with which this chart belongs. Chart groups share common rendering events since it is
+expected they share the same underlying crossfilter data set.</p>
 <h4 id="-expirecache-">.expireCache()</h4>
 <p>Expire internal chart cache. dc.js chart cache some data internally on a per chart basis so it can speed up rendering
 and avoid unnecessary calculation however under certain circumstances it might be useful to clear the cache e.g. after
@@ -350,7 +369,9 @@ the cache to make sure charts are rendered properly.</p>
 <p>Attach dc.legend widget to this chart. Legend widget will automatically draw legend labels based on the color setting
 and names associated with each group.</p>
 <pre><code class="lang-js">chart<span class="variable">.legend</span>(dc<span class="variable">.legend</span>()<span class="variable">.x</span>(<span class="number">400</span>)<span class="variable">.y</span>(<span class="number">10</span>)<span class="variable">.itemHeight</span>(<span class="number">13</span>)<span class="variable">.gap</span>(<span class="number">5</span>))</code></pre>
-<h2 id="-a-name-listeners-href-listeners-a-listeners"><a name="listeners" href="#listeners">#</a> Listeners</h2>
+<h4 id="-chartid-">.chartID()</h4>
+<p>Return the internal numeric ID of the chart.</p>
+<h2 id="listeners">Listeners</h2>
 <p>All dc chart instance supports the following listeners.</p>
 <h4 id="-on-prerender-function-chart-">.on(&quot;preRender&quot;, function(chart){...})</h4>
 <p>This listener function will be invoked before chart rendering.</p>
@@ -364,8 +385,8 @@ and names associated with each group.</p>
 <p>This listener function will be invoked after a filter is applied, added or removed.</p>
 <h4 id="-on-zoomed-function-chart-filter-">.on(&quot;zoomed&quot;, function(chart, filter){...})</h4>
 <p>This listener function will be invoked after a zoom is triggered.</p>
-<h2 id="-a-name-marginable-href-marginable-a-marginable"><a name="marginable" href="#marginable">#</a>  Marginable</h2>
-<p>Marginable is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid Charts.</p>
+<h2 id="margin-mixin">Margin Mixin</h2>
+<p>Margin is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid Charts.</p>
 <h4 id="-margins-margins-">.margins([margins])</h4>
 <p>Get or set the margins for a particular coordinate grid chart instance. The margins is stored as an associative Javascript
 array. Default margins: {top: 10, right: 50, bottom: 30, left: 30}.</p>
@@ -373,8 +394,45 @@ array. Default margins: {top: 10, right: 50, bottom: 30, left: 30}.</p>
 <pre><code class="lang-js">var leftMargin = chart<span class="preprocessor">.margins</span>()<span class="preprocessor">.left</span><span class="comment">; // 30 by default</span>
 chart<span class="preprocessor">.margins</span>()<span class="preprocessor">.left</span> = <span class="number">50</span><span class="comment">;</span>
 leftMargin = chart<span class="preprocessor">.margins</span>()<span class="preprocessor">.left</span><span class="comment">; // now 50</span></code></pre>
-<h2 id="-a-name-coordinate-grid-chart-href-coordinate-grid-chart-a-coordinategrid-chart-abstract-color-chart-color-chart-base-chart-base-chart-"><a name="coordinate-grid-chart" href="#coordinate-grid-chart">#</a> CoordinateGrid Chart [Abstract] &lt; <a href="#color-chart">Color Chart</a> &lt; <a href="#base-chart">Base Chart</a></h2>
-<p>Coordinate grid chart is an abstract base chart designed to support a number of coordinate grid based concrete chart types,
+<h2 id="color-mixin">Color Mixin</h2>
+<p>Color Mixin is an abstract chart functional class created to provide universal coloring support as a mix-in for any concrete
+chart implementation.</p>
+<h4 id="-colors-colorscale-">.colors([colorScale])</h4>
+<p>Retrieve current color scale or set a new color scale. This methods accepts any
+function the operate like a d3 scale. If not set the default is
+<code>d3.scale.category20c()</code>.</p>
+<pre><code class="lang-js">// alternate categorical scale
+chart.colors(d3.scale.category20b());
+
+// ordinal scale
+chart.colors(d3.scale.ordinal().<span class="keyword">range</span>([<span class="attribute">'red</span>',<span class="attribute">'green</span>',<span class="attribute">'blue</span>']);
+// convience method, the same as above
+chart.ordinalColors([<span class="attribute">'red</span>',<span class="attribute">'green</span>',<span class="attribute">'blue</span>']);
+
+// set a linear scale
+chart.linearColors([<span class="string">"#4575b4"</span>, <span class="string">"#ffffbf"</span>, <span class="string">"#a50026"</span>]);</code></pre>
+<h4 id="-ordinalcolors-r-">.ordinalColors(r)</h4>
+<p>Convenience method to set the color scale to d3.scale.ordinal with range <code>r</code>.</p>
+<h4 id="-linearcolors-r-">.linearColors(r)</h4>
+<p>Convenience method to set the color scale to an Hcl interpolated linear scale with range <code>r</code>.</p>
+<h4 id="-coloraccessor-coloraccessorfunction-">.colorAccessor([colorAccessorFunction])</h4>
+<p>Set or get color accessor function. This function will be used to map a data point on crossfilter group to a specific
+color value on the color scale. Default implementation of this function simply returns the next color on the scale using
+the index of a group.</p>
+<pre><code class="lang-js"><span class="comment">// default index based color accessor</span>
+<span class="variable">.colorAccessor</span>(function(d, i){<span class="keyword">return</span> i;})
+<span class="comment">// color accessor for a multi-value crossfilter reduction</span>
+<span class="variable">.colorAccessor</span>(function(d){<span class="keyword">return</span> d<span class="variable">.value</span><span class="variable">.absGain</span>;})</code></pre>
+<h4 id="-colordomain-domain-">.colorDomain([domain])</h4>
+<p>Set or get the current domain for the color mapping function. The domain must be supplied as an array.</p>
+<p>Note: previously this method accepted a callback function. Instead you may use a custom scale set by <code>.colors</code>.</p>
+<h4 id="-calculatecolordomain-">.calculateColorDomain()</h4>
+<p>Set the domain by determining the min and max values as retrived by <code>.colorAccessor</code> over the chart&#39;s dataset.</p>
+<h4 id="-getcolor-d-i-">.getColor(d [, i])</h4>
+<p>Get the color for the datum d and counter i. This is used internaly by charts to retrieve a color.</p>
+<h2 id="coordinate-grid-mixin">Coordinate Grid Mixin</h2>
+<p>Includes: <a href="#color-mixin">Color Mixin</a>, <a href="#margin-mixin">Margin Mixin</a>, <a href="#base-mixin">Base Mixin</a></p>
+<p>Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based concrete chart types,
 i.e. bar chart, line chart, and bubble chart.</p>
 <h4 id="-rangechart-chart-">.rangeChart([chart])</h4>
 <p>Get or set the range selection chart associated with this instance. Setting the range selection chart using this function
@@ -444,8 +502,17 @@ only if elasticX is turned on otherwise it will be simply ignored.</p>
 When padding with date, integer represents number of days being padded while percentage string will be treated
 as number.</li>
 </ul>
-<h4 id="-yaxislabel-labeltext-">.yAxisLabel([labelText])</h4>
-<p>Set or get the y axis label.</p>
+<h4 id="-xunitcount-">.xUnitCount()</h4>
+<p>Returns the number of units displayed on the x axis using the unit measure configured by .xUnits.</p>
+<h4 id="isordinal-">isOrdinal()</h4>
+<p>Returns true if the chart is using ordinal xUnits, false otherwise. Most charts must behave somewhat
+differently when with ordinal data and use the result of this method to trigger those special case.</p>
+<h4 id="-xaxislabel-labeltext-padding-">.xAxisLabel([labelText, [, padding]])</h4>
+<p>Set or get the x axis label. If setting the label, you may optionally include additional padding to
+the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.</p>
+<h4 id="-yaxislabel-labeltext-padding-">.yAxisLabel([labelText, [, padding]])</h4>
+<p>Set or get the y axis label. If setting the label, you may optionally include additional padding to
+the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.</p>
 <h4 id="-y-yscale-">.y([yScale])</h4>
 <p>Get or set the y scale. y scale is typically automatically generated by the chart implementation.</p>
 <h4 id="-yaxis-yaxis-">.yAxis([yAxis])</h4>
@@ -465,6 +532,14 @@ y axis range whenever redraw event is triggered.</p>
 <p>Turn on/off horizontal grid lines.</p>
 <h4 id="-renderverticalgridlines-boolean-">.renderVerticalGridLines([boolean])</h4>
 <p>Turn on/off vertical grid lines.</p>
+<h4 id="-xaxismin-">.xAxisMin()</h4>
+<p>Return the minimum x value to diplay in the chart. Includes xAxisPadding if set.</p>
+<h4 id="-xaxismin-">.xAxisMin()</h4>
+<p>Return the maximum x value to diplay in the chart. Includes xAxisPadding if set.</p>
+<h4 id="-xaxismin-">.xAxisMin()</h4>
+<p>Return the minimum y value to diplay in the chart. Includes yAxisPadding if set.</p>
+<h4 id="-yaxismax-">.yAxisMax()</h4>
+<p>Return the maximum y value to diplay in the chart. Includes yAxisPadding if set.</p>
 <h4 id="-yaxispadding-padding-">.yAxisPadding([padding])</h4>
 <p>if elasticY is turned on otherwise it will be simply ignored.
 Set or get y axis padding when elastic y axis is turned on. The padding will be added to the top of the y axis if and only</p>
@@ -493,49 +568,12 @@ chart.<span class="command">round</span>(d3.<span class="property">time</span>.<
     });
 })</code></pre>
 <h4 id="-brushon-boolean-">.brushOn([boolean])</h4>
-<p>Turn on/off the brush based in-place range filter. When the brush is on then user will be able to  simply drag the mouse
+<p>Turn on/off the brush based in-place range filter. When the brush is on then user will be able to simply drag the mouse
 across the chart to perform range filtering based on the extend of the brush. However turning on brush filter will essentially
 disable other interactive elements on the chart such as the highlighting, tool-tip, and reference lines on a chart. Zooming will still
 be possible if enabled, but only via scrolling (panning will be disabled.) Default value is &quot;true&quot;.</p>
-<h2 id="-a-name-color-chart-href-color-chart-a-color-chart-abstract-"><a name="color-chart" href="#color-chart">#</a> Color Chart [Abstract]</h2>
-<p>Color chart is an abstract chart functional class created to provide universal coloring support as a mix-in for any concrete
-chart implementation.</p>
-<h4 id="-colors-colorscale-">.colors([colorScale])</h4>
-<p>Retrieve current color scale or set a new color scale. This methods accepts any
-function the operate like a d3 scale. If not set the default is
-<code>d3.scale.category20c()</code>.</p>
-<pre><code class="lang-js">// alternate categorical scale
-chart.colors(d3.scale.category20b());
-
-// ordinal scale
-chart.colors(d3.scale.ordinal().<span class="keyword">range</span>([<span class="attribute">'red</span>',<span class="attribute">'green</span>',<span class="attribute">'blue</span>']);
-// convience method, the same as above
-chart.ordinalColors([<span class="attribute">'red</span>',<span class="attribute">'green</span>',<span class="attribute">'blue</span>']);
-
-// set a linear scale
-chart.linearColors([<span class="string">"#4575b4"</span>, <span class="string">"#ffffbf"</span>, <span class="string">"#a50026"</span>]);</code></pre>
-<h4 id="-ordinalcolors-r-">.ordinalColors(r)</h4>
-<p>Convenience method to set the color scale to d3.scale.ordinal with range <code>r</code>.</p>
-<h4 id="-linearcolors-r-">.linearColors(r)</h4>
-<p>Convenience method to set the color scale to an Hcl interpolated linear scale with range <code>r</code>.</p>
-<h4 id="-coloraccessor-coloraccessorfunction-">.colorAccessor([colorAccessorFunction])</h4>
-<p>Set or get color accessor function. This function will be used to map a data point on crossfilter group to a specific
-color value on the color scale. Default implementation of this function simply returns the next color on the scale using
-the index of a group.</p>
-<pre><code class="lang-js"><span class="comment">// default index based color accessor</span>
-<span class="variable">.colorAccessor</span>(function(d, i){<span class="keyword">return</span> i;})
-<span class="comment">// color accessor for a multi-value crossfilter reduction</span>
-<span class="variable">.colorAccessor</span>(function(d){<span class="keyword">return</span> d<span class="variable">.value</span><span class="variable">.absGain</span>;})</code></pre>
-<h4 id="-colordomain-domain-">.colorDomain([domain])</h4>
-<p>Set or get the current domain for the color mapping function. The domain must be supplied as an array.</p>
-<p>Note: previously this method accepted a callback function. Instead you may use a custom scale set by <code>.colors</code>.</p>
-<h4 id="-calculatecolordomain-">.calculateColorDomain()</h4>
-<p>Set the domain by determining the min and max values as retrived by <code>.colorAccessor</code> over the chart&#39;s dataset.</p>
-<h4 id="-getcolor-d-i-">.getColor(d [, i])</h4>
-<p>Get the color for the datum d and counter i. This is used internaly by charts to retrieve a color.</p>
-<h2 id="-a-name-stackable-chart-href-stackable-chart-a-stackable-chart-abstract-"><a name="stackable-chart" href="#stackable-chart">#</a> Stackable Chart [Abstract]</h2>
-<p>Stackable chart is an abstract chart introduced to provide cross-chart support of stackability. Concrete implementation of
-charts can then selectively mix-in this capability.</p>
+<h2 id="stack-mixin">Stack Mixin</h2>
+<p>Stack Mixin is an mixin that provides cross-chart support of stackability using d3.layout.stack.</p>
 <h4 id="-stack-group-name-accessor-">.stack(group[, name, accessor])</h4>
 <p>Stack a new crossfilter group into this chart with optionally a custom value accessor. All stacks in the same chart will
 share the same key accessor therefore share the same set of keys. In more concrete words, imagine in a stacked bar chart
@@ -566,8 +604,34 @@ is not provided, the first stack is implied.</p>
 // get a title <span class="function"><span class="keyword">function</span> <span class="title">from</span> "<span class="title">second</span> <span class="title">stack</span>"
 <span class="title">var</span> <span class="title">secondTitleFunction</span> = <span class="title">chart.title</span><span class="params">("second stack")</span></span>;
 );</code></pre>
-<h2 id="-a-name-abstract-bubble-chart-href-abstract-bubble-chart-a-abstract-bubble-chart-abstract-color-chart-color-chart-"><a name="abstract-bubble-chart" href="#abstract-bubble-chart">#</a> Abstract Bubble Chart [Abstract] &lt; <a href="#color-chart">Color Chart</a></h2>
-<p>An abstraction provides reusable functionalities for any chart that needs to visualize data using bubbles.</p>
+<h2 id="cap-mixin">Cap Mixin</h2>
+<p>Cap is a mixin that groups small data elements below a <em>cap</em> into an <em>others</em> grouping for both the Row and Pie Charts.</p>
+<p>The top ordered elements in the group up to the cap amount will be kept in the chart and
+the sum of those below will be added to the <em>others</em> element. The keys of the elements below the cap limit are recorded
+in order to repsond to onClick events and trigger filtering of all the within that grouping.</p>
+<h4 id="-cap-count-">.cap([count])</h4>
+<p>Get or set the count of elements to that will be included in the cap.</p>
+<h4 id="-otherslabel-label-">.othersLabel([label])</h4>
+<p>Get or set the label for <em>Others</em> slice when slices cap is specified. Default label is <strong>Others</strong>.</p>
+<h4 id="-othersgrouper-grouperfunction-">.othersGrouper([grouperFunction])</h4>
+<p>Get or set the grouper function that will perform the insertion of data for the <em>Others</em> slice if the slices cap is
+specified. If set to a falsy value, no others will be added. By default the grouper function computes the sum of all
+values below the cap.</p>
+<pre><code class="lang-js"><span class="title">chart</span>.othersGrouper(function (<span class="typedef"><span class="keyword">data</span>) <span class="container">{
+    // <span class="title">compute</span> <span class="title">the</span> <span class="title">value</span> <span class="title">for</span> <span class="title">others</span>, <span class="title">presumably</span> <span class="title">the</span> <span class="title">sum</span> <span class="title">of</span> <span class="title">all</span> <span class="title">values</span> <span class="title">below</span> <span class="title">the</span> <span class="title">cap</span>
+    <span class="title">var</span> <span class="title">othersSum</span>  = <span class="title">yourComputeOthersValueLogic</span>(<span class="title">data</span>)
+
+    // <span class="title">the</span> <span class="title">keys</span> <span class="title">are</span> <span class="title">needed</span> <span class="title">to</span> <span class="title">properly</span> <span class="title">filter</span> <span class="title">when</span> <span class="title">the</span> <span class="title">others</span> <span class="title">element</span> <span class="title">is</span> <span class="title">clicked</span>
+    <span class="title">var</span> <span class="title">othersKeys</span> = <span class="title">yourComputeOthersKeysArrayLogic</span>(<span class="title">data</span>);
+
+    // <span class="title">add</span> <span class="title">the</span> <span class="title">others</span> <span class="title">row</span> <span class="title">to</span> <span class="title">the</span> <span class="title">dataset</span>
+    <span class="title">data</span>.<span class="title">push</span>({"<span class="title">key</span>": "<span class="type">Others</span>", "<span class="title">value</span>": <span class="title">othersSum</span>, "<span class="title">others</span>": <span class="title">othersKeys</span> }</span>);</span>
+
+    return <span class="typedef"><span class="keyword">data</span>;</span>
+});</code></pre>
+<h2 id="bubble-mixin">Bubble Mixin</h2>
+<p>Includes: <a href="#color-mixin">Color Mixin</a></p>
+<p>This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.</p>
 <h4 id="-r-bubbleradiusscale-">.r([bubbleRadiusScale])</h4>
 <p>Get or set bubble radius scale. By default bubble chart uses <code>d3.scale.linear().domain([0, 100])</code> as it&#39;s r scale .</p>
 <h4 id="-radiusvalueaccessor-radiusvalueaccessor-">.radiusValueAccessor([radiusValueAccessor])</h4>
@@ -580,9 +644,10 @@ Default value: 10.</p>
 <h4 id="-maxbubblerelativesize-relativesize-">.maxBubbleRelativeSize([relativeSize])</h4>
 <p>Get or set the maximum relative size of a bubble to the length of x axis. This value is useful when the radius differences among
 different bubbles are too great. Default value: 0.3</p>
-<h2 id="-a-name-pie-chart-href-pie-chart-a-pie-chart-concrete-color-chart-color-chart-base-chart-base-chart-"><a name="pie-chart" href="#pie-chart">#</a> Pie Chart [Concrete] &lt; <a href="#color-chart">Color Chart</a> &lt; <a href="#base-chart">Base Chart</a></h2>
-<p>This chart is a concrete pie chart implementation usually used to visualize small number of categorical distributions.
-Pie chart implementation uses keyAccessor to generate slices, and valueAccessor to calculate the size of each slice(key)
+<h2 id="pie-chart">Pie Chart</h2>
+<p>Includes: <a href="#cap-mixin">Cap Mixin</a>, <a href="#color-mixin">Color Mixin</a>, <a href="#base-mixin">Base Mixin</a></p>
+<p>The pie chart implementation is usually used to visualize small number of categorical distributions.
+Pie chart uses keyAccessor to generate slices, and valueAccessor to calculate the size of each slice(key)
 relatively to the total sum of all values. Slices are ordered by <code>.ordering</code> which defaults to sorting by key.</p>
 <p>Examples:</p>
 <ul>
@@ -620,7 +685,8 @@ will be essentially rendered as a doughnut chart. Default inner radius is 0px.</
 <h4 id="-minangelforlabel-minangle-">.minAngelForLabel([minAngle])</h4>
 <p>Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not render slice label.
 Default min angel is 0.5.</p>
-<h2 id="-a-name-bar-chart-href-bar-chart-a-bar-chart-concrete-stackable-chart-stackable-chart-coordinategrid-chart-coordinate-grid-chart-"><a name="bar-chart" href="#bar-chart">#</a> Bar Chart [Concrete] &lt; <a href="#stackable-chart">Stackable Chart</a> &lt; <a href="#coordinate-grid-chart">CoordinateGrid Chart</a></h2>
+<h2 id="bar-chart">Bar Chart</h2>
+<p>Includes: <a href="#stack Mixin">Stack Mixin</a>, <a href="#coordinate-grid-mixin">Coordinate Grid Mixin</a></p>
 <p>Concrete bar chart/histogram implementation.</p>
 <p>Examples:</p>
 <ul>
@@ -647,19 +713,20 @@ var chart2 = dc.barChart(<span class="string">"#chart-container2"</span>, <span 
 var chart3 = dc.barChart(compositeChart);</span></code></pre>
 <h4 id="-centerbar-boolean-">.centerBar(boolean)</h4>
 <p>Whether the bar chart will render each bar centered around the data position on x axis. Default to false.</p>
-<h3 id="-barpadding-padding-">.barPadding([padding])</h3>
+<h4 id="-barpadding-padding-">.barPadding([padding])</h4>
 <p>Get or set the spacing between bars as a fraction of bar size. Valid values are within 0-1.
 Setting this value will also remove any previously set <code>gap</code>. See the
 <a href="https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands">d3 docs</a>
 for a visual description of how the padding is applied.</p>
-<h3 id="-outerpadding-padding-">.outerPadding([padding])</h3>
+<h4 id="-outerpadding-padding-">.outerPadding([padding])</h4>
 <p>Get or set the outer padding on an ordinal bar chart. This setting has no effect on non-ordinal charts.
 Padding equivlent in width to <code>padding * barWidth</code> will be added on each side of the chart.</p>
 <p>Default: 0.5</p>
 <h4 id="-gap-gapbetweenbars-">.gap(gapBetweenBars)</h4>
 <p>Manually set fixed gap (in px) between bars instead of relying on the default auto-generated gap. By default bar chart
 implementation will calculate and set the gap automatically based on the number of data points and the length of the x axis.</p>
-<h2 id="-a-name-line-chart-href-line-chart-a-line-chart-concrete-stackable-chart-stackable-chart-coordinategrid-chart-coordinate-grid-chart-"><a name="line-chart" href="#line-chart">#</a> Line Chart [Concrete] &lt; <a href="#stackable-chart">Stackable Chart</a> &lt; <a href="#coordinate-grid-chart">CoordinateGrid Chart</a></h2>
+<h2 id="line-chart">Line Chart</h2>
+<p>Includes <a href="#stack-mixin">Stack Mixin</a>, <a href="#coordinate-grid-mixin">Coordinate Grid Mixin</a></p>
 <p>Concrete line/area chart implementation.</p>
 <p>Examples:</p>
 <ul>
@@ -705,7 +772,8 @@ becomes an area chart.</p>
 <p>If no <code>options</code> are provded, the current <code>options</code> values are instead returned</p>
 <p>Example:</p>
 <pre><code>chart.renderDataPoints([{<span class="method">radius:</span> <span class="number">2</span>, <span class="method">fillOpacity:</span> <span class="number">0.8</span>, <span class="method">strokeOpacity:</span> <span class="number">0.8</span>}])</code></pre>
-<h2 id="-a-name-data-count-href-data-count-a-data-count-widget-concrete-base-chart-base-chart-"><a name="data-count" href="#data-count">#</a> Data Count Widget [Concrete] &lt; <a href="#base-chart">Base Chart</a></h2>
+<h2 id="data-count-widget">Data Count Widget</h2>
+<p>Includes: <a href="#base-mixin">Base Mixin</a></p>
 <p>Data count is a simple widget designed to display total number records in the data set vs. the number records selected
 by the current filters. Once created data count widget will automatically update the text content of the following elements
 under the parent element.</p>
@@ -738,7 +806,8 @@ A newly created data count widget instance</p>
 <span class="title">dc</span>.<span class="typedef">dataCount<span class="container">(".<span class="title">dc</span>-<span class="title">data</span>-<span class="title">count</span>")</span></span>
  .dimension(ndx)
  .group(all);</code></pre>
-<h2 id="-a-name-data-table-href-data-table-a-data-table-widget-concrete-base-chart-base-chart-"><a name="data-table" href="#data-table">#</a> Data Table Widget [Concrete] &lt; <a href="#base-chart">Base Chart</a></h2>
+<h2 id="data-table-widget">Data Table Widget</h2>
+<p>Includes: <a href="#base-mixin">Base Mixin</a></p>
 <p>Data table is a simple widget designed to list crossfilter focused data set (rows being filtered) in a good old tabular
 fashion.</p>
 <p>Examples:</p>
@@ -788,7 +857,8 @@ by. Default value: <code>function(d) {return d;};</code></p>
 <h4 id="-order-order-">.order([order])</h4>
 <p>Get or set sort order. Default value: <code>d3.ascending</code></p>
 <pre><code class="lang-js">    chart<span class="preprocessor">.order</span>(d3<span class="preprocessor">.descending</span>)<span class="comment">;</span></code></pre>
-<h2 id="-a-name-bubble-chart-href-bubble-chart-a-bubble-chart-concrete-abstract-bubble-chart-abstract-bubble-chart-coordinategrid-chart-coordinate-grid-chart-"><a name="bubble-chart" href="#bubble-chart">#</a> Bubble Chart [Concrete] &lt; <a href="#abstract-bubble-chart">Abstract Bubble Chart</a> &lt; <a href="#coordinate-grid-chart">CoordinateGrid Chart</a></h2>
+<h2 id="bubble-chart">Bubble Chart</h2>
+<p>Includes: <a href="#bubble-mixin">Bubble Mixin</a>, <a href="#coordinate-grid-mixin">Coordinate Grid Mixin</a></p>
 <p>A concrete implementation of a general purpose bubble chart that allows data visualization using the following dimensions:</p>
 <ul>
 <li>x axis position</li>
@@ -819,15 +889,12 @@ var bubbleChart2 = dc.bubbleChart(<span class="string">"#chart-container2"</span
 <h4 id="-elasticradius-boolean-">.elasticRadius([boolean])</h4>
 <p>Turn on or off elastic bubble radius feature. If this feature is turned on, then bubble radiuses will be automatically rescaled
 to fit the chart better.</p>
-<h2 id="-a-name-composite-chart-href-composite-chart-a-composite-chart-concrete-coordinategrid-chart-coordinate-grid-chart-"><a name="composite-chart" href="#composite-chart">#</a> Composite Chart [Concrete] &lt; <a href="#coordinate-grid-chart">CoordinateGrid Chart</a></h2>
-<p>Composite chart is a special kind of chart that resides somewhere between abstract and concrete charts. It does not
-generate data visualization directly, but rather working with other concrete charts to do the job. You can essentially
-overlay(compose) different bar/line/area charts in a single composite chart to achieve some quite flexible charting
-effects.</p>
-<p>Examples:</p>
-<ul>
-<li><a href="http://nickqizhu.github.com/dc.js/">Nasdaq 100 Index</a></li>
-</ul>
+<h2 id="composite-chart">Composite Chart</h2>
+<p>Includes: <a href="#coordinate-grid-mixin">Coordinate Grid Mixin</a></p>
+<p>Composite charts are a special kind of chart that allow you to render multiple
+charts on the same Coordinate Grid. You can overlay(compose) different
+bar/line/area charts in a single composite chart to achieve some quite flexible
+charting effects.</p>
 <h4 id="dc-compositechart-parent-chartgroup-">dc.compositeChart(parent[, chartGroup])</h4>
 <p>Create a composite chart instance and attach it to the given parent element.</p>
 <p>Parameters:</p>
@@ -885,9 +952,11 @@ outcome.</p>
 chart<span class="variable">.rightYAxis</span>()<span class="variable">.tickFormat</span>(function(v) {<span class="keyword">return</span> v + <span class="string">"%"</span>;});
 <span class="comment">// customize y axis tick values</span>
 chart<span class="variable">.rightYAxis</span>()<span class="variable">.tickValues</span>([<span class="number">0</span>, <span class="number">100</span>, <span class="number">200</span>, <span class="number">300</span>]);</code></pre>
-<h2 id="-a-name-series-chart-href-series-chart-a-series-chart-concrete-color-chart-color-chart-base-chart-base-chart-"><a name="series-chart" href="#Series-chart">#</a> Series Chart [Concrete] &lt; <a href="#color-chart">Color Chart</a> &lt; <a href="#base-chart">Base Chart</a></h2>
+<h2 id="series-chart">Series Chart</h2>
+<p>Includes: <a href="#composite chart">Composite Chart</a></p>
 <p>A series chart is a chart that shows multiple series of data as lines, where the series
-is specified in the data.</p>
+is specified in the data. It is a special implementation Composite Chart and inherits
+all composite features other than recomposing the chart.</p>
 <h4 id="dc-serieschart-parent-chartgroup-">dc.seriesChart(parent[, chartGroup])</h4>
 <p>Create a series chart instance and attach it to the given parent element.</p>
 <p>Parameters:</p>
@@ -910,9 +979,15 @@ should return the series that datum belongs to.</p>
 <p>Get or set a function to sort the list of series by, given series values.</p>
 <p>Example:</p>
 <pre><code>chart<span class="preprocessor">.seriesSort</span>(d3<span class="preprocessor">.descending</span>)<span class="comment">;</span></code></pre>
-<h2 id="-a-name-geo-choropleth-chart-href-geo-choropleth-chart-a-geo-choropleth-chart-concrete-color-chart-color-chart-base-chart-base-chart-"><a name="geo-choropleth-chart" href="#geo-choropleth-chart">#</a> Geo Choropleth Chart [Concrete] &lt; <a href="#color-chart">Color Chart</a> &lt; <a href="#base-chart">Base Chart</a></h2>
-<p>Geo choropleth chart is design to make creating crossfilter driven choropleth map from GeoJson data an easy process. This
-chart implementation was inspired by <a href="http://bl.ocks.org/4060606">the great d3 choropleth example</a>.</p>
+<h4 id="-valuesort-sortfunction-">.valueSort([sortFunction])</h4>
+<p>Get or set a function to the sort each series values by. By default this is
+the key accessor which, for example, a will ensure lineChart a series connects
+its points in increasing key/x order, rather than haphazardly.</p>
+<h2 id="geo-choropleth-chart">Geo Choropleth Chart</h2>
+<p>Includes: <a href="#color-mixin">Color Mixin</a>, <a href="#base-mixin">Base Mixin</a></p>
+<p>Geo choropleth chart is designed to make creating crossfilter driven choropleth
+map from GeoJson data an easy process. This chart implementation was inspired by
+<a href="http://bl.ocks.org/4060606">the great d3 choropleth example</a>.</p>
 <p>Examples:</p>
 <ul>
 <li><a href="http://nickqizhu.github.com/dc.js/vc/index.html">US Venture Capital Landscape 2011</a></li>
@@ -959,7 +1034,8 @@ An array of objects containing fields {name, data, accessor}</p>
 <h4 id="-removegeojson-name-">.removeGeoJson(name)</h4>
 <p>Remove a GeoJson layer from this chart by name</p>
 <p>Return: chart instance</p>
-<h2 id="-a-name-bubble-overlay-chart-href-bubble-overlay-chart-a-bubble-overlay-chart-concrete-abstract-bubble-chart-abstract-bubble-chart-base-chart-base-chart-"><a name="bubble-overlay-chart" href="#bubble-overlay-chart">#</a> Bubble Overlay Chart [Concrete] &lt; <a href="#abstract-bubble-chart">Abstract Bubble Chart</a> &lt; <a href="#base-chart">Base Chart</a></h2>
+<h2 id="bubble-overlay-chart">Bubble Overlay Chart</h2>
+<p>Includes: <a href="#bubble-mixin">Bubble Mixin</a>, <a href="#base-mixin">Base Mixin</a></p>
 <p>Bubble overlay chart is quite different from the typical bubble chart. With bubble overlay chart you can arbitrarily place
 a finite number of bubbles on an existing svg or bitmap image (overlay on top of it), thus losing the typical x and y
 positioning that we are used to whiling retaining the capability to visualize data using it&#39;s bubble radius and
@@ -994,7 +1070,8 @@ chart<span class="preprocessor">.svg</span>(d3<span class="preprocessor">.select
 <p>Set up a data point on the overlay. The name of a data point should match a specific &quot;key&quot; among data groups generated using keyAccessor.
 If a match is found (point name &lt;-&gt; data group key) then a bubble will be automatically generated at the position specified by the
 function. x and y value specified here are relative to the underlying svg.</p>
-<h2 id="-a-name-row-chart-href-row-chart-a-row-chart-concrete-color-chart-color-chart-base-chart-base-chart-"><a name="row-chart" href="#row-chart">#</a> Row Chart [Concrete] &lt; <a href="#color-chart">Color Chart</a> &lt; <a href="#base-chart">Base Chart</a></h2>
+<h2 id="row-chart">Row Chart</h2>
+<p>Includes: <a href="#cap-mixin">Cap Mixin</a>, <a href="#margin-mixin">Margin Mixin</a>, <a href="#color-mixin">Color Mixin</a>, <a href="#base-mixin">Base Mixin</a></p>
 <p>Concrete row chart implementation.</p>
 <h4 id="dc-rowchart-parent-chartgroup-">dc.rowChart(parent[, chartGroup])</h4>
 <p>Create a row chart instance and attach it to the given parent element.</p>
@@ -1017,7 +1094,7 @@ range when filtered.</p>
 <p>Get or set the x offset (horizontal space to the top left corner of a row) for labels on a particular row chart. Default x offset is 10px;</p>
 <h4 id="-labeloffsety-y-">.labelOffsetY([y])</h4>
 <p>Get of set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart. Default y offset is 15px;</p>
-<h2 id="-a-name-legend-href-legend-a-legend-concrete-"><a name="legend" href="#legend">#</a> Legend [Concrete]</h2>
+<h2 id="legend">Legend</h2>
 <p>Legend is a attachable widget that can be added to other dc charts to render horizontal legend labels.</p>
 <pre><code class="lang-js">chart<span class="variable">.legend</span>(dc<span class="variable">.legend</span>()<span class="variable">.x</span>(<span class="number">400</span>)<span class="variable">.y</span>(<span class="number">10</span>)<span class="variable">.itemHeight</span>(<span class="number">13</span>)<span class="variable">.gap</span>(<span class="number">5</span>))</code></pre>
 <p>Examples:</p>
@@ -1039,34 +1116,10 @@ range when filtered.</p>
 <p>Maximum width for horizontal legend. Default value: 560.</p>
 <h4 id="-itemwidth-value-">.itemWidth([value])</h4>
 <p>legendItem width for horizontal legend. Default value: 70.</p>
-<h2 id="-a-name-capped-href-capped-a-capped"><a name="capped" href="#capped">#</a>  Capped</h2>
-<p>Capped is a mixin that groups small data elements below a <em>cap</em> into an <em>others</em> grouping for both the Row and Pie Charts.</p>
-<p>The top ordered elements in the group up to the cap amount will be kept in the chart and
-the sum of those below will be added to the <em>others</em> element. The keys of the elements below the cap limit are recorded
-in order to repsond to onClick events and trigger filtering of all the within that grouping.</p>
-<h4 id="-cap-count-">.cap([count])</h4>
-<p>Get or set the count of elements to that will be included in the cap.</p>
-<h4 id="-otherslabel-label-">.othersLabel([label])</h4>
-<p>Get or set the label for <em>Others</em> slice when slices cap is specified. Default label is <strong>Others</strong>.</p>
-<h4 id="-othersgrouper-grouperfunction-">.othersGrouper([grouperFunction])</h4>
-<p>Get or set the grouper function that will perform the insertion of data for the <em>Others</em> slice if the slices cap is
-specified. If set to a falsy value, no others will be added. By default the grouper function computes the sum of all
-values below the cap.</p>
-<pre><code class="lang-js"><span class="title">chart</span>.othersGrouper(function (<span class="typedef"><span class="keyword">data</span>) <span class="container">{
-    // <span class="title">compute</span> <span class="title">the</span> <span class="title">value</span> <span class="title">for</span> <span class="title">others</span>, <span class="title">presumably</span> <span class="title">the</span> <span class="title">sum</span> <span class="title">of</span> <span class="title">all</span> <span class="title">values</span> <span class="title">below</span> <span class="title">the</span> <span class="title">cap</span>
-    <span class="title">var</span> <span class="title">othersSum</span>  = <span class="title">yourComputeOthersValueLogic</span>(<span class="title">data</span>)
-
-    // <span class="title">the</span> <span class="title">keys</span> <span class="title">are</span> <span class="title">needed</span> <span class="title">to</span> <span class="title">properly</span> <span class="title">filter</span> <span class="title">when</span> <span class="title">the</span> <span class="title">others</span> <span class="title">element</span> <span class="title">is</span> <span class="title">clicked</span>
-    <span class="title">var</span> <span class="title">othersKeys</span> = <span class="title">yourComputeOthersKeysArrayLogic</span>(<span class="title">data</span>);
-
-    // <span class="title">add</span> <span class="title">the</span> <span class="title">others</span> <span class="title">row</span> <span class="title">to</span> <span class="title">the</span> <span class="title">dataset</span>
-    <span class="title">data</span>.<span class="title">push</span>({"<span class="title">key</span>": "<span class="type">Others</span>", "<span class="title">value</span>": <span class="title">othersSum</span>, "<span class="title">others</span>": <span class="title">othersKeys</span> }</span>);</span>
-
-    return <span class="typedef"><span class="keyword">data</span>;</span>
-});</code></pre>
 <h4 id="-symbolsize-radius-">.symbolSize([radius])</h4>
 <p>Set or get radius for symbols, default: 3.</p>
-<h2 id="-a-name-number-display-href-number-display-a-number-display-concrete-base-chart-base-chart-"><a name="number-display" href="#number-display">#</a> Number Display [Concrete] &lt; <a href="#base-chart">Base Chart</a></h2>
+<h2 id="number-display-widget">Number Display Widget</h2>
+<p>Includes: <a href="#base-mixin">Base Mixin</a></p>
 <p>A display of a single numeric value.</p>
 <p>Examples:</p>
 <ul>
@@ -1090,7 +1143,8 @@ var display1 = dc.numberDisplay(<span class="string">"#chart-container1"</span>)
 <p>Calculate and return the underlying value of the display</p>
 <h4 id="-formatnumber-formatter-">.formatNumber([formatter])</h4>
 <p>Get or set a function to format the value for the display. By default <code>d3.format(&quot;.2s&quot;);</code> is used.</p>
-<h2 id="-a-name-heatmap-href-heatmap-a-heat-map-concrete-color-chart-color-chart-base-chart-base-chart-"><a name="heatmap" href="#heatmap">#</a> Heat Map [Concrete] &lt; <a href="#color-chart">Color Chart</a> &lt; <a href="#base-chart">Base Chart</a></h2>
+<h2 id="heat-map">Heat Map</h2>
+<p>Includes: <a href="#color-mixin">Color Mixin</a>, <a href="#margin-mixin">Margin Mixin</a>, <a href="#base-mixin">Base Mixin</a></p>
 <p>A heat map is matrix that represents the values of two dimensions of data using colors.</p>
 <h4 id="dc-heatmap-parent-chartgroup-">dc.heatMap(parent[, chartGroup])</h4>
 <p>Create a heat map instance and attach it to the given parent element.</p>
@@ -1107,7 +1161,8 @@ A newly created heat map instance</p>
 var heatMap1 = dc.heatMap(<span class="string">"#chart-container1"</span>);</span>
 // <span class="operator"><span class="keyword">create</span> a heat map under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
 var heatMap2 = dc.heatMap(<span class="string">"#chart-container2"</span>, <span class="string">"chartGroupA"</span>);</span></code></pre>
-<h2 id="-a-name-boxplot-href-boxplot-a-box-plot-concrete-coordinategrid-chart-coordinate-grid-chart-"><a name="boxplot" href="#boxplot">#</a> Box Plot [Concrete] &lt; <a href="#coordinate-grid-chart">CoordinateGrid Chart</a></h2>
+<h2 id="box-plot">Box Plot</h2>
+<p>Includes: <a href="#coordinate-grid-mixin">Coordinate Grid Mixin</a></p>
 <p>A box plot is a chart that depicts numerical data via their quartile ranges.</p>
 <h4 id="dc-boxplot-parent-chartgroup-">dc.boxPlot(parent[, chartGroup])</h4>
 <p>Create a box plot instance and attach it to the given parent element.</p>
@@ -1124,12 +1179,12 @@ A newly created box plot instance</p>
 var boxPlot1 = dc.boxPlot(<span class="string">"#chart-container1"</span>);</span>
 // <span class="operator"><span class="keyword">create</span> a box plot under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
 var boxPlot2 = dc.boxPlot(<span class="string">"#chart-container2"</span>, <span class="string">"chartGroupA"</span>);</span></code></pre>
-<h3 id="-boxpadding-padding-">.boxPadding([padding])</h3>
+<h4 id="-boxpadding-padding-">.boxPadding([padding])</h4>
 <p>Get or set the spacing between boxes as a fraction of bar size. Valid values are within 0-1.
 See the <a href="https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands">d3 docs</a>
 for a visual description of how the padding is applied.</p>
 <p>Default: 0.8</p>
-<h3 id="-outerpadding-padding-">.outerPadding([padding])</h3>
+<h4 id="-outerpadding-padding-">.outerPadding([padding])</h4>
 <p>Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
 or on charts with a custom <code>.boxWidth</code>. Padding equivlent in width to <code>padding * barWidth</code> will be
 added on each side of the chart.</p>
