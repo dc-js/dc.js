@@ -20,6 +20,7 @@
   * [Bubble Overlay Chart](#bubble-overlay-chart)
   * [Row Chart](#row-chart)
   * [Legend](#legend)
+  * [Scatter Plot](#scatter-plot)
   * [Number Display Widget](#number-display-widget)
   * [Heat Map](#heat-map)
   * [Box Plot](#box-plot)
@@ -1335,6 +1336,17 @@ Maximum width for horizontal legend. Default value: 560.
 
 #### .itemWidth([value])
 legendItem width for horizontal legend. Default value: 70.
+
+## Scatter Plot
+
+Includes: [Coordinate Grid Mixin](#coordinate-grid-mixin)
+
+A scatter plot chart
+
+#### .symbol([type])
+Get or set the symbol type used for each point. By default a circle. See the D3
+[docs](https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-symbol_type) for acceptable types;
+Type can be a constant or an accessor.
 
 #### .symbolSize([radius])
 Set or get radius for symbols, default: 3.

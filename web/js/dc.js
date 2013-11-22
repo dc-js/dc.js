@@ -5937,13 +5937,22 @@ dc.legend = function () {
     return _legend;
 };
 
+/**
+## Scatter Plot
+
+Includes: [Coordinate Grid Mixin](#coordinate-grid-mixin)
+
+A scatter plot chart
+
+**/
 dc.scatterPlot = function (parent, chartGroup) {
     var _chart = dc.coordinateGridMixin({});
+    var _symbol = d3.svg.symbol();
 
     var originalKeyAccessor = _chart.keyAccessor();
     _chart.keyAccessor(function (d) { return originalKeyAccessor(d)[0]; });
     _chart.valueAccessor(function (d) { return originalKeyAccessor(d)[1]; });
-    _chart.colorAccessor(function () { return 0; });
+    _chart.colorAccessor(function (d) { return _chart._groupName; });
 
     var _locator = function (d) {
         return "translate(" + _chart.x()(_chart.keyAccessor()(d)) + "," + _chart.y()(_chart.valueAccessor()(d)) + ")";
@@ -5951,6 +5960,9 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     var _symbolSize = 3;
     var _highlightedSize = 4;
+    _symbol.size(function(d) {
+        return d.filtered ? Math.pow(_highlightedSize,2) : Math.pow(_symbolSize,2);
+    });
 
     dc.override(_chart, "_filter", function(filter) {
         if (filter !== undefined) {
@@ -5961,27 +5973,38 @@ dc.scatterPlot = function (parent, chartGroup) {
     });
 
     _chart.plotData = function () {
-        var symbols = _chart.chartBodyG().selectAll("circle.symbol")
+        var symbols = _chart.chartBodyG().selectAll("path.symbol")
             .data(_chart.data());
 
         symbols
             .enter()
-        .append("circle")
+        .append("path")
             .attr("class", "symbol")
-            .attr("fill", _chart.getColor())
+            .attr("opacity", 0)
+            .attr("fill", _chart.getColor)
             .attr("transform", _locator);
 
         dc.transition(symbols, _chart.transitionDuration())
+            .attr("opacity", 1)
+            .attr("fill", _chart.getColor)
             .attr("transform", _locator)
-            .attr("r", function (d) {
-                return d.filtered ? _highlightedSize : _symbolSize;
-            });
-
-        dc.transition(symbols.filter(function(d){return _chart.valueAccessor()(d) === 0;}), _chart.transitionDuration())
-                    .attr("r", 0).remove(); // remove empty groups
+            .attr("d", _symbol);
 
         dc.transition(symbols.exit(), _chart.transitionDuration())
-            .attr("r", 0).remove();
+            .attr("opacity", 0).remove();
+    };
+
+    /**
+    #### .symbol([type])
+    Get or set the symbol type used for each point. By default a circle. See the D3
+    [docs](https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-symbol_type) for acceptable types;
+    Type can be a constant or an accessor.
+
+    **/
+    _chart.symbol = function(type) {
+        if(!arguments.length) return _symbol.type();
+        _symbol.type(type);
+        return _chart;
     };
 
     /**
@@ -6014,7 +6037,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         resizeSymbolsWhere(function (symbol) {
             return symbol.attr('fill') == d.color;
         }, _highlightedSize);
-        _chart.selectAll('.chart-body').selectAll('circle.symbol').filter(function () {
+        _chart.selectAll('.chart-body').selectAll('path.symbol').filter(function () {
             return d3.select(this).attr('fill') != d.color;
         }).classed('fadeout', true);
     };
@@ -6023,7 +6046,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         resizeSymbolsWhere(function (symbol) {
             return symbol.attr('fill') == d.color;
         }, _symbolSize);
-        _chart.selectAll('.chart-body').selectAll('circle.symbol').filter(function () {
+        _chart.selectAll('.chart-body').selectAll('path.symbol').filter(function () {
             return d3.select(this).attr('fill') != d.color;
         }).classed('fadeout', false);
     };
@@ -6049,12 +6072,15 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     function resizeSymbolsWhere(condition, size, filteredValue) {
-        var symbols = _chart.selectAll('.chart-body').selectAll('circle.symbol').filter(function (d) {
+        var symbols = _chart.selectAll('.chart-body').selectAll('path.symbol').filter(function (d) {
             var shouldResize = condition(d3.select(this));
             if (filteredValue !== undefined && shouldResize) {  d.filtered = filteredValue;  }
             return shouldResize;
         });
-        dc.transition(symbols, _chart.transitionDuration()).attr("r", size);
+        var oldSize = _symbol.size();
+        _symbol.size(Math.pow(size,2));
+        dc.transition(symbols, _chart.transitionDuration()).attr("d", _symbol);
+        _symbol.size(oldSize);
     }
 
     _chart._brushing = function () {
