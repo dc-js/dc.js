@@ -69,13 +69,13 @@ dc.compositeChart = function (parent, chartGroup) {
 
     _chart._brushing = function () {
         var extent = _chart.extendBrush();
+        var brushIsEmpty = _chart.brushIsEmpty(extent);
 
         for (var i = 0; i < _children.length; ++i) {
-            var childBaseChartFilter = _children[i]._filter;
-            childBaseChartFilter(null); // normal child.filter clears shared brush.
+            _children[i].filter(null);
         }
 
-        if (!_chart.brushIsEmpty(extent)) {
+        if (!brushIsEmpty) {
             for (var i = 0; i < _children.length; ++i) {
                 _children[i].filter(extent);
             }

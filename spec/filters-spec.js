@@ -70,19 +70,19 @@ describe('dc.filters', function () {
                 filter = dc.filters.RangedTwoDimensionalFilter([[0, 1],[10, 20]])
             });
 
-            it('should return false if on top left of filter rectangle', function () {
+            it('should return true if on bottom left of filter rectangle', function () {
                 expect(filter.isFiltered([0,1])).toBeTruthy();
             });
 
-            it('should return false if on top right of filter rectangle', function () {
+            it('should return false if on bottom right of filter rectangle', function () {
                 expect(filter.isFiltered([10,1])).toBeFalsy();
             });
 
-            it('should return false for the bottom left of filter rectangle', function () {
+            it('should return false for the top left of filter rectangle', function () {
                 expect(filter.isFiltered([0,20])).toBeFalsy();
             });
 
-            it('should return true for the bottom right of filter rectangle', function () {
+            it('should return false for the top right of filter rectangle', function () {
                 expect(filter.isFiltered([10,20])).toBeFalsy();
             });
 
@@ -90,12 +90,20 @@ describe('dc.filters', function () {
                 expect(filter.isFiltered([5,5])).toBeTruthy();
             });
 
-            it('should return false for a point to the right and below the filter rectangle', function () {
+            it('should return false for a point to the right and above the filter rectangle', function () {
                 expect(filter.isFiltered([11,21])).toBeFalsy();
             });
 
-            it('should return false for a point to the left and above the filter rectangle', function () {
+            it('should return false for a point to the left and below the filter rectangle', function () {
                 expect(filter.isFiltered([-1,-1])).toBeFalsy();
+            });
+
+            describe('when a single value is considered', function() {
+                it('should filter that value using only x coordinates', function() {
+                    expect(filter.isFiltered(5)).toBeTruthy();
+                    expect(filter.isFiltered(0)).toBeTruthy();
+                    expect(filter.isFiltered(10)).toBeFalsy();
+                });
             });
         });
 
@@ -120,6 +128,13 @@ describe('dc.filters', function () {
                 expect(filter.isFiltered([20,10])).toBeFalsy();
             });
 
+            describe('when a single value is considered', function() {
+                it('should filter that value using only x coordinates', function() {
+                    expect(filter.isFiltered(10)).toBeTruthy();
+                    expect(filter.isFiltered(15)).toBeTruthy();
+                    expect(filter.isFiltered(20)).toBeFalsy();
+                });
+            });
         });
 
     });

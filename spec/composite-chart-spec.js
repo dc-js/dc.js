@@ -479,8 +479,9 @@ describe('dc.compositeChart', function() {
         });
     });
 
-    describe('compositing scatterplots', function() {
+    describe('sub-charts with different filter types', function() {
         var scatterGroup, scatterDimension;
+        var lineGroup, lineDimension;
 
         beforeEach(function () {
             data = crossfilter(loadDateFixture());
@@ -488,20 +489,22 @@ describe('dc.compositeChart', function() {
             scatterDimension = data.dimension(function(d) { return [+d.value, +d.nvalue]; });
             scatterGroup = scatterDimension.group();
 
+            lineDimension = data.dimension(function(d) { return +d.value; });
+            lineGroup = lineDimension.group();
+
             chart
                 .dimension(scatterDimension)
                 .group(scatterGroup)
                 .x(d3.scale.linear().domain([0,70]))
                 .brushOn(true)
                 .compose([
-                    dc.scatterPlot(chart)
-                        .x(d3.scale.linear().domain([0, 70])),
-                    dc.scatterPlot(chart)
-                        .x(d3.scale.linear().domain([0, 70]))
+                    dc.scatterPlot(chart),
+                    dc.scatterPlot(chart),
+                    dc.lineChart(chart).dimension(lineDimension).group(lineGroup)
                 ]).render();
         });
 
-        describe('brushing on a composite chart', function () {
+        describe('brushing', function () {
             var otherDimension;
 
             beforeEach(function () {
@@ -528,6 +531,17 @@ describe('dc.compositeChart', function() {
 
             });
 
+            describe('brush disappears', function() {
+                beforeEach(function() {
+                    chart.brush().extent([22, 22]);
+                    chart.brush().on("brush")();
+                    chart.redraw();
+                });
+
+                it('should clear all filters', function() {
+                    expect(otherDimension.top(Infinity).length).toBe(10);
+                });
+            });
         });
     });
 });

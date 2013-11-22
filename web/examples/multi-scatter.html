@@ -22,29 +22,34 @@ d3.csv("morley.csv", function(error, experiments) {
   });
 
   var ndx                 = crossfilter(experiments),
-      runDimension        = ndx.dimension(function(d) {return [+d.Run, d.Speed * d.Run / 1000];}),
-      speedSumGroup       = runDimension.group();
+      scatterDimension    = ndx.dimension(function(d) { return [+d.Run, d.Speed * d.Run / 1000]; }),
+      scatterGroup        = scatterDimension.group(),
+      lineDimension       = ndx.dimension(function(d) { return +d.Run; }),
+      lineGroup           = lineDimension.group().reduceSum(function (d) {
+          return d.Speed * d.Run / 4000;
+      });
 
     chart
         .width(768)
         .height(480)
         .x(d3.scale.linear().domain([6,20]))
         .yAxisLabel("This is the Y Axis!")
-        .dimension(runDimension)
+        .dimension(scatterDimension)
         .legend(dc.legend().x(70).y(10).itemHeight(13).gap(5))
         .compose([
             dc.scatterPlot(chart)
-                .group(speedSumGroup, "Blue Group")
+                .group(scatterGroup, "Blue Group")
                 .colors(["blue"]),
             dc.scatterPlot(chart)
-                .group(speedSumGroup, "Red Group")
+                .group(scatterGroup, "Red Group")
                 .colors(["red"])
-                .valueAccessor(function (d) { return d.key[1] + 5; })
+                .valueAccessor(function (d) { return d.key[1] + 5; }),
+            dc.lineChart(chart)
+                .dimension(lineDimension)
+                .group(lineGroup, "Line Group")
         ]);
 
   chart.render();
-
-
 });
 
 </script>
