@@ -55,6 +55,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     var _zoom = d3.behavior.zoom().on("zoom", zoomHandler);
     var _nullZoom = d3.behavior.zoom().on("zoom", null);
+    var _hasBeenMouseZoomable = false;
 
     var _rangeChart;
     var _focusChart;
@@ -880,13 +881,16 @@ dc.coordinateGridMixin = function (_chart) {
     }
 
     function configureMouseZoom () {
-        if (_mouseZoomable)
+        if (_mouseZoomable) {
             _chart._enableMouseZoom();
-        else
+        }
+        else if (_hasBeenMouseZoomable) {
             _chart._disableMouseZoom();
+        }
     }
 
     _chart._enableMouseZoom = function () {
+        _hasBeenMouseZoomable = true;
         _zoom.x(_chart.x())
             .scaleExtent(_zoomScale)
             .size([_chart.width(),_chart.height()]);

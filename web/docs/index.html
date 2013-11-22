@@ -195,7 +195,7 @@ will be used to calculate the new height and the chart returned for method chain
 The value can either be a numeric, a function, or falsy. If no value specified then
 value of the current height attribute will be returned.</p>
 <p>By default, without an explicit height being given, the chart will select the width
-of its anchor element. If that isn&#39;t possible it defaults to 200;</p>
+of its anchor element. If that isn’t possible it defaults to 200;</p>
 <p>Examples:</p>
 <pre><code class="lang-js">chart.height(<span class="number">250</span>); // Set <span class="keyword">the</span> chart's height <span class="keyword">to</span> <span class="number">250</span>px;
 chart.height(function(anchor) { <span class="constant">return</span> doSomethingWith(anchor); }); // <span class="keyword">set</span> <span class="keyword">the</span> chart's height <span class="keyword">with</span> a function
@@ -210,7 +210,7 @@ chart.height(null); // reset <span class="keyword">the</span> height <span class
 then it will be used as the new dimension.</p>
 <p>If no value specified then the current dimension will be returned.</p>
 <h4 id="-data-callback-">.data([callback])</h4>
-<p>Get the data callback or retreive the charts data set. The data callback is passed the chart&#39;s group and by default
+<p>Get the data callback or retreive the charts data set. The data callback is passed the chart’s group and by default
 will return <code>group.all()</code>. This behavior may be modified to, for instance, return only the top 5 groups:</p>
 <pre><code>    chart.<span class="typedef"><span class="keyword">data</span><span class="container">(<span class="title">function</span>(<span class="title">group</span>)</span> <span class="container">{
         <span class="title">return</span> <span class="title">group</span>.<span class="title">top</span>(5);
@@ -230,16 +230,16 @@ If name is specified then it will be used to generate legend label.</p>
 <p>Execute in scope d3 single selection using the given selector and return d3 selection result. Roughly the same as:</p>
 <pre><code class="lang-js">d3.<span class="operator"><span class="keyword">select</span>(<span class="string">"#chart-id"</span>).<span class="keyword">select</span>(selector);</span></code></pre>
 <p>This function is <strong>not chainable</strong> since it does not return a chart instance; however the d3 selection result is chainable
-from d3&#39;s perspective.</p>
+from d3’s perspective.</p>
 <h4 id="-selectall-selector-">.selectAll(selector)</h4>
 <p>Execute in scope d3 selectAll using the given selector and return d3 selection result. Roughly the same as:</p>
 <pre><code class="lang-js">d3<span class="variable">.select</span>(<span class="string">"#chart-id"</span>)<span class="variable">.selectAll</span>(<span class="keyword">selector</span>);</code></pre>
 <p>This function is <strong>not chainable</strong> since it does not return a chart instance; however the d3 selection result is
-chainable from d3&#39;s perspective.</p>
+chainable from d3’s perspective.</p>
 <h4 id="-anchor-anchorchart-anchorselector-chartgroup-">.anchor([anchorChart/anchorSelector], [chartGroup])</h4>
-<p>Set the svg root to either be an existing chart&#39;s root or the first element returned from a d3 css string selector. Optionally registers the chart within the chartGroup. This class is called internally on chart initialization, but be called again to relocate the chart. However, it will orphan any previously created SVG elements.</p>
+<p>Set the svg root to either be an existing chart’s root or the first element returned from a d3 css string selector. Optionally registers the chart within the chartGroup. This class is called internally on chart initialization, but be called again to relocate the chart. However, it will orphan any previously created SVG elements.</p>
 <h4 id="-anchorname-">.anchorName()</h4>
-<p>Return the dom ID for chart&#39;s anchored location</p>
+<p>Return the dom ID for chart’s anchored location</p>
 <h4 id="-root-rootelement-">.root([rootElement])</h4>
 <p>Returns the root element where a chart resides. Usually it will be the parent div element where svg was created. You
 can also pass in a new root element however this is usually handled as part of the dc internal. Resetting root element
@@ -249,7 +249,7 @@ on a chart outside of dc internal might have unexpected consequences.</p>
 handled as part of the dc internal. Resetting svg element on a chart outside of dc internal might have unexpected
 consequences.</p>
 <h4 id="-resetsvg-">.resetSvg()</h4>
-<p>Remove the chart&#39;s SVG elements from the dom and recreate the container SVG element.</p>
+<p>Remove the chart’s SVG elements from the dom and recreate the container SVG element.</p>
 <h4 id="-filterprinter-filterprinterfunction-">.filterPrinter([filterPrinterFunction])</h4>
 <p>Set or get filter printer function. Filter printer function is used to generate human friendly text for filter value(s)
 associated with the chart instance. By default dc charts shipped with a default filter printer implementation dc.printers.filter
@@ -257,8 +257,8 @@ that provides simple printing support for both single value and ranged filters.<
 <h4 id="-turnoncontrols-turnoffcontrols-">.turnOnControls() &amp; .turnOffControls()</h4>
 <p>Turn on/off optional control elements within the root element. dc.js currently support the following html control elements.</p>
 <ul>
-<li>root.selectAll(&quot;.reset&quot;) elements are turned on if the chart has an active filter. This type of control elements are usually used to store reset link to allow user to reset filter on a certain chart. This element will be turned off automatically if the filter is cleared.</li>
-<li>root.selectAll(&quot;.filter&quot;) elements are turned on if the chart has an active filter. The text content of this element is then replaced with the current filter value using the filter printer function. This type of element will be turned off automatically if the filter is cleared.</li>
+<li>root.selectAll(“.reset”) elements are turned on if the chart has an active filter. This type of control elements are usually used to store reset link to allow user to reset filter on a certain chart. This element will be turned off automatically if the filter is cleared.</li>
+<li>root.selectAll(“.filter”) elements are turned on if the chart has an active filter. The text content of this element is then replaced with the current filter value using the filter printer function. This type of element will be turned off automatically if the filter is cleared.</li>
 </ul>
 <h4 id="-transitionduration-duration-">.transitionDuration([duration])</h4>
 <p>Set or get animation transition duration(in milliseconds) for specific chart instance. Default duration is 750ms.</p>
@@ -270,7 +270,7 @@ of relying on the default incremental redrawing behaviour.</p>
 <p>Calling redraw will cause the chart to re-render delta in data change incrementally. If there is no change in the
 underlying data dimension then calling this method will have no effect on the chart. Most of the chart interaction in
 dc library will automatically trigger this method through its internal event engine, therefore you only need to manually
-invoke this function if data is manipulated outside of dc&#39;s control; for example if data is loaded on a periodic basis
+invoke this function if data is manipulated outside of dc’s control; for example if data is loaded on a periodic basis
 in the background using crossfilter.add().</p>
 <h4 id="-hasfilter-filter-">.hasFilter([filter])</h4>
 <p>Check whether is any active filter or a specific filter is associated with particular chart instance.
@@ -283,7 +283,7 @@ chart<span class="variable">.filter</span>(<span class="string">"Sunday"</span>)
 chart<span class="variable">.filter</span>(<span class="number">18</span>);</code></pre>
 <h4 id="-filters-">.filters()</h4>
 <p>Return all current filters. This method does not perform defensive cloning of the internal filter array before returning
-therefore any modification of returned array will affact chart&#39;s internal filter storage.</p>
+therefore any modification of returned array will affact chart’s internal filter storage.</p>
 <h4 id="-onclick-datum-">.onClick(datum)</h4>
 <p>This function is passed to d3 as the onClick handler for each chart. By default it will filter the on the clicked datum
 (as passed back to the callback) and redraw the chart group.</p>
@@ -373,17 +373,17 @@ and names associated with each group.</p>
 <p>Return the internal numeric ID of the chart.</p>
 <h2 id="listeners">Listeners</h2>
 <p>All dc chart instance supports the following listeners.</p>
-<h4 id="-on-prerender-function-chart-">.on(&quot;preRender&quot;, function(chart){...})</h4>
+<h4 id="-on-prerender-function-chart-">.on(“preRender”, function(chart){…})</h4>
 <p>This listener function will be invoked before chart rendering.</p>
-<h4 id="-on-postrender-function-chart-">.on(&quot;postRender&quot;, function(chart){...})</h4>
-<p>This listener function will be invoked after chart finish rendering including all renderlets&#39; logic.</p>
-<h4 id="-on-preredraw-function-chart-">.on(&quot;preRedraw&quot;, function(chart){...})</h4>
+<h4 id="-on-postrender-function-chart-">.on(“postRender”, function(chart){…})</h4>
+<p>This listener function will be invoked after chart finish rendering including all renderlets’ logic.</p>
+<h4 id="-on-preredraw-function-chart-">.on(“preRedraw”, function(chart){…})</h4>
 <p>This listener function will be invoked before chart redrawing.</p>
-<h4 id="-on-postredraw-function-chart-">.on(&quot;postRedraw&quot;, function(chart){...})</h4>
-<p>This listener function will be invoked after chart finish redrawing including all renderlets&#39; logic.</p>
-<h4 id="-on-filtered-function-chart-filter-">.on(&quot;filtered&quot;, function(chart, filter){...})</h4>
+<h4 id="-on-postredraw-function-chart-">.on(“postRedraw”, function(chart){…})</h4>
+<p>This listener function will be invoked after chart finish redrawing including all renderlets’ logic.</p>
+<h4 id="-on-filtered-function-chart-filter-">.on(“filtered”, function(chart, filter){…})</h4>
 <p>This listener function will be invoked after a filter is applied, added or removed.</p>
-<h4 id="-on-zoomed-function-chart-filter-">.on(&quot;zoomed&quot;, function(chart, filter){...})</h4>
+<h4 id="-on-zoomed-function-chart-filter-">.on(“zoomed”, function(chart, filter){…})</h4>
 <p>This listener function will be invoked after a zoom is triggered.</p>
 <h2 id="margin-mixin">Margin Mixin</h2>
 <p>Margin is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid Charts.</p>
@@ -427,7 +427,7 @@ the index of a group.</p>
 <p>Set or get the current domain for the color mapping function. The domain must be supplied as an array.</p>
 <p>Note: previously this method accepted a callback function. Instead you may use a custom scale set by <code>.colors</code>.</p>
 <h4 id="-calculatecolordomain-">.calculateColorDomain()</h4>
-<p>Set the domain by determining the min and max values as retrived by <code>.colorAccessor</code> over the chart&#39;s dataset.</p>
+<p>Set the domain by determining the min and max values as retrived by <code>.colorAccessor</code> over the chart’s dataset.</p>
 <h4 id="-getcolor-d-i-">.getColor(d [, i])</h4>
 <p>Get the color for the datum d and counter i. This is used internaly by charts to retrieve a color.</p>
 <h2 id="coordinate-grid-mixin">Coordinate Grid Mixin</h2>
@@ -498,7 +498,7 @@ recalculate x axis range whenever redraw event is triggered.</p>
 <p>Set or get x axis padding when elastic x axis is turned on. The padding will be added to both end of the x axis if and
 only if elasticX is turned on otherwise it will be simply ignored.</p>
 <ul>
-<li>padding - could be integer or percentage in string (e.g. &quot;10%&quot;). Padding can be applied to number or date.
+<li>padding - could be integer or percentage in string (e.g. “10%”). Padding can be applied to number or date.
 When padding with date, integer represents number of days being padded while percentage string will be treated
 as number.</li>
 </ul>
@@ -544,7 +544,7 @@ y axis range whenever redraw event is triggered.</p>
 <p>if elasticY is turned on otherwise it will be simply ignored.
 Set or get y axis padding when elastic y axis is turned on. The padding will be added to the top of the y axis if and only</p>
 <ul>
-<li>padding - could be integer or percentage in string (e.g. &quot;10%&quot;). Padding can be applied to number or date.
+<li>padding - could be integer or percentage in string (e.g. “10%”). Padding can be applied to number or date.
 When padding with date, integer represents number of days being padded while percentage string will be treated
 as number.</li>
 </ul>
@@ -571,7 +571,7 @@ chart.<span class="command">round</span>(d3.<span class="property">time</span>.<
 <p>Turn on/off the brush based in-place range filter. When the brush is on then user will be able to simply drag the mouse
 across the chart to perform range filtering based on the extend of the brush. However turning on brush filter will essentially
 disable other interactive elements on the chart such as the highlighting, tool-tip, and reference lines on a chart. Zooming will still
-be possible if enabled, but only via scrolling (panning will be disabled.) Default value is &quot;true&quot;.</p>
+be possible if enabled, but only via scrolling (panning will be disabled.) Default value is “true”.</p>
 <h2 id="stack-mixin">Stack Mixin</h2>
 <p>Stack Mixin is an mixin that provides cross-chart support of stackability using d3.layout.stack.</p>
 <h4 id="-stack-group-name-accessor-">.stack(group[, name, accessor])</h4>
@@ -633,13 +633,13 @@ values below the cap.</p>
 <p>Includes: <a href="#color-mixin">Color Mixin</a></p>
 <p>This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.</p>
 <h4 id="-r-bubbleradiusscale-">.r([bubbleRadiusScale])</h4>
-<p>Get or set bubble radius scale. By default bubble chart uses <code>d3.scale.linear().domain([0, 100])</code> as it&#39;s r scale .</p>
+<p>Get or set bubble radius scale. By default bubble chart uses <code>d3.scale.linear().domain([0, 100])</code> as it’s r scale .</p>
 <h4 id="-radiusvalueaccessor-radiusvalueaccessor-">.radiusValueAccessor([radiusValueAccessor])</h4>
 <p>Get or set the radius value accessor function. The radius value accessor function if set will be used to retrieve data value
 for each and every bubble rendered. The data retrieved then will be mapped using r scale to be used as the actual bubble
 radius. In other words, this allows you to encode a data dimension using bubble size.</p>
 <h4 id="-minradiuswithlabel-radius-">.minRadiusWithLabel([radius])</h4>
-<p>Get or set the minimum radius for label rendering. If a bubble&#39;s radius is less than this value then no label will be rendered.
+<p>Get or set the minimum radius for label rendering. If a bubble’s radius is less than this value then no label will be rendered.
 Default value: 10.</p>
 <h4 id="-maxbubblerelativesize-relativesize-">.maxBubbleRelativeSize([relativeSize])</h4>
 <p>Get or set the maximum relative size of a bubble to the length of x axis. This value is useful when the radius differences among
@@ -752,7 +752,7 @@ var chart2 = dc.lineChart(<span class="string">"#chart-container2"</span>, <span
 // <span class="operator"><span class="keyword">create</span> a sub-chart under a composite parent chart
 var chart3 = dc.lineChart(compositeChart);</span></code></pre>
 <h4 id="-dashstyle-array-">.dashStyle([array])</h4>
-<p>Set the line&#39;s d3 dashstyle. This value becomes &quot;stroke-dasharray&quot; of line. Defaults to empty array (solid line).</p>
+<p>Set the line’s d3 dashstyle. This value becomes “stroke-dasharray” of line. Defaults to empty array (solid line).</p>
 <pre><code class="lang-js"> // <span class="operator"><span class="keyword">create</span> a Dash Dot Dot Dot
  chart.dashStyle([<span class="number">3</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>]);</span></code></pre>
 <h4 id="-renderarea-boolean-">.renderArea([boolean])</h4>
@@ -778,8 +778,8 @@ becomes an area chart.</p>
 by the current filters. Once created data count widget will automatically update the text content of the following elements
 under the parent element.</p>
 <ul>
-<li>&quot;.total-count&quot; - total number of records</li>
-<li>&quot;.filter-count&quot; - number of records matched by the current filters</li>
+<li>“.total-count” - total number of records</li>
+<li>“.filter-count” - number of records matched by the current filters</li>
 </ul>
 <p>Examples:</p>
 <ul>
@@ -1015,7 +1015,7 @@ override the existing one.</p>
 <ul>
 <li>json - GeoJson feed</li>
 <li>name - name of the layer</li>
-<li>keyAccessor - accessor function used to extract &quot;key&quot; from the GeoJson data. Key extracted by this function should match
+<li>keyAccessor - accessor function used to extract “key” from the GeoJson data. Key extracted by this function should match
 the keys generated in crossfilter groups.</li>
 </ul>
 <pre><code class="lang-js"><span class="comment">// insert a layer for rendering US states</span>
@@ -1026,8 +1026,8 @@ chart<span class="variable">.overlayGeoJson</span>(statesJson<span class="variab
 <p>Set custom geo projection function. Available <a href="https://github.com/mbostock/d3/wiki/Geo-Projections">d3 geo projection functions</a>.
 Default value: albersUsa.</p>
 <h4 id="-geojsons-">.geoJsons()</h4>
-<p>Return all GeoJson layers currently registered with thit chart. The returned array is a reference to this chart&#39;s internal
-registration data structure without copying thus any modification to this array will also modify this chart&#39;s internal
+<p>Return all GeoJson layers currently registered with thit chart. The returned array is a reference to this chart’s internal
+registration data structure without copying thus any modification to this array will also modify this chart’s internal
 registration.</p>
 <p>Return:
 An array of objects containing fields {name, data, accessor}</p>
@@ -1038,7 +1038,7 @@ An array of objects containing fields {name, data, accessor}</p>
 <p>Includes: <a href="#bubble-mixin">Bubble Mixin</a>, <a href="#base-mixin">Base Mixin</a></p>
 <p>Bubble overlay chart is quite different from the typical bubble chart. With bubble overlay chart you can arbitrarily place
 a finite number of bubbles on an existing svg or bitmap image (overlay on top of it), thus losing the typical x and y
-positioning that we are used to whiling retaining the capability to visualize data using it&#39;s bubble radius and
+positioning that we are used to whiling retaining the capability to visualize data using it’s bubble radius and
 coloring.</p>
 <p>Examples:</p>
 <ul>
@@ -1067,7 +1067,7 @@ to be manually created on top of the image.</p>
 <pre><code class="lang-js">// <span class="keyword">set</span> up underlying svg element
 chart<span class="preprocessor">.svg</span>(d3<span class="preprocessor">.select</span>(<span class="string">"#chart svg"</span>))<span class="comment">;</span></code></pre>
 <h4 id="-point-name-x-y-mandatory-">.point(name, x, y) - <strong>mandatory</strong></h4>
-<p>Set up a data point on the overlay. The name of a data point should match a specific &quot;key&quot; among data groups generated using keyAccessor.
+<p>Set up a data point on the overlay. The name of a data point should match a specific “key” among data groups generated using keyAccessor.
 If a match is found (point name &lt;-&gt; data group key) then a bubble will be automatically generated at the position specified by the
 function. x and y value specified here are relative to the underlying svg.</p>
 <h2 id="row-chart">Row Chart</h2>
@@ -1189,7 +1189,7 @@ for a visual description of how the padding is applied.</p>
 or on charts with a custom <code>.boxWidth</code>. Padding equivlent in width to <code>padding * barWidth</code> will be
 added on each side of the chart.</p>
 <p>Default: 0.5</p>
-<h4 id="-boxwidth-width-function-innerchartwidth-xunits-">.boxWidth(width || function(innerChartWidth, xUnits) { ... })</h4>
+<h4 id="-boxwidth-width-function-innerchartwidth-xunits-">.boxWidth(width || function(innerChartWidth, xUnits) { … })</h4>
 <p>Get or set the numerical width of the boxplot box. Provided width may also be a function.
 This function takes as parameters the chart width without the right and left margins
 as well as the number of x units.</p>
