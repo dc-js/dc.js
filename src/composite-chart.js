@@ -326,6 +326,13 @@ dc.compositeChart = function (parent, chartGroup) {
         }
     };
 
+    _chart.legendToggle = function (d) {
+        for (var j = 0; j < _children.length; ++j) {
+            var child = _children[j];
+            if (d.name == child._groupName) child.legendToggle(d);
+        }
+    };
+
     /**
      #### .rightYAxis([yAxis])
      Set or get the right y axis used by the composite chart. This function is most useful when certain y
