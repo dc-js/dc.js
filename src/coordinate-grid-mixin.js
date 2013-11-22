@@ -730,13 +730,21 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr("class", "brush")
                 .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")")
                 .call(_brush.x(_chart.x()));
-            gBrush.selectAll("rect").attr("height", brushHeight());
-            gBrush.selectAll(".resize").append("path").attr("d", _chart.resizeHandlePath);
+            _chart.setBrushY(gBrush);
+            _chart.setHandlePaths(gBrush);
 
             if (_chart.hasFilter()) {
                 _chart.redrawBrush(g);
             }
         }
+    };
+
+    _chart.setHandlePaths = function (gBrush) {
+        gBrush.selectAll(".resize").append("path").attr("d", _chart.resizeHandlePath);
+    };
+
+    _chart.setBrushY = function(gBrush){
+        gBrush.selectAll("rect").attr("height", brushHeight());
     };
 
     _chart.extendBrush = function () {
@@ -782,7 +790,7 @@ dc.coordinateGridMixin = function (_chart) {
 
             var gBrush = g.select("g.brush");
             gBrush.call(_chart.brush().x(_chart.x()));
-            gBrush.selectAll("rect").attr("height", brushHeight());
+            _chart.setBrushY(gBrush);
         }
 
         _chart.fadeDeselectedArea();
