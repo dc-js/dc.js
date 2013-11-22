@@ -1,8 +1,9 @@
 describe('dc.boxPlot', function() {
-    var id, chart, dimension, group;
+    var id, chart;
+    var data, dimension, group;
 
     beforeEach(function () {
-        var data = crossfilter(loadBoxPlotFixture());
+        data = crossfilter(loadBoxPlotFixture());
 
         dimension = data.dimension(function (d) { return d.countrycode; });
         group = dimension.group().reduce(
@@ -117,8 +118,23 @@ describe('dc.boxPlot', function() {
             expect(box(0).select('rect.box').attr("fill")).toBe("#01");
             expect(box(1).select('rect.box').attr("fill")).toBe("#02");
         });
-    });
 
+        describe('when a box has no data', function() {
+            beforeEach(function() {
+                var otherDimension = data.dimension(function (d) { return d.countrycode; })
+                otherDimension.filter("US");
+                chart.redraw();
+            });
+
+            it('should not attempt to render that box', function() {
+                expect(chart.selectAll('g.box').size()).toBe(1);
+            });
+
+            it('should not represent the box in the chart domain', function() {
+                expect(chart.selectAll(".axis.x .tick").size()).toBe(1);
+            });
+        });
+    });
 
     describe('events', function () {
         beforeEach(function () {

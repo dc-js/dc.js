@@ -97,6 +97,18 @@ dc.boxPlot = function (parent, chartGroup) {
         return "translate(" + xOffset + ",0)";
     };
 
+    dc.override(_chart, 'data', function(_) {
+        return _chart._data().filter(function (d) {
+            var values = _chart.valueAccessor()(d);
+            return values.length !== 0;
+        });
+    });
+
+    _chart.elasticX(true);
+    _chart.on('preRedraw', function () {
+        _chart.x().domain([]);
+    });
+
     _chart.plotData = function () {
         var _calculatedBoxWidth = _boxWidth(_chart.effectiveWidth(), _chart.xUnitCount());
 
@@ -107,7 +119,6 @@ dc.boxPlot = function (parent, chartGroup) {
             .domain(_chart.y().domain())
             .duration(_chart.transitionDuration())
             .tickFormat(_tickFormat);
-
 
         var boxesG = _chart.chartBodyG().selectAll('g.box').data(_chart.data());
 
@@ -127,7 +138,6 @@ dc.boxPlot = function (parent, chartGroup) {
             .call(_box)
             .on("click", function(d) {
                 _chart.filter(d.key);
-                //_chart.focus(_chart.filter());
                 _chart.redrawGroup();
             });
     }
