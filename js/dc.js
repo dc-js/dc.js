@@ -1515,6 +1515,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     var _zoom = d3.behavior.zoom().on("zoom", zoomHandler);
     var _nullZoom = d3.behavior.zoom().on("zoom", null);
+    var _hasBeenMouseZoomable = false;
 
     var _rangeChart;
     var _focusChart;
@@ -2340,13 +2341,16 @@ dc.coordinateGridMixin = function (_chart) {
     }
 
     function configureMouseZoom () {
-        if (_mouseZoomable)
+        if (_mouseZoomable) {
             _chart._enableMouseZoom();
-        else
+        }
+        else if (_hasBeenMouseZoomable) {
             _chart._disableMouseZoom();
+        }
     }
 
     _chart._enableMouseZoom = function () {
+        _hasBeenMouseZoomable = true;
         _zoom.x(_chart.x())
             .scaleExtent(_zoomScale)
             .size([_chart.width(),_chart.height()]);
@@ -4021,10 +4025,10 @@ dc.lineChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    function colorFilter(color,inv) {
+    function colorFilter(color, dashstyle, inv) {
         return function() {
             var item = d3.select(this);
-            var match = item.attr('stroke') == color || item.attr('fill') == color;
+            var match = (item.attr('stroke') == color && item.attr("stroke-dasharray") == ((dashstyle instanceof Array) ? dashstyle.join(",") : null) )|| item.attr('fill') == color;
             return inv ? !match : match;
         };
     }
@@ -4032,8 +4036,8 @@ dc.lineChart = function (parent, chartGroup) {
     _chart.legendHighlight = function (d) {
         if(!_chart.isLegendableHidden(d)) {
             _chart.selectAll('path.line, path.area')
-                .classed('highlight', colorFilter(d.color))
-                .classed('fadeout', colorFilter(d.color,true));
+                .classed('highlight', colorFilter(d.color, d.dashstyle))
+                .classed('fadeout', colorFilter(d.color, d.dashstyle, true));
         }
     };
 
@@ -4781,6 +4785,13 @@ dc.compositeChart = function (parent, chartGroup) {
         for (var j = 0; j < _children.length; ++j) {
             var child = _children[j];
             child.legendReset(d);
+        }
+    };
+
+    _chart.legendToggle = function (d) {
+        for (var j = 0; j < _children.length; ++j) {
+            var child = _children[j];
+            if (d.name == child._groupName) child.legendToggle(d);
         }
     };
 
