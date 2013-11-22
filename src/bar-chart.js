@@ -233,14 +233,14 @@ dc.barChart = function (parent, chartGroup) {
 
     _chart.legendHighlight = function (d) {
         if(!_chart.isLegendableHidden(d)) {
-            _chart.selectAll('rect.bar')
+            _chart.g().selectAll('rect.bar')
                 .classed('highlight', colorFilter(d.color))
                 .classed('fadeout', colorFilter(d.color,true));
         }
     };
 
     _chart.legendReset = function () {
-        _chart.selectAll('rect.bar')
+        _chart.g().selectAll('rect.bar')
             .classed('highlight', false)
             .classed('fadeout', false);
     };

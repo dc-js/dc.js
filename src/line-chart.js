@@ -337,14 +337,14 @@ dc.lineChart = function (parent, chartGroup) {
 
     _chart.legendHighlight = function (d) {
         if(!_chart.isLegendableHidden(d)) {
-            _chart.selectAll('path.line, path.area')
+            _chart.g().selectAll('path.line, path.area')
                 .classed('highlight', colorFilter(d.color))
                 .classed('fadeout', colorFilter(d.color,true));
         }
     };
 
     _chart.legendReset = function () {
-        _chart.selectAll('path.line, path.area')
+        _chart.g().selectAll('path.line, path.area')
             .classed('highlight', false)
             .classed('fadeout', false);
     };
