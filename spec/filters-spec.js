@@ -56,4 +56,86 @@ describe('dc.filters', function () {
             });
         });
     });
+
+    describe('RangedTwoDimensionalFilter', function () {
+        var filter;
+
+
+        it('should return null if filtered with null', function () {
+            expect(dc.filters.RangedTwoDimensionalFilter(null)).toBe(null);
+        });
+
+        describe('two-dimensional filtering', function () {
+            beforeEach(function () {
+                filter = dc.filters.RangedTwoDimensionalFilter([[0, 1],[10, 20]])
+            });
+
+            it('should return true if on bottom left of filter rectangle', function () {
+                expect(filter.isFiltered([0,1])).toBeTruthy();
+            });
+
+            it('should return false if on bottom right of filter rectangle', function () {
+                expect(filter.isFiltered([10,1])).toBeFalsy();
+            });
+
+            it('should return false for the top left of filter rectangle', function () {
+                expect(filter.isFiltered([0,20])).toBeFalsy();
+            });
+
+            it('should return false for the top right of filter rectangle', function () {
+                expect(filter.isFiltered([10,20])).toBeFalsy();
+            });
+
+            it('should return true for a point inside the filter rectangle', function () {
+                expect(filter.isFiltered([5,5])).toBeTruthy();
+            });
+
+            it('should return false for a point to the right and above the filter rectangle', function () {
+                expect(filter.isFiltered([11,21])).toBeFalsy();
+            });
+
+            it('should return false for a point to the left and below the filter rectangle', function () {
+                expect(filter.isFiltered([-1,-1])).toBeFalsy();
+            });
+
+            describe('when a single value is considered', function() {
+                it('should filter that value using only x coordinates', function() {
+                    expect(filter.isFiltered(5)).toBeTruthy();
+                    expect(filter.isFiltered(0)).toBeTruthy();
+                    expect(filter.isFiltered(10)).toBeFalsy();
+                });
+            });
+        });
+
+        describe('one-dimensional filtering', function () {
+            beforeEach(function () {
+                filter = dc.filters.RangedTwoDimensionalFilter([10, 20])
+            });
+
+            it('should return true while inside the range', function () {
+                expect(filter.isFiltered([15,10])).toBeTruthy();
+            });
+
+            it('should return false while to the left of the range', function () {
+                expect(filter.isFiltered([5,10])).toBeFalsy();
+            });
+
+            it('should return true while on the left edge of the range', function () {
+                expect(filter.isFiltered([10,10])).toBeTruthy();
+            });
+
+            it('should return false while on the right edge of the range', function () {
+                expect(filter.isFiltered([20,10])).toBeFalsy();
+            });
+
+            describe('when a single value is considered', function() {
+                it('should filter that value using only x coordinates', function() {
+                    expect(filter.isFiltered(10)).toBeTruthy();
+                    expect(filter.isFiltered(15)).toBeTruthy();
+                    expect(filter.isFiltered(20)).toBeFalsy();
+                });
+            });
+        });
+
+    });
 });

@@ -1339,6 +1339,9 @@ legendItem width for horizontal legend. Default value: 70.
 #### .symbolSize([radius])
 Set or get radius for symbols, default: 3.
 
+#### .highlightedSize([radius])
+Set or get radius for highlighted symbols, default: 4.
+
 ## Number Display Widget
 
 Includes: [Base Mixin](#base-mixin)

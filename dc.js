@@ -440,6 +440,44 @@ dc.filters.TwoDimensionalFilter = function(array) {
 };
 
 /**
+ * @param array in the form [[x1,y1],[x2,y2]]
+ */
+dc.filters.RangedTwoDimensionalFilter = function(array){
+    if (array === null) { return null; }
+
+    var filter = array;
+    var fromBottomLeft;
+
+    if (filter[0] instanceof Array) {
+        fromBottomLeft = [[Math.min(array[0][0], array[1][0]),
+                           Math.min(array[0][1], array[1][1])],
+                          [Math.max(array[0][0], array[1][0]),
+                           Math.max(array[0][1], array[1][1])]];
+    } else {
+        fromBottomLeft = [[array[0], -Infinity],
+                          [array[1], Infinity]];
+    }
+
+    filter.isFiltered = function(value) {
+        var x, y;
+
+        if (value instanceof Array) {
+            if (value.length != 2) return false;
+            x = value[0];
+            y = value[1];
+        } else {
+            x = value;
+            y = fromBottomLeft[0][1];
+        }
+
+        return x >= fromBottomLeft[0][0] && x < fromBottomLeft[1][0] &&
+               y >= fromBottomLeft[0][1] && y < fromBottomLeft[1][1];
+    };
+
+    return filter;
+};
+
+/**
 ## Base Mixin
 Base Mixin is an abstract functional object representing a basic dc chart object
 for all chart and widget implementations. Methods from the Base Mixin are inherited
@@ -954,7 +992,7 @@ dc.baseMixin = function (_chart) {
     **/
     _chart.filter = function (_) {
         if (!arguments.length) return _filters.length > 0 ? _filters[0] : null;
-        if (_ instanceof Array && _[0] instanceof Array) {
+        if (_ instanceof Array && _[0] instanceof Array && !_.isFiltered) {
             _[0].forEach(function(d){
                 if (_chart.hasFilter(d)) {
                     _filters.splice(_filters.indexOf(d), 1);
@@ -2190,13 +2228,21 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr("class", "brush")
                 .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")")
                 .call(_brush.x(_chart.x()));
-            gBrush.selectAll("rect").attr("height", brushHeight());
-            gBrush.selectAll(".resize").append("path").attr("d", _chart.resizeHandlePath);
+            _chart.setBrushY(gBrush);
+            _chart.setHandlePaths(gBrush);
 
             if (_chart.hasFilter()) {
                 _chart.redrawBrush(g);
             }
         }
+    };
+
+    _chart.setHandlePaths = function (gBrush) {
+        gBrush.selectAll(".resize").append("path").attr("d", _chart.resizeHandlePath);
+    };
+
+    _chart.setBrushY = function(gBrush){
+        gBrush.selectAll("rect").attr("height", brushHeight());
     };
 
     _chart.extendBrush = function () {
@@ -2242,7 +2288,7 @@ dc.coordinateGridMixin = function (_chart) {
 
             var gBrush = g.select("g.brush");
             gBrush.call(_chart.brush().x(_chart.x()));
-            gBrush.selectAll("rect").attr("height", brushHeight());
+            _chart.setBrushY(gBrush);
         }
 
         _chart.fadeDeselectedArea();
@@ -3672,14 +3718,14 @@ dc.barChart = function (parent, chartGroup) {
 
     _chart.legendHighlight = function (d) {
         if(!_chart.isLegendableHidden(d)) {
-            _chart.selectAll('rect.bar')
+            _chart.g().selectAll('rect.bar')
                 .classed('highlight', colorFilter(d.color))
                 .classed('fadeout', colorFilter(d.color,true));
         }
     };
 
     _chart.legendReset = function () {
-        _chart.selectAll('rect.bar')
+        _chart.g().selectAll('rect.bar')
             .classed('highlight', false)
             .classed('fadeout', false);
     };
@@ -4035,14 +4081,14 @@ dc.lineChart = function (parent, chartGroup) {
 
     _chart.legendHighlight = function (d) {
         if(!_chart.isLegendableHidden(d)) {
-            _chart.selectAll('path.line, path.area')
+            _chart.g().selectAll('path.line, path.area')
                 .classed('highlight', colorFilter(d.color))
                 .classed('fadeout', colorFilter(d.color,true));
         }
     };
 
     _chart.legendReset = function () {
-        _chart.selectAll('path.line, path.area')
+        _chart.g().selectAll('path.line, path.area')
             .classed('highlight', false)
             .classed('fadeout', false);
     };
@@ -4528,6 +4574,21 @@ dc.compositeChart = function (parent, chartGroup) {
 
         return g;
     });
+
+    _chart._brushing = function () {
+        var extent = _chart.extendBrush();
+        var brushIsEmpty = _chart.brushIsEmpty(extent);
+
+        for (var i = 0; i < _children.length; ++i) {
+            _children[i].filter(null);
+        }
+
+        if (!brushIsEmpty) {
+            for (var i = 0; i < _children.length; ++i) {
+                _children[i].filter(extent);
+            }
+        }
+    };
 
     _chart.prepareYAxis = function () {
         if (leftYAxisChildren().length !== 0) { prepareLeftYAxis(); }
@@ -5879,13 +5940,25 @@ dc.legend = function () {
 dc.scatterPlot = function (parent, chartGroup) {
     var _chart = dc.coordinateGridMixin({});
 
+    var originalKeyAccessor = _chart.keyAccessor();
+    _chart.keyAccessor(function (d) { return originalKeyAccessor(d)[0]; });
+    _chart.valueAccessor(function (d) { return originalKeyAccessor(d)[1]; });
+    _chart.colorAccessor(function () { return 0; });
+
     var _locator = function (d) {
         return "translate(" + _chart.x()(_chart.keyAccessor()(d)) + "," + _chart.y()(_chart.valueAccessor()(d)) + ")";
     };
 
     var _symbolSize = 3;
+    var _highlightedSize = 4;
 
-    _chart.transitionDuration(0); // turn off transition by default for scatterplot
+    dc.override(_chart, "_filter", function(filter) {
+        if (filter !== undefined) {
+            return _chart.__filter(dc.filters.RangedTwoDimensionalFilter(filter));
+        } else {
+            return _chart.__filter();
+        }
+    });
 
     _chart.plotData = function () {
         var symbols = _chart.chartBodyG().selectAll("circle.symbol")
@@ -5895,12 +5968,14 @@ dc.scatterPlot = function (parent, chartGroup) {
             .enter()
         .append("circle")
             .attr("class", "symbol")
-            .attr("fill", _chart.getColor(0))
+            .attr("fill", _chart.getColor())
             .attr("transform", _locator);
 
         dc.transition(symbols, _chart.transitionDuration())
             .attr("transform", _locator)
-            .attr("r", _symbolSize);
+            .attr("r", function (d) {
+                return d.filtered ? _highlightedSize : _symbolSize;
+            });
 
         dc.transition(symbols.filter(function(d){return _chart.valueAccessor()(d) === 0;}), _chart.transitionDuration())
                     .attr("r", 0).remove(); // remove empty groups
@@ -5918,6 +5993,103 @@ dc.scatterPlot = function (parent, chartGroup) {
         if(!arguments.length) return _symbolSize;
         _symbolSize = s;
         return _chart;
+    };
+
+    /**
+    #### .highlightedSize([radius])
+    Set or get radius for highlighted symbols, default: 4.
+
+    **/
+    _chart.highlightedSize = function(s){
+        if(!arguments.length) return _highlightedSize;
+        _highlightedSize = s;
+        return _chart;
+    };
+
+    _chart.legendables = function () {
+        return [{chart: _chart, name: _chart._groupName, color: _chart.getColor()}];
+    };
+
+    _chart.legendHighlight = function (d) {
+        resizeSymbolsWhere(function (symbol) {
+            return symbol.attr('fill') == d.color;
+        }, _highlightedSize);
+        _chart.selectAll('.chart-body').selectAll('circle.symbol').filter(function () {
+            return d3.select(this).attr('fill') != d.color;
+        }).classed('fadeout', true);
+    };
+
+    _chart.legendReset = function (d) {
+        resizeSymbolsWhere(function (symbol) {
+            return symbol.attr('fill') == d.color;
+        }, _symbolSize);
+        _chart.selectAll('.chart-body').selectAll('circle.symbol').filter(function () {
+            return d3.select(this).attr('fill') != d.color;
+        }).classed('fadeout', false);
+    };
+
+    _chart.setHandlePaths = function () {
+        // no handle paths for poly-brushes
+    };
+
+    _chart.extendBrush = function () {
+        var extent = _chart.brush().extent();
+        if (_chart.round()) {
+            extent[0] = extent[0].map(_chart.round());
+            extent[1] = extent[1].map(_chart.round());
+
+            _chart.g().select(".brush")
+                .call(_chart.brush().extent(extent));
+        }
+        return extent;
+    };
+
+    _chart.brushIsEmpty = function (extent) {
+        return _chart.brush().empty() || !extent || extent[0][0] >= extent[1][0] || extent[0][1] >= extent[1][1];
+    };
+
+    function resizeSymbolsWhere(condition, size, filteredValue) {
+        var symbols = _chart.selectAll('.chart-body').selectAll('circle.symbol').filter(function (d) {
+            var shouldResize = condition(d3.select(this));
+            if (filteredValue !== undefined && shouldResize) {  d.filtered = filteredValue;  }
+            return shouldResize;
+        });
+        dc.transition(symbols, _chart.transitionDuration()).attr("r", size);
+    }
+
+    _chart._brushing = function () {
+        var extent = _chart.extendBrush();
+
+        _chart.redrawBrush(_chart.g());
+
+        if (_chart.brushIsEmpty(extent)) {
+            dc.events.trigger(function () {
+                _chart.filter(null);
+                dc.redrawAll(_chart.chartGroup());
+            });
+
+            resizeSymbolsWhere(function () { return true; }, _symbolSize, false);
+
+        } else {
+            var ranged2DFilter = dc.filters.RangedTwoDimensionalFilter(extent);
+            dc.events.trigger(function () {
+                _chart.filter(null);
+                _chart.filter(ranged2DFilter);
+                dc.redrawAll(_chart.chartGroup());
+            }, dc.constants.EVENT_DELAY);
+
+            resizeSymbolsWhere(function (symbol) {
+                return ranged2DFilter.isFiltered(symbol.datum().key);
+            }, _highlightedSize, true);
+
+            resizeSymbolsWhere(function (symbol) {
+                return !ranged2DFilter.isFiltered(symbol.datum().key);
+            }, _symbolSize, false);
+        }
+    };
+
+    _chart.setBrushY = function (gBrush) {
+        gBrush.call(_chart.brush().y(_chart.y()));
     };
 
     return _chart.anchor(parent, chartGroup);
@@ -6093,7 +6265,7 @@ dc.heatMap = function (parent, chartGroup) {
     }
 
     dc.override(_chart, "filter", function(filter) {
-        if(filter) {
+        if(filter !== undefined) {
             return _chart._filter(dc.filters.TwoDimensionalFilter(filter));
         } else {
             return _chart._filter();
@@ -6707,7 +6879,7 @@ dc.boxPlot = function (parent, chartGroup) {
 
     _chart.fadeDeselectedArea = function () {
         if (_chart.hasFilter()) {
-            _chart.selectAll("g.box").each(function (d) {
+            _chart.g().selectAll("g.box").each(function (d) {
                 if (_chart.isSelectedNode(d)) {
                     _chart.highlightSelected(this);
                 } else {
@@ -6715,7 +6887,7 @@ dc.boxPlot = function (parent, chartGroup) {
                 }
             });
         } else {
-            _chart.selectAll("g.box").each(function () {
+            _chart.g().selectAll("g.box").each(function () {
                 _chart.resetHighlight(this);
             });
         }

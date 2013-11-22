@@ -1,5 +1,6 @@
 beforeEach(function() {
     d3.select("body").append("div").attr("id", "test-content");
+    dc.events.trigger = function(f) { return f() };
 });
 
 afterEach(function () {

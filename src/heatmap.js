@@ -72,7 +72,7 @@ dc.heatMap = function (parent, chartGroup) {
     }
 
     dc.override(_chart, "filter", function(filter) {
-        if(filter) {
+        if(filter !== undefined) {
             return _chart._filter(dc.filters.TwoDimensionalFilter(filter));
         } else {
             return _chart._filter();
