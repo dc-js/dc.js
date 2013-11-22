@@ -28,7 +28,7 @@ describe('dc.scatterPlot', function() {
         });
 
         it('should create the correct number of symbols', function () {
-            expect(chart.group().all().length).toBe(chart.selectAll('circle.symbol').size());
+            expect(chart.group().all().length).toBe(chart.selectAll('path.symbol').size());
         });
 
         it('should correctly place the symbols', function () {
@@ -45,7 +45,7 @@ describe('dc.scatterPlot', function() {
 
         describe('with a custom color', function () {
             beforeEach(function () {
-                chart.colors(["red"]).render();
+                chart.colors("red").render();
             });
 
             it('should color the symbols to the provided color', function () {
@@ -56,7 +56,7 @@ describe('dc.scatterPlot', function() {
         });
 
         function nthSymbol(i) {
-            return d3.select(chart.selectAll('circle.symbol')[0][i]);
+            return d3.select(chart.selectAll('path.symbol')[0][i]);
         }
 
         describe('filtering the chart', function () {
@@ -132,11 +132,17 @@ describe('dc.scatterPlot', function() {
                 });
 
                 function selectedSymbols() {
-                    return chart.selectAll('circle.symbol').filter(function () {
-                                return d3.select(this).attr("r") == 4;
-                            })[0].map(function (symbol) {
-                                return d3.select(symbol).datum();
-                            });
+                    function getData(symbols) {
+                        return symbols[0].map(function (symbol) {
+                            return d3.select(symbol).datum();
+                        })
+                    }
+                    return getData(chart.selectAll('path.symbol').filter(function () {
+                        var symbol = d3.select(this);
+                        var highlightedSize = Math.pow(chart.highlightedSize(), 2);
+                        var highlightedPath = d3.svg.symbol().size(highlightedSize)();
+                        return symbol.attr("d") === highlightedPath;
+                    }));
                 }
             });
         });
@@ -158,8 +164,8 @@ describe('dc.scatterPlot', function() {
                 .transitionDuration(0)
                 .legend(dc.legend())
                 .compose([
-                    subChart1 = dc.scatterPlot(compositeChart).colors(['red']).group(group, "Scatter 1"),
-                    subChart2 = dc.scatterPlot(compositeChart).colors(['blue']).group(group, "Scatter 2")
+                    subChart1 = dc.scatterPlot(compositeChart).colors('red').group(group, "Scatter 1"),
+                    subChart2 = dc.scatterPlot(compositeChart).colors('blue').group(group, "Scatter 2")
                 ]).render();
 
             firstItem = compositeChart.select('g.dc-legend g.dc-legend-item');
@@ -179,7 +185,7 @@ describe('dc.scatterPlot', function() {
 
             describe('when a legend item is hovered over', function () {
                 it('should highlight corresponding plot', function () {
-                    nthChart(0).expectPlotSymbolsToHaveRadius("4");
+                    nthChart(0).expectPlotSymbolsToHaveSize(chart.highlightedSize());
 
                 });
 
@@ -194,7 +200,7 @@ describe('dc.scatterPlot', function() {
                 });
 
                 it('should remove highlighting from corresponding lines and areas', function () {
-                    nthChart(0).expectPlotSymbolsToHaveRadius("3");
+                    nthChart(0).expectPlotSymbolsToHaveSize(chart.symbolSize());
                 });
 
                 it('should fade in non-corresponding lines and areas', function () {
@@ -208,19 +214,21 @@ describe('dc.scatterPlot', function() {
             var subChart = d3.select(compositeChart.selectAll("g.sub")[0][n]);
 
             subChart.expectPlotSymbolsToHaveClass = function(className) {
-                subChart.selectAll("circle.symbol").each(function () {
+                subChart.selectAll("path.symbol").each(function () {
                     expect(d3.select(this).classed(className)).toBeTruthy();
                 });
             };
 
-            subChart.expectPlotSymbolsToHaveRadius = function(radius) {
-                subChart.selectAll("circle.symbol").each(function () {
-                    expect(d3.select(this).attr("r")).toBe(radius);
+            subChart.expectPlotSymbolsToHaveSize = function(size) {
+                var highlightedSize = Math.pow(size, 2);
+                var highlightedPath = d3.svg.symbol().size(highlightedSize)();
+                subChart.selectAll("path.symbol").each(function () {
+                    expect(d3.select(this).attr("d")).toBe(highlightedPath);
                 });
             };
 
             subChart.expectPlotSymbolsNotToHaveClass = function(className){
-                subChart.selectAll("circle.symbol").each(function () {
+                subChart.selectAll("path.symbol").each(function () {
                     expect(d3.select(this).classed(className)).toBeFalsy();
                 });
             };

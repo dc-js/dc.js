@@ -39,10 +39,10 @@ d3.csv("morley.csv", function(error, experiments) {
         .compose([
             dc.scatterPlot(chart)
                 .group(scatterGroup, "Blue Group")
-                .colors(["blue"]),
+                .colors("blue"),
             dc.scatterPlot(chart)
                 .group(scatterGroup, "Red Group")
-                .colors(["red"])
+                .colors("red")
                 .valueAccessor(function (d) { return d.key[1] + 5; }),
             dc.lineChart(chart)
                 .dimension(lineDimension)
