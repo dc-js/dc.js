@@ -332,6 +332,32 @@ describe('dc.coordinateGridChart', function() {
             });
         });
 
+        describe("rendering for the first time with mouse zoom disabled when it wasn't previously enabled", function () {
+            beforeEach(function () {
+                chart.mouseZoomable(false);
+                spyOn(chart, "_disableMouseZoom");
+                chart.render();
+            });
+
+            it("should not explicitly disable mouse zooming", function () {
+                expect(chart._disableMouseZoom).not.toHaveBeenCalled();
+            });
+        });
+
+        describe("rendering with mouse zoom disabled after it was previously enabled", function () {
+            beforeEach(function () {
+                chart.mouseZoomable(true);
+                chart.render();
+                chart.mouseZoomable(false);
+                spyOn(chart, "_disableMouseZoom");
+                chart.render();
+            });
+
+            it("should explicitly disable mouse zooming", function () {
+                expect(chart._disableMouseZoom).toHaveBeenCalled();
+            });
+        });
+
         describe("with mouse zoom disabled", function () {
             beforeEach(function () {
                 chart.mouseZoomable(false);
