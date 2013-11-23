@@ -10,6 +10,8 @@ dc.filters.RangedFilter = function(low, high) {
 };
 
 dc.filters.TwoDimensionalFilter = function(array) {
+    if (array === null) { return null; }
+
     var filter = array;
     filter.isFiltered = function(value) {
         return value.length && value.length == filter.length &&
