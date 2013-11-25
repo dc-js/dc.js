@@ -125,6 +125,18 @@ dc.filterAll = function(group) {
 };
 
 /**
+#### dc.refocusAll([chartGroup])
+Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is not given then only charts that belong to
+ the default chart group will be reset.
+**/
+dc.refocusAll = function(group) {
+    var charts = dc.chartRegistry.list(group);
+    for (var i = 0; i < charts.length; ++i) {
+        if (charts[i].focus) charts[i].focus();
+    }
+};
+
+/**
 #### dc.renderAll([chartGroup])
 Re-render all charts belong to the given chart group. If the chart group is not given then only charts that belong to
  the default chart group will be re-rendered.

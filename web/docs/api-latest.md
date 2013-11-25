@@ -46,6 +46,10 @@ The API references will highlight the fact if a particular function is not chain
 Clear all filters on every chart within the given chart group. If the chart group is not given then only charts that
 belong to the default chart group will be reset.
 
+#### dc.refocusAll([chartGroup])
+Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is not given then only charts that belong to
+the default chart group will be reset.
+
 #### dc.renderAll([chartGroup])
 Re-render all charts belong to the given chart group. If the chart group is not given then only charts that belong to
 the default chart group will be re-rendered.
