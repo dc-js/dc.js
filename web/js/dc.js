@@ -430,6 +430,8 @@ dc.filters.RangedFilter = function(low, high) {
 };
 
 dc.filters.TwoDimensionalFilter = function(array) {
+    if (array === null) { return null; }
+
     var filter = array;
     filter.isFiltered = function(value) {
         return value.length && value.length == filter.length &&
@@ -5992,11 +5994,9 @@ dc.scatterPlot = function (parent, chartGroup) {
     });
 
     dc.override(_chart, "_filter", function(filter) {
-        if (filter !== undefined) {
-            return _chart.__filter(dc.filters.RangedTwoDimensionalFilter(filter));
-        } else {
-            return _chart.__filter();
-        }
+        if (!arguments.length) return _chart.__filter();
+
+        return _chart.__filter(dc.filters.RangedTwoDimensionalFilter(filter));
     });
 
     _chart.plotData = function () {
@@ -6318,12 +6318,9 @@ dc.heatMap = function (parent, chartGroup) {
     }
 
     dc.override(_chart, "filter", function(filter) {
-        if(filter !== undefined) {
-            return _chart._filter(dc.filters.TwoDimensionalFilter(filter));
-        } else {
-            return _chart._filter();
-        }
+        if (!arguments.length) return _chart._filter();
 
+        return _chart._filter(dc.filters.TwoDimensionalFilter(filter));
     });
 
     function uniq(d,i,a) {
