@@ -20,6 +20,7 @@
   * [Bubble Overlay Chart](#bubble-overlay-chart)
   * [Row Chart](#row-chart)
   * [Legend](#legend)
+  * [Scatter Plot](#scatter-plot)
   * [Number Display Widget](#number-display-widget)
   * [Heat Map](#heat-map)
   * [Box Plot](#box-plot)
@@ -46,7 +47,8 @@ Clear all filters on every chart within the given chart group. If the chart grou
 belong to the default chart group will be reset.
 
 #### dc.refocusAll([chartGroup])
-Reset focus and reset zoom to original domain on every chart within the given chart group. If the chart group is not given then only charts that belong to the default chart group will be reset.
+Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is not given then only charts that belong to
+the default chart group will be reset.
 
 #### dc.renderAll([chartGroup])
 Re-render all charts belong to the given chart group. If the chart group is not given then only charts that belong to
@@ -1339,8 +1341,45 @@ Maximum width for horizontal legend. Default value: 560.
 #### .itemWidth([value])
 legendItem width for horizontal legend. Default value: 70.
 
+## Scatter Plot
+
+Includes: [Coordinate Grid Mixin](#coordinate-grid-mixin)
+
+A scatter plot chart
+
+#### dc.scatterPlot(parent[, chartGroup])
+Create a scatter plot instance and attach it to the given parent element.
+
+Parameters:
+
+* parent : string|compositeChart - any valid d3 single selector representing typically a dom block element such
+as a div, or if this scatter plot is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
+in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
+chart group.
+
+Return:
+A newly created scatter plot instance
+
+```js
+// create a scatter plot under #chart-container1 element using the default global chart group
+var chart1 = dc.scatterPlot("#chart-container1");
+// create a scatter plot under #chart-container2 element using chart group A
+var chart2 = dc.scatterPlot("#chart-container2", "chartGroupA");
+// create a sub-chart under a composite parent chart
+var chart3 = dc.scatterPlot(compositeChart);
+```
+
+#### .symbol([type])
+Get or set the symbol type used for each point. By default a circle. See the D3
+[docs](https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-symbol_type) for acceptable types;
+Type can be a constant or an accessor.
+
 #### .symbolSize([radius])
 Set or get radius for symbols, default: 3.
+
+#### .highlightedSize([radius])
+Set or get radius for highlighted symbols, default: 4.
 
 ## Number Display Widget
 

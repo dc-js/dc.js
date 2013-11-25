@@ -136,11 +136,14 @@ describe("dc.heatmap", function() {
         });
     });
 
-    describe('filters', function() {
+    describe('filtering', function() {
         var filterX, filterY;
+        var otherDimension;
+
         beforeEach( function() {
             filterX = Math.ceil(Math.random() * 2);
             filterY = Math.ceil(Math.random() * 2);
+            otherDimension = data.dimension(function (d) { return +d.colData; });
             chart.render();
         });
 
@@ -167,13 +170,19 @@ describe("dc.heatmap", function() {
         });
 
         it('should keep all data points for that cell', function () {
-            var otherDimension = data.dimension(function (d) { return +d.colData; });
             var otherGroup = otherDimension.group().reduceSum(function (d) { return +d.colorData; });
             var otherChart = dc.baseChart({}).dimension(otherDimension).group(otherGroup);
 
             otherChart.render();
             var clickedCell = clickCellOnChart(chart, filterX, filterY);
             expect(otherChart.data()[filterX - 1].value).toEqual(clickedCell.datum().value);
+        });
+
+        it('should be able to clear filters by filtering with null', function() {
+            clickCellOnChart(chart, filterX, filterY);
+            expect(otherDimension.top(Infinity).length).toBe(2);
+            chart.filter(null);
+            expect(otherDimension.top(Infinity).length).toBe(8);
         });
     });
 

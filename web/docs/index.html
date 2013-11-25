@@ -135,6 +135,7 @@
 <li><a href="#bubble-overlay-chart">Bubble Overlay Chart</a></li>
 <li><a href="#row-chart">Row Chart</a></li>
 <li><a href="#legend">Legend</a></li>
+<li><a href="#scatter-plot">Scatter Plot</a></li>
 <li><a href="#number-display-widget">Number Display Widget</a></li>
 <li><a href="#heat-map">Heat Map</a></li>
 <li><a href="#box-plot">Box Plot</a></li>
@@ -153,6 +154,9 @@ whenever it is appropriate. Therefore configuration of a chart can be written in
 <h4 id="dc-filterall-chartgroup-">dc.filterAll([chartGroup])</h4>
 <p>Clear all filters on every chart within the given chart group. If the chart group is not given then only charts that
 belong to the default chart group will be reset.</p>
+<h4 id="dc-refocusall-chartgroup-">dc.refocusAll([chartGroup])</h4>
+<p>Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is not given then only charts that belong to
+the default chart group will be reset.</p>
 <h4 id="dc-renderall-chartgroup-">dc.renderAll([chartGroup])</h4>
 <p>Re-render all charts belong to the given chart group. If the chart group is not given then only charts that belong to
 the default chart group will be re-rendered.</p>
@@ -1116,8 +1120,35 @@ range when filtered.</p>
 <p>Maximum width for horizontal legend. Default value: 560.</p>
 <h4 id="-itemwidth-value-">.itemWidth([value])</h4>
 <p>legendItem width for horizontal legend. Default value: 70.</p>
+<h2 id="scatter-plot">Scatter Plot</h2>
+<p>Includes: <a href="#coordinate-grid-mixin">Coordinate Grid Mixin</a></p>
+<p>A scatter plot chart</p>
+<h4 id="dc-scatterplot-parent-chartgroup-">dc.scatterPlot(parent[, chartGroup])</h4>
+<p>Create a scatter plot instance and attach it to the given parent element.</p>
+<p>Parameters:</p>
+<ul>
+<li>parent : string|compositeChart - any valid d3 single selector representing typically a dom block element such
+as a div, or if this scatter plot is a sub-chart in a <a href="#composite-chart">Composite Chart</a> then pass in the parent composite chart instance.</li>
+<li>chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
+in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
+chart group.</li>
+</ul>
+<p>Return:
+A newly created scatter plot instance</p>
+<pre><code class="lang-js">// <span class="operator"><span class="keyword">create</span> a scatter plot under #chart-container1 element <span class="keyword">using</span> the <span class="keyword">default</span> <span class="keyword">global</span> chart <span class="keyword">group</span>
+var chart1 = dc.scatterPlot(<span class="string">"#chart-container1"</span>);</span>
+// <span class="operator"><span class="keyword">create</span> a scatter plot under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
+var chart2 = dc.scatterPlot(<span class="string">"#chart-container2"</span>, <span class="string">"chartGroupA"</span>);</span>
+// <span class="operator"><span class="keyword">create</span> a sub-chart under a composite parent chart
+var chart3 = dc.scatterPlot(compositeChart);</span></code></pre>
+<h4 id="-symbol-type-">.symbol([type])</h4>
+<p>Get or set the symbol type used for each point. By default a circle. See the D3
+<a href="https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-symbol_type">docs</a> for acceptable types;
+Type can be a constant or an accessor.</p>
 <h4 id="-symbolsize-radius-">.symbolSize([radius])</h4>
 <p>Set or get radius for symbols, default: 3.</p>
+<h4 id="-highlightedsize-radius-">.highlightedSize([radius])</h4>
+<p>Set or get radius for highlighted symbols, default: 4.</p>
 <h2 id="number-display-widget">Number Display Widget</h2>
 <p>Includes: <a href="#base-mixin">Base Mixin</a></p>
 <p>A display of a single numeric value.</p>
