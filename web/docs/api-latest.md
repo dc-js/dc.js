@@ -879,9 +879,9 @@ Options, if given, is an object that can contain the following:
 * strokeOpacity (default 0.8)
 * radius (default 2)
 
-If `options` is falsy, it disable data point rendering.
+If `options` is falsy, it disables data point rendering.
 
-If no `options` are provded, the current `options` values are instead returned
+If no `options` are provided, the current `options` values are instead returned.
 
 Example:
 ```
