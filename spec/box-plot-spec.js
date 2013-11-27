@@ -130,8 +130,24 @@ describe('dc.boxPlot', function() {
                 expect(chart.selectAll('g.box').size()).toBe(1);
             });
 
-            it('should not represent the box in the chart domain', function() {
-                expect(chart.selectAll(".axis.x .tick").size()).toBe(1);
+            describe("with elasticX enabled", function() {
+                beforeEach(function() {
+                    chart.elasticX(true).render();
+                });
+
+                it('should not represent the box in the chart domain', function() {
+                    expect(chart.selectAll(".axis.x .tick").size()).toBe(1);
+                });
+            });
+
+            describe("when elasticX is disabled", function() {
+                beforeEach(function() {
+                    chart.elasticX(false).render();
+                });
+
+                it('should represent the box in the chart domain', function() {
+                    expect(chart.selectAll(".axis.x .tick").size()).toBe(2);
+                });
             });
         });
     });

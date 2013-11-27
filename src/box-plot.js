@@ -50,11 +50,15 @@ dc.boxPlot = function (parent, chartGroup) {
     _chart.xUnits(dc.units.ordinal);
 
     // valueAccessor should return an array of values that can be coerced into numbers
-    //  or if data is overloaded for a static array of arrays, it should be `Number`
+    // or if data is overloaded for a static array of arrays, it should be `Number`.
+    // Empty arrays are not included.
     _chart.data(function(group) {
         return group.all().map(function (d) {
             d.map = function(accessor) { return accessor.call(d,d); };
             return d;
+        }).filter(function (d) {
+            var values = _chart.valueAccessor()(d);
+            return values.length !== 0;
         });
     });
 
@@ -97,17 +101,11 @@ dc.boxPlot = function (parent, chartGroup) {
         return "translate(" + xOffset + ",0)";
     };
 
-    dc.override(_chart, 'data', function(_) {
-        return _chart._data().filter(function (d) {
-            var values = _chart.valueAccessor()(d);
-            return values.length !== 0;
-        });
-    });
-
-    _chart.elasticX(true);
-    _chart.on('preRedraw', function () {
-        _chart.x().domain([]);
-    });
+    _chart._preprocessData = function () {
+        if (_chart.elasticX()) {
+            _chart.x().domain([]);
+        }
+    };
 
     _chart.plotData = function () {
         var _calculatedBoxWidth = _boxWidth(_chart.effectiveWidth(), _chart.xUnitCount());
