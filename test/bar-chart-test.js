@@ -99,70 +99,6 @@ suite.addBatch({
             chart.redraw();
             return chart;
         },
-        'we get something': function (chart) {
-            assert.isObject(chart);
-        },
-        'should be registered': function (chart) {
-            assert.isTrue(dc.hasChart(chart));
-        },
-        'dc-chart class should be turned on for parent div': function (chart) {
-            assert.equal(d3.select("#bar-chart").attr("class"), "dc-chart");
-        },
-        'svg should be created': function (chart) {
-            assert.isFalse(chart.select("svg").empty());
-        },
-        'dimension should be set': function (chart) {
-            assert.equal(chart.dimension(), dateDimension);
-        },
-        'group should be set': function (chart) {
-            assert.equal(chart.group(), dateGroup);
-        },
-        'width should be set': function (chart) {
-            assert.equal(chart.width(), width);
-        },
-        'height should be set': function (chart) {
-            assert.equal(chart.height(), height);
-        },
-        'height should be used for svg': function (chart) {
-            assert.equal(chart.select("svg").attr("height"), height);
-        },
-        'transition duration should be set': function (chart) {
-            assert.equal(chart.transitionDuration(), 0);
-        },
-        'margin should be set': function (chart) {
-            assert.isNotNull(chart.margins());
-        },
-        'x can be set': function (chart) {
-            assert.isTrue(chart.x() !== undefined);
-        },
-        'x range round is auto calculated based on width': function (chart) {
-            assert.equal(chart.x().range()[0], 0);
-            assert.equal(chart.x().range()[1], 1020);
-        },
-        'x domain should be set': function (chart) {
-            assert.equal(chart.x().domain()[0].getTime(), new Date(2012, 0, 1).getTime());
-            assert.equal(chart.x().domain()[1].getTime(), new Date(2012, 11, 31).getTime());
-        },
-        'y can be set': function (chart) {
-            assert.isTrue(chart.y() !== undefined);
-        },
-        'y range round is auto calculated based on height': function (chart) {
-            assert.equal(chart.y().range()[0], 160);
-            assert.equal(chart.y().range()[1], 0);
-        },
-        'y domain is auto calculated based on height': function (chart) {
-            assert.equal(chart.y().domain()[0], 0);
-            assert.equal(chart.y().domain()[1], 3);
-        },
-        'root g should be created': function (chart) {
-            assert.isFalse(chart.select("svg g").empty());
-        },
-        'axis x should be placed at the bottom': function (chart) {
-            assert.equal(chart.select("svg g g.x").attr("transform"), "translate(30,170)");
-        },
-        'axis y should be placed on the left': function (chart) {
-            assert.equal(chart.select("svg g g.y").attr("transform"), "translate(30,10)");
-        },
         'bar x should be set correctly': function (chart) {
             chart.selectAll("svg g rect.bar").each(function (d) {
                 var halfBarWidth = 0.5;
@@ -184,25 +120,6 @@ suite.addBatch({
             chart.selectAll("svg g rect.bar").each(function (d) {
                 assert.equal(d3.select(this).attr('width'), 1);
             });
-        },
-        'x units should be set': function (chart) {
-            assert.equal(chart.xUnits(), d3.time.days);
-        },
-        'x axis should be created': function (chart) {
-            assert.isNotNull(chart.xAxis());
-        },
-        'y axis should be created': function (chart) {
-            assert.isNotNull(chart.yAxis());
-        },
-        'brush should be created': function (chart) {
-            assert.isNotNull(chart.select("g.brush"));
-        },
-        'round should be off by default': function (chart) {
-            assert.isTrue(chart.round() === undefined);
-        },
-        'round can be changed': function (chart) {
-            chart.round(d3.time.day.round);
-            assert.isNotNull(chart.round());
         },
         'current filter should be set correctly': function (chart) {
             assert.equal(chart.filter()[0].getTime(), new Date(2012, 5, 1).getTime());
@@ -330,48 +247,6 @@ suite.addBatch({
     }
 });
 
-suite.addBatch({'elastic axis': {
-    topic: function () {
-        countryDimension.filter("CA");
-        var chart = buildChart("bar-chart2");
-        chart.elasticY(true)
-            .yAxisPadding(10)
-            .elasticX(true)
-            .xAxisPadding(30)
-            .redraw();
-        return chart;
-    },
-    'y axis should have changed triggered by filter': function (chart) {
-        assert.equal(chart.y().domain()[0], -10);
-        assert.equal(chart.y().domain()[1], 11);
-    },
-    'x axis should have changed triggered by filter': function (chart) {
-        assert.isTrue(chart.x().domain()[0].getTime() >= 1335312000000);
-        assert.isTrue(chart.x().domain()[1].getTime() >= 1347148800000);
-    },
-    teardown: function (topic) {
-        resetAllFilters();
-        resetBody();
-    }
-}});
-
-suite.addBatch({'elastic y axis with no data in focus': {
-    topic: function () {
-        countryDimension.filter("CC");
-        var chart = buildChart("bar-chart-no-data");
-        chart.elasticY(true).redraw();
-        return chart;
-    },
-    'y axis should have been set to empty': function (chart) {
-        assert.equal(chart.y().domain()[0], 0);
-        assert.equal(chart.y().domain()[1], 0);
-    },
-    teardown: function (topic) {
-        resetAllFilters();
-        resetBody();
-    }
-}});
-
 suite.addBatch({'stacked': {
     topic: function () {
         var chart = buildChart("bar-chart-stack");
@@ -434,29 +309,6 @@ suite.addBatch({'stacked with custom value retriever': {
     }
 }});
 
-suite.addBatch({
-    'renderlet': {
-        topic: function () {
-            var chart = buildChart("chart-renderlet");
-            chart.renderlet(function (chart) {
-                chart.selectAll("rect").attr("fill", "red");
-            });
-            return chart;
-        },
-        'custom renderlet should be invoked with render': function (chart) {
-            chart.render();
-            assert.equal(chart.selectAll("rect").attr("fill"), "red");
-        },
-        'custom renderlet should be invoked with redraw': function (chart) {
-            chart.redraw();
-            assert.equal(chart.selectAll("rect").attr("fill"), "red");
-        },
-        teardown: function (topic) {
-            resetAllFilters();
-            resetBody();
-        }
-    }
-});
 
 suite.addBatch({
     'de-centering': {
@@ -800,7 +652,6 @@ suite.addBatch({
             assert.lengthOf(chart.selectAll("rect.bar")[0], 1);
         },
         'bar width should be resized accordingly': function (chart) {
-            //console.log(chart.selectAll("rect.bar")[0][0].attr("width"));
             assert.equal(chart.selectAll("rect.bar").attr("width"), 35);
         },
         'y axis domain should be reset based on focus range': function(chart){
@@ -829,38 +680,6 @@ suite.addBatch({
         }
     }
 });
-
-suite.addBatch({'clip path': {
-    topic: function () {
-        return buildChart("chart-clip-path");
-    },
-    'only one defs should be created': function (chart) {
-        assert.lengthOf(chart.selectAll("defs")[0], 1);
-    },
-    'only one clip path should be created': function (chart) {
-        assert.lengthOf(chart.selectAll("defs clipPath")[0], 1);
-    },
-    'only one clip rect should be created': function (chart) {
-        assert.lengthOf(chart.selectAll("defs clipPath rect")[0], 1);
-    },
-    'clip rect size should be correct': function (chart) {
-        var rect = chart.select("defs clipPath rect");
-        assert.equal(rect.attr("width"), 1020);
-        assert.equal(rect.attr("height"), 160);
-    },
-    'clip id should be correct': function (chart) {
-        assert.equal(chart.select("defs clipPath").attr("id"), "chart-clip-path-clip");
-    },
-    'chart body g should have clip path refs': function (chart) {
-        chart.selectAll("g.chart-body").each(function () {
-            assert.equal(d3.select(this).attr("clip-path"), "url(#chart-clip-path-clip)");
-        });
-    },
-    teardown: function (topic) {
-        resetAllFilters();
-        resetBody();
-    }
-}});
 
 suite.addBatch({
     'legend': {
