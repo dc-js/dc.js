@@ -240,7 +240,7 @@ dc.barChart = function (parent, chartGroup) {
     If false, using rounding with centered bars will result in a warning and rounding will be ignored.
     This flag has no effect if bars are not centered.
 
-    When using standard d3.js rounding methods, the brush doesn't align correctly with centered bars since the bars are offset.
+    When using standard d3.js rounding methods, the brush often doesn't align correctly with centered bars since the bars are offset.
     The rounding function must add an offset to compensate, such as in the following example.
     ```js
     chart.round(function(n) {return Math.floor(n)+0.5});
