@@ -179,7 +179,7 @@ dc.compositeChart = function (parent, chartGroup) {
             });
         }
         return _chart;
-    }
+    };
 
     _chart.fadeDeselectedArea = function () {
         for (var i = 0; i < _children.length; ++i) {

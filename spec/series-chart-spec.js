@@ -77,8 +77,8 @@ describe('dc.seriesChart', function() {
         });
 
         it('should apply options to all lines in the chart', function () {
-            var lines = chart.selectAll("path.line")
-              , areas = chart.selectAll("path.area");
+            var lines = chart.selectAll("path.line");
+            var areas = chart.selectAll("path.area");
 
             expect(d3.select(lines[0][0]).attr("stroke-dasharray")).toBe("3,1,1");
             expect(d3.select(lines[0][1]).attr("stroke-dasharray")).toBe("3,1,1");
