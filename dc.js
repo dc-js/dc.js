@@ -4672,6 +4672,12 @@ dc.compositeChart = function (parent, chartGroup) {
         }
     };
 
+    /**
+    #### .chartOptions({object})
+    Get or set chart-specific options for the subcharts. If set, the applicable mathods
+    of `.chartOptions()` will be applied to all composed children. This is a convenience method
+    for composite charts and exposes line-chart options in a series chart.
+    **/
     _chart.chartOptions = function (_) {
         if(!arguments.length) return _chartOptions;
         _chartOptions = _;

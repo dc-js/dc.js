@@ -87,6 +87,10 @@ describe('dc.compositeChart', function() {
         expect(chart.select('g.brush')).not.toBeNull();
     });
 
+    it('should create chart options', function () {
+        expect(chart.chartOptions()).not.toBeNull();
+    });
+
     it('does not set round by default', function () {
         expect(chart.round()).not.toBeDefined();
     });
@@ -348,10 +352,10 @@ describe('dc.compositeChart', function() {
     });
 
     describe('chart options', function () {
-        beforeEach(function () {
-            it('should set properties on subcharts', function () {
-                expect(chart.children()[0].centerBar()).toBeTruthy();
-            });
+        it('should set properties on subcharts', function () {
+            expect(chart.children()[0].centerBar()).toBeTruthy();
+            expect(chart.children()[0].gap()).toBe(1);
+            expect(chart.children()[1].dashStyle()).toEqual([3,1,1]);
         });
     });
 

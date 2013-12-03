@@ -911,6 +911,10 @@ A newly created composite chart instance</p>
 var compositeChart1 = dc.compositeChart(<span class="string">"#chart-container1"</span>);</span>
 // <span class="operator"><span class="keyword">create</span> a composite chart under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
 var compositeChart2 = dc.compositeChart(<span class="string">"#chart-container2"</span>, <span class="string">"chartGroupA"</span>);</span></code></pre>
+<h4 id="-chartoptions-object-">.chartOptions({object})</h4>
+<p>Get or set chart-specific options for the subcharts. If set, the applicable mathods
+of <code>.chartOptions()</code> will be applied to all composed children. This is a convenience method
+for composite charts and exposes line-chart options in a series chart.</p>
 <h4 id="-rightyaxislabel-labeltext-">.rightYAxisLabel([labelText])</h4>
 <p>Set or get the right y axis label.</p>
 <h4 id="-compose-subchartarray-">.compose(subChartArray)</h4>
