@@ -41,12 +41,22 @@ dc.barChart = function (parent, chartGroup) {
 
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
     var _centerBar = false;
+    var _alwaysUseRounding = false;
 
     var _barWidth;
 
     dc.override(_chart, 'rescale', function () {
         _chart._rescale();
         _barWidth = undefined;
+    });
+
+    dc.override(_chart, 'render', function () {
+        if (_chart.round() && _centerBar && !_alwaysUseRounding) {
+            console.warn("By default, brush rounding is disabled if bars are centered. " +
+                         "See dc.js bar chart API documentation for details.");
+        }
+
+        _chart._render();
     });
 
     _chart.plotData = function () {
@@ -213,14 +223,33 @@ dc.barChart = function (parent, chartGroup) {
 
     _chart.extendBrush = function () {
         var extent = _chart.brush().extent();
-        if (_chart.round() && !_centerBar) {
+        if (_chart.round() && (!_centerBar || _alwaysUseRounding)) {
             extent[0] = extent.map(_chart.round())[0];
             extent[1] = extent.map(_chart.round())[1];
 
             _chart.chartBodyG().select(".brush")
                 .call(_chart.brush().extent(extent));
         }
+
         return extent;
+    };
+
+    /**
+    #### .alwaysUseRounding([boolean])
+    Set or get the flag which determines whether rounding is enabled when bars are centered (default: false).
+    If false, using rounding with centered bars will result in a warning and rounding will be ignored.
+    This flag has no effect if bars are not centered.
+
+    When using standard d3.js rounding methods, the brush often doesn't align correctly with centered bars since the bars are offset.
+    The rounding function must add an offset to compensate, such as in the following example.
+    ```js
+    chart.round(function(n) {return Math.floor(n)+0.5});
+    ```
+    **/
+    _chart.alwaysUseRounding = function (_) {
+        if (!arguments.length) return _alwaysUseRounding;
+        _alwaysUseRounding = _;
+        return _chart;
     };
 
     function colorFilter(color,inv) {

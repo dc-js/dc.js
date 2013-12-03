@@ -823,6 +823,17 @@ Default: 0.5
 Manually set fixed gap (in px) between bars instead of relying on the default auto-generated gap. By default bar chart
 implementation will calculate and set the gap automatically based on the number of data points and the length of the x axis.
 
+#### .alwaysUseRounding([boolean])
+Set or get the flag which determines whether rounding is enabled when bars are centered (default: false).
+If false, using rounding with centered bars will result in a warning and rounding will be ignored.
+This flag has no effect if bars are not centered.
+
+When using standard d3.js rounding methods, the brush often doesn't align correctly with centered bars since the bars are offset.
+The rounding function must add an offset to compensate, such as in the following example.
+```js
+chart.round(function(n) {return Math.floor(n)+0.5});
+```
+
 ## Line Chart
 
 Includes [Stack Mixin](#stack-mixin), [Coordinate Grid Mixin](#coordinate-grid-mixin)
