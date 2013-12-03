@@ -21,11 +21,10 @@ describe('dc.compositeChart', function() {
             .transitionDuration(0)
             .xUnits(d3.time.days)
             .shareColors(true)
+            .chartOptions({gap: 1, centerBar: true, dashStyle: [3,1,1]})
             .compose([
                 dc.barChart(chart)
-                    .centerBar(true)
-                    .group(dateValueSumGroup, 'Date Value Group Bar')
-                    .gap(1),
+                    .group(dateValueSumGroup, 'Date Value Group Bar'),
                 dc.lineChart(chart)
                     .group(dateIdSumGroup, 'Date ID Group')
                     .stack(dateValueSumGroup, 'Date Value Group Line 1')
@@ -345,6 +344,14 @@ describe('dc.compositeChart', function() {
         it('should set the x domain', function () {
             expect(chart.x().domain()[0].getTime() >= 1337904000000).toBeTruthy();
             expect(chart.x().domain()[1].getTime() >= 1344556800000).toBeTruthy();
+        });
+    });
+
+    describe('chart options', function () {
+        beforeEach(function () {
+            it('should set properties on subcharts', function () {
+                expect(chart.children()[0].centerBar()).toBeTruthy();
+            });
         });
     });
 

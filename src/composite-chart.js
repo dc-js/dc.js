@@ -126,6 +126,13 @@ dc.compositeChart = function (parent, chartGroup) {
         child.g().attr("class", SUB_CHART_CLASS + " _" + i);
     }
 
+    function applyOptions (child) {
+        for(var option in _chartOptions) {
+            var arg = _chartOptions[option];
+            if(child[option]) child[option].call(null, arg);
+        }
+    }
+
     _chart.plotData = function () {
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
@@ -157,17 +164,20 @@ dc.compositeChart = function (parent, chartGroup) {
         }
     };
 
+    /**
+    #### .chartOptions({object})
+    Get or set chart-specific options for the subcharts. If set, the applicable mathods
+    of `.chartOptions()` will be applied to all composed children. This is a convenience method
+    for composite charts and exposes line-chart options in a series chart.
+    **/
     _chart.chartOptions = function (_) {
         if(!arguments.length) return _chartOptions;
-        for (var j = 0; j < _children.length; ++j) {
-            var child = _children[j]
-              , arg;
-            for(var option in _) {
-                arg = _[option];
-                if(child[option]) child[option].call(null, arg);
-            }
-        }
         _chartOptions = _;
+        if(_children) {
+            _children.forEach(function(child) {
+                applyOptions(child);
+            });
+        }
         return _chart;
     }
 
@@ -226,6 +236,9 @@ dc.compositeChart = function (parent, chartGroup) {
             child.margins(_chart.margins());
 
             if (_shareTitle) child.title(_chart.title());
+
+            if (_chartOptions) applyOptions(child);
+
         });
         return _chart;
     };

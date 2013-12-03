@@ -4537,11 +4537,14 @@ var compositeChart2 = dc.compositeChart("#chart-container2", "chartGroupA");
 
 **/
 dc.compositeChart = function (parent, chartGroup) {
+
     var SUB_CHART_CLASS = "sub";
     var DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING = 12;
 
     var _chart = dc.coordinateGridMixin({});
     var _children = [];
+
+    var _chartOptions = {};
 
     var _shareColors = false,
         _shareTitle = true;
@@ -4631,6 +4634,13 @@ dc.compositeChart = function (parent, chartGroup) {
         child.g().attr("class", SUB_CHART_CLASS + " _" + i);
     }
 
+    function applyOptions (child) {
+        for(var option in _chartOptions) {
+            var arg = _chartOptions[option];
+            if(child[option]) child[option].call(null, arg);
+        }
+    }
+
     _chart.plotData = function () {
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
@@ -4661,6 +4671,17 @@ dc.compositeChart = function (parent, chartGroup) {
             child._activateRenderlets();
         }
     };
+
+    _chart.chartOptions = function (_) {
+        if(!arguments.length) return _chartOptions;
+        _chartOptions = _;
+        if(_children) {
+            _children.forEach(function(child) {
+                applyOptions(child);
+            });
+        }
+        return _chart;
+    }
 
     _chart.fadeDeselectedArea = function () {
         for (var i = 0; i < _children.length; ++i) {
@@ -4717,6 +4738,9 @@ dc.compositeChart = function (parent, chartGroup) {
             child.margins(_chart.margins());
 
             if (_shareTitle) child.title(_chart.title());
+
+            if (_chartOptions) applyOptions(child);
+
         });
         return _chart;
     };
@@ -4951,6 +4975,7 @@ dc.seriesChart = function (parent, chartGroup) {
                 children_changed = true;
             });
         _chart._compose(children);
+        _chart.chartOptions(_chart.chartOptions());
         if(children_changed && _chart.legend())
             _chart.legend().render();
     };
