@@ -29,10 +29,13 @@ dc.rowChart = function (parent, chartGroup) {
 
     var _labelOffsetX = 10;
     var _labelOffsetY = 15;
+    var _titleLabelOffsetX = 2;
 
     var _gap = 5;
 
     var _rowCssClass = "row";
+    var _titleRowCssClass = "titlerow";
+    var _renderTitleLabel = false;
 
     var _chart = dc.capMixin(dc.marginMixin(dc.colorMixin(dc.baseMixin({}))));
 
@@ -181,6 +184,11 @@ dc.rowChart = function (parent, chartGroup) {
             rowEnter.append("text")
                 .on("click", onClick);
         }
+        if (_chart.renderTitleLabel()) {
+            rowEnter.append("text")
+                .attr("class", _titleRowCssClass)
+                .on("click", onClick);
+        }
     }
 
     function updateLabels(rows) {
@@ -198,6 +206,32 @@ dc.rowChart = function (parent, chartGroup) {
             dc.transition(lab, _chart.transitionDuration())
                 .attr("transform", translateX);
         }
+        if (_chart.renderTitleLabel()) {
+            var titlelab = rows.select("." + _titleRowCssClass)
+                    .attr("x", _chart.effectiveWidth() - _titleLabelOffsetX)
+                    .attr("y", _labelOffsetY)
+                    .attr("text-anchor", "end")
+                    .on("click", onClick)
+                    .attr("class", function (d, i) {
+                        return _titleRowCssClass + " _" + i ;
+                    })
+                    .text(function (d) {
+                        return _chart.title()(d);
+                    });
+            dc.transition(titlelab, _chart.transitionDuration())
+                .attr("transform", translateX);
+            }
+    }
+
+    /**
+    #### .renderTitleLabel(boolean)
+    Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'
+
+    **/
+    _chart.renderTitleLabel = function (_) {
+        if (!arguments.length) return _renderTitleLabel;
+        _renderTitleLabel = _;
+        return _chart;
     }
 
     function onClick(d) {
@@ -256,12 +290,23 @@ dc.rowChart = function (parent, chartGroup) {
 
     /**
     #### .labelOffsetY([y])
-    Get of set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart. Default y offset is 15px;
+    Get or set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart. Default y offset is 15px;
 
     **/
     _chart.labelOffsetY = function (o) {
         if (!arguments.length) return _labelOffsetY;
         _labelOffsetY = o;
+        return _chart;
+    };
+
+    /**
+    #### .titleLabelOffsetx([x])
+    Get of set the x offset (horizontal space between right edge of row and right edge or text.   Default x offset is 2px;
+
+    **/
+    _chart.titleLabelOffsetX = function (o) {
+        if (!arguments.length) return _titleLabelOffsetX;
+        _titleLabelOffsetX = o;
         return _chart;
     };
 

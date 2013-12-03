@@ -1296,6 +1296,9 @@ var chart1 = dc.rowChart("#chart-container1");
 var chart2 = dc.rowChart("#chart-container2", "chartGroupA");
 ```
 
+#### .renderTitleLabel(boolean)
+Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'
+
 #### .gap([gap])
 Get or set the vertical gap space between rows on a particular row chart instance. Default gap is 5px;
 
@@ -1307,7 +1310,10 @@ range when filtered.
 Get or set the x offset (horizontal space to the top left corner of a row) for labels on a particular row chart. Default x offset is 10px;
 
 #### .labelOffsetY([y])
-Get of set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart. Default y offset is 15px;
+Get or set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart. Default y offset is 15px;
+
+#### .titleLabelOffsetx([x])
+Get of set the x offset (horizontal space between right edge of row and right edge or text.   Default x offset is 2px;
 
 ## Legend
 Legend is a attachable widget that can be added to other dc charts to render horizontal legend labels.
