@@ -1297,17 +1297,23 @@ var chart2 = dc.rowChart("#chart-container2", "chartGroupA");
 ```
 
 #### .gap([gap])
-Get or set the vertical gap space between rows on a particular row chart instance. Default gap is 5px;
+Get or set the vertical gap space between rows on a particular row chart instance. Default gap is 5px.
 
 #### .elasticX([boolean])
 Get or set the elasticity on x axis. If this attribute is set to true, then the x axis will rescle to auto-fit the data
 range when filtered.
 
 #### .labelOffsetX([x])
-Get or set the x offset (horizontal space to the top left corner of a row) for labels on a particular row chart. Default x offset is 10px;
+Get or set the x offset (horizontal space to the top left corner of a row) for labels on a particular row chart. Default x offset is 10px.
 
 #### .labelOffsetY([y])
-Get of set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart. Default y offset is 15px;
+Get or set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart. Default y offset is 15px.
+
+#### .renderTitleLabel(boolean)
+Turn on/off Title label rendering within each row.  This adds an additional label using an SVG style of text-anchor 'end'.  Useful for adding titles (often values) to the right side of row bars. 
+
+#### .titleLabelOffsetX([y])
+Get of set the x offset (horizontal space between right edge of row and right edge or text.)   Default x offset is 2px;
 
 ## Legend
 Legend is a attachable widget that can be added to other dc charts to render horizontal legend labels.
