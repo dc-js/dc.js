@@ -17,120 +17,11 @@ describe('dc.lineChart', function() {
             .width(1100).height(200)
             .x(d3.time.scale().domain([new Date("2012/01/01"), new Date("2012/12/31")]))
             .transitionDuration(0)
-            .xUnits(d3.time.days);
     });
 
-    describe('#render', function () {
+    describe('rendering', function () {
         beforeEach(function () {
             chart.render();
-        });
-
-        it('should create the svg', function () {
-            expect(chart.svg().empty()).toBeFalsy();
-        });
-
-        it('should create a root g', function () {
-            expect(chart.g().empty()).toBeFalsy();
-        });
-
-        it('should register the chart', function () {
-            expect(dc.hasChart(chart)).toBeTruthy();
-        });
-
-        it('should set a dimension on the chart', function () {
-            expect(chart.dimension()).toBe(dateDimension);
-        });
-
-        it('should set a group on the chart', function () {
-            expect(chart.group()).toBe(dateGroup);
-        });
-
-        it('should set a width on the chart', function () {
-            expect(chart.width()).toBe(1100);
-        });
-
-        it('should set a height on the chart', function () {
-            expect(chart.height()).toBe(200);
-        });
-
-        it('should use the height for the svg', function () {
-            expect(chart.select('svg').attr('height')).toBe('200');
-        });
-
-        it('should have zero transition duration', function () {
-            expect(chart.transitionDuration()).toBe(0);
-        });
-
-        it('should set the margins of the chart', function () {
-            expect(chart.margins()).not.toBeNull();
-        });
-
-        it('should set an x domain', function () {
-            expect(chart.x()).toBeDefined();
-        });
-
-        it('should set a y domain', function () {
-            expect(chart.y()).toBeDefined();
-        });
-
-        it('should set the x domain to endpoint dates', function () {
-            expect(chart.x().domain()).toEqual([new Date("2012/1/1"), new Date("2012/12/31")]);
-        });
-
-        it('should set the x units', function(){
-            expect(chart.xUnits()).toBe(d3.time.days);
-        });
-
-        it('should create the x axis', function(){
-            expect(chart.xAxis()).not.toBeNull();
-        });
-
-        it('should create the y axis', function () {
-            expect(chart.yAxis()).not.toBeNull();
-        });
-
-        it('should create the brush', function () {
-            expect(chart.select('g.brush')).not.toBeNull();
-        });
-
-        it('should not set round by default', function () {
-            expect(chart.round()).not.toBeDefined();
-        });
-
-        it('should auto-calculate x range round based on width', function () {
-            expect(chart.x().range()[0]).toBe(0);
-            expect(chart.x().range()[1]).toBe(1020);
-        });
-
-        it('should auto-calculate y range round based on height', function () {
-            expect(chart.y().range()[0]).toBe(160);
-            expect(chart.y().range()[1]).toBe(0);
-        });
-
-        it('should auto-calculate y domain based on height', function () {
-            expect(chart.y().domain()[0]).toBe(0);
-            expect(chart.y().domain()[1]).toBe(3);
-        });
-
-        it('should be able to change round', function () {
-            chart.round(d3.time.day.round);
-            expect(chart.round()).not.toBeNull();
-        });
-
-        it('should have a default value for x', function () {
-            expect(chart.keyAccessor()).not.toBeNull();
-        });
-
-        it('should have a default value for y', function () {
-            expect(chart.valueAccessor()).not.toBeNull();
-        });
-
-        it('should place the x axis at the bottom', function () {
-            expect(chart.select("g.x").attr("transform")).toBe("translate(30,170)");
-        });
-
-        it('should place the y axis to the left by default', function () {
-            expect(chart.select("g.y").attr("transform")).toBe("translate(30,10)");
         });
 
         describe('with a specified dash style', function () {
@@ -140,28 +31,6 @@ describe('dc.lineChart', function() {
 
             it('should be dash-dot-dot-dot to match the specified style', function () {
                 expect(chart.selectAll("path.line").attr("stroke-dasharray")).toBe("3,1,1,1");
-            });
-        });
-
-        describe('renderlets', function () {
-            beforeEach(function () {
-                chart.renderlet(function (chart) {
-                    chart.selectAll("path").attr("fill", "red");
-                });
-            });
-
-            it('should not run immediately', function () {
-                expect(chart.selectAll("path").attr("fill")).not.toBe("red");
-            });
-
-            it('should run when render is invoked', function () {
-                chart.render();
-                expect(chart.selectAll("path").attr("fill")).toBe("red");
-            });
-
-            it('should run when redraw is invoked', function () {
-                chart.redraw();
-                expect(chart.selectAll("path").attr("fill")).toBe("red");
             });
         });
 
@@ -360,33 +229,6 @@ describe('dc.lineChart', function() {
 
             it('should not draw dots on undefined points', function () {
                 expect(chart.selectAll(".dot").size()).toBe(5);
-            });
-        });
-
-        describe('clip paths', function () {
-            it('should only create one def', function () {
-                expect(chart.selectAll("defs").size()).toBe(1);
-            });
-
-            it('should only create one clip path', function () {
-                // selecting on ID due to webkit bug #83438
-                expect(chart.selectAll("defs #line-chart-clip").size()).toBe(1);
-            });
-
-            it('should only create one clip rect', function () {
-                expect(chart.selectAll("defs #line-chart-clip rect").size()).toBe(1);
-            });
-
-            it('should create a clip rect based on the graph size', function () {
-                var rect = chart.select("defs #line-chart-clip rect");
-                expect(rect.attr("width")).toBe('1020');
-                expect(rect.attr("height")).toBe('160');
-            });
-
-            it('should add clip path refs to the chart body', function () {
-                chart.selectAll("g.chart-body").each(function () {
-                    expect(d3.select(this).attr("clip-path")).toBe("url(#line-chart-clip)");
-                });
             });
         });
 
@@ -674,24 +516,6 @@ describe('dc.lineChart', function() {
             function nthArea(n) {
                 return d3.select(chart.selectAll("path.area")[0][n]);
             }
-        });
-
-        describe('elastic axis', function () {
-            beforeEach(function () {
-                data.dimension(function(d) {
-                    return d.countrycode;
-                }).filter("CA");
-
-                chart.elasticX(true).elasticY(true).render();
-            });
-
-            it('should shrink the y axis', function () {
-                expect(chart.y().domain()[1]).toBe(1);
-            });
-
-            it('should shrink the x domain', function () {
-                expect(chart.x().domain()).toEqual([new Date("2012/5/25"), new Date("2012/8/10")]);
-            });
         });
 
         describe('filtering', function () {

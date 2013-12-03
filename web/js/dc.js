@@ -4057,9 +4057,9 @@ dc.lineChart = function (parent, chartGroup) {
     * strokeOpacity (default 0.8)
     * radius (default 2)
 
-    If `options` is falsy, it disable data point rendering.
+    If `options` is falsy, it disables data point rendering.
 
-    If no `options` are provded, the current `options` values are instead returned
+    If no `options` are provided, the current `options` values are instead returned.
 
     Example:
     ```
@@ -6844,11 +6844,15 @@ dc.boxPlot = function (parent, chartGroup) {
     _chart.xUnits(dc.units.ordinal);
 
     // valueAccessor should return an array of values that can be coerced into numbers
-    //  or if data is overloaded for a static array of arrays, it should be `Number`
+    // or if data is overloaded for a static array of arrays, it should be `Number`.
+    // Empty arrays are not included.
     _chart.data(function(group) {
         return group.all().map(function (d) {
             d.map = function(accessor) { return accessor.call(d,d); };
             return d;
+        }).filter(function (d) {
+            var values = _chart.valueAccessor()(d);
+            return values.length !== 0;
         });
     });
 
@@ -6891,6 +6895,12 @@ dc.boxPlot = function (parent, chartGroup) {
         return "translate(" + xOffset + ",0)";
     };
 
+    _chart._preprocessData = function () {
+        if (_chart.elasticX()) {
+            _chart.x().domain([]);
+        }
+    };
+
     _chart.plotData = function () {
         var _calculatedBoxWidth = _boxWidth(_chart.effectiveWidth(), _chart.xUnitCount());
 
@@ -6901,7 +6911,6 @@ dc.boxPlot = function (parent, chartGroup) {
             .domain(_chart.y().domain())
             .duration(_chart.transitionDuration())
             .tickFormat(_tickFormat);
-
 
         var boxesG = _chart.chartBodyG().selectAll('g.box').data(_chart.data());
 
@@ -6921,7 +6930,6 @@ dc.boxPlot = function (parent, chartGroup) {
             .call(_box)
             .on("click", function(d) {
                 _chart.filter(d.key);
-                //_chart.focus(_chart.filter());
                 _chart.redrawGroup();
             });
     }
