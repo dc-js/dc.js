@@ -52,7 +52,7 @@ dc.barChart = function (parent, chartGroup) {
 
     dc.override(_chart, 'render', function () {
         if (_chart.round() && _centerBar && !_alwaysUseRounding) {
-            console.warn("By default, brush rounding is disabled if bars are centered. " +
+            dc.logger.warn("By default, brush rounding is disabled if bars are centered. " +
                          "See dc.js bar chart API documentation for details.");
         }
 
