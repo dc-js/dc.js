@@ -36,7 +36,7 @@ dc.compositeChart = function (parent, chartGroup) {
     var _chart = dc.coordinateGridMixin({});
     var _children = [];
 
-    var _chartOptions = {};
+    var _childOptions = {};
 
     var _shareColors = false,
         _shareTitle = true;
@@ -126,13 +126,6 @@ dc.compositeChart = function (parent, chartGroup) {
         child.g().attr("class", SUB_CHART_CLASS + " _" + i);
     }
 
-    function applyOptions (child) {
-        for(var option in _chartOptions) {
-            var arg = _chartOptions[option];
-            if(child[option]) child[option].call(null, arg);
-        }
-    }
-
     _chart.plotData = function () {
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
@@ -165,19 +158,15 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .chartOptions({object})
-    Get or set chart-specific options for the subcharts. If set, the applicable mathods
-    of `.chartOptions()` will be applied to all composed children. This is a convenience method
-    for composite charts and exposes line-chart options in a series chart.
+    #### .childOptions({object})
+    Get or set chart-specific options for all child charts. This is equivalent to calling `.options` on each child chart.
     **/
-    _chart.chartOptions = function (_) {
-        if(!arguments.length) return _chartOptions;
-        _chartOptions = _;
-        if(_children) {
-            _children.forEach(function(child) {
-                applyOptions(child);
-            });
-        }
+    _chart.childOptions = function (_) {
+        if(!arguments.length) return _childOptions;
+        _childOptions = _;
+        _children.forEach(function(child){
+            child.options(_childOptions);
+        });
         return _chart;
     };
 
@@ -237,8 +226,7 @@ dc.compositeChart = function (parent, chartGroup) {
 
             if (_shareTitle) child.title(_chart.title());
 
-            if (_chartOptions) applyOptions(child);
-
+            child.options(_childOptions);
         });
         return _chart;
     };

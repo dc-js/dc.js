@@ -28,7 +28,7 @@ describe('dc.seriesChart', function() {
             .seriesAccessor(function(d) { return +d.key[0];})
             .keyAccessor(function(d) { return +d.key[1];})
             .valueAccessor(function(d) { return +d.value ;})
-            .chartOptions({renderArea: true, dashStyle: [3, 1, 1]})
+            .childOptions({renderArea: true, dashStyle: [3, 1, 1]})
             .transitionDuration(0);
     });
 

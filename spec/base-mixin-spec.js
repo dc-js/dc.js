@@ -1,4 +1,4 @@
-describe("dc.baseChart", function () {
+describe("dc.baseMixin", function () {
     var chart, dateDimension, dateValueGroup;
     beforeEach(function () {
         var data = crossfilter(loadDateFixture());
@@ -9,10 +9,12 @@ describe("dc.baseChart", function () {
             return d.value;
         });
 
-        chart = dc.baseChart({})
-            .dimension(dateDimension)
-            .group(dateValueGroup)
-            .transitionDuration(0);
+        chart = dc.baseMixin({})
+            .options({
+                dimension: dateDimension,
+                group: dateValueGroup,
+                transitionDuration: 0,
+            });
     });
 
     describe('renderlets', function () {
@@ -119,7 +121,7 @@ describe("dc.baseChart", function () {
 
         it('should require dimension', function () {
             try {
-                dc.baseChart({}).group(dateValueGroup).render();
+                dc.baseMixin({}).group(dateValueGroup).render();
                 throw new Error("That should've thrown");
             } catch (e) {
                 expect(e instanceof dc.errors.InvalidStateException).toBeTruthy();
@@ -128,7 +130,7 @@ describe("dc.baseChart", function () {
 
         it('should require group', function () {
             try {
-                dc.baseChart({}).dimension(dateDimension).render();
+                dc.baseMixin({}).dimension(dateDimension).render();
                 throw new Error("That should've thrown");
             } catch (e) {
                 expect(e instanceof dc.errors.InvalidStateException).toBeTruthy();

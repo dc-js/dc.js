@@ -824,6 +824,26 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
+    #### .options(optionsObject)
+    Set chart options using a configuration object. Each object key will be call the fluent method of the same name to set that attribute for the chart.
+
+    Example:
+    ```
+    chart.options({dimension: myDimension, group: myGroup});
+    ```
+    **/
+    _chart.options = function(opts) {
+        for (var o in opts) {
+            if (typeof(_chart[o]) === 'function') {
+                _chart[o].call(_chart,opts[o]);
+            } else {
+                dc.logger.debug("Not a valid option setter name: " + o);
+            }
+        };
+        return _chart;
+    };
+
+    /**
     ## Listeners
     All dc chart instance supports the following listeners.
 

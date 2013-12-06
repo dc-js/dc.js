@@ -74,7 +74,6 @@ dc.seriesChart = function (parent, chartGroup) {
                 children_changed = true;
             });
         _chart._compose(children);
-        _chart.chartOptions(_chart.chartOptions());
         if(children_changed && _chart.legend())
             _chart.legend().render();
     };
