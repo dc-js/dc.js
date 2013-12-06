@@ -345,6 +345,14 @@ chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
 #### .chartID()
 Return the internal numeric ID of the chart.
 
+#### .options(optionsObject)
+Set chart options using a configuration object. Each object key will be call the fluent method of the same name to set that attribute for the chart.
+
+Example:
+```
+chart.options({dimension: myDimension, group: myGroup});
+```
+
 ## Listeners
 All dc chart instance supports the following listeners.
 
@@ -1074,6 +1082,9 @@ var compositeChart1 = dc.compositeChart("#chart-container1");
 // create a composite chart under #chart-container2 element using chart group A
 var compositeChart2 = dc.compositeChart("#chart-container2", "chartGroupA");
 ```
+
+#### .childOptions({object})
+Get or set chart-specific options for all child charts. This is equivalent to calling `.options` on each child chart.
 
 #### .rightYAxisLabel([labelText])
 Set or get the right y axis label.

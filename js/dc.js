@@ -1345,6 +1345,26 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
+    #### .options(optionsObject)
+    Set chart options using a configuration object. Each object key will be call the fluent method of the same name to set that attribute for the chart.
+
+    Example:
+    ```
+    chart.options({dimension: myDimension, group: myGroup});
+    ```
+    **/
+    _chart.options = function(opts) {
+        for (var o in opts) {
+            if (typeof(_chart[o]) === 'function') {
+                _chart[o].call(_chart,opts[o]);
+            } else {
+                dc.logger.debug("Not a valid option setter name: " + o);
+            }
+        };
+        return _chart;
+    };
+
+    /**
     ## Listeners
     All dc chart instance supports the following listeners.
 
@@ -4608,11 +4628,14 @@ var compositeChart2 = dc.compositeChart("#chart-container2", "chartGroupA");
 
 **/
 dc.compositeChart = function (parent, chartGroup) {
+
     var SUB_CHART_CLASS = "sub";
     var DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING = 12;
 
     var _chart = dc.coordinateGridMixin({});
     var _children = [];
+
+    var _childOptions = {};
 
     var _shareColors = false,
         _shareTitle = true;
@@ -4733,6 +4756,19 @@ dc.compositeChart = function (parent, chartGroup) {
         }
     };
 
+    /**
+    #### .childOptions({object})
+    Get or set chart-specific options for all child charts. This is equivalent to calling `.options` on each child chart.
+    **/
+    _chart.childOptions = function (_) {
+        if(!arguments.length) return _childOptions;
+        _childOptions = _;
+        _children.forEach(function(child){
+            child.options(_childOptions);
+        });
+        return _chart;
+    };
+
     _chart.fadeDeselectedArea = function () {
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
@@ -4788,6 +4824,8 @@ dc.compositeChart = function (parent, chartGroup) {
             child.margins(_chart.margins());
 
             if (_shareTitle) child.title(_chart.title());
+
+            child.options(_childOptions);
         });
         return _chart;
     };
