@@ -319,6 +319,7 @@ d3.csv("ndx.csv", function (data) {
         .gap(1)
         // (optional) set filter brush rounding
         .round(dc.round.floor)
+        .alwaysUseRounding(true)
         .x(d3.scale.linear().domain([-25, 25]))
         .renderHorizontalGridLines(true)
         // customize the filter displayed in the control span
@@ -379,6 +380,7 @@ d3.csv("ndx.csv", function (data) {
         .gap(1)
         .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
         .round(d3.time.month.round)
+        .alwaysUseRounding(true)
         .xUnits(d3.time.months);
 
     /*

@@ -852,6 +852,7 @@ on other charts within the same chart group.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>        .round(dc.round.floor)
+        .alwaysUseRounding(<span class="literal">true</span>)
         .x(d3.scale.linear().domain([-<span class="number">25</span>, <span class="number">25</span>]))
         .renderHorizontalGridLines(<span class="literal">true</span>)</pre></div></div>
             
@@ -1001,6 +1002,7 @@ The second parameter is the series name. The third is a value accessor.</p>
         .gap(<span class="number">1</span>)
         .x(d3.time.scale().domain([<span class="keyword">new</span> Date(<span class="number">1985</span>, <span class="number">0</span>, <span class="number">1</span>), <span class="keyword">new</span> Date(<span class="number">2012</span>, <span class="number">11</span>, <span class="number">31</span>)]))
         .round(d3.time.month.round)
+        .alwaysUseRounding(<span class="literal">true</span>)
         .xUnits(d3.time.months);
 
     <span class="comment">/*

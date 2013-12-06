@@ -823,6 +823,17 @@ Default: 0.5
 Manually set fixed gap (in px) between bars instead of relying on the default auto-generated gap. By default bar chart
 implementation will calculate and set the gap automatically based on the number of data points and the length of the x axis.
 
+#### .alwaysUseRounding([boolean])
+Set or get the flag which determines whether rounding is enabled when bars are centered (default: false).
+If false, using rounding with centered bars will result in a warning and rounding will be ignored.
+This flag has no effect if bars are not centered.
+
+When using standard d3.js rounding methods, the brush often doesn't align correctly with centered bars since the bars are offset.
+The rounding function must add an offset to compensate, such as in the following example.
+```js
+chart.round(function(n) {return Math.floor(n)+0.5});
+```
+
 ## Line Chart
 
 Includes [Stack Mixin](#stack-mixin), [Coordinate Grid Mixin](#coordinate-grid-mixin)
@@ -1296,6 +1307,9 @@ var chart1 = dc.rowChart("#chart-container1");
 var chart2 = dc.rowChart("#chart-container2", "chartGroupA");
 ```
 
+#### .renderTitleLabel(boolean)
+Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'
+
 #### .gap([gap])
 Get or set the vertical gap space between rows on a particular row chart instance. Default gap is 5px;
 
@@ -1307,7 +1321,10 @@ range when filtered.
 Get or set the x offset (horizontal space to the top left corner of a row) for labels on a particular row chart. Default x offset is 10px;
 
 #### .labelOffsetY([y])
-Get of set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart. Default y offset is 15px;
+Get or set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart. Default y offset is 15px;
+
+#### .titleLabelOffsetx([x])
+Get of set the x offset (horizontal space between right edge of row and right edge or text.   Default x offset is 2px;
 
 ## Legend
 Legend is a attachable widget that can be added to other dc charts to render horizontal legend labels.

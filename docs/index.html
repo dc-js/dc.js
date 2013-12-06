@@ -729,6 +729,13 @@ Padding equivlent in width to <code>padding * barWidth</code> will be added on e
 <h4 id="-gap-gapbetweenbars-">.gap(gapBetweenBars)</h4>
 <p>Manually set fixed gap (in px) between bars instead of relying on the default auto-generated gap. By default bar chart
 implementation will calculate and set the gap automatically based on the number of data points and the length of the x axis.</p>
+<h4 id="-alwaysuserounding-boolean-">.alwaysUseRounding([boolean])</h4>
+<p>Set or get the flag which determines whether rounding is enabled when bars are centered (default: false).
+If false, using rounding with centered bars will result in a warning and rounding will be ignored.
+This flag has no effect if bars are not centered.</p>
+<p>When using standard d3.js rounding methods, the brush often doesn’t align correctly with centered bars since the bars are offset.
+The rounding function must add an offset to compensate, such as in the following example.</p>
+<pre><code class="lang-js"><span class="transposed_variable">chart.</span><span class="built_in">round</span>(<span class="keyword">function</span>(n) <span class="cell">{return Math.floor(n)+<span class="number">0.5</span>}</span>);</code></pre>
 <h2 id="line-chart">Line Chart</h2>
 <p>Includes <a href="#stack-mixin">Stack Mixin</a>, <a href="#coordinate-grid-mixin">Coordinate Grid Mixin</a></p>
 <p>Concrete line/area chart implementation.</p>
@@ -1089,6 +1096,8 @@ function. x and y value specified here are relative to the underlying svg.</p>
 var chart1 = dc.rowChart(<span class="string">"#chart-container1"</span>);</span>
 // <span class="operator"><span class="keyword">create</span> a row chart under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
 var chart2 = dc.rowChart(<span class="string">"#chart-container2"</span>, <span class="string">"chartGroupA"</span>);</span></code></pre>
+<h4 id="-rendertitlelabel-boolean-">.renderTitleLabel(boolean)</h4>
+<p>Turn on/off Title label rendering (values) using SVG style of text-anchor ‘end’</p>
 <h4 id="-gap-gap-">.gap([gap])</h4>
 <p>Get or set the vertical gap space between rows on a particular row chart instance. Default gap is 5px;</p>
 <h4 id="-elasticx-boolean-">.elasticX([boolean])</h4>
@@ -1097,7 +1106,9 @@ range when filtered.</p>
 <h4 id="-labeloffsetx-x-">.labelOffsetX([x])</h4>
 <p>Get or set the x offset (horizontal space to the top left corner of a row) for labels on a particular row chart. Default x offset is 10px;</p>
 <h4 id="-labeloffsety-y-">.labelOffsetY([y])</h4>
-<p>Get of set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart. Default y offset is 15px;</p>
+<p>Get or set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart. Default y offset is 15px;</p>
+<h4 id="-titlelabeloffsetx-x-">.titleLabelOffsetx([x])</h4>
+<p>Get of set the x offset (horizontal space between right edge of row and right edge or text.   Default x offset is 2px;</p>
 <h2 id="legend">Legend</h2>
 <p>Legend is a attachable widget that can be added to other dc charts to render horizontal legend labels.</p>
 <pre><code class="lang-js">chart<span class="variable">.legend</span>(dc<span class="variable">.legend</span>()<span class="variable">.x</span>(<span class="number">400</span>)<span class="variable">.y</span>(<span class="number">10</span>)<span class="variable">.itemHeight</span>(<span class="number">13</span>)<span class="variable">.gap</span>(<span class="number">5</span>))</code></pre>
