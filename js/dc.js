@@ -2698,6 +2698,7 @@ dc.stackMixin = function (_chart) {
     _chart.hideStack = function (stackName) {
         var layer = findLayerByName(stackName);
         if (layer) layer.hidden = true;
+        return _chart;
     };
 
     /**
@@ -2709,6 +2710,7 @@ dc.stackMixin = function (_chart) {
     _chart.showStack = function (stackName) {
         var layer = findLayerByName(stackName);
         if (layer) layer.hidden = false;
+        return _chart;
     };
 
     _chart.getValueAccessorByIndex = function (index) {
