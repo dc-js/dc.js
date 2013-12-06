@@ -2,16 +2,16 @@
 
 var istanbul = require('istanbul');
 
-var jasmineCoverageJSON = './jasmine/coverage.json';
-var vowsCoverageJSON = './vows/coverage.json';
-var mergedOutputDir = './merged';
+var jasmineCoverageJSON = '../coverage/jasmine/coverage.json';
+var vowsCoverageJSON = '../coverage/vows/coverage.json';
+var mergedOutputDir = './coverage/merged';
 
 
 var jasmineFileCoverage = getDCFileCoverage(require(jasmineCoverageJSON));
 var vowsFileCoverage = getDCFileCoverage(require(vowsCoverageJSON));
 
 var mergedFileCoverage = istanbul.utils.mergeFileCoverage(jasmineFileCoverage, vowsFileCoverage);
-mergedFileCoverage.path = '../dc.js';
+mergedFileCoverage.path = './dc.js';
 var mergedCoverage = { './dc.js/dc.js': mergedFileCoverage };
 
 var collector = new istanbul.Collector();

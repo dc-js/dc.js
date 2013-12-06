@@ -181,10 +181,14 @@ module.exports = function (grunt) {
                 }
             },
             merge_coverage: {
-                command: "cd coverage && node merge_coverage.js",
+                command: "NODE_PATH=`npm -g root` node scripts/merge_coverage.js",
                 options: {
                   stdout: true
                 }
+            },
+            hooks: {
+                command: 'cp -n scripts/pre-commit.sh .git/hooks/pre-commit' +
+                    ' || echo "Cowardly refusing to overwrite your existing git pre-commit hook."'
             }
         }
     });
@@ -241,7 +245,7 @@ module.exports = function (grunt) {
     grunt.registerTask('build', ['concat', 'uglify', 'sed']);
     grunt.registerTask('docs', ['build', 'copy', 'emu', 'toc', 'markdown', 'docco']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
-    grunt.registerTask('test', ['docs', 'vows:tests', 'jasmine:specs']);
+    grunt.registerTask('test', ['docs', 'vows:tests', 'jasmine:specs', 'shell:hooks']);
     grunt.registerTask('vows:coverage', ['shell:vows_coverage']);
     grunt.registerTask('coverage', ['vows:coverage', 'jasmine:coverage', 'shell:merge_coverage']);
     grunt.registerTask('lint', ['build', 'jshint']);
