@@ -401,7 +401,7 @@ describe('dc.barChart', function() {
                 it('should automatically size the bar widths', function() {
                     forEachBar(function (bar) {
                         expect(bar.attr("width")).toBe("9");
-                    })
+                    });
                 });
 
                 it('should generate negative bars for stack 0', function () {

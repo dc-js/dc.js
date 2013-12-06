@@ -121,7 +121,7 @@ describe('dc.boxPlot', function() {
 
         describe('when a box has no data', function() {
             beforeEach(function() {
-                var otherDimension = data.dimension(function (d) { return d.countrycode; })
+                var otherDimension = data.dimension(function (d) { return d.countrycode; });
                 otherDimension.filter("US");
                 chart.redraw();
             });

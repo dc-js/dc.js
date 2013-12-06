@@ -839,7 +839,7 @@ dc.baseMixin = function (_chart) {
             } else {
                 dc.logger.debug("Not a valid option setter name: " + o);
             }
-        };
+        }
         return _chart;
     };
 

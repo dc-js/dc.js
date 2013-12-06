@@ -1,6 +1,6 @@
 describe('dc.coordinateGridChart', function() {
     var chart, id;
-    var data, dimension, group
+    var data, dimension, group;
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());

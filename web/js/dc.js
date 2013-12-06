@@ -1360,7 +1360,7 @@ dc.baseMixin = function (_chart) {
             } else {
                 dc.logger.debug("Not a valid option setter name: " + o);
             }
-        };
+        }
         return _chart;
     };
 
@@ -5816,7 +5816,7 @@ dc.rowChart = function (parent, chartGroup) {
                     });
             dc.transition(titlelab, _chart.transitionDuration())
                 .attr("transform", translateX);
-            }
+        }
     }
 
     /**
@@ -5828,7 +5828,7 @@ dc.rowChart = function (parent, chartGroup) {
         if (!arguments.length) return _renderTitleLabel;
         _renderTitleLabel = _;
         return _chart;
-    }
+    };
 
     function onClick(d) {
         _chart.onClick(d);
