@@ -114,10 +114,6 @@ describe('dc.coordinateGridChart', function() {
             expect(chart.valueAccessor()).not.toBeNull();
         });
 
-        it('should place an x axis at the bottom', function () {
-            expect(chart.select("g.x").attr("transform")).toBe("translate(0,150)");
-        });
-
         describe('renderlets', function () {
             beforeEach(function () {
                 chart.renderlet(function (chart) {
@@ -176,6 +172,37 @@ describe('dc.coordinateGridChart', function() {
                     expect(e instanceof dc.errors.InvalidStateException).toBeTruthy();
                     expect(e.message).toMatch(/Mandatory attribute chart.x is missing on chart\[#.+\]/);
                 }
+            });
+        });
+
+        describe("x-axis", function() {
+            it('should place an x axis at the bottom', function () {
+                expect(chart.select("g.x").attr("transform")).toBe("translate(0,150)");
+            });
+
+            describe("labels", function() {
+                beforeEach(function() {
+                    expect(chart.effectiveHeight()).toBe(130);
+                    chart.xAxisLabel("X Label").render();
+                });
+
+                it("should set the x-axis label", function() {
+                    expect(chart.selectAll("text.x-axis-label").text()).toBe("X Label");
+                });
+
+                it("should adjust the chart height accordingly due to label padding", function() {
+                    expect(chart.effectiveHeight()).toBe(118);
+                });
+
+                describe("with custom padding", function() {
+                    beforeEach(function() {
+                        chart.xAxisLabel("Custom X Label", 50).render();
+                    });
+
+                    it("should adjust the chart height with respect to the custom padding", function() {
+                        expect(chart.effectiveHeight()).toBe(80);
+                    });
+                });
             });
         });
 
@@ -280,6 +307,7 @@ describe('dc.coordinateGridChart', function() {
 
                 describe('y-axis labels', function () {
                     beforeEach(function () {
+                        expect(chart.effectiveWidth()).toBe(490);
                         chart.yAxisLabel("The Y Axis Label").render();
                     });
 
@@ -287,8 +315,22 @@ describe('dc.coordinateGridChart', function() {
                         expect(chart.selectAll('text.y-axis-label.y-label').text()).toBe("The Y Axis Label");
                     });
 
+                    it("should change the effective width of the chart due to padding", function() {
+                        expect(chart.effectiveWidth()).toBe(478);
+                    });
+
                     it('should position the label to the left of the chart', function () {
                         expect(chart.selectAll('text.y-axis-label.y-label').attr("transform")).toBe("translate(12,85),rotate(-90)");
+                    });
+
+                    describe("with custom padding", function() {
+                        beforeEach(function() {
+                            chart.yAxisLabel("Custom Y Label", 50).render();
+                        });
+
+                        it("should adjust the chart height with respect to the custom padding", function() {
+                            expect(chart.effectiveWidth()).toBe(440);
+                        });
                     });
                 });
             });
@@ -312,6 +354,7 @@ describe('dc.coordinateGridChart', function() {
 
                 describe('y-axis labels', function () {
                     beforeEach(function () {
+                        expect(chart.effectiveWidth()).toBe(490);
                         chart.yAxisLabel("Right Y Axis Label").render();
                     });
 
@@ -319,8 +362,22 @@ describe('dc.coordinateGridChart', function() {
                         expect(chart.selectAll('text.y-axis-label.y-label').text()).toBe("Right Y Axis Label");
                     });
 
+                    it("should change the effective width of the chart due to padding", function() {
+                        expect(chart.effectiveWidth()).toBe(478);
+                    });
+
                     it('should position the label to the right of the chart', function () {
                         expect(chart.selectAll('text.y-axis-label.y-label').attr("transform")).toBe("translate(488,85),rotate(90)");
+                    });
+
+                    describe("with custom padding", function() {
+                        beforeEach(function() {
+                            chart.yAxisLabel("Custom Y Label", 50).render();
+                        });
+
+                        it("should adjust the chart height with respect to the custom padding", function() {
+                            expect(chart.effectiveWidth()).toBe(440);
+                        });
                     });
                 });
             });
