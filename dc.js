@@ -395,6 +395,34 @@ dc.utils.appendOrSelect = function (parent, name) {
 
 dc.utils.safeNumber = function(n){return dc.utils.isNumber(+n)?+n:0;};
 
+dc.logger = {};
+
+dc.logger.enableDebugLog = false;
+
+dc.logger.warn = function (msg) {
+    if (console) {
+        if (console.warn) {
+            console.warn(msg);
+        } else if (console.log) {
+            console.log(msg);
+        }
+    }
+
+    return dc.logger;
+};
+
+dc.logger.debug = function (msg) {
+    if (dc.logger.enableDebugLog && console) {
+        if (console.debug) {
+            console.debug(msg);
+        } else if (console.log) {
+            console.log(msg);
+        }
+    }
+
+    return dc.logger;
+};
+
 dc.events = {
     current: null
 };
@@ -3551,7 +3579,7 @@ dc.barChart = function (parent, chartGroup) {
 
     dc.override(_chart, 'render', function () {
         if (_chart.round() && _centerBar && !_alwaysUseRounding) {
-            console.warn("By default, brush rounding is disabled if bars are centered. " +
+            dc.logger.warn("By default, brush rounding is disabled if bars are centered. " +
                          "See dc.js bar chart API documentation for details.");
         }
 
