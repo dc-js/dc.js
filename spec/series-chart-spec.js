@@ -28,6 +28,7 @@ describe('dc.seriesChart', function() {
             .seriesAccessor(function(d) { return +d.key[0];})
             .keyAccessor(function(d) { return +d.key[1];})
             .valueAccessor(function(d) { return +d.value ;})
+            .chartOptions({renderArea: true, dashStyle: [3, 1, 1]})
             .transitionDuration(0);
     });
 
@@ -69,4 +70,22 @@ describe('dc.seriesChart', function() {
             expect(d3.select(lines[0][0]).attr("d")).toBe("M0,43L130,0");
         });
     });
+
+    describe('chart options', function () {
+        beforeEach(function() {
+            chart.render();
+        });
+
+        it('should apply options to all lines in the chart', function () {
+            var lines = chart.selectAll("path.line");
+            var areas = chart.selectAll("path.area");
+
+            expect(d3.select(lines[0][0]).attr("stroke-dasharray")).toBe("3,1,1");
+            expect(d3.select(lines[0][1]).attr("stroke-dasharray")).toBe("3,1,1");
+
+            expect(d3.select(areas[0][0]).attr("fill")).toBe("#000001");
+            expect(d3.select(areas[0][1]).attr("fill")).toBe("#000002");
+        });
+    });
+
 });
