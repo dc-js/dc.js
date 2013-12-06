@@ -318,8 +318,7 @@ describe('dc.barChart', function() {
                 describe('stack hiding', function () {
                     describe('first stack', function () {
                         beforeEach(function () {
-                            chart.hideStack("stack 0");
-                            chart.render();
+                            chart.hideStack("stack 0").render();
                         });
 
                         it('should hide the stack', function () {
@@ -328,8 +327,7 @@ describe('dc.barChart', function() {
                         });
 
                         it('should show the stack', function () {
-                            chart.showStack("stack 0");
-                            chart.render();
+                            chart.showStack("stack 0").render();
                             expect(nthStack(0).nthBar(0).attr("height")).toBe('1');
                             expect(nthStack(0).nthBar(1).attr("height")).toBe('6');
                         });
@@ -338,8 +336,7 @@ describe('dc.barChart', function() {
                     describe('any other stack', function () {
                         beforeEach(function () {
                             chart.title("stack 2", function (d) { return "stack 2: " + d.value; });
-                            chart.hideStack("stack 1");
-                            chart.render();
+                            chart.hideStack("stack 1").render();
                         });
 
                         it('should hide the stack', function () {
@@ -348,8 +345,7 @@ describe('dc.barChart', function() {
                         });
 
                         it('should show the stack', function () {
-                            chart.showStack("stack 1");
-                            chart.render();
+                            chart.showStack("stack 1").render();
                             expect(nthStack(1).nthBar(0).attr("height")).toBe('46');
                             expect(nthStack(1).nthBar(1).attr("height")).toBe('70');
                         });
@@ -363,10 +359,10 @@ describe('dc.barChart', function() {
 
                     describe('hiding all the stacks', function () {
                         beforeEach(function () {
-                            chart.hideStack("stack 0");
-                            chart.hideStack("stack 1");
-                            chart.hideStack("stack 2");
-                            chart.render();
+                            chart.hideStack("stack 0")
+                                .hideStack("stack 1")
+                                .hideStack("stack 2")
+                                .render();
                         });
 
                         it('should show a blank graph', function () {

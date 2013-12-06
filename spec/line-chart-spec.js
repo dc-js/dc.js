@@ -370,8 +370,7 @@ describe('dc.lineChart', function() {
                 describe('stack hiding', function () {
                     describe('first stack', function () {
                         beforeEach(function () {
-                            chart.hideStack("stack 0");
-                            chart.render();
+                            chart.hideStack("stack 0").render();
                         });
 
                         it('should hide the stack', function () {
@@ -379,8 +378,7 @@ describe('dc.lineChart', function() {
                         });
 
                         it('should show the stack', function () {
-                            chart.showStack("stack 0");
-                            chart.render();
+                            chart.showStack("stack 0").render();
                             expect(chart.select('g._0 path.line').attr("d")).toMatch(/M58\.\d+,159L222\.\d+,157L246\.\d+,150L492\.\d+,158L597\.\d+,151L961\.\d+,153/);
                         });
                     });
@@ -388,8 +386,7 @@ describe('dc.lineChart', function() {
                     describe('any other stack', function () {
                         beforeEach(function () {
                             chart.title("stack 2", function (d) { return "stack 2: " + d.value; });
-                            chart.hideStack("stack 1");
-                            chart.render();
+                            chart.hideStack("stack 1").render();
                         });
 
                         it('should hide the stack', function () {
@@ -397,8 +394,7 @@ describe('dc.lineChart', function() {
                         });
 
                         it('should show the stack', function () {
-                            chart.showStack("stack 1");
-                            chart.render();
+                            chart.showStack("stack 1").render();
                             expect(chart.select('g._1 path.line').attr("d")).toMatch(/M58\.\d+,134L222\.\d+,119L246\.\d+,75L492\.\d+,133L597\.\d+,120L961\.\d+,109/);
                         });
 
@@ -417,10 +413,10 @@ describe('dc.lineChart', function() {
 
                     describe('hiding all the stacks', function () {
                         beforeEach(function () {
-                            chart.hideStack("stack 0");
-                            chart.hideStack("stack 1");
-                            chart.hideStack("stack 2");
-                            chart.render();
+                            chart.hideStack("stack 0")
+                                .hideStack("stack 1")
+                                .hideStack("stack 2")
+                                .render();
                         });
 
                         it('should show a blank graph', function () {
