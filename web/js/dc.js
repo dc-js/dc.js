@@ -1974,7 +1974,7 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    _chart.prepareYAxis = function(g) {
+    _chart._prepareYAxis = function(g) {
         if (_y === undefined || _chart.elasticY()) {
             _y = d3.scale.linear();
             _y.domain([_chart.yAxisMin(), _chart.yAxisMax()]).rangeRound([_chart.yAxisHeight(), 0]);
@@ -2278,9 +2278,6 @@ dc.coordinateGridMixin = function (_chart) {
     }
 
     _chart.renderBrush = function (g) {
-        if (_chart.isOrdinal())
-            _brushOn = false;
-
         if (_brushOn) {
             _brush.on("brush", _chart._brushing);
             _brush.on("brushstart", _chart._disableMouseZoom);
@@ -2431,8 +2428,11 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function drawChart (render) {
+        if (_chart.isOrdinal())
+            _brushOn = false;
+
         prepareXAxis(_chart.g());
-        _chart.prepareYAxis(_chart.g());
+        _chart._prepareYAxis(_chart.g());
 
         _chart.plotData();
 
@@ -2709,16 +2709,6 @@ dc.stackMixin = function (_chart) {
     _chart.showStack = function (stackName) {
         var layer = findLayerByName(stackName);
         if (layer) layer.hidden = false;
-    };
-
-    _chart.allGroups = function () {
-        return _stack.map(dc.pluck('group'));
-    };
-
-    _chart.allValueAccessors = function () {
-        return _stack.map(function(layer) {
-            return layer.accessor || _chart.valueAccessor();
-        });
     };
 
     _chart.getValueAccessorByIndex = function (index) {
@@ -3888,6 +3878,7 @@ dc.lineChart = function (parent, chartGroup) {
     var _dashStyle;
 
     _chart.transitionDuration(500);
+    _chart._rangeBandPadding(1);
 
     _chart.plotData = function () {
         var chartBody = _chart.chartBodyG();
@@ -4024,7 +4015,6 @@ dc.lineChart = function (parent, chartGroup) {
 
     function drawDots(chartBody, layers) {
         if (!_chart.brushOn()) {
-
             var tooltipListClass = TOOLTIP_G_CLASS + "-list";
             var tooltips = chartBody.select("g." + tooltipListClass);
 
@@ -4140,7 +4130,7 @@ dc.lineChart = function (parent, chartGroup) {
 
     Example:
     ```
-    chart.renderDataPoints([{radius: 2, fillOpacity: 0.8, strokeOpacity: 0.8}])
+    chart.renderDataPoints({radius: 2, fillOpacity: 0.8, strokeOpacity: 0.8})
     ```
     **/
     _chart.renderDataPoints = function (options) {
@@ -4679,7 +4669,7 @@ dc.compositeChart = function (parent, chartGroup) {
         }
     };
 
-    _chart.prepareYAxis = function () {
+    _chart._prepareYAxis = function () {
         if (leftYAxisChildren().length !== 0) { prepareLeftYAxis(); }
         if (rightYAxisChildren().length !== 0) { prepareRightYAxis(); }
     };

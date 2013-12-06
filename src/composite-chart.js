@@ -80,7 +80,7 @@ dc.compositeChart = function (parent, chartGroup) {
         }
     };
 
-    _chart.prepareYAxis = function () {
+    _chart._prepareYAxis = function () {
         if (leftYAxisChildren().length !== 0) { prepareLeftYAxis(); }
         if (rightYAxisChildren().length !== 0) { prepareRightYAxis(); }
     };

@@ -414,7 +414,7 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    _chart.prepareYAxis = function(g) {
+    _chart._prepareYAxis = function(g) {
         if (_y === undefined || _chart.elasticY()) {
             _y = d3.scale.linear();
             _y.domain([_chart.yAxisMin(), _chart.yAxisMax()]).rangeRound([_chart.yAxisHeight(), 0]);
@@ -718,9 +718,6 @@ dc.coordinateGridMixin = function (_chart) {
     }
 
     _chart.renderBrush = function (g) {
-        if (_chart.isOrdinal())
-            _brushOn = false;
-
         if (_brushOn) {
             _brush.on("brush", _chart._brushing);
             _brush.on("brushstart", _chart._disableMouseZoom);
@@ -871,8 +868,11 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function drawChart (render) {
+        if (_chart.isOrdinal())
+            _brushOn = false;
+
         prepareXAxis(_chart.g());
-        _chart.prepareYAxis(_chart.g());
+        _chart._prepareYAxis(_chart.g());
 
         _chart.plotData();
 

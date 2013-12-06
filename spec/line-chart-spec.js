@@ -261,7 +261,7 @@ describe('dc.lineChart', function() {
             });
 
             it('should generate an ordinal path', function () {
-                expect(chart.select("path.line").attr("d")).toMatch(/M72.\d+,0L218.\d+,107L364.\d+,107L510(\.\d+)?,53L655.\d+,107L801.\d+,53/);
+                expect(chart.select("path.line").attr("d")).toMatch(/M85,0L255,107L425,107L595,53L765,107L935,53/);
             });
         });
 

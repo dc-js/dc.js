@@ -121,16 +121,6 @@ dc.stackMixin = function (_chart) {
         if (layer) layer.hidden = false;
     };
 
-    _chart.allGroups = function () {
-        return _stack.map(dc.pluck('group'));
-    };
-
-    _chart.allValueAccessors = function () {
-        return _stack.map(function(layer) {
-            return layer.accessor || _chart.valueAccessor();
-        });
-    };
-
     _chart.getValueAccessorByIndex = function (index) {
         return _stack[index].accessor || _chart.valueAccessor();
     };

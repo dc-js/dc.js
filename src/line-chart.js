@@ -53,6 +53,7 @@ dc.lineChart = function (parent, chartGroup) {
     var _dashStyle;
 
     _chart.transitionDuration(500);
+    _chart._rangeBandPadding(1);
 
     _chart.plotData = function () {
         var chartBody = _chart.chartBodyG();
@@ -189,7 +190,6 @@ dc.lineChart = function (parent, chartGroup) {
 
     function drawDots(chartBody, layers) {
         if (!_chart.brushOn()) {
-
             var tooltipListClass = TOOLTIP_G_CLASS + "-list";
             var tooltips = chartBody.select("g." + tooltipListClass);
 
@@ -305,7 +305,7 @@ dc.lineChart = function (parent, chartGroup) {
 
     Example:
     ```
-    chart.renderDataPoints([{radius: 2, fillOpacity: 0.8, strokeOpacity: 0.8}])
+    chart.renderDataPoints({radius: 2, fillOpacity: 0.8, strokeOpacity: 0.8})
     ```
     **/
     _chart.renderDataPoints = function (options) {
