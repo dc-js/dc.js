@@ -44,7 +44,8 @@ dc.compositeChart = function (parent, chartGroup) {
     var _rightYAxis = d3.svg.axis(),
         _rightYAxisLabel = 0,
         _rightYAxisLabelPadding = DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING,
-        _rightY;
+        _rightY,
+        _rightAxisGridLines = false;
 
     _chart._mandatoryAttributes([]);
     _chart.transitionDuration(500);
@@ -83,6 +84,13 @@ dc.compositeChart = function (parent, chartGroup) {
     _chart._prepareYAxis = function () {
         if (leftYAxisChildren().length !== 0) { prepareLeftYAxis(); }
         if (rightYAxisChildren().length !== 0) { prepareRightYAxis(); }
+
+        if (leftYAxisChildren().length > 0 && !_rightAxisGridLines) {
+            _chart._renderHorizontalGridLinesForAxis(_chart.g(), _chart.y(), _chart.yAxis());
+        }
+        else if (rightYAxisChildren().length > 0) {
+            _chart._renderHorizontalGridLinesForAxis(_chart.g(), _rightY, _rightYAxis);
+        }
     };
 
     _chart.renderYAxis = function () {
@@ -155,6 +163,19 @@ dc.compositeChart = function (parent, chartGroup) {
 
             child._activateRenderlets();
         }
+    };
+
+    /**
+    #### .useRightAxisGridLines(bool)
+    Get or set whether to draw gridlines from the right y axis.
+    Drawing from the left y axis is the default behavior. This option is only respected when
+    subcharts with both left and right y-axes are present.
+    **/
+    _chart.useRightAxisGridLines = function(_) {
+        if (!arguments) return _rightAxisGridLines;
+
+        _rightAxisGridLines = _;
+        return _chart;
     };
 
     /**
