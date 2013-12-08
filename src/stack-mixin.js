@@ -226,7 +226,7 @@ dc.stackMixin = function (_chart) {
 
     _chart.legendables = function () {
         return _stack.map(function (layer, i) {
-            return {chart:_chart, name:layer.name, color:_chart.getColor.call(layer,layer.values,i)};
+            return {chart:_chart, name:layer.name, hidden: layer.hidden || false, color:_chart.getColor.call(layer,layer.values,i)};
         });
     };
 
