@@ -925,6 +925,10 @@ A newly created composite chart instance</p>
 var compositeChart1 = dc.compositeChart(<span class="string">"#chart-container1"</span>);</span>
 // <span class="operator"><span class="keyword">create</span> a composite chart under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
 var compositeChart2 = dc.compositeChart(<span class="string">"#chart-container2"</span>, <span class="string">"chartGroupA"</span>);</span></code></pre>
+<h4 id="-userightaxisgridlines-bool-">.useRightAxisGridLines(bool)</h4>
+<p>Get or set whether to draw gridlines from the right y axis.
+Drawing from the left y axis is the default behavior. This option is only respected when
+subcharts with both left and right y-axes are present.</p>
 <h4 id="-childoptions-object-">.childOptions({object})</h4>
 <p>Get or set chart-specific options for all child charts. This is equivalent to calling <code>.options</code> on each child chart.</p>
 <h4 id="-rightyaxislabel-labeltext-">.rightYAxisLabel([labelText])</h4>

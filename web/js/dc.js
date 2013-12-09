@@ -1986,7 +1986,7 @@ dc.coordinateGridMixin = function (_chart) {
         if (_useRightYAxis)
             _yAxis.orient("right");
 
-        renderHorizontalGridLines(g);
+        _chart._renderHorizontalGridLinesForAxis(g, _y, _yAxis);
     };
 
     _chart.renderYAxisLabel = function(axisClass, text, rotation, labelXPosition) {
@@ -2026,11 +2026,11 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.renderYAxisLabel("y", _chart.yAxisLabel(), rotation, labelPosition);
     };
 
-    function renderHorizontalGridLines(g) {
+    _chart._renderHorizontalGridLinesForAxis = function (g, scale, axis) {
         var gridLineG = g.selectAll("g." + HORIZONTAL_CLASS);
 
         if (_renderHorizontalGridLine) {
-            var ticks = _yAxis.tickValues() ? _yAxis.tickValues() : _y.ticks(_yAxis.ticks()[0]);
+            var ticks = axis.tickValues() ? axis.tickValues() : scale.ticks(axis.ticks()[0]);
 
             if (gridLineG.empty()) {
                 gridLineG = g.insert("g", ":first-child")
@@ -2046,11 +2046,11 @@ dc.coordinateGridMixin = function (_chart) {
                 .append("line")
                 .attr("x1", 1)
                 .attr("y1", function (d) {
-                    return _y(d);
+                    return scale(d);
                 })
                 .attr("x2", _chart.xAxisLength())
                 .attr("y2", function (d) {
-                    return _y(d);
+                    return scale(d);
                 })
                 .attr("opacity", 0);
             dc.transition(linesGEnter, _chart.transitionDuration())
@@ -2060,11 +2060,11 @@ dc.coordinateGridMixin = function (_chart) {
             dc.transition(lines, _chart.transitionDuration())
                 .attr("x1", 1)
                 .attr("y1", function (d) {
-                    return _y(d);
+                    return scale(d);
                 })
                 .attr("x2", _chart.xAxisLength())
                 .attr("y2", function (d) {
-                    return _y(d);
+                    return scale(d);
                 });
 
             // exit
@@ -2073,7 +2073,7 @@ dc.coordinateGridMixin = function (_chart) {
         else {
             gridLineG.selectAll("line").remove();
         }
-    }
+    };
 
     _chart._yAxisX = function () {
         return _chart.useRightYAxis() ? _chart.width() - _chart.margins().right : _chart.margins().left;
@@ -4635,7 +4635,8 @@ dc.compositeChart = function (parent, chartGroup) {
     var _rightYAxis = d3.svg.axis(),
         _rightYAxisLabel = 0,
         _rightYAxisLabelPadding = DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING,
-        _rightY;
+        _rightY,
+        _rightAxisGridLines = false;
 
     _chart._mandatoryAttributes([]);
     _chart.transitionDuration(500);
@@ -4674,6 +4675,13 @@ dc.compositeChart = function (parent, chartGroup) {
     _chart._prepareYAxis = function () {
         if (leftYAxisChildren().length !== 0) { prepareLeftYAxis(); }
         if (rightYAxisChildren().length !== 0) { prepareRightYAxis(); }
+
+        if (leftYAxisChildren().length > 0 && !_rightAxisGridLines) {
+            _chart._renderHorizontalGridLinesForAxis(_chart.g(), _chart.y(), _chart.yAxis());
+        }
+        else if (rightYAxisChildren().length > 0) {
+            _chart._renderHorizontalGridLinesForAxis(_chart.g(), _rightY, _rightYAxis);
+        }
     };
 
     _chart.renderYAxis = function () {
@@ -4746,6 +4754,19 @@ dc.compositeChart = function (parent, chartGroup) {
 
             child._activateRenderlets();
         }
+    };
+
+    /**
+    #### .useRightAxisGridLines(bool)
+    Get or set whether to draw gridlines from the right y axis.
+    Drawing from the left y axis is the default behavior. This option is only respected when
+    subcharts with both left and right y-axes are present.
+    **/
+    _chart.useRightAxisGridLines = function(_) {
+        if (!arguments) return _rightAxisGridLines;
+
+        _rightAxisGridLines = _;
+        return _chart;
     };
 
     /**

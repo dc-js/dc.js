@@ -426,7 +426,7 @@ dc.coordinateGridMixin = function (_chart) {
         if (_useRightYAxis)
             _yAxis.orient("right");
 
-        renderHorizontalGridLines(g);
+        _chart._renderHorizontalGridLinesForAxis(g, _y, _yAxis);
     };
 
     _chart.renderYAxisLabel = function(axisClass, text, rotation, labelXPosition) {
@@ -466,11 +466,11 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.renderYAxisLabel("y", _chart.yAxisLabel(), rotation, labelPosition);
     };
 
-    function renderHorizontalGridLines(g) {
+    _chart._renderHorizontalGridLinesForAxis = function (g, scale, axis) {
         var gridLineG = g.selectAll("g." + HORIZONTAL_CLASS);
 
         if (_renderHorizontalGridLine) {
-            var ticks = _yAxis.tickValues() ? _yAxis.tickValues() : _y.ticks(_yAxis.ticks()[0]);
+            var ticks = axis.tickValues() ? axis.tickValues() : scale.ticks(axis.ticks()[0]);
 
             if (gridLineG.empty()) {
                 gridLineG = g.insert("g", ":first-child")
@@ -486,11 +486,11 @@ dc.coordinateGridMixin = function (_chart) {
                 .append("line")
                 .attr("x1", 1)
                 .attr("y1", function (d) {
-                    return _y(d);
+                    return scale(d);
                 })
                 .attr("x2", _chart.xAxisLength())
                 .attr("y2", function (d) {
-                    return _y(d);
+                    return scale(d);
                 })
                 .attr("opacity", 0);
             dc.transition(linesGEnter, _chart.transitionDuration())
@@ -500,11 +500,11 @@ dc.coordinateGridMixin = function (_chart) {
             dc.transition(lines, _chart.transitionDuration())
                 .attr("x1", 1)
                 .attr("y1", function (d) {
-                    return _y(d);
+                    return scale(d);
                 })
                 .attr("x2", _chart.xAxisLength())
                 .attr("y2", function (d) {
-                    return _y(d);
+                    return scale(d);
                 });
 
             // exit
@@ -513,7 +513,7 @@ dc.coordinateGridMixin = function (_chart) {
         else {
             gridLineG.selectAll("line").remove();
         }
-    }
+    };
 
     _chart._yAxisX = function () {
         return _chart.useRightYAxis() ? _chart.width() - _chart.margins().right : _chart.margins().left;

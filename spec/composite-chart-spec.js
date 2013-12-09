@@ -155,11 +155,6 @@ describe('dc.compositeChart', function() {
             expect(d3.select(chart.selectAll('g.sub')[0][1]).attr('class')).toBe('sub _1');
         });
 
-        it('should only render a left y axis', function () {
-            expect(chart.selectAll('.axis.y').empty()).toBeFalsy();
-            expect(chart.selectAll('.axis.yr').empty()).toBeTruthy();
-        });
-
         it('should generate sub line chart paths', function () {
             expect(chart.selectAll('g.sub path.line').size()).not.toBe(0);
             chart.selectAll('g.sub path.line').each(function(d, i) {
@@ -420,63 +415,111 @@ describe('dc.compositeChart', function() {
         });
     });
 
-    describe('when using a right y-axis', function () {
-        var rightChart;
+    describe('the y-axes', function() {
+        describe('when composing charts with both left and right y-axes', function () {
+            var rightChart;
 
-        beforeEach(function () {
-            chart
-                .compose([
-                    dc.barChart(chart)
-                        .group(dateValueSumGroup, 'Date Value Group'),
-                    rightChart = dc.lineChart(chart)
-                        .group(dateIdSumGroup, 'Date ID Group')
-                        .stack(dateValueSumGroup, 'Date Value Group')
-                        .stack(dateValueSumGroup, 'Date Value Group')
-                        .useRightYAxis(true)
-                ])
-                .render();
-        });
-
-        it('should render two y-axes', function () {
-            expect(chart.selectAll('.axis').size()).toBe(3);
-        });
-
-        it('should render a right and a left label', function () {
-            chart.yAxisLabel("Left Label").rightYAxisLabel("Right Label").render();
-
-            expect(chart.selectAll('.y-axis-label').size()).toBe(2);
-            expect(chart.selectAll('.y-axis-label.y-label').empty()).toBeFalsy();
-            expect(chart.selectAll('.y-axis-label.yr-label').empty()).toBeFalsy();
-        });
-
-        it('should scale "right" charts according to the right y-axis' , function () {
-            expect(rightChart.y()).toBe(chart.rightY());
-        });
-
-        it('should set the domain of the right axis', function () {
-            expect(rightChart.yAxisMin()).toBe(0);
-            expect(rightChart.yAxisMax()).toBe(281);
-        });
-
-        it('domain', function () {
-            expect(chart.rightY().domain()).toEqual([0, 281]);
-            expect(chart.y().domain()).toEqual([0, 132]);
-        });
-
-        it('should set "right" chart y-axes to the composite chart right y-axis', function () {
-            expect(rightChart.yAxis()).toBe(chart.rightYAxis());
-        });
-
-        describe('when only right y-axis sub charts are present', function () {
             beforeEach(function () {
-                chart.compose([rightChart]).render();
+                chart
+                    .compose([
+                        dc.barChart(chart)
+                            .group(dateValueSumGroup, 'Date Value Group'),
+                        rightChart = dc.lineChart(chart)
+                            .group(dateIdSumGroup, 'Date ID Group')
+                            .stack(dateValueSumGroup, 'Date Value Group')
+                            .stack(dateValueSumGroup, 'Date Value Group')
+                            .useRightYAxis(true)
+                    ])
+                    .render();
+            });
+
+            it('should render two y-axes', function () {
+                expect(chart.selectAll('.axis').size()).toBe(3);
+            });
+
+            it('should render a right and a left label', function () {
+                chart.yAxisLabel("Left Label").rightYAxisLabel("Right Label").render();
+
+                expect(chart.selectAll('.y-axis-label').size()).toBe(2);
+                expect(chart.selectAll('.y-axis-label.y-label').empty()).toBeFalsy();
+                expect(chart.selectAll('.y-axis-label.yr-label').empty()).toBeFalsy();
+            });
+
+            it('should scale "right" charts according to the right y-axis' , function () {
+                expect(rightChart.y()).toBe(chart.rightY());
+            });
+
+            it('should set the domain of the right axis', function () {
+                expect(rightChart.yAxisMin()).toBe(0);
+                expect(rightChart.yAxisMax()).toBe(281);
+            });
+
+            it('domain', function () {
+                expect(chart.rightY().domain()).toEqual([0, 281]);
+                expect(chart.y().domain()).toEqual([0, 132]);
+            });
+
+            it('should set "right" chart y-axes to the composite chart right y-axis', function () {
+                expect(rightChart.yAxis()).toBe(chart.rightYAxis());
+            });
+
+            describe('horizontal gridlines', function() {
+                beforeEach(function() {
+                    chart.yAxis().ticks(3);
+                    chart.rightYAxis().ticks(6);
+                    chart.renderHorizontalGridLines(true).render();
+                });
+
+                it('should draw left horizontal gridlines by default', function() {
+                    expect(chart.selectAll('.grid-line.horizontal line').size()).toBe(3);
+                });
+
+                it('should allow right horizontal gridlines to be used', function() {
+                    chart.useRightAxisGridLines(true).render();
+                    expect(chart.selectAll('.grid-line.horizontal line').size()).toBe(6);
+                });
+            });
+        });
+
+        describe('when composing charts with just a left axis', function() {
+            beforeEach(function() {
+                chart.yAxis().ticks(4);
+                chart.compose([
+                    dc.lineChart(chart).group(dateGroup)
+                ]).renderHorizontalGridLines(true).render();
+            });
+
+            it('should only render a left y axis', function () {
+                expect(chart.selectAll('.axis.y').empty()).toBeFalsy();
+                expect(chart.selectAll('.axis.yr').empty()).toBeTruthy();
+            });
+
+            it('should only draw left horizontal gridlines', function () {
+                expect(chart.selectAll('.grid-line.horizontal line').size()).toBe(4);
+            });
+        });
+
+        describe('when composing charts with just a right axis', function() {
+            beforeEach(function () {
+                chart.yAxis().ticks(7);
+                chart.compose([
+                    dc.lineChart(chart).group(dateGroup).useRightYAxis(true)
+                ]).renderHorizontalGridLines(true).render();
             });
 
             it('should only render a right y axis', function () {
                 expect(chart.selectAll('.axis.y').empty()).toBeTruthy();
                 expect(chart.selectAll('.axis.yr').empty()).toBeFalsy();
             });
+
+            it('should only draw the right horizontal gridlines', function () {
+                expect(chart.selectAll('.grid-line.horizontal line').size()).toBe(7);
+            });
         });
+
+        function nthGridLine(n) {
+            return d3.select(chart.selectAll('.grid-line.horizontal line')[0][n]);
+        }
     });
 
     describe('sub-charts with different filter types', function() {
