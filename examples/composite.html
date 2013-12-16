@@ -41,6 +41,7 @@ q.await(function(error, exp1, exp2) {
         .x(d3.scale.linear().domain([0,20]))
         .yAxisLabel("The Y Axis")
         .legend(dc.legend().x(80).y(20).itemHeight(13).gap(5))
+        .renderHorizontalGridLines(true)
         .compose([
             dc.lineChart(composite)
                 .dimension(dim)
