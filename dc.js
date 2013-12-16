@@ -4059,6 +4059,7 @@ dc.lineChart = function (parent, chartGroup) {
                     .attr("cy", function (d) {
                         return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
                     })
+                    .attr("fill", _chart.getColor)
                     .select("title").text(dc.pluck('data', _chart.title(d.name)));
 
                 dots.exit().remove();
