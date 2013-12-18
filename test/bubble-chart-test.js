@@ -37,7 +37,6 @@ function buildChart(id) {
         .renderTitle(true)
         .title(function (p) {
             return p.key + ": {count:" + p.value.count + ",value:" + p.value.value + "}";
-
         });
     chart.render();
     return chart;

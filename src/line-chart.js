@@ -211,6 +211,12 @@ dc.lineChart = function (parent, chartGroup) {
                     .append("circle")
                     .attr("class", DOT_CIRCLE_CLASS)
                     .attr("r", getDotRadius())
+                    .attr("cx", function (d) {
+                        return dc.utils.safeNumber(_chart.x()(d.x));
+                    })
+                    .attr("cy", function (d) {
+                        return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
+                    })
                     .attr("fill", _chart.getColor)
                     .style("fill-opacity", _dataPointFillOpacity)
                     .style("stroke-opacity", _dataPointStrokeOpacity)
@@ -224,15 +230,7 @@ dc.lineChart = function (parent, chartGroup) {
                         hideDot(dot);
                         hideRefLines(g);
                     })
-                    .append("title").text(dc.pluck('data', _chart.title(d.name)));
-
-                dots.attr("cx", function (d) {
-                        return dc.utils.safeNumber(_chart.x()(d.x));
-                    })
-                    .attr("cy", function (d) {
-                        return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
-                    })
-                    .select("title").text(dc.pluck('data', _chart.title(d.name)));
+                    .call(renderTitle, d);
 
                 dots.exit().remove();
             });
@@ -277,6 +275,10 @@ dc.lineChart = function (parent, chartGroup) {
     function hideRefLines(g) {
         g.select("path." + Y_AXIS_REF_LINE_CLASS).style("display", "none");
         g.select("path." + X_AXIS_REF_LINE_CLASS).style("display", "none");
+    }
+
+    function renderTitle(dot, d) {
+        if (_chart.renderTitle()) dot.append("title").text(dc.pluck('data', _chart.title(d.name)));
     }
 
     /**

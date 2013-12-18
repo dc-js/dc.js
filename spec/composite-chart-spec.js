@@ -420,6 +420,18 @@ describe('dc.compositeChart', function() {
         });
     });
 
+    describe('subchart title rendering', function () {
+        beforeEach(function () {
+            chart.renderTitle(false);
+            chart.render();
+        });
+
+        it('should respect boolean flag when title not set', function () {
+            expect(chart.select(".sub._0 .dc-tooltip._0 .dot").empty()).toBeTruthy();
+            expect(chart.select(".sub._1 .dc-tooltip._0 .dot").empty()).toBeTruthy();
+        });
+    });
+
     describe('when using a right y-axis', function () {
         var rightChart;
 

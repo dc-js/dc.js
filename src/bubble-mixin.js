@@ -17,7 +17,7 @@ dc.bubbleMixin = function (_chart) {
     _chart = dc.colorMixin(_chart);
 
     _chart.renderLabel(true);
-    _chart.renderTitle(false);
+    _chart.renderTitle(true);
 
     _chart.data(function(group) {
         return group.top(Infinity);
