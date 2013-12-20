@@ -186,6 +186,14 @@ module.exports = function (grunt) {
                   stdout: true
                 }
             },
+            run_examples: {
+                command: function(port) {
+                    return "ruby -run -ehttpd web -p"+port;
+                },
+                options: {
+                    stdout: true
+                }
+            },
             hooks: {
                 command: 'cp -n scripts/pre-commit.sh .git/hooks/pre-commit' +
                     ' || echo "Cowardly refusing to overwrite your existing git pre-commit hook."'
@@ -224,6 +232,11 @@ module.exports = function (grunt) {
     grunt.registerTask('web-baseline', 'Rerender the example baselines.', function() {
         var render = require('./test/web-test');
         render(grunt.log.writeln);
+    });
+    grunt.registerTask('run-examples', 'Start a web server for the example site. Defaults to port 8000.', function (port) {
+        if (typeof port === 'undefined') port = 8000;
+        grunt.log.writeln('Starting example web server on port '+port);
+        grunt.task.run(['shell:run_examples:'+port]);
     });
     grunt.registerMultiTask('toc', 'Generate a markdown table of contents.', function() {
         var marked = require('marked'),
