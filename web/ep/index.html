@@ -11,7 +11,14 @@
     <script type="text/javascript" src="../js/d3.js"></script>
     <script type="text/javascript" src="../js/crossfilter.js"></script>
     <script type="text/javascript" src="../js/dc.js"></script>
+    <script type="text/javascript" src="../../src/data-grid.js"></script>
+    <script type="text/javascript" src="underscore-min.js"></script>
+
+
 <script>
+
+var tpl = _.template("<h2 title='MEP from <%= country %> in <%= party %>'> <%= first_name %> <%= last_name %></h2><img src='<%= image_URL %>' alt='<%= last_name %>, <%= first_name %> member of <%= party %>' title='MEP from <%= country %> in <%= party %>'>");
+
 function list (selector,path,data) {
   var ndx = crossfilter(data),
   all = ndx.groupAll();
@@ -81,6 +88,21 @@ function rotateBarChartLabels() {
     .dimension(ndx)
     .group(all);
 
+  dc.dataGrid(".dc-data-grid")
+        .dimension(country)
+        .group(function (d) {
+            return d.country;
+        })
+        .size(1000)
+        .html (function(d) { return tpl(d);})
+        .sortBy(function (d) {
+            return d.last_name;
+        })
+        .order(d3.ascending)
+        .renderlet(function (table) {
+        });
+
+/*
   dc.dataTable(".dc-data-table")
         .dimension(country)
         .group(function (d) {
@@ -111,7 +133,7 @@ function rotateBarChartLabels() {
         .renderlet(function (table) {
         });
 
-
+*/
 
   dc.renderAll();
 
@@ -135,7 +157,10 @@ function rotateBarChartLabels() {
             href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
         </div>
       </div>
-      <table class="table table-hover dc-data-table">
+      <div class="dc-data-grid">
+here be grid
+</div>
+      <table class="tabledc-data-table">
         <thead>
           <tr class="header">
             <th>Gender</th>
@@ -158,9 +183,40 @@ d3.csv("mep.csv", function(d) {return d;
 </script>
 <style>
   .country, .gender {float:left;}
-  #ep2014list table {clear:both;}
+  #ep2014list table, .dc-data-grid {clear:both;}
   .dc-table-label {background: #F5F5F5; font-weight:bold; }
   .x line {stroke:none;}
+
+  body {font-family: arial, helvetica, sans-serif;}
+
+  .dc-data-grid, .dc-grid-group {clear:both}
+
+  .dc-grid-group {
+    background-color: #F5F5F5;
+    border: 1px solid #E3E3E3;
+    border-radius: 4px;
+    
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+    margin-bottom: 20px;
+    min-height: 20px;
+    padding: 10px;
+  }
+
+  .dc-grid-item {
+    float:left;
+    margin:0 10px 10px 0;
+    padding:5px;
+    width:200px;
+    background-color: #F8F8F8;
+    border-color: #E7E7E7;
+    border-radius: 4px;
+    text-align:center;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05) inset;
+}
+  .dc-grid-item img {width:170px;height:215px}
+  .dc-grid-top h1 {font-size:22px;}
+  .dc-grid-top h2 {font-size:14px;}
+   
 </style>
 </div>
 
