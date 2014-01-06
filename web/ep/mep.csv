@@ -1,0 +1,745 @@
+country,first_name,gender,gender_id,image_URL,last_name,party
+Netherlands,Judith,Female,1,http://ep.ngo.im/mepphoto/96910.jpg,"A. MERKIES",S&D
+Malta,Claudette,Female,1,http://ep.ngo.im/mepphoto/118860.jpg,"ABELA BALDACCHINO",S&D
+"United Kingdom","John Stuart",Male,2,http://ep.ngo.im/mepphoto/96897.jpg,AGNEW,EFD
+Germany,"Jan Philipp",Male,2,http://ep.ngo.im/mepphoto/96736.jpg,ALBRECHT,Verts/ALE
+Italy,Sonia,Female,1,http://ep.ngo.im/mepphoto/97086.jpg,ALFANO,ALDE
+France,François,Male,2,http://ep.ngo.im/mepphoto/96750.jpg,ALFONSI,Verts/ALE
+Italy,"Magdi Cristiano",Male,2,http://ep.ngo.im/mepphoto/96992.jpg,ALLAM,EFD
+Germany,Alexander,Male,2,http://ep.ngo.im/mepphoto/28246.jpg,ALVARO,ALDE
+Portugal,"Luís Paulo",Male,2,http://ep.ngo.im/mepphoto/96976.jpg,ALVES,S&D
+Sweden,Amelia,Female,1,http://ep.ngo.im/mepphoto/108570.jpg,ANDERSDOTTER,Verts/ALE
+"United Kingdom",Martina,Female,1,http://ep.ngo.im/mepphoto/113959.jpg,ANDERSON,GUE/NGL
+"United Kingdom",Marta,Female,1,http://ep.ngo.im/mepphoto/96954.jpg,ANDREASEN,ECR
+Spain,Josefa,Female,1,http://ep.ngo.im/mepphoto/96986.jpg,"ANDRÉS BAREA",S&D
+France,Eric,Male,2,http://ep.ngo.im/mepphoto/113892.jpg,ANDRIEU,S&D
+Lithuania,"Laima Liucija",Female,1,http://ep.ngo.im/mepphoto/28276.jpg,ANDRIKIENĖ,PPE
+Italy,Roberta,Female,1,http://ep.ngo.im/mepphoto/1941.jpg,ANGELILLI,PPE
+Greece,Charalampos,Male,2,http://ep.ngo.im/mepphoto/99419.jpg,ANGOURAKIS,GUE/NGL
+Italy,Antonello,Male,2,http://ep.ngo.im/mepphoto/97193.jpg,ANTINORO,PPE
+Romania,"Elena Oana",Male,2,http://ep.ngo.im/mepphoto/96702.jpg,ANTONESCU,PPE
+Italy,Alfredo,Male,2,http://ep.ngo.im/mepphoto/28422.jpg,ANTONIOZZI,PPE
+Spain,Pablo,Male,2,http://ep.ngo.im/mepphoto/96808.jpg,"ARIAS ECHEVERRÍA",PPE
+Italy,Pino,Male,2,http://ep.ngo.im/mepphoto/97228.jpg,ARLACCHI,S&D
+Greece,Kriton,Male,2,http://ep.ngo.im/mepphoto/97009.jpg,ARSENIS,S&D
+"United Kingdom",Richard,Male,2,http://ep.ngo.im/mepphoto/28132.jpg,ASHWORTH,ECR
+"United Kingdom","Sir Robert",Male,2,http://ep.ngo.im/mepphoto/4537.jpg,ATKINS,ECR
+Malta,John,Male,2,http://ep.ngo.im/mepphoto/23938.jpg,ATTARD-MONTALTO,S&D
+France,Sophie,Female,1,http://ep.ngo.im/mepphoto/96862.jpg,AUCONIE,PPE
+France,Jean-Pierre,Male,2,http://ep.ngo.im/mepphoto/33775.jpg,AUDY,PPE
+Denmark,Margrete,Female,1,http://ep.ngo.im/mepphoto/28161.jpg,AUKEN,Verts/ALE
+Spain,Inés,Female,1,http://ep.ngo.im/mepphoto/28292.jpg,"AYALA SENDER",S&D
+Ireland,Liam,Male,2,http://ep.ngo.im/mepphoto/28114.jpg,AYLWARD,ALDE
+Spain,Pilar,Female,1,http://ep.ngo.im/mepphoto/4319.jpg,AYUSO,PPE
+Netherlands,"Johannes Cornelis van",Male,2,http://ep.ngo.im/mepphoto/96937.jpg,BAALEN,ALDE
+Luxembourg,Georges,Male,2,http://ep.ngo.im/mepphoto/97293.jpg,BACH,PPE
+Spain,Maria,Female,1,http://ep.ngo.im/mepphoto/28342.jpg,"BADIA i CUTCHET",S&D
+Hungary,Zoltán,Male,2,http://ep.ngo.im/mepphoto/23813.jpg,BAGÓ,PPE
+Lithuania,Zigmantas,Male,2,http://ep.ngo.im/mepphoto/96680.jpg,BALČYTIS,S&D
+Italy,Raffaele,Male,2,http://ep.ngo.im/mepphoto/96757.jpg,BALDASSARRE,PPE
+Croatia,Marino,Male,2,http://ep.ngo.im/mepphoto/119439.jpg,BALDINI,S&D
+Italy,Francesca,Female,1,http://ep.ngo.im/mepphoto/96979.jpg,BALZANI,S&D
+Hungary,Erik,Male,2,http://ep.ngo.im/mepphoto/113883.jpg,BÁNKI,PPE
+Italy,Francesca,Female,1,http://ep.ngo.im/mepphoto/116823.jpg,BARRACCIU,S&D
+Italy,Paolo,Male,2,http://ep.ngo.im/mepphoto/21818.jpg,BARTOLOZZI,PPE
+Romania,Elena,Female,1,http://ep.ngo.im/mepphoto/96814.jpg,BĂSESCU,PPE
+Portugal,Regina,Female,1,http://ep.ngo.im/mepphoto/5956.jpg,BASTOS,PPE
+"United Kingdom",Gerard,Male,2,http://ep.ngo.im/mepphoto/28497.jpg,BATTEN,EFD
+Slovakia,Edit,Female,1,http://ep.ngo.im/mepphoto/23866.jpg,BAUER,PPE
+"United Kingdom",Catherine,Female,1,http://ep.ngo.im/mepphoto/96955.jpg,BEARDER,ALDE
+Netherlands,Bastiaan,Male,2,http://ep.ngo.im/mepphoto/4507.jpg,BELDER,EFD
+Belgium,Ivo,Male,2,http://ep.ngo.im/mepphoto/28257.jpg,BELET,PPE
+France,Sandrine,Female,1,http://ep.ngo.im/mepphoto/96738.jpg,BÉLIER,Verts/ALE
+France,Malika,Female,1,http://ep.ngo.im/mepphoto/96732.jpg,BENARAB-ATTOU,Verts/ALE
+Denmark,Bendt,Male,2,http://ep.ngo.im/mepphoto/96705.jpg,BENDTSEN,PPE
+France,Jean-Luc,Male,2,http://ep.ngo.im/mepphoto/28214.jpg,BENNAHMIAS,ALDE
+"United Kingdom",Phil,Male,2,http://ep.ngo.im/mepphoto/112014.jpg,BENNION,ALDE
+France,Pervenche,Female,1,http://ep.ngo.im/mepphoto/1985.jpg,BERÈS,S&D
+Italy,Sergio,Male,2,http://ep.ngo.im/mepphoto/4746.jpg,BERLATO,PPE
+Italy,Luigi,Male,2,http://ep.ngo.im/mepphoto/97156.jpg,BERLINGUER,S&D
+Netherlands,Thijs,Male,2,http://ep.ngo.im/mepphoto/28174.jpg,BERMAN,S&D
+France,Nora,Female,1,http://ep.ngo.im/mepphoto/96947.jpg,BERRA,PPE
+Italy,Fabrizio,Male,2,http://ep.ngo.im/mepphoto/118709.jpg,BERTOT,PPE
+France,Jean-Paul,Male,2,http://ep.ngo.im/mepphoto/96699.jpg,BESSET,Verts/ALE
+France,Jean-Jacob,Male,2,http://ep.ngo.im/mepphoto/113891.jpg,BICEP,Verts/ALE
+Poland,Adam,Male,2,http://ep.ngo.im/mepphoto/23788.jpg,BIELAN,ECR
+Spain,Izaskun,Female,1,http://ep.ngo.im/mepphoto/96922.jpg,"BILBAO BARANDICA",ALDE
+Bulgaria,Slavi,Male,2,http://ep.ngo.im/mepphoto/38610.jpg,BINEV,EFD
+Italy,Mara,Female,1,http://ep.ngo.im/mepphoto/97198.jpg,BIZZOTTO,EFD
+Lithuania,Vilija,Male,2,http://ep.ngo.im/mepphoto/96681.jpg,BLINKEVIČIŪTĖ,S&D
+"United Kingdom",Godfrey,Male,2,http://ep.ngo.im/mepphoto/28513.jpg,BLOOM,EFD
+Romania,"Sebastian Valentin",Male,2,http://ep.ngo.im/mepphoto/39722.jpg,BODU,PPE
+Germany,Reimer,Male,2,http://ep.ngo.im/mepphoto/1037.jpg,BÖGE,PPE
+Hungary,Lajos,Male,2,http://ep.ngo.im/mepphoto/96878.jpg,BOKROS,ECR
+Italy,Franco,Male,2,http://ep.ngo.im/mepphoto/118710.jpg,BONANINI,"NA,NI"
+Italy,Vito,Male,2,http://ep.ngo.im/mepphoto/29074.jpg,BONSIGNORE,PPE
+Italy,Mario,Male,2,http://ep.ngo.im/mepphoto/21817.jpg,BORGHEZIO,"NA,NI"
+Bulgaria,Preslav,Male,2,http://ep.ngo.im/mepphoto/116816.jpg,BORISSOV,PPE
+Italy,Rita,Female,1,http://ep.ngo.im/mepphoto/96916.jpg,BORSELLINO,S&D
+Poland,Piotr,Male,2,http://ep.ngo.im/mepphoto/96799.jpg,BORYS,PPE
+Croatia,Biljana,Female,1,http://ep.ngo.im/mepphoto/112748.jpg,BORZAN,S&D
+Romania,Victor,Male,2,http://ep.ngo.im/mepphoto/39711.jpg,BOŞTINARU,S&D
+France,Philippe,Male,2,http://ep.ngo.im/mepphoto/105624.jpg,BOULLAND,PPE
+France,José,Male,2,http://ep.ngo.im/mepphoto/96744.jpg,BOVÉ,Verts/ALE
+"United Kingdom",Sharon,Female,1,http://ep.ngo.im/mepphoto/33570.jpg,BOWLES,ALDE
+Netherlands,Emine,Female,1,http://ep.ngo.im/mepphoto/28171.jpg,BOZKURT,S&D
+"United Kingdom",Philip,Male,2,http://ep.ngo.im/mepphoto/4540.jpg,BRADBOURN,ECR
+Poland,"Arkadiusz Tomasz",Male,2,http://ep.ngo.im/mepphoto/111126.jpg,BRATKOWSKI,PPE
+Germany,Hiltrud,Female,1,http://ep.ngo.im/mepphoto/1059.jpg,BREYER,Verts/ALE
+"Czech Republic",Jan,Male,2,http://ep.ngo.im/mepphoto/28354.jpg,BŘEZINA,PPE
+Germany,Elmar,Male,2,http://ep.ngo.im/mepphoto/1263.jpg,BROK,PPE
+"United Kingdom","Andrew Henry William",Male,2,http://ep.ngo.im/mepphoto/96749.jpg,BRONS,"NA,NI"
+"Czech Republic",Zuzana,Female,1,http://ep.ngo.im/mepphoto/96716.jpg,BRZOBOHATÁ,S&D
+"United Kingdom",John,Male,2,http://ep.ngo.im/mepphoto/96798.jpg,BUFTON,EFD
+Germany,Udo,Male,2,http://ep.ngo.im/mepphoto/4267.jpg,BULLMANN,S&D
+Croatia,Zdravka,Female,1,http://ep.ngo.im/mepphoto/119438.jpg,BUŠIĆ,PPE
+Germany,Reinhard,Male,2,http://ep.ngo.im/mepphoto/96739.jpg,BÜTIKOFER,Verts/ALE
+Poland,Jerzy,Male,2,http://ep.ngo.im/mepphoto/28269.jpg,BUZEK,PPE
+"Czech Republic",Milan,Male,2,http://ep.ngo.im/mepphoto/28324.jpg,CABRNOCH,ECR
+France,Alain,Male,2,http://ep.ngo.im/mepphoto/96849.jpg,CADEC,PPE
+"United Kingdom",Martin,Male,2,http://ep.ngo.im/mepphoto/4536.jpg,CALLANAN,ECR
+Netherlands,"Wim van de",Male,2,http://ep.ngo.im/mepphoto/96754.jpg,CAMP,PPE
+Italy,Antonio,Male,2,http://ep.ngo.im/mepphoto/96733.jpg,CANCIAN,PPE
+Portugal,"Luis Manuel",Male,2,http://ep.ngo.im/mepphoto/28311.jpg,"CAPOULAS SANTOS",S&D
+Italy,Salvatore,Male,2,http://ep.ngo.im/mepphoto/96866.jpg,CARONNA,S&D
+Portugal,"Maria Da Graça",Female,1,http://ep.ngo.im/mepphoto/96867.jpg,CARVALHO,PPE
+Malta,David,Male,2,http://ep.ngo.im/mepphoto/28122.jpg,CASA,PPE
+"United Kingdom",Michael,Male,2,http://ep.ngo.im/mepphoto/4532.jpg,CASHMAN,S&D
+Italy,Carlo,Male,2,http://ep.ngo.im/mepphoto/988.jpg,CASINI,PPE
+France,Françoise,Female,1,http://ep.ngo.im/mepphoto/28148.jpg,CASTEX,S&D
+Spain,"Pilar del",Female,1,http://ep.ngo.im/mepphoto/28390.jpg,"CASTILLO VERA",PPE
+France,Jean-Marie,Male,2,http://ep.ngo.im/mepphoto/28206.jpg,CAVADA,PPE
+Spain,Alejandro,Male,2,http://ep.ngo.im/mepphoto/4337.jpg,CERCAS,S&D
+"Czech Republic",Andrea,Female,1,http://ep.ngo.im/mepphoto/96719.jpg,ČEŠKOVÁ,ECR
+Germany,Jorgo,Male,2,http://ep.ngo.im/mepphoto/28243.jpg,CHATZIMARKAKIS,ALDE
+"United Kingdom",Giles,Male,2,http://ep.ngo.im/mepphoto/2097.jpg,CHICHESTER,ECR
+Ireland,Nessa,Female,1,http://ep.ngo.im/mepphoto/96603.jpg,CHILDERS,"NA,NI"
+Greece,Nikolaos,Male,2,http://ep.ngo.im/mepphoto/26851.jpg,CHOUNTIS,GUE/NGL
+Denmark,Ole,Male,2,http://ep.ngo.im/mepphoto/28154.jpg,CHRISTENSEN,S&D
+Greece,Nikos,Male,2,http://ep.ngo.im/mepphoto/111823.jpg,CHRYSOGELOS,Verts/ALE
+Belgium,Philip,Male,2,http://ep.ngo.im/mepphoto/24030.jpg,CLAEYS,"NA,NI"
+"United Kingdom","Derek Roland",Male,2,http://ep.ngo.im/mepphoto/28493.jpg,CLARK,EFD
+Romania,Minodora,Female,1,http://ep.ngo.im/mepphoto/113597.jpg,CLIVETI,S&D
+France,Yves,Male,2,http://ep.ngo.im/mepphoto/1202.jpg,COCHET,Verts/ALE
+Portugal,Carlos,Male,2,http://ep.ngo.im/mepphoto/1892.jpg,COELHO,PPE
+Italy,"Sergio Gaetano",Male,2,http://ep.ngo.im/mepphoto/96915.jpg,COFFERATI,S&D
+France,Daniel,Male,2,http://ep.ngo.im/mepphoto/1934.jpg,COHN-BENDIT,Verts/ALE
+Germany,Birgit,Female,1,http://ep.ngo.im/mepphoto/112788.jpg,COLLIN-LANGEN,PPE
+"United Kingdom",Trevor,Male,2,http://ep.ngo.im/mepphoto/94283.jpg,COLMAN,"NA,NI"
+Italy,Lara,Female,1,http://ep.ngo.im/mepphoto/96775.jpg,COMI,PPE
+Sweden,"Anna Maria",Female,1,http://ep.ngo.im/mepphoto/96674.jpg,"CORAZZA BILDT",PPE
+Netherlands,Marije,Female,1,http://ep.ngo.im/mepphoto/96726.jpg,CORNELISSEN,Verts/ALE
+Spain,"María Auxiliadora",Female,1,http://ep.ngo.im/mepphoto/111496.jpg,"CORREA ZAMORA",PPE
+Portugal,"António Fernando",Male,2,http://ep.ngo.im/mepphoto/96975.jpg,"CORREIA DE CAMPOS",S&D
+Spain,Ricardo,Male,2,http://ep.ngo.im/mepphoto/96987.jpg,"CORTÉS LASTRA",S&D
+Italy,Silvia,Female,1,http://ep.ngo.im/mepphoto/96917.jpg,COSTA,S&D
+Ireland,Emer,Female,1,http://ep.ngo.im/mepphoto/112071.jpg,COSTELLO,S&D
+France,"Jean Louis",Male,2,http://ep.ngo.im/mepphoto/2315.jpg,COTTIGNY,S&D
+Italy,Andrea,Male,2,http://ep.ngo.im/mepphoto/96880.jpg,COZZOLINO,S&D
+Germany,Michael,Male,2,http://ep.ngo.im/mepphoto/28238.jpg,CRAMER,Verts/ALE
+Romania,Corina,Female,1,http://ep.ngo.im/mepphoto/33997.jpg,CREŢU,S&D
+Germany,Jürgen,Male,2,http://ep.ngo.im/mepphoto/96873.jpg,CREUTZMANN,ALDE
+Finland,Tarja,Female,1,http://ep.ngo.im/mepphoto/107973.jpg,CRONBERG,Verts/ALE
+Ireland,Brian,Male,2,http://ep.ngo.im/mepphoto/2109.jpg,CROWLEY,ALDE
+Malta,Joseph,Male,2,http://ep.ngo.im/mepphoto/110984.jpg,CUSCHIERI,S&D
+Romania,"George Sabin",Male,2,http://ep.ngo.im/mepphoto/96856.jpg,CUTAŞ,S&D
+Poland,Tadeusz,Male,2,http://ep.ngo.im/mepphoto/96786.jpg,CYMAŃSKI,EFD
+Poland,Ryszard,Male,2,http://ep.ngo.im/mepphoto/28372.jpg,CZARNECKI,ECR
+Belgium,Frédéric,Male,2,http://ep.ngo.im/mepphoto/97125.jpg,DAERDEN,S&D
+Netherlands,"Peter van",Male,2,http://ep.ngo.im/mepphoto/96809.jpg,DALEN,ECR
+Romania,"Vasilica Viorica",Female,1,http://ep.ngo.im/mepphoto/95281.jpg,DĂNCILĂ,S&D
+Greece,Spyros,Male,2,http://ep.ngo.im/mepphoto/99325.jpg,DANELLIS,S&D
+France,Arnaud,Male,2,http://ep.ngo.im/mepphoto/96747.jpg,DANJEAN,PPE
+France,Michel,Male,2,http://ep.ngo.im/mepphoto/97296.jpg,DANTIN,PPE
+"United Kingdom","William (The Earl of)",Male,2,http://ep.ngo.im/mepphoto/96958.jpg,DARTMOUTH,EFD
+France,Rachida,Female,1,http://ep.ngo.im/mepphoto/72775.jpg,DATI,PPE
+France,Joseph,Male,2,http://ep.ngo.im/mepphoto/4342.jpg,DAUL,PPE
+"United Kingdom",Chris,Male,2,http://ep.ngo.im/mepphoto/4554.jpg,DAVIES,ALDE
+Italy,Francesco,Male,2,http://ep.ngo.im/mepphoto/96887.jpg,"DE ANGELIS",S&D
+Belgium,Philippe,Male,2,http://ep.ngo.im/mepphoto/109337.jpg,"DE BACKER",ALDE
+Italy,Paolo,Male,2,http://ep.ngo.im/mepphoto/96891.jpg,"DE CASTRO",S&D
+Belgium,Véronique,Female,1,http://ep.ngo.im/mepphoto/22097.jpg,"DE KEYSER",S&D
+Italy,Susy,Female,1,http://ep.ngo.im/mepphoto/118708.jpg,"DE MARTINI",ECR
+Italy,"Luigi Ciriaco",Male,2,http://ep.ngo.im/mepphoto/1746.jpg,"DE MITA",PPE
+France,Christine,Female,1,http://ep.ngo.im/mepphoto/4347.jpg,"DE VEYRAC",PPE
+Belgium,Jean-Luc,Male,2,http://ep.ngo.im/mepphoto/28256.jpg,DEHAENE,PPE
+France,Karima,Female,1,http://ep.ngo.im/mepphoto/96868.jpg,DELLI,Verts/ALE
+Belgium,Anne,Female,1,http://ep.ngo.im/mepphoto/96914.jpg,DELVAUX,PPE
+Belgium,Mark,Male,2,http://ep.ngo.im/mepphoto/117477.jpg,DEMESMAEKER,Verts/ALE
+France,Harlem,Male,2,http://ep.ngo.im/mepphoto/4318.jpg,DÉSIR,S&D
+Germany,Albert,Male,2,http://ep.ngo.im/mepphoto/28228.jpg,DESS,PPE
+Hungary,Tamás,Male,2,http://ep.ngo.im/mepphoto/96826.jpg,DEUTSCH,PPE
+"United Kingdom",Nirj,Male,2,http://ep.ngo.im/mepphoto/4556.jpg,DEVA,ECR
+Spain,Agustín,Male,2,http://ep.ngo.im/mepphoto/28397.jpg,"DÍAZ DE MERA GARCÍA CONSUEGRA",PPE
+"United Kingdom",Diane,Female,1,http://ep.ngo.im/mepphoto/96951.jpg,DODDS,"NA,NI"
+Italy,Leonardo,Male,2,http://ep.ngo.im/mepphoto/96888.jpg,DOMENICI,S&D
+Lithuania,Leonidas,Male,2,http://ep.ngo.im/mepphoto/96692.jpg,DONSKIS,ALDE
+Italy,Herbert,Male,2,http://ep.ngo.im/mepphoto/96787.jpg,DORFMANN,PPE
+Greece,Dimitrios,Male,2,http://ep.ngo.im/mepphoto/107977.jpg,DROUTSAS,S&D
+"United Kingdom",Andrew,Male,2,http://ep.ngo.im/mepphoto/4514.jpg,DUFF,ALDE
+Belgium,Isabelle,Female,1,http://ep.ngo.im/mepphoto/96639.jpg,DURANT,Verts/ALE
+"Czech Republic",Robert,Male,2,http://ep.ngo.im/mepphoto/96717.jpg,DUŠEK,S&D
+Denmark,Anne,Female,1,http://ep.ngo.im/mepphoto/4440.jpg,"E. JENSEN",ALDE
+Germany,Christian,Male,2,http://ep.ngo.im/mepphoto/28226.jpg,EHLER,PPE
+Austria,Martin,Male,2,http://ep.ngo.im/mepphoto/39769.jpg,EHRENHAUSER,"NA,NI"
+Netherlands,Bas,Male,2,http://ep.ngo.im/mepphoto/96725.jpg,EICKHOUT,Verts/ALE
+Belgium,Saïd,Male,2,http://ep.ngo.im/mepphoto/25718.jpg,"EL KHADRAOUI",S&D
+"United Kingdom",James,Male,2,http://ep.ngo.im/mepphoto/1419.jpg,ELLES,ECR
+Romania,Ioan,Male,2,http://ep.ngo.im/mepphoto/96859.jpg,ENCIU,S&D
+Luxembourg,Frank,Male,2,http://ep.ngo.im/mepphoto/96876.jpg,ENGEL,PPE
+Sweden,Christian,Male,2,http://ep.ngo.im/mepphoto/96676.jpg,ENGSTRÖM,Verts/ALE
+Belgium,"Derk Jan",Male,2,http://ep.ngo.im/mepphoto/97133.jpg,EPPINK,ECR
+Germany,Cornelia,Female,1,http://ep.ngo.im/mepphoto/96852.jpg,ERNST,GUE/NGL
+Germany,Ismail,Male,2,http://ep.ngo.im/mepphoto/96842.jpg,ERTUG,S&D
+Finland,Sari,Female,1,http://ep.ngo.im/mepphoto/96682.jpg,ESSAYAH,PPE
+Spain,Rosa,Female,1,http://ep.ngo.im/mepphoto/96811.jpg,"ESTARÀS FERRAGUT",PPE
+Portugal,Edite,Female,1,http://ep.ngo.im/mepphoto/28310.jpg,ESTRELA,S&D
+"United Kingdom",Jill,Female,1,http://ep.ngo.im/mepphoto/4550.jpg,EVANS,Verts/ALE
+"Czech Republic",Hynek,Male,2,http://ep.ngo.im/mepphoto/23695.jpg,FAJMON,ECR
+Slovenia,Tanja,Female,1,http://ep.ngo.im/mepphoto/96911.jpg,FAJON,S&D
+"Czech Republic",Richard,Male,2,http://ep.ngo.im/mepphoto/23840.jpg,FALBR,S&D
+"United Kingdom",Nigel,Male,2,http://ep.ngo.im/mepphoto/4525.jpg,FARAGE,EFD
+Sweden,Göran,Male,2,http://ep.ngo.im/mepphoto/4265.jpg,FÄRM,S&D
+Germany,Markus,Male,2,http://ep.ngo.im/mepphoto/1917.jpg,FERBER,PPE
+Portugal,"José Manuel",Male,2,http://ep.ngo.im/mepphoto/96899.jpg,FERNANDES,PPE
+Portugal,Elisa,Female,1,http://ep.ngo.im/mepphoto/28308.jpg,FERREIRA,S&D
+Portugal,João,Male,2,http://ep.ngo.im/mepphoto/96706.jpg,FERREIRA,GUE/NGL
+Italy,Carlo,Male,2,http://ep.ngo.im/mepphoto/96810.jpg,FIDANZA,PPE
+Spain,Santiago,Male,2,http://ep.ngo.im/mepphoto/96729.jpg,"FISAS AYXELA",PPE
+Sweden,Christofer,Male,2,http://ep.ngo.im/mepphoto/28126.jpg,FJELLNER,PPE
+Slovakia,Monika,Female,1,http://ep.ngo.im/mepphoto/23868.jpg,"FLAŠÍKOVÁ BEŇOVÁ",S&D
+France,Hélène,Female,1,http://ep.ngo.im/mepphoto/4385.jpg,FLAUTRE,Verts/ALE
+Germany,Knut,Male,2,http://ep.ngo.im/mepphoto/96840.jpg,FLECKENSTEIN,S&D
+Germany,Karl-Heinz,Male,2,http://ep.ngo.im/mepphoto/1038.jpg,FLORENZ,PPE
+Italy,Lorenzo,Male,2,http://ep.ngo.im/mepphoto/96993.jpg,FONTANA,EFD
+"United Kingdom",Vicky,Female,1,http://ep.ngo.im/mepphoto/96949.jpg,FORD,ECR
+"United Kingdom",Jacqueline,Female,1,http://ep.ngo.im/mepphoto/4553.jpg,FOSTER,ECR
+"United Kingdom",Ashley,Male,2,http://ep.ngo.im/mepphoto/96957.jpg,FOX,ECR
+Spain,Carmen,Female,1,http://ep.ngo.im/mepphoto/1993.jpg,"FRAGA ESTÉVEZ",PPE
+France,Gaston,Male,2,http://ep.ngo.im/mepphoto/96908.jpg,FRANCO,PPE
+Italy,Franco,Male,2,http://ep.ngo.im/mepphoto/118999.jpg,FRIGO,S&D
+France,Jean-Claude,Male,2,http://ep.ngo.im/mepphoto/4297.jpg,FRUTEAU,
+Bulgaria,Mariya,Female,1,http://ep.ngo.im/mepphoto/96848.jpg,GABRIEL,PPE
+Germany,Michael,Male,2,http://ep.ngo.im/mepphoto/2341.jpg,GAHLER,PPE
+Hungary,Kinga,Female,1,http://ep.ngo.im/mepphoto/28150.jpg,GÁL,PPE
+Hungary,Ildikó,Female,1,http://ep.ngo.im/mepphoto/102886.jpg,GÁLL-PELCZ,PPE
+Ireland,"Pat the Cope",Male,2,http://ep.ngo.im/mepphoto/2125.jpg,GALLAGHER,ALDE
+Spain,"Vicente Miguel",Male,2,http://ep.ngo.im/mepphoto/39321.jpg,"GARCÉS RAMÓN",S&D
+Spain,Iratxe,Female,1,http://ep.ngo.im/mepphoto/28298.jpg,"GARCÍA PÉREZ",S&D
+Spain,Dolores,Female,1,http://ep.ngo.im/mepphoto/111017.jpg,"GARCÍA-HIERRO CARABALLO",S&D
+Spain,Eider,Female,1,http://ep.ngo.im/mepphoto/96991.jpg,"GARDIAZÁBAL RUBIAL",S&D
+Italy,Giuseppe,Male,2,http://ep.ngo.im/mepphoto/4562.jpg,GARGANI,PPE
+Spain,Salvador,Male,2,http://ep.ngo.im/mepphoto/1665.jpg,"GARRIGA POLLEDO",PPE
+France,Jean-Paul,Male,2,http://ep.ngo.im/mepphoto/28193.jpg,GAUZÈS,PPE
+Germany,Evelyne,Female,1,http://ep.ngo.im/mepphoto/1913.jpg,GEBHARDT,S&D
+Germany,Jens,Male,2,http://ep.ngo.im/mepphoto/96833.jpg,GEIER,S&D
+Netherlands,Gerben-Jan,Male,2,http://ep.ngo.im/mepphoto/96940.jpg,GERBRANDY,ALDE
+Poland,"Lidia Joanna",Female,1,http://ep.ngo.im/mepphoto/28377.jpg,"GERINGER de OEDENBERG",S&D
+Greece,Marietta,Female,1,http://ep.ngo.im/mepphoto/1431.jpg,GIANNAKOU,PPE
+Germany,Sven,Male,2,http://ep.ngo.im/mepphoto/96730.jpg,GIEGOLD,Verts/ALE
+Poland,Adam,Male,2,http://ep.ngo.im/mepphoto/28379.jpg,GIEREK,S&D
+"United Kingdom",Julie,Female,1,http://ep.ngo.im/mepphoto/96956.jpg,GIRLING,ECR
+Germany,Norbert,Male,2,http://ep.ngo.im/mepphoto/1902.jpg,GLANTE,S&D
+Hungary,Béla,Male,2,http://ep.ngo.im/mepphoto/28145.jpg,GLATTFELDER,PPE
+Latvia,Ivars,Male,2,http://ep.ngo.im/mepphoto/97004.jpg,GODMANIS,ALDE
+Luxembourg,Robert,Male,2,http://ep.ngo.im/mepphoto/4429.jpg,GOEBBELS,S&D
+Luxembourg,Charles,Male,2,http://ep.ngo.im/mepphoto/840.jpg,GOERENS,ALDE
+France,Bruno,Male,2,http://ep.ngo.im/mepphoto/1164.jpg,GOLLNISCH,"NA,NI"
+Portugal,Ana,Female,1,http://ep.ngo.im/mepphoto/28306.jpg,GOMES,S&D
+Hungary,Kinga,Female,1,http://ep.ngo.im/mepphoto/96832.jpg,GÖNCZ,S&D
+France,Sylvie,Female,1,http://ep.ngo.im/mepphoto/97137.jpg,GOULARD,ALDE
+Spain,"Luis de",Male,2,http://ep.ngo.im/mepphoto/28393.jpg,"GRANDES PASCUAL",PPE
+Germany,Ingeborg,Female,1,http://ep.ngo.im/mepphoto/28220.jpg,GRÄSSLE,PPE
+France,Catherine,Female,1,http://ep.ngo.im/mepphoto/96745.jpg,GRÈZE,Verts/ALE
+France,Nathalie,Female,1,http://ep.ngo.im/mepphoto/28208.jpg,GRIESBECK,ALDE
+"United Kingdom",Nick,Male,2,http://ep.ngo.im/mepphoto/96751.jpg,GRIFFIN,"NA,NI"
+Poland,"Marek Józef",Male,2,http://ep.ngo.im/mepphoto/96790.jpg,GRÓBARCZYK,ECR
+Germany,Matthias,Male,2,http://ep.ngo.im/mepphoto/34728.jpg,GROOTE,S&D
+Belgium,Mathieu,Male,2,http://ep.ngo.im/mepphoto/2247.jpg,GROSCH,PPE
+France,Françoise,Female,1,http://ep.ngo.im/mepphoto/2025.jpg,GROSSETÊTE,PPE
+Poland,Andrzej,Male,2,http://ep.ngo.im/mepphoto/23785.jpg,GRZYB,PPE
+Italy,Roberto,Male,2,http://ep.ngo.im/mepphoto/96892.jpg,GUALTIERI,S&D
+Spain,Enrique,Male,2,http://ep.ngo.im/mepphoto/96768.jpg,"GUERRERO SALOM",S&D
+France,Sylvie,Female,1,http://ep.ngo.im/mepphoto/96952.jpg,GUILLAUME,S&D
+Hungary,Zita,Female,1,http://ep.ngo.im/mepphoto/23805.jpg,GURMAI,S&D
+Sweden,Mikael,Male,2,http://ep.ngo.im/mepphoto/109649.jpg,GUSTAFSSON,GUE/NGL
+Spain,Sergio,Male,2,http://ep.ngo.im/mepphoto/103488.jpg,"GUTIÉRREZ PRIETO",S&D
+Spain,Cristina,Female,1,http://ep.ngo.im/mepphoto/4326.jpg,GUTIÉRREZ-CORTINES,PPE
+Hungary,András,Male,2,http://ep.ngo.im/mepphoto/23816.jpg,GYÜRK,PPE
+Germany,Gerald,Male,2,http://ep.ngo.im/mepphoto/96758.jpg,HÄFNER,Verts/ALE
+"United Kingdom",Fiona,Female,1,http://ep.ngo.im/mepphoto/28477.jpg,HALL,ALDE
+Germany,Thomas,Male,2,http://ep.ngo.im/mepphoto/96851.jpg,HÄNDEL,GUE/NGL
+Poland,Małgorzata,Female,1,http://ep.ngo.im/mepphoto/28275.jpg,HANDZLIK,PPE
+Hungary,Ágnes,Female,1,http://ep.ngo.im/mepphoto/96707.jpg,HANKISS,PPE
+"United Kingdom",Daniel,Male,2,http://ep.ngo.im/mepphoto/4555.jpg,HANNAN,ECR
+"United Kingdom",Malcolm,Male,2,http://ep.ngo.im/mepphoto/4538.jpg,HARBOUR,ECR
+Ireland,Marian,Female,1,http://ep.ngo.im/mepphoto/28116.jpg,HARKIN,ALDE
+Germany,Rebecca,Female,1,http://ep.ngo.im/mepphoto/28233.jpg,HARMS,Verts/ALE
+Netherlands,Lucas,Male,2,http://ep.ngo.im/mepphoto/103132.jpg,HARTONG,"NA,NI"
+Finland,Satu,Female,1,http://ep.ngo.im/mepphoto/28321.jpg,HASSI,Verts/ALE
+Germany,Jutta,Female,1,http://ep.ngo.im/mepphoto/1914.jpg,HAUG,S&D
+Germany,Martin,Male,2,http://ep.ngo.im/mepphoto/96752.jpg,HÄUSLING,Verts/ALE
+Sweden,Anna,Female,1,http://ep.ngo.im/mepphoto/28131.jpg,HEDH,S&D
+Romania,Eduard-Raul,Male,2,http://ep.ngo.im/mepphoto/37448.jpg,HELLVIG,ALDE
+"United Kingdom",Roger,Male,2,http://ep.ngo.im/mepphoto/4516.jpg,HELMER,EFD
+France,Jacky,Male,2,http://ep.ngo.im/mepphoto/28215.jpg,HÉNIN,GUE/NGL
+Hungary,Edit,Female,1,http://ep.ngo.im/mepphoto/28155.jpg,HERCZOG,S&D
+Spain,Esther,Female,1,http://ep.ngo.im/mepphoto/22418.jpg,"HERRANZ GARCÍA",PPE
+Poland,"Jolanta Emilia",Female,1,http://ep.ngo.im/mepphoto/96753.jpg,HIBNER,PPE
+Ireland,Jim,Male,2,http://ep.ngo.im/mepphoto/28117.jpg,HIGGINS,PPE
+Germany,Nadja,Female,1,http://ep.ngo.im/mepphoto/96872.jpg,HIRSCH,ALDE
+France,Liem,Male,2,http://ep.ngo.im/mepphoto/96950.jpg,"HOANG NGOC",S&D
+Germany,Monika,Female,1,http://ep.ngo.im/mepphoto/96780.jpg,HOHLMEIER,PPE
+Sweden,Gunnar,Male,2,http://ep.ngo.im/mepphoto/28124.jpg,HÖKMARK,PPE
+"United Kingdom",Mary,Female,1,http://ep.ngo.im/mepphoto/5846.jpg,HONEYBALL,S&D
+France,Brice,Male,2,http://ep.ngo.im/mepphoto/5565.jpg,HORTEFEUX,PPE
+"United Kingdom",Richard,Male,2,http://ep.ngo.im/mepphoto/2073.jpg,HOWITT,S&D
+Poland,"Danuta Maria",Female,1,http://ep.ngo.im/mepphoto/96779.jpg,HÜBNER,PPE
+"United Kingdom",Ian,Male,2,http://ep.ngo.im/mepphoto/2338.jpg,HUDGHTON,Verts/ALE
+"United Kingdom",Stephen,Male,2,http://ep.ngo.im/mepphoto/1407.jpg,HUGHES,S&D
+Bulgaria,"Filiz Hakaeva",Female,1,http://ep.ngo.im/mepphoto/34249.jpg,HYUSMENOVA,ALDE
+Italy,Salvatore,Male,2,http://ep.ngo.im/mepphoto/96818.jpg,IACOLINO,PPE
+Sweden,Anna,Female,1,http://ep.ngo.im/mepphoto/28125.jpg,IBRISAGIC,PPE
+Bulgaria,Stanimir,Male,2,http://ep.ngo.im/mepphoto/34235.jpg,ILCHEV,ALDE
+Lithuania,Juozas,Male,2,http://ep.ngo.im/mepphoto/96693.jpg,IMBRASAS,EFD
+Bulgaria,"Iliana Malinova",Female,1,http://ep.ngo.im/mepphoto/38605.jpg,IOTOVA,S&D
+Italy,Vincenzo,Male,2,http://ep.ngo.im/mepphoto/97130.jpg,IOVINE,S&D
+Spain,Iñaki,Male,2,http://ep.ngo.im/mepphoto/119875.jpg,"IRAZABALBEITIA FERNÁNDEZ",Verts/ALE
+Spain,María,Female,1,http://ep.ngo.im/mepphoto/105192.jpg,"IRIGOYEN PÉREZ",S&D
+Spain,"Carlos José",Male,2,http://ep.ngo.im/mepphoto/28398.jpg,"ITURGAIZ ANGULO",PPE
+Romania,"Cătălin Sorin",Male,2,http://ep.ngo.im/mepphoto/96857.jpg,IVAN,S&D
+Netherlands,Laurence,Female,1,http://ep.ngo.im/mepphoto/96905.jpg,"J.A.J. STASSEN","NA,NI"
+Finland,Liisa,Female,1,http://ep.ngo.im/mepphoto/96684.jpg,JAAKONSAARI,S&D
+Finland,Anneli,Female,1,http://ep.ngo.im/mepphoto/28314.jpg,JÄÄTTEENMÄKI,ALDE
+France,Yannick,Male,2,http://ep.ngo.im/mepphoto/96740.jpg,JADOT,Verts/ALE
+Germany,Peter,Male,2,http://ep.ngo.im/mepphoto/96772.jpg,JAHR,PPE
+Hungary,Lívia,Female,1,http://ep.ngo.im/mepphoto/28141.jpg,JÁRÓKA,PPE
+Poland,Danuta,Female,1,http://ep.ngo.im/mepphoto/96781.jpg,JAZŁOWIECKA,PPE
+Poland,"Sidonia Elżbieta",Female,1,http://ep.ngo.im/mepphoto/96782.jpg,JĘDRZEJEWSKA,PPE
+Germany,Elisabeth,Female,1,http://ep.ngo.im/mepphoto/4271.jpg,JEGGLE,PPE
+Spain,Teresa,Female,1,http://ep.ngo.im/mepphoto/96806.jpg,"JIMÉNEZ-BECERRIL BARRIO",PPE
+Sweden,Kent,Male,2,http://ep.ngo.im/mepphoto/110365.jpg,JOHANSSON,ALDE
+France,Eva,Female,1,http://ep.ngo.im/mepphoto/96883.jpg,JOLY,Verts/ALE
+Netherlands,"Cornelis de",Male,2,http://ep.ngo.im/mepphoto/96748.jpg,JONG,GUE/NGL
+Slovenia,Romana,Female,1,http://ep.ngo.im/mepphoto/28291.jpg,JORDAN,PPE
+Denmark,Dan,Male,2,http://ep.ngo.im/mepphoto/28156.jpg,JØRGENSEN,S&D
+France,Philippe,Male,2,http://ep.ngo.im/mepphoto/96884.jpg,JUVIN,PPE
+Austria,Heinz,Male,2,http://ep.ngo.im/mepphoto/107041.jpg,"K. BECKER",PPE
+Slovenia,Jelko,Male,2,http://ep.ngo.im/mepphoto/23691.jpg,KACIN,ALDE
+Poland,Filip,Male,2,http://ep.ngo.im/mepphoto/28280.jpg,KACZMAREK,PPE
+Austria,Karin,Female,1,http://ep.ngo.im/mepphoto/97014.jpg,KADENBACH,S&D
+Bulgaria,Ivailo,Male,2,http://ep.ngo.im/mepphoto/96807.jpg,KALFIN,S&D
+Poland,Jarosław,Male,2,http://ep.ngo.im/mepphoto/96771.jpg,KALINOWSKI,PPE
+Latvia,Sandra,Female,1,http://ep.ngo.im/mepphoto/96934.jpg,KALNIETE,PPE
+"United Kingdom",Syed,Male,2,http://ep.ngo.im/mepphoto/33569.jpg,KAMALL,ECR
+Poland,"Michał Tomasz",Male,2,http://ep.ngo.im/mepphoto/23792.jpg,KAMIŃSKI,ECR
+Netherlands,"Patricia van der",Female,1,http://ep.ngo.im/mepphoto/115868.jpg,KAMMEN,"NA,NI"
+Germany,Petra,Female,1,http://ep.ngo.im/mepphoto/96837.jpg,KAMMEREVERT,S&D
+Austria,Othmar,Male,2,http://ep.ngo.im/mepphoto/4246.jpg,KARAS,PPE
+"United Kingdom",Sajjad,Male,2,http://ep.ngo.im/mepphoto/28481.jpg,KARIM,ECR
+Latvia,Krišjānis,Male,2,http://ep.ngo.im/mepphoto/96901.jpg,KARIŅŠ,PPE
+Germany,Martin,Male,2,http://ep.ngo.im/mepphoto/25919.jpg,KASTLER,PPE
+Bulgaria,Metin,Male,2,http://ep.ngo.im/mepphoto/38613.jpg,KAZAK,ALDE
+Estonia,Tunne,Male,2,http://ep.ngo.im/mepphoto/28424.jpg,KELAM,PPE
+Germany,Franziska,Female,1,http://ep.ngo.im/mepphoto/96734.jpg,KELLER,Verts/ALE
+Ireland,Seán,Male,2,http://ep.ngo.im/mepphoto/96668.jpg,KELLY,PPE
+France,Nicole,Female,1,http://ep.ngo.im/mepphoto/96737.jpg,KIIL-NIELSEN,Verts/ALE
+Bulgaria,Evgeni,Male,2,http://ep.ngo.im/mepphoto/34231.jpg,KIRILOV,S&D
+"United Kingdom",Timothy,Male,2,http://ep.ngo.im/mepphoto/4542.jpg,KIRKHOPE,ECR
+Germany,Christa,Female,1,http://ep.ngo.im/mepphoto/1929.jpg,KLASS,PPE
+Slovenia,Mojca,Female,1,http://ep.ngo.im/mepphoto/23413.jpg,"KLEVA KEKUŠ",S&D
+Germany,Wolf,Male,2,http://ep.ngo.im/mepphoto/28244.jpg,KLINZ,ALDE
+Germany,Jürgen,Male,2,http://ep.ngo.im/mepphoto/96769.jpg,KLUTE,GUE/NGL
+Germany,Silvana,Female,1,http://ep.ngo.im/mepphoto/28241.jpg,KOCH-MEHRIN,ALDE
+Germany,Dieter-Lebrecht,Male,2,http://ep.ngo.im/mepphoto/1852.jpg,KOCH,PPE
+"Czech Republic",Jaromír,Male,2,http://ep.ngo.im/mepphoto/28331.jpg,KOHLÍČEK,GUE/NGL
+Poland,Lena,Female,1,http://ep.ngo.im/mepphoto/96785.jpg,KOLARSKA-BOBIŃSKA,PPE
+Greece,"Maria Eleni",Female,1,http://ep.ngo.im/mepphoto/39319.jpg,KOPPA,S&D
+Finland,Eija-Riitta,Female,1,http://ep.ngo.im/mepphoto/4260.jpg,KORHOLA,PPE
+Hungary,Ádám,Male,2,http://ep.ngo.im/mepphoto/96829.jpg,KÓSA,PPE
+Austria,Elisabeth,Female,1,http://ep.ngo.im/mepphoto/96882.jpg,KÖSTINGER,PPE
+Greece,Georgios,Male,2,http://ep.ngo.im/mepphoto/97011.jpg,KOUMOUTSAKOS,PPE
+Hungary,Béla,Male,2,http://ep.ngo.im/mepphoto/102887.jpg,KOVÁCS,"NA,NI"
+Bulgaria,Andrey,Male,2,http://ep.ngo.im/mepphoto/97968.jpg,KOVATCHEV,PPE
+Poland,"Paweł Robert",Male,2,http://ep.ngo.im/mepphoto/96793.jpg,KOWAL,ECR
+Slovakia,Sergej,Male,2,http://ep.ngo.im/mepphoto/23873.jpg,KOZLÍK,ALDE
+Poland,Jan,Male,2,http://ep.ngo.im/mepphoto/101954.jpg,KOZŁOWSKI,PPE
+"Czech Republic",Edvard,Male,2,http://ep.ngo.im/mepphoto/96704.jpg,KOŽUŠNÍK,ECR
+Germany,Holger,Male,2,http://ep.ngo.im/mepphoto/28247.jpg,KRAHMER,ALDE
+Greece,Rodi,Female,1,http://ep.ngo.im/mepphoto/4482.jpg,KRATSA-TSAGAROPOULOU,PPE
+Germany,"Constanze Angela",Female,1,http://ep.ngo.im/mepphoto/1854.jpg,KREHL,S&D
+Germany,Wolfgang,Male,2,http://ep.ngo.im/mepphoto/1935.jpg,KREISSL-DÖRFLER,S&D
+Germany,Werner,Male,2,http://ep.ngo.im/mepphoto/96767.jpg,KUHN,PPE
+Slovakia,Eduard,Male,2,http://ep.ngo.im/mepphoto/96651.jpg,KUKAN,PPE
+Poland,"Jacek Olgierd",Male,2,http://ep.ngo.im/mepphoto/96795.jpg,KURSKI,EFD
+Italy,Giovanni,Male,2,http://ep.ngo.im/mepphoto/96816.jpg,"LA VIA",PPE
+France,Alain,Male,2,http://ep.ngo.im/mepphoto/1204.jpg,LAMASSOURE,PPE
+"United Kingdom",Jean,Female,1,http://ep.ngo.im/mepphoto/4531.jpg,LAMBERT,Verts/ALE
+Belgium,Philippe,Male,2,http://ep.ngo.im/mepphoto/96648.jpg,LAMBERTS,Verts/ALE
+Germany,"Alexander Graf",Male,2,http://ep.ngo.im/mepphoto/28242.jpg,LAMBSDORFF,ALDE
+Lithuania,Vytautas,Male,2,http://ep.ngo.im/mepphoto/23746.jpg,LANDSBERGIS,PPE
+Germany,Bernd,Male,2,http://ep.ngo.im/mepphoto/1909.jpg,LANGE,S&D
+Netherlands,"Esther de",Female,1,http://ep.ngo.im/mepphoto/38398.jpg,LANGE,PPE
+Germany,Werner,Male,2,http://ep.ngo.im/mepphoto/1928.jpg,LANGEN,PPE
+France,Agnès,Female,1,http://ep.ngo.im/mepphoto/105849.jpg,"LE BRUN",PPE
+France,Constance,Female,1,http://ep.ngo.im/mepphoto/101580.jpg,"LE GRIP",PPE
+France,Jean-Marie,Male,2,http://ep.ngo.im/mepphoto/1023.jpg,"LE PEN","NA,NI"
+France,Marine,Female,1,http://ep.ngo.im/mepphoto/28210.jpg,"LE PEN","NA,NI"
+Poland,"Ryszard Antoni",Male,2,http://ep.ngo.im/mepphoto/96796.jpg,LEGUTKO,ECR
+Germany,Klaus-Heiner,Male,2,http://ep.ngo.im/mepphoto/2224.jpg,LEHNE,PPE
+Austria,Jörg,Male,2,http://ep.ngo.im/mepphoto/28251.jpg,LEICHTFRIED,S&D
+Germany,Jo,Male,2,http://ep.ngo.im/mepphoto/4262.jpg,LEINEN,S&D
+France,Corinne,Female,1,http://ep.ngo.im/mepphoto/97076.jpg,LEPAGE,ALDE
+Poland,Bogusław,Male,2,http://ep.ngo.im/mepphoto/23768.jpg,LIBERADZKI,S&D
+Austria,Eva,Female,1,http://ep.ngo.im/mepphoto/28253.jpg,LICHTENBERGER,Verts/ALE
+Germany,Peter,Male,2,http://ep.ngo.im/mepphoto/1927.jpg,LIESE,PPE
+Netherlands,"Kartika Tamara",Female,1,http://ep.ngo.im/mepphoto/28182.jpg,LIOTARD,GUE/NGL
+Poland,Krzysztof,Male,2,http://ep.ngo.im/mepphoto/96788.jpg,LISEK,PPE
+Germany,Barbara,Female,1,http://ep.ngo.im/mepphoto/96728.jpg,LOCHBIHLER,Verts/ALE
+Spain,Verónica,Female,1,http://ep.ngo.im/mepphoto/96765.jpg,"LOPE FONTAGNÉ",PPE
+Spain,"Juan Fernando",Male,2,http://ep.ngo.im/mepphoto/96812.jpg,"LÓPEZ AGUILAR",S&D
+Spain,Antonio,Male,2,http://ep.ngo.im/mepphoto/28399.jpg,"LÓPEZ-ISTÚRIZ WHITE",PPE
+Germany,Sabine,Female,1,http://ep.ngo.im/mepphoto/96854.jpg,LÖSING,GUE/NGL
+Sweden,Isabella,Female,1,http://ep.ngo.im/mepphoto/96675.jpg,LÖVIN,Verts/ALE
+Denmark,Morten,Male,2,http://ep.ngo.im/mepphoto/96709.jpg,LØKKEGAARD,ALDE
+"United Kingdom","Baroness Sarah",Female,1,http://ep.ngo.im/mepphoto/4529.jpg,LUDFORD,ALDE
+Sweden,Olle,Male,2,http://ep.ngo.im/mepphoto/96673.jpg,LUDVIGSSON,S&D
+Romania,"Petru Constantin",Male,2,http://ep.ngo.im/mepphoto/96823.jpg,LUHAN,PPE
+Luxembourg,Astrid,Female,1,http://ep.ngo.im/mepphoto/1186.jpg,LULLING,PPE
+Austria,Ulrike,Female,1,http://ep.ngo.im/mepphoto/97017.jpg,LUNACEK,Verts/ALE
+"United Kingdom",George,Male,2,http://ep.ngo.im/mepphoto/96959.jpg,LYON,ALDE
+Bulgaria,Marusya,Female,1,http://ep.ngo.im/mepphoto/37524.jpg,LYUBCHEVA,S&D
+Poland,"Elżbieta Katarzyna",Female,1,http://ep.ngo.im/mepphoto/96791.jpg,ŁUKACIJEWSKA,PPE
+Romania,"Monica Luisa",Female,1,http://ep.ngo.im/mepphoto/96824.jpg,MACOVEI,PPE
+Croatia,Ivana,Female,1,http://ep.ngo.im/mepphoto/119436.jpg,MALETIĆ,PPE
+Bulgaria,"Svetoslav Hristov",Male,2,http://ep.ngo.im/mepphoto/111027.jpg,MALINOV,PPE
+Netherlands,Toine,Male,2,http://ep.ngo.im/mepphoto/4560.jpg,MANDERS,ALDE
+Slovakia,Vladimír,Male,2,http://ep.ngo.im/mepphoto/28192.jpg,MAŇKA,S&D
+Germany,Thomas,Male,2,http://ep.ngo.im/mepphoto/1922.jpg,MANN,PPE
+Poland,"Bogdan Kazimierz",Male,2,http://ep.ngo.im/mepphoto/96792.jpg,MARCINKIEWICZ,PPE
+Romania,Marian-Jean,Male,2,http://ep.ngo.im/mepphoto/33982.jpg,MARINESCU,PPE
+"United Kingdom",David,Male,2,http://ep.ngo.im/mepphoto/1403.jpg,MARTIN,S&D
+Austria,Hans-Peter,Male,2,http://ep.ngo.im/mepphoto/4238.jpg,MARTIN,"NA,NI"
+Spain,"Miguel Angel",Male,2,http://ep.ngo.im/mepphoto/4346.jpg,"MARTÍNEZ MARTÍNEZ",S&D
+Spain,Antonio,Male,2,http://ep.ngo.im/mepphoto/28338.jpg,"MASIP HIDALGO",S&D
+"Czech Republic",Jiří,Male,2,http://ep.ngo.im/mepphoto/23704.jpg,MAŠTÁLKA,GUE/NGL
+Italy,Clemente,Male,2,http://ep.ngo.im/mepphoto/4462.jpg,MASTELLA,PPE
+Italy,Barbara,Female,1,http://ep.ngo.im/mepphoto/96813.jpg,MATERA,PPE
+France,Véronique,Female,1,http://ep.ngo.im/mepphoto/4412.jpg,"MATHIEU HOUILLON",PPE
+Portugal,Marisa,Female,1,http://ep.ngo.im/mepphoto/96820.jpg,MATIAS,GUE/NGL
+Spain,Gabriel,Male,2,http://ep.ngo.im/mepphoto/96936.jpg,"MATO ADROVER",PPE
+Romania,Iosif,Male,2,http://ep.ngo.im/mepphoto/95017.jpg,MATULA,PPE
+Germany,Hans-Peter,Male,2,http://ep.ngo.im/mepphoto/4275.jpg,MAYER,PPE
+Spain,Jaime,Male,2,http://ep.ngo.im/mepphoto/28362.jpg,"MAYOR OREJA",PPE
+Slovenia,Zofija,Female,1,http://ep.ngo.im/mepphoto/39916.jpg,"MAZEJ KUKOVIČ",PPE
+Italy,Erminia,Female,1,http://ep.ngo.im/mepphoto/96817.jpg,MAZZONI,PPE
+"United Kingdom",Linda,Female,1,http://ep.ngo.im/mepphoto/2327.jpg,McAVAN,S&D
+"United Kingdom",Arlene,Female,1,http://ep.ngo.im/mepphoto/2173.jpg,McCARTHY,S&D
+Ireland,Mairead,Female,1,http://ep.ngo.im/mepphoto/28115.jpg,McGUINNESS,PPE
+"United Kingdom",Anthea,Female,1,http://ep.ngo.im/mepphoto/111011.jpg,McINTYRE,ECR
+"United Kingdom",Edward,Male,2,http://ep.ngo.im/mepphoto/1405.jpg,McMILLAN-SCOTT,ALDE
+Germany,Gesine,Female,1,http://ep.ngo.im/mepphoto/96870.jpg,MEISSNER,ALDE
+France,Jean-Luc,Male,2,http://ep.ngo.im/mepphoto/96742.jpg,MÉLENCHON,GUE/NGL
+Spain,Emilio,Male,2,http://ep.ngo.im/mepphoto/4348.jpg,"MENÉNDEZ del VALLE",S&D
+Denmark,Morten,Male,2,http://ep.ngo.im/mepphoto/96663.jpg,MESSERSCHMIDT,EFD
+Slovakia,Alajos,Male,2,http://ep.ngo.im/mepphoto/96652.jpg,MÉSZÁROS,PPE
+Malta,Roberta,Female,1,http://ep.ngo.im/mepphoto/118859.jpg,METSOLA,PPE
+Spain,Willy,Male,2,http://ep.ngo.im/mepphoto/28407.jpg,MEYER,GUE/NGL
+Belgium,Louis,Male,2,http://ep.ngo.im/mepphoto/96670.jpg,MICHEL,ALDE
+Germany,Martina,Female,1,http://ep.ngo.im/mepphoto/120478.jpg,MICHELS,GUE/NGL
+Slovakia,Miroslav,Male,2,http://ep.ngo.im/mepphoto/28178.jpg,MIKOLÁŠIK,PPE
+Italy,Guido,Male,2,http://ep.ngo.im/mepphoto/97020.jpg,MILANA,S&D
+Spain,"Francisco José",Male,2,http://ep.ngo.im/mepphoto/28400.jpg,"MILLÁN MON",PPE
+Latvia,Alexander,Male,2,http://ep.ngo.im/mepphoto/96999.jpg,MIRSKY,S&D
+Ireland,Gay,Male,2,http://ep.ngo.im/mepphoto/28112.jpg,MITCHELL,PPE
+Malta,Marlene,Female,1,http://ep.ngo.im/mepphoto/118858.jpg,MIZZI,S&D
+Austria,Andreas,Male,2,http://ep.ngo.im/mepphoto/28255.jpg,MÖLZER,"NA,NI"
+"United Kingdom",Claude,Male,2,http://ep.ngo.im/mepphoto/4519.jpg,MORAES,S&D
+Portugal,Vital,Male,2,http://ep.ngo.im/mepphoto/96930.jpg,MOREIRA,S&D
+France,Elisabeth,Female,1,http://ep.ngo.im/mepphoto/38596.jpg,MORIN-CHARTIER,PPE
+Lithuania,Radvilė,Female,1,http://ep.ngo.im/mepphoto/96695.jpg,MORKŪNAITĖ-MIKULĖNIENĖ,PPE
+Hungary,Krisztina,Female,1,http://ep.ngo.im/mepphoto/96661.jpg,MORVAI,"NA,NI"
+Italy,Tiziano,Male,2,http://ep.ngo.im/mepphoto/96760.jpg,MOTTI,PPE
+Netherlands,Jan,Male,2,http://ep.ngo.im/mepphoto/1965.jpg,MULDER,ALDE
+Spain,María,Female,1,http://ep.ngo.im/mepphoto/96701.jpg,"MUÑIZ DE URQUIZA",S&D
+Ireland,Paul,Male,2,http://ep.ngo.im/mepphoto/97344.jpg,MURPHY,GUE/NGL
+Italy,Cristiana,Female,1,http://ep.ngo.im/mepphoto/1073.jpg,MUSCARDINI,ECR
+"Czech Republic",Vojtěch,Male,2,http://ep.ngo.im/mepphoto/114873.jpg,MYNÁŘ,S&D
+Spain,"Juan Andrés",Male,2,http://ep.ngo.im/mepphoto/5537.jpg,"NARANJO ESCOBAR",PPE
+"United Kingdom",Mike,Male,2,http://ep.ngo.im/mepphoto/28506.jpg,NATTRASS,EFD
+Germany,Norbert,Male,2,http://ep.ngo.im/mepphoto/96844.jpg,NEUSER,S&D
+Slovakia,Katarína,Female,1,http://ep.ngo.im/mepphoto/96653.jpg,NEVEĎALOVÁ,S&D
+"United Kingdom",Bill,Male,2,http://ep.ngo.im/mepphoto/1394.jpg,"NEWTON DUNN",ALDE
+Bulgaria,Nadezhda,Female,1,http://ep.ngo.im/mepphoto/96861.jpg,NEYNSKY,PPE
+Belgium,Annemie,Female,1,http://ep.ngo.im/mepphoto/1946.jpg,NEYTS-UYTTEBROECK,ALDE
+"United Kingdom",James,Male,2,http://ep.ngo.im/mepphoto/1318.jpg,NICHOLSON,ECR
+Romania,Norica,Female,1,http://ep.ngo.im/mepphoto/96825.jpg,NICOLAI,ALDE
+Romania,Rareş-Lucian,Male,2,http://ep.ngo.im/mepphoto/39714.jpg,NICULESCU,PPE
+Germany,Angelika,Female,1,http://ep.ngo.im/mepphoto/4289.jpg,NIEBLER,PPE
+Sweden,Jens,Male,2,http://ep.ngo.im/mepphoto/111024.jpg,NILSSON,S&D
+Netherlands,"Lambert van",Male,2,http://ep.ngo.im/mepphoto/28165.jpg,NISTELROOIJ,PPE
+Poland,Sławomir,Male,2,http://ep.ngo.im/mepphoto/96794.jpg,NITRAS,PPE
+"United Kingdom",Paul,Male,2,http://ep.ngo.im/mepphoto/96805.jpg,NUTTALL,EFD
+Austria,Franz,Male,2,http://ep.ngo.im/mepphoto/96981.jpg,OBERMAYR,"NA,NI"
+Spain,Raimon,Male,2,http://ep.ngo.im/mepphoto/4328.jpg,OBIOLS,S&D
+Estonia,Kristiina,Female,1,http://ep.ngo.im/mepphoto/97230.jpg,OJULAND,ALDE
+Poland,"Wojciech Michał",Male,2,http://ep.ngo.im/mepphoto/96783.jpg,OLEJNICZAK,S&D
+France,Younous,Male,2,http://ep.ngo.im/mepphoto/30482.jpg,OMARJEE,GUE/NGL
+Netherlands,Ria,Female,1,http://ep.ngo.im/mepphoto/1122.jpg,OOMEN-RUIJTEN,PPE
+Spain,Eva,Female,1,http://ep.ngo.im/mepphoto/111019.jpg,"ORTIZ VILELLA",PPE
+Hungary,Csaba,Male,2,http://ep.ngo.im/mepphoto/23819.jpg,ŐRY,PPE
+"Czech Republic",Miroslav,Male,2,http://ep.ngo.im/mepphoto/23705.jpg,OUZKÝ,ECR
+Estonia,Siiri,Female,1,http://ep.ngo.im/mepphoto/26829.jpg,OVIIR,ALDE
+Germany,Doris,Female,1,http://ep.ngo.im/mepphoto/1191.jpg,PACK,PPE
+Estonia,Ivari,Male,2,http://ep.ngo.im/mepphoto/97025.jpg,PADAR,S&D
+Finland,Riikka,Female,1,http://ep.ngo.im/mepphoto/96685.jpg,PAKARINEN,ALDE
+Lithuania,Rolandas,Male,2,http://ep.ngo.im/mepphoto/96694.jpg,PAKSAS,EFD
+Lithuania,"Justas Vincas",Male,2,http://ep.ngo.im/mepphoto/28279.jpg,PALECKIS,S&D
+Greece,Chrysoula,Female,1,http://ep.ngo.im/mepphoto/97007.jpg,PALIADELI,S&D
+Italy,Alfredo,Male,2,http://ep.ngo.im/mepphoto/97197.jpg,PALLONE,PPE
+Bulgaria,"Vladko Todorov",Male,2,http://ep.ngo.im/mepphoto/38602.jpg,PANAYOTOV,ALDE
+Bulgaria,Monika,Female,1,http://ep.ngo.im/mepphoto/116663.jpg,PANAYOTOVA,PPE
+Italy,"Pier Antonio",Male,2,http://ep.ngo.im/mepphoto/28365.jpg,PANZERI,S&D
+Cyprus,Antigoni,Female,1,http://ep.ngo.im/mepphoto/97050.jpg,PAPADOPOULOU,S&D
+Greece,Georgios,Male,2,http://ep.ngo.im/mepphoto/96900.jpg,PAPANIKOLAOU,PPE
+Greece,Georgios,Male,2,http://ep.ngo.im/mepphoto/28572.jpg,PAPASTAMKOS,PPE
+France,Gilles,Male,2,http://ep.ngo.im/mepphoto/96948.jpg,PARGNEAUX,S&D
+Bulgaria,Antonyia,Female,1,http://ep.ngo.im/mepphoto/34234.jpg,PARVANOVA,ALDE
+Romania,"Ioan Mircea",Male,2,http://ep.ngo.im/mepphoto/33984.jpg,PAŞCU,S&D
+Slovakia,Jaroslav,Male,2,http://ep.ngo.im/mepphoto/96654.jpg,PAŠKA,EFD
+Portugal,"Maria do Céu",Female,1,http://ep.ngo.im/mepphoto/96902.jpg,"PATRÃO NEVES",PPE
+Italy,Aldo,Male,2,http://ep.ngo.im/mepphoto/36392.jpg,PATRICIELLO,PPE
+Sweden,Marit,Female,1,http://ep.ngo.im/mepphoto/4270.jpg,PAULSEN,ALDE
+Spain,Andrés,Male,2,http://ep.ngo.im/mepphoto/96989.jpg,"PERELLÓ RODRÍGUEZ",S&D
+Slovenia,Alojz,Male,2,http://ep.ngo.im/mepphoto/23693.jpg,PETERLE,PPE
+Croatia,Sandra,Female,1,http://ep.ngo.im/mepphoto/119441.jpg,"PETROVIĆ JAKOVINA",S&D
+Croatia,Tonino,Male,2,http://ep.ngo.im/mepphoto/112744.jpg,PICULA,S&D
+Germany,Markus,Male,2,http://ep.ngo.im/mepphoto/28224.jpg,PIEPER,PPE
+Finland,Sirpa,Female,1,http://ep.ngo.im/mepphoto/40599.jpg,PIETIKÄINEN,PPE
+Poland,Mirosław,Male,2,http://ep.ngo.im/mepphoto/28341.jpg,PIOTROWSKI,ECR
+Italy,Mario,Male,2,http://ep.ngo.im/mepphoto/96890.jpg,PIRILLO,S&D
+Austria,Hubert,Male,2,http://ep.ngo.im/mepphoto/2307.jpg,PIRKER,PPE
+Cyprus,Andreas,Male,2,http://ep.ngo.im/mepphoto/118144.jpg,PITSILLIDES,PPE
+Italy,Gianni,Male,2,http://ep.ngo.im/mepphoto/4436.jpg,PITTELLA,S&D
+Croatia,Andrej,Male,2,http://ep.ngo.im/mepphoto/112755.jpg,PLENKOVIĆ,PPE
+"Czech Republic",Pavel,Male,2,http://ep.ngo.im/mepphoto/96715.jpg,POC,S&D
+Greece,Anni,Female,1,http://ep.ngo.im/mepphoto/39317.jpg,PODIMATA,S&D
+France,Maurice,Male,2,http://ep.ngo.im/mepphoto/96931.jpg,PONGA,PPE
+Poland,"Tomasz Piotr",Male,2,http://ep.ngo.im/mepphoto/96801.jpg,PORĘBA,ECR
+Germany,Bernd,Male,2,http://ep.ngo.im/mepphoto/2229.jpg,POSSELT,PPE
+Germany,Hans-Gert,Male,2,http://ep.ngo.im/mepphoto/1253.jpg,PÖTTERING,PPE
+Greece,Konstantinos,Male,2,http://ep.ngo.im/mepphoto/96658.jpg,POUPAKIS,PPE
+Romania,"Cristian Dan",Male,2,http://ep.ngo.im/mepphoto/96838.jpg,PREDA,PPE
+Ireland,Phil,Female,1,http://ep.ngo.im/mepphoto/107386.jpg,PRENDERGAST,S&D
+Italy,Vittorio,Male,2,http://ep.ngo.im/mepphoto/28370.jpg,PRODI,S&D
+Poland,Jacek,Male,2,http://ep.ngo.im/mepphoto/23782.jpg,PROTASIEWICZ,PPE
+France,Franck,Male,2,http://ep.ngo.im/mepphoto/108080.jpg,PROUST,PPE
+Italy,Fiorello,Male,2,http://ep.ngo.im/mepphoto/96994.jpg,PROVERA,EFD
+Germany,Godelieve,Female,1,http://ep.ngo.im/mepphoto/1055.jpg,QUISTHOUDT-ROWOHL,PPE
+Portugal,Paulo,Male,2,http://ep.ngo.im/mepphoto/96903.jpg,RANGEL,PPE
+"Czech Republic",Miloslav,Male,2,http://ep.ngo.im/mepphoto/23706.jpg,RANSDORF,GUE/NGL
+Germany,Bernhard,Male,2,http://ep.ngo.im/mepphoto/1906.jpg,RAPKAY,S&D
+Greece,Sylvana,Female,1,http://ep.ngo.im/mepphoto/96925.jpg,RAPTI,S&D
+Austria,Evelyn,Female,1,http://ep.ngo.im/mepphoto/96998.jpg,REGNER,S&D
+Germany,Britta,Female,1,http://ep.ngo.im/mepphoto/96875.jpg,REIMERS,ALDE
+"Czech Republic",Vladimír,Male,2,http://ep.ngo.im/mepphoto/28330.jpg,REMEK,GUE/NGL
+Finland,Mitro,Male,2,http://ep.ngo.im/mepphoto/96686.jpg,REPO,S&D
+Germany,Herbert,Male,2,http://ep.ngo.im/mepphoto/28225.jpg,REUL,PPE
+Spain,Teresa,Female,1,http://ep.ngo.im/mepphoto/28349.jpg,"RIERA MADURELL",S&D
+Belgium,Frédérique,Female,1,http://ep.ngo.im/mepphoto/4253.jpg,RIES,ALDE
+Italy,Niccolò,Male,2,http://ep.ngo.im/mepphoto/97229.jpg,RINALDI,ALDE
+France,Michèle,Female,1,http://ep.ngo.im/mepphoto/96743.jpg,RIVASI,Verts/ALE
+Italy,Crescenzio,Male,2,http://ep.ngo.im/mepphoto/97199.jpg,RIVELLINI,PPE
+France,Jean,Male,2,http://ep.ngo.im/mepphoto/111068.jpg,ROATTA,PPE
+France,Robert,Male,2,http://ep.ngo.im/mepphoto/97022.jpg,ROCHEFORT,ALDE
+Germany,Ulrike,Female,1,http://ep.ngo.im/mepphoto/93624.jpg,RODUST,S&D
+Denmark,Jens,Male,2,http://ep.ngo.im/mepphoto/96710.jpg,ROHDE,ALDE
+"Czech Republic",Zuzana,Female,1,http://ep.ngo.im/mepphoto/28352.jpg,ROITHOVÁ,PPE
+Spain,Carmen,Female,1,http://ep.ngo.im/mepphoto/96990.jpg,"ROMERO LÓPEZ",S&D
+Spain,Raül,Male,2,http://ep.ngo.im/mepphoto/28409.jpg,"ROMEVA i RUEDA",Verts/ALE
+Italy,Licia,Female,1,http://ep.ngo.im/mepphoto/96819.jpg,RONZULLI,PPE
+Denmark,Anna,Female,1,http://ep.ngo.im/mepphoto/96664.jpg,ROSBACH,ECR
+Italy,Oreste,Male,2,http://ep.ngo.im/mepphoto/97196.jpg,ROSSI,PPE
+Germany,Dagmar,Female,1,http://ep.ngo.im/mepphoto/1183.jpg,ROTH-BEHRENDT,S&D
+"Czech Republic",Libor,Male,2,http://ep.ngo.im/mepphoto/23707.jpg,ROUČEK,S&D
+Austria,Paul,Male,2,http://ep.ngo.im/mepphoto/2278.jpg,RÜBIG,PPE
+Latvia,Alfreds,Male,2,http://ep.ngo.im/mepphoto/96988.jpg,RUBIKS,GUE/NGL
+Germany,Heide,Female,1,http://ep.ngo.im/mepphoto/4294.jpg,RÜHLE,Verts/ALE
+Latvia,Kārlis,Male,2,http://ep.ngo.im/mepphoto/111033.jpg,ŠADURSKIS,PPE
+France,Tokia,Female,1,http://ep.ngo.im/mepphoto/4345.jpg,SAÏFI,PPE
+Spain,"José Ignacio",Male,2,http://ep.ngo.im/mepphoto/2002.jpg,"SALAFRANCA SÁNCHEZ-NEYRA",PPE
+Italy,Potito,Male,2,http://ep.ngo.im/mepphoto/96889.jpg,SALATTO,PPE
+Greece,Nikolaos,Male,2,http://ep.ngo.im/mepphoto/99416.jpg,SALAVRAKOS,EFD
+Italy,Matteo,Male,2,http://ep.ngo.im/mepphoto/28404.jpg,SALVINI,EFD
+Spain,Antolín,Male,2,http://ep.ngo.im/mepphoto/28295.jpg,"SÁNCHEZ PRESEDO",S&D
+France,Marie-Thérèse,Female,1,http://ep.ngo.im/mepphoto/96746.jpg,SANCHEZ-SCHMID,PPE
+Romania,"Daciana Octavia",Female,1,http://ep.ngo.im/mepphoto/33989.jpg,SÂRBU,S&D
+Netherlands,Judith,Female,1,http://ep.ngo.im/mepphoto/96815.jpg,SARGENTINI,Verts/ALE
+France,"Marielle de",Female,1,http://ep.ngo.im/mepphoto/4335.jpg,SARNEZ,ALDE
+Italy,Amalia,Female,1,http://ep.ngo.im/mepphoto/4423.jpg,SARTORI,PPE
+Finland,Petri,Male,2,http://ep.ngo.im/mepphoto/112611.jpg,SARVAMAA,PPE
+Poland,Jacek,Male,2,http://ep.ngo.im/mepphoto/28297.jpg,SARYUSZ-WOLSKI,PPE
+Italy,David-Maria,Male,2,http://ep.ngo.im/mepphoto/96864.jpg,SASSOLI,S&D
+Lithuania,Algirdas,Male,2,http://ep.ngo.im/mepphoto/96696.jpg,SAUDARGAS,PPE
+Estonia,Vilja,Female,1,http://ep.ngo.im/mepphoto/97308.jpg,SAVISAAR-TOOMAST,ALDE
+Netherlands,Marietje,Female,1,http://ep.ngo.im/mepphoto/96945.jpg,SCHAAKE,ALDE
+Denmark,Christel,Female,1,http://ep.ngo.im/mepphoto/37312.jpg,SCHALDEMOSE,S&D
+Sweden,Carl,Male,2,http://ep.ngo.im/mepphoto/28139.jpg,SCHLYTER,Verts/ALE
+Sweden,Olle,Male,2,http://ep.ngo.im/mepphoto/4274.jpg,SCHMIDT,ALDE
+Germany,Horst,Male,2,http://ep.ngo.im/mepphoto/1930.jpg,SCHNELLHARDT,PPE
+Germany,Birgit,Female,1,http://ep.ngo.im/mepphoto/96827.jpg,SCHNIEBER-JASTRAM,PPE
+Germany,Helmut,Male,2,http://ep.ngo.im/mepphoto/96646.jpg,SCHOLZ,GUE/NGL
+Hungary,György,Male,2,http://ep.ngo.im/mepphoto/28135.jpg,SCHÖPFLIN,PPE
+Germany,Elisabeth,Female,1,http://ep.ngo.im/mepphoto/1933.jpg,SCHROEDTER,Verts/ALE
+Germany,Martin,Male,2,http://ep.ngo.im/mepphoto/1911.jpg,SCHULZ,S&D
+Germany,Werner,Male,2,http://ep.ngo.im/mepphoto/96731.jpg,SCHULZ,Verts/ALE
+Germany,Andreas,Male,2,http://ep.ngo.im/mepphoto/28223.jpg,SCHWAB,PPE
+Italy,Giancarlo,Male,2,http://ep.ngo.im/mepphoto/96996.jpg,SCOTTÀ,EFD
+Italy,Marco,Male,2,http://ep.ngo.im/mepphoto/96843.jpg,SCURRIA,PPE
+Spain,Salvador,Male,2,http://ep.ngo.im/mepphoto/111018.jpg,"SEDÓ i ALABART",PPE
+Austria,Richard,Male,2,http://ep.ngo.im/mepphoto/28252.jpg,SEEBER,PPE
+"Czech Republic",Olga,Female,1,http://ep.ngo.im/mepphoto/96718.jpg,SEHNALOVÁ,S&D
+Poland,Joanna,Female,1,http://ep.ngo.im/mepphoto/96789.jpg,SENYSZYN,S&D
+Romania,Adrian,Male,2,http://ep.ngo.im/mepphoto/33990.jpg,SEVERIN,"NA,NI"
+Poland,"Czesław Adam",Male,2,http://ep.ngo.im/mepphoto/23787.jpg,SIEKIERSKI,PPE
+Romania,"Ovidiu Ioan",Male,2,http://ep.ngo.im/mepphoto/33991.jpg,SILAGHI,ALDE
+Italy,"Sergio Paolo Francesco",Male,2,http://ep.ngo.im/mepphoto/96755.jpg,SILVESTRIS,PPE
+Germany,Peter,Male,2,http://ep.ngo.im/mepphoto/96836.jpg,SIMON,S&D
+"United Kingdom",Brian,Male,2,http://ep.ngo.im/mepphoto/1309.jpg,SIMPSON,S&D
+"United Kingdom",Nicole,Female,1,http://ep.ngo.im/mepphoto/96960.jpg,SINCLAIRE,"NA,NI"
+Germany,Birgit,Female,1,http://ep.ngo.im/mepphoto/96932.jpg,SIPPEL,S&D
+Poland,Marek,Male,2,http://ep.ngo.im/mepphoto/28380.jpg,SIWIEC,S&D
+"United Kingdom",Peter,Male,2,http://ep.ngo.im/mepphoto/2081.jpg,SKINNER,S&D
+Poland,"Joanna Katarzyna",Female,1,http://ep.ngo.im/mepphoto/96770.jpg,SKRZYDLEWSKA,PPE
+"United Kingdom",Alyn,Male,2,http://ep.ngo.im/mepphoto/28508.jpg,SMITH,Verts/ALE
+Slovakia,Monika,Female,1,http://ep.ngo.im/mepphoto/96655.jpg,SMOLKOVÁ,S&D
+Romania,Csaba,Male,2,http://ep.ngo.im/mepphoto/39724.jpg,SÓGOR,PPE
+Germany,Renate,Female,1,http://ep.ngo.im/mepphoto/4282.jpg,SOMMER,PPE
+Poland,Bogusław,Male,2,http://ep.ngo.im/mepphoto/28299.jpg,SONIK,PPE
+Cyprus,Sophocles,Male,2,http://ep.ngo.im/mepphoto/114840.jpg,SOPHOCLEOUS,S&D
+Spain,Francisco,Male,2,http://ep.ngo.im/mepphoto/97170.jpg,"SOSA WAGNER","NA,NI"
+Portugal,Alda,Female,1,http://ep.ngo.im/mepphoto/113487.jpg,SOUSA,GUE/NGL
+Denmark,"Søren Bo",Male,2,http://ep.ngo.im/mepphoto/37676.jpg,SØNDERGAARD,GUE/NGL
+Italy,"Francesco Enrico",Male,2,http://ep.ngo.im/mepphoto/997.jpg,SPERONI,EFD
+Austria,Ewald,Male,2,http://ep.ngo.im/mepphoto/111026.jpg,STADLER,"NA,NI"
+Belgium,Bart,Male,2,http://ep.ngo.im/mepphoto/4751.jpg,STAES,Verts/ALE
+Germany,Gabriele,Female,1,http://ep.ngo.im/mepphoto/4293.jpg,STAUNER,PPE
+Greece,Georgios,Male,2,http://ep.ngo.im/mepphoto/97008.jpg,STAVRAKAKIS,S&D
+Germany,Jutta,Female,1,http://ep.ngo.im/mepphoto/96831.jpg,STEINRUCK,S&D
+"United Kingdom",Struan,Male,2,http://ep.ngo.im/mepphoto/4546.jpg,STEVENSON,ECR
+Croatia,"Davor Ivo",Male,2,http://ep.ngo.im/mepphoto/119435.jpg,STIER,PPE
+"United Kingdom",Catherine,Female,1,http://ep.ngo.im/mepphoto/4545.jpg,STIHLER,S&D
+Netherlands,"Daniël van der",Male,2,http://ep.ngo.im/mepphoto/96946.jpg,STOEP,"NA,NI"
+Romania,"Theodor Dumitru",Male,2,http://ep.ngo.im/mepphoto/39721.jpg,STOLOJAN,PPE
+Bulgaria,Dimitar,Male,2,http://ep.ngo.im/mepphoto/34254.jpg,STOYANOV,"NA,NI"
+"Czech Republic",Ivo,Male,2,http://ep.ngo.im/mepphoto/28320.jpg,STREJČEK,ECR
+"United Kingdom",Robert,Male,2,http://ep.ngo.im/mepphoto/2037.jpg,STURDY,ECR
+Croatia,Dubravka,Female,1,http://ep.ngo.im/mepphoto/119434.jpg,ŠUICA,PPE
+Hungary,László,Male,2,http://ep.ngo.im/mepphoto/23820.jpg,SURJÁN,PPE
+Sweden,Alf,Male,2,http://ep.ngo.im/mepphoto/96678.jpg,SVENSSON,PPE
+"United Kingdom",Kay,Female,1,http://ep.ngo.im/mepphoto/96920.jpg,SWINBURNE,ECR
+Austria,Hannes,Male,2,http://ep.ngo.im/mepphoto/2295.jpg,SWOBODA,S&D
+Hungary,József,Male,2,http://ep.ngo.im/mepphoto/23821.jpg,SZÁJER,PPE
+Hungary,Csanád,Male,2,http://ep.ngo.im/mepphoto/96855.jpg,SZEGEDI,"NA,NI"
+Poland,Konrad,Male,2,http://ep.ngo.im/mepphoto/28358.jpg,SZYMAŃSKI,ECR
+Hungary,"Csaba Sándor",Male,2,http://ep.ngo.im/mepphoto/23808.jpg,TABAJDI,S&D
+Finland,Hannu,Male,2,http://ep.ngo.im/mepphoto/28316.jpg,TAKKULA,ALDE
+Romania,"Claudiu Ciprian",Male,2,http://ep.ngo.im/mepphoto/96847.jpg,TĂNĂSESCU,S&D
+"United Kingdom",Charles,Male,2,http://ep.ngo.im/mepphoto/4521.jpg,TANNOCK,ECR
+Belgium,Marc,Male,2,http://ep.ngo.im/mepphoto/29579.jpg,TARABELLA,S&D
+Estonia,Indrek,Male,2,http://ep.ngo.im/mepphoto/97136.jpg,TARAND,Verts/ALE
+Italy,Salvatore,Male,2,http://ep.ngo.im/mepphoto/1945.jpg,TATARELLA,PPE
+Portugal,Rui,Male,2,http://ep.ngo.im/mepphoto/96821.jpg,TAVARES,Verts/ALE
+"United Kingdom",Keith,Male,2,http://ep.ngo.im/mepphoto/102931.jpg,TAYLOR,Verts/ALE
+"United Kingdom",Rebecca,Female,1,http://ep.ngo.im/mepphoto/112620.jpg,TAYLOR,ALDE
+Portugal,Nuno,Male,2,http://ep.ngo.im/mepphoto/96974.jpg,TEIXEIRA,PPE
+Finland,Sampo,Male,2,http://ep.ngo.im/mepphoto/107385.jpg,TERHO,EFD
+Germany,Alexandra,Female,1,http://ep.ngo.im/mepphoto/96874.jpg,THEIN,ALDE
+Germany,Michael,Male,2,http://ep.ngo.im/mepphoto/96871.jpg,THEURER,ALDE
+France,Isabelle,Female,1,http://ep.ngo.im/mepphoto/114279.jpg,THOMAS,S&D
+Denmark,Britta,Female,1,http://ep.ngo.im/mepphoto/28153.jpg,THOMSEN,S&D
+Poland,"Róża Gräfin von",Female,1,http://ep.ngo.im/mepphoto/96776.jpg,"THUN UND HOHENSTEIN",PPE
+Belgium,Marianne,Female,1,http://ep.ngo.im/mepphoto/1832.jpg,THYSSEN,PPE
+Romania,Silvia-Adriana,Female,1,http://ep.ngo.im/mepphoto/36281.jpg,ŢICĂU,S&D
+France,Patrice,Male,2,http://ep.ngo.im/mepphoto/97026.jpg,TIROLIEN,S&D
+Italy,Patrizia,Female,1,http://ep.ngo.im/mepphoto/28340.jpg,TOIA,S&D
+Romania,László,Male,2,http://ep.ngo.im/mepphoto/39726.jpg,TŐKÉS,PPE
+Lithuania,Valdemar,Male,2,http://ep.ngo.im/mepphoto/96697.jpg,TOMAŠEVSKI,ECR
+Croatia,Ruža,Female,1,http://ep.ngo.im/mepphoto/119431.jpg,TOMAŠIĆ,ECR
+Finland,Nils,Male,2,http://ep.ngo.im/mepphoto/114268.jpg,TORVALDS,ALDE
+"Czech Republic",Evžen,Male,2,http://ep.ngo.im/mepphoto/96713.jpg,TOŠENOVSKÝ,ECR
+Greece,Georgios,Male,2,http://ep.ngo.im/mepphoto/28584.jpg,TOUSSAS,GUE/NGL
+France,Catherine,Female,1,http://ep.ngo.im/mepphoto/1129.jpg,TRAUTMANN,S&D
+Italy,Gino,Male,2,http://ep.ngo.im/mepphoto/110987.jpg,TREMATERRA,PPE
+Spain,Ramon,Male,2,http://ep.ngo.im/mepphoto/97203.jpg,"TREMOSA i BALCELLS",ALDE
+Cyprus,Kyriacos,Male,2,http://ep.ngo.im/mepphoto/28514.jpg,TRIANTAPHYLLIDES,GUE/NGL
+Germany,Helga,Female,1,http://ep.ngo.im/mepphoto/28240.jpg,TRÜPEL,Verts/ALE
+Poland,Rafał,Male,2,http://ep.ngo.im/mepphoto/96773.jpg,TRZASKOWSKI,PPE
+Luxembourg,Claude,Male,2,http://ep.ngo.im/mepphoto/4432.jpg,TURMES,Verts/ALE
+Denmark,Emilie,Female,1,http://ep.ngo.im/mepphoto/96703.jpg,TURUNEN,S&D
+Greece,Niki,Female,1,http://ep.ngo.im/mepphoto/96660.jpg,TZAVELA,EFD
+Italy,Giommaria,Male,2,http://ep.ngo.im/mepphoto/97131.jpg,UGGIAS,ALDE
+Germany,Thomas,Male,2,http://ep.ngo.im/mepphoto/28221.jpg,ULMER,PPE
+Sweden,Marita,Female,1,http://ep.ngo.im/mepphoto/96672.jpg,ULVSKOG,S&D
+Bulgaria,Vladimir,Male,2,http://ep.ngo.im/mepphoto/38601.jpg,URUTCHEV,PPE
+Romania,Corneliu,Male,2,http://ep.ngo.im/mepphoto/96845.jpg,"VADIM TUDOR","NA,NI"
+Latvia,Inese,Female,1,http://ep.ngo.im/mepphoto/28617.jpg,VAIDERE,PPE
+Slovenia,Ivo,Male,2,http://ep.ngo.im/mepphoto/97019.jpg,VAJGL,ALDE
+Romania,Adina-Ioana,Female,1,http://ep.ngo.im/mepphoto/37324.jpg,VĂLEAN,ALDE
+Croatia,Oleg,Male,2,http://ep.ngo.im/mepphoto/119440.jpg,VALJALO,S&D
+Belgium,Kathleen,Female,1,http://ep.ngo.im/mepphoto/5729.jpg,"VAN BREMPT",S&D
+"United Kingdom",Geoffrey,Male,2,http://ep.ngo.im/mepphoto/4513.jpg,"VAN ORDEN",ECR
+Belgium,Frank,Male,2,http://ep.ngo.im/mepphoto/1956.jpg,VANHECKE,EFD
+Italy,Gianni,Male,2,http://ep.ngo.im/mepphoto/4398.jpg,VATTIMO,ALDE
+"United Kingdom",Derek,Male,2,http://ep.ngo.im/mepphoto/96918.jpg,VAUGHAN,S&D
+Netherlands,"Sophia in 't",Female,1,http://ep.ngo.im/mepphoto/28266.jpg,VELD,ALDE
+France,Marie-Christine,Female,1,http://ep.ngo.im/mepphoto/96858.jpg,VERGIAT,GUE/NGL
+France,Bernadette,Female,1,http://ep.ngo.im/mepphoto/28177.jpg,VERGNAUD,S&D
+Germany,Sabine,Female,1,http://ep.ngo.im/mepphoto/96756.jpg,VERHEYEN,PPE
+Belgium,Guy,Male,2,http://ep.ngo.im/mepphoto/97058.jpg,VERHOFSTADT,ALDE
+Spain,Alejo,Male,2,http://ep.ngo.im/mepphoto/4308.jpg,VIDAL-QUADRAS,PPE
+France,"Philippe de",Male,2,http://ep.ngo.im/mepphoto/2212.jpg,VILLIERS,EFD
+Lithuania,Justina,Female,1,http://ep.ngo.im/mepphoto/30475.jpg,"VITKAUSKAITE BERNARD",ALDE
+"Czech Republic",Oldřich,Male,2,http://ep.ngo.im/mepphoto/28323.jpg,VLASÁK,ECR
+France,Dominique,Female,1,http://ep.ngo.im/mepphoto/5737.jpg,VLASTO,PPE
+Germany,Axel,Male,2,http://ep.ngo.im/mepphoto/96761.jpg,VOSS,PPE
+Croatia,Nikola,Male,2,http://ep.ngo.im/mepphoto/112760.jpg,VULJANIĆ,GUE/NGL
+Poland,"Jarosław Leszek",Male,2,http://ep.ngo.im/mepphoto/96774.jpg,WAŁĘSA,PPE
+"United Kingdom","Sir Graham",Male,2,http://ep.ngo.im/mepphoto/2155.jpg,WATSON,ALDE
+France,Henri,Male,2,http://ep.ngo.im/mepphoto/2319.jpg,WEBER,S&D
+Germany,Manfred,Male,2,http://ep.ngo.im/mepphoto/28229.jpg,WEBER,PPE
+Romania,Renate,Female,1,http://ep.ngo.im/mepphoto/39713.jpg,WEBER,ALDE
+Austria,Josef,Male,2,http://ep.ngo.im/mepphoto/111014.jpg,WEIDENHOLZER,S&D
+Germany,Barbara,Female,1,http://ep.ngo.im/mepphoto/1907.jpg,WEILER,S&D
+Austria,Angelika,Female,1,http://ep.ngo.im/mepphoto/97016.jpg,WERTHMANN,ALDE
+Sweden,Åsa,Female,1,http://ep.ngo.im/mepphoto/28130.jpg,WESTLUND,S&D
+Germany,Kerstin,Female,1,http://ep.ngo.im/mepphoto/96839.jpg,WESTPHAL,S&D
+Germany,Rainer,Male,2,http://ep.ngo.im/mepphoto/2323.jpg,WIELAND,PPE
+Sweden,Cecilia,Female,1,http://ep.ngo.im/mepphoto/96677.jpg,WIKSTRÖM,ALDE
+"United Kingdom",Glenis,Female,1,http://ep.ngo.im/mepphoto/35743.jpg,WILLMOTT,S&D
+Germany,Sabine,Female,1,http://ep.ngo.im/mepphoto/96741.jpg,WILS,GUE/NGL
+Germany,Hermann,Male,2,http://ep.ngo.im/mepphoto/96764.jpg,WINKLER,PPE
+Romania,Iuliu,Male,2,http://ep.ngo.im/mepphoto/39725.jpg,WINKLER,PPE
+Poland,Jacek,Male,2,http://ep.ngo.im/mepphoto/96802.jpg,WŁOSOWICZ,EFD
+Poland,Janusz,Male,2,http://ep.ngo.im/mepphoto/23784.jpg,WOJCIECHOWSKI,ECR
+Netherlands,Corien,Female,1,http://ep.ngo.im/mepphoto/28167.jpg,WORTMANN-KOOL,PPE
+Spain,Luis,Male,2,http://ep.ngo.im/mepphoto/28278.jpg,"YÁÑEZ-BARNUEVO GARCÍA",S&D
+Slovakia,Anna,Female,1,http://ep.ngo.im/mepphoto/23894.jpg,ZÁBORSKÁ,PPE
+"Czech Republic",Jan,Male,2,http://ep.ngo.im/mepphoto/23712.jpg,ZAHRADIL,ECR
+Slovakia,Boris,Male,2,http://ep.ngo.im/mepphoto/96656.jpg,ZALA,S&D
+Spain,Pablo,Male,2,http://ep.ngo.im/mepphoto/96763.jpg,"ZALBA BIDEGAIN",PPE
+Poland,Paweł,Male,2,http://ep.ngo.im/mepphoto/96777.jpg,ZALEWSKI,PPE
+Romania,"Dan Dumitru",Male,2,http://ep.ngo.im/mepphoto/117119.jpg,ZAMFIRESCU,"NA,NI"
+Italy,Iva,Female,1,http://ep.ngo.im/mepphoto/41007.jpg,ZANICCHI,PPE
+Italy,Andrea,Male,2,http://ep.ngo.im/mepphoto/108329.jpg,ZANONI,ALDE
+Poland,Artur,Male,2,http://ep.ngo.im/mepphoto/96778.jpg,ZASADA,PPE
+Latvia,Tatjana,Female,1,http://ep.ngo.im/mepphoto/28619.jpg,ŽDANOKA,Verts/ALE
+Germany,Joachim,Male,2,http://ep.ngo.im/mepphoto/96762.jpg,ZELLER,PPE
+Poland,"Janusz Władysław",Male,2,http://ep.ngo.im/mepphoto/96784.jpg,ZEMKE,S&D
+France,Karim,Male,2,http://ep.ngo.im/mepphoto/113890.jpg,ZÉRIBI,Verts/ALE
+Netherlands,Auke,Male,2,http://ep.ngo.im/mepphoto/103246.jpg,ZIJLSTRA,"NA,NI"
+Latvia,Roberts,Male,2,http://ep.ngo.im/mepphoto/28615.jpg,ZĪLE,ECR
+Germany,Gabriele,Female,1,http://ep.ngo.im/mepphoto/28248.jpg,ZIMMER,GUE/NGL
+Poland,Zbigniew,Male,2,http://ep.ngo.im/mepphoto/96803.jpg,ZIOBRO,EFD
+Portugal,"Inês Cristina",Female,1,http://ep.ngo.im/mepphoto/111589.jpg,ZUBER,GUE/NGL
+Poland,Tadeusz,Male,2,http://ep.ngo.im/mepphoto/28301.jpg,ZWIEFKA,PPE
