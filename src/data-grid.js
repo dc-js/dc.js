@@ -3,11 +3,11 @@
 
 Includes: [Base Mixin](#base-mixin)
 
-Data grid is a simple widget designed to list crossfilter focused data set (items being filtered) in a good old tabular
+Data grid is a simple widget designed to list crossfilter focused data set (items being filtered) and provide you a simple way to define how each data item is displayed.
 fashion.
 
 Examples:
-* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
+* [List of members of the european parliament ](http://europarl.me/dc.js/web/ep/index.html)
 
 #### dc.dataGrid(parent[, chartGroup])
 Create a data grid widget instance and attach it to the given parent element.
@@ -21,6 +21,8 @@ Parameters:
 Return:
 A newly created data grid widget instance
 
+you are expected to provide your own html(d) function that returns the html for each item (by default, stringify the data, not what you want beside for debugging)
+ 
 **/
 dc.dataGrid = function(parent, chartGroup) {
     var LABEL_CSS_CLASS = "dc-grid-label";
