@@ -14,12 +14,14 @@
     <script type="text/javascript" src="../../src/data-grid.js"></script>
     <script type="text/javascript" src="underscore-min.js"></script>
 
+<script src="jquery.min.js"></script>
+<script src="jquery.lazyload.js"></script>
 
 <script>
 
-var tpl = _.template("<h2 title='MEP from <%= country %> in <%= party %>'> <%= first_name %> <%= last_name %></h2><img src='<%= image_URL %>' alt='<%= last_name %>, <%= first_name %> member of <%= party %>' title='MEP from <%= country %> in <%= party %>'>");
+var tpl = _.template("<h2 title='MEP from <%= country %> in <%= party %>'> <%= first_name %> <%= last_name %></h2><img class='lazy-load' dsrc='blank.gif' data-original='<%= image_URL %>' alt='<%= last_name %>, <%= first_name %> member of <%= party %>' title='MEP from <%= country %> in <%= party %>' width=170 height=216 />");
 
-function list (selector,path,data) {
+function grid (selector,data) {
   var ndx = crossfilter(data),
   all = ndx.groupAll();
 
@@ -45,43 +47,43 @@ function list (selector,path,data) {
   });
   var countryGroup   = country.group().reduceSum(function(d) { return 1; });
  
- pie_gender
-  .width(200)
-  .height(200)
-  .dimension(gender)
-  .group(groupGender);
+   pie_gender
+    .width(200)
+    .height(200)
+    .dimension(gender)
+    .group(groupGender);
 
- pie_group
-  .width(200)
-  .height(200)
-  .dimension(group)
-  .colors(d3.scale.category10())
-  .group(groupGroup)
-  .renderlet(function (chart) {
-  });
+   pie_group
+    .width(200)
+    .height(200)
+    .dimension(group)
+    .colors(d3.scale.category10())
+    .group(groupGroup)
+    .renderlet(function (chart) {
+    });
 
- bar_country
-  .width(444)
-  .height(200)
-  .outerPadding(0)
-  .gap(1)
-  .margins({top: 0, right: 0, bottom: 95, left: 30})
-  .x(d3.scale.ordinal())
-  .xUnits(dc.units.ordinal)
-  .brushOn(false)
-  .elasticY(true)
-  .yAxisLabel("#MEPs")
-  .dimension(country)
-  .group(countryGroup);
+   bar_country
+    .width(444)
+    .height(200)
+    .outerPadding(0)
+    .gap(1)
+    .margins({top: 0, right: 0, bottom: 95, left: 30})
+    .x(d3.scale.ordinal())
+    .xUnits(dc.units.ordinal)
+    .brushOn(false)
+    .elasticY(true)
+    .yAxisLabel("#MEPs")
+    .dimension(country)
+    .group(countryGroup);
 
- bar_country.on("postRender", function(c) {rotateBarChartLabels();} );
+   bar_country.on("postRender", function(c) {rotateBarChartLabels();} );
 
 
-function rotateBarChartLabels() {
-  d3.selectAll(selector+ ' .country .axis.x text')
-    .style("text-anchor", "end" )
-    .attr("transform", function(d) { return "rotate(-90, -4, 9) "; });
-}
+  function rotateBarChartLabels() {
+    d3.selectAll(selector+ ' .country .axis.x text')
+      .style("text-anchor", "end" )
+      .attr("transform", function(d) { return "rotate(-90, -4, 9) "; });
+  }
 
 
   dc.dataCount(".dc-data-count")
@@ -99,7 +101,11 @@ function rotateBarChartLabels() {
             return d.last_name;
         })
         .order(d3.ascending)
-        .renderlet(function (table) {
+        .renderlet(function (grid) {
+          $("img.lazy-load").lazyload ({
+            effect : "fadeIn"
+          })
+          .removeClass("lazy-load");
         });
 
 /*
@@ -158,9 +164,9 @@ function rotateBarChartLabels() {
         </div>
       </div>
       <div class="dc-data-grid">
-here be grid
 </div>
-      <table class="tabledc-data-table">
+
+      <!--table class="table dc-data-table">
         <thead>
           <tr class="header">
             <th>Gender</th>
@@ -170,19 +176,21 @@ here be grid
             <th>Group</th>
           </tr>
         </thead>
-      </table>
+      </table-->
     </div>
 
-    <script>
-d3.csv("mep.csv", function(d) {return d;
-  }, function(error, rows) {
-  console.log(rows);
-  list ("#ep2014list","/sites/ep2014.org/modules/ep2014",rows);
-  });
-      
+<script>
+$(function() {
+  d3.csv("mep.csv", function(d) {return d;}
+    ,function(error, rows) {
+      grid ("#ep2014list",rows);
+  });      
+});      
 </script>
+
 <style>
-  .country, .gender {float:left;}
+  div.gender {float:none;}
+  
   #ep2014list table, .dc-data-grid {clear:both;}
   .dc-table-label {background: #F5F5F5; font-weight:bold; }
   .x line {stroke:none;}
@@ -216,12 +224,12 @@ d3.csv("mep.csv", function(d) {return d;
   .dc-grid-item img {width:170px;height:215px}
   .dc-grid-top h1 {font-size:22px;}
   .dc-grid-top h2 {font-size:14px;}
-   
 </style>
 </div>
 
 
 </div>
 </div>
+
 </body>
 </html>
