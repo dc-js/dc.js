@@ -17,7 +17,7 @@ describe('dc.compositeChart', function() {
             .group(dateIdSumGroup)
             .width(500)
             .height(150)
-            .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
+            .x(d3.time.scale().domain([new Date(Date.UTC(2012, 3, 20,0,0,0,0)), new Date(Date.UTC(2012, 6, 15,0,0,0,0))]))
             .transitionDuration(0)
             .xUnits(d3.time.days)
             .shareColors(true)
@@ -68,8 +68,8 @@ describe('dc.compositeChart', function() {
     });
 
     it('should set the x domain to endpoint dates', function () {
-        expect(chart.x().domain()[0].getTime()).toBe(new Date(2012, 4, 20).getTime());
-        expect(chart.x().domain()[1].getTime()).toBe(new Date(2012, 7, 15).getTime());
+        expect(chart.x().domain()[0].getTime()).toBe(new Date(Date.UTC(2012, 3, 20,0,0,0,0)).getTime());
+        expect(chart.x().domain()[1].getTime()).toBe(new Date(Date.UTC(2012, 6, 15,0,0,0,0)).getTime());
     });
 
     it('should set the x units', function(){
@@ -338,8 +338,8 @@ describe('dc.compositeChart', function() {
         });
 
         it('should set the x domain', function () {
-            expect(chart.x().domain()[0].getTime() >= 1337904000000).toBeTruthy();
-            expect(chart.x().domain()[1].getTime() >= 1344556800000).toBeTruthy();
+            expect(chart.x().domain()[0].getTime() >= new Date(Date.UTC(2012, 4, 25,0,0,0,0)).getTime()).toBeTruthy();
+            expect(chart.x().domain()[1].getTime() >= new Date(Date.UTC(2012, 7, 10,0,0,0,0)).getTime()).toBeTruthy();
         });
     });
 
