@@ -17,7 +17,7 @@ describe('dc.compositeChart', function() {
             .group(dateIdSumGroup)
             .width(500)
             .height(150)
-            .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
+            .x(d3.time.scale().domain([new Date(Date.UTC(2012, 3, 20,0,0,0,0)), new Date(Date.UTC(2012, 6, 15,0,0,0,0))]))
             .transitionDuration(0)
             .xUnits(d3.time.days)
             .shareColors(true)
