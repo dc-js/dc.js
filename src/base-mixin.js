@@ -76,7 +76,7 @@ dc.baseMixin = function (_chart) {
                     var filter = filters[i];
                     if (filter.isFiltered && filter.isFiltered(d)) {
                         return true;
-                    } else if (filter == d) {
+                    } else if (filter <= d && filter >= d) {
                         return true;
                     }
                 }
