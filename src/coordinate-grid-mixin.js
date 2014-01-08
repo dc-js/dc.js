@@ -338,7 +338,7 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('text-anchor', 'middle')
                 .text(_chart.xAxisLabel());
         if (_chart.xAxisLabel() && axisXLab.text() != _chart.xAxisLabel())
-            axisYLab.text(_chart.xAxisLabel());
+            axisXLab.text(_chart.xAxisLabel());
 
         dc.transition(axisXG, _chart.transitionDuration())
             .call(_xAxis);
