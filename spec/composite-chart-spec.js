@@ -338,8 +338,8 @@ describe('dc.compositeChart', function() {
         });
 
         it('should set the x domain', function () {
-            expect(chart.x().domain()[0].getTime() >= new Date(Date.UTC(2012, 4, 25,0,0,0,0).getTime()).toBeTruthy();
-            expect(chart.x().domain()[1].getTime() >= new Date(Date.UTC(2012, 7, 10,0,0,0,0).getTime()).toBeTruthy();
+            expect(chart.x().domain()[0].getTime() >= new Date(Date.UTC(2012, 4, 25,0,0,0,0)).getTime()).toBeTruthy();
+            expect(chart.x().domain()[1].getTime() >= new Date(Date.UTC(2012, 7, 10,0,0,0,0)).getTime()).toBeTruthy();
         });
     });
 
