@@ -73,12 +73,19 @@ dc.compositeChart = function (parent, chartGroup) {
 
     _chart._brushing = function () {
         var extent = _chart.extendBrush();
-        var brushIsEmpty = _chart.brushIsEmpty(extent);
-
-        for (var i = 0; i < _children.length; ++i) {
-            _children[i].filter(null);
-            if (!brushIsEmpty) _children[i].filter(extent);
+        var rangedFilter = null;
+        if(!_chart.brushIsEmpty(extent)) {
+            rangedFilter = dc.filters.RangedFilter(extent[0], extent[1]);
         }
+    
+        dc.events.trigger(function () {
+            if (!rangedFilter) {
+                _chart.filter(null);
+            } else {
+                _chart.replaceFilter(rangedFilter);
+            }
+            _chart.redrawGroup();
+        }, dc.constants.EVENT_DELAY);
     };
 
     _chart._prepareYAxis = function () {
