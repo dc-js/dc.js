@@ -17,11 +17,9 @@ Parameters:
  * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
  in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
  chart group.
-
+ * html (item): function - return the html fragment for each item in the dataset. you can use a templating library or build the html directly.
 Return:
 A newly created data grid widget instance
-
-you are expected to provide your own html(d) function that returns the html for each item (by default, stringify the data, not what you want beside for debugging)
 
  **/
 dc.dataGrid = function(parent, chartGroup) {
