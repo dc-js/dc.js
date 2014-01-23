@@ -27,9 +27,11 @@ function buildPage(htmlFile,jsFile) {
     var libs = {d3:null, crossfilter:null, dc:null, colorbrewer:null};
     function loadJS(f) {
         /*jshint -W054 */
+        var debug_tag = "//@ sourceURL=dc-web-test" + f;
         load = new Function("window","document","d3","crossfilter","dc","colorbrewer",
                           fs.readFileSync(web(f), "utf-8") +
-                            "this.d3 = d3;this.dc=dc;this.colorbrewer=colorbrewer;");
+                            "\nthis.d3 = (42,eval)('this').d3;this.dc=dc;this.colorbrewer=colorbrewer;\n" +
+                            debug_tag);
         load.call(libs, window, document, libs.d3, libs.crossfilter, libs.dc, libs.colorbrewer);
     }
     loadJS('js/d3.js');
@@ -76,7 +78,7 @@ var pages = [
   {name:"Stock Example", html:'index.html',js:'stock.js',baseline:'test/web-renders/stock.html'}
 ];
 
-if (module.parent.id.match(/Gruntfile/)) {
+if (module.parent && module.parent.id.match(/Gruntfile/)) {
     module.exports = function(log) {
         pages.forEach(savePage,log);
     };
