@@ -169,7 +169,7 @@ d3.csv("ndx.csv", function (data) {
     var dayOfWeekGroup = dayOfWeek.group();
 
     //### Define Chart Attributes
-    //Define chart attributes using fluent methods. See the [dc API Reference](https://github.com/NickQiZhu/dc.js/blob/master/web/docs/api-1.7.0.md) for more information
+    //Define chart attributes using fluent methods. See the [dc API Reference](https://github.com/dc-js/dc.js/blob/master/web/docs/api-1.7.0.md) for more information
     //
 
     //#### Bubble Chart
