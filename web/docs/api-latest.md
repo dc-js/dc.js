@@ -25,6 +25,7 @@
   * [Heat Map](#heat-map)
   * [Box Plot](#box-plot)
 
+
 #### Version 2.0.0-dev
 
 The entire dc.js library is scoped under **dc** name space. It does not introduce anything else into the global
@@ -40,37 +41,46 @@ chart.width(300)
 ```
 The API references will highlight the fact if a particular function is not chainable.
 
+
 ## Utilities
+
 
 #### dc.filterAll([chartGroup])
 Clear all filters on every chart within the given chart group. If the chart group is not given then only charts that
 belong to the default chart group will be reset.
 
+
 #### dc.refocusAll([chartGroup])
 Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is not given then only charts that belong to
 the default chart group will be reset.
 
+
 #### dc.renderAll([chartGroup])
 Re-render all charts belong to the given chart group. If the chart group is not given then only charts that belong to
 the default chart group will be re-rendered.
+
 
 #### dc.redrawAll([chartGroup])
 Redraw all charts belong to the given chart group. If the chart group is not given then only charts that belong to the
 default chart group will be re-drawn. Redraw is different from re-render since when redrawing dc charts try to update
 the graphic incrementally instead of starting from scratch.
 
+
 #### dc.units.integers
 This function can be used to in [Coordinate Grid Chart](#coordinate-grid-chart) to define units on x axis.
 dc.units.integers is the default x unit scale used by [Coordinate Grid Chart](#coordinate-grid-chart) and should be
 used when x range is a sequential of integers.
 
+
 #### dc.units.ordinal
 This function can be used to in [Coordinate Grid Chart](#coordinate-grid-chart) to define ordinal units on x axis.
 Usually this function is used in combination with d3.scale.ordinal() on x axis.
 
+
 #### dc.units.fp.precision(precision)
 This function generates xunit function in floating-point numbers with the given precision. For example if the function
 is invoked with 0.001 precision then the function created will divide a range [0.5, 1.0] with 500 units.
+
 
 #### dc.events.trigger(function[, delay])
 This function is design to trigger throttled event function optionally with certain amount of delay(in milli-seconds).
@@ -88,13 +98,16 @@ chart.renderlet(function(chart){
 })
 ```
 
+
 ## Base Mixin
 Base Mixin is an abstract functional object representing a basic dc chart object
 for all chart and widget implementations. Methods from the Base Mixin are inherited
 and available on all chart implementation in the DC library.
 
+
 #### .width([value])
 Set or get width attribute of a chart. See `.height` below for further description of the behavior.
+
 
 #### .height([value])
 Set or get height attribute of a chart. The height is applied to the SVG element
@@ -114,11 +127,14 @@ chart.height(function(anchor) { return doSomethingWith(anchor); }); // set the c
 chart.height(null); // reset the height to the default auto calculation
 ```
 
+
 #### .minWidth([value])
 Set or get minimum width attribute of a chart. This only applicable if the width is calculated by DC.
 
+
 #### .minHeight([value])
 Set or get minimum height attribute of a chart. This only applicable if the height is calculated by DC.
+
 
 #### .dimension([value]) - **mandatory**
 Set or get dimension attribute of a chart. In dc a dimension can be any valid
@@ -126,6 +142,7 @@ Set or get dimension attribute of a chart. In dc a dimension can be any valid
 then it will be used as the new dimension.
 
 If no value specified then the current dimension will be returned.
+
 
 #### .data([callback])
 Get the data callback or retreive the charts data set. The data callback is passed the chart's group and by default
@@ -136,6 +153,7 @@ will return `group.all()`. This behavior may be modified to, for instance, retur
     });
 ```
 
+
 #### .group([value, [name]]) - **mandatory**
 Set or get group attribute of a chart. In dc a group is a
 [crossfilter group](https://github.com/square/crossfilter/wiki/API-Reference#wiki-group). Usually the group should be
@@ -145,11 +163,14 @@ the new group.
 If no value specified then the current group will be returned.
 If name is specified then it will be used to generate legend label.
 
+
 #### .ordering([orderFunction])
 Get or set an accessor to order ordinal charts
 
+
 #### .filterAll()
 Clear all filters associated with this chart.
+
 
 #### .select(selector)
 Execute in scope d3 single selection using the given selector and return d3 selection result. Roughly the same as:
@@ -159,6 +180,7 @@ d3.select("#chart-id").select(selector);
 This function is **not chainable** since it does not return a chart instance; however the d3 selection result is chainable
 from d3's perspective.
 
+
 #### .selectAll(selector)
 Execute in scope d3 selectAll using the given selector and return d3 selection result. Roughly the same as:
 ```js
@@ -167,29 +189,36 @@ d3.select("#chart-id").selectAll(selector);
 This function is **not chainable** since it does not return a chart instance; however the d3 selection result is
 chainable from d3's perspective.
 
+
 #### .anchor([anchorChart/anchorSelector], [chartGroup])
 Set the svg root to either be an existing chart's root or the first element returned from a d3 css string selector. Optionally registers the chart within the chartGroup. This class is called internally on chart initialization, but be called again to relocate the chart. However, it will orphan any previously created SVG elements.
 
+
 #### .anchorName()
 Return the dom ID for chart's anchored location
+
 
 #### .root([rootElement])
 Returns the root element where a chart resides. Usually it will be the parent div element where svg was created. You
 can also pass in a new root element however this is usually handled as part of the dc internal. Resetting root element
 on a chart outside of dc internal might have unexpected consequences.
 
+
 #### .svg([svgElement])
 Returns the top svg element for this specific chart. You can also pass in a new svg element however this is usually
 handled as part of the dc internal. Resetting svg element on a chart outside of dc internal might have unexpected
 consequences.
 
+
 #### .resetSvg()
 Remove the chart's SVG elements from the dom and recreate the container SVG element.
+
 
 #### .filterPrinter([filterPrinterFunction])
 Set or get filter printer function. Filter printer function is used to generate human friendly text for filter value(s)
 associated with the chart instance. By default dc charts shipped with a default filter printer implementation dc.printers.filter
 that provides simple printing support for both single value and ranged filters.
+
 
 #### .turnOnControls() & .turnOffControls()
 Turn on/off optional control elements within the root element. dc.js currently support the following html control elements.
@@ -197,13 +226,16 @@ Turn on/off optional control elements within the root element. dc.js currently s
 * root.selectAll(".reset") elements are turned on if the chart has an active filter. This type of control elements are usually used to store reset link to allow user to reset filter on a certain chart. This element will be turned off automatically if the filter is cleared.
 * root.selectAll(".filter") elements are turned on if the chart has an active filter. The text content of this element is then replaced with the current filter value using the filter printer function. This type of element will be turned off automatically if the filter is cleared.
 
+
 #### .transitionDuration([duration])
 Set or get animation transition duration(in milliseconds) for specific chart instance. Default duration is 750ms.
+
 
 #### .render()
 Invoke this method will force the chart to re-render everything from scratch. Generally it should be only used to
 render the chart for the first time on the page or if you want to make sure everything is redrawn from scratch instead
 of relying on the default incremental redrawing behaviour.
+
 
 #### .redraw()
 Calling redraw will cause the chart to re-render delta in data change incrementally. If there is no change in the
@@ -212,9 +244,11 @@ dc library will automatically trigger this method through its internal event eng
 invoke this function if data is manipulated outside of dc's control; for example if data is loaded on a periodic basis
 in the background using crossfilter.add().
 
+
 #### .hasFilter([filter])
 Check whether is any active filter or a specific filter is associated with particular chart instance.
 This function is **not chainable**.
+
 
 #### .filter([filterValue])
 Filter the chart by the given value or return the current filter if the input parameter is missing.
@@ -225,13 +259,16 @@ chart.filter("Sunday");
 chart.filter(18);
 ```
 
+
 #### .filters()
 Return all current filters. This method does not perform defensive cloning of the internal filter array before returning
 therefore any modification of returned array will affact chart's internal filter storage.
 
+
 #### .onClick(datum)
 This function is passed to d3 as the onClick handler for each chart. By default it will filter the on the clicked datum
 (as passed back to the callback) and redraw the chart group.
+
 
 #### .filterHandler([function])
 Set or get filter handler. Filter handler is a function that performs the filter action on a specific dimension. Using
@@ -252,6 +289,7 @@ chart.filterHandler(function(dimension, filter){
 });
 ```
 
+
 #### .keyAccessor([keyAccessorFunction])
 Set or get the key accessor function. Key accessor function is used to retrieve key value in crossfilter group. Key
 values are used differently in different charts, for example keys correspond to slices in pie chart and x axis position
@@ -262,6 +300,7 @@ chart.keyAccessor(function(d) { return d.key; });
 // custom key accessor for a multi-value crossfilter reduction
 chart.keyAccessor(function(p) { return p.value.absGain; });
 ```
+
 
 #### .valueAccessor([valueAccessorFunction])
 Set or get the value accessor function. Value accessor function is used to retrieve value in crossfilter group. Group
@@ -274,6 +313,7 @@ chart.valueAccessor(function(d) { return d.value; });
 chart.valueAccessor(function(p) { return p.value.percentageGain; });
 ```
 
+
 #### .label([labelFunction])
 Set or get the label function. Chart class will use this function to render label for each child element in the chart,
 i.e. a slice in a pie chart or a bubble in a bubble chart. Not every chart supports label function for example bar chart
@@ -285,8 +325,10 @@ chart.label(function(d) { return d.key; });
 chart.label(function(d) { return d.data.key + "(" + Math.floor(d.data.value / all.value() * 100) + "%)"; });
 ```
 
+
 #### .renderLabel(boolean)
 Turn on/off label rendering
+
 
 #### .title([titleFunction])
 Set or get the title function. Chart class will use this function to render svg title(usually interpreted by browser
@@ -306,8 +348,10 @@ chart.title(function(p) {
 });
 ```
 
+
 #### .renderTitle(boolean)
 Turn on/off title rendering
+
 
 #### .renderlet(renderletFunction)
 Renderlet is similar to an event listener on rendering event. Multiple renderlets can be added to an individual chart.
@@ -324,15 +368,18 @@ chart.renderlet(function(chart){
 });
 ```
 
+
 #### .chartGroup([group])
 Get or set the chart group with which this chart belongs. Chart groups share common rendering events since it is
 expected they share the same underlying crossfilter data set.
+
 
 #### .expireCache()
 Expire internal chart cache. dc.js chart cache some data internally on a per chart basis so it can speed up rendering
 and avoid unnecessary calculation however under certain circumstances it might be useful to clear the cache e.g. after
 you invoke crossfilter.add function or if you reset group or dimension post render it is always a good idea to clear
 the cache to make sure charts are rendered properly.
+
 
 #### .legend([dc.legend])
 Attach dc.legend widget to this chart. Legend widget will automatically draw legend labels based on the color setting
@@ -342,8 +389,10 @@ and names associated with each group.
 chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
 ```
 
+
 #### .chartID()
 Return the internal numeric ID of the chart.
+
 
 #### .options(optionsObject)
 Set chart options using a configuration object. Each object key will be call the fluent method of the same name to set that attribute for the chart.
@@ -352,6 +401,7 @@ Example:
 ```
 chart.options({dimension: myDimension, group: myGroup});
 ```
+
 
 ## Listeners
 All dc chart instance supports the following listeners.
@@ -374,9 +424,11 @@ This listener function will be invoked after a filter is applied, added or remov
 #### .on("zoomed", function(chart, filter){...})
 This listener function will be invoked after a zoom is triggered.
 
+
 ## Margin Mixin
 
 Margin is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid Charts.
+
 
 #### .margins([margins])
 Get or set the margins for a particular coordinate grid chart instance. The margins is stored as an associative Javascript
@@ -389,10 +441,12 @@ chart.margins().left = 50;
 leftMargin = chart.margins().left; // now 50
 ```
 
+
 ## Color Mixin
 
 Color Mixin is an abstract chart functional class created to provide universal coloring support as a mix-in for any concrete
 chart implementation.
+
 
 #### .colors([colorScale])
 Retrieve current color scale or set a new color scale. This methods accepts any
@@ -411,11 +465,14 @@ chart.ordinalColors(['red','green','blue']);
 chart.linearColors(["#4575b4", "#ffffbf", "#a50026"]);
 ```
 
+
 #### .ordinalColors(r)
 Convenience method to set the color scale to d3.scale.ordinal with range `r`.
 
+
 #### .linearColors(r)
 Convenience method to set the color scale to an Hcl interpolated linear scale with range `r`.
+
 
 #### .colorAccessor([colorAccessorFunction])
 Set or get color accessor function. This function will be used to map a data point on crossfilter group to a specific
@@ -428,16 +485,20 @@ the index of a group.
 .colorAccessor(function(d){return d.value.absGain;})
 ```
 
+
 #### .colorDomain([domain])
 Set or get the current domain for the color mapping function. The domain must be supplied as an array.
 
 Note: previously this method accepted a callback function. Instead you may use a custom scale set by `.colors`.
 
+
 #### .calculateColorDomain()
 Set the domain by determining the min and max values as retrived by `.colorAccessor` over the chart's dataset.
 
+
 #### .getColor(d [, i])
 Get the color for the datum d and counter i. This is used internaly by charts to retrieve a color.
+
 
 ## Coordinate Grid Mixin
 
@@ -446,29 +507,36 @@ Includes: [Color Mixin](#color-mixin), [Margin Mixin](#margin-mixin), [Base Mixi
 Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based concrete chart types,
 i.e. bar chart, line chart, and bubble chart.
 
+
 #### .rangeChart([chart])
 Get or set the range selection chart associated with this instance. Setting the range selection chart using this function
 will automatically update its selection brush when the current chart zooms in. In return the given range chart will also
 automatically attach this chart as its focus chart hence zoom in when range brush updates. See the
 [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/) example for this effect in action.
 
+
 #### .zoomScale([extent])
 Get or set the scale extent for mouse zooms.
+
 
 #### .zoomOutRestrict([true/false])
 Get or set the zoom restriction for the chart. If true limits the zoom to origional domain of the chart.
 
+
 #### .g([gElement])
 Get or set the root g element. This method is usually used to retrieve the g element in order to overlay custom svg drawing
 programatically. **Caution**: The root g element is usually generated by dc.js internals, and resetting it might produce unpredictable result.
+
 
 #### .mouseZoomable([boolean])
 Set or get mouse zoom capability flag (default: false). When turned on the chart will be zoomable through mouse wheel
  . If range selector chart is also attached zooming will also update the range selection brush on associated range
  selector chart.
 
+
 #### .chartBodyG()
 Retreive the svg group for the chart body.
+
 
 #### .x([xScale]) - **mandatory**
 Get or set the x scale. x scale could be any [d3 quatitive scales](https://github.com/mbostock/d3/wiki/Quantitative-Scales).
@@ -479,6 +547,7 @@ chart.x(d3.scale.linear().domain([-2500, 2500]))
 // set x to a time scale to generate histogram
 chart.x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
 ```
+
 
 #### .xUnits([xUnits function])
 Set or get the xUnits function. xUnits function is the coordinate grid chart uses to calculate number of data
@@ -507,6 +576,7 @@ function(start, end, xDomain) {
 };
 ```
 
+
 #### .xAxis([xAxis])
 Set or get the x axis used by a particular coordinate grid chart instance. This function is most useful when certain x
 axis customization is required. x axis in dc.js is simply an instance of
@@ -520,9 +590,11 @@ chart.xAxis().tickFormat(function(v) {return v + "%";});
 chart.xAxis().tickValues([0, 100, 200, 300]);
 ```
 
+
 #### .elasticX([boolean])
 Turn on/off elastic x axis. If x axis elasticity is turned on, then the grid chart will attempt to generate and
 recalculate x axis range whenever redraw event is triggered.
+
 
 #### .xAxisPadding([padding])
 Set or get x axis padding when elastic x axis is turned on. The padding will be added to both end of the x axis if and
@@ -532,23 +604,29 @@ only if elasticX is turned on otherwise it will be simply ignored.
 When padding with date, integer represents number of days being padded while percentage string will be treated
 as number.
 
+
 #### .xUnitCount()
 Returns the number of units displayed on the x axis using the unit measure configured by .xUnits.
+
 
 #### isOrdinal()
 Returns true if the chart is using ordinal xUnits, false otherwise. Most charts must behave somewhat
 differently when with ordinal data and use the result of this method to trigger those special case.
 
+
 #### .xAxisLabel([labelText, [, padding]])
 Set or get the x axis label. If setting the label, you may optionally include additional padding to
 the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.
+
 
 #### .yAxisLabel([labelText, [, padding]])
 Set or get the y axis label. If setting the label, you may optionally include additional padding to
 the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.
 
+
 #### .y([yScale])
 Get or set the y scale. y scale is typically automatically generated by the chart implementation.
+
 
 #### .yAxis([yAxis])
 Set or get the y axis used by a particular coordinate grid chart instance. This function is most useful when certain y
@@ -563,27 +641,35 @@ chart.yAxis().tickFormat(function(v) {return v + "%";});
 chart.yAxis().tickValues([0, 100, 200, 300]);
 ```
 
+
 #### .elasticY([boolean])
 Turn on/off elastic y axis. If y axis elasticity is turned on, then the grid chart will attempt to generate and recalculate
 y axis range whenever redraw event is triggered.
 
+
 #### .renderHorizontalGridLines([boolean])
 Turn on/off horizontal grid lines.
+
 
 #### .renderVerticalGridLines([boolean])
 Turn on/off vertical grid lines.
 
+
 #### .xAxisMin()
 Return the minimum x value to diplay in the chart. Includes xAxisPadding if set.
+
 
 #### .xAxisMin()
 Return the maximum x value to diplay in the chart. Includes xAxisPadding if set.
 
+
 #### .xAxisMin()
 Return the minimum y value to diplay in the chart. Includes yAxisPadding if set.
 
+
 #### .yAxisMax()
 Return the maximum y value to diplay in the chart. Includes yAxisPadding if set.
+
 
 #### .yAxisPadding([padding])
 if elasticY is turned on otherwise it will be simply ignored.
@@ -592,6 +678,7 @@ Set or get y axis padding when elastic y axis is turned on. The padding will be 
 * padding - could be integer or percentage in string (e.g. "10%"). Padding can be applied to number or date.
 When padding with date, integer represents number of days being padded while percentage string will be treated
 as number.
+
 
 #### .round([rounding function])
 Set or get the rounding function for x axis. Rounding is mainly used to provide stepping capability when in place
@@ -602,10 +689,12 @@ selection based filter is enable.
 chart.round(d3.time.month.round);
 ```
 
+
 #### .clipPadding([padding])
 Get or set padding in pixel for clip path. Once set padding will be applied evenly to top, left, right, and bottom padding
  when clip path is generated. If set to zero, then the clip area will be exactly the chart body area minus the margins.
  Default: 5
+
 
 #### .focus([range])
 Zoom this chart to focus on the given range. The given range should be an array containing only 2 element([start, end]) defining an range in x domain. If the range is not given or set to null, then the zoom will be reset. _For focus to work elasticX has to be turned off otherwise focus will be ignored._
@@ -619,15 +708,18 @@ chart.renderlet(function(chart){
 })
 ```
 
+
 #### .brushOn([boolean])
 Turn on/off the brush based in-place range filter. When the brush is on then user will be able to simply drag the mouse
 across the chart to perform range filtering based on the extend of the brush. However turning on brush filter will essentially
 disable other interactive elements on the chart such as the highlighting, tool-tip, and reference lines on a chart. Zooming will still
 be possible if enabled, but only via scrolling (panning will be disabled.) Default value is "true".
 
+
 ## Stack Mixin
 
 Stack Mixin is an mixin that provides cross-chart support of stackability using d3.layout.stack.
+
 
 #### .stack(group[, name, accessor])
 Stack a new crossfilter group into this chart with optionally a custom value accessor. All stacks in the same chart will
@@ -641,17 +733,21 @@ chart.stack(valueSumGroup)
 .stack(avgByDayGroup, function(d){return d.value.avgByDay;});
 ```
 
+
 #### .hidableStacks([boolean])
 Allow named stacks to be hidden or shown by clicking on legend items.
 This does not affect the behavior of hideStack or showStack.
+
 
 #### .hideStack(name)
 Hide all stacks on the chart with the given name.
 The chart must be re-rendered for this change to appear.
 
+
 #### .showStack(name)
 Show all stacks on the chart with the given name.
 The chart must be re-rendered for this change to appear.
+
 
 #### .title([stackName], [titleFunction])
 Set or get the title function. Chart class will use this function to render svg title (usually interpreted by browser
@@ -669,6 +765,7 @@ var secondTitleFunction = chart.title("second stack");
 );
 ```
 
+
 ## Cap Mixin
 
 Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the Row and Pie Charts.
@@ -677,11 +774,14 @@ The top ordered elements in the group up to the cap amount will be kept in the c
 the sum of those below will be added to the *others* element. The keys of the elements below the cap limit are recorded
 in order to repsond to onClick events and trigger filtering of all the within that grouping.
 
+
 #### .cap([count])
 Get or set the count of elements to that will be included in the cap.
 
+
 #### .othersLabel([label])
 Get or set the label for *Others* slice when slices cap is specified. Default label is **Others**.
+
 
 #### .othersGrouper([grouperFunction])
 Get or set the grouper function that will perform the insertion of data for the *Others* slice if the slices cap is
@@ -702,27 +802,33 @@ chart.othersGrouper(function (data) {
 });
 ```
 
+
 ## Bubble Mixin
 
 Includes: [Color Mixin](#color-mixin)
 
 This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.
 
+
 #### .r([bubbleRadiusScale])
 Get or set bubble radius scale. By default bubble chart uses ```d3.scale.linear().domain([0, 100])``` as it's r scale .
+
 
 #### .radiusValueAccessor([radiusValueAccessor])
 Get or set the radius value accessor function. The radius value accessor function if set will be used to retrieve data value
 for each and every bubble rendered. The data retrieved then will be mapped using r scale to be used as the actual bubble
 radius. In other words, this allows you to encode a data dimension using bubble size.
 
+
 #### .minRadiusWithLabel([radius])
 Get or set the minimum radius for label rendering. If a bubble's radius is less than this value then no label will be rendered.
 Default value: 10.
 
+
 #### .maxBubbleRelativeSize([relativeSize])
 Get or set the maximum relative size of a bubble to the length of x axis. This value is useful when the radius differences among
 different bubbles are too great. Default value: 0.3
+
 
 ## Pie Chart
 
@@ -757,27 +863,34 @@ var chart1 = dc.pieChart("#chart-container1");
 var chart2 = dc.pieChart("#chart-container2", "chartGroupA");
 ```
 
+
 #### .slicesCap([cap])
 Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
 value from high to low. Other slices exeeding the cap will be rolled up into one single *Others* slice.
 The resulting data will still be sorted by .ordering (default by key).
 
+
 #### .innerRadius([innerRadius])
 Get or set the inner radius on a particular pie chart instance. If inner radius is greater than 0px then the pie chart
 will be essentially rendered as a doughnut chart. Default inner radius is 0px.
 
+
 #### .radius([radius])
 Get or set the radius on a particular pie chart instance. Default radius is 90px.
+
 
 #### .cx()
 Get center x coordinate position. This function is **not chainable**.
 
+
 #### .cy()
 Get center y coordinate position. This function is **not chainable**.
+
 
 #### .minAngelForLabel([minAngle])
 Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not render slice label.
 Default min angel is 0.5.
+
 
 ## Bar Chart
 
@@ -812,8 +925,10 @@ var chart2 = dc.barChart("#chart-container2", "chartGroupA");
 var chart3 = dc.barChart(compositeChart);
 ```
 
+
 #### .centerBar(boolean)
 Whether the bar chart will render each bar centered around the data position on x axis. Default to false.
+
 
 #### .barPadding([padding])
 Get or set the spacing between bars as a fraction of bar size. Valid values are within 0-1.
@@ -821,15 +936,18 @@ Setting this value will also remove any previously set `gap`. See the
 [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
 for a visual description of how the padding is applied.
 
+
 #### .outerPadding([padding])
 Get or set the outer padding on an ordinal bar chart. This setting has no effect on non-ordinal charts.
 Padding equivlent in width to `padding * barWidth` will be added on each side of the chart.
 
 Default: 0.5
 
+
 #### .gap(gapBetweenBars)
 Manually set fixed gap (in px) between bars instead of relying on the default auto-generated gap. By default bar chart
 implementation will calculate and set the gap automatically based on the number of data points and the length of the x axis.
+
 
 #### .alwaysUseRounding([boolean])
 Set or get the flag which determines whether rounding is enabled when bars are centered (default: false).
@@ -841,6 +959,7 @@ The rounding function must add an offset to compensate, such as in the following
 ```js
 chart.round(function(n) {return Math.floor(n)+0.5});
 ```
+
 
 ## Line Chart
 
@@ -875,6 +994,7 @@ var chart2 = dc.lineChart("#chart-container2", "chartGroupA");
 var chart3 = dc.lineChart(compositeChart);
 ```
 
+
 #### .dashStyle([array])
 Set the line's d3 dashstyle. This value becomes "stroke-dasharray" of line. Defaults to empty array (solid line).
  ```js
@@ -882,12 +1002,15 @@ Set the line's d3 dashstyle. This value becomes "stroke-dasharray" of line. Defa
  chart.dashStyle([3,1,1,1]);
  ```
 
+
 #### .renderArea([boolean])
 Get or set render area flag. If the flag is set to true then the chart will render the area beneath each line and effectively
 becomes an area chart.
 
+
 #### .dotRadius([dotRadius])
 Get or set the radius (in px) for data points. Default dot radius is 5.
+
 
 #### .renderDataPoints([options])
 Always show individual dots for each datapoint.
@@ -906,6 +1029,7 @@ Example:
 ```
 chart.renderDataPoints({radius: 2, fillOpacity: 0.8, strokeOpacity: 0.8})
 ```
+
 
 ## Data Count Widget
 
@@ -950,6 +1074,7 @@ dc.dataCount(".dc-data-count")
  .group(all);
 ```
 
+
 ## Data Table Widget
 
 Includes: [Base Mixin](#base-mixin)
@@ -972,8 +1097,10 @@ chart group.
 Return:
 A newly created data table widget instance
 
+
 #### .size([size])
 Get or set the table size which determines the number of rows displayed by the widget.
+
 
 #### .columns([columnFunctionArray])
 Get or set column functions. Data table widget uses an array of functions to generate dynamic columns. Column functions are
@@ -1000,6 +1127,7 @@ these functions will be used directly to generate table content for each cell.
     ]);
 ```
 
+
 #### .sortBy([sortByFunction])
 Get or set sort-by function. This function works as a value accessor at row level and returns a particular field to be sorted
 by. Default value: ``` function(d) {return d;}; ```
@@ -1010,12 +1138,14 @@ by. Default value: ``` function(d) {return d;}; ```
     });
 ```
 
+
 #### .order([order])
 Get or set sort order. Default value: ``` d3.ascending ```
 
 ```js
     chart.order(d3.descending);
 ```
+
 
 ## Bubble Chart
 
@@ -1051,9 +1181,11 @@ var bubbleChart1 = dc.bubbleChart("#chart-container1");
 var bubbleChart2 = dc.bubbleChart("#chart-container2", "chartGroupA");
 ```
 
+
 #### .elasticRadius([boolean])
 Turn on or off elastic bubble radius feature. If this feature is turned on, then bubble radiuses will be automatically rescaled
 to fit the chart better.
+
 
 ## Composite Chart
 
@@ -1083,16 +1215,20 @@ var compositeChart1 = dc.compositeChart("#chart-container1");
 var compositeChart2 = dc.compositeChart("#chart-container2", "chartGroupA");
 ```
 
+
 #### .useRightAxisGridLines(bool)
 Get or set whether to draw gridlines from the right y axis.
 Drawing from the left y axis is the default behavior. This option is only respected when
 subcharts with both left and right y-axes are present.
 
+
 #### .childOptions({object})
 Get or set chart-specific options for all child charts. This is equivalent to calling `.options` on each child chart.
 
+
 #### .rightYAxisLabel([labelText])
 Set or get the right y axis label.
+
 
 #### .compose(subChartArray)
 Combine the given charts into one single composite coordinate grid chart.
@@ -1118,18 +1254,22 @@ moveChart.compose([
 ]);
 ```
 
+
 #### .shareColors([boolean])
 Get or set color sharing for the chart. If set, the `.colors()` value from this chart
 will be shared with composed children. Additionally if the child chart implements
 Stackable and has not set a custom .colorAccessor, then it will generate a color
 specific to its order in the composition.
 
+
 #### .shareTitle([[boolean])
 Get or set title sharing for the chart. If set, the `.title()` value from this chart
 will be shared with composed children. Default value is true.
 
+
 #### .rightY([yScale])
 Get or set the y scale for the right axis. Right y scale is typically automatically generated by the chart implementation.
+
 
 #### .rightYAxis([yAxis])
 Set or get the right y axis used by the composite chart. This function is most useful when certain y
@@ -1143,6 +1283,7 @@ chart.rightYAxis().tickFormat(function(v) {return v + "%";});
 // customize y axis tick values
 chart.rightYAxis().tickValues([0, 100, 200, 300]);
 ```
+
 
 ## Series Chart
 
@@ -1171,9 +1312,11 @@ var seriesChart1 = dc.seriesChart("#chart-container1");
 var seriesChart2 = dc.seriesChart("#chart-container2", "chartGroupA");
 ```
 
+
 #### .seriesAccessor([accessor])
 Get or set accessor function for the displayed series. Given a datum, this function
 should return the series that datum belongs to.
+
 
 #### .seriesSort([sortFunction])
 Get or set a function to sort the list of series by, given series values.
@@ -1183,10 +1326,12 @@ Example:
 chart.seriesSort(d3.descending);
 ```
 
+
 #### .valueSort([sortFunction])
 Get or set a function to the sort each series values by. By default this is
 the key accessor which, for example, a will ensure lineChart a series connects
 its points in increasing key/x order, rather than haphazardly.
+
 
 ## Geo Choropleth Chart
 
@@ -1218,6 +1363,7 @@ var chart1 = dc.geoChoroplethChart("#us-chart");
 var chart2 = dc.compositeChart("#us-chart2", "chartGroupA");
 ```
 
+
 #### .overlayGeoJson(json, name, keyAccessor) - **mandatory**
 Use this function to insert a new GeoJson map layer. This function can be invoked multiple times if you have multiple GeoJson
 data layer to render on top of each other. If you overlay mutiple layers with the same name the new overlay will simply
@@ -1236,9 +1382,11 @@ chart.overlayGeoJson(statesJson.features, "state", function(d) {
 });
 ```
 
+
 #### .projection(projection)
 Set custom geo projection function. Available [d3 geo projection functions](https://github.com/mbostock/d3/wiki/Geo-Projections).
 Default value: albersUsa.
+
 
 #### .geoJsons()
 Return all GeoJson layers currently registered with thit chart. The returned array is a reference to this chart's internal
@@ -1248,10 +1396,12 @@ registration.
 Return:
 An array of objects containing fields {name, data, accessor}
 
+
 #### .removeGeoJson(name)
 Remove a GeoJson layer from this chart by name
 
 Return: chart instance
+
 
 ## Bubble Overlay Chart
 
@@ -1295,10 +1445,12 @@ to be manually created on top of the image.
 chart.svg(d3.select("#chart svg"));
 ```
 
+
 #### .point(name, x, y) - **mandatory**
 Set up a data point on the overlay. The name of a data point should match a specific "key" among data groups generated using keyAccessor.
 If a match is found (point name <-> data group key) then a bubble will be automatically generated at the position specified by the
 function. x and y value specified here are relative to the underlying svg.
+
 
 ## Row Chart
 
@@ -1323,24 +1475,31 @@ var chart1 = dc.rowChart("#chart-container1");
 var chart2 = dc.rowChart("#chart-container2", "chartGroupA");
 ```
 
+
 #### .renderTitleLabel(boolean)
 Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'
 
+
 #### .gap([gap])
 Get or set the vertical gap space between rows on a particular row chart instance. Default gap is 5px;
+
 
 #### .elasticX([boolean])
 Get or set the elasticity on x axis. If this attribute is set to true, then the x axis will rescle to auto-fit the data
 range when filtered.
 
+
 #### .labelOffsetX([x])
 Get or set the x offset (horizontal space to the top left corner of a row) for labels on a particular row chart. Default x offset is 10px;
+
 
 #### .labelOffsetY([y])
 Get or set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart. Default y offset is 15px;
 
+
 #### .titleLabelOffsetx([x])
 Get of set the x offset (horizontal space between right edge of row and right edge or text.   Default x offset is 2px;
+
 
 ## Legend
 Legend is a attachable widget that can be added to other dc charts to render horizontal legend labels.
@@ -1353,26 +1512,34 @@ Examples:
 * [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
 * [Canadian City Crime Stats](http://nickqizhu.github.com/dc.js/crime/index.html)
 
+
 #### .x([value])
 Set or get x coordinate for legend widget. Default value: 0.
+
 
 #### .y([value])
 Set or get y coordinate for legend widget. Default value: 0.
 
+
 #### .gap([value])
 Set or get gap between legend items. Default value: 5.
+
 
 #### .itemHeight([value])
 Set or get legend item height. Default value: 12.
 
+
 #### .horizontal([boolean])
 Position legend horizontally instead of vertically
+
 
 #### .legendWidth([value])
 Maximum width for horizontal legend. Default value: 560.
 
+
 #### .itemWidth([value])
 legendItem width for horizontal legend. Default value: 70.
+
 
 ## Scatter Plot
 
@@ -1403,16 +1570,20 @@ var chart2 = dc.scatterPlot("#chart-container2", "chartGroupA");
 var chart3 = dc.scatterPlot(compositeChart);
 ```
 
+
 #### .symbol([type])
 Get or set the symbol type used for each point. By default a circle. See the D3
 [docs](https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-symbol_type) for acceptable types;
 Type can be a constant or an accessor.
 
+
 #### .symbolSize([radius])
 Set or get radius for symbols, default: 3.
 
+
 #### .highlightedSize([radius])
 Set or get radius for highlighted symbols, default: 4.
+
 
 ## Number Display Widget
 
@@ -1444,11 +1615,14 @@ A newly created number display instance
 var display1 = dc.numberDisplay("#chart-container1");
 ```
 
+
 #### .value()
 Calculate and return the underlying value of the display
 
+
 #### .formatNumber([formatter])
 Get or set a function to format the value for the display. By default `d3.format(".2s");` is used.
+
 
 ## Heat Map
 
@@ -1475,6 +1649,7 @@ var heatMap1 = dc.heatMap("#chart-container1");
 var heatMap2 = dc.heatMap("#chart-container2", "chartGroupA");
 ```
 
+
 ## Box Plot
 
 Includes: [Coordinate Grid Mixin](#coordinate-grid-mixin)
@@ -1500,12 +1675,14 @@ var boxPlot1 = dc.boxPlot("#chart-container1");
 var boxPlot2 = dc.boxPlot("#chart-container2", "chartGroupA");
 ```
 
+
 #### .boxPadding([padding])
 Get or set the spacing between boxes as a fraction of bar size. Valid values are within 0-1.
 See the [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
 for a visual description of how the padding is applied.
 
 Default: 0.8
+
 
 #### .outerPadding([padding])
 Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
@@ -1514,10 +1691,12 @@ added on each side of the chart.
 
 Default: 0.5
 
+
 #### .boxWidth(width || function(innerChartWidth, xUnits) { ... })
 Get or set the numerical width of the boxplot box. Provided width may also be a function.
 This function takes as parameters the chart width without the right and left margins
 as well as the number of x units.
+
 
 #### .tickFormat()
 Set the numerical format of the boxplot median, whiskers and quartile labels. Defaults to integer.
