@@ -7,8 +7,8 @@ chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
 ```
 
 Examples:
-* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
-* [Canadian City Crime Stats](http://nickqizhu.github.com/dc.js/crime/index.html)
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+* [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
 
 **/
 dc.legend = function () {

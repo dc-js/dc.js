@@ -12,7 +12,7 @@ under the parent element.
 
 Examples:
 
-* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 
 #### dc.dataCount(parent[, chartGroup])
 Create a data count widget instance and attach it to the given parent element.

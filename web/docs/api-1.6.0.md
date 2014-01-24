@@ -337,7 +337,7 @@ i.e. bar chart, line chart, and bubble chart.
 Get or set the range selection chart associated with this instance. Setting the range selection chart using this function
 will automatically update its selection brush when the current chart zooms in. In return the given range chart will also
 automatically attach this chart as its focus chart hence zoom in when range brush updates. See the
-[Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/) example for this effect in action.
+[Nasdaq 100 Index](http://dc-js.github.com/dc.js/) example for this effect in action.
 
 #### .zoomScale([extent])
 Get or set the scale extent for mouse zooms.
@@ -569,7 +569,7 @@ relatively to the total sum of all values.
 
 Examples:
 
-* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 
 #### dc.pieChart(parent[, chartGroup])
 Create a pie chart instance and attach it to the given parent element.
@@ -618,8 +618,8 @@ Concrete bar chart/histogram implementation.
 
 Examples:
 
-* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
-* [Canadian City Crime Stats](http://nickqizhu.github.com/dc.js/crime/index.html)
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+* [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
 
 #### dc.barChart(parent[, chartGroup])
 Create a bar chart instance and attach it to the given parent element.
@@ -654,8 +654,8 @@ implementation will calculate and set the gap automatically based on the number 
 Concrete line/area chart implementation.
 
 Examples:
-* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
-* [Canadian City Crime Stats](http://nickqizhu.github.com/dc.js/crime/index.html)
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+* [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
 
 #### dc.lineChart(parent[, chartGroup])
 Create a line chart instance and attach it to the given parent element.
@@ -697,7 +697,7 @@ under the parent element.
 
 Examples:
 
-* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 
 #### dc.dataCount(parent[, chartGroup])
 Create a data count widget instance and attach it to the given parent element.
@@ -732,7 +732,7 @@ Data table is a simple widget designed to list crossfilter focused data set (row
 fashion.
 
 Examples:
-* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 
 #### dc.dataTable(parent[, chartGroup])
 Create a data table widget instance and attach it to the given parent element.
@@ -800,8 +800,8 @@ A concrete implementation of a general purpose bubble chart that allows data vis
 * color
 
 Examples:
-* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
-* [US Venture Capital Landscape 2011](http://nickqizhu.github.com/dc.js/vc/index.html)
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+* [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
 
 #### dc.bubbleChart(parent[, chartGroup])
 Create a bubble chart instance and attach it to the given parent element.
@@ -833,7 +833,7 @@ overlay(compose) different bar/line/area charts in a single composite chart to a
 effects.
 
 Examples:
-* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 
 #### dc.compositeChart(parent[, chartGroup])
 Create a composite chart instance and attach it to the given parent element.
@@ -883,7 +883,7 @@ Geo choropleth chart is design to make creating crossfilter driven choropleth ma
 chart implementation was inspired by [the great d3 choropleth example](http://bl.ocks.org/4060606).
 
 Examples:
-* [US Venture Capital Landscape 2011](http://nickqizhu.github.com/dc.js/vc/index.html)
+* [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
 
 #### dc.geoChoroplethChart(parent[, chartGroup])
 Create a choropleth chart instance and attach it to the given parent element.
@@ -946,7 +946,7 @@ positioning that we are used to whiling retaining the capability to visualize da
 coloring.
 
 Examples:
-* [Canadian City Crime Stats](http://nickqizhu.github.com/dc.js/crime/index.html)
+* [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
 
 #### dc.bubbleOverlay(parent[, chartGroup])
 Create a bubble overlay chart instance and attach it to the given parent element.
@@ -1024,8 +1024,8 @@ chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
 ```
 
 Examples:
-* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
-* [Canadian City Crime Stats](http://nickqizhu.github.com/dc.js/crime/index.html)
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+* [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
 
 #### .x([value])
 Set or get x coordinate for legend widget. Default value: 0.
@@ -1057,7 +1057,7 @@ A display of a single numeric value.
 
 Examples:
 
-* [Test Example](http://nickqizhu.github.io/dc.js/examples/number.html)
+* [Test Example](http://dc-js.github.io/dc.js/examples/number.html)
 
 #### dc.numberDisplay(parent[, chartGroup])
 Create a Number Display instance and attach it to the given parent element.
