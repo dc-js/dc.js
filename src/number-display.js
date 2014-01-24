@@ -7,7 +7,7 @@ A display of a single numeric value.
 
 Examples:
 
-* [Test Example](http://nickqizhu.github.io/dc.js/examples/number.html)
+* [Test Example](http://dc-js.github.io/dc.js/examples/number.html)
 
 #### dc.numberDisplay(parent[, chartGroup])
 Create a Number Display instance and attach it to the given parent element.

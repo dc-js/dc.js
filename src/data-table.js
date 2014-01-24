@@ -7,7 +7,7 @@ Data table is a simple widget designed to list crossfilter focused data set (row
 fashion.
 
 Examples:
-* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 
 #### dc.dataTable(parent[, chartGroup])
 Create a data table widget instance and attach it to the given parent element.

@@ -24,9 +24,9 @@ the `test` folder) to support smaller changes is fine. With vows tests, charts m
 
 * If you have a problem with your code, please ask your question on stackoverflow.com or the [user group](https://groups.google.com/forum/?fromgroups#!forum/dc-js-user-group)
   * Please try to include an example of your issue on http://jsfiddle.net/ or on http://bl.ocks.org/
-* For bugs and feature requests submit a [github issue](http://github.com/NickQiZhu/dc.js/issues)
+* For bugs and feature requests submit a [github issue](http://github.com/dc-js/dc.js/issues)
   * Please include the version of DC you are using
-  * If you can, please try the latest version of DC on the [master](https://raw.github.com/NickQiZhu/dc.js/master/dc.js) branch to see if your issue has already been addressed or is otherwise affected by recent changes.
+  * If you can, please try the latest version of DC on the [master](https://raw.github.com/dc-js/dc.js/master/dc.js) branch to see if your issue has already been addressed or is otherwise affected by recent changes.
 
 # Merging Pull Requests
 
@@ -35,7 +35,7 @@ _for maintainers_
 Ensure origin looks like this in `.git/config`. The key element here is the second fetch statement
 ```
 [remote "origin"]
-  url = git@github.com:NickQiZhu/dc.js.git
+  url = git@github.com:dc-js/dc.js.git
   fetch = +refs/heads/*:refs/remotes/origin/*
   fetch = +refs/pull/*/head:refs/remotes/origin/pr/*
 ```

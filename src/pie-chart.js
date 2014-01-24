@@ -9,7 +9,7 @@ relatively to the total sum of all values. Slices are ordered by `.ordering` whi
 
 Examples:
 
-* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 
 #### dc.pieChart(parent[, chartGroup])
 Create a pie chart instance and attach it to the given parent element.

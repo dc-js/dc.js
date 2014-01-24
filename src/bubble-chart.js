@@ -11,8 +11,8 @@ A concrete implementation of a general purpose bubble chart that allows data vis
 * color
 
 Examples:
-* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
-* [US Venture Capital Landscape 2011](http://nickqizhu.github.com/dc.js/vc/index.html)
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+* [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
 
 #### dc.bubbleChart(parent[, chartGroup])
 Create a bubble chart instance and attach it to the given parent element.
