@@ -7,8 +7,8 @@ Concrete bar chart/histogram implementation.
 
 Examples:
 
-* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
-* [Canadian City Crime Stats](http://nickqizhu.github.com/dc.js/crime/index.html)
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+* [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
 
 #### dc.barChart(parent[, chartGroup])
 Create a bar chart instance and attach it to the given parent element.

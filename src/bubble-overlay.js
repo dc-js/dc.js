@@ -9,7 +9,7 @@ positioning that we are used to whiling retaining the capability to visualize da
 coloring.
 
 Examples:
-* [Canadian City Crime Stats](http://nickqizhu.github.com/dc.js/crime/index.html)
+* [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
 
 #### dc.bubbleOverlay(parent[, chartGroup])
 Create a bubble overlay chart instance and attach it to the given parent element.
