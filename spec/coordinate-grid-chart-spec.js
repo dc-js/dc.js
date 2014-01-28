@@ -209,7 +209,7 @@ describe('dc.coordinateGridChart', function() {
                         chart.elasticX(true).xAxisLabel("New X Label").redraw();
                     });
                     it("should change the x-axis label", function() {
-                        expect(chart.selectAll("text.x-axis-label").text()).toBe("X Label");
+                        expect(chart.selectAll("text.x-axis-label").text()).toBe("New X Label");
                     });
                 });
             });
