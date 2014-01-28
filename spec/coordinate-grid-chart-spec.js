@@ -203,6 +203,15 @@ describe('dc.coordinateGridChart', function() {
                         expect(chart.effectiveHeight()).toBe(80);
                     });
                 });
+
+                describe("reset axis label", function() {
+                    beforeEach(function() {
+                        chart.elasticX(true).xAxisLabel("New X Label").redraw();
+                    });
+                    it("should change the x-axis label", function() {
+                        expect(chart.selectAll("text.x-axis-label").text()).toBe("X Label");
+                    });
+                });
             });
         });
 
