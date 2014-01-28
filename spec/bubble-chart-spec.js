@@ -1,11 +1,13 @@
 describe('dc.bubbleChart', function() {
     var id, chart, data;
+    var dateFixture;
     var dimension, group;
     var countryDimension;
     var width = 900, height = 350;
 
     beforeEach(function() {
-        data = crossfilter(loadDateFixture());
+        dateFixture = loadDateFixture();
+        data = crossfilter(dateFixture);
         dimension = data.dimension(function(d) {
             return d.status;
         });
@@ -345,5 +347,49 @@ describe('dc.bubbleChart', function() {
            expect(chart.selectAll("circle").attr("fill")).toBe("red");
            expect(derlet.calls.count()).toEqual(2);
         });
+    });
+
+    describe('non-unique keys', function() {
+        // plot all rows as (value, nvalue) - a common scatterplot scenario
+        beforeEach(function() {
+            var rowDimension = data.dimension(function(d, i) {
+                return i;
+            });
+            var rowGroup = rowDimension.group();
+
+            chart.dimension(rowDimension).group(rowGroup)
+                .keyAccessor(function(kv) {
+                    return +dateFixture[kv.key].value;
+                })
+                .valueAccessor(function(kv) {
+                    return +dateFixture[kv.key].nvalue;
+                })
+                .elasticY(true)
+                .yAxisPadding(2)
+                .elasticX(true)
+                .xAxisPadding(2);
+
+            chart.render();
+        });
+        it('should generate right number of bubbles', function () {
+            expect(chart.selectAll("circle.bubble")[0].length).toBe(10);
+        });
+        it('should auto calculate x range based on width', function () {
+            expect(chart.x().range()[0]).toBe(0);
+            expect(chart.x().range()[1]).toBe(820);
+        });
+        it('should set the x domain', function () {
+            expect(chart.x().domain()[0]).toBe(20);
+            expect(chart.x().domain()[1]).toBe(68);
+        });
+        it('should auto calculate y range based on height', function () {
+            expect(chart.y().range()[0]).toBe(310);
+            expect(chart.y().range()[1]).toBe(0);
+        });
+        it('should set the y domain', function () {
+            expect(chart.y().domain()[0]).toBe(-7);
+            expect(chart.y().domain()[1]).toBe(12);
+        });
+
     });
 });
