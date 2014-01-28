@@ -241,7 +241,7 @@ describe('dc.bubbleChart', function() {
         });
     });
 
-    describe('bubble chart w/ filter', function() {
+    describe('with filter', function() {
         beforeEach(function () {
             chart.filter("F");
             chart.render();
@@ -263,7 +263,7 @@ describe('dc.bubbleChart', function() {
         });
     });
 
-    describe('update bubble chart', function() {
+    describe('update', function() {
         beforeEach(function () {
             chart.render();
             countryDimension.filter("CA");
@@ -287,7 +287,7 @@ describe('dc.bubbleChart', function() {
         });
     });
 
-    describe('bubble chart w/ no filter', function() {
+    describe('with no filter', function() {
         beforeEach(function () {
             countryDimension.filter("ZZ");
             chart.render();
@@ -299,7 +299,7 @@ describe('dc.bubbleChart', function() {
         });
     });
 
-   describe('bubble chart w/ elastic axises', function() {
+   describe('with elastic axises', function() {
         beforeEach(function () {
             chart.elasticY(true)
                 .yAxisPadding(3)
@@ -307,19 +307,19 @@ describe('dc.bubbleChart', function() {
                 .xAxisPadding(20);
             chart.render();
         });
-       it('x range round is auto calculated based on width', function () {
+       it('should auto calculate x range based on width', function () {
             expect(chart.x().range()[0]).toBe(0);
             expect(chart.x().range()[1]).toBe(820);
         });
-       it('x domain should be set', function () {
+       it('should set the x domain', function () {
             expect(chart.x().domain()[0]).toBe(178);
             expect(chart.x().domain()[1]).toBe(240);
         });
-       it('y range round is auto calculated based on height', function () {
+       it('should auto calculate y range based on height', function () {
             expect(chart.y().range()[0]).toBe(310);
             expect(chart.y().range()[1]).toBe(0);
         });
-       it('y domain should be set', function () {
+       it('should set the y domain', function () {
             expect(chart.y().domain()[0]).toBe(2);
             expect(chart.y().domain()[1]).toBe(8);
         });
@@ -335,12 +335,12 @@ describe('dc.bubbleChart', function() {
            derlet.and.callThrough();
            chart.renderlet(derlet);
        });
-       it('custom renderlet should be invoked with render', function () {
+       it('should be invoked with render', function () {
            chart.render();
            expect(chart.selectAll("circle").attr("fill")).toBe("red");
            expect(derlet).toHaveBeenCalled();
        });
-       it('custom renderlet should be invoked with redraw', function () {
+       it('should be invoked with redraw', function () {
            chart.render().redraw();
            expect(chart.selectAll("circle").attr("fill")).toBe("red");
            expect(derlet.calls.count()).toEqual(2);
