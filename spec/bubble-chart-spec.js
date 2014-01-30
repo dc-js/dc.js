@@ -331,7 +331,7 @@ describe('dc.bubbleChart', function() {
        var derlet;
        beforeEach(function () {
            // spyOn doesn't seem to work with plain functions
-           derlet = jasmine.createSpy('renderlet', function () {
+           derlet = jasmine.createSpy('renderlet', function (chart) {
                chart.selectAll("circle").attr("fill", "red");
            });
            derlet.and.callThrough();
