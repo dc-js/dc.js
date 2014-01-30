@@ -67,70 +67,70 @@ describe('dc.bubbleChart', function() {
             });
     });
 
-    it("should produce a chart", function() {
+    it("produces a chart", function() {
         expect(chart).not.toBeNull();
     });
-    it('should register the chart with DC', function () {
+    it('registers the chart with DC', function () {
         expect(dc.hasChart(chart)).toBeTruthy();
     });
-    it('should set the requested dimension', function () {
+    it('sets the requested dimension', function () {
         expect(chart.dimension()).toBe(dimension);
     });
-    it('should set the requested group', function () {
+    it('sets the requested group', function () {
         expect(chart.group()).toBe(group);
     });
 
-    it('should assign colors', function () {
+    it('assigns colors', function () {
         expect(chart.colors()).not.toBeNull();
     });
-    it('should set the width', function () {
+    it('sets the width', function () {
         expect(chart.width()).toBe(width);
     });
-    it('should set the height', function () {
+    it('sets the height', function () {
         expect(chart.height()).toBe(height);
     });
-    it('should set the transition duration', function () {
+    it('sets the transition duration', function () {
         expect(chart.transitionDuration()).toBe(0);
     });
-    it('should set the margin', function () {
+    it('sets the margin', function () {
         expect(chart.margins()).not.toBeNull();
     });
-    it('should set the x scale', function () {
+    it('sets the x scale', function () {
         expect(chart.x()).toBeDefined();
     });
-    it('should set the x scale domain', function () {
+    it('sets the x scale domain', function () {
         expect(chart.x().domain()[0]).toBe(0);
         expect(chart.x().domain()[1]).toBe(300);
     });
-    it('should set the y scale', function () {
+    it('sets the y scale', function () {
         expect(chart.y()).toBeDefined();
     });
-    it('should set the y scale domain', function () {
+    it('sets the y scale domain', function () {
         expect(chart.y().domain()[0]).toBe(0);
         expect(chart.y().domain()[1]).toBe(10);
     });
-    it('should set the radius scale', function () {
+    it('sets the radius scale', function () {
         expect(chart.r()).not.toBeNull();
     });
-    it('should set the radius value accessor', function () {
+    it('sets the radius value accessor', function () {
         expect(chart.radiusValueAccessor()).not.toBeNull();
     });
-    it('should set the x units', function () {
+    it('sets the x units', function () {
         expect(chart.xUnits()).toBe(dc.units.integers);
     });
-    it('should create the x axis', function () {
+    it('creates the x axis', function () {
         expect(chart.xAxis()).not.toBeNull();
     });
-    it('should create the y axis', function () {
+    it('creates the y axis', function () {
         expect(chart.yAxis()).not.toBeNull();
     });
-    it('should create the brush', function () {
+    it('creates the brush', function () {
         expect(chart.select("g.brush")).not.toBeNull();
     });
-    it('should leave round off by default', function () {
+    it('leaves round off by default', function () {
         expect(chart.round()).toBeUndefined();
     });
-    it('allow round to be changed', function () {
+    it('allows round to be changed', function () {
         chart.round(d3.time.day.round);
         expect(chart.round()).not.toBeNull();
     });
@@ -139,35 +139,35 @@ describe('dc.bubbleChart', function() {
         beforeEach(function() {
             chart.render();
         });
-        it('should create the svg', function () {
+        it('creates the svg', function () {
             expect(chart.select("svg").empty()).toBeFalsy();
         });
-        it('should use the height for svg', function () {
+        it('uses the height for svg', function () {
             expect(Number(chart.select("svg").attr("height"))).toEqual(height);
         });
-        it('should auto calculate the x range based on width', function () {
+        it('auto calculates the x range based on width', function () {
             expect(chart.x().range()[0]).toBe(0);
             expect(chart.x().range()[1]).toBe(820);
         });
-        it('should auto calculate the y range round based on height', function () {
+        it('auto calculates the y range round based on height', function () {
             expect(chart.y().range()[0]).toBe(310);
             expect(chart.y().range()[1]).toBe(0);
         });
-        it('should create the root g', function () {
+        it('creates the root g', function () {
             expect(chart.select("svg g").empty()).toBeFalsy();
         });
-        it('should place the x axis at the bottom', function () {
+        it('places the x axis at the bottom', function () {
             expect(chart.select("svg g g.x").attr("transform")).toBe("translate(30,320)");
         });
-        it('should place the y axis on the left', function () {
+        it('places the y axis on the left', function () {
             expect(chart.select("svg g g.y").attr("transform")).toBe("translate(30,10)");
         });
 
         // bubbles
-        it('should generate right number of bubbles', function () {
+        it('generates right number of bubbles', function () {
             expect(chart.selectAll("circle.bubble")[0].length).toBe(2);
         });
-        it('should calculate right cx for each bubble', function () {
+        it('calculates right cx for each bubble', function () {
             chart.selectAll("g.node").each(function (d, i) {
                 if (i === 0)
                     expect(d3.select(this).attr("transform")).toBe("translate(601.3333333333334,155)");
@@ -175,13 +175,13 @@ describe('dc.bubbleChart', function() {
                     expect(d3.select(this).attr("transform")).toBe("translate(541.2,155)");
             });
         });
-        it('should generate opaque groups and circles for each bubble', function () {
+        it('generates opaque groups and circles for each bubble', function () {
             chart.selectAll("g.node").each(function (d, i) {
                 expect(d3.select(this).attr("opacity")).toBeNull();
                 expect(d3.select(this).select('circle').attr("opacity")).toBe('1');
             });
         });
-        it('should calculate right r for each bubble', function () {
+        it('calculates right r for each bubble', function () {
             chart.selectAll("circle.bubble").each(function (d, i) {
                 if (i === 0)
                     expect(Number(d3.select(this).attr("r"))).toBe(49.33333333333333);
@@ -189,7 +189,7 @@ describe('dc.bubbleChart', function() {
                     expect(Number(d3.select(this).attr("r"))).toBe(49.33333333333333);
             });
         });
-        it('should attach each bubble with index based class', function () {
+        it('attaches each bubble with index based class', function () {
             chart.selectAll("circle.bubble").each(function (d, i) {
                 if (i === 0)
                     expect(d3.select(this).attr("class")).toBe("bubble _0");
@@ -197,10 +197,10 @@ describe('dc.bubbleChart', function() {
                     expect(d3.select(this).attr("class")).toBe("bubble _1");
             });
         });
-        it('should generate right number of labels', function () {
+        it('generates right number of labels', function () {
             expect(chart.selectAll("g.node text")[0].length).toBe(2);
         });
-        it('should create correct label for each bubble', function () {
+        it('creates correct label for each bubble', function () {
             chart.selectAll("g.node text").each(function (d, i) {
                 if (i === 0)
                     expect(d3.select(this).text()).toBe("F");
@@ -208,10 +208,10 @@ describe('dc.bubbleChart', function() {
                     expect(d3.select(this).text()).toBe("T");
             });
         });
-        it('should generate right number of titles', function () {
+        it('generates right number of titles', function () {
             expect(chart.selectAll("g.node title")[0].length).toBe(2);
         });
-        it('should create correct title for each bubble', function () {
+        it('creates correct title for each bubble', function () {
             chart.selectAll("g.node title").each(function (d, i) {
                 if (i === 0)
                     expect(d3.select(this).text()).toBe("F: {count:5,value:220}");
@@ -219,7 +219,7 @@ describe('dc.bubbleChart', function() {
                     expect(d3.select(this).text()).toBe("T: {count:5,value:198}");
             });
         });
-        it('should fill bubbles with correct colors', function () {
+        it('fills bubbles with correct colors', function () {
             chart.selectAll("circle.bubble").each(function (d, i) {
                 if (i === 0)
                     expect(d3.select(this).attr("fill")).toBe("#00cc00");
@@ -235,10 +235,10 @@ describe('dc.bubbleChart', function() {
             chart.renderTitle(false);
             chart.render();
         });
-        it('should generate right number of labels', function () {
+        it('generates right number of labels', function () {
             expect(chart.selectAll("g.node text")[0].length).toBe(0);
         });
-        it('should generate right number of titles', function () {
+        it('generates right number of titles', function () {
             expect(chart.selectAll("g.node title")[0].length).toBe(0);
         });
     });
@@ -248,7 +248,7 @@ describe('dc.bubbleChart', function() {
             chart.filter("F");
             chart.render();
         });
-        it('should deselect bubble based on filter value', function () {
+        it('deselects bubble based on filter value', function () {
             chart.selectAll("g.node").each(function (d, i) {
                 if (i === 0)
                     expect(d3.select(this).attr("class")).toBe("node selected");
@@ -256,7 +256,7 @@ describe('dc.bubbleChart', function() {
                     expect(d3.select(this).attr("class")).toBe("node deselected");
             });
         });
-        it('should handle multi-selection highlight', function () {
+        it('handles multi-selection highlight', function () {
             chart.filter("T");
             chart.redraw();
             chart.selectAll("g.node").each(function (d, i) {
@@ -271,7 +271,7 @@ describe('dc.bubbleChart', function() {
             countryDimension.filter("CA");
             chart.redraw();
         });
-        it('should create correct label for each bubble', function () {
+        it('creates correct label for each bubble', function () {
             chart.selectAll("g.node title").each(function (d, i) {
                 if (i === 0)
                     expect(d3.select(this).text()).toBe("F: {count:0,value:0}");
@@ -279,7 +279,7 @@ describe('dc.bubbleChart', function() {
                     expect(d3.select(this).text()).toBe("T: {count:2,value:77}");
             });
         });
-        it('should fill bubbles with correct colors', function () {
+        it('fills bubbles with correct colors', function () {
             chart.selectAll("circle.bubble").each(function (d, i) {
                 if (i === 0)
                     expect(d3.select(this).attr("fill")).toBe("#a60000");
@@ -294,7 +294,7 @@ describe('dc.bubbleChart', function() {
             countryDimension.filter("ZZ");
             chart.render();
         });
-       it('should set invisible if bubble has 0 r', function () {
+       it('sets invisible if bubble has 0 r', function () {
             chart.selectAll("g.node text").each(function (d, i) {
                 expect(Number(d3.select(this).attr("opacity"))).toBe(0);
             });
@@ -309,19 +309,19 @@ describe('dc.bubbleChart', function() {
                 .xAxisPadding(20);
             chart.render();
         });
-       it('should auto calculate x range based on width', function () {
+       it('auto calculates x range based on width', function () {
             expect(chart.x().range()[0]).toBe(0);
             expect(chart.x().range()[1]).toBe(820);
         });
-       it('should set the x domain', function () {
+       it('sets the x domain', function () {
             expect(chart.x().domain()[0]).toBe(178);
             expect(chart.x().domain()[1]).toBe(240);
         });
-       it('should auto calculate y range based on height', function () {
+       it('auto calculates y range based on height', function () {
             expect(chart.y().range()[0]).toBe(310);
             expect(chart.y().range()[1]).toBe(0);
         });
-       it('should set the y domain', function () {
+       it('sets the y domain', function () {
             expect(chart.y().domain()[0]).toBe(2);
             expect(chart.y().domain()[1]).toBe(8);
         });
@@ -337,12 +337,12 @@ describe('dc.bubbleChart', function() {
            derlet.and.callThrough();
            chart.renderlet(derlet);
        });
-       it('should be invoked with render', function () {
+       it('is invoked with render', function () {
            chart.render();
            expect(chart.selectAll("circle").attr("fill")).toBe("red");
            expect(derlet).toHaveBeenCalled();
        });
-       it('should be invoked with redraw', function () {
+       it('is invoked with redraw', function () {
            chart.render().redraw();
            expect(chart.selectAll("circle").attr("fill")).toBe("red");
            expect(derlet.calls.count()).toEqual(2);
@@ -371,22 +371,22 @@ describe('dc.bubbleChart', function() {
 
             chart.render();
         });
-        it('should generate right number of bubbles', function () {
+        it('generates right number of bubbles', function () {
             expect(chart.selectAll("circle.bubble")[0].length).toBe(10);
         });
-        it('should auto calculate x range based on width', function () {
+        it('auto calculates x range based on width', function () {
             expect(chart.x().range()[0]).toBe(0);
             expect(chart.x().range()[1]).toBe(820);
         });
-        it('should set the x domain', function () {
+        it('sets the x domain', function () {
             expect(chart.x().domain()[0]).toBe(20);
             expect(chart.x().domain()[1]).toBe(68);
         });
-        it('should auto calculate y range based on height', function () {
+        it('auto calculates y range based on height', function () {
             expect(chart.y().range()[0]).toBe(310);
             expect(chart.y().range()[1]).toBe(0);
         });
-        it('should set the y domain', function () {
+        it('sets the y domain', function () {
             expect(chart.y().domain()[0]).toBe(-7);
             expect(chart.y().domain()[1]).toBe(12);
         });
