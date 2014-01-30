@@ -36,30 +36,30 @@ describe('dc.dataTable', function() {
     });
 
     describe('creation', function() {
-        it('should generate something', function() {
+        it('generates something', function() {
             expect(chart).not.toBeNull();
         });
-        it('should be registered', function() {
+        it('registers', function() {
             expect(dc.hasChart(chart)).toBeTruthy();
         });
-        it('size should be set', function() {
+        it('sets size', function() {
             expect(chart.size()).toEqual(3);
         });
-        it('sortBy should be set', function() {
+        it('sets sortBy', function() {
             expect(chart.sortBy()).not.toBeNull();
         });
-        it('order should be set', function() {
+        it('sets order', function() {
             expect(chart.order()).toBe(d3.descending);
         });
-        it('should have column span set on group tr', function() {
+        it('sets column span set on group tr', function() {
             expect(chart.selectAll("tr.dc-table-group td")[0][0].getAttribute("colspan")).toEqual("2");
         });
-        it('should have id column created', function() {
+        it('creates id column', function() {
             expect(chart.selectAll("td._0")[0][0].innerHTML).toEqual('9');
             expect(chart.selectAll("td._0")[0][1].innerHTML).toEqual('8');
             expect(chart.selectAll("td._0")[0][2].innerHTML).toEqual('3');
         });
-        it('should have status column created', function() {
+        it('creates status column', function() {
             expect(chart.selectAll("td._1")[0][0].innerHTML).toEqual("T");
             expect(chart.selectAll("td._1")[0][1].innerHTML).toEqual("F");
             expect(chart.selectAll("td._1")[0][2].innerHTML).toEqual("T");
@@ -71,10 +71,10 @@ describe('dc.dataTable', function() {
             countryDimension.filter("CA");
             chart.redraw();
         });
-        it('should only render filtered data set', function() {
+        it('renders only filtered data set', function() {
             expect(chart.selectAll("td._0")[0].length).toEqual(2);
         });
-        it('should render the correctly filtered records', function() {
+        it('renders the correctly filtered records', function() {
             expect(chart.selectAll("td._0")[0][0].innerHTML).toEqual('7');
             expect(chart.selectAll("td._0")[0][1].innerHTML).toEqual('5');
         });
