@@ -97,6 +97,7 @@ describe('dc.scatterPlot', function() {
             });
 
             it('should filter dimensions based on the same data', function () {
+                jasmine.clock().tick(100);
                 expect(otherDimension.top(Infinity).length).toBe(3);
             });
 

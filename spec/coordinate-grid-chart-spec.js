@@ -668,6 +668,7 @@ describe('dc.coordinateGridChart', function() {
                 });
 
                 it("should trigger redraw on other charts in group after a brief pause", function () {
+                    jasmine.clock().tick(100);
                     expect(dc.redrawAll).toHaveBeenCalledWith(chart.chartGroup());
                 });
             });
@@ -752,6 +753,7 @@ describe('dc.coordinateGridChart', function() {
             spyOn(chart, "focus");
             rangeChart.brush().extent(selectedRange);
             rangeChart.brush().event(rangeChart.g());
+            jasmine.clock().tick(100);
             expect(chart.focus).toHaveBeenCalledWith(selectedRange);
         });
 

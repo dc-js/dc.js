@@ -1,11 +1,12 @@
 beforeEach(function() {
     d3.select("body").append("div").attr("id", "test-content");
-    dc.events.trigger = function(f) { return f(); };
+    jasmine.clock().install();
 });
 
 afterEach(function () {
     dc.deregisterAllCharts();
     d3.selectAll("#test-content").remove();
+    jasmine.clock().uninstall();
 });
 
 function appendChartID(id) {

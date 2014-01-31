@@ -705,6 +705,7 @@ describe('dc.barChart', function() {
             });
 
             it("should not round the brush", function () {
+                jasmine.clock().tick(100);
                 expect(chart.filter()).toEqual([new Date(2012, 6, 1), new Date(2012, 7, 15)]);
             });
         });
