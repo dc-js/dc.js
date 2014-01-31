@@ -45,7 +45,8 @@ suite.addBatch({
 	'line chart': {
 		topic: function () {
 			var chart = buildChart("chart");
-			chart.color(function(){ return '#FF0000'; }).redraw();
+			chart.ordinalColors(['#FF0000'])
+                        .colorAccessor(function(){ return 0; }).redraw();
 			return chart;
 		},
 		'dots colour should update on redraw': function (chart) {
@@ -57,3 +58,6 @@ suite.addBatch({
 		}
 	}
 });
+
+suite.export(module);
+
