@@ -38,7 +38,7 @@ describe('dc.geoChoropleth', function() {
             });
         chart.render();
         return chart;
-    };
+    }
 
     function buildChartWithCustomProjection(id) {
         var div = appendChartID(id);
@@ -63,7 +63,7 @@ describe('dc.geoChoropleth', function() {
             });
         chart.render();
         return chart;
-    };
+    }
 
     describe('creation', function() {
         var chart;

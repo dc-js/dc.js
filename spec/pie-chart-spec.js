@@ -145,7 +145,7 @@ describe('dc.pieChart', function() {
             var parts = /translate\((.*),(.*)\)/.exec(translate);
             expect(parts.length).toEqual(3);
             expect(+parts[1]).toBeCloseTo(38.20604139901076, 8);
-            expect(+parts[2]).toBeCloseTo(-52.58610463437158, 8);;
+            expect(+parts[2]).toBeCloseTo(-52.58610463437158, 8);
         });
         it('slice label text should be set', function() {
             chart.selectAll("svg g text.pie-slice").call(function(p) {

@@ -3,7 +3,7 @@ describe('dc.numberDisplay', function() {
     var countryDimension;
     function average(d) {
         return d.n ? d.tot / d.n : 0;
-    };
+    }
 
     beforeEach(function() {
         data = crossfilter(loadDateFixture());
