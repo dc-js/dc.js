@@ -10,7 +10,7 @@ afterEach(function () {
 });
 
 function appendChartID(id) {
-    d3.select("#test-content").append("div").attr("id", id);
+    return d3.select("#test-content").append("div").attr("id", id);
 }
 
 function coordsFromTranslate(translationString){

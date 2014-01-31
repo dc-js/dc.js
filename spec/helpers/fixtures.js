@@ -13,9 +13,19 @@ function loadDateFixture() {
         "]");
 
     fixture.forEach(dateCleaner);
-
     return fixture;
 }
+
+function loadDateFixture2() {
+var fixture = JSON.parse("[" +
+    "{\"value\":\"11\",\"nvalue\":\"-4\",\"countrycode\":\"UK\",\"state\":\"Liverpool\",\"status\":\"T\",\"id\":11,\"region\":\"South\",\"date\":\"2012-05-25T16:20:09Z\"}, " +
+    "{\"value\":\"76\",\"nvalue\":\"-1\",\"countrycode\":\"UK\",\"state\":\"London\",\"status\":\"F\",\"id\":12,\"region\":\"\",\"date\":\"2012-06-10T16:20:39Z\"}" +
+    "]");
+
+    fixture.forEach(dateCleaner);
+    return fixture;
+}
+
 
 function loadBoxPlotFixture() {
     return JSON.parse("[" +
