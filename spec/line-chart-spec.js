@@ -576,4 +576,15 @@ describe('dc.lineChart', function() {
             });
         });
     });
+    describe('change color', function() {
+        beforeEach(function() {
+            chart.brushOn(false)
+                .ordinalColors(['#FF0000'])
+                .colorAccessor(function(){ return 0; })
+                .render().redraw();
+        });
+        it('updates dot colors', function() {
+            expect(chart.select("circle.dot")[0][0].attributes.fill.nodeValue).toEqual('#FF0000');
+        });
+    });
 });
