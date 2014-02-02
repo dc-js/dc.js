@@ -8,7 +8,7 @@ map from GeoJson data an easy process. This chart implementation was inspired by
 [the great d3 choropleth example](http://bl.ocks.org/4060606).
 
 Examples:
-* [US Venture Capital Landscape 2011](http://nickqizhu.github.com/dc.js/vc/index.html)
+* [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
 
 #### dc.geoChoroplethChart(parent[, chartGroup])
 Create a choropleth chart instance and attach it to the given parent element.

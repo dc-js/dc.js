@@ -25,10 +25,10 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="string">'use strict'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-pi">'use strict'</span>;
 
-<span class="comment">/* jshint globalstrict: true */</span>
-<span class="comment">/* global dc,d3,crossfilter,colorbrewer */</span></pre></div></div>
+<span class="hljs-comment">/* jshint globalstrict: true */</span>
+<span class="hljs-comment">/* global dc,d3,crossfilter,colorbrewer */</span></pre></div></div>
             
         </li>
         
@@ -45,13 +45,13 @@ Note: It is often a good idea to have these objects accessible at the global sco
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="keyword">var</span> gainOrLossChart = dc.pieChart(<span class="string">"#gain-loss-chart"</span>);
-<span class="keyword">var</span> fluctuationChart = dc.barChart(<span class="string">"#fluctuation-chart"</span>);
-<span class="keyword">var</span> quarterChart = dc.pieChart(<span class="string">"#quarter-chart"</span>);
-<span class="keyword">var</span> dayOfWeekChart = dc.rowChart(<span class="string">"#day-of-week-chart"</span>);
-<span class="keyword">var</span> moveChart = dc.lineChart(<span class="string">"#monthly-move-chart"</span>);
-<span class="keyword">var</span> volumeChart = dc.barChart(<span class="string">"#monthly-volume-chart"</span>);
-<span class="keyword">var</span> yearlyBubbleChart = dc.bubbleChart(<span class="string">"#yearly-bubble-chart"</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> gainOrLossChart = dc.pieChart(<span class="hljs-string">"#gain-loss-chart"</span>);
+<span class="hljs-keyword">var</span> fluctuationChart = dc.barChart(<span class="hljs-string">"#fluctuation-chart"</span>);
+<span class="hljs-keyword">var</span> quarterChart = dc.pieChart(<span class="hljs-string">"#quarter-chart"</span>);
+<span class="hljs-keyword">var</span> dayOfWeekChart = dc.rowChart(<span class="hljs-string">"#day-of-week-chart"</span>);
+<span class="hljs-keyword">var</span> moveChart = dc.lineChart(<span class="hljs-string">"#monthly-move-chart"</span>);
+<span class="hljs-keyword">var</span> volumeChart = dc.barChart(<span class="hljs-string">"#monthly-volume-chart"</span>);
+<span class="hljs-keyword">var</span> yearlyBubbleChart = dc.bubbleChart(<span class="hljs-string">"#yearly-bubble-chart"</span>);</pre></div></div>
             
         </li>
         
@@ -66,7 +66,7 @@ Note: It is often a good idea to have these objects accessible at the global sco
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="comment">/*
+            <div class="content"><div class='highlight'><pre><span class="hljs-comment">/*
 </span></pre></div></div>
             
         </li>
@@ -82,7 +82,7 @@ Note: It is often a good idea to have these objects accessible at the global sco
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    &lt;div id=<span class="string">"your-chart"</span>&gt;<span class="xml"><span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+            <div class="content"><div class='highlight'><pre>    &lt;div id=<span class="hljs-string">"your-chart"</span>&gt;<span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
 </span></pre></div></div>
             
         </li>
@@ -98,7 +98,7 @@ Note: It is often a good idea to have these objects accessible at the global sco
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    &lt;div id=<span class="string">"chart"</span>&gt;<span class="xml"><span class="tag">&lt;<span class="title">span</span>&gt;</span>Days by Gain or Loss<span class="tag">&lt;/<span class="title">span</span>&gt;</span><span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+            <div class="content"><div class='highlight'><pre>    &lt;div id=<span class="hljs-string">"chart"</span>&gt;<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>Days by Gain or Loss<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
 </span></pre></div></div>
             
         </li>
@@ -118,9 +118,9 @@ selection for bar chart). Enable this with <code>chart.turnOnControls(true)</cod
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>     &lt;div id=<span class="string">"chart"</span>&gt;
-       <span class="xml"><span class="tag">&lt;<span class="title">a</span> <span class="attribute">class</span>=<span class="value">"reset"</span> <span class="attribute">href</span>=<span class="value">"javascript:myChart.filterAll();dc.redrawAll();"</span> <span class="attribute">style</span>=<span class="value">"display: none;"</span>&gt;</span>reset<span class="tag">&lt;/<span class="title">a</span>&gt;</span>
-     <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+            <div class="content"><div class='highlight'><pre>     &lt;div id=<span class="hljs-string">"chart"</span>&gt;
+       <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"reset"</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">"javascript:myChart.filterAll();dc.redrawAll();"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">"display: none;"</span>&gt;</span>reset<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
+     <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
 </span></pre></div></div>
             
         </li>
@@ -137,9 +137,9 @@ any html element with css class set to “filter”</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    &lt;div id=<span class="string">"chart"</span>&gt;
-        <span class="xml"><span class="tag">&lt;<span class="title">span</span> <span class="attribute">class</span>=<span class="value">"reset"</span> <span class="attribute">style</span>=<span class="value">"display: none;"</span>&gt;</span>Current filter: <span class="tag">&lt;<span class="title">span</span> <span class="attribute">class</span>=<span class="value">"filter"</span>&gt;</span><span class="tag">&lt;/<span class="title">span</span>&gt;</span><span class="tag">&lt;/<span class="title">span</span>&gt;</span>
-    <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+            <div class="content"><div class='highlight'><pre>    &lt;div id=<span class="hljs-string">"chart"</span>&gt;
+        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"reset"</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">"display: none;"</span>&gt;</span>Current filter: <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"filter"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
 */
 
 </span></pre></div></div>
@@ -156,21 +156,21 @@ any html element with css class set to “filter”</p>
               <h3 id="load-your-data">Load your data</h3>
 <p>Data can be loaded through regular means with your
 favorite javascript library</p>
-<pre><code class="lang-javascript">d3.csv(<span class="string">"data.csv"</span>, <span class="function"><span class="keyword">function</span><span class="params">(data)</span> {</span>...};
-d3.json(<span class="string">"data.json"</span>, <span class="function"><span class="keyword">function</span><span class="params">(data)</span> {</span>...};
-jQuery.getJson(<span class="string">"data.json"</span>, <span class="function"><span class="keyword">function</span><span class="params">(data)</span>{</span>...});</code></pre>
+<pre><code class="lang-javascript">d3.csv(<span class="hljs-string">"data.csv"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>...};
+d3.json(<span class="hljs-string">"data.json"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span> {</span>...};
+jQuery.getJson(<span class="hljs-string">"data.json"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(data)</span>{</span>...});</code></pre>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>d3.csv(<span class="string">"ndx.csv"</span>, <span class="function"><span class="keyword">function</span> <span class="params">(data)</span> {</span>
-    <span class="comment">/* since its a csv file we need to format the data a bit */</span>
-    <span class="keyword">var</span> dateFormat = d3.time.format(<span class="string">"%m/%d/%Y"</span>);
-    <span class="keyword">var</span> numberFormat = d3.format(<span class="string">".2f"</span>);
+            <div class="content"><div class='highlight'><pre>d3.csv(<span class="hljs-string">"ndx.csv"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(data)</span> {</span>
+    <span class="hljs-comment">/* since its a csv file we need to format the data a bit */</span>
+    <span class="hljs-keyword">var</span> dateFormat = d3.time.format(<span class="hljs-string">"%m/%d/%Y"</span>);
+    <span class="hljs-keyword">var</span> numberFormat = d3.format(<span class="hljs-string">".2f"</span>);
 
-    data.forEach(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+    data.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
         d.dd = dateFormat.parse(d.date);
-        d.month = d3.time.month(d.dd); <span class="comment">// pre-calculate month for better performance</span>
-        d.close = +d.close; <span class="comment">// coerce to number</span>
+        d.month = d3.time.month(d.dd); <span class="hljs-comment">// pre-calculate month for better performance</span>
+        d.close = +d.close; <span class="hljs-comment">// coerce to number</span>
         d.open = +d.open;
     });</pre></div></div>
             
@@ -188,8 +188,8 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="function"><
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> ndx = crossfilter(data);
-    <span class="keyword">var</span> all = ndx.groupAll();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> ndx = crossfilter(data);
+    <span class="hljs-keyword">var</span> all = ndx.groupAll();</pre></div></div>
             
         </li>
         
@@ -204,8 +204,8 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="function"><
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> yearlyDimension = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-        <span class="keyword">return</span> d3.time.year(d.dd).getFullYear();
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> yearlyDimension = ndx.dimension(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+        <span class="hljs-keyword">return</span> d3.time.year(d.dd).getFullYear();
     });</pre></div></div>
             
         </li>
@@ -221,32 +221,32 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="function"><
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> yearlyPerformanceGroup = yearlyDimension.group().reduce(
-        <span class="comment">/* callback for when data is added to the current filter results */</span>
-        <span class="function"><span class="keyword">function</span> <span class="params">(p, v)</span> {</span>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> yearlyPerformanceGroup = yearlyDimension.group().reduce(
+        <span class="hljs-comment">/* callback for when data is added to the current filter results */</span>
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(p, v)</span> {</span>
             ++p.count;
             p.absGain += v.close - v.open;
-            p.fluctuation += Math.abs(v.close - v.open);
-            p.sumIndex += (v.open + v.close) / <span class="number">2</span>;
+            p.fluctuation += <span class="hljs-built_in">Math</span>.abs(v.close - v.open);
+            p.sumIndex += (v.open + v.close) / <span class="hljs-number">2</span>;
             p.avgIndex = p.sumIndex / p.count;
-            p.percentageGain = (p.absGain / p.avgIndex) * <span class="number">100</span>;
-            p.fluctuationPercentage = (p.fluctuation / p.avgIndex) * <span class="number">100</span>;
-            <span class="keyword">return</span> p;
+            p.percentageGain = (p.absGain / p.avgIndex) * <span class="hljs-number">100</span>;
+            p.fluctuationPercentage = (p.fluctuation / p.avgIndex) * <span class="hljs-number">100</span>;
+            <span class="hljs-keyword">return</span> p;
         },
-        <span class="comment">/* callback for when data is removed from the current filter results */</span>
-        <span class="function"><span class="keyword">function</span> <span class="params">(p, v)</span> {</span>
+        <span class="hljs-comment">/* callback for when data is removed from the current filter results */</span>
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(p, v)</span> {</span>
             --p.count;
             p.absGain -= v.close - v.open;
-            p.fluctuation -= Math.abs(v.close - v.open);
-            p.sumIndex -= (v.open + v.close) / <span class="number">2</span>;
+            p.fluctuation -= <span class="hljs-built_in">Math</span>.abs(v.close - v.open);
+            p.sumIndex -= (v.open + v.close) / <span class="hljs-number">2</span>;
             p.avgIndex = p.sumIndex / p.count;
-            p.percentageGain = (p.absGain / p.avgIndex) * <span class="number">100</span>;
-            p.fluctuationPercentage = (p.fluctuation / p.avgIndex) * <span class="number">100</span>;
-            <span class="keyword">return</span> p;
+            p.percentageGain = (p.absGain / p.avgIndex) * <span class="hljs-number">100</span>;
+            p.fluctuationPercentage = (p.fluctuation / p.avgIndex) * <span class="hljs-number">100</span>;
+            <span class="hljs-keyword">return</span> p;
         },
-        <span class="comment">/* initialize p */</span>
-        <span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span>
-            <span class="keyword">return</span> {count: <span class="number">0</span>, absGain: <span class="number">0</span>, fluctuation: <span class="number">0</span>, fluctuationPercentage: <span class="number">0</span>, sumIndex: <span class="number">0</span>, avgIndex: <span class="number">0</span>, percentageGain: <span class="number">0</span>};
+        <span class="hljs-comment">/* initialize p */</span>
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">return</span> {count: <span class="hljs-number">0</span>, absGain: <span class="hljs-number">0</span>, fluctuation: <span class="hljs-number">0</span>, fluctuationPercentage: <span class="hljs-number">0</span>, sumIndex: <span class="hljs-number">0</span>, avgIndex: <span class="hljs-number">0</span>, percentageGain: <span class="hljs-number">0</span>};
         }
     );</pre></div></div>
             
@@ -263,8 +263,8 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="function"><
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> dateDimension = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-        <span class="keyword">return</span> d.dd;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> dateDimension = ndx.dimension(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+        <span class="hljs-keyword">return</span> d.dd;
     });</pre></div></div>
             
         </li>
@@ -280,8 +280,8 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="function"><
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> moveMonths = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-        <span class="keyword">return</span> d.month;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> moveMonths = ndx.dimension(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+        <span class="hljs-keyword">return</span> d.month;
     });</pre></div></div>
             
         </li>
@@ -297,8 +297,8 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="function"><
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> monthlyMoveGroup = moveMonths.group().reduceSum(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-        <span class="keyword">return</span> Math.abs(d.close - d.open);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> monthlyMoveGroup = moveMonths.group().reduceSum(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.abs(d.close - d.open);
     });</pre></div></div>
             
         </li>
@@ -314,24 +314,24 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="function"><
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> volumeByMonthGroup = moveMonths.group().reduceSum(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-        <span class="keyword">return</span> d.volume / <span class="number">500000</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> volumeByMonthGroup = moveMonths.group().reduceSum(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+        <span class="hljs-keyword">return</span> d.volume / <span class="hljs-number">500000</span>;
     });
-    <span class="keyword">var</span> indexAvgByMonthGroup = moveMonths.group().reduce(
-        <span class="function"><span class="keyword">function</span> <span class="params">(p, v)</span> {</span>
+    <span class="hljs-keyword">var</span> indexAvgByMonthGroup = moveMonths.group().reduce(
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(p, v)</span> {</span>
             ++p.days;
-            p.total += (v.open + v.close) / <span class="number">2</span>;
-            p.avg = Math.round(p.total / p.days);
-            <span class="keyword">return</span> p;
+            p.total += (v.open + v.close) / <span class="hljs-number">2</span>;
+            p.avg = <span class="hljs-built_in">Math</span>.round(p.total / p.days);
+            <span class="hljs-keyword">return</span> p;
         },
-        <span class="function"><span class="keyword">function</span> <span class="params">(p, v)</span> {</span>
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(p, v)</span> {</span>
             --p.days;
-            p.total -= (v.open + v.close) / <span class="number">2</span>;
-            p.avg = p.days ? Math.round(p.total / p.days) : <span class="number">0</span>;
-            <span class="keyword">return</span> p;
+            p.total -= (v.open + v.close) / <span class="hljs-number">2</span>;
+            p.avg = p.days ? <span class="hljs-built_in">Math</span>.round(p.total / p.days) : <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">return</span> p;
         },
-        <span class="function"><span class="keyword">function</span> <span class="params">()</span> {</span>
-            <span class="keyword">return</span> {days: <span class="number">0</span>, total: <span class="number">0</span>, avg: <span class="number">0</span>};
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+            <span class="hljs-keyword">return</span> {days: <span class="hljs-number">0</span>, total: <span class="hljs-number">0</span>, avg: <span class="hljs-number">0</span>};
         }
     );</pre></div></div>
             
@@ -348,8 +348,8 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="function"><
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> gainOrLoss = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-        <span class="keyword">return</span> d.open &gt; d.close ? <span class="string">"Loss"</span> : <span class="string">"Gain"</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> gainOrLoss = ndx.dimension(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+        <span class="hljs-keyword">return</span> d.open &gt; d.close ? <span class="hljs-string">"Loss"</span> : <span class="hljs-string">"Gain"</span>;
     });</pre></div></div>
             
         </li>
@@ -365,7 +365,7 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="function"><
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> gainOrLossGroup = gainOrLoss.group();</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> gainOrLossGroup = gainOrLoss.group();</pre></div></div>
             
         </li>
         
@@ -380,10 +380,10 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="function"><
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> fluctuation = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-        <span class="keyword">return</span> Math.round((d.close - d.open) / d.open * <span class="number">100</span>);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> fluctuation = ndx.dimension(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.round((d.close - d.open) / d.open * <span class="hljs-number">100</span>);
     });
-    <span class="keyword">var</span> fluctuationGroup = fluctuation.group();</pre></div></div>
+    <span class="hljs-keyword">var</span> fluctuationGroup = fluctuation.group();</pre></div></div>
             
         </li>
         
@@ -398,19 +398,19 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="function"><
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> quarter = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-        <span class="keyword">var</span> month = d.dd.getMonth();
-        <span class="keyword">if</span> (month &lt;= <span class="number">2</span>)
-            <span class="keyword">return</span> <span class="string">"Q1"</span>;
-        <span class="keyword">else</span> <span class="keyword">if</span> (month &gt; <span class="number">3</span> &amp;&amp; month &lt;= <span class="number">5</span>)
-            <span class="keyword">return</span> <span class="string">"Q2"</span>;
-        <span class="keyword">else</span> <span class="keyword">if</span> (month &gt; <span class="number">5</span> &amp;&amp; month &lt;= <span class="number">8</span>)
-            <span class="keyword">return</span> <span class="string">"Q3"</span>;
-        <span class="keyword">else</span>
-            <span class="keyword">return</span> <span class="string">"Q4"</span>;
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> quarter = ndx.dimension(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+        <span class="hljs-keyword">var</span> month = d.dd.getMonth();
+        <span class="hljs-keyword">if</span> (month &lt;= <span class="hljs-number">2</span>)
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"Q1"</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (month &gt; <span class="hljs-number">3</span> &amp;&amp; month &lt;= <span class="hljs-number">5</span>)
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"Q2"</span>;
+        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (month &gt; <span class="hljs-number">5</span> &amp;&amp; month &lt;= <span class="hljs-number">8</span>)
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"Q3"</span>;
+        <span class="hljs-keyword">else</span>
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"Q4"</span>;
     });
-    <span class="keyword">var</span> quarterGroup = quarter.group().reduceSum(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-        <span class="keyword">return</span> d.volume;
+    <span class="hljs-keyword">var</span> quarterGroup = quarter.group().reduceSum(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+        <span class="hljs-keyword">return</span> d.volume;
     });</pre></div></div>
             
         </li>
@@ -426,12 +426,12 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="function"><
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="keyword">var</span> dayOfWeek = ndx.dimension(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-        <span class="keyword">var</span> day = d.dd.getDay();
-        <span class="keyword">var</span> name=[<span class="string">"Sun"</span>,<span class="string">"Mon"</span>,<span class="string">"Tue"</span>,<span class="string">"Wed"</span>,<span class="string">"Thu"</span>,<span class="string">"Fri"</span>,<span class="string">"Sat"</span>];
-        <span class="keyword">return</span> day+<span class="string">"."</span>+name[day];
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> dayOfWeek = ndx.dimension(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+        <span class="hljs-keyword">var</span> day = d.dd.getDay();
+        <span class="hljs-keyword">var</span> name=[<span class="hljs-string">"Sun"</span>,<span class="hljs-string">"Mon"</span>,<span class="hljs-string">"Tue"</span>,<span class="hljs-string">"Wed"</span>,<span class="hljs-string">"Thu"</span>,<span class="hljs-string">"Fri"</span>,<span class="hljs-string">"Sat"</span>];
+        <span class="hljs-keyword">return</span> day+<span class="hljs-string">"."</span>+name[day];
      });
-    <span class="keyword">var</span> dayOfWeekGroup = dayOfWeek.group();</pre></div></div>
+    <span class="hljs-keyword">var</span> dayOfWeekGroup = dayOfWeek.group();</pre></div></div>
             
         </li>
         
@@ -443,7 +443,7 @@ jQuery.getJson(<span class="string">"data.json"</span>, <span class="function"><
                 <a class="pilcrow" href="#section-21">&#182;</a>
               </div>
               <h3 id="define-chart-attributes">Define Chart Attributes</h3>
-<p>Define chart attributes using fluent methods. See the <a href="https://github.com/NickQiZhu/dc.js/blob/master/web/docs/api-1.7.0.md">dc API Reference</a> for more information</p>
+<p>Define chart attributes using fluent methods. See the <a href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-1.7.0.md">dc API Reference</a> for more information</p>
 
             </div>
             
@@ -464,12 +464,12 @@ on other charts within the same chart group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="comment">/* dc.bubbleChart("#yearly-bubble-chart", "chartGroup") */</span>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-comment">/* dc.bubbleChart("#yearly-bubble-chart", "chartGroup") */</span>
     yearlyBubbleChart
-        .width(<span class="number">990</span>) <span class="comment">// (optional) define chart width, :default = 200</span>
-        .height(<span class="number">250</span>)  <span class="comment">// (optional) define chart height, :default = 200</span>
-        .transitionDuration(<span class="number">1500</span>) <span class="comment">// (optional) define chart transition duration, :default = 750</span>
-        .margins({top: <span class="number">10</span>, right: <span class="number">50</span>, bottom: <span class="number">30</span>, left: <span class="number">40</span>})
+        .width(<span class="hljs-number">990</span>) <span class="hljs-comment">// (optional) define chart width, :default = 200</span>
+        .height(<span class="hljs-number">250</span>)  <span class="hljs-comment">// (optional) define chart height, :default = 200</span>
+        .transitionDuration(<span class="hljs-number">1500</span>) <span class="hljs-comment">// (optional) define chart transition duration, :default = 750</span>
+        .margins({top: <span class="hljs-number">10</span>, right: <span class="hljs-number">50</span>, bottom: <span class="hljs-number">30</span>, left: <span class="hljs-number">40</span>})
         .dimension(yearlyDimension)</pre></div></div>
             
         </li>
@@ -487,8 +487,8 @@ to generate x, y, and radius for each key (bubble) in the group</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>        .group(yearlyPerformanceGroup)
-        .colors(colorbrewer.RdYlGn[<span class="number">9</span>]) <span class="comment">// (optional) define color function or array for bubbles</span>
-        .colorDomain([-<span class="number">500</span>, <span class="number">500</span>]) <span class="comment">//(optional) define color domain to match your data domain if you want to bind data or color</span></pre></div></div>
+        .colors(colorbrewer.RdYlGn[<span class="hljs-number">9</span>]) <span class="hljs-comment">// (optional) define color function or array for bubbles</span>
+        .colorDomain([-<span class="hljs-number">500</span>, <span class="hljs-number">500</span>]) <span class="hljs-comment">//(optional) define color domain to match your data domain if you want to bind data or color</span></pre></div></div>
             
         </li>
         
@@ -510,22 +510,22 @@ to generate x, y, and radius for each key (bubble) in the group</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .colorAccessor(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-            <span class="keyword">return</span> d.value.absGain;
+            <div class="content"><div class='highlight'><pre>        .colorAccessor(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+            <span class="hljs-keyword">return</span> d.value.absGain;
         })
-        .keyAccessor(<span class="function"><span class="keyword">function</span> <span class="params">(p)</span> {</span>
-            <span class="keyword">return</span> p.value.absGain;
+        .keyAccessor(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(p)</span> {</span>
+            <span class="hljs-keyword">return</span> p.value.absGain;
         })
-        .valueAccessor(<span class="function"><span class="keyword">function</span> <span class="params">(p)</span> {</span>
-            <span class="keyword">return</span> p.value.percentageGain;
+        .valueAccessor(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(p)</span> {</span>
+            <span class="hljs-keyword">return</span> p.value.percentageGain;
         })
-        .radiusValueAccessor(<span class="function"><span class="keyword">function</span> <span class="params">(p)</span> {</span>
-            <span class="keyword">return</span> p.value.fluctuationPercentage;
+        .radiusValueAccessor(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(p)</span> {</span>
+            <span class="hljs-keyword">return</span> p.value.fluctuationPercentage;
         })
-        .maxBubbleRelativeSize(<span class="number">0.3</span>)
-        .x(d3.scale.linear().domain([-<span class="number">2500</span>, <span class="number">2500</span>]))
-        .y(d3.scale.linear().domain([-<span class="number">100</span>, <span class="number">100</span>]))
-        .r(d3.scale.linear().domain([<span class="number">0</span>, <span class="number">4000</span>]))</pre></div></div>
+        .maxBubbleRelativeSize(<span class="hljs-number">0.3</span>)
+        .x(d3.scale.linear().domain([-<span class="hljs-number">2500</span>, <span class="hljs-number">2500</span>]))
+        .y(d3.scale.linear().domain([-<span class="hljs-number">100</span>, <span class="hljs-number">100</span>]))
+        .r(d3.scale.linear().domain([<span class="hljs-number">0</span>, <span class="hljs-number">4000</span>]))</pre></div></div>
             
         </li>
         
@@ -542,14 +542,14 @@ The <code>.yAxisPadding</code> and <code>.xAxisPadding</code> add padding to dat
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .elasticY(<span class="literal">true</span>)
-        .elasticX(<span class="literal">true</span>)
-        .yAxisPadding(<span class="number">100</span>)
-        .xAxisPadding(<span class="number">500</span>)
-        .renderHorizontalGridLines(<span class="literal">true</span>) <span class="comment">// (optional) render horizontal grid lines, :default=false</span>
-        .renderVerticalGridLines(<span class="literal">true</span>) <span class="comment">// (optional) render vertical grid lines, :default=false</span>
-        .xAxisLabel(<span class="string">'Index Gain'</span>) <span class="comment">// (optional) render an axis label below the x axis</span>
-        .yAxisLabel(<span class="string">'Index Gain %'</span>) <span class="comment">// (optional) render a vertical axis lable left of the y axis</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>        .elasticY(<span class="hljs-literal">true</span>)
+        .elasticX(<span class="hljs-literal">true</span>)
+        .yAxisPadding(<span class="hljs-number">100</span>)
+        .xAxisPadding(<span class="hljs-number">500</span>)
+        .renderHorizontalGridLines(<span class="hljs-literal">true</span>) <span class="hljs-comment">// (optional) render horizontal grid lines, :default=false</span>
+        .renderVerticalGridLines(<span class="hljs-literal">true</span>) <span class="hljs-comment">// (optional) render vertical grid lines, :default=false</span>
+        .xAxisLabel(<span class="hljs-string">'Index Gain'</span>) <span class="hljs-comment">// (optional) render an axis label below the x axis</span>
+        .yAxisLabel(<span class="hljs-string">'Index Gain %'</span>) <span class="hljs-comment">// (optional) render a vertical axis lable left of the y axis</span></pre></div></div>
             
         </li>
         
@@ -565,17 +565,17 @@ The <code>.yAxisPadding</code> and <code>.xAxisPadding</code> add padding to dat
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .renderLabel(<span class="literal">true</span>) <span class="comment">// (optional) whether chart should render labels, :default = true</span>
-        .label(<span class="function"><span class="keyword">function</span> <span class="params">(p)</span> {</span>
-            <span class="keyword">return</span> p.key;
+            <div class="content"><div class='highlight'><pre>        .renderLabel(<span class="hljs-literal">true</span>) <span class="hljs-comment">// (optional) whether chart should render labels, :default = true</span>
+        .label(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(p)</span> {</span>
+            <span class="hljs-keyword">return</span> p.key;
         })
-        .renderTitle(<span class="literal">true</span>) <span class="comment">// (optional) whether chart should render titles, :default = false</span>
-        .title(<span class="function"><span class="keyword">function</span> <span class="params">(p)</span> {</span>
-            <span class="keyword">return</span> [p.key,
-                   <span class="string">"Index Gain: "</span> + numberFormat(p.value.absGain),
-                   <span class="string">"Index Gain in Percentage: "</span> + numberFormat(p.value.percentageGain) + <span class="string">"%"</span>,
-                   <span class="string">"Fluctuation / Index Ratio: "</span> + numberFormat(p.value.fluctuationPercentage) + <span class="string">"%"</span>]
-                   .join(<span class="string">"\n"</span>);
+        .renderTitle(<span class="hljs-literal">true</span>) <span class="hljs-comment">// (optional) whether chart should render titles, :default = false</span>
+        .title(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(p)</span> {</span>
+            <span class="hljs-keyword">return</span> [p.key,
+                   <span class="hljs-string">"Index Gain: "</span> + numberFormat(p.value.absGain),
+                   <span class="hljs-string">"Index Gain in Percentage: "</span> + numberFormat(p.value.percentageGain) + <span class="hljs-string">"%"</span>,
+                   <span class="hljs-string">"Fluctuation / Index Ratio: "</span> + numberFormat(p.value.fluctuationPercentage) + <span class="hljs-string">"%"</span>]
+                   .join(<span class="hljs-string">"\n"</span>);
         })</pre></div></div>
             
         </li>
@@ -592,8 +592,8 @@ The <code>.yAxisPadding</code> and <code>.xAxisPadding</code> add padding to dat
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .yAxis().tickFormat(<span class="function"><span class="keyword">function</span> <span class="params">(v)</span> {</span>
-            <span class="keyword">return</span> v + <span class="string">"%"</span>;
+            <div class="content"><div class='highlight'><pre>        .yAxis().tickFormat(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(v)</span> {</span>
+            <span class="hljs-keyword">return</span> v + <span class="hljs-string">"%"</span>;
         });</pre></div></div>
             
         </li>
@@ -615,18 +615,18 @@ on other charts within the same chart group.</p>
             
             <div class="content"><div class='highlight'><pre>
     gainOrLossChart
-        .width(<span class="number">180</span>) <span class="comment">// (optional) define chart width, :default = 200</span>
-        .height(<span class="number">180</span>) <span class="comment">// (optional) define chart height, :default = 200</span>
-        .radius(<span class="number">80</span>) <span class="comment">// define pie radius</span>
-        .dimension(gainOrLoss) <span class="comment">// set dimension</span>
-        .group(gainOrLossGroup) <span class="comment">// set group</span>
-        <span class="comment">/* (optional) by default pie chart will use group.key as it's label
+        .width(<span class="hljs-number">180</span>) <span class="hljs-comment">// (optional) define chart width, :default = 200</span>
+        .height(<span class="hljs-number">180</span>) <span class="hljs-comment">// (optional) define chart height, :default = 200</span>
+        .radius(<span class="hljs-number">80</span>) <span class="hljs-comment">// define pie radius</span>
+        .dimension(gainOrLoss) <span class="hljs-comment">// set dimension</span>
+        .group(gainOrLossGroup) <span class="hljs-comment">// set group</span>
+        <span class="hljs-comment">/* (optional) by default pie chart will use group.key as it's label
          * but you can overwrite it with a closure */</span>
-        .label(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-            <span class="keyword">if</span> (gainOrLossChart.hasFilter() &amp;&amp; !gainOrLossChart.hasFilter(d.key))
-                <span class="keyword">return</span> d.key + <span class="string">"(0%)"</span>;
-            <span class="keyword">return</span> d.key + <span class="string">"("</span> + Math.floor(d.value / all.value() * <span class="number">100</span>) + <span class="string">"%)"</span>;
-        }) <span class="comment">/*
+        .label(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+            <span class="hljs-keyword">if</span> (gainOrLossChart.hasFilter() &amp;&amp; !gainOrLossChart.hasFilter(d.key))
+                <span class="hljs-keyword">return</span> d.key + <span class="hljs-string">"(0%)"</span>;
+            <span class="hljs-keyword">return</span> d.key + <span class="hljs-string">"("</span> + <span class="hljs-built_in">Math</span>.floor(d.value / all.value() * <span class="hljs-number">100</span>) + <span class="hljs-string">"%)"</span>;
+        }) <span class="hljs-comment">/*
 </span></pre></div></div>
             
         </li>
@@ -642,7 +642,7 @@ on other charts within the same chart group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .renderLabel(<span class="literal">true</span>)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        .renderLabel(<span class="hljs-literal">true</span>)</pre></div></div>
             
         </li>
         
@@ -657,7 +657,7 @@ on other charts within the same chart group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .innerRadius(<span class="number">40</span>)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        .innerRadius(<span class="hljs-number">40</span>)</pre></div></div>
             
         </li>
         
@@ -672,7 +672,7 @@ on other charts within the same chart group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .transitionDuration(<span class="number">500</span>)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        .transitionDuration(<span class="hljs-number">500</span>)</pre></div></div>
             
         </li>
         
@@ -687,7 +687,7 @@ on other charts within the same chart group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .colors([<span class="string">'#3182bd'</span>, <span class="string">'#6baed6'</span>, <span class="string">'#9ecae1'</span>, <span class="string">'#c6dbef'</span>, <span class="string">'#dadaeb'</span>])</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        .colors([<span class="hljs-string">'#3182bd'</span>, <span class="hljs-string">'#6baed6'</span>, <span class="hljs-string">'#9ecae1'</span>, <span class="hljs-string">'#c6dbef'</span>, <span class="hljs-string">'#dadaeb'</span>])</pre></div></div>
             
         </li>
         
@@ -702,7 +702,7 @@ on other charts within the same chart group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .colorDomain([-<span class="number">1750</span>, <span class="number">1644</span>])</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        .colorDomain([-<span class="hljs-number">1750</span>, <span class="hljs-number">1644</span>])</pre></div></div>
             
         </li>
         
@@ -740,9 +740,9 @@ on other charts within the same chart group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    dayOfWeekChart.width(<span class="number">180</span>)
-        .height(<span class="number">180</span>)
-        .margins({top: <span class="number">20</span>, left: <span class="number">10</span>, right: <span class="number">10</span>, bottom: <span class="number">20</span>})
+            <div class="content"><div class='highlight'><pre>    dayOfWeekChart.width(<span class="hljs-number">180</span>)
+        .height(<span class="hljs-number">180</span>)
+        .margins({top: <span class="hljs-number">20</span>, left: <span class="hljs-number">10</span>, right: <span class="hljs-number">10</span>, bottom: <span class="hljs-number">20</span>})
         .group(dayOfWeekGroup)
         .dimension(dayOfWeek)</pre></div></div>
             
@@ -759,9 +759,9 @@ on other charts within the same chart group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .ordinalColors([<span class="string">'#3182bd'</span>, <span class="string">'#6baed6'</span>, <span class="string">'#9ecae1'</span>, <span class="string">'#c6dbef'</span>, <span class="string">'#dadaeb'</span>])
-        .label(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-            <span class="keyword">return</span> d.key.split(<span class="string">"."</span>)[<span class="number">1</span>];
+            <div class="content"><div class='highlight'><pre>        .ordinalColors([<span class="hljs-string">'#3182bd'</span>, <span class="hljs-string">'#6baed6'</span>, <span class="hljs-string">'#9ecae1'</span>, <span class="hljs-string">'#c6dbef'</span>, <span class="hljs-string">'#dadaeb'</span>])
+        .label(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+            <span class="hljs-keyword">return</span> d.key.split(<span class="hljs-string">"."</span>)[<span class="hljs-number">1</span>];
         })</pre></div></div>
             
         </li>
@@ -777,11 +777,11 @@ on other charts within the same chart group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .title(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-            <span class="keyword">return</span> d.value;
+            <div class="content"><div class='highlight'><pre>        .title(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+            <span class="hljs-keyword">return</span> d.value;
         })
-        .elasticX(<span class="literal">true</span>)
-        .xAxis().ticks(<span class="number">4</span>);</pre></div></div>
+        .elasticX(<span class="hljs-literal">true</span>)
+        .xAxis().ticks(<span class="hljs-number">4</span>);</pre></div></div>
             
         </li>
         
@@ -800,13 +800,13 @@ on other charts within the same chart group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="comment">/* dc.barChart("#volume-month-chart") */</span>
-    fluctuationChart.width(<span class="number">420</span>)
-        .height(<span class="number">180</span>)
-        .margins({top: <span class="number">10</span>, right: <span class="number">50</span>, bottom: <span class="number">30</span>, left: <span class="number">40</span>})
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-comment">/* dc.barChart("#volume-month-chart") */</span>
+    fluctuationChart.width(<span class="hljs-number">420</span>)
+        .height(<span class="hljs-number">180</span>)
+        .margins({top: <span class="hljs-number">10</span>, right: <span class="hljs-number">50</span>, bottom: <span class="hljs-number">30</span>, left: <span class="hljs-number">40</span>})
         .dimension(fluctuation)
         .group(fluctuationGroup)
-        .elasticY(<span class="literal">true</span>)</pre></div></div>
+        .elasticY(<span class="hljs-literal">true</span>)</pre></div></div>
             
         </li>
         
@@ -821,7 +821,7 @@ on other charts within the same chart group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .centerBar(<span class="literal">true</span>)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        .centerBar(<span class="hljs-literal">true</span>)</pre></div></div>
             
         </li>
         
@@ -836,7 +836,7 @@ on other charts within the same chart group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .gap(<span class="number">1</span>)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        .gap(<span class="hljs-number">1</span>)</pre></div></div>
             
         </li>
         
@@ -852,9 +852,9 @@ on other charts within the same chart group.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>        .round(dc.round.floor)
-        .alwaysUseRounding(<span class="literal">true</span>)
-        .x(d3.scale.linear().domain([-<span class="number">25</span>, <span class="number">25</span>]))
-        .renderHorizontalGridLines(<span class="literal">true</span>)</pre></div></div>
+        .alwaysUseRounding(<span class="hljs-literal">true</span>)
+        .x(d3.scale.linear().domain([-<span class="hljs-number">25</span>, <span class="hljs-number">25</span>]))
+        .renderHorizontalGridLines(<span class="hljs-literal">true</span>)</pre></div></div>
             
         </li>
         
@@ -869,10 +869,10 @@ on other charts within the same chart group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .filterPrinter(<span class="function"><span class="keyword">function</span> <span class="params">(filters)</span> {</span>
-            <span class="keyword">var</span> filter = filters[<span class="number">0</span>], s = <span class="string">""</span>;
-            s += numberFormat(filter[<span class="number">0</span>]) + <span class="string">"% -&gt; "</span> + numberFormat(filter[<span class="number">1</span>]) + <span class="string">"%"</span>;
-            <span class="keyword">return</span> s;
+            <div class="content"><div class='highlight'><pre>        .filterPrinter(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(filters)</span> {</span>
+            <span class="hljs-keyword">var</span> filter = filters[<span class="hljs-number">0</span>], s = <span class="hljs-string">""</span>;
+            s += numberFormat(filter[<span class="hljs-number">0</span>]) + <span class="hljs-string">"% -&gt; "</span> + numberFormat(filter[<span class="hljs-number">1</span>]) + <span class="hljs-string">"%"</span>;
+            <span class="hljs-keyword">return</span> s;
         });</pre></div></div>
             
         </li>
@@ -889,8 +889,8 @@ on other charts within the same chart group.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    fluctuationChart.xAxis().tickFormat(
-        <span class="function"><span class="keyword">function</span> <span class="params">(v)</span> {</span> <span class="keyword">return</span> v + <span class="string">"%"</span>; });
-    fluctuationChart.yAxis().ticks(<span class="number">5</span>);</pre></div></div>
+        <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(v)</span> {</span> <span class="hljs-keyword">return</span> v + <span class="hljs-string">"%"</span>; });
+    fluctuationChart.yAxis().ticks(<span class="hljs-number">5</span>);</pre></div></div>
             
         </li>
         
@@ -907,13 +907,13 @@ on other charts within the same chart group.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    moveChart
-        .renderArea(<span class="literal">true</span>)
-        .width(<span class="number">990</span>)
-        .height(<span class="number">200</span>)
-        .transitionDuration(<span class="number">1000</span>)
-        .margins({top: <span class="number">30</span>, right: <span class="number">50</span>, bottom: <span class="number">25</span>, left: <span class="number">40</span>})
+        .renderArea(<span class="hljs-literal">true</span>)
+        .width(<span class="hljs-number">990</span>)
+        .height(<span class="hljs-number">200</span>)
+        .transitionDuration(<span class="hljs-number">1000</span>)
+        .margins({top: <span class="hljs-number">30</span>, right: <span class="hljs-number">50</span>, bottom: <span class="hljs-number">25</span>, left: <span class="hljs-number">40</span>})
         .dimension(moveMonths)
-        .mouseZoomable(<span class="literal">true</span>)</pre></div></div>
+        .mouseZoomable(<span class="hljs-literal">true</span>)</pre></div></div>
             
         </li>
         
@@ -929,13 +929,13 @@ on other charts within the same chart group.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>        .rangeChart(volumeChart)
-        .x(d3.time.scale().domain([<span class="keyword">new</span> Date(<span class="number">1985</span>, <span class="number">0</span>, <span class="number">1</span>), <span class="keyword">new</span> Date(<span class="number">2012</span>, <span class="number">11</span>, <span class="number">31</span>)]))
+        .x(d3.time.scale().domain([<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">1985</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>), <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">2012</span>, <span class="hljs-number">11</span>, <span class="hljs-number">31</span>)]))
         .round(d3.time.month.round)
         .xUnits(d3.time.months)
-        .elasticY(<span class="literal">true</span>)
-        .renderHorizontalGridLines(<span class="literal">true</span>)
-        .legend(dc.legend().x(<span class="number">800</span>).y(<span class="number">10</span>).itemHeight(<span class="number">13</span>).gap(<span class="number">5</span>))
-        .brushOn(<span class="literal">false</span>)</pre></div></div>
+        .elasticY(<span class="hljs-literal">true</span>)
+        .renderHorizontalGridLines(<span class="hljs-literal">true</span>)
+        .legend(dc.legend().x(<span class="hljs-number">800</span>).y(<span class="hljs-number">10</span>).itemHeight(<span class="hljs-number">13</span>).gap(<span class="hljs-number">5</span>))
+        .brushOn(<span class="hljs-literal">false</span>)</pre></div></div>
             
         </li>
         
@@ -951,9 +951,9 @@ The <code>.valueAccessor</code> will be used for the base layer</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .group(indexAvgByMonthGroup, <span class="string">"Monthly Index Average"</span>)
-        .valueAccessor(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-            <span class="keyword">return</span> d.value.avg;
+            <div class="content"><div class='highlight'><pre>        .group(indexAvgByMonthGroup, <span class="hljs-string">"Monthly Index Average"</span>)
+        .valueAccessor(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+            <span class="hljs-keyword">return</span> d.value.avg;
         })</pre></div></div>
             
         </li>
@@ -970,8 +970,8 @@ The second parameter is the series name. The third is a value accessor.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .stack(monthlyMoveGroup, <span class="string">"Monthly Index Move"</span>, <span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-            <span class="keyword">return</span> d.value;
+            <div class="content"><div class='highlight'><pre>        .stack(monthlyMoveGroup, <span class="hljs-string">"Monthly Index Move"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+            <span class="hljs-keyword">return</span> d.value;
         })</pre></div></div>
             
         </li>
@@ -987,25 +987,25 @@ The second parameter is the series name. The third is a value accessor.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .title(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-            <span class="keyword">var</span> value = d.value.avg ? d.value.avg : d.value;
-            <span class="keyword">if</span> (isNaN(value)) value = <span class="number">0</span>;
-            <span class="keyword">return</span> dateFormat(d.key) + <span class="string">"\n"</span> + numberFormat(value);
+            <div class="content"><div class='highlight'><pre>        .title(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+            <span class="hljs-keyword">var</span> value = d.value.avg ? d.value.avg : d.value;
+            <span class="hljs-keyword">if</span> (<span class="hljs-built_in">isNaN</span>(value)) value = <span class="hljs-number">0</span>;
+            <span class="hljs-keyword">return</span> dateFormat(d.key) + <span class="hljs-string">"\n"</span> + numberFormat(value);
         });
 
-    volumeChart.width(<span class="number">990</span>)
-        .height(<span class="number">40</span>)
-        .margins({top: <span class="number">0</span>, right: <span class="number">50</span>, bottom: <span class="number">20</span>, left: <span class="number">40</span>})
+    volumeChart.width(<span class="hljs-number">990</span>)
+        .height(<span class="hljs-number">40</span>)
+        .margins({top: <span class="hljs-number">0</span>, right: <span class="hljs-number">50</span>, bottom: <span class="hljs-number">20</span>, left: <span class="hljs-number">40</span>})
         .dimension(moveMonths)
         .group(volumeByMonthGroup)
-        .centerBar(<span class="literal">true</span>)
-        .gap(<span class="number">1</span>)
-        .x(d3.time.scale().domain([<span class="keyword">new</span> Date(<span class="number">1985</span>, <span class="number">0</span>, <span class="number">1</span>), <span class="keyword">new</span> Date(<span class="number">2012</span>, <span class="number">11</span>, <span class="number">31</span>)]))
+        .centerBar(<span class="hljs-literal">true</span>)
+        .gap(<span class="hljs-number">1</span>)
+        .x(d3.time.scale().domain([<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">1985</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>), <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">2012</span>, <span class="hljs-number">11</span>, <span class="hljs-number">31</span>)]))
         .round(d3.time.month.round)
-        .alwaysUseRounding(<span class="literal">true</span>)
+        .alwaysUseRounding(<span class="hljs-literal">true</span>)
         .xUnits(d3.time.months);
 
-    <span class="comment">/*
+    <span class="hljs-comment">/*
 </span></pre></div></div>
             
         </li>
@@ -1025,9 +1025,9 @@ on other charts within the same chart group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    &lt;div id=<span class="string">"data-count"</span>&gt;
-        <span class="xml"><span class="tag">&lt;<span class="title">span</span> <span class="attribute">class</span>=<span class="value">"filter-count"</span>&gt;</span><span class="tag">&lt;/<span class="title">span</span>&gt;</span> selected out of <span class="tag">&lt;<span class="title">span</span> <span class="attribute">class</span>=<span class="value">"total-count"</span>&gt;</span><span class="tag">&lt;/<span class="title">span</span>&gt;</span> records
-    <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+            <div class="content"><div class='highlight'><pre>    &lt;div id=<span class="hljs-string">"data-count"</span>&gt;
+        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"filter-count"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> selected out of <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"total-count"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> records
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
     */
     dc.dataCount(".dc-data-count")
         .dimension(ndx)
@@ -1053,18 +1053,18 @@ on other charts within the same chart group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    &lt;!-- anchor div <span class="keyword">for</span> data table --&gt;
-    <span class="xml"><span class="tag">&lt;<span class="title">div</span> <span class="attribute">id</span>=<span class="value">"data-table"</span>&gt;</span>
-        <span class="comment">&lt;!-- create a custom header --&gt;</span>
-        <span class="tag">&lt;<span class="title">div</span> <span class="attribute">class</span>=<span class="value">"header"</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">span</span>&gt;</span>Date<span class="tag">&lt;/<span class="title">span</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">span</span>&gt;</span>Open<span class="tag">&lt;/<span class="title">span</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">span</span>&gt;</span>Close<span class="tag">&lt;/<span class="title">span</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">span</span>&gt;</span>Change<span class="tag">&lt;/<span class="title">span</span>&gt;</span>
-            <span class="tag">&lt;<span class="title">span</span>&gt;</span>Volume<span class="tag">&lt;/<span class="title">span</span>&gt;</span>
-        <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
-        <span class="comment">&lt;!-- data rows will filled in here --&gt;</span>
-    <span class="tag">&lt;/<span class="title">div</span>&gt;</span>
+            <div class="content"><div class='highlight'><pre>    &lt;!-- anchor div <span class="hljs-keyword">for</span> data table --&gt;
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">"data-table"</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- create a custom header --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">"header"</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>Date<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>Open<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>Close<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>Change<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>Volume<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- data rows will filled in here --&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
     */
     dc.dataTable(".dc-data-table")
         .dimension(dateDimension)
@@ -1084,11 +1084,11 @@ as a grouping function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .group(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-            <span class="keyword">var</span> format = d3.format(<span class="string">"02d"</span>);
-            <span class="keyword">return</span> d.dd.getFullYear() + <span class="string">"/"</span> + format((d.dd.getMonth() + <span class="number">1</span>));
+            <div class="content"><div class='highlight'><pre>        .group(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+            <span class="hljs-keyword">var</span> format = d3.format(<span class="hljs-string">"02d"</span>);
+            <span class="hljs-keyword">return</span> d.dd.getFullYear() + <span class="hljs-string">"/"</span> + format((d.dd.getMonth() + <span class="hljs-number">1</span>));
         })
-        .size(<span class="number">10</span>) <span class="comment">// (optional) max number of records to be shown, :default = 25</span></pre></div></div>
+        .size(<span class="hljs-number">10</span>) <span class="hljs-comment">// (optional) max number of records to be shown, :default = 25</span></pre></div></div>
             
         </li>
         
@@ -1104,20 +1104,20 @@ as a grouping function</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>        .columns([
-            <span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-                <span class="keyword">return</span> d.date;
+            <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+                <span class="hljs-keyword">return</span> d.date;
             },
-            <span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-                <span class="keyword">return</span> numberFormat(d.open);
+            <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+                <span class="hljs-keyword">return</span> numberFormat(d.open);
             },
-            <span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-                <span class="keyword">return</span> numberFormat(d.close);
+            <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+                <span class="hljs-keyword">return</span> numberFormat(d.close);
             },
-            <span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-                <span class="keyword">return</span> numberFormat(d.close - d.open);
+            <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+                <span class="hljs-keyword">return</span> numberFormat(d.close - d.open);
             },
-            <span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-                <span class="keyword">return</span> d.volume;
+            <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+                <span class="hljs-keyword">return</span> d.volume;
             }
         ])</pre></div></div>
             
@@ -1134,8 +1134,8 @@ as a grouping function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .sortBy(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
-            <span class="keyword">return</span> d.dd;
+            <div class="content"><div class='highlight'><pre>        .sortBy(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+            <span class="hljs-keyword">return</span> d.dd;
         })</pre></div></div>
             
         </li>
@@ -1166,11 +1166,11 @@ as a grouping function</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .renderlet(<span class="function"><span class="keyword">function</span> <span class="params">(table)</span> {</span>
-            table.selectAll(<span class="string">".dc-table-group"</span>).classed(<span class="string">"info"</span>, <span class="literal">true</span>);
+            <div class="content"><div class='highlight'><pre>        .renderlet(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(table)</span> {</span>
+            table.selectAll(<span class="hljs-string">".dc-table-group"</span>).classed(<span class="hljs-string">"info"</span>, <span class="hljs-literal">true</span>);
         });
 
-    <span class="comment">/*
+    <span class="hljs-comment">/*
 </span></pre></div></div>
             
         </li>
@@ -1190,12 +1190,12 @@ on other charts within the same chart group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    dc.geoChoroplethChart(<span class="string">"#us-chart"</span>)
-        .width(<span class="number">990</span>) <span class="comment">// (optional) define chart width, :default = 200</span>
-        .height(<span class="number">500</span>) <span class="comment">// (optional) define chart height, :default = 200</span>
-        .transitionDuration(<span class="number">1000</span>) <span class="comment">// (optional) define chart transition duration, :default = 1000</span>
-        .dimension(states) <span class="comment">// set crossfilter dimension, dimension key should match the name retrieved in geo json layer</span>
-        .group(stateRaisedSum) <span class="comment">// set crossfilter group</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    dc.geoChoroplethChart(<span class="hljs-string">"#us-chart"</span>)
+        .width(<span class="hljs-number">990</span>) <span class="hljs-comment">// (optional) define chart width, :default = 200</span>
+        .height(<span class="hljs-number">500</span>) <span class="hljs-comment">// (optional) define chart height, :default = 200</span>
+        .transitionDuration(<span class="hljs-number">1000</span>) <span class="hljs-comment">// (optional) define chart transition duration, :default = 1000</span>
+        .dimension(states) <span class="hljs-comment">// set crossfilter dimension, dimension key should match the name retrieved in geo json layer</span>
+        .group(stateRaisedSum) <span class="hljs-comment">// set crossfilter group</span></pre></div></div>
             
         </li>
         
@@ -1210,7 +1210,7 @@ on other charts within the same chart group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .colors([<span class="string">"#ccc"</span>, <span class="string">"#E2F2FF"</span>,<span class="string">"#C4E4FF"</span>,<span class="string">"#9ED2FF"</span>,<span class="string">"#81C5FF"</span>,<span class="string">"#6BBAFF"</span>,<span class="string">"#51AEFF"</span>,<span class="string">"#36A2FF"</span>,<span class="string">"#1E96FF"</span>,<span class="string">"#0089FF"</span>,<span class="string">"#0061B5"</span>])</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        .colors([<span class="hljs-string">"#ccc"</span>, <span class="hljs-string">"#E2F2FF"</span>,<span class="hljs-string">"#C4E4FF"</span>,<span class="hljs-string">"#9ED2FF"</span>,<span class="hljs-string">"#81C5FF"</span>,<span class="hljs-string">"#6BBAFF"</span>,<span class="hljs-string">"#51AEFF"</span>,<span class="hljs-string">"#36A2FF"</span>,<span class="hljs-string">"#1E96FF"</span>,<span class="hljs-string">"#0089FF"</span>,<span class="hljs-string">"#0061B5"</span>])</pre></div></div>
             
         </li>
         
@@ -1225,7 +1225,7 @@ on other charts within the same chart group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .colorDomain([-<span class="number">5</span>, <span class="number">200</span>])</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        .colorDomain([-<span class="hljs-number">5</span>, <span class="hljs-number">200</span>])</pre></div></div>
             
         </li>
         
@@ -1240,7 +1240,7 @@ on other charts within the same chart group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .colorAccessor(<span class="function"><span class="keyword">function</span><span class="params">(d, i)</span>{</span><span class="keyword">return</span> d.value;})</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        .colorAccessor(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d, i)</span>{</span><span class="hljs-keyword">return</span> d.value;})</pre></div></div>
             
         </li>
         
@@ -1262,8 +1262,8 @@ in order for the coloring to work properly</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .overlayGeoJson(statesJson.features, <span class="string">"state"</span>, <span class="function"><span class="keyword">function</span><span class="params">(d)</span> {</span>
-            <span class="keyword">return</span> d.properties.name;
+            <div class="content"><div class='highlight'><pre>        .overlayGeoJson(statesJson.features, <span class="hljs-string">"state"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> {</span>
+            <span class="hljs-keyword">return</span> d.properties.name;
         })</pre></div></div>
             
         </li>
@@ -1279,8 +1279,8 @@ in order for the coloring to work properly</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .title(<span class="function"><span class="keyword">function</span><span class="params">(d)</span> {</span>
-            <span class="keyword">return</span> <span class="string">"State: "</span> + d.key + <span class="string">"\nTotal Amount Raised: "</span> + numberFormat(d.value ? d.value : <span class="number">0</span>) + <span class="string">"M"</span>;
+            <div class="content"><div class='highlight'><pre>        .title(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> {</span>
+            <span class="hljs-keyword">return</span> <span class="hljs-string">"State: "</span> + d.key + <span class="hljs-string">"\nTotal Amount Raised: "</span> + numberFormat(d.value ? d.value : <span class="hljs-number">0</span>) + <span class="hljs-string">"M"</span>;
         });</pre></div></div>
             
         </li>
@@ -1300,7 +1300,7 @@ on other charts within the same chart group.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        dc.bubbleOverlay(<span class="string">"#bubble-overlay"</span>)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        dc.bubbleOverlay(<span class="hljs-string">"#bubble-overlay"</span>)</pre></div></div>
             
         </li>
         
@@ -1316,12 +1316,12 @@ svg to generate it’s overlay layer</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .svg(d3.select(<span class="string">"#bubble-overlay svg"</span>))
-            .width(<span class="number">990</span>) <span class="comment">// (optional) define chart width, :default = 200</span>
-            .height(<span class="number">500</span>) <span class="comment">// (optional) define chart height, :default = 200</span>
-            .transitionDuration(<span class="number">1000</span>) <span class="comment">// (optional) define chart transition duration, :default = 1000</span>
-            .dimension(states) <span class="comment">// set crossfilter dimension, dimension key should match the name retrieved in geo json layer</span>
-            .group(stateRaisedSum) <span class="comment">// set crossfilter group</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>            .svg(d3.select(<span class="hljs-string">"#bubble-overlay svg"</span>))
+            .width(<span class="hljs-number">990</span>) <span class="hljs-comment">// (optional) define chart width, :default = 200</span>
+            .height(<span class="hljs-number">500</span>) <span class="hljs-comment">// (optional) define chart height, :default = 200</span>
+            .transitionDuration(<span class="hljs-number">1000</span>) <span class="hljs-comment">// (optional) define chart transition duration, :default = 1000</span>
+            .dimension(states) <span class="hljs-comment">// set crossfilter dimension, dimension key should match the name retrieved in geo json layer</span>
+            .group(stateRaisedSum) <span class="hljs-comment">// set crossfilter group</span></pre></div></div>
             
         </li>
         
@@ -1336,7 +1336,7 @@ svg to generate it’s overlay layer</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .keyAccessor(<span class="function"><span class="keyword">function</span><span class="params">(p)</span> {</span><span class="keyword">return</span> p.value.absGain;})</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            .keyAccessor(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(p)</span> {</span><span class="hljs-keyword">return</span> p.value.absGain;})</pre></div></div>
             
         </li>
         
@@ -1351,7 +1351,7 @@ svg to generate it’s overlay layer</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .valueAccessor(<span class="function"><span class="keyword">function</span><span class="params">(p)</span> {</span><span class="keyword">return</span> p.value.percentageGain;})</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            .valueAccessor(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(p)</span> {</span><span class="hljs-keyword">return</span> p.value.percentageGain;})</pre></div></div>
             
         </li>
         
@@ -1366,7 +1366,7 @@ svg to generate it’s overlay layer</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .colors([<span class="string">"#ccc"</span>, <span class="string">"#E2F2FF"</span>,<span class="string">"#C4E4FF"</span>,<span class="string">"#9ED2FF"</span>,<span class="string">"#81C5FF"</span>,<span class="string">"#6BBAFF"</span>,<span class="string">"#51AEFF"</span>,<span class="string">"#36A2FF"</span>,<span class="string">"#1E96FF"</span>,<span class="string">"#0089FF"</span>,<span class="string">"#0061B5"</span>])</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            .colors([<span class="hljs-string">"#ccc"</span>, <span class="hljs-string">"#E2F2FF"</span>,<span class="hljs-string">"#C4E4FF"</span>,<span class="hljs-string">"#9ED2FF"</span>,<span class="hljs-string">"#81C5FF"</span>,<span class="hljs-string">"#6BBAFF"</span>,<span class="hljs-string">"#51AEFF"</span>,<span class="hljs-string">"#36A2FF"</span>,<span class="hljs-string">"#1E96FF"</span>,<span class="hljs-string">"#0089FF"</span>,<span class="hljs-string">"#0061B5"</span>])</pre></div></div>
             
         </li>
         
@@ -1381,7 +1381,7 @@ svg to generate it’s overlay layer</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .colorDomain([-<span class="number">5</span>, <span class="number">200</span>])</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            .colorDomain([-<span class="hljs-number">5</span>, <span class="hljs-number">200</span>])</pre></div></div>
             
         </li>
         
@@ -1396,7 +1396,7 @@ svg to generate it’s overlay layer</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .colorAccessor(<span class="function"><span class="keyword">function</span><span class="params">(d, i)</span>{</span><span class="keyword">return</span> d.value;})</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            .colorAccessor(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d, i)</span>{</span><span class="hljs-keyword">return</span> d.value;})</pre></div></div>
             
         </li>
         
@@ -1411,7 +1411,7 @@ svg to generate it’s overlay layer</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .radiusValueAccessor(<span class="function"><span class="keyword">function</span><span class="params">(p)</span> {</span><span class="keyword">return</span> p.value.fluctuationPercentage;})</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            .radiusValueAccessor(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(p)</span> {</span><span class="hljs-keyword">return</span> p.value.fluctuationPercentage;})</pre></div></div>
             
         </li>
         
@@ -1426,7 +1426,7 @@ svg to generate it’s overlay layer</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .r(d3.scale.linear().domain([<span class="number">0</span>, <span class="number">3</span>]))</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            .r(d3.scale.linear().domain([<span class="hljs-number">0</span>, <span class="hljs-number">3</span>]))</pre></div></div>
             
         </li>
         
@@ -1441,7 +1441,7 @@ svg to generate it’s overlay layer</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .renderLabel(<span class="literal">true</span>)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            .renderLabel(<span class="hljs-literal">true</span>)</pre></div></div>
             
         </li>
         
@@ -1456,7 +1456,7 @@ svg to generate it’s overlay layer</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .label(<span class="function"><span class="keyword">function</span><span class="params">(p)</span> {</span><span class="keyword">return</span> p.key.getFullYear();})</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            .label(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(p)</span> {</span><span class="hljs-keyword">return</span> p.key.getFullYear();})</pre></div></div>
             
         </li>
         
@@ -1471,7 +1471,7 @@ svg to generate it’s overlay layer</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .renderTitle(<span class="literal">true</span>)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            .renderTitle(<span class="hljs-literal">true</span>)</pre></div></div>
             
         </li>
         
@@ -1486,8 +1486,8 @@ svg to generate it’s overlay layer</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .title(<span class="function"><span class="keyword">function</span><span class="params">(d)</span> {</span>
-                <span class="keyword">return</span> <span class="string">"Title: "</span> + d.key;
+            <div class="content"><div class='highlight'><pre>            .title(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> {</span>
+                <span class="hljs-keyword">return</span> <span class="hljs-string">"Title: "</span> + d.key;
             })</pre></div></div>
             
         </li>
@@ -1505,8 +1505,8 @@ multiple bubbles</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .point(<span class="string">"California"</span>, <span class="number">100</span>, <span class="number">120</span>)
-            .point(<span class="string">"Colorado"</span>, <span class="number">300</span>, <span class="number">120</span>)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            .point(<span class="hljs-string">"California"</span>, <span class="hljs-number">100</span>, <span class="hljs-number">120</span>)
+            .point(<span class="hljs-string">"Colorado"</span>, <span class="hljs-number">300</span>, <span class="hljs-number">120</span>)</pre></div></div>
             
         </li>
         
@@ -1541,7 +1541,7 @@ data point, :default = false</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    dc.renderAll();
-    <span class="comment">/*
+    <span class="hljs-comment">/*
 </span></pre></div></div>
             
         </li>
@@ -1557,7 +1557,7 @@ data point, :default = false</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    dc.renderAll(<span class="string">"group"</span>);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    dc.renderAll(<span class="hljs-string">"group"</span>);</pre></div></div>
             
         </li>
         
@@ -1606,7 +1606,7 @@ change without re-rendering everything</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>d3.selectAll(<span class="string">"#version"</span>).text(dc.version);</pre></div></div>
+            <div class="content"><div class='highlight'><pre>d3.selectAll(<span class="hljs-string">"#version"</span>).text(dc.version);</pre></div></div>
             
         </li>
         

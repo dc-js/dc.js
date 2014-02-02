@@ -339,7 +339,7 @@ dc.compositeChart = function (parent, chartGroup) {
         });
     }
 
-    dc.override('xAxisMin',function () {
+    dc.override(_chart, 'xAxisMin',function () {
         return dc.utils.subtract(d3.min(getAllXAxisMinFromChildCharts()), _chart.xAxisPadding());
     });
 
@@ -349,7 +349,7 @@ dc.compositeChart = function (parent, chartGroup) {
         });
     }
 
-    dc.override('xAxisMax',function () {
+    dc.override(_chart, 'xAxisMax',function () {
         return dc.utils.add(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding());
     });
 

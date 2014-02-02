@@ -1,0 +1,104 @@
+describe('dc.numberDisplay', function() {
+    var data, groupAll, meanGroup;
+    var countryDimension;
+    function average(d) {
+        return d.n ? d.tot / d.n : 0;
+    }
+
+    beforeEach(function() {
+        data = crossfilter(loadDateFixture());
+        var groupAll = data.groupAll();
+        meanGroup = groupAll.reduce(
+            function(p, v) {
+                ++p.n;
+                p.tot += +v.value;
+                return p;
+            },
+            function(p, v) {
+                --p.n;
+                p.tot -= +v.value;
+                return p;
+            },
+            function() { return {n:0,tot:0}; }
+        );
+        countryDimension = data.dimension(function(d) {
+            return d.countrycode;
+        });
+    countryDimension.filter("CA");
+    });
+
+    function buildChart(id) {
+        var chart = dc.numberDisplay(id)
+                .transitionDuration(0)
+                .group(meanGroup)
+                .formatNumber(d3.format(".3s"))
+                .valueAccessor(average);
+        chart.render();
+        d3.timer.flush();
+        return chart;
+    }
+
+    describe('Empty Div', function() {
+        var chart;
+        beforeEach(function() {
+            var id = "empty-div";
+            var div = appendChartID(id);
+            chart = buildChart("#"+id);
+        });
+        it('should generate something', function() {
+            expect(chart).not.toBeNull();
+        });
+        it('should be registered', function() {
+            expect(dc.hasChart(chart)).toBeTruthy();
+        });
+        it('should return a value', function() {
+            expect(chart.value()).toEqual(38.5);
+        });
+        it('should have text value in child', function() {
+            expect(chart.select("span.number-display").text()).toEqual("38.5");
+        });
+        it('redraw', function() {
+            beforeEach(function() {
+                countryDimension.filterAll();
+                chart.redraw();
+                d3.timer.flush();
+            });
+            it('should update value', function() {
+                expect(chart.select("span.number-display").text()).toEqual("41.8");
+            });
+        });
+        afterEach(function() {
+            countryDimension.filterAll();
+        });
+    });
+    describe('Div with embedded span', function() {
+        var chart;
+        beforeEach(function() {
+            var id = "full-div";
+            var div = appendChartID(id);
+            var p = div.append("p").html("There are <span class=\"number-display\">_</span> Total Widgets.");
+            chart = buildChart("#"+id);
+        });
+        it('should have text value in child', function() {
+            expect(chart.root().text()).toEqual("There are 38.5 Total Widgets.");
+        });
+        afterEach(function() {
+            countryDimension.filterAll();
+        });
+    });
+    describe('Inline nonspan element' , function() {
+        beforeEach(function() {
+            var div = d3.select("body").append("div").attr("id","section");
+            div.append("p").html("There are <em id=\"nonspan\"></em> Total Widgets.");
+            chart = buildChart("#nonspan");
+        });
+        it('should have text value in child', function() {
+            expect(d3.select("body").select("#section").html())
+                .toEqual('<p>There are <em id="nonspan" class="dc-chart"><span class="number-display">38.5</span></em> Total Widgets.</p>');
+        });
+        afterEach(function() {
+            countryDimension.filterAll();
+        });
+    });
+});
+

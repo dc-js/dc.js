@@ -203,6 +203,15 @@ describe('dc.coordinateGridChart', function() {
                         expect(chart.effectiveHeight()).toBe(80);
                     });
                 });
+
+                describe("reset axis label", function() {
+                    beforeEach(function() {
+                        chart.elasticX(true).xAxisLabel("New X Label").redraw();
+                    });
+                    it("should change the x-axis label", function() {
+                        expect(chart.selectAll("text.x-axis-label").text()).toBe("New X Label");
+                    });
+                });
             });
         });
 
@@ -659,6 +668,7 @@ describe('dc.coordinateGridChart', function() {
                 });
 
                 it("should trigger redraw on other charts in group after a brief pause", function () {
+                    jasmine.clock().tick(100);
                     expect(dc.redrawAll).toHaveBeenCalledWith(chart.chartGroup());
                 });
             });
@@ -743,6 +753,7 @@ describe('dc.coordinateGridChart', function() {
             spyOn(chart, "focus");
             rangeChart.brush().extent(selectedRange);
             rangeChart.brush().event(rangeChart.g());
+            jasmine.clock().tick(100);
             expect(chart.focus).toHaveBeenCalledWith(selectedRange);
         });
 

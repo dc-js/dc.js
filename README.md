@@ -1,13 +1,13 @@
-[![Build Status](https://api.travis-ci.org/NickQiZhu/dc.js.png?branch=master)](http://travis-ci.org/NickQiZhu/dc.js)
+[![Build Status](https://api.travis-ci.org/dc-js/dc.js.png?branch=master)](http://travis-ci.org/dc-js/dc.js)
 [![NPM Status](https://badge.fury.io/js/dc.png)](http://badge.fury.io/js/dc)
 
 dc.js
 =====
 
 Dimensional charting built to work natively with crossfilter rendered using d3.js. Check out the
-[example page](http://nickqizhu.github.com/dc.js/) with a quick five minutes how to guide. For a
-detailed [API reference](https://github.com/NickQiZhu/dc.js/blob/master/web/docs/api-1.6.0.md) and
-more please visit the [Wiki](https://github.com/NickQiZhu/dc.js/wiki).
+[example page](http://dc-js.github.com/dc.js/) with a quick five minutes how to guide. For a
+detailed [API reference](https://github.com/dc-js/dc.js/blob/master/web/docs/api-1.6.0.md) and
+more please visit the [Wiki](https://github.com/dc-js/dc.js/wiki).
 
 
 Install with npm
@@ -22,8 +22,8 @@ Install without npm
 Download
 * [d3.js](https://github.com/mbostock/d3)
 * [crossfilter.js](https://github.com/square/crossfilter)
-* [dc.js - stable](https://github.com/NickQiZhu/dc.js/releases)
-* [dc.js - bleeding edge (master)](https://github.com/NickQiZhu/dc.js)
+* [dc.js - stable](https://github.com/dc-js/dc.js/releases)
+* [dc.js - bleeding edge (master)](https://github.com/dc-js/dc.js)
 
 
 How to build dc.js locally

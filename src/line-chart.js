@@ -6,8 +6,8 @@ Includes [Stack Mixin](#stack-mixin), [Coordinate Grid Mixin](#coordinate-grid-m
 Concrete line/area chart implementation.
 
 Examples:
-* [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/)
-* [Canadian City Crime Stats](http://nickqizhu.github.com/dc.js/crime/index.html)
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+* [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
 
 #### dc.lineChart(parent[, chartGroup])
 Create a line chart instance and attach it to the given parent element.

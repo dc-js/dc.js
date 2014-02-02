@@ -77,7 +77,7 @@ dc.coordinateGridMixin = function (_chart) {
     Get or set the range selection chart associated with this instance. Setting the range selection chart using this function
     will automatically update its selection brush when the current chart zooms in. In return the given range chart will also
     automatically attach this chart as its focus chart hence zoom in when range brush updates. See the
-    [Nasdaq 100 Index](http://nickqizhu.github.com/dc.js/) example for this effect in action.
+    [Nasdaq 100 Index](http://dc-js.github.com/dc.js/) example for this effect in action.
 
     **/
     _chart.rangeChart = function (_) {
@@ -338,7 +338,7 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('text-anchor', 'middle')
                 .text(_chart.xAxisLabel());
         if (_chart.xAxisLabel() && axisXLab.text() != _chart.xAxisLabel())
-            axisYLab.text(_chart.xAxisLabel());
+            axisXLab.text(_chart.xAxisLabel());
 
         dc.transition(axisXG, _chart.transitionDuration())
             .call(_xAxis);
@@ -612,7 +612,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     /**
-    #### .xAxisMin()
+    #### .xAxisMax()
     Return the maximum x value to diplay in the chart. Includes xAxisPadding if set.
     **/
     _chart.xAxisMax = function () {
@@ -623,7 +623,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     /**
-    #### .xAxisMin()
+    #### .yAxisMin()
     Return the minimum y value to diplay in the chart. Includes yAxisPadding if set.
     **/
     _chart.yAxisMin = function () {
