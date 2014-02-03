@@ -2172,7 +2172,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     /**
-    #### .xAxisMin()
+    #### .xAxisMax()
     Return the maximum x value to diplay in the chart. Includes xAxisPadding if set.
     **/
     _chart.xAxisMax = function () {
@@ -2183,7 +2183,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     /**
-    #### .xAxisMin()
+    #### .yAxisMin()
     Return the minimum y value to diplay in the chart. Includes yAxisPadding if set.
     **/
     _chart.yAxisMin = function () {
