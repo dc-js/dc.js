@@ -15,9 +15,9 @@
 #### Testing Notes
 
 We are currently transitioning from vows/jsdom testing to jasmine/PhantomJS. New tests should
-be written in (jasmine)[http://jasmine.github.io/2.0/introduction.html] (under the `spec` folder).
-Once you have run the tests once using `grunt test` or `grunt jasmine`, you can run the tests in
-your browser by opening web/jasmine-runner.html.  You can also run an individual test with
+be written in [jasmine](http://jasmine.github.io/2.0/introduction.html) (under the `spec` folder).
+Once you have run the tests once using `grunt test` or `grunt jasmine`, you can debug the tests in
+your favorite browser by opening `web/jasmine-runner.html`.  You can also run an individual test with
 `grunt jasmine --filter=<part-of-test-filename>`
 
 Changing existing vows test cases (under
