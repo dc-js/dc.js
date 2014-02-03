@@ -15,7 +15,12 @@
 #### Testing Notes
 
 We are currently transitioning from vows/jsdom testing to jasmine/PhantomJS. New tests should
-be written in jasmine (under the `spec` folder), but changing existing vows test cases (under
+be written in (jasmine)[http://jasmine.github.io/2.0/introduction.html] (under the `spec` folder).
+Once you have run the tests once using `grunt test` or `grunt jasmine`, you can run the tests in
+your browser by opening web/jasmine-runner.html.  You can also run an individual test with
+`grunt jasmine --filter=<part-of-test-filename>`
+
+Changing existing vows test cases (under
 the `test` folder) to support smaller changes is fine. With vows tests, charts must set
 `.transitionDuration(0)` as the dom library used for testing
 [does not support](https://github.com/tmpvar/jsdom/issues/300) the SVG animation APIs.
