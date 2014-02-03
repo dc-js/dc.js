@@ -105,7 +105,7 @@ describe('dc.geoChoropleth', function() {
             expect(chart.selectAll("g.layer0 g.state title")[0][4].textContent).toEqual("California : 154");
         });
         it('correct color should be set [California]', function() {
-            expect(chart.selectAll("g.layer0 g.state path")[0][4].getAttribute("fill")).toEqual("#0089FF");
+            expect(chart.selectAll("g.layer0 g.state path")[0][4].getAttribute("fill")).toMatch(/#0089FF/i);
         });
         it('correct state boundary should be rendered [California]', function() {
             expect(chart.selectAll("g.layer0 g.state path")[0][4].getAttribute("d").length).not.toEqual(0);
@@ -117,7 +117,7 @@ describe('dc.geoChoropleth', function() {
             expect(chart.selectAll("g.layer0 g.state title")[0][5].textContent).toEqual("Colorado : 22");
         });
         it('correct color should be set [Colorado]', function() {
-            expect(chart.selectAll("g.layer0 g.state path")[0][5].getAttribute("fill")).toEqual("#E2F2FF");
+            expect(chart.selectAll("g.layer0 g.state path")[0][5].getAttribute("fill")).toMatch(/#E2F2FF/i);
         });
         it('correct state boundary should be rendered [Colorado]', function() {
             expect(chart.selectAll("g.layer0 g.state path")[0][5].getAttribute("d").length).not.toEqual(0);

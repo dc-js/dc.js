@@ -158,7 +158,7 @@ describe('dc.coordinateGridChart', function() {
 
             it('should add clip path refs to the chart body', function () {
                 chart.selectAll("g.chart-body").each(function () {
-                    expect(d3.select(this).attr("clip-path")).toBe("url(#coordinate-grid-chart-clip)");
+                    expect(d3.select(this).attr("clip-path")).toMatchUrl("#coordinate-grid-chart-clip");
                 });
             });
         });
@@ -177,7 +177,7 @@ describe('dc.coordinateGridChart', function() {
 
         describe("x-axis", function() {
             it('should place an x axis at the bottom', function () {
-                expect(chart.select("g.x").attr("transform")).toBe("translate(0,150)");
+                expect(chart.select("g.x").attr("transform")).toMatchTranslate(0,150);
             });
 
             describe("labels", function() {
@@ -311,7 +311,7 @@ describe('dc.coordinateGridChart', function() {
                 });
 
                 it('should place the y axis to the left', function () {
-                    expect(chart.select("g.y").attr("transform")).toBe("translate(0,20)");
+                    expect(chart.select("g.y").attr("transform")).toMatchTranslate(0,20);
                 });
 
                 describe('y-axis labels', function () {
@@ -358,7 +358,7 @@ describe('dc.coordinateGridChart', function() {
                 });
 
                 it('should position the axis to the right of the chart', function () {
-                    expect(chart.select('.axis.y').attr('transform')).toBe('translate(490,20)');
+                    expect(chart.select('.axis.y').attr('transform')).toMatchTranslate(490,20);
                 });
 
                 describe('y-axis labels', function () {

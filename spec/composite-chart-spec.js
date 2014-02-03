@@ -139,11 +139,11 @@ describe('dc.compositeChart', function() {
         });
 
         it('should place the x axis at the bottom', function(){
-            expect(chart.select('svg g g.x').attr('transform')).toBe('translate(30,120)');
+            expect(chart.select('svg g g.x').attr('transform')).toMatchTranslate(30,120);
         });
 
         it('should place the y axis to the left', function(){
-            expect(chart.select('svg g g.y').attr('transform')).toBe('translate(30,10)');
+            expect(chart.select('svg g g.y').attr('transform')).toMatchTranslate(30,10);
         });
 
         it('should create a separate g for each subchart', function () {
@@ -180,13 +180,13 @@ describe('dc.compositeChart', function() {
             chart.selectAll('g.sub rect.bar').each(function(d, i) {
                 switch (i) {
                     case 0:
-                        expect(d3.select(this).attr('x')).toBe('22.637931034482758');
+                        expect(d3.select(this).attr('x')).toBeCloseTo('22.637931034482758', 3);
                         expect(d3.select(this).attr('y')).toBe('93');
                         expect(d3.select(this).attr('width')).toBe('3');
                         expect(d3.select(this).attr('height')).toBe('17');
                         break;
                     case 5:
-                        expect(d3.select(this).attr('x')).toBe('394.3620689655172');
+                        expect(d3.select(this).attr('x')).toBeCloseTo('394.3620689655172', 3);
                         expect(d3.select(this).attr('y')).toBe('80');
                         expect(d3.select(this).attr('width')).toBe('3');
                         expect(d3.select(this).attr('height')).toBe('30');
@@ -217,7 +217,7 @@ describe('dc.compositeChart', function() {
             it('should have clip path refs', function () {
                 expect(chart.selectAll("g.chart-body").size()).not.toBe(0);
                 chart.selectAll("g.chart-body").each(function(){
-                    expect(d3.select(this).attr("clip-path")).toBe("url(#composite-chart-clip)");
+                    expect(d3.select(this).attr("clip-path")).toMatchUrl("#composite-chart-clip");
                 });
             });
         });
@@ -225,7 +225,7 @@ describe('dc.compositeChart', function() {
         describe('the chart brush', function () {
 
             it('should be positioned with the chart left margin', function () {
-                expect(chart.select('g.brush').attr('transform')).toBe('translate(' + chart.margins().left + ',10)');
+                expect(chart.select('g.brush').attr('transform')).toMatchTranslate(chart.margins().left,10);
             });
 
             it('should have a resize handle', function () {
@@ -296,7 +296,7 @@ describe('dc.compositeChart', function() {
             });
 
             it('should be placed according to its own legend option, ignoring the sub-charts', function () {
-                expect(chart.select("g.dc-legend").attr("transform")).toBe('translate(200,10)');
+                expect(chart.select("g.dc-legend").attr("transform")).toMatchTranslate(200,10);
             });
 
             it('should generate legend labels with their associated group text', function () {

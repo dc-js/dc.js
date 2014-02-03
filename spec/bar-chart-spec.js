@@ -43,7 +43,7 @@ describe('dc.barChart', function() {
                 var halfBarWidth = 0.5;
                 forEachBar(function (bar, datum) {
                     var barPosition = chart.x()(datum.data.key);
-                    expect(+bar.attr('x')).toBe(barPosition - halfBarWidth);
+                    expect(+bar.attr('x')).toBeCloseTo(barPosition - halfBarWidth, 3);
                 });
             });
         });
@@ -52,7 +52,7 @@ describe('dc.barChart', function() {
             it("should position bars starting at their data points", function() {
                 forEachBar(function (bar, datum) {
                     var barPosition = chart.x()(datum.data.key);
-                    expect(+bar.attr('x')).toBe(barPosition);
+                    expect(+bar.attr('x')).toBeCloseTo(barPosition, 3);
                 });
             });
         });
@@ -565,7 +565,7 @@ describe('dc.barChart', function() {
 
             describe('when a brush is defined', function () {
                 it('should position the brush with an offset', function () {
-                    expect(chart.select("g.brush").attr("transform")).toBe("translate(" + chart.margins().left + ",10)");
+                    expect(chart.select("g.brush").attr("transform")).toMatchTranslate(chart.margins().left, 10);
                 });
 
                 it('should create a fancy brush resize handle', function () {
