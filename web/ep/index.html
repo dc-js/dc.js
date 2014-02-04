@@ -10,6 +10,7 @@
 
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
+<!--script type="text/javascript" src="../../dc.js"></script-->
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript" src="../../src/data-grid.js"></script>
 <script type="text/javascript" src="underscore-min.js"></script>
@@ -19,22 +20,58 @@
 
 <script>
 
-var tpl = _.template("<h2 title='MEP from <%= country %> in <%= party %>'> <%= first_name %> <%= last_name %></h2><img class='lazy-load' dsrc='blank.gif' data-original='<%= image_URL %>' alt='<%= last_name %>, <%= first_name %> member of <%= party %>' title='MEP from <%= country %> in <%= party %>' width=170 height=216 />");
+var tpl = _.template("<h2 title='MEP from <%= country %> in <%= eugroup %>'> <%= first_name %> <%= last_name %></h2><img class='lazy-load' dsrc='blank.gif' data-original='http://ep.ngo.im/mepphoto/<%= epid %>.jpg' alt='<%= last_name %>, <%= first_name %> member of <%= eugroup %>' title='MEP from <%= country %> in <%= eugroup %>' width=170 height=216 />");
 
 function grid (selector,data) {
   var ndx = crossfilter(data),
       all = ndx.groupAll();
 
+  function adjust (data) {
+    //calculate age
+    var dateFormat = d3.time.format("%Y-%m-%d");
+    var now = Date.now();
+    var birthdate=null;
+
+    data.forEach(function (e) {
+      birthdate = dateFormat.parse(e.birthdate);
+      e.age= ~~((now - birthdate) / (31557600000));// 24 * 3600 * 365.25 * 1000
+    });
+  }
+
+  adjust (data);
+
   var pie_group = dc.pieChart(selector +  " .group").innerRadius(20).radius(70);
   var group = ndx.dimension(function(d) {
-      if (typeof d.party == "undefined") return "";
-      return d.party;
+      if (typeof d.eugroup == "undefined") return "";
+      return d.eugroup;
       });
   var groupGroup   = group.group().reduceSum(function(d) {   return 1; });
 
+  //var chart_age = dc.barChart(selector + " .age");
+  var chart_age = dc.lineChart(selector + " .age");
+
+  var age = ndx.dimension(function(d) {
+      if (typeof d.age == "undefined") return "";
+      return d.age;
+      });
+
+  var ageGroup   = age.group().reduceSum(function(d) {   return 1; });
+    //.x(d3.scale.ordinal())
+  chart_age
+    .width(444)
+    .height(200)
+    .margins({top: 0, right: 0, bottom: 95, left: 30})
+    .x(d3.scale.linear().domain([20,100]))
+    .brushOn(true)
+    .renderArea(true)
+    .elasticY(true)
+    .yAxisLabel("#MEPs")
+    .dimension(age)
+    .group(ageGroup);
+
   var pie_gender = dc.pieChart(selector +  " .gender").radius(70);
   var gender = ndx.dimension(function(d) {
-      if (typeof d.gender_id == "undefined") return "";
+      if (typeof d.gender == "undefined") return "";
       return d.gender;
       });
 
@@ -47,10 +84,19 @@ function grid (selector,data) {
       });
   var countryGroup   = country.group().reduceSum(function(d) { return 1; });
 
+  var NameGender= {"M":"Male","F":"Female","":"missing data"};
+  var SymbolGender= {"M":"\u2642","F":"\u2640","":""};
+
   pie_gender
     .width(200)
     .height(200)
     .dimension(gender)
+    .label(function (d){
+       return SymbolGender[d.key];
+    })
+    .title(function (d){
+       return NameGender[d.key] +": "+d.value;
+    })
     .group(groupGender);
 
   pie_group
@@ -85,7 +131,6 @@ function grid (selector,data) {
       .attr("transform", function(d) { return "rotate(-90, -4, 9) "; });
   }
 
-
   dc.dataCount(".dc-data-count")
     .dimension(ndx)
     .group(all);
@@ -107,7 +152,6 @@ effect : "fadeIn"
 })
         .removeClass("lazy-load");
         });
-
 dc.renderAll();
 }
 
@@ -121,6 +165,7 @@ dc.renderAll();
 <div class="group"></div>
 <div class="country"></div>
 <div class="gender"></div>
+<div class="age"></div>
 <div class="list"></div>
 <div style="clear:both;">
 <div class="dc-data-count">
@@ -152,7 +197,7 @@ div.gender {float:none;}
 body {font-family: arial, helvetica, sans-serif;}
 
 .dc-data-grid, .dc-grid-group {clear:both}
-
+.dc-data-count {clear:both;}
 .dc-grid-group {
   background-color: #F5F5F5;
 border: 1px solid #E3E3E3;
