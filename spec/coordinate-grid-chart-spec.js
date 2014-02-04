@@ -750,7 +750,7 @@ describe('dc.coordinateGridChart', function() {
         });
 
         it("should zoom the focus chart when range chart is brushed", function () {
-            spyOn(chart, "focus");
+            spyOn(chart, "focus").and.callThrough();
             rangeChart.brush().extent(selectedRange);
             rangeChart.brush().event(rangeChart.g());
             jasmine.clock().tick(100);
@@ -760,9 +760,14 @@ describe('dc.coordinateGridChart', function() {
         it("should zoom the focus chart back out when range chart is un-brushed", function () {
             rangeChart.brush().extent(selectedRange);
             rangeChart.brush().event(rangeChart.g());
-            spyOn(chart, "focus");
+            jasmine.clock().tick(100);
+
+            expect(chart.x().domain()).toEqual(selectedRange);
+            spyOn(chart, "focus").and.callThrough();
             rangeChart.filter(null);
+            jasmine.clock().tick(100);
             expect(chart.focus).toHaveBeenCalledWith(null);
+            expect(chart.x().domain()).toEqual(rangeChart.xOriginalDomain());
         });
 
         it("should update the range chart brush to match zoomed domain of focus chart", function () {
