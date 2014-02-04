@@ -39,8 +39,7 @@ describe("dc.heatmap", function() {
         });
 
         it('should transform the graph position using the graph margins', function () {
-            var coordinates = {x: 5, y: 5};
-            expect(coordsFromTranslate(chart.select("g.heatmap").attr("transform"))).toEqual(coordinates);
+            expect(chart.select("g.heatmap").attr("transform")).toMatchTranslate(5,5);
         });
 
         it('should position the heatboxes in a matrix', function () {

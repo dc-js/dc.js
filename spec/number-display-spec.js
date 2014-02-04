@@ -94,7 +94,7 @@ describe('dc.numberDisplay', function() {
         });
         it('should have text value in child', function() {
             expect(d3.select("body").select("#section").html())
-                .toEqual('<p>There are <em id="nonspan" class="dc-chart"><span class="number-display">38.5</span></em> Total Widgets.</p>');
+                .toMatch(new RegExp('<p>There are <em (?:id="nonspan" class="dc-chart"|class="dc-chart" id="nonspan")><span class="number-display">38.5</span></em> Total Widgets.</p>'));
         });
         afterEach(function() {
             countryDimension.filterAll();

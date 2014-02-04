@@ -180,7 +180,7 @@ describe('dc.lineChart', function() {
                         });
 
                         it('shows the ref line from the bottom of the graph', function () {
-                            expect(chart.select('path.xRef').attr('d')).toMatch(/M405\.\d+ 160L405\.\d+ 107/);
+                            expect(chart.select('path.xRef').attr('d')).toMatch(/M ?405\.\d+ 160 ?L ?405\.\d+ 107/);
                             expect(chart.select('path.xRef').attr("display")).not.toBe("none");
                         });
                     });
@@ -534,7 +534,7 @@ describe('dc.lineChart', function() {
 
             describe('when a brush is defined', function () {
                 it('should position the brush with an offset', function () {
-                    expect(chart.select("g.brush").attr("transform")).toBe("translate(" + chart.margins().left + ",10)");
+                    expect(chart.select("g.brush").attr("transform")).toMatchTranslate(chart.margins().left, 10);
                 });
 
                 it('should create a fancy brush resize handle', function () {
@@ -584,7 +584,7 @@ describe('dc.lineChart', function() {
                 .render().redraw();
         });
         it('updates dot colors', function() {
-            expect(chart.select("circle.dot")[0][0].attributes.fill.nodeValue).toEqual('#FF0000');
+            expect(chart.select("circle.dot")[0][0].attributes.fill.nodeValue).toMatch(/#FF0000/i);
         });
     });
 });

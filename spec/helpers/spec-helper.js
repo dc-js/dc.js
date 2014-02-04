@@ -7,7 +7,7 @@ beforeEach(function() {
                 compare: function(actual, x, y, prec) {
                     var parts = /translate\((.*)[, ](.*)\)/.exec(actual);
                     prec = prec || 10; // default 10 digits after decimal
-                    if(!parts && !y) { // jumping through hoops for IE
+                    if(!parts && !y) { // IE clips y if it's 0
                         parts = /translate\((.*)\)/.exec(actual);
                         if(parts) parts.push(0);
                     }
@@ -43,9 +43,13 @@ function appendChartID(id) {
     return d3.select("#test-content").append("div").attr("id", id);
 }
 
-function coordsFromTranslate(translationString){
-    var regex = /translate\((.+),(.+)\)/;
+function coordsFromTranslate(translationString) {
+    var regex = /translate\((.+)[, ](.+)\)/;
     var result = regex.exec(translationString);
-
+    if(!result) { // IE clips y if it's 0
+        result = /translate\((.*)\)/.exec(translationString);
+        if(result) result.push(0);
+    }
+    expect(result).not.toBeNull();
     return { x: +result[1], y: +result[2] };
 }

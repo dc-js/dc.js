@@ -32,9 +32,9 @@ describe('dc.scatterPlot', function() {
         });
 
         it('should correctly place the symbols', function () {
-            expect(nthSymbol(4).attr("transform")).toBe("translate(264,131)");
-            expect(nthSymbol(5).attr("transform")).toBe("translate(264,75)");
-            expect(nthSymbol(8).attr("transform")).toBe("translate(396,131)");
+            expect(nthSymbol(4).attr("transform")).toMatchTranslate(264,131);
+            expect(nthSymbol(5).attr("transform")).toMatchTranslate(264,75);
+            expect(nthSymbol(8).attr("transform")).toMatchTranslate(396,131);
         });
 
         it('should generate a default color fill for symbols', function () {
