@@ -329,7 +329,7 @@ describe('dc.coordinateGridChart', function() {
                     });
 
                     it('should position the label to the left of the chart', function () {
-                        expect(chart.selectAll('text.y-axis-label.y-label').attr("transform")).toBe("translate(12,85),rotate(-90)");
+                        expect(chart.selectAll('text.y-axis-label.y-label').attr("transform")).toMatchTransRot(12,85,-90);
                     });
 
                     describe("with custom padding", function() {
@@ -376,7 +376,7 @@ describe('dc.coordinateGridChart', function() {
                     });
 
                     it('should position the label to the right of the chart', function () {
-                        expect(chart.selectAll('text.y-axis-label.y-label').attr("transform")).toBe("translate(488,85),rotate(90)");
+                        expect(chart.selectAll('text.y-axis-label.y-label').attr("transform")).toMatchTransRot(488,85,90);
                     });
 
                     describe("with custom padding", function() {

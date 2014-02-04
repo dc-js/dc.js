@@ -1,3 +1,23 @@
+function parseTranslate(actual) {
+    var parts = /translate\((-?[\d\.]*)(?:[, ](.*))?\)/.exec(actual);
+    if(!parts)
+        return null;
+    if(parts[2]===undefined)
+        parts[2] = 0;
+    expect(parts.length).toEqual(3);
+    return parts;
+}
+
+function parseTranslateRotate(actual) {
+    var parts = /translate\((-?[\d\.]*)(?:[, ](.*))?\)[, ]rotate\((-?[\d\.]*)\)/.exec(actual);
+    if(!parts)
+        return null;
+    if(parts[2]===undefined)
+        parts[2] = 0;
+    expect(parts.length).toEqual(4);
+    return parts;
+}
+
 beforeEach(function() {
     d3.select("body").append("div").attr("id", "test-content");
     jasmine.clock().install();
@@ -5,17 +25,24 @@ beforeEach(function() {
         toMatchTranslate: function() {
             return {
                 compare: function(actual, x, y, prec) {
-                    var parts = /translate\((.*)[, ](.*)\)/.exec(actual);
-                    prec = prec || 10; // default 10 digits after decimal
-                    if(!parts && !y) { // IE clips y if it's 0
-                        parts = /translate\((.*)\)/.exec(actual);
-                        if(parts) parts.push(0);
-                    }
+                    var parts = parseTranslate(actual);
                     if(!parts)
-                        return {pass: false, message: "'" + actual + "' did not match translate(x,y) regexp"};
-                    expect(parts.length).toEqual(3);
+                        return {pass: false, message: "'" + actual + "' did not match translate(x[,y]) regexp"};
                     expect(+parts[1]).toBeCloseTo(x, prec);
                     expect(+parts[2]).toBeCloseTo(y, prec);
+                    return {pass: true};  // ignore possibility of not.toBeTranslate (?)
+                }
+            };
+        },
+        toMatchTransRot: function() {
+            return {
+                compare: function(actual, x, y, r, prec) {
+                    var parts = parseTranslateRotate(actual);
+                    if(!parts)
+                        return {pass: false, message: "'" + actual + "' did not match translate(x[,y]),rotate(r) regexp"};
+                    expect(+parts[1]).toBeCloseTo(x, prec);
+                    expect(+parts[2]).toBeCloseTo(y, prec);
+                    expect(+parts[3]).toBeCloseTo(r, prec);
                     return {pass: true};  // ignore possibility of not.toBeTranslate (?)
                 }
             };
@@ -44,12 +71,7 @@ function appendChartID(id) {
 }
 
 function coordsFromTranslate(translationString) {
-    var regex = /translate\((.+)[, ](.+)\)/;
-    var result = regex.exec(translationString);
-    if(!result) { // IE clips y if it's 0
-        result = /translate\((.*)\)/.exec(translationString);
-        if(result) result.push(0);
-    }
+    var result = parseTranslate(translationString);
     expect(result).not.toBeNull();
     return { x: +result[1], y: +result[2] };
 }
