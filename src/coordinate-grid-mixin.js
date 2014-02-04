@@ -993,18 +993,17 @@ dc.coordinateGridMixin = function (_chart) {
         if (!range1 && !range2) {
             return true;
         }
-
-        if (range1.length === 0 && range2.length === 0) {
+        else if (!range1 || !range2) {
+            return false;
+        }
+        else if (range1.length === 0 && range2.length === 0) {
             return true;
         }
-
-        if (range1 && range2 &&
-            range1[0].valueOf() === range2[0].valueOf() &&
+        else if (range1[0].valueOf() === range2[0].valueOf() &&
             range1[1].valueOf() === range2[1].valueOf()) {
             return true;
         }
-
-        return false;
+        else return false;
     }
 
     /**

@@ -757,6 +757,14 @@ describe('dc.coordinateGridChart', function() {
             expect(chart.focus).toHaveBeenCalledWith(selectedRange);
         });
 
+        it("should zoom the focus chart back out when range chart is un-brushed", function () {
+            rangeChart.brush().extent(selectedRange);
+            rangeChart.brush().event(rangeChart.g());
+            spyOn(chart, "focus");
+            rangeChart.filter(null);
+            expect(chart.focus).toHaveBeenCalledWith(null);
+        });
+
         it("should update the range chart brush to match zoomed domain of focus chart", function () {
             spyOn(rangeChart, "replaceFilter");
             chart.focus(selectedRange);
