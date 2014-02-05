@@ -9,13 +9,13 @@ beforeEach(function(){
 
                     var result = {};
 
-                    result.pass = actual >= (expected-delta) && actual <= (expected+delta);
+                    result.pass = actual >= (+expected-delta) && actual <= (+expected+delta);
 
                     if(result.pass){
-                        result.message = "Expected " + actual + " to not be within [" + (expected-delta) + "/" + (expected+delta) + "]";
+                        result.message = "Expected " + actual + " to not be within [" + (+expected-delta) + "/" + (+expected+delta) + "]";
                     }
                     else{
-                        result.message = "Expected " + actual + " to be within [" + (expected-delta) + "/" + (expected+delta) + "]";
+                        result.message = "Expected " + actual + " to be within [" + (+expected-delta) + "/" + (+expected+delta) + "]";
                     }
 
                     return result;
