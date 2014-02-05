@@ -224,7 +224,7 @@ describe('dc.scatterPlot', function() {
                 var highlightedSize = Math.pow(size, 2);
                 var highlightedPath = d3.svg.symbol().size(highlightedSize)();
                 subChart.selectAll("path.symbol").each(function () {
-                    expect(d3.select(this).attr("d")).toBe(highlightedPath);
+                    expect(d3.select(this).attr("d")).toMatchPath(highlightedPath);
                 });
             };
 

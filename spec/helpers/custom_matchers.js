@@ -22,7 +22,7 @@ function parsePath(path) {
     // an svg path is a string of any number of letters
     // each followed by zero or more numbers separated by spaces or commas
     var instrexp = /([a-z])[^a-z]*/gi,
-        argexp = /(\d+(?:\.\d*)?)[, ]*/gi;
+        argexp = /(-?\d+(?:\.\d*)?)[, ]*/gi;
     var match, result = [], die = 99;
     while((match = instrexp.exec(path))) {
         var instr = match[0];

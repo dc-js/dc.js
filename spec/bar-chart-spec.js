@@ -572,11 +572,11 @@ describe('dc.barChart', function() {
                     chart.select("g.brush").selectAll(".resize path").each(function (d, i) {
                         if (i === 0) {
                             expect(d3.select(this).attr("d"))
-                                .toMatch(/M0.5,53.\d+A6,6 0 0 1 6.5,59.\d+V100.\d+A6,6 0 0 1 0.5,106.\d+ZM2.5,61.\d+V98.\d+M4.5,61.\d+V98.\d+/);
+                                .toMatchPath("M0.5,53 A6,6 0 0 1 6.5,59 V100 A6,6 0 0 1 0.5,106 ZM2.5,61 V98 M4.5,61 V98");
                         }
                         else{
                             expect(d3.select(this).attr("d"))
-                                .toMatch(/M-0.5,53.\d+A6,6 0 0 0 -6.5,59.\d+V100.\d+A6,6 0 0 0 -0.5,106.\d+ZM-2.5,61.\d+V98.\d+M-4.5,61.\d+V98.\d+/);
+                                .toMatchPath("M-0.5,53 A6,6 0 0 0 -6.5,59 V100 A6,6 0 0 0 -0.5,106 ZM-2.5,61 V98 M-4.5,61 V98");
                         }
                     });
                 });
