@@ -142,7 +142,8 @@ describe('dc.scatterPlot', function() {
                         var symbol = d3.select(this);
                         var highlightedSize = Math.pow(chart.highlightedSize(), 2);
                         var highlightedPath = d3.svg.symbol().size(highlightedSize)();
-                        return symbol.attr("d") === highlightedPath;
+                        var result = comparePaths(symbol.attr("d"), highlightedPath);
+                        return result.pass;
                     }));
                 }
             });
