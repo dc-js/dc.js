@@ -36,28 +36,62 @@ function parsePath(path) {
     return result;
 }
 
+// there doesn't seem to be any way to access jasmine custom matchers
+function compareWithinDelta(actual, expected, delta){
+    if (delta === undefined) {
+        delta = 1e-6;
+    }
+
+    var result = {};
+
+    result.pass = actual >= (+expected-delta) && actual <= (+expected+delta);
+
+    var pre = "Expected " + actual + " to ",
+        post = "be within [" + (+expected-delta) + "/" + (+expected+delta) + "]";
+
+    if(result.pass){
+        result.message = pre + "not " + post;
+    }
+    else{
+        result.message = pre + post;
+    }
+
+    return result;
+}
+
+// note: to make this reusable as a boolean predicate, it only returns the first
+// failure instead of using expect
+function comparePaths(actual, expected, delta) {
+    delta = delta || 1; // default delta of 1px
+    var got = parsePath(actual),
+        wanted = parsePath(expected);
+    if(got.length != wanted.length)
+        return {pass: false, message: "actual number of path cmds " + actual.length +
+                " did not match expected number " + expected.length};
+    for(var i = 0; i!=got.length; ++i) {
+        var command_num = "path command #" + i;
+        if(got[i].op.toUpperCase() != wanted[i].op.toUpperCase())
+            return {pass: false, message: command_num + " actual '" + got[i].op.toUpperCase() +
+                    "' != expected '" + wanted[i].op.toUpperCase() + "'"};
+        if(got[i].args.length != wanted[i].args.length)
+            return {pass: false, message: command_num + " number of arguments " +
+                    got[i].args.length + " != expected " + wanted[i].args.length};
+        for(var j = 0; j<got[i].args.length; ++j) {
+            var result = compareWithinDelta(got[i].args[j], wanted[i].args[j], delta);
+            if(!result.pass) {
+                result.message = command_num + ": " + result.message;
+                return result;
+            }
+        }
+    }
+    return {pass: true};
+}
+
 beforeEach(function(){
     jasmine.addMatchers({
         toBeWithinDelta: function(_) {
             return {
-                compare: function(actual, expected, delta){
-                    if (delta === undefined) {
-                        delta = 1e-6;
-                    }
-
-                    var result = {};
-
-                    result.pass = actual >= (+expected-delta) && actual <= (+expected+delta);
-
-                    if(result.pass){
-                        result.message = "Expected " + actual + " to not be within [" + (+expected-delta) + "/" + (+expected+delta) + "]";
-                    }
-                    else{
-                        result.message = "Expected " + actual + " to be within [" + (+expected-delta) + "/" + (+expected+delta) + "]";
-                    }
-
-                    return result;
-                }
+                compare: compareWithinDelta
             };
         },
         // note: all of these custom matchers ignore the possibility of .not.toMatch
@@ -98,25 +132,7 @@ beforeEach(function(){
         },
         toMatchPath: function() {
             return {
-                compare: function(actual, expected, delta) {
-                    delta = delta || 1; // default delta of 1px
-                    var got = parsePath(actual),
-                        wanted = parsePath(expected);
-                    if(got.length != wanted.length)
-                        return {pass: false, message: "actual number of path cmds " + actual.length +
-                                " did not match expected number " + expected.length};
-                    for(var i = 0; i!=got.length; ++i) {
-                        if(got[i].op.toUpperCase() != wanted[i].op.toUpperCase())
-                            return {pass: false, message: "path command #" + i + " actual '" + got[i].op.toUpperCase() +
-                                    "' != expected '" + wanted[i].op.toUpperCase() + "'"};
-                        if(got[i].args.length != wanted[i].args.length)
-                            return {pass: false, message: "path command #" + i + " number of arguments " +
-                                    got[i].args.length + " != expected " + wanted[i].args.length};
-                        for(var j = 0; j<got[i].args.length; ++j)
-                            expect(got[i].args[j]).toBeWithinDelta(wanted[i].args[j], delta);
-                    }
-                    return {pass: true};
-                }
+                compare: comparePaths
             };
         }
     });
