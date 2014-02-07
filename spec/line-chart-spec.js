@@ -180,7 +180,7 @@ describe('dc.lineChart', function() {
                         });
 
                         it('shows the ref line from the bottom of the graph', function () {
-                            expect(chart.select('path.xRef').attr('d')).toMatch(/M405\.\d+ 160L405\.\d+ 107/);
+                            expect(chart.select('path.xRef').attr('d')).toMatchPath("M405 160 L 405 107");
                             expect(chart.select('path.xRef').attr("display")).not.toBe("none");
                         });
                     });
@@ -193,7 +193,7 @@ describe('dc.lineChart', function() {
                             });
 
                             it('shows the ref line on the left', function () {
-                                expect(chart.select('path.yRef').attr("d")).toMatch(/M0 107L405\.\d+ 107/);
+                                expect(chart.select('path.yRef').attr("d")).toMatchPath("M0 107L405 107");
                                 expect(chart.select('path.yRef').attr("display")).not.toBe("none");
                             });
                         });
@@ -206,7 +206,7 @@ describe('dc.lineChart', function() {
                             });
 
                             it('shows the ref line on the right', function () {
-                                expect(chart.select('path.yRef').attr("d")).toMatch(/M1020 107L405\.\d+ 107/);
+                                expect(chart.select('path.yRef').attr("d")).toMatchPath("M1020 107L405 107");
                                 expect(chart.select('path.yRef').attr("display")).not.toBe("none");
                             });
                         });
@@ -236,11 +236,11 @@ describe('dc.lineChart', function() {
             });
 
             it('should draw the chart line', function () {
-                expect(chart.select("path.line").attr("d")).toMatch(/M405\.\d+,107L444\.\d+,107L449\.\d+,0L508\.\d+,107L533\.\d+,53L620\.\d+,53/);
+                expect(chart.select("path.line").attr("d")).toMatchPath("M405 107 L444 107L449 0L508 107L533 53L620 53");
             });
 
             it('should draw the chart area', function () {
-                expect(chart.select("path.area").attr("d")).toMatch(/M405\.\d+,107L444\.\d+,107L449\.\d+,0L508\.\d+,107L533\.\d+,53L620\.\d+,53L620\.\d+,160L533\.\d+,160L508\.\d+,160L449\.\d+,160L444\.\d+,160L405\.\d+,160Z/);
+                expect(chart.select("path.area").attr("d")).toMatchPath("M405 107L444 107L449 0L508 107L533 53L620 53L620 160L533 160L508 160L449 160L444 160L405 160Z");
             });
         });
 
@@ -261,7 +261,7 @@ describe('dc.lineChart', function() {
             });
 
             it('should generate an ordinal path', function () {
-                expect(chart.select("path.line").attr("d")).toMatch(/M85,0L255,107L425,107L595,53L765,107L935,53/);
+                expect(chart.select("path.line").attr("d")).toMatchPath("M85,0L255,107L425,107L595,53L765,107L935,53");
             });
         });
 
@@ -288,15 +288,15 @@ describe('dc.lineChart', function() {
                 });
 
                 it('should set the path for stack 0 line', function () {
-                    expect(chart.select('g._0 path.line').attr("d")).toMatch(/M58\.\d+,159L222\.\d+,157L246\.\d+,150L492\.\d+,158L597\.\d+,151L961\.\d+,153/);
+                    expect(chart.select('g._0 path.line').attr("d")).toMatchPath("M58 159L222 157L246 150L492 158L597 151L961 153");
                 });
 
                 it('should set the path for stack 1 line', function () {
-                    expect(chart.select('g._1 path.line').attr("d")).toMatch(/M58\.\d+,134L222\.\d+,119L246\.\d+,75L492\.\d+,133L597\.\d+,120L961\.\d+,109/);
+                    expect(chart.select('g._1 path.line').attr("d")).toMatchPath("M58 134L222 119L246 75L492 133L597 120L961 109");
                 });
 
                 it('should set the path for stack 2 line', function () {
-                    expect(chart.select('g._2 path.line').attr("d")).toMatch(/M58\.\d+,109L222\.\d+,81L246\.\d+,0L492\.\d+,108L597\.\d+,89L961\.\d+,65/);
+                    expect(chart.select('g._2 path.line').attr("d")).toMatchPath("M58 109L222 81L246 0L492 108L597 89L961 65");
                 });
 
                 it('should have its own title accessor', function () {
@@ -327,15 +327,15 @@ describe('dc.lineChart', function() {
                     });
 
                     it('should set the area for stack 0', function () {
-                        expect(chart.select('g._0 path.area').attr("d")).toMatch(/M58\.\d+,159L222\.\d+,157L246\.\d+,150L492\.\d+,158L597\.\d+,151L961\.\d+,153L961\.\d+,160L597\.\d+,160L492\.\d+,160L246\.\d+,160L222\.\d+,160L58\.\d+,160Z/);
+                        expect(chart.select('g._0 path.area').attr("d")).toMatchPath("M58 159L222 157L246 150L492 158L597 151L961 153L961 160L597 160L492 160L246 160L222 160L58 160Z");
                     });
 
                     it('should set the area for stack 1', function () {
-                        expect(chart.select('g._1 path.area').attr("d")).toMatch(/M58\.\d+,134L222\.\d+,119L246\.\d+,75L492\.\d+,133L597\.\d+,120L961\.\d+,109L961\.\d+,153L597\.\d+,151L492\.\d+,158L246\.\d+,150L222\.\d+,157L58\.\d+,159Z/);
+                        expect(chart.select('g._1 path.area').attr("d")).toMatchPath("M58 134L222 119L246 75L492 133L597 120L961 109L961 153L597 151L492 158L246 150L222 157L58 159Z");
                     });
 
                     it('should set the area for stack 2', function () {
-                        expect(chart.select('g._2 path.area').attr("d")).toMatch(/M58\.\d+,109L222\.\d+,81L246\.\d+,0L492\.\d+,108L597\.\d+,89L961\.\d+,65L961\.\d+,109L597\.\d+,120L492\.\d+,133L246\.\d+,75L222\.\d+,119L58\.\d+,134Z/);
+                        expect(chart.select('g._2 path.area').attr("d")).toMatchPath("M58 109L222 81L246 0L492 108L597 89L961 65L961 109L597 120L492 133L246 75L222 119L58 134Z");
                     });
 
                     it('should draw tooltip dots on top of paths and areas', function () {
@@ -374,12 +374,12 @@ describe('dc.lineChart', function() {
                         });
 
                         it('should hide the stack', function () {
-                            expect(chart.select('g._0 path.line').attr("d")).toMatch(/M58\.\d+,133L222\.\d+,120L246\.\d+,80L492\.\d+,133L597\.\d+,127L961\.\d+,113/);
+                            expect(chart.select('g._0 path.line').attr("d")).toMatchPath("M58 133L222 120L246 80L492 133L597 127L961 113");
                         });
 
                         it('should show the stack', function () {
                             chart.showStack("stack 0").render();
-                            expect(chart.select('g._0 path.line').attr("d")).toMatch(/M58\.\d+,159L222\.\d+,157L246\.\d+,150L492\.\d+,158L597\.\d+,151L961\.\d+,153/);
+                            expect(chart.select('g._0 path.line').attr("d")).toMatchPath("M58 159L222 157L246 150L492 158L597 151L961 153");
                         });
                     });
 
@@ -390,12 +390,12 @@ describe('dc.lineChart', function() {
                         });
 
                         it('should hide the stack', function () {
-                            expect(chart.select('g._1 path.line').attr("d")).toMatch(/M58\.\d+,112L222\.\d+,83L246\.\d+,0L492\.\d+,108L597\.\d+,85L961\.\d+,64/);
+                            expect(chart.select('g._1 path.line').attr("d")).toMatchPath("M58 112L222 83L246 0L492 108L597 85L961 64");
                         });
 
                         it('should show the stack', function () {
                             chart.showStack("stack 1").render();
-                            expect(chart.select('g._1 path.line').attr("d")).toMatch(/M58\.\d+,134L222\.\d+,119L246\.\d+,75L492\.\d+,133L597\.\d+,120L961\.\d+,109/);
+                            expect(chart.select('g._1 path.line').attr("d")).toMatchPath("M58 134L222 119L246 75L492 133L597 120L961 109");
                         });
 
                         it('should color chart dots the same as line paths', function () {
@@ -448,13 +448,13 @@ describe('dc.lineChart', function() {
                 });
 
                 it('should generate negative lines and area for stack 0', function () {
-                    expect(chart.select('g._0 path.line').attr('d')).toMatch(/M58.\d+,81L222.\d+,81L246.\d+,92L492.\d+,79L597.\d+,52L961.\d+,67/);
-                    expect(chart.select('g._0 path.area').attr('d')).toMatch(/M58.\d+,81L222.\d+,81L246.\d+,92L492.\d+,79L597.\d+,52L961.\d+,67L961.\d+,73L597.\d+,73L492.\d+,73L246.\d+,73L222.\d+,73L58.\d+,73Z/);
+                    expect(chart.select('g._0 path.line').attr('d')).toMatchPath("M58 81L222 81L246 92L492 79L597 52L961 67");
+                    expect(chart.select('g._0 path.area').attr('d')).toMatchPath("M58 81L222 81L246 92L492 79L597 52L961 67L961 73L597 73L492 73L246 73L222 73L58 73Z");
                 });
 
                 it('should generate negative lines and area for stack 1', function () {
-                    expect(chart.select('g._1 path.line').attr('d')).toMatch(/M58.\d+,88L222.\d+,88L246.\d+,111L492.\d+,84L597.\d+,31L961.\d+,61/);
-                    expect(chart.select('g._1 path.area').attr('d')).toMatch(/M58.\d+,88L222.\d+,88L246.\d+,111L492.\d+,84L597.\d+,31L961.\d+,61L961.\d+,67L597.\d+,52L492.\d+,79L246.\d+,92L222.\d+,81L58.\d+,81Z/);
+                    expect(chart.select('g._1 path.line').attr('d')).toMatchPath("M58 88L222 88L246 111L492 84L597 31L961 61");
+                    expect(chart.select('g._1 path.area').attr('d')).toMatchPath("M58 88L222 88L246 111L492 84L597 31L961 61L961 67L597 52L492 79L246 92L222 81L58 81Z");
                 });
 
                 it('should generate y axis domain dynamically', function () {
@@ -534,18 +534,18 @@ describe('dc.lineChart', function() {
 
             describe('when a brush is defined', function () {
                 it('should position the brush with an offset', function () {
-                    expect(chart.select("g.brush").attr("transform")).toBe("translate(" + chart.margins().left + ",10)");
+                    expect(chart.select("g.brush").attr("transform")).toMatchTranslate(chart.margins().left, 10);
                 });
 
                 it('should create a fancy brush resize handle', function () {
                     chart.select("g.brush").selectAll(".resize path").each(function (d, i) {
                         if (i === 0) {
                             expect(d3.select(this).attr("d"))
-                                .toMatch(/M0.5,53.\d+A6,6 0 0 1 6.5,59.\d+V100.\d+A6,6 0 0 1 0.5,106.\d+ZM2.5,61.\d+V98.\d+M4.5,61.\d+V98.\d+/);
+                                .toMatchPath("M0.5,53 A6,6 0 0 1 6.5,59 V100 A6,6 0 0 1 0.5,106 ZM2.5,61 V98 M4.5,61 V98");
                         }
                         else{
                             expect(d3.select(this).attr("d"))
-                                .toMatch(/M-0.5,53.\d+A6,6 0 0 0 -6.5,59.\d+V100.\d+A6,6 0 0 0 -0.5,106.\d+ZM-2.5,61.\d+V98.\d+M-4.5,61.\d+V98.\d+/);
+                                .toMatchPath("M-0.5,53 A6,6 0 0 0 -6.5,59 V100 A6,6 0 0 0 -0.5,106 ZM-2.5,61 V98 M-4.5,61 V98");
                         }
                     });
                 });
@@ -584,7 +584,7 @@ describe('dc.lineChart', function() {
                 .render().redraw();
         });
         it('updates dot colors', function() {
-            expect(chart.select("circle.dot")[0][0].attributes.fill.nodeValue).toEqual('#FF0000');
+            expect(chart.select("circle.dot")[0][0].attributes.fill.nodeValue).toMatch(/#FF0000/i);
         });
     });
 });

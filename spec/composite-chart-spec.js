@@ -139,11 +139,11 @@ describe('dc.compositeChart', function() {
         });
 
         it('should place the x axis at the bottom', function(){
-            expect(chart.select('svg g g.x').attr('transform')).toBe('translate(30,120)');
+            expect(chart.select('svg g g.x').attr('transform')).toMatchTranslate(30,120);
         });
 
         it('should place the y axis to the left', function(){
-            expect(chart.select('svg g g.y').attr('transform')).toBe('translate(30,10)');
+            expect(chart.select('svg g g.y').attr('transform')).toMatchTranslate(30,10);
         });
 
         it('should create a separate g for each subchart', function () {
@@ -161,11 +161,11 @@ describe('dc.compositeChart', function() {
                 switch (i) {
                     case 0:
                         expect(d3.select(this).attr('d'))
-                            .toBe('M24.137931034482758,110L91.72413793103448,108L101.37931034482757,103L202.75862068965515,108L246.20689655172413,104L395.8620689655172,105');
+                            .toMatchPath('M24.137931034482758,110L91.72413793103448,108L101.37931034482757,103L202.75862068965515,108L246.20689655172413,104L395.8620689655172,105');
                         break;
                     case 1:
                         expect(d3.select(this).attr('d'))
-                            .toBe('M24.137931034482758,92L91.72413793103448,82L101.37931034482757,52L202.75862068965515,91L246.20689655172413,83L395.8620689655172,75');
+                            .toMatchPath('M24.137931034482758,92L91.72413793103448,82L101.37931034482757,52L202.75862068965515,91L246.20689655172413,83L395.8620689655172,75');
                         break;
                 }
             });
@@ -180,13 +180,13 @@ describe('dc.compositeChart', function() {
             chart.selectAll('g.sub rect.bar').each(function(d, i) {
                 switch (i) {
                     case 0:
-                        expect(d3.select(this).attr('x')).toBe('22.637931034482758');
+                        expect(d3.select(this).attr('x')).toBeCloseTo('22.637931034482758', 3);
                         expect(d3.select(this).attr('y')).toBe('93');
                         expect(d3.select(this).attr('width')).toBe('3');
                         expect(d3.select(this).attr('height')).toBe('17');
                         break;
                     case 5:
-                        expect(d3.select(this).attr('x')).toBe('394.3620689655172');
+                        expect(d3.select(this).attr('x')).toBeCloseTo('394.3620689655172', 3);
                         expect(d3.select(this).attr('y')).toBe('80');
                         expect(d3.select(this).attr('width')).toBe('3');
                         expect(d3.select(this).attr('height')).toBe('30');
@@ -217,7 +217,7 @@ describe('dc.compositeChart', function() {
             it('should have clip path refs', function () {
                 expect(chart.selectAll("g.chart-body").size()).not.toBe(0);
                 chart.selectAll("g.chart-body").each(function(){
-                    expect(d3.select(this).attr("clip-path")).toBe("url(#composite-chart-clip)");
+                    expect(d3.select(this).attr("clip-path")).toMatchUrl("#composite-chart-clip");
                 });
             });
         });
@@ -225,7 +225,7 @@ describe('dc.compositeChart', function() {
         describe('the chart brush', function () {
 
             it('should be positioned with the chart left margin', function () {
-                expect(chart.select('g.brush').attr('transform')).toBe('translate(' + chart.margins().left + ',10)');
+                expect(chart.select('g.brush').attr('transform')).toMatchTranslate(chart.margins().left,10);
             });
 
             it('should have a resize handle', function () {
@@ -233,11 +233,11 @@ describe('dc.compositeChart', function() {
                 chart.selectAll('g.brush .resize path').each(function(d, i) {
                     if (i === 0){
                         expect(d3.select(this).attr('d'))
-                            .toBe('M0.5,36.666666666666664A6,6 0 0 1 6.5,42.666666666666664V67.33333333333333A6,6 0 0 1 0.5,73.33333333333333ZM2.5,44.666666666666664V65.33333333333333M4.5,44.666666666666664V65.33333333333333');
+                            .toMatchPath('M0.5,36.666666666666664A6,6 0 0 1 6.5,42.666666666666664V67.33333333333333A6,6 0 0 1 0.5,73.33333333333333ZM2.5,44.666666666666664V65.33333333333333M4.5,44.666666666666664V65.33333333333333');
                     }
                     else{
                         expect(d3.select(this).attr('d'))
-                            .toBe('M-0.5,36.666666666666664A6,6 0 0 0 -6.5,42.666666666666664V67.33333333333333A6,6 0 0 0 -0.5,73.33333333333333ZM-2.5,44.666666666666664V65.33333333333333M-4.5,44.666666666666664V65.33333333333333');
+                            .toMatchPath('M-0.5,36.666666666666664A6,6 0 0 0 -6.5,42.666666666666664V67.33333333333333A6,6 0 0 0 -0.5,73.33333333333333ZM-2.5,44.666666666666664V65.33333333333333M-4.5,44.666666666666664V65.33333333333333');
                     }
                 });
             });
@@ -296,7 +296,7 @@ describe('dc.compositeChart', function() {
             });
 
             it('should be placed according to its own legend option, ignoring the sub-charts', function () {
-                expect(chart.select("g.dc-legend").attr("transform")).toBe('translate(200,10)');
+                expect(chart.select("g.dc-legend").attr("transform")).toMatchTranslate(200,10);
             });
 
             it('should generate legend labels with their associated group text', function () {

@@ -2172,7 +2172,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     /**
-    #### .xAxisMin()
+    #### .xAxisMax()
     Return the maximum x value to diplay in the chart. Includes xAxisPadding if set.
     **/
     _chart.xAxisMax = function () {
@@ -2183,7 +2183,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     /**
-    #### .xAxisMin()
+    #### .yAxisMin()
     Return the minimum y value to diplay in the chart. Includes yAxisPadding if set.
     **/
     _chart.yAxisMin = function () {
@@ -2553,18 +2553,17 @@ dc.coordinateGridMixin = function (_chart) {
         if (!range1 && !range2) {
             return true;
         }
-
-        if (range1.length === 0 && range2.length === 0) {
+        else if (!range1 || !range2) {
+            return false;
+        }
+        else if (range1.length === 0 && range2.length === 0) {
             return true;
         }
-
-        if (range1 && range2 &&
-            range1[0].valueOf() === range2[0].valueOf() &&
+        else if (range1[0].valueOf() === range2[0].valueOf() &&
             range1[1].valueOf() === range2[1].valueOf()) {
             return true;
         }
-
-        return false;
+        else return false;
     }
 
     /**

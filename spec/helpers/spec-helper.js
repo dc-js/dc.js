@@ -13,9 +13,8 @@ function appendChartID(id) {
     return d3.select("#test-content").append("div").attr("id", id);
 }
 
-function coordsFromTranslate(translationString){
-    var regex = /translate\((.+),(.+)\)/;
-    var result = regex.exec(translationString);
-
+function coordsFromTranslate(translationString) {
+    var result = parseTranslate(translationString);
+    expect(result).not.toBeNull();
     return { x: +result[1], y: +result[2] };
 }

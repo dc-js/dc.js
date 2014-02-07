@@ -158,7 +158,7 @@ describe('dc.coordinateGridChart', function() {
 
             it('should add clip path refs to the chart body', function () {
                 chart.selectAll("g.chart-body").each(function () {
-                    expect(d3.select(this).attr("clip-path")).toBe("url(#coordinate-grid-chart-clip)");
+                    expect(d3.select(this).attr("clip-path")).toMatchUrl("#coordinate-grid-chart-clip");
                 });
             });
         });
@@ -177,7 +177,7 @@ describe('dc.coordinateGridChart', function() {
 
         describe("x-axis", function() {
             it('should place an x axis at the bottom', function () {
-                expect(chart.select("g.x").attr("transform")).toBe("translate(0,150)");
+                expect(chart.select("g.x").attr("transform")).toMatchTranslate(0,150);
             });
 
             describe("labels", function() {
@@ -311,7 +311,7 @@ describe('dc.coordinateGridChart', function() {
                 });
 
                 it('should place the y axis to the left', function () {
-                    expect(chart.select("g.y").attr("transform")).toBe("translate(0,20)");
+                    expect(chart.select("g.y").attr("transform")).toMatchTranslate(0,20);
                 });
 
                 describe('y-axis labels', function () {
@@ -329,7 +329,7 @@ describe('dc.coordinateGridChart', function() {
                     });
 
                     it('should position the label to the left of the chart', function () {
-                        expect(chart.selectAll('text.y-axis-label.y-label').attr("transform")).toBe("translate(12,85),rotate(-90)");
+                        expect(chart.selectAll('text.y-axis-label.y-label').attr("transform")).toMatchTransRot(12,85,-90);
                     });
 
                     describe("with custom padding", function() {
@@ -358,7 +358,7 @@ describe('dc.coordinateGridChart', function() {
                 });
 
                 it('should position the axis to the right of the chart', function () {
-                    expect(chart.select('.axis.y').attr('transform')).toBe('translate(490,20)');
+                    expect(chart.select('.axis.y').attr('transform')).toMatchTranslate(490,20);
                 });
 
                 describe('y-axis labels', function () {
@@ -376,7 +376,7 @@ describe('dc.coordinateGridChart', function() {
                     });
 
                     it('should position the label to the right of the chart', function () {
-                        expect(chart.selectAll('text.y-axis-label.y-label').attr("transform")).toBe("translate(488,85),rotate(90)");
+                        expect(chart.selectAll('text.y-axis-label.y-label').attr("transform")).toMatchTransRot(488,85,90);
                     });
 
                     describe("with custom padding", function() {
@@ -750,11 +750,24 @@ describe('dc.coordinateGridChart', function() {
         });
 
         it("should zoom the focus chart when range chart is brushed", function () {
-            spyOn(chart, "focus");
+            spyOn(chart, "focus").and.callThrough();
             rangeChart.brush().extent(selectedRange);
             rangeChart.brush().event(rangeChart.g());
             jasmine.clock().tick(100);
             expect(chart.focus).toHaveBeenCalledWith(selectedRange);
+        });
+
+        it("should zoom the focus chart back out when range chart is un-brushed", function () {
+            rangeChart.brush().extent(selectedRange);
+            rangeChart.brush().event(rangeChart.g());
+            jasmine.clock().tick(100);
+
+            expect(chart.x().domain()).toEqual(selectedRange);
+            spyOn(chart, "focus").and.callThrough();
+            rangeChart.filter(null);
+            jasmine.clock().tick(100);
+            expect(chart.focus).toHaveBeenCalledWith(null);
+            expect(chart.x().domain()).toEqual(rangeChart.xOriginalDomain());
         });
 
         it("should update the range chart brush to match zoomed domain of focus chart", function () {

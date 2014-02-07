@@ -576,10 +576,10 @@ Turn on/off vertical grid lines.
 #### .xAxisMin()
 Return the minimum x value to diplay in the chart. Includes xAxisPadding if set.
 
-#### .xAxisMin()
+#### .xAxisMax()
 Return the maximum x value to diplay in the chart. Includes xAxisPadding if set.
 
-#### .xAxisMin()
+#### .yAxisMin()
 Return the minimum y value to diplay in the chart. Includes yAxisPadding if set.
 
 #### .yAxisMax()

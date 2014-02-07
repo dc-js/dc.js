@@ -44,8 +44,8 @@ describe('dc.seriesChart', function() {
         it('should position generated lineCharts using the data', function() {
             var lines = chart.selectAll("path.line");
 
-            expect(d3.select(lines[0][0]).attr("d")).toBe("M0,128L130,85");
-            expect(d3.select(lines[0][1]).attr("d")).toBe("M0,43L130,0");
+            expect(d3.select(lines[0][0]).attr("d")).toMatchPath("M0,128L130,85");
+            expect(d3.select(lines[0][1]).attr("d")).toMatchPath("M0,43L130,0");
         });
 
         it('should color lines using the colors in the data', function() {
@@ -66,8 +66,8 @@ describe('dc.seriesChart', function() {
         it('should order lineCharts in the order specified', function() {
             var lines = chart.selectAll("path.line");
 
-            expect(d3.select(lines[0][1]).attr("d")).toBe("M0,128L130,85");
-            expect(d3.select(lines[0][0]).attr("d")).toBe("M0,43L130,0");
+            expect(d3.select(lines[0][1]).attr("d")).toMatchPath("M0,128L130,85");
+            expect(d3.select(lines[0][0]).attr("d")).toMatchPath("M0,43L130,0");
         });
     });
 

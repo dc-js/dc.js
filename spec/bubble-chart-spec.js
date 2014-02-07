@@ -157,10 +157,10 @@ describe('dc.bubbleChart', function() {
             expect(chart.select("svg g").empty()).toBeFalsy();
         });
         it('places the x axis at the bottom', function () {
-            expect(chart.select("svg g g.x").attr("transform")).toBe("translate(30,320)");
+            expect(chart.select("svg g g.x").attr("transform")).toMatchTranslate(30,320);
         });
         it('places the y axis on the left', function () {
-            expect(chart.select("svg g g.y").attr("transform")).toBe("translate(30,10)");
+            expect(chart.select("svg g g.y").attr("transform")).toMatchTranslate(30,10);
         });
 
         // bubbles
@@ -170,9 +170,9 @@ describe('dc.bubbleChart', function() {
         it('calculates right cx for each bubble', function () {
             chart.selectAll("g.node").each(function (d, i) {
                 if (i === 0)
-                    expect(d3.select(this).attr("transform")).toBe("translate(601.3333333333334,155)");
+                    expect(d3.select(this).attr("transform")).toMatchTranslate(601.3333333333334,155,3);
                 if (i === 1)
-                    expect(d3.select(this).attr("transform")).toBe("translate(541.2,155)");
+                    expect(d3.select(this).attr("transform")).toMatchTranslate(541.2,155);
             });
         });
         it('generates opaque groups and circles for each bubble', function () {
@@ -184,9 +184,9 @@ describe('dc.bubbleChart', function() {
         it('calculates right r for each bubble', function () {
             chart.selectAll("circle.bubble").each(function (d, i) {
                 if (i === 0)
-                    expect(Number(d3.select(this).attr("r"))).toBe(49.33333333333333);
+                    expect(Number(d3.select(this).attr("r"))).toBeCloseTo(49.33333333333333,3);
                 if (i === 1)
-                    expect(Number(d3.select(this).attr("r"))).toBe(49.33333333333333);
+                    expect(Number(d3.select(this).attr("r"))).toBeCloseTo(49.33333333333333,3);
             });
         });
         it('attaches each bubble with index based class', function () {

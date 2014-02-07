@@ -108,7 +108,7 @@ describe('dc.pieChart', function() {
             expect(chart.select("svg g").empty()).toBeFalsy();
         });
         it('root g should be translated to center', function() {
-            expect(chart.select("svg g").attr("transform")).toEqual("translate(100,100)");
+            expect(chart.select("svg g").attr("transform")).toMatchTranslate(100,100);
         });
         it('slice g should be created with class', function() {
             expect(chart.selectAll("svg g g.pie-slice").data().length).toEqual(5);
@@ -141,11 +141,8 @@ describe('dc.pieChart', function() {
             expect(chart.selectAll("svg text.pie-slice").data().length).toEqual(5);
         });
         it('slice label transform to centroid', function() {
-            var translate = chart.selectAll("svg g text.pie-slice").attr("transform");
-            var parts = /translate\((.*),(.*)\)/.exec(translate);
-            expect(parts.length).toEqual(3);
-            expect(+parts[1]).toBeCloseTo(38.20604139901076, 8);
-            expect(+parts[2]).toBeCloseTo(-52.58610463437158, 8);
+            expect(chart.selectAll("svg g text.pie-slice").attr("transform"))
+                .toMatchTranslate(38.20604139901076, -52.58610463437158, 3);
         });
         it('slice label text should be set', function() {
             chart.selectAll("svg g text.pie-slice").call(function(p) {
@@ -195,7 +192,8 @@ describe('dc.pieChart', function() {
                 return chart;
             });
             it('NaN centroid should be handled properly', function() {
-                expect(chart.selectAll("svg g text.pie-slice").attr("transform")).toEqual("translate(0,0)");
+                expect(chart.selectAll("svg g text.pie-slice").attr("transform"))
+                    .toMatchTranslate(0,0);
             });
             it('slice path should not contain NaN', function() {
                 expect(chart.selectAll("g.pie-slice path").attr("d"), "M0).toEqual(0");
@@ -500,7 +498,7 @@ describe('dc.pieChart', function() {
                 .innerRadius(chart.radius() + 10)
                 .centroid(label.datum());
 
-            expect(label.attr("transform")).toEqual("translate(" + centroid + ")");
+            expect(label.attr("transform")).toMatchTranslate(centroid[0], centroid[1], 3);
         });
         it('gives labels class "external"', function() {
             d3.selectAll("#pie-chart-external-labeling svg g text.pie-slice").each(function() {
@@ -521,7 +519,7 @@ describe('dc.pieChart', function() {
                     .innerRadius(chart.innerRadius())
                     .centroid(label.datum());
 
-                expect(label.attr("transform")).toEqual("translate(" + centroid + ")");
+                expect(label.attr("transform")).toMatchTranslate(centroid[0], centroid[1], 3);
                 expect(label.classed("external")).toBeFalsy();
             });
         });

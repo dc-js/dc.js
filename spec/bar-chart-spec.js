@@ -43,7 +43,7 @@ describe('dc.barChart', function() {
                 var halfBarWidth = 0.5;
                 forEachBar(function (bar, datum) {
                     var barPosition = chart.x()(datum.data.key);
-                    expect(+bar.attr('x')).toBe(barPosition - halfBarWidth);
+                    expect(+bar.attr('x')).toBeCloseTo(barPosition - halfBarWidth, 3);
                 });
             });
         });
@@ -52,7 +52,7 @@ describe('dc.barChart', function() {
             it("should position bars starting at their data points", function() {
                 forEachBar(function (bar, datum) {
                     var barPosition = chart.x()(datum.data.key);
-                    expect(+bar.attr('x')).toBe(barPosition);
+                    expect(+bar.attr('x')).toBeCloseTo(barPosition, 3);
                 });
             });
         });
@@ -565,18 +565,18 @@ describe('dc.barChart', function() {
 
             describe('when a brush is defined', function () {
                 it('should position the brush with an offset', function () {
-                    expect(chart.select("g.brush").attr("transform")).toBe("translate(" + chart.margins().left + ",10)");
+                    expect(chart.select("g.brush").attr("transform")).toMatchTranslate(chart.margins().left, 10);
                 });
 
                 it('should create a fancy brush resize handle', function () {
                     chart.select("g.brush").selectAll(".resize path").each(function (d, i) {
                         if (i === 0) {
                             expect(d3.select(this).attr("d"))
-                                .toMatch(/M0.5,53.\d+A6,6 0 0 1 6.5,59.\d+V100.\d+A6,6 0 0 1 0.5,106.\d+ZM2.5,61.\d+V98.\d+M4.5,61.\d+V98.\d+/);
+                                .toMatchPath("M0.5,53 A6,6 0 0 1 6.5,59 V100 A6,6 0 0 1 0.5,106 ZM2.5,61 V98 M4.5,61 V98");
                         }
                         else{
                             expect(d3.select(this).attr("d"))
-                                .toMatch(/M-0.5,53.\d+A6,6 0 0 0 -6.5,59.\d+V100.\d+A6,6 0 0 0 -0.5,106.\d+ZM-2.5,61.\d+V98.\d+M-4.5,61.\d+V98.\d+/);
+                                .toMatchPath("M-0.5,53 A6,6 0 0 0 -6.5,59 V100 A6,6 0 0 0 -0.5,106 ZM-2.5,61 V98 M-4.5,61 V98");
                         }
                     });
                 });
