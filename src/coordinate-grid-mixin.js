@@ -980,7 +980,11 @@ dc.coordinateGridMixin = function (_chart) {
         if (!arguments.length) return _focusChart;
         _focusChart = c;
         _chart.on("filtered", function (chart) {
-            if (!rangesEqual(chart.filter(), _focusChart.filter())) {
+            if (!chart.filter()) {
+                dc.events.trigger(function() {
+                    _focusChart.x().domain(_focusChart.xOriginalDomain());
+                });
+            } else if (!rangesEqual(chart.filter(), _focusChart.filter())) {
                 dc.events.trigger(function () {
                     _focusChart.focus(chart.filter());
                 });
