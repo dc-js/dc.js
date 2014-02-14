@@ -10,7 +10,7 @@ describe('dc.bubbleOverlay', function() {
 
             var id = "bubble-overlay";
             var parent = appendChartID(id);
-            var svg = parent.append("svg")
+            var svg = parent.append("svg");
 
             chart = dc.bubbleOverlay("#" + id)
                 .svg(svg)
