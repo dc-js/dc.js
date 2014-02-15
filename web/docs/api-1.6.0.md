@@ -609,9 +609,9 @@ Get center x coordinate position. This function is **not chainable**.
 #### .cy()
 Get center y coordinate position. This function is **not chainable**.
 
-#### .minAngelForLabel([minAngle])
+#### .minAngleForLabel([minAngle])
 Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not render slice label.
-Default min angel is 0.5.
+Default min angle is 0.5.
 
 ## <a name="bar-chart" href="#bar-chart">#</a> Bar Chart [Concrete] < [Stackable Chart](#stackable-chart) < [CoordinateGrid Chart](#coordinate-grid-chart)
 Concrete bar chart/histogram implementation.
