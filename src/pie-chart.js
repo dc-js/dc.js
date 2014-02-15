@@ -292,9 +292,9 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .minAngelForLabel([minAngle])
+    #### .minAngleForLabel([minAngle])
     Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not render slice label.
-    Default min angel is 0.5.
+    Default min angle is 0.5.
     **/
     _chart.minAngleForLabel = function (_) {
         if (!arguments.length) return _minAngleForLabel;
