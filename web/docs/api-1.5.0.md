@@ -482,9 +482,9 @@ Get center x coordinate position. This function is **not chainable**.
 #### .cy()
 Get center y coordinate position. This function is **not chainable**.
 
-#### .minAngelForLabel([minAngle])
+#### .minAngleForLabel([minAngle])
 Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not render slice label.
-Default min angel is 0.5.
+Default min angle is 0.5.
 
 #### .slicesCap([cap])
 Get or set the maximum number of slices the pie chart will generate. Slices are ordered by its value from high to low.
