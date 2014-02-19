@@ -59,8 +59,8 @@ dc.chartRegistry = function() {
             group = initializeChartGroup(group);
             _chartMap[group].push(chart);
         },
-		
-		deregister: function (chart, group) {
+        
+        deregister: function (chart, group) {
         	group = initializeChartGroup(group);
         	for (var i = 0; i < _chartMap[group].length; i++) {
         		if (_chartMap[group][i].anchorName() === chart.anchorName()) {
