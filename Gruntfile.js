@@ -69,7 +69,7 @@ module.exports = function (grunt) {
         },
         vows: {
             tests: {
-                src: "test/*.js"
+                src: "test/row-chart-test.js test/web-test.js test/env-data.js test/env-xhr.js test/env.js"
             }
         },
         jasmine: {
