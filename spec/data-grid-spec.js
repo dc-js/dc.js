@@ -1,4 +1,4 @@
-describe('dc.dataTable', function() {
+describe('dc.dataGrid', function() {
     var id, chart, data;
     var dateFixture;
     var dimension, group;
