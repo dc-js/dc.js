@@ -59,15 +59,15 @@ dc.chartRegistry = function() {
             group = initializeChartGroup(group);
             _chartMap[group].push(chart);
         },
-        
+
         deregister: function (chart, group) {
-        	group = initializeChartGroup(group);
-        	for (var i = 0; i < _chartMap[group].length; i++) {
-        		if (_chartMap[group][i].anchorName() === chart.anchorName()) {
-        			_chartMap[group].splice(i, 1);
-        			break;
-        		}
-        	}
+            group = initializeChartGroup(group);
+            for (var i = 0; i < _chartMap[group].length; i++) {
+                if (_chartMap[group][i].anchorName() === chart.anchorName()) {
+                    _chartMap[group].splice(i, 1);
+                    break;
+                }
+            }
         },
 
         clear: function(group) {
@@ -90,7 +90,7 @@ dc.registerChart = function(chart, group) {
 };
 
 dc.deregisterChart = function (chart, group) {
-	dc.chartRegistry.deregister(chart, group);
+    dc.chartRegistry.deregister(chart, group);
 };
 
 dc.hasChart = function(chart) {

@@ -50,7 +50,7 @@ describe('dc.core', function() {
             dc.deregisterAllCharts();
         });
     });
-    
+
     describe('chartsRegistry', function() {
         var chart;
         var chartGrouped;
@@ -67,15 +67,15 @@ describe('dc.core', function() {
         it('should register chart object', function() {
             expect(dc.hasChart(chart)).toBeTruthy();
         });
-		
+
         it('should not have ungrouped chart after remove', function() {
             dc.deregisterChart(chart);
             expect(dc.hasChart(chart)).toBeFalsy();
         });
-        
+
         it('should not have grouped chart after remove', function(){
-        	dc.deregisterChart(chartGrouped, chartGroup);
-        	expect(dc.hasChart(chartGrouped)).toBeFalsy();
+            dc.deregisterChart(chartGrouped, chartGroup);
+            expect(dc.hasChart(chartGrouped)).toBeFalsy();
         });
         afterEach(function() {
             dc.deregisterAllCharts();
