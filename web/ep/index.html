@@ -67,7 +67,18 @@ function grid (selector,data) {
     .elasticY(true)
     .yAxisLabel("#MEPs")
     .dimension(age)
-    .group(ageGroup);
+    .group(ageGroup)
+    .renderlet(function (chart) {
+      if (!console || !console.log) return;
+      var d = chart.dimension().top(Number.POSITIVE_INFINITY);
+      var total = nb = 0;
+      d.forEach (function (a) {
+        ++nb;
+        total += a.age;
+      }); 
+      var avg= total/nb;
+      console.log ("average:" + avg);
+    });
 
   var pie_gender = dc.pieChart(selector +  " .gender").radius(70);
   var gender = ndx.dimension(function(d) {
