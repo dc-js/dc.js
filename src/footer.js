@@ -8,4 +8,11 @@ dc.coordinateGridChart = dc.coordinateGridMixin;
 dc.marginable = dc.marginMixin;
 dc.stackableChart = dc.stackMixin;
 
-return dc;})();
+return dc;}
+if(typeof define === "function" && define.amd){
+  return define(["d3"], _dc);
+} else {
+  return _dc(d3);
+}
+}
+)();
