@@ -576,10 +576,10 @@ Turn on/off vertical grid lines.
 #### .xAxisMin()
 Return the minimum x value to diplay in the chart. Includes xAxisPadding if set.
 
-#### .xAxisMin()
+#### .xAxisMax()
 Return the maximum x value to diplay in the chart. Includes xAxisPadding if set.
 
-#### .xAxisMin()
+#### .yAxisMin()
 Return the minimum y value to diplay in the chart. Includes yAxisPadding if set.
 
 #### .yAxisMax()
@@ -775,9 +775,9 @@ Get center x coordinate position. This function is **not chainable**.
 #### .cy()
 Get center y coordinate position. This function is **not chainable**.
 
-#### .minAngelForLabel([minAngle])
+#### .minAngleForLabel([minAngle])
 Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not render slice label.
-Default min angel is 0.5.
+Default min angle is 0.5.
 
 ## Bar Chart
 

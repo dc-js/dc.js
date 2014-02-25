@@ -81,6 +81,16 @@ dc.chartRegistry = function() {
             _chartMap[group].push(chart);
         },
 
+        deregister: function (chart, group) {
+            group = initializeChartGroup(group);
+            for (var i = 0; i < _chartMap[group].length; i++) {
+                if (_chartMap[group][i].anchorName() === chart.anchorName()) {
+                    _chartMap[group].splice(i, 1);
+                    break;
+                }
+            }
+        },
+
         clear: function(group) {
             if (group) {
                 delete _chartMap[group];
@@ -98,6 +108,10 @@ dc.chartRegistry = function() {
 
 dc.registerChart = function(chart, group) {
     dc.chartRegistry.register(chart, group);
+};
+
+dc.deregisterChart = function (chart, group) {
+    dc.chartRegistry.deregister(chart, group);
 };
 
 dc.hasChart = function(chart) {
@@ -1898,7 +1912,7 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('text-anchor', 'middle')
                 .text(_chart.xAxisLabel());
         if (_chart.xAxisLabel() && axisXLab.text() != _chart.xAxisLabel())
-            axisYLab.text(_chart.xAxisLabel());
+            axisXLab.text(_chart.xAxisLabel());
 
         dc.transition(axisXG, _chart.transitionDuration())
             .call(_xAxis);
@@ -2172,7 +2186,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     /**
-    #### .xAxisMin()
+    #### .xAxisMax()
     Return the maximum x value to diplay in the chart. Includes xAxisPadding if set.
     **/
     _chart.xAxisMax = function () {
@@ -2183,7 +2197,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     /**
-    #### .xAxisMin()
+    #### .yAxisMin()
     Return the minimum y value to diplay in the chart. Includes yAxisPadding if set.
     **/
     _chart.yAxisMin = function () {
@@ -2553,18 +2567,17 @@ dc.coordinateGridMixin = function (_chart) {
         if (!range1 && !range2) {
             return true;
         }
-
-        if (range1.length === 0 && range2.length === 0) {
+        else if (!range1 || !range2) {
+            return false;
+        }
+        else if (range1.length === 0 && range2.length === 0) {
             return true;
         }
-
-        if (range1 && range2 &&
-            range1[0].valueOf() === range2[0].valueOf() &&
+        else if (range1[0].valueOf() === range2[0].valueOf() &&
             range1[1].valueOf() === range2[1].valueOf()) {
             return true;
         }
-
-        return false;
+        else return false;
     }
 
     /**
@@ -3417,9 +3430,9 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .minAngelForLabel([minAngle])
+    #### .minAngleForLabel([minAngle])
     Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not render slice label.
-    Default min angel is 0.5.
+    Default min angle is 0.5.
     **/
     _chart.minAngleForLabel = function (_) {
         if (!arguments.length) return _minAngleForLabel;
@@ -4507,7 +4520,7 @@ dc.bubbleChart = function(parent, chartGroup) {
         _chart.r().range([_chart.MIN_RADIUS, _chart.xAxisLength() * _chart.maxBubbleRelativeSize()]);
 
         var bubbleG = _chart.chartBodyG().selectAll("g." + _chart.BUBBLE_NODE_CLASS)
-            .data(_chart.data(),_chart.keyAccessor());
+            .data(_chart.data(), function (d) { return d.key; });
 
         renderNodes(bubbleG);
 
@@ -4931,7 +4944,7 @@ dc.compositeChart = function (parent, chartGroup) {
         });
     }
 
-    dc.override('xAxisMin',function () {
+    dc.override(_chart, 'xAxisMin',function () {
         return dc.utils.subtract(d3.min(getAllXAxisMinFromChildCharts()), _chart.xAxisPadding());
     });
 
@@ -4941,7 +4954,7 @@ dc.compositeChart = function (parent, chartGroup) {
         });
     }
 
-    dc.override('xAxisMax',function () {
+    dc.override(_chart, 'xAxisMax',function () {
         return dc.utils.add(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding());
     });
 
