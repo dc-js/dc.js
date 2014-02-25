@@ -763,7 +763,6 @@ describe('dc.coordinateGridChart', function() {
             jasmine.clock().tick(100);
 
             expect(chart.x().domain()).toEqual(selectedRange);
-            spyOn(chart, "focus").and.callThrough();
             rangeChart.filter(null);
             jasmine.clock().tick(100);
             expect(rangeChart.x().domain()).toEqual(rangeChart.xOriginalDomain());
