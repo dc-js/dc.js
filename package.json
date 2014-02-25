@@ -39,7 +39,7 @@
     "grunt-contrib-jasmine": "https://github.com/travisjeffery/grunt-contrib-jasmine/tarball/master",
     "grunt-contrib-watch": "~0.5.3",
     "grunt-template-jasmine-istanbul": "https://github.com/sclevine/grunt-template-jasmine-istanbul/tarball/master",
-    "grunt-docco2": "https://github.com/gordonwoodhull/grunt-docco/tarball/master",
+    "grunt-docco2": "~0.2.0",
     "grunt-gh-pages": "~0.8.0",
     "grunt-markdown": "https://github.com/willkan/grunt-markdown/tarball/master",
     "grunt-sed": "~0.1.1",

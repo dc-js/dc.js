@@ -129,10 +129,16 @@ module.exports = function (grunt) {
             options: {markdownOptions: {highlight: 'manual'}}
         },
         docco: {
+            options: {
+                dst: 'web/docs',
+                basepath:'web'
+            },
             howto: {
-                src: 'web/stock.js',
-                dest: 'web/docs',
-                options: {basepath:'web'}
+                files: [
+                    {
+                        src: ['web/stock.js']
+                    }
+                ]
             }
         },
         copy: {
