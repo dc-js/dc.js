@@ -22,8 +22,8 @@ describe('dc.rowChart', function() {
             chart.render();
         });
 
-        it('should create an svg', function () {
-            expect(chart.svg().empty()).toBeFalsy();
+        it('should create a root svg node', function () {
+            expect(chart.select("svg").size()).toBe(1);
         });
 
         it('should create a row group for each datum', function () {
@@ -98,7 +98,7 @@ describe('dc.rowChart', function() {
             });
 
             it('should generate filter info in a filter-classed element', function () {
-                expect(chart.select('span.filter').style("display")).toBe('');
+                expect(chart.select('span.filter').style("display")).not.toBe('none');
                 expect(chart.select('span.filter').text()).toBe('66');
             });
 
@@ -137,7 +137,7 @@ describe('dc.rowChart', function() {
         });
 
         it('should filter the corresponding group', function () {
-            expect(chart.filter()).toBe('22')
+            expect(chart.filter()).toBe(22)
         });
 
         describe('clicking again', function () {
@@ -183,7 +183,7 @@ describe('dc.rowChart', function() {
         });
     });
 
-    describe('custom label', function () {
+    describe('custom labels', function () {
         beforeEach(function () {
             chart.label(function () {
                 return "custom label";
@@ -211,7 +211,7 @@ describe('dc.rowChart', function() {
         });
     });
 
-    describe('custom title', function () {
+    describe('custom titles', function () {
         beforeEach(function () {
             chart.title(function () {
                 return "custom title";
@@ -247,11 +247,11 @@ describe('dc.rowChart', function() {
         });
 
         it('should use the default function to dynamically generate the label', function () {
-            expect(chart.select('text.row').text()).toBe("F");
+            expect(chart.select('text.row').text()).toBe('22');
         });
 
         it('should use the default function to dynamically generate the title', function () {
-            expect(chart.select("g.row title").text()).toBe("F: 105");
+            expect(chart.select("g.row title").text()).toBe('22: 108');
         });
     });
 
@@ -263,8 +263,7 @@ describe('dc.rowChart', function() {
         });
 
         it('should render valid rect widths', function () {
-            expect(chart.select('g.row rect').attr('width')).toBeGreaterThan(0);
-            expect(chart.select('g.row rect').attr('width')).toBeLessThan(1);
+            expect(chart.select('g.row rect').attr('width')).toBeWithinDelta(0.9, 0.1)
         });
     });
 });
