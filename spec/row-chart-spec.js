@@ -58,7 +58,7 @@ describe('dc.rowChart', function() {
             });
 
             it('should leave a single instance of the chart', function () {
-                expect(d3.selectAll('#row-chart svg').size()).toBe(1)
+                expect(d3.selectAll('#row-chart svg').size()).toBe(1);
             });
         });
     });
@@ -75,7 +75,7 @@ describe('dc.rowChart', function() {
 
         describe('filtering a row', function () {
             beforeEach(function () {
-                chart.filter('66')
+                chart.filter('66');
             });
 
             it('should apply a filter to the chart', function () {
@@ -94,7 +94,7 @@ describe('dc.rowChart', function() {
                         expect(d3.select(this).classed('deselected')).toBeTruthy();
                         expect(d3.select(this).classed('selected')).toBeFalsy();
                     }
-                })
+                });
             });
 
             it('should generate filter info in a filter-classed element', function () {
@@ -137,7 +137,7 @@ describe('dc.rowChart', function() {
         });
 
         it('should filter the corresponding group', function () {
-            expect(chart.filter()).toBe(22)
+            expect(chart.filter()).toBe(22);
         });
 
         describe('clicking again', function () {
@@ -158,12 +158,12 @@ describe('dc.rowChart', function() {
 
         it('should order values when by value', function () {
             chart.ordering(dc.pluck('value'));
-            expect(chart.data().map(dc.pluck('value')).sort(d3.ascending)).toEqual(chart.data().map(dc.pluck('value')))
+            expect(chart.data().map(dc.pluck('value')).sort(d3.ascending)).toEqual(chart.data().map(dc.pluck('value')));
         });
 
         it('should order keys when by keys', function () {
             chart.ordering(dc.pluck('key'));
-            expect(chart.data().map(dc.pluck('key')).sort(d3.ascending)).toEqual(chart.data().map(dc.pluck('key')))
+            expect(chart.data().map(dc.pluck('key')).sort(d3.ascending)).toEqual(chart.data().map(dc.pluck('key')));
         });
     });
 
@@ -196,7 +196,7 @@ describe('dc.rowChart', function() {
 
         it('should use the custom function for each label', function () {
             chart.selectAll('text.row').each(function () {
-                expect(d3.select(this).text()).toBe('custom label')
+                expect(d3.select(this).text()).toBe('custom label');
             });
         });
 
@@ -224,7 +224,7 @@ describe('dc.rowChart', function() {
 
         it('should use the custom function for each title', function () {
             chart.selectAll('g.row title').each(function () {
-                expect(d3.select(this).text()).toBe('custom title')
+                expect(d3.select(this).text()).toBe('custom title');
             });
         });
 
@@ -263,7 +263,7 @@ describe('dc.rowChart', function() {
         });
 
         it('should render valid rect widths', function () {
-            expect(chart.select('g.row rect').attr('width')).toBeWithinDelta(0.9, 0.1)
+            expect(chart.select('g.row rect').attr('width')).toBeWithinDelta(0.9, 0.1);
         });
     });
 });
