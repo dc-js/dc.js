@@ -119,7 +119,7 @@ Get or set the grid size which determines the number of items displayed by the w
 
   /**
 #### .html( function (data) { return "<html>"; })
-Get or set the function that formats an item. Data grid widget uses a function to generate dynamic html. The provided example uses handlebar templating libary, but feel free to do it the way you want
+Get or set the function that formats an item. Data grid widget uses a function to generate dynamic html. Use your favourite templating engine or generate the string directly
 ```js
 chart.html(function (d) { return "<div class='item "+data.exampleCategory+"'>"+data.exampleString+"</div>";});
 ```
@@ -130,6 +130,16 @@ chart.html(function (d) { return "<div class='item "+data.exampleCategory+"'>"+d
     _html = _;
     return _chart;
   };
+
+
+  /**
+#### .htmlGroup( function (data) { return "<html>"; })
+Get or set the function that formats a group label. The provided example uses handlebar templating libary, but feel free to do it the way you want
+```js
+chart.htmlGroup (function (d) { return "<h2>".d.key . "with " . d.values.length ." items</h2>"});
+```
+
+ **/
 
   _chart.htmlGroup = function(_) {
     if (!arguments.length) return _htmlGroup;
