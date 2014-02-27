@@ -37,6 +37,11 @@ dc.dataGrid = function(parent, chartGroup) {
   };
   var _order = d3.ascending;
 
+  var _htmlGroup = function (d) {
+    return "<div class='"+GROUP_CSS_CLASS+"'><h1 class='"+LABEL_CSS_CLASS+"'>"
+           +_chart.keyAccessor()(d)+"</h1></div>";
+  }
+  
   _chart._doRender = function() {
     _chart.selectAll("div."+ GRID_CSS_CLASS).remove();
 
@@ -56,17 +61,10 @@ dc.dataGrid = function(parent, chartGroup) {
       .append("div")
       .attr("class", GRID_CSS_CLASS)
 
+    if (_htmlGroup) {
       itemGroup
-      .append("div")
-      .attr("class", GROUP_CSS_CLASS)
-      .call (renderGroupLabel);
-
-    function renderGroupLabel(selection) {
-      selection
-        .append("h1")
-        .attr("class", LABEL_CSS_CLASS)
         .html(function(d) {
-          return _chart.keyAccessor()(d);
+          return _htmlGroup(d);
         });
     }
 
@@ -133,6 +131,11 @@ chart.html(function (d) { return "<div class='item "+data.exampleCategory+"'>"+d
     return _chart;
   };
 
+  _chart.htmlGroup = function(_) {
+    if (!arguments.length) return _htmlGroup;
+    _htmlGroup = _;
+    return _chart;
+  };
   /**
 #### .sortBy([sortByFunction])
 Get or set sort-by function. This function works as a value accessor at item level and returns a particular field to be sorted
