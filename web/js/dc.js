@@ -3273,9 +3273,10 @@ dc.pieChart = function (parent, chartGroup) {
             .attr("d", function (d, i) {
                 return safeArc(d, i, arc);
             });
-        slicePath.transition()
-            .duration(_chart.transitionDuration())
-            .attrTween("d", tweenPie);
+
+        dc.transition(slicePath, _chart.transitionDuration(), function (s) {
+            s.attrTween("d", tweenPie);
+        });
     }
 
     function createTitles(slicesEnter) {
