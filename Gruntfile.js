@@ -238,6 +238,7 @@ module.exports = function (grunt) {
                     grunt.log.error("Failed to open stock example.");
                 } else if (fixtureStr !== pageStr) {
                     grunt.log.error("Failed comparison to stock example.");
+                    grunt.log.error("If these changes are intentional, please run `grunt update-stock-example` to overwrite the fixture.");
                     if (option === "diff") {
                         var jsdiff = require("diff");
                         var diff = jsdiff.diffLines(fixtureStr, pageStr);
