@@ -1,7 +1,9 @@
 module.exports = function (grunt) {
     'use strict';
-    var jsFiles = module.exports.jsFiles,
-    output = {
+
+    var jsFiles = module.exports.jsFiles;
+
+    var output = {
       js: '<%= pkg.name %>.js',
       jsmin: '<%= pkg.name %>.min.js',
       map: '<%= pkg.name %>.min.js.map'
@@ -247,6 +249,53 @@ module.exports = function (grunt) {
         grunt.file.write(destFile, "# DC API\n" + toc +"\n"+ source);
         grunt.log.writeln('Added TOC to "' + destFile + '".');
     });
+    grunt.registerTask('test-stock-example', 'Test a new rendering of the stock example web page against a baseline rendering', function () {
+        var phantomjs = require('grunt-lib-phantomjs').init(grunt);
+
+        phantomjs.on('done', function(pageStr) {
+            require("fs").readFile(__dirname + '/spec/helpers/rendered-stock-fixture.html', function (err, data) {
+                if (err) {
+                    grunt.log.error("Failed to open stock example.");
+                } else if (data.toString() !== pageStr) {
+                    grunt.log.error("Failed comparison to stock example.");
+                } else {
+                    grunt.log.writeln("Passed comparison to stock example.");
+                }
+                phantomjs.halt();
+            });
+        });
+
+        var done = this.async();
+        phantomjs.spawn('web/index.html', {
+            options: {
+                inject: __dirname + "/spec/helpers/inject-serializer.js"
+            },
+            done: done
+        });
+    });
+    grunt.registerTask('update-stock-example', 'Update the baseline stock example web page.', function () {
+        var phantomjs = require('grunt-lib-phantomjs').init(grunt);
+
+        phantomjs.on('done', function(pageStr) {
+            require("fs").writeFile(__dirname + '/spec/helpers/rendered-stock-fixture.html', pageStr, function (err) {
+                if (err) {
+                    grunt.log.error("Failed to overwrite stock example.");
+                } else {
+                    grunt.log.writeln("Overwrote stock example.");
+                }
+                phantomjs.halt();
+            });
+        });
+
+        var done = this.async();
+        phantomjs.spawn('web/index.html', {
+            options: {
+                inject: __dirname + "/spec/helpers/inject-serializer.js"
+            },
+            done: done
+        });
+    });
+
     // task aliases
     grunt.registerTask('build', ['concat', 'uglify', 'sed']);
     grunt.registerTask('docs', ['build', 'copy', 'emu', 'toc', 'markdown', 'docco']);

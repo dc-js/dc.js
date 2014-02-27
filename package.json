@@ -41,6 +41,7 @@
     "grunt-template-jasmine-istanbul": "https://github.com/sclevine/grunt-template-jasmine-istanbul/tarball/master",
     "grunt-docco2": "~0.2.0",
     "grunt-gh-pages": "~0.8.0",
+    "grunt-lib-phantomjs": "~0.5.0",
     "grunt-markdown": "https://github.com/willkan/grunt-markdown/tarball/master",
     "grunt-sed": "~0.1.1",
     "grunt-shell": "~0.5.0",
