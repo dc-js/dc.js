@@ -230,31 +230,79 @@ module.exports = function (grunt) {
     grunt.registerTask('test-stock-example', 'Test a new rendering of the stock example web page against a baseline rendering', function (option) {
         var phantomjs = require('grunt-lib-phantomjs').init(grunt);
         var passed = false;
+        require(__dirname + "/regression/difflib.js");
+
+        function diffPages(first, second) {
+            var firstLines = difflib.stringAsLines(first);
+            var secondLines = difflib.stringAsLines(second);
+            var seq = new difflib.SequenceMatcher(firstLines, secondLines);
+            var ops = seq.get_opcodes();
+            var diffs = [];
+
+            for (var i = 0; i < ops.length; i++) {
+                var op = ops[i];
+                var firstDiff = firstLines.slice(op[1], op[2]).join("\n");
+                var secondDiff = secondLines.slice(op[3], op[4]).join("\n");
+
+                if (op[0] === 'replace') {
+                    if (!onlyDiffersByDelta(firstDiff, secondDiff, 0.01)) {
+                        diffs.push("Replacement:");
+                        diffs.push(firstDiff.red);
+                        diffs.push(secondDiff.green);
+                    }
+                } else if (op[0] === 'insert') {
+                    diffs.push("Insertion:");
+                    diffs.push(secondDiff.green);
+                } else if (op[0] === 'delete') {
+                    diffs.push("Deletion:");
+                    diffs.push(firstDiff.red);
+                }
+            }
+
+            return diffs.join("\n\n");
+        }
+
+        function onlyDiffersByDelta(firstLine, secondLine, delta) {
+            var findNums = /"(?:[0-9]*\.[0-9]+|[0-9]+)"/g;
+
+            var firstNums = firstLine.match(findNums);
+            var secondNums = secondLine.match(findNums);
+
+            if (secondNums.length !== firstNums.length) {
+                return false;
+            }
+
+            for (var i = 0; i < firstNums.length; i++) {
+                var firstNum = +firstNums[i].substring(1, firstNums[i].length - 1);
+                var secondNum = +secondNums[i].substring(1, secondNums[i].length - 1);
+                if (Math.abs(firstNum - secondNum) > delta) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         phantomjs.on('rendered', function(pageStr) {
             require("fs").readFile(__dirname + '/regression/rendered-stock-fixture.html', function (err, data) {
                 var fixtureStr = data.toString();
+
                 if (err) {
                     grunt.log.error("Failed to open stock example.");
-                } else if (fixtureStr !== pageStr) {
-                    grunt.log.error("Failed comparison to stock example.");
-                    grunt.log.error("If these changes are intentional, please run `grunt update-stock-example` to overwrite the fixture.");
-                    if (option === "diff") {
-                        var jsdiff = require("diff");
-                        var diff = jsdiff.diffLines(fixtureStr, pageStr);
-                        diff.forEach(function (part) {
-                            if (part.added) {
-                                grunt.log.writeln(part.value.green);
-                            } else if (part.removed) {
-                                grunt.log.writeln(part.value.red);
-                            }
-                        });
-                    } else {
-                        grunt.log.error("Run `grunt test-stock-example:diff` to see differences.");
-                    }
                 } else {
-                    grunt.log.writeln("Passed comparison to stock example.");
-                    passed = true;
+                    var diffs = diffPages(fixtureStr, pageStr);
+                    if (diffs.length > 0) {
+                        grunt.log.error("Failed comparison to stock example.");
+                        grunt.log.error("If these changes are intentional, please run `grunt update-stock-example` to overwrite the fixture.");
+                        if (option === "diff") {
+                            grunt.log.writeln("\n" + diffs + "\n");
+                        } else {
+                            grunt.log.error("Run `grunt test-stock-example:diff` to see differences.");
+                        }
+                    } else {
+                        grunt.log.writeln("Passed comparison to stock example.");
+                        passed = true;
+                    }
                 }
                 phantomjs.halt();
             });
