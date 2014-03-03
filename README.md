@@ -45,6 +45,13 @@ dc.js$ npm install
 dc.js$ grunt test
 ```
 
+### Run example site on local web server
+```
+dc.js$ grunt run-examples:8888
+```
+After running this command go to [http://localhost:8888](http://localhost:8888) to see the main dc.js example page or
+[http://localhost:8888/examples](http://localhost:8888/examples) to see an index of additional examples.
+
 License
 --------------------
 
