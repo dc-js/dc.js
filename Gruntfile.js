@@ -263,7 +263,7 @@ module.exports = function (grunt) {
         }
 
         function onlyDiffersByDelta(firstLine, secondLine, delta) {
-            var findNums = /"(?:[0-9]*\.[0-9]+|[0-9]+)"/g;
+            var findNums = /(?:[0-9]*\.[0-9]+|[0-9]+)/g;
 
             var firstNums = firstLine.match(findNums);
             var secondNums = secondLine.match(findNums);
@@ -280,9 +280,7 @@ module.exports = function (grunt) {
             }
 
             for (var i = 0; i < firstNums.length; i++) {
-                var firstNum = +firstNums[i].substring(1, firstNums[i].length - 1);
-                var secondNum = +secondNums[i].substring(1, secondNums[i].length - 1);
-                if (Math.abs(firstNum - secondNum) > delta) {
+                if (Math.abs(+firstNums[i] - +secondNums[i]) > delta) {
                     return false;
                 }
             }
