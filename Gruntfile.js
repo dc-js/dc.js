@@ -268,6 +268,13 @@ module.exports = function (grunt) {
             var firstNums = firstLine.match(findNums);
             var secondNums = secondLine.match(findNums);
 
+            var firstWithoutNums = firstLine.replace(findNums, "NUMBER");
+            var secondWithoutNums = secondLine.replace(findNums, "NUMBER");
+
+            if (firstWithoutNums !== secondWithoutNums) {
+                return false;
+            }
+
             if (secondNums.length !== firstNums.length) {
                 return false;
             }
