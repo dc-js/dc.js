@@ -1,7 +1,9 @@
 module.exports = function (grunt) {
     'use strict';
-    var jsFiles = module.exports.jsFiles,
-    output = {
+
+    var jsFiles = module.exports.jsFiles;
+
+    var output = {
       js: '<%= pkg.name %>.js',
       jsmin: '<%= pkg.name %>.min.js',
       map: '<%= pkg.name %>.min.js.map'
@@ -43,7 +45,7 @@ module.exports = function (grunt) {
                 }
             },
             others: {
-                src: ['Gruntfile.js', 'test/**/*.js', 'spec/**/*.js', 'web/stock.js'],
+                src: ['Gruntfile.js', 'spec/**/*.js', 'web/stock.js'],
                 options: { '-W041': true }
             }
         },
@@ -53,7 +55,7 @@ module.exports = function (grunt) {
             tasks: ['build', 'copy']
           },
           tests: {
-            files: ['spec/**/*.js', 'test/**/*.js'],
+            files: ['src/**/*.js', 'spec/**/*.js'],
             tasks: ['test']
           },
           jasmine_runner: {
@@ -66,11 +68,6 @@ module.exports = function (grunt) {
               livereload: true
             }
           }
-        },
-        vows: {
-            tests: {
-                src: "test/row-chart-test.js test/web-test.js test/env-data.js test/env-xhr.js test/env.js"
-            }
         },
         jasmine: {
             specs: {
@@ -180,18 +177,6 @@ module.exports = function (grunt) {
                 command: 'git commit -a --amend --no-edit',
                 options: { stdout: true, failOnError: true }
             },
-            vows_coverage: {
-                command: "istanbul cover --print none --dir coverage/vows node_modules/vows/bin/vows",
-                options: {
-                  stdout: true
-                }
-            },
-            merge_coverage: {
-                command: "NODE_PATH=`npm -g root` node scripts/merge_coverage.js",
-                options: {
-                  stdout: true
-                }
-            },
             hooks: {
                 command: 'cp -n scripts/pre-commit.sh .git/hooks/pre-commit' +
                     ' || echo "Cowardly refusing to overwrite your existing git pre-commit hook."'
@@ -211,7 +196,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-markdown');
     grunt.loadNpmTasks('grunt-sed');
     grunt.loadNpmTasks('grunt-shell');
-    grunt.loadNpmTasks('grunt-vows');
 
     // custom tasks
     grunt.registerMultiTask('emu', 'Documentation extraction by emu.', function() {
@@ -226,10 +210,6 @@ module.exports = function (grunt) {
     grunt.registerTask('merge', 'Merge a github pull request.', function(pr) {
         grunt.log.writeln('Merge Github Pull Request #' + pr);
         grunt.task.run(['shell:merge:'+pr,'test','shell:amend']);
-    });
-    grunt.registerTask('web-baseline', 'Rerender the example baselines.', function() {
-        var render = require('./test/web-test');
-        render(grunt.log.writeln);
     });
     grunt.registerMultiTask('toc', 'Generate a markdown table of contents.', function() {
         var marked = require('marked'),
@@ -247,13 +227,19 @@ module.exports = function (grunt) {
         grunt.file.write(destFile, "# DC API\n" + toc +"\n"+ source);
         grunt.log.writeln('Added TOC to "' + destFile + '".');
     });
+    grunt.registerTask('test-stock-example', 'Test a new rendering of the stock example web page against a baseline rendering', function (option) {
+        require('./regression/stock-regression-test.js').testStockExample(this.async(), option === "diff");
+    });
+    grunt.registerTask('update-stock-example', 'Update the baseline stock example web page.', function () {
+        require('./regression/stock-regression-test.js').updateStockExample(this.async());
+    });
+
     // task aliases
     grunt.registerTask('build', ['concat', 'uglify', 'sed']);
     grunt.registerTask('docs', ['build', 'copy', 'emu', 'toc', 'markdown', 'docco']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
-    grunt.registerTask('test', ['docs', 'vows:tests', 'jasmine:specs', 'shell:hooks']);
-    grunt.registerTask('vows:coverage', ['shell:vows_coverage']);
-    grunt.registerTask('coverage', ['vows:coverage', 'jasmine:coverage', 'shell:merge_coverage']);
+    grunt.registerTask('test', ['docs', 'jasmine:specs', 'test-stock-example', 'shell:hooks']);
+    grunt.registerTask('coverage', ['jasmine:coverage']);
     grunt.registerTask('lint', ['build', 'jshint']);
     grunt.registerTask('default', ['build']);
 };
