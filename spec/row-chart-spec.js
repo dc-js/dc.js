@@ -1,19 +1,16 @@
 describe('dc.rowChart', function() {
     var id, chart;
     var data, dimension;
-    var positiveGroupHolder = {};
-    var negativeGroupHolder = {};
-    var mixedGroupHolder = {};
+    var positiveGroupHolder = { groupType: "positive signed" };
+    var negativeGroupHolder = { groupType: "negative signed" };
+    var mixedGroupHolder = { groupType: "mixed signed" };
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
         dimension = data.dimension(function(d) { return +d.value; });
 
-        positiveGroupHolder.groupType = "positive signed";
         positiveGroupHolder.group = dimension.group().reduceSum(function(d){return Math.abs(+d.nvalue);});
-        negativeGroupHolder.groupType = "negative signed";
         negativeGroupHolder.group = dimension.group().reduceSum(function(d){return -Math.abs(+d.nvalue);});
-        mixedGroupHolder.groupType = "mixed signed";
         mixedGroupHolder.group = dimension.group().reduceSum(function(d){return +d.nvalue;});
 
         id = 'row-chart';
