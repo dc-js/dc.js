@@ -120,9 +120,21 @@ describe('dc.rowChart', function() {
                     expect(chart.hasFilter()).toBeFalsy();
                 });
 
+                it('should not modify the underlying crossfilter group', function () {
+                    var oldGroupData = chart.group().all().slice(0);
+                    chart.ordering(dc.pluck("value"));
+                    chart.filter('66').render();
+
+                    expect(chart.group().all().length).toBe(oldGroupData.length);
+                    for (var i = 0; i < oldGroupData.length; i++) {
+                        expect(chart.group().all()[i]).toBe(oldGroupData[i]);
+                    }
+                });
+
                 describe('filtering a row', function () {
                     beforeEach(function () {
                         chart.filter('66');
+                        chart.render();
                     });
 
                     it('should apply a filter to the chart', function () {
@@ -152,6 +164,7 @@ describe('dc.rowChart', function() {
                     describe('removing filters', function () {
                         beforeEach(function () {
                             chart.filterAll();
+                            chart.render();
                         });
 
                         it('should remove highlighting', function () {

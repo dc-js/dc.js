@@ -749,10 +749,15 @@ dc.baseMixin = function (_chart) {
     };
 
     _chart._computeOrderedGroups = function(data) {
-        if (data.length <= 1)
-            return data;
-        if (!_orderSort) _orderSort = crossfilter.quicksort.by(_ordering);
-        return _orderSort(data,0,data.length);
+        var dataCopy = data.slice(0);
+
+        if (dataCopy.length <= 1)
+            return dataCopy;
+
+        if (!_orderSort)
+            _orderSort = crossfilter.quicksort.by(_ordering);
+
+        return _orderSort(dataCopy, 0, dataCopy.length);
     };
 
     /**
