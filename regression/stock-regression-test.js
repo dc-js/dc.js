@@ -72,6 +72,9 @@ module.exports = {
 };
 
 function diffPages(first, second) {
+    first = filterExceptions(first);
+    second = filterExceptions(second);
+
     var firstLines = difflib.stringAsLines(first);
     var secondLines = difflib.stringAsLines(second);
     var seq = new difflib.SequenceMatcher(firstLines, secondLines);
@@ -99,6 +102,13 @@ function diffPages(first, second) {
     }
 
     return diffs.join("\n\n");
+}
+
+// TODO: remove use of clientHeight in legend and remove this function
+function filterExceptions(fixtureStr) {
+    fixtureStr = fixtureStr.replace(/<text x="15" y="[0-9.]+">Monthly Index Move<\/text>/, "EXCEPTION");
+    fixtureStr = fixtureStr.replace(/<text x="15" y="[0-9.]+">Monthly Index Average<\/text>/, "EXCEPTION");
+    return fixtureStr;
 }
 
 function onlyDiffersByDelta(firstLine, secondLine, delta) {
