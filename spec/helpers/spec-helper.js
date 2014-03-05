@@ -5,6 +5,7 @@ beforeEach(function() {
 
 afterEach(function () {
     dc.deregisterAllCharts();
+    dc.renderlet(null);
     d3.selectAll("#test-content").remove();
     jasmine.clock().uninstall();
 });

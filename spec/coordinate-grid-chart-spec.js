@@ -1,3 +1,4 @@
+
 describe('dc.coordinateGridChart', function() {
     var chart, id;
     var data, dimension, group;

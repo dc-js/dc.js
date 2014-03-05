@@ -14,7 +14,7 @@ describe("dc.baseMixin", function () {
             .options({
                 dimension: dimension,
                 group: group,
-                transitionDuration: 0,
+                transitionDuration: 0
             });
     });
 
