@@ -72,9 +72,11 @@ module.exports = function (grunt) {
         jasmine: {
             specs: {
                 options: {
+                    display: "short",
+                    summary: false,
                     specs:  "spec/*-spec.js",
                     helpers: "spec/helpers/*.js",
-                    version: "2.0.0-rc5",
+                    version: "2.0.0",
                     keepRunner: true,
                     outfile: "web/jasmine-runner.html"
                 },
