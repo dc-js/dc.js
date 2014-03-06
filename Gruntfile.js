@@ -50,42 +50,48 @@ module.exports = function (grunt) {
             }
         },
         watch: {
-          scripts: {
-            files: ['src/**/*.js'],
-            tasks: ['build', 'copy']
-          },
-          tests: {
-            files: ['src/**/*.js', 'spec/**/*.js'],
-            tasks: ['test']
-          },
-          jasmine_runner: {
-            files: ['spec/**/*.js'],
-            tasks: ['jasmine:specs:build']
-          },
-          reload: {
-            files: ['dc.js', 'dc.css', 'web/js/dc.js', 'web/css/dc.css', 'dc.min.js'],
-            options: {
-              livereload: true
+            scripts: {
+                files: ['src/**/*.js'],
+                tasks: ['build', 'copy']
+            },
+            jasmine_runner: {
+                files: ['spec/**/*.js'],
+                tasks: ['jasmine:specs:build']
+            },
+            tests: {
+                files: ['src/**/*.js', 'spec/**/*.js'],
+                tasks: ['test']
+            },
+            reload: {
+                files: ['dc.js', 'dc.css', 'web/js/dc.js', 'web/css/dc.css', 'dc.min.js'],
+                options: {
+                  livereload: true
+                }
             }
-          }
+        },
+        connect: {
+            server: {
+                options: {
+                    port: 8888,
+                    base: '.'
+                }
+            }
         },
         jasmine: {
             specs: {
                 options: {
                     display: "short",
-                    summary: false,
                     specs:  "spec/*-spec.js",
                     helpers: "spec/helpers/*.js",
                     version: "2.0.0",
-                    keepRunner: true,
-                    outfile: "web/jasmine-runner.html"
+                    outfile: "spec/index.html"
                 },
-               src: [
+                src: [
                     "web/js/d3.js",
                     "web/js/crossfilter.js",
                     "web/js/colorbrewer.js",
                     "dc.js"
-               ]
+                ]
             },
             coverage:{
                 src: '<%= jasmine.specs.src %>',
@@ -188,6 +194,7 @@ module.exports = function (grunt) {
 
     // These plugins provide necessary tasks.
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -235,13 +242,23 @@ module.exports = function (grunt) {
     grunt.registerTask('update-stock-example', 'Update the baseline stock example web page.', function () {
         require('./regression/stock-regression-test.js').updateStockExample(this.async());
     });
+    grunt.registerTask('watch:jasmine', function () {
+        grunt.config('watch', {
+            options: { interrupt: true },
+            runner: grunt.config('watch').jasmine_runner,
+            scripts: grunt.config('watch').scripts
+        });
+        grunt.task.run('watch');
+    });
+
 
     // task aliases
     grunt.registerTask('build', ['concat', 'uglify', 'sed']);
     grunt.registerTask('docs', ['build', 'copy', 'emu', 'toc', 'markdown', 'docco']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
+    grunt.registerTask('server', ['docs', 'jasmine:specs:build', 'connect:server', 'watch:jasmine']);
     grunt.registerTask('test', ['docs', 'jasmine:specs', 'test-stock-example', 'shell:hooks']);
-    grunt.registerTask('coverage', ['jasmine:coverage']);
+    grunt.registerTask('coverage', ['docs', 'jasmine:coverage']);
     grunt.registerTask('lint', ['build', 'jshint']);
     grunt.registerTask('default', ['build']);
 };
