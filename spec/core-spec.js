@@ -132,7 +132,7 @@ describe('dc.core', function() {
     });
 
     describe('units', function() {
-        it('.integers', function() {
+        describe('.integers', function() {
             var result;
             beforeEach(function() {
                 result = dc.units.integers(0, 100);
@@ -142,7 +142,7 @@ describe('dc.core', function() {
             });
         });
 
-        it('.float', function() {
+        describe('.float', function() {
             var result;
             beforeEach(function() {
                 result = dc.units.fp.precision(0.001)(0.49999, 1.0);
@@ -152,7 +152,7 @@ describe('dc.core', function() {
             });
         });
 
-        it('.ordinal', function() {
+        describe('.ordinal', function() {
             var result;
             beforeEach(function() {
                 result = dc.units.ordinal("a", "d", ["a", "b", "c", "d"]);
@@ -164,7 +164,7 @@ describe('dc.core', function() {
     });
 
     describe('round', function() {
-        it('.floor', function() {
+        describe('.floor', function() {
             var result;
             beforeEach(function() {
                 result = dc.round.floor(0.33);

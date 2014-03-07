@@ -203,8 +203,6 @@ describe('dc.pieChart', function() {
             });
         });
         describe('slice selection', function() {
-            beforeEach(function() {
-            });
             it('on click function should be defined', function() {
                 expect(chart.selectAll("svg g g.pie-slice path").on("click") !== undefined).toBeTruthy();
             });
@@ -266,8 +264,6 @@ describe('dc.pieChart', function() {
                     var cls = d3.select(this).attr("class");
                     expect(cls === null || cls === "").toBeTruthy();
                 });
-            });
-            afterEach(function() {
             });
         });
         describe('filter through clicking', function() {
@@ -364,7 +360,7 @@ describe('dc.pieChart', function() {
                 .othersLabel("small");
             chart.render();
         });
-        it('with normal valueAccessor', function() {
+        describe('with normal valueAccessor', function() {
             beforeEach(function() {
                 chart.dimension(valueDimension).group(valueGroup)
                     .valueAccessor(dc.pluck('value'))

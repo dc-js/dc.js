@@ -40,7 +40,7 @@ module.exports = function (grunt) {
             source: {
                 src: ['src/**/*.js'],
                 options: {
-                    indent:4,
+                    indent: 4,
                     ignores: ['src/banner.js','src/footer.js','src/d3.box.js']
                 }
             },
@@ -111,6 +111,22 @@ module.exports = function (grunt) {
                             }
                         ]
                     }
+                }
+            }
+        },
+        'saucelabs-jasmine': {
+            all: {
+                options: {
+                    urls: ["http://localhost:8888/spec/"],
+                    tunnelTimeout: 5,
+                    build: process.env.TRAVIS_JOB_ID,
+                    concurrency: 3,
+                    browsers: [
+                        { browserName: "firefox", version: "25", platform: "linux" },
+                        { browserName: "safari", version: "6", platform: "OS X 10.8" },
+                        { browserName: "internet explorer", version: "10", platform: "WIN8" }
+                    ],
+                    testname: "dc.js"
                 }
             }
         },
@@ -202,6 +218,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-docco2');
     grunt.loadNpmTasks('grunt-gh-pages');
+    grunt.loadNpmTasks('grunt-saucelabs');
     grunt.loadNpmTasks('grunt-markdown');
     grunt.loadNpmTasks('grunt-sed');
     grunt.loadNpmTasks('grunt-shell');
@@ -251,7 +268,6 @@ module.exports = function (grunt) {
         grunt.task.run('watch');
     });
 
-
     // task aliases
     grunt.registerTask('build', ['concat', 'uglify', 'sed']);
     grunt.registerTask('docs', ['build', 'copy', 'emu', 'toc', 'markdown', 'docco']);
@@ -259,6 +275,7 @@ module.exports = function (grunt) {
     grunt.registerTask('server', ['docs', 'jasmine:specs:build', 'connect:server', 'watch:jasmine']);
     grunt.registerTask('test', ['docs', 'jasmine:specs', 'test-stock-example', 'shell:hooks']);
     grunt.registerTask('coverage', ['docs', 'jasmine:coverage']);
+    grunt.registerTask('ci', ['test', 'jasmine:specs:build', 'connect:server', 'saucelabs-jasmine']);
     grunt.registerTask('lint', ['build', 'jshint']);
     grunt.registerTask('default', ['build']);
 };
