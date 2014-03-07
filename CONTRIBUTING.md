@@ -12,10 +12,10 @@
 
 * Fork the repository
 * Make changes to the files in `src/` not dc.js
-* Add tests to `test/`. Feel free to create a new file if needed.
+* Add tests to `spec/`. Feel free to create a new file if needed.
 * Run `grunt test` and fix your patch or other tests as needed
 * Run `grunt lint` and fix your patch as needed
-* Commit your changes to `src/*` and `test/*` but not any build artifacts.  (Build artifacts include `dc.*js*`, `web/docs/*`, `web/js/*`)
+* Commit your changes to `src/*` and `spec/*` but not any build artifacts.  (Build artifacts include `dc.*js*`, `web/docs/*`, `web/js/*`)
 * Submit a pull request
 * If you merge master or another branch into your patchset, please rebase against master.
 * The DC maintainer team will review and build the artifacts when merging
@@ -28,16 +28,9 @@
 
 #### Testing Notes
 
-We are currently transitioning from vows/jsdom testing to jasmine/PhantomJS. New tests should
-be written in [jasmine](http://jasmine.github.io/2.0/introduction.html) (under the `spec` folder).
-
 Once you have run the tests once using `grunt test` or `grunt jasmine`, you can debug the tests in
 your favorite browser by opening `web/jasmine-runner.html`.  You can also run an individual test with
-`grunt jasmine --filter=<part-of-test-filename>`
-
-Changing existing vows test cases (under the `test` folder) to support smaller changes is fine. With vows tests, charts must set
-`.transitionDuration(0)` as the dom library used for testing
-[does not support](https://github.com/tmpvar/jsdom/issues/300) the SVG animation APIs.
+`grunt jasmine --filter=<part-of-test-filename>`.  Please use `.transitionDuration(0)` for all chart tests.
 
 # Merging Pull Requests
 
