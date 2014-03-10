@@ -13,8 +13,9 @@
 * Fork the repository
 * Make changes to the files in `src/` not dc.js
 * Add tests to `spec/`. Feel free to create a new file if needed.
-* Run `grunt test` and fix your patch or other tests as needed
-* Run `grunt lint` and fix your patch as needed
+* Run `grunt server` and go to http://localhost:8888/spec to develop your tests.
+* Run `grunt lint` to fix any final linting issues via jshint.
+* Run `grunt test` to confirm that all tests will pass on phantomjs.
 * Commit your changes to `src/*` and `spec/*` but not any build artifacts.  (Build artifacts include `dc.*js*`, `web/docs/*`, `web/js/*`)
 * Submit a pull request
 * If you merge master or another branch into your patchset, please rebase against master.
@@ -28,9 +29,8 @@
 
 #### Testing Notes
 
-Once you have run the tests once using `grunt test` or `grunt jasmine`, you can debug the tests in
-your favorite browser by opening `web/jasmine-runner.html`.  You can also run an individual test with
-`grunt jasmine --filter=<part-of-test-filename>`.  Please use `.transitionDuration(0)` for all chart tests.
+Running `grunt server` will host the jasmine specs at http://localhost:8888/spec.
+Please use `.transitionDuration(0)` for all chart tests.
 
 # Merging Pull Requests
 

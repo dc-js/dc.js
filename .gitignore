@@ -22,7 +22,7 @@ node_modules
 .grunt
 
 # jasmine spec runner
-web/jasmine-runner.html
+spec/index.html
 
 # coverage reports
 coverage

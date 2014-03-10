@@ -57,7 +57,7 @@ describe('dc.numberDisplay', function() {
         it('should have text value in child', function() {
             expect(chart.select("span.number-display").text()).toEqual("38.5");
         });
-        it('redraw', function() {
+        describe('redraw', function() {
             beforeEach(function() {
                 countryDimension.filterAll();
                 chart.redraw();
