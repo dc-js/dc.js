@@ -54,8 +54,8 @@ describe('dc.bubbleOverlay', function() {
         });
 
         it('should generate a correct translate for overlay groups', function() {
-            expect(d3.select(chart.selectAll("g.node")[0][0]).attr("transform")).toEqual("translate(100,120)");
-            expect(d3.select(chart.selectAll("g.node")[0][3]).attr("transform")).toEqual("translate(180,90)");
+            expect(d3.select(chart.selectAll("g.node")[0][0]).attr("transform")).toMatchTranslate(100, 120);
+            expect(d3.select(chart.selectAll("g.node")[0][3]).attr("transform")).toMatchTranslate(180, 90);
         });
 
         it('should generate correct radii for circles', function() {

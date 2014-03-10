@@ -377,7 +377,7 @@ describe('dc.pieChart', function() {
                     .toEqual([2,3,5]);
             });
             it('clicking others slice should filter all groups slices', function() {
-                var event = document.createEvent("SVGEvents");
+                var event = document.createEvent("MouseEvents");
                 event.initEvent("click",true,true);
                 chart.selectAll(".pie-slice path")[0][2].dispatchEvent(event);
                 expect(chart.filters()).toEqual(["22","55","66","small"]);

@@ -127,11 +127,16 @@
                     description: "DC.js jasmine tests",
                     passed: results.passed,
                     durationSec: results.durationSec,
-                    specs: [
-                        {
-                            description: "SEE SAUCE SCREENCAST"
-                        }
-                    ]
+                    suites: [],
+                    specs: [ {
+                        skipped: false,
+                        description: "SEE SAUCE SCREENCAST",
+                        failedCount: results.passed ? 0 : 1,
+                        durationSec: results.durationSec,
+                        totalCount: 1,
+                        passed: true,
+                        passedCount: results.passed ? 1 : 0
+                    } ]
                 }
             ];
             /////////////////////////////////////

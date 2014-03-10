@@ -123,7 +123,7 @@ module.exports = function (grunt) {
                     concurrency: 3,
                     browsers: [
                         { browserName: "firefox", version: "25", platform: "linux" },
-                        { browserName: "safari", version: "6", platform: "OS X 10.8" },
+                        { browserName: "safari", version: "7", platform: "OS X 10.9" },
                         { browserName: "internet explorer", version: "10", platform: "WIN8" }
                     ],
                     testname: "dc.js"
