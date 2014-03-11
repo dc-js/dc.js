@@ -29,7 +29,6 @@
     "d3": "3.x"
   },
   "devDependencies": {
-    "diff": "~1.0.8",
     "emu": "~0.0.2",
     "grunt": "~0.4.1",
     "grunt-cli": "~0.1.9",
