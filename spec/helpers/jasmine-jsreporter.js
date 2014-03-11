@@ -66,6 +66,9 @@
                 var specResult = suite.children[i].result;
                 childFailed = specResult.status === "failed";
 
+                // TEMPORARY PATCH FOR SAUCE LABS LENGTH ISSUES
+                if (!childFailed) continue;
+
                 suiteData.specs.push({
                     description : specResult.description,
                     durationSec : specResult.duration / 1000,
@@ -78,6 +81,10 @@
             } else if (suite.children[i] instanceof jasmine.Suite) {
                 var childSuiteData = getSuiteData(suite.children[i]);
                 childFailed = !childSuiteData.passed;
+
+                // TEMPORARY PATCH FOR SAUCE LABS LENGTH ISSUES
+                if (!childFailed) continue;
+
                 suiteData.suites.push(childSuiteData);
             }
 
@@ -120,26 +127,6 @@
             }
 
             results.durationSec = round(totalDuration, 4);
-
-            // PATCH FOR SAUCE LABS LENGTH ISSUES
-            results.suites = [
-                {
-                    description: "DC.js jasmine tests",
-                    passed: results.passed,
-                    durationSec: results.durationSec,
-                    suites: [],
-                    specs: [ {
-                        skipped: false,
-                        description: "SEE SAUCE SCREENCAST",
-                        failedCount: results.passed ? 0 : 1,
-                        durationSec: results.durationSec,
-                        totalCount: 1,
-                        passed: true,
-                        passedCount: results.passed ? 1 : 0
-                    } ]
-                }
-            ];
-            /////////////////////////////////////
 
             finalResults = results;
         }
