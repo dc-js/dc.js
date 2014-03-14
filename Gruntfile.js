@@ -84,7 +84,8 @@ module.exports = function (grunt) {
                     specs:  "spec/*-spec.js",
                     helpers: "spec/helpers/*.js",
                     version: "2.0.0",
-                    outfile: "spec/index.html"
+                    outfile: "spec/index.html",
+                    keepRunner: true
                 },
                 src: [
                     "web/js/d3.js",
