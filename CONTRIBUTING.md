@@ -49,6 +49,9 @@ Run these commands (or their approximation):
 # clean master branch
 git stash
 
+# update node modules that may be pulled into `web/`
+npm update
+
 # double check your aren't going to blow away local commits
 git fetch origin
 git checkout master
@@ -67,4 +70,4 @@ git diff origin/gh-pages master:web
 grunt web
 ```
 
-If needed, the baseline test for the demos can be rebuilt by running `grunt web-baseline`.
+If needed, the baseline test for the demos can be rebuilt by running `grunt update-stock-regression`.
