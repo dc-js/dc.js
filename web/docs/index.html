@@ -1115,6 +1115,16 @@ See the <a href="https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis">d3 axis
 chart<span class="variable">.xAxis</span>()<span class="variable">.tickFormat</span>(function(v) {<span class="keyword">return</span> v + <span class="string">"%"</span>;});
 <span class="comment">// customize x axis tick values</span>
 chart<span class="variable">.xAxis</span>()<span class="variable">.tickValues</span>([<span class="number">0</span>, <span class="number">100</span>, <span class="number">200</span>, <span class="number">300</span>]);</code></pre>
+<h4 id="-fixedbarheight-height-">.fixedBarHeight([height])</h4>
+<p>Get or set the fixed bar height. Default is [false] which will auto-scale bars.
+For example, if you want to fix the height for a specific number of bars (useful in TopN charts) 
+you could fix height as follows (where count = total number of bars in your TopN and gap is your vertical gap space).  </p>
+<pre><code class="lang-js"> <span class="comment">chart</span>.<span class="comment">fixedBarHeight(</span> <span class="comment">chartheight</span> <span class="literal">-</span> <span class="comment">(count</span> <span class="literal">+</span> <span class="comment">1)</span> <span class="comment">*</span> <span class="comment">gap</span> <span class="comment">/</span> <span class="comment">count);</code></pre>
+<h4 id="-fixedbarheight-height-">.fixedBarHeight([height])</h4>
+<p>Get or set the fixed bar height. Default is [false] which will auto-scale bars.
+For example, if you want to fix the height for a specific number of bars (useful in TopN charts) 
+you could fix height as follows (where count = total number of bars in your TopN and gap is your vertical gap space).  </p>
+<pre><code class="lang-js"> <span class="comment">chart</span>.<span class="comment">fixedBarHeight(</span> <span class="comment">chartheight</span> <span class="literal">-</span> <span class="comment">(count</span> <span class="literal">+</span> <span class="comment">1)</span> <span class="comment">*</span> <span class="comment">gap</span> <span class="comment">/</span> <span class="comment">count);</code></pre>
 <h4 id="-gap-gap-">.gap([gap])</h4>
 <p>Get or set the vertical gap space between rows on a particular row chart instance. Default gap is 5px;</p>
 <h4 id="-elasticx-boolean-">.elasticX([boolean])</h4>
