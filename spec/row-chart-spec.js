@@ -56,6 +56,20 @@ describe('dc.rowChart', function() {
         });
     });
 
+    describe('with a fixedBarHeight', function () {
+        beforeEach(function () {
+            chart.group(positiveGroupHolder.group);
+            chart.elasticX(false);
+            chart.x(d3.scale.log());
+            chart.fixedBarHeight(10);
+            chart.render();
+        });
+
+        it('should render fixed rect height', function () {
+            expect(chart.select('g.row rect').attr('height')).toBeWithinDelta(10, 0.0);
+        });
+    });
+
     function itShouldBehaveLikeARowChartWithGroup(groupHolder) {
         describe('for ' + groupHolder.groupType + ' data', function () {
             var group;
