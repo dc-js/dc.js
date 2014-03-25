@@ -87,11 +87,13 @@ dc.legend = function () {
         itemEnter.attr("transform", function(d, i) {
             if(_horizontal) {
                 var translateBy = "translate(" + _cumulativeLegendTextWidth + "," + row * legendItemHeight() + ")";
-                if ((_cumulativeLegendTextWidth + _itemWidth) >= _legendWidth) {
+                var itemWidth   = _itemWidth === "auto" ? this.getBBox().width + _gap : _itemWidth;
+
+                if ((_cumulativeLegendTextWidth + itemWidth) >= _legendWidth) {
                     ++row ;
                     _cumulativeLegendTextWidth = 0 ;
                 } else {
-                    _cumulativeLegendTextWidth += _itemWidth;
+                    _cumulativeLegendTextWidth += itemWidth;
                 }
                 return translateBy;
             }
