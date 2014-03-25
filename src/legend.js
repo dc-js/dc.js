@@ -22,7 +22,7 @@ dc.legend = function () {
         _gap = 5,
         _horizontal = false,
         _legendWidth = 560,
-        _itemWidth = 70;
+        _itemWidth = "auto";
 
     var _g;
 
