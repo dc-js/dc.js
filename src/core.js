@@ -60,6 +60,16 @@ dc.chartRegistry = function() {
             _chartMap[group].push(chart);
         },
 
+        deregister: function (chart, group) {
+            group = initializeChartGroup(group);
+            for (var i = 0; i < _chartMap[group].length; i++) {
+                if (_chartMap[group][i].anchorName() === chart.anchorName()) {
+                    _chartMap[group].splice(i, 1);
+                    break;
+                }
+            }
+        },
+
         clear: function(group) {
             if (group) {
                 delete _chartMap[group];
@@ -77,6 +87,10 @@ dc.chartRegistry = function() {
 
 dc.registerChart = function(chart, group) {
     dc.chartRegistry.register(chart, group);
+};
+
+dc.deregisterChart = function (chart, group) {
+    dc.chartRegistry.deregister(chart, group);
 };
 
 dc.hasChart = function(chart) {

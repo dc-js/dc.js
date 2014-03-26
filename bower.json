@@ -11,11 +11,10 @@
     "make",
     "package.json",
     "test",
-    "src",
-    "wiki"
+    "src"
   ],
   "dependencies": {
-    "d3": "~3.2.3",
-    "crossfilter": "~1.2.0"
+    "d3": "3.x",
+    "crossfilter": "1.x"
   }
 }

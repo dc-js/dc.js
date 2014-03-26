@@ -1,19 +1,20 @@
 describe("dc.baseMixin", function () {
-    var chart, dateDimension, dateValueGroup;
+    var chart, dimension, group;
+
     beforeEach(function () {
         var data = crossfilter(loadDateFixture());
-        dateDimension = data.dimension(function (d) {
+        dimension = data.dimension(function (d) {
             return d3.time.day(d.dd);
         });
-        dateValueGroup = dateDimension.group().reduceSum(function (d) {
+        group = dimension.group().reduceSum(function (d) {
             return d.value;
         });
 
         chart = dc.baseMixin({})
             .options({
-                dimension: dateDimension,
-                group: dateValueGroup,
-                transitionDuration: 0,
+                dimension: dimension,
+                group: group,
+                transitionDuration: 0
             });
     });
 
@@ -121,7 +122,7 @@ describe("dc.baseMixin", function () {
 
         it('should require dimension', function () {
             try {
-                dc.baseMixin({}).group(dateValueGroup).render();
+                dc.baseMixin({}).group(group).render();
                 throw new Error("That should've thrown");
             } catch (e) {
                 expect(e instanceof dc.errors.InvalidStateException).toBeTruthy();
@@ -130,7 +131,7 @@ describe("dc.baseMixin", function () {
 
         it('should require group', function () {
             try {
-                dc.baseMixin({}).dimension(dateDimension).render();
+                dc.baseMixin({}).dimension(dimension).render();
                 throw new Error("That should've thrown");
             } catch (e) {
                 expect(e instanceof dc.errors.InvalidStateException).toBeTruthy();
@@ -139,32 +140,41 @@ describe("dc.baseMixin", function () {
     });
 
     describe('anchoring chart to dom', function () {
-        var id = "ele";
+        var id;
+
+        beforeEach(function () {
+            id = "chart-id";
+        });
+
         describe('using a d3 node', function () {
-            var div;
-            describe('with an id', function () {
-                beforeEach(function () {
-                    div = d3.select("body").append("div").attr("id", id).node();
-                    chart.anchor(div);
-                });
+            var anchorDiv;
 
-                it('should return the node, when anchor is called', function () {
-                    expect(chart.anchor()).toEqual(div);
-                });
+            beforeEach(function () {
+                anchorDiv = d3.select("body").append("div").attr("id", id).node();
+                chart.anchor(anchorDiv);
+            });
 
-                it('should return the id, when anchorName is called', function () {
-                    expect(chart.anchorName()).toEqual(id);
-                });
+            it('should register the chart', function () {
+                expect(dc.hasChart(chart)).toBeTruthy();
+            });
+
+            it('should return the node, when anchor is called', function () {
+                expect(chart.anchor()).toEqual(anchorDiv);
+            });
+
+            it('should return the id, when anchorName is called', function () {
+                expect(chart.anchorName()).toEqual(id);
             });
 
             describe('without an id', function () {
                 beforeEach(function () {
-                    div = d3.select("body").append("div").attr("class", "no-id").node();
-                    chart.anchor(div);
+                    d3.select("#" + id).remove();
+                    anchorDiv = d3.select("body").append("div").attr("class", "no-id").node();
+                    chart.anchor(anchorDiv);
                 });
 
                 it('should return the node, when anchor is called', function () {
-                    expect(chart.anchor()).toEqual(div);
+                    expect(chart.anchor()).toEqual(anchorDiv);
                 });
 
                 it('should return a numeric string, when anchorName is called', function () {
@@ -178,6 +188,10 @@ describe("dc.baseMixin", function () {
             beforeEach(function () {
                 d3.select("body").append("div").attr("id", id);
                 chart.anchor('#' + id);
+            });
+
+            it('should add the dc chart class to its parent div', function () {
+                expect(chart.root().classed("dc-chart")).toBeTruthy();
             });
 
             it('should return the id selector when anchor is called', function () {

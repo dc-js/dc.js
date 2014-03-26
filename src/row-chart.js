@@ -250,6 +250,18 @@ dc.rowChart = function (parent, chartGroup) {
         return _chart;
     };
 
+    /**
+    #### .xAxis()
+    Get the x axis for the row chart instance.  Note: not settable for row charts.
+    See the [d3 axis object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis) documention for more information.
+    ```js
+    // customize x axis tick format
+    chart.xAxis().tickFormat(function(v) {return v + "%";});
+    // customize x axis tick values
+    chart.xAxis().tickValues([0, 100, 200, 300]);
+    ```
+
+    **/
     _chart.xAxis = function () {
         return _xAxis;
     };
