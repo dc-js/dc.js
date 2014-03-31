@@ -462,10 +462,10 @@ describe('dc.barChart', function() {
 
             it('should redraw the x-axis scale and ticks', function() {
                 chart.focus(null);
-                expect(nthXAxisText(0).text()).toBe("July");
-                expect(nthXAxisText(1).text()).toBe("2012");
-                expect(nthXAxisText(2).text()).toBe("February");
-                expect(nthXAxisText(3).text()).toBe("March");
+                expect(nthXAxisText(0).text()).toBe("2012");
+                expect(nthXAxisText(1).text()).toBe("February");
+                expect(nthXAxisText(2).text()).toBe("March");
+                expect(nthXAxisText(3).text()).toBe("April");
 
                 function nthXAxisText(n) {
                     return d3.select(chart.selectAll("g.x text")[0][n]);
