@@ -416,6 +416,7 @@ d3.csv("ndx.csv", function (data) {
         <!-- data rows will filled in here -->
     </div>
     */
+
     dc.dataTable(".dc-data-table")
         .dimension(dateDimension)
         // data table does not use crossfilter group but rather a closure
@@ -425,24 +426,12 @@ d3.csv("ndx.csv", function (data) {
             return d.dd.getFullYear() + "/" + format((d.dd.getMonth() + 1));
         })
         .size(10) // (optional) max number of records to be shown, :default = 25
-        // dynamic columns creation using an array of closures
-        .columns([
-            function (d) {
-                return d.date;
-            },
-            function (d) {
-                return numberFormat(d.open);
-            },
-            function (d) {
-                return numberFormat(d.close);
-            },
-            function (d) {
-                return numberFormat(d.close - d.open);
-            },
-            function (d) {
-                return d.volume;
-            }
-        ])
+        // 
+		// several ways to specify the columns	
+        //.columns(columnsOriginal())			// original, needs index.html to have thead/header/cols;  dynamic columns creation using an array of closures
+		//.columns(columnsWithMixedFormat1())	// remove thead/header/cols from index.html
+        .columns(columnsWithMixedFormat2())		// remove thead/header/cols from index.html
+
         // (optional) sort using the given field, :default = function(d){return d;}
         .sortBy(function (d) {
             return d.dd;
@@ -548,6 +537,74 @@ d3.csv("ndx.csv", function (data) {
     // or you can choose to redraw only those charts associated with a specific chart group
     dc.redrawAll("group");
     */
+
+
+	function columnHelper(cLabel, cFn)
+	{
+		var o = new Object();
+		o.label = cLabel;
+		o.fn = cFn;
+		return o; 
+	}
+	
+	function columnsOriginal()	// still supports original example
+	{
+		return [
+	            function (d) {
+	                return d.date;
+	            },
+	            function (d) {
+	                return numberFormat(d.open);
+	            },
+	            function (d) {
+	                return numberFormat(d.close);
+	            },
+	            function (d) {
+	                return numberFormat(d.close - d.open);
+	            },
+	            function (d) {
+	                return d.volume;
+	            }
+	        	];
+	}
+	
+	function columnsWithMixedFormat1()	// not all applications need formatting
+	{
+		return [
+			    "date",
+			    "open",
+			    "close",
+			    columnHelper("Change",
+					  function (d) {
+					      return numberFormat(d.close - d.open);
+					  }),
+			  	"volume"
+		        ];
+	}
+	
+	function columnsWithMixedFormat2()	// could be formatting during earlier step (load)
+	{
+		return [
+				columnHelper("Date",
+							  function (d) {
+							      return d.date;
+							  }),
+			    columnHelper("open",
+							  function (d) {
+		                		  return numberFormat(d.open);
+		            		  }),
+			    columnHelper("close",
+							  function (d) {
+		                		  return numberFormat(d.close);
+		            		  }),
+			    columnHelper("Change",
+							  function (d) {
+							      return numberFormat(d.close - d.open);
+							  }),
+				"volume"
+		        ];
+	}
+
 });
 
 //#### Version
