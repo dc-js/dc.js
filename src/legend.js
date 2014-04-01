@@ -22,7 +22,8 @@ dc.legend = function () {
         _gap = 5,
         _horizontal = false,
         _legendWidth = 560,
-        _itemWidth = "auto";
+        _itemWidth = 70,
+        _autoItemWidth = false;
 
     var _g;
 
@@ -87,7 +88,7 @@ dc.legend = function () {
         itemEnter.attr("transform", function(d, i) {
             if(_horizontal) {
                 var translateBy = "translate(" + _cumulativeLegendTextWidth + "," + row * legendItemHeight() + ")";
-                var itemWidth   = _itemWidth === "auto" ? this.getBBox().width + _gap : _itemWidth;
+                var itemWidth   = _autoItemWidth === true ? this.getBBox().width + _gap : _itemWidth;
 
                 if ((_cumulativeLegendTextWidth + itemWidth) >= _legendWidth) {
                     ++row ;
@@ -174,6 +175,17 @@ dc.legend = function () {
     _legend.itemWidth = function(_) {
         if (!arguments.length) return _itemWidth;
         _itemWidth = _;
+        return _legend;
+    };
+
+    /**
+    #### .autoItemWidth([value])
+    Turn automatic width for legend items on or off. If true, itemWidth() is ignored.
+    This setting takes into account gap(). Default value: false.
+    **/
+    _legend.autoItemWidth = function(_) {
+        if (!arguments.length) return _autoItemWidth;
+        _autoItemWidth = _;
         return _legend;
     };
 
