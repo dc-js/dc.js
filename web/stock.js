@@ -565,35 +565,35 @@ d3.csv("ndx.csv", function (data) {
 	            function (d) {
 	                return d.volume;
 	            }
-	        	];
+		];
 	}
 	
 	function columnsWithMixedFormat1()	// not all applications need formatting
 	{
 		return [
-			    "date",
+			    "date",	// d["date"], ie, a field accessor; capitalized automatically
 			    "open",
 			    "close",
-			    columnHelper("Change",
+			    columnHelper("Change", // desired format of column name "Change" when used as a label with a function.
 					  function (d) {
 					      return numberFormat(d.close - d.open);
 					  }),
-			  	"volume"
-		        ];
+			    "volume"	// d["volume"], ie, a field accessor; capitalized automatically
+		];
 	}
 	
 	function columnsWithMixedFormat2()	// could be formatting during earlier step (load)
 	{
 		return [
-				columnHelper("Date",
+			    columnHelper("Date",	// desired format of column name "Date" when used as a label with a function.
 							  function (d) {
 							      return d.date;
 							  }),
-			    columnHelper("open",
+			    columnHelper("Open",
 							  function (d) {
 		                		  return numberFormat(d.open);
 		            		  }),
-			    columnHelper("close",
+			    columnHelper("Close",
 							  function (d) {
 		                		  return numberFormat(d.close);
 		            		  }),
@@ -601,8 +601,8 @@ d3.csv("ndx.csv", function (data) {
 							  function (d) {
 							      return numberFormat(d.close - d.open);
 							  }),
-				"volume"
-		        ];
+			    "volume"	// d["volume"], ie, a field accessor; capitalized automatically
+		];
 	}
 
 });
