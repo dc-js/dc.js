@@ -91,7 +91,7 @@ describe("dc.legend", function() {
                 chart.render();
             });
 
-            it('itemAutoWidth should be false', function() {
+            it('autoItemWidth should be false', function() {
                 expect(chart.legend().autoItemWidth()).toBe(false);
             });
         });
@@ -101,7 +101,7 @@ describe("dc.legend", function() {
                 chart.legend(dc.legend().autoItemWidth(true).legendWidth(60).itemWidth(30));
                 chart.render();
             });
-            it('itemAutoWidth should be true', function() {
+            it('autoItemWidth should be true', function() {
                 expect(chart.legend().autoItemWidth()).toBe(true);
             });
         });
