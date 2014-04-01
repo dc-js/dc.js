@@ -4304,7 +4304,6 @@ dc.dataTable = function(parent, chartGroup) {
     var ROW_CSS_CLASS = "dc-table-row";
     var COLUMN_CSS_CLASS = "dc-table-column";
     var GROUP_CSS_CLASS = "dc-table-group";
-    var HEAD_CSS_CLASS = "dc-table-head";
 
     var _chart = dc.baseMixin({});
 
@@ -4323,46 +4322,7 @@ dc.dataTable = function(parent, chartGroup) {
         return _chart;
     };
 
-    function capitalizeString(s) {
-	return s.charAt(0).toUpperCase() + s.slice(1);
-    }
-    function columnString(f) {
-	var s = String(f);
-	var i1 = s.indexOf("return ");
-	if (i1>=0) {
-	    var i2 = s.lastIndexOf(";");
-	    if (i2>=0) {
-		s = s.substring(i1+7,i2);
-		var i3 = s.indexOf("numberFormat");
-		if (i3>=0)
-		    s = s.replace("numberFormat","");
-	    }
-	}
-	return s;
-    }
-
     function renderGroups() {
-
-		var bAllFunctions = true;
-        	_columns.forEach(function(f,i) {
-	    	bAllFunctions = bAllFunctions & (typeof f === 'function');
-		});
-
-		if (!bAllFunctions) {
-	        var headcols = _chart.root().selectAll("th")
-    	        .data( _columns );
-
-        	var headGroup = headcols
-            	.enter()
-            	.append("th");
-
-        	headGroup
-            	.attr("class", HEAD_CSS_CLASS)
-                	.html(function(d) {
-				//console.log("d " + d + " " + typeof d);
-				return ((typeof d === 'function') ? columnString(d) : ((typeof d === 'string') ? capitalizeString(d) : String(d.label) ));});
-		}
-
         var groups = _chart.root().selectAll("tbody")
             .data(nestEntries(), function(d) {
                 return _chart.keyAccessor()(d);
@@ -4409,16 +4369,10 @@ dc.dataTable = function(parent, chartGroup) {
             .append("tr")
             .attr("class", ROW_CSS_CLASS);
 
-		var bAllFunctions = true;
-        	_columns.forEach(function(f,i) {
-	    	bAllFunctions = bAllFunctions & (typeof f === 'function');
-		});
-
         _columns.forEach(function(f,i) {
             rowEnter.append("td")
                 .attr("class", COLUMN_CSS_CLASS + " _" + i)
-                .html(function(d) {
-					return ((bAllFunctions)? f(d) :((typeof f === 'function') ? f(d) : ((typeof f === 'string') ? d[f] : f.fn(d) )));});
+                .html(f);
         });
 
         rows.exit().remove();
