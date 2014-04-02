@@ -95,7 +95,7 @@ dc.dataTable = function(parent, chartGroup) {
         var rowGroup = groups
             .enter()
             .append("tbody");
-
+ 
         rowGroup
             .append("tr")
             .attr("class", GROUP_CSS_CLASS)
