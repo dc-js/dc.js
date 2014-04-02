@@ -991,6 +991,10 @@ dc.baseMixin = function (_chart) {
         dc.redrawAll(_chart.chartGroup());
     };
 
+    _chart.renderGroup = function () {
+        dc.renderAll(_chart.chartGroup());
+    };
+
     _chart._invokeFilteredListener = function (f) {
         if (f !== undefined) _listeners.filtered(_chart, f);
     };
@@ -2844,7 +2848,7 @@ dc.stackMixin = function (_chart) {
             if (_chart.isLegendableHidden(d)) _chart.showStack(d.name);
             else _chart.hideStack(d.name);
             //_chart.redraw();
-            dc.renderAll(_chart.chartGroup());
+            _chart.renderGroup();
         }
     };
 
@@ -3138,7 +3142,7 @@ dc.bubbleMixin = function (_chart) {
         var filter = d.key;
         dc.events.trigger(function () {
             _chart.filter(filter);
-            dc.redrawAll(_chart.chartGroup());
+            _chart.redrawGroup();
         });
     };
 
@@ -6358,7 +6362,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         if (_chart.brushIsEmpty(extent)) {
             dc.events.trigger(function () {
                 _chart.filter(null);
-                dc.redrawAll(_chart.chartGroup());
+                _chart.redrawGroup();
             });
 
             resizeFiltered(false);
@@ -6368,7 +6372,7 @@ dc.scatterPlot = function (parent, chartGroup) {
             dc.events.trigger(function () {
                 _chart.filter(null);
                 _chart.filter(ranged2DFilter);
-                dc.redrawAll(_chart.chartGroup());
+                _chart.redrawGroup();
             }, dc.constants.EVENT_DELAY);
 
             resizeFiltered(ranged2DFilter);
