@@ -277,6 +277,7 @@ module.exports = function (grunt) {
     grunt.registerTask('test', ['docs', 'jasmine:specs', 'test-stock-example', 'shell:hooks']);
     grunt.registerTask('coverage', ['docs', 'jasmine:coverage']);
     grunt.registerTask('ci', ['test', 'jasmine:specs:build', 'connect:server', 'saucelabs-jasmine']);
+    grunt.registerTask('ci-pull', ['test', 'jasmine:specs:build', 'connect:server']);
     grunt.registerTask('lint', ['build', 'jshint']);
     grunt.registerTask('default', ['build']);
 };
