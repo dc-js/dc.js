@@ -160,7 +160,7 @@ describe('dc.rowChart', function() {
                         chart.filter('22');
                         chart.render();
                         chart.selectAll('g.row rect').each(function (d) {
-                            if (d.key === '66' || d.key === '22') {
+                            if (d.key === 66 || d.key === 22) {
                                 expect(d3.select(this).classed('selected')).toBeTruthy();
                                 expect(d3.select(this).classed('deselected')).toBeFalsy();
                             } else {
