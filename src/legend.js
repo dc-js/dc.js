@@ -77,12 +77,28 @@ dc.legend = function () {
                 .attr("fill", function(d){return d?d.color:"blue";});
         }
 
-        itemEnter.append("text")
-                .text(dc.pluck('name'))
+        var texts = itemEnter.append("text")
+                .text('')
                 .attr("x", _itemHeight + LABEL_GAP)
                 .attr("y", function(){return _itemHeight / 2 + (this.clientHeight?this.clientHeight:13) / 2 - 2;});
 
-        var _cumulativeLegendTextWidth = 0;
+        var max_item_length = 0;
+        texts.each(function(d) {
+                    var words = d.name.split('\n');
+                    var el = d3.select(this);
+
+                    for (var j = 0; j < words.length; j++) {
+                        var tspan = el.append('tspan').text(words[j]);
+                        if (j > 0)
+                            tspan.attr('x', _itemHeight + LABEL_GAP).attr('dy', _itemHeight);
+                        if (words[j].length > max_item_length) max_item_length = words[j].length;
+                    }   
+                });
+
+        var _cumulativeLegendTextWidth = 0,
+            _cumulativeLegendTextHeight = 0,
+            _currentColumn = 0,
+            max_height = _parent.height();
         var row = 0;
         itemEnter.attr("transform", function(d, i) {
             if(_horizontal) {
@@ -96,7 +112,21 @@ dc.legend = function () {
                 return translateBy;
             }
             else {
-                return "translate(0," + i * legendItemHeight() + ")";
+                var lines = d.name.split('\n').length,
+                    my_height = lines * legendItemHeight(),
+                    x_offset, y_offset;
+
+                if ((_cumulativeLegendTextHeight + my_height) > 0.9*max_height) {
+                    _currentColumn += 1;
+                    _cumulativeLegendTextHeight = my_height;
+                } else {
+                    _cumulativeLegendTextHeight += my_height;
+                }
+
+                x_offset = (7 * max_item_length) * _currentColumn;
+                y_offset = _cumulativeLegendTextHeight - my_height;
+
+                return "translate(" + x_offset + "," + y_offset + ")";
             }
         });
     };
