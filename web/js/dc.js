@@ -3652,7 +3652,8 @@ dc.barChart = function (parent, chartGroup) {
         bars.enter()
             .append("rect")
             .attr("class", "bar")
-            .attr("fill", dc.pluck('data',_chart.getColor));
+            .attr("fill", dc.pluck('data',_chart.getColor))
+            .attr("height", 0);
 
         if (_chart.renderTitle())
             bars.append("title").text(dc.pluck('data',_chart.title(d.name)));
