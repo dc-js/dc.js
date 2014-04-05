@@ -543,15 +543,6 @@ d3.csv("ndx.csv", function (data) {
     dc.redrawAll("group");
     */
 
-
-    function columnHelper(cLabel, cFn)
-    {
-        var o = new Object();
-        o.label = cLabel;
-        o.fn = cFn;
-        return o; 
-    }
-    
     function columnsOriginal()    // still supports original example
     {
         return [
@@ -580,11 +571,11 @@ d3.csv("ndx.csv", function (data) {
                 "date",    // d["date"], ie, a field accessor; capitalized automatically
                 "open",    // ...
                 "close",   // ...
-                columnHelper("CHange", // desired format of column name "Change" when used as a label with a function.
-                                       // 'H' purposely capitalized for visual confirmation of sub
+                [ "CHange", // desired format of column name "Change" when used as a label with a function.
+                                                           // 'H' purposely capitalized for visual confirmation of sub
                       function (d) {
                           return numberFormat(d.close - d.open);
-                      }),
+                      }],
                 "volume"   // d["volume"], ie, a field accessor; capitalized automatically
         ];
     }
@@ -592,26 +583,26 @@ d3.csv("ndx.csv", function (data) {
     function columnsWithMixedFormat2()    // could be formatting during earlier step (load)
     {
         return [
-                columnHelper("Date",    // desired format of column name "Date" when used as a label with a function.
-                              function (d) {
-                                  return d.date;
-                              }),
-                columnHelper("Open",
-                              function (d) {
-                                  return numberFormat(d.open);
-                              }),
-                columnHelper("Close",
-                              function (d) {
-                                  return numberFormat(d.close);
-                              }),
-                columnHelper("ChAnge",        // 'A' purposely capitalized for visual confirmation of sub
-                              function (d) {
-                                  return numberFormat(d.close - d.open);
-                              }),
-                columnHelper("Volume",
-                              function (d) {
-                                  return d.volume;
-                              }),
+                [ "Date",    // desired format of column name "Date" when used as a label with a function.
+                      function (d) {
+                          return d.date;
+                      }],
+                [ "Open",
+                      function (d) {
+                          return numberFormat(d.open);
+                      }],
+                [ "Close",
+                      function (d) {
+                          return numberFormat(d.close);
+                      }],
+                [ "ChAnge",  // 'A' purposely capitalized for visual confirmation of sub
+                      function (d) {
+                          return numberFormat(d.close - d.open);
+                      }],
+                [ "Volume",
+                      function (d) {
+                          return d.volume;
+                      }],
         ];
     }
 

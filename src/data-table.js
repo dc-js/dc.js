@@ -51,7 +51,7 @@ dc.dataTable = function(parent, chartGroup) {
                 v(d) :                          // v as function
                 ((typeof v === 'string') ? 
                  d[v] :                         // v is field name string
-                 v.fn(d)                        // v is columnHelper Object, use fn
+                 v[1](d)                        // v is Object, use fn (element 2)
                 )
                );
     }
@@ -59,11 +59,11 @@ dc.dataTable = function(parent, chartGroup) {
     _chart._doColumnHeaderFormat = function(d) {
         // if 'function', convert to string representation
         // show a string capitalized
-        // if a columnHelper object then display it's label string as-is.
+        // if an object then display it's label string as-is.
         return (typeof d === 'function') ? 
                 _chart._doColumnHeaderFnToString(d) :
                 ((typeof d === 'string') ? 
-                 _chart._doColumnHeaderCapitalize(d) : String(d.label) );
+                 _chart._doColumnHeaderCapitalize(d) : String(d[0]) );
     }
 
     _chart._doColumnHeaderCapitalize = function(s) {
@@ -89,10 +89,13 @@ dc.dataTable = function(parent, chartGroup) {
 
     function renderGroups() {
 
-        // 'original' example uses all 'functions'. The 'columnHelper' returns an Object.
-        // The other option is a string representing the field. If all 'functions' are
-        // used, then don't remove/add a header, and leave the html alone. This preserves
-        // the functionality of earlier releases.
+        // The 'original' example uses all 'functions'.
+	// If all 'functions' are used, then don't remove/add a header, and leave
+	// the html alone. This preserves the functionality of earlier releases.
+	// A 2nd option is a string representing a field in the data. 
+	// A third option is to supply an Object such as an array of 'information', and
+	// supply your own _doColumnHeaderFormat and _doColumnValueFormat functions to
+	// create what you need.
         var bAllFunctions = true;
             _columns.forEach(function(f,i) {
             bAllFunctions = bAllFunctions & (typeof f === 'function');
@@ -217,49 +220,59 @@ dc.dataTable = function(parent, chartGroup) {
         ]);
     ```
 
-    This next example shows you can simply list the data (d) content directly without specifying it as a function.
-    Note the data element accessor name is capitalized for display in the table. You can also mix in functions as
-    desired or necessary, but you must use the 'columnHelper' to provide the desired column header label. Be aware
-    that fields without numberFormat specification will be displayed as stored in the data, unformatted.
+    This next example shows you can simply list the data (d) content directly without
+    specifying it as a function, except where necessary (ie, computed columns).  Note
+    the data element accessor name is capitalized when displayed in the table. You can
+    also mix in functions as desired or necessary, but you must use the
+   	 Object = [Label, Fn] method as shown below.
+    You may wish to override the following two functions, which are internally used to
+    translate the column information or function into a displayed header. The first one
+    is used on the simple "string" column specifier, the second is used to transform the
+    String(fn) into something displayable. For the Stock example, the function for Change
+    becomes a header of 'd.close - d.open'.
+       	_chart._doColumnHeaderCapitalize _chart._doColumnHeaderFnToString 
+    You may use your own Object definition, however you must then override
+    	_chart._doColumnHeaderFormat , _chart._doColumnValueFormat
+    Be aware that fields without numberFormat specification will be displayed just as
+    they are stored in the data, unformatted.
     ```js
         chart.columns([
                 "date",    // d["date"], ie, a field accessor; capitalized automatically
                 "open",    // ...
                 "close",   // ...
-                columnHelper("Change", // Desired format of column name "Change" when used as a label with a function.
-                                       // It does not need to be capitalized, format as you wish.
+                ["Change", // Specify an Object = [Label, Fn]
                       function (d) {
                           return numberFormat(d.close - d.open);
-                      }),
-                "volume"    // d["volume"], ie, a field accessor; capitalized automatically
+                      }],
+                "volume"   // d["volume"], ie, a field accessor; capitalized automatically
         ]);
     ```
 
-    A third example, where all fields are specified using columnHelper.
+    A third example, where all fields are specified using the Object = [Label, Fn] method.
 
 
     ```js
         chart.columns([
-                columnHelper("Date",
-                              function (d) {
-                                  return d.date;
-                              }),
-                columnHelper("Open",
-                              function (d) {
-                                  return numberFormat(d.open);
-                              }),
-                columnHelper("Close",
-                              function (d) {
-                                  return numberFormat(d.close);
-                              }),
-                columnHelper("Change",
-                              function (d) {
-                                  return numberFormat(d.close - d.open);
-                              }),
-                columnHelper("Volume",
-                              function (d) {
-                                  return d.volume;
-                              })
+                ["Date",   // Specify an Object = [Label, Fn]
+		      function (d) {
+			  return d.date;
+		      }],
+                ["Open",
+		      function (d) {
+			  return numberFormat(d.open);
+		      }],
+                ["Close",
+		      function (d) {
+			  return numberFormat(d.close);
+		      }],
+                ["Change",
+		      function (d) {
+			  return numberFormat(d.close - d.open);
+		      }],
+                ["Volume",
+		      function (d) {
+			  return d.volume;
+		      }]
         ]);
     ```
 
