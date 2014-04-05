@@ -46,6 +46,16 @@ dc.dataTable = function(parent, chartGroup) {
         return _chart;
     };
 
+    _chart._doColumnValueFormat = function(v,d) {
+        return ((typeof v === 'function') ?
+                v(d) :                          // v as function
+                ((typeof v === 'string') ? 
+                 d[v] :                         // v is field name string
+                 v.fn(d)                        // v is columnHelper Object, use fn
+                )
+               );
+    }
+
     _chart._doColumnHeaderFormat = function(d) {
         // if 'function', convert to string representation
         // show a string capitalized
@@ -151,14 +161,11 @@ dc.dataTable = function(parent, chartGroup) {
             .append("tr")
             .attr("class", ROW_CSS_CLASS);
 
-        _columns.forEach(function(f,i) {
+        _columns.forEach(function(v,i) {
             rowEnter.append("td")
                 .attr("class", COLUMN_CSS_CLASS + " _" + i)
                 .html(function(d) {
-                    return ((typeof f === 'function') ?
-                            f(d) : ((typeof f === 'string') ? 
-                                    d[f] : f.fn(d) )
-                           );
+                        return _chart._doColumnValueFormat(v,d);
                 });
         });
 
