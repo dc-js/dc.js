@@ -427,10 +427,15 @@ d3.csv("ndx.csv", function (data) {
         })
         .size(10) // (optional) max number of records to be shown, :default = 25
         // 
-		// several ways to specify the columns	
-        //.columns(columnsOriginal())			// original, needs index.html to have thead/header/cols;  dynamic columns creation using an array of closures
-		//.columns(columnsWithMixedFormat1())	// remove thead/header/cols from index.html
-        .columns(columnsWithMixedFormat2())		// remove thead/header/cols from index.html
+        // There are several ways to specify the columns, see data-table documentation.
+        // See further down in this file for the function definitions for columnsOriginal, etc.
+        .columns(columnsOriginal())             // original, requires index.html to have thead/header/cols;
+                                                // allows dynamic columns creation using an array of closures
+        //.columns(columnsWithMixedFormat1())   // causes removal of any thead/header/cols from index.html
+        //.columns(columnsWithMixedFormat2())   // causes removal of any thead/header/cols from index.html
+        //.columns(columnsWithMixedFormat3())   // causes removal of any thead/header/cols from index.html
+                                                // but mixed format with a function shows function definition
+                                                // as the column header (d.close - d.open)
 
         // (optional) sort using the given field, :default = function(d){return d;}
         .sortBy(function (d) {
@@ -539,72 +544,90 @@ d3.csv("ndx.csv", function (data) {
     */
 
 
-	function columnHelper(cLabel, cFn)
-	{
-		var o = new Object();
-		o.label = cLabel;
-		o.fn = cFn;
-		return o; 
-	}
-	
-	function columnsOriginal()	// still supports original example
-	{
-		return [
-	            function (d) {
-	                return d.date;
-	            },
-	            function (d) {
-	                return numberFormat(d.open);
-	            },
-	            function (d) {
-	                return numberFormat(d.close);
-	            },
-	            function (d) {
-	                return numberFormat(d.close - d.open);
-	            },
-	            function (d) {
-	                return d.volume;
-	            }
-		];
-	}
-	
-	function columnsWithMixedFormat1()	// not all applications need formatting
-	{
-		return [
-			    "date",	// d["date"], ie, a field accessor; capitalized automatically
-			    "open",
-			    "close",
-			    columnHelper("Change", // desired format of column name "Change" when used as a label with a function.
-					  function (d) {
-					      return numberFormat(d.close - d.open);
-					  }),
-			    "volume"	// d["volume"], ie, a field accessor; capitalized automatically
-		];
-	}
-	
-	function columnsWithMixedFormat2()	// could be formatting during earlier step (load)
-	{
-		return [
-			    columnHelper("Date",	// desired format of column name "Date" when used as a label with a function.
-							  function (d) {
-							      return d.date;
-							  }),
-			    columnHelper("Open",
-							  function (d) {
-		                		  return numberFormat(d.open);
-		            		  }),
-			    columnHelper("Close",
-							  function (d) {
-		                		  return numberFormat(d.close);
-		            		  }),
-			    columnHelper("Change",
-							  function (d) {
-							      return numberFormat(d.close - d.open);
-							  }),
-			    "volume"	// d["volume"], ie, a field accessor; capitalized automatically
-		];
-	}
+    function columnHelper(cLabel, cFn)
+    {
+        var o = new Object();
+        o.label = cLabel;
+        o.fn = cFn;
+        return o; 
+    }
+    
+    function columnsOriginal()    // still supports original example
+    {
+        return [
+                function (d) {
+                    return d.date;
+                },
+                function (d) {
+                    return numberFormat(d.open);
+                },
+                function (d) {
+                    return numberFormat(d.close);
+                },
+                function (d) {
+                    return numberFormat(d.close - d.open);
+                },
+                function (d) {
+                    return d.volume;
+                }
+        ];
+    }
+    
+    function columnsWithMixedFormat1()    // not all applications need formatting, but note in the stock example
+                                          // that $ values with no cents will display as 2625 instead of 2625.00.
+    {
+        return [
+                "date",    // d["date"], ie, a field accessor; capitalized automatically
+                "open",    // ...
+                "close",   // ...
+                columnHelper("CHange", // desired format of column name "Change" when used as a label with a function.
+                                       // 'H' purposely capitalized for visual confirmation of sub
+                      function (d) {
+                          return numberFormat(d.close - d.open);
+                      }),
+                "volume"   // d["volume"], ie, a field accessor; capitalized automatically
+        ];
+    }
+    
+    function columnsWithMixedFormat2()    // could be formatting during earlier step (load)
+    {
+        return [
+                columnHelper("Date",    // desired format of column name "Date" when used as a label with a function.
+                              function (d) {
+                                  return d.date;
+                              }),
+                columnHelper("Open",
+                              function (d) {
+                                  return numberFormat(d.open);
+                              }),
+                columnHelper("Close",
+                              function (d) {
+                                  return numberFormat(d.close);
+                              }),
+                columnHelper("ChAnge",        // 'A' purposely capitalized for visual confirmation of sub
+                              function (d) {
+                                  return numberFormat(d.close - d.open);
+                              }),
+                columnHelper("Volume",
+                              function (d) {
+                                  return d.volume;
+                              }),
+        ];
+    }
 
+    function columnsWithMixedFormat3()    // Another example, where a function is used.
+                                          // Causes column header to be '(d.close - d.open)'
+    {
+        return [
+                "date",    // d["date"], ie, a field accessor; capitalized automatically
+                "open",    // ...
+                "close",   // ...
+                function (d) {
+                    return numberFormat(d.close - d.open);
+                },
+                "volume"   // d["volume"], ie, a field accessor; capitalized automatically
+        ];
+    }
 });
 
 //#### Version

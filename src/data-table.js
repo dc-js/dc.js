@@ -39,7 +39,6 @@ dc.dataTable = function(parent, chartGroup) {
     var _order = d3.ascending;
 
     _chart._doRender = function() {
-        _chart.selectAll("th").remove();
         _chart.selectAll("tbody").remove();
 
         renderRows(renderGroups());
@@ -47,45 +46,64 @@ dc.dataTable = function(parent, chartGroup) {
         return _chart;
     };
 
-    function capitalizeString(s) {
-	return s.charAt(0).toUpperCase() + s.slice(1);
+    _chart._doColumnHeaderFormat = function(d) {
+        // if 'function', convert to string representation
+        // show a string capitalized
+        // if a columnHelper object then display it's label string as-is.
+        return (typeof d === 'function') ? 
+                _chart._doColumnHeaderFnToString(d) :
+                ((typeof d === 'string') ? 
+                 _chart._doColumnHeaderCapitalize(d) : String(d.label) );
     }
-    function columnString(f) {
-	var s = String(f);
-	var i1 = s.indexOf("return ");
-	if (i1>=0) {
-	    var i2 = s.lastIndexOf(";");
-	    if (i2>=0) {
-		s = s.substring(i1+7,i2);
-		var i3 = s.indexOf("numberFormat");
-		if (i3>=0)
-		    s = s.replace("numberFormat","");
-	    }
-	}
-	return s;
+
+    _chart._doColumnHeaderCapitalize = function(s) {
+        // capitalize
+        return s.charAt(0).toUpperCase() + s.slice(1);
+    }
+
+    _chart._doColumnHeaderFnToString = function(f) {
+        // columnString(f) {
+        var s = String(f);
+        var i1 = s.indexOf("return ");
+        if (i1>=0) {
+            var i2 = s.lastIndexOf(";");
+            if (i2>=0) {
+                s = s.substring(i1+7,i2);
+                var i3 = s.indexOf("numberFormat");
+                if (i3>=0)
+                    s = s.replace("numberFormat","");
+            }
+        }
+        return s;
     }
 
     function renderGroups() {
 
-		var bAllFunctions = true;
-        	_columns.forEach(function(f,i) {
-	    	bAllFunctions = bAllFunctions & (typeof f === 'function');
-		});
+        // 'original' example uses all 'functions'. The 'columnHelper' returns an Object.
+        // The other option is a string representing the field. If all 'functions' are
+        // used, then don't remove/add a header, and leave the html alone. This preserves
+        // the functionality of earlier releases.
+        var bAllFunctions = true;
+            _columns.forEach(function(f,i) {
+            bAllFunctions = bAllFunctions & (typeof f === 'function');
+        });
 
-		if (!bAllFunctions) {
-	        var headcols = _chart.root().selectAll("th")
-    	        .data( _columns );
+        if (!bAllFunctions) {
+            _chart.selectAll("th").remove();
+            var headcols = _chart.root().selectAll("th")
+                .data( _columns );
 
-        	var headGroup = headcols
-            	.enter()
-            	.append("th");
+            var headGroup = headcols
+                .enter()
+                .append("th");
 
-        	headGroup
-            	.attr("class", HEAD_CSS_CLASS)
-                	.html(function(d) {
-				//console.log("d " + d + " " + typeof d);
-				return ((typeof d === 'function') ? columnString(d) : ((typeof d === 'string') ? capitalizeString(d) : String(d.label) ));});
-		}
+            headGroup
+                .attr("class", HEAD_CSS_CLASS)
+                    .html(function(d) {
+                        return (_chart._doColumnHeaderFormat(d));
+
+                    });
+        }
 
         var groups = _chart.root().selectAll("tbody")
             .data(nestEntries(), function(d) {
@@ -133,16 +151,15 @@ dc.dataTable = function(parent, chartGroup) {
             .append("tr")
             .attr("class", ROW_CSS_CLASS);
 
-		var bAllFunctions = true;
-        	_columns.forEach(function(f,i) {
-	    	bAllFunctions = bAllFunctions & (typeof f === 'function');
-		});
-
         _columns.forEach(function(f,i) {
             rowEnter.append("td")
                 .attr("class", COLUMN_CSS_CLASS + " _" + i)
                 .html(function(d) {
-					return ((bAllFunctions)? f(d) :((typeof f === 'function') ? f(d) : ((typeof f === 'string') ? d[f] : f.fn(d) )));});
+                    return ((typeof f === 'function') ?
+                            f(d) : ((typeof f === 'string') ? 
+                                    d[f] : f.fn(d) )
+                           );
+                });
         });
 
         rows.exit().remove();
@@ -167,9 +184,11 @@ dc.dataTable = function(parent, chartGroup) {
 
     /**
     #### .columns([columnFunctionArray])
-    Get or set column functions. Data table widget uses an array of functions to generate dynamic columns. Column functions are
+    Get or set column functions. Data table widget now supports several methods of specifying the columns to display.
+    The original method, first shown below, uses an array of functions to generate dynamic columns. Column functions are
     simple javascript function with only one input argument d which represents a row in the data set, and the return value of
-    these functions will be used directly to generate table content for each cell.
+    these functions will be used directly to generate table content for each cell. However, this method requires the .html
+    table entry to have a fixed set of column headers.
 
     ```js
         chart.columns([
@@ -188,6 +207,52 @@ dc.dataTable = function(parent, chartGroup) {
             function(d) {
                 return d.volume;
             }
+        ]);
+    ```
+
+    This next example shows you can simply list the data (d) content directly without specifying it as a function.
+    Note the data element accessor name is capitalized for display in the table. You can also mix in functions as
+    desired or necessary, but you must use the 'columnHelper' to provide the desired column header label. Be aware
+    that fields without numberFormat specification will be displayed as stored in the data, unformatted.
+    ```js
+        chart.columns([
+                "date",    // d["date"], ie, a field accessor; capitalized automatically
+                "open",    // ...
+                "close",   // ...
+                columnHelper("Change", // Desired format of column name "Change" when used as a label with a function.
+                                       // It does not need to be capitalized, format as you wish.
+                      function (d) {
+                          return numberFormat(d.close - d.open);
+                      }),
+                "volume"    // d["volume"], ie, a field accessor; capitalized automatically
+        ]);
+    ```
+
+    A third example, where all fields are specified using columnHelper.
+
+
+    ```js
+        chart.columns([
+                columnHelper("Date",
+                              function (d) {
+                                  return d.date;
+                              }),
+                columnHelper("Open",
+                              function (d) {
+                                  return numberFormat(d.open);
+                              }),
+                columnHelper("Close",
+                              function (d) {
+                                  return numberFormat(d.close);
+                              }),
+                columnHelper("Change",
+                              function (d) {
+                                  return numberFormat(d.close - d.open);
+                              }),
+                columnHelper("Volume",
+                              function (d) {
+                                  return d.volume;
+                              })
         ]);
     ```
 
