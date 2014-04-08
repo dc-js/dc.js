@@ -5902,12 +5902,12 @@ dc.rowChart = function (parent, chartGroup) {
     _chart.xAxis = function () {
         return _xAxis;
     };
-    
+
     /**
     #### .fixedBarHeight([height])
     Get or set the fixed bar height. Default is [false] which will auto-scale bars.
-    For example, if you want to fix the height for a specific number of bars (useful in TopN charts) 
-    you could fix height as follows (where count = total number of bars in your TopN and gap is your vertical gap space).  
+    For example, if you want to fix the height for a specific number of bars (useful in TopN charts)
+    you could fix height as follows (where count = total number of bars in your TopN and gap is your vertical gap space).
     ```js
      chart.fixedBarHeight( chartheight - (count + 1) * gap / count);
     ```
@@ -5917,21 +5917,6 @@ dc.rowChart = function (parent, chartGroup) {
         _fixedBarHeight = g;
         return _chart;
     };
-
-    /**
-    #### .fixedBarHeight([height])
-    Get or set the fixed bar height. Default is [false] which will auto-scale bars.
-    For example, if you want to fix the height for a specific number of bars (useful in TopN charts) 
-    you could fix height as follows (where count = total number of bars in your TopN and gap is your vertical gap space).  
-    ```js
-     chart.fixedBarHeight( chartheight - (count + 1) * gap / count);
-    ```
-    **/
-    _chart.fixedBarHeight = function (g) {
-        if (!arguments.length) return _fixedBarHeight;
-        _fixedBarHeight = g;
-        return _chart;
-    };    
 
     /**
     #### .gap([gap])

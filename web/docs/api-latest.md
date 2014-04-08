@@ -1338,16 +1338,8 @@ chart.xAxis().tickValues([0, 100, 200, 300]);
 
 #### .fixedBarHeight([height])
 Get or set the fixed bar height. Default is [false] which will auto-scale bars.
-For example, if you want to fix the height for a specific number of bars (useful in TopN charts) 
-you could fix height as follows (where count = total number of bars in your TopN and gap is your vertical gap space).  
-```js
- chart.fixedBarHeight( chartheight - (count + 1) * gap / count);
-```
-
-#### .fixedBarHeight([height])
-Get or set the fixed bar height. Default is [false] which will auto-scale bars.
-For example, if you want to fix the height for a specific number of bars (useful in TopN charts) 
-you could fix height as follows (where count = total number of bars in your TopN and gap is your vertical gap space).  
+For example, if you want to fix the height for a specific number of bars (useful in TopN charts)
+you could fix height as follows (where count = total number of bars in your TopN and gap is your vertical gap space).
 ```js
  chart.fixedBarHeight( chartheight - (count + 1) * gap / count);
 ```
