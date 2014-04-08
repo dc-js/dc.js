@@ -991,10 +991,6 @@ dc.baseMixin = function (_chart) {
         dc.redrawAll(_chart.chartGroup());
     };
 
-    _chart.renderGroup = function () {
-        dc.renderAll(_chart.chartGroup());
-    };
-
     _chart._invokeFilteredListener = function (f) {
         if (f !== undefined) _listeners.filtered(_chart, f);
     };
@@ -2848,7 +2844,7 @@ dc.stackMixin = function (_chart) {
             if (_chart.isLegendableHidden(d)) _chart.showStack(d.name);
             else _chart.hideStack(d.name);
             //_chart.redraw();
-            _chart.renderGroup();
+            dc.renderAll(_chart.chartGroup());
         }
     };
 
@@ -3142,7 +3138,7 @@ dc.bubbleMixin = function (_chart) {
         var filter = d.key;
         dc.events.trigger(function () {
             _chart.filter(filter);
-            _chart.redrawGroup();
+            dc.redrawAll(_chart.chartGroup());
         });
     };
 
@@ -3656,7 +3652,8 @@ dc.barChart = function (parent, chartGroup) {
         bars.enter()
             .append("rect")
             .attr("class", "bar")
-            .attr("fill", dc.pluck('data',_chart.getColor));
+            .attr("fill", dc.pluck('data',_chart.getColor))
+            .attr("height", 0);
 
         if (_chart.renderTitle())
             bars.append("title").text(dc.pluck('data',_chart.title(d.name)));
@@ -5905,12 +5902,12 @@ dc.rowChart = function (parent, chartGroup) {
     _chart.xAxis = function () {
         return _xAxis;
     };
-    
+
     /**
     #### .fixedBarHeight([height])
     Get or set the fixed bar height. Default is [false] which will auto-scale bars.
-    For example, if you want to fix the height for a specific number of bars (useful in TopN charts) 
-    you could fix height as follows (where count = total number of bars in your TopN and gap is your vertical gap space).  
+    For example, if you want to fix the height for a specific number of bars (useful in TopN charts)
+    you could fix height as follows (where count = total number of bars in your TopN and gap is your vertical gap space).
     ```js
      chart.fixedBarHeight( chartheight - (count + 1) * gap / count);
     ```
@@ -5920,21 +5917,6 @@ dc.rowChart = function (parent, chartGroup) {
         _fixedBarHeight = g;
         return _chart;
     };
-
-    /**
-    #### .fixedBarHeight([height])
-    Get or set the fixed bar height. Default is [false] which will auto-scale bars.
-    For example, if you want to fix the height for a specific number of bars (useful in TopN charts) 
-    you could fix height as follows (where count = total number of bars in your TopN and gap is your vertical gap space).  
-    ```js
-     chart.fixedBarHeight( chartheight - (count + 1) * gap / count);
-    ```
-    **/
-    _chart.fixedBarHeight = function (g) {
-        if (!arguments.length) return _fixedBarHeight;
-        _fixedBarHeight = g;
-        return _chart;
-    };    
 
     /**
     #### .gap([gap])
@@ -6362,7 +6344,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         if (_chart.brushIsEmpty(extent)) {
             dc.events.trigger(function () {
                 _chart.filter(null);
-                _chart.redrawGroup();
+                dc.redrawAll(_chart.chartGroup());
             });
 
             resizeFiltered(false);
@@ -6372,7 +6354,7 @@ dc.scatterPlot = function (parent, chartGroup) {
             dc.events.trigger(function () {
                 _chart.filter(null);
                 _chart.filter(ranged2DFilter);
-                _chart.redrawGroup();
+                dc.redrawAll(_chart.chartGroup());
             }, dc.constants.EVENT_DELAY);
 
             resizeFiltered(ranged2DFilter);
