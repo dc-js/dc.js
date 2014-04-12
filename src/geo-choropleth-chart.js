@@ -174,11 +174,39 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
     _chart._doRedraw = function () {
         for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
-            plotData(layerIndex);
-            if (_projectionFlag) {
-                _chart.svg().selectAll('g.' + geoJson(layerIndex).name + ' path').attr('d', _geoPath);
+            // reproject
+            if(_projectionFlag) {
+                _chart.svg().selectAll("g." + geoJson(layerIndex).name + " path").attr("d", _geoPath);
             }
+
+            // add missing layers
+            if(_chart.svg().selectAll("g.layer" + layerIndex).empty()) {
+                var regions = _chart.layers().append("g")
+                    .attr("class", "layer" + layerIndex);
+
+                var regionG = regions.selectAll("g." + geoJson(layerIndex).name)
+                    .data(geoJson(layerIndex).data)
+                    .enter()
+                    .append("g")
+                    .attr("class", geoJson(layerIndex).name);
+
+                regionG
+                    .append("path")
+                    .attr("fill", "white")
+                    .attr("d", _geoPath);
+
+                regionG.append("title");
+            }
+
+            plotData(layerIndex);
         }
+
+        // remove useless layers
+        while (!_chart.svg().selectAll("g.layer" + layerIndex).empty()) {
+            _chart.svg().selectAll("g.layer" + layerIndex).remove();
+            layerIndex++;
+        }
+
         _projectionFlag = false;
     };
 
