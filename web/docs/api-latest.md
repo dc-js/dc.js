@@ -20,6 +20,7 @@
   * [Bubble Overlay Chart](#bubble-overlay-chart)
   * [Row Chart](#row-chart)
   * [Legend](#legend)
+  * [HTML Legend](#html-legend)
   * [Scatter Plot](#scatter-plot)
   * [Number Display Widget](#number-display-widget)
   * [Heat Map](#heat-map)
@@ -1391,6 +1392,19 @@ Maximum width for horizontal legend. Default value: 560.
 
 #### .itemWidth([value])
 legendItem width for horizontal legend. Default value: 70.
+
+## HTML Legend
+HTML Legend is an attachable widget that can be added to other dc charts to
+render legend labels. Unlike the [Legend](#) mixin, which generated legends
+as SVG elements, HTML Legend generated HTML table based legends, which are
+easier to manipulate with CSS.
+
+```js
+chart.legend(dc.htmlLegend().container('#legend'))
+```
+
+#### .container([selector])
+Set the container selector for the legend widget. Required.
 
 ## Scatter Plot
 

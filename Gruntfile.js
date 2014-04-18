@@ -309,6 +309,7 @@ module.exports.jsFiles = [
     "src/bubble-overlay.js",
     "src/row-chart.js",
     "src/legend.js",
+    "src/html-legend.js",
     "src/scatter-plot.js",
     "src/number-display.js",
     "src/heatmap.js",
