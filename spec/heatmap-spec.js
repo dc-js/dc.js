@@ -153,33 +153,29 @@ describe("dc.heatmap", function() {
             originalDomain = reduceDimensionValues(dimension);
             newDomain = reduceDimensionValues(dimension2);
 
-            chart.render();
             chart.dimension(dimension2).group(group2);
-            chart.redraw();
-        });
-
-        afterEach(function () {
-            chart.filterAll();
+            chart.render();
             chart.dimension(dimension).group(group);
+            chart.redraw();
         });
 
         it('should have the correct number of columns', function () {
             chart.selectAll(".box-group").each(function (d) {
-                expect(newDomain.cols.has(d.key[0])).toBeTruthy();
+                expect(originalDomain.cols.has(d.key[0])).toBeTruthy();
             });
 
             chart.selectAll(".cols.axis text").each(function (d) {
-                expect(newDomain.cols.has(d)).toBeTruthy();
+                expect(originalDomain.cols.has(d)).toBeTruthy();
             });
         });
 
         it('should have the correct number of rows', function () {
             chart.selectAll(".box-group").each(function (d) {
-                expect(newDomain.rows.has(d.key[1])).toBeTruthy();
+                expect(originalDomain.rows.has(d.key[1])).toBeTruthy();
             });
 
             chart.selectAll(".rows.axis text").each(function (d) {
-                expect(newDomain.rows.has(d)).toBeTruthy();
+                expect(originalDomain.rows.has(d)).toBeTruthy();
             });
         });
     });
