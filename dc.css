@@ -219,6 +219,24 @@ table.dc-legend .dc-legend-item-color {
   height: 12px;
 }
 
+div.dc-legend {}
+div.dc-legend .dc-legend-item {
+  display: inline-block;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+div.dc-legend .dc-legend-item-color {
+  display: table-cell;
+  width: 12px;
+  height: 12px;
+}
+div.dc-legend .dc-legend-item-label {
+  line-height:12px;
+  display: table-cell;
+  vertical-align: middle;
+  padding-left: 3px;
+}
+
 .dc-legend-item {
     cursor: pointer;
 }

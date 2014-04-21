@@ -29,7 +29,7 @@ d3.csv("morley.csv", function(error, experiments) {
     .innerRadius(100)
     .dimension(runDimension)
     .group(speedSumGroup)
-    .legend(dc.htmlLegend().container('#legend'));
+    .legend(dc.htmlLegend().container('#legend').horizontal(true));
 
   chart.render();
 });
