@@ -12,10 +12,11 @@
 
 * Fork the repository
 * Make changes to the files in `src/` not dc.js
-* Add tests to `test/`. Feel free to create a new file if needed.
-* Run `grunt test` and fix your patch or other tests as needed
-* Run `grunt lint` and fix your patch as needed
-* Commit your changes to `src/*` and `test/*` but not any build artifacts.  (Build artifacts include `dc.*js*`, `web/docs/*`, `web/js/*`)
+* Add tests to `spec/`. Feel free to create a new file if needed.
+* Run `grunt server` and go to http://localhost:8888/spec to develop your tests.
+* Run `grunt lint` to fix any final linting issues via jshint.
+* Run `grunt test` to confirm that all tests will pass on phantomjs.
+* Commit your changes to `src/*` and `spec/*` but not any build artifacts.  (Build artifacts include `dc.*js*`, `web/docs/*`, `web/js/*`)
 * Submit a pull request
 * If you merge master or another branch into your patchset, please rebase against master.
 * The DC maintainer team will review and build the artifacts when merging
@@ -28,16 +29,8 @@
 
 #### Testing Notes
 
-We are currently transitioning from vows/jsdom testing to jasmine/PhantomJS. New tests should
-be written in [jasmine](http://jasmine.github.io/2.0/introduction.html) (under the `spec` folder).
-
-Once you have run the tests once using `grunt test` or `grunt jasmine`, you can debug the tests in
-your favorite browser by opening `web/jasmine-runner.html`.  You can also run an individual test with
-`grunt jasmine --filter=<part-of-test-filename>`
-
-Changing existing vows test cases (under the `test` folder) to support smaller changes is fine. With vows tests, charts must set
-`.transitionDuration(0)` as the dom library used for testing
-[does not support](https://github.com/tmpvar/jsdom/issues/300) the SVG animation APIs.
+Running `grunt server` will host the jasmine specs at http://localhost:8888/spec.
+Please use `.transitionDuration(0)` for all chart tests.
 
 # Merging Pull Requests
 
@@ -55,6 +48,9 @@ Run these commands (or their approximation):
 ```
 # clean master branch
 git stash
+
+# update node modules that may be pulled into `web/`
+npm update
 
 # double check your aren't going to blow away local commits
 git fetch origin
@@ -74,4 +70,4 @@ git diff origin/gh-pages master:web
 grunt web
 ```
 
-If needed, the baseline test for the demos can be rebuilt by running `grunt web-baseline`.
+If needed, the baseline test for the demos can be rebuilt by running `grunt update-stock-regression`.

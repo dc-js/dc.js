@@ -1,4 +1,5 @@
 [![Build Status](https://api.travis-ci.org/dc-js/dc.js.png?branch=master)](http://travis-ci.org/dc-js/dc.js)
+[![Sauce Status](https://saucelabs.com/buildstatus/sclevine)](https://saucelabs.com/u/sclevine)
 [![NPM Status](https://badge.fury.io/js/dc.png)](http://badge.fury.io/js/dc)
 
 dc.js
@@ -44,6 +45,18 @@ dc.js$ npm install
 ```
 dc.js$ grunt test
 ```
+
+Developing dc.js
+----------------
+
+### Start the development server
+```
+dc.js$ grunt server
+```
+
+* Jasmine specs are hosted at http://localhost:8888/spec
+* The stock example is at http://localhost:8888/web
+* More examples are at http://localhost:8888/web/examples
 
 License
 --------------------

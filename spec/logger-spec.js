@@ -37,6 +37,7 @@ describe("dc.logger", function() {
         describe("when debugging is disabled", function (){
             beforeEach(function () {
                 dc.logger.enableDebugLog = false;
+                console.debug = function (msg) {};
                 spyOn(console, "debug");
                 dc.logger.debug(message);
             });

@@ -1,7 +1,9 @@
 module.exports = function (grunt) {
     'use strict';
-    var jsFiles = module.exports.jsFiles,
-    output = {
+
+    var jsFiles = module.exports.jsFiles;
+
+    var output = {
       js: '<%= pkg.name %>.js',
       jsmin: '<%= pkg.name %>.min.js',
       map: '<%= pkg.name %>.min.js.map'
@@ -38,55 +40,59 @@ module.exports = function (grunt) {
             source: {
                 src: ['src/**/*.js'],
                 options: {
-                    indent:4,
+                    indent: 4,
                     ignores: ['src/banner.js','src/footer.js','src/d3.box.js']
                 }
             },
             others: {
-                src: ['Gruntfile.js', 'test/**/*.js', 'spec/**/*.js', 'web/stock.js'],
+                src: ['Gruntfile.js', 'spec/**/*.js', 'web/stock.js'],
                 options: { '-W041': true }
             }
         },
         watch: {
-          scripts: {
-            files: ['src/**/*.js'],
-            tasks: ['build', 'copy']
-          },
-          tests: {
-            files: ['spec/**/*.js', 'test/**/*.js'],
-            tasks: ['test']
-          },
-          jasmine_runner: {
-            files: ['spec/**/*.js'],
-            tasks: ['jasmine:specs:build']
-          },
-          reload: {
-            files: ['dc.js', 'dc.css', 'web/js/dc.js', 'web/css/dc.css', 'dc.min.js'],
-            options: {
-              livereload: true
-            }
-          }
-        },
-        vows: {
+            scripts: {
+                files: ['src/**/*.js'],
+                tasks: ['build', 'copy']
+            },
+            jasmine_runner: {
+                files: ['spec/**/*.js'],
+                tasks: ['jasmine:specs:build']
+            },
             tests: {
-                src: "test/row-chart-test.js test/web-test.js test/env-data.js test/env-xhr.js test/env.js"
+                files: ['src/**/*.js', 'spec/**/*.js'],
+                tasks: ['test']
+            },
+            reload: {
+                files: ['dc.js', 'dc.css', 'web/js/dc.js', 'web/css/dc.css', 'dc.min.js'],
+                options: {
+                  livereload: true
+                }
+            }
+        },
+        connect: {
+            server: {
+                options: {
+                    port: 8888,
+                    base: '.'
+                }
             }
         },
         jasmine: {
             specs: {
                 options: {
+                    display: "short",
                     specs:  "spec/*-spec.js",
                     helpers: "spec/helpers/*.js",
-                    version: "2.0.0-rc5",
-                    keepRunner: true,
-                    outfile: "web/jasmine-runner.html"
+                    version: "2.0.0",
+                    outfile: "spec/index.html",
+                    keepRunner: true
                 },
-               src: [
+                src: [
                     "web/js/d3.js",
                     "web/js/crossfilter.js",
                     "web/js/colorbrewer.js",
                     "dc.js"
-               ]
+                ]
             },
             coverage:{
                 src: '<%= jasmine.specs.src %>',
@@ -106,6 +112,22 @@ module.exports = function (grunt) {
                             }
                         ]
                     }
+                }
+            }
+        },
+        'saucelabs-jasmine': {
+            all: {
+                options: {
+                    urls: ["http://localhost:8888/spec/"],
+                    tunnelTimeout: 5,
+                    build: process.env.TRAVIS_JOB_ID,
+                    concurrency: 3,
+                    browsers: [
+                        { browserName: "firefox", version: "25", platform: "linux" },
+                        { browserName: "safari", version: "7", platform: "OS X 10.9" },
+                        { browserName: "internet explorer", version: "10", platform: "WIN8" }
+                    ],
+                    testname: "dc.js"
                 }
             }
         },
@@ -180,18 +202,6 @@ module.exports = function (grunt) {
                 command: 'git commit -a --amend --no-edit',
                 options: { stdout: true, failOnError: true }
             },
-            vows_coverage: {
-                command: "istanbul cover --print none --dir coverage/vows node_modules/vows/bin/vows",
-                options: {
-                  stdout: true
-                }
-            },
-            merge_coverage: {
-                command: "NODE_PATH=`npm -g root` node scripts/merge_coverage.js",
-                options: {
-                  stdout: true
-                }
-            },
             hooks: {
                 command: 'cp -n scripts/pre-commit.sh .git/hooks/pre-commit' +
                     ' || echo "Cowardly refusing to overwrite your existing git pre-commit hook."'
@@ -201,6 +211,7 @@ module.exports = function (grunt) {
 
     // These plugins provide necessary tasks.
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
     grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -208,10 +219,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-docco2');
     grunt.loadNpmTasks('grunt-gh-pages');
+    grunt.loadNpmTasks('grunt-saucelabs');
     grunt.loadNpmTasks('grunt-markdown');
     grunt.loadNpmTasks('grunt-sed');
     grunt.loadNpmTasks('grunt-shell');
-    grunt.loadNpmTasks('grunt-vows');
 
     // custom tasks
     grunt.registerMultiTask('emu', 'Documentation extraction by emu.', function() {
@@ -226,10 +237,6 @@ module.exports = function (grunt) {
     grunt.registerTask('merge', 'Merge a github pull request.', function(pr) {
         grunt.log.writeln('Merge Github Pull Request #' + pr);
         grunt.task.run(['shell:merge:'+pr,'test','shell:amend']);
-    });
-    grunt.registerTask('web-baseline', 'Rerender the example baselines.', function() {
-        var render = require('./test/web-test');
-        render(grunt.log.writeln);
     });
     grunt.registerMultiTask('toc', 'Generate a markdown table of contents.', function() {
         var marked = require('marked'),
@@ -247,13 +254,30 @@ module.exports = function (grunt) {
         grunt.file.write(destFile, "# DC API\n" + toc +"\n"+ source);
         grunt.log.writeln('Added TOC to "' + destFile + '".');
     });
+    grunt.registerTask('test-stock-example', 'Test a new rendering of the stock example web page against a baseline rendering', function (option) {
+        require('./regression/stock-regression-test.js').testStockExample(this.async(), option === "diff");
+    });
+    grunt.registerTask('update-stock-example', 'Update the baseline stock example web page.', function () {
+        require('./regression/stock-regression-test.js').updateStockExample(this.async());
+    });
+    grunt.registerTask('watch:jasmine', function () {
+        grunt.config('watch', {
+            options: { interrupt: true },
+            runner: grunt.config('watch').jasmine_runner,
+            scripts: grunt.config('watch').scripts
+        });
+        grunt.task.run('watch');
+    });
+
     // task aliases
     grunt.registerTask('build', ['concat', 'uglify', 'sed']);
     grunt.registerTask('docs', ['build', 'copy', 'emu', 'toc', 'markdown', 'docco']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
-    grunt.registerTask('test', ['docs', 'vows:tests', 'jasmine:specs', 'shell:hooks']);
-    grunt.registerTask('vows:coverage', ['shell:vows_coverage']);
-    grunt.registerTask('coverage', ['vows:coverage', 'jasmine:coverage', 'shell:merge_coverage']);
+    grunt.registerTask('server', ['docs', 'jasmine:specs:build', 'connect:server', 'watch:jasmine']);
+    grunt.registerTask('test', ['docs', 'jasmine:specs', 'test-stock-example', 'shell:hooks']);
+    grunt.registerTask('coverage', ['docs', 'jasmine:coverage']);
+    grunt.registerTask('ci', ['test', 'jasmine:specs:build', 'connect:server', 'saucelabs-jasmine']);
+    grunt.registerTask('ci-pull', ['test', 'jasmine:specs:build', 'connect:server']);
     grunt.registerTask('lint', ['build', 'jshint']);
     grunt.registerTask('default', ['build']);
 };

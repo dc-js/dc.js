@@ -33,6 +33,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     var _gap = 5;
 
+    var _fixedBarHeight = false;
     var _rowCssClass = "row";
     var _titleRowCssClass = "titlerow";
     var _renderTitleLabel = false;
@@ -146,7 +147,9 @@ dc.rowChart = function (parent, chartGroup) {
     function updateElements(rows) {
         var n = _rowData.length;
 
-        var height = (_chart.effectiveHeight() - (n + 1) * _gap) / n;
+        var height;
+        if (!_fixedBarHeight) height = (_chart.effectiveHeight() - (n + 1) * _gap) / n;
+            else height = _fixedBarHeight;
 
         var rect = rows.attr("transform",function (d, i) {
                 return "translate(0," + ((i + 1) * _gap + i * height) + ")";
@@ -250,8 +253,35 @@ dc.rowChart = function (parent, chartGroup) {
         return _chart;
     };
 
+    /**
+    #### .xAxis()
+    Get the x axis for the row chart instance.  Note: not settable for row charts.
+    See the [d3 axis object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis) documention for more information.
+    ```js
+    // customize x axis tick format
+    chart.xAxis().tickFormat(function(v) {return v + "%";});
+    // customize x axis tick values
+    chart.xAxis().tickValues([0, 100, 200, 300]);
+    ```
+
+    **/
     _chart.xAxis = function () {
         return _xAxis;
+    };
+
+    /**
+    #### .fixedBarHeight([height])
+    Get or set the fixed bar height. Default is [false] which will auto-scale bars.
+    For example, if you want to fix the height for a specific number of bars (useful in TopN charts)
+    you could fix height as follows (where count = total number of bars in your TopN and gap is your vertical gap space).
+    ```js
+     chart.fixedBarHeight( chartheight - (count + 1) * gap / count);
+    ```
+    **/
+    _chart.fixedBarHeight = function (g) {
+        if (!arguments.length) return _fixedBarHeight;
+        _fixedBarHeight = g;
+        return _chart;
     };
 
     /**

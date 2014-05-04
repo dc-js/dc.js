@@ -120,7 +120,10 @@ describe('dc.boxPlot', function() {
         });
 
         describe('when a box has no data', function() {
+            var firstBox;
+
             beforeEach(function() {
+                firstBox = chart.select('g.box').node();
                 var otherDimension = data.dimension(function (d) { return d.countrycode; });
                 otherDimension.filter("US");
                 chart.redraw();
@@ -128,6 +131,10 @@ describe('dc.boxPlot', function() {
 
             it('should not attempt to render that box', function() {
                 expect(chart.selectAll('g.box').size()).toBe(1);
+            });
+
+            it('should not animate the removed box into another box', function() {
+                expect(chart.select('g.box').node()).not.toBe(firstBox);
             });
 
             describe("with elasticX enabled", function() {
