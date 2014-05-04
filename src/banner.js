@@ -16,5 +16,5 @@
  *  limitations under the License.
  */
 
-dc = (function(){ function _dc(d3){
+(function() { function _dc(d3) {
 'use strict';
