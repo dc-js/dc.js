@@ -1,6 +1,6 @@
 /*!
  *  dc %VERSION%
- *  http://nickqizhu.github.io/dc.js/
+ *  http://dc-js.github.io/dc.js/
  *  Copyright 2012 Nick Zhu and other contributors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,5 +16,5 @@
  *  limitations under the License.
  */
 
-dc = (function(){
+(function() { function _dc(d3) {
 'use strict';

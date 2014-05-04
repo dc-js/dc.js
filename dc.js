@@ -1,6 +1,6 @@
 /*!
  *  dc 1.6.0
- *  http://nickqizhu.github.io/dc.js/
+ *  http://dc-js.github.io/dc.js/
  *  Copyright 2012 Nick Zhu and other contributors
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-dc = (function(){
+(function() { function _dc(d3) {
 'use strict';
 
 /**
@@ -5397,4 +5397,14 @@ dc.numberDisplay = function (parent, chartGroup) {
 };
 
 
-return dc;})();
+
+return dc;}
+if(typeof define === "function" && define.amd) {
+  define(["d3"], _dc);
+} else if(typeof module === "object" && module.exports) {
+  module.exports = d3;
+} else {
+  this.dc = _dc(d3);
+}
+}
+)();
