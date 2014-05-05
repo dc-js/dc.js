@@ -323,25 +323,13 @@ describe('dc.compositeChart', function() {
             });
 
             it('should hide hidable child stacks', function() {
-                var dateValueGroupBar = d3.select(chart.selectAll('g.dc-legend g.dc-legend-item')[0][3]);//chart.select('g.dc-legend g.dc-legend-item');
-                var dateValueGroupLine2 = chart.selectAll('g.dc-legend g.dc-legend-item')[0][3];
+                var dateValueGroupLine2 = d3.select(chart.selectAll('g.dc-legend g.dc-legend-item')[0][3]);
 
-                dateValueGroupBar.on("click")(dateValueGroupBar.datum());
-
-                it('should fade out the legend item', function() {
-                    expect(dateValueGroupBar.classed("fadeout")).toBeTruthy();
-                });
-
-                it('should hide its associated stack', function() {
-                    expect(chart.selectAll("path.line").size()).toEqual(3);
-                });
-
-                it('disable hover highlighting for that legend item', function() {
-                    dateValueGroupBar.on("mouseover")(dateValueGroupBar.datum());
-                    expect(d3.select(chart.selectAll("path.line")[0][1]).classed("fadeout")).toBeFalsy();
-                });
+                dateValueGroupLine2.on("click")(dateValueGroupLine2.datum());
+                expect(dateValueGroupLine2.text()).toBe('Date Value Group Line 2');
+                expect(d3.select(chart.selectAll('g.dc-legend g.dc-legend-item')[0][3]).classed("fadeout")).toBeTruthy();                
+                expect(chart.selectAll("path.line").size()).toEqual(3);
             });
-
         });
     });
 
