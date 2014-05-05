@@ -29,7 +29,8 @@ describe('dc.compositeChart', function() {
                 dc.lineChart(chart)
                     .group(dateIdSumGroup, 'Date ID Group')
                     .stack(dateValueSumGroup, 'Date Value Group Line 1')
-                    .stack(dateValueSumGroup, 'Date Value Group Line 2'),
+                    .stack(dateValueSumGroup, 'Date Value Group Line 2')
+                    .hidableStacks(true),
                 dc.lineChart(chart)
                     .group(dateGroup, 'Date Group')
             ]);
@@ -319,6 +320,26 @@ describe('dc.compositeChart', function() {
                 firstItem.on("mouseout")(firstItem.datum());
                 expect(chart.selectAll("rect.highlight").size()).toBe(0);
                 expect(chart.selectAll("path.fadeout").size()).toBe(0);
+            });
+
+            it('should hide hidable child stacks', function() {
+                var dateValueGroupBar = d3.select(chart.selectAll('g.dc-legend g.dc-legend-item')[0][3]);//chart.select('g.dc-legend g.dc-legend-item');
+                var dateValueGroupLine2 = chart.selectAll('g.dc-legend g.dc-legend-item')[0][3];
+
+                dateValueGroupBar.on("click")(dateValueGroupBar.datum());
+
+                it('should fade out the legend item', function() {
+                    expect(dateValueGroupBar.classed("fadeout")).toBeTruthy();
+                });
+
+                it('should hide its associated stack', function() {
+                    expect(chart.selectAll("path.line").size()).toEqual(3);
+                });
+
+                it('disable hover highlighting for that legend item', function() {
+                    dateValueGroupBar.on("mouseover")(dateValueGroupBar.datum());
+                    expect(d3.select(chart.selectAll("path.line")[0][1]).classed("fadeout")).toBeFalsy();
+                });
             });
 
         });
