@@ -856,6 +856,8 @@ dc.coordinateGridMixin = function (_chart) {
                 _chart.redrawBrush(g);
             }
         }
+
+        _chart.fadeDeselectedArea();
     };
 
     _chart.setHandlePaths = function (gBrush) {
