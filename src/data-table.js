@@ -162,7 +162,12 @@ dc.dataTable = function (parent, chartGroup) {
 
         var rowEnter = rows.enter()
             .append('tr')
-            .attr('class', ROW_CSS_CLASS);
+            .attr("class", function(d) {
+                var baseClasses = ROW_CSS_CLASS;
+                if (isSelected(d)) baseClasses += " selected";
+                if (isDeselected(d)) baseClasses += " deselected";
+                return baseClasses;
+            });
 
         _columns.forEach(function (v, i) {
             rowEnter.append('td')
@@ -180,6 +185,14 @@ dc.dataTable = function (parent, chartGroup) {
     _chart._doRedraw = function () {
         return _chart._doRender();
     };
+
+    function isSelected(d) {
+        return _chart.hasFilter() && _chart.hasFilter(_chart.keyAccessor()(d));
+    }
+
+    function isDeselected(d) {
+        return _chart.hasFilter() && !_chart.hasFilter(_chart.keyAccessor()(d));
+    }
 
     /**
     #### .size([size])
