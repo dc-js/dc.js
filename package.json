@@ -1,8 +1,8 @@
 {
   "name": "dc",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "license": "Apache-2.0",
-  "copyright": "2012",
+  "copyright": "2014",
   "description": "A multi-dimensional charting library built to work natively with crossfilter and rendered using d3.js ",
   "keywords": [
     "visualization",
@@ -14,15 +14,15 @@
     "crossfilter",
     "d3"
   ],
-  "homepage": "http://nickqizhu.github.io/dc.js/",
-  "bugs": "https://github.com/NickQiZhu/dc.js/issues",
+  "homepage": "http://dc-js.github.io/dc.js/",
+  "bugs": "https://github.com/dc-js/dc.js/issues",
   "author": {
     "name": "Nick Zhu",
     "url": "http://nzhu.blogspot.ca/"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/NickQiZhu/dc.js.git"
+    "url": "https://github.com/dc-js/dc.js.git"
   },
   "dependencies": {
     "crossfilter": "1.x",

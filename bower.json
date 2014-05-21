@@ -1,6 +1,6 @@
 {
   "name": "dcjs",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "main": ["dc.js", "dc.css"],
   "ignore": [
     ".gitignore",
@@ -15,7 +15,7 @@
     "wiki"
   ],
   "dependencies": {
-    "d3": "~3.2.3",
-    "crossfilter": "~1.2.0"
+    "d3": "3.x",
+    "crossfilter": "1.x"
   }
 }
