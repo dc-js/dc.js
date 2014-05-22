@@ -56,7 +56,19 @@ describe('dc.barChart', function() {
                 });
             });
         });
-
+        
+        describe("with custom barWidthAccessor",function() {
+            beforeEach(function() {
+                chart.barWidthAccessor(function(){ return 10; }).render();
+            });
+            
+            it("should set bar width to specified value",function() {
+                forEachBar(function (bar, datum) {
+                    expect(+bar.attr('width')).toBe(10);
+                });
+            });
+        });
+        
         describe('and then switching the group at runtime', function() {
             beforeEach(function() {
                 chart.rescale(); // BUG: barWidth cannot change after initial rendering

@@ -44,6 +44,10 @@ dc.barChart = function (parent, chartGroup) {
     var _alwaysUseRounding = false;
 
     var _barWidth;
+    
+    var _barWidthAccessor = function () {
+        return _barWidth;
+    };
 
     dc.override(_chart, 'rescale', function () {
         _chart._rescale();
@@ -82,7 +86,7 @@ dc.barChart = function (parent, chartGroup) {
     function barHeight(d) {
         return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
     }
-
+    
     function renderBars(layer, layerIndex, d) {
         var bars = layer.selectAll("rect.bar")
             .data(d.values, dc.pluck('x'));
@@ -102,7 +106,7 @@ dc.barChart = function (parent, chartGroup) {
         dc.transition(bars, _chart.transitionDuration())
             .attr("x", function (d) {
                 var x = _chart.x()(d.x);
-                if (_centerBar) x -= _barWidth / 2;
+                if (_centerBar) x -= _barWidthAccessor(d.data) / 2;
                 if (_chart.isOrdinal()) x += _gap/2;
                 return dc.utils.safeNumber(x);
             })
@@ -114,7 +118,9 @@ dc.barChart = function (parent, chartGroup) {
 
                 return dc.utils.safeNumber(y);
             })
-            .attr("width", _barWidth)
+            .attr("width", function (d) { 
+                return _barWidthAccessor(d.data); 
+            })
             .attr("height", function (d) {
                 return barHeight(d);
             })
@@ -235,6 +241,19 @@ dc.barChart = function (parent, chartGroup) {
         return extent;
     };
 
+    /**
+    #### .barWidthAccessor([barWidth accessor function])
+    Set or get the accessor function to determine each bar's width (in pixels) separately.  
+    Default is to use a single width for all bars as determined by the .barPadding, .outerPadding, and .gap functions.
+    If this is set, .gap, .barPadding, and .outerPadding are ignored.
+
+    **/
+    _chart.barWidthAccessor = function (_) {
+        if (!arguments.length) return _barWidthAccessor;
+        _barWidthAccessor = _;
+        return _chart;
+    };
+    
     /**
     #### .alwaysUseRounding([boolean])
     Set or get the flag which determines whether rounding is enabled when bars are centered (default: false).
