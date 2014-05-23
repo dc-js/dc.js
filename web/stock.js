@@ -237,6 +237,9 @@ d3.csv("ndx.csv", function (data) {
                    "Fluctuation / Index Ratio: " + numberFormat(p.value.fluctuationPercentage) + "%"]
                    .join("\n");
         })
+        //#### Customize how new filter selection clicks are handled
+        // Change from the default behavior to work like e.g. PowerPoint, where single left click selects, and ctrl-click adds or subtracts from the selection.
+        .clickFilterBehavior("replaceCtrlToggle")
         //#### Customize Axis
         //Set a custom tick format. Note `.yAxis()` returns an axis object, so any additional method chaining applies to the axis, not the chart.
         .yAxis().tickFormat(function (v) {

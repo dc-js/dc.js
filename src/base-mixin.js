@@ -65,6 +65,7 @@ dc.baseMixin = function (_chart) {
     var _legend;
 
     var _filters = [];
+    var _inverseFiltering = false;
     var _filterHandler = function (dimension, filters) {
         dimension.filter(null);
 
@@ -75,17 +76,18 @@ dc.baseMixin = function (_chart) {
                 for(var i = 0; i < filters.length; i++) {
                     var filter = filters[i];
                     if (filter.isFiltered && filter.isFiltered(d)) {
-                        return true;
+                        return !_inverseFiltering;
                     } else if (filter == d) {
-                        return true;
+                        return !_inverseFiltering;
                     }
                 }
-                return false;
+                return _inverseFiltering;
             });
 
         return filters;
     };
-
+    var _clickFilterBehavior = "replaceThenToggle";
+    
     var _data = function (group) {
         return group.all();
     };
@@ -360,7 +362,10 @@ dc.baseMixin = function (_chart) {
     _chart.turnOnControls = function () {
         if (_root) {
             _chart.selectAll(".reset").style("display", null);
-            _chart.selectAll(".filter").text(_filterPrinter(_chart.filters())).style("display", null);
+            _chart.selectAll(".filter").text(
+                _inverseFiltering ? "INVERSE OF: " : "" +
+                _filterPrinter(_chart.filters())
+            ).style("display", null);
         }
         return _chart;
     };
@@ -472,7 +477,11 @@ dc.baseMixin = function (_chart) {
     **/
     _chart.hasFilter = function (filter) {
         if (!arguments.length) return _filters.length > 0;
-        return _filters.indexOf(filter) >= 0;
+        if (_filters.indexOf(filter) >= 0) {
+            return !_inverseFiltering;
+        } else {
+            return _inverseFiltering;
+        }
     };
 
     function removeFilter(_) {
@@ -495,6 +504,7 @@ dc.baseMixin = function (_chart) {
 
     function applyFilters() {
         if (_chart.dimension() && _chart.dimension().filter) {
+            if(!_filters.length) _inverseFiltering = false;
             var fs = _filterHandler(_chart.dimension(), _filters);
             _filters = fs ? fs : _filters;
         }
@@ -503,6 +513,24 @@ dc.baseMixin = function (_chart) {
     _chart.replaceFilter = function (_) {
         _filters = [];
         _chart.filter(_);
+    };
+    /**
+    #### .clickFilterBehavior([behavior])
+    Control how this chart's set of active filters are updated from user clicks. 
+    Valid options are:
+
+    * "replace": Data will be filtered to exactly match the selected value
+    * "toggle": The selected value will toggle; i.e. removed from current selection if currently included, otherwise added to the current selection
+    * "replaceThenToggle" (default):  If no filters are active, data are filtered to exactly match the current selection. Otherwise, the current value is toggled. If no active filters remain, as in filterAll
+    * "replaceCtrlToggle": Mimics the behavior of most GUIs with selectable groups. A left click acts as replace and a ctrl-left click acts as toggle. 
+
+    **/
+    _chart.clickFilterBehavior = function (_) {
+        if(!arguments.length) return _clickFilterBehavior;
+        if(["replace","toggle","replaceThenToggle","replaceCtrlToggle"].indexOf(_) < 0)
+            _ = "replaceThenToggle";
+        _clickFilterBehavior = _;
+        return _chart;
     };
 
     /**
@@ -518,25 +546,40 @@ dc.baseMixin = function (_chart) {
     **/
     _chart.filter = function (_) {
         if (!arguments.length) return _filters.length > 0 ? _filters[0] : null;
-        if (_ instanceof Array && _[0] instanceof Array && !_.isFiltered) {
-            _[0].forEach(function(d){
-                if (_chart.hasFilter(d)) {
-                    _filters.splice(_filters.indexOf(d), 1);
-                } else {
+        var toggle = ( 
+            _clickFilterBehavior == "toggle" ||
+            ( _clickFilterBehavior == "replaceThenToggle"&& _chart.hasFilter() ) ||
+            ( _clickFilterBehavior == "replaceCtrlToggle" && (d3.event && d3.event.ctrlKey) )
+        );
+        
+        if (_ === null) {
+            _filters = [];
+        } else {
+            var newFilter = _;
+            if( !(_ instanceof Array && _[0] instanceof Array && !_.isFiltered) )
+                newFilter = [[_]];
+            if(!toggle) {
+                _filters = [];
+                _inverseFiltering = false;
+            }
+            newFilter[0].forEach(function(d){
+                if(!toggle) {
                     _filters.push(d);
+                } else {
+                    var idx = _filters.indexOf(d);
+                    if(idx >= 0){
+                        _filters.splice(idx, 1);
+                    } else {
+                        if(!_chart.hasFilter()) 
+                            _inverseFiltering = true;
+                        _filters.push(d);
+                    }    
                 }
             });
-            applyFilters();
-            _chart._invokeFilteredListener(_);
-        } else if (_ === null) {
-            resetFilters();
-        } else {
-            if (_chart.hasFilter(_))
-                removeFilter(_);
-            else
-                addFilter(_);
         }
-
+        applyFilters();
+        _chart._invokeFilteredListener(_);
+       
         if (_root !== null && _chart.hasFilter()) {
             _chart.turnOnControls();
         } else {
