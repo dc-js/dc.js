@@ -2,7 +2,7 @@
   "name": "dc",
   "version": "2.0.0-dev",
   "license": "Apache-2.0",
-  "copyright": "2012",
+  "copyright": "2014",
   "description": "A multi-dimensional charting library built to work natively with crossfilter and rendered using d3.js ",
   "keywords": [
     "visualization",
@@ -52,5 +52,16 @@
   },
   "scripts": {
     "test": "grunt test"
-  }
+  },
+  "npmName": "dc",
+  "npmFileMap": [
+    {
+      "basePath": "/",
+      "files": [
+        "dc.css",
+        "dc.min.js",
+        "dc.js"
+      ]
+    }
+  ]
 }
