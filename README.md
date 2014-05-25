@@ -11,6 +11,17 @@ detailed [API reference](https://github.com/dc-js/dc.js/blob/master/web/docs/api
 more please visit the [Wiki](https://github.com/dc-js/dc.js/wiki).
 
 
+CDN location
+--------------------
+```
+http://cdnjs.cloudflare.com/ajax/libs/dc/1.6.0/dc.js
+http://cdnjs.cloudflare.com/ajax/libs/dc/1.6.0/dc.min.js
+http://cdnjs.cloudflare.com/ajax/libs/dc/1.6.0/dc.css
+```
+Please do not use github.io as a CDN unless you need the bleeding-edge 2.0 features, as it is not
+stable.  In particular, we are sorry to report that `nickqizhu.github.io/dc.js/*` went away
+when we transfered the project to dc-js.github.io.
+
 Install with npm
 --------------------
 ```
