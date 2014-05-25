@@ -796,9 +796,10 @@ suite.addBatch({
         },
         'focus should redraw x axis scale and ticks': function (chart) {
             chart.focus(null);
-            assert.equal(d3.select(chart.selectAll("g.x text")[0][0]).text(), "July");
-            assert.equal(d3.select(chart.selectAll("g.x text")[0][1]).text(), "2012");
-            assert.equal(d3.select(chart.selectAll("g.x text")[0][3]).text(), "March");
+            assert.equal(d3.select(chart.selectAll("g.x text")[0][0]).text(), "2012");
+            assert.equal(d3.select(chart.selectAll("g.x text")[0][1]).text(), "February");
+            assert.equal(d3.select(chart.selectAll("g.x text")[0][2]).text(), "March");
+            assert.equal(d3.select(chart.selectAll("g.x text")[0][3]).text(), "April");
         },
         teardown: function (topic) {
             resetAllFilters();
