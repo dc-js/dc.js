@@ -26,6 +26,6 @@ sinon = require("sinon");
 
 $ = jQuery = require("jquery");
 
-require("../dc");
+GLOBAL.dc = require("../dc");
 
 require("./env-data");
