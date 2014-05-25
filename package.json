@@ -48,5 +48,16 @@
   },
   "scripts": {
     "test": "./node_modules/vows/bin/vows"
-  }
+  },
+  "npmName": "dc",
+  "npmFileMap": [
+    {
+      "basePath": "/",
+      "files": [
+        "dc.css",
+        "dc.min.js",
+        "dc.js"
+      ]
+    }
+  ]
 }
