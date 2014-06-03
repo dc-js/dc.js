@@ -223,6 +223,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-markdown');
     grunt.loadNpmTasks('grunt-sed');
     grunt.loadNpmTasks('grunt-shell');
+    grunt.loadNpmTasks('grunt-debug-task');
 
     // custom tasks
     grunt.registerMultiTask('emu', 'Documentation extraction by emu.', function() {
