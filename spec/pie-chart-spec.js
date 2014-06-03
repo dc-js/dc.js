@@ -1,7 +1,8 @@
 describe('dc.pieChart', function() {
     var width = 200;
     var height = 200;
-    var radius = 100;
+    var radius = 99;
+    var center = {x: 101, y: 99};
     var innerRadius = 30;
     var data, valueDimension, valueGroup;
     var regionDimension, statusDimension;
@@ -56,7 +57,9 @@ describe('dc.pieChart', function() {
             .width(width)
             .height(height)
             .radius(radius)
-            .transitionDuration(0);
+            .transitionDuration(0)
+            .cx(center.x)
+            .cy(center.y);
         chart.render();
         return chart;
     }
@@ -107,8 +110,8 @@ describe('dc.pieChart', function() {
         it('root g should be created', function() {
             expect(chart.select("svg g").empty()).toBeFalsy();
         });
-        it('root g should be translated to center', function() {
-            expect(chart.select("svg g").attr("transform")).toMatchTranslate(100,100);
+        it('root g should be translated to ' + center.x + ',' + center.y, function() {
+            expect(chart.select("svg g").attr("transform")).toMatchTranslate(center.x, center.y);
         });
         it('slice g should be created with class', function() {
             expect(chart.selectAll("svg g g.pie-slice").data().length).toEqual(5);
@@ -142,7 +145,7 @@ describe('dc.pieChart', function() {
         });
         it('slice label transform to centroid', function() {
             expect(chart.selectAll("svg g text.pie-slice").attr("transform"))
-                .toMatchTranslate(38.20604139901076, -52.58610463437158, 3);
+                .toMatchTranslate(37.91214877286452, -52.18159613718411, 3);
         });
         it('slice label text should be set', function() {
             chart.selectAll("svg g text.pie-slice").call(function(p) {

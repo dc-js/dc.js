@@ -266,26 +266,26 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     /**
-   #### .cx()
-      Get center x coordinate position.
+    #### .cx([cx])
+    Get or set center x coordinate position. Default is center of svg.
 
-      **/
-     _chart.cx = function (cx) {
-         if (!arguments.length) return (_cx ||  _chart.width() / 2);
-         _cx = cx;
-         return _chart;
-     };
+    **/
+    _chart.cx = function (cx) {
+        if (!arguments.length) return (_cx ||  _chart.width() / 2);
+        _cx = cx;
+        return _chart;
+    };
 
-     /**
-      #### .cy()
-      Get center y coordinate position.
+    /**
+    #### .cy([cy])
+    Get or set center y coordinate position. Default is center of svg.
 
-      **/
-     _chart.cy = function () {
-         if (!arguments.length) return (_cy ||  _chart.height() / 2);
-         _cy = cy;
-         return _chart;
-     };
+    **/
+    _chart.cy = function (cy) {
+        if (!arguments.length) return (_cy ||  _chart.height() / 2);
+        _cy = cy;
+        return _chart;
+    };
         
     function buildArcs() {
         return d3.svg.arc().outerRadius(_radius).innerRadius(_innerRadius);
