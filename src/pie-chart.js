@@ -42,6 +42,10 @@ dc.pieChart = function (parent, chartGroup) {
         _innerRadius = 0;
 
     var _g;
+    
+    var _cx;
+
+    var _cy;
 
     var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
 
@@ -262,23 +266,27 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .cx()
-    Get center x coordinate position. This function is **not chainable**.
+   #### .cx()
+      Get center x coordinate position.
 
-    **/
-    _chart.cx = function () {
-        return _chart.width() / 2;
-    };
+      **/
+     _chart.cx = function (cx) {
+         if (!arguments.length) return (_cx ||  _chart.width() / 2);
+         _cx = cx;
+         return _chart;
+     };
 
-    /**
-    #### .cy()
-    Get center y coordinate position. This function is **not chainable**.
+     /**
+      #### .cy()
+      Get center y coordinate position.
 
-    **/
-    _chart.cy = function () {
-        return _chart.height() / 2;
-    };
-
+      **/
+     _chart.cy = function () {
+         if (!arguments.length) return (_cy ||  _chart.height() / 2);
+         _cy = cy;
+         return _chart;
+     };
+        
     function buildArcs() {
         return d3.svg.arc().outerRadius(_radius).innerRadius(_innerRadius);
     }
