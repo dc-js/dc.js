@@ -286,7 +286,7 @@ dc.pieChart = function (parent, chartGroup) {
         _cy = cy;
         return _chart;
     };
-        
+
     function buildArcs() {
         return d3.svg.arc().outerRadius(_radius).innerRadius(_innerRadius);
     }
