@@ -31,15 +31,15 @@ dc.dataGrid = function(parent, chartGroup) {
     var _chart = dc.baseMixin({});
 
     var _size = 999; // shouldn't be needed, but you might
-    var _html = function (d) { return "you need to provide an html() handling param:  " + JSON.stringify(d)};
+    var _html = function (d) { return "you need to provide an html() handling param:  " + JSON.stringify(d); };
     var _sortBy = function(d) {
         return d;
     };
     var _order = d3.ascending;
 
     var _htmlGroup = function (d) {
-        return "<div class='"+GROUP_CSS_CLASS+"'><h1 class='"+LABEL_CSS_CLASS+"'>"
-            +_chart.keyAccessor()(d)+"</h1></div>";
+        return "<div class='"+GROUP_CSS_CLASS+"'><h1 class='"+LABEL_CSS_CLASS+"'>"+
+            _chart.keyAccessor()(d)+"</h1></div>";
     };
 
     _chart._doRender = function() {
@@ -90,12 +90,12 @@ dc.dataGrid = function(parent, chartGroup) {
                     return d.values;
                 });
 
-        var itemEnter = items.enter()
-                .append("div")
-                .attr("class", ITEM_CSS_CLASS)
-                .html(function(d) {
-                    return _html(d);
-                });
+        items.enter()
+            .append("div")
+            .attr("class", ITEM_CSS_CLASS)
+            .html(function(d) {
+                return _html(d);
+            });
 
         items.exit().remove();
 

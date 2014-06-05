@@ -27,7 +27,7 @@ describe('dc.dataGrid', function() {
             .order(d3.descending)
             .html(function(d) {
 return "<div id='id_"+d.id+"' class='"+d.countrycode+" "+d.region+"'>"+d.state+":"+d.value+"</div>";
-            })
+            });
         chart.render();
         var pause="dummy";
     });
