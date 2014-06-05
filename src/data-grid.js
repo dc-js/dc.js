@@ -3,8 +3,8 @@
 
  Includes: [Base Mixin](#base-mixin)
 
- Data grid is a simple widget designed to list crossfilter focused data set (items being filtered) and provide you a simple way to define how each data item is displayed.
- fashion.
+ Data grid is a simple widget designed to list the filtered records, providing
+ a simple way to define how the items are displayed.
 
  Examples:
  * [List of members of the european parliament ](http://europarl.me/dc.js/web/ep/index.html)
@@ -14,10 +14,11 @@
 
  Parameters:
  * parent : string - any valid d3 single selector representing typically a dom block element such as a div.
- * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
- in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
- chart group.
- * html (item): function - return the html fragment for each item in the dataset. you can use a templating library or build the html directly.
+ * chartGroup : string (optional) - name of the chart group this chart instance should be
+ placed in. Once a chart is placed in a chart group then any interaction with the chart
+ will only trigger events and redraw within the same chart group.
+ * html (item): function - return the html fragment for each item in the dataset.
+ You can use a templating library or build the html directly.
  Return:
  A newly created data grid widget instance
 
@@ -119,7 +120,9 @@ dc.dataGrid = function(parent, chartGroup) {
 
     /**
      #### .html( function (data) { return "<html>"; })
-     Get or set the function that formats an item. Data grid widget uses a function to generate dynamic html. Use your favourite templating engine or generate the string directly
+     Get or set the function that formats an item. The data grid widget uses a
+     function to generate dynamic html. Use your favourite templating engine or
+     generate the string directly.
      ```js
      chart.html(function (d) { return "<div class='item "+data.exampleCategory+"'>"+data.exampleString+"</div>";});
      ```
@@ -134,7 +137,7 @@ dc.dataGrid = function(parent, chartGroup) {
 
     /**
      #### .htmlGroup( function (data) { return "<html>"; })
-     Get or set the function that formats a group label. The provided example uses handlebar templating libary, but feel free to do it the way you want
+     Get or set the function that formats a group label.
      ```js
      chart.htmlGroup (function (d) { return "<h2>".d.key . "with " . d.values.length ." items</h2>"});
      ```
@@ -148,7 +151,8 @@ dc.dataGrid = function(parent, chartGroup) {
     };
     /**
      #### .sortBy([sortByFunction])
-     Get or set sort-by function. This function works as a value accessor at item level and returns a particular field to be sorted
+     Get or set sort-by function. This function works as a value accessor at the item
+     level and returns a particular field to be sorted.
      by. Default value: ``` function(d) {return d;}; ```
 
      ```js
@@ -166,7 +170,7 @@ dc.dataGrid = function(parent, chartGroup) {
 
     /**
      #### .order([order])
-     Get or set sort order. Default value: ``` d3.ascending ```
+     Get or set sort order function. Default value: ``` d3.ascending ```
 
      ```js
      chart.order(d3.descending);
