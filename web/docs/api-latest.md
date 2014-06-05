@@ -13,6 +13,7 @@
   * [Line Chart](#line-chart)
   * [Data Count Widget](#data-count-widget)
   * [Data Table Widget](#data-table-widget)
+  * [Data Grid Widget](#data-grid-widget)
   * [Bubble Chart](#bubble-chart)
   * [Composite Chart](#composite-chart)
   * [Series Chart](#series-chart)
@@ -1015,6 +1016,64 @@ Get or set sort order. Default value: ``` d3.ascending ```
 
 ```js
     chart.order(d3.descending);
+```
+
+## Data Grid Widget
+
+Includes: [Base Mixin](#base-mixin)
+
+Data grid is a simple widget designed to list the filtered records, providing
+a simple way to define how the items are displayed.
+
+Examples:
+* [List of members of the european parliament ](http://europarl.me/dc.js/web/ep/index.html)
+
+#### dc.dataGrid(parent[, chartGroup])
+Create a data grid widget instance and attach it to the given parent element.
+
+Parameters:
+* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* chartGroup : string (optional) - name of the chart group this chart instance should be
+placed in. Once a chart is placed in a chart group then any interaction with the chart
+will only trigger events and redraw within the same chart group.
+* html (item): function - return the html fragment for each item in the dataset.
+You can use a templating library or build the html directly.
+Return:
+A newly created data grid widget instance
+
+#### .size([size])
+Get or set the grid size which determines the number of items displayed by the widget.
+
+#### .html( function (data) { return "<html>"; })
+Get or set the function that formats an item. The data grid widget uses a
+function to generate dynamic html. Use your favourite templating engine or
+generate the string directly.
+```js
+chart.html(function (d) { return "<div class='item "+data.exampleCategory+"'>"+data.exampleString+"</div>";});
+```
+
+#### .htmlGroup( function (data) { return "<html>"; })
+Get or set the function that formats a group label.
+```js
+chart.htmlGroup (function (d) { return "<h2>".d.key . "with " . d.values.length ." items</h2>"});
+```
+
+#### .sortBy([sortByFunction])
+Get or set sort-by function. This function works as a value accessor at the item
+level and returns a particular field to be sorted.
+by. Default value: ``` function(d) {return d;}; ```
+
+```js
+chart.sortBy(function(d) {
+return d.date;
+});
+```
+
+#### .order([order])
+Get or set sort order function. Default value: ``` d3.ascending ```
+
+```js
+chart.order(d3.descending);
 ```
 
 ## Bubble Chart
