@@ -81,6 +81,7 @@ module.exports = function (grunt) {
             specs: {
                 options: {
                     display: "short",
+                    summary: true,
                     specs:  "spec/*-spec.js",
                     helpers: "spec/helpers/*.js",
                     version: "2.0.0",
