@@ -1530,6 +1530,9 @@ Calculate and return the underlying value of the display
 #### .formatNumber([formatter])
 Get or set a function to format the value for the display. By default `d3.format(".2s");` is used.
 
+#### .text(string)
+Set or get the string attached to the number display. 
+
 ## Heat Map
 
 Includes: [Color Mixin](#color-mixin), [Margin Mixin](#margin-mixin), [Base Mixin](#base-mixin)
