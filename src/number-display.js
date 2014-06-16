@@ -34,9 +34,20 @@ dc.numberDisplay = function (parent, chartGroup) {
     var SPAN_CLASS = 'number-display';
     var _formatNumber = d3.format(".2s");
     var _chart = dc.baseMixin({});
+    var _text = "";
 
     // dimension not required
     _chart._mandatoryAttributes(['group']);
+
+    /**
+    #### .text(string)
+    Get or set the string attached to the number.
+    **/
+    _chart.text = function (t) {
+        if (!arguments.length) return _text;
+        _text = " "+t;
+        return _chart;
+    };
 
     /**
     #### .value()
@@ -70,7 +81,7 @@ dc.numberDisplay = function (parent, chartGroup) {
                 var interp = d3.interpolateNumber(this.lastValue || 0, newValue);
                 this.lastValue = newValue;
                 return function (t) {
-                    this.textContent = _chart.formatNumber()(interp(t));
+                    this.textContent = _chart.formatNumber()(interp(t))+_text;
                 };
             });
     };
