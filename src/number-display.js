@@ -35,6 +35,7 @@ dc.numberDisplay = function (parent, chartGroup) {
     var _formatNumber = d3.format(".2s");
     var _chart = dc.baseMixin({});
     var _text = "";
+    var _hideZero = false;
 
     // dimension not required
     _chart._mandatoryAttributes(['group']);
@@ -46,6 +47,16 @@ dc.numberDisplay = function (parent, chartGroup) {
     _chart.text = function (t) {
         if (!arguments.length) return _text;
         _text = " "+t;
+        return _chart;
+    };
+
+    /**
+    #### .hideZero(boolean)
+    Hide the number if it equals to zero.
+    **/
+    _chart.hideZero = function (b) {
+        if (!arguments.length) return _hideZero;
+        _hideZero = b;
         return _chart;
     };
 
@@ -81,7 +92,10 @@ dc.numberDisplay = function (parent, chartGroup) {
                 var interp = d3.interpolateNumber(this.lastValue || 0, newValue);
                 this.lastValue = newValue;
                 return function (t) {
-                    this.textContent = _chart.formatNumber()(interp(t))+_text;
+                    if((_hideZero)&&(newValue==0))
+                        this.textContent = "";
+                    else
+                        this.textContent = _chart.formatNumber()(interp(t))+_text;
                 };
             });
     };
