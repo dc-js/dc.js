@@ -34,7 +34,8 @@ dc.numberDisplay = function (parent, chartGroup) {
     var SPAN_CLASS = 'number-display';
     var _formatNumber = d3.format(".2s");
     var _chart = dc.baseMixin({});
-    var _text = "";
+    var _singulartext = "";
+    var _pluraltext = "";
     var _hideZero = false;
 
     // dimension not required
@@ -44,9 +45,11 @@ dc.numberDisplay = function (parent, chartGroup) {
     #### .text(string)
     Get or set the string attached to the number.
     **/
-    _chart.text = function (t) {
-        if (!arguments.length) return _text;
-        _text = " "+t;
+    _chart.text = function (s,p) {
+        if (!arguments.length) return [_singulartext,_pluraltext];
+        _singulartext = " "+s;
+        if(p)
+            _pluraltext = " "+p;
         return _chart;
     };
 
@@ -95,7 +98,10 @@ dc.numberDisplay = function (parent, chartGroup) {
                     if((_hideZero)&&(newValue==0))
                         this.textContent = "";
                     else
-                        this.textContent = _chart.formatNumber()(interp(t))+_text;
+                        if((_pluraltext!="")&&(newValue>1))
+                            this.textContent = _chart.formatNumber()(interp(t))+_pluraltext;
+                        else
+                            this.textContent = _chart.formatNumber()(interp(t))+_singulartext;
                 };
             });
     };
