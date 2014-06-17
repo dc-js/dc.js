@@ -18,9 +18,9 @@ http://cdnjs.cloudflare.com/ajax/libs/dc/1.7.0/dc.js
 http://cdnjs.cloudflare.com/ajax/libs/dc/1.7.0/dc.min.js
 http://cdnjs.cloudflare.com/ajax/libs/dc/1.7.0/dc.css
 ```
-Please do not use github.io as a CDN unless you need the bleeding-edge 2.0 features, as it is not
-stable.  In particular, we are sorry to report that `nickqizhu.github.io/dc.js/*` went away
-when we transfered the project to dc-js.github.io.
+Please do not use github.io as a CDN unless you need the bleeding-edge features, as it is not
+stable (and GitHub doesn't like you doing that).  In particular, we are sorry to report that `nickqizhu.github.io/dc.js/*` went away when we transfered the project to dc-js.github.io.
+
 
 Install with npm
 --------------------
