@@ -34,32 +34,24 @@ dc.numberDisplay = function (parent, chartGroup) {
     var SPAN_CLASS = 'number-display';
     var _formatNumber = d3.format(".2s");
     var _chart = dc.baseMixin({});
-    var _singulartext = "";
-    var _pluraltext = "";
-    var _hideZero = false;
+    var _html = {singular:"",plural:"",zero:""};
 
     // dimension not required
     _chart._mandatoryAttributes(['group']);
 
     /**
-    #### .text(string)
-    Get or set the string attached to the number.
+    #### .html({singlular:"%number",plural:"%number",zero:"%number"}})
+    %number will be replaced with the value
+    Get or set the string attached to the number and pluralize it according to the value. 
     **/
-    _chart.text = function (s,p) {
-        if (!arguments.length) return [_singulartext,_pluraltext];
-        _singulartext = " "+s;
-        if(p)
-            _pluraltext = " "+p;
-        return _chart;
-    };
 
-    /**
-    #### .hideZero(boolean)
-    Hide the number if it equals to zero.
-    **/
-    _chart.hideZero = function (b) {
-        if (!arguments.length) return _hideZero;
-        _hideZero = b;
+    _chart.html = function(s) {
+        if(s.zero)
+            _html.zero = s.zero;
+        if(s.singular)
+            _html.singular = s.singular;
+        if(s.plural)
+            _html.plural = s.plural;
         return _chart;
     };
 
@@ -95,13 +87,12 @@ dc.numberDisplay = function (parent, chartGroup) {
                 var interp = d3.interpolateNumber(this.lastValue || 0, newValue);
                 this.lastValue = newValue;
                 return function (t) {
-                    if((_hideZero)&&(newValue==0))
-                        this.textContent = "";
+                    if(newValue==0)
+                        this.textContent = (_html.zero=="")?_chart.formatNumber()(interp(t)):_html.zero.replace("%number",_chart.formatNumber()(interp(t)));
+                    else if(newValue==1)
+                        this.textContent = (_html.singular=="")?_chart.formatNumber()(interp(t)):_html.singular.replace("%number",_chart.formatNumber()(interp(t)));
                     else
-                        if((_pluraltext!="")&&(newValue>1))
-                            this.textContent = _chart.formatNumber()(interp(t))+_pluraltext;
-                        else
-                            this.textContent = _chart.formatNumber()(interp(t))+_singulartext;
+                        this.textContent = (_html.plural=="")?_chart.formatNumber()(interp(t)):_html.plural.replace("%number",_chart.formatNumber()(interp(t)));
                 };
             });
     };
