@@ -72,7 +72,7 @@ d3.csv("morley.csv", function(error, experiments) {
 
   inlineND
       .valueAccessor(average)
-      .html({singular:"%number Monkey",plural:"%number total Monkeys",zero:"zero Monkey"})
+      .html({one:"%number Monkey",some:"%number Total Monkeys"})
       .group(meanSpeedGroup);
   boxND
       .formatNumber(d3.format(".3s"))
