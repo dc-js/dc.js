@@ -34,24 +34,32 @@ dc.numberDisplay = function (parent, chartGroup) {
     var SPAN_CLASS = 'number-display';
     var _formatNumber = d3.format(".2s");
     var _chart = dc.baseMixin({});
-    var _html = {singular:"",plural:"",zero:""};
+    var _html = {one:"",some:"",none:""};
 
     // dimension not required
     _chart._mandatoryAttributes(['group']);
 
     /**
-    #### .html({singlular:"%number",plural:"%number",zero:"%number"}})
+    #### .html({one:"%number record",some:"%number records",none:"empty"}})
     %number will be replaced with the value
     Get or set the string attached to the number and pluralize it according to the value. 
     **/
 
     _chart.html = function(s) {
-        if(s.zero)
-            _html.zero = s.zero;
-        if(s.singular)
-            _html.singular = s.singular;
-        if(s.plural)
-            _html.plural = s.plural;
+        if(s.none)
+            _html.none = s.none;//if none available
+        else if(s.one)
+            _html.none = s.one;//if none not available use one
+        else if(s.some)
+            _html.none = s.some;//if none and one not available use some
+        if(s.one)
+            _html.one = s.one;//if one available
+        else if(s.some)
+            _html.one = s.some;//if one not available use some
+        if(s.some)
+            _html.some = s.some;//if some available
+        else if(s.one)
+            _html.some = s.one;//if some not available use one
         return _chart;
     };
 
@@ -59,6 +67,7 @@ dc.numberDisplay = function (parent, chartGroup) {
     #### .value()
     Calculate and return the underlying value of the display
     **/
+
     _chart.value = function () {
         return _chart.data();
     };
@@ -88,11 +97,11 @@ dc.numberDisplay = function (parent, chartGroup) {
                 this.lastValue = newValue;
                 return function (t) {
                     if(newValue==0)
-                        this.textContent = (_html.zero=="")?_chart.formatNumber()(interp(t)):_html.zero.replace("%number",_chart.formatNumber()(interp(t)));
+                        this.textContent = (_html.none=="")?_chart.formatNumber()(interp(t)):_html.none.replace("%number",_chart.formatNumber()(interp(t)));
                     else if(newValue==1)
-                        this.textContent = (_html.singular=="")?_chart.formatNumber()(interp(t)):_html.singular.replace("%number",_chart.formatNumber()(interp(t)));
+                        this.textContent = (_html.one=="")?_chart.formatNumber()(interp(t)):_html.one.replace("%number",_chart.formatNumber()(interp(t)));
                     else
-                        this.textContent = (_html.plural=="")?_chart.formatNumber()(interp(t)):_html.plural.replace("%number",_chart.formatNumber()(interp(t)));
+                        this.textContent = (_html.some=="")?_chart.formatNumber()(interp(t)):_html.some.replace("%number",_chart.formatNumber()(interp(t)));
                 };
             });
     };
@@ -114,4 +123,3 @@ dc.numberDisplay = function (parent, chartGroup) {
 
     return _chart.anchor(parent, chartGroup);
 };
-
