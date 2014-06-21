@@ -1491,6 +1491,9 @@ Set or get radius for symbols, default: 3.
 #### .highlightedSize([radius])
 Set or get radius for highlighted symbols, default: 4.
 
+#### .hiddenSize([radius])
+Set or get radius for symbols when the group is empty, default: 0.
+
 ## Number Display Widget
 
 Includes: [Base Mixin](#base-mixin)
