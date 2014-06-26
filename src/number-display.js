@@ -46,6 +46,7 @@ dc.numberDisplay = function (parent, chartGroup) {
     **/
 
     _chart.html = function(s) {
+        if (!arguments.length) return _html;
         if(s.none)
             _html.none = s.none;//if none available
         else if(s.one)
@@ -97,11 +98,11 @@ dc.numberDisplay = function (parent, chartGroup) {
                 this.lastValue = newValue;
                 return function (t) {
                     if(newValue==0)
-                        this.textContent = (_html.none=="")?_chart.formatNumber()(interp(t)):_html.none.replace("%number",_chart.formatNumber()(interp(t)));
+                        this.textContent = (_html.none==="")?_chart.formatNumber()(interp(t)):_html.none.replace("%number",_chart.formatNumber()(interp(t)));
                     else if(newValue==1)
-                        this.textContent = (_html.one=="")?_chart.formatNumber()(interp(t)):_html.one.replace("%number",_chart.formatNumber()(interp(t)));
+                        this.textContent = (_html.one==="")?_chart.formatNumber()(interp(t)):_html.one.replace("%number",_chart.formatNumber()(interp(t)));
                     else
-                        this.textContent = (_html.some=="")?_chart.formatNumber()(interp(t)):_html.some.replace("%number",_chart.formatNumber()(interp(t)));
+                        this.textContent = (_html.some==="")?_chart.formatNumber()(interp(t)):_html.some.replace("%number",_chart.formatNumber()(interp(t)));
                 };
             });
     };

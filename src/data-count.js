@@ -50,6 +50,7 @@ dc.dataCount = function(parent, chartGroup) {
     var _html = {some:"",all:""};
 
     _chart.html = function(s) {
+        if (!arguments.length) return _html;
         if(s.all)
             _html.all = s.all;//if one available
         if(s.some)
@@ -61,14 +62,14 @@ dc.dataCount = function(parent, chartGroup) {
         var all = _formatNumber(_chart.dimension().size());
         var selected = _formatNumber(_chart.group().value());
 
-        if(_html.some==""){
+        if(_html.some===""){
             _chart.selectAll(".total-count").text(all);
             _chart.selectAll(".filter-count").text(selected);
         }
         else{
             _chart.root().text(_html.some.replace('%total-count',all).replace('%filter-count',selected));
         }
-        if((selected==all)&&(_html.all!="")){
+        if((_chart.dimension().size()==_chart.group().value())&&(_html.all!="")){
             _chart.root().text(_html.all.replace('%total-count',all).replace('%filter-count',selected));
         }
         return _chart;
