@@ -67,6 +67,68 @@ describe('dc.numberDisplay', function() {
                 expect(chart.select("span.number-display").text()).toEqual("41.8");
             });
         });
+        describe('html with one, some and none', function() {
+            beforeEach(function() {
+                chart.html({one:"%number number",none:"no number",some:"%number numbers"});
+                chart.redraw();
+                d3.timer.flush();
+            });
+            it('should use some for some', function() {
+                expect(chart.select("span.number-display").text()).toEqual("38.5 numbers");
+            });
+        });
+        describe('html with one, some and none', function() {
+            beforeEach(function() {
+                chart.html({one:"%number number",none:"no number",some:"%number numbers"});
+                chart.valueAccessor(function(d){return 1;});
+                chart.redraw();
+                d3.timer.flush();
+            });
+            it('should use one for one', function() {
+                expect(chart.select("span.number-display").text()).toEqual("1.00 number");
+            });
+        });
+        describe('html with one, some and none', function() {
+            beforeEach(function() {
+                chart.html({one:"%number number",none:"no number",some:"%number numbers"});
+                chart.valueAccessor(function(d){return 0;});
+                chart.redraw();
+                d3.timer.flush();
+            });
+            it('should use zero for zero', function() {
+                expect(chart.select("span.number-display").text()).toEqual("no number");
+            });
+        });
+        describe('html with just one', function() {
+            beforeEach(function() {
+                chart.html({one:"%number number"});
+                chart.redraw();
+                d3.timer.flush();
+            });
+            it('should use one for showing some', function() {
+                expect(chart.select("span.number-display").text()).toEqual("38.5 number");
+            });
+        });
+        describe('html with just some', function() {
+            beforeEach(function() {
+                chart.html({some:"%number numbers"});
+                chart.redraw();
+                d3.timer.flush();
+            });
+            it('should use some for showing one', function() {
+                expect(chart.select("span.number-display").text()).toEqual("38.5 numbers");
+            });
+        });
+        describe('html with just none', function() {
+            beforeEach(function() {
+                chart.html({});
+                chart.redraw();
+                d3.timer.flush();
+            });
+            it('should just show the number in case of some and one', function() {
+                expect(chart.select("span.number-display").text()).toEqual("38.5");
+            });
+        });
         afterEach(function() {
             countryDimension.filterAll();
         });
@@ -101,4 +163,3 @@ describe('dc.numberDisplay', function() {
         });
     });
 });
-

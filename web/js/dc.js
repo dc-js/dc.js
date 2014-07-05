@@ -4259,13 +4259,35 @@ dc.dataCount(".dc-data-count")
 
 **/
 dc.dataCount = function(parent, chartGroup) {
+    var SPAN_CLASS = 'data-count-display';
     var _formatNumber = d3.format(",d");
     var _chart = dc.baseMixin({});
+    var _html = {some:"",all:""};
+
+    _chart.html = function(s) {
+        if (!arguments.length) return _html;
+        if(s.all)
+            _html.all = s.all;//if one available
+        if(s.some)
+            _html.some = s.some;//if some available
+        return _chart;
+    };
 
     _chart._doRender = function() {
-        _chart.selectAll(".total-count").text(_formatNumber(_chart.dimension().size()));
-        _chart.selectAll(".filter-count").text(_formatNumber(_chart.group().value()));
+        var tot = _chart.dimension().size(),
+            val = _chart.group().value();
+        var all = _formatNumber(tot);
+        var selected = _formatNumber(val);
 
+        if((tot===val)&&(_html.all!=="")) {
+            _chart.root().text(_html.all.replace('%total-count',all).replace('%filter-count',selected));
+        }
+        else if(_html.some!=="") {
+            _chart.root().text(_html.some.replace('%total-count',all).replace('%filter-count',selected));
+        } else {
+            _chart.selectAll(".total-count").text(all);
+            _chart.selectAll(".filter-count").text(selected);
+        }
         return _chart;
     };
 
@@ -6609,14 +6631,41 @@ dc.numberDisplay = function (parent, chartGroup) {
     var SPAN_CLASS = 'number-display';
     var _formatNumber = d3.format(".2s");
     var _chart = dc.baseMixin({});
+    var _html = {one:"",some:"",none:""};
 
     // dimension not required
     _chart._mandatoryAttributes(['group']);
 
     /**
+    #### .html({one:"%number record",some:"%number records",none:"empty"}})
+    %number will be replaced with the value
+    Get or set the string attached to the number and pluralize it according to the value. 
+    **/
+
+    _chart.html = function(s) {
+        if (!arguments.length) return _html;
+        if(s.none)
+            _html.none = s.none;//if none available
+        else if(s.one)
+            _html.none = s.one;//if none not available use one
+        else if(s.some)
+            _html.none = s.some;//if none and one not available use some
+        if(s.one)
+            _html.one = s.one;//if one available
+        else if(s.some)
+            _html.one = s.some;//if one not available use some
+        if(s.some)
+            _html.some = s.some;//if some available
+        else if(s.one)
+            _html.some = s.one;//if some not available use one
+        return _chart;
+    };
+
+    /**
     #### .value()
     Calculate and return the underlying value of the display
     **/
+
     _chart.value = function () {
         return _chart.data();
     };
@@ -6645,7 +6694,14 @@ dc.numberDisplay = function (parent, chartGroup) {
                 var interp = d3.interpolateNumber(this.lastValue || 0, newValue);
                 this.lastValue = newValue;
                 return function (t) {
-                    this.textContent = _chart.formatNumber()(interp(t));
+                    var html = null, num = _chart.formatNumber()(interp(t));
+                    if(newValue===0 && (_html.none!==""))
+                        html = _html.none;
+                    else if(newValue===1 &&(_html.one!==""))
+                        html = _html.one;
+                    else if(_html.some!=="")
+                        html = _html.some;
+                    this.textContent = html ? html.replace("%number", num) : num;
                 };
             });
     };
@@ -6667,7 +6723,6 @@ dc.numberDisplay = function (parent, chartGroup) {
 
     return _chart.anchor(parent, chartGroup);
 };
-
 
 /**
  ## Heat Map

@@ -1524,6 +1524,10 @@ A newly created number display instance
 var display1 = dc.numberDisplay("#chart-container1");
 ```
 
+#### .html({one:"%number record",some:"%number records",none:"empty"}})
+%number will be replaced with the value
+Get or set the string attached to the number and pluralize it according to the value.
+
 #### .value()
 Calculate and return the underlying value of the display
 

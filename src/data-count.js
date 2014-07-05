@@ -44,13 +44,35 @@ dc.dataCount(".dc-data-count")
 
 **/
 dc.dataCount = function(parent, chartGroup) {
+    var SPAN_CLASS = 'data-count-display';
     var _formatNumber = d3.format(",d");
     var _chart = dc.baseMixin({});
+    var _html = {some:"",all:""};
+
+    _chart.html = function(s) {
+        if (!arguments.length) return _html;
+        if(s.all)
+            _html.all = s.all;//if one available
+        if(s.some)
+            _html.some = s.some;//if some available
+        return _chart;
+    };
 
     _chart._doRender = function() {
-        _chart.selectAll(".total-count").text(_formatNumber(_chart.dimension().size()));
-        _chart.selectAll(".filter-count").text(_formatNumber(_chart.group().value()));
+        var tot = _chart.dimension().size(),
+            val = _chart.group().value();
+        var all = _formatNumber(tot);
+        var selected = _formatNumber(val);
 
+        if((tot===val)&&(_html.all!=="")) {
+            _chart.root().text(_html.all.replace('%total-count',all).replace('%filter-count',selected));
+        }
+        else if(_html.some!=="") {
+            _chart.root().text(_html.some.replace('%total-count',all).replace('%filter-count',selected));
+        } else {
+            _chart.selectAll(".total-count").text(all);
+            _chart.selectAll(".filter-count").text(selected);
+        }
         return _chart;
     };
 
