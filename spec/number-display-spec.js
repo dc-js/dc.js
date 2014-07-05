@@ -12,18 +12,14 @@ describe('dc.numberDisplay', function() {
             function(p, v) {
                 ++p.n;
                 p.tot += +v.value;
-                p.zero = 0;
-                p.one = 1;
                 return p;
             },
             function(p, v) {
                 --p.n;
                 p.tot -= +v.value;
-                p.zero = 0;
-                p.one = 1;
                 return p;
             },
-            function() { return {n:0,tot:0,one:1,zero:0}; }
+            function() { return {n:0,tot:0}; }
         );
         countryDimension = data.dimension(function(d) {
             return d.countrycode;
@@ -84,7 +80,7 @@ describe('dc.numberDisplay', function() {
         describe('html with one, some and none', function() {
             beforeEach(function() {
                 chart.html({one:"%number number",none:"no number",some:"%number numbers"});
-                chart.valueAccessor(function(d){return d.one});
+                chart.valueAccessor(function(d){return 1;});
                 chart.redraw();
                 d3.timer.flush();
             });
@@ -95,7 +91,7 @@ describe('dc.numberDisplay', function() {
         describe('html with one, some and none', function() {
             beforeEach(function() {
                 chart.html({one:"%number number",none:"no number",some:"%number numbers"});
-                chart.valueAccessor(function(d){return d.zero});
+                chart.valueAccessor(function(d){return 0;});
                 chart.redraw();
                 d3.timer.flush();
             });

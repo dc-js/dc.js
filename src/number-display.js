@@ -97,9 +97,9 @@ dc.numberDisplay = function (parent, chartGroup) {
                 var interp = d3.interpolateNumber(this.lastValue || 0, newValue);
                 this.lastValue = newValue;
                 return function (t) {
-                    if(newValue==0)
+                    if(newValue===0)
                         this.textContent = (_html.none==="")?_chart.formatNumber()(interp(t)):_html.none.replace("%number",_chart.formatNumber()(interp(t)));
-                    else if(newValue==1)
+                    else if(newValue===1)
                         this.textContent = (_html.one==="")?_chart.formatNumber()(interp(t)):_html.one.replace("%number",_chart.formatNumber()(interp(t)));
                     else
                         this.textContent = (_html.some==="")?_chart.formatNumber()(interp(t)):_html.some.replace("%number",_chart.formatNumber()(interp(t)));

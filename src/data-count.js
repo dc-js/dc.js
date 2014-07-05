@@ -69,7 +69,7 @@ dc.dataCount = function(parent, chartGroup) {
         else{
             _chart.root().text(_html.some.replace('%total-count',all).replace('%filter-count',selected));
         }
-        if((_chart.dimension().size()==_chart.group().value())&&(_html.all!="")){
+        if((_chart.dimension().size()===_chart.group().value())&&(_html.all!=="")){
             _chart.root().text(_html.all.replace('%total-count',all).replace('%filter-count',selected));
         }
         return _chart;
