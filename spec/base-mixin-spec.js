@@ -211,20 +211,20 @@ describe("dc.baseMixin", function () {
 
         describe('when set to a falsy', function () {
             beforeEach(function () {
-               chart.width(null).height(null).render();
+                chart.width(null).height(null).render();
             });
 
             it('should set the height to the default', function () {
-               expect(chart.height()).toEqual(200);
+                expect(chart.height()).toEqual(200);
             });
 
             it('should set the width to the default', function () {
-               expect(chart.width()).toEqual(200);
+                expect(chart.width()).toEqual(200);
             });
 
             describe('with minimums set', function () {
                 beforeEach(function () {
-                   chart.minHeight(234).minWidth(976).render();
+                    chart.minHeight(234).minWidth(976).render();
                 });
 
                 it('should set the height to the minimum', function () {
@@ -259,11 +259,11 @@ describe("dc.baseMixin", function () {
             });
 
             it('should not execute callback before width() is called', function () {
-               expect(setterSpy).not.toHaveBeenCalled();
+                expect(setterSpy).not.toHaveBeenCalled();
             });
 
             it('should ask the callback for the width', function () {
-               expect(chart.width()).toEqual(800);
+                expect(chart.width()).toEqual(800);
             });
         });
     });

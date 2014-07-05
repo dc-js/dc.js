@@ -165,7 +165,7 @@ d3.csv("ndx.csv", function (data) {
         var day = d.dd.getDay();
         var name=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
         return day+"."+name[day];
-     });
+    });
     var dayOfWeekGroup = dayOfWeek.group();
 
     //### Define Chart Attributes

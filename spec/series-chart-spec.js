@@ -38,7 +38,7 @@ describe('dc.seriesChart', function() {
         });
 
         it('should create the svg', function() {
-           expect(chart.svg()).not.toBeNull();
+            expect(chart.svg()).not.toBeNull();
         });
 
         it('should position generated lineCharts using the data', function() {

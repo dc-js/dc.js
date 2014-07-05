@@ -24,7 +24,7 @@ describe('dc.numberDisplay', function() {
         countryDimension = data.dimension(function(d) {
             return d.countrycode;
         });
-    countryDimension.filter("CA");
+        countryDimension.filter("CA");
     });
 
     function buildChart(id) {

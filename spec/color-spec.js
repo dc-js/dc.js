@@ -75,13 +75,13 @@ describe('dc.colorChart', function() {
             });
             var valueGroup = valueDimension.group();
             chart = dc.colorChart(dc.baseChart({}))
-              .colorAccessor(function(d){return d.value;})
-              .group(valueGroup);
+                .colorAccessor(function(d){return d.value;})
+                .group(valueGroup);
         });
 
         it('check domain', function() {
-              chart.calculateColorDomain();
-              expect(chart.colorDomain()).toEqual([1,3]);
+            chart.calculateColorDomain();
+            expect(chart.colorDomain()).toEqual([1,3]);
         });
     });
 });

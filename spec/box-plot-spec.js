@@ -173,9 +173,9 @@ describe('dc.boxPlot', function() {
                 box(0).each(function (d) {
                     expect(d3.select(this).classed("selected")).toBeTruthy();
                 });
-             });
+            });
 
-             it('should deselect the boxes not corresponding to the filtered value', function() {
+            it('should deselect the boxes not corresponding to the filtered value', function() {
                 box(1).each(function (d) {
                     expect(d3.select(this).classed("deselected")).toBeTruthy();
                 });
