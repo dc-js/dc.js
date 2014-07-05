@@ -30,8 +30,10 @@ describe('dc.colorChart', function() {
         });
 
         it('linear', function() {
+            // GIGO: mapping ordinal domain to linear scale is nonsensical
+            // actually it gets scaled to NaN and then d3 corrects it
             chart.linearColors(['#FF0000','#00FF00']);
-            expect(colorTest(chart,domain)).toEqual(['#NaNNaNNaN', '#NaNNaNNaN', '#NaNNaNNaN', '#NaNNaNNaN','#NaNNaNNaN' ]);
+            expect(colorTest(chart,domain)).toEqual([ '#000000', '#000000', '#000000', '#000000', '#000000' ]);
         });
     });
     describe('with numeric domain' , function() {
