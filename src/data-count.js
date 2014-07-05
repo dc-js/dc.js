@@ -59,18 +59,19 @@ dc.dataCount = function(parent, chartGroup) {
     };
 
     _chart._doRender = function() {
-        var all = _formatNumber(_chart.dimension().size());
-        var selected = _formatNumber(_chart.group().value());
+        var tot = _chart.dimension().size(),
+            val = _chart.group().value();
+        var all = _formatNumber(tot);
+        var selected = _formatNumber(val);
 
-        if(_html.some===""){
+        if((tot===val)&&(_html.all!=="")) {
+            _chart.root().text(_html.all.replace('%total-count',all).replace('%filter-count',selected));
+        }
+        else if(_html.some!=="") {
+            _chart.root().text(_html.some.replace('%total-count',all).replace('%filter-count',selected));
+        } else {
             _chart.selectAll(".total-count").text(all);
             _chart.selectAll(".filter-count").text(selected);
-        }
-        else{
-            _chart.root().text(_html.some.replace('%total-count',all).replace('%filter-count',selected));
-        }
-        if((_chart.dimension().size()===_chart.group().value())&&(_html.all!=="")){
-            _chart.root().text(_html.all.replace('%total-count',all).replace('%filter-count',selected));
         }
         return _chart;
     };
