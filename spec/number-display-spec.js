@@ -76,7 +76,7 @@ describe('dc.numberDisplay', function() {
             it('should use some for some', function() {
                 expect(chart.select("span.number-display").text()).toEqual("38.5 numbers");
             });
-        });        
+        });
         describe('html with one, some and none', function() {
             beforeEach(function() {
                 chart.html({one:"%number number",none:"no number",some:"%number numbers"});
@@ -163,4 +163,3 @@ describe('dc.numberDisplay', function() {
         });
     });
 });
-
