@@ -65,10 +65,10 @@ dc.dataCount = function(parent, chartGroup) {
         var selected = _formatNumber(val);
 
         if((tot===val)&&(_html.all!=="")) {
-            _chart.root().text(_html.all.replace('%total-count',all).replace('%filter-count',selected));
+            _chart.root().innerHTML(_html.all.replace('%total-count',all).replace('%filter-count',selected));
         }
         else if(_html.some!=="") {
-            _chart.root().text(_html.some.replace('%total-count',all).replace('%filter-count',selected));
+            _chart.root().innerHTML(_html.some.replace('%total-count',all).replace('%filter-count',selected));
         } else {
             _chart.selectAll(".total-count").text(all);
             _chart.selectAll(".filter-count").text(selected);
