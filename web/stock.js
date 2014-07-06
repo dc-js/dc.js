@@ -393,7 +393,7 @@ d3.csv("ndx.csv", function (data) {
         <span class="filter-count"></span> selected out of <span class="total-count"></span> records
     </div>
     */
-    var data = dc.dataCount(".dc-data-count")
+    dc.dataCount(".dc-data-count")
         .dimension(ndx)
         .group(all)
         // (optional) html, for setting different html for some records and all records.
