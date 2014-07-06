@@ -128,6 +128,7 @@
 <li><a href="#line-chart">Line Chart</a></li>
 <li><a href="#data-count-widget">Data Count Widget</a></li>
 <li><a href="#data-table-widget">Data Table Widget</a></li>
+<li><a href="#data-grid-widget">Data Grid Widget</a></li>
 <li><a href="#bubble-chart">Bubble Chart</a></li>
 <li><a href="#composite-chart">Composite Chart</a></li>
 <li><a href="#series-chart">Series Chart</a></li>
@@ -872,6 +873,47 @@ by. Default value: <code>function(d) {return d;};</code></p>
 <h4 id="-order-order-">.order([order])</h4>
 <p>Get or set sort order. Default value: <code>d3.ascending</code></p>
 <pre><code class="lang-js">    chart<span class="preprocessor">.order</span>(d3<span class="preprocessor">.descending</span>)<span class="comment">;</span></code></pre>
+<h2 id="data-grid-widget">Data Grid Widget</h2>
+<p>Includes: <a href="#base-mixin">Base Mixin</a></p>
+<p>Data grid is a simple widget designed to list the filtered records, providing
+a simple way to define how the items are displayed.</p>
+<p>Examples:</p>
+<ul>
+<li><a href="http://europarl.me/dc.js/web/ep/index.html">List of members of the european parliament </a></li>
+</ul>
+<h4 id="dc-datagrid-parent-chartgroup-">dc.dataGrid(parent[, chartGroup])</h4>
+<p>Create a data grid widget instance and attach it to the given parent element.</p>
+<p>Parameters:</p>
+<ul>
+<li>parent : string - any valid d3 single selector representing typically a dom block element such as a div.</li>
+<li>chartGroup : string (optional) - name of the chart group this chart instance should be
+placed in. Once a chart is placed in a chart group then any interaction with the chart
+will only trigger events and redraw within the same chart group.</li>
+<li>html (item): function - return the html fragment for each item in the dataset.
+You can use a templating library or build the html directly.
+Return:
+A newly created data grid widget instance</li>
+</ul>
+<h4 id="-size-size-">.size([size])</h4>
+<p>Get or set the grid size which determines the number of items displayed by the widget.</p>
+<h4 id="-html-function-data-return-html-">.html( function (data) { return &quot;<html>&quot;; })</h4>
+<p>Get or set the function that formats an item. The data grid widget uses a
+function to generate dynamic html. Use your favourite templating engine or
+generate the string directly.</p>
+<pre><code class="lang-js"><span class="transposed_variable">chart.</span>html(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> { <span class="title">return</span> "&lt;<span class="title">div</span> <span class="title">class</span>='<span class="title">item</span> "+<span class="title">data</span>.<span class="title">exampleCategory</span>+"'&gt;"+<span class="title">data</span>.<span class="title">exampleString</span>+"&lt;/<span class="title">div</span>&gt;";});</span></code></pre>
+<h4 id="-htmlgroup-function-data-return-html-">.htmlGroup( function (data) { return &quot;<html>&quot;; })</h4>
+<p>Get or set the function that formats a group label.</p>
+<pre><code class="lang-js"><span class="transposed_variable">chart.</span>htmlGroup (<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> { <span class="title">return</span> "&lt;<span class="title">h2</span>&gt;".<span class="title">d</span>.<span class="title">key</span> . "<span class="title">with</span> " . <span class="title">d</span>.<span class="title">values</span>.<span class="title">length</span> ." <span class="title">items</span>&lt;/<span class="title">h2</span>&gt;"});</span></code></pre>
+<h4 id="-sortby-sortbyfunction-">.sortBy([sortByFunction])</h4>
+<p>Get or set sort-by function. This function works as a value accessor at the item
+level and returns a particular field to be sorted.
+by. Default value: <code>function(d) {return d;};</code></p>
+<pre><code class="lang-js">chart<span class="preprocessor">.sortBy</span>(function(d) {
+return d<span class="preprocessor">.date</span><span class="comment">;</span>
+})<span class="comment">;</span></code></pre>
+<h4 id="-order-order-">.order([order])</h4>
+<p>Get or set sort order function. Default value: <code>d3.ascending</code></p>
+<pre><code class="lang-js">chart<span class="preprocessor">.order</span>(d3<span class="preprocessor">.descending</span>)<span class="comment">;</span></code></pre>
 <h2 id="bubble-chart">Bubble Chart</h2>
 <p>Includes: <a href="#bubble-mixin">Bubble Mixin</a>, <a href="#coordinate-grid-mixin">Coordinate Grid Mixin</a></p>
 <p>A concrete implementation of a general purpose bubble chart that allows data visualization using the following dimensions:</p>
@@ -1182,6 +1224,8 @@ Type can be a constant or an accessor.</p>
 <p>Set or get radius for symbols, default: 3.</p>
 <h4 id="-highlightedsize-radius-">.highlightedSize([radius])</h4>
 <p>Set or get radius for highlighted symbols, default: 4.</p>
+<h4 id="-hiddensize-radius-">.hiddenSize([radius])</h4>
+<p>Set or get radius for symbols when the group is empty, default: 0.</p>
 <h2 id="number-display-widget">Number Display Widget</h2>
 <p>Includes: <a href="#base-mixin">Base Mixin</a></p>
 <p>A display of a single numeric value.</p>
@@ -1203,6 +1247,9 @@ chart group.</li>
 A newly created number display instance</p>
 <pre><code class="lang-js">// <span class="operator"><span class="keyword">create</span> a <span class="keyword">number</span> display under #chart-container1 element <span class="keyword">using</span> the <span class="keyword">default</span> <span class="keyword">global</span> chart <span class="keyword">group</span>
 var display1 = dc.numberDisplay(<span class="string">"#chart-container1"</span>);</span></code></pre>
+<h4 id="-html-one-number-record-some-number-records-none-empty-">.html({one:&quot;%number record&quot;,some:&quot;%number records&quot;,none:&quot;empty&quot;}})</h4>
+<p>%number will be replaced with the value
+Get or set the string attached to the number and pluralize it according to the value.</p>
 <h4 id="-value-">.value()</h4>
 <p>Calculate and return the underlying value of the display</p>
 <h4 id="-formatnumber-formatter-">.formatNumber([formatter])</h4>

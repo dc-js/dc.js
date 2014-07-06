@@ -1996,7 +1996,9 @@ dc.coordinateGridMixin = function (_chart) {
     _chart._prepareYAxis = function(g) {
         if (_y === undefined || _chart.elasticY()) {
             _y = d3.scale.linear();
-            _y.domain([_chart.yAxisMin(), _chart.yAxisMax()]).rangeRound([_chart.yAxisHeight(), 0]);
+            var min = _chart.yAxisMin() || 0,
+                max = _chart.yAxisMax() || 0;
+            _y.domain([min, max]).rangeRound([_chart.yAxisHeight(), 0]);
         }
 
         _y.range([_chart.yAxisHeight(), 0]);
@@ -4259,13 +4261,35 @@ dc.dataCount(".dc-data-count")
 
 **/
 dc.dataCount = function(parent, chartGroup) {
+    var SPAN_CLASS = 'data-count-display';
     var _formatNumber = d3.format(",d");
     var _chart = dc.baseMixin({});
+    var _html = {some:"",all:""};
+
+    _chart.html = function(s) {
+        if (!arguments.length) return _html;
+        if(s.all)
+            _html.all = s.all;//if one available
+        if(s.some)
+            _html.some = s.some;//if some available
+        return _chart;
+    };
 
     _chart._doRender = function() {
-        _chart.selectAll(".total-count").text(_formatNumber(_chart.dimension().size()));
-        _chart.selectAll(".filter-count").text(_formatNumber(_chart.group().value()));
+        var tot = _chart.dimension().size(),
+            val = _chart.group().value();
+        var all = _formatNumber(tot);
+        var selected = _formatNumber(val);
 
+        if((tot===val)&&(_html.all!=="")) {
+            _chart.root().text(_html.all.replace('%total-count',all).replace('%filter-count',selected));
+        }
+        else if(_html.some!=="") {
+            _chart.root().text(_html.some.replace('%total-count',all).replace('%filter-count',selected));
+        } else {
+            _chart.selectAll(".total-count").text(all);
+            _chart.selectAll(".filter-count").text(selected);
+        }
         return _chart;
     };
 
@@ -4456,6 +4480,194 @@ dc.dataTable = function(parent, chartGroup) {
     ```
 
     **/
+    _chart.order = function(_) {
+        if (!arguments.length) return _order;
+        _order = _;
+        return _chart;
+    };
+
+    return _chart.anchor(parent, chartGroup);
+};
+
+/**
+ ## Data Grid Widget
+
+ Includes: [Base Mixin](#base-mixin)
+
+ Data grid is a simple widget designed to list the filtered records, providing
+ a simple way to define how the items are displayed.
+
+ Examples:
+ * [List of members of the european parliament ](http://europarl.me/dc.js/web/ep/index.html)
+
+ #### dc.dataGrid(parent[, chartGroup])
+ Create a data grid widget instance and attach it to the given parent element.
+
+ Parameters:
+ * parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+ * chartGroup : string (optional) - name of the chart group this chart instance should be
+ placed in. Once a chart is placed in a chart group then any interaction with the chart
+ will only trigger events and redraw within the same chart group.
+ * html (item): function - return the html fragment for each item in the dataset.
+ You can use a templating library or build the html directly.
+ Return:
+ A newly created data grid widget instance
+
+ **/
+dc.dataGrid = function(parent, chartGroup) {
+    var LABEL_CSS_CLASS = "dc-grid-label";
+    var ITEM_CSS_CLASS = "dc-grid-item";
+    var GROUP_CSS_CLASS = "dc-grid-group";
+    var GRID_CSS_CLASS = "dc-grid-top";
+
+    var _chart = dc.baseMixin({});
+
+    var _size = 999; // shouldn't be needed, but you might
+    var _html = function (d) { return "you need to provide an html() handling param:  " + JSON.stringify(d); };
+    var _sortBy = function(d) {
+        return d;
+    };
+    var _order = d3.ascending;
+
+    var _htmlGroup = function (d) {
+        return "<div class='"+GROUP_CSS_CLASS+"'><h1 class='"+LABEL_CSS_CLASS+"'>"+
+            _chart.keyAccessor()(d)+"</h1></div>";
+    };
+
+    _chart._doRender = function() {
+        _chart.selectAll("div."+ GRID_CSS_CLASS).remove();
+
+        renderItems(renderGroups());
+
+        return _chart;
+    };
+
+    function renderGroups() {
+        var groups = _chart.root().selectAll("div."+ GRID_CSS_CLASS)
+                .data(nestEntries(), function(d) {
+                    return _chart.keyAccessor()(d);
+                });
+
+        var itemGroup = groups
+                .enter()
+                .append("div")
+                .attr("class", GRID_CSS_CLASS);
+
+        if (_htmlGroup) {
+            itemGroup
+                .html(function(d) {
+                    return _htmlGroup(d);
+                });
+        }
+
+        groups.exit().remove();
+        return itemGroup;
+    }
+
+    function nestEntries() {
+        var entries = _chart.dimension().top(_size);
+
+        return d3.nest()
+            .key(_chart.group())
+            .sortKeys(_order)
+            .entries(entries.sort(function(a, b){
+                return _order(_sortBy(a), _sortBy(b));
+            }));
+    }
+
+    function renderItems(groups) {
+        var items = groups.order()
+                .selectAll("div." + ITEM_CSS_CLASS)
+                .data(function(d) {
+                    return d.values;
+                });
+
+        items.enter()
+            .append("div")
+            .attr("class", ITEM_CSS_CLASS)
+            .html(function(d) {
+                return _html(d);
+            });
+
+        items.exit().remove();
+
+        return items;
+    }
+
+    _chart._doRedraw = function() {
+        return _chart._doRender();
+    };
+
+    /**
+     #### .size([size])
+     Get or set the grid size which determines the number of items displayed by the widget.
+
+     **/
+    _chart.size = function(s) {
+        if (!arguments.length) return _size;
+        _size = s;
+        return _chart;
+    };
+
+    /**
+     #### .html( function (data) { return "<html>"; })
+     Get or set the function that formats an item. The data grid widget uses a
+     function to generate dynamic html. Use your favourite templating engine or
+     generate the string directly.
+     ```js
+     chart.html(function (d) { return "<div class='item "+data.exampleCategory+"'>"+data.exampleString+"</div>";});
+     ```
+
+     **/
+    _chart.html = function(_) {
+        if (!arguments.length) return _html;
+        _html = _;
+        return _chart;
+    };
+
+
+    /**
+     #### .htmlGroup( function (data) { return "<html>"; })
+     Get or set the function that formats a group label.
+     ```js
+     chart.htmlGroup (function (d) { return "<h2>".d.key . "with " . d.values.length ." items</h2>"});
+     ```
+
+     **/
+
+    _chart.htmlGroup = function(_) {
+        if (!arguments.length) return _htmlGroup;
+        _htmlGroup = _;
+        return _chart;
+    };
+    /**
+     #### .sortBy([sortByFunction])
+     Get or set sort-by function. This function works as a value accessor at the item
+     level and returns a particular field to be sorted.
+     by. Default value: ``` function(d) {return d;}; ```
+
+     ```js
+     chart.sortBy(function(d) {
+     return d.date;
+     });
+     ```
+
+     **/
+    _chart.sortBy = function(_) {
+        if (!arguments.length) return _sortBy;
+        _sortBy = _;
+        return _chart;
+    };
+
+    /**
+     #### .order([order])
+     Get or set sort order function. Default value: ``` d3.ascending ```
+
+     ```js
+     chart.order(d3.descending);
+     ```
+
+     **/
     _chart.order = function(_) {
         if (!arguments.length) return _order;
         _order = _;
@@ -6208,9 +6420,15 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     var _symbolSize = 3;
     var _highlightedSize = 5;
+    var _hiddenSize = 0;
 
     _symbol.size(function(d) {
-        return this.filtered ? Math.pow(_highlightedSize, 2) : Math.pow(_symbolSize, 2);
+        if(d.value === 0)
+            return _hiddenSize;
+        else if(this.filtered)
+            return Math.pow(_highlightedSize, 2);
+        else
+            return Math.pow(_symbolSize, 2);
     });
 
     dc.override(_chart, "_filter", function(filter) {
@@ -6232,7 +6450,7 @@ dc.scatterPlot = function (parent, chartGroup) {
             .attr("transform", _locator);
 
         dc.transition(symbols, _chart.transitionDuration())
-            .attr("opacity", 1)
+            .attr("opacity", function(d) { return d.value ? 1 : 0; })
             .attr("fill", _chart.getColor)
             .attr("transform", _locator)
             .attr("d", _symbol);
@@ -6273,6 +6491,17 @@ dc.scatterPlot = function (parent, chartGroup) {
     _chart.highlightedSize = function(s){
         if(!arguments.length) return _highlightedSize;
         _highlightedSize = s;
+        return _chart;
+    };
+
+    /**
+    #### .hiddenSize([radius])
+    Set or get radius for symbols when the group is empty, default: 0.
+
+    **/
+    _chart.hiddenSize = function(s){
+        if(!arguments.length) return _hiddenSize;
+        _hiddenSize = s;
         return _chart;
     };
 
@@ -6404,14 +6633,41 @@ dc.numberDisplay = function (parent, chartGroup) {
     var SPAN_CLASS = 'number-display';
     var _formatNumber = d3.format(".2s");
     var _chart = dc.baseMixin({});
+    var _html = {one:"",some:"",none:""};
 
     // dimension not required
     _chart._mandatoryAttributes(['group']);
 
     /**
+    #### .html({one:"%number record",some:"%number records",none:"empty"}})
+    %number will be replaced with the value
+    Get or set the string attached to the number and pluralize it according to the value. 
+    **/
+
+    _chart.html = function(s) {
+        if (!arguments.length) return _html;
+        if(s.none)
+            _html.none = s.none;//if none available
+        else if(s.one)
+            _html.none = s.one;//if none not available use one
+        else if(s.some)
+            _html.none = s.some;//if none and one not available use some
+        if(s.one)
+            _html.one = s.one;//if one available
+        else if(s.some)
+            _html.one = s.some;//if one not available use some
+        if(s.some)
+            _html.some = s.some;//if some available
+        else if(s.one)
+            _html.some = s.one;//if some not available use one
+        return _chart;
+    };
+
+    /**
     #### .value()
     Calculate and return the underlying value of the display
     **/
+
     _chart.value = function () {
         return _chart.data();
     };
@@ -6440,7 +6696,14 @@ dc.numberDisplay = function (parent, chartGroup) {
                 var interp = d3.interpolateNumber(this.lastValue || 0, newValue);
                 this.lastValue = newValue;
                 return function (t) {
-                    this.textContent = _chart.formatNumber()(interp(t));
+                    var html = null, num = _chart.formatNumber()(interp(t));
+                    if(newValue===0 && (_html.none!==""))
+                        html = _html.none;
+                    else if(newValue===1 &&(_html.one!==""))
+                        html = _html.one;
+                    else if(_html.some!=="")
+                        html = _html.some;
+                    this.textContent = html ? html.replace("%number", num) : num;
                 };
             });
     };
@@ -6462,7 +6725,6 @@ dc.numberDisplay = function (parent, chartGroup) {
 
     return _chart.anchor(parent, chartGroup);
 };
-
 
 /**
  ## Heat Map
@@ -7234,7 +7496,7 @@ return dc;}
 if(typeof define === "function" && define.amd) {
   define(["d3"], _dc);
 } else if(typeof module === "object" && module.exports) {
-  module.exports = d3;
+  module.exports = _dc(d3);
 } else {
   this.dc = _dc(d3);
 }
