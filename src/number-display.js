@@ -104,7 +104,7 @@ dc.numberDisplay = function (parent, chartGroup) {
                         html = _html.one;
                     else if(_html.some!=="")
                         html = _html.some;
-                    this.textContent = html ? html.replace("%number", num) : num;
+                    this.innerHTML = html ? html.replace("%number", num) : num;
                 };
             });
     };
