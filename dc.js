@@ -1996,7 +1996,9 @@ dc.coordinateGridMixin = function (_chart) {
     _chart._prepareYAxis = function(g) {
         if (_y === undefined || _chart.elasticY()) {
             _y = d3.scale.linear();
-            _y.domain([_chart.yAxisMin(), _chart.yAxisMax()]).rangeRound([_chart.yAxisHeight(), 0]);
+            var min = _chart.yAxisMin() || 0,
+                max = _chart.yAxisMax() || 0;
+            _y.domain([min, max]).rangeRound([_chart.yAxisHeight(), 0]);
         }
 
         _y.range([_chart.yAxisHeight(), 0]);
