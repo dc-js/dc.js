@@ -246,7 +246,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     **/
     _chart.geoPath = function () {
         return _geoPath;
-    }
+    };
 
     /**
     #### .removeGeoJson(name)

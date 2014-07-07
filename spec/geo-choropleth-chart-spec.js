@@ -74,6 +74,9 @@ describe('dc.geoChoropleth', function() {
         it('should return not null', function() {
             expect(chart).not.toBeNull();
         });
+        it('should have a d3.geo.path', function() {
+            expect(chart.geoPath()).not.toBeNull();
+        });
         it('svg is created', function() {
             expect(chart.selectAll("svg").length).not.toEqual(0);
         });
