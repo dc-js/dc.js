@@ -395,7 +395,14 @@ d3.csv("ndx.csv", function (data) {
     */
     dc.dataCount(".dc-data-count")
         .dimension(ndx)
-        .group(all);
+        .group(all)
+        // (optional) html, for setting different html for some records and all records.
+        // .html replaces everything in the anchor with the html given using the following function.
+        // %filter-count and %total-count are replaced with the values obtained.
+        .html({
+            some:"<strong>%filter-count</strong> selected out of <strong>%total-count</strong> records | <a href='javascript:dc.filterAll(); dc.renderAll();''>Reset All</a>",
+            all:"All records selected. Please click on the graph to apply filters."
+        });
 
     /*
     //#### Data Table
