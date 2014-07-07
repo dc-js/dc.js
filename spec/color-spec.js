@@ -1,4 +1,4 @@
-describe('dc.colorChart', function() {
+describe('dc.colorMixin', function() {
     function colorTest(chart, domain, test) {
         chart.colorDomain(domain);
         return (test || domain).map(chart.getColor);
@@ -10,7 +10,7 @@ describe('dc.colorChart', function() {
         var chart, domain;
 
         beforeEach(function() {
-            chart = dc.colorChart({});
+            chart = dc.colorMixin({});
             chart.colorAccessor(identity);
             domain = ["a","b","c","d","e"];
         });
