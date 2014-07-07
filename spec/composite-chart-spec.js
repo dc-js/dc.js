@@ -29,7 +29,8 @@ describe('dc.compositeChart', function() {
                 dc.lineChart(chart)
                     .group(dateIdSumGroup, 'Date ID Group')
                     .stack(dateValueSumGroup, 'Date Value Group Line 1')
-                    .stack(dateValueSumGroup, 'Date Value Group Line 2'),
+                    .stack(dateValueSumGroup, 'Date Value Group Line 2')
+                    .hidableStacks(true),
                 dc.lineChart(chart)
                     .group(dateGroup, 'Date Group')
             ]);
@@ -321,6 +322,14 @@ describe('dc.compositeChart', function() {
                 expect(chart.selectAll("path.fadeout").size()).toBe(0);
             });
 
+            it('should hide hidable child stacks', function() {
+                var dateValueGroupLine2 = d3.select(chart.selectAll('g.dc-legend g.dc-legend-item')[0][3]);
+
+                dateValueGroupLine2.on("click")(dateValueGroupLine2.datum());
+                expect(dateValueGroupLine2.text()).toBe('Date Value Group Line 2');
+                expect(d3.select(chart.selectAll('g.dc-legend g.dc-legend-item')[0][3]).classed("fadeout")).toBeTruthy();                
+                expect(chart.selectAll("path.line").size()).toEqual(3);
+            });
         });
     });
 
