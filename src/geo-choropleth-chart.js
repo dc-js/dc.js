@@ -236,6 +236,19 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     };
 
     /**
+    #### .geoPath()
+    Return the d3.geo.path object used to render the projection and features.  Can be useful for figuring out the bounding
+    box of the feature set and thus a way to calculate scale and translation for the projection.
+
+    Return:
+    d3.geo.path()
+
+    **/
+    _chart.geoPath = function () {
+        return _geoPath;
+    }
+
+    /**
     #### .removeGeoJson(name)
     Remove a GeoJson layer from this chart by name
 
