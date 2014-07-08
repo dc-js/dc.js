@@ -5211,10 +5211,7 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     _chart.legendToggle = function (d) {
-        for (var j = 0; j < _children.length; ++j) {
-            var child = _children[j];
-            if (d.name == child._groupName) child.legendToggle(d);
-        }
+        console.log("composite should not be getting legendToggle itself");
     };
 
     /**
@@ -6267,7 +6264,7 @@ dc.legend = function () {
                 _parent.legendReset(d);
             })
             .on("click", function (d) {
-                _parent.legendToggle(d);
+                d.chart.legendToggle(d);
             });
 
         _g.selectAll('g.dc-legend-item')

@@ -376,16 +376,7 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     _chart.legendToggle = function (d) {
-        for (var j = 0; j < _children.length; ++j) {
-            var child = _children[j];
-            var _child_stacks = child.stack();
-            for (var k = 0; k < _child_stacks.length; ++k) {
-                var _child_stack = _child_stacks[k];
-                if (d.name == _child_stack.name) {
-                    child.legendToggle(d);
-                }
-            }
-        }
+        console.log("composite should not be getting legendToggle itself");
     };
 
     /**

@@ -51,7 +51,7 @@ dc.legend = function () {
                 _parent.legendReset(d);
             })
             .on("click", function (d) {
-                _parent.legendToggle(d);
+                d.chart.legendToggle(d);
             });
 
         _g.selectAll('g.dc-legend-item')
