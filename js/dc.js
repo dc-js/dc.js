@@ -5211,10 +5211,7 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     _chart.legendToggle = function (d) {
-        for (var j = 0; j < _children.length; ++j) {
-            var child = _children[j];
-            if (d.name == child._groupName) child.legendToggle(d);
-        }
+        console.log("composite should not be getting legendToggle itself");
     };
 
     /**
@@ -5306,7 +5303,8 @@ dc.seriesChart = function (parent, chartGroup) {
                     .dimension(_chart.dimension())
                     .group({all:d3.functor(sub.values)}, sub.key)
                     .keyAccessor(_chart.keyAccessor())
-                    .valueAccessor(_chart.valueAccessor());
+                    .valueAccessor(_chart.valueAccessor())
+                    .brushOn(_chart.brushOn());
             });
         // this works around the fact compositeChart doesn't really
         // have a removal interface
@@ -5622,6 +5620,19 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     **/
     _chart.geoJsons = function () {
         return _geoJsons;
+    };
+
+    /**
+    #### .geoPath()
+    Return the d3.geo.path object used to render the projection and features.  Can be useful for figuring out the bounding
+    box of the feature set and thus a way to calculate scale and translation for the projection.
+
+    Return:
+    d3.geo.path()
+
+    **/
+    _chart.geoPath = function () {
+        return _geoPath;
     };
 
     /**
@@ -6253,7 +6264,7 @@ dc.legend = function () {
                 _parent.legendReset(d);
             })
             .on("click", function (d) {
-                _parent.legendToggle(d);
+                d.chart.legendToggle(d);
             });
 
         _g.selectAll('g.dc-legend-item')

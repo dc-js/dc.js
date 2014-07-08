@@ -1307,6 +1307,13 @@ registration.
 Return:
 An array of objects containing fields {name, data, accessor}
 
+#### .geoPath()
+Return the d3.geo.path object used to render the projection and features.  Can be useful for figuring out the bounding
+box of the feature set and thus a way to calculate scale and translation for the projection.
+
+Return:
+d3.geo.path()
+
 #### .removeGeoJson(name)
 Remove a GeoJson layer from this chart by name
 

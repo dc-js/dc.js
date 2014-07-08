@@ -1094,6 +1094,11 @@ registration data structure without copying thus any modification to this array 
 registration.</p>
 <p>Return:
 An array of objects containing fields {name, data, accessor}</p>
+<h4 id="-geopath-">.geoPath()</h4>
+<p>Return the d3.geo.path object used to render the projection and features.  Can be useful for figuring out the bounding
+box of the feature set and thus a way to calculate scale and translation for the projection.</p>
+<p>Return:
+d3.geo.path()</p>
 <h4 id="-removegeojson-name-">.removeGeoJson(name)</h4>
 <p>Remove a GeoJson layer from this chart by name</p>
 <p>Return: chart instance</p>
