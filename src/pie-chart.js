@@ -37,6 +37,7 @@ dc.pieChart = function (parent, chartGroup) {
     var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
     var _sliceCssClass = "pie-slice";
+    var _emptyCssClass = "empty-chart";
 
     var _radius,
         _innerRadius = 0;
@@ -91,6 +92,13 @@ dc.pieChart = function (parent, chartGroup) {
         var pieData = pie(_chart.data());
 
         if (_g) {
+            if(Number.isNaN(pieData[pieData.length-1].endAngle)) {
+                pieData = pie([{key:"empty",value:1}]);
+                _g.attr("class",_emptyCssClass);
+            } else {
+                 _g.attr("class","");
+            }
+
             var slices = _g.selectAll("g." + _sliceCssClass)
                 .data(pieData);
 
@@ -337,7 +345,8 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     function onClick(d, i) {
-        _chart.onClick(d.data, i);
+        if (_g.attr("class") != _emptyCssClass)
+            _chart.onClick(d.data, i);
     }
 
     function safeArc(d, i, arc) {

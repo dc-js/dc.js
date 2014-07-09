@@ -26,6 +26,15 @@ div.dc-chart {
     fill: #ccc;
 }
 
+.dc-chart .empty-chart .pie-slice path {
+    fill: #FFEEEE;
+    cursor: default;
+}
+
+.dc-chart .empty-chart .pie-slice {
+    cursor: default;
+}
+
 .dc-chart .pie-slice {
     fill: white;
     font-size: 12px;
