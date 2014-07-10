@@ -32,7 +32,7 @@ dc.colorMixin = function(_chart) {
     **/
     _chart.colors = function(_) {
         if (!arguments.length) return _colors;
-        if (_ instanceof Array) _colors = d3.scale.quantize().range(_); // depricated legacy support, note: this fails for ordinal domains
+        if (_ instanceof Array) _colors = d3.scale.quantize().range(_); // deprecated legacy support, note: this fails for ordinal domains
         else _colors = d3.functor(_);
         return _chart;
     };
