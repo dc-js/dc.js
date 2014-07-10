@@ -38,6 +38,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     var _sliceCssClass = "pie-slice";
     var _emptyCssClass = "empty-chart";
+    var _emptyTitle = "empty";
 
     var _radius,
         _innerRadius = 0;
@@ -89,16 +90,19 @@ dc.pieChart = function (parent, chartGroup) {
         var arc = buildArcs();
 
         var pie = pieLayout();
-        var pieData = pie(_chart.data());
+        var pieData;
+        // if we have data...
+        if(d3.sum(_chart.data(), _chart.valueAccessor())) {
+            pieData = pie(_chart.data());
+            _g.classed(_emptyCssClass, false);
+        } else {
+            // otherwise we'd be getting NaNs, so override
+            // note: abuse others for its ignoring the value accessor
+            pieData = pie([{key:_emptyTitle, value:1, others: [_emptyTitle]}]);
+            _g.classed(_emptyCssClass, true);
+        }
 
         if (_g) {
-            if(Number.isNaN(pieData[pieData.length-1].endAngle)) {
-                pieData = pie([{key:"empty",value:1}]);
-                _g.attr("class",_emptyCssClass);
-            } else {
-                 _g.attr("class","");
-            }
-
             var slices = _g.selectAll("g." + _sliceCssClass)
                 .data(pieData);
 
@@ -355,6 +359,17 @@ dc.pieChart = function (parent, chartGroup) {
             path = "M0,0";
         return path;
     }
+
+    /**
+     #### .emptyTitle([title])
+     Title to use for the only slice when there is no data
+     */
+    _chart.emptyTitle = function(title) {
+        if (arguments.length === 0)
+            return _emptyTitle;
+        _emptyTitle = title;
+        return _chart;
+    };
 
     /**
      #### .externalLabels([radius])

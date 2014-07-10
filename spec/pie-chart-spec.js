@@ -191,12 +191,11 @@ describe('dc.pieChart', function() {
                 chart.render();
                 return chart;
             });
-            it('NaN centroid should be handled properly', function() {
-                expect(chart.selectAll("svg g text.pie-slice").attr("transform"))
-                    .toMatchTranslate(0,0);
+            it('should draw an empty chart', function() {
+                expect(chart.select('g').classed('empty-chart')).toBeTruthy();
             });
-            it('slice path should not contain NaN', function() {
-                expect(chart.selectAll("g.pie-slice path").attr("d"), "M0).toEqual(0");
+            it('should have one slice', function() {
+                expect(chart.selectAll("svg g text.pie-slice").length).toBe(1);
             });
             afterEach(function() {
                 statusDimension.filterAll();
@@ -384,8 +383,8 @@ describe('dc.pieChart', function() {
                 chart.selectAll(".pie-slice path")[0][2].dispatchEvent(event);
                 expect(chart.filters()).toEqual([]);
             });
-        });/*
-        it('with custom valueAccessor', function() {
+        });
+        describe('with custom valueAccessor', function() {
             beforeEach(function() {
                 chart.dimension(statusDimension).group(statusMultiGroup)
                     .valueAccessor(function(d) {return d.value.value;})
@@ -393,16 +392,16 @@ describe('dc.pieChart', function() {
                 return chart;
             });
             it('correct values, no others row', function() {
-                assert.deepEqual(chart.selectAll("g.pie-slice").data().map(dc.pluck('value')),
-                                 [220, 198]);
+                expect(chart.selectAll("g.pie-slice").data().map(dc.pluck('value')))
+                    .toEqual([220, 198]);
             });
             it('correct values, others row', function() {
                 chart.cap(1).render();
-                assert.deepEqual(chart.selectAll("title")[0].map(function(t) {return d3.select(t).text();}),
-                                 [ 'F: 220', 'small: 198' ]);
+                expect(chart.selectAll("title")[0].map(function(t) {return d3.select(t).text();}))
+                    .toEqual([ 'F: 220', 'small: 198' ]);
                 chart.cap(3); //teardown
             });
-        });*/
+        });
         afterEach(function() {
             valueDimension.filterAll();
         });
@@ -457,6 +456,36 @@ describe('dc.pieChart', function() {
         });
         it('default function should be used to dynamically generate title', function() {
             expect(d3.select(chart.selectAll("g.pie-slice title")[0][0]).text()).toEqual("F: 5");
+        });
+        describe('with n/a filter', function() {
+            beforeEach(function() {
+                regionDimension.filter("nowhere");
+                chart.render();
+                return chart;
+            });
+            it('should draw an empty chart', function() {
+                expect(chart.select('g').classed('empty-chart')).toBeTruthy();
+            });
+            it('should have one slice', function() {
+                expect(chart.selectAll("svg g text.pie-slice").length).toBe(1);
+            });
+            it('should have slice labeled empty', function() {
+                expect(d3.select(chart.selectAll("text.pie-slice")[0][0]).text()).toEqual("empty");
+            });
+            describe('with emptyTitle', function() {
+                beforeEach(function() {
+                    chart.emptyTitle('nothing').render();
+                });
+                it('should respect the emptyTitle', function() {
+                    expect(d3.select(chart.selectAll("text.pie-slice")[0][0]).text()).toEqual("nothing");
+                });
+                afterEach(function() {
+                    chart.emptyTitle('empty');
+                });
+            });
+            afterEach(function() {
+                regionDimension.filterAll();
+            });
         });
     });
 

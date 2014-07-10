@@ -255,12 +255,15 @@ d3.csv("ndx.csv", function (data) {
         .radius(80) // define pie radius
         .dimension(gainOrLoss) // set dimension
         .group(gainOrLossGroup) // set group
-        /* (optional) by default pie chart will use group.key as it's label
+        /* (optional) by default pie chart will use group.key as its label
          * but you can overwrite it with a closure */
         .label(function (d) {
             if (gainOrLossChart.hasFilter() && !gainOrLossChart.hasFilter(d.key))
                 return d.key + "(0%)";
-            return d.key + "(" + Math.floor(d.value / all.value() * 100) + "%)";
+            var label = d.key;
+            if(all.value())
+                label += "(" + Math.floor(d.value / all.value() * 100) + "%)";
+            return label;
         }) /*
         // (optional) whether chart should render labels, :default = true
         .renderLabel(true)

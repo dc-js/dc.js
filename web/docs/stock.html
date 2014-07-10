@@ -621,12 +621,15 @@ on other charts within the same chart group.</p>
         .radius(<span class="hljs-number">80</span>) <span class="hljs-comment">// define pie radius</span>
         .dimension(gainOrLoss) <span class="hljs-comment">// set dimension</span>
         .group(gainOrLossGroup) <span class="hljs-comment">// set group</span>
-        <span class="hljs-comment">/* (optional) by default pie chart will use group.key as it's label
+        <span class="hljs-comment">/* (optional) by default pie chart will use group.key as its label
          * but you can overwrite it with a closure */</span>
         .label(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
             <span class="hljs-keyword">if</span> (gainOrLossChart.hasFilter() &amp;&amp; !gainOrLossChart.hasFilter(d.key))
                 <span class="hljs-keyword">return</span> d.key + <span class="hljs-string">"(0%)"</span>;
-            <span class="hljs-keyword">return</span> d.key + <span class="hljs-string">"("</span> + <span class="hljs-built_in">Math</span>.floor(d.value / all.value() * <span class="hljs-number">100</span>) + <span class="hljs-string">"%)"</span>;
+            <span class="hljs-keyword">var</span> label = d.key;
+            <span class="hljs-keyword">if</span>(all.value())
+                label += <span class="hljs-string">"("</span> + <span class="hljs-built_in">Math</span>.floor(d.value / all.value() * <span class="hljs-number">100</span>) + <span class="hljs-string">"%)"</span>;
+            <span class="hljs-keyword">return</span> label;
         }) <span class="hljs-comment">/*
 </span></pre></div></div>
             
