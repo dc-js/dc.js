@@ -383,8 +383,8 @@ describe('dc.pieChart', function() {
                 chart.selectAll(".pie-slice path")[0][2].dispatchEvent(event);
                 expect(chart.filters()).toEqual([]);
             });
-        });/*
-        it('with custom valueAccessor', function() {
+        });
+        describe('with custom valueAccessor', function() {
             beforeEach(function() {
                 chart.dimension(statusDimension).group(statusMultiGroup)
                     .valueAccessor(function(d) {return d.value.value;})
@@ -392,16 +392,16 @@ describe('dc.pieChart', function() {
                 return chart;
             });
             it('correct values, no others row', function() {
-                assert.deepEqual(chart.selectAll("g.pie-slice").data().map(dc.pluck('value')),
-                                 [220, 198]);
+                expect(chart.selectAll("g.pie-slice").data().map(dc.pluck('value')))
+                    .toEqual([220, 198]);
             });
             it('correct values, others row', function() {
                 chart.cap(1).render();
-                assert.deepEqual(chart.selectAll("title")[0].map(function(t) {return d3.select(t).text();}),
-                                 [ 'F: 220', 'small: 198' ]);
+                expect(chart.selectAll("title")[0].map(function(t) {return d3.select(t).text();}))
+                    .toEqual([ 'F: 220', 'small: 198' ]);
                 chart.cap(3); //teardown
             });
-        });*/
+        });
         afterEach(function() {
             valueDimension.filterAll();
         });
