@@ -191,12 +191,11 @@ describe('dc.pieChart', function() {
                 chart.render();
                 return chart;
             });
-            it('NaN centroid should be handled properly', function() {
-                expect(chart.selectAll("svg g text.pie-slice").attr("transform"))
-                    .toMatchTranslate(0,0);
+            it('should draw an empty chart', function() {
+                expect(chart.select('g').classed('empty-chart')).toBeTruthy();
             });
-            it('slice path should not contain NaN', function() {
-                expect(chart.selectAll("g.pie-slice path").attr("d"), "M0).toEqual(0");
+            it('should have one slice', function() {
+                expect(chart.selectAll("svg g text.pie-slice").length).toBe(1);
             });
             afterEach(function() {
                 statusDimension.filterAll();
@@ -457,6 +456,36 @@ describe('dc.pieChart', function() {
         });
         it('default function should be used to dynamically generate title', function() {
             expect(d3.select(chart.selectAll("g.pie-slice title")[0][0]).text()).toEqual("F: 5");
+        });
+        describe('with n/a filter', function() {
+            beforeEach(function() {
+                regionDimension.filter("nowhere");
+                chart.render();
+                return chart;
+            });
+            it('should draw an empty chart', function() {
+                expect(chart.select('g').classed('empty-chart')).toBeTruthy();
+            });
+            it('should have one slice', function() {
+                expect(chart.selectAll("svg g text.pie-slice").length).toBe(1);
+            });
+            it('should have slice labeled empty', function() {
+                expect(d3.select(chart.selectAll("text.pie-slice")[0][0]).text()).toEqual("empty");
+            });
+            describe('with emptyTitle', function() {
+                beforeEach(function() {
+                    chart.emptyTitle('nothing').render();
+                });
+                it('should respect the emptyTitle', function() {
+                    expect(d3.select(chart.selectAll("text.pie-slice")[0][0]).text()).toEqual("nothing");
+                });
+                afterEach(function() {
+                    chart.emptyTitle('empty');
+                });
+            });
+            afterEach(function() {
+                regionDimension.filterAll();
+            });
         });
     });
 
