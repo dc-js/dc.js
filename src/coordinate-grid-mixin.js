@@ -186,7 +186,7 @@ dc.coordinateGridMixin = function (_chart) {
     #### .xUnits([xUnits function])
     Set or get the xUnits function. xUnits function is the coordinate grid chart uses to calculate number of data
     projections on x axis such as number bars for a bar chart and number of dots for a line chart. This function is
-    expected to return an Javascript array of all data points on x axis. d3 time range functions d3.time.days, d3.time.months,
+    expected to return a Javascript array of all data points on x axis. d3 time range functions d3.time.days, d3.time.months,
     and d3.time.years are all valid xUnits function. dc.js also provides a few units function, see [Utilities](#utilities)
     section for a list of built-in units functions. Default xUnits function is dc.units.integers.
     ```js
@@ -952,7 +952,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
     #### .focus([range])
-    Zoom this chart to focus on the given range. The given range should be an array containing only 2 element([start, end]) defining an range in x domain. If the range is not given or set to null, then the zoom will be reset. _For focus to work elasticX has to be turned off otherwise focus will be ignored._
+    Zoom this chart to focus on the given range. The given range should be an array containing only 2 element([start, end]) defining a range in x domain. If the range is not given or set to null, then the zoom will be reset. _For focus to work elasticX has to be turned off otherwise focus will be ignored._
     ```js
     chart.renderlet(function(chart){
         // smooth the rendering through event throttling
