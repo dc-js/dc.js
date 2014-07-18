@@ -10,8 +10,8 @@ Create a scatter plot instance and attach it to the given parent element.
 
 Parameters:
 
-* parent : string|compositeChart - any valid d3 single selector representing typically a dom block element such
-as a div, or if this scatter plot is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+* parent : string | node | compositeChart - any valid d3 single selector (typically representing a DOM block element such
+as a div), a DOM node, or if this scatter plot is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
 * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
 in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
 chart group.

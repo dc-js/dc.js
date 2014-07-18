@@ -168,8 +168,8 @@ d3.select("#chart-id").selectAll(selector);
 This function is **not chainable** since it does not return a chart instance; however the d3 selection result is
 chainable from d3's perspective.
 
-#### .anchor([anchorChart/anchorSelector], [chartGroup])
-Set the svg root to either be an existing chart's root or the first element returned from a d3 css string selector. Optionally registers the chart within the chartGroup. This class is called internally on chart initialization, but be called again to relocate the chart. However, it will orphan any previously created SVG elements.
+#### .anchor([anchorChart/anchorSelector/anchorNode], [chartGroup])
+Set the svg root to either be an existing chart's root or the result returned by d3's select method, which can operate on a css string selector or a DOM node. Optionally registers the chart within the chartGroup. This class is called internally on chart initialization, but be called again to relocate the chart. However, it will orphan any previously created SVG elements.
 
 #### .anchorName()
 Return the dom ID for chart's anchored location
@@ -742,8 +742,8 @@ Create a pie chart instance and attach it to the given parent element.
 
 Parameters:
 
-* parent : string - any valid d3 single selector representing typically a dom block element such
-as a div.
+* parent : string | node - any valid d3 single selector (typically representing a DOM block element such
+   as a div) or a DOM node.
 * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
 in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
 chart group.
@@ -795,8 +795,8 @@ Examples:
 Create a bar chart instance and attach it to the given parent element.
 
 Parameters:
-* parent : string|compositeChart - any valid d3 single selector representing typically a dom block element such
-as a div, or if this bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+* parent : string | node | compositeChart - any valid d3 single selector (typically representing a DOM block element such
+   as a div), a DOM node, or if this bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
 * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
 in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
 chart group.
@@ -858,8 +858,8 @@ Create a line chart instance and attach it to the given parent element.
 
 Parameters:
 
-* parent : string|compositeChart - any valid d3 single selector representing typically a dom block element such
-as a div, or if this line chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+* parent : string | node | compositeChart - any valid d3 single selector (typically representing a DOM block element such
+   as a div), a DOM node, or if this line chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
 * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
 in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
 chart group.
@@ -928,7 +928,7 @@ Create a data count widget instance and attach it to the given parent element.
 
 Parameters:
 
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* parent : string | node - any valid d3 single selector (typically representing a DOM block element such as a div) or a DOM node.
 * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
 in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
 chart group.
@@ -965,7 +965,7 @@ Examples:
 Create a data table widget instance and attach it to the given parent element.
 
 Parameters:
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* parent : string | node - any valid d3 single selector (typically representing a DOM block element such as a div) or a DOM node.
 * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
 in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
 chart group.
@@ -1032,7 +1032,7 @@ Examples:
 Create a data grid widget instance and attach it to the given parent element.
 
 Parameters:
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* parent : string | node - any valid d3 single selector (typically representing a DOM block element such as a div) or a DOM node.
 * chartGroup : string (optional) - name of the chart group this chart instance should be
 placed in. Once a chart is placed in a chart group then any interaction with the chart
 will only trigger events and redraw within the same chart group.
@@ -1095,7 +1095,7 @@ Examples:
 Create a bubble chart instance and attach it to the given parent element.
 
 Parameters:
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* parent : string | node - any valid d3 single selector (typically representing a DOM block element such as a div) or a DOM node.
 * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
 in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
 chart group.
@@ -1127,7 +1127,7 @@ charting effects.
 Create a composite chart instance and attach it to the given parent element.
 
 Parameters:
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* parent : string | node - any valid d3 single selector (typically representing a DOM block element such as a div) or a DOM node.
 * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
 in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
 chart group.
@@ -1215,7 +1215,7 @@ all composite features other than recomposing the chart.
 Create a series chart instance and attach it to the given parent element.
 
 Parameters:
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* parent : string | node - any valid d3 single selector (typically representing a DOM block element such as a div) or a DOM node.
 * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
 in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
 chart group.
@@ -1262,7 +1262,7 @@ Examples:
 Create a choropleth chart instance and attach it to the given parent element.
 
 Parameters:
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* parent : string | node - any valid d3 single selector (typically representing a DOM block element such as a div) or a DOM node.
 * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
 in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
 chart group.
@@ -1335,8 +1335,8 @@ Examples:
 Create a bubble overlay chart instance and attach it to the given parent element.
 
 Parameters:
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div. Typically
-this element should also be the parent of the underlying image.
+* parent : string | node - any valid d3 single selector (typically representing a DOM block element such as a div) or a DOM node.
+Typically this element should also be the parent of the underlying image.
 * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
 in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
 chart group.
@@ -1377,7 +1377,7 @@ Create a row chart instance and attach it to the given parent element.
 
 Parameters:
 
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* parent : string | node - any valid d3 single selector (typically representing a DOM block element such as a div) or a DOM node.
 * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed in a certain chart group then any interaction with such instance will only trigger events and redraw within the same chart group.
 
 Return a newly created row chart instance
@@ -1469,8 +1469,8 @@ Create a scatter plot instance and attach it to the given parent element.
 
 Parameters:
 
-* parent : string|compositeChart - any valid d3 single selector representing typically a dom block element such
-as a div, or if this scatter plot is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+* parent : string | node | compositeChart - any valid d3 single selector (typically representing a DOM block element such
+as a div), a DOM node, or if this scatter plot is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
 * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
 in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
 chart group.
@@ -1518,7 +1518,7 @@ Unlike other charts, you do not need to set a dimension. Instead a valid group o
 
 Parameters:
 
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div or span
+* parent : string | node - any valid d3 single selector typically representing a DOM block element such as a div or span or a DOM node
 * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
 in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
 chart group.
@@ -1551,7 +1551,7 @@ A heat map is matrix that represents the values of two dimensions of data using 
 Create a heat map instance and attach it to the given parent element.
 
 Parameters:
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* parent : string | node - any valid d3 single selector (typically representing a DOM block element such as a div) or a DOM node.
 * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
 in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
 chart group.
@@ -1576,7 +1576,7 @@ A box plot is a chart that depicts numerical data via their quartile ranges.
 Create a box plot instance and attach it to the given parent element.
 
 Parameters:
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+* parent : string | node - any valid d3 single selector (typically representing a dom block element such as a div) or a DOM node.
 * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
 in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
 chart group.

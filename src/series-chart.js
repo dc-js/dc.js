@@ -11,7 +11,7 @@
  Create a series chart instance and attach it to the given parent element.
 
  Parameters:
- * parent : string - any valid d3 single selector representing typically a dom block element such as a div.
+ * parent : string | node - any valid d3 single selector (typically representing a DOM block element such as a div) or a DOM node.
  * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
  in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
  chart group.
