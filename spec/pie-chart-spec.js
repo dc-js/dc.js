@@ -24,7 +24,7 @@ describe('dc.pieChart', function() {
         });
         countryGroup = countryDimension.group();
         dateDimension = data.dimension(function(d) {
-            return d3.time.day(d.dd);
+            return d3.time.day.utc(d.dd);
         });
         statusGroup = statusDimension.group();
         statusMultiGroup = statusGroup.reduce(
@@ -301,9 +301,9 @@ describe('dc.pieChart', function() {
         var chart;
         beforeEach(function() {
             chart = buildChart("pie-chart2");
-            dateDimension.filter([new Date(2010, 0, 1), new Date(2010, 0, 3)]);
+            dateDimension.filter([makeDate(2010, 0, 1), makeDate(2010, 0, 3)]);
             chart.redraw();
-            dateDimension.filter([new Date(2012, 0, 1), new Date(2012, 11, 30)]);
+            dateDimension.filter([makeDate(2012, 0, 1), makeDate(2012, 11, 30)]);
             chart.redraw();
         });
         it('pie chart should be restored', function() {

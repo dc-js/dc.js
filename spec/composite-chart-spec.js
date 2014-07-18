@@ -3,7 +3,7 @@ describe('dc.compositeChart', function() {
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
-        dateDimension = data.dimension(function(d) { return d3.time.day(d.dd); });
+        dateDimension = data.dimension(function(d) { return d3.time.day.utc(d.dd); });
         dateValueSumGroup = dateDimension.group().reduceSum(function(d) { return d.value; });
         dateIdSumGroup = dateDimension.group().reduceSum(function(d) { return d.id; });
         dateGroup = dateDimension.group();
@@ -17,9 +17,9 @@ describe('dc.compositeChart', function() {
             .group(dateIdSumGroup)
             .width(500)
             .height(150)
-            .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
+            .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]))
             .transitionDuration(0)
-            .xUnits(d3.time.days)
+            .xUnits(d3.time.days.utc)
             .shareColors(true)
             .compose([
                 dc.barChart(chart)
@@ -69,12 +69,12 @@ describe('dc.compositeChart', function() {
     });
 
     it('should set the x domain to endpoint dates', function () {
-        expect(chart.x().domain()[0].getTime()).toBe(new Date(2012, 4, 20).getTime());
-        expect(chart.x().domain()[1].getTime()).toBe(new Date(2012, 7, 15).getTime());
+        expect(chart.x().domain()[0].getTime()).toBe(makeDate(2012, 4, 20).getTime());
+        expect(chart.x().domain()[1].getTime()).toBe(makeDate(2012, 7, 15).getTime());
     });
 
     it('should set the x units', function(){
-        expect(chart.xUnits()).toBe(d3.time.days);
+        expect(chart.xUnits()).toBe(d3.time.days.utc);
     });
 
     it('should create the x axis', function(){
@@ -94,7 +94,7 @@ describe('dc.compositeChart', function() {
     });
 
     it('can change round', function () {
-        chart.round(d3.time.day.round);
+        chart.round(d3.time.day.utc.round);
         expect(chart.round()).not.toBeNull();
     });
 
@@ -257,7 +257,7 @@ describe('dc.compositeChart', function() {
 
             describe('when filtering the chart', function () {
                 beforeEach(function () {
-                    chart.filter([new Date(2012, 5, 1), new Date(2012, 5, 30)]).redraw();
+                    chart.filter([makeDate(2012, 5, 1), makeDate(2012, 5, 30)]).redraw();
                 });
 
                 it('should set extent width to chart width based on filter set', function () {

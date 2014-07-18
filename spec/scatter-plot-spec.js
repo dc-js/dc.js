@@ -184,7 +184,7 @@ describe('dc.scatterPlot', function() {
             compositeChart = dc.compositeChart("#" + id);
             compositeChart
                 .dimension(dimension)
-                .x(d3.time.scale().domain([new Date(2012, 0, 1), new Date(2012, 11, 31)]))
+                .x(d3.time.scale.utc().domain([makeDate(2012, 0, 1), makeDate(2012, 11, 31)]))
                 .transitionDuration(0)
                 .legend(dc.legend())
                 .compose([

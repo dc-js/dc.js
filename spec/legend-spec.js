@@ -3,7 +3,7 @@ describe("dc.legend", function() {
 
     beforeEach(function () {
         var data = crossfilter(loadDateFixture());
-        dateDimension = data.dimension(function(d) { return d3.time.day(d.dd); });
+        dateDimension = data.dimension(function(d) { return d3.time.day.utc(d.dd); });
         dateValueSumGroup = dateDimension.group().reduceSum(function(d) { return d.value; });
         dateIdSumGroup = dateDimension.group().reduceSum(function(d) { return d.id; });
 
@@ -16,7 +16,7 @@ describe("dc.legend", function() {
             .group(dateIdSumGroup, "Id Sum")
             .stack(dateValueSumGroup, "Value Sum")
             .stack(dateValueSumGroup, "Fixed", function () {})
-            .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
+            .x(d3.time.scale.utc().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
             .legend(dc.legend().x(400).y(10).itemHeight(13).gap(5));
     });
 

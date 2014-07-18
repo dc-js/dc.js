@@ -12,8 +12,8 @@ describe('dc.filter-dates', function() {
     var margins = {top: 15, right: 10, bottom: 20, left: 40};
     beforeEach(function () {
         // Months are 0 indexed...
-        var start = new Date(2013, 10, 1);
-        var end = new Date(2013, 11, 1);
+        var start = makeDate(2013, 10, 1);
+        var end = makeDate(2013, 11, 1);
         var stringLength = 2;
 
         // Generate Random Data [Date, VowelString, Random Number, Random Measure]
@@ -57,7 +57,7 @@ describe('dc.filter-dates', function() {
     });
 
     it('filtering on 11/8 should keep only that row', function() {
-        row1.filter(new Date(2013, 10, 8));
+        row1.filter(makeDate(2013, 10, 8));
         expect(group1.all()[6].value).not.toEqual(0);
         expect(group2.all()[6].value).toEqual(0);
         expect(group2.all()[7]).toEqual(group1.all()[7]);
@@ -65,7 +65,7 @@ describe('dc.filter-dates', function() {
     });
 
     it('filtering on 11/17 should keep only that row', function() {
-        row1.filter(new Date(2013, 10, 17));
+        row1.filter(makeDate(2013, 10, 17));
         expect(group1.all()[15].value).not.toEqual(0);
         expect(group2.all()[15].value).toEqual(0);
         expect(group2.all()[16]).toEqual(group1.all()[16]);
@@ -75,7 +75,7 @@ describe('dc.filter-dates', function() {
     // Create a Random Date
     function randomDate(start, end) {
         var d = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-        d.setHours(0,0,0,0);
+        d.setUTCHours(0,0,0,0);
         return d;
     }
 

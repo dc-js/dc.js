@@ -4,7 +4,7 @@ describe('dc.barChart', function() {
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
-        dimension = data.dimension(function(d) { return d3.time.day(d.dd); });
+        dimension = data.dimension(function(d) { return d3.time.day.utc(d.dd); });
         group = dimension.group();
 
         id = 'bar-chart';
@@ -13,7 +13,7 @@ describe('dc.barChart', function() {
         chart = dc.barChart('#' + id);
         chart.dimension(dimension).group(group)
             .width(1100).height(200)
-            .x(d3.time.scale().domain([new Date("2012/01/01"), new Date("2012/12/31")]))
+            .x(d3.time.scale.utc().domain([makeDate(2012, 0, 1), makeDate(2012, 11, 31)]))
             .transitionDuration(0);
     });
 
@@ -61,15 +61,15 @@ describe('dc.barChart', function() {
             beforeEach(function() {
                 chart.rescale(); // BUG: barWidth cannot change after initial rendering
 
-                var domain = [new Date("5/20/2012"), new Date("8/15/2012")];
+                var domain = [makeDate(2012, 4, 20), makeDate(2012, 7, 15)];
 
-                chart.x(d3.time.scale().domain(domain))
+                chart.x(d3.time.scale.utc().domain(domain))
                     .group(dimension.group().reduceSum(function(d) {
                         return +d.nvalue;
                     }))
                     .elasticY(true)
                     .centerBar(false)
-                    .xUnits(d3.time.days)
+                    .xUnits(d3.time.days.utc)
                     .yAxis().ticks(5);
 
                 chart.render();
@@ -252,7 +252,7 @@ describe('dc.barChart', function() {
 
                     chart
                         .brushOn(false)
-                        .x(d3.time.scale().domain([new Date("2012/5/20"), new Date("2012/8/15")]))
+                        .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]))
                         .group(idGroup, "stack 0")
                         .title("stack 0", function (d) { return "stack 0: " + d.value; })
                         .stack(sumGroup, "stack 1")
@@ -377,12 +377,12 @@ describe('dc.barChart', function() {
                     var negativeGroup = dimension.group().reduceSum(function(d){ return d.nvalue; });
 
                     chart.group(negativeGroup).stack(negativeGroup).stack(negativeGroup);
-                    chart.x(d3.time.scale().domain([new Date("2012/5/20"), new Date("2012/8/15")]));
+                    chart.x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
 
                     chart.margins({top: 30, right: 50, bottom: 30, left: 30})
                         .yAxisPadding(5)
                         .elasticY(true)
-                        .xUnits(d3.time.days)
+                        .xUnits(d3.time.days.utc)
                         .yAxis().ticks(5);
 
                     chart.rescale(); // BUG: barWidth cannot change after initial rendering
@@ -444,8 +444,8 @@ describe('dc.barChart', function() {
 
         describe('when focused', function() {
             beforeEach(function() {
-                chart.elasticY(true).gap(1).xUnits(d3.time.days);
-                chart.focus([new Date("2012/6/11"), new Date("2012/7/9")]);
+                chart.elasticY(true).gap(1).xUnits(d3.time.days.utc);
+                chart.focus([makeDate(2012, 5, 11), makeDate(2012, 6, 9)]);
             });
 
             it('should render the one (focused) bar', function() {
@@ -461,15 +461,7 @@ describe('dc.barChart', function() {
             });
 
             it('should redraw the x-axis scale and ticks', function() {
-                chart.focus(null);
-                expect(nthXAxisText(0).text()).toBe("2012");
-                expect(nthXAxisText(1).text()).toBe("February");
-                expect(nthXAxisText(2).text()).toBe("March");
-                expect(nthXAxisText(3).text()).toBe("April");
-
-                function nthXAxisText(n) {
-                    return d3.select(chart.selectAll("g.x text")[0][n]);
-                }
+                expect(xAxisText().slice(0,4)).toEqual(["Mon 11", "Wed 13", "Fri 15", "Jun 17"]);
             });
 
             it('should set its focus flag', function() {
@@ -488,7 +480,13 @@ describe('dc.barChart', function() {
 
             function itBehavesLikeItWasReset() {
                 expect(chart.refocused()).toBeFalsy();
-                expect(chart.x().domain()).toEqual([new Date("2012/1/1"), new Date("2012/12/31")]);
+                expect(chart.x().domain()).toEqual([makeDate(2012, 0, 1), makeDate(2012, 11, 31)]);
+
+                expect(xAxisText().slice(0,4)).toEqual(["2012", "February", "March", "April"]);
+            }
+
+            function xAxisText() {
+                return chart.selectAll("g.x text")[0].map(function(x) { return d3.select(x).text(); });
             }
         });
 
@@ -539,12 +537,13 @@ describe('dc.barChart', function() {
             beforeEach(function () {
                 d3.select("#" + id).append("span").attr("class", "filter").style("display", "none");
                 d3.select("#" + id).append("a").attr("class", "reset").style("display", "none");
-                chart.filter([new Date("2012/6/1"), new Date("2012/6/30")]).redraw();
+                chart.filter([makeDate(2012, 5, 1), makeDate(2012, 5, 30)]).redraw();
+                dc.dateFormat = d3.time.format.utc("%m/%d/%Y");
                 chart.redraw();
             });
 
             it('should set the chart filter', function () {
-                expect(chart.filter()).toEqual([new Date("2012/6/1"), new Date("2012/6/30")]);
+                expect(chart.filter()).toEqual([makeDate(2012, 5, 1), makeDate(2012, 5, 30)]);
             });
 
             it("should enable the reset link after rendering", function() {
@@ -625,7 +624,7 @@ describe('dc.barChart', function() {
 
         describe("a chart with a large domain", function() {
             beforeEach(function() {
-                chart.x(d3.time.scale().domain([new Date("2000/01/01"), new Date("2012/12/31")]));
+                chart.x(d3.time.scale.utc().domain([makeDate(2000, 0, 1), makeDate(2012, 11, 31)]));
             });
 
             describe("when filters are applied", function() {
@@ -685,7 +684,7 @@ describe('dc.barChart', function() {
         beforeEach(function () {
             chart
                 .brushOn(true)
-                .round(d3.time.month.round)
+                .round(d3.time.month.utc.round)
                 .centerBar(true);
         });
 
@@ -696,7 +695,7 @@ describe('dc.barChart', function() {
                 chart.alwaysUseRounding(false);
                 consoleWarnSpy = spyOn(console, "warn");
                 chart.render();
-                chart.brush().extent([new Date(2012, 6, 1), new Date(2012, 7, 15)]);
+                chart.brush().extent([makeDate(2012, 6, 1), makeDate(2012, 7, 15)]);
                 chart.brush().event(chart.root());
             });
 
@@ -706,7 +705,7 @@ describe('dc.barChart', function() {
 
             it("should not round the brush", function () {
                 jasmine.clock().tick(100);
-                expect(chart.filter()).toEqual([new Date(2012, 6, 1), new Date(2012, 7, 15)]);
+                expect(chart.filter()).toEqual([makeDate(2012, 6, 1), makeDate(2012, 7, 15)]);
             });
         });
 
@@ -714,12 +713,13 @@ describe('dc.barChart', function() {
             beforeEach(function() {
                 chart.alwaysUseRounding(true);
                 chart.render();
-                chart.brush().extent([new Date(2012, 6, 1), new Date(2012, 7, 15)]);
+                chart.brush().extent([makeDate(2012, 6, 1), makeDate(2012, 7, 15)]);
                 chart.brush().event(chart.root());
             });
 
             it("should round the brush", function () {
-                expect(chart.brush().extent()).toEqual([new Date(2012, 6, 1), new Date(2012, 7, 1)]);
+                jasmine.clock().tick(100);
+                expect(chart.brush().extent()).toEqual([makeDate(2012, 6, 1), makeDate(2012, 7, 1)]);
             });
         });
     });

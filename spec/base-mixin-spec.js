@@ -4,7 +4,7 @@ describe("dc.baseMixin", function () {
     beforeEach(function () {
         var data = crossfilter(loadDateFixture());
         dimension = data.dimension(function (d) {
-            return d3.time.day(d.dd);
+            return d3.time.day.utc(d.dd);
         });
         group = dimension.group().reduceSum(function (d) {
             return d.value;
