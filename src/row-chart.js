@@ -144,6 +144,11 @@ dc.rowChart = function (parent, chartGroup) {
         rows.exit().remove();
     }
 
+    function rootValue() {
+        var root = _x(0);
+        return root === -Infinity ? _x(1) : root;
+    }
+
     function updateElements(rows) {
         var n = _rowData.length;
 
@@ -166,8 +171,7 @@ dc.rowChart = function (parent, chartGroup) {
 
         dc.transition(rect, _chart.transitionDuration())
             .attr("width", function (d) {
-                var start = _x(0) == -Infinity ? _x(1) : _x(0);
-                return Math.abs(start - _x(_chart.valueAccessor()(d)));
+                return Math.abs(rootValue() - _x(_chart.valueAccessor()(d)));
             })
             .attr("transform", translateX);
 
@@ -243,7 +247,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     function translateX(d) {
         var x = _x(_chart.cappedValueAccessor(d)),
-            x0 = _x(0),
+            x0 = rootValue(),
             s = x > x0 ? x0 : x;
         return "translate("+s+",0)";
     }
