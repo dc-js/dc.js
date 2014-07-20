@@ -263,8 +263,12 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .anchor([anchorChart/anchorSelector/anchorNode], [chartGroup])
-    Set the svg root to either be an existing chart's root or the result returned by d3's select method, which can operate on a css string selector or a DOM node. Optionally registers the chart within the chartGroup. This class is called internally on chart initialization, but be called again to relocate the chart. However, it will orphan any previously created SVG elements.
+     #### .anchor([anchorChart|anchorSelector|anchorNode], [chartGroup])
+     Set the svg root to either be an existing chart's root; or any valid [d3 single
+     selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom
+     block element such as a div; or a dom element or d3 selection. Optionally registers the chart
+     within the chartGroup. This class is called internally on chart initialization, but be called
+     again to relocate the chart. However, it will orphan any previously created SVG elements.
     **/
     _chart.anchor = function (a, chartGroup) {
         if (!arguments.length) return _anchor;
