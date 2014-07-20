@@ -7276,7 +7276,7 @@ dc.heatMap = function (parent, chartGroup) {
      Gets or sets the Y border radius.  Set to 0 to get full rectangles.  Default: 6.75
      */
     _chart.yBorderRadius = function (d) {
-        if (arguments.length) return _yBorderRadius;
+        if (!arguments.length) return _yBorderRadius;
         _yBorderRadius = d;
         return _chart;
     };
