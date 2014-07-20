@@ -1,7 +1,7 @@
 /* try to discover which methods have not been documented.
- although this is very clever, it produces a lot of false positives
- because it reports functions that were inherited from base classes
- (which are never commented in the child class) */
+ this produces a lot of false positives because it reports
+ functions that were inherited from base classes (which
+ are never commented in the child class) */
 
 var mixinDocs = (function () {
     'use strict';
@@ -34,11 +34,11 @@ var mixinDocs = (function () {
         var comments = [];
 
         function extractComments(node, parentComment, within) {
-            var comment = node.leadingComments && node.leadingComments[0],
-                comment = (comment && comment.type == 'Block' &&
-                           comment.value[0] == '*' &&
-                           comment.value[comment.value.length - 1] == '*') ?
-                    comment.value : undefined;
+            var comment = node.leadingComments && node.leadingComments[0];
+            comment = (comment && comment.type == 'Block' &&
+                       comment.value[0] == '*' &&
+                       comment.value[comment.value.length - 1] == '*') ?
+                comment.value : undefined;
 
             if (parentComment && node.type == 'AssignmentExpression') {
                 var left = escodegen.generate(node.left);
@@ -83,7 +83,7 @@ var mixinDocs = (function () {
                 prefix,
                 result;
 
-            while (result = r.exec(value)) {
+            while ((result = r.exec(value))) {
                 if (prefix === undefined || result[1].length < prefix.length)
                     prefix = result[1];
             }
@@ -151,10 +151,10 @@ files.forEach(function (file) {
 eval(instrumented.join("\n"));
 
 // does not work because it is trying to instantiate the functions as charts with ('#doc')
-
 //Object.keys(dc).filter(function(p) {
 //  return typeof dc[p] == 'function';
 //}).forEach(documentChart);
+
 charts.forEach(documentChart);
 
 function extend(obj, copy) {
