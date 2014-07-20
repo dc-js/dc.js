@@ -1,3 +1,8 @@
+/* try to discover which methods have not been documented.
+ although this is very clever, it produces a lot of false positives
+ because it reports functions that were inherited from base classes
+ (which are never commented in the child class) */
+
 var mixinDocs = (function () {
     'use strict';
 
@@ -110,7 +115,7 @@ var mixinDocs = (function () {
 
 //##### dc specific code
 
-require("../test/env");
+require('d3');
 var fs = require('fs'),
     dc, // ignore dc from test/env, we just want the d3/crossfilter environment
     charts = [
@@ -133,7 +138,7 @@ var fs = require('fs'),
 
 var instrumented = [];
 files.forEach(function (file) {
-    console.log("Instrumenting " + file)
+    console.log("Instrumenting " + file);
     var rawSource = fs.readFileSync(file, 'utf-8');
     try {
         var src = mixinDocs.instrumentSource(rawSource, file);
@@ -144,6 +149,8 @@ files.forEach(function (file) {
 });
 //console.log(instrumented.join("\n"));
 eval(instrumented.join("\n"));
+
+// does not work because it is trying to instantiate the functions as charts with ('#doc')
 
 //Object.keys(dc).filter(function(p) {
 //  return typeof dc[p] == 'function';
@@ -164,7 +171,7 @@ function documentChart(chartName) {
         model = {
             name: "dc." + chartName,
             covered: [],
-            missing: [],
+            missing: []
         };
     if (!chart || chart.render === undefined) return;
     Object.keys(chart).filter(function(m) {
