@@ -31,7 +31,8 @@ dc.bubbleMixin = function (_chart) {
 
     /**
     #### .r([bubbleRadiusScale])
-    Get or set bubble radius scale. By default bubble chart uses ```d3.scale.linear().domain([0, 100])``` as it's r scale .
+    Get or set the bubble radius scale. By default the bubble chart uses
+    `d3.scale.linear().domain([0, 100])` as its r scale .
 
     **/
     _chart.r = function (_) {
@@ -42,9 +43,10 @@ dc.bubbleMixin = function (_chart) {
 
     /**
     #### .radiusValueAccessor([radiusValueAccessor])
-    Get or set the radius value accessor function. The radius value accessor function if set will be used to retrieve data value
-    for each and every bubble rendered. The data retrieved then will be mapped using r scale to be used as the actual bubble
-    radius. In other words, this allows you to encode a data dimension using bubble size.
+    Get or set the radius value accessor function. If set, the radius value accessor function will
+    be used to retrieve a data value for each bubble. The data retrieved then will be mapped using
+    the r scale to the actual bubble radius. This allows you to encode a data dimension using bubble
+    size.
 
     **/
     _chart.radiusValueAccessor = function (_) {
@@ -132,8 +134,8 @@ dc.bubbleMixin = function (_chart) {
 
     /**
     #### .minRadiusWithLabel([radius])
-    Get or set the minimum radius for label rendering. If a bubble's radius is less than this value then no label will be rendered.
-    Default value: 10.
+    Get or set the minimum radius for label rendering. If a bubble's radius is less than this value
+    then no label will be rendered.  Default: 10
 
     **/
     _chart.minRadiusWithLabel = function (_) {
@@ -144,8 +146,8 @@ dc.bubbleMixin = function (_chart) {
 
     /**
     #### .maxBubbleRelativeSize([relativeSize])
-    Get or set the maximum relative size of a bubble to the length of x axis. This value is useful when the radius differences among
-    different bubbles are too great. Default value: 0.3
+    Get or set the maximum relative size of a bubble to the length of x axis. This value is useful
+    when the difference in radius between bubbles is too great. Default: 0.3
 
     **/
     _chart.maxBubbleRelativeSize = function (_) {

@@ -3,20 +3,22 @@
 
  Includes: [Composite Chart](#composite chart)
 
- A series chart is a chart that shows multiple series of data as lines, where the series
- is specified in the data. It is a special implementation Composite Chart and inherits
- all composite features other than recomposing the chart.
+ A series chart is a chart that shows multiple series of data overlaid on one chart, where the
+ series is specified in the data. It is a specialization of Composite Chart and inherits all
+ composite features other than recomposing the chart.
 
  #### dc.seriesChart(parent[, chartGroup])
  Create a series chart instance and attach it to the given parent element.
 
  Parameters:
- * parent : string - any valid d3 single selector representing typically a dom block element such as a div.
- * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
- in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
- chart group.
+* parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
 
- Return:
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+ Returns:
  A newly created series chart instance
 
  ```js
@@ -90,6 +92,18 @@ dc.seriesChart = function (parent, chartGroup) {
         _charts = {};
     }
 
+    /**
+     #### .chart([function])
+     Get or set the chart function, which generates the child charts.  Default: dc.lineChart
+
+     ```
+     // put interpolation on the line charts used for the series
+     chart.chart(function(c) { return dc.lineChart(c).interpolate('basis'); })
+     // do a scatter series chart
+     chart.chart(dc.scatterPlot)
+     ```
+
+     **/
     _chart.chart = function(_) {
         if (!arguments.length) return _chartFunction;
         _chartFunction = _;
@@ -127,9 +141,9 @@ dc.seriesChart = function (parent, chartGroup) {
 
     /**
      #### .valueSort([sortFunction])
-     Get or set a function to the sort each series values by. By default this is
-     the key accessor which, for example, a will ensure lineChart a series connects
-     its points in increasing key/x order, rather than haphazardly.
+     Get or set a function to sort each series values by. By default this is the key accessor which,
+     for example, will ensure a lineChart series connects its points in increasing key/x order,
+     rather than haphazardly.
     **/
     _chart.valueSort = function(_) {
         if (!arguments.length) return _valueSort;

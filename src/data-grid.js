@@ -7,20 +7,21 @@
  a simple way to define how the items are displayed.
 
  Examples:
- * [List of members of the european parliament ](http://europarl.me/dc.js/web/ep/index.html)
+ * [List of members of the european parliament](http://europarl.me/dc.js/web/ep/index.html)
 
  #### dc.dataGrid(parent[, chartGroup])
  Create a data grid widget instance and attach it to the given parent element.
 
- Parameters:
- * parent : string - any valid d3 single selector representing typically a dom block element such as a div.
- * chartGroup : string (optional) - name of the chart group this chart instance should be
- placed in. Once a chart is placed in a chart group then any interaction with the chart
- will only trigger events and redraw within the same chart group.
- * html (item): function - return the html fragment for each item in the dataset.
- You can use a templating library or build the html directly.
- Return:
- A newly created data grid widget instance
+Parameters:
+* parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
+A newly created data grid widget instance
 
  **/
 dc.dataGrid = function(parent, chartGroup) {
@@ -143,21 +144,21 @@ dc.dataGrid = function(parent, chartGroup) {
      ```
 
      **/
-
     _chart.htmlGroup = function(_) {
         if (!arguments.length) return _htmlGroup;
         _htmlGroup = _;
         return _chart;
     };
+
     /**
      #### .sortBy([sortByFunction])
      Get or set sort-by function. This function works as a value accessor at the item
      level and returns a particular field to be sorted.
-     by. Default value: ``` function(d) {return d;}; ```
+     by. Default: identity function
 
      ```js
      chart.sortBy(function(d) {
-     return d.date;
+         return d.date;
      });
      ```
 

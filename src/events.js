@@ -4,10 +4,11 @@ dc.events = {
 
 /**
 #### dc.events.trigger(function[, delay])
-This function is design to trigger throttled event function optionally with certain amount of delay(in milli-seconds).
-Events that are triggered repetitively due to user interaction such as the dragging of the brush might over flood
-library and cause too much rendering being scheduled. In this case, using this function to wrap your event function
-allows the library to smooth out the rendering by throttling event flood and only respond to the most recent event.
+This function triggers a throttled event function with a specified delay (in milli-seconds).  Events
+that are triggered repetitively due to user interaction such brush dragging might flood the library
+and invoke more renders than can be executed in time. Using this function to wrap your event
+function allows the library to smooth out the rendering by throttling events and only responding to
+the most recent event.
 
 ```js
     chart.renderlet(function(chart){

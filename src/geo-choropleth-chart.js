@@ -3,9 +3,9 @@
 
 Includes: [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
 
-Geo choropleth chart is designed to make creating crossfilter driven choropleth
-map from GeoJson data an easy process. This chart implementation was inspired by
-[the great d3 choropleth example](http://bl.ocks.org/4060606).
+The geo choropleth chart is designed as an easy way to create a crossfilter driven choropleth map
+from GeoJson data. This chart implementation was inspired by [the great d3 choropleth
+example](http://bl.ocks.org/4060606).
 
 Examples:
 * [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
@@ -14,12 +14,14 @@ Examples:
 Create a choropleth chart instance and attach it to the given parent element.
 
 Parameters:
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-   in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-   chart group.
+* parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
 
-Return:
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
 A newly created choropleth chart instance
 
 ```js
@@ -179,15 +181,15 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
     /**
     #### .overlayGeoJson(json, name, keyAccessor) - **mandatory**
-    Use this function to insert a new GeoJson map layer. This function can be invoked multiple times if you have multiple GeoJson
-    data layer to render on top of each other. If you overlay mutiple layers with the same name the new overlay will simply
-    override the existing one.
+    Use this function to insert a new GeoJson map layer. This function can be invoked multiple times
+    if you have multiple GeoJson data layers to render on top of each other. If you overlay multiple
+    layers with the same name the new overlay will override the existing one.
 
     Parameters:
     * json - GeoJson feed
     * name - name of the layer
-    * keyAccessor - accessor function used to extract "key" from the GeoJson data. Key extracted by this function should match
-     the keys generated in crossfilter groups.
+    * keyAccessor - accessor function used to extract "key" from the GeoJson data. The key extracted by
+    this function should match the keys returned by the crossfilter groups.
 
     ```js
     // insert a layer for rendering US states
@@ -211,8 +213,8 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
     /**
     #### .projection(projection)
-    Set custom geo projection function. Available [d3 geo projection functions](https://github.com/mbostock/d3/wiki/Geo-Projections).
-    Default value: albersUsa.
+    Set custom geo projection function. See the available [d3 geo projection
+    functions](https://github.com/mbostock/d3/wiki/Geo-Projections).  Default value: albersUsa.
 
     **/
     _chart.projection = function (projection) {
@@ -223,12 +225,11 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
     /**
     #### .geoJsons()
-    Return all GeoJson layers currently registered with thit chart. The returned array is a reference to this chart's internal
-    registration data structure without copying thus any modification to this array will also modify this chart's internal
-    registration.
+    Returns all GeoJson layers currently registered with this chart. The returned array is a
+    reference to this chart's internal data structure, so any modification to this array will also
+    modify this chart's internal registration.
 
-    Return:
-    An array of objects containing fields {name, data, accessor}
+    Returns an array of objects containing fields {name, data, accessor}
 
     **/
     _chart.geoJsons = function () {
@@ -237,11 +238,9 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
     /**
     #### .geoPath()
-    Return the d3.geo.path object used to render the projection and features.  Can be useful for figuring out the bounding
-    box of the feature set and thus a way to calculate scale and translation for the projection.
-
-    Return:
-    d3.geo.path()
+    Returns the [d3.geo.path](https://github.com/mbostock/d3/wiki/Geo-Paths#path) object used to
+    render the projection and features.  Can be useful for figuring out the bounding box of the
+    feature set and thus a way to calculate scale and translation for the projection.
 
     **/
     _chart.geoPath = function () {
@@ -251,8 +250,6 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     /**
     #### .removeGeoJson(name)
     Remove a GeoJson layer from this chart by name
-
-    Return: chart instance
 
     **/
     _chart.removeGeoJson = function (name) {

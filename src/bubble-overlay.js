@@ -3,10 +3,10 @@
 
 Includes: [Bubble Mixin](#bubble-mixin), [Base Mixin](#base-mixin)
 
-Bubble overlay chart is quite different from the typical bubble chart. With bubble overlay chart you can arbitrarily place
-a finite number of bubbles on an existing svg or bitmap image (overlay on top of it), thus losing the typical x and y
-positioning that we are used to whiling retaining the capability to visualize data using it's bubble radius and
-coloring.
+The bubble overlay chart is quite different from the typical bubble chart. With the bubble overlay
+chart you can arbitrarily place bubbles on an existing svg or bitmap image, thus changing the
+typical x and y positioning while retaining the capability to visualize data using bubble radius
+and coloring.
 
 Examples:
 * [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
@@ -15,26 +15,27 @@ Examples:
 Create a bubble overlay chart instance and attach it to the given parent element.
 
 Parameters:
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div. Typically
-   this element should also be the parent of the underlying image.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-   in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-   chart group.
+* parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+ off-screen. Typically this element should also be the parent of the underlying image.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
 
-Return:
+Returns:
 A newly created bubble overlay chart instance
 
 ```js
-// create a bubble overlay chart on top of "#chart-container1 svg" element using the default global chart group
+// create a bubble overlay chart on top of the "#chart-container1 svg" element using the default global chart group
 var bubbleChart1 = dc.bubbleOverlayChart("#chart-container1").svg(d3.select("#chart-container1 svg"));
-// create a bubble overlay chart on top of "#chart-container2 svg" element using chart group A
+// create a bubble overlay chart on top of the "#chart-container2 svg" element using chart group A
 var bubbleChart2 = dc.compositeChart("#chart-container2", "chartGroupA").svg(d3.select("#chart-container2 svg"));
 ```
 
 #### .svg(imageElement) - **mandatory**
-Set the underlying svg image element. Unlike other dc charts this chart will not generate svg element therefore bubble overlay
-chart will not work if this function is not properly invoked. If the underlying image is a bitmap, then an empty svg will need
-to be manually created on top of the image.
+Set the underlying svg image element. Unlike other dc charts this chart will not generate a svg
+element; therefore the bubble overlay chart will not work if this function is not invoked. If the
+underlying image is a bitmap, then an empty svg will need to be created on top of the image.
 
 ```js
 // set up underlying svg element
@@ -59,9 +60,10 @@ dc.bubbleOverlay = function(root, chartGroup) {
 
     /**
     #### .point(name, x, y) - **mandatory**
-    Set up a data point on the overlay. The name of a data point should match a specific "key" among data groups generated using keyAccessor.
-    If a match is found (point name <-> data group key) then a bubble will be automatically generated at the position specified by the
-    function. x and y value specified here are relative to the underlying svg.
+    Set up a data point on the overlay. The name of a data point should match a specific "key" among
+    data groups generated using keyAccessor.  If a match is found (point name <-> data group key)
+    then a bubble will be generated at the position specified by the function. x and y
+    value specified here are relative to the underlying svg.
 
     **/
     _chart.point = function(name, x, y) {

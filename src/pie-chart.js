@@ -3,26 +3,28 @@
 
 Includes: [Cap Mixin](#cap-mixin), [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
 
-The pie chart implementation is usually used to visualize small number of categorical distributions.
-Pie chart uses keyAccessor to generate slices, and valueAccessor to calculate the size of each slice(key)
-relatively to the total sum of all values. Slices are ordered by `.ordering` which defaults to sorting by key.
+The pie chart implementation is usually used to visualize a small categorical distribution.  The pie
+chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
+slice relative to the sum of all values. Slices are ordered by `.ordering` which defaults to sorting
+by key.
 
 Examples:
 
 * [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 
 #### dc.pieChart(parent[, chartGroup])
-Create a pie chart instance and attach it to the given parent element.
+Create a pie chart instance and attaches it to the given parent element.
 
 Parameters:
 
-* parent : string - any valid d3 single selector representing typically a dom block element such
-   as a div.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-   in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-   chart group.
+* parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
 
-Return:
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
 A newly created pie chart instance
 
 ```js
@@ -252,8 +254,8 @@ dc.pieChart = function (parent, chartGroup) {
 
     /**
     #### .innerRadius([innerRadius])
-    Get or set the inner radius on a particular pie chart instance. If inner radius is greater than 0px then the pie chart
-    will be essentially rendered as a doughnut chart. Default inner radius is 0px.
+    Get or set the inner radius of the pie chart. If the inner radius is greater than 0px then the
+    pie chart will be rendered as a doughnut chart. Default inner radius is 0px.
 
     **/
     _chart.innerRadius = function (r) {
@@ -264,7 +266,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     /**
     #### .radius([radius])
-    Get or set the radius on a particular pie chart instance. Default radius is 90px.
+    Get or set the outer radius. Default radius is 90px.
 
     **/
     _chart.radius = function (r) {
@@ -306,8 +308,8 @@ dc.pieChart = function (parent, chartGroup) {
 
     /**
     #### .minAngleForLabel([minAngle])
-    Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not render slice label.
-    Default min angle is 0.5.
+    Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
+    display a slice label.  Default min angle is 0.5.
     **/
     _chart.minAngleForLabel = function (_) {
         if (!arguments.length) return _minAngleForLabel;

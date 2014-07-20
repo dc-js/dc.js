@@ -10,13 +10,16 @@ Create a scatter plot instance and attach it to the given parent element.
 
 Parameters:
 
-* parent : string|compositeChart - any valid d3 single selector representing typically a dom block element such
-as a div, or if this scatter plot is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-chart group.
+* parent : string | node | selection | compositeChart - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+ If the scatter plot is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite
+ chart instance.
 
-Return:
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
 A newly created scatter plot instance
 
 ```js
@@ -86,8 +89,8 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
     #### .symbol([type])
-    Get or set the symbol type used for each point. By default a circle. See the D3
-    [docs](https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-symbol_type) for acceptable types;
+    Get or set the symbol type used for each point. By default the symbol is a circle. See the D3
+    [docs](https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-symbol_type) for acceptable types.
     Type can be a constant or an accessor.
 
     **/
@@ -99,7 +102,7 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
     #### .symbolSize([radius])
-    Set or get radius for symbols, default: 3.
+    Set or get radius for symbols. Default: 3.
 
     **/
     _chart.symbolSize = function(s){
@@ -110,7 +113,7 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
     #### .highlightedSize([radius])
-    Set or get radius for highlighted symbols, default: 4.
+    Set or get radius for highlighted symbols. Default: 4.
 
     **/
     _chart.highlightedSize = function(s){
@@ -121,7 +124,7 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
     #### .hiddenSize([radius])
-    Set or get radius for symbols when the group is empty, default: 0.
+    Set or get radius for symbols when the group is empty. Default: 0.
 
     **/
     _chart.hiddenSize = function(s){

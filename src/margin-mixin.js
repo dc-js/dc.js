@@ -1,7 +1,8 @@
 /**
 ## Margin Mixin
 
-Margin is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid Charts.
+Margin is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid
+Charts.
 
 **/
 dc.marginMixin = function (_chart) {
@@ -9,8 +10,8 @@ dc.marginMixin = function (_chart) {
 
     /**
     #### .margins([margins])
-    Get or set the margins for a particular coordinate grid chart instance. The margins is stored as an associative Javascript
-    array. Default margins: {top: 10, right: 50, bottom: 30, left: 30}.
+    Get or set the margins for a particular coordinate grid chart instance. The margins is stored as
+    an associative Javascript array. Default margins: {top: 10, right: 50, bottom: 30, left: 30}.
 
     The margins can be accessed directly from the getter.
     ```js

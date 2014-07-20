@@ -9,12 +9,14 @@
  Create a heat map instance and attach it to the given parent element.
 
  Parameters:
- * parent : string - any valid d3 single selector representing typically a dom block element such as a div.
- * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
- in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
- chart group.
+* parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
 
- Return:
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+ Returns:
  A newly created heat map instance
 
  ```js
@@ -81,6 +83,13 @@ dc.heatMap = function (parent, chartGroup) {
         return !i || a[i-1] != d;
     }
 
+    /**
+     #### .rows([values])
+     Gets or sets the values used to create the rows of the heatmap, as an array. By default, all
+     the values will be fetched from the data using the value accessor, and they will be sorted in
+     ascending order.
+     **/
+
     _chart.rows = function (_) {
         if (arguments.length) {
             _rows = _;
@@ -92,6 +101,12 @@ dc.heatMap = function (parent, chartGroup) {
         return d3.scale.ordinal().domain(rowValues.filter(uniq));
     };
 
+    /**
+     #### .cols([keys])
+     Gets or sets the keys used to create the columns of the heatmap, as an array. By default, all
+     the values will be fetched from the data using the key accessor, and they will be sorted in
+     ascending order.
+     **/
     _chart.cols = function (_) {
         if (arguments.length) {
             _cols = _;
@@ -191,31 +206,55 @@ dc.heatMap = function (parent, chartGroup) {
         }
         return _chart;
     };
-
+    /**
+     #### .boxOnClick([handler])
+     Gets or sets the handler that fires when an individual cell is clicked in the heatmap.
+     By default, filtering of the cell will be toggled.
+     **/
     _chart.boxOnClick = function (f) {
         if (!arguments.length) return _boxOnClick;
         _boxOnClick = f;
         return _chart;
     };
 
+    /**
+     #### .xAxisOnClick([handler])
+     Gets or sets the handler that fires when a column tick is clicked in the x axis.
+     By default, if any cells in the column are unselected, the whole column will be selected,
+     otherwise the whole column will be unselected.
+     **/
     _chart.xAxisOnClick = function (f) {
         if (!arguments.length) return _xAxisOnClick;
         _xAxisOnClick = f;
         return _chart;
     };
 
+    /**
+     #### .yAxisOnClick([handler])
+     Gets or sets the handler that fires when a row tick is clicked in the y axis.
+     By default, if any cells in the row are unselected, the whole row will be selected,
+     otherwise the whole row will be unselected.
+     **/
     _chart.yAxisOnClick = function (f) {
         if (!arguments.length) return _yAxisOnClick;
         _yAxisOnClick = f;
         return _chart;
     };
 
+    /**
+     #### .xBorderRadius([value])
+     Gets or sets the X border radius.  Set to 0 to get full rectangles.  Default: 6.75
+     */
     _chart.xBorderRadius = function (d) {
         if (!arguments.length) return _xBorderRadius;
         _xBorderRadius = d;
         return _chart;
     };
 
+    /**
+     #### .xBorderRadius([value])
+     Gets or sets the Y border radius.  Set to 0 to get full rectangles.  Default: 6.75
+     */
     _chart.yBorderRadius = function (d) {
         if (arguments.length) return _yBorderRadius;
         _yBorderRadius = d;
