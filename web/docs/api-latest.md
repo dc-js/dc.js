@@ -404,7 +404,7 @@ function the operate like a d3 scale. If not set the default is
 chart.colors(d3.scale.category20b());
 
 // ordinal scale
-chart.colors(d3.scale.ordinal().range(['red','green','blue']);
+chart.colors(d3.scale.ordinal().range(['red','green','blue']));
 // convience method, the same as above
 chart.ordinalColors(['red','green','blue']);
 
