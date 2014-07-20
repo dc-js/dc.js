@@ -1,4 +1,4 @@
-// https://raw.github.com/d3/d3-plugins/56f25a3b54446c921e23a7360f1a0dea2508870f/box/box.js
+// https://github.com/d3/d3-plugins/blob/master/box/box.js
 (function() {
 
 // Inspired by http://informationandvisualization.de/blog/box-plot
