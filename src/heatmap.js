@@ -211,17 +211,15 @@ dc.heatMap = function (parent, chartGroup) {
     };
 
     _chart.xBorderRadius = function (d) {
-        if (arguments.length) {
-            _xBorderRadius = d;
-        }
-        return _xBorderRadius;
+        if (!arguments.length) return _xBorderRadius;
+        _xBorderRadius = d;
+        return _chart;
     };
 
     _chart.yBorderRadius = function (d) {
-        if (arguments.length) {
-            _yBorderRadius = d;
-        }
-        return _yBorderRadius;
+        if (arguments.length) return _yBorderRadius;
+        _yBorderRadius = d;
+        return _chart;
     };
 
     _chart.isSelectedNode = function (d) {
