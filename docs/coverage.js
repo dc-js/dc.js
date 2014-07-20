@@ -1,7 +1,14 @@
-/* try to discover which methods have not been documented.
- this produces a lot of false positives because it reports
- functions that were inherited from base classes (which
- are never commented in the child class) */
+/*
+ Try to discover which methods have not been documented.
+ This instruments the dc source so that every constructor marks
+ the methods it contains comments for.  Then it constructs every
+ chart type and sees whether the resulting object has methods on it
+ that are not marked.
+
+ Unfortunately this has a few false positives, and even worse, we have
+ LOTS of methods which are actually internal but aren't prefixed with _,
+ so it's hard to wade through the 400+ results.
+*/
 
 var mixinDocs = (function () {
     'use strict';
@@ -103,7 +110,7 @@ var mixinDocs = (function () {
 
             return {
                 index: c.range[1] + 1,
-                text: "\n" + assignment + JSON.stringify(doc) + ";\n"
+                text: "\n" + assignment + JSON.stringify(doc) + ";\n" // + "console.log('" + c.for + "', '" + c.in + "');"
             };
         });
 
@@ -181,8 +188,9 @@ function documentChart(chartName) {
         var method = m[0] == '_' ? m.substr(1) : m;
         if (chart[m][mixinDocs.DOC])
             model.covered.push(method);
-        else
+        else {
             model.missing.push(method);
+        }
     });
     model.covered.sort();
     model.missing.sort();
