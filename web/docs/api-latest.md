@@ -212,11 +212,12 @@ d3.select("#chart-id").selectAll(selector);
 This function is **not chainable** since it does not return a chart instance; however the d3
 selection result can be chained to d3 function calls.
 
-#### .anchor([anchorChart | anchorSelector], [chartGroup])
-Set the svg root to either be an existing chart's root or the first element returned from a d3
-css string selector. Optionally registers the chart within the chartGroup. This class is called
-internally on chart initialization, but be called again to relocate the chart. However, it will
-orphan any previously created SVG elements.
+#### .anchor([anchorChart|anchorSelector|anchorNode], [chartGroup])
+Set the svg root to either be an existing chart's root; or any valid [d3 single
+selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom
+block element such as a div; or a dom element or d3 selection. Optionally registers the chart
+within the chartGroup. This class is called internally on chart initialization, but be called
+again to relocate the chart. However, it will orphan any previously created SVG elements.
 
 #### .anchorName()
 Returns the dom id for the chart's anchored location.
