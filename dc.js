@@ -3845,14 +3845,14 @@ dc.barChart = function (parent, chartGroup) {
         var bars = layer.selectAll("rect.bar")
             .data(d.values, dc.pluck('x'));
 
-        bars.enter()
+        var enter = bars.enter()
             .append("rect")
             .attr("class", "bar")
             .attr("fill", dc.pluck('data',_chart.getColor))
             .attr("height", 0);
 
         if (_chart.renderTitle())
-            bars.append("title").text(dc.pluck('data',_chart.title(d.name)));
+            enter.append("title").text(dc.pluck('data',_chart.title(d.name)));
 
         if (_chart.isOrdinal())
             bars.on("click", onClick);

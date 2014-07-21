@@ -295,6 +295,7 @@ describe('dc.barChart', function() {
 
                 it('should have titles rendered for extra stacks', function () {
                     nthStack(1).forEachBar(function (bar, datum) {
+                        expect(bar.selectAll('title')[0].length).toBe(1);
                         expect(bar.select("title").text()).toBe("stack 1: " + datum.data.value);
                     });
                 });
@@ -302,6 +303,19 @@ describe('dc.barChart', function() {
                 it('should default to first stack title for untitled stacks', function () {
                     nthStack(2).forEachBar(function (bar, datum) {
                         expect(bar.select("title").text()).toBe("stack 0: " + datum.data.value);
+                    });
+                });
+
+                describe("extra redraws", function() {
+                    beforeEach(function() {
+                        chart.redraw();
+                        chart.redraw();
+                    });
+
+                    it('should not create extra title elements', function() {
+                        nthStack(1).forEachBar(function (bar, datum) {
+                            expect(bar.selectAll('title')[0].length).toBe(1);
+                        });
                     });
                 });
 
