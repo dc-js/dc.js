@@ -660,14 +660,13 @@ dc.baseMixin = function (_chart) {
 
     var NULL_LISTENER = function () {};
 
-    var _listeners = {
-        preRender: NULL_LISTENER,
-        postRender: NULL_LISTENER,
-        preRedraw: NULL_LISTENER,
-        postRedraw: NULL_LISTENER,
-        filtered: NULL_LISTENER,
-        zoomed: NULL_LISTENER
-    };
+    var _listeners = d3.dispatch(
+        "preRender",
+        "postRender",
+        "preRedraw",
+        "postRedraw",
+        "filtered",
+        "zoomed");
 
     var _legend;
 
@@ -1515,7 +1514,7 @@ dc.baseMixin = function (_chart) {
 
     **/
     _chart.on = function (event, listener) {
-        _listeners[event] = listener;
+        _listeners.on(event, listener);
         return _chart;
     };
 
