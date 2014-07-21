@@ -877,12 +877,12 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .anchor([anchorChart | anchorSelector], [chartGroup])
-    Set the svg root to either be an existing chart's root or the first element returned from a d3
-    css string selector. Optionally registers the chart within the chartGroup. This class is called
-    internally on chart initialization, but be called again to relocate the chart. However, it will
-    orphan any previously created SVG elements.
-
+     #### .anchor([anchorChart|anchorSelector|anchorNode], [chartGroup])
+     Set the svg root to either be an existing chart's root; or any valid [d3 single
+     selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom
+     block element such as a div; or a dom element or d3 selection. Optionally registers the chart
+     within the chartGroup. This class is called internally on chart initialization, but be called
+     again to relocate the chart. However, it will orphan any previously created SVG elements.
     **/
     _chart.anchor = function (a, chartGroup) {
         if (!arguments.length) return _anchor;
@@ -7276,7 +7276,7 @@ dc.heatMap = function (parent, chartGroup) {
      Gets or sets the Y border radius.  Set to 0 to get full rectangles.  Default: 6.75
      */
     _chart.yBorderRadius = function (d) {
-        if (arguments.length) return _yBorderRadius;
+        if (!arguments.length) return _yBorderRadius;
         _yBorderRadius = d;
         return _chart;
     };

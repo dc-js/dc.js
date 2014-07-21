@@ -1,3 +1,32 @@
+# DC API
+  * [Utilities](#utilities)
+  * [Filters](#filters)
+  * [Base Mixin](#base-mixin)
+  * [Listeners](#listeners)
+  * [Margin Mixin](#margin-mixin)
+  * [Color Mixin](#color-mixin)
+  * [Coordinate Grid Mixin](#coordinate-grid-mixin)
+  * [Stack Mixin](#stack-mixin)
+  * [Cap Mixin](#cap-mixin)
+  * [Bubble Mixin](#bubble-mixin)
+  * [Pie Chart](#pie-chart)
+  * [Bar Chart](#bar-chart)
+  * [Line Chart](#line-chart)
+  * [Data Count Widget](#data-count-widget)
+  * [Data Table Widget](#data-table-widget)
+  * [Data Grid Widget](#data-grid-widget)
+  * [Bubble Chart](#bubble-chart)
+  * [Composite Chart](#composite-chart)
+  * [Series Chart](#series-chart)
+  * [Geo Choropleth Chart](#geo-choropleth-chart)
+  * [Bubble Overlay Chart](#bubble-overlay-chart)
+  * [Row Chart](#row-chart)
+  * [Legend](#legend)
+  * [Scatter Plot](#scatter-plot)
+  * [Number Display Widget](#number-display-widget)
+  * [Heat Map](#heat-map)
+  * [Box Plot](#box-plot)
+
 #### Version 2.0.0-dev
 
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
