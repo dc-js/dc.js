@@ -652,9 +652,9 @@ used with a chart in a composite chart, allows both left and right Y axes to be 
 chart.
 
 #### isOrdinal()
-Returns true if the chart is using ordinal xUnits ([dc.units.ordinal](dcunitsordinal)), or false
+Returns true if the chart is using ordinal xUnits ([dc.units.ordinal](#dcunitsordinal)), or false
 otherwise. Most charts behave differently with ordinal data and use the result of this method to
-trigger the special case.
+trigger the appropriate logic.
 
 #### .xAxisLabel([labelText, [, padding]])
 Set or get the x axis label. If setting the label, you may optionally include additional padding to
