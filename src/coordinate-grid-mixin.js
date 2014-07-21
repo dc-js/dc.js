@@ -304,9 +304,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
     #### isOrdinal()
-    Returns true if the chart is using ordinal xUnits ([dc.units.ordinal](dcunitsordinal)), or false
+    Returns true if the chart is using ordinal xUnits ([dc.units.ordinal](#dcunitsordinal)), or false
     otherwise. Most charts behave differently with ordinal data and use the result of this method to
-    trigger the special case.
+    trigger the appropriate logic.
     **/
     _chart.isOrdinal = function () {
         return _chart.xUnits() === dc.units.ordinal;
