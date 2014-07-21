@@ -2,6 +2,8 @@ describe('dc.pieChart', function() {
     var width = 200;
     var height = 200;
     var radius = 100;
+    var defaultCenter = {x: width / 2, y: height / 2};
+    var newCenter = {x: 101, y: 99};
     var innerRadius = 30;
     var data, valueDimension, valueGroup;
     var regionDimension, statusDimension;
@@ -101,6 +103,12 @@ describe('dc.pieChart', function() {
         it('radius should be set', function() {
             expect(chart.radius()).toEqual(radius);
         });
+        it('cx should be set', function() {
+            expect(chart.cx()).toEqual(defaultCenter.x);
+        });
+        it('cy should be set', function() {
+            expect(chart.cy()).toEqual(defaultCenter.y);
+        });
         it('height should be used for svg', function() {
             expect(chart.select("svg").attr("height")).toEqual(String(height));
         });
@@ -108,7 +116,7 @@ describe('dc.pieChart', function() {
             expect(chart.select("svg g").empty()).toBeFalsy();
         });
         it('root g should be translated to center', function() {
-            expect(chart.select("svg g").attr("transform")).toMatchTranslate(100,100);
+            expect(chart.select("svg g").attr("transform")).toMatchTranslate(defaultCenter.x, defaultCenter.y);
         });
         it('slice g should be created with class', function() {
             expect(chart.selectAll("svg g g.pie-slice").data().length).toEqual(5);
@@ -163,6 +171,26 @@ describe('dc.pieChart', function() {
         it('filter info should be hidden after init rendering', function() {
             expect(chart.select("span.filter").style("display")).toEqual("none");
         });
+        describe('center positioning', function() {
+            beforeEach(function() {
+                chart
+                    .cx(newCenter.x)
+                    .cy(newCenter.y)
+                    .render();
+                return chart;
+            });
+            afterEach(function() {
+                chart
+                    .cx(defaultCenter.x)
+                    .cy(defaultCenter.y)
+                    .render();
+                return chart;
+            });
+            it('root g should be translated to ' + newCenter.x + ',' + newCenter.y, function() {
+                expect(chart.select("svg g").attr("transform")).toMatchTranslate(newCenter.x, newCenter.y);
+            });
+        });
+
         describe('re-render', function() {
             beforeEach(function() {
                 chart.render();

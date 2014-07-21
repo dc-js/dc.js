@@ -904,11 +904,11 @@ pie chart will be rendered as a doughnut chart. Default inner radius is 0px.
 #### .radius([radius])
 Get or set the outer radius. Default radius is 90px.
 
-#### .cx()
-Get center x coordinate position. This function is **not chainable**.
+#### .cx([cx])
+Get or set center x coordinate position. Default is center of svg.
 
-#### .cy()
-Get center y coordinate position. This function is **not chainable**.
+#### .cy([cy])
+Get or set center y coordinate position. Default is center of svg.
 
 #### .minAngleForLabel([minAngle])
 Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
