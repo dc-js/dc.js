@@ -2010,6 +2010,10 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart.xUnits() === dc.units.ordinal;
     };
 
+    _chart._useOuterPadding = function() {
+        return true;
+    };
+
     _chart._ordinalXDomain = function() {
         var groups = _chart._computeOrderedGroups(_chart.data());
         return groups.map(_chart.keyAccessor());
@@ -2031,8 +2035,10 @@ dc.coordinateGridMixin = function (_chart) {
             _chart.rescale();
         _lastXDomain = xdom;
 
+        // please can't we always use rangeBands for bar charts?
         if (_chart.isOrdinal()) {
-            _x.rangeBands([0,_chart.xAxisLength()],_rangeBandPadding,_outerRangeBandPadding);
+            _x.rangeBands([0,_chart.xAxisLength()],_rangeBandPadding,
+                          _chart._useOuterPadding()?_outerRangeBandPadding:0);
         } else {
             _x.range([0, _chart.xAxisLength()]);
         }
@@ -3855,7 +3861,7 @@ dc.barChart = function (parent, chartGroup) {
             .attr("x", function (d) {
                 var x = _chart.x()(d.x);
                 if (_centerBar) x -= _barWidth / 2;
-                if (_chart.isOrdinal()) x += _gap/2;
+                if (_chart.isOrdinal() && _gap!==undefined) x += _gap/2;
                 return dc.utils.safeNumber(x);
             })
             .attr("y", function (d) {
@@ -3882,7 +3888,8 @@ dc.barChart = function (parent, chartGroup) {
         if (_barWidth === undefined) {
             var numberOfBars = _chart.xUnitCount();
 
-            if (_chart.isOrdinal() && !_gap)
+            // please can't we always use rangeBands for bar charts?
+            if (_chart.isOrdinal() && _gap===undefined)
                 _barWidth = Math.floor(_chart.x().rangeBand());
             else if (_gap)
                 _barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
@@ -3949,8 +3956,12 @@ dc.barChart = function (parent, chartGroup) {
     _chart.barPadding = function (_) {
         if (!arguments.length) return _chart._rangeBandPadding();
         _chart._rangeBandPadding(_);
-        _gap = 0;
+        _gap = undefined;
         return _chart;
+    };
+
+    _chart._useOuterPadding = function() {
+        return _gap===undefined;
     };
 
     /**

@@ -313,6 +313,10 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart.xUnits() === dc.units.ordinal;
     };
 
+    _chart._useOuterPadding = function() {
+        return true;
+    };
+
     _chart._ordinalXDomain = function() {
         var groups = _chart._computeOrderedGroups(_chart.data());
         return groups.map(_chart.keyAccessor());
@@ -334,8 +338,10 @@ dc.coordinateGridMixin = function (_chart) {
             _chart.rescale();
         _lastXDomain = xdom;
 
+        // please can't we always use rangeBands for bar charts?
         if (_chart.isOrdinal()) {
-            _x.rangeBands([0,_chart.xAxisLength()],_rangeBandPadding,_outerRangeBandPadding);
+            _x.rangeBands([0,_chart.xAxisLength()],_rangeBandPadding,
+                          _chart._useOuterPadding()?_outerRangeBandPadding:0);
         } else {
             _x.range([0, _chart.xAxisLength()]);
         }
