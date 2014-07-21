@@ -39,6 +39,9 @@ dc.stackMixin = function (_chart) {
                 return true; //domainSet.has(p.x);
             };
         }
+        if (_chart.elasticX()) {
+            return function() { return true; };
+        }
         return function(p) {
             //return true;
             return p.x >= xDomain[0] && p.x <= xDomain[xDomain.length-1];
