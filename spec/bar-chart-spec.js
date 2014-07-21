@@ -280,13 +280,56 @@ describe('dc.barChart', function() {
                 chart.render();
             });
             it('should not overlap bars', function() {
-                var x = numAttr('x'), wid = numAttr('width');
-                function checkBar(n) {
-                    expect(x(nthStack(0).nthBar(n)) + wid(nthStack(0).nthBar(n)))
-                        .toBeLessThan(x(nthStack(0).nthBar(n+1)));
-                }
                 for(var i=0; i<7; ++i)
-                    checkBar(i);
+                    checkBarOverlap(i);
+            });
+        });
+
+        describe('with changing number of bars', function() {
+            beforeEach(function() {
+                var rows1 = [
+                    {x: 1, y: 3},
+                    {x: 2, y: 9},
+                    {x: 5, y: 10},
+                    {x: 6, y: 7}
+                ];
+
+                data = crossfilter(rows1);
+                dimension = data.dimension(function(d) {
+                    return d.x;
+                });
+                group = dimension.group().reduceSum(function(d) {
+                    return d.y;
+                });
+
+                chart = dc.barChart('#' + id);
+                chart.width(500).transitionDuration(0)
+                    .x(d3.scale.linear().domain([0,7]))
+                    .elasticY(true)
+                    .dimension(dimension)
+                    .group(group);
+                chart.render();
+
+            });
+            it('should not overlap bars', function() {
+                for(var i=0; i<3; ++i)
+                    checkBarOverlap(i);
+            });
+            describe('with bars added', function() {
+                beforeEach(function() {
+                    var rows2 = [
+                        {x: 7, y:4},
+                        {x: 12, y:9}
+                    ];
+
+                    data.add(rows2);
+                    chart.x().domain([0,13]);
+                    chart.render();
+                });
+                it('should not overlap bars', function() {
+                    for(var i=0; i<5; ++i)
+                        checkBarOverlap(i);
+                });
             });
         });
         describe('with a linear x domain', function () {
@@ -828,5 +871,11 @@ describe('dc.barChart', function() {
         return function(selection) {
             return +selection.attr(attr);
         };
+    }
+
+    function checkBarOverlap(n) {
+        var x = numAttr('x'), wid = numAttr('width');
+        expect(x(nthStack(0).nthBar(n)) + wid(nthStack(0).nthBar(n)))
+            .toBeLessThan(x(nthStack(0).nthBar(n+1)));
     }
 });
