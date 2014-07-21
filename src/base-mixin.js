@@ -475,6 +475,10 @@ dc.baseMixin = function (_chart) {
         dc.redrawAll(_chart.chartGroup());
     };
 
+    _chart.renderGroup = function () {
+        dc.renderAll(_chart.chartGroup());
+    };
+
     _chart._invokeFilteredListener = function (f) {
         if (f !== undefined) _listeners.filtered(_chart, f);
     };
