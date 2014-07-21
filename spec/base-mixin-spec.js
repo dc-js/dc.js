@@ -68,6 +68,38 @@ describe("dc.baseMixin", function () {
             });
         });
 
+        describe('on filter double', function () {
+            var filterSpy, filterSpy2, filter;
+            beforeEach(function () {
+                filter = "1";
+
+                var expectedCallbackSignature = function (callbackChart, callbackFilter) {
+                    expect(callbackChart).toBe(chart);
+                    expect(callbackFilter).toEqual(filter);
+                };
+
+                filterSpy = jasmine.createSpy().and.callFake(expectedCallbackSignature);
+                filterSpy2 = jasmine.createSpy().and.callFake(expectedCallbackSignature);
+                chart.on("filtered.one", filterSpy);
+                chart.on("filtered.two", filterSpy2);
+            });
+
+            it('should execute first callback after setting through #filter', function () {
+                chart.filter(filter);
+                expect(filterSpy).toHaveBeenCalled();
+            });
+
+            it('should execute second callback after setting through #filter', function () {
+                chart.filter(filter);
+                expect(filterSpy2).toHaveBeenCalled();
+            });
+
+            it('should not execute callback after reading from #filter', function () {
+                chart.filter();
+                expect(filterSpy).not.toHaveBeenCalled();
+            });
+        });
+
         describe('on filter', function () {
             var filterSpy, filter;
             beforeEach(function () {
