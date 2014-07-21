@@ -1,5 +1,6 @@
 # DC API
   * [Utilities](#utilities)
+  * [Filters](#filters)
   * [Base Mixin](#base-mixin)
   * [Listeners](#listeners)
   * [Margin Mixin](#margin-mixin)
@@ -28,56 +29,89 @@
 
 #### Version 2.0.0-dev
 
-The entire dc.js library is scoped under **dc** name space. It does not introduce anything else into the global
-name space.
+The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
+into the global name space.
 
-#### Function Chain
-Majority of dc functions are designed to allow function chaining, meaning it will return the current chart instance
-whenever it is appropriate. Therefore configuration of a chart can be written in the following style.
+#### Function Chaining
+Most dc functions are designed to allow function chaining, meaning they return the current chart
+instance whenever it is appropriate. This way chart configuration can be written in the following
+style:
 ```js
 chart.width(300)
 .height(300)
 .filter("sunday")
 ```
-The API references will highlight the fact if a particular function is not chainable.
+The getter forms of functions do not participate in function chaining because they necessarily
+return values that are not the chart.  (Although some, such as `.svg` and `.xAxis`, return values
+that are chainable d3 objects.)
 
 ## Utilities
 
 #### dc.filterAll([chartGroup])
-Clear all filters on every chart within the given chart group. If the chart group is not given then only charts that
-belong to the default chart group will be reset.
+Clear all filters on all charts within the given chart group. If the chart group is not given then
+only charts that belong to the default chart group will be reset.
 
 #### dc.refocusAll([chartGroup])
-Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is not given then only charts that belong to
-the default chart group will be reset.
+Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
+not given then only charts that belong to the default chart group will be reset.
 
 #### dc.renderAll([chartGroup])
-Re-render all charts belong to the given chart group. If the chart group is not given then only charts that belong to
-the default chart group will be re-rendered.
+Re-render all charts belong to the given chart group. If the chart group is not given then only
+charts that belong to the default chart group will be re-rendered.
 
 #### dc.redrawAll([chartGroup])
-Redraw all charts belong to the given chart group. If the chart group is not given then only charts that belong to the
-default chart group will be re-drawn. Redraw is different from re-render since when redrawing dc charts try to update
-the graphic incrementally instead of starting from scratch.
+Redraw all charts belong to the given chart group. If the chart group is not given then only charts
+that belong to the default chart group will be re-drawn. Redraw is different from re-render since
+when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
+from scratch.
+
+#### dc.disableTransitions
+If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
+immediately.  Default: false
 
 #### dc.units.integers
-This function can be used to in [Coordinate Grid Chart](#coordinate-grid-chart) to define units on x axis.
-dc.units.integers is the default x unit scale used by [Coordinate Grid Chart](#coordinate-grid-chart) and should be
-used when x range is a sequential of integers.
+`dc.units.integers` is the default value for `xUnits` for the [Coordinate Grid
+Chart](#coordinate-grid-chart) and should be used when the x values are a sequence of integers.
+
+It is a function that counts the number of integers in the range supplied in its start and end parameters.
+
+```js
+chart.xUnits(dc.units.integers) // already the default
+```
 
 #### dc.units.ordinal
-This function can be used to in [Coordinate Grid Chart](#coordinate-grid-chart) to define ordinal units on x axis.
-Usually this function is used in combination with d3.scale.ordinal() on x axis.
+This argument can be passed to the `xUnits` function of the to specify ordinal units for the x
+axis. Usually this parameter is used in combination with passing `d3.scale.ordinal()` to `.x`.
+
+It just returns the domain passed to it, which for ordinal charts is an array of all values.
+
+```js
+chart.xUnits(dc.units.ordinal)
+.x(d3.scale.ordinal())
+```
 
 #### dc.units.fp.precision(precision)
-This function generates xunit function in floating-point numbers with the given precision. For example if the function
-is invoked with 0.001 precision then the function created will divide a range [0.5, 1.0] with 500 units.
+This function generates an argument for the [Coordinate Grid Chart's](#coordinate-grid-chart)
+`xUnits` function specifying that the x values are floating-point numbers with the given
+precision.
+
+The returned function determines how many values at the given precision will fit into the range
+supplied in its start and end parameters.
+
+```js
+// specify values (and ticks) every 0.1 units
+chart.xUnits(dc.units.fp.precision(0.1)
+// there are 500 units between 0.5 and 1 if the precision is 0.001
+var thousandths = dc.units.fp.precision(0.001);
+thousandths(0.5, 1.0) // returns 500
+```
 
 #### dc.events.trigger(function[, delay])
-This function is design to trigger throttled event function optionally with certain amount of delay(in milli-seconds).
-Events that are triggered repetitively due to user interaction such as the dragging of the brush might over flood
-library and cause too much rendering being scheduled. In this case, using this function to wrap your event function
-allows the library to smooth out the rendering by throttling event flood and only respond to the most recent event.
+This function triggers a throttled event function with a specified delay (in milli-seconds).  Events
+that are triggered repetitively due to user interaction such brush dragging might flood the library
+and invoke more renders than can be executed in time. Using this function to wrap your event
+function allows the library to smooth out the rendering by throttling events and only responding to
+the most recent event.
 
 ```js
 chart.renderlet(function(chart){
@@ -89,23 +123,57 @@ chart.renderlet(function(chart){
 })
 ```
 
+## Filters
+
+The dc.js filters are functions which are passed into crossfilter to chose which records will be
+accumulated to produce values for the charts.  In the crossfilter model, any filters applied on one
+dimension will affect all the other dimensions but not that one.  dc always applies a filter
+function to the dimension; the function combines multiple filters and if any of them accept a
+record, it is filtered in.
+
+These filter constructors are used as appropriate by the various charts to implement brushing.  We
+mention below which chart uses which filter.  In some cases, many instances of a filter will be added.
+
+#### dc.filters.RangedFilter(low, high)
+RangedFilter is a filter which accepts keys between `low` and `high`.  It is used to implement X
+axis brushing for the [coordinate grid charts](#coordinate-grid-mixin).
+
+#### dc.filters.TwoDimensionalFilter(array)
+TwoDimensionalFilter is a filter which accepts a single two-dimensional value.  It is used by the
+[heat map chart](#heat-map) to include particular cells as they are clicked.  (Rows and columns are
+filtered by filtering all the cells in the row or column.)
+
+#### dc.filters.RangedTwoDimensionalFilter(array)
+The RangedTwoDimensionalFilter allows filtering all values which fit within a rectangular
+region. It is used by the [scatter plot](#scatter-plot) to implement rectangular brushing.
+
+It takes two two-dimensional points in the form `[[x1,y1],[x2,y2]]`, and normalizes them so that
+`x1 <= x2` and `y1 <- y2`. It then returns a filter which accepts any points which are in the
+rectangular range including the lower values but excluding the higher values.
+
+If an array of two values are given to the RangedTwoDimensionalFilter, it interprets the values as
+two x coordinates `x1` and `x2` and returns a filter which accepts any points for which `x1 <= x <
+x2`.
+
 ## Base Mixin
 Base Mixin is an abstract functional object representing a basic dc chart object
 for all chart and widget implementations. Methods from the Base Mixin are inherited
 and available on all chart implementation in the DC library.
 
 #### .width([value])
-Set or get width attribute of a chart. See `.height` below for further description of the behavior.
+Set or get the width attribute of a chart. See `.height` below for further description of the
+behavior.
 
 #### .height([value])
-Set or get height attribute of a chart. The height is applied to the SVG element
-generated by the chart when rendered (or rerendered). If a value is given, then it
-will be used to calculate the new height and the chart returned for method chaining.
-The value can either be a numeric, a function, or falsy. If no value specified then
-value of the current height attribute will be returned.
+Set or get the height attribute of a chart. The height is applied to the SVG element generated by
+the chart when rendered (or rerendered). If a value is given, then it will be used to calculate
+the new height and the chart returned for method chaining.  The value can either be a numeric, a
+function, or falsy. If no value is specified then the value of the current height attribute will
+be returned.
 
-By default, without an explicit height being given, the chart will select the width
-of its anchor element. If that isn't possible it defaults to 200;
+By default, without an explicit height being given, the chart will select the width of its
+anchor element. If that isn't possible it defaults to 200. Setting the value falsy will return
+the chart to the default behavior
 
 Examples:
 
@@ -116,21 +184,24 @@ chart.height(null); // reset the height to the default auto calculation
 ```
 
 #### .minWidth([value])
-Set or get minimum width attribute of a chart. This only applicable if the width is calculated by DC.
+Set or get the minimum width attribute of a chart. This only applicable if the width is
+calculated by dc.
 
 #### .minHeight([value])
-Set or get minimum height attribute of a chart. This only applicable if the height is calculated by DC.
+Set or get the minimum height attribute of a chart. This only applicable if the height is
+calculated by dc.
 
 #### .dimension([value]) - **mandatory**
-Set or get dimension attribute of a chart. In dc a dimension can be any valid
-[crossfilter dimension](https://github.com/square/crossfilter/wiki/API-Reference#wiki-dimension). If the value is given,
-then it will be used as the new dimension.
+Set or get the dimension attribute of a chart. In dc a dimension can be any valid [crossfilter
+dimension](https://github.com/square/crossfilter/wiki/API-Reference#wiki-dimension).
 
-If no value specified then the current dimension will be returned.
+If a value is given, then it will be used as the new dimension. If no value is specified then
+the current dimension will be returned.
 
 #### .data([callback])
-Get the data callback or retreive the charts data set. The data callback is passed the chart's group and by default
-will return `group.all()`. This behavior may be modified to, for instance, return only the top 5 groups:
+Set the data callback or retrieve the chart's data set. The data callback is passed the chart's
+group and by default will return `group.all()`. This behavior may be modified to, for instance,
+return only the top 5 groups:
 ```
     chart.data(function(group) {
         return group.top(5);
@@ -138,13 +209,13 @@ will return `group.all()`. This behavior may be modified to, for instance, retur
 ```
 
 #### .group([value, [name]]) - **mandatory**
-Set or get group attribute of a chart. In dc a group is a
-[crossfilter group](https://github.com/square/crossfilter/wiki/API-Reference#wiki-group). Usually the group should be
-created from the particular dimension associated with the same chart. If the value is given, then it will be used as
-the new group.
+Set or get the group attribute of a chart. In dc a group is a [crossfilter
+group](https://github.com/square/crossfilter/wiki/API-Reference#wiki-group). Usually the group
+should be created from the particular dimension associated with the same chart. If a value is
+given, then it will be used as the new group.
 
 If no value specified then the current group will be returned.
-If name is specified then it will be used to generate legend label.
+If `name` is specified then it will be used to generate legend label.
 
 #### .ordering([orderFunction])
 Get or set an accessor to order ordinal charts
@@ -153,65 +224,81 @@ Get or set an accessor to order ordinal charts
 Clear all filters associated with this chart.
 
 #### .select(selector)
-Execute in scope d3 single selection using the given selector and return d3 selection result. Roughly the same as:
+Execute d3 single selection in the chart's scope using the given selector and return the d3
+selection. Roughly the same as:
 ```js
 d3.select("#chart-id").select(selector);
 ```
-This function is **not chainable** since it does not return a chart instance; however the d3 selection result is chainable
-from d3's perspective.
+This function is **not chainable** since it does not return a chart instance; however the d3
+selection result can be chained to d3 function calls.
 
 #### .selectAll(selector)
-Execute in scope d3 selectAll using the given selector and return d3 selection result. Roughly the same as:
+Execute in scope d3 selectAll using the given selector and return d3 selection result. Roughly
+the same as:
 ```js
 d3.select("#chart-id").selectAll(selector);
 ```
-This function is **not chainable** since it does not return a chart instance; however the d3 selection result is
-chainable from d3's perspective.
+This function is **not chainable** since it does not return a chart instance; however the d3
+selection result can be chained to d3 function calls.
 
-#### .anchor([anchorChart/anchorSelector], [chartGroup])
-Set the svg root to either be an existing chart's root or the first element returned from a d3 css string selector. Optionally registers the chart within the chartGroup. This class is called internally on chart initialization, but be called again to relocate the chart. However, it will orphan any previously created SVG elements.
+#### .anchor([anchorChart|anchorSelector|anchorNode], [chartGroup])
+Set the svg root to either be an existing chart's root; or any valid [d3 single
+selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom
+block element such as a div; or a dom element or d3 selection. Optionally registers the chart
+within the chartGroup. This class is called internally on chart initialization, but be called
+again to relocate the chart. However, it will orphan any previously created SVG elements.
 
 #### .anchorName()
-Return the dom ID for chart's anchored location
+Returns the dom id for the chart's anchored location.
 
 #### .root([rootElement])
-Returns the root element where a chart resides. Usually it will be the parent div element where svg was created. You
-can also pass in a new root element however this is usually handled as part of the dc internal. Resetting root element
-on a chart outside of dc internal might have unexpected consequences.
+Returns the root element where a chart resides. Usually it will be the parent div element where
+the svg was created. You can also pass in a new root element however this is usually handled by
+dc internally. Resetting the root element on a chart outside of dc internals may have
+unexpected consequences.
 
 #### .svg([svgElement])
-Returns the top svg element for this specific chart. You can also pass in a new svg element however this is usually
-handled as part of the dc internal. Resetting svg element on a chart outside of dc internal might have unexpected
-consequences.
+Returns the top svg element for this specific chart. You can also pass in a new svg element,
+however this is usually handled by dc internally. Resetting the svg element on a chart outside
+of dc internals may have unexpected consequences.
 
 #### .resetSvg()
 Remove the chart's SVG elements from the dom and recreate the container SVG element.
 
 #### .filterPrinter([filterPrinterFunction])
-Set or get filter printer function. Filter printer function is used to generate human friendly text for filter value(s)
-associated with the chart instance. By default dc charts shipped with a default filter printer implementation dc.printers.filter
-that provides simple printing support for both single value and ranged filters.
+Set or get the filter printer function. The filter printer function is used to generate human
+friendly text for filter value(s) associated with the chart instance. By default dc charts use a
+default filter printer `dc.printers.filter` that provides simple printing support for both
+single value and ranged filters.
 
 #### .turnOnControls() & .turnOffControls()
-Turn on/off optional control elements within the root element. dc.js currently support the following html control elements.
+Turn on/off optional control elements within the root element. dc currently supports the
+following html control elements.
 
-* root.selectAll(".reset") elements are turned on if the chart has an active filter. This type of control elements are usually used to store reset link to allow user to reset filter on a certain chart. This element will be turned off automatically if the filter is cleared.
-* root.selectAll(".filter") elements are turned on if the chart has an active filter. The text content of this element is then replaced with the current filter value using the filter printer function. This type of element will be turned off automatically if the filter is cleared.
+* root.selectAll(".reset") - elements are turned on if the chart has an active filter. This type
+ of control element is usually used to store a reset link to allow user to reset filter on a
+ certain chart. This element will be turned off automatically if the filter is cleared.
+* root.selectAll(".filter") elements are turned on if the chart has an active filter. The text
+ content of this element is then replaced with the current filter value using the filter printer
+ function. This type of element will be turned off automatically if the filter is cleared.
 
 #### .transitionDuration([duration])
-Set or get animation transition duration(in milliseconds) for specific chart instance. Default duration is 750ms.
+Set or get the animation transition duration(in milliseconds) for this chart instance. Default
+duration is 750ms.
 
 #### .render()
-Invoke this method will force the chart to re-render everything from scratch. Generally it should be only used to
-render the chart for the first time on the page or if you want to make sure everything is redrawn from scratch instead
-of relying on the default incremental redrawing behaviour.
+Invoking this method will force the chart to re-render everything from scratch. Generally it
+should only be used to render the chart for the first time on the page or if you want to make
+sure everything is redrawn from scratch instead of relying on the default incremental redrawing
+behaviour.
 
 #### .redraw()
-Calling redraw will cause the chart to re-render delta in data change incrementally. If there is no change in the
-underlying data dimension then calling this method will have no effect on the chart. Most of the chart interaction in
-dc library will automatically trigger this method through its internal event engine, therefore you only need to manually
-invoke this function if data is manipulated outside of dc's control; for example if data is loaded on a periodic basis
-in the background using crossfilter.add().
+Calling redraw will cause the chart to re-render data changes incrementally. If there is no
+change in the underlying data dimension then calling this method will have no effect on the
+chart. Most chart interaction in dc will automatically trigger this method through internal
+events (in particular [dc.redrawAll](#dcredrawallchartgroup)); therefore, you only need to
+manually invoke this function if data is manipulated outside of dc's control (for example if
+data is loaded in the background using `crossfilter.add()`).
 
 #### .hasFilter([filter])
 Check whether is any active filter or a specific filter is associated with particular chart instance.
@@ -227,16 +314,18 @@ chart.filter(18);
 ```
 
 #### .filters()
-Return all current filters. This method does not perform defensive cloning of the internal filter array before returning
-therefore any modification of returned array will affact chart's internal filter storage.
+Returns all current filters. This method does not perform defensive cloning of the internal
+filter array before returning, therefore any modification of the returned array will effect the
+chart's internal filter storage.
 
 #### .onClick(datum)
-This function is passed to d3 as the onClick handler for each chart. By default it will filter the on the clicked datum
-(as passed back to the callback) and redraw the chart group.
+This function is passed to d3 as the onClick handler for each chart. The default behavior is to
+filter on the clicked datum (passed to the callback) and redraw the chart group.
 
 #### .filterHandler([function])
-Set or get filter handler. Filter handler is a function that performs the filter action on a specific dimension. Using
-custom filter handler give you the flexibility to perform additional logic before or after filtering.
+Set or get the filter handler. The filter handler is a function that performs the filter action
+on a specific dimension. Using a custom filter handler allows you to perform additional logic
+before or after filtering.
 
 ```js
 // default filter handler
@@ -254,9 +343,9 @@ chart.filterHandler(function(dimension, filter){
 ```
 
 #### .keyAccessor([keyAccessorFunction])
-Set or get the key accessor function. Key accessor function is used to retrieve key value in crossfilter group. Key
-values are used differently in different charts, for example keys correspond to slices in pie chart and x axis position
-in grid coordinate chart.
+Set or get the key accessor function. The key accessor function is used to retrieve the key
+value from the crossfilter group. Key values are used differently in different charts, for
+example keys correspond to slices in a pie chart and x axis positions in a grid coordinate chart.
 ```js
 // default key accessor
 chart.keyAccessor(function(d) { return d.key; });
@@ -265,9 +354,10 @@ chart.keyAccessor(function(p) { return p.value.absGain; });
 ```
 
 #### .valueAccessor([valueAccessorFunction])
-Set or get the value accessor function. Value accessor function is used to retrieve value in crossfilter group. Group
-values are used differently in different charts, for example group values correspond to slices size in pie chart and y
-axis position in grid coordinate chart.
+Set or get the value accessor function. The value accessor function is used to retrieve the
+value from the crossfilter group. Group values are used differently in different charts, for
+example values correspond to slice sizes in a pie chart and y axis positions in a grid
+coordinate chart.
 ```js
 // default value accessor
 chart.valueAccessor(function(d) { return d.value; });
@@ -276,9 +366,10 @@ chart.valueAccessor(function(p) { return p.value.percentageGain; });
 ```
 
 #### .label([labelFunction])
-Set or get the label function. Chart class will use this function to render label for each child element in the chart,
-i.e. a slice in a pie chart or a bubble in a bubble chart. Not every chart supports label function for example bar chart
-and line chart do not use this function at all.
+Set or get the label function. The chart class will use this function to render labels for each
+child element in the chart, e.g. slices in a pie chart or bubbles in a bubble chart. Not every
+chart supports the label function for example bar chart and line chart do not use this function
+at all.
 ```js
 // default label function just return the key
 chart.label(function(d) { return d.key; });
@@ -290,10 +381,11 @@ chart.label(function(d) { return d.data.key + "(" + Math.floor(d.data.value / al
 Turn on/off label rendering
 
 #### .title([titleFunction])
-Set or get the title function. Chart class will use this function to render svg title(usually interpreted by browser
-as tooltips) for each child element in the chart, i.e. a slice in a pie chart or a bubble in a bubble chart. Almost
-every chart supports title function however in grid coordinate chart you need to turn off brush in order to use title
-otherwise the brush layer will block tooltip trigger.
+Set or get the title function. The chart class will use this function to render the svg title
+(usually interpreted by browser as tooltips) for each child element in the chart, e.g. a slice
+in a pie chart or a bubble in a bubble chart. Almost every chart supports the title function;
+however in grid coordinate charts you need to turn off the brush in order to see titles, because
+otherwise the brush layer will block tooltip triggering.
 ```js
 // default title function just return the key
 chart.title(function(d) { return d.key + ": " + d.value; });
@@ -308,13 +400,15 @@ chart.title(function(p) {
 ```
 
 #### .renderTitle(boolean)
-Turn on/off title rendering
+Turn on/off title rendering, or return the state of the render title flag if no arguments are
+given.
 
 #### .renderlet(renderletFunction)
-Renderlet is similar to an event listener on rendering event. Multiple renderlets can be added to an individual chart.
-Every time when chart is rerendered or redrawn renderlet then will be invoked right after the chart finishes its own
-drawing routine hence given you a way to override or modify certain behaviour. Renderlet function accepts the chart
-instance as the only input parameter and you can either rely on dc API or use raw d3 to achieve pretty much any effect.
+A renderlet is similar to an event listener on rendering event. Multiple renderlets can be added
+to an individual chart.  Each time a chart is rerendered or redrawn the renderlets are invoked
+right after the chart finishes its own drawing routine, giving you a way to modify the svg
+elements. Renderlet functions take the chart instance as the only input parameter and you can
+use the dc API or use raw d3 to achieve pretty much any effect.
 ```js
 // renderlet function
 chart.renderlet(function(chart){
@@ -326,28 +420,30 @@ chart.renderlet(function(chart){
 ```
 
 #### .chartGroup([group])
-Get or set the chart group with which this chart belongs. Chart groups share common rendering events since it is
-expected they share the same underlying crossfilter data set.
+Get or set the chart group to which this chart belongs. Chart groups are rendered or redrawn
+together since it is expected they share the same underlying crossfilter data set.
 
 #### .expireCache()
-Expire internal chart cache. dc.js chart cache some data internally on a per chart basis so it can speed up rendering
-and avoid unnecessary calculation however under certain circumstances it might be useful to clear the cache e.g. after
-you invoke crossfilter.add function or if you reset group or dimension post render it is always a good idea to clear
-the cache to make sure charts are rendered properly.
+Expire the internal chart cache. dc charts cache some data internally on a per chart basis to
+speed up rendering and avoid unnecessary calculation; however it might be useful to clear the
+cache if you have changed state which will affect rendering.  For example if you invoke the
+`crossfilter.add` function or reset group or dimension after rendering it is a good idea to
+clear the cache to make sure charts are rendered properly.
 
 #### .legend([dc.legend])
-Attach dc.legend widget to this chart. Legend widget will automatically draw legend labels based on the color setting
-and names associated with each group.
+Attach a dc.legend widget to this chart. The legend widget will automatically draw legend labels
+based on the color setting and names associated with each group.
 
 ```js
 chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
 ```
 
 #### .chartID()
-Return the internal numeric ID of the chart.
+Returns the internal numeric ID of the chart.
 
 #### .options(optionsObject)
-Set chart options using a configuration object. Each object key will be call the fluent method of the same name to set that attribute for the chart.
+Set chart options using a configuration object. Each key in the object will cause the method of
+the same name to be called with the value to set that attribute for the chart.
 
 Example:
 ```
@@ -377,11 +473,12 @@ This listener function will be invoked after a zoom is triggered.
 
 ## Margin Mixin
 
-Margin is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid Charts.
+Margin is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid
+Charts.
 
 #### .margins([margins])
-Get or set the margins for a particular coordinate grid chart instance. The margins is stored as an associative Javascript
-array. Default margins: {top: 10, right: 50, bottom: 30, left: 30}.
+Get or set the margins for a particular coordinate grid chart instance. The margins is stored as
+an associative Javascript array. Default margins: {top: 10, right: 50, bottom: 30, left: 30}.
 
 The margins can be accessed directly from the getter.
 ```js
@@ -392,20 +489,20 @@ leftMargin = chart.margins().left; // now 50
 
 ## Color Mixin
 
-Color Mixin is an abstract chart functional class created to provide universal coloring support as a mix-in for any concrete
-chart implementation.
+The Color Mixin is an abstract chart functional class providing universal coloring support
+as a mix-in for any concrete chart implementation.
 
 #### .colors([colorScale])
-Retrieve current color scale or set a new color scale. This methods accepts any
-function the operate like a d3 scale. If not set the default is
+Retrieve current color scale or set a new color scale. This methods accepts any function that
+operates like a d3 scale. If not set the default is
 `d3.scale.category20c()`.
 ```js
 // alternate categorical scale
 chart.colors(d3.scale.category20b());
 
 // ordinal scale
-chart.colors(d3.scale.ordinal().range(['red','green','blue']);
-// convience method, the same as above
+chart.colors(d3.scale.ordinal().range(['red','green','blue']));
+// convenience method, the same as above
 chart.ordinalColors(['red','green','blue']);
 
 // set a linear scale
@@ -419,9 +516,9 @@ Convenience method to set the color scale to d3.scale.ordinal with range `r`.
 Convenience method to set the color scale to an Hcl interpolated linear scale with range `r`.
 
 #### .colorAccessor([colorAccessorFunction])
-Set or get color accessor function. This function will be used to map a data point on crossfilter group to a specific
-color value on the color scale. Default implementation of this function simply returns the next color on the scale using
-the index of a group.
+Set or the get color accessor function. This function will be used to map a data point in a
+crossfilter group to a color value on the color scale. The default function uses the key
+accessor.
 ```js
 // default index based color accessor
 .colorAccessor(function(d, i){return i;})
@@ -430,28 +527,35 @@ the index of a group.
 ```
 
 #### .colorDomain([domain])
-Set or get the current domain for the color mapping function. The domain must be supplied as an array.
+Set or get the current domain for the color mapping function. The domain must be supplied as an
+array.
 
-Note: previously this method accepted a callback function. Instead you may use a custom scale set by `.colors`.
+Note: previously this method accepted a callback function. Instead you may use a custom scale
+set by `.colors`.
 
 #### .calculateColorDomain()
-Set the domain by determining the min and max values as retrived by `.colorAccessor` over the chart's dataset.
+Set the domain by determining the min and max values as retrieved by `.colorAccessor` over the
+chart's dataset.
 
 #### .getColor(d [, i])
-Get the color for the datum d and counter i. This is used internaly by charts to retrieve a color.
+Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
+
+#### .colorCalculator([value])
+Gets or sets chart.getColor.
 
 ## Coordinate Grid Mixin
 
 Includes: [Color Mixin](#color-mixin), [Margin Mixin](#margin-mixin), [Base Mixin](#base-mixin)
 
-Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based concrete chart types,
-i.e. bar chart, line chart, and bubble chart.
+Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based
+concrete chart types, e.g. bar chart, line chart, and bubble chart.
 
 #### .rangeChart([chart])
-Get or set the range selection chart associated with this instance. Setting the range selection chart using this function
-will automatically update its selection brush when the current chart zooms in. In return the given range chart will also
-automatically attach this chart as its focus chart hence zoom in when range brush updates. See the
-[Nasdaq 100 Index](http://dc-js.github.com/dc.js/) example for this effect in action.
+Get or set the range selection chart associated with this instance. Setting the range selection
+chart using this function will automatically update its selection brush when the current chart
+zooms in. In return the given range chart will also automatically attach this chart as its focus
+chart hence zoom in when range brush updates. See the [Nasdaq 100
+Index](http://dc-js.github.com/dc.js/) example for this effect in action.
 
 #### .zoomScale([extent])
 Get or set the scale extent for mouse zooms.
@@ -460,20 +564,22 @@ Get or set the scale extent for mouse zooms.
 Get or set the zoom restriction for the chart. If true limits the zoom to origional domain of the chart.
 
 #### .g([gElement])
-Get or set the root g element. This method is usually used to retrieve the g element in order to overlay custom svg drawing
-programatically. **Caution**: The root g element is usually generated by dc.js internals, and resetting it might produce unpredictable result.
+Get or set the root g element. This method is usually used to retrieve the g element in order to
+overlay custom svg drawing programatically. **Caution**: The root g element is usually generated
+by dc.js internals, and resetting it might produce unpredictable result.
 
 #### .mouseZoomable([boolean])
-Set or get mouse zoom capability flag (default: false). When turned on the chart will be zoomable through mouse wheel
- . If range selector chart is also attached zooming will also update the range selection brush on associated range
- selector chart.
+Set or get mouse zoom capability flag (default: false). When turned on the chart will be
+zoomable using the mouse wheel. If the range selector chart is attached zooming will also update
+the range selection brush on the associated range selector chart.
 
 #### .chartBodyG()
-Retreive the svg group for the chart body.
+Retrieve the svg group for the chart body.
 
 #### .x([xScale]) - **mandatory**
-Get or set the x scale. x scale could be any [d3 quatitive scales](https://github.com/mbostock/d3/wiki/Quantitative-Scales).
-For example a time scale for histogram or a linear/ordinal scale for visualizing data distribution.
+Get or set the x scale. The x scale can be any d3
+[quantitive scale](https://github.com/mbostock/d3/wiki/Quantitative-Scales) or
+[ordinal scale](https://github.com/mbostock/d3/wiki/Ordinal-Scales).
 ```js
 // set x to a linear scale
 chart.x(d3.scale.linear().domain([-2500, 2500]))
@@ -482,18 +588,21 @@ chart.x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
 ```
 
 #### .xUnits([xUnits function])
-Set or get the xUnits function. xUnits function is the coordinate grid chart uses to calculate number of data
-projections on x axis such as number bars for a bar chart and number of dots for a line chart. This function is
-expected to return a Javascript array of all data points on x axis. d3 time range functions d3.time.days, d3.time.months,
-and d3.time.years are all valid xUnits function. dc.js also provides a few units function, see [Utilities](#utilities)
-section for a list of built-in units functions. Default xUnits function is dc.units.integers.
+Set or get the xUnits function. The coordinate grid chart uses the xUnits function to calculate
+the number of data projections on x axis such as the number of bars for a bar chart or the
+number of dots for a line chart. This function is expected to return a Javascript array of all
+data points on x axis, or the number of points on the axis. [d3 time range functions
+d3.time.days, d3.time.months, and
+d3.time.years](https://github.com/mbostock/d3/wiki/Time-Intervals#aliases) are all valid xUnits
+function. dc.js also provides a few units function, see the [Utilities](#utilities) section for
+a list of built-in units functions. The default xUnits function is dc.units.integers.
 ```js
-// set x units to day for a histogram
+// set x units to count days
 chart.xUnits(d3.time.days);
-// set x units to month for a histogram
+// set x units to count months
 chart.xUnits(d3.time.months);
 ```
-Custom xUnits function can be easily created using as long as it follows the following inteface:
+A custom xUnits function can be used as long as it follows the following interface:
 ```js
 // units in integer
 function(start, end, xDomain) {
@@ -509,11 +618,11 @@ function(start, end, xDomain) {
 ```
 
 #### .xAxis([xAxis])
-Set or get the x axis used by a particular coordinate grid chart instance. This function is most useful when certain x
-axis customization is required. x axis in dc.js is simply an instance of
-[d3 axis object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis) therefore it supports any valid d3 axis
-manipulation. **Caution**: The x axis is typically generated by dc chart internal, resetting it might cause unexpected
-outcome.
+Set or get the x axis used by a particular coordinate grid chart instance. This function is most
+useful when x axis customization is required. The x axis in dc.js is an instance of a [d3
+axis object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis); therefore it supports any
+valid d3 axis manipulation. **Caution**: The x axis is usually generated internally by dc;
+resetting it may cause unexpected results.
 ```js
 // customize x axis tick format
 chart.xAxis().tickFormat(function(v) {return v + "%";});
@@ -522,41 +631,49 @@ chart.xAxis().tickValues([0, 100, 200, 300]);
 ```
 
 #### .elasticX([boolean])
-Turn on/off elastic x axis. If x axis elasticity is turned on, then the grid chart will attempt to generate and
-recalculate x axis range whenever redraw event is triggered.
+Turn on/off elastic x axis behavior. If x axis elasticity is turned on, then the grid chart will
+attempt to recalculate the x axis range whenever a redraw event is triggered.
 
 #### .xAxisPadding([padding])
-Set or get x axis padding when elastic x axis is turned on. The padding will be added to both end of the x axis if and
-only if elasticX is turned on otherwise it will be simply ignored.
+Set or get x axis padding for the elastic x axis. The padding will be added to both end of the x
+axis if elasticX is turned on; otherwise it is ignored.
 
-* padding - could be integer or percentage in string (e.g. "10%"). Padding can be applied to number or date.
-When padding with date, integer represents number of days being padded while percentage string will be treated
-as number.
+* padding can be an integer or percentage in string (e.g. "10%"). Padding can be applied to
+number or date x axes.  When padding a date axis, an integer represents number of days being padded
+and a percentage string will be treated the same as an integer.
 
 #### .xUnitCount()
-Returns the number of units displayed on the x axis using the unit measure configured by .xUnits.
+Returns the number of units displayed on the x axis using the unit measure configured by
+.xUnits.
+
+#### .useRightYAxis()
+Gets or sets whether the chart should be drawn with a right axis instead of a left axis. When
+used with a chart in a composite chart, allows both left and right Y axes to be shown on a
+chart.
 
 #### isOrdinal()
-Returns true if the chart is using ordinal xUnits, false otherwise. Most charts must behave somewhat
-differently when with ordinal data and use the result of this method to trigger those special case.
+Returns true if the chart is using ordinal xUnits ([dc.units.ordinal](dcunitsordinal)), or false
+otherwise. Most charts behave differently with ordinal data and use the result of this method to
+trigger the special case.
 
 #### .xAxisLabel([labelText, [, padding]])
 Set or get the x axis label. If setting the label, you may optionally include additional padding to
 the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.
 
 #### .yAxisLabel([labelText, [, padding]])
-Set or get the y axis label. If setting the label, you may optionally include additional padding to
-the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.
+Set or get the y axis label. If setting the label, you may optionally include additional padding
+to the margin to make room for the label. By default the padded is set to 12 to accomodate the
+text height.
 
 #### .y([yScale])
-Get or set the y scale. y scale is typically automatically generated by the chart implementation.
+Get or set the y scale. The y scale is typically automatically determined by the chart implementation.
 
 #### .yAxis([yAxis])
-Set or get the y axis used by a particular coordinate grid chart instance. This function is most useful when certain y
-axis customization is required. y axis in dc.js is simply an instance
-of [d3 axis object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis) therefore it supports any valid d3 axis
-manipulation. **Caution**: The y axis is typically generated by dc chart internal, resetting it might cause unexpected
-outcome.
+Set or get the y axis used by the coordinate grid chart instance. This function is most useful
+when y axis customization is required. The y axis in dc.js is simply an instance of a [d3 axis
+object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis); therefore it supports any
+valid d3 axis manipulation. **Caution**: The y axis is usually generated internally by dc;
+resetting it may cause unexpected results.
 ```js
 // customize y axis tick format
 chart.yAxis().tickFormat(function(v) {return v + "%";});
@@ -565,8 +682,8 @@ chart.yAxis().tickValues([0, 100, 200, 300]);
 ```
 
 #### .elasticY([boolean])
-Turn on/off elastic y axis. If y axis elasticity is turned on, then the grid chart will attempt to generate and recalculate
-y axis range whenever redraw event is triggered.
+Turn on/off elastic y axis behavior. If y axis elasticity is turned on, then the grid chart will
+attempt to recalculate the y axis range whenever a redraw event is triggered.
 
 #### .renderHorizontalGridLines([boolean])
 Turn on/off horizontal grid lines.
@@ -575,41 +692,43 @@ Turn on/off horizontal grid lines.
 Turn on/off vertical grid lines.
 
 #### .xAxisMin()
-Return the minimum x value to diplay in the chart. Includes xAxisPadding if set.
+Calculates the minimum x value to display in the chart. Includes xAxisPadding if set.
 
 #### .xAxisMax()
-Return the maximum x value to diplay in the chart. Includes xAxisPadding if set.
+Calculates the maximum x value to display in the chart. Includes xAxisPadding if set.
 
 #### .yAxisMin()
-Return the minimum y value to diplay in the chart. Includes yAxisPadding if set.
+Calculates the minimum y value to display in the chart. Includes yAxisPadding if set.
 
 #### .yAxisMax()
-Return the maximum y value to diplay in the chart. Includes yAxisPadding if set.
+Calculates the maximum y value to display in the chart. Includes yAxisPadding if set.
 
 #### .yAxisPadding([padding])
-if elasticY is turned on otherwise it will be simply ignored.
-Set or get y axis padding when elastic y axis is turned on. The padding will be added to the top of the y axis if and only
+Set or get y axis padding for the elastic y axis. The padding will be added to the top of the y
+axis if elasticY is turned on; otherwise it is ignored.
 
-* padding - could be integer or percentage in string (e.g. "10%"). Padding can be applied to number or date.
-When padding with date, integer represents number of days being padded while percentage string will be treated
-as number.
+* padding can be an integer or percentage in string (e.g. "10%"). Padding can be applied to
+number or date axes. When padding a date axis, an integer represents number of days being padded
+and a percentage string will be treated the same as an integer.
 
 #### .round([rounding function])
-Set or get the rounding function for x axis. Rounding is mainly used to provide stepping capability when in place
-selection based filter is enable.
+Set or get the rounding function used to quantize the selection when brushing is enabled.
 ```js
-// set x unit round to by month, this will make sure range selection brash will
-// extend on a month-by-month basis
+// set x unit round to by month, this will make sure range selection brush will
+// select whole months
 chart.round(d3.time.month.round);
 ```
 
 #### .clipPadding([padding])
-Get or set padding in pixel for clip path. Once set padding will be applied evenly to top, left, right, and bottom padding
- when clip path is generated. If set to zero, then the clip area will be exactly the chart body area minus the margins.
- Default: 5
+Get or set the padding in pixels for the clip path. Once set padding will be applied evenly to
+the top, left, right, and bottom when the clip path is generated. If set to zero, the clip area
+will be exactly the chart body area minus the margins.  Default: 5
 
 #### .focus([range])
-Zoom this chart to focus on the given range. The given range should be an array containing only 2 element([start, end]) defining a range in x domain. If the range is not given or set to null, then the zoom will be reset. _For focus to work elasticX has to be turned off otherwise focus will be ignored._
+Zoom this chart to focus on the given range. The given range should be an array containing only
+2 elements (`[start, end]`) defining a range in the x domain. If the range is not given or set
+to null, then the zoom will be reset. _For focus to work elasticX has to be turned off;
+otherwise focus will be ignored._
 ```js
 chart.renderlet(function(chart){
     // smooth the rendering through event throttling
@@ -621,20 +740,24 @@ chart.renderlet(function(chart){
 ```
 
 #### .brushOn([boolean])
-Turn on/off the brush based in-place range filter. When the brush is on then user will be able to simply drag the mouse
-across the chart to perform range filtering based on the extend of the brush. However turning on brush filter will essentially
-disable other interactive elements on the chart such as the highlighting, tool-tip, and reference lines on a chart. Zooming will still
-be possible if enabled, but only via scrolling (panning will be disabled.) Default value is "true".
+Turn on/off the brush-based range filter. When brushing is on then user can drag the mouse
+across a chart with a quantitative scale to perform range filtering based on the extent of the
+brush, or click on the bars of an ordinal bar chart or slices of a pie chart to filter and
+unfilter them. However turning on the brush filter will disable other interactive elements on
+the chart such as highlighting, tool tips, and reference lines. Zooming will still be possible
+if enabled, but only via scrolling (panning will be disabled.) Default: true
 
 ## Stack Mixin
 
 Stack Mixin is an mixin that provides cross-chart support of stackability using d3.layout.stack.
 
 #### .stack(group[, name, accessor])
-Stack a new crossfilter group into this chart with optionally a custom value accessor. All stacks in the same chart will
-share the same key accessor therefore share the same set of keys. In more concrete words, imagine in a stacked bar chart
-all bars will be positioned using the same set of keys on the x axis while stacked vertically. If name is specified then
-it will be used to generate legend label.
+Stack a new crossfilter group onto this chart with an optional custom value accessor. All stacks
+in the same chart will share the same key accessor and therefore the same set of keys.
+
+For example, in a stacked bar chart, the bars of each stack will be positioned using the same set
+of keys on the x axis, while stacked vertically. If name is specified then it will be used to
+generate the legend label.
 ```js
 // stack group using default accessor
 chart.stack(valueSumGroup)
@@ -670,13 +793,20 @@ var secondTitleFunction = chart.title("second stack");
 );
 ```
 
+#### .stackLayout([layout])
+Gets or sets the stack layout algorithm, which computes a baseline for each stack and
+propagates it to the next.  The default is
+[d3.layout.stack](https://github.com/mbostock/d3/wiki/Stack-Layout#stack).
+
 ## Cap Mixin
 
-Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the Row and Pie Charts.
+Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the
+Row and Pie Charts.
 
-The top ordered elements in the group up to the cap amount will be kept in the chart and
-the sum of those below will be added to the *others* element. The keys of the elements below the cap limit are recorded
-in order to repsond to onClick events and trigger filtering of all the within that grouping.
+The top ordered elements in the group up to the cap amount will be kept in the chart, and the rest
+will be replaced with an *others* element, with value equal to the sum of the replaced values. The
+keys of the elements below the cap limit are recorded in order to filter by those keys when the
+*others* element is clicked.
 
 #### .cap([count])
 Get or set the count of elements to that will be included in the cap.
@@ -685,9 +815,9 @@ Get or set the count of elements to that will be included in the cap.
 Get or set the label for *Others* slice when slices cap is specified. Default label is **Others**.
 
 #### .othersGrouper([grouperFunction])
-Get or set the grouper function that will perform the insertion of data for the *Others* slice if the slices cap is
-specified. If set to a falsy value, no others will be added. By default the grouper function computes the sum of all
-values below the cap.
+Get or set the grouper function that will perform the insertion of data for the *Others* slice
+if the slices cap is specified. If set to a falsy value, no others will be added. By default the
+grouper function computes the sum of all values below the cap.
 ```js
 chart.othersGrouper(function (data) {
     // compute the value for others, presumably the sum of all values below the cap
@@ -710,45 +840,49 @@ Includes: [Color Mixin](#color-mixin)
 This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.
 
 #### .r([bubbleRadiusScale])
-Get or set bubble radius scale. By default bubble chart uses ```d3.scale.linear().domain([0, 100])``` as it's r scale .
+Get or set the bubble radius scale. By default the bubble chart uses
+`d3.scale.linear().domain([0, 100])` as its r scale .
 
 #### .radiusValueAccessor([radiusValueAccessor])
-Get or set the radius value accessor function. The radius value accessor function if set will be used to retrieve data value
-for each and every bubble rendered. The data retrieved then will be mapped using r scale to be used as the actual bubble
-radius. In other words, this allows you to encode a data dimension using bubble size.
+Get or set the radius value accessor function. If set, the radius value accessor function will
+be used to retrieve a data value for each bubble. The data retrieved then will be mapped using
+the r scale to the actual bubble radius. This allows you to encode a data dimension using bubble
+size.
 
 #### .minRadiusWithLabel([radius])
-Get or set the minimum radius for label rendering. If a bubble's radius is less than this value then no label will be rendered.
-Default value: 10.
+Get or set the minimum radius for label rendering. If a bubble's radius is less than this value
+then no label will be rendered.  Default: 10
 
 #### .maxBubbleRelativeSize([relativeSize])
-Get or set the maximum relative size of a bubble to the length of x axis. This value is useful when the radius differences among
-different bubbles are too great. Default value: 0.3
+Get or set the maximum relative size of a bubble to the length of x axis. This value is useful
+when the difference in radius between bubbles is too great. Default: 0.3
 
 ## Pie Chart
 
 Includes: [Cap Mixin](#cap-mixin), [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
 
-The pie chart implementation is usually used to visualize small number of categorical distributions.
-Pie chart uses keyAccessor to generate slices, and valueAccessor to calculate the size of each slice(key)
-relatively to the total sum of all values. Slices are ordered by `.ordering` which defaults to sorting by key.
+The pie chart implementation is usually used to visualize a small categorical distribution.  The pie
+chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
+slice relative to the sum of all values. Slices are ordered by `.ordering` which defaults to sorting
+by key.
 
 Examples:
 
 * [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 
 #### dc.pieChart(parent[, chartGroup])
-Create a pie chart instance and attach it to the given parent element.
+Create a pie chart instance and attaches it to the given parent element.
 
 Parameters:
 
-* parent : string - any valid d3 single selector representing typically a dom block element such
-as a div.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-chart group.
+* parent : string | node | selection - any valid
+[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+a dom block element such as a div; or a dom element or d3 selection.
 
-Return:
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
 A newly created pie chart instance
 
 ```js
@@ -764,11 +898,11 @@ value from high to low. Other slices exeeding the cap will be rolled up into one
 The resulting data will still be sorted by .ordering (default by key).
 
 #### .innerRadius([innerRadius])
-Get or set the inner radius on a particular pie chart instance. If inner radius is greater than 0px then the pie chart
-will be essentially rendered as a doughnut chart. Default inner radius is 0px.
+Get or set the inner radius of the pie chart. If the inner radius is greater than 0px then the
+pie chart will be rendered as a doughnut chart. Default inner radius is 0px.
 
 #### .radius([radius])
-Get or set the radius on a particular pie chart instance. Default radius is 90px.
+Get or set the outer radius. Default radius is 90px.
 
 #### .cx()
 Get center x coordinate position. This function is **not chainable**.
@@ -777,8 +911,8 @@ Get center x coordinate position. This function is **not chainable**.
 Get center y coordinate position. This function is **not chainable**.
 
 #### .minAngleForLabel([minAngle])
-Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not render slice label.
-Default min angle is 0.5.
+Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
+display a slice label.  Default min angle is 0.5.
 
 ## Bar Chart
 
@@ -795,13 +929,15 @@ Examples:
 Create a bar chart instance and attach it to the given parent element.
 
 Parameters:
-* parent : string|compositeChart - any valid d3 single selector representing typically a dom block element such
-as a div, or if this bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-chart group.
+* parent : string | node | selection | compositeChart - any valid
+[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+a dom block element such as a div; or a dom element or d3 selection.
+If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite
+chart instance.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.
 
-Return:
+Returns:
 A newly created bar chart instance
 
 ```js
@@ -814,31 +950,33 @@ var chart3 = dc.barChart(compositeChart);
 ```
 
 #### .centerBar(boolean)
-Whether the bar chart will render each bar centered around the data position on x axis. Default to false.
+Whether the bar chart will render each bar centered around the data position on x axis. Default: false
 
 #### .barPadding([padding])
-Get or set the spacing between bars as a fraction of bar size. Valid values are within 0-1.
+Get or set the spacing between bars as a fraction of bar size. Valid values are between 0-1.
 Setting this value will also remove any previously set `gap`. See the
 [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
 for a visual description of how the padding is applied.
 
 #### .outerPadding([padding])
 Get or set the outer padding on an ordinal bar chart. This setting has no effect on non-ordinal charts.
-Padding equivlent in width to `padding * barWidth` will be added on each side of the chart.
+Will pad the width by `padding * barWidth` on each side of the chart.
 
 Default: 0.5
 
 #### .gap(gapBetweenBars)
-Manually set fixed gap (in px) between bars instead of relying on the default auto-generated gap. By default bar chart
-implementation will calculate and set the gap automatically based on the number of data points and the length of the x axis.
+Manually set fixed gap (in px) between bars instead of relying on the default auto-generated
+gap.  By default the bar chart implementation will calculate and set the gap automatically
+based on the number of data points and the length of the x axis.
 
 #### .alwaysUseRounding([boolean])
-Set or get the flag which determines whether rounding is enabled when bars are centered (default: false).
-If false, using rounding with centered bars will result in a warning and rounding will be ignored.
-This flag has no effect if bars are not centered.
+Set or get whether rounding is enabled when bars are centered.  Default: false.  If false, using
+rounding with centered bars will result in a warning and rounding will be ignored.  This flag
+has no effect if bars are not centered.
 
-When using standard d3.js rounding methods, the brush often doesn't align correctly with centered bars since the bars are offset.
-The rounding function must add an offset to compensate, such as in the following example.
+When using standard d3.js rounding methods, the brush often doesn't align correctly with
+centered bars since the bars are offset.  The rounding function must add an offset to
+compensate, such as in the following example.
 ```js
 chart.round(function(n) {return Math.floor(n)+0.5});
 ```
@@ -858,13 +996,16 @@ Create a line chart instance and attach it to the given parent element.
 
 Parameters:
 
-* parent : string|compositeChart - any valid d3 single selector representing typically a dom block element such
-as a div, or if this line chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-chart group.
+* parent : string | node | selection | compositeChart - any valid
+[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+a dom block element such as a div; or a dom element or d3 selection.
+If the line chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite
+chart instance.
 
-Return:
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
 A newly created line chart instance
 
 ```js
@@ -876,19 +1017,43 @@ var chart2 = dc.lineChart("#chart-container2", "chartGroupA");
 var chart3 = dc.lineChart(compositeChart);
 ```
 
+#### .interpolate([value])
+Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
+functions, splines, and cubic interpolation.  This is passed to
+[d3.svg.line.interpolate](https://github.com/mbostock/d3/wiki/SVG-Shapes#line_interpolate) and
+[d3.svg.area.interpolate](https://github.com/mbostock/d3/wiki/SVG-Shapes#area_interpolate),
+where you can find a complete list of valid arguments
+
+#### .tension([value]) Gets or sets the tension to use for lines drawn, in the range 0 to 1.
+This parameter further customizes the interpolation behavior.  It is passed to
+[d3.svg.line.tension](https://github.com/mbostock/d3/wiki/SVG-Shapes#line_tension) and
+[d3.svg.area.tension](https://github.com/mbostock/d3/wiki/SVG-Shapes#area_tension).  Default:
+0.7
+
+#### .defined([value])
+Gets or sets a function that will determine discontinuities in the line which should be
+skipped: the path will be broken into separate subpaths if some points are undefined.
+This function is passed to
+[d3.svg.line.defined](https://github.com/mbostock/d3/wiki/SVG-Shapes#line_defined)
+
+Note: crossfilter will sometimes coerce nulls to 0, so you may need to carefully write
+custom reduce functions to get this to work, depending on your data. See
+https://github.com/dc-js/dc.js/issues/615#issuecomment-49089248
+
 #### .dashStyle([array])
-Set the line's d3 dashstyle. This value becomes "stroke-dasharray" of line. Defaults to empty array (solid line).
+Set the line's d3 dashstyle. This value becomes the "stroke-dasharray" of line. Defaults to empty
+array (solid line).
  ```js
  // create a Dash Dot Dot Dot
  chart.dashStyle([3,1,1,1]);
  ```
 
 #### .renderArea([boolean])
-Get or set render area flag. If the flag is set to true then the chart will render the area beneath each line and effectively
-becomes an area chart.
+Get or set render area flag. If the flag is set to true then the chart will render the area
+beneath each line and the line chart effectively becomes an area chart.
 
 #### .dotRadius([dotRadius])
-Get or set the radius (in px) for data points. Default dot radius is 5.
+Get or set the radius (in px) for dots displayed on the data points. Default dot radius is 5.
 
 #### .renderDataPoints([options])
 Always show individual dots for each datapoint.
@@ -912,9 +1077,9 @@ chart.renderDataPoints({radius: 2, fillOpacity: 0.8, strokeOpacity: 0.8})
 
 Includes: [Base Mixin](#base-mixin)
 
-Data count is a simple widget designed to display total number records in the data set vs. the number records selected
-by the current filters. Once created data count widget will automatically update the text content of the following elements
-under the parent element.
+The data count widget is a simple widget designed to display the number of records selected by the
+current filters out of the total number of records in the data set. Once created the data count widget
+will automatically update the text content of the following elements under the parent element.
 
 * ".total-count" - total number of records
 * ".filter-count" - number of records matched by the current filters
@@ -924,39 +1089,54 @@ Examples:
 * [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 
 #### dc.dataCount(parent[, chartGroup])
-Create a data count widget instance and attach it to the given parent element.
+Create a data count widget and attach it to the given parent element.
 
 Parameters:
 
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-chart group.
+* parent : string | node | selection - any valid
+[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+a dom block element such as a div; or a dom element or d3 selection.
+* chartGroup : string (optional) - name of the chart group this widget should be placed in.
+The data count widget will only react to filter changes in the chart group.
 
-Return:
+Returns:
 A newly created data count widget instance
 
 #### .dimension(allData) - **mandatory**
-For data count widget the only valid dimension is the entire data set.
+For the data count widget the only valid dimension is the entire data set.
 
 #### .group(groupAll) - **mandatory**
-For data count widget the only valid group is the all group.
+For the data count widget the only valid group is the group returned by `dimension.groupAll()`.
 
 ```js
 var ndx = crossfilter(data);
 var all = ndx.groupAll();
 
 dc.dataCount(".dc-data-count")
- .dimension(ndx)
- .group(all);
+   .dimension(ndx)
+   .group(all);
+```
+
+#### html([object])
+Gets or sets an optional object specifying HTML templates to use depending how many items are
+selected. The text `%total-count` will replaced with the total number of records, and the text
+`%filter-count` will be replaced with the number of selected records.
+- all: HTML template to use if all items are selected
+- some: HTML template to use if not all items are selected
+
+```js
+counter.html({
+    some: "%filter-count out of %total-count records selected",
+    all: "All records selected. Click on charts to apply filters"
+})
 ```
 
 ## Data Table Widget
 
 Includes: [Base Mixin](#base-mixin)
 
-Data table is a simple widget designed to list crossfilter focused data set (rows being filtered) in a good old tabular
-fashion.
+The data table is a simple widget designed to list crossfilter focused data set (rows being
+filtered) in a good old tabular fashion.
 
 Examples:
 * [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
@@ -965,21 +1145,24 @@ Examples:
 Create a data table widget instance and attach it to the given parent element.
 
 Parameters:
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-chart group.
+* parent : string | node | selection - any valid
+[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+a dom block element such as a div; or a dom element or d3 selection.
 
-Return:
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
 A newly created data table widget instance
 
 #### .size([size])
 Get or set the table size which determines the number of rows displayed by the widget.
 
 #### .columns([columnFunctionArray])
-Get or set column functions. Data table widget uses an array of functions to generate dynamic columns. Column functions are
-simple javascript function with only one input argument d which represents a row in the data set, and the return value of
-these functions will be used directly to generate table content for each cell.
+Get or set column functions. The data table widget uses an array of functions to generate dynamic
+columns. Column functions are simple javascript functions with only one input argument d which
+represents a row in the data set, and the return value of these functions will be used directly
+to generate table content for the cells.
 
 ```js
     chart.columns([
@@ -1002,8 +1185,8 @@ these functions will be used directly to generate table content for each cell.
 ```
 
 #### .sortBy([sortByFunction])
-Get or set sort-by function. This function works as a value accessor at row level and returns a particular field to be sorted
-by. Default value: ``` function(d) {return d;}; ```
+Get or set sort-by function. This function works as a value accessor at row level and returns a
+particular field to be sorted by. Default value: identity function
 
 ```js
    chart.sortBy(function(d) {
@@ -1026,19 +1209,20 @@ Data grid is a simple widget designed to list the filtered records, providing
 a simple way to define how the items are displayed.
 
 Examples:
-* [List of members of the european parliament ](http://europarl.me/dc.js/web/ep/index.html)
+* [List of members of the european parliament](http://europarl.me/dc.js/web/ep/index.html)
 
 #### dc.dataGrid(parent[, chartGroup])
 Create a data grid widget instance and attach it to the given parent element.
 
 Parameters:
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
-* chartGroup : string (optional) - name of the chart group this chart instance should be
-placed in. Once a chart is placed in a chart group then any interaction with the chart
-will only trigger events and redraw within the same chart group.
-* html (item): function - return the html fragment for each item in the dataset.
-You can use a templating library or build the html directly.
-Return:
+* parent : string | node | selection - any valid
+[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+a dom block element such as a div; or a dom element or d3 selection.
+
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
 A newly created data grid widget instance
 
 #### .size([size])
@@ -1061,11 +1245,11 @@ chart.htmlGroup (function (d) { return "<h2>".d.key . "with " . d.values.length 
 #### .sortBy([sortByFunction])
 Get or set sort-by function. This function works as a value accessor at the item
 level and returns a particular field to be sorted.
-by. Default value: ``` function(d) {return d;}; ```
+by. Default: identity function
 
 ```js
 chart.sortBy(function(d) {
-return d.date;
+    return d.date;
 });
 ```
 
@@ -1080,7 +1264,8 @@ chart.order(d3.descending);
 
 Includes: [Bubble Mixin](#bubble-mixin), [Coordinate Grid Mixin](#coordinate-grid-mixin)
 
-A concrete implementation of a general purpose bubble chart that allows data visualization using the following dimensions:
+A concrete implementation of a general purpose bubble chart that allows data visualization using the
+following dimensions:
 
 * x axis position
 * y axis position
@@ -1095,12 +1280,13 @@ Examples:
 Create a bubble chart instance and attach it to the given parent element.
 
 Parameters:
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-chart group.
+* parent : string | node | selection | compositeChart - any valid
+[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+a dom block element such as a div; or a dom element or d3 selection.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.
 
-Return:
+Returns:
 A newly created bubble chart instance
 
 ```js
@@ -1111,28 +1297,28 @@ var bubbleChart2 = dc.bubbleChart("#chart-container2", "chartGroupA");
 ```
 
 #### .elasticRadius([boolean])
-Turn on or off elastic bubble radius feature. If this feature is turned on, then bubble radiuses will be automatically rescaled
-to fit the chart better.
+Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
+feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
 
 ## Composite Chart
 
 Includes: [Coordinate Grid Mixin](#coordinate-grid-mixin)
 
-Composite charts are a special kind of chart that allow you to render multiple
-charts on the same Coordinate Grid. You can overlay(compose) different
-bar/line/area charts in a single composite chart to achieve some quite flexible
-charting effects.
+Composite charts are a special kind of chart that render multiple charts on the same Coordinate
+Grid. You can overlay (compose) different bar/line/area charts in a single composite chart to
+achieve some quite flexible charting effects.
 
 #### dc.compositeChart(parent[, chartGroup])
 Create a composite chart instance and attach it to the given parent element.
 
 Parameters:
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-chart group.
+* parent : string | node | selection - any valid
+[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+a dom block element such as a div; or a dom element or d3 selection.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.
 
-Return:
+Returns:
 A newly created composite chart instance
 
 ```js
@@ -1143,12 +1329,13 @@ var compositeChart2 = dc.compositeChart("#chart-container2", "chartGroupA");
 ```
 
 #### .useRightAxisGridLines(bool)
-Get or set whether to draw gridlines from the right y axis.
-Drawing from the left y axis is the default behavior. This option is only respected when
-subcharts with both left and right y-axes are present.
+Get or set whether to draw gridlines from the right y axis.  Drawing from the left y axis is the
+default behavior. This option is only respected when subcharts with both left and right y-axes
+are present.
 
 #### .childOptions({object})
-Get or set chart-specific options for all child charts. This is equivalent to calling `.options` on each child chart.
+Get or set chart-specific options for all child charts. This is equivalent to calling `.options`
+on each child chart.
 
 #### .rightYAxisLabel([labelText])
 Set or get the right y axis label.
@@ -1177,6 +1364,9 @@ moveChart.compose([
 ]);
 ```
 
+#### .children()
+Returns the child charts which are composed into the composite chart.
+
 #### .shareColors([boolean])
 Get or set color sharing for the chart. If set, the `.colors()` value from this chart
 will be shared with composed children. Additionally if the child chart implements
@@ -1184,18 +1374,19 @@ Stackable and has not set a custom .colorAccessor, then it will generate a color
 specific to its order in the composition.
 
 #### .shareTitle([[boolean])
-Get or set title sharing for the chart. If set, the `.title()` value from this chart
-will be shared with composed children. Default value is true.
+Get or set title sharing for the chart. If set, the `.title()` value from this chart will be
+shared with composed children. Default value is true.
 
 #### .rightY([yScale])
-Get or set the y scale for the right axis. Right y scale is typically automatically generated by the chart implementation.
+Get or set the y scale for the right axis. The right y scale is typically automatically
+generated by the chart implementation.
 
 #### .rightYAxis([yAxis])
-Set or get the right y axis used by the composite chart. This function is most useful when certain y
-axis customization is required. y axis in dc.js is simply an instance
-of [d3 axis object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis) therefore it supports any valid d3 axis
-manipulation. **Caution**: The y axis is typically generated by dc chart internal, resetting it might cause unexpected
-outcome.
+Set or get the right y axis used by the composite chart. This function is most useful when y
+axis customization is required. The y axis in dc.js is an instance of a [d3 axis
+object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis) therefore it supports any valid
+d3 axis manipulation. **Caution**: The y axis is usually generated internally by dc;
+resetting it may cause unexpected results.
 ```js
 // customize y axis tick format
 chart.rightYAxis().tickFormat(function(v) {return v + "%";});
@@ -1207,20 +1398,22 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);
 
 Includes: [Composite Chart](#composite chart)
 
-A series chart is a chart that shows multiple series of data as lines, where the series
-is specified in the data. It is a special implementation Composite Chart and inherits
-all composite features other than recomposing the chart.
+A series chart is a chart that shows multiple series of data overlaid on one chart, where the
+series is specified in the data. It is a specialization of Composite Chart and inherits all
+composite features other than recomposing the chart.
 
 #### dc.seriesChart(parent[, chartGroup])
 Create a series chart instance and attach it to the given parent element.
 
 Parameters:
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-chart group.
+* parent : string | node | selection - any valid
+[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+a dom block element such as a div; or a dom element or d3 selection.
 
-Return:
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
 A newly created series chart instance
 
 ```js
@@ -1228,6 +1421,16 @@ A newly created series chart instance
 var seriesChart1 = dc.seriesChart("#chart-container1");
 // create a series chart under #chart-container2 element using chart group A
 var seriesChart2 = dc.seriesChart("#chart-container2", "chartGroupA");
+```
+
+#### .chart([function])
+Get or set the chart function, which generates the child charts.  Default: dc.lineChart
+
+```
+// put interpolation on the line charts used for the series
+chart.chart(function(c) { return dc.lineChart(c).interpolate('basis'); })
+// do a scatter series chart
+chart.chart(dc.scatterPlot)
 ```
 
 #### .seriesAccessor([accessor])
@@ -1243,17 +1446,17 @@ chart.seriesSort(d3.descending);
 ```
 
 #### .valueSort([sortFunction])
-Get or set a function to the sort each series values by. By default this is
-the key accessor which, for example, a will ensure lineChart a series connects
-its points in increasing key/x order, rather than haphazardly.
+Get or set a function to sort each series values by. By default this is the key accessor which,
+for example, will ensure a lineChart series connects its points in increasing key/x order,
+rather than haphazardly.
 
 ## Geo Choropleth Chart
 
 Includes: [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
 
-Geo choropleth chart is designed to make creating crossfilter driven choropleth
-map from GeoJson data an easy process. This chart implementation was inspired by
-[the great d3 choropleth example](http://bl.ocks.org/4060606).
+The geo choropleth chart is designed as an easy way to create a crossfilter driven choropleth map
+from GeoJson data. This chart implementation was inspired by [the great d3 choropleth
+example](http://bl.ocks.org/4060606).
 
 Examples:
 * [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
@@ -1262,12 +1465,14 @@ Examples:
 Create a choropleth chart instance and attach it to the given parent element.
 
 Parameters:
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-chart group.
+* parent : string | node | selection - any valid
+[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+a dom block element such as a div; or a dom element or d3 selection.
 
-Return:
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
 A newly created choropleth chart instance
 
 ```js
@@ -1278,15 +1483,15 @@ var chart2 = dc.compositeChart("#us-chart2", "chartGroupA");
 ```
 
 #### .overlayGeoJson(json, name, keyAccessor) - **mandatory**
-Use this function to insert a new GeoJson map layer. This function can be invoked multiple times if you have multiple GeoJson
-data layer to render on top of each other. If you overlay mutiple layers with the same name the new overlay will simply
-override the existing one.
+Use this function to insert a new GeoJson map layer. This function can be invoked multiple times
+if you have multiple GeoJson data layers to render on top of each other. If you overlay multiple
+layers with the same name the new overlay will override the existing one.
 
 Parameters:
 * json - GeoJson feed
 * name - name of the layer
-* keyAccessor - accessor function used to extract "key" from the GeoJson data. Key extracted by this function should match
- the keys generated in crossfilter groups.
+* keyAccessor - accessor function used to extract "key" from the GeoJson data. The key extracted by
+this function should match the keys returned by the crossfilter groups.
 
 ```js
 // insert a layer for rendering US states
@@ -1296,37 +1501,32 @@ chart.overlayGeoJson(statesJson.features, "state", function(d) {
 ```
 
 #### .projection(projection)
-Set custom geo projection function. Available [d3 geo projection functions](https://github.com/mbostock/d3/wiki/Geo-Projections).
-Default value: albersUsa.
+Set custom geo projection function. See the available [d3 geo projection
+functions](https://github.com/mbostock/d3/wiki/Geo-Projections).  Default value: albersUsa.
 
 #### .geoJsons()
-Return all GeoJson layers currently registered with thit chart. The returned array is a reference to this chart's internal
-registration data structure without copying thus any modification to this array will also modify this chart's internal
-registration.
+Returns all GeoJson layers currently registered with this chart. The returned array is a
+reference to this chart's internal data structure, so any modification to this array will also
+modify this chart's internal registration.
 
-Return:
-An array of objects containing fields {name, data, accessor}
+Returns an array of objects containing fields {name, data, accessor}
 
 #### .geoPath()
-Return the d3.geo.path object used to render the projection and features.  Can be useful for figuring out the bounding
-box of the feature set and thus a way to calculate scale and translation for the projection.
-
-Return:
-d3.geo.path()
+Returns the [d3.geo.path](https://github.com/mbostock/d3/wiki/Geo-Paths#path) object used to
+render the projection and features.  Can be useful for figuring out the bounding box of the
+feature set and thus a way to calculate scale and translation for the projection.
 
 #### .removeGeoJson(name)
 Remove a GeoJson layer from this chart by name
-
-Return: chart instance
 
 ## Bubble Overlay Chart
 
 Includes: [Bubble Mixin](#bubble-mixin), [Base Mixin](#base-mixin)
 
-Bubble overlay chart is quite different from the typical bubble chart. With bubble overlay chart you can arbitrarily place
-a finite number of bubbles on an existing svg or bitmap image (overlay on top of it), thus losing the typical x and y
-positioning that we are used to whiling retaining the capability to visualize data using it's bubble radius and
-coloring.
+The bubble overlay chart is quite different from the typical bubble chart. With the bubble overlay
+chart you can arbitrarily place bubbles on an existing svg or bitmap image, thus changing the
+typical x and y positioning while retaining the capability to visualize data using bubble radius
+and coloring.
 
 Examples:
 * [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
@@ -1335,26 +1535,27 @@ Examples:
 Create a bubble overlay chart instance and attach it to the given parent element.
 
 Parameters:
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div. Typically
-this element should also be the parent of the underlying image.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-chart group.
+* parent : string | node | selection - any valid
+[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+a dom block element such as a div; or a dom element or d3 selection.
+off-screen. Typically this element should also be the parent of the underlying image.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.
 
-Return:
+Returns:
 A newly created bubble overlay chart instance
 
 ```js
-// create a bubble overlay chart on top of "#chart-container1 svg" element using the default global chart group
+// create a bubble overlay chart on top of the "#chart-container1 svg" element using the default global chart group
 var bubbleChart1 = dc.bubbleOverlayChart("#chart-container1").svg(d3.select("#chart-container1 svg"));
-// create a bubble overlay chart on top of "#chart-container2 svg" element using chart group A
+// create a bubble overlay chart on top of the "#chart-container2 svg" element using chart group A
 var bubbleChart2 = dc.compositeChart("#chart-container2", "chartGroupA").svg(d3.select("#chart-container2 svg"));
 ```
 
 #### .svg(imageElement) - **mandatory**
-Set the underlying svg image element. Unlike other dc charts this chart will not generate svg element therefore bubble overlay
-chart will not work if this function is not properly invoked. If the underlying image is a bitmap, then an empty svg will need
-to be manually created on top of the image.
+Set the underlying svg image element. Unlike other dc charts this chart will not generate a svg
+element; therefore the bubble overlay chart will not work if this function is not invoked. If the
+underlying image is a bitmap, then an empty svg will need to be created on top of the image.
 
 ```js
 // set up underlying svg element
@@ -1362,9 +1563,10 @@ chart.svg(d3.select("#chart svg"));
 ```
 
 #### .point(name, x, y) - **mandatory**
-Set up a data point on the overlay. The name of a data point should match a specific "key" among data groups generated using keyAccessor.
-If a match is found (point name <-> data group key) then a bubble will be automatically generated at the position specified by the
-function. x and y value specified here are relative to the underlying svg.
+Set up a data point on the overlay. The name of a data point should match a specific "key" among
+data groups generated using keyAccessor.  If a match is found (point name <-> data group key)
+then a bubble will be generated at the position specified by the function. x and y
+value specified here are relative to the underlying svg.
 
 ## Row Chart
 
@@ -1377,10 +1579,15 @@ Create a row chart instance and attach it to the given parent element.
 
 Parameters:
 
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed in a certain chart group then any interaction with such instance will only trigger events and redraw within the same chart group.
+* parent : string | node | selection - any valid
+[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+a dom block element such as a div; or a dom element or d3 selection.
 
-Return a newly created row chart instance
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
+A newly created row chart instance
 
 ```js
 // create a row chart under #chart-container1 element using the default global chart group
@@ -1388,6 +1595,10 @@ var chart1 = dc.rowChart("#chart-container1");
 // create a row chart under #chart-container2 element using chart group A
 var chart2 = dc.rowChart("#chart-container2", "chartGroupA");
 ```
+
+#### .x([scale])
+Gets or sets the x scale. The x scale can be any d3
+[quantitive scale](https://github.com/mbostock/d3/wiki/Quantitative-Scales)
 
 #### .renderTitleLabel(boolean)
 Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'
@@ -1427,7 +1638,8 @@ Get or set the y offset (vertical space to the top left corner of a row) for lab
 Get of set the x offset (horizontal space between right edge of row and right edge or text.   Default x offset is 2px;
 
 ## Legend
-Legend is a attachable widget that can be added to other dc charts to render horizontal legend labels.
+Legend is a attachable widget that can be added to other dc charts to render horizontal legend
+labels.
 
 ```js
 chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
@@ -1438,25 +1650,25 @@ Examples:
 * [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
 
 #### .x([value])
-Set or get x coordinate for legend widget. Default value: 0.
+Set or get x coordinate for legend widget. Default: 0.
 
 #### .y([value])
-Set or get y coordinate for legend widget. Default value: 0.
+Set or get y coordinate for legend widget. Default: 0.
 
 #### .gap([value])
-Set or get gap between legend items. Default value: 5.
+Set or get gap between legend items. Default: 5.
 
 #### .itemHeight([value])
-Set or get legend item height. Default value: 12.
+Set or get legend item height. Default: 12.
 
 #### .horizontal([boolean])
 Position legend horizontally instead of vertically
 
 #### .legendWidth([value])
-Maximum width for horizontal legend. Default value: 560.
+Maximum width for horizontal legend. Default: 560.
 
 #### .itemWidth([value])
-legendItem width for horizontal legend. Default value: 70.
+legendItem width for horizontal legend. Default: 70.
 
 ## Scatter Plot
 
@@ -1469,13 +1681,16 @@ Create a scatter plot instance and attach it to the given parent element.
 
 Parameters:
 
-* parent : string|compositeChart - any valid d3 single selector representing typically a dom block element such
-as a div, or if this scatter plot is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-chart group.
+* parent : string | node | selection | compositeChart - any valid
+[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+a dom block element such as a div; or a dom element or d3 selection.
+If the scatter plot is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite
+chart instance.
 
-Return:
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
 A newly created scatter plot instance
 
 ```js
@@ -1488,18 +1703,18 @@ var chart3 = dc.scatterPlot(compositeChart);
 ```
 
 #### .symbol([type])
-Get or set the symbol type used for each point. By default a circle. See the D3
-[docs](https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-symbol_type) for acceptable types;
+Get or set the symbol type used for each point. By default the symbol is a circle. See the D3
+[docs](https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-symbol_type) for acceptable types.
 Type can be a constant or an accessor.
 
 #### .symbolSize([radius])
-Set or get radius for symbols, default: 3.
+Set or get radius for symbols. Default: 3.
 
 #### .highlightedSize([radius])
-Set or get radius for highlighted symbols, default: 4.
+Set or get radius for highlighted symbols. Default: 4.
 
 #### .hiddenSize([radius])
-Set or get radius for symbols when the group is empty, default: 0.
+Set or get radius for symbols when the group is empty. Default: 0.
 
 ## Number Display Widget
 
@@ -1514,16 +1729,18 @@ Examples:
 #### dc.numberDisplay(parent[, chartGroup])
 Create a Number Display instance and attach it to the given parent element.
 
-Unlike other charts, you do not need to set a dimension. Instead a valid group object must be provided and valueAccessor that is expected to return a single value.
+Unlike other charts, you do not need to set a dimension. Instead a group object must be provided and
+a valueAccessor that returns a single value.
 
 Parameters:
 
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div or span
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-chart group.
+* parent : string | node | selection - any valid
+[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+a dom block element such as a div; or a dom element or d3 selection.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+The number display widget will only react to filter changes in the chart group.
 
-Return:
+Returns:
 A newly created number display instance
 
 ```js
@@ -1531,9 +1748,19 @@ A newly created number display instance
 var display1 = dc.numberDisplay("#chart-container1");
 ```
 
-#### .html({one:"%number record",some:"%number records",none:"empty"}})
-%number will be replaced with the value
-Get or set the string attached to the number and pluralize it according to the value.
+#### .html([object])
+ Gets or sets an optional object specifying HTML templates to use depending on the number
+ displayed.  The text `%number` will be replaced with the current value.
+ - one: HTML template to use if the number is 1
+ - zero: HTML template to use if the number is 0
+ - some: HTML template to use otherwise
+
+ ```js
+ numberWidget.html({
+     one:"%number record",
+     some:"%number records",
+     none:"no records"})
+ ```
 
 #### .value()
 Calculate and return the underlying value of the display
@@ -1551,12 +1778,14 @@ A heat map is matrix that represents the values of two dimensions of data using 
 Create a heat map instance and attach it to the given parent element.
 
 Parameters:
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-chart group.
+* parent : string | node | selection - any valid
+[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+a dom block element such as a div; or a dom element or d3 selection.
 
-Return:
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
 A newly created heat map instance
 
 ```js
@@ -1565,6 +1794,30 @@ var heatMap1 = dc.heatMap("#chart-container1");
 // create a heat map under #chart-container2 element using chart group A
 var heatMap2 = dc.heatMap("#chart-container2", "chartGroupA");
 ```
+
+#### .rows([values])
+Gets or sets the values used to create the rows of the heatmap, as an array. By default, all
+the values will be fetched from the data using the value accessor, and they will be sorted in
+ascending order.
+
+#### .cols([keys])
+Gets or sets the keys used to create the columns of the heatmap, as an array. By default, all
+the values will be fetched from the data using the key accessor, and they will be sorted in
+ascending order.
+
+#### .boxOnClick([handler])
+Gets or sets the handler that fires when an individual cell is clicked in the heatmap.
+By default, filtering of the cell will be toggled.
+
+#### .xAxisOnClick([handler])
+Gets or sets the handler that fires when a column tick is clicked in the x axis.
+By default, if any cells in the column are unselected, the whole column will be selected,
+otherwise the whole column will be unselected.
+
+#### .yAxisOnClick([handler])
+Gets or sets the handler that fires when a row tick is clicked in the y axis.
+By default, if any cells in the row are unselected, the whole row will be selected,
+otherwise the whole row will be unselected.
 
 ## Box Plot
 
@@ -1576,12 +1829,13 @@ A box plot is a chart that depicts numerical data via their quartile ranges.
 Create a box plot instance and attach it to the given parent element.
 
 Parameters:
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-chart group.
+* parent : string | node | selection - any valid
+[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) representing
+a dom block element such as a div; or a dom element or d3 selection.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.
 
-Return:
+Returns:
 A newly created box plot instance
 
 ```js
@@ -1592,7 +1846,7 @@ var boxPlot2 = dc.boxPlot("#chart-container2", "chartGroupA");
 ```
 
 #### .boxPadding([padding])
-Get or set the spacing between boxes as a fraction of bar size. Valid values are within 0-1.
+Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
 See the [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
 for a visual description of how the padding is applied.
 
@@ -1600,18 +1854,18 @@ Default: 0.8
 
 #### .outerPadding([padding])
 Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
-or on charts with a custom `.boxWidth`. Padding equivlent in width to `padding * barWidth` will be
-added on each side of the chart.
+or on charts with a custom `.boxWidth`. Will pad the width by `padding * barWidth` on each side of the chart.
 
 Default: 0.5
 
 #### .boxWidth(width || function(innerChartWidth, xUnits) { ... })
-Get or set the numerical width of the boxplot box. Provided width may also be a function.
-This function takes as parameters the chart width without the right and left margins
-as well as the number of x units.
+Get or set the numerical width of the boxplot box. The width may also be a function taking as
+parameters the chart width excluding the right and left margins, as well as the number of x
+units.
 
 #### .tickFormat()
-Set the numerical format of the boxplot median, whiskers and quartile labels. Defaults to integer.
+Set the numerical format of the boxplot median, whiskers and quartile labels. Defaults to
+integer formatting.
 ```js
 // format ticks to 2 decimal places
 chart.tickFormat(d3.format(".2f"));
