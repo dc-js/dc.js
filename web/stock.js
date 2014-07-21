@@ -149,7 +149,7 @@ d3.csv("ndx.csv", function (data) {
         var month = d.dd.getMonth();
         if (month <= 2)
             return "Q1";
-        else if (month > 3 && month <= 5)
+        else if (month > 2 && month <= 5)
             return "Q2";
         else if (month > 5 && month <= 8)
             return "Q3";
