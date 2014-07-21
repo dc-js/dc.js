@@ -212,6 +212,83 @@ describe('dc.barChart', function() {
             });
         });
 
+        describe('with another ordinal domain', function() {
+            beforeEach(function() {
+                var rows = [];
+                rows.push({State:'CA', 'Population': 2704659});
+                rows.push({State:'TX', 'Population': 1827307});
+                data = crossfilter(rows);
+                dimension  = data.dimension(dc.pluck('State'));
+                group = dimension.group().reduceSum(dc.pluck('Population'));
+
+                chart = dc.barChart('#' + id);
+                chart.xUnits(dc.units.ordinal)
+                    .x(d3.scale.ordinal())
+                    .transitionDuration(0)
+                    .dimension(dimension)
+                    .group(group, "Population");
+                chart.render();
+            });
+            it('should not overlap bars', function() {
+                var x = numAttr('x'), wid = numAttr('width');
+                expect(x(nthStack(0).nthBar(0)) + wid(nthStack(0).nthBar(0)))
+                    .toBeLessThan(x(nthStack(0).nthBar(1)));
+            });
+        });
+
+        describe('with yetnother ordinal domain', function() {
+            beforeEach(function() {
+                //var countries = ["Venezuela", "Saudi", "Canada", "Iran", "Russia", "UAE", "US", "China"];
+                var rows = [{
+                    name: 'Venezuela',
+                    sale: 300
+                }, {
+                    name: 'Saudi',
+                    sale: 253
+                }, {
+                    name: 'Canada',
+                    sale: 150
+                }, {
+                    name: 'Iran',
+                    sale: 125
+                }, {
+                    name: 'Russia',
+                    sale: 110
+                }, {
+                    name: 'UAE',
+                    sale: 90
+                }, {
+                    name: 'US',
+                    sale: 40
+                }, {
+                    name: 'China',
+                    sale: 37
+                }];
+                data = crossfilter(rows);
+                dimension  = data.dimension(function (d) {
+                    return d.name;
+                });
+                group = dimension.group().reduceSum(function (d) {
+                    return d.sale;
+                });
+                chart = dc.barChart('#' + id);
+                chart.transitionDuration(0)
+                    .dimension(dimension)
+                    .group(group)
+                    .x(d3.scale.ordinal())
+                    .xUnits(dc.units.ordinal);
+                chart.render();
+            });
+            it('should not overlap bars', function() {
+                var x = numAttr('x'), wid = numAttr('width');
+                function checkBar(n) {
+                    expect(x(nthStack(0).nthBar(n)) + wid(nthStack(0).nthBar(n)))
+                        .toBeLessThan(x(nthStack(0).nthBar(n+1)));
+                }
+                for(var i=0; i<7; ++i)
+                    checkBar(i);
+            });
+        });
         describe('with a linear x domain', function () {
             beforeEach(function () {
                 var linearDimension = data.dimension(function(d){ return +d.value; });
@@ -744,5 +821,12 @@ describe('dc.barChart', function() {
         chart.selectAll("rect.bar").each(function (d) {
             assertions(d3.select(this), d);
         });
+    }
+
+    // mostly because jshint complains about the +
+    function numAttr(attr) {
+        return function(selection) {
+            return +selection.attr(attr);
+        };
     }
 });
