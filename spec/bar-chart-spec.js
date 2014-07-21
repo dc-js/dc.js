@@ -309,7 +309,6 @@ describe('dc.barChart', function() {
                     .dimension(dimension)
                     .group(group);
                 chart.render();
-
             });
             it('should not overlap bars', function() {
                 for(var i=0; i<3; ++i)
@@ -324,6 +323,97 @@ describe('dc.barChart', function() {
 
                     data.add(rows2);
                     chart.x().domain([0,13]);
+                    chart.render();
+                });
+                it('should not overlap bars', function() {
+                    for(var i=0; i<5; ++i)
+                        checkBarOverlap(i);
+                });
+            });
+        });
+        describe('with changing number of bars and elasticX', function() {
+            beforeEach(function() {
+                var rows1 = [
+                    {x: 1, y: 3},
+                    {x: 2, y: 9},
+                    {x: 5, y: 10},
+                    {x: 6, y: 7}
+                ];
+
+                data = crossfilter(rows1);
+                dimension = data.dimension(function(d) {
+                    return d.x;
+                });
+                group = dimension.group().reduceSum(function(d) {
+                    return d.y;
+                });
+
+                chart = dc.barChart('#' + id);
+                chart.width(500).transitionDuration(0)
+                    .x(d3.scale.linear())
+                    .elasticY(true).elasticX(true)
+                    .dimension(dimension)
+                    .group(group);
+                chart.render();
+            });
+            it('should not overlap bars', function() {
+                for(var i=0; i<3; ++i)
+                    checkBarOverlap(i);
+            });
+            describe('with bars added', function() {
+                beforeEach(function() {
+                    var rows2 = [
+                        {x: 7, y:4},
+                        {x: 12, y:9}
+                    ];
+
+                    data.add(rows2);
+                    chart.render();
+                });
+                it('should not overlap bars', function() {
+                    for(var i=0; i<5; ++i)
+                        checkBarOverlap(i);
+                });
+            });
+        });
+        describe('with changing number of ordinal bars and elasticX', function() {
+            beforeEach(function() {
+                var rows1 = [
+                    {x: 'a', y: 3},
+                    {x: 'b', y: 9},
+                    {x: 'e', y: 10},
+                    {x: 'f', y: 7}
+                ];
+
+                data = crossfilter(rows1);
+                dimension = data.dimension(function(d) {
+                    return d.x;
+                });
+                group = dimension.group().reduceSum(function(d) {
+                    return d.y;
+                });
+
+                chart = dc.barChart('#' + id);
+                chart.width(500).transitionDuration(0)
+                    .x(d3.scale.ordinal())
+                    .xUnits(dc.units.ordinal)
+                    .elasticY(true).elasticX(true)
+                    .dimension(dimension)
+                    .group(group);
+                chart.render();
+            });
+            it('should not overlap bars', function() {
+                for(var i=0; i<3; ++i)
+                    checkBarOverlap(i);
+            });
+            describe('with bars added', function() {
+                beforeEach(function() {
+                    var rows2 = [
+                        {x: 'g', y:4},
+                        {x: 'l', y:9}
+                    ];
+
+                    data.add(rows2);
                     chart.render();
                 });
                 it('should not overlap bars', function() {
