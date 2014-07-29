@@ -475,24 +475,30 @@ dc.baseMixin = function (_chart) {
         return _filters.indexOf(filter) >= 0;
     };
 
-    _chart.removeFilter = function(_) {
+    function removeFilter(_) {
         _filters.splice(_filters.indexOf(_), 1);
-    };
+        applyFilters();
+        _chart._invokeFilteredListener(_);
+    }
 
-    _chart.addFilter = function(_) {
+    function addFilter(_) {
         _filters.push(_);
-    };
+        applyFilters();
+        _chart._invokeFilteredListener(_);
+    }
 
-    _chart.resetFilters = function() {
+    function resetFilters() {
         _filters = [];
-    };
+        applyFilters();
+        _chart._invokeFilteredListener(null);
+    }
 
-    _chart.applyFilters = function() {
+    function applyFilters() {
         if (_chart.dimension() && _chart.dimension().filter) {
             var fs = _filterHandler(_chart.dimension(), _filters);
             _filters = fs ? fs : _filters;
         }
-    };
+    }
 
     _chart.replaceFilter = function (_) {
         _filters = [];
@@ -515,24 +521,20 @@ dc.baseMixin = function (_chart) {
         if (_ instanceof Array && _[0] instanceof Array && !_.isFiltered) {
             _[0].forEach(function(d){
                 if (_chart.hasFilter(d)) {
-                    _chart.removeFilter(d);
+                    _filters.splice(_filters.indexOf(d), 1);
                 } else {
-                    _chart.addFilter(d);
+                    _filters.push(d);
                 }
             });
-            _chart.applyFilters();
+            applyFilters();
             _chart._invokeFilteredListener(_);
         } else if (_ === null) {
-            _chart.resetFilters();
-            _chart.applyFilters();
-            _chart._invokeFilteredListener(null);
+            resetFilters();
         } else {
             if (_chart.hasFilter(_))
-                _chart.removeFilter(_);
+                removeFilter(_);
             else
-                _chart.addFilter(_);
-            _chart.applyFilters();
-            _chart._invokeFilteredListener(_);
+                addFilter(_);
         }
 
         if (_root !== null && _chart.hasFilter()) {
