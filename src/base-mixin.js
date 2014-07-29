@@ -500,28 +500,42 @@ dc.baseMixin = function (_chart) {
         });
     };
 
-    function removeFilter(_) {
-        for(var i = 0; i < _filters.length; i++) {
-            if(_filters[i] <= _ && _filters[i] >= _) {
-                _filters.splice(i, 1);
+    var _removeFilterHandler = function (filters, filter) {
+        for(var i = 0; i < filters.length; i++) {
+            if(filters[i] <= filter && filters[i] >= filter) {
+                filters.splice(i, 1);
                 break;
             }
         }
-        applyFilters();
-        _chart._invokeFilteredListener(_);
-    }
+        return filters;
+    };
 
-    function addFilter(_) {
-        _filters.push(_);
-        applyFilters();
-        _chart._invokeFilteredListener(_);
-    }
+    _chart.removeFilterHandler = function (_) {
+        if (!arguments.length) return _removeFilterHandler;
+        _removeFilterHandler = _;
+        return _chart;
+    };
 
-    function resetFilters() {
-        _filters = [];
-        applyFilters();
-        _chart._invokeFilteredListener(null);
-    }
+    var _addFilterHandler = function (filters, filter) {
+        filters.push(filter);
+        return filters;
+    };
+
+    _chart.addFilterHandler = function (_) {
+        if (!arguments.length) return _addFilterHandler;
+        _addFilterHandler = _;
+        return _chart;
+    };
+
+    var _resetFilterHandler = function(filters) {
+        return [];
+    };
+
+    _chart.resetFilterHandler = function (_) {
+        if (!arguments.length) return _resetFilterHandler;
+        _resetFilterHandler = _;
+        return _chart;
+    };
 
     function applyFilters() {
         if (_chart.dimension() && _chart.dimension().filter) {
@@ -551,21 +565,21 @@ dc.baseMixin = function (_chart) {
         if (_ instanceof Array && _[0] instanceof Array && !_.isFiltered) {
             _[0].forEach(function(d){
                 if (_chart.hasFilter(d)) {
-                    _filters.splice(_filters.indexOf(d), 1);
+                    _removeFilterHandler(_filters, d);
                 } else {
-                    _filters.push(d);
+                    _addFilterHandler(_filters, d);
                 }
             });
-            applyFilters();
-            _chart._invokeFilteredListener(_);
         } else if (_ === null) {
-            resetFilters();
+            _filters = _resetFilterHandler(_filters);
         } else {
             if (_chart.hasFilter(_))
-                removeFilter(_);
+                _removeFilterHandler(_filters, _);
             else
-                addFilter(_);
+                _addFilterHandler(_filters, _);
         }
+        applyFilters();
+        _chart._invokeFilteredListener(_);
 
         if (_root !== null && _chart.hasFilter()) {
             _chart.turnOnControls();
