@@ -10,13 +10,16 @@ Create a scatter plot instance and attach it to the given parent element.
 
 Parameters:
 
-* parent : string|compositeChart - any valid d3 single selector representing typically a dom block element such
-as a div, or if this scatter plot is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-chart group.
+* parent : string | node | selection | compositeChart - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+ If the scatter plot is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite
+ chart instance.
 
-Return:
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
 A newly created scatter plot instance
 
 ```js
@@ -45,9 +48,15 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     var _symbolSize = 3;
     var _highlightedSize = 5;
+    var _hiddenSize = 0;
 
     _symbol.size(function(d) {
-        return this.filtered ? Math.pow(_highlightedSize, 2) : Math.pow(_symbolSize, 2);
+        if(d.value === 0)
+            return _hiddenSize;
+        else if(this.filtered)
+            return Math.pow(_highlightedSize, 2);
+        else
+            return Math.pow(_symbolSize, 2);
     });
 
     dc.override(_chart, "_filter", function(filter) {
@@ -69,7 +78,7 @@ dc.scatterPlot = function (parent, chartGroup) {
             .attr("transform", _locator);
 
         dc.transition(symbols, _chart.transitionDuration())
-            .attr("opacity", 1)
+            .attr("opacity", function(d) { return d.value ? 1 : 0; })
             .attr("fill", _chart.getColor)
             .attr("transform", _locator)
             .attr("d", _symbol);
@@ -80,8 +89,8 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
     #### .symbol([type])
-    Get or set the symbol type used for each point. By default a circle. See the D3
-    [docs](https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-symbol_type) for acceptable types;
+    Get or set the symbol type used for each point. By default the symbol is a circle. See the D3
+    [docs](https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-symbol_type) for acceptable types.
     Type can be a constant or an accessor.
 
     **/
@@ -93,7 +102,7 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
     #### .symbolSize([radius])
-    Set or get radius for symbols, default: 3.
+    Set or get radius for symbols. Default: 3.
 
     **/
     _chart.symbolSize = function(s){
@@ -104,12 +113,23 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
     #### .highlightedSize([radius])
-    Set or get radius for highlighted symbols, default: 4.
+    Set or get radius for highlighted symbols. Default: 4.
 
     **/
     _chart.highlightedSize = function(s){
         if(!arguments.length) return _highlightedSize;
         _highlightedSize = s;
+        return _chart;
+    };
+
+    /**
+    #### .hiddenSize([radius])
+    Set or get radius for symbols when the group is empty. Default: 0.
+
+    **/
+    _chart.hiddenSize = function(s){
+        if(!arguments.length) return _hiddenSize;
+        _hiddenSize = s;
         return _chart;
     };
 
@@ -181,7 +201,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         if (_chart.brushIsEmpty(extent)) {
             dc.events.trigger(function () {
                 _chart.filter(null);
-                dc.redrawAll(_chart.chartGroup());
+                _chart.redrawGroup();
             });
 
             resizeFiltered(false);
@@ -191,7 +211,7 @@ dc.scatterPlot = function (parent, chartGroup) {
             dc.events.trigger(function () {
                 _chart.filter(null);
                 _chart.filter(ranged2DFilter);
-                dc.redrawAll(_chart.chartGroup());
+                _chart.redrawGroup();
             }, dc.constants.EVENT_DELAY);
 
             resizeFiltered(ranged2DFilter);

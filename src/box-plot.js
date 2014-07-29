@@ -9,12 +9,13 @@
  Create a box plot instance and attach it to the given parent element.
 
  Parameters:
- * parent : string - any valid d3 single selector representing typically a dom block element such as a div.
- * chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
- in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
- chart group.
+ * parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) representing
+ a dom block element such as a div; or a dom element or d3 selection.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
 
- Return:
+ Returns:
  A newly created box plot instance
 
  ```js
@@ -64,7 +65,7 @@ dc.boxPlot = function (parent, chartGroup) {
 
     /**
     #### .boxPadding([padding])
-    Get or set the spacing between boxes as a fraction of bar size. Valid values are within 0-1.
+    Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
     See the [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
     for a visual description of how the padding is applied.
 
@@ -76,8 +77,7 @@ dc.boxPlot = function (parent, chartGroup) {
     /**
     #### .outerPadding([padding])
     Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
-    or on charts with a custom `.boxWidth`. Padding equivlent in width to `padding * barWidth` will be
-    added on each side of the chart.
+    or on charts with a custom `.boxWidth`. Will pad the width by `padding * barWidth` on each side of the chart.
 
     Default: 0.5
     **/
@@ -86,9 +86,9 @@ dc.boxPlot = function (parent, chartGroup) {
 
     /**
      #### .boxWidth(width || function(innerChartWidth, xUnits) { ... })
-     Get or set the numerical width of the boxplot box. Provided width may also be a function.
-     This function takes as parameters the chart width without the right and left margins
-     as well as the number of x units.
+     Get or set the numerical width of the boxplot box. The width may also be a function taking as
+     parameters the chart width excluding the right and left margins, as well as the number of x
+     units.
      **/
     _chart.boxWidth = function(_) {
         if (!arguments.length) return _boxWidth;
@@ -189,7 +189,8 @@ dc.boxPlot = function (parent, chartGroup) {
 
     /**
      #### .tickFormat()
-     Set the numerical format of the boxplot median, whiskers and quartile labels. Defaults to integer.
+     Set the numerical format of the boxplot median, whiskers and quartile labels. Defaults to
+     integer formatting.
      ```js
      // format ticks to 2 decimal places
      chart.tickFormat(d3.format(".2f"));

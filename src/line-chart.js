@@ -14,13 +14,16 @@ Create a line chart instance and attach it to the given parent element.
 
 Parameters:
 
-* parent : string|compositeChart - any valid d3 single selector representing typically a dom block element such
-   as a div, or if this line chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-   in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-   chart group.
+* parent : string | node | selection | compositeChart - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+ If the line chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite
+ chart instance.
 
-Return:
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
 A newly created line chart instance
 
 ```js
@@ -77,26 +80,54 @@ dc.lineChart = function (parent, chartGroup) {
         drawDots(chartBody, layers);
     };
 
+    /**
+     #### .interpolate([value])
+     Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
+     functions, splines, and cubic interpolation.  This is passed to
+     [d3.svg.line.interpolate](https://github.com/mbostock/d3/wiki/SVG-Shapes#line_interpolate) and
+     [d3.svg.area.interpolate](https://github.com/mbostock/d3/wiki/SVG-Shapes#area_interpolate),
+     where you can find a complete list of valid arguments
+     **/
     _chart.interpolate = function(_){
         if (!arguments.length) return _interpolate;
         _interpolate = _;
         return _chart;
     };
 
+    /**
+     #### .tension([value]) Gets or sets the tension to use for lines drawn, in the range 0 to 1.
+     This parameter further customizes the interpolation behavior.  It is passed to
+     [d3.svg.line.tension](https://github.com/mbostock/d3/wiki/SVG-Shapes#line_tension) and
+     [d3.svg.area.tension](https://github.com/mbostock/d3/wiki/SVG-Shapes#area_tension).  Default:
+     0.7
+     **/
     _chart.tension = function(_){
         if (!arguments.length) return _tension;
         _tension = _;
         return _chart;
     };
 
+    /**
+     #### .defined([value])
+     Gets or sets a function that will determine discontinuities in the line which should be
+     skipped: the path will be broken into separate subpaths if some points are undefined.
+     This function is passed to
+     [d3.svg.line.defined](https://github.com/mbostock/d3/wiki/SVG-Shapes#line_defined)
+
+     Note: crossfilter will sometimes coerce nulls to 0, so you may need to carefully write
+     custom reduce functions to get this to work, depending on your data. See
+     https://github.com/dc-js/dc.js/issues/615#issuecomment-49089248
+     **/
     _chart.defined = function(_){
         if (!arguments.length) return _defined;
         _defined = _;
         return _chart;
     };
+
     /**
     #### .dashStyle([array])
-    Set the line's d3 dashstyle. This value becomes "stroke-dasharray" of line. Defaults to empty array (solid line).
+    Set the line's d3 dashstyle. This value becomes the "stroke-dasharray" of line. Defaults to empty
+    array (solid line).
      ```js
      // create a Dash Dot Dot Dot
      chart.dashStyle([3,1,1,1]);
@@ -110,8 +141,8 @@ dc.lineChart = function (parent, chartGroup) {
 
     /**
     #### .renderArea([boolean])
-    Get or set render area flag. If the flag is set to true then the chart will render the area beneath each line and effectively
-    becomes an area chart.
+    Get or set render area flag. If the flag is set to true then the chart will render the area
+    beneath each line and the line chart effectively becomes an area chart.
 
     **/
     _chart.renderArea = function (_) {
@@ -282,7 +313,7 @@ dc.lineChart = function (parent, chartGroup) {
 
     /**
     #### .dotRadius([dotRadius])
-    Get or set the radius (in px) for data points. Default dot radius is 5.
+    Get or set the radius (in px) for dots displayed on the data points. Default dot radius is 5.
     **/
     _chart.dotRadius = function (_) {
         if (!arguments.length) return _dotRadius;

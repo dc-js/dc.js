@@ -19,12 +19,13 @@ describe('dc utils', function() {
         var printer;
         beforeEach(function() {
             printer = dc.printers.filter;
+            dc.dateFormat = d3.time.format.utc("%m/%d/%Y");
         });
         it('print simple string', function() {
             expect(printer("a")).toEqual("a");
         });
         it('print date string', function() {
-            expect(printer(new Date(2012, 1, 1))).toEqual("02/01/2012");
+            expect(printer(makeDate(2012, 1, 1))).toEqual("02/01/2012");
         });
         it('print int range', function() {
             expect(printer([10, 30])).toEqual("[10 -> 30]");
@@ -33,10 +34,10 @@ describe('dc utils', function() {
             expect(printer([10.124244, 30.635623])).toEqual("[10.12 -> 30.64]");
         });
         it('print date range', function() {
-            expect(printer([new Date(2012, 1, 1), new Date(2012, 1, 15)])).toEqual("[02/01/2012 -> 02/15/2012]");
+            expect(printer([makeDate(2012, 1, 1), makeDate(2012, 1, 15)])).toEqual("[02/01/2012 -> 02/15/2012]");
         });
         it('print single element array', function() {
-            expect(printer([new Date(2012, 1, 1)])).toEqual("02/01/2012");
+            expect(printer([makeDate(2012, 1, 1)])).toEqual("02/01/2012");
         });
         it('print null', function() {
             expect(printer(null)).toEqual("");
@@ -55,8 +56,8 @@ describe('dc utils', function() {
             add = dc.utils.add;
         });
         it('should be able to add days', function() {
-            var date = add(new Date(2012, 0, 1), 10);
-            expect(date.toString()).toEqual((new Date(2012, 0, 11)).toString());
+            var date = add(makeDate(2012, 0, 1), 10);
+            expect(date.toString()).toEqual((makeDate(2012, 0, 11)).toString());
         });
         it('should be able to add numbers', function() {
             var num = add(10, 10);
@@ -71,8 +72,8 @@ describe('dc utils', function() {
             expect(num).toEqual(-9);
         });
         it('should ignore % when adding dates', function() {
-            var date = add(new Date(2012, 0, 1), "10%");
-            expect(date.toString()).toEqual(new Date(2012, 0, 11).toString());
+            var date = add(makeDate(2012, 0, 1), "10%");
+            expect(date.toString()).toEqual(makeDate(2012, 0, 11).toString());
         });
     });
     describe('dc.utils.subtract', function() {
@@ -81,8 +82,8 @@ describe('dc utils', function() {
             subtract = dc.utils.subtract;
         });
         it('should be able to subtract dates', function() {
-            var date = subtract(new Date(2012, 0, 11), 10);
-            expect(date.toString()).toEqual((new Date(2012, 0, 1)).toString());
+            var date = subtract(makeDate(2012, 0, 11), 10);
+            expect(date.toString()).toEqual((makeDate(2012, 0, 1)).toString());
         });
         it('should be able to subtract numbers', function() {
             var num = subtract(10, 10);
@@ -97,8 +98,8 @@ describe('dc utils', function() {
             expect(num).toEqual(-11);
         });
         it('should ignore % when subtracting dates', function() {
-            var date = subtract(new Date(2012, 0, 11), "10%");
-            expect(date.toString()).toEqual(new Date(2012, 0, 1).toString());
+            var date = subtract(makeDate(2012, 0, 11), "10%");
+            expect(date.toString()).toEqual(makeDate(2012, 0, 1).toString());
         });
     });
 });

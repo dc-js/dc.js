@@ -39,6 +39,9 @@ dc.stackMixin = function (_chart) {
                 return true; //domainSet.has(p.x);
             };
         }
+        if (_chart.elasticX()) {
+            return function() { return true; };
+        }
         return function(p) {
             //return true;
             return p.x >= xDomain[0] && p.x <= xDomain[xDomain.length-1];
@@ -47,10 +50,12 @@ dc.stackMixin = function (_chart) {
 
     /**
     #### .stack(group[, name, accessor])
-    Stack a new crossfilter group into this chart with optionally a custom value accessor. All stacks in the same chart will
-    share the same key accessor therefore share the same set of keys. In more concrete words, imagine in a stacked bar chart
-    all bars will be positioned using the same set of keys on the x axis while stacked vertically. If name is specified then
-    it will be used to generate legend label.
+    Stack a new crossfilter group onto this chart with an optional custom value accessor. All stacks
+    in the same chart will share the same key accessor and therefore the same set of keys.
+
+    For example, in a stacked bar chart, the bars of each stack will be positioned using the same set
+    of keys on the x axis, while stacked vertically. If name is specified then it will be used to
+    generate the legend label.
     ```js
     // stack group using default accessor
     chart.stack(valueSumGroup)
@@ -191,6 +196,12 @@ dc.stackMixin = function (_chart) {
         return _chart;
     });
 
+    /**
+     #### .stackLayout([layout])
+     Gets or sets the stack layout algorithm, which computes a baseline for each stack and
+     propagates it to the next.  The default is
+     [d3.layout.stack](https://github.com/mbostock/d3/wiki/Stack-Layout#stack).
+     **/
     _chart.stackLayout = function (stack) {
         if (!arguments.length) return _stackLayout;
         _stackLayout = stack;
@@ -202,7 +213,6 @@ dc.stackMixin = function (_chart) {
     }
 
     _chart.data(function() {
-        // return _stackLayout(_stack);
         var layers = _stack.filter(visability);
         return layers.length ? _chart.stackLayout()(layers) : [];
     });
@@ -232,7 +242,7 @@ dc.stackMixin = function (_chart) {
             if (_chart.isLegendableHidden(d)) _chart.showStack(d.name);
             else _chart.hideStack(d.name);
             //_chart.redraw();
-            dc.renderAll(_chart.chartGroup());
+            _chart.renderGroup();
         }
     };
 

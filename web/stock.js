@@ -149,7 +149,7 @@ d3.csv("ndx.csv", function (data) {
         var month = d.dd.getMonth();
         if (month <= 2)
             return "Q1";
-        else if (month > 3 && month <= 5)
+        else if (month > 2 && month <= 5)
             return "Q2";
         else if (month > 5 && month <= 8)
             return "Q3";
@@ -165,7 +165,7 @@ d3.csv("ndx.csv", function (data) {
         var day = d.dd.getDay();
         var name=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
         return day+"."+name[day];
-     });
+    });
     var dayOfWeekGroup = dayOfWeek.group();
 
     //### Define Chart Attributes
@@ -255,12 +255,15 @@ d3.csv("ndx.csv", function (data) {
         .radius(80) // define pie radius
         .dimension(gainOrLoss) // set dimension
         .group(gainOrLossGroup) // set group
-        /* (optional) by default pie chart will use group.key as it's label
+        /* (optional) by default pie chart will use group.key as its label
          * but you can overwrite it with a closure */
         .label(function (d) {
             if (gainOrLossChart.hasFilter() && !gainOrLossChart.hasFilter(d.key))
                 return d.key + "(0%)";
-            return d.key + "(" + Math.floor(d.value / all.value() * 100) + "%)";
+            var label = d.key;
+            if(all.value())
+                label += "(" + Math.floor(d.value / all.value() * 100) + "%)";
+            return label;
         }) /*
         // (optional) whether chart should render labels, :default = true
         .renderLabel(true)
@@ -395,7 +398,14 @@ d3.csv("ndx.csv", function (data) {
     */
     dc.dataCount(".dc-data-count")
         .dimension(ndx)
-        .group(all);
+        .group(all)
+        // (optional) html, for setting different html for some records and all records.
+        // .html replaces everything in the anchor with the html given using the following function.
+        // %filter-count and %total-count are replaced with the values obtained.
+        .html({
+            some:"<strong>%filter-count</strong> selected out of <strong>%total-count</strong> records | <a href='javascript:dc.filterAll(); dc.renderAll();''>Reset All</a>",
+            all:"All records selected. Please click on the graph to apply filters."
+        });
 
     /*
     //#### Data Table

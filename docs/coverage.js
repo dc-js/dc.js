@@ -1,3 +1,15 @@
+/*
+ Try to discover which methods have not been documented.
+ This instruments the dc source so that every constructor marks
+ the methods it contains comments for.  Then it constructs every
+ chart type and sees whether the resulting object has methods on it
+ that are not marked.
+
+ Unfortunately this has a few false positives, and even worse, we have
+ LOTS of methods which are actually internal but aren't prefixed with _,
+ so it's hard to wade through the 400+ results.
+*/
+
 var mixinDocs = (function () {
     'use strict';
 
@@ -29,11 +41,11 @@ var mixinDocs = (function () {
         var comments = [];
 
         function extractComments(node, parentComment, within) {
-            var comment = node.leadingComments && node.leadingComments[0],
-                comment = (comment && comment.type == 'Block' &&
-                           comment.value[0] == '*' &&
-                           comment.value[comment.value.length - 1] == '*') ?
-                    comment.value : undefined;
+            var comment = node.leadingComments && node.leadingComments[0];
+            comment = (comment && comment.type == 'Block' &&
+                       comment.value[0] == '*' &&
+                       comment.value[comment.value.length - 1] == '*') ?
+                comment.value : undefined;
 
             if (parentComment && node.type == 'AssignmentExpression') {
                 var left = escodegen.generate(node.left);
@@ -78,7 +90,7 @@ var mixinDocs = (function () {
                 prefix,
                 result;
 
-            while (result = r.exec(value)) {
+            while ((result = r.exec(value))) {
                 if (prefix === undefined || result[1].length < prefix.length)
                     prefix = result[1];
             }
@@ -98,7 +110,7 @@ var mixinDocs = (function () {
 
             return {
                 index: c.range[1] + 1,
-                text: "\n" + assignment + JSON.stringify(doc) + ";\n"
+                text: "\n" + assignment + JSON.stringify(doc) + ";\n" // + "console.log('" + c.for + "', '" + c.in + "');"
             };
         });
 
@@ -110,7 +122,7 @@ var mixinDocs = (function () {
 
 //##### dc specific code
 
-require("../test/env");
+require('d3');
 var fs = require('fs'),
     dc, // ignore dc from test/env, we just want the d3/crossfilter environment
     charts = [
@@ -133,7 +145,7 @@ var fs = require('fs'),
 
 var instrumented = [];
 files.forEach(function (file) {
-    console.log("Instrumenting " + file)
+    console.log("Instrumenting " + file);
     var rawSource = fs.readFileSync(file, 'utf-8');
     try {
         var src = mixinDocs.instrumentSource(rawSource, file);
@@ -145,9 +157,11 @@ files.forEach(function (file) {
 //console.log(instrumented.join("\n"));
 eval(instrumented.join("\n"));
 
+// does not work because it is trying to instantiate the functions as charts with ('#doc')
 //Object.keys(dc).filter(function(p) {
 //  return typeof dc[p] == 'function';
 //}).forEach(documentChart);
+
 charts.forEach(documentChart);
 
 function extend(obj, copy) {
@@ -164,7 +178,7 @@ function documentChart(chartName) {
         model = {
             name: "dc." + chartName,
             covered: [],
-            missing: [],
+            missing: []
         };
     if (!chart || chart.render === undefined) return;
     Object.keys(chart).filter(function(m) {
@@ -174,8 +188,9 @@ function documentChart(chartName) {
         var method = m[0] == '_' ? m.substr(1) : m;
         if (chart[m][mixinDocs.DOC])
             model.covered.push(method);
-        else
+        else {
             model.missing.push(method);
+        }
     });
     model.covered.sort();
     model.missing.sort();

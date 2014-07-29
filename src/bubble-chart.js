@@ -3,7 +3,8 @@
 
 Includes: [Bubble Mixin](#bubble-mixin), [Coordinate Grid Mixin](#coordinate-grid-mixin)
 
-A concrete implementation of a general purpose bubble chart that allows data visualization using the following dimensions:
+A concrete implementation of a general purpose bubble chart that allows data visualization using the
+following dimensions:
 
 * x axis position
 * y axis position
@@ -18,12 +19,13 @@ Examples:
 Create a bubble chart instance and attach it to the given parent element.
 
 Parameters:
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-   in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-   chart group.
+* parent : string | node | selection | compositeChart - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
 
-Return:
+Returns:
 A newly created bubble chart instance
 
 ```js
@@ -47,8 +49,8 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     /**
     #### .elasticRadius([boolean])
-    Turn on or off elastic bubble radius feature. If this feature is turned on, then bubble radiuses will be automatically rescaled
-    to fit the chart better.
+    Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
+    feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
 
     **/
     _chart.elasticRadius = function(_) {

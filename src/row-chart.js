@@ -10,10 +10,15 @@ Create a row chart instance and attach it to the given parent element.
 
 Parameters:
 
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed in a certain chart group then any interaction with such instance will only trigger events and redraw within the same chart group.
+* parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
 
-Return a newly created row chart instance
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
+A newly created row chart instance
 
 ```js
 // create a row chart under #chart-container1 element using the default global chart group
@@ -91,6 +96,11 @@ dc.rowChart = function (parent, chartGroup) {
 
     _chart.label(_chart.cappedKeyAccessor);
 
+    /**
+     #### .x([scale])
+     Gets or sets the x scale. The x scale can be any d3
+     [quantitive scale](https://github.com/mbostock/d3/wiki/Quantitative-Scales)
+     **/
     _chart.x = function(x){
         if(!arguments.length) return _x;
         _x = x;
@@ -144,6 +154,11 @@ dc.rowChart = function (parent, chartGroup) {
         rows.exit().remove();
     }
 
+    function rootValue() {
+        var root = _x(0);
+        return root === -Infinity ? _x(1) : root;
+    }
+
     function updateElements(rows) {
         var n = _rowData.length;
 
@@ -166,8 +181,7 @@ dc.rowChart = function (parent, chartGroup) {
 
         dc.transition(rect, _chart.transitionDuration())
             .attr("width", function (d) {
-                var start = _x(0) == -Infinity ? _x(1) : _x(0);
-                return Math.abs(start - _x(_chart.valueAccessor()(d)));
+                return Math.abs(rootValue() - _x(_chart.valueAccessor()(d)));
             })
             .attr("transform", translateX);
 
@@ -243,7 +257,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     function translateX(d) {
         var x = _x(_chart.cappedValueAccessor(d)),
-            x0 = _x(0),
+            x0 = rootValue(),
             s = x > x0 ? x0 : x;
         return "translate("+s+",0)";
     }
@@ -268,12 +282,12 @@ dc.rowChart = function (parent, chartGroup) {
     _chart.xAxis = function () {
         return _xAxis;
     };
-    
+
     /**
     #### .fixedBarHeight([height])
     Get or set the fixed bar height. Default is [false] which will auto-scale bars.
-    For example, if you want to fix the height for a specific number of bars (useful in TopN charts) 
-    you could fix height as follows (where count = total number of bars in your TopN and gap is your vertical gap space).  
+    For example, if you want to fix the height for a specific number of bars (useful in TopN charts)
+    you could fix height as follows (where count = total number of bars in your TopN and gap is your vertical gap space).
     ```js
      chart.fixedBarHeight( chartheight - (count + 1) * gap / count);
     ```
@@ -283,21 +297,6 @@ dc.rowChart = function (parent, chartGroup) {
         _fixedBarHeight = g;
         return _chart;
     };
-
-    /**
-    #### .fixedBarHeight([height])
-    Get or set the fixed bar height. Default is [false] which will auto-scale bars.
-    For example, if you want to fix the height for a specific number of bars (useful in TopN charts) 
-    you could fix height as follows (where count = total number of bars in your TopN and gap is your vertical gap space).  
-    ```js
-     chart.fixedBarHeight( chartheight - (count + 1) * gap / count);
-    ```
-    **/
-    _chart.fixedBarHeight = function (g) {
-        if (!arguments.length) return _fixedBarHeight;
-        _fixedBarHeight = g;
-        return _chart;
-    };    
 
     /**
     #### .gap([gap])

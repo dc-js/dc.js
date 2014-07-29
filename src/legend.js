@@ -1,6 +1,7 @@
 /**
 ## Legend
-Legend is a attachable widget that can be added to other dc charts to render horizontal legend labels.
+Legend is a attachable widget that can be added to other dc charts to render horizontal legend
+labels.
 
 ```js
 chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
@@ -51,7 +52,7 @@ dc.legend = function () {
                 _parent.legendReset(d);
             })
             .on("click", function (d) {
-                _parent.legendToggle(d);
+                d.chart.legendToggle(d);
             });
 
         _g.selectAll('g.dc-legend-item')
@@ -107,7 +108,7 @@ dc.legend = function () {
 
     /**
     #### .x([value])
-    Set or get x coordinate for legend widget. Default value: 0.
+    Set or get x coordinate for legend widget. Default: 0.
     **/
     _legend.x = function (x) {
         if (!arguments.length) return _x;
@@ -117,7 +118,7 @@ dc.legend = function () {
 
     /**
     #### .y([value])
-    Set or get y coordinate for legend widget. Default value: 0.
+    Set or get y coordinate for legend widget. Default: 0.
     **/
     _legend.y = function (y) {
         if (!arguments.length) return _y;
@@ -127,7 +128,7 @@ dc.legend = function () {
 
     /**
     #### .gap([value])
-    Set or get gap between legend items. Default value: 5.
+    Set or get gap between legend items. Default: 5.
     **/
     _legend.gap = function (gap) {
         if (!arguments.length) return _gap;
@@ -137,7 +138,7 @@ dc.legend = function () {
 
     /**
     #### .itemHeight([value])
-    Set or get legend item height. Default value: 12.
+    Set or get legend item height. Default: 12.
     **/
     _legend.itemHeight = function (h) {
         if (!arguments.length) return _itemHeight;
@@ -157,7 +158,7 @@ dc.legend = function () {
 
     /**
     #### .legendWidth([value])
-    Maximum width for horizontal legend. Default value: 560.
+    Maximum width for horizontal legend. Default: 560.
     **/
     _legend.legendWidth = function(_) {
         if (!arguments.length) return _legendWidth;
@@ -167,7 +168,7 @@ dc.legend = function () {
 
     /**
     #### .itemWidth([value])
-    legendItem width for horizontal legend. Default value: 70.
+    legendItem width for horizontal legend. Default: 70.
     **/
     _legend.itemWidth = function(_) {
         if (!arguments.length) return _itemWidth;

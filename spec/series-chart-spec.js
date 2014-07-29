@@ -1,13 +1,13 @@
 describe('dc.seriesChart', function() {
 
     var chart;
-    var jsonColorData = JSON.parse("[" +
-        "{\"colData\":\"1\", \"rowData\": \"1\", \"colorData\": \"1\"}," +
-        "{\"colData\":\"1\", \"rowData\": \"2\", \"colorData\": \"2\"}," +
-        "{\"colData\":\"2\", \"rowData\": \"1\", \"colorData\": \"3\"}," +
-        "{\"colData\":\"2\", \"rowData\": \"2\", \"colorData\": \"4\"}" +
-        "]");
-    var colorData = crossfilter(jsonColorData);
+    var colorRows = [
+        {colData:1, rowData: 1, colorData: 1},
+        {colData:1, rowData: 2, colorData: 2},
+        {colData:2, rowData: 1, colorData: 3},
+        {colData:2, rowData: 2, colorData: 4}
+    ];
+    var colorData = crossfilter(colorRows);
 
     beforeEach(function() {
         var dimensionColorData = colorData.dimension(function (d) { return [+d.colData, +d.rowData]; });
@@ -38,7 +38,7 @@ describe('dc.seriesChart', function() {
         });
 
         it('should create the svg', function() {
-           expect(chart.svg()).not.toBeNull();
+            expect(chart.svg()).not.toBeNull();
         });
 
         it('should position generated lineCharts using the data', function() {
@@ -48,13 +48,24 @@ describe('dc.seriesChart', function() {
             expect(d3.select(lines[0][1]).attr("d")).toMatchPath("M0,43L130,0");
         });
 
+
         it('should color lines using the colors in the data', function() {
             var lines = chart.selectAll("path.line");
 
             expect(d3.select(lines[0][0]).attr("stroke")).toBe("#000001");
             expect(d3.select(lines[0][1]).attr("stroke")).toBe("#000002");
         });
+
+        describe('with brush off', function () {
+            it('should create line chart dots', function () {
+                chart.brushOn(false).render();
+                var dots = chart.selectAll('circle.dot');
+                expect(dots[0].length).toEqual(4);
+                chart.brushOn(true);
+            });
+        });
     });
+
 
     describe('series sorting', function() {
         beforeEach(function() {
@@ -88,4 +99,36 @@ describe('dc.seriesChart', function() {
         });
     });
 
+    describe('#redraw', function () {
+        var colorRows2 = [
+            {colData:1, rowData: 1, colorData: 1},
+            {colData:1, rowData: 2, colorData: 2},
+            {colData:2, rowData: 1, colorData: 3},
+            {colData:2, rowData: 2, colorData: 4},
+            {colData:3, rowData: 1, colorData: 5},
+            {colData:3, rowData: 2, colorData: 6}
+        ];
+        var colorData2 = crossfilter(colorRows2);
+        beforeEach(function () {
+            chart.brushOn(false);
+            chart.render();
+
+            var dimensionData = colorData2.dimension(function (d) { return [+d.colData, +d.rowData]; });
+            var groupData = dimensionData.group().reduceSum(function(d) { return +d.colorData; });
+
+            chart.dimension(dimensionData).group(groupData);
+
+
+            chart.redraw();
+        });
+
+        afterEach(function () {
+            chart.brushOn(true);
+        });
+
+        it ('is redrawn with dots', function () {
+            var dots = chart.selectAll('circle.dot');
+            expect(dots[0].length).toEqual(6);
+        });
+    });
 });

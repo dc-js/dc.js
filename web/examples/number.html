@@ -19,7 +19,7 @@
 <body>
 
 <div id="test">
-  Inline Number Display. We have <span class="number-display">_</span> Total Monkeys Jumping on the bed.
+  Inline Number Display. We have <span class="number-display"></span> Jumping on the bed.
 </div>
 
 <br />
@@ -72,6 +72,11 @@ d3.csv("morley.csv", function(error, experiments) {
 
   inlineND
       .valueAccessor(average)
+      .html({
+        one:"<span style=\"color:steelblue; font-size: 26px;\">%number</span> Monkey",
+        some:"<span style=\"color:steelblue; font-size: 26px;\">%number</span> Total Monkeys",
+        none:"<span style=\"color:steelblue; font-size: 26px;\">No</span> Monkeys"
+      })
       .group(meanSpeedGroup);
   boxND
       .formatNumber(d3.format(".3s"))

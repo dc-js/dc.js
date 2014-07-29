@@ -85,6 +85,28 @@ describe('dc.scatterPlot', function() {
             });
         });
 
+        describe('filtering another dimension', function () {
+            var otherDimension;
+
+            beforeEach(function () {
+                otherDimension = data.dimension(function(d) { return [+d.value, +d.nvalue]; });
+                var ff = dc.filters.RangedTwoDimensionalFilter([[22, -3], [44, 2]]).isFiltered;
+                otherDimension.filterFunction(ff);
+                chart.redraw();
+            });
+
+            it('should show the included points', function() {
+                var shownPoints = symbolsOfRadius(chart.symbolSize());
+                expect(shownPoints.length).toBe(2);
+                expect(shownPoints[0].key).toEqual([22, -2]);
+                expect(shownPoints[1].key).toEqual([33, 1]);
+            });
+            it('should hide the excluded points', function() {
+                var hiddenPoints = symbolsOfRadius(chart.hiddenSize());
+                expect(hiddenPoints.length).toBe(7);
+            });
+        });
+
         describe('brushing', function () {
             var otherDimension;
 
@@ -113,7 +135,7 @@ describe('dc.scatterPlot', function() {
                 var selectedPoints;
 
                 beforeEach(function () {
-                    selectedPoints = selectedSymbols();
+                    selectedPoints = symbolsOfRadius(chart.highlightedSize());
                 });
 
                 it('should highlight the selected points', function () {
@@ -125,30 +147,30 @@ describe('dc.scatterPlot', function() {
                 it('should remove highlighting when the brush is removed from the selected points', function () {
                     chart.brush().extent([[22, 2], [22, -3]]);
                     chart.brush().on("brush")();
-                    selectedPoints = selectedSymbols();
+                    selectedPoints = symbolsOfRadius(chart.highlightedSize());
                     expect(selectedPoints.length).toBe(0);
                     chart.redraw();
-                    selectedPoints = selectedSymbols();
+                    selectedPoints = symbolsOfRadius(chart.highlightedSize());
                     expect(selectedPoints.length).toBe(0);
                 });
-
-                function selectedSymbols() {
-                    function getData(symbols) {
-                        return symbols[0].map(function (symbol) {
-                            return d3.select(symbol).datum();
-                        });
-                    }
-                    return getData(chart.selectAll('path.symbol').filter(function () {
-                        var symbol = d3.select(this);
-                        var highlightedSize = Math.pow(chart.highlightedSize(), 2);
-                        var highlightedPath = d3.svg.symbol().size(highlightedSize)();
-                        var result = comparePaths(symbol.attr("d"), highlightedPath);
-                        return result.pass;
-                    }));
-                }
             });
         });
     });
+
+    function symbolsOfRadius(r) {
+        function getData(symbols) {
+            return symbols[0].map(function (symbol) {
+                return d3.select(symbol).datum();
+            });
+        }
+        return getData(chart.selectAll('path.symbol').filter(function () {
+            var symbol = d3.select(this);
+            var size = Math.pow(r, 2);
+            var path = d3.svg.symbol().size(size)();
+            var result = comparePaths(symbol.attr("d"), path);
+            return result.pass;
+        }));
+    }
 
     describe('legends', function () {
         var compositeChart, id;
@@ -162,7 +184,7 @@ describe('dc.scatterPlot', function() {
             compositeChart = dc.compositeChart("#" + id);
             compositeChart
                 .dimension(dimension)
-                .x(d3.time.scale().domain([new Date(2012, 0, 1), new Date(2012, 11, 31)]))
+                .x(d3.time.scale.utc().domain([makeDate(2012, 0, 1), makeDate(2012, 11, 31)]))
                 .transitionDuration(0)
                 .legend(dc.legend())
                 .compose([

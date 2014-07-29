@@ -2,7 +2,7 @@
   "name": "dc",
   "version": "2.0.0-dev",
   "license": "Apache-2.0",
-  "copyright": "2012",
+  "copyright": "2014",
   "description": "A multi-dimensional charting library built to work natively with crossfilter and rendered using d3.js ",
   "keywords": [
     "visualization",
@@ -39,12 +39,13 @@
     "grunt-contrib-uglify": "~0.2.4",
     "grunt-contrib-jasmine": "https://github.com/gruntjs/grunt-contrib-jasmine/tarball/master",
     "grunt-contrib-watch": "~0.5.3",
+    "grunt-debug-task": "~0.1.4",
     "grunt-template-jasmine-istanbul": "~0.3.0",
     "grunt-docco2": "~0.2.0",
     "grunt-gh-pages": "~0.8.0",
     "grunt-lib-phantomjs": "~0.5.0",
     "grunt-markdown": "~0.5.0",
-    "grunt-saucelabs": "~5.0.1",
+    "grunt-saucelabs": "~8.1.1",
     "grunt-sed": "~0.1.1",
     "grunt-shell": "~0.5.0",
     "uglify-js": "2.4.x",
@@ -52,5 +53,16 @@
   },
   "scripts": {
     "test": "grunt test"
-  }
+  },
+  "npmName": "dc",
+  "npmFileMap": [
+    {
+      "basePath": "/",
+      "files": [
+        "dc.css",
+        "dc.min.js",
+        "dc.js"
+      ]
+    }
+  ]
 }

@@ -4,9 +4,9 @@ module.exports = function (grunt) {
     var jsFiles = module.exports.jsFiles;
 
     var output = {
-      js: '<%= pkg.name %>.js',
-      jsmin: '<%= pkg.name %>.min.js',
-      map: '<%= pkg.name %>.min.js.map'
+        js: '<%= pkg.name %>.js',
+        jsmin: '<%= pkg.name %>.min.js',
+        map: '<%= pkg.name %>.min.js.map'
     };
 
     grunt.initConfig({
@@ -38,15 +38,11 @@ module.exports = function (grunt) {
         },
         jshint: {
             source: {
-                src: ['src/**/*.js'],
+                src: ['src/**/*.js','Gruntfile.js', 'spec/**/*.js', 'web/stock.js'],
                 options: {
                     indent: 4,
                     ignores: ['src/banner.js','src/footer.js','src/d3.box.js']
                 }
-            },
-            others: {
-                src: ['Gruntfile.js', 'spec/**/*.js', 'web/stock.js'],
-                options: { '-W041': true }
             }
         },
         watch: {
@@ -65,7 +61,7 @@ module.exports = function (grunt) {
             reload: {
                 files: ['dc.js', 'dc.css', 'web/js/dc.js', 'web/css/dc.css', 'dc.min.js'],
                 options: {
-                  livereload: true
+                    livereload: true
                 }
             }
         },
@@ -81,6 +77,7 @@ module.exports = function (grunt) {
             specs: {
                 options: {
                     display: "short",
+                    summary: true,
                     specs:  "spec/*-spec.js",
                     helpers: "spec/helpers/*.js",
                     version: "2.0.0",
@@ -194,7 +191,7 @@ module.exports = function (grunt) {
                             'git reset --hard origin/master',
                             'git fetch origin',
                             'git merge --no-ff origin/pr/'+pr+' -m "Merge pull request #'+pr+'"'
-                    ].join('&&');
+                           ].join('&&');
                 },
                 options: { stdout: true, failOnError: true }
             },
@@ -223,6 +220,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-markdown');
     grunt.loadNpmTasks('grunt-sed');
     grunt.loadNpmTasks('grunt-shell');
+    grunt.loadNpmTasks('grunt-debug-task');
 
     // custom tasks
     grunt.registerMultiTask('emu', 'Documentation extraction by emu.', function() {
@@ -302,6 +300,7 @@ module.exports.jsFiles = [
     "src/line-chart.js",
     "src/data-count.js",
     "src/data-table.js",
+    "src/data-grid.js",
     "src/bubble-chart.js",
     "src/composite-chart.js",
     "src/series-chart.js",

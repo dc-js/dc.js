@@ -160,7 +160,7 @@ describe('dc.rowChart', function() {
                         chart.filter('22');
                         chart.render();
                         chart.selectAll('g.row rect').each(function (d) {
-                            if (d.key === '66' || d.key === '22') {
+                            if (d.key === 66 || d.key === 22) {
                                 expect(d3.select(this).classed('selected')).toBeTruthy();
                                 expect(d3.select(this).classed('deselected')).toBeFalsy();
                             } else {
@@ -244,9 +244,9 @@ describe('dc.rowChart', function() {
             describe('redrawing after an empty selection', function () {
                 beforeEach(function () {
                     chart.render();
-                    dimension.filter([new Date("2010/1/1"), new Date("2010/1/3")]);
+                    dimension.filter([makeDate(2010, 0, 1), makeDate(2010, 0, 3)]);
                     chart.redraw();
-                    dimension.filter([new Date("2012/1/1"), new Date("2012/12/30")]);
+                    dimension.filter([makeDate(2012, 0, 1), makeDate(2012, 11, 30)]);
                     chart.redraw();
                 });
 

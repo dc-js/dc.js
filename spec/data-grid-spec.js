@@ -1,4 +1,4 @@
-describe('dc.dataTable', function() {
+describe('dc.dataGrid', function() {
     var id, chart, data;
     var dateFixture;
     var dimension, group;
@@ -14,25 +14,22 @@ describe('dc.dataTable', function() {
             return d.countrycode;
         });
 
-        id = "data-table";
+        id = "data-grid";
         appendChartID(id);
-        chart = dc.dataTable("#" + id)
+        chart = dc.dataGrid("#" + id)
             .dimension(dimension)
             .group(function(d) {
-                return "Data Table";
+                return "Data Grid";
             })
             .transitionDuration(0)
             .size(3)
             .sortBy(function(d){return d.id;})
             .order(d3.descending)
-            .columns(
-                [function(d) {
-                    return d.id;
-                }, function(d) {
-                    return d.status;
-                }]
-            );
+            .html(function(d) {
+                return "<div id='id_"+d.id+"' class='"+d.countrycode+" "+d.region+"'>"+d.state+":"+d.value+"</div>";
+            });
         chart.render();
+        var pause="dummy";
     });
 
     describe('creation', function() {
@@ -51,18 +48,18 @@ describe('dc.dataTable', function() {
         it('sets order', function() {
             expect(chart.order()).toBe(d3.descending);
         });
-        it('sets column span set on group tr', function() {
-            expect(chart.selectAll("tr.dc-table-group td")[0][0].getAttribute("colspan")).toEqual("2");
+        it('sets the group label', function() {
+            expect(chart.selectAll(".dc-grid-group h1.dc-grid-label")[0][0].innerHTML).toEqual("Data Grid");
         });
-        it('creates id column', function() {
-            expect(chart.selectAll("td._0")[0][0].innerHTML).toEqual('9');
-            expect(chart.selectAll("td._0")[0][1].innerHTML).toEqual('8');
-            expect(chart.selectAll("td._0")[0][2].innerHTML).toEqual('3');
+        it('creates id div', function() {
+            expect(chart.selectAll(".dc-grid-item div#id_9")[0].length).toEqual(1);
+            expect(chart.selectAll(".dc-grid-item div#id_8")[0].length).toEqual(1);
+            expect(chart.selectAll(".dc-grid-item div#id_3")[0].length).toEqual(1);
         });
-        it('creates status column', function() {
-            expect(chart.selectAll("td._1")[0][0].innerHTML).toEqual("T");
-            expect(chart.selectAll("td._1")[0][1].innerHTML).toEqual("F");
-            expect(chart.selectAll("td._1")[0][2].innerHTML).toEqual("T");
+        it('creates div content', function() {
+            expect(chart.selectAll(".dc-grid-item div")[0][0].innerHTML).toEqual("Mississippi:44");
+            expect(chart.selectAll(".dc-grid-item div")[0][1].innerHTML).toEqual("Mississippi:33");
+            expect(chart.selectAll(".dc-grid-item div")[0][2].innerHTML).toEqual("Delaware:33");
         });
     });
 
@@ -72,11 +69,11 @@ describe('dc.dataTable', function() {
             chart.redraw();
         });
         it('renders only filtered data set', function() {
-            expect(chart.selectAll("td._0")[0].length).toEqual(2);
+            expect(chart.selectAll(".dc-grid-item div")[0].length).toEqual(2);
         });
         it('renders the correctly filtered records', function() {
-            expect(chart.selectAll("td._0")[0][0].innerHTML).toEqual('7');
-            expect(chart.selectAll("td._0")[0][1].innerHTML).toEqual('5');
+            expect(chart.selectAll(".dc-grid-item div")[0][0].innerHTML).toEqual('Ontario:22');
+            expect(chart.selectAll(".dc-grid-item div")[0][1].innerHTML).toEqual('Ontario:55');
         });
     });
 
@@ -84,19 +81,19 @@ describe('dc.dataTable', function() {
         var derlet;
         beforeEach(function() {
             derlet = jasmine.createSpy('renderlet', function(chart) {
-                chart.selectAll("td.dc-table-label").text("changed");
+                chart.selectAll(".dc-grid-label").text("changed");
             });
             derlet.and.callThrough();
             chart.renderlet(derlet);
         });
         it('custom renderlet should be invoked with render', function() {
             chart.render();
-            expect(chart.selectAll("td.dc-table-label").text()).toEqual("changed");
+            expect(chart.selectAll(".dc-grid-label").text()).toEqual("changed");
             expect(derlet).toHaveBeenCalled();
         });
         it('custom renderlet should be invoked with redraw', function() {
             chart.redraw();
-            expect(chart.selectAll("td.dc-table-label").text()).toEqual("changed");
+            expect(chart.selectAll(".dc-grid-label").text()).toEqual("changed");
             expect(derlet).toHaveBeenCalled();
         });
     });

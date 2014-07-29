@@ -1,4 +1,4 @@
-describe('dc.colorChart', function() {
+describe('dc.colorMixin', function() {
     function colorTest(chart, domain, test) {
         chart.colorDomain(domain);
         return (test || domain).map(chart.getColor);
@@ -10,7 +10,7 @@ describe('dc.colorChart', function() {
         var chart, domain;
 
         beforeEach(function() {
-            chart = dc.colorChart({});
+            chart = dc.colorMixin({});
             chart.colorAccessor(identity);
             domain = ["a","b","c","d","e"];
         });
@@ -30,8 +30,10 @@ describe('dc.colorChart', function() {
         });
 
         it('linear', function() {
+            // GIGO: mapping ordinal domain to linear scale is nonsensical
+            // actually it gets scaled to NaN and then d3 corrects it
             chart.linearColors(['#FF0000','#00FF00']);
-            expect(colorTest(chart,domain)).toEqual(['#NaNNaNNaN', '#NaNNaNNaN', '#NaNNaNNaN', '#NaNNaNNaN','#NaNNaNNaN' ]);
+            expect(colorTest(chart,domain)).toEqual([ '#000000', '#000000', '#000000', '#000000', '#000000' ]);
         });
     });
     describe('with numeric domain' , function() {
@@ -73,13 +75,13 @@ describe('dc.colorChart', function() {
             });
             var valueGroup = valueDimension.group();
             chart = dc.colorChart(dc.baseChart({}))
-              .colorAccessor(function(d){return d.value;})
-              .group(valueGroup);
+                .colorAccessor(function(d){return d.value;})
+                .group(valueGroup);
         });
 
         it('check domain', function() {
-              chart.calculateColorDomain();
-              expect(chart.colorDomain()).toEqual([1,3]);
+            chart.calculateColorDomain();
+            expect(chart.colorDomain()).toEqual([1,3]);
         });
     });
 });

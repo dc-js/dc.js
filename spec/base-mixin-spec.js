@@ -4,7 +4,7 @@ describe("dc.baseMixin", function () {
     beforeEach(function () {
         var data = crossfilter(loadDateFixture());
         dimension = data.dimension(function (d) {
-            return d3.time.day(d.dd);
+            return d3.time.day.utc(d.dd);
         });
         group = dimension.group().reduceSum(function (d) {
             return d.value;
@@ -65,6 +65,38 @@ describe("dc.baseMixin", function () {
 
             it('should execute the postRender callback', function () {
                 expect(postRenderSpy).toHaveBeenCalled();
+            });
+        });
+
+        describe('on filter double', function () {
+            var filterSpy, filterSpy2, filter;
+            beforeEach(function () {
+                filter = "1";
+
+                var expectedCallbackSignature = function (callbackChart, callbackFilter) {
+                    expect(callbackChart).toBe(chart);
+                    expect(callbackFilter).toEqual(filter);
+                };
+
+                filterSpy = jasmine.createSpy().and.callFake(expectedCallbackSignature);
+                filterSpy2 = jasmine.createSpy().and.callFake(expectedCallbackSignature);
+                chart.on("filtered.one", filterSpy);
+                chart.on("filtered.two", filterSpy2);
+            });
+
+            it('should execute first callback after setting through #filter', function () {
+                chart.filter(filter);
+                expect(filterSpy).toHaveBeenCalled();
+            });
+
+            it('should execute second callback after setting through #filter', function () {
+                chart.filter(filter);
+                expect(filterSpy2).toHaveBeenCalled();
+            });
+
+            it('should not execute callback after reading from #filter', function () {
+                chart.filter();
+                expect(filterSpy).not.toHaveBeenCalled();
             });
         });
 
@@ -211,20 +243,20 @@ describe("dc.baseMixin", function () {
 
         describe('when set to a falsy', function () {
             beforeEach(function () {
-               chart.width(null).height(null).render();
+                chart.width(null).height(null).render();
             });
 
             it('should set the height to the default', function () {
-               expect(chart.height()).toEqual(200);
+                expect(chart.height()).toEqual(200);
             });
 
             it('should set the width to the default', function () {
-               expect(chart.width()).toEqual(200);
+                expect(chart.width()).toEqual(200);
             });
 
             describe('with minimums set', function () {
                 beforeEach(function () {
-                   chart.minHeight(234).minWidth(976).render();
+                    chart.minHeight(234).minWidth(976).render();
                 });
 
                 it('should set the height to the minimum', function () {
@@ -259,11 +291,11 @@ describe("dc.baseMixin", function () {
             });
 
             it('should not execute callback before width() is called', function () {
-               expect(setterSpy).not.toHaveBeenCalled();
+                expect(setterSpy).not.toHaveBeenCalled();
             });
 
             it('should ask the callback for the width', function () {
-               expect(chart.width()).toEqual(800);
+                expect(chart.width()).toEqual(800);
             });
         });
     });

@@ -2,6 +2,8 @@ describe('dc.pieChart', function() {
     var width = 200;
     var height = 200;
     var radius = 100;
+    var defaultCenter = {x: width / 2, y: height / 2};
+    var newCenter = {x: 101, y: 99};
     var innerRadius = 30;
     var data, valueDimension, valueGroup;
     var regionDimension, statusDimension;
@@ -24,7 +26,7 @@ describe('dc.pieChart', function() {
         });
         countryGroup = countryDimension.group();
         dateDimension = data.dimension(function(d) {
-            return d3.time.day(d.dd);
+            return d3.time.day.utc(d.dd);
         });
         statusGroup = statusDimension.group();
         statusMultiGroup = statusGroup.reduce(
@@ -101,6 +103,12 @@ describe('dc.pieChart', function() {
         it('radius should be set', function() {
             expect(chart.radius()).toEqual(radius);
         });
+        it('cx should be set', function() {
+            expect(chart.cx()).toEqual(defaultCenter.x);
+        });
+        it('cy should be set', function() {
+            expect(chart.cy()).toEqual(defaultCenter.y);
+        });
         it('height should be used for svg', function() {
             expect(chart.select("svg").attr("height")).toEqual(String(height));
         });
@@ -108,7 +116,7 @@ describe('dc.pieChart', function() {
             expect(chart.select("svg g").empty()).toBeFalsy();
         });
         it('root g should be translated to center', function() {
-            expect(chart.select("svg g").attr("transform")).toMatchTranslate(100,100);
+            expect(chart.select("svg g").attr("transform")).toMatchTranslate(defaultCenter.x, defaultCenter.y);
         });
         it('slice g should be created with class', function() {
             expect(chart.selectAll("svg g g.pie-slice").data().length).toEqual(5);
@@ -163,6 +171,26 @@ describe('dc.pieChart', function() {
         it('filter info should be hidden after init rendering', function() {
             expect(chart.select("span.filter").style("display")).toEqual("none");
         });
+        describe('center positioning', function() {
+            beforeEach(function() {
+                chart
+                    .cx(newCenter.x)
+                    .cy(newCenter.y)
+                    .render();
+                return chart;
+            });
+            afterEach(function() {
+                chart
+                    .cx(defaultCenter.x)
+                    .cy(defaultCenter.y)
+                    .render();
+                return chart;
+            });
+            it('root g should be translated to ' + newCenter.x + ',' + newCenter.y, function() {
+                expect(chart.select("svg g").attr("transform")).toMatchTranslate(newCenter.x, newCenter.y);
+            });
+        });
+
         describe('re-render', function() {
             beforeEach(function() {
                 chart.render();
@@ -191,12 +219,11 @@ describe('dc.pieChart', function() {
                 chart.render();
                 return chart;
             });
-            it('NaN centroid should be handled properly', function() {
-                expect(chart.selectAll("svg g text.pie-slice").attr("transform"))
-                    .toMatchTranslate(0,0);
+            it('should draw an empty chart', function() {
+                expect(chart.select('g').classed('empty-chart')).toBeTruthy();
             });
-            it('slice path should not contain NaN', function() {
-                expect(chart.selectAll("g.pie-slice path").attr("d"), "M0).toEqual(0");
+            it('should have one slice', function() {
+                expect(chart.selectAll("svg g text.pie-slice").length).toBe(1);
             });
             afterEach(function() {
                 statusDimension.filterAll();
@@ -302,9 +329,9 @@ describe('dc.pieChart', function() {
         var chart;
         beforeEach(function() {
             chart = buildChart("pie-chart2");
-            dateDimension.filter([new Date(2010, 0, 1), new Date(2010, 0, 3)]);
+            dateDimension.filter([makeDate(2010, 0, 1), makeDate(2010, 0, 3)]);
             chart.redraw();
-            dateDimension.filter([new Date(2012, 0, 1), new Date(2012, 11, 30)]);
+            dateDimension.filter([makeDate(2012, 0, 1), makeDate(2012, 11, 30)]);
             chart.redraw();
         });
         it('pie chart should be restored', function() {
@@ -384,8 +411,8 @@ describe('dc.pieChart', function() {
                 chart.selectAll(".pie-slice path")[0][2].dispatchEvent(event);
                 expect(chart.filters()).toEqual([]);
             });
-        });/*
-        it('with custom valueAccessor', function() {
+        });
+        describe('with custom valueAccessor', function() {
             beforeEach(function() {
                 chart.dimension(statusDimension).group(statusMultiGroup)
                     .valueAccessor(function(d) {return d.value.value;})
@@ -393,16 +420,16 @@ describe('dc.pieChart', function() {
                 return chart;
             });
             it('correct values, no others row', function() {
-                assert.deepEqual(chart.selectAll("g.pie-slice").data().map(dc.pluck('value')),
-                                 [220, 198]);
+                expect(chart.selectAll("g.pie-slice").data().map(dc.pluck('value')))
+                    .toEqual([220, 198]);
             });
             it('correct values, others row', function() {
                 chart.cap(1).render();
-                assert.deepEqual(chart.selectAll("title")[0].map(function(t) {return d3.select(t).text();}),
-                                 [ 'F: 220', 'small: 198' ]);
+                expect(chart.selectAll("title")[0].map(function(t) {return d3.select(t).text();}))
+                    .toEqual([ 'F: 220', 'small: 198' ]);
                 chart.cap(3); //teardown
             });
-        });*/
+        });
         afterEach(function() {
             valueDimension.filterAll();
         });
@@ -457,6 +484,36 @@ describe('dc.pieChart', function() {
         });
         it('default function should be used to dynamically generate title', function() {
             expect(d3.select(chart.selectAll("g.pie-slice title")[0][0]).text()).toEqual("F: 5");
+        });
+        describe('with n/a filter', function() {
+            beforeEach(function() {
+                regionDimension.filter("nowhere");
+                chart.render();
+                return chart;
+            });
+            it('should draw an empty chart', function() {
+                expect(chart.select('g').classed('empty-chart')).toBeTruthy();
+            });
+            it('should have one slice', function() {
+                expect(chart.selectAll("svg g text.pie-slice").length).toBe(1);
+            });
+            it('should have slice labeled empty', function() {
+                expect(d3.select(chart.selectAll("text.pie-slice")[0][0]).text()).toEqual("empty");
+            });
+            describe('with emptyTitle', function() {
+                beforeEach(function() {
+                    chart.emptyTitle('nothing').render();
+                });
+                it('should respect the emptyTitle', function() {
+                    expect(d3.select(chart.selectAll("text.pie-slice")[0][0]).text()).toEqual("nothing");
+                });
+                afterEach(function() {
+                    chart.emptyTitle('empty');
+                });
+            });
+            afterEach(function() {
+                regionDimension.filterAll();
+            });
         });
     });
 

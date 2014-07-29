@@ -1,11 +1,13 @@
 /**
 ## Cap Mixin
 
-Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the Row and Pie Charts.
+Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the
+Row and Pie Charts.
 
-The top ordered elements in the group up to the cap amount will be kept in the chart and
-the sum of those below will be added to the *others* element. The keys of the elements below the cap limit are recorded
-in order to repsond to onClick events and trigger filtering of all the within that grouping.
+The top ordered elements in the group up to the cap amount will be kept in the chart, and the rest
+will be replaced with an *others* element, with value equal to the sum of the replaced values. The
+keys of the elements below the cap limit are recorded in order to filter by those keys when the
+*others* element is clicked.
 
 **/
 dc.capMixin = function (_chart) {
@@ -72,9 +74,9 @@ dc.capMixin = function (_chart) {
 
     /**
     #### .othersGrouper([grouperFunction])
-    Get or set the grouper function that will perform the insertion of data for the *Others* slice if the slices cap is
-    specified. If set to a falsy value, no others will be added. By default the grouper function computes the sum of all
-    values below the cap.
+    Get or set the grouper function that will perform the insertion of data for the *Others* slice
+    if the slices cap is specified. If set to a falsy value, no others will be added. By default the
+    grouper function computes the sum of all values below the cap.
     ```js
     chart.othersGrouper(function (data) {
         // compute the value for others, presumably the sum of all values below the cap

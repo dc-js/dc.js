@@ -53,6 +53,8 @@ dc.utils.printSingleValue = function (filter) {
 };
 dc.utils.printSingleValue.fformat = d3.format(".2f");
 
+// FIXME: these assume than any string r is a percentage (whether or not it
+// includes %). They also generate strange results if l is a string.
 dc.utils.add = function (l, r) {
     if (typeof r === "string")
         r = r.replace("%", "");

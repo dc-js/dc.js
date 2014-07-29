@@ -29,7 +29,7 @@ function parsePath(path) {
         var cmd = {op: match[1], args: []};
         argexp.lastIndex = 0;
         while((match = argexp.exec(instr)))
-              cmd.args.push(match[1]);
+            cmd.args.push(match[1]);
         result.push(cmd);
         if(!--die) throw "give up";
     }

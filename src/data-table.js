@@ -3,8 +3,8 @@
 
 Includes: [Base Mixin](#base-mixin)
 
-Data table is a simple widget designed to list crossfilter focused data set (rows being filtered) in a good old tabular
-fashion.
+The data table is a simple widget designed to list crossfilter focused data set (rows being
+filtered) in a good old tabular fashion.
 
 Examples:
 * [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
@@ -13,12 +13,14 @@ Examples:
 Create a data table widget instance and attach it to the given parent element.
 
 Parameters:
-* parent : string - any valid d3 single selector representing typically a dom block element such as a div.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-   in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-   chart group.
+* parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
 
-Return:
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
 A newly created data table widget instance
 
 **/
@@ -120,9 +122,10 @@ dc.dataTable = function(parent, chartGroup) {
 
     /**
     #### .columns([columnFunctionArray])
-    Get or set column functions. Data table widget uses an array of functions to generate dynamic columns. Column functions are
-    simple javascript function with only one input argument d which represents a row in the data set, and the return value of
-    these functions will be used directly to generate table content for each cell.
+    Get or set column functions. The data table widget uses an array of functions to generate dynamic
+    columns. Column functions are simple javascript functions with only one input argument d which
+    represents a row in the data set, and the return value of these functions will be used directly
+    to generate table content for the cells.
 
     ```js
         chart.columns([
@@ -153,8 +156,8 @@ dc.dataTable = function(parent, chartGroup) {
 
     /**
     #### .sortBy([sortByFunction])
-    Get or set sort-by function. This function works as a value accessor at row level and returns a particular field to be sorted
-    by. Default value: ``` function(d) {return d;}; ```
+    Get or set sort-by function. This function works as a value accessor at row level and returns a
+    particular field to be sorted by. Default value: identity function
 
     ```js
        chart.sortBy(function(d) {

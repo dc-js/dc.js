@@ -31,7 +31,7 @@ describe("dc.heatmap", function() {
 
     describe('rendering the heatmap', function() {
         beforeEach(function() {
-           chart.render();
+            chart.render();
         });
 
         it('should create svg', function () {

@@ -14,13 +14,15 @@ Examples:
 Create a bar chart instance and attach it to the given parent element.
 
 Parameters:
-* parent : string|compositeChart - any valid d3 single selector representing typically a dom block element such
-   as a div, or if this bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
-   in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
-   chart group.
+* parent : string | node | selection | compositeChart - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+ If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite
+ chart instance.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
 
-Return:
+Returns:
 A newly created bar chart instance
 
 ```js
@@ -87,13 +89,14 @@ dc.barChart = function (parent, chartGroup) {
         var bars = layer.selectAll("rect.bar")
             .data(d.values, dc.pluck('x'));
 
-        bars.enter()
+        var enter = bars.enter()
             .append("rect")
             .attr("class", "bar")
-            .attr("fill", dc.pluck('data',_chart.getColor));
+            .attr("fill", dc.pluck('data',_chart.getColor))
+            .attr("height", 0);
 
         if (_chart.renderTitle())
-            bars.append("title").text(dc.pluck('data',_chart.title(d.name)));
+            enter.append("title").text(dc.pluck('data',_chart.title(d.name)));
 
         if (_chart.isOrdinal())
             bars.on("click", onClick);
@@ -102,7 +105,7 @@ dc.barChart = function (parent, chartGroup) {
             .attr("x", function (d) {
                 var x = _chart.x()(d.x);
                 if (_centerBar) x -= _barWidth / 2;
-                if (_chart.isOrdinal()) x += _gap/2;
+                if (_chart.isOrdinal() && _gap!==undefined) x += _gap/2;
                 return dc.utils.safeNumber(x);
             })
             .attr("y", function (d) {
@@ -129,7 +132,8 @@ dc.barChart = function (parent, chartGroup) {
         if (_barWidth === undefined) {
             var numberOfBars = _chart.xUnitCount();
 
-            if (_chart.isOrdinal() && !_gap)
+            // please can't we always use rangeBands for bar charts?
+            if (_chart.isOrdinal() && _gap===undefined)
                 _barWidth = Math.floor(_chart.x().rangeBand());
             else if (_gap)
                 _barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
@@ -173,7 +177,7 @@ dc.barChart = function (parent, chartGroup) {
 
     /**
     #### .centerBar(boolean)
-    Whether the bar chart will render each bar centered around the data position on x axis. Default to false.
+    Whether the bar chart will render each bar centered around the data position on x axis. Default: false
 
     **/
     _chart.centerBar = function (_) {
@@ -188,7 +192,7 @@ dc.barChart = function (parent, chartGroup) {
 
     /**
     #### .barPadding([padding])
-    Get or set the spacing between bars as a fraction of bar size. Valid values are within 0-1.
+    Get or set the spacing between bars as a fraction of bar size. Valid values are between 0-1.
     Setting this value will also remove any previously set `gap`. See the
     [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
     for a visual description of how the padding is applied.
@@ -196,23 +200,28 @@ dc.barChart = function (parent, chartGroup) {
     _chart.barPadding = function (_) {
         if (!arguments.length) return _chart._rangeBandPadding();
         _chart._rangeBandPadding(_);
-        _gap = 0;
+        _gap = undefined;
         return _chart;
+    };
+
+    _chart._useOuterPadding = function() {
+        return _gap===undefined;
     };
 
     /**
     #### .outerPadding([padding])
     Get or set the outer padding on an ordinal bar chart. This setting has no effect on non-ordinal charts.
-    Padding equivlent in width to `padding * barWidth` will be added on each side of the chart.
+    Will pad the width by `padding * barWidth` on each side of the chart.
 
     Default: 0.5
     **/
     _chart.outerPadding = _chart._outerRangeBandPadding;
 
     /**
-    #### .gap(gapBetweenBars)
-    Manually set fixed gap (in px) between bars instead of relying on the default auto-generated gap. By default bar chart
-    implementation will calculate and set the gap automatically based on the number of data points and the length of the x axis.
+     #### .gap(gapBetweenBars)
+     Manually set fixed gap (in px) between bars instead of relying on the default auto-generated
+     gap.  By default the bar chart implementation will calculate and set the gap automatically
+     based on the number of data points and the length of the x axis.
 
     **/
     _chart.gap = function (_) {
@@ -236,12 +245,13 @@ dc.barChart = function (parent, chartGroup) {
 
     /**
     #### .alwaysUseRounding([boolean])
-    Set or get the flag which determines whether rounding is enabled when bars are centered (default: false).
-    If false, using rounding with centered bars will result in a warning and rounding will be ignored.
-    This flag has no effect if bars are not centered.
+    Set or get whether rounding is enabled when bars are centered.  Default: false.  If false, using
+    rounding with centered bars will result in a warning and rounding will be ignored.  This flag
+    has no effect if bars are not centered.
 
-    When using standard d3.js rounding methods, the brush often doesn't align correctly with centered bars since the bars are offset.
-    The rounding function must add an offset to compensate, such as in the following example.
+    When using standard d3.js rounding methods, the brush often doesn't align correctly with
+    centered bars since the bars are offset.  The rounding function must add an offset to
+    compensate, such as in the following example.
     ```js
     chart.round(function(n) {return Math.floor(n)+0.5});
     ```
