@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-dev
+ *  dc 2.0.0-alpha
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012 Nick Zhu and other contributors
  *
@@ -20,7 +20,7 @@
 'use strict';
 
 /**
-#### Version 2.0.0-dev
+#### Version 2.0.0-alpha
 
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
@@ -40,7 +40,7 @@ that are chainable d3 objects.)
 
 **/
 var dc = {
-    version: "2.0.0-dev",
+    version: "2.0.0-alpha",
     constants: {
         CHART_CLASS: "dc-chart",
         DEBUG_GROUP_CLASS: "debug",
