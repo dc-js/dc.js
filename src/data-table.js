@@ -51,7 +51,7 @@ dc.dataTable = function(parent, chartGroup) {
                 v(d) :                          // v as function
                 ((typeof v === 'string') ? 
                  d[v] :                         // v is field name string
-                 v[1](d)                        // v is Object, use fn (element 2)
+                 v.format(d)                        // v is Object, use fn (element 2)
                 )
                );
     }
@@ -63,7 +63,7 @@ dc.dataTable = function(parent, chartGroup) {
         return (typeof d === 'function') ? 
                 _chart._doColumnHeaderFnToString(d) :
                 ((typeof d === 'string') ? 
-                 _chart._doColumnHeaderCapitalize(d) : String(d[0]) );
+                 _chart._doColumnHeaderCapitalize(d) : String(d.label) );
     }
 
     _chart._doColumnHeaderCapitalize = function(s) {

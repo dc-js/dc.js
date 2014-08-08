@@ -571,11 +571,11 @@ d3.csv("ndx.csv", function (data) {
                 "date",    // d["date"], ie, a field accessor; capitalized automatically
                 "open",    // ...
                 "close",   // ...
-                [ "CHange", // desired format of column name "Change" when used as a label with a function.
+                { label: "CHange", // desired format of column name "Change" when used as a label with a function.
                                                            // 'H' purposely capitalized for visual confirmation of sub
-                      function (d) {
+                    format: function (d) {
                           return numberFormat(d.close - d.open);
-                      }],
+                      }},
                 "volume"   // d["volume"], ie, a field accessor; capitalized automatically
         ];
     }
@@ -583,26 +583,26 @@ d3.csv("ndx.csv", function (data) {
     function columnsWithMixedFormat2()    // could be formatting during earlier step (load)
     {
         return [
-                [ "Date",    // desired format of column name "Date" when used as a label with a function.
-                      function (d) {
+                { label: "Date",    // desired format of column name "Date" when used as a label with a function.
+                    format: function (d) {
                           return d.date;
-                      }],
-                [ "Open",
-                      function (d) {
+                      }},
+                { label: "Open",
+                    format: function (d) {
                           return numberFormat(d.open);
-                      }],
-                [ "Close",
-                      function (d) {
+                      }},
+                { label: "Close",
+                    format: function (d) {
                           return numberFormat(d.close);
-                      }],
-                [ "ChAnge",  // 'A' purposely capitalized for visual confirmation of sub
-                      function (d) {
+                      }},
+                { label: "ChAnge",  // 'A' purposely capitalized for visual confirmation of sub
+                    format: function (d) {
                           return numberFormat(d.close - d.open);
-                      }],
-                [ "Volume",
-                      function (d) {
+                      }},
+                { label: "Volume",
+                    format: function (d) {
                           return d.volume;
-                      }],
+                      }},
         ];
     }
 
