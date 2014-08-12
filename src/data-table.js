@@ -73,7 +73,12 @@ dc.dataTable = function(parent, chartGroup) {
     }
 
     function nestEntries() {
-        var entries = _chart.dimension().top(_size);
+        var entries;
+        if (_order.name === "d3_ascending") {
+            entries = _chart.dimension().bottom(_size);
+        } else {
+            entries = _chart.dimension().top(_size);
+        }
 
         return d3.nest()
             .key(_chart.group())
