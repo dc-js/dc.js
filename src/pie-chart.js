@@ -3,28 +3,26 @@
 
 Includes: [Cap Mixin](#cap-mixin), [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
 
-The pie chart implementation is usually used to visualize a small categorical distribution.  The pie
-chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
-slice relative to the sum of all values. Slices are ordered by `.ordering` which defaults to sorting
-by key.
+The pie chart implementation is usually used to visualize small number of categorical distributions.
+Pie chart uses keyAccessor to generate slices, and valueAccessor to calculate the size of each slice(key)
+relatively to the total sum of all values. Slices are ordered by `.ordering` which defaults to sorting by key.
 
 Examples:
 
 * [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 
 #### dc.pieChart(parent[, chartGroup])
-Create a pie chart instance and attaches it to the given parent element.
+Create a pie chart instance and attach it to the given parent element.
 
 Parameters:
 
-* parent : string | node | selection - any valid
- [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- a dom block element such as a div; or a dom element or d3 selection.
+* parent : string - any valid d3 single selector representing typically a dom block element such
+   as a div.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in. Once a chart is placed
+   in a certain chart group then any interaction with such instance will only trigger events and redraw within the same
+   chart group.
 
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
- Interaction with a chart will only trigger events and redraws within the chart's group.
-
-Returns:
+Return:
 A newly created pie chart instance
 
 ```js
@@ -39,23 +37,17 @@ dc.pieChart = function (parent, chartGroup) {
     var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
     var _sliceCssClass = "pie-slice";
-    var _emptyCssClass = "empty-chart";
-    var _emptyTitle = "empty";
 
     var _radius,
         _innerRadius = 0;
 
     var _g;
-    
-    var _cx;
-
-    var _cy;
 
     var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
 
     var _externalLabelRadius;
 
-    var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
+    var _chart = dc.capMixin(dc.marginMixin(dc.colorMixin(dc.baseMixin({}))) );
 
     _chart.colorAccessor(_chart.cappedKeyAccessor);
 
@@ -96,17 +88,7 @@ dc.pieChart = function (parent, chartGroup) {
         var arc = buildArcs();
 
         var pie = pieLayout();
-        var pieData;
-        // if we have data...
-        if(d3.sum(_chart.data(), _chart.valueAccessor())) {
-            pieData = pie(_chart.data());
-            _g.classed(_emptyCssClass, false);
-        } else {
-            // otherwise we'd be getting NaNs, so override
-            // note: abuse others for its ignoring the value accessor
-            pieData = pie([{key:_emptyTitle, value:1, others: [_emptyTitle]}]);
-            _g.classed(_emptyCssClass, true);
-        }
+        var pieData = pie(_chart.data());
 
         if (_g) {
             var slices = _g.selectAll("g." + _sliceCssClass)
@@ -258,8 +240,8 @@ dc.pieChart = function (parent, chartGroup) {
 
     /**
     #### .innerRadius([innerRadius])
-    Get or set the inner radius of the pie chart. If the inner radius is greater than 0px then the
-    pie chart will be rendered as a doughnut chart. Default inner radius is 0px.
+    Get or set the inner radius on a particular pie chart instance. If inner radius is greater than 0px then the pie chart
+    will be essentially rendered as a doughnut chart. Default inner radius is 0px.
 
     **/
     _chart.innerRadius = function (r) {
@@ -270,7 +252,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     /**
     #### .radius([radius])
-    Get or set the outer radius. Default radius is 90px.
+    Get or set the radius on a particular pie chart instance. Default radius is 90px.
 
     **/
     _chart.radius = function (r) {
@@ -280,25 +262,21 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .cx([cx])
-    Get or set center x coordinate position. Default is center of svg.
+    #### .cx()
+    Get center x coordinate position. This function is **not chainable**.
 
     **/
-    _chart.cx = function (cx) {
-        if (!arguments.length) return (_cx ||  _chart.width() / 2);
-        _cx = cx;
-        return _chart;
+    _chart.cx = function () {
+        return _chart.width() / 2;
     };
 
     /**
-    #### .cy([cy])
-    Get or set center y coordinate position. Default is center of svg.
+    #### .cy()
+    Get center y coordinate position. This function is **not chainable**.
 
     **/
-    _chart.cy = function (cy) {
-        if (!arguments.length) return (_cy ||  _chart.height() / 2);
-        _cy = cy;
-        return _chart;
+    _chart.cy = function () {
+        return _chart.height() / 2;
     };
 
     function buildArcs() {
@@ -316,8 +294,8 @@ dc.pieChart = function (parent, chartGroup) {
 
     /**
     #### .minAngleForLabel([minAngle])
-    Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
-    display a slice label.  Default min angle is 0.5.
+    Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not render slice label.
+    Default min angle is 0.5.
     **/
     _chart.minAngleForLabel = function (_) {
         if (!arguments.length) return _minAngleForLabel;
@@ -359,8 +337,7 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     function onClick(d, i) {
-        if (_g.attr("class") != _emptyCssClass)
-            _chart.onClick(d.data, i);
+        _chart.onClick(d.data, i);
     }
 
     function safeArc(d, i, arc) {
@@ -369,17 +346,6 @@ dc.pieChart = function (parent, chartGroup) {
             path = "M0,0";
         return path;
     }
-
-    /**
-     #### .emptyTitle([title])
-     Title to use for the only slice when there is no data
-     */
-    _chart.emptyTitle = function(title) {
-        if (arguments.length === 0)
-            return _emptyTitle;
-        _emptyTitle = title;
-        return _chart;
-    };
 
     /**
      #### .externalLabels([radius])

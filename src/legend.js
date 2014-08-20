@@ -1,7 +1,6 @@
 /**
 ## Legend
-Legend is a attachable widget that can be added to other dc charts to render horizontal legend
-labels.
+Legend is a attachable widget that can be added to other dc charts to render horizontal legend labels.
 
 ```js
 chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
@@ -22,8 +21,9 @@ dc.legend = function () {
         _itemHeight = 12,
         _gap = 5,
         _horizontal = false,
-        _legendWidth = 560,
-        _itemWidth = 70;
+        _legendWidth = Infinity,
+        _itemWidth = 70,
+        _autoItemWidth = false;
 
     var _g;
 
@@ -52,7 +52,7 @@ dc.legend = function () {
                 _parent.legendReset(d);
             })
             .on("click", function (d) {
-                d.chart.legendToggle(d);
+                _parent.legendToggle(d);
             });
 
         _g.selectAll('g.dc-legend-item')
@@ -81,18 +81,22 @@ dc.legend = function () {
         itemEnter.append("text")
                 .text(dc.pluck('name'))
                 .attr("x", _itemHeight + LABEL_GAP)
-                .attr("y", function(){return _itemHeight / 2 + (this.clientHeight?this.clientHeight:13) / 2 - 2;});
+                .attr("y", function(d){
+                    return _itemHeight / 2 + (this.clientHeight?this.clientHeight:13) / 2 - 2;}
+                );
 
         var _cumulativeLegendTextWidth = 0;
         var row = 0;
         itemEnter.attr("transform", function(d, i) {
             if(_horizontal) {
                 var translateBy = "translate(" + _cumulativeLegendTextWidth + "," + row * legendItemHeight() + ")";
-                if ((_cumulativeLegendTextWidth + _itemWidth) >= _legendWidth) {
+                var itemWidth   = _autoItemWidth === true ? this.getBBox().width + _gap : _itemWidth;
+
+                if ((_cumulativeLegendTextWidth + itemWidth) >= _legendWidth) {
                     ++row ;
                     _cumulativeLegendTextWidth = 0 ;
                 } else {
-                    _cumulativeLegendTextWidth += _itemWidth;
+                    _cumulativeLegendTextWidth += itemWidth;
                 }
                 return translateBy;
             }
@@ -108,7 +112,7 @@ dc.legend = function () {
 
     /**
     #### .x([value])
-    Set or get x coordinate for legend widget. Default: 0.
+    Set or get x coordinate for legend widget. Default value: 0.
     **/
     _legend.x = function (x) {
         if (!arguments.length) return _x;
@@ -118,7 +122,7 @@ dc.legend = function () {
 
     /**
     #### .y([value])
-    Set or get y coordinate for legend widget. Default: 0.
+    Set or get y coordinate for legend widget. Default value: 0.
     **/
     _legend.y = function (y) {
         if (!arguments.length) return _y;
@@ -128,7 +132,7 @@ dc.legend = function () {
 
     /**
     #### .gap([value])
-    Set or get gap between legend items. Default: 5.
+    Set or get gap between legend items. Default value: 5.
     **/
     _legend.gap = function (gap) {
         if (!arguments.length) return _gap;
@@ -138,7 +142,7 @@ dc.legend = function () {
 
     /**
     #### .itemHeight([value])
-    Set or get legend item height. Default: 12.
+    Set or get legend item height. Default value: 12.
     **/
     _legend.itemHeight = function (h) {
         if (!arguments.length) return _itemHeight;
@@ -158,7 +162,7 @@ dc.legend = function () {
 
     /**
     #### .legendWidth([value])
-    Maximum width for horizontal legend. Default: 560.
+    Maximum width for horizontal legend. Default value: 560.
     **/
     _legend.legendWidth = function(_) {
         if (!arguments.length) return _legendWidth;
@@ -168,11 +172,22 @@ dc.legend = function () {
 
     /**
     #### .itemWidth([value])
-    legendItem width for horizontal legend. Default: 70.
+    legendItem width for horizontal legend. Default value: 70.
     **/
     _legend.itemWidth = function(_) {
         if (!arguments.length) return _itemWidth;
         _itemWidth = _;
+        return _legend;
+    };
+
+    /**
+    #### .autoItemWidth([value])
+    Turn legendItem auto width on or off. If true, itemWidth() is ignored.
+    This setting takes into account gap(). Default value: false.
+    **/
+    _legend.autoItemWidth = function(_) {
+        if (!arguments.length) return _autoItemWidth;
+        _autoItemWidth = _;
         return _legend;
     };
 
