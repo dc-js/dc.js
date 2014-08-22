@@ -1,6 +1,5 @@
 /**
 ## Coordinate Grid Mixin
-
 Includes: [Color Mixin](#color-mixin), [Margin Mixin](#margin-mixin), [Base Mixin](#base-mixin)
 
 Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based
@@ -8,9 +7,9 @@ concrete chart types, e.g. bar chart, line chart, and bubble chart.
 
 **/
 dc.coordinateGridMixin = function (_chart) {
-    var GRID_LINE_CLASS = "grid-line";
-    var HORIZONTAL_CLASS = "horizontal";
-    var VERTICAL_CLASS = "vertical";
+    var GRID_LINE_CLASS = 'grid-line';
+    var HORIZONTAL_CLASS = 'horizontal';
+    var VERTICAL_CLASS = 'vertical';
     var Y_AXIS_LABEL_CLASS = 'y-axis-label';
     var X_AXIS_LABEL_CLASS = 'x-axis-label';
     var DEFAULT_AXIS_LABEL_PADDING = 12;
@@ -20,13 +19,45 @@ dc.coordinateGridMixin = function (_chart) {
     _chart.colors(d3.scale.category10());
     _chart._mandatoryAttributes().push('x');
 
+    function zoomHandler () {
+        _refocused = true;
+        if (_zoomOutRestrict) {
+            _chart.x().domain(constrainRange(_chart.x().domain(), _xOriginalDomain));
+            if (_rangeChart) {
+                _chart.x().domain(constrainRange(_chart.x().domain(), _rangeChart.x().domain()));
+            }
+        }
+
+        var domain = _chart.x().domain();
+        var domFilter = dc.filters.RangedFilter(domain[0], domain[1]);
+
+        _chart.replaceFilter(domFilter);
+        _chart.rescale();
+        _chart.redraw();
+
+        if (_rangeChart && !rangesEqual(_chart.filter(), _rangeChart.filter())) {
+            dc.events.trigger( function () {
+                _rangeChart.replaceFilter(domFilter);
+                _rangeChart.redraw();
+            });
+        }
+
+        _chart._invokeZoomedListener();
+
+        dc.events.trigger(function () {
+            _chart.redrawGroup();
+        }, dc.constants.EVENT_DELAY);
+
+        _refocused = !rangesEqual(domain, _xOriginalDomain);
+    }
+
     var _parent;
     var _g;
     var _chartBodyG;
 
     var _x;
     var _xOriginalDomain;
-    var _xAxis = d3.svg.axis().orient("bottom");
+    var _xAxis = d3.svg.axis().orient('bottom');
     var _xUnits = dc.units.integers;
     var _xAxisPadding = 0;
     var _xElasticity = false;
@@ -35,7 +66,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _lastXDomain;
 
     var _y;
-    var _yAxis = d3.svg.axis().orient("left");
+    var _yAxis = d3.svg.axis().orient('left');
     var _yAxisPadding = 0;
     var _yElasticity = false;
     var _yAxisLabel;
@@ -54,8 +85,8 @@ dc.coordinateGridMixin = function (_chart) {
     var _zoomScale = [1, Infinity];
     var _zoomOutRestrict = true;
 
-    var _zoom = d3.behavior.zoom().on("zoom", zoomHandler);
-    var _nullZoom = d3.behavior.zoom().on("zoom", null);
+    var _zoom = d3.behavior.zoom().on('zoom', zoomHandler);
+    var _nullZoom = d3.behavior.zoom().on('zoom', null);
     var _hasBeenMouseZoomable = false;
 
     var _rangeChart;
@@ -83,7 +114,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     **/
     _chart.rangeChart = function (_) {
-        if (!arguments.length) return _rangeChart;
+        if (!arguments.length) {
+            return _rangeChart;
+        }
         _rangeChart = _;
         _rangeChart.focusChart(_chart);
         return _chart;
@@ -95,7 +128,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     **/
     _chart.zoomScale = function (_) {
-        if (!arguments.length) return _zoomScale;
+        if (!arguments.length) {
+            return _zoomScale;
+        }
         _zoomScale = _;
         return _chart;
     };
@@ -105,23 +140,26 @@ dc.coordinateGridMixin = function (_chart) {
     Get or set the zoom restriction for the chart. If true limits the zoom to origional domain of the chart.
     **/
     _chart.zoomOutRestrict = function (r) {
-        if (!arguments.length) return _zoomOutRestrict;
+        if (!arguments.length) {
+            return _zoomOutRestrict;
+        }
         _zoomScale[0] = r ? 1 : 0;
         _zoomOutRestrict = r;
         return _chart;
     };
 
     _chart._generateG = function (parent) {
-        if (parent === undefined)
+        if (parent === undefined) {
             _parent = _chart.svg();
-        else
+        } else {
             _parent = parent;
+        }
 
-        _g = _parent.append("g");
+        _g = _parent.append('g');
 
-        _chartBodyG = _g.append("g").attr("class", "chart-body")
-            .attr("transform", "translate(" + _chart.margins().left + ", " + _chart.margins().top + ")")
-            .attr("clip-path", "url(#" + getClipPathId() + ")");
+        _chartBodyG = _g.append('g').attr('class', 'chart-body')
+            .attr('transform', 'translate(' + _chart.margins().left + ', ' + _chart.margins().top + ')')
+            .attr('clip-path', 'url(#' + getClipPathId() + ')');
 
         return _g;
     };
@@ -134,7 +172,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     **/
     _chart.g = function (_) {
-        if (!arguments.length) return _g;
+        if (!arguments.length) {
+            return _g;
+        }
         _g = _;
         return _chart;
     };
@@ -147,7 +187,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     **/
     _chart.mouseZoomable = function (z) {
-        if (!arguments.length) return _mouseZoomable;
+        if (!arguments.length) {
+            return _mouseZoomable;
+        }
         _mouseZoomable = z;
         return _chart;
     };
@@ -157,7 +199,9 @@ dc.coordinateGridMixin = function (_chart) {
     Retrieve the svg group for the chart body.
     **/
     _chart.chartBodyG = function (_) {
-        if (!arguments.length) return _chartBodyG;
+        if (!arguments.length) {
+            return _chartBodyG;
+        }
         _chartBodyG = _;
         return _chart;
     };
@@ -176,7 +220,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     **/
     _chart.x = function (_) {
-        if (!arguments.length) return _x;
+        if (!arguments.length) {
+            return _x;
+        }
         _x = _;
         _xOriginalDomain = _x.domain();
         return _chart;
@@ -219,7 +265,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     **/
     _chart.xUnits = function (_) {
-        if (!arguments.length) return _xUnits;
+        if (!arguments.length) {
+            return _xUnits;
+        }
         _xUnits = _;
         return _chart;
     };
@@ -233,14 +281,16 @@ dc.coordinateGridMixin = function (_chart) {
     resetting it may cause unexpected results.
     ```js
     // customize x axis tick format
-    chart.xAxis().tickFormat(function(v) {return v + "%";});
+    chart.xAxis().tickFormat(function(v) {return v + '%';});
     // customize x axis tick values
     chart.xAxis().tickValues([0, 100, 200, 300]);
     ```
 
     **/
     _chart.xAxis = function (_) {
-        if (!arguments.length) return _xAxis;
+        if (!arguments.length) {
+            return _xAxis;
+        }
         _xAxis = _;
         return _chart;
     };
@@ -252,7 +302,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     **/
     _chart.elasticX = function (_) {
-        if (!arguments.length) return _xElasticity;
+        if (!arguments.length) {
+            return _xElasticity;
+        }
         _xElasticity = _;
         return _chart;
     };
@@ -262,13 +314,15 @@ dc.coordinateGridMixin = function (_chart) {
     Set or get x axis padding for the elastic x axis. The padding will be added to both end of the x
     axis if elasticX is turned on; otherwise it is ignored.
 
-    * padding can be an integer or percentage in string (e.g. "10%"). Padding can be applied to
+    * padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
     number or date x axes.  When padding a date axis, an integer represents number of days being padded
     and a percentage string will be treated the same as an integer.
 
     **/
     _chart.xAxisPadding = function (_) {
-        if (!arguments.length) return _xAxisPadding;
+        if (!arguments.length) {
+            return _xAxisPadding;
+        }
         _xAxisPadding = _;
         return _chart;
     };
@@ -282,10 +336,11 @@ dc.coordinateGridMixin = function (_chart) {
         if (_unitCount === undefined) {
             var units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain());
 
-            if (units instanceof Array)
+            if (units instanceof Array) {
                 _unitCount = units.length;
-            else
+            } else {
                 _unitCount = units;
+            }
         }
 
         return _unitCount;
@@ -298,7 +353,9 @@ dc.coordinateGridMixin = function (_chart) {
      **/
 
     _chart.useRightYAxis = function (_) {
-        if (!arguments.length) return _useRightYAxis;
+        if (!arguments.length) {
+            return _useRightYAxis;
+        }
         _useRightYAxis = _;
         return _chart;
     };
@@ -313,35 +370,38 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart.xUnits() === dc.units.ordinal;
     };
 
-    _chart._useOuterPadding = function() {
+    _chart._useOuterPadding = function () {
         return true;
     };
 
-    _chart._ordinalXDomain = function() {
+    _chart._ordinalXDomain = function () {
         var groups = _chart._computeOrderedGroups(_chart.data());
         return groups.map(_chart.keyAccessor());
     };
 
     function prepareXAxis(g) {
-        if(!_chart.isOrdinal()) {
-            if (_chart.elasticX())
+        if (!_chart.isOrdinal()) {
+            if (_chart.elasticX()) {
                 _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
+            }
         }
         else { // _chart.isOrdinal()
-            if(_chart.elasticX() || _x.domain().length===0)
+            if (_chart.elasticX() || _x.domain().length === 0) {
                 _x.domain(_chart._ordinalXDomain());
+            }
         }
 
         // has the domain changed?
         var xdom = _x.domain();
-        if(!_lastXDomain || xdom.some(function(elem, i) { return elem != _lastXDomain[i]; }))
+        if (!_lastXDomain || xdom.some(function (elem, i) { return elem !== _lastXDomain[i]; })) {
             _chart.rescale();
+        }
         _lastXDomain = xdom;
 
         // please can't we always use rangeBands for bar charts?
         if (_chart.isOrdinal()) {
-            _x.rangeBands([0,_chart.xAxisLength()],_rangeBandPadding,
-                          _chart._useOuterPadding()?_outerRangeBandPadding:0);
+            _x.rangeBands([0, _chart.xAxisLength()], _rangeBandPadding,
+                          _chart._useOuterPadding() ? _outerRangeBandPadding : 0);
         } else {
             _x.range([0, _chart.xAxisLength()]);
         }
@@ -352,72 +412,77 @@ dc.coordinateGridMixin = function (_chart) {
     }
 
     _chart.renderXAxis = function (g) {
-        var axisXG = g.selectAll("g.x");
+        var axisXG = g.selectAll('g.x');
 
-        if (axisXG.empty())
-            axisXG = g.append("g")
-                .attr("class", "axis x")
-                .attr("transform", "translate(" + _chart.margins().left + "," + _chart._xAxisY() + ")");
+        if (axisXG.empty()) {
+            axisXG = g.append('g')
+                .attr('class', 'axis x')
+                .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')');
+        }
 
-        var axisXLab = g.selectAll("text."+X_AXIS_LABEL_CLASS);
-        if (axisXLab.empty() && _chart.xAxisLabel())
+        var axisXLab = g.selectAll('text.' + X_AXIS_LABEL_CLASS);
+        if (axisXLab.empty() && _chart.xAxisLabel()) {
             axisXLab = g.append('text')
-                .attr("transform", "translate(" + (_chart.margins().left + _chart.xAxisLength() / 2) + "," + (_chart.height() - _xAxisLabelPadding) + ")")
+                .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
+                    (_chart.height() - _xAxisLabelPadding) + ')')
                 .attr('class', X_AXIS_LABEL_CLASS)
                 .attr('text-anchor', 'middle')
                 .text(_chart.xAxisLabel());
-        if (_chart.xAxisLabel() && axisXLab.text() != _chart.xAxisLabel())
+        }
+        if (_chart.xAxisLabel() && axisXLab.text() !== _chart.xAxisLabel()) {
             axisXLab.text(_chart.xAxisLabel());
+        }
 
         dc.transition(axisXG, _chart.transitionDuration())
             .call(_xAxis);
     };
 
     function renderVerticalGridLines(g) {
-        var gridLineG = g.selectAll("g." + VERTICAL_CLASS);
+        var gridLineG = g.selectAll('g.' + VERTICAL_CLASS);
 
         if (_renderVerticalGridLine) {
-            if (gridLineG.empty())
-                gridLineG = g.insert("g", ":first-child")
-                    .attr("class", GRID_LINE_CLASS + " " + VERTICAL_CLASS)
-                    .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")");
+            if (gridLineG.empty()) {
+                gridLineG = g.insert('g', ':first-child')
+                    .attr('class', GRID_LINE_CLASS + ' ' + VERTICAL_CLASS)
+                    .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
+            }
 
             var ticks = _xAxis.tickValues() ? _xAxis.tickValues() : _x.ticks(_xAxis.ticks()[0]);
 
-            var lines = gridLineG.selectAll("line")
+            var lines = gridLineG.selectAll('line')
                 .data(ticks);
 
             // enter
             var linesGEnter = lines.enter()
-                .append("line")
-                .attr("x1", function (d) {
+                .append('line')
+                .attr('x1', function (d) {
                     return _x(d);
                 })
-                .attr("y1", _chart._xAxisY() - _chart.margins().top)
-                .attr("x2", function (d) {
+                .attr('y1', _chart._xAxisY() - _chart.margins().top)
+                .attr('x2', function (d) {
                     return _x(d);
                 })
-                .attr("y2", 0)
-                .attr("opacity", 0);
+                .attr('y2', 0)
+                .attr('opacity', 0);
             dc.transition(linesGEnter, _chart.transitionDuration())
-                .attr("opacity", 1);
+                .attr('opacity', 1);
 
             // update
             dc.transition(lines, _chart.transitionDuration())
-                .attr("x1", function (d) {
+                .attr('x1', function (d) {
                     return _x(d);
                 })
-                .attr("y1", _chart._xAxisY() - _chart.margins().top)
-                .attr("x2", function (d) {
+                .attr('y1', _chart._xAxisY() - _chart.margins().top)
+                .attr('x2', function (d) {
                     return _x(d);
                 })
-                .attr("y2", 0);
+                .attr('y2', 0);
 
             // exit
             lines.exit().remove();
         }
         else {
-            gridLineG.selectAll("line").remove();
+            gridLineG.selectAll('line').remove();
         }
     }
 
@@ -435,7 +500,9 @@ dc.coordinateGridMixin = function (_chart) {
     the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.
     **/
     _chart.xAxisLabel = function (_, padding) {
-        if (!arguments.length) return _xAxisLabel;
+        if (!arguments.length) {
+            return _xAxisLabel;
+        }
         _xAxisLabel = _;
         _chart.margins().bottom -= _xAxisLabelPadding;
         _xAxisLabelPadding = (padding === undefined) ? DEFAULT_AXIS_LABEL_PADDING : padding;
@@ -443,7 +510,7 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    _chart._prepareYAxis = function(g) {
+    _chart._prepareYAxis = function (g) {
         if (_y === undefined || _chart.elasticY()) {
             _y = d3.scale.linear();
             var min = _chart.yAxisMin() || 0,
@@ -454,36 +521,37 @@ dc.coordinateGridMixin = function (_chart) {
         _y.range([_chart.yAxisHeight(), 0]);
         _yAxis = _yAxis.scale(_y);
 
-        if (_useRightYAxis)
-            _yAxis.orient("right");
+        if (_useRightYAxis) {
+            _yAxis.orient('right');
+        }
 
         _chart._renderHorizontalGridLinesForAxis(g, _y, _yAxis);
     };
 
-    _chart.renderYAxisLabel = function(axisClass, text, rotation, labelXPosition) {
+    _chart.renderYAxisLabel = function (axisClass, text, rotation, labelXPosition) {
         labelXPosition = labelXPosition || _yAxisLabelPadding;
 
-        var axisYLab = _chart.g().selectAll("text." + Y_AXIS_LABEL_CLASS + "." + axisClass + "-label");
+        var axisYLab = _chart.g().selectAll('text.' + Y_AXIS_LABEL_CLASS + '.' + axisClass + '-label');
         if (axisYLab.empty() && text) {
 
             var labelYPosition = (_chart.margins().top + _chart.yAxisHeight() / 2);
             axisYLab = _chart.g().append('text')
-                .attr("transform", "translate(" + labelXPosition + "," + labelYPosition + "),rotate(" + rotation + ")")
-                .attr('class', Y_AXIS_LABEL_CLASS + " " + axisClass + "-label")
+                .attr('transform', 'translate(' + labelXPosition + ',' + labelYPosition + '),rotate(' + rotation + ')')
+                .attr('class', Y_AXIS_LABEL_CLASS + ' ' + axisClass + '-label')
                 .attr('text-anchor', 'middle')
                 .text(text);
         }
-        if (text && axisYLab.text() != text) {
+        if (text && axisYLab.text() !== text) {
             axisYLab.text(text);
         }
     };
 
-    _chart.renderYAxisAt = function (axisClass, axis, position){
-        var axisYG = _chart.g().selectAll("g." + axisClass);
+    _chart.renderYAxisAt = function (axisClass, axis, position) {
+        var axisYG = _chart.g().selectAll('g.' + axisClass);
         if (axisYG.empty()) {
-            axisYG = _chart.g().append("g")
-                .attr("class", "axis " + axisClass)
-                .attr("transform", "translate(" + position + "," + _chart.margins().top + ")");
+            axisYG = _chart.g().append('g')
+                .attr('class', 'axis ' + axisClass)
+                .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')');
         }
 
         dc.transition(axisYG, _chart.transitionDuration()).call(axis);
@@ -491,50 +559,50 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart.renderYAxis = function () {
         var axisPosition = _useRightYAxis ? (_chart.width() - _chart.margins().right) : _chart._yAxisX();
-        _chart.renderYAxisAt("y", _yAxis, axisPosition);
+        _chart.renderYAxisAt('y', _yAxis, axisPosition);
         var labelPosition = _useRightYAxis ? (_chart.width() - _yAxisLabelPadding) : _yAxisLabelPadding;
         var rotation = _useRightYAxis ? 90 : -90;
-        _chart.renderYAxisLabel("y", _chart.yAxisLabel(), rotation, labelPosition);
+        _chart.renderYAxisLabel('y', _chart.yAxisLabel(), rotation, labelPosition);
     };
 
     _chart._renderHorizontalGridLinesForAxis = function (g, scale, axis) {
-        var gridLineG = g.selectAll("g." + HORIZONTAL_CLASS);
+        var gridLineG = g.selectAll('g.' + HORIZONTAL_CLASS);
 
         if (_renderHorizontalGridLine) {
             var ticks = axis.tickValues() ? axis.tickValues() : scale.ticks(axis.ticks()[0]);
 
             if (gridLineG.empty()) {
-                gridLineG = g.insert("g", ":first-child")
-                    .attr("class", GRID_LINE_CLASS + " " + HORIZONTAL_CLASS)
-                    .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")");
+                gridLineG = g.insert('g', ':first-child')
+                    .attr('class', GRID_LINE_CLASS + ' ' + HORIZONTAL_CLASS)
+                    .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
             }
 
-            var lines = gridLineG.selectAll("line")
+            var lines = gridLineG.selectAll('line')
                 .data(ticks);
 
             // enter
             var linesGEnter = lines.enter()
-                .append("line")
-                .attr("x1", 1)
-                .attr("y1", function (d) {
+                .append('line')
+                .attr('x1', 1)
+                .attr('y1', function (d) {
                     return scale(d);
                 })
-                .attr("x2", _chart.xAxisLength())
-                .attr("y2", function (d) {
+                .attr('x2', _chart.xAxisLength())
+                .attr('y2', function (d) {
                     return scale(d);
                 })
-                .attr("opacity", 0);
+                .attr('opacity', 0);
             dc.transition(linesGEnter, _chart.transitionDuration())
-                .attr("opacity", 1);
+                .attr('opacity', 1);
 
             // update
             dc.transition(lines, _chart.transitionDuration())
-                .attr("x1", 1)
-                .attr("y1", function (d) {
+                .attr('x1', 1)
+                .attr('y1', function (d) {
                     return scale(d);
                 })
-                .attr("x2", _chart.xAxisLength())
-                .attr("y2", function (d) {
+                .attr('x2', _chart.xAxisLength())
+                .attr('y2', function (d) {
                     return scale(d);
                 });
 
@@ -542,14 +610,13 @@ dc.coordinateGridMixin = function (_chart) {
             lines.exit().remove();
         }
         else {
-            gridLineG.selectAll("line").remove();
+            gridLineG.selectAll('line').remove();
         }
     };
 
     _chart._yAxisX = function () {
         return _chart.useRightYAxis() ? _chart.width() - _chart.margins().right : _chart.margins().left;
     };
-
 
     /**
     #### .yAxisLabel([labelText, [, padding]])
@@ -558,7 +625,9 @@ dc.coordinateGridMixin = function (_chart) {
     text height.
     **/
     _chart.yAxisLabel = function (_, padding) {
-        if (!arguments.length) return _yAxisLabel;
+        if (!arguments.length) {
+            return _yAxisLabel;
+        }
         _yAxisLabel = _;
         _chart.margins().left -= _yAxisLabelPadding;
         _yAxisLabelPadding = (padding === undefined) ? DEFAULT_AXIS_LABEL_PADDING : padding;
@@ -572,7 +641,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     **/
     _chart.y = function (_) {
-        if (!arguments.length) return _y;
+        if (!arguments.length) {
+            return _y;
+        }
         _y = _;
         return _chart;
     };
@@ -586,14 +657,16 @@ dc.coordinateGridMixin = function (_chart) {
     resetting it may cause unexpected results.
     ```js
     // customize y axis tick format
-    chart.yAxis().tickFormat(function(v) {return v + "%";});
+    chart.yAxis().tickFormat(function(v) {return v + '%';});
     // customize y axis tick values
     chart.yAxis().tickValues([0, 100, 200, 300]);
     ```
 
     **/
     _chart.yAxis = function (y) {
-        if (!arguments.length) return _yAxis;
+        if (!arguments.length) {
+            return _yAxis;
+        }
         _yAxis = y;
         return _chart;
     };
@@ -605,7 +678,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     **/
     _chart.elasticY = function (_) {
-        if (!arguments.length) return _yElasticity;
+        if (!arguments.length) {
+            return _yElasticity;
+        }
         _yElasticity = _;
         return _chart;
     };
@@ -616,7 +691,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     **/
     _chart.renderHorizontalGridLines = function (_) {
-        if (!arguments.length) return _renderHorizontalGridLine;
+        if (!arguments.length) {
+            return _renderHorizontalGridLine;
+        }
         _renderHorizontalGridLine = _;
         return _chart;
     };
@@ -627,7 +704,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     **/
     _chart.renderVerticalGridLines = function (_) {
-        if (!arguments.length) return _renderVerticalGridLine;
+        if (!arguments.length) {
+            return _renderVerticalGridLine;
+        }
         _renderVerticalGridLine = _;
         return _chart;
     };
@@ -681,13 +760,15 @@ dc.coordinateGridMixin = function (_chart) {
     Set or get y axis padding for the elastic y axis. The padding will be added to the top of the y
     axis if elasticY is turned on; otherwise it is ignored.
 
-    * padding can be an integer or percentage in string (e.g. "10%"). Padding can be applied to
+    * padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
     number or date axes. When padding a date axis, an integer represents number of days being padded
     and a percentage string will be treated the same as an integer.
 
     **/
     _chart.yAxisPadding = function (_) {
-        if (!arguments.length) return _yAxisPadding;
+        if (!arguments.length) {
+            return _yAxisPadding;
+        }
         _yAxisPadding = _;
         return _chart;
     };
@@ -707,25 +788,33 @@ dc.coordinateGridMixin = function (_chart) {
 
     **/
     _chart.round = function (_) {
-        if (!arguments.length) return _round;
+        if (!arguments.length) {
+            return _round;
+        }
         _round = _;
         return _chart;
     };
 
     _chart._rangeBandPadding = function (_) {
-        if (!arguments.length) return _rangeBandPadding;
+        if (!arguments.length) {
+            return _rangeBandPadding;
+        }
         _rangeBandPadding = _;
         return _chart;
     };
 
     _chart._outerRangeBandPadding = function (_) {
-        if (!arguments.length) return _outerRangeBandPadding;
+        if (!arguments.length) {
+            return _outerRangeBandPadding;
+        }
         _outerRangeBandPadding = _;
         return _chart;
     };
 
-    dc.override(_chart, "filter", function (_) {
-        if (!arguments.length) return _chart._filter();
+    dc.override(_chart, 'filter', function (_) {
+        if (!arguments.length) {
+            return _chart._filter();
+        }
 
         _chart._filter(_);
 
@@ -739,7 +828,9 @@ dc.coordinateGridMixin = function (_chart) {
     });
 
     _chart.brush = function (_) {
-        if (!arguments.length) return _brush;
+        if (!arguments.length) {
+            return _brush;
+        }
         _brush = _;
         return _chart;
     };
@@ -750,13 +841,13 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart.renderBrush = function (g) {
         if (_brushOn) {
-            _brush.on("brush", _chart._brushing);
-            _brush.on("brushstart", _chart._disableMouseZoom);
-            _brush.on("brushend", configureMouseZoom);
+            _brush.on('brush', _chart._brushing);
+            _brush.on('brushstart', _chart._disableMouseZoom);
+            _brush.on('brushend', configureMouseZoom);
 
-            var gBrush = g.append("g")
-                .attr("class", "brush")
-                .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")")
+            var gBrush = g.append('g')
+                .attr('class', 'brush')
+                .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')')
                 .call(_brush.x(_chart.x()));
             _chart.setBrushY(gBrush);
             _chart.setHandlePaths(gBrush);
@@ -768,11 +859,11 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart.setHandlePaths = function (gBrush) {
-        gBrush.selectAll(".resize").append("path").attr("d", _chart.resizeHandlePath);
+        gBrush.selectAll('.resize').append('path').attr('d', _chart.resizeHandlePath);
     };
 
-    _chart.setBrushY = function(gBrush){
-        gBrush.selectAll("rect").attr("height", brushHeight());
+    _chart.setBrushY = function (gBrush) {
+        gBrush.selectAll('rect').attr('height', brushHeight());
     };
 
     _chart.extendBrush = function () {
@@ -781,7 +872,7 @@ dc.coordinateGridMixin = function (_chart) {
             extent[0] = extent.map(_chart.round())[0];
             extent[1] = extent.map(_chart.round())[1];
 
-            _g.select(".brush")
+            _g.select('.brush')
                 .call(_brush.extent(extent));
         }
         return extent;
@@ -791,7 +882,7 @@ dc.coordinateGridMixin = function (_chart) {
         return _brush.empty() || !extent || extent[1] <= extent[0];
     };
 
-    _chart._brushing = function() {
+    _chart._brushing = function () {
         var extent = _chart.extendBrush();
 
         _chart.redrawBrush(_g);
@@ -813,10 +904,11 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart.redrawBrush = function (g) {
         if (_brushOn) {
-            if (_chart.filter() && _chart.brush().empty())
+            if (_chart.filter() && _chart.brush().empty()) {
                 _chart.brush().extent(_chart.filter());
+            }
 
-            var gBrush = g.select("g.brush");
+            var gBrush = g.select('g.brush');
             gBrush.call(_chart.brush().x(_chart.x()));
             _chart.setBrushY(gBrush);
         }
@@ -830,22 +922,22 @@ dc.coordinateGridMixin = function (_chart) {
 
     // borrowed from Crossfilter example
     _chart.resizeHandlePath = function (d) {
-        var e = +(d == "e"), x = e ? 1 : -1, y = brushHeight() / 3;
+        var e = +(d === 'e'), x = e ? 1 : -1, y = brushHeight() / 3;
         /*jshint -W014 */
-        return "M" + (0.5 * x) + "," + y
-            + "A6,6 0 0 " + e + " " + (6.5 * x) + "," + (y + 6)
-            + "V" + (2 * y - 6)
-            + "A6,6 0 0 " + e + " " + (0.5 * x) + "," + (2 * y)
-            + "Z"
-            + "M" + (2.5 * x) + "," + (y + 8)
-            + "V" + (2 * y - 8)
-            + "M" + (4.5 * x) + "," + (y + 8)
-            + "V" + (2 * y - 8);
+        return 'M' + (0.5 * x) + ',' + y
+            + 'A6,6 0 0 ' + e + ' ' + (6.5 * x) + ',' + (y + 6)
+            + 'V' + (2 * y - 6)
+            + 'A6,6 0 0 ' + e + ' ' + (0.5 * x) + ',' + (2 * y)
+            + 'Z'
+            + 'M' + (2.5 * x) + ',' + (y + 8)
+            + 'V' + (2 * y - 8)
+            + 'M' + (4.5 * x) + ',' + (y + 8)
+            + 'V' + (2 * y - 8);
         /*jshint +W014 */
     };
 
     function getClipPathId() {
-        return _chart.anchorName() + "-clip";
+        return _chart.anchorName() + '-clip';
     }
 
     /**
@@ -856,24 +948,26 @@ dc.coordinateGridMixin = function (_chart) {
 
     **/
     _chart.clipPadding = function (p) {
-        if (!arguments.length) return _clipPadding;
+        if (!arguments.length) {
+            return _clipPadding;
+        }
         _clipPadding = p;
         return _chart;
     };
 
     function generateClipPath() {
-        var defs = dc.utils.appendOrSelect(_parent, "defs");
+        var defs = dc.utils.appendOrSelect(_parent, 'defs');
 
-        var chartBodyClip = dc.utils.appendOrSelect(defs, "clipPath").attr("id", getClipPathId());
+        var chartBodyClip = dc.utils.appendOrSelect(defs, 'clipPath').attr('id', getClipPathId());
 
         var padding = _clipPadding * 2;
 
-        dc.utils.appendOrSelect(chartBodyClip, "rect")
-            .attr("width", _chart.xAxisLength() + padding)
-            .attr("height", _chart.yAxisHeight() + padding);
+        dc.utils.appendOrSelect(chartBodyClip, 'rect')
+            .attr('width', _chart.xAxisLength() + padding)
+            .attr('height', _chart.yAxisHeight() + padding);
     }
 
-    _chart._preprocessData = function() {};
+    _chart._preprocessData = function () {};
 
     _chart._doRender = function () {
         _chart.resetSvg();
@@ -899,24 +993,28 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function drawChart (render) {
-        if (_chart.isOrdinal())
+        if (_chart.isOrdinal()) {
             _brushOn = false;
+        }
 
         prepareXAxis(_chart.g());
         _chart._prepareYAxis(_chart.g());
 
         _chart.plotData();
 
-        if (_chart.elasticX() || _refocused || render)
+        if (_chart.elasticX() || _refocused || render) {
             _chart.renderXAxis(_chart.g());
+        }
 
-        if (_chart.elasticY() || render)
+        if (_chart.elasticY() || render) {
             _chart.renderYAxis(_chart.g());
+        }
 
-        if (render)
+        if (render) {
             _chart.renderBrush(_chart.g());
-        else
+        } else {
             _chart.redrawBrush(_chart.g());
+        }
     }
 
     function configureMouseZoom () {
@@ -932,45 +1030,13 @@ dc.coordinateGridMixin = function (_chart) {
         _hasBeenMouseZoomable = true;
         _zoom.x(_chart.x())
             .scaleExtent(_zoomScale)
-            .size([_chart.width(),_chart.height()]);
+            .size([_chart.width(), _chart.height()]);
         _chart.root().call(_zoom);
     };
 
     _chart._disableMouseZoom = function () {
         _chart.root().call(_nullZoom);
     };
-
-    function zoomHandler() {
-        _refocused = true;
-        if (_zoomOutRestrict) {
-            _chart.x().domain(constrainRange(_chart.x().domain(), _xOriginalDomain));
-            if (_rangeChart) {
-                _chart.x().domain(constrainRange(_chart.x().domain(), _rangeChart.x().domain()));
-            }
-        }
-
-        var domain = _chart.x().domain();
-        var domFilter = dc.filters.RangedFilter(domain[0], domain[1]);
-
-        _chart.replaceFilter(domFilter);
-        _chart.rescale();
-        _chart.redraw();
-
-        if (_rangeChart && !rangesEqual(_chart.filter(), _rangeChart.filter())) {
-            dc.events.trigger( function () {
-                _rangeChart.replaceFilter(domFilter);
-                _rangeChart.redraw();
-            });
-        }
-
-        _chart._invokeZoomedListener();
-
-        dc.events.trigger(function () {
-            _chart.redrawGroup();
-        }, dc.constants.EVENT_DELAY);
-
-        _refocused = !rangesEqual(domain, _xOriginalDomain);
-    }
 
     function constrainRange(range, constraint) {
         var constrainedRange = [];
@@ -997,10 +1063,11 @@ dc.coordinateGridMixin = function (_chart) {
 
     **/
     _chart.focus = function (range) {
-        if (hasRangeSelected(range))
+        if (hasRangeSelected(range)) {
             _chart.x().domain(range);
-        else
+        } else {
             _chart.x().domain(_xOriginalDomain);
+        }
 
         _zoom.x(_chart.x());
         zoomHandler();
@@ -1011,11 +1078,13 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart.focusChart = function (c) {
-        if (!arguments.length) return _focusChart;
+        if (!arguments.length) {
+            return _focusChart;
+        }
         _focusChart = c;
-        _chart.on("filtered", function (chart) {
+        _chart.on('filtered', function (chart) {
             if (!chart.filter()) {
-                dc.events.trigger(function() {
+                dc.events.trigger(function () {
                     _focusChart.x().domain(_focusChart.xOriginalDomain());
                 });
             } else if (!rangesEqual(chart.filter(), _focusChart.filter())) {
@@ -1041,7 +1110,7 @@ dc.coordinateGridMixin = function (_chart) {
             range1[1].valueOf() === range2[1].valueOf()) {
             return true;
         }
-        else return false;
+        return false;
     }
 
     /**
@@ -1055,7 +1124,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     **/
     _chart.brushOn = function (_) {
-        if (!arguments.length) return _brushOn;
+        if (!arguments.length) {
+            return _brushOn;
+        }
         _brushOn = _;
         return _chart;
     };

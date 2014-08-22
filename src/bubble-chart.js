@@ -1,6 +1,5 @@
 /**
 ## Bubble Chart
-
 Includes: [Bubble Mixin](#bubble-mixin), [Coordinate Grid Mixin](#coordinate-grid-mixin)
 
 A concrete implementation of a general purpose bubble chart that allows data visualization using the
@@ -14,7 +13,6 @@ following dimensions:
 Examples:
 * [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 * [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
-
 #### dc.bubbleChart(parent[, chartGroup])
 Create a bubble chart instance and attach it to the given parent element.
 
@@ -30,21 +28,21 @@ A newly created bubble chart instance
 
 ```js
 // create a bubble chart under #chart-container1 element using the default global chart group
-var bubbleChart1 = dc.bubbleChart("#chart-container1");
+var bubbleChart1 = dc.bubbleChart('#chart-container1');
 // create a bubble chart under #chart-container2 element using chart group A
-var bubbleChart2 = dc.bubbleChart("#chart-container2", "chartGroupA");
+var bubbleChart2 = dc.bubbleChart('#chart-container2', 'chartGroupA');
 ```
 
 **/
-dc.bubbleChart = function(parent, chartGroup) {
+dc.bubbleChart = function (parent, chartGroup) {
     var _chart = dc.bubbleMixin(dc.coordinateGridMixin({}));
 
     var _elasticRadius = false;
 
     _chart.transitionDuration(750);
 
-    var bubbleLocator = function(d) {
-        return "translate(" + (bubbleX(d)) + "," + (bubbleY(d)) + ")";
+    var bubbleLocator = function (d) {
+        return 'translate(' + (bubbleX(d)) + ',' + (bubbleY(d)) + ')';
     };
 
     /**
@@ -53,19 +51,22 @@ dc.bubbleChart = function(parent, chartGroup) {
     feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
 
     **/
-    _chart.elasticRadius = function(_) {
-        if (!arguments.length) return _elasticRadius;
+    _chart.elasticRadius = function (_) {
+        if (!arguments.length) {
+            return _elasticRadius;
+        }
         _elasticRadius = _;
         return _chart;
     };
 
-    _chart.plotData = function() {
-        if (_elasticRadius)
+    _chart.plotData = function () {
+        if (_elasticRadius) {
             _chart.r().domain([_chart.rMin(), _chart.rMax()]);
+        }
 
         _chart.r().range([_chart.MIN_RADIUS, _chart.xAxisLength() * _chart.maxBubbleRelativeSize()]);
 
-        var bubbleG = _chart.chartBodyG().selectAll("g." + _chart.BUBBLE_NODE_CLASS)
+        var bubbleG = _chart.chartBodyG().selectAll('g.' + _chart.BUBBLE_NODE_CLASS)
             .data(_chart.data(), function (d) { return d.key; });
 
         renderNodes(bubbleG);
@@ -78,23 +79,23 @@ dc.bubbleChart = function(parent, chartGroup) {
     };
 
     function renderNodes(bubbleG) {
-        var bubbleGEnter = bubbleG.enter().append("g");
+        var bubbleGEnter = bubbleG.enter().append('g');
 
         bubbleGEnter
-            .attr("class", _chart.BUBBLE_NODE_CLASS)
-            .attr("transform", bubbleLocator)
-            .append("circle").attr("class", function(d, i) {
-                return _chart.BUBBLE_CLASS + " _" + i;
+            .attr('class', _chart.BUBBLE_NODE_CLASS)
+            .attr('transform', bubbleLocator)
+            .append('circle').attr('class', function (d, i) {
+                return _chart.BUBBLE_CLASS + ' _' + i;
             })
-            .on("click", _chart.onClick)
-            .attr("fill", _chart.getColor)
-            .attr("r", 0);
+            .on('click', _chart.onClick)
+            .attr('fill', _chart.getColor)
+            .attr('r', 0);
         dc.transition(bubbleG, _chart.transitionDuration())
-            .selectAll("circle." + _chart.BUBBLE_CLASS)
-            .attr("r", function(d) {
+            .selectAll('circle.' + _chart.BUBBLE_CLASS)
+            .attr('r', function (d) {
                 return _chart.bubbleR(d);
             })
-            .attr("opacity", function(d) {
+            .attr('opacity', function (d) {
                 return (_chart.bubbleR(d) > 0) ? 1 : 0;
             });
 
@@ -105,13 +106,13 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     function updateNodes(bubbleG) {
         dc.transition(bubbleG, _chart.transitionDuration())
-            .attr("transform", bubbleLocator)
-            .selectAll("circle." + _chart.BUBBLE_CLASS)
-            .attr("fill", _chart.getColor)
-            .attr("r", function(d) {
+            .attr('transform', bubbleLocator)
+            .selectAll('circle.' + _chart.BUBBLE_CLASS)
+            .attr('fill', _chart.getColor)
+            .attr('r', function (d) {
                 return _chart.bubbleR(d);
             })
-            .attr("opacity", function(d) {
+            .attr('opacity', function (d) {
                 return (_chart.bubbleR(d) > 0) ? 1 : 0;
             });
 
@@ -125,23 +126,25 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     function bubbleX(d) {
         var x = _chart.x()(_chart.keyAccessor()(d));
-        if (isNaN(x))
+        if (isNaN(x)) {
             x = 0;
+        }
         return x;
     }
 
     function bubbleY(d) {
         var y = _chart.y()(_chart.valueAccessor()(d));
-        if (isNaN(y))
+        if (isNaN(y)) {
             y = 0;
+        }
         return y;
     }
 
-    _chart.renderBrush = function(g) {
+    _chart.renderBrush = function () {
         // override default x axis brush from parent chart
     };
 
-    _chart.redrawBrush = function(g) {
+    _chart.redrawBrush = function () {
         // override default x axis brush from parent chart
         _chart.fadeDeselectedArea();
     };

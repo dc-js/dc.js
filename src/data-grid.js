@@ -24,28 +24,28 @@ Returns:
 A newly created data grid widget instance
 
  **/
-dc.dataGrid = function(parent, chartGroup) {
-    var LABEL_CSS_CLASS = "dc-grid-label";
-    var ITEM_CSS_CLASS = "dc-grid-item";
-    var GROUP_CSS_CLASS = "dc-grid-group";
-    var GRID_CSS_CLASS = "dc-grid-top";
+dc.dataGrid = function (parent, chartGroup) {
+    var LABEL_CSS_CLASS = 'dc-grid-label';
+    var ITEM_CSS_CLASS = 'dc-grid-item';
+    var GROUP_CSS_CLASS = 'dc-grid-group';
+    var GRID_CSS_CLASS = 'dc-grid-top';
 
     var _chart = dc.baseMixin({});
 
     var _size = 999; // shouldn't be needed, but you might
-    var _html = function (d) { return "you need to provide an html() handling param:  " + JSON.stringify(d); };
-    var _sortBy = function(d) {
+    var _html = function (d) { return 'you need to provide an html() handling param:  ' + JSON.stringify(d); };
+    var _sortBy = function (d) {
         return d;
     };
     var _order = d3.ascending;
 
     var _htmlGroup = function (d) {
-        return "<div class='"+GROUP_CSS_CLASS+"'><h1 class='"+LABEL_CSS_CLASS+"'>"+
-            _chart.keyAccessor()(d)+"</h1></div>";
+        return '<div class=\'' + GROUP_CSS_CLASS + '\'><h1 class=\'' + LABEL_CSS_CLASS + '\'>' +
+            _chart.keyAccessor()(d) + '</h1></div>';
     };
 
-    _chart._doRender = function() {
-        _chart.selectAll("div."+ GRID_CSS_CLASS).remove();
+    _chart._doRender = function () {
+        _chart.selectAll('div.' + GRID_CSS_CLASS).remove();
 
         renderItems(renderGroups());
 
@@ -53,19 +53,19 @@ dc.dataGrid = function(parent, chartGroup) {
     };
 
     function renderGroups() {
-        var groups = _chart.root().selectAll("div."+ GRID_CSS_CLASS)
-                .data(nestEntries(), function(d) {
+        var groups = _chart.root().selectAll('div.' + GRID_CSS_CLASS)
+                .data(nestEntries(), function (d) {
                     return _chart.keyAccessor()(d);
                 });
 
         var itemGroup = groups
                 .enter()
-                .append("div")
-                .attr("class", GRID_CSS_CLASS);
+                .append('div')
+                .attr('class', GRID_CSS_CLASS);
 
         if (_htmlGroup) {
             itemGroup
-                .html(function(d) {
+                .html(function (d) {
                     return _htmlGroup(d);
                 });
         }
@@ -80,22 +80,22 @@ dc.dataGrid = function(parent, chartGroup) {
         return d3.nest()
             .key(_chart.group())
             .sortKeys(_order)
-            .entries(entries.sort(function(a, b){
+            .entries(entries.sort(function (a, b) {
                 return _order(_sortBy(a), _sortBy(b));
             }));
     }
 
     function renderItems(groups) {
         var items = groups.order()
-                .selectAll("div." + ITEM_CSS_CLASS)
-                .data(function(d) {
+                .selectAll('div.' + ITEM_CSS_CLASS)
+                .data(function (d) {
                     return d.values;
                 });
 
         items.enter()
-            .append("div")
-            .attr("class", ITEM_CSS_CLASS)
-            .html(function(d) {
+            .append('div')
+            .attr('class', ITEM_CSS_CLASS)
+            .html(function (d) {
                 return _html(d);
             });
 
@@ -104,7 +104,7 @@ dc.dataGrid = function(parent, chartGroup) {
         return items;
     }
 
-    _chart._doRedraw = function() {
+    _chart._doRedraw = function () {
         return _chart._doRender();
     };
 
@@ -113,39 +113,44 @@ dc.dataGrid = function(parent, chartGroup) {
      Get or set the grid size which determines the number of items displayed by the widget.
 
      **/
-    _chart.size = function(s) {
-        if (!arguments.length) return _size;
+    _chart.size = function (s) {
+        if (!arguments.length) {
+            return _size;
+        }
         _size = s;
         return _chart;
     };
 
     /**
-     #### .html( function (data) { return "<html>"; })
+     #### .html( function (data) { return '<html>'; })
      Get or set the function that formats an item. The data grid widget uses a
      function to generate dynamic html. Use your favourite templating engine or
      generate the string directly.
      ```js
-     chart.html(function (d) { return "<div class='item "+data.exampleCategory+"'>"+data.exampleString+"</div>";});
+     chart.html(function (d) { return '<div class='item '+data.exampleCategory+''>'+data.exampleString+'</div>';});
      ```
 
      **/
-    _chart.html = function(_) {
-        if (!arguments.length) return _html;
+    _chart.html = function (_) {
+        if (!arguments.length) {
+            return _html;
+        }
         _html = _;
         return _chart;
     };
 
-
     /**
-     #### .htmlGroup( function (data) { return "<html>"; })
+     #### .htmlGroup( function (data) { return '<html>'; })
      Get or set the function that formats a group label.
      ```js
-     chart.htmlGroup (function (d) { return "<h2>".d.key . "with " . d.values.length ." items</h2>"});
+     chart.htmlGroup (function (d) { return '<h2>'.d.key . 'with ' . d.values.length .' items</h2>'});
      ```
 
      **/
-    _chart.htmlGroup = function(_) {
-        if (!arguments.length) return _htmlGroup;
+    _chart.htmlGroup = function (_) {
+        if (!arguments.length) {
+            return _htmlGroup;
+        }
         _htmlGroup = _;
         return _chart;
     };
@@ -163,8 +168,10 @@ dc.dataGrid = function(parent, chartGroup) {
      ```
 
      **/
-    _chart.sortBy = function(_) {
-        if (!arguments.length) return _sortBy;
+    _chart.sortBy = function (_) {
+        if (!arguments.length) {
+            return _sortBy;
+        }
         _sortBy = _;
         return _chart;
     };
@@ -178,8 +185,10 @@ dc.dataGrid = function(parent, chartGroup) {
      ```
 
      **/
-    _chart.order = function(_) {
-        if (!arguments.length) return _order;
+    _chart.order = function (_) {
+        if (!arguments.length) {
+            return _order;
+        }
         _order = _;
         return _chart;
     };

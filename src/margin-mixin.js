@@ -1,6 +1,5 @@
 /**
 ## Margin Mixin
-
 Margin is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid
 Charts.
 
@@ -22,7 +21,9 @@ dc.marginMixin = function (_chart) {
 
     **/
     _chart.margins = function (m) {
-        if (!arguments.length) return _margin;
+        if (!arguments.length) {
+            return _margin;
+        }
         _margin = m;
         return _chart;
     };

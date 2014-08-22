@@ -20,16 +20,17 @@ the most recent event.
     })
 ```
 **/
-dc.events.trigger = function(closure, delay) {
-    if (!delay){
+dc.events.trigger = function (closure, delay) {
+    if (!delay) {
         closure();
         return;
     }
 
     dc.events.current = closure;
 
-    setTimeout(function() {
-        if (closure == dc.events.current)
+    setTimeout(function () {
+        if (closure === dc.events.current) {
             closure();
+        }
     }, delay);
 };

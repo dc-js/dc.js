@@ -1,9 +1,7 @@
 /**
 #### Version %VERSION%
-
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
-
 #### Function Chaining
 Most dc functions are designed to allow function chaining, meaning they return the current chart
 instance whenever it is appropriate. This way chart configuration can be written in the following
@@ -11,54 +9,60 @@ style:
 ```js
 chart.width(300)
     .height(300)
-    .filter("sunday")
+    .filter('sunday')
 ```
 The getter forms of functions do not participate in function chaining because they necessarily
 return values that are not the chart.  (Although some, such as `.svg` and `.xAxis`, return values
 that are chainable d3 objects.)
 
 **/
+
+/*jshint -W062*/
+/*jshint -W079*/
 var dc = {
-    version: "%VERSION%",
+    version: '%VERSION%',
     constants: {
-        CHART_CLASS: "dc-chart",
-        DEBUG_GROUP_CLASS: "debug",
-        STACK_CLASS: "stack",
-        DESELECTED_CLASS: "deselected",
-        SELECTED_CLASS: "selected",
-        NODE_INDEX_NAME: "__index__",
-        GROUP_INDEX_NAME: "__group_index__",
-        DEFAULT_CHART_GROUP: "__default_chart_group__",
+        CHART_CLASS: 'dc-chart',
+        DEBUG_GROUP_CLASS: 'debug',
+        STACK_CLASS: 'stack',
+        DESELECTED_CLASS: 'deselected',
+        SELECTED_CLASS: 'selected',
+        NODE_INDEX_NAME: '__index__',
+        GROUP_INDEX_NAME: '__group_index__',
+        DEFAULT_CHART_GROUP: '__default_chart_group__',
         EVENT_DELAY: 40,
         NEGLIGIBLE_NUMBER: 1e-10
     },
     _renderlet: null
 };
 
-dc.chartRegistry = function() {
+dc.chartRegistry = function () {
     // chartGroup:string => charts:array
     var _chartMap = {};
 
     function initializeChartGroup(group) {
-        if (!group)
+        if (!group) {
             group = dc.constants.DEFAULT_CHART_GROUP;
+        }
 
-        if (!_chartMap[group])
+        if (!_chartMap[group]) {
             _chartMap[group] = [];
+        }
 
         return group;
     }
 
     return {
-        has: function(chart) {
+        has: function (chart) {
             for (var e in _chartMap) {
-                if (_chartMap[e].indexOf(chart) >= 0)
+                if (_chartMap[e].indexOf(chart) >= 0) {
                     return true;
+                }
             }
             return false;
         },
 
-        register: function(chart, group) {
+        register: function (chart, group) {
             group = initializeChartGroup(group);
             _chartMap[group].push(chart);
         },
@@ -73,7 +77,7 @@ dc.chartRegistry = function() {
             }
         },
 
-        clear: function(group) {
+        clear: function (group) {
             if (group) {
                 delete _chartMap[group];
             } else {
@@ -81,14 +85,16 @@ dc.chartRegistry = function() {
             }
         },
 
-        list: function(group) {
+        list: function (group) {
             group = initializeChartGroup(group);
             return _chartMap[group];
         }
     };
 }();
+/*jshint +W062 */
+/*jshint +W079*/
 
-dc.registerChart = function(chart, group) {
+dc.registerChart = function (chart, group) {
     dc.chartRegistry.register(chart, group);
 };
 
@@ -96,11 +102,11 @@ dc.deregisterChart = function (chart, group) {
     dc.chartRegistry.deregister(chart, group);
 };
 
-dc.hasChart = function(chart) {
+dc.hasChart = function (chart) {
     return dc.chartRegistry.has(chart);
 };
 
-dc.deregisterAllCharts = function(group) {
+dc.deregisterAllCharts = function (group) {
     dc.chartRegistry.clear(group);
 };
 
@@ -113,7 +119,7 @@ dc.deregisterAllCharts = function(group) {
 Clear all filters on all charts within the given chart group. If the chart group is not given then
 only charts that belong to the default chart group will be reset.
 **/
-dc.filterAll = function(group) {
+dc.filterAll = function (group) {
     var charts = dc.chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         charts[i].filterAll();
@@ -125,10 +131,12 @@ dc.filterAll = function(group) {
 Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
 not given then only charts that belong to the default chart group will be reset.
 **/
-dc.refocusAll = function(group) {
+dc.refocusAll = function (group) {
     var charts = dc.chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
-        if (charts[i].focus) charts[i].focus();
+        if (charts[i].focus) {
+            charts[i].focus();
+        }
     }
 };
 
@@ -137,14 +145,15 @@ dc.refocusAll = function(group) {
 Re-render all charts belong to the given chart group. If the chart group is not given then only
 charts that belong to the default chart group will be re-rendered.
 **/
-dc.renderAll = function(group) {
+dc.renderAll = function (group) {
     var charts = dc.chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         charts[i].render();
     }
 
-    if(dc._renderlet !== null)
+    if (dc._renderlet !== null) {
         dc._renderlet(group);
+    }
 };
 
 /**
@@ -154,14 +163,15 @@ that belong to the default chart group will be re-drawn. Redraw is different fro
 when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
 from scratch.
 **/
-dc.redrawAll = function(group) {
+dc.redrawAll = function (group) {
     var charts = dc.chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         charts[i].redraw();
     }
 
-    if(dc._renderlet !== null)
+    if (dc._renderlet !== null) {
         dc._renderlet(group);
+    }
 };
 
 /**
@@ -171,9 +181,10 @@ immediately.  Default: false
 **/
 dc.disableTransitions = false;
 
-dc.transition = function(selections, duration, callback) {
-    if (duration <= 0 || duration === undefined || dc.disableTransitions)
+dc.transition = function (selections, duration, callback) {
+    if (duration <= 0 || duration === undefined || dc.disableTransitions) {
         return selections;
+    }
 
     var s = selections
         .transition()
@@ -200,7 +211,7 @@ chart.xUnits(dc.units.integers) // already the default
 ```
 
 **/
-dc.units.integers = function(s, e) {
+dc.units.integers = function (s, e) {
     return Math.abs(e - s);
 };
 
@@ -217,7 +228,7 @@ chart.xUnits(dc.units.ordinal)
 ```
 
 **/
-dc.units.ordinal = function(s, e, domain){
+dc.units.ordinal = function (s, e, domain) {
     return domain;
 };
 
@@ -239,41 +250,44 @@ thousandths(0.5, 1.0) // returns 500
 ```
 **/
 dc.units.fp = {};
-dc.units.fp.precision = function(precision){
-    var _f = function(s, e){
-        var d = Math.abs((e-s)/_f.resolution);
-        if(dc.utils.isNegligible(d - Math.floor(d)))
+dc.units.fp.precision = function (precision) {
+    var _f = function (s, e) {
+        var d = Math.abs((e - s) / _f.resolution);
+        if (dc.utils.isNegligible(d - Math.floor(d))) {
             return Math.floor(d);
-        else
+        } else {
             return Math.ceil(d);
+        }
     };
     _f.resolution = precision;
     return _f;
 };
 
 dc.round = {};
-dc.round.floor = function(n) {
+dc.round.floor = function (n) {
     return Math.floor(n);
 };
-dc.round.ceil = function(n) {
+dc.round.ceil = function (n) {
     return Math.ceil(n);
 };
-dc.round.round = function(n) {
+dc.round.round = function (n) {
     return Math.round(n);
 };
 
-dc.override = function(obj, functionName, newFunction) {
+dc.override = function (obj, functionName, newFunction) {
     var existingFunction = obj[functionName];
-    obj["_" + functionName] = existingFunction;
+    obj['_' + functionName] = existingFunction;
     obj[functionName] = newFunction;
 };
 
-dc.renderlet = function(_){
-    if(!arguments.length) return dc._renderlet;
+dc.renderlet = function (_) {
+    if (!arguments.length) {
+        return dc._renderlet;
+    }
     dc._renderlet = _;
     return dc;
 };
 
 dc.instanceOfChart = function (o) {
-    return o instanceof Object && o.__dc_flag__ && true;
+    return o instanceof Object && o.__dcFlag__ && true;
 };

@@ -1,12 +1,10 @@
 /**
 ## Composite Chart
-
 Includes: [Coordinate Grid Mixin](#coordinate-grid-mixin)
 
 Composite charts are a special kind of chart that render multiple charts on the same Coordinate
 Grid. You can overlay (compose) different bar/line/area charts in a single composite chart to
 achieve some quite flexible charting effects.
-
 #### dc.compositeChart(parent[, chartGroup])
 Create a composite chart instance and attach it to the given parent element.
 
@@ -22,15 +20,15 @@ A newly created composite chart instance
 
 ```js
 // create a composite chart under #chart-container1 element using the default global chart group
-var compositeChart1 = dc.compositeChart("#chart-container1");
+var compositeChart1 = dc.compositeChart('#chart-container1');
 // create a composite chart under #chart-container2 element using chart group A
-var compositeChart2 = dc.compositeChart("#chart-container2", "chartGroupA");
+var compositeChart2 = dc.compositeChart('#chart-container2', 'chartGroupA');
 ```
 
 **/
 dc.compositeChart = function (parent, chartGroup) {
 
-    var SUB_CHART_CLASS = "sub";
+    var SUB_CHART_CLASS = 'sub';
     var DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING = 12;
 
     var _chart = dc.coordinateGridMixin({});
@@ -50,7 +48,7 @@ dc.compositeChart = function (parent, chartGroup) {
     _chart._mandatoryAttributes([]);
     _chart.transitionDuration(500);
 
-    dc.override(_chart, "_generateG", function () {
+    dc.override(_chart, '_generateG', function () {
         var g = this.__generateG();
 
         for (var i = 0; i < _children.length; ++i) {
@@ -58,8 +56,12 @@ dc.compositeChart = function (parent, chartGroup) {
 
             generateChildG(child, i);
 
-            if (!child.dimension()) child.dimension(_chart.dimension());
-            if (!child.group()) child.group(_chart.group());
+            if (!child.dimension()) {
+                child.dimension(_chart.dimension());
+            }
+            if (!child.group()) {
+                child.group(_chart.group());
+            }
 
             child.chartGroup(_chart.chartGroup());
             child.svg(_chart.svg());
@@ -77,7 +79,9 @@ dc.compositeChart = function (parent, chartGroup) {
 
         for (var i = 0; i < _children.length; ++i) {
             _children[i].filter(null);
-            if (!brushIsEmpty) _children[i].filter(extent);
+            if (!brushIsEmpty) {
+                _children[i].filter(extent);
+            }
         }
     };
 
@@ -95,13 +99,13 @@ dc.compositeChart = function (parent, chartGroup) {
 
     _chart.renderYAxis = function () {
         if (leftYAxisChildren().length !== 0) {
-            _chart.renderYAxisAt("y", _chart.yAxis(), _chart.margins().left);
-            _chart.renderYAxisLabel("y", _chart.yAxisLabel(), -90);
+            _chart.renderYAxisAt('y', _chart.yAxis(), _chart.margins().left);
+            _chart.renderYAxisLabel('y', _chart.yAxisLabel(), -90);
         }
 
         if (rightYAxisChildren().length !== 0) {
-            _chart.renderYAxisAt("yr", _chart.rightYAxis(), _chart.width() - _chart.margins().right);
-            _chart.renderYAxisLabel("yr", _chart.rightYAxisLabel(), 90, _chart.width() - _rightYAxisLabelPadding);
+            _chart.renderYAxisAt('yr', _chart.rightYAxis(), _chart.width() - _chart.margins().right);
+            _chart.renderYAxisLabel('yr', _chart.rightYAxisLabel(), 90, _chart.width() - _rightYAxisLabelPadding);
         }
     };
 
@@ -114,7 +118,7 @@ dc.compositeChart = function (parent, chartGroup) {
         _chart.rightY().range([_chart.yAxisHeight(), 0]);
         _chart.rightYAxis(_chart.rightYAxis().scale(_chart.rightY()));
 
-        _chart.rightYAxis().orient("right");
+        _chart.rightYAxis().orient('right');
     }
 
     function prepareLeftYAxis() {
@@ -126,12 +130,12 @@ dc.compositeChart = function (parent, chartGroup) {
         _chart.y().range([_chart.yAxisHeight(), 0]);
         _chart.yAxis(_chart.yAxis().scale(_chart.y()));
 
-        _chart.yAxis().orient("left");
+        _chart.yAxis().orient('left');
     }
 
     function generateChildG(child, i) {
         child._generateG(_chart.g());
-        child.g().attr("class", SUB_CHART_CLASS + " _" + i);
+        child.g().attr('class', SUB_CHART_CLASS + ' _' + i);
     }
 
     _chart.plotData = function () {
@@ -171,8 +175,10 @@ dc.compositeChart = function (parent, chartGroup) {
     default behavior. This option is only respected when subcharts with both left and right y-axes
     are present.
     **/
-    _chart.useRightAxisGridLines = function(_) {
-        if (!arguments) return _rightAxisGridLines;
+    _chart.useRightAxisGridLines = function (_) {
+        if (!arguments) {
+            return _rightAxisGridLines;
+        }
 
         _rightAxisGridLines = _;
         return _chart;
@@ -184,9 +190,11 @@ dc.compositeChart = function (parent, chartGroup) {
     on each child chart.
     **/
     _chart.childOptions = function (_) {
-        if(!arguments.length) return _childOptions;
+        if (!arguments.length) {
+            return _childOptions;
+        }
         _childOptions = _;
-        _children.forEach(function(child){
+        _children.forEach(function (child) {
             child.options(_childOptions);
         });
         return _chart;
@@ -205,7 +213,9 @@ dc.compositeChart = function (parent, chartGroup) {
     Set or get the right y axis label.
     **/
     _chart.rightYAxisLabel = function (_, padding) {
-        if (!arguments.length) return _rightYAxisLabel;
+        if (!arguments.length) {
+            return _rightYAxisLabel;
+        }
         _rightYAxisLabel = _;
         _chart.margins().right -= _rightYAxisLabelPadding;
         _rightYAxisLabelPadding = (padding === undefined) ? DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING : padding;
@@ -223,14 +233,14 @@ dc.compositeChart = function (parent, chartGroup) {
         // when creating sub-chart you need to pass in the parent chart
         dc.lineChart(moveChart)
             .group(indexAvgByMonthGroup) // if group is missing then parent's group will be used
-            .valueAccessor(function(d){return d.value.avg;})
+            .valueAccessor(function (d){return d.value.avg;})
             // most of the normal functions will continue to work in a composed chart
             .renderArea(true)
-            .stack(monthlyMoveGroup, function(d){return d.value;})
-            .title(function(d){
+            .stack(monthlyMoveGroup, function (d){return d.value;})
+            .title(function (d){
                 var value = d.value.avg?d.value.avg:d.value;
                 if(isNaN(value)) value = 0;
-                return dateFormat(d.key) + "\n" + numberFormat(value);
+                return dateFormat(d.key) + '\n' + numberFormat(value);
             }),
         dc.barChart(moveChart)
             .group(volumeByMonthGroup)
@@ -241,12 +251,14 @@ dc.compositeChart = function (parent, chartGroup) {
     **/
     _chart.compose = function (charts) {
         _children = charts;
-        _children.forEach(function(child) {
+        _children.forEach(function (child) {
             child.height(_chart.height());
             child.width(_chart.width());
             child.margins(_chart.margins());
 
-            if (_shareTitle) child.title(_chart.title());
+            if (_shareTitle) {
+                child.title(_chart.title());
+            }
 
             child.options(_childOptions);
         });
@@ -270,7 +282,9 @@ dc.compositeChart = function (parent, chartGroup) {
     specific to its order in the composition.
     **/
     _chart.shareColors = function (_) {
-        if (!arguments.length) return _shareColors;
+        if (!arguments.length) {
+            return _shareColors;
+        }
         _shareColors = _;
         return _chart;
     };
@@ -281,7 +295,9 @@ dc.compositeChart = function (parent, chartGroup) {
     shared with composed children. Default value is true.
     **/
     _chart.shareTitle = function (_) {
-        if (!arguments.length) return _shareTitle;
+        if (!arguments.length) {
+            return _shareTitle;
+        }
         _shareTitle = _;
         return _chart;
     };
@@ -293,7 +309,9 @@ dc.compositeChart = function (parent, chartGroup) {
 
     **/
     _chart.rightY = function (_) {
-        if (!arguments.length) return _rightY;
+        if (!arguments.length) {
+            return _rightY;
+        }
         _rightY = _;
         return _chart;
     };
@@ -311,7 +329,7 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     function getYAxisMin(charts) {
-        return charts.map(function(c) {
+        return charts.map(function (c) {
             return c.yAxisMin();
         });
     }
@@ -326,7 +344,7 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     function getYAxisMax(charts) {
-        return charts.map(function(c) {
+        return charts.map(function (c) {
             return c.yAxisMax();
         });
     }
@@ -341,31 +359,33 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     function getAllXAxisMinFromChildCharts() {
-        return _children.map(function(c) {
+        return _children.map(function (c) {
             return c.xAxisMin();
         });
     }
 
-    dc.override(_chart, 'xAxisMin',function () {
+    dc.override(_chart, 'xAxisMin', function () {
         return dc.utils.subtract(d3.min(getAllXAxisMinFromChildCharts()), _chart.xAxisPadding());
     });
 
     function getAllXAxisMaxFromChildCharts() {
-        return _children.map(function(c) {
+        return _children.map(function (c) {
             return c.xAxisMax();
         });
     }
 
-    dc.override(_chart, 'xAxisMax',function () {
+    dc.override(_chart, 'xAxisMax', function () {
         return dc.utils.add(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding());
     });
 
     _chart.legendables = function () {
-        return _children.reduce(function(items,child) {
-            if (_shareColors) child.colors(_chart.colors());
+        return _children.reduce(function (items, child) {
+            if (_shareColors) {
+                child.colors(_chart.colors());
+            }
             items.push.apply(items, child.legendables());
             return items;
-        },[]);
+        }, []);
     };
 
     _chart.legendHighlight = function (d) {
@@ -382,8 +402,8 @@ dc.compositeChart = function (parent, chartGroup) {
         }
     };
 
-    _chart.legendToggle = function (d) {
-        console.log("composite should not be getting legendToggle itself");
+    _chart.legendToggle = function () {
+        console.log('composite should not be getting legendToggle itself');
     };
 
     /**
@@ -393,16 +413,18 @@ dc.compositeChart = function (parent, chartGroup) {
     object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis) therefore it supports any valid
     d3 axis manipulation. **Caution**: The y axis is usually generated internally by dc;
     resetting it may cause unexpected results.
-    ```js
+    ```jså
     // customize y axis tick format
-    chart.rightYAxis().tickFormat(function(v) {return v + "%";});
+    chart.rightYAxis().tickFormat(function (v) {return v + '%';});
     // customize y axis tick values
     chart.rightYAxis().tickValues([0, 100, 200, 300]);
     ```
 
     **/
     _chart.rightYAxis = function (rightYAxis) {
-        if (!arguments.length) return _rightYAxis;
+        if (!arguments.length) {
+            return _rightYAxis;
+        }
         _rightYAxis = rightYAxis;
         return _chart;
     };

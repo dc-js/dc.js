@@ -1,19 +1,17 @@
 /**
 ## Data Count Widget
-
 Includes: [Base Mixin](#base-mixin)
 
 The data count widget is a simple widget designed to display the number of records selected by the
 current filters out of the total number of records in the data set. Once created the data count widget
 will automatically update the text content of the following elements under the parent element.
 
-* ".total-count" - total number of records
-* ".filter-count" - number of records matched by the current filters
+* '.total-count' - total number of records
+* '.filter-count' - number of records matched by the current filters
 
 Examples:
 
 * [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
-
 #### dc.dataCount(parent[, chartGroup])
 Create a data count widget and attach it to the given parent element.
 
@@ -27,10 +25,8 @@ Parameters:
 
 Returns:
 A newly created data count widget instance
-
 #### .dimension(allData) - **mandatory**
 For the data count widget the only valid dimension is the entire data set.
-
 #### .group(groupAll) - **mandatory**
 For the data count widget the only valid group is the group returned by `dimension.groupAll()`.
 
@@ -38,17 +34,16 @@ For the data count widget the only valid group is the group returned by `dimensi
 var ndx = crossfilter(data);
 var all = ndx.groupAll();
 
-dc.dataCount(".dc-data-count")
+dc.dataCount('.dc-data-count')
     .dimension(ndx)
     .group(all);
 ```
 
 **/
-dc.dataCount = function(parent, chartGroup) {
-    var SPAN_CLASS = 'data-count-display';
-    var _formatNumber = d3.format(",d");
+dc.dataCount = function (parent, chartGroup) {
+    var _formatNumber = d3.format(',d');
     var _chart = dc.baseMixin({});
-    var _html = {some:"",all:""};
+    var _html = {some:'', all:''};
 
     /**
      #### html([object])
@@ -60,39 +55,42 @@ dc.dataCount = function(parent, chartGroup) {
 
      ```js
      counter.html({
-         some: "%filter-count out of %total-count records selected",
-         all: "All records selected. Click on charts to apply filters"
+         some: '%filter-count out of %total-count records selected',
+         all: 'All records selected. Click on charts to apply filters'
      })
      ```
      **/
-    _chart.html = function(s) {
-        if (!arguments.length) return _html;
-        if(s.all)
+    _chart.html = function (s) {
+        if (!arguments.length) {
+            return _html;
+        }
+        if (s.all) {
             _html.all = s.all;
-        if(s.some)
+        }
+        if (s.some) {
             _html.some = s.some;
+        }
         return _chart;
     };
 
-    _chart._doRender = function() {
+    _chart._doRender = function () {
         var tot = _chart.dimension().size(),
             val = _chart.group().value();
         var all = _formatNumber(tot);
         var selected = _formatNumber(val);
 
-        if((tot===val)&&(_html.all!=="")) {
-            _chart.root().html(_html.all.replace('%total-count',all).replace('%filter-count',selected));
-        }
-        else if(_html.some!=="") {
-            _chart.root().html(_html.some.replace('%total-count',all).replace('%filter-count',selected));
+        if ((tot === val) && (_html.all !== '')) {
+            _chart.root().html(_html.all.replace('%total-count', all).replace('%filter-count', selected));
+        } else if (_html.some !== '') {
+            _chart.root().html(_html.some.replace('%total-count', all).replace('%filter-count', selected));
         } else {
-            _chart.selectAll(".total-count").text(all);
-            _chart.selectAll(".filter-count").text(selected);
+            _chart.selectAll('.total-count').text(all);
+            _chart.selectAll('.filter-count').text(selected);
         }
         return _chart;
     };
 
-    _chart._doRedraw = function(){
+    _chart._doRedraw = function () {
         return _chart._doRender();
     };
 
