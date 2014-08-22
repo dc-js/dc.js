@@ -2,5 +2,4 @@
 
 d3 = require("d3");
 crossfilter = require("crossfilter");
-require("./dc");
-module.exports = dc;
+module.exports = require("./dc");

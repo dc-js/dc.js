@@ -1,6 +1,6 @@
 {
   "name": "dcjs",
-  "version": "2.0.0-dev",
+  "version": "2.0.0-alpha.2",
   "main": ["dc.js", "dc.css"],
   "ignore": [
     ".gitignore",

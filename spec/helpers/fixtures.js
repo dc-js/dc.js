@@ -60,6 +60,19 @@ function loadColorFixture() {
         "]");
 }
 
+function loadColorFixture2() {
+    return JSON.parse("[" +
+        "{\"colData\":\"3\", \"rowData\": \"3\", \"colorData\": \"5\"}," +
+        "{\"colData\":\"3\", \"rowData\": \"4\", \"colorData\": \"5\"}," +
+        "{\"colData\":\"4\", \"rowData\": \"5\", \"colorData\": \"6\"}," +
+        "{\"colData\":\"4\", \"rowData\": \"6\", \"colorData\": \"6\"}," +
+        "{\"colData\":\"5\", \"rowData\": \"3\", \"colorData\": \"7\"}," +
+        "{\"colData\":\"5\", \"rowData\": \"4\", \"colorData\": \"7\"}," +
+        "{\"colData\":\"6\", \"rowData\": \"5\", \"colorData\": \"8\"}," +
+        "{\"colData\":\"6\", \"rowData\": \"6\", \"colorData\": \"8\"}" +
+        "]");
+}
+
 function dateCleaner(e) {
     e.dd = d3.time.format.iso.parse(e.date);
 }

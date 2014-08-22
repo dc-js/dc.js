@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-dev
+ *  dc 2.0.0-alpha.2
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012 Nick Zhu and other contributors
  *
@@ -20,7 +20,7 @@
 'use strict';
 
 /**
-#### Version 2.0.0-dev
+#### Version 2.0.0-alpha.2
 
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
@@ -40,7 +40,7 @@ that are chainable d3 objects.)
 
 **/
 var dc = {
-    version: "2.0.0-dev",
+    version: "2.0.0-alpha.2",
     constants: {
         CHART_CLASS: "dc-chart",
         DEBUG_GROUP_CLASS: "debug",
@@ -7222,28 +7222,33 @@ dc.heatMap = function (parent, chartGroup) {
         var gCols = _chartBody.selectAll("g.cols");
         if (gCols.empty())
             gCols = _chartBody.append("g").attr("class", "cols axis");
-        gCols.selectAll('text').data(cols.domain())
-            .enter().append("text")
+        var gColsText = gCols.selectAll('text').data(cols.domain());
+        gColsText.enter().append("text")
               .attr("x", function(d) { return cols(d) + boxWidth/2; })
               .style("text-anchor", "middle")
               .attr("y", _chart.effectiveHeight())
               .attr("dy", 12)
               .on("click", _chart.xAxisOnClick())
               .text(function(d) { return d; });
+        dc.transition(gColsText, _chart.transitionDuration())
+               .text(function(d) { return d; })
+               .attr("x", function(d) { return cols(d) + boxWidth/2; });
+        gColsText.exit().remove();
         var gRows = _chartBody.selectAll("g.rows");
         if (gRows.empty())
             gRows = _chartBody.append("g").attr("class", "rows axis");
-        gRows.selectAll('text').data(rows.domain())
-            .enter().append("text")
+        var gRowsText = gRows.selectAll('text').data(rows.domain());
+        gRowsText.enter().append("text")
               .attr("dy", 6)
               .style("text-anchor", "end")
               .attr("x", 0)
               .attr("dx", -2)
               .on("click", _chart.yAxisOnClick())
               .text(function(d) { return d; });
-        dc.transition(gRows.selectAll('text'), _chart.transitionDuration())
+        dc.transition(gRowsText, _chart.transitionDuration())
               .text(function(d) { return d; })
               .attr("y", function(d) { return rows(d) + boxHeight/2; });
+        gRowsText.exit().remove();
 
         if (_chart.hasFilter()) {
             _chart.selectAll("g.box-group").each(function (d) {
