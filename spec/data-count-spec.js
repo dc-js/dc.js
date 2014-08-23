@@ -2,23 +2,23 @@ describe('dc.dataCount', function() {
     var data, countryDimension, groupAll;
     var chart;
     beforeEach(function() {
-            data = crossfilter(loadDateFixture());
-            groupAll = data.groupAll();
-            countryDimension = data.dimension(function(d) {
-                return d.countrycode;
-            });
-            countryDimension.filter("CA");
+        data = crossfilter(loadDateFixture());
+        groupAll = data.groupAll();
+        countryDimension = data.dimension(function(d) {
+            return d.countrycode;
         });
+        countryDimension.filter("CA");
+    });
     function buildChart(id){
         var chart = dc.dataCount("#" + id)
-                .transitionDuration(0)
-                .dimension(data)
-                .group(groupAll);
+            .transitionDuration(0)
+            .dimension(data)
+            .group(groupAll);
         chart.render();
         d3.timer.flush();
         return chart;
     }
-    describe('creation', function() { 
+    describe('creation', function() {
         beforeEach(function() {
             var id = "data-count";
             var div = appendChartID(id);

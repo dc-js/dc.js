@@ -93,8 +93,15 @@ d3.csv('ndx.csv', function (data) {
         },
         /* initialize p */
         function () {
-            return {count: 0, absGain: 0, fluctuation: 0, fluctuationPercentage: 0,
-                sumIndex: 0, avgIndex: 0, percentageGain: 0};
+            return {
+                count: 0,
+                absGain: 0,
+                fluctuation: 0,
+                fluctuationPercentage: 0,
+                sumIndex: 0,
+                avgIndex: 0,
+                percentageGain: 0
+            };
         }
     );
 
@@ -238,11 +245,12 @@ d3.csv('ndx.csv', function (data) {
         })
         .renderTitle(true) // (optional) whether chart should render titles, :default = false
         .title(function (p) {
-            return [p.key,
-                   'Index Gain: ' + numberFormat(p.value.absGain),
-                   'Index Gain in Percentage: ' + numberFormat(p.value.percentageGain) + '%',
-                   'Fluctuation / Index Ratio: ' + numberFormat(p.value.fluctuationPercentage) + '%']
-                   .join('\n');
+            return [
+                p.key,
+                'Index Gain: ' + numberFormat(p.value.absGain),
+                'Index Gain in Percentage: ' + numberFormat(p.value.percentageGain) + '%',
+                'Fluctuation / Index Ratio: ' + numberFormat(p.value.fluctuationPercentage) + '%'
+            ].join('\n');
         })
         //#### Customize Axis
         //Set a custom tick format. Note `.yAxis()` returns an axis object, so any additional method chaining applies

@@ -37,6 +37,12 @@ module.exports = function (grunt) {
             }
         },
         jscs: {
+            old: {
+                src: ['spec/**/*.js'],
+                options: {
+                    validateIndentation: 4
+                }
+            },
             source: {
                 src: ['src/**/*.js', '!src/{banner,footer}.js', 'Gruntfile.js', 'web/stock.js'],
                 options: {
@@ -45,12 +51,6 @@ module.exports = function (grunt) {
             }
         },
         jshint: {
-            old: {
-                src: ['spec/**/*.js'],
-                options: {
-                    indent: 4
-                }
-            },
             source: {
                 src: ['src/**/*.js', 'Gruntfile.js', 'web/stock.js'],
                 options: {
@@ -134,9 +134,21 @@ module.exports = function (grunt) {
                     build: process.env.TRAVIS_JOB_ID,
                     concurrency: 3,
                     browsers: [
-                        { browserName: 'firefox', version: '25', platform: 'linux' },
-                        { browserName: 'safari', version: '7', platform: 'OS X 10.9' },
-                        { browserName: 'internet explorer', version: '10', platform: 'WIN8' }
+                        {
+                            browserName: 'firefox',
+                            version: '25',
+                            platform: 'linux'
+                        },
+                        {
+                            browserName: 'safari',
+                            version: '7',
+                            platform: 'OS X 10.9'
+                        },
+                        {
+                            browserName: 'internet explorer',
+                            version: '10',
+                            platform: 'WIN8'
+                        }
                     ],
                     testname: 'dc.js'
                 }
@@ -177,15 +189,18 @@ module.exports = function (grunt) {
         copy: {
             'dc-to-gh': {
                 files: [
-                    { expand: true, flatten: true, src: 'dc.css', dest: 'web/css/'},
-                    { expand: true,
-                      flatten: true,
-                      src: [output.js,
+                    {expand: true, flatten: true, src: 'dc.css', dest: 'web/css/'},
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: [
+                            output.js,
                             output.js + '.map',
                             'node_modules/d3/d3.js',
                             'node_modules/crossfilter/crossfilter.js',
-                            'test/env-data.js'],
-                      dest: 'web/js/'
+                            'test/env-data.js'
+                        ],
+                        dest: 'web/js/'
                     }
                 ]
             }
@@ -200,18 +215,25 @@ module.exports = function (grunt) {
         shell: {
             merge: {
                 command: function (pr) {
-                    return ['git fetch origin',
-                            'git checkout master',
-                            'git reset --hard origin/master',
-                            'git fetch origin',
-                            'git merge --no-ff origin/pr/' + pr + ' -m \'Merge pull request #' + pr + '\''
-                           ].join('&&');
+                    return [
+                        'git fetch origin',
+                        'git checkout master',
+                        'git reset --hard origin/master',
+                        'git fetch origin',
+                        'git merge --no-ff origin/pr/' + pr + ' -m \'Merge pull request #' + pr + '\''
+                    ].join('&&');
                 },
-                options: { stdout: true, failOnError: true }
+                options: {
+                    stdout: true,
+                    failOnError: true
+                }
             },
             amend: {
                 command: 'git commit -a --amend --no-edit',
-                options: { stdout: true, failOnError: true }
+                options: {
+                    stdout: true,
+                    failOnError: true
+                }
             },
             hooks: {
                 command: 'cp -n scripts/pre-commit.sh .git/hooks/pre-commit' +
@@ -268,14 +290,16 @@ module.exports = function (grunt) {
     });
     grunt.registerTask('test-stock-example', 'Test a new rendering of the stock example web page against a ' +
         'baseline rendering', function (option) {
-        require('./regression/stock-regression-test.js').testStockExample(this.async(), option === 'diff');
-    });
+            require('./regression/stock-regression-test.js').testStockExample(this.async(), option === 'diff');
+        });
     grunt.registerTask('update-stock-example', 'Update the baseline stock example web page.', function () {
         require('./regression/stock-regression-test.js').updateStockExample(this.async());
     });
     grunt.registerTask('watch:jasmine', function () {
         grunt.config('watch', {
-            options: { interrupt: true },
+            options: {
+                interrupt: true
+            },
             runner: grunt.config('watch').jasmineRunner,
             scripts: grunt.config('watch').scripts
         });

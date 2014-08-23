@@ -410,7 +410,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     function labelPosition(d, arc) {
         var centroid;
-        if ( _externalLabelRadius ) {
+        if (_externalLabelRadius) {
             centroid = d3.svg.arc()
                 .outerRadius(_radius + _externalLabelRadius)
                 .innerRadius(_radius + _externalLabelRadius)
@@ -427,7 +427,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     _chart.legendables = function () {
         return _chart.data().map(function (d, i) {
-            var legendable = { name: d.key, data: d.value, others: d.others, chart:_chart };
+            var legendable = {name: d.key, data: d.value, others: d.others, chart:_chart};
             legendable.color = _chart.getColor(d, i);
             return legendable;
         });
@@ -442,7 +442,7 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     _chart.legendToggle = function (d) {
-        _chart.onClick({ key: d.name, others: d.others });
+        _chart.onClick({key: d.name, others: d.others});
     };
 
     function highlightSliceFromLegendable(legendable, highlighted) {

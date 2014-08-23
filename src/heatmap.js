@@ -53,19 +53,19 @@ dc.heatMap = function (parent, chartGroup) {
     };
 
     function filterAxis(axis, value) {
-        var cellsOnAxis = _chart.selectAll('.box-group').filter( function (d) {
+        var cellsOnAxis = _chart.selectAll('.box-group').filter(function (d) {
             return d.key[axis] === value;
         });
-        var unfilteredCellsOnAxis = cellsOnAxis.filter( function (d) {
+        var unfilteredCellsOnAxis = cellsOnAxis.filter(function (d) {
             return !_chart.hasFilter(d.key);
         });
         dc.events.trigger(function () {
             if (unfilteredCellsOnAxis.empty()) {
-                cellsOnAxis.each( function (d) {
+                cellsOnAxis.each(function (d) {
                     _chart.filter(d.key);
                 });
             } else {
-                unfilteredCellsOnAxis.each( function (d) {
+                unfilteredCellsOnAxis.each(function (d) {
                     _chart.filter(d.key);
                 });
             }

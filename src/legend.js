@@ -83,8 +83,9 @@ dc.legend = function () {
         itemEnter.append('text')
                 .text(dc.pluck('name'))
                 .attr('x', _itemHeight + LABEL_GAP)
-                .attr('y', function () {return _itemHeight / 2 + (this.clientHeight ?
-                    this.clientHeight : 13) / 2 - 2;});
+                .attr('y', function () {
+                    return _itemHeight / 2 + (this.clientHeight ? this.clientHeight : 13) / 2 - 2;
+                });
 
         var _cumulativeLegendTextWidth = 0;
         var row = 0;

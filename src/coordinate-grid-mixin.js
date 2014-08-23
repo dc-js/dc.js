@@ -36,7 +36,7 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.redraw();
 
         if (_rangeChart && !rangesEqual(_chart.filter(), _rangeChart.filter())) {
-            dc.events.trigger( function () {
+            dc.events.trigger(function () {
                 _rangeChart.replaceFilter(domFilter);
                 _rangeChart.redraw();
             });

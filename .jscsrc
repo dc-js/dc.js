@@ -15,6 +15,7 @@
         "allowComments": true,
         "allowRegex": true
     },
+    "validateIndentation": 4,
     "validateQuoteMarks": "'",
     "disallowMultipleLineStrings": true,
     "disallowMixedSpacesAndTabs": true,
@@ -73,10 +74,9 @@
        "beforeOpeningRoundBrace": true,
        "beforeOpeningCurlyBrace": true
     },
-    "requireSpacesInFunctionExpression": {
-       "beforeOpeningRoundBrace": true,
-       "beforeOpeningCurlyBrace": true
-    },
+    "disallowSpacesInsideObjectBrackets": "all",
+    "disallowSpacesInsideArrayBrackets": "all",
+    "disallowSpacesInsideParentheses": true,
     "validateJSDoc": {
         "checkParamNames": true,
         "requireParamTypes": true

@@ -276,7 +276,8 @@ dc.lineChart = function (parent, chartGroup) {
                     })
                     .append('title').text(dc.pluck('data', _chart.title(d.name)));
 
-                dots.attr('cx', function (d) {
+                dots
+                    .attr('cx', function (d) {
                         return dc.utils.safeNumber(_chart.x()(d.x));
                     })
                     .attr('cy', function (d) {
@@ -387,7 +388,7 @@ dc.lineChart = function (parent, chartGroup) {
             var item = d3.select(this);
             var match = (item.attr('stroke') === color &&
                 item.attr('stroke-dasharray') === ((dashstyle instanceof Array) ?
-                    dashstyle.join(',') : null) )|| item.attr('fill') === color;
+                    dashstyle.join(',') : null)) || item.attr('fill') === color;
             return inv ? !match : match;
         };
     }

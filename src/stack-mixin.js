@@ -9,11 +9,13 @@ dc.stackMixin = function (_chart) {
         var valAccessor = layer.accessor || _chart.valueAccessor();
         layer.name = String(layer.name || layerIdx);
         layer.values = layer.group.all().map(function (d, i) {
-            return {x: _chart.keyAccessor()(d, i),
-                    y: layer.hidden ? null : valAccessor(d, i),
-                    data: d,
-                    layer: layer.name,
-                    hidden: layer.hidden};
+            return {
+                x: _chart.keyAccessor()(d, i),
+                y: layer.hidden ? null : valAccessor(d, i),
+                data: d,
+                layer: layer.name,
+                hidden: layer.hidden
+            };
         });
 
         layer.values = layer.values.filter(domainFilter());

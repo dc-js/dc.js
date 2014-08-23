@@ -65,13 +65,12 @@ dc.filters.RangedTwoDimensionalFilter = function (array) {
     var fromBottomLeft;
 
     if (filter[0] instanceof Array) {
-        fromBottomLeft = [[Math.min(array[0][0], array[1][0]),
-                           Math.min(array[0][1], array[1][1])],
-                          [Math.max(array[0][0], array[1][0]),
-                           Math.max(array[0][1], array[1][1])]];
+        fromBottomLeft = [
+            [Math.min(array[0][0], array[1][0]), Math.min(array[0][1], array[1][1])],
+            [Math.max(array[0][0], array[1][0]), Math.max(array[0][1], array[1][1])]
+        ];
     } else {
-        fromBottomLeft = [[array[0], -Infinity],
-                          [array[1], Infinity]];
+        fromBottomLeft = [[array[0], -Infinity], [array[1], Infinity]];
     }
 
     filter.isFiltered = function (value) {
