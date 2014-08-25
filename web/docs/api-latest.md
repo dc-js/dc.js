@@ -1870,3 +1870,17 @@ integer formatting.
 // format ticks to 2 decimal places
 chart.tickFormat(d3.format(".2f"));
 ```
+
+#### .orientation(string)
+Set the orientation of the bar 'horizontal' or 'vertical'.
+
+#### .totalCapacity(number)
+Explicitly set total capacity.
+
+#### .filledValue(number)
+Explicitly set filled value. 
+The filled value will be used to get the percentage the bar is filled.
+
+#### .initializeRectangles(HTML node, number, number, string)
+Add the background and foreground rectangles. Set the foreground
+rectangle to the calculated fill percantage.
