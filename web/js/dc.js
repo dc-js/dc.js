@@ -7851,6 +7851,37 @@ dc.boxPlot = function (parent, chartGroup) {
     return _chart.anchor(parent, chartGroup);
 };
 
+/**
+## Bar Gauge
+
+Includes: [Base Mixin](#base-mixin)
+
+The Bar Gauge is a way to see data displacement. Typically there is a number
+Total and 'filled up' number. The bar will show how close the fill number is to the total. 
+
+#### dc.barGauge(parent[, chartGroup])
+Parameters:
+* parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+ Returns:
+A newly created choropleth chart instance
+
+```js
+totalFundingBar = dc.barGauge("#total-funding-gauge")
+                                .group(totalFundingGroup)
+                                .valueAccessor(function(d){return d;})
+                                .totalCapacity(function(){
+                                  return totalDollars;
+                                })
+                                .orientation('horizontal') 
+                                .thickness(6);
+```
+**/
 dc.barGauge = function (parent, chartGroup) {
 
     var _chart = dc.baseMixin({});
@@ -7921,10 +7952,10 @@ dc.barGauge = function (parent, chartGroup) {
         Explicitly set total capacity.
     **/
     _chart.totalCapacity = function(_) {
-      if (!arguments.length) return _totalCapacity.call(_chart);
-      _totalCapacity = d3.functor(_);
-      _chart.expireCache();
-      return _chart;
+        if (!arguments.length) return _totalCapacity.call(_chart);
+        _totalCapacity = d3.functor(_);
+        _chart.expireCache();
+        return _chart;
     };
 
     /**
@@ -7933,9 +7964,9 @@ dc.barGauge = function (parent, chartGroup) {
         The filled value will be used to get the percentage the bar is filled.
     **/
     _chart.filledValue = function(_) {
-      if(!arguments.length) return _filledValue;
-      _filledValue = _;
-      return _chart;
+        if(!arguments.length) return _filledValue;
+        _filledValue = _;
+        return _chart;
     };
 
     /**
@@ -7956,7 +7987,7 @@ dc.barGauge = function (parent, chartGroup) {
             filledX = thickness;
             filledY = _oldpercentFilled + "%";
             newFilledX = filledX;
-            newFilledY = _percentFilled + "%"
+            newFilledY = _percentFilled + "%";
             containingX = thickness;
             containingY = longness + "%";
             offsetX = 0;
@@ -8010,7 +8041,7 @@ dc.barGauge = function (parent, chartGroup) {
 
 
     _chart._doRedraw = function(){
-      return _chart._doRender();
+        return _chart._doRender();
     };
 
     return _chart.anchor(parent, chartGroup);

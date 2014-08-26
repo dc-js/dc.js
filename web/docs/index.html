@@ -141,6 +141,7 @@
 <li><a href="#number-display-widget">Number Display Widget</a></li>
 <li><a href="#heat-map">Heat Map</a></li>
 <li><a href="#box-plot">Box Plot</a></li>
+<li><a href="#bar-gauge">Bar Gauge</a></li>
 </ul>
 <h4 id="version-2-0-0-alpha-2">Version 2.0.0-alpha.2</h4>
 <p>The entire dc.js library is scoped under the <strong>dc</strong> name space. It does not introduce anything else
@@ -1535,6 +1536,31 @@ units.</p>
 integer formatting.</p>
 <pre><code class="lang-js"><span class="comment">// format ticks to 2 decimal places</span>
 chart<span class="variable">.tickFormat</span>(d3<span class="variable">.format</span>(<span class="string">".2f"</span>));</code></pre>
+<h2 id="bar-gauge">Bar Gauge</h2>
+<p>Includes: <a href="#base-mixin">Base Mixin</a></p>
+<p>The Bar Gauge is a way to see data displacement. Typically there is a number
+Total and ‘filled up’ number. The bar will show how close the fill number is to the total. </p>
+<h4 id="dc-bargauge-parent-chartgroup-">dc.barGauge(parent[, chartGroup])</h4>
+<p>Parameters:</p>
+<ul>
+<li><p>parent : string | node | selection - any valid
+<a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single selector</a> specifying
+a dom block element such as a div; or a dom element or d3 selection.</p>
+</li>
+<li><p>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart’s group.</p>
+</li>
+</ul>
+<p>Returns:
+A newly created choropleth chart instance</p>
+<pre><code class="lang-js"><span class="comment">totalFundingBar</span> <span class="comment">=</span> <span class="comment">dc</span>.<span class="comment">barGauge("#total</span>-<span class="comment">funding</span>-<span class="comment">gauge")</span>
+                               <span class="string">.</span><span class="comment">group(totalFundingGroup)</span>
+                               <span class="string">.</span><span class="comment">valueAccessor(function(d){return</span> <span class="comment">d;})</span>
+                               <span class="string">.</span><span class="comment">totalCapacity(function(){</span>
+                                 <span class="comment">return</span> <span class="comment">totalDollars;</span>
+                               <span class="comment">})</span>
+                               <span class="string">.</span><span class="comment">orientation('horizontal')</span> 
+                               <span class="string">.</span><span class="comment">thickness(6);</code></pre>
 <h4 id="-orientation-string-">.orientation(string)</h4>
 <p>Set the orientation of the bar ‘horizontal’ or ‘vertical’.</p>
 <h4 id="-totalcapacity-number-">.totalCapacity(number)</h4>
