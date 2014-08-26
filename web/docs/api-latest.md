@@ -26,6 +26,7 @@
   * [Number Display Widget](#number-display-widget)
   * [Heat Map](#heat-map)
   * [Box Plot](#box-plot)
+  * [Bar Gauge](#bar-gauge)
 
 #### Version 2.0.0-alpha.2
 
@@ -1870,3 +1871,47 @@ integer formatting.
 // format ticks to 2 decimal places
 chart.tickFormat(d3.format(".2f"));
 ```
+
+## Bar Gauge
+
+Includes: [Base Mixin](#base-mixin)
+
+The Bar Gauge is a way to see data displacement. Typically there is a number
+Total and 'filled up' number. The bar will show how close the fill number is to the total. 
+
+#### dc.barGauge(parent[, chartGroup])
+Parameters:
+* parent : string | node | selection - any valid
+[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+a dom block element such as a div; or a dom element or d3 selection.
+
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
+A newly created choropleth chart instance
+
+```js
+totalFundingBar = dc.barGauge("#total-funding-gauge")
+                               .group(totalFundingGroup)
+                               .valueAccessor(function(d){return d;})
+                               .totalCapacity(function(){
+                                 return totalDollars;
+                               })
+                               .orientation('horizontal') 
+                               .thickness(6);
+```
+
+#### .orientation(string)
+Set the orientation of the bar 'horizontal' or 'vertical'.
+
+#### .totalCapacity(number)
+Explicitly set total capacity.
+
+#### .filledValue(number)
+Explicitly set filled value. 
+The filled value will be used to get the percentage the bar is filled.
+
+#### .initializeRectangles(HTML node, number, number, string)
+Add the background and foreground rectangles. Set the foreground
+rectangle to the calculated fill percantage.
