@@ -27,6 +27,7 @@
   * [Heat Map](#heat-map)
   * [Box Plot](#box-plot)
   * [Bar Gauge](#bar-gauge)
+  * [Geo Bubble Overlay Chart](#geo-bubble-overlay-chart)
 
 #### Version 2.0.0-alpha.2
 
@@ -1915,3 +1916,48 @@ The filled value will be used to get the percentage the bar is filled.
 #### .initializeRectangles(HTML node, number, number, string)
 Add the background and foreground rectangles. Set the foreground
 rectangle to the calculated fill percantage.
+
+## Geo Bubble Overlay Chart
+
+Includes: [Base Mixin](#base-mixin)
+
+The Geo Bubble Overlay chart is a mix of the Geo Choropleth chart and the Bubble Graph chart.
+This chart puts bubbles over the centroid of each defined area. 
+
+#### dc.geoBubbleOverlayChart(parent[, chartGroup])
+Parameters:
+* parent : string | node | selection - any valid
+[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+a dom block element such as a div; or a dom element or d3 selection.
+
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
+A newly created choropleth chart instance
+
+```js
+map = dc.geoBubbleOverlayChart('#map')
+     .width(width)
+     .height(height)
+     .dimension(countryDimension)
+     .group(countryGroup)
+     .projection(projection)
+     .setGeoJson(countriesJson.features, 'country', function (d) {
+       return d.id;
+     })
+     .radiusValueAccessor(function(d){
+       var r = Math.sqrt(d.value/1000000);
+       if (r < 0) return 0;
+       return Math.abs(r);
+     });
+```
+
+#### bubbleLocator(number)
+Finds the centroid(like a 2d Center of Mass) or the geometric region.
+
+#### .setGeoJson(json, string, key)
+Set the geometric map features from the Geo Json data.
+
+#### .projection(MapProjection)
+Use a different map projection with this bubble chart.

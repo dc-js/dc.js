@@ -314,5 +314,6 @@ module.exports.jsFiles = [
     "src/d3.box.js",
     "src/box-plot.js",
     "src/bar-gauge.js",
+    "src/geo-bubble-overlay-chart.js",
     "src/footer.js"  // NOTE: keep this last
 ];
