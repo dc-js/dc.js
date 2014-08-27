@@ -845,7 +845,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function getClipPathId() {
-        return _chart.anchorName() + "-clip";
+        return _chart.anchorName().replace(/[ .#]/g, '-') + "-clip";
     }
 
     /**
