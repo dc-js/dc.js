@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Bar Chart Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript" src="../../spec/helpers/fixtures.js"></script>
+<script type="text/javascript" src="../../spec/helpers/geoFixtures.js"></script>
+<script type="text/javascript">
+
+var chart, data, id;
+var stateDimension, stateValueSumGroup, districtDimension, districtValueEnrollGroup;
+var geoJson, geoJson2, geoJson3;
+var width, height;
+var state;
+
+
+data = crossfilter(loadDateFixture());
+stateDimension = data.dimension(function(d){return d.state;});
+stateValueSumGroup = stateDimension.group().reduceSum(function(d){return d.value;});
+districtDimension = data.dimension(function(d){return d.district;});
+districtValueEnrollGroup = districtDimension.group().reduceSum(function(d){return d.value;});
+
+geoJson = loadGeoFixture();
+width = 1000;
+height = 600;
+
+map = dc.geoBubbleOverlayChart('#map')
+  .width(width)
+  .height(height)
+  .dimension(stateDimension)
+  .group(stateValueSumGroup)
+  .setGeoJson(geoJson.features, 'state', function (d) {
+      return d.properties.name;
+  })
+  .radiusValueAccessor(function(d){
+    var r = d.value;
+    if (r < 0) return 0;
+    return Math.abs(r);
+  });
+
+
+dc.renderAll();
+</script>
+
+</body>
+</html>
