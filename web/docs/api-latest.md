@@ -28,6 +28,7 @@
   * [Box Plot](#box-plot)
   * [Bar Gauge](#bar-gauge)
   * [Geo Bubble Overlay Chart](#geo-bubble-overlay-chart)
+  * [Arc Gauge](#arc-gauge)
 
 #### Version 2.0.0-alpha.2
 
@@ -1913,7 +1914,7 @@ Explicitly set total capacity.
 Explicitly set filled value. 
 The filled value will be used to get the percentage the bar is filled.
 
-#### .initializeRectangles(HTML node, number, number, string)
+#### .initializeRectangles(ParentSelector, number, number, string)
 Add the background and foreground rectangles. Set the foreground
 rectangle to the calculated fill percantage.
 
@@ -1961,3 +1962,48 @@ Set the geometric map features from the Geo Json data.
 
 #### .projection(MapProjection)
 Use a different map projection with this bubble chart.
+
+## Arc Gauge
+
+Includes: [Base Mixin](#base-mixin)
+
+The Arc Gauge is a way to see data displacement similar to the Bar Gauge
+but in curved speedometer-like fashion.
+
+#### dc.arcGauge(parent[, chartGroup])
+Parameters:
+* parent : string | node | selection - any valid
+[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+a dom block element such as a div; or a dom element or d3 selection.
+
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
+A newly created arc gauge chart instance
+
+```js
+arc = dc.arcGauge("#total-funding-arc")
+                               .group(totalFundingGroup)
+                               .valueAccessor(function(d){return d;})
+                               .totalCapacity(function(){
+                                 return crossfilterdata.groupAll().reduceSum(function(d){return d.columnname;}).value();
+                               });
+```
+
+####.startAngle(numberofdegrees)
+Start angle of the component arc in degrees. Remember 0 and 360 are at 12 o'clock.
+
+####.endAngle(numberofdegrees)
+End angle of the component arc in degrees. Remember 0 and 360 are at 12 o'clock.
+
+#### .totalCapacity(number)
+Explicitly set total capacity.
+
+#### .filledValue(number)
+Explicitly set filled value. 
+The filled value will be used to get the percentage the bar is filled which will be translated 
+to the correct amount of degrees to fill in the arc.
+
+#### .initializeArc(ParentSelector)
+Add the background and foreground arcs. Also do the animation of the arc filling/emptying.
