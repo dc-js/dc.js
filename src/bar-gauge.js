@@ -117,7 +117,7 @@ dc.barGauge = function (parent, chartGroup) {
     };
 
     /**
-        #### .initializeRectangles(HTML node, number, number, string)
+        #### .initializeRectangles(ParentSelector, number, number, string)
         Add the background and foreground rectangles. Set the foreground
         rectangle to the calculated fill percantage.
     **/

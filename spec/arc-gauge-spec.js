@@ -1,4 +1,4 @@
-describe('dc.barGauge', function () {
+describe('dc.arcGauge', function () {
 	var chart, data;
 	var dimension, group;
 	var totalCapacity, maxValue, regionDimension;
@@ -12,10 +12,10 @@ describe('dc.barGauge', function () {
                 return d.region;
             });
 
-			var id = "bar-gauge";
+			var id = "arc-gauge";
 			var parent = appendChartID(id);
 
-			chart = dc.barGauge("#" + id)
+			chart = dc.arcGauge("#" + id)
                                 .group(group)
                                 .valueAccessor(function(d){return d;})
                                 .totalCapacity(maxValue);
@@ -32,20 +32,24 @@ describe('dc.barGauge', function () {
             expect(dc.hasChart(chart)).toBeTruthy();
         });
 
-        it('should have rectangles for background and foreground', function() {
-            expect(d3.select(chart.root().selectAll('rect')[0][0]).attr('class')).toEqual("dc-bar-gauge-background");
-            expect(d3.select(chart.root().selectAll('rect')[0][1]).attr('class')).toEqual("dc-bar-gauge-foreground");
+        it('should have paths for background and foreground in a g element', function() {
+            expect(d3.select(chart.root().selectAll('g path')[0][0]).attr('class')).toEqual("dc-arc-gauge-background");
+            expect(d3.select(chart.root().selectAll('g path')[0][1]).attr('class')).toEqual("dc-arc-gauge-foreground");
         });
 
-        it('should only create two rectangles in the svg', function() {
-            expect(chart.root().selectAll('svg rect')[0].length).toEqual(2);
+        it('should only create two paths in the svg', function() {
+            expect(chart.root().selectAll('svg path')[0].length).toEqual(2);
         });
-
-        it('should have default thickness, longness, orientation, ', function() {
+        
+        it('should have default values are defined', function() {
+            //value, totalCapacity, filledValue, startAngle, endAngle, outerRadius, innerRadius
             expect(chart.value()).toBeDefined();
             expect(chart.totalCapacity()).toBeDefined();
             expect(chart.filledValue()).toBeDefined();
-            expect(chart.orientation()).toBeDefined();
+            expect(chart.startAngle()).toBeDefined();
+            expect(chart.endAngle()).toBeDefined();
+            expect(chart.outerRadius()).toBeDefined();
+            expect(chart.innerRadius()).toBeDefined();
         });
 
         //test cases after filter change
@@ -55,20 +59,10 @@ describe('dc.barGauge', function () {
                 chart.render();
             });
 
-            it('should have correct calculated length for foreground rectangle when filter changes', function() {
+            it('should have correct calculated value when the filter changes', function() {
                 //expect the chart value to mirror the value of the cross filter data
                 expect(chart.value()).toEqual(data.groupAll().reduceSum(function(d){return d.value;}).value());
-                var expectedPercentageFill = chart.value() / maxValue * 100;
-                var attrForFillCheck;
-                if(chart.orientation() === 'vertical') attrForFillCheck = 'height';
-                else if(chart.orientation() === 'horizontal') attrForFillCheck = 'width';
 
-                chart.render(); //need render to be here for some reason even though it is in beforeEach???
-                var innerFilledValue = d3.select(chart.root().selectAll('rect')[0][1]).attr(attrForFillCheck);
-                var actualPercentageFill = innerFilledValue.replace('%', '') - 0;
-
-                //expect the rendered fill amount percentage is the same as the calculated amount
-                expect(expectedPercentageFill).toEqual(actualPercentageFill);
             });
 
             afterEach(function() {
@@ -76,7 +70,7 @@ describe('dc.barGauge', function () {
                 regionDimension.filterAll();
             });
         });
-        
+
 	});
 
 });

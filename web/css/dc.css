@@ -315,3 +315,11 @@ div.dc-chart {
     pointer-events: all;
     cursor: pointer;
 }
+
+.dc-arc-gauge-background {
+    fill: #9BE8D4;
+}
+
+.dc-arc-gauge-foreground {
+    fill: #04ADB0;
+}

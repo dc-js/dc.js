@@ -143,6 +143,7 @@
 <li><a href="#box-plot">Box Plot</a></li>
 <li><a href="#bar-gauge">Bar Gauge</a></li>
 <li><a href="#geo-bubble-overlay-chart">Geo Bubble Overlay Chart</a></li>
+<li><a href="#arc-gauge">Arc Gauge</a></li>
 </ul>
 <h4 id="version-2-0-0-alpha-2">Version 2.0.0-alpha.2</h4>
 <p>The entire dc.js library is scoped under the <strong>dc</strong> name space. It does not introduce anything else
@@ -1569,7 +1570,7 @@ A newly created choropleth chart instance</p>
 <h4 id="-filledvalue-number-">.filledValue(number)</h4>
 <p>Explicitly set filled value. 
 The filled value will be used to get the percentage the bar is filled.</p>
-<h4 id="-initializerectangles-html-node-number-number-string-">.initializeRectangles(HTML node, number, number, string)</h4>
+<h4 id="-initializerectangles-parentselector-number-number-string-">.initializeRectangles(ParentSelector, number, number, string)</h4>
 <p>Add the background and foreground rectangles. Set the foreground
 rectangle to the calculated fill percantage.</p>
 <h2 id="geo-bubble-overlay-chart">Geo Bubble Overlay Chart</h2>
@@ -1609,6 +1610,41 @@ A newly created choropleth chart instance</p>
 <p>Set the geometric map features from the Geo Json data.</p>
 <h4 id="-projection-mapprojection-">.projection(MapProjection)</h4>
 <p>Use a different map projection with this bubble chart.</p>
+<h2 id="arc-gauge">Arc Gauge</h2>
+<p>Includes: <a href="#base-mixin">Base Mixin</a></p>
+<p>The Arc Gauge is a way to see data displacement similar to the Bar Gauge
+but in curved speedometer-like fashion.</p>
+<h4 id="dc-arcgauge-parent-chartgroup-">dc.arcGauge(parent[, chartGroup])</h4>
+<p>Parameters:</p>
+<ul>
+<li><p>parent : string | node | selection - any valid
+<a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single selector</a> specifying
+a dom block element such as a div; or a dom element or d3 selection.</p>
+</li>
+<li><p>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart’s group.</p>
+</li>
+</ul>
+<p>Returns:
+A newly created arc gauge chart instance</p>
+<pre><code class="lang-js">arc = dc<span class="variable">.arcGauge</span>(<span class="string">"#total-funding-arc"</span>)
+                               <span class="variable">.group</span>(totalFundingGroup)
+                               <span class="variable">.valueAccessor</span>(function(d){<span class="keyword">return</span> d;})
+                               <span class="variable">.totalCapacity</span>(function(){
+                                 <span class="keyword">return</span> crossfilterdata<span class="variable">.groupAll</span>()<span class="variable">.reduceSum</span>(function(d){<span class="keyword">return</span> d<span class="variable">.columnname</span>;})<span class="variable">.value</span>();
+                               });</code></pre>
+<h4 id="-startangle-numberofdegrees-">.startAngle(numberofdegrees)</h4>
+<p>Start angle of the component arc in degrees. Remember 0 and 360 are at 12 o’clock.</p>
+<h4 id="-endangle-numberofdegrees-">.endAngle(numberofdegrees)</h4>
+<p>End angle of the component arc in degrees. Remember 0 and 360 are at 12 o’clock.</p>
+<h4 id="-totalcapacity-number-">.totalCapacity(number)</h4>
+<p>Explicitly set total capacity.</p>
+<h4 id="-filledvalue-number-">.filledValue(number)</h4>
+<p>Explicitly set filled value. 
+The filled value will be used to get the percentage the bar is filled which will be translated 
+to the correct amount of degrees to fill in the arc.</p>
+<h4 id="-initializearc-parentselector-">.initializeArc(ParentSelector)</h4>
+<p>Add the background and foreground arcs. Also do the animation of the arc filling/emptying.</p>
 
   </body>
 </html>

@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>dc.js - Geo Bubble Overlay Chart Example</title>
+    <title>dc.js - Arc Gauge Example</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
 </head>
 <body>
 
-<div id="map"></div>
+<div id="arc" ></div>
 
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
@@ -18,34 +18,23 @@
 
 var chart, data, id;
 var stateDimension, stateValueSumGroup;
-var geoJson;
-var width, height;
-
 
 data = crossfilter(loadDateFixture());
 stateDimension = data.dimension(function(d){return d.state;});
-stateValueSumGroup = stateDimension.group().reduceSum(function(d){return d.value;});
-
-geoJson = loadGeoFixture();
-width = 1000;
-height = 600;
-
-map = dc.geoBubbleOverlayChart('#map')
-  .width(width)
-  .height(height)
-  .dimension(stateDimension)
-  .group(stateValueSumGroup)
-  .setGeoJson(geoJson.features, 'state', function (d) {
-      return d.properties.name;
-  })
-  .radiusValueAccessor(function(d){
-    var r = d.value;
-    if (r < 0) return 0;
-    return Math.abs(r);
-  });
+stateValueSumGroup = data.groupAll().reduceSum(function(d){return d.value;});
 
 
-dc.renderAll();
+var arc = dc.arcGauge('#arc')
+	.innerRadius(30)
+	.outerRadius(50)
+	.dimension(stateDimension)
+	.group(stateValueSumGroup)
+	.valueAccessor(function(d){return d;})
+	.totalCapacity(data.groupAll().reduceSum(function(d){return d.value;}).value());
+
+//render then position the gauge 
+arc.render();
+arc.select("g").attr("transform", "translate(" + arc.outerRadius() + "," +  arc.outerRadius() + ")");
 </script>
 
 </body>
