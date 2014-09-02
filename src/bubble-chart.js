@@ -125,14 +125,14 @@ dc.bubbleChart = function(parent, chartGroup) {
 
     function bubbleX(d) {
         var x = _chart.x()(_chart.keyAccessor()(d));
-        if (isNaN(x))
+        if (!isFinite(x))
             x = 0;
         return x;
     }
 
     function bubbleY(d) {
         var y = _chart.y()(_chart.valueAccessor()(d));
-        if (isNaN(y))
+        if (!isFinite(y))
             y = 0;
         return y;
     }
