@@ -8110,7 +8110,7 @@ dc.geoBubbleOverlayChart = function (parent, chartGroup) {
     **/
     var bubbleLocator = function(d) {
         var centroid;
-        if (d.key === "" || d.key === undefined || d.key === null || d.key === 0){
+        if (d.key === "" || d.key === undefined || d.key === null || d.key === 0 || d.key === '0'){
             centroid = [-500,-500];            
         }else{
             var selector = "g."+ _chart.GEO_LAYER_CLASS +" g."+ dc.utils.nameToId(d.key);
