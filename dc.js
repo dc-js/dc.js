@@ -4173,10 +4173,21 @@ dc.barChart = function (parent, chartGroup) {
 
     var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
 
+	/** _isTarget controls how the bar is rendered. If it is a 'cap'
+        we render the bar as a thick line of the top instead of 
+        to the bottom */
+	var _isTarget = false;
+    
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
     var _centerBar = false;
     var _alwaysUseRounding = false;
-
+	
+	/** _padding adds whitespace between the barwidth 
+        (the brackets where bars are rendered in) and de bar
+        itself, putting the rendered bar in the center. */
+         
+       
+	var _padding =0;
     var _barWidth;
 
     dc.override(_chart, 'rescale', function () {
@@ -4244,6 +4255,7 @@ dc.barChart = function (parent, chartGroup) {
                 if (_chart.isOrdinal() && _gap !== undefined) {
                     x += _gap / 2;
                 }
+               	x+=_padding;
                 return dc.utils.safeNumber(x);
             })
             .attr('y', function (d) {
@@ -4255,9 +4267,9 @@ dc.barChart = function (parent, chartGroup) {
 
                 return dc.utils.safeNumber(y);
             })
-            .attr('width', _barWidth)
+            .attr('width', _barWidth - 2 * _padding)
             .attr('height', function (d) {
-                return barHeight(d);
+                return _isTarget ? 2 : barHeight(d);
             })
             .attr('fill', dc.pluck('data', _chart.getColor))
             .select('title').text(dc.pluck('data', _chart.title(d.name)));
@@ -4267,17 +4279,17 @@ dc.barChart = function (parent, chartGroup) {
             .remove();
     }
 
-    function calculateBarWidth() {
+       function calculateBarWidth() {
         if (_barWidth === undefined) {
             var numberOfBars = _chart.xUnitCount();
 
             // please can't we always use rangeBands for bar charts?
             if (_chart.isOrdinal() && _gap === undefined) {
-                _barWidth = Math.floor(_chart.x().rangeBand());
+                _barWidth = Math.ceil(_chart.x().rangeBand());
             } else if (_gap) {
-                _barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
+                _barWidth = Math.ceil((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
             } else {
-                _barWidth = Math.floor(_chart.xAxisLength() / (1 + _chart.barPadding()) / numberOfBars);
+                _barWidth = Math.ceil(_chart.xAxisLength() / (1 + _chart.barPadding()) / numberOfBars);
             }
 
             if (_barWidth === Infinity || isNaN(_barWidth) || _barWidth < MIN_BAR_WIDTH) {
@@ -4374,6 +4386,19 @@ dc.barChart = function (parent, chartGroup) {
             return _gap;
         }
         _gap = _;
+        return _chart;
+    };
+
+    _chart.target = function (_) {
+        if (!arguments.length) return _isTarget;
+        _isTarget = _;
+        return _chart;
+    };
+
+   
+    _chart.padding = function (_) {
+        if (!arguments.length) return _padding;
+        _padding = _;
         return _chart;
     };
 
