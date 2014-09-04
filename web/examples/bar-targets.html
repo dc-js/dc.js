@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Bar Chart Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+
+<div id="test"></div>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript">
+
+var compositeBar = dc.compositeChart("#test");
+d3.csv("data.csv", function(error, experiments) {
+
+	var targets =  {};
+	targets['01M'] = 7; 
+	targets['03M'] = 5;
+	targets['06M'] = 3;
+	targets['12M'] = 0.1;
+
+	var actuals =  {};
+	actuals['01M'] = 4; 
+	actuals['03M'] = 4;
+	actuals['06M'] = 1.5;
+	actuals['12M'] = 1.8;
+
+	
+	var ndx = crossfilter();
+	ndx.add(experiments);
+	
+	var d2acolors   = d3.scale.ordinal ().range (["rgb(188,35,36)","rgb(224,128,128)","rgb(224,226,228)"]);
+	var dim  		= ndx.dimension(dc.pluck('Period')),
+		dateGroup 	= dim.group(),
+		perf     	= dim.group().reduceSum(function(d) { return d.Cat == 'perf' ? 1: 0 ;}),
+		local     	= dim.group().reduceSum(function(d) { return d.Cat == 'local' ? 1: 0 ;}),
+		other     	= dim.group().reduceSum(function(d) { return d.Cat == 'other' ? 1: 0 ;});
+		target      = dim.group().reduceSum(function(d) { return targets[d.D]});
+
+		compositeBar
+	.width(480)
+	.height(480)
+	.x(d3.scale.ordinal().domain(['01M','03M','06M','12M'] ))
+	.xUnits(dc.units.ordinal)
+	.compose([
+	    dc.barChart(compositeBar)
+		.dimension(dim)
+		.group(perf , "Perf")
+		.stack(local, "Local")
+		.stack(other , "Other")
+		.colors(d2acolors)	
+		.gap(10)
+		.padding(10)
+		,
+	
+	    dc.barChart(compositeBar)
+		.dimension(dim)
+		.colors("black")
+		.padding(8)
+		.target(true)
+		.gap(10)
+		.group(dateGroup, "Target")
+		.valueAccessor(function(p) {
+			return targets[p.key];
+		})
+		,
+	    dc.barChart(compositeBar)
+		.dimension(dim)
+		.colors("black")
+		.padding(30)
+		.gap(10)
+		.group(dateGroup, "Actual")
+		.valueAccessor(function(p) {
+			return actuals[p.key];
+		})
+                           
+		
+	 ])
+	
+	.yAxisLabel("Number of vendors")
+	.xAxisLabel("Inactive for")
+	.colors(d2acolors)
+	.render();
+
+});
+
+</script>
+
+</body>
+</html>
