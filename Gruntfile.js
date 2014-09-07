@@ -405,6 +405,7 @@ module.exports.jsFiles = [
     'src/cap-mixin.js',
     'src/bubble-mixin.js',
     'src/pie-chart.js',
+    'src/sunburst-chart.js',
     'src/bar-chart.js',
     'src/line-chart.js',
     'src/data-count.js',
