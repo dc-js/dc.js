@@ -382,7 +382,7 @@ dc.coordinateGridMixin = function (_chart) {
                     .attr("class", GRID_LINE_CLASS + " " + VERTICAL_CLASS)
                     .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")");
 
-            var ticks = _xAxis.tickValues() ? _xAxis.tickValues() : _x.ticks(_xAxis.ticks()[0]);
+            var ticks = _xAxis.tickValues() ? _xAxis.tickValues() : (typeof _x.ticks === 'function' ? _x.ticks(_xAxis.ticks()[0]) : _x.domain());
 
             var lines = gridLineG.selectAll("line")
                 .data(ticks);
