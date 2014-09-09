@@ -313,9 +313,7 @@ dc.sunburstChart = function (parent, chartGroup) {
     }
 
     function isSelectedSlice(d) {
-        console.log(d, d.path);
         return isPathFiltered(d.path);
-//        return _chart.hasFilter(d.path);
     }
 
     function isPathFiltered(path) {
@@ -329,11 +327,13 @@ dc.sunburstChart = function (parent, chartGroup) {
         return false;
     }
     
+    // returns all filters that are a parent or child of the path
     function filtersForPath(path) {
+        var pathFilter = dc.filters.HierarchyFilter(path);
         var filters = [];
         for (var i=0;i< _chart.filters().length;i++) {
             var currentFilter =  _chart.filters()[i];
-            if (currentFilter.isFiltered(path)) {
+            if (currentFilter.isFiltered(path) || pathFilter.isFiltered(currentFilter)) {
                 filters.push(currentFilter);
             }
         }
@@ -382,10 +382,8 @@ dc.sunburstChart = function (parent, chartGroup) {
         if (isOffCanvas(current)) {
             current = {x:0, y:0, dx:0, dy:0};
         }
-        // unfortunally, we can't tween an entire hierarchy. it has 2 way links :/ 
+        // unfortunally, we can't tween an entire hierarchy since it has 2 way links. 
         var tweenTarget = {x:b.x, y:b.y, dx:b.dx, dy:b.dy};
-        
-//        var i = d3.interpolate(current, b);
         var i = d3.interpolate(current, tweenTarget);
         this._current = i(0);
         
@@ -405,10 +403,11 @@ dc.sunburstChart = function (parent, chartGroup) {
     function _onClick(d) {
         var path = d.path;
         var filter = dc.filters.HierarchyFilter(path);
+
+        // filters are equal to, parents or children of the path.
         var filters = filtersForPath(path);
         var exactMatch = false;
         // clear out any filters that cover the path filtered.
-        console.log(filters);
         for (var i=filters.length -1 ;i >= 0;i--) {
             var currentFilter = filters[i];
             console.log(i, currentFilter);
