@@ -1702,6 +1702,11 @@ var chart2 = dc.scatterPlot("#chart-container2", "chartGroupA");
 var chart3 = dc.scatterPlot(compositeChart);
 ```
 
+#### .existenceAccessor([accessor])
+Get or set the existence accessor.  By default, the existence accessor checks if the
+reduced value is truthy.  If a point exists, it is drawn with symbolSize radius and
+opacity 1; if it does not exist, it is drawn with hiddenSize radius and opacity 0.
+
 #### .symbol([type])
 Get or set the symbol type used for each point. By default the symbol is a circle. See the D3
 [docs](https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-symbol_type) for acceptable types.

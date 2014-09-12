@@ -6722,6 +6722,8 @@ dc.scatterPlot = function (parent, chartGroup) {
     var _chart = dc.coordinateGridMixin({});
     var _symbol = d3.svg.symbol();
 
+    var _existenceAccessor = function(d) { return d.value; };
+
     var originalKeyAccessor = _chart.keyAccessor();
     _chart.keyAccessor(function (d) { return originalKeyAccessor(d)[0]; });
     _chart.valueAccessor(function (d) { return originalKeyAccessor(d)[1]; });
@@ -6737,7 +6739,7 @@ dc.scatterPlot = function (parent, chartGroup) {
     var _hiddenSize = 0;
 
     _symbol.size(function(d) {
-        if(d.value === 0)
+        if(_existenceAccessor(d) === 0)
             return _hiddenSize;
         else if(this.filtered)
             return Math.pow(_highlightedSize, 2);
@@ -6764,7 +6766,7 @@ dc.scatterPlot = function (parent, chartGroup) {
             .attr("transform", _locator);
 
         dc.transition(symbols, _chart.transitionDuration())
-            .attr("opacity", function(d) { return d.value ? 1 : 0; })
+            .attr("opacity", function(d) { return _existenceAccessor(d) ? 1 : 0; })
             .attr("fill", _chart.getColor)
             .attr("transform", _locator)
             .attr("d", _symbol);
@@ -6772,6 +6774,20 @@ dc.scatterPlot = function (parent, chartGroup) {
         dc.transition(symbols.exit(), _chart.transitionDuration())
             .attr("opacity", 0).remove();
     };
+
+    /**
+    #### .existenceAccessor([accessor])
+    Get or set the existence accessor.  By default, the existence accessor checks if the
+    reduced value is truthy.  If a point exists, it is drawn with symbolSize radius and
+    opacity 1; if it does not exist, it is drawn with hiddenSize radius and opacity 0.
+    **/
+
+    _chart.existenceAccessor = function(acc) {
+        if(!arguments.length) return _existenceAccessor;
+        _existenceAccessor = acc;
+        return this;
+    };
+
 
     /**
     #### .symbol([type])
