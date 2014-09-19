@@ -74,6 +74,38 @@ describe("dc.legend", function() {
             });
         });
 
+        describe('with autoItemWidth not set', function () {
+            beforeEach(function () {
+                chart.legend(dc.legend().legendWidth(60).itemWidth(30));
+                chart.render();
+            });
+
+            it('itemAutoWidth should be false', function() {
+                expect(chart.legend().autoItemWidth()).toBe(false);
+            });
+        });
+
+        describe('with .autoItemWidth(false)', function () {
+            beforeEach(function () {
+                chart.legend(dc.legend().legendWidth(60).itemWidth(30).autoItemWidth(false));
+                chart.render();
+            });
+
+            it('autoItemWidth should be false', function() {
+                expect(chart.legend().autoItemWidth()).toBe(false);
+            });
+        });
+
+        describe('with .autoItemWidth(true)', function () {
+            beforeEach(function () {
+                chart.legend(dc.legend().autoItemWidth(true).legendWidth(60).itemWidth(30));
+                chart.render();
+            });
+            it('autoItemWidth should be true', function() {
+                expect(chart.legend().autoItemWidth()).toBe(true);
+            });
+        });
+
         it('should generate legend item boxes', function() {
             expect(legendIcon(0).attr("width")).toBeWithinDelta(13,2);
             expect(legendIcon(0).attr("height")).toBeWithinDelta(13, 2);
