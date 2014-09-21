@@ -198,7 +198,7 @@ module.exports = function (grunt) {
                                 '<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css"></head>',
                                 '<body><div class="container">',
                                 '<h2>Examples of using dc.js</h2>',
-                                '<p>An attempt to present a simple example of each chart type.</p>',
+                                '<p>An attempt to present a simple example of each chart type.  <a href="https://github.com/dc-js/dc.js/blob/master/CONTRIBUTING.md#pull-request-guidelines">Contributions welcome</a>.</p>',
                                 '<p>Source <a href="https://github.com/dc-js/dc.js/tree/master/web/examples">here</a>.</p>',
                                 body,
                                 "</div></body></html>"].join("\n");
