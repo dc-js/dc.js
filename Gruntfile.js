@@ -199,7 +199,7 @@ module.exports = function (grunt) {
                                 '<body><div class="container">',
                                 '<h2>Examples of using dc.js</h2>',
                                 '<p>An attempt to present a simple example of each chart type.</p>',
-                                '<p>Source <a href="http://https://github.com/dc-js/dc.js/tree/master/web/examples">here</a>.</p>',
+                                '<p>Source <a href="https://github.com/dc-js/dc.js/tree/master/web/examples">here</a>.</p>',
                                 body,
                                 "</div></body></html>"].join("\n");
                     },
