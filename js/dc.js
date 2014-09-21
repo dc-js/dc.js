@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-dev
+ *  dc 2.0.0-alpha.2
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012 Nick Zhu and other contributors
  *
@@ -20,7 +20,7 @@
 'use strict';
 
 /**
-#### Version 2.0.0-dev
+#### Version 2.0.0-alpha.2
 
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
@@ -40,7 +40,7 @@ that are chainable d3 objects.)
 
 **/
 var dc = {
-    version: "2.0.0-dev",
+    version: "2.0.0-alpha.2",
     constants: {
         CHART_CLASS: "dc-chart",
         DEBUG_GROUP_CLASS: "debug",
@@ -660,14 +660,13 @@ dc.baseMixin = function (_chart) {
 
     var NULL_LISTENER = function () {};
 
-    var _listeners = {
-        preRender: NULL_LISTENER,
-        postRender: NULL_LISTENER,
-        preRedraw: NULL_LISTENER,
-        postRedraw: NULL_LISTENER,
-        filtered: NULL_LISTENER,
-        zoomed: NULL_LISTENER
-    };
+    var _listeners = d3.dispatch(
+        "preRender",
+        "postRender",
+        "preRedraw",
+        "postRedraw",
+        "filtered",
+        "zoomed");
 
     var _legend;
 
@@ -1081,6 +1080,10 @@ dc.baseMixin = function (_chart) {
 
     _chart.redrawGroup = function () {
         dc.redrawAll(_chart.chartGroup());
+    };
+
+    _chart.renderGroup = function () {
+        dc.renderAll(_chart.chartGroup());
     };
 
     _chart._invokeFilteredListener = function (f) {
@@ -1515,7 +1518,7 @@ dc.baseMixin = function (_chart) {
 
     **/
     _chart.on = function (event, listener) {
-        _listeners[event] = listener;
+        _listeners.on(event, listener);
         return _chart;
     };
 
@@ -3008,7 +3011,7 @@ dc.stackMixin = function (_chart) {
             if (_chart.isLegendableHidden(d)) _chart.showStack(d.name);
             else _chart.hideStack(d.name);
             //_chart.redraw();
-            dc.renderAll(_chart.chartGroup());
+            _chart.renderGroup();
         }
     };
 
@@ -3306,7 +3309,7 @@ dc.bubbleMixin = function (_chart) {
         var filter = d.key;
         dc.events.trigger(function () {
             _chart.filter(filter);
-            dc.redrawAll(_chart.chartGroup());
+            _chart.redrawGroup();
         });
     };
 
@@ -3361,6 +3364,10 @@ dc.pieChart = function (parent, chartGroup) {
         _innerRadius = 0;
 
     var _g;
+    
+    var _cx;
+
+    var _cy;
 
     var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
 
@@ -3591,21 +3598,25 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .cx()
-    Get center x coordinate position. This function is **not chainable**.
+    #### .cx([cx])
+    Get or set center x coordinate position. Default is center of svg.
 
     **/
-    _chart.cx = function () {
-        return _chart.width() / 2;
+    _chart.cx = function (cx) {
+        if (!arguments.length) return (_cx ||  _chart.width() / 2);
+        _cx = cx;
+        return _chart;
     };
 
     /**
-    #### .cy()
-    Get center y coordinate position. This function is **not chainable**.
+    #### .cy([cy])
+    Get or set center y coordinate position. Default is center of svg.
 
     **/
-    _chart.cy = function () {
-        return _chart.height() / 2;
+    _chart.cy = function (cy) {
+        if (!arguments.length) return (_cy ||  _chart.height() / 2);
+        _cy = cy;
+        return _chart;
     };
 
     function buildArcs() {
@@ -3845,14 +3856,14 @@ dc.barChart = function (parent, chartGroup) {
         var bars = layer.selectAll("rect.bar")
             .data(d.values, dc.pluck('x'));
 
-        bars.enter()
+        var enter = bars.enter()
             .append("rect")
             .attr("class", "bar")
             .attr("fill", dc.pluck('data',_chart.getColor))
             .attr("height", 0);
 
         if (_chart.renderTitle())
-            bars.append("title").text(dc.pluck('data',_chart.title(d.name)));
+            enter.append("title").text(dc.pluck('data',_chart.title(d.name)));
 
         if (_chart.isOrdinal())
             bars.on("click", onClick);
@@ -6711,6 +6722,8 @@ dc.scatterPlot = function (parent, chartGroup) {
     var _chart = dc.coordinateGridMixin({});
     var _symbol = d3.svg.symbol();
 
+    var _existenceAccessor = function(d) { return d.value; };
+
     var originalKeyAccessor = _chart.keyAccessor();
     _chart.keyAccessor(function (d) { return originalKeyAccessor(d)[0]; });
     _chart.valueAccessor(function (d) { return originalKeyAccessor(d)[1]; });
@@ -6726,7 +6739,7 @@ dc.scatterPlot = function (parent, chartGroup) {
     var _hiddenSize = 0;
 
     _symbol.size(function(d) {
-        if(d.value === 0)
+        if(_existenceAccessor(d) === 0)
             return _hiddenSize;
         else if(this.filtered)
             return Math.pow(_highlightedSize, 2);
@@ -6753,7 +6766,7 @@ dc.scatterPlot = function (parent, chartGroup) {
             .attr("transform", _locator);
 
         dc.transition(symbols, _chart.transitionDuration())
-            .attr("opacity", function(d) { return d.value ? 1 : 0; })
+            .attr("opacity", function(d) { return _existenceAccessor(d) ? 1 : 0; })
             .attr("fill", _chart.getColor)
             .attr("transform", _locator)
             .attr("d", _symbol);
@@ -6761,6 +6774,20 @@ dc.scatterPlot = function (parent, chartGroup) {
         dc.transition(symbols.exit(), _chart.transitionDuration())
             .attr("opacity", 0).remove();
     };
+
+    /**
+    #### .existenceAccessor([accessor])
+    Get or set the existence accessor.  By default, the existence accessor checks if the
+    reduced value is truthy.  If a point exists, it is drawn with symbolSize radius and
+    opacity 1; if it does not exist, it is drawn with hiddenSize radius and opacity 0.
+    **/
+
+    _chart.existenceAccessor = function(acc) {
+        if(!arguments.length) return _existenceAccessor;
+        _existenceAccessor = acc;
+        return this;
+    };
+
 
     /**
     #### .symbol([type])
@@ -6876,7 +6903,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         if (_chart.brushIsEmpty(extent)) {
             dc.events.trigger(function () {
                 _chart.filter(null);
-                dc.redrawAll(_chart.chartGroup());
+                _chart.redrawGroup();
             });
 
             resizeFiltered(false);
@@ -6886,7 +6913,7 @@ dc.scatterPlot = function (parent, chartGroup) {
             dc.events.trigger(function () {
                 _chart.filter(null);
                 _chart.filter(ranged2DFilter);
-                dc.redrawAll(_chart.chartGroup());
+                _chart.redrawGroup();
             }, dc.constants.EVENT_DELAY);
 
             resizeFiltered(ranged2DFilter);
@@ -7211,28 +7238,33 @@ dc.heatMap = function (parent, chartGroup) {
         var gCols = _chartBody.selectAll("g.cols");
         if (gCols.empty())
             gCols = _chartBody.append("g").attr("class", "cols axis");
-        gCols.selectAll('text').data(cols.domain())
-            .enter().append("text")
+        var gColsText = gCols.selectAll('text').data(cols.domain());
+        gColsText.enter().append("text")
               .attr("x", function(d) { return cols(d) + boxWidth/2; })
               .style("text-anchor", "middle")
               .attr("y", _chart.effectiveHeight())
               .attr("dy", 12)
               .on("click", _chart.xAxisOnClick())
               .text(function(d) { return d; });
+        dc.transition(gColsText, _chart.transitionDuration())
+               .text(function(d) { return d; })
+               .attr("x", function(d) { return cols(d) + boxWidth/2; });
+        gColsText.exit().remove();
         var gRows = _chartBody.selectAll("g.rows");
         if (gRows.empty())
             gRows = _chartBody.append("g").attr("class", "rows axis");
-        gRows.selectAll('text').data(rows.domain())
-            .enter().append("text")
+        var gRowsText = gRows.selectAll('text').data(rows.domain());
+        gRowsText.enter().append("text")
               .attr("dy", 6)
               .style("text-anchor", "end")
               .attr("x", 0)
               .attr("dx", -2)
               .on("click", _chart.yAxisOnClick())
               .text(function(d) { return d; });
-        dc.transition(gRows.selectAll('text'), _chart.transitionDuration())
+        dc.transition(gRowsText, _chart.transitionDuration())
               .text(function(d) { return d; })
               .attr("y", function(d) { return rows(d) + boxHeight/2; });
+        gRowsText.exit().remove();
 
         if (_chart.hasFilter()) {
             _chart.selectAll("g.box-group").each(function (d) {

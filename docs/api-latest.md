@@ -27,7 +27,7 @@
   * [Heat Map](#heat-map)
   * [Box Plot](#box-plot)
 
-#### Version 2.0.0-dev
+#### Version 2.0.0-alpha.2
 
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
@@ -904,11 +904,11 @@ pie chart will be rendered as a doughnut chart. Default inner radius is 0px.
 #### .radius([radius])
 Get or set the outer radius. Default radius is 90px.
 
-#### .cx()
-Get center x coordinate position. This function is **not chainable**.
+#### .cx([cx])
+Get or set center x coordinate position. Default is center of svg.
 
-#### .cy()
-Get center y coordinate position. This function is **not chainable**.
+#### .cy([cy])
+Get or set center y coordinate position. Default is center of svg.
 
 #### .minAngleForLabel([minAngle])
 Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
@@ -1701,6 +1701,11 @@ var chart2 = dc.scatterPlot("#chart-container2", "chartGroupA");
 // create a sub-chart under a composite parent chart
 var chart3 = dc.scatterPlot(compositeChart);
 ```
+
+#### .existenceAccessor([accessor])
+Get or set the existence accessor.  By default, the existence accessor checks if the
+reduced value is truthy.  If a point exists, it is drawn with symbolSize radius and
+opacity 1; if it does not exist, it is drawn with hiddenSize radius and opacity 0.
 
 #### .symbol([type])
 Get or set the symbol type used for each point. By default the symbol is a circle. See the D3

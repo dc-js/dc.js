@@ -142,7 +142,7 @@
 <li><a href="#heat-map">Heat Map</a></li>
 <li><a href="#box-plot">Box Plot</a></li>
 </ul>
-<h4 id="version-2-0-0-dev">Version 2.0.0-dev</h4>
+<h4 id="version-2-0-0-alpha-2">Version 2.0.0-alpha.2</h4>
 <p>The entire dc.js library is scoped under the <strong>dc</strong> name space. It does not introduce anything else
 into the global name space.</p>
 <h4 id="function-chaining">Function Chaining</h4>
@@ -797,10 +797,10 @@ The resulting data will still be sorted by .ordering (default by key).</p>
 pie chart will be rendered as a doughnut chart. Default inner radius is 0px.</p>
 <h4 id="-radius-radius-">.radius([radius])</h4>
 <p>Get or set the outer radius. Default radius is 90px.</p>
-<h4 id="-cx-">.cx()</h4>
-<p>Get center x coordinate position. This function is <strong>not chainable</strong>.</p>
-<h4 id="-cy-">.cy()</h4>
-<p>Get center y coordinate position. This function is <strong>not chainable</strong>.</p>
+<h4 id="-cx-cx-">.cx([cx])</h4>
+<p>Get or set center x coordinate position. Default is center of svg.</p>
+<h4 id="-cy-cy-">.cy([cy])</h4>
+<p>Get or set center y coordinate position. Default is center of svg.</p>
 <h4 id="-minangleforlabel-minangle-">.minAngleForLabel([minAngle])</h4>
 <p>Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
 display a slice label.  Default min angle is 0.5.</p>
@@ -1408,6 +1408,10 @@ var chart1 = dc.scatterPlot(<span class="string">"#chart-container1"</span>);</s
 var chart2 = dc.scatterPlot(<span class="string">"#chart-container2"</span>, <span class="string">"chartGroupA"</span>);</span>
 // <span class="operator"><span class="keyword">create</span> a sub-chart under a composite parent chart
 var chart3 = dc.scatterPlot(compositeChart);</span></code></pre>
+<h4 id="-existenceaccessor-accessor-">.existenceAccessor([accessor])</h4>
+<p>Get or set the existence accessor.  By default, the existence accessor checks if the
+reduced value is truthy.  If a point exists, it is drawn with symbolSize radius and
+opacity 1; if it does not exist, it is drawn with hiddenSize radius and opacity 0.</p>
 <h4 id="-symbol-type-">.symbol([type])</h4>
 <p>Get or set the symbol type used for each point. By default the symbol is a circle. See the D3
 <a href="https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-symbol_type">docs</a> for acceptable types.
