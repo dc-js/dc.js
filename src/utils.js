@@ -18,7 +18,7 @@ dc.printers.filters = function (filters) {
 dc.printers.filter = function (filter) {
     var s = '';
 
-    if (filter) {
+    if (typeof filter !== 'undefined' && filter !== null) {
         if (filter instanceof Array) {
             if (filter.length >= 2) {
                 s = '[' + dc.utils.printSingleValue(filter[0]) + ' -> ' + dc.utils.printSingleValue(filter[1]) + ']';
