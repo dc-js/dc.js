@@ -316,29 +316,29 @@ describe("dc.baseMixin", function () {
             chart.resetFilterHandler(resetFilterHandler);
             chart.filterAll();
         });
-        it('has a default hasFilterHandler', function () {
+        it('with the default hasFilterHandler', function () {
             chart.filter(filter);
             expect(chart.hasFilter(filter)).toBeTruthy();
             expect(chart.hasFilter(notFilter)).toBeFalsy();
         });
-        it('has a truthy hasFilterHandler', function () {
+        it('with a truthy hasFilterHandler', function () {
             chart.filter(filter);
             chart.hasFilterHandler(function () { return true; });
             expect(chart.hasFilter(filter)).toBeTruthy();
             expect(chart.hasFilter(notFilter)).toBeTruthy();
         });
-        it('has a falsy hasFilterHandler', function () {
+        it('with a falsy hasFilterHandler', function () {
             chart.filter(filter);
             chart.hasFilterHandler(function () { return false; });
             expect(chart.hasFilter(filter)).toBeFalsy();
             expect(chart.hasFilter(notFilter)).toBeFalsy();
         });
-        it('has a default addFilterHandler', function () {
+        it('with the default addFilterHandler', function () {
             chart.filter(filter);
             expect(chart.hasFilter(filter)).toBeTruthy();
             expect(chart.filters().length).toEqual(1);
         });
-        it('has a noop addFilterHandler', function () {
+        it('with a noop addFilterHandler', function () {
             chart.addFilterHandler(function (filters, filter) {
                 return filters;
             });
@@ -347,7 +347,7 @@ describe("dc.baseMixin", function () {
             expect(chart.hasFilter(notFilter)).toBeFalsy();
             expect(chart.filters().length).toEqual(0);
         });
-        it('has a static addFilterHandler', function () {
+        it('with a static addFilterHandler', function () {
             chart.addFilterHandler(function (filters, filter) {
                 filters.push(notFilter);
                 return filters;
@@ -357,7 +357,7 @@ describe("dc.baseMixin", function () {
             expect(chart.hasFilter(notFilter)).toBeTruthy();
             expect(chart.filters().length).toEqual(1);
         });
-        it('has a default removeFilterHandler', function () {
+        it('with the default removeFilterHandler', function () {
             chart.filter(filter);
             chart.filter(notFilter);
             expect(chart.filters().length).toEqual(2);
@@ -370,7 +370,7 @@ describe("dc.baseMixin", function () {
             expect(chart.hasFilter(notFilter)).toBeFalsy();
             expect(chart.filters().length).toEqual(0);
         });
-        it('has a noop removeFilterHandler', function () {
+        it('with a noop removeFilterHandler', function () {
             chart.filter(filter);
             chart.filter(notFilter);
             chart.removeFilterHandler(function (filters, filter) {
@@ -386,7 +386,7 @@ describe("dc.baseMixin", function () {
             expect(chart.hasFilter(notFilter)).toBeTruthy();
             expect(chart.filters().length).toEqual(2);
         });
-        it('has a shift removeFilterHandler', function () {
+        it('with a shift removeFilterHandler', function () {
             chart.filter(filter);
             chart.filter(notFilter);
             chart.removeFilterHandler(function (filters, filter) {
@@ -405,7 +405,7 @@ describe("dc.baseMixin", function () {
             expect(chart.hasFilter(notFilter)).toBeFalsy();
             expect(chart.filters().length).toEqual(0);
         });
-        it('has a default resetFilterHandler', function () {
+        it('with the default resetFilterHandler', function () {
             chart.filter(filter);
             chart.filter(notFilter);
             chart.filter(null);
@@ -413,7 +413,7 @@ describe("dc.baseMixin", function () {
             expect(chart.hasFilter(notFilter)).toBeFalsy();
             expect(chart.filters().length).toEqual(0);
         });
-        it('has a noop resetFilterHandler', function () {
+        it('with a noop resetFilterHandler', function () {
             chart.filter(filter);
             chart.filter(notFilter);
             chart.resetFilterHandler(function (filters) {
@@ -424,7 +424,7 @@ describe("dc.baseMixin", function () {
             expect(chart.hasFilter(notFilter)).toBeTruthy();
             expect(chart.filters().length).toEqual(2);
         });
-        it('has a shift resetFilterHandler', function () {
+        it('with a shift resetFilterHandler', function () {
             chart.filter(filter);
             chart.filter(notFilter);
             chart.resetFilterHandler(function (filters) {
