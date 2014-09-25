@@ -300,9 +300,85 @@ events (in particular [dc.redrawAll](#dcredrawallchartgroup)); therefore, you on
 manually invoke this function if data is manipulated outside of dc's control (for example if
 data is loaded in the background using `crossfilter.add()`).
 
+Set or get the has filter handler. The has filter handler is a function that performs the logical check if the
+current chart's filters have a specific filter.  Using a custom has filter handler allows you to perform additional
+logic upon checking if a filter exists.
+
+```js
+// default has filter handler
+function (filters, filter) {
+    if (filter === null || typeof(filter) === 'undefined') {
+        return filters.length > 0;
+    }
+    return filters.some(function (f) {
+        return filter <= f && filter >= f;
+    });
+}
+
+// custom filter handler (no-op)
+chart.hasFilterHandler(function(filter) {
+    return false;
+});
+```
+
 #### .hasFilter([filter])
-Check whether is any active filter or a specific filter is associated with particular chart instance.
+Check whether any active filter or a specific filter is associated with particular chart instance.
 This function is **not chainable**.
+
+Set or get the remove filter handler. The remove filter handler is a function that performs the removal of a filter
+from the chart's current filters. Using a custom remove filter handler allows you to perform additional logic
+upon removing a filter.  Any changes should modify the `filters` argument reference and return that reference.
+
+```js
+// default remove filter handler
+function (filters, filter) {
+    for (var i = 0; i < filters.length; i++) {
+        if (filters[i] <= filter && filters[i] >= filter) {
+            filters.splice(i, 1);
+            break;
+        }
+    }
+    return filters;
+}
+
+// custom filter handler (no-op)
+chart.removeFilterHandler(function(filters, filter) {
+    return filters;
+});
+```
+
+Set or get the add filter handler. The add filter handler is a function that performs the addition of a filter
+to the charts filter list. Using a custom add filter handler allows you to perform additional logic
+upon adding a filter.  Any changes should modify the `filters` argument reference and return that reference.
+
+```js
+// default add filter handler
+function (filters, filter) {
+    filters.push(filter);
+    return filters;
+}
+
+// custom filter handler (no-op)
+chart.addFilterHandler(function(filters, filter) {
+    return filters;
+});
+```
+
+Set or get the reset filter handler. The reset filter handler is a function that performs the reset of the filters
+list by returning the new list. Using a custom reset filter handler allows you to perform additional logic
+upon reseting the filters.  This function should return an array.
+
+```js
+// default remove filter handler
+function (filters) {
+    return [];
+}
+
+// custom filter handler (no-op)
+chart.addFilterHandler(function(filters) {
+    return filters;
+});
+```
 
 #### .filter([filterValue])
 Filter the chart by the given value or return the current filter if the input parameter is missing.

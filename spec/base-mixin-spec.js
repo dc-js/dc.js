@@ -1,5 +1,5 @@
 describe("dc.baseMixin", function () {
-    var chart, dimension, group;
+    var chart, dimension, group, addFilterHandler, removeFilterHandler, hasFilterHandler, resetFilterHandler;
 
     beforeEach(function () {
         var data = crossfilter(loadDateFixture());
@@ -16,6 +16,10 @@ describe("dc.baseMixin", function () {
                 group: group,
                 transitionDuration: 0
             });
+        addFilterHandler = chart.addFilterHandler();
+        hasFilterHandler = chart.hasFilterHandler();
+        removeFilterHandler = chart.removeFilterHandler();
+        resetFilterHandler = chart.resetFilterHandler();
     });
 
     describe('renderlets', function () {
@@ -297,6 +301,144 @@ describe("dc.baseMixin", function () {
             it('should ask the callback for the width', function () {
                 expect(chart.width()).toEqual(800);
             });
+        });
+    });
+
+    describe('filter handling', function () {
+        var filter, notFilter;
+        beforeEach(function () {
+            // 1 && 0 should handle most cases.  Could be true/false booleans...
+            filter = 1;
+            notFilter = 0;
+            chart.addFilterHandler(addFilterHandler);
+            chart.hasFilterHandler(hasFilterHandler);
+            chart.removeFilterHandler(removeFilterHandler);
+            chart.resetFilterHandler(resetFilterHandler);
+            chart.filterAll();
+        });
+        it('has a default hasFilterHandler', function () {
+            chart.filter(filter);
+            expect(chart.hasFilter(filter)).toBeTruthy();
+            expect(chart.hasFilter(notFilter)).toBeFalsy();
+        });
+        it('has a truthy hasFilterHandler', function () {
+            chart.filter(filter);
+            chart.hasFilterHandler(function () { return true; });
+            expect(chart.hasFilter(filter)).toBeTruthy();
+            expect(chart.hasFilter(notFilter)).toBeTruthy();
+        });
+        it('has a falsy hasFilterHandler', function () {
+            chart.filter(filter);
+            chart.hasFilterHandler(function () { return false; });
+            expect(chart.hasFilter(filter)).toBeFalsy();
+            expect(chart.hasFilter(notFilter)).toBeFalsy();
+        });
+        it('has a default addFilterHandler', function () {
+            chart.filter(filter);
+            expect(chart.hasFilter(filter)).toBeTruthy();
+            expect(chart.filters().length).toEqual(1);
+        });
+        it('has a noop addFilterHandler', function () {
+            chart.addFilterHandler(function (filters, filter) {
+                return filters;
+            });
+            chart.filter(filter);
+            expect(chart.hasFilter(filter)).toBeFalsy();
+            expect(chart.hasFilter(notFilter)).toBeFalsy();
+            expect(chart.filters().length).toEqual(0);
+        });
+        it('has a static addFilterHandler', function () {
+            chart.addFilterHandler(function (filters, filter) {
+                filters.push(notFilter);
+                return filters;
+            });
+            chart.filter(filter);
+            expect(chart.hasFilter(filter)).toBeFalsy();
+            expect(chart.hasFilter(notFilter)).toBeTruthy();
+            expect(chart.filters().length).toEqual(1);
+        });
+        it('has a default removeFilterHandler', function () {
+            chart.filter(filter);
+            chart.filter(notFilter);
+            expect(chart.filters().length).toEqual(2);
+            chart.filter(filter);
+            expect(chart.hasFilter(filter)).toBeFalsy();
+            expect(chart.hasFilter(notFilter)).toBeTruthy();
+            expect(chart.filters().length).toEqual(1);
+            chart.filter(notFilter);
+            expect(chart.hasFilter(filter)).toBeFalsy();
+            expect(chart.hasFilter(notFilter)).toBeFalsy();
+            expect(chart.filters().length).toEqual(0);
+        });
+        it('has a noop removeFilterHandler', function () {
+            chart.filter(filter);
+            chart.filter(notFilter);
+            chart.removeFilterHandler(function (filters, filter) {
+                return filters;
+            });
+            expect(chart.filters().length).toEqual(2);
+            chart.filter(filter);
+            expect(chart.hasFilter(filter)).toBeTruthy();
+            expect(chart.hasFilter(notFilter)).toBeTruthy();
+            expect(chart.filters().length).toEqual(2);
+            chart.filter(notFilter);
+            expect(chart.hasFilter(filter)).toBeTruthy();
+            expect(chart.hasFilter(notFilter)).toBeTruthy();
+            expect(chart.filters().length).toEqual(2);
+        });
+        it('has a shift removeFilterHandler', function () {
+            chart.filter(filter);
+            chart.filter(notFilter);
+            chart.removeFilterHandler(function (filters, filter) {
+                if (filters.length > 0) {
+                    filters.shift();
+                }
+                return filters;
+            });
+            expect(chart.filters().length).toEqual(2);
+            chart.filter(notFilter);
+            expect(chart.hasFilter(filter)).toBeFalsy();
+            expect(chart.hasFilter(notFilter)).toBeTruthy();
+            expect(chart.filters().length).toEqual(1);
+            chart.filter(notFilter);
+            expect(chart.hasFilter(filter)).toBeFalsy();
+            expect(chart.hasFilter(notFilter)).toBeFalsy();
+            expect(chart.filters().length).toEqual(0);
+        });
+        it('has a default resetFilterHandler', function () {
+            chart.filter(filter);
+            chart.filter(notFilter);
+            chart.filter(null);
+            expect(chart.hasFilter(filter)).toBeFalsy();
+            expect(chart.hasFilter(notFilter)).toBeFalsy();
+            expect(chart.filters().length).toEqual(0);
+        });
+        it('has a noop resetFilterHandler', function () {
+            chart.filter(filter);
+            chart.filter(notFilter);
+            chart.resetFilterHandler(function (filters) {
+                return filters;
+            });
+            chart.filter(null);
+            expect(chart.hasFilter(filter)).toBeTruthy();
+            expect(chart.hasFilter(notFilter)).toBeTruthy();
+            expect(chart.filters().length).toEqual(2);
+        });
+        it('has a shift resetFilterHandler', function () {
+            chart.filter(filter);
+            chart.filter(notFilter);
+            chart.resetFilterHandler(function (filters) {
+                filters.shift();
+                return filters;
+            });
+            chart.filter(null);
+            expect(chart.hasFilter(filter)).toBeFalsy();
+            expect(chart.hasFilter(notFilter)).toBeTruthy();
+            expect(chart.filters().length).toEqual(1);
+            chart.filter(null);
+            expect(chart.hasFilter(filter)).toBeFalsy();
+            expect(chart.hasFilter(notFilter)).toBeFalsy();
+            expect(chart.filters().length).toEqual(0);
         });
     });
 });

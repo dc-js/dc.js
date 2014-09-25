@@ -1094,41 +1094,155 @@ dc.baseMixin = function (_chart) {
         _listeners.zoomed(_chart);
     };
 
-    /**
-    #### .hasFilter([filter])
-    Check whether is any active filter or a specific filter is associated with particular chart instance.
-    This function is **not chainable**.
-
-    **/
-    _chart.hasFilter = function (filter) {
-        if (!arguments.length) return _filters.length > 0;
-        return _filters.some(function(f) {
+    var _hasFilterHandler = function (filters, filter) {
+        if (filter === null || typeof(filter) === 'undefined') {
+            return filters.length > 0;
+        }
+        return filters.some(function (f) {
             return filter <= f && filter >= f;
         });
     };
 
-    function removeFilter(_) {
-        for(var i = 0; i < _filters.length; i++) {
-            if(_filters[i] <= _ && _filters[i] >= _) {
-                _filters.splice(i, 1);
+    /**
+    Set or get the has filter handler. The has filter handler is a function that performs the logical check if the
+    current chart's filters have a specific filter.  Using a custom has filter handler allows you to perform additional
+    logic upon checking if a filter exists.
+
+    ```js
+    // default has filter handler
+    function (filters, filter) {
+        if (filter === null || typeof(filter) === 'undefined') {
+            return filters.length > 0;
+        }
+        return filters.some(function (f) {
+            return filter <= f && filter >= f;
+        });
+    }
+
+    // custom filter handler (no-op)
+    chart.hasFilterHandler(function(filter) {
+        return false;
+    });
+    ```
+    **/
+    _chart.hasFilterHandler = function (_) {
+        if (!arguments.length) {
+            return _hasFilterHandler;
+        }
+        _hasFilterHandler = _;
+        return _chart;
+    };
+
+    /**
+    #### .hasFilter([filter])
+    Check whether any active filter or a specific filter is associated with particular chart instance.
+    This function is **not chainable**.
+
+    **/
+    _chart.hasFilter = function (filter) {
+        return _hasFilterHandler(_filters, filter);
+    };
+
+    var _removeFilterHandler = function (filters, filter) {
+        for (var i = 0; i < filters.length; i++) {
+            if (filters[i] <= filter && filters[i] >= filter) {
+                filters.splice(i, 1);
                 break;
             }
         }
-        applyFilters();
-        _chart._invokeFilteredListener(_);
+        return filters;
+    };
+
+    /**
+    Set or get the remove filter handler. The remove filter handler is a function that performs the removal of a filter
+    from the chart's current filters. Using a custom remove filter handler allows you to perform additional logic
+    upon removing a filter.  Any changes should modify the `filters` argument reference and return that reference.
+
+    ```js
+    // default remove filter handler
+    function (filters, filter) {
+        for (var i = 0; i < filters.length; i++) {
+            if (filters[i] <= filter && filters[i] >= filter) {
+                filters.splice(i, 1);
+                break;
+            }
+        }
+        return filters;
     }
 
-    function addFilter(_) {
-        _filters.push(_);
-        applyFilters();
-        _chart._invokeFilteredListener(_);
+    // custom filter handler (no-op)
+    chart.removeFilterHandler(function(filters, filter) {
+        return filters;
+    });
+    ```
+    **/
+    _chart.removeFilterHandler = function (_) {
+        if (!arguments.length) {
+            return _removeFilterHandler;
+        }
+        _removeFilterHandler = _;
+        return _chart;
+    };
+
+    var _addFilterHandler = function (filters, filter) {
+        filters.push(filter);
+        return filters;
+    };
+
+    /**
+    Set or get the add filter handler. The add filter handler is a function that performs the addition of a filter
+    to the charts filter list. Using a custom add filter handler allows you to perform additional logic
+    upon adding a filter.  Any changes should modify the `filters` argument reference and return that reference.
+
+    ```js
+    // default add filter handler
+    function (filters, filter) {
+        filters.push(filter);
+        return filters;
     }
 
-    function resetFilters() {
-        _filters = [];
-        applyFilters();
-        _chart._invokeFilteredListener(null);
+    // custom filter handler (no-op)
+    chart.addFilterHandler(function(filters, filter) {
+        return filters;
+    });
+    ```
+    **/
+    _chart.addFilterHandler = function (_) {
+        if (!arguments.length) {
+            return _addFilterHandler;
+        }
+        _addFilterHandler = _;
+        return _chart;
+    };
+
+    var _resetFilterHandler = function (filters) {
+        return [];
+    };
+
+    /**
+    Set or get the reset filter handler. The reset filter handler is a function that performs the reset of the filters
+    list by returning the new list. Using a custom reset filter handler allows you to perform additional logic
+    upon reseting the filters.  This function should return an array.
+
+    ```js
+    // default remove filter handler
+    function (filters) {
+        return [];
     }
+
+    // custom filter handler (no-op)
+    chart.addFilterHandler(function(filters) {
+        return filters;
+    });
+    ```
+    **/
+    _chart.resetFilterHandler = function (_) {
+        if (!arguments.length) {
+            return _resetFilterHandler;
+        }
+        _resetFilterHandler = _;
+        return _chart;
+    };
 
     function applyFilters() {
         if (_chart.dimension() && _chart.dimension().filter) {
@@ -1151,28 +1265,27 @@ dc.baseMixin = function (_chart) {
     // filter by a single age
     chart.filter(18);
     ```
-
     **/
     _chart.filter = function (_) {
         if (!arguments.length) return _filters.length > 0 ? _filters[0] : null;
         if (_ instanceof Array && _[0] instanceof Array && !_.isFiltered) {
             _[0].forEach(function(d){
                 if (_chart.hasFilter(d)) {
-                    _filters.splice(_filters.indexOf(d), 1);
+                    _removeFilterHandler(_filters, d);
                 } else {
-                    _filters.push(d);
+                    _addFilterHandler(_filters, d);
                 }
             });
-            applyFilters();
-            _chart._invokeFilteredListener(_);
         } else if (_ === null) {
-            resetFilters();
+            _filters = _resetFilterHandler(_filters);
         } else {
             if (_chart.hasFilter(_))
-                removeFilter(_);
+                _removeFilterHandler(_filters, _);
             else
-                addFilter(_);
+                _addFilterHandler(_filters, _);
         }
+        applyFilters();
+        _chart._invokeFilteredListener(_);
 
         if (_root !== null && _chart.hasFilter()) {
             _chart.turnOnControls();
