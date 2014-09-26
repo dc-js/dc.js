@@ -151,8 +151,11 @@ dc.heatMap = function (parent, chartGroup) {
             .attr("fill", "white")
             .on("click", _chart.boxOnClick());
 
-        gEnter.append("title")
-            .text(_chart.title());
+
+        if(_chart.renderTitle()) {
+            gEnter.append("title")
+                .text(_chart.title());
+        }
 
         dc.transition(boxes.selectAll("rect"), _chart.transitionDuration())
             .attr("x", function(d,i) { return cols(_chart.keyAccessor()(d,i)); })

@@ -1491,7 +1491,6 @@ dc.baseMixin = function (_chart) {
     _chart.title = function (_) {
         if (!arguments.length) return _title;
         _title = _;
-        // _renderTitle = true;
         return _chart;
     };
 
@@ -3259,7 +3258,6 @@ dc.bubbleMixin = function (_chart) {
     _chart = dc.colorMixin(_chart);
 
     _chart.renderLabel(true);
-    _chart.renderTitle(true);
 
     _chart.data(function(group) {
         return group.top(Infinity);
@@ -4441,8 +4439,7 @@ dc.lineChart = function (parent, chartGroup) {
                     .attr("cy", function (d) {
                         return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
                     })
-                    .attr("fill", _chart.getColor)
-                    .select("title").text(dc.pluck('data', _chart.title(d.name)));
+                    .attr("fill", _chart.getColor);
 
                 dots.exit().remove();
             });
@@ -7339,8 +7336,11 @@ dc.heatMap = function (parent, chartGroup) {
             .attr("fill", "white")
             .on("click", _chart.boxOnClick());
 
-        gEnter.append("title")
-            .text(_chart.title());
+
+        if(_chart.renderTitle()) {
+            gEnter.append("title")
+                .text(_chart.title());
+        }
 
         dc.transition(boxes.selectAll("rect"), _chart.transitionDuration())
             .attr("x", function(d,i) { return cols(_chart.keyAccessor()(d,i)); })

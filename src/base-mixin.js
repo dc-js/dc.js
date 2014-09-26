@@ -884,7 +884,6 @@ dc.baseMixin = function (_chart) {
     _chart.title = function (_) {
         if (!arguments.length) return _title;
         _title = _;
-        // _renderTitle = true;
         return _chart;
     };
 
