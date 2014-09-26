@@ -255,7 +255,7 @@ dc.lineChart = function (parent, chartGroup) {
                         hideDot(dot);
                         hideRefLines(g);
                     })
-                    .append("title").text(dc.pluck('data', _chart.title(d.name)));
+                    .call(renderTitle, d);
 
                 dots.attr("cx", function (d) {
                         return dc.utils.safeNumber(_chart.x()(d.x));
@@ -309,6 +309,10 @@ dc.lineChart = function (parent, chartGroup) {
     function hideRefLines(g) {
         g.select("path." + Y_AXIS_REF_LINE_CLASS).style("display", "none");
         g.select("path." + X_AXIS_REF_LINE_CLASS).style("display", "none");
+    }
+
+    function renderTitle(dot, d) {
+        if (_chart.renderTitle()) dot.append("title").text(dc.pluck('data', _chart.title(d.name)));
     }
 
     /**

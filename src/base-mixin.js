@@ -40,7 +40,7 @@ dc.baseMixin = function (_chart) {
     var _title = function (d) {
         return _chart.keyAccessor()(d) + ": " + _chart.valueAccessor()(d);
     };
-    var _renderTitle = false;
+    var _renderTitle = true;
 
     var _transitionDuration = 750;
 
@@ -884,7 +884,7 @@ dc.baseMixin = function (_chart) {
     _chart.title = function (_) {
         if (!arguments.length) return _title;
         _title = _;
-        _renderTitle = true;
+        // _renderTitle = true;
         return _chart;
     };
 

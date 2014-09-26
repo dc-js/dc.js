@@ -647,7 +647,7 @@ dc.baseMixin = function (_chart) {
     var _title = function (d) {
         return _chart.keyAccessor()(d) + ": " + _chart.valueAccessor()(d);
     };
-    var _renderTitle = false;
+    var _renderTitle = true;
 
     var _transitionDuration = 750;
 
@@ -1491,7 +1491,7 @@ dc.baseMixin = function (_chart) {
     _chart.title = function (_) {
         if (!arguments.length) return _title;
         _title = _;
-        _renderTitle = true;
+        // _renderTitle = true;
         return _chart;
     };
 
@@ -3259,7 +3259,7 @@ dc.bubbleMixin = function (_chart) {
     _chart = dc.colorMixin(_chart);
 
     _chart.renderLabel(true);
-    _chart.renderTitle(false);
+    _chart.renderTitle(true);
 
     _chart.data(function(group) {
         return group.top(Infinity);
@@ -4433,7 +4433,7 @@ dc.lineChart = function (parent, chartGroup) {
                         hideDot(dot);
                         hideRefLines(g);
                     })
-                    .append("title").text(dc.pluck('data', _chart.title(d.name)));
+                    .call(renderTitle, d);
 
                 dots.attr("cx", function (d) {
                         return dc.utils.safeNumber(_chart.x()(d.x));
@@ -4487,6 +4487,10 @@ dc.lineChart = function (parent, chartGroup) {
     function hideRefLines(g) {
         g.select("path." + Y_AXIS_REF_LINE_CLASS).style("display", "none");
         g.select("path." + X_AXIS_REF_LINE_CLASS).style("display", "none");
+    }
+
+    function renderTitle(dot, d) {
+        if (_chart.renderTitle()) dot.append("title").text(dc.pluck('data', _chart.title(d.name)));
     }
 
     /**
@@ -5272,6 +5276,7 @@ dc.compositeChart = function (parent, chartGroup) {
             child.xUnits(_chart.xUnits());
             child.transitionDuration(_chart.transitionDuration());
             child.brushOn(_chart.brushOn());
+            child.renderTitle(_chart.renderTitle());
         }
 
         return g;

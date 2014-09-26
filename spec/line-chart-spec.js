@@ -110,6 +110,18 @@ describe('dc.lineChart', function() {
             });
         });
 
+        describe('title rendering', function () {
+            beforeEach(function () {
+                chart.renderTitle(false);
+                chart.render();
+            });
+
+            it('should not render tooltips when boolean flag is false', function () {
+                expect(chart.select(".sub._0 .dc-tooltip._0 .dot").empty()).toBeTruthy();
+                expect(chart.select(".sub._1 .dc-tooltip._0 .dot").empty()).toBeTruthy();
+            });
+        });
+
         describe('data point highlights', function () {
             beforeEach(function () {
                 chart.title(function (d) { return d.value; });
