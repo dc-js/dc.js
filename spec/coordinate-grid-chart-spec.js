@@ -157,11 +157,37 @@ describe('dc.coordinateGridChart', function() {
                 expect(rect.attr("height")).toBe('130');
             });
 
+            it('should translate the clip rect to 0,0', function () {
+                var rect = chart.select("defs #coordinate-grid-chart-clip rect");
+                expect(rect.attr('transform')).toBe('translate(-0, -0)');
+            });
+
             it('should add clip path refs to the chart body', function () {
                 chart.selectAll("g.chart-body").each(function () {
                     expect(d3.select(this).attr("clip-path")).toMatchUrl("#coordinate-grid-chart-clip");
                 });
             });
+
+            describe('setting clipPadding(20)', function () {
+
+                beforeEach(function () {
+                    chart.clipPadding(20);
+                    chart.render();
+                });
+
+                it('should update the clip rect based on the graph size and clipPadding', function () {
+                    var rect = chart.select("defs #coordinate-grid-chart-clip rect");
+                    expect(rect.attr('width')).toBe('530');
+                    expect(rect.attr('height')).toBe('170');
+                });
+
+                it('should translate the clip rect to -20,-20', function () {
+                    var rect = chart.select("defs #coordinate-grid-chart-clip rect");
+                    expect(rect.attr('transform')).toBe('translate(-20, -20)');
+                });
+
+            });
+
         });
 
         describe('when an x function is not provided', function () {
