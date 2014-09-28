@@ -331,6 +331,7 @@ module.exports.jsFiles = [
     "src/stack-mixin.js",
     "src/cap-mixin.js",
     "src/bubble-mixin.js",
+    "src/wheel-mixin.js",
     "src/pie-chart.js",
     "src/bar-chart.js",
     "src/line-chart.js",
