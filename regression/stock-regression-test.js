@@ -5,6 +5,7 @@ require("./difflib.js");
 module.exports = {
     testStockExample: function (asyncDone, showDiff) {
         var passed = false;
+        process.env.TZ = "UTC";
 
         phantomjs.on('rendered', function(pageStr) {
             require("fs").readFile(__dirname + '/rendered-stock-fixture.html', function (err, data) {
@@ -46,6 +47,7 @@ module.exports = {
 
     updateStockExample: function (asyncDone) {
         var ok = false;
+        process.env.TZ = "UTC";
 
         phantomjs.on('rendered', function(pageStr) {
             require("fs").writeFile(__dirname + '/rendered-stock-fixture.html', pageStr, function (err) {
