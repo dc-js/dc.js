@@ -157,8 +157,7 @@ dc.heatMap = function (parent, chartGroup) {
             .attr('fill', 'white')
             .on('click', _chart.boxOnClick());
 
-
-        if(_chart.renderTitle()) {
+        if (_chart.renderTitle()) {
             gEnter.append('title')
                 .text(_chart.title());
         }

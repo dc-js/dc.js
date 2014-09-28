@@ -34,7 +34,7 @@ dc.scatterPlot = function (parent, chartGroup) {
     var _chart = dc.coordinateGridMixin({});
     var _symbol = d3.svg.symbol();
 
-    var _existenceAccessor = function(d) { return d.value; };
+    var _existenceAccessor = function (d) { return d.value; };
 
     var originalKeyAccessor = _chart.keyAccessor();
     _chart.keyAccessor(function (d) { return originalKeyAccessor(d)[0]; });
@@ -50,7 +50,7 @@ dc.scatterPlot = function (parent, chartGroup) {
     var _highlightedSize = 5;
     var _hiddenSize = 0;
 
-    _symbol.size(function(d) {
+    _symbol.size(function (d) {
         if (!_existenceAccessor(d)) {
             return _hiddenSize;
         } else if (this.filtered) {
@@ -97,12 +97,13 @@ dc.scatterPlot = function (parent, chartGroup) {
     opacity 1; if it does not exist, it is drawn with hiddenSize radius and opacity 0.
     **/
 
-    _chart.existenceAccessor = function(acc) {
-        if(!arguments.length) return _existenceAccessor;
+    _chart.existenceAccessor = function (acc) {
+        if (!arguments.length) {
+            return _existenceAccessor;
+        }
         _existenceAccessor = acc;
         return this;
     };
-
 
     /**
     #### .symbol([type])

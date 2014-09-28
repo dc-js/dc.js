@@ -333,7 +333,9 @@ dc.lineChart = function (parent, chartGroup) {
     }
 
     function renderTitle(dot, d) {
-        if (_chart.renderTitle()) dot.append('title').text(dc.pluck('data', _chart.title(d.name)));
+        if (_chart.renderTitle()) {
+            dot.append('title').text(dc.pluck('data', _chart.title(d.name)));
+        }
     }
 
     /**

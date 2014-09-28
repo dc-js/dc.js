@@ -652,7 +652,7 @@ dc.baseMixin = function (_chart) {
         return _chart;
     };
 
-    var _resetFilterHandler = function (filters) {
+    var _resetFilterHandler = function () {
         return [];
     };
 
