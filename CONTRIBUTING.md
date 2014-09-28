@@ -29,15 +29,17 @@
 * Please try to follow the existing code formatting
 * We use jshint and jscs to verify most of our coding conventions
 
-It helps keep on top of the conventions if you create a pre-commit hook like this:
+It helps keep on top of the conventions if you create a git pre-commit hook `.git/hooks/pre-commit`:
 ```
-$ cat > .git/hooks/pre-commit
 #!/usr/bin/env sh
 
 grunt jshint
 grunt jscs
 ```
-... or just run the commands manually before committing.
+
+(You also need to make it executable with  `chmod u+x .git/hooks/pre-commit`)
+
+Or you can just run the commands manually before committing.
 
 #### Testing Notes
 
