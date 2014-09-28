@@ -21,9 +21,9 @@
 
  ```js
  // create a heat map under #chart-container1 element using the default global chart group
- var heatMap1 = dc.heatMap("#chart-container1");
+ var heatMap1 = dc.heatMap('#chart-container1');
  // create a heat map under #chart-container2 element using chart group A
- var heatMap2 = dc.heatMap("#chart-container2", "chartGroupA");
+ var heatMap2 = dc.heatMap('#chart-container2', 'chartGroupA');
  ```
 
  **/
@@ -46,26 +46,26 @@ dc.heatMap = function (parent, chartGroup) {
     var _yAxisOnClick = function (d) { filterAxis(1, d); };
     var _boxOnClick = function (d) {
         var filter = d.key;
-        dc.events.trigger(function() {
+        dc.events.trigger(function () {
             _chart.filter(filter);
             _chart.redrawGroup();
         });
     };
 
     function filterAxis(axis, value) {
-        var cellsOnAxis = _chart.selectAll(".box-group").filter( function (d) {
-            return d.key[axis] == value;
+        var cellsOnAxis = _chart.selectAll('.box-group').filter(function (d) {
+            return d.key[axis] === value;
         });
-        var unfilteredCellsOnAxis = cellsOnAxis.filter( function (d) {
+        var unfilteredCellsOnAxis = cellsOnAxis.filter(function (d) {
             return !_chart.hasFilter(d.key);
         });
-        dc.events.trigger(function() {
-            if(unfilteredCellsOnAxis.empty()) {
-                cellsOnAxis.each( function (d) {
+        dc.events.trigger(function () {
+            if (unfilteredCellsOnAxis.empty()) {
+                cellsOnAxis.each(function (d) {
                     _chart.filter(d.key);
                 });
             } else {
-                unfilteredCellsOnAxis.each( function (d) {
+                unfilteredCellsOnAxis.each(function (d) {
                     _chart.filter(d.key);
                 });
             }
@@ -73,14 +73,16 @@ dc.heatMap = function (parent, chartGroup) {
         });
     }
 
-    dc.override(_chart, "filter", function(filter) {
-        if (!arguments.length) return _chart._filter();
+    dc.override(_chart, 'filter', function (filter) {
+        if (!arguments.length) {
+            return _chart._filter();
+        }
 
         return _chart._filter(dc.filters.TwoDimensionalFilter(filter));
     });
 
-    function uniq(d,i,a) {
-        return !i || a[i-1] != d;
+    function uniq(d, i, a) {
+        return !i || a[i - 1] !== d;
     }
 
     /**
@@ -95,7 +97,9 @@ dc.heatMap = function (parent, chartGroup) {
             _rows = _;
             return _chart;
         }
-        if (_rows) return _rows;
+        if (_rows) {
+            return _rows;
+        }
         var rowValues = _chart.data().map(_chart.valueAccessor());
         rowValues.sort(d3.ascending);
         return d3.scale.ordinal().domain(rowValues.filter(uniq));
@@ -112,7 +116,9 @@ dc.heatMap = function (parent, chartGroup) {
             _cols = _;
             return _chart;
         }
-        if (_cols) return _cols;
+        if (_cols) {
+            return _cols;
+        }
         var colValues = _chart.data().map(_chart.keyAccessor());
         colValues.sort(d3.ascending);
         return d3.scale.ordinal().domain(colValues.filter(uniq));
@@ -122,9 +128,9 @@ dc.heatMap = function (parent, chartGroup) {
         _chart.resetSvg();
 
         _chartBody = _chart.svg()
-          .append("g")
-          .attr("class", "heatmap")
-          .attr("transform", "translate(" + _chart.margins().left + "," + _chart.margins().top + ")");
+            .append('g')
+            .attr('class', 'heatmap')
+            .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
 
         return _chart._doRedraw();
     };
@@ -140,67 +146,69 @@ dc.heatMap = function (parent, chartGroup) {
         cols.rangeRoundBands([0, _chart.effectiveWidth()]);
         rows.rangeRoundBands([_chart.effectiveHeight(), 0]);
 
-        var boxes = _chartBody.selectAll("g.box-group").data(_chart.data(), function(d,i) {
-            return _chart.keyAccessor()(d,i) + '\0' + _chart.valueAccessor()(d,i);
+        var boxes = _chartBody.selectAll('g.box-group').data(_chart.data(), function (d, i) {
+            return _chart.keyAccessor()(d, i) + '\0' + _chart.valueAccessor()(d, i);
         });
-        var gEnter = boxes.enter().append("g")
-            .attr("class", "box-group");
+        var gEnter = boxes.enter().append('g')
+            .attr('class', 'box-group');
 
-        gEnter.append("rect")
-            .attr("class","heat-box")
-            .attr("fill", "white")
-            .on("click", _chart.boxOnClick());
+        gEnter.append('rect')
+            .attr('class', 'heat-box')
+            .attr('fill', 'white')
+            .on('click', _chart.boxOnClick());
 
 
         if(_chart.renderTitle()) {
-            gEnter.append("title")
+            gEnter.append('title')
                 .text(_chart.title());
         }
 
-        dc.transition(boxes.selectAll("rect"), _chart.transitionDuration())
-            .attr("x", function(d,i) { return cols(_chart.keyAccessor()(d,i)); })
-            .attr("y", function(d,i) { return rows(_chart.valueAccessor()(d,i)); })
-            .attr("rx", _xBorderRadius)
-            .attr("ry", _yBorderRadius)
-            .attr("fill", _chart.getColor)
-            .attr("width", boxWidth)
-            .attr("height", boxHeight);
+        dc.transition(boxes.selectAll('rect'), _chart.transitionDuration())
+            .attr('x', function (d, i) { return cols(_chart.keyAccessor()(d, i)); })
+            .attr('y', function (d, i) { return rows(_chart.valueAccessor()(d, i)); })
+            .attr('rx', _xBorderRadius)
+            .attr('ry', _yBorderRadius)
+            .attr('fill', _chart.getColor)
+            .attr('width', boxWidth)
+            .attr('height', boxHeight);
 
         boxes.exit().remove();
 
-        var gCols = _chartBody.selectAll("g.cols");
-        if (gCols.empty())
-            gCols = _chartBody.append("g").attr("class", "cols axis");
+        var gCols = _chartBody.selectAll('g.cols');
+        if (gCols.empty()) {
+            gCols = _chartBody.append('g').attr('class', 'cols axis');
+        }
         var gColsText = gCols.selectAll('text').data(cols.domain());
-        gColsText.enter().append("text")
-              .attr("x", function(d) { return cols(d) + boxWidth/2; })
-              .style("text-anchor", "middle")
-              .attr("y", _chart.effectiveHeight())
-              .attr("dy", 12)
-              .on("click", _chart.xAxisOnClick())
-              .text(function(d) { return d; });
+        gColsText.enter().append('text')
+              .attr('x', function (d) { return cols(d) + boxWidth / 2; })
+              .style('text-anchor', 'middle')
+              .attr('y', _chart.effectiveHeight())
+              .attr('dy', 12)
+              .on('click', _chart.xAxisOnClick())
+              .text(function (d) { return d; });
         dc.transition(gColsText, _chart.transitionDuration())
-               .text(function(d) { return d; })
-               .attr("x", function(d) { return cols(d) + boxWidth/2; });
+               .text(function (d) { return d; })
+               .attr('x', function (d) { return cols(d) + boxWidth / 2; });
         gColsText.exit().remove();
-        var gRows = _chartBody.selectAll("g.rows");
-        if (gRows.empty())
-            gRows = _chartBody.append("g").attr("class", "rows axis");
+        var gRows = _chartBody.selectAll('g.rows');
+        if (gRows.empty()) {
+            gRows = _chartBody.append('g').attr('class', 'rows axis');
+        }
         var gRowsText = gRows.selectAll('text').data(rows.domain());
-        gRowsText.enter().append("text")
-              .attr("dy", 6)
-              .style("text-anchor", "end")
-              .attr("x", 0)
-              .attr("dx", -2)
-              .on("click", _chart.yAxisOnClick())
-              .text(function(d) { return d; });
+        gRowsText.enter().append('text')
+              .attr('dy', 6)
+              .style('text-anchor', 'end')
+              .attr('x', 0)
+              .attr('dx', -2)
+              .on('click', _chart.yAxisOnClick())
+              .text(function (d) { return d; });
         dc.transition(gRowsText, _chart.transitionDuration())
-              .text(function(d) { return d; })
-              .attr("y", function(d) { return rows(d) + boxHeight/2; });
+              .text(function (d) { return d; })
+              .attr('y', function (d) { return rows(d) + boxHeight / 2; });
         gRowsText.exit().remove();
 
         if (_chart.hasFilter()) {
-            _chart.selectAll("g.box-group").each(function (d) {
+            _chart.selectAll('g.box-group').each(function (d) {
                 if (_chart.isSelectedNode(d)) {
                     _chart.highlightSelected(this);
                 } else {
@@ -208,7 +216,7 @@ dc.heatMap = function (parent, chartGroup) {
                 }
             });
         } else {
-            _chart.selectAll("g.box-group").each(function () {
+            _chart.selectAll('g.box-group').each(function () {
                 _chart.resetHighlight(this);
             });
         }
@@ -220,7 +228,9 @@ dc.heatMap = function (parent, chartGroup) {
      By default, filtering of the cell will be toggled.
      **/
     _chart.boxOnClick = function (f) {
-        if (!arguments.length) return _boxOnClick;
+        if (!arguments.length) {
+            return _boxOnClick;
+        }
         _boxOnClick = f;
         return _chart;
     };
@@ -232,7 +242,9 @@ dc.heatMap = function (parent, chartGroup) {
      otherwise the whole column will be unselected.
      **/
     _chart.xAxisOnClick = function (f) {
-        if (!arguments.length) return _xAxisOnClick;
+        if (!arguments.length) {
+            return _xAxisOnClick;
+        }
         _xAxisOnClick = f;
         return _chart;
     };
@@ -244,7 +256,9 @@ dc.heatMap = function (parent, chartGroup) {
      otherwise the whole row will be unselected.
      **/
     _chart.yAxisOnClick = function (f) {
-        if (!arguments.length) return _yAxisOnClick;
+        if (!arguments.length) {
+            return _yAxisOnClick;
+        }
         _yAxisOnClick = f;
         return _chart;
     };
@@ -254,7 +268,9 @@ dc.heatMap = function (parent, chartGroup) {
      Gets or sets the X border radius.  Set to 0 to get full rectangles.  Default: 6.75
      */
     _chart.xBorderRadius = function (d) {
-        if (!arguments.length) return _xBorderRadius;
+        if (!arguments.length) {
+            return _xBorderRadius;
+        }
         _xBorderRadius = d;
         return _chart;
     };
@@ -264,7 +280,9 @@ dc.heatMap = function (parent, chartGroup) {
      Gets or sets the Y border radius.  Set to 0 to get full rectangles.  Default: 6.75
      */
     _chart.yBorderRadius = function (d) {
-        if (!arguments.length) return _yBorderRadius;
+        if (!arguments.length) {
+            return _yBorderRadius;
+        }
         _yBorderRadius = d;
         return _chart;
     };

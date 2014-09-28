@@ -1,6 +1,5 @@
 /**
 ## Cap Mixin
-
 Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the
 Row and Pie Charts.
 
@@ -14,7 +13,7 @@ dc.capMixin = function (_chart) {
 
     var _cap = Infinity;
 
-    var _othersLabel = "Others";
+    var _othersLabel = 'Others';
 
     var _othersGrouper = function (topRows) {
         var topRowsSum = d3.sum(topRows, _chart.valueAccessor()),
@@ -23,31 +22,36 @@ dc.capMixin = function (_chart) {
             topKeys = topRows.map(_chart.keyAccessor()),
             allKeys = allRows.map(_chart.keyAccessor()),
             topSet = d3.set(topKeys),
-            others = allKeys.filter(function(d){return !topSet.has(d);});
-        if (allRowsSum > topRowsSum)
-            return topRows.concat([{"others": others, "key": _othersLabel, "value": allRowsSum - topRowsSum}]);
+            others = allKeys.filter(function (d) {return !topSet.has(d);});
+        if (allRowsSum > topRowsSum) {
+            return topRows.concat([{'others': others, 'key': _othersLabel, 'value': allRowsSum - topRowsSum}]);
+        }
         return topRows;
     };
 
-    _chart.cappedKeyAccessor = function(d,i) {
-        if (d.others)
+    _chart.cappedKeyAccessor = function (d, i) {
+        if (d.others) {
             return d.key;
-        return _chart.keyAccessor()(d,i);
+        }
+        return _chart.keyAccessor()(d, i);
     };
 
-    _chart.cappedValueAccessor = function(d,i) {
-        if (d.others)
+    _chart.cappedValueAccessor = function (d, i) {
+        if (d.others) {
             return d.value;
-        return _chart.valueAccessor()(d,i);
+        }
+        return _chart.valueAccessor()(d, i);
     };
 
-    _chart.data(function(group) {
-        if (_cap == Infinity) {
+    _chart.data(function (group) {
+        if (_cap === Infinity) {
             return _chart._computeOrderedGroups(group.all());
         } else {
             var topRows = group.top(_cap); // ordered by crossfilter group order (default value)
             topRows = _chart._computeOrderedGroups(topRows); // re-order using ordering (default key)
-            if (_othersGrouper) return _othersGrouper(topRows);
+            if (_othersGrouper) {
+                return _othersGrouper(topRows);
+            }
             return topRows;
         }
     });
@@ -57,7 +61,9 @@ dc.capMixin = function (_chart) {
     Get or set the count of elements to that will be included in the cap.
     **/
     _chart.cap = function (_) {
-        if (!arguments.length) return _cap;
+        if (!arguments.length) {
+            return _cap;
+        }
         _cap = _;
         return _chart;
     };
@@ -67,7 +73,9 @@ dc.capMixin = function (_chart) {
     Get or set the label for *Others* slice when slices cap is specified. Default label is **Others**.
     **/
     _chart.othersLabel = function (_) {
-        if (!arguments.length) return _othersLabel;
+        if (!arguments.length) {
+            return _othersLabel;
+        }
         _othersLabel = _;
         return _chart;
     };
@@ -86,21 +94,24 @@ dc.capMixin = function (_chart) {
         var othersKeys = yourComputeOthersKeysArrayLogic(data);
 
         // add the others row to the dataset
-        data.push({"key": "Others", "value": othersSum, "others": othersKeys });
+        data.push({'key': 'Others', 'value': othersSum, 'others': othersKeys });
 
         return data;
     });
     ```
     **/
     _chart.othersGrouper = function (_) {
-        if (!arguments.length) return _othersGrouper;
+        if (!arguments.length) {
+            return _othersGrouper;
+        }
         _othersGrouper = _;
         return _chart;
     };
 
-    dc.override(_chart, "onClick", function (d) {
-        if (d.others)
+    dc.override(_chart, 'onClick', function (d) {
+        if (d.others) {
             _chart.filter([d.others]);
+        }
         _chart._onClick(d);
     });
 

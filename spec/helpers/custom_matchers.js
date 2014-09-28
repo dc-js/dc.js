@@ -66,16 +66,25 @@ function comparePaths(actual, expected, delta) {
     var got = parsePath(actual),
         wanted = parsePath(expected);
     if(got.length != wanted.length)
-        return {pass: false, message: "actual number of path cmds " + actual.length +
-                " did not match expected number " + expected.length};
+        return {
+            pass: false,
+            message: "actual number of path cmds " + actual.length +
+                " did not match expected number " + expected.length
+        };
     for(var i = 0; i!=got.length; ++i) {
         var command_num = "path command #" + i;
         if(got[i].op.toUpperCase() != wanted[i].op.toUpperCase())
-            return {pass: false, message: command_num + " actual '" + got[i].op.toUpperCase() +
-                    "' != expected '" + wanted[i].op.toUpperCase() + "'"};
+            return {
+                pass: false,
+                message: command_num + " actual '" + got[i].op.toUpperCase() +
+                    "' != expected '" + wanted[i].op.toUpperCase() + "'"
+            };
         if(got[i].args.length != wanted[i].args.length)
-            return {pass: false, message: command_num + " number of arguments " +
-                    got[i].args.length + " != expected " + wanted[i].args.length};
+            return {
+                pass: false,
+                message: command_num + " number of arguments " +
+                    got[i].args.length + " != expected " + wanted[i].args.length
+            };
         for(var j = 0; j<got[i].args.length; ++j) {
             var result = compareWithinDelta(got[i].args[j], wanted[i].args[j], delta);
             if(!result.pass) {

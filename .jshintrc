@@ -1,0 +1,31 @@
+{
+    "browser": true,
+    "camelcase": true,
+    "curly": true,
+    "eqeqeq": true,
+    "evil": false,
+    "immed": true,
+    "latedef": true,
+    "loopfunc": true,
+    "maxlen": 120,
+    "multistr": true,
+    "newcap": true,
+    "noarg": true,
+    "noempty": true,
+    "nonbsp": true,
+    "nonew": true,
+    "quotmark": "single",
+    "sub": true,
+    "undef": true,
+    "unused": true,
+    "globals" : {
+        "console": false,
+        "crossfilter" : false,
+        "d3" : false,
+        "dc" : false,
+        "global": false,
+        "module": false,
+        "process": false,
+        "require": false
+    }
+}
