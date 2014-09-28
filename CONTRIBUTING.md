@@ -23,7 +23,13 @@
 * The DC maintainer team will review and build the artifacts when merging
 * If you continue making changes to your fork of `dc.js`, create a branch for each pull request
 
-It helps keep on top of the style guidelines if you create a pre-commit hook like this:
+#### Coding Conventions
+
+* Avoid tabs and trailing whitespace
+* Please try to follow the existing code formatting
+* We use jshint and jscs to verify most of our coding conventions
+
+It helps keep on top of the conventions if you create a pre-commit hook like this:
 ```
 $ cat > .git/hooks/pre-commit
 #!/usr/bin/env sh
@@ -31,13 +37,6 @@ $ cat > .git/hooks/pre-commit
 grunt jshint
 grunt jscs
 ```
-
-(Or just run the commands manually before committing your changes.)
-
-#### Coding Conventions
-
-* Please try to follow the existing code formatting
-* Avoid tabs and trailing whitespace
 
 #### Testing Notes
 
