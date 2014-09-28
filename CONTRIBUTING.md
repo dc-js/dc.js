@@ -37,6 +37,7 @@ $ cat > .git/hooks/pre-commit
 grunt jshint
 grunt jscs
 ```
+... or just run the commands manually before committing.
 
 #### Testing Notes
 
