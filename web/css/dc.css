@@ -223,6 +223,11 @@ div.dc-chart {
     font-size: 11px;
 }
 
+table.dc-legend .dc-legend-item-color {
+  width: 12px;
+  height: 12px;
+}
+
 .dc-legend-item {
     cursor: pointer;
 }
