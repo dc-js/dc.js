@@ -964,7 +964,8 @@ dc.coordinateGridMixin = function (_chart) {
 
         dc.utils.appendOrSelect(chartBodyClip, 'rect')
             .attr('width', _chart.xAxisLength() + padding)
-            .attr('height', _chart.yAxisHeight() + padding);
+            .attr('height', _chart.yAxisHeight() + padding)
+            .attr('transform', 'translate(-' + _clipPadding + ', -' + _clipPadding + ')');
     }
 
     _chart._preprocessData = function () {};
