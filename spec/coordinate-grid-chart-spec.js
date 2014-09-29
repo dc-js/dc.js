@@ -159,7 +159,7 @@ describe('dc.coordinateGridChart', function() {
 
             it('should translate the clip rect to 0,0', function () {
                 var rect = chart.select("defs #coordinate-grid-chart-clip rect");
-                expect(rect.attr('transform')).toBe('translate(-0, -0)');
+                expect(rect.attr('transform')).toMatchTranslate(0,0);
             });
 
             it('should add clip path refs to the chart body', function () {
@@ -183,7 +183,7 @@ describe('dc.coordinateGridChart', function() {
 
                 it('should translate the clip rect to -20,-20', function () {
                     var rect = chart.select("defs #coordinate-grid-chart-clip rect");
-                    expect(rect.attr('transform')).toBe('translate(-20, -20)');
+                    expect(rect.attr('transform')).toMatchTranslate(-20,-20);
                 });
 
             });
