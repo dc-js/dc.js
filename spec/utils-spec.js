@@ -42,6 +42,9 @@ describe('dc utils', function() {
         it('print null', function() {
             expect(printer(null)).toEqual("");
         });
+        it('print zero', function() {
+            expect(printer(0)).toEqual(0);
+        });
     });
 
     describe('dc.utils.nameToId', function() {
