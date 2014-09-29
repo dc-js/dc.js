@@ -457,24 +457,17 @@ d3.csv('ndx.csv', function (data) {
             return d.dd.getFullYear() + '/' + format((d.dd.getMonth() + 1));
         })
         .size(10) // (optional) max number of records to be shown, :default = 25
-        // dynamic columns creation using an array of closures
-        .columns([
-            function (d) {
-                return d.date;
-            },
-            function (d) {
-                return numberFormat(d.open);
-            },
-            function (d) {
-                return numberFormat(d.close);
-            },
-            function (d) {
-                return numberFormat(d.close - d.open);
-            },
-            function (d) {
-                return d.volume;
-            }
-        ])
+        // 
+        // There are several ways to specify the columns, see data-table documentation.
+        // See further down in this file for the function definitions for columnsOriginal, etc.
+        .columns(columnsOriginal())             // original, requires index.html to have thead/header/cols;
+                                                // allows dynamic columns creation using an array of closures
+        //.columns(columnsWithMixedFormat1())   // causes removal of any thead/header/cols from index.html
+        //.columns(columnsWithMixedFormat2())   // causes removal of any thead/header/cols from index.html
+        //.columns(columnsWithMixedFormat3())   // causes removal of any thead/header/cols from index.html
+                                                // but mixed format with a function shows function definition
+                                                // as the column header (d.close - d.open)
+
         // (optional) sort using the given field, :default = function(d){return d;}
         .sortBy(function (d) {
             return d.dd;
@@ -583,6 +576,83 @@ d3.csv('ndx.csv', function (data) {
     // or you can choose to redraw only those charts associated with a specific chart group
     dc.redrawAll('group');
     */
+
+    function columnsOriginal()    // still supports original example
+    {
+        return [
+                function (d) {
+                    return d.date;
+                },
+                function (d) {
+                    return numberFormat(d.open);
+                },
+                function (d) {
+                    return numberFormat(d.close);
+                },
+                function (d) {
+                    return numberFormat(d.close - d.open);
+                },
+                function (d) {
+                    return d.volume;
+                }
+        ];
+    }
+    
+    function columnsWithMixedFormat1()    // not all applications need formatting, but note in the stock example
+                                          // that $ values with no cents will display as 2625 instead of 2625.00.
+    {
+        return [
+                "date",    // d["date"], ie, a field accessor; capitalized automatically
+                "open",    // ...
+                "close",   // ...
+                { label: "CHange", // desired format of column name "Change" when used as a label with a function.
+                                                           // 'H' purposely capitalized for visual confirmation of sub
+                    format: function (d) {
+                          return numberFormat(d.close - d.open);
+                      }},
+                "volume"   // d["volume"], ie, a field accessor; capitalized automatically
+        ];
+    }
+    
+    function columnsWithMixedFormat2()    // could be formatting during earlier step (load)
+    {
+        return [
+                { label: "Date",    // desired format of column name "Date" when used as a label with a function.
+                    format: function (d) {
+                          return d.date;
+                      }},
+                { label: "Open",
+                    format: function (d) {
+                          return numberFormat(d.open);
+                      }},
+                { label: "Close",
+                    format: function (d) {
+                          return numberFormat(d.close);
+                      }},
+                { label: "ChAnge",  // 'A' purposely capitalized for visual confirmation of sub
+                    format: function (d) {
+                          return numberFormat(d.close - d.open);
+                      }},
+                { label: "Volume",
+                    format: function (d) {
+                          return d.volume;
+                      }},
+        ];
+    }
+
+    function columnsWithMixedFormat3()    // Another example, where a function is used.
+                                          // Causes column header to be '(d.close - d.open)'
+    {
+        return [
+                "date",    // d["date"], ie, a field accessor; capitalized automatically
+                "open",    // ...
+                "close",   // ...
+                function (d) {
+                    return numberFormat(d.close - d.open);
+                },
+                "volume"   // d["volume"], ie, a field accessor; capitalized automatically
+        ];
+    }
 });
 
 //#### Version

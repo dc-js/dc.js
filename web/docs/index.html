@@ -1053,10 +1053,11 @@ A newly created data table widget instance</p>
 <h4 id="-size-size-">.size([size])</h4>
 <p>Get or set the table size which determines the number of rows displayed by the widget.</p>
 <h4 id="-columns-columnfunctionarray-">.columns([columnFunctionArray])</h4>
-<p>Get or set column functions. The data table widget uses an array of functions to generate dynamic
-columns. Column functions are simple javascript functions with only one input argument d which
-represents a row in the data set, and the return value of these functions will be used directly
-to generate table content for the cells.</p>
+<p>Get or set column functions. The data table widget now supports several methods of specifying the columns to display.
+The original method, first shown below, uses an array of functions to generate dynamic columns. Column functions are
+simple javascript functions with only one input argument <code>d</code> which represents a row in the data set. The return value of
+these functions will be used directly to generate table content for each cell. However, this method requires the .html
+table entry to have a fixed set of column headers.</p>
 <pre><code class="lang-js">    chart<span class="preprocessor">.columns</span>([
         function(d) {
             return d<span class="preprocessor">.date</span><span class="comment">;</span>
@@ -1074,6 +1075,54 @@ to generate table content for the cells.</p>
             return d<span class="preprocessor">.volume</span><span class="comment">;</span>
         }
     ])<span class="comment">;</span></code></pre>
+<p>The next example shows you can simply list the data (d) content directly without
+specifying it as a function, except where necessary (ie, computed columns).  Note
+the data element accessor name is capitalized when displayed in the table. You can
+also mix in functions as desired or necessary, but you must use the
+        Object = [Label, Fn] method as shown below.
+You may wish to override the following two functions, which are internally used to
+translate the column information or function into a displayed header. The first one
+is used on the simple “string” column specifier, the second is used to transform the
+String(fn) into something displayable. For the Stock example, the function for Change
+becomes a header of ‘d.close - d.open’.
+       _chart._doColumnHeaderCapitalize _chart._doColumnHeaderFnToString 
+You may use your own Object definition, however you must then override
+    _chart._doColumnHeaderFormat , _chart._doColumnValueFormat
+Be aware that fields without numberFormat specification will be displayed just as
+they are stored in the data, unformatted.</p>
+<pre><code class="lang-js">    chart.columns([
+            <span class="string">"date"</span>,    // d[<span class="string">"date"</span>], ie, a field accessor; capitalized automatically
+            <span class="string">"open"</span>,    // <span class="keyword">...</span>
+            <span class="string">"close"</span>,   // <span class="keyword">...</span>
+            [<span class="string">"Change"</span>, // Specify an Object = [Label, Fn]
+                  <span class="keyword">function</span> (d) {
+                      <span class="keyword">return</span> numberFormat(d.close - d.open);
+                  }],
+            <span class="string">"volume"</span>   // d[<span class="string">"volume"</span>], ie, a field accessor; capitalized automatically
+    ]);</code></pre>
+<p>A third example, where all fields are specified using the Object = [Label, Fn] method.</p>
+<pre><code class="lang-js">    chart.columns([
+            [<span class="string">"Date"</span>,   <span class="comment">// Specify an Object = [Label, Fn]</span>
+              <span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+              <span class="keyword">return</span> d.date;
+              }],
+            [<span class="string">"Open"</span>,
+              <span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+              <span class="keyword">return</span> numberFormat(d.open);
+              }],
+            [<span class="string">"Close"</span>,
+              <span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+              <span class="keyword">return</span> numberFormat(d.close);
+              }],
+            [<span class="string">"Change"</span>,
+              <span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+              <span class="keyword">return</span> numberFormat(d.close - d.open);
+              }],
+            [<span class="string">"Volume"</span>,
+              <span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+              <span class="keyword">return</span> d.volume;
+              }]
+    ]);</code></pre>
 <h4 id="-sortby-sortbyfunction-">.sortBy([sortByFunction])</h4>
 <p>Get or set sort-by function. This function works as a value accessor at row level and returns a
 particular field to be sorted by. Default value: identity function</p>
