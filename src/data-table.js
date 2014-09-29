@@ -46,73 +46,73 @@ dc.dataTable = function (parent, chartGroup) {
         return _chart;
     };
 
-    _chart._doColumnValueFormat = function(v,d) {
+    _chart._doColumnValueFormat = function (v, d) {
         return ((typeof v === 'function') ?
                 v(d) :                          // v as function
-                ((typeof v === 'string') ? 
+                ((typeof v === 'string') ?
                  d[v] :                         // v is field name string
                  v.format(d)                        // v is Object, use fn (element 2)
                 )
                );
-    }
+    };
 
-    _chart._doColumnHeaderFormat = function(d) {
+    _chart._doColumnHeaderFormat = function (d) {
         // if 'function', convert to string representation
         // show a string capitalized
         // if an object then display it's label string as-is.
-        return (typeof d === 'function') ? 
+        return (typeof d === 'function') ?
                 _chart._doColumnHeaderFnToString(d) :
-                ((typeof d === 'string') ? 
-                 _chart._doColumnHeaderCapitalize(d) : String(d.label) );
-    }
+                ((typeof d === 'string') ?
+                 _chart._doColumnHeaderCapitalize(d) : String(d.label));
+    };
 
-    _chart._doColumnHeaderCapitalize = function(s) {
+    _chart._doColumnHeaderCapitalize = function (s) {
         // capitalize
         return s.charAt(0).toUpperCase() + s.slice(1);
-    }
+    };
 
-    _chart._doColumnHeaderFnToString = function(f) {
+    _chart._doColumnHeaderFnToString = function (f) {
         // columnString(f) {
         var s = String(f);
-        var i1 = s.indexOf("return ");
-        if (i1>=0) {
-            var i2 = s.lastIndexOf(";");
-            if (i2>=0) {
-                s = s.substring(i1+7,i2);
-                var i3 = s.indexOf("numberFormat");
-                if (i3>=0)
-                    s = s.replace("numberFormat","");
+        var i1 = s.indexOf('return ');
+        if (i1 >= 0) {
+            var i2 = s.lastIndexOf(';');
+            if (i2 >= 0) {
+                s = s.substring(i1 + 7, i2);
+                var i3 = s.indexOf('numberFormat');
+                if (i3 >= 0) {
+                    s = s.replace('numberFormat', '');
+                }
             }
         }
         return s;
-    }
+    };
 
     function renderGroups() {
-
-    // The 'original' example uses all 'functions'.
+        // The 'original' example uses all 'functions'.
 	// If all 'functions' are used, then don't remove/add a header, and leave
 	// the html alone. This preserves the functionality of earlier releases.
-	// A 2nd option is a string representing a field in the data. 
+	// A 2nd option is a string representing a field in the data.
 	// A third option is to supply an Object such as an array of 'information', and
 	// supply your own _doColumnHeaderFormat and _doColumnValueFormat functions to
 	// create what you need.
         var bAllFunctions = true;
-            _columns.forEach(function(f,i) {
+        _columns.forEach(function (f) {
             bAllFunctions = bAllFunctions & (typeof f === 'function');
         });
 
         if (!bAllFunctions) {
-            _chart.selectAll("th").remove();
-            var headcols = _chart.root().selectAll("th")
-                .data( _columns );
+            _chart.selectAll('th').remove();
+            var headcols = _chart.root().selectAll('th')
+                .data(_columns);
 
             var headGroup = headcols
                 .enter()
-                .append("th");
+                .append('th');
 
             headGroup
-                .attr("class", HEAD_CSS_CLASS)
-                    .html(function(d) {
+                .attr('class', HEAD_CSS_CLASS)
+                    .html(function (d) {
                         return (_chart._doColumnHeaderFormat(d));
 
                     });
@@ -167,8 +167,8 @@ dc.dataTable = function (parent, chartGroup) {
         _columns.forEach(function (v, i) {
             rowEnter.append('td')
                 .attr('class', COLUMN_CSS_CLASS + ' _' + i)
-                .html(function(d) {
-                        return _chart._doColumnValueFormat(v,d);
+                .html(function (d) {
+                    return _chart._doColumnValueFormat(v, d);
                 });
         });
 
@@ -196,10 +196,11 @@ dc.dataTable = function (parent, chartGroup) {
 
     /**
     #### .columns([columnFunctionArray])
-    Get or set column functions. The data table widget now supports several methods of specifying the columns to display.
-    The original method, first shown below, uses an array of functions to generate dynamic columns. Column functions are
-    simple javascript functions with only one input argument `d` which represents a row in the data set. The return value of
-    these functions will be used directly to generate table content for each cell. However, this method requires the .html
+    Get or set column functions. The data table widget now supports several methods of specifying
+    the columns to display.  The original method, first shown below, uses an array of functions to
+    generate dynamic columns. Column functions are simple javascript functions with only one input
+    argument `d` which represents a row in the data set. The return value of these functions will be
+    used directly to generate table content for each cell. However, this method requires the .html
     table entry to have a fixed set of column headers.
 
     ```js
@@ -226,15 +227,15 @@ dc.dataTable = function (parent, chartGroup) {
     specifying it as a function, except where necessary (ie, computed columns).  Note
     the data element accessor name is capitalized when displayed in the table. You can
     also mix in functions as desired or necessary, but you must use the
-   	 Object = [Label, Fn] method as shown below.
+        Object = [Label, Fn] method as shown below.
     You may wish to override the following two functions, which are internally used to
     translate the column information or function into a displayed header. The first one
     is used on the simple "string" column specifier, the second is used to transform the
     String(fn) into something displayable. For the Stock example, the function for Change
     becomes a header of 'd.close - d.open'.
-       	_chart._doColumnHeaderCapitalize _chart._doColumnHeaderFnToString 
+        _chart._doColumnHeaderCapitalize _chart._doColumnHeaderFnToString
     You may use your own Object definition, however you must then override
-    	_chart._doColumnHeaderFormat , _chart._doColumnValueFormat
+        _chart._doColumnHeaderFormat , _chart._doColumnValueFormat
     Be aware that fields without numberFormat specification will be displayed just as
     they are stored in the data, unformatted.
     ```js
@@ -252,29 +253,28 @@ dc.dataTable = function (parent, chartGroup) {
 
     A third example, where all fields are specified using the Object = [Label, Fn] method.
 
-
     ```js
         chart.columns([
-                ["Date",   // Specify an Object = [Label, Fn]
-		      function (d) {
-			  return d.date;
-		      }],
-                ["Open",
-		      function (d) {
-			  return numberFormat(d.open);
-		      }],
-                ["Close",
-		      function (d) {
-			  return numberFormat(d.close);
-		      }],
-                ["Change",
-		      function (d) {
-			  return numberFormat(d.close - d.open);
-		      }],
-                ["Volume",
-		      function (d) {
-			  return d.volume;
-		      }]
+            ["Date",   // Specify an Object = [Label, Fn]
+             function (d) {
+                 return d.date;
+             }],
+            ["Open",
+             function (d) {
+                 return numberFormat(d.open);
+             }],
+            ["Close",
+             function (d) {
+                 return numberFormat(d.close);
+             }],
+            ["Change",
+             function (d) {
+                 return numberFormat(d.close - d.open);
+             }],
+            ["Volume",
+             function (d) {
+                 return d.volume;
+             }]
         ]);
     ```
 
