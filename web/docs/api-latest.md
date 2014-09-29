@@ -1214,10 +1214,11 @@ A newly created data table widget instance
 Get or set the table size which determines the number of rows displayed by the widget.
 
 #### .columns([columnFunctionArray])
-Get or set column functions. The data table widget now supports several methods of specifying the columns to display.
-The original method, first shown below, uses an array of functions to generate dynamic columns. Column functions are
-simple javascript functions with only one input argument `d` which represents a row in the data set. The return value of
-these functions will be used directly to generate table content for each cell. However, this method requires the .html
+Get or set column functions. The data table widget now supports several methods of specifying
+the columns to display.  The original method, first shown below, uses an array of functions to
+generate dynamic columns. Column functions are simple javascript functions with only one input
+argument `d` which represents a row in the data set. The return value of these functions will be
+used directly to generate table content for each cell. However, this method requires the .html
 table entry to have a fixed set of column headers.
 
 ```js
@@ -1244,15 +1245,15 @@ The next example shows you can simply list the data (d) content directly without
 specifying it as a function, except where necessary (ie, computed columns).  Note
 the data element accessor name is capitalized when displayed in the table. You can
 also mix in functions as desired or necessary, but you must use the
-   	 Object = [Label, Fn] method as shown below.
+    Object = [Label, Fn] method as shown below.
 You may wish to override the following two functions, which are internally used to
 translate the column information or function into a displayed header. The first one
 is used on the simple "string" column specifier, the second is used to transform the
 String(fn) into something displayable. For the Stock example, the function for Change
 becomes a header of 'd.close - d.open'.
-   	_chart._doColumnHeaderCapitalize _chart._doColumnHeaderFnToString 
+    _chart._doColumnHeaderCapitalize _chart._doColumnHeaderFnToString
 You may use your own Object definition, however you must then override
-	_chart._doColumnHeaderFormat , _chart._doColumnValueFormat
+    _chart._doColumnHeaderFormat , _chart._doColumnValueFormat
 Be aware that fields without numberFormat specification will be displayed just as
 they are stored in the data, unformatted.
 ```js
@@ -1270,29 +1271,28 @@ they are stored in the data, unformatted.
 
 A third example, where all fields are specified using the Object = [Label, Fn] method.
 
-
 ```js
     chart.columns([
-            ["Date",   // Specify an Object = [Label, Fn]
-		      function (d) {
-			  return d.date;
-		      }],
-            ["Open",
-		      function (d) {
-			  return numberFormat(d.open);
-		      }],
-            ["Close",
-		      function (d) {
-			  return numberFormat(d.close);
-		      }],
-            ["Change",
-		      function (d) {
-			  return numberFormat(d.close - d.open);
-		      }],
-            ["Volume",
-		      function (d) {
-			  return d.volume;
-		      }]
+        ["Date",   // Specify an Object = [Label, Fn]
+         function (d) {
+             return d.date;
+         }],
+        ["Open",
+         function (d) {
+             return numberFormat(d.open);
+         }],
+        ["Close",
+         function (d) {
+             return numberFormat(d.close);
+         }],
+        ["Change",
+         function (d) {
+             return numberFormat(d.close - d.open);
+         }],
+        ["Volume",
+         function (d) {
+             return d.volume;
+         }]
     ]);
 ```
 

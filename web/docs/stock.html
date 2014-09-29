@@ -1145,12 +1145,23 @@ as a grouping function</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-53">&#182;</a>
               </div>
-              <p>There are several ways to specify the columns, see data-table documentation.
-See further down in this file for the function definitions for columnsOriginal, etc.</p>
+              <p>There are several ways to specify the columns; see the data-table documentation.
+This code demonstrates generating the column header automatically based on the columns.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .columns(columnsOriginal())             <span class="hljs-comment">// original, requires index.html to have thead/header/cols;</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>        .columns([
+            <span class="hljs-string">'date'</span>,    <span class="hljs-comment">// d['date'], ie, a field accessor; capitalized automatically</span>
+            <span class="hljs-string">'open'</span>,    <span class="hljs-comment">// ...</span>
+            <span class="hljs-string">'close'</span>,   <span class="hljs-comment">// ...</span>
+            {
+                label: <span class="hljs-string">'Change'</span>, <span class="hljs-comment">// desired format of column name 'Change' when used as a label with a function.</span>
+                format: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{
+                    <span class="hljs-keyword">return</span> numberFormat(d.close - d.open);
+                }
+            },
+            <span class="hljs-string">'volume'</span>   <span class="hljs-comment">// d['volume'], ie, a field accessor; capitalized automatically</span>
+        ])</pre></div></div>
             
         </li>
         
@@ -1160,24 +1171,6 @@ See further down in this file for the function definitions for columnsOriginal, 
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-54">&#182;</a>
-              </div>
-              <p>allows dynamic columns creation using an array of closures
-.columns(columnsWithMixedFormat1())   // causes removal of any thead/header/cols from index.html
-.columns(columnsWithMixedFormat2())   // causes removal of any thead/header/cols from index.html
-.columns(columnsWithMixedFormat3())   // causes removal of any thead/header/cols from index.html
-but mixed format with a function shows function definition
-as the column header (d.close - d.open)</p>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-55">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p>(optional) sort using the given field, :default = function(d){return d;}</p>
 
@@ -1190,11 +1183,11 @@ as the column header (d.close - d.open)</p>
         </li>
         
         
-        <li id="section-56">
+        <li id="section-55">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-56">&#182;</a>
+                <a class="pilcrow" href="#section-55">&#182;</a>
               </div>
               <p>(optional) sort order, :default ascending</p>
 
@@ -1205,11 +1198,11 @@ as the column header (d.close - d.open)</p>
         </li>
         
         
-        <li id="section-57">
+        <li id="section-56">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-57">&#182;</a>
+                <a class="pilcrow" href="#section-56">&#182;</a>
               </div>
               <p>(optional) custom renderlet to post-process chart using D3</p>
 
@@ -1225,11 +1218,11 @@ as the column header (d.close - d.open)</p>
         </li>
         
         
-        <li id="section-58">
+        <li id="section-57">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-58">&#182;</a>
+                <a class="pilcrow" href="#section-57">&#182;</a>
               </div>
               <h4 id="geo-choropleth-chart">Geo Choropleth Chart</h4>
 <p>Create a choropleth chart and use the given css selector as anchor. You can also specify
@@ -1249,11 +1242,11 @@ on other charts within the same chart group.</p>
         </li>
         
         
-        <li id="section-59">
+        <li id="section-58">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-59">&#182;</a>
+                <a class="pilcrow" href="#section-58">&#182;</a>
               </div>
               <p>(optional) define color function or array for bubbles</p>
 
@@ -1265,11 +1258,11 @@ on other charts within the same chart group.</p>
         </li>
         
         
-        <li id="section-60">
+        <li id="section-59">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-60">&#182;</a>
+                <a class="pilcrow" href="#section-59">&#182;</a>
               </div>
               <p>(optional) define color domain to match your data domain if you want to bind data or color</p>
 
@@ -1280,11 +1273,11 @@ on other charts within the same chart group.</p>
         </li>
         
         
-        <li id="section-61">
+        <li id="section-60">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-61">&#182;</a>
+                <a class="pilcrow" href="#section-60">&#182;</a>
               </div>
               <p>(optional) define color value accessor</p>
 
@@ -1295,11 +1288,11 @@ on other charts within the same chart group.</p>
         </li>
         
         
-        <li id="section-62">
+        <li id="section-61">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-62">&#182;</a>
+                <a class="pilcrow" href="#section-61">&#182;</a>
               </div>
               <p>Project the given geojson. You can call this function mutliple times with different geojson feed to generate
 multiple layers of geo paths.</p>
@@ -1319,11 +1312,11 @@ in order for the coloring to work properly</li>
         </li>
         
         
-        <li id="section-63">
+        <li id="section-62">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-63">&#182;</a>
+                <a class="pilcrow" href="#section-62">&#182;</a>
               </div>
               <p>(optional) closure to generate title for path, :default = d.key + ‘: ‘ + d.value</p>
 
@@ -1336,11 +1329,11 @@ in order for the coloring to work properly</li>
         </li>
         
         
-        <li id="section-64">
+        <li id="section-63">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-64">&#182;</a>
+                <a class="pilcrow" href="#section-63">&#182;</a>
               </div>
               <h4 id="bubble-overlay-chart">Bubble Overlay Chart</h4>
 <p>Create a overlay bubble chart and use the given css selector as anchor. You can also specify
@@ -1355,11 +1348,11 @@ on other charts within the same chart group.</p>
         </li>
         
         
-        <li id="section-65">
+        <li id="section-64">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-65">&#182;</a>
+                <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
               <p>bubble overlay chart does not generate it’s own svg element but rather resue an existing
 svg to generate it’s overlay layer</p>
@@ -1377,11 +1370,11 @@ svg to generate it’s overlay layer</p>
         </li>
         
         
-        <li id="section-66">
+        <li id="section-65">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-66">&#182;</a>
+                <a class="pilcrow" href="#section-65">&#182;</a>
               </div>
               <p>closure used to retrieve x value from multi-value group</p>
 
@@ -1392,11 +1385,11 @@ svg to generate it’s overlay layer</p>
         </li>
         
         
-        <li id="section-67">
+        <li id="section-66">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-67">&#182;</a>
+                <a class="pilcrow" href="#section-66">&#182;</a>
               </div>
               <p>closure used to retrieve y value from multi-value group</p>
 
@@ -1407,11 +1400,11 @@ svg to generate it’s overlay layer</p>
         </li>
         
         
-        <li id="section-68">
+        <li id="section-67">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-68">&#182;</a>
+                <a class="pilcrow" href="#section-67">&#182;</a>
               </div>
               <p>(optional) define color function or array for bubbles</p>
 
@@ -1423,11 +1416,11 @@ svg to generate it’s overlay layer</p>
         </li>
         
         
-        <li id="section-69">
+        <li id="section-68">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-69">&#182;</a>
+                <a class="pilcrow" href="#section-68">&#182;</a>
               </div>
               <p>(optional) define color domain to match your data domain if you want to bind data or color</p>
 
@@ -1438,11 +1431,11 @@ svg to generate it’s overlay layer</p>
         </li>
         
         
-        <li id="section-70">
+        <li id="section-69">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-70">&#182;</a>
+                <a class="pilcrow" href="#section-69">&#182;</a>
               </div>
               <p>(optional) define color value accessor</p>
 
@@ -1453,11 +1446,11 @@ svg to generate it’s overlay layer</p>
         </li>
         
         
-        <li id="section-71">
+        <li id="section-70">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-71">&#182;</a>
+                <a class="pilcrow" href="#section-70">&#182;</a>
               </div>
               <p>closure used to retrieve radius value from multi-value group</p>
 
@@ -1468,11 +1461,11 @@ svg to generate it’s overlay layer</p>
         </li>
         
         
-        <li id="section-72">
+        <li id="section-71">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-72">&#182;</a>
+                <a class="pilcrow" href="#section-71">&#182;</a>
               </div>
               <p>set radius scale</p>
 
@@ -1483,11 +1476,11 @@ svg to generate it’s overlay layer</p>
         </li>
         
         
-        <li id="section-73">
+        <li id="section-72">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-73">&#182;</a>
+                <a class="pilcrow" href="#section-72">&#182;</a>
               </div>
               <p>(optional) whether chart should render labels, :default = true</p>
 
@@ -1498,11 +1491,11 @@ svg to generate it’s overlay layer</p>
         </li>
         
         
-        <li id="section-74">
+        <li id="section-73">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-74">&#182;</a>
+                <a class="pilcrow" href="#section-73">&#182;</a>
               </div>
               <p>(optional) closure to generate label per bubble, :default = group.key</p>
 
@@ -1513,11 +1506,11 @@ svg to generate it’s overlay layer</p>
         </li>
         
         
-        <li id="section-75">
+        <li id="section-74">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-75">&#182;</a>
+                <a class="pilcrow" href="#section-74">&#182;</a>
               </div>
               <p>(optional) whether chart should render titles, :default = false</p>
 
@@ -1528,11 +1521,11 @@ svg to generate it’s overlay layer</p>
         </li>
         
         
-        <li id="section-76">
+        <li id="section-75">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-76">&#182;</a>
+                <a class="pilcrow" href="#section-75">&#182;</a>
               </div>
               <p>(optional) closure to generate title per bubble, :default = d.key + ‘: ‘ + d.value</p>
 
@@ -1545,11 +1538,11 @@ svg to generate it’s overlay layer</p>
         </li>
         
         
-        <li id="section-77">
+        <li id="section-76">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-77">&#182;</a>
+                <a class="pilcrow" href="#section-76">&#182;</a>
               </div>
               <p>add data point to it’s layer dimension key that matches point name will be used to
 generate bubble. multiple data points can be added to bubble overlay to generate
@@ -1563,11 +1556,11 @@ multiple bubbles</p>
         </li>
         
         
-        <li id="section-78">
+        <li id="section-77">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-78">&#182;</a>
+                <a class="pilcrow" href="#section-77">&#182;</a>
               </div>
               <p>(optional) setting debug flag to true will generate a transparent layer on top of
 bubble overlay which can be used to obtain relative x,y coordinate for specific
@@ -1581,11 +1574,11 @@ data point, :default = false</p>
         </li>
         
         
-        <li id="section-79">
+        <li id="section-78">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-79">&#182;</a>
+                <a class="pilcrow" href="#section-78">&#182;</a>
               </div>
               <h4 id="rendering">Rendering</h4>
 <p>simply call renderAll() to render all charts on the page</p>
@@ -1599,11 +1592,11 @@ data point, :default = false</p>
         </li>
         
         
-        <li id="section-80">
+        <li id="section-79">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-80">&#182;</a>
+                <a class="pilcrow" href="#section-79">&#182;</a>
               </div>
               <p>or you can render charts belong to a specific chart group</p>
 
@@ -1614,11 +1607,11 @@ data point, :default = false</p>
         </li>
         
         
-        <li id="section-81">
+        <li id="section-80">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-81">&#182;</a>
+                <a class="pilcrow" href="#section-80">&#182;</a>
               </div>
               <p>once rendered you can call redrawAll to update charts incrementally when data
 change without re-rendering everything</p>
@@ -1630,11 +1623,11 @@ change without re-rendering everything</p>
         </li>
         
         
-        <li id="section-82">
+        <li id="section-81">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-82">&#182;</a>
+                <a class="pilcrow" href="#section-81">&#182;</a>
               </div>
               <p>or you can choose to redraw only those charts associated with a specific chart group</p>
 
@@ -1643,132 +1636,16 @@ change without re-rendering everything</p>
             <div class="content"><div class='highlight'><pre>    dc.redrawAll('group');
     */
 
-    function columnsOriginal()    // still supports original example
-    {
-        return [
-                function (d) {
-                    return d.date;
-                },
-                function (d) {
-                    return numberFormat(d.open);
-                },
-                function (d) {
-                    return numberFormat(d.close);
-                },
-                function (d) {
-                    return numberFormat(d.close - d.open);
-                },
-                function (d) {
-                    return d.volume;
-                }
-        ];
-    }
-    
-    function columnsWithMixedFormat1()    // not all applications need formatting, but note in the stock example</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-83">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-83">&#182;</a>
-              </div>
-              <p>that $ values with no cents will display as 2625 instead of 2625.00.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    {
-        <span class="hljs-keyword">return</span> [
-                <span class="hljs-string">"date"</span>,    <span class="hljs-comment">// d["date"], ie, a field accessor; capitalized automatically</span>
-                <span class="hljs-string">"open"</span>,    <span class="hljs-comment">// ...</span>
-                <span class="hljs-string">"close"</span>,   <span class="hljs-comment">// ...</span>
-                { label: <span class="hljs-string">"CHange"</span>, <span class="hljs-comment">// desired format of column name "Change" when used as a label with a function.</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-84">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-84">&#182;</a>
-              </div>
-              <p>‘H’ purposely capitalized for visual confirmation of sub</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>                    format: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{
-                          <span class="hljs-keyword">return</span> numberFormat(d.close - d.open);
-                      }},
-                <span class="hljs-string">"volume"</span>   <span class="hljs-comment">// d["volume"], ie, a field accessor; capitalized automatically</span>
-        ];
-    }
-    
-    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">columnsWithMixedFormat2</span><span class="hljs-params">()</span>    // <span class="hljs-title">could</span> <span class="hljs-title">be</span> <span class="hljs-title">formatting</span> <span class="hljs-title">during</span> <span class="hljs-title">earlier</span> <span class="hljs-title">step</span> <span class="hljs-params">(load)</span>
-    </span>{
-        <span class="hljs-keyword">return</span> [
-                { label: <span class="hljs-string">"Date"</span>,    <span class="hljs-comment">// desired format of column name "Date" when used as a label with a function.</span>
-                    format: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{
-                          <span class="hljs-keyword">return</span> d.date;
-                      }},
-                { label: <span class="hljs-string">"Open"</span>,
-                    format: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{
-                          <span class="hljs-keyword">return</span> numberFormat(d.open);
-                      }},
-                { label: <span class="hljs-string">"Close"</span>,
-                    format: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{
-                          <span class="hljs-keyword">return</span> numberFormat(d.close);
-                      }},
-                { label: <span class="hljs-string">"ChAnge"</span>,  <span class="hljs-comment">// 'A' purposely capitalized for visual confirmation of sub</span>
-                    format: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{
-                          <span class="hljs-keyword">return</span> numberFormat(d.close - d.open);
-                      }},
-                { label: <span class="hljs-string">"Volume"</span>,
-                    format: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{
-                          <span class="hljs-keyword">return</span> d.volume;
-                      }},
-        ];
-    }
-
-    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">columnsWithMixedFormat3</span><span class="hljs-params">()</span>    // <span class="hljs-title">Another</span> <span class="hljs-title">example</span>, <span class="hljs-title">where</span> <span class="hljs-title">a</span> <span class="hljs-title">function</span> <span class="hljs-title">is</span> <span class="hljs-title">used</span>.
-</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-85">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-85">&#182;</a>
-              </div>
-              <p>Causes column header to be ‘(d.close - d.open)’</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    {
-        <span class="hljs-keyword">return</span> [
-                <span class="hljs-string">"date"</span>,    <span class="hljs-comment">// d["date"], ie, a field accessor; capitalized automatically</span>
-                <span class="hljs-string">"open"</span>,    <span class="hljs-comment">// ...</span>
-                <span class="hljs-string">"close"</span>,   <span class="hljs-comment">// ...</span>
-                <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{
-                    <span class="hljs-keyword">return</span> numberFormat(d.close - d.open);
-                },
-                <span class="hljs-string">"volume"</span>   <span class="hljs-comment">// d["volume"], ie, a field accessor; capitalized automatically</span>
-        ];
-    }
 });</pre></div></div>
             
         </li>
         
         
-        <li id="section-86">
+        <li id="section-82">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-86">&#182;</a>
+                <a class="pilcrow" href="#section-82">&#182;</a>
               </div>
               <h4 id="version">Version</h4>
 <p>Determine the current version of dc with <code>dc.version</code></p>
