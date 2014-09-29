@@ -47,19 +47,23 @@ var ndx = crossfilter(data),
     group1 = dim1.group(),
     group2 = dim2.group();
 
-chart1.width(200)
-    .height(200)
+chart1.width(300)
+    .height(300)
     .x(d3.scale.linear().domain([0, 20]))
     .yAxisLabel("y")
     .xAxisLabel("x")
+    .symbolSize(8)
+    .clipPadding(10)
     .dimension(dim1)
     .group(group1);
 
-chart2.width(200)
-    .height(200)
+chart2.width(300)
+    .height(300)
     .x(d3.scale.linear().domain([0, 20]))
     .yAxisLabel("z")
     .xAxisLabel("y")
+    .symbolSize(8)
+    .clipPadding(10)
     .dimension(dim2)
     .group(group2);
 
