@@ -7276,9 +7276,9 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
     #### .existenceAccessor([accessor])
-    Get or set the existence accessor.  By default, the existence accessor checks if the
-    reduced value is truthy.  If a point exists, it is drawn with symbolSize radius and
-    opacity 1; if it does not exist, it is drawn with hiddenSize radius and opacity 0.
+    Get or set the existence accessor.  If a point exists, it is drawn with symbolSize radius and
+    opacity 1; if it does not exist, it is drawn with hiddenSize radius and opacity 0. By default,
+    the existence accessor checks if the reduced value is truthy.
     **/
 
     _chart.existenceAccessor = function (acc) {

@@ -1749,9 +1749,9 @@ var chart3 = dc.scatterPlot(compositeChart);
 ```
 
 #### .existenceAccessor([accessor])
-Get or set the existence accessor.  By default, the existence accessor checks if the
-reduced value is truthy.  If a point exists, it is drawn with symbolSize radius and
-opacity 1; if it does not exist, it is drawn with hiddenSize radius and opacity 0.
+Get or set the existence accessor.  If a point exists, it is drawn with symbolSize radius and
+opacity 1; if it does not exist, it is drawn with hiddenSize radius and opacity 0. By default,
+the existence accessor checks if the reduced value is truthy.
 
 #### .symbol([type])
 Get or set the symbol type used for each point. By default the symbol is a circle. See the D3
