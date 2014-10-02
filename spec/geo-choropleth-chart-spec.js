@@ -33,10 +33,10 @@ describe('dc.geoChoropleth', function () {
             .height(600)
             .colors(['#ccc', '#e2f2ff', '#c4e4ff', '#9ed2ff', '#81c5ff', '#6bbaff', '#51aeff', '#36a2ff', '#1e96ff', '#0089ff'])
             .colorDomain([0, 155])
-            .overlayGeoJson(geoJson.features, 'state', function (d) {
+            .addLayer(geoJson.features, 'state', function (d) {
                 return d.properties.name;
             })
-            .overlayGeoJson(geoJson2.features, 'county')
+            .addLayer(geoJson2.features, 'county')
             .transitionDuration(0)
             .title(function (d) {
                 return d.key + ' : ' + (d.value ? d.value : 0);
@@ -59,7 +59,7 @@ describe('dc.geoChoropleth', function () {
             .height(600)
             .colors(['#ccc', '#e2f2ff', '#c4e4ff', '#9ed2ff', '#81c5ff', '#6bbaff', '#51aeff', '#36a2ff', '#1e96ff', '#0089ff'])
             .colorDomain([0, 155])
-            .overlayGeoJson(geoJson3.features, 'district', function (d) {
+            .addLayer(geoJson3.features, 'district', function (d) {
                 return d.properties.NAME;
             })
             .transitionDuration(0)
@@ -80,73 +80,58 @@ describe('dc.geoChoropleth', function () {
             expect(chart).not.toBeNull();
         });
         it('should have a d3.geo.path', function () {
-            expect(chart.geoPath()).not.toBeNull();
+            expect(chart.path()).not.toBeNull();
         });
         it('svg is created', function () {
             expect(chart.selectAll('svg').length).not.toEqual(0);
         });
         it('geo layer0 g is created', function () {
-            expect(chart.selectAll('g.layer0').length).not.toEqual(0);
+            expect(chart.selectAll('g.feature').length).not.toEqual(0);
         });
         it('correct number of states should be generated', function () {
-            expect(chart.selectAll('g.layer0 g.state')[0].length).toEqual(52);
-        });
-        it('correct css class should be set [Alaska]', function () {
-            expect(chart.selectAll('g.layer0 g.state')[0][1].getAttribute('class')).toEqual('state alaska');
+            expect(chart.selectAll('g.feature.layer-state path')[0].length).toEqual(52);
         });
         it('correct title should be set [Alaska]', function () {
-            expect(chart.selectAll('g.layer0 g.state title')[0][1].textContent).toEqual('Alaska : 0');
+            expect(chart.selectAll('g.feature.layer-state title')[0][1].textContent).toEqual('Alaska : 0');
         });
         it('correct color filling should be set [Alaska]', function () {
-            expect(chart.selectAll('g.layer0 g.state path')[0][1].getAttribute('fill')).toMatch(/#ccc/i);
+            expect(chart.selectAll('g.feature.layer-state path')[0][1].getAttribute('fill')).toMatch(/#ccc/i);
         });
         it('correct state boundary should be rendered [Alaska]', function () {
-            expect(chart.selectAll('g.layer0 g.state path')[0][1].getAttribute('d').length).not.toEqual(0);
-        });
-        it('correct css class should be set [California]', function () {
-            expect(chart.selectAll('g.layer0 g.state')[0][4].getAttribute('class')).toEqual('state california');
-        });
-        it('correct css class should be set [District of Columbia]', function () {
-            expect(chart.selectAll('g.layer0 g.state')[0][8].getAttribute('class')).toEqual('state district_of_columbia');
+            expect(chart.selectAll('g.feature.layer-state path')[0][1].getAttribute('d').length).not.toEqual(0);
         });
         it('correct title should be set [California]', function () {
-            expect(chart.selectAll('g.layer0 g.state title')[0][4].textContent).toEqual('California : 154');
+            expect(chart.selectAll('g.feature.layer-state title')[0][4].textContent).toEqual('California : 154');
         });
         it('correct color should be set [California]', function () {
-            expect(chart.selectAll('g.layer0 g.state path')[0][4].getAttribute('fill')).toMatch(/#0089ff/i);
+            expect(chart.selectAll('g.feature.layer-state path')[0][4].getAttribute('fill')).toMatch(/#0089ff/i);
         });
         it('correct state boundary should be rendered [California]', function () {
-            expect(chart.selectAll('g.layer0 g.state path')[0][4].getAttribute('d').length).not.toEqual(0);
-        });
-        it('correct css class should be set [Colorado]', function () {
-            expect(chart.selectAll('g.layer0 g.state')[0][5].getAttribute('class')).toEqual('state colorado');
+            expect(chart.selectAll('g.feature.layer-state path')[0][4].getAttribute('d').length).not.toEqual(0);
         });
         it('correct title should be set [Colorado]', function () {
-            expect(chart.selectAll('g.layer0 g.state title')[0][5].textContent).toEqual('Colorado : 22');
+            expect(chart.selectAll('g.feature.layer-state title')[0][5].textContent).toEqual('Colorado : 22');
         });
         it('correct color should be set [Colorado]', function () {
-            expect(chart.selectAll('g.layer0 g.state path')[0][5].getAttribute('fill')).toMatch(/#e2f2ff/i);
+            expect(chart.selectAll('g.feature.layer-state path')[0][5].getAttribute('fill')).toMatch(/#e2f2ff/i);
         });
         it('correct state boundary should be rendered [Colorado]', function () {
-            expect(chart.selectAll('g.layer0 g.state path')[0][5].getAttribute('d').length).not.toEqual(0);
+            expect(chart.selectAll('g.feature.layer-state path')[0][5].getAttribute('d').length).not.toEqual(0);
         });
         it('geo layer1 g is created', function () {
-            expect(chart.selectAll('g.layer1').length).not.toEqual(0);
+            expect(chart.selectAll('g.feature').length).not.toEqual(0);
         });
         it('correct number of counties should be generated', function () {
-            expect(chart.selectAll('g.layer1 g.county')[0].length).toEqual(5);
-        });
-        it('correct css class should be set [county]', function () {
-            expect(chart.selectAll('g.layer1 g.county')[0][1].getAttribute('class')).toEqual('county');
+            expect(chart.selectAll('g.feature.layer-county path')[0].length).toEqual(5);
         });
         it('correct title should be set [county]', function () {
-            expect(chart.selectAll('g.layer1 g.county title')[0][1].textContent).toEqual('');
+            expect(chart.selectAll('g.feature.layer-county title')[0][1].textContent).toEqual('');
         });
         it('correct color filling should be set [county]', function () {
-            expect(chart.selectAll('g.layer1 g.county path')[0][1].getAttribute('fill')).toEqual('white');
+            expect(chart.selectAll('g.feature.layer-county path')[0][1].getAttribute('fill')).toEqual('#ccc');
         });
         it('correct state boundary should be rendered [county]', function () {
-            expect(chart.selectAll('g.layer1 g.county path')[0][1].getAttribute('d').length).not.toEqual(0);
+            expect(chart.selectAll('g.feature.layer-county path')[0][1].getAttribute('d').length).not.toEqual(0);
         });
     });
 
@@ -160,12 +145,12 @@ describe('dc.geoChoropleth', function () {
         });
 
         it('sets deselected classes for some states', function () {
-            expect(chart.selectAll('g.layer0 g.state')[0][0].getAttribute('class')).toEqual('state alabama deselected');
-            expect(chart.selectAll('g.layer0 g.state')[0][1].getAttribute('class')).toEqual('state alaska deselected');
+            expect(chart.selectAll('g.feature.layer-state path')[0][0].getAttribute('class')).toEqual('deselected');
+            expect(chart.selectAll('g.feature.layer-state path')[0][1].getAttribute('class')).toEqual('deselected');
         });
         it('sets selected classes for selected states', function () {
-            expect(chart.selectAll('g.layer0 g.state')[0][4].getAttribute('class')).toEqual('state california selected');
-            expect(chart.selectAll('g.layer0 g.state')[0][5].getAttribute('class')).toEqual('state colorado selected');
+            expect(chart.selectAll('g.feature.layer-state path')[0][4].getAttribute('class')).toEqual('selected');
+            expect(chart.selectAll('g.feature.layer-state path')[0][5].getAttribute('class')).toEqual('selected');
         });
     });
 
@@ -272,20 +257,16 @@ describe('dc.geoChoropleth', function () {
         var chart;
         beforeEach(function () {
             chart = buildChart('choropleth-chart-replace-layer');
-            chart.overlayGeoJson(geoJson3.features, 'state', function (d) {
+            chart.addLayer(geoJson3.features, 'state', function (d) {
                 return d.properties.name;
             });
         });
         it('geo json layer with the same name should be replaced', function () {
-            expect(chart.geoJsons().filter(function (e) {
-                return e.name === 'state';
-            })[0].data).toBe(geoJson3.features);
+            expect(chart.layers().state.features).toBe(geoJson3.features);
         });
         it('geo json layer can be removed by name', function () {
-            chart.removeGeoJson('state');
-            expect(chart.geoJsons().filter(function (e) {
-                return e.name === 'state';
-            }).length).toEqual(0);
+            chart.removeLayer('state');
+            expect(Object.keys(chart.layers()).length).toEqual(1);
         });
     });
 });
