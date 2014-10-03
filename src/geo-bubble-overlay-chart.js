@@ -76,8 +76,8 @@ dc.geoBubbleOverlayChart = function (parent, chartGroup) {
     };
 
     _chart.bubbleLocator = function(_) {
-        if (!arguments.length) return _elasticRadius;
-        _elasticRadius = _;
+        if (!arguments.length) return _bubbleLocator;
+        _bubbleLocator = _;
         return _chart;
     };
 
