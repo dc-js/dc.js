@@ -59,7 +59,7 @@ dc.geoBubbleOverlayChart = function (parent, chartGroup) {
         #### bubbleLocator(number)
         Finds the centroid(like a 2d Center of Mass) or the geometric region. 
     **/
-    var bubbleLocator = function(d) {
+    var _bubbleLocator = function(d) {
         var centroid;
         if (d.key === "" || d.key === undefined || d.key === null || d.key === 0 || d.key === '0'){
             centroid = [-500,-500];            
@@ -73,6 +73,12 @@ dc.geoBubbleOverlayChart = function (parent, chartGroup) {
             }
         }
         return "translate(" + (centroid[0]) + "," + (centroid[1]) + ")";
+    };
+
+    _chart.bubbleLocator = function(_) {
+        if (!arguments.length) return _elasticRadius;
+        _elasticRadius = _;
+        return _chart;
     };
 
     _chart.elasticRadius = function(_) {
@@ -126,7 +132,7 @@ dc.geoBubbleOverlayChart = function (parent, chartGroup) {
             .attr("class", function(d) {
                 return _chart.BUBBLE_NODE_CLASS + ' ' + dc.utils.nameToId(d.key);
             }) 
-            .attr("transform", bubbleLocator)
+            .attr("transform", _bubbleLocator)
             .append("circle").attr("class", function(d, i) {
                 return _chart.BUBBLE_CLASS + " _" + i;
             })
@@ -149,7 +155,7 @@ dc.geoBubbleOverlayChart = function (parent, chartGroup) {
 
     function updateNodes(bubbleG) {
         dc.transition(bubbleG, _chart.transitionDuration())
-            .attr("transform", bubbleLocator)
+            .attr("transform", _bubbleLocator)
             .selectAll("circle." + _chart.BUBBLE_CLASS)
             .attr("fill", _chart.getColor)
             .attr("r", function(d) {
