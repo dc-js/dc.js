@@ -3826,7 +3826,7 @@ dc.pieChart = function (parent, chartGroup) {
             .attr('text-anchor', 'middle')
             .text(function (d) {
                 var data = d.data;
-                if (sliceHasNoData(data) || sliceTooSmall(d)) {
+                if ((sliceHasNoData(data) || sliceTooSmall(d)) && !isSelectedSlice(d)) {
                     return '';
                 }
                 return _chart.label()(d.data);
