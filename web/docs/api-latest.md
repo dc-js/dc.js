@@ -980,7 +980,7 @@ Get or set the minimal slice angle for label rendering. Any slice with a smaller
 display a slice label.  Default min angle is 0.5.
 
 ## Bar Chart
-Includes: [Stack Mixin](#stack Mixin), [Coordinate Grid Mixin](#coordinate-grid-mixin)
+Includes: [Stack Mixin](#stack-mixin), [Coordinate Grid Mixin](#coordinate-grid-mixin)
 
 Concrete bar chart/histogram implementation.
 
