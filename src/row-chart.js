@@ -159,7 +159,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     function rootValue() {
         var root = _x(0);
-        return root === -Infinity ? _x(1) : root;
+        return (root === -Infinity || root !== root) ? _x(1) : root;
     }
 
     function updateElements(rows) {
