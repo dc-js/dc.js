@@ -185,7 +185,7 @@ axis. Usually this parameter is used in combination with passing <code>d3.scale.
 <pre><code class="lang-js">chart<span class="variable">.xUnits</span>(dc<span class="variable">.units</span><span class="variable">.ordinal</span>)
 <span class="variable">.x</span>(d3<span class="variable">.scale</span><span class="variable">.ordinal</span>())</code></pre>
 <h4 id="dc-units-fp-precision-precision-">dc.units.fp.precision(precision)</h4>
-<p>This function generates an argument for the <a href="#coordinate-grid-chart">Coordinate Grid Chart’s</a>
+<p>This function generates an argument for the <a href="#coordinate-grid-chart">Coordinate Grid Chart&#39;s</a>
 <code>xUnits</code> function specifying that the x values are floating-point numbers with the given
 precision.</p>
 <p>The returned function determines how many values at the given precision will fit into the range
@@ -246,7 +246,7 @@ the new height and the chart returned for method chaining.  The value can either
 function, or falsy. If no value is specified then the value of the current height attribute will
 be returned.</p>
 <p>By default, without an explicit height being given, the chart will select the width of its
-anchor element. If that isn’t possible it defaults to 200. Setting the value falsy will return
+anchor element. If that isn&#39;t possible it defaults to 200. Setting the value falsy will return
 the chart to the default behavior</p>
 <p>Examples:</p>
 <pre><code class="lang-js">chart.height(<span class="number">250</span>); // Set <span class="keyword">the</span> chart's height <span class="keyword">to</span> <span class="number">250</span>px;
@@ -264,7 +264,7 @@ dimension</a>.</p>
 <p>If a value is given, then it will be used as the new dimension. If no value is specified then
 the current dimension will be returned.</p>
 <h4 id="-data-callback-">.data([callback])</h4>
-<p>Set the data callback or retrieve the chart’s data set. The data callback is passed the chart’s
+<p>Set the data callback or retrieve the chart&#39;s data set. The data callback is passed the chart&#39;s
 group and by default will return <code>group.all()</code>. This behavior may be modified to, for instance,
 return only the top 5 groups:</p>
 <pre><code>    chart.<span class="typedef"><span class="keyword">data</span><span class="container">(<span class="title">function</span>(<span class="title">group</span>)</span> <span class="container">{
@@ -282,7 +282,7 @@ If <code>name</code> is specified then it will be used to generate legend label.
 <h4 id="-filterall-">.filterAll()</h4>
 <p>Clear all filters associated with this chart.</p>
 <h4 id="-select-selector-">.select(selector)</h4>
-<p>Execute d3 single selection in the chart’s scope using the given selector and return the d3
+<p>Execute d3 single selection in the chart&#39;s scope using the given selector and return the d3
 selection. Roughly the same as:</p>
 <pre><code class="lang-js">d3.<span class="operator"><span class="keyword">select</span>(<span class="string">'#chart-id'</span>).<span class="keyword">select</span>(selector);</span></code></pre>
 <p>This function is <strong>not chainable</strong> since it does not return a chart instance; however the d3
@@ -294,13 +294,13 @@ the same as:</p>
 <p>This function is <strong>not chainable</strong> since it does not return a chart instance; however the d3
 selection result can be chained to d3 function calls.</p>
 <h4 id="-anchor-anchorchart-anchorselector-anchornode-chartgroup-">.anchor([anchorChart|anchorSelector|anchorNode], [chartGroup])</h4>
-<p>Set the svg root to either be an existing chart’s root; or any valid <a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single
+<p>Set the svg root to either be an existing chart&#39;s root; or any valid <a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single
 selector</a> specifying a dom
 block element such as a div; or a dom element or d3 selection. Optionally registers the chart
 within the chartGroup. This class is called internally on chart initialization, but be called
 again to relocate the chart. However, it will orphan any previously created SVG elements.</p>
 <h4 id="-anchorname-">.anchorName()</h4>
-<p>Returns the dom id for the chart’s anchored location.</p>
+<p>Returns the dom id for the chart&#39;s anchored location.</p>
 <h4 id="-root-rootelement-">.root([rootElement])</h4>
 <p>Returns the root element where a chart resides. Usually it will be the parent div element where
 the svg was created. You can also pass in a new root element however this is usually handled by
@@ -311,7 +311,7 @@ unexpected consequences.</p>
 however this is usually handled by dc internally. Resetting the svg element on a chart outside
 of dc internals may have unexpected consequences.</p>
 <h4 id="-resetsvg-">.resetSvg()</h4>
-<p>Remove the chart’s SVG elements from the dom and recreate the container SVG element.</p>
+<p>Remove the chart&#39;s SVG elements from the dom and recreate the container SVG element.</p>
 <h4 id="-filterprinter-filterprinterfunction-">.filterPrinter([filterPrinterFunction])</h4>
 <p>Set or get the filter printer function. The filter printer function is used to generate human
 friendly text for filter value(s) associated with the chart instance. By default dc charts use a
@@ -321,10 +321,10 @@ single value and ranged filters.</p>
 <p>Turn on/off optional control elements within the root element. dc currently supports the
 following html control elements.</p>
 <ul>
-<li>root.selectAll(‘.reset’) - elements are turned on if the chart has an active filter. This type
+<li>root.selectAll(&#39;.reset&#39;) - elements are turned on if the chart has an active filter. This type
 of control element is usually used to store a reset link to allow user to reset filter on a
 certain chart. This element will be turned off automatically if the filter is cleared.</li>
-<li>root.selectAll(‘.filter’) elements are turned on if the chart has an active filter. The text
+<li>root.selectAll(&#39;.filter&#39;) elements are turned on if the chart has an active filter. The text
 content of this element is then replaced with the current filter value using the filter printer
 function. This type of element will be turned off automatically if the filter is cleared.</li>
 </ul>
@@ -341,10 +341,10 @@ behaviour.</p>
 change in the underlying data dimension then calling this method will have no effect on the
 chart. Most chart interaction in dc will automatically trigger this method through internal
 events (in particular <a href="#dcredrawallchartgroup">dc.redrawAll</a>); therefore, you only need to
-manually invoke this function if data is manipulated outside of dc’s control (for example if
+manually invoke this function if data is manipulated outside of dc&#39;s control (for example if
 data is loaded in the background using <code>crossfilter.add()</code>).</p>
 <p>Set or get the has filter handler. The has filter handler is a function that performs the logical check if the
-current chart’s filters have a specific filter.  Using a custom has filter handler allows you to perform additional
+current chart&#39;s filters have a specific filter.  Using a custom has filter handler allows you to perform additional
 logic upon checking if a filter exists.</p>
 <pre><code class="lang-js"><span class="comment">// default has filter handler</span>
 <span class="function"><span class="keyword">function</span> <span class="params">(filters, filter)</span> {</span>
@@ -364,7 +364,7 @@ chart.hasFilterHandler(<span class="keyword">function</span>(filter) {
 <p>Check whether any active filter or a specific filter is associated with particular chart instance.
 This function is <strong>not chainable</strong>.</p>
 <p>Set or get the remove filter handler. The remove filter handler is a function that performs the removal of a filter
-from the chart’s current filters. Using a custom remove filter handler allows you to perform additional logic
+from the chart&#39;s current filters. Using a custom remove filter handler allows you to perform additional logic
 upon removing a filter.  Any changes should modify the <code>filters</code> argument reference and return that reference.</p>
 <pre><code class="lang-js"><span class="comment">// default remove filter handler</span>
 <span class="function"><span class="keyword">function</span> <span class="params">(filters, filter)</span> {</span>
@@ -415,7 +415,7 @@ chart.filter(<span class="number">18</span>);</code></pre>
 <h4 id="-filters-">.filters()</h4>
 <p>Returns all current filters. This method does not perform defensive cloning of the internal
 filter array before returning, therefore any modification of the returned array will effect the
-chart’s internal filter storage.</p>
+chart&#39;s internal filter storage.</p>
 <h4 id="-onclick-datum-">.onClick(datum)</h4>
 <p>This function is passed to d3 as the onClick handler for each chart. The default behavior is to
 filter on the clicked datum (passed to the callback) and redraw the chart group.</p>
@@ -517,17 +517,17 @@ the same name to be called with the value to set that attribute for the chart.</
 <pre><code><span class="tag">chart</span><span class="class">.options</span>(<span class="rules">{<span class="rule"><span class="attribute">dimension</span>:<span class="value"> myDimension, group: myGroup}</span></span></span>);</code></pre>
 <h2 id="listeners">Listeners</h2>
 <p>All dc chart instance supports the following listeners.</p>
-<h4 id="-on-prerender-function-chart-">.on(‘preRender’, function(chart){…})</h4>
+<h4 id="-on-prerender-function-chart-">.on(&#39;preRender&#39;, function(chart){...})</h4>
 <p>This listener function will be invoked before chart rendering.</p>
-<h4 id="-on-postrender-function-chart-">.on(‘postRender’, function(chart){…})</h4>
-<p>This listener function will be invoked after chart finish rendering including all renderlets’ logic.</p>
-<h4 id="-on-preredraw-function-chart-">.on(‘preRedraw’, function(chart){…})</h4>
+<h4 id="-on-postrender-function-chart-">.on(&#39;postRender&#39;, function(chart){...})</h4>
+<p>This listener function will be invoked after chart finish rendering including all renderlets&#39; logic.</p>
+<h4 id="-on-preredraw-function-chart-">.on(&#39;preRedraw&#39;, function(chart){...})</h4>
 <p>This listener function will be invoked before chart redrawing.</p>
-<h4 id="-on-postredraw-function-chart-">.on(‘postRedraw’, function(chart){…})</h4>
-<p>This listener function will be invoked after chart finish redrawing including all renderlets’ logic.</p>
-<h4 id="-on-filtered-function-chart-filter-">.on(‘filtered’, function(chart, filter){…})</h4>
+<h4 id="-on-postredraw-function-chart-">.on(&#39;postRedraw&#39;, function(chart){...})</h4>
+<p>This listener function will be invoked after chart finish redrawing including all renderlets&#39; logic.</p>
+<h4 id="-on-filtered-function-chart-filter-">.on(&#39;filtered&#39;, function(chart, filter){...})</h4>
 <p>This listener function will be invoked after a filter is applied, added or removed.</p>
-<h4 id="-on-zoomed-function-chart-filter-">.on(‘zoomed’, function(chart, filter){…})</h4>
+<h4 id="-on-zoomed-function-chart-filter-">.on(&#39;zoomed&#39;, function(chart, filter){...})</h4>
 <p>This listener function will be invoked after a zoom is triggered.</p>
 <h2 id="margin-mixin">Margin Mixin</h2>
 <p>Margin is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid
@@ -575,7 +575,7 @@ array.</p>
 set by <code>.colors</code>.</p>
 <h4 id="-calculatecolordomain-">.calculateColorDomain()</h4>
 <p>Set the domain by determining the min and max values as retrieved by <code>.colorAccessor</code> over the
-chart’s dataset.</p>
+chart&#39;s dataset.</p>
 <h4 id="-getcolor-d-i-">.getColor(d [, i])</h4>
 <p>Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.</p>
 <h4 id="-colorcalculator-value-">.colorCalculator([value])</h4>
@@ -654,7 +654,7 @@ attempt to recalculate the x axis range whenever a redraw event is triggered.</p
 <p>Set or get x axis padding for the elastic x axis. The padding will be added to both end of the x
 axis if elasticX is turned on; otherwise it is ignored.</p>
 <ul>
-<li>padding can be an integer or percentage in string (e.g. ‘10%’). Padding can be applied to
+<li>padding can be an integer or percentage in string (e.g. &#39;10%&#39;). Padding can be applied to
 number or date x axes.  When padding a date axis, an integer represents number of days being padded
 and a percentage string will be treated the same as an integer.</li>
 </ul>
@@ -707,7 +707,7 @@ attempt to recalculate the y axis range whenever a redraw event is triggered.</p
 <p>Set or get y axis padding for the elastic y axis. The padding will be added to the top of the y
 axis if elasticY is turned on; otherwise it is ignored.</p>
 <ul>
-<li>padding can be an integer or percentage in string (e.g. ‘10%’). Padding can be applied to
+<li>padding can be an integer or percentage in string (e.g. &#39;10%&#39;). Padding can be applied to
 number or date axes. When padding a date axis, an integer represents number of days being padded
 and a percentage string will be treated the same as an integer.</li>
 </ul>
@@ -815,7 +815,7 @@ be used to retrieve a data value for each bubble. The data retrieved then will b
 the r scale to the actual bubble radius. This allows you to encode a data dimension using bubble
 size.</p>
 <h4 id="-minradiuswithlabel-radius-">.minRadiusWithLabel([radius])</h4>
-<p>Get or set the minimum radius for label rendering. If a bubble’s radius is less than this value
+<p>Get or set the minimum radius for label rendering. If a bubble&#39;s radius is less than this value
 then no label will be rendered.  Default: 10</p>
 <h4 id="-maxbubblerelativesize-relativesize-">.maxBubbleRelativeSize([relativeSize])</h4>
 <p>Get or set the maximum relative size of a bubble to the length of x axis. This value is useful
@@ -838,7 +838,7 @@ Create a pie chart instance and attaches it to the given parent element.</li>
 a dom block element such as a div; or a dom element or d3 selection.</p>
 </li>
 <li><p>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</p>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</p>
 </li>
 </ul>
 <p>Returns:
@@ -855,7 +855,8 @@ The resulting data will still be sorted by .ordering (default by key).</p>
 <p>Get or set the inner radius of the pie chart. If the inner radius is greater than 0px then the
 pie chart will be rendered as a doughnut chart. Default inner radius is 0px.</p>
 <h4 id="-radius-radius-">.radius([radius])</h4>
-<p>Get or set the outer radius. Default radius is 90px.</p>
+<p>Get or set the outer radius. If the radius is not set, it will be half of the minimum of the
+chart width and height.</p>
 <h4 id="-cx-cx-">.cx([cx])</h4>
 <p>Get or set center x coordinate position. Default is center of svg.</p>
 <h4 id="-cy-cy-">.cy([cy])</h4>
@@ -880,7 +881,7 @@ a dom block element such as a div; or a dom element or d3 selection.
 If the bar chart is a sub-chart in a <a href="#composite-chart">Composite Chart</a> then pass in the parent composite
 chart instance.</li>
 <li>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</li>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</li>
 </ul>
 <p>Returns:
 A newly created bar chart instance</p>
@@ -909,7 +910,7 @@ based on the number of data points and the length of the x axis.</p>
 <p>Set or get whether rounding is enabled when bars are centered.  Default: false.  If false, using
 rounding with centered bars will result in a warning and rounding will be ignored.  This flag
 has no effect if bars are not centered.</p>
-<p>When using standard d3.js rounding methods, the brush often doesn’t align correctly with
+<p>When using standard d3.js rounding methods, the brush often doesn&#39;t align correctly with
 centered bars since the bars are offset.  The rounding function must add an offset to
 compensate, such as in the following example.</p>
 <pre><code class="lang-js"><span class="transposed_variable">chart.</span><span class="built_in">round</span>(<span class="keyword">function</span>(n) <span class="cell">{return Math.floor(n)+<span class="number">0.5</span>}</span>);</code></pre>
@@ -931,7 +932,7 @@ If the line chart is a sub-chart in a <a href="#composite-chart">Composite Chart
 chart instance.</p>
 </li>
 <li><p>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</p>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</p>
 </li>
 </ul>
 <p>Returns:
@@ -962,7 +963,7 @@ This function is passed to
 custom reduce functions to get this to work, depending on your data. See
 <a href="https://github.com/dc-js/dc.js/issues/615#issuecomment-49089248">https://github.com/dc-js/dc.js/issues/615#issuecomment-49089248</a></p>
 <h4 id="-dashstyle-array-">.dashStyle([array])</h4>
-<p>Set the line’s d3 dashstyle. This value becomes the ‘stroke-dasharray’ of line. Defaults to empty
+<p>Set the line&#39;s d3 dashstyle. This value becomes the &#39;stroke-dasharray&#39; of line. Defaults to empty
 array (solid line).</p>
 <pre><code class="lang-js"> // <span class="operator"><span class="keyword">create</span> a Dash Dot Dot Dot
  chart.dashStyle([<span class="number">3</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>]);</span></code></pre>
@@ -989,8 +990,8 @@ beneath each line and the line chart effectively becomes an area chart.</p>
 current filters out of the total number of records in the data set. Once created the data count widget
 will automatically update the text content of the following elements under the parent element.</p>
 <ul>
-<li>‘.total-count’ - total number of records</li>
-<li>‘.filter-count’ - number of records matched by the current filters</li>
+<li>&#39;.total-count&#39; - total number of records</li>
+<li>&#39;.filter-count&#39; - number of records matched by the current filters</li>
 </ul>
 <p>Examples:</p>
 <ul>
@@ -1045,7 +1046,7 @@ Create a data table widget instance and attach it to the given parent element.</
 a dom block element such as a div; or a dom element or d3 selection.</p>
 </li>
 <li><p>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</p>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</p>
 </li>
 </ul>
 <p>Returns:
@@ -1083,9 +1084,9 @@ also mix in functions as desired or necessary, but you must use the
     Object = [Label, Fn] method as shown below.
 You may wish to override the following two functions, which are internally used to
 translate the column information or function into a displayed header. The first one
-is used on the simple “string” column specifier, the second is used to transform the
+is used on the simple &quot;string&quot; column specifier, the second is used to transform the
 String(fn) into something displayable. For the Stock example, the function for Change
-becomes a header of ‘d.close - d.open’.
+becomes a header of &#39;d.close - d.open&#39;.
     _chart._doColumnHeaderCapitalize _chart._doColumnHeaderFnToString
 You may use your own Object definition, however you must then override
     _chart._doColumnHeaderFormat , _chart._doColumnValueFormat
@@ -1150,19 +1151,19 @@ a simple way to define how the items are displayed.</p>
 a dom block element such as a div; or a dom element or d3 selection.</p>
 </li>
 <li><p>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</p>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</p>
 </li>
 </ul>
 <p>Returns:
 A newly created data grid widget instance</p>
 <h4 id="-size-size-">.size([size])</h4>
 <p>Get or set the grid size which determines the number of items displayed by the widget.</p>
-<h4 id="-html-function-data-return-html-">.html( function (data) { return ‘<html>‘; })</h4>
+<h4 id="-html-function-data-return-html-">.html( function (data) { return &#39;<html>&#39;; })</h4>
 <p>Get or set the function that formats an item. The data grid widget uses a
 function to generate dynamic html. Use your favourite templating engine or
 generate the string directly.</p>
 <pre><code class="lang-js"><span class="transposed_variable">chart.</span>html(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> { <span class="title">return</span> '&lt;<span class="title">div</span> <span class="title">class</span>='<span class="title">item</span> '+<span class="title">data</span>.<span class="title">exampleCategory</span>+''&gt;'+<span class="title">data</span>.<span class="title">exampleString</span>+'&lt;/<span class="title">div</span>&gt;';});</span></code></pre>
-<h4 id="-htmlgroup-function-data-return-html-">.htmlGroup( function (data) { return ‘<html>‘; })</h4>
+<h4 id="-htmlgroup-function-data-return-html-">.htmlGroup( function (data) { return &#39;<html>&#39;; })</h4>
 <p>Get or set the function that formats a group label.</p>
 <pre><code class="lang-js"><span class="transposed_variable">chart.</span>htmlGroup (<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> { <span class="title">return</span> '&lt;<span class="title">h2</span>&gt;'.<span class="title">d</span>.<span class="title">key</span> . '<span class="title">with</span> ' . <span class="title">d</span>.<span class="title">values</span>.<span class="title">length</span> .' <span class="title">items</span>&lt;/<span class="title">h2</span>&gt;'});</span></code></pre>
 <h4 id="-sortby-sortbyfunction-">.sortBy([sortByFunction])</h4>
@@ -1197,7 +1198,7 @@ Create a bubble chart instance and attach it to the given parent element.</li>
 <a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single selector</a> specifying
 a dom block element such as a div; or a dom element or d3 selection.</li>
 <li>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</li>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</li>
 </ul>
 <p>Returns:
 A newly created bubble chart instance</p>
@@ -1221,7 +1222,7 @@ achieve some quite flexible charting effects.</p>
 <a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single selector</a> specifying
 a dom block element such as a div; or a dom element or d3 selection.</li>
 <li>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</li>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</li>
 </ul>
 <p>Returns:
 A newly created composite chart instance</p>
@@ -1295,7 +1296,7 @@ composite features other than recomposing the chart.</p>
 a dom block element such as a div; or a dom element or d3 selection.</p>
 </li>
 <li><p>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</p>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</p>
 </li>
 </ul>
 <p>Returns:
@@ -1338,7 +1339,7 @@ Create a choropleth chart instance and attach it to the given parent element.</l
 a dom block element such as a div; or a dom element or d3 selection.</p>
 </li>
 <li><p>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</p>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</p>
 </li>
 </ul>
 <p>Returns:
@@ -1355,7 +1356,7 @@ layers with the same name the new overlay will override the existing one.</p>
 <ul>
 <li>json - GeoJson feed</li>
 <li>name - name of the layer</li>
-<li>keyAccessor - accessor function used to extract ‘key’ from the GeoJson data. The key extracted by
+<li>keyAccessor - accessor function used to extract &#39;key&#39; from the GeoJson data. The key extracted by
 this function should match the keys returned by the crossfilter groups.</li>
 </ul>
 <pre><code class="lang-js"><span class="regexp">//</span> insert a layer <span class="keyword">for</span> rendering US states
@@ -1367,8 +1368,8 @@ chart.overlayGeoJson(statesJson.features, <span class="string">'state'</span>, <
 functions</a>.  Default value: albersUsa.</p>
 <h4 id="-geojsons-">.geoJsons()</h4>
 <p>Returns all GeoJson layers currently registered with this chart. The returned array is a
-reference to this chart’s internal data structure, so any modification to this array will also
-modify this chart’s internal registration.</p>
+reference to this chart&#39;s internal data structure, so any modification to this array will also
+modify this chart&#39;s internal registration.</p>
 <p>Returns an array of objects containing fields {name, data, accessor}</p>
 <h4 id="-geopath-">.geoPath()</h4>
 <p>Returns the <a href="https://github.com/mbostock/d3/wiki/Geo-Paths#path">d3.geo.path</a> object used to
@@ -1394,7 +1395,7 @@ Create a bubble overlay chart instance and attach it to the given parent element
 a dom block element such as a div; or a dom element or d3 selection.
 off-screen. Typically this element should also be the parent of the underlying image.</li>
 <li>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</li>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</li>
 </ul>
 <p>Returns:
 A newly created bubble overlay chart instance</p>
@@ -1409,7 +1410,7 @@ underlying image is a bitmap, then an empty svg will need to be created on top o
 <pre><code class="lang-js">// <span class="operator"><span class="keyword">set</span> up underlying svg element
 chart.svg(d3.<span class="keyword">select</span>(<span class="string">'#chart svg'</span>));</span></code></pre>
 <h4 id="-point-name-x-y-mandatory-">.point(name, x, y) - <strong>mandatory</strong></h4>
-<p>Set up a data point on the overlay. The name of a data point should match a specific ‘key’ among
+<p>Set up a data point on the overlay. The name of a data point should match a specific &#39;key&#39; among
 data groups generated using keyAccessor.  If a match is found (point name &lt;-&gt; data group key)
 then a bubble will be generated at the position specified by the function. x and y
 value specified here are relative to the underlying svg.</p>
@@ -1425,7 +1426,7 @@ value specified here are relative to the underlying svg.</p>
 a dom block element such as a div; or a dom element or d3 selection.</p>
 </li>
 <li><p>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</p>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</p>
 </li>
 </ul>
 <p>Returns:
@@ -1438,7 +1439,7 @@ var chart2 = dc.rowChart(<span class="string">'#chart-container2'</span>, <span 
 <p>Gets or sets the x scale. The x scale can be any d3
 <a href="https://github.com/mbostock/d3/wiki/Quantitative-Scales">quantitive scale</a></p>
 <h4 id="-rendertitlelabel-boolean-">.renderTitleLabel(boolean)</h4>
-<p>Turn on/off Title label rendering (values) using SVG style of text-anchor ‘end’</p>
+<p>Turn on/off Title label rendering (values) using SVG style of text-anchor &#39;end&#39;</p>
 <h4 id="-xaxis-">.xAxis()</h4>
 <p>Get the x axis for the row chart instance.  Note: not settable for row charts.
 See the <a href="https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis">d3 axis object</a> documention for more information.</p>
@@ -1503,7 +1504,7 @@ If the scatter plot is a sub-chart in a <a href="#composite-chart">Composite Cha
 chart instance.</p>
 </li>
 <li><p>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</p>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</p>
 </li>
 </ul>
 <p>Returns:
@@ -1579,7 +1580,7 @@ var display1 = dc.numberDisplay(<span class="string">'#chart-container1'</span>)
 a dom block element such as a div; or a dom element or d3 selection.</p>
 </li>
 <li><p>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</p>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</p>
 </li>
 </ul>
 <p>Returns:
@@ -1618,7 +1619,7 @@ otherwise the whole row will be unselected.</p>
 <a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single selector</a> representing
 a dom block element such as a div; or a dom element or d3 selection.</li>
 <li>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</li>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</li>
 </ul>
 <p>Returns:
 A newly created box plot instance</p>
@@ -1635,7 +1636,7 @@ for a visual description of how the padding is applied.</p>
 <p>Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
 or on charts with a custom <code>.boxWidth</code>. Will pad the width by <code>padding * barWidth</code> on each side of the chart.</p>
 <p>Default: 0.5</p>
-<h4 id="-boxwidth-width-function-innerchartwidth-xunits-">.boxWidth(width || function(innerChartWidth, xUnits) { … })</h4>
+<h4 id="-boxwidth-width-function-innerchartwidth-xunits-">.boxWidth(width || function(innerChartWidth, xUnits) { ... })</h4>
 <p>Get or set the numerical width of the boxplot box. The width may also be a function taking as
 parameters the chart width excluding the right and left margins, as well as the number of x
 units.</p>

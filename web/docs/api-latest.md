@@ -967,7 +967,8 @@ Get or set the inner radius of the pie chart. If the inner radius is greater tha
 pie chart will be rendered as a doughnut chart. Default inner radius is 0px.
 
 #### .radius([radius])
-Get or set the outer radius. Default radius is 90px.
+Get or set the outer radius. If the radius is not set, it will be half of the minimum of the
+chart width and height.
 
 #### .cx([cx])
 Get or set center x coordinate position. Default is center of svg.
@@ -980,7 +981,7 @@ Get or set the minimal slice angle for label rendering. Any slice with a smaller
 display a slice label.  Default min angle is 0.5.
 
 ## Bar Chart
-Includes: [Stack Mixin](#stack-mixin), [Coordinate Grid Mixin](#coordinate-grid-mixin)
+Includes: [Stack Mixin](#stack Mixin), [Coordinate Grid Mixin](#coordinate-grid-mixin)
 
 Concrete bar chart/histogram implementation.
 
