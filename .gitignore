@@ -8,6 +8,7 @@ node_modules
 # ide files
 *.iml
 .idea
+.project
 
 # vim files
 .*.swp
