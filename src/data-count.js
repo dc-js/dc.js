@@ -74,15 +74,15 @@ dc.dataCount = function (parent, chartGroup) {
     };
 
     /**
-    #### numberFormat([object])
+    #### formatNumber([object])
     Gets or sets an optional object specifying the formatter to be used to display the filter count
     and total count.
 
     ```js
-    counter.numberFormat(d3.format('.2g'))
+    counter.formatNumber(d3.format('.2g'))
     ```
     **/
-    _chart.numberFormat = function (s) {
+    _chart.formatNumber = function (s) {
         if (!arguments.length) {
             return _formatNumber;
         }

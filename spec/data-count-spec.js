@@ -149,14 +149,14 @@ describe('dc.dataCount', function() {
         });
     });
 	
-    describe('creation with numberFormat attribute', function() {
+    describe('creation with formatNumber attribute', function() {
         beforeEach(function() {
             var id = "data-count";
             var div = appendChartID(id);
             div.append("span").attr("class", "filter-count");
             div.append("span").attr("class", "total-count");
             chart = buildChart(id);
-            chart.numberFormat(d3.format("04.1g"));
+            chart.formatNumber(d3.format("04.1g"));
             chart.redraw();
         });
         it('should generate something', function() {
