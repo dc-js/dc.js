@@ -4211,6 +4211,7 @@ dc.barChart = function (parent, chartGroup) {
             .append('rect')
             .attr('class', 'bar')
             .attr('fill', dc.pluck('data', _chart.getColor))
+            .attr("y", _chart.height())
             .attr('height', 0);
 
         if (_chart.renderTitle()) {
