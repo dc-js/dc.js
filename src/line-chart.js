@@ -261,7 +261,6 @@ dc.lineChart = function (parent, chartGroup) {
                     .append('circle')
                     .attr('class', DOT_CIRCLE_CLASS)
                     .attr('r', getDotRadius())
-                    .attr('fill', _chart.getColor)
                     .style('fill-opacity', _dataPointFillOpacity)
                     .style('stroke-opacity', _dataPointStrokeOpacity)
                     .on('mousemove', function () {
@@ -273,8 +272,7 @@ dc.lineChart = function (parent, chartGroup) {
                         var dot = d3.select(this);
                         hideDot(dot);
                         hideRefLines(g);
-                    })
-                    .call(renderTitle, d);
+                    });
 
                 dots
                     .attr('cx', function (d) {
@@ -283,7 +281,8 @@ dc.lineChart = function (parent, chartGroup) {
                     .attr('cy', function (d) {
                         return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
                     })
-                    .attr('fill', _chart.getColor);
+                    .attr('fill', _chart.getColor)
+                    .call(renderTitle, d);
 
                 dots.exit().remove();
             });
@@ -334,6 +333,7 @@ dc.lineChart = function (parent, chartGroup) {
 
     function renderTitle(dot, d) {
         if (_chart.renderTitle()) {
+            dot.selectAll('title' ).remove();
             dot.append('title').text(dc.pluck('data', _chart.title(d.name)));
         }
     }
