@@ -2,7 +2,7 @@
 
 ## Issue Submission Guidlines
 
-* If you have a problem with your code, please ask your question on stackoverflow.com or the [user group](https://groups.google.com/forum/?fromgroups#!forum/dc-js-user-group)
+* Because of the volume of requests, we do not use the issue tracker for support questions. If you are trying to get a particular effect or you have a problem with your code, please ask your question on stackoverflow.com or the [user group](https://groups.google.com/forum/?fromgroups#!forum/dc-js-user-group)
 * It will be far, far easier for others to understand your problem or bug if you demonstrate it with a short example on http://jsfiddle.net/ or on http://bl.ocks.org/
 * For bugs and feature requests submit a [github issue](http://github.com/dc-js/dc.js/issues)
   * Please include the version of DC you are using
