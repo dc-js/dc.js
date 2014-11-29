@@ -34,6 +34,7 @@ d3.csv("morley.csv", function(error, experiments) {
     .brushOn(false)
     .yAxisLabel("Measured Speed km/s")
     .xAxisLabel("Run")
+    .clipPadding(10)
     .elasticY(true)
     .dimension(runDimension)
     .group(runGroup)

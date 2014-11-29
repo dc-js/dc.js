@@ -30,6 +30,8 @@ d3.csv("morley.csv", function(error, experiments) {
     .height(480)
     .x(d3.scale.linear().domain([6,20]))
     .brushOn(false)
+    .symbolSize(8)
+    .clipPadding(10)
     .yAxisLabel("This is the Y Axis!")
     .dimension(runDimension)
     .group(speedSumGroup);

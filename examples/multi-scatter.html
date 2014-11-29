@@ -34,6 +34,7 @@ d3.csv("morley.csv", function(error, experiments) {
         .height(480)
         .x(d3.scale.linear().domain([6,20]))
         .yAxisLabel("This is the Y Axis!")
+        .clipPadding(10)
         .dimension(scatterDimension)
         .legend(dc.legend().x(70).y(10).itemHeight(13).gap(5))
         .compose([
