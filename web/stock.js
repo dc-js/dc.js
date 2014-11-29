@@ -180,7 +180,7 @@ d3.csv('ndx.csv', function (data) {
 
     //### Define Chart Attributes
     //Define chart attributes using fluent methods. See the
-    // [dc API Reference](https://github.com/dc-js/dc.js/blob/master/web/docs/api-1.7.0.md) for more information
+    // [dc API Reference](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md) for more information
     //
 
     //#### Bubble Chart
