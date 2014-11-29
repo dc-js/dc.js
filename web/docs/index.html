@@ -343,9 +343,10 @@ chart. Most chart interaction in dc will automatically trigger this method throu
 events (in particular <a href="#dcredrawallchartgroup">dc.redrawAll</a>); therefore, you only need to
 manually invoke this function if data is manipulated outside of dc&#39;s control (for example if
 data is loaded in the background using <code>crossfilter.add()</code>).</p>
-<p>Set or get the has filter handler. The has filter handler is a function that performs the logical check if the
-current chart&#39;s filters have a specific filter.  Using a custom has filter handler allows you to perform additional
-logic upon checking if a filter exists.</p>
+<h4 id="-hasfilterhandler-function-">.hasFilterHandler([function])</h4>
+<p>Set or get the has filter handler. The has filter handler is a function that checks to see if
+the chart&#39;s current filters include a specific filter.  Using a custom has filter handler allows
+you to change the way filters are checked for and replaced.</p>
 <pre><code class="lang-js"><span class="comment">// default has filter handler</span>
 <span class="function"><span class="keyword">function</span> <span class="params">(filters, filter)</span> {</span>
     <span class="keyword">if</span> (filter === <span class="literal">null</span> || <span class="keyword">typeof</span>(filter) === <span class="string">'undefined'</span>) {
@@ -357,15 +358,18 @@ logic upon checking if a filter exists.</p>
 }
 
 <span class="comment">// custom filter handler (no-op)</span>
-chart.hasFilterHandler(<span class="keyword">function</span>(filter) {
+chart.hasFilterHandler(<span class="keyword">function</span>(filters, filter) {
     <span class="keyword">return</span> <span class="literal">false</span>;
 });</code></pre>
 <h4 id="-hasfilter-filter-">.hasFilter([filter])</h4>
 <p>Check whether any active filter or a specific filter is associated with particular chart instance.
 This function is <strong>not chainable</strong>.</p>
-<p>Set or get the remove filter handler. The remove filter handler is a function that performs the removal of a filter
-from the chart&#39;s current filters. Using a custom remove filter handler allows you to perform additional logic
-upon removing a filter.  Any changes should modify the <code>filters</code> argument reference and return that reference.</p>
+<h4 id="-removefilterhandler-function-">.removeFilterHandler([function])</h4>
+<p>Set or get the remove filter handler. The remove filter handler is a function that removes a
+filter from the chart&#39;s current filters. Using a custom remove filter handler allows you to
+change how filters are removed or perform additional work when removing a filter, e.g. when
+using a filter server other than crossfilter.</p>
+<p>Any changes should modify the <code>filters</code> array argument and return that array.</p>
 <pre><code class="lang-js"><span class="comment">// default remove filter handler</span>
 <span class="function"><span class="keyword">function</span> <span class="params">(filters, filter)</span> {</span>
     <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; filters.length; i++) {
@@ -381,9 +385,12 @@ upon removing a filter.  Any changes should modify the <code>filters</code> argu
 chart.removeFilterHandler(<span class="keyword">function</span>(filters, filter) {
     <span class="keyword">return</span> filters;
 });</code></pre>
-<p>Set or get the add filter handler. The add filter handler is a function that performs the addition of a filter
-to the charts filter list. Using a custom add filter handler allows you to perform additional logic
-upon adding a filter.  Any changes should modify the <code>filters</code> argument reference and return that reference.</p>
+<h4 id="-addfilterhandler-function-">.addFilterHandler([function])</h4>
+<p>Set or get the add filter handler. The add filter handler is a function that adds a filter to
+the chart&#39;s filter list. Using a custom add filter handler allows you to change the way filters
+are added or perform additional work when adding a filter, e.g. when using a filter server other
+than crossfilter.</p>
+<p>Any changes should modify the <code>filters</code> array argument and return that array.</p>
 <pre><code class="lang-js"><span class="comment">// default add filter handler</span>
 <span class="function"><span class="keyword">function</span> <span class="params">(filters, filter)</span> <span class="comment">{
     filters.push(filter);
@@ -394,16 +401,19 @@ upon adding a filter.  Any changes should modify the <code>filters</code> argume
 <span class="title">chart</span>.<span class="title">addFilterHandler</span><span class="params">(<span class="keyword">function</span>(filters, filter)</span> <span class="comment">{
     return filters;
 }</span>);</span></code></pre>
-<p>Set or get the reset filter handler. The reset filter handler is a function that performs the reset of the filters
-list by returning the new list. Using a custom reset filter handler allows you to perform additional logic
-upon reseting the filters.  This function should return an array.</p>
+<h4 id="-resetfilterhandler-function-">.resetFilterHandler([function])</h4>
+<p>Set or get the reset filter handler. The reset filter handler is a function that resets the
+chart&#39;s filter list by returning a new list. Using a custom reset filter handler allows you to
+change the way filters are reset, or perform additional work when resetting the filters,
+e.g. when using a filter server other than crossfilter.</p>
+<p>This function should return an array.</p>
 <pre><code class="lang-js"><span class="comment">// default remove filter handler</span>
 <span class="function"><span class="keyword">function</span> <span class="params">(filters)</span> <span class="comment">{
     return [];
 }</span>
 
 // <span class="title">custom</span> <span class="title">filter</span> <span class="title">handler</span> <span class="params">(no-op)</span>
-<span class="title">chart</span>.<span class="title">addFilterHandler</span><span class="params">(<span class="keyword">function</span>(filters)</span> <span class="comment">{
+<span class="title">chart</span>.<span class="title">resetFilterHandler</span><span class="params">(<span class="keyword">function</span>(filters)</span> <span class="comment">{
     return filters;
 }</span>);</span></code></pre>
 <h4 id="-filter-filtervalue-">.filter([filterValue])</h4>
