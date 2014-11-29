@@ -17,7 +17,7 @@
     "quotmark": "single",
     "sub": true,
     "undef": true,
-    "unused": true,
+    "unused": "vars",
     "globals" : {
         "console": false,
         "crossfilter" : false,
