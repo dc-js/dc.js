@@ -348,4 +348,34 @@ describe('dc.bubbleChart', function() {
             expect(chart.y().domain()[1]).toBe(12);
         });
     });
+
+    describe('with logarithmic scales', function() {
+        beforeEach(function () {
+            var rowDimension = data.dimension(function(d, i) {
+                return i;
+            });
+            var rowGroup = rowDimension.group();
+
+            chart
+		.dimension(rowDimension).group(rowGroup)
+                .keyAccessor(function(kv) {
+                    return 0;
+                })
+                .valueAccessor(function(kv) {
+                    return 0;
+                })
+		.x(d3.scale.log().domain([1, 300]))
+		.y(d3.scale.log().domain([1, 10]))
+		.elasticX(false)
+		.elasticY(false)
+	    ;
+        });
+
+        it('renders without errors', function () {
+            chart.render();
+            chart.selectAll("g.node").each(function (d, i) {
+                expect(d3.select(this).attr("transform")).toMatchTranslate(0,0);
+            });
+        });
+    });
 });
