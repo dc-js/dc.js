@@ -144,7 +144,7 @@ dc.dataTable = function (parent, chartGroup) {
 
     function nestEntries() {
         var entries;
-        if (_order.name === 'd3_ascending') {
+        if (_order === d3.ascending) {
             entries = _chart.dimension().bottom(_size);
         } else {
             entries = _chart.dimension().top(_size);
