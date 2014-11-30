@@ -188,6 +188,25 @@ describe('dc.coordinateGridChart', function() {
 
             });
 
+            describe('with a complex selector', function() {
+                beforeEach(function() {
+                    var sel = appendChartID('coordinate-grid').append('div').attr('class', 'chart');
+                    chart = dc.lineChart("#coordinate-grid .chart")
+                        .width(500)
+                        .height(150)
+                        .dimension(dimension)
+                        .group(group)
+                        .transitionDuration(0)
+                        .brushOn(false)
+                        .margins({ top: 20, bottom: 0, right: 10, left: 0 })
+                        .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
+                    chart.render();
+                });
+                it('should generate a valid clippath id', function() {
+                    var rect = chart.select("defs #coordinate-grid--chart-clip rect");
+                    expect(rect.empty()).toBeFalsy();
+                });
+            });
         });
 
         describe('when an x function is not provided', function () {
