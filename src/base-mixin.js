@@ -996,6 +996,25 @@ dc.baseMixin = function (_chart) {
         return _chart;
     };
 
+    /**
+     #### .clearRenderlet(renderletFunction)
+     Removes a renderlet function you have previously added to the chart
+     **/
+    _chart.clearRenderlet = function (_) {
+        for (var i = 0; i < _renderlets.length; ++i) {
+            if (_renderlets[i] === _) { _renderlets.splice(i, 1); }
+        }
+    };
+
+    /**
+     #### .clearRenderlets()
+     Removes all renderlet functions from the chart
+     **/
+    _chart.clearRenderlets = function () {
+        _renderlets.length = 0;
+        return _chart;
+    };
+
     function runAllRenderlets() {
         for (var i = 0; i < _renderlets.length; ++i) {
             _renderlets[i](_chart);
