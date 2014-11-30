@@ -101,6 +101,16 @@ describe('dc.dataTable', function() {
         });
     });
 
+    describe('ascending order', function () {
+        beforeEach(function() {
+            chart.order(d3.ascending);
+            chart.redraw();
+        });
+        it('uses dimension.bottom() instead of top()', function () {
+            expect(chart.selectAll("td._0")[0][0].innerHTML).toEqual('1');
+        });
+    });
+
     describe('specifying chart columns with label', function () {
         beforeEach(function() {
             chart.columns(["state"]);
