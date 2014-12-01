@@ -1177,9 +1177,10 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    Set or get the has filter handler. The has filter handler is a function that performs the logical check if the
-    current chart's filters have a specific filter.  Using a custom has filter handler allows you to perform additional
-    logic upon checking if a filter exists.
+    #### .hasFilterHandler([function])
+    Set or get the has filter handler. The has filter handler is a function that checks to see if
+    the chart's current filters include a specific filter.  Using a custom has filter handler allows
+    you to change the way filters are checked for and replaced.
 
     ```js
     // default has filter handler
@@ -1193,7 +1194,7 @@ dc.baseMixin = function (_chart) {
     }
 
     // custom filter handler (no-op)
-    chart.hasFilterHandler(function(filter) {
+    chart.hasFilterHandler(function(filters, filter) {
         return false;
     });
     ```
@@ -1227,9 +1228,13 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    Set or get the remove filter handler. The remove filter handler is a function that performs the removal of a filter
-    from the chart's current filters. Using a custom remove filter handler allows you to perform additional logic
-    upon removing a filter.  Any changes should modify the `filters` argument reference and return that reference.
+    #### .removeFilterHandler([function])
+    Set or get the remove filter handler. The remove filter handler is a function that removes a
+    filter from the chart's current filters. Using a custom remove filter handler allows you to
+    change how filters are removed or perform additional work when removing a filter, e.g. when
+    using a filter server other than crossfilter.
+
+    Any changes should modify the `filters` array argument and return that array.
 
     ```js
     // default remove filter handler
@@ -1263,9 +1268,13 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    Set or get the add filter handler. The add filter handler is a function that performs the addition of a filter
-    to the charts filter list. Using a custom add filter handler allows you to perform additional logic
-    upon adding a filter.  Any changes should modify the `filters` argument reference and return that reference.
+    #### .addFilterHandler([function])
+    Set or get the add filter handler. The add filter handler is a function that adds a filter to
+    the chart's filter list. Using a custom add filter handler allows you to change the way filters
+    are added or perform additional work when adding a filter, e.g. when using a filter server other
+    than crossfilter.
+
+    Any changes should modify the `filters` array argument and return that array.
 
     ```js
     // default add filter handler
@@ -1288,14 +1297,18 @@ dc.baseMixin = function (_chart) {
         return _chart;
     };
 
-    var _resetFilterHandler = function () {
+    var _resetFilterHandler = function (filters) {
         return [];
     };
 
     /**
-    Set or get the reset filter handler. The reset filter handler is a function that performs the reset of the filters
-    list by returning the new list. Using a custom reset filter handler allows you to perform additional logic
-    upon reseting the filters.  This function should return an array.
+    #### .resetFilterHandler([function])
+    Set or get the reset filter handler. The reset filter handler is a function that resets the
+    chart's filter list by returning a new list. Using a custom reset filter handler allows you to
+    change the way filters are reset, or perform additional work when resetting the filters,
+    e.g. when using a filter server other than crossfilter.
+
+    This function should return an array.
 
     ```js
     // default remove filter handler
@@ -1304,7 +1317,7 @@ dc.baseMixin = function (_chart) {
     }
 
     // custom filter handler (no-op)
-    chart.addFilterHandler(function(filters) {
+    chart.resetFilterHandler(function(filters) {
         return filters;
     });
     ```
@@ -2853,7 +2866,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function getClipPathId() {
-        return _chart.anchorName() + '-clip';
+        return _chart.anchorName().replace(/[ .#]/g, '-') + '-clip';
     }
 
     /**
@@ -5104,7 +5117,12 @@ dc.dataTable = function (parent, chartGroup) {
     }
 
     function nestEntries() {
-        var entries = _chart.dimension().top(_size);
+        var entries;
+        if (_order === d3.ascending) {
+            entries = _chart.dimension().bottom(_size);
+        } else {
+            entries = _chart.dimension().top(_size);
+        }
 
         return d3.nest()
             .key(_chart.group())
