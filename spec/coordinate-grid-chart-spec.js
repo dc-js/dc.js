@@ -340,6 +340,17 @@ describe('dc.coordinateGridChart', function() {
                             expect(nthGridLine(2).attr('x1')).toBeWithinDelta(237, 1);
                         });
                     });
+
+                    describe('with an ordinal x axis', function() {
+                        beforeEach(function() {
+                            chart.x(d3.scale.ordinal())
+                                .xUnits(dc.units.ordinal)
+                                .render();
+                        });
+                        it('render without errors', function() {
+                            expect(chart.selectAll('.grid-line.vertical line').size()).toBe(6);
+                        });
+                    });
                 });
             });
 
