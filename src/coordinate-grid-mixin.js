@@ -447,7 +447,8 @@ dc.coordinateGridMixin = function (_chart) {
                     .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
             }
 
-            var ticks = _xAxis.tickValues() ? _xAxis.tickValues() : (typeof _x.ticks === 'function' ? _x.ticks(_xAxis.ticks()[0]) : _x.domain());
+            var ticks = _xAxis.tickValues() ? _xAxis.tickValues() :
+                    (typeof _x.ticks === 'function' ? _x.ticks(_xAxis.ticks()[0]) : _x.domain());
 
             var lines = gridLineG.selectAll('line')
                 .data(ticks);

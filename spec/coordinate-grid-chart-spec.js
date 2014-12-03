@@ -347,7 +347,7 @@ describe('dc.coordinateGridChart', function() {
                                 .xUnits(dc.units.ordinal)
                                 .render();
                         });
-                        it('render without errors', function() {
+                        it('should render without errors', function() {
                             expect(chart.selectAll('.grid-line.vertical line').size()).toBe(6);
                         });
                     });
