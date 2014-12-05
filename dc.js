@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-alpha.2
+ *  dc %VERSION%
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012 Nick Zhu and other contributors
  *
@@ -20,7 +20,7 @@
 'use strict';
 
 /**
-#### Version 2.0.0-alpha.2
+#### Version %VERSION%
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -41,7 +41,7 @@ that are chainable d3 objects.)
 /*jshint -W062*/
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-alpha.2',
+    version: '%VERSION%',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -2887,8 +2887,10 @@ dc.coordinateGridMixin = function (_chart) {
 
     function generateClipPath() {
         var defs = dc.utils.appendOrSelect(_parent, 'defs');
-
-        var chartBodyClip = dc.utils.appendOrSelect(defs, 'clipPath').attr('id', getClipPathId());
+        // cannot select <clippath> elements; bug in WebKit, must select by id
+        // https://groups.google.com/forum/#!topic/d3-js/6EpAzQ2gU9I
+        var id = getClipPathId();
+        var chartBodyClip = dc.utils.appendOrSelect(defs, id).attr('id', id);
 
         var padding = _clipPadding * 2;
 
@@ -2919,6 +2921,7 @@ dc.coordinateGridMixin = function (_chart) {
         _chart._preprocessData();
 
         drawChart(false);
+        generateClipPath();
 
         return _chart;
     };
