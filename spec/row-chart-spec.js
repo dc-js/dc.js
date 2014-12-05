@@ -113,6 +113,28 @@ describe('dc.rowChart', function() {
                     });
                 });
 
+                describe('row label vertical position', function() {
+                    var labels, rows;
+                    beforeEach(function() {
+                        labels = chart.selectAll("svg text.row");
+                        rows = chart.selectAll("g.row rect");
+                    });
+
+                    function itShouldVerticallyPositionLabelWithinRow(i) {
+                        it('should place label ' + i + ' within row ' + i, function() {
+                            var rowpos = rows[0][i].getBoundingClientRect(),
+                                textpos = labels[0][i].getBoundingClientRect();
+                            expect(textpos.top).toBeGreaterThan(rowpos.top);
+                            expect(textpos.bottom).toBeLessThan(rowpos.bottom);
+                        });
+                    }
+                    itShouldVerticallyPositionLabelWithinRow(0);
+                    itShouldVerticallyPositionLabelWithinRow(1);
+                    itShouldVerticallyPositionLabelWithinRow(2);
+                    itShouldVerticallyPositionLabelWithinRow(3);
+                    itShouldVerticallyPositionLabelWithinRow(4);
+                });
+
                 describe('re-rendering the chart', function () {
                     beforeEach(function () {
                         chart.render();
