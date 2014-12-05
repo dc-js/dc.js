@@ -14,9 +14,8 @@
 * Make changes to the files in `src/` not dc.js
 * Add tests to `spec/`. Feel free to create a new file if needed.
 * Run `grunt server` and go to http://localhost:8888/spec to develop your tests.
-* Run `grunt lint` to fix any final linting issues via jshint.
+* Run `grunt lint` to confirm that your code meets the dc.js style guidelines.
 * Run `grunt test` to confirm that all tests will pass on phantomjs.
-* Run `grunt jshint` and `grunt jscs` to confirm that your code meets the dc.js style guidelines
 * Commit your changes to `src/*` and `spec/*` but not any build artifacts.  (Build artifacts include `dc.*js*`, `web/docs/*`, `web/js/*`)
 * Submit a pull request
 * If you merge master or another branch into your patchset, please rebase against master.
