@@ -207,6 +207,17 @@ describe('dc.coordinateGridChart', function() {
                     expect(rect.empty()).toBeFalsy();
                 });
             });
+
+            describe('redrawing at a different size', function() {
+                beforeEach(function() {
+                    chart.width(300).height(400).redraw();
+                });
+                it('should change the clippath to the new size', function() {
+                    var rect = chart.select("defs #coordinate-grid-chart-clip rect");
+                    expect(rect.attr("width")).toBe('290');
+                    expect(rect.attr("height")).toBe('380');
+                });
+            });
         });
 
         describe('when an x function is not provided', function () {
