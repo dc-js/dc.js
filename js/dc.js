@@ -463,10 +463,11 @@ dc.utils.nameToId = function (name) {
     return name.toLowerCase().replace(/[\s]/g, '_').replace(/[\.']/g, '');
 };
 
-dc.utils.appendOrSelect = function (parent, name) {
-    var element = parent.select(name);
+dc.utils.appendOrSelect = function (parent, selector, tag) {
+    tag = tag || selector;
+    var element = parent.select(selector);
     if (element.empty()) {
-        element = parent.append(name);
+        element = parent.append(tag);
     }
     return element;
 };
@@ -2887,8 +2888,10 @@ dc.coordinateGridMixin = function (_chart) {
 
     function generateClipPath() {
         var defs = dc.utils.appendOrSelect(_parent, 'defs');
-
-        var chartBodyClip = dc.utils.appendOrSelect(defs, 'clipPath').attr('id', getClipPathId());
+        // cannot select <clippath> elements; bug in WebKit, must select by id
+        // https://groups.google.com/forum/#!topic/d3-js/6EpAzQ2gU9I
+        var id = getClipPathId();
+        var chartBodyClip = dc.utils.appendOrSelect(defs, '#' + id, 'clipPath').attr('id', id);
 
         var padding = _clipPadding * 2;
 
@@ -2919,6 +2922,7 @@ dc.coordinateGridMixin = function (_chart) {
         _chart._preprocessData();
 
         drawChart(false);
+        generateClipPath();
 
         return _chart;
     };
