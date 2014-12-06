@@ -596,6 +596,27 @@ describe('dc.lineChart', function() {
                 });
             });
         });
+        describe('changing data', function() {
+            var stateDimension;
+            beforeEach(function() {
+                chart.brushOn(false)
+                    .title(function (d) { return d.value; })
+                    .render();
+                stateDimension = data.dimension(function(d){ return d.state; });
+                stateDimension.filter('CA');
+                chart.redraw();
+            });
+
+            it('should update dot titles', function() {
+                chart.selectAll('g._0 circle.dot').each(function (d) {
+                    expect(+d3.select(this).select("title").text()).toBe(d.data.value);
+                });
+            });
+
+            afterEach(function() {
+                stateDimension.filter(null);
+            });
+        });
     });
     describe('change color', function() {
         beforeEach(function() {
@@ -605,7 +626,7 @@ describe('dc.lineChart', function() {
                 .render();
         });
         it('updates dot colors', function() {
-            expect(chart.select("circle.dot")[0][0].attributes.fill.nodeValue).toMatch(/#FF0000/i);
+            expect(chart.select("circle.dot")[0][0].attributes.fill.value).toMatch(/#FF0000/i);
         });
     });
 });
