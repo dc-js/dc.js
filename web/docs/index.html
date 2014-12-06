@@ -1040,6 +1040,9 @@ selected. The text <code>%total-count</code> will replaced with the total number
     <span class="keyword">some</span>: '%filter-<span class="command">count</span> <span class="keyword">out of</span> %total-<span class="command">count</span> records selected',
     all: 'All records selected. Click <span class="function_start"><span class="keyword">on</span> <span class="title">charts</span></span> <span class="keyword">to</span> apply filters'
 })</code></pre>
+<h4 id="formatnumber-formatter-">formatNumber([formatter])</h4>
+<p>Gets or sets an optional function to format the filter count and total count.</p>
+<pre><code class="lang-js">counter.<span class="built_in">formatNumber</span>(d3.format(<span class="comment">'.2g'))</span></code></pre>
 <h2 id="data-table-widget">Data Table Widget</h2>
 <p>Includes: <a href="#base-mixin">Base Mixin</a></p>
 <p>The data table is a simple widget designed to list crossfilter focused data set (rows being
