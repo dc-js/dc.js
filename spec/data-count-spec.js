@@ -148,5 +148,32 @@ describe('dc.dataCount', function() {
             countryDimension.filterAll();
         });
     });
+	
+    describe('creation with formatNumber attribute', function() {
+        beforeEach(function() {
+            var id = "data-count";
+            var div = appendChartID(id);
+            div.append("span").attr("class", "filter-count");
+            div.append("span").attr("class", "total-count");
+            chart = buildChart(id);
+            chart.formatNumber(d3.format("04.1g"));
+            chart.redraw();
+        });
+        it('should generate something', function() {
+            expect(chart).not.toBeNull();
+        });
+        it('should be registered', function() {
+            expect(dc.hasChart(chart)).toBeTruthy();
+        });
+        it('should fill in the formatted total count', function() {
+            expect(chart.select("span.total-count").text()).toEqual("1e+1");
+        });
+        it('should fill in the formatted filter count', function() {
+            expect(chart.select("span.filter-count").text()).toEqual("0002");
+        });
+        afterEach(function() {
+            countryDimension.filterAll();
+        });
+    });
 
 });
