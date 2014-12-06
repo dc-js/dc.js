@@ -132,10 +132,11 @@ dc.utils.nameToId = function (name) {
     return name.toLowerCase().replace(/[\s]/g, '_').replace(/[\.']/g, '');
 };
 
-dc.utils.appendOrSelect = function (parent, name) {
-    var element = parent.select(name);
+dc.utils.appendOrSelect = function (parent, selector, tag) {
+    tag = tag || selector;
+    var element = parent.select(selector);
     if (element.empty()) {
-        element = parent.append(name);
+        element = parent.append(tag);
     }
     return element;
 };

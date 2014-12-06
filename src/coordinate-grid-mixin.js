@@ -961,7 +961,7 @@ dc.coordinateGridMixin = function (_chart) {
         // cannot select <clippath> elements; bug in WebKit, must select by id
         // https://groups.google.com/forum/#!topic/d3-js/6EpAzQ2gU9I
         var id = getClipPathId();
-        var chartBodyClip = dc.utils.appendOrSelect(defs, id).attr('id', id);
+        var chartBodyClip = dc.utils.appendOrSelect(defs, '#' + id, 'clipPath').attr('id', id);
 
         var padding = _clipPadding * 2;
 
