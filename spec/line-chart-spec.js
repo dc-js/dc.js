@@ -609,6 +609,7 @@ describe('dc.lineChart', function() {
 
             it('should update dot titles', function() {
                 chart.selectAll('g._0 circle.dot').each(function (d) {
+                    expect(d3.select(this).select("title").size()).toBe(1);
                     expect(+d3.select(this).select("title").text()).toBe(d.data.value);
                 });
             });
