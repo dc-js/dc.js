@@ -602,7 +602,7 @@ describe('dc.lineChart', function() {
             chart.brushOn(false)
                 .ordinalColors(['#FF0000'])
                 .colorAccessor(function(){ return 0; })
-                .render().redraw();
+                .render();
         });
         it('updates dot colors', function() {
             expect(chart.select("circle.dot")[0][0].attributes.fill.nodeValue).toMatch(/#FF0000/i);
