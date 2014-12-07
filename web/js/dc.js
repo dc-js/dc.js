@@ -6877,13 +6877,24 @@ dc.compositeChart = function (parent, chartGroup) {
             child.xUnits(_chart.xUnits());
             child.transitionDuration(_chart.transitionDuration());
             child.brushOn(_chart.brushOn());
-            child.filterGroup(_chart.filterGroup());
             child.renderTitle(_chart.renderTitle());
             child.elasticX(_chart.elasticX());
         }
 
         return g;
     });
+
+    _chart._brushing = function () {
+        var extent = _chart.extendBrush();
+        var brushIsEmpty = _chart.brushIsEmpty(extent);
+
+        for (var i = 0; i < _children.length; ++i) {
+            _children[i].filter(null);
+            if (!brushIsEmpty) {
+                _children[i].filter(extent);
+            }
+        }
+    };
 
     _chart._prepareYAxis = function () {
         var left = (leftYAxisChildren().length !== 0);
