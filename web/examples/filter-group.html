@@ -38,14 +38,10 @@ d3.csv("morley.csv", function(error, experiments) {
             .height(300)
             .x(d3.scale.linear().domain([6,20]))
             .brushOn(true)
+            .filterGroup('filter-group')
             .yAxisLabel("This is the Y Axis!")
             .dimension(runDimension)
-            .group(speedSumGroup)
-            .renderlet(function(chart) {
-                chart.selectAll('rect').on("click", function(d) {
-                    console.log("click!", d);
-                });
-            });
+            .group(speedSumGroup);
         chart.render();
     }
     function line_chart(chart) {
@@ -55,6 +51,7 @@ d3.csv("morley.csv", function(error, experiments) {
             .x(d3.scale.linear().domain([0,20]))
             .renderArea(true)
             .brushOn(true)
+            .filterGroup('filter-group')
             .renderDataPoints(true)
             .clipPadding(10)
             .yAxisLabel("This is the Y Axis!")

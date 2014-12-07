@@ -950,21 +950,14 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    dc.override(_chart, 'filter', function (_) {
-        if (!arguments.length) {
-            return _chart._filter();
-        }
-
-        _chart._filter(_);
-
-        if (_) {
-            _chart.brush().extent(_);
+    _chart._updateFilterUI = function (filters, filter) {
+        if (filter) {
+            _chart.brush().extent(filter);
         } else {
             _chart.brush().clear();
         }
-
         return _chart;
-    });
+    };
 
     _chart.brush = function (_) {
         if (!arguments.length) {
@@ -1033,14 +1026,14 @@ dc.coordinateGridMixin = function (_chart) {
             dc.events.trigger(function () {
                 _chart.filter(null);
                 _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
+            }, 0); // dc.constants.EVENT_DELAY);
         } else {
             var rangedFilter = dc.filters.RangedFilter(extent[0], extent[1]);
 
             dc.events.trigger(function () {
                 _chart.replaceFilter(rangedFilter);
                 _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
+            }, 0); //dc.constants.EVENT_DELAY);
         }
     };
 

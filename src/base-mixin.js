@@ -71,6 +71,8 @@ dc.baseMixin = function (_chart) {
     var _commitHandler;
 
     var _filters = [];
+    var _filterGroup = null;
+
     var _filterHandler = function (dimension, filters) {
         if (filters.length === 0) {
             dimension.filter(null);
@@ -963,8 +965,7 @@ dc.baseMixin = function (_chart) {
     }
 
     _chart.replaceFilter = function (_) {
-        _filters = [];
-        _chart.filter(_);
+        _chart.filter(_, true);
     };
 
     /**
@@ -995,9 +996,34 @@ dc.baseMixin = function (_chart) {
      * @param {*} [filter]
      * @return {dc.baseMixin}
      */
-    _chart.filter = function (filter) {
+    _chart.filter = function (filter, replace) {
         if (!arguments.length) {
             return _filters.length > 0 ? _filters[0] : null;
+        }
+        var modify, updateUI;
+        if (_filterGroup) {
+            updateUI = dc.filterGroupRegistry.list(_filterGroup);
+            modify = updateUI[0];
+        } else {
+            modify = _chart;
+            updateUI = [_chart];
+        }
+        var filters = modify._modifyFilter(filter, replace);
+        updateUI.forEach(function (chart) {
+            chart._updateFilter(filters, filter);
+        });
+        // only fire this event on the chart that applied the filters
+        // (which may not be same one `filter` was invoked on)
+        modify._invokeFilteredListener(filter);
+
+        return _chart;
+    };
+
+    // determines the new filters from element, and sets dimension.filter
+    _chart._modifyFilter = function (filter, replace) {
+        var filters = _filters;
+        if (replace) {
+            filters = _resetFilterHandler(filters);
         }
         if (filter instanceof Array && filter[0] instanceof Array && !filter.isFiltered) {
             filter[0].forEach(function (d) {
@@ -1017,20 +1043,30 @@ dc.baseMixin = function (_chart) {
             }
         }
         applyFilters();
-        _chart._invokeFilteredListener(filter);
+        return _filters;
+    };
+
+    // sets the filter for UI purposes, but doesn't tell crossfilter
+    _chart._updateFilter = function (filters, filter) {
+        _filters = filters;
 
         if (_root !== null && _chart.hasFilter()) {
             _chart.turnOnControls();
         } else {
             _chart.turnOffControls();
         }
+        _chart._updateFilterUI(filters, filter);
+        return _chart;
+    };
 
+    // to be replaced by children
+    _chart._updateFilterUI = function (filters, filter) {
         return _chart;
     };
 
     /**
      * Returns all current filters. This method does not perform defensive cloning of the internal
-     * filter array before returning, therefore any modification of the returned array will effect the
+     * filter array before returning, therefore any modification of the returned array will affect the
      * chart's internal filter storage.
      * @method filters
      * @memberof dc.baseMixin
@@ -1117,6 +1153,30 @@ dc.baseMixin = function (_chart) {
             return _filterHandler;
         }
         _filterHandler = filterHandler;
+        return _chart;
+    };
+
+    /**
+    #### .filterGroup([string])
+    Assigns this chart to a filter group.  Charts in the same filter group will be filtered
+    together: they share the same brushing UI and when the filter changes, it will only be
+    applied once (by the first chart added to the group).
+
+    Limitations:
+     * The charts should be on the same dimension, otherwise they will observe the filtering
+     * The charts should use the same [Filter Type](#Filters), otherwise they will not
+    be able to interpret the filter data and will probably break.
+    **/
+    _chart.filterGroup = function (_) {
+        if (!arguments.length) {
+            return _filterGroup;
+        }
+        if (_filterGroup) {
+            dc.filterGroupRegistry.deregister(_chart, _filterGroup);
+        }
+        if ((_filterGroup = _)) {
+            dc.filterGroupRegistry.register(_chart, _filterGroup);
+        }
         return _chart;
     };
 
