@@ -848,7 +848,7 @@ chart.filter(18);
 <a name="dc.baseMixin+filters"></a>
 #### baseMixin.filters ⇒ <code>Array.&lt;\*&gt;</code>
 Returns all current filters. This method does not perform defensive cloning of the internal
-filter array before returning, therefore any modification of the returned array will effect the
+filter array before returning, therefore any modification of the returned array will affect the
 chart's internal filter storage.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  

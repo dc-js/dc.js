@@ -55,7 +55,7 @@ var dc = {
 };
 /*jshint +W079*/
 
-dc.chartRegistry = (function () {
+dc.chartRegistrar = function () {
     // chartGroup:string => charts:array
     var _chartMap = {};
 
@@ -109,7 +109,13 @@ dc.chartRegistry = (function () {
             return _chartMap[group];
         }
     };
-})();
+};
+
+// groups for redraw/render
+dc.chartRegistry = dc.chartRegistrar();
+
+// groups for filtering
+dc.filterGroupRegistry = dc.chartRegistrar();
 
 dc.registerChart = function (chart, group) {
     dc.chartRegistry.register(chart, group);
@@ -814,6 +820,8 @@ dc.baseMixin = function (_chart) {
     var _commitHandler;
 
     var _filters = [];
+    var _filterGroup = null;
+
     var _filterHandler = function (dimension, filters) {
         if (filters.length === 0) {
             dimension.filter(null);
@@ -1698,8 +1706,7 @@ dc.baseMixin = function (_chart) {
     }
 
     _chart.replaceFilter = function (_) {
-        _filters = [];
-        _chart.filter(_);
+        _chart.filter(_, true);
     };
 
     /**
@@ -1727,11 +1734,35 @@ dc.baseMixin = function (_chart) {
      * @param {*} [filter]
      * @return {dc.baseMixin}
      */
-    _chart.filter = function (filter) {
+    _chart.filter = function (filter, replace) {
         if (!arguments.length) {
             return _filters.length > 0 ? _filters[0] : null;
         }
+        var modify, updateUI;
+        if (_filterGroup) {
+            updateUI = dc.filterGroupRegistry.list(_filterGroup);
+            modify = updateUI[0];
+        } else {
+            modify = _chart;
+            updateUI = [_chart];
+        }
+        var filters = modify._modifyFilter(filter, replace);
+        updateUI.forEach(function (chart) {
+            chart._updateFilter(filters, filter);
+        });
+        // only fire this event on the chart that applied the filters
+        // (which may not be same one `filter` was invoked on)
+        modify._invokeFilteredListener(filter);
+
+        return _chart;
+    };
+
+    // determines the new filters from element, and sets dimension.filter
+    _chart._modifyFilter = function (filter, replace) {
         var filters = _filters;
+        if (replace) {
+            filters = _resetFilterHandler(filters);
+        }
         if (filter instanceof Array && filter[0] instanceof Array && !filter.isFiltered) {
             // toggle each filter
             filter[0].forEach(function (f) {
@@ -1750,21 +1781,30 @@ dc.baseMixin = function (_chart) {
                 filters = _addFilterHandler(filters, filter);
             }
         }
-        _filters = applyFilters(filters);
-        _chart._invokeFilteredListener(filter);
+        return applyFilters(filters);
+    };
+
+    // sets the filter for UI purposes, but doesn't tell crossfilter
+    _chart._updateFilter = function (filters, filter) {
+        _filters = filters;
 
         if (_root !== null && _chart.hasFilter()) {
             _chart.turnOnControls();
         } else {
             _chart.turnOffControls();
         }
+        _chart._updateFilterUI(filters, filter);
+        return _chart;
+    };
 
+    // to be replaced by children
+    _chart._updateFilterUI = function (filters, filter) {
         return _chart;
     };
 
     /**
      * Returns all current filters. This method does not perform defensive cloning of the internal
-     * filter array before returning, therefore any modification of the returned array will effect the
+     * filter array before returning, therefore any modification of the returned array will affect the
      * chart's internal filter storage.
      * @name filters
      * @memberof dc.baseMixin
@@ -1851,6 +1891,30 @@ dc.baseMixin = function (_chart) {
             return _filterHandler;
         }
         _filterHandler = filterHandler;
+        return _chart;
+    };
+
+    /**
+    #### .filterGroup([string])
+    Assigns this chart to a filter group.  Charts in the same filter group will be filtered
+    together: they share the same brushing UI and when the filter changes, it will only be
+    applied once (by the first chart added to the group).
+
+    Limitations:
+     * The charts should be on the same dimension, otherwise they will observe the filtering
+     * The charts should use the same [Filter Type](#Filters), otherwise they will not
+    be able to interpret the filter data and will probably break.
+    **/
+    _chart.filterGroup = function (_) {
+        if (!arguments.length) {
+            return _filterGroup;
+        }
+        if (_filterGroup) {
+            dc.filterGroupRegistry.deregister(_chart, _filterGroup);
+        }
+        if ((_filterGroup = _)) {
+            dc.filterGroupRegistry.register(_chart, _filterGroup);
+        }
         return _chart;
     };
 
@@ -3381,21 +3445,14 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    dc.override(_chart, 'filter', function (_) {
-        if (!arguments.length) {
-            return _chart._filter();
-        }
-
-        _chart._filter(_);
-
-        if (_) {
-            _chart.brush().extent(_);
+    _chart._updateFilterUI = function (filters, filter) {
+        if (filter) {
+            _chart.brush().extent(filter);
         } else {
             _chart.brush().clear();
         }
-
         return _chart;
-    });
+    };
 
     _chart.brush = function (_) {
         if (!arguments.length) {
@@ -3464,14 +3521,14 @@ dc.coordinateGridMixin = function (_chart) {
             dc.events.trigger(function () {
                 _chart.filter(null);
                 _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
+            }, 0); // dc.constants.EVENT_DELAY);
         } else {
             var rangedFilter = dc.filters.RangedFilter(extent[0], extent[1]);
 
             dc.events.trigger(function () {
                 _chart.replaceFilter(rangedFilter);
                 _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
+            }, 0); //dc.constants.EVENT_DELAY);
         }
     };
 
@@ -6820,24 +6877,13 @@ dc.compositeChart = function (parent, chartGroup) {
             child.xUnits(_chart.xUnits());
             child.transitionDuration(_chart.transitionDuration());
             child.brushOn(_chart.brushOn());
+            child.filterGroup(_chart.filterGroup());
             child.renderTitle(_chart.renderTitle());
             child.elasticX(_chart.elasticX());
         }
 
         return g;
     });
-
-    _chart._brushing = function () {
-        var extent = _chart.extendBrush();
-        var brushIsEmpty = _chart.brushIsEmpty(extent);
-
-        for (var i = 0; i < _children.length; ++i) {
-            _children[i].filter(null);
-            if (!brushIsEmpty) {
-                _children[i].filter(extent);
-            }
-        }
-    };
 
     _chart._prepareYAxis = function () {
         var left = (leftYAxisChildren().length !== 0);
@@ -8739,12 +8785,12 @@ dc.scatterPlot = function (parent, chartGroup) {
         }
     });
 
-    dc.override(_chart, '_filter', function (filter) {
+    dc.override(_chart, 'filter', function (filter) {
         if (!arguments.length) {
-            return _chart.__filter();
+            return _chart._filter();
         }
 
-        return _chart.__filter(dc.filters.RangedTwoDimensionalFilter(filter));
+        return _chart._filter(dc.filters.RangedTwoDimensionalFilter(filter));
     });
 
     _chart.plotData = function () {

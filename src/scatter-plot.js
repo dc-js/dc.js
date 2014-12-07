@@ -51,12 +51,12 @@ dc.scatterPlot = function (parent, chartGroup) {
         }
     });
 
-    dc.override(_chart, '_filter', function (filter) {
+    dc.override(_chart, 'filter', function (filter) {
         if (!arguments.length) {
-            return _chart.__filter();
+            return _chart._filter();
         }
 
-        return _chart.__filter(dc.filters.RangedTwoDimensionalFilter(filter));
+        return _chart._filter(dc.filters.RangedTwoDimensionalFilter(filter));
     });
 
     _chart.plotData = function () {
