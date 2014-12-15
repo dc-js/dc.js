@@ -91,6 +91,9 @@ dc.barChart = function (parent, chartGroup) {
             .append('rect')
             .attr('class', 'bar')
             .attr('fill', dc.pluck('data', _chart.getColor))
+            .attr('y' , function () {
+                return _chart.effectiveHeight();
+            })
             .attr('height', 0);
 
         if (_chart.renderTitle()) {
