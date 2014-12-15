@@ -2965,7 +2965,8 @@ dc.coordinateGridMixin = function (_chart) {
         _hasBeenMouseZoomable = true;
         _zoom.x(_chart.x())
             .scaleExtent(_zoomScale)
-            .size([_chart.width(), _chart.height()]);
+            .size([_chart.width(), _chart.height()])
+            .duration(_chart.transitionDuration());
         _chart.root().call(_zoom);
     };
 
@@ -4230,6 +4231,7 @@ dc.barChart = function (parent, chartGroup) {
             .append('rect')
             .attr('class', 'bar')
             .attr('fill', dc.pluck('data', _chart.getColor))
+            .attr('y', _chart.yAxisHeight())
             .attr('height', 0);
 
         if (_chart.renderTitle()) {
@@ -4713,7 +4715,6 @@ dc.lineChart = function (parent, chartGroup) {
                     .append('circle')
                     .attr('class', DOT_CIRCLE_CLASS)
                     .attr('r', getDotRadius())
-                    .attr('fill', _chart.getColor)
                     .style('fill-opacity', _dataPointFillOpacity)
                     .style('stroke-opacity', _dataPointStrokeOpacity)
                     .on('mousemove', function () {
@@ -4725,8 +4726,7 @@ dc.lineChart = function (parent, chartGroup) {
                         var dot = d3.select(this);
                         hideDot(dot);
                         hideRefLines(g);
-                    })
-                    .call(renderTitle, d);
+                    });
 
                 dots
                     .attr('cx', function (d) {
@@ -4735,7 +4735,8 @@ dc.lineChart = function (parent, chartGroup) {
                     .attr('cy', function (d) {
                         return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
                     })
-                    .attr('fill', _chart.getColor);
+                    .attr('fill', _chart.getColor)
+                    .call(renderTitle, d);
 
                 dots.exit().remove();
             });
@@ -4786,6 +4787,7 @@ dc.lineChart = function (parent, chartGroup) {
 
     function renderTitle(dot, d) {
         if (_chart.renderTitle()) {
+            dot.selectAll('title').remove();
             dot.append('title').text(dc.pluck('data', _chart.title(d.name)));
         }
     }
@@ -4950,6 +4952,22 @@ dc.dataCount = function (parent, chartGroup) {
         if (s.some) {
             _html.some = s.some;
         }
+        return _chart;
+    };
+
+    /**
+    #### formatNumber([formatter])
+    Gets or sets an optional function to format the filter count and total count.
+
+    ```js
+    counter.formatNumber(d3.format('.2g'))
+    ```
+    **/
+    _chart.formatNumber = function (s) {
+        if (!arguments.length) {
+            return _formatNumber;
+        }
+        _formatNumber = s;
         return _chart;
     };
 

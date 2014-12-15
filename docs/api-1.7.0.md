@@ -522,7 +522,7 @@ chart.colorDomain([0, 11])
 chart.colorDomain([0, 364])
 // custom domain function that scales with the group value range
 chart.colorDomain(function() {
-    [dc.utils.groupMin(this.group(), this.valueAccessor()),
+    return [dc.utils.groupMin(this.group(), this.valueAccessor()),
      dc.utils.groupMax(this.group(), this.valueAccessor())];
 });
 ```

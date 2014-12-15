@@ -1202,6 +1202,13 @@ counter.html({
 })
 ```
 
+#### formatNumber([formatter])
+Gets or sets an optional function to format the filter count and total count.
+
+```js
+counter.formatNumber(d3.format('.2g'))
+```
+
 ## Data Table Widget
 Includes: [Base Mixin](#base-mixin)
 
