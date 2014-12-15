@@ -42,6 +42,29 @@ dc.heatMap = function (parent, chartGroup) {
     _chart._mandatoryAttributes(['group']);
     _chart.title(_chart.colorAccessor());
 
+    var _colsLabel = function(d){
+        return d;
+    };
+    var _rowsLabel = function(d){
+        return d;
+    }
+
+    _chart.colsLabel = function (_) {
+        if (!arguments.length) {
+            return _colsLabel;
+        }
+        _colsLabel = _;
+        return _chart;
+    }
+
+    _chart.rowsLabel = function(_) {
+                if (!arguments.length) {
+            return _rowsLabel;
+        }
+        _rowsLabel = _;
+        return _chart;
+    }
+
     var _xAxisOnClick = function (d) { filterAxis(0, d); };
     var _yAxisOnClick = function (d) { filterAxis(1, d); };
     var _boxOnClick = function (d) {
@@ -184,9 +207,9 @@ dc.heatMap = function (parent, chartGroup) {
               .attr('y', _chart.effectiveHeight())
               .attr('dy', 12)
               .on('click', _chart.xAxisOnClick())
-              .text(function (d) { return d; });
+              .text(_chart.colsLabel());
         dc.transition(gColsText, _chart.transitionDuration())
-               .text(function (d) { return d; })
+               .text(_chart.colsLabel())
                .attr('x', function (d) { return cols(d) + boxWidth / 2; });
         gColsText.exit().remove();
         var gRows = _chartBody.selectAll('g.rows');
@@ -200,9 +223,9 @@ dc.heatMap = function (parent, chartGroup) {
               .attr('x', 0)
               .attr('dx', -2)
               .on('click', _chart.yAxisOnClick())
-              .text(function (d) { return d; });
+              .text(_chart.rowsLabel());
         dc.transition(gRowsText, _chart.transitionDuration())
-              .text(function (d) { return d; })
+              .text(_chart.rowsLabel())
               .attr('y', function (d) { return rows(d) + boxHeight / 2; });
         gRowsText.exit().remove();
 
