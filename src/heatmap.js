@@ -181,8 +181,8 @@ dc.heatMap = function (parent, chartGroup) {
             .on('click', _chart.boxOnClick());
 
         if (_chart.renderTitle()) {
-            gEnter.append('title');
-            boxes.selectAll(".box-group title").text(_chart.title());
+            gEnter.append('title')
+                .text(_chart.title());
         }
 
         dc.transition(boxes.selectAll('rect'), _chart.transitionDuration())
