@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-alpha.2
+ *  dc 2.0.0-alpha.3
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012 Nick Zhu and other contributors
  *
@@ -16,11 +16,11 @@
  *  limitations under the License.
  */
 
-(function() { function _dc(d3) {
+(function() { function _dc(d3, crossfilter) {
 'use strict';
 
 /**
-#### Version 2.0.0-alpha.2
+#### Version 2.0.0-alpha.3
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -41,7 +41,7 @@ that are chainable d3 objects.)
 /*jshint -W062*/
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-alpha.2',
+    version: '2.0.0-alpha.3',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -2965,7 +2965,8 @@ dc.coordinateGridMixin = function (_chart) {
         _hasBeenMouseZoomable = true;
         _zoom.x(_chart.x())
             .scaleExtent(_zoomScale)
-            .size([_chart.width(), _chart.height()]);
+            .size([_chart.width(), _chart.height()])
+            .duration(_chart.transitionDuration());
         _chart.root().call(_zoom);
     };
 
@@ -4230,6 +4231,7 @@ dc.barChart = function (parent, chartGroup) {
             .append('rect')
             .attr('class', 'bar')
             .attr('fill', dc.pluck('data', _chart.getColor))
+            .attr('y', _chart.yAxisHeight())
             .attr('height', 0);
 
         if (_chart.renderTitle()) {
@@ -8618,11 +8620,14 @@ dc.stackableChart = dc.stackMixin;
 
 return dc;}
     if(typeof define === "function" && define.amd) {
-        define(["d3"], _dc);
+        define(["d3", "crossfilter"], _dc);
     } else if(typeof module === "object" && module.exports) {
-        module.exports = _dc(d3);
+        // When using window global, window.crossfilter is a function
+        // When using require, the value will be an object with 'crossfilter'
+        // field, so we need to access it here.
+        module.exports = _dc(require('d3'), require('crossfilter').crossfilter);
     } else {
-        this.dc = _dc(d3);
+        this.dc = _dc(d3, crossfilter);
     }
 }
 )();
