@@ -196,7 +196,7 @@ describe("dc.heatmap", function() {
             var titles = chart.selectAll(".box-group title");
             var expected = ["1,1: 0", "1,2: 0", "2,1: 6", "2,2: 0"];
             titles.each(function(d){
-                expect(this.innerHTML).toBe(expected.shift());
+                expect(this.textContent).toBe(expected.shift());
             });
         });
     });
