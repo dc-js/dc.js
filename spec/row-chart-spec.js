@@ -1,17 +1,25 @@
 describe('dc.rowChart', function() {
     var id, chart;
-    var data, dimension;
+    var data, dimension, nvdimension;
     var positiveGroupHolder = { groupType: "positive signed" };
     var negativeGroupHolder = { groupType: "negative signed" };
     var mixedGroupHolder = { groupType: "mixed signed" };
+    var largerGroupHolder = { groupType: "larger" };
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
         dimension = data.dimension(function(d) { return +d.value; });
 
         positiveGroupHolder.group = dimension.group().reduceSum(function(d){return Math.abs(+d.nvalue);});
+        positiveGroupHolder.dimension = dimension;
         negativeGroupHolder.group = dimension.group().reduceSum(function(d){return -Math.abs(+d.nvalue);});
+        negativeGroupHolder.dimension = dimension;
         mixedGroupHolder.group = dimension.group().reduceSum(function(d){return +d.nvalue;});
+        mixedGroupHolder.dimension = dimension;
+
+        nvdimension = data.dimension(function(d) { return +d.nvalue; });
+        largerGroupHolder.group = nvdimension.group().reduceSum(function(d){return +d.value;});
+        largerGroupHolder.dimension = nvdimension;
 
         id = 'row-chart';
         appendChartID(id);
@@ -22,9 +30,10 @@ describe('dc.rowChart', function() {
             .transitionDuration(0);
     });
 
-    itShouldBehaveLikeARowChartWithGroup(positiveGroupHolder);
-    itShouldBehaveLikeARowChartWithGroup(negativeGroupHolder);
-    itShouldBehaveLikeARowChartWithGroup(mixedGroupHolder);
+    itShouldBehaveLikeARowChartWithGroup(positiveGroupHolder, 5);
+    itShouldBehaveLikeARowChartWithGroup(negativeGroupHolder, 5);
+    itShouldBehaveLikeARowChartWithGroup(mixedGroupHolder, 5);
+    itShouldBehaveLikeARowChartWithGroup(largerGroupHolder, 7);
 
     describe('enabling the chart title and label with a value accessor', function () {
         beforeEach(function () {
@@ -70,7 +79,7 @@ describe('dc.rowChart', function() {
         });
     });
 
-    function itShouldBehaveLikeARowChartWithGroup(groupHolder) {
+    function itShouldBehaveLikeARowChartWithGroup(groupHolder, N) {
         describe('for ' + groupHolder.groupType + ' data', function () {
             var group;
 
@@ -88,7 +97,7 @@ describe('dc.rowChart', function() {
                 });
 
                 it('should create a row group for each datum', function () {
-                    expect(chart.selectAll("svg g g.row").size()).toBe(5);
+                    expect(chart.selectAll("svg g g.row").size()).toBe(N);
                 });
 
                 it('should number each row sequentially with classes', function () {
@@ -106,11 +115,30 @@ describe('dc.rowChart', function() {
                 });
 
                 it('should create a row label from the data for each row', function () {
-                    expect(chart.selectAll("svg text.row").size()).toBe(5);
+                    expect(chart.selectAll("svg text.row").size()).toBe(N);
 
                     chart.selectAll('svg g text.row').call(function (t) {
                         expect(+t.text()).toBe(t.datum().key);
                     });
+                });
+
+                describe('row label vertical position', function() {
+                    var labels, rows;
+                    beforeEach(function() {
+                        labels = chart.selectAll("svg text.row");
+                        rows = chart.selectAll("g.row rect");
+                    });
+
+                    function itShouldVerticallyCenterLabelWithinRow(i) {
+                        it('should place label ' + i + ' within row ' + i, function() {
+                            var rowpos = rows[0][i].getBoundingClientRect(),
+                                textpos = labels[0][i].getBoundingClientRect();
+                            expect((textpos.top+textpos.bottom)/2)
+                                .toBeWithinDelta((rowpos.top+rowpos.bottom)/2, 2);
+                        });
+                    }
+                    for(var i=0; i<N ;++i)
+                        itShouldVerticallyCenterLabelWithinRow(i);
                 });
 
                 describe('re-rendering the chart', function () {
@@ -211,7 +239,7 @@ describe('dc.rowChart', function() {
                 });
 
                 it('should filter the corresponding group', function () {
-                    expect(chart.filter()).toBe(22);
+                    expect(chart.filter()).toBe(chart.group().all()[0].key);
                 });
 
                 describe('clicking again', function () {
@@ -244,9 +272,10 @@ describe('dc.rowChart', function() {
             describe('redrawing after an empty selection', function () {
                 beforeEach(function () {
                     chart.render();
-                    dimension.filter([makeDate(2010, 0, 1), makeDate(2010, 0, 3)]);
+                    // fixme: huh?  this isn't even the right data type
+                    groupHolder.dimension.filter([makeDate(2010, 0, 1), makeDate(2010, 0, 3)]);
                     chart.redraw();
-                    dimension.filter([makeDate(2012, 0, 1), makeDate(2012, 11, 30)]);
+                    groupHolder.dimension.filter([makeDate(2012, 0, 1), makeDate(2012, 11, 30)]);
                     chart.redraw();
                 });
 
@@ -265,7 +294,7 @@ describe('dc.rowChart', function() {
                 });
 
                 it('should render a label for each datum', function () {
-                    expect(chart.selectAll('text.row').size()).toBe(5);
+                    expect(chart.selectAll('text.row').size()).toBe(N);
                 });
 
                 it('should use the custom function for each label', function () {
@@ -293,7 +322,7 @@ describe('dc.rowChart', function() {
                 });
 
                 it('should render a title for each datum', function () {
-                    expect(chart.selectAll('g.row title').size()).toBe(5);
+                    expect(chart.selectAll('g.row title').size()).toBe(N);
                 });
 
                 it('should use the custom function for each title', function () {

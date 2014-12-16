@@ -1,5 +1,5 @@
 (function(exports){
-crossfilter.version = "1.3.10";
+crossfilter.version = "1.3.11";
 function crossfilter_identity(d) {
   return d;
 }
@@ -825,7 +825,7 @@ function crossfilter() {
           removed = [];
 
       for (i = 0; i < n; ++i) {
-        if (filters[k = index[i]] & one ^ !(x = f(values[i], i))) {
+        if (!(filters[k = index[i]] & one) ^ !!(x = f(values[i], i))) {
           if (x) filters[k] &= zero, added.push(k);
           else filters[k] |= one, removed.push(k);
         }

@@ -32,6 +32,8 @@ dc.rowChart = function (parent, chartGroup) {
 
     var _labelOffsetX = 10;
     var _labelOffsetY = 15;
+    var _hasLabelOffsetY = false;
+    var _dyOffset = '0.35em';  // this helps center labels https://github.com/mbostock/d3/wiki/SVG-Shapes#svg_text
     var _titleLabelOffsetX = 2;
 
     var _gap = 5;
@@ -159,7 +161,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     function rootValue() {
         var root = _x(0);
-        return root === -Infinity ? _x(1) : root;
+        return (root === -Infinity || root !== root) ? _x(1) : root;
     }
 
     function updateElements(rows) {
@@ -170,6 +172,11 @@ dc.rowChart = function (parent, chartGroup) {
             height = (_chart.effectiveHeight() - (n + 1) * _gap) / n;
         } else {
             height = _fixedBarHeight;
+        }
+
+        // vertically align label in center unless they override the value via property setter
+        if (!_hasLabelOffsetY) {
+            _labelOffsetY = height / 2;
         }
 
         var rect = rows.attr('transform', function (d, i) {
@@ -219,6 +226,7 @@ dc.rowChart = function (parent, chartGroup) {
             var lab = rows.select('text')
                 .attr('x', _labelOffsetX)
                 .attr('y', _labelOffsetY)
+                .attr('dy', _dyOffset)
                 .on('click', onClick)
                 .attr('class', function (d, i) {
                     return _rowCssClass + ' _' + i;
@@ -361,6 +369,7 @@ dc.rowChart = function (parent, chartGroup) {
             return _labelOffsetY;
         }
         _labelOffsetY = o;
+        _hasLabelOffsetY = true;
         return _chart;
     };
 

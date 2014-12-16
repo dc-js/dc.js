@@ -4,10 +4,12 @@
 
 # local files
 node_modules
+bower_components
 
 # ide files
 *.iml
 .idea
+.project
 
 # vim files
 .*.swp

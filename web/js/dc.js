@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-alpha.2
+ *  dc 2.0.0-alpha.3
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012 Nick Zhu and other contributors
  *
@@ -16,11 +16,11 @@
  *  limitations under the License.
  */
 
-(function() { function _dc(d3) {
+(function() { function _dc(d3, crossfilter) {
 'use strict';
 
 /**
-#### Version 2.0.0-alpha.2
+#### Version 2.0.0-alpha.3
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -41,7 +41,7 @@ that are chainable d3 objects.)
 /*jshint -W062*/
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-alpha.2',
+    version: '2.0.0-alpha.3',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -463,10 +463,11 @@ dc.utils.nameToId = function (name) {
     return name.toLowerCase().replace(/[\s]/g, '_').replace(/[\.']/g, '');
 };
 
-dc.utils.appendOrSelect = function (parent, name) {
-    var element = parent.select(name);
+dc.utils.appendOrSelect = function (parent, selector, tag) {
+    tag = tag || selector;
+    var element = parent.select(selector);
     if (element.empty()) {
-        element = parent.append(name);
+        element = parent.append(tag);
     }
     return element;
 };
@@ -1177,9 +1178,10 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    Set or get the has filter handler. The has filter handler is a function that performs the logical check if the
-    current chart's filters have a specific filter.  Using a custom has filter handler allows you to perform additional
-    logic upon checking if a filter exists.
+    #### .hasFilterHandler([function])
+    Set or get the has filter handler. The has filter handler is a function that checks to see if
+    the chart's current filters include a specific filter.  Using a custom has filter handler allows
+    you to change the way filters are checked for and replaced.
 
     ```js
     // default has filter handler
@@ -1193,7 +1195,7 @@ dc.baseMixin = function (_chart) {
     }
 
     // custom filter handler (no-op)
-    chart.hasFilterHandler(function(filter) {
+    chart.hasFilterHandler(function(filters, filter) {
         return false;
     });
     ```
@@ -1227,9 +1229,13 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    Set or get the remove filter handler. The remove filter handler is a function that performs the removal of a filter
-    from the chart's current filters. Using a custom remove filter handler allows you to perform additional logic
-    upon removing a filter.  Any changes should modify the `filters` argument reference and return that reference.
+    #### .removeFilterHandler([function])
+    Set or get the remove filter handler. The remove filter handler is a function that removes a
+    filter from the chart's current filters. Using a custom remove filter handler allows you to
+    change how filters are removed or perform additional work when removing a filter, e.g. when
+    using a filter server other than crossfilter.
+
+    Any changes should modify the `filters` array argument and return that array.
 
     ```js
     // default remove filter handler
@@ -1263,9 +1269,13 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    Set or get the add filter handler. The add filter handler is a function that performs the addition of a filter
-    to the charts filter list. Using a custom add filter handler allows you to perform additional logic
-    upon adding a filter.  Any changes should modify the `filters` argument reference and return that reference.
+    #### .addFilterHandler([function])
+    Set or get the add filter handler. The add filter handler is a function that adds a filter to
+    the chart's filter list. Using a custom add filter handler allows you to change the way filters
+    are added or perform additional work when adding a filter, e.g. when using a filter server other
+    than crossfilter.
+
+    Any changes should modify the `filters` array argument and return that array.
 
     ```js
     // default add filter handler
@@ -1288,14 +1298,18 @@ dc.baseMixin = function (_chart) {
         return _chart;
     };
 
-    var _resetFilterHandler = function () {
+    var _resetFilterHandler = function (filters) {
         return [];
     };
 
     /**
-    Set or get the reset filter handler. The reset filter handler is a function that performs the reset of the filters
-    list by returning the new list. Using a custom reset filter handler allows you to perform additional logic
-    upon reseting the filters.  This function should return an array.
+    #### .resetFilterHandler([function])
+    Set or get the reset filter handler. The reset filter handler is a function that resets the
+    chart's filter list by returning a new list. Using a custom reset filter handler allows you to
+    change the way filters are reset, or perform additional work when resetting the filters,
+    e.g. when using a filter server other than crossfilter.
+
+    This function should return an array.
 
     ```js
     // default remove filter handler
@@ -1304,7 +1318,7 @@ dc.baseMixin = function (_chart) {
     }
 
     // custom filter handler (no-op)
-    chart.addFilterHandler(function(filters) {
+    chart.resetFilterHandler(function(filters) {
         return filters;
     });
     ```
@@ -2363,7 +2377,8 @@ dc.coordinateGridMixin = function (_chart) {
                     .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
             }
 
-            var ticks = _xAxis.tickValues() ? _xAxis.tickValues() : _x.ticks(_xAxis.ticks()[0]);
+            var ticks = _xAxis.tickValues() ? _xAxis.tickValues() :
+                    (typeof _x.ticks === 'function' ? _x.ticks(_xAxis.ticks()[0]) : _x.domain());
 
             var lines = gridLineG.selectAll('line')
                 .data(ticks);
@@ -2853,7 +2868,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function getClipPathId() {
-        return _chart.anchorName() + '-clip';
+        return _chart.anchorName().replace(/[ .#]/g, '-') + '-clip';
     }
 
     /**
@@ -2873,8 +2888,10 @@ dc.coordinateGridMixin = function (_chart) {
 
     function generateClipPath() {
         var defs = dc.utils.appendOrSelect(_parent, 'defs');
-
-        var chartBodyClip = dc.utils.appendOrSelect(defs, 'clipPath').attr('id', getClipPathId());
+        // cannot select <clippath> elements; bug in WebKit, must select by id
+        // https://groups.google.com/forum/#!topic/d3-js/6EpAzQ2gU9I
+        var id = getClipPathId();
+        var chartBodyClip = dc.utils.appendOrSelect(defs, '#' + id, 'clipPath').attr('id', id);
 
         var padding = _clipPadding * 2;
 
@@ -2905,6 +2922,7 @@ dc.coordinateGridMixin = function (_chart) {
         _chart._preprocessData();
 
         drawChart(false);
+        generateClipPath();
 
         return _chart;
     };
@@ -2947,7 +2965,8 @@ dc.coordinateGridMixin = function (_chart) {
         _hasBeenMouseZoomable = true;
         _zoom.x(_chart.x())
             .scaleExtent(_zoomScale)
-            .size([_chart.width(), _chart.height()]);
+            .size([_chart.width(), _chart.height()])
+            .duration(_chart.transitionDuration());
         _chart.root().call(_zoom);
     };
 
@@ -3929,7 +3948,8 @@ dc.pieChart = function (parent, chartGroup) {
 
     /**
     #### .radius([radius])
-    Get or set the outer radius. Default radius is 90px.
+    Get or set the outer radius. If the radius is not set, it will be half of the minimum of the
+    chart width and height.
 
     **/
     _chart.radius = function (r) {
@@ -4211,6 +4231,7 @@ dc.barChart = function (parent, chartGroup) {
             .append('rect')
             .attr('class', 'bar')
             .attr('fill', dc.pluck('data', _chart.getColor))
+            .attr('y', _chart.yAxisHeight())
             .attr('height', 0);
 
         if (_chart.renderTitle()) {
@@ -4694,7 +4715,6 @@ dc.lineChart = function (parent, chartGroup) {
                     .append('circle')
                     .attr('class', DOT_CIRCLE_CLASS)
                     .attr('r', getDotRadius())
-                    .attr('fill', _chart.getColor)
                     .style('fill-opacity', _dataPointFillOpacity)
                     .style('stroke-opacity', _dataPointStrokeOpacity)
                     .on('mousemove', function () {
@@ -4706,8 +4726,7 @@ dc.lineChart = function (parent, chartGroup) {
                         var dot = d3.select(this);
                         hideDot(dot);
                         hideRefLines(g);
-                    })
-                    .call(renderTitle, d);
+                    });
 
                 dots
                     .attr('cx', function (d) {
@@ -4716,7 +4735,8 @@ dc.lineChart = function (parent, chartGroup) {
                     .attr('cy', function (d) {
                         return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
                     })
-                    .attr('fill', _chart.getColor);
+                    .attr('fill', _chart.getColor)
+                    .call(renderTitle, d);
 
                 dots.exit().remove();
             });
@@ -4767,6 +4787,7 @@ dc.lineChart = function (parent, chartGroup) {
 
     function renderTitle(dot, d) {
         if (_chart.renderTitle()) {
+            dot.selectAll('title').remove();
             dot.append('title').text(dc.pluck('data', _chart.title(d.name)));
         }
     }
@@ -4931,6 +4952,22 @@ dc.dataCount = function (parent, chartGroup) {
         if (s.some) {
             _html.some = s.some;
         }
+        return _chart;
+    };
+
+    /**
+    #### formatNumber([formatter])
+    Gets or sets an optional function to format the filter count and total count.
+
+    ```js
+    counter.formatNumber(d3.format('.2g'))
+    ```
+    **/
+    _chart.formatNumber = function (s) {
+        if (!arguments.length) {
+            return _formatNumber;
+        }
+        _formatNumber = s;
         return _chart;
     };
 
@@ -5103,7 +5140,12 @@ dc.dataTable = function (parent, chartGroup) {
     }
 
     function nestEntries() {
-        var entries = _chart.dimension().top(_size);
+        var entries;
+        if (_order === d3.ascending) {
+            entries = _chart.dimension().bottom(_size);
+        } else {
+            entries = _chart.dimension().top(_size);
+        }
 
         return d3.nest()
             .key(_chart.group())
@@ -6761,6 +6803,8 @@ dc.rowChart = function (parent, chartGroup) {
 
     var _labelOffsetX = 10;
     var _labelOffsetY = 15;
+    var _hasLabelOffsetY = false;
+    var _dyOffset = '0.35em';  // this helps center labels https://github.com/mbostock/d3/wiki/SVG-Shapes#svg_text
     var _titleLabelOffsetX = 2;
 
     var _gap = 5;
@@ -6888,7 +6932,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     function rootValue() {
         var root = _x(0);
-        return root === -Infinity ? _x(1) : root;
+        return (root === -Infinity || root !== root) ? _x(1) : root;
     }
 
     function updateElements(rows) {
@@ -6899,6 +6943,11 @@ dc.rowChart = function (parent, chartGroup) {
             height = (_chart.effectiveHeight() - (n + 1) * _gap) / n;
         } else {
             height = _fixedBarHeight;
+        }
+
+        // vertically align label in center unless they override the value via property setter
+        if (!_hasLabelOffsetY) {
+            _labelOffsetY = height / 2;
         }
 
         var rect = rows.attr('transform', function (d, i) {
@@ -6948,6 +6997,7 @@ dc.rowChart = function (parent, chartGroup) {
             var lab = rows.select('text')
                 .attr('x', _labelOffsetX)
                 .attr('y', _labelOffsetY)
+                .attr('dy', _dyOffset)
                 .on('click', onClick)
                 .attr('class', function (d, i) {
                     return _rowCssClass + ' _' + i;
@@ -7090,6 +7140,7 @@ dc.rowChart = function (parent, chartGroup) {
             return _labelOffsetY;
         }
         _labelOffsetY = o;
+        _hasLabelOffsetY = true;
         return _chart;
     };
 
@@ -8569,11 +8620,14 @@ dc.stackableChart = dc.stackMixin;
 
 return dc;}
     if(typeof define === "function" && define.amd) {
-        define(["d3"], _dc);
+        define(["d3", "crossfilter"], _dc);
     } else if(typeof module === "object" && module.exports) {
-        module.exports = _dc(d3);
+        // When using window global, window.crossfilter is a function
+        // When using require, the value will be an object with 'crossfilter'
+        // field, so we need to access it here.
+        module.exports = _dc(require('d3'), require('crossfilter').crossfilter);
     } else {
-        this.dc = _dc(d3);
+        this.dc = _dc(d3, crossfilter);
     }
 }
 )();

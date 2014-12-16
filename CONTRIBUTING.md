@@ -2,7 +2,7 @@
 
 ## Issue Submission Guidlines
 
-* If you have a problem with your code, please ask your question on stackoverflow.com or the [user group](https://groups.google.com/forum/?fromgroups#!forum/dc-js-user-group)
+* Because of the volume of requests, we do not use the issue tracker for support questions. If you are trying to get a particular effect or you have a problem with your code, please ask your question on stackoverflow.com or the [user group](https://groups.google.com/forum/?fromgroups#!forum/dc-js-user-group)
 * It will be far, far easier for others to understand your problem or bug if you demonstrate it with a short example on http://jsfiddle.net/ or on http://bl.ocks.org/
 * For bugs and feature requests submit a [github issue](http://github.com/dc-js/dc.js/issues)
   * Please include the version of DC you are using
@@ -14,9 +14,8 @@
 * Make changes to the files in `src/` not dc.js
 * Add tests to `spec/`. Feel free to create a new file if needed.
 * Run `grunt server` and go to http://localhost:8888/spec to develop your tests.
-* Run `grunt lint` to fix any final linting issues via jshint.
+* Run `grunt lint` to confirm that your code meets the dc.js style guidelines.
 * Run `grunt test` to confirm that all tests will pass on phantomjs.
-* Run `grunt jshint` and `grunt jscs` to confirm that your code meets the dc.js style guidelines
 * Commit your changes to `src/*` and `spec/*` but not any build artifacts.  (Build artifacts include `dc.*js*`, `web/docs/*`, `web/js/*`)
 * Submit a pull request
 * If you merge master or another branch into your patchset, please rebase against master.

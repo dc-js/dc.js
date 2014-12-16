@@ -73,6 +73,22 @@ dc.dataCount = function (parent, chartGroup) {
         return _chart;
     };
 
+    /**
+    #### formatNumber([formatter])
+    Gets or sets an optional function to format the filter count and total count.
+
+    ```js
+    counter.formatNumber(d3.format('.2g'))
+    ```
+    **/
+    _chart.formatNumber = function (s) {
+        if (!arguments.length) {
+            return _formatNumber;
+        }
+        _formatNumber = s;
+        return _chart;
+    };
+
     _chart._doRender = function () {
         var tot = _chart.dimension().size(),
             val = _chart.group().value();

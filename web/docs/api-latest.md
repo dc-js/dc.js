@@ -27,7 +27,7 @@
   * [Heat Map](#heat-map)
   * [Box Plot](#box-plot)
 
-#### Version 2.0.0-alpha.2
+#### Version 2.0.0-alpha.3
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -297,9 +297,10 @@ events (in particular [dc.redrawAll](#dcredrawallchartgroup)); therefore, you on
 manually invoke this function if data is manipulated outside of dc's control (for example if
 data is loaded in the background using `crossfilter.add()`).
 
-Set or get the has filter handler. The has filter handler is a function that performs the logical check if the
-current chart's filters have a specific filter.  Using a custom has filter handler allows you to perform additional
-logic upon checking if a filter exists.
+#### .hasFilterHandler([function])
+Set or get the has filter handler. The has filter handler is a function that checks to see if
+the chart's current filters include a specific filter.  Using a custom has filter handler allows
+you to change the way filters are checked for and replaced.
 
 ```js
 // default has filter handler
@@ -313,7 +314,7 @@ function (filters, filter) {
 }
 
 // custom filter handler (no-op)
-chart.hasFilterHandler(function(filter) {
+chart.hasFilterHandler(function(filters, filter) {
     return false;
 });
 ```
@@ -322,9 +323,13 @@ chart.hasFilterHandler(function(filter) {
 Check whether any active filter or a specific filter is associated with particular chart instance.
 This function is **not chainable**.
 
-Set or get the remove filter handler. The remove filter handler is a function that performs the removal of a filter
-from the chart's current filters. Using a custom remove filter handler allows you to perform additional logic
-upon removing a filter.  Any changes should modify the `filters` argument reference and return that reference.
+#### .removeFilterHandler([function])
+Set or get the remove filter handler. The remove filter handler is a function that removes a
+filter from the chart's current filters. Using a custom remove filter handler allows you to
+change how filters are removed or perform additional work when removing a filter, e.g. when
+using a filter server other than crossfilter.
+
+Any changes should modify the `filters` array argument and return that array.
 
 ```js
 // default remove filter handler
@@ -344,9 +349,13 @@ chart.removeFilterHandler(function(filters, filter) {
 });
 ```
 
-Set or get the add filter handler. The add filter handler is a function that performs the addition of a filter
-to the charts filter list. Using a custom add filter handler allows you to perform additional logic
-upon adding a filter.  Any changes should modify the `filters` argument reference and return that reference.
+#### .addFilterHandler([function])
+Set or get the add filter handler. The add filter handler is a function that adds a filter to
+the chart's filter list. Using a custom add filter handler allows you to change the way filters
+are added or perform additional work when adding a filter, e.g. when using a filter server other
+than crossfilter.
+
+Any changes should modify the `filters` array argument and return that array.
 
 ```js
 // default add filter handler
@@ -361,9 +370,13 @@ chart.addFilterHandler(function(filters, filter) {
 });
 ```
 
-Set or get the reset filter handler. The reset filter handler is a function that performs the reset of the filters
-list by returning the new list. Using a custom reset filter handler allows you to perform additional logic
-upon reseting the filters.  This function should return an array.
+#### .resetFilterHandler([function])
+Set or get the reset filter handler. The reset filter handler is a function that resets the
+chart's filter list by returning a new list. Using a custom reset filter handler allows you to
+change the way filters are reset, or perform additional work when resetting the filters,
+e.g. when using a filter server other than crossfilter.
+
+This function should return an array.
 
 ```js
 // default remove filter handler
@@ -372,7 +385,7 @@ function (filters) {
 }
 
 // custom filter handler (no-op)
-chart.addFilterHandler(function(filters) {
+chart.resetFilterHandler(function(filters) {
     return filters;
 });
 ```
@@ -967,7 +980,8 @@ Get or set the inner radius of the pie chart. If the inner radius is greater tha
 pie chart will be rendered as a doughnut chart. Default inner radius is 0px.
 
 #### .radius([radius])
-Get or set the outer radius. Default radius is 90px.
+Get or set the outer radius. If the radius is not set, it will be half of the minimum of the
+chart width and height.
 
 #### .cx([cx])
 Get or set center x coordinate position. Default is center of svg.
@@ -1186,6 +1200,13 @@ counter.html({
     some: '%filter-count out of %total-count records selected',
     all: 'All records selected. Click on charts to apply filters'
 })
+```
+
+#### formatNumber([formatter])
+Gets or sets an optional function to format the filter count and total count.
+
+```js
+counter.formatNumber(d3.format('.2g'))
 ```
 
 ## Data Table Widget
