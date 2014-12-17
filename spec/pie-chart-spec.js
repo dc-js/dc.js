@@ -293,6 +293,7 @@ describe('dc.pieChart', function() {
                 });
             });
         });
+
         describe('filter through clicking', function() {
             it('onClick should trigger filtering of according group', function() {
                 chart.onClick(chart.group().all()[0]);
@@ -341,6 +342,31 @@ describe('dc.pieChart', function() {
         });
         afterEach(function() {
             dateDimension.filterAll();
+        });
+    });
+
+    describe('small slices', function() {
+        var chart;
+        beforeEach(function() {
+            chart = buildChart("pie-chart3");
+            chart.minAngleForLabel(1)
+                .renderTitle(true);
+            chart.render();
+        });
+        it('label should not be generated if the slice is too small', function() {
+            // slice '66'
+            expect(d3.select(chart.selectAll("text.pie-slice")[0][4]).text()).toEqual("");
+        });
+        describe('selected', function() {
+            beforeEach(function() {
+                chart.filter('66').redraw();
+            });
+            it('a small slice should be labelled if it is selected', function() {
+                expect(d3.select(chart.selectAll("text.pie-slice")[0][4]).text()).toEqual("66");
+            });
+            afterEach(function() {
+                chart.filter(null);
+            });
         });
     });
 
