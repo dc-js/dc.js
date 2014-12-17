@@ -74,35 +74,49 @@ describe("dc.legend", function() {
             });
         });
 
-        describe('with autoItemWidth not set', function () {
+        describe('with .autoItemWidth not called', function () {
             beforeEach(function () {
-                chart.legend(dc.legend().legendWidth(60).itemWidth(30));
-                chart.render();
+                chart.legend(dc.legend());
             });
 
-            it('itemAutoWidth should be false', function() {
+            it('_autoItemWidth should be false', function() {
                 expect(chart.legend().autoItemWidth()).toBe(false);
             });
         });
 
         describe('with .autoItemWidth(false)', function () {
             beforeEach(function () {
-                chart.legend(dc.legend().legendWidth(60).itemWidth(30).autoItemWidth(false));
-                chart.render();
+                chart.legend(dc.legend().autoItemWidth(false));
             });
 
-            it('autoItemWidth should be false', function() {
+            it('_autoItemWidth should be false', function() {
                 expect(chart.legend().autoItemWidth()).toBe(false);
             });
         });
 
         describe('with .autoItemWidth(true)', function () {
             beforeEach(function () {
-                chart.legend(dc.legend().autoItemWidth(true).legendWidth(60).itemWidth(30));
-                chart.render();
+                chart.legend(dc.legend().autoItemWidth(true));
             });
-            it('autoItemWidth should be true', function() {
+            it('_autoItemWidth should be true', function() {
                 expect(chart.legend().autoItemWidth()).toBe(true);
+            });
+        });
+
+        describe('with .horizontal(true) and .autoItemWidth(true)', function () {
+
+            var autoWidthOffset, fixedWidthOffset;
+
+            beforeEach(function () {
+                chart.legend(dc.legend().horizontal(true).itemWidth(30).autoItemWidth(true));
+                chart.render();
+                autoWidthOffset  = coordsFromTranslate(legendItem(1).attr("transform")).x;
+                chart.legend(dc.legend().horizontal(true).itemWidth(30).autoItemWidth(false));
+                chart.render();
+                fixedWidthOffset = coordsFromTranslate(legendItem(1).attr("transform")).x;
+            });
+            it('autoWidth offset should be different than fixedWidth offset', function() {
+                expect(autoWidthOffset).not.toEqual(fixedWidthOffset);
             });
         });
 
