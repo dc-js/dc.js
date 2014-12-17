@@ -124,6 +124,20 @@ module.exports = function (grunt) {
                         ]
                     }
                 }
+            },
+            browserify: {
+                options: {
+                    display: 'short',
+                    summary: true,
+                    specs:  'spec/*-spec.js',
+                    helpers: 'spec/helpers/*.js',
+                    version: '2.0.0',
+                    outfile: 'spec/index-browserify.html',
+                    keepRunner: true
+                },
+                src: [
+                    'bundle.js'
+                ]
             }
         },
         'saucelabs-jasmine': {
@@ -281,6 +295,12 @@ module.exports = function (grunt) {
                 command: 'cp -n scripts/pre-commit.sh .git/hooks/pre-commit' +
                     ' || echo \'Cowardly refusing to overwrite your existing git pre-commit hook.\''
             }
+        },
+        browserify: {
+            dev: {
+                src: 'dc.js',
+                dest: 'bundle.js'
+            }
         }
     });
 
@@ -301,6 +321,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-shell');
     grunt.loadNpmTasks('grunt-debug-task');
     grunt.loadNpmTasks('grunt-fileindex');
+    grunt.loadNpmTasks('grunt-browserify');
+
 
     // custom tasks
     grunt.registerMultiTask('emu', 'Documentation extraction by emu.', function () {
