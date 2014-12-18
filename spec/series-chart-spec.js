@@ -7,7 +7,7 @@ describe('dc.seriesChart', function() {
         {colData:2, rowData: 1, colorData: 3},
         {colData:2, rowData: 2, colorData: 4}
     ];
-    var colorData = crossfilter(colorRows);
+    var colorData = dc.crossfilter(colorRows);
 
     beforeEach(function() {
         var dimensionColorData = colorData.dimension(function (d) { return [+d.colData, +d.rowData]; });
@@ -108,7 +108,7 @@ describe('dc.seriesChart', function() {
             {colData:3, rowData: 1, colorData: 5},
             {colData:3, rowData: 2, colorData: 6}
         ];
-        var colorData2 = crossfilter(colorRows2);
+        var colorData2 = dc.crossfilter(colorRows2);
         beforeEach(function () {
             chart.brushOn(false);
             chart.render();
