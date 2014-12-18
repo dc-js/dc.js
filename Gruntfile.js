@@ -299,8 +299,13 @@ module.exports = function (grunt) {
         browserify: {
             dev: {
                 src: 'dc.js',
-                dest: 'bundle.js'
-            }
+                dest: 'bundle.js',
+                options: {
+                    browserifyOptions: {
+                        standalone: 'dc'
+                    }
+                }
+            },            
         }
     });
 
