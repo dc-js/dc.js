@@ -32,3 +32,7 @@ coverage
 # browserify bundle & test
 bundle.js
 spec/index-browserify.html
+
+# font noise from some doc tool
+web/docs/public
+
