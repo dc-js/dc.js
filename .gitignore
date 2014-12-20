@@ -28,3 +28,7 @@ spec/index.html
 
 # coverage reports
 coverage
+
+# browserify bundle & test
+bundle.js
+spec/index-browserify.html
