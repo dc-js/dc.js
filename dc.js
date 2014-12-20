@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-alpha.4
+ *  dc 2.0.0-alpha.5
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012 Nick Zhu and other contributors
  *
@@ -20,7 +20,7 @@
 'use strict';
 
 /**
-#### Version 2.0.0-alpha.4
+#### Version 2.0.0-alpha.5
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -41,7 +41,7 @@ that are chainable d3 objects.)
 /*jshint -W062*/
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-alpha.4',
+    version: '2.0.0-alpha.5',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
