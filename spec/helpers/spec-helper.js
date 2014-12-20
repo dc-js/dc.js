@@ -1,6 +1,12 @@
 beforeEach(function() {
     d3.select("body").append("div").attr("id", "test-content");
     jasmine.clock().install();
+
+    // If we're using browserify bundle, pull d3 and crossfilter out of it,
+    // so that tests don't have to deal with this incidental complexity.
+    if (typeof d3 === 'undefined') { d3 = dc.d3; }
+    if (typeof crossfilter === 'undefined') { crossfilter = dc.crossfilter; }
+
 });
 
 afterEach(function () {

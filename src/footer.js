@@ -8,6 +8,11 @@ dc.coordinateGridChart = dc.coordinateGridMixin;
 dc.marginable = dc.marginMixin;
 dc.stackableChart = dc.stackMixin;
 
+// Expose d3 and crossfilter, so that clients in browserify
+// case can obtain them if they need them.
+dc.d3 = d3;
+dc.crossfilter = crossfilter;
+
 return dc;}
     if(typeof define === "function" && define.amd) {
         define(["d3", "crossfilter"], _dc);
