@@ -381,7 +381,7 @@ module.exports = function (grunt) {
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine']);
     grunt.registerTask('test', ['docs', 'jasmine:specs', 'test-stock-example', 'shell:hooks']);
-    grunt.registerTask('test-browserify', ['browserify', 'jasmine:browserify']);
+    grunt.registerTask('test-browserify', ['docs', 'browserify', 'jasmine:browserify']);
     grunt.registerTask('coverage', ['docs', 'jasmine:coverage']);
     grunt.registerTask('ci', ['test', 'jasmine:specs:build', 'connect:server', 'saucelabs-jasmine']);
     grunt.registerTask('ci-pull', ['test', 'jasmine:specs:build', 'connect:server']);
