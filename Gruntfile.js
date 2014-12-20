@@ -305,7 +305,7 @@ module.exports = function (grunt) {
                         standalone: 'dc'
                     }
                 }
-            },            
+            },
         }
     });
 
