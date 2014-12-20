@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-alpha.2
+ *  dc 2.0.0-alpha.4
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012 Nick Zhu and other contributors
  *
@@ -16,11 +16,11 @@
  *  limitations under the License.
  */
 
-(function() { function _dc(d3) {
+(function() { function _dc(d3, crossfilter) {
 'use strict';
 
 /**
-#### Version 2.0.0-alpha.2
+#### Version 2.0.0-alpha.4
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -41,7 +41,7 @@ that are chainable d3 objects.)
 /*jshint -W062*/
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-alpha.2',
+    version: '2.0.0-alpha.4',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -3845,7 +3845,7 @@ dc.pieChart = function (parent, chartGroup) {
             .attr('text-anchor', 'middle')
             .text(function (d) {
                 var data = d.data;
-                if (sliceHasNoData(data) || sliceTooSmall(d)) {
+                if ((sliceHasNoData(data) || sliceTooSmall(d)) && !isSelectedSlice(d)) {
                     return '';
                 }
                 return _chart.label()(d.data);
@@ -8618,13 +8618,28 @@ dc.coordinateGridChart = dc.coordinateGridMixin;
 dc.marginable = dc.marginMixin;
 dc.stackableChart = dc.stackMixin;
 
+// Expose d3 and crossfilter, so that clients in browserify
+// case can obtain them if they need them.
+dc.d3 = d3;
+dc.crossfilter = crossfilter;
+
 return dc;}
     if(typeof define === "function" && define.amd) {
-        define(["d3"], _dc);
+        define(["d3", "crossfilter"], _dc);
     } else if(typeof module === "object" && module.exports) {
-        module.exports = _dc(d3);
+        var _d3 = require('d3');
+        var _crossfilter = require('crossfilter');
+        // When using npm + browserify, 'crossfilter' is a function,
+        // since package.json specifies index.js as main function, and it
+        // does special handling. When using bower + browserify,
+        // there's no main in bower.json (in fact, there's no bower.json),
+        // so we need to fix it.
+        if (typeof _crossfilter !== "function") {
+            _crossfilter = _crossfilter.crossfilter;
+        }
+        module.exports = _dc(_d3, _crossfilter);
     } else {
-        this.dc = _dc(d3);
+        this.dc = _dc(d3, crossfilter);
     }
 }
 )();
