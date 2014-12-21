@@ -105,18 +105,25 @@ describe("dc.legend", function() {
 
         describe('with .horizontal(true) and .autoItemWidth(true)', function () {
 
-            var autoWidthOffset, fixedWidthOffset;
+            var
+                autoWidthOffset1, fixedWidthOffset1,
+                autoWidthOffset2, fixedWidthOffset2;
 
             beforeEach(function () {
+
                 chart.legend(dc.legend().horizontal(true).itemWidth(30).autoItemWidth(true));
                 chart.render();
-                autoWidthOffset  = coordsFromTranslate(legendItem(1).attr("transform")).x;
+                autoWidthOffset1  = coordsFromTranslate(legendItem(1).attr("transform")).x;
+                autoWidthOffset2  = coordsFromTranslate(legendItem(2).attr("transform")).x;
                 chart.legend(dc.legend().horizontal(true).itemWidth(30).autoItemWidth(false));
                 chart.render();
-                fixedWidthOffset = coordsFromTranslate(legendItem(1).attr("transform")).x;
+                fixedWidthOffset1 = coordsFromTranslate(legendItem(1).attr("transform")).x;
+                fixedWidthOffset2 = coordsFromTranslate(legendItem(2).attr("transform")).x;
             });
-            it('autoWidth offset should be different than fixedWidth offset', function() {
-                expect(autoWidthOffset).not.toEqual(fixedWidthOffset);
+
+            it('autoWidth x offset should be different than fixedWidth x offset for some legend items', function() {
+                expect(autoWidthOffset1).not.toEqual(fixedWidthOffset1);
+                expect(autoWidthOffset2).not.toEqual(fixedWidthOffset2);
             });
         });
 
