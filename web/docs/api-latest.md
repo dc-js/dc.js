@@ -1796,6 +1796,10 @@ Maximum width for horizontal legend. Default: 560.
 #### .itemWidth([value])
 legendItem width for horizontal legend. Default: 70.
 
+#### .autoItemWidth([value])
+Turn automatic width for legend items on or off. If true, itemWidth() is ignored.
+This setting takes into account gap(). Default: false.
+
 ## Scatter Plot
 Includes: [Coordinate Grid Mixin](#coordinate-grid-mixin)
 
