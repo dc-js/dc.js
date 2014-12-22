@@ -23,8 +23,8 @@ bower_components
 # files for gh-pages and grunt-contrib-jasmine
 .grunt
 
-# jasmine spec runner
-spec/index.html
+# jasmine spec runners
+spec/*.html
 
 # coverage reports
 coverage
