@@ -74,6 +74,59 @@ describe("dc.legend", function() {
             });
         });
 
+        describe('with .autoItemWidth not called', function () {
+            beforeEach(function () {
+                chart.legend(dc.legend());
+            });
+
+            it('_autoItemWidth should be false', function() {
+                expect(chart.legend().autoItemWidth()).toBe(false);
+            });
+        });
+
+        describe('with .autoItemWidth(false)', function () {
+            beforeEach(function () {
+                chart.legend(dc.legend().autoItemWidth(false));
+            });
+
+            it('_autoItemWidth should be false', function() {
+                expect(chart.legend().autoItemWidth()).toBe(false);
+            });
+        });
+
+        describe('with .autoItemWidth(true)', function () {
+            beforeEach(function () {
+                chart.legend(dc.legend().autoItemWidth(true));
+            });
+            it('_autoItemWidth should be true', function() {
+                expect(chart.legend().autoItemWidth()).toBe(true);
+            });
+        });
+
+        describe('with .horizontal(true) and .autoItemWidth(true)', function () {
+
+            var
+                autoWidthOffset1, fixedWidthOffset1,
+                autoWidthOffset2, fixedWidthOffset2;
+
+            beforeEach(function () {
+
+                chart.legend(dc.legend().horizontal(true).itemWidth(30).autoItemWidth(true));
+                chart.render();
+                autoWidthOffset1  = coordsFromTranslate(legendItem(1).attr("transform")).x;
+                autoWidthOffset2  = coordsFromTranslate(legendItem(2).attr("transform")).x;
+                chart.legend(dc.legend().horizontal(true).itemWidth(30).autoItemWidth(false));
+                chart.render();
+                fixedWidthOffset1 = coordsFromTranslate(legendItem(1).attr("transform")).x;
+                fixedWidthOffset2 = coordsFromTranslate(legendItem(2).attr("transform")).x;
+            });
+
+            it('autoWidth x offset should be different than fixedWidth x offset for some legend items', function() {
+                expect(autoWidthOffset1).not.toEqual(fixedWidthOffset1);
+                expect(autoWidthOffset2).not.toEqual(fixedWidthOffset2);
+            });
+        });
+
         it('should generate legend item boxes', function() {
             expect(legendIcon(0).attr("width")).toBeWithinDelta(13,2);
             expect(legendIcon(0).attr("height")).toBeWithinDelta(13, 2);
