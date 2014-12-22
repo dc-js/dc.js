@@ -202,7 +202,7 @@ dc.legend = function () {
     Turn automatic width for legend items on or off. If true, itemWidth() is ignored.
     This setting takes into account gap(). Default: false.
     **/
-    _legend.autoItemWidth = function(_) {
+    _legend.autoItemWidth = function (_) {
         if (!arguments.length) {
             return _autoItemWidth;
         }
