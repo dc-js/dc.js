@@ -376,7 +376,7 @@ module.exports = function (grunt) {
     });
 
     // task aliases
-    grunt.registerTask('build', ['concat', 'uglify', 'sed']);
+    grunt.registerTask('build', ['concat', 'uglify', 'sed', 'docs']);
     grunt.registerTask('docs', ['build', 'copy', 'emu', 'toc', 'markdown', 'docco']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine']);
