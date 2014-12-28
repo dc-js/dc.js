@@ -24,8 +24,6 @@ describe('dc.geoChoropleth', function() {
             .group(stateValueSumGroup)
             .width(990)
             .height(600)
-            .dimension(stateDimension)
-            .group(stateValueSumGroup)
             .colors(["#ccc", "#E2F2FF", "#C4E4FF", "#9ED2FF", "#81C5FF", "#6BBAFF", "#51AEFF", "#36A2FF", "#1E96FF", "#0089FF"])
             .colorDomain([0, 155])
             .overlayGeoJson(geoJson.features, "state", function(d) {
