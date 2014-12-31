@@ -2,7 +2,8 @@
  ## Select Menu
  Includes: [Base Mixin](#base-mixin)
 
-The select menu is a simple widget that allows filtering a dimension by selecting an option from an HTML <select/> menu.
+The select menu is a simple widget designed to filter a dimension by selecting an option from
+an HTML <select/> menu. The menu can be optionally turned into a multiselect.
 
  #### dc.selectMenu(parent[, chartGroup])
  Create a select menu instance and attach it to the given parent element.
@@ -23,7 +24,7 @@ The select menu is a simple widget that allows filtering a dimension by selectin
                   .dimension(states)
                   .group(stateGroup);
 
-   // the option text can be set via the title function
+   // the option text can be set via the title() function
    // by default the option text is '`key`: `value`'
    select.title(function(d){
       return 'STATE: ' + d.key;
@@ -39,6 +40,7 @@ dc.selectMenu = function (parent, chartGroup) {
 
     var _select;
     var _promptText = 'Select all';
+    var _multiple = false;
     var _order = function (a, b) {
         return _chart.keyAccessor()(a) > _chart.keyAccessor()(b) ?
              1 : _chart.keyAccessor()(b) > _chart.keyAccessor()(a) ?
@@ -55,16 +57,27 @@ dc.selectMenu = function (parent, chartGroup) {
 
     _chart._doRender = function () {
         _chart.select('select').remove();
-        _select = _chart.root().append('select').classed(SELECT_CSS_CLASS, true);
+        _select = _chart.root().append('select')
+                        .classed(SELECT_CSS_CLASS, true);
+
+        switchMultipleSelectOption();
+
         _select.append('option').text(_promptText).attr('value', '');
         renderOptions();
         return _chart;
     };
 
     _chart._doRedraw = function () {
+        switchMultipleSelectOption();
         renderOptions();
-        // select the option that corresponds to current filter
-        if (_chart.hasFilter()) {
+        // select the option(s) corresponding to current filter(s)
+        if (_chart.hasFilter() && _multiple) {
+            _select.selectAll('option')
+                .filter(function (d) {
+                    return d && _chart.filters().indexOf(String(_chart.keyAccessor()(d))) >= 0;
+                })
+                .property('selected', true);
+        } else if (_chart.hasFilter()) {
             _select.property('value', _chart.filter());
         } else {
             _select.property('value', '');
@@ -89,12 +102,24 @@ dc.selectMenu = function (parent, chartGroup) {
         return options;
     }
 
-    function onChange () {
-        _chart.onChange(this.value);
+    function onChange (d , i) {
+        var selectedOptions = Array.prototype.slice.call(d3.event.target.selectedOptions);
+        var values = selectedOptions.map(function (d) {
+            return d.value;
+        });
+        // check if only prompt option is selected
+        if (values.length === 1 && values[0] === '') {
+            values = null;
+        } else if (values.length === 1) {
+            values = values[0];
+        }
+        _chart.onChange(values);
     }
 
     _chart.onChange = function (val) {
-        if (val) {
+        if (val && _multiple) {
+            _chart.replaceFilter([val]);
+        } else if (val) {
             _chart.replaceFilter(val);
         } else {
             _chart.filterAll();
@@ -103,6 +128,14 @@ dc.selectMenu = function (parent, chartGroup) {
             _chart.redrawGroup();
         });
     };
+
+    function switchMultipleSelectOption () {
+        if (_multiple) {
+            _select.attr('multiple', true);
+        } else {
+            _select.attr('multiple', null);
+        }
+    }
 
     /**
     #### .order([function])
@@ -156,6 +189,23 @@ dc.selectMenu = function (parent, chartGroup) {
             return _filterDisplayed;
         }
         _filterDisplayed = _;
+        return _chart;
+    };
+
+    /**
+    #### .multiple([bool])
+    Controls the type of select menu (single select is default). Setting it to true converts the underlying
+    HTML tag into a multiple select.
+    ```
+        chart.multiple(true);
+    ```
+    **/
+    _chart.multiple = function (_) {
+        if (!arguments.length) {
+            return _multiple;
+        }
+        _multiple = _;
+
         return _chart;
     };
 
