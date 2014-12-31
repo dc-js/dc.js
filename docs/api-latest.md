@@ -27,7 +27,7 @@
   * [Heat Map](#heat-map)
   * [Box Plot](#box-plot)
 
-#### Version 2.0.0-alpha.4
+#### Version 2.0.0-alpha.5
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -1795,6 +1795,10 @@ Maximum width for horizontal legend. Default: 560.
 
 #### .itemWidth([value])
 legendItem width for horizontal legend. Default: 70.
+
+#### .autoItemWidth([value])
+Turn automatic width for legend items on or off. If true, itemWidth() is ignored.
+This setting takes into account gap(). Default: false.
 
 ## Scatter Plot
 Includes: [Coordinate Grid Mixin](#coordinate-grid-mixin)

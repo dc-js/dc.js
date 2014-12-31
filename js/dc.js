@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-alpha.4
+ *  dc 2.0.0-alpha.5
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012 Nick Zhu and other contributors
  *
@@ -20,7 +20,7 @@
 'use strict';
 
 /**
-#### Version 2.0.0-alpha.4
+#### Version 2.0.0-alpha.5
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -41,7 +41,7 @@ that are chainable d3 objects.)
 /*jshint -W062*/
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-alpha.4',
+    version: '2.0.0-alpha.5',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -1902,6 +1902,7 @@ dc.colorMixin = function (_chart) {
         var newDomain = [d3.min(_chart.data(), _chart.colorAccessor()),
                          d3.max(_chart.data(), _chart.colorAccessor())];
         _colors.domain(newDomain);
+        return _chart;
     };
 
     /**
@@ -7190,7 +7191,8 @@ dc.legend = function () {
         _gap = 5,
         _horizontal = false,
         _legendWidth = 560,
-        _itemWidth = 70;
+        _itemWidth = 70,
+        _autoItemWidth = false;
 
     var _g;
 
@@ -7259,11 +7261,13 @@ dc.legend = function () {
         itemEnter.attr('transform', function (d, i) {
             if (_horizontal) {
                 var translateBy = 'translate(' + _cumulativeLegendTextWidth + ',' + row * legendItemHeight() + ')';
-                if ((_cumulativeLegendTextWidth + _itemWidth) >= _legendWidth) {
+                var itemWidth   = _autoItemWidth === true ? this.getBBox().width + _gap : _itemWidth;
+
+                if ((_cumulativeLegendTextWidth + itemWidth) >= _legendWidth) {
                     ++row ;
                     _cumulativeLegendTextWidth = 0 ;
                 } else {
-                    _cumulativeLegendTextWidth += _itemWidth;
+                    _cumulativeLegendTextWidth += itemWidth;
                 }
                 return translateBy;
             }
@@ -7358,6 +7362,19 @@ dc.legend = function () {
             return _itemWidth;
         }
         _itemWidth = _;
+        return _legend;
+    };
+
+    /**
+    #### .autoItemWidth([value])
+    Turn automatic width for legend items on or off. If true, itemWidth() is ignored.
+    This setting takes into account gap(). Default: false.
+    **/
+    _legend.autoItemWidth = function (_) {
+        if (!arguments.length) {
+            return _autoItemWidth;
+        }
+        _autoItemWidth = _;
         return _legend;
     };
 
