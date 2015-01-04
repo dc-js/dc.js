@@ -1902,6 +1902,7 @@ dc.colorMixin = function (_chart) {
         var newDomain = [d3.min(_chart.data(), _chart.colorAccessor()),
                          d3.max(_chart.data(), _chart.colorAccessor())];
         _colors.domain(newDomain);
+        return _chart;
     };
 
     /**
