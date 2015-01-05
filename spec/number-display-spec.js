@@ -150,16 +150,17 @@ describe('dc.numberDisplay', function() {
     });
     describe('Inline nonspan element' , function() {
         beforeEach(function() {
-            var div = d3.select("body").append("div").attr("id","section");
+            var div = d3.select("body").append("div").attr("id","number-display-test-section");
             div.append("p").html("There are <em id=\"nonspan\"></em> Total Widgets.");
             chart = buildChart("#nonspan");
         });
         it('should have text value in child', function() {
-            expect(d3.select("body").select("#section").html())
+            expect(d3.select("body").select("#number-display-test-section").html())
                 .toMatch(new RegExp('<p>There are <em (?:id="nonspan" class="dc-chart"|class="dc-chart" id="nonspan")><span class="number-display">38.5</span></em> Total Widgets.</p>'));
         });
         afterEach(function() {
             countryDimension.filterAll();
+            d3.select('#number-display-test-section').remove();
         });
     });
 });
