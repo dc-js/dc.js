@@ -322,7 +322,7 @@ dc.baseMixin = function (_chart) {
         if (a && a.replace) {
             return a.replace('#', '');
         }
-        return '' + _chart.chartID();
+        return 'dc-chart' + _chart.chartID();
     };
 
     /**

@@ -217,6 +217,11 @@ describe("dc.baseMixin", function () {
                     expect(dc.utils.isNumber(chart.anchorName())).toBeFalsy();
                     expect(chart.anchorName()).toMatch(/\d+/);
                 });
+
+                it('should return a string that begins with a non-numeric character', function () {
+                    expect(chart.anchorName()).toMatch(/[^\d][\w]*/);
+                });
+
             });
         });
 
