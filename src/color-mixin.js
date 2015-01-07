@@ -6,7 +6,12 @@ as a mix-in for any concrete chart implementation.
 **/
 
 dc.colorMixin = function (_chart) {
-    var _colors = d3.scale.category20c();
+    var _colors = d3.scale.ordinal().range( 
+        // qualitative 12 color schemes set3 from colorbrewer concatenated+removed grey and light colors
+      [ '#1f78b4', '#b2df8a', '#cab2d6','#33a02c', '#fb9a99', '#a6cee3' ,'#e31a1c', '#fdbf6f', '#ff7f00',
+      '#6a3d9a', '#b15928','#8dd3c7', '#bebada', '#fb8072', '#80b1d3', '#fdb462', '#b3de69', '#fccde5', '#bc80bd']);
+    
+
     var _defaultAccessor = true;
 
     var _colorAccessor = function (d) { return _chart.keyAccessor()(d); };
