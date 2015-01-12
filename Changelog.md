@@ -1,4 +1,7 @@
-## 2.0.0 alpha 6
+## 2.0.0 beta 1
+ * Merged #800: unselectable ids starting with numbers #789. Thanks Jasmine Hegman!
+ * Interface and features frozen - from this point all fixes will be merged to
+   `master` and `develop`, and all interface changes only merged to `develop`.
 
 ## Starting dc.js Changelog
  * Here we start using git-flow, start a changelog, and start 2015.  Under git-flow,

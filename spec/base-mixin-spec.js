@@ -213,10 +213,11 @@ describe("dc.baseMixin", function () {
                     expect(chart.anchor()).toEqual(anchorDiv);
                 });
 
-                it('should return a numeric string, when anchorName is called', function () {
-                    expect(dc.utils.isNumber(chart.anchorName())).toBeFalsy();
-                    expect(chart.anchorName()).toMatch(/\d+/);
+                it('should return a valid, selectable id', function () {
+                    // see http://stackoverflow.com/questions/70579/what-are-valid-values-for-the-id-attribute-in-html
+                    expect(chart.anchorName()).toMatch(/^[a-zA-Z][a-zA-Z0-9_:.-]*$/);
                 });
+
             });
         });
 
