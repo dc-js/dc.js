@@ -29,9 +29,6 @@ describe("dc.baseMixin", function () {
             var expectedCallbackSignature = function (callbackChart) {
                 expect(callbackChart).toBe(chart);
             };
-            var namedRenderlet = function (callbackChart) {
-                expect(callbackChart).toBe(chart);
-            }
             firstRenderlet = jasmine.createSpy().and.callFake(expectedCallbackSignature);
             secondRenderlet = jasmine.createSpy().and.callFake(expectedCallbackSignature);
             thirdRenderlet = jasmine.createSpy().and.callFake(expectedCallbackSignature);
@@ -52,25 +49,27 @@ describe("dc.baseMixin", function () {
             expect(secondRenderlet).toHaveBeenCalled();
         });
 
-        it('should add a named renderlet called after a render', function () {
+        it('should execute a named renderlet after a render', function () {
             chart.render();
             expect(thirdRenderlet).toHaveBeenCalled();
         });
 
-        it('should add a named renderlet called after a redraw', function () {
+        it('should execute a named renderlet after a redraw', function () {
             chart.redraw();
             expect(thirdRenderlet).toHaveBeenCalled();
         });
 
-        it('should add a named renderlet, remove it and expect no call after a redraw', function () {
+        it('should remove a named renderlet expect no call after a redraw', function () {
             chart.removeRenderlet(third);
             chart.redraw();
+            expect(secondRenderlet).toHaveBeenCalled();
             expect(thirdRenderlet).not.toHaveBeenCalled();
         });
 
-        it('should add a named renderlet, remove it and expect no call after a redraw', function () {
+        it('should remove a named renderlet and expect no call after a redraw', function () {
             chart.removeRenderlet(third);
             chart.render();
+            expect(secondRenderlet).toHaveBeenCalled();
             expect(thirdRenderlet).not.toHaveBeenCalled();
         });
     });
