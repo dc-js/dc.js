@@ -7,6 +7,8 @@ and available on all chart implementation in the DC library.
 dc.baseMixin = function (_chart) {
     _chart.__dcFlag__ = dc.utils.uniqueId();
 
+    var RENDERLET_KEY = 'renderlet';
+
     var _dimension;
     var _group;
 
@@ -46,7 +48,7 @@ dc.baseMixin = function (_chart) {
 
     var _filterPrinter = dc.printers.filters;
 
-    var _renderlets = [];
+    var _renderlets = d3.dispatch(RENDERLET_KEY);
     var _mandatoryAttributes = ['dimension', 'group'];
 
     var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
@@ -974,12 +976,58 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .renderlet(renderletFunction)
+    #### .addRenderlet(renderletKey, renderletFunction)
     A renderlet is similar to an event listener on rendering event. Multiple renderlets can be added
     to an individual chart.  Each time a chart is rerendered or redrawn the renderlets are invoked
     right after the chart finishes its own drawing routine, giving you a way to modify the svg
     elements. Renderlet functions take the chart instance as the only input parameter and you can
     use the dc API or use raw d3 to achieve pretty much any effect.
+    ```js
+    // add renderlet function
+    chart.renderlet('displayNone', function(chart){
+        // mix of dc API and d3 manipulation
+        chart.select('g.y').style('display', 'none');
+        // its a closure so you can also access other chart variable available in the closure scope
+        moveChart.filter(chart.filter());
+    });
+    ```
+
+    **/
+    _chart.addRenderlet = function (renderletKey, renderletFunction) {
+        _renderlets.on(RENDERLET_KEY + '.' + renderletKey, renderletFunction);
+        return _chart;
+    };
+
+    /**
+    #### .removeRenderlet(renderletKey)
+    Removes a renderlet from the renderlet event stack.
+    ```js
+    // remove renderlet function
+    chart.removeRenderlet('displayNone');
+    ```
+
+    **/
+    _chart.removeRenderlet = function (renderletKey) {
+        _renderlets.on(RENDERLET_KEY + '.' + renderletKey, null);
+    };
+
+    /**
+    #### .renderlets(renderletKey)
+    Returns the d3.dispatch instance that holds all current renderlets.
+    ```js
+    // renderlet getter
+    chart.renderlets('displayNone');
+    ```
+
+    **/
+    _chart.renderlets = function () {
+        return _renderlets;
+    };
+
+    /**
+    #### .renderlet(renderletFunction)
+    @Deprecated - Use [.addRenderlet](#.addRenderlet)
+    Generates a random key for the renderlet, which makes it hard for removal.
     ```js
     // renderlet function
     chart.renderlet(function(chart){
@@ -992,14 +1040,11 @@ dc.baseMixin = function (_chart) {
 
     **/
     _chart.renderlet = function (_) {
-        _renderlets.push(_);
-        return _chart;
+        _chart.addRenderlet(dc.utils.uniqueId(), _);
     };
 
     function runAllRenderlets() {
-        for (var i = 0; i < _renderlets.length; ++i) {
-            _renderlets[i](_chart);
-        }
+        _renderlets[RENDERLET_KEY](_chart);
     }
 
     /**
