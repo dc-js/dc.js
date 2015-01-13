@@ -996,9 +996,9 @@ dc.baseMixin = function (_chart) {
     ```
 
     **/
-    _chart.renderlet = function (_) {
+    _chart.renderlet = dc.logger.deprecate(function (_) {
         _chart.on(RENDERLET_KEY + '.' + dc.utils.uniqueId(), _);
-    };
+    }, 'chart.renderlet has been deprecated.  Please use chart.on("renderlet.<renderletKey>", renderletFunction)');
 
     /**
     #### .chartGroup([group])
