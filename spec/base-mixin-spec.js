@@ -45,6 +45,20 @@ describe("dc.baseMixin", function () {
             expect(firstRenderlet).toHaveBeenCalled();
             expect(secondRenderlet).toHaveBeenCalled();
         });
+
+        it('should clear a renderlet when asked', function () {
+            chart.clearRenderlet(firstRenderlet);
+            chart.redraw();
+            expect(firstRenderlet).not.toHaveBeenCalled();
+            expect(secondRenderlet).toHaveBeenCalled();
+        });
+
+        it('should clear all renderlets when asked', function () {
+            chart.clearRenderlets();
+            chart.redraw();
+            expect(firstRenderlet).not.toHaveBeenCalled();
+            expect(secondRenderlet).not.toHaveBeenCalled();
+        });
     });
 
     describe('event listeners', function () {
