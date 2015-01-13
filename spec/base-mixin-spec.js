@@ -24,7 +24,7 @@ describe("dc.baseMixin", function () {
 
     describe('renderlets', function () {
         var firstRenderlet, secondRenderlet, thirdRenderlet,
-            third = 'third';
+            third = 'renderlet.third';
         beforeEach(function () {
             var expectedCallbackSignature = function (callbackChart) {
                 expect(callbackChart).toBe(chart);
@@ -34,7 +34,7 @@ describe("dc.baseMixin", function () {
             thirdRenderlet = jasmine.createSpy().and.callFake(expectedCallbackSignature);
             chart.renderlet(firstRenderlet);
             chart.renderlet(secondRenderlet);
-            chart.addRenderlet(third, thirdRenderlet);
+            chart.on(third, thirdRenderlet);
         });
 
         it('should execute each renderlet after a render', function () {
@@ -60,14 +60,14 @@ describe("dc.baseMixin", function () {
         });
 
         it('should remove a named renderlet expect no call after a redraw', function () {
-            chart.removeRenderlet(third);
+            chart.on(third);
             chart.redraw();
             expect(secondRenderlet).toHaveBeenCalled();
             expect(thirdRenderlet).not.toHaveBeenCalled();
         });
 
         it('should remove a named renderlet and expect no call after a redraw', function () {
-            chart.removeRenderlet(third);
+            chart.on(third);
             chart.render();
             expect(secondRenderlet).toHaveBeenCalled();
             expect(thirdRenderlet).not.toHaveBeenCalled();

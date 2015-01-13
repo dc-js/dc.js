@@ -48,7 +48,6 @@ dc.baseMixin = function (_chart) {
 
     var _filterPrinter = dc.printers.filters;
 
-    var _renderlets = d3.dispatch(RENDERLET_KEY);
     var _mandatoryAttributes = ['dimension', 'group'];
 
     var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
@@ -59,7 +58,8 @@ dc.baseMixin = function (_chart) {
         'preRedraw',
         'postRedraw',
         'filtered',
-        'zoomed');
+        'zoomed',
+        RENDERLET_KEY);
 
     var _legend;
 
@@ -478,13 +478,13 @@ dc.baseMixin = function (_chart) {
         if (_chart.transitionDuration() > 0 && _svg) {
             _svg.transition().duration(_chart.transitionDuration())
                 .each('end', function () {
-                    runAllRenderlets();
+                    _listeners[RENDERLET_KEY](_chart);
                     if (event) {
                         _listeners[event](_chart);
                     }
                 });
         } else {
-            runAllRenderlets();
+            _listeners[RENDERLET_KEY](_chart);
             if (event) {
                 _listeners[event](_chart);
             }
@@ -976,57 +976,14 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .addRenderlet(renderletKey, renderletFunction)
+    #### .renderlet(renderletFunction)
     A renderlet is similar to an event listener on rendering event. Multiple renderlets can be added
     to an individual chart.  Each time a chart is rerendered or redrawn the renderlets are invoked
     right after the chart finishes its own drawing routine, giving you a way to modify the svg
     elements. Renderlet functions take the chart instance as the only input parameter and you can
     use the dc API or use raw d3 to achieve pretty much any effect.
-    ```js
-    // add renderlet function
-    chart.renderlet('displayNone', function(chart){
-        // mix of dc API and d3 manipulation
-        chart.select('g.y').style('display', 'none');
-        // its a closure so you can also access other chart variable available in the closure scope
-        moveChart.filter(chart.filter());
-    });
-    ```
 
-    **/
-    _chart.addRenderlet = function (renderletKey, renderletFunction) {
-        _renderlets.on(RENDERLET_KEY + '.' + renderletKey, renderletFunction);
-        return _chart;
-    };
-
-    /**
-    #### .removeRenderlet(renderletKey)
-    Removes a renderlet from the renderlet event stack.
-    ```js
-    // remove renderlet function
-    chart.removeRenderlet('displayNone');
-    ```
-
-    **/
-    _chart.removeRenderlet = function (renderletKey) {
-        _renderlets.on(RENDERLET_KEY + '.' + renderletKey, null);
-    };
-
-    /**
-    #### .renderlets(renderletKey)
-    Returns the d3.dispatch instance that holds all current renderlets.
-    ```js
-    // renderlet getter
-    chart.renderlets('displayNone');
-    ```
-
-    **/
-    _chart.renderlets = function () {
-        return _renderlets;
-    };
-
-    /**
-    #### .renderlet(renderletFunction)
-    @Deprecated - Use [.addRenderlet](#.addRenderlet)
+    @Deprecated - Use [Listeners](#Listeners) with a 'renderlet' prefix
     Generates a random key for the renderlet, which makes it hard for removal.
     ```js
     // renderlet function
@@ -1040,12 +997,8 @@ dc.baseMixin = function (_chart) {
 
     **/
     _chart.renderlet = function (_) {
-        _chart.addRenderlet(dc.utils.uniqueId(), _);
+        _chart.on(RENDERLET_KEY + '.' + dc.utils.uniqueId(), _);
     };
-
-    function runAllRenderlets() {
-        _renderlets[RENDERLET_KEY](_chart);
-    }
 
     /**
     #### .chartGroup([group])
@@ -1125,6 +1078,9 @@ dc.baseMixin = function (_chart) {
     /**
     ## Listeners
     All dc chart instance supports the following listeners.
+
+    #### .on('renderlet', function(chart, filter){...})
+    This listener function will be invoked before redraw and render
 
     #### .on('preRender', function(chart){...})
     This listener function will be invoked before chart rendering.
