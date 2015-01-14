@@ -86,13 +86,13 @@ dc.heatMap = function (parent, chartGroup) {
     }
 
     /**
-     #### .rows([values])
+     #### .rowValues([values])
      Gets or sets the values used to create the rows of the heatmap, as an array. By default, all
      the values will be fetched from the data using the value accessor, and they will be sorted in
      ascending order.
      **/
 
-    _chart.rows = function (_) {
+    _chart.rowValues = function (_) {
         if (arguments.length) {
             _rows = _;
             return _chart;
@@ -100,18 +100,18 @@ dc.heatMap = function (parent, chartGroup) {
         if (_rows) {
             return _rows;
         }
-        var rowValues = _chart.data().map(_chart.valueAccessor());
-        rowValues.sort(d3.ascending);
-        return d3.scale.ordinal().domain(rowValues.filter(uniq));
+        var values = _chart.data().map(_chart.valueAccessor());
+        values.sort(d3.ascending);
+        return values.filter(uniq);
     };
 
     /**
-     #### .cols([keys])
+     #### .colValues([keys])
      Gets or sets the keys used to create the columns of the heatmap, as an array. By default, all
      the values will be fetched from the data using the key accessor, and they will be sorted in
      ascending order.
      **/
-    _chart.cols = function (_) {
+    _chart.colValues = function (_) {
         if (arguments.length) {
             _cols = _;
             return _chart;
@@ -119,9 +119,9 @@ dc.heatMap = function (parent, chartGroup) {
         if (_cols) {
             return _cols;
         }
-        var colValues = _chart.data().map(_chart.keyAccessor());
-        colValues.sort(d3.ascending);
-        return d3.scale.ordinal().domain(colValues.filter(uniq));
+        var values = _chart.data().map(_chart.keyAccessor());
+        values.sort(d3.ascending);
+        return values.filter(uniq);
     };
 
     _chart._doRender = function () {
@@ -136,8 +136,8 @@ dc.heatMap = function (parent, chartGroup) {
     };
 
     _chart._doRedraw = function () {
-        var rows = _chart.rows(),
-            cols = _chart.cols(),
+        var rows = d3.scale.ordinal().domain(_chart.rowValues()),
+            cols = d3.scale.ordinal().domain(_chart.colValues()),
             rowCount = rows.domain().length,
             colCount = cols.domain().length,
             boxWidth = Math.floor(_chart.effectiveWidth() / colCount),
