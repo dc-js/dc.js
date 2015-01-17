@@ -495,6 +495,9 @@ to an individual chart.  Each time a chart is rerendered or redrawn the renderle
 right after the chart finishes its own drawing routine, giving you a way to modify the svg
 elements. Renderlet functions take the chart instance as the only input parameter and you can
 use the dc API or use raw d3 to achieve pretty much any effect.
+
+@Deprecated - Use [Listeners](#Listeners) with a 'renderlet' prefix
+Generates a random key for the renderlet, which makes it hard for removal.
 ```js
 // renderlet function
 chart.renderlet(function(chart){
@@ -538,6 +541,9 @@ chart.options({dimension: myDimension, group: myGroup});
 
 ## Listeners
 All dc chart instance supports the following listeners.
+
+#### .on('renderlet', function(chart, filter){...})
+This listener function will be invoked after transitions and before redraw and render
 
 #### .on('preRender', function(chart){...})
 This listener function will be invoked before chart rendering.

@@ -502,6 +502,18 @@ dc.logger.debug = function (msg) {
     return dc.logger;
 };
 
+dc.logger.deprecate = function (fn, msg) {
+    // Allow logging of deprecation
+    var warned = false;
+    function deprecated() {
+        if (!warned) {
+            dc.logger.warn(msg);
+            warned = true;
+        }
+        return fn.apply(this, arguments);
+    }
+    return deprecated;
+};
 dc.events = {
     current: null
 };
@@ -683,7 +695,6 @@ dc.baseMixin = function (_chart) {
 
     var _filterPrinter = dc.printers.filters;
 
-    var _renderlets = [];
     var _mandatoryAttributes = ['dimension', 'group'];
 
     var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
@@ -694,7 +705,8 @@ dc.baseMixin = function (_chart) {
         'preRedraw',
         'postRedraw',
         'filtered',
-        'zoomed');
+        'zoomed',
+        'renderlet');
 
     var _legend;
 
@@ -1113,13 +1125,13 @@ dc.baseMixin = function (_chart) {
         if (_chart.transitionDuration() > 0 && _svg) {
             _svg.transition().duration(_chart.transitionDuration())
                 .each('end', function () {
-                    runAllRenderlets();
+                    _listeners['renderlet'](_chart);
                     if (event) {
                         _listeners[event](_chart);
                     }
                 });
         } else {
-            runAllRenderlets();
+            _listeners['renderlet'](_chart);
             if (event) {
                 _listeners[event](_chart);
             }
@@ -1617,6 +1629,9 @@ dc.baseMixin = function (_chart) {
     right after the chart finishes its own drawing routine, giving you a way to modify the svg
     elements. Renderlet functions take the chart instance as the only input parameter and you can
     use the dc API or use raw d3 to achieve pretty much any effect.
+
+    @Deprecated - Use [Listeners](#Listeners) with a 'renderlet' prefix
+    Generates a random key for the renderlet, which makes it hard for removal.
     ```js
     // renderlet function
     chart.renderlet(function(chart){
@@ -1628,16 +1643,9 @@ dc.baseMixin = function (_chart) {
     ```
 
     **/
-    _chart.renderlet = function (_) {
-        _renderlets.push(_);
-        return _chart;
-    };
-
-    function runAllRenderlets() {
-        for (var i = 0; i < _renderlets.length; ++i) {
-            _renderlets[i](_chart);
-        }
-    }
+    _chart.renderlet = dc.logger.deprecate(function (_) {
+        _chart.on('renderlet.' + dc.utils.uniqueId(), _);
+    }, 'chart.renderlet has been deprecated.  Please use chart.on("renderlet.<renderletKey>", renderletFunction)');
 
     /**
     #### .chartGroup([group])
@@ -1717,6 +1725,9 @@ dc.baseMixin = function (_chart) {
     /**
     ## Listeners
     All dc chart instance supports the following listeners.
+
+    #### .on('renderlet', function(chart, filter){...})
+    This listener function will be invoked after transitions and before redraw and render
 
     #### .on('preRender', function(chart){...})
     This listener function will be invoked before chart rendering.
