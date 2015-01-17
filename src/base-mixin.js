@@ -7,8 +7,6 @@ and available on all chart implementation in the DC library.
 dc.baseMixin = function (_chart) {
     _chart.__dcFlag__ = dc.utils.uniqueId();
 
-    var RENDERLET_KEY = 'renderlet';
-
     var _dimension;
     var _group;
 
@@ -59,7 +57,7 @@ dc.baseMixin = function (_chart) {
         'postRedraw',
         'filtered',
         'zoomed',
-        RENDERLET_KEY);
+        'renderlet');
 
     var _legend;
 
@@ -478,13 +476,13 @@ dc.baseMixin = function (_chart) {
         if (_chart.transitionDuration() > 0 && _svg) {
             _svg.transition().duration(_chart.transitionDuration())
                 .each('end', function () {
-                    _listeners[RENDERLET_KEY](_chart);
+                    _listeners['renderlet'](_chart);
                     if (event) {
                         _listeners[event](_chart);
                     }
                 });
         } else {
-            _listeners[RENDERLET_KEY](_chart);
+            _listeners['renderlet'](_chart);
             if (event) {
                 _listeners[event](_chart);
             }
@@ -997,7 +995,7 @@ dc.baseMixin = function (_chart) {
 
     **/
     _chart.renderlet = dc.logger.deprecate(function (_) {
-        _chart.on(RENDERLET_KEY + '.' + dc.utils.uniqueId(), _);
+        _chart.on('renderlet.' + dc.utils.uniqueId(), _);
     }, 'chart.renderlet has been deprecated.  Please use chart.on("renderlet.<renderletKey>", renderletFunction)');
 
     /**
@@ -1080,7 +1078,7 @@ dc.baseMixin = function (_chart) {
     All dc chart instance supports the following listeners.
 
     #### .on('renderlet', function(chart, filter){...})
-    This listener function will be invoked before redraw and render
+    This listener function will be invoked after transitions and before redraw and render
 
     #### .on('preRender', function(chart){...})
     This listener function will be invoked before chart rendering.
