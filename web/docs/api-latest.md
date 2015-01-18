@@ -1933,6 +1933,22 @@ var heatMap1 = dc.heatMap('#chart-container1');
 var heatMap2 = dc.heatMap('#chart-container2', 'chartGroupA');
 ```
 
+#### .colsLabel([labelFunction])
+Set or get the column label function. The chart class uses this function to render
+column labels on the X axis. It is passed the column name.
+```js
+// the default label function just returns the name
+chart.colsLabel(function(d) { return d; });
+```
+
+#### .rowsLabel([labelFunction])
+Set or get the row label function. The chart class uses this function to render
+row labels on the Y axis. It is passed the row name.
+```js
+// the default label function just returns the name
+chart.rowsLabel(function(d) { return d; });
+```
+
 #### .rows([values])
 Gets or sets the values used to create the rows of the heatmap, as an array. By default, all
 the values will be fetched from the data using the value accessor, and they will be sorted in

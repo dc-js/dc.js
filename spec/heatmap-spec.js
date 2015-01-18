@@ -102,6 +102,24 @@ describe("dc.heatmap", function() {
             expect(xaxisTexts[0][1].textContent).toEqual('2');
         });
 
+        describe('with custom labels', function() {
+            beforeEach(function() {
+                chart.colsLabel(function(x) { return 'col ' + x;})
+                    .rowsLabel(function(x) { return 'row ' + x;})
+                    .redraw();
+            });
+            it('should display the custom labels on the x axis', function() {
+                var xaxisTexts = chart.selectAll(".cols.axis text");
+                expect(xaxisTexts[0][0].textContent).toEqual('col 1');
+                expect(xaxisTexts[0][1].textContent).toEqual('col 2');
+            });
+            it('should display the custom labels on the y axis', function() {
+                var yaxisTexts = chart.selectAll(".rows.axis text");
+                expect(yaxisTexts[0][0].textContent).toEqual('row 1');
+                expect(yaxisTexts[0][1].textContent).toEqual('row 2');
+            });
+        });
+
         describe('box radius', function() {
             it('should default the x', function () {
                 chart.select('rect.heat-box').each(function () {
@@ -133,6 +151,7 @@ describe("dc.heatmap", function() {
                 });
             });
         });
+
     });
 
     describe('change crossfilter', function () {

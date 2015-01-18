@@ -42,28 +42,46 @@ dc.heatMap = function (parent, chartGroup) {
     _chart._mandatoryAttributes(['group']);
     _chart.title(_chart.colorAccessor());
 
-    var _colsLabel = function(d){
+    var _colsLabel = function (d) {
         return d;
     };
-    var _rowsLabel = function(d){
+    var _rowsLabel = function (d) {
         return d;
-    }
+    };
 
+   /**
+    #### .colsLabel([labelFunction])
+    Set or get the column label function. The chart class uses this function to render
+    column labels on the X axis. It is passed the column name.
+    ```js
+    // the default label function just returns the name
+    chart.colsLabel(function(d) { return d; });
+    ```
+    **/
     _chart.colsLabel = function (_) {
         if (!arguments.length) {
             return _colsLabel;
         }
         _colsLabel = _;
         return _chart;
-    }
+    };
 
-    _chart.rowsLabel = function(_) {
-                if (!arguments.length) {
+   /**
+    #### .rowsLabel([labelFunction])
+    Set or get the row label function. The chart class uses this function to render
+    row labels on the Y axis. It is passed the row name.
+    ```js
+    // the default label function just returns the name
+    chart.rowsLabel(function(d) { return d; });
+    ```
+    **/
+    _chart.rowsLabel = function (_) {
+        if (!arguments.length) {
             return _rowsLabel;
         }
         _rowsLabel = _;
         return _chart;
-    }
+    };
 
     var _xAxisOnClick = function (d) { filterAxis(0, d); };
     var _yAxisOnClick = function (d) { filterAxis(1, d); };

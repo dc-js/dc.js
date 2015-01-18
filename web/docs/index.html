@@ -1610,6 +1610,16 @@ A newly created heat map instance</p>
 var heatMap1 = dc.heatMap(<span class="string">'#chart-container1'</span>);</span>
 // <span class="operator"><span class="keyword">create</span> a heat map under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
 var heatMap2 = dc.heatMap(<span class="string">'#chart-container2'</span>, <span class="string">'chartGroupA'</span>);</span></code></pre>
+<h4 id="-colslabel-labelfunction-">.colsLabel([labelFunction])</h4>
+<p>Set or get the column label function. The chart class uses this function to render
+column labels on the X axis. It is passed the column name.</p>
+<pre><code class="lang-js">// the default label <span class="function"><span class="keyword">function</span> <span class="title">just</span> <span class="title">returns</span> <span class="title">the</span> <span class="title">name</span>
+<span class="title">chart.colsLabel</span><span class="params">(function(d)</span></span> { <span class="keyword">return</span> d; });</code></pre>
+<h4 id="-rowslabel-labelfunction-">.rowsLabel([labelFunction])</h4>
+<p>Set or get the row label function. The chart class uses this function to render
+row labels on the Y axis. It is passed the row name.</p>
+<pre><code class="lang-js">// the default label <span class="function"><span class="keyword">function</span> <span class="title">just</span> <span class="title">returns</span> <span class="title">the</span> <span class="title">name</span>
+<span class="title">chart.rowsLabel</span><span class="params">(function(d)</span></span> { <span class="keyword">return</span> d; });</code></pre>
 <h4 id="-rows-values-">.rows([values])</h4>
 <p>Gets or sets the values used to create the rows of the heatmap, as an array. By default, all
 the values will be fetched from the data using the value accessor, and they will be sorted in
