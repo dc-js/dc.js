@@ -1,5 +1,8 @@
 ## 2.1.0
 
+## 2.0.0 beta 3
+ * Properly tagged this time.
+
 ## 2.0.0 beta 2
  * Re-implement renderlets as regular event `.on('renderlet')`. old function `.renderlet()`
    is deprecated, by Matt Traynham (#776 / #833, replaces #779)
