@@ -1078,7 +1078,8 @@ dc.baseMixin = function (_chart) {
     All dc chart instance supports the following listeners.
 
     #### .on('renderlet', function(chart, filter){...})
-    This listener function will be invoked after transitions and before redraw and render
+    This listener function will be invoked after transitions after redraw and render. Replaces the
+    deprecated `.renderlet()` method.
 
     #### .on('preRender', function(chart){...})
     This listener function will be invoked before chart rendering.

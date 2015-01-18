@@ -530,7 +530,8 @@ the same name to be called with the value to set that attribute for the chart.</
 <h2 id="listeners">Listeners</h2>
 <p>All dc chart instance supports the following listeners.</p>
 <h4 id="-on-renderlet-function-chart-filter-">.on(&#39;renderlet&#39;, function(chart, filter){...})</h4>
-<p>This listener function will be invoked after transitions and before redraw and render</p>
+<p>This listener function will be invoked after transitions after redraw and render. Replaces the
+deprecated <code>.renderlet()</code> method.</p>
 <h4 id="-on-prerender-function-chart-">.on(&#39;preRender&#39;, function(chart){...})</h4>
 <p>This listener function will be invoked before chart rendering.</p>
 <h4 id="-on-postrender-function-chart-">.on(&#39;postRender&#39;, function(chart){...})</h4>
