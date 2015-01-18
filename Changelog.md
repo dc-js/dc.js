@@ -1,12 +1,12 @@
-## add-logo tag
- * Added logo to main page and favicon (#618)
-
 ## 2.0.0 beta 2
  * Re-implement renderlets as regular event `.on('renderlet')`. old function `.renderlet()`
    is deprecated, by Matt Traynham (#776 / #833, replaces #779)
  * Geochoropleth tests sped up, by Jasmine Hegman (#825 / #817)
  * Number display test cleaned up, by Jasmine Hegman (#826/ #783)
  * Provide a way to override the heatmap labels, by hhravn (#794)
+
+## add-logo tag
+ * Added logo to main page and favicon (#618)
 
 ## 2.0.0 beta 1
  * Merged #800: unselectable ids starting with numbers #789. Thanks Jasmine Hegman!
