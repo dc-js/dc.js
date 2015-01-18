@@ -498,6 +498,8 @@ to an individual chart.  Each time a chart is rerendered or redrawn the renderle
 right after the chart finishes its own drawing routine, giving you a way to modify the svg
 elements. Renderlet functions take the chart instance as the only input parameter and you can
 use the dc API or use raw d3 to achieve pretty much any effect.</p>
+<p>@Deprecated - Use <a href="#Listeners">Listeners</a> with a &#39;renderlet&#39; prefix
+Generates a random key for the renderlet, which makes it hard for removal.</p>
 <pre><code class="lang-js"><span class="regexp">//</span> renderlet <span class="reserved">function</span>
 chart.renderlet(<span class="reserved">function</span>(chart){
     <span class="regexp">//</span> mix <span class="keyword">of</span> dc API <span class="keyword">and</span> d3 manipulation
@@ -527,6 +529,9 @@ the same name to be called with the value to set that attribute for the chart.</
 <pre><code><span class="tag">chart</span><span class="class">.options</span>(<span class="rules">{<span class="rule"><span class="attribute">dimension</span>:<span class="value"> myDimension, group: myGroup}</span></span></span>);</code></pre>
 <h2 id="listeners">Listeners</h2>
 <p>All dc chart instance supports the following listeners.</p>
+<h4 id="-on-renderlet-function-chart-filter-">.on(&#39;renderlet&#39;, function(chart, filter){...})</h4>
+<p>This listener function will be invoked after transitions after redraw and render. Replaces the
+deprecated <code>.renderlet()</code> method.</p>
 <h4 id="-on-prerender-function-chart-">.on(&#39;preRender&#39;, function(chart){...})</h4>
 <p>This listener function will be invoked before chart rendering.</p>
 <h4 id="-on-postrender-function-chart-">.on(&#39;postRender&#39;, function(chart){...})</h4>
@@ -1605,6 +1610,16 @@ A newly created heat map instance</p>
 var heatMap1 = dc.heatMap(<span class="string">'#chart-container1'</span>);</span>
 // <span class="operator"><span class="keyword">create</span> a heat map under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
 var heatMap2 = dc.heatMap(<span class="string">'#chart-container2'</span>, <span class="string">'chartGroupA'</span>);</span></code></pre>
+<h4 id="-colslabel-labelfunction-">.colsLabel([labelFunction])</h4>
+<p>Set or get the column label function. The chart class uses this function to render
+column labels on the X axis. It is passed the column name.</p>
+<pre><code class="lang-js">// the default label <span class="function"><span class="keyword">function</span> <span class="title">just</span> <span class="title">returns</span> <span class="title">the</span> <span class="title">name</span>
+<span class="title">chart.colsLabel</span><span class="params">(function(d)</span></span> { <span class="keyword">return</span> d; });</code></pre>
+<h4 id="-rowslabel-labelfunction-">.rowsLabel([labelFunction])</h4>
+<p>Set or get the row label function. The chart class uses this function to render
+row labels on the Y axis. It is passed the row name.</p>
+<pre><code class="lang-js">// the default label <span class="function"><span class="keyword">function</span> <span class="title">just</span> <span class="title">returns</span> <span class="title">the</span> <span class="title">name</span>
+<span class="title">chart.rowsLabel</span><span class="params">(function(d)</span></span> { <span class="keyword">return</span> d; });</code></pre>
 <h4 id="-rows-values-">.rows([values])</h4>
 <p>Gets or sets the values used to create the rows of the heatmap, as an array. By default, all
 the values will be fetched from the data using the value accessor, and they will be sorted in

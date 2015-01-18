@@ -25,3 +25,16 @@ dc.logger.debug = function (msg) {
 
     return dc.logger;
 };
+
+dc.logger.deprecate = function (fn, msg) {
+    // Allow logging of deprecation
+    var warned = false;
+    function deprecated() {
+        if (!warned) {
+            dc.logger.warn(msg);
+            warned = true;
+        }
+        return fn.apply(this, arguments);
+    }
+    return deprecated;
+};

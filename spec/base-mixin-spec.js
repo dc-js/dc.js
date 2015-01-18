@@ -23,15 +23,18 @@ describe("dc.baseMixin", function () {
     });
 
     describe('renderlets', function () {
-        var firstRenderlet, secondRenderlet;
+        var firstRenderlet, secondRenderlet, thirdRenderlet,
+            third = 'renderlet.third';
         beforeEach(function () {
             var expectedCallbackSignature = function (callbackChart) {
                 expect(callbackChart).toBe(chart);
             };
             firstRenderlet = jasmine.createSpy().and.callFake(expectedCallbackSignature);
             secondRenderlet = jasmine.createSpy().and.callFake(expectedCallbackSignature);
+            thirdRenderlet = jasmine.createSpy().and.callFake(expectedCallbackSignature);
             chart.renderlet(firstRenderlet);
             chart.renderlet(secondRenderlet);
+            chart.on(third, thirdRenderlet);
         });
 
         it('should execute each renderlet after a render', function () {
@@ -44,6 +47,30 @@ describe("dc.baseMixin", function () {
             chart.redraw();
             expect(firstRenderlet).toHaveBeenCalled();
             expect(secondRenderlet).toHaveBeenCalled();
+        });
+
+        it('should execute a named renderlet after a render', function () {
+            chart.render();
+            expect(thirdRenderlet).toHaveBeenCalled();
+        });
+
+        it('should execute a named renderlet after a redraw', function () {
+            chart.redraw();
+            expect(thirdRenderlet).toHaveBeenCalled();
+        });
+
+        it('should remove a named renderlet expect no call after a redraw', function () {
+            chart.on(third);
+            chart.redraw();
+            expect(secondRenderlet).toHaveBeenCalled();
+            expect(thirdRenderlet).not.toHaveBeenCalled();
+        });
+
+        it('should remove a named renderlet and expect no call after a redraw', function () {
+            chart.on(third);
+            chart.render();
+            expect(secondRenderlet).toHaveBeenCalled();
+            expect(thirdRenderlet).not.toHaveBeenCalled();
         });
     });
 
