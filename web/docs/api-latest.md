@@ -495,6 +495,9 @@ to an individual chart.  Each time a chart is rerendered or redrawn the renderle
 right after the chart finishes its own drawing routine, giving you a way to modify the svg
 elements. Renderlet functions take the chart instance as the only input parameter and you can
 use the dc API or use raw d3 to achieve pretty much any effect.
+
+@Deprecated - Use [Listeners](#Listeners) with a 'renderlet' prefix
+Generates a random key for the renderlet, which makes it hard for removal.
 ```js
 // renderlet function
 chart.renderlet(function(chart){
@@ -538,6 +541,10 @@ chart.options({dimension: myDimension, group: myGroup});
 
 ## Listeners
 All dc chart instance supports the following listeners.
+
+#### .on('renderlet', function(chart, filter){...})
+This listener function will be invoked after transitions after redraw and render. Replaces the
+deprecated `.renderlet()` method.
 
 #### .on('preRender', function(chart){...})
 This listener function will be invoked before chart rendering.
@@ -1924,6 +1931,22 @@ A newly created heat map instance
 var heatMap1 = dc.heatMap('#chart-container1');
 // create a heat map under #chart-container2 element using chart group A
 var heatMap2 = dc.heatMap('#chart-container2', 'chartGroupA');
+```
+
+#### .colsLabel([labelFunction])
+Set or get the column label function. The chart class uses this function to render
+column labels on the X axis. It is passed the column name.
+```js
+// the default label function just returns the name
+chart.colsLabel(function(d) { return d; });
+```
+
+#### .rowsLabel([labelFunction])
+Set or get the row label function. The chart class uses this function to render
+row labels on the Y axis. It is passed the row name.
+```js
+// the default label function just returns the name
+chart.rowsLabel(function(d) { return d; });
 ```
 
 #### .rows([values])
