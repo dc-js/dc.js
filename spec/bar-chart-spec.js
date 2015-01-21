@@ -210,6 +210,16 @@ describe('dc.barChart', function() {
                     expect(nthStack(0).nthBar(2).attr("height")).toBe("1600");
                 });
             });
+
+            describe('clicking', function() {
+                it('causes other dimension to be filtered', function() {
+                    expect(dimension.top(Infinity).length).toEqual(10);
+                    // fake a click
+                    var abar = chart.selectAll('rect.bar:nth-child(3)');
+                    abar.on('click')(abar.datum());
+                    expect(dimension.top(Infinity).length).toEqual(1);
+                });
+            });
         });
 
         describe('with a linear x domain', function () {
@@ -240,6 +250,22 @@ describe('dc.barChart', function() {
                 expect(nthStack(0).nthBar(0).attr('x')).toBeWithinDelta(40, 1);
                 expect(nthStack(0).nthBar(2).attr('x')).toBeWithinDelta(489, 1);
                 expect(nthStack(0).nthBar(4).attr('x')).toBeWithinDelta(938, 1);
+            });
+
+            describe('with a custom click handler', function() {
+                beforeEach(function() {
+                    chart.brushOn(false)
+                        .renderlet(function(_chart) {
+                            _chart.selectAll("rect.bar").on("click", _chart.onClick);
+                        })
+                        .render();
+                });
+                it('clicking causes another dimension to be filtered', function() {
+                    expect(dimension.top(Infinity).length).toEqual(10);
+                    var abar = chart.selectAll('rect.bar:nth-child(3)');
+                    abar.on('click')(abar.datum());
+                    expect(dimension.top(Infinity).length).toEqual(3);
+                });
             });
         });
 

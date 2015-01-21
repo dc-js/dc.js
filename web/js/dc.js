@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-beta.3
+ *  dc 2.0.0-beta.4
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012 Nick Zhu and other contributors
  *
@@ -20,7 +20,7 @@
 'use strict';
 
 /**
-#### Version 2.0.0-beta.3
+#### Version 2.0.0-beta.4
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -41,7 +41,7 @@ that are chainable d3 objects.)
 /*jshint -W062*/
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-beta.3',
+    version: '2.0.0-beta.4',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -1645,6 +1645,7 @@ dc.baseMixin = function (_chart) {
     **/
     _chart.renderlet = dc.logger.deprecate(function (_) {
         _chart.on('renderlet.' + dc.utils.uniqueId(), _);
+        return _chart;
     }, 'chart.renderlet has been deprecated.  Please use chart.on("renderlet.<renderletKey>", renderletFunction)');
 
     /**
@@ -4252,7 +4253,7 @@ dc.barChart = function (parent, chartGroup) {
         }
 
         if (_chart.isOrdinal()) {
-            bars.on('click', onClick);
+            bars.on('click', _chart.onClick);
         }
 
         dc.transition(bars, _chart.transitionDuration())
@@ -4349,9 +4350,9 @@ dc.barChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    function onClick(d) {
-        _chart.onClick(d.data);
-    }
+    dc.override(_chart, 'onClick', function (d) {
+        _chart._onClick(d.data);
+    });
 
     /**
     #### .barPadding([padding])
