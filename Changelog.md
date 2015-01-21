@@ -1,3 +1,6 @@
+## 2.0.0 beta 4
+ * make barChart.onClick a proper override (fixes the complaint in #168)
+
 ## 2.0.0 beta 3
  * Properly tagged this time.
 
