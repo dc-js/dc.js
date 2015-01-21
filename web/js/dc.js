@@ -1645,6 +1645,7 @@ dc.baseMixin = function (_chart) {
     **/
     _chart.renderlet = dc.logger.deprecate(function (_) {
         _chart.on('renderlet.' + dc.utils.uniqueId(), _);
+        return _chart;
     }, 'chart.renderlet has been deprecated.  Please use chart.on("renderlet.<renderletKey>", renderletFunction)');
 
     /**
@@ -4252,7 +4253,7 @@ dc.barChart = function (parent, chartGroup) {
         }
 
         if (_chart.isOrdinal()) {
-            bars.on('click', onClick);
+            bars.on('click', _chart.onClick);
         }
 
         dc.transition(bars, _chart.transitionDuration())
@@ -4349,9 +4350,9 @@ dc.barChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    function onClick(d) {
-        _chart.onClick(d.data);
-    }
+    dc.override(_chart, 'onClick', function (d) {
+        _chart._onClick(d.data);
+    });
 
     /**
     #### .barPadding([padding])
