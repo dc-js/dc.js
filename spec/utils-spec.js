@@ -11,7 +11,7 @@ describe('dc utils', function() {
             expect(printer([[10, 30]])).toEqual("[10 -> 30]");
         });
         it('print simple string and a range', function() {
-            expect(printer(["a", [10, 30]]), "a).toEqual([10 -> 30]");
+            expect(printer(["a", [10, 30]])).toEqual("a, [10 -> 30]");
         });
     });
 
