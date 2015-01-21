@@ -38,6 +38,7 @@ dc.barChart = function (parent, chartGroup) {
     var DEFAULT_GAP_BETWEEN_BARS = 2;
 
     var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
+    var _syncGroup;
 
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
     var _centerBar = false;
@@ -197,7 +198,26 @@ dc.barChart = function (parent, chartGroup) {
     };
 
     function onClick(d) {
-        _chart.onClick(d.data);
+        if (!_syncGroup){
+            _chart.onClick(d.data);
+        }else{
+            var filter = _chart.keyAccessor()(d.data);
+            dc.events.trigger(function () {
+                var filterOnce;
+                _syncGroup.forEach(function(chart){
+                    if (!filterOnce){ //To prevent resetting dimension's filter multiple times
+                        filterOnce = true;
+                        chart.filter(filter);
+                        return;
+                    }
+                    if (!chart.hasFilter(filter))
+                        chart.filters().push(filter);
+                    else
+                        chart.filters().splice(chart.filters().indexOf(filter),1);
+                });
+                _chart.redrawGroup();
+            });
+        }
     }
 
     /**
@@ -308,6 +328,14 @@ dc.barChart = function (parent, chartGroup) {
         }
         return max;
     });
+
+    _chart.syncGroup = function (_) {
+        if (!arguments.length) return _syncGroup;
+        //TODO Check if it isn't already added
+        _syncGroup = _;
+        _syncGroup.push(_chart);
+        return _chart;
+    };
 
     return _chart.anchor(parent, chartGroup);
 };
