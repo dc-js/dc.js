@@ -1,6 +1,8 @@
 ## 2.0.0 beta 5
+ * updating this doc to link to issues/PRs manually (until we get a better changelog
+   system?), by Matt Traynham ([#845](https://github.com/dc-js/dc.js/issues/845))
  * update all NPM dependencies and fix tests that were not expecting any results,
-   by Matt Traynham (#844)
+   by Matt Traynham ([#844](https://github.com/dc-js/dc.js/issues/844))
 
 ## 2.0.0 beta 4
  * make barChart.onClick a proper override, by Gordon Woodhull (fixes the complaint in [#168](https://github.com/dc-js/dc.js/issues/168))
