@@ -22,18 +22,16 @@ describe('dc event engine', function() {
             var times = 0;
             var i = 0;
 
-            /* jshint -W083 */
             while (i < 10) {
                 engine.trigger(function() {
                     times++;
                 }, 10);
                 i++;
             }
-            /* jshint +W083 */
-
-            setTimeout(function() {
-                expect(times).toEqual(1);
-            }, 10);
+            jasmine.clock().tick(5);
+            expect(times).toEqual(0);
+            jasmine.clock().tick(5);
+            expect(times).toEqual(1);
         });
         afterEach(function() {
         });
