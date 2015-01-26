@@ -1,5 +1,9 @@
+## 2.0.0 beta 5
+ * update all NPM dependencies and fix tests that were not expecting any results,
+   by Matt Traynham (#844)
+
 ## 2.0.0 beta 4
- * make barChart.onClick a proper override (fixes the complaint in #168)
+ * make barChart.onClick a proper override, by Gordon Woodhull (fixes the complaint in #168)
 
 ## 2.0.0 beta 3
  * Properly tagged this time.
@@ -9,7 +13,7 @@
    is deprecated, by Matt Traynham (#776 / #833, replaces #779)
  * Geochoropleth tests sped up, by Jasmine Hegman (#825 / #817)
  * Number display test cleaned up, by Jasmine Hegman (#826/ #783)
- * Provide a way to override the heatmap labels, by hhravn (#794)
+ * Provide a way to override the heatmap labels, by hhravn (#794 / #793)
 
 ## add-logo tag
  * Added logo to main page and favicon (#618)
