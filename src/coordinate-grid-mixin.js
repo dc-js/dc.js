@@ -464,9 +464,9 @@ dc.coordinateGridMixin = function (_chart) {
                     return _x(d);
                 })
                 .attr('y2', 0)
-                .attr('opacity', 0);
+                .style('opacity', 0);
             dc.transition(linesGEnter, _chart.transitionDuration())
-                .attr('opacity', 1);
+                .style('opacity', 1);
 
             // update
             dc.transition(lines, _chart.transitionDuration())
@@ -592,9 +592,9 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('y2', function (d) {
                     return scale(d);
                 })
-                .attr('opacity', 0);
+                .style('opacity', 0);
             dc.transition(linesGEnter, _chart.transitionDuration())
-                .attr('opacity', 1);
+                .style('opacity', 1);
 
             // update
             dc.transition(lines, _chart.transitionDuration())

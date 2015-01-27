@@ -95,7 +95,7 @@ dc.bubbleChart = function (parent, chartGroup) {
             .attr('r', function (d) {
                 return _chart.bubbleR(d);
             })
-            .attr('opacity', function (d) {
+            .style('opacity', function (d) {
                 return (_chart.bubbleR(d) > 0) ? 1 : 0;
             });
 
@@ -112,7 +112,7 @@ dc.bubbleChart = function (parent, chartGroup) {
             .attr('r', function (d) {
                 return _chart.bubbleR(d);
             })
-            .attr('opacity', function (d) {
+            .style('opacity', function (d) {
                 return (_chart.bubbleR(d) > 0) ? 1 : 0;
             });
 

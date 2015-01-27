@@ -76,18 +76,18 @@ dc.scatterPlot = function (parent, chartGroup) {
             .enter()
         .append('path')
             .attr('class', 'symbol')
-            .attr('opacity', 0)
+            .style('opacity', 0)
             .style('fill', _chart.getColor)
             .attr('transform', _locator);
 
         dc.transition(symbols, _chart.transitionDuration())
-            .attr('opacity', function (d) { return _existenceAccessor(d) ? 1 : 0; })
+            .style('opacity', function (d) { return _existenceAccessor(d) ? 1 : 0; })
             .style('fill', _chart.getColor)
             .attr('transform', _locator)
             .attr('d', _symbol);
 
         dc.transition(symbols.exit(), _chart.transitionDuration())
-            .attr('opacity', 0).remove();
+            .style('opacity', 0).remove();
     };
 
     /**
