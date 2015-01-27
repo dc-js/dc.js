@@ -48,7 +48,6 @@
     "grunt-lib-phantomjs": "~0.6.0",
     "grunt-markdown": "~0.7.0",
     "grunt-saucelabs": "~8.5.0",
-    "grunt-sed": "~0.1.1",
     "grunt-shell": "~1.1.1",
     "grunt-template-jasmine-istanbul": "~0.3.2",
     "load-grunt-tasks": "~3.0.0",
