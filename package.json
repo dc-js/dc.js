@@ -51,6 +51,7 @@
     "grunt-shell": "~1.1.1",
     "grunt-template-jasmine-istanbul": "~0.3.2",
     "load-grunt-tasks": "~3.0.0",
+    "jsdifflib": "~1.1.0",
     "marked": "~0.3.3",
     "uglify-js": "2.4.x",
     "time-grunt": "~1.0.0"

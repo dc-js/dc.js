@@ -53,6 +53,7 @@ module.exports = function (grunt) {
         concat: {
             options : {
                 process: true,
+                sourceMap: true,
                 banner : '<%= conf.banner %>'
             },
             js: {
@@ -249,6 +250,8 @@ module.exports = function (grunt) {
                         expand: true,
                         flatten: true,
                         src: [
+                            '<%= conf.pkg.name %>.js',
+                            '<%= conf.pkg.name %>.js.map',
                             '<%= conf.pkg.name %>.min.js',
                             '<%= conf.pkg.name %>.min.js.map',
                             'node_modules/d3/d3.js',
