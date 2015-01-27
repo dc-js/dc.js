@@ -190,7 +190,7 @@
                     .attr('dx', function (d, i) { return i & 1 ? 6 : -6; })
                     .attr('x', function (d, i) { return i & 1 ? width : 0; })
                     .attr('y', x0)
-                    .attr('text-anchor', function (d, i) { return i & 1 ? 'start' : 'end'; })
+                    .style('text-anchor', function (d, i) { return i & 1 ? 'start' : 'end'; })
                     .text(format)
                     .transition()
                     .duration(duration)

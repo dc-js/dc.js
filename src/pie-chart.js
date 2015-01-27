@@ -161,7 +161,7 @@ dc.pieChart = function (parent, chartGroup) {
             .attr('transform', function (d) {
                 return labelPosition(d, arc);
             })
-            .attr('text-anchor', 'middle')
+            .style('text-anchor', 'middle')
             .text(function (d) {
                 var data = d.data;
                 if ((sliceHasNoData(data) || sliceTooSmall(d)) && !isSelectedSlice(d)) {

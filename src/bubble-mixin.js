@@ -94,7 +94,7 @@ dc.bubbleMixin = function (_chart) {
 
             if (label.empty()) {
                 label = bubbleGEnter.append('text')
-                    .attr('text-anchor', 'middle')
+                    .style('text-anchor', 'middle')
                     .attr('dy', '.3em')
                     .on('click', _chart.onClick);
             }

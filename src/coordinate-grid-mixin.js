@@ -426,7 +426,7 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
                     (_chart.height() - _xAxisLabelPadding) + ')')
                 .attr('class', X_AXIS_LABEL_CLASS)
-                .attr('text-anchor', 'middle')
+                .style('text-anchor', 'middle')
                 .text(_chart.xAxisLabel());
         }
         if (_chart.xAxisLabel() && axisXLab.text() !== _chart.xAxisLabel()) {
@@ -539,7 +539,7 @@ dc.coordinateGridMixin = function (_chart) {
             axisYLab = _chart.g().append('text')
                 .attr('transform', 'translate(' + labelXPosition + ',' + labelYPosition + '),rotate(' + rotation + ')')
                 .attr('class', Y_AXIS_LABEL_CLASS + ' ' + axisClass + '-label')
-                .attr('text-anchor', 'middle')
+                .style('text-anchor', 'middle')
                 .text(text);
         }
         if (text && axisYLab.text() !== text) {
