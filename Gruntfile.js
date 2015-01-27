@@ -1,21 +1,63 @@
 module.exports = function (grunt) {
     'use strict';
 
-    var jsFiles = module.exports.jsFiles;
+    require('load-grunt-tasks')(grunt);
+    require('time-grunt')(grunt);
 
-    var output = {
-        js: '<%= pkg.name %>.js',
-        jsmin: '<%= pkg.name %>.min.js',
-        map: '<%= pkg.name %>.min.js.map'
+    var config = {
+        src: 'src',
+        spec: 'spec',
+        web: 'web',
+        pkg: require('./package.json'),
+        banner: grunt.file.read('./LICENSE_BANNER'),
+        jsFiles: [
+            'src/banner.js',  // NOTE: keep this first
+            'src/core.js',
+            'src/errors.js',
+            'src/utils.js',
+            'src/logger.js',
+            'src/events.js',
+            'src/filters.js',
+            'src/base-mixin.js',
+            'src/margin-mixin.js',
+            'src/color-mixin.js',
+            'src/coordinate-grid-mixin.js',
+            'src/stack-mixin.js',
+            'src/cap-mixin.js',
+            'src/bubble-mixin.js',
+            'src/pie-chart.js',
+            'src/bar-chart.js',
+            'src/line-chart.js',
+            'src/data-count.js',
+            'src/data-table.js',
+            'src/data-grid.js',
+            'src/bubble-chart.js',
+            'src/composite-chart.js',
+            'src/series-chart.js',
+            'src/geo-choropleth-chart.js',
+            'src/bubble-overlay.js',
+            'src/row-chart.js',
+            'src/legend.js',
+            'src/scatter-plot.js',
+            'src/number-display.js',
+            'src/heatmap.js',
+            'src/d3.box.js',
+            'src/box-plot.js',
+            'src/footer.js'  // NOTE: keep this last
+        ]
     };
 
     grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
+        conf: config,
 
         concat: {
+            options : {
+                process: true,
+                banner : '<%= conf.banner %>'
+            },
             js: {
-                src: jsFiles,
-                dest: output.js
+                src: '<%= conf.jsFiles %>',
+                dest: '<%= conf.pkg.name %>.js'
             }
         },
         uglify: {
@@ -23,28 +65,23 @@ module.exports = function (grunt) {
                 options: {
                     mangle: true,
                     compress: true,
-                    sourceMap: output.map
+                    sourceMap: true,
+                    banner : '<%= conf.banner %>'
                 },
-                src: output.js,
-                dest: output.jsmin
-            }
-        },
-        sed: {
-            version: {
-                pattern: '%VERSION%',
-                replacement: '<%= pkg.version %>',
-                path: [output.js, output.jsmin]
+                src: '<%= conf.pkg.name %>.js',
+                dest: '<%= conf.pkg.name %>.min.js'
             }
         },
         jscs: {
             old: {
-                src: ['spec/**/*.js'],
+                src: ['<%= conf.spec %>/**/*.js'],
                 options: {
                     validateIndentation: 4
                 }
             },
             source: {
-                src: ['src/**/*.js', '!src/{banner,footer}.js', 'Gruntfile.js', 'web/stock.js'],
+                src: ['<%= conf.src %>/**/*.js', '!<%= conf.src %>/{banner,footer}.js', 'Gruntfile.js',
+                    '<%= conf.web %>/stock.js'],
                 options: {
                     config: '.jscsrc'
                 }
@@ -52,28 +89,32 @@ module.exports = function (grunt) {
         },
         jshint: {
             source: {
-                src: ['src/**/*.js', 'Gruntfile.js', 'web/stock.js'],
+                src: ['<%= conf.src %>/**/*.js', 'Gruntfile.js', '<%= conf.web %>/stock.js'],
                 options: {
                     jshintrc: '.jshintrc',
-                    ignores: ['src/banner.js', 'src/footer.js']
+                    ignores: ['<%= conf.src %>/banner.js', '<%= conf.src %>/footer.js']
                 }
             }
         },
         watch: {
             scripts: {
-                files: ['src/**/*.js'],
+                files: ['<%= conf.src %>/**/*.js'],
                 tasks: ['build', 'copy']
             },
             jasmineRunner: {
-                files: ['spec/**/*.js'],
+                files: ['<%= conf.spec %>/**/*.js'],
                 tasks: ['jasmine:specs:build']
             },
             tests: {
-                files: ['src/**/*.js', 'spec/**/*.js'],
+                files: ['<%= conf.src %>/**/*.js', '<%= conf.spec %>/**/*.js'],
                 tasks: ['test']
             },
             reload: {
-                files: ['dc.js', 'dc.css', 'web/js/dc.js', 'web/css/dc.css', 'dc.min.js'],
+                files: ['<%= conf.pkg.name %>.js',
+                    '<%= conf.pkg.name %>css',
+                    '<%= conf.web %>/js/<%= conf.pkg.name %>.js',
+                    '<%= conf.web %>/css/<%= conf.pkg.name %>.css',
+                    '<%= conf.pkg.name %>.min.js'],
                 options: {
                     livereload: true
                 }
@@ -92,17 +133,17 @@ module.exports = function (grunt) {
                 options: {
                     display: 'short',
                     summary: true,
-                    specs:  'spec/*-spec.js',
-                    helpers: 'spec/helpers/*.js',
+                    specs:  '<%= conf.spec %>/*-spec.js',
+                    helpers: '<%= conf.spec %>/helpers/*.js',
                     version: '2.0.0',
-                    outfile: 'spec/index.html',
+                    outfile: '<%= conf.spec %>/index.html',
                     keepRunner: true
                 },
                 src: [
-                    'web/js/d3.js',
-                    'web/js/crossfilter.js',
-                    'web/js/colorbrewer.js',
-                    'dc.js'
+                    '<%= conf.web %>/js/d3.js',
+                    '<%= conf.web %>/js/crossfilter.js',
+                    '<%= conf.web %>/js/colorbrewer.js',
+                    '<%= conf.pkg.name %>.js'
                 ]
             },
             coverage:{
@@ -129,10 +170,10 @@ module.exports = function (grunt) {
                 options: {
                     display: 'short',
                     summary: true,
-                    specs:  'spec/*-spec.js',
-                    helpers: 'spec/helpers/*.js',
+                    specs:  '<%= conf.spec %>/*-spec.js',
+                    helpers: '<%= conf.spec %>/helpers/*.js',
                     version: '2.0.0',
-                    outfile: 'spec/index-browserify.html',
+                    outfile: '<%= conf.spec %>/index-browserify.html',
                     keepRunner: true
                 },
                 src: [
@@ -164,14 +205,14 @@ module.exports = function (grunt) {
                             platform: 'WIN8'
                         }
                     ],
-                    testname: 'dc.js'
+                    testname: '<%= conf.pkg.name %>.js'
                 }
             }
         },
         emu: {
             api: {
-                src: output.js,
-                dest: 'web/docs/api-latest.md'
+                src: '<%= conf.pkg.name %>.js',
+                dest: '<%= conf.web %>/docs/api-latest.md'
             }
         },
         toc: {
@@ -183,19 +224,19 @@ module.exports = function (grunt) {
         markdown: {
             html: {
                 src: '<%= emu.api.dest %>',
-                dest: 'web/docs/index.html'
+                dest: '<%= conf.web %>/docs/index.html'
             },
             options: {markdownOptions: {highlight: 'manual'}}
         },
         docco: {
             options: {
-                dst: 'web/docs',
-                basepath:'web'
+                dst: '<%= conf.web %>/docs',
+                basepath:'<%= conf.web %>'
             },
             howto: {
                 files: [
                     {
-                        src: ['web/stock.js']
+                        src: ['<%= conf.web %>/stock.js']
                     }
                 ]
             }
@@ -203,18 +244,18 @@ module.exports = function (grunt) {
         copy: {
             'dc-to-gh': {
                 files: [
-                    {expand: true, flatten: true, src: 'dc.css', dest: 'web/css/'},
+                    {expand: true, flatten: true, src: '<%= conf.pkg.name %>.css', dest: '<%= conf.web %>/css/'},
                     {
                         expand: true,
                         flatten: true,
                         src: [
-                            output.js,
-                            output.js + '.map',
+                            '<%= conf.pkg.name %>.min.js',
+                            '<%= conf.pkg.name %>.min.js.map',
                             'node_modules/d3/d3.js',
                             'node_modules/crossfilter/crossfilter.js',
                             'test/env-data.js'
                         ],
-                        dest: 'web/js/'
+                        dest: '<%= conf.web %>/js/'
                     }
                 ]
             }
@@ -247,7 +288,7 @@ module.exports = function (grunt) {
                             '<p>An attempt to present a simple example of each chart type.',
                             '<a href="https://github.com/dc-js/dc.js/blob/master/CONTRIBUTING.md">',
                             'Contributions welcome</a>.</p>',
-                            '<p>Source <a href="https://github.com/dc-js/dc.js/tree/master/web/examples">',
+                            '<p>Source <a href="https://github.com/dc-js/dc.js/tree/master/<%= conf.web %>/examples">',
                             'here</a>.</p>',
                             body,
                             '</div></body></html>'
@@ -256,14 +297,14 @@ module.exports = function (grunt) {
                     absolute: true
                 },
                 files: [
-                    {dest: 'web/examples/index.html', src: ['web/examples/*.html']}
+                    {dest: '<%= conf.web %>/examples/index.html', src: ['<%= conf.web %>/examples/*.html']}
                 ]
             }
         },
 
         'gh-pages': {
             options: {
-                base: 'web',
+                base: '<%= conf.web %>',
                 message: 'Synced from from master branch.'
             },
             src: ['**']
@@ -298,35 +339,16 @@ module.exports = function (grunt) {
         },
         browserify: {
             dev: {
-                src: 'dc.js',
+                src: '<%= conf.pkg.name %>.js',
                 dest: 'bundle.js',
                 options: {
                     browserifyOptions: {
                         standalone: 'dc'
                     }
                 }
-            },
+            }
         }
     });
-
-    // These plugins provide necessary tasks.
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-connect');
-    grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-contrib-jasmine');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-docco2');
-    grunt.loadNpmTasks('grunt-gh-pages');
-    grunt.loadNpmTasks('grunt-jscs');
-    grunt.loadNpmTasks('grunt-saucelabs');
-    grunt.loadNpmTasks('grunt-markdown');
-    grunt.loadNpmTasks('grunt-sed');
-    grunt.loadNpmTasks('grunt-shell');
-    grunt.loadNpmTasks('grunt-debug-task');
-    grunt.loadNpmTasks('grunt-fileindex');
-    grunt.loadNpmTasks('grunt-browserify');
 
     // custom tasks
     grunt.registerMultiTask('emu', 'Documentation extraction by emu.', function () {
@@ -376,7 +398,7 @@ module.exports = function (grunt) {
     });
 
     // task aliases
-    grunt.registerTask('build', ['concat', 'uglify', 'sed']);
+    grunt.registerTask('build', ['concat', 'uglify']);
     grunt.registerTask('docs', ['build', 'copy', 'emu', 'toc', 'markdown', 'docco']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine']);
@@ -388,39 +410,3 @@ module.exports = function (grunt) {
     grunt.registerTask('lint', ['build', 'jshint', 'jscs']);
     grunt.registerTask('default', ['build']);
 };
-
-module.exports.jsFiles = [
-    'src/banner.js',
-    'src/core.js',
-    'src/errors.js',
-    'src/utils.js',
-    'src/logger.js',
-    'src/events.js',
-    'src/filters.js',
-    'src/base-mixin.js',
-    'src/margin-mixin.js',
-    'src/color-mixin.js',
-    'src/coordinate-grid-mixin.js',
-    'src/stack-mixin.js',
-    'src/cap-mixin.js',
-    'src/bubble-mixin.js',
-    'src/pie-chart.js',
-    'src/bar-chart.js',
-    'src/line-chart.js',
-    'src/data-count.js',
-    'src/data-table.js',
-    'src/data-grid.js',
-    'src/bubble-chart.js',
-    'src/composite-chart.js',
-    'src/series-chart.js',
-    'src/geo-choropleth-chart.js',
-    'src/bubble-overlay.js',
-    'src/row-chart.js',
-    'src/legend.js',
-    'src/scatter-plot.js',
-    'src/number-display.js',
-    'src/heatmap.js',
-    'src/d3.box.js',
-    'src/box-plot.js',
-    'src/footer.js'  // NOTE: keep this last
-];
