@@ -56,7 +56,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
             regionG
                 .append('path')
-                .attr('fill', 'white')
+                .style('fill', 'white')
                 .attr('d', _geoPath);
 
             regionG.append('title');
@@ -138,8 +138,8 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     function renderPaths(regionG, layerIndex, data) {
         var paths = regionG
             .select('path')
-            .attr('fill', function () {
-                var currentFill = d3.select(this).attr('fill');
+            .style('fill', function () {
+                var currentFill = d3.select(this).style('fill');
                 if (currentFill) {
                     return currentFill;
                 }
@@ -149,7 +149,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
                 return _chart.onClick(d, layerIndex);
             });
 
-        dc.transition(paths, _chart.transitionDuration()).attr('fill', function (d, i) {
+        dc.transition(paths, _chart.transitionDuration()).style('fill', function (d, i) {
             return _chart.getColor(data[geoJson(layerIndex).keyAccessor(d)], i);
         });
     }

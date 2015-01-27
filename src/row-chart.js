@@ -183,7 +183,7 @@ dc.rowChart = function (parent, chartGroup) {
                 return 'translate(0,' + ((i + 1) * _gap + i * height) + ')';
             }).select('rect')
             .attr('height', height)
-            .attr('fill', _chart.getColor)
+            .style('fill', _chart.getColor)
             .on('click', onClick)
             .classed('deselected', function (d) {
                 return (_chart.hasFilter()) ? !isSelectedRow(d) : false;

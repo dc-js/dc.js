@@ -137,7 +137,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     function createSlicePath(slicesEnter, arc) {
         var slicePath = slicesEnter.append('path')
-            .attr('fill', fill)
+            .style('fill', fill)
             .on('click', onClick)
             .attr('d', function (d, i) {
                 return safeArc(d, i, arc);
@@ -209,7 +209,7 @@ dc.pieChart = function (parent, chartGroup) {
         dc.transition(slicePaths, _chart.transitionDuration(),
             function (s) {
                 s.attrTween('d', tweenPie);
-            }).attr('fill', fill);
+            }).style('fill', fill);
     }
 
     function updateLabels(pieData, arc) {

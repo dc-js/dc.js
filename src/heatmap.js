@@ -195,7 +195,7 @@ dc.heatMap = function (parent, chartGroup) {
 
         gEnter.append('rect')
             .attr('class', 'heat-box')
-            .attr('fill', 'white')
+            .style('fill', 'white')
             .on('click', _chart.boxOnClick());
 
         if (_chart.renderTitle()) {
@@ -208,7 +208,7 @@ dc.heatMap = function (parent, chartGroup) {
             .attr('y', function (d, i) { return rows(_chart.valueAccessor()(d, i)); })
             .attr('rx', _xBorderRadius)
             .attr('ry', _yBorderRadius)
-            .attr('fill', _chart.getColor)
+            .style('fill', _chart.getColor)
             .attr('width', boxWidth)
             .attr('height', boxHeight);
 
