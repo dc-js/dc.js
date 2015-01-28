@@ -10,41 +10,7 @@ module.exports = function (grunt) {
         web: 'web',
         pkg: require('./package.json'),
         banner: grunt.file.read('./LICENSE_BANNER'),
-        jsFiles: [
-            'src/banner.js',  // NOTE: keep this first
-            'src/core.js',
-            'src/errors.js',
-            'src/utils.js',
-            'src/logger.js',
-            'src/events.js',
-            'src/filters.js',
-            'src/base-mixin.js',
-            'src/margin-mixin.js',
-            'src/color-mixin.js',
-            'src/coordinate-grid-mixin.js',
-            'src/stack-mixin.js',
-            'src/cap-mixin.js',
-            'src/bubble-mixin.js',
-            'src/pie-chart.js',
-            'src/bar-chart.js',
-            'src/line-chart.js',
-            'src/data-count.js',
-            'src/data-table.js',
-            'src/data-grid.js',
-            'src/bubble-chart.js',
-            'src/composite-chart.js',
-            'src/series-chart.js',
-            'src/geo-choropleth-chart.js',
-            'src/bubble-overlay.js',
-            'src/row-chart.js',
-            'src/legend.js',
-            'src/scatter-plot.js',
-            'src/number-display.js',
-            'src/heatmap.js',
-            'src/d3.box.js',
-            'src/box-plot.js',
-            'src/footer.js'  // NOTE: keep this last
-        ]
+        jsFiles: module.exports.jsFiles
     };
 
     grunt.initConfig({
@@ -413,3 +379,39 @@ module.exports = function (grunt) {
     grunt.registerTask('lint', ['build', 'jshint', 'jscs']);
     grunt.registerTask('default', ['build']);
 };
+
+module.exports.jsFiles = [
+    'src/banner.js',   // NOTE: keep this first
+    'src/core.js',
+    'src/errors.js',
+    'src/utils.js',
+    'src/logger.js',
+    'src/events.js',
+    'src/filters.js',
+    'src/base-mixin.js',
+    'src/margin-mixin.js',
+    'src/color-mixin.js',
+    'src/coordinate-grid-mixin.js',
+    'src/stack-mixin.js',
+    'src/cap-mixin.js',
+    'src/bubble-mixin.js',
+    'src/pie-chart.js',
+    'src/bar-chart.js',
+    'src/line-chart.js',
+    'src/data-count.js',
+    'src/data-table.js',
+    'src/data-grid.js',
+    'src/bubble-chart.js',
+    'src/composite-chart.js',
+    'src/series-chart.js',
+    'src/geo-choropleth-chart.js',
+    'src/bubble-overlay.js',
+    'src/row-chart.js',
+    'src/legend.js',
+    'src/scatter-plot.js',
+    'src/number-display.js',
+    'src/heatmap.js',
+    'src/d3.box.js',
+    'src/box-plot.js',
+    'src/footer.js'  // NOTE: keep this last
+];
