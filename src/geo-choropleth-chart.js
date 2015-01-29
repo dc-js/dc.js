@@ -68,16 +68,6 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
             }
         },
         _projectionZoomScale = 0.95,
-        _title = function (layerName, data, titleFn) {
-            return function (d) {
-                var key = getKey(layerName, d);
-                return key ? titleFn({
-                    key: key,
-                    title: getTitle(layerName, d),
-                    value: data[key]
-                }) : '';
-            };
-        },
         _showGraticule = false,
         _showSphere = false,
         _zoom = d3.geo.zoom().projection(_projection),
@@ -87,45 +77,6 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     _chart.colorAccessor(function (d) {
         return d || 0;
     });
-
-    // LAYER ACCESSORS
-    function layerClass (layerName) {
-        return 'layer-' + layerName;
-    }
-
-    function layerSelector (layerName) {
-        return 'g.layer-' + layerName;
-    }
-
-    function isSelected (layerName, d) {
-        return _chart.hasFilter() && _chart.hasFilter(getKey(layerName, d));
-    }
-
-    function isDeselected (layerName, d) {
-        return _chart.hasFilter() && !_chart.hasFilter(getKey(layerName, d));
-    }
-
-    function isDataLayer (layerName) {
-        return !!getLayer(layerName).keyAccessor;
-    }
-
-    function getKey (layerName, d) {
-        var keyAccessor = getLayer(layerName).keyAccessor;
-        return keyAccessor ? keyAccessor(d) : keyAccessor;
-    }
-
-    function getTitle (layerName, d) {
-        var titleAccessor = getLayer(layerName).titleAccessor;
-        return titleAccessor ? titleAccessor(d) : d;
-    }
-
-    function getFeatures (layerName) {
-        return getLayer(layerName).features;
-    }
-
-    function getLayer (layerName) {
-        return _layers[layerName];
-    }
 
     /**
      * Returns all GeoJson layers currently registered with this chart. The returned object is a
@@ -187,10 +138,9 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      */
     _chart.removeLayer = function (name) {
         delete _layers[name];
-        _allFeatures.features = [];
-        for (var key in _layers) {
-            _allFeatures.features = _allFeatures.features.concat(getFeatures(key));
-        }
+        _allFeatures.features = Object.keys(_layers).reduce(function (prev, key) {
+            return prev.concat(_layers[key].features);
+        }, []);
         return _chart;
     };
 
@@ -347,32 +297,59 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
     // PLOT
     _chart._doRedraw = function () {
-        var data = _layeredData(_chart.data());
+        var data = _layeredData(_chart.data()),
+            layers = _chart.svg().select('g.layers').selectAll('g.feature')
+                .data(d3.values(_layers), dc.pluck('name'));
 
-        for (var layerName in _layers) {
-            // Select path
-            var pathG = _chart.svg().selectAll(layerSelector(layerName) + ' path');
+        layers.enter()
+            .append('g')
+            .attr('class', function (d) { return 'feature layer-' + d.name; })
+            .selectAll('path')
+            .data(dc.pluck('features')).enter()
+            .append('path')
+            .attr('fill', 'white')
+            .attr('d', _path)
+            .on('click', function (d) {
+                var parent = d3.select(this.parentNode).datum();
+                if (parent.keyAccessor) {
+                    dc.events.trigger(function () {
+                        _chart.filter(parent.keyAccessor(d));
+                        _chart.redrawGroup();
+                    });
+                }
+            }).append('title');
 
-            // Set selected color function
-            var hasData = isDataLayer(layerName);
-            pathG.classed('selected', hasData ? function (d) { return isSelected(layerName, d); } :
-                function () { return false; })
-                .classed('deselected', hasData ? function (d) { return isDeselected(layerName, d); } :
-                    function () { return false; });
-
-            // Update color
-            dc.transition(pathG, _chart.transitionDuration()).attr('fill', function (d, i) {
-                return _chart.getColor(data[getKey(layerName, d)], i);
+        var paths = layers.selectAll('path')
+            .classed('selected', function (d) {
+                var parent = d3.select(this.parentNode).datum();
+                return _chart.hasFilter() && parent.keyAccessor && _chart.hasFilter(parent.keyAccessor(d));
+            })
+            .classed('deselected', function (d) {
+                var parent = d3.select(this.parentNode).datum();
+                return _chart.hasFilter() && parent.keyAccessor && !_chart.hasFilter(parent.keyAccessor(d));
             });
+        dc.transition(paths, _chart.transitionDuration(), _chart.transitionDelay()).attr('fill', function (d, i) {
+            var parent = d3.select(this.parentNode).datum();
+            return _chart.getColor(parent.keyAccessor ? data[parent.keyAccessor(d)] : '', i);
+        });
+        paths.selectAll('title').text(function (d) {
+            var parent = d3.select(this.parentNode.parentNode).datum();
+            if (parent.keyAccessor && _chart.renderTitle()) {
+                var key = parent.keyAccessor && parent.keyAccessor(d);
+                return _chart.title()({
+                    key: key,
+                    title: parent.titleAccessor ? parent.titleAccessor(d) : '',
+                    value: key ? data[key] : null
+                });
+            }
+            return '';
+        });
 
-            // Update title
-            pathG.selectAll('title').text(_chart.renderTitle() ?
-                _title(layerName, data, _chart.title()) : function () { return ''; });
-        }
+        layers.exit().remove();
 
         // Update the projection
         if (_projectionChanged) {
-            _projectionZoom(_path, _allFeatures, _chart.width(), _chart.height(), _chart.projectionZoomScale());
+            _projectionZoom(_path, _allFeatures, _chart.width(), _chart.height());
             _chart.svg().selectAll('g path').attr('d', _path);
             _projectionChanged = false;
         }
@@ -381,18 +358,20 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     };
 
     _chart._doRender = function () {
-        _chart.resetSvg();
+        var svg = _chart.resetSvg();
 
         if (_zoomable) {
-            _chart.svg().call(_zoom
+            svg.call(_zoom
                 .translate(_projection.translate())
                 .scale(_projection.scale())
                 .on('zoom.redraw', function () {
-                    d3.event.sourceEvent.preventDefault();
-                    _chart.svg().selectAll('path').attr('d', _path);
+                    if (d3.event.sourceEvent) {
+                        d3.event.sourceEvent.preventDefault();
+                    }
+                    svg.selectAll('path').attr('d', _path);
                 }));
         } else {
-            _chart.svg().call(_zoom
+            svg.call(_zoom
                 .translate(_projection.translate())
                 .scale(_projection.scale())
                 .on('zoom.redraw', function () {
@@ -403,42 +382,23 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         // Since we are rendering, no need to transform the projection
         _projectionChanged = false;
 
-        // The graph
-        var _g = _chart.svg().append('g');
-
         // Zoom on the current features
         _projectionZoom(_path, _allFeatures, _chart.width(), _chart.height());
 
+        // The layers
+        svg.append('g').attr('class', 'layers');
+
         // Add graticule
         if (_showGraticule) {
-            _g.append('path').attr('class', 'graticule').datum(_graticule).attr('d', _path);
+            svg.append('path').attr('class', 'graticule').datum(_graticule).attr('d', _path);
         }
 
         // Add sphere
         if (_showSphere) {
-            _g.append('path').attr('class', 'sphere').datum({type: 'Sphere'}).attr('d', _path);
+            svg.append('path').attr('class', 'sphere').datum({type: 'Sphere'}).attr('d', _path);
         }
 
-        // Add layers
-        for (var layerName in _layers) {
-            _g.append('g').attr('class', 'feature ' + layerClass(layerName))
-                .selectAll('path').data(getFeatures(layerName))
-                .enter().append('path')
-                .attr('fill', 'white')
-                .attr('d', _path)
-                .on('click', function (d) {
-                    return _chart.onClick(d, layerName);
-                }).append('title');
-        }
         return _chart._doRedraw();
-    };
-
-    _chart.onClick = function (d, layerName) {
-        var selectedRegion = getKey(layerName, d);
-        dc.events.trigger(function () {
-            _chart.filter(selectedRegion);
-            _chart.redrawGroup();
-        });
     };
 
     return _chart.anchor(parent, chartGroup);
