@@ -2404,8 +2404,7 @@ dc.coordinateGridMixin = function (_chart) {
 
         if (axisXG.empty()) {
             axisXG = g.append('g')
-                .attr('class', 'axis x')
-                .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')');
+                .attr('class', 'axis x');
         }
 
         var axisXLab = g.selectAll('text.' + X_AXIS_LABEL_CLASS);
@@ -2422,6 +2421,7 @@ dc.coordinateGridMixin = function (_chart) {
         }
 
         dc.transition(axisXG, _chart.transitionDuration())
+            .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')')
             .call(_xAxis);
     };
 
