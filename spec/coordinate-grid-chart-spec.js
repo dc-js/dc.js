@@ -237,6 +237,11 @@ describe('dc.coordinateGridChart', function() {
                 expect(chart.select("g.x").attr("transform")).toMatchTranslate(0,150);
             });
 
+            it('should update x axis position when the chart height is changed', function() {
+                chart.elasticX(true).height(400).redraw();
+                expect(chart.select("g.x").attr("transform")).toMatchTranslate(0,400);
+            });
+
             describe("labels", function() {
                 beforeEach(function() {
                     expect(chart.effectiveHeight()).toBe(130);
