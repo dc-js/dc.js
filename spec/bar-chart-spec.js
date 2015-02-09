@@ -958,7 +958,10 @@ describe('dc.barChart', function() {
 
             it("should not round the brush", function () {
                 jasmine.clock().tick(100);
-                expect(chart.filter()).toEqual([makeDate(2012, 6, 1), makeDate(2012, 7, 15)]);
+                var chartFilter = chart.filter();
+                expect(chartFilter.length).toEqual(2);
+                expect(chartFilter[0]).toEqual(makeDate(2012, 6, 1));
+                expect(chartFilter[1]).toEqual(makeDate(2012, 7, 15));
             });
         });
 
