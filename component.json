@@ -1,0 +1,20 @@
+{
+  "name": "dc.js",
+  "repo": "dc-js/dc.js",
+  "description": "Multi-Dimensional charting built to work natively with crossfilter rendered with d3.js",
+  "version": "1.3.11",
+  "keywords": ["dcjs","d3","crossfilter","multi-dimensional charting"],
+  "main": "dc.js",
+  "scripts": [
+    "dc.js"
+  ],
+  "styles": [
+    "dc.css"
+  ],
+  "dependencies": {
+    "mbostock/d3": "3.x",
+    "square/crossfilter": "1.x",
+  },
+  "development": {},
+  "license": "Apache"
+}
