@@ -41,7 +41,7 @@ dc.dataTable = function (parent, chartGroup) {
         return d;
     };
     var _order = d3.ascending;
-    var _showGroup = true;
+    var _showGroups = true;
 
     _chart._doRender = function () {
         _chart.selectAll('tbody').remove();
@@ -132,7 +132,7 @@ dc.dataTable = function (parent, chartGroup) {
             .enter()
             .append('tbody');
 
-        if (_showGroup === true) {
+        if (_showGroups === true) {
             rowGroup
                 .append('tr')
                 .attr('class', GROUP_CSS_CLASS)
@@ -337,22 +337,22 @@ dc.dataTable = function (parent, chartGroup) {
     };
 
     /**
-    ### .showGroup(true|false)
+    ### .showGroups(true|false)
     Get or set if group rows will be shown. Default value ``` true ```
-    The .group() getter-setter must be provided in both cases.
+    The .group() getter-setter must be provided in either case.
 
     ```js
         chart
             .group([value], [name])
-            .showGroup(true|false);
+            .showGroups(true|false);
     ```
 
     **/
-    _chart.showGroup = function (_) {
+    _chart.showGroups = function (_) {
       if (!arguments.length) {
         return true;
       }
-      _showGroup = _;
+      _showGroups = _;
       return _chart;
     };
 
