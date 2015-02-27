@@ -56,7 +56,7 @@ dc.barChart = function (parent, chartGroup) {
                          'See dc.js bar chart API documentation for details.');
         }
 
-        _chart._render();
+        return _chart._render();
     });
 
     _chart.plotData = function () {

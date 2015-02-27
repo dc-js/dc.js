@@ -34,6 +34,10 @@ describe('dc.barChart', function() {
             });
         });
 
+        it("should preserve method chaining", function() {
+            expect(chart.render()).toEqual(chart);
+        });
+
         describe("with centered bars", function() {
             beforeEach(function() {
                 chart.centerBar(true).render();
