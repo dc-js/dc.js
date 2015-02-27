@@ -711,7 +711,9 @@ describe('dc.coordinateGridChart', function() {
                 });
 
                 it("should update chart filter to match new x domain", function () {
-                    expect(chart.filter()).toEqual(chart.x().domain());
+                    var filter = chart.filter();
+                    delete filter.isFiltered;
+                    expect(filter).toEqual(chart.x().domain());
                 });
 
                 it("should be rescaled", function () {
@@ -822,7 +824,10 @@ describe('dc.coordinateGridChart', function() {
             rangeChart.brush().extent(selectedRange);
             rangeChart.brush().event(rangeChart.g());
             jasmine.clock().tick(100);
-            expect(chart.focus).toHaveBeenCalledWith(selectedRange);
+            // expect(chart.focus).toHaveBeenCalledWith(selectedRange);
+            var focus = chart.focus.calls.argsFor(0)[0];
+            delete focus.isFiltered;
+            expect(focus).toEqual(selectedRange);
         });
 
         it("should zoom the focus chart back out when range chart is un-brushed", function () {
@@ -839,7 +844,10 @@ describe('dc.coordinateGridChart', function() {
         it("should update the range chart brush to match zoomed domain of focus chart", function () {
             spyOn(rangeChart, "replaceFilter");
             chart.focus(selectedRange);
-            expect(rangeChart.replaceFilter).toHaveBeenCalledWith(selectedRange);
+            // expect(rangeChart.replaceFilter).toHaveBeenCalledWith(selectedRange);
+            var replaceFilter = rangeChart.replaceFilter.calls.argsFor(0)[0];
+            delete replaceFilter.isFiltered;
+            expect(replaceFilter).toEqual(selectedRange);
         });
     });
 
