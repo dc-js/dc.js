@@ -1949,6 +1949,13 @@ row labels on the Y axis. It is passed the row name.
 // the default label function just returns the name
 chart.rowsLabel(function(d) { return d; });
 ```
+#### .colsSort(function)
+Gets or Sets the sorting function for the columns of the heatmap.
+Default is d3.ascending
+
+#### .colsSort(function)
+Gets or Sets the sorting function for the columns of the heatmap.
+Default is d3.ascending
 
 #### .rows([values])
 Gets or sets the values used to create the rows of the heatmap, as an array. By default, all

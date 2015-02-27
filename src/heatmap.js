@@ -38,6 +38,9 @@ dc.heatMap = function (parent, chartGroup) {
     var _xBorderRadius = DEFAULT_BORDER_RADIUS;
     var _yBorderRadius = DEFAULT_BORDER_RADIUS;
 
+    var _rowSort = d3.ascending;
+    var _colSort = d3.ascending;
+
     var _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin({})));
     _chart._mandatoryAttributes(['group']);
     _chart.title(_chart.colorAccessor());
@@ -127,6 +130,34 @@ dc.heatMap = function (parent, chartGroup) {
     }
 
     /**
+     #### .colSort(function)
+     Gets or Sets the sorting function for the columns of the heatmap.
+     Default is d3.ascending
+     **/
+
+    _chart.colSort = function(_){
+        if (arguments.length) {
+            _colSort = _;
+            return _chart;
+        }
+        return _colSort;
+    }
+
+    /**
+     #### .rowSort(function)
+     Gets or Sets the sorting function for the columns of the heatmap.
+     Default is d3.ascending
+     **/
+
+    _chart.rowSort = function(_){
+        if (arguments.length) {
+            _rowSort = _;
+            return _chart;
+        }
+        return _rowSort;
+    }
+
+    /**
      #### .rows([values])
      Gets or sets the values used to create the rows of the heatmap, as an array. By default, all
      the values will be fetched from the data using the value accessor, and they will be sorted in
@@ -142,7 +173,7 @@ dc.heatMap = function (parent, chartGroup) {
             return _rows;
         }
         var rowValues = _chart.data().map(_chart.valueAccessor());
-        rowValues.sort(d3.ascending);
+        rowValues.sort(_chart.rowSort());
         return d3.scale.ordinal().domain(rowValues.filter(uniq));
     };
 
@@ -161,7 +192,7 @@ dc.heatMap = function (parent, chartGroup) {
             return _cols;
         }
         var colValues = _chart.data().map(_chart.keyAccessor());
-        colValues.sort(d3.ascending);
+        colValues.sort(_chart.colSort());
         return d3.scale.ordinal().domain(colValues.filter(uniq));
     };
 
