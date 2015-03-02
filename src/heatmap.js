@@ -130,8 +130,7 @@ dc.heatMap = function (parent, chartGroup) {
     /**
      #### .rows([values])
      Gets or sets the values used to create the rows of the heatmap, as an array. By default, all
-     the values will be fetched from the data using the value accessor, and they will be sorted in
-     ascending order.
+     the values will be fetched from the data using the value accessor.
      **/
 
     _chart.rows = function (_) {
@@ -144,7 +143,7 @@ dc.heatMap = function (parent, chartGroup) {
 
     /**
      #### .rowOrdering([orderFunction])
-     Get or set an accessor to order the rows
+     Get or set an accessor to order the rows.  Default is d3.ascending.
      */
     _chart.rowOrdering = function (_) {
         if (!arguments.length) {
@@ -157,8 +156,7 @@ dc.heatMap = function (parent, chartGroup) {
     /**
      #### .cols([keys])
      Gets or sets the keys used to create the columns of the heatmap, as an array. By default, all
-     the values will be fetched from the data using the key accessor, and they will be sorted in
-     ascending order.
+     the values will be fetched from the data using the key accessor.
      **/
     _chart.cols = function (_) {
         if (!arguments.length) {
@@ -170,7 +168,7 @@ dc.heatMap = function (parent, chartGroup) {
 
     /**
      #### .colOrdering([orderFunction])
-     Get or set an accessor to order the cols
+     Get or set an accessor to order the cols.  Default is ascending.
      */
     _chart.colOrdering = function (_) {
         if (!arguments.length) {
