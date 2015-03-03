@@ -1648,12 +1648,30 @@ change without re-rendering everything</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-82">&#182;</a>
               </div>
-              <h4 id="version">Version</h4>
+              <h4 id="versions">Versions</h4>
 <p>Determine the current version of dc with <code>dc.version</code></p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>d3.selectAll(<span class="hljs-string">'#version'</span>).text(dc.version);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-83">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-83">&#182;</a>
+              </div>
+              <p>Determine latest stable version in the repo via Github API</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>d3.json(<span class="hljs-string">'https://api.github.com/repos/dc-js/dc.js/releases/latest'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(error, latestRelease)</span> </span>{
+    <span class="hljs-comment">/*jshint camelcase: false */</span>
+    d3.selectAll(<span class="hljs-string">'#latest'</span>).text(latestRelease.tag_name);
+});</pre></div></div>
             
         </li>
         

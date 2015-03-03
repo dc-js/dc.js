@@ -514,6 +514,7 @@ dc.logger.deprecate = function (fn, msg) {
     }
     return deprecated;
 };
+
 dc.events = {
     current: null
 };
@@ -1645,6 +1646,7 @@ dc.baseMixin = function (_chart) {
     **/
     _chart.renderlet = dc.logger.deprecate(function (_) {
         _chart.on('renderlet.' + dc.utils.uniqueId(), _);
+        return _chart;
     }, 'chart.renderlet has been deprecated.  Please use chart.on("renderlet.<renderletKey>", renderletFunction)');
 
     /**
@@ -2867,17 +2869,15 @@ dc.coordinateGridMixin = function (_chart) {
     // borrowed from Crossfilter example
     _chart.resizeHandlePath = function (d) {
         var e = +(d === 'e'), x = e ? 1 : -1, y = brushHeight() / 3;
-        /*jshint -W014 */
-        return 'M' + (0.5 * x) + ',' + y
-            + 'A6,6 0 0 ' + e + ' ' + (6.5 * x) + ',' + (y + 6)
-            + 'V' + (2 * y - 6)
-            + 'A6,6 0 0 ' + e + ' ' + (0.5 * x) + ',' + (2 * y)
-            + 'Z'
-            + 'M' + (2.5 * x) + ',' + (y + 8)
-            + 'V' + (2 * y - 8)
-            + 'M' + (4.5 * x) + ',' + (y + 8)
-            + 'V' + (2 * y - 8);
-        /*jshint +W014 */
+        return 'M' + (0.5 * x) + ',' + y +
+            'A6,6 0 0 ' + e + ' ' + (6.5 * x) + ',' + (y + 6) +
+            'V' + (2 * y - 6) +
+            'A6,6 0 0 ' + e + ' ' + (0.5 * x) + ',' + (2 * y) +
+            'Z' +
+            'M' + (2.5 * x) + ',' + (y + 8) +
+            'V' + (2 * y - 8) +
+            'M' + (4.5 * x) + ',' + (y + 8) +
+            'V' + (2 * y - 8);
     };
 
     function getClipPathId() {
@@ -4252,7 +4252,7 @@ dc.barChart = function (parent, chartGroup) {
         }
 
         if (_chart.isOrdinal()) {
-            bars.on('click', onClick);
+            bars.on('click', _chart.onClick);
         }
 
         dc.transition(bars, _chart.transitionDuration())
@@ -4349,9 +4349,9 @@ dc.barChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    function onClick(d) {
-        _chart.onClick(d.data);
-    }
+    dc.override(_chart, 'onClick', function (d) {
+        _chart._onClick(d.data);
+    });
 
     /**
     #### .barPadding([padding])
@@ -4564,7 +4564,8 @@ dc.lineChart = function (parent, chartGroup) {
     };
 
     /**
-     #### .tension([value]) Gets or sets the tension to use for lines drawn, in the range 0 to 1.
+     #### .tension([value])
+     Gets or sets the tension to use for lines drawn, in the range 0 to 1.
      This parameter further customizes the interpolation behavior.  It is passed to
      [d3.svg.line.tension](https://github.com/mbostock/d3/wiki/SVG-Shapes#line_tension) and
      [d3.svg.area.tension](https://github.com/mbostock/d3/wiki/SVG-Shapes#area_tension).  Default:
@@ -7831,6 +7832,11 @@ dc.heatMap = function (parent, chartGroup) {
 
     var _cols;
     var _rows;
+    var _colOrdering = d3.ascending;
+    var _rowOrdering = d3.ascending;
+    var _colScale = d3.scale.ordinal();
+    var _rowScale = d3.scale.ordinal();
+
     var _xBorderRadius = DEFAULT_BORDER_RADIUS;
     var _yBorderRadius = DEFAULT_BORDER_RADIUS;
 
@@ -7918,47 +7924,55 @@ dc.heatMap = function (parent, chartGroup) {
         return _chart._filter(dc.filters.TwoDimensionalFilter(filter));
     });
 
-    function uniq(d, i, a) {
-        return !i || a[i - 1] !== d;
-    }
-
     /**
      #### .rows([values])
      Gets or sets the values used to create the rows of the heatmap, as an array. By default, all
-     the values will be fetched from the data using the value accessor, and they will be sorted in
-     ascending order.
+     the values will be fetched from the data using the value accessor.
      **/
 
     _chart.rows = function (_) {
-        if (arguments.length) {
-            _rows = _;
-            return _chart;
-        }
-        if (_rows) {
+        if (!arguments.length) {
             return _rows;
         }
-        var rowValues = _chart.data().map(_chart.valueAccessor());
-        rowValues.sort(d3.ascending);
-        return d3.scale.ordinal().domain(rowValues.filter(uniq));
+        _rows = _;
+        return _chart;
+    };
+
+    /**
+     #### .rowOrdering([orderFunction])
+     Get or set an accessor to order the rows.  Default is d3.ascending.
+     */
+    _chart.rowOrdering = function (_) {
+        if (!arguments.length) {
+            return _rowOrdering;
+        }
+        _rowOrdering = _;
+        return _chart;
     };
 
     /**
      #### .cols([keys])
      Gets or sets the keys used to create the columns of the heatmap, as an array. By default, all
-     the values will be fetched from the data using the key accessor, and they will be sorted in
-     ascending order.
+     the values will be fetched from the data using the key accessor.
      **/
     _chart.cols = function (_) {
-        if (arguments.length) {
-            _cols = _;
-            return _chart;
-        }
-        if (_cols) {
+        if (!arguments.length) {
             return _cols;
         }
-        var colValues = _chart.data().map(_chart.keyAccessor());
-        colValues.sort(d3.ascending);
-        return d3.scale.ordinal().domain(colValues.filter(uniq));
+        _cols = _;
+        return _chart;
+    };
+
+    /**
+     #### .colOrdering([orderFunction])
+     Get or set an accessor to order the cols.  Default is ascending.
+     */
+    _chart.colOrdering = function (_) {
+        if (!arguments.length) {
+            return _colOrdering;
+        }
+        _colOrdering = _;
+        return _chart;
     };
 
     _chart._doRender = function () {
@@ -7973,9 +7987,19 @@ dc.heatMap = function (parent, chartGroup) {
     };
 
     _chart._doRedraw = function () {
-        var rows = _chart.rows(),
-            cols = _chart.cols(),
-            rowCount = rows.domain().length,
+        var data = _chart.data(),
+            rows = _chart.rows() || data.map(_chart.valueAccessor()),
+            cols = _chart.cols() || data.map(_chart.keyAccessor());
+        if (_rowOrdering) {
+            rows = rows.sort(_rowOrdering);
+        }
+        if (_colOrdering) {
+            cols = cols.sort(_colOrdering);
+        }
+        rows = _rowScale.domain(rows);
+        cols = _colScale.domain(cols);
+
+        var rowCount = rows.domain().length,
             colCount = cols.domain().length,
             boxWidth = Math.floor(_chart.effectiveWidth() / colCount),
             boxHeight = Math.floor(_chart.effectiveHeight() / rowCount);
