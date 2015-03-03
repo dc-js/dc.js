@@ -1,5 +1,5 @@
 ## 2.1.0
- * Heatmap allows customizing the ordering separately from the values, by Matt Traynham ([#869]https://github.com/dc-js/dc.js/pull/869 - thanks also to Quinn Lee for [#837](https://github.com/dc-js/dc.js/pull/837))
+ * Heatmap allows customizing the ordering separately from the values, by Matt Traynham ([#869](https://github.com/dc-js/dc.js/pull/869) - thanks also to Quinn Lee for [#837](https://github.com/dc-js/dc.js/pull/837))
  * Front page stable version automatically read from GitHub, by Enrico Spinielli ([#865](https://github.com/dc-js/dc.js/pull/865))
 
 ## 2.0.0 beta 5
