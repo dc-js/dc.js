@@ -1668,8 +1668,9 @@ change without re-rendering everything</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>d3.json(<span class="hljs-string">'https://api.github.com/repos/dc-js/dc.js/releases/latest'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(error, latest_release)</span> </span>{
-    d3.selectAll(<span class="hljs-string">'#latest'</span>).text(latest_release.tag_name);
+            <div class="content"><div class='highlight'><pre>d3.json(<span class="hljs-string">'https://api.github.com/repos/dc-js/dc.js/releases/latest'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(error, latestRelease)</span> </span>{
+    <span class="hljs-comment">/*jshint camelcase: false */</span>
+    d3.selectAll(<span class="hljs-string">'#latest'</span>).text(latestRelease.tag_name);
 });</pre></div></div>
             
         </li>
