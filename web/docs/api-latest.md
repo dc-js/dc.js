@@ -1952,13 +1952,11 @@ chart.rowsLabel(function(d) { return d; });
 
 #### .rows([values])
 Gets or sets the values used to create the rows of the heatmap, as an array. By default, all
-the values will be fetched from the data using the value accessor, and they will be sorted in
-ascending order.
+the values will be fetched from the data using the value accessor.
 
 #### .cols([keys])
 Gets or sets the keys used to create the columns of the heatmap, as an array. By default, all
-the values will be fetched from the data using the key accessor, and they will be sorted in
-ascending order.
+the values will be fetched from the data using the key accessor.
 
 #### .boxOnClick([handler])
 Gets or sets the handler that fires when an individual cell is clicked in the heatmap.
