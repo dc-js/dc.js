@@ -154,6 +154,64 @@ describe("dc.heatmap", function() {
 
     });
 
+    describe('override scale domains', function () {
+        beforeEach( function () {
+            chart.rows([1]);
+            chart.cols([1]);
+            chart.render();
+        });
+
+        it ('should only have 1 row on the y axis', function () {
+            var yaxisTexts = chart.selectAll(".rows.axis text");
+            expect(yaxisTexts[0].length).toEqual(1);
+            expect(yaxisTexts[0][0].textContent).toEqual('1');
+        });
+
+        it ('should only have 1 col on the x axis', function () {
+            var xaxisTexts = chart.selectAll(".cols.axis text");
+            expect(xaxisTexts[0].length).toEqual(1);
+            expect(xaxisTexts[0][0].textContent).toEqual('1');
+        });
+
+        it ('should reset the rows to using the chart data on the y axis', function () {
+            chart.rows(null);
+            chart.redraw();
+            var yaxisTexts = chart.selectAll(".rows.axis text");
+            expect(yaxisTexts[0].length).toEqual(2);
+            expect(yaxisTexts[0][0].textContent).toEqual('1');
+            expect(yaxisTexts[0][1].textContent).toEqual('2');
+        });
+
+        it ('should reset the cols to using the chart data on the y axis', function () {
+            chart.cols(null);
+            chart.redraw();
+            var xaxisTexts = chart.selectAll(".cols.axis text");
+            expect(xaxisTexts[0].length).toEqual(2);
+            expect(xaxisTexts[0][0].textContent).toEqual('1');
+            expect(xaxisTexts[0][1].textContent).toEqual('2');
+        });
+    });
+
+    describe('use a custom ordering on x and y axes', function () {
+        beforeEach( function () {
+            chart.rowOrdering(d3.descending);
+            chart.colOrdering(d3.descending);
+            chart.render();
+        });
+
+        it ('should have descending rows', function () {
+            var yaxisTexts = chart.selectAll(".rows.axis text");
+            expect(yaxisTexts[0][0].textContent).toEqual('2');
+            expect(yaxisTexts[0][1].textContent).toEqual('1');
+        });
+
+        it ('should have descending cols', function () {
+            var yaxisTexts = chart.selectAll(".rows.axis text");
+            expect(yaxisTexts[0][0].textContent).toEqual('2');
+            expect(yaxisTexts[0][1].textContent).toEqual('1');
+        });
+    });
+
     describe('change crossfilter', function () {
         var data2, dimension2, group2, originalDomain, newDomain;
 

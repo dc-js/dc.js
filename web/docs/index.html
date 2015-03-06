@@ -964,8 +964,9 @@ functions, splines, and cubic interpolation.  This is passed to
 <a href="https://github.com/mbostock/d3/wiki/SVG-Shapes#line_interpolate">d3.svg.line.interpolate</a> and
 <a href="https://github.com/mbostock/d3/wiki/SVG-Shapes#area_interpolate">d3.svg.area.interpolate</a>,
 where you can find a complete list of valid arguments</p>
-<h4 id="-tension-value-gets-or-sets-the-tension-to-use-for-lines-drawn-in-the-range-0-to-1-">.tension([value]) Gets or sets the tension to use for lines drawn, in the range 0 to 1.</h4>
-<p>This parameter further customizes the interpolation behavior.  It is passed to
+<h4 id="-tension-value-">.tension([value])</h4>
+<p>Gets or sets the tension to use for lines drawn, in the range 0 to 1.
+This parameter further customizes the interpolation behavior.  It is passed to
 <a href="https://github.com/mbostock/d3/wiki/SVG-Shapes#line_tension">d3.svg.line.tension</a> and
 <a href="https://github.com/mbostock/d3/wiki/SVG-Shapes#area_tension">d3.svg.area.tension</a>.  Default:
 0.7</p>
@@ -1622,12 +1623,10 @@ row labels on the Y axis. It is passed the row name.</p>
 <span class="title">chart.rowsLabel</span><span class="params">(function(d)</span></span> { <span class="keyword">return</span> d; });</code></pre>
 <h4 id="-rows-values-">.rows([values])</h4>
 <p>Gets or sets the values used to create the rows of the heatmap, as an array. By default, all
-the values will be fetched from the data using the value accessor, and they will be sorted in
-ascending order.</p>
+the values will be fetched from the data using the value accessor.</p>
 <h4 id="-cols-keys-">.cols([keys])</h4>
 <p>Gets or sets the keys used to create the columns of the heatmap, as an array. By default, all
-the values will be fetched from the data using the key accessor, and they will be sorted in
-ascending order.</p>
+the values will be fetched from the data using the key accessor.</p>
 <h4 id="-boxonclick-handler-">.boxOnClick([handler])</h4>
 <p>Gets or sets the handler that fires when an individual cell is clicked in the heatmap.
 By default, filtering of the cell will be toggled.</p>
