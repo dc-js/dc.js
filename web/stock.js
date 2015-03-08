@@ -76,8 +76,8 @@ d3.csv('ndx.csv', function (data) {
             p.fluctuation += Math.abs(v.close - v.open);
             p.sumIndex += (v.open + v.close) / 2;
             p.avgIndex = p.sumIndex / p.count;
-            p.percentageGain = (p.absGain / p.avgIndex) * 100;
-            p.fluctuationPercentage = (p.fluctuation / p.avgIndex) * 100;
+            p.percentageGain = p.avgIndex ? (p.absGain / p.avgIndex) * 100 : 0;
+            p.fluctuationPercentage = p.avgIndex ? (p.fluctuation / p.avgIndex) * 100 : 0;
             return p;
         },
         /* callback for when data is removed from the current filter results */
@@ -86,9 +86,9 @@ d3.csv('ndx.csv', function (data) {
             p.absGain -= v.close - v.open;
             p.fluctuation -= Math.abs(v.close - v.open);
             p.sumIndex -= (v.open + v.close) / 2;
-            p.avgIndex = p.sumIndex / p.count;
-            p.percentageGain = (p.absGain / p.avgIndex) * 100;
-            p.fluctuationPercentage = (p.fluctuation / p.avgIndex) * 100;
+            p.avgIndex = p.count ? p.sumIndex / p.count : 0;
+            p.percentageGain = p.avgIndex ? (p.absGain / p.avgIndex) * 100 : 0;
+            p.fluctuationPercentage = p.avgIndex ? (p.fluctuation / p.avgIndex) * 100 : 0;
             return p;
         },
         /* initialize p */

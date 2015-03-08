@@ -231,8 +231,8 @@ jQuery.getJson(<span class="hljs-string">'data.json'</span>, <span class="hljs-f
             p.fluctuation += <span class="hljs-built_in">Math</span>.abs(v.close - v.open);
             p.sumIndex += (v.open + v.close) / <span class="hljs-number">2</span>;
             p.avgIndex = p.sumIndex / p.count;
-            p.percentageGain = (p.absGain / p.avgIndex) * <span class="hljs-number">100</span>;
-            p.fluctuationPercentage = (p.fluctuation / p.avgIndex) * <span class="hljs-number">100</span>;
+            p.percentageGain = p.avgIndex ? (p.absGain / p.avgIndex) * <span class="hljs-number">100</span> : <span class="hljs-number">0</span>;
+            p.fluctuationPercentage = p.avgIndex ? (p.fluctuation / p.avgIndex) * <span class="hljs-number">100</span> : <span class="hljs-number">0</span>;
             <span class="hljs-keyword">return</span> p;
         },
         <span class="hljs-comment">/* callback for when data is removed from the current filter results */</span>
@@ -241,9 +241,9 @@ jQuery.getJson(<span class="hljs-string">'data.json'</span>, <span class="hljs-f
             p.absGain -= v.close - v.open;
             p.fluctuation -= <span class="hljs-built_in">Math</span>.abs(v.close - v.open);
             p.sumIndex -= (v.open + v.close) / <span class="hljs-number">2</span>;
-            p.avgIndex = p.sumIndex / p.count;
-            p.percentageGain = (p.absGain / p.avgIndex) * <span class="hljs-number">100</span>;
-            p.fluctuationPercentage = (p.fluctuation / p.avgIndex) * <span class="hljs-number">100</span>;
+            p.avgIndex = p.count ? p.sumIndex / p.count : <span class="hljs-number">0</span>;
+            p.percentageGain = p.avgIndex ? (p.absGain / p.avgIndex) * <span class="hljs-number">100</span> : <span class="hljs-number">0</span>;
+            p.fluctuationPercentage = p.avgIndex ? (p.fluctuation / p.avgIndex) * <span class="hljs-number">100</span> : <span class="hljs-number">0</span>;
             <span class="hljs-keyword">return</span> p;
         },
         <span class="hljs-comment">/* initialize p */</span>
