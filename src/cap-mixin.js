@@ -12,6 +12,7 @@ keys of the elements below the cap limit are recorded in order to filter by thos
 dc.capMixin = function (_chart) {
 
     var _cap = Infinity;
+    var _capPercent = 0; // By default nothing is limited by percentage
 
     var _othersLabel = 'Others';
 
@@ -44,16 +45,34 @@ dc.capMixin = function (_chart) {
     };
 
     _chart.data(function (group) {
+        var topRows = [];
+
+        // Gives an ORDERED set of rows based on cap
         if (_cap === Infinity) {
-            return _chart._computeOrderedGroups(group.all());
+            topRows = _chart._computeOrderedGroups(group.all());
         } else {
-            var topRows = group.top(_cap); // ordered by crossfilter group order (default value)
+            topRows = group.top(_cap); // ordered by crossfilter group order (default value)
             topRows = _chart._computeOrderedGroups(topRows); // re-order using ordering (default key)
-            if (_othersGrouper) {
-                return _othersGrouper(topRows);
-            }
-            return topRows;
         }
+
+        // Apply percentage cap
+        if (_capPercent && _capPercent != 0) {
+            var allRowsSum = d3.sum(group.all(), _chart.valueAccessor());
+
+            // Test individual rows to avoid ordering problems
+            for (var i = 0; i < topRows.length; i++) {
+                var row = topRows[i];
+
+                if (row.value < ((_capPercent / 100) * allRowsSum)) {
+                    // Row has failed - remove it
+                    topRows.splice(i, 1);
+                    i--;
+                }
+            }
+        }
+
+        if ((_capPercent != 0 || _cap != Infinity) && _othersGrouper) return _othersGrouper(topRows);
+        return topRows;
     });
 
     /**
@@ -65,6 +84,18 @@ dc.capMixin = function (_chart) {
             return _cap;
         }
         _cap = _;
+        return _chart;
+    };
+
+    /**
+    #### .capPercentage([percent])
+    Get or set the minimum percentage (of total data) a group must be to be included in the cap.
+    **/
+    _chart.capPercentage = function (_) {
+        if (!arguments.length) {
+            return _capPercent;
+        }
+        _capPercent = _;
         return _chart;
     };
 
