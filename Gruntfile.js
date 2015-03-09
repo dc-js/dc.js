@@ -22,7 +22,7 @@ module.exports = function (grunt) {
             jsmin: {
                 options: {
                     mangle: true,
-                    compress: true,
+                    compress: {},
                     sourceMap: output.map
                 },
                 src: output.js,
