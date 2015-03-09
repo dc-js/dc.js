@@ -1,6 +1,6 @@
 # 2.0 Series
 ## 2.0.0 beta 13
-* grammar/spelling fixes to annotated stock example, by Johnny Peck ([#956](https://github.com/dc-js/dc.js/pull/956))
+* grammar/spelling/formatting fixes to annotated stock example, by Johnny Peck and Enrico Spinielli ([#956](https://github.com/dc-js/dc.js/pull/956), [#875](https://github.com/dc-js/dc.js/pull/875))
 * document bower install, by Mayfarth ([#899](https://github.com/dc-js/dc.js/pull/899))
 * remove unused bower version, by Kevin Kirsche ([#948](https://github.com/dc-js/dc.js/pull/948))
 
