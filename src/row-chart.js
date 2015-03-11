@@ -396,8 +396,8 @@ dc.rowChart = function (parent, chartGroup) {
     Calculates the minimum x value to display in the chart.
 
     **/
-    _chart.xAxisMin = function() {
-        return d3.min(_chart.data(), function(e) {
+    _chart.xAxisMin = function () {
+        return d3.min(_chart.data(), function (e) {
             return _chart.valueAccessor()(e);
         });
     };
@@ -407,8 +407,8 @@ dc.rowChart = function (parent, chartGroup) {
     Calculates the maximum x value to display in the chart.
 
     **/
-    _chart.xAxisMax = function() {
-        return d3.max(_chart.data(), function(e) {
+    _chart.xAxisMax = function () {
+        return d3.max(_chart.data(), function (e) {
             return _chart.valueAccessor()(e);
         });
     };
