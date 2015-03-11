@@ -391,5 +391,27 @@ dc.rowChart = function (parent, chartGroup) {
         return _chart.hasFilter(_chart.cappedKeyAccessor(d));
     }
 
+    /**
+    #### .xAxisMin()
+    Calculates the minimum x value to display in the chart.
+
+    **/
+    _chart.xAxisMin = function() {
+        return d3.min(_chart.data(), function(e) {
+            return _chart.valueAccessor()(e);
+        });
+    };
+
+    /**
+    #### .xAxisMax()
+    Calculates the maximum x value to display in the chart.
+
+    **/
+    _chart.xAxisMax = function() {
+        return d3.max(_chart.data(), function(e) {
+            return _chart.valueAccessor()(e);
+        });
+    };
+
     return _chart.anchor(parent, chartGroup);
 };
