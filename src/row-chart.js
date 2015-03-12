@@ -27,6 +27,8 @@ var chart2 = dc.rowChart('#chart-container2', 'chartGroupA');
 
 **/
 dc.rowChart = function (parent, chartGroup) {
+    var X_AXIS_LABEL_CLASS = 'x-axis-label';
+    var DEFAULT_AXIS_LABEL_PADDING = 12;
 
     var _g;
 
@@ -46,10 +48,10 @@ dc.rowChart = function (parent, chartGroup) {
     var _chart = dc.capMixin(dc.marginMixin(dc.colorMixin(dc.baseMixin({}))));
 
     var _x;
-
     var _elasticX;
-
     var _xAxis = d3.svg.axis().orient('bottom');
+    var _xAxisLabel;
+    var _xAxisLabelPadding = 0;
 
     var _rowData;
 
@@ -75,6 +77,19 @@ dc.rowChart = function (parent, chartGroup) {
         if (axisG.empty()) {
             axisG = _g.append('g').attr('class', 'axis')
                 .attr('transform', 'translate(0, ' + _chart.effectiveHeight() + ')');
+        }
+
+        var axisXLab = _g.selectAll('text.' + X_AXIS_LABEL_CLASS);
+        if (axisXLab.empty() && _chart.xAxisLabel()) {
+            axisXLab = _g.append('text')
+                .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
+                    (_chart.height() - _xAxisLabelPadding) + ')')
+                .attr('class', X_AXIS_LABEL_CLASS)
+                .attr('text-anchor', 'middle')
+                .text(_chart.xAxisLabel());
+        }
+        if (_chart.xAxisLabel() && axisXLab.text() !== _chart.xAxisLabel()) {
+            axisXLab.text(_chart.xAxisLabel());
         }
 
         dc.transition(axisG, _chart.transitionDuration())
@@ -257,7 +272,6 @@ dc.rowChart = function (parent, chartGroup) {
     /**
     #### .renderTitleLabel(boolean)
     Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'
-
     **/
     _chart.renderTitleLabel = function (_) {
         if (!arguments.length) {
@@ -293,7 +307,6 @@ dc.rowChart = function (parent, chartGroup) {
     // customize x axis tick values
     chart.xAxis().tickValues([0, 100, 200, 300]);
     ```
-
     **/
     _chart.xAxis = function () {
         return _xAxis;
@@ -320,7 +333,6 @@ dc.rowChart = function (parent, chartGroup) {
     /**
     #### .gap([gap])
     Get or set the vertical gap space between rows on a particular row chart instance. Default gap is 5px;
-
     **/
     _chart.gap = function (g) {
         if (!arguments.length) {
@@ -334,7 +346,6 @@ dc.rowChart = function (parent, chartGroup) {
     #### .elasticX([boolean])
     Get or set the elasticity on x axis. If this attribute is set to true, then the x axis will rescle to auto-fit the
     data range when filtered.
-
     **/
     _chart.elasticX = function (_) {
         if (!arguments.length) {
@@ -348,7 +359,6 @@ dc.rowChart = function (parent, chartGroup) {
     #### .labelOffsetX([x])
     Get or set the x offset (horizontal space to the top left corner of a row) for labels on a particular row chart.
     Default x offset is 10px;
-
     **/
     _chart.labelOffsetX = function (o) {
         if (!arguments.length) {
@@ -362,7 +372,6 @@ dc.rowChart = function (parent, chartGroup) {
     #### .labelOffsetY([y])
     Get or set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart.
     Default y offset is 15px;
-
     **/
     _chart.labelOffsetY = function (o) {
         if (!arguments.length) {
@@ -377,7 +386,6 @@ dc.rowChart = function (parent, chartGroup) {
     #### .titleLabelOffsetx([x])
     Get of set the x offset (horizontal space between right edge of row and right edge or text.
     Default x offset is 2px;
-
     **/
     _chart.titleLabelOffsetX = function (o) {
         if (!arguments.length) {
@@ -394,7 +402,6 @@ dc.rowChart = function (parent, chartGroup) {
     /**
     #### .xAxisMin()
     Calculates the minimum x value to display in the chart.
-
     **/
     _chart.xAxisMin = function () {
         return d3.min(_chart.data(), function (e) {
@@ -405,12 +412,31 @@ dc.rowChart = function (parent, chartGroup) {
     /**
     #### .xAxisMax()
     Calculates the maximum x value to display in the chart.
-
     **/
     _chart.xAxisMax = function () {
         return d3.max(_chart.data(), function (e) {
             return _chart.valueAccessor()(e);
         });
+    };
+
+    /**
+    #### .xAxisLabel([labelText, [, padding]])
+    Set or get the x axis label. If setting the label, you may optionally include additional padding to
+    the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.
+    **/
+    _chart.xAxisLabel = function (_, padding) {
+        if (!arguments.length) {
+            return _xAxisLabel;
+        }
+        _xAxisLabel = _;
+        _chart.margins().bottom -= _xAxisLabelPadding;
+        _xAxisLabelPadding = (padding === undefined) ? DEFAULT_AXIS_LABEL_PADDING : padding;
+        _chart.margins().bottom += _xAxisLabelPadding;
+        return _chart;
+    };
+
+    _chart.xAxisLength = function () {
+        return _chart.effectiveWidth();
     };
 
     return _chart.anchor(parent, chartGroup);
