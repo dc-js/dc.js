@@ -45,9 +45,12 @@ dc.bubbleOverlay = function (root, chartGroup) {
     var BUBBLE_NODE_CLASS = 'node';
     var BUBBLE_CLASS = 'bubble';
 
+
     var _chart = dc.bubbleMixin(dc.baseMixin({}));
     var _g;
     var _points = [];
+    var _minBubbleR = null;
+    var _maxBubbleR = null;
 
     _chart.transitionDuration(750);
 
@@ -68,16 +71,102 @@ dc.bubbleOverlay = function (root, chartGroup) {
         return _chart;
     };
 
+
+
     _chart._doRender = function () {
         _g = initOverlayG();
 
-        _chart.r().range([_chart.MIN_RADIUS, _chart.width() * _chart.maxBubbleRelativeSize()]);
+        setRadiusRange();
 
         initializeBubbles();
 
         _chart.fadeDeselectedArea();
 
         return _chart;
+    };
+
+    /**
+    #### .minBubbleR(value)
+    Sets the minimum radius of a bubble overlay.
+    **/
+    _chart.minBubbleR = function(_){
+        if(!arguments.length){
+            return _minBubbleR;
+        }
+        _minBubbleR = _;
+        return _chart;
+    };
+
+    /**
+    #### .maxBubbleR(value)
+    Sets the maximum radius of a bubble overlay.
+    **/
+    _chart.maxBubbleR = function(_){
+        if(!arguments.length){
+            return _minBubbleR;
+        }
+        _maxBubbleR = _;
+        return _chart;
+    };
+
+    /**
+    #### .reset()
+    Clears all points, text and title elements from the bubble overlay.
+    **/
+    _chart.reset = function(){
+        var data = mapData();
+
+        _points.forEach(function (point) {
+            var nodeG = getNodeG(point, data);
+
+            var circle = nodeG.select('circle.' + BUBBLE_CLASS);
+            var label = nodeG.select('text');
+            var title = nodeG.select('title');
+
+            circle.remove();
+            label.remove();
+            title.remove();
+        });
+
+        _points = [];
+        
+        return _chart;
+    };
+
+    /**
+    #### .addPoints(points)
+    Set up data points on the overlay. The name of a data point should match a specific 'key' among
+    data groups generated using keyAccessor.  If a match is found (point name <-> data group key)
+    then a bubble will be generated at the position specified by the function. x and y
+    value specified here are relative to the underlying svg.
+
+    **/
+    _chart.addPoints = function(points){
+        if(points.length < 1){
+            throw "There must be at least one point";
+        }
+        points.forEach(function(point){
+            if(!("name" in point) || !("x" in point) || !("y" in point)){
+                throw "All points must be of type {name: name, x: x, y: y}";
+            }
+            _chart.point(point.name,point.x,point.y);
+        });
+        return _chart;
+    };   
+
+    function setRadiusRange(){
+        if(_minBubbleR != null && _minBubbleR >= 0 && _maxBubbleR == null){
+            _chart.r().range([_minBubbleR, _chart.width() * _chart.maxBubbleRelativeSize()]);
+        } 
+        else if(_maxBubbleR != null && _maxBubbleR >= 0 && _minBubbleR == null){
+            _chart.r().range([_chart.MIN_RADIUS, _maxBubbleR]);
+        } 
+        else if(_minBubbleR != null && _minBubbleR >= 0 && _maxBubbleR != null && _maxBubbleR >= 0 && _maxBubbleR >= _minBubbleR){
+            _chart.r().range([_minBubbleR, _maxBubbleR]);
+        } 
+        else {
+            _chart.r().range([_chart.MIN_RADIUS, _chart.width() * _chart.maxBubbleRelativeSize()]);
+        }
     };
 
     function initOverlayG() {
