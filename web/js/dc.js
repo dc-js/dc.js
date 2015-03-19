@@ -1712,9 +1712,15 @@ dc.baseMixin = function (_chart) {
     ```
     **/
     _chart.options = function (opts) {
+        var apply_options = ['anchor', 'group', 'xAxisLabel', 'yAxisLabel', 'stack', 'title', 'point', 'getColor', 'overlayGeoJson'];
+
         for (var o in opts) {
             if (typeof(_chart[o]) === 'function') {
-                _chart[o].call(_chart, opts[o]);
+                if (opts[o] instanceof Array && apply_options.indexOf(o) !== -1) {
+                    _chart[o].apply(_chart, opts[o]);
+                } else {
+                    _chart[o].call(_chart, opts[o]);
+                }
             } else {
                 dc.logger.debug('Not a valid option setter name: ' + o);
             }
