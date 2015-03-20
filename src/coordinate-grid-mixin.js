@@ -849,7 +849,7 @@ dc.coordinateGridMixin = function (_chart) {
                 _brush.on('brush', _chart._brushing);
                 _brush.on('brushend.filter', function () {});
             } else {
-                _brush.on('brush', function () {});
+                _brush.on('brush', _chart._nonFilteredBrushing);
                 _brush.on('brushend.filter', _chart._brushing);
             }
 
@@ -890,7 +890,7 @@ dc.coordinateGridMixin = function (_chart) {
         return _brush.empty() || !extent || extent[1] <= extent[0];
     };
 
-    _chart._brushing = function () {
+    function _brushing (redrawFn) {
         var extent = _chart.extendBrush();
 
         _chart.redrawBrush(_g);
@@ -898,16 +898,24 @@ dc.coordinateGridMixin = function (_chart) {
         if (_chart.brushIsEmpty(extent)) {
             dc.events.trigger(function () {
                 _chart.filter(null);
-                _chart.redrawGroup();
+                redrawFn();
             }, dc.constants.EVENT_DELAY);
         } else {
             var rangedFilter = dc.filters.RangedFilter(extent[0], extent[1]);
 
             dc.events.trigger(function () {
                 _chart.replaceFilter(rangedFilter);
-                _chart.redrawGroup();
+                redrawFn();
             }, dc.constants.EVENT_DELAY);
         }
+    }
+
+    _chart._brushing = function () {
+        _brushing(_chart.redrawGroup);
+    };
+
+    _chart._nonFilteredBrushing = function () {
+        _brushing(_chart.redraw);
     };
 
     _chart.redrawBrush = function (g) {
