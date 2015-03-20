@@ -157,7 +157,7 @@ dc.stackMixin = function (_chart) {
             return (p.y + p.y0 < p.y0) ? (p.y + p.y0) : p.y0;
         });
 
-        return dc.utils.subtract(min, _chart.yAxisPadding());
+        return _chart.yAxisPaddingSubtractor()(min, _chart.yAxisPadding());
 
     };
 
@@ -166,7 +166,7 @@ dc.stackMixin = function (_chart) {
             return p.y + p.y0;
         });
 
-        return dc.utils.add(max, _chart.yAxisPadding());
+        return _chart.yAxisPaddingAdder()(max, _chart.yAxisPadding());
     };
 
     function flattenStack() {
@@ -177,12 +177,12 @@ dc.stackMixin = function (_chart) {
 
     _chart.xAxisMin = function () {
         var min = d3.min(flattenStack(), dc.pluck('x'));
-        return dc.utils.subtract(min, _chart.xAxisPadding());
+        return _chart.xAxisPaddingSubtractor()(min, _chart.xAxisPadding());
     };
 
     _chart.xAxisMax = function () {
         var max = d3.max(flattenStack(), dc.pluck('x'));
-        return dc.utils.add(max, _chart.xAxisPadding());
+        return _chart.xAxisPaddingAdder()(max, _chart.xAxisPadding());
     };
 
     /**

@@ -60,6 +60,8 @@ dc.coordinateGridMixin = function (_chart) {
     var _xAxis = d3.svg.axis().orient('bottom');
     var _xUnits = dc.units.integers;
     var _xAxisPadding = 0;
+    var _xAxisPaddingAdder = dc.utils.add;
+    var _xAxisPaddingSubtractor = dc.utils.subtract;
     var _xElasticity = false;
     var _xAxisLabel;
     var _xAxisLabelPadding = 0;
@@ -68,6 +70,8 @@ dc.coordinateGridMixin = function (_chart) {
     var _y;
     var _yAxis = d3.svg.axis().orient('left');
     var _yAxisPadding = 0;
+    var _yAxisPaddingAdder = dc.utils.add;
+    var _yAxisPaddingSubtractor = dc.utils.subtract;
     var _yElasticity = false;
     var _yAxisLabel;
     var _yAxisLabelPadding = 0;
@@ -318,12 +322,54 @@ dc.coordinateGridMixin = function (_chart) {
     number or date x axes.  When padding a date axis, an integer represents number of days being padded
     and a percentage string will be treated the same as an integer.
 
-    **/
+    * if more sophisticated methods of adding and subtracting the padded content are required,
+    set the xAxisPaddingAdder and the xAxisPaddingSubtractor.
+
+
+     **/
     _chart.xAxisPadding = function (_) {
         if (!arguments.length) {
             return _xAxisPadding;
         }
         _xAxisPadding = _;
+        return _chart;
+    };
+
+    /**
+     #### .xAxisPaddingAdder([paddingAdder])
+     A function that takes the domain max value and adds a numeric scalar padding value to it.  This function
+     may be useful for adding floats or date intervals other than day.  Default: dc.utils.add
+
+     ```js
+     chart.xAxisPaddingAdder(domainMax, scalar) {
+         return domainMax + scalar * 0.5;
+     }
+     ```
+     **/
+    _chart.xAxisPaddingAdder = function (_) {
+        if (!arguments.length) {
+            return _xAxisPaddingAdder;
+        }
+        _xAxisPaddingAdder = _ || dc.utils.add;
+        return _chart;
+    };
+
+    /**
+     #### .xAxisPaddingSubtractor([paddingSubtractor])
+     A function that takes the domain min value and subtracts a numeric scalar padding value to it.  This function may
+     be useful for adding floats or date intervals other than day.  Default: dc.utils.subtract
+
+     ```js
+     chart.xAxisPaddingSubtractor(domainMax, scalar) {
+         return domainMax - scalar * 0.5;
+     }
+     ```
+     **/
+    _chart.xAxisPaddingSubtractor = function (_) {
+        if (!arguments.length) {
+            return _xAxisPaddingSubtractor;
+        }
+        _xAxisPaddingSubtractor = _ || dc.utils.subtract;
         return _chart;
     };
 
@@ -720,7 +766,7 @@ dc.coordinateGridMixin = function (_chart) {
         var min = d3.min(_chart.data(), function (e) {
             return _chart.keyAccessor()(e);
         });
-        return dc.utils.subtract(min, _xAxisPadding);
+        return _chart.xAxisPaddingSubtractor()(min, _xAxisPadding);
     };
 
     /**
@@ -731,7 +777,7 @@ dc.coordinateGridMixin = function (_chart) {
         var max = d3.max(_chart.data(), function (e) {
             return _chart.keyAccessor()(e);
         });
-        return dc.utils.add(max, _xAxisPadding);
+        return _chart.xAxisPaddingAdder()(max, _xAxisPadding);
     };
 
     /**
@@ -742,7 +788,7 @@ dc.coordinateGridMixin = function (_chart) {
         var min = d3.min(_chart.data(), function (e) {
             return _chart.valueAccessor()(e);
         });
-        return dc.utils.subtract(min, _yAxisPadding);
+        return _chart.yAxisPaddingSubtractor()(min, _yAxisPadding);
     };
 
     /**
@@ -753,7 +799,7 @@ dc.coordinateGridMixin = function (_chart) {
         var max = d3.max(_chart.data(), function (e) {
             return _chart.valueAccessor()(e);
         });
-        return dc.utils.add(max, _yAxisPadding);
+        return _chart.yAxisPaddingAdder()(max, _yAxisPadding);
     };
 
     /**
@@ -765,12 +811,53 @@ dc.coordinateGridMixin = function (_chart) {
     number or date axes. When padding a date axis, an integer represents number of days being padded
     and a percentage string will be treated the same as an integer.
 
+     * if more sophisticated methods of adding and subtracting the padded content are required,
+     set the yAxisPaddingAdder and the yAxisPaddingSubtractor.
+
     **/
     _chart.yAxisPadding = function (_) {
         if (!arguments.length) {
             return _yAxisPadding;
         }
         _yAxisPadding = _;
+        return _chart;
+    };
+
+    /**
+     #### .yAxisPaddingAdder([paddingAdder])
+     A function that takes the domain max value and adds a numeric scalar padding value to it.  This function
+     may be useful for adding floats or date intervals other than day.  Default: dc.utils.add
+
+     ```js
+     chart.yAxisPaddingAdder(domainMax, scalar) {
+         return domainMax + scalar * 0.5;
+     }
+     ```
+     **/
+    _chart.yAxisPaddingAdder = function (_) {
+        if (!arguments.length) {
+            return _yAxisPaddingAdder;
+        }
+        _yAxisPaddingAdder = _ || dc.utils.add;
+        return _chart;
+    };
+
+    /**
+     #### .yAxisPaddingSubtractor([paddingSubtractor])
+     A function that takes the domain min value and subtracts a numeric scalar padding value to it.  This function may
+     be useful for adding floats or date intervals other than day.  Default: dc.utils.subtract
+
+     ```js
+     chart.yAxisPaddingAdder(domainMax, scalar) {
+         return domainMax - scalar * 0.5;
+     }
+     ```
+     **/
+    _chart.yAxisPaddingSubtractor = function (_) {
+        if (!arguments.length) {
+            return _yAxisPaddingSubtractor;
+        }
+        _yAxisPaddingSubtractor = _ || dc.utils.subtract;
         return _chart;
     };
 

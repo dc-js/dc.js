@@ -198,14 +198,14 @@ dc.boxPlot = function (parent, chartGroup) {
         var min = d3.min(_chart.data(), function (e) {
             return d3.min(_chart.valueAccessor()(e));
         });
-        return dc.utils.subtract(min, _chart.yAxisPadding());
+        return _chart.yAxisPaddingSubtractor()(min, _chart.yAxisPadding());
     };
 
     _chart.yAxisMax = function () {
         var max = d3.max(_chart.data(), function (e) {
             return d3.max(_chart.valueAccessor()(e));
         });
-        return dc.utils.add(max, _chart.yAxisPadding());
+        return _chart.yAxisPaddingAdder()(max, _chart.yAxisPadding());
     };
 
     /**

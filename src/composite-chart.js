@@ -337,11 +337,11 @@ dc.compositeChart = function (parent, chartGroup) {
 
     delete _chart.yAxisMin;
     function yAxisMin() {
-        return d3.min(getYAxisMin(leftYAxisChildren()));
+        return _chart.yAxisPaddingSubtractor()(d3.min(getYAxisMin(leftYAxisChildren())), _chart.yAxisPadding());
     }
 
     function rightYAxisMin() {
-        return d3.min(getYAxisMin(rightYAxisChildren()));
+        return _chart.yAxisPaddingSubtractor()(d3.min(getYAxisMin(rightYAxisChildren())), _chart.yAxisPadding());
     }
 
     function getYAxisMax(charts) {
@@ -352,11 +352,11 @@ dc.compositeChart = function (parent, chartGroup) {
 
     delete _chart.yAxisMax;
     function yAxisMax() {
-        return dc.utils.add(d3.max(getYAxisMax(leftYAxisChildren())), _chart.yAxisPadding());
+        return _chart.yAxisPaddingAdder()(d3.max(getYAxisMax(leftYAxisChildren())), _chart.yAxisPadding());
     }
 
     function rightYAxisMax() {
-        return dc.utils.add(d3.max(getYAxisMax(rightYAxisChildren())), _chart.yAxisPadding());
+        return _chart.yAxisPaddingAdder()(d3.max(getYAxisMax(rightYAxisChildren())), _chart.yAxisPadding());
     }
 
     function getAllXAxisMinFromChildCharts() {
@@ -366,7 +366,7 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     dc.override(_chart, 'xAxisMin', function () {
-        return dc.utils.subtract(d3.min(getAllXAxisMinFromChildCharts()), _chart.xAxisPadding());
+        return _chart.xAxisPaddingSubtractor()(d3.min(getAllXAxisMinFromChildCharts()), _chart.xAxisPadding());
     });
 
     function getAllXAxisMaxFromChildCharts() {
@@ -376,7 +376,7 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     dc.override(_chart, 'xAxisMax', function () {
-        return dc.utils.add(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding());
+        return _chart.xAxisPaddingAdder()(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding());
     });
 
     _chart.legendables = function () {
