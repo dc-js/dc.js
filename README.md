@@ -6,6 +6,8 @@
 dc.js
 =====
 
+[![Join the chat at https://gitter.im/dc-js/dc.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dc-js/dc.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Dimensional charting built to work natively with crossfilter rendered using d3.js. Check out the
 [example page](http://dc-js.github.com/dc.js/) with a quick five minutes how to guide. For a
 detailed [API reference](https://github.com/dc-js/dc.js/blob/master/web/docs/api-1.6.0.md) and
