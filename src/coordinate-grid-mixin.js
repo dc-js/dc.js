@@ -1,4 +1,11 @@
+/**
+ ## Coordinate Grid Mixin
+ Includes: [Color Mixin](#color-mixin), [Margin Mixin](#margin-mixin), [Base Mixin](#base-mixin)
 
+ Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based
+ concrete chart types, e.g. bar chart, line chart, and bubble chart.
+
+ **/
 dc.coordinateGridMixin = function (_chart) {
     var GRID_LINE_CLASS = 'grid-line';
     var HORIZONTAL_CLASS = 'horizontal';
