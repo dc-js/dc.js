@@ -1,11 +1,4 @@
-/**
-## Coordinate Grid Mixin
-Includes: [Color Mixin](#color-mixin), [Margin Mixin](#margin-mixin), [Base Mixin](#base-mixin)
 
-Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based
-concrete chart types, e.g. bar chart, line chart, and bubble chart.
-
-**/
 dc.coordinateGridMixin = function (_chart) {
     var GRID_LINE_CLASS = 'grid-line';
     var HORIZONTAL_CLASS = 'horizontal';
@@ -74,6 +67,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     var _brush = d3.svg.brush();
     var _brushOn = true;
+    var _filterOnBrushEnd = false;
     var _round;
 
     var _renderHorizontalGridLine = false;
@@ -842,9 +836,15 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart.renderBrush = function (g) {
         if (_brushOn) {
-            _brush.on('brush', _chart._brushing);
             _brush.on('brushstart', _chart._disableMouseZoom);
             _brush.on('brushend', configureMouseZoom);
+            if (!_filterOnBrushEnd) {
+                _brush.on('brush', _chart._brushing);
+                _brush.on('brushend.filter', function () {});
+            } else {
+                _brush.on('brush', function () {});
+                _brush.on('brushend.filter', _chart._brushing);
+            }
 
             var gBrush = g.append('g')
                 .attr('class', 'brush')
@@ -1131,7 +1131,26 @@ dc.coordinateGridMixin = function (_chart) {
         if (!arguments.length) {
             return _brushOn;
         }
+        // If brush on is switched, we should reset the filters.
+        // We should not mix range filters with click filters
+        if (_brushOn !== _ && _chart.hasFilter()) {
+            _chart.filterAll();
+        }
         _brushOn = _;
+        return _chart;
+    };
+
+    /**
+     #### .filterOnBrushEnd([boolean])
+     Allows one to specify when the brush filtering should be performed.  If this is false,
+     filtering happens at every move of the brush.  If this is true, filtering occurs when the
+     brush is dropped.  Default: false
+     */
+    _chart.filterOnBrushEnd = function (_) {
+        if (!arguments.length) {
+            return _filterOnBrushEnd;
+        }
+        _filterOnBrushEnd = _;
         return _chart;
     };
 
