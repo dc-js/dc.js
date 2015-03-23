@@ -577,13 +577,14 @@ describe('dc.barChart', function() {
             beforeEach(function () {
                 d3.select("#" + id).append("span").attr("class", "filter").style("display", "none");
                 d3.select("#" + id).append("a").attr("class", "reset").style("display", "none");
-                chart.filter([makeDate(2012, 5, 1), makeDate(2012, 5, 30)]).redraw();
+                chart.filter(dc.filters.RangedFilter(makeDate(2012, 5, 1), makeDate(2012, 5, 30))).redraw();
                 dc.dateFormat = d3.time.format.utc("%m/%d/%Y");
                 chart.redraw();
             });
 
             it('should set the chart filter', function () {
-                expect(chart.filter()).toEqual([makeDate(2012, 5, 1), makeDate(2012, 5, 30)]);
+                expect(chart.filter()[0]).toEqual(makeDate(2012, 5, 1));
+                expect(chart.filter()[1]).toEqual(makeDate(2012, 5, 30));
             });
 
             it("should enable the reset link after rendering", function() {

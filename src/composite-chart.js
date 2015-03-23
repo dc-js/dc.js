@@ -74,16 +74,27 @@ dc.compositeChart = function (parent, chartGroup) {
         return g;
     });
 
-    _chart._brushing = function () {
-        var extent = _chart.extendBrush();
-        var brushIsEmpty = _chart.brushIsEmpty(extent);
-
+    _chart.on('filtered.composite', function(chart, filter) {
         for (var i = 0; i < _children.length; ++i) {
-            _children[i].filter(null);
-            if (!brushIsEmpty) {
-                _children[i].filter(extent);
-            }
+            _children[i].replaceFilter(filter);
         }
+    });
+
+    _chart._brushing = function () {
+        _chart._brush(function (filter) {
+            for (var i = 0; i < _children.length; ++i) {
+                _children[i].replaceFilter(filter);
+            }
+        });
+    };
+
+    _chart._nonFilteredBrushing = function () {
+        _chart._brush(function (filter) {
+            for (var i = 0; i < _children.length; ++i) {
+                _children[i].setFilter(filter);
+                _children[i].fadeDeselectedArea();
+            }
+        });
     };
 
     _chart._prepareYAxis = function () {
@@ -203,9 +214,7 @@ dc.compositeChart = function (parent, chartGroup) {
 
     _chart.fadeDeselectedArea = function () {
         for (var i = 0; i < _children.length; ++i) {
-            var child = _children[i];
-            child.brush(_chart.brush());
-            child.fadeDeselectedArea();
+            _children[i].fadeDeselectedArea();
         }
     };
 

@@ -19,6 +19,11 @@ mention below which chart uses which filter.  In some cases, many instances of a
  axis brushing for the [coordinate grid charts](#coordinate-grid-mixin).
 **/
 dc.filters.RangedFilter = function (low, high) {
+    if (low > high) {
+        var tmp = high;
+        high = low;
+        low = tmp;
+    }
     var range = new Array(low, high);
     range.isFiltered = function (value) {
         return value >= this[0] && value < this[1];

@@ -536,7 +536,7 @@ dc.baseMixin = function (_chart) {
             return filters.length > 0;
         }
         return filters.some(function (f) {
-            return filter <= f && filter >= f;
+            return (f.isFiltered && f.isFiltered(filter)) || filter <= f && filter >= f;
         });
     };
 
@@ -700,6 +700,14 @@ dc.baseMixin = function (_chart) {
             _filters = fs ? fs : _filters;
         }
     }
+
+    _chart.setFilter = function(_) {
+        if (_) {
+            _filters = [_];
+        } else {
+            _filters = [];
+        }
+    };
 
     _chart.replaceFilter = function (_) {
         _filters = [];
