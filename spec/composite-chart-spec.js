@@ -257,7 +257,7 @@ describe('dc.compositeChart', function() {
 
             describe('when filtering the chart', function () {
                 beforeEach(function () {
-                    chart.filter([makeDate(2012, 5, 1), makeDate(2012, 5, 30)]).redraw();
+                    chart.filter(dc.filters.RangedFilter(makeDate(2012, 5, 1), makeDate(2012, 5, 30))).redraw();
                 });
 
                 it('should set extent width to chart width based on filter set', function () {

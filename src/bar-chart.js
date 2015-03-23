@@ -155,31 +155,16 @@ dc.barChart = function (parent, chartGroup) {
 
     _chart.fadeDeselectedArea = function () {
         var bars = _chart.chartBodyG().selectAll('rect.bar');
-        var extent = _chart.brush().extent();
-
-        if (_chart.isOrdinal()) {
-            if (_chart.hasFilter()) {
-                bars.classed(dc.constants.SELECTED_CLASS, function (d) {
-                    return _chart.hasFilter(d.x);
-                });
-                bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
-                    return !_chart.hasFilter(d.x);
-                });
-            } else {
-                bars.classed(dc.constants.SELECTED_CLASS, false);
-                bars.classed(dc.constants.DESELECTED_CLASS, false);
-            }
+        if (_chart.hasFilter()) {
+            bars.classed(dc.constants.SELECTED_CLASS, function (d) {
+                return _chart.hasFilter(d.x);
+            });
+            bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
+                return !_chart.hasFilter(d.x);
+            });
         } else {
-            if (!_chart.brushIsEmpty(extent)) {
-                var start = extent[0];
-                var end = extent[1];
-
-                bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
-                    return d.x < start || d.x >= end;
-                });
-            } else {
-                bars.classed(dc.constants.DESELECTED_CLASS, false);
-            }
+            bars.classed(dc.constants.SELECTED_CLASS, false);
+            bars.classed(dc.constants.DESELECTED_CLASS, false);
         }
     };
 
@@ -244,16 +229,10 @@ dc.barChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    _chart.extendBrush = function () {
-        var extent = _chart.brush().extent();
+    _chart.extendBrush = function (extent) {
         if (_chart.round() && (!_centerBar || _alwaysUseRounding)) {
-            extent[0] = extent.map(_chart.round())[0];
-            extent[1] = extent.map(_chart.round())[1];
-
-            _chart.chartBodyG().select('.brush')
-                .call(_chart.brush().extent(extent));
+            return extent.map(_chart.round());
         }
-
         return extent;
     };
 

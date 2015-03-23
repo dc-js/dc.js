@@ -599,7 +599,7 @@ describe('dc.coordinateGridChart', function() {
     });
 
     describe("applying a filter", function () {
-        var filter = [makeDate(2012, 5, 20), makeDate(2012, 6, 15)];
+        var filter = dc.filters.RangedFilter(makeDate(2012, 5, 20), makeDate(2012, 6, 15));
         beforeEach(function () {
             chart.brushOn(true);
             chart.render();
@@ -607,7 +607,8 @@ describe('dc.coordinateGridChart', function() {
         });
 
         it("should update the brush extent", function () {
-            expect(chart.brush().extent()).toEqual(filter);
+            expect(chart.brush().extent()[0]).toEqual(filter[0]);
+            expect(chart.brush().extent()[1]).toEqual(filter[1]);
         });
     });
 

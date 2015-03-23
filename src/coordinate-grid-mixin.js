@@ -1,11 +1,11 @@
 /**
-## Coordinate Grid Mixin
-Includes: [Color Mixin](#color-mixin), [Margin Mixin](#margin-mixin), [Base Mixin](#base-mixin)
+ ## Coordinate Grid Mixin
+ Includes: [Color Mixin](#color-mixin), [Margin Mixin](#margin-mixin), [Base Mixin](#base-mixin)
 
-Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based
-concrete chart types, e.g. bar chart, line chart, and bubble chart.
+ Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based
+ concrete chart types, e.g. bar chart, line chart, and bubble chart.
 
-**/
+ **/
 dc.coordinateGridMixin = function (_chart) {
     var GRID_LINE_CLASS = 'grid-line';
     var HORIZONTAL_CLASS = 'horizontal';
@@ -74,6 +74,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     var _brush = d3.svg.brush();
     var _brushOn = true;
+    var _filterOnBrushEnd = false;
     var _round;
 
     var _renderHorizontalGridLine = false;
@@ -812,22 +813,6 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    dc.override(_chart, 'filter', function (_) {
-        if (!arguments.length) {
-            return _chart._filter();
-        }
-
-        _chart._filter(_);
-
-        if (_) {
-            _chart.brush().extent(_);
-        } else {
-            _chart.brush().clear();
-        }
-
-        return _chart;
-    });
-
     _chart.brush = function (_) {
         if (!arguments.length) {
             return _brush;
@@ -836,93 +821,49 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
+    /**
+     #### .brushOn([boolean])
+     Turn on/off the brush-based range filter. When brushing is on then user can drag the mouse
+     across a chart with a quantitative scale to perform range filtering based on the extent of the
+     brush, or click on the bars of an ordinal bar chart or slices of a pie chart to filter and
+     unfilter them. However turning on the brush filter will disable other interactive elements on
+     the chart such as highlighting, tool tips, and reference lines. Zooming will still be possible
+     if enabled, but only via scrolling (panning will be disabled.) Default: true
+
+     **/
+    _chart.brushOn = function (_) {
+        if (!arguments.length) {
+            return _brushOn;
+        }
+        // If brush on is switched, we should reset the filters.
+        // We should not mix range filters with click filters
+        if (_brushOn !== _ && _chart.hasFilter()) {
+            _chart.filterAll();
+        }
+        _brushOn = _;
+        return _chart;
+    };
+
+    /**
+     #### .filterOnBrushEnd([boolean])
+     Allows one to specify when the brush filtering should be performed.  If this is false,
+     filtering happens at every move of the brush.  If this is true, filtering occurs when the
+     brush is dropped.  Default: false
+     */
+    _chart.filterOnBrushEnd = function (_) {
+        if (!arguments.length) {
+            return _filterOnBrushEnd;
+        }
+        _filterOnBrushEnd = _;
+        return _chart;
+    };
+
     function brushHeight() {
         return _chart._xAxisY() - _chart.margins().top;
     }
 
-    _chart.renderBrush = function (g) {
-        if (_brushOn) {
-            _brush.on('brush', _chart._brushing);
-            _brush.on('brushstart', _chart._disableMouseZoom);
-            _brush.on('brushend', configureMouseZoom);
-
-            var gBrush = g.append('g')
-                .attr('class', 'brush')
-                .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')')
-                .call(_brush.x(_chart.x()));
-            _chart.setBrushY(gBrush);
-            _chart.setHandlePaths(gBrush);
-
-            if (_chart.hasFilter()) {
-                _chart.redrawBrush(g);
-            }
-        }
-    };
-
-    _chart.setHandlePaths = function (gBrush) {
-        gBrush.selectAll('.resize').append('path').attr('d', _chart.resizeHandlePath);
-    };
-
-    _chart.setBrushY = function (gBrush) {
-        gBrush.selectAll('rect').attr('height', brushHeight());
-    };
-
-    _chart.extendBrush = function () {
-        var extent = _brush.extent();
-        if (_chart.round()) {
-            extent[0] = extent.map(_chart.round())[0];
-            extent[1] = extent.map(_chart.round())[1];
-
-            _g.select('.brush')
-                .call(_brush.extent(extent));
-        }
-        return extent;
-    };
-
-    _chart.brushIsEmpty = function (extent) {
-        return _brush.empty() || !extent || extent[1] <= extent[0];
-    };
-
-    _chart._brushing = function () {
-        var extent = _chart.extendBrush();
-
-        _chart.redrawBrush(_g);
-
-        if (_chart.brushIsEmpty(extent)) {
-            dc.events.trigger(function () {
-                _chart.filter(null);
-                _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
-        } else {
-            var rangedFilter = dc.filters.RangedFilter(extent[0], extent[1]);
-
-            dc.events.trigger(function () {
-                _chart.replaceFilter(rangedFilter);
-                _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
-        }
-    };
-
-    _chart.redrawBrush = function (g) {
-        if (_brushOn) {
-            if (_chart.filter() && _chart.brush().empty()) {
-                _chart.brush().extent(_chart.filter());
-            }
-
-            var gBrush = g.select('g.brush');
-            gBrush.call(_chart.brush().x(_chart.x()));
-            _chart.setBrushY(gBrush);
-        }
-
-        _chart.fadeDeselectedArea();
-    };
-
-    _chart.fadeDeselectedArea = function () {
-        // do nothing, sub-chart should override this function
-    };
-
     // borrowed from Crossfilter example
-    _chart.resizeHandlePath = function (d) {
+    function resizeHandlePath (d) {
         var e = +(d === 'e'), x = e ? 1 : -1, y = brushHeight() / 3;
         return 'M' + (0.5 * x) + ',' + y +
             'A6,6 0 0 ' + e + ' ' + (6.5 * x) + ',' + (y + 6) +
@@ -933,6 +874,83 @@ dc.coordinateGridMixin = function (_chart) {
             'V' + (2 * y - 8) +
             'M' + (4.5 * x) + ',' + (y + 8) +
             'V' + (2 * y - 8);
+    }
+
+    _chart.on('filtered.brush', function (chart, filter) {
+        if (filter) {
+            _brush.extent(filter);
+        } else {
+            _brush.clear();
+        }
+    });
+
+    _chart.renderBrush = function (g) {
+        _brush.on('brushstart', _chart._disableMouseZoom);
+        _brush.on('brushend', configureMouseZoom);
+        if (!_filterOnBrushEnd) {
+            _brush.on('brush', _chart._brushing);
+            _brush.on('brushend.filter', function () {});
+        } else {
+            _brush.on('brush', _chart._nonFilteredBrushing);
+            _brush.on('brushend.filter', _chart._brushing);
+        }
+        var gBrush = g.append('g')
+            .attr('class', 'brush')
+            .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')')
+            .call(_brush.x(_chart.x()));
+        gBrush.selectAll('.resize').append('path').attr('d', resizeHandlePath);
+        _chart.redrawBrush(g);
+    };
+
+    _chart.redrawBrush = function (g) {
+        if (_chart.filter() && _chart.brush().empty()) {
+            _chart.brush().extent(_chart.filter());
+        } else if (!_chart.filter() && !_chart.brush().empty()) {
+            _chart.brush().clear();
+        }
+        var gBrush = g.select('g.brush');
+        gBrush.call(_chart.brush().x(_chart.x()));
+        gBrush.selectAll('rect').attr('height', brushHeight());
+    };
+
+    _chart.extendBrush = function (extent) {
+        if (_chart.round()) {
+            return extent.map(_chart.round());
+        }
+        return extent;
+    };
+
+    _chart._brush = function (redrawFn) {
+        var extent = !_brush.empty() && _brush.extent(),
+            filter = null;
+        if (extent) {
+            extent = _chart.extendBrush(extent);
+            _g.select('.brush').call(_brush.extent(extent));
+            filter = dc.filters.RangedFilter(extent[0], extent[1]);
+        } else {
+            _brush.clear();
+        }
+        redrawFn(filter);
+    };
+
+    _chart._brushing = function () {
+        _chart._brush(function (filter) {
+            dc.events.trigger(function () {
+                _chart.replaceFilter(filter);
+                _chart.redrawGroup();
+            }, dc.constants.EVENT_DELAY);
+        });
+    };
+
+    _chart._nonFilteredBrushing = function () {
+        _chart._brush(function (filter) {
+            _chart.setFilter(filter);
+            _chart.fadeDeselectedArea();
+        });
+    };
+
+    _chart.fadeDeselectedArea = function () {
+        // do nothing, sub-chart should override this function
     };
 
     function getClipPathId() {
@@ -1013,11 +1031,14 @@ dc.coordinateGridMixin = function (_chart) {
             _chart.renderYAxis(_chart.g());
         }
 
-        if (render) {
-            _chart.renderBrush(_chart.g());
-        } else {
-            _chart.redrawBrush(_chart.g());
+        if (_brushOn) {
+            if (render) {
+                _chart.renderBrush(_chart.g());
+            } else {
+                _chart.redrawBrush(_chart.g());
+            }
         }
+        _chart.fadeDeselectedArea();
     }
 
     function configureMouseZoom () {
@@ -1116,24 +1137,6 @@ dc.coordinateGridMixin = function (_chart) {
         }
         return false;
     }
-
-    /**
-    #### .brushOn([boolean])
-    Turn on/off the brush-based range filter. When brushing is on then user can drag the mouse
-    across a chart with a quantitative scale to perform range filtering based on the extent of the
-    brush, or click on the bars of an ordinal bar chart or slices of a pie chart to filter and
-    unfilter them. However turning on the brush filter will disable other interactive elements on
-    the chart such as highlighting, tool tips, and reference lines. Zooming will still be possible
-    if enabled, but only via scrolling (panning will be disabled.) Default: true
-
-    **/
-    _chart.brushOn = function (_) {
-        if (!arguments.length) {
-            return _brushOn;
-        }
-        _brushOn = _;
-        return _chart;
-    };
 
     function hasRangeSelected(range) {
         return range instanceof Array && range.length > 1;
