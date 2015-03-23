@@ -393,7 +393,8 @@ dc.coordinateGridMixin = function (_chart) {
 
         // has the domain changed?
         var xdom = _x.domain();
-        if (!_lastXDomain || xdom.some(function (elem, i) { return elem !== _lastXDomain[i]; })) {
+        if (!_lastXDomain || _lastXDomain.length !== xdom.length ||
+            xdom.some(function (elem, i) { return elem !== _lastXDomain[i]; })) {
             _chart.rescale();
         }
         _lastXDomain = xdom;
