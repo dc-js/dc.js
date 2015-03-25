@@ -46,6 +46,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     var _brush = d3.svg.brush();
     var _brushOn = true;
+    var _filterOnBrushEnd = false;
     var _round;
 
     var _renderHorizontalGridLine = false;
@@ -970,7 +971,13 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart.renderBrush = function (g) {
         if (_brushOn) {
-            _brush.on('brush', _chart._brushing);
+            if (!_filterOnBrushEnd) {
+                _brush.on('brush', _chart._brushing);
+                _brush.on('brushend.filter', null);
+            } else {
+                _brush.on('brush', _chart._nonFilteredBrushing);
+                _brush.on('brushend.filter', _chart._brushing);
+            }
             _brush.on('brushstart', _chart._disableMouseZoom);
             _brush.on('brushend', configureMouseZoom);
 
@@ -1032,6 +1039,15 @@ dc.coordinateGridMixin = function (_chart) {
                 _chart.redrawGroup();
             }, dc.constants.EVENT_DELAY);
         }
+    };
+
+    _chart._nonFilteredBrushing = function () {
+        var extent = _chart.extendBrush();
+        if (_chart.brushIsEmpty(extent)) {
+            _chart.setFilter(null);
+            _chart.brush().clear();
+        }
+        _chart.fadeDeselectedArea();
     };
 
     _chart.redrawBrush = function (g, doTransition) {
@@ -1316,7 +1332,28 @@ dc.coordinateGridMixin = function (_chart) {
         if (!arguments.length) {
             return _brushOn;
         }
+        if (_brushOn !== brushOn && _chart.hasFilter()) {
+            _chart.filterAll();
+        }
         _brushOn = brushOn;
+        return _chart;
+    };
+
+    /**
+     * Allows one to specify when the brush filtering should be performed.  If this is false,
+     * filtering happens at every move of the brush.  If this is true, filtering occurs when the
+     * brush is dropped.
+     * @method filterOnBrushEnd
+     * @memberof dc.coordinateGridMixin
+     * @instance
+     * @param {Boolean} [filterOnBrushEnd=false]
+     * @returns {Boolean|dc.coordinateGridMixin}
+     */
+    _chart.filterOnBrushEnd = function (filterOnBrushEnd) {
+        if (!arguments.length) {
+            return _filterOnBrushEnd;
+        }
+        _filterOnBrushEnd = filterOnBrushEnd;
         return _chart;
     };
 
