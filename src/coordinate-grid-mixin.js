@@ -1018,6 +1018,7 @@ dc.coordinateGridMixin = function (_chart) {
         } else {
             _chart.redrawBrush(_chart.g());
         }
+        _chart.fadeDeselectedArea();
     }
 
     function configureMouseZoom () {
