@@ -42,6 +42,17 @@ dc.pluck = function (n, f) {
 
 dc.utils = {};
 
+dc.utils.constructGetterSetter = function (obj, name, defaultValue) {
+    var value = void 0;
+    obj[name] = function (_) {
+        if (!arguments.length) {
+            return (value === null || value === void 0) ? value : defaultValue;
+        }
+        value = _;
+        return obj;
+    };
+};
+
 dc.utils.printSingleValue = function (filter) {
     var s = '' + filter;
 
