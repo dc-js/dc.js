@@ -16,22 +16,19 @@
 dc.gaugeChart = function (parent, chartGroup) {
     var _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin({})));
 
-    var _g;
-
-    var _gaugeCssClass = 'gauge';
-    var _sliceCssClass = 'pie-slice';
-    var _sliceLabelsCssClass = 'pie-slice-labels';
-    var _needleCircleCssClass = 'needle-center';
-    var _needleCssClass = 'needle';
-    var _gaugeTextCssClass = 'gauge-text';
-    var _radius = 0;
-    var numberFormat = d3.format('s');
+    var GAUGE_CLASS = 'gauge',
+        SLICE_CLASS = 'pie-slice',
+        SLICE_LABEL_CLASS = 'pie-slice-labels',
+        NEEDLE_CIRCLE_CLASS = 'needle-center',
+        NEEDLE_CLASS = 'needle',
+        GAUGE_TEXT_CLASS = 'gauge-text';
 
     [
+        {name: 'radius'},
         {name: 'domain', defaultValue: [0, 100]},
         {name: 'externalRadiusPadding', defaultValue: 30},
         {name: 'gap', defaultValue: 3},
-        {name: 'innerRadiusPercentage', defaultValue: [0, 100]},
+        {name: 'innerRadiusPercentage', defaultValue: 0.9},
         {name: 'labelPadding', defaultValue: 5},
         {name: 'maxAngle', defaultValue: 90},
         {name: 'minAngle', defaultValue: -90},
@@ -44,29 +41,18 @@ dc.gaugeChart = function (parent, chartGroup) {
         {name: 'textColor', defaultValue: '#000000'},
         {name: 'textX', defaultValue: 0},
         {name: 'textY', defaultValue: 30},
-        {name: 'textRotation', defaultValue: 0}
+        {name: 'textRotation', defaultValue: 0},
+        {name: 'numberFormat', defaultValue: d3.format('s')}
     ].forEach(function (property) {
         dc.utils.constructGetterSetter(_chart, property.name, property.defaultValue);
     });
 
     _chart.margins({top: 0, left: 0, right: 0, bottom: 35});
-    _chart.label(function (d) { return numberFormat(d); });
+    _chart.label(function (d) { return _chart.numberFormat()(d); });
     _chart.data(null);
-
-    function deg2rad (deg) {
-        return deg * Math.PI / 180;
-    }
 
     function fill (d, i) {
         return _chart.getColor(d.data, i);
-    }
-
-    function safeArc (d, i, arc) {
-        var path = arc(d, i);
-        if (path.indexOf('NaN') >= 0) {
-            path = 'M0,0';
-        }
-        return path;
     }
 
     function tweenPie (radius, innerRadius) {
@@ -82,13 +68,13 @@ dc.gaugeChart = function (parent, chartGroup) {
             var i = d3.interpolate(current, b);
             this._current = i(0);
             return function (t) {
-                return safeArc(i(t), 0, d3.svg.arc().outerRadius(radius).innerRadius(innerRadius));
+                return dc.utils.safeArc(i(t), 0, d3.svg.arc().outerRadius(radius).innerRadius(innerRadius));
             };
         };
     }
 
     function needlePath (value, domain, minAngle, maxAngle, length, radius) {
-        var thetaRadian = deg2rad((maxAngle - minAngle) *  (value - domain[0]) / (domain[1] - domain[0]));
+        var thetaRadian = dc.utils.deg2rad((maxAngle - minAngle) *  (value - domain[0]) / (domain[1] - domain[0]));
 
         var topX = -length * Math.cos(thetaRadian),
             topY = -length * Math.sin(thetaRadian),
@@ -100,39 +86,41 @@ dc.gaugeChart = function (parent, chartGroup) {
         return 'M ' + leftX + ' ' + leftY + ' L ' + topX + ' ' + topY + ' L ' + rightX + ' ' + rightY;
     }
 
-    function drawChart () {
-        if (!_g) {
-            return;
-        }
-
+    function drawChart (_g) {
         var width = _chart.width() / 2 - _chart.margins().left - _chart.margins().right;
         var height = _chart.height() - _chart.margins().top - _chart.margins().bottom;
-        var radius = (_radius ? _radius : Math.min(width, height)) - _chart.externalRadiusPadding();
+        var radius = (_chart.radius() || Math.min(width, height)) - _chart.externalRadiusPadding();
 
         // TODO Smarter centering?
         _g.attr('transform', 'translate(' + (_chart.width() / 2 + _chart.margins().left - _chart.margins().right) +
         ', ' + (_chart.height() + _chart.margins().top - _chart.margins().bottom) + ')');
 
-        var innerRadius = (_chart.innerRadiusPercentage() !== null ?
-                Math.max(Math.min(_chart.innerRadiusPercentage(), 1), 0) : 0.5) * radius;
-        var startRadian = deg2rad(_chart.minAngle());
-        var endRadian = deg2rad(_chart.maxAngle());
+        var innerRadius = radius *
+            (_chart.innerRadiusPercentage() !== null ?
+                Math.max(Math.min(_chart.innerRadiusPercentage(), 1), 0) :
+                0.5);
+        var startRadian = dc.utils.deg2rad(_chart.minAngle());
+        var endRadian = dc.utils.deg2rad(_chart.maxAngle());
 
-        var gauge = _g.select('g.' + _gaugeCssClass);
+        var gauge = _g.select('g.' + GAUGE_CLASS);
 
         /*****************************************************************
          * Slices
          *****************************************************************/
-        var pie = d3.layout.pie().sort(null).startAngle(startRadian).endAngle(endRadian)
-            .value(function (d) { return d.value; });
-        var pieData = pie(d3.range(_chart.slices()).map(function (d, i) {
-            return {key: i, value: 1 / _chart.slices()};
-        }));
+        var pie = d3.layout.pie()
+            .sort(null)
+            .startAngle(startRadian)
+            .endAngle(endRadian)
+            .value(dc.pluck('value'));
+        var pieData = pie(d3.range(_chart.slices())
+            .map(function (d, i) {
+                return {key: i, value: 1 / _chart.slices()};
+            }));
         if (_chart.gap()) {
             // TODO Even padding?
             //var padding = (_maxAngle - _minAngle)/_slices -
             //  (_maxAngle - _minAngle - _gap * (_slices - 1)) / _slices;
-            var padding = deg2rad(_chart.gap() / 2);
+            var padding = dc.utils.deg2rad(_chart.gap() / 2);
             pieData = pieData.map(function (datum, index, array) {
                 if (index !== 0) {
                     datum.startAngle += padding;
@@ -143,26 +131,36 @@ dc.gaugeChart = function (parent, chartGroup) {
                 return datum;
             });
         }
-        var arc = d3.svg.arc().outerRadius(radius).innerRadius(innerRadius);
+        var arc = d3.svg.arc()
+            .outerRadius(radius)
+            .innerRadius(innerRadius);
 
         // Get slices
-        var slices = gauge.selectAll('g.' + _sliceCssClass).data(pieData);
+        var slices = gauge
+            .selectAll('g.' + SLICE_CLASS)
+            .data(pieData);
 
         // Create elements
-        var slicesEnter = slices.enter().append('g').attr('class', function (d, i) {
-            return _sliceCssClass + ' _' + i;
-        });
-        var slicePath = slicesEnter.append('path').attr('fill', fill).attr('d', function (d, i) {
-            return safeArc(d, i, arc);
-        });
+        var slicesEnter = slices
+            .enter()
+            .append('g')
+            .attr('class', function (d, i) {
+                return SLICE_CLASS + ' _' + i;
+            });
+        var slicePath = slicesEnter
+            .append('path')
+            .attr('fill', fill)
+            .attr('d', function (d, i) {
+                return dc.utils.safeArc(d, i, arc);
+            });
         dc.transition(slicePath, _chart.transitionDuration(), function (s) {
             s.attrTween('d', tweenPie(radius, innerRadius, endRadian, endRadian));
         });
 
         // Update elements
-        var slicePaths = gauge.selectAll('g.' + _sliceCssClass)
+        var slicePaths = gauge.selectAll('g.' + SLICE_CLASS)
             .data(pieData).select('path').attr('d', function (d, i) {
-                return safeArc(d, i, arc);
+                return dc.utils.safeArc(d, i, arc);
             });
         dc.transition(slicePaths, _chart.transitionDuration(), function (s) {
             s.attrTween('d', tweenPie(radius, innerRadius));
@@ -174,21 +172,28 @@ dc.gaugeChart = function (parent, chartGroup) {
         /*****************************************************************
          * Labels
          *****************************************************************/
-        var labelScale = d3.scale.linear().range([0, 1]).domain(_chart.domain());
-        var labelData = labelScale.ticks(_chart.slices());
+        var labelScale = d3.scale.linear()
+            .range([0, 1])
+            .domain(_chart.domain());
+        var labelData = labelScale
+            .ticks(_chart.slices());
 
         // Update Labels
-        var labels = gauge.selectAll('text.' + _sliceLabelsCssClass)
+        var labels = gauge
+            .selectAll('text.' + SLICE_LABEL_CLASS)
             .data(_chart.renderLabel() ? labelData : []);
-        labels.enter().append('text').attr('class', function (d, i) {
-            return _sliceLabelsCssClass + ' _' + i;
-        });
-        dc.transition(labels, _chart.transitionDuration()).attr('transform', function (d) {
-            var newAngle = _chart.minAngle() + ((_chart.maxAngle() - _chart.minAngle()) * labelScale(d));
-            return 'rotate(' + newAngle + ') translate(0,' + -(radius + _chart.labelPadding()) + ')';
-        }).attr('text-anchor', 'middle').text(function (d) {
-            return _chart.label()(d);
-        });
+        labels.enter()
+            .append('text')
+            .attr('class', function (d, i) {
+                return SLICE_LABEL_CLASS + ' _' + i;
+            });
+        dc.transition(labels, _chart.transitionDuration())
+            .attr('transform', function (d) {
+                var newAngle = _chart.minAngle() + ((_chart.maxAngle() - _chart.minAngle()) * labelScale(d));
+                return 'rotate(' + newAngle + ') translate(0,' + -(radius + _chart.labelPadding()) + ')';
+            }).attr('text-anchor', 'middle').text(function (d) {
+                return _chart.label()(d);
+            });
         labels.exit().remove();
 
         /*****************************************************************
@@ -203,48 +208,57 @@ dc.gaugeChart = function (parent, chartGroup) {
         }
 
         // Update needle
-        _g.select('circle.' + _needleCircleCssClass)
+        _g.select('circle.' + NEEDLE_CIRCLE_CLASS)
             .attr('r', _chart.needleRadius())
             .attr('fill', _chart.needleColor());
 
         // TODO Tween?
-        _g.select('path.' + _needleCssClass)
+        _g.select('path.' + NEEDLE_CLASS)
             .attr('fill', _chart.needleColor())
-            .attr('d', needlePath(needleValue, _chart.domain(), _chart.minAngle(), _chart.maxAngle(),
-                _chart.needleLengthPercentage() * radius, _chart.needleRadius()));
+            .attr('d', needlePath(
+                needleValue,
+                _chart.domain(),
+                _chart.minAngle(),
+                _chart.maxAngle(),
+                _chart.needleLengthPercentage() * radius,
+                _chart.needleRadius()));
 
         /*****************************************************************
          * Text
          *****************************************************************/
         // Update text
-        var text = _g.select('text.' + _gaugeTextCssClass);
-        dc.transition(text, _chart.transitionDuration()).attr('transform', function () {
-            return 'rotate(' + _chart.textRotation() + ') translate(' + _chart.textX() + ',' + _chart.textY() + ')';
-        })
+        var text = _g.select('text.' + GAUGE_TEXT_CLASS);
+        dc.transition(text, _chart.transitionDuration())
+            .attr('transform', 'rotate(' + _chart.textRotation() + ') ' +
+                               'translate(' + _chart.textX() + ',' + _chart.textY() + ')')
             .attr('text-anchor', 'middle')
             .attr('fill', _chart.textColor())
-            .text(function () {
-                return _chart.text();
-            });
+            .text(_chart.text());
     }
 
     _chart._doRender = function () {
-        _chart.resetSvg();
-        _g = _chart.svg().append('g');
-        _g.append('g').attr('class', _gaugeCssClass);
-        _g.append('circle').attr('class', _needleCircleCssClass)
+        var _g = _chart.resetSvg().append('g');
+        _g.append('g')
+            .attr('class', GAUGE_CLASS);
+        _g.append('circle')
+            .attr('class', NEEDLE_CIRCLE_CLASS)
             .attr('cx', 0)
             .attr('cy', 0);
-        _g.append('path').attr('class', _needleCssClass);
-        _g.append('text').attr('class', _gaugeTextCssClass)
+        _g.append('path')
+            .attr('class', NEEDLE_CLASS);
+        _g.append('text')
+            .attr('class', GAUGE_TEXT_CLASS)
             .attr('cx', 0)
             .attr('cy', 0);
-        drawChart();
-        return _chart;
+        return _chart._doRedraw();
     };
 
     _chart._doRedraw = function () {
-        drawChart();
+        var _g = _chart.svg().select('g');
+        if (!_g) {
+            return;
+        }
+        drawChart(_g);
         return _chart;
     };
 

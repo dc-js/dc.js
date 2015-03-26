@@ -114,6 +114,10 @@ dc.utils.subtract = function (l, r) {
     }
 };
 
+dc.utils.deg2rad = function (deg) {
+    return deg * Math.PI / 180;
+};
+
 dc.utils.isNumber = function (n) {
     return n === +n;
 };
@@ -153,3 +157,11 @@ dc.utils.appendOrSelect = function (parent, selector, tag) {
 };
 
 dc.utils.safeNumber = function (n) { return dc.utils.isNumber(+n) ? +n : 0;};
+
+dc.utils.safeArc = function (d, i, arc) {
+    var path = arc(d, i);
+    if (path.indexOf('NaN') >= 0) {
+        path = 'M0,0';
+    }
+    return path;
+};
