@@ -46,7 +46,7 @@ dc.utils.constructGetterSetter = function (obj, name, defaultValue) {
     var value = void 0;
     obj[name] = function (_) {
         if (!arguments.length) {
-            return (value === null || value === void 0) ? value : defaultValue;
+            return (value === null || value === void 0) ? defaultValue : value;
         }
         value = _;
         return obj;
