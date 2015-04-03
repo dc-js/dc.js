@@ -1,3 +1,7 @@
+# 2.0 Series
+## 2.0.0 beta 6
+ * adding example bar-extra-line, overlaying a line with a renderlet
+
 ## 2.0.0 beta 5
  * updating this doc to link to issues/PRs manually (until we get a better changelog
    system?), by Matt Traynham ([#845](https://github.com/dc-js/dc.js/issues/845))
