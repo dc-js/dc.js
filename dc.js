@@ -3259,15 +3259,9 @@ dc.stackMixin = function (_chart) {
     };
 
     function flattenStack() {
-        var groups = _chart.data();
-
-        if (groups.length) {
-            groups[0].values = _chart._computeOrderedGroups(groups[0].values);
-        }
-
-        return groups.reduce(function (all, layer) {
-            return all.concat(layer.values);
-        }, []);
+        var valueses = _chart.data().map(function (layer) { return layer.values; });
+        var flattened = Array.prototype.concat.apply([], valueses);
+        return _chart._computeOrderedGroups(flattened);
     }
 
     _chart.xAxisMin = function () {
