@@ -129,7 +129,7 @@ describe('dc.lineChart', function() {
                 chart.brushOn(false).xyTipsOn(false).render();
             });
             it('should not generate per data points', function () {
-                expect(chart.selectAll('circle.dot').size())toBe(0);
+                expect(chart.selectAll('circle.dot').size()).toBe(0);
             });
             it('should not generate x and y refs', function () {
                 expect(chart.selectAll('path.xRef').size()).toBe(0);
