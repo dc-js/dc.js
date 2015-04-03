@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-beta.5
+ *  dc 2.0.0-beta.6
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012 Nick Zhu and other contributors
  *
@@ -20,7 +20,7 @@
 'use strict';
 
 /**
-#### Version 2.0.0-beta.5
+#### Version 2.0.0-beta.6
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -41,7 +41,7 @@ that are chainable d3 objects.)
 /*jshint -W062*/
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-beta.5',
+    version: '2.0.0-beta.6',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -3259,9 +3259,9 @@ dc.stackMixin = function (_chart) {
     };
 
     function flattenStack() {
-        return _chart.data().reduce(function (all, layer) {
-            return all.concat(layer.values);
-        }, []);
+        var valueses = _chart.data().map(function (layer) { return layer.values; });
+        var flattened = Array.prototype.concat.apply([], valueses);
+        return _chart._computeOrderedGroups(flattened);
     }
 
     _chart.xAxisMin = function () {
@@ -3845,7 +3845,7 @@ dc.pieChart = function (parent, chartGroup) {
     function createTitles(slicesEnter) {
         if (_chart.renderTitle()) {
             slicesEnter.append('title').text(function (d) {
-                return _chart.title()(d);
+                return _chart.title()(d.data);
             });
         }
     }
@@ -4519,6 +4519,7 @@ dc.lineChart = function (parent, chartGroup) {
     var _tension = 0.7;
     var _defined;
     var _dashStyle;
+    var _xyTipsOn = true;
 
     _chart.transitionDuration(500);
     _chart._rangeBandPadding(1);
@@ -4701,7 +4702,7 @@ dc.lineChart = function (parent, chartGroup) {
     }
 
     function drawDots(chartBody, layers) {
-        if (!_chart.brushOn()) {
+        if (!_chart.brushOn() && _chart.xyTipsOn()) {
             var tooltipListClass = TOOLTIP_G_CLASS + '-list';
             var tooltips = chartBody.select('g.' + tooltipListClass);
 
@@ -4805,6 +4806,20 @@ dc.lineChart = function (parent, chartGroup) {
             dot.append('title').text(dc.pluck('data', _chart.title(d.name)));
         }
     }
+
+    /**
+     #### .xyTipsOn([boolean])
+     Turn on/off the mouseover behavior of an individual data point which renders a circle and x/y axis
+     dashed lines back to each respective axis.  This is ignored if the chart brush is on (`brushOn`)
+     Default: true
+     */
+    _chart.xyTipsOn = function (_) {
+        if (!arguments.length) {
+            return _xyTipsOn;
+        }
+        _xyTipsOn = _;
+        return _chart;
+    };
 
     /**
     #### .dotRadius([dotRadius])
@@ -7996,8 +8011,8 @@ dc.heatMap = function (parent, chartGroup) {
             .on('click', _chart.boxOnClick());
 
         if (_chart.renderTitle()) {
-            gEnter.append('title')
-                .text(_chart.title());
+            gEnter.append('title');
+            boxes.selectAll('title').text(_chart.title());
         }
 
         dc.transition(boxes.selectAll('rect'), _chart.transitionDuration())

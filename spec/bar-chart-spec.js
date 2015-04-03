@@ -979,6 +979,129 @@ describe('dc.barChart', function() {
         });
     });
 
+    describe('check ordering option of the x axis', function() {
+        beforeEach(function() {
+            var rows = [
+                {x: 'a', y: 1},
+                {x: 'b', y: 3},
+                {x: 'd', y: 4},
+                {x: 'c', y: 2}
+            ];
+
+            id = 'bar-chart';
+            appendChartID(id);
+            data = crossfilter(rows);
+            dimension = data.dimension(function(d) {
+                return d.x;
+            });
+            group = dimension.group().reduceSum(function(d) {
+                return d.y;
+            });
+
+            chart = dc.barChart('#' + id);
+            chart.width(500).transitionDuration(0)
+                .x(d3.scale.ordinal())
+                .xUnits(dc.units.ordinal)
+                .elasticY(true).elasticX(true)
+                .dimension(dimension)
+                .group(group);
+            chart.render();
+        });
+
+        it('should be ordered by default alphabetical order', function() {
+            var data = chart.data()["0"].values;
+            var expectedData = ["a", "b", "c", "d"];
+            expect(data.map(function(d) { return d.x; })).toEqual(expectedData);
+        });
+
+        it('should be ordered by value increasing', function() {
+            chart.ordering(function(d) { return d.data.value; });
+            chart.redraw();
+            expect(xAxisText()).toEqual(["a", "c", "b", "d"]);
+        });
+
+        it('should be ordered by value decreasing', function() {
+            chart.ordering(function(d) { return -d.data.value; });
+            chart.redraw();
+            expect(xAxisText()).toEqual(["d", "b", "c", "a"]);
+        });
+
+        it('should be ordered by alphabetical order', function() {
+            chart.ordering(function(d) { return d.data.key; });
+            chart.redraw();
+            expect(xAxisText()).toEqual(["a", "b", "c", "d"]);
+        });
+
+        function xAxisText() {
+            return chart.selectAll("g.x text")[0].map(function(x) { return d3.select(x).text(); });
+        }
+    });
+
+    describe('ordering with stacks', function() {
+        var group2;
+        beforeEach(function() {
+            var rows = [
+                {x: 'a', y: 1, z: 10},
+                {x: 'b', y: 3, z: 20},
+                {x: 'd', y: 4, z: 30},
+                {x: 'c', y: 2, z: 40}
+            ];
+
+            id = 'bar-chart';
+            appendChartID(id);
+            data = crossfilter(rows);
+            dimension = data.dimension(function(d) {
+                return d.x;
+            });
+            group = dimension.group().reduceSum(function(d) {
+                return d.y;
+            });
+            var group2 = dimension.group().reduceSum(function(d) {
+                return d.z;
+            });
+
+            chart = dc.barChart('#' + id);
+            chart.width(500).transitionDuration(0)
+                .x(d3.scale.ordinal())
+                .xUnits(dc.units.ordinal)
+                .elasticY(true).elasticX(true)
+                .dimension(dimension)
+                .group(group)
+                .stack(group2);
+            chart.render();
+        });
+
+        it('should be ordered by default alphabetical order', function() {
+            var data = chart.data()["0"].values;
+            var expectedData = ["a", "b", "c", "d"];
+            expect(data.map(function(d) { return d.x; })).toEqual(expectedData);
+        });
+
+        // note: semantics are kind of screwy here: which stack do you want to sort
+        // by when you order by value? right now it's all of them together.
+        it('should be ordered by value increasing', function() {
+            chart.ordering(function(d) { return d.data.value; });
+            chart.redraw();
+            expect(xAxisText()).toEqual(["a", "c", "b", "d"]);
+        });
+
+        it('should be ordered by value decreasing', function() {
+            chart.ordering(function(d) { return -d.data.value; });
+            chart.redraw();
+            expect(xAxisText()).toEqual(["c", "d", "b", "a"]);
+        });
+
+        it('should be ordered by alphabetical order', function() {
+            chart.ordering(function(d) { return d.data.key; });
+            chart.redraw();
+            expect(xAxisText()).toEqual(["a", "b", "c", "d"]);
+        });
+
+        function xAxisText() {
+            return chart.selectAll("g.x text")[0].map(function(x) { return d3.select(x).text(); });
+        }
+    });
+
     function nthStack(n) {
         var stack = d3.select(chart.selectAll(".stack")[0][n]);
 
