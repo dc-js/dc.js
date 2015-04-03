@@ -3259,15 +3259,9 @@ dc.stackMixin = function (_chart) {
     };
 
     function flattenStack() {
-        var groups = _chart.data();
-
-        if (groups.length) {
-            groups[0].values = _chart._computeOrderedGroups(groups[0].values);
-        }
-
-        return groups.reduce(function (all, layer) {
-            return all.concat(layer.values);
-        }, []);
+        var valueses = _chart.data().map(function (layer) { return layer.values; });
+        var flattened = Array.prototype.concat.apply([], valueses);
+        return _chart._computeOrderedGroups(flattened);
     }
 
     _chart.xAxisMin = function () {
@@ -8017,8 +8011,8 @@ dc.heatMap = function (parent, chartGroup) {
             .on('click', _chart.boxOnClick());
 
         if (_chart.renderTitle()) {
-            gEnter.append('title')
-                .text(_chart.title());
+            gEnter.append('title');
+            boxes.selectAll('title').text(_chart.title());
         }
 
         dc.transition(boxes.selectAll('rect'), _chart.transitionDuration())
