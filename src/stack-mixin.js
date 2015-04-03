@@ -172,7 +172,7 @@ dc.stackMixin = function (_chart) {
     function flattenStack() {
         var groups = _chart.data();
 
-        if(groups.length){
+        if (groups.length) {
             groups[0].values = _chart._computeOrderedGroups(groups[0].values);
         }
 
