@@ -199,6 +199,27 @@ describe("dc.heatmap", function() {
         });
     });
 
+    describe('indirect filtering', function(){
+        var dimension2, group2;
+        beforeEach(function () {
+            dimension2 = data.dimension(function(d){ return +d.colorData; });
+            group2 = dimension2.group().reduceSum(function (d) { return +d.colorData; });
+
+            chart.dimension(dimension).group(group);
+            chart.render();
+            dimension2.filter('3');
+            chart.redraw();
+        });
+
+        it('should update the title of the boxes', function(){
+            var titles = chart.selectAll(".box-group title");
+            var expected = ["1,1: 0", "1,2: 0", "2,1: 6", "2,2: 0"];
+            titles.each(function(d){
+                expect(this.textContent).toBe(expected.shift());
+            });
+        });
+    });
+
     describe('filtering', function() {
         var filterX, filterY;
         var otherDimension;
