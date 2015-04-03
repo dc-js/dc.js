@@ -1,5 +1,6 @@
 # 2.0 Series
 ## 2.0.0 beta 6
+ * add option to hide mouseover dots for line chart, by Davis Ford ([#735](https://github.com/dc-js-dc.js-issues/735))
  * adding example bar-extra-line, overlaying a line with a renderlet
 
 ## 2.0.0 beta 5
