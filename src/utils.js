@@ -74,14 +74,14 @@ dc.utils.allChildren = function (node) {
 // builds a d3 Hierarchy from a collection
 // TODO: turn this monster method something better.
 dc.utils.toHierarchy = function (list, accessor) {
-    var root = {"key": "root", "children": []};
+    var root = {'key': 'root', 'children': []};
     for (var i = 0; i < list.length; i++) {
         var data = list[i];
         var parts = data.key;
         var value = accessor(data);
         var currentNode = root;
         for (var j = 0; j < parts.length; j++) {
-            var currentPath = parts.slice(0,j+1);
+            var currentPath = parts.slice(0, j + 1);
             var children = currentNode.children;
             var nodeName = parts[j];
             var childNode;
@@ -89,7 +89,7 @@ dc.utils.toHierarchy = function (list, accessor) {
                 // Not yet at the end of the sequence; move down the tree.
                 var foundChild = false;
                 for (var k = 0; k < children.length; k++) {
-                    if (children[k].key == nodeName) {
+                    if (children[k].key === nodeName) {
                         childNode = children[k];
                         foundChild = true;
                         break;
@@ -97,13 +97,13 @@ dc.utils.toHierarchy = function (list, accessor) {
                 }
             // If we don't already have a child node for this branch, create it.
                 if (!foundChild) {
-                    childNode = {"key": nodeName, "children": [], 'path':currentPath};
+                    childNode = {'key': nodeName, 'children': [], 'path':currentPath};
                     children.push(childNode);
                 }
                 currentNode = childNode;
             } else {
                 // Reached the end of the sequence; create a leaf node.
-                childNode = {"key": nodeName, "value": value, 'data': data, 'path':currentPath};
+                childNode = {'key': nodeName, 'value': value, 'data': data, 'path':currentPath};
                 children.push(childNode);
             }
         }
@@ -205,11 +205,15 @@ dc.utils.appendOrSelect = function (parent, selector, tag) {
 
 dc.utils.safeNumber = function (n) { return dc.utils.isNumber(+n) ? +n : 0;};
 
-dc.utils.arraysIdentical = function(a, b) {
+dc.utils.arraysIdentical = function (a, b) {
     var i = a.length;
-    if (i != b.length) return false;
+    if (i !== b.length) {
+        return false;
+    }
     while (i--) {
-        if (a[i] !== b[i]) return false;
+        if (a[i] !== b[i]) {
+            return false;
+        }
     }
     return true;
 };
