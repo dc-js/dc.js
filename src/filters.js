@@ -28,6 +28,20 @@ dc.filters.RangedFilter = function (low, high) {
 };
 
 /**
+#### dc.filters.HierarchyFilter(path)
+ HierarchyFilter is a filter which accepts a path.  It is used by the
+ [sunburst chart](#sunburst) to include particular cells and all their children as they are clicked.
+**/
+dc.filters.HierarchyFilter = function (path) {
+    if (path === null) { return null; }
+    var filter = path;
+    filter.isFiltered = function (value) {
+        return filter.length && value.length && dc.utils.arraysIdentical(value.slice(0, filter.length), filter);
+    };
+    return filter;
+};
+
+/**
 #### dc.filters.TwoDimensionalFilter(array)
  TwoDimensionalFilter is a filter which accepts a single two-dimensional value.  It is used by the
  [heat map chart](#heat-map) to include particular cells as they are clicked.  (Rows and columns are

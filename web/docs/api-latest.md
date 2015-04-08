@@ -10,6 +10,7 @@
   * [Cap Mixin](#cap-mixin)
   * [Bubble Mixin](#bubble-mixin)
   * [Pie Chart](#pie-chart)
+  * [Sunburst Chart](#sunburst-chart)
   * [Bar Chart](#bar-chart)
   * [Line Chart](#line-chart)
   * [Data Count Widget](#data-count-widget)
@@ -134,6 +135,10 @@ mention below which chart uses which filter.  In some cases, many instances of a
 #### dc.filters.RangedFilter(low, high)
 RangedFilter is a filter which accepts keys between `low` and `high`.  It is used to implement X
 axis brushing for the [coordinate grid charts](#coordinate-grid-mixin).
+
+#### dc.filters.HierarchyFilter(path)
+HierarchyFilter is a filter which accepts a path.  It is used by the
+[sunburst chart](#sunburst) to include particular cells and all their children as they are clicked.
 
 #### dc.filters.TwoDimensionalFilter(array)
 TwoDimensionalFilter is a filter which accepts a single two-dimensional value.  It is used by the
@@ -989,6 +994,63 @@ pie chart will be rendered as a doughnut chart. Default inner radius is 0px.
 #### .radius([radius])
 Get or set the outer radius. If the radius is not set, it will be half of the minimum of the
 chart width and height.
+
+#### .cx([cx])
+Get or set center x coordinate position. Default is center of svg.
+
+#### .cy([cy])
+Get or set center y coordinate position. Default is center of svg.
+
+#### .minAngleForLabel([minAngle])
+Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
+display a slice label.  Default min angle is 0.5.
+
+## Sunburst Chart
+
+Includes: [Cap Mixin](#cap-mixin), [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
+
+The sunburst chart implementation is usually used to visualize a small tree distribution.  The sunburst
+chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
+slice relative to the sum of all values. Slices are ordered by `.ordering` which defaults to sorting
+by key.
+
+Examples:
+
+* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+
+#### dc.sunburstChart(parent[, chartGroup])
+Create a sunburst chart instance and attaches it to the given parent element.
+
+Parameters:
+
+* parent : string | node | selection - any valid
+[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+a dom block element such as a div; or a dom element or d3 selection.
+
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
+A newly created sunburst chart instance
+
+```js
+// create a sunburst chart under #chart-container1 element using the default global chart group
+var chart1 = dc.sunburstChart("#chart-container1");
+// create a sunburst chart under #chart-container2 element using chart group A
+var chart2 = dc.sunburstChart("#chart-container2", "chartGroupA");
+```
+
+#### .slicesCap([cap])
+Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
+value from high to low. Other slices exeeding the cap will be rolled up into one single *Others* slice.
+The resulting data will still be sorted by .ordering (default by key).
+
+#### .innerRadius([innerRadius])
+Get or set the inner radius of the sunburstData chart. If the inner radius is greater than 0px then the
+sunburstData chart will be rendered as a doughnut chart. Default inner radius is 0px.
+
+#### .radius([radius])
+Get or set the outer radius. Default radius is 90px.
 
 #### .cx([cx])
 Get or set center x coordinate position. Default is center of svg.
