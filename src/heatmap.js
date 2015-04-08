@@ -244,23 +244,26 @@ dc.heatMap = function (parent, chartGroup) {
                 .attr('transform', 'translate(0, ' + _chart.effectiveHeight() + ')');
         }
         var gColsG = gCols.selectAll('g').data(cols.domain());
-        var gColsText = gColsG.enter().append('g')
+        gColsG.enter().append('g')
               .attr('class', 'tick')
               .attr('transform', function (d) {
                   return 'translate(' + (cols(d) + boxWidth / 2) + ', 0)';
-              })
-              .selectAll('text')
+              });
+        gColsG.selectAll('text')
               .data(function (d) {
                   return [d];
-              });
-        gColsText.enter().append('text')
+              }).enter().append('text')
               .style('text-anchor', 'middle')
               .attr('dy', 12)
               .on('click', _chart.xAxisOnClick())
               .text(_chart.colsLabel());
-        dc.transition(gColsText, _chart.transitionDuration())
+        dc.transition(gColsG.selectAll('text'), _chart.transitionDuration())
                .text(_chart.colsLabel());
-        gColsText.exit().remove();
+        dc.transition(gColsG, _chart.transitionDuration())
+               .attr('transform', function (d) {
+                  return 'translate(' + (cols(d) + boxWidth / 2) + ', 0)';
+              });
+        gColsG.exit().remove();
         var gRows = _chartBody.selectAll('g.rows');
         if (gRows.empty()) {
             gRows = _chartBody.append('g').attr('class', 'rows axis');

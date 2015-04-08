@@ -88,12 +88,21 @@ describe("dc.heatmap", function() {
             expect(yaxisTexts[0][1].textContent).toEqual('2');
         });
 
+        it('should have x-axis transformed below chart', function() {
+            var xaxis = chart.selectAll('.cols.axis');
+            var xaxisTransform = /^translate\((\d+)\,\s(\d+)\)$/.exec(xaxis[0][0].getAttribute('transform')).splice(1);
+            expect(+xaxisTransform[0]).toEqual(0);
+            expect(+xaxisTransform[1]).toEqual(200);
+        });
+
         it('should position the x-axis labels with their associated columns', function() {
-            var xaxisTexts = chart.selectAll(".cols.axis text");
-            expect(+xaxisTexts[0][0].getAttribute("y")).toEqual(200);
-            expect(+xaxisTexts[0][0].getAttribute("x")).toEqual(50);
-            expect(+xaxisTexts[0][1].getAttribute("y")).toEqual(200);
-            expect(+xaxisTexts[0][1].getAttribute("x")).toEqual(150);
+            var xaxisTicks = chart.selectAll('.cols.axis .tick');
+            var xaxisTicksTransform = [/^translate\((\d+)\,\s(\d+)\)$/.exec(xaxisTicks[0][0].getAttribute('transform')).splice(1),
+                                       /^translate\((\d+)\,\s(\d+)\)$/.exec(xaxisTicks[0][1].getAttribute('transform')).splice(1)];
+            expect(+xaxisTicksTransform[0][0]).toEqual(50);
+            expect(+xaxisTicksTransform[0][1]).toEqual(0);
+            expect(+xaxisTicksTransform[1][0]).toEqual(150);
+            expect(+xaxisTicksTransform[1][1]).toEqual(0);
         });
 
         it('should have labels on the x-axis corresponding to the row values', function() {
