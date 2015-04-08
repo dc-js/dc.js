@@ -170,9 +170,9 @@ dc.stackMixin = function (_chart) {
     };
 
     function flattenStack() {
-        return _chart.data().reduce(function (all, layer) {
-            return all.concat(layer.values);
-        }, []);
+        var valueses = _chart.data().map(function (layer) { return layer.values; });
+        var flattened = Array.prototype.concat.apply([], valueses);
+        return _chart._computeOrderedGroups(flattened);
     }
 
     _chart.xAxisMin = function () {
