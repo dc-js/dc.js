@@ -239,19 +239,27 @@ dc.heatMap = function (parent, chartGroup) {
 
         var gCols = _chartBody.selectAll('g.cols');
         if (gCols.empty()) {
-            gCols = _chartBody.append('g').attr('class', 'cols axis');
+            gCols = _chartBody.append('g')
+                .attr('class', 'cols axis')
+                .attr('transform', 'translate(0, ' + _chart.effectiveHeight() + ')');
         }
-        var gColsText = gCols.selectAll('text').data(cols.domain());
+        var gColsG = gCols.selectAll('g').data(cols.domain());
+        var gColsText = gColsG.enter().append('g')
+              .attr('class', 'tick')
+              .attr('transform', function (d) {
+                  return 'translate(' + (cols(d) + boxWidth / 2) + ', 0)';
+              })
+              .selectAll('text')
+              .data(function (d) {
+                  return [d];
+              });
         gColsText.enter().append('text')
-              .attr('x', function (d) { return cols(d) + boxWidth / 2; })
               .style('text-anchor', 'middle')
-              .attr('y', _chart.effectiveHeight())
               .attr('dy', 12)
               .on('click', _chart.xAxisOnClick())
               .text(_chart.colsLabel());
         dc.transition(gColsText, _chart.transitionDuration())
-               .text(_chart.colsLabel())
-               .attr('x', function (d) { return cols(d) + boxWidth / 2; });
+               .text(_chart.colsLabel());
         gColsText.exit().remove();
         var gRows = _chartBody.selectAll('g.rows');
         if (gRows.empty()) {
