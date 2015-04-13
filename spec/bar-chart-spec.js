@@ -1015,19 +1015,19 @@ describe('dc.barChart', function() {
         });
 
         it('should be ordered by value increasing', function() {
-            chart.ordering(function(d) { return d.data.value; });
+            chart.ordering(function(d) { return d.value; });
             chart.redraw();
             expect(xAxisText()).toEqual(["a", "c", "b", "d"]);
         });
 
         it('should be ordered by value decreasing', function() {
-            chart.ordering(function(d) { return -d.data.value; });
+            chart.ordering(function(d) { return -d.value; });
             chart.redraw();
             expect(xAxisText()).toEqual(["d", "b", "c", "a"]);
         });
 
         it('should be ordered by alphabetical order', function() {
-            chart.ordering(function(d) { return d.data.key; });
+            chart.ordering(function(d) { return d.key; });
             chart.redraw();
             expect(xAxisText()).toEqual(["a", "b", "c", "d"]);
         });
@@ -1080,19 +1080,19 @@ describe('dc.barChart', function() {
         // note: semantics are kind of screwy here: which stack do you want to sort
         // by when you order by value? right now it's all of them together.
         it('should be ordered by value increasing', function() {
-            chart.ordering(function(d) { return d.data.value; });
+            chart.ordering(function(d) { return d.value; });
             chart.redraw();
             expect(xAxisText()).toEqual(["a", "c", "b", "d"]);
         });
 
         it('should be ordered by value decreasing', function() {
-            chart.ordering(function(d) { return -d.data.value; });
+            chart.ordering(function(d) { return -d.value; });
             chart.redraw();
             expect(xAxisText()).toEqual(["c", "d", "b", "a"]);
         });
 
         it('should be ordered by alphabetical order', function() {
-            chart.ordering(function(d) { return d.data.key; });
+            chart.ordering(function(d) { return d.key; });
             chart.redraw();
             expect(xAxisText()).toEqual(["a", "b", "c", "d"]);
         });

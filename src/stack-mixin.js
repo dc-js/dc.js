@@ -171,8 +171,7 @@ dc.stackMixin = function (_chart) {
 
     function flattenStack() {
         var valueses = _chart.data().map(function (layer) { return layer.values; });
-        var flattened = Array.prototype.concat.apply([], valueses);
-        return _chart._computeOrderedGroups(flattened);
+        return Array.prototype.concat.apply([], valueses);
     }
 
     _chart.xAxisMin = function () {
@@ -247,7 +246,9 @@ dc.stackMixin = function (_chart) {
     });
 
     _chart._ordinalXDomain = function () {
-        return flattenStack().map(dc.pluck('x'));
+        var flat = flattenStack().map(dc.pluck('data'));
+        var ordered = _chart._computeOrderedGroups(flat);
+        return ordered.map(_chart.keyAccessor());
     };
 
     _chart.colorAccessor(function (d) {
