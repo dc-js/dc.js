@@ -1056,7 +1056,7 @@ dc.coordinateGridMixin = function (_chart) {
     to null, then the zoom will be reset. _For focus to work elasticX has to be turned off;
     otherwise focus will be ignored._
     ```js
-    chart.renderlet(function(chart){
+    chart.on('renderlet,function(chart){
         // smooth the rendering through event throttling
         dc.events.trigger(function(){
             // focus some other chart to the range selected by user on this chart
@@ -1089,7 +1089,7 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.on('filtered', function (chart) {
             if (!chart.filter()) {
                 dc.events.trigger(function () {
-                    _focusChart.x().domain(_focusChart.xOriginalDomain());
+                    _focusChart.focus(_focusChart.xOriginalDomain());
                 });
             } else if (!rangesEqual(chart.filter(), _focusChart.filter())) {
                 dc.events.trigger(function () {

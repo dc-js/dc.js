@@ -352,21 +352,6 @@ describe('dc.compositeChart', function() {
         });
     });
 
-    describe('subchart renderlets', function () {
-        beforeEach(function () {
-            chart.children()[0].renderlet(function(chart) {
-                chart.selectAll('rect.bar').attr('width', function(d) {
-                    return 10;
-                });
-            });
-            chart.render();
-        });
-
-        it('should trigger the sub-chart renderlet', function () {
-            expect(d3.select(chart.selectAll('rect')[0][0]).attr('width')).toBe('10');
-        });
-    });
-
     describe('when two subcharts share the same group', function () {
         beforeEach(function () {
             var dimension = data.dimension(function(d) {

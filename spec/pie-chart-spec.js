@@ -474,24 +474,6 @@ describe('dc.pieChart', function() {
         });
     });
 
-    describe('renderlet', function() {
-        var chart;
-        beforeEach(function() {
-            chart = buildChart("chart-renderlet");
-            chart.renderlet(function() {
-                chart.selectAll("path").attr("fill", "red");
-            });
-        });
-        it('custom renderlet should be invoked with render', function() {
-            chart.render();
-            expect(chart.selectAll("path").attr("fill")).toEqual("red");
-        });
-        it('custom renderlet should be invoked with redraw', function() {
-            chart.redraw();
-            expect(chart.selectAll("path").attr("fill")).toEqual("red");
-        });
-    });
-
     describe('pie chart label and title w/ value accessor', function() {
         var chart;
         beforeEach(function() {

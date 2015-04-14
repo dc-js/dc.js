@@ -80,27 +80,6 @@ describe('dc.dataTable', function() {
         });
     });
 
-    describe('renderlet', function() {
-        var derlet;
-        beforeEach(function() {
-            derlet = jasmine.createSpy('renderlet', function(chart) {
-                chart.selectAll("td.dc-table-label").text("changed");
-            });
-            derlet.and.callThrough();
-            chart.renderlet(derlet);
-        });
-        it('custom renderlet should be invoked with render', function() {
-            chart.render();
-            expect(chart.selectAll("td.dc-table-label").text()).toEqual("changed");
-            expect(derlet).toHaveBeenCalled();
-        });
-        it('custom renderlet should be invoked with redraw', function() {
-            chart.redraw();
-            expect(chart.selectAll("td.dc-table-label").text()).toEqual("changed");
-            expect(derlet).toHaveBeenCalled();
-        });
-    });
-
     describe('ascending order', function () {
         beforeEach(function() {
             chart.order(d3.ascending);

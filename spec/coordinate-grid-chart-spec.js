@@ -115,28 +115,6 @@ describe('dc.coordinateGridChart', function() {
             expect(chart.valueAccessor()).not.toBeNull();
         });
 
-        describe('renderlets', function () {
-            beforeEach(function () {
-                chart.renderlet(function (chart) {
-                    chart.selectAll("path").attr("fill", "red");
-                });
-            });
-
-            it('should not run immediately', function () {
-                expect(chart.selectAll("path").attr("fill")).not.toBe("red");
-            });
-
-            it('should run when render is invoked', function () {
-                chart.render();
-                expect(chart.selectAll("path").attr("fill")).toBe("red");
-            });
-
-            it('should run when redraw is invoked', function () {
-                chart.redraw();
-                expect(chart.selectAll("path").attr("fill")).toBe("red");
-            });
-        });
-
         describe('clip paths', function () {
             it('should only create one def', function () {
                 expect(chart.selectAll("defs").size()).toBe(1);

@@ -255,7 +255,7 @@ describe('dc.barChart', function() {
             describe('with a custom click handler', function() {
                 beforeEach(function() {
                     chart.brushOn(false)
-                        .renderlet(function(_chart) {
+                        .on('postRender',(function(_chart) {
                             _chart.selectAll("rect.bar").on("click", _chart.onClick);
                         })
                         .render();
