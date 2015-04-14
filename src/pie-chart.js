@@ -51,6 +51,7 @@ dc.pieChart = function (parent, chartGroup) {
     var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
 
     _chart.colorAccessor(_chart.cappedKeyAccessor);
+    _chart.legendLabelAccessor(_chart.cappedKeyAccessor);
 
     _chart.title(function (d) {
         return _chart.cappedKeyAccessor(d) + ': ' + _chart.cappedValueAccessor(d);
