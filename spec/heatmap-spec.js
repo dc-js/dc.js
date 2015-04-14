@@ -1,10 +1,11 @@
 describe("dc.heatmap", function() {
-    var id, data, dimension, group, chart, chartHeight, chartWidth;
+    var id, data, dimension, group, chart, chartHeight, chartWidth, titleFn;
 
     beforeEach(function() {
         data = crossfilter(loadColorFixture());
         dimension = data.dimension(function (d) { return [+d.colData, +d.rowData]; });
         group = dimension.group().reduceSum(function (d) { return +d.colorData; });
+        titleFn = function(d) {return d.key + ": " + d.value; };
 
         chartHeight = 210;
         chartWidth = 210;
@@ -20,7 +21,7 @@ describe("dc.heatmap", function() {
             .valueAccessor(function (d) { return d.key[1]; })
             .colorAccessor(function (d) { return d.value; })
             .colors(["#000001", "#000002", "#000003", "#000004"])
-            .title(function(d) {return d.key + ": " + d.value; })
+            .title(titleFn)
             .height(chartHeight)
             .width(chartWidth)
             .transitionDuration(0)
@@ -234,6 +235,12 @@ describe("dc.heatmap", function() {
             chart.render();
             chart.dimension(dimension).group(group);
             chart.redraw();
+        });
+
+        it('should have the correct title', function () {
+            chart.selectAll(".box-group title")[0].forEach(function (titleNode) {
+                expect(titleNode.textContent).toBe(titleFn(titleNode['__data__']));
+            });
         });
 
         it('should have the correct number of columns', function () {

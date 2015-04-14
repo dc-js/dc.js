@@ -235,6 +235,8 @@ dc.heatMap = function (parent, chartGroup) {
             .attr('width', boxWidth)
             .attr('height', boxHeight);
 
+        boxes.selectAll('title').text(_chart.title());
+
         boxes.exit().remove();
 
         var gCols = _chartBody.selectAll('g.cols');
