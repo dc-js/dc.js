@@ -681,6 +681,7 @@ dc.baseMixin = function (_chart) {
     var _keyAccessor = dc.pluck('key');
     var _valueAccessor = dc.pluck('value');
     var _label = dc.pluck('key');
+    var _legend_label = dc.pluck('key');
 
     var _ordering = dc.pluck('key');
     var _orderSort;
@@ -1565,6 +1566,18 @@ dc.baseMixin = function (_chart) {
         _label = _;
         _renderLabel = true;
         return _chart;
+    };
+    _chart.legendLabelAccessor = function (_) {
+        if (!arguments.length) {
+            return _legendLabelAccessor;
+        }
+        _legendLabelAccessor = _;
+        _defaultAccessor = false;
+        return _chart;
+    };
+
+    _chart.getLegendLabel = function (d, i) {
+        return _colors(_legendLabelAccessor.call(this, d, i));
     };
 
     /**
@@ -4123,7 +4136,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     _chart.legendables = function () {
         return _chart.data().map(function (d, i) {
-            var legendable = {name: d.key, data: d.value, others: d.others, chart:_chart};
+            var legendable = {name: _chart.getLegendLabel(d, i), data: d.value, others: d.others, chart:_chart};
             legendable.color = _chart.getColor(d, i);
             return legendable;
         });
