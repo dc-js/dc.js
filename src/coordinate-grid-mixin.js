@@ -1089,7 +1089,7 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.on('filtered', function (chart) {
             if (!chart.filter()) {
                 dc.events.trigger(function () {
-                    _focusChart.focus(_focusChart.xOriginalDomain());
+                    _focusChart.x().domain(_focusChart.xOriginalDomain());
                 });
             } else if (!rangesEqual(chart.filter(), _focusChart.filter())) {
                 dc.events.trigger(function () {
