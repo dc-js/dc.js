@@ -70,15 +70,15 @@ dc.legend = function () {
                 .attr('y1', _itemHeight / 2)
                 .attr('x2', _itemHeight)
                 .attr('y2', _itemHeight / 2)
-                .attr('stroke-width', 2)
-                .attr('stroke-dasharray', dc.pluck('dashstyle'))
-                .attr('stroke', dc.pluck('color'));
+                .style('stroke-width', 2)
+                .style('stroke-dasharray', dc.pluck('dashstyle'))
+                .style('stroke', dc.pluck('color'));
         } else {
             itemEnter
                 .append('rect')
                 .attr('width', _itemHeight)
                 .attr('height', _itemHeight)
-                .attr('fill', function (d) {return d ? d.color : 'blue';});
+                .style('fill', function (d) {return d ? d.color : 'blue';});
         }
 
         itemEnter.append('text')

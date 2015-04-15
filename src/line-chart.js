@@ -183,14 +183,14 @@ dc.lineChart = function (parent, chartGroup) {
 
         var path = layersEnter.append('path')
             .attr('class', 'line')
-            .attr('stroke', colors);
+            .style('stroke', colors);
         if (_dashStyle) {
-            path.attr('stroke-dasharray', _dashStyle);
+            path.style('stroke-dasharray', _dashStyle);
         }
 
         dc.transition(layers.select('path.line'), _chart.transitionDuration())
             //.ease('linear')
-            .attr('stroke', colors)
+            .style('stroke', colors)
             .attr('d', function (d) {
                 return safeD(line(d.values));
             });
@@ -216,14 +216,14 @@ dc.lineChart = function (parent, chartGroup) {
 
             layersEnter.append('path')
                 .attr('class', 'area')
-                .attr('fill', colors)
+                .style('fill', colors)
                 .attr('d', function (d) {
                     return safeD(area(d.values));
                 });
 
             dc.transition(layers.select('path.area'), _chart.transitionDuration())
                 //.ease('linear')
-                .attr('fill', colors)
+                .style('fill', colors)
                 .attr('d', function (d) {
                     return safeD(area(d.values));
                 });
@@ -283,7 +283,7 @@ dc.lineChart = function (parent, chartGroup) {
                     .attr('cy', function (d) {
                         return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
                     })
-                    .attr('fill', _chart.getColor)
+                    .style('fill', _chart.getColor)
                     .call(renderTitle, d);
 
                 dots.exit().remove();
@@ -294,11 +294,11 @@ dc.lineChart = function (parent, chartGroup) {
     function createRefLines(g) {
         var yRefLine = g.select('path.' + Y_AXIS_REF_LINE_CLASS).empty() ?
             g.append('path').attr('class', Y_AXIS_REF_LINE_CLASS) : g.select('path.' + Y_AXIS_REF_LINE_CLASS);
-        yRefLine.style('display', 'none').attr('stroke-dasharray', '5,5');
+        yRefLine.style('display', 'none').style('stroke-dasharray', '5,5');
 
         var xRefLine = g.select('path.' + X_AXIS_REF_LINE_CLASS).empty() ?
             g.append('path').attr('class', X_AXIS_REF_LINE_CLASS) : g.select('path.' + X_AXIS_REF_LINE_CLASS);
-        xRefLine.style('display', 'none').attr('stroke-dasharray', '5,5');
+        xRefLine.style('display', 'none').style('stroke-dasharray', '5,5');
     }
 
     function showDot(dot) {
@@ -407,9 +407,9 @@ dc.lineChart = function (parent, chartGroup) {
     function colorFilter(color, dashstyle, inv) {
         return function () {
             var item = d3.select(this);
-            var match = (item.attr('stroke') === color &&
-                item.attr('stroke-dasharray') === ((dashstyle instanceof Array) ?
-                    dashstyle.join(',') : null)) || item.attr('fill') === color;
+            var match = (item.style('stroke') === color &&
+                item.style('stroke-dasharray') === ((dashstyle instanceof Array) ?
+                    dashstyle.join(',') : null)) || item.style('fill') === color;
             return inv ? !match : match;
         };
     }

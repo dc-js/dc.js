@@ -88,14 +88,14 @@ dc.bubbleChart = function (parent, chartGroup) {
                 return _chart.BUBBLE_CLASS + ' _' + i;
             })
             .on('click', _chart.onClick)
-            .attr('fill', _chart.getColor)
+            .style('fill', _chart.getColor)
             .attr('r', 0);
         dc.transition(bubbleG, _chart.transitionDuration())
             .selectAll('circle.' + _chart.BUBBLE_CLASS)
             .attr('r', function (d) {
                 return _chart.bubbleR(d);
             })
-            .attr('opacity', function (d) {
+            .style('opacity', function (d) {
                 return (_chart.bubbleR(d) > 0) ? 1 : 0;
             });
 
@@ -108,11 +108,11 @@ dc.bubbleChart = function (parent, chartGroup) {
         dc.transition(bubbleG, _chart.transitionDuration())
             .attr('transform', bubbleLocator)
             .selectAll('circle.' + _chart.BUBBLE_CLASS)
-            .attr('fill', _chart.getColor)
+            .style('fill', _chart.getColor)
             .attr('r', function (d) {
                 return _chart.bubbleR(d);
             })
-            .attr('opacity', function (d) {
+            .style('opacity', function (d) {
                 return (_chart.bubbleR(d) > 0) ? 1 : 0;
             });
 

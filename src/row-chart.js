@@ -183,7 +183,7 @@ dc.rowChart = function (parent, chartGroup) {
                 return 'translate(0,' + ((i + 1) * _gap + i * height) + ')';
             }).select('rect')
             .attr('height', height)
-            .attr('fill', _chart.getColor)
+            .style('fill', _chart.getColor)
             .on('click', onClick)
             .classed('deselected', function (d) {
                 return (_chart.hasFilter()) ? !isSelectedRow(d) : false;
@@ -241,7 +241,7 @@ dc.rowChart = function (parent, chartGroup) {
             var titlelab = rows.select('.' + _titleRowCssClass)
                     .attr('x', _chart.effectiveWidth() - _titleLabelOffsetX)
                     .attr('y', _labelOffsetY)
-                    .attr('text-anchor', 'end')
+                    .style('text-anchor', 'end')
                     .on('click', onClick)
                     .attr('class', function (d, i) {
                         return _titleRowCssClass + ' _' + i ;

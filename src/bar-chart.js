@@ -90,7 +90,7 @@ dc.barChart = function (parent, chartGroup) {
         var enter = bars.enter()
             .append('rect')
             .attr('class', 'bar')
-            .attr('fill', dc.pluck('data', _chart.getColor))
+            .style('fill', dc.pluck('data', _chart.getColor))
             .attr('y', _chart.yAxisHeight())
             .attr('height', 0);
 
@@ -126,7 +126,7 @@ dc.barChart = function (parent, chartGroup) {
             .attr('height', function (d) {
                 return barHeight(d);
             })
-            .attr('fill', dc.pluck('data', _chart.getColor))
+            .style('fill', dc.pluck('data', _chart.getColor))
             .select('title').text(dc.pluck('data', _chart.title(d.name)));
 
         dc.transition(bars.exit(), _chart.transitionDuration())
@@ -281,7 +281,7 @@ dc.barChart = function (parent, chartGroup) {
     function colorFilter(color, inv) {
         return function () {
             var item = d3.select(this);
-            var match = item.attr('fill') === color;
+            var match = item.style('fill') === color;
             return inv ? !match : match;
         };
     }

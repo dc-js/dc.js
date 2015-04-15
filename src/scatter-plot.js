@@ -76,18 +76,18 @@ dc.scatterPlot = function (parent, chartGroup) {
             .enter()
         .append('path')
             .attr('class', 'symbol')
-            .attr('opacity', 0)
-            .attr('fill', _chart.getColor)
+            .style('opacity', 0)
+            .style('fill', _chart.getColor)
             .attr('transform', _locator);
 
         dc.transition(symbols, _chart.transitionDuration())
-            .attr('opacity', function (d) { return _existenceAccessor(d) ? 1 : 0; })
-            .attr('fill', _chart.getColor)
+            .style('opacity', function (d) { return _existenceAccessor(d) ? 1 : 0; })
+            .style('fill', _chart.getColor)
             .attr('transform', _locator)
             .attr('d', _symbol);
 
         dc.transition(symbols.exit(), _chart.transitionDuration())
-            .attr('opacity', 0).remove();
+            .style('opacity', 0).remove();
     };
 
     /**
@@ -165,19 +165,19 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     _chart.legendHighlight = function (d) {
         resizeSymbolsWhere(function (symbol) {
-            return symbol.attr('fill') === d.color;
+            return symbol.style('fill') === d.color;
         }, _highlightedSize);
         _chart.selectAll('.chart-body path.symbol').filter(function () {
-            return d3.select(this).attr('fill') !== d.color;
+            return d3.select(this).style('fill') !== d.color;
         }).classed('fadeout', true);
     };
 
     _chart.legendReset = function (d) {
         resizeSymbolsWhere(function (symbol) {
-            return symbol.attr('fill') === d.color;
+            return symbol.style('fill') === d.color;
         }, _symbolSize);
         _chart.selectAll('.chart-body path.symbol').filter(function () {
-            return d3.select(this).attr('fill') !== d.color;
+            return d3.select(this).style('fill') !== d.color;
         }).classed('fadeout', false);
     };
 
