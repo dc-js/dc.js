@@ -11,7 +11,6 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-
         concat: {
             js: {
                 src: jsFiles,
@@ -422,5 +421,6 @@ module.exports.jsFiles = [
     'src/heatmap.js',
     'src/d3.box.js',
     'src/box-plot.js',
+    'src/select-menu.js',
     'src/footer.js'  // NOTE: keep this last
 ];
