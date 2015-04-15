@@ -15,6 +15,8 @@ var dayOfWeekChart = dc.rowChart('#day-of-week-chart');
 var moveChart = dc.lineChart('#monthly-move-chart');
 var volumeChart = dc.barChart('#monthly-volume-chart');
 var yearlyBubbleChart = dc.bubbleChart('#yearly-bubble-chart');
+var nasdaqCount = dc.dataCount('.dc-data-count');
+var nasdaqTable = dc.dataTable('.dc-data-table');
 
 // ### Anchor Div for Charts
 /*
@@ -27,13 +29,17 @@ var yearlyBubbleChart = dc.bubbleChart('#yearly-bubble-chart');
 // will automatically turn it on/off based on whether there is filter
 // set on this chart (slice selection for pie chart and brush
 // selection for bar chart). Enable this with `chart.turnOnControls(true)`
-     <div id='chart'>
-       <a class='reset' href='javascript:myChart.filterAll();dc.redrawAll();' style='display: none;'>reset</a>
-     </div>
+    <div id='chart'>
+       <a class='reset'
+          href='javascript:myChart.filterAll();dc.redrawAll();'
+          style='display: none;'>reset</a>
+    </div>
 // dc.js will also automatically inject applied current filter value into
 // any html element with css class set to 'filter'
     <div id='chart'>
-        <span class='reset' style='display: none;'>Current filter: <span class='filter'></span></span>
+        <span class='reset' style='display: none;'>
+          Current filter: <span class='filter'></span>
+        </span>
     </div>
 */
 
@@ -179,7 +185,7 @@ d3.csv('ndx.csv', function (data) {
     var dayOfWeekGroup = dayOfWeek.group();
 
     //### Define Chart Attributes
-    //Define chart attributes using fluent methods. See the
+    // Define chart attributes using fluent methods. See the
     // [dc API Reference](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md) for more information
     //
 
@@ -188,19 +194,25 @@ d3.csv('ndx.csv', function (data) {
     //an optional chart group for this chart to be scoped within. When a chart belongs
     //to a specific group then any interaction with such chart will only trigger redraw
     //on other charts within the same chart group.
+    // <br>API: [Bubble Chart](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#bubble-chart)
     /* dc.bubbleChart('#yearly-bubble-chart', 'chartGroup') */
     yearlyBubbleChart
-        .width(990) // (optional) define chart width, :default = 200
-        .height(250)  // (optional) define chart height, :default = 200
-        .transitionDuration(1500) // (optional) define chart transition duration, :default = 750
+        // (_optional_) define chart width, `default = 200`
+        .width(990)
+        // (_optional_) define chart height, `default = 200`
+        .height(250)
+        // (_optional_) define chart transition duration, :default = 750
+        .transitionDuration(1500)
         .margins({top: 10, right: 50, bottom: 30, left: 40})
         .dimension(yearlyDimension)
-        //Bubble chart expect the groups are reduced to multiple values which would then be used
+        //Bubble chart group's attributes are reduced to multiple values which would then be used
         //to generate x, y, and radius for each key (bubble) in the group
         .group(yearlyPerformanceGroup)
-        .colors(colorbrewer.RdYlGn[9]) // (optional) define color function or array for bubbles
-        .colorDomain([-500, 500]) //(optional) define color domain to match your data domain if you want to bind data or
-                                  //color
+        // (_optional_) define color function or array for bubbles: [ColorBrewer](http://colorbrewer2.org/)
+        // and [Mike](http://bl.ocks.org/mbostock/5577023) to the rescue
+        .colors(colorbrewer.RdYlGn[9])
+        //(optional) define color domain to match your data domain if you want to bind data or color
+        .colorDomain([-500, 500])
         //##### Accessors
         //Accessor functions are applied to each value returned by the grouping
         //
@@ -208,7 +220,7 @@ d3.csv('ndx.csv', function (data) {
         //* `.keyAccessor` Identifies the `X` value that will be applied against the `.x()` to identify pixel location
         //* `.valueAccessor` Identifies the `Y` value that will be applied agains the `.y()` to identify pixel location
         //* `.radiusValueAccessor` Identifies the value that will be applied agains the `.r()` determine radius size,
-        //*     by default this maps linearly to [0,100]
+        //   by default this maps linearly to [0,100]
         .colorAccessor(function (d) {
             return d.value.absGain;
         })
@@ -226,24 +238,30 @@ d3.csv('ndx.csv', function (data) {
         .y(d3.scale.linear().domain([-100, 100]))
         .r(d3.scale.linear().domain([0, 4000]))
         //##### Elastic Scaling
-        //`.elasticX` and `.elasticX` determine whether the chart should rescale each axis to fit data.
+        //`.elasticY` and `.elasticX` determine whether the chart should rescale each axis to fit data.
         //The `.yAxisPadding` and `.xAxisPadding` add padding to data above and below their max values in the same unit
         //domains as the Accessors.
         .elasticY(true)
         .elasticX(true)
         .yAxisPadding(100)
         .xAxisPadding(500)
-        .renderHorizontalGridLines(true) // (optional) render horizontal grid lines, :default=false
-        .renderVerticalGridLines(true) // (optional) render vertical grid lines, :default=false
-        .xAxisLabel('Index Gain') // (optional) render an axis label below the x axis
-        .yAxisLabel('Index Gain %') // (optional) render a vertical axis lable left of the y axis
-        //#### Labels and  Titles
-        //Labels are displaed on the chart for each bubble. Titles displayed on mouseover.
-        .renderLabel(true) // (optional) whether chart should render labels, :default = true
+        // (_optional_) render horizontal grid lines, `default=false`
+        .renderHorizontalGridLines(true)
+        // (_optional_) render vertical grid lines, `default=false`
+        .renderVerticalGridLines(true)
+        // (_optional_) render an axis label below the x axis
+        .xAxisLabel('Index Gain')
+        // (_optional_) render a vertical axis lable left of the y axis
+        .yAxisLabel('Index Gain %')
+        //##### Labels and  Titles
+        //Labels are displayed on the chart for each bubble. Titles displayed on mouseover.
+        // (_optional_) whether chart should render labels, `default = true`
+        .renderLabel(true)
         .label(function (p) {
             return p.key;
         })
-        .renderTitle(true) // (optional) whether chart should render titles, :default = false
+        // (_optional_) whether chart should render titles, `default = false`
+        .renderTitle(true)
         .title(function (p) {
             return [
                 p.key,
@@ -252,7 +270,7 @@ d3.csv('ndx.csv', function (data) {
                 'Fluctuation / Index Ratio: ' + numberFormat(p.value.fluctuationPercentage) + '%'
             ].join('\n');
         })
-        //#### Customize Axis
+        //##### Customize Axis
         //Set a custom tick format. Note `.yAxis()` returns an axis object, so any additional method chaining applies
         //to the axis, not the chart.
         .yAxis().tickFormat(function (v) {
@@ -264,15 +282,16 @@ d3.csv('ndx.csv', function (data) {
     // an optional chart group for this chart to be scoped within. When a chart belongs
     // to a specific group then any interaction with such chart will only trigger redraw
     // on other charts within the same chart group.
-
+    // <br>API: [Pie Chart](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#pie-chart)
+    /* dc.pieChart('#gain-loss-chart', 'chartGroup') */
     gainOrLossChart
         .width(180) // (optional) define chart width, :default = 200
         .height(180) // (optional) define chart height, :default = 200
-        .radius(80) // define pie radius
+        // define pie radius
+        .radius(80)
         .dimension(gainOrLoss) // set dimension
         .group(gainOrLossGroup) // set group
-        /* (optional) by default pie chart will use group.key as its label
-         * but you can overwrite it with a closure */
+        // (_optional_) by default pie chart will use `group.key` as its label but you can overwrite it with a closure.
         .label(function (d) {
             if (gainOrLossChart.hasFilter() && !gainOrLossChart.hasFilter(d.key)) {
                 return d.key + '(0%)';
@@ -283,20 +302,21 @@ d3.csv('ndx.csv', function (data) {
             }
             return label;
         }) /*
-        // (optional) whether chart should render labels, :default = true
+        // (_optional_) whether chart should render labels, `default = true`
         .renderLabel(true)
-        // (optional) if inner radius is used then a donut chart will be generated instead of pie chart
+        // (_optional_) if inner radius is used then a donut chart will be generated instead of pie chart
         .innerRadius(40)
-        // (optional) define chart transition duration, :default = 350
+        // (_optional_) define chart transition duration, `default = 350`
         .transitionDuration(500)
-        // (optional) define color array for slices
+        // (_optional_) define color array for slices
         .colors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
-        // (optional) define color domain to match your data domain if you want to bind data or color
+        // (_optional_) define color domain to match your data domain if you want to bind data or color
         .colorDomain([-1750, 1644])
-        // (optional) define color value accessor
+        // (_optional_) define color value accessor
         .colorAccessor(function(d, i){return d.value;})
         */;
 
+    /* dc.pieChart('#quarter-chart', 'chartGroup'); */
     quarterChart.width(180)
         .height(180)
         .radius(80)
@@ -305,6 +325,12 @@ d3.csv('ndx.csv', function (data) {
         .group(quarterGroup);
 
     //#### Row Chart
+    // Create a row chart and use the given css selector as anchor. You can also specify
+    // an optional chart group for this chart to be scoped within. When a chart belongs
+    // to a specific group then any interaction with such chart will only trigger redraw
+    // on other charts within the same chart group.
+    // <br>API: [Row Chart](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#row-chart)
+    /* dc.rowChart('#day-of-week-chart', 'chartGroup'); */
     dayOfWeekChart.width(180)
         .height(180)
         .margins({top: 20, left: 10, right: 10, bottom: 20})
@@ -327,18 +353,19 @@ d3.csv('ndx.csv', function (data) {
     // an optional chart group for this chart to be scoped within. When a chart belongs
     // to a specific group then any interaction with such chart will only trigger redraw
     // on other charts within the same chart group.
-    /* dc.barChart('#volume-month-chart') */
+    // <br>API: [Bar Chart](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#bar-chart)
+    /* dc.barChart('#volume-month-chart', 'chartGroup') */
     fluctuationChart.width(420)
         .height(180)
         .margins({top: 10, right: 50, bottom: 30, left: 40})
         .dimension(fluctuation)
         .group(fluctuationGroup)
         .elasticY(true)
-        // (optional) whether bar should be center to its x value. Not needed for ordinal chart, :default=false
+        // (_optional_) whether bar should be center to its x value. Not needed for ordinal chart, `default=false`
         .centerBar(true)
-        // (optional) set gap between bars manually in px, :default=2
+        // (_optional_) set gap between bars manually in px, `default=2`
         .gap(1)
-        // (optional) set filter brush rounding
+        // (_optional_) set filter brush rounding
         .round(dc.round.floor)
         .alwaysUseRounding(true)
         .x(d3.scale.linear().domain([-25, 25]))
@@ -356,7 +383,10 @@ d3.csv('ndx.csv', function (data) {
     fluctuationChart.yAxis().ticks(5);
 
     //#### Stacked Area Chart
-    //Specify an area chart, by using a line chart with `.renderArea(true)`
+    //Specify an area chart by using a line chart with `.renderArea(true)`.
+    // <br>API: [Stack Mixin](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#stack-mixin),
+    // [Line Chart](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#line-chart)
+    /* dc.lineChart('#monthly-move-chart', 'chartGroup'); */
     moveChart
         .renderArea(true)
         .width(990)
@@ -372,10 +402,12 @@ d3.csv('ndx.csv', function (data) {
         .xUnits(d3.time.months)
         .elasticY(true)
         .renderHorizontalGridLines(true)
+        //##### Legend
+        // Position the legend relative to the chart origin and specify items' height and separation.
         .legend(dc.legend().x(800).y(10).itemHeight(13).gap(5))
         .brushOn(false)
         // Add the base layer of the stack with group. The second parameter specifies a series name for use in the
-        // legend
+        // legend.
         // The `.valueAccessor` will be used for the base layer
         .group(indexAvgByMonthGroup, 'Monthly Index Average')
         .valueAccessor(function (d) {
@@ -395,6 +427,8 @@ d3.csv('ndx.csv', function (data) {
             return dateFormat(d.key) + '\n' + numberFormat(value);
         });
 
+    /* dc.barChart('#monthly-volume-chart', 'chartGroup'); */
+    // Keep the dimensions in synch with the other stacked charts if you want alignment.
     volumeChart.width(990)
         .height(40)
         .margins({top: 0, right: 50, bottom: 20, left: 40})
@@ -407,48 +441,58 @@ d3.csv('ndx.csv', function (data) {
         .alwaysUseRounding(true)
         .xUnits(d3.time.months);
 
-    /*
     //#### Data Count
     // Create a data count widget and use the given css selector as anchor. You can also specify
     // an optional chart group for this chart to be scoped within. When a chart belongs
     // to a specific group then any interaction with such chart will only trigger redraw
     // on other charts within the same chart group.
-    <div id='data-count'>
-        <span class='filter-count'></span> selected out of <span class='total-count'></span> records
-    </div>
-    */
-    dc.dataCount('.dc-data-count')
+    // <br>API: [Data Count Widget](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#data-count-widget)
+    //
+    //```html
+    //<div class='dc-data-count'>
+    //  <span class='filter-count'></span>
+    //  selected out of <span class='total-count'></span> records.
+    //</div>
+    //```
+    /* dc.dataCount('.dc-data-count', 'chartGroup'); */
+    nasdaqCount
         .dimension(ndx)
         .group(all)
-        // (optional) html, for setting different html for some records and all records.
-        // .html replaces everything in the anchor with the html given using the following function.
-        // %filter-count and %total-count are replaced with the values obtained.
+        // (_optional_) `.html`, for setting different html for some records/all records.
+        // `.html` replaces everything in the anchor with the html given using the following function.
+        // `%filter-count` and `%total-count` are replaced with the values obtained.
         .html({
             some:'<strong>%filter-count</strong> selected out of <strong>%total-count</strong> records' +
                 ' | <a href=\'javascript:dc.filterAll(); dc.renderAll();\'\'>Reset All</a>',
             all:'All records selected. Please click on the graph to apply filters.'
         });
 
-    /*
     //#### Data Table
     // Create a data table widget and use the given css selector as anchor. You can also specify
     // an optional chart group for this chart to be scoped within. When a chart belongs
     // to a specific group then any interaction with such chart will only trigger redraw
     // on other charts within the same chart group.
-    <!-- anchor div for data table -->
-    <div id='data-table'>
-        <!-- create a custom header -->
-        <div class='header'>
-            <span>Date</span>
-            <span>Open</span>
-            <span>Close</span>
-            <span>Change</span>
-            <span>Volume</span>
-        </div>
-        <!-- data rows will filled in here -->
-    </div>
-    */
-    dc.dataTable('.dc-data-table')
+    // <br>API: [Data Table Widget](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#data-table-widget)
+    //
+    // You can statically define the headers like in
+    //
+    // ```html
+    //    <!-- anchor div for data table -->
+    //    <div id='data-table'>
+    //       <!-- create a custom header -->
+    //       <div class='header'>
+    //           <span>Date</span>
+    //           <span>Open</span>
+    //           <span>Close</span>
+    //           <span>Change</span>
+    //           <span>Volume</span>
+    //       </div>
+    //       <!-- data rows will filled in here -->
+    //    </div>
+    // ```
+    // or do it programmatically using `.columns()`.
+    /* dc.dataTable('.dc-data-table', 'chartGroup') */
+    nasdaqTable
         .dimension(dateDimension)
         // data table does not use crossfilter group but rather a closure
         // as a grouping function
@@ -456,29 +500,35 @@ d3.csv('ndx.csv', function (data) {
             var format = d3.format('02d');
             return d.dd.getFullYear() + '/' + format((d.dd.getMonth() + 1));
         })
-        .size(10) // (optional) max number of records to be shown, :default = 25
+        // (_optional_) max number of records to be shown, `default = 25`
+        .size(10)
         // There are several ways to specify the columns; see the data-table documentation.
         // This code demonstrates generating the column header automatically based on the columns.
         .columns([
-            'date',    // d['date'], ie, a field accessor; capitalized automatically
-            'open',    // ...
-            'close',   // ...
+            // `d['date']`, i.e. a field accessor; capitalized automatically
+            'date',
+            // ...
+            'open',
+            // ...
+            'close',
             {
-                label: 'Change', // desired format of column name 'Change' when used as a label with a function.
+                // desired format of column name 'Change' when used as a label with a function.
+                label: 'Change',
                 format: function (d) {
                     return numberFormat(d.close - d.open);
                 }
             },
-            'volume'   // d['volume'], ie, a field accessor; capitalized automatically
+            // `d['volume']`, i.e. a field accessor; capitalized automatically
+            'volume'
         ])
 
-        // (optional) sort using the given field, :default = function(d){return d;}
+        // (_optional_) sort using the given field, `default = function(d){return d;}`
         .sortBy(function (d) {
             return d.dd;
         })
-        // (optional) sort order, :default ascending
+        // (_optional_) sort order, `default ascending`
         .order(d3.ascending)
-        // (optional) custom renderlet to post-process chart using D3
+        // (_optional_) custom renderlet to post-process chart using [D3](http://d3js.org)
         .renderlet(function (table) {
             table.selectAll('.dc-table-group').classed('info', true);
         });
@@ -489,30 +539,33 @@ d3.csv('ndx.csv', function (data) {
     //an optional chart group for this chart to be scoped within. When a chart belongs
     //to a specific group then any interaction with such chart will only trigger redraw
     //on other charts within the same chart group.
+    // <br>API: [Geo Chroropleth Chart][choro]
+    // [choro]: https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#geo-choropleth-chart
     dc.geoChoroplethChart('#us-chart')
         .width(990) // (optional) define chart width, :default = 200
         .height(500) // (optional) define chart height, :default = 200
         .transitionDuration(1000) // (optional) define chart transition duration, :default = 1000
-        .dimension(states) // set crossfilter dimension, dimension key should match the name retrieved in geo json layer
+        // set crossfilter dimension, dimension key should match the name retrieved in geojson layer
+        .dimension(states)
         .group(stateRaisedSum) // set crossfilter group
-        // (optional) define color function or array for bubbles
+        // (_optional_) define color function or array for bubbles
         .colors(['#ccc', '#E2F2FF','#C4E4FF','#9ED2FF','#81C5FF','#6BBAFF','#51AEFF','#36A2FF','#1E96FF','#0089FF',
             '#0061B5'])
-        // (optional) define color domain to match your data domain if you want to bind data or color
+        // (_optional_) define color domain to match your data domain if you want to bind data or color
         .colorDomain([-5, 200])
-        // (optional) define color value accessor
+        // (_optional_) define color value accessor
         .colorAccessor(function(d, i){return d.value;})
-        // Project the given geojson. You can call this function mutliple times with different geojson feed to generate
+        // Project the given geojson. You can call this function multiple times with different geojson feed to generate
         // multiple layers of geo paths.
         //
-        // * 1st param - geo json data
+        // * 1st param - geojson data
         // * 2nd param - name of the layer which will be used to generate css class
-        // * 3rd param - (optional) a function used to generate key for geo path, it should match the dimension key
+        // * 3rd param - (_optional_) a function used to generate key for geo path, it should match the dimension key
         // in order for the coloring to work properly
         .overlayGeoJson(statesJson.features, 'state', function(d) {
             return d.properties.name;
         })
-        // (optional) closure to generate title for path, :default = d.key + ': ' + d.value
+        // (_optional_) closure to generate title for path, `default = d.key + ': ' + d.value`
         .title(function(d) {
             return 'State: ' + d.key + '\nTotal Amount Raised: ' + numberFormat(d.value ? d.value : 0) + 'M';
         });
@@ -522,9 +575,11 @@ d3.csv('ndx.csv', function (data) {
         // an optional chart group for this chart to be scoped within. When a chart belongs
         // to a specific group then any interaction with such chart will only trigger redraw
         // on other charts within the same chart group.
+        // <br>API: [Bubble Overlay Chart][bubble]
+        // [bubble]: https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#bubble-overlay-chart
         dc.bubbleOverlay('#bubble-overlay')
-            // bubble overlay chart does not generate it's own svg element but rather resue an existing
-            // svg to generate it's overlay layer
+            // bubble overlay chart does not generate its own svg element but rather reuse an existing
+            // svg to generate its overlay layer
             .svg(d3.select('#bubble-overlay svg'))
             .width(990) // (optional) define chart width, :default = 200
             .height(500) // (optional) define chart height, :default = 200
@@ -536,48 +591,48 @@ d3.csv('ndx.csv', function (data) {
             .keyAccessor(function(p) {return p.value.absGain;})
             // closure used to retrieve y value from multi-value group
             .valueAccessor(function(p) {return p.value.percentageGain;})
-            // (optional) define color function or array for bubbles
+            // (_optional_) define color function or array for bubbles
             .colors(['#ccc', '#E2F2FF','#C4E4FF','#9ED2FF','#81C5FF','#6BBAFF','#51AEFF','#36A2FF','#1E96FF','#0089FF',
                 '#0061B5'])
-            // (optional) define color domain to match your data domain if you want to bind data or color
+            // (_optional_) define color domain to match your data domain if you want to bind data or color
             .colorDomain([-5, 200])
-            // (optional) define color value accessor
+            // (_optional_) define color value accessor
             .colorAccessor(function(d, i){return d.value;})
             // closure used to retrieve radius value from multi-value group
             .radiusValueAccessor(function(p) {return p.value.fluctuationPercentage;})
             // set radius scale
             .r(d3.scale.linear().domain([0, 3]))
-            // (optional) whether chart should render labels, :default = true
+            // (_optional_) whether chart should render labels, `default = true`
             .renderLabel(true)
-            // (optional) closure to generate label per bubble, :default = group.key
+            // (_optional_) closure to generate label per bubble, `default = group.key`
             .label(function(p) {return p.key.getFullYear();})
-            // (optional) whether chart should render titles, :default = false
+            // (_optional_) whether chart should render titles, `default = false`
             .renderTitle(true)
-            // (optional) closure to generate title per bubble, :default = d.key + ': ' + d.value
+            // (_optional_) closure to generate title per bubble, `default = d.key + ': ' + d.value`
             .title(function(d) {
                 return 'Title: ' + d.key;
             })
-            // add data point to it's layer dimension key that matches point name will be used to
-            // generate bubble. multiple data points can be added to bubble overlay to generate
-            // multiple bubbles
+            // add data point to its layer dimension key that matches point name: it will be used to
+            // generate a bubble. Multiple data points can be added to the bubble overlay to generate
+            // multiple bubbles.
             .point('California', 100, 120)
             .point('Colorado', 300, 120)
-            // (optional) setting debug flag to true will generate a transparent layer on top of
-            // bubble overlay which can be used to obtain relative x,y coordinate for specific
-            // data point, :default = false
+            // (_optional_) setting debug flag to true will generate a transparent layer on top of
+            // bubble overlay which can be used to obtain relative `x`,`y` coordinate for specific
+            // data point, `default = false`
             .debug(true);
     */
 
     //#### Rendering
-    //simply call renderAll() to render all charts on the page
+    //simply call `dc.renderAll()` to render all charts on the page
     dc.renderAll();
     /*
     // or you can render charts belong to a specific chart group
     dc.renderAll('group');
-    // once rendered you can call redrawAll to update charts incrementally when data
-    // change without re-rendering everything
+    // once rendered you can call `dc.redrawAll()`
+    // to update charts incrementally when data change without re-rendering everything
     dc.redrawAll();
-    // or you can choose to redraw only those charts associated with a specific chart group
+    // or you can choose to `dc.redraw(chartGroup)` only those charts associated with a specific chart group
     dc.redrawAll('group');
     */
 
