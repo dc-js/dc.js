@@ -143,6 +143,10 @@ dc.compositeChart = function (parent, chartGroup) {
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
 
+            if (child.isLegendableHidden()) {
+                continue;
+            }
+
             if (!child.g()) {
                 generateChildG(child, i);
             }
@@ -319,13 +323,13 @@ dc.compositeChart = function (parent, chartGroup) {
 
     function leftYAxisChildren() {
         return _children.filter(function (child) {
-            return !child.useRightYAxis();
+            return !child.isLegendableHidden() && !child.useRightYAxis();
         });
     }
 
     function rightYAxisChildren() {
         return _children.filter(function (child) {
-            return child.useRightYAxis();
+            return !child.isLegendableHidden() && child.useRightYAxis();
         });
     }
 

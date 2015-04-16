@@ -29,6 +29,7 @@ dc.stackMixin = function (_chart) {
     var _titles = {};
 
     var _hidableStacks = false;
+    var _hidden = false;
 
     function domainFilter() {
         if (!_chart.x()) {
@@ -267,18 +268,25 @@ dc.stackMixin = function (_chart) {
     };
 
     _chart.isLegendableHidden = function (d) {
-        var layer = findLayerByName(d.name);
-        return layer ? layer.hidden : false;
+        if (d && _stack.length > 1) {
+            var layer = findLayerByName(d.name);
+            return layer ? layer.hidden : false;
+        } else {
+            return _hidden;
+        }
     };
 
     _chart.legendToggle = function (d) {
         if (_hidableStacks) {
-            if (_chart.isLegendableHidden(d)) {
-                _chart.showStack(d.name);
+            if (d && _stack.length > 1) {
+                if (_chart.isLegendableHidden(d)) {
+                    _chart.showStack(d.name);
+                } else {
+                    _chart.hideStack(d.name);
+                }
             } else {
-                _chart.hideStack(d.name);
+                _hidden = !_hidden;
             }
-            //_chart.redraw();
             _chart.renderGroup();
         }
     };

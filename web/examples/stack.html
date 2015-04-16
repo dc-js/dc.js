@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>dc.js - Composite Chart Example</title>
+    <title>dc.js - Stacked Area Chart Example</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
 </head>
@@ -15,7 +15,7 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var composite = dc.compositeChart("#test_composed");
+var lineChart = dc.lineChart("#test_composed");
 
 var q = queue()
     .defer(d3.csv, "morley.csv")
@@ -35,28 +35,19 @@ q.await(function(error, exp1, exp2) {
         grp1 = dim.group().reduceSum(dc.pluck('y1')),
         grp2 = dim.group().reduceSum(dc.pluck('y2'));
 
-    composite
+    lineChart
         .width(768)
         .height(480)
         .x(d3.scale.linear().domain([0,20]))
         .yAxisLabel("The Y Axis")
         .legend(dc.legend().x(80).y(20).itemHeight(13).gap(5))
         .renderHorizontalGridLines(true)
-        .compose([
-            dc.lineChart(composite)
-                .dimension(dim)
-                .colors('red')
-                .group(grp1, "Top Line")
-                .hidableStacks(true)
-                .dashStyle([2,2]),
-            dc.lineChart(composite)
-                .dimension(dim)
-                .colors('blue')
-                .group(grp2, "Bottom Line")
-                .hidableStacks(true)
-                .dashStyle([5,5])
-            ])
+        .dimension(dim)
+        .group(grp1, "Bottom Line")
+        .stack(grp2, "Top Line")
         .brushOn(false)
+        .renderArea(true)
+        .hidableStacks(true)
         .render();
 
 });
