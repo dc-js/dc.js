@@ -232,9 +232,15 @@ div.dc-chart {
             fill-opacity: 0.5;
             fill: $color_celeste;
         }
-        g.axis text {
-            pointer-events: all;
-            cursor: pointer;
+        g.axis {
+            text {
+                pointer-events: all;
+                cursor: pointer;
+            }
+            .domain,
+            .tick line {
+                opacity: 0;
+            }
         }
     }
     .empty-chart .pie-slice {
