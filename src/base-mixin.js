@@ -895,6 +895,19 @@ dc.baseMixin = function (_chart) {
         return _chart;
     };
 
+
+    /**
+    #### .legendLabelAccessor([legendLabelAccessorFunction])
+    Set or get the legend label accessor function. The legend label accessor function is used to retrieve the
+    value from the legend label for the crossfilter group.
+    ```js
+    // default legenLabel accessor
+    chart.legendLabelAccessor(function(d) { return d.key; });
+    // custom legen label accessor for a multi-value crossfilter reduction
+    chart.legendLabelAccessor(function(p) { return "Custom Legend:" + p.key; });
+    ```
+
+    **/
     _chart.legendLabelAccessor = function (_) {
         if (!arguments.length) {
             return _legendLabelAccessor;
@@ -924,10 +937,6 @@ dc.baseMixin = function (_chart) {
         _label = _;
         _renderLabel = true;
         return _chart;
-    };
-
-    _chart.getLegendLabel = function (d, i) {
-        return _legendLabelAccessor.call(this, d, i);
     };
 
     /**

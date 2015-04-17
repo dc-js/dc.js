@@ -658,6 +658,32 @@ describe('dc.pieChart', function() {
             valueDimension.filterAll();
         });
     });
+
+
+    describe('legends with label', function() {
+        var chart;
+        beforeEach(function() {
+            chart = buildChart("pie-chart-legend")
+                .cap(3)
+                .legend(dc.legend())
+                .legendLabelAccessor(function(d){
+                   return d.key + " labeled";
+                })
+                .render();
+        });
+        it('should generate items for each slice', function() {
+            expect(chart.selectAll('g.dc-legend g.dc-legend-item').size()).toEqual(chart.data().length);
+        });
+        it('should include "others" item labeled', function() {
+            var numOthersGroups = chart.selectAll('g.dc-legend g.dc-legend-item text').filter(function(d, i) {
+                return d.name == "Others labeled";
+            }).size();
+            expect(numOthersGroups).toEqual(1);
+        });
+        afterEach(function() {
+            valueDimension.filterAll();
+        });
+    });
 });
 
 
