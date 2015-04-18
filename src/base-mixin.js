@@ -31,6 +31,7 @@ dc.baseMixin = function (_chart) {
     var _keyAccessor = dc.pluck('key');
     var _valueAccessor = dc.pluck('value');
     var _label = dc.pluck('key');
+    var _legendLabelAccessor = dc.pluck('key');
 
     var _ordering = dc.pluck('key');
     var _orderSort;
@@ -891,6 +892,27 @@ dc.baseMixin = function (_chart) {
             return _valueAccessor;
         }
         _valueAccessor = _;
+        return _chart;
+    };
+
+
+    /**
+    #### .legendLabelAccessor([legendLabelAccessorFunction])
+    Set or get the legend label accessor function. The legend label accessor function is used to retrieve the
+    value from the legend label for the crossfilter group.
+    ```js
+    // default legenLabel accessor
+    chart.legendLabelAccessor(function(d) { return d.key; });
+    // custom legen label accessor for a multi-value crossfilter reduction
+    chart.legendLabelAccessor(function(p) { return "Custom Legend:" + p.key; });
+    ```
+
+    **/
+    _chart.legendLabelAccessor = function (_) {
+        if (!arguments.length) {
+            return _legendLabelAccessor;
+        }
+        _legendLabelAccessor = _;
         return _chart;
     };
 

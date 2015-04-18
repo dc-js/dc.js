@@ -51,6 +51,7 @@ dc.pieChart = function (parent, chartGroup) {
     var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
 
     _chart.colorAccessor(_chart.cappedKeyAccessor);
+    _chart.legendLabelAccessor(_chart.cappedKeyAccessor);
 
     _chart.title(function (d) {
         return _chart.cappedKeyAccessor(d) + ': ' + _chart.cappedValueAccessor(d);
@@ -428,7 +429,8 @@ dc.pieChart = function (parent, chartGroup) {
 
     _chart.legendables = function () {
         return _chart.data().map(function (d, i) {
-            var legendable = {name: d.key, data: d.value, others: d.others, chart:_chart};
+            var legendable = {  name: _chart.legendLabelAccessor().call(this, d, i),
+                                data: d.value, others: d.others, chart:_chart };
             legendable.color = _chart.getColor(d, i);
             return legendable;
         });

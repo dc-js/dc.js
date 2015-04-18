@@ -681,6 +681,7 @@ dc.baseMixin = function (_chart) {
     var _keyAccessor = dc.pluck('key');
     var _valueAccessor = dc.pluck('value');
     var _label = dc.pluck('key');
+    var _legendLabelAccessor = dc.pluck('key');
 
     var _ordering = dc.pluck('key');
     var _orderSort;
@@ -1541,6 +1542,27 @@ dc.baseMixin = function (_chart) {
             return _valueAccessor;
         }
         _valueAccessor = _;
+        return _chart;
+    };
+
+
+    /**
+    #### .legendLabelAccessor([legendLabelAccessorFunction])
+    Set or get the legend label accessor function. The legend label accessor function is used to retrieve the
+    value from the legend label for the crossfilter group.
+    ```js
+    // default legenLabel accessor
+    chart.legendLabelAccessor(function(d) { return d.key; });
+    // custom legen label accessor for a multi-value crossfilter reduction
+    chart.legendLabelAccessor(function(p) { return "Custom Legend:" + p.key; });
+    ```
+
+    **/
+    _chart.legendLabelAccessor = function (_) {
+        if (!arguments.length) {
+            return _legendLabelAccessor;
+        }
+        _legendLabelAccessor = _;
         return _chart;
     };
 
@@ -3746,6 +3768,7 @@ dc.pieChart = function (parent, chartGroup) {
     var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
 
     _chart.colorAccessor(_chart.cappedKeyAccessor);
+    _chart.legendLabelAccessor(_chart.cappedKeyAccessor);
 
     _chart.title(function (d) {
         return _chart.cappedKeyAccessor(d) + ': ' + _chart.cappedValueAccessor(d);
@@ -4123,7 +4146,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     _chart.legendables = function () {
         return _chart.data().map(function (d, i) {
-            var legendable = {name: d.key, data: d.value, others: d.others, chart:_chart};
+            var legendable = {name: _chart.legendLabelAccessor().call(this, d, i), data: d.value, others: d.others, chart:_chart};
             legendable.color = _chart.getColor(d, i);
             return legendable;
         });
