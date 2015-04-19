@@ -53,6 +53,8 @@ dc.rowChart = function (parent, chartGroup) {
 
     var _rowData;
 
+    var _ignoreZeroValue = false;
+
     _chart.rowsCap = _chart.cap;
 
     function calculateAxisScale() {
@@ -129,7 +131,14 @@ dc.rowChart = function (parent, chartGroup) {
     }
 
     function drawChart() {
-        _rowData = _chart.data();
+
+        if (_ignoreZeroValue){
+            _rowData = _chart.data().filter(function(d){
+                return _chart.valueAccessor()(d) !== 0;
+            });
+        }else{
+            _rowData = _chart.data();
+        }
 
         drawAxis();
         drawGridLines();
@@ -384,6 +393,12 @@ dc.rowChart = function (parent, chartGroup) {
             return _titleLabelOffsetX;
         }
         _titleLabelOffsetX = o;
+        return _chart;
+    };
+
+    _chart.ignoreZeroValue = function(x){
+        if(!arguments.length) return _ignoreZeroValue;
+        _ignoreZeroValue = x;
         return _chart;
     };
 
