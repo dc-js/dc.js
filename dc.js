@@ -663,6 +663,7 @@ dc.baseMixin = function (_chart) {
     var _anchor;
     var _root;
     var _svg;
+    var _isChild;
 
     var _minWidth = 200;
     var _defaultWidth = function (element) {
@@ -949,11 +950,13 @@ dc.baseMixin = function (_chart) {
         if (dc.instanceOfChart(a)) {
             _anchor = a.anchor();
             _root = a.root();
+            _isChild = true;
         } else {
             _anchor = a;
             _root = d3.select(_anchor);
             _root.classed(dc.constants.CHART_CLASS, true);
             dc.registerChart(_chart, chartGroup);
+            _isChild = false;
         }
         _chartGroup = chartGroup;
         return _chart;
@@ -1658,9 +1661,13 @@ dc.baseMixin = function (_chart) {
         if (!arguments.length) {
             return _chartGroup;
         }
-        dc.deregisterChart(_chart, _chartGroup);
+        if (!_isChild) {
+            dc.deregisterChart(_chart, _chartGroup);
+        }
         _chartGroup = _;
-        dc.registerChart(_chart, _chartGroup);
+        if (!_isChild) {
+            dc.registerChart(_chart, _chartGroup);
+        }
         return _chart;
     };
 
