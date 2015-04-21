@@ -1008,7 +1008,9 @@ dc.baseMixin = function (_chart) {
         if (!arguments.length) {
             return _chartGroup;
         }
+        dc.deregisterChart(_chart, _chartGroup);
         _chartGroup = _;
+        dc.registerChart(_chart, _chartGroup);
         return _chart;
     };
 
