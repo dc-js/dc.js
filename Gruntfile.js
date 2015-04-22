@@ -1,7 +1,9 @@
 module.exports = function (grunt) {
     'use strict';
 
-    require('load-grunt-tasks')(grunt);
+    require('load-grunt-tasks')(grunt, {
+        pattern: ['grunt-*', '!grunt-lib-phantomjs', '!grunt-template-jasmine-istanbul']
+    });
     require('time-grunt')(grunt);
 
     var config = {
