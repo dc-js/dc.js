@@ -327,7 +327,7 @@ describe('dc.compositeChart', function() {
 
                 dateValueGroupLine2.on("click")(dateValueGroupLine2.datum());
                 expect(dateValueGroupLine2.text()).toBe('Date Value Group Line 2');
-                expect(d3.select(chart.selectAll('g.dc-legend g.dc-legend-item')[0][3]).classed("fadeout")).toBeTruthy();                
+                expect(d3.select(chart.selectAll('g.dc-legend g.dc-legend-item')[0][3]).classed("fadeout")).toBeTruthy();
                 expect(chart.selectAll("path.line").size()).toEqual(3);
             });
         });
