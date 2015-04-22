@@ -141,6 +141,7 @@
 <li><a href="#number-display-widget">Number Display Widget</a></li>
 <li><a href="#heat-map">Heat Map</a></li>
 <li><a href="#box-plot">Box Plot</a></li>
+<li><a href="#bullet-chart">Bullet Chart</a></li>
 </ul>
 <h4 id="version-2-1-0-dev">Version 2.1.0-dev</h4>
 <p>The entire dc.js library is scoped under the <strong>dc</strong> name space. It does not introduce anything else
@@ -1746,6 +1747,44 @@ integer formatting.</p>
 <pre><code class="lang-js"><span class="hljs-comment">// format ticks to 2 decimal places</span>
 chart.tickFormat(d3.format(<span class="hljs-string">'.2f'</span>));
 </code></pre>
+<h2 id="bullet-chart">Bullet Chart</h2>
+<p>Includes: <a href="#color-mixin">Color Mixin</a>, <a href="#margin-mixin">Margin Mixin</a>, <a href="#base-mixin">Base Mixin</a></p>
+<p>Concrete bullet chart implementation.</p>
+<p>Inspired by:</p>
+<ul>
+<li><a href="http://bl.ocks.org/mbostock/4061961">Mike Bostock’s bullet chart</a></li>
+</ul>
+<p>Examples:</p>
+<ul>
+<li>ToDO</li>
+</ul>
+<h4 id="dc-bulletchart-parent-chartgroup-">dc.bulletChart(parent[, chartGroup])</h4>
+<p>Create a bullet chart instance and attach it to the given parent element.</p>
+<p>Parameters:</p>
+<ul>
+<li>parent : string | node | selection | compositeChart - any valid
+<a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single selector</a> specifying
+a dom block element such as a div; or a dom element or d3 selection.</li>
+<li>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart’s group.</li>
+</ul>
+<p>Returns:
+A newly created bullet chart instance</p>
+<pre><code class="lang-js"><span class="hljs-comment">// create a bullet chart under #chart-container1 element using the default global chart group</span>
+<span class="hljs-keyword">var</span> chart1 = dc.bulletChart(<span class="hljs-string">'#chart-container1'</span>);
+<span class="hljs-comment">// create a bullet chart under #chart-container2 element using chart group A</span>
+<span class="hljs-keyword">var</span> chart2 = dc.bulletChart(<span class="hljs-string">'#chart-container2'</span>, <span class="hljs-string">'chartGroupA'</span>);
+<span class="hljs-comment">// create a sub-chart under a composite parent chart</span>
+<span class="hljs-keyword">var</span> chart3 = dc.bulletChart(compositeChart);
+</code></pre>
+<h4 id="-bulletwidth-value-">.bulletWidth([value])</h4>
+<p>Set or get the bullet width.</p>
+<h4 id="-bulletheight-value-">.bulletHeight([value])</h4>
+<p>Set or get the bullet height.</p>
+<h4 id="-bulletmargin-value-">.bulletMargin([value])</h4>
+<p>Set or get the bullet margin, i.e. <code>{top: 5, right: 40, bottom: 50, left:120}</code>.</p>
+<h4 id="-orient-value-">.orient([value])</h4>
+<p>Set or get the bullet orientation (one of <code>&quot;left&quot;</code>, <code>&quot;right&quot;</code>, <code>&quot;top&quot;</code> or <code>&quot;bottom&quot;</code>).</p>
 
   </body>
 </html>

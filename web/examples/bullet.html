@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>dc.js - Bullet Chart Example</title>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<style>
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: auto;
+  padding-top: 40px;
+  position: relative;
+  width: 960px;
+}
+
+button {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.bullet { font: 10px sans-serif; }
+.bullet .marker { stroke: #000; stroke-width: 2px; }
+.bullet .tick line { stroke: #666; stroke-width: .5px;}
+.bullet .range.s0 { fill: #eee; }
+.bullet .range.s1 { fill: #ddd; }
+.bullet .range.s2 { fill: #ccc; }
+.bullet .measure.s0 { fill: lightsteelblue; }
+.bullet .measure.s1 { fill: steelblue; }
+.bullet .title { font-size: 14px; font-weight: bold; }
+.bullet .subtitle { fill: #999; }
+
+.bullet .axis line, .bullet .axis path { opacity: 0.5; }
+</style>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+
+<div id="test-horizontal"></div>
+<div id="test-vertical"></div>
+
+<script type="text/javascript">
+
+var chart1 = dc.bulletChart("#test-horizontal");
+var chart2 = dc.bulletChart("#test-vertical");
+
+// included second marker for "Revenue" (not in original gists)
+// NOTE: the bullet d3.plugin does not support different symbols for the different markers
+var data = [
+  {"title":"Revenue","subtitle":"US$, in thousands","ranges":[150,225,300],"measures":[220,270],"markers":[210, 250]},
+  {"title":"Profit","subtitle":"%","ranges":[20,25,30],"measures":[21,23],"markers":[26]},
+  {"title":"Order Size","subtitle":"US$, average","ranges":[350,500,600],"measures":[100,320],"markers":[550]},
+  {"title":"New Customers","subtitle":"count","ranges":[1400,2000,2500],"measures":[1000,1650],"markers":[2100]},
+  {"title":"Satisfaction","subtitle":"out of 5","ranges":[3.5,4.25,5],"measures":[3.2,4.7],"markers":[4.4]}
+];
+
+var ndx        = crossfilter(data),
+    titleDimension = ndx.dimension(function(d) {return d.title;}),
+    statusGroup    = {
+      all: function(){
+        return data;
+    }};
+
+// dims from Mike Bostock's bl.ock, http://bl.ocks.org/mbostock/4061961
+chart1
+  .width(960)
+  .height(450)
+  .bulletMargin({top: 5, right: 40, bottom: 20, left: 120})
+  .bulletWidth(960 - 120 - 40)
+  .bulletHeight(50 - 5 - 20)
+  .orient("left")
+  .dimension(titleDimension)
+  .group(statusGroup);
+
+chart1.render();
+
+// dims from Jason Davies's bl.ock, http://bl.ocks.org/jasondavies/5452290
+chart2
+  .width(185)
+  .height(450)
+  .bulletMargin({top: 5, right: 40, bottom: 50, left: 120})
+  .bulletWidth(185 - 120 - 40)
+  .bulletHeight(450 - 5 - 50)
+  .orient("top")
+  .dimension(titleDimension)
+  .group(statusGroup);
+
+chart2.render();
+</script>
+</html>

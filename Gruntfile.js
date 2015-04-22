@@ -61,7 +61,7 @@ module.exports = function (grunt) {
                 src: ['<%= conf.src %>/**/*.js', 'Gruntfile.js', '<%= conf.web %>/stock.js'],
                 options: {
                     jshintrc: '.jshintrc',
-                    ignores: ['<%= conf.src %>/banner.js', '<%= conf.src %>/footer.js']
+                    ignores: ['<%= conf.src %>/banner.js', '<%= conf.src %>/footer.js', '<%= conf.src %>/d3.bullet.js']
                 }
             }
         },
@@ -415,5 +415,7 @@ module.exports.jsFiles = [
     'src/heatmap.js',
     'src/d3.box.js',
     'src/box-plot.js',
+    'src/d3.bullet.js',
+    'src/bullet-chart.js',
     'src/footer.js'  // NOTE: keep this last
 ];
