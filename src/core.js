@@ -1,5 +1,5 @@
 /**
-#### Version %VERSION%
+#### Version <%= conf.pkg.version %>
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -20,7 +20,7 @@ that are chainable d3 objects.)
 /*jshint -W062*/
 /*jshint -W079*/
 var dc = {
-    version: '%VERSION%',
+    version: '<%= conf.pkg.version %>',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
