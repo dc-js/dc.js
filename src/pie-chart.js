@@ -429,7 +429,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     _chart.legendables = function () {
         return _chart.data().map(function (d, i) {
-            var legendable = {name: _chart.legendLabelAccessor(d, i), data: d.value, others: d.others, chart:_chart};
+            var legendable = {name: _chart.getLegendLabel(d, i), data: d.value, others: d.others, chart:_chart};
             legendable.color = _chart.getColor(d, i);
             return legendable;
         });
