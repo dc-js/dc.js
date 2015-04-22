@@ -1,7 +1,8 @@
 /*!
  *  dc 2.0.0-beta.8
  *  http://dc-js.github.io/dc.js/
- *  Copyright 2012 Nick Zhu and other contributors
+ *  Copyright 2012-2015 Nick Zhu & the dc.js Developers
+ *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,7 +16,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 (function() { function _dc(d3, crossfilter) {
 'use strict';
 
@@ -8739,3 +8739,5 @@ return dc;}
     }
 }
 )();
+
+//# sourceMappingURL=dc.js.map
