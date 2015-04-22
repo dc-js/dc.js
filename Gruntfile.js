@@ -373,7 +373,7 @@ module.exports = function (grunt) {
     grunt.registerTask('docs', ['build', 'copy', 'emu', 'toc', 'markdown', 'docco']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine']);
-    grunt.registerTask('test', ['build', 'jasmine:specs', 'test-stock-example', 'shell:hooks']);
+    grunt.registerTask('test', ['build', 'jasmine:specs', 'shell:hooks']);
     grunt.registerTask('test-browserify', ['build', 'browserify', 'jasmine:browserify']);
     grunt.registerTask('coverage', ['build', 'jasmine:coverage']);
     grunt.registerTask('ci', ['test', 'jasmine:specs:build', 'connect:server', 'saucelabs-jasmine']);
