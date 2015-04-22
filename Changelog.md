@@ -1,5 +1,6 @@
 # 2.0 Series
 ## 2.0.0 beta 8
+ * simplify Gruntfile and further update dependencies, by Matt Traynham ([#849](https://github.com/dc-js/dc.js/pull/849))
  * setting the chart group should automatically put the chart in that group, by Matt Traynham ([#834](https://github.com/dc-js/dc.js/pull/834) / [#775](https://github.com/dc-js/dc.js/issues/775))
 
 ## 2.0.0 beta 7
