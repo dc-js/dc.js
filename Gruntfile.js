@@ -1,32 +1,21 @@
 module.exports = function (grunt) {
     'use strict';
 
-    require('load-grunt-tasks')(grunt, {
-        pattern: ['grunt-*', '!grunt-lib-phantomjs', '!grunt-template-jasmine-istanbul']
-    });
-    require('time-grunt')(grunt);
+    var jsFiles = module.exports.jsFiles;
 
-    var config = {
-        src: 'src',
-        spec: 'spec',
-        web: 'web',
-        pkg: require('./package.json'),
-        banner: grunt.file.read('./LICENSE_BANNER'),
-        jsFiles: module.exports.jsFiles
+    var output = {
+        js: '<%= pkg.name %>.js',
+        jsmin: '<%= pkg.name %>.min.js',
+        map: '<%= pkg.name %>.min.js.map'
     };
 
     grunt.initConfig({
-        conf: config,
+        pkg: grunt.file.readJSON('package.json'),
 
         concat: {
-            options : {
-                process: true,
-                sourceMap: true,
-                banner : '<%= conf.banner %>'
-            },
             js: {
-                src: '<%= conf.jsFiles %>',
-                dest: '<%= conf.pkg.name %>.js'
+                src: jsFiles,
+                dest: output.js
             }
         },
         uglify: {
@@ -34,23 +23,28 @@ module.exports = function (grunt) {
                 options: {
                     mangle: true,
                     compress: true,
-                    sourceMap: true,
-                    banner : '<%= conf.banner %>'
+                    sourceMap: output.map
                 },
-                src: '<%= conf.pkg.name %>.js',
-                dest: '<%= conf.pkg.name %>.min.js'
+                src: output.js,
+                dest: output.jsmin
+            }
+        },
+        sed: {
+            version: {
+                pattern: '%VERSION%',
+                replacement: '<%= pkg.version %>',
+                path: [output.js, output.jsmin]
             }
         },
         jscs: {
             old: {
-                src: ['<%= conf.spec %>/**/*.js'],
+                src: ['spec/**/*.js'],
                 options: {
                     validateIndentation: 4
                 }
             },
             source: {
-                src: ['<%= conf.src %>/**/*.js', '!<%= conf.src %>/{banner,footer}.js', 'Gruntfile.js',
-                    '<%= conf.web %>/stock.js'],
+                src: ['src/**/*.js', '!src/{banner,footer}.js', 'Gruntfile.js', 'web/stock.js'],
                 options: {
                     config: '.jscsrc'
                 }
@@ -58,32 +52,28 @@ module.exports = function (grunt) {
         },
         jshint: {
             source: {
-                src: ['<%= conf.src %>/**/*.js', 'Gruntfile.js', '<%= conf.web %>/stock.js'],
+                src: ['src/**/*.js', 'Gruntfile.js', 'web/stock.js'],
                 options: {
                     jshintrc: '.jshintrc',
-                    ignores: ['<%= conf.src %>/banner.js', '<%= conf.src %>/footer.js']
+                    ignores: ['src/banner.js', 'src/footer.js']
                 }
             }
         },
         watch: {
             scripts: {
-                files: ['<%= conf.src %>/**/*.js'],
+                files: ['src/**/*.js'],
                 tasks: ['build', 'copy']
             },
             jasmineRunner: {
-                files: ['<%= conf.spec %>/**/*.js'],
+                files: ['spec/**/*.js'],
                 tasks: ['jasmine:specs:build']
             },
             tests: {
-                files: ['<%= conf.src %>/**/*.js', '<%= conf.spec %>/**/*.js'],
+                files: ['src/**/*.js', 'spec/**/*.js'],
                 tasks: ['test']
             },
             reload: {
-                files: ['<%= conf.pkg.name %>.js',
-                    '<%= conf.pkg.name %>css',
-                    '<%= conf.web %>/js/<%= conf.pkg.name %>.js',
-                    '<%= conf.web %>/css/<%= conf.pkg.name %>.css',
-                    '<%= conf.pkg.name %>.min.js'],
+                files: ['dc.js', 'dc.css', 'web/js/dc.js', 'web/css/dc.css', 'dc.min.js'],
                 options: {
                     livereload: true
                 }
@@ -102,17 +92,17 @@ module.exports = function (grunt) {
                 options: {
                     display: 'short',
                     summary: true,
-                    specs:  '<%= conf.spec %>/*-spec.js',
-                    helpers: '<%= conf.spec %>/helpers/*.js',
+                    specs:  'spec/*-spec.js',
+                    helpers: 'spec/helpers/*.js',
                     version: '2.0.0',
-                    outfile: '<%= conf.spec %>/index.html',
+                    outfile: 'spec/index.html',
                     keepRunner: true
                 },
                 src: [
-                    '<%= conf.web %>/js/d3.js',
-                    '<%= conf.web %>/js/crossfilter.js',
-                    '<%= conf.web %>/js/colorbrewer.js',
-                    '<%= conf.pkg.name %>.js'
+                    'web/js/d3.js',
+                    'web/js/crossfilter.js',
+                    'web/js/colorbrewer.js',
+                    'dc.js'
                 ]
             },
             coverage:{
@@ -139,10 +129,10 @@ module.exports = function (grunt) {
                 options: {
                     display: 'short',
                     summary: true,
-                    specs:  '<%= conf.spec %>/*-spec.js',
-                    helpers: '<%= conf.spec %>/helpers/*.js',
+                    specs:  'spec/*-spec.js',
+                    helpers: 'spec/helpers/*.js',
                     version: '2.0.0',
-                    outfile: '<%= conf.spec %>/index-browserify.html',
+                    outfile: 'spec/index-browserify.html',
                     keepRunner: true
                 },
                 src: [
@@ -174,14 +164,14 @@ module.exports = function (grunt) {
                             platform: 'WIN8'
                         }
                     ],
-                    testname: '<%= conf.pkg.name %>.js'
+                    testname: 'dc.js'
                 }
             }
         },
         emu: {
             api: {
-                src: '<%= conf.pkg.name %>.js',
-                dest: '<%= conf.web %>/docs/api-latest.md'
+                src: output.js,
+                dest: 'web/docs/api-latest.md'
             }
         },
         toc: {
@@ -193,19 +183,19 @@ module.exports = function (grunt) {
         markdown: {
             html: {
                 src: '<%= emu.api.dest %>',
-                dest: '<%= conf.web %>/docs/index.html'
+                dest: 'web/docs/index.html'
             },
             options: {markdownOptions: {highlight: 'manual'}}
         },
         docco: {
             options: {
-                dst: '<%= conf.web %>/docs',
-                basepath:'<%= conf.web %>'
+                dst: 'web/docs',
+                basepath:'web'
             },
             howto: {
                 files: [
                     {
-                        src: ['<%= conf.web %>/stock.js']
+                        src: ['web/stock.js']
                     }
                 ]
             }
@@ -213,20 +203,18 @@ module.exports = function (grunt) {
         copy: {
             'dc-to-gh': {
                 files: [
-                    {expand: true, flatten: true, src: '<%= conf.pkg.name %>.css', dest: '<%= conf.web %>/css/'},
+                    {expand: true, flatten: true, src: 'dc.css', dest: 'web/css/'},
                     {
                         expand: true,
                         flatten: true,
                         src: [
-                            '<%= conf.pkg.name %>.js',
-                            '<%= conf.pkg.name %>.js.map',
-                            '<%= conf.pkg.name %>.min.js',
-                            '<%= conf.pkg.name %>.min.js.map',
+                            output.js,
+                            output.js + '.map',
                             'node_modules/d3/d3.js',
                             'node_modules/crossfilter/crossfilter.js',
                             'test/env-data.js'
                         ],
-                        dest: '<%= conf.web %>/js/'
+                        dest: 'web/js/'
                     }
                 ]
             }
@@ -259,7 +247,7 @@ module.exports = function (grunt) {
                             '<p>An attempt to present a simple example of each chart type.',
                             '<a href="https://github.com/dc-js/dc.js/blob/master/CONTRIBUTING.md">',
                             'Contributions welcome</a>.</p>',
-                            '<p>Source <a href="https://github.com/dc-js/dc.js/tree/master/<%= conf.web %>/examples">',
+                            '<p>Source <a href="https://github.com/dc-js/dc.js/tree/master/web/examples">',
                             'here</a>.</p>',
                             body,
                             '</div></body></html>'
@@ -268,14 +256,14 @@ module.exports = function (grunt) {
                     absolute: true
                 },
                 files: [
-                    {dest: '<%= conf.web %>/examples/index.html', src: ['<%= conf.web %>/examples/*.html']}
+                    {dest: 'web/examples/index.html', src: ['web/examples/*.html']}
                 ]
             }
         },
 
         'gh-pages': {
             options: {
-                base: '<%= conf.web %>',
+                base: 'web',
                 message: 'Synced from from master branch.'
             },
             src: ['**']
@@ -310,16 +298,35 @@ module.exports = function (grunt) {
         },
         browserify: {
             dev: {
-                src: '<%= conf.pkg.name %>.js',
+                src: 'dc.js',
                 dest: 'bundle.js',
                 options: {
                     browserifyOptions: {
                         standalone: 'dc'
                     }
                 }
-            }
+            },
         }
     });
+
+    // These plugins provide necessary tasks.
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-jasmine');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-docco2');
+    grunt.loadNpmTasks('grunt-gh-pages');
+    grunt.loadNpmTasks('grunt-jscs');
+    grunt.loadNpmTasks('grunt-saucelabs');
+    grunt.loadNpmTasks('grunt-markdown');
+    grunt.loadNpmTasks('grunt-sed');
+    grunt.loadNpmTasks('grunt-shell');
+    grunt.loadNpmTasks('grunt-debug-task');
+    grunt.loadNpmTasks('grunt-fileindex');
+    grunt.loadNpmTasks('grunt-browserify');
 
     // custom tasks
     grunt.registerMultiTask('emu', 'Documentation extraction by emu.', function () {
@@ -369,11 +376,11 @@ module.exports = function (grunt) {
     });
 
     // task aliases
-    grunt.registerTask('build', ['concat', 'uglify']);
+    grunt.registerTask('build', ['concat', 'uglify', 'sed']);
     grunt.registerTask('docs', ['build', 'copy', 'emu', 'toc', 'markdown', 'docco']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine']);
-    grunt.registerTask('test', ['build', 'jasmine:specs', 'shell:hooks']);
+    grunt.registerTask('test', ['build', 'jasmine:specs', 'test-stock-example', 'shell:hooks']);
     grunt.registerTask('test-browserify', ['build', 'browserify', 'jasmine:browserify']);
     grunt.registerTask('coverage', ['build', 'jasmine:coverage']);
     grunt.registerTask('ci', ['test', 'jasmine:specs:build', 'connect:server', 'saucelabs-jasmine']);
@@ -383,7 +390,7 @@ module.exports = function (grunt) {
 };
 
 module.exports.jsFiles = [
-    'src/banner.js',   // NOTE: keep this first
+    'src/banner.js',
     'src/core.js',
     'src/errors.js',
     'src/utils.js',

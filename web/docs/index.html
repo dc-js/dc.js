@@ -149,10 +149,9 @@ into the global name space.</p>
 <p>Most dc functions are designed to allow function chaining, meaning they return the current chart
 instance whenever it is appropriate. This way chart configuration can be written in the following
 style:</p>
-<pre><code class="lang-js">chart.width(<span class="hljs-number">300</span>)
-.height(<span class="hljs-number">300</span>)
-.filter(<span class="hljs-string">'sunday'</span>)
-</code></pre>
+<pre><code class="lang-js"><span class="comment">chart</span>.<span class="comment">width(300)</span>
+<span class="string">.</span><span class="comment">height(300)</span>
+<span class="string">.</span><span class="comment">filter('sunday')</code></pre>
 <p>The getter forms of functions do not participate in function chaining because they necessarily
 return values that are not the chart.  (Although some, such as <code>.svg</code> and <code>.xAxis</code>, return values
 that are chainable d3 objects.)</p>
@@ -178,41 +177,37 @@ immediately.  Default: false</p>
 <p><code>dc.units.integers</code> is the default value for <code>xUnits</code> for the <a href="#coordinate-grid-chart">Coordinate Grid
 Chart</a> and should be used when the x values are a sequence of integers.</p>
 <p>It is a function that counts the number of integers in the range supplied in its start and end parameters.</p>
-<pre><code class="lang-js">chart.xUnits(dc.units.integers) <span class="hljs-comment">// already the default</span>
-</code></pre>
+<pre><code class="lang-js">chart<span class="variable">.xUnits</span>(dc<span class="variable">.units</span><span class="variable">.integers</span>) <span class="comment">// already the default</span></code></pre>
 <h4 id="dc-units-ordinal">dc.units.ordinal</h4>
 <p>This argument can be passed to the <code>xUnits</code> function of the to specify ordinal units for the x
 axis. Usually this parameter is used in combination with passing <code>d3.scale.ordinal()</code> to <code>.x</code>.</p>
 <p>It just returns the domain passed to it, which for ordinal charts is an array of all values.</p>
-<pre><code class="lang-js">chart.xUnits(dc.units.ordinal)
-.x(d3.scale.ordinal())
-</code></pre>
+<pre><code class="lang-js">chart<span class="variable">.xUnits</span>(dc<span class="variable">.units</span><span class="variable">.ordinal</span>)
+<span class="variable">.x</span>(d3<span class="variable">.scale</span><span class="variable">.ordinal</span>())</code></pre>
 <h4 id="dc-units-fp-precision-precision-">dc.units.fp.precision(precision)</h4>
-<p>This function generates an argument for the <a href="#coordinate-grid-chart">Coordinate Grid Chart’s</a>
+<p>This function generates an argument for the <a href="#coordinate-grid-chart">Coordinate Grid Chart&#39;s</a>
 <code>xUnits</code> function specifying that the x values are floating-point numbers with the given
 precision.</p>
 <p>The returned function determines how many values at the given precision will fit into the range
 supplied in its start and end parameters.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// specify values (and ticks) every 0.1 units</span>
-chart.xUnits(dc.units.fp.precision(<span class="hljs-number">0.1</span>)
-<span class="hljs-comment">// there are 500 units between 0.5 and 1 if the precision is 0.001</span>
-<span class="hljs-keyword">var</span> thousandths = dc.units.fp.precision(<span class="hljs-number">0.001</span>);
-thousandths(<span class="hljs-number">0.5</span>, <span class="hljs-number">1.0</span>) <span class="hljs-comment">// returns 500</span>
-</code></pre>
+<pre><code class="lang-js"><span class="comment">// specify values (and ticks) every 0.1 units</span>
+chart<span class="variable">.xUnits</span>(dc<span class="variable">.units</span><span class="variable">.fp</span><span class="variable">.precision</span>(<span class="number">0.1</span>)
+<span class="comment">// there are 500 units between 0.5 and 1 if the precision is 0.001</span>
+var thousandths = dc<span class="variable">.units</span><span class="variable">.fp</span><span class="variable">.precision</span>(<span class="number">0.001</span>);
+thousandths(<span class="number">0.5</span>, <span class="number">1.0</span>) <span class="comment">// returns 500</span></code></pre>
 <h4 id="dc-events-trigger-function-delay-">dc.events.trigger(function[, delay])</h4>
 <p>This function triggers a throttled event function with a specified delay (in milli-seconds).  Events
 that are triggered repetitively due to user interaction such brush dragging might flood the library
 and invoke more renders than can be executed in time. Using this function to wrap your event
 function allows the library to smooth out the rendering by throttling events and only responding to
 the most recent event.</p>
-<pre><code class="lang-js">chart.renderlet(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(chart)</span></span>{
-    <span class="hljs-comment">// smooth the rendering through event throttling</span>
-    dc.events.trigger(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
-        <span class="hljs-comment">// focus some other chart to the range selected by user on this chart</span>
+<pre><code class="lang-js">chart.renderlet(function(chart){
+    // smooth <span class="keyword">the</span> rendering <span class="keyword">through</span> event throttling
+    dc.events.trigger(function(){
+        // focus <span class="keyword">some</span> other chart <span class="keyword">to</span> <span class="keyword">the</span> range selected <span class="keyword">by</span> user <span class="function_start"><span class="keyword">on</span> <span class="title">this</span></span> chart
         someOtherChart.focus(chart.filter());
     });
-})
-</code></pre>
+})</code></pre>
 <h2 id="filters">Filters</h2>
 <p>The dc.js filters are functions which are passed into crossfilter to chose which records will be
 accumulated to produce values for the charts.  In the crossfilter model, any filters applied on one
@@ -251,13 +246,12 @@ the new height and the chart returned for method chaining.  The value can either
 function, or falsy. If no value is specified then the value of the current height attribute will
 be returned.</p>
 <p>By default, without an explicit height being given, the chart will select the width of its
-anchor element. If that isn’t possible it defaults to 200. Setting the value falsy will return
+anchor element. If that isn&#39;t possible it defaults to 200. Setting the value falsy will return
 the chart to the default behavior</p>
 <p>Examples:</p>
-<pre><code class="lang-js">chart.height(<span class="hljs-number">250</span>); <span class="hljs-comment">// Set the chart's height to 250px;</span>
-chart.height(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(anchor)</span> </span>{ <span class="hljs-keyword">return</span> doSomethingWith(anchor); }); <span class="hljs-comment">// set the chart's height with a function</span>
-chart.height(<span class="hljs-literal">null</span>); <span class="hljs-comment">// reset the height to the default auto calculation</span>
-</code></pre>
+<pre><code class="lang-js">chart.height(<span class="number">250</span>); // Set <span class="keyword">the</span> chart's height <span class="keyword">to</span> <span class="number">250</span>px;
+chart.height(function(anchor) { <span class="constant">return</span> doSomethingWith(anchor); }); // <span class="keyword">set</span> <span class="keyword">the</span> chart's height <span class="keyword">with</span> a function
+chart.height(null); // reset <span class="keyword">the</span> height <span class="keyword">to</span> <span class="keyword">the</span> default auto calculation</code></pre>
 <h4 id="-minwidth-value-">.minWidth([value])</h4>
 <p>Set or get the minimum width attribute of a chart. This only applicable if the width is
 calculated by dc.</p>
@@ -270,13 +264,13 @@ dimension</a>.</p>
 <p>If a value is given, then it will be used as the new dimension. If no value is specified then
 the current dimension will be returned.</p>
 <h4 id="-data-callback-">.data([callback])</h4>
-<p>Set the data callback or retrieve the chart’s data set. The data callback is passed the chart’s
+<p>Set the data callback or retrieve the chart&#39;s data set. The data callback is passed the chart&#39;s
 group and by default will return <code>group.all()</code>. This behavior may be modified to, for instance,
 return only the top 5 groups:</p>
-<pre><code>    chart.data(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(group)</span> </span>{
-        <span class="hljs-keyword">return</span> group.top(<span class="hljs-number">5</span>);
-    });
-</code></pre><h4 id="-group-value-name-mandatory-">.group([value, [name]]) - <strong>mandatory</strong></h4>
+<pre><code>    chart.<span class="typedef"><span class="keyword">data</span><span class="container">(<span class="title">function</span>(<span class="title">group</span>)</span> <span class="container">{
+        <span class="title">return</span> <span class="title">group</span>.<span class="title">top</span>(5);
+    }</span>);</span></code></pre>
+<h4 id="-group-value-name-mandatory-">.group([value, [name]]) - <strong>mandatory</strong></h4>
 <p>Set or get the group attribute of a chart. In dc a group is a <a href="https://github.com/square/crossfilter/wiki/API-Reference#wiki-group">crossfilter
 group</a>. Usually the group
 should be created from the particular dimension associated with the same chart. If a value is
@@ -288,27 +282,25 @@ If <code>name</code> is specified then it will be used to generate legend label.
 <h4 id="-filterall-">.filterAll()</h4>
 <p>Clear all filters associated with this chart.</p>
 <h4 id="-select-selector-">.select(selector)</h4>
-<p>Execute d3 single selection in the chart’s scope using the given selector and return the d3
+<p>Execute d3 single selection in the chart&#39;s scope using the given selector and return the d3
 selection. Roughly the same as:</p>
-<pre><code class="lang-js">d3.select(<span class="hljs-string">'#chart-id'</span>).select(selector);
-</code></pre>
+<pre><code class="lang-js">d3.<span class="operator"><span class="keyword">select</span>(<span class="string">'#chart-id'</span>).<span class="keyword">select</span>(selector);</span></code></pre>
 <p>This function is <strong>not chainable</strong> since it does not return a chart instance; however the d3
 selection result can be chained to d3 function calls.</p>
 <h4 id="-selectall-selector-">.selectAll(selector)</h4>
 <p>Execute in scope d3 selectAll using the given selector and return d3 selection result. Roughly
 the same as:</p>
-<pre><code class="lang-js">d3.select(<span class="hljs-string">'#chart-id'</span>).selectAll(selector);
-</code></pre>
+<pre><code class="lang-js">d3.<span class="operator"><span class="keyword">select</span>(<span class="string">'#chart-id'</span>).selectAll(selector);</span></code></pre>
 <p>This function is <strong>not chainable</strong> since it does not return a chart instance; however the d3
 selection result can be chained to d3 function calls.</p>
 <h4 id="-anchor-anchorchart-anchorselector-anchornode-chartgroup-">.anchor([anchorChart|anchorSelector|anchorNode], [chartGroup])</h4>
-<p>Set the svg root to either be an existing chart’s root; or any valid <a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single
+<p>Set the svg root to either be an existing chart&#39;s root; or any valid <a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single
 selector</a> specifying a dom
 block element such as a div; or a dom element or d3 selection. Optionally registers the chart
 within the chartGroup. This class is called internally on chart initialization, but be called
 again to relocate the chart. However, it will orphan any previously created SVG elements.</p>
 <h4 id="-anchorname-">.anchorName()</h4>
-<p>Returns the dom id for the chart’s anchored location.</p>
+<p>Returns the dom id for the chart&#39;s anchored location.</p>
 <h4 id="-root-rootelement-">.root([rootElement])</h4>
 <p>Returns the root element where a chart resides. Usually it will be the parent div element where
 the svg was created. You can also pass in a new root element however this is usually handled by
@@ -319,7 +311,7 @@ unexpected consequences.</p>
 however this is usually handled by dc internally. Resetting the svg element on a chart outside
 of dc internals may have unexpected consequences.</p>
 <h4 id="-resetsvg-">.resetSvg()</h4>
-<p>Remove the chart’s SVG elements from the dom and recreate the container SVG element.</p>
+<p>Remove the chart&#39;s SVG elements from the dom and recreate the container SVG element.</p>
 <h4 id="-filterprinter-filterprinterfunction-">.filterPrinter([filterPrinterFunction])</h4>
 <p>Set or get the filter printer function. The filter printer function is used to generate human
 friendly text for filter value(s) associated with the chart instance. By default dc charts use a
@@ -329,10 +321,10 @@ single value and ranged filters.</p>
 <p>Turn on/off optional control elements within the root element. dc currently supports the
 following html control elements.</p>
 <ul>
-<li>root.selectAll(‘.reset’) - elements are turned on if the chart has an active filter. This type
+<li>root.selectAll(&#39;.reset&#39;) - elements are turned on if the chart has an active filter. This type
 of control element is usually used to store a reset link to allow user to reset filter on a
 certain chart. This element will be turned off automatically if the filter is cleared.</li>
-<li>root.selectAll(‘.filter’) elements are turned on if the chart has an active filter. The text
+<li>root.selectAll(&#39;.filter&#39;) elements are turned on if the chart has an active filter. The text
 content of this element is then replaced with the current filter value using the filter printer
 function. This type of element will be turned off automatically if the filter is cleared.</li>
 </ul>
@@ -349,96 +341,91 @@ behaviour.</p>
 change in the underlying data dimension then calling this method will have no effect on the
 chart. Most chart interaction in dc will automatically trigger this method through internal
 events (in particular <a href="#dcredrawallchartgroup">dc.redrawAll</a>); therefore, you only need to
-manually invoke this function if data is manipulated outside of dc’s control (for example if
+manually invoke this function if data is manipulated outside of dc&#39;s control (for example if
 data is loaded in the background using <code>crossfilter.add()</code>).</p>
 <h4 id="-hasfilterhandler-function-">.hasFilterHandler([function])</h4>
 <p>Set or get the has filter handler. The has filter handler is a function that checks to see if
-the chart’s current filters include a specific filter.  Using a custom has filter handler allows
+the chart&#39;s current filters include a specific filter.  Using a custom has filter handler allows
 you to change the way filters are checked for and replaced.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// default has filter handler</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(filters, filter)</span> </span>{
-    <span class="hljs-keyword">if</span> (filter === <span class="hljs-literal">null</span> || <span class="hljs-keyword">typeof</span>(filter) === <span class="hljs-string">'undefined'</span>) {
-        <span class="hljs-keyword">return</span> filters.length &gt; <span class="hljs-number">0</span>;
+<pre><code class="lang-js"><span class="comment">// default has filter handler</span>
+<span class="function"><span class="keyword">function</span> <span class="params">(filters, filter)</span> {</span>
+    <span class="keyword">if</span> (filter === <span class="literal">null</span> || <span class="keyword">typeof</span>(filter) === <span class="string">'undefined'</span>) {
+        <span class="keyword">return</span> filters.length &gt; <span class="number">0</span>;
     }
-    <span class="hljs-keyword">return</span> filters.some(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(f)</span> </span>{
-        <span class="hljs-keyword">return</span> filter &lt;= f &amp;&amp; filter &gt;= f;
+    <span class="keyword">return</span> filters.some(<span class="function"><span class="keyword">function</span> <span class="params">(f)</span> {</span>
+        <span class="keyword">return</span> filter &lt;= f &amp;&amp; filter &gt;= f;
     });
 }
 
-<span class="hljs-comment">// custom filter handler (no-op)</span>
-chart.hasFilterHandler(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(filters, filter)</span> </span>{
-    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
-});
-</code></pre>
+<span class="comment">// custom filter handler (no-op)</span>
+chart.hasFilterHandler(<span class="keyword">function</span>(filters, filter) {
+    <span class="keyword">return</span> <span class="literal">false</span>;
+});</code></pre>
 <h4 id="-hasfilter-filter-">.hasFilter([filter])</h4>
 <p>Check whether any active filter or a specific filter is associated with particular chart instance.
 This function is <strong>not chainable</strong>.</p>
 <h4 id="-removefilterhandler-function-">.removeFilterHandler([function])</h4>
 <p>Set or get the remove filter handler. The remove filter handler is a function that removes a
-filter from the chart’s current filters. Using a custom remove filter handler allows you to
+filter from the chart&#39;s current filters. Using a custom remove filter handler allows you to
 change how filters are removed or perform additional work when removing a filter, e.g. when
 using a filter server other than crossfilter.</p>
 <p>Any changes should modify the <code>filters</code> array argument and return that array.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// default remove filter handler</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(filters, filter)</span> </span>{
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; filters.length; i++) {
-        <span class="hljs-keyword">if</span> (filters[i] &lt;= filter &amp;&amp; filters[i] &gt;= filter) {
-            filters.splice(i, <span class="hljs-number">1</span>);
-            <span class="hljs-keyword">break</span>;
+<pre><code class="lang-js"><span class="comment">// default remove filter handler</span>
+<span class="function"><span class="keyword">function</span> <span class="params">(filters, filter)</span> {</span>
+    <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; filters.length; i++) {
+        <span class="keyword">if</span> (filters[i] &lt;= filter &amp;&amp; filters[i] &gt;= filter) {
+            filters.splice(i, <span class="number">1</span>);
+            <span class="keyword">break</span>;
         }
     }
-    <span class="hljs-keyword">return</span> filters;
+    <span class="keyword">return</span> filters;
 }
 
-<span class="hljs-comment">// custom filter handler (no-op)</span>
-chart.removeFilterHandler(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(filters, filter)</span> </span>{
-    <span class="hljs-keyword">return</span> filters;
-});
-</code></pre>
+<span class="comment">// custom filter handler (no-op)</span>
+chart.removeFilterHandler(<span class="keyword">function</span>(filters, filter) {
+    <span class="keyword">return</span> filters;
+});</code></pre>
 <h4 id="-addfilterhandler-function-">.addFilterHandler([function])</h4>
 <p>Set or get the add filter handler. The add filter handler is a function that adds a filter to
-the chart’s filter list. Using a custom add filter handler allows you to change the way filters
+the chart&#39;s filter list. Using a custom add filter handler allows you to change the way filters
 are added or perform additional work when adding a filter, e.g. when using a filter server other
 than crossfilter.</p>
 <p>Any changes should modify the <code>filters</code> array argument and return that array.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// default add filter handler</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(filters, filter)</span> </span>{
+<pre><code class="lang-js"><span class="comment">// default add filter handler</span>
+<span class="function"><span class="keyword">function</span> <span class="params">(filters, filter)</span> <span class="comment">{
     filters.push(filter);
-    <span class="hljs-keyword">return</span> filters;
-}
+    return filters;
+}</span>
 
-<span class="hljs-comment">// custom filter handler (no-op)</span>
-chart.addFilterHandler(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(filters, filter)</span> </span>{
-    <span class="hljs-keyword">return</span> filters;
-});
-</code></pre>
+// <span class="title">custom</span> <span class="title">filter</span> <span class="title">handler</span> <span class="params">(no-op)</span>
+<span class="title">chart</span>.<span class="title">addFilterHandler</span><span class="params">(<span class="keyword">function</span>(filters, filter)</span> <span class="comment">{
+    return filters;
+}</span>);</span></code></pre>
 <h4 id="-resetfilterhandler-function-">.resetFilterHandler([function])</h4>
 <p>Set or get the reset filter handler. The reset filter handler is a function that resets the
-chart’s filter list by returning a new list. Using a custom reset filter handler allows you to
+chart&#39;s filter list by returning a new list. Using a custom reset filter handler allows you to
 change the way filters are reset, or perform additional work when resetting the filters,
 e.g. when using a filter server other than crossfilter.</p>
 <p>This function should return an array.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// default remove filter handler</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(filters)</span> </span>{
-    <span class="hljs-keyword">return</span> [];
-}
+<pre><code class="lang-js"><span class="comment">// default remove filter handler</span>
+<span class="function"><span class="keyword">function</span> <span class="params">(filters)</span> <span class="comment">{
+    return [];
+}</span>
 
-<span class="hljs-comment">// custom filter handler (no-op)</span>
-chart.resetFilterHandler(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(filters)</span> </span>{
-    <span class="hljs-keyword">return</span> filters;
-});
-</code></pre>
+// <span class="title">custom</span> <span class="title">filter</span> <span class="title">handler</span> <span class="params">(no-op)</span>
+<span class="title">chart</span>.<span class="title">resetFilterHandler</span><span class="params">(<span class="keyword">function</span>(filters)</span> <span class="comment">{
+    return filters;
+}</span>);</span></code></pre>
 <h4 id="-filter-filtervalue-">.filter([filterValue])</h4>
 <p>Filter the chart by the given value or return the current filter if the input parameter is missing.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// filter by a single string</span>
-chart.filter(<span class="hljs-string">'Sunday'</span>);
-<span class="hljs-comment">// filter by a single age</span>
-chart.filter(<span class="hljs-number">18</span>);
-</code></pre>
+<pre><code class="lang-js"><span class="regexp">//</span> filter <span class="keyword">by</span> a single string
+chart.filter(<span class="string">'Sunday'</span>);
+<span class="regexp">//</span> filter <span class="keyword">by</span> a single age
+chart.filter(<span class="number">18</span>);</code></pre>
 <h4 id="-filters-">.filters()</h4>
 <p>Returns all current filters. This method does not perform defensive cloning of the internal
 filter array before returning, therefore any modification of the returned array will effect the
-chart’s internal filter storage.</p>
+chart&#39;s internal filter storage.</p>
 <h4 id="-onclick-datum-">.onClick(datum)</h4>
 <p>This function is passed to d3 as the onClick handler for each chart. The default behavior is to
 filter on the clicked datum (passed to the callback) and redraw the chart group.</p>
@@ -446,48 +433,44 @@ filter on the clicked datum (passed to the callback) and redraw the chart group.
 <p>Set or get the filter handler. The filter handler is a function that performs the filter action
 on a specific dimension. Using a custom filter handler allows you to perform additional logic
 before or after filtering.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// default filter handler</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(dimension, filter)</span></span>{
-    dimension.filter(filter); <span class="hljs-comment">// perform filtering</span>
-    <span class="hljs-keyword">return</span> filter; <span class="hljs-comment">// return the actual filter value</span>
+<pre><code class="lang-js"><span class="comment">// default filter handler</span>
+function(dimension, <span class="keyword">filter</span>){
+    dimension.<span class="keyword">filter</span>(<span class="keyword">filter</span>); <span class="comment">// perform filtering</span>
+    <span class="keyword">return</span> <span class="keyword">filter</span>; <span class="comment">// return the actual filter value</span>
 }
 
-<span class="hljs-comment">// custom filter handler</span>
-chart.filterHandler(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(dimension, filter)</span></span>{
-    <span class="hljs-keyword">var</span> newFilter = filter + <span class="hljs-number">10</span>;
-    dimension.filter(newFilter);
-    <span class="hljs-keyword">return</span> newFilter; <span class="hljs-comment">// set the actual filter value to the new value</span>
-});
-</code></pre>
+<span class="comment">// custom filter handler</span>
+chart.filterHandler(function(dimension, <span class="keyword">filter</span>){
+    var newFilter = <span class="keyword">filter</span> + <span class="number">10</span>;
+    dimension.<span class="keyword">filter</span>(newFilter);
+    <span class="keyword">return</span> newFilter; <span class="comment">// set the actual filter value to the new value</span>
+});</code></pre>
 <h4 id="-keyaccessor-keyaccessorfunction-">.keyAccessor([keyAccessorFunction])</h4>
 <p>Set or get the key accessor function. The key accessor function is used to retrieve the key
 value from the crossfilter group. Key values are used differently in different charts, for
 example keys correspond to slices in a pie chart and x axis positions in a grid coordinate chart.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// default key accessor</span>
-chart.keyAccessor(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{ <span class="hljs-keyword">return</span> d.key; });
-<span class="hljs-comment">// custom key accessor for a multi-value crossfilter reduction</span>
-chart.keyAccessor(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(p)</span> </span>{ <span class="hljs-keyword">return</span> p.value.absGain; });
-</code></pre>
+<pre><code class="lang-js"><span class="comment">// default key accessor</span>
+chart<span class="variable">.keyAccessor</span>(function(d) { <span class="keyword">return</span> d<span class="variable">.key</span>; });
+<span class="comment">// custom key accessor for a multi-value crossfilter reduction</span>
+chart<span class="variable">.keyAccessor</span>(function(p) { <span class="keyword">return</span> p<span class="variable">.value</span><span class="variable">.absGain</span>; });</code></pre>
 <h4 id="-valueaccessor-valueaccessorfunction-">.valueAccessor([valueAccessorFunction])</h4>
 <p>Set or get the value accessor function. The value accessor function is used to retrieve the
 value from the crossfilter group. Group values are used differently in different charts, for
 example values correspond to slice sizes in a pie chart and y axis positions in a grid
 coordinate chart.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// default value accessor</span>
-chart.valueAccessor(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{ <span class="hljs-keyword">return</span> d.value; });
-<span class="hljs-comment">// custom value accessor for a multi-value crossfilter reduction</span>
-chart.valueAccessor(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(p)</span> </span>{ <span class="hljs-keyword">return</span> p.value.percentageGain; });
-</code></pre>
+<pre><code class="lang-js"><span class="comment">// default value accessor</span>
+chart<span class="variable">.valueAccessor</span>(function(d) { <span class="keyword">return</span> d<span class="variable">.value</span>; });
+<span class="comment">// custom value accessor for a multi-value crossfilter reduction</span>
+chart<span class="variable">.valueAccessor</span>(function(p) { <span class="keyword">return</span> p<span class="variable">.value</span><span class="variable">.percentageGain</span>; });</code></pre>
 <h4 id="-label-labelfunction-">.label([labelFunction])</h4>
 <p>Set or get the label function. The chart class will use this function to render labels for each
 child element in the chart, e.g. slices in a pie chart or bubbles in a bubble chart. Not every
 chart supports the label function for example bar chart and line chart do not use this function
 at all.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// default label function just return the key</span>
-chart.label(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{ <span class="hljs-keyword">return</span> d.key; });
-<span class="hljs-comment">// label function has access to the standard d3 data binding and can get quite complicated</span>
-chart.label(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{ <span class="hljs-keyword">return</span> d.data.key + <span class="hljs-string">'('</span> + <span class="hljs-built_in">Math</span>.floor(d.data.value / all.value() * <span class="hljs-number">100</span>) + <span class="hljs-string">'%)'</span>; });
-</code></pre>
+<pre><code class="lang-js">// default label <span class="function"><span class="keyword">function</span> <span class="title">just</span> <span class="title">return</span> <span class="title">the</span> <span class="title">key</span>
+<span class="title">chart.label</span><span class="params">(function(d)</span></span> { <span class="keyword">return</span> d.key; });
+// label <span class="function"><span class="keyword">function</span> <span class="title">has</span> <span class="title">access</span> <span class="title">to</span> <span class="title">the</span> <span class="title">standard</span> <span class="title">d3</span> <span class="title">data</span> <span class="title">binding</span> <span class="title">and</span> <span class="title">can</span> <span class="title">get</span> <span class="title">quite</span> <span class="title">complicated</span>
+<span class="title">chart.label</span><span class="params">(function(d)</span></span> { <span class="keyword">return</span> d.data.key + <span class="string">'('</span> + Math.floor(d.data.value / all.value() * <span class="number">100</span>) + <span class="string">'%)'</span>; });</code></pre>
 <h4 id="-renderlabel-boolean-">.renderLabel(boolean)</h4>
 <p>Turn on/off label rendering</p>
 <h4 id="-title-titlefunction-">.title([titleFunction])</h4>
@@ -496,17 +479,16 @@ chart.label(<span class="hljs-function"><span class="hljs-keyword">function</spa
 in a pie chart or a bubble in a bubble chart. Almost every chart supports the title function;
 however in grid coordinate charts you need to turn off the brush in order to see titles, because
 otherwise the brush layer will block tooltip triggering.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// default title function just return the key</span>
-chart.title(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{ <span class="hljs-keyword">return</span> d.key + <span class="hljs-string">': '</span> + d.value; });
-<span class="hljs-comment">// title function has access to the standard d3 data binding and can get quite complicated</span>
-chart.title(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(p)</span> </span>{
-    <span class="hljs-keyword">return</span> p.key.getFullYear()
-        + <span class="hljs-string">'\n'</span>
-        + <span class="hljs-string">'Index Gain: '</span> + numberFormat(p.value.absGain) + <span class="hljs-string">'\n'</span>
-        + <span class="hljs-string">'Index Gain in Percentage: '</span> + numberFormat(p.value.percentageGain) + <span class="hljs-string">'%\n'</span>
-        + <span class="hljs-string">'Fluctuation / Index Ratio: '</span> + numberFormat(p.value.fluctuationPercentage) + <span class="hljs-string">'%'</span>;
-});
-</code></pre>
+<pre><code class="lang-js">// default title <span class="function"><span class="keyword">function</span> <span class="title">just</span> <span class="title">return</span> <span class="title">the</span> <span class="title">key</span>
+<span class="title">chart.title</span><span class="params">(function(d)</span></span> { <span class="keyword">return</span> d.key + <span class="string">': '</span> + d.value; });
+// title <span class="function"><span class="keyword">function</span> <span class="title">has</span> <span class="title">access</span> <span class="title">to</span> <span class="title">the</span> <span class="title">standard</span> <span class="title">d3</span> <span class="title">data</span> <span class="title">binding</span> <span class="title">and</span> <span class="title">can</span> <span class="title">get</span> <span class="title">quite</span> <span class="title">complicated</span>
+<span class="title">chart.title</span><span class="params">(function(p)</span></span> {
+    <span class="keyword">return</span> p.key.getFullYear()
+        + <span class="string">'\n'</span>
+        + <span class="string">'Index Gain: '</span> + numberFormat(p.value.absGain) + <span class="string">'\n'</span>
+        + <span class="string">'Index Gain in Percentage: '</span> + numberFormat(p.value.percentageGain) + <span class="string">'%\n'</span>
+        + <span class="string">'Fluctuation / Index Ratio: '</span> + numberFormat(p.value.fluctuationPercentage) + <span class="string">'%'</span>;
+});</code></pre>
 <h4 id="-rendertitle-boolean-">.renderTitle(boolean)</h4>
 <p>Turn on/off title rendering, or return the state of the render title flag if no arguments are
 given.</p>
@@ -516,16 +498,15 @@ to an individual chart.  Each time a chart is rerendered or redrawn the renderle
 right after the chart finishes its own drawing routine, giving you a way to modify the svg
 elements. Renderlet functions take the chart instance as the only input parameter and you can
 use the dc API or use raw d3 to achieve pretty much any effect.</p>
-<p>@Deprecated - Use <a href="#Listeners">Listeners</a> with a ‘renderlet’ prefix
+<p>@Deprecated - Use <a href="#Listeners">Listeners</a> with a &#39;renderlet&#39; prefix
 Generates a random key for the renderlet, which makes it hard for removal.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// renderlet function</span>
-chart.renderlet(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(chart)</span></span>{
-    <span class="hljs-comment">// mix of dc API and d3 manipulation</span>
-    chart.select(<span class="hljs-string">'g.y'</span>).style(<span class="hljs-string">'display'</span>, <span class="hljs-string">'none'</span>);
-    <span class="hljs-comment">// its a closure so you can also access other chart variable available in the closure scope</span>
+<pre><code class="lang-js"><span class="regexp">//</span> renderlet <span class="reserved">function</span>
+chart.renderlet(<span class="reserved">function</span>(chart){
+    <span class="regexp">//</span> mix <span class="keyword">of</span> dc API <span class="keyword">and</span> d3 manipulation
+    chart.select(<span class="string">'g.y'</span>).style(<span class="string">'display'</span>, <span class="string">'none'</span>);
+    <span class="regexp">//</span> its a closure so you can also access other chart variable available <span class="keyword">in</span> the closure scope
     moveChart.filter(chart.filter());
-});
-</code></pre>
+});</code></pre>
 <h4 id="-chartgroup-group-">.chartGroup([group])</h4>
 <p>Get or set the chart group to which this chart belongs. Chart groups are rendered or redrawn
 together since it is expected they share the same underlying crossfilter data set.</p>
@@ -538,31 +519,30 @@ clear the cache to make sure charts are rendered properly.</p>
 <h4 id="-legend-dc-legend-">.legend([dc.legend])</h4>
 <p>Attach a dc.legend widget to this chart. The legend widget will automatically draw legend labels
 based on the color setting and names associated with each group.</p>
-<pre><code class="lang-js">chart.legend(dc.legend().x(<span class="hljs-number">400</span>).y(<span class="hljs-number">10</span>).itemHeight(<span class="hljs-number">13</span>).gap(<span class="hljs-number">5</span>))
-</code></pre>
+<pre><code class="lang-js">chart<span class="variable">.legend</span>(dc<span class="variable">.legend</span>()<span class="variable">.x</span>(<span class="number">400</span>)<span class="variable">.y</span>(<span class="number">10</span>)<span class="variable">.itemHeight</span>(<span class="number">13</span>)<span class="variable">.gap</span>(<span class="number">5</span>))</code></pre>
 <h4 id="-chartid-">.chartID()</h4>
 <p>Returns the internal numeric ID of the chart.</p>
 <h4 id="-options-optionsobject-">.options(optionsObject)</h4>
 <p>Set chart options using a configuration object. Each key in the object will cause the method of
 the same name to be called with the value to set that attribute for the chart.</p>
 <p>Example:</p>
-<pre><code><span class="hljs-tag">chart</span><span class="hljs-class">.options</span>({<span class="hljs-attribute">dimension</span>: myDimension, <span class="hljs-attribute">group</span>: myGroup});
-</code></pre><h2 id="listeners">Listeners</h2>
+<pre><code><span class="tag">chart</span><span class="class">.options</span>(<span class="rules">{<span class="rule"><span class="attribute">dimension</span>:<span class="value"> myDimension, group: myGroup}</span></span></span>);</code></pre>
+<h2 id="listeners">Listeners</h2>
 <p>All dc chart instance supports the following listeners.</p>
-<h4 id="-on-renderlet-function-chart-filter-">.on(‘renderlet’, function(chart, filter){…})</h4>
+<h4 id="-on-renderlet-function-chart-filter-">.on(&#39;renderlet&#39;, function(chart, filter){...})</h4>
 <p>This listener function will be invoked after transitions after redraw and render. Replaces the
 deprecated <code>.renderlet()</code> method.</p>
-<h4 id="-on-prerender-function-chart-">.on(‘preRender’, function(chart){…})</h4>
+<h4 id="-on-prerender-function-chart-">.on(&#39;preRender&#39;, function(chart){...})</h4>
 <p>This listener function will be invoked before chart rendering.</p>
-<h4 id="-on-postrender-function-chart-">.on(‘postRender’, function(chart){…})</h4>
-<p>This listener function will be invoked after chart finish rendering including all renderlets’ logic.</p>
-<h4 id="-on-preredraw-function-chart-">.on(‘preRedraw’, function(chart){…})</h4>
+<h4 id="-on-postrender-function-chart-">.on(&#39;postRender&#39;, function(chart){...})</h4>
+<p>This listener function will be invoked after chart finish rendering including all renderlets&#39; logic.</p>
+<h4 id="-on-preredraw-function-chart-">.on(&#39;preRedraw&#39;, function(chart){...})</h4>
 <p>This listener function will be invoked before chart redrawing.</p>
-<h4 id="-on-postredraw-function-chart-">.on(‘postRedraw’, function(chart){…})</h4>
-<p>This listener function will be invoked after chart finish redrawing including all renderlets’ logic.</p>
-<h4 id="-on-filtered-function-chart-filter-">.on(‘filtered’, function(chart, filter){…})</h4>
+<h4 id="-on-postredraw-function-chart-">.on(&#39;postRedraw&#39;, function(chart){...})</h4>
+<p>This listener function will be invoked after chart finish redrawing including all renderlets&#39; logic.</p>
+<h4 id="-on-filtered-function-chart-filter-">.on(&#39;filtered&#39;, function(chart, filter){...})</h4>
 <p>This listener function will be invoked after a filter is applied, added or removed.</p>
-<h4 id="-on-zoomed-function-chart-filter-">.on(‘zoomed’, function(chart, filter){…})</h4>
+<h4 id="-on-zoomed-function-chart-filter-">.on(&#39;zoomed&#39;, function(chart, filter){...})</h4>
 <p>This listener function will be invoked after a zoom is triggered.</p>
 <h2 id="margin-mixin">Margin Mixin</h2>
 <p>Margin is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid
@@ -571,10 +551,9 @@ Charts.</p>
 <p>Get or set the margins for a particular coordinate grid chart instance. The margins is stored as
 an associative Javascript array. Default margins: {top: 10, right: 50, bottom: 30, left: 30}.</p>
 <p>The margins can be accessed directly from the getter.</p>
-<pre><code class="lang-js"><span class="hljs-keyword">var</span> leftMargin = chart.margins().left; <span class="hljs-comment">// 30 by default</span>
-chart.margins().left = <span class="hljs-number">50</span>;
-leftMargin = chart.margins().left; <span class="hljs-comment">// now 50</span>
-</code></pre>
+<pre><code class="lang-js">var leftMargin = chart<span class="preprocessor">.margins</span>()<span class="preprocessor">.left</span><span class="comment">; // 30 by default</span>
+chart<span class="preprocessor">.margins</span>()<span class="preprocessor">.left</span> = <span class="number">50</span><span class="comment">;</span>
+leftMargin = chart<span class="preprocessor">.margins</span>()<span class="preprocessor">.left</span><span class="comment">; // now 50</span></code></pre>
 <h2 id="color-mixin">Color Mixin</h2>
 <p>The Color Mixin is an abstract chart functional class providing universal coloring support
 as a mix-in for any concrete chart implementation.</p>
@@ -582,17 +561,16 @@ as a mix-in for any concrete chart implementation.</p>
 <p>Retrieve current color scale or set a new color scale. This methods accepts any function that
 operates like a d3 scale. If not set the default is
 <code>d3.scale.category20c()</code>.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// alternate categorical scale</span>
+<pre><code class="lang-js">// alternate categorical scale
 chart.colors(d3.scale.category20b());
 
-<span class="hljs-comment">// ordinal scale</span>
-chart.colors(d3.scale.ordinal().range([<span class="hljs-string">'red'</span>,<span class="hljs-string">'green'</span>,<span class="hljs-string">'blue'</span>]));
-<span class="hljs-comment">// convenience method, the same as above</span>
-chart.ordinalColors([<span class="hljs-string">'red'</span>,<span class="hljs-string">'green'</span>,<span class="hljs-string">'blue'</span>]);
+// ordinal scale
+chart.colors(d3.scale.ordinal().<span class="keyword">range</span>([<span class="attribute">'red</span>',<span class="attribute">'green</span>',<span class="attribute">'blue</span>']));
+// convenience method, the same as above
+chart.ordinalColors([<span class="attribute">'red</span>',<span class="attribute">'green</span>',<span class="attribute">'blue</span>']);
 
-<span class="hljs-comment">// set a linear scale</span>
-chart.linearColors([<span class="hljs-string">"#4575b4"</span>, <span class="hljs-string">"#ffffbf"</span>, <span class="hljs-string">"#a50026"</span>]);
-</code></pre>
+// set a linear scale
+chart.linearColors([<span class="string">"#4575b4"</span>, <span class="string">"#ffffbf"</span>, <span class="string">"#a50026"</span>]);</code></pre>
 <h4 id="-ordinalcolors-r-">.ordinalColors(r)</h4>
 <p>Convenience method to set the color scale to d3.scale.ordinal with range <code>r</code>.</p>
 <h4 id="-linearcolors-r-">.linearColors(r)</h4>
@@ -601,11 +579,10 @@ chart.linearColors([<span class="hljs-string">"#4575b4"</span>, <span class="hlj
 <p>Set or the get color accessor function. This function will be used to map a data point in a
 crossfilter group to a color value on the color scale. The default function uses the key
 accessor.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// default index based color accessor</span>
-.colorAccessor(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d, i)</span></span>{<span class="hljs-keyword">return</span> i;})
-<span class="hljs-comment">// color accessor for a multi-value crossfilter reduction</span>
-.colorAccessor(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span></span>{<span class="hljs-keyword">return</span> d.value.absGain;})
-</code></pre>
+<pre><code class="lang-js"><span class="comment">// default index based color accessor</span>
+.colorAccessor(<span class="function"><span class="keyword">function</span> <span class="params">(d, i)</span><span class="comment">{return i;}</span>)
+// <span class="title">color</span> <span class="title">accessor</span> <span class="title">for</span> <span class="title">a</span> <span class="title">multi</span>-<span class="title">value</span> <span class="title">crossfilter</span> <span class="title">reduction</span>
+.<span class="title">colorAccessor</span><span class="params">(<span class="keyword">function</span> (d)</span><span class="comment">{return d.value.absGain;}</span>)</code></pre>
 <h4 id="-colordomain-domain-">.colorDomain([domain])</h4>
 <p>Set or get the current domain for the color mapping function. The domain must be supplied as an
 array.</p>
@@ -613,7 +590,7 @@ array.</p>
 set by <code>.colors</code>.</p>
 <h4 id="-calculatecolordomain-">.calculateColorDomain()</h4>
 <p>Set the domain by determining the min and max values as retrieved by <code>.colorAccessor</code> over the
-chart’s dataset.</p>
+chart&#39;s dataset.</p>
 <h4 id="-getcolor-d-i-">.getColor(d [, i])</h4>
 <p>Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.</p>
 <h4 id="-colorcalculator-value-">.colorCalculator([value])</h4>
@@ -646,11 +623,10 @@ the range selection brush on the associated range selector chart.</p>
 <p>Get or set the x scale. The x scale can be any d3
 <a href="https://github.com/mbostock/d3/wiki/Quantitative-Scales">quantitive scale</a> or
 <a href="https://github.com/mbostock/d3/wiki/Ordinal-Scales">ordinal scale</a>.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// set x to a linear scale</span>
-chart.x(d3.scale.linear().domain([-<span class="hljs-number">2500</span>, <span class="hljs-number">2500</span>]))
-<span class="hljs-comment">// set x to a time scale to generate histogram</span>
-chart.x(d3.time.scale().domain([<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">1985</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>), <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">2012</span>, <span class="hljs-number">11</span>, <span class="hljs-number">31</span>)]))
-</code></pre>
+<pre><code class="lang-js">// <span class="operator"><span class="keyword">set</span> x <span class="keyword">to</span> a linear scale
+chart.x(d3.scale.linear().<span class="keyword">domain</span>([-<span class="number">2500</span>, <span class="number">2500</span>]))
+// <span class="keyword">set</span> x <span class="keyword">to</span> a <span class="keyword">time</span> scale <span class="keyword">to</span> generate histogram
+chart.x(d3.<span class="keyword">time</span>.scale().<span class="keyword">domain</span>([new <span class="keyword">Date</span>(<span class="number">1985</span>, <span class="number">0</span>, <span class="number">1</span>), new <span class="keyword">Date</span>(<span class="number">2012</span>, <span class="number">11</span>, <span class="number">31</span>)]))</code></pre>
 <h4 id="-xunits-xunits-function-">.xUnits([xUnits function])</h4>
 <p>Set or get the xUnits function. The coordinate grid chart uses the xUnits function to calculate
 the number of data projections on x axis such as the number of bars for a bar chart or the
@@ -660,35 +636,32 @@ d3.time.days, d3.time.months, and
 d3.time.years</a> are all valid xUnits
 function. dc.js also provides a few units function, see the <a href="#utilities">Utilities</a> section for
 a list of built-in units functions. The default xUnits function is dc.units.integers.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// set x units to count days</span>
-chart.xUnits(d3.time.days);
-<span class="hljs-comment">// set x units to count months</span>
-chart.xUnits(d3.time.months);
-</code></pre>
+<pre><code class="lang-js">// <span class="operator"><span class="keyword">set</span> x units <span class="keyword">to</span> <span class="aggregate">count</span> days
+chart.xUnits(d3.<span class="keyword">time</span>.days);</span>
+// <span class="operator"><span class="keyword">set</span> x units <span class="keyword">to</span> <span class="aggregate">count</span> months
+chart.xUnits(d3.<span class="keyword">time</span>.months);</span></code></pre>
 <p>A custom xUnits function can be used as long as it follows the following interface:</p>
-<pre><code class="lang-js"><span class="hljs-comment">// units in integer</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(start, end, xDomain)</span> </span>{
-    <span class="hljs-comment">// simply calculates how many integers in the domain</span>
-    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.abs(end - start);
+<pre><code class="lang-js">// units <span class="keyword">in</span> <span class="type">integer</span>
+function(start, <span class="keyword">end</span>, xDomain) {
+    // simply calculates how many integers <span class="keyword">in</span> <span class="keyword">the</span> domain
+<span class="command">    return</span> Math.abs(<span class="keyword">end</span> - start);
 };
 
-<span class="hljs-comment">// fixed units</span>
-<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(start, end, xDomain)</span> </span>{
-    <span class="hljs-comment">// be aware using fixed units will disable the focus/zoom ability on the chart</span>
-    <span class="hljs-keyword">return</span> <span class="hljs-number">1000</span>;
-};
-</code></pre>
+// fixed units
+function(start, <span class="keyword">end</span>, xDomain) {
+    // be aware using fixed units will disable <span class="keyword">the</span> focus/zoom ability <span class="function_start"><span class="keyword">on</span> <span class="title">the</span></span> chart
+<span class="command">    return</span> <span class="number">1000</span>;
+};</code></pre>
 <h4 id="-xaxis-xaxis-">.xAxis([xAxis])</h4>
 <p>Set or get the x axis used by a particular coordinate grid chart instance. This function is most
 useful when x axis customization is required. The x axis in dc.js is an instance of a <a href="https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis">d3
 axis object</a>; therefore it supports any
 valid d3 axis manipulation. <strong>Caution</strong>: The x axis is usually generated internally by dc;
 resetting it may cause unexpected results.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// customize x axis tick format</span>
-chart.xAxis().tickFormat(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(v)</span> </span>{<span class="hljs-keyword">return</span> v + <span class="hljs-string">'%'</span>;});
-<span class="hljs-comment">// customize x axis tick values</span>
-chart.xAxis().tickValues([<span class="hljs-number">0</span>, <span class="hljs-number">100</span>, <span class="hljs-number">200</span>, <span class="hljs-number">300</span>]);
-</code></pre>
+<pre><code class="lang-js"><span class="comment">// customize x axis tick format</span>
+chart<span class="variable">.xAxis</span>()<span class="variable">.tickFormat</span>(function(v) {<span class="keyword">return</span> v + <span class="string">'%'</span>;});
+<span class="comment">// customize x axis tick values</span>
+chart<span class="variable">.xAxis</span>()<span class="variable">.tickValues</span>([<span class="number">0</span>, <span class="number">100</span>, <span class="number">200</span>, <span class="number">300</span>]);</code></pre>
 <h4 id="-elasticx-boolean-">.elasticX([boolean])</h4>
 <p>Turn on/off elastic x axis behavior. If x axis elasticity is turned on, then the grid chart will
 attempt to recalculate the x axis range whenever a redraw event is triggered.</p>
@@ -696,7 +669,7 @@ attempt to recalculate the x axis range whenever a redraw event is triggered.</p
 <p>Set or get x axis padding for the elastic x axis. The padding will be added to both end of the x
 axis if elasticX is turned on; otherwise it is ignored.</p>
 <ul>
-<li>padding can be an integer or percentage in string (e.g. ‘10%’). Padding can be applied to
+<li>padding can be an integer or percentage in string (e.g. &#39;10%&#39;). Padding can be applied to
 number or date x axes.  When padding a date axis, an integer represents number of days being padded
 and a percentage string will be treated the same as an integer.</li>
 </ul>
@@ -726,11 +699,10 @@ when y axis customization is required. The y axis in dc.js is simply an instance
 object</a>; therefore it supports any
 valid d3 axis manipulation. <strong>Caution</strong>: The y axis is usually generated internally by dc;
 resetting it may cause unexpected results.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// customize y axis tick format</span>
-chart.yAxis().tickFormat(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(v)</span> </span>{<span class="hljs-keyword">return</span> v + <span class="hljs-string">'%'</span>;});
-<span class="hljs-comment">// customize y axis tick values</span>
-chart.yAxis().tickValues([<span class="hljs-number">0</span>, <span class="hljs-number">100</span>, <span class="hljs-number">200</span>, <span class="hljs-number">300</span>]);
-</code></pre>
+<pre><code class="lang-js"><span class="comment">// customize y axis tick format</span>
+chart<span class="variable">.yAxis</span>()<span class="variable">.tickFormat</span>(function(v) {<span class="keyword">return</span> v + <span class="string">'%'</span>;});
+<span class="comment">// customize y axis tick values</span>
+chart<span class="variable">.yAxis</span>()<span class="variable">.tickValues</span>([<span class="number">0</span>, <span class="number">100</span>, <span class="number">200</span>, <span class="number">300</span>]);</code></pre>
 <h4 id="-elasticy-boolean-">.elasticY([boolean])</h4>
 <p>Turn on/off elastic y axis behavior. If y axis elasticity is turned on, then the grid chart will
 attempt to recalculate the y axis range whenever a redraw event is triggered.</p>
@@ -750,16 +722,15 @@ attempt to recalculate the y axis range whenever a redraw event is triggered.</p
 <p>Set or get y axis padding for the elastic y axis. The padding will be added to the top of the y
 axis if elasticY is turned on; otherwise it is ignored.</p>
 <ul>
-<li>padding can be an integer or percentage in string (e.g. ‘10%’). Padding can be applied to
+<li>padding can be an integer or percentage in string (e.g. &#39;10%&#39;). Padding can be applied to
 number or date axes. When padding a date axis, an integer represents number of days being padded
 and a percentage string will be treated the same as an integer.</li>
 </ul>
 <h4 id="-round-rounding-function-">.round([rounding function])</h4>
 <p>Set or get the rounding function used to quantize the selection when brushing is enabled.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// set x unit round to by month, this will make sure range selection brush will</span>
-<span class="hljs-comment">// select whole months</span>
-chart.round(d3.time.month.round);
-</code></pre>
+<pre><code class="lang-js">// <span class="keyword">set</span> x unit <span class="command">round</span> <span class="keyword">to</span> <span class="keyword">by</span> <span class="property">month</span>, this will make sure range selection brush will
+// select whole months
+chart.<span class="command">round</span>(d3.<span class="property">time</span>.<span class="property">month</span>.<span class="command">round</span>);</code></pre>
 <h4 id="-clippadding-padding-">.clipPadding([padding])</h4>
 <p>Get or set the padding in pixels for the clip path. Once set padding will be applied evenly to
 the top, left, right, and bottom when the clip path is generated. If set to zero, the clip area
@@ -769,14 +740,13 @@ will be exactly the chart body area minus the margins.  Default: 5</p>
 2 elements (<code>[start, end]</code>) defining a range in the x domain. If the range is not given or set
 to null, then the zoom will be reset. <em>For focus to work elasticX has to be turned off;
 otherwise focus will be ignored.</em></p>
-<pre><code class="lang-js">chart.renderlet(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(chart)</span></span>{
-    <span class="hljs-comment">// smooth the rendering through event throttling</span>
-    dc.events.trigger(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
-        <span class="hljs-comment">// focus some other chart to the range selected by user on this chart</span>
+<pre><code class="lang-js">chart.renderlet(function(chart){
+    // smooth <span class="keyword">the</span> rendering <span class="keyword">through</span> event throttling
+    dc.events.trigger(function(){
+        // focus <span class="keyword">some</span> other chart <span class="keyword">to</span> <span class="keyword">the</span> range selected <span class="keyword">by</span> user <span class="function_start"><span class="keyword">on</span> <span class="title">this</span></span> chart
         someOtherChart.focus(chart.filter());
     });
-})
-</code></pre>
+})</code></pre>
 <h4 id="-brushon-boolean-">.brushOn([boolean])</h4>
 <p>Turn on/off the brush-based range filter. When brushing is on then user can drag the mouse
 across a chart with a quantitative scale to perform range filtering based on the extent of the
@@ -792,11 +762,10 @@ in the same chart will share the same key accessor and therefore the same set of
 <p>For example, in a stacked bar chart, the bars of each stack will be positioned using the same set
 of keys on the x axis, while stacked vertically. If name is specified then it will be used to
 generate the legend label.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// stack group using default accessor</span>
-chart.stack(valueSumGroup)
-<span class="hljs-comment">// stack group using custom accessor</span>
-.stack(avgByDayGroup, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span></span>{<span class="hljs-keyword">return</span> d.value.avgByDay;});
-</code></pre>
+<pre><code class="lang-js"><span class="comment">// stack group using default accessor</span>
+chart<span class="variable">.stack</span>(valueSumGroup)
+<span class="comment">// stack group using custom accessor</span>
+<span class="variable">.stack</span>(avgByDayGroup, function(d){<span class="keyword">return</span> d<span class="variable">.value</span><span class="variable">.avgByDay</span>;});</code></pre>
 <h4 id="-hidablestacks-boolean-">.hidableStacks([boolean])</h4>
 <p>Allow named stacks to be hidden or shown by clicking on legend items.
 This does not affect the behavior of hideStack or showStack.</p>
@@ -813,12 +782,11 @@ Almost every chart supports title function however in grid coordinate chart you 
 use title otherwise the brush layer will block tooltip trigger.</p>
 <p>If the first argument is a stack name, the title function will get or set the title for that stack. If stackName
 is not provided, the first stack is implied.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// set a title function on 'first stack'</span>
-chart.title(<span class="hljs-string">'first stack'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{ <span class="hljs-keyword">return</span> d.key + <span class="hljs-string">': '</span> + d.value; });
-<span class="hljs-comment">// get a title function from 'second stack'</span>
-<span class="hljs-keyword">var</span> secondTitleFunction = chart.title(<span class="hljs-string">'second stack'</span>);
-);
-</code></pre>
+<pre><code class="lang-js">// set a title <span class="function"><span class="keyword">function</span> <span class="title">on</span> '<span class="title">first</span> <span class="title">stack</span>'
+<span class="title">chart.title</span><span class="params">('first stack', function(d)</span></span> { <span class="keyword">return</span> d.key + <span class="string">': '</span> + d.value; });
+// get a title <span class="function"><span class="keyword">function</span> <span class="title">from</span> '<span class="title">second</span> <span class="title">stack</span>'
+<span class="title">var</span> <span class="title">secondTitleFunction</span> = <span class="title">chart.title</span><span class="params">('second stack')</span></span>;
+);</code></pre>
 <h4 id="-stacklayout-layout-">.stackLayout([layout])</h4>
 <p>Gets or sets the stack layout algorithm, which computes a baseline for each stack and
 propagates it to the next.  The default is
@@ -838,19 +806,18 @@ keys of the elements below the cap limit are recorded in order to filter by thos
 <p>Get or set the grouper function that will perform the insertion of data for the <em>Others</em> slice
 if the slices cap is specified. If set to a falsy value, no others will be added. By default the
 grouper function computes the sum of all values below the cap.</p>
-<pre><code class="lang-js">chart.othersGrouper(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(data)</span> </span>{
-    <span class="hljs-comment">// compute the value for others, presumably the sum of all values below the cap</span>
-    <span class="hljs-keyword">var</span> othersSum  = yourComputeOthersValueLogic(data)
+<pre><code class="lang-js"><span class="title">chart</span>.othersGrouper(function (<span class="typedef"><span class="keyword">data</span>) <span class="container">{
+    // <span class="title">compute</span> <span class="title">the</span> <span class="title">value</span> <span class="title">for</span> <span class="title">others</span>, <span class="title">presumably</span> <span class="title">the</span> <span class="title">sum</span> <span class="title">of</span> <span class="title">all</span> <span class="title">values</span> <span class="title">below</span> <span class="title">the</span> <span class="title">cap</span>
+    <span class="title">var</span> <span class="title">othersSum</span>  = <span class="title">yourComputeOthersValueLogic</span>(<span class="title">data</span>)
 
-    <span class="hljs-comment">// the keys are needed to properly filter when the others element is clicked</span>
-    <span class="hljs-keyword">var</span> othersKeys = yourComputeOthersKeysArrayLogic(data);
+    // <span class="title">the</span> <span class="title">keys</span> <span class="title">are</span> <span class="title">needed</span> <span class="title">to</span> <span class="title">properly</span> <span class="title">filter</span> <span class="title">when</span> <span class="title">the</span> <span class="title">others</span> <span class="title">element</span> <span class="title">is</span> <span class="title">clicked</span>
+    <span class="title">var</span> <span class="title">othersKeys</span> = <span class="title">yourComputeOthersKeysArrayLogic</span>(<span class="title">data</span>);
 
-    <span class="hljs-comment">// add the others row to the dataset</span>
-    data.push({<span class="hljs-string">'key'</span>: <span class="hljs-string">'Others'</span>, <span class="hljs-string">'value'</span>: othersSum, <span class="hljs-string">'others'</span>: othersKeys });
+    // <span class="title">add</span> <span class="title">the</span> <span class="title">others</span> <span class="title">row</span> <span class="title">to</span> <span class="title">the</span> <span class="title">dataset</span>
+    <span class="title">data</span>.<span class="title">push</span>({'<span class="title">key'</span>: '<span class="type">Others</span>', '<span class="title">value'</span>: <span class="title">othersSum</span>, '<span class="title">others'</span>: <span class="title">othersKeys</span> }</span>);</span>
 
-    <span class="hljs-keyword">return</span> data;
-});
-</code></pre>
+    return <span class="typedef"><span class="keyword">data</span>;</span>
+});</code></pre>
 <h2 id="bubble-mixin">Bubble Mixin</h2>
 <p>Includes: <a href="#color-mixin">Color Mixin</a></p>
 <p>This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.</p>
@@ -863,7 +830,7 @@ be used to retrieve a data value for each bubble. The data retrieved then will b
 the r scale to the actual bubble radius. This allows you to encode a data dimension using bubble
 size.</p>
 <h4 id="-minradiuswithlabel-radius-">.minRadiusWithLabel([radius])</h4>
-<p>Get or set the minimum radius for label rendering. If a bubble’s radius is less than this value
+<p>Get or set the minimum radius for label rendering. If a bubble&#39;s radius is less than this value
 then no label will be rendered.  Default: 10</p>
 <h4 id="-maxbubblerelativesize-relativesize-">.maxBubbleRelativeSize([relativeSize])</h4>
 <p>Get or set the maximum relative size of a bubble to the length of x axis. This value is useful
@@ -886,16 +853,15 @@ Create a pie chart instance and attaches it to the given parent element.</li>
 a dom block element such as a div; or a dom element or d3 selection.</p>
 </li>
 <li><p>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</p>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</p>
 </li>
 </ul>
 <p>Returns:
 A newly created pie chart instance</p>
-<pre><code class="lang-js"><span class="hljs-comment">// create a pie chart under #chart-container1 element using the default global chart group</span>
-<span class="hljs-keyword">var</span> chart1 = dc.pieChart(<span class="hljs-string">'#chart-container1'</span>);
-<span class="hljs-comment">// create a pie chart under #chart-container2 element using chart group A</span>
-<span class="hljs-keyword">var</span> chart2 = dc.pieChart(<span class="hljs-string">'#chart-container2'</span>, <span class="hljs-string">'chartGroupA'</span>);
-</code></pre>
+<pre><code class="lang-js">// <span class="operator"><span class="keyword">create</span> a pie chart under #chart-container1 element <span class="keyword">using</span> the <span class="keyword">default</span> <span class="keyword">global</span> chart <span class="keyword">group</span>
+var chart1 = dc.pieChart(<span class="string">'#chart-container1'</span>);</span>
+// <span class="operator"><span class="keyword">create</span> a pie chart under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
+var chart2 = dc.pieChart(<span class="string">'#chart-container2'</span>, <span class="string">'chartGroupA'</span>);</span></code></pre>
 <h4 id="-slicescap-cap-">.slicesCap([cap])</h4>
 <p>Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
 value from high to low. Other slices exeeding the cap will be rolled up into one single <em>Others</em> slice.
@@ -930,17 +896,16 @@ a dom block element such as a div; or a dom element or d3 selection.
 If the bar chart is a sub-chart in a <a href="#composite-chart">Composite Chart</a> then pass in the parent composite
 chart instance.</li>
 <li>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</li>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</li>
 </ul>
 <p>Returns:
 A newly created bar chart instance</p>
-<pre><code class="lang-js"><span class="hljs-comment">// create a bar chart under #chart-container1 element using the default global chart group</span>
-<span class="hljs-keyword">var</span> chart1 = dc.barChart(<span class="hljs-string">'#chart-container1'</span>);
-<span class="hljs-comment">// create a bar chart under #chart-container2 element using chart group A</span>
-<span class="hljs-keyword">var</span> chart2 = dc.barChart(<span class="hljs-string">'#chart-container2'</span>, <span class="hljs-string">'chartGroupA'</span>);
-<span class="hljs-comment">// create a sub-chart under a composite parent chart</span>
-<span class="hljs-keyword">var</span> chart3 = dc.barChart(compositeChart);
-</code></pre>
+<pre><code class="lang-js">// <span class="operator"><span class="keyword">create</span> a bar chart under #chart-container1 element <span class="keyword">using</span> the <span class="keyword">default</span> <span class="keyword">global</span> chart <span class="keyword">group</span>
+var chart1 = dc.barChart(<span class="string">'#chart-container1'</span>);</span>
+// <span class="operator"><span class="keyword">create</span> a bar chart under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
+var chart2 = dc.barChart(<span class="string">'#chart-container2'</span>, <span class="string">'chartGroupA'</span>);</span>
+// <span class="operator"><span class="keyword">create</span> a sub-chart under a composite parent chart
+var chart3 = dc.barChart(compositeChart);</span></code></pre>
 <h4 id="-centerbar-boolean-">.centerBar(boolean)</h4>
 <p>Whether the bar chart will render each bar centered around the data position on x axis. Default: false</p>
 <h4 id="-barpadding-padding-">.barPadding([padding])</h4>
@@ -960,11 +925,10 @@ based on the number of data points and the length of the x axis.</p>
 <p>Set or get whether rounding is enabled when bars are centered.  Default: false.  If false, using
 rounding with centered bars will result in a warning and rounding will be ignored.  This flag
 has no effect if bars are not centered.</p>
-<p>When using standard d3.js rounding methods, the brush often doesn’t align correctly with
+<p>When using standard d3.js rounding methods, the brush often doesn&#39;t align correctly with
 centered bars since the bars are offset.  The rounding function must add an offset to
 compensate, such as in the following example.</p>
-<pre><code class="lang-js">chart.round(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(n)</span> </span>{<span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.floor(n)+<span class="hljs-number">0.5</span>});
-</code></pre>
+<pre><code class="lang-js"><span class="transposed_variable">chart.</span><span class="built_in">round</span>(<span class="keyword">function</span>(n) <span class="cell">{return Math.floor(n)+<span class="number">0.5</span>}</span>);</code></pre>
 <h2 id="line-chart">Line Chart</h2>
 <p>Includes <a href="#stack-mixin">Stack Mixin</a>, <a href="#coordinate-grid-mixin">Coordinate Grid Mixin</a></p>
 <p>Concrete line/area chart implementation.</p>
@@ -983,18 +947,17 @@ If the line chart is a sub-chart in a <a href="#composite-chart">Composite Chart
 chart instance.</p>
 </li>
 <li><p>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</p>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</p>
 </li>
 </ul>
 <p>Returns:
 A newly created line chart instance</p>
-<pre><code class="lang-js"><span class="hljs-comment">// create a line chart under #chart-container1 element using the default global chart group</span>
-<span class="hljs-keyword">var</span> chart1 = dc.lineChart(<span class="hljs-string">'#chart-container1'</span>);
-<span class="hljs-comment">// create a line chart under #chart-container2 element using chart group A</span>
-<span class="hljs-keyword">var</span> chart2 = dc.lineChart(<span class="hljs-string">'#chart-container2'</span>, <span class="hljs-string">'chartGroupA'</span>);
-<span class="hljs-comment">// create a sub-chart under a composite parent chart</span>
-<span class="hljs-keyword">var</span> chart3 = dc.lineChart(compositeChart);
-</code></pre>
+<pre><code class="lang-js">// <span class="operator"><span class="keyword">create</span> a line chart under #chart-container1 element <span class="keyword">using</span> the <span class="keyword">default</span> <span class="keyword">global</span> chart <span class="keyword">group</span>
+var chart1 = dc.lineChart(<span class="string">'#chart-container1'</span>);</span>
+// <span class="operator"><span class="keyword">create</span> a line chart under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
+var chart2 = dc.lineChart(<span class="string">'#chart-container2'</span>, <span class="string">'chartGroupA'</span>);</span>
+// <span class="operator"><span class="keyword">create</span> a sub-chart under a composite parent chart
+var chart3 = dc.lineChart(compositeChart);</span></code></pre>
 <h4 id="-interpolate-value-">.interpolate([value])</h4>
 <p>Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
 functions, splines, and cubic interpolation.  This is passed to
@@ -1016,11 +979,10 @@ This function is passed to
 custom reduce functions to get this to work, depending on your data. See
 <a href="https://github.com/dc-js/dc.js/issues/615#issuecomment-49089248">https://github.com/dc-js/dc.js/issues/615#issuecomment-49089248</a></p>
 <h4 id="-dashstyle-array-">.dashStyle([array])</h4>
-<p>Set the line’s d3 dashstyle. This value becomes the ‘stroke-dasharray’ of line. Defaults to empty
+<p>Set the line&#39;s d3 dashstyle. This value becomes the &#39;stroke-dasharray&#39; of line. Defaults to empty
 array (solid line).</p>
-<pre><code class="lang-js"> <span class="hljs-comment">// create a Dash Dot Dot Dot</span>
- chart.dashStyle([<span class="hljs-number">3</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>,<span class="hljs-number">1</span>]);
-</code></pre>
+<pre><code class="lang-js"> // <span class="operator"><span class="keyword">create</span> a Dash Dot Dot Dot
+ chart.dashStyle([<span class="number">3</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>]);</span></code></pre>
 <h4 id="-renderarea-boolean-">.renderArea([boolean])</h4>
 <p>Get or set render area flag. If the flag is set to true then the chart will render the area
 beneath each line and the line chart effectively becomes an area chart.</p>
@@ -1037,15 +999,15 @@ beneath each line and the line chart effectively becomes an area chart.</p>
 <p>If <code>options</code> is falsy, it disables data point rendering.</p>
 <p>If no <code>options</code> are provided, the current <code>options</code> values are instead returned.</p>
 <p>Example:</p>
-<pre><code><span class="hljs-tag">chart</span><span class="hljs-class">.renderDataPoints</span>({<span class="hljs-attribute">radius</span>: <span class="hljs-number">2</span>, <span class="hljs-attribute">fillOpacity</span>: <span class="hljs-number">0.8</span>, <span class="hljs-attribute">strokeOpacity</span>: <span class="hljs-number">0.8</span>})
-</code></pre><h2 id="data-count-widget">Data Count Widget</h2>
+<pre><code><span class="tag">chart</span><span class="class">.renderDataPoints</span>(<span class="rules">{<span class="rule"><span class="attribute">radius</span>:<span class="value"> <span class="number">2</span>, fillOpacity: <span class="number">0.8</span>, strokeOpacity: <span class="number">0.8</span>}</span></span></span>)</code></pre>
+<h2 id="data-count-widget">Data Count Widget</h2>
 <p>Includes: <a href="#base-mixin">Base Mixin</a></p>
 <p>The data count widget is a simple widget designed to display the number of records selected by the
 current filters out of the total number of records in the data set. Once created the data count widget
 will automatically update the text content of the following elements under the parent element.</p>
 <ul>
-<li>‘.total-count’ - total number of records</li>
-<li>‘.filter-count’ - number of records matched by the current filters</li>
+<li>&#39;.total-count&#39; - total number of records</li>
+<li>&#39;.filter-count&#39; - number of records matched by the current filters</li>
 </ul>
 <p>Examples:</p>
 <ul>
@@ -1066,13 +1028,12 @@ A newly created data count widget instance</p>
 <p>For the data count widget the only valid dimension is the entire data set.</p>
 <h4 id="-group-groupall-mandatory-">.group(groupAll) - <strong>mandatory</strong></h4>
 <p>For the data count widget the only valid group is the group returned by <code>dimension.groupAll()</code>.</p>
-<pre><code class="lang-js"><span class="hljs-keyword">var</span> ndx = crossfilter(data);
-<span class="hljs-keyword">var</span> all = ndx.groupAll();
+<pre><code class="lang-js"><span class="title">var</span> ndx = crossfilter(<span class="typedef"><span class="keyword">data</span>);</span>
+<span class="title">var</span> all = ndx.groupAll();
 
-dc.dataCount(<span class="hljs-string">'.dc-data-count'</span>)
+<span class="title">dc</span>.<span class="typedef">dataCount<span class="container">('.<span class="title">dc</span>-<span class="title">data</span>-<span class="title">count'</span>)</span></span>
    .dimension(ndx)
-   .group(all);
-</code></pre>
+   .group(all);</code></pre>
 <h4 id="html-object-">html([object])</h4>
 <p>Gets or sets an optional object specifying HTML templates to use depending how many items are
 selected. The text <code>%total-count</code> will replaced with the total number of records, and the text
@@ -1082,14 +1043,12 @@ selected. The text <code>%total-count</code> will replaced with the total number
 <li>some: HTML template to use if not all items are selected</li>
 </ul>
 <pre><code class="lang-js">counter.html({
-    some: <span class="hljs-string">'%filter-count out of %total-count records selected'</span>,
-    all: <span class="hljs-string">'All records selected. Click on charts to apply filters'</span>
-})
-</code></pre>
+    <span class="keyword">some</span>: '%filter-<span class="command">count</span> <span class="keyword">out of</span> %total-<span class="command">count</span> records selected',
+    all: 'All records selected. Click <span class="function_start"><span class="keyword">on</span> <span class="title">charts</span></span> <span class="keyword">to</span> apply filters'
+})</code></pre>
 <h4 id="formatnumber-formatter-">formatNumber([formatter])</h4>
 <p>Gets or sets an optional function to format the filter count and total count.</p>
-<pre><code class="lang-js">counter.formatNumber(d3.format(<span class="hljs-string">'.2g'</span>))
-</code></pre>
+<pre><code class="lang-js">counter.<span class="built_in">formatNumber</span>(d3.format(<span class="comment">'.2g'))</span></code></pre>
 <h2 id="data-table-widget">Data Table Widget</h2>
 <p>Includes: <a href="#base-mixin">Base Mixin</a></p>
 <p>The data table is a simple widget designed to list crossfilter focused data set (rows being
@@ -1106,7 +1065,7 @@ Create a data table widget instance and attach it to the given parent element.</
 a dom block element such as a div; or a dom element or d3 selection.</p>
 </li>
 <li><p>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</p>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</p>
 </li>
 </ul>
 <p>Returns:
@@ -1120,24 +1079,23 @@ generate dynamic columns. Column functions are simple javascript functions with 
 argument <code>d</code> which represents a row in the data set. The return value of these functions will be
 used directly to generate table content for each cell. However, this method requires the .html
 table entry to have a fixed set of column headers.</p>
-<pre><code class="lang-js">    chart.columns([
-        <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{
-            <span class="hljs-keyword">return</span> d.date;
+<pre><code class="lang-js">    chart<span class="preprocessor">.columns</span>([
+        function(d) {
+            return d<span class="preprocessor">.date</span><span class="comment">;</span>
         },
-        <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{
-            <span class="hljs-keyword">return</span> d.open;
+        function(d) {
+            return d<span class="preprocessor">.open</span><span class="comment">;</span>
         },
-        <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{
-            <span class="hljs-keyword">return</span> d.close;
+        function(d) {
+            return d<span class="preprocessor">.close</span><span class="comment">;</span>
         },
-        <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{
-            <span class="hljs-keyword">return</span> numberFormat(d.close - d.open);
+        function(d) {
+            return numberFormat(d<span class="preprocessor">.close</span> - d<span class="preprocessor">.open</span>)<span class="comment">;</span>
         },
-        <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{
-            <span class="hljs-keyword">return</span> d.volume;
+        function(d) {
+            return d<span class="preprocessor">.volume</span><span class="comment">;</span>
         }
-    ]);
-</code></pre>
+    ])<span class="comment">;</span></code></pre>
 <p>The next example shows you can simply list the data (d) content directly without
 specifying it as a function, except where necessary (ie, computed columns).  Note
 the data element accessor name is capitalized when displayed in the table. You can
@@ -1145,60 +1103,56 @@ also mix in functions as desired or necessary, but you must use the
     Object = [Label, Fn] method as shown below.
 You may wish to override the following two functions, which are internally used to
 translate the column information or function into a displayed header. The first one
-is used on the simple “string” column specifier, the second is used to transform the
+is used on the simple &quot;string&quot; column specifier, the second is used to transform the
 String(fn) into something displayable. For the Stock example, the function for Change
-becomes a header of ‘d.close - d.open’.
+becomes a header of &#39;d.close - d.open&#39;.
     _chart._doColumnHeaderCapitalize _chart._doColumnHeaderFnToString
 You may use your own Object definition, however you must then override
     _chart._doColumnHeaderFormat , _chart._doColumnValueFormat
 Be aware that fields without numberFormat specification will be displayed just as
 they are stored in the data, unformatted.</p>
 <pre><code class="lang-js">    chart.columns([
-            <span class="hljs-string">"date"</span>,    <span class="hljs-comment">// d["date"], ie, a field accessor; capitalized automatically</span>
-            <span class="hljs-string">"open"</span>,    <span class="hljs-comment">// ...</span>
-            <span class="hljs-string">"close"</span>,   <span class="hljs-comment">// ...</span>
-            [<span class="hljs-string">"Change"</span>, <span class="hljs-comment">// Specify an Object = [Label, Fn]</span>
-                  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{
-                      <span class="hljs-keyword">return</span> numberFormat(d.close - d.open);
+            <span class="string">"date"</span>,    // d[<span class="string">"date"</span>], ie, a field accessor; capitalized automatically
+            <span class="string">"open"</span>,    // <span class="keyword">...</span>
+            <span class="string">"close"</span>,   // <span class="keyword">...</span>
+            [<span class="string">"Change"</span>, // Specify an Object = [Label, Fn]
+                  <span class="keyword">function</span> (d) {
+                      <span class="keyword">return</span> numberFormat(d.close - d.open);
                   }],
-            <span class="hljs-string">"volume"</span>   <span class="hljs-comment">// d["volume"], ie, a field accessor; capitalized automatically</span>
-    ]);
-</code></pre>
+            <span class="string">"volume"</span>   // d[<span class="string">"volume"</span>], ie, a field accessor; capitalized automatically
+    ]);</code></pre>
 <p>A third example, where all fields are specified using the Object = [Label, Fn] method.</p>
 <pre><code class="lang-js">    chart.columns([
-        [<span class="hljs-string">"Date"</span>,   <span class="hljs-comment">// Specify an Object = [Label, Fn]</span>
-         <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{
-             <span class="hljs-keyword">return</span> d.date;
+        [<span class="string">"Date"</span>,   <span class="comment">// Specify an Object = [Label, Fn]</span>
+         <span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+             <span class="keyword">return</span> d.date;
          }],
-        [<span class="hljs-string">"Open"</span>,
-         <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{
-             <span class="hljs-keyword">return</span> numberFormat(d.open);
+        [<span class="string">"Open"</span>,
+         <span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+             <span class="keyword">return</span> numberFormat(d.open);
          }],
-        [<span class="hljs-string">"Close"</span>,
-         <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{
-             <span class="hljs-keyword">return</span> numberFormat(d.close);
+        [<span class="string">"Close"</span>,
+         <span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+             <span class="keyword">return</span> numberFormat(d.close);
          }],
-        [<span class="hljs-string">"Change"</span>,
-         <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{
-             <span class="hljs-keyword">return</span> numberFormat(d.close - d.open);
+        [<span class="string">"Change"</span>,
+         <span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+             <span class="keyword">return</span> numberFormat(d.close - d.open);
          }],
-        [<span class="hljs-string">"Volume"</span>,
-         <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{
-             <span class="hljs-keyword">return</span> d.volume;
+        [<span class="string">"Volume"</span>,
+         <span class="function"><span class="keyword">function</span> <span class="params">(d)</span> {</span>
+             <span class="keyword">return</span> d.volume;
          }]
-    ]);
-</code></pre>
+    ]);</code></pre>
 <h4 id="-sortby-sortbyfunction-">.sortBy([sortByFunction])</h4>
 <p>Get or set sort-by function. This function works as a value accessor at row level and returns a
 particular field to be sorted by. Default value: identity function</p>
-<pre><code class="lang-js">   chart.sortBy(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{
-        <span class="hljs-keyword">return</span> d.date;
-    });
-</code></pre>
+<pre><code class="lang-js">   chart<span class="preprocessor">.sortBy</span>(function(d) {
+        return d<span class="preprocessor">.date</span><span class="comment">;</span>
+    })<span class="comment">;</span></code></pre>
 <h4 id="-order-order-">.order([order])</h4>
 <p>Get or set sort order. Default value: <code>d3.ascending</code></p>
-<pre><code class="lang-js">    chart.order(d3.descending);
-</code></pre>
+<pre><code class="lang-js">    chart<span class="preprocessor">.order</span>(d3<span class="preprocessor">.descending</span>)<span class="comment">;</span></code></pre>
 <h2 id="data-grid-widget">Data Grid Widget</h2>
 <p>Includes: <a href="#base-mixin">Base Mixin</a></p>
 <p>Data grid is a simple widget designed to list the filtered records, providing
@@ -1216,35 +1170,31 @@ a simple way to define how the items are displayed.</p>
 a dom block element such as a div; or a dom element or d3 selection.</p>
 </li>
 <li><p>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</p>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</p>
 </li>
 </ul>
 <p>Returns:
 A newly created data grid widget instance</p>
 <h4 id="-size-size-">.size([size])</h4>
 <p>Get or set the grid size which determines the number of items displayed by the widget.</p>
-<h4 id="-html-function-data-return-html-">.html( function (data) { return ‘<html>‘; })</h4>
+<h4 id="-html-function-data-return-html-">.html( function (data) { return &#39;<html>&#39;; })</h4>
 <p>Get or set the function that formats an item. The data grid widget uses a
 function to generate dynamic html. Use your favourite templating engine or
 generate the string directly.</p>
-<pre><code class="lang-js">chart.html(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-string">'&lt;div class='</span>item <span class="hljs-string">'+data.exampleCategory+'</span><span class="hljs-string">'&gt;'</span>+data.exampleString+<span class="hljs-string">'&lt;/div&gt;'</span>;});
-</code></pre>
-<h4 id="-htmlgroup-function-data-return-html-">.htmlGroup( function (data) { return ‘<html>‘; })</h4>
+<pre><code class="lang-js"><span class="transposed_variable">chart.</span>html(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> { <span class="title">return</span> '&lt;<span class="title">div</span> <span class="title">class</span>='<span class="title">item</span> '+<span class="title">data</span>.<span class="title">exampleCategory</span>+''&gt;'+<span class="title">data</span>.<span class="title">exampleString</span>+'&lt;/<span class="title">div</span>&gt;';});</span></code></pre>
+<h4 id="-htmlgroup-function-data-return-html-">.htmlGroup( function (data) { return &#39;<html>&#39;; })</h4>
 <p>Get or set the function that formats a group label.</p>
-<pre><code class="lang-js">chart.htmlGroup (<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> </span>{ <span class="hljs-keyword">return</span> <span class="hljs-string">'&lt;h2&gt;'</span>.d.key . <span class="hljs-string">'with '</span> . d.values.length .<span class="hljs-string">' items&lt;/h2&gt;'</span>});
-</code></pre>
+<pre><code class="lang-js"><span class="transposed_variable">chart.</span>htmlGroup (<span class="function"><span class="keyword">function</span> <span class="params">(d)</span> { <span class="title">return</span> '&lt;<span class="title">h2</span>&gt;'.<span class="title">d</span>.<span class="title">key</span> . '<span class="title">with</span> ' . <span class="title">d</span>.<span class="title">values</span>.<span class="title">length</span> .' <span class="title">items</span>&lt;/<span class="title">h2</span>&gt;'});</span></code></pre>
 <h4 id="-sortby-sortbyfunction-">.sortBy([sortByFunction])</h4>
 <p>Get or set sort-by function. This function works as a value accessor at the item
 level and returns a particular field to be sorted.
 by. Default: identity function</p>
-<pre><code class="lang-js">chart.sortBy(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{
-    <span class="hljs-keyword">return</span> d.date;
-});
-</code></pre>
+<pre><code class="lang-js">chart<span class="preprocessor">.sortBy</span>(function(d) {
+    return d<span class="preprocessor">.date</span><span class="comment">;</span>
+})<span class="comment">;</span></code></pre>
 <h4 id="-order-order-">.order([order])</h4>
 <p>Get or set sort order function. Default value: <code>d3.ascending</code></p>
-<pre><code class="lang-js">chart.order(d3.descending);
-</code></pre>
+<pre><code class="lang-js">chart<span class="preprocessor">.order</span>(d3<span class="preprocessor">.descending</span>)<span class="comment">;</span></code></pre>
 <h2 id="bubble-chart">Bubble Chart</h2>
 <p>Includes: <a href="#bubble-mixin">Bubble Mixin</a>, <a href="#coordinate-grid-mixin">Coordinate Grid Mixin</a></p>
 <p>A concrete implementation of a general purpose bubble chart that allows data visualization using the
@@ -1267,15 +1217,14 @@ Create a bubble chart instance and attach it to the given parent element.</li>
 <a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single selector</a> specifying
 a dom block element such as a div; or a dom element or d3 selection.</li>
 <li>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</li>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</li>
 </ul>
 <p>Returns:
 A newly created bubble chart instance</p>
-<pre><code class="lang-js"><span class="hljs-comment">// create a bubble chart under #chart-container1 element using the default global chart group</span>
-<span class="hljs-keyword">var</span> bubbleChart1 = dc.bubbleChart(<span class="hljs-string">'#chart-container1'</span>);
-<span class="hljs-comment">// create a bubble chart under #chart-container2 element using chart group A</span>
-<span class="hljs-keyword">var</span> bubbleChart2 = dc.bubbleChart(<span class="hljs-string">'#chart-container2'</span>, <span class="hljs-string">'chartGroupA'</span>);
-</code></pre>
+<pre><code class="lang-js">// <span class="operator"><span class="keyword">create</span> a bubble chart under #chart-container1 element <span class="keyword">using</span> the <span class="keyword">default</span> <span class="keyword">global</span> chart <span class="keyword">group</span>
+var bubbleChart1 = dc.bubbleChart(<span class="string">'#chart-container1'</span>);</span>
+// <span class="operator"><span class="keyword">create</span> a bubble chart under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
+var bubbleChart2 = dc.bubbleChart(<span class="string">'#chart-container2'</span>, <span class="string">'chartGroupA'</span>);</span></code></pre>
 <h4 id="-elasticradius-boolean-">.elasticRadius([boolean])</h4>
 <p>Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
 feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.</p>
@@ -1292,15 +1241,14 @@ achieve some quite flexible charting effects.</p>
 <a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single selector</a> specifying
 a dom block element such as a div; or a dom element or d3 selection.</li>
 <li>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</li>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</li>
 </ul>
 <p>Returns:
 A newly created composite chart instance</p>
-<pre><code class="lang-js"><span class="hljs-comment">// create a composite chart under #chart-container1 element using the default global chart group</span>
-<span class="hljs-keyword">var</span> compositeChart1 = dc.compositeChart(<span class="hljs-string">'#chart-container1'</span>);
-<span class="hljs-comment">// create a composite chart under #chart-container2 element using chart group A</span>
-<span class="hljs-keyword">var</span> compositeChart2 = dc.compositeChart(<span class="hljs-string">'#chart-container2'</span>, <span class="hljs-string">'chartGroupA'</span>);
-</code></pre>
+<pre><code class="lang-js">// <span class="operator"><span class="keyword">create</span> a composite chart under #chart-container1 element <span class="keyword">using</span> the <span class="keyword">default</span> <span class="keyword">global</span> chart <span class="keyword">group</span>
+var compositeChart1 = dc.compositeChart(<span class="string">'#chart-container1'</span>);</span>
+// <span class="operator"><span class="keyword">create</span> a composite chart under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
+var compositeChart2 = dc.compositeChart(<span class="string">'#chart-container2'</span>, <span class="string">'chartGroupA'</span>);</span></code></pre>
 <h4 id="-userightaxisgridlines-bool-">.useRightAxisGridLines(bool)</h4>
 <p>Get or set whether to draw gridlines from the right y axis.  Drawing from the left y axis is the
 default behavior. This option is only respected when subcharts with both left and right y-axes
@@ -1312,25 +1260,24 @@ on each child chart.</p>
 <p>Set or get the right y axis label.</p>
 <h4 id="-compose-subchartarray-">.compose(subChartArray)</h4>
 <p>Combine the given charts into one single composite coordinate grid chart.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// compose the given charts in the array into one single composite chart</span>
+<pre><code class="lang-js"><span class="comment">// compose the given charts in the array into one single composite chart</span>
 moveChart.compose([
-    <span class="hljs-comment">// when creating sub-chart you need to pass in the parent chart</span>
+    <span class="comment">// when creating sub-chart you need to pass in the parent chart</span>
     dc.lineChart(moveChart)
-        .group(indexAvgByMonthGroup) <span class="hljs-comment">// if group is missing then parent's group will be used</span>
-        .valueAccessor(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span></span>{<span class="hljs-keyword">return</span> d.value.avg;})
-        <span class="hljs-comment">// most of the normal functions will continue to work in a composed chart</span>
-        .renderArea(<span class="hljs-literal">true</span>)
-        .stack(monthlyMoveGroup, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span></span>{<span class="hljs-keyword">return</span> d.value;})
-        .title(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span></span>{
-            <span class="hljs-keyword">var</span> value = d.value.avg?d.value.avg:d.value;
-            <span class="hljs-keyword">if</span>(<span class="hljs-built_in">isNaN</span>(value)) value = <span class="hljs-number">0</span>;
-            <span class="hljs-keyword">return</span> dateFormat(d.key) + <span class="hljs-string">'\n'</span> + numberFormat(value);
-        }),
-    dc.barChart(moveChart)
-        .group(volumeByMonthGroup)
-        .centerBar(<span class="hljs-literal">true</span>)
-]);
-</code></pre>
+        .group(indexAvgByMonthGroup) <span class="comment">// if group is missing then parent's group will be used</span>
+        .valueAccessor(<span class="function"><span class="keyword">function</span> <span class="params">(d)</span><span class="comment">{return d.value.avg;}</span>)
+        // <span class="title">most</span> <span class="title">of</span> <span class="title">the</span> <span class="title">normal</span> <span class="title">functions</span> <span class="title">will</span> <span class="title">continue</span> <span class="title">to</span> <span class="title">work</span> <span class="title">in</span> <span class="title">a</span> <span class="title">composed</span> <span class="title">chart</span>
+        .<span class="title">renderArea</span><span class="params">(true)</span>
+        .<span class="title">stack</span><span class="params">(monthlyMoveGroup, <span class="keyword">function</span> (d)</span><span class="comment">{return d.value;}</span>)
+        .<span class="title">title</span><span class="params">(<span class="keyword">function</span> (d)</span><span class="comment">{
+            var value = d.value.avg?d.value.avg:d.value;
+            if(isNaN(value)) value = 0;
+            return dateFormat(d.key) + '\n' + numberFormat(value);
+        }</span>),
+    <span class="title">dc</span>.<span class="title">barChart</span><span class="params">(moveChart)</span>
+        .<span class="title">group</span><span class="params">(volumeByMonthGroup)</span>
+        .<span class="title">centerBar</span><span class="params">(true)</span>
+]);</span></code></pre>
 <h4 id="-children-">.children()</h4>
 <p>Returns the child charts which are composed into the composite chart.</p>
 <h4 id="-sharecolors-boolean-">.shareColors([boolean])</h4>
@@ -1350,11 +1297,10 @@ axis customization is required. The y axis in dc.js is an instance of a <a href=
 object</a> therefore it supports any valid
 d3 axis manipulation. <strong>Caution</strong>: The y axis is usually generated internally by dc;
 resetting it may cause unexpected results.</p>
-<pre><code class="lang-jså"><span class="hljs-comment">// customize y axis tick format</span>
-chart.rightYAxis().tickFormat(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(v)</span> </span>{<span class="hljs-keyword">return</span> v + <span class="hljs-string">'%'</span>;});
-<span class="hljs-comment">// customize y axis tick values</span>
-chart.rightYAxis().tickValues([<span class="hljs-number">0</span>, <span class="hljs-number">100</span>, <span class="hljs-number">200</span>, <span class="hljs-number">300</span>]);
-</code></pre>
+<pre><code class="lang-jså"><span class="comment">// customize y axis tick format</span>
+chart<span class="variable">.rightYAxis</span>()<span class="variable">.tickFormat</span>(function (v) {<span class="keyword">return</span> v + <span class="string">'%'</span>;});
+<span class="comment">// customize y axis tick values</span>
+chart<span class="variable">.rightYAxis</span>()<span class="variable">.tickValues</span>([<span class="number">0</span>, <span class="number">100</span>, <span class="number">200</span>, <span class="number">300</span>]);</code></pre>
 <h2 id="series-chart">Series Chart</h2>
 <p>Includes: <a href="#composite chart">Composite Chart</a></p>
 <p>A series chart is a chart that shows multiple series of data overlaid on one chart, where the
@@ -1369,30 +1315,29 @@ composite features other than recomposing the chart.</p>
 a dom block element such as a div; or a dom element or d3 selection.</p>
 </li>
 <li><p>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</p>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</p>
 </li>
 </ul>
 <p>Returns:
 A newly created series chart instance</p>
-<pre><code class="lang-js"><span class="hljs-comment">// create a series chart under #chart-container1 element using the default global chart group</span>
-<span class="hljs-keyword">var</span> seriesChart1 = dc.seriesChart(<span class="hljs-string">"#chart-container1"</span>);
-<span class="hljs-comment">// create a series chart under #chart-container2 element using chart group A</span>
-<span class="hljs-keyword">var</span> seriesChart2 = dc.seriesChart(<span class="hljs-string">"#chart-container2"</span>, <span class="hljs-string">"chartGroupA"</span>);
-</code></pre>
+<pre><code class="lang-js">// <span class="operator"><span class="keyword">create</span> a series chart under #chart-container1 element <span class="keyword">using</span> the <span class="keyword">default</span> <span class="keyword">global</span> chart <span class="keyword">group</span>
+var seriesChart1 = dc.seriesChart(<span class="string">"#chart-container1"</span>);</span>
+// <span class="operator"><span class="keyword">create</span> a series chart under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
+var seriesChart2 = dc.seriesChart(<span class="string">"#chart-container2"</span>, <span class="string">"chartGroupA"</span>);</span></code></pre>
 <h4 id="-chart-function-">.chart([function])</h4>
 <p>Get or set the chart function, which generates the child charts.  Default: dc.lineChart</p>
-<pre><code><span class="hljs-comment">// put interpolation on the line charts used for the series</span>
-chart.chart(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(c)</span> </span>{ <span class="hljs-keyword">return</span> dc.lineChart(c).interpolate(<span class="hljs-string">'basis'</span>); })
-<span class="hljs-comment">// do a scatter series chart</span>
-chart.chart(dc.scatterPlot)
-</code></pre><h4 id="-seriesaccessor-accessor-">.seriesAccessor([accessor])</h4>
+<pre><code><span class="regexp">//</span> put interpolation <span class="literal">on</span> the line charts used <span class="keyword">for</span> the series
+chart.chart(<span class="reserved">function</span>(c) { <span class="keyword">return</span> dc.lineChart(c).interpolate(<span class="string">'basis'</span>); })
+<span class="regexp">//</span> <span class="keyword">do</span> a scatter series chart
+chart.chart(dc.scatterPlot)</code></pre>
+<h4 id="-seriesaccessor-accessor-">.seriesAccessor([accessor])</h4>
 <p>Get or set accessor function for the displayed series. Given a datum, this function
 should return the series that datum belongs to.</p>
 <h4 id="-seriessort-sortfunction-">.seriesSort([sortFunction])</h4>
 <p>Get or set a function to sort the list of series by, given series values.</p>
 <p>Example:</p>
-<pre><code>chart.seriesSort(d3.<span class="hljs-keyword">descending</span>);
-</code></pre><h4 id="-valuesort-sortfunction-">.valueSort([sortFunction])</h4>
+<pre><code>chart<span class="preprocessor">.seriesSort</span>(d3<span class="preprocessor">.descending</span>)<span class="comment">;</span></code></pre>
+<h4 id="-valuesort-sortfunction-">.valueSort([sortFunction])</h4>
 <p>Get or set a function to sort each series values by. By default this is the key accessor which,
 for example, will ensure a lineChart series connects its points in increasing key/x order,
 rather than haphazardly.</p>
@@ -1413,16 +1358,15 @@ Create a choropleth chart instance and attach it to the given parent element.</l
 a dom block element such as a div; or a dom element or d3 selection.</p>
 </li>
 <li><p>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</p>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</p>
 </li>
 </ul>
 <p>Returns:
 A newly created choropleth chart instance</p>
-<pre><code class="lang-js"><span class="hljs-comment">// create a choropleth chart under '#us-chart' element using the default global chart group</span>
-<span class="hljs-keyword">var</span> chart1 = dc.geoChoroplethChart(<span class="hljs-string">'#us-chart'</span>);
-<span class="hljs-comment">// create a choropleth chart under '#us-chart2' element using chart group A</span>
-<span class="hljs-keyword">var</span> chart2 = dc.compositeChart(<span class="hljs-string">'#us-chart2'</span>, <span class="hljs-string">'chartGroupA'</span>);
-</code></pre>
+<pre><code class="lang-js">// <span class="operator"><span class="keyword">create</span> a choropleth chart under <span class="string">'#us-chart'</span> element <span class="keyword">using</span> the <span class="keyword">default</span> <span class="keyword">global</span> chart <span class="keyword">group</span>
+var chart1 = dc.geoChoroplethChart(<span class="string">'#us-chart'</span>);</span>
+// <span class="operator"><span class="keyword">create</span> a choropleth chart under <span class="string">'#us-chart2'</span> element <span class="keyword">using</span> chart <span class="keyword">group</span> A
+var chart2 = dc.compositeChart(<span class="string">'#us-chart2'</span>, <span class="string">'chartGroupA'</span>);</span></code></pre>
 <h4 id="-overlaygeojson-json-name-keyaccessor-mandatory-">.overlayGeoJson(json, name, keyAccessor) - <strong>mandatory</strong></h4>
 <p>Use this function to insert a new GeoJson map layer. This function can be invoked multiple times
 if you have multiple GeoJson data layers to render on top of each other. If you overlay multiple
@@ -1431,21 +1375,20 @@ layers with the same name the new overlay will override the existing one.</p>
 <ul>
 <li>json - GeoJson feed</li>
 <li>name - name of the layer</li>
-<li>keyAccessor - accessor function used to extract ‘key’ from the GeoJson data. The key extracted by
+<li>keyAccessor - accessor function used to extract &#39;key&#39; from the GeoJson data. The key extracted by
 this function should match the keys returned by the crossfilter groups.</li>
 </ul>
-<pre><code class="lang-js"><span class="hljs-comment">// insert a layer for rendering US states</span>
-chart.overlayGeoJson(statesJson.features, <span class="hljs-string">'state'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{
-    <span class="hljs-keyword">return</span> d.properties.name;
-});
-</code></pre>
+<pre><code class="lang-js"><span class="regexp">//</span> insert a layer <span class="keyword">for</span> rendering US states
+chart.overlayGeoJson(statesJson.features, <span class="string">'state'</span>, <span class="reserved">function</span>(d) {
+    <span class="keyword">return</span> d.properties.name;
+});</code></pre>
 <h4 id="-projection-projection-">.projection(projection)</h4>
 <p>Set custom geo projection function. See the available <a href="https://github.com/mbostock/d3/wiki/Geo-Projections">d3 geo projection
 functions</a>.  Default value: albersUsa.</p>
 <h4 id="-geojsons-">.geoJsons()</h4>
 <p>Returns all GeoJson layers currently registered with this chart. The returned array is a
-reference to this chart’s internal data structure, so any modification to this array will also
-modify this chart’s internal registration.</p>
+reference to this chart&#39;s internal data structure, so any modification to this array will also
+modify this chart&#39;s internal registration.</p>
 <p>Returns an array of objects containing fields {name, data, accessor}</p>
 <h4 id="-geopath-">.geoPath()</h4>
 <p>Returns the <a href="https://github.com/mbostock/d3/wiki/Geo-Paths#path">d3.geo.path</a> object used to
@@ -1471,24 +1414,22 @@ Create a bubble overlay chart instance and attach it to the given parent element
 a dom block element such as a div; or a dom element or d3 selection.
 off-screen. Typically this element should also be the parent of the underlying image.</li>
 <li>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</li>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</li>
 </ul>
 <p>Returns:
 A newly created bubble overlay chart instance</p>
-<pre><code class="lang-js"><span class="hljs-comment">// create a bubble overlay chart on top of the '#chart-container1 svg' element using the default global chart group</span>
-<span class="hljs-keyword">var</span> bubbleChart1 = dc.bubbleOverlayChart(<span class="hljs-string">'#chart-container1'</span>).svg(d3.select(<span class="hljs-string">'#chart-container1 svg'</span>));
-<span class="hljs-comment">// create a bubble overlay chart on top of the '#chart-container2 svg' element using chart group A</span>
-<span class="hljs-keyword">var</span> bubbleChart2 = dc.compositeChart(<span class="hljs-string">'#chart-container2'</span>, <span class="hljs-string">'chartGroupA'</span>).svg(d3.select(<span class="hljs-string">'#chart-container2 svg'</span>));
-</code></pre>
+<pre><code class="lang-js">// <span class="operator"><span class="keyword">create</span> a bubble overlay chart <span class="keyword">on</span> top <span class="keyword">of</span> the <span class="string">'#chart-container1 svg'</span> element <span class="keyword">using</span> the <span class="keyword">default</span> <span class="keyword">global</span> chart <span class="keyword">group</span>
+var bubbleChart1 = dc.bubbleOverlayChart(<span class="string">'#chart-container1'</span>).svg(d3.<span class="keyword">select</span>(<span class="string">'#chart-container1 svg'</span>));</span>
+// <span class="operator"><span class="keyword">create</span> a bubble overlay chart <span class="keyword">on</span> top <span class="keyword">of</span> the <span class="string">'#chart-container2 svg'</span> element <span class="keyword">using</span> chart <span class="keyword">group</span> A
+var bubbleChart2 = dc.compositeChart(<span class="string">'#chart-container2'</span>, <span class="string">'chartGroupA'</span>).svg(d3.<span class="keyword">select</span>(<span class="string">'#chart-container2 svg'</span>));</span></code></pre>
 <h4 id="-svg-imageelement-mandatory-">.svg(imageElement) - <strong>mandatory</strong></h4>
 <p>Set the underlying svg image element. Unlike other dc charts this chart will not generate a svg
 element; therefore the bubble overlay chart will not work if this function is not invoked. If the
 underlying image is a bitmap, then an empty svg will need to be created on top of the image.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// set up underlying svg element</span>
-chart.svg(d3.select(<span class="hljs-string">'#chart svg'</span>));
-</code></pre>
+<pre><code class="lang-js">// <span class="operator"><span class="keyword">set</span> up underlying svg element
+chart.svg(d3.<span class="keyword">select</span>(<span class="string">'#chart svg'</span>));</span></code></pre>
 <h4 id="-point-name-x-y-mandatory-">.point(name, x, y) - <strong>mandatory</strong></h4>
-<p>Set up a data point on the overlay. The name of a data point should match a specific ‘key’ among
+<p>Set up a data point on the overlay. The name of a data point should match a specific &#39;key&#39; among
 data groups generated using keyAccessor.  If a match is found (point name &lt;-&gt; data group key)
 then a bubble will be generated at the position specified by the function. x and y
 value specified here are relative to the underlying svg.</p>
@@ -1504,36 +1445,33 @@ value specified here are relative to the underlying svg.</p>
 a dom block element such as a div; or a dom element or d3 selection.</p>
 </li>
 <li><p>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</p>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</p>
 </li>
 </ul>
 <p>Returns:
 A newly created row chart instance</p>
-<pre><code class="lang-js"><span class="hljs-comment">// create a row chart under #chart-container1 element using the default global chart group</span>
-<span class="hljs-keyword">var</span> chart1 = dc.rowChart(<span class="hljs-string">'#chart-container1'</span>);
-<span class="hljs-comment">// create a row chart under #chart-container2 element using chart group A</span>
-<span class="hljs-keyword">var</span> chart2 = dc.rowChart(<span class="hljs-string">'#chart-container2'</span>, <span class="hljs-string">'chartGroupA'</span>);
-</code></pre>
+<pre><code class="lang-js">// <span class="operator"><span class="keyword">create</span> a row chart under #chart-container1 element <span class="keyword">using</span> the <span class="keyword">default</span> <span class="keyword">global</span> chart <span class="keyword">group</span>
+var chart1 = dc.rowChart(<span class="string">'#chart-container1'</span>);</span>
+// <span class="operator"><span class="keyword">create</span> a row chart under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
+var chart2 = dc.rowChart(<span class="string">'#chart-container2'</span>, <span class="string">'chartGroupA'</span>);</span></code></pre>
 <h4 id="-x-scale-">.x([scale])</h4>
 <p>Gets or sets the x scale. The x scale can be any d3
 <a href="https://github.com/mbostock/d3/wiki/Quantitative-Scales">quantitive scale</a></p>
 <h4 id="-rendertitlelabel-boolean-">.renderTitleLabel(boolean)</h4>
-<p>Turn on/off Title label rendering (values) using SVG style of text-anchor ‘end’</p>
+<p>Turn on/off Title label rendering (values) using SVG style of text-anchor &#39;end&#39;</p>
 <h4 id="-xaxis-">.xAxis()</h4>
 <p>Get the x axis for the row chart instance.  Note: not settable for row charts.
 See the <a href="https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis">d3 axis object</a> documention for more information.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// customize x axis tick format</span>
-chart.xAxis().tickFormat(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(v)</span> </span>{<span class="hljs-keyword">return</span> v + <span class="hljs-string">'%'</span>;});
-<span class="hljs-comment">// customize x axis tick values</span>
-chart.xAxis().tickValues([<span class="hljs-number">0</span>, <span class="hljs-number">100</span>, <span class="hljs-number">200</span>, <span class="hljs-number">300</span>]);
-</code></pre>
+<pre><code class="lang-js"><span class="comment">// customize x axis tick format</span>
+chart<span class="variable">.xAxis</span>()<span class="variable">.tickFormat</span>(function (v) {<span class="keyword">return</span> v + <span class="string">'%'</span>;});
+<span class="comment">// customize x axis tick values</span>
+chart<span class="variable">.xAxis</span>()<span class="variable">.tickValues</span>([<span class="number">0</span>, <span class="number">100</span>, <span class="number">200</span>, <span class="number">300</span>]);</code></pre>
 <h4 id="-fixedbarheight-height-">.fixedBarHeight([height])</h4>
 <p>Get or set the fixed bar height. Default is [false] which will auto-scale bars.
 For example, if you want to fix the height for a specific number of bars (useful in TopN charts)
 you could fix height as follows (where count = total number of bars in your TopN and gap is
 your vertical gap space).</p>
-<pre><code class="lang-js"> chart.fixedBarHeight( chartheight - (count + <span class="hljs-number">1</span>) * gap / count);
-</code></pre>
+<pre><code class="lang-js"> <span class="comment">chart</span>.<span class="comment">fixedBarHeight(</span> <span class="comment">chartheight</span> <span class="literal">-</span> <span class="comment">(count</span> <span class="literal">+</span> <span class="comment">1)</span> <span class="comment">*</span> <span class="comment">gap</span> <span class="comment">/</span> <span class="comment">count);</code></pre>
 <h4 id="-gap-gap-">.gap([gap])</h4>
 <p>Get or set the vertical gap space between rows on a particular row chart instance. Default gap is 5px;</p>
 <h4 id="-elasticx-boolean-">.elasticX([boolean])</h4>
@@ -1551,8 +1489,7 @@ Default x offset is 2px;</p>
 <h2 id="legend">Legend</h2>
 <p>Legend is a attachable widget that can be added to other dc charts to render horizontal legend
 labels.</p>
-<pre><code class="lang-js">chart.legend(dc.legend().x(<span class="hljs-number">400</span>).y(<span class="hljs-number">10</span>).itemHeight(<span class="hljs-number">13</span>).gap(<span class="hljs-number">5</span>))
-</code></pre>
+<pre><code class="lang-js">chart<span class="variable">.legend</span>(dc<span class="variable">.legend</span>()<span class="variable">.x</span>(<span class="number">400</span>)<span class="variable">.y</span>(<span class="number">10</span>)<span class="variable">.itemHeight</span>(<span class="number">13</span>)<span class="variable">.gap</span>(<span class="number">5</span>))</code></pre>
 <p>Examples:</p>
 <ul>
 <li><a href="http://dc-js.github.com/dc.js/">Nasdaq 100 Index</a></li>
@@ -1589,18 +1526,17 @@ If the scatter plot is a sub-chart in a <a href="#composite-chart">Composite Cha
 chart instance.</p>
 </li>
 <li><p>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</p>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</p>
 </li>
 </ul>
 <p>Returns:
 A newly created scatter plot instance</p>
-<pre><code class="lang-js"><span class="hljs-comment">// create a scatter plot under #chart-container1 element using the default global chart group</span>
-<span class="hljs-keyword">var</span> chart1 = dc.scatterPlot(<span class="hljs-string">'#chart-container1'</span>);
-<span class="hljs-comment">// create a scatter plot under #chart-container2 element using chart group A</span>
-<span class="hljs-keyword">var</span> chart2 = dc.scatterPlot(<span class="hljs-string">'#chart-container2'</span>, <span class="hljs-string">'chartGroupA'</span>);
-<span class="hljs-comment">// create a sub-chart under a composite parent chart</span>
-<span class="hljs-keyword">var</span> chart3 = dc.scatterPlot(compositeChart);
-</code></pre>
+<pre><code class="lang-js">// <span class="operator"><span class="keyword">create</span> a scatter plot under #chart-container1 element <span class="keyword">using</span> the <span class="keyword">default</span> <span class="keyword">global</span> chart <span class="keyword">group</span>
+var chart1 = dc.scatterPlot(<span class="string">'#chart-container1'</span>);</span>
+// <span class="operator"><span class="keyword">create</span> a scatter plot under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
+var chart2 = dc.scatterPlot(<span class="string">'#chart-container2'</span>, <span class="string">'chartGroupA'</span>);</span>
+// <span class="operator"><span class="keyword">create</span> a sub-chart under a composite parent chart
+var chart3 = dc.scatterPlot(compositeChart);</span></code></pre>
 <h4 id="-existenceaccessor-accessor-">.existenceAccessor([accessor])</h4>
 <p>Get or set the existence accessor.  If a point exists, it is drawn with symbolSize radius and
 opacity 1; if it does not exist, it is drawn with hiddenSize radius and opacity 0. By default,
@@ -1635,9 +1571,8 @@ The number display widget will only react to filter changes in the chart group.<
 </ul>
 <p>Returns:
 A newly created number display instance</p>
-<pre><code class="lang-js"><span class="hljs-comment">// create a number display under #chart-container1 element using the default global chart group</span>
-<span class="hljs-keyword">var</span> display1 = dc.numberDisplay(<span class="hljs-string">'#chart-container1'</span>);
-</code></pre>
+<pre><code class="lang-js">// <span class="operator"><span class="keyword">create</span> a <span class="keyword">number</span> display under #chart-container1 element <span class="keyword">using</span> the <span class="keyword">default</span> <span class="keyword">global</span> chart <span class="keyword">group</span>
+var display1 = dc.numberDisplay(<span class="string">'#chart-container1'</span>);</span></code></pre>
 <h4 id="-html-object-">.html([object])</h4>
 <p> Gets or sets an optional object specifying HTML templates to use depending on the number
  displayed.  The text <code>%number</code> will be replaced with the current value.</p>
@@ -1646,10 +1581,9 @@ A newly created number display instance</p>
 <li>zero: HTML template to use if the number is 0</li>
 <li><p>some: HTML template to use otherwise</p>
 <pre><code class="lang-js">numberWidget.html({
-  one:<span class="hljs-string">'%number record'</span>,
-  some:<span class="hljs-string">'%number records'</span>,
-  none:<span class="hljs-string">'no records'</span>})
-</code></pre>
+  one:'%<span class="type">number</span> <span class="type">record</span>',
+  <span class="keyword">some</span>:'%<span class="type">number</span> records',
+  none:'no records'})</code></pre>
 </li>
 </ul>
 <h4 id="-value-">.value()</h4>
@@ -1668,28 +1602,25 @@ A newly created number display instance</p>
 a dom block element such as a div; or a dom element or d3 selection.</p>
 </li>
 <li><p>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</p>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</p>
 </li>
 </ul>
 <p>Returns:
 A newly created heat map instance</p>
-<pre><code class="lang-js"><span class="hljs-comment">// create a heat map under #chart-container1 element using the default global chart group</span>
-<span class="hljs-keyword">var</span> heatMap1 = dc.heatMap(<span class="hljs-string">'#chart-container1'</span>);
-<span class="hljs-comment">// create a heat map under #chart-container2 element using chart group A</span>
-<span class="hljs-keyword">var</span> heatMap2 = dc.heatMap(<span class="hljs-string">'#chart-container2'</span>, <span class="hljs-string">'chartGroupA'</span>);
-</code></pre>
+<pre><code class="lang-js">// <span class="operator"><span class="keyword">create</span> a heat map under #chart-container1 element <span class="keyword">using</span> the <span class="keyword">default</span> <span class="keyword">global</span> chart <span class="keyword">group</span>
+var heatMap1 = dc.heatMap(<span class="string">'#chart-container1'</span>);</span>
+// <span class="operator"><span class="keyword">create</span> a heat map under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
+var heatMap2 = dc.heatMap(<span class="string">'#chart-container2'</span>, <span class="string">'chartGroupA'</span>);</span></code></pre>
 <h4 id="-colslabel-labelfunction-">.colsLabel([labelFunction])</h4>
 <p>Set or get the column label function. The chart class uses this function to render
 column labels on the X axis. It is passed the column name.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// the default label function just returns the name</span>
-chart.colsLabel(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{ <span class="hljs-keyword">return</span> d; });
-</code></pre>
+<pre><code class="lang-js">// the default label <span class="function"><span class="keyword">function</span> <span class="title">just</span> <span class="title">returns</span> <span class="title">the</span> <span class="title">name</span>
+<span class="title">chart.colsLabel</span><span class="params">(function(d)</span></span> { <span class="keyword">return</span> d; });</code></pre>
 <h4 id="-rowslabel-labelfunction-">.rowsLabel([labelFunction])</h4>
 <p>Set or get the row label function. The chart class uses this function to render
 row labels on the Y axis. It is passed the row name.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// the default label function just returns the name</span>
-chart.rowsLabel(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span> </span>{ <span class="hljs-keyword">return</span> d; });
-</code></pre>
+<pre><code class="lang-js">// the default label <span class="function"><span class="keyword">function</span> <span class="title">just</span> <span class="title">returns</span> <span class="title">the</span> <span class="title">name</span>
+<span class="title">chart.rowsLabel</span><span class="params">(function(d)</span></span> { <span class="keyword">return</span> d; });</code></pre>
 <h4 id="-rows-values-">.rows([values])</h4>
 <p>Gets or sets the values used to create the rows of the heatmap, as an array. By default, all
 the values will be fetched from the data using the value accessor.</p>
@@ -1718,15 +1649,14 @@ otherwise the whole row will be unselected.</p>
 <a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single selector</a> representing
 a dom block element such as a div; or a dom element or d3 selection.</li>
 <li>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart’s group.</li>
+Interaction with a chart will only trigger events and redraws within the chart&#39;s group.</li>
 </ul>
 <p>Returns:
 A newly created box plot instance</p>
-<pre><code class="lang-js"><span class="hljs-comment">// create a box plot under #chart-container1 element using the default global chart group</span>
-<span class="hljs-keyword">var</span> boxPlot1 = dc.boxPlot(<span class="hljs-string">'#chart-container1'</span>);
-<span class="hljs-comment">// create a box plot under #chart-container2 element using chart group A</span>
-<span class="hljs-keyword">var</span> boxPlot2 = dc.boxPlot(<span class="hljs-string">'#chart-container2'</span>, <span class="hljs-string">'chartGroupA'</span>);
-</code></pre>
+<pre><code class="lang-js">// <span class="operator"><span class="keyword">create</span> a box plot under #chart-container1 element <span class="keyword">using</span> the <span class="keyword">default</span> <span class="keyword">global</span> chart <span class="keyword">group</span>
+var boxPlot1 = dc.boxPlot(<span class="string">'#chart-container1'</span>);</span>
+// <span class="operator"><span class="keyword">create</span> a box plot under #chart-container2 element <span class="keyword">using</span> chart <span class="keyword">group</span> A
+var boxPlot2 = dc.boxPlot(<span class="string">'#chart-container2'</span>, <span class="string">'chartGroupA'</span>);</span></code></pre>
 <h4 id="-boxpadding-padding-">.boxPadding([padding])</h4>
 <p>Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
 See the <a href="https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands">d3 docs</a>
@@ -1736,16 +1666,15 @@ for a visual description of how the padding is applied.</p>
 <p>Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
 or on charts with a custom <code>.boxWidth</code>. Will pad the width by <code>padding * barWidth</code> on each side of the chart.</p>
 <p>Default: 0.5</p>
-<h4 id="-boxwidth-width-function-innerchartwidth-xunits-">.boxWidth(width || function(innerChartWidth, xUnits) { … })</h4>
+<h4 id="-boxwidth-width-function-innerchartwidth-xunits-">.boxWidth(width || function(innerChartWidth, xUnits) { ... })</h4>
 <p>Get or set the numerical width of the boxplot box. The width may also be a function taking as
 parameters the chart width excluding the right and left margins, as well as the number of x
 units.</p>
 <h4 id="-tickformat-">.tickFormat()</h4>
 <p>Set the numerical format of the boxplot median, whiskers and quartile labels. Defaults to
 integer formatting.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// format ticks to 2 decimal places</span>
-chart.tickFormat(d3.format(<span class="hljs-string">'.2f'</span>));
-</code></pre>
+<pre><code class="lang-js"><span class="comment">// format ticks to 2 decimal places</span>
+chart.tickFormat(d3.<span class="built_in">format</span>(<span class="string">'.2f'</span>));</code></pre>
 
   </body>
 </html>
