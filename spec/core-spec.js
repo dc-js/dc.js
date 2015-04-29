@@ -80,6 +80,20 @@ describe('dc.core', function() {
             dc.deregisterChart(chartGrouped, chartGroup);
             expect(dc.hasChart(chartGrouped)).toBeFalsy();
         });
+
+        it('should have switched to an existing group', function () {
+            chart.chartGroup(chartGroup);
+            expect(dc.hasChart(chart)).toBeTruthy();
+            expect(dc.chartRegistry.list(chartGroup).indexOf(chart) > -1).toBeTruthy();
+            expect(dc.chartRegistry.list(null).indexOf(chart) > -1).toBeFalsy();
+        });
+
+        it('should have switched to the global group', function () {
+            chart.chartGroup(null);
+            expect(dc.hasChart(chart)).toBeTruthy();
+            expect(dc.chartRegistry.list(chartGroup).indexOf(chart) > -1).toBeFalsy();
+            expect(dc.chartRegistry.list(null).indexOf(chart) > -1).toBeTruthy();
+        });
     });
 
     describe('transition', function() {

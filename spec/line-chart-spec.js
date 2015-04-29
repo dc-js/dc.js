@@ -35,6 +35,7 @@ describe('dc.lineChart', function() {
         describe('render data markers', function () {
             beforeEach(function () {
                 chart.dotRadius(5)
+                    .brushOn(false)
                     .renderDataPoints({}).render();
 
             });
@@ -44,7 +45,7 @@ describe('dc.lineChart', function() {
                     var dot = d3.select(this);
                     expect(dot.style("fill-opacity")).toBeWithinDelta(0.8);
                     expect(dot.style("stroke-opacity")).toBeWithinDelta(0.8);
-                    expect(dot.attr("r")).toBe(2);
+                    expect(dot.attr("r")).toBe('2');
                 });
             });
 
@@ -54,9 +55,9 @@ describe('dc.lineChart', function() {
                     .render();
                 chart.selectAll("circle.dot").each(function () {
                     var dot = d3.select(this);
-                    expect(dot.attr("fill-opacity")).toBe(1);
-                    expect(dot.attr("stroke-opacity")).toBe(1);
-                    expect(dot.attr("r")).toBe(3);
+                    expect(dot.style("fill-opacity")).toBe('1');
+                    expect(dot.style("stroke-opacity")).toBe('1');
+                    expect(dot.attr("r")).toBe('3');
                 });
             });
 
@@ -64,7 +65,7 @@ describe('dc.lineChart', function() {
                 chart.selectAll("circle.dot").each(function () {
                     var dot = d3.select(this);
                     dot.on("mousemove").call(this);
-                    expect(dot.attr("r")).toBe(5);
+                    expect(dot.attr("r")).toBe('5');
                 });
             });
 
@@ -73,7 +74,7 @@ describe('dc.lineChart', function() {
                     var dot = d3.select(this);
                     dot.on("mousemove").call(this);
                     dot.on("mouseout").call(this);
-                    expect(dot.attr("r")).toBe(3);
+                    expect(dot.attr("r")).toBe('2');
                 });
             });
 
@@ -119,6 +120,20 @@ describe('dc.lineChart', function() {
             it('should not render tooltips when boolean flag is false', function () {
                 expect(chart.select(".sub._0 .dc-tooltip._0 .dot").empty()).toBeTruthy();
                 expect(chart.select(".sub._1 .dc-tooltip._0 .dot").empty()).toBeTruthy();
+            });
+        });
+
+        describe('data point highlights and refs off', function () {
+            beforeEach(function () {
+                chart.title(function (d) { return d.value; });
+                chart.brushOn(false).xyTipsOn(false).render();
+            });
+            it('should not generate per data points', function () {
+                expect(chart.selectAll('circle.dot').size()).toBe(0);
+            });
+            it('should not generate x and y refs', function () {
+                expect(chart.selectAll('path.xRef').size()).toBe(0);
+                expect(chart.selectAll('path.yRef').size()).toBe(0);
             });
         });
 

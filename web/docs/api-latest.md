@@ -1106,7 +1106,8 @@ functions, splines, and cubic interpolation.  This is passed to
 [d3.svg.area.interpolate](https://github.com/mbostock/d3/wiki/SVG-Shapes#area_interpolate),
 where you can find a complete list of valid arguments
 
-#### .tension([value]) Gets or sets the tension to use for lines drawn, in the range 0 to 1.
+#### .tension([value])
+Gets or sets the tension to use for lines drawn, in the range 0 to 1.
 This parameter further customizes the interpolation behavior.  It is passed to
 [d3.svg.line.tension](https://github.com/mbostock/d3/wiki/SVG-Shapes#line_tension) and
 [d3.svg.area.tension](https://github.com/mbostock/d3/wiki/SVG-Shapes#area_tension).  Default:
@@ -1951,13 +1952,11 @@ chart.rowsLabel(function(d) { return d; });
 
 #### .rows([values])
 Gets or sets the values used to create the rows of the heatmap, as an array. By default, all
-the values will be fetched from the data using the value accessor, and they will be sorted in
-ascending order.
+the values will be fetched from the data using the value accessor.
 
 #### .cols([keys])
 Gets or sets the keys used to create the columns of the heatmap, as an array. By default, all
-the values will be fetched from the data using the key accessor, and they will be sorted in
-ascending order.
+the values will be fetched from the data using the key accessor.
 
 #### .boxOnClick([handler])
 Gets or sets the handler that fires when an individual cell is clicked in the heatmap.

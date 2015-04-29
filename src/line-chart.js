@@ -52,6 +52,7 @@ dc.lineChart = function (parent, chartGroup) {
     var _tension = 0.7;
     var _defined;
     var _dashStyle;
+    var _xyTipsOn = true;
 
     _chart.transitionDuration(500);
     _chart._rangeBandPadding(1);
@@ -97,7 +98,8 @@ dc.lineChart = function (parent, chartGroup) {
     };
 
     /**
-     #### .tension([value]) Gets or sets the tension to use for lines drawn, in the range 0 to 1.
+     #### .tension([value])
+     Gets or sets the tension to use for lines drawn, in the range 0 to 1.
      This parameter further customizes the interpolation behavior.  It is passed to
      [d3.svg.line.tension](https://github.com/mbostock/d3/wiki/SVG-Shapes#line_tension) and
      [d3.svg.area.tension](https://github.com/mbostock/d3/wiki/SVG-Shapes#area_tension).  Default:
@@ -233,7 +235,7 @@ dc.lineChart = function (parent, chartGroup) {
     }
 
     function drawDots(chartBody, layers) {
-        if (!_chart.brushOn()) {
+        if (!_chart.brushOn() && _chart.xyTipsOn()) {
             var tooltipListClass = TOOLTIP_G_CLASS + '-list';
             var tooltips = chartBody.select('g.' + tooltipListClass);
 
@@ -337,6 +339,20 @@ dc.lineChart = function (parent, chartGroup) {
             dot.append('title').text(dc.pluck('data', _chart.title(d.name)));
         }
     }
+
+    /**
+     #### .xyTipsOn([boolean])
+     Turn on/off the mouseover behavior of an individual data point which renders a circle and x/y axis
+     dashed lines back to each respective axis.  This is ignored if the chart brush is on (`brushOn`)
+     Default: true
+     */
+    _chart.xyTipsOn = function (_) {
+        if (!arguments.length) {
+            return _xyTipsOn;
+        }
+        _xyTipsOn = _;
+        return _chart;
+    };
 
     /**
     #### .dotRadius([dotRadius])
