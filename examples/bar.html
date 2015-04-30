@@ -12,13 +12,6 @@
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
-
-<style type="text/css">
-.y-axis-label {
-    font-size: 20pt;
-}
-</style>
-
 <script type="text/javascript">
 
 var chart = dc.barChart("#test");
@@ -37,8 +30,7 @@ d3.csv("morley.csv", function(error, experiments) {
     .height(480)
     .x(d3.scale.linear().domain([6,20]))
     .brushOn(false)
-    .margins({left:100, top: 20, right: 20, bottom: 20})
-    .yAxisLabel("This is the Y Axis!", 30)
+    .yAxisLabel("This is the Y Axis!")
     .dimension(runDimension)
     .group(speedSumGroup)
     .renderlet(function(chart) {
