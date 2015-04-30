@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-beta.8
+ *  dc 2.0.0-beta.9
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2015 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -20,7 +20,7 @@
 'use strict';
 
 /**
-#### Version 2.0.0-beta.8
+#### Version 2.0.0-beta.9
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -41,7 +41,7 @@ that are chainable d3 objects.)
 /*jshint -W062*/
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-beta.8',
+    version: '2.0.0-beta.9',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -5791,6 +5791,7 @@ dc.compositeChart = function (parent, chartGroup) {
             child.transitionDuration(_chart.transitionDuration());
             child.brushOn(_chart.brushOn());
             child.renderTitle(_chart.renderTitle());
+            child.elasticX(_chart.elasticX());
         }
 
         return g;
