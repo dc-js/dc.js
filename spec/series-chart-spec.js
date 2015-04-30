@@ -133,4 +133,50 @@ describe('dc.seriesChart', function() {
             expect(dots[0].length).toEqual(6);
         });
     });
+
+    describe('legends with hidable stacks', function () {
+        beforeEach(function () {
+            chart
+                .chart(function(c) { return dc.lineChart(c).hidableStacks(true); })
+                .legend(dc.legend().x(10).y(10).itemHeight(13).gap(5))
+                .render();
+        });
+
+        describe('clicking on a legend item', function () {
+            beforeEach(function () {
+                legendItem(0).on('click').call(legendItem(0)[0][0], legendItem(0).datum());
+            });
+
+            it('should fade out the legend item', function() {
+                expect(legendItem(0).classed('fadeout')).toBeTruthy();
+            });
+
+            it('should hide its associated stack', function() {
+                expect(chart.selectAll('path.line').size()).toEqual(1);
+            });
+
+            it('disable hover highlighting for that legend item', function() {
+                legendItem(0).on('mouseover')(legendItem(0).datum());
+                expect(chart.selectAll('path.line').classed('fadeout')).toBeFalsy();
+            });
+
+            describe('clicking on a faded out legend item', function () {
+                beforeEach(function () {
+                    legendItem(0).on('click').call(legendItem(0)[0][0], legendItem(0).datum());
+                });
+
+                it('should unfade the legend item', function() {
+                    expect(legendItem(0).classed('fadeout')).toBeFalsy();
+                });
+
+                it('should unfade its associated stack', function() {
+                    expect(chart.selectAll('path.line').size()).toEqual(2);
+                });
+            });
+        });
+    });
+
+    function legendItem(n) {
+        return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item')[0][n]);
+    }
 });

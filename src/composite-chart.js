@@ -394,9 +394,11 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     _chart.legendHighlight = function (d) {
-        for (var j = 0; j < _children.length; ++j) {
-            var child = _children[j];
-            child.legendHighlight(d);
+        if (!d.chart.isLegendableHidden()) {
+            for (var j = 0; j < _children.length; ++j) {
+                var child = _children[j];
+                child.legendHighlight(d);
+            }
         }
     };
 
