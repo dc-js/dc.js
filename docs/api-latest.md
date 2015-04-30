@@ -27,7 +27,7 @@
   * [Heat Map](#heat-map)
   * [Box Plot](#box-plot)
 
-#### Version 2.0.0-beta.9
+#### Version 2.1.0-dev
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -1952,13 +1952,11 @@ chart.rowsLabel(function(d) { return d; });
 
 #### .rows([values])
 Gets or sets the values used to create the rows of the heatmap, as an array. By default, all
-the values will be fetched from the data using the value accessor, and they will be sorted in
-ascending order.
+the values will be fetched from the data using the value accessor.
 
 #### .cols([keys])
 Gets or sets the keys used to create the columns of the heatmap, as an array. By default, all
-the values will be fetched from the data using the key accessor, and they will be sorted in
-ascending order.
+the values will be fetched from the data using the key accessor.
 
 #### .boxOnClick([handler])
 Gets or sets the handler that fires when an individual cell is clicked in the heatmap.
