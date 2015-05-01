@@ -26,6 +26,7 @@
   * [Number Display Widget](#number-display-widget)
   * [Heat Map](#heat-map)
   * [Box Plot](#box-plot)
+  * [Bullet Chart](#bullet-chart)
 
 #### Version 2.1.0-dev
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
@@ -2023,3 +2024,50 @@ integer formatting.
 // format ticks to 2 decimal places
 chart.tickFormat(d3.format('.2f'));
 ```
+
+## Bullet Chart
+Includes: [Color Mixin](#color-mixin), [Margin Mixin](#margin-mixin), [Base Mixin](#base-mixin)
+
+Concrete bullet chart implementation.
+
+Inspired by:
+
+* [Mike Bostock's bullet chart](http://bl.ocks.org/mbostock/4061961)
+
+Examples:
+
+* ToDO
+
+#### dc.bulletChart(parent[, chartGroup])
+Create a bullet chart instance and attach it to the given parent element.
+
+Parameters:
+* parent : string | node | selection | compositeChart - any valid
+[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+a dom block element such as a div; or a dom element or d3 selection.
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
+A newly created bullet chart instance
+
+```js
+// create a bullet chart under #chart-container1 element using the default global chart group
+var chart1 = dc.bulletChart('#chart-container1');
+// create a bullet chart under #chart-container2 element using chart group A
+var chart2 = dc.bulletChart('#chart-container2', 'chartGroupA');
+// create a sub-chart under a composite parent chart
+var chart3 = dc.bulletChart(compositeChart);
+```
+
+#### .bulletWidth([value])
+Set or get the bullet width.
+
+#### .bulletHeight([value])
+Set or get the bullet height.
+
+#### .bulletMargin([value])
+Set or get the bullet margin, i.e. `{top: 5, right: 40, bottom: 50, left:120}`.
+
+#### .orient([value])
+Set or get the bullet orientation (one of `"left"`, `"right"`, `"top"` or `"bottom"`).
