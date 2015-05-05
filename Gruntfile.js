@@ -102,7 +102,7 @@ module.exports = function (grunt) {
                 options: {
                     display: 'short',
                     summary: true,
-                    specs:  '<%= conf.spec %>/*-spec.js',
+                    specs:  grunt.option('specs') || '<%= conf.spec %>/*-spec.js',
                     helpers: '<%= conf.spec %>/helpers/*.js',
                     version: '2.0.0',
                     outfile: '<%= conf.spec %>/index.html',
@@ -139,7 +139,7 @@ module.exports = function (grunt) {
                 options: {
                     display: 'short',
                     summary: true,
-                    specs:  '<%= conf.spec %>/*-spec.js',
+                    specs:  grunt.option('specs') || '<%= conf.spec %>/*-spec.js',
                     helpers: '<%= conf.spec %>/helpers/*.js',
                     version: '2.0.0',
                     outfile: '<%= conf.spec %>/index-browserify.html',
