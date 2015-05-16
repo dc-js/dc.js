@@ -2,6 +2,16 @@
   "name": "dcjs",
   "version": "2.0.0-beta.9",
   "main": ["dc.js", "dc.css"],
+  "keywords": [
+    "visualization",
+    "svg",
+    "animation",
+    "canvas",
+    "chart",
+    "dimensional",
+    "crossfilter",
+    "d3"
+  ],
   "ignore": [
     "**/.*"
     "AUTHORS",
