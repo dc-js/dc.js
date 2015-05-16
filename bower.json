@@ -3,15 +3,20 @@
   "version": "2.0.0-alpha.2",
   "main": ["dc.js", "dc.css"],
   "ignore": [
-    ".gitignore",
-    ".travis.yml",
-    "build.xml",
-    "globals.js",
+    "**/.*"
+    "AUTHORS",
+    "Changelog.md",
+    "CONTRIBUTING.md",
+    "Gruntfile.js",
     "index.js",
-    "make",
     "package.json",
-    "test",
-    "src"
+    "README.md",
+    "docs",
+    "regression",
+    "scripts",
+    "spec",
+    "src",
+    "web"
   ],
   "dependencies": {
     "d3": "3.x",
