@@ -11,6 +11,7 @@
     "index.js",
     "package.json",
     "README.md",
+    "LICENSE_BANNER",
     "docs",
     "regression",
     "scripts",
