@@ -315,6 +315,9 @@ module.exports = function (grunt) {
             },
             debug: {
                 plugins: [
+                    new webpack.DefinePlugin({
+                        __VERSION__: JSON.stringify(config.pkg.version)
+                    }),
                     new webpack.BannerPlugin('<%= conf.banner %>', {raw: true})
                 ],
                 output: {
@@ -326,6 +329,9 @@ module.exports = function (grunt) {
             },
             dist: {
                 plugins: [
+                    new webpack.DefinePlugin({
+                        __VERSION__: JSON.stringify(config.pkg.version)
+                    }),
                     new webpack.BannerPlugin('<%= conf.banner %>', {raw: true}),
                     new webpack.optimize.UglifyJsPlugin()
                 ],
@@ -336,7 +342,7 @@ module.exports = function (grunt) {
                     devtoolModuleFilenameTemplate: 'webpack:///<%= conf.pkg.name %>/[resource-path]'
                 }
             }
-        },
+        }
     });
 
     grunt.registerTask('merge', 'Merge a github pull request.', function (pr) {

@@ -1,3 +1,5 @@
+import {utils} from './utils';
+
 /**
  * The entire dc.js library is scoped under the **dc** name space. It does not introduce
  * anything else into the global name space.
@@ -29,6 +31,7 @@ export var constants = {
     NEGLIGIBLE_NUMBER: 1e-10
 };
 /*jshint +W079*/
+var _renderlet = null;
 
 export var chartRegistry = (function () {
     // chartGroup:string => charts:array
@@ -36,7 +39,7 @@ export var chartRegistry = (function () {
 
     function initializeChartGroup (group) {
         if (!group) {
-            group = dc.constants.DEFAULT_CHART_GROUP;
+            group = constants.DEFAULT_CHART_GROUP;
         }
 
         if (!_chartMap[group]) {
@@ -87,19 +90,19 @@ export var chartRegistry = (function () {
 })();
 
 export var registerChart = function (chart, group) {
-    dc.chartRegistry.register(chart, group);
+    chartRegistry.register(chart, group);
 };
 
 export var deregisterChart = function (chart, group) {
-    dc.chartRegistry.deregister(chart, group);
+    chartRegistry.deregister(chart, group);
 };
 
 export var hasChart = function (chart) {
-    return dc.chartRegistry.has(chart);
+    return chartRegistry.has(chart);
 };
 
 export var deregisterAllCharts = function (group) {
-    dc.chartRegistry.clear(group);
+    chartRegistry.clear(group);
 };
 
 /**
@@ -110,7 +113,7 @@ export var deregisterAllCharts = function (group) {
  * @param {String} [group]
  */
 export var filterAll = function (group) {
-    var charts = dc.chartRegistry.list(group);
+    var charts = chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         charts[i].filterAll();
     }
@@ -124,7 +127,7 @@ export var filterAll = function (group) {
  * @param {String} [group]
  */
 export var refocusAll = function (group) {
-    var charts = dc.chartRegistry.list(group);
+    var charts = chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         if (charts[i].focus) {
             charts[i].focus();
@@ -140,13 +143,13 @@ export var refocusAll = function (group) {
  * @param {String} [group]
  */
 export var renderAll = function (group) {
-    var charts = dc.chartRegistry.list(group);
+    var charts = chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         charts[i].render();
     }
 
-    if (dc._renderlet !== null) {
-        dc._renderlet(group);
+    if (_renderlet !== null) {
+        _renderlet(group);
     }
 };
 
@@ -160,13 +163,13 @@ export var renderAll = function (group) {
  * @param {String} [group]
  */
 export var redrawAll = function (group) {
-    var charts = dc.chartRegistry.list(group);
+    var charts = chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         charts[i].redraw();
     }
 
-    if (dc._renderlet !== null) {
-        dc._renderlet(group);
+    if (_renderlet !== null) {
+        _renderlet(group);
     }
 };
 
@@ -187,7 +190,7 @@ export var disableTransitions = function (disableTransitions) {
 };
 
 export var transition = function (selections, duration, callback, name) {
-    if (duration <= 0 || duration === undefined || dc.disableTransitions) {
+    if (duration <= 0 || duration === undefined || _disableTransitions) {
         return selections;
     }
 
@@ -282,7 +285,7 @@ units.fp = {};
 units.fp.precision = function (precision) {
     var _f = function (s, e) {
         var d = Math.abs((e - s) / _f.resolution);
-        if (dc.utils.isNegligible(d - Math.floor(d))) {
+        if (utils.isNegligible(d - Math.floor(d))) {
             return Math.floor(d);
         } else {
             return Math.ceil(d);
@@ -313,10 +316,9 @@ export var override = function (obj, functionName, newFunction) {
 
 export var renderlet = function (_) {
     if (!arguments.length) {
-        return dc._renderlet;
+        return _renderlet;
     }
-    dc._renderlet = _;
-    return dc;
+    _renderlet = _;
 };
 
 export var instanceOfChart = function (o) {

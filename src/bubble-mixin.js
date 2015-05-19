@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import colorMixin from './color-mixin';
-import {transition} from './core';
 import trigger from './events';
+import {transition} from './core';
 
 /**
  * This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.

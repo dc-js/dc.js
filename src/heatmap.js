@@ -1,9 +1,9 @@
 import * as d3 from 'd3';
-import colorMixin from './color-mixin';
 import baseMixin from './base-mixin';
 import marginMixin from './margin-mixin';
-import {override, transition} from './core';
+import colorMixin from './color-mixin';
 import trigger from './events';
+import {override, transition} from './core';
 import {twoDimensionalFilter} from './filters';
 
 /**

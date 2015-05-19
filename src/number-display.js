@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import baseMixin from './base-mixin';
 
 /**
  * A display of a single numeric value.
@@ -21,7 +22,7 @@ import * as d3 from 'd3';
 var numberDisplay = function (parent, chartGroup) {
     var SPAN_CLASS = 'number-display';
     var _formatNumber = d3.format('.2s');
-    var _chart = dc.baseMixin({});
+    var _chart = baseMixin({});
     var _html = {one: '', some: '', none: ''};
 
     // dimension not required

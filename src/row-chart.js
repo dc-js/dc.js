@@ -1,8 +1,8 @@
 import * as d3 from 'd3';
-import capMixin from './cap-mixin';
-import marginMixin from './margin-mixin';
-import colorMixin from './color-mixin';
 import baseMixin from './base-mixin';
+import colorMixin from './color-mixin';
+import marginMixin from './margin-mixin';
+import capMixin from './cap-mixin';
 import {transition} from './core';
 
 /**
