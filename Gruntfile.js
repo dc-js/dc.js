@@ -26,7 +26,7 @@ module.exports = function (grunt) {
                 }
             },
             source: {
-                src: ['<%= conf.src %>/**/*.js', '!<%= conf.src %>/{banner,footer}.js', 'Gruntfile.js',
+                src: ['<%= conf.src %>/**/*.js', '!<%= conf.src %>/d3.box.js', 'Gruntfile.js',
                     '<%= conf.web %>/stock.js'],
                 options: {
                     config: '.jscsrc'
@@ -35,7 +35,8 @@ module.exports = function (grunt) {
         },
         jshint: {
             source: {
-                src: ['<%= conf.src %>/**/*.js', 'Gruntfile.js', '<%= conf.web %>/stock.js'],
+                src: ['<%= conf.src %>/**/*.js', '!<%= conf.src %>/d3.box.js', 'Gruntfile.js',
+                    '<%= conf.web %>/stock.js'],
                 options: {
                     jshintrc: '.jshintrc'
                 }

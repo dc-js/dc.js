@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import coordinateGridMixin from './coordinate-grid-mixin';
+import d3Box from './d3.box';
 import {units, transition} from './core';
 import {utils} from './utils';
 
@@ -56,7 +57,7 @@ var boxPlot = function (parent, chartGroup) {
     var _whiskersIqr = DEFAULT_WHISKERS_IQR;
     var _whiskers = _whiskersIqr(_whiskerIqrFactor);
 
-    var _box = d3.box();
+    var _box = d3Box();
     var _tickFormat = null;
 
     var _boxWidth = function (innerChartWidth, xUnits) {

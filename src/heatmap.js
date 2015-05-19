@@ -4,7 +4,7 @@ import baseMixin from './base-mixin';
 import marginMixin from './margin-mixin';
 import {override, transition} from './core';
 import trigger from './events';
-import {TwoDimensionalFilter} from './filters';
+import {twoDimensionalFilter} from './filters';
 
 /**
  ## Heat Map
@@ -132,7 +132,7 @@ var heatMap = function (parent, chartGroup) {
             return _chart._filter();
         }
 
-        return _chart._filter(TwoDimensionalFilter(filter));
+        return _chart._filter(twoDimensionalFilter(filter));
     });
 
     /**

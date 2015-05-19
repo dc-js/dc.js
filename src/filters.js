@@ -12,11 +12,11 @@ mention below which chart uses which filter.  In some cases, many instances of a
 **/
 
 /**
-#### RangedFilter(low, high)
+#### dc.filters.rangedFilter(low, high)
  RangedFilter is a filter which accepts keys between `low` and `high`.  It is used to implement X
  axis brushing for the [coordinate grid charts](#coordinate-grid-mixin).
 **/
-export var RangedFilter = function (low, high) {
+export var rangedFilter = function (low, high) {
     var range = new Array(low, high);
     range.isFiltered = function (value) {
         return value >= this[0] && value < this[1];
@@ -26,12 +26,12 @@ export var RangedFilter = function (low, high) {
 };
 
 /**
-#### TwoDimensionalFilter(array)
+#### dc.filters.twoDimensionalFilter(array)
  TwoDimensionalFilter is a filter which accepts a single two-dimensional value.  It is used by the
  [heat map chart](#heat-map) to include particular cells as they are clicked.  (Rows and columns are
  filtered by filtering all the cells in the row or column.)
 **/
-export var TwoDimensionalFilter = function (array) {
+export var twoDimensionalFilter = function (array) {
     if (array === null) { return null; }
 
     var filter = array;
@@ -44,7 +44,7 @@ export var TwoDimensionalFilter = function (array) {
 };
 
 /**
-#### RangedTwoDimensionalFilter(array)
+#### dc.filters.rangedTwoDimensionalFilter(array)
  The RangedTwoDimensionalFilter allows filtering all values which fit within a rectangular
  region. It is used by the [scatter plot](#scatter-plot) to implement rectangular brushing.
 
@@ -56,7 +56,7 @@ export var TwoDimensionalFilter = function (array) {
  two x coordinates `x1` and `x2` and returns a filter which accepts any points for which `x1 <= x <
  x2`.
  **/
-export var RangedTwoDimensionalFilter = function (array) {
+export var rangedTwoDimensionalFilter = function (array) {
     if (array === null) { return null; }
 
     var filter = array;

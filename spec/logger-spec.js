@@ -29,14 +29,14 @@ describe("dc.logger", function() {
 
     describe("debug flag", function () {
         it("is off by default", function() {
-            expect(dc.logger.enableDebugLog).toBeFalsy();
+            expect(dc.logger.enableDebugLog()).toBeFalsy();
         });
     });
 
     describe("debug logging", function () {
         describe("when debugging is disabled", function (){
             beforeEach(function () {
-                dc.logger.enableDebugLog = false;
+                dc.logger.enableDebugLog(false);
                 console.debug = function (msg) {};
                 spyOn(console, "debug");
                 dc.logger.debug(message);
@@ -49,7 +49,7 @@ describe("dc.logger", function() {
 
         describe("when debugging is enabled", function () {
             beforeEach(function () {
-                dc.logger.enableDebugLog = true;
+                dc.logger.enableDebugLog(true);
             });
 
             describe("when console.debug is defined", function () {

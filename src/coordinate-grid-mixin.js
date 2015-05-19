@@ -3,7 +3,7 @@ import colorMixin from './color-mixin';
 import marginMixin from './margin-mixin';
 import baseMixin from './base-mixin';
 import trigger from './events';
-import {RangedFilter} from './filters';
+import {rangedFilter} from './filters';
 import {utils} from './utils';
 
 /**
@@ -37,7 +37,7 @@ var coordinateGridMixin = function (_chart) {
         }
 
         var domain = _chart.x().domain();
-        var domFilter = RangedFilter(domain[0], domain[1]);
+        var domFilter = rangedFilter(domain[0], domain[1]);
 
         _chart.replaceFilter(domFilter);
         _chart.rescale();

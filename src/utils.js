@@ -1,39 +1,6 @@
+import {constants} from './core';
+
 export var dateFormat = d3.time.format('%m/%d/%Y');
-
-var printers = {};
-
-printers.filters = function (filters) {
-    var s = '';
-
-    for (var i = 0; i < filters.length; ++i) {
-        if (i > 0) {
-            s += ', ';
-        }
-        s += printers.filter(filters[i]);
-    }
-
-    return s;
-};
-
-printers.filter = function (filter) {
-    var s = '';
-
-    if (typeof filter !== 'undefined' && filter !== null) {
-        if (filter instanceof Array) {
-            if (filter.length >= 2) {
-                s = '[' + dc.utils.printSingleValue(filter[0]) + ' -> ' + dc.utils.printSingleValue(filter[1]) + ']';
-            } else if (filter.length >= 1) {
-                s = dc.utils.printSingleValue(filter[0]);
-            }
-        } else {
-            s = dc.utils.printSingleValue(filter);
-        }
-    }
-
-    return s;
-};
-
-export {printers as printers};
 
 export var pluck = function (n, f) {
     if (!f) {
@@ -48,12 +15,12 @@ utils.printSingleValue = function (filter) {
     var s = '' + filter;
 
     if (filter instanceof Date) {
-        s = dc.dateFormat(filter);
+        s = dateFormat(filter);
     } else if (typeof(filter) === 'string') {
         s = filter;
-    } else if (dc.utils.isFloat(filter)) {
-        s = dc.utils.printSingleValue.fformat(filter);
-    } else if (dc.utils.isInteger(filter)) {
+    } else if (utils.isFloat(filter)) {
+        s = utils.printSingleValue.fformat(filter);
+    } else if (utils.isInteger(filter)) {
         s = Math.round(filter);
     }
 
@@ -118,7 +85,7 @@ utils.isInteger = function (n) {
 };
 
 utils.isNegligible = function (n) {
-    return !dc.utils.isNumber(n) || (n < dc.constants.NEGLIGIBLE_NUMBER && n > -dc.constants.NEGLIGIBLE_NUMBER);
+    return !utils.isNumber(n) || (n < constants.NEGLIGIBLE_NUMBER && n > -constants.NEGLIGIBLE_NUMBER);
 };
 
 utils.clamp = function (val, min, max) {
@@ -143,6 +110,41 @@ utils.appendOrSelect = function (parent, selector, tag) {
     return element;
 };
 
-utils.safeNumber = function (n) { return dc.utils.isNumber(+n) ? +n : 0;};
+utils.safeNumber = function (n) { return utils.isNumber(+n) ? +n : 0;};
 
-export {utils as utils};
+export {utils};
+
+var printers = {};
+
+printers.filters = function (filters) {
+    var s = '';
+
+    for (var i = 0; i < filters.length; ++i) {
+        if (i > 0) {
+            s += ', ';
+        }
+        s += printers.filter(filters[i]);
+    }
+
+    return s;
+};
+
+printers.filter = function (filter) {
+    var s = '';
+
+    if (typeof filter !== 'undefined' && filter !== null) {
+        if (filter instanceof Array) {
+            if (filter.length >= 2) {
+                s = '[' + utils.printSingleValue(filter[0]) + ' -> ' + utils.printSingleValue(filter[1]) + ']';
+            } else if (filter.length >= 1) {
+                s = utils.printSingleValue(filter[0]);
+            }
+        } else {
+            s = utils.printSingleValue(filter);
+        }
+    }
+
+    return s;
+};
+
+export {printers};
