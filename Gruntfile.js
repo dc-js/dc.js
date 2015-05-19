@@ -1,6 +1,7 @@
 module.exports = function (grunt) {
     'use strict';
 
+    var webpack = require('webpack');
     require('load-grunt-tasks')(grunt, {
         pattern: ['grunt-*', '!grunt-lib-phantomjs', '!grunt-template-jasmine-istanbul']
     });
@@ -19,34 +20,10 @@ module.exports = function (grunt) {
     grunt.initConfig({
         conf: config,
 
-        concat: {
-            options: {
-                process: true,
-                sourceMap: true,
-                banner: '<%= conf.banner %>'
-            },
-            js: {
-                src: '<%= conf.jsFiles %>',
-                dest: '<%= conf.pkg.name %>.js'
-            }
-        },
-        uglify: {
-            jsmin: {
-                options: {
-                    mangle: true,
-                    compress: true,
-                    sourceMap: true,
-                    banner: '<%= conf.banner %>'
-                },
-                src: '<%= conf.pkg.name %>.js',
-                dest: '<%= conf.pkg.name %>.min.js'
-            }
-        },
         jscs: {
             source: {
                 src: [
                     '<%= conf.src %>/**/*.js',
-                    '!<%= conf.src %>/{banner,footer}.js',
                     '<%= conf.spec %>/**/*.js',
                     'Gruntfile.js',
                     'grunt/*.js',
@@ -60,7 +37,6 @@ module.exports = function (grunt) {
             source: {
                 src: [
                     '<%= conf.src %>/**/*.js',
-                    '!<%= conf.src %>/{banner,footer}.js',
                     '<%= conf.spec %>/**/*.js',
                     'Gruntfile.js',
                     'grunt/*.js',
@@ -320,7 +296,47 @@ module.exports = function (grunt) {
                     }
                 }
             }
-        }
+        },
+
+        webpack: {
+            options: {
+                progress: false, // freaked on windows
+                failOnError: true,
+                externals: {
+                    'crossfilter': 'crossfilter',
+                    'd3': 'd3'
+                },
+                entry: './index.js',
+                devtool: 'source-map',
+                module: {
+                    preLoaders: [{test: /\.js$/, loader: 'source-map-loader'}],
+                    loaders: [{test: /\.js$/, loader: 'babel-loader'}]
+                }
+            },
+            debug: {
+                plugins: [
+                    new webpack.BannerPlugin('<%= conf.banner %>', {raw: true})
+                ],
+                output: {
+                    filename: 'dc.js',
+                    library: 'dc',
+                    libraryTarget: 'umd',
+                    devtoolModuleFilenameTemplate: 'webpack:///<%= conf.pkg.name %>/[resource-path]'
+                }
+            },
+            dist: {
+                plugins: [
+                    new webpack.BannerPlugin('<%= conf.banner %>', {raw: true}),
+                    new webpack.optimize.UglifyJsPlugin()
+                ],
+                output: {
+                    filename: 'dc.min.js',
+                    library: 'dc',
+                    libraryTarget: 'umd',
+                    devtoolModuleFilenameTemplate: 'webpack:///<%= conf.pkg.name %>/[resource-path]'
+                }
+            }
+        },
     });
 
     grunt.registerTask('merge', 'Merge a github pull request.', function (pr) {
@@ -346,7 +362,7 @@ module.exports = function (grunt) {
     });
 
     // task aliases
-    grunt.registerTask('build', ['concat', 'uglify']);
+    grunt.registerTask('build', ['webpack']);
     grunt.registerTask('docs', ['build', 'copy', 'jsdoc2md', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine-docs']);

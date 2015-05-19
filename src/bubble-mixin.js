@@ -1,3 +1,8 @@
+import * as d3 from 'd3';
+import colorMixin from './color-mixin';
+import {transition} from './core';
+import trigger from './events';
+
 /**
  * This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.
  * @name bubbleMixin
@@ -7,7 +12,7 @@
  * @param {Object} _chart
  * @return {dc.bubbleMixin}
  */
-dc.bubbleMixin = function (_chart) {
+var bubbleMixin = function (_chart) {
     var _maxBubbleRelativeSize = 0.3;
     var _minRadiusWithLabel = 10;
 
@@ -15,7 +20,7 @@ dc.bubbleMixin = function (_chart) {
     _chart.BUBBLE_CLASS = 'bubble';
     _chart.MIN_RADIUS = 10;
 
-    _chart = dc.colorMixin(_chart);
+    _chart = colorMixin(_chart);
 
     _chart.renderLabel(true);
 
@@ -113,7 +118,7 @@ dc.bubbleMixin = function (_chart) {
             label
                 .attr('opacity', 0)
                 .text(labelFunction);
-            dc.transition(label, _chart.transitionDuration())
+            transition(label, _chart.transitionDuration())
                 .attr('opacity', labelOpacity);
         }
     };
@@ -122,7 +127,7 @@ dc.bubbleMixin = function (_chart) {
         if (_chart.renderLabel()) {
             var labels = bubbleGEnter.selectAll('text')
                 .text(labelFunction);
-            dc.transition(labels, _chart.transitionDuration())
+            transition(labels, _chart.transitionDuration())
                 .attr('opacity', labelOpacity);
         }
     };
@@ -223,7 +228,7 @@ dc.bubbleMixin = function (_chart) {
 
     _chart.onClick = function (d) {
         var filter = d.key;
-        dc.events.trigger(function () {
+        trigger(function () {
             _chart.filter(filter);
             _chart.redrawGroup();
         });
@@ -231,3 +236,5 @@ dc.bubbleMixin = function (_chart) {
 
     return _chart;
 };
+
+export default bubbleMixin;

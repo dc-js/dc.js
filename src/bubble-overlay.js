@@ -1,3 +1,9 @@
+import * as d3 from 'd3';
+import bubbleMixin from './bubble-mixin';
+import baseMixin from './base-mixin';
+import {constants, transition} from './core';
+import {utils} from './utils';
+
 /**
  * The bubble overlay chart is quite different from the typical bubble chart. With the bubble overlay
  * chart you can arbitrarily place bubbles on an existing svg or bitmap image, thus changing the
@@ -22,7 +28,7 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {BubbleOverlay}
  */
-dc.bubbleOverlay = function (parent, chartGroup) {
+var bubbleOverlay = function (parent, chartGroup) {
     var BUBBLE_OVERLAY_CLASS = 'bubble-overlay';
     var BUBBLE_NODE_CLASS = 'node';
     var BUBBLE_CLASS = 'bubble';
@@ -42,7 +48,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
      * @param {Selection} [imageElement]
      * @returns {Chart}
      */
-    var _chart = dc.bubbleMixin(dc.baseMixin({}));
+    var _chart = bubbleMixin(baseMixin({}));
     var _g;
     var _points = [];
 
@@ -108,7 +114,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
                     .on('click', _chart.onClick);
             }
 
-            dc.transition(circle, _chart.transitionDuration())
+            transition(circle, _chart.transitionDuration())
                 .attr('r', function (d) {
                     return _chart.bubbleR(d);
                 });
@@ -128,9 +134,9 @@ dc.bubbleOverlay = function (parent, chartGroup) {
     }
 
     function getNodeG (point, data) {
-        var bubbleNodeClass = BUBBLE_NODE_CLASS + ' ' + dc.utils.nameToId(point.name);
+        var bubbleNodeClass = BUBBLE_NODE_CLASS + ' ' + utils.nameToId(point.name);
 
-        var nodeG = _g.select('g.' + dc.utils.nameToId(point.name));
+        var nodeG = _g.select('g.' + utils.nameToId(point.name));
 
         if (nodeG.empty()) {
             nodeG = _g.append('g')
@@ -159,7 +165,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
 
             var circle = nodeG.select('circle.' + BUBBLE_CLASS);
 
-            dc.transition(circle, _chart.transitionDuration())
+            transition(circle, _chart.transitionDuration())
                 .attr('r', function (d) {
                     return _chart.bubbleR(d);
                 })
@@ -173,12 +179,12 @@ dc.bubbleOverlay = function (parent, chartGroup) {
 
     _chart.debug = function (flag) {
         if (flag) {
-            var debugG = _chart.select('g.' + dc.constants.DEBUG_GROUP_CLASS);
+            var debugG = _chart.select('g.' + constants.DEBUG_GROUP_CLASS);
 
             if (debugG.empty()) {
                 debugG = _chart.svg()
                     .append('g')
-                    .attr('class', dc.constants.DEBUG_GROUP_CLASS);
+                    .attr('class', constants.DEBUG_GROUP_CLASS);
             }
 
             var debugText = debugG.append('text')
@@ -205,3 +211,5 @@ dc.bubbleOverlay = function (parent, chartGroup) {
 
     return _chart;
 };
+
+export default bubbleOverlay;

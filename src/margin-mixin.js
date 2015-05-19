@@ -7,7 +7,7 @@
  * @param {Object} _chart
  * @return {dc.marginMixin}
  */
-dc.marginMixin = function (_chart) {
+var marginMixin = function (_chart) {
     var _margin = {top: 10, right: 50, bottom: 30, left: 30};
 
     /**
@@ -42,3 +42,5 @@ dc.marginMixin = function (_chart) {
 
     return _chart;
 };
+
+export default marginMixin;

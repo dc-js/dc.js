@@ -1,3 +1,11 @@
+import * as d3 from 'd3';
+import colorMixin from './color-mixin';
+import baseMixin from './base-mixin';
+import marginMixin from './margin-mixin';
+import {override, transition} from './core';
+import trigger from './events';
+import {TwoDimensionalFilter} from './filters';
+
 /**
  * A heat map is matrix that represents the values of two dimensions of data using colors.
  * @name heatMap
@@ -18,7 +26,7 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {HeatMap}
  */
-dc.heatMap = function (parent, chartGroup) {
+var heatMap = function (parent, chartGroup) {
 
     var DEFAULT_BORDER_RADIUS = 6.75;
 
@@ -34,7 +42,7 @@ dc.heatMap = function (parent, chartGroup) {
     var _xBorderRadius = DEFAULT_BORDER_RADIUS;
     var _yBorderRadius = DEFAULT_BORDER_RADIUS;
 
-    var _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin({})));
+    var _chart = colorMixin(marginMixin(baseMixin({})));
     _chart._mandatoryAttributes(['group']);
     _chart.title(_chart.colorAccessor());
 
@@ -89,7 +97,7 @@ dc.heatMap = function (parent, chartGroup) {
     var _yAxisOnClick = function (d) { filterAxis(1, d); };
     var _boxOnClick = function (d) {
         var filter = d.key;
-        dc.events.trigger(function () {
+        trigger(function () {
             _chart.filter(filter);
             _chart.redrawGroup();
         });
@@ -102,7 +110,7 @@ dc.heatMap = function (parent, chartGroup) {
         var unfilteredCellsOnAxis = cellsOnAxis.filter(function (d) {
             return !_chart.hasFilter(d.key);
         });
-        dc.events.trigger(function () {
+        trigger(function () {
             if (unfilteredCellsOnAxis.empty()) {
                 cellsOnAxis.each(function (d) {
                     _chart.filter(d.key);
@@ -116,12 +124,12 @@ dc.heatMap = function (parent, chartGroup) {
         });
     }
 
-    dc.override(_chart, 'filter', function (filter) {
+    override(_chart, 'filter', function (filter) {
         if (!arguments.length) {
             return _chart._filter();
         }
 
-        return _chart._filter(dc.filters.TwoDimensionalFilter(filter));
+        return _chart._filter(TwoDimensionalFilter(filter));
     });
 
     /**
@@ -231,7 +239,7 @@ dc.heatMap = function (parent, chartGroup) {
             boxes.selectAll('title').text(_chart.title());
         }
 
-        dc.transition(boxes.selectAll('rect'), _chart.transitionDuration())
+        transition(boxes.selectAll('rect'), _chart.transitionDuration())
             .attr('x', function (d, i) { return cols(_chart.keyAccessor()(d, i)); })
             .attr('y', function (d, i) { return rows(_chart.valueAccessor()(d, i)); })
             .attr('rx', _xBorderRadius)
@@ -254,7 +262,7 @@ dc.heatMap = function (parent, chartGroup) {
               .attr('dy', 12)
               .on('click', _chart.xAxisOnClick())
               .text(_chart.colsLabel());
-        dc.transition(gColsText, _chart.transitionDuration())
+        transition(gColsText, _chart.transitionDuration())
                .text(_chart.colsLabel())
                .attr('x', function (d) { return cols(d) + boxWidth / 2; })
                .attr('y', _chart.effectiveHeight());
@@ -271,7 +279,7 @@ dc.heatMap = function (parent, chartGroup) {
               .attr('dx', -2)
               .on('click', _chart.yAxisOnClick())
               .text(_chart.rowsLabel());
-        dc.transition(gRowsText, _chart.transitionDuration())
+        transition(gRowsText, _chart.transitionDuration())
               .text(_chart.rowsLabel())
               .attr('y', function (d) { return rows(d) + boxHeight / 2; });
         gRowsText.exit().remove();
@@ -383,3 +391,5 @@ dc.heatMap = function (parent, chartGroup) {
 
     return _chart.anchor(parent, chartGroup);
 };
+
+export default heatMap;

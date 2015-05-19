@@ -1,3 +1,8 @@
+import * as d3 from 'd3';
+import coordinateGridMixin from './coordinate-grid-mixin';
+import {units, transition} from './core';
+import {utils} from './utils';
+
 /**
  * A box plot is a chart that depicts numerical data via their quartile ranges.
  * Examples:
@@ -19,8 +24,8 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {BoxPlot}
  */
-dc.boxPlot = function (parent, chartGroup) {
-    var _chart = dc.coordinateGridMixin({});
+var boxPlot = function (parent, chartGroup) {
+    var _chart = coordinateGridMixin({});
 
     // Returns a function to compute the interquartile range.
     function DEFAULT_WHISKERS_IQR (k) {
@@ -56,7 +61,7 @@ dc.boxPlot = function (parent, chartGroup) {
 
     // default to ordinal
     _chart.x(d3.scale.ordinal());
-    _chart.xUnits(dc.units.ordinal);
+    _chart.xUnits(units.ordinal);
 
     // valueAccessor should return an array of values that can be coerced into numbers
     // or if data is overloaded for a static array of arrays, it should be `Number`.
@@ -164,7 +169,7 @@ dc.boxPlot = function (parent, chartGroup) {
     }
 
     function updateBoxes (boxesG) {
-        dc.transition(boxesG, _chart.transitionDuration())
+        transition(boxesG, _chart.transitionDuration())
             .attr('transform', boxTransform)
             .call(_box)
             .each(function () {
@@ -200,14 +205,14 @@ dc.boxPlot = function (parent, chartGroup) {
         var min = d3.min(_chart.data(), function (e) {
             return d3.min(_chart.valueAccessor()(e));
         });
-        return dc.utils.subtract(min, _chart.yAxisPadding());
+        return utils.subtract(min, _chart.yAxisPadding());
     };
 
     _chart.yAxisMax = function () {
         var max = d3.max(_chart.data(), function (e) {
             return d3.max(_chart.valueAccessor()(e));
         });
-        return dc.utils.add(max, _chart.yAxisPadding());
+        return utils.add(max, _chart.yAxisPadding());
     };
 
     /**
@@ -232,3 +237,5 @@ dc.boxPlot = function (parent, chartGroup) {
 
     return _chart.anchor(parent, chartGroup);
 };
+
+export default boxPlot;

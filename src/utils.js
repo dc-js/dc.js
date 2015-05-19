@@ -1,21 +1,21 @@
-dc.dateFormat = d3.time.format('%m/%d/%Y');
+export var dateFormat = d3.time.format('%m/%d/%Y');
 
-dc.printers = {};
+var printers = {};
 
-dc.printers.filters = function (filters) {
+printers.filters = function (filters) {
     var s = '';
 
     for (var i = 0; i < filters.length; ++i) {
         if (i > 0) {
             s += ', ';
         }
-        s += dc.printers.filter(filters[i]);
+        s += printers.filter(filters[i]);
     }
 
     return s;
 };
 
-dc.printers.filter = function (filter) {
+printers.filter = function (filter) {
     var s = '';
 
     if (typeof filter !== 'undefined' && filter !== null) {
@@ -33,16 +33,18 @@ dc.printers.filter = function (filter) {
     return s;
 };
 
-dc.pluck = function (n, f) {
+export {printers as printers};
+
+export var pluck = function (n, f) {
     if (!f) {
         return function (d) { return d[n]; };
     }
     return function (d, i) { return f.call(d, d[n], i); };
 };
 
-dc.utils = {};
+var utils = {};
 
-dc.utils.printSingleValue = function (filter) {
+utils.printSingleValue = function (filter) {
     var s = '' + filter;
 
     if (filter instanceof Date) {
@@ -57,11 +59,11 @@ dc.utils.printSingleValue = function (filter) {
 
     return s;
 };
-dc.utils.printSingleValue.fformat = d3.format('.2f');
+utils.printSingleValue.fformat = d3.format('.2f');
 
 // FIXME: these assume than any string r is a percentage (whether or not it
 // includes %). They also generate strange results if l is a string.
-dc.utils.add = function (l, r) {
+utils.add = function (l, r) {
     if (typeof r === 'string') {
         r = r.replace('%', '');
     }
@@ -82,7 +84,7 @@ dc.utils.add = function (l, r) {
     }
 };
 
-dc.utils.subtract = function (l, r) {
+utils.subtract = function (l, r) {
     if (typeof r === 'string') {
         r = r.replace('%', '');
     }
@@ -103,36 +105,36 @@ dc.utils.subtract = function (l, r) {
     }
 };
 
-dc.utils.isNumber = function (n) {
+utils.isNumber = function (n) {
     return n === +n;
 };
 
-dc.utils.isFloat = function (n) {
+utils.isFloat = function (n) {
     return n === +n && n !== (n | 0);
 };
 
-dc.utils.isInteger = function (n) {
+utils.isInteger = function (n) {
     return n === +n && n === (n | 0);
 };
 
-dc.utils.isNegligible = function (n) {
+utils.isNegligible = function (n) {
     return !dc.utils.isNumber(n) || (n < dc.constants.NEGLIGIBLE_NUMBER && n > -dc.constants.NEGLIGIBLE_NUMBER);
 };
 
-dc.utils.clamp = function (val, min, max) {
+utils.clamp = function (val, min, max) {
     return val < min ? min : (val > max ? max : val);
 };
 
 var _idCounter = 0;
-dc.utils.uniqueId = function () {
+utils.uniqueId = function () {
     return ++_idCounter;
 };
 
-dc.utils.nameToId = function (name) {
+utils.nameToId = function (name) {
     return name.toLowerCase().replace(/[\s]/g, '_').replace(/[\.']/g, '');
 };
 
-dc.utils.appendOrSelect = function (parent, selector, tag) {
+utils.appendOrSelect = function (parent, selector, tag) {
     tag = tag || selector;
     var element = parent.select(selector);
     if (element.empty()) {
@@ -141,4 +143,6 @@ dc.utils.appendOrSelect = function (parent, selector, tag) {
     return element;
 };
 
-dc.utils.safeNumber = function (n) { return dc.utils.isNumber(+n) ? +n : 0;};
+utils.safeNumber = function (n) { return dc.utils.isNumber(+n) ? +n : 0;};
+
+export {utils as utils};

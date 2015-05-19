@@ -18,7 +18,6 @@
  * @memberof dc
  * @type {{}}
  */
-dc.filters = {};
 
 /**
  * RangedFilter is a filter which accepts keys between `low` and `high`.  It is used to implement X
@@ -32,8 +31,7 @@ dc.filters = {};
  * @returns {Array<Number>}
  * @constructor
  */
-dc.filters.RangedFilter = function (low, high) {
-    var range = new Array(low, high);
+export var RangedFilter = function (low, high) {    var range = new Array(low, high);
     range.isFiltered = function (value) {
         return value >= this[0] && value < this[1];
     };
@@ -54,7 +52,7 @@ dc.filters.RangedFilter = function (low, high) {
  * @returns {Array<Number>}
  * @constructor
  */
-dc.filters.TwoDimensionalFilter = function (filter) {
+export var TwoDimensionalFilter = function (filter) {
     if (filter === null) { return null; }
 
     var f = filter;
@@ -86,7 +84,7 @@ dc.filters.TwoDimensionalFilter = function (filter) {
  * @returns {Array<Array<Number>>}
  * @constructor
  */
-dc.filters.RangedTwoDimensionalFilter = function (filter) {
+export var RangedTwoDimensionalFilter = function (filter) {
     if (filter === null) { return null; }
 
     var f = filter;

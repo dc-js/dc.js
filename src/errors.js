@@ -1,6 +1,4 @@
-dc.errors = {};
-
-dc.errors.Exception = function (msg) {
+export var Exception = function (msg) {
     var _msg = msg || 'Unexpected internal error';
 
     this.message = _msg;
@@ -13,7 +11,7 @@ dc.errors.Exception = function (msg) {
 dc.errors.Exception.prototype = Object.create(Error.prototype);
 dc.errors.Exception.prototype.constructor = dc.errors.Exception;
 
-dc.errors.InvalidStateException = function () {
+export var InvalidStateException = function () {
     dc.errors.Exception.apply(this, arguments);
 };
 

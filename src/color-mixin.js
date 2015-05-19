@@ -1,3 +1,5 @@
+import * as d3 from 'd3';
+
 /**
  * The Color Mixin is an abstract chart functional class providing universal coloring support
  * as a mix-in for any concrete chart implementation.
@@ -7,7 +9,7 @@
  * @param {Object} _chart
  * @return {dc.colorMixin}
  */
-dc.colorMixin = function (_chart) {
+var colorMixin = function (_chart) {
     var _colors = d3.scale.category20c();
     var _defaultAccessor = true;
 
@@ -168,3 +170,5 @@ dc.colorMixin = function (_chart) {
 
     return _chart;
 };
+
+export default colorMixin;

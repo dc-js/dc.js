@@ -1,3 +1,9 @@
+import * as d3 from 'd3';
+import capMixin from './cap-mixin';
+import colorMixin from './color-mixin';
+import baseMixin from './base-mixin';
+import {transition} from './core';
+
 /**
  * The pie chart implementation is usually used to visualize a small categorical distribution.  The pie
  * chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
@@ -21,7 +27,7 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {PieChart}
  */
-dc.pieChart = function (parent, chartGroup) {
+var pieChart = function (parent, chartGroup) {
     var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
     var _sliceCssClass = 'pie-slice';
@@ -38,7 +44,7 @@ dc.pieChart = function (parent, chartGroup) {
     var _cy;
     var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
     var _externalLabelRadius;
-    var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
+    var _chart = capMixin(colorMixin(baseMixin({})));
 
     _chart.colorAccessor(_chart.cappedKeyAccessor);
 
@@ -138,7 +144,7 @@ dc.pieChart = function (parent, chartGroup) {
                 return safeArc(d, i, arc);
             });
 
-        dc.transition(slicePath, _chart.transitionDuration(), function (s) {
+        transition(slicePath, _chart.transitionDuration(), function (s) {
             s.attrTween('d', tweenPie);
         });
     }
@@ -152,7 +158,7 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     function positionLabels (labelsEnter, arc) {
-        dc.transition(labelsEnter, _chart.transitionDuration())
+        transition(labelsEnter, _chart.transitionDuration())
             .attr('transform', function (d) {
                 return labelPosition(d, arc);
             })
@@ -201,7 +207,7 @@ dc.pieChart = function (parent, chartGroup) {
             .attr('d', function (d, i) {
                 return safeArc(d, i, arc);
             });
-        dc.transition(slicePaths, _chart.transitionDuration(),
+        transition(slicePaths, _chart.transitionDuration(),
             function (s) {
                 s.attrTween('d', tweenPie);
             }).attr('fill', fill);
@@ -492,3 +498,5 @@ dc.pieChart = function (parent, chartGroup) {
 
     return _chart.anchor(parent, chartGroup);
 };
+
+export default pieChart;

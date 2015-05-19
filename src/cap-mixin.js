@@ -1,3 +1,5 @@
+import * as d3 from 'd3';
+
 /**
  * Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the
  * Row and Pie Charts.
@@ -12,7 +14,7 @@
  * @param {Object} _chart
  * @return {dc.capMixin}
  */
-dc.capMixin = function (_chart) {
+var capMixin = function (_chart) {
 
     var _cap = Infinity;
 
@@ -149,3 +151,5 @@ dc.capMixin = function (_chart) {
 
     return _chart;
 };
+
+export default capMixin;

@@ -1,3 +1,11 @@
+import {constants, override, transition, units} from './core';
+import colorMixin from './color-mixin';
+import marginMixin from './margin-mixin';
+import baseMixin from './base-mixin';
+import trigger from './events';
+import {RangedFilter} from './filters';
+import {utils} from './utils';
+
 /**
  * Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based
  * concrete chart types, e.g. bar chart, line chart, and bubble chart.
@@ -10,7 +18,7 @@
  * @param {Object} _chart
  * @return {dc.coordinateGridMixin}
  */
-dc.coordinateGridMixin = function (_chart) {
+var coordinateGridMixin = function (_chart) {
     var GRID_LINE_CLASS = 'grid-line';
     var HORIZONTAL_CLASS = 'horizontal';
     var VERTICAL_CLASS = 'vertical';
@@ -18,7 +26,7 @@ dc.coordinateGridMixin = function (_chart) {
     var X_AXIS_LABEL_CLASS = 'x-axis-label';
     var DEFAULT_AXIS_LABEL_PADDING = 12;
 
-    _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin(_chart)));
+    _chart = colorMixin(marginMixin(baseMixin(_chart)));
 
     _chart.colors(d3.scale.category10());
     _chart._mandatoryAttributes().push('x');
@@ -33,14 +41,14 @@ dc.coordinateGridMixin = function (_chart) {
         }
 
         var domain = _chart.x().domain();
-        var domFilter = dc.filters.RangedFilter(domain[0], domain[1]);
+        var domFilter = RangedFilter(domain[0], domain[1]);
 
         _chart.replaceFilter(domFilter);
         _chart.rescale();
         _chart.redraw();
 
         if (_rangeChart && !rangesEqual(_chart.filter(), _rangeChart.filter())) {
-            dc.events.trigger(function () {
+            trigger(function () {
                 _rangeChart.replaceFilter(domFilter);
                 _rangeChart.redraw();
             });
@@ -48,9 +56,9 @@ dc.coordinateGridMixin = function (_chart) {
 
         _chart._invokeZoomedListener();
 
-        dc.events.trigger(function () {
+        trigger(function () {
             _chart.redrawGroup();
-        }, dc.constants.EVENT_DELAY);
+        }, constants.EVENT_DELAY);
 
         _refocused = !rangesEqual(domain, _xOriginalDomain);
     }
@@ -62,7 +70,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _x;
     var _xOriginalDomain;
     var _xAxis = d3.svg.axis().orient('bottom');
-    var _xUnits = dc.units.integers;
+    var _xUnits = units.integers;
     var _xAxisPadding = 0;
     var _xElasticity = false;
     var _xAxisLabel;
@@ -437,7 +445,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @return {Boolean}
      */
     _chart.isOrdinal = function () {
-        return _chart.xUnits() === dc.units.ordinal;
+        return _chart.xUnits() === units.ordinal;
     };
 
     _chart._useOuterPadding = function () {
@@ -506,8 +514,7 @@ dc.coordinateGridMixin = function (_chart) {
             axisXLab.text(_chart.xAxisLabel());
         }
 
-        dc.transition(axisXG, _chart.transitionDuration())
-            .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')')
+        transition(axisXG, _chart.transitionDuration())
             .call(_xAxis);
         dc.transition(axisXLab, _chart.transitionDuration())
             .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
@@ -542,11 +549,11 @@ dc.coordinateGridMixin = function (_chart) {
                 })
                 .attr('y2', 0)
                 .attr('opacity', 0);
-            dc.transition(linesGEnter, _chart.transitionDuration())
+            transition(linesGEnter, _chart.transitionDuration())
                 .attr('opacity', 1);
 
             // update
-            dc.transition(lines, _chart.transitionDuration())
+            transition(lines, _chart.transitionDuration())
                 .attr('x1', function (d) {
                     return _x(d);
                 })
@@ -639,7 +646,7 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')');
         }
 
-        dc.transition(axisYG, _chart.transitionDuration())
+        transition(axisYG, _chart.transitionDuration())
             .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')')
             .call(axis);
     };
@@ -679,11 +686,11 @@ dc.coordinateGridMixin = function (_chart) {
                     return scale(d);
                 })
                 .attr('opacity', 0);
-            dc.transition(linesGEnter, _chart.transitionDuration())
+            transition(linesGEnter, _chart.transitionDuration())
                 .attr('opacity', 1);
 
             // update
-            dc.transition(lines, _chart.transitionDuration())
+            transition(lines, _chart.transitionDuration())
                 .attr('x1', 1)
                 .attr('y1', function (d) {
                     return scale(d);
@@ -836,7 +843,7 @@ dc.coordinateGridMixin = function (_chart) {
         var min = d3.min(_chart.data(), function (e) {
             return _chart.keyAccessor()(e);
         });
-        return dc.utils.subtract(min, _xAxisPadding);
+        return utils.subtract(min, _xAxisPadding);
     };
 
     /**
@@ -850,7 +857,7 @@ dc.coordinateGridMixin = function (_chart) {
         var max = d3.max(_chart.data(), function (e) {
             return _chart.keyAccessor()(e);
         });
-        return dc.utils.add(max, _xAxisPadding);
+        return utils.add(max, _xAxisPadding);
     };
 
     /**
@@ -864,7 +871,7 @@ dc.coordinateGridMixin = function (_chart) {
         var min = d3.min(_chart.data(), function (e) {
             return _chart.valueAccessor()(e);
         });
-        return dc.utils.subtract(min, _yAxisPadding);
+        return utils.subtract(min, _yAxisPadding);
     };
 
     /**
@@ -878,7 +885,7 @@ dc.coordinateGridMixin = function (_chart) {
         var max = d3.max(_chart.data(), function (e) {
             return _chart.valueAccessor()(e);
         });
-        return dc.utils.add(max, _yAxisPadding);
+        return utils.add(max, _yAxisPadding);
     };
 
     /**
@@ -944,7 +951,7 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    dc.override(_chart, 'filter', function (_) {
+    override(_chart, 'filter', function (_) {
         if (!arguments.length) {
             return _chart._filter();
         }
@@ -1024,17 +1031,17 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.redrawBrush(_g, false);
 
         if (_chart.brushIsEmpty(extent)) {
-            dc.events.trigger(function () {
+            trigger(function () {
                 _chart.filter(null);
                 _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
+            }, constants.EVENT_DELAY);
         } else {
-            var rangedFilter = dc.filters.RangedFilter(extent[0], extent[1]);
+            var rangedFilter = rangedFilter(extent[0], extent[1]);
 
-            dc.events.trigger(function () {
+            trigger(function () {
                 _chart.replaceFilter(rangedFilter);
                 _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
+            }, constants.EVENT_DELAY);
         }
     };
 
@@ -1096,15 +1103,15 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function generateClipPath () {
-        var defs = dc.utils.appendOrSelect(_parent, 'defs');
+        var defs = utils.appendOrSelect(_parent, 'defs');
         // cannot select <clippath> elements; bug in WebKit, must select by id
         // https://groups.google.com/forum/#!topic/d3-js/6EpAzQ2gU9I
         var id = getClipPathId();
-        var chartBodyClip = dc.utils.appendOrSelect(defs, '#' + id, 'clipPath').attr('id', id);
+        var chartBodyClip = utils.appendOrSelect(defs, '#' + id, 'clipPath').attr('id', id);
 
         var padding = _clipPadding * 2;
 
-        dc.utils.appendOrSelect(chartBodyClip, 'rect')
+        utils.appendOrSelect(chartBodyClip, 'rect')
             .attr('width', _chart.xAxisLength() + padding)
             .attr('height', _chart.yAxisHeight() + padding)
             .attr('transform', 'translate(-' + _clipPadding + ', -' + _clipPadding + ')');
@@ -1231,11 +1238,11 @@ dc.coordinateGridMixin = function (_chart) {
         _focusChart = c;
         _chart.on('filtered', function (chart) {
             if (!chart.filter()) {
-                dc.events.trigger(function () {
+                trigger(function () {
                     _focusChart.x().domain(_focusChart.xOriginalDomain());
                 });
             } else if (!rangesEqual(chart.filter(), _focusChart.filter())) {
-                dc.events.trigger(function () {
+                trigger(function () {
                     _focusChart.focus(chart.filter());
                 });
             }
@@ -1285,3 +1292,5 @@ dc.coordinateGridMixin = function (_chart) {
 
     return _chart;
 };
+
+export default coordinateGridMixin;

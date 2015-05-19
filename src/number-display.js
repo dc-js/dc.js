@@ -1,3 +1,5 @@
+import * as d3 from 'd3';
+
 /**
  * A display of a single numeric value.
  * Unlike other charts, you do not need to set a dimension. Instead a group object must be provided and
@@ -16,7 +18,7 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {NumberDisplay}
  */
-dc.numberDisplay = function (parent, chartGroup) {
+var numberDisplay = function (parent, chartGroup) {
     var SPAN_CLASS = 'number-display';
     var _formatNumber = d3.format('.2s');
     var _chart = dc.baseMixin({});
@@ -137,3 +139,5 @@ dc.numberDisplay = function (parent, chartGroup) {
 
     return _chart.anchor(parent, chartGroup);
 };
+
+export default numberDisplay;

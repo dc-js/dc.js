@@ -1,3 +1,5 @@
+import {pluck} from './utils';
+
 /**
  * Legend is a attachable widget that can be added to other dc charts to render horizontal legend
  * labels.
@@ -10,7 +12,7 @@
  * chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
  * @returns {Legend}
  */
-dc.legend = function () {
+var legend = function () {
     var LABEL_GAP = 2;
 
     var _legend = {},
@@ -61,7 +63,7 @@ dc.legend = function () {
                 return d.chart.isLegendableHidden(d);
             });
 
-        if (legendables.some(dc.pluck('dashstyle'))) {
+        if (legendables.some(pluck('dashstyle'))) {
             itemEnter
                 .append('line')
                 .attr('x1', 0)
@@ -69,8 +71,8 @@ dc.legend = function () {
                 .attr('x2', _itemHeight)
                 .attr('y2', _itemHeight / 2)
                 .attr('stroke-width', 2)
-                .attr('stroke-dasharray', dc.pluck('dashstyle'))
-                .attr('stroke', dc.pluck('color'));
+                .attr('stroke-dasharray', pluck('dashstyle'))
+                .attr('stroke', pluck('color'));
         } else {
             itemEnter
                 .append('rect')
@@ -80,7 +82,7 @@ dc.legend = function () {
         }
 
         itemEnter.append('text')
-                .text(dc.pluck('name'))
+                .text(pluck('name'))
                 .attr('x', _itemHeight + LABEL_GAP)
                 .attr('y', function () {
                     return _itemHeight / 2 + (this.clientHeight ? this.clientHeight : 13) / 2 - 2;
@@ -241,3 +243,5 @@ dc.legend = function () {
 
     return _legend;
 };
+
+export default legend;
