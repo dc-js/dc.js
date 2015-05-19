@@ -1,3 +1,5 @@
+import baseMixin from './base-mixin';
+
 /**
  ## Data Grid Widget
 
@@ -24,13 +26,13 @@ Returns:
 A newly created data grid widget instance
 
  **/
-dc.dataGrid = function (parent, chartGroup) {
+var dataGrid = function (parent, chartGroup) {
     var LABEL_CSS_CLASS = 'dc-grid-label';
     var ITEM_CSS_CLASS = 'dc-grid-item';
     var GROUP_CSS_CLASS = 'dc-grid-group';
     var GRID_CSS_CLASS = 'dc-grid-top';
 
-    var _chart = dc.baseMixin({});
+    var _chart = baseMixin({});
 
     var _size = 999; // shouldn't be needed, but you might
     var _html = function (d) { return 'you need to provide an html() handling param:  ' + JSON.stringify(d); };
@@ -195,3 +197,5 @@ dc.dataGrid = function (parent, chartGroup) {
 
     return _chart.anchor(parent, chartGroup);
 };
+
+export default dataGrid;

@@ -1,5 +1,3 @@
-dc.filters = {};
-
 /**
 ## Filters
 The dc.js filters are functions which are passed into crossfilter to chose which records will be
@@ -14,11 +12,11 @@ mention below which chart uses which filter.  In some cases, many instances of a
 **/
 
 /**
-#### dc.filters.RangedFilter(low, high)
+#### RangedFilter(low, high)
  RangedFilter is a filter which accepts keys between `low` and `high`.  It is used to implement X
  axis brushing for the [coordinate grid charts](#coordinate-grid-mixin).
 **/
-dc.filters.RangedFilter = function (low, high) {
+export var RangedFilter = function (low, high) {
     var range = new Array(low, high);
     range.isFiltered = function (value) {
         return value >= this[0] && value < this[1];
@@ -28,12 +26,12 @@ dc.filters.RangedFilter = function (low, high) {
 };
 
 /**
-#### dc.filters.TwoDimensionalFilter(array)
+#### TwoDimensionalFilter(array)
  TwoDimensionalFilter is a filter which accepts a single two-dimensional value.  It is used by the
  [heat map chart](#heat-map) to include particular cells as they are clicked.  (Rows and columns are
  filtered by filtering all the cells in the row or column.)
 **/
-dc.filters.TwoDimensionalFilter = function (array) {
+export var TwoDimensionalFilter = function (array) {
     if (array === null) { return null; }
 
     var filter = array;
@@ -46,7 +44,7 @@ dc.filters.TwoDimensionalFilter = function (array) {
 };
 
 /**
-#### dc.filters.RangedTwoDimensionalFilter(array)
+#### RangedTwoDimensionalFilter(array)
  The RangedTwoDimensionalFilter allows filtering all values which fit within a rectangular
  region. It is used by the [scatter plot](#scatter-plot) to implement rectangular brushing.
 
@@ -58,7 +56,7 @@ dc.filters.TwoDimensionalFilter = function (array) {
  two x coordinates `x1` and `x2` and returns a filter which accepts any points for which `x1 <= x <
  x2`.
  **/
-dc.filters.RangedTwoDimensionalFilter = function (array) {
+export var RangedTwoDimensionalFilter = function (array) {
     if (array === null) { return null; }
 
     var filter = array;

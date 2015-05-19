@@ -1,6 +1,7 @@
 module.exports = function (grunt) {
     'use strict';
 
+    var webpack = require('webpack');
     require('load-grunt-tasks')(grunt, {
         pattern: ['grunt-*', '!grunt-lib-phantomjs', '!grunt-template-jasmine-istanbul']
     });
@@ -11,36 +12,12 @@ module.exports = function (grunt) {
         spec: 'spec',
         web: 'web',
         pkg: require('./package.json'),
-        banner: grunt.file.read('./LICENSE_BANNER'),
-        jsFiles: module.exports.jsFiles
+        banner: grunt.file.read('./LICENSE_BANNER')
     };
 
     grunt.initConfig({
         conf: config,
 
-        concat: {
-            options : {
-                process: true,
-                sourceMap: true,
-                banner : '<%= conf.banner %>'
-            },
-            js: {
-                src: '<%= conf.jsFiles %>',
-                dest: '<%= conf.pkg.name %>.js'
-            }
-        },
-        uglify: {
-            jsmin: {
-                options: {
-                    mangle: true,
-                    compress: true,
-                    sourceMap: true,
-                    banner : '<%= conf.banner %>'
-                },
-                src: '<%= conf.pkg.name %>.js',
-                dest: '<%= conf.pkg.name %>.min.js'
-            }
-        },
         jscs: {
             old: {
                 src: ['<%= conf.spec %>/**/*.js'],
@@ -60,8 +37,7 @@ module.exports = function (grunt) {
             source: {
                 src: ['<%= conf.src %>/**/*.js', 'Gruntfile.js', '<%= conf.web %>/stock.js'],
                 options: {
-                    jshintrc: '.jshintrc',
-                    ignores: ['<%= conf.src %>/banner.js', '<%= conf.src %>/footer.js']
+                    jshintrc: '.jshintrc'
                 }
             }
         },
@@ -318,7 +294,47 @@ module.exports = function (grunt) {
                     }
                 }
             }
-        }
+        },
+
+        webpack: {
+            options: {
+                progress: false, // freaked on windows
+                failOnError: true,
+                externals: {
+                    'crossfilter': 'crossfilter',
+                    'd3': 'd3'
+                },
+                entry: './index.js',
+                devtool: 'source-map',
+                module: {
+                    preLoaders: [{test: /\.js$/, loader: 'source-map-loader'}],
+                    loaders: [{test: /\.js$/, loader: 'babel-loader'}]
+                }
+            },
+            debug: {
+                plugins: [
+                    new webpack.BannerPlugin('<%= conf.banner %>', {raw: true})
+                ],
+                output: {
+                    filename: 'dc.js',
+                    library: 'dc',
+                    libraryTarget: 'umd',
+                    devtoolModuleFilenameTemplate: 'webpack:///<%= conf.pkg.name %>/[resource-path]'
+                }
+            },
+            dist: {
+                plugins: [
+                    new webpack.BannerPlugin('<%= conf.banner %>', {raw: true}),
+                    new webpack.optimize.UglifyJsPlugin()
+                ],
+                output: {
+                    filename: 'dc.min.js',
+                    library: 'dc',
+                    libraryTarget: 'umd',
+                    devtoolModuleFilenameTemplate: 'webpack:///<%= conf.pkg.name %>/[resource-path]'
+                }
+            }
+        },
     });
 
     // custom tasks
@@ -369,7 +385,7 @@ module.exports = function (grunt) {
     });
 
     // task aliases
-    grunt.registerTask('build', ['concat', 'uglify']);
+    grunt.registerTask('build', ['webpack']);
     grunt.registerTask('docs', ['build', 'copy', 'emu', 'toc', 'markdown', 'docco']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine']);
@@ -381,39 +397,3 @@ module.exports = function (grunt) {
     grunt.registerTask('lint', ['build', 'jshint', 'jscs']);
     grunt.registerTask('default', ['build']);
 };
-
-module.exports.jsFiles = [
-    'src/banner.js',   // NOTE: keep this first
-    'src/core.js',
-    'src/errors.js',
-    'src/utils.js',
-    'src/logger.js',
-    'src/events.js',
-    'src/filters.js',
-    'src/base-mixin.js',
-    'src/margin-mixin.js',
-    'src/color-mixin.js',
-    'src/coordinate-grid-mixin.js',
-    'src/stack-mixin.js',
-    'src/cap-mixin.js',
-    'src/bubble-mixin.js',
-    'src/pie-chart.js',
-    'src/bar-chart.js',
-    'src/line-chart.js',
-    'src/data-count.js',
-    'src/data-table.js',
-    'src/data-grid.js',
-    'src/bubble-chart.js',
-    'src/composite-chart.js',
-    'src/series-chart.js',
-    'src/geo-choropleth-chart.js',
-    'src/bubble-overlay.js',
-    'src/row-chart.js',
-    'src/legend.js',
-    'src/scatter-plot.js',
-    'src/number-display.js',
-    'src/heatmap.js',
-    'src/d3.box.js',
-    'src/box-plot.js',
-    'src/footer.js'  // NOTE: keep this last
-];

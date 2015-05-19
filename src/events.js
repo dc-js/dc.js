@@ -1,9 +1,5 @@
-dc.events = {
-    current: null
-};
-
 /**
-#### dc.events.trigger(function[, delay])
+#### trigger(function[, delay])
 This function triggers a throttled event function with a specified delay (in milli-seconds).  Events
 that are triggered repetitively due to user interaction such brush dragging might flood the library
 and invoke more renders than can be executed in time. Using this function to wrap your event
@@ -20,17 +16,20 @@ the most recent event.
     })
 ```
 **/
-dc.events.trigger = function (closure, delay) {
+var current = null;
+var trigger = function (closure, delay) {
     if (!delay) {
         closure();
         return;
     }
 
-    dc.events.current = closure;
+    current = closure;
 
     setTimeout(function () {
-        if (closure === dc.events.current) {
+        if (closure === current) {
             closure();
         }
     }, delay);
 };
+
+export default trigger;

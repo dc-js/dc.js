@@ -1,3 +1,5 @@
+import * as d3 from 'd3';
+
 /**
 ## Number Display Widget
 Includes: [Base Mixin](#base-mixin)
@@ -30,7 +32,7 @@ var display1 = dc.numberDisplay('#chart-container1');
 ```
 
 **/
-dc.numberDisplay = function (parent, chartGroup) {
+var numberDisplay = function (parent, chartGroup) {
     var SPAN_CLASS = 'number-display';
     var _formatNumber = d3.format('.2s');
     var _chart = dc.baseMixin({});
@@ -145,3 +147,5 @@ dc.numberDisplay = function (parent, chartGroup) {
 
     return _chart.anchor(parent, chartGroup);
 };
+
+export default numberDisplay;

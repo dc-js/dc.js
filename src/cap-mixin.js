@@ -1,3 +1,5 @@
+import * as d3 from 'd3';
+
 /**
 ## Cap Mixin
 Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the
@@ -9,7 +11,7 @@ keys of the elements below the cap limit are recorded in order to filter by thos
 *others* element is clicked.
 
 **/
-dc.capMixin = function (_chart) {
+var capMixin = function (_chart) {
 
     var _cap = Infinity;
 
@@ -117,3 +119,5 @@ dc.capMixin = function (_chart) {
 
     return _chart;
 };
+
+export default capMixin;

@@ -1,3 +1,10 @@
+import * as d3 from 'd3';
+import colorMixin from './color-mixin';
+import baseMixin from './base-mixin';
+import {transition} from './core';
+import trigger from './events';
+import {utils} from './utils';
+
 /**
 ## Geo Choropleth Chart
 Includes: [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
@@ -30,8 +37,8 @@ var chart2 = dc.compositeChart('#us-chart2', 'chartGroupA');
 ```
 
 **/
-dc.geoChoroplethChart = function (parent, chartGroup) {
-    var _chart = dc.colorMixin(dc.baseMixin({}));
+var geoChoroplethChart = function (parent, chartGroup) {
+    var _chart = colorMixin(baseMixin({}));
 
     _chart.colorAccessor(function (d) {
         return d || 0;
@@ -102,7 +109,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
             })
             .attr('class', function (d) {
                 var layerNameClass = geoJson(layerIndex).name;
-                var regionClass = dc.utils.nameToId(geoJson(layerIndex).keyAccessor(d));
+                var regionClass = utils.nameToId(geoJson(layerIndex).keyAccessor(d));
                 var baseClasses = layerNameClass + ' ' + regionClass;
                 if (isSelected(layerIndex, d)) {
                     baseClasses += ' selected';
@@ -149,14 +156,14 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
                 return _chart.onClick(d, layerIndex);
             });
 
-        dc.transition(paths, _chart.transitionDuration()).attr('fill', function (d, i) {
+        transition(paths, _chart.transitionDuration()).attr('fill', function (d, i) {
             return _chart.getColor(data[geoJson(layerIndex).keyAccessor(d)], i);
         });
     }
 
     _chart.onClick = function (d, layerIndex) {
         var selectedRegion = geoJson(layerIndex).keyAccessor(d);
-        dc.events.trigger(function () {
+        trigger(function () {
             _chart.filter(selectedRegion);
             _chart.redrawGroup();
         });
@@ -272,3 +279,5 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
     return _chart.anchor(parent, chartGroup);
 };
+
+export default geoChoroplethChart;

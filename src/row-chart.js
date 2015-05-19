@@ -1,3 +1,10 @@
+import * as d3 from 'd3';
+import capMixin from './cap-mixin';
+import marginMixin from './margin-mixin';
+import colorMixin from './color-mixin';
+import baseMixin from './base-mixin';
+import {transition} from './core';
+
 /**
 ## Row Chart
 Includes: [Cap Mixin](#cap-mixin), [Margin Mixin](#margin-mixin), [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
@@ -26,7 +33,7 @@ var chart2 = dc.rowChart('#chart-container2', 'chartGroupA');
 ```
 
 **/
-dc.rowChart = function (parent, chartGroup) {
+var rowChart = function (parent, chartGroup) {
 
     var _g;
 
@@ -43,7 +50,7 @@ dc.rowChart = function (parent, chartGroup) {
     var _titleRowCssClass = 'titlerow';
     var _renderTitleLabel = false;
 
-    var _chart = dc.capMixin(dc.marginMixin(dc.colorMixin(dc.baseMixin({}))));
+    var _chart = capMixin(marginMixin(colorMixin(baseMixin({}))));
 
     var _x;
 
@@ -77,7 +84,7 @@ dc.rowChart = function (parent, chartGroup) {
                 .attr('transform', 'translate(0, ' + _chart.effectiveHeight() + ')');
         }
 
-        dc.transition(axisG, _chart.transitionDuration())
+        transition(axisG, _chart.transitionDuration())
             .call(_xAxis);
     }
 
@@ -192,7 +199,7 @@ dc.rowChart = function (parent, chartGroup) {
                 return (_chart.hasFilter()) ? isSelectedRow(d) : false;
             });
 
-        dc.transition(rect, _chart.transitionDuration())
+        transition(rect, _chart.transitionDuration())
             .attr('width', function (d) {
                 return Math.abs(rootValue() - _x(_chart.valueAccessor()(d)));
             })
@@ -234,7 +241,7 @@ dc.rowChart = function (parent, chartGroup) {
                 .text(function (d) {
                     return _chart.label()(d);
                 });
-            dc.transition(lab, _chart.transitionDuration())
+            transition(lab, _chart.transitionDuration())
                 .attr('transform', translateX);
         }
         if (_chart.renderTitleLabel()) {
@@ -249,7 +256,7 @@ dc.rowChart = function (parent, chartGroup) {
                     .text(function (d) {
                         return _chart.title()(d);
                     });
-            dc.transition(titlelab, _chart.transitionDuration())
+            transition(titlelab, _chart.transitionDuration())
                 .attr('transform', translateX);
         }
     }
@@ -393,3 +400,5 @@ dc.rowChart = function (parent, chartGroup) {
 
     return _chart.anchor(parent, chartGroup);
 };
+
+export default rowChart;

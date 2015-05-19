@@ -4,7 +4,7 @@ Margin is a mixin that provides margin utility functions for both the Row Chart 
 Charts.
 
 **/
-dc.marginMixin = function (_chart) {
+var marginMixin = function (_chart) {
     var _margin = {top: 10, right: 50, bottom: 30, left: 30};
 
     /**
@@ -38,3 +38,5 @@ dc.marginMixin = function (_chart) {
 
     return _chart;
 };
+
+export default marginMixin;

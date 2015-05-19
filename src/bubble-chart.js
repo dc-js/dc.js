@@ -1,3 +1,7 @@
+import bubbleMixin from './bubble-mixin';
+import coordinateGridMixin from './coordinate-grid-mixin';
+import {transition} from './core';
+
 /**
 ## Bubble Chart
 Includes: [Bubble Mixin](#bubble-mixin), [Coordinate Grid Mixin](#coordinate-grid-mixin)
@@ -34,8 +38,8 @@ var bubbleChart2 = dc.bubbleChart('#chart-container2', 'chartGroupA');
 ```
 
 **/
-dc.bubbleChart = function (parent, chartGroup) {
-    var _chart = dc.bubbleMixin(dc.coordinateGridMixin({}));
+var bubbleChart = function (parent, chartGroup) {
+    var _chart = bubbleMixin(coordinateGridMixin({}));
 
     var _elasticRadius = false;
 
@@ -90,7 +94,7 @@ dc.bubbleChart = function (parent, chartGroup) {
             .on('click', _chart.onClick)
             .attr('fill', _chart.getColor)
             .attr('r', 0);
-        dc.transition(bubbleG, _chart.transitionDuration())
+        transition(bubbleG, _chart.transitionDuration())
             .selectAll('circle.' + _chart.BUBBLE_CLASS)
             .attr('r', function (d) {
                 return _chart.bubbleR(d);
@@ -105,7 +109,7 @@ dc.bubbleChart = function (parent, chartGroup) {
     }
 
     function updateNodes(bubbleG) {
-        dc.transition(bubbleG, _chart.transitionDuration())
+        transition(bubbleG, _chart.transitionDuration())
             .attr('transform', bubbleLocator)
             .selectAll('circle.' + _chart.BUBBLE_CLASS)
             .attr('fill', _chart.getColor)
@@ -151,3 +155,5 @@ dc.bubbleChart = function (parent, chartGroup) {
 
     return _chart.anchor(parent, chartGroup);
 };
+
+export default bubbleChart;

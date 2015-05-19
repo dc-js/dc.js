@@ -1,3 +1,7 @@
+import * as d3 from 'd3';
+import compositeChart from './composite-chart';
+import lineChart from './line-chart';
+
 /**
  ## Series Chart
 
@@ -29,15 +33,15 @@
  ```
 
  **/
-dc.seriesChart = function (parent, chartGroup) {
-    var _chart = dc.compositeChart(parent, chartGroup);
+var seriesChart = function (parent, chartGroup) {
+    var _chart = compositeChart(parent, chartGroup);
 
     function keySort(a, b) {
         return d3.ascending(_chart.keyAccessor()(a), _chart.keyAccessor()(b));
     }
 
     var _charts = {};
-    var _chartFunction = dc.lineChart;
+    var _chartFunction = lineChart;
     var _seriesAccessor;
     var _seriesSort = d3.ascending;
     var _valueSort = keySort;
@@ -171,3 +175,5 @@ dc.seriesChart = function (parent, chartGroup) {
 
     return _chart;
 };
+
+export default seriesChart;

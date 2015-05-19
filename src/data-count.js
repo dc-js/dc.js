@@ -1,3 +1,6 @@
+import * as d3 from 'd3';
+import baseMixin from './base-mixin';
+
 /**
 ## Data Count Widget
 Includes: [Base Mixin](#base-mixin)
@@ -34,15 +37,15 @@ For the data count widget the only valid group is the group returned by `dimensi
 var ndx = crossfilter(data);
 var all = ndx.groupAll();
 
-dc.dataCount('.dc-data-count')
+dataCount('.dc-data-count')
     .dimension(ndx)
     .group(all);
 ```
 
 **/
-dc.dataCount = function (parent, chartGroup) {
+var dataCount = function (parent, chartGroup) {
     var _formatNumber = d3.format(',d');
-    var _chart = dc.baseMixin({});
+    var _chart = baseMixin({});
     var _html = {some:'', all:''};
 
     /**
@@ -112,3 +115,5 @@ dc.dataCount = function (parent, chartGroup) {
 
     return _chart.anchor(parent, chartGroup);
 };
+
+export default dataCount;

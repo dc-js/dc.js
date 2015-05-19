@@ -19,24 +19,21 @@ that are chainable d3 objects.)
 
 /*jshint -W062*/
 /*jshint -W079*/
-var dc = {
-    version: '<%= conf.pkg.version %>',
-    constants: {
-        CHART_CLASS: 'dc-chart',
-        DEBUG_GROUP_CLASS: 'debug',
-        STACK_CLASS: 'stack',
-        DESELECTED_CLASS: 'deselected',
-        SELECTED_CLASS: 'selected',
-        NODE_INDEX_NAME: '__index__',
-        GROUP_INDEX_NAME: '__group_index__',
-        DEFAULT_CHART_GROUP: '__default_chart_group__',
-        EVENT_DELAY: 40,
-        NEGLIGIBLE_NUMBER: 1e-10
-    },
-    _renderlet: null
+export var version = '<%= conf.pkg.version %>';
+export var constants = {
+    CHART_CLASS: 'dc-chart',
+    DEBUG_GROUP_CLASS: 'debug',
+    STACK_CLASS: 'stack',
+    DESELECTED_CLASS: 'deselected',
+    SELECTED_CLASS: 'selected',
+    NODE_INDEX_NAME: '__index__',
+    GROUP_INDEX_NAME: '__group_index__',
+    DEFAULT_CHART_GROUP: '__default_chart_group__',
+    EVENT_DELAY: 40,
+    NEGLIGIBLE_NUMBER: 1e-10
 };
 
-dc.chartRegistry = function () {
+export var chartRegistry = function () {
     // chartGroup:string => charts:array
     var _chartMap = {};
 
@@ -94,19 +91,19 @@ dc.chartRegistry = function () {
 /*jshint +W062 */
 /*jshint +W079*/
 
-dc.registerChart = function (chart, group) {
+export var registerChart = function (chart, group) {
     dc.chartRegistry.register(chart, group);
 };
 
-dc.deregisterChart = function (chart, group) {
+export var deregisterChart = function (chart, group) {
     dc.chartRegistry.deregister(chart, group);
 };
 
-dc.hasChart = function (chart) {
+export var hasChart = function (chart) {
     return dc.chartRegistry.has(chart);
 };
 
-dc.deregisterAllCharts = function (group) {
+export var deregisterAllCharts = function (group) {
     dc.chartRegistry.clear(group);
 };
 
@@ -119,7 +116,7 @@ dc.deregisterAllCharts = function (group) {
 Clear all filters on all charts within the given chart group. If the chart group is not given then
 only charts that belong to the default chart group will be reset.
 **/
-dc.filterAll = function (group) {
+export var filterAll = function (group) {
     var charts = dc.chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         charts[i].filterAll();
@@ -131,7 +128,7 @@ dc.filterAll = function (group) {
 Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
 not given then only charts that belong to the default chart group will be reset.
 **/
-dc.refocusAll = function (group) {
+export var refocusAll = function (group) {
     var charts = dc.chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         if (charts[i].focus) {
@@ -145,7 +142,7 @@ dc.refocusAll = function (group) {
 Re-render all charts belong to the given chart group. If the chart group is not given then only
 charts that belong to the default chart group will be re-rendered.
 **/
-dc.renderAll = function (group) {
+export var renderAll = function (group) {
     var charts = dc.chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         charts[i].render();
@@ -163,7 +160,7 @@ that belong to the default chart group will be re-drawn. Redraw is different fro
 when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
 from scratch.
 **/
-dc.redrawAll = function (group) {
+export var redrawAll = function (group) {
     var charts = dc.chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         charts[i].redraw();
@@ -179,9 +176,15 @@ dc.redrawAll = function (group) {
 If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
 immediately.  Default: false
 **/
-dc.disableTransitions = false;
+var _disableTransitions = false;
+export var disableTransitions = function (_) {
+    if (!arguments.length) {
+        return _disableTransitions;
+    }
+    _disableTransitions = _;
+};
 
-dc.transition = function (selections, duration, callback) {
+export var transition = function (selections, duration, callback) {
     if (duration <= 0 || duration === undefined || dc.disableTransitions) {
         return selections;
     }
@@ -197,7 +200,7 @@ dc.transition = function (selections, duration, callback) {
     return s;
 };
 
-dc.units = {};
+var units = {};
 
 /**
 #### dc.units.integers
@@ -211,7 +214,7 @@ chart.xUnits(dc.units.integers) // already the default
 ```
 
 **/
-dc.units.integers = function (s, e) {
+units.integers = function (s, e) {
     return Math.abs(e - s);
 };
 
@@ -228,7 +231,7 @@ chart.xUnits(dc.units.ordinal)
 ```
 
 **/
-dc.units.ordinal = function (s, e, domain) {
+units.ordinal = function (s, e, domain) {
     return domain;
 };
 
@@ -249,8 +252,8 @@ var thousandths = dc.units.fp.precision(0.001);
 thousandths(0.5, 1.0) // returns 500
 ```
 **/
-dc.units.fp = {};
-dc.units.fp.precision = function (precision) {
+units.fp = {};
+units.fp.precision = function (precision) {
     var _f = function (s, e) {
         var d = Math.abs((e - s) / _f.resolution);
         if (dc.utils.isNegligible(d - Math.floor(d))) {
@@ -262,25 +265,27 @@ dc.units.fp.precision = function (precision) {
     _f.resolution = precision;
     return _f;
 };
+export {units};
 
-dc.round = {};
-dc.round.floor = function (n) {
+var round = {};
+round.floor = function (n) {
     return Math.floor(n);
 };
-dc.round.ceil = function (n) {
+round.ceil = function (n) {
     return Math.ceil(n);
 };
-dc.round.round = function (n) {
+round.round = function (n) {
     return Math.round(n);
 };
+export {round};
 
-dc.override = function (obj, functionName, newFunction) {
+export var override = function (obj, functionName, newFunction) {
     var existingFunction = obj[functionName];
     obj['_' + functionName] = existingFunction;
     obj[functionName] = newFunction;
 };
 
-dc.renderlet = function (_) {
+export var renderlet = function (_) {
     if (!arguments.length) {
         return dc._renderlet;
     }
@@ -288,6 +293,6 @@ dc.renderlet = function (_) {
     return dc;
 };
 
-dc.instanceOfChart = function (o) {
+export var instanceOfChart = function (o) {
     return o instanceof Object && o.__dcFlag__ && true;
 };

@@ -29,6 +29,7 @@
     "d3": "3.x"
   },
   "devDependencies": {
+    "babel-loader": "~5.1.2",
     "emu": "~0.0.2",
     "grunt": "~0.4.5",
     "grunt-browserify": "~3.3.0",
@@ -50,9 +51,11 @@
     "grunt-saucelabs": "~8.5.0",
     "grunt-shell": "~1.1.1",
     "grunt-template-jasmine-istanbul": "~0.3.2",
+    "grunt-webpack": "~1.0.8",
     "load-grunt-tasks": "~3.0.0",
     "jsdifflib": "~1.1.0",
     "marked": "~0.3.3",
+    "source-map-loader": "0.1.5",
     "uglify-js": "2.4.x",
     "time-grunt": "~1.0.0"
   },

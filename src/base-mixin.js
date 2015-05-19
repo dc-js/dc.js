@@ -1,11 +1,18 @@
+import * as crossfilter from 'crossfilter';
+import * as d3 from 'd3';
+import trigger from './events';
+import {InvalidStateException} from './errors';
+import {debug, deprecate} from './logger';
+import {pluck, printers, utils} from './utils';
+
 /**
 ## Base Mixin
 Base Mixin is an abstract functional object representing a basic dc chart object
 for all chart and widget implementations. Methods from the Base Mixin are inherited
 and available on all chart implementation in the DC library.
 **/
-dc.baseMixin = function (_chart) {
-    _chart.__dcFlag__ = dc.utils.uniqueId();
+var baseMixin = function (_chart) {
+    _chart.__dcFlag__ = utils.uniqueId();
 
     var _dimension;
     var _group;
@@ -29,11 +36,11 @@ dc.baseMixin = function (_chart) {
     };
     var _height = _defaultHeight;
 
-    var _keyAccessor = dc.pluck('key');
-    var _valueAccessor = dc.pluck('value');
-    var _label = dc.pluck('key');
+    var _keyAccessor = pluck('key');
+    var _valueAccessor = pluck('value');
+    var _label = pluck('key');
 
-    var _ordering = dc.pluck('key');
+    var _ordering = pluck('key');
     var _orderSort;
 
     var _renderLabel = false;
@@ -45,7 +52,7 @@ dc.baseMixin = function (_chart) {
 
     var _transitionDuration = 750;
 
-    var _filterPrinter = dc.printers.filters;
+    var _filterPrinter = printers.filters;
 
     var _mandatoryAttributes = ['dimension', 'group'];
 
@@ -379,7 +386,7 @@ dc.baseMixin = function (_chart) {
     #### .filterPrinter([filterPrinterFunction])
     Set or get the filter printer function. The filter printer function is used to generate human
     friendly text for filter value(s) associated with the chart instance. By default dc charts use a
-    default filter printer `dc.printers.filter` that provides simple printing support for both
+    default filter printer `printers.filter` that provides simple printing support for both
     single value and ranged filters.
 
     **/
@@ -444,7 +451,7 @@ dc.baseMixin = function (_chart) {
 
     function checkForMandatoryAttributes(a) {
         if (!_chart[a] || !_chart[a]()) {
-            throw new dc.errors.InvalidStateException('Mandatory attribute chart.' + a +
+            throw new InvalidStateException('Mandatory attribute chart.' + a +
                                                       ' is missing on chart[#' + _chart.anchorName() + ']');
         }
     }
@@ -785,7 +792,7 @@ dc.baseMixin = function (_chart) {
     **/
     _chart.onClick = function (d) {
         var filter = _chart.keyAccessor()(d);
-        dc.events.trigger(function () {
+        trigger(function () {
             _chart.filter(filter);
             _chart.redrawGroup();
         });
@@ -997,8 +1004,8 @@ dc.baseMixin = function (_chart) {
     ```
 
     **/
-    _chart.renderlet = dc.logger.deprecate(function (_) {
-        _chart.on('renderlet.' + dc.utils.uniqueId(), _);
+    _chart.renderlet = deprecate(function (_) {
+        _chart.on('renderlet.' + utils.uniqueId(), _);
         return _chart;
     }, 'chart.renderlet has been deprecated.  Please use chart.on("renderlet.<renderletKey>", renderletFunction)');
 
@@ -1077,7 +1084,7 @@ dc.baseMixin = function (_chart) {
             if (typeof(_chart[o]) === 'function') {
                 _chart[o].call(_chart, opts[o]);
             } else {
-                dc.logger.debug('Not a valid option setter name: ' + o);
+                debug('Not a valid option setter name: ' + o);
             }
         }
         return _chart;
@@ -1117,3 +1124,5 @@ dc.baseMixin = function (_chart) {
 
     return _chart;
 };
+
+export default baseMixin;

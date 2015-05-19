@@ -3,6 +3,7 @@
     "camelcase": true,
     "curly": true,
     "eqeqeq": true,
+    "esnext": true,
     "evil": false,
     "immed": true,
     "latedef": true,

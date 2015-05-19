@@ -1,9 +1,12 @@
+import * as d3 from 'd3';
+import {utils} from './utils';
+
 /**
 ## Stack Mixin
 Stack Mixin is an mixin that provides cross-chart support of stackability using d3.layout.stack.
 
 **/
-dc.stackMixin = function (_chart) {
+var stackMixin = function (_chart) {
 
     function prepareValues (layer, layerIdx) {
         var valAccessor = layer.accessor || _chart.valueAccessor();
@@ -157,7 +160,7 @@ dc.stackMixin = function (_chart) {
             return (p.y + p.y0 < p.y0) ? (p.y + p.y0) : p.y0;
         });
 
-        return dc.utils.subtract(min, _chart.yAxisPadding());
+        return utils.subtract(min, _chart.yAxisPadding());
 
     };
 
@@ -166,7 +169,7 @@ dc.stackMixin = function (_chart) {
             return p.y + p.y0;
         });
 
-        return dc.utils.add(max, _chart.yAxisPadding());
+        return utils.add(max, _chart.yAxisPadding());
     };
 
     function flattenStack() {
@@ -176,12 +179,12 @@ dc.stackMixin = function (_chart) {
 
     _chart.xAxisMin = function () {
         var min = d3.min(flattenStack(), dc.pluck('x'));
-        return dc.utils.subtract(min, _chart.xAxisPadding());
+        return utils.subtract(min, _chart.xAxisPadding());
     };
 
     _chart.xAxisMax = function () {
         var max = d3.max(flattenStack(), dc.pluck('x'));
-        return dc.utils.add(max, _chart.xAxisPadding());
+        return utils.add(max, _chart.xAxisPadding());
     };
 
     /**
@@ -286,3 +289,5 @@ dc.stackMixin = function (_chart) {
 
     return _chart;
 };
+
+export default stackMixin;
