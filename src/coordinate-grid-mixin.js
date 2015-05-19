@@ -1,8 +1,9 @@
-import {constants, override, transition, units} from './core';
-import colorMixin from './color-mixin';
-import marginMixin from './margin-mixin';
+import * as d3 from 'd3';
 import baseMixin from './base-mixin';
+import marginMixin from './margin-mixin';
+import colorMixin from './color-mixin';
 import trigger from './events';
+import {constants, override, transition, units} from './core';
 import {rangedFilter} from './filters';
 import {utils} from './utils';
 
@@ -902,10 +903,10 @@ var coordinateGridMixin = function (_chart) {
                 _chart.redrawGroup();
             }, constants.EVENT_DELAY);
         } else {
-            var rangedFilter = rangedFilter(extent[0], extent[1]);
+            var rangeFilter = rangedFilter(extent[0], extent[1]);
 
             trigger(function () {
-                _chart.replaceFilter(rangedFilter);
+                _chart.replaceFilter(rangeFilter);
                 _chart.redrawGroup();
             }, constants.EVENT_DELAY);
         }

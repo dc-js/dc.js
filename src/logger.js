@@ -1,9 +1,9 @@
-var enableDebugLogging = false;
+var _enableDebugLog = false;
 export var enableDebugLog = function (_) {
     if (!arguments.length) {
-        enableDebugLogging = _;
+        return _enableDebugLog;
     }
-    return enableDebugLogging;
+    _enableDebugLog = _;
 };
 
 export var warn = function (msg) {
@@ -17,7 +17,7 @@ export var warn = function (msg) {
 };
 
 export var debug = function (msg) {
-    if (enableDebugLogging && console) {
+    if (_enableDebugLog && console) {
         if (console.debug) {
             console.debug(msg);
         } else if (console.log) {

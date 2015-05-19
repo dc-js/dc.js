@@ -282,7 +282,7 @@ d3.csv('ndx.csv', function (data) {
                 label += '(' + Math.floor(d.value / all.value() * 100) + '%)';
             }
             return label;
-        }) /*
+        }) /*jscs:disable
         // (optional) whether chart should render labels, :default = true
         .renderLabel(true)
         // (optional) if inner radius is used then a donut chart will be generated instead of pie chart
@@ -295,7 +295,7 @@ d3.csv('ndx.csv', function (data) {
         .colorDomain([-1750, 1644])
         // (optional) define color value accessor
         .colorAccessor(function(d, i){return d.value;})
-        */;
+        jscs:enable*/;
 
     quarterChart.width(180)
         .height(180)

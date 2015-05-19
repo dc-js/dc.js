@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
-import {constants, override, transition} from './core';
 import coordinateGridMixin from './coordinate-grid-mixin';
 import stackMixin from './stack-mixin';
+import {constants, override, transition} from './core';
 import {warn} from './logger';
 import {pluck, utils} from './utils';
 

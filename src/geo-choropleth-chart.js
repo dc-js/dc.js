@@ -1,8 +1,8 @@
 import * as d3 from 'd3';
-import colorMixin from './color-mixin';
 import baseMixin from './base-mixin';
-import {transition} from './core';
+import colorMixin from './color-mixin';
 import trigger from './events';
+import {transition} from './core';
 import {utils} from './utils';
 
 /**

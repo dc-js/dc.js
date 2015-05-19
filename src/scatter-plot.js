@@ -1,8 +1,8 @@
 import * as d3 from 'd3';
 import coordinateGridMixin from './coordinate-grid-mixin';
+import trigger from './events';
 import {constants, override, transition} from './core';
 import {rangedTwoDimensionalFilter} from './filters';
-import trigger from './events';
 
 /**
 ## Scatter Plot

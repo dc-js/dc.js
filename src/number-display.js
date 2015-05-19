@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import baseMixin from './base-mixin';
 
 /**
 ## Number Display Widget
@@ -35,7 +36,7 @@ var display1 = dc.numberDisplay('#chart-container1');
 var numberDisplay = function (parent, chartGroup) {
     var SPAN_CLASS = 'number-display';
     var _formatNumber = d3.format('.2s');
-    var _chart = dc.baseMixin({});
+    var _chart = baseMixin({});
     var _html = {one:'', some:'', none:''};
 
     // dimension not required

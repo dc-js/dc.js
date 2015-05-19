@@ -1,5 +1,7 @@
+import {utils} from './utils';
+
 /**
-#### Version <%= conf.pkg.version %>
+#### Version __VERSION__
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -16,10 +18,9 @@ return values that are not the chart.  (Although some, such as `.svg` and `.xAxi
 that are chainable d3 objects.)
 
 **/
-
-/*jshint -W062*/
-/*jshint -W079*/
-export var version = '<%= conf.pkg.version %>';
+/* jshint ignore:start */
+export var version = __VERSION__;
+/* jshint ignore:end */
 export var constants = {
     CHART_CLASS: 'dc-chart',
     DEBUG_GROUP_CLASS: 'debug',
@@ -32,14 +33,15 @@ export var constants = {
     EVENT_DELAY: 40,
     NEGLIGIBLE_NUMBER: 1e-10
 };
+var _renderlet = null;
 
-export var chartRegistry = function () {
+export var chartRegistry = (function () {
     // chartGroup:string => charts:array
     var _chartMap = {};
 
     function initializeChartGroup(group) {
         if (!group) {
-            group = dc.constants.DEFAULT_CHART_GROUP;
+            group = constants.DEFAULT_CHART_GROUP;
         }
 
         if (!_chartMap[group]) {
@@ -87,24 +89,22 @@ export var chartRegistry = function () {
             return _chartMap[group];
         }
     };
-}();
-/*jshint +W062 */
-/*jshint +W079*/
+}());
 
 export var registerChart = function (chart, group) {
-    dc.chartRegistry.register(chart, group);
+    chartRegistry.register(chart, group);
 };
 
 export var deregisterChart = function (chart, group) {
-    dc.chartRegistry.deregister(chart, group);
+    chartRegistry.deregister(chart, group);
 };
 
 export var hasChart = function (chart) {
-    return dc.chartRegistry.has(chart);
+    return chartRegistry.has(chart);
 };
 
 export var deregisterAllCharts = function (group) {
-    dc.chartRegistry.clear(group);
+    chartRegistry.clear(group);
 };
 
 /**
@@ -117,7 +117,7 @@ Clear all filters on all charts within the given chart group. If the chart group
 only charts that belong to the default chart group will be reset.
 **/
 export var filterAll = function (group) {
-    var charts = dc.chartRegistry.list(group);
+    var charts = chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         charts[i].filterAll();
     }
@@ -129,7 +129,7 @@ Reset zoom level / focus on all charts that belong to the given chart group. If 
 not given then only charts that belong to the default chart group will be reset.
 **/
 export var refocusAll = function (group) {
-    var charts = dc.chartRegistry.list(group);
+    var charts = chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         if (charts[i].focus) {
             charts[i].focus();
@@ -143,13 +143,13 @@ Re-render all charts belong to the given chart group. If the chart group is not 
 charts that belong to the default chart group will be re-rendered.
 **/
 export var renderAll = function (group) {
-    var charts = dc.chartRegistry.list(group);
+    var charts = chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         charts[i].render();
     }
 
-    if (dc._renderlet !== null) {
-        dc._renderlet(group);
+    if (_renderlet !== null) {
+        _renderlet(group);
     }
 };
 
@@ -161,13 +161,13 @@ when redrawing dc tries to update the graphic incrementally, using transitions, 
 from scratch.
 **/
 export var redrawAll = function (group) {
-    var charts = dc.chartRegistry.list(group);
+    var charts = chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         charts[i].redraw();
     }
 
-    if (dc._renderlet !== null) {
-        dc._renderlet(group);
+    if (_renderlet !== null) {
+        _renderlet(group);
     }
 };
 
@@ -185,7 +185,7 @@ export var disableTransitions = function (_) {
 };
 
 export var transition = function (selections, duration, callback) {
-    if (duration <= 0 || duration === undefined || dc.disableTransitions) {
+    if (duration <= 0 || duration === undefined || _disableTransitions) {
         return selections;
     }
 
@@ -256,7 +256,7 @@ units.fp = {};
 units.fp.precision = function (precision) {
     var _f = function (s, e) {
         var d = Math.abs((e - s) / _f.resolution);
-        if (dc.utils.isNegligible(d - Math.floor(d))) {
+        if (utils.isNegligible(d - Math.floor(d))) {
             return Math.floor(d);
         } else {
             return Math.ceil(d);
@@ -287,10 +287,9 @@ export var override = function (obj, functionName, newFunction) {
 
 export var renderlet = function (_) {
     if (!arguments.length) {
-        return dc._renderlet;
+        return _renderlet;
     }
-    dc._renderlet = _;
-    return dc;
+    _renderlet = _;
 };
 
 export var instanceOfChart = function (o) {
