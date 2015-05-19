@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import coordinateGridMixin from './coordinate-grid-mixin';
 import {constants, override, transition} from './core';
-import {RangedTwoDimensionalFilter} from './filters';
+import {rangedTwoDimensionalFilter} from './filters';
 import trigger from './events';
 
 /**
@@ -59,7 +59,7 @@ var scatterPlot = function (parent, chartGroup) {
             return _chart.__filter();
         }
 
-        return _chart.__filter(RangedTwoDimensionalFilter(filter));
+        return _chart.__filter(rangedTwoDimensionalFilter(filter));
     });
 
     _chart.plotData = function () {
@@ -242,7 +242,7 @@ var scatterPlot = function (parent, chartGroup) {
             resizeFiltered(false);
 
         } else {
-            var ranged2DFilter = RangedTwoDimensionalFilter(extent);
+            var ranged2DFilter = rangedTwoDimensionalFilter(extent);
             trigger(function () {
                 _chart.filter(null);
                 _chart.filter(ranged2DFilter);

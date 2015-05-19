@@ -24,14 +24,13 @@
  * axis brushing for the [coordinate grid charts](#coordinate-grid-mixin).
  *
  * Its `filterType` is 'RangedFilter'
- * @name RangedFilter
+ * @name rangedFilter
  * @memberof dc.filters
  * @param {Number} low
  * @param {Number} high
  * @returns {Array<Number>}
- * @constructor
  */
-export var RangedFilter = function (low, high) {    var range = new Array(low, high);
+export var rangedFilter = function (low, high) {    var range = new Array(low, high);
     range.isFiltered = function (value) {
         return value >= this[0] && value < this[1];
     };
@@ -46,13 +45,12 @@ export var RangedFilter = function (low, high) {    var range = new Array(low, h
  * filtered by filtering all the cells in the row or column.)
  *
  * Its `filterType` is 'TwoDimensionalFilter'
- * @name TwoDimensionalFilter
+ * @name twoDimensionalFilter
  * @memberof dc.filters
  * @param {Array<Number>} filter
  * @returns {Array<Number>}
- * @constructor
  */
-export var TwoDimensionalFilter = function (filter) {
+export var twoDimensionalFilter = function (filter) {
     if (filter === null) { return null; }
 
     var f = filter;
@@ -78,13 +76,12 @@ export var TwoDimensionalFilter = function (filter) {
  * x2`.
  *
  * Its `filterType` is 'RangedTwoDimensionalFilter'
- * @name RangedTwoDimensionalFilter
+ * @name rangedTwoDimensionalFilter
  * @memberof dc.filters
  * @param {Array<Array<Number>>} filter
  * @returns {Array<Array<Number>>}
- * @constructor
  */
-export var RangedTwoDimensionalFilter = function (filter) {
+export var rangedTwoDimensionalFilter = function (filter) {
     if (filter === null) { return null; }
 
     var f = filter;
