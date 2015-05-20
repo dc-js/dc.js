@@ -111,20 +111,6 @@ module.exports = function (grunt) {
                         ]
                     }
                 }
-            },
-            browserify: {
-                options: {
-                    display: 'short',
-                    summary: true,
-                    specs:  '<%= conf.spec %>/*-spec.js',
-                    helpers: '<%= conf.spec %>/helpers/*.js',
-                    version: '2.0.0',
-                    outfile: '<%= conf.spec %>/index-browserify.html',
-                    keepRunner: true
-                },
-                src: [
-                    'bundle.js'
-                ]
             }
         },
         'saucelabs-jasmine': {
@@ -285,17 +271,6 @@ module.exports = function (grunt) {
                     ' || echo \'Cowardly refusing to overwrite your existing git pre-commit hook.\''
             }
         },
-        browserify: {
-            dev: {
-                src: '<%= conf.pkg.name %>.js',
-                dest: 'bundle.js',
-                options: {
-                    browserifyOptions: {
-                        standalone: 'dc'
-                    }
-                }
-            }
-        },
 
         webpack: {
             options: {
@@ -397,7 +372,6 @@ module.exports = function (grunt) {
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine']);
     grunt.registerTask('test', ['build', 'jasmine:specs', 'shell:hooks']);
-    grunt.registerTask('test-browserify', ['build', 'browserify', 'jasmine:browserify']);
     grunt.registerTask('coverage', ['build', 'jasmine:coverage']);
     grunt.registerTask('ci', ['test', 'jasmine:specs:build', 'connect:server', 'saucelabs-jasmine']);
     grunt.registerTask('ci-pull', ['test', 'jasmine:specs:build', 'connect:server']);
