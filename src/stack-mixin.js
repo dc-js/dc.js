@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
-import {utils} from './utils';
+import {override} from './core';
+import {pluck, utils} from './utils';
 
 /**
  * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.layout.stack.
@@ -100,7 +101,7 @@ var stackMixin = function (_chart) {
         return _chart;
     };
 
-    dc.override(_chart, 'group', function (g, n, f) {
+    override(_chart, 'group', function (g, n, f) {
         if (!arguments.length) {
             return _chart._group();
         }
@@ -132,7 +133,7 @@ var stackMixin = function (_chart) {
     };
 
     function findLayerByName (n) {
-        var i = _stack.map(dc.pluck('name')).indexOf(n);
+        var i = _stack.map(pluck('name')).indexOf(n);
         return _stack[i];
     }
 
@@ -197,12 +198,12 @@ var stackMixin = function (_chart) {
     }
 
     _chart.xAxisMin = function () {
-        var min = d3.min(flattenStack(), dc.pluck('x'));
+        var min = d3.min(flattenStack(), pluck('x'));
         return utils.subtract(min, _chart.xAxisPadding());
     };
 
     _chart.xAxisMax = function () {
-        var max = d3.max(flattenStack(), dc.pluck('x'));
+        var max = d3.max(flattenStack(), pluck('x'));
         return utils.add(max, _chart.xAxisPadding());
     };
 
@@ -227,7 +228,7 @@ var stackMixin = function (_chart) {
      * @return {String}
      * @return {dc.stackMixin}
      */
-    dc.override(_chart, 'title', function (stackName, titleAccessor) {
+    override(_chart, 'title', function (stackName, titleAccessor) {
         if (!stackName) {
             return _chart._title();
         }
@@ -277,7 +278,7 @@ var stackMixin = function (_chart) {
     });
 
     _chart._ordinalXDomain = function () {
-        var flat = flattenStack().map(dc.pluck('data'));
+        var flat = flattenStack().map(pluck('data'));
         var ordered = _chart._computeOrderedGroups(flat);
         return ordered.map(_chart.keyAccessor());
     };

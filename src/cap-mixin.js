@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import {override} from './core';
 
 /**
  * Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the
@@ -142,7 +143,7 @@ var capMixin = function (_chart) {
         return _chart;
     };
 
-    dc.override(_chart, 'onClick', function (d) {
+    override(_chart, 'onClick', function (d) {
         if (d.others) {
             _chart.filter([d.others]);
         }

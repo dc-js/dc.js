@@ -12,7 +12,7 @@ dc.errors.Exception.prototype = Object.create(Error.prototype);
 dc.errors.Exception.prototype.constructor = dc.errors.Exception;
 
 export var InvalidStateException = function () {
-    dc.errors.Exception.apply(this, arguments);
+    Exception.apply(this, arguments);
 };
 
 dc.errors.InvalidStateException.prototype = Object.create(dc.errors.Exception.prototype);
