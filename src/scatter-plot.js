@@ -9,7 +9,7 @@ import {rangedTwoDimensionalFilter} from './filters';
 Includes: [Coordinate Grid Mixin](#coordinate-grid-mixin)
 
 A scatter plot chart
-#### scatterPlot(parent[, chartGroup])
+#### dc.scatterPlot(parent[, chartGroup])
 Create a scatter plot instance and attach it to the given parent element.
 
 Parameters:

@@ -37,7 +37,7 @@ For the data count widget the only valid group is the group returned by `dimensi
 var ndx = crossfilter(data);
 var all = ndx.groupAll();
 
-dataCount('.dc-data-count')
+dc.dataCount('.dc-data-count')
     .dimension(ndx)
     .group(all);
 ```

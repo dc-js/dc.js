@@ -12,7 +12,7 @@ mention below which chart uses which filter.  In some cases, many instances of a
 **/
 
 /**
-#### dc.filters.rangedFilter(low, high)
+#### dc.filters.RangedFilter(low, high)
  RangedFilter is a filter which accepts keys between `low` and `high`.  It is used to implement X
  axis brushing for the [coordinate grid charts](#coordinate-grid-mixin).
 **/
@@ -26,7 +26,7 @@ export var rangedFilter = function (low, high) {
 };
 
 /**
-#### dc.filters.twoDimensionalFilter(array)
+#### dc.filters.TwoDimensionalFilter(array)
  TwoDimensionalFilter is a filter which accepts a single two-dimensional value.  It is used by the
  [heat map chart](#heat-map) to include particular cells as they are clicked.  (Rows and columns are
  filtered by filtering all the cells in the row or column.)
@@ -44,7 +44,7 @@ export var twoDimensionalFilter = function (array) {
 };
 
 /**
-#### dc.filters.rangedTwoDimensionalFilter(array)
+#### dc.filters.RangedTwoDimensionalFilter(array)
  The RangedTwoDimensionalFilter allows filtering all values which fit within a rectangular
  region. It is used by the [scatter plot](#scatter-plot) to implement rectangular brushing.
 
