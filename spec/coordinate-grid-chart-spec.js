@@ -676,7 +676,7 @@ describe('dc.coordinateGridChart', function() {
             chart.render();
             rangeChart.render();
 
-            spyOn(dc, "redrawAll");
+            spyOn(chart, "redrawGroup");
             spyOn(chart, "redraw");
             spyOn(rangeChart, "redraw");
         });
@@ -739,7 +739,7 @@ describe('dc.coordinateGridChart', function() {
 
                 it("should trigger redraw on other charts in group after a brief pause", function () {
                     jasmine.clock().tick(100);
-                    expect(dc.redrawAll).toHaveBeenCalledWith(chart.chartGroup());
+                    expect(chart.redrawGroup).toHaveBeenCalledWith();
                 });
             });
         }

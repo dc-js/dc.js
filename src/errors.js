@@ -9,5 +9,5 @@ export var Exception = function (msg) {
 };
 
 export var InvalidStateException = function () {
-    dc.errors.Exception.apply(this, arguments);
+    Exception.apply(this, arguments);
 };

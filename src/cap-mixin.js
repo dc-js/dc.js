@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import {override} from './core';
 
 /**
 ## Cap Mixin
@@ -110,7 +111,7 @@ var capMixin = function (_chart) {
         return _chart;
     };
 
-    dc.override(_chart, 'onClick', function (d) {
+    override(_chart, 'onClick', function (d) {
         if (d.others) {
             _chart.filter([d.others]);
         }

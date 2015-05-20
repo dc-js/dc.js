@@ -1,6 +1,7 @@
 import * as crossfilter from 'crossfilter';
 import * as d3 from 'd3';
 import trigger from './events';
+import {constants, instanceOfChart, deregisterChart, registerChart, redrawAll, renderAll} from './core';
 import {InvalidStateException} from './errors';
 import {debug, deprecate} from './logger';
 import {pluck, printers, utils} from './utils';
@@ -56,7 +57,7 @@ var baseMixin = function (_chart) {
 
     var _mandatoryAttributes = ['dimension', 'group'];
 
-    var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
+    var _chartGroup = constants.DEFAULT_CHART_GROUP;
 
     var _listeners = d3.dispatch(
         'preRender',
@@ -304,15 +305,15 @@ var baseMixin = function (_chart) {
         if (!arguments.length) {
             return _anchor;
         }
-        if (dc.instanceOfChart(a)) {
+        if (instanceOfChart(a)) {
             _anchor = a.anchor();
             _root = a.root();
             _isChild = true;
         } else {
             _anchor = a;
             _root = d3.select(_anchor);
-            _root.classed(dc.constants.CHART_CLASS, true);
-            dc.registerChart(_chart, chartGroup);
+            _root.classed(constants.CHART_CLASS, true);
+            registerChart(_chart, chartGroup);
             _isChild = false;
         }
         _chartGroup = chartGroup;
@@ -524,11 +525,11 @@ var baseMixin = function (_chart) {
     };
 
     _chart.redrawGroup = function () {
-        dc.redrawAll(_chart.chartGroup());
+        redrawAll(_chart.chartGroup());
     };
 
     _chart.renderGroup = function () {
-        dc.renderAll(_chart.chartGroup());
+        renderAll(_chart.chartGroup());
     };
 
     _chart._invokeFilteredListener = function (f) {
@@ -771,18 +772,18 @@ var baseMixin = function (_chart) {
     };
 
     _chart.highlightSelected = function (e) {
-        d3.select(e).classed(dc.constants.SELECTED_CLASS, true);
-        d3.select(e).classed(dc.constants.DESELECTED_CLASS, false);
+        d3.select(e).classed(constants.SELECTED_CLASS, true);
+        d3.select(e).classed(constants.DESELECTED_CLASS, false);
     };
 
     _chart.fadeDeselected = function (e) {
-        d3.select(e).classed(dc.constants.SELECTED_CLASS, false);
-        d3.select(e).classed(dc.constants.DESELECTED_CLASS, true);
+        d3.select(e).classed(constants.SELECTED_CLASS, false);
+        d3.select(e).classed(constants.DESELECTED_CLASS, true);
     };
 
     _chart.resetHighlight = function (e) {
-        d3.select(e).classed(dc.constants.SELECTED_CLASS, false);
-        d3.select(e).classed(dc.constants.DESELECTED_CLASS, false);
+        d3.select(e).classed(constants.SELECTED_CLASS, false);
+        d3.select(e).classed(constants.DESELECTED_CLASS, false);
     };
 
     /**
@@ -1019,11 +1020,11 @@ var baseMixin = function (_chart) {
             return _chartGroup;
         }
         if (!_isChild) {
-            dc.deregisterChart(_chart, _chartGroup);
+            deregisterChart(_chart, _chartGroup);
         }
         _chartGroup = _;
         if (!_isChild) {
-            dc.registerChart(_chart, _chartGroup);
+            registerChart(_chart, _chartGroup);
         }
         return _chart;
     };
