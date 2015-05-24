@@ -47,28 +47,27 @@ dc.inputFilter = function (parent, chartGroup) {
     var _applyFilter = function (){ dc.redrawAll(); };
     var _html = function() {return "<input class='form-control input-lg' placeholder='search'/>"};
     var _normalize = function (s) { return s.toLowerCase()};
+    var _filter = function(q) { 
+      _chart.dimension().filterFunction(function (d){return d.indexOf (q) !== -1;});
+    };
+    var _throttleDuration=200;
 
     _chart._doRender = function () {
       _chart.root().html(_html());
 
       _chart.root().selectAll("input").on("input", function() {
-        var q= _normalize(this.value);
-        _chart.dimension().filterFunction(function(d) {
-          return d.indexOf (q) !== -1;
-        });
-        throttle();
-//        dc.redrawAll();
-
+        _filter(_normalize(this.value));
+        _throttle();
       });
       return _chart;
     };
 
     var throttleTimer;
-    function throttle() {
+    function _throttle() {
       window.clearTimeout(throttleTimer);
       throttleTimer = window.setTimeout(function() {
           dc.redrawAll();
-      }, 200);
+      }, _throttleDuration);
     }
 
     _chart._doRedraw = function () {
@@ -94,6 +93,21 @@ dc.inputFilter = function (parent, chartGroup) {
         return _chart;
     };
 
+    _chart.filter = function (s) {
+        if (!arguments.length) {
+            return _filter;
+        }
+        _filter = s;
+        return _chart;
+    };
+
+    _chart.throttle = function (s) {
+        if (!arguments.length) {
+            return _throttleDuration;
+        }
+        _throttleDuration = s;
+        return _chart;
+    };
 
     return _chart.anchor(parent, chartGroup);
 };
