@@ -1,4 +1,8 @@
 # 2.0 Series
+## 2.0.0 beta 10
+ * added infrastructure for testing transitions by eye
+ * added area and stacked bar examples ([#777](https://github.com/dc-js/dc.js/issues/#777))
+
 ## 2.0.0 beta 9
  * propagate elasticX to child charts so that domain can be calculated correctly ([#926](https://github.com/dc-js/dc.js/issues/926))
 

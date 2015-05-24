@@ -1,8 +1,5 @@
 module.exports = function (grunt) {
     return function (list, opts) {
-        grunt.log.writeln(arguments[0]);
-        grunt.log.writeln(JSON.stringify(arguments[1]));
-        grunt.log.writeln(arguments[2]);
         var files = list.sort().map(function (entry) {
             var f = entry.replace(/.*\//, '');
             return [f.replace('.html', '').replace(/-/g, ' '), f];

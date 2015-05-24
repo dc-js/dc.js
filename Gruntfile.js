@@ -245,6 +245,20 @@ module.exports = function (grunt) {
                 files: [
                     {dest: '<%= conf.web %>/examples/index.html', src: ['<%= conf.web %>/examples/*.html']}
                 ]
+            },
+            'transitions-listing': {
+                options: {
+                    format: formatFileList,
+                    absolute: true,
+                    title: 'Index of dc.js transition tests',
+                    heading: 'Eyeball tests for dc.js transitions',
+                    description: 'Transitions can only be tested by eye. ' +
+                        'These pages automate the transitions so they can be visually verified.',
+                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.web %>/transitions'
+                },
+                files: [
+                    {dest: '<%= conf.web %>/transitions/index.html', src: ['<%= conf.web %>/transitions/*.html']}
+                ]
             }
         },
 
