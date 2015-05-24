@@ -107,15 +107,15 @@ dc.pieChart = function (parent, chartGroup) {
         if (_g) {
             var slices = _g.select('g.' + _sliceGroupCssClass)
                 .selectAll('g.' + _sliceCssClass)
-                .data(pieData);
+                .data(pieData, function(d) { return _chart.cappedKeyAccessor(d.data); });
 
             var labels = _g.select('g.' + _labelGroupCssClass)
                 .selectAll('text.' + _labelCssClass)
-                .data(pieData);
+                    .data(pieData, function(d) { return _chart.cappedKeyAccessor(d.data); });
 
             createElements(slices, labels, arc, pieData);
 
-            updateElements(pieData, arc);
+            updateElements(slices, pieData, arc);
 
             removeElements(slices, labels);
 
@@ -146,7 +146,12 @@ dc.pieChart = function (parent, chartGroup) {
         return slicesEnter;
     }
 
-    function createSlicePath (slicesEnter, arc) {
+    function createSlicePath  (slicesEnter, arc) {
+        console.log('createSlicePath');
+        slicesEnter.each(function(d) {
+            console.log(_chart.cappedKeyAccessor(d.data));
+        });
+        console.log(slicesEnter.datum());
         var slicePath = slicesEnter.append('path')
             .attr('fill', fill)
             .on('click', onClick)
@@ -266,16 +271,14 @@ dc.pieChart = function (parent, chartGroup) {
 
     }
 
-    function updateElements (pieData, arc) {
-        updateSlicePaths(pieData, arc);
+    function updateElements (slices, pieData, arc) {
+        updateSlicePaths(slices, arc);
         updateLabels(pieData, arc);
         updateTitles(pieData);
     }
 
-    function updateSlicePaths (pieData, arc) {
-        var slicePaths = _g.selectAll('g.' + _sliceCssClass)
-            .data(pieData)
-            .select('path')
+    function updateSlicePaths(slices, arc) {
+        var slicePaths = slices.select('path')
             .attr('d', function (d, i) {
                 return safeArc(d, i, arc);
             });
@@ -289,7 +292,7 @@ dc.pieChart = function (parent, chartGroup) {
     function updateLabels (pieData, arc) {
         if (_chart.renderLabel()) {
             var labels = _g.selectAll('text.' + _labelCssClass)
-                .data(pieData);
+                .data(pieData, function(d) { return _chart.cappedKeyAccessor(d.data); });
             positionLabels(labels, arc);
             if (_externalLabelRadius && _drawPaths) {
                 updateLabelPaths(pieData, arc);
@@ -300,7 +303,7 @@ dc.pieChart = function (parent, chartGroup) {
     function updateTitles (pieData) {
         if (_chart.renderTitle()) {
             _g.selectAll('g.' + _sliceCssClass)
-                .data(pieData)
+                .data(pieData, function(d) { return _chart.cappedKeyAccessor(d.data); })
                 .select('title')
                 .text(function (d) {
                     return _chart.title()(d.data);
