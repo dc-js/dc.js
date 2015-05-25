@@ -48,7 +48,9 @@ dc.rowChart = function (parent, chartGroup) {
     var _chart = dc.capMixin(dc.marginMixin(dc.colorMixin(dc.baseMixin({}))));
 
     var _x;
+
     var _elasticX;
+
     var _xAxis = d3.svg.axis().orient('bottom');
     var _xAxisLabel;
     var _xAxisLabelPadding = 0;
@@ -59,7 +61,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     function calculateAxisScale() {
         if (!_x || _elasticX) {
-            var extent = d3.extent(_rowData, _chart.cappedValueAccessor);
+            var extent = [_chart.xAxisMin(), _chart.xAxisMax()];
             if (extent[0] > 0) {
                 extent[0] = 0;
             }
@@ -404,9 +406,7 @@ dc.rowChart = function (parent, chartGroup) {
     Calculates the minimum x value to display in the chart.
     **/
     _chart.xAxisMin = function () {
-        return d3.min(_chart.data(), function (e) {
-            return _chart.valueAccessor()(e);
-        });
+        return d3.min(_chart.data(), _chart.cappedValueAccessor);
     };
 
     /**
@@ -414,9 +414,7 @@ dc.rowChart = function (parent, chartGroup) {
     Calculates the maximum x value to display in the chart.
     **/
     _chart.xAxisMax = function () {
-        return d3.max(_chart.data(), function (e) {
-            return _chart.valueAccessor()(e);
-        });
+        return d3.max(_chart.data(), _chart.cappedValueAccessor);
     };
 
     /**
