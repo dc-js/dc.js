@@ -2,10 +2,10 @@
 ## input Filter Widget
 Includes: [Base Mixin](#base-mixin)
 
-The data count widget is a simple widget designed to display an input field allowing to filter the data
+The input filter data widget is a simple widget designed to display an input field allowing to filter the data
 that matches the text typed. 
 
-As opposed to the other graphs, this doesn't display any result and doesn't update its display, it's just to input
+As opposed to the other graphs, this doesn't display any result and doesn't update its display, it's just to input an filter other graphs
 
 Examples:
 
@@ -23,21 +23,16 @@ Returns:
 A newly created input widget instance
 #### .dimension(data) - **mandatory**
 
-#### .group(group) - **mandatory**
-For the widget, a reduceSum works ok
-
 ```js
-var data=[{"firstname":"John","lastname":"Coltrane"}{"fistname":"Miles",lastname:"Davis"] 
+var data=[{"firstname":"John","lastname":"Coltrane"}{"firstname":"Miles",lastname:"Davis"] 
 var ndx = crossfilter(data);
 var dimension = ndx.dimension(function(d) {
   return d.lastname.toLowerCase() + " "+ d.firstname.toLowerCase();
 });
 
-var group   = dimension.group().reduceSum(function(d) { return 1; });
-
 dc.inputFilter('.search')
-    .dimension(dimension)
-    .group(group); // optional, by default reduceSum
+    .dimension(dimension);
+    // you don't need the group() function
 ```
 
 **/
@@ -52,6 +47,8 @@ dc.inputFilter = function (parent, chartGroup) {
     var _throttleDuration=200;
     var _throttleTimer;
 
+    _chart.group(function (){throw "the group function on inputFilter should never be called, please report the issue"});
+
     _chart._doRender = function () {
       _chart.root().html(_html());
 
@@ -63,7 +60,7 @@ dc.inputFilter = function (parent, chartGroup) {
     };
 
     function _throttle() {
-      window.clearTimeout(throttleTimer);
+      window.clearTimeout(_throttleTimer);
       _throttleTimer = window.setTimeout(function() {
           dc.redrawAll();
       }, _throttleDuration);
