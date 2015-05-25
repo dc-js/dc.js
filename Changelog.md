@@ -1,5 +1,6 @@
 # 2.0 Series
 ## 2.0.0 beta 10
+ * component package manager support, by Shobhit Gupta ([#860](https://github.com/dc-js/dc.js/pull/860))
  * add sourcemaps (*.map) to distributions ([#866](https://github.com/dc-js/dc.js/issues/866))
  * allow `.options()` to take an array of arguments (for better angular-dc support), by Tim Ruhle ([#886](https://github.com/dc-js/dc.js/pull/886) / ([#769](https://github.com/dc-js/dc.js/issues/769))
  * make bower distro smaller, by Matt Traynham and Tim Ruhle ([#925](https://github.com/dc-js/dc.js/pull/925 / [#935](https://github.com/dc-js/dc.js/pull/935))
