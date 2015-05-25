@@ -61,7 +61,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     function calculateAxisScale() {
         if (!_x || _elasticX) {
-            var extent = [_chart.xAxisMin(), _chart.xAxisMax()];
+            var extent = d3.extent(_rowData, _chart.cappedValueAccessor);
             if (extent[0] > 0) {
                 extent[0] = 0;
             }
