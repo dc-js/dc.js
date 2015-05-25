@@ -1,6 +1,12 @@
 import {constants} from './core';
 
-export var dateFormat = d3.time.format('%m/%d/%Y');
+var _dateFormat = d3.time.format('%m/%d/%Y');
+export var dateFormat = function (_) {
+    if (!arguments.length) {
+        return _dateFormat;
+    }
+    _dateFormat = _;
+};
 
 export var pluck = function (n, f) {
     if (!f) {
@@ -15,7 +21,7 @@ utils.printSingleValue = function (filter) {
     var s = '' + filter;
 
     if (filter instanceof Date) {
-        s = dateFormat(filter);
+        s = _dateFormat(filter);
     } else if (typeof(filter) === 'string') {
         s = filter;
     } else if (utils.isFloat(filter)) {
