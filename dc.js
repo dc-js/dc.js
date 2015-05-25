@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-beta.9
+ *  dc 2.0.0-beta.10
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2015 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -20,7 +20,7 @@
 'use strict';
 
 /**
-#### Version 2.0.0-beta.9
+#### Version 2.0.0-beta.10
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -41,7 +41,7 @@ that are chainable d3 objects.)
 /*jshint -W062*/
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-beta.9',
+    version: '2.0.0-beta.10',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -1723,9 +1723,25 @@ dc.baseMixin = function (_chart) {
     ```
     **/
     _chart.options = function (opts) {
+        var applyOptions = [
+            'anchor',
+            'group',
+            'xAxisLabel',
+            'yAxisLabel',
+            'stack',
+            'title',
+            'point',
+            'getColor',
+            'overlayGeoJson'
+        ];
+
         for (var o in opts) {
             if (typeof(_chart[o]) === 'function') {
-                _chart[o].call(_chart, opts[o]);
+                if (opts[o] instanceof Array && applyOptions.indexOf(o) !== -1) {
+                    _chart[o].apply(_chart, opts[o]);
+                } else {
+                    _chart[o].call(_chart, opts[o]);
+                }
             } else {
                 dc.logger.debug('Not a valid option setter name: ' + o);
             }

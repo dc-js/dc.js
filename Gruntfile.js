@@ -5,6 +5,7 @@ module.exports = function (grunt) {
         pattern: ['grunt-*', '!grunt-lib-phantomjs', '!grunt-template-jasmine-istanbul']
     });
     require('time-grunt')(grunt);
+    var formatFileList = require('./grunt/format-file-list')(grunt);
 
     var config = {
         src: 'src',
@@ -50,7 +51,7 @@ module.exports = function (grunt) {
             },
             source: {
                 src: ['<%= conf.src %>/**/*.js', '!<%= conf.src %>/{banner,footer}.js', 'Gruntfile.js',
-                    '<%= conf.web %>/stock.js'],
+                    'grunt/*.js', '<%= conf.web %>/stock.js'],
                 options: {
                     config: '.jscsrc'
                 }
@@ -58,7 +59,7 @@ module.exports = function (grunt) {
         },
         jshint: {
             source: {
-                src: ['<%= conf.src %>/**/*.js', 'Gruntfile.js', '<%= conf.web %>/stock.js'],
+                src: ['<%= conf.src %>/**/*.js', 'Gruntfile.js', 'grunt/*.js', '<%= conf.web %>/stock.js'],
                 options: {
                     jshintrc: '.jshintrc',
                     ignores: ['<%= conf.src %>/banner.js', '<%= conf.src %>/footer.js']
@@ -234,41 +235,29 @@ module.exports = function (grunt) {
         fileindex: {
             'examples-listing': {
                 options: {
-                    format: function (list) {
-                        var examples = list.sort().map(function (entry) {
-                            return entry.replace(/.*examples\//, '');
-                        }).filter(function (e) { return e !== 'index.html'; });
-                        var rows = [];
-                        for (var i = 0; i < examples.length; i += 5) {
-                            var cols = [];
-                            for (var j = 0; j < 5; ++j) {
-                                if (i + j >= examples.length) {
-                                    break;
-                                }
-                                var fname = examples[i + j];
-                                cols.push('    <td><a href="' + fname + '">' + fname + '</a></td>');
-                            }
-                            rows.push('  <tr>\n' + cols.join('\n') + '\n<tr>');
-                        }
-                        var body = '<table class="table">\n' + rows.join('\n') + '\n</table>';
-                        return [
-                            '<html><head><title>Index of dc.js examples</title>',
-                            '<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css"></head>',
-                            '<body><div class="container">',
-                            '<h2>Examples of using dc.js</h2>',
-                            '<p>An attempt to present a simple example of each chart type.',
-                            '<a href="https://github.com/dc-js/dc.js/blob/master/CONTRIBUTING.md">',
-                            'Contributions welcome</a>.</p>',
-                            '<p>Source <a href="https://github.com/dc-js/dc.js/tree/master/<%= conf.web %>/examples">',
-                            'here</a>.</p>',
-                            body,
-                            '</div></body></html>'
-                        ].join('\n');
-                    },
-                    absolute: true
+                    format: formatFileList,
+                    absolute: true,
+                    title: 'Index of dc.js examples',
+                    heading: 'Examples of using dc.js',
+                    description: 'An attempt to present a simple example of each chart type.',
+                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.web %>/examples'
                 },
                 files: [
                     {dest: '<%= conf.web %>/examples/index.html', src: ['<%= conf.web %>/examples/*.html']}
+                ]
+            },
+            'transitions-listing': {
+                options: {
+                    format: formatFileList,
+                    absolute: true,
+                    title: 'Index of dc.js transition tests',
+                    heading: 'Eyeball tests for dc.js transitions',
+                    description: 'Transitions can only be tested by eye. ' +
+                        'These pages automate the transitions so they can be visually verified.',
+                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.web %>/transitions'
+                },
+                files: [
+                    {dest: '<%= conf.web %>/transitions/index.html', src: ['<%= conf.web %>/transitions/*.html']}
                 ]
             }
         },
@@ -370,7 +359,7 @@ module.exports = function (grunt) {
 
     // task aliases
     grunt.registerTask('build', ['concat', 'uglify']);
-    grunt.registerTask('docs', ['build', 'copy', 'emu', 'toc', 'markdown', 'docco']);
+    grunt.registerTask('docs', ['build', 'copy', 'emu', 'toc', 'markdown', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine']);
     grunt.registerTask('test', ['build', 'jasmine:specs', 'shell:hooks']);
