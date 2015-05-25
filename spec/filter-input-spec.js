@@ -30,10 +30,23 @@ describe('dc.inputFilter', function() {
             expect(dc.hasChart(chart)).toBeTruthy();
         });
         it('sets an input field', function() {
-            expect(chart.selectAll("input")[0].length.toEqual("1"));
+            expect(chart.selectAll("input")[0].length).toEqual("1");
+        });
+        it("doesn't filter by default", function() {
+            expect(chart.dimension().top(1000).length).toEqual("10");
         });
     });
 
+    describe('type to filter', function() {
+        beforeEach(function() {
+            chart.redraw();
+        });
+
+        it('filters when the user types', function() {
+            expect(chart.selectAll("input")[0].length).toEqual("1");
+        });
+
+    });
     describe('external filter', function() {
         beforeEach(function() {
             countryDimension.filter("CA");
