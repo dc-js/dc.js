@@ -1,17 +1,33 @@
 {
   "name": "dcjs",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.0-beta.9",
   "main": ["dc.js", "dc.css"],
+  "keywords": [
+    "visualization",
+    "svg",
+    "animation",
+    "canvas",
+    "chart",
+    "dimensional",
+    "crossfilter",
+    "d3"
+  ],
   "ignore": [
-    ".gitignore",
-    ".travis.yml",
-    "build.xml",
-    "globals.js",
+    "**/.*"
+    "AUTHORS",
+    "Changelog.md",
+    "CONTRIBUTING.md",
+    "Gruntfile.js",
     "index.js",
-    "make",
     "package.json",
-    "test",
-    "src"
+    "README.md",
+    "LICENSE_BANNER",
+    "docs",
+    "regression",
+    "scripts",
+    "spec",
+    "src",
+    "web"
   ],
   "dependencies": {
     "d3": "3.x",
