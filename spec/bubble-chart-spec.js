@@ -276,31 +276,6 @@ describe('dc.bubbleChart', function() {
         });
     });
 
-    describe('renderlet', function() {
-        var renderlet;
-
-        beforeEach(function () {
-            // spyOn doesn't seem to work with plain functions
-            renderlet = jasmine.createSpy('renderlet', function (chart) {
-                chart.selectAll("circle").attr("fill", "red");
-            });
-            renderlet.and.callThrough();
-            chart.renderlet(renderlet);
-        });
-
-        it('is invoked with render', function () {
-            chart.render();
-            expect(chart.selectAll("circle").attr("fill")).toBe("red");
-            expect(renderlet).toHaveBeenCalled();
-        });
-
-        it('is invoked with redraw', function () {
-            chart.render().redraw();
-            expect(chart.selectAll("circle").attr("fill")).toBe("red");
-            expect(renderlet.calls.count()).toEqual(2);
-        });
-    });
-
     describe('non-unique keys', function() {
         // plot all rows as (value, nvalue) - a common scatterplot scenario
         beforeEach(function() {

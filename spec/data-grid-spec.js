@@ -76,28 +76,7 @@ describe('dc.dataGrid', function() {
             expect(chart.selectAll(".dc-grid-item div")[0][1].innerHTML).toEqual('Ontario:55');
         });
     });
-
-    describe('renderlet', function() {
-        var derlet;
-        beforeEach(function() {
-            derlet = jasmine.createSpy('renderlet', function(chart) {
-                chart.selectAll(".dc-grid-label").text("changed");
-            });
-            derlet.and.callThrough();
-            chart.renderlet(derlet);
-        });
-        it('custom renderlet should be invoked with render', function() {
-            chart.render();
-            expect(chart.selectAll(".dc-grid-label").text()).toEqual("changed");
-            expect(derlet).toHaveBeenCalled();
-        });
-        it('custom renderlet should be invoked with redraw', function() {
-            chart.redraw();
-            expect(chart.selectAll(".dc-grid-label").text()).toEqual("changed");
-            expect(derlet).toHaveBeenCalled();
-        });
-    });
-
+    
     afterEach(function() {
         dimension.filterAll();
         countryDimension.filterAll();
