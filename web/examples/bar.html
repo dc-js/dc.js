@@ -33,7 +33,7 @@ d3.csv("morley.csv", function(error, experiments) {
     .yAxisLabel("This is the Y Axis!")
     .dimension(runDimension)
     .group(speedSumGroup)
-    .renderlet(function(chart) {
+    .on('renderlet', function(chart) {
         chart.selectAll('rect').on("click", function(d) {
             console.log("click!", d);
         });

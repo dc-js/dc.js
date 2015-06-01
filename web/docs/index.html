@@ -205,7 +205,7 @@ that are triggered repetitively due to user interaction such brush dragging migh
 and invoke more renders than can be executed in time. Using this function to wrap your event
 function allows the library to smooth out the rendering by throttling events and only responding to
 the most recent event.</p>
-<pre><code class="lang-js">chart.renderlet(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(chart)</span></span>{
+<pre><code class="lang-js">chart.on(<span class="hljs-string">'renderlet'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(chart)</span> </span>{
     <span class="hljs-comment">// smooth the rendering through event throttling</span>
     dc.events.trigger(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
         <span class="hljs-comment">// focus some other chart to the range selected by user on this chart</span>
@@ -769,7 +769,7 @@ will be exactly the chart body area minus the margins.  Default: 5</p>
 2 elements (<code>[start, end]</code>) defining a range in the x domain. If the range is not given or set
 to null, then the zoom will be reset. <em>For focus to work elasticX has to be turned off;
 otherwise focus will be ignored.</em></p>
-<pre><code class="lang-js">chart.renderlet(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(chart)</span></span>{
+<pre><code class="lang-js">chart.on(<span class="hljs-string">'renderlet'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(chart)</span> </span>{
     <span class="hljs-comment">// smooth the rendering through event throttling</span>
     dc.events.trigger(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
         <span class="hljs-comment">// focus some other chart to the range selected by user on this chart</span>

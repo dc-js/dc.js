@@ -479,7 +479,7 @@ d3.csv('ndx.csv', function (data) {
         // (optional) sort order, :default ascending
         .order(d3.ascending)
         // (optional) custom renderlet to post-process chart using D3
-        .renderlet(function (table) {
+        .on('renderlet', function (table) {
             table.selectAll('.dc-table-group').classed('info', true);
         });
 
