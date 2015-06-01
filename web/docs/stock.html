@@ -1209,7 +1209,7 @@ This code demonstrates generating the column header automatically based on the c
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .renderlet(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(table)</span> </span>{
+            <div class="content"><div class='highlight'><pre>        .on(<span class="hljs-string">'renderlet'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(table)</span> </span>{
             table.selectAll(<span class="hljs-string">'.dc-table-group'</span>).classed(<span class="hljs-string">'info'</span>, <span class="hljs-literal">true</span>);
         });
 

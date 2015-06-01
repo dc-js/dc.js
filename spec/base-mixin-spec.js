@@ -1,5 +1,5 @@
 describe("dc.baseMixin", function () {
-    var chart, dimension, group, addFilterHandler, removeFilterHandler, hasFilterHandler, resetFilterHandler;
+    var id, chart, dimension, group, addFilterHandler, removeFilterHandler, hasFilterHandler, resetFilterHandler;
 
     beforeEach(function () {
         var data = crossfilter(loadDateFixture());
@@ -14,8 +14,12 @@ describe("dc.baseMixin", function () {
             .options({
                 dimension: dimension,
                 group: group,
-                transitionDuration: 0
+                transitionDuration: 100
             });
+        id = 'base-chart';
+        appendChartID(id);
+        chart.anchor('#' + id)
+            .resetSvg(); // so that renderlets can fire
         addFilterHandler = chart.addFilterHandler();
         hasFilterHandler = chart.hasFilterHandler();
         removeFilterHandler = chart.removeFilterHandler();
@@ -24,7 +28,7 @@ describe("dc.baseMixin", function () {
 
     describe('renderlets', function () {
         var firstRenderlet, secondRenderlet, thirdRenderlet,
-            third = 'renderlet.third';
+            pretransition;
         beforeEach(function () {
             var expectedCallbackSignature = function (callbackChart) {
                 expect(callbackChart).toBe(chart);
@@ -32,43 +36,77 @@ describe("dc.baseMixin", function () {
             firstRenderlet = jasmine.createSpy().and.callFake(expectedCallbackSignature);
             secondRenderlet = jasmine.createSpy().and.callFake(expectedCallbackSignature);
             thirdRenderlet = jasmine.createSpy().and.callFake(expectedCallbackSignature);
-            chart.renderlet(firstRenderlet);
+            pretransition = jasmine.createSpy().and.callFake(expectedCallbackSignature);
+            chart.renderlet(firstRenderlet); // still testing renderlet event-namespace generation here
             chart.renderlet(secondRenderlet);
-            chart.on(third, thirdRenderlet);
+            chart.on('renderlet.third', thirdRenderlet);
+            chart.on('pretransition.pret', pretransition);
+        });
+
+        it('should not execute a renderlet until after the render transitions', function() {
+            chart.render();
+            expect(firstRenderlet).not.toHaveBeenCalled();
+            flushAllD3Transitions();
+            expect(firstRenderlet).toHaveBeenCalled();
+        });
+
+        it('should not execute a renderlet until after the redraw transitions', function() {
+            chart.redraw();
+            expect(firstRenderlet).not.toHaveBeenCalled();
+            flushAllD3Transitions();
+            expect(firstRenderlet).toHaveBeenCalled();
+        });
+
+        it('should execute pretransition event before the render transitions', function() {
+            chart.render();
+            expect(pretransition).toHaveBeenCalled();
+            flushAllD3Transitions();
+        });
+
+        it('should execute pretransition event before the redraw transitions', function() {
+            chart.redraw();
+            expect(pretransition).toHaveBeenCalled();
+            flushAllD3Transitions();
         });
 
         it('should execute each renderlet after a render', function () {
             chart.render();
+            flushAllD3Transitions();
             expect(firstRenderlet).toHaveBeenCalled();
             expect(secondRenderlet).toHaveBeenCalled();
         });
 
         it('should execute each renderlet after a redraw', function () {
             chart.redraw();
+            flushAllD3Transitions();
             expect(firstRenderlet).toHaveBeenCalled();
             expect(secondRenderlet).toHaveBeenCalled();
         });
 
         it('should execute a named renderlet after a render', function () {
             chart.render();
+            flushAllD3Transitions();
             expect(thirdRenderlet).toHaveBeenCalled();
         });
 
         it('should execute a named renderlet after a redraw', function () {
             chart.redraw();
+            flushAllD3Transitions();
             expect(thirdRenderlet).toHaveBeenCalled();
         });
 
         it('should remove a named renderlet expect no call after a redraw', function () {
-            chart.on(third);
+            chart.on('renderlet.third');
             chart.redraw();
+            flushAllD3Transitions();
             expect(secondRenderlet).toHaveBeenCalled();
             expect(thirdRenderlet).not.toHaveBeenCalled();
         });
 
         it('should remove a named renderlet and expect no call after a redraw', function () {
-            chart.on(third);
+            chart.on('renderlet.third');
             chart.render();
+            flushAllD3Transitions();
             expect(secondRenderlet).toHaveBeenCalled();
             expect(thirdRenderlet).not.toHaveBeenCalled();
         });
@@ -87,14 +125,17 @@ describe("dc.baseMixin", function () {
 
                 chart.on('preRender', preRenderSpy);
                 chart.on('postRender', postRenderSpy);
-                chart.render();
             });
 
             it('should execute the preRender callback', function () {
+                chart.render();
+                flushAllD3Transitions();
                 expect(preRenderSpy).toHaveBeenCalled();
             });
 
             it('should execute the postRender callback', function () {
+                chart.render();
+                flushAllD3Transitions();
                 expect(postRenderSpy).toHaveBeenCalled();
             });
         });
@@ -168,14 +209,18 @@ describe("dc.baseMixin", function () {
 
                 chart.on("preRedraw", preRedrawSpy);
                 chart.on("postRedraw", postRedrawSpy);
+            });
+
+            it('should execute the preRedraw callback before transitions', function () {
                 chart.redraw();
-            });
-
-            it('should execute the preRedraw callback', function () {
                 expect(preRedrawSpy).toHaveBeenCalled();
+                flushAllD3Transitions();
             });
 
-            it('should execute the postRedraw callback', function () {
+            it('should execute the postRedraw callback after transitions', function () {
+                chart.redraw();
+                expect(postRedrawSpy).not.toHaveBeenCalled();
+                flushAllD3Transitions();
                 expect(postRedrawSpy).toHaveBeenCalled();
             });
         });

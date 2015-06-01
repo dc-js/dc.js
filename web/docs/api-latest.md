@@ -112,7 +112,7 @@ function allows the library to smooth out the rendering by throttling events and
 the most recent event.
 
 ```js
-chart.renderlet(function(chart){
+chart.on('renderlet', function(chart) {
     // smooth the rendering through event throttling
     dc.events.trigger(function(){
         // focus some other chart to the range selected by user on this chart
@@ -492,15 +492,15 @@ given.
 #### .renderlet(renderletFunction)
 A renderlet is similar to an event listener on rendering event. Multiple renderlets can be added
 to an individual chart.  Each time a chart is rerendered or redrawn the renderlets are invoked
-right after the chart finishes its own drawing routine, giving you a way to modify the svg
+right after the chart finishes its transitions, giving you a way to modify the svg
 elements. Renderlet functions take the chart instance as the only input parameter and you can
 use the dc API or use raw d3 to achieve pretty much any effect.
 
 @Deprecated - Use [Listeners](#Listeners) with a 'renderlet' prefix
-Generates a random key for the renderlet, which makes it hard for removal.
+Generates a random key for the renderlet, which makes it hard to remove.
 ```js
-// renderlet function
-chart.renderlet(function(chart){
+// do this instead of .renderlet(function(chart) { ... })
+chart.on("renderlet", function(chart){
     // mix of dc API and d3 manipulation
     chart.select('g.y').style('display', 'none');
     // its a closure so you can also access other chart variable available in the closure scope
@@ -545,6 +545,9 @@ All dc chart instance supports the following listeners.
 #### .on('renderlet', function(chart, filter){...})
 This listener function will be invoked after transitions after redraw and render. Replaces the
 deprecated `.renderlet()` method.
+
+#### .on('pretransition', function(chart, filter){...})
+Like `.on('renderlet', ...)` but the event is fired before transitions start.
 
 #### .on('preRender', function(chart){...})
 This listener function will be invoked before chart rendering.
@@ -820,7 +823,7 @@ Zoom this chart to focus on the given range. The given range should be an array 
 to null, then the zoom will be reset. _For focus to work elasticX has to be turned off;
 otherwise focus will be ignored._
 ```js
-chart.renderlet(function(chart){
+chart.on('renderlet', function(chart) {
     // smooth the rendering through event throttling
     dc.events.trigger(function(){
         // focus some other chart to the range selected by user on this chart

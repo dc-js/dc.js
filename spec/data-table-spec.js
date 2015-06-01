@@ -87,7 +87,7 @@ describe('dc.dataTable', function() {
                 chart.selectAll("td.dc-table-label").text("changed");
             });
             derlet.and.callThrough();
-            chart.renderlet(derlet);
+            chart.on("renderlet", derlet);
         });
         it('custom renderlet should be invoked with render', function() {
             chart.render();

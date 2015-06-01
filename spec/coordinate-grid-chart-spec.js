@@ -117,7 +117,7 @@ describe('dc.coordinateGridChart', function() {
 
         describe('renderlets', function () {
             beforeEach(function () {
-                chart.renderlet(function (chart) {
+                chart.on("renderlet", function (chart) {
                     chart.selectAll("path").attr("fill", "red");
                 });
             });

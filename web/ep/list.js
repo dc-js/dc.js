@@ -37,7 +37,7 @@ function list (selector,path,data) {
   .dimension(group)
   .colors(d3.scale.category10())
   .group(groupGroup)
-  .renderlet(function (chart) {
+  .on('renderlet', function (chart) {
   });
 
  bar_country
@@ -95,7 +95,7 @@ function rotateBarChartLabels() {
             return d.last_name;
         })
         .order(d3.ascending)
-        .renderlet(function (table) {
+        .on('renderlet', function (table) {
         });
 
 

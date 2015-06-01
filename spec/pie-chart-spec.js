@@ -478,7 +478,7 @@ describe('dc.pieChart', function() {
         var chart;
         beforeEach(function() {
             chart = buildChart("chart-renderlet");
-            chart.renderlet(function() {
+            chart.on("renderlet", function() {
                 chart.selectAll("path").attr("fill", "red");
             });
         });

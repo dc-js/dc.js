@@ -1,6 +1,6 @@
 {
   "name": "dcjs",
-  "version": "2.0.0-beta.10",
+  "version": "2.1.0-dev",
   "main": ["dc.js", "dc.css"],
   "keywords": [
     "visualization",
