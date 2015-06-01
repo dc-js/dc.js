@@ -1,4 +1,8 @@
 # 2.0 Series
+## 2.0.0 beta 11
+ * pretransition event ([#806](https://github.com/dc-js/dc.js/issues/806))
+ * replace `.renderlet(...)` with `.on("renderlet", ...)` in test and examples, by Alan Kavanagh ([#906](https://github.com/dc-js/dc.js/issues/906) / ([#917](https://github.com/dc-js/dc.js/pull/917))
+ 
 ## 2.0.0 beta 10
  * component package manager support, by Shobhit Gupta ([#860](https://github.com/dc-js/dc.js/pull/860))
  * add sourcemaps (*.map) to distributions ([#866](https://github.com/dc-js/dc.js/issues/866))

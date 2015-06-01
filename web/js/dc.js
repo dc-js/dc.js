@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-beta.10
+ *  dc 2.0.0-beta.11
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2015 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -20,7 +20,7 @@
 'use strict';
 
 /**
-#### Version 2.0.0-beta.10
+#### Version 2.0.0-beta.11
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -41,7 +41,7 @@ that are chainable d3 objects.)
 /*jshint -W062*/
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-beta.10',
+    version: '2.0.0-beta.11',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -528,7 +528,7 @@ function allows the library to smooth out the rendering by throttling events and
 the most recent event.
 
 ```js
-    chart.renderlet(function(chart){
+    chart.on('renderlet', function(chart) {
         // smooth the rendering through event throttling
         dc.events.trigger(function(){
             // focus some other chart to the range selected by user on this chart
@@ -708,7 +708,8 @@ dc.baseMixin = function (_chart) {
         'postRedraw',
         'filtered',
         'zoomed',
-        'renderlet');
+        'renderlet',
+        'pretransition');
 
     var _legend;
 
@@ -1126,6 +1127,7 @@ dc.baseMixin = function (_chart) {
     };
 
     _chart._activateRenderlets = function (event) {
+        _listeners.pretransition(_chart);
         if (_chart.transitionDuration() > 0 && _svg) {
             _svg.transition().duration(_chart.transitionDuration())
                 .each('end', function () {
@@ -1630,15 +1632,15 @@ dc.baseMixin = function (_chart) {
     #### .renderlet(renderletFunction)
     A renderlet is similar to an event listener on rendering event. Multiple renderlets can be added
     to an individual chart.  Each time a chart is rerendered or redrawn the renderlets are invoked
-    right after the chart finishes its own drawing routine, giving you a way to modify the svg
+    right after the chart finishes its transitions, giving you a way to modify the svg
     elements. Renderlet functions take the chart instance as the only input parameter and you can
     use the dc API or use raw d3 to achieve pretty much any effect.
 
     @Deprecated - Use [Listeners](#Listeners) with a 'renderlet' prefix
-    Generates a random key for the renderlet, which makes it hard for removal.
+    Generates a random key for the renderlet, which makes it hard to remove.
     ```js
-    // renderlet function
-    chart.renderlet(function(chart){
+    // do this instead of .renderlet(function(chart) { ... })
+    chart.on("renderlet", function(chart){
         // mix of dc API and d3 manipulation
         chart.select('g.y').style('display', 'none');
         // its a closure so you can also access other chart variable available in the closure scope
@@ -1756,6 +1758,9 @@ dc.baseMixin = function (_chart) {
     #### .on('renderlet', function(chart, filter){...})
     This listener function will be invoked after transitions after redraw and render. Replaces the
     deprecated `.renderlet()` method.
+
+    #### .on('pretransition', function(chart, filter){...})
+    Like `.on('renderlet', ...)` but the event is fired before transitions start.
 
     #### .on('preRender', function(chart){...})
     This listener function will be invoked before chart rendering.
@@ -3026,7 +3031,7 @@ dc.coordinateGridMixin = function (_chart) {
     to null, then the zoom will be reset. _For focus to work elasticX has to be turned off;
     otherwise focus will be ignored._
     ```js
-    chart.renderlet(function(chart){
+    chart.on('renderlet', function(chart) {
         // smooth the rendering through event throttling
         dc.events.trigger(function(){
             // focus some other chart to the range selected by user on this chart

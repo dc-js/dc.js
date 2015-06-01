@@ -354,7 +354,7 @@ describe('dc.compositeChart', function() {
 
     describe('subchart renderlets', function () {
         beforeEach(function () {
-            chart.children()[0].renderlet(function(chart) {
+            chart.children()[0].on("renderlet", function(chart) {
                 chart.selectAll('rect.bar').attr('width', function(d) {
                     return 10;
                 });

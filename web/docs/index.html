@@ -142,7 +142,7 @@
 <li><a href="#heat-map">Heat Map</a></li>
 <li><a href="#box-plot">Box Plot</a></li>
 </ul>
-<h4 id="version-2-0-0-beta-10">Version 2.0.0-beta.10</h4>
+<h4 id="version-2-0-0-beta-11">Version 2.0.0-beta.11</h4>
 <p>The entire dc.js library is scoped under the <strong>dc</strong> name space. It does not introduce anything else
 into the global name space.</p>
 <h4 id="function-chaining">Function Chaining</h4>
@@ -205,7 +205,7 @@ that are triggered repetitively due to user interaction such brush dragging migh
 and invoke more renders than can be executed in time. Using this function to wrap your event
 function allows the library to smooth out the rendering by throttling events and only responding to
 the most recent event.</p>
-<pre><code class="lang-js">chart.renderlet(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(chart)</span></span>{
+<pre><code class="lang-js">chart.on(<span class="hljs-string">'renderlet'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(chart)</span> </span>{
     <span class="hljs-comment">// smooth the rendering through event throttling</span>
     dc.events.trigger(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
         <span class="hljs-comment">// focus some other chart to the range selected by user on this chart</span>
@@ -513,13 +513,13 @@ given.</p>
 <h4 id="-renderlet-renderletfunction-">.renderlet(renderletFunction)</h4>
 <p>A renderlet is similar to an event listener on rendering event. Multiple renderlets can be added
 to an individual chart.  Each time a chart is rerendered or redrawn the renderlets are invoked
-right after the chart finishes its own drawing routine, giving you a way to modify the svg
+right after the chart finishes its transitions, giving you a way to modify the svg
 elements. Renderlet functions take the chart instance as the only input parameter and you can
 use the dc API or use raw d3 to achieve pretty much any effect.</p>
 <p>@Deprecated - Use <a href="#Listeners">Listeners</a> with a ‘renderlet’ prefix
-Generates a random key for the renderlet, which makes it hard for removal.</p>
-<pre><code class="lang-js"><span class="hljs-comment">// renderlet function</span>
-chart.renderlet(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(chart)</span></span>{
+Generates a random key for the renderlet, which makes it hard to remove.</p>
+<pre><code class="lang-js"><span class="hljs-comment">// do this instead of .renderlet(function(chart) { ... })</span>
+chart.on(<span class="hljs-string">"renderlet"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(chart)</span></span>{
     <span class="hljs-comment">// mix of dc API and d3 manipulation</span>
     chart.select(<span class="hljs-string">'g.y'</span>).style(<span class="hljs-string">'display'</span>, <span class="hljs-string">'none'</span>);
     <span class="hljs-comment">// its a closure so you can also access other chart variable available in the closure scope</span>
@@ -552,6 +552,8 @@ the same name to be called with the value to set that attribute for the chart.</
 <h4 id="-on-renderlet-function-chart-filter-">.on(‘renderlet’, function(chart, filter){…})</h4>
 <p>This listener function will be invoked after transitions after redraw and render. Replaces the
 deprecated <code>.renderlet()</code> method.</p>
+<h4 id="-on-pretransition-function-chart-filter-">.on(‘pretransition’, function(chart, filter){…})</h4>
+<p>Like <code>.on(&#39;renderlet&#39;, ...)</code> but the event is fired before transitions start.</p>
 <h4 id="-on-prerender-function-chart-">.on(‘preRender’, function(chart){…})</h4>
 <p>This listener function will be invoked before chart rendering.</p>
 <h4 id="-on-postrender-function-chart-">.on(‘postRender’, function(chart){…})</h4>
@@ -769,7 +771,7 @@ will be exactly the chart body area minus the margins.  Default: 5</p>
 2 elements (<code>[start, end]</code>) defining a range in the x domain. If the range is not given or set
 to null, then the zoom will be reset. <em>For focus to work elasticX has to be turned off;
 otherwise focus will be ignored.</em></p>
-<pre><code class="lang-js">chart.renderlet(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(chart)</span></span>{
+<pre><code class="lang-js">chart.on(<span class="hljs-string">'renderlet'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(chart)</span> </span>{
     <span class="hljs-comment">// smooth the rendering through event throttling</span>
     dc.events.trigger(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span></span>{
         <span class="hljs-comment">// focus some other chart to the range selected by user on this chart</span>
