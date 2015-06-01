@@ -27,7 +27,8 @@ describe("dc.baseMixin", function () {
     });
 
     describe('renderlets', function () {
-        var firstRenderlet, secondRenderlet, thirdRenderlet;
+        var firstRenderlet, secondRenderlet, thirdRenderlet,
+            pretransition;
         beforeEach(function () {
             var expectedCallbackSignature = function (callbackChart) {
                 expect(callbackChart).toBe(chart);
@@ -35,9 +36,11 @@ describe("dc.baseMixin", function () {
             firstRenderlet = jasmine.createSpy().and.callFake(expectedCallbackSignature);
             secondRenderlet = jasmine.createSpy().and.callFake(expectedCallbackSignature);
             thirdRenderlet = jasmine.createSpy().and.callFake(expectedCallbackSignature);
+            pretransition = jasmine.createSpy().and.callFake(expectedCallbackSignature);
             chart.renderlet(firstRenderlet); // still testing renderlet event-namespace generation here
             chart.renderlet(secondRenderlet);
             chart.on('renderlet.third', thirdRenderlet);
+            chart.on('pretransition.pret', pretransition);
         });
 
         it('should not execute a renderlet until after the render transitions', function() {
@@ -52,6 +55,18 @@ describe("dc.baseMixin", function () {
             expect(firstRenderlet).not.toHaveBeenCalled();
             flushAllD3Transitions();
             expect(firstRenderlet).toHaveBeenCalled();
+        });
+
+        it('should execute pretransition event before the render transitions', function() {
+            chart.render();
+            expect(pretransition).toHaveBeenCalled();
+            flushAllD3Transitions();
+        });
+
+        it('should execute pretransition event before the redraw transitions', function() {
+            chart.redraw();
+            expect(pretransition).toHaveBeenCalled();
+            flushAllD3Transitions();
         });
 
         it('should execute each renderlet after a render', function () {

@@ -552,6 +552,8 @@ the same name to be called with the value to set that attribute for the chart.</
 <h4 id="-on-renderlet-function-chart-filter-">.on(‘renderlet’, function(chart, filter){…})</h4>
 <p>This listener function will be invoked after transitions after redraw and render. Replaces the
 deprecated <code>.renderlet()</code> method.</p>
+<h4 id="-on-pretransition-function-chart-filter-">.on(‘pretransition’, function(chart, filter){…})</h4>
+<p>Like <code>.on(&#39;renderlet&#39;, ...)</code> but the event is fired before transitions start.</p>
 <h4 id="-on-prerender-function-chart-">.on(‘preRender’, function(chart){…})</h4>
 <p>This listener function will be invoked before chart rendering.</p>
 <h4 id="-on-postrender-function-chart-">.on(‘postRender’, function(chart){…})</h4>

@@ -546,6 +546,9 @@ All dc chart instance supports the following listeners.
 This listener function will be invoked after transitions after redraw and render. Replaces the
 deprecated `.renderlet()` method.
 
+#### .on('pretransition', function(chart, filter){...})
+Like `.on('renderlet', ...)` but the event is fired before transitions start.
+
 #### .on('preRender', function(chart){...})
 This listener function will be invoked before chart rendering.
 

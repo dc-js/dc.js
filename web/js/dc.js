@@ -708,7 +708,8 @@ dc.baseMixin = function (_chart) {
         'postRedraw',
         'filtered',
         'zoomed',
-        'renderlet');
+        'renderlet',
+        'pretransition');
 
     var _legend;
 
@@ -1126,6 +1127,7 @@ dc.baseMixin = function (_chart) {
     };
 
     _chart._activateRenderlets = function (event) {
+        _listeners.pretransition(_chart);
         if (_chart.transitionDuration() > 0 && _svg) {
             _svg.transition().duration(_chart.transitionDuration())
                 .each('end', function () {
@@ -1756,6 +1758,9 @@ dc.baseMixin = function (_chart) {
     #### .on('renderlet', function(chart, filter){...})
     This listener function will be invoked after transitions after redraw and render. Replaces the
     deprecated `.renderlet()` method.
+
+    #### .on('pretransition', function(chart, filter){...})
+    Like `.on('renderlet', ...)` but the event is fired before transitions start.
 
     #### .on('preRender', function(chart){...})
     This listener function will be invoked before chart rendering.
