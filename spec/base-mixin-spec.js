@@ -32,8 +32,8 @@ describe("dc.baseMixin", function () {
             firstRenderlet = jasmine.createSpy().and.callFake(expectedCallbackSignature);
             secondRenderlet = jasmine.createSpy().and.callFake(expectedCallbackSignature);
             thirdRenderlet = jasmine.createSpy().and.callFake(expectedCallbackSignature);
-            chart.renderlet(firstRenderlet);
-            chart.renderlet(secondRenderlet);
+            chart.on("renderlet.firstRenderlet", firstRenderlet);
+            chart.on("renderlet.secondRenderlet", secondRenderlet);
             chart.on(third, thirdRenderlet);
         });
 

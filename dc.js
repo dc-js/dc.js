@@ -1630,15 +1630,15 @@ dc.baseMixin = function (_chart) {
     #### .renderlet(renderletFunction)
     A renderlet is similar to an event listener on rendering event. Multiple renderlets can be added
     to an individual chart.  Each time a chart is rerendered or redrawn the renderlets are invoked
-    right after the chart finishes its own drawing routine, giving you a way to modify the svg
+    right after the chart finishes its transitions, giving you a way to modify the svg
     elements. Renderlet functions take the chart instance as the only input parameter and you can
     use the dc API or use raw d3 to achieve pretty much any effect.
 
     @Deprecated - Use [Listeners](#Listeners) with a 'renderlet' prefix
-    Generates a random key for the renderlet, which makes it hard for removal.
+    Generates a random key for the renderlet, which makes it hard to remove.
     ```js
-    // renderlet function
-    chart.renderlet(function(chart){
+    // do this instead of .renderlet(function(chart) { ... })
+    chart.on("renderlet", function(chart){
         // mix of dc API and d3 manipulation
         chart.select('g.y').style('display', 'none');
         // its a closure so you can also access other chart variable available in the closure scope
