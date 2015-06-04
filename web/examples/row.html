@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>dc.js - Row Chart Example</title>
+    <title>dc.js - Bar Chart Example</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
@@ -11,6 +11,7 @@
 <div class="container">
 <script type="text/javascript" src="header.js"></script>
 <div id="test"></div>
+<div id="test2"></div>
 
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
@@ -18,6 +19,8 @@
 <script type="text/javascript">
 
 var chart = dc.rowChart("#test");
+var chart2 = dc.rowChart("#test2");
+
 d3.csv("morley.csv", function(error, experiments) {
 
   experiments.forEach(function(x) {
@@ -31,11 +34,20 @@ d3.csv("morley.csv", function(error, experiments) {
   chart
     .width(768)
     .height(480)
-    .x(d3.scale.linear().domain([6,20]))
-    .elasticX(true)
     .dimension(runDimension)
     .group(speedSumGroup)
-    .render();
+    .cap(10);
+
+    chart.render();
+
+  chart2
+    .width(768)
+    .height(480)
+    .dimension(runDimension)
+    .group(speedSumGroup)
+    .useRightYAxis(true);
+
+    chart2.render();
 });
 
 </script>

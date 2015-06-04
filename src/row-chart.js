@@ -48,6 +48,8 @@ dc.rowChart = function (parent, chartGroup) {
 
     var _rowData;
 
+    var _useRightYAxis = false;
+
     _chart.rowsCap = _chart.cap;
 
     function calculateAxisScale () {
@@ -59,8 +61,12 @@ dc.rowChart = function (parent, chartGroup) {
             if (extent[1] < 0) {
                 extent[1] = 0;
             }
-            _x = d3.scale.linear().domain(extent)
-                .range([0, _chart.effectiveWidth()]);
+            var domain = d3.scale.linear().domain(extent);
+            if (_useRightYAxis) {
+                _x = domain.range([_chart.effectiveWidth(), 0]);
+            } else {
+                _x = domain.range([0, _chart.effectiveWidth()]);
+            }
         }
         _xAxis.scale(_x);
     }
@@ -408,6 +414,19 @@ dc.rowChart = function (parent, chartGroup) {
             return _titleLabelOffsetX;
         }
         _titleLabelOffsetX = titleLabelOffsetX;
+        return _chart;
+    };
+
+    /**
+     #### .useRightYAxis()
+     Gets or sets whether the chart should be drawn with a right axis instead of a left axis.
+     **/
+
+    _chart.useRightYAxis = function (_) {
+        if (!arguments.length) {
+            return _useRightYAxis;
+        }
+        _useRightYAxis = _;
         return _chart;
     };
 
