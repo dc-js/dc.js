@@ -79,6 +79,65 @@ describe('dc.rowChart', function() {
         });
     });
 
+    describe('_useRightYAxis', function () {
+        beforeEach(function () {
+            chart.group(positiveGroupHolder.group);
+        });
+
+        describe('is false', function () {
+            beforeEach(function () {
+                chart.useRightYAxis(false);
+                chart.render();
+            });
+
+            describe('rows', function () {
+                it('should not translate', function () {
+                    expect(chart.selectAll('.row').attr('transform')).toBe('translate(0,10)');
+                });
+            });
+
+            describe('bars', function () {
+                it('should not translate', function () {
+                    expect(chart.selectAll('.row rect').attr('transform')).toBe('translate(0,0)');
+                });
+            });
+
+            describe('labels', function () {
+                it('should position the label by the end', function () {
+                    expect(chart.selectAll('.row text').attr('text-anchor')).toBe('start');
+                });
+            });
+        });
+
+        describe('is true', function () {
+            beforeEach(function () {
+                chart.useRightYAxis(true);
+                chart.render();
+            });
+
+            describe('rows', function () {
+                it('should translate to the width of the chart', function () {
+                    expect(chart.selectAll('.row').attr('transform')).toBe('translate(' + chart.effectiveWidth() + ',10)');
+                });
+            });
+
+            describe('bars', function () {
+                it('should translate to its own width', function () {
+                    var rect = chart.selectAll('.row rect');
+
+                    expect(rect.attr('transform')).toBe('translate(-' + rect[0][0].getBBox().width + ',0)');
+                });
+            });
+
+            describe('labels', function () {
+                it('should position the label by the end', function () {
+                    expect(chart.selectAll('.row text').attr('text-anchor')).toBe('end');
+                });
+            });
+        });
+
+    });
+
     function itShouldBehaveLikeARowChartWithGroup(groupHolder, N) {
         describe('for ' + groupHolder.groupType + ' data', function () {
             var group;
