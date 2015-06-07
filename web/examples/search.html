@@ -42,12 +42,11 @@ var data= [
 ];
   var ndx = crossfilter(data),
     dimension  = ndx.dimension(function(d) {return d.last_name.toLowerCase() + " "+ d.first_name.toLowerCase();});
-    group = dimension.group().reduceSum(function(d) { return 1; });
 
   var chart = dc.inputFilter ("#search")
     .dimension(dimension)
     .html("<input placeholder='search a musician' />")
-    .group(group);
+//    .group(function(d){console.log("never called")});
 
    var i=0;
    dc.dataTable(".dc-data-grid")

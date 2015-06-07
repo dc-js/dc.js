@@ -1,4 +1,5 @@
 describe('dc.inputFilter', function() {
+
     var id, chart, data;
     var dimension, group;
     var countryDimension;
@@ -30,62 +31,74 @@ describe('dc.inputFilter', function() {
             expect(dc.hasChart(chart)).toBeTruthy();
         });
         it('sets an input field', function() {
-            expect(chart.selectAll("input")[0].length).toEqual("1");
+            expect(chart.selectAll("input")[0].length).toEqual(1);
         });
         it("doesn't filter by default", function() {
-            expect(chart.dimension().top(1000).length).toEqual("10");
+            expect(chart.dimension().top(1000).length).toEqual(100);
         });
     });
 
-    describe('type to filter', function() {
+    describe('default accessor functions', function() {
+      it('exists for html()', function() {
+        var html = chart.html();
+        expect(typeof html).toBe("function");
+      });
+      it('exists for normalize()', function() {
+        var normalize = chart.normalize();
+        expect(typeof normalize).toBe("function");
+      });
+      it('exists for filterFunction()', function() {
+        var filterFunction = chart.filterFunction();
+        expect(typeof filterFunction).toBe("function");
+      });
+      it('exists for throttleDuration()', function() {
+        var throttleDuration = chart.throttle();
+        expect(typeof throttleDuration).toBe("number");
+        expect(throttleDuration).toBe(200);
+      });
+    });
+
+    describe('change the html search field', function() {
+        it('generates something', function() {
+            expect(chart).not.toBeNull();
+        });
+        it('registers', function() {
+            expect(dc.hasChart(chart)).toBeTruthy();
+        });
+        it('sets an input field', function() {
+            expect(chart.selectAll("input")[0].length).toEqual(1);
+        });
+        it("doesn't filter by default", function() {
+            expect(chart.dimension().top(1000).length).toEqual(100);
+        });
+    });
+
+    describe('filter when typing', function() {
+        var mockTyping = function (q) {
+          i=d3.select("input");
+          i[0][0].value=q;
+          i.on("input").call(i.node(),i.datum());
+        };
+
         beforeEach(function() {
             chart.redraw();
         });
 
-        it('filters when the user types', function() {
-            expect(chart.selectAll("input")[0].length).toEqual("1");
+        it("has a mock function that sets the value", function() {
+          mockTyping("42");
+          expect(chart.selectAll("input")[0][0].value),toEqual("42");
         });
 
-    });
-    describe('external filter', function() {
-        beforeEach(function() {
-            countryDimension.filter("CA");
-            chart.redraw();
+        it(' a letter that exists', function() {
+            mockTyping("C");
+            expect(chart.selectAll("input")[0].length).toEqual(1);
         });
-        it('renders only filtered data set', function() {
-            expect(chart.selectAll("td._0")[0].length).toEqual(2);
-        });
-        it('renders the correctly filtered records', function() {
-            expect(chart.selectAll("td._0")[0][0].innerHTML).toEqual('7');
-            expect(chart.selectAll("td._0")[0][1].innerHTML).toEqual('5');
-        });
-    });
 
-    describe('renderlet', function() {
-        var derlet;
-        beforeEach(function() {
-            derlet = jasmine.createSpy('renderlet', function(chart) {
-                chart.selectAll("td.dc-table-label").text("changed");
-            });
-            derlet.and.callThrough();
-            chart.renderlet(derlet);
-        });
-        it('custom renderlet should be invoked with render', function() {
-            chart.render();
-            expect(chart.selectAll("td.dc-table-label").text()).toEqual("changed");
-            expect(derlet).toHaveBeenCalled();
-        });
-        it('custom renderlet should be invoked with redraw', function() {
-            chart.redraw();
-            expect(chart.selectAll("td.dc-table-label").text()).toEqual("changed");
-            expect(derlet).toHaveBeenCalled();
-        });
     });
 
 
     afterEach(function() {
         dimension.filterAll();
-        countryDimension.filterAll();
     });
 });
 

@@ -97,7 +97,7 @@ dc.inputFilter = function (parent, chartGroup) {
         return _chart;
     };
 
-    _chart.throttle = function (s) {
+    _chart.throttleDuration = function (s) {
         if (!arguments.length) {
             return _throttleDuration;
         }
