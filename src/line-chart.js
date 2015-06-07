@@ -56,7 +56,8 @@ dc.lineChart = function (parent, chartGroup) {
             layersList = chartBody.append('g').attr('class', 'stack-list');
         }
 
-        var layers = layersList.selectAll('g.stack').data(_chart.data());
+        var data = _chart.data();
+        var layers = layersList.selectAll('g.stack').data(data, dc.pluck('name'));
 
         var layersEnter = layers
             .enter()
@@ -64,12 +65,13 @@ dc.lineChart = function (parent, chartGroup) {
             .attr('class', function (d, i) {
                 return 'stack ' + '_' + i;
             });
+        layers.exit().remove();
 
         drawLine(layersEnter, layers);
 
         drawArea(layersEnter, layers);
 
-        drawDots(chartBody, layers);
+        drawDots(chartBody, data);
 
         if (_chart.renderLabel()) {
             drawLabels(layers);
@@ -257,7 +259,7 @@ dc.lineChart = function (parent, chartGroup) {
         return (!d || d.indexOf('NaN') >= 0) ? 'M0,0' : d;
     }
 
-    function drawDots (chartBody, layers) {
+    function drawDots (chartBody, data) {
         if (!_chart.brushOn() && _chart.xyTipsOn()) {
             var tooltipListClass = TOOLTIP_G_CLASS + '-list';
             var tooltips = chartBody.select('g.' + tooltipListClass);
@@ -265,6 +267,12 @@ dc.lineChart = function (parent, chartGroup) {
             if (tooltips.empty()) {
                 tooltips = chartBody.append('g').attr('class', tooltipListClass);
             }
+            var layers = tooltips.selectAll('g.' + TOOLTIP_G_CLASS).data(data, dc.pluck('name'));
+
+            layers.enter().append('g').attr('class', function (_, layerIndex) {
+                return TOOLTIP_G_CLASS + ' _' + layerIndex;
+            });
+            layers.exit().remove();
 
             layers.each(function (d, layerIndex) {
                 var points = d.values;
@@ -272,10 +280,7 @@ dc.lineChart = function (parent, chartGroup) {
                     points = points.filter(_defined);
                 }
 
-                var g = tooltips.select('g.' + TOOLTIP_G_CLASS + '._' + layerIndex);
-                if (g.empty()) {
-                    g = tooltips.append('g').attr('class', TOOLTIP_G_CLASS + ' _' + layerIndex);
-                }
+                var g = d3.select(this);
 
                 createRefLines(g);
 
