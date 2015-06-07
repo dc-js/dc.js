@@ -61,8 +61,8 @@ dc.lineChart = function (parent, chartGroup) {
 
         var layersEnter = layers
             .enter()
-            .append('g')
-            .attr('class', function (d, i) {
+            .append('g');
+        layers.attr('class', function (d, i) { // renumber all
                 return 'stack ' + '_' + i;
             });
         layers.exit().remove();
@@ -317,7 +317,8 @@ dc.lineChart = function (parent, chartGroup) {
             }
             var layers = tooltips.selectAll('g.' + TOOLTIP_G_CLASS).data(data, dc.pluck('name'));
 
-            layers.enter().append('g').attr('class', function (_, layerIndex) {
+            layers.enter().append('g');
+            layers.attr('class', function (_, layerIndex) { // renumber all
                 return TOOLTIP_G_CLASS + ' _' + layerIndex;
             });
             layers.exit().remove();
