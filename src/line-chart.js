@@ -259,6 +259,54 @@ dc.lineChart = function (parent, chartGroup) {
         return (!d || d.indexOf('NaN') >= 0) ? 'M0,0' : d;
     }
 
+    function positionDots (dots) {
+        dots
+            .attr('cx', function (d) {
+                return dc.utils.safeNumber(_chart.x()(d.x));
+            })
+            .attr('cy', function (d) {
+                return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
+            })
+            .attr('fill', _chart.getColor);
+    }
+
+    function dotLayer (d, layerIndex) {
+        var points = d.values;
+        if (_defined) {
+            points = points.filter(_defined);
+        }
+
+        var g = d3.select(this);
+
+        createRefLines(g);
+
+        var dots = g.selectAll('circle.' + DOT_CIRCLE_CLASS)
+                .data(points, dc.pluck('x'));
+        dots.transition().duration(_chart.transitionDuration())
+            .call(positionDots);
+
+        dots.enter()
+            .append('circle')
+            .attr('class', DOT_CIRCLE_CLASS)
+            .attr('r', getDotRadius())
+            .style('fill-opacity', _dataPointFillOpacity)
+            .style('stroke-opacity', _dataPointStrokeOpacity)
+            .on('mousemove', function () {
+                var dot = d3.select(this);
+                showDot(dot);
+                showRefLines(dot, g);
+            })
+            .on('mouseout', function () {
+                var dot = d3.select(this);
+                hideDot(dot);
+                hideRefLines(g);
+            })
+            .call(positionDots);
+
+        dots.call(renderTitle, d.name);
+        dots.exit().remove();
+    }
+
     function drawDots (chartBody, data) {
         if (!_chart.brushOn() && _chart.xyTipsOn()) {
             var tooltipListClass = TOOLTIP_G_CLASS + '-list';
@@ -273,49 +321,7 @@ dc.lineChart = function (parent, chartGroup) {
                 return TOOLTIP_G_CLASS + ' _' + layerIndex;
             });
             layers.exit().remove();
-
-            layers.each(function (d, layerIndex) {
-                var points = d.values;
-                if (_defined) {
-                    points = points.filter(_defined);
-                }
-
-                var g = d3.select(this);
-
-                createRefLines(g);
-
-                var dots = g.selectAll('circle.' + DOT_CIRCLE_CLASS)
-                    .data(points, dc.pluck('x'));
-
-                dots.enter()
-                    .append('circle')
-                    .attr('class', DOT_CIRCLE_CLASS)
-                    .attr('r', getDotRadius())
-                    .style('fill-opacity', _dataPointFillOpacity)
-                    .style('stroke-opacity', _dataPointStrokeOpacity)
-                    .on('mousemove', function () {
-                        var dot = d3.select(this);
-                        showDot(dot);
-                        showRefLines(dot, g);
-                    })
-                    .on('mouseout', function () {
-                        var dot = d3.select(this);
-                        hideDot(dot);
-                        hideRefLines(g);
-                    });
-
-                dots
-                    .attr('cx', function (d) {
-                        return dc.utils.safeNumber(_chart.x()(d.x));
-                    })
-                    .attr('cy', function (d) {
-                        return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
-                    })
-                    .attr('fill', _chart.getColor)
-                    .call(renderTitle, d);
-
-                dots.exit().remove();
-            });
+            layers.each(dotLayer);
         }
     }
 
@@ -394,10 +400,10 @@ dc.lineChart = function (parent, chartGroup) {
         g.select('path.' + X_AXIS_REF_LINE_CLASS).style('display', 'none');
     }
 
-    function renderTitle (dot, d) {
+    function renderTitle (dot, layerName) {
         if (_chart.renderTitle()) {
             dot.selectAll('title').remove();
-            dot.append('title').text(dc.pluck('data', _chart.title(d.name)));
+            dot.append('title').text(dc.pluck('data', _chart.title(layerName)));
         }
     }
 
