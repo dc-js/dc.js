@@ -76,8 +76,8 @@ d3.csv('ndx.csv', function (data) {
             p.fluctuation += Math.abs(v.close - v.open);
             p.sumIndex += (v.open + v.close) / 2;
             p.avgIndex = p.sumIndex / p.count;
-            p.percentageGain = (p.absGain / p.avgIndex) * 100;
-            p.fluctuationPercentage = (p.fluctuation / p.avgIndex) * 100;
+            p.percentageGain = p.avgIndex ? (p.absGain / p.avgIndex) * 100 : 0;
+            p.fluctuationPercentage = p.avgIndex ? (p.fluctuation / p.avgIndex) * 100 : 0;
             return p;
         },
         /* callback for when data is removed from the current filter results */
@@ -86,9 +86,9 @@ d3.csv('ndx.csv', function (data) {
             p.absGain -= v.close - v.open;
             p.fluctuation -= Math.abs(v.close - v.open);
             p.sumIndex -= (v.open + v.close) / 2;
-            p.avgIndex = p.sumIndex / p.count;
-            p.percentageGain = (p.absGain / p.avgIndex) * 100;
-            p.fluctuationPercentage = (p.fluctuation / p.avgIndex) * 100;
+            p.avgIndex = p.count ? p.sumIndex / p.count : 0;
+            p.percentageGain = p.avgIndex ? (p.absGain / p.avgIndex) * 100 : 0;
+            p.fluctuationPercentage = p.avgIndex ? (p.fluctuation / p.avgIndex) * 100 : 0;
             return p;
         },
         /* initialize p */
@@ -479,7 +479,7 @@ d3.csv('ndx.csv', function (data) {
         // (optional) sort order, :default ascending
         .order(d3.ascending)
         // (optional) custom renderlet to post-process chart using D3
-        .renderlet(function (table) {
+        .on('renderlet', function (table) {
             table.selectAll('.dc-table-group').classed('info', true);
         });
 
@@ -583,6 +583,12 @@ d3.csv('ndx.csv', function (data) {
 
 });
 
-//#### Version
+//#### Versions
 //Determine the current version of dc with `dc.version`
 d3.selectAll('#version').text(dc.version);
+
+// Determine latest stable version in the repo via Github API
+d3.json('https://api.github.com/repos/dc-js/dc.js/releases/latest', function (error, latestRelease) {
+    /*jshint camelcase: false */
+    d3.selectAll('#latest').text(latestRelease.tag_name);
+});

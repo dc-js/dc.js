@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-beta.9
+ *  dc 2.1.0-dev
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2015 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -20,7 +20,7 @@
 'use strict';
 
 /**
-#### Version 2.0.0-beta.9
+#### Version 2.1.0-dev
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -41,7 +41,7 @@ that are chainable d3 objects.)
 /*jshint -W062*/
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-beta.9',
+    version: '2.1.0-dev',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -528,7 +528,7 @@ function allows the library to smooth out the rendering by throttling events and
 the most recent event.
 
 ```js
-    chart.renderlet(function(chart){
+    chart.on('renderlet', function(chart) {
         // smooth the rendering through event throttling
         dc.events.trigger(function(){
             // focus some other chart to the range selected by user on this chart
@@ -708,7 +708,8 @@ dc.baseMixin = function (_chart) {
         'postRedraw',
         'filtered',
         'zoomed',
-        'renderlet');
+        'renderlet',
+        'pretransition');
 
     var _legend;
 
@@ -1126,6 +1127,7 @@ dc.baseMixin = function (_chart) {
     };
 
     _chart._activateRenderlets = function (event) {
+        _listeners.pretransition(_chart);
         if (_chart.transitionDuration() > 0 && _svg) {
             _svg.transition().duration(_chart.transitionDuration())
                 .each('end', function () {
@@ -1630,15 +1632,15 @@ dc.baseMixin = function (_chart) {
     #### .renderlet(renderletFunction)
     A renderlet is similar to an event listener on rendering event. Multiple renderlets can be added
     to an individual chart.  Each time a chart is rerendered or redrawn the renderlets are invoked
-    right after the chart finishes its own drawing routine, giving you a way to modify the svg
+    right after the chart finishes its transitions, giving you a way to modify the svg
     elements. Renderlet functions take the chart instance as the only input parameter and you can
     use the dc API or use raw d3 to achieve pretty much any effect.
 
     @Deprecated - Use [Listeners](#Listeners) with a 'renderlet' prefix
-    Generates a random key for the renderlet, which makes it hard for removal.
+    Generates a random key for the renderlet, which makes it hard to remove.
     ```js
-    // renderlet function
-    chart.renderlet(function(chart){
+    // do this instead of .renderlet(function(chart) { ... })
+    chart.on("renderlet", function(chart){
         // mix of dc API and d3 manipulation
         chart.select('g.y').style('display', 'none');
         // its a closure so you can also access other chart variable available in the closure scope
@@ -1723,9 +1725,25 @@ dc.baseMixin = function (_chart) {
     ```
     **/
     _chart.options = function (opts) {
+        var applyOptions = [
+            'anchor',
+            'group',
+            'xAxisLabel',
+            'yAxisLabel',
+            'stack',
+            'title',
+            'point',
+            'getColor',
+            'overlayGeoJson'
+        ];
+
         for (var o in opts) {
             if (typeof(_chart[o]) === 'function') {
-                _chart[o].call(_chart, opts[o]);
+                if (opts[o] instanceof Array && applyOptions.indexOf(o) !== -1) {
+                    _chart[o].apply(_chart, opts[o]);
+                } else {
+                    _chart[o].call(_chart, opts[o]);
+                }
             } else {
                 dc.logger.debug('Not a valid option setter name: ' + o);
             }
@@ -1740,6 +1758,9 @@ dc.baseMixin = function (_chart) {
     #### .on('renderlet', function(chart, filter){...})
     This listener function will be invoked after transitions after redraw and render. Replaces the
     deprecated `.renderlet()` method.
+
+    #### .on('pretransition', function(chart, filter){...})
+    Like `.on('renderlet', ...)` but the event is fired before transitions start.
 
     #### .on('preRender', function(chart){...})
     This listener function will be invoked before chart rendering.
@@ -3010,7 +3031,7 @@ dc.coordinateGridMixin = function (_chart) {
     to null, then the zoom will be reset. _For focus to work elasticX has to be turned off;
     otherwise focus will be ignored._
     ```js
-    chart.renderlet(function(chart){
+    chart.on('renderlet', function(chart) {
         // smooth the rendering through event throttling
         dc.events.trigger(function(){
             // focus some other chart to the range selected by user on this chart
@@ -4530,6 +4551,7 @@ dc.lineChart = function (parent, chartGroup) {
     var _defined;
     var _dashStyle;
     var _xyTipsOn = true;
+    var _lastData;
 
     _chart.transitionDuration(500);
     _chart._rangeBandPadding(1);
@@ -4542,20 +4564,23 @@ dc.lineChart = function (parent, chartGroup) {
             layersList = chartBody.append('g').attr('class', 'stack-list');
         }
 
-        var layers = layersList.selectAll('g.stack').data(_chart.data());
+        var data = _chart.data();
+        var layers = layersList.selectAll('g.stack').data(data, dc.pluck('name'));
 
         var layersEnter = layers
             .enter()
-            .append('g')
-            .attr('class', function (d, i) {
+            .insert('g');
+        layers.attr('class', function (d, i) { // renumber all
                 return 'stack ' + '_' + i;
             });
+        layers.exit().remove();
 
-        drawLine(layersEnter, layers);
+        drawLine(data, layersEnter, layers);
 
-        drawArea(layersEnter, layers);
+        drawArea(data, layersEnter, layers);
 
-        drawDots(chartBody, layers);
+        drawDots(data, chartBody);
+        _lastData = data; //JSON.parse(JSON.stringify(data));
     };
 
     /**
@@ -4644,7 +4669,7 @@ dc.lineChart = function (parent, chartGroup) {
         return _chart.getColor.call(d, d.values, i);
     }
 
-    function drawLine(layersEnter, layers) {
+    function drawLine(data, layersEnter, layers) {
         var line = d3.svg.line()
             .x(function (d) {
                 return _chart.x()(d.x);
@@ -4660,7 +4685,29 @@ dc.lineChart = function (parent, chartGroup) {
 
         var path = layersEnter.append('path')
             .attr('class', 'line')
-            .attr('stroke', colors);
+            .attr('stroke', colors)
+            .attr('d', function (d, i) {
+                var values;
+                if (_lastData && i > 0) {
+                    var bname = data[i - 1].name;
+                    _lastData.forEach(function (dd, i) {
+                        if (dd.name === bname) {
+                            values = dd.values;
+                        }
+                    });
+                }
+                if (!values) {
+                    values = new Array(d.values.length);
+                    for (var j = 0; j < values.length; ++j) {
+                        values[j] = {
+                            x: d.values[j].x,
+                            y: 0,
+                            y0: 0
+                        };
+                    }
+                }
+                return safeD(line(values));
+            });
         if (_dashStyle) {
             path.attr('stroke-dasharray', _dashStyle);
         }
@@ -4673,7 +4720,7 @@ dc.lineChart = function (parent, chartGroup) {
             });
     }
 
-    function drawArea(layersEnter, layers) {
+    function drawArea(data, layersEnter, layers) {
         if (_renderArea) {
             var area = d3.svg.area()
                 .x(function (d) {
@@ -4694,8 +4741,35 @@ dc.lineChart = function (parent, chartGroup) {
             layersEnter.append('path')
                 .attr('class', 'area')
                 .attr('fill', colors)
-                .attr('d', function (d) {
-                    return safeD(area(d.values));
+                .attr('d', function (d, i) {
+                    var values;
+                    if (_lastData && i > 0) {
+                        var bname = data[i - 1].name;
+                        _lastData.forEach(function (dd, i) {
+                            if (dd.name === bname) {
+                                values = new Array(dd.values.length);
+                                for (var j = 0; j < values.length; ++j) {
+                                    var v = dd.values[j];
+                                    values[j] = {
+                                        x: v.x,
+                                        y: 0,
+                                        y0: v.y + v.y
+                                    };
+                                }
+                            }
+                        });
+                    }
+                    if (!values) {
+                        values = new Array(d.values.length);
+                        for (var j = 0; j < values.length; ++j) {
+                            values[j] = {
+                                x: d.values[j].x,
+                                y: 0,
+                                y0: 0
+                            };
+                        }
+                    }
+                    return safeD(area(values));
                 });
 
             dc.transition(layers.select('path.area'), _chart.transitionDuration())
@@ -4711,7 +4785,55 @@ dc.lineChart = function (parent, chartGroup) {
         return (!d || d.indexOf('NaN') >= 0) ? 'M0,0' : d;
     }
 
-    function drawDots(chartBody, layers) {
+    function positionDots(dots) {
+        dots
+            .attr('cx', function (d) {
+                return dc.utils.safeNumber(_chart.x()(d.x));
+            })
+            .attr('cy', function (d) {
+                return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
+            })
+            .attr('fill', _chart.getColor);
+    }
+
+    function dotLayer(d, layerIndex) {
+        var points = d.values;
+        if (_defined) {
+            points = points.filter(_defined);
+        }
+
+        var g = d3.select(this);
+
+        createRefLines(g);
+
+        var dots = g.selectAll('circle.' + DOT_CIRCLE_CLASS)
+                .data(points, dc.pluck('x'));
+        dc.transition(dots, _chart.transitionDuration())
+            .call(positionDots);
+
+        dots.enter()
+            .append('circle')
+            .attr('class', DOT_CIRCLE_CLASS)
+            .attr('r', getDotRadius())
+            .style('fill-opacity', _dataPointFillOpacity)
+            .style('stroke-opacity', _dataPointStrokeOpacity)
+            .on('mousemove', function () {
+                var dot = d3.select(this);
+                showDot(dot);
+                showRefLines(dot, g);
+            })
+            .on('mouseout', function () {
+                var dot = d3.select(this);
+                hideDot(dot);
+                hideRefLines(g);
+            })
+            .call(positionDots);
+
+        dots.call(renderTitle, d.name);
+        dots.exit().remove();
+    }
+
+    function drawDots(data, chartBody) {
         if (!_chart.brushOn() && _chart.xyTipsOn()) {
             var tooltipListClass = TOOLTIP_G_CLASS + '-list';
             var tooltips = chartBody.select('g.' + tooltipListClass);
@@ -4719,52 +4841,14 @@ dc.lineChart = function (parent, chartGroup) {
             if (tooltips.empty()) {
                 tooltips = chartBody.append('g').attr('class', tooltipListClass);
             }
+            var layers = tooltips.selectAll('g.' + TOOLTIP_G_CLASS).data(data, dc.pluck('name'));
 
-            layers.each(function (d, layerIndex) {
-                var points = d.values;
-                if (_defined) {
-                    points = points.filter(_defined);
-                }
-
-                var g = tooltips.select('g.' + TOOLTIP_G_CLASS + '._' + layerIndex);
-                if (g.empty()) {
-                    g = tooltips.append('g').attr('class', TOOLTIP_G_CLASS + ' _' + layerIndex);
-                }
-
-                createRefLines(g);
-
-                var dots = g.selectAll('circle.' + DOT_CIRCLE_CLASS)
-                    .data(points, dc.pluck('x'));
-
-                dots.enter()
-                    .append('circle')
-                    .attr('class', DOT_CIRCLE_CLASS)
-                    .attr('r', getDotRadius())
-                    .style('fill-opacity', _dataPointFillOpacity)
-                    .style('stroke-opacity', _dataPointStrokeOpacity)
-                    .on('mousemove', function () {
-                        var dot = d3.select(this);
-                        showDot(dot);
-                        showRefLines(dot, g);
-                    })
-                    .on('mouseout', function () {
-                        var dot = d3.select(this);
-                        hideDot(dot);
-                        hideRefLines(g);
-                    });
-
-                dots
-                    .attr('cx', function (d) {
-                        return dc.utils.safeNumber(_chart.x()(d.x));
-                    })
-                    .attr('cy', function (d) {
-                        return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
-                    })
-                    .attr('fill', _chart.getColor)
-                    .call(renderTitle, d);
-
-                dots.exit().remove();
+            layers.enter().insert('g');
+            layers.attr('class', function (_, layerIndex) { // renumber all
+                return TOOLTIP_G_CLASS + ' _' + layerIndex;
             });
+            layers.exit().remove();
+            layers.each(dotLayer);
         }
     }
 
@@ -4810,10 +4894,10 @@ dc.lineChart = function (parent, chartGroup) {
         g.select('path.' + X_AXIS_REF_LINE_CLASS).style('display', 'none');
     }
 
-    function renderTitle(dot, d) {
+    function renderTitle(dot, layerName) {
         if (_chart.renderTitle()) {
             dot.selectAll('title').remove();
-            dot.append('title').text(dc.pluck('data', _chart.title(d.name)));
+            dot.append('title').text(dc.pluck('data', _chart.title(layerName)));
         }
     }
 
@@ -7858,6 +7942,11 @@ dc.heatMap = function (parent, chartGroup) {
 
     var _cols;
     var _rows;
+    var _colOrdering = d3.ascending;
+    var _rowOrdering = d3.ascending;
+    var _colScale = d3.scale.ordinal();
+    var _rowScale = d3.scale.ordinal();
+
     var _xBorderRadius = DEFAULT_BORDER_RADIUS;
     var _yBorderRadius = DEFAULT_BORDER_RADIUS;
 
@@ -7945,47 +8034,55 @@ dc.heatMap = function (parent, chartGroup) {
         return _chart._filter(dc.filters.TwoDimensionalFilter(filter));
     });
 
-    function uniq(d, i, a) {
-        return !i || a[i - 1] !== d;
-    }
-
     /**
      #### .rows([values])
      Gets or sets the values used to create the rows of the heatmap, as an array. By default, all
-     the values will be fetched from the data using the value accessor, and they will be sorted in
-     ascending order.
+     the values will be fetched from the data using the value accessor.
      **/
 
     _chart.rows = function (_) {
-        if (arguments.length) {
-            _rows = _;
-            return _chart;
-        }
-        if (_rows) {
+        if (!arguments.length) {
             return _rows;
         }
-        var rowValues = _chart.data().map(_chart.valueAccessor());
-        rowValues.sort(d3.ascending);
-        return d3.scale.ordinal().domain(rowValues.filter(uniq));
+        _rows = _;
+        return _chart;
+    };
+
+    /**
+     #### .rowOrdering([orderFunction])
+     Get or set an accessor to order the rows.  Default is d3.ascending.
+     */
+    _chart.rowOrdering = function (_) {
+        if (!arguments.length) {
+            return _rowOrdering;
+        }
+        _rowOrdering = _;
+        return _chart;
     };
 
     /**
      #### .cols([keys])
      Gets or sets the keys used to create the columns of the heatmap, as an array. By default, all
-     the values will be fetched from the data using the key accessor, and they will be sorted in
-     ascending order.
+     the values will be fetched from the data using the key accessor.
      **/
     _chart.cols = function (_) {
-        if (arguments.length) {
-            _cols = _;
-            return _chart;
-        }
-        if (_cols) {
+        if (!arguments.length) {
             return _cols;
         }
-        var colValues = _chart.data().map(_chart.keyAccessor());
-        colValues.sort(d3.ascending);
-        return d3.scale.ordinal().domain(colValues.filter(uniq));
+        _cols = _;
+        return _chart;
+    };
+
+    /**
+     #### .colOrdering([orderFunction])
+     Get or set an accessor to order the cols.  Default is ascending.
+     */
+    _chart.colOrdering = function (_) {
+        if (!arguments.length) {
+            return _colOrdering;
+        }
+        _colOrdering = _;
+        return _chart;
     };
 
     _chart._doRender = function () {
@@ -8000,9 +8097,19 @@ dc.heatMap = function (parent, chartGroup) {
     };
 
     _chart._doRedraw = function () {
-        var rows = _chart.rows(),
-            cols = _chart.cols(),
-            rowCount = rows.domain().length,
+        var data = _chart.data(),
+            rows = _chart.rows() || data.map(_chart.valueAccessor()),
+            cols = _chart.cols() || data.map(_chart.keyAccessor());
+        if (_rowOrdering) {
+            rows = rows.sort(_rowOrdering);
+        }
+        if (_colOrdering) {
+            cols = cols.sort(_colOrdering);
+        }
+        rows = _rowScale.domain(rows);
+        cols = _colScale.domain(cols);
+
+        var rowCount = rows.domain().length,
             colCount = cols.domain().length,
             boxWidth = Math.floor(_chart.effectiveWidth() / colCount),
             boxHeight = Math.floor(_chart.effectiveHeight() / rowCount);
