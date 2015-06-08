@@ -44,6 +44,7 @@ dc.lineChart = function (parent, chartGroup) {
     var _defined;
     var _dashStyle;
     var _xyTipsOn = true;
+    var _lastData;
 
     _chart.transitionDuration(500);
     _chart._rangeBandPadding(1);
@@ -67,11 +68,12 @@ dc.lineChart = function (parent, chartGroup) {
             });
         layers.exit().remove();
 
-        drawLine(layersEnter, layers);
+        drawLine(data, layersEnter, layers);
 
-        drawArea(layersEnter, layers);
+        drawArea(data, layersEnter, layers);
 
-        drawDots(chartBody, data);
+        drawDots(data, chartBody);
+        _lastData = data; //JSON.parse(JSON.stringify(data));
 
         if (_chart.renderLabel()) {
             drawLabels(layers);
@@ -192,7 +194,7 @@ dc.lineChart = function (parent, chartGroup) {
         return _chart.getColor.call(d, d.values, i);
     }
 
-    function drawLine (layersEnter, layers) {
+    function drawLine (data, layersEnter, layers) {
         var line = d3.svg.line()
             .x(function (d) {
                 return _chart.x()(d.x);
@@ -208,7 +210,29 @@ dc.lineChart = function (parent, chartGroup) {
 
         var path = layersEnter.append('path')
             .attr('class', 'line')
-            .attr('stroke', colors);
+            .attr('stroke', colors)
+            .attr('d', function (d, i) {
+                var values;
+                if (_lastData && i > 0) {
+                    var bname = data[i - 1].name;
+                    _lastData.forEach(function (dd, i) {
+                        if (dd.name === bname) {
+                            values = dd.values;
+                        }
+                    });
+                }
+                if (!values) {
+                    values = new Array(d.values.length);
+                    for (var j = 0; j < values.length; ++j) {
+                        values[j] = {
+                            x: d.values[j].x,
+                            y: 0,
+                            y0: 0
+                        };
+                    }
+                }
+                return safeD(line(values));
+            });
         if (_dashStyle) {
             path.attr('stroke-dasharray', _dashStyle);
         }
@@ -221,7 +245,7 @@ dc.lineChart = function (parent, chartGroup) {
             });
     }
 
-    function drawArea (layersEnter, layers) {
+    function drawArea (data, layersEnter, layers) {
         if (_renderArea) {
             var area = d3.svg.area()
                 .x(function (d) {
@@ -242,8 +266,35 @@ dc.lineChart = function (parent, chartGroup) {
             layersEnter.append('path')
                 .attr('class', 'area')
                 .attr('fill', colors)
-                .attr('d', function (d) {
-                    return safeD(area(d.values));
+                .attr('d', function (d, i) {
+                    var values;
+                    if (_lastData && i > 0) {
+                        var bname = data[i - 1].name;
+                        _lastData.forEach(function (dd, i) {
+                            if (dd.name === bname) {
+                                values = new Array(dd.values.length);
+                                for (var j = 0; j < values.length; ++j) {
+                                    var v = dd.values[j];
+                                    values[j] = {
+                                        x: v.x,
+                                        y: 0,
+                                        y0: v.y + v.y
+                                    };
+                                }
+                            }
+                        });
+                    }
+                    if (!values) {
+                        values = new Array(d.values.length);
+                        for (var j = 0; j < values.length; ++j) {
+                            values[j] = {
+                                x: d.values[j].x,
+                                y: 0,
+                                y0: 0
+                            };
+                        }
+                    }
+                    return safeD(area(values));
                 });
 
             dc.transition(layers.select('path.area'), _chart.transitionDuration())
@@ -282,7 +333,7 @@ dc.lineChart = function (parent, chartGroup) {
 
         var dots = g.selectAll('circle.' + DOT_CIRCLE_CLASS)
                 .data(points, dc.pluck('x'));
-        dots.transition().duration(_chart.transitionDuration())
+        dc.transition(dots, _chart.transitionDuration())
             .call(positionDots);
 
         dots.enter()
@@ -307,7 +358,7 @@ dc.lineChart = function (parent, chartGroup) {
         dots.exit().remove();
     }
 
-    function drawDots (chartBody, data) {
+    function drawDots (data, chartBody) {
         if (!_chart.brushOn() && _chart.xyTipsOn()) {
             var tooltipListClass = TOOLTIP_G_CLASS + '-list';
             var tooltips = chartBody.select('g.' + tooltipListClass);
