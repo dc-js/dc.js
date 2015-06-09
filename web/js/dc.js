@@ -2054,7 +2054,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _renderHorizontalGridLine = false;
     var _renderVerticalGridLine = false;
 
-    var _refocused = false;
+    var _refocused = false, _resizing = false;
     var _unitCount;
 
     var _zoomScale = [1, Infinity];
@@ -2075,8 +2075,15 @@ dc.coordinateGridMixin = function (_chart) {
 
     var _useRightYAxis = false;
 
+    /**
+    #### .rescale()
+    When changing the domain of the x or y scale, it is necessary to tell the chart to recalculate
+    and redraw the axes. (`.rescale()` is called automatically when the x or y scale is replaced
+    with `.x()` or `.y()`, and has no effect on elastic scales.)
+    **/
     _chart.rescale = function () {
         _unitCount = undefined;
+        _resizing = true;
     };
 
     /**
@@ -2200,6 +2207,7 @@ dc.coordinateGridMixin = function (_chart) {
         }
         _x = _;
         _xOriginalDomain = _x.domain();
+        _chart.rescale();
         return _chart;
     };
 
@@ -2354,7 +2362,12 @@ dc.coordinateGridMixin = function (_chart) {
         return groups.map(_chart.keyAccessor());
     };
 
-    function prepareXAxis(g) {
+    function compareDomains(d1, d2) {
+        return !d1 || !d2 || d1.length !== d2.length ||
+            d1.some(function (elem, i) { return elem.toString() !== d2[i]; });
+    }
+
+    function prepareXAxis(g, render) {
         if (!_chart.isOrdinal()) {
             if (_chart.elasticX()) {
                 _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
@@ -2368,7 +2381,7 @@ dc.coordinateGridMixin = function (_chart) {
 
         // has the domain changed?
         var xdom = _x.domain();
-        if (!_lastXDomain || xdom.some(function (elem, i) { return elem !== _lastXDomain[i]; })) {
+        if (render || compareDomains(_lastXDomain, xdom)) {
             _chart.rescale();
         }
         _lastXDomain = xdom;
@@ -2621,6 +2634,7 @@ dc.coordinateGridMixin = function (_chart) {
             return _y;
         }
         _y = _;
+        _chart.rescale();
         return _chart;
     };
 
@@ -2975,16 +2989,16 @@ dc.coordinateGridMixin = function (_chart) {
             _brushOn = false;
         }
 
-        prepareXAxis(_chart.g());
+        prepareXAxis(_chart.g(), render);
         _chart._prepareYAxis(_chart.g());
 
         _chart.plotData();
 
-        if (_chart.elasticX() || _refocused || render) {
+        if (_chart.elasticX() || _resizing || render) {
             _chart.renderXAxis(_chart.g());
         }
 
-        if (_chart.elasticY() || render) {
+        if (_chart.elasticY() || _resizing || render) {
             _chart.renderYAxis(_chart.g());
         }
 
@@ -2993,6 +3007,7 @@ dc.coordinateGridMixin = function (_chart) {
         } else {
             _chart.redrawBrush(_chart.g());
         }
+        _resizing = false;
     }
 
     function configureMouseZoom () {
