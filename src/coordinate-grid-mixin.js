@@ -387,7 +387,7 @@ dc.coordinateGridMixin = function (_chart) {
         return groups.map(_chart.keyAccessor());
     };
 
-    function prepareXAxis(g) {
+    function prepareXAxis(g, render) {
         if (!_chart.isOrdinal()) {
             if (_chart.elasticX()) {
                 _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
@@ -401,7 +401,8 @@ dc.coordinateGridMixin = function (_chart) {
 
         // has the domain changed?
         var xdom = _x.domain();
-        if (!_lastXDomain || xdom.some(function (elem, i) { return elem !== _lastXDomain[i]; })) {
+        if (render || !_lastXDomain || _lastXDomain.length !== xdom.length ||
+            xdom.some(function (elem, i) { return elem !== _lastXDomain[i]; })) {
             _chart.rescale();
         }
         _lastXDomain = xdom;
@@ -1009,7 +1010,7 @@ dc.coordinateGridMixin = function (_chart) {
             _brushOn = false;
         }
 
-        prepareXAxis(_chart.g());
+        prepareXAxis(_chart.g(), render);
         _chart._prepareYAxis(_chart.g());
 
         _chart.plotData();
