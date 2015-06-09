@@ -66,11 +66,11 @@ dc.lineChart = function (parent, chartGroup) {
         layers.attr('class', function (d, i) { // renumber all
                 return 'stack ' + '_' + i;
             });
-        layers.exit().remove();
+        var layersExit = layers.exit();
 
-        drawLine(data, layersEnter, layers);
-
-        drawArea(data, layersEnter, layers);
+        drawLine(data, layersEnter, layers, layersExit);
+        drawArea(data, layersEnter, layers, layersExit);
+        dc.transition(layersExit, _chart.transitionDuration()).remove();
 
         drawDots(data, chartBody);
         _lastData = data; //JSON.parse(JSON.stringify(data));
@@ -224,7 +224,7 @@ dc.lineChart = function (parent, chartGroup) {
         return values;
     }
 
-    function drawLine (data, layersEnter, layers) {
+    function drawLine (data, layersEnter, layers, layersExit) {
         var line = d3.svg.line()
             .x(function (d) {
                 return _chart.x()(d.x);
@@ -255,9 +255,24 @@ dc.lineChart = function (parent, chartGroup) {
             .attr('d', function (d) {
                 return safeD(line(d.values));
             });
+
+        dc.transition(layersExit.select('path.line'), _chart.transitionDuration())
+            .style('stroke-opacity', 0)
+            .attr('d', function (d, i) {
+                var values = otherLayerBelow(_lastData, data, i);
+                return safeD(line(values));
+            });
     }
 
-    function drawArea (data, layersEnter, layers) {
+    function flatArea(v) {
+        return {
+            x: v.x,
+            y: 0,
+            y0: v.y + v.y0
+        };
+    }
+
+    function drawArea (data, layersEnter, layers, layersExit) {
         if (_renderArea) {
             var area = d3.svg.area()
                 .x(function (d) {
@@ -279,13 +294,7 @@ dc.lineChart = function (parent, chartGroup) {
                 .attr('class', 'area')
                 .attr('fill', colors)
                 .attr('d', function (d, i) {
-                    var values = otherLayerBelow(data, _lastData, i, function (v) {
-                        return {
-                            x: v.x,
-                            y: 0,
-                            y0: v.y + v.y0
-                        };
-                    });
+                    var values = otherLayerBelow(data, _lastData, i, flatArea);
                     return safeD(area(values));
                 });
 
@@ -294,6 +303,12 @@ dc.lineChart = function (parent, chartGroup) {
                 .attr('fill', colors)
                 .attr('d', function (d) {
                     return safeD(area(d.values));
+                });
+
+            dc.transition(layersExit.select('path.area'), _chart.transitionDuration())
+                .attr('d', function (d, i) {
+                    var values = otherLayerBelow(_lastData, data, i, flatArea);
+                    return safeD(area(values));
                 });
         }
     }
@@ -345,7 +360,10 @@ dc.lineChart = function (parent, chartGroup) {
             .call(positionDots, points);
 
         dots.call(renderTitle, d.name);
-        dots.exit().remove();
+        dc.transition(dots.exit(), _chart.transitionDuration())
+            .style('fill-opacity', 0)
+            .style('stroke-opacity', 0)
+            .remove();
     }
 
     function drawDots (data, chartBody) {
@@ -356,16 +374,25 @@ dc.lineChart = function (parent, chartGroup) {
             if (tooltips.empty()) {
                 tooltips = chartBody.append('g').attr('class', tooltipListClass);
             }
-            var layers = tooltips.selectAll('g.' + TOOLTIP_G_CLASS).data(data, dc.pluck('name'));
+            var layers = tooltips.selectAll('g.' + TOOLTIP_G_CLASS)
+                    .data(data, dc.pluck('name'));
 
             layers.enter().insert('g');
             layers.attr('class', function (_, layerIndex) { // renumber all
                 return TOOLTIP_G_CLASS + ' _' + layerIndex;
             });
-            layers.exit().remove();
             layers.each(function (layer, i) {
                 dotLayer.call(this, layer, i, otherLayerBelow(data, _lastData, i));
             });
+            layers.exit().each(function (layer, i) {
+                dc.transition(d3.select(this).selectAll('circle.' + DOT_CIRCLE_CLASS),
+                              _chart.transitionDuration())
+                    .style('fill-opacity', 0)
+                    .style('stroke-opacity', 0)
+                    .call(positionDots, otherLayerBelow(_lastData, data, i));
+            });
+            dc.transition(layers.exit(), _chart.transitionDuration())
+                .remove();
         }
     }
 
