@@ -302,18 +302,17 @@ dc.lineChart = function (parent, chartGroup) {
         return (!d || d.indexOf('NaN') >= 0) ? 'M0,0' : d;
     }
 
-    function positionDots (dots) {
-        dots
-            .attr('cx', function (d) {
-                return dc.utils.safeNumber(_chart.x()(d.x));
+    function positionDots (dots, points) {
+        dots.attr('cx', function (d, i) {
+                return dc.utils.safeNumber(_chart.x()(points[i].x));
             })
-            .attr('cy', function (d) {
-                return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
+            .attr('cy', function (d, i) {
+                return dc.utils.safeNumber(_chart.y()(points[i].y + points[i].y0));
             })
             .attr('fill', _chart.getColor);
     }
 
-    function dotLayer (d, layerIndex) {
+    function dotLayer (d, layerIndex, lastLayer) {
         var points = d.values;
         if (_defined) {
             points = points.filter(_defined);
@@ -325,9 +324,6 @@ dc.lineChart = function (parent, chartGroup) {
 
         var dots = g.selectAll('circle.' + DOT_CIRCLE_CLASS)
                 .data(points, dc.pluck('x'));
-        dc.transition(dots, _chart.transitionDuration())
-            .call(positionDots);
-
         dots.enter()
             .append('circle')
             .attr('class', DOT_CIRCLE_CLASS)
@@ -344,7 +340,9 @@ dc.lineChart = function (parent, chartGroup) {
                 hideDot(dot);
                 hideRefLines(g);
             })
-            .call(positionDots);
+            .call(positionDots, lastLayer);
+        dc.transition(dots, _chart.transitionDuration())
+            .call(positionDots, points);
 
         dots.call(renderTitle, d.name);
         dots.exit().remove();
@@ -365,7 +363,9 @@ dc.lineChart = function (parent, chartGroup) {
                 return TOOLTIP_G_CLASS + ' _' + layerIndex;
             });
             layers.exit().remove();
-            layers.each(dotLayer);
+            layers.each(function (layer, i) {
+                dotLayer.call(this, layer, i, readLastLayerBelow(data, i));
+            });
         }
     }
 
