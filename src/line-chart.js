@@ -278,7 +278,7 @@ dc.lineChart = function (parent, chartGroup) {
                                     values[j] = {
                                         x: v.x,
                                         y: 0,
-                                        y0: v.y + v.y
+                                        y0: v.y + v.y0
                                     };
                                 }
                             }
