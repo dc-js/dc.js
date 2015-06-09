@@ -387,6 +387,11 @@ dc.coordinateGridMixin = function (_chart) {
         return groups.map(_chart.keyAccessor());
     };
 
+    function compareDomains(d1, d2) {
+        return !d1 || !d2 || d1.length !== d2.length ||
+            d1.some(function (elem, i) { return elem.toString() !== d2[i]; });
+    }
+
     function prepareXAxis(g, render) {
         if (!_chart.isOrdinal()) {
             if (_chart.elasticX()) {
@@ -401,8 +406,7 @@ dc.coordinateGridMixin = function (_chart) {
 
         // has the domain changed?
         var xdom = _x.domain();
-        if (render || !_lastXDomain || _lastXDomain.length !== xdom.length ||
-            xdom.some(function (elem, i) { return elem !== _lastXDomain[i]; })) {
+        if (render || compareDomains(_lastXDomain, xdom)) {
             _chart.rescale();
         }
         _lastXDomain = xdom;

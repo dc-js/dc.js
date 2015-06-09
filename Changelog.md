@@ -1,6 +1,7 @@
 # 2.0 Series
 ## 2.0.0 beta 12
  * axes should rescale on chart rescale (not just on zoom). ([#791](https://github.com/dc-js/dc.js/issues/791))
+ * always rescale x axis on render, and detect domain change more thoroughly, by Matt Traynham (
 
 ## 2.0.0 beta 11
  * pretransition event ([#806](https://github.com/dc-js/dc.js/issues/806))
