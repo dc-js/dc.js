@@ -194,14 +194,14 @@ dc.lineChart = function (parent, chartGroup) {
         return _chart.getColor.call(d, d.values, i);
     }
 
-    function readLastLayerBelow (data, index, transform) {
+    function otherLayerBelow (curr, other, index, transform) {
         var values;
         if (!transform) {
             transform = function (v) { return v; };
         }
-        if (_lastData && index > 0) {
-            var bname = data[index - 1].name;
-            _lastData.forEach(function (dd, i) {
+        if (other && index > 0) {
+            var bname = curr[index - 1].name;
+            other.forEach(function (dd, i) {
                 if (dd.name === bname) {
                     values = new Array(dd.values.length);
                     for (var j = 0; j < values.length; ++j) {
@@ -211,7 +211,7 @@ dc.lineChart = function (parent, chartGroup) {
             });
         }
         if (!values) {
-            var d = data[index];
+            var d = curr[index];
             values = new Array(d.values.length);
             for (var j = 0; j < values.length; ++j) {
                 values[j] = {
@@ -242,7 +242,7 @@ dc.lineChart = function (parent, chartGroup) {
             .attr('class', 'line')
             .attr('stroke', colors)
             .attr('d', function (d, i) {
-                var values = readLastLayerBelow(data, i);
+                var values = otherLayerBelow(data, _lastData, i);
                 return safeD(line(values));
             });
         if (_dashStyle) {
@@ -279,7 +279,7 @@ dc.lineChart = function (parent, chartGroup) {
                 .attr('class', 'area')
                 .attr('fill', colors)
                 .attr('d', function (d, i) {
-                    var values = readLastLayerBelow(data, i, function (v) {
+                    var values = otherLayerBelow(data, _lastData, i, function (v) {
                         return {
                             x: v.x,
                             y: 0,
@@ -364,7 +364,7 @@ dc.lineChart = function (parent, chartGroup) {
             });
             layers.exit().remove();
             layers.each(function (layer, i) {
-                dotLayer.call(this, layer, i, readLastLayerBelow(data, i));
+                dotLayer.call(this, layer, i, otherLayerBelow(data, _lastData, i));
             });
         }
     }
