@@ -194,6 +194,36 @@ dc.lineChart = function (parent, chartGroup) {
         return _chart.getColor.call(d, d.values, i);
     }
 
+    function readLastLayerBelow (data, index, transform) {
+        var values;
+        if (!transform) {
+            transform = function (v) { return v; };
+        }
+        if (_lastData && index > 0) {
+            var bname = data[index - 1].name;
+            _lastData.forEach(function (dd, i) {
+                if (dd.name === bname) {
+                    values = new Array(dd.values.length);
+                    for (var j = 0; j < values.length; ++j) {
+                        values[j] = transform(dd.values[j]);
+                    }
+                }
+            });
+        }
+        if (!values) {
+            var d = data[index];
+            values = new Array(d.values.length);
+            for (var j = 0; j < values.length; ++j) {
+                values[j] = {
+                    x: d.values[j].x,
+                    y: 0,
+                    y0: 0
+                };
+            }
+        }
+        return values;
+    }
+
     function drawLine (data, layersEnter, layers) {
         var line = d3.svg.line()
             .x(function (d) {
@@ -212,25 +242,7 @@ dc.lineChart = function (parent, chartGroup) {
             .attr('class', 'line')
             .attr('stroke', colors)
             .attr('d', function (d, i) {
-                var values;
-                if (_lastData && i > 0) {
-                    var bname = data[i - 1].name;
-                    _lastData.forEach(function (dd, i) {
-                        if (dd.name === bname) {
-                            values = dd.values;
-                        }
-                    });
-                }
-                if (!values) {
-                    values = new Array(d.values.length);
-                    for (var j = 0; j < values.length; ++j) {
-                        values[j] = {
-                            x: d.values[j].x,
-                            y: 0,
-                            y0: 0
-                        };
-                    }
-                }
+                var values = readLastLayerBelow(data, i);
                 return safeD(line(values));
             });
         if (_dashStyle) {
@@ -267,33 +279,13 @@ dc.lineChart = function (parent, chartGroup) {
                 .attr('class', 'area')
                 .attr('fill', colors)
                 .attr('d', function (d, i) {
-                    var values;
-                    if (_lastData && i > 0) {
-                        var bname = data[i - 1].name;
-                        _lastData.forEach(function (dd, i) {
-                            if (dd.name === bname) {
-                                values = new Array(dd.values.length);
-                                for (var j = 0; j < values.length; ++j) {
-                                    var v = dd.values[j];
-                                    values[j] = {
-                                        x: v.x,
-                                        y: 0,
-                                        y0: v.y + v.y0
-                                    };
-                                }
-                            }
-                        });
-                    }
-                    if (!values) {
-                        values = new Array(d.values.length);
-                        for (var j = 0; j < values.length; ++j) {
-                            values[j] = {
-                                x: d.values[j].x,
-                                y: 0,
-                                y0: 0
-                            };
-                        }
-                    }
+                    var values = readLastLayerBelow(data, i, function (v) {
+                        return {
+                            x: v.x,
+                            y: 0,
+                            y0: v.y + v.y0
+                        };
+                    });
                     return safeD(area(values));
                 });
 
