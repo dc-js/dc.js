@@ -241,6 +241,7 @@ dc.lineChart = function (parent, chartGroup) {
         var path = layersEnter.append('path')
             .attr('class', 'line')
             .attr('stroke', colors)
+            .style('stroke-opacity', 0)
             .attr('d', function (d, i) {
                 var values = otherLayerBelow(data, _lastData, i);
                 return safeD(line(values));
@@ -252,6 +253,7 @@ dc.lineChart = function (parent, chartGroup) {
         dc.transition(layers.select('path.line'), _chart.transitionDuration())
             //.ease('linear')
             .attr('stroke', colors)
+            .style('stroke-opacity', 1)
             .attr('d', function (d) {
                 return safeD(line(d.values));
             });
@@ -343,8 +345,8 @@ dc.lineChart = function (parent, chartGroup) {
             .append('circle')
             .attr('class', DOT_CIRCLE_CLASS)
             .attr('r', getDotRadius())
-            .style('fill-opacity', _dataPointFillOpacity)
-            .style('stroke-opacity', _dataPointStrokeOpacity)
+            .style('fill-opacity', 0)
+            .style('stroke-opacity', 0)
             .on('mousemove', function () {
                 var dot = d3.select(this);
                 showDot(dot);
@@ -357,6 +359,8 @@ dc.lineChart = function (parent, chartGroup) {
             })
             .call(positionDots, lastLayer);
         dc.transition(dots, _chart.transitionDuration())
+            .style('fill-opacity', _dataPointFillOpacity)
+            .style('stroke-opacity', _dataPointStrokeOpacity)
             .call(positionDots, points);
 
         dots.call(renderTitle, d.name);
