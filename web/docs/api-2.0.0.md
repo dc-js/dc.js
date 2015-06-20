@@ -948,6 +948,7 @@ by key.
 Examples:
 
 * [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+
 #### dc.pieChart(parent[, chartGroup])
 Create a pie chart instance and attaches it to the given parent element.
 
@@ -1002,6 +1003,7 @@ Examples:
 
 * [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 * [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
+
 #### dc.barChart(parent[, chartGroup])
 Create a bar chart instance and attach it to the given parent element.
 
@@ -1066,6 +1068,7 @@ Concrete line/area chart implementation.
 Examples:
 * [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 * [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
+
 #### dc.lineChart(parent[, chartGroup])
 Create a line chart instance and attach it to the given parent element.
 
@@ -1161,6 +1164,7 @@ will automatically update the text content of the following elements under the p
 Examples:
 
 * [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+
 #### dc.dataCount(parent[, chartGroup])
 Create a data count widget and attach it to the given parent element.
 
@@ -1217,6 +1221,7 @@ filtered) in a good old tabular fashion.
 
 Examples:
 * [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+
 #### dc.dataTable(parent[, chartGroup])
 Create a data table widget instance and attach it to the given parent element.
 
@@ -1407,6 +1412,7 @@ following dimensions:
 Examples:
 * [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 * [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
+
 #### dc.bubbleChart(parent[, chartGroup])
 Create a bubble chart instance and attach it to the given parent element.
 
@@ -1588,6 +1594,7 @@ example](http://bl.ocks.org/4060606).
 
 Examples:
 * [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
+
 #### dc.geoChoroplethChart(parent[, chartGroup])
 Create a choropleth chart instance and attach it to the given parent element.
 
@@ -1656,6 +1663,7 @@ and coloring.
 
 Examples:
 * [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
+
 #### dc.bubbleOverlay(parent[, chartGroup])
 Create a bubble overlay chart instance and attach it to the given parent element.
 
@@ -1857,6 +1865,7 @@ A display of a single numeric value.
 Examples:
 
 * [Test Example](http://dc-js.github.io/dc.js/examples/number.html)
+
 #### dc.numberDisplay(parent[, chartGroup])
 Create a Number Display instance and attach it to the given parent element.
 
