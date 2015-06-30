@@ -206,8 +206,8 @@ d3.csv('ndx.csv', function (data) {
         //
         //* `.colorAccessor` The returned value will be mapped to an internal scale to determine a fill color
         //* `.keyAccessor` Identifies the `X` value that will be applied against the `.x()` to identify pixel location
-        //* `.valueAccessor` Identifies the `Y` value that will be applied agains the `.y()` to identify pixel location
-        //* `.radiusValueAccessor` Identifies the value that will be applied agains the `.r()` determine radius size,
+        //* `.valueAccessor` Identifies the `Y` value that will be applied against the `.y()` to identify pixel location
+        //* `.radiusValueAccessor` Identifies the value that will be applied against the `.r()` to determine radius size,
         //*     by default this maps linearly to [0,100]
         .colorAccessor(function (d) {
             return d.value.absGain;
@@ -226,7 +226,7 @@ d3.csv('ndx.csv', function (data) {
         .y(d3.scale.linear().domain([-100, 100]))
         .r(d3.scale.linear().domain([0, 4000]))
         //##### Elastic Scaling
-        //`.elasticX` and `.elasticX` determine whether the chart should rescale each axis to fit data.
+        //`.elasticY` and `.elasticX` determine whether the chart should rescale each axis to fit data.
         //The `.yAxisPadding` and `.xAxisPadding` add padding to data above and below their max values in the same unit
         //domains as the Accessors.
         .elasticY(true)
@@ -237,8 +237,8 @@ d3.csv('ndx.csv', function (data) {
         .renderVerticalGridLines(true) // (optional) render vertical grid lines, :default=false
         .xAxisLabel('Index Gain') // (optional) render an axis label below the x axis
         .yAxisLabel('Index Gain %') // (optional) render a vertical axis lable left of the y axis
-        //#### Labels and  Titles
-        //Labels are displaed on the chart for each bubble. Titles displayed on mouseover.
+        //#### Labels and Titles
+        //Labels are displayed on the chart for each bubble. Titles are displayed on mouseover.
         .renderLabel(true) // (optional) whether chart should render labels, :default = true
         .label(function (p) {
             return p.key;
@@ -252,8 +252,8 @@ d3.csv('ndx.csv', function (data) {
                 'Fluctuation / Index Ratio: ' + numberFormat(p.value.fluctuationPercentage) + '%'
             ].join('\n');
         })
-        //#### Customize Axis
-        //Set a custom tick format. Note `.yAxis()` returns an axis object, so any additional method chaining applies
+        //#### Customize Axes
+        //Set a custom tick format. Both `.yAxis()` and `.xAxis()` return an axis object, so any additional method chaining applies
         //to the axis, not the chart.
         .yAxis().tickFormat(function (v) {
             return v + '%';
@@ -350,7 +350,7 @@ d3.csv('ndx.csv', function (data) {
             return s;
         });
 
-    // Customize axis
+    // Customize axes
     fluctuationChart.xAxis().tickFormat(
         function (v) { return v + '%'; });
     fluctuationChart.yAxis().ticks(5);
@@ -365,7 +365,7 @@ d3.csv('ndx.csv', function (data) {
         .margins({top: 30, right: 50, bottom: 25, left: 40})
         .dimension(moveMonths)
         .mouseZoomable(true)
-        // Specify a range chart to link the brush extent of the range with the zoom focue of the current chart.
+        // Specify a range chart to link the brush extent of the range with the zoom focus of the current chart.
         .rangeChart(volumeChart)
         .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
         .round(d3.time.month.round)
@@ -523,7 +523,7 @@ d3.csv('ndx.csv', function (data) {
         // to a specific group then any interaction with such chart will only trigger redraw
         // on other charts within the same chart group.
         dc.bubbleOverlay('#bubble-overlay')
-            // bubble overlay chart does not generate it's own svg element but rather resue an existing
+            // bubble overlay chart does not generate it's own svg element but rather resuses an existing
             // svg to generate it's overlay layer
             .svg(d3.select('#bubble-overlay svg'))
             .width(990) // (optional) define chart width, :default = 200
@@ -569,12 +569,12 @@ d3.csv('ndx.csv', function (data) {
     */
 
     //#### Rendering
-    //simply call renderAll() to render all charts on the page
+    //simply call `.renderAll()` to render all charts on the page
     dc.renderAll();
     /*
-    // or you can render charts belong to a specific chart group
+    // or you can render charts belonging to a specific chart group
     dc.renderAll('group');
-    // once rendered you can call redrawAll to update charts incrementally when data
+    // once rendered you can call `.redrawAll()` to update charts incrementally when data
     // change without re-rendering everything
     dc.redrawAll();
     // or you can choose to redraw only those charts associated with a specific chart group
