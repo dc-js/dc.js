@@ -517,8 +517,8 @@ to generate x, y, and radius for each key (bubble) in the group</p>
 <ul>
 <li><code>.colorAccessor</code> The returned value will be mapped to an internal scale to determine a fill color</li>
 <li><code>.keyAccessor</code> Identifies the <code>X</code> value that will be applied against the <code>.x()</code> to identify pixel location</li>
-<li><code>.valueAccessor</code> Identifies the <code>Y</code> value that will be applied agains the <code>.y()</code> to identify pixel location</li>
-<li><code>.radiusValueAccessor</code> Identifies the value that will be applied agains the <code>.r()</code> determine radius size,</li>
+<li><code>.valueAccessor</code> Identifies the <code>Y</code> value that will be applied against the <code>.y()</code> to identify pixel location</li>
+<li><code>.radiusValueAccessor</code> Identifies the value that will be applied against the <code>.r()</code> to determine radius size,</li>
 <li>by default this maps linearly to [0,100]</li>
 </ul>
 
@@ -551,7 +551,7 @@ to generate x, y, and radius for each key (bubble) in the group</p>
                 <a class="pilcrow" href="#section-25">&#182;</a>
               </div>
               <h5 id="elastic-scaling">Elastic Scaling</h5>
-<p><code>.elasticX</code> and <code>.elasticX</code> determine whether the chart should rescale each axis to fit data.
+<p><code>.elasticY</code> and <code>.elasticX</code> determine whether the chart should rescale each axis to fit data.
 The <code>.yAxisPadding</code> and <code>.xAxisPadding</code> add padding to data above and below their max values in the same unit
 domains as the Accessors.</p>
 
@@ -575,8 +575,8 @@ domains as the Accessors.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-26">&#182;</a>
               </div>
-              <h4 id="labels-and-titles">Labels and  Titles</h4>
-<p>Labels are displaed on the chart for each bubble. Titles displayed on mouseover.</p>
+              <h4 id="labels-and-titles">Labels and Titles</h4>
+<p>Labels are displayed on the chart for each bubble. Titles are displayed on mouseover.</p>
 
             </div>
             
@@ -603,8 +603,8 @@ domains as the Accessors.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-27">&#182;</a>
               </div>
-              <h4 id="customize-axis">Customize Axis</h4>
-<p>Set a custom tick format. Note <code>.yAxis()</code> returns an axis object, so any additional method chaining applies
+              <h4 id="customize-axis">Customize Axes</h4>
+<p>Set a custom tick format. Both <code>.yAxis()</code> and <code>.xAxis()</code> return an axis object, so any additional method chaining applies
 to the axis, not the chart.</p>
 
             </div>
@@ -906,7 +906,7 @@ on other charts within the same chart group.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-43">&#182;</a>
               </div>
-              <p>Customize axis</p>
+              <p>Customize axes</p>
 
             </div>
             
@@ -946,7 +946,7 @@ on other charts within the same chart group.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-45">&#182;</a>
               </div>
-              <p>Specify a range chart to link the brush extent of the range with the zoom focue of the current chart.</p>
+              <p>Specify a range chart to link the brush extent of the range with the zoom focus of the current chart.</p>
 
             </div>
             
@@ -1355,7 +1355,7 @@ on other charts within the same chart group.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-64">&#182;</a>
               </div>
-              <p>bubble overlay chart does not generate it’s own svg element but rather resue an existing
+              <p>bubble overlay chart does not generate it’s own svg element but rather reuses an existing
 svg to generate it’s overlay layer</p>
 
             </div>
@@ -1582,7 +1582,7 @@ data point, :default = false</p>
                 <a class="pilcrow" href="#section-78">&#182;</a>
               </div>
               <h4 id="rendering">Rendering</h4>
-<p>simply call renderAll() to render all charts on the page</p>
+<p>simply call <code>renderAll()</code> to render all charts on the page</p>
 
             </div>
             
@@ -1599,7 +1599,7 @@ data point, :default = false</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-79">&#182;</a>
               </div>
-              <p>or you can render charts belong to a specific chart group</p>
+              <p>or you can render charts belonging to a specific chart group</p>
 
             </div>
             
@@ -1614,7 +1614,7 @@ data point, :default = false</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-80">&#182;</a>
               </div>
-              <p>once rendered you can call redrawAll to update charts incrementally when data
+              <p>once rendered you can call <code>redrawAll()</code> to update charts incrementally when data
 change without re-rendering everything</p>
 
             </div>
