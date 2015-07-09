@@ -315,3 +315,7 @@ div.dc-chart {
     pointer-events: all;
     cursor: pointer;
 }
+
+.dc-chart g.row text.titlerow {
+    fill: #000000;
+}

@@ -57,14 +57,18 @@ dc.rowChart = function (parent, chartGroup) {
 
     _chart.rowsCap = _chart.cap;
 
+    _chart.calculateAxisScaleData = function () {
+        return _rowData;
+    };
+
     function calculateAxisScale() {
         if (!_x || _elasticX) {
-            var extent = d3.extent(_rowData, _chart.cappedValueAccessor);
+            var extent = d3.extent(_chart.calculateAxisScaleData(), _chart.cappedValueAccessor);
             if (extent[0] > 0) {
                 extent[0] = 0;
             }
-
             var domain = d3.scale.linear().domain(extent);
+
             if (_useRightYAxis) {
                 _x = domain.range([_chart.effectiveWidth(), 0]);
             } else {
@@ -245,7 +249,7 @@ dc.rowChart = function (parent, chartGroup) {
                     return _chart.label()(d);
                 });
             dc.transition(lab, _chart.transitionDuration())
-                .attr('transform', function(d) {
+                .attr('transform', function (d) {
                     if (_useRightYAxis) {
                         return 'translate(0,0)';
                     }
@@ -255,8 +259,8 @@ dc.rowChart = function (parent, chartGroup) {
         if (_chart.renderTitleLabel()) {
             var titlelab = rows.select('.' + _titleRowCssClass)
                     .attr('x', _useRightYAxis ?
-                    	_titleLabelOffsetX - _chart.effectiveWidth() :
-                    	_chart.effectiveWidth() - _titleLabelOffsetX
+                      _titleLabelOffsetX - _chart.effectiveWidth() :
+                      _chart.effectiveWidth() - _titleLabelOffsetX
                     )
                     .attr('y', _labelOffsetY)
                     .attr('text-anchor', _useRightYAxis ? 'start' : 'end')
@@ -268,7 +272,7 @@ dc.rowChart = function (parent, chartGroup) {
                         return _chart.title()(d);
                     });
             dc.transition(titlelab, _chart.transitionDuration())
-                .attr('transform', function(d) {
+                .attr('transform', function (d) {
                     if (_useRightYAxis) {
                         return 'translate(0,0)';
                     }
