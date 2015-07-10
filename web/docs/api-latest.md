@@ -643,6 +643,11 @@ Includes: [Color Mixin](#color-mixin), [Margin Mixin](#margin-mixin), [Base Mixi
 Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based
 concrete chart types, e.g. bar chart, line chart, and bubble chart.
 
+#### .rescale()
+When changing the domain of the x or y scale, it is necessary to tell the chart to recalculate
+and redraw the axes. (`.rescale()` is called automatically when the x or y scale is replaced
+with `.x()` or `.y()`, and has no effect on elastic scales.)
+
 #### .rangeChart([chart])
 Get or set the range selection chart associated with this instance. Setting the range selection
 chart using this function will automatically update its selection brush when the current chart
