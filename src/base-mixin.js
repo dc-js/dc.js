@@ -65,8 +65,6 @@ dc.baseMixin = function (_chart) {
 
     var _filters = [];
     var _filterHandler = function (dimension, filters) {
-        dimension.filter(null);
-
         if (filters.length === 0) {
             dimension.filter(null);
         } else {
@@ -1127,7 +1125,7 @@ dc.baseMixin = function (_chart) {
     #### .on('filtered', function(chart, filter){...})
     This listener function will be invoked after a filter is applied, added or removed.
 
-    #### .on('zoomed', function(chart, filter){...})
+    #### .on('zoomed', function(chart````````````````, filter){...})
     This listener function will be invoked after a zoom is triggered.
 
     **/
