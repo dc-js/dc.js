@@ -24,7 +24,8 @@ dc.legend = function () {
         _horizontal = false,
         _legendWidth = 560,
         _itemWidth = 70,
-        _autoItemWidth = false;
+        _autoItemWidth = false,
+        _labelText = null;
 
     var _g;
 
@@ -42,6 +43,12 @@ dc.legend = function () {
             .attr('class', 'dc-legend')
             .attr('transform', 'translate(' + _x + ',' + _y + ')');
         var legendables = _parent.legendables();
+        
+        if (_labelText) {
+            for (var i = 0; i < legendables.length; i++) {
+                legendables[i].name = _labelText(legendables[i].name);
+            }
+        }
 
         var itemEnter = _g.selectAll('g.dc-legend-item')
             .data(legendables)
@@ -207,6 +214,14 @@ dc.legend = function () {
             return _autoItemWidth;
         }
         _autoItemWidth = _;
+        return _legend;
+    };
+    
+    _legend.labelText = function(_) {
+        if (!arguments.length) {
+            return _labelText;
+        }
+        _labelText = _;
         return _legend;
     };
 
