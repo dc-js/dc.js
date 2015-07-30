@@ -3,6 +3,9 @@
  * Front page stable version automatically read from GitHub, by Enrico Spinielli ([#865](https://github.com/dc-js/dc.js/pull/865))
 
 # 2.0 Series
+## 2.0.0 beta 14
+* Fix a test for IE and add svg subpath matcher, for #894
+
 ## 2.0.0 beta 13
 * Pie chart radius padding, by Matt Traynham ([#894](https://github.com/dc-js/dc.js/pull/894))
 * Example of a table showing group-aggregated data, by Ion Alberdi ([#929](https://github.com/dc-js/dc.js/pull/929))
