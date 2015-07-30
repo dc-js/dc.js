@@ -3007,6 +3007,7 @@ dc.coordinateGridMixin = function (_chart) {
         } else {
             _chart.redrawBrush(_chart.g());
         }
+        _chart.fadeDeselectedArea();
         _resizing = false;
     }
 
