@@ -2925,7 +2925,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function getClipPathId() {
-        return _chart.anchorName().replace(/[ .#]/g, '-') + '-clip';
+        return _chart.anchorName().replace(/[ .#=\[\]]/g, '-') + '-clip';
     }
 
     /**
