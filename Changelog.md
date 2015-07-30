@@ -1,5 +1,6 @@
 # 2.0 Series
 ## 2.0.0 beta 13
+* Example of a table showing group-aggregated data, by Ion Alberdi ([#929](https://github.com/dc-js/dc.js/pull/929))
 * Filtered items were not displayed after render in coordinate grid charts, by Matt Traynham ([#900](https://github.com/dc-js/dc.js/pull/900))
 * grammar/spelling/formatting fixes to annotated stock example, by Johnny Peck and Enrico Spinielli ([#956](https://github.com/dc-js/dc.js/pull/956), [#875](https://github.com/dc-js/dc.js/pull/875))
 * document bower install, by Mayfarth ([#899](https://github.com/dc-js/dc.js/pull/899))

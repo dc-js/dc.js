@@ -33,6 +33,9 @@ d3.csv("morley.csv", function(error, experiments) {
      - the .order() is defined & defined to something else than the default value which seems to
        be either d3.ascending or descending. (a method that is undefined for .reduce()-d
        dimension groups is called else).
+
+     This demonstrates that a crossfilter group can (oddly, but usefully) be passed
+     as the dimension for a dc.dataTable, because it's just using `dimension.all()`.
   */
   var ndx              = crossfilter(experiments),
       exptDimension    = ndx.dimension(function(d) {return +d.Expt;}),
