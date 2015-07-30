@@ -950,7 +950,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function getClipPathId() {
-        return _chart.anchorName().replace(/[ .#]/g, '-') + '-clip';
+        return _chart.anchorName().replace(/[ .#=\[\]]/g, '-') + '-clip';
     }
 
     /**
@@ -1032,6 +1032,7 @@ dc.coordinateGridMixin = function (_chart) {
         } else {
             _chart.redrawBrush(_chart.g());
         }
+        _chart.fadeDeselectedArea();
         _resizing = false;
     }
 

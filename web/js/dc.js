@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-beta.12
+ *  dc 2.0.0-beta.13
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2015 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -20,7 +20,7 @@
 'use strict';
 
 /**
-#### Version 2.0.0-beta.12
+#### Version 2.0.0-beta.13
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -41,7 +41,7 @@ that are chainable d3 objects.)
 /*jshint -W062*/
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-beta.12',
+    version: '2.0.0-beta.13',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -2925,7 +2925,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function getClipPathId() {
-        return _chart.anchorName().replace(/[ .#]/g, '-') + '-clip';
+        return _chart.anchorName().replace(/[ .#=\[\]]/g, '-') + '-clip';
     }
 
     /**
@@ -3007,6 +3007,7 @@ dc.coordinateGridMixin = function (_chart) {
         } else {
             _chart.redrawBrush(_chart.g());
         }
+        _chart.fadeDeselectedArea();
         _resizing = false;
     }
 
@@ -3781,7 +3782,8 @@ dc.pieChart = function (parent, chartGroup) {
     var _emptyTitle = 'empty';
 
     var _radius,
-        _innerRadius = 0;
+        _innerRadius = 0,
+        _externalRadiusPadding = 0;
 
     var _g;
     var _cx;
@@ -3992,6 +3994,20 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     /**
+     #### .externalRadiusPadding([externalRadiusPadding])
+     Get or set the external radius padding of the pie chart. This will force the radius of the
+     pie chart to become smaller or larger depending on the value.  Default external radius padding is 0px.
+
+     **/
+    _chart.externalRadiusPadding = function (_) {
+        if (!arguments.length) {
+            return _externalRadiusPadding;
+        }
+        _externalRadiusPadding = _;
+        return _chart;
+    };
+
+    /**
     #### .innerRadius([innerRadius])
     Get or set the inner radius of the pie chart. If the inner radius is greater than 0px then the
     pie chart will be rendered as a doughnut chart. Default inner radius is 0px.
@@ -4046,7 +4062,7 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     function buildArcs() {
-        return d3.svg.arc().outerRadius(_radius).innerRadius(_innerRadius);
+        return d3.svg.arc().outerRadius(_radius - _externalRadiusPadding).innerRadius(_innerRadius);
     }
 
     function isSelectedSlice(d) {
@@ -4153,8 +4169,8 @@ dc.pieChart = function (parent, chartGroup) {
         var centroid;
         if (_externalLabelRadius) {
             centroid = d3.svg.arc()
-                .outerRadius(_radius + _externalLabelRadius)
-                .innerRadius(_radius + _externalLabelRadius)
+                .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
+                .innerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
                 .centroid(d);
         } else {
             centroid = arc.centroid(d);
