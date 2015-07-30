@@ -131,9 +131,9 @@ dc.pairedRowChart = function (parent, chartGroup) {
         });
     };
 
-    // margins
-    // the margins between the charts need to be set to 0 so that they sit together
+    // width and margins
 
+    // the margins between the charts need to be set to 0 so that they sit together
     var _margins = _chart.margins(); // get the default margins
 
     _chart.margins = function (_) {
@@ -163,6 +163,44 @@ dc.pairedRowChart = function (parent, chartGroup) {
 
     _chart.margins(_margins); // set the new margins
 
+    // the width needs to be halved
+    var _width = 0; // get the default width
+
+    _chart.width = function (_) {
+        if (!arguments.length) {
+            return _width;
+        }
+        _width = _;
+
+        // set left chart width
+        _leftChart.width(dc.utils.isNumber(_) ? _ / 2 : _);
+
+        // set right chart width
+        _rightChart.width(dc.utils.isNumber(_) ? _ / 2 : _);
+
+        return _chart;
+    };
+
+    // the minWidth needs to be halved
+    var _minWidth = _chart.minWidth(); // get the default minWidth
+
+    _chart.minWidth = function (_) {
+        if (!arguments.length) {
+            return _minWidth;
+        }
+        _minWidth = _;
+
+        // set left chart minWidth
+        _leftChart.minWidth(dc.utils.isNumber(_) ? _ / 2 : _);
+
+        // set right chart minWidth
+        _rightChart.minWidth(dc.utils.isNumber(_) ? _ / 2 : _);
+
+        return _chart;
+    };
+
+    _chart.minWidth(_minWidth); // set the new minWidth
+
     // svg
     // return an array of both the sub chart svgs
 
@@ -188,7 +226,7 @@ dc.pairedRowChart = function (parent, chartGroup) {
 
     var _getterSetterPassOn = [
         // display
-        'height', 'width', 'minHeight', 'minWidth', 'renderTitleLabel', 'fixedBarHeight', 'gap', 'othersLabel',
+        'height', 'minHeight', 'renderTitleLabel', 'fixedBarHeight', 'gap', 'othersLabel',
         'transitionDuration', 'label', 'renderLabel', 'title', 'renderTitle', 'chartGroup',
         //colors
         'colors', 'ordinalColors', 'linearColors', 'colorAccessor', 'colorDomain', 'getColor', 'colorCalculator',
