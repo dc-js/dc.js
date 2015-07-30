@@ -3,9 +3,18 @@
  * Front page stable version automatically read from GitHub, by Enrico Spinielli ([#865](https://github.com/dc-js/dc.js/pull/865))
 
 # 2.0 Series
+## 2.0.0 beta 13
+* Pie chart radius padding, by Matt Traynham ([#894](https://github.com/dc-js/dc.js/pull/894))
+* Example of a table showing group-aggregated data, by Ion Alberdi ([#929](https://github.com/dc-js/dc.js/pull/929))
+* Filtered items were not displayed after render in coordinate grid charts, by Matt Traynham ([#900](https://github.com/dc-js/dc.js/pull/900))
+* grammar/spelling/formatting fixes to annotated stock example, by Johnny Peck and Enrico Spinielli ([#956](https://github.com/dc-js/dc.js/pull/956), [#875](https://github.com/dc-js/dc.js/pull/875))
+* document bower install, by Mayfarth ([#899](https://github.com/dc-js/dc.js/pull/899))
+* remove unused bower version, by Kevin Kirsche ([#948](https://github.com/dc-js/dc.js/pull/948))
+
 ## 2.0.0 beta 12
  * axes should rescale on chart rescale (not just on zoom). ([#791](https://github.com/dc-js/dc.js/issues/791))
- * always rescale x axis on render, and detect domain change more thoroughly, by Matt Traynham (
+ * always rescale x axis on render, and detect domain change more thoroughly, by Matt Traynham
+ ([#896](https://github.com/dc-js/dc.js/pull/896))
 
 ## 2.0.0 beta 11
  * pretransition event ([#806](https://github.com/dc-js/dc.js/issues/806))

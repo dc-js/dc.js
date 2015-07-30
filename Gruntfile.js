@@ -68,8 +68,8 @@ module.exports = function (grunt) {
         },
         watch: {
             scripts: {
-                files: ['<%= conf.src %>/**/*.js'],
-                tasks: ['build', 'copy']
+                files: ['<%= conf.src %>/**/*.js', '<%= conf.web %>/stock.js'],
+                tasks: ['docs']
             },
             jasmineRunner: {
                 files: ['<%= conf.spec %>/**/*.js'],
@@ -346,7 +346,7 @@ module.exports = function (grunt) {
     grunt.registerTask('update-stock-example', 'Update the baseline stock example web page.', function () {
         require('./regression/stock-regression-test.js').updateStockExample(this.async());
     });
-    grunt.registerTask('watch:jasmine', function () {
+    grunt.registerTask('watch:jasmine-docs', function () {
         grunt.config('watch', {
             options: {
                 interrupt: true
@@ -361,7 +361,7 @@ module.exports = function (grunt) {
     grunt.registerTask('build', ['concat', 'uglify']);
     grunt.registerTask('docs', ['build', 'copy', 'emu', 'toc', 'markdown', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
-    grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine']);
+    grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine-docs']);
     grunt.registerTask('test', ['build', 'jasmine:specs', 'shell:hooks']);
     grunt.registerTask('test-browserify', ['build', 'browserify', 'jasmine:browserify']);
     grunt.registerTask('coverage', ['build', 'jasmine:coverage']);

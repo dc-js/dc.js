@@ -990,6 +990,10 @@ Get or set the maximum number of slices the pie chart will generate. The top sli
 value from high to low. Other slices exeeding the cap will be rolled up into one single *Others* slice.
 The resulting data will still be sorted by .ordering (default by key).
 
+#### .externalRadiusPadding([externalRadiusPadding])
+Get or set the external radius padding of the pie chart. This will force the radius of the
+pie chart to become smaller or larger depending on the value.  Default external radius padding is 0px.
+
 #### .innerRadius([innerRadius])
 Get or set the inner radius of the pie chart. If the inner radius is greater than 0px then the
 pie chart will be rendered as a doughnut chart. Default inner radius is 0px.
