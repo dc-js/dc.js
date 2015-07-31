@@ -27,11 +27,7 @@
   * [Heat Map](#heat-map)
   * [Box Plot](#box-plot)
 
-<<<<<<< HEAD
 #### Version 2.1.0-dev
-=======
-#### Version 2.0.0-beta.14
->>>>>>> 2.0.0-beta.14
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
