@@ -27,7 +27,7 @@
   * [Heat Map](#heat-map)
   * [Box Plot](#box-plot)
 
-#### Version 2.0.0-beta.11
+#### Version 2.0.0-beta.14
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -643,6 +643,11 @@ Includes: [Color Mixin](#color-mixin), [Margin Mixin](#margin-mixin), [Base Mixi
 Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based
 concrete chart types, e.g. bar chart, line chart, and bubble chart.
 
+#### .rescale()
+When changing the domain of the x or y scale, it is necessary to tell the chart to recalculate
+and redraw the axes. (`.rescale()` is called automatically when the x or y scale is replaced
+with `.x()` or `.y()`, and has no effect on elastic scales.)
+
 #### .rangeChart([chart])
 Get or set the range selection chart associated with this instance. Setting the range selection
 chart using this function will automatically update its selection brush when the current chart
@@ -984,6 +989,10 @@ var chart2 = dc.pieChart('#chart-container2', 'chartGroupA');
 Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
 value from high to low. Other slices exeeding the cap will be rolled up into one single *Others* slice.
 The resulting data will still be sorted by .ordering (default by key).
+
+#### .externalRadiusPadding([externalRadiusPadding])
+Get or set the external radius padding of the pie chart. This will force the radius of the
+pie chart to become smaller or larger depending on the value.  Default external radius padding is 0px.
 
 #### .innerRadius([innerRadius])
 Get or set the inner radius of the pie chart. If the inner radius is greater than 0px then the
