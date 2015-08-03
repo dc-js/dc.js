@@ -69,6 +69,7 @@ dc.compositeChart = function (parent, chartGroup) {
             child.transitionDuration(_chart.transitionDuration());
             child.brushOn(_chart.brushOn());
             child.renderTitle(_chart.renderTitle());
+            child.elasticX(_chart.elasticX());
         }
 
         return g;

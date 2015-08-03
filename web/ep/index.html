@@ -66,7 +66,7 @@ function grid (selector,data) {
     .yAxisLabel("#MEPs")
     .dimension(age)
     .group(ageGroup)
-    .renderlet(function (chart) {
+    .on('renderlet', function (chart) {
       if (!console || !console.log) return;
       var d = chart.dimension().top(Number.POSITIVE_INFINITY);
       var total = nb = 0;
@@ -114,7 +114,7 @@ function grid (selector,data) {
     .dimension(group)
     .colors(d3.scale.category10())
     .group(groupGroup)
-    .renderlet(function (chart) {
+    .on('renderlet', function (chart) {
         });
 
   bar_country
@@ -155,7 +155,7 @@ function grid (selector,data) {
         return d.last_name;
         })
   .order(d3.ascending)
-    .renderlet(function (grid) {
+  .on('renderlet', function (grid) {
         $("img.lazy-load").lazyload ({
 effect : "fadeIn"
 })

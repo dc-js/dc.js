@@ -112,7 +112,7 @@ function allows the library to smooth out the rendering by throttling events and
 the most recent event.
 
 ```js
-chart.renderlet(function(chart){
+chart.on('renderlet', function(chart) {
     // smooth the rendering through event throttling
     dc.events.trigger(function(){
         // focus some other chart to the range selected by user on this chart
@@ -492,15 +492,15 @@ given.
 #### .renderlet(renderletFunction)
 A renderlet is similar to an event listener on rendering event. Multiple renderlets can be added
 to an individual chart.  Each time a chart is rerendered or redrawn the renderlets are invoked
-right after the chart finishes its own drawing routine, giving you a way to modify the svg
+right after the chart finishes its transitions, giving you a way to modify the svg
 elements. Renderlet functions take the chart instance as the only input parameter and you can
 use the dc API or use raw d3 to achieve pretty much any effect.
 
 @Deprecated - Use [Listeners](#Listeners) with a 'renderlet' prefix
-Generates a random key for the renderlet, which makes it hard for removal.
+Generates a random key for the renderlet, which makes it hard to remove.
 ```js
-// renderlet function
-chart.renderlet(function(chart){
+// do this instead of .renderlet(function(chart) { ... })
+chart.on("renderlet", function(chart){
     // mix of dc API and d3 manipulation
     chart.select('g.y').style('display', 'none');
     // its a closure so you can also access other chart variable available in the closure scope
@@ -545,6 +545,9 @@ All dc chart instance supports the following listeners.
 #### .on('renderlet', function(chart, filter){...})
 This listener function will be invoked after transitions after redraw and render. Replaces the
 deprecated `.renderlet()` method.
+
+#### .on('pretransition', function(chart, filter){...})
+Like `.on('renderlet', ...)` but the event is fired before transitions start.
 
 #### .on('preRender', function(chart){...})
 This listener function will be invoked before chart rendering.
@@ -639,6 +642,11 @@ Includes: [Color Mixin](#color-mixin), [Margin Mixin](#margin-mixin), [Base Mixi
 
 Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based
 concrete chart types, e.g. bar chart, line chart, and bubble chart.
+
+#### .rescale()
+When changing the domain of the x or y scale, it is necessary to tell the chart to recalculate
+and redraw the axes. (`.rescale()` is called automatically when the x or y scale is replaced
+with `.x()` or `.y()`, and has no effect on elastic scales.)
 
 #### .rangeChart([chart])
 Get or set the range selection chart associated with this instance. Setting the range selection
@@ -820,7 +828,7 @@ Zoom this chart to focus on the given range. The given range should be an array 
 to null, then the zoom will be reset. _For focus to work elasticX has to be turned off;
 otherwise focus will be ignored._
 ```js
-chart.renderlet(function(chart){
+chart.on('renderlet', function(chart) {
     // smooth the rendering through event throttling
     dc.events.trigger(function(){
         // focus some other chart to the range selected by user on this chart
@@ -981,6 +989,10 @@ var chart2 = dc.pieChart('#chart-container2', 'chartGroupA');
 Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
 value from high to low. Other slices exeeding the cap will be rolled up into one single *Others* slice.
 The resulting data will still be sorted by .ordering (default by key).
+
+#### .externalRadiusPadding([externalRadiusPadding])
+Get or set the external radius padding of the pie chart. This will force the radius of the
+pie chart to become smaller or larger depending on the value.  Default external radius padding is 0px.
 
 #### .innerRadius([innerRadius])
 Get or set the inner radius of the pie chart. If the inner radius is greater than 0px then the

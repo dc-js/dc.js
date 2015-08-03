@@ -84,7 +84,7 @@ describe('dc.dataGrid', function() {
                 chart.selectAll(".dc-grid-label").text("changed");
             });
             derlet.and.callThrough();
-            chart.renderlet(derlet);
+            chart.on("renderlet", derlet);
         });
         it('custom renderlet should be invoked with render', function() {
             chart.render();

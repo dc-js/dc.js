@@ -1,17 +1,21 @@
 {
   "name": "dcjs",
-  "version": "2.0.0-alpha.2",
   "main": ["dc.js", "dc.css"],
+  "keywords": [
+    "visualization",
+    "svg",
+    "animation",
+    "canvas",
+    "chart",
+    "dimensional",
+    "crossfilter",
+    "d3"
+  ],
   "ignore": [
-    ".gitignore",
-    ".travis.yml",
-    "build.xml",
-    "globals.js",
-    "index.js",
-    "make",
-    "package.json",
-    "test",
-    "src"
+    "*",
+    "!dc.*",
+    "!LICENSE",
+    "!README.md"
   ],
   "dependencies": {
     "d3": "3.x",

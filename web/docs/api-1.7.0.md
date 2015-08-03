@@ -110,6 +110,9 @@ If name is specified then it will be used to generate legend label.
 #### .filterAll()
 Clear all filters associated with this chart.
 
+#### .ordering([orderFunction])
+Get or set an accessor to order ordinal charts
+
 #### .select(selector)
 Execute in scope d3 single selection using the given selector and return d3 selection result. Roughly the same as:
 ```js
