@@ -37,6 +37,7 @@ dc.dataTable = function (parent, chartGroup) {
         return d;
     };
     var _order = d3.ascending;
+    var _showGroups = true;
 
     _chart._doRender = function () {
         _chart.selectAll('tbody').remove();
@@ -127,15 +128,17 @@ dc.dataTable = function (parent, chartGroup) {
             .enter()
             .append('tbody');
 
-        rowGroup
-            .append('tr')
-            .attr('class', GROUP_CSS_CLASS)
-                .append('td')
-                .attr('class', LABEL_CSS_CLASS)
-                .attr('colspan', _columns.length)
-                .html(function (d) {
-                    return _chart.keyAccessor()(d);
-                });
+        if (_showGroups === true) {
+            rowGroup
+                .append('tr')
+                .attr('class', GROUP_CSS_CLASS)
+                    .append('td')
+                    .attr('class', LABEL_CSS_CLASS)
+                    .attr('colspan', _columns.length)
+                    .html(function (d) {
+                        return _chart.keyAccessor()(d);
+                    });
+        }
 
         groups.exit().remove();
 
@@ -327,6 +330,26 @@ dc.dataTable = function (parent, chartGroup) {
         }
         _order = _;
         return _chart;
+    };
+
+    /**
+    ### .showGroups(true|false)
+    Get or set if group rows will be shown. Default value ``` true ```
+    The .group() getter-setter must be provided in either case.
+
+    ```js
+        chart
+            .group([value], [name])
+            .showGroups(true|false);
+    ```
+
+    **/
+    _chart.showGroups = function (_) {
+      if (!arguments.length) {
+        return true;
+      }
+      _showGroups = _;
+      return _chart;
     };
 
     return _chart.anchor(parent, chartGroup);
