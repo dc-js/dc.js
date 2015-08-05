@@ -68,7 +68,7 @@
                 .elasticY(true)
                 .renderHorizontalGridLines(true)
                 .legend(dc.legend().x(90).y(10).itemHeight(13).gap(5))
-                .brushOn(false)
+                .brushOn(true)
                 .compose([
                     dc.lineChart(moveChart)
                             .group(indexAvgByMonthGroup, "Monthly Index Average")

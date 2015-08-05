@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-beta.15
+ *  dc 2.0.0-beta.16
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2015 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -20,7 +20,7 @@
 'use strict';
 
 /**
-#### Version 2.0.0-beta.15
+#### Version 2.0.0-beta.16
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -41,7 +41,7 @@ that are chainable d3 objects.)
 /*jshint -W062*/
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-beta.15',
+    version: '2.0.0-beta.16',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -202,13 +202,13 @@ immediately.  Default: false
 **/
 dc.disableTransitions = false;
 
-dc.transition = function (selections, duration, callback) {
+dc.transition = function (selections, duration, callback, name) {
     if (duration <= 0 || duration === undefined || dc.disableTransitions) {
         return selections;
     }
 
     var s = selections
-        .transition()
+        .transition(name)
         .duration(duration);
 
     if (typeof(callback) === 'function') {
@@ -216,6 +216,20 @@ dc.transition = function (selections, duration, callback) {
     }
 
     return s;
+};
+
+/* somewhat silly, but to avoid duplicating logic */
+dc.optionalTransition = function (enable, duration, callback, name) {
+    if (enable) {
+        return function (selection) {
+            return dc.transition(selection, duration, callback, name);
+        };
+    }
+    else {
+        return function (selection) {
+            return selection;
+        };
+    }
 };
 
 dc.units = {};
@@ -2854,7 +2868,7 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('class', 'brush')
                 .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')')
                 .call(_brush.x(_chart.x()));
-            _chart.setBrushY(gBrush);
+            _chart.setBrushY(gBrush, false);
             _chart.setHandlePaths(gBrush);
 
             if (_chart.hasFilter()) {
@@ -2868,7 +2882,10 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart.setBrushY = function (gBrush) {
-        gBrush.selectAll('rect').attr('height', brushHeight());
+        gBrush.selectAll('.brush rect')
+            .attr('height', brushHeight());
+        gBrush.selectAll('.resize path')
+            .attr('d', _chart.resizeHandlePath);
     };
 
     _chart.extendBrush = function () {
@@ -2913,9 +2930,12 @@ dc.coordinateGridMixin = function (_chart) {
                 _chart.brush().extent(_chart.filter());
             }
 
-            var gBrush = g.select('g.brush');
-            gBrush.call(_chart.brush().x(_chart.x()));
+            var gBrush = dc.transition(g.select('g.brush'),
+                                       _chart.transitionDuration());
             _chart.setBrushY(gBrush);
+            gBrush.call(_chart.brush()
+                      .x(_chart.x())
+                      .extent(_chart.brush().extent()));
         }
 
         _chart.fadeDeselectedArea();
@@ -5113,6 +5133,10 @@ Includes: [Base Mixin](#base-mixin)
 The data table is a simple widget designed to list crossfilter focused data set (rows being
 filtered) in a good old tabular fashion.
 
+Note: Unlike other charts, the data table (and data grid chart) use the group attribute as a keying function
+for [nesting](https://github.com/mbostock/d3/wiki/Arrays#-nest) the data together in groups.
+Do not pass in a crossfilter group as this will not work.
+
 Examples:
 * [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 #### dc.dataTable(parent[, chartGroup])
@@ -5145,6 +5169,7 @@ dc.dataTable = function (parent, chartGroup) {
         return d;
     };
     var _order = d3.ascending;
+    var _showGroups = true;
 
     _chart._doRender = function () {
         _chart.selectAll('tbody').remove();
@@ -5235,15 +5260,17 @@ dc.dataTable = function (parent, chartGroup) {
             .enter()
             .append('tbody');
 
-        rowGroup
-            .append('tr')
-            .attr('class', GROUP_CSS_CLASS)
-                .append('td')
-                .attr('class', LABEL_CSS_CLASS)
-                .attr('colspan', _columns.length)
-                .html(function (d) {
-                    return _chart.keyAccessor()(d);
-                });
+        if (_showGroups === true) {
+            rowGroup
+                .append('tr')
+                .attr('class', GROUP_CSS_CLASS)
+                    .append('td')
+                    .attr('class', LABEL_CSS_CLASS)
+                    .attr('colspan', _columns.length)
+                    .html(function (d) {
+                        return _chart.keyAccessor()(d);
+                    });
+        }
 
         groups.exit().remove();
 
@@ -5437,6 +5464,26 @@ dc.dataTable = function (parent, chartGroup) {
         return _chart;
     };
 
+    /**
+    ### .showGroups(true|false)
+    Get or set if group rows will be shown. Default value ``` true ```
+    The .group() getter-setter must be provided in either case.
+
+    ```js
+        chart
+            .group([value], [name])
+            .showGroups(true|false);
+    ```
+
+    **/
+    _chart.showGroups = function (_) {
+        if (!arguments.length) {
+            return true;
+        }
+        _showGroups = _;
+        return _chart;
+    };
+
     return _chart.anchor(parent, chartGroup);
 };
 
@@ -5447,6 +5494,10 @@ dc.dataTable = function (parent, chartGroup) {
 
  Data grid is a simple widget designed to list the filtered records, providing
  a simple way to define how the items are displayed.
+
+ Note: Unlike other charts, the data grid chart (and data table) use the group attribute as a keying function
+ for [nesting](https://github.com/mbostock/d3/wiki/Arrays#-nest) the data together in groups.
+ Do not pass in a crossfilter group as this will not work.
 
  Examples:
  * [List of members of the european parliament](http://europarl.me/dc.js/web/ep/index.html)
@@ -5480,6 +5531,7 @@ dc.dataGrid = function (parent, chartGroup) {
         return d;
     };
     var _order = d3.ascending;
+    var _beginSlice = 0, _endSlice;
 
     var _htmlGroup = function (d) {
         return '<div class=\'' + GROUP_CSS_CLASS + '\'><h1 class=\'' + LABEL_CSS_CLASS + '\'>' +
@@ -5524,7 +5576,7 @@ dc.dataGrid = function (parent, chartGroup) {
             .sortKeys(_order)
             .entries(entries.sort(function (a, b) {
                 return _order(_sortBy(a), _sortBy(b));
-            }));
+            }).slice(_beginSlice, _endSlice));
     }
 
     function renderItems(groups) {
@@ -5548,6 +5600,34 @@ dc.dataGrid = function (parent, chartGroup) {
 
     _chart._doRedraw = function () {
         return _chart._doRender();
+    };
+
+    /**
+     #### .beginSlice([index])
+     Get or set the index of the beginning slice which determines which entries get displayed by the widget
+     Useful when implementing pagination.
+
+     **/
+    _chart.beginSlice = function (_) {
+        if (!arguments.length) {
+            return _beginSlice;
+        }
+        _beginSlice = _;
+        return _chart;
+    };
+
+    /**
+     #### .endSlice([index])
+     Get or set the index of the end slice which determines which entries get displayed by the widget
+     Useful when implementing pagination.
+
+     **/
+    _chart.endSlice = function (_) {
+        if (!arguments.length) {
+            return _endSlice;
+        }
+        _endSlice = _;
+        return _chart;
     };
 
     /**
