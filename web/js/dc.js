@@ -5133,6 +5133,10 @@ Includes: [Base Mixin](#base-mixin)
 The data table is a simple widget designed to list crossfilter focused data set (rows being
 filtered) in a good old tabular fashion.
 
+Note: Unlike other charts, the data table (and data grid chart) use the group attribute as a keying function
+for [nesting](https://github.com/mbostock/d3/wiki/Arrays#-nest) the data together in groups.
+Do not pass in a crossfilter group as this will not work.
+
 Examples:
 * [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 #### dc.dataTable(parent[, chartGroup])
@@ -5468,6 +5472,10 @@ dc.dataTable = function (parent, chartGroup) {
  Data grid is a simple widget designed to list the filtered records, providing
  a simple way to define how the items are displayed.
 
+ Note: Unlike other charts, the data grid chart (and data table) use the group attribute as a keying function
+ for [nesting](https://github.com/mbostock/d3/wiki/Arrays#-nest) the data together in groups.
+ Do not pass in a crossfilter group as this will not work.
+
  Examples:
  * [List of members of the european parliament](http://europarl.me/dc.js/web/ep/index.html)
 
@@ -5500,6 +5508,7 @@ dc.dataGrid = function (parent, chartGroup) {
         return d;
     };
     var _order = d3.ascending;
+    var _beginSlice = 0, _endSlice;
 
     var _htmlGroup = function (d) {
         return '<div class=\'' + GROUP_CSS_CLASS + '\'><h1 class=\'' + LABEL_CSS_CLASS + '\'>' +
@@ -5544,7 +5553,7 @@ dc.dataGrid = function (parent, chartGroup) {
             .sortKeys(_order)
             .entries(entries.sort(function (a, b) {
                 return _order(_sortBy(a), _sortBy(b));
-            }));
+            }).slice(_beginSlice, _endSlice));
     }
 
     function renderItems(groups) {
@@ -5568,6 +5577,34 @@ dc.dataGrid = function (parent, chartGroup) {
 
     _chart._doRedraw = function () {
         return _chart._doRender();
+    };
+
+    /**
+     #### .beginSlice([index])
+     Get or set the index of the beginning slice which determines which entries get displayed by the widget
+     Useful when implementing pagination.
+
+     **/
+    _chart.beginSlice = function (_) {
+        if (!arguments.length) {
+            return _beginSlice;
+        }
+        _beginSlice = _;
+        return _chart;
+    };
+
+    /**
+     #### .endSlice([index])
+     Get or set the index of the end slice which determines which entries get displayed by the widget
+     Useful when implementing pagination.
+
+     **/
+    _chart.endSlice = function (_) {
+        if (!arguments.length) {
+            return _endSlice;
+        }
+        _endSlice = _;
+        return _chart;
     };
 
     /**

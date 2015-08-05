@@ -5,6 +5,10 @@ Includes: [Base Mixin](#base-mixin)
 The data table is a simple widget designed to list crossfilter focused data set (rows being
 filtered) in a good old tabular fashion.
 
+Note: Unlike other charts, the data table (and data grid chart) use the group attribute as a keying function
+for [nesting](https://github.com/mbostock/d3/wiki/Arrays#-nest) the data together in groups.
+Do not pass in a crossfilter group as this will not work.
+
 Examples:
 * [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 #### dc.dataTable(parent[, chartGroup])

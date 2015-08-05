@@ -6,7 +6,7 @@
  Data grid is a simple widget designed to list the filtered records, providing
  a simple way to define how the items are displayed.
 
- Note: Unlike other charts, a data grid chart uses the group attribute as a keying function
+ Note: Unlike other charts, the data grid chart (and data table) use the group attribute as a keying function
  for [nesting](https://github.com/mbostock/d3/wiki/Arrays#-nest) the data together in groups.
  Do not pass in a crossfilter group as this will not work.
 
@@ -42,8 +42,7 @@ dc.dataGrid = function (parent, chartGroup) {
         return d;
     };
     var _order = d3.ascending;
-    var _beginSlice = 0;
-    var _endSlice;
+    var _beginSlice = 0, _endSlice;
 
     var _htmlGroup = function (d) {
         return '<div class=\'' + GROUP_CSS_CLASS + '\'><h1 class=\'' + LABEL_CSS_CLASS + '\'>' +
