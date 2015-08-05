@@ -1019,10 +1019,17 @@ dc.baseMixin = function (_chart) {
         return generateSvg();
     };
 
+    function sizeSvg() {
+        if (_svg) {
+            _svg
+                .attr('width', _chart.width())
+                .attr('height', _chart.height());
+        }
+    }
+
     function generateSvg() {
-        _svg = _chart.root().append('svg')
-            .attr('width', _chart.width())
-            .attr('height', _chart.height());
+        _svg = _chart.root().append('svg');
+        sizeSvg();
         return _svg;
     }
 
@@ -1155,6 +1162,7 @@ dc.baseMixin = function (_chart) {
 
     **/
     _chart.redraw = function () {
+        sizeSvg();
         _listeners.preRedraw(_chart);
 
         var result = _chart._doRedraw();
@@ -2084,6 +2092,7 @@ dc.coordinateGridMixin = function (_chart) {
     _chart.rescale = function () {
         _unitCount = undefined;
         _resizing = true;
+        return _chart;
     };
 
     /**
@@ -2364,7 +2373,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     function compareDomains(d1, d2) {
         return !d1 || !d2 || d1.length !== d2.length ||
-            d1.some(function (elem, i) { return elem.toString() !== d2[i]; });
+            d1.some(function (elem, i) { return elem.toString() !== d2[i].toString(); });
     }
 
     function prepareXAxis(g, render) {
@@ -2411,18 +2420,21 @@ dc.coordinateGridMixin = function (_chart) {
         var axisXLab = g.selectAll('text.' + X_AXIS_LABEL_CLASS);
         if (axisXLab.empty() && _chart.xAxisLabel()) {
             axisXLab = g.append('text')
-                .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
-                    (_chart.height() - _xAxisLabelPadding) + ')')
                 .attr('class', X_AXIS_LABEL_CLASS)
-                .attr('text-anchor', 'middle')
-                .text(_chart.xAxisLabel());
+                .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
+                      (_chart.height() - _xAxisLabelPadding) + ')')
+                .attr('text-anchor', 'middle');
         }
         if (_chart.xAxisLabel() && axisXLab.text() !== _chart.xAxisLabel()) {
             axisXLab.text(_chart.xAxisLabel());
         }
 
         dc.transition(axisXG, _chart.transitionDuration())
+            .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')')
             .call(_xAxis);
+        dc.transition(axisXLab, _chart.transitionDuration())
+            .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
+                  (_chart.height() - _xAxisLabelPadding) + ')');
     };
 
     function renderVerticalGridLines(g) {
@@ -2521,9 +2533,8 @@ dc.coordinateGridMixin = function (_chart) {
         labelXPosition = labelXPosition || _yAxisLabelPadding;
 
         var axisYLab = _chart.g().selectAll('text.' + Y_AXIS_LABEL_CLASS + '.' + axisClass + '-label');
+        var labelYPosition = (_chart.margins().top + _chart.yAxisHeight() / 2);
         if (axisYLab.empty() && text) {
-
-            var labelYPosition = (_chart.margins().top + _chart.yAxisHeight() / 2);
             axisYLab = _chart.g().append('text')
                 .attr('transform', 'translate(' + labelXPosition + ',' + labelYPosition + '),rotate(' + rotation + ')')
                 .attr('class', Y_AXIS_LABEL_CLASS + ' ' + axisClass + '-label')
@@ -2533,6 +2544,8 @@ dc.coordinateGridMixin = function (_chart) {
         if (text && axisYLab.text() !== text) {
             axisYLab.text(text);
         }
+        dc.transition(axisYLab, _chart.transitionDuration())
+            .attr('transform', 'translate(' + labelXPosition + ',' + labelYPosition + '),rotate(' + rotation + ')');
     };
 
     _chart.renderYAxisAt = function (axisClass, axis, position) {
@@ -2543,7 +2556,9 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')');
         }
 
-        dc.transition(axisYG, _chart.transitionDuration()).call(axis);
+        dc.transition(axisYG, _chart.transitionDuration())
+            .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')')
+            .call(axis);
     };
 
     _chart.renderYAxis = function () {
@@ -3782,6 +3797,7 @@ dc.pieChart = function (parent, chartGroup) {
     var _emptyTitle = 'empty';
 
     var _radius,
+        _givenRadius, // specified radius, if any
         _innerRadius = 0,
         _externalRadiusPadding = 0;
 
@@ -3826,7 +3842,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     function drawChart() {
         // set radius on basis of chart dimension if missing
-        _radius = _radius ? _radius : d3.min([_chart.width(), _chart.height()]) / 2;
+        _radius = _givenRadius ? _givenRadius : d3.min([_chart.width(), _chart.height()]) / 2;
 
         var arc = buildArcs();
 
@@ -3854,6 +3870,9 @@ dc.pieChart = function (parent, chartGroup) {
             removeElements(slices);
 
             highlightFilter();
+
+            dc.transition(_g, _chart.transitionDuration())
+                .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
         }
     }
 
@@ -4029,9 +4048,9 @@ dc.pieChart = function (parent, chartGroup) {
     **/
     _chart.radius = function (r) {
         if (!arguments.length) {
-            return _radius;
+            return _givenRadius;
         }
-        _radius = r;
+        _givenRadius = r;
         return _chart;
     };
 
@@ -4263,6 +4282,7 @@ dc.barChart = function (parent, chartGroup) {
     dc.override(_chart, 'rescale', function () {
         _chart._rescale();
         _barWidth = undefined;
+        return _chart;
     });
 
     dc.override(_chart, 'render', function () {
@@ -4271,7 +4291,7 @@ dc.barChart = function (parent, chartGroup) {
                          'See dc.js bar chart API documentation for details.');
         }
 
-        _chart._render();
+        return _chart._render();
     });
 
     _chart.plotData = function () {
