@@ -259,6 +259,20 @@ module.exports = function (grunt) {
                 files: [
                     {dest: '<%= conf.web %>/transitions/index.html', src: ['<%= conf.web %>/transitions/*.html']}
                 ]
+            },
+            'resizing-listing': {
+                options: {
+                    format: formatFileList,
+                    absolute: true,
+                    title: 'Index of dc.js resizing tests',
+                    heading: 'Eyeball tests for resizing dc.js charts',
+                    description: 'It\'s a lot easier to test resizing behavior by eye. ' +
+                        'These pages fit the charts to the browser dynamically so it\'s easier to test.',
+                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.web %>/resizing'
+                },
+                files: [
+                    {dest: '<%= conf.web %>/resizing/index.html', src: ['<%= conf.web %>/resizing/*.html']}
+                ]
             }
         },
 

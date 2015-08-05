@@ -1,6 +1,7 @@
 # 2.0 Series
 ## 2.0.0 beta 15
 * Reposition X axis on chart resize, by Rob Hardwick ([#856](https://github.com/dc-js/dc.js/pull/856)). Y axis as well
+* More fixes for resizing charts, and [a new resizing examples directory](http://dc-js.github.io/dc.js/resizing/), mostly for testing.
 
 ## 2.0.0 beta 14
 * Fix a test for IE and add svg subpath matcher, for #894
