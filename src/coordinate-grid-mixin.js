@@ -871,7 +871,7 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('class', 'brush')
                 .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')')
                 .call(_brush.x(_chart.x()));
-            _chart.setBrushY(gBrush);
+            _chart.setBrushY(gBrush, false);
             _chart.setHandlePaths(gBrush);
 
             if (_chart.hasFilter()) {
@@ -884,8 +884,10 @@ dc.coordinateGridMixin = function (_chart) {
         gBrush.selectAll('.resize').append('path').attr('d', _chart.resizeHandlePath);
     };
 
-    _chart.setBrushY = function (gBrush) {
-        gBrush.selectAll('rect').attr('height', brushHeight());
+    _chart.setBrushY = function (gBrush, doTransition) {
+        var transition = dc.optionalTransition(doTransition, _chart.transitionDuration());
+        transition(gBrush.selectAll('.brush rect')).attr('height', brushHeight());
+        transition(gBrush.selectAll('.resize path')).attr('d', _chart.resizeHandlePath);
     };
 
     _chart.extendBrush = function () {
@@ -932,7 +934,7 @@ dc.coordinateGridMixin = function (_chart) {
 
             var gBrush = g.select('g.brush');
             gBrush.call(_chart.brush().x(_chart.x()));
-            _chart.setBrushY(gBrush);
+            _chart.setBrushY(gBrush, true);
         }
 
         _chart.fadeDeselectedArea();

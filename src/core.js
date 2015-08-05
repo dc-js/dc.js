@@ -197,6 +197,20 @@ dc.transition = function (selections, duration, callback) {
     return s;
 };
 
+/* somewhat silly, but to avoid duplicating logic */
+dc.optionalTransition = function (enable, duration, callback) {
+    if (enable) {
+        return function (selection) {
+            return dc.transition(selection, duration, callback);
+        };
+    }
+    else {
+        return function (selection) {
+            return selection;
+        };
+    }
+};
+
 dc.units = {};
 
 /**
