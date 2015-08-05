@@ -369,10 +369,15 @@ dc.baseMixin = function (_chart) {
         return generateSvg();
     };
 
-    function generateSvg() {
-        _svg = _chart.root().append('svg')
+    function sizeSvg() {
+        _svg
             .attr('width', _chart.width())
             .attr('height', _chart.height());
+    }
+
+    function generateSvg() {
+        _svg = _chart.root().append('svg');
+        sizeSvg();
         return _svg;
     }
 
@@ -505,6 +510,7 @@ dc.baseMixin = function (_chart) {
 
     **/
     _chart.redraw = function () {
+        sizeSvg();
         _listeners.preRedraw(_chart);
 
         var result = _chart._doRedraw();
