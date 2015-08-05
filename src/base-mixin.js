@@ -370,9 +370,11 @@ dc.baseMixin = function (_chart) {
     };
 
     function sizeSvg() {
-        _svg
-            .attr('width', _chart.width())
-            .attr('height', _chart.height());
+        if (_svg) {
+            _svg
+                .attr('width', _chart.width())
+                .attr('height', _chart.height());
+        }
     }
 
     function generateSvg() {
