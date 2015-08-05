@@ -26,9 +26,10 @@ d3.csv("morley.csv", function(error, experiments) {
   runDimension = ndx.dimension(function(d) {return [+d.Expt, +d.Run]; });
   runGroup = runDimension.group().reduceSum(function(d) { return +d.Speed; });
 
+  var adjustX = 20, adjustY = 40;
   chart
-    .width(768)
-    .height(480)
+    .width(window.innerWidth-adjustX)
+    .height(window.innerHeight-adjustY)
     .chart(function(c) { return dc.lineChart(c).interpolate('basis'); })
     .x(d3.scale.linear().domain([0,20]))
     .brushOn(false)
@@ -45,6 +46,13 @@ d3.csv("morley.csv", function(error, experiments) {
     .legend(dc.legend().x(350).y(350).itemHeight(13).gap(5).horizontal(1).legendWidth(140).itemWidth(70));
   chart.yAxis().tickFormat(function(d) {return d3.format(',d')(d+299500);});
   chart.margins().left += 40;
+
+  window.onresize = function() {
+      chart
+          .width(window.innerWidth-adjustX)
+          .height(window.innerHeight-adjustY)
+          .redraw();
+  };
 
   dc.renderAll();
 
