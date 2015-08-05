@@ -181,13 +181,13 @@ immediately.  Default: false
 **/
 dc.disableTransitions = false;
 
-dc.transition = function (selections, duration, callback) {
+dc.transition = function (selections, duration, callback, name) {
     if (duration <= 0 || duration === undefined || dc.disableTransitions) {
         return selections;
     }
 
     var s = selections
-        .transition()
+        .transition(name)
         .duration(duration);
 
     if (typeof(callback) === 'function') {
@@ -195,6 +195,20 @@ dc.transition = function (selections, duration, callback) {
     }
 
     return s;
+};
+
+/* somewhat silly, but to avoid duplicating logic */
+dc.optionalTransition = function (enable, duration, callback, name) {
+    if (enable) {
+        return function (selection) {
+            return dc.transition(selection, duration, callback, name);
+        };
+    }
+    else {
+        return function (selection) {
+            return selection;
+        };
+    }
 };
 
 dc.units = {};
