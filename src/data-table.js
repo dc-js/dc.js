@@ -349,11 +349,11 @@ dc.dataTable = function (parent, chartGroup) {
 
     **/
     _chart.showGroups = function (_) {
-      if (!arguments.length) {
-        return true;
-      }
-      _showGroups = _;
-      return _chart;
+        if (!arguments.length) {
+            return true;
+        }
+        _showGroups = _;
+        return _chart;
     };
 
     return _chart.anchor(parent, chartGroup);
