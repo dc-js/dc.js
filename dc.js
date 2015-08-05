@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-beta.15
+ *  dc 2.0.0-beta.16
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2015 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -20,7 +20,7 @@
 'use strict';
 
 /**
-#### Version 2.0.0-beta.15
+#### Version 2.0.0-beta.16
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -41,7 +41,7 @@ that are chainable d3 objects.)
 /*jshint -W062*/
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-beta.15',
+    version: '2.0.0-beta.16',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -5169,6 +5169,7 @@ dc.dataTable = function (parent, chartGroup) {
         return d;
     };
     var _order = d3.ascending;
+    var _showGroups = true;
 
     _chart._doRender = function () {
         _chart.selectAll('tbody').remove();
@@ -5259,15 +5260,17 @@ dc.dataTable = function (parent, chartGroup) {
             .enter()
             .append('tbody');
 
-        rowGroup
-            .append('tr')
-            .attr('class', GROUP_CSS_CLASS)
-                .append('td')
-                .attr('class', LABEL_CSS_CLASS)
-                .attr('colspan', _columns.length)
-                .html(function (d) {
-                    return _chart.keyAccessor()(d);
-                });
+        if (_showGroups === true) {
+            rowGroup
+                .append('tr')
+                .attr('class', GROUP_CSS_CLASS)
+                    .append('td')
+                    .attr('class', LABEL_CSS_CLASS)
+                    .attr('colspan', _columns.length)
+                    .html(function (d) {
+                        return _chart.keyAccessor()(d);
+                    });
+        }
 
         groups.exit().remove();
 
@@ -5458,6 +5461,26 @@ dc.dataTable = function (parent, chartGroup) {
             return _order;
         }
         _order = _;
+        return _chart;
+    };
+
+    /**
+    ### .showGroups(true|false)
+    Get or set if group rows will be shown. Default value ``` true ```
+    The .group() getter-setter must be provided in either case.
+
+    ```js
+        chart
+            .group([value], [name])
+            .showGroups(true|false);
+    ```
+
+    **/
+    _chart.showGroups = function (_) {
+        if (!arguments.length) {
+            return true;
+        }
+        _showGroups = _;
         return _chart;
     };
 
