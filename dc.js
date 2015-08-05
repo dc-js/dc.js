@@ -2881,13 +2881,10 @@ dc.coordinateGridMixin = function (_chart) {
         gBrush.selectAll('.resize').append('path').attr('d', _chart.resizeHandlePath);
     };
 
-    _chart.setBrushY = function (gBrush, doTransition) {
-        // note we have to use named transitions here to not interfere with the transition brush
-        // call in redrawBrush below - will try a better way next
-        var transition = dc.optionalTransition(doTransition, _chart.transitionDuration(), null, 'brushY');
-        transition(gBrush.selectAll('.brush rect'))
+    _chart.setBrushY = function (gBrush) {
+        gBrush.selectAll('.brush rect')
             .attr('height', brushHeight());
-        transition(gBrush.selectAll('.resize path'))
+        gBrush.selectAll('.resize path')
             .attr('d', _chart.resizeHandlePath);
     };
 
@@ -2933,10 +2930,10 @@ dc.coordinateGridMixin = function (_chart) {
                 _chart.brush().extent(_chart.filter());
             }
 
-            var gBrush = g.select('g.brush');
-            _chart.setBrushY(gBrush, true);
-            dc.transition(gBrush, _chart.transitionDuration(), null, 'brushX')
-                .call(_chart.brush()
+            var gBrush = dc.transition(g.select('g.brush'),
+                                       _chart.transitionDuration());
+            _chart.setBrushY(gBrush);
+            gBrush.call(_chart.brush()
                       .x(_chart.x())
                       .extent(_chart.brush().extent()));
         }
