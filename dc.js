@@ -2090,6 +2090,7 @@ dc.coordinateGridMixin = function (_chart) {
     _chart.rescale = function () {
         _unitCount = undefined;
         _resizing = true;
+        return _chart;
     };
 
     /**
@@ -2370,7 +2371,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     function compareDomains(d1, d2) {
         return !d1 || !d2 || d1.length !== d2.length ||
-            d1.some(function (elem, i) { return elem.toString() !== d2[i]; });
+            d1.some(function (elem, i) { return elem.toString() !== d2[i].toString(); });
     }
 
     function prepareXAxis(g, render) {
@@ -3794,6 +3795,7 @@ dc.pieChart = function (parent, chartGroup) {
     var _emptyTitle = 'empty';
 
     var _radius,
+        _givenRadius, // specified radius, if any
         _innerRadius = 0,
         _externalRadiusPadding = 0;
 
@@ -3838,7 +3840,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     function drawChart() {
         // set radius on basis of chart dimension if missing
-        _radius = _radius ? _radius : d3.min([_chart.width(), _chart.height()]) / 2;
+        _radius = _givenRadius ? _givenRadius : d3.min([_chart.width(), _chart.height()]) / 2;
 
         var arc = buildArcs();
 
@@ -3866,6 +3868,9 @@ dc.pieChart = function (parent, chartGroup) {
             removeElements(slices);
 
             highlightFilter();
+
+            dc.transition(_g, _chart.transitionDuration())
+                .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
         }
     }
 
@@ -4041,9 +4046,9 @@ dc.pieChart = function (parent, chartGroup) {
     **/
     _chart.radius = function (r) {
         if (!arguments.length) {
-            return _radius;
+            return _givenRadius;
         }
-        _radius = r;
+        _givenRadius = r;
         return _chart;
     };
 
@@ -4275,6 +4280,7 @@ dc.barChart = function (parent, chartGroup) {
     dc.override(_chart, 'rescale', function () {
         _chart._rescale();
         _barWidth = undefined;
+        return _chart;
     });
 
     dc.override(_chart, 'render', function () {
