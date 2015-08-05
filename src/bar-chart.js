@@ -48,6 +48,7 @@ dc.barChart = function (parent, chartGroup) {
     dc.override(_chart, 'rescale', function () {
         _chart._rescale();
         _barWidth = undefined;
+        return _chart;
     });
 
     dc.override(_chart, 'render', function () {

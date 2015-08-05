@@ -109,6 +109,7 @@ dc.coordinateGridMixin = function (_chart) {
     _chart.rescale = function () {
         _unitCount = undefined;
         _resizing = true;
+        return _chart;
     };
 
     /**
