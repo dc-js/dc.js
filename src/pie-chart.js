@@ -41,6 +41,7 @@ dc.pieChart = function (parent, chartGroup) {
     var _emptyTitle = 'empty';
 
     var _radius,
+        _givenRadius, // specified radius, if any
         _innerRadius = 0,
         _externalRadiusPadding = 0;
 
@@ -85,7 +86,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     function drawChart() {
         // set radius on basis of chart dimension if missing
-        _radius = _radius ? _radius : d3.min([_chart.width(), _chart.height()]) / 2;
+        _radius = _givenRadius ? _givenRadius : d3.min([_chart.width(), _chart.height()]) / 2;
 
         var arc = buildArcs();
 
@@ -113,6 +114,9 @@ dc.pieChart = function (parent, chartGroup) {
             removeElements(slices);
 
             highlightFilter();
+
+            dc.transition(_g, _chart.transitionDuration())
+                .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
         }
     }
 
@@ -288,9 +292,9 @@ dc.pieChart = function (parent, chartGroup) {
     **/
     _chart.radius = function (r) {
         if (!arguments.length) {
-            return _radius;
+            return _givenRadius;
         }
-        _radius = r;
+        _givenRadius = r;
         return _chart;
     };
 

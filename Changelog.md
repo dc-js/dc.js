@@ -1,4 +1,8 @@
 # 2.0 Series
+## 2.0.0 beta 15
+* Reposition X axis on chart resize, by Rob Hardwick ([#856](https://github.com/dc-js/dc.js/pull/856)). Y axis as well
+* More fixes for resizing charts, and [a new resizing examples directory](http://dc-js.github.io/dc.js/resizing/), mostly for testing.
+
 ## 2.0.0 beta 14
 * Fix a test for IE and add svg subpath matcher, for #894
 
@@ -9,6 +13,7 @@
 * grammar/spelling/formatting fixes to annotated stock example, by Johnny Peck and Enrico Spinielli ([#956](https://github.com/dc-js/dc.js/pull/956), [#875](https://github.com/dc-js/dc.js/pull/875))
 * document bower install, by Mayfarth ([#899](https://github.com/dc-js/dc.js/pull/899))
 * remove unused bower version, by Kevin Kirsche ([#948](https://github.com/dc-js/dc.js/pull/948))
+* Front page stable version automatically read from GitHub, by Enrico Spinielli ([#865](https://github.com/dc-js/dc.js/pull/865))
 
 ## 2.0.0 beta 12
  * axes should rescale on chart rescale (not just on zoom). ([#791](https://github.com/dc-js/dc.js/issues/791))
