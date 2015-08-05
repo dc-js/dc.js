@@ -202,13 +202,13 @@ immediately.  Default: false
 **/
 dc.disableTransitions = false;
 
-dc.transition = function (selections, duration, callback) {
+dc.transition = function (selections, duration, callback, name) {
     if (duration <= 0 || duration === undefined || dc.disableTransitions) {
         return selections;
     }
 
     var s = selections
-        .transition()
+        .transition(name)
         .duration(duration);
 
     if (typeof(callback) === 'function') {
@@ -219,10 +219,10 @@ dc.transition = function (selections, duration, callback) {
 };
 
 /* somewhat silly, but to avoid duplicating logic */
-dc.optionalTransition = function (enable, duration, callback) {
+dc.optionalTransition = function (enable, duration, callback, name) {
     if (enable) {
         return function (selection) {
-            return dc.transition(selection, duration, callback);
+            return dc.transition(selection, duration, callback, name);
         };
     }
     else {
@@ -2882,9 +2882,13 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart.setBrushY = function (gBrush, doTransition) {
-        var transition = dc.optionalTransition(doTransition, _chart.transitionDuration());
-        transition(gBrush.selectAll('.brush rect')).attr('height', brushHeight());
-        transition(gBrush.selectAll('.resize path')).attr('d', _chart.resizeHandlePath);
+        // note we have to use named transitions here to not interfere with the transition brush
+        // call in redrawBrush below - will try a better way next
+        var transition = dc.optionalTransition(doTransition, _chart.transitionDuration(), null, 'brushY');
+        transition(gBrush.selectAll('.brush rect'))
+            .attr('height', brushHeight());
+        transition(gBrush.selectAll('.resize path'))
+            .attr('d', _chart.resizeHandlePath);
     };
 
     _chart.extendBrush = function () {
@@ -2930,8 +2934,11 @@ dc.coordinateGridMixin = function (_chart) {
             }
 
             var gBrush = g.select('g.brush');
-            gBrush.call(_chart.brush().x(_chart.x()));
             _chart.setBrushY(gBrush, true);
+            dc.transition(gBrush, _chart.transitionDuration(), null, 'brushX')
+                .call(_chart.brush()
+                      .x(_chart.x())
+                      .extent(_chart.brush().extent()));
         }
 
         _chart.fadeDeselectedArea();
