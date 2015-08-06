@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-beta.16
+ *  dc 2.0.0-beta.17
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2015 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -20,7 +20,7 @@
 'use strict';
 
 /**
-#### Version 2.0.0-beta.16
+#### Version 2.0.0-beta.17
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -41,7 +41,7 @@ that are chainable d3 objects.)
 /*jshint -W062*/
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-beta.16',
+    version: '2.0.0-beta.17',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -2527,7 +2527,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart._prepareYAxis = function (g) {
         if (_y === undefined || _chart.elasticY()) {
-            _y = d3.scale.linear();
+            if (_y === undefined) {
+                _y = d3.scale.linear();
+            }
             var min = _chart.yAxisMin() || 0,
                 max = _chart.yAxisMax() || 0;
             _y.domain([min, max]).rangeRound([_chart.yAxisHeight(), 0]);
@@ -5985,10 +5987,10 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     function prepareRightYAxis() {
-        if (_chart.rightY() === undefined) {
-            _chart.rightY(d3.scale.linear());
-        }
-        if (_chart.elasticY()) {
+        if (_chart.rightY() === undefined || _chart.elasticY()) {
+            if (_chart.rightY() === undefined) {
+                _chart.rightY(d3.scale.linear());
+            }
             _chart.rightY().domain([rightYAxisMin(), rightYAxisMax()]).rangeRound([_chart.yAxisHeight(), 0]);
         }
 
@@ -5999,10 +6001,10 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     function prepareLeftYAxis() {
-        if (_chart.y() === undefined) {
-            _chart.y(d3.scale.linear());
-        }
-        if (_chart.elasticY()) {
+        if (_chart.y() === undefined || _chart.elasticY()) {
+            if (_chart.y() === undefined) {
+                _chart.y(d3.scale.linear());
+            }
             _chart.y().domain([yAxisMin(), yAxisMax()]).rangeRound([_chart.yAxisHeight(), 0]);
         }
 
