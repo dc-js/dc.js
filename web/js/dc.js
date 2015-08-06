@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-beta.16
+ *  dc 2.0.0-beta.17
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2015 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -20,7 +20,7 @@
 'use strict';
 
 /**
-#### Version 2.0.0-beta.16
+#### Version 2.0.0-beta.17
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -41,7 +41,7 @@ that are chainable d3 objects.)
 /*jshint -W062*/
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-beta.16',
+    version: '2.0.0-beta.17',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -2527,7 +2527,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart._prepareYAxis = function (g) {
         if (_y === undefined || _chart.elasticY()) {
-            _y = d3.scale.linear();
+            if (_y === undefined) {
+                _y = d3.scale.linear();
+            }
             var min = _chart.yAxisMin() || 0,
                 max = _chart.yAxisMax() || 0;
             _y.domain([min, max]).rangeRound([_chart.yAxisHeight(), 0]);
@@ -2872,7 +2874,7 @@ dc.coordinateGridMixin = function (_chart) {
             _chart.setHandlePaths(gBrush);
 
             if (_chart.hasFilter()) {
-                _chart.redrawBrush(g);
+                _chart.redrawBrush(g, false);
             }
         }
     };
@@ -2907,7 +2909,7 @@ dc.coordinateGridMixin = function (_chart) {
     _chart._brushing = function () {
         var extent = _chart.extendBrush();
 
-        _chart.redrawBrush(_g);
+        _chart.redrawBrush(_g, false);
 
         if (_chart.brushIsEmpty(extent)) {
             dc.events.trigger(function () {
@@ -2924,14 +2926,13 @@ dc.coordinateGridMixin = function (_chart) {
         }
     };
 
-    _chart.redrawBrush = function (g) {
+    _chart.redrawBrush = function (g, doTransition) {
         if (_brushOn) {
             if (_chart.filter() && _chart.brush().empty()) {
                 _chart.brush().extent(_chart.filter());
             }
 
-            var gBrush = dc.transition(g.select('g.brush'),
-                                       _chart.transitionDuration());
+            var gBrush = dc.optionalTransition(doTransition, _chart.transitionDuration())(g.select('g.brush'));
             _chart.setBrushY(gBrush);
             gBrush.call(_chart.brush()
                       .x(_chart.x())
@@ -3038,9 +3039,9 @@ dc.coordinateGridMixin = function (_chart) {
         }
 
         if (render) {
-            _chart.renderBrush(_chart.g());
+            _chart.renderBrush(_chart.g(), false);
         } else {
-            _chart.redrawBrush(_chart.g());
+            _chart.redrawBrush(_chart.g(), _resizing);
         }
         _chart.fadeDeselectedArea();
         _resizing = false;
@@ -5987,7 +5988,9 @@ dc.compositeChart = function (parent, chartGroup) {
 
     function prepareRightYAxis() {
         if (_chart.rightY() === undefined || _chart.elasticY()) {
-            _chart.rightY(d3.scale.linear());
+            if (_chart.rightY() === undefined) {
+                _chart.rightY(d3.scale.linear());
+            }
             _chart.rightY().domain([rightYAxisMin(), rightYAxisMax()]).rangeRound([_chart.yAxisHeight(), 0]);
         }
 
@@ -5999,7 +6002,9 @@ dc.compositeChart = function (parent, chartGroup) {
 
     function prepareLeftYAxis() {
         if (_chart.y() === undefined || _chart.elasticY()) {
-            _chart.y(d3.scale.linear());
+            if (_chart.y() === undefined) {
+                _chart.y(d3.scale.linear());
+            }
             _chart.y().domain([yAxisMin(), yAxisMax()]).rangeRound([_chart.yAxisHeight(), 0]);
         }
 
@@ -6189,6 +6194,7 @@ dc.compositeChart = function (parent, chartGroup) {
             return _rightY;
         }
         _rightY = _;
+        _chart.rescale();
         return _chart;
     };
 
