@@ -142,7 +142,7 @@
 <li><a href="#heat-map">Heat Map</a></li>
 <li><a href="#box-plot">Box Plot</a></li>
 </ul>
-<h4 id="version-2-0-0-beta-15">Version 2.0.0-beta.15</h4>
+<h4 id="version-2-0-0-beta-16">Version 2.0.0-beta.16</h4>
 <p>The entire dc.js library is scoped under the <strong>dc</strong> name space. It does not introduce anything else
 into the global name space.</p>
 <h4 id="function-chaining">Function Chaining</h4>
@@ -1103,6 +1103,9 @@ selected. The text <code>%total-count</code> will replaced with the total number
 <p>Includes: <a href="#base-mixin">Base Mixin</a></p>
 <p>The data table is a simple widget designed to list crossfilter focused data set (rows being
 filtered) in a good old tabular fashion.</p>
+<p>Note: Unlike other charts, the data table (and data grid chart) use the group attribute as a keying function
+for <a href="https://github.com/mbostock/d3/wiki/Arrays#-nest">nesting</a> the data together in groups.
+Do not pass in a crossfilter group as this will not work.</p>
 <p>Examples:</p>
 <ul>
 <li><a href="http://dc-js.github.com/dc.js/">Nasdaq 100 Index</a><h4 id="dc-datatable-parent-chartgroup-">dc.dataTable(parent[, chartGroup])</h4>
@@ -1208,10 +1211,20 @@ particular field to be sorted by. Default value: identity function</p>
 <p>Get or set sort order. Default value: <code>d3.ascending</code></p>
 <pre><code class="lang-js">    chart.order(d3.descending);
 </code></pre>
+<h3 id="-showgroups-true-false-">.showGroups(true|false)</h3>
+<p>Get or set if group rows will be shown. Default value <code>true</code>
+The .group() getter-setter must be provided in either case.</p>
+<pre><code class="lang-js">    chart
+        .group([value], [name])
+        .showGroups(<span class="hljs-literal">true</span>|<span class="hljs-literal">false</span>);
+</code></pre>
 <h2 id="data-grid-widget">Data Grid Widget</h2>
 <p>Includes: <a href="#base-mixin">Base Mixin</a></p>
 <p>Data grid is a simple widget designed to list the filtered records, providing
 a simple way to define how the items are displayed.</p>
+<p>Note: Unlike other charts, the data grid chart (and data table) use the group attribute as a keying function
+for <a href="https://github.com/mbostock/d3/wiki/Arrays#-nest">nesting</a> the data together in groups.
+Do not pass in a crossfilter group as this will not work.</p>
 <p>Examples:</p>
 <ul>
 <li><a href="http://europarl.me/dc.js/web/ep/index.html">List of members of the european parliament</a></li>
@@ -1230,6 +1243,12 @@ Interaction with a chart will only trigger events and redraws within the chart�
 </ul>
 <p>Returns:
 A newly created data grid widget instance</p>
+<h4 id="-beginslice-index-">.beginSlice([index])</h4>
+<p>Get or set the index of the beginning slice which determines which entries get displayed by the widget
+Useful when implementing pagination.</p>
+<h4 id="-endslice-index-">.endSlice([index])</h4>
+<p>Get or set the index of the end slice which determines which entries get displayed by the widget
+Useful when implementing pagination.</p>
 <h4 id="-size-size-">.size([size])</h4>
 <p>Get or set the grid size which determines the number of items displayed by the widget.</p>
 <h4 id="-html-function-data-return-html-">.html( function (data) { return ‘<html>‘; })</h4>
