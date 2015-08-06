@@ -530,7 +530,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart._prepareYAxis = function (g) {
         if (_y === undefined || _chart.elasticY()) {
-            _y = d3.scale.linear();
+            if (_y === undefined) {
+                _y = d3.scale.linear();
+            }
             var min = _chart.yAxisMin() || 0,
                 max = _chart.yAxisMax() || 0;
             _y.domain([min, max]).rangeRound([_chart.yAxisHeight(), 0]);
@@ -875,7 +877,7 @@ dc.coordinateGridMixin = function (_chart) {
             _chart.setHandlePaths(gBrush);
 
             if (_chart.hasFilter()) {
-                _chart.redrawBrush(g);
+                _chart.redrawBrush(g, false);
             }
         }
     };
@@ -910,7 +912,7 @@ dc.coordinateGridMixin = function (_chart) {
     _chart._brushing = function () {
         var extent = _chart.extendBrush();
 
-        _chart.redrawBrush(_g);
+        _chart.redrawBrush(_g, false);
 
         if (_chart.brushIsEmpty(extent)) {
             dc.events.trigger(function () {
@@ -927,14 +929,13 @@ dc.coordinateGridMixin = function (_chart) {
         }
     };
 
-    _chart.redrawBrush = function (g) {
+    _chart.redrawBrush = function (g, doTransition) {
         if (_brushOn) {
             if (_chart.filter() && _chart.brush().empty()) {
                 _chart.brush().extent(_chart.filter());
             }
 
-            var gBrush = dc.transition(g.select('g.brush'),
-                                       _chart.transitionDuration());
+            var gBrush = dc.optionalTransition(doTransition, _chart.transitionDuration())(g.select('g.brush'));
             _chart.setBrushY(gBrush);
             gBrush.call(_chart.brush()
                       .x(_chart.x())
@@ -1041,9 +1042,9 @@ dc.coordinateGridMixin = function (_chart) {
         }
 
         if (render) {
-            _chart.renderBrush(_chart.g());
+            _chart.renderBrush(_chart.g(), false);
         } else {
-            _chart.redrawBrush(_chart.g());
+            _chart.redrawBrush(_chart.g(), _resizing);
         }
         _chart.fadeDeselectedArea();
         _resizing = false;
