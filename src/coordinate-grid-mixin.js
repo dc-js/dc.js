@@ -530,7 +530,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart._prepareYAxis = function (g) {
         if (_y === undefined || _chart.elasticY()) {
-            _y = d3.scale.linear();
+            if (_y === undefined) {
+                _y = d3.scale.linear();
+            }
             var min = _chart.yAxisMin() || 0,
                 max = _chart.yAxisMax() || 0;
             _y.domain([min, max]).rangeRound([_chart.yAxisHeight(), 0]);

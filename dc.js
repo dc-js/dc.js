@@ -2527,7 +2527,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart._prepareYAxis = function (g) {
         if (_y === undefined || _chart.elasticY()) {
-            _y = d3.scale.linear();
+            if (_y === undefined) {
+                _y = d3.scale.linear();
+            }
             var min = _chart.yAxisMin() || 0,
                 max = _chart.yAxisMax() || 0;
             _y.domain([min, max]).rangeRound([_chart.yAxisHeight(), 0]);
@@ -5986,7 +5988,9 @@ dc.compositeChart = function (parent, chartGroup) {
 
     function prepareRightYAxis() {
         if (_chart.rightY() === undefined || _chart.elasticY()) {
-            _chart.rightY(d3.scale.linear());
+            if (_chart.rightY() === undefined) {
+                _chart.rightY(d3.scale.linear());
+            }
             _chart.rightY().domain([rightYAxisMin(), rightYAxisMax()]).rangeRound([_chart.yAxisHeight(), 0]);
         }
 
@@ -5998,7 +6002,9 @@ dc.compositeChart = function (parent, chartGroup) {
 
     function prepareLeftYAxis() {
         if (_chart.y() === undefined || _chart.elasticY()) {
-            _chart.y(d3.scale.linear());
+            if (_chart.y() === undefined) {
+                _chart.y(d3.scale.linear());
+            }
             _chart.y().domain([yAxisMin(), yAxisMax()]).rangeRound([_chart.yAxisHeight(), 0]);
         }
 
@@ -6188,6 +6194,7 @@ dc.compositeChart = function (parent, chartGroup) {
             return _rightY;
         }
         _rightY = _;
+        _chart.rescale();
         return _chart;
     };
 
