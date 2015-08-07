@@ -66,6 +66,13 @@
         "global": false,
         "module": false,
         "process": false,
-        "require": false
+        "require": false,
+        "jasmine": false,
+        "expect": false,
+        "describe": false,
+        "it": false,
+        "beforeEach": false,
+        "afterEach": false,
+        "spyOn": false
     }
 }
