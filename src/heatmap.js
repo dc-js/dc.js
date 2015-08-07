@@ -49,7 +49,7 @@ dc.heatMap = function (parent, chartGroup) {
         return d;
     };
 
-   /**
+    /**
     #### .colsLabel([labelFunction])
     Set or get the column label function. The chart class uses this function to render
     column labels on the X axis. It is passed the column name.
@@ -66,7 +66,7 @@ dc.heatMap = function (parent, chartGroup) {
         return _chart;
     };
 
-   /**
+    /**
     #### .rowsLabel([labelFunction])
     Set or get the row label function. The chart class uses this function to render
     row labels on the Y axis. It is passed the row name.
@@ -93,7 +93,7 @@ dc.heatMap = function (parent, chartGroup) {
         });
     };
 
-    function filterAxis(axis, value) {
+    function filterAxis (axis, value) {
         var cellsOnAxis = _chart.selectAll('.box-group').filter(function (d) {
             return d.key[axis] === value;
         });
@@ -122,7 +122,7 @@ dc.heatMap = function (parent, chartGroup) {
         return _chart._filter(dc.filters.TwoDimensionalFilter(filter));
     });
 
-    function uniq(d, i, a) {
+    function uniq (d, i, a) {
         return !i || a[i - 1] !== d;
     }
 

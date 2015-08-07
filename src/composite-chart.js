@@ -93,8 +93,7 @@ dc.compositeChart = function (parent, chartGroup) {
 
         if (leftYAxisChildren().length > 0 && !_rightAxisGridLines) {
             _chart._renderHorizontalGridLinesForAxis(_chart.g(), _chart.y(), _chart.yAxis());
-        }
-        else if (rightYAxisChildren().length > 0) {
+        } else if (rightYAxisChildren().length > 0) {
             _chart._renderHorizontalGridLinesForAxis(_chart.g(), _rightY, _rightYAxis);
         }
     };
@@ -111,7 +110,7 @@ dc.compositeChart = function (parent, chartGroup) {
         }
     };
 
-    function prepareRightYAxis() {
+    function prepareRightYAxis () {
         if (_chart.rightY() === undefined || _chart.elasticY()) {
             if (_chart.rightY() === undefined) {
                 _chart.rightY(d3.scale.linear());
@@ -125,7 +124,7 @@ dc.compositeChart = function (parent, chartGroup) {
         _chart.rightYAxis().orient('right');
     }
 
-    function prepareLeftYAxis() {
+    function prepareLeftYAxis () {
         if (_chart.y() === undefined || _chart.elasticY()) {
             if (_chart.y() === undefined) {
                 _chart.y(d3.scale.linear());
@@ -139,7 +138,7 @@ dc.compositeChart = function (parent, chartGroup) {
         _chart.yAxis().orient('left');
     }
 
-    function generateChildG(child, i) {
+    function generateChildG (child, i) {
         child._generateG(_chart.g());
         child.g().attr('class', SUB_CHART_CLASS + ' _' + i);
     }
@@ -163,8 +162,7 @@ dc.compositeChart = function (parent, chartGroup) {
             if (child.useRightYAxis()) {
                 child.y(_chart.rightY());
                 child.yAxis(_chart.rightYAxis());
-            }
-            else {
+            } else {
                 child.y(_chart.y());
                 child.yAxis(_chart.yAxis());
             }
@@ -323,49 +321,49 @@ dc.compositeChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    function leftYAxisChildren() {
+    function leftYAxisChildren () {
         return _children.filter(function (child) {
             return !child.useRightYAxis();
         });
     }
 
-    function rightYAxisChildren() {
+    function rightYAxisChildren () {
         return _children.filter(function (child) {
             return child.useRightYAxis();
         });
     }
 
-    function getYAxisMin(charts) {
+    function getYAxisMin (charts) {
         return charts.map(function (c) {
             return c.yAxisMin();
         });
     }
 
     delete _chart.yAxisMin;
-    function yAxisMin() {
+    function yAxisMin () {
         return d3.min(getYAxisMin(leftYAxisChildren()));
     }
 
-    function rightYAxisMin() {
+    function rightYAxisMin () {
         return d3.min(getYAxisMin(rightYAxisChildren()));
     }
 
-    function getYAxisMax(charts) {
+    function getYAxisMax (charts) {
         return charts.map(function (c) {
             return c.yAxisMax();
         });
     }
 
     delete _chart.yAxisMax;
-    function yAxisMax() {
+    function yAxisMax () {
         return dc.utils.add(d3.max(getYAxisMax(leftYAxisChildren())), _chart.yAxisPadding());
     }
 
-    function rightYAxisMax() {
+    function rightYAxisMax () {
         return dc.utils.add(d3.max(getYAxisMax(rightYAxisChildren())), _chart.yAxisPadding());
     }
 
-    function getAllXAxisMinFromChildCharts() {
+    function getAllXAxisMinFromChildCharts () {
         return _children.map(function (c) {
             return c.xAxisMin();
         });
@@ -375,7 +373,7 @@ dc.compositeChart = function (parent, chartGroup) {
         return dc.utils.subtract(d3.min(getAllXAxisMinFromChildCharts()), _chart.xAxisPadding());
     });
 
-    function getAllXAxisMaxFromChildCharts() {
+    function getAllXAxisMaxFromChildCharts () {
         return _children.map(function (c) {
             return c.xAxisMax();
         });

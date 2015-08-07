@@ -40,7 +40,7 @@ dc.chartRegistry = function () {
     // chartGroup:string => charts:array
     var _chartMap = {};
 
-    function initializeChartGroup(group) {
+    function initializeChartGroup (group) {
         if (!group) {
             group = dc.constants.DEFAULT_CHART_GROUP;
         }
@@ -203,8 +203,7 @@ dc.optionalTransition = function (enable, duration, callback, name) {
         return function (selection) {
             return dc.transition(selection, duration, callback, name);
         };
-    }
-    else {
+    } else {
         return function (selection) {
             return selection;
         };

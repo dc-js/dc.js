@@ -102,14 +102,13 @@ dc.legend = function () {
                     _cumulativeLegendTextWidth += itemWidth;
                 }
                 return translateBy;
-            }
-            else {
+            } else {
                 return 'translate(0,' + i * legendItemHeight() + ')';
             }
         });
     };
 
-    function legendItemHeight() {
+    function legendItemHeight () {
         return _gap + _itemHeight;
     }
 

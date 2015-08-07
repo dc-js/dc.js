@@ -34,7 +34,7 @@ dc.numberDisplay = function (parent, chartGroup) {
     var SPAN_CLASS = 'number-display';
     var _formatNumber = d3.format('.2s');
     var _chart = dc.baseMixin({});
-    var _html = {one:'', some:'', none:''};
+    var _html = {one: '', some: '', none: ''};
 
     // dimension not required
     _chart._mandatoryAttributes(['group']);

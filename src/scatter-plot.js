@@ -181,7 +181,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         }).classed('fadeout', false);
     };
 
-    function resizeSymbolsWhere(condition, size) {
+    function resizeSymbolsWhere (condition, size) {
         var symbols = _chart.selectAll('.chart-body path.symbol').filter(function () {
             return condition(d3.select(this));
         });
@@ -211,7 +211,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         return _chart.brush().empty() || !extent || extent[0][0] >= extent[1][0] || extent[0][1] >= extent[1][1];
     };
 
-    function resizeFiltered(filter) {
+    function resizeFiltered (filter) {
         var symbols = _chart.selectAll('.chart-body path.symbol').each(function (d) {
             this.filtered = filter && filter.isFiltered(d.key);
         });

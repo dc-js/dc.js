@@ -482,9 +482,9 @@ d3.csv('ndx.csv', function (data) {
         // `.html` replaces everything in the anchor with the html given using the following function.
         // `%filter-count` and `%total-count` are replaced with the values obtained.
         .html({
-            some:'<strong>%filter-count</strong> selected out of <strong>%total-count</strong> records' +
+            some: '<strong>%filter-count</strong> selected out of <strong>%total-count</strong> records' +
                 ' | <a href=\'javascript:dc.filterAll(); dc.renderAll();\'\'>Reset All</a>',
-            all:'All records selected. Please click on the graph to apply filters.'
+            all: 'All records selected. Please click on the graph to apply filters.'
         });
 
     //#### Data Table
@@ -553,7 +553,7 @@ d3.csv('ndx.csv', function (data) {
             table.selectAll('.dc-table-group').classed('info', true);
         });
 
-/*
+    /*
     //#### Geo Choropleth Chart
 
     //Create a choropleth chart and use the given css selector as anchor. You can also specify
@@ -677,5 +677,5 @@ d3.selectAll('#version').text(dc.version);
 // Determine latest stable version in the repo via Github API
 d3.json('https://api.github.com/repos/dc-js/dc.js/releases/latest', function (error, latestRelease) {
     /*jshint camelcase: false */
-    d3.selectAll('#latest').text(latestRelease.tag_name);
+    d3.selectAll('#latest').text(latestRelease.tag_name); /* jscs:disable */
 });

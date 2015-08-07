@@ -32,7 +32,7 @@
 dc.seriesChart = function (parent, chartGroup) {
     var _chart = dc.compositeChart(parent, chartGroup);
 
-    function keySort(a, b) {
+    function keySort (a, b) {
         return d3.ascending(_chart.keyAccessor()(a), _chart.keyAccessor()(b));
     }
 
@@ -66,7 +66,7 @@ dc.seriesChart = function (parent, chartGroup) {
                 keep.push(sub.key);
                 return subChart
                     .dimension(_chart.dimension())
-                    .group({all:d3.functor(sub.values)}, sub.key)
+                    .group({all: d3.functor(sub.values)}, sub.key)
                     .keyAccessor(_chart.keyAccessor())
                     .valueAccessor(_chart.valueAccessor())
                     .brushOn(_chart.brushOn());
@@ -85,14 +85,14 @@ dc.seriesChart = function (parent, chartGroup) {
         }
     };
 
-    function clearChart(c) {
+    function clearChart (c) {
         if (_charts[c].g()) {
             _charts[c].g().remove();
         }
         delete _charts[c];
     }
 
-    function resetChildren() {
+    function resetChildren () {
         Object.keys(_charts).map(clearChart);
         _charts = {};
     }

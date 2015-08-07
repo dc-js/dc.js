@@ -80,7 +80,7 @@ dc.bubbleOverlay = function (root, chartGroup) {
         return _chart;
     };
 
-    function initOverlayG() {
+    function initOverlayG () {
         _g = _chart.select('g.' + BUBBLE_OVERLAY_CLASS);
         if (_g.empty()) {
             _g = _chart.svg().append('g').attr('class', BUBBLE_OVERLAY_CLASS);
@@ -88,7 +88,7 @@ dc.bubbleOverlay = function (root, chartGroup) {
         return _g;
     }
 
-    function initializeBubbles() {
+    function initializeBubbles () {
         var data = mapData();
 
         _points.forEach(function (point) {
@@ -115,7 +115,7 @@ dc.bubbleOverlay = function (root, chartGroup) {
         });
     }
 
-    function mapData() {
+    function mapData () {
         var data = {};
         _chart.data().forEach(function (datum) {
             data[_chart.keyAccessor()(datum)] = datum;
@@ -123,7 +123,7 @@ dc.bubbleOverlay = function (root, chartGroup) {
         return data;
     }
 
-    function getNodeG(point, data) {
+    function getNodeG (point, data) {
         var bubbleNodeClass = BUBBLE_NODE_CLASS + ' ' + dc.utils.nameToId(point.name);
 
         var nodeG = _g.select('g.' + dc.utils.nameToId(point.name));
@@ -147,7 +147,7 @@ dc.bubbleOverlay = function (root, chartGroup) {
         return _chart;
     };
 
-    function updateBubbles() {
+    function updateBubbles () {
         var data = mapData();
 
         _points.forEach(function (point) {

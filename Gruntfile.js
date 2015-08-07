@@ -20,10 +20,10 @@ module.exports = function (grunt) {
         conf: config,
 
         concat: {
-            options : {
+            options: {
                 process: true,
                 sourceMap: true,
-                banner : '<%= conf.banner %>'
+                banner: '<%= conf.banner %>'
             },
             js: {
                 src: '<%= conf.jsFiles %>',
@@ -36,7 +36,7 @@ module.exports = function (grunt) {
                     mangle: true,
                     compress: true,
                     sourceMap: true,
-                    banner : '<%= conf.banner %>'
+                    banner: '<%= conf.banner %>'
                 },
                 src: '<%= conf.pkg.name %>.js',
                 dest: '<%= conf.pkg.name %>.min.js'
@@ -116,9 +116,9 @@ module.exports = function (grunt) {
                     '<%= conf.pkg.name %>.js'
                 ]
             },
-            coverage:{
+            coverage: {
                 src: '<%= jasmine.specs.src %>',
-                options:{
+                options: {
                     specs: '<%= jasmine.specs.options.specs %>',
                     helpers: '<%= jasmine.specs.options.helpers %>',
                     version: '<%= jasmine.specs.options.version %>',
@@ -201,7 +201,7 @@ module.exports = function (grunt) {
         docco: {
             options: {
                 dst: '<%= conf.web %>/docs',
-                basepath:'<%= conf.web %>'
+                basepath: '<%= conf.web %>'
             },
             howto: {
                 files: [

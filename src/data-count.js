@@ -43,7 +43,7 @@ dc.dataCount('.dc-data-count')
 dc.dataCount = function (parent, chartGroup) {
     var _formatNumber = d3.format(',d');
     var _chart = dc.baseMixin({});
-    var _html = {some:'', all:''};
+    var _html = {some: '', all: ''};
 
     /**
      #### html([object])
