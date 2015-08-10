@@ -1,4 +1,10 @@
-function loadDateFixture() {
+/* jscs:disable validateQuoteMarks, maximumLineLength */
+/* jshint -W109, -W101, -W098 */
+function dateCleaner (e) {
+    e.dd = d3.time.format.iso.parse(e.date);
+}
+
+function loadDateFixture () {
     var fixture = JSON.parse("[" +
         "{\"value\":\"44\",\"nvalue\":\"-4\",\"countrycode\":\"US\",\"state\":\"California\",\"status\":\"T\",\"id\":1,\"region\":\"South\",\"date\":\"2012-05-25T16:10:09Z\"}, " +
         "{\"value\":\"22\",\"nvalue\":\"-2\",\"countrycode\":\"US\",\"state\":\"Colorado\",\"status\":\"F\",\"id\":2,\"region\":\"West\",\"date\":\"2012-06-10T16:10:19Z\"}, " +
@@ -16,7 +22,7 @@ function loadDateFixture() {
     return fixture;
 }
 
-function loadDateFixture2() {
+function loadDateFixture2 () {
     var fixture = JSON.parse(
         "[" +
             "{\"value\":\"11\",\"nvalue\":\"-4\",\"countrycode\":\"UK\",\"state\":\"Liverpool\",\"status\":\"T\",\"id\":11,\"region\":\"South\",\"date\":\"2012-05-25T16:20:09Z\"}, " +
@@ -27,8 +33,7 @@ function loadDateFixture2() {
     return fixture;
 }
 
-
-function loadBoxPlotFixture() {
+function loadBoxPlotFixture () {
     return JSON.parse("[" +
         "{\"value\":\"44\",\"nvalue\":\"-4\",\"countrycode\":\"US\",\"state\":\"California\",\"status\":\"T\",\"id\":1,\"region\":\"South\",\"date\":\"2012-05-25T16:10:09Z\"}, " +
         "{\"value\":\"22\",\"nvalue\":\"-2\",\"countrycode\":\"US\",\"state\":\"Colorado\",\"status\":\"F\",\"id\":2,\"region\":\"West\",\"date\":\"2012-06-10T16:10:19Z\"}, " +
@@ -47,7 +52,7 @@ function loadBoxPlotFixture() {
         "]");
 }
 
-function loadColorFixture() {
+function loadColorFixture () {
     return JSON.parse("[" +
         "{\"colData\":\"1\", \"rowData\": \"1\", \"colorData\": \"1\"}," +
         "{\"colData\":\"1\", \"rowData\": \"1\", \"colorData\": \"1\"}," +
@@ -60,7 +65,7 @@ function loadColorFixture() {
         "]");
 }
 
-function loadColorFixture2() {
+function loadColorFixture2 () {
     return JSON.parse("[" +
         "{\"colData\":\"3\", \"rowData\": \"3\", \"colorData\": \"5\"}," +
         "{\"colData\":\"3\", \"rowData\": \"4\", \"colorData\": \"5\"}," +
@@ -72,7 +77,5 @@ function loadColorFixture2() {
         "{\"colData\":\"6\", \"rowData\": \"6\", \"colorData\": \"8\"}" +
         "]");
 }
-
-function dateCleaner(e) {
-    e.dd = d3.time.format.iso.parse(e.date);
-}
+/* jscs:enable validateQuoteMarks, maximumLineLength */
+/* jshint +W109, +W101, +W098 */

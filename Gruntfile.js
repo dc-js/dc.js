@@ -43,15 +43,14 @@ module.exports = function (grunt) {
             }
         },
         jscs: {
-            old: {
-                src: ['<%= conf.spec %>/**/*.js'],
-                options: {
-                    validateIndentation: 4
-                }
-            },
             source: {
-                src: ['<%= conf.src %>/**/*.js', '!<%= conf.src %>/{banner,footer}.js', 'Gruntfile.js',
-                    'grunt/*.js', '<%= conf.web %>/stock.js'],
+                src: [
+                    '<%= conf.src %>/**/*.js',
+                    '!<%= conf.src %>/{banner,footer}.js',
+                    '<%= conf.spec %>/**/*.js',
+                    'Gruntfile.js',
+                    'grunt/*.js',
+                    '<%= conf.web %>/stock.js'],
                 options: {
                     config: '.jscsrc'
                 }
@@ -59,10 +58,16 @@ module.exports = function (grunt) {
         },
         jshint: {
             source: {
-                src: ['<%= conf.src %>/**/*.js', 'Gruntfile.js', 'grunt/*.js', '<%= conf.web %>/stock.js'],
+                src: [
+                    '<%= conf.src %>/**/*.js',
+                    '!<%= conf.src %>/{banner,footer}.js',
+                    '<%= conf.spec %>/**/*.js',
+                    'Gruntfile.js',
+                    'grunt/*.js',
+                    '<%= conf.web %>/stock.js'
+                ],
                 options: {
-                    jshintrc: '.jshintrc',
-                    ignores: ['<%= conf.src %>/banner.js', '<%= conf.src %>/footer.js']
+                    jshintrc: '.jshintrc'
                 }
             }
         },

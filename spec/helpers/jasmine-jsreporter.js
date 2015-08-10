@@ -1,3 +1,5 @@
+/* globals Exception */
+/* jshint -W074 */
 /*
   This file is part of the Jasmine JSReporter project from Ivan De Marino.
 
@@ -15,7 +17,7 @@
       names of its contributors may be used to endorse or promote products
       derived from this software without specific prior written permission.
 
-  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS'
   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
   ARE DISCLAIMED. IN NO EVENT SHALL IVAN DE MARINO BE LIABLE FOR ANY
@@ -32,7 +34,7 @@
 
     // Ensure that Jasmine library is loaded first
     if (!jasmine) {
-        throw new Exception("[Jasmine JSReporter] 'Jasmine' library not found");
+        throw new Exception('[Jasmine JSReporter] \'Jasmine\' library not found');
     }
 
     /**
@@ -48,14 +50,14 @@
 
     /**
      * Collect information about a Suite, recursively, and return a JSON result.
-     * @param suite The Jasmine Suite to get data from
+     * @param {*} suite The Jasmine Suite to get data from
      */
     function getSuiteData (suite) {
         var suiteData = {
                 passed: true,
-                durationSec : 0,
+                durationSec: 0,
                 suites: [],
-                description : suite.description,
+                description: suite.description,
                 specs: []
             };
 
@@ -64,26 +66,30 @@
 
             if (suite.children[i] instanceof jasmine.Spec) {
                 var specResult = suite.children[i].result;
-                childFailed = specResult.status === "failed";
+                childFailed = specResult.status === 'failed';
 
                 // TEMPORARY PATCH FOR SAUCE LABS LENGTH ISSUES
-                if (!childFailed) continue;
+                if (!childFailed) {
+                    continue;
+                }
 
                 suiteData.specs.push({
-                    description : specResult.description,
-                    durationSec : specResult.duration / 1000,
-                    passed : specResult.status === "passed",
-                    skipped : specResult.status === "disabled" || specResult.status === "pending",
-                    passedCount : specResult.status === "passed" ? 1 : 0,
-                    failedCount : childFailed ? 1 : 0,
-                    totalCount : specResult.status !== "disabled" ? 1 : 0
+                    description: specResult.description,
+                    durationSec: specResult.duration / 1000,
+                    passed: specResult.status === 'passed',
+                    skipped: specResult.status === 'disabled' || specResult.status === 'pending',
+                    passedCount: specResult.status === 'passed' ? 1 : 0,
+                    failedCount: childFailed ? 1 : 0,
+                    totalCount: specResult.status !== 'disabled' ? 1 : 0
                 });
             } else if (suite.children[i] instanceof jasmine.Suite) {
                 var childSuiteData = getSuiteData(suite.children[i]);
                 childFailed = !childSuiteData.passed;
 
                 // TEMPORARY PATCH FOR SAUCE LABS LENGTH ISSUES
-                if (!childFailed) continue;
+                if (!childFailed) {
+                    continue;
+                }
 
                 suiteData.suites.push(childSuiteData);
             }
@@ -112,7 +118,7 @@
     var JSReporter =  function () {};
     JSReporter.prototype = {
         jasmineDone: function () {
-            // Attach results to the "jasmine" object to make those results easy to scrap/find
+            // Attach results to the 'jasmine' object to make those results easy to scrap/find
             var results = getSuiteData(jasmine.getEnv().topSuite());
             var totalDuration = 0;
 
@@ -136,4 +142,4 @@
     jasmine.JSReporter = JSReporter;
     jasmine.getEnv().addReporter(new jasmine.JSReporter());
 })();
-
+/* jshint +W074 */

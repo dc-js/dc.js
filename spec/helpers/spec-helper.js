@@ -5,9 +5,10 @@ beforeEach(function () {
 
     // If we're using browserify bundle, pull d3 and crossfilter out of it,
     // so that tests don't have to deal with this incidental complexity.
+    /* jshint -W020 */
     if (typeof d3 === 'undefined') { d3 = dc.d3; }
     if (typeof crossfilter === 'undefined') { crossfilter = dc.crossfilter; }
-
+    /* jshint +W020 */
 });
 
 afterEach(function () {
