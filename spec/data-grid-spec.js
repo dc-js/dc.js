@@ -63,6 +63,24 @@ describe('dc.dataGrid', function() {
         });
     });
 
+    describe('slicing entries', function() {
+        beforeEach(function() {
+            chart.beginSlice(1);
+            chart.redraw();
+        });
+
+        it('slice beginning', function() {
+            expect(chart.selectAll(".dc-grid-item")[0].length).toEqual(2);
+        });
+
+        it('slice beginning and end', function() {
+            chart.endSlice(2);
+            chart.redraw();
+
+            expect(chart.selectAll(".dc-grid-item")[0].length).toEqual(1);
+        });
+    });
+
     describe('external filter', function() {
         beforeEach(function() {
             countryDimension.filter("CA");
@@ -84,7 +102,7 @@ describe('dc.dataGrid', function() {
                 chart.selectAll(".dc-grid-label").text("changed");
             });
             derlet.and.callThrough();
-            chart.renderlet(derlet);
+            chart.on("renderlet", derlet);
         });
         it('custom renderlet should be invoked with render', function() {
             chart.render();

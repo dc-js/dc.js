@@ -1,5 +1,5 @@
 /**
-#### Version %VERSION%
+#### Version <%= conf.pkg.version %>
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
 into the global name space.
 #### Function Chaining
@@ -20,7 +20,7 @@ that are chainable d3 objects.)
 /*jshint -W062*/
 /*jshint -W079*/
 var dc = {
-    version: '%VERSION%',
+    version: '<%= conf.pkg.version %>',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -181,13 +181,13 @@ immediately.  Default: false
 **/
 dc.disableTransitions = false;
 
-dc.transition = function (selections, duration, callback) {
+dc.transition = function (selections, duration, callback, name) {
     if (duration <= 0 || duration === undefined || dc.disableTransitions) {
         return selections;
     }
 
     var s = selections
-        .transition()
+        .transition(name)
         .duration(duration);
 
     if (typeof(callback) === 'function') {
@@ -195,6 +195,20 @@ dc.transition = function (selections, duration, callback) {
     }
 
     return s;
+};
+
+/* somewhat silly, but to avoid duplicating logic */
+dc.optionalTransition = function (enable, duration, callback, name) {
+    if (enable) {
+        return function (selection) {
+            return dc.transition(selection, duration, callback, name);
+        };
+    }
+    else {
+        return function (selection) {
+            return selection;
+        };
+    }
 };
 
 dc.units = {};

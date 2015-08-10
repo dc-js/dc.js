@@ -79,7 +79,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _renderHorizontalGridLine = false;
     var _renderVerticalGridLine = false;
 
-    var _refocused = false;
+    var _refocused = false, _resizing = false;
     var _unitCount;
 
     var _zoomScale = [1, Infinity];
@@ -100,8 +100,16 @@ dc.coordinateGridMixin = function (_chart) {
 
     var _useRightYAxis = false;
 
+    /**
+    #### .rescale()
+    When changing the domain of the x or y scale, it is necessary to tell the chart to recalculate
+    and redraw the axes. (`.rescale()` is called automatically when the x or y scale is replaced
+    with `.x()` or `.y()`, and has no effect on elastic scales.)
+    **/
     _chart.rescale = function () {
         _unitCount = undefined;
+        _resizing = true;
+        return _chart;
     };
 
     /**
@@ -225,6 +233,7 @@ dc.coordinateGridMixin = function (_chart) {
         }
         _x = _;
         _xOriginalDomain = _x.domain();
+        _chart.rescale();
         return _chart;
     };
 
@@ -379,7 +388,12 @@ dc.coordinateGridMixin = function (_chart) {
         return groups.map(_chart.keyAccessor());
     };
 
-    function prepareXAxis(g) {
+    function compareDomains(d1, d2) {
+        return !d1 || !d2 || d1.length !== d2.length ||
+            d1.some(function (elem, i) { return elem.toString() !== d2[i].toString(); });
+    }
+
+    function prepareXAxis(g, render) {
         if (!_chart.isOrdinal()) {
             if (_chart.elasticX()) {
                 _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
@@ -393,7 +407,7 @@ dc.coordinateGridMixin = function (_chart) {
 
         // has the domain changed?
         var xdom = _x.domain();
-        if (!_lastXDomain || xdom.some(function (elem, i) { return elem !== _lastXDomain[i]; })) {
+        if (render || compareDomains(_lastXDomain, xdom)) {
             _chart.rescale();
         }
         _lastXDomain = xdom;
@@ -423,18 +437,21 @@ dc.coordinateGridMixin = function (_chart) {
         var axisXLab = g.selectAll('text.' + X_AXIS_LABEL_CLASS);
         if (axisXLab.empty() && _chart.xAxisLabel()) {
             axisXLab = g.append('text')
-                .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
-                    (_chart.height() - _xAxisLabelPadding) + ')')
                 .attr('class', X_AXIS_LABEL_CLASS)
-                .attr('text-anchor', 'middle')
-                .text(_chart.xAxisLabel());
+                .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
+                      (_chart.height() - _xAxisLabelPadding) + ')')
+                .attr('text-anchor', 'middle');
         }
         if (_chart.xAxisLabel() && axisXLab.text() !== _chart.xAxisLabel()) {
             axisXLab.text(_chart.xAxisLabel());
         }
 
         dc.transition(axisXG, _chart.transitionDuration())
+            .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')')
             .call(_xAxis);
+        dc.transition(axisXLab, _chart.transitionDuration())
+            .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
+                  (_chart.height() - _xAxisLabelPadding) + ')');
     };
 
     function renderVerticalGridLines(g) {
@@ -513,7 +530,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart._prepareYAxis = function (g) {
         if (_y === undefined || _chart.elasticY()) {
-            _y = d3.scale.linear();
+            if (_y === undefined) {
+                _y = d3.scale.linear();
+            }
             var min = _chart.yAxisMin() || 0,
                 max = _chart.yAxisMax() || 0;
             _y.domain([min, max]).rangeRound([_chart.yAxisHeight(), 0]);
@@ -533,9 +552,8 @@ dc.coordinateGridMixin = function (_chart) {
         labelXPosition = labelXPosition || _yAxisLabelPadding;
 
         var axisYLab = _chart.g().selectAll('text.' + Y_AXIS_LABEL_CLASS + '.' + axisClass + '-label');
+        var labelYPosition = (_chart.margins().top + _chart.yAxisHeight() / 2);
         if (axisYLab.empty() && text) {
-
-            var labelYPosition = (_chart.margins().top + _chart.yAxisHeight() / 2);
             axisYLab = _chart.g().append('text')
                 .attr('transform', 'translate(' + labelXPosition + ',' + labelYPosition + '),rotate(' + rotation + ')')
                 .attr('class', Y_AXIS_LABEL_CLASS + ' ' + axisClass + '-label')
@@ -545,6 +563,8 @@ dc.coordinateGridMixin = function (_chart) {
         if (text && axisYLab.text() !== text) {
             axisYLab.text(text);
         }
+        dc.transition(axisYLab, _chart.transitionDuration())
+            .attr('transform', 'translate(' + labelXPosition + ',' + labelYPosition + '),rotate(' + rotation + ')');
     };
 
     _chart.renderYAxisAt = function (axisClass, axis, position) {
@@ -555,7 +575,9 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')');
         }
 
-        dc.transition(axisYG, _chart.transitionDuration()).call(axis);
+        dc.transition(axisYG, _chart.transitionDuration())
+            .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')')
+            .call(axis);
     };
 
     _chart.renderYAxis = function () {
@@ -646,6 +668,7 @@ dc.coordinateGridMixin = function (_chart) {
             return _y;
         }
         _y = _;
+        _chart.rescale();
         return _chart;
     };
 
@@ -850,11 +873,11 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('class', 'brush')
                 .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')')
                 .call(_brush.x(_chart.x()));
-            _chart.setBrushY(gBrush);
+            _chart.setBrushY(gBrush, false);
             _chart.setHandlePaths(gBrush);
 
             if (_chart.hasFilter()) {
-                _chart.redrawBrush(g);
+                _chart.redrawBrush(g, false);
             }
         }
     };
@@ -864,7 +887,10 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart.setBrushY = function (gBrush) {
-        gBrush.selectAll('rect').attr('height', brushHeight());
+        gBrush.selectAll('.brush rect')
+            .attr('height', brushHeight());
+        gBrush.selectAll('.resize path')
+            .attr('d', _chart.resizeHandlePath);
     };
 
     _chart.extendBrush = function () {
@@ -886,7 +912,7 @@ dc.coordinateGridMixin = function (_chart) {
     _chart._brushing = function () {
         var extent = _chart.extendBrush();
 
-        _chart.redrawBrush(_g);
+        _chart.redrawBrush(_g, false);
 
         if (_chart.brushIsEmpty(extent)) {
             dc.events.trigger(function () {
@@ -903,15 +929,17 @@ dc.coordinateGridMixin = function (_chart) {
         }
     };
 
-    _chart.redrawBrush = function (g) {
+    _chart.redrawBrush = function (g, doTransition) {
         if (_brushOn) {
             if (_chart.filter() && _chart.brush().empty()) {
                 _chart.brush().extent(_chart.filter());
             }
 
-            var gBrush = g.select('g.brush');
-            gBrush.call(_chart.brush().x(_chart.x()));
+            var gBrush = dc.optionalTransition(doTransition, _chart.transitionDuration())(g.select('g.brush'));
             _chart.setBrushY(gBrush);
+            gBrush.call(_chart.brush()
+                      .x(_chart.x())
+                      .extent(_chart.brush().extent()));
         }
 
         _chart.fadeDeselectedArea();
@@ -936,7 +964,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function getClipPathId() {
-        return _chart.anchorName().replace(/[ .#]/g, '-') + '-clip';
+        return _chart.anchorName().replace(/[ .#=\[\]]/g, '-') + '-clip';
     }
 
     /**
@@ -1000,24 +1028,26 @@ dc.coordinateGridMixin = function (_chart) {
             _brushOn = false;
         }
 
-        prepareXAxis(_chart.g());
+        prepareXAxis(_chart.g(), render);
         _chart._prepareYAxis(_chart.g());
 
         _chart.plotData();
 
-        if (_chart.elasticX() || _refocused || render) {
+        if (_chart.elasticX() || _resizing || render) {
             _chart.renderXAxis(_chart.g());
         }
 
-        if (_chart.elasticY() || render) {
+        if (_chart.elasticY() || _resizing || render) {
             _chart.renderYAxis(_chart.g());
         }
 
         if (render) {
-            _chart.renderBrush(_chart.g());
+            _chart.renderBrush(_chart.g(), false);
         } else {
-            _chart.redrawBrush(_chart.g());
+            _chart.redrawBrush(_chart.g(), _resizing);
         }
+        _chart.fadeDeselectedArea();
+        _resizing = false;
     }
 
     function configureMouseZoom () {
@@ -1056,7 +1086,7 @@ dc.coordinateGridMixin = function (_chart) {
     to null, then the zoom will be reset. _For focus to work elasticX has to be turned off;
     otherwise focus will be ignored._
     ```js
-    chart.renderlet(function(chart){
+    chart.on('renderlet', function(chart) {
         // smooth the rendering through event throttling
         dc.events.trigger(function(){
             // focus some other chart to the range selected by user on this chart

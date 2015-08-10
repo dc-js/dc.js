@@ -1,30 +1,22 @@
 dc.lineChart = function (parent, chartGroup) {
-    var DEFAULT_DOT_RADIUS = 5,
-        DEFAULT_DOT_OPACITY = 1;
+    var DEFAULT_DOT_RADIUS = 5;
+    var TOOLTIP_G_CLASS = 'dc-tooltip';
+    var DOT_CIRCLE_CLASS = 'dot';
+    var Y_AXIS_REF_LINE_CLASS = 'yRef';
+    var X_AXIS_REF_LINE_CLASS = 'xRef';
+    var DEFAULT_DOT_OPACITY = 1e-6;
 
-    var _chart = dc.layerMixin(dc.coordinateGridMixin({})),
-        _renderArea = false,
-        _dotRadius = DEFAULT_DOT_RADIUS,
-        _dataPointRadius = DEFAULT_DOT_RADIUS,
-        _dataPointFillOpacity = DEFAULT_DOT_OPACITY,
-        _dataPointStrokeOpacity = DEFAULT_DOT_OPACITY,
-        _interpolate = 'linear',
-        _tension = 0.7,
-        _defined,
-        _dashStyle,
-        _safePath = function (d) { return (!d || d.indexOf('NaN') >= 0) ? 'M0,0' : d; },
-        _line = d3.svg.line()
-            .interpolate(_interpolate)
-            .tension(_tension),
-        _lineEnterExit = d3.svg.line()
-            .interpolate(_interpolate)
-            .tension(_tension),
-        _area = d3.svg.area()
-            .interpolate(_interpolate)
-            .tension(_tension),
-        _areaEnterExit = d3.svg.area()
-            .interpolate(_interpolate)
-            .tension(_tension);
+    var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
+    var _renderArea = false;
+    var _dotRadius = DEFAULT_DOT_RADIUS;
+    var _dataPointRadius = null;
+    var _dataPointFillOpacity = DEFAULT_DOT_OPACITY;
+    var _dataPointStrokeOpacity = DEFAULT_DOT_OPACITY;
+    var _interpolate = 'linear';
+    var _tension = 0.7;
+    var _defined;
+    var _dashStyle;
+    var _xyTipsOn = true;
 
     _chart.transitionDuration(500);
     _chart._rangeBandPadding(1);
@@ -50,7 +42,8 @@ dc.lineChart = function (parent, chartGroup) {
     };
 
     /**
-     #### .tension([value]) Gets or sets the tension to use for lines drawn, in the range 0 to 1.
+     #### .tension([value])
+     Gets or sets the tension to use for lines drawn, in the range 0 to 1.
      This parameter further customizes the interpolation behavior.  It is passed to
      [d3.svg.line.tension](https://github.com/mbostock/d3/wiki/SVG-Shapes#line_tension) and
      [d3.svg.area.tension](https://github.com/mbostock/d3/wiki/SVG-Shapes#area_tension).  Default:
@@ -115,6 +108,197 @@ dc.lineChart = function (parent, chartGroup) {
             return _renderArea;
         }
         _renderArea = _;
+        return _chart;
+    };
+
+    function colors(d, i) {
+        return _chart.getColor.call(d, d.values, i);
+    }
+
+    function drawLine(layersEnter, layers) {
+        var line = d3.svg.line()
+            .x(function (d) {
+                return _chart.x()(d.x);
+            })
+            .y(function (d) {
+                return _chart.y()(d.y + d.y0);
+            })
+            .interpolate(_interpolate)
+            .tension(_tension);
+        if (_defined) {
+            line.defined(_defined);
+        }
+
+        var path = layersEnter.append('path')
+            .attr('class', 'line')
+            .attr('stroke', colors);
+        if (_dashStyle) {
+            path.attr('stroke-dasharray', _dashStyle);
+        }
+
+        dc.transition(layers.select('path.line'), _chart.transitionDuration())
+            //.ease('linear')
+            .attr('stroke', colors)
+            .attr('d', function (d) {
+                return safeD(line(d.values));
+            });
+    }
+
+    function drawArea(layersEnter, layers) {
+        if (_renderArea) {
+            var area = d3.svg.area()
+                .x(function (d) {
+                    return _chart.x()(d.x);
+                })
+                .y(function (d) {
+                    return _chart.y()(d.y + d.y0);
+                })
+                .y0(function (d) {
+                    return _chart.y()(d.y0);
+                })
+                .interpolate(_interpolate)
+                .tension(_tension);
+            if (_defined) {
+                area.defined(_defined);
+            }
+
+            layersEnter.append('path')
+                .attr('class', 'area')
+                .attr('fill', colors)
+                .attr('d', function (d) {
+                    return safeD(area(d.values));
+                });
+
+            dc.transition(layers.select('path.area'), _chart.transitionDuration())
+                //.ease('linear')
+                .attr('fill', colors)
+                .attr('d', function (d) {
+                    return safeD(area(d.values));
+                });
+        }
+    }
+
+    function safeD (d) {
+        return (!d || d.indexOf('NaN') >= 0) ? 'M0,0' : d;
+    }
+
+    function drawDots(chartBody, layers) {
+        if (!_chart.brushOn() && _chart.xyTipsOn()) {
+            var tooltipListClass = TOOLTIP_G_CLASS + '-list';
+            var tooltips = chartBody.select('g.' + tooltipListClass);
+
+            if (tooltips.empty()) {
+                tooltips = chartBody.append('g').attr('class', tooltipListClass);
+            }
+
+            layers.each(function (d, layerIndex) {
+                var points = d.values;
+                if (_defined) {
+                    points = points.filter(_defined);
+                }
+
+                var g = tooltips.select('g.' + TOOLTIP_G_CLASS + '._' + layerIndex);
+                if (g.empty()) {
+                    g = tooltips.append('g').attr('class', TOOLTIP_G_CLASS + ' _' + layerIndex);
+                }
+
+                createRefLines(g);
+
+                var dots = g.selectAll('circle.' + DOT_CIRCLE_CLASS)
+                    .data(points, dc.pluck('x'));
+
+                dots.enter()
+                    .append('circle')
+                    .attr('class', DOT_CIRCLE_CLASS)
+                    .attr('r', getDotRadius())
+                    .style('fill-opacity', _dataPointFillOpacity)
+                    .style('stroke-opacity', _dataPointStrokeOpacity)
+                    .on('mousemove', function () {
+                        var dot = d3.select(this);
+                        showDot(dot);
+                        showRefLines(dot, g);
+                    })
+                    .on('mouseout', function () {
+                        var dot = d3.select(this);
+                        hideDot(dot);
+                        hideRefLines(g);
+                    });
+
+                dots
+                    .attr('cx', function (d) {
+                        return dc.utils.safeNumber(_chart.x()(d.x));
+                    })
+                    .attr('cy', function (d) {
+                        return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
+                    })
+                    .attr('fill', _chart.getColor)
+                    .call(renderTitle, d);
+
+                dots.exit().remove();
+            });
+        }
+    }
+
+    function createRefLines(g) {
+        var yRefLine = g.select('path.' + Y_AXIS_REF_LINE_CLASS).empty() ?
+            g.append('path').attr('class', Y_AXIS_REF_LINE_CLASS) : g.select('path.' + Y_AXIS_REF_LINE_CLASS);
+        yRefLine.style('display', 'none').attr('stroke-dasharray', '5,5');
+
+        var xRefLine = g.select('path.' + X_AXIS_REF_LINE_CLASS).empty() ?
+            g.append('path').attr('class', X_AXIS_REF_LINE_CLASS) : g.select('path.' + X_AXIS_REF_LINE_CLASS);
+        xRefLine.style('display', 'none').attr('stroke-dasharray', '5,5');
+    }
+
+    function showDot(dot) {
+        dot.style('fill-opacity', 0.8);
+        dot.style('stroke-opacity', 0.8);
+        dot.attr('r', _dotRadius);
+        return dot;
+    }
+
+    function showRefLines(dot, g) {
+        var x = dot.attr('cx');
+        var y = dot.attr('cy');
+        var yAxisX = (_chart._yAxisX() - _chart.margins().left);
+        var yAxisRefPathD = 'M' + yAxisX + ' ' + y + 'L' + (x) + ' ' + (y);
+        var xAxisRefPathD = 'M' + x + ' ' + _chart.yAxisHeight() + 'L' + x + ' ' + y;
+        g.select('path.' + Y_AXIS_REF_LINE_CLASS).style('display', '').attr('d', yAxisRefPathD);
+        g.select('path.' + X_AXIS_REF_LINE_CLASS).style('display', '').attr('d', xAxisRefPathD);
+    }
+
+    function getDotRadius() {
+        return _dataPointRadius || _dotRadius;
+    }
+
+    function hideDot(dot) {
+        dot.style('fill-opacity', _dataPointFillOpacity)
+            .style('stroke-opacity', _dataPointStrokeOpacity)
+            .attr('r', getDotRadius());
+    }
+
+    function hideRefLines(g) {
+        g.select('path.' + Y_AXIS_REF_LINE_CLASS).style('display', 'none');
+        g.select('path.' + X_AXIS_REF_LINE_CLASS).style('display', 'none');
+    }
+
+    function renderTitle(dot, d) {
+        if (_chart.renderTitle()) {
+            dot.selectAll('title').remove();
+            dot.append('title').text(dc.pluck('data', _chart.title(d.name)));
+        }
+    }
+
+    /**
+     #### .xyTipsOn([boolean])
+     Turn on/off the mouseover behavior of an individual data point which renders a circle and x/y axis
+     dashed lines back to each respective axis.  This is ignored if the chart brush is on (`brushOn`)
+     Default: true
+     */
+    _chart.xyTipsOn = function (_) {
+        if (!arguments.length) {
+            return _xyTipsOn;
+        }
+        _xyTipsOn = _;
         return _chart;
     };
 

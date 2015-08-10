@@ -170,9 +170,8 @@ dc.stackMixin = function (_chart) {
     };
 
     function flattenStack() {
-        return _chart.data().reduce(function (all, layer) {
-            return all.concat(layer.values);
-        }, []);
+        var valueses = _chart.data().map(function (layer) { return layer.values; });
+        return Array.prototype.concat.apply([], valueses);
     }
 
     _chart.xAxisMin = function () {
@@ -247,7 +246,9 @@ dc.stackMixin = function (_chart) {
     });
 
     _chart._ordinalXDomain = function () {
-        return flattenStack().map(dc.pluck('x'));
+        var flat = flattenStack().map(dc.pluck('data'));
+        var ordered = _chart._computeOrderedGroups(flat);
+        return ordered.map(_chart.keyAccessor());
     };
 
     _chart.colorAccessor(function (d) {

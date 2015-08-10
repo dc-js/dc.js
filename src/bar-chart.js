@@ -1,6 +1,104 @@
 dc.barChart = function (parent, chartGroup) {
-    var DEFAULT_GAP_BETWEEN_BARS = 2,
-        MIN_BAR_WIDTH = 1;
+    var MIN_BAR_WIDTH = 1;
+    var DEFAULT_GAP_BETWEEN_BARS = 2;
+
+    var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
+
+    var _gap = DEFAULT_GAP_BETWEEN_BARS;
+    var _centerBar = false;
+    var _alwaysUseRounding = false;
+
+    var _barWidth;
+
+    dc.override(_chart, 'rescale', function () {
+        _chart._rescale();
+        _barWidth = undefined;
+        return _chart;
+    });
+
+    dc.override(_chart, 'render', function () {
+        if (_chart.round() && _centerBar && !_alwaysUseRounding) {
+            dc.logger.warn('By default, brush rounding is disabled if bars are centered. ' +
+                         'See dc.js bar chart API documentation for details.');
+        }
+
+        return _chart._render();
+    });
+
+    _chart.plotData = function () {
+        var layers = _chart.chartBodyG().selectAll('g.stack')
+            .data(_chart.data());
+
+        calculateBarWidth();
+
+        layers
+            .enter()
+            .append('g')
+            .attr('class', function (d, i) {
+                return 'stack ' + '_' + i;
+            });
+
+        layers.each(function (d, i) {
+            var layer = d3.select(this);
+
+            renderBars(layer, i, d);
+        });
+    };
+
+    function barHeight(d) {
+        return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
+    }
+
+    function renderBars(layer, layerIndex, d) {
+        var bars = layer.selectAll('rect.bar')
+            .data(d.values, dc.pluck('x'));
+
+        var enter = bars.enter()
+            .append('rect')
+            .attr('class', 'bar')
+            .attr('fill', dc.pluck('data', _chart.getColor))
+            .attr('y', _chart.yAxisHeight())
+            .attr('height', 0);
+
+        if (_chart.renderTitle()) {
+            enter.append('title').text(dc.pluck('data', _chart.title(d.name)));
+        }
+
+        if (_chart.isOrdinal()) {
+            bars.on('click', _chart.onClick);
+        }
+
+        dc.transition(bars, _chart.transitionDuration())
+            .attr('x', function (d) {
+                var x = _chart.x()(d.x);
+                if (_centerBar) {
+                    x -= _barWidth / 2;
+                }
+                if (_chart.isOrdinal() && _gap !== undefined) {
+                    x += _gap / 2;
+                }
+                return dc.utils.safeNumber(x);
+            })
+            .attr('y', function (d) {
+                var y = _chart.y()(d.y + d.y0);
+
+                if (d.y < 0) {
+                    y -= barHeight(d);
+                }
+
+                return dc.utils.safeNumber(y);
+            })
+            .attr('width', _barWidth)
+            .attr('height', function (d) {
+                return barHeight(d);
+            })
+            .attr('fill', dc.pluck('data', _chart.getColor))
+            .select('title').text(dc.pluck('data', _chart.title(d.name)));
+
+        dc.transition(bars.exit(), _chart.transitionDuration())
+            .attr('height', 0)
+            .remove();
+    }
 
     var _chart = dc.layerMixin(dc.coordinateGridMixin({}));
 
