@@ -44,7 +44,7 @@
     "grunt-fileindex": "^0.1.0",
     "grunt-gh-pages": "~0.9.1",
     "grunt-jscs": "~1.2.0",
-    "grunt-jsdoc": "~0.6.7",
+    "grunt-jsdoc-to-markdown": "~1.1.1",
     "grunt-lib-phantomjs": "~0.6.0",
     "grunt-markdown": "~0.7.0",
     "grunt-saucelabs": "~8.5.0",

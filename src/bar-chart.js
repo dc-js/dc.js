@@ -1,6 +1,7 @@
 /**
  * Concrete bar chart/histogram implementation.
- * @mixes StackMixin, CoordinateGridMixin
+ * @name barChart
+ * @mixes StackMixin,CoordinateGridMixin
  * Examples:
  * [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
  * [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
@@ -17,7 +18,7 @@
  * in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {Chart}
+ * @returns {barChart}
  */
 dc.barChart = function (parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
@@ -171,14 +172,16 @@ dc.barChart = function (parent, chartGroup) {
 
     /**
      * Whether the bar chart will render each bar centered around the data position on x axis
-     * @param {Boolean} [_=false]
+     * @name centerBar
+     * @memberOf barChart
+     * @param {Boolean} [centerBar=false]
      * @returns {Boolean}
      */
-    _chart.centerBar = function (_) {
+    _chart.centerBar = function (centerBar) {
         if (!arguments.length) {
             return _centerBar;
         }
-        _centerBar = _;
+        _centerBar = centerBar;
         return _chart;
     };
 
@@ -191,14 +194,16 @@ dc.barChart = function (parent, chartGroup) {
      * Setting this value will also remove any previously set `gap`. See the
      * [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
      * for a visual description of how the padding is applied.
-     * @param {Number} [_]
+     * @name barPadding
+     * @memberOf barChart
+     * @param {Number} [barPadding]
      * @returns {Number}
      */
-    _chart.barPadding = function (_) {
+    _chart.barPadding = function (barPadding) {
         if (!arguments.length) {
             return _chart._rangeBandPadding();
         }
-        _chart._rangeBandPadding(_);
+        _chart._rangeBandPadding(barPadding);
         _gap = undefined;
         return _chart;
     };
@@ -210,7 +215,10 @@ dc.barChart = function (parent, chartGroup) {
     /**
      * Get or set the outer padding on an ordinal bar chart. This setting has no effect on non-ordinal charts.
      * Will pad the width by `padding * barWidth` on each side of the chart.
+     * @name outerPadding
+     * @memberOf barChart
      * @param {Number} [padding=0.5]
+     * @returns {Number}
      */
     _chart.outerPadding = _chart._outerRangeBandPadding;
 
@@ -218,14 +226,16 @@ dc.barChart = function (parent, chartGroup) {
      * Manually set fixed gap (in px) between bars instead of relying on the default auto-generated
      * gap.  By default the bar chart implementation will calculate and set the gap automatically
      * based on the number of data points and the length of the x axis.
-     * @param {Number} [_=2]
+     * @name gap
+     * @memberOf barChart
+     * @param {Number} [gap=2]
      * @returns {Number}
      */
-    _chart.gap = function (_) {
+    _chart.gap = function (gap) {
         if (!arguments.length) {
             return _gap;
         }
-        _gap = _;
+        _gap = gap;
         return _chart;
     };
 
@@ -249,16 +259,18 @@ dc.barChart = function (parent, chartGroup) {
      * When using standard d3.js rounding methods, the brush often doesn't align correctly with
      * centered bars since the bars are offset.  The rounding function must add an offset to
      * compensate, such as in the following example.
+     * @name alwaysUseRounding
+     * @memberOf barChart
      * @example
      * chart.round(function(n) {return Math.floor(n)+0.5});
-     * @param {Boolean} [_=false]
+     * @param {Boolean} [alwaysUseRounding=false]
      * @returns {Boolean}
      */
-    _chart.alwaysUseRounding = function (_) {
+    _chart.alwaysUseRounding = function (alwaysUseRounding) {
         if (!arguments.length) {
             return _alwaysUseRounding;
         }
-        _alwaysUseRounding = _;
+        _alwaysUseRounding = alwaysUseRounding;
         return _chart;
     };
 
