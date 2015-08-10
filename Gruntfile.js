@@ -109,7 +109,10 @@ module.exports = function (grunt) {
                     display: 'short',
                     summary: true,
                     specs:  '<%= conf.spec %>/*-spec.js',
-                    helpers: '<%= conf.spec %>/helpers/*.js',
+                    helpers: [
+                        '<%= conf.spec %>/helpers/*.js',
+                        'node_modules/grunt-saucelabs/examples/jasmine/lib/jasmine-jsreporter/jasmine-jsreporter.js'
+                    ],
                     version: '2.0.0',
                     outfile: '<%= conf.spec %>/index.html',
                     keepRunner: true
