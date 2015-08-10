@@ -179,24 +179,14 @@ module.exports = function (grunt) {
                 }
             }
         },
-        emu: {
-            api: {
-                src: '<%= conf.pkg.name %>.js',
-                dest: '<%= conf.web %>/docs/api-latest.md'
+        jsdoc : {
+            dist : {
+                src: ['src/bar-chart.js'],
+                options: {
+                    destination: '<%= conf.web %>/docs/api',
+                    configure: './jsdoc.conf.json'
+                }
             }
-        },
-        toc: {
-            api: {
-                src: '<%= emu.api.dest %>',
-                dest: '<%= emu.api.dest %>'
-            }
-        },
-        markdown: {
-            html: {
-                src: '<%= emu.api.dest %>',
-                dest: '<%= conf.web %>/docs/index.html'
-            },
-            options: {markdownOptions: {highlight: 'manual'}}
         },
         docco: {
             options: {
@@ -324,34 +314,9 @@ module.exports = function (grunt) {
         }
     });
 
-    // custom tasks
-    grunt.registerMultiTask('emu', 'Documentation extraction by emu.', function () {
-        var emu = require('emu'),
-            srcFile = this.files[0].src[0],
-            destFile = this.files[0].dest,
-            source = grunt.file.read(srcFile);
-        grunt.file.write(destFile, emu.getComments(source));
-        grunt.log.writeln('File \'' + destFile + '\' created.');
-    });
     grunt.registerTask('merge', 'Merge a github pull request.', function (pr) {
         grunt.log.writeln('Merge Github Pull Request #' + pr);
         grunt.task.run(['shell:merge:' + pr, 'test' , 'shell:amend']);
-    });
-    grunt.registerMultiTask('toc', 'Generate a markdown table of contents.', function () {
-        var marked = require('marked'),
-            slugify = function (s) { return s.trim().replace(/[-_\s]+/g, '-').toLowerCase(); },
-            srcFile = this.files[0].src[0],
-            destFile = this.files[0].dest,
-            source = grunt.file.read(srcFile),
-            tokens = marked.lexer(source),
-            toc = tokens.filter(function (item) {
-                return item.type === 'heading' && item.depth === 2;
-            }).reduce(function (toc, item) {
-                return toc + '  * [' + item.text + '](#' + slugify(item.text) + ')\n';
-            }, '');
-
-        grunt.file.write(destFile, '# DC API\n' + toc + '\n' + source);
-        grunt.log.writeln('Added TOC to \'' + destFile + '\'.');
     });
     grunt.registerTask('test-stock-example', 'Test a new rendering of the stock example web page against a ' +
         'baseline rendering', function (option) {
@@ -373,7 +338,7 @@ module.exports = function (grunt) {
 
     // task aliases
     grunt.registerTask('build', ['concat', 'uglify']);
-    grunt.registerTask('docs', ['build', 'copy', 'emu', 'toc', 'markdown', 'docco', 'fileindex']);
+    grunt.registerTask('docs', ['build', 'copy', 'jsdoc', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine-docs']);
     grunt.registerTask('test', ['build', 'jasmine:specs', 'shell:hooks']);

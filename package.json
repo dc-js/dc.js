@@ -29,7 +29,6 @@
     "d3": "3.x"
   },
   "devDependencies": {
-    "emu": "~0.0.2",
     "grunt": "~0.4.5",
     "grunt-browserify": "~3.3.0",
     "grunt-changed": "~0.1.x",
@@ -46,6 +45,7 @@
     "grunt-fileindex": "^0.1.0",
     "grunt-gh-pages": "~0.9.1",
     "grunt-jscs": "~1.2.0",
+    "grunt-jsdoc": "~0.6.7",
     "grunt-lib-phantomjs": "~0.6.0",
     "grunt-markdown": "~0.7.0",
     "grunt-saucelabs": "~8.5.0",
