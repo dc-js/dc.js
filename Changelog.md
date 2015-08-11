@@ -1,4 +1,7 @@
 # 2.0 Series
+## 2.0.0 beta 18
+* Fixes resizing examples to use `rescale` - currently all coordinate grid charts need to call this when changing width/height, in order to get axes moved ([#974](https://github.com/dc-js/dc.js/issues/974))
+
 ## 2.0.0 beta 17
 * Fixes issue where transitions were applied to the brush as it's being applied, causing it to lag ([#973](https://github.com/dc-js/dc.js/issues/973))
 
