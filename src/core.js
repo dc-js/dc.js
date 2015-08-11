@@ -1,22 +1,19 @@
 /**
-#### Version <%= conf.pkg.version %>
-The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
-into the global name space.
-#### Function Chaining
-Most dc functions are designed to allow function chaining, meaning they return the current chart
-instance whenever it is appropriate. This way chart configuration can be written in the following
-style:
-```js
-chart.width(300)
-    .height(300)
-    .filter('sunday')
-```
-The getter forms of functions do not participate in function chaining because they necessarily
-return values that are not the chart.  (Although some, such as `.svg` and `.xAxis`, return values
-that are chainable d3 objects.)
-
-**/
-
+ * The entire dc.js library is scoped under the **dc** name space. It does not introduce
+ * anything else into the global name space.
+ *
+ * Most `dc` functions are designed to allow function chaining, meaning they return the current chart
+ * instance whenever it is appropriate.  The getter forms of functions do not participate in function
+ * chaining because they necessarily return values that are not the chart.  Although some,
+ * such as `.svg` and `.xAxis`, return values that are chainable d3 objects.
+ * @namespace dc
+ * @version <%= conf.pkg.version %>
+ * @example
+ * // Example chaining
+ * chart.width(300)
+ *      .height(300)
+ *      .filter('sunday');
+ */
 /*jshint -W062*/
 /*jshint -W079*/
 var dc = {
@@ -111,14 +108,12 @@ dc.deregisterAllCharts = function (group) {
 };
 
 /**
-## Utilities
-**/
-
-/**
-#### dc.filterAll([chartGroup])
-Clear all filters on all charts within the given chart group. If the chart group is not given then
-only charts that belong to the default chart group will be reset.
-**/
+ * Clear all filters on all charts within the given chart group. If the chart group is not given then
+ * only charts that belong to the default chart group will be reset.
+ * @memberOf dc
+ * @name filterAll
+ * @param {String} [group]
+ */
 dc.filterAll = function (group) {
     var charts = dc.chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
@@ -127,10 +122,12 @@ dc.filterAll = function (group) {
 };
 
 /**
-#### dc.refocusAll([chartGroup])
-Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
-not given then only charts that belong to the default chart group will be reset.
-**/
+ * Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
+ * not given then only charts that belong to the default chart group will be reset.
+ * @memberOf dc
+ * @name refocusAll
+ * @param {String} [group]
+ */
 dc.refocusAll = function (group) {
     var charts = dc.chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
@@ -141,10 +138,12 @@ dc.refocusAll = function (group) {
 };
 
 /**
-#### dc.renderAll([chartGroup])
-Re-render all charts belong to the given chart group. If the chart group is not given then only
-charts that belong to the default chart group will be re-rendered.
-**/
+ * Re-render all charts belong to the given chart group. If the chart group is not given then only
+ * charts that belong to the default chart group will be re-rendered.
+ * @memberOf dc
+ * @name renderAll
+ * @param {String} [group]
+ */
 dc.renderAll = function (group) {
     var charts = dc.chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
@@ -157,12 +156,14 @@ dc.renderAll = function (group) {
 };
 
 /**
-#### dc.redrawAll([chartGroup])
-Redraw all charts belong to the given chart group. If the chart group is not given then only charts
-that belong to the default chart group will be re-drawn. Redraw is different from re-render since
-when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
-from scratch.
-**/
+ * Redraw all charts belong to the given chart group. If the chart group is not given then only charts
+ * that belong to the default chart group will be re-drawn. Redraw is different from re-render since
+ * when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
+ * from scratch.
+ * @memberOf dc
+ * @name redrawAll
+ * @param {String} [group]
+ */
 dc.redrawAll = function (group) {
     var charts = dc.chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
@@ -175,10 +176,13 @@ dc.redrawAll = function (group) {
 };
 
 /**
-#### dc.disableTransitions
-If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
-immediately.  Default: false
-**/
+ * If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
+ * immediately
+ * @memberOf dc
+ * @name disableTransitions
+ * @type {Boolean}
+ * @default false
+ */
 dc.disableTransitions = false;
 
 dc.transition = function (selections, duration, callback, name) {
@@ -211,59 +215,70 @@ dc.optionalTransition = function (enable, duration, callback, name) {
     }
 };
 
+/**
+ * @name units
+ * @memberOf dc
+ * @type {{}}
+ */
 dc.units = {};
 
 /**
-#### dc.units.integers
-`dc.units.integers` is the default value for `xUnits` for the [Coordinate Grid
-Chart](#coordinate-grid-chart) and should be used when the x values are a sequence of integers.
-
-It is a function that counts the number of integers in the range supplied in its start and end parameters.
-
-```js
-chart.xUnits(dc.units.integers) // already the default
-```
-
-**/
-dc.units.integers = function (s, e) {
-    return Math.abs(e - s);
+ * The default value for `xUnits` for the [Coordinate Grid Chart](#coordinate-grid-chart) and should
+ * be used when the x values are a sequence of integers.
+ * It is a function that counts the number of integers in the range supplied in its start and end parameters.
+ * @name integers
+ * @memberOf dc.units
+ * @example
+ * chart.xUnits(dc.units.integers) // already the default
+ * @param {Number} start
+ * @param {Number} end
+ * @returns {Number}
+ */
+dc.units.integers = function (start, end) {
+    return Math.abs(end - start);
 };
 
 /**
-#### dc.units.ordinal
-This argument can be passed to the `xUnits` function of the to specify ordinal units for the x
-axis. Usually this parameter is used in combination with passing `d3.scale.ordinal()` to `.x`.
-
-It just returns the domain passed to it, which for ordinal charts is an array of all values.
-
-```js
-chart.xUnits(dc.units.ordinal)
-    .x(d3.scale.ordinal())
-```
-
-**/
+ * This argument can be passed to the `xUnits` function of the to specify ordinal units for the x
+ * axis. Usually this parameter is used in combination with passing `d3.scale.ordinal()` to `.x`.
+ * It just returns the domain passed to it, which for ordinal charts is an array of all values.
+ * @name ordinal
+ * @memberOf dc.units
+ * @example
+ * chart.xUnits(dc.units.ordinal)
+ *      .x(d3.scale.ordinal())
+ * @param {*} start
+ * @param {*} end
+ * @param {Array<String>} domain
+ * @returns {Array<String>}
+ */
 dc.units.ordinal = function (s, e, domain) {
     return domain;
 };
 
 /**
-#### dc.units.fp.precision(precision)
-This function generates an argument for the [Coordinate Grid Chart's](#coordinate-grid-chart)
-`xUnits` function specifying that the x values are floating-point numbers with the given
-precision.
-
-The returned function determines how many values at the given precision will fit into the range
-supplied in its start and end parameters.
-
-```js
-// specify values (and ticks) every 0.1 units
-chart.xUnits(dc.units.fp.precision(0.1)
-// there are 500 units between 0.5 and 1 if the precision is 0.001
-var thousandths = dc.units.fp.precision(0.001);
-thousandths(0.5, 1.0) // returns 500
-```
-**/
+ * @name fp
+ * @memberOf dc.units
+ * @type {{}}
+ */
 dc.units.fp = {};
+/**
+ * This function generates an argument for the [Coordinate Grid Chart's](#coordinate-grid-chart)
+ * `xUnits` function specifying that the x values are floating-point numbers with the given
+ * precision.
+ * The returned function determines how many values at the given precision will fit into the range
+ * supplied in its start and end parameters.
+ * @name precision
+ * @memberOf dc.units.fp
+ * @example
+ * // specify values (and ticks) every 0.1 units
+ * chart.xUnits(dc.units.fp.precision(0.1)
+ * // there are 500 units between 0.5 and 1 if the precision is 0.001
+ * var thousandths = dc.units.fp.precision(0.001);
+ * thousandths(0.5, 1.0) // returns 500
+ * @param {Number} precision
+ * @returns {Function} start-end unit function
+ */
 dc.units.fp.precision = function (precision) {
     var _f = function (s, e) {
         var d = Math.abs((e - s) / _f.resolution);
