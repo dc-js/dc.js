@@ -41,9 +41,7 @@ dc.pieChart = function (parent, chartGroup) {
     var _emptyTitle = 'empty';
 
     var _radius,
-        _givenRadius, // specified radius, if any
-        _innerRadius = 0,
-        _externalRadiusPadding = 0;
+        _innerRadius = 0;
 
     var _g;
     var _cx;
@@ -86,7 +84,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     function drawChart() {
         // set radius on basis of chart dimension if missing
-        _radius = _givenRadius ? _givenRadius : d3.min([_chart.width(), _chart.height()]) / 2;
+        _radius = _radius ? _radius : d3.min([_chart.width(), _chart.height()]) / 2;
 
         var arc = buildArcs();
 
@@ -114,9 +112,6 @@ dc.pieChart = function (parent, chartGroup) {
             removeElements(slices);
 
             highlightFilter();
-
-            dc.transition(_g, _chart.transitionDuration())
-                .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
         }
     }
 
@@ -257,20 +252,6 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     /**
-     #### .externalRadiusPadding([externalRadiusPadding])
-     Get or set the external radius padding of the pie chart. This will force the radius of the
-     pie chart to become smaller or larger depending on the value.  Default external radius padding is 0px.
-
-     **/
-    _chart.externalRadiusPadding = function (_) {
-        if (!arguments.length) {
-            return _externalRadiusPadding;
-        }
-        _externalRadiusPadding = _;
-        return _chart;
-    };
-
-    /**
     #### .innerRadius([innerRadius])
     Get or set the inner radius of the pie chart. If the inner radius is greater than 0px then the
     pie chart will be rendered as a doughnut chart. Default inner radius is 0px.
@@ -292,9 +273,9 @@ dc.pieChart = function (parent, chartGroup) {
     **/
     _chart.radius = function (r) {
         if (!arguments.length) {
-            return _givenRadius;
+            return _radius;
         }
-        _givenRadius = r;
+        _radius = r;
         return _chart;
     };
 
@@ -325,7 +306,7 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     function buildArcs() {
-        return d3.svg.arc().outerRadius(_radius - _externalRadiusPadding).innerRadius(_innerRadius);
+        return d3.svg.arc().outerRadius(_radius).innerRadius(_innerRadius);
     }
 
     function isSelectedSlice(d) {
@@ -432,8 +413,8 @@ dc.pieChart = function (parent, chartGroup) {
         var centroid;
         if (_externalLabelRadius) {
             centroid = d3.svg.arc()
-                .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
-                .innerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
+                .outerRadius(_radius + _externalLabelRadius)
+                .innerRadius(_radius + _externalLabelRadius)
                 .centroid(d);
         } else {
             centroid = arc.centroid(d);

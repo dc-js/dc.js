@@ -3,7 +3,6 @@ describe('dc.dataTable', function() {
     var dateFixture;
     var dimension, group;
     var countryDimension;
-    var valueGroup;
 
     beforeEach(function() {
         dateFixture = loadDateFixture();
@@ -14,15 +13,14 @@ describe('dc.dataTable', function() {
         countryDimension = data.dimension(function(d) {
             return d.countrycode;
         });
-        valueGroup = function() {
-                return "Data Table";
-            };
 
         id = "data-table";
         appendChartID(id);
         chart = dc.dataTable("#" + id)
             .dimension(dimension)
-            .group(valueGroup)
+            .group(function(d) {
+                return "Data Table";
+            })
             .transitionDuration(0)
             .size(3)
             .sortBy(function(d){return d.id;})
@@ -52,12 +50,6 @@ describe('dc.dataTable', function() {
         });
         it('sets order', function() {
             expect(chart.order()).toBe(d3.descending);
-        });
-        it('group should be set', function() {
-            expect(chart.group()).toEqual(valueGroup);
-        });
-        it('group tr should not be undefined', function() {
-            expect(typeof(chart.selectAll("tr.dc-table-group")[0][0])).not.toBe('undefined');
         });
         it('sets column span set on group tr', function() {
             expect(chart.selectAll("tr.dc-table-group td")[0][0].getAttribute("colspan")).toEqual("2");
@@ -173,16 +165,6 @@ describe('dc.dataTable', function() {
             var colheader = chart.selectAll("th.dc-table-head")[0].map(function(d){return d.textContent;});
             expect(colheader.length).toEqual(1);
             expect(colheader[0]).toEqual("Test ID");
-        });
-    });
-
-    describe('specifying showGroups as false', function () {
-        beforeEach(function() {
-            chart.showGroups(false);
-            chart.render();
-        });
-        it('group tr should be undefined', function() {
-            expect(typeof(chart.selectAll("tr.dc-table-group")[0][0])).toBe('undefined');
         });
     });
 

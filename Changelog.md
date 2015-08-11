@@ -1,32 +1,7 @@
 # 2.0 Series
-## 2.0.0 beta 17
-* Fixes issue where transitions were applied to the brush as it's being applied, causing it to lag ([#973](https://github.com/dc-js/dc.js/issues/973))
-
-## 2.0.0 beta 16
-* Reposition brush when coordinate grid chart size changes ([#972](https://github.com/dc-js/dc.js/pull/972))
-* Ability to slice the data grid, by Chris Alvino ([#946](https://github.com/dc-js/dc.js/pull/946)). Also a much-needed warning that data table and data grid `.group()` means something completely different.
-* Ability not to apply grouping to data table, by Emiliano Guevara ([#863](https://github.com/dc-js/dc.js/pull/863))
-
-## 2.0.0 beta 15
-* Reposition X axis on chart resize, by Rob Hardwick ([#856](https://github.com/dc-js/dc.js/pull/856)). Y axis as well
-* More fixes for resizing charts, and [a new resizing examples directory](http://dc-js.github.io/dc.js/resizing/), mostly for testing.
-
-## 2.0.0 beta 14
-* Fix a test for IE and add svg subpath matcher, for #894
-
-## 2.0.0 beta 13
-* Pie chart radius padding, by Matt Traynham ([#894](https://github.com/dc-js/dc.js/pull/894))
-* Example of a table showing group-aggregated data, by Ion Alberdi ([#929](https://github.com/dc-js/dc.js/pull/929))
-* Filtered items were not displayed after render in coordinate grid charts, by Matt Traynham ([#900](https://github.com/dc-js/dc.js/pull/900))
-* grammar/spelling/formatting fixes to annotated stock example, by Johnny Peck and Enrico Spinielli ([#956](https://github.com/dc-js/dc.js/pull/956), [#875](https://github.com/dc-js/dc.js/pull/875))
-* document bower install, by Mayfarth ([#899](https://github.com/dc-js/dc.js/pull/899))
-* remove unused bower version, by Kevin Kirsche ([#948](https://github.com/dc-js/dc.js/pull/948))
-* Front page stable version automatically read from GitHub, by Enrico Spinielli ([#865](https://github.com/dc-js/dc.js/pull/865))
-
 ## 2.0.0 beta 12
  * axes should rescale on chart rescale (not just on zoom). ([#791](https://github.com/dc-js/dc.js/issues/791))
- * always rescale x axis on render, and detect domain change more thoroughly, by Matt Traynham
- ([#896](https://github.com/dc-js/dc.js/pull/896))
+ * always rescale x axis on render, and detect domain change more thoroughly, by Matt Traynham (
 
 ## 2.0.0 beta 11
  * pretransition event ([#806](https://github.com/dc-js/dc.js/issues/806))

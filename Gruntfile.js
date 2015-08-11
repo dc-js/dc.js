@@ -67,9 +67,13 @@ module.exports = function (grunt) {
             }
         },
         watch: {
+            jsdoc2md: {
+                files: ['<%= conf.src %>/**/*.js'],
+                tasks: ['jsdoc2md']
+            },
             scripts: {
-                files: ['<%= conf.src %>/**/*.js', '<%= conf.web %>/stock.js'],
-                tasks: ['docs']
+                files: ['<%= conf.src %>/**/*.js'],
+                tasks: ['build', 'copy']
             },
             jasmineRunner: {
                 files: ['<%= conf.spec %>/**/*.js'],
@@ -179,24 +183,11 @@ module.exports = function (grunt) {
                 }
             }
         },
-        emu: {
-            api: {
-                src: '<%= conf.pkg.name %>.js',
-                dest: '<%= conf.web %>/docs/api-latest.md'
+        jsdoc2md: {
+            dist: {
+                src: ['src/{core,base-mixin,bar-chart}.js'],
+                dest: 'web/docs/api-latest.md'
             }
-        },
-        toc: {
-            api: {
-                src: '<%= emu.api.dest %>',
-                dest: '<%= emu.api.dest %>'
-            }
-        },
-        markdown: {
-            html: {
-                src: '<%= emu.api.dest %>',
-                dest: '<%= conf.web %>/docs/index.html'
-            },
-            options: {markdownOptions: {highlight: 'manual'}}
         },
         docco: {
             options: {
@@ -259,20 +250,6 @@ module.exports = function (grunt) {
                 files: [
                     {dest: '<%= conf.web %>/transitions/index.html', src: ['<%= conf.web %>/transitions/*.html']}
                 ]
-            },
-            'resizing-listing': {
-                options: {
-                    format: formatFileList,
-                    absolute: true,
-                    title: 'Index of dc.js resizing tests',
-                    heading: 'Eyeball tests for resizing dc.js charts',
-                    description: 'It\'s a lot easier to test resizing behavior by eye. ' +
-                        'These pages fit the charts to the browser dynamically so it\'s easier to test.',
-                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.web %>/resizing'
-                },
-                files: [
-                    {dest: '<%= conf.web %>/resizing/index.html', src: ['<%= conf.web %>/resizing/*.html']}
-                ]
             }
         },
 
@@ -324,34 +301,9 @@ module.exports = function (grunt) {
         }
     });
 
-    // custom tasks
-    grunt.registerMultiTask('emu', 'Documentation extraction by emu.', function () {
-        var emu = require('emu'),
-            srcFile = this.files[0].src[0],
-            destFile = this.files[0].dest,
-            source = grunt.file.read(srcFile);
-        grunt.file.write(destFile, emu.getComments(source));
-        grunt.log.writeln('File \'' + destFile + '\' created.');
-    });
     grunt.registerTask('merge', 'Merge a github pull request.', function (pr) {
         grunt.log.writeln('Merge Github Pull Request #' + pr);
         grunt.task.run(['shell:merge:' + pr, 'test' , 'shell:amend']);
-    });
-    grunt.registerMultiTask('toc', 'Generate a markdown table of contents.', function () {
-        var marked = require('marked'),
-            slugify = function (s) { return s.trim().replace(/[-_\s]+/g, '-').toLowerCase(); },
-            srcFile = this.files[0].src[0],
-            destFile = this.files[0].dest,
-            source = grunt.file.read(srcFile),
-            tokens = marked.lexer(source),
-            toc = tokens.filter(function (item) {
-                return item.type === 'heading' && item.depth === 2;
-            }).reduce(function (toc, item) {
-                return toc + '  * [' + item.text + '](#' + slugify(item.text) + ')\n';
-            }, '');
-
-        grunt.file.write(destFile, '# DC API\n' + toc + '\n' + source);
-        grunt.log.writeln('Added TOC to \'' + destFile + '\'.');
     });
     grunt.registerTask('test-stock-example', 'Test a new rendering of the stock example web page against a ' +
         'baseline rendering', function (option) {
@@ -360,7 +312,7 @@ module.exports = function (grunt) {
     grunt.registerTask('update-stock-example', 'Update the baseline stock example web page.', function () {
         require('./regression/stock-regression-test.js').updateStockExample(this.async());
     });
-    grunt.registerTask('watch:jasmine-docs', function () {
+    grunt.registerTask('watch:jasmine', function () {
         grunt.config('watch', {
             options: {
                 interrupt: true
@@ -373,16 +325,17 @@ module.exports = function (grunt) {
 
     // task aliases
     grunt.registerTask('build', ['concat', 'uglify']);
-    grunt.registerTask('docs', ['build', 'copy', 'emu', 'toc', 'markdown', 'docco', 'fileindex']);
+    grunt.registerTask('docs', ['build', 'copy', 'jsdoc2md', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
-    grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine-docs']);
+    grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine']);
     grunt.registerTask('test', ['build', 'jasmine:specs', 'shell:hooks']);
     grunt.registerTask('test-browserify', ['build', 'browserify', 'jasmine:browserify']);
     grunt.registerTask('coverage', ['build', 'jasmine:coverage']);
     grunt.registerTask('ci', ['test', 'jasmine:specs:build', 'connect:server', 'saucelabs-jasmine']);
     grunt.registerTask('ci-pull', ['test', 'jasmine:specs:build', 'connect:server']);
-    grunt.registerTask('lint', ['changed:jshint', 'changed:jscs']);
+    grunt.registerTask('lint', ['build', 'jshint', 'jscs']);
     grunt.registerTask('default', ['build']);
+    grunt.registerTask('jsdoc', ['jsdoc2md', 'watch:jsdoc2md']);
 };
 
 module.exports.jsFiles = [

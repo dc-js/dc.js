@@ -109,7 +109,6 @@ dc.coordinateGridMixin = function (_chart) {
     _chart.rescale = function () {
         _unitCount = undefined;
         _resizing = true;
-        return _chart;
     };
 
     /**
@@ -390,7 +389,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     function compareDomains(d1, d2) {
         return !d1 || !d2 || d1.length !== d2.length ||
-            d1.some(function (elem, i) { return elem.toString() !== d2[i].toString(); });
+            d1.some(function (elem, i) { return elem.toString() !== d2[i]; });
     }
 
     function prepareXAxis(g, render) {
@@ -437,21 +436,18 @@ dc.coordinateGridMixin = function (_chart) {
         var axisXLab = g.selectAll('text.' + X_AXIS_LABEL_CLASS);
         if (axisXLab.empty() && _chart.xAxisLabel()) {
             axisXLab = g.append('text')
-                .attr('class', X_AXIS_LABEL_CLASS)
                 .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
-                      (_chart.height() - _xAxisLabelPadding) + ')')
-                .attr('text-anchor', 'middle');
+                    (_chart.height() - _xAxisLabelPadding) + ')')
+                .attr('class', X_AXIS_LABEL_CLASS)
+                .attr('text-anchor', 'middle')
+                .text(_chart.xAxisLabel());
         }
         if (_chart.xAxisLabel() && axisXLab.text() !== _chart.xAxisLabel()) {
             axisXLab.text(_chart.xAxisLabel());
         }
 
         dc.transition(axisXG, _chart.transitionDuration())
-            .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')')
             .call(_xAxis);
-        dc.transition(axisXLab, _chart.transitionDuration())
-            .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
-                  (_chart.height() - _xAxisLabelPadding) + ')');
     };
 
     function renderVerticalGridLines(g) {
@@ -530,9 +526,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart._prepareYAxis = function (g) {
         if (_y === undefined || _chart.elasticY()) {
-            if (_y === undefined) {
-                _y = d3.scale.linear();
-            }
+            _y = d3.scale.linear();
             var min = _chart.yAxisMin() || 0,
                 max = _chart.yAxisMax() || 0;
             _y.domain([min, max]).rangeRound([_chart.yAxisHeight(), 0]);
@@ -552,8 +546,9 @@ dc.coordinateGridMixin = function (_chart) {
         labelXPosition = labelXPosition || _yAxisLabelPadding;
 
         var axisYLab = _chart.g().selectAll('text.' + Y_AXIS_LABEL_CLASS + '.' + axisClass + '-label');
-        var labelYPosition = (_chart.margins().top + _chart.yAxisHeight() / 2);
         if (axisYLab.empty() && text) {
+
+            var labelYPosition = (_chart.margins().top + _chart.yAxisHeight() / 2);
             axisYLab = _chart.g().append('text')
                 .attr('transform', 'translate(' + labelXPosition + ',' + labelYPosition + '),rotate(' + rotation + ')')
                 .attr('class', Y_AXIS_LABEL_CLASS + ' ' + axisClass + '-label')
@@ -563,8 +558,6 @@ dc.coordinateGridMixin = function (_chart) {
         if (text && axisYLab.text() !== text) {
             axisYLab.text(text);
         }
-        dc.transition(axisYLab, _chart.transitionDuration())
-            .attr('transform', 'translate(' + labelXPosition + ',' + labelYPosition + '),rotate(' + rotation + ')');
     };
 
     _chart.renderYAxisAt = function (axisClass, axis, position) {
@@ -575,9 +568,7 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')');
         }
 
-        dc.transition(axisYG, _chart.transitionDuration())
-            .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')')
-            .call(axis);
+        dc.transition(axisYG, _chart.transitionDuration()).call(axis);
     };
 
     _chart.renderYAxis = function () {
@@ -873,11 +864,11 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('class', 'brush')
                 .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')')
                 .call(_brush.x(_chart.x()));
-            _chart.setBrushY(gBrush, false);
+            _chart.setBrushY(gBrush);
             _chart.setHandlePaths(gBrush);
 
             if (_chart.hasFilter()) {
-                _chart.redrawBrush(g, false);
+                _chart.redrawBrush(g);
             }
         }
     };
@@ -887,10 +878,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart.setBrushY = function (gBrush) {
-        gBrush.selectAll('.brush rect')
-            .attr('height', brushHeight());
-        gBrush.selectAll('.resize path')
-            .attr('d', _chart.resizeHandlePath);
+        gBrush.selectAll('rect').attr('height', brushHeight());
     };
 
     _chart.extendBrush = function () {
@@ -912,7 +900,7 @@ dc.coordinateGridMixin = function (_chart) {
     _chart._brushing = function () {
         var extent = _chart.extendBrush();
 
-        _chart.redrawBrush(_g, false);
+        _chart.redrawBrush(_g);
 
         if (_chart.brushIsEmpty(extent)) {
             dc.events.trigger(function () {
@@ -929,17 +917,15 @@ dc.coordinateGridMixin = function (_chart) {
         }
     };
 
-    _chart.redrawBrush = function (g, doTransition) {
+    _chart.redrawBrush = function (g) {
         if (_brushOn) {
             if (_chart.filter() && _chart.brush().empty()) {
                 _chart.brush().extent(_chart.filter());
             }
 
-            var gBrush = dc.optionalTransition(doTransition, _chart.transitionDuration())(g.select('g.brush'));
+            var gBrush = g.select('g.brush');
+            gBrush.call(_chart.brush().x(_chart.x()));
             _chart.setBrushY(gBrush);
-            gBrush.call(_chart.brush()
-                      .x(_chart.x())
-                      .extent(_chart.brush().extent()));
         }
 
         _chart.fadeDeselectedArea();
@@ -964,7 +950,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function getClipPathId() {
-        return _chart.anchorName().replace(/[ .#=\[\]]/g, '-') + '-clip';
+        return _chart.anchorName().replace(/[ .#]/g, '-') + '-clip';
     }
 
     /**
@@ -1042,11 +1028,10 @@ dc.coordinateGridMixin = function (_chart) {
         }
 
         if (render) {
-            _chart.renderBrush(_chart.g(), false);
+            _chart.renderBrush(_chart.g());
         } else {
-            _chart.redrawBrush(_chart.g(), _resizing);
+            _chart.redrawBrush(_chart.g());
         }
-        _chart.fadeDeselectedArea();
         _resizing = false;
     }
 
