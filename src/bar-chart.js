@@ -19,11 +19,7 @@
  * in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- <<<<<<< HEAD
- * @returns {barChart}
- =======
  * @returns {BarChart}
- >>>>>>> cec52eb469e363b35b6f8c2f36488f9bb1d481fc
  */
 dc.barChart = function (parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
