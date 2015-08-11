@@ -24,7 +24,8 @@ dc.legend = function () {
         _horizontal = false,
         _legendWidth = 560,
         _itemWidth = 70,
-        _autoItemWidth = false;
+        _autoItemWidth = false,
+        _legendText = dc.pluck('name');
 
     var _g;
 
@@ -82,7 +83,7 @@ dc.legend = function () {
         }
 
         itemEnter.append('text')
-                .text(dc.pluck('name'))
+                .text(_legendText)
                 .attr('x', _itemHeight + LABEL_GAP)
                 .attr('y', function () {
                     return _itemHeight / 2 + (this.clientHeight ? this.clientHeight : 13) / 2 - 2;
@@ -207,6 +208,30 @@ dc.legend = function () {
             return _autoItemWidth;
         }
         _autoItemWidth = _;
+        return _legend;
+    };
+
+    /**
+    #### .legendText([legendTextFunction])
+    Set or get the legend text function. The legend widget uses this function to render
+    the legend text on each item. If no function is specified the legend widget will display
+    the names associated with each group.
+
+    Default: dc.pluck('name')
+
+    ```js
+    // create numbered legend items
+    chart.legend(dc.legend().legendText(function(d, i) { return i + '. ' + d.name; }))
+
+    // create legend displaying group counts
+    chart.legend(dc.legend().legendText(function(d) { return d.name + ': ' d.data; }))
+    ```
+    **/
+    _legend.legendText = function (_) {
+        if (!arguments.length) {
+            return _legendText;
+        }
+        _legendText = _;
         return _legend;
     };
 
