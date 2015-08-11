@@ -3,8 +3,11 @@
  * @name barChart
  * @mixes StackMixin,CoordinateGridMixin
  * Examples:
- * [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
- * [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
+ * - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+ * - [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
+ * @name barChart
+ * @memberOf dc
+ * @mixes baseMixin
  * @example
  * // create a bar chart under #chart-container1 element using the default global chart group
  * var chart1 = dc.barChart('#chart-container1');

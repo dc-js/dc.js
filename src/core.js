@@ -214,56 +214,62 @@ dc.optionalTransition = function (enable, duration, callback, name) {
 dc.units = {};
 
 /**
-#### dc.units.integers
-`dc.units.integers` is the default value for `xUnits` for the [Coordinate Grid
-Chart](#coordinate-grid-chart) and should be used when the x values are a sequence of integers.
-
-It is a function that counts the number of integers in the range supplied in its start and end parameters.
-
-```js
-chart.xUnits(dc.units.integers) // already the default
-```
-
-**/
-dc.units.integers = function (s, e) {
-    return Math.abs(e - s);
+ * The default value for `xUnits` for the [Coordinate Grid Chart](#coordinate-grid-chart) and should
+ * be used when the x values are a sequence of integers.
+ * It is a function that counts the number of integers in the range supplied in its start and end parameters.
+ * @name integers
+ * @memberOf dc.units
+ * @example
+ * chart.xUnits(dc.units.integers) // already the default
+ * @param {Number} start
+ * @param {Number} end
+ * @returns {Number}
+ */
+dc.units.integers = function (start, end) {
+    return Math.abs(end - start);
 };
 
 /**
-#### dc.units.ordinal
-This argument can be passed to the `xUnits` function of the to specify ordinal units for the x
-axis. Usually this parameter is used in combination with passing `d3.scale.ordinal()` to `.x`.
-
-It just returns the domain passed to it, which for ordinal charts is an array of all values.
-
-```js
-chart.xUnits(dc.units.ordinal)
-    .x(d3.scale.ordinal())
-```
-
-**/
+ * This argument can be passed to the `xUnits` function of the to specify ordinal units for the x
+ * axis. Usually this parameter is used in combination with passing `d3.scale.ordinal()` to `.x`.
+ * It just returns the domain passed to it, which for ordinal charts is an array of all values.
+ * @name ordinal
+ * @memberOf dc.units
+ * @example
+ * chart.xUnits(dc.units.ordinal)
+ *      .x(d3.scale.ordinal())
+ * @param {*} start
+ * @param {*} end
+ * @param {Array<String>} domain
+ * @returns {Array<String>}
+ */
 dc.units.ordinal = function (s, e, domain) {
     return domain;
 };
 
 /**
-#### dc.units.fp.precision(precision)
-This function generates an argument for the [Coordinate Grid Chart's](#coordinate-grid-chart)
-`xUnits` function specifying that the x values are floating-point numbers with the given
-precision.
-
-The returned function determines how many values at the given precision will fit into the range
-supplied in its start and end parameters.
-
-```js
-// specify values (and ticks) every 0.1 units
-chart.xUnits(dc.units.fp.precision(0.1)
-// there are 500 units between 0.5 and 1 if the precision is 0.001
-var thousandths = dc.units.fp.precision(0.001);
-thousandths(0.5, 1.0) // returns 500
-```
-**/
+ * @name fp
+ * @memberOf dc.units
+ * @type {{}}
+ */
 dc.units.fp = {};
+/**
+ * This function generates an argument for the [Coordinate Grid Chart's](#coordinate-grid-chart)
+ * `xUnits` function specifying that the x values are floating-point numbers with the given
+ * precision.
+ * The returned function determines how many values at the given precision will fit into the range
+ * supplied in its start and end parameters.
+ * @name precision
+ * @memberOf dc.units.fp
+ * @example
+ * // specify values (and ticks) every 0.1 units
+ * chart.xUnits(dc.units.fp.precision(0.1)
+ * // there are 500 units between 0.5 and 1 if the precision is 0.001
+ * var thousandths = dc.units.fp.precision(0.001);
+ * thousandths(0.5, 1.0) // returns 500
+ * @param {Number} precision
+ * @returns {Function} start-end unit function
+ */
 dc.units.fp.precision = function (precision) {
     var _f = function (s, e) {
         var d = Math.abs((e - s) / _f.resolution);

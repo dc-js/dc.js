@@ -185,7 +185,7 @@ module.exports = function (grunt) {
         },
         jsdoc2md: {
             dist: {
-                src: ['src/bar-chart.js'],
+                src: ['src/{core,base-mixin,bar-chart}.js'],
                 dest: 'web/docs/api-latest.md'
             }
         },
