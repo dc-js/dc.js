@@ -398,6 +398,7 @@ module.exports.jsFiles = [
     'src/color-mixin.js',
     'src/coordinate-grid-mixin.js',
     'src/stack-mixin.js',
+    'src/layer-mixin.js',
     'src/cap-mixin.js',
     'src/bubble-mixin.js',
     'src/pie-chart.js',
