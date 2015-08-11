@@ -1,22 +1,19 @@
 /**
-#### Version <%= conf.pkg.version %>
-The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
-into the global name space.
-#### Function Chaining
-Most dc functions are designed to allow function chaining, meaning they return the current chart
-instance whenever it is appropriate. This way chart configuration can be written in the following
-style:
-```js
-chart.width(300)
-    .height(300)
-    .filter('sunday')
-```
-The getter forms of functions do not participate in function chaining because they necessarily
-return values that are not the chart.  (Although some, such as `.svg` and `.xAxis`, return values
-that are chainable d3 objects.)
-
-**/
-
+ * The entire dc.js library is scoped under the **dc** name space. It does not introduce
+ * anything else into the global name space.
+ *
+ * Most `dc` functions are designed to allow function chaining, meaning they return the current chart
+ * instance whenever it is appropriate.  The getter forms of functions do not participate in function
+ * chaining because they necessarily return values that are not the chart.  Although some,
+ * such as `.svg` and `.xAxis`, return values that are chainable d3 objects.
+ * @namespace dc
+ * @version <%= conf.pkg.version %>
+ * @example
+ * // Example chaining
+ * chart.width(300)
+ *      .height(300)
+ *      .filter('sunday');
+ */
 /*jshint -W062*/
 /*jshint -W079*/
 var dc = {
@@ -111,14 +108,12 @@ dc.deregisterAllCharts = function (group) {
 };
 
 /**
-## Utilities
-**/
-
-/**
-#### dc.filterAll([chartGroup])
-Clear all filters on all charts within the given chart group. If the chart group is not given then
-only charts that belong to the default chart group will be reset.
-**/
+ * Clear all filters on all charts within the given chart group. If the chart group is not given then
+ * only charts that belong to the default chart group will be reset.
+ * @memberOf dc
+ * @name filterAll
+ * @param {String} [group]
+ */
 dc.filterAll = function (group) {
     var charts = dc.chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
@@ -127,10 +122,12 @@ dc.filterAll = function (group) {
 };
 
 /**
-#### dc.refocusAll([chartGroup])
-Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
-not given then only charts that belong to the default chart group will be reset.
-**/
+ * Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
+ * not given then only charts that belong to the default chart group will be reset.
+ * @memberOf dc
+ * @name refocusAll
+ * @param {String} [group]
+ */
 dc.refocusAll = function (group) {
     var charts = dc.chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
@@ -141,10 +138,12 @@ dc.refocusAll = function (group) {
 };
 
 /**
-#### dc.renderAll([chartGroup])
-Re-render all charts belong to the given chart group. If the chart group is not given then only
-charts that belong to the default chart group will be re-rendered.
-**/
+ * Re-render all charts belong to the given chart group. If the chart group is not given then only
+ * charts that belong to the default chart group will be re-rendered.
+ * @memberOf dc
+ * @name renderAll
+ * @param {String} [group]
+ */
 dc.renderAll = function (group) {
     var charts = dc.chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
@@ -157,12 +156,14 @@ dc.renderAll = function (group) {
 };
 
 /**
-#### dc.redrawAll([chartGroup])
-Redraw all charts belong to the given chart group. If the chart group is not given then only charts
-that belong to the default chart group will be re-drawn. Redraw is different from re-render since
-when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
-from scratch.
-**/
+ * Redraw all charts belong to the given chart group. If the chart group is not given then only charts
+ * that belong to the default chart group will be re-drawn. Redraw is different from re-render since
+ * when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
+ * from scratch.
+ * @memberOf dc
+ * @name redrawAll
+ * @param {String} [group]
+ */
 dc.redrawAll = function (group) {
     var charts = dc.chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
@@ -175,19 +176,22 @@ dc.redrawAll = function (group) {
 };
 
 /**
-#### dc.disableTransitions
-If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
-immediately.  Default: false
-**/
+ * If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
+ * immediately
+ * @memberOf dc
+ * @name disableTransitions
+ * @type {Boolean}
+ * @default false
+ */
 dc.disableTransitions = false;
 
-dc.transition = function (selections, duration, callback, name) {
+dc.transition = function (selections, duration, callback) {
     if (duration <= 0 || duration === undefined || dc.disableTransitions) {
         return selections;
     }
 
     var s = selections
-        .transition(name)
+        .transition()
         .duration(duration);
 
     if (typeof(callback) === 'function') {
@@ -197,20 +201,11 @@ dc.transition = function (selections, duration, callback, name) {
     return s;
 };
 
-/* somewhat silly, but to avoid duplicating logic */
-dc.optionalTransition = function (enable, duration, callback, name) {
-    if (enable) {
-        return function (selection) {
-            return dc.transition(selection, duration, callback, name);
-        };
-    }
-    else {
-        return function (selection) {
-            return selection;
-        };
-    }
-};
-
+/**
+ * @name units
+ * @memberOf dc
+ * @type {{}}
+ */
 dc.units = {};
 
 /**

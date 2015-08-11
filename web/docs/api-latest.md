@@ -1,24 +1,24 @@
 <a name="dc"></a>
-## dc
-#### Version <%= conf.pkg.version %>
-The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
-into the global name space.
-#### Function Chaining
-Most dc functions are designed to allow function chaining, meaning they return the current chart
-instance whenever it is appropriate. This way chart configuration can be written in the following
-style:
+## dc : <code>object</code>
+The entire dc.js library is scoped under the **dc** name space. It does not introduce
+anything else into the global name space.
+
+Most `dc` functions are designed to allow function chaining, meaning they return the current chart
+instance whenever it is appropriate.  The getter forms of functions do not participate in function
+chaining because they necessarily return values that are not the chart.  Although some,
+such as `.svg` and `.xAxis`, return values that are chainable d3 objects.
+
+**Kind**: global namespace  
+**Version**: &lt;%= conf.pkg.version %&gt;  
+**Example**  
 ```js
+// Example chaining
 chart.width(300)
-    .height(300)
-    .filter('sunday')
+     .height(300)
+     .filter('sunday');
 ```
-The getter forms of functions do not participate in function chaining because they necessarily
-return values that are not the chart.  (Although some, such as `.svg` and `.xAxis`, return values
-that are chainable d3 objects.)
 
-**Kind**: global variable  
-
-* [dc](#dc)
+* [dc](#dc) : <code>object</code>
   * [.baseMixin](#dc.baseMixin) ⇒ <code>Chart</code>
     * [.width](#dc.baseMixin+width) ⇒ <code>Number</code>
     * [.height](#dc.baseMixin+height) ⇒ <code>Number</code>
@@ -27,12 +27,22 @@ that are chainable d3 objects.)
     * [.dimension](#dc.baseMixin+dimension) ⇒ <code>Dimension</code>
     * [.data](#dc.baseMixin+data) ⇒ <code>\*</code>
     * [.group](#dc.baseMixin+group) ⇒ <code>Group</code>
-  * [.barChart](#dc.barChart) ⇒ <code>barChart</code>
-  * [.disableTransitions](#dc.disableTransitions)
-  * [.filterAll()](#dc.filterAll)
-  * [.refocusAll()](#dc.refocusAll)
-  * [.renderAll()](#dc.renderAll)
-  * [.redrawAll()](#dc.redrawAll)
+  * [.barChart](#dc.barChart) ⇒ <code>barChart</code> &#124; <code>BarChart</code>
+    * [.centerBar](#dc.barChart+centerBar) ⇒ <code>Boolean</code>
+    * [.barPadding](#dc.barChart+barPadding) ⇒ <code>Number</code>
+    * [.outerPadding](#dc.barChart+outerPadding) ⇒ <code>Number</code>
+    * [.gap](#dc.barChart+gap) ⇒ <code>Number</code>
+    * [.alwaysUseRounding](#dc.barChart+alwaysUseRounding) ⇒ <code>Boolean</code>
+  * [.filterAll](#dc.filterAll)
+  * [.refocusAll](#dc.refocusAll)
+  * [.renderAll](#dc.renderAll)
+  * [.redrawAll](#dc.redrawAll)
+  * [.disableTransitions](#dc.disableTransitions) : <code>Boolean</code>
+  * [.units](#dc.units) : <code>Object</code>
+    * [.integers](#dc.units.integers) ⇒ <code>Number</code>
+    * [.ordinal](#dc.units.ordinal) ⇒ <code>Array.&lt;String&gt;</code>
+    * [.fp](#dc.units.fp) : <code>Object</code>
+      * [.precision](#dc.units.fp.precision) ⇒ <code>function</code>
 
 <a name="dc.baseMixin"></a>
 ### dc.baseMixin ⇒ <code>Chart</code>
@@ -167,16 +177,20 @@ If `name` is specified then it will be used to generate legend label.
 | [name] | <code>String</code> | 
 
 <a name="dc.barChart"></a>
-### dc.barChart ⇒ <code>barChart</code>
+### dc.barChart ⇒ <code>barChart</code> &#124; <code>BarChart</code>
 Concrete bar chart/histogram implementation.
+Examples:
+- [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+- [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
 
 **Kind**: static property of <code>[dc](#dc)</code>  
-**Mixes**: <code>StackMixin,CoordinateGridMixin</code>, <code>baseMixin</code>  
+**Mixes**: <code>baseMixin</code>  
+**Returns**: <code>barChart</code> - =======<code>BarChart</code> - >>>>>>> cec52eb469e363b35b6f8c2f36488f9bb1d481fc  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | parent | <code>String</code> &#124; <code>node</code> &#124; <code>d3.selection</code> &#124; <code>dc.compositeChart</code> | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance. |
-| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. <<<<<<< HEAD |
 
 **Example**  
 ```js
@@ -187,40 +201,201 @@ var chart2 = dc.barChart('#chart-container2', 'chartGroupA');
 // create a sub-chart under a composite parent chart
 var chart3 = dc.barChart(compositeChart);
 ```
-<a name="dc.disableTransitions"></a>
-### dc.disableTransitions
-#### dc.disableTransitions
-If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
-immediately.  Default: false
 
-**Kind**: static property of <code>[dc](#dc)</code>  
+* [.barChart](#dc.barChart) ⇒ <code>barChart</code> &#124; <code>BarChart</code>
+  * [.centerBar](#dc.barChart+centerBar) ⇒ <code>Boolean</code>
+  * [.barPadding](#dc.barChart+barPadding) ⇒ <code>Number</code>
+  * [.outerPadding](#dc.barChart+outerPadding) ⇒ <code>Number</code>
+  * [.gap](#dc.barChart+gap) ⇒ <code>Number</code>
+  * [.alwaysUseRounding](#dc.barChart+alwaysUseRounding) ⇒ <code>Boolean</code>
+
+<a name="dc.barChart+centerBar"></a>
+#### barChart.centerBar ⇒ <code>Boolean</code>
+Whether the bar chart will render each bar centered around the data position on x axis
+
+**Kind**: instance property of <code>[barChart](#dc.barChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [centerBar] | <code>Boolean</code> | <code>false</code> | 
+
+<a name="dc.barChart+barPadding"></a>
+#### barChart.barPadding ⇒ <code>Number</code>
+Get or set the spacing between bars as a fraction of bar size. Valid values are between 0-1.
+Setting this value will also remove any previously set `gap`. See the
+[d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
+for a visual description of how the padding is applied.
+
+**Kind**: instance property of <code>[barChart](#dc.barChart)</code>  
+
+| Param | Type |
+| --- | --- |
+| [barPadding] | <code>Number</code> | 
+
+<a name="dc.barChart+outerPadding"></a>
+#### barChart.outerPadding ⇒ <code>Number</code>
+Get or set the outer padding on an ordinal bar chart. This setting has no effect on non-ordinal charts.
+Will pad the width by `padding * barWidth` on each side of the chart.
+
+**Kind**: instance property of <code>[barChart](#dc.barChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [padding] | <code>Number</code> | <code>0.5</code> | 
+
+<a name="dc.barChart+gap"></a>
+#### barChart.gap ⇒ <code>Number</code>
+Manually set fixed gap (in px) between bars instead of relying on the default auto-generated
+gap.  By default the bar chart implementation will calculate and set the gap automatically
+based on the number of data points and the length of the x axis.
+
+**Kind**: instance property of <code>[barChart](#dc.barChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [gap] | <code>Number</code> | <code>2</code> | 
+
+<a name="dc.barChart+alwaysUseRounding"></a>
+#### barChart.alwaysUseRounding ⇒ <code>Boolean</code>
+Set or get whether rounding is enabled when bars are centered.  Default: false.  If false, using
+rounding with centered bars will result in a warning and rounding will be ignored.  This flag
+has no effect if bars are not centered.
+When using standard d3.js rounding methods, the brush often doesn't align correctly with
+centered bars since the bars are offset.  The rounding function must add an offset to
+compensate, such as in the following example.
+
+**Kind**: instance property of <code>[barChart](#dc.barChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [alwaysUseRounding] | <code>Boolean</code> | <code>false</code> | 
+
+**Example**  
+```js
+chart.round(function(n) {return Math.floor(n)+0.5});
+```
 <a name="dc.filterAll"></a>
-### dc.filterAll()
-#### dc.filterAll([chartGroup])
+### dc.filterAll
 Clear all filters on all charts within the given chart group. If the chart group is not given then
 only charts that belong to the default chart group will be reset.
 
-**Kind**: static method of <code>[dc](#dc)</code>  
+**Kind**: static property of <code>[dc](#dc)</code>  
+
+| Param | Type |
+| --- | --- |
+| [group] | <code>String</code> | 
+
 <a name="dc.refocusAll"></a>
-### dc.refocusAll()
-#### dc.refocusAll([chartGroup])
+### dc.refocusAll
 Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
 not given then only charts that belong to the default chart group will be reset.
 
-**Kind**: static method of <code>[dc](#dc)</code>  
+**Kind**: static property of <code>[dc](#dc)</code>  
+
+| Param | Type |
+| --- | --- |
+| [group] | <code>String</code> | 
+
 <a name="dc.renderAll"></a>
-### dc.renderAll()
-#### dc.renderAll([chartGroup])
+### dc.renderAll
 Re-render all charts belong to the given chart group. If the chart group is not given then only
 charts that belong to the default chart group will be re-rendered.
 
-**Kind**: static method of <code>[dc](#dc)</code>  
+**Kind**: static property of <code>[dc](#dc)</code>  
+
+| Param | Type |
+| --- | --- |
+| [group] | <code>String</code> | 
+
 <a name="dc.redrawAll"></a>
-### dc.redrawAll()
-#### dc.redrawAll([chartGroup])
+### dc.redrawAll
 Redraw all charts belong to the given chart group. If the chart group is not given then only charts
 that belong to the default chart group will be re-drawn. Redraw is different from re-render since
 when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
 from scratch.
 
-**Kind**: static method of <code>[dc](#dc)</code>  
+**Kind**: static property of <code>[dc](#dc)</code>  
+
+| Param | Type |
+| --- | --- |
+| [group] | <code>String</code> | 
+
+<a name="dc.disableTransitions"></a>
+### dc.disableTransitions : <code>Boolean</code>
+If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
+immediately
+
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Default**: <code>false</code>  
+<a name="dc.units"></a>
+### dc.units : <code>Object</code>
+**Kind**: static property of <code>[dc](#dc)</code>  
+
+* [.units](#dc.units) : <code>Object</code>
+  * [.integers](#dc.units.integers) ⇒ <code>Number</code>
+  * [.ordinal](#dc.units.ordinal) ⇒ <code>Array.&lt;String&gt;</code>
+  * [.fp](#dc.units.fp) : <code>Object</code>
+    * [.precision](#dc.units.fp.precision) ⇒ <code>function</code>
+
+<a name="dc.units.integers"></a>
+#### units.integers ⇒ <code>Number</code>
+The default value for `xUnits` for the [Coordinate Grid Chart](#coordinate-grid-chart) and should
+be used when the x values are a sequence of integers.
+It is a function that counts the number of integers in the range supplied in its start and end parameters.
+
+**Kind**: static property of <code>[units](#dc.units)</code>  
+
+| Param | Type |
+| --- | --- |
+| start | <code>Number</code> | 
+| end | <code>Number</code> | 
+
+**Example**  
+```js
+chart.xUnits(dc.units.integers) // already the default
+```
+<a name="dc.units.ordinal"></a>
+#### units.ordinal ⇒ <code>Array.&lt;String&gt;</code>
+This argument can be passed to the `xUnits` function of the to specify ordinal units for the x
+axis. Usually this parameter is used in combination with passing `d3.scale.ordinal()` to `.x`.
+It just returns the domain passed to it, which for ordinal charts is an array of all values.
+
+**Kind**: static property of <code>[units](#dc.units)</code>  
+
+| Param | Type |
+| --- | --- |
+| start | <code>\*</code> | 
+| end | <code>\*</code> | 
+| domain | <code>Array.&lt;String&gt;</code> | 
+
+**Example**  
+```js
+chart.xUnits(dc.units.ordinal)
+     .x(d3.scale.ordinal())
+```
+<a name="dc.units.fp"></a>
+#### units.fp : <code>Object</code>
+**Kind**: static property of <code>[units](#dc.units)</code>  
+<a name="dc.units.fp.precision"></a>
+##### fp.precision ⇒ <code>function</code>
+This function generates an argument for the [Coordinate Grid Chart's](#coordinate-grid-chart)
+`xUnits` function specifying that the x values are floating-point numbers with the given
+precision.
+The returned function determines how many values at the given precision will fit into the range
+supplied in its start and end parameters.
+
+**Kind**: static property of <code>[fp](#dc.units.fp)</code>  
+**Returns**: <code>function</code> - start-end unit function  
+
+| Param | Type |
+| --- | --- |
+| precision | <code>Number</code> | 
+
+**Example**  
+```js
+// specify values (and ticks) every 0.1 units
+chart.xUnits(dc.units.fp.precision(0.1)
+// there are 500 units between 0.5 and 1 if the precision is 0.001
+var thousandths = dc.units.fp.precision(0.001);
+thousandths(0.5, 1.0) // returns 500
+```
