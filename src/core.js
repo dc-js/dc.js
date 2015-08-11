@@ -213,7 +213,7 @@ dc.units = {};
  * be used when the x values are a sequence of integers.
  * It is a function that counts the number of integers in the range supplied in its start and end parameters.
  * @name integers
- * @memberOf units
+ * @memberOf dc.units
  * @example
  * chart.xUnits(dc.units.integers) // already the default
  * @param {Number} start
@@ -229,7 +229,7 @@ dc.units.integers = function (start, end) {
  * axis. Usually this parameter is used in combination with passing `d3.scale.ordinal()` to `.x`.
  * It just returns the domain passed to it, which for ordinal charts is an array of all values.
  * @name ordinal
- * @memberOf units
+ * @memberOf dc.units
  * @example
  * chart.xUnits(dc.units.ordinal)
  *      .x(d3.scale.ordinal())
@@ -242,6 +242,11 @@ dc.units.ordinal = function (s, e, domain) {
     return domain;
 };
 
+/**
+ * @name fp
+ * @memberOf dc.units
+ * @type {{}}
+ */
 dc.units.fp = {};
 /**
  * This function generates an argument for the [Coordinate Grid Chart's](#coordinate-grid-chart)
@@ -249,8 +254,8 @@ dc.units.fp = {};
  * precision.
  * The returned function determines how many values at the given precision will fit into the range
  * supplied in its start and end parameters.
- * @name fp.precision
- * @memberOf units
+ * @name precision
+ * @memberOf dc.units.fp
  * @example
  * // specify values (and ticks) every 0.1 units
  * chart.xUnits(dc.units.fp.precision(0.1)
