@@ -246,14 +246,18 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .ordering([orderFunction])
-    Get or set an accessor to order ordinal charts
-    **/
-    _chart.ordering = function (o) {
+     * Get or set an accessor to order ordinal charts
+     * @name ordering
+     * @memberOf dc.baseMixin
+     * @instance
+     * @param {Function} [orderFunction]
+     * @returns {Function}
+     */
+    _chart.ordering = function (orderFunction) {
         if (!arguments.length) {
             return _ordering;
         }
-        _ordering = o;
+        _ordering = orderFunction;
         _orderSort = crossfilter.quicksort.by(_ordering);
         _chart.expireCache();
         return _chart;
@@ -274,52 +278,64 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .filterAll()
-    Clear all filters associated with this chart.
-
-    **/
+     * Clear all filters associated with this chart.
+     * @name filterAll
+     * @memberOf dc.baseMixin
+     * @instance
+     * @returns {Chart}
+     */
     _chart.filterAll = function () {
         return _chart.filter(null);
     };
 
     /**
-    #### .select(selector)
-    Execute d3 single selection in the chart's scope using the given selector and return the d3
-    selection. Roughly the same as:
-    ```js
-    d3.select('#chart-id').select(selector);
-    ```
-    This function is **not chainable** since it does not return a chart instance; however the d3
-    selection result can be chained to d3 function calls.
-
-    **/
+     * Execute d3 single selection in the chart's scope using the given selector and return the d3
+     * selection.
+     *
+     * This function is **not chainable** since it does not return a chart instance; however the d3
+     * selection result can be chained to d3 function calls.
+     * @name select
+     * @memberOf dc.baseMixin
+     * @instance
+     * @example
+     * // Similar to:
+     * d3.select('#chart-id').select(selector);
+     * @returns {Selection}
+     */
     _chart.select = function (s) {
         return _root.select(s);
     };
 
     /**
-    #### .selectAll(selector)
-    Execute in scope d3 selectAll using the given selector and return d3 selection result. Roughly
-    the same as:
-    ```js
-    d3.select('#chart-id').selectAll(selector);
-    ```
-    This function is **not chainable** since it does not return a chart instance; however the d3
-    selection result can be chained to d3 function calls.
-
-    **/
+     * Execute in scope d3 selectAll using the given selector and return d3 selection result.
+     *
+     * This function is **not chainable** since it does not return a chart instance; however the d3
+     * selection result can be chained to d3 function calls.
+     * @name selectAll
+     * @memberOf dc.baseMixin
+     * @instance
+     * @example
+     * // Similar to:
+     * d3.select('#chart-id').selectAll(selector);
+     * @returns {Selection}
+     */
     _chart.selectAll = function (s) {
         return _root ? _root.selectAll(s) : null;
     };
 
     /**
-     #### .anchor([anchorChart|anchorSelector|anchorNode], [chartGroup])
-     Set the svg root to either be an existing chart's root; or any valid [d3 single
-     selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom
-     block element such as a div; or a dom element or d3 selection. Optionally registers the chart
-     within the chartGroup. This class is called internally on chart initialization, but be called
-     again to relocate the chart. However, it will orphan any previously created SVG elements.
-    **/
+     * Set the svg root to either be an existing chart's root; or any valid [d3 single
+     * selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom
+     * block element such as a div; or a dom element or d3 selection. Optionally registers the chart
+     * within the chartGroup. This class is called internally on chart initialization, but be called
+     * again to relocate the chart. However, it will orphan any previously created SVG elements.
+     * @name anchor
+     * @memberOf dc.baseMixin
+     * @instance
+     * @param {anchorChart|anchorSelector|anchorNode} [a]
+     * @param {chartGroup} [chartGroup]
+     * @returns {Chart}
+     */
     _chart.anchor = function (a, chartGroup) {
         if (!arguments.length) {
             return _anchor;
@@ -340,10 +356,12 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .anchorName()
-    Returns the dom id for the chart's anchored location.
-
-    **/
+     * Returns the dom id for the chart's anchored location.
+     * @name anchorName
+     * @memberOf dc.baseMixin
+     * @instance
+     * @return {String}
+     */
     _chart.anchorName = function () {
         var a = _chart.anchor();
         if (a && a.id) {
@@ -356,13 +374,16 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .root([rootElement])
-    Returns the root element where a chart resides. Usually it will be the parent div element where
-    the svg was created. You can also pass in a new root element however this is usually handled by
-    dc internally. Resetting the root element on a chart outside of dc internals may have
-    unexpected consequences.
-
-    **/
+     * Returns the root element where a chart resides. Usually it will be the parent div element where
+     * the svg was created. You can also pass in a new root element however this is usually handled by
+     * dc internally. Resetting the root element on a chart outside of dc internals may have
+     * unexpected consequences.
+     * @name root
+     * @memberOf dc.baseMixin
+     * @instance
+     * @param {Element} [rootElement]
+     * @return {Element}
+     */
     _chart.root = function (r) {
         if (!arguments.length) {
             return _root;
@@ -372,12 +393,15 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .svg([svgElement])
-    Returns the top svg element for this specific chart. You can also pass in a new svg element,
-    however this is usually handled by dc internally. Resetting the svg element on a chart outside
-    of dc internals may have unexpected consequences.
-
-    **/
+     * Returns the top svg element for this specific chart. You can also pass in a new svg element,
+     * however this is usually handled by dc internally. Resetting the svg element on a chart outside
+     * of dc internals may have unexpected consequences.
+     * @name svg
+     * @memberOf dc.baseMixin
+     * @instance
+     * @param {SVGElement} [svgElement]
+     * @return {SVGElement}
+     */
     _chart.svg = function (_) {
         if (!arguments.length) {
             return _svg;
@@ -387,9 +411,12 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .resetSvg()
-    Remove the chart's SVG elements from the dom and recreate the container SVG element.
-    **/
+     * Remove the chart's SVG elements from the dom and recreate the container SVG element.
+     * @name resetSvg
+     * @memberOf dc.baseMixin
+     * @instance
+     * @return {SVGElement}
+     */
     _chart.resetSvg = function () {
         _chart.select('svg').remove();
         return generateSvg();
@@ -410,18 +437,21 @@ dc.baseMixin = function (_chart) {
     }
 
     /**
-    #### .filterPrinter([filterPrinterFunction])
-    Set or get the filter printer function. The filter printer function is used to generate human
-    friendly text for filter value(s) associated with the chart instance. By default dc charts use a
-    default filter printer `dc.printers.filter` that provides simple printing support for both
-    single value and ranged filters.
-
-    **/
-    _chart.filterPrinter = function (_) {
+     * Set or get the filter printer function. The filter printer function is used to generate human
+     * friendly text for filter value(s) associated with the chart instance. By default dc charts use a
+     * default filter printer `dc.printers.filter` that provides simple printing support for both
+     * single value and ranged filters.
+     * @name filterPrinter
+     * @memberOf dc.baseMixin
+     * @instance
+     * @param {Function} [filterPrinterFunction]
+     * @return {Function}
+     */
+    _chart.filterPrinter = function (filterPrinterFunction) {
         if (!arguments.length) {
             return _filterPrinter;
         }
-        _filterPrinter = _;
+        _filterPrinter = filterPrinterFunction;
         return _chart;
     };
 
@@ -438,6 +468,20 @@ dc.baseMixin = function (_chart) {
      function. This type of element will be turned off automatically if the filter is cleared.
 
     **/
+    /**
+     * Turn on optional control elements within the root element. dc currently supports the
+     * following html control elements.
+     * * root.selectAll('.reset') - elements are turned on if the chart has an active filter. This type
+     * of control element is usually used to store a reset link to allow user to reset filter on a
+     * certain chart. This element will be turned off automatically if the filter is cleared.
+     * * root.selectAll('.filter') elements are turned on if the chart has an active filter. The text
+     * content of this element is then replaced with the current filter value using the filter printer
+     * function. This type of element will be turned off automatically if the filter is cleared.
+     * @name turnOnControls
+     * @memberOf dc.baseMixin
+     * @instance
+     * @return {Chart}
+     */
     _chart.turnOnControls = function () {
         if (_root) {
             _chart.selectAll('.reset').style('display', null);
@@ -446,6 +490,13 @@ dc.baseMixin = function (_chart) {
         return _chart;
     };
 
+    /**
+     * Turn off optional control elements within the root element.
+     * @name turnOffControls
+     * @memberOf dc.baseMixin
+     * @instance
+     * @return {Chart}
+     */
     _chart.turnOffControls = function () {
         if (_root) {
             _chart.selectAll('.reset').style('display', 'none');
@@ -455,16 +506,18 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .transitionDuration([duration])
-    Set or get the animation transition duration(in milliseconds) for this chart instance. Default
-    duration is 750ms.
-
-    **/
-    _chart.transitionDuration = function (d) {
+     * Set or get the animation transition duration (in milliseconds) for this chart instance.
+     * @name transitionDuration
+     * @memberOf dc.baseMixin
+     * @instance
+     * @param {Number} [duration]
+     * @return {Number}
+     */
+    _chart.transitionDuration = function (duration) {
         if (!arguments.length) {
             return _transitionDuration;
         }
-        _transitionDuration = d;
+        _transitionDuration = duration;
         return _chart;
     };
 
@@ -484,13 +537,15 @@ dc.baseMixin = function (_chart) {
     }
 
     /**
-    #### .render()
-    Invoking this method will force the chart to re-render everything from scratch. Generally it
-    should only be used to render the chart for the first time on the page or if you want to make
-    sure everything is redrawn from scratch instead of relying on the default incremental redrawing
-    behaviour.
-
-    **/
+     * Invoking this method will force the chart to re-render everything from scratch. Generally it
+     * should only be used to render the chart for the first time on the page or if you want to make
+     * sure everything is redrawn from scratch instead of relying on the default incremental redrawing
+     * behaviour.
+     * @name render
+     * @memberOf dc.baseMixin
+     * @instance
+     * @return {Chart}
+     */
     _chart.render = function () {
         _listeners.preRender(_chart);
 
@@ -528,15 +583,17 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .redraw()
-    Calling redraw will cause the chart to re-render data changes incrementally. If there is no
-    change in the underlying data dimension then calling this method will have no effect on the
-    chart. Most chart interaction in dc will automatically trigger this method through internal
-    events (in particular [dc.redrawAll](#dcredrawallchartgroup)); therefore, you only need to
-    manually invoke this function if data is manipulated outside of dc's control (for example if
-    data is loaded in the background using `crossfilter.add()`).
-
-    **/
+     * Calling redraw will cause the chart to re-render data changes incrementally. If there is no
+     * change in the underlying data dimension then calling this method will have no effect on the
+     * chart. Most chart interaction in dc will automatically trigger this method through internal
+     * events (in particular [dc.redrawAll](#dcredrawallchartgroup)); therefore, you only need to
+     * manually invoke this function if data is manipulated outside of dc's control (for example if
+     * data is loaded in the background using `crossfilter.add()`).
+     * @name redraw
+     * @memberOf dc.baseMixin
+     * @instance
+     * @return {Chart}
+     */
     _chart.redraw = function () {
         sizeSvg();
         _listeners.preRedraw(_chart);
@@ -580,42 +637,47 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .hasFilterHandler([function])
-    Set or get the has filter handler. The has filter handler is a function that checks to see if
-    the chart's current filters include a specific filter.  Using a custom has filter handler allows
-    you to change the way filters are checked for and replaced.
-
-    ```js
-    // default has filter handler
-    function (filters, filter) {
-        if (filter === null || typeof(filter) === 'undefined') {
-            return filters.length > 0;
-        }
-        return filters.some(function (f) {
-            return filter <= f && filter >= f;
-        });
-    }
-
-    // custom filter handler (no-op)
-    chart.hasFilterHandler(function(filters, filter) {
-        return false;
-    });
-    ```
-    **/
-    _chart.hasFilterHandler = function (_) {
+     * Set or get the has filter handler. The has filter handler is a function that checks to see if
+     * the chart's current filters include a specific filter.  Using a custom has filter handler allows
+     * you to change the way filters are checked for and replaced.
+     * @name hasFilterHandler
+     * @memberOf dc.baseMixin
+     * @instance
+     * @example
+     * // default has filter handler
+     * function (filters, filter) {
+     *     if (filter === null || typeof(filter) === 'undefined') {
+     *         return filters.length > 0;
+     *     }
+     *     return filters.some(function (f) {
+     *         return filter <= f && filter >= f;
+     *     });
+     * }
+     *
+     * // custom filter handler (no-op)
+     * chart.hasFilterHandler(function(filters, filter) {
+     *     return false;
+     * });
+     * @param {Function} [hasFilterHandler]
+     * @return {Chart}
+     */
+    _chart.hasFilterHandler = function (hasFilterHandler) {
         if (!arguments.length) {
             return _hasFilterHandler;
         }
-        _hasFilterHandler = _;
+        _hasFilterHandler = hasFilterHandler;
         return _chart;
     };
 
     /**
-    #### .hasFilter([filter])
-    Check whether any active filter or a specific filter is associated with particular chart instance.
-    This function is **not chainable**.
-
-    **/
+     * Check whether any active filter or a specific filter is associated with particular chart instance.
+     * This function is **not chainable**.
+     * @name hasFilter
+     * @memberOf dc.baseMixin
+     * @instance
+     * @param {*} [hasFilter]
+     * @return {Boolean}
+     */
     _chart.hasFilter = function (filter) {
         return _hasFilterHandler(_filters, filter);
     };
@@ -631,37 +693,39 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .removeFilterHandler([function])
-    Set or get the remove filter handler. The remove filter handler is a function that removes a
-    filter from the chart's current filters. Using a custom remove filter handler allows you to
-    change how filters are removed or perform additional work when removing a filter, e.g. when
-    using a filter server other than crossfilter.
-
-    Any changes should modify the `filters` array argument and return that array.
-
-    ```js
-    // default remove filter handler
-    function (filters, filter) {
-        for (var i = 0; i < filters.length; i++) {
-            if (filters[i] <= filter && filters[i] >= filter) {
-                filters.splice(i, 1);
-                break;
-            }
-        }
-        return filters;
-    }
-
-    // custom filter handler (no-op)
-    chart.removeFilterHandler(function(filters, filter) {
-        return filters;
-    });
-    ```
-    **/
-    _chart.removeFilterHandler = function (_) {
+     * Set or get the remove filter handler. The remove filter handler is a function that removes a
+     * filter from the chart's current filters. Using a custom remove filter handler allows you to
+     * change how filters are removed or perform additional work when removing a filter, e.g. when
+     * using a filter server other than crossfilter.
+     *
+     * Any changes should modify the `filters` array argument and return that array.
+     * @name removeFilterHandler
+     * @memberOf dc.baseMixin
+     * @instance
+     * @example
+     * // default remove filter handler
+     * function (filters, filter) {
+     *     for (var i = 0; i < filters.length; i++) {
+     *         if (filters[i] <= filter && filters[i] >= filter) {
+     *             filters.splice(i, 1);
+     *             break;
+     *         }
+     *     }
+     *     return filters;
+     * }
+     *
+     * // custom filter handler (no-op)
+     * chart.removeFilterHandler(function(filters, filter) {
+     *     return filters;
+     * });
+     * @param {Function} [removeFilterHandler]
+     * @return {Chart}
+     */
+    _chart.removeFilterHandler = function (removeFilterHandler) {
         if (!arguments.length) {
             return _removeFilterHandler;
         }
-        _removeFilterHandler = _;
+        _removeFilterHandler = removeFilterHandler;
         return _chart;
     };
 
@@ -671,32 +735,34 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .addFilterHandler([function])
-    Set or get the add filter handler. The add filter handler is a function that adds a filter to
-    the chart's filter list. Using a custom add filter handler allows you to change the way filters
-    are added or perform additional work when adding a filter, e.g. when using a filter server other
-    than crossfilter.
-
-    Any changes should modify the `filters` array argument and return that array.
-
-    ```js
-    // default add filter handler
-    function (filters, filter) {
-        filters.push(filter);
-        return filters;
-    }
-
-    // custom filter handler (no-op)
-    chart.addFilterHandler(function(filters, filter) {
-        return filters;
-    });
-    ```
-    **/
-    _chart.addFilterHandler = function (_) {
+     * Set or get the add filter handler. The add filter handler is a function that adds a filter to
+     * the chart's filter list. Using a custom add filter handler allows you to change the way filters
+     * are added or perform additional work when adding a filter, e.g. when using a filter server other
+     * than crossfilter.
+     *
+     * Any changes should modify the `filters` array argument and return that array.
+     * @name addFilterHandler
+     * @memberOf dc.baseMixin
+     * @instance
+     * @example
+     * // default add filter handler
+     * function (filters, filter) {
+     *     filters.push(filter);
+     *     return filters;
+     * }
+     *
+     * // custom filter handler (no-op)
+     * chart.addFilterHandler(function(filters, filter) {
+     *     return filters;
+     * });
+     * @param {Function} [addFilterHandler]
+     * @return {Chart}
+     */
+    _chart.addFilterHandler = function (addFilterHandler) {
         if (!arguments.length) {
             return _addFilterHandler;
         }
-        _addFilterHandler = _;
+        _addFilterHandler = addFilterHandler;
         return _chart;
     };
 
@@ -705,31 +771,33 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .resetFilterHandler([function])
-    Set or get the reset filter handler. The reset filter handler is a function that resets the
-    chart's filter list by returning a new list. Using a custom reset filter handler allows you to
-    change the way filters are reset, or perform additional work when resetting the filters,
-    e.g. when using a filter server other than crossfilter.
-
-    This function should return an array.
-
-    ```js
-    // default remove filter handler
-    function (filters) {
-        return [];
-    }
-
-    // custom filter handler (no-op)
-    chart.resetFilterHandler(function(filters) {
-        return filters;
-    });
-    ```
-    **/
-    _chart.resetFilterHandler = function (_) {
+     * Set or get the reset filter handler. The reset filter handler is a function that resets the
+     * chart's filter list by returning a new list. Using a custom reset filter handler allows you to
+     * change the way filters are reset, or perform additional work when resetting the filters,
+     * e.g. when using a filter server other than crossfilter.
+     *
+     * This function should return an array.
+     * @name resetFilterHandler
+     * @memberOf dc.baseMixin
+     * @instance
+     * @example
+     * // default remove filter handler
+     * function (filters) {
+     *     return [];
+     * }
+     *
+     * // custom filter handler (no-op)
+     * chart.resetFilterHandler(function(filters) {
+     *     return filters;
+     * });
+     * @param {Function} [resetFilterHandler]
+     * @return {Chart}
+     */
+    _chart.resetFilterHandler = function (resetFilterHandler) {
         if (!arguments.length) {
             return _resetFilterHandler;
         }
-        _resetFilterHandler = _;
+        _resetFilterHandler = resetFilterHandler;
         return _chart;
     };
 
@@ -746,15 +814,18 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .filter([filterValue])
-    Filter the chart by the given value or return the current filter if the input parameter is missing.
-    ```js
-    // filter by a single string
-    chart.filter('Sunday');
-    // filter by a single age
-    chart.filter(18);
-    ```
-    **/
+     * Filter the chart by the given value or return the current filter if the input parameter is missing.
+     * @name filter
+     * @memberOf dc.baseMixin
+     * @instance
+     * @example
+     * // filter by a single string
+     * chart.filter('Sunday');
+     * // filter by a single age
+     * chart.filter(18);
+     * @param {*} [filterValue]
+     * @return {Chart}
+     */
     _chart.filter = function (_) {
         if (!arguments.length) {
             return _filters.length > 0 ? _filters[0] : null;
@@ -789,12 +860,14 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .filters()
-    Returns all current filters. This method does not perform defensive cloning of the internal
-    filter array before returning, therefore any modification of the returned array will effect the
-    chart's internal filter storage.
-
-    **/
+     * Returns all current filters. This method does not perform defensive cloning of the internal
+     * filter array before returning, therefore any modification of the returned array will effect the
+     * chart's internal filter storage.
+     * @name filters
+     * @memberOf dc.baseMixin
+     * @instance
+     * @return {Array<*>}
+     */
     _chart.filters = function () {
         return _filters;
     };
@@ -815,10 +888,13 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .onClick(datum)
-    This function is passed to d3 as the onClick handler for each chart. The default behavior is to
-    filter on the clicked datum (passed to the callback) and redraw the chart group.
-    **/
+     * This function is passed to d3 as the onClick handler for each chart. The default behavior is to
+     * filter on the clicked datum (passed to the callback) and redraw the chart group.
+     * @name onClick
+     * @memberOf dc.baseMixin
+     * @instance
+     * @param {*} datum
+     */
     _chart.onClick = function (d) {
         var filter = _chart.keyAccessor()(d);
         dc.events.trigger(function () {
@@ -828,27 +904,28 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .filterHandler([function])
-    Set or get the filter handler. The filter handler is a function that performs the filter action
-    on a specific dimension. Using a custom filter handler allows you to perform additional logic
-    before or after filtering.
-
-    ```js
-    // default filter handler
-    function(dimension, filter){
-        dimension.filter(filter); // perform filtering
-        return filter; // return the actual filter value
-    }
-
-    // custom filter handler
-    chart.filterHandler(function(dimension, filter){
-        var newFilter = filter + 10;
-        dimension.filter(newFilter);
-        return newFilter; // set the actual filter value to the new value
-    });
-    ```
-
-    **/
+     * Set or get the filter handler. The filter handler is a function that performs the filter action
+     * on a specific dimension. Using a custom filter handler allows you to perform additional logic
+     * before or after filtering.
+     * @name filterHandler
+     * @memberOf dc.baseMixin
+     * @instance
+     * @example
+     * // default filter handler
+     * function(dimension, filter){
+     *     dimension.filter(filter); // perform filtering
+     *     return filter; // return the actual filter value
+     * }
+     *
+     * // custom filter handler
+     * chart.filterHandler(function(dimension, filter){
+     *     var newFilter = filter + 10;
+     *     dimension.filter(newFilter);
+     *     return newFilter; // set the actual filter value to the new value
+     * });
+     * @param {Function} filterHandler
+     * @return {Chart}
+     */
     _chart.filterHandler = function (_) {
         if (!arguments.length) {
             return _filterHandler;
@@ -891,62 +968,68 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .keyAccessor([keyAccessorFunction])
-    Set or get the key accessor function. The key accessor function is used to retrieve the key
-    value from the crossfilter group. Key values are used differently in different charts, for
-    example keys correspond to slices in a pie chart and x axis positions in a grid coordinate chart.
-    ```js
-    // default key accessor
-    chart.keyAccessor(function(d) { return d.key; });
-    // custom key accessor for a multi-value crossfilter reduction
-    chart.keyAccessor(function(p) { return p.value.absGain; });
-    ```
-
-    **/
-    _chart.keyAccessor = function (_) {
+     * Set or get the key accessor function. The key accessor function is used to retrieve the key
+     * value from the crossfilter group. Key values are used differently in different charts, for
+     * example keys correspond to slices in a pie chart and x axis positions in a grid coordinate chart.
+     * @name keyAccessor
+     * @memberOf dc.baseMixin
+     * @instance
+     * @example
+     * // default key accessor
+     * chart.keyAccessor(function(d) { return d.key; });
+     * // custom key accessor for a multi-value crossfilter reduction
+     * chart.keyAccessor(function(p) { return p.value.absGain; });
+     * @param {Function} keyAccessor
+     * @return {Chart}
+     */
+    _chart.keyAccessor = function (keyAccessor) {
         if (!arguments.length) {
             return _keyAccessor;
         }
-        _keyAccessor = _;
+        _keyAccessor = keyAccessor;
         return _chart;
     };
 
     /**
-    #### .valueAccessor([valueAccessorFunction])
-    Set or get the value accessor function. The value accessor function is used to retrieve the
-    value from the crossfilter group. Group values are used differently in different charts, for
-    example values correspond to slice sizes in a pie chart and y axis positions in a grid
-    coordinate chart.
-    ```js
-    // default value accessor
-    chart.valueAccessor(function(d) { return d.value; });
-    // custom value accessor for a multi-value crossfilter reduction
-    chart.valueAccessor(function(p) { return p.value.percentageGain; });
-    ```
-
-    **/
-    _chart.valueAccessor = function (_) {
+     * Set or get the value accessor function. The value accessor function is used to retrieve the
+     * value from the crossfilter group. Group values are used differently in different charts, for
+     * example values correspond to slice sizes in a pie chart and y axis positions in a grid
+     * coordinate chart.
+     * @name valueAccessor
+     * @memberOf dc.baseMixin
+     * @instance
+     * @example
+     * // default value accessor
+     * chart.valueAccessor(function(d) { return d.value; });
+     * // custom value accessor for a multi-value crossfilter reduction
+     * chart.valueAccessor(function(p) { return p.value.percentageGain; });
+     * @param {Function} valueAccessor
+     * @return {Chart}
+     */
+    _chart.valueAccessor = function (valueAccessor) {
         if (!arguments.length) {
             return _valueAccessor;
         }
-        _valueAccessor = _;
+        _valueAccessor = valueAccessor;
         return _chart;
     };
 
     /**
-    #### .label([labelFunction])
-    Set or get the label function. The chart class will use this function to render labels for each
-    child element in the chart, e.g. slices in a pie chart or bubbles in a bubble chart. Not every
-    chart supports the label function for example bar chart and line chart do not use this function
-    at all.
-    ```js
-    // default label function just return the key
-    chart.label(function(d) { return d.key; });
-    // label function has access to the standard d3 data binding and can get quite complicated
-    chart.label(function(d) { return d.data.key + '(' + Math.floor(d.data.value / all.value() * 100) + '%)'; });
-    ```
-
-    **/
+     * Set or get the label function. The chart class will use this function to render labels for each
+     * child element in the chart, e.g. slices in a pie chart or bubbles in a bubble chart. Not every
+     * chart supports the label function for example bar chart and line chart do not use this function
+     * at all.
+     * @name label
+     * @memberOf dc.baseMixin
+     * @instance
+     * @example
+     * // default label function just return the key
+     * chart.label(function(d) { return d.key; });
+     * // label function has access to the standard d3 data binding and can get quite complicated
+     * chart.label(function(d) { return d.data.key + '(' + Math.floor(d.data.value / all.value() * 100) + '%)'; });
+     * @param {Function} labelFunction
+     * @return {Chart}
+     */
     _chart.label = function (_) {
         if (!arguments.length) {
             return _label;
@@ -957,100 +1040,113 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .renderLabel(boolean)
-    Turn on/off label rendering
-
-    **/
-    _chart.renderLabel = function (_) {
+     * Turn on/off label rendering
+     * @name renderLabel
+     * @memberOf dc.baseMixin
+     * @instance
+     * @param {Boolean} renderLabel
+     * @return {Boolean}
+     */
+    _chart.renderLabel = function (renderLabel) {
         if (!arguments.length) {
             return _renderLabel;
         }
-        _renderLabel = _;
+        _renderLabel = renderLabel;
         return _chart;
     };
 
     /**
-    #### .title([titleFunction])
-    Set or get the title function. The chart class will use this function to render the svg title
-    (usually interpreted by browser as tooltips) for each child element in the chart, e.g. a slice
-    in a pie chart or a bubble in a bubble chart. Almost every chart supports the title function;
-    however in grid coordinate charts you need to turn off the brush in order to see titles, because
-    otherwise the brush layer will block tooltip triggering.
-    ```js
-    // default title function just return the key
-    chart.title(function(d) { return d.key + ': ' + d.value; });
-    // title function has access to the standard d3 data binding and can get quite complicated
-    chart.title(function(p) {
-        return p.key.getFullYear()
-            + '\n'
-            + 'Index Gain: ' + numberFormat(p.value.absGain) + '\n'
-            + 'Index Gain in Percentage: ' + numberFormat(p.value.percentageGain) + '%\n'
-            + 'Fluctuation / Index Ratio: ' + numberFormat(p.value.fluctuationPercentage) + '%';
-    });
-    ```
-
-    **/
-    _chart.title = function (_) {
+     * Set or get the title function. The chart class will use this function to render the svg title
+     * (usually interpreted by browser as tooltips) for each child element in the chart, e.g. a slice
+     * in a pie chart or a bubble in a bubble chart. Almost every chart supports the title function;
+     * however in grid coordinate charts you need to turn off the brush in order to see titles, because
+     * otherwise the brush layer will block tooltip triggering.
+     * @name title
+     * @memberOf dc.baseMixin
+     * @instance
+     * @example
+     * // default title function just return the key
+     * chart.title(function(d) { return d.key + ': ' + d.value; });
+     * // title function has access to the standard d3 data binding and can get quite complicated
+     * chart.title(function(p) {
+     *    return p.key.getFullYear()
+     *        + '\n'
+     *        + 'Index Gain: ' + numberFormat(p.value.absGain) + '\n'
+     *        + 'Index Gain in Percentage: ' + numberFormat(p.value.percentageGain) + '%\n'
+     *        + 'Fluctuation / Index Ratio: ' + numberFormat(p.value.fluctuationPercentage) + '%';
+     * });
+     * @param {Function} titleFunction
+     * @return {Function}
+     */
+    _chart.title = function (titleFunction) {
         if (!arguments.length) {
             return _title;
         }
-        _title = _;
+        _title = titleFunction;
         return _chart;
     };
 
     /**
-    #### .renderTitle(boolean)
-    Turn on/off title rendering, or return the state of the render title flag if no arguments are
-    given.
-
-    **/
-    _chart.renderTitle = function (_) {
+     * Turn on/off title rendering, or return the state of the render title flag if no arguments are
+     * given.
+     * @name renderTitle
+     * @memberOf dc.baseMixin
+     * @instance
+     * @param {Boolean} renderTitle
+     * @return {Boolean}
+     */
+    _chart.renderTitle = function (renderTitle) {
         if (!arguments.length) {
             return _renderTitle;
         }
-        _renderTitle = _;
+        _renderTitle = renderTitle;
         return _chart;
     };
 
     /**
-    #### .renderlet(renderletFunction)
-    A renderlet is similar to an event listener on rendering event. Multiple renderlets can be added
-    to an individual chart.  Each time a chart is rerendered or redrawn the renderlets are invoked
-    right after the chart finishes its transitions, giving you a way to modify the svg
-    elements. Renderlet functions take the chart instance as the only input parameter and you can
-    use the dc API or use raw d3 to achieve pretty much any effect.
-
-    @Deprecated - Use [Listeners](#Listeners) with a 'renderlet' prefix
-    Generates a random key for the renderlet, which makes it hard to remove.
-    ```js
-    // do this instead of .renderlet(function(chart) { ... })
-    chart.on("renderlet", function(chart){
-        // mix of dc API and d3 manipulation
-        chart.select('g.y').style('display', 'none');
-        // its a closure so you can also access other chart variable available in the closure scope
-        moveChart.filter(chart.filter());
-    });
-    ```
-
-    **/
+     * A renderlet is similar to an event listener on rendering event. Multiple renderlets can be added
+     * to an individual chart.  Each time a chart is rerendered or redrawn the renderlets are invoked
+     * right after the chart finishes its transitions, giving you a way to modify the svg
+     * elements. Renderlet functions take the chart instance as the only input parameter and you can
+     * use the dc API or use raw d3 to achieve pretty much any effect.
+     * @name renderlet
+     * @memberOf dc.baseMixin
+     * @instance
+     * @deprecated Use [Listeners](#Listeners) with a 'renderlet' prefix.
+     * Generates a random key for the renderlet, which makes it hard to remove.
+     * @example
+     * // do this instead of .renderlet(function(chart) { ... })
+     * chart.on("renderlet", function(chart){
+     *     // mix of dc API and d3 manipulation
+     *     chart.select('g.y').style('display', 'none');
+     *     // its a closure so you can also access other chart variable available in the closure scope
+     *     moveChart.filter(chart.filter());
+     * });
+     * @param {Function} renderletFunction
+     * @return {Function}
+     */
     _chart.renderlet = dc.logger.deprecate(function (_) {
         _chart.on('renderlet.' + dc.utils.uniqueId(), _);
         return _chart;
     }, 'chart.renderlet has been deprecated.  Please use chart.on("renderlet.<renderletKey>", renderletFunction)');
 
     /**
-    #### .chartGroup([group])
-    Get or set the chart group to which this chart belongs. Chart groups are rendered or redrawn
-    together since it is expected they share the same underlying crossfilter data set.
-    **/
-    _chart.chartGroup = function (_) {
+     * Get or set the chart group to which this chart belongs. Chart groups are rendered or redrawn
+     * together since it is expected they share the same underlying crossfilter data set.
+     * @name chartGroup
+     * @memberOf dc.baseMixin
+     * @instance
+     * @param {String} chartGroup
+     * @return {String}
+     */
+    _chart.chartGroup = function (chartGroup) {
         if (!arguments.length) {
             return _chartGroup;
         }
         if (!_isChild) {
             dc.deregisterChart(_chart, _chartGroup);
         }
-        _chartGroup = _;
+        _chartGroup = chartGroup;
         if (!_isChild) {
             dc.registerChart(_chart, _chartGroup);
         }
@@ -1058,29 +1154,32 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .expireCache()
-    Expire the internal chart cache. dc charts cache some data internally on a per chart basis to
-    speed up rendering and avoid unnecessary calculation; however it might be useful to clear the
-    cache if you have changed state which will affect rendering.  For example if you invoke the
-    `crossfilter.add` function or reset group or dimension after rendering it is a good idea to
-    clear the cache to make sure charts are rendered properly.
-
-    **/
+     * Expire the internal chart cache. dc charts cache some data internally on a per chart basis to
+     * speed up rendering and avoid unnecessary calculation; however it might be useful to clear the
+     * cache if you have changed state which will affect rendering.  For example if you invoke the
+     * `crossfilter.add` function or reset group or dimension after rendering it is a good idea to
+     * clear the cache to make sure charts are rendered properly.
+     * @name expireCache
+     * @memberOf dc.baseMixin
+     * @instance
+     * @return {Chart}
+     */
     _chart.expireCache = function () {
         // do nothing in base, should be overridden by sub-function
         return _chart;
     };
 
     /**
-    #### .legend([dc.legend])
-    Attach a dc.legend widget to this chart. The legend widget will automatically draw legend labels
-    based on the color setting and names associated with each group.
-
-    ```js
-    chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
-    ```
-
-    **/
+     * Attach a dc.legend widget to this chart. The legend widget will automatically draw legend labels
+     * based on the color setting and names associated with each group.
+     * @name legend
+     * @memberOf dc.baseMixin
+     * @instance
+     * @example
+     * chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
+     * @param {dc.legend} [legend]
+     * @return {dc.legend}
+     */
     _chart.legend = function (l) {
         if (!arguments.length) {
             return _legend;
@@ -1091,23 +1190,27 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    #### .chartID()
-    Returns the internal numeric ID of the chart.
-    **/
+     * Returns the internal numeric ID of the chart.
+     * @name chartID
+     * @memberOf dc.baseMixin
+     * @instance
+     * @return {String}
+     */
     _chart.chartID = function () {
         return _chart.__dcFlag__;
     };
 
     /**
-    #### .options(optionsObject)
-    Set chart options using a configuration object. Each key in the object will cause the method of
-    the same name to be called with the value to set that attribute for the chart.
-
-    Example:
-    ```
-    chart.options({dimension: myDimension, group: myGroup});
-    ```
-    **/
+     * Set chart options using a configuration object. Each key in the object will cause the method of
+     * the same name to be called with the value to set that attribute for the chart.
+     * @name options
+     * @memberOf dc.baseMixin
+     * @instance
+     * @example
+     * chart.options({dimension: myDimension, group: myGroup});
+     * @param {{}} opts
+     * @return {Chart}
+     */
     _chart.options = function (opts) {
         var applyOptions = [
             'anchor',
@@ -1136,35 +1239,35 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-    ## Listeners
-    All dc chart instance supports the following listeners.
-
-    #### .on('renderlet', function(chart, filter){...})
-    This listener function will be invoked after transitions after redraw and render. Replaces the
-    deprecated `.renderlet()` method.
-
-    #### .on('pretransition', function(chart, filter){...})
-    Like `.on('renderlet', ...)` but the event is fired before transitions start.
-
-    #### .on('preRender', function(chart){...})
-    This listener function will be invoked before chart rendering.
-
-    #### .on('postRender', function(chart){...})
-    This listener function will be invoked after chart finish rendering including all renderlets' logic.
-
-    #### .on('preRedraw', function(chart){...})
-    This listener function will be invoked before chart redrawing.
-
-    #### .on('postRedraw', function(chart){...})
-    This listener function will be invoked after chart finish redrawing including all renderlets' logic.
-
-    #### .on('filtered', function(chart, filter){...})
-    This listener function will be invoked after a filter is applied, added or removed.
-
-    #### .on('zoomed', function(chart, filter){...})
-    This listener function will be invoked after a zoom is triggered.
-
-    **/
+     * All dc chart instance supports the following listeners.
+     * Supports the following events:
+     * * 'renderlet' - This listener function will be invoked after transitions after redraw and render. Replaces the
+     * deprecated `.renderlet()` method.
+     * * 'pretransition' - Like `.on('renderlet', ...)` but the event is fired before transitions start.
+     * * 'preRender' - This listener function will be invoked before chart rendering.
+     * * 'postRender' - This listener function will be invoked after chart finish rendering including
+     * all renderlets' logic.
+     * * 'preRedraw' - This listener function will be invoked before chart redrawing.
+     * * 'postRedraw' - This listener function will be invoked after chart finish redrawing
+     * including all renderlets' logic.
+     * * 'filtered' - This listener function will be invoked after a filter is applied, added or removed.
+     * * 'zoomed' - This listener function will be invoked after a zoom is triggered.
+     * @name on
+     * @memberOf dc.baseMixin
+     * @instance
+     * @example
+     * .on('renderlet', function(chart, filter){...})
+     * .on('pretransition', function(chart, filter){...})
+     * .on('preRender', function(chart){...})
+     * .on('postRender', function(chart){...})
+     * .on('preRedraw', function(chart){...})
+     * .on('postRedraw', function(chart){...})
+     * .on('filtered', function(chart, filter){...})
+     * .on('zoomed', function(chart, filter){...})
+     * @param {String} event
+     * @param {Function} listener
+     * @return {Chart}
+     */
     _chart.on = function (event, listener) {
         _listeners.on(event, listener);
         return _chart;

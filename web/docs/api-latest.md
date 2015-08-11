@@ -27,6 +27,43 @@ chart.width(300)
     * [.dimension](#dc.baseMixin+dimension) ⇒ <code>Dimension</code>
     * [.data](#dc.baseMixin+data) ⇒ <code>\*</code>
     * [.group](#dc.baseMixin+group) ⇒ <code>Group</code>
+    * [.ordering](#dc.baseMixin+ordering) ⇒ <code>function</code>
+    * [.filterAll](#dc.baseMixin+filterAll) ⇒ <code>Chart</code>
+    * [.select](#dc.baseMixin+select) ⇒ <code>Selection</code>
+    * [.selectAll](#dc.baseMixin+selectAll) ⇒ <code>Selection</code>
+    * [.anchor](#dc.baseMixin+anchor) ⇒ <code>Chart</code>
+    * [.anchorName](#dc.baseMixin+anchorName) ⇒ <code>String</code>
+    * [.root](#dc.baseMixin+root) ⇒ <code>Element</code>
+    * [.svg](#dc.baseMixin+svg) ⇒ <code>SVGElement</code>
+    * [.resetSvg](#dc.baseMixin+resetSvg) ⇒ <code>SVGElement</code>
+    * [.filterPrinter](#dc.baseMixin+filterPrinter) ⇒ <code>function</code>
+    * [.turnOnControls](#dc.baseMixin+turnOnControls) ⇒ <code>Chart</code>
+    * [.turnOffControls](#dc.baseMixin+turnOffControls) ⇒ <code>Chart</code>
+    * [.transitionDuration](#dc.baseMixin+transitionDuration) ⇒ <code>Number</code>
+    * [.render](#dc.baseMixin+render) ⇒ <code>Chart</code>
+    * [.redraw](#dc.baseMixin+redraw) ⇒ <code>Chart</code>
+    * [.hasFilterHandler](#dc.baseMixin+hasFilterHandler) ⇒ <code>Chart</code>
+    * [.hasFilter](#dc.baseMixin+hasFilter) ⇒ <code>Boolean</code>
+    * [.removeFilterHandler](#dc.baseMixin+removeFilterHandler) ⇒ <code>Chart</code>
+    * [.addFilterHandler](#dc.baseMixin+addFilterHandler) ⇒ <code>Chart</code>
+    * [.resetFilterHandler](#dc.baseMixin+resetFilterHandler) ⇒ <code>Chart</code>
+    * [.filter](#dc.baseMixin+filter) ⇒ <code>Chart</code>
+    * [.filters](#dc.baseMixin+filters) ⇒ <code>Array.&lt;\*&gt;</code>
+    * [.onClick](#dc.baseMixin+onClick)
+    * [.filterHandler](#dc.baseMixin+filterHandler) ⇒ <code>Chart</code>
+    * [.keyAccessor](#dc.baseMixin+keyAccessor) ⇒ <code>Chart</code>
+    * [.valueAccessor](#dc.baseMixin+valueAccessor) ⇒ <code>Chart</code>
+    * [.label](#dc.baseMixin+label) ⇒ <code>Chart</code>
+    * [.renderLabel](#dc.baseMixin+renderLabel) ⇒ <code>Boolean</code>
+    * [.title](#dc.baseMixin+title) ⇒ <code>function</code>
+    * [.renderTitle](#dc.baseMixin+renderTitle) ⇒ <code>Boolean</code>
+    * ~~[.renderlet](#dc.baseMixin+renderlet) ⇒ <code>function</code>~~
+    * [.chartGroup](#dc.baseMixin+chartGroup) ⇒ <code>String</code>
+    * [.expireCache](#dc.baseMixin+expireCache) ⇒ <code>Chart</code>
+    * [.legend](#dc.baseMixin+legend) ⇒ <code>dc.legend</code>
+    * [.chartID](#dc.baseMixin+chartID) ⇒ <code>String</code>
+    * [.options](#dc.baseMixin+options) ⇒ <code>Chart</code>
+    * [.on](#dc.baseMixin+on) ⇒ <code>Chart</code>
   * [.bubbleMixin](#dc.bubbleMixin) ⇒ <code>Chart</code>
     * [.r](#dc.bubbleMixin+r) ⇒ <code>Array.&lt;Number&gt;</code>
     * [.radiusValueAccessor](#dc.bubbleMixin+radiusValueAccessor) ⇒ <code>function</code>
@@ -93,6 +130,43 @@ and available on all chart implementation in the DC library.
   * [.dimension](#dc.baseMixin+dimension) ⇒ <code>Dimension</code>
   * [.data](#dc.baseMixin+data) ⇒ <code>\*</code>
   * [.group](#dc.baseMixin+group) ⇒ <code>Group</code>
+  * [.ordering](#dc.baseMixin+ordering) ⇒ <code>function</code>
+  * [.filterAll](#dc.baseMixin+filterAll) ⇒ <code>Chart</code>
+  * [.select](#dc.baseMixin+select) ⇒ <code>Selection</code>
+  * [.selectAll](#dc.baseMixin+selectAll) ⇒ <code>Selection</code>
+  * [.anchor](#dc.baseMixin+anchor) ⇒ <code>Chart</code>
+  * [.anchorName](#dc.baseMixin+anchorName) ⇒ <code>String</code>
+  * [.root](#dc.baseMixin+root) ⇒ <code>Element</code>
+  * [.svg](#dc.baseMixin+svg) ⇒ <code>SVGElement</code>
+  * [.resetSvg](#dc.baseMixin+resetSvg) ⇒ <code>SVGElement</code>
+  * [.filterPrinter](#dc.baseMixin+filterPrinter) ⇒ <code>function</code>
+  * [.turnOnControls](#dc.baseMixin+turnOnControls) ⇒ <code>Chart</code>
+  * [.turnOffControls](#dc.baseMixin+turnOffControls) ⇒ <code>Chart</code>
+  * [.transitionDuration](#dc.baseMixin+transitionDuration) ⇒ <code>Number</code>
+  * [.render](#dc.baseMixin+render) ⇒ <code>Chart</code>
+  * [.redraw](#dc.baseMixin+redraw) ⇒ <code>Chart</code>
+  * [.hasFilterHandler](#dc.baseMixin+hasFilterHandler) ⇒ <code>Chart</code>
+  * [.hasFilter](#dc.baseMixin+hasFilter) ⇒ <code>Boolean</code>
+  * [.removeFilterHandler](#dc.baseMixin+removeFilterHandler) ⇒ <code>Chart</code>
+  * [.addFilterHandler](#dc.baseMixin+addFilterHandler) ⇒ <code>Chart</code>
+  * [.resetFilterHandler](#dc.baseMixin+resetFilterHandler) ⇒ <code>Chart</code>
+  * [.filter](#dc.baseMixin+filter) ⇒ <code>Chart</code>
+  * [.filters](#dc.baseMixin+filters) ⇒ <code>Array.&lt;\*&gt;</code>
+  * [.onClick](#dc.baseMixin+onClick)
+  * [.filterHandler](#dc.baseMixin+filterHandler) ⇒ <code>Chart</code>
+  * [.keyAccessor](#dc.baseMixin+keyAccessor) ⇒ <code>Chart</code>
+  * [.valueAccessor](#dc.baseMixin+valueAccessor) ⇒ <code>Chart</code>
+  * [.label](#dc.baseMixin+label) ⇒ <code>Chart</code>
+  * [.renderLabel](#dc.baseMixin+renderLabel) ⇒ <code>Boolean</code>
+  * [.title](#dc.baseMixin+title) ⇒ <code>function</code>
+  * [.renderTitle](#dc.baseMixin+renderTitle) ⇒ <code>Boolean</code>
+  * ~~[.renderlet](#dc.baseMixin+renderlet) ⇒ <code>function</code>~~
+  * [.chartGroup](#dc.baseMixin+chartGroup) ⇒ <code>String</code>
+  * [.expireCache](#dc.baseMixin+expireCache) ⇒ <code>Chart</code>
+  * [.legend](#dc.baseMixin+legend) ⇒ <code>dc.legend</code>
+  * [.chartID](#dc.baseMixin+chartID) ⇒ <code>String</code>
+  * [.options](#dc.baseMixin+options) ⇒ <code>Chart</code>
+  * [.on](#dc.baseMixin+on) ⇒ <code>Chart</code>
 
 <a name="dc.baseMixin+width"></a>
 #### baseMixin.width ⇒ <code>Number</code>
@@ -204,6 +278,568 @@ If `name` is specified then it will be used to generate legend label.
 | [group] | <code>Group</code> | 
 | [name] | <code>String</code> | 
 
+<a name="dc.baseMixin+ordering"></a>
+#### baseMixin.ordering ⇒ <code>function</code>
+Get or set an accessor to order ordinal charts
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [orderFunction] | <code>function</code> | 
+
+<a name="dc.baseMixin+filterAll"></a>
+#### baseMixin.filterAll ⇒ <code>Chart</code>
+Clear all filters associated with this chart.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+select"></a>
+#### baseMixin.select ⇒ <code>Selection</code>
+Execute d3 single selection in the chart's scope using the given selector and return the d3
+selection.
+
+This function is **not chainable** since it does not return a chart instance; however the d3
+selection result can be chained to d3 function calls.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+**Example**  
+```js
+// Similar to:
+d3.select('#chart-id').select(selector);
+```
+<a name="dc.baseMixin+selectAll"></a>
+#### baseMixin.selectAll ⇒ <code>Selection</code>
+Execute in scope d3 selectAll using the given selector and return d3 selection result.
+
+This function is **not chainable** since it does not return a chart instance; however the d3
+selection result can be chained to d3 function calls.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+**Example**  
+```js
+// Similar to:
+d3.select('#chart-id').selectAll(selector);
+```
+<a name="dc.baseMixin+anchor"></a>
+#### baseMixin.anchor ⇒ <code>Chart</code>
+Set the svg root to either be an existing chart's root; or any valid [d3 single
+selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom
+block element such as a div; or a dom element or d3 selection. Optionally registers the chart
+within the chartGroup. This class is called internally on chart initialization, but be called
+again to relocate the chart. However, it will orphan any previously created SVG elements.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [a] | <code>anchorChart</code> &#124; <code>anchorSelector</code> &#124; <code>anchorNode</code> | 
+| [chartGroup] | <code>chartGroup</code> | 
+
+<a name="dc.baseMixin+anchorName"></a>
+#### baseMixin.anchorName ⇒ <code>String</code>
+Returns the dom id for the chart's anchored location.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+root"></a>
+#### baseMixin.root ⇒ <code>Element</code>
+Returns the root element where a chart resides. Usually it will be the parent div element where
+the svg was created. You can also pass in a new root element however this is usually handled by
+dc internally. Resetting the root element on a chart outside of dc internals may have
+unexpected consequences.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [rootElement] | <code>Element</code> | 
+
+<a name="dc.baseMixin+svg"></a>
+#### baseMixin.svg ⇒ <code>SVGElement</code>
+Returns the top svg element for this specific chart. You can also pass in a new svg element,
+however this is usually handled by dc internally. Resetting the svg element on a chart outside
+of dc internals may have unexpected consequences.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [svgElement] | <code>SVGElement</code> | 
+
+<a name="dc.baseMixin+resetSvg"></a>
+#### baseMixin.resetSvg ⇒ <code>SVGElement</code>
+Remove the chart's SVG elements from the dom and recreate the container SVG element.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+filterPrinter"></a>
+#### baseMixin.filterPrinter ⇒ <code>function</code>
+Set or get the filter printer function. The filter printer function is used to generate human
+friendly text for filter value(s) associated with the chart instance. By default dc charts use a
+default filter printer `dc.printers.filter` that provides simple printing support for both
+single value and ranged filters.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [filterPrinterFunction] | <code>function</code> | 
+
+<a name="dc.baseMixin+turnOnControls"></a>
+#### baseMixin.turnOnControls ⇒ <code>Chart</code>
+Turn on optional control elements within the root element. dc currently supports the
+following html control elements.
+* root.selectAll('.reset') - elements are turned on if the chart has an active filter. This type
+of control element is usually used to store a reset link to allow user to reset filter on a
+certain chart. This element will be turned off automatically if the filter is cleared.
+* root.selectAll('.filter') elements are turned on if the chart has an active filter. The text
+content of this element is then replaced with the current filter value using the filter printer
+function. This type of element will be turned off automatically if the filter is cleared.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+turnOffControls"></a>
+#### baseMixin.turnOffControls ⇒ <code>Chart</code>
+Turn off optional control elements within the root element.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+transitionDuration"></a>
+#### baseMixin.transitionDuration ⇒ <code>Number</code>
+Set or get the animation transition duration (in milliseconds) for this chart instance.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [duration] | <code>Number</code> | 
+
+<a name="dc.baseMixin+render"></a>
+#### baseMixin.render ⇒ <code>Chart</code>
+Invoking this method will force the chart to re-render everything from scratch. Generally it
+should only be used to render the chart for the first time on the page or if you want to make
+sure everything is redrawn from scratch instead of relying on the default incremental redrawing
+behaviour.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+redraw"></a>
+#### baseMixin.redraw ⇒ <code>Chart</code>
+Calling redraw will cause the chart to re-render data changes incrementally. If there is no
+change in the underlying data dimension then calling this method will have no effect on the
+chart. Most chart interaction in dc will automatically trigger this method through internal
+events (in particular [dc.redrawAll](#dcredrawallchartgroup)); therefore, you only need to
+manually invoke this function if data is manipulated outside of dc's control (for example if
+data is loaded in the background using `crossfilter.add()`).
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+hasFilterHandler"></a>
+#### baseMixin.hasFilterHandler ⇒ <code>Chart</code>
+Set or get the has filter handler. The has filter handler is a function that checks to see if
+the chart's current filters include a specific filter.  Using a custom has filter handler allows
+you to change the way filters are checked for and replaced.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [hasFilterHandler] | <code>function</code> | 
+
+**Example**  
+```js
+// default has filter handler
+function (filters, filter) {
+    if (filter === null || typeof(filter) === 'undefined') {
+        return filters.length > 0;
+    }
+    return filters.some(function (f) {
+        return filter <= f && filter >= f;
+    });
+}
+
+// custom filter handler (no-op)
+chart.hasFilterHandler(function(filters, filter) {
+    return false;
+});
+```
+<a name="dc.baseMixin+hasFilter"></a>
+#### baseMixin.hasFilter ⇒ <code>Boolean</code>
+Check whether any active filter or a specific filter is associated with particular chart instance.
+This function is **not chainable**.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [hasFilter] | <code>\*</code> | 
+
+<a name="dc.baseMixin+removeFilterHandler"></a>
+#### baseMixin.removeFilterHandler ⇒ <code>Chart</code>
+Set or get the remove filter handler. The remove filter handler is a function that removes a
+filter from the chart's current filters. Using a custom remove filter handler allows you to
+change how filters are removed or perform additional work when removing a filter, e.g. when
+using a filter server other than crossfilter.
+
+Any changes should modify the `filters` array argument and return that array.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [removeFilterHandler] | <code>function</code> | 
+
+**Example**  
+```js
+// default remove filter handler
+function (filters, filter) {
+    for (var i = 0; i < filters.length; i++) {
+        if (filters[i] <= filter && filters[i] >= filter) {
+            filters.splice(i, 1);
+            break;
+        }
+    }
+    return filters;
+}
+
+// custom filter handler (no-op)
+chart.removeFilterHandler(function(filters, filter) {
+    return filters;
+});
+```
+<a name="dc.baseMixin+addFilterHandler"></a>
+#### baseMixin.addFilterHandler ⇒ <code>Chart</code>
+Set or get the add filter handler. The add filter handler is a function that adds a filter to
+the chart's filter list. Using a custom add filter handler allows you to change the way filters
+are added or perform additional work when adding a filter, e.g. when using a filter server other
+than crossfilter.
+
+Any changes should modify the `filters` array argument and return that array.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [addFilterHandler] | <code>function</code> | 
+
+**Example**  
+```js
+// default add filter handler
+function (filters, filter) {
+    filters.push(filter);
+    return filters;
+}
+
+// custom filter handler (no-op)
+chart.addFilterHandler(function(filters, filter) {
+    return filters;
+});
+```
+<a name="dc.baseMixin+resetFilterHandler"></a>
+#### baseMixin.resetFilterHandler ⇒ <code>Chart</code>
+Set or get the reset filter handler. The reset filter handler is a function that resets the
+chart's filter list by returning a new list. Using a custom reset filter handler allows you to
+change the way filters are reset, or perform additional work when resetting the filters,
+e.g. when using a filter server other than crossfilter.
+
+This function should return an array.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [resetFilterHandler] | <code>function</code> | 
+
+**Example**  
+```js
+// default remove filter handler
+function (filters) {
+    return [];
+}
+
+// custom filter handler (no-op)
+chart.resetFilterHandler(function(filters) {
+    return filters;
+});
+```
+<a name="dc.baseMixin+filter"></a>
+#### baseMixin.filter ⇒ <code>Chart</code>
+Filter the chart by the given value or return the current filter if the input parameter is missing.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [filterValue] | <code>\*</code> | 
+
+**Example**  
+```js
+// filter by a single string
+chart.filter('Sunday');
+// filter by a single age
+chart.filter(18);
+```
+<a name="dc.baseMixin+filters"></a>
+#### baseMixin.filters ⇒ <code>Array.&lt;\*&gt;</code>
+Returns all current filters. This method does not perform defensive cloning of the internal
+filter array before returning, therefore any modification of the returned array will effect the
+chart's internal filter storage.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+onClick"></a>
+#### baseMixin.onClick
+This function is passed to d3 as the onClick handler for each chart. The default behavior is to
+filter on the clicked datum (passed to the callback) and redraw the chart group.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| datum | <code>\*</code> | 
+
+<a name="dc.baseMixin+filterHandler"></a>
+#### baseMixin.filterHandler ⇒ <code>Chart</code>
+Set or get the filter handler. The filter handler is a function that performs the filter action
+on a specific dimension. Using a custom filter handler allows you to perform additional logic
+before or after filtering.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| filterHandler | <code>function</code> | 
+
+**Example**  
+```js
+// default filter handler
+function(dimension, filter){
+    dimension.filter(filter); // perform filtering
+    return filter; // return the actual filter value
+}
+
+// custom filter handler
+chart.filterHandler(function(dimension, filter){
+    var newFilter = filter + 10;
+    dimension.filter(newFilter);
+    return newFilter; // set the actual filter value to the new value
+});
+```
+<a name="dc.baseMixin+keyAccessor"></a>
+#### baseMixin.keyAccessor ⇒ <code>Chart</code>
+Set or get the key accessor function. The key accessor function is used to retrieve the key
+value from the crossfilter group. Key values are used differently in different charts, for
+example keys correspond to slices in a pie chart and x axis positions in a grid coordinate chart.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| keyAccessor | <code>function</code> | 
+
+**Example**  
+```js
+// default key accessor
+chart.keyAccessor(function(d) { return d.key; });
+// custom key accessor for a multi-value crossfilter reduction
+chart.keyAccessor(function(p) { return p.value.absGain; });
+```
+<a name="dc.baseMixin+valueAccessor"></a>
+#### baseMixin.valueAccessor ⇒ <code>Chart</code>
+Set or get the value accessor function. The value accessor function is used to retrieve the
+value from the crossfilter group. Group values are used differently in different charts, for
+example values correspond to slice sizes in a pie chart and y axis positions in a grid
+coordinate chart.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| valueAccessor | <code>function</code> | 
+
+**Example**  
+```js
+// default value accessor
+chart.valueAccessor(function(d) { return d.value; });
+// custom value accessor for a multi-value crossfilter reduction
+chart.valueAccessor(function(p) { return p.value.percentageGain; });
+```
+<a name="dc.baseMixin+label"></a>
+#### baseMixin.label ⇒ <code>Chart</code>
+Set or get the label function. The chart class will use this function to render labels for each
+child element in the chart, e.g. slices in a pie chart or bubbles in a bubble chart. Not every
+chart supports the label function for example bar chart and line chart do not use this function
+at all.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| labelFunction | <code>function</code> | 
+
+**Example**  
+```js
+// default label function just return the key
+chart.label(function(d) { return d.key; });
+// label function has access to the standard d3 data binding and can get quite complicated
+chart.label(function(d) { return d.data.key + '(' + Math.floor(d.data.value / all.value() * 100) + '%)'; });
+```
+<a name="dc.baseMixin+renderLabel"></a>
+#### baseMixin.renderLabel ⇒ <code>Boolean</code>
+Turn on/off label rendering
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| renderLabel | <code>Boolean</code> | 
+
+<a name="dc.baseMixin+title"></a>
+#### baseMixin.title ⇒ <code>function</code>
+Set or get the title function. The chart class will use this function to render the svg title
+(usually interpreted by browser as tooltips) for each child element in the chart, e.g. a slice
+in a pie chart or a bubble in a bubble chart. Almost every chart supports the title function;
+however in grid coordinate charts you need to turn off the brush in order to see titles, because
+otherwise the brush layer will block tooltip triggering.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| titleFunction | <code>function</code> | 
+
+**Example**  
+```js
+// default title function just return the key
+chart.title(function(d) { return d.key + ': ' + d.value; });
+// title function has access to the standard d3 data binding and can get quite complicated
+chart.title(function(p) {
+   return p.key.getFullYear()
+       + '\n'
+       + 'Index Gain: ' + numberFormat(p.value.absGain) + '\n'
+       + 'Index Gain in Percentage: ' + numberFormat(p.value.percentageGain) + '%\n'
+       + 'Fluctuation / Index Ratio: ' + numberFormat(p.value.fluctuationPercentage) + '%';
+});
+```
+<a name="dc.baseMixin+renderTitle"></a>
+#### baseMixin.renderTitle ⇒ <code>Boolean</code>
+Turn on/off title rendering, or return the state of the render title flag if no arguments are
+given.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| renderTitle | <code>Boolean</code> | 
+
+<a name="dc.baseMixin+renderlet"></a>
+#### ~~baseMixin.renderlet ⇒ <code>function</code>~~
+***Deprecated***
+
+A renderlet is similar to an event listener on rendering event. Multiple renderlets can be added
+to an individual chart.  Each time a chart is rerendered or redrawn the renderlets are invoked
+right after the chart finishes its transitions, giving you a way to modify the svg
+elements. Renderlet functions take the chart instance as the only input parameter and you can
+use the dc API or use raw d3 to achieve pretty much any effect.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| renderletFunction | <code>function</code> | 
+
+**Example**  
+```js
+// do this instead of .renderlet(function(chart) { ... })
+chart.on("renderlet", function(chart){
+    // mix of dc API and d3 manipulation
+    chart.select('g.y').style('display', 'none');
+    // its a closure so you can also access other chart variable available in the closure scope
+    moveChart.filter(chart.filter());
+});
+```
+<a name="dc.baseMixin+chartGroup"></a>
+#### baseMixin.chartGroup ⇒ <code>String</code>
+Get or set the chart group to which this chart belongs. Chart groups are rendered or redrawn
+together since it is expected they share the same underlying crossfilter data set.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| chartGroup | <code>String</code> | 
+
+<a name="dc.baseMixin+expireCache"></a>
+#### baseMixin.expireCache ⇒ <code>Chart</code>
+Expire the internal chart cache. dc charts cache some data internally on a per chart basis to
+speed up rendering and avoid unnecessary calculation; however it might be useful to clear the
+cache if you have changed state which will affect rendering.  For example if you invoke the
+`crossfilter.add` function or reset group or dimension after rendering it is a good idea to
+clear the cache to make sure charts are rendered properly.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+legend"></a>
+#### baseMixin.legend ⇒ <code>dc.legend</code>
+Attach a dc.legend widget to this chart. The legend widget will automatically draw legend labels
+based on the color setting and names associated with each group.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [legend] | <code>dc.legend</code> | 
+
+**Example**  
+```js
+chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
+```
+<a name="dc.baseMixin+chartID"></a>
+#### baseMixin.chartID ⇒ <code>String</code>
+Returns the internal numeric ID of the chart.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+options"></a>
+#### baseMixin.options ⇒ <code>Chart</code>
+Set chart options using a configuration object. Each key in the object will cause the method of
+the same name to be called with the value to set that attribute for the chart.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| opts | <code>Object</code> | 
+
+**Example**  
+```js
+chart.options({dimension: myDimension, group: myGroup});
+```
+<a name="dc.baseMixin+on"></a>
+#### baseMixin.on ⇒ <code>Chart</code>
+All dc chart instance supports the following listeners.
+Supports the following events:
+* 'renderlet' - This listener function will be invoked after transitions after redraw and render. Replaces the
+deprecated `.renderlet()` method.
+* 'pretransition' - Like `.on('renderlet', ...)` but the event is fired before transitions start.
+* 'preRender' - This listener function will be invoked before chart rendering.
+* 'postRender' - This listener function will be invoked after chart finish rendering including
+all renderlets' logic.
+* 'preRedraw' - This listener function will be invoked before chart redrawing.
+* 'postRedraw' - This listener function will be invoked after chart finish redrawing
+including all renderlets' logic.
+* 'filtered' - This listener function will be invoked after a filter is applied, added or removed.
+* 'zoomed' - This listener function will be invoked after a zoom is triggered.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| event | <code>String</code> | 
+| listener | <code>function</code> | 
+
+**Example**  
+```js
+.on('renderlet', function(chart, filter){...})
+.on('pretransition', function(chart, filter){...})
+.on('preRender', function(chart){...})
+.on('postRender', function(chart){...})
+.on('preRedraw', function(chart){...})
+.on('postRedraw', function(chart){...})
+.on('filtered', function(chart, filter){...})
+.on('zoomed', function(chart, filter){...})
+```
 <a name="dc.bubbleMixin"></a>
 ### dc.bubbleMixin ⇒ <code>Chart</code>
 This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.
