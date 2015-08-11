@@ -369,7 +369,7 @@ dc.baseMixin = function (_chart) {
         return generateSvg();
     };
 
-    function sizeSvg() {
+    function sizeSvg () {
         if (_svg) {
             _svg
                 .attr('width', _chart.width())
@@ -377,7 +377,7 @@ dc.baseMixin = function (_chart) {
         }
     }
 
-    function generateSvg() {
+    function generateSvg () {
         _svg = _chart.root().append('svg');
         sizeSvg();
         return _svg;
@@ -450,7 +450,7 @@ dc.baseMixin = function (_chart) {
         return _chart;
     };
 
-    function checkForMandatoryAttributes(a) {
+    function checkForMandatoryAttributes (a) {
         if (!_chart[a] || !_chart[a]()) {
             throw new dc.errors.InvalidStateException('Mandatory attribute chart.' + a +
                                                       ' is missing on chart[#' + _chart.anchorName() + ']');
@@ -488,13 +488,13 @@ dc.baseMixin = function (_chart) {
         if (_chart.transitionDuration() > 0 && _svg) {
             _svg.transition().duration(_chart.transitionDuration())
                 .each('end', function () {
-                    _listeners['renderlet'](_chart);
+                    _listeners.renderlet(_chart);
                     if (event) {
                         _listeners[event](_chart);
                     }
                 });
         } else {
-            _listeners['renderlet'](_chart);
+            _listeners.renderlet(_chart);
             if (event) {
                 _listeners[event](_chart);
             }
@@ -707,7 +707,7 @@ dc.baseMixin = function (_chart) {
         return _chart;
     };
 
-    function applyFilters() {
+    function applyFilters () {
         if (_chart.dimension() && _chart.dimension().filter) {
             var fs = _filterHandler(_chart.dimension(), _filters);
             _filters = fs ? fs : _filters;

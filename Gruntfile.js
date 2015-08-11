@@ -20,10 +20,10 @@ module.exports = function (grunt) {
         conf: config,
 
         concat: {
-            options : {
+            options: {
                 process: true,
                 sourceMap: true,
-                banner : '<%= conf.banner %>'
+                banner: '<%= conf.banner %>'
             },
             js: {
                 src: '<%= conf.jsFiles %>',
@@ -36,22 +36,21 @@ module.exports = function (grunt) {
                     mangle: true,
                     compress: true,
                     sourceMap: true,
-                    banner : '<%= conf.banner %>'
+                    banner: '<%= conf.banner %>'
                 },
                 src: '<%= conf.pkg.name %>.js',
                 dest: '<%= conf.pkg.name %>.min.js'
             }
         },
         jscs: {
-            old: {
-                src: ['<%= conf.spec %>/**/*.js'],
-                options: {
-                    validateIndentation: 4
-                }
-            },
             source: {
-                src: ['<%= conf.src %>/**/*.js', '!<%= conf.src %>/{banner,footer}.js', 'Gruntfile.js',
-                    'grunt/*.js', '<%= conf.web %>/stock.js'],
+                src: [
+                    '<%= conf.src %>/**/*.js',
+                    '!<%= conf.src %>/{banner,footer}.js',
+                    '<%= conf.spec %>/**/*.js',
+                    'Gruntfile.js',
+                    'grunt/*.js',
+                    '<%= conf.web %>/stock.js'],
                 options: {
                     config: '.jscsrc'
                 }
@@ -59,10 +58,16 @@ module.exports = function (grunt) {
         },
         jshint: {
             source: {
-                src: ['<%= conf.src %>/**/*.js', 'Gruntfile.js', 'grunt/*.js', '<%= conf.web %>/stock.js'],
+                src: [
+                    '<%= conf.src %>/**/*.js',
+                    '!<%= conf.src %>/{banner,footer}.js',
+                    '<%= conf.spec %>/**/*.js',
+                    'Gruntfile.js',
+                    'grunt/*.js',
+                    '<%= conf.web %>/stock.js'
+                ],
                 options: {
-                    jshintrc: '.jshintrc',
-                    ignores: ['<%= conf.src %>/banner.js', '<%= conf.src %>/footer.js']
+                    jshintrc: '.jshintrc'
                 }
             }
         },
@@ -104,7 +109,10 @@ module.exports = function (grunt) {
                     display: 'short',
                     summary: true,
                     specs:  '<%= conf.spec %>/*-spec.js',
-                    helpers: '<%= conf.spec %>/helpers/*.js',
+                    helpers: [
+                        '<%= conf.spec %>/helpers/*.js',
+                        'node_modules/grunt-saucelabs/examples/jasmine/lib/jasmine-jsreporter/jasmine-jsreporter.js'
+                    ],
                     version: '2.0.0',
                     outfile: '<%= conf.spec %>/index.html',
                     keepRunner: true
@@ -116,9 +124,9 @@ module.exports = function (grunt) {
                     '<%= conf.pkg.name %>.js'
                 ]
             },
-            coverage:{
+            coverage: {
                 src: '<%= jasmine.specs.src %>',
-                options:{
+                options: {
                     specs: '<%= jasmine.specs.options.specs %>',
                     helpers: '<%= jasmine.specs.options.helpers %>',
                     version: '<%= jasmine.specs.options.version %>',
@@ -201,7 +209,7 @@ module.exports = function (grunt) {
         docco: {
             options: {
                 dst: '<%= conf.web %>/docs',
-                basepath:'<%= conf.web %>'
+                basepath: '<%= conf.web %>'
             },
             howto: {
                 files: [

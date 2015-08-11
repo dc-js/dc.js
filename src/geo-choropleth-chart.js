@@ -66,7 +66,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         _projectionFlag = false;
     };
 
-    function plotData(layerIndex) {
+    function plotData (layerIndex) {
         var data = generateLayeredData();
 
         if (isDataLayer(layerIndex)) {
@@ -78,7 +78,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         }
     }
 
-    function generateLayeredData() {
+    function generateLayeredData () {
         var data = {};
         var groupAll = _chart.data();
         for (var i = 0; i < groupAll.length; ++i) {
@@ -87,11 +87,11 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         return data;
     }
 
-    function isDataLayer(layerIndex) {
+    function isDataLayer (layerIndex) {
         return geoJson(layerIndex).keyAccessor;
     }
 
-    function renderRegionG(layerIndex) {
+    function renderRegionG (layerIndex) {
         var regionG = _chart.svg()
             .selectAll(layerSelector(layerIndex))
             .classed('selected', function (d) {
@@ -115,27 +115,27 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         return regionG;
     }
 
-    function layerSelector(layerIndex) {
+    function layerSelector (layerIndex) {
         return 'g.layer' + layerIndex + ' g.' + geoJson(layerIndex).name;
     }
 
-    function isSelected(layerIndex, d) {
+    function isSelected (layerIndex, d) {
         return _chart.hasFilter() && _chart.hasFilter(getKey(layerIndex, d));
     }
 
-    function isDeselected(layerIndex, d) {
+    function isDeselected (layerIndex, d) {
         return _chart.hasFilter() && !_chart.hasFilter(getKey(layerIndex, d));
     }
 
-    function getKey(layerIndex, d) {
+    function getKey (layerIndex, d) {
         return geoJson(layerIndex).keyAccessor(d);
     }
 
-    function geoJson(index) {
+    function geoJson (index) {
         return _geoJsons[index];
     }
 
-    function renderPaths(regionG, layerIndex, data) {
+    function renderPaths (regionG, layerIndex, data) {
         var paths = regionG
             .select('path')
             .attr('fill', function () {
@@ -162,7 +162,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         });
     };
 
-    function renderTitle(regionG, layerIndex, data) {
+    function renderTitle (regionG, layerIndex, data) {
         if (_chart.renderTitle()) {
             regionG.selectAll('title').text(function (d) {
                 var key = getKey(layerIndex, d);

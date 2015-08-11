@@ -80,11 +80,11 @@ dc.barChart = function (parent, chartGroup) {
         });
     };
 
-    function barHeight(d) {
+    function barHeight (d) {
         return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
     }
 
-    function renderBars(layer, layerIndex, d) {
+    function renderBars (layer, layerIndex, d) {
         var bars = layer.selectAll('rect.bar')
             .data(d.values, dc.pluck('x'));
 
@@ -135,7 +135,7 @@ dc.barChart = function (parent, chartGroup) {
             .remove();
     }
 
-    function calculateBarWidth() {
+    function calculateBarWidth () {
         if (_barWidth === undefined) {
             var numberOfBars = _chart.xUnitCount();
 
@@ -279,7 +279,7 @@ dc.barChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    function colorFilter(color, inv) {
+    function colorFilter (color, inv) {
         return function () {
             var item = d3.select(this);
             var match = item.attr('fill') === color;

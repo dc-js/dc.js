@@ -388,18 +388,17 @@ dc.coordinateGridMixin = function (_chart) {
         return groups.map(_chart.keyAccessor());
     };
 
-    function compareDomains(d1, d2) {
+    function compareDomains (d1, d2) {
         return !d1 || !d2 || d1.length !== d2.length ||
             d1.some(function (elem, i) { return elem.toString() !== d2[i].toString(); });
     }
 
-    function prepareXAxis(g, render) {
+    function prepareXAxis (g, render) {
         if (!_chart.isOrdinal()) {
             if (_chart.elasticX()) {
                 _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
             }
-        }
-        else { // _chart.isOrdinal()
+        } else { // _chart.isOrdinal()
             if (_chart.elasticX() || _x.domain().length === 0) {
                 _x.domain(_chart._ordinalXDomain());
             }
@@ -454,7 +453,7 @@ dc.coordinateGridMixin = function (_chart) {
                   (_chart.height() - _xAxisLabelPadding) + ')');
     };
 
-    function renderVerticalGridLines(g) {
+    function renderVerticalGridLines (g) {
         var gridLineG = g.selectAll('g.' + VERTICAL_CLASS);
 
         if (_renderVerticalGridLine) {
@@ -498,8 +497,7 @@ dc.coordinateGridMixin = function (_chart) {
 
             // exit
             lines.exit().remove();
-        }
-        else {
+        } else {
             gridLineG.selectAll('line').remove();
         }
     }
@@ -631,8 +629,7 @@ dc.coordinateGridMixin = function (_chart) {
 
             // exit
             lines.exit().remove();
-        }
-        else {
+        } else {
             gridLineG.selectAll('line').remove();
         }
     };
@@ -859,7 +856,7 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    function brushHeight() {
+    function brushHeight () {
         return _chart._xAxisY() - _chart.margins().top;
     }
 
@@ -963,7 +960,7 @@ dc.coordinateGridMixin = function (_chart) {
             'V' + (2 * y - 8);
     };
 
-    function getClipPathId() {
+    function getClipPathId () {
         return _chart.anchorName().replace(/[ .#=\[\]]/g, '-') + '-clip';
     }
 
@@ -982,7 +979,7 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    function generateClipPath() {
+    function generateClipPath () {
         var defs = dc.utils.appendOrSelect(_parent, 'defs');
         // cannot select <clippath> elements; bug in WebKit, must select by id
         // https://groups.google.com/forum/#!topic/d3-js/6EpAzQ2gU9I
@@ -1053,8 +1050,7 @@ dc.coordinateGridMixin = function (_chart) {
     function configureMouseZoom () {
         if (_mouseZoomable) {
             _chart._enableMouseZoom();
-        }
-        else if (_hasBeenMouseZoomable) {
+        } else if (_hasBeenMouseZoomable) {
             _chart._disableMouseZoom();
         }
     }
@@ -1072,7 +1068,7 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.root().call(_nullZoom);
     };
 
-    function constrainRange(range, constraint) {
+    function constrainRange (range, constraint) {
         var constrainedRange = [];
         constrainedRange[0] = d3.max([range[0], constraint[0]]);
         constrainedRange[1] = d3.min([range[1], constraint[1]]);
@@ -1130,17 +1126,14 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    function rangesEqual(range1, range2) {
+    function rangesEqual (range1, range2) {
         if (!range1 && !range2) {
             return true;
-        }
-        else if (!range1 || !range2) {
+        } else if (!range1 || !range2) {
             return false;
-        }
-        else if (range1.length === 0 && range2.length === 0) {
+        } else if (range1.length === 0 && range2.length === 0) {
             return true;
-        }
-        else if (range1[0].valueOf() === range2[0].valueOf() &&
+        } else if (range1[0].valueOf() === range2[0].valueOf() &&
             range1[1].valueOf() === range2[1].valueOf()) {
             return true;
         }
@@ -1165,7 +1158,7 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    function hasRangeSelected(range) {
+    function hasRangeSelected (range) {
         return range instanceof Array && range.length > 1;
     }
 

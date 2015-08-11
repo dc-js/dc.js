@@ -55,7 +55,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     _chart.rowsCap = _chart.cap;
 
-    function calculateAxisScale() {
+    function calculateAxisScale () {
         if (!_x || _elasticX) {
             var extent = d3.extent(_rowData, _chart.cappedValueAccessor);
             if (extent[0] > 0) {
@@ -67,7 +67,7 @@ dc.rowChart = function (parent, chartGroup) {
         _xAxis.scale(_x);
     }
 
-    function drawAxis() {
+    function drawAxis () {
         var axisG = _g.select('g.axis');
 
         calculateAxisScale();
@@ -112,7 +112,7 @@ dc.rowChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    function drawGridLines() {
+    function drawGridLines () {
         _g.selectAll('g.tick')
             .select('line.grid-line')
             .remove();
@@ -128,7 +128,7 @@ dc.rowChart = function (parent, chartGroup) {
             });
     }
 
-    function drawChart() {
+    function drawChart () {
         _rowData = _chart.data();
 
         drawAxis();
@@ -142,7 +142,7 @@ dc.rowChart = function (parent, chartGroup) {
         updateElements(rows);
     }
 
-    function createElements(rows) {
+    function createElements (rows) {
         var rowEnter = rows.enter()
             .append('g')
             .attr('class', function (d, i) {
@@ -155,16 +155,16 @@ dc.rowChart = function (parent, chartGroup) {
         updateLabels(rows);
     }
 
-    function removeElements(rows) {
+    function removeElements (rows) {
         rows.exit().remove();
     }
 
-    function rootValue() {
+    function rootValue () {
         var root = _x(0);
         return (root === -Infinity || root !== root) ? _x(1) : root;
     }
 
-    function updateElements(rows) {
+    function updateElements (rows) {
         var n = _rowData.length;
 
         var height;
@@ -202,14 +202,14 @@ dc.rowChart = function (parent, chartGroup) {
         updateLabels(rows);
     }
 
-    function createTitles(rows) {
+    function createTitles (rows) {
         if (_chart.renderTitle()) {
             rows.selectAll('title').remove();
             rows.append('title').text(_chart.title());
         }
     }
 
-    function createLabels(rowEnter) {
+    function createLabels (rowEnter) {
         if (_chart.renderLabel()) {
             rowEnter.append('text')
                 .on('click', onClick);
@@ -221,7 +221,7 @@ dc.rowChart = function (parent, chartGroup) {
         }
     }
 
-    function updateLabels(rows) {
+    function updateLabels (rows) {
         if (_chart.renderLabel()) {
             var lab = rows.select('text')
                 .attr('x', _labelOffsetX)
@@ -267,11 +267,11 @@ dc.rowChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    function onClick(d) {
+    function onClick (d) {
         _chart.onClick(d);
     }
 
-    function translateX(d) {
+    function translateX (d) {
         var x = _x(_chart.cappedValueAccessor(d)),
             x0 = rootValue(),
             s = x > x0 ? x0 : x;

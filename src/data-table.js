@@ -93,14 +93,14 @@ dc.dataTable = function (parent, chartGroup) {
         return s;
     };
 
-    function renderGroups() {
+    function renderGroups () {
         // The 'original' example uses all 'functions'.
-	// If all 'functions' are used, then don't remove/add a header, and leave
-	// the html alone. This preserves the functionality of earlier releases.
-	// A 2nd option is a string representing a field in the data.
-	// A third option is to supply an Object such as an array of 'information', and
-	// supply your own _doColumnHeaderFormat and _doColumnValueFormat functions to
-	// create what you need.
+        // If all 'functions' are used, then don't remove/add a header, and leave
+        // the html alone. This preserves the functionality of earlier releases.
+        // A 2nd option is a string representing a field in the data.
+        // A third option is to supply an Object such as an array of 'information', and
+        // supply your own _doColumnHeaderFormat and _doColumnValueFormat functions to
+        // create what you need.
         var bAllFunctions = true;
         _columns.forEach(function (f) {
             bAllFunctions = bAllFunctions & (typeof f === 'function');
@@ -149,7 +149,7 @@ dc.dataTable = function (parent, chartGroup) {
         return rowGroup;
     }
 
-    function nestEntries() {
+    function nestEntries () {
         var entries;
         if (_order === d3.ascending) {
             entries = _chart.dimension().bottom(_size);
@@ -165,7 +165,7 @@ dc.dataTable = function (parent, chartGroup) {
             }));
     }
 
-    function renderRows(groups) {
+    function renderRows (groups) {
         var rows = groups.order()
             .selectAll('tr.' + ROW_CSS_CLASS)
             .data(function (d) {

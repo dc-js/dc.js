@@ -163,11 +163,11 @@ dc.lineChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    function colors(d, i) {
+    function colors (d, i) {
         return _chart.getColor.call(d, d.values, i);
     }
 
-    function drawLine(layersEnter, layers) {
+    function drawLine (layersEnter, layers) {
         var line = d3.svg.line()
             .x(function (d) {
                 return _chart.x()(d.x);
@@ -196,7 +196,7 @@ dc.lineChart = function (parent, chartGroup) {
             });
     }
 
-    function drawArea(layersEnter, layers) {
+    function drawArea (layersEnter, layers) {
         if (_renderArea) {
             var area = d3.svg.area()
                 .x(function (d) {
@@ -234,7 +234,7 @@ dc.lineChart = function (parent, chartGroup) {
         return (!d || d.indexOf('NaN') >= 0) ? 'M0,0' : d;
     }
 
-    function drawDots(chartBody, layers) {
+    function drawDots (chartBody, layers) {
         if (!_chart.brushOn() && _chart.xyTipsOn()) {
             var tooltipListClass = TOOLTIP_G_CLASS + '-list';
             var tooltips = chartBody.select('g.' + tooltipListClass);
@@ -291,7 +291,7 @@ dc.lineChart = function (parent, chartGroup) {
         }
     }
 
-    function createRefLines(g) {
+    function createRefLines (g) {
         var yRefLine = g.select('path.' + Y_AXIS_REF_LINE_CLASS).empty() ?
             g.append('path').attr('class', Y_AXIS_REF_LINE_CLASS) : g.select('path.' + Y_AXIS_REF_LINE_CLASS);
         yRefLine.style('display', 'none').attr('stroke-dasharray', '5,5');
@@ -301,14 +301,14 @@ dc.lineChart = function (parent, chartGroup) {
         xRefLine.style('display', 'none').attr('stroke-dasharray', '5,5');
     }
 
-    function showDot(dot) {
+    function showDot (dot) {
         dot.style('fill-opacity', 0.8);
         dot.style('stroke-opacity', 0.8);
         dot.attr('r', _dotRadius);
         return dot;
     }
 
-    function showRefLines(dot, g) {
+    function showRefLines (dot, g) {
         var x = dot.attr('cx');
         var y = dot.attr('cy');
         var yAxisX = (_chart._yAxisX() - _chart.margins().left);
@@ -318,22 +318,22 @@ dc.lineChart = function (parent, chartGroup) {
         g.select('path.' + X_AXIS_REF_LINE_CLASS).style('display', '').attr('d', xAxisRefPathD);
     }
 
-    function getDotRadius() {
+    function getDotRadius () {
         return _dataPointRadius || _dotRadius;
     }
 
-    function hideDot(dot) {
+    function hideDot (dot) {
         dot.style('fill-opacity', _dataPointFillOpacity)
             .style('stroke-opacity', _dataPointStrokeOpacity)
             .attr('r', getDotRadius());
     }
 
-    function hideRefLines(g) {
+    function hideRefLines (g) {
         g.select('path.' + Y_AXIS_REF_LINE_CLASS).style('display', 'none');
         g.select('path.' + X_AXIS_REF_LINE_CLASS).style('display', 'none');
     }
 
-    function renderTitle(dot, d) {
+    function renderTitle (dot, d) {
         if (_chart.renderTitle()) {
             dot.selectAll('title').remove();
             dot.append('title').text(dc.pluck('data', _chart.title(d.name)));
@@ -404,7 +404,7 @@ dc.lineChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    function colorFilter(color, dashstyle, inv) {
+    function colorFilter (color, dashstyle, inv) {
         return function () {
             var item = d3.select(this);
             var match = (item.attr('stroke') === color &&

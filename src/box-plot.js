@@ -148,7 +148,7 @@ dc.boxPlot = function (parent, chartGroup) {
         _chart.fadeDeselectedArea();
     };
 
-    function renderBoxes(boxesG) {
+    function renderBoxes (boxesG) {
         var boxesGEnter = boxesG.enter().append('g');
 
         boxesGEnter
@@ -161,7 +161,7 @@ dc.boxPlot = function (parent, chartGroup) {
             });
     }
 
-    function updateBoxes(boxesG) {
+    function updateBoxes (boxesG) {
         dc.transition(boxesG, _chart.transitionDuration())
             .attr('transform', boxTransform)
             .call(_box)
@@ -170,7 +170,7 @@ dc.boxPlot = function (parent, chartGroup) {
             });
     }
 
-    function removeBoxes(boxesG) {
+    function removeBoxes (boxesG) {
         boxesG.exit().remove().call(_box);
     }
 

@@ -78,7 +78,7 @@ dc.bubbleChart = function (parent, chartGroup) {
         _chart.fadeDeselectedArea();
     };
 
-    function renderNodes(bubbleG) {
+    function renderNodes (bubbleG) {
         var bubbleGEnter = bubbleG.enter().append('g');
 
         bubbleGEnter
@@ -104,7 +104,7 @@ dc.bubbleChart = function (parent, chartGroup) {
         _chart._doRenderTitles(bubbleGEnter);
     }
 
-    function updateNodes(bubbleG) {
+    function updateNodes (bubbleG) {
         dc.transition(bubbleG, _chart.transitionDuration())
             .attr('transform', bubbleLocator)
             .selectAll('circle.' + _chart.BUBBLE_CLASS)
@@ -120,11 +120,11 @@ dc.bubbleChart = function (parent, chartGroup) {
         _chart.doUpdateTitles(bubbleG);
     }
 
-    function removeNodes(bubbleG) {
+    function removeNodes (bubbleG) {
         bubbleG.exit().remove();
     }
 
-    function bubbleX(d) {
+    function bubbleX (d) {
         var x = _chart.x()(_chart.keyAccessor()(d));
         if (isNaN(x)) {
             x = 0;
@@ -132,7 +132,7 @@ dc.bubbleChart = function (parent, chartGroup) {
         return x;
     }
 
-    function bubbleY(d) {
+    function bubbleY (d) {
         var y = _chart.y()(_chart.valueAccessor()(d));
         if (isNaN(y)) {
             y = 0;

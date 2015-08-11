@@ -57,7 +57,7 @@ dc.dataGrid = function (parent, chartGroup) {
         return _chart;
     };
 
-    function renderGroups() {
+    function renderGroups () {
         var groups = _chart.root().selectAll('div.' + GRID_CSS_CLASS)
                 .data(nestEntries(), function (d) {
                     return _chart.keyAccessor()(d);
@@ -79,7 +79,7 @@ dc.dataGrid = function (parent, chartGroup) {
         return itemGroup;
     }
 
-    function nestEntries() {
+    function nestEntries () {
         var entries = _chart.dimension().top(_size);
 
         return d3.nest()
@@ -90,7 +90,7 @@ dc.dataGrid = function (parent, chartGroup) {
             }).slice(_beginSlice, _endSlice));
     }
 
-    function renderItems(groups) {
+    function renderItems (groups) {
         var items = groups.order()
                 .selectAll('div.' + ITEM_CSS_CLASS)
                 .data(function (d) {

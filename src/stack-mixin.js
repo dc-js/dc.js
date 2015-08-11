@@ -30,7 +30,7 @@ dc.stackMixin = function (_chart) {
 
     var _hidableStacks = false;
 
-    function domainFilter() {
+    function domainFilter () {
         if (!_chart.x()) {
             return d3.functor(true);
         }
@@ -76,7 +76,7 @@ dc.stackMixin = function (_chart) {
             accessor = name;
         }
 
-        var layer = {group:group};
+        var layer = {group: group};
         if (typeof name === 'string') {
             layer.name = name;
         }
@@ -115,7 +115,7 @@ dc.stackMixin = function (_chart) {
         return _chart;
     };
 
-    function findLayerByName(n) {
+    function findLayerByName (n) {
         var i = _stack.map(dc.pluck('name')).indexOf(n);
         return _stack[i];
     }
@@ -169,7 +169,7 @@ dc.stackMixin = function (_chart) {
         return dc.utils.add(max, _chart.yAxisPadding());
     };
 
-    function flattenStack() {
+    function flattenStack () {
         var valueses = _chart.data().map(function (layer) { return layer.values; });
         return Array.prototype.concat.apply([], valueses);
     }
@@ -236,7 +236,7 @@ dc.stackMixin = function (_chart) {
         return _chart;
     };
 
-    function visability(l) {
+    function visability (l) {
         return !l.hidden;
     }
 
@@ -259,10 +259,10 @@ dc.stackMixin = function (_chart) {
     _chart.legendables = function () {
         return _stack.map(function (layer, i) {
             return {
-                chart:_chart,
-                name:layer.name,
+                chart: _chart,
+                name: layer.name,
                 hidden: layer.hidden || false,
-                color:_chart.getColor.call(layer, layer.values, i)
+                color: _chart.getColor.call(layer, layer.values, i)
             };
         });
     };
