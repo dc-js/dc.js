@@ -185,7 +185,8 @@ module.exports = function (grunt) {
         },
         jsdoc2md: {
             dist: {
-                src: ['src/{core,base-mixin,bar-chart}.js'],
+                src: ['src/{bar-chart,base-mixin,box-plot,bubble-chart,bubble-mixin,' +
+                            'bubble-overlay,cap-mixin,color-mixin,core}.js'],
                 dest: 'web/docs/api-latest.md'
             }
         },

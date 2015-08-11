@@ -1,39 +1,29 @@
 /**
-## Bubble Chart
-Includes: [Bubble Mixin](#bubble-mixin), [Coordinate Grid Mixin](#coordinate-grid-mixin)
-
-A concrete implementation of a general purpose bubble chart that allows data visualization using the
-following dimensions:
-
-* x axis position
-* y axis position
-* bubble radius
-* color
-
-Examples:
-* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
-* [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
-#### dc.bubbleChart(parent[, chartGroup])
-Create a bubble chart instance and attach it to the given parent element.
-
-Parameters:
-* parent : string | node | selection | compositeChart - any valid
- [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- a dom block element such as a div; or a dom element or d3 selection.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
- Interaction with a chart will only trigger events and redraws within the chart's group.
-
-Returns:
-A newly created bubble chart instance
-
-```js
-// create a bubble chart under #chart-container1 element using the default global chart group
-var bubbleChart1 = dc.bubbleChart('#chart-container1');
-// create a bubble chart under #chart-container2 element using chart group A
-var bubbleChart2 = dc.bubbleChart('#chart-container2', 'chartGroupA');
-```
-
-**/
+ * A concrete implementation of a general purpose bubble chart that allows data visualization using the
+ * following dimensions:
+ * - x axis position
+ * - y axis position
+ * - bubble radius
+ * - color
+ * Examples:
+ * - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+ * - [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
+ * @name bubbleChart
+ * @memberOf dc
+ * @mixes bubbleMixin,coordinateGridMixin
+ * @example
+ * // create a bubble chart under #chart-container1 element using the default global chart group
+ * var bubbleChart1 = dc.bubbleChart('#chart-container1');
+ * // create a bubble chart under #chart-container2 element using chart group A
+ * var bubbleChart2 = dc.bubbleChart('#chart-container2', 'chartGroupA');
+ * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
+ * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ * a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart
+ * in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+ * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+ * Interaction with a chart will only trigger events and redraws within the chart's group.
+ * @returns {BubbleChart}
+ */
 dc.bubbleChart = function (parent, chartGroup) {
     var _chart = dc.bubbleMixin(dc.coordinateGridMixin({}));
 
@@ -46,11 +36,14 @@ dc.bubbleChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .elasticRadius([boolean])
-    Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
-    feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
-
-    **/
+     * Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
+     * feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
+     * @name elasticRadius
+     * @memberOf dc.bubbleChart
+     * @instance
+     * @param {Boolean} [padding=false]
+     * @returns {Boolean}
+     */
     _chart.elasticRadius = function (_) {
         if (!arguments.length) {
             return _elasticRadius;

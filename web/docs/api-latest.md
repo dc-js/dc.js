@@ -27,12 +27,40 @@ chart.width(300)
     * [.dimension](#dc.baseMixin+dimension) ⇒ <code>Dimension</code>
     * [.data](#dc.baseMixin+data) ⇒ <code>\*</code>
     * [.group](#dc.baseMixin+group) ⇒ <code>Group</code>
-  * [.barChart](#dc.barChart) ⇒ <code>barChart</code> &#124; <code>BarChart</code>
+  * [.bubbleMixin](#dc.bubbleMixin) ⇒ <code>Chart</code>
+    * [.r](#dc.bubbleMixin+r) ⇒ <code>Array.&lt;Number&gt;</code>
+    * [.radiusValueAccessor](#dc.bubbleMixin+radiusValueAccessor) ⇒ <code>function</code>
+    * [.minRadiusWithLabel](#dc.bubbleMixin+minRadiusWithLabel) ⇒ <code>Number</code>
+    * [.maxBubbleRelativeSize](#dc.bubbleMixin+maxBubbleRelativeSize) ⇒ <code>Number</code>
+  * [.capMixin](#dc.capMixin) ⇒ <code>Chart</code>
+    * [.cap](#dc.capMixin+cap) ⇒ <code>Number</code>
+    * [.othersLabel](#dc.capMixin+othersLabel) ⇒ <code>String</code>
+    * [.othersGrouper](#dc.capMixin+othersGrouper) ⇒ <code>function</code>
+  * [.colorMixin](#dc.colorMixin) ⇒ <code>Chart</code>
+    * [.colors](#dc.colorMixin+colors) ⇒ <code>Chart</code>
+    * [.ordinalColors](#dc.colorMixin+ordinalColors) ⇒ <code>Chart</code>
+    * [.linearColors](#dc.colorMixin+linearColors) ⇒ <code>Chart</code>
+    * [.linearColors](#dc.colorMixin+linearColors) ⇒ <code>function</code>
+    * [.colorDomain](#dc.colorMixin+colorDomain) ⇒ <code>function</code>
+    * [.calculateColorDomain](#dc.colorMixin+calculateColorDomain) ⇒ <code>Chart</code>
+    * [.getColor](#dc.colorMixin+getColor) ⇒ <code>String</code>
+    * [.colorCalculator](#dc.colorMixin+colorCalculator) ⇒ <code>\*</code>
+  * [.barChart](#dc.barChart) ⇒ <code>BarChart</code>
     * [.centerBar](#dc.barChart+centerBar) ⇒ <code>Boolean</code>
     * [.barPadding](#dc.barChart+barPadding) ⇒ <code>Number</code>
     * [.outerPadding](#dc.barChart+outerPadding) ⇒ <code>Number</code>
     * [.gap](#dc.barChart+gap) ⇒ <code>Number</code>
     * [.alwaysUseRounding](#dc.barChart+alwaysUseRounding) ⇒ <code>Boolean</code>
+  * [.boxPlot](#dc.boxPlot) ⇒ <code>BoxPlot</code>
+    * [.boxPadding](#dc.boxPlot+boxPadding) ⇒ <code>Number</code>
+    * [.outerPadding](#dc.boxPlot+outerPadding) ⇒ <code>Number</code>
+    * [.boxWidth](#dc.boxPlot+boxWidth) ⇒ <code>Number</code> &#124; <code>function</code>
+    * [.tickFormat](#dc.boxPlot+tickFormat) ⇒ <code>Number</code> &#124; <code>function</code>
+  * [.bubbleChart](#dc.bubbleChart) ⇒ <code>BubbleChart</code>
+    * [.elasticRadius](#dc.bubbleChart+elasticRadius) ⇒ <code>Boolean</code>
+  * [.bubbleOverlay](#dc.bubbleOverlay) ⇒ <code>BubbleOverlay</code>
+    * [.svg](#dc.bubbleOverlay+svg) ⇒ <code>Chart</code>
+    * [.point](#dc.bubbleOverlay+point) ⇒ <code>Chart</code>
   * [.filterAll](#dc.filterAll)
   * [.refocusAll](#dc.refocusAll)
   * [.renderAll](#dc.renderAll)
@@ -176,8 +204,267 @@ If `name` is specified then it will be used to generate legend label.
 | [group] | <code>Group</code> | 
 | [name] | <code>String</code> | 
 
+<a name="dc.bubbleMixin"></a>
+### dc.bubbleMixin ⇒ <code>Chart</code>
+This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.
+
+**Kind**: static mixin of <code>[dc](#dc)</code>  
+**Mixes**: <code>colorMixin</code>  
+
+| Param | Type |
+| --- | --- |
+| _chart | <code>Chart</code> | 
+
+
+* [.bubbleMixin](#dc.bubbleMixin) ⇒ <code>Chart</code>
+  * [.r](#dc.bubbleMixin+r) ⇒ <code>Array.&lt;Number&gt;</code>
+  * [.radiusValueAccessor](#dc.bubbleMixin+radiusValueAccessor) ⇒ <code>function</code>
+  * [.minRadiusWithLabel](#dc.bubbleMixin+minRadiusWithLabel) ⇒ <code>Number</code>
+  * [.maxBubbleRelativeSize](#dc.bubbleMixin+maxBubbleRelativeSize) ⇒ <code>Number</code>
+
+<a name="dc.bubbleMixin+r"></a>
+#### bubbleMixin.r ⇒ <code>Array.&lt;Number&gt;</code>
+Get or set the bubble radius scale. By default the bubble chart uses
+`d3.scale.linear().domain([0, 100])` as its r scale .
+
+**Kind**: instance property of <code>[bubbleMixin](#dc.bubbleMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [bubbleRadiusScale] | <code>Array.&lt;Number&gt;</code> | 
+
+<a name="dc.bubbleMixin+radiusValueAccessor"></a>
+#### bubbleMixin.radiusValueAccessor ⇒ <code>function</code>
+Get or set the radius value accessor function. If set, the radius value accessor function will
+be used to retrieve a data value for each bubble. The data retrieved then will be mapped using
+the r scale to the actual bubble radius. This allows you to encode a data dimension using bubble
+size.
+
+**Kind**: instance property of <code>[bubbleMixin](#dc.bubbleMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [radiusValueAccessor] | <code>function</code> | 
+
+<a name="dc.bubbleMixin+minRadiusWithLabel"></a>
+#### bubbleMixin.minRadiusWithLabel ⇒ <code>Number</code>
+Get or set the minimum radius for label rendering. If a bubble's radius is less than this value
+then no label will be rendered.
+
+**Kind**: instance property of <code>[bubbleMixin](#dc.bubbleMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [radius] | <code>Number</code> | <code>10</code> | 
+
+<a name="dc.bubbleMixin+maxBubbleRelativeSize"></a>
+#### bubbleMixin.maxBubbleRelativeSize ⇒ <code>Number</code>
+Get or set the maximum relative size of a bubble to the length of x axis. This value is useful
+when the difference in radius between bubbles is too great.
+
+**Kind**: instance property of <code>[bubbleMixin](#dc.bubbleMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [relativeSize] | <code>Number</code> | <code>0.3</code> | 
+
+<a name="dc.capMixin"></a>
+### dc.capMixin ⇒ <code>Chart</code>
+Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the
+Row and Pie Charts.
+
+The top ordered elements in the group up to the cap amount will be kept in the chart, and the rest
+will be replaced with an *others* element, with value equal to the sum of the replaced values. The
+keys of the elements below the cap limit are recorded in order to filter by those keys when the
+others* element is clicked.
+
+**Kind**: static mixin of <code>[dc](#dc)</code>  
+
+| Param | Type |
+| --- | --- |
+| _chart | <code>Chart</code> | 
+
+
+* [.capMixin](#dc.capMixin) ⇒ <code>Chart</code>
+  * [.cap](#dc.capMixin+cap) ⇒ <code>Number</code>
+  * [.othersLabel](#dc.capMixin+othersLabel) ⇒ <code>String</code>
+  * [.othersGrouper](#dc.capMixin+othersGrouper) ⇒ <code>function</code>
+
+<a name="dc.capMixin+cap"></a>
+#### capMixin.cap ⇒ <code>Number</code>
+Get or set the count of elements to that will be included in the cap.
+
+**Kind**: instance property of <code>[capMixin](#dc.capMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [count] | <code>Number</code> | <code>Infinity</code> | 
+
+<a name="dc.capMixin+othersLabel"></a>
+#### capMixin.othersLabel ⇒ <code>String</code>
+Get or set the label for *Others* slice when slices cap is specified
+
+**Kind**: instance property of <code>[capMixin](#dc.capMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [label] | <code>String</code> | <code>Others</code> | 
+
+<a name="dc.capMixin+othersGrouper"></a>
+#### capMixin.othersGrouper ⇒ <code>function</code>
+Get or set the grouper function that will perform the insertion of data for the *Others* slice
+if the slices cap is specified. If set to a falsy value, no others will be added. By default the
+grouper function computes the sum of all values below the cap.
+
+**Kind**: instance property of <code>[capMixin](#dc.capMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [grouperFunction] | <code>function</code> | 
+
+**Example**  
+```js
+chart.othersGrouper(function (data) {
+    // compute the value for others, presumably the sum of all values below the cap
+    var othersSum  = yourComputeOthersValueLogic(data)
+
+    // the keys are needed to properly filter when the others element is clicked
+    var othersKeys = yourComputeOthersKeysArrayLogic(data);
+
+    // add the others row to the dataset
+    data.push({'key': 'Others', 'value': othersSum, 'others': othersKeys });
+
+    return data;
+});
+```
+<a name="dc.colorMixin"></a>
+### dc.colorMixin ⇒ <code>Chart</code>
+The Color Mixin is an abstract chart functional class providing universal coloring support
+as a mix-in for any concrete chart implementation.
+
+**Kind**: static mixin of <code>[dc](#dc)</code>  
+
+| Param | Type |
+| --- | --- |
+| _chart | <code>Chart</code> | 
+
+
+* [.colorMixin](#dc.colorMixin) ⇒ <code>Chart</code>
+  * [.colors](#dc.colorMixin+colors) ⇒ <code>Chart</code>
+  * [.ordinalColors](#dc.colorMixin+ordinalColors) ⇒ <code>Chart</code>
+  * [.linearColors](#dc.colorMixin+linearColors) ⇒ <code>Chart</code>
+  * [.linearColors](#dc.colorMixin+linearColors) ⇒ <code>function</code>
+  * [.colorDomain](#dc.colorMixin+colorDomain) ⇒ <code>function</code>
+  * [.calculateColorDomain](#dc.colorMixin+calculateColorDomain) ⇒ <code>Chart</code>
+  * [.getColor](#dc.colorMixin+getColor) ⇒ <code>String</code>
+  * [.colorCalculator](#dc.colorMixin+colorCalculator) ⇒ <code>\*</code>
+
+<a name="dc.colorMixin+colors"></a>
+#### colorMixin.colors ⇒ <code>Chart</code>
+Retrieve current color scale or set a new color scale. This methods accepts any function that
+operates like a d3 scale.
+
+**Kind**: instance property of <code>[colorMixin](#dc.colorMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [colorScale] | <code>D3Scale</code> | <code>d3.scale.category20c()</code> | 
+
+**Example**  
+```js
+// alternate categorical scale
+chart.colors(d3.scale.category20b());
+
+// ordinal scale
+chart.colors(d3.scale.ordinal().range(['red','green','blue']));
+// convenience method, the same as above
+chart.ordinalColors(['red','green','blue']);
+
+// set a linear scale
+chart.linearColors(["#4575b4", "#ffffbf", "#a50026"]);
+```
+<a name="dc.colorMixin+ordinalColors"></a>
+#### colorMixin.ordinalColors ⇒ <code>Chart</code>
+Convenience method to set the color scale to d3.scale.ordinal with range `r`.
+
+**Kind**: instance property of <code>[colorMixin](#dc.colorMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| r | <code>Array.&lt;String&gt;</code> | 
+
+<a name="dc.colorMixin+linearColors"></a>
+#### colorMixin.linearColors ⇒ <code>Chart</code>
+Convenience method to set the color scale to an Hcl interpolated linear scale with range `r`.
+
+**Kind**: instance property of <code>[colorMixin](#dc.colorMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| r | <code>Array.&lt;Number&gt;</code> | 
+
+<a name="dc.colorMixin+linearColors"></a>
+#### colorMixin.linearColors ⇒ <code>function</code>
+Set or the get color accessor function. This function will be used to map a data point in a
+crossfilter group to a color value on the color scale. The default function uses the key
+accessor.
+
+**Kind**: instance property of <code>[colorMixin](#dc.colorMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [colorAccessorFunction] | <code>function</code> | 
+
+**Example**  
+```js
+// default index based color accessor
+.colorAccessor(function (d, i){return i;})
+// color accessor for a multi-value crossfilter reduction
+.colorAccessor(function (d){return d.value.absGain;})
+```
+<a name="dc.colorMixin+colorDomain"></a>
+#### colorMixin.colorDomain ⇒ <code>function</code>
+Set or get the current domain for the color mapping function. The domain must be supplied as an
+array.
+
+Note: previously this method accepted a callback function. Instead you may use a custom scale
+set by `.colors`.
+
+**Kind**: instance property of <code>[colorMixin](#dc.colorMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [domain] | <code>Array.&lt;String&gt;</code> | 
+
+<a name="dc.colorMixin+calculateColorDomain"></a>
+#### colorMixin.calculateColorDomain ⇒ <code>Chart</code>
+Set the domain by determining the min and max values as retrieved by `.colorAccessor` over the
+chart's dataset.
+
+**Kind**: instance property of <code>[colorMixin](#dc.colorMixin)</code>  
+<a name="dc.colorMixin+getColor"></a>
+#### colorMixin.getColor ⇒ <code>String</code>
+Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
+
+**Kind**: instance property of <code>[colorMixin](#dc.colorMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| d | <code>\*</code> | 
+| [i] | <code>Number</code> | 
+
+<a name="dc.colorMixin+colorCalculator"></a>
+#### colorMixin.colorCalculator ⇒ <code>\*</code>
+Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
+
+**Kind**: instance property of <code>[colorMixin](#dc.colorMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [value] | <code>\*</code> | 
+
 <a name="dc.barChart"></a>
-### dc.barChart ⇒ <code>barChart</code> &#124; <code>BarChart</code>
+### dc.barChart ⇒ <code>BarChart</code>
 Concrete bar chart/histogram implementation.
 Examples:
 - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
@@ -185,12 +472,11 @@ Examples:
 
 **Kind**: static property of <code>[dc](#dc)</code>  
 **Mixes**: <code>baseMixin</code>  
-**Returns**: <code>barChart</code> - =======<code>BarChart</code> - >>>>>>> cec52eb469e363b35b6f8c2f36488f9bb1d481fc  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | parent | <code>String</code> &#124; <code>node</code> &#124; <code>d3.selection</code> &#124; <code>dc.compositeChart</code> | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance. |
-| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group.  <<<<<<< HEAD |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
 **Example**  
 ```js
@@ -202,7 +488,7 @@ var chart2 = dc.barChart('#chart-container2', 'chartGroupA');
 var chart3 = dc.barChart(compositeChart);
 ```
 
-* [.barChart](#dc.barChart) ⇒ <code>barChart</code> &#124; <code>BarChart</code>
+* [.barChart](#dc.barChart) ⇒ <code>BarChart</code>
   * [.centerBar](#dc.barChart+centerBar) ⇒ <code>Boolean</code>
   * [.barPadding](#dc.barChart+barPadding) ⇒ <code>Number</code>
   * [.outerPadding](#dc.barChart+outerPadding) ⇒ <code>Number</code>
@@ -274,6 +560,196 @@ compensate, such as in the following example.
 ```js
 chart.round(function(n) {return Math.floor(n)+0.5});
 ```
+<a name="dc.boxPlot"></a>
+### dc.boxPlot ⇒ <code>BoxPlot</code>
+A box plot is a chart that depicts numerical data via their quartile ranges.
+Examples:
+- [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+- [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
+
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Mixes**: <code>coordinateGridMixin</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> &#124; <code>node</code> &#124; <code>d3.selection</code> &#124; <code>dc.compositeChart</code> | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance. |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
+
+**Example**  
+```js
+// create a box plot under #chart-container1 element using the default global chart group
+var boxPlot1 = dc.boxPlot('#chart-container1');
+// create a box plot under #chart-container2 element using chart group A
+var boxPlot2 = dc.boxPlot('#chart-container2', 'chartGroupA');
+```
+
+* [.boxPlot](#dc.boxPlot) ⇒ <code>BoxPlot</code>
+  * [.boxPadding](#dc.boxPlot+boxPadding) ⇒ <code>Number</code>
+  * [.outerPadding](#dc.boxPlot+outerPadding) ⇒ <code>Number</code>
+  * [.boxWidth](#dc.boxPlot+boxWidth) ⇒ <code>Number</code> &#124; <code>function</code>
+  * [.tickFormat](#dc.boxPlot+tickFormat) ⇒ <code>Number</code> &#124; <code>function</code>
+
+<a name="dc.boxPlot+boxPadding"></a>
+#### boxPlot.boxPadding ⇒ <code>Number</code>
+Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
+See the [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
+for a visual description of how the padding is applied.
+
+**Kind**: instance property of <code>[boxPlot](#dc.boxPlot)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [padding] | <code>Number</code> | <code>0.8</code> | 
+
+<a name="dc.boxPlot+outerPadding"></a>
+#### boxPlot.outerPadding ⇒ <code>Number</code>
+Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
+or on charts with a custom `.boxWidth`. Will pad the width by `padding * barWidth` on each side of the chart.
+
+**Kind**: instance property of <code>[boxPlot](#dc.boxPlot)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [padding] | <code>Number</code> | <code>0.5</code> | 
+
+<a name="dc.boxPlot+boxWidth"></a>
+#### boxPlot.boxWidth ⇒ <code>Number</code> &#124; <code>function</code>
+Get or set the numerical width of the boxplot box. The width may also be a function taking as
+parameters the chart width excluding the right and left margins, as well as the number of x
+units.
+
+**Kind**: instance property of <code>[boxPlot](#dc.boxPlot)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [boxWidth] | <code>Number</code> &#124; <code>function</code> | <code>0.5</code> | 
+
+**Example**  
+```js
+// Using numerical parameter
+chart.boxWidth(10);
+// Using function
+chart.boxWidth((innerChartWidth, xUnits) { ... });
+```
+<a name="dc.boxPlot+tickFormat"></a>
+#### boxPlot.tickFormat ⇒ <code>Number</code> &#124; <code>function</code>
+Set the numerical format of the boxplot median, whiskers and quartile labels. Defaults to
+integer formatting.
+
+**Kind**: instance property of <code>[boxPlot](#dc.boxPlot)</code>  
+
+| Param | Type |
+| --- | --- |
+| [tickFormat] | <code>function</code> | 
+
+**Example**  
+```js
+// format ticks to 2 decimal places
+chart.tickFormat(d3.format('.2f'));
+```
+<a name="dc.bubbleChart"></a>
+### dc.bubbleChart ⇒ <code>BubbleChart</code>
+A concrete implementation of a general purpose bubble chart that allows data visualization using the
+following dimensions:
+- x axis position
+- y axis position
+- bubble radius
+- color
+Examples:
+- [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+- [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
+
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Mixes**: <code>bubbleMixin,coordinateGridMixin</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> &#124; <code>node</code> &#124; <code>d3.selection</code> &#124; <code>dc.compositeChart</code> | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance. |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
+
+**Example**  
+```js
+// create a bubble chart under #chart-container1 element using the default global chart group
+var bubbleChart1 = dc.bubbleChart('#chart-container1');
+// create a bubble chart under #chart-container2 element using chart group A
+var bubbleChart2 = dc.bubbleChart('#chart-container2', 'chartGroupA');
+```
+<a name="dc.bubbleChart+elasticRadius"></a>
+#### bubbleChart.elasticRadius ⇒ <code>Boolean</code>
+Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
+feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
+
+**Kind**: instance property of <code>[bubbleChart](#dc.bubbleChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [padding] | <code>Boolean</code> | <code>false</code> | 
+
+<a name="dc.bubbleOverlay"></a>
+### dc.bubbleOverlay ⇒ <code>BubbleOverlay</code>
+The bubble overlay chart is quite different from the typical bubble chart. With the bubble overlay
+chart you can arbitrarily place bubbles on an existing svg or bitmap image, thus changing the
+typical x and y positioning while retaining the capability to visualize data using bubble radius
+and coloring.
+Examples:
+- [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
+
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Mixes**: <code>bubbleMixin,baseMixin</code>  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> &#124; <code>node</code> &#124; <code>d3.selection</code> &#124; <code>dc.compositeChart</code> | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance. |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
+
+**Example**  
+```js
+// create a bubble overlay chart on top of the '#chart-container1 svg' element using the default global chart group
+var bubbleChart1 = dc.bubbleOverlayChart('#chart-container1').svg(d3.select('#chart-container1 svg'));
+// create a bubble overlay chart on top of the '#chart-container2 svg' element using chart group A
+var bubbleChart2 = dc.compositeChart('#chart-container2', 'chartGroupA').svg(d3.select('#chart-container2 svg'));
+```
+
+* [.bubbleOverlay](#dc.bubbleOverlay) ⇒ <code>BubbleOverlay</code>
+  * [.svg](#dc.bubbleOverlay+svg) ⇒ <code>Chart</code>
+  * [.point](#dc.bubbleOverlay+point) ⇒ <code>Chart</code>
+
+<a name="dc.bubbleOverlay+svg"></a>
+#### bubbleOverlay.svg ⇒ <code>Chart</code>
+**mandatory**
+
+Set the underlying svg image element. Unlike other dc charts this chart will not generate a svg
+element; therefore the bubble overlay chart will not work if this function is not invoked. If the
+underlying image is a bitmap, then an empty svg will need to be created on top of the image.
+
+**Kind**: instance property of <code>[bubbleOverlay](#dc.bubbleOverlay)</code>  
+
+| Param | Type |
+| --- | --- |
+| [imageElement] | <code>Selection</code> | 
+
+**Example**  
+```js
+// set up underlying svg element
+chart.svg(d3.select('#chart svg'));
+```
+<a name="dc.bubbleOverlay+point"></a>
+#### bubbleOverlay.point ⇒ <code>Chart</code>
+**mandatory**
+
+Set up a data point on the overlay. The name of a data point should match a specific 'key' among
+data groups generated using keyAccessor.  If a match is found (point name <-> data group key)
+then a bubble will be generated at the position specified by the function. x and y
+value specified here are relative to the underlying svg.
+
+**Kind**: instance property of <code>[bubbleOverlay](#dc.bubbleOverlay)</code>  
+
+| Param | Type |
+| --- | --- |
+| name | <code>String</code> | 
+| x | <code>Number</code> | 
+| y | <code>Number</code> | 
+
 <a name="dc.filterAll"></a>
 ### dc.filterAll
 Clear all filters on all charts within the given chart group. If the chart group is not given then

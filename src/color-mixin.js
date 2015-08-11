@@ -4,7 +4,15 @@ The Color Mixin is an abstract chart functional class providing universal colori
 as a mix-in for any concrete chart implementation.
 
 **/
-
+/**
+ * The Color Mixin is an abstract chart functional class providing universal coloring support
+ * as a mix-in for any concrete chart implementation.
+ * @name colorMixin
+ * @memberOf dc
+ * @mixin
+ * @param {Chart} _chart
+ * @returns {Chart}
+ */
 dc.colorMixin = function (_chart) {
     var _colors = d3.scale.category20c();
     var _defaultAccessor = true;
@@ -12,23 +20,25 @@ dc.colorMixin = function (_chart) {
     var _colorAccessor = function (d) { return _chart.keyAccessor()(d); };
 
     /**
-    #### .colors([colorScale])
-    Retrieve current color scale or set a new color scale. This methods accepts any function that
-    operates like a d3 scale. If not set the default is
-    `d3.scale.category20c()`.
-    ```js
-    // alternate categorical scale
-    chart.colors(d3.scale.category20b());
-
-    // ordinal scale
-    chart.colors(d3.scale.ordinal().range(['red','green','blue']));
-    // convenience method, the same as above
-    chart.ordinalColors(['red','green','blue']);
-
-    // set a linear scale
-    chart.linearColors(["#4575b4", "#ffffbf", "#a50026"]);
-    ```
-    **/
+     * Retrieve current color scale or set a new color scale. This methods accepts any function that
+     * operates like a d3 scale.
+     * @name colors
+     * @memberOf dc.colorMixin
+     * @instance
+     * @example
+     * // alternate categorical scale
+     * chart.colors(d3.scale.category20b());
+     *
+     * // ordinal scale
+     * chart.colors(d3.scale.ordinal().range(['red','green','blue']));
+     * // convenience method, the same as above
+     * chart.ordinalColors(['red','green','blue']);
+     *
+     * // set a linear scale
+     * chart.linearColors(["#4575b4", "#ffffbf", "#a50026"]);
+     * @param {D3Scale} [colorScale=d3.scale.category20c()]
+     * @returns {Chart}
+     */
     _chart.colors = function (_) {
         if (!arguments.length) {
             return _colors;
@@ -42,19 +52,25 @@ dc.colorMixin = function (_chart) {
     };
 
     /**
-    #### .ordinalColors(r)
-    Convenience method to set the color scale to d3.scale.ordinal with range `r`.
-
-    **/
+     * Convenience method to set the color scale to d3.scale.ordinal with range `r`.
+     * @name ordinalColors
+     * @memberOf dc.colorMixin
+     * @instance
+     * @param {Array<String>} r
+     * @returns {Chart}
+     */
     _chart.ordinalColors = function (r) {
         return _chart.colors(d3.scale.ordinal().range(r));
     };
 
     /**
-    #### .linearColors(r)
-    Convenience method to set the color scale to an Hcl interpolated linear scale with range `r`.
-
-    **/
+     * Convenience method to set the color scale to an Hcl interpolated linear scale with range `r`.
+     * @name linearColors
+     * @memberOf dc.colorMixin
+     * @instance
+     * @param {Array<Number>} r
+     * @returns {Chart}
+     */
     _chart.linearColors = function (r) {
         return _chart.colors(d3.scale.linear()
                              .range(r)
@@ -62,22 +78,25 @@ dc.colorMixin = function (_chart) {
     };
 
     /**
-    #### .colorAccessor([colorAccessorFunction])
-    Set or the get color accessor function. This function will be used to map a data point in a
-    crossfilter group to a color value on the color scale. The default function uses the key
-    accessor.
-    ```js
-    // default index based color accessor
-    .colorAccessor(function (d, i){return i;})
-    // color accessor for a multi-value crossfilter reduction
-    .colorAccessor(function (d){return d.value.absGain;})
-    ```
-    **/
-    _chart.colorAccessor = function (_) {
+     * Set or the get color accessor function. This function will be used to map a data point in a
+     * crossfilter group to a color value on the color scale. The default function uses the key
+     * accessor.
+     * @name linearColors
+     * @memberOf dc.colorMixin
+     * @instance
+     * @example
+     * // default index based color accessor
+     * .colorAccessor(function (d, i){return i;})
+     * // color accessor for a multi-value crossfilter reduction
+     * .colorAccessor(function (d){return d.value.absGain;})
+     * @param {Function} [colorAccessorFunction]
+     * @returns {Function}
+     */
+    _chart.colorAccessor = function (colorAccessorFunction) {
         if (!arguments.length) {
             return _colorAccessor;
         }
-        _colorAccessor = _;
+        _colorAccessor = colorAccessorFunction;
         _defaultAccessor = false;
         return _chart;
     };
@@ -88,28 +107,33 @@ dc.colorMixin = function (_chart) {
     };
 
     /**
-    #### .colorDomain([domain])
-    Set or get the current domain for the color mapping function. The domain must be supplied as an
-    array.
-
-    Note: previously this method accepted a callback function. Instead you may use a custom scale
-    set by `.colors`.
-
-    **/
-    _chart.colorDomain = function (_) {
+     * Set or get the current domain for the color mapping function. The domain must be supplied as an
+     * array.
+     *
+     * Note: previously this method accepted a callback function. Instead you may use a custom scale
+     * set by `.colors`.
+     * @name colorDomain
+     * @memberOf dc.colorMixin
+     * @instance
+     * @param {Array<String>} [domain]
+     * @returns {Function}
+     */
+    _chart.colorDomain = function (domain) {
         if (!arguments.length) {
             return _colors.domain();
         }
-        _colors.domain(_);
+        _colors.domain(domain);
         return _chart;
     };
 
     /**
-    #### .calculateColorDomain()
-    Set the domain by determining the min and max values as retrieved by `.colorAccessor` over the
-    chart's dataset.
-
-    **/
+     * Set the domain by determining the min and max values as retrieved by `.colorAccessor` over the
+     * chart's dataset.
+     * @name calculateColorDomain
+     * @memberOf dc.colorMixin
+     * @instance
+     * @returns {Chart}
+     */
     _chart.calculateColorDomain = function () {
         var newDomain = [d3.min(_chart.data(), _chart.colorAccessor()),
                          d3.max(_chart.data(), _chart.colorAccessor())];
@@ -118,18 +142,26 @@ dc.colorMixin = function (_chart) {
     };
 
     /**
-    #### .getColor(d [, i])
-    Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
-
-    **/
+     * Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
+     * @name getColor
+     * @memberOf dc.colorMixin
+     * @instance
+     * @param {*} d
+     * @param {Number} [i]
+     * @returns {String}
+     */
     _chart.getColor = function (d, i) {
         return _colors(_colorAccessor.call(this, d, i));
     };
 
     /**
-     #### .colorCalculator([value])
-     Gets or sets chart.getColor.
-     **/
+     * Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
+     * @name colorCalculator
+     * @memberOf dc.colorMixin
+     * @instance
+     * @param {*} [value]
+     * @returns {*}
+     */
     _chart.colorCalculator = function (_) {
         if (!arguments.length) {
             return _chart.getColor;
