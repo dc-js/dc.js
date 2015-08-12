@@ -4305,7 +4305,7 @@ dc.barChart = function (parent, chartGroup) {
                   }
                   return dc.utils.safeNumber(x);
             })
-            .attr('width', _barWidth/_chart.stack().length)
+            .attr('width', (_barWidth/_chart.stack().length) - 3)
             .attr('y', function(d) {return _chart.y()(d.y);})
             .attr('height', function(d){
               return groupBarHeight(d);
@@ -4499,6 +4499,24 @@ dc.barChart = function (parent, chartGroup) {
         return max;
     });
 
+    dc.override(_chart, 'yAxisMax', function(){
+      var max;
+      if(_renderType === 'stack'){
+        max = d3.max(flattenStack(), function(p){
+          return p.y + p.y0;
+        });
+      }
+      else if(_renderType === 'group'){
+        max = d3.max(flattenStack(), dc.pluck('y'));
+      }
+      return max;
+    });
+  
+    // Not dry but need flattenStack here and don't want to expose it, possible move to util
+    function flattenStack() {
+        var valueses = _chart.data().map(function (layer) { return layer.values; });
+        return Array.prototype.concat.apply([], valueses);
+    }
     return _chart.anchor(parent, chartGroup);
 };
 
