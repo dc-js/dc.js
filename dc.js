@@ -6996,6 +6996,8 @@ var chart2 = dc.rowChart('#chart-container2', 'chartGroupA');
 
 **/
 dc.rowChart = function (parent, chartGroup) {
+    var X_AXIS_LABEL_CLASS = 'x-axis-label';
+    var DEFAULT_AXIS_LABEL_PADDING = 12;
 
     var _g;
 
@@ -7019,6 +7021,8 @@ dc.rowChart = function (parent, chartGroup) {
     var _elasticX;
 
     var _xAxis = d3.svg.axis().orient('bottom');
+    var _xAxisLabel;
+    var _xAxisLabelPadding = 0;
 
     var _rowData;
 
@@ -7044,6 +7048,19 @@ dc.rowChart = function (parent, chartGroup) {
         if (axisG.empty()) {
             axisG = _g.append('g').attr('class', 'axis')
                 .attr('transform', 'translate(0, ' + _chart.effectiveHeight() + ')');
+        }
+
+        var axisXLab = _g.selectAll('text.' + X_AXIS_LABEL_CLASS);
+        if (axisXLab.empty() && _chart.xAxisLabel()) {
+            axisXLab = _g.append('text')
+                .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
+                    (_chart.height() - _xAxisLabelPadding) + ')')
+                .attr('class', X_AXIS_LABEL_CLASS)
+                .attr('text-anchor', 'middle')
+                .text(_chart.xAxisLabel());
+        }
+        if (_chart.xAxisLabel() && axisXLab.text() !== _chart.xAxisLabel()) {
+            axisXLab.text(_chart.xAxisLabel());
         }
 
         dc.transition(axisG, _chart.transitionDuration())
@@ -7359,6 +7376,45 @@ dc.rowChart = function (parent, chartGroup) {
     function isSelectedRow (d) {
         return _chart.hasFilter(_chart.cappedKeyAccessor(d));
     }
+
+    /**
+    #### .xAxisMin()
+    Calculates the minimum x value to display in the chart.
+
+    **/
+    _chart.xAxisMin = function () {
+        return d3.min(_chart.data(), _chart.cappedValueAccessor);
+    };
+
+    /**
+    #### .xAxisMax()
+    Calculates the maximum x value to display in the chart.
+
+    **/
+    _chart.xAxisMax = function () {
+        return d3.max(_chart.data(), _chart.cappedValueAccessor);
+    };
+
+    /**
+    #### .xAxisLabel([labelText, [, padding]])
+    Set or get the x axis label. If setting the label, you may optionally include additional padding to
+    the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.\
+
+    **/
+    _chart.xAxisLabel = function (_, padding) {
+        if (!arguments.length) {
+            return _xAxisLabel;
+        }
+        _xAxisLabel = _;
+        _chart.margins().bottom -= _xAxisLabelPadding;
+        _xAxisLabelPadding = (padding === undefined) ? DEFAULT_AXIS_LABEL_PADDING : padding;
+        _chart.margins().bottom += _xAxisLabelPadding;
+        return _chart;
+    };
+
+    _chart.xAxisLength = function () {
+        return _chart.effectiveWidth();
+    };
 
     return _chart.anchor(parent, chartGroup);
 };
