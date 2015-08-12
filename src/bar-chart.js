@@ -153,7 +153,14 @@ dc.barChart = function (parent, chartGroup) {
                   return dc.utils.safeNumber(x);
             })
             .attr('width', (_barWidth/_chart.stack().length) - 3)
-            .attr('y', function(d) {return _chart.y()(d.y);})
+            .attr('y', function(d) {
+                var y = _chart.y()(d.y);
+                
+                  if (d.y < 0) {
+                      y -= groupBarHeight(d);
+                  }
+                return dc.utils.safeNumber(y);
+            })
             .attr('height', function(d){
               return groupBarHeight(d);
             });
@@ -356,7 +363,7 @@ dc.barChart = function (parent, chartGroup) {
       else if(_renderType === 'group'){
         max = d3.max(flattenStack(), dc.pluck('y'));
       }
-      return max;
+      return dc.utils.add(max, _chart.yAxisPadding());
     });
   
     // Not dry but need flattenStack here and don't want to expose it, possible move to util
