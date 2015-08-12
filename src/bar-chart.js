@@ -42,8 +42,10 @@ dc.barChart = function (parent, chartGroup) {
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
     var _centerBar = false;
     var _alwaysUseRounding = false;
-
+    
     var _barWidth;
+
+    _chart.renderType = "stack";
 
     dc.override(_chart, 'rescale', function () {
         _chart._rescale();
@@ -79,8 +81,12 @@ dc.barChart = function (parent, chartGroup) {
         });
     };
 
-    function barHeight(d) {
+    function stackBarHeight(d) {
         return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
+    }
+
+    function groupBarHeight(d){
+        return dc.utils.safeNumber(Math.abs(_chart.height() - _chart.margins().top - _chart.margins().bottom - chart.y()(d.y))); 
     }
 
     function renderBars(layer, layerIndex, d) {
@@ -101,34 +107,56 @@ dc.barChart = function (parent, chartGroup) {
         if (_chart.isOrdinal()) {
             bars.on('click', _chart.onClick);
         }
+        
+        if(_chart.renderType == "stack"){
+          dc.transition(bars, _chart.transitionDuration())
+              .attr('x', function (d) {
+                  var x = _chart.x()(d.x);
+                  if (_centerBar) {
+                      x -= _barWidth / 2;
+                  }
+                  if (_chart.isOrdinal() && _gap !== undefined) {
+                      x += _gap / 2;
+                  }
+                  return dc.utils.safeNumber(x);
+              })
+              .attr('y', function (d) {
+                  var y = _chart.y()(d.y + d.y0);
 
-        dc.transition(bars, _chart.transitionDuration())
-            .attr('x', function (d) {
-                var x = _chart.x()(d.x);
-                if (_centerBar) {
-                    x -= _barWidth / 2;
-                }
-                if (_chart.isOrdinal() && _gap !== undefined) {
-                    x += _gap / 2;
-                }
-                return dc.utils.safeNumber(x);
+                  if (d.y < 0) {
+                      y -= stackBarHeight(d);
+                  }
+
+                  return dc.utils.safeNumber(y);
+              })
+              .attr('width', _barWidth)
+              .attr('height', function (d) {
+                  return stackBarHeight(d);
+              })
+              .attr('fill', dc.pluck('data', _chart.getColor))
+              .select('title').text(dc.pluck('data', _chart.title(d.name)));
+
+        }
+        else if(chart.renderType == "group"){
+          var groups = chart.stack().map(function(d){ return d.name;});
+          var groupRange = d3.scale.ordinal().domain(groups).rangePoints([0, _barWidth - _barWidth/2]);
+          dc.transition(bars, _chart.transitionDuration())
+            .attr('x', function(d, i){
+                  var x = _chart.x()(d.x) + groupRange(d.layer);
+                  if (_centerBar) {
+                      x -= _barWidth / 2;
+                  }
+                  if (_chart.isOrdinal() && _gap !== undefined) {
+                      x += _gap / 2;
+                  }
+                  return dc.utils.safeNumber(x);
             })
-            .attr('y', function (d) {
-                var y = _chart.y()(d.y + d.y0);
-
-                if (d.y < 0) {
-                    y -= barHeight(d);
-                }
-
-                return dc.utils.safeNumber(y);
+            .attr('width', _barWidth/_chart.stack().length)
+            .attr('y', function(d) {return _chart.y()(d.y)})
+            .attr('height', function(d){
+              return groupBarHeight(d);
             })
-            .attr('width', _barWidth)
-            .attr('height', function (d) {
-                return barHeight(d);
-            })
-            .attr('fill', dc.pluck('data', _chart.getColor))
-            .select('title').text(dc.pluck('data', _chart.title(d.name)));
-
+        }
         dc.transition(bars.exit(), _chart.transitionDuration())
             .attr('height', 0)
             .remove();
