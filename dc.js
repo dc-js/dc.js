@@ -5992,7 +5992,8 @@ dc.compositeChart = function (parent, chartGroup) {
             if (_chart.rightY() === undefined) {
                 _chart.rightY(d3.scale.linear());
             }
-            _chart.rightY().domain([rightYAxisMin(_chart.alignAxes()), rightYAxisMax(_chart.alignAxes())]).rangeRound([_chart.yAxisHeight(), 0]);
+            _chart.rightY().domain([rightYAxisMin(_chart.alignAxes()), rightYAxisMax(_chart.alignAxes())])
+            .rangeRound([_chart.yAxisHeight(), 0]);
         }
 
         _chart.rightY().range([_chart.yAxisHeight(), 0]);
@@ -6006,7 +6007,8 @@ dc.compositeChart = function (parent, chartGroup) {
             if (_chart.y() === undefined) {
                 _chart.y(d3.scale.linear());
             }
-            _chart.y().domain([yAxisMin(_chart.alignAxes()), yAxisMax(_chart.alignAxes())]).rangeRound([_chart.yAxisHeight(), 0]);
+            _chart.y().domain([yAxisMin(_chart.alignAxes()), yAxisMax(_chart.alignAxes())])
+            .rangeRound([_chart.yAxisHeight(), 0]);
         }
 
         _chart.y().range([_chart.yAxisHeight(), 0]);
@@ -6235,7 +6237,7 @@ dc.compositeChart = function (parent, chartGroup) {
     function yAxisMin(aligned) {
         var lyAxisMin = d3.min(getYAxisMin(leftYAxisChildren())), rYAxisMin, rYAxisMax;
 
-        if(!aligned) {
+        if (!aligned) {
             return lyAxisMin;
         }
 
@@ -6250,7 +6252,7 @@ dc.compositeChart = function (parent, chartGroup) {
     function rightYAxisMin(aligned) {
         var ryAxisMin = d3.min(getYAxisMin(rightYAxisChildren())), lyAxisMin;
 
-        if(!aligned) {
+        if (!aligned) {
             return ryAxisMin;
         }
 
@@ -6269,28 +6271,30 @@ dc.compositeChart = function (parent, chartGroup) {
 
     delete _chart.yAxisMax;
     function yAxisMax(aligned) {
-      var lyAxisMax = dc.utils.add(d3.max(getYAxisMax(leftYAxisChildren())), _chart.yAxisPadding()), lyAxisMin, ryAxisMin, ryAxisMax;
+        var lyAxisMax = dc.utils.add(d3.max(getYAxisMax(leftYAxisChildren())), _chart.yAxisPadding()),
+        lyAxisMin, ryAxisMin, ryAxisMax;
 
-      if(!aligned) {
-          return lyAxisMax;
-      }
+        if (!aligned) {
+            return lyAxisMax;
+        }
 
-      lyAxisMin = yAxisMin();
-      ryAxisMin = rightYAxisMin();
-      ryAxisMax = rightYAxisMax();
-      if (lyAxisMin < 0 && ryAxisMin < 0) {
-          var leftYFactor = lyAxisMax / lyAxisMin, rightYFactor = ryAxisMax / ryAxisMin;
-          if (leftYFactor > rightYFactor) {
-            lyAxisMax = lyAxisMin * rightYFactor;
-          }
-      }
-      return lyAxisMax;
+        lyAxisMin = yAxisMin();
+        ryAxisMin = rightYAxisMin();
+        ryAxisMax = rightYAxisMax();
+        if (lyAxisMin < 0 && ryAxisMin < 0) {
+            var leftYFactor = lyAxisMax / lyAxisMin, rightYFactor = ryAxisMax / ryAxisMin;
+            if (leftYFactor > rightYFactor) {
+                lyAxisMax = lyAxisMin * rightYFactor;
+            }
+        }
+        return lyAxisMax;
     }
 
     function rightYAxisMax(aligned) {
-        var ryAxisMax = dc.utils.add(d3.max(getYAxisMax(rightYAxisChildren())), _chart.yAxisPadding()), lyAxisMin, lyAxisMax, ryAxisMin;
+        var ryAxisMax = dc.utils.add(d3.max(getYAxisMax(rightYAxisChildren())), _chart.yAxisPadding()),
+        lyAxisMin, lyAxisMax, ryAxisMin;
 
-        if(!aligned) {
+        if (!aligned) {
             return ryAxisMax;
         }
 
@@ -6300,9 +6304,9 @@ dc.compositeChart = function (parent, chartGroup) {
         if (lyAxisMin < 0 && ryAxisMin < 0) {
             var leftYFactor = lyAxisMax / lyAxisMin, rightYFactor = ryAxisMax / ryAxisMin;
             if (leftYFactor < rightYFactor) {
-              ryAxisMax = ryAxisMin * leftYFactor;
+                ryAxisMax = ryAxisMin * leftYFactor;
             }
-        } else if(lyAxisMin >= 0){
+        } else if (lyAxisMin >= 0) {
             if (ryAxisMax === 0) {
                 ryAxisMax = -ryAxisMin;
             }
