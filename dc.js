@@ -4198,7 +4198,7 @@ dc.barChart = function (parent, chartGroup) {
     
     var _barWidth;
 
-    _chart.renderType = "stack";
+    var _renderType = 'stack';
 
     dc.override(_chart, 'rescale', function () {
         _chart._rescale();
@@ -4239,7 +4239,8 @@ dc.barChart = function (parent, chartGroup) {
     }
 
     function groupBarHeight(d){
-        return dc.utils.safeNumber(Math.abs(_chart.height() - _chart.margins().top - _chart.margins().bottom - chart.y()(d.y))); 
+        var margin = _chart.margins();
+        return dc.utils.safeNumber(Math.abs(_chart.height() - margin.top - margin.bottom - _chart.y()(d.y))); 
     }
 
     function renderBars(layer, layerIndex, d) {
@@ -4261,7 +4262,7 @@ dc.barChart = function (parent, chartGroup) {
             bars.on('click', _chart.onClick);
         }
         
-        if(_chart.renderType == "stack"){
+        if(_renderType === 'stack'){
           dc.transition(bars, _chart.transitionDuration())
               .attr('x', function (d) {
                   var x = _chart.x()(d.x);
@@ -4290,8 +4291,8 @@ dc.barChart = function (parent, chartGroup) {
               .select('title').text(dc.pluck('data', _chart.title(d.name)));
 
         }
-        else if(chart.renderType == "group"){
-          var groups = chart.stack().map(function(d){ return d.name;});
+        else if(_renderType === 'group'){
+          var groups = _chart.stack().map(function(d){ return d.name;});
           var groupRange = d3.scale.ordinal().domain(groups).rangePoints([0, _barWidth - _barWidth/2]);
           dc.transition(bars, _chart.transitionDuration())
             .attr('x', function(d, i){
@@ -4305,10 +4306,10 @@ dc.barChart = function (parent, chartGroup) {
                   return dc.utils.safeNumber(x);
             })
             .attr('width', _barWidth/_chart.stack().length)
-            .attr('y', function(d) {return _chart.y()(d.y)})
+            .attr('y', function(d) {return _chart.y()(d.y);})
             .attr('height', function(d){
               return groupBarHeight(d);
-            })
+            });
         }
         dc.transition(bars.exit(), _chart.transitionDuration())
             .attr('height', 0)
@@ -4479,6 +4480,14 @@ dc.barChart = function (parent, chartGroup) {
         _chart.g().selectAll('rect.bar')
             .classed('highlight', false)
             .classed('fadeout', false);
+    };
+
+    _chart.renderType = function(_rendtype){
+      if(!arguments.length){
+        return _renderType;
+      }
+      _renderType = _rendtype;
+      return _chart;
     };
 
     dc.override(_chart, 'xAxisMax', function () {
