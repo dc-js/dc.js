@@ -10,17 +10,19 @@
 
 ## Pull Request Guidelines
 
-* Fork the repository
+* Fork the repository. 
+* As with all pull requests, put your changes in a branch. For contributions that change the dc.js API, create your branch off of `develop`. If your contribution does not change the API, branch off of `master` instead.
 * Make changes to the files in `src/` not dc.js
 * Add tests to `spec/`. Feel free to create a new file if needed.
 * Run `grunt server` and go to http://localhost:8888/spec to develop your tests.
+* If your changes might affect transitions, go to the relevant transition tests in http://localhost:8888/web/transitions and watch them by eye to see if they make sense
 * Run `grunt lint` to confirm that your code meets the dc.js style guidelines.
 * Run `grunt test` to confirm that all tests will pass on phantomjs.
 * Commit your changes to `src/*` and `spec/*` but not any build artifacts.  (Build artifacts include `dc.*js*`, `web/docs/*`, `web/js/*`)
-* Submit a pull request
-* If you merge master or another branch into your patchset, please rebase against master.
-* The DC maintainer team will review and build the artifacts when merging
-* If you continue making changes to your fork of `dc.js`, create a branch for each pull request
+* Submit a pull request. 
+* If you merge `develop` or `master` into your patchset, please rebase against develop. (It's okay to rewrite history for PRs, because these branches are temporary and it's unlikely that anyone is tracking your feature branch.)
+* The DC maintainer team will review and build the artifacts when merging.
+* If you continue making changes to your fork of `dc.js`, create a separate branch for each pull request and keep the changes separate.
 
 #### Coding Conventions
 

@@ -285,7 +285,7 @@ describe('dc.bubbleChart', function() {
                 chart.selectAll("circle").attr("fill", "red");
             });
             renderlet.and.callThrough();
-            chart.renderlet(renderlet);
+            chart.on("renderlet", renderlet);
         });
 
         it('is invoked with render', function () {

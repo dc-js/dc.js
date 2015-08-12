@@ -123,6 +123,20 @@ describe('dc.lineChart', function() {
             });
         });
 
+        describe('data point highlights and refs off', function () {
+            beforeEach(function () {
+                chart.title(function (d) { return d.value; });
+                chart.brushOn(false).xyTipsOn(false).render();
+            });
+            it('should not generate per data points', function () {
+                expect(chart.selectAll('circle.dot').size()).toBe(0);
+            });
+            it('should not generate x and y refs', function () {
+                expect(chart.selectAll('path.xRef').size()).toBe(0);
+                expect(chart.selectAll('path.yRef').size()).toBe(0);
+            });
+        });
+
         describe('data point highlights', function () {
             beforeEach(function () {
                 chart.title(function (d) { return d.value; });

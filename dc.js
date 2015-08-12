@@ -1,7 +1,8 @@
 /*!
  *  dc 2.1.0-dev
  *  http://dc-js.github.io/dc.js/
- *  Copyright 2012 Nick Zhu and other contributors
+ *  Copyright 2012-2015 Nick Zhu & the dc.js Developers
+ *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,7 +16,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 (function() { function _dc(d3, crossfilter) {
 'use strict';
 
@@ -202,13 +202,13 @@ immediately.  Default: false
 **/
 dc.disableTransitions = false;
 
-dc.transition = function (selections, duration, callback) {
+dc.transition = function (selections, duration, callback, name) {
     if (duration <= 0 || duration === undefined || dc.disableTransitions) {
         return selections;
     }
 
     var s = selections
-        .transition()
+        .transition(name)
         .duration(duration);
 
     if (typeof(callback) === 'function') {
@@ -216,6 +216,20 @@ dc.transition = function (selections, duration, callback) {
     }
 
     return s;
+};
+
+/* somewhat silly, but to avoid duplicating logic */
+dc.optionalTransition = function (enable, duration, callback, name) {
+    if (enable) {
+        return function (selection) {
+            return dc.transition(selection, duration, callback, name);
+        };
+    }
+    else {
+        return function (selection) {
+            return selection;
+        };
+    }
 };
 
 dc.units = {};
@@ -528,7 +542,7 @@ function allows the library to smooth out the rendering by throttling events and
 the most recent event.
 
 ```js
-    chart.renderlet(function(chart){
+    chart.on('renderlet', function(chart) {
         // smooth the rendering through event throttling
         dc.events.trigger(function(){
             // focus some other chart to the range selected by user on this chart
@@ -663,6 +677,7 @@ dc.baseMixin = function (_chart) {
     var _anchor;
     var _root;
     var _svg;
+    var _isChild;
 
     var _minWidth = 200;
     var _defaultWidth = function (element) {
@@ -707,7 +722,8 @@ dc.baseMixin = function (_chart) {
         'postRedraw',
         'filtered',
         'zoomed',
-        'renderlet');
+        'renderlet',
+        'pretransition');
 
     var _legend;
 
@@ -949,11 +965,13 @@ dc.baseMixin = function (_chart) {
         if (dc.instanceOfChart(a)) {
             _anchor = a.anchor();
             _root = a.root();
+            _isChild = true;
         } else {
             _anchor = a;
             _root = d3.select(_anchor);
             _root.classed(dc.constants.CHART_CLASS, true);
             dc.registerChart(_chart, chartGroup);
+            _isChild = false;
         }
         _chartGroup = chartGroup;
         return _chart;
@@ -1015,10 +1033,17 @@ dc.baseMixin = function (_chart) {
         return generateSvg();
     };
 
+    function sizeSvg() {
+        if (_svg) {
+            _svg
+                .attr('width', _chart.width())
+                .attr('height', _chart.height());
+        }
+    }
+
     function generateSvg() {
-        _svg = _chart.root().append('svg')
-            .attr('width', _chart.width())
-            .attr('height', _chart.height());
+        _svg = _chart.root().append('svg');
+        sizeSvg();
         return _svg;
     }
 
@@ -1123,6 +1148,7 @@ dc.baseMixin = function (_chart) {
     };
 
     _chart._activateRenderlets = function (event) {
+        _listeners.pretransition(_chart);
         if (_chart.transitionDuration() > 0 && _svg) {
             _svg.transition().duration(_chart.transitionDuration())
                 .each('end', function () {
@@ -1150,6 +1176,7 @@ dc.baseMixin = function (_chart) {
 
     **/
     _chart.redraw = function () {
+        sizeSvg();
         _listeners.preRedraw(_chart);
 
         var result = _chart._doRedraw();
@@ -1627,15 +1654,15 @@ dc.baseMixin = function (_chart) {
     #### .renderlet(renderletFunction)
     A renderlet is similar to an event listener on rendering event. Multiple renderlets can be added
     to an individual chart.  Each time a chart is rerendered or redrawn the renderlets are invoked
-    right after the chart finishes its own drawing routine, giving you a way to modify the svg
+    right after the chart finishes its transitions, giving you a way to modify the svg
     elements. Renderlet functions take the chart instance as the only input parameter and you can
     use the dc API or use raw d3 to achieve pretty much any effect.
 
     @Deprecated - Use [Listeners](#Listeners) with a 'renderlet' prefix
-    Generates a random key for the renderlet, which makes it hard for removal.
+    Generates a random key for the renderlet, which makes it hard to remove.
     ```js
-    // renderlet function
-    chart.renderlet(function(chart){
+    // do this instead of .renderlet(function(chart) { ... })
+    chart.on("renderlet", function(chart){
         // mix of dc API and d3 manipulation
         chart.select('g.y').style('display', 'none');
         // its a closure so you can also access other chart variable available in the closure scope
@@ -1658,7 +1685,13 @@ dc.baseMixin = function (_chart) {
         if (!arguments.length) {
             return _chartGroup;
         }
+        if (!_isChild) {
+            dc.deregisterChart(_chart, _chartGroup);
+        }
         _chartGroup = _;
+        if (!_isChild) {
+            dc.registerChart(_chart, _chartGroup);
+        }
         return _chart;
     };
 
@@ -1714,9 +1747,25 @@ dc.baseMixin = function (_chart) {
     ```
     **/
     _chart.options = function (opts) {
+        var applyOptions = [
+            'anchor',
+            'group',
+            'xAxisLabel',
+            'yAxisLabel',
+            'stack',
+            'title',
+            'point',
+            'getColor',
+            'overlayGeoJson'
+        ];
+
         for (var o in opts) {
             if (typeof(_chart[o]) === 'function') {
-                _chart[o].call(_chart, opts[o]);
+                if (opts[o] instanceof Array && applyOptions.indexOf(o) !== -1) {
+                    _chart[o].apply(_chart, opts[o]);
+                } else {
+                    _chart[o].call(_chart, opts[o]);
+                }
             } else {
                 dc.logger.debug('Not a valid option setter name: ' + o);
             }
@@ -1731,6 +1780,9 @@ dc.baseMixin = function (_chart) {
     #### .on('renderlet', function(chart, filter){...})
     This listener function will be invoked after transitions after redraw and render. Replaces the
     deprecated `.renderlet()` method.
+
+    #### .on('pretransition', function(chart, filter){...})
+    Like `.on('renderlet', ...)` but the event is fired before transitions start.
 
     #### .on('preRender', function(chart){...})
     This listener function will be invoked before chart rendering.
@@ -2024,7 +2076,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _renderHorizontalGridLine = false;
     var _renderVerticalGridLine = false;
 
-    var _refocused = false;
+    var _refocused = false, _resizing = false;
     var _unitCount;
 
     var _zoomScale = [1, Infinity];
@@ -2045,8 +2097,16 @@ dc.coordinateGridMixin = function (_chart) {
 
     var _useRightYAxis = false;
 
+    /**
+    #### .rescale()
+    When changing the domain of the x or y scale, it is necessary to tell the chart to recalculate
+    and redraw the axes. (`.rescale()` is called automatically when the x or y scale is replaced
+    with `.x()` or `.y()`, and has no effect on elastic scales.)
+    **/
     _chart.rescale = function () {
         _unitCount = undefined;
+        _resizing = true;
+        return _chart;
     };
 
     /**
@@ -2170,6 +2230,7 @@ dc.coordinateGridMixin = function (_chart) {
         }
         _x = _;
         _xOriginalDomain = _x.domain();
+        _chart.rescale();
         return _chart;
     };
 
@@ -2324,7 +2385,12 @@ dc.coordinateGridMixin = function (_chart) {
         return groups.map(_chart.keyAccessor());
     };
 
-    function prepareXAxis(g) {
+    function compareDomains(d1, d2) {
+        return !d1 || !d2 || d1.length !== d2.length ||
+            d1.some(function (elem, i) { return elem.toString() !== d2[i].toString(); });
+    }
+
+    function prepareXAxis(g, render) {
         if (!_chart.isOrdinal()) {
             if (_chart.elasticX()) {
                 _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
@@ -2338,7 +2404,7 @@ dc.coordinateGridMixin = function (_chart) {
 
         // has the domain changed?
         var xdom = _x.domain();
-        if (!_lastXDomain || xdom.some(function (elem, i) { return elem !== _lastXDomain[i]; })) {
+        if (render || compareDomains(_lastXDomain, xdom)) {
             _chart.rescale();
         }
         _lastXDomain = xdom;
@@ -2368,18 +2434,21 @@ dc.coordinateGridMixin = function (_chart) {
         var axisXLab = g.selectAll('text.' + X_AXIS_LABEL_CLASS);
         if (axisXLab.empty() && _chart.xAxisLabel()) {
             axisXLab = g.append('text')
-                .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
-                    (_chart.height() - _xAxisLabelPadding) + ')')
                 .attr('class', X_AXIS_LABEL_CLASS)
-                .attr('text-anchor', 'middle')
-                .text(_chart.xAxisLabel());
+                .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
+                      (_chart.height() - _xAxisLabelPadding) + ')')
+                .attr('text-anchor', 'middle');
         }
         if (_chart.xAxisLabel() && axisXLab.text() !== _chart.xAxisLabel()) {
             axisXLab.text(_chart.xAxisLabel());
         }
 
         dc.transition(axisXG, _chart.transitionDuration())
+            .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')')
             .call(_xAxis);
+        dc.transition(axisXLab, _chart.transitionDuration())
+            .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
+                  (_chart.height() - _xAxisLabelPadding) + ')');
     };
 
     function renderVerticalGridLines(g) {
@@ -2458,7 +2527,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart._prepareYAxis = function (g) {
         if (_y === undefined || _chart.elasticY()) {
-            _y = d3.scale.linear();
+            if (_y === undefined) {
+                _y = d3.scale.linear();
+            }
             var min = _chart.yAxisMin() || 0,
                 max = _chart.yAxisMax() || 0;
             _y.domain([min, max]).rangeRound([_chart.yAxisHeight(), 0]);
@@ -2478,9 +2549,8 @@ dc.coordinateGridMixin = function (_chart) {
         labelXPosition = labelXPosition || _yAxisLabelPadding;
 
         var axisYLab = _chart.g().selectAll('text.' + Y_AXIS_LABEL_CLASS + '.' + axisClass + '-label');
+        var labelYPosition = (_chart.margins().top + _chart.yAxisHeight() / 2);
         if (axisYLab.empty() && text) {
-
-            var labelYPosition = (_chart.margins().top + _chart.yAxisHeight() / 2);
             axisYLab = _chart.g().append('text')
                 .attr('transform', 'translate(' + labelXPosition + ',' + labelYPosition + '),rotate(' + rotation + ')')
                 .attr('class', Y_AXIS_LABEL_CLASS + ' ' + axisClass + '-label')
@@ -2490,6 +2560,8 @@ dc.coordinateGridMixin = function (_chart) {
         if (text && axisYLab.text() !== text) {
             axisYLab.text(text);
         }
+        dc.transition(axisYLab, _chart.transitionDuration())
+            .attr('transform', 'translate(' + labelXPosition + ',' + labelYPosition + '),rotate(' + rotation + ')');
     };
 
     _chart.renderYAxisAt = function (axisClass, axis, position) {
@@ -2500,7 +2572,9 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')');
         }
 
-        dc.transition(axisYG, _chart.transitionDuration()).call(axis);
+        dc.transition(axisYG, _chart.transitionDuration())
+            .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')')
+            .call(axis);
     };
 
     _chart.renderYAxis = function () {
@@ -2591,6 +2665,7 @@ dc.coordinateGridMixin = function (_chart) {
             return _y;
         }
         _y = _;
+        _chart.rescale();
         return _chart;
     };
 
@@ -2795,11 +2870,11 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('class', 'brush')
                 .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')')
                 .call(_brush.x(_chart.x()));
-            _chart.setBrushY(gBrush);
+            _chart.setBrushY(gBrush, false);
             _chart.setHandlePaths(gBrush);
 
             if (_chart.hasFilter()) {
-                _chart.redrawBrush(g);
+                _chart.redrawBrush(g, false);
             }
         }
     };
@@ -2809,7 +2884,10 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart.setBrushY = function (gBrush) {
-        gBrush.selectAll('rect').attr('height', brushHeight());
+        gBrush.selectAll('.brush rect')
+            .attr('height', brushHeight());
+        gBrush.selectAll('.resize path')
+            .attr('d', _chart.resizeHandlePath);
     };
 
     _chart.extendBrush = function () {
@@ -2831,7 +2909,7 @@ dc.coordinateGridMixin = function (_chart) {
     _chart._brushing = function () {
         var extent = _chart.extendBrush();
 
-        _chart.redrawBrush(_g);
+        _chart.redrawBrush(_g, false);
 
         if (_chart.brushIsEmpty(extent)) {
             dc.events.trigger(function () {
@@ -2848,15 +2926,17 @@ dc.coordinateGridMixin = function (_chart) {
         }
     };
 
-    _chart.redrawBrush = function (g) {
+    _chart.redrawBrush = function (g, doTransition) {
         if (_brushOn) {
             if (_chart.filter() && _chart.brush().empty()) {
                 _chart.brush().extent(_chart.filter());
             }
 
-            var gBrush = g.select('g.brush');
-            gBrush.call(_chart.brush().x(_chart.x()));
+            var gBrush = dc.optionalTransition(doTransition, _chart.transitionDuration())(g.select('g.brush'));
             _chart.setBrushY(gBrush);
+            gBrush.call(_chart.brush()
+                      .x(_chart.x())
+                      .extent(_chart.brush().extent()));
         }
 
         _chart.fadeDeselectedArea();
@@ -2881,7 +2961,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function getClipPathId() {
-        return _chart.anchorName().replace(/[ .#]/g, '-') + '-clip';
+        return _chart.anchorName().replace(/[ .#=\[\]]/g, '-') + '-clip';
     }
 
     /**
@@ -2945,24 +3025,26 @@ dc.coordinateGridMixin = function (_chart) {
             _brushOn = false;
         }
 
-        prepareXAxis(_chart.g());
+        prepareXAxis(_chart.g(), render);
         _chart._prepareYAxis(_chart.g());
 
         _chart.plotData();
 
-        if (_chart.elasticX() || _refocused || render) {
+        if (_chart.elasticX() || _resizing || render) {
             _chart.renderXAxis(_chart.g());
         }
 
-        if (_chart.elasticY() || render) {
+        if (_chart.elasticY() || _resizing || render) {
             _chart.renderYAxis(_chart.g());
         }
 
         if (render) {
-            _chart.renderBrush(_chart.g());
+            _chart.renderBrush(_chart.g(), false);
         } else {
-            _chart.redrawBrush(_chart.g());
+            _chart.redrawBrush(_chart.g(), _resizing);
         }
+        _chart.fadeDeselectedArea();
+        _resizing = false;
     }
 
     function configureMouseZoom () {
@@ -3001,7 +3083,7 @@ dc.coordinateGridMixin = function (_chart) {
     to null, then the zoom will be reset. _For focus to work elasticX has to be turned off;
     otherwise focus will be ignored._
     ```js
-    chart.renderlet(function(chart){
+    chart.on('renderlet', function(chart) {
         // smooth the rendering through event throttling
         dc.events.trigger(function(){
             // focus some other chart to the range selected by user on this chart
@@ -3259,9 +3341,8 @@ dc.stackMixin = function (_chart) {
     };
 
     function flattenStack() {
-        return _chart.data().reduce(function (all, layer) {
-            return all.concat(layer.values);
-        }, []);
+        var valueses = _chart.data().map(function (layer) { return layer.values; });
+        return Array.prototype.concat.apply([], valueses);
     }
 
     _chart.xAxisMin = function () {
@@ -3336,7 +3417,9 @@ dc.stackMixin = function (_chart) {
     });
 
     _chart._ordinalXDomain = function () {
-        return flattenStack().map(dc.pluck('x'));
+        var flat = flattenStack().map(dc.pluck('data'));
+        var ordered = _chart._computeOrderedGroups(flat);
+        return ordered.map(_chart.keyAccessor());
     };
 
     _chart.colorAccessor(function (d) {
@@ -3735,7 +3818,9 @@ dc.pieChart = function (parent, chartGroup) {
     var _emptyTitle = 'empty';
 
     var _radius,
-        _innerRadius = 0;
+        _givenRadius, // specified radius, if any
+        _innerRadius = 0,
+        _externalRadiusPadding = 0;
 
     var _g;
     var _cx;
@@ -3778,7 +3863,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     function drawChart() {
         // set radius on basis of chart dimension if missing
-        _radius = _radius ? _radius : d3.min([_chart.width(), _chart.height()]) / 2;
+        _radius = _givenRadius ? _givenRadius : d3.min([_chart.width(), _chart.height()]) / 2;
 
         var arc = buildArcs();
 
@@ -3806,6 +3891,9 @@ dc.pieChart = function (parent, chartGroup) {
             removeElements(slices);
 
             highlightFilter();
+
+            dc.transition(_g, _chart.transitionDuration())
+                .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
         }
     }
 
@@ -3845,7 +3933,7 @@ dc.pieChart = function (parent, chartGroup) {
     function createTitles(slicesEnter) {
         if (_chart.renderTitle()) {
             slicesEnter.append('title').text(function (d) {
-                return _chart.title()(d);
+                return _chart.title()(d.data);
             });
         }
     }
@@ -3946,6 +4034,20 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     /**
+     #### .externalRadiusPadding([externalRadiusPadding])
+     Get or set the external radius padding of the pie chart. This will force the radius of the
+     pie chart to become smaller or larger depending on the value.  Default external radius padding is 0px.
+
+     **/
+    _chart.externalRadiusPadding = function (_) {
+        if (!arguments.length) {
+            return _externalRadiusPadding;
+        }
+        _externalRadiusPadding = _;
+        return _chart;
+    };
+
+    /**
     #### .innerRadius([innerRadius])
     Get or set the inner radius of the pie chart. If the inner radius is greater than 0px then the
     pie chart will be rendered as a doughnut chart. Default inner radius is 0px.
@@ -3967,9 +4069,9 @@ dc.pieChart = function (parent, chartGroup) {
     **/
     _chart.radius = function (r) {
         if (!arguments.length) {
-            return _radius;
+            return _givenRadius;
         }
-        _radius = r;
+        _givenRadius = r;
         return _chart;
     };
 
@@ -4000,7 +4102,7 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     function buildArcs() {
-        return d3.svg.arc().outerRadius(_radius).innerRadius(_innerRadius);
+        return d3.svg.arc().outerRadius(_radius - _externalRadiusPadding).innerRadius(_innerRadius);
     }
 
     function isSelectedSlice(d) {
@@ -4107,8 +4209,8 @@ dc.pieChart = function (parent, chartGroup) {
         var centroid;
         if (_externalLabelRadius) {
             centroid = d3.svg.arc()
-                .outerRadius(_radius + _externalLabelRadius)
-                .innerRadius(_radius + _externalLabelRadius)
+                .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
+                .innerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
                 .centroid(d);
         } else {
             centroid = arc.centroid(d);
@@ -4201,6 +4303,7 @@ dc.barChart = function (parent, chartGroup) {
     dc.override(_chart, 'rescale', function () {
         _chart._rescale();
         _barWidth = undefined;
+        return _chart;
     });
 
     dc.override(_chart, 'render', function () {
@@ -4209,7 +4312,7 @@ dc.barChart = function (parent, chartGroup) {
                          'See dc.js bar chart API documentation for details.');
         }
 
-        _chart._render();
+        return _chart._render();
     });
 
     _chart.plotData = function () {
@@ -4519,6 +4622,7 @@ dc.lineChart = function (parent, chartGroup) {
     var _tension = 0.7;
     var _defined;
     var _dashStyle;
+    var _xyTipsOn = true;
 
     _chart.transitionDuration(500);
     _chart._rangeBandPadding(1);
@@ -4701,7 +4805,7 @@ dc.lineChart = function (parent, chartGroup) {
     }
 
     function drawDots(chartBody, layers) {
-        if (!_chart.brushOn()) {
+        if (!_chart.brushOn() && _chart.xyTipsOn()) {
             var tooltipListClass = TOOLTIP_G_CLASS + '-list';
             var tooltips = chartBody.select('g.' + tooltipListClass);
 
@@ -4805,6 +4909,20 @@ dc.lineChart = function (parent, chartGroup) {
             dot.append('title').text(dc.pluck('data', _chart.title(d.name)));
         }
     }
+
+    /**
+     #### .xyTipsOn([boolean])
+     Turn on/off the mouseover behavior of an individual data point which renders a circle and x/y axis
+     dashed lines back to each respective axis.  This is ignored if the chart brush is on (`brushOn`)
+     Default: true
+     */
+    _chart.xyTipsOn = function (_) {
+        if (!arguments.length) {
+            return _xyTipsOn;
+        }
+        _xyTipsOn = _;
+        return _chart;
+    };
 
     /**
     #### .dotRadius([dotRadius])
@@ -5016,6 +5134,10 @@ Includes: [Base Mixin](#base-mixin)
 The data table is a simple widget designed to list crossfilter focused data set (rows being
 filtered) in a good old tabular fashion.
 
+Note: Unlike other charts, the data table (and data grid chart) use the group attribute as a keying function
+for [nesting](https://github.com/mbostock/d3/wiki/Arrays#-nest) the data together in groups.
+Do not pass in a crossfilter group as this will not work.
+
 Examples:
 * [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 #### dc.dataTable(parent[, chartGroup])
@@ -5048,6 +5170,7 @@ dc.dataTable = function (parent, chartGroup) {
         return d;
     };
     var _order = d3.ascending;
+    var _showGroups = true;
 
     _chart._doRender = function () {
         _chart.selectAll('tbody').remove();
@@ -5138,15 +5261,17 @@ dc.dataTable = function (parent, chartGroup) {
             .enter()
             .append('tbody');
 
-        rowGroup
-            .append('tr')
-            .attr('class', GROUP_CSS_CLASS)
-                .append('td')
-                .attr('class', LABEL_CSS_CLASS)
-                .attr('colspan', _columns.length)
-                .html(function (d) {
-                    return _chart.keyAccessor()(d);
-                });
+        if (_showGroups === true) {
+            rowGroup
+                .append('tr')
+                .attr('class', GROUP_CSS_CLASS)
+                    .append('td')
+                    .attr('class', LABEL_CSS_CLASS)
+                    .attr('colspan', _columns.length)
+                    .html(function (d) {
+                        return _chart.keyAccessor()(d);
+                    });
+        }
 
         groups.exit().remove();
 
@@ -5340,6 +5465,26 @@ dc.dataTable = function (parent, chartGroup) {
         return _chart;
     };
 
+    /**
+    ### .showGroups(true|false)
+    Get or set if group rows will be shown. Default value ``` true ```
+    The .group() getter-setter must be provided in either case.
+
+    ```js
+        chart
+            .group([value], [name])
+            .showGroups(true|false);
+    ```
+
+    **/
+    _chart.showGroups = function (_) {
+        if (!arguments.length) {
+            return true;
+        }
+        _showGroups = _;
+        return _chart;
+    };
+
     return _chart.anchor(parent, chartGroup);
 };
 
@@ -5350,6 +5495,10 @@ dc.dataTable = function (parent, chartGroup) {
 
  Data grid is a simple widget designed to list the filtered records, providing
  a simple way to define how the items are displayed.
+
+ Note: Unlike other charts, the data grid chart (and data table) use the group attribute as a keying function
+ for [nesting](https://github.com/mbostock/d3/wiki/Arrays#-nest) the data together in groups.
+ Do not pass in a crossfilter group as this will not work.
 
  Examples:
  * [List of members of the european parliament](http://europarl.me/dc.js/web/ep/index.html)
@@ -5383,6 +5532,7 @@ dc.dataGrid = function (parent, chartGroup) {
         return d;
     };
     var _order = d3.ascending;
+    var _beginSlice = 0, _endSlice;
 
     var _htmlGroup = function (d) {
         return '<div class=\'' + GROUP_CSS_CLASS + '\'><h1 class=\'' + LABEL_CSS_CLASS + '\'>' +
@@ -5427,7 +5577,7 @@ dc.dataGrid = function (parent, chartGroup) {
             .sortKeys(_order)
             .entries(entries.sort(function (a, b) {
                 return _order(_sortBy(a), _sortBy(b));
-            }));
+            }).slice(_beginSlice, _endSlice));
     }
 
     function renderItems(groups) {
@@ -5451,6 +5601,34 @@ dc.dataGrid = function (parent, chartGroup) {
 
     _chart._doRedraw = function () {
         return _chart._doRender();
+    };
+
+    /**
+     #### .beginSlice([index])
+     Get or set the index of the beginning slice which determines which entries get displayed by the widget
+     Useful when implementing pagination.
+
+     **/
+    _chart.beginSlice = function (_) {
+        if (!arguments.length) {
+            return _beginSlice;
+        }
+        _beginSlice = _;
+        return _chart;
+    };
+
+    /**
+     #### .endSlice([index])
+     Get or set the index of the end slice which determines which entries get displayed by the widget
+     Useful when implementing pagination.
+
+     **/
+    _chart.endSlice = function (_) {
+        if (!arguments.length) {
+            return _endSlice;
+        }
+        _endSlice = _;
+        return _chart;
     };
 
     /**
@@ -5766,6 +5944,7 @@ dc.compositeChart = function (parent, chartGroup) {
             child.transitionDuration(_chart.transitionDuration());
             child.brushOn(_chart.brushOn());
             child.renderTitle(_chart.renderTitle());
+            child.elasticX(_chart.elasticX());
         }
 
         return g;
@@ -5809,7 +5988,9 @@ dc.compositeChart = function (parent, chartGroup) {
 
     function prepareRightYAxis() {
         if (_chart.rightY() === undefined || _chart.elasticY()) {
-            _chart.rightY(d3.scale.linear());
+            if (_chart.rightY() === undefined) {
+                _chart.rightY(d3.scale.linear());
+            }
             _chart.rightY().domain([rightYAxisMin(), rightYAxisMax()]).rangeRound([_chart.yAxisHeight(), 0]);
         }
 
@@ -5821,7 +6002,9 @@ dc.compositeChart = function (parent, chartGroup) {
 
     function prepareLeftYAxis() {
         if (_chart.y() === undefined || _chart.elasticY()) {
-            _chart.y(d3.scale.linear());
+            if (_chart.y() === undefined) {
+                _chart.y(d3.scale.linear());
+            }
             _chart.y().domain([yAxisMin(), yAxisMax()]).rangeRound([_chart.yAxisHeight(), 0]);
         }
 
@@ -6011,6 +6194,7 @@ dc.compositeChart = function (parent, chartGroup) {
             return _rightY;
         }
         _rightY = _;
+        _chart.rescale();
         return _chart;
     };
 
@@ -8019,8 +8203,8 @@ dc.heatMap = function (parent, chartGroup) {
             .on('click', _chart.boxOnClick());
 
         if (_chart.renderTitle()) {
-            gEnter.append('title')
-                .text(_chart.title());
+            gEnter.append('title');
+            boxes.selectAll('title').text(_chart.title());
         }
 
         dc.transition(boxes.selectAll('rect'), _chart.transitionDuration())
@@ -8737,3 +8921,5 @@ return dc;}
     }
 }
 )();
+
+//# sourceMappingURL=dc.js.map

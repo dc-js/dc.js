@@ -190,6 +190,19 @@ describe('dc.pieChart', function() {
                 expect(chart.select("svg g").attr("transform")).toMatchTranslate(newCenter.x, newCenter.y);
             });
         });
+        describe('with radius padding', function() {
+            beforeEach(function() {
+                chart.externalRadiusPadding(17)
+                    .render();
+                return chart;
+            });
+            it('should not change center', function() {
+                expect(chart.select("svg g").attr("transform")).toMatchTranslate(defaultCenter.x, defaultCenter.y);
+            });
+            it('should decrease outer radius', function() {
+                expect(chart.select("svg g.pie-slice path").attr('d')).toContainPath("A83,83 0 0,1 78,-25");
+            });
+        });
 
         describe('re-render', function() {
             beforeEach(function() {
@@ -478,7 +491,7 @@ describe('dc.pieChart', function() {
         var chart;
         beforeEach(function() {
             chart = buildChart("chart-renderlet");
-            chart.renderlet(function() {
+            chart.on("renderlet", function() {
                 chart.selectAll("path").attr("fill", "red");
             });
         });

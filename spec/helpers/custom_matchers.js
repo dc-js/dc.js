@@ -59,8 +59,34 @@ function compareWithinDelta(actual, expected, delta){
     return result;
 }
 
-// note: to make this reusable as a boolean predicate, it only returns the first
+// note: to make these reusable as boolean predicates, they only returns the first
 // failure instead of using expect
+
+function compareSubPath(got, wanted, i, j, delta) {
+    for(var k = 0; k!=wanted.length; ++k) {
+        var command_num = "path command #" + i+k;
+        if(got[i+k].op.toUpperCase() != wanted[j+k].op.toUpperCase())
+            return {
+                pass: false,
+                message: command_num + " actual '" + got[i+k].op.toUpperCase() +
+                    "' != expected '" + wanted[j+k].op.toUpperCase() + "'"
+            };
+        if(got[i+k].args.length != wanted[j+k].args.length)
+            return {
+                pass: false,
+                message: command_num + " number of arguments " +
+                    got[i+k].args.length + " != expected " + wanted[j+k].args.length
+            };
+        for(var h = 0; h<got[i+k].args.length; ++h) {
+            var result = compareWithinDelta(got[i+k].args[h], wanted[j+k].args[h], delta);
+            if(!result.pass) {
+                result.message = command_num + ", element " + h + ": " + result.message;
+                return result;
+            }
+        }
+    }
+    return {pass: true};
+}
 function comparePaths(actual, expected, delta) {
     delta = delta || 1; // default delta of 1px
     var got = parsePath(actual),
@@ -71,29 +97,22 @@ function comparePaths(actual, expected, delta) {
             message: "actual number of path cmds " + actual.length +
                 " did not match expected number " + expected.length
         };
-    for(var i = 0; i!=got.length; ++i) {
-        var command_num = "path command #" + i;
-        if(got[i].op.toUpperCase() != wanted[i].op.toUpperCase())
-            return {
-                pass: false,
-                message: command_num + " actual '" + got[i].op.toUpperCase() +
-                    "' != expected '" + wanted[i].op.toUpperCase() + "'"
-            };
-        if(got[i].args.length != wanted[i].args.length)
-            return {
-                pass: false,
-                message: command_num + " number of arguments " +
-                    got[i].args.length + " != expected " + wanted[i].args.length
-            };
-        for(var j = 0; j<got[i].args.length; ++j) {
-            var result = compareWithinDelta(got[i].args[j], wanted[i].args[j], delta);
-            if(!result.pass) {
-                result.message = command_num + ": " + result.message;
-                return result;
-            }
-        }
+    return compareSubPath(got, wanted, 0, 0, delta);
+}
+function findSubPath(actual, expected, delta) {
+    delta = delta || 1; // default delta of 1px
+    var got = parsePath(actual),
+        wanted = parsePath(expected),
+        end = got.length - wanted.length;
+    for(var i = 0; i<end; ++i) {
+        var result = compareSubPath(got, wanted, i, 0, delta);
+        if(result.pass)
+            return result;
     }
-    return {pass: true};
+    return {
+        pass: false,
+        message: "did not find expected subpath '" + expected + "' in actual path '" + actual + "'"
+    };
 }
 
 beforeEach(function(){
@@ -142,6 +161,11 @@ beforeEach(function(){
         toMatchPath: function() {
             return {
                 compare: comparePaths
+            };
+        },
+        toContainPath: function() {
+            return {
+                compare: findSubPath
             };
         }
     });
