@@ -38,6 +38,7 @@ dc.pieChart = function (parent, chartGroup) {
     var _cy;
     var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
     var _externalLabelRadius;
+    var _drawPaths = false;
     var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
 
     _chart.colorAccessor(_chart.cappedKeyAccessor);
@@ -185,7 +186,44 @@ dc.pieChart = function (parent, chartGroup) {
                 })
                 .on('click', onClick);
             positionLabels(labelsEnter, arc);
+            if(_externalLabelRadius && _drawPaths){
+              createLabelPaths(pieData, arc);
+            }
         }
+    }
+
+    function createLabelPaths(pieData, arc) {
+      var polyline = _g.selectAll('polyline.'+ _sliceCssClass)
+        .data(pieData);
+
+      var polylineEnter = polyline
+        .enter()
+        .append('polyline')
+        .attr('class', function(d, i){
+          return 'pie-path _' + i + ' ' + _sliceCssClass;
+        });
+
+      polyline.exit().remove();
+      dc.transition(polylineEnter, _chart.transitionDuration())
+        .attrTween('points', function(d){
+          this._current = this._current || d;
+          var interpolate = d3.interpolate(this._current, d);
+          this._current = interpolate(0);
+          return function(t){
+            var centroid, centroid2;
+            centroid = d3.svg.arc()
+                .outerRadius(_radius + _externalLabelRadius)
+                .innerRadius(_radius + _externalLabelRadius)
+                .centroid(d);
+            centroid2 = d3.svg.arc()
+                .outerRadius(_radius + _externalLabelRadius)
+                .innerRadius(_radius)
+                .centroid(d);
+            var d2 = interpolate(t);
+            return [arc.centroid(d2), centroid2];
+          };
+        });
+
     }
 
     function updateElements (pieData, arc) {
@@ -489,6 +527,13 @@ dc.pieChart = function (parent, chartGroup) {
             }
         });
     }
+    _chart.drawPaths = function (d) {
+        if (arguments.length === 0) {
+            return _drawPaths;
+        }
+        _drawPaths = d;
+        return _chart;
+    };
 
     return _chart.anchor(parent, chartGroup);
 };
