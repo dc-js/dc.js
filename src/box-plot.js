@@ -37,13 +37,9 @@ dc.boxPlot = function (parent, chartGroup) {
                 iqr = (q3 - q1) * k,
                 i = -1,
                 j = d.length;
-            /*jshint -W116*/
-            /*jshint -W035*/
-            while (d[++i] < q1 - iqr) {}
-            while (d[--j] > q3 + iqr) {}
-            /*jshint +W116*/
+            do { ++i; } while (d[i] < q1 - iqr);
+            do { --j; } while (d[j] > q3 + iqr);
             return [i, j];
-            /*jshint +W035*/
         };
     }
 

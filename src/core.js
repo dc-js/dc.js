@@ -17,7 +17,6 @@ that are chainable d3 objects.)
 
 **/
 
-/*jshint -W062*/
 /*jshint -W079*/
 var dc = {
     version: '<%= conf.pkg.version %>',
@@ -35,8 +34,9 @@ var dc = {
     },
     _renderlet: null
 };
+/*jshint +W079*/
 
-dc.chartRegistry = function () {
+dc.chartRegistry = (function () {
     // chartGroup:string => charts:array
     var _chartMap = {};
 
@@ -90,9 +90,7 @@ dc.chartRegistry = function () {
             return _chartMap[group];
         }
     };
-}();
-/*jshint +W062 */
-/*jshint +W079*/
+})();
 
 dc.registerChart = function (chart, group) {
     dc.chartRegistry.register(chart, group);
