@@ -46,9 +46,9 @@ dc.pieChart = function (parent, chartGroup) {
     var _g;
     var _cx;
     var _cy;
-    var _drawPaths = true;
     var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
     var _externalLabelRadius;
+    var _drawPaths = false;
     var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
 
     _chart.colorAccessor(_chart.cappedKeyAccessor);
@@ -191,20 +191,21 @@ dc.pieChart = function (parent, chartGroup) {
                 })
                 .on('click', onClick);
             positionLabels(labelsEnter, arc);
-            if(_externalLabelRadius && _drawPaths)
+            if(_externalLabelRadius && _drawPaths){
               createLabelPaths(pieData, arc);
+            }
         }
     }
 
-    function createLabelPaths(pieData, arc){
+    function createLabelPaths(pieData, arc) {
       var polyline = _g.selectAll('polyline.'+ _sliceCssClass)
-        .data(pieData, function(d){return d.data.key;});
+        .data(pieData);
 
       var polylineEnter = polyline
         .enter()
         .append('polyline')
         .attr('class', function(d, i){
-          return 'pie-path _'+i+" "+_sliceCssClass;
+          return 'pie-path _' + i + ' ' + _sliceCssClass;
         });
         
       polyline.exit().remove();
@@ -225,7 +226,7 @@ dc.pieChart = function (parent, chartGroup) {
                 .centroid(d);
             var d2 = interpolate(t);
             return [arc.centroid(d2), centroid2];
-          }
+          };
         });
         
     }
@@ -490,6 +491,13 @@ dc.pieChart = function (parent, chartGroup) {
             }
         });
     }
+    _chart.drawPaths = function (d) {
+        if (arguments.length === 0) {
+            return _drawPaths;
+        }
+        _drawPaths = d;
+        return _chart;
+    };
 
     return _chart.anchor(parent, chartGroup);
 };
