@@ -5,7 +5,8 @@
  * - [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
  * @name lineChart
  * @memberOf dc
- * @mixes stackMixin,coordinateGridMixin
+ * @mixes dc.stackMixin
+ * @mixes dc.coordinateGridMixin
  * @example
  * // create a line chart under #chart-container1 element using the default global chart group
  * var chart1 = dc.lineChart('#chart-container1');

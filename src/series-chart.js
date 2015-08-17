@@ -4,7 +4,7 @@
  * composite features other than recomposing the chart.
  * @name seriesChart
  * @memberOf dc
- * @mixes compositeChart
+ * @mixes dc.compositeChart
  * @example
  * // create a series chart under #chart-container1 element using the default global chart group
  * var seriesChart1 = dc.seriesChart("#chart-container1");

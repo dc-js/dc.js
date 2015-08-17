@@ -4,7 +4,7 @@
  * a valueAccessor that returns a single value.
  * @name numberDisplay
  * @memberOf dc
- * @mixes baseMixin
+ * @mixes dc.baseMixin
  * @example
  * // create a number display under #chart-container1 element using the default global chart group
  * var display1 = dc.numberDisplay('#chart-container1');

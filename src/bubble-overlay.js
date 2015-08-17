@@ -7,7 +7,8 @@
  * - [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
  * @name bubbleOverlay
  * @memberOf dc
- * @mixes bubbleMixin,baseMixin
+ * @mixes dc.bubbleMixin
+ * @mixes dc.baseMixin
  * @example
  * // create a bubble overlay chart on top of the '#chart-container1 svg' element using the default global chart group
  * var bubbleChart1 = dc.bubbleOverlayChart('#chart-container1').svg(d3.select('#chart-container1 svg'));

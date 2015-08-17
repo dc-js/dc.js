@@ -5,7 +5,8 @@
  * - [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
  * @name barChart
  * @memberOf dc
- * @mixes baseMixin
+ * @mixes dc.stackMixin
+ * @mixes dc.coordinateGridMixin
  * @example
  * // create a bar chart under #chart-container1 element using the default global chart group
  * var chart1 = dc.barChart('#chart-container1');

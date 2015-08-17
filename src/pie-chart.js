@@ -5,7 +5,9 @@
  * by key.
  * @name pieChart
  * @memberOf dc
- * @mixes capMixin,colorMixin,baseMixin
+ * @mixes dc.capMixin
+ * @mixes dc.colorMixin
+ * @mixes dc.baseMixin
  * @example
  * // create a pie chart under #chart-container1 element using the default global chart group
  * var chart1 = dc.pieChart('#chart-container1');

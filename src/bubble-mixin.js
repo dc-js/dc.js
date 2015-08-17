@@ -3,7 +3,7 @@
  * @name bubbleMixin
  * @memberOf dc
  * @mixin
- * @mixes colorMixin
+ * @mixes dc.colorMixin
  * @param {Chart} _chart
  * @returns {Chart}
  */

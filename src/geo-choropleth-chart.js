@@ -5,7 +5,8 @@
  * - [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
  * @name geoChoroplethChart
  * @memberOf dc
- * @mixes colorMixin,baseMixin
+ * @mixes dc.colorMixin
+ * @mixes dc.baseMixin
  * @example
  * // create a choropleth chart under '#us-chart' element using the default global chart group
  * var chart1 = dc.geoChoroplethChart('#us-chart');

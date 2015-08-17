@@ -5,7 +5,7 @@
  * - [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
  * @name boxPlot
  * @memberOf dc
- * @mixes coordinateGridMixin
+ * @mixes dc.coordinateGridMixin
  * @example
  * // create a box plot under #chart-container1 element using the default global chart group
  * var boxPlot1 = dc.boxPlot('#chart-container1');

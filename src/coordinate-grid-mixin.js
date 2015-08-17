@@ -4,7 +4,9 @@
  * @name coordinateGridMixin
  * @memberOf dc
  * @mixin
- * @mixes colorMixin,marginMixin,baseMixin
+ * @mixes dc.colorMixin
+ * @mixes dc.marginMixin
+ * @mixes dc.baseMixin
  * @param {Chart} _chart
  * @returns {Chart}
  */

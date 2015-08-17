@@ -1144,7 +1144,7 @@ Coordinate Grid is an abstract base chart designed to support a number of coordi
 concrete chart types, e.g. bar chart, line chart, and bubble chart.
 
 **Kind**: static mixin of <code>[dc](#dc)</code>  
-**Mixes**: <code>colorMixin,marginMixin,baseMixin</code>  
+**Mixes**: <code>[colorMixin](#dc.colorMixin)</code>, <code>[marginMixin](#dc.marginMixin)</code>, <code>[baseMixin](#dc.baseMixin)</code>  
 
 | Param | Type |
 | --- | --- |
@@ -1761,7 +1761,7 @@ chart.othersGrouper(function (data) {
 This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.
 
 **Kind**: static mixin of <code>[dc](#dc)</code>  
-**Mixes**: <code>colorMixin</code>  
+**Mixes**: <code>[colorMixin](#dc.colorMixin)</code>  
 
 | Param | Type |
 | --- | --- |
@@ -2023,7 +2023,7 @@ slice relative to the sum of all values. Slices are ordered by `.ordering` which
 by key.
 
 **Kind**: static property of <code>[dc](#dc)</code>  
-**Mixes**: <code>capMixin,colorMixin,baseMixin</code>  
+**Mixes**: <code>[capMixin](#dc.capMixin)</code>, <code>[colorMixin](#dc.colorMixin)</code>, <code>[baseMixin](#dc.baseMixin)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -2154,7 +2154,7 @@ Examples:
 - [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
 
 **Kind**: static property of <code>[dc](#dc)</code>  
-**Mixes**: <code>baseMixin</code>  
+**Mixes**: <code>[stackMixin](#dc.stackMixin)</code>, <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -2251,7 +2251,7 @@ Examples:
 - [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
 
 **Kind**: static property of <code>[dc](#dc)</code>  
-**Mixes**: <code>stackMixin,coordinateGridMixin</code>  
+**Mixes**: <code>[stackMixin](#dc.stackMixin)</code>, <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -2400,7 +2400,7 @@ Examples:
 - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 
 **Kind**: static property of <code>[dc](#dc)</code>  
-**Mixes**: <code>baseMixin</code>  
+**Mixes**: <code>[baseMixin](#dc.baseMixin)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -2469,7 +2469,7 @@ Examples:
 - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 
 **Kind**: static property of <code>[dc](#dc)</code>  
-**Mixes**: <code>baseMixin</code>  
+**Mixes**: <code>[baseMixin](#dc.baseMixin)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -2625,7 +2625,7 @@ Examples:
 - [List of members of the european parliament](http://europarl.me/dc.js/web/ep/index.html)
 
 **Kind**: static property of <code>[dc](#dc)</code>  
-**Mixes**: <code>baseMixin</code>  
+**Mixes**: <code>[baseMixin](#dc.baseMixin)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -2748,7 +2748,7 @@ Examples:
 - [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
 
 **Kind**: static property of <code>[dc](#dc)</code>  
-**Mixes**: <code>bubbleMixin,coordinateGridMixin</code>  
+**Mixes**: <code>[bubbleMixin](#dc.bubbleMixin)</code>, <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -2780,7 +2780,7 @@ Grid. You can overlay (compose) different bar/line/area charts in a single compo
 achieve some quite flexible charting effects.
 
 **Kind**: static property of <code>[dc](#dc)</code>  
-**Mixes**: <code>coordinateGridMixin</code>  
+**Mixes**: <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -2937,7 +2937,7 @@ series is specified in the data. It is a specialization of Composite Chart and i
 composite features other than recomposing the chart.
 
 **Kind**: static property of <code>[dc](#dc)</code>  
-**Mixes**: <code>compositeChart</code>  
+**Mixes**: <code>[compositeChart](#dc.compositeChart)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -3020,7 +3020,7 @@ Examples:
 - [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
 
 **Kind**: static property of <code>[dc](#dc)</code>  
-**Mixes**: <code>colorMixin,baseMixin</code>  
+**Mixes**: <code>[colorMixin](#dc.colorMixin)</code>, <code>[baseMixin](#dc.baseMixin)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -3110,7 +3110,7 @@ Examples:
 - [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
 
 **Kind**: static property of <code>[dc](#dc)</code>  
-**Mixes**: <code>bubbleMixin,baseMixin</code>  
+**Mixes**: <code>[bubbleMixin](#dc.bubbleMixin)</code>, <code>[baseMixin](#dc.baseMixin)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -3170,7 +3170,7 @@ value specified here are relative to the underlying svg.
 Concrete row chart implementation.
 
 **Kind**: static property of <code>[dc](#dc)</code>  
-**Mixes**: <code>capMixin,marginMixin,colorMixin,baseMixin</code>  
+**Mixes**: <code>[capMixin](#dc.capMixin)</code>, <code>[marginMixin](#dc.marginMixin)</code>, <code>[colorMixin](#dc.colorMixin)</code>, <code>[baseMixin](#dc.baseMixin)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -3408,7 +3408,7 @@ This setting takes into account gap().
 A scatter plot chart
 
 **Kind**: static property of <code>[dc](#dc)</code>  
-**Mixes**: <code>coordinateGridMixin</code>  
+**Mixes**: <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -3493,7 +3493,7 @@ Unlike other charts, you do not need to set a dimension. Instead a group object 
 a valueAccessor that returns a single value.
 
 **Kind**: static property of <code>[dc](#dc)</code>  
-**Mixes**: <code>baseMixin</code>  
+**Mixes**: <code>[baseMixin](#dc.baseMixin)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -3552,7 +3552,7 @@ Get or set a function to format the value for the display.
 A heat map is matrix that represents the values of two dimensions of data using colors.
 
 **Kind**: static property of <code>[dc](#dc)</code>  
-**Mixes**: <code>colorMixin,marginMixin,baseMixin</code>  
+**Mixes**: <code>[colorMixin](#dc.colorMixin)</code>, <code>[marginMixin](#dc.marginMixin)</code>, <code>[baseMixin](#dc.baseMixin)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -3697,7 +3697,7 @@ Examples:
 - [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
 
 **Kind**: static property of <code>[dc](#dc)</code>  
-**Mixes**: <code>coordinateGridMixin</code>  
+**Mixes**: <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |

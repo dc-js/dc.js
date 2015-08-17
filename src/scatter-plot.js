@@ -2,7 +2,7 @@
  * A scatter plot chart
  * @name scatterPlot
  * @memberOf dc
- * @mixes coordinateGridMixin
+ * @mixes dc.coordinateGridMixin
  * @example
  * // create a scatter plot under #chart-container1 element using the default global chart group
  * var chart1 = dc.scatterPlot('#chart-container1');

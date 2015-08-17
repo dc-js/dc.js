@@ -10,7 +10,7 @@
  * - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
  * @name dataTable
  * @memberOf dc
- * @mixes baseMixin
+ * @mixes dc.baseMixin
  * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
  * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
  * a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart

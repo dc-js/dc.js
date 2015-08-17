@@ -10,7 +10,8 @@
  * - [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
  * @name bubbleChart
  * @memberOf dc
- * @mixes bubbleMixin,coordinateGridMixin
+ * @mixes dc.bubbleMixin
+ * @mixes dc.coordinateGridMixin
  * @example
  * // create a bubble chart under #chart-container1 element using the default global chart group
  * var bubbleChart1 = dc.bubbleChart('#chart-container1');

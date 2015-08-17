@@ -2,7 +2,10 @@
  * Concrete row chart implementation.
  * @name rowChart
  * @memberOf dc
- * @mixes capMixin,marginMixin,colorMixin,baseMixin
+ * @mixes dc.capMixin
+ * @mixes dc.marginMixin
+ * @mixes dc.colorMixin
+ * @mixes dc.baseMixin
  * @example
  * // create a row chart under #chart-container1 element using the default global chart group
  * var chart1 = dc.rowChart('#chart-container1');

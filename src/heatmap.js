@@ -2,7 +2,9 @@
  * A heat map is matrix that represents the values of two dimensions of data using colors.
  * @name heatMap
  * @memberOf dc
- * @mixes colorMixin,marginMixin,baseMixin
+ * @mixes dc.colorMixin
+ * @mixes dc.marginMixin
+ * @mixes dc.baseMixin
  * @example
  * // create a heat map under #chart-container1 element using the default global chart group
  * var heatMap1 = dc.heatMap('#chart-container1');

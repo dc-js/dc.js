@@ -4,7 +4,7 @@
  * achieve some quite flexible charting effects.
  * @name compositeChart
  * @memberOf dc
- * @mixes coordinateGridMixin
+ * @mixes dc.coordinateGridMixin
  * @example
  * // create a composite chart under #chart-container1 element using the default global chart group
  * var compositeChart1 = dc.compositeChart('#chart-container1');

@@ -10,7 +10,7 @@
  * - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
  * @name dataCount
  * @memberOf dc
- * @mixes baseMixin
+ * @mixes dc.baseMixin
  * @example
  * var ndx = crossfilter(data);
  * var all = ndx.groupAll();
