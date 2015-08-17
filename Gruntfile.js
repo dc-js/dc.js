@@ -185,10 +185,7 @@ module.exports = function (grunt) {
         },
         jsdoc2md: {
             dist: {
-                src: ['src/{bar-chart,base-mixin,box-plot,bubble-chart,bubble-mixin,' +
-                        'bubble-overlay,cap-mixin,color-mixin,core,geo-choropleth-chart,' +
-                        'heatmap,legend,line-chart,margin-mixin,number-display,pie-chart,row-chart,' +
-                        'scatter-plot,series-chart,stack-mixin}.js'],
+                src: 'dc.js',
                 dest: 'web/docs/api-latest.md'
             }
         },
