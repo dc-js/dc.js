@@ -1,34 +1,23 @@
 /**
- ## Series Chart
-
- Includes: [Composite Chart](#composite chart)
-
- A series chart is a chart that shows multiple series of data overlaid on one chart, where the
- series is specified in the data. It is a specialization of Composite Chart and inherits all
- composite features other than recomposing the chart.
-
- #### dc.seriesChart(parent[, chartGroup])
- Create a series chart instance and attach it to the given parent element.
-
- Parameters:
-* parent : string | node | selection - any valid
- [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- a dom block element such as a div; or a dom element or d3 selection.
-
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
- Interaction with a chart will only trigger events and redraws within the chart's group.
-
- Returns:
- A newly created series chart instance
-
- ```js
- // create a series chart under #chart-container1 element using the default global chart group
- var seriesChart1 = dc.seriesChart("#chart-container1");
- // create a series chart under #chart-container2 element using chart group A
- var seriesChart2 = dc.seriesChart("#chart-container2", "chartGroupA");
- ```
-
- **/
+ * A series chart is a chart that shows multiple series of data overlaid on one chart, where the
+ * series is specified in the data. It is a specialization of Composite Chart and inherits all
+ * composite features other than recomposing the chart.
+ * @name seriesChart
+ * @memberOf dc
+ * @mixes compositeChart
+ * @example
+ * // create a series chart under #chart-container1 element using the default global chart group
+ * var seriesChart1 = dc.seriesChart("#chart-container1");
+ * // create a series chart under #chart-container2 element using chart group A
+ * var seriesChart2 = dc.seriesChart("#chart-container2", "chartGroupA");
+ * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
+ * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ * a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart
+ * in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+ * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+ * Interaction with a chart will only trigger events and redraws within the chart's group.
+ * @returns {SeriesChart}
+ */
 dc.seriesChart = function (parent, chartGroup) {
     var _chart = dc.compositeChart(parent, chartGroup);
 
@@ -98,17 +87,18 @@ dc.seriesChart = function (parent, chartGroup) {
     }
 
     /**
-     #### .chart([function])
-     Get or set the chart function, which generates the child charts.  Default: dc.lineChart
-
-     ```
-     // put interpolation on the line charts used for the series
-     chart.chart(function(c) { return dc.lineChart(c).interpolate('basis'); })
-     // do a scatter series chart
-     chart.chart(dc.scatterPlot)
-     ```
-
-     **/
+     * Get or set the chart function, which generates the child charts.
+     * @name chart
+     * @memberOf dc.seriesChart
+     * @instance
+     * @example
+     * // put interpolation on the line charts used for the series
+     * chart.chart(function(c) { return dc.lineChart(c).interpolate('basis'); })
+     * // do a scatter series chart
+     * chart.chart(dc.scatterPlot)
+     * @param {Function} chartFunction=dc.lineChart
+     * @returns {Chart}
+     */
     _chart.chart = function (_) {
         if (!arguments.length) {
             return _chartFunction;
@@ -119,10 +109,14 @@ dc.seriesChart = function (parent, chartGroup) {
     };
 
     /**
-     #### .seriesAccessor([accessor])
-     Get or set accessor function for the displayed series. Given a datum, this function
-     should return the series that datum belongs to.
-     **/
+     * Get or set accessor function for the displayed series. Given a datum, this function
+     * should return the series that datum belongs to.
+     * @name seriesAccessor
+     * @memberOf dc.seriesChart
+     * @instance
+     * @param {Function} [accessor]
+     * @returns {Chart}
+     */
     _chart.seriesAccessor = function (_) {
         if (!arguments.length) {
             return _seriesAccessor;
@@ -133,14 +127,15 @@ dc.seriesChart = function (parent, chartGroup) {
     };
 
     /**
-     #### .seriesSort([sortFunction])
-     Get or set a function to sort the list of series by, given series values.
-
-     Example:
-     ```
-     chart.seriesSort(d3.descending);
-     ```
-     **/
+     * Get or set a function to sort the list of series by, given series values.
+     * @name seriesSort
+     * @memberOf dc.seriesChart
+     * @instance
+     * @example
+     * chart.seriesSort(d3.descending);
+     * @param {Function} [sortFunction]
+     * @returns {Chart}
+     */
     _chart.seriesSort = function (_) {
         if (!arguments.length) {
             return _seriesSort;
@@ -151,11 +146,15 @@ dc.seriesChart = function (parent, chartGroup) {
     };
 
     /**
-     #### .valueSort([sortFunction])
-     Get or set a function to sort each series values by. By default this is the key accessor which,
-     for example, will ensure a lineChart series connects its points in increasing key/x order,
-     rather than haphazardly.
-    **/
+     * Get or set a function to sort each series values by. By default this is the key accessor which,
+     * for example, will ensure a lineChart series connects its points in increasing key/x order,
+     * rather than haphazardly.
+     * @name valueSort
+     * @memberOf dc.seriesChart
+     * @instance
+     * @param {Function} [sortFunction]
+     * @returns {Chart}
+     */
     _chart.valueSort = function (_) {
         if (!arguments.length) {
             return _valueSort;

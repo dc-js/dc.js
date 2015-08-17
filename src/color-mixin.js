@@ -1,10 +1,4 @@
 /**
-## Color Mixin
-The Color Mixin is an abstract chart functional class providing universal coloring support
-as a mix-in for any concrete chart implementation.
-
-**/
-/**
  * The Color Mixin is an abstract chart functional class providing universal coloring support
  * as a mix-in for any concrete chart implementation.
  * @name colorMixin

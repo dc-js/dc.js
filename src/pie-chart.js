@@ -1,38 +1,24 @@
 /**
-## Pie Chart
-Includes: [Cap Mixin](#cap-mixin), [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
-
-The pie chart implementation is usually used to visualize a small categorical distribution.  The pie
-chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
-slice relative to the sum of all values. Slices are ordered by `.ordering` which defaults to sorting
-by key.
-
-Examples:
-
-* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
-#### dc.pieChart(parent[, chartGroup])
-Create a pie chart instance and attaches it to the given parent element.
-
-Parameters:
-
-* parent : string | node | selection - any valid
- [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- a dom block element such as a div; or a dom element or d3 selection.
-
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
- Interaction with a chart will only trigger events and redraws within the chart's group.
-
-Returns:
-A newly created pie chart instance
-
-```js
-// create a pie chart under #chart-container1 element using the default global chart group
-var chart1 = dc.pieChart('#chart-container1');
-// create a pie chart under #chart-container2 element using chart group A
-var chart2 = dc.pieChart('#chart-container2', 'chartGroupA');
-```
-
-**/
+ * The pie chart implementation is usually used to visualize a small categorical distribution.  The pie
+ * chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
+ * slice relative to the sum of all values. Slices are ordered by `.ordering` which defaults to sorting
+ * by key.
+ * @name pieChart
+ * @memberOf dc
+ * @mixes capMixin,colorMixin,baseMixin
+ * @example
+ * // create a pie chart under #chart-container1 element using the default global chart group
+ * var chart1 = dc.pieChart('#chart-container1');
+ * // create a pie chart under #chart-container2 element using chart group A
+ * var chart2 = dc.pieChart('#chart-container2', 'chartGroupA');
+ * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
+ * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ * a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart
+ * in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+ * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+ * Interaction with a chart will only trigger events and redraws within the chart's group.
+ * @returns {PieChart}
+ */
 dc.pieChart = function (parent, chartGroup) {
     var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
@@ -59,12 +45,14 @@ dc.pieChart = function (parent, chartGroup) {
     });
 
     /**
-    #### .slicesCap([cap])
-    Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
-    value from high to low. Other slices exeeding the cap will be rolled up into one single *Others* slice.
-    The resulting data will still be sorted by .ordering (default by key).
-
-    **/
+     * Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
+     * value from high to low. Other slices exeeding the cap will be rolled up into one single *Others* slice.
+     * @name slicesCap
+     * @memberOf dc.pieChart
+     * @instance
+     * @param {Number} [cap]
+     * @returns {Chart}
+     */
     _chart.slicesCap = _chart.cap;
 
     _chart.label(_chart.cappedKeyAccessor);
@@ -257,11 +245,14 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     /**
-     #### .externalRadiusPadding([externalRadiusPadding])
-     Get or set the external radius padding of the pie chart. This will force the radius of the
-     pie chart to become smaller or larger depending on the value.  Default external radius padding is 0px.
-
-     **/
+     * Get or set the external radius padding of the pie chart. This will force the radius of the
+     * pie chart to become smaller or larger depending on the value.
+     * @name externalRadiusPadding
+     * @memberOf dc.pieChart
+     * @instance
+     * @param {Number} [externalRadiusPadding=0]
+     * @returns {Chart}
+     */
     _chart.externalRadiusPadding = function (_) {
         if (!arguments.length) {
             return _externalRadiusPadding;
@@ -271,11 +262,14 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .innerRadius([innerRadius])
-    Get or set the inner radius of the pie chart. If the inner radius is greater than 0px then the
-    pie chart will be rendered as a doughnut chart. Default inner radius is 0px.
-
-    **/
+     * Get or set the inner radius of the pie chart. If the inner radius is greater than 0px then the
+     * pie chart will be rendered as a doughnut chart.
+     * @name innerRadius
+     * @memberOf dc.pieChart
+     * @instance
+     * @param {Number} [innerRadius=0]
+     * @returns {Chart}
+     */
     _chart.innerRadius = function (r) {
         if (!arguments.length) {
             return _innerRadius;
@@ -285,11 +279,14 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .radius([radius])
-    Get or set the outer radius. If the radius is not set, it will be half of the minimum of the
-    chart width and height.
-
-    **/
+     * Get or set the outer radius. If the radius is not set, it will be half of the minimum of the
+     * chart width and height.
+     * @name radius
+     * @memberOf dc.pieChart
+     * @instance
+     * @param {Number} [radius]
+     * @returns {Chart}
+     */
     _chart.radius = function (r) {
         if (!arguments.length) {
             return _givenRadius;
@@ -299,10 +296,13 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .cx([cx])
-    Get or set center x coordinate position. Default is center of svg.
-
-    **/
+     * Get or set center x coordinate position. Default is center of svg.
+     * @name cx
+     * @memberOf dc.pieChart
+     * @instance
+     * @param {Number} [cx]
+     * @returns {Chart}
+     */
     _chart.cx = function (cx) {
         if (!arguments.length) {
             return (_cx ||  _chart.width() / 2);
@@ -312,10 +312,13 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .cy([cy])
-    Get or set center y coordinate position. Default is center of svg.
-
-    **/
+     * Get or set center y coordinate position. Default is center of svg.
+     * @name cy
+     * @memberOf dc.pieChart
+     * @instance
+     * @param {Number} [cy]
+     * @returns {Chart}
+     */
     _chart.cy = function (cy) {
         if (!arguments.length) {
             return (_cy ||  _chart.height() / 2);
@@ -338,10 +341,14 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .minAngleForLabel([minAngle])
-    Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
-    display a slice label.  Default min angle is 0.5.
-    **/
+     * Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
+     * display a slice label.
+     * @name minAngleForLabel
+     * @memberOf dc.pieChart
+     * @instance
+     * @param {Number} [minAngleForLabel=0.5]
+     * @returns {Chart}
+     */
     _chart.minAngleForLabel = function (_) {
         if (!arguments.length) {
             return _minAngleForLabel;
@@ -399,8 +406,12 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     /**
-     #### .emptyTitle([title])
-     Title to use for the only slice when there is no data
+     * Title to use for the only slice when there is no data.
+     * @name emptyTitle
+     * @memberOf dc.pieChart
+     * @instance
+     * @param {String} [title]
+     * @returns {Chart}
      */
     _chart.emptyTitle = function (title) {
         if (arguments.length === 0) {
@@ -411,10 +422,14 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     /**
-     #### .externalLabels([radius])
-     Position slice labels offset from the outer edge of the chart
-
-     The given argument sets the radial offset.
+     * Position slice labels offset from the outer edge of the chart
+     *
+     * The given argument sets the radial offset.
+     * @name externalLabels
+     * @memberOf dc.pieChart
+     * @instance
+     * @param {Number} [radius]
+     * @returns {Chart}
      */
     _chart.externalLabels = function (radius) {
         if (arguments.length === 0) {
