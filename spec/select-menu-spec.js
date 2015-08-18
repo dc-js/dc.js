@@ -149,7 +149,8 @@ describe('dc.selectMenu', function() {
         });
         it('selects all options corresponding to active filters on redraw', function(){
             var selectedOptions = chart.selectAll("select").selectAll("option")[0].filter(function(d) {
-                return d.selected;
+                // IE returns an extra option with value '', not sure what it means
+                return d.value && d.selected;
             });
             expect(selectedOptions.length).toEqual(2);
             expect(selectedOptions.map(function(d){ return d.value; })).toEqual(["California", "Colorado"]);
@@ -158,7 +159,8 @@ describe('dc.selectMenu', function() {
             chart.onChange([stateGroup.all()[0].key, stateGroup.all()[1].key, stateGroup.all()[5].key]);
 
             var selectedOptions = chart.selectAll("select").selectAll("option")[0].filter(function(d) {
-                return d.selected;
+                // IE returns an extra option with value '', not sure what it means
+                return d.value && d.selected;
             });
             expect(selectedOptions.length).toEqual(3);
             expect(selectedOptions.map(function(d){ return d.value; })).toEqual(["California", "Colorado", "Ontario"]);
@@ -190,7 +192,7 @@ describe('dc.selectMenu', function() {
         });
         afterEach(function(){
             regionDimension.filterAll();
-        })
+        });
     });
 
     function getOption(chart, i){
