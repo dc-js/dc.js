@@ -42,6 +42,7 @@ dc.baseMixin = function (_chart) {
         return _chart.keyAccessor()(d) + ': ' + _chart.valueAccessor()(d);
     };
     var _renderTitle = true;
+    var _controlsUseVisibility = true;
 
     var _transitionDuration = 750;
 
@@ -400,6 +401,19 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
+     #### .controlsUseVisibility
+     If set, use the `visibility` attribute instead of the `display` attribute, for less disruption
+     to layout. Default: true.
+     **/
+    _chart.controlsUseVisibility = function (_) {
+        if (!arguments.length) {
+            return _controlsUseVisibility;
+        }
+        _controlsUseVisibility = _;
+        return _chart;
+    };
+
+    /**
     #### .turnOnControls() & .turnOffControls()
     Turn on/off optional control elements within the root element. dc currently supports the
     following html control elements.
@@ -411,19 +425,25 @@ dc.baseMixin = function (_chart) {
      content of this element is then replaced with the current filter value using the filter printer
      function. This type of element will be turned off automatically if the filter is cleared.
 
+     The method (display or visibility) for turning on/off the controls depends on the
+     `controlsUseVisibility` flag.
+
     **/
     _chart.turnOnControls = function () {
         if (_root) {
-            _chart.selectAll('.reset').style('display', null);
-            _chart.selectAll('.filter').text(_filterPrinter(_chart.filters())).style('display', null);
+            var attribute = _chart.controlsUseVisibility() ? 'visibility' : 'display';
+            _chart.selectAll('.reset').style(attribute, null);
+            _chart.selectAll('.filter').text(_filterPrinter(_chart.filters())).style(attribute, null);
         }
         return _chart;
     };
 
     _chart.turnOffControls = function () {
         if (_root) {
-            _chart.selectAll('.reset').style('display', 'none');
-            _chart.selectAll('.filter').style('display', 'none').text(_chart.filter());
+            var attribute = _chart.controlsUseVisibility() ? 'visibility' : 'display';
+            var value = _chart.controlsUseVisibility() ? 'hidden' : 'none';
+            _chart.selectAll('.reset').style(attribute, value);
+            _chart.selectAll('.filter').style(attribute, value).text(_chart.filter());
         }
         return _chart;
     };

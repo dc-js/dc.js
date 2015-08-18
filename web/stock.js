@@ -31,15 +31,19 @@ var nasdaqTable = dc.dataTable('.dc-data-table');
 // will automatically hide/show it based on whether there is a filter
 // set on the chart (e.g. slice selection for pie chart and brush
 // selection for bar chart). Enable this with `chart.turnOnControls(true)`
+
+// dc.js >=2.1 uses `visibility: hidden` to hide/show controls without
+// disrupting the layout. To return the old `display: none` behavior,
+// set `chart.controlsUseVisibility(false)` and use that style instead.
     <div id='chart'>
        <a class='reset'
           href='javascript:myChart.filterAll();dc.redrawAll();'
-          style='display: none;'>reset</a>
+          style='visibility: hidden;'>reset</a>
     </div>
 // dc.js will also automatically inject the current filter value into
 // any html element with its css class set to `filter`
     <div id='chart'>
-        <span class='reset' style='display: none;'>
+        <span class='reset' style='visibility: hidden;'>
           Current filter: <span class='filter'></span>
         </span>
     </div>

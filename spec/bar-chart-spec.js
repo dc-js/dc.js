@@ -14,7 +14,8 @@ describe('dc.barChart', function() {
         chart.dimension(dimension).group(group)
             .width(1100).height(200)
             .x(d3.time.scale.utc().domain([makeDate(2012, 0, 1), makeDate(2012, 11, 31)]))
-            .transitionDuration(0);
+            .transitionDuration(0)
+            .controlsUseVisibility(false);
     });
 
     describe('rendering', function () {
