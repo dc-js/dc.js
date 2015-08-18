@@ -44,9 +44,16 @@ describe('dc.selectMenu', function() {
             chart.multiple(true).redraw();
             expect(chart.selectAll("select").attr("multiple")).toBeTruthy();
         });
+        it('select tag does not have size by default', function() {
+            expect(chart.selectAll("select").attr("size")).toBeNull();
+        });
+        it('can have size set', function() {
+            chart.size(10).redraw();
+            expect(chart.selectAll("select").attr("size")).toEqual('10');
+        });
         it('creates prompt option with empty value', function() {
             var option = chart.selectAll("option")[0][0];
-            expect(option).toBeTruthy();
+            expect(option).not.toBeNull();
             expect(option.value).toEqual("");
         });
         it('creates prompt option with default prompt text', function() {

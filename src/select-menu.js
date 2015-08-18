@@ -41,6 +41,7 @@ dc.selectMenu = function (parent, chartGroup) {
     var _select;
     var _promptText = 'Select all';
     var _multiple = false;
+    var _size = null;
     var _order = function (a, b) {
         return _chart.keyAccessor()(a) > _chart.keyAccessor()(b) ?
              1 : _chart.keyAccessor()(b) > _chart.keyAccessor()(a) ?
@@ -60,7 +61,7 @@ dc.selectMenu = function (parent, chartGroup) {
         _select = _chart.root().append('select')
                         .classed(SELECT_CSS_CLASS, true);
 
-        switchMultipleSelectOption();
+        setAttributes();
 
         _select.append('option').text(_promptText).attr('value', '');
         renderOptions();
@@ -68,7 +69,7 @@ dc.selectMenu = function (parent, chartGroup) {
     };
 
     _chart._doRedraw = function () {
-        switchMultipleSelectOption();
+        setAttributes();
         renderOptions();
         // select the option(s) corresponding to current filter(s)
         if (_chart.hasFilter() && _multiple) {
@@ -129,11 +130,16 @@ dc.selectMenu = function (parent, chartGroup) {
         });
     };
 
-    function switchMultipleSelectOption () {
+    function setAttributes () {
         if (_multiple) {
             _select.attr('multiple', true);
         } else {
             _select.attr('multiple', null);
+        }
+        if (_size !== null) {
+            _select.attr('size', _size);
+        } else {
+            _select.attr('size', null);
         }
     }
 
@@ -205,6 +211,19 @@ dc.selectMenu = function (parent, chartGroup) {
             return _multiple;
         }
         _multiple = _;
+
+        return _chart;
+    };
+
+    /**
+     #### .size([number])
+     Controls the height, in lines, of the select menu, when `.multiple()` is true. Default: undefined (not set).
+     **/
+    _chart.size = function (_) {
+        if (!arguments.length) {
+            return _size;
+        }
+        _size = _;
 
         return _chart;
     };
