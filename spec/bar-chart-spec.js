@@ -15,7 +15,8 @@ describe('dc.barChart', function () {
         chart.dimension(dimension).group(group)
             .width(1100).height(200)
             .x(d3.time.scale.utc().domain([makeDate(2012, 0, 1), makeDate(2012, 11, 31)]))
-            .transitionDuration(0);
+            .transitionDuration(0)
+            .controlsUseVisibility(true);
     });
 
     describe('rendering', function () {
@@ -576,8 +577,8 @@ describe('dc.barChart', function () {
 
         describe('filtering', function () {
             beforeEach(function () {
-                d3.select('#' + id).append('span').attr('class', 'filter').style('display', 'none');
-                d3.select('#' + id).append('a').attr('class', 'reset').style('display', 'none');
+                d3.select('#' + id).append('span').attr('class', 'filter').style('visibility', 'hidden');
+                d3.select('#' + id).append('a').attr('class', 'reset').style('visibility', 'hidden');
                 chart.filter([makeDate(2012, 5, 1), makeDate(2012, 5, 30)]).redraw();
                 dc.dateFormat = d3.time.format.utc('%m/%d/%Y');
                 chart.redraw();
@@ -588,15 +589,15 @@ describe('dc.barChart', function () {
             });
 
             it('should enable the reset link after rendering', function () {
-                expect(chart.select('a.reset').style('display')).not.toBe('none');
+                expect(chart.select('a.reset').style('visibility')).not.toBe('none');
             });
 
             it('should set the filter printer', function () {
                 expect(chart.filterPrinter()).not.toBeNull();
             });
 
-            it('should turn the filter info on', function () {
-                expect(chart.select('span.filter').style('display')).not.toBe('none');
+            it('should show the filter info', function () {
+                expect(chart.select('span.filter').style('visibility')).toBe('visible');
             });
 
             it('should set filter text after slice selection', function () {

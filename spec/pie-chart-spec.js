@@ -289,11 +289,11 @@ describe('dc.pieChart', function () {
                 });
                 chart.filterAll();
             });
-            it('reset link generated after slice selection', function () {
+            it('reset link shown after slice selection', function () {
                 chart.filter('66');
                 expect(chart.select('a.reset').style('display')).not.toEqual('none');
             });
-            it('filter info generated after slice selection', function () {
+            it('filter info shown after slice selection', function () {
                 chart.filter(null);
                 chart.filter('66');
                 expect(chart.select('span.filter').style('display')).not.toEqual('none');

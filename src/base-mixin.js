@@ -46,6 +46,7 @@ dc.baseMixin = function (_chart) {
         return _chart.keyAccessor()(d) + ': ' + _chart.valueAccessor()(d);
     };
     var _renderTitle = true;
+    var _controlsUseVisibility = false;
 
     var _transitionDuration = 750;
 
@@ -522,6 +523,19 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
+     #### .controlsUseVisibility
+     If set, use the `visibility` attribute instead of the `display` attribute, for less disruption
+     to layout. Default: false.
+     **/
+    _chart.controlsUseVisibility = function (_) {
+        if (!arguments.length) {
+            return _controlsUseVisibility;
+        }
+        _controlsUseVisibility = _;
+        return _chart;
+    };
+
+    /**
      * Turn on optional control elements within the root element. dc currently supports the
      * following html control elements.
      * * root.selectAll('.reset') - elements are turned on if the chart has an active filter. This type
@@ -537,8 +551,9 @@ dc.baseMixin = function (_chart) {
      */
     _chart.turnOnControls = function () {
         if (_root) {
-            _chart.selectAll('.reset').style('display', null);
-            _chart.selectAll('.filter').text(_filterPrinter(_chart.filters())).style('display', null);
+            var attribute = _chart.controlsUseVisibility() ? 'visibility' : 'display';
+            _chart.selectAll('.reset').style(attribute, null);
+            _chart.selectAll('.filter').text(_filterPrinter(_chart.filters())).style(attribute, null);
         }
         return _chart;
     };
@@ -553,8 +568,10 @@ dc.baseMixin = function (_chart) {
      */
     _chart.turnOffControls = function () {
         if (_root) {
-            _chart.selectAll('.reset').style('display', 'none');
-            _chart.selectAll('.filter').style('display', 'none').text(_chart.filter());
+            var attribute = _chart.controlsUseVisibility() ? 'visibility' : 'display';
+            var value = _chart.controlsUseVisibility() ? 'hidden' : 'none';
+            _chart.selectAll('.reset').style(attribute, value);
+            _chart.selectAll('.filter').style(attribute, value).text(_chart.filter());
         }
         return _chart;
     };

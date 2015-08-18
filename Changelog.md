@@ -1,4 +1,9 @@
 # 2.0 Series
+## 2.0.0 beta 21
+* Ability to use non-crossfilter backend with asynchronous connection (callback), via `commitHandler`.
+* Domain comparison was failing for undefined/null domain values.
+* Option `controlsUseVisibility` to use `visibility` attribute instead of `display` for `filter` and `reset` controls, to reduce disruption to the layout. Was originally on 2.1 branch with default true, now on 2.0 branch with default false. ([#888](https://github.com/dc-js/dc.js/issues/888), [#1016](https://github.com/dc-js/dc.js/issues/1016))
+
 ## 2.0.0 beta 20
 * Slicing functionality for basic data table paging, based on Chris Alvino's feature for the data grid ([#101](https://github.com/dc-js/dc.js/issues/101))
 * Ability to customize the legend text, by Chris Alvino ([#982](https://github.com/dc-js/dc.js/pull/982))
