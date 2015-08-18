@@ -7,6 +7,7 @@
 </head>
 <body>
 
+  <p>A meaningless example of multiple selectMenus on some random data...</p>
   <div id="select1">
     <div>
       <a class='reset'
@@ -101,7 +102,7 @@
   datatable
     .dimension(letterDimension2)
     .group(function(d) { return d.letter; })
-    .columns(['letter', 'color', 'state'])
+    .columns(['color', 'state'])
     .size(data.length);
 
   dc.renderAll();

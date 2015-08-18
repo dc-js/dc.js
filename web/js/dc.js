@@ -9012,10 +9012,23 @@ dc.selectMenu = function (parent, chartGroup) {
     }
 
     function onChange (d , i) {
-        var selectedOptions = Array.prototype.slice.call(d3.event.target.selectedOptions);
-        var values = selectedOptions.map(function (d) {
-            return d.value;
-        });
+        var values;
+        var target = d3.event.target;
+        if(target.selectedOptions) {
+            var selectedOptions = Array.prototype.slice.call(target.selectedOptions);
+            values = selectedOptions.map(function (d) {
+                return d.value;
+            });
+        } else { // IE and other browsers do not support selectedOptions
+            // adapted from this polyfill: https://gist.github.com/brettz9/4212217
+            var options = [].slice.call(d3.event.target.options);
+            values = options.filter(function (option) {
+                return option.selected;
+            }).map(function(option) {
+                return option.value;
+            });
+        }
+        // console.log(values);
         // check if only prompt option is selected
         if (values.length === 1 && values[0] === '') {
             values = null;
