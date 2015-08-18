@@ -26,6 +26,7 @@
   * [Number Display Widget](#number-display-widget)
   * [Heat Map](#heat-map)
   * [Box Plot](#box-plot)
+  * [Select Menu](#select-menu)
 
 #### Version 2.1.0-dev
 The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
@@ -268,6 +269,10 @@ friendly text for filter value(s) associated with the chart instance. By default
 default filter printer `dc.printers.filter` that provides simple printing support for both
 single value and ranged filters.
 
+#### .controlsUseVisibility
+If set, use the `visibility` attribute instead of the `display` attribute, for less disruption
+to layout. Default: true.
+
 #### .turnOnControls() & .turnOffControls()
 Turn on/off optional control elements within the root element. dc currently supports the
 following html control elements.
@@ -278,6 +283,9 @@ following html control elements.
 * root.selectAll('.filter') elements are turned on if the chart has an active filter. The text
  content of this element is then replaced with the current filter value using the filter printer
  function. This type of element will be turned off automatically if the filter is cleared.
+
+ The method (display or visibility) for turning on/off the controls depends on the
+ `controlsUseVisibility` flag.
 
 #### .transitionDuration([duration])
 Set or get the animation transition duration(in milliseconds) for this chart instance. Default
@@ -2061,3 +2069,73 @@ integer formatting.
 // format ticks to 2 decimal places
 chart.tickFormat(d3.format('.2f'));
 ```
+
+## Select Menu
+Includes: [Base Mixin](#base-mixin)
+
+The select menu is a simple widget designed to filter a dimension by selecting an option from
+an HTML <select/> menu. The menu can be optionally turned into a multiselect.
+
+#### dc.selectMenu(parent[, chartGroup])
+Create a select menu instance and attach it to the given parent element.
+
+Parameters:
+* parent : string | node | selection - any valid
+[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+a dom block element such as a div; or a dom element or d3 selection.
+
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
+A newly created select menu instance.
+
+```js
+  var select = dc.selectMenu('#select-container')
+                 .dimension(states)
+                 .group(stateGroup);
+
+  // the option text can be set via the title() function
+  // by default the option text is '`key`: `value`'
+  select.title(function(d){
+     return 'STATE: ' + d.key;
+  })
+```
+
+#### .order([function])
+Get or set the function that controls the ordering of option tags in the
+select menu. By default options are ordered by the group key in ascending
+order. To order by the group's value for example an appropriate comparator
+ function needs to be specified:
+```
+    chart.order(function(a,b) {
+        return a.value > b.value ? 1 : b.value > a.value ? -1 : 0;
+    });
+```
+
+#### .promptText([value])
+Gets or sets the text displayed in the options used to prompt selection.
+The default is 'Select all'.
+```
+    chart.promptText('All states');
+```
+
+#### .filterDisplayed([function])
+Get or set the function that filters option tags prior to display.
+By default options with a value of < 1 are not displayed.
+To always display all options override the `filterDisplayed` function:
+```
+    chart.filterDisplayed(function() {
+        return true;
+    });
+```
+
+#### .multiple([bool])
+Controls the type of select menu (single select is default). Setting it to true converts the underlying
+HTML tag into a multiple select.
+```
+    chart.multiple(true);
+```
+
+#### .size([number])
+Controls the height, in lines, of the select menu, when `.multiple()` is true. Default: undefined (not set).

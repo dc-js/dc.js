@@ -141,6 +141,7 @@
 <li><a href="#number-display-widget">Number Display Widget</a></li>
 <li><a href="#heat-map">Heat Map</a></li>
 <li><a href="#box-plot">Box Plot</a></li>
+<li><a href="#select-menu">Select Menu</a></li>
 </ul>
 <h4 id="version-2-1-0-dev">Version 2.1.0-dev</h4>
 <p>The entire dc.js library is scoped under the <strong>dc</strong> name space. It does not introduce anything else
@@ -325,6 +326,9 @@ of dc internals may have unexpected consequences.</p>
 friendly text for filter value(s) associated with the chart instance. By default dc charts use a
 default filter printer <code>dc.printers.filter</code> that provides simple printing support for both
 single value and ranged filters.</p>
+<h4 id="-controlsusevisibility">.controlsUseVisibility</h4>
+<p>If set, use the <code>visibility</code> attribute instead of the <code>display</code> attribute, for less disruption
+to layout. Default: true.</p>
 <h4 id="-turnoncontrols-turnoffcontrols-">.turnOnControls() &amp; .turnOffControls()</h4>
 <p>Turn on/off optional control elements within the root element. dc currently supports the
 following html control elements.</p>
@@ -332,9 +336,12 @@ following html control elements.</p>
 <li>root.selectAll(‘.reset’) - elements are turned on if the chart has an active filter. This type
 of control element is usually used to store a reset link to allow user to reset filter on a
 certain chart. This element will be turned off automatically if the filter is cleared.</li>
-<li>root.selectAll(‘.filter’) elements are turned on if the chart has an active filter. The text
+<li><p>root.selectAll(‘.filter’) elements are turned on if the chart has an active filter. The text
 content of this element is then replaced with the current filter value using the filter printer
-function. This type of element will be turned off automatically if the filter is cleared.</li>
+function. This type of element will be turned off automatically if the filter is cleared.</p>
+<p>The method (display or visibility) for turning on/off the controls depends on the
+<code>controlsUseVisibility</code> flag.</p>
+</li>
 </ul>
 <h4 id="-transitionduration-duration-">.transitionDuration([duration])</h4>
 <p>Set or get the animation transition duration(in milliseconds) for this chart instance. Default
@@ -1774,6 +1781,59 @@ integer formatting.</p>
 <pre><code class="lang-js"><span class="hljs-comment">// format ticks to 2 decimal places</span>
 chart.tickFormat(d3.format(<span class="hljs-string">'.2f'</span>));
 </code></pre>
+<h2 id="select-menu">Select Menu</h2>
+<p>Includes: <a href="#base-mixin">Base Mixin</a></p>
+<p>The select menu is a simple widget designed to filter a dimension by selecting an option from
+an HTML <select/> menu. The menu can be optionally turned into a multiselect.</p>
+<h4 id="dc-selectmenu-parent-chartgroup-">dc.selectMenu(parent[, chartGroup])</h4>
+<p>Create a select menu instance and attach it to the given parent element.</p>
+<p>Parameters:</p>
+<ul>
+<li><p>parent : string | node | selection - any valid
+<a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single selector</a> specifying
+a dom block element such as a div; or a dom element or d3 selection.</p>
+</li>
+<li><p>chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart’s group.</p>
+</li>
+</ul>
+<p>Returns:
+A newly created select menu instance.</p>
+<pre><code class="lang-js">  <span class="hljs-keyword">var</span> select = dc.selectMenu(<span class="hljs-string">'#select-container'</span>)
+                 .dimension(states)
+                 .group(stateGroup);
+
+  <span class="hljs-comment">// the option text can be set via the title() function</span>
+  <span class="hljs-comment">// by default the option text is '`key`: `value`'</span>
+  select.title(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(d)</span></span>{
+     <span class="hljs-keyword">return</span> <span class="hljs-string">'STATE: '</span> + d.key;
+  })
+</code></pre>
+<h4 id="-order-function-">.order([function])</h4>
+<p>Get or set the function that controls the ordering of option tags in the
+select menu. By default options are ordered by the group key in ascending
+order. To order by the group’s value for example an appropriate comparator
+ function needs to be specified:</p>
+<pre><code>    chart.order(function(a,b) {
+        <span class="hljs-keyword">return</span> a.<span class="hljs-keyword">value</span> &gt; b.<span class="hljs-keyword">value</span> ? <span class="hljs-number">1</span> : b.<span class="hljs-keyword">value</span> &gt; a.<span class="hljs-keyword">value</span> ? -<span class="hljs-number">1</span> : <span class="hljs-number">0</span>;
+    });
+</code></pre><h4 id="-prompttext-value-">.promptText([value])</h4>
+<p>Gets or sets the text displayed in the options used to prompt selection.
+The default is ‘Select all’.</p>
+<pre><code>    chart.promptText(<span class="hljs-symbol">'All</span> states');
+</code></pre><h4 id="-filterdisplayed-function-">.filterDisplayed([function])</h4>
+<p>Get or set the function that filters option tags prior to display.
+By default options with a value of &lt; 1 are not displayed.
+To always display all options override the <code>filterDisplayed</code> function:</p>
+<pre><code>    chart.filterDisplayed(<span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+    });
+</code></pre><h4 id="-multiple-bool-">.multiple([bool])</h4>
+<p>Controls the type of select menu (single select is default). Setting it to true converts the underlying
+HTML tag into a multiple select.</p>
+<pre><code>    chart.multiple(<span class="hljs-literal">true</span>);
+</code></pre><h4 id="-size-number-">.size([number])</h4>
+<p>Controls the height, in lines, of the select menu, when <code>.multiple()</code> is true. Default: undefined (not set).</p>
 
   </body>
 </html>
