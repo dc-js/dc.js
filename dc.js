@@ -729,10 +729,10 @@ dc.baseMixin = function (_chart) {
 
     var _filters = [];
     var _filterHandler = function (dimension, filters) {
-        dimension.filter(null);
-
         if (filters.length === 0) {
             dimension.filter(null);
+        } else if (filters.length === 1 && !Array.isArray(filters[0])) {
+            dimension.filterExact(filters[0]);
         } else {
             dimension.filterFunction(function (d) {
                 for (var i = 0; i < filters.length; i++) {
