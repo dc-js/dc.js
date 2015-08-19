@@ -79,9 +79,16 @@ describe('dc.colorMixin', function() {
                 .group(valueGroup);
         });
 
-        it('check domain', function() {
+        it('check domain for linear scale', function() {
+            chart.colors(d3.scale.linear())
             chart.calculateColorDomain();
             expect(chart.colorDomain()).toEqual([1,3]);
+        });
+
+        it('check domain for ordinal scale', function() {
+            chart.colors(d3.scale.ordinal())
+            chart.calculateColorDomain();
+            expect(chart.colorDomain()).toEqual([2,3,1]);
         });
     });
 });

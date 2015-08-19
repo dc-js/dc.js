@@ -104,15 +104,24 @@ dc.colorMixin = function (_chart) {
         return _chart;
     };
 
+    _chart._ordinalColorDomain = function () {
+      var groups = _chart._computeOrderedGroups(_chart.data());
+      return groups.map(_chart.colorAccessor());
+    };
+
     /**
     #### .calculateColorDomain()
     Set the domain by determining the min and max values as retrieved by `.colorAccessor` over the
     chart's dataset.
-
     **/
+
     _chart.calculateColorDomain = function () {
-        var newDomain = [d3.min(_chart.data(), _chart.colorAccessor()),
-                         d3.max(_chart.data(), _chart.colorAccessor())];
+        var newDomain;
+        if(typeof(_colors.rangePoints) === "function") {
+            newDomain = _chart._ordinalColorDomain();
+        } else {
+            newDomain = d3.extent(_chart.data(), _chart.colorAccessor());
+        }
         _colors.domain(newDomain);
         return _chart;
     };
