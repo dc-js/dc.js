@@ -46,58 +46,122 @@ dc.rowChart = function (parent, chartGroup) {
     var _chart = dc.capMixin(dc.marginMixin(dc.colorMixin(dc.baseMixin({}))));
 
     var _x;
-
     var _elasticX;
-
     var _xAxis = d3.svg.axis().orient('bottom');
 
-    var _rowData;
-
     _chart.rowsCap = _chart.cap;
+    _chart.title(function (d) { return _chart.cappedKeyAccessor(d) + ': ' + _chart.cappedValueAccessor(d); });
+    _chart.label(_chart.cappedKeyAccessor);
 
-    function calculateAxisScale() {
+    function rootValue() {
+        var root = _x(0);
+        return (root === -Infinity || root !== root) ? _x(1) : root;
+    }
+
+    function translateX(d) {
+        return 'translate(' + Math.min(rootValue(), _x(_chart.cappedValueAccessor(d))) + ',0)';
+    }
+
+    _chart._doRedraw = function () {
+        var data = _chart.data(),
+            n = data.length,
+            height = _fixedBarHeight || (_chart.effectiveHeight() - (n + 1) * _gap) / n,
+            labelOffsetY = _hasLabelOffsetY ? _labelOffsetY : height / 2;
+
+        // Draw axis
         if (!_x || _elasticX) {
-            var extent = d3.extent(_rowData, _chart.cappedValueAccessor);
-            if (extent[0] > 0) {
-                extent[0] = 0;
-            }
-            _x = d3.scale.linear().domain(extent)
+            _x = d3.scale.linear()
+                .domain(d3.extent(data.map(_chart.cappedValueAccessor).concat([0])))
                 .range([0, _chart.effectiveWidth()]);
         }
-        _xAxis.scale(_x);
-    }
+        dc.transition(_g.select('g.axis'), _chart.transitionDuration()).call(_xAxis.scale(_x));
 
-    function drawAxis() {
-        var axisG = _g.select('g.axis');
+        // Draw grid lines
+        var ticks = _g.selectAll('g.tick');
+        ticks.select('line.grid-line')
+            .remove();
+        ticks.append('line')
+            .attr('class', 'grid-line')
+            .attr('y2', function () { return -_chart.effectiveHeight(); });
 
-        calculateAxisScale();
+        // Draw rows
+        var rows = _g.selectAll('g.' + _rowCssClass)
+            .data(data)
+            .attr('transform', function (d, i) {
+                return 'translate(0,' + ((i + 1) * _gap + i * height) + ')';
+            });
+        var rowEnter = rows.enter()
+            .append('g')
+            .attr('class', function (d, i) { return _rowCssClass + ' _' + i; });
 
-        if (axisG.empty()) {
-            axisG = _g.append('g').attr('class', 'axis')
-                .attr('transform', 'translate(0, ' + _chart.effectiveHeight() + ')');
+        // Update rects
+        rowEnter.append('rect')
+            .attr('width', 0);
+        var rect = rows.select('rect')
+            .attr('height', height)
+            .attr('fill', _chart.getColor)
+            .on('click', _chart.onClick)
+            .classed('deselected', function (d) {
+                return (_chart.hasFilter()) ? !_chart.hasFilter(_chart.cappedKeyAccessor(d)) : false;
+            })
+            .classed('selected', function (d) {
+                return (_chart.hasFilter()) ? _chart.hasFilter(_chart.cappedKeyAccessor(d)) : false;
+            });
+        dc.transition(rect, _chart.transitionDuration())
+            .attr('width', function (d) { return Math.abs(rootValue() - _x(_chart.valueAccessor()(d))); })
+            .attr('transform', translateX);
+
+        // Update titles
+        if (_chart.renderTitle()) {
+            rows.selectAll('title').remove();
+            rows.append('title').text(_chart.title());
         }
 
-        dc.transition(axisG, _chart.transitionDuration())
-            .call(_xAxis);
-    }
+        // Update labels
+        if (_chart.renderLabel()) {
+            rowEnter.append('text')
+                .on('click', _chart.onClick);
+            var lab = rows.select('text')
+                .attr('x', _labelOffsetX)
+                .attr('y', labelOffsetY)
+                .attr('dy', _dyOffset)
+                .on('click', _chart.onClick)
+                .attr('class', function (d, i) { return _rowCssClass + ' _' + i; })
+                .text(_chart.label());
+            dc.transition(lab, _chart.transitionDuration())
+                .attr('transform', translateX);
+        }
 
-    _chart._doRender = function () {
-        _chart.resetSvg();
+        // Update title labels
+        if (_chart.renderTitleLabel()) {
+            rowEnter.append('text')
+                .attr('class', _titleRowCssClass)
+                .on('click', _chart.onClick);
+            var titleLabel = rows.select('.' + _titleRowCssClass)
+                .attr('x', _chart.effectiveWidth() - _titleLabelOffsetX)
+                .attr('y', labelOffsetY)
+                .attr('text-anchor', 'end')
+                .on('click', _chart.onClick)
+                .attr('class', function (d, i) { return _titleRowCssClass + ' _' + i; })
+                .text(_chart.title());
+            dc.transition(titleLabel, _chart.transitionDuration())
+                .attr('transform', translateX);
+        }
 
-        _g = _chart.svg()
-            .append('g')
-            .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
-
-        drawChart();
-
+        // Remove rows
+        rows.exit().remove();
         return _chart;
     };
 
-    _chart.title(function (d) {
-        return _chart.cappedKeyAccessor(d) + ': ' + _chart.cappedValueAccessor(d);
-    });
-
-    _chart.label(_chart.cappedKeyAccessor);
+    _chart._doRender = function () {
+        _chart.resetSvg();
+        _g = _chart.svg()
+            .append('g')
+            .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
+        _g.append('g').attr('class', 'axis')
+            .attr('transform', 'translate(0, ' + _chart.effectiveHeight() + ')');
+        return _chart._doRedraw();
+    };
 
     /**
      #### .x([scale])
@@ -109,177 +173,6 @@ dc.rowChart = function (parent, chartGroup) {
             return _x;
         }
         _x = x;
-        return _chart;
-    };
-
-    function drawGridLines() {
-        _g.selectAll('g.tick')
-            .select('line.grid-line')
-            .remove();
-
-        _g.selectAll('g.tick')
-            .append('line')
-            .attr('class', 'grid-line')
-            .attr('x1', 0)
-            .attr('y1', 0)
-            .attr('x2', 0)
-            .attr('y2', function () {
-                return -_chart.effectiveHeight();
-            });
-    }
-
-    function drawChart() {
-        _rowData = _chart.data();
-
-        drawAxis();
-        drawGridLines();
-
-        var rows = _g.selectAll('g.' + _rowCssClass)
-            .data(_rowData);
-
-        createElements(rows);
-        removeElements(rows);
-        updateElements(rows);
-    }
-
-    function createElements(rows) {
-        var rowEnter = rows.enter()
-            .append('g')
-            .attr('class', function (d, i) {
-                return _rowCssClass + ' _' + i;
-            });
-
-        rowEnter.append('rect').attr('width', 0);
-
-        createLabels(rowEnter);
-        updateLabels(rows);
-    }
-
-    function removeElements(rows) {
-        rows.exit().remove();
-    }
-
-    function rootValue() {
-        var root = _x(0);
-        return (root === -Infinity || root !== root) ? _x(1) : root;
-    }
-
-    function updateElements(rows) {
-        var n = _rowData.length;
-
-        var height;
-        if (!_fixedBarHeight) {
-            height = (_chart.effectiveHeight() - (n + 1) * _gap) / n;
-        } else {
-            height = _fixedBarHeight;
-        }
-
-        // vertically align label in center unless they override the value via property setter
-        if (!_hasLabelOffsetY) {
-            _labelOffsetY = height / 2;
-        }
-
-        var rect = rows.attr('transform', function (d, i) {
-                return 'translate(0,' + ((i + 1) * _gap + i * height) + ')';
-            }).select('rect')
-            .attr('height', height)
-            .attr('fill', _chart.getColor)
-            .on('click', onClick)
-            .classed('deselected', function (d) {
-                return (_chart.hasFilter()) ? !isSelectedRow(d) : false;
-            })
-            .classed('selected', function (d) {
-                return (_chart.hasFilter()) ? isSelectedRow(d) : false;
-            });
-
-        dc.transition(rect, _chart.transitionDuration())
-            .attr('width', function (d) {
-                return Math.abs(rootValue() - _x(_chart.valueAccessor()(d)));
-            })
-            .attr('transform', translateX);
-
-        createTitles(rows);
-        updateLabels(rows);
-    }
-
-    function createTitles(rows) {
-        if (_chart.renderTitle()) {
-            rows.selectAll('title').remove();
-            rows.append('title').text(_chart.title());
-        }
-    }
-
-    function createLabels(rowEnter) {
-        if (_chart.renderLabel()) {
-            rowEnter.append('text')
-                .on('click', onClick);
-        }
-        if (_chart.renderTitleLabel()) {
-            rowEnter.append('text')
-                .attr('class', _titleRowCssClass)
-                .on('click', onClick);
-        }
-    }
-
-    function updateLabels(rows) {
-        if (_chart.renderLabel()) {
-            var lab = rows.select('text')
-                .attr('x', _labelOffsetX)
-                .attr('y', _labelOffsetY)
-                .attr('dy', _dyOffset)
-                .on('click', onClick)
-                .attr('class', function (d, i) {
-                    return _rowCssClass + ' _' + i;
-                })
-                .text(function (d) {
-                    return _chart.label()(d);
-                });
-            dc.transition(lab, _chart.transitionDuration())
-                .attr('transform', translateX);
-        }
-        if (_chart.renderTitleLabel()) {
-            var titlelab = rows.select('.' + _titleRowCssClass)
-                    .attr('x', _chart.effectiveWidth() - _titleLabelOffsetX)
-                    .attr('y', _labelOffsetY)
-                    .attr('text-anchor', 'end')
-                    .on('click', onClick)
-                    .attr('class', function (d, i) {
-                        return _titleRowCssClass + ' _' + i ;
-                    })
-                    .text(function (d) {
-                        return _chart.title()(d);
-                    });
-            dc.transition(titlelab, _chart.transitionDuration())
-                .attr('transform', translateX);
-        }
-    }
-
-    /**
-    #### .renderTitleLabel(boolean)
-    Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'
-
-    **/
-    _chart.renderTitleLabel = function (_) {
-        if (!arguments.length) {
-            return _renderTitleLabel;
-        }
-        _renderTitleLabel = _;
-        return _chart;
-    };
-
-    function onClick(d) {
-        _chart.onClick(d);
-    }
-
-    function translateX(d) {
-        var x = _x(_chart.cappedValueAccessor(d)),
-            x0 = rootValue(),
-            s = x > x0 ? x0 : x;
-        return 'translate(' + s + ',0)';
-    }
-
-    _chart._doRedraw = function () {
-        drawChart();
         return _chart;
     };
 
@@ -374,6 +267,19 @@ dc.rowChart = function (parent, chartGroup) {
     };
 
     /**
+     #### .renderTitleLabel(boolean)
+     Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'
+
+     **/
+    _chart.renderTitleLabel = function (_) {
+        if (!arguments.length) {
+            return _renderTitleLabel;
+        }
+        _renderTitleLabel = _;
+        return _chart;
+    };
+
+    /**
     #### .titleLabelOffsetx([x])
     Get of set the x offset (horizontal space between right edge of row and right edge or text.
     Default x offset is 2px;
@@ -386,10 +292,6 @@ dc.rowChart = function (parent, chartGroup) {
         _titleLabelOffsetX = o;
         return _chart;
     };
-
-    function isSelectedRow (d) {
-        return _chart.hasFilter(_chart.cappedKeyAccessor(d));
-    }
 
     return _chart.anchor(parent, chartGroup);
 };
