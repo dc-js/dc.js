@@ -64,8 +64,6 @@ dc.barChart = function (parent, chartGroup) {
         var layers = _chart.chartBodyG().selectAll('g.stack')
             .data(_chart.data());
 
-        calculateBarWidth();
-
         layers
             .enter()
             .append('g')
@@ -85,6 +83,8 @@ dc.barChart = function (parent, chartGroup) {
     }
 
     function renderBars(layer, layerIndex, d) {
+        calculateBarWidth(d.values.length);
+
         var bars = layer.selectAll('rect.bar')
             .data(d.values, dc.pluck('x'));
 
@@ -135,10 +135,8 @@ dc.barChart = function (parent, chartGroup) {
             .remove();
     }
 
-    function calculateBarWidth() {
+    function calculateBarWidth(numberOfBars) {
         if (_barWidth === undefined) {
-            var numberOfBars = _chart.xUnitCount();
-
             // please can't we always use rangeBands for bar charts?
             if (_chart.isOrdinal() && _gap === undefined) {
                 _barWidth = Math.floor(_chart.x().rangeBand());
