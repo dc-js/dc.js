@@ -3709,6 +3709,19 @@ dc.bubbleMixin = function (_chart) {
     };
 
     /**
+    #### .minRadius([radius])
+    Get or set the minimum radius. This will be used to initialize the radius scale's range.  Default: 10
+
+    **/
+    _chart.minRadius = function (_) {
+        if (!arguments.length) {
+            return _chart.MIN_RADIUS;
+        }
+        _chart.MIN_RADIUS = _;
+        return _chart;
+    };
+
+    /**
     #### .minRadiusWithLabel([radius])
     Get or set the minimum radius for label rendering. If a bubble's radius is less than this value
     then no label will be rendered.  Default: 10

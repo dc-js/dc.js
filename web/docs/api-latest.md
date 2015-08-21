@@ -944,6 +944,9 @@ be used to retrieve a data value for each bubble. The data retrieved then will b
 the r scale to the actual bubble radius. This allows you to encode a data dimension using bubble
 size.
 
+#### .minRadius([radius])
+Get or set the minimum radius. This will be used to initialize the radius scale's range.  Default: 10
+
 #### .minRadiusWithLabel([radius])
 Get or set the minimum radius for label rendering. If a bubble's radius is less than this value
 then no label will be rendered.  Default: 10

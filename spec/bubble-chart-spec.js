@@ -397,4 +397,24 @@ describe('dc.bubbleChart', function () {
             });
         });
     });
+
+    describe('with minimum radius', function() {
+        beforeEach(function () {
+
+            chart
+                .minRadius(1);
+        });
+
+        it('shows smaller bubbles', function () {
+            chart.render();
+            chart.selectAll('circle.bubble').each(function (d, i) {
+                if (i === 0) {
+                    expect(Number(d3.select(this).attr('r'))).toBeCloseTo(41.83333333333333,3);
+                }
+                if (i === 1) {
+                    expect(Number(d3.select(this).attr('r'))).toBeCloseTo(41.83333333333333,3);
+                }
+            });
+        });
+    });
 });
