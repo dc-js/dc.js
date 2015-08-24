@@ -18,7 +18,6 @@
     "disallowSpacesInFunctionDeclaration": null,
     "jsDoc": {
         "checkAnnotations": true,
-        "checkParamNames": true,
         "requireParamTypes": true,
         "checkRedundantParams": true,
         "checkReturnTypes": true,
