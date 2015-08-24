@@ -17,7 +17,7 @@
     "disallowSpacesInAnonymousFunctionExpression": null,
     "disallowSpacesInFunctionDeclaration": null,
     "jsDoc": {
-        "checkAnnotations": "closurecompiler",
+        "checkAnnotations": true,
         "checkParamNames": true,
         "requireParamTypes": true,
         "checkRedundantParams": true,
