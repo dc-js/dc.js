@@ -258,7 +258,7 @@ chart.width(300)
 ### dc.baseMixin ⇒ <code>Chart</code>
 Base Mixin is an abstract functional object representing a basic dc chart object
 for all chart and widget implementations. Methods from the Base Mixin are inherited
-and available on all chart implementation in the DC library.
+and available on all chart implementations in the DC library.
 
 **Kind**: static mixin of <code>[dc](#dc)</code>  
 

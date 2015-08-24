@@ -693,7 +693,7 @@ dc.filters.RangedTwoDimensionalFilter = function (array) {
 /**
  * Base Mixin is an abstract functional object representing a basic dc chart object
  * for all chart and widget implementations. Methods from the Base Mixin are inherited
- * and available on all chart implementation in the DC library.
+ * and available on all chart implementations in the DC library.
  * @name baseMixin
  * @memberOf dc
  * @mixin
@@ -5814,7 +5814,7 @@ dc.dataTable = function (parent, chartGroup) {
      */
     _chart.showGroups = function (_) {
         if (!arguments.length) {
-            return true;
+            return _showGroups;
         }
         _showGroups = _;
         return _chart;
@@ -7842,7 +7842,7 @@ dc.legend = function () {
     function legendItemHeight () {
         return _gap + _itemHeight;
     }
-    
+
     /**
      * Set or get x coordinate for legend widget.
      * @name x
@@ -7858,7 +7858,7 @@ dc.legend = function () {
         _x = x;
         return _legend;
     };
-    
+
     /**
      * Set or get y coordinate for legend widget.
      * @name y
