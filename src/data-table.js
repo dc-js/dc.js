@@ -326,7 +326,7 @@ dc.dataTable = function (parent, chartGroup) {
      */
     _chart.showGroups = function (_) {
         if (!arguments.length) {
-            return true;
+            return _showGroups;
         }
         _showGroups = _;
         return _chart;

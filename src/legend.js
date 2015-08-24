@@ -109,7 +109,7 @@ dc.legend = function () {
     function legendItemHeight () {
         return _gap + _itemHeight;
     }
-    
+
     /**
      * Set or get x coordinate for legend widget.
      * @name x
@@ -125,7 +125,7 @@ dc.legend = function () {
         _x = x;
         return _legend;
     };
-    
+
     /**
      * Set or get y coordinate for legend widget.
      * @name y

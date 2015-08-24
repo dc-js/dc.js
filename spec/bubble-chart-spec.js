@@ -398,7 +398,7 @@ describe('dc.bubbleChart', function () {
         });
     });
 
-    describe('with minimum radius', function() {
+    describe('with minimum radius', function () {
         beforeEach(function () {
 
             chart
