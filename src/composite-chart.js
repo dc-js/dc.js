@@ -1,31 +1,23 @@
 /**
-## Composite Chart
-Includes: [Coordinate Grid Mixin](#coordinate-grid-mixin)
-
-Composite charts are a special kind of chart that render multiple charts on the same Coordinate
-Grid. You can overlay (compose) different bar/line/area charts in a single composite chart to
-achieve some quite flexible charting effects.
-#### dc.compositeChart(parent[, chartGroup])
-Create a composite chart instance and attach it to the given parent element.
-
-Parameters:
-* parent : string | node | selection - any valid
- [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- a dom block element such as a div; or a dom element or d3 selection.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
- Interaction with a chart will only trigger events and redraws within the chart's group.
-
-Returns:
-A newly created composite chart instance
-
-```js
-// create a composite chart under #chart-container1 element using the default global chart group
-var compositeChart1 = dc.compositeChart('#chart-container1');
-// create a composite chart under #chart-container2 element using chart group A
-var compositeChart2 = dc.compositeChart('#chart-container2', 'chartGroupA');
-```
-
-**/
+ * Composite charts are a special kind of chart that render multiple charts on the same Coordinate
+ * Grid. You can overlay (compose) different bar/line/area charts in a single composite chart to
+ * achieve some quite flexible charting effects.
+ * @name compositeChart
+ * @memberOf dc
+ * @mixes dc.coordinateGridMixin
+ * @example
+ * // create a composite chart under #chart-container1 element using the default global chart group
+ * var compositeChart1 = dc.compositeChart('#chart-container1');
+ * // create a composite chart under #chart-container2 element using chart group A
+ * var compositeChart2 = dc.compositeChart('#chart-container2', 'chartGroupA');
+ * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
+ * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ * a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart
+ * in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+ * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+ * Interaction with a chart will only trigger events and redraws within the chart's group.
+ * @returns {CompositeChart}
+ */
 dc.compositeChart = function (parent, chartGroup) {
 
     var SUB_CHART_CLASS = 'sub';
@@ -174,11 +166,15 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .useRightAxisGridLines(bool)
-    Get or set whether to draw gridlines from the right y axis.  Drawing from the left y axis is the
-    default behavior. This option is only respected when subcharts with both left and right y-axes
-    are present.
-    **/
+     * Get or set whether to draw gridlines from the right y axis.  Drawing from the left y axis is the
+     * default behavior. This option is only respected when subcharts with both left and right y-axes
+     * are present.
+     * @name useRightAxisGridLines
+     * @memberOf dc.compositeChart
+     * @instance
+     * @param {Boolean} [useRightAxisGridLines]
+     * @return {Chart}
+     */
     _chart.useRightAxisGridLines = function (_) {
         if (!arguments) {
             return _rightAxisGridLines;
@@ -189,10 +185,14 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .childOptions({object})
-    Get or set chart-specific options for all child charts. This is equivalent to calling `.options`
-    on each child chart.
-    **/
+     * Get or set chart-specific options for all child charts. This is equivalent to calling `.options`
+     * on each child chart.
+     * @name childOptions
+     * @memberOf dc.compositeChart
+     * @instance
+     * @param {Object} [options]
+     * @return {Chart}
+     */
     _chart.childOptions = function (_) {
         if (!arguments.length) {
             return _childOptions;
@@ -213,9 +213,13 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .rightYAxisLabel([labelText])
-    Set or get the right y axis label.
-    **/
+     * Set or get the right y axis label.
+     * @name rightYAxisLabel
+     * @memberOf dc.compositeChart
+     * @instance
+     * @param {String} [rightYAxisLabel]
+     * @return {Chart}
+     */
     _chart.rightYAxisLabel = function (_, padding) {
         if (!arguments.length) {
             return _rightYAxisLabel;
@@ -228,31 +232,31 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .compose(subChartArray)
-    Combine the given charts into one single composite coordinate grid chart.
-
-    ```js
-    // compose the given charts in the array into one single composite chart
-    moveChart.compose([
-        // when creating sub-chart you need to pass in the parent chart
-        dc.lineChart(moveChart)
-            .group(indexAvgByMonthGroup) // if group is missing then parent's group will be used
-            .valueAccessor(function (d){return d.value.avg;})
-            // most of the normal functions will continue to work in a composed chart
-            .renderArea(true)
-            .stack(monthlyMoveGroup, function (d){return d.value;})
-            .title(function (d){
-                var value = d.value.avg?d.value.avg:d.value;
-                if(isNaN(value)) value = 0;
-                return dateFormat(d.key) + '\n' + numberFormat(value);
-            }),
-        dc.barChart(moveChart)
-            .group(volumeByMonthGroup)
-            .centerBar(true)
-    ]);
-    ```
-
-    **/
+     * Combine the given charts into one single composite coordinate grid chart.
+     * @name compose
+     * @memberOf dc.compositeChart
+     * @instance
+     * @example
+     * moveChart.compose([
+     *     // when creating sub-chart you need to pass in the parent chart
+     *     dc.lineChart(moveChart)
+     *         .group(indexAvgByMonthGroup) // if group is missing then parent's group will be used
+     *         .valueAccessor(function (d){return d.value.avg;})
+     *         // most of the normal functions will continue to work in a composed chart
+     *         .renderArea(true)
+     *         .stack(monthlyMoveGroup, function (d){return d.value;})
+     *         .title(function (d){
+     *             var value = d.value.avg?d.value.avg:d.value;
+     *             if(isNaN(value)) value = 0;
+     *             return dateFormat(d.key) + '\n' + numberFormat(value);
+     *         }),
+     *     dc.barChart(moveChart)
+     *         .group(volumeByMonthGroup)
+     *         .centerBar(true)
+     * ]);
+     * @param {Array<Chart>} [subChartArray]
+     * @return {Chart}
+     */
     _chart.compose = function (charts) {
         _children = charts;
         _children.forEach(function (child) {
@@ -270,21 +274,27 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     /**
-     #### .children()
-     Returns the child charts which are composed into the composite chart.
-     **/
-
+     * Returns the child charts which are composed into the composite chart.
+     * @name children
+     * @memberOf dc.compositeChart
+     * @instance
+     * @return {Array<Chart>}
+     */
     _chart.children = function () {
         return _children;
     };
 
     /**
-    #### .shareColors([boolean])
-    Get or set color sharing for the chart. If set, the `.colors()` value from this chart
-    will be shared with composed children. Additionally if the child chart implements
-    Stackable and has not set a custom .colorAccessor, then it will generate a color
-    specific to its order in the composition.
-    **/
+     * Get or set color sharing for the chart. If set, the `.colors()` value from this chart
+     * will be shared with composed children. Additionally if the child chart implements
+     * Stackable and has not set a custom .colorAccessor, then it will generate a color
+     * specific to its order in the composition.
+     * @name shareColors
+     * @memberOf dc.compositeChart
+     * @instance
+     * @param {Boolean} [shareColors]
+     * @return {Chart}
+     */
     _chart.shareColors = function (_) {
         if (!arguments.length) {
             return _shareColors;
@@ -294,10 +304,14 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .shareTitle([[boolean])
-    Get or set title sharing for the chart. If set, the `.title()` value from this chart will be
-    shared with composed children. Default value is true.
-    **/
+     * Get or set title sharing for the chart. If set, the `.title()` value from this chart will be
+     * shared with composed children.
+     * @name shareTitle
+     * @memberOf dc.compositeChart
+     * @instance
+     * @param {Boolean} [shareTitle=true]
+     * @return {Chart}
+     */
     _chart.shareTitle = function (_) {
         if (!arguments.length) {
             return _shareTitle;
@@ -307,11 +321,14 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .rightY([yScale])
-    Get or set the y scale for the right axis. The right y scale is typically automatically
-    generated by the chart implementation.
-
-    **/
+     * Get or set the y scale for the right axis. The right y scale is typically automatically
+     * generated by the chart implementation.
+     * @name rightY
+     * @memberOf dc.compositeChart
+     * @instance
+     * @param {d3.scale} [yScale]
+     * @return {Chart}
+     */
     _chart.rightY = function (_) {
         if (!arguments.length) {
             return _rightY;
@@ -412,20 +429,22 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .rightYAxis([yAxis])
-    Set or get the right y axis used by the composite chart. This function is most useful when y
-    axis customization is required. The y axis in dc.js is an instance of a [d3 axis
-    object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis) therefore it supports any valid
-    d3 axis manipulation. **Caution**: The y axis is usually generated internally by dc;
-    resetting it may cause unexpected results.
-    ```jså
-    // customize y axis tick format
-    chart.rightYAxis().tickFormat(function (v) {return v + '%';});
-    // customize y axis tick values
-    chart.rightYAxis().tickValues([0, 100, 200, 300]);
-    ```
-
-    **/
+     * Set or get the right y axis used by the composite chart. This function is most useful when y
+     * axis customization is required. The y axis in dc.js is an instance of a [d3 axis
+     * object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis) therefore it supports any valid
+     * d3 axis manipulation. **Caution**: The y axis is usually generated internally by dc;
+     * resetting it may cause unexpected results.
+     * @name rightYAxis
+     * @memberOf dc.compositeChart
+     * @instance
+     * @example
+     * // customize y axis tick format
+     * chart.rightYAxis().tickFormat(function (v) {return v + '%';});
+     * // customize y axis tick values
+     * chart.rightYAxis().tickValues([0, 100, 200, 300]);
+     * @param {d3.svg.axis} [rightYAxis]
+     * @return {Chart}
+     */
     _chart.rightYAxis = function (rightYAxis) {
         if (!arguments.length) {
             return _rightYAxis;

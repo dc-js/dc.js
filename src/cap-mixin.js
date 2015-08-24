@@ -1,14 +1,17 @@
 /**
-## Cap Mixin
-Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the
-Row and Pie Charts.
-
-The top ordered elements in the group up to the cap amount will be kept in the chart, and the rest
-will be replaced with an *others* element, with value equal to the sum of the replaced values. The
-keys of the elements below the cap limit are recorded in order to filter by those keys when the
-*others* element is clicked.
-
-**/
+ * Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the
+ * Row and Pie Charts.
+ *
+ * The top ordered elements in the group up to the cap amount will be kept in the chart, and the rest
+ * will be replaced with an *others* element, with value equal to the sum of the replaced values. The
+ * keys of the elements below the cap limit are recorded in order to filter by those keys when the
+ * others* element is clicked.
+ * @name capMixin
+ * @memberOf dc
+ * @mixin
+ * @param {Chart} _chart
+ * @returns {Chart}
+ */
 dc.capMixin = function (_chart) {
 
     var _cap = Infinity;
@@ -57,54 +60,65 @@ dc.capMixin = function (_chart) {
     });
 
     /**
-    #### .cap([count])
-    Get or set the count of elements to that will be included in the cap.
-    **/
-    _chart.cap = function (_) {
+     * Get or set the count of elements to that will be included in the cap.
+     * @name cap
+     * @memberOf dc.capMixin
+     * @instance
+     * @param {Number} [count=Infinity]
+     * @returns {Number}
+     */
+    _chart.cap = function (count) {
         if (!arguments.length) {
             return _cap;
         }
-        _cap = _;
+        _cap = count;
         return _chart;
     };
 
     /**
-    #### .othersLabel([label])
-    Get or set the label for *Others* slice when slices cap is specified. Default label is **Others**.
-    **/
-    _chart.othersLabel = function (_) {
+     * Get or set the label for *Others* slice when slices cap is specified
+     * @name othersLabel
+     * @memberOf dc.capMixin
+     * @instance
+     * @param {String} [label=Others]
+     * @returns {String}
+     */
+    _chart.othersLabel = function (label) {
         if (!arguments.length) {
             return _othersLabel;
         }
-        _othersLabel = _;
+        _othersLabel = label;
         return _chart;
     };
 
     /**
-    #### .othersGrouper([grouperFunction])
-    Get or set the grouper function that will perform the insertion of data for the *Others* slice
-    if the slices cap is specified. If set to a falsy value, no others will be added. By default the
-    grouper function computes the sum of all values below the cap.
-    ```js
-    chart.othersGrouper(function (data) {
-        // compute the value for others, presumably the sum of all values below the cap
-        var othersSum  = yourComputeOthersValueLogic(data)
-
-        // the keys are needed to properly filter when the others element is clicked
-        var othersKeys = yourComputeOthersKeysArrayLogic(data);
-
-        // add the others row to the dataset
-        data.push({'key': 'Others', 'value': othersSum, 'others': othersKeys });
-
-        return data;
-    });
-    ```
-    **/
-    _chart.othersGrouper = function (_) {
+     * Get or set the grouper function that will perform the insertion of data for the *Others* slice
+     * if the slices cap is specified. If set to a falsy value, no others will be added. By default the
+     * grouper function computes the sum of all values below the cap.
+     * @name othersGrouper
+     * @memberOf dc.capMixin
+     * @instance
+     * @example
+     * chart.othersGrouper(function (data) {
+     *     // compute the value for others, presumably the sum of all values below the cap
+     *     var othersSum  = yourComputeOthersValueLogic(data)
+     *
+     *     // the keys are needed to properly filter when the others element is clicked
+     *     var othersKeys = yourComputeOthersKeysArrayLogic(data);
+     *
+     *     // add the others row to the dataset
+     *     data.push({'key': 'Others', 'value': othersSum, 'others': othersKeys });
+     *
+     *     return data;
+     * });
+     * @param {Function} [grouperFunction]
+     * @returns {Function}
+     */
+    _chart.othersGrouper = function (grouperFunction) {
         if (!arguments.length) {
             return _othersGrouper;
         }
-        _othersGrouper = _;
+        _othersGrouper = grouperFunction;
         return _chart;
     };
 
