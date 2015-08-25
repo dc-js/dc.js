@@ -154,11 +154,11 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @param {Number} [_hiddenSize=0]
      * @returns {Chart}
      */
-    _chart.hiddenSize = function (_hiddenSize) {
+    _chart.hiddenSize = function (hiddenSize) {
         if (!arguments.length) {
             return _hiddenSize;
         }
-        _hiddenSize = _hiddenSize;
+        _hiddenSize = hiddenSize;
         return _chart;
     };
 
