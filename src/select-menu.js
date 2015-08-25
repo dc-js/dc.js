@@ -1,36 +1,25 @@
 /**
- ## Select Menu
- Includes: [Base Mixin](#base-mixin)
-
-The select menu is a simple widget designed to filter a dimension by selecting an option from
-an HTML <select/> menu. The menu can be optionally turned into a multiselect.
-
- #### dc.selectMenu(parent[, chartGroup])
- Create a select menu instance and attach it to the given parent element.
-
- Parameters:
-* parent : string | node | selection - any valid
- [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- a dom block element such as a div; or a dom element or d3 selection.
-
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
- Interaction with a chart will only trigger events and redraws within the chart's group.
-
- Returns:
- A newly created select menu instance.
-
- ```js
-   var select = dc.selectMenu('#select-container')
-                  .dimension(states)
-                  .group(stateGroup);
-
-   // the option text can be set via the title() function
-   // by default the option text is '`key`: `value`'
-   select.title(function(d){
-      return 'STATE: ' + d.key;
-   })
- ```
-
+ * The select menu is a simple widget designed to filter a dimension by selecting an option from
+ * an HTML `<select/>` menu. The menu can be optionally turned into a multiselect.
+ * @name selectMenu
+ * @memberof dc
+ * @mixes dc.baseMixin
+ * @example
+ * // create a select menu under #select-container using the default global chart group
+ * var select = dc.selectMenu('#select-container')
+ *                .dimension(states)
+ *                .group(stateGroup);
+ * // the option text can be set via the title() function
+ * // by default the option text is '`key`: `value`'
+ * select.title(function (d){
+ *     return 'STATE: ' + d.key;
+ * })
+ * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
+ * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ * a dom block element such as a div; or a dom element or d3 selection.
+ * @param {String} [chartGroup] - The name of the chart group this widget should be placed in.
+ * Interaction with the widget will only trigger events and redraws within its group.
+ * @returns {selectMenu}
  **/
 dc.selectMenu = function (parent, chartGroup) {
     var SELECT_CSS_CLASS = 'dc-select-menu';
@@ -103,10 +92,10 @@ dc.selectMenu = function (parent, chartGroup) {
         return options;
     }
 
-    function onChange (d , i) {
+    function onChange (d, i) {
         var values;
         var target = d3.event.target;
-        if(target.selectedOptions) {
+        if (target.selectedOptions) {
             var selectedOptions = Array.prototype.slice.call(target.selectedOptions);
             values = selectedOptions.map(function (d) {
                 return d.value;
@@ -116,7 +105,7 @@ dc.selectMenu = function (parent, chartGroup) {
             var options = [].slice.call(d3.event.target.options);
             values = options.filter(function (option) {
                 return option.selected;
-            }).map(function(option) {
+            }).map(function (option) {
                 return option.value;
             });
         }
@@ -157,33 +146,36 @@ dc.selectMenu = function (parent, chartGroup) {
     }
 
     /**
-    #### .order([function])
-    Get or set the function that controls the ordering of option tags in the
-    select menu. By default options are ordered by the group key in ascending
-    order. To order by the group's value for example an appropriate comparator
-     function needs to be specified:
-    ```
-        chart.order(function(a,b) {
-            return a.value > b.value ? 1 : b.value > a.value ? -1 : 0;
-        });
-    ```
-    **/
-    _chart.order = function (_) {
+     * Get or set the function that controls the ordering of option tags in the
+     * select menu. By default options are ordered by the group key in ascending
+     * order.
+     * @name order
+     * @memberof dc.selectMenu
+     * @instance
+     * @param {Function} [order]
+     * @example
+     * // order by the group's value
+     * chart.order(function (a,b) {
+     *     return a.value > b.value ? 1 : b.value > a.value ? -1 : 0;
+     * });
+     **/
+    _chart.order = function (order) {
         if (!arguments.length) {
             return _order;
         }
-        _order = _;
+        _order = order;
         return _chart;
     };
 
     /**
-    #### .promptText([value])
-    Gets or sets the text displayed in the options used to prompt selection.
-    The default is 'Select all'.
-    ```
-        chart.promptText('All states');
-    ```
-    **/
+     * Get or set the text displayed in the options used to prompt selection.
+     * @name promptText
+     * @memberof dc.selectMenu
+     * @instance
+     * @param {String} [promptText='Select all']
+     * @example
+     * chart.promptText('All states');
+     **/
     _chart.promptText = function (_) {
         if (!arguments.length) {
             return _promptText;
@@ -193,50 +185,60 @@ dc.selectMenu = function (parent, chartGroup) {
     };
 
     /**
-    #### .filterDisplayed([function])
-    Get or set the function that filters option tags prior to display.
-    By default options with a value of < 1 are not displayed.
-    To always display all options override the `filterDisplayed` function:
-    ```
-        chart.filterDisplayed(function() {
-            return true;
-        });
-    ```
-    **/
-    _chart.filterDisplayed = function (_) {
+     * Get or set the function that filters option tags prior to display. By default options
+     * with a value of < 1 are not displayed.
+     * @name filterDisplayed
+     * @memberof dc.selectMenu
+     * @instance
+     * @param {function} [filterDisplayed]
+     * @example
+     * // display all options override the `filterDisplayed` function:
+     * chart.filterDisplayed(function () {
+     *     return true;
+     * });
+     **/
+    _chart.filterDisplayed = function (filterDisplayed) {
         if (!arguments.length) {
             return _filterDisplayed;
         }
-        _filterDisplayed = _;
+        _filterDisplayed = filterDisplayed;
         return _chart;
     };
 
     /**
-    #### .multiple([bool])
-    Controls the type of select menu (single select is default). Setting it to true converts the underlying
-    HTML tag into a multiple select.
-    ```
-        chart.multiple(true);
-    ```
-    **/
-    _chart.multiple = function (_) {
+     * Controls the type of select menu. Setting it to true converts the underlying
+     * HTML tag into a multiple select.
+     * @name multiple
+     * @memberof dc.selectMenu
+     * @instance
+     * @param {boolean} [multiple=false]
+     * @example
+     * chart.multiple(true);
+     **/
+    _chart.multiple = function (multiple) {
         if (!arguments.length) {
             return _multiple;
         }
-        _multiple = _;
+        _multiple = multiple;
 
         return _chart;
     };
 
     /**
-     #### .size([number])
-     Controls the height, in lines, of the select menu, when `.multiple()` is true. Default: undefined (not set).
+     * Controls the height, in lines, of the select menu, when `.multiple()` is true. If `null` (the default),
+     * uses the browser's default height.
+     * @name size
+     * @memberof dc.selectMenu
+     * @instance
+     * @param {?number} [size
+     * @example
+     * chart.size(10);
      **/
-    _chart.size = function (_) {
+    _chart.size = function (size) {
         if (!arguments.length) {
             return _size;
         }
-        _size = _;
+        _size = size;
 
         return _chart;
     };
