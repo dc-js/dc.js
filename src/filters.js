@@ -8,7 +8,7 @@
  * These filter constructors are used as appropriate by the various charts to implement brushing.  We
  * mention below which chart uses which filter.  In some cases, many instances of a filter will be added.
  * @name filters
- * @memberOf dc
+ * @memberof dc
  * @type {{}}
  */
 dc.filters = {};
@@ -17,7 +17,7 @@ dc.filters = {};
  * RangedFilter is a filter which accepts keys between `low` and `high`.  It is used to implement X
  * axis brushing for the [coordinate grid charts](#coordinate-grid-mixin).
  * @name RangedFilter
- * @memberOf dc.filters
+ * @memberof dc.filters
  * @param {Number} low
  * @param {Number} high
  * @returns {Array<Number>}
@@ -37,21 +37,21 @@ dc.filters.RangedFilter = function (low, high) {
  * [heat map chart](#heat-map) to include particular cells as they are clicked.  (Rows and columns are
  * filtered by filtering all the cells in the row or column.)
  * @name TwoDimensionalFilter
- * @memberOf dc.filters
+ * @memberof dc.filters
  * @param {Array<Number>} filter
  * @returns {Array<Number>}
  * @constructor
  */
-dc.filters.TwoDimensionalFilter = function (array) {
-    if (array === null) { return null; }
+dc.filters.TwoDimensionalFilter = function (filter) {
+    if (filter === null) { return null; }
 
-    var filter = array;
-    filter.isFiltered = function (value) {
-        return value.length && value.length === filter.length &&
-               value[0] === filter[0] && value[1] === filter[1];
+    var f = filter;
+    f.isFiltered = function (value) {
+        return value.length && value.length === f.length &&
+               value[0] === f[0] && value[1] === f[1];
     };
 
-    return filter;
+    return f;
 };
 
 /**
@@ -66,27 +66,27 @@ dc.filters.TwoDimensionalFilter = function (array) {
  * two x coordinates `x1` and `x2` and returns a filter which accepts any points for which `x1 <= x <
  * x2`.
  * @name RangedTwoDimensionalFilter
- * @memberOf dc.filters
+ * @memberof dc.filters
  * @param {Array<Array<Number>>} filter
  * @returns {Array<Array<Number>>}
  * @constructor
  */
-dc.filters.RangedTwoDimensionalFilter = function (array) {
-    if (array === null) { return null; }
+dc.filters.RangedTwoDimensionalFilter = function (filter) {
+    if (filter === null) { return null; }
 
-    var filter = array;
+    var f = filter;
     var fromBottomLeft;
 
-    if (filter[0] instanceof Array) {
+    if (f[0] instanceof Array) {
         fromBottomLeft = [
-            [Math.min(array[0][0], array[1][0]), Math.min(array[0][1], array[1][1])],
-            [Math.max(array[0][0], array[1][0]), Math.max(array[0][1], array[1][1])]
+            [Math.min(filter[0][0], filter[1][0]), Math.min(filter[0][1], filter[1][1])],
+            [Math.max(filter[0][0], filter[1][0]), Math.max(filter[0][1], filter[1][1])]
         ];
     } else {
-        fromBottomLeft = [[array[0], -Infinity], [array[1], Infinity]];
+        fromBottomLeft = [[filter[0], -Infinity], [filter[1], Infinity]];
     }
 
-    filter.isFiltered = function (value) {
+    f.isFiltered = function (value) {
         var x, y;
 
         if (value instanceof Array) {
@@ -104,5 +104,5 @@ dc.filters.RangedTwoDimensionalFilter = function (array) {
                y >= fromBottomLeft[0][1] && y < fromBottomLeft[1][1];
     };
 
-    return filter;
+    return f;
 };

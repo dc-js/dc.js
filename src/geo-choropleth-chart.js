@@ -4,7 +4,7 @@
  * Examples:
  * - [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
  * @name geoChoroplethChart
- * @memberOf dc
+ * @memberof dc
  * @mixes dc.colorMixin
  * @mixes dc.baseMixin
  * @example
@@ -179,7 +179,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * if you have multiple GeoJson data layers to render on top of each other. If you overlay multiple
      * layers with the same name the new overlay will override the existing one.
      * @name overlayGeoJson
-     * @memberOf dc.geoChoroplethChart
+     * @memberof dc.geoChoroplethChart
      * @instance
      * @example
      * // insert a layer for rendering US states
@@ -208,7 +208,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * Set custom geo projection function. See the available [d3 geo projection
      * functions](https://github.com/mbostock/d3/wiki/Geo-Projections).
      * @name projection
-     * @memberOf dc.geoChoroplethChart
+     * @memberof dc.geoChoroplethChart
      * @instance
      * @param {d3.projection} [projection=d3.projection.albersUsa()]
      * @returns {Chart}
@@ -224,7 +224,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * reference to this chart's internal data structure, so any modification to this array will also
      * modify this chart's internal registration.
      * @name geoJsons
-     * @memberOf dc.geoChoroplethChart
+     * @memberof dc.geoChoroplethChart
      * @instance
      * @returns {Array<{name:String, data: Object, accessor: Function}>}
      */
@@ -237,7 +237,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * render the projection and features.  Can be useful for figuring out the bounding box of the
      * feature set and thus a way to calculate scale and translation for the projection.
      * @name geoPath
-     * @memberOf dc.geoChoroplethChart
+     * @memberof dc.geoChoroplethChart
      * @instance
      * @returns {d3.geo.path}
      */
@@ -248,7 +248,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     /**
      * Remove a GeoJson layer from this chart by name
      * @name removeGeoJson
-     * @memberOf dc.geoChoroplethChart
+     * @memberof dc.geoChoroplethChart
      * @instance
      * @param {String} name
      * @returns {Chart}

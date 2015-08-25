@@ -110,7 +110,7 @@ dc.deregisterAllCharts = function (group) {
 /**
  * Clear all filters on all charts within the given chart group. If the chart group is not given then
  * only charts that belong to the default chart group will be reset.
- * @memberOf dc
+ * @memberof dc
  * @name filterAll
  * @param {String} [group]
  */
@@ -124,7 +124,7 @@ dc.filterAll = function (group) {
 /**
  * Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
  * not given then only charts that belong to the default chart group will be reset.
- * @memberOf dc
+ * @memberof dc
  * @name refocusAll
  * @param {String} [group]
  */
@@ -140,7 +140,7 @@ dc.refocusAll = function (group) {
 /**
  * Re-render all charts belong to the given chart group. If the chart group is not given then only
  * charts that belong to the default chart group will be re-rendered.
- * @memberOf dc
+ * @memberof dc
  * @name renderAll
  * @param {String} [group]
  */
@@ -160,7 +160,7 @@ dc.renderAll = function (group) {
  * that belong to the default chart group will be re-drawn. Redraw is different from re-render since
  * when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
  * from scratch.
- * @memberOf dc
+ * @memberof dc
  * @name redrawAll
  * @param {String} [group]
  */
@@ -178,7 +178,7 @@ dc.redrawAll = function (group) {
 /**
  * If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
  * immediately
- * @memberOf dc
+ * @memberof dc
  * @name disableTransitions
  * @type {Boolean}
  * @default false
@@ -216,7 +216,7 @@ dc.optionalTransition = function (enable, duration, callback, name) {
 
 /**
  * @name units
- * @memberOf dc
+ * @memberof dc
  * @type {{}}
  */
 dc.units = {};
@@ -226,7 +226,7 @@ dc.units = {};
  * be used when the x values are a sequence of integers.
  * It is a function that counts the number of integers in the range supplied in its start and end parameters.
  * @name integers
- * @memberOf dc.units
+ * @memberof dc.units
  * @example
  * chart.xUnits(dc.units.integers) // already the default
  * @param {Number} start
@@ -242,7 +242,7 @@ dc.units.integers = function (start, end) {
  * axis. Usually this parameter is used in combination with passing `d3.scale.ordinal()` to `.x`.
  * It just returns the domain passed to it, which for ordinal charts is an array of all values.
  * @name ordinal
- * @memberOf dc.units
+ * @memberof dc.units
  * @example
  * chart.xUnits(dc.units.ordinal)
  *      .x(d3.scale.ordinal())
@@ -251,13 +251,13 @@ dc.units.integers = function (start, end) {
  * @param {Array<String>} domain
  * @returns {Array<String>}
  */
-dc.units.ordinal = function (s, e, domain) {
+dc.units.ordinal = function (start, end, domain) {
     return domain;
 };
 
 /**
  * @name fp
- * @memberOf dc.units
+ * @memberof dc.units
  * @type {{}}
  */
 dc.units.fp = {};
@@ -268,7 +268,7 @@ dc.units.fp = {};
  * The returned function determines how many values at the given precision will fit into the range
  * supplied in its start and end parameters.
  * @name precision
- * @memberOf dc.units.fp
+ * @memberof dc.units.fp
  * @example
  * // specify values (and ticks) every 0.1 units
  * chart.xUnits(dc.units.fp.precision(0.1)

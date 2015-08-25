@@ -4,7 +4,7 @@
  * - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
  * - [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
  * @name lineChart
- * @memberOf dc
+ * @memberof dc
  * @mixes dc.stackMixin
  * @mixes dc.coordinateGridMixin
  * @example
@@ -76,16 +76,16 @@ dc.lineChart = function (parent, chartGroup) {
      * [d3.svg.area.interpolate](https://github.com/mbostock/d3/wiki/SVG-Shapes#area_interpolate),
      * where you can find a complete list of valid arguments
      * @name interpolate
-     * @memberOf dc.lineChart
+     * @memberof dc.lineChart
      * @instance
-     * @param  {String} [interpolate]
+     * @param  {String} [interpolate='linear']
      * @returns {Chart}
      */
-    _chart.interpolate = function (_) {
+    _chart.interpolate = function (interpolate) {
         if (!arguments.length) {
             return _interpolate;
         }
-        _interpolate = _;
+        _interpolate = interpolate;
         return _chart;
     };
 
@@ -95,16 +95,16 @@ dc.lineChart = function (parent, chartGroup) {
      * [d3.svg.line.tension](https://github.com/mbostock/d3/wiki/SVG-Shapes#line_tension) and
      * [d3.svg.area.tension](https://github.com/mbostock/d3/wiki/SVG-Shapes#area_tension).
      * @name tension
-     * @memberOf dc.lineChart
+     * @memberof dc.lineChart
      * @instance
      * @param  {Number} [tension=0.7]
      * @returns {Chart}
      */
-    _chart.tension = function (_) {
+    _chart.tension = function (tension) {
         if (!arguments.length) {
             return _tension;
         }
-        _tension = _;
+        _tension = tension;
         return _chart;
     };
 
@@ -118,16 +118,16 @@ dc.lineChart = function (parent, chartGroup) {
      * custom reduce functions to get this to work, depending on your data. See
      * https://github.com/dc-js/dc.js/issues/615#issuecomment-49089248
      * @name defined
-     * @memberOf dc.lineChart
+     * @memberof dc.lineChart
      * @instance
      * @param  {Function} [defined]
      * @returns {Chart}
      */
-    _chart.defined = function (_) {
+    _chart.defined = function (defined) {
         if (!arguments.length) {
             return _defined;
         }
-        _defined = _;
+        _defined = defined;
         return _chart;
     };
 
@@ -135,7 +135,7 @@ dc.lineChart = function (parent, chartGroup) {
      * Set the line's d3 dashstyle. This value becomes the 'stroke-dasharray' of line. Defaults to empty
      * array (solid line).
      * @name dashStyle
-     * @memberOf dc.lineChart
+     * @memberof dc.lineChart
      * @instance
      * @example
      * // create a Dash Dot Dot Dot
@@ -143,11 +143,11 @@ dc.lineChart = function (parent, chartGroup) {
      * @param  {Array<Number>} [dashStyle=[]]
      * @returns {Chart}
      */
-    _chart.dashStyle = function (_) {
+    _chart.dashStyle = function (dashStyle) {
         if (!arguments.length) {
             return _dashStyle;
         }
-        _dashStyle = _;
+        _dashStyle = dashStyle;
         return _chart;
     };
 
@@ -155,16 +155,16 @@ dc.lineChart = function (parent, chartGroup) {
      * Get or set render area flag. If the flag is set to true then the chart will render the area
      * beneath each line and the line chart effectively becomes an area chart.
      * @name renderArea
-     * @memberOf dc.lineChart
+     * @memberof dc.lineChart
      * @instance
      * @param  {Boolean} [renderArea=false]
      * @returns {Chart}
      */
-    _chart.renderArea = function (_) {
+    _chart.renderArea = function (renderArea) {
         if (!arguments.length) {
             return _renderArea;
         }
-        _renderArea = _;
+        _renderArea = renderArea;
         return _chart;
     };
 
@@ -349,32 +349,32 @@ dc.lineChart = function (parent, chartGroup) {
      * Turn on/off the mouseover behavior of an individual data point which renders a circle and x/y axis
      * dashed lines back to each respective axis.  This is ignored if the chart brush is on (`brushOn`)
      * @name xyTipsOn
-     * @memberOf dc.lineChart
+     * @memberof dc.lineChart
      * @instance
      * @param  {Boolean} [xyTipsOn=false]
      * @returns {Chart}
      */
-    _chart.xyTipsOn = function (_) {
+    _chart.xyTipsOn = function (xyTipsOn) {
         if (!arguments.length) {
             return _xyTipsOn;
         }
-        _xyTipsOn = _;
+        _xyTipsOn = xyTipsOn;
         return _chart;
     };
 
     /**
      * Get or set the radius (in px) for dots displayed on the data points.
      * @name dotRadius
-     * @memberOf dc.lineChart
+     * @memberof dc.lineChart
      * @instance
      * @param  {Number} [dotRadius=5]
      * @returns {Chart}
      */
-    _chart.dotRadius = function (_) {
+    _chart.dotRadius = function (dotRadius) {
         if (!arguments.length) {
             return _dotRadius;
         }
-        _dotRadius = _;
+        _dotRadius = dotRadius;
         return _chart;
     };
 
@@ -384,7 +384,7 @@ dc.lineChart = function (parent, chartGroup) {
      *
      * If no `options` are provided, the current `options` values are instead returned.
      * @name renderDataPoints
-     * @memberOf dc.lineChart
+     * @memberof dc.lineChart
      * @instance
      * @example
      * chart.renderDataPoints({radius: 2, fillOpacity: 0.8, strokeOpacity: 0.8})

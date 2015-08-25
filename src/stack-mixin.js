@@ -1,7 +1,7 @@
 /**
  * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.layout.stack.
  * @name stackMixin
- * @memberOf dc
+ * @memberof dc
  * @mixin
  * @param {Chart} _chart
  * @returns {Chart}
@@ -62,7 +62,7 @@ dc.stackMixin = function (_chart) {
      * of keys on the x axis, while stacked vertically. If name is specified then it will be used to
      * generate the legend label.
      * @name stack
-     * @memberOf dc.stackMixin
+     * @memberof dc.stackMixin
      * @instance
      * @example
      * // stack group using default accessor
@@ -112,7 +112,7 @@ dc.stackMixin = function (_chart) {
      * Allow named stacks to be hidden or shown by clicking on legend items.
      * This does not affect the behavior of hideStack or showStack.
      * @name hidableStacks
-     * @memberOf dc.stackMixin
+     * @memberof dc.stackMixin
      * @instance
      * @param {Boolean} hidableStacks
      * @returns {Chart}
@@ -134,7 +134,7 @@ dc.stackMixin = function (_chart) {
      * Hide all stacks on the chart with the given name.
      * The chart must be re-rendered for this change to appear.
      * @name hideStack
-     * @memberOf dc.stackMixin
+     * @memberof dc.stackMixin
      * @instance
      * @param {String} stackName
      * @returns {Chart}
@@ -151,7 +151,7 @@ dc.stackMixin = function (_chart) {
      * Show all stacks on the chart with the given name.
      * The chart must be re-rendered for this change to appear.
      * @name showStack
-     * @memberOf dc.stackMixin
+     * @memberof dc.stackMixin
      * @instance
      * @param {String} stackName
      * @returns {Chart}
@@ -209,7 +209,7 @@ dc.stackMixin = function (_chart) {
      * If the first argument is a stack name, the title function will get or set the title for that stack. If stackName
      * is not provided, the first stack is implied.
      * @name title
-     * @memberOf dc.stackMixin
+     * @memberof dc.stackMixin
      * @instance
      * @example
      * // set a title function on 'first stack'
@@ -245,7 +245,7 @@ dc.stackMixin = function (_chart) {
      * Gets or sets the stack layout algorithm, which computes a baseline for each stack and
      * propagates it to the next
      * @name stackLayout
-     * @memberOf dc.stackMixin
+     * @memberof dc.stackMixin
      * @instance
      * @param {Function} [stack=d3.layout.stack]
      * @returns {Chart}

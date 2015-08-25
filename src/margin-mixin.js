@@ -2,7 +2,7 @@
  * Margin is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid
  * Charts.
  * @name marginMixin
- * @memberOf dc
+ * @memberof dc
  * @mixin
  * @param {Chart} _chart
  * @returns {Chart}
@@ -14,7 +14,7 @@ dc.marginMixin = function (_chart) {
      * Get or set the margins for a particular coordinate grid chart instance. The margins is stored as
      * an associative Javascript array.
      * @name margins
-     * @memberOf dc.marginMixin
+     * @memberof dc.marginMixin
      * @instance
      * @example
      * var leftMargin = chart.margins().left; // 30 by default
@@ -23,11 +23,11 @@ dc.marginMixin = function (_chart) {
      * @param {{top:Number, right: Number, left: Number, bottom: Number}} [margins={top: 10, right: 50, bottom: 30, left: 30}]
      * @returns {Chart}
      */
-    _chart.margins = function (m) {
+    _chart.margins = function (margins) {
         if (!arguments.length) {
             return _margin;
         }
-        _margin = m;
+        _margin = margins;
         return _chart;
     };
 

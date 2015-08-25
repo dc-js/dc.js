@@ -1,7 +1,7 @@
 /**
  * A scatter plot chart
  * @name scatterPlot
- * @memberOf dc
+ * @memberof dc
  * @mixes dc.coordinateGridMixin
  * @example
  * // create a scatter plot under #chart-container1 element using the default global chart group
@@ -83,16 +83,16 @@ dc.scatterPlot = function (parent, chartGroup) {
      * opacity 1; if it does not exist, it is drawn with hiddenSize radius and opacity 0. By default,
      * the existence accessor checks if the reduced value is truthy.
      * @name existenceAccessor
-     * @memberOf dc.scatterPlot
+     * @memberof dc.scatterPlot
      * @instance
      * @param {Function} [accessor]
      * @returns {Chart}
      */
-    _chart.existenceAccessor = function (acc) {
+    _chart.existenceAccessor = function (accessor) {
         if (!arguments.length) {
             return _existenceAccessor;
         }
-        _existenceAccessor = acc;
+        _existenceAccessor = accessor;
         return this;
     };
 
@@ -101,7 +101,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * [docs](https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-symbol_type) for acceptable types.
      * Type can be a constant or an accessor.
      * @name symbol
-     * @memberOf dc.scatterPlot
+     * @memberof dc.scatterPlot
      * @instance
      * @param {Function} [type]
      * @returns {Chart}
@@ -117,48 +117,48 @@ dc.scatterPlot = function (parent, chartGroup) {
     /**
      * Set or get radius for symbols.
      * @name symbolSize
-     * @memberOf dc.scatterPlot
+     * @memberof dc.scatterPlot
      * @instance
-     * @param {Number} [radius=3]
+     * @param {Number} [symbolSize=3]
      * @returns {Chart}
      */
-    _chart.symbolSize = function (s) {
+    _chart.symbolSize = function (symbolSize) {
         if (!arguments.length) {
             return _symbolSize;
         }
-        _symbolSize = s;
+        _symbolSize = symbolSize;
         return _chart;
     };
 
     /**
      * Set or get radius for highlighted symbols.
      * @name highlightedSize
-     * @memberOf dc.scatterPlot
+     * @memberof dc.scatterPlot
      * @instance
-     * @param {Number} [radius=4]
+     * @param {Number} [highlightedSize=5]
      * @returns {Chart}
      */
-    _chart.highlightedSize = function (s) {
+    _chart.highlightedSize = function (highlightedSize) {
         if (!arguments.length) {
             return _highlightedSize;
         }
-        _highlightedSize = s;
+        _highlightedSize = highlightedSize;
         return _chart;
     };
 
     /**
      * Set or get radius for symbols when the group is empty.
      * @name hiddenSize
-     * @memberOf dc.scatterPlot
+     * @memberof dc.scatterPlot
      * @instance
-     * @param {Number} [radius=0]
+     * @param {Number} [_hiddenSize=0]
      * @returns {Chart}
      */
-    _chart.hiddenSize = function (s) {
+    _chart.hiddenSize = function (_hiddenSize) {
         if (!arguments.length) {
             return _hiddenSize;
         }
-        _hiddenSize = s;
+        _hiddenSize = _hiddenSize;
         return _chart;
     };
 

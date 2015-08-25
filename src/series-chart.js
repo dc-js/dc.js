@@ -3,7 +3,7 @@
  * series is specified in the data. It is a specialization of Composite Chart and inherits all
  * composite features other than recomposing the chart.
  * @name seriesChart
- * @memberOf dc
+ * @memberof dc
  * @mixes dc.compositeChart
  * @example
  * // create a series chart under #chart-container1 element using the default global chart group
@@ -89,21 +89,21 @@ dc.seriesChart = function (parent, chartGroup) {
     /**
      * Get or set the chart function, which generates the child charts.
      * @name chart
-     * @memberOf dc.seriesChart
+     * @memberof dc.seriesChart
      * @instance
      * @example
      * // put interpolation on the line charts used for the series
      * chart.chart(function(c) { return dc.lineChart(c).interpolate('basis'); })
      * // do a scatter series chart
      * chart.chart(dc.scatterPlot)
-     * @param {Function} chartFunction=dc.lineChart
+     * @param {Function} [chartFunction=dc.lineChart]
      * @returns {Chart}
      */
-    _chart.chart = function (_) {
+    _chart.chart = function (chartFunction) {
         if (!arguments.length) {
             return _chartFunction;
         }
-        _chartFunction = _;
+        _chartFunction = chartFunction;
         resetChildren();
         return _chart;
     };
@@ -112,16 +112,16 @@ dc.seriesChart = function (parent, chartGroup) {
      * Get or set accessor function for the displayed series. Given a datum, this function
      * should return the series that datum belongs to.
      * @name seriesAccessor
-     * @memberOf dc.seriesChart
+     * @memberof dc.seriesChart
      * @instance
      * @param {Function} [accessor]
      * @returns {Chart}
      */
-    _chart.seriesAccessor = function (_) {
+    _chart.seriesAccessor = function (accessor) {
         if (!arguments.length) {
             return _seriesAccessor;
         }
-        _seriesAccessor = _;
+        _seriesAccessor = accessor;
         resetChildren();
         return _chart;
     };
@@ -129,18 +129,18 @@ dc.seriesChart = function (parent, chartGroup) {
     /**
      * Get or set a function to sort the list of series by, given series values.
      * @name seriesSort
-     * @memberOf dc.seriesChart
+     * @memberof dc.seriesChart
      * @instance
      * @example
      * chart.seriesSort(d3.descending);
-     * @param {Function} [sortFunction]
+     * @param {Function} [sortFunction=d3.ascending]
      * @returns {Chart}
      */
-    _chart.seriesSort = function (_) {
+    _chart.seriesSort = function (sortFunction) {
         if (!arguments.length) {
             return _seriesSort;
         }
-        _seriesSort = _;
+        _seriesSort = sortFunction;
         resetChildren();
         return _chart;
     };
@@ -150,16 +150,16 @@ dc.seriesChart = function (parent, chartGroup) {
      * for example, will ensure a lineChart series connects its points in increasing key/x order,
      * rather than haphazardly.
      * @name valueSort
-     * @memberOf dc.seriesChart
+     * @memberof dc.seriesChart
      * @instance
      * @param {Function} [sortFunction]
      * @returns {Chart}
      */
-    _chart.valueSort = function (_) {
+    _chart.valueSort = function (sortFunction) {
         if (!arguments.length) {
             return _valueSort;
         }
-        _valueSort = _;
+        _valueSort = sortFunction;
         resetChildren();
         return _chart;
     };

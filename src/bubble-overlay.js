@@ -6,7 +6,7 @@
  * Examples:
  * - [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
  * @name bubbleOverlay
- * @memberOf dc
+ * @memberof dc
  * @mixes dc.bubbleMixin
  * @mixes dc.baseMixin
  * @example
@@ -22,7 +22,7 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {BubbleOverlay}
  */
-dc.bubbleOverlay = function (root, chartGroup) {
+dc.bubbleOverlay = function (parent, chartGroup) {
     var BUBBLE_OVERLAY_CLASS = 'bubble-overlay';
     var BUBBLE_NODE_CLASS = 'node';
     var BUBBLE_CLASS = 'bubble';
@@ -34,7 +34,7 @@ dc.bubbleOverlay = function (root, chartGroup) {
      * element; therefore the bubble overlay chart will not work if this function is not invoked. If the
      * underlying image is a bitmap, then an empty svg will need to be created on top of the image.
      * @name svg
-     * @memberOf dc.bubbleOverlay
+     * @memberof dc.bubbleOverlay
      * @instance
      * @example
      * // set up underlying svg element
@@ -60,7 +60,7 @@ dc.bubbleOverlay = function (root, chartGroup) {
      * then a bubble will be generated at the position specified by the function. x and y
      * value specified here are relative to the underlying svg.
      * @name point
-     * @memberOf dc.bubbleOverlay
+     * @memberof dc.bubbleOverlay
      * @instance
      * @param {String} name
      * @param {Number} x
@@ -201,7 +201,7 @@ dc.bubbleOverlay = function (root, chartGroup) {
         return _chart;
     };
 
-    _chart.anchor(root, chartGroup);
+    _chart.anchor(parent, chartGroup);
 
     return _chart;
 };
