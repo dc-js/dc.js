@@ -9,7 +9,7 @@
  * Examples:
  * - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
  * @name dataTable
- * @memberOf dc
+ * @memberof dc
  * @mixes dc.baseMixin
  * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
  * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
@@ -189,16 +189,16 @@ dc.dataTable = function (parent, chartGroup) {
     /**
      * Get or set the table size which determines the number of rows displayed by the widget.
      * @name size
-     * @memberOf dc.dataTable
+     * @memberof dc.dataTable
      * @instance
-     * @param {Number} [size]
+     * @param {Number} [size=25]
      * @returns {Chart}
      */
-    _chart.size = function (s) {
+    _chart.size = function (size) {
         if (!arguments.length) {
             return _size;
         }
-        _size = s;
+        _size = size;
         return _chart;
     };
 
@@ -228,7 +228,7 @@ dc.dataTable = function (parent, chartGroup) {
      *
      * The third example, where all fields are specified using the Object = [Label, Fn] method.
      * @name columns
-     * @memberOf dc.dataTable
+     * @memberof dc.dataTable
      * @instance
      * @example
      * chart.columns([
@@ -260,14 +260,14 @@ dc.dataTable = function (parent, chartGroup) {
      *     ["Volume",
      *         function (d) { return d.volume; }]
      * ]);
-     * @param {Array<Function>} [columns]
+     * @param {Array<Function>} [columns=[]]
      * @returns {Chart}
      */
-    _chart.columns = function (_) {
+    _chart.columns = function (columns) {
         if (!arguments.length) {
             return _columns;
         }
-        _columns = _;
+        _columns = columns;
         return _chart;
     };
 
@@ -275,7 +275,7 @@ dc.dataTable = function (parent, chartGroup) {
      * Get or set sort-by function. This function works as a value accessor at row level and returns a
      * particular field to be sorted by. Default value: identity function
      * @name sortBy
-     * @memberOf dc.dataTable
+     * @memberof dc.dataTable
      * @instance
      * @example
      * chart.sortBy(function(d) {
@@ -284,29 +284,29 @@ dc.dataTable = function (parent, chartGroup) {
      * @param {Function} [sortBy]
      * @returns {Chart}
      */
-    _chart.sortBy = function (_) {
+    _chart.sortBy = function (sortBy) {
         if (!arguments.length) {
             return _sortBy;
         }
-        _sortBy = _;
+        _sortBy = sortBy;
         return _chart;
     };
 
     /**
      * Get or set sort order.
      * @name order
-     * @memberOf dc.dataTable
+     * @memberof dc.dataTable
      * @instance
      * @example
      * chart.order(d3.descending);
      * @param {Function} [order=d3.ascending]
      * @returns {Chart}
      */
-    _chart.order = function (_) {
+    _chart.order = function (order) {
         if (!arguments.length) {
             return _order;
         }
-        _order = _;
+        _order = order;
         return _chart;
     };
 
@@ -315,7 +315,7 @@ dc.dataTable = function (parent, chartGroup) {
      *
      * The .group() getter-setter must be provided in either case.
      * @name order
-     * @memberOf dc.dataTable
+     * @memberof dc.dataTable
      * @instance
      * @example
      * chart
@@ -324,11 +324,11 @@ dc.dataTable = function (parent, chartGroup) {
      * @param {Boolean} [showGroups=true]
      * @returns {Chart}
      */
-    _chart.showGroups = function (_) {
+    _chart.showGroups = function (showGroups) {
         if (!arguments.length) {
             return _showGroups;
         }
-        _showGroups = _;
+        _showGroups = showGroups;
         return _chart;
     };
 

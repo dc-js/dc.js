@@ -17,7 +17,8 @@
     "disallowSpacesInAnonymousFunctionExpression": null,
     "disallowSpacesInFunctionDeclaration": null,
     "jsDoc": {
-        "checkAnnotations": true,
+        "checkAnnotations": "jsdoc3",
+        "checkParamNames": true,
         "requireParamTypes": true,
         "checkRedundantParams": true,
         "checkReturnTypes": true,

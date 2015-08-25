@@ -5,7 +5,7 @@
  * - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
  * - [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
  * @name legend
- * @memberOf dc
+ * @memberof dc
  * @example
  * chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
  * @returns {Legend}
@@ -113,7 +113,7 @@ dc.legend = function () {
     /**
      * Set or get x coordinate for legend widget.
      * @name x
-     * @memberOf dc.legend
+     * @memberof dc.legend
      * @instance
      * @param  {Number} [x=0]
      * @returns {Legend}
@@ -129,7 +129,7 @@ dc.legend = function () {
     /**
      * Set or get y coordinate for legend widget.
      * @name y
-     * @memberOf dc.legend
+     * @memberof dc.legend
      * @instance
      * @param  {Number} [y=0]
      * @returns {Legend}
@@ -145,7 +145,7 @@ dc.legend = function () {
     /**
      * Set or get gap between legend items.
      * @name gap
-     * @memberOf dc.legend
+     * @memberof dc.legend
      * @instance
      * @param  {Number} [gap=5]
      * @returns {Legend}
@@ -161,64 +161,64 @@ dc.legend = function () {
     /**
      * Set or get legend item height.
      * @name itemHeight
-     * @memberOf dc.legend
+     * @memberof dc.legend
      * @instance
      * @param  {Number} [itemHeight=12]
      * @returns {Legend}
      */
-    _legend.itemHeight = function (h) {
+    _legend.itemHeight = function (itemHeight) {
         if (!arguments.length) {
             return _itemHeight;
         }
-        _itemHeight = h;
+        _itemHeight = itemHeight;
         return _legend;
     };
 
     /**
      * Position legend horizontally instead of vertically.
      * @name horizontal
-     * @memberOf dc.legend
+     * @memberof dc.legend
      * @instance
-     * @param  {Boolean} [horizontal]
+     * @param  {Boolean} [horizontal=false]
      * @returns {Legend}
      */
-    _legend.horizontal = function (_) {
+    _legend.horizontal = function (horizontal) {
         if (!arguments.length) {
             return _horizontal;
         }
-        _horizontal = _;
+        _horizontal = horizontal;
         return _legend;
     };
 
     /**
      * Maximum width for horizontal legend.
      * @name legendWidth
-     * @memberOf dc.legend
+     * @memberof dc.legend
      * @instance
      * @param  {Number} [legendWidth=500]
      * @returns {Legend}
      */
-    _legend.legendWidth = function (_) {
+    _legend.legendWidth = function (legendWidth) {
         if (!arguments.length) {
             return _legendWidth;
         }
-        _legendWidth = _;
+        _legendWidth = legendWidth;
         return _legend;
     };
 
     /**
      * legendItem width for horizontal legend.
      * @name itemWidth
-     * @memberOf dc.legend
+     * @memberof dc.legend
      * @instance
      * @param  {Number} [itemWidth=70]
      * @returns {Legend}
      */
-    _legend.itemWidth = function (_) {
+    _legend.itemWidth = function (itemWidth) {
         if (!arguments.length) {
             return _itemWidth;
         }
-        _itemWidth = _;
+        _itemWidth = itemWidth;
         return _legend;
     };
 
@@ -226,16 +226,16 @@ dc.legend = function () {
      * Turn automatic width for legend items on or off. If true, itemWidth() is ignored.
      * This setting takes into account gap().
      * @name autoItemWidth
-     * @memberOf dc.legend
+     * @memberof dc.legend
      * @instance
      * @param  {Boolean} [autoItemWidth=false]
      * @returns {Legend}
      */
-    _legend.autoItemWidth = function (_) {
+    _legend.autoItemWidth = function (autoItemWidth) {
         if (!arguments.length) {
             return _autoItemWidth;
         }
-        _autoItemWidth = _;
+        _autoItemWidth = autoItemWidth;
         return _legend;
     };
 

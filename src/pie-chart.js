@@ -4,7 +4,7 @@
  * slice relative to the sum of all values. Slices are ordered by `.ordering` which defaults to sorting
  * by key.
  * @name pieChart
- * @memberOf dc
+ * @memberof dc
  * @mixes dc.capMixin
  * @mixes dc.colorMixin
  * @mixes dc.baseMixin
@@ -50,7 +50,7 @@ dc.pieChart = function (parent, chartGroup) {
      * Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
      * value from high to low. Other slices exeeding the cap will be rolled up into one single *Others* slice.
      * @name slicesCap
-     * @memberOf dc.pieChart
+     * @memberof dc.pieChart
      * @instance
      * @param {Number} [cap]
      * @returns {Chart}
@@ -250,16 +250,16 @@ dc.pieChart = function (parent, chartGroup) {
      * Get or set the external radius padding of the pie chart. This will force the radius of the
      * pie chart to become smaller or larger depending on the value.
      * @name externalRadiusPadding
-     * @memberOf dc.pieChart
+     * @memberof dc.pieChart
      * @instance
      * @param {Number} [externalRadiusPadding=0]
      * @returns {Chart}
      */
-    _chart.externalRadiusPadding = function (_) {
+    _chart.externalRadiusPadding = function (externalRadiusPadding) {
         if (!arguments.length) {
             return _externalRadiusPadding;
         }
-        _externalRadiusPadding = _;
+        _externalRadiusPadding = externalRadiusPadding;
         return _chart;
     };
 
@@ -267,16 +267,16 @@ dc.pieChart = function (parent, chartGroup) {
      * Get or set the inner radius of the pie chart. If the inner radius is greater than 0px then the
      * pie chart will be rendered as a doughnut chart.
      * @name innerRadius
-     * @memberOf dc.pieChart
+     * @memberof dc.pieChart
      * @instance
      * @param {Number} [innerRadius=0]
      * @returns {Chart}
      */
-    _chart.innerRadius = function (r) {
+    _chart.innerRadius = function (innerRadius) {
         if (!arguments.length) {
             return _innerRadius;
         }
-        _innerRadius = r;
+        _innerRadius = innerRadius;
         return _chart;
     };
 
@@ -284,23 +284,23 @@ dc.pieChart = function (parent, chartGroup) {
      * Get or set the outer radius. If the radius is not set, it will be half of the minimum of the
      * chart width and height.
      * @name radius
-     * @memberOf dc.pieChart
+     * @memberof dc.pieChart
      * @instance
      * @param {Number} [radius]
      * @returns {Chart}
      */
-    _chart.radius = function (r) {
+    _chart.radius = function (radius) {
         if (!arguments.length) {
             return _givenRadius;
         }
-        _givenRadius = r;
+        _givenRadius = radius;
         return _chart;
     };
 
     /**
      * Get or set center x coordinate position. Default is center of svg.
      * @name cx
-     * @memberOf dc.pieChart
+     * @memberof dc.pieChart
      * @instance
      * @param {Number} [cx]
      * @returns {Chart}
@@ -316,7 +316,7 @@ dc.pieChart = function (parent, chartGroup) {
     /**
      * Get or set center y coordinate position. Default is center of svg.
      * @name cy
-     * @memberOf dc.pieChart
+     * @memberof dc.pieChart
      * @instance
      * @param {Number} [cy]
      * @returns {Chart}
@@ -346,16 +346,16 @@ dc.pieChart = function (parent, chartGroup) {
      * Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
      * display a slice label.
      * @name minAngleForLabel
-     * @memberOf dc.pieChart
+     * @memberof dc.pieChart
      * @instance
      * @param {Number} [minAngleForLabel=0.5]
      * @returns {Chart}
      */
-    _chart.minAngleForLabel = function (_) {
+    _chart.minAngleForLabel = function (minAngleForLabel) {
         if (!arguments.length) {
             return _minAngleForLabel;
         }
-        _minAngleForLabel = _;
+        _minAngleForLabel = minAngleForLabel;
         return _chart;
     };
 
@@ -410,7 +410,7 @@ dc.pieChart = function (parent, chartGroup) {
     /**
      * Title to use for the only slice when there is no data.
      * @name emptyTitle
-     * @memberOf dc.pieChart
+     * @memberof dc.pieChart
      * @instance
      * @param {String} [title]
      * @returns {Chart}
@@ -428,7 +428,7 @@ dc.pieChart = function (parent, chartGroup) {
      *
      * The given argument sets the radial offset.
      * @name externalLabels
-     * @memberOf dc.pieChart
+     * @memberof dc.pieChart
      * @instance
      * @param {Number} [radius]
      * @returns {Chart}

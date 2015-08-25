@@ -3,7 +3,7 @@
  * Unlike other charts, you do not need to set a dimension. Instead a group object must be provided and
  * a valueAccessor that returns a single value.
  * @name numberDisplay
- * @memberOf dc
+ * @memberof dc
  * @mixes dc.baseMixin
  * @example
  * // create a number display under #chart-container1 element using the default global chart group
@@ -32,36 +32,36 @@ dc.numberDisplay = function (parent, chartGroup) {
      * - zero: HTML template to use if the number is 0
      * - some: HTML template to use otherwise
      * @name html
-     * @memberOf dc.numberDisplay
+     * @memberof dc.numberDisplay
      * @instance
      * @example
      * numberWidget.html({
      *      one:'%number record',
      *      some:'%number records',
      *      none:'no records'})
-     * @param {Object} [externalRadiusPadding=0]
+     * @param {{one:String, some:String, none:String}} [html={one: '', some: '', none: ''}]
      * @returns {Chart}
      */
-    _chart.html = function (s) {
+    _chart.html = function (html) {
         if (!arguments.length) {
             return _html;
         }
-        if (s.none) {
-            _html.none = s.none;//if none available
-        } else if (s.one) {
-            _html.none = s.one;//if none not available use one
-        } else if (s.some) {
-            _html.none = s.some;//if none and one not available use some
+        if (html.none) {
+            _html.none = html.none;//if none available
+        } else if (html.one) {
+            _html.none = html.one;//if none not available use one
+        } else if (html.some) {
+            _html.none = html.some;//if none and one not available use some
         }
-        if (s.one) {
-            _html.one = s.one;//if one available
-        } else if (s.some) {
-            _html.one = s.some;//if one not available use some
+        if (html.one) {
+            _html.one = html.one;//if one available
+        } else if (html.some) {
+            _html.one = html.some;//if one not available use some
         }
-        if (s.some) {
-            _html.some = s.some;//if some available
-        } else if (s.one) {
-            _html.some = s.one;//if some not available use one
+        if (html.some) {
+            _html.some = html.some;//if some available
+        } else if (html.one) {
+            _html.some = html.one;//if some not available use one
         }
         return _chart;
     };
@@ -69,7 +69,7 @@ dc.numberDisplay = function (parent, chartGroup) {
     /**
      * Calculate and return the underlying value of the display
      * @name value
-     * @memberOf dc.numberDisplay
+     * @memberof dc.numberDisplay
      * @instance
      * @returns {Number}
      */
@@ -122,16 +122,16 @@ dc.numberDisplay = function (parent, chartGroup) {
     /**
      * Get or set a function to format the value for the display.
      * @name formatNumber
-     * @memberOf dc.numberDisplay
+     * @memberof dc.numberDisplay
      * @instance
      * @param {Function} [formatter=d3.format('.2s')]
      * @returns {Chart}
      */
-    _chart.formatNumber = function (_) {
+    _chart.formatNumber = function (formatter) {
         if (!arguments.length) {
             return _formatNumber;
         }
-        _formatNumber = _;
+        _formatNumber = formatter;
         return _chart;
     };
 

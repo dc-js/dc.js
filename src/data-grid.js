@@ -9,7 +9,7 @@
  * Examples:
  * - [List of members of the european parliament](http://europarl.me/dc.js/web/ep/index.html)
  * @name dataGrid
- * @memberOf dc
+ * @memberof dc
  * @mixes dc.baseMixin
  * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
  * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
@@ -108,16 +108,16 @@ dc.dataGrid = function (parent, chartGroup) {
      * Get or set the index of the beginning slice which determines which entries get displayed by the widget
      * Useful when implementing pagination.
      * @name beginSlice
-     * @memberOf dc.dataGrid
+     * @memberof dc.dataGrid
      * @instance
      * @param {Number} [beginSlice=0]
      * @returns {Chart}
      */
-    _chart.beginSlice = function (_) {
+    _chart.beginSlice = function (beginSlice) {
         if (!arguments.length) {
             return _beginSlice;
         }
-        _beginSlice = _;
+        _beginSlice = beginSlice;
         return _chart;
     };
 
@@ -125,32 +125,32 @@ dc.dataGrid = function (parent, chartGroup) {
      * Get or set the index of the end slice which determines which entries get displayed by the widget
      * Useful when implementing pagination.
      * @name endSlice
-     * @memberOf dc.dataGrid
+     * @memberof dc.dataGrid
      * @instance
      * @param {Number} [endSlice]
      * @returns {Chart}
      */
-    _chart.endSlice = function (_) {
+    _chart.endSlice = function (endSlice) {
         if (!arguments.length) {
             return _endSlice;
         }
-        _endSlice = _;
+        _endSlice = endSlice;
         return _chart;
     };
 
     /**
      * Get or set the grid size which determines the number of items displayed by the widget.
      * @name size
-     * @memberOf dc.dataGrid
+     * @memberof dc.dataGrid
      * @instance
      * @param {Number} [size=999]
      * @returns {Chart}
      */
-    _chart.size = function (s) {
+    _chart.size = function (size) {
         if (!arguments.length) {
             return _size;
         }
-        _size = s;
+        _size = size;
         return _chart;
     };
 
@@ -159,36 +159,36 @@ dc.dataGrid = function (parent, chartGroup) {
      * function to generate dynamic html. Use your favourite templating engine or
      * generate the string directly.
      * @name html
-     * @memberOf dc.dataGrid
+     * @memberof dc.dataGrid
      * @instance
      * @example
      * chart.html(function (d) { return '<div class='item '+data.exampleCategory+''>'+data.exampleString+'</div>';});
      * @param {Function} [html]
      * @returns {Chart}
      */
-    _chart.html = function (_) {
+    _chart.html = function (html) {
         if (!arguments.length) {
             return _html;
         }
-        _html = _;
+        _html = html;
         return _chart;
     };
 
     /**
      * Get or set the function that formats a group label.
      * @name htmlGroup
-     * @memberOf dc.dataGrid
+     * @memberof dc.dataGrid
      * @instance
      * @example
      * chart.htmlGroup (function (d) { return '<h2>'.d.key . 'with ' . d.values.length .' items</h2>'});
      * @param {Function} [htmlGroup]
      * @returns {Chart}
      */
-    _chart.htmlGroup = function (_) {
+    _chart.htmlGroup = function (htmlGroup) {
         if (!arguments.length) {
             return _htmlGroup;
         }
-        _htmlGroup = _;
+        _htmlGroup = htmlGroup;
         return _chart;
     };
 
@@ -196,7 +196,7 @@ dc.dataGrid = function (parent, chartGroup) {
      * Get or set sort-by function. This function works as a value accessor at the item
      * level and returns a particular field to be sorted.
      * @name sortBy
-     * @memberOf dc.dataGrid
+     * @memberof dc.dataGrid
      * @instance
      * @example
      * chart.sortBy(function(d) {
@@ -205,29 +205,29 @@ dc.dataGrid = function (parent, chartGroup) {
      * @param {Function} [sortByFunction]
      * @returns {Chart}
      */
-    _chart.sortBy = function (_) {
+    _chart.sortBy = function (sortByFunction) {
         if (!arguments.length) {
             return _sortBy;
         }
-        _sortBy = _;
+        _sortBy = sortByFunction;
         return _chart;
     };
 
     /**
      * Get or set sort order function.
      * @name order
-     * @memberOf dc.dataGrid
+     * @memberof dc.dataGrid
      * @instance
      * @example
      * chart.order(d3.descending);
      * @param {Function} [order=d3.ascending]
      * @returns {Chart}
      */
-    _chart.order = function (_) {
+    _chart.order = function (order) {
         if (!arguments.length) {
             return _order;
         }
-        _order = _;
+        _order = order;
         return _chart;
     };
 

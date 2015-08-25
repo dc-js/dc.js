@@ -3,6 +3,8 @@
 * Fixes resizing examples to use `rescale` - currently all coordinate grid charts need to call this when changing width/height, in order to get axes moved ([#974](https://github.com/dc-js/dc.js/issues/974))
 * Update all dependencies, continued linting, by Matt Traynham ([#975](https://github.com/dc-js/dc.js/pull/975))
 * Bubble mixin minimum radius accessor ([#687](https://github.com/dc-js/dc.js/issues/687))
+* Example of single selection of ordinal bar chart (for [#996](https://github.com/dc-js/dc.js/issues/996))
+* Move documentation to JSDoc toolchain, by Matt Traynham ([#978](https://github.com/dc-js/dc.js/pull/978) / [#994](https://github.com/dc-js/dc.js/pull/994))
 
 ## 2.0.0 beta 17
 * Fixes issue where transitions were applied to the brush as it's being applied, causing it to lag ([#973](https://github.com/dc-js/dc.js/issues/973))

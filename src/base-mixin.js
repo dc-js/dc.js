@@ -3,7 +3,7 @@
  * for all chart and widget implementations. Methods from the Base Mixin are inherited
  * and available on all chart implementations in the DC library.
  * @name baseMixin
- * @memberOf dc
+ * @memberof dc
  * @mixin
  * @param {Chart} _chart
  * @returns {Chart}
@@ -97,7 +97,7 @@ dc.baseMixin = function (_chart) {
      * Set or get the width attribute of a chart. See `.height` below for further description of the
      * behavior.
      * @name width
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @param {Number|Function} w
      * @returns {Number}
@@ -121,7 +121,7 @@ dc.baseMixin = function (_chart) {
      * anchor element. If that isn't possible it defaults to 200. Setting the value falsy will return
      * the chart to the default behavior
      * @name height
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @example
      * chart.height(250); // Set the chart's height to 250px;
@@ -142,7 +142,7 @@ dc.baseMixin = function (_chart) {
      * Set or get the minimum width attribute of a chart. This only applicable if the width is
      * calculated by dc.
      * @name minWidth
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @param {Number} w
      * @returns {Number}
@@ -159,7 +159,7 @@ dc.baseMixin = function (_chart) {
      * Set or get the minimum height attribute of a chart. This only applicable if the height is
      * calculated by dc.
      * @name minHeight
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @param {Number} h
      * @returns {Number}
@@ -181,7 +181,7 @@ dc.baseMixin = function (_chart) {
      * If a value is given, then it will be used as the new dimension. If no value is specified then
      * the current dimension will be returned.
      * @name dimension
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @param {Dimension} d
      * @returns {Dimension}
@@ -200,7 +200,7 @@ dc.baseMixin = function (_chart) {
      * group and by default will return `group.all()`. This behavior may be modified to, for instance,
      * return only the top 5 groups.
      * @name data
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @example
      * chart.data(function(group) {
@@ -209,11 +209,11 @@ dc.baseMixin = function (_chart) {
      * @param {Function} [callback]
      * @returns {*}
      */
-    _chart.data = function (d) {
+    _chart.data = function (callback) {
         if (!arguments.length) {
             return _data.call(_chart, _group);
         }
-        _data = d3.functor(d);
+        _data = d3.functor(callback);
         _chart.expireCache();
         return _chart;
     };
@@ -229,17 +229,17 @@ dc.baseMixin = function (_chart) {
      * If no value specified then the current group will be returned.
      * If `name` is specified then it will be used to generate legend label.
      * @name group
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @param {Group} [group]
      * @param {String} [name]
      * @returns {Group}
      */
-    _chart.group = function (g, name) {
+    _chart.group = function (group, name) {
         if (!arguments.length) {
             return _group;
         }
-        _group = g;
+        _group = group;
         _chart._groupName = name;
         _chart.expireCache();
         return _chart;
@@ -248,7 +248,7 @@ dc.baseMixin = function (_chart) {
     /**
      * Get or set an accessor to order ordinal charts
      * @name ordering
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @param {Function} [orderFunction]
      * @returns {Function}
@@ -280,7 +280,7 @@ dc.baseMixin = function (_chart) {
     /**
      * Clear all filters associated with this chart.
      * @name filterAll
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @returns {Chart}
      */
@@ -295,7 +295,7 @@ dc.baseMixin = function (_chart) {
      * This function is **not chainable** since it does not return a chart instance; however the d3
      * selection result can be chained to d3 function calls.
      * @name select
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @example
      * // Similar to:
@@ -312,7 +312,7 @@ dc.baseMixin = function (_chart) {
      * This function is **not chainable** since it does not return a chart instance; however the d3
      * selection result can be chained to d3 function calls.
      * @name selectAll
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @example
      * // Similar to:
@@ -330,7 +330,7 @@ dc.baseMixin = function (_chart) {
      * within the chartGroup. This class is called internally on chart initialization, but be called
      * again to relocate the chart. However, it will orphan any previously created SVG elements.
      * @name anchor
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @param {anchorChart|anchorSelector|anchorNode} [a]
      * @param {chartGroup} [chartGroup]
@@ -358,7 +358,7 @@ dc.baseMixin = function (_chart) {
     /**
      * Returns the dom id for the chart's anchored location.
      * @name anchorName
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @return {String}
      */
@@ -379,16 +379,16 @@ dc.baseMixin = function (_chart) {
      * dc internally. Resetting the root element on a chart outside of dc internals may have
      * unexpected consequences.
      * @name root
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @param {Element} [rootElement]
      * @return {Element}
      */
-    _chart.root = function (r) {
+    _chart.root = function (rootElement) {
         if (!arguments.length) {
             return _root;
         }
-        _root = r;
+        _root = rootElement;
         return _chart;
     };
 
@@ -397,23 +397,23 @@ dc.baseMixin = function (_chart) {
      * however this is usually handled by dc internally. Resetting the svg element on a chart outside
      * of dc internals may have unexpected consequences.
      * @name svg
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @param {SVGElement} [svgElement]
      * @return {SVGElement}
      */
-    _chart.svg = function (_) {
+    _chart.svg = function (svgElement) {
         if (!arguments.length) {
             return _svg;
         }
-        _svg = _;
+        _svg = svgElement;
         return _chart;
     };
 
     /**
      * Remove the chart's SVG elements from the dom and recreate the container SVG element.
      * @name resetSvg
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @return {SVGElement}
      */
@@ -442,7 +442,7 @@ dc.baseMixin = function (_chart) {
      * default filter printer `dc.printers.filter` that provides simple printing support for both
      * single value and ranged filters.
      * @name filterPrinter
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @param {Function} [filterPrinterFunction]
      * @return {Function}
@@ -478,7 +478,7 @@ dc.baseMixin = function (_chart) {
      * content of this element is then replaced with the current filter value using the filter printer
      * function. This type of element will be turned off automatically if the filter is cleared.
      * @name turnOnControls
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @return {Chart}
      */
@@ -493,7 +493,7 @@ dc.baseMixin = function (_chart) {
     /**
      * Turn off optional control elements within the root element.
      * @name turnOffControls
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @return {Chart}
      */
@@ -508,7 +508,7 @@ dc.baseMixin = function (_chart) {
     /**
      * Set or get the animation transition duration (in milliseconds) for this chart instance.
      * @name transitionDuration
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @param {Number} [duration]
      * @return {Number}
@@ -542,7 +542,7 @@ dc.baseMixin = function (_chart) {
      * sure everything is redrawn from scratch instead of relying on the default incremental redrawing
      * behaviour.
      * @name render
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @return {Chart}
      */
@@ -590,7 +590,7 @@ dc.baseMixin = function (_chart) {
      * manually invoke this function if data is manipulated outside of dc's control (for example if
      * data is loaded in the background using `crossfilter.add()`).
      * @name redraw
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @return {Chart}
      */
@@ -641,7 +641,7 @@ dc.baseMixin = function (_chart) {
      * the chart's current filters include a specific filter.  Using a custom has filter handler allows
      * you to change the way filters are checked for and replaced.
      * @name hasFilterHandler
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @example
      * // default has filter handler
@@ -673,9 +673,9 @@ dc.baseMixin = function (_chart) {
      * Check whether any active filter or a specific filter is associated with particular chart instance.
      * This function is **not chainable**.
      * @name hasFilter
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
-     * @param {*} [hasFilter]
+     * @param {*} [filter]
      * @return {Boolean}
      */
     _chart.hasFilter = function (filter) {
@@ -700,7 +700,7 @@ dc.baseMixin = function (_chart) {
      *
      * Any changes should modify the `filters` array argument and return that array.
      * @name removeFilterHandler
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @example
      * // default remove filter handler
@@ -742,7 +742,7 @@ dc.baseMixin = function (_chart) {
      *
      * Any changes should modify the `filters` array argument and return that array.
      * @name addFilterHandler
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @example
      * // default add filter handler
@@ -778,7 +778,7 @@ dc.baseMixin = function (_chart) {
      *
      * This function should return an array.
      * @name resetFilterHandler
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @example
      * // default remove filter handler
@@ -816,39 +816,39 @@ dc.baseMixin = function (_chart) {
     /**
      * Filter the chart by the given value or return the current filter if the input parameter is missing.
      * @name filter
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @example
      * // filter by a single string
      * chart.filter('Sunday');
      * // filter by a single age
      * chart.filter(18);
-     * @param {*} [filterValue]
+     * @param {*} [filter]
      * @return {Chart}
      */
-    _chart.filter = function (_) {
+    _chart.filter = function (filter) {
         if (!arguments.length) {
             return _filters.length > 0 ? _filters[0] : null;
         }
-        if (_ instanceof Array && _[0] instanceof Array && !_.isFiltered) {
-            _[0].forEach(function (d) {
+        if (filter instanceof Array && filter[0] instanceof Array && !filter.isFiltered) {
+            filter[0].forEach(function (d) {
                 if (_chart.hasFilter(d)) {
                     _removeFilterHandler(_filters, d);
                 } else {
                     _addFilterHandler(_filters, d);
                 }
             });
-        } else if (_ === null) {
+        } else if (filter === null) {
             _filters = _resetFilterHandler(_filters);
         } else {
-            if (_chart.hasFilter(_)) {
-                _removeFilterHandler(_filters, _);
+            if (_chart.hasFilter(filter)) {
+                _removeFilterHandler(_filters, filter);
             } else {
-                _addFilterHandler(_filters, _);
+                _addFilterHandler(_filters, filter);
             }
         }
         applyFilters();
-        _chart._invokeFilteredListener(_);
+        _chart._invokeFilteredListener(filter);
 
         if (_root !== null && _chart.hasFilter()) {
             _chart.turnOnControls();
@@ -864,7 +864,7 @@ dc.baseMixin = function (_chart) {
      * filter array before returning, therefore any modification of the returned array will effect the
      * chart's internal filter storage.
      * @name filters
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @return {Array<*>}
      */
@@ -891,12 +891,12 @@ dc.baseMixin = function (_chart) {
      * This function is passed to d3 as the onClick handler for each chart. The default behavior is to
      * filter on the clicked datum (passed to the callback) and redraw the chart group.
      * @name onClick
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @param {*} datum
      */
-    _chart.onClick = function (d) {
-        var filter = _chart.keyAccessor()(d);
+    _chart.onClick = function (datum) {
+        var filter = _chart.keyAccessor()(datum);
         dc.events.trigger(function () {
             _chart.filter(filter);
             _chart.redrawGroup();
@@ -908,7 +908,7 @@ dc.baseMixin = function (_chart) {
      * on a specific dimension. Using a custom filter handler allows you to perform additional logic
      * before or after filtering.
      * @name filterHandler
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @example
      * // default filter handler
@@ -926,11 +926,11 @@ dc.baseMixin = function (_chart) {
      * @param {Function} filterHandler
      * @return {Chart}
      */
-    _chart.filterHandler = function (_) {
+    _chart.filterHandler = function (filterHandler) {
         if (!arguments.length) {
             return _filterHandler;
         }
-        _filterHandler = _;
+        _filterHandler = filterHandler;
         return _chart;
     };
 
@@ -972,7 +972,7 @@ dc.baseMixin = function (_chart) {
      * value from the crossfilter group. Key values are used differently in different charts, for
      * example keys correspond to slices in a pie chart and x axis positions in a grid coordinate chart.
      * @name keyAccessor
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @example
      * // default key accessor
@@ -996,7 +996,7 @@ dc.baseMixin = function (_chart) {
      * example values correspond to slice sizes in a pie chart and y axis positions in a grid
      * coordinate chart.
      * @name valueAccessor
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @example
      * // default value accessor
@@ -1020,7 +1020,7 @@ dc.baseMixin = function (_chart) {
      * chart supports the label function for example bar chart and line chart do not use this function
      * at all.
      * @name label
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @example
      * // default label function just return the key
@@ -1030,11 +1030,11 @@ dc.baseMixin = function (_chart) {
      * @param {Function} labelFunction
      * @return {Chart}
      */
-    _chart.label = function (_) {
+    _chart.label = function (labelFunction) {
         if (!arguments.length) {
             return _label;
         }
-        _label = _;
+        _label = labelFunction;
         _renderLabel = true;
         return _chart;
     };
@@ -1042,7 +1042,7 @@ dc.baseMixin = function (_chart) {
     /**
      * Turn on/off label rendering
      * @name renderLabel
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @param {Boolean} renderLabel
      * @return {Boolean}
@@ -1062,7 +1062,7 @@ dc.baseMixin = function (_chart) {
      * however in grid coordinate charts you need to turn off the brush in order to see titles, because
      * otherwise the brush layer will block tooltip triggering.
      * @name title
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @example
      * // default title function just return the key
@@ -1090,7 +1090,7 @@ dc.baseMixin = function (_chart) {
      * Turn on/off title rendering, or return the state of the render title flag if no arguments are
      * given.
      * @name renderTitle
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @param {Boolean} renderTitle
      * @return {Boolean}
@@ -1110,7 +1110,7 @@ dc.baseMixin = function (_chart) {
      * elements. Renderlet functions take the chart instance as the only input parameter and you can
      * use the dc API or use raw d3 to achieve pretty much any effect.
      * @name renderlet
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @deprecated Use [Listeners](#Listeners) with a 'renderlet' prefix.
      * Generates a random key for the renderlet, which makes it hard to remove.
@@ -1125,8 +1125,8 @@ dc.baseMixin = function (_chart) {
      * @param {Function} renderletFunction
      * @return {Function}
      */
-    _chart.renderlet = dc.logger.deprecate(function (_) {
-        _chart.on('renderlet.' + dc.utils.uniqueId(), _);
+    _chart.renderlet = dc.logger.deprecate(function (renderletFunction) {
+        _chart.on('renderlet.' + dc.utils.uniqueId(), renderletFunction);
         return _chart;
     }, 'chart.renderlet has been deprecated.  Please use chart.on("renderlet.<renderletKey>", renderletFunction)');
 
@@ -1134,7 +1134,7 @@ dc.baseMixin = function (_chart) {
      * Get or set the chart group to which this chart belongs. Chart groups are rendered or redrawn
      * together since it is expected they share the same underlying crossfilter data set.
      * @name chartGroup
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @param {String} chartGroup
      * @return {String}
@@ -1160,7 +1160,7 @@ dc.baseMixin = function (_chart) {
      * `crossfilter.add` function or reset group or dimension after rendering it is a good idea to
      * clear the cache to make sure charts are rendered properly.
      * @name expireCache
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @return {Chart}
      */
@@ -1173,18 +1173,18 @@ dc.baseMixin = function (_chart) {
      * Attach a dc.legend widget to this chart. The legend widget will automatically draw legend labels
      * based on the color setting and names associated with each group.
      * @name legend
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @example
      * chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
      * @param {dc.legend} [legend]
      * @return {dc.legend}
      */
-    _chart.legend = function (l) {
+    _chart.legend = function (legend) {
         if (!arguments.length) {
             return _legend;
         }
-        _legend = l;
+        _legend = legend;
         _legend.parent(_chart);
         return _chart;
     };
@@ -1192,7 +1192,7 @@ dc.baseMixin = function (_chart) {
     /**
      * Returns the internal numeric ID of the chart.
      * @name chartID
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @return {String}
      */
@@ -1204,7 +1204,7 @@ dc.baseMixin = function (_chart) {
      * Set chart options using a configuration object. Each key in the object will cause the method of
      * the same name to be called with the value to set that attribute for the chart.
      * @name options
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @example
      * chart.options({dimension: myDimension, group: myGroup});
@@ -1253,7 +1253,7 @@ dc.baseMixin = function (_chart) {
      * * 'filtered' - This listener function will be invoked after a filter is applied, added or removed.
      * * 'zoomed' - This listener function will be invoked after a zoom is triggered.
      * @name on
-     * @memberOf dc.baseMixin
+     * @memberof dc.baseMixin
      * @instance
      * @example
      * .on('renderlet', function(chart, filter){...})

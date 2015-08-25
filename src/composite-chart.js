@@ -3,7 +3,7 @@
  * Grid. You can overlay (compose) different bar/line/area charts in a single composite chart to
  * achieve some quite flexible charting effects.
  * @name compositeChart
- * @memberOf dc
+ * @memberof dc
  * @mixes dc.coordinateGridMixin
  * @example
  * // create a composite chart under #chart-container1 element using the default global chart group
@@ -170,17 +170,17 @@ dc.compositeChart = function (parent, chartGroup) {
      * default behavior. This option is only respected when subcharts with both left and right y-axes
      * are present.
      * @name useRightAxisGridLines
-     * @memberOf dc.compositeChart
+     * @memberof dc.compositeChart
      * @instance
-     * @param {Boolean} [useRightAxisGridLines]
+     * @param {Boolean} [useRightAxisGridLines=false]
      * @return {Chart}
      */
-    _chart.useRightAxisGridLines = function (_) {
+    _chart.useRightAxisGridLines = function (useRightAxisGridLines) {
         if (!arguments) {
             return _rightAxisGridLines;
         }
 
-        _rightAxisGridLines = _;
+        _rightAxisGridLines = useRightAxisGridLines;
         return _chart;
     };
 
@@ -188,16 +188,16 @@ dc.compositeChart = function (parent, chartGroup) {
      * Get or set chart-specific options for all child charts. This is equivalent to calling `.options`
      * on each child chart.
      * @name childOptions
-     * @memberOf dc.compositeChart
+     * @memberof dc.compositeChart
      * @instance
-     * @param {Object} [options]
+     * @param {Object} [childOptions]
      * @return {Chart}
      */
-    _chart.childOptions = function (_) {
+    _chart.childOptions = function (childOptions) {
         if (!arguments.length) {
             return _childOptions;
         }
-        _childOptions = _;
+        _childOptions = childOptions;
         _children.forEach(function (child) {
             child.options(_childOptions);
         });
@@ -215,16 +215,17 @@ dc.compositeChart = function (parent, chartGroup) {
     /**
      * Set or get the right y axis label.
      * @name rightYAxisLabel
-     * @memberOf dc.compositeChart
+     * @memberof dc.compositeChart
      * @instance
      * @param {String} [rightYAxisLabel]
+     * @param {Number} [padding]
      * @return {Chart}
      */
-    _chart.rightYAxisLabel = function (_, padding) {
+    _chart.rightYAxisLabel = function (rightYAxisLabel, padding) {
         if (!arguments.length) {
             return _rightYAxisLabel;
         }
-        _rightYAxisLabel = _;
+        _rightYAxisLabel = rightYAxisLabel;
         _chart.margins().right -= _rightYAxisLabelPadding;
         _rightYAxisLabelPadding = (padding === undefined) ? DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING : padding;
         _chart.margins().right += _rightYAxisLabelPadding;
@@ -234,7 +235,7 @@ dc.compositeChart = function (parent, chartGroup) {
     /**
      * Combine the given charts into one single composite coordinate grid chart.
      * @name compose
-     * @memberOf dc.compositeChart
+     * @memberof dc.compositeChart
      * @instance
      * @example
      * moveChart.compose([
@@ -257,8 +258,8 @@ dc.compositeChart = function (parent, chartGroup) {
      * @param {Array<Chart>} [subChartArray]
      * @return {Chart}
      */
-    _chart.compose = function (charts) {
-        _children = charts;
+    _chart.compose = function (subChartArray) {
+        _children = subChartArray;
         _children.forEach(function (child) {
             child.height(_chart.height());
             child.width(_chart.width());
@@ -276,7 +277,7 @@ dc.compositeChart = function (parent, chartGroup) {
     /**
      * Returns the child charts which are composed into the composite chart.
      * @name children
-     * @memberOf dc.compositeChart
+     * @memberof dc.compositeChart
      * @instance
      * @return {Array<Chart>}
      */
@@ -290,16 +291,16 @@ dc.compositeChart = function (parent, chartGroup) {
      * Stackable and has not set a custom .colorAccessor, then it will generate a color
      * specific to its order in the composition.
      * @name shareColors
-     * @memberOf dc.compositeChart
+     * @memberof dc.compositeChart
      * @instance
-     * @param {Boolean} [shareColors]
+     * @param {Boolean} [shareColors=false]
      * @return {Chart}
      */
-    _chart.shareColors = function (_) {
+    _chart.shareColors = function (shareColors) {
         if (!arguments.length) {
             return _shareColors;
         }
-        _shareColors = _;
+        _shareColors = shareColors;
         return _chart;
     };
 
@@ -307,16 +308,16 @@ dc.compositeChart = function (parent, chartGroup) {
      * Get or set title sharing for the chart. If set, the `.title()` value from this chart will be
      * shared with composed children.
      * @name shareTitle
-     * @memberOf dc.compositeChart
+     * @memberof dc.compositeChart
      * @instance
      * @param {Boolean} [shareTitle=true]
      * @return {Chart}
      */
-    _chart.shareTitle = function (_) {
+    _chart.shareTitle = function (shareTitle) {
         if (!arguments.length) {
             return _shareTitle;
         }
-        _shareTitle = _;
+        _shareTitle = shareTitle;
         return _chart;
     };
 
@@ -324,16 +325,16 @@ dc.compositeChart = function (parent, chartGroup) {
      * Get or set the y scale for the right axis. The right y scale is typically automatically
      * generated by the chart implementation.
      * @name rightY
-     * @memberOf dc.compositeChart
+     * @memberof dc.compositeChart
      * @instance
      * @param {d3.scale} [yScale]
      * @return {Chart}
      */
-    _chart.rightY = function (_) {
+    _chart.rightY = function (yScale) {
         if (!arguments.length) {
             return _rightY;
         }
-        _rightY = _;
+        _rightY = yScale;
         _chart.rescale();
         return _chart;
     };
@@ -435,7 +436,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * d3 axis manipulation. **Caution**: The y axis is usually generated internally by dc;
      * resetting it may cause unexpected results.
      * @name rightYAxis
-     * @memberOf dc.compositeChart
+     * @memberof dc.compositeChart
      * @instance
      * @example
      * // customize y axis tick format

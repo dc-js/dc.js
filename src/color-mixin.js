@@ -2,7 +2,7 @@
  * The Color Mixin is an abstract chart functional class providing universal coloring support
  * as a mix-in for any concrete chart implementation.
  * @name colorMixin
- * @memberOf dc
+ * @memberof dc
  * @mixin
  * @param {Chart} _chart
  * @returns {Chart}
@@ -17,7 +17,7 @@ dc.colorMixin = function (_chart) {
      * Retrieve current color scale or set a new color scale. This methods accepts any function that
      * operates like a d3 scale.
      * @name colors
-     * @memberOf dc.colorMixin
+     * @memberof dc.colorMixin
      * @instance
      * @example
      * // alternate categorical scale
@@ -33,14 +33,14 @@ dc.colorMixin = function (_chart) {
      * @param {D3Scale} [colorScale=d3.scale.category20c()]
      * @returns {Chart}
      */
-    _chart.colors = function (_) {
+    _chart.colors = function (colorScale) {
         if (!arguments.length) {
             return _colors;
         }
-        if (_ instanceof Array) {
-            _colors = d3.scale.quantize().range(_); // deprecated legacy support, note: this fails for ordinal domains
+        if (colorScale instanceof Array) {
+            _colors = d3.scale.quantize().range(colorScale); // deprecated legacy support, note: this fails for ordinal domains
         } else {
-            _colors = d3.functor(_);
+            _colors = d3.functor(colorScale);
         }
         return _chart;
     };
@@ -48,7 +48,7 @@ dc.colorMixin = function (_chart) {
     /**
      * Convenience method to set the color scale to d3.scale.ordinal with range `r`.
      * @name ordinalColors
-     * @memberOf dc.colorMixin
+     * @memberof dc.colorMixin
      * @instance
      * @param {Array<String>} r
      * @returns {Chart}
@@ -60,7 +60,7 @@ dc.colorMixin = function (_chart) {
     /**
      * Convenience method to set the color scale to an Hcl interpolated linear scale with range `r`.
      * @name linearColors
-     * @memberOf dc.colorMixin
+     * @memberof dc.colorMixin
      * @instance
      * @param {Array<Number>} r
      * @returns {Chart}
@@ -76,7 +76,7 @@ dc.colorMixin = function (_chart) {
      * crossfilter group to a color value on the color scale. The default function uses the key
      * accessor.
      * @name linearColors
-     * @memberOf dc.colorMixin
+     * @memberof dc.colorMixin
      * @instance
      * @example
      * // default index based color accessor
@@ -107,7 +107,7 @@ dc.colorMixin = function (_chart) {
      * Note: previously this method accepted a callback function. Instead you may use a custom scale
      * set by `.colors`.
      * @name colorDomain
-     * @memberOf dc.colorMixin
+     * @memberof dc.colorMixin
      * @instance
      * @param {Array<String>} [domain]
      * @returns {Function}
@@ -124,7 +124,7 @@ dc.colorMixin = function (_chart) {
      * Set the domain by determining the min and max values as retrieved by `.colorAccessor` over the
      * chart's dataset.
      * @name calculateColorDomain
-     * @memberOf dc.colorMixin
+     * @memberof dc.colorMixin
      * @instance
      * @returns {Chart}
      */
@@ -138,7 +138,7 @@ dc.colorMixin = function (_chart) {
     /**
      * Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
      * @name getColor
-     * @memberOf dc.colorMixin
+     * @memberof dc.colorMixin
      * @instance
      * @param {*} d
      * @param {Number} [i]
@@ -151,16 +151,16 @@ dc.colorMixin = function (_chart) {
     /**
      * Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
      * @name colorCalculator
-     * @memberOf dc.colorMixin
+     * @memberof dc.colorMixin
      * @instance
-     * @param {*} [value]
+     * @param {*} [colorCalculator]
      * @returns {*}
      */
-    _chart.colorCalculator = function (_) {
+    _chart.colorCalculator = function (colorCalculator) {
         if (!arguments.length) {
             return _chart.getColor;
         }
-        _chart.getColor = _;
+        _chart.getColor = colorCalculator;
         return _chart;
     };
 

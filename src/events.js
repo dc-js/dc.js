@@ -9,7 +9,7 @@ dc.events = {
  * function allows the library to smooth out the rendering by throttling events and only responding to
  * the most recent event.
  * @name events.trigger
- * @memberOf dc
+ * @memberof dc
  * @example
  * chart.on('renderlet', function(chart) {
  *     // smooth the rendering through event throttling

@@ -611,7 +611,7 @@ This function is **not chainable**.
 
 | Param | Type |
 | --- | --- |
-| [hasFilter] | <code>\*</code> | 
+| [filter] | <code>\*</code> | 
 
 <a name="dc.baseMixin+removeFilterHandler"></a>
 #### baseMixin.removeFilterHandler ⇒ <code>Chart</code>
@@ -709,7 +709,7 @@ Filter the chart by the given value or return the current filter if the input pa
 
 | Param | Type |
 | --- | --- |
-| [filterValue] | <code>\*</code> | 
+| [filter] | <code>\*</code> | 
 
 **Example**  
 ```js
@@ -1137,7 +1137,7 @@ Get the color for the datum d and counter i. This is used internally by charts t
 
 | Param | Type |
 | --- | --- |
-| [value] | <code>\*</code> | 
+| [colorCalculator] | <code>\*</code> | 
 
 <a name="dc.coordinateGridMixin"></a>
 ### dc.coordinateGridMixin ⇒ <code>Chart</code>
@@ -1222,9 +1222,9 @@ Get or set the zoom restriction for the chart. If true limits the zoom to origio
 
 **Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 
-| Param | Type |
-| --- | --- |
-| [zoomOutRestrict] | <code>Boolean</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [zoomOutRestrict] | <code>Boolean</code> | <code>true</code> | 
 
 <a name="dc.coordinateGridMixin+g"></a>
 #### coordinateGridMixin.g ⇒ <code>Chart</code>
@@ -1345,9 +1345,9 @@ attempt to recalculate the x axis range whenever a redraw event is triggered.
 
 **Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 
-| Param | Type |
-| --- | --- |
-| [elasticX] | <code>Boolean</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [elasticX] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="dc.coordinateGridMixin+xAxisPadding"></a>
 #### coordinateGridMixin.xAxisPadding ⇒ <code>Chart</code>
@@ -1378,9 +1378,9 @@ chart.
 
 **Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 
-| Param | Type |
-| --- | --- |
-| [useRightYAxis] | <code>Boolean</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [useRightYAxis] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="dc.coordinateGridMixin+isOrdinal"></a>
 #### coordinateGridMixin.isOrdinal ⇒ <code>Boolean</code>
@@ -1422,7 +1422,7 @@ Get or set the y scale. The y scale is typically automatically determined by the
 
 | Param | Type |
 | --- | --- |
-| [y] | <code>d3.scale</code> | 
+| [yScale] | <code>d3.scale</code> | 
 
 <a name="dc.coordinateGridMixin+yAxis"></a>
 #### coordinateGridMixin.yAxis ⇒ <code>Chart</code>
@@ -1434,9 +1434,9 @@ resetting it may cause unexpected results.
 
 **Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 
-| Param | Type |
-| --- | --- |
-| [yAxis] | <code>d3.svg.axis</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [yAxis] | <code>d3.svg.axis</code> | <code>d3.svg.axis().orient(&#x27;left&#x27;)</code> | 
 
 **Example**  
 ```js
@@ -1452,9 +1452,9 @@ attempt to recalculate the y axis range whenever a redraw event is triggered.
 
 **Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 
-| Param | Type |
-| --- | --- |
-| [elasticY] | <code>Boolean</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [elasticY] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="dc.coordinateGridMixin+renderHorizontalGridLines"></a>
 #### coordinateGridMixin.renderHorizontalGridLines ⇒ <code>Chart</code>
@@ -1462,9 +1462,9 @@ Turn on/off horizontal grid lines.
 
 **Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 
-| Param | Type |
-| --- | --- |
-| [renderHorizontalGridLines] | <code>Boolean</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [renderHorizontalGridLines] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="dc.coordinateGridMixin+renderVerticalGridLines"></a>
 #### coordinateGridMixin.renderVerticalGridLines ⇒ <code>Chart</code>
@@ -1472,9 +1472,9 @@ Turn on/off vertical grid lines.
 
 **Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 
-| Param | Type |
-| --- | --- |
-| [renderVerticalGridLines] | <code>Boolean</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [renderVerticalGridLines] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="dc.coordinateGridMixin+xAxisMin"></a>
 #### coordinateGridMixin.xAxisMin ⇒ <code>\*</code>
@@ -1507,9 +1507,9 @@ and a percentage string will be treated the same as an integer.
 
 **Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 
-| Param | Type |
-| --- | --- |
-| [padding] | <code>Number</code> &#124; <code>String</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [padding] | <code>Number</code> &#124; <code>String</code> | <code>0</code> | 
 
 <a name="dc.coordinateGridMixin+round"></a>
 #### coordinateGridMixin.round ⇒ <code>Chart</code>
@@ -2300,9 +2300,9 @@ where you can find a complete list of valid arguments
 
 **Kind**: instance property of <code>[lineChart](#dc.lineChart)</code>  
 
-| Param | Type |
-| --- | --- |
-| [interpolate] | <code>String</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [interpolate] | <code>String</code> | <code>&#x27;linear&#x27;</code> | 
 
 <a name="dc.lineChart+tension"></a>
 #### lineChart.tension ⇒ <code>Chart</code>
@@ -2502,9 +2502,9 @@ Get or set the table size which determines the number of rows displayed by the w
 
 **Kind**: instance property of <code>[dataTable](#dc.dataTable)</code>  
 
-| Param | Type |
-| --- | --- |
-| [size] | <code>Number</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [size] | <code>Number</code> | <code>25</code> | 
 
 <a name="dc.dataTable+columns"></a>
 #### dataTable.columns ⇒ <code>Chart</code>
@@ -2535,9 +2535,9 @@ The third example, where all fields are specified using the Object = [Label, Fn]
 
 **Kind**: instance property of <code>[dataTable](#dc.dataTable)</code>  
 
-| Param | Type |
-| --- | --- |
-| [columns] | <code>Array.&lt;function()&gt;</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [columns] | <code>Array.&lt;function()&gt;</code> | <code>[]</code> | 
 
 **Example**  
 ```js
@@ -2783,7 +2783,7 @@ feature is turned on, then bubble radii will be automatically rescaled to fit th
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [padding] | <code>Boolean</code> | <code>false</code> | 
+| [elasticRadius] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="dc.compositeChart"></a>
 ### dc.compositeChart ⇒ <code>CompositeChart</code>
@@ -2826,9 +2826,9 @@ are present.
 
 **Kind**: instance property of <code>[compositeChart](#dc.compositeChart)</code>  
 
-| Param | Type |
-| --- | --- |
-| [useRightAxisGridLines] | <code>Boolean</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [useRightAxisGridLines] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="dc.compositeChart+childOptions"></a>
 #### compositeChart.childOptions ⇒ <code>Chart</code>
@@ -2839,7 +2839,7 @@ on each child chart.
 
 | Param | Type |
 | --- | --- |
-| [options] | <code>Object</code> | 
+| [childOptions] | <code>Object</code> | 
 
 <a name="dc.compositeChart+rightYAxisLabel"></a>
 #### compositeChart.rightYAxisLabel ⇒ <code>Chart</code>
@@ -2850,6 +2850,7 @@ Set or get the right y axis label.
 | Param | Type |
 | --- | --- |
 | [rightYAxisLabel] | <code>String</code> | 
+| [padding] | <code>Number</code> | 
 
 <a name="dc.compositeChart+compose"></a>
 #### compositeChart.compose ⇒ <code>Chart</code>
@@ -2895,9 +2896,9 @@ specific to its order in the composition.
 
 **Kind**: instance property of <code>[compositeChart](#dc.compositeChart)</code>  
 
-| Param | Type |
-| --- | --- |
-| [shareColors] | <code>Boolean</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [shareColors] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="dc.compositeChart+shareTitle"></a>
 #### compositeChart.shareTitle ⇒ <code>Chart</code>
@@ -2978,7 +2979,7 @@ Get or set the chart function, which generates the child charts.
 
 | Param | Type | Default |
 | --- | --- | --- |
-| chartFunction | <code>function</code> | <code>dc.lineChart</code> | 
+| [chartFunction] | <code>function</code> | <code>dc.lineChart</code> | 
 
 **Example**  
 ```js
@@ -3004,9 +3005,9 @@ Get or set a function to sort the list of series by, given series values.
 
 **Kind**: instance property of <code>[seriesChart](#dc.seriesChart)</code>  
 
-| Param | Type |
-| --- | --- |
-| [sortFunction] | <code>function</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [sortFunction] | <code>function</code> | <code>d3.ascending</code> | 
 
 **Example**  
 ```js
@@ -3225,9 +3226,9 @@ Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'
 
 **Kind**: instance property of <code>[rowChart](#dc.rowChart)</code>  
 
-| Param | Type |
-| --- | --- |
-| [renderTitleLabel] | <code>Boolean</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [renderTitleLabel] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="dc.rowChart+xAxis"></a>
 #### rowChart.xAxis ⇒ <code>d3.svg.Axis</code>
@@ -3251,9 +3252,9 @@ your vertical gap space).
 
 **Kind**: instance property of <code>[rowChart](#dc.rowChart)</code>  
 
-| Param | Type |
-| --- | --- |
-| [height] | <code>Number</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [fixedBarHeight] | <code>Boolean</code> &#124; <code>Number</code> | <code>false</code> | 
 
 **Example**  
 ```js
@@ -3308,7 +3309,7 @@ Get of set the x offset (horizontal space between right edge of row and right ed
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [x] | <code>Number</code> | <code>2</code> | 
+| [titleLabelOffsetX] | <code>Number</code> | <code>2</code> | 
 
 <a name="dc.legend"></a>
 ### dc.legend ⇒ <code>Legend</code>
@@ -3380,9 +3381,9 @@ Position legend horizontally instead of vertically.
 
 **Kind**: instance property of <code>[legend](#dc.legend)</code>  
 
-| Param | Type |
-| --- | --- |
-| [horizontal] | <code>Boolean</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [horizontal] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="dc.legend+legendWidth"></a>
 #### legend.legendWidth ⇒ <code>Legend</code>
@@ -3476,7 +3477,7 @@ Set or get radius for symbols.
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [radius] | <code>Number</code> | <code>3</code> | 
+| [symbolSize] | <code>Number</code> | <code>3</code> | 
 
 <a name="dc.scatterPlot+highlightedSize"></a>
 #### scatterPlot.highlightedSize ⇒ <code>Chart</code>
@@ -3486,7 +3487,7 @@ Set or get radius for highlighted symbols.
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [radius] | <code>Number</code> | <code>4</code> | 
+| [highlightedSize] | <code>Number</code> | <code>5</code> | 
 
 <a name="dc.scatterPlot+hiddenSize"></a>
 #### scatterPlot.hiddenSize ⇒ <code>Chart</code>
@@ -3496,7 +3497,7 @@ Set or get radius for symbols when the group is empty.
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [radius] | <code>Number</code> | <code>0</code> | 
+| [_hiddenSize] | <code>Number</code> | <code>0</code> | 
 
 <a name="dc.numberDisplay"></a>
 ### dc.numberDisplay ⇒ <code>NumberDisplay</code>
@@ -3535,7 +3536,7 @@ displayed.  The text `%number` will be replaced with the current value.
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [externalRadiusPadding] | <code>Object</code> | <code>0</code> | 
+| [html] | <code>Object</code> | <code>{one: &#x27;&#x27;, some: &#x27;&#x27;, none: &#x27;&#x27;}</code> | 
 
 **Example**  
 ```js

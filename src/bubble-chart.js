@@ -9,7 +9,7 @@
  * - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
  * - [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
  * @name bubbleChart
- * @memberOf dc
+ * @memberof dc
  * @mixes dc.bubbleMixin
  * @mixes dc.coordinateGridMixin
  * @example
@@ -40,16 +40,16 @@ dc.bubbleChart = function (parent, chartGroup) {
      * Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
      * feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
      * @name elasticRadius
-     * @memberOf dc.bubbleChart
+     * @memberof dc.bubbleChart
      * @instance
-     * @param {Boolean} [padding=false]
+     * @param {Boolean} [elasticRadius=false]
      * @returns {Boolean}
      */
-    _chart.elasticRadius = function (_) {
+    _chart.elasticRadius = function (elasticRadius) {
         if (!arguments.length) {
             return _elasticRadius;
         }
-        _elasticRadius = _;
+        _elasticRadius = elasticRadius;
         return _chart;
     };
 

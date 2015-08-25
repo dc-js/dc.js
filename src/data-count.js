@@ -9,7 +9,7 @@
  * Examples:
  * - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
  * @name dataCount
- * @memberOf dc
+ * @memberof dc
  * @mixes dc.baseMixin
  * @example
  * var ndx = crossfilter(data);
@@ -38,7 +38,7 @@ dc.dataCount = function (parent, chartGroup) {
      * - all: HTML template to use if all items are selected
      * - some: HTML template to use if not all items are selected
      * @name html
-     * @memberOf dc.dataCount
+     * @memberof dc.dataCount
      * @instance
      * @example
      * counter.html({
@@ -48,15 +48,15 @@ dc.dataCount = function (parent, chartGroup) {
      * @param {{some:String, all: String}} [options]
      * @returns {Chart}
      */
-    _chart.html = function (s) {
+    _chart.html = function (options) {
         if (!arguments.length) {
             return _html;
         }
-        if (s.all) {
-            _html.all = s.all;
+        if (options.all) {
+            _html.all = options.all;
         }
-        if (s.some) {
-            _html.some = s.some;
+        if (options.some) {
+            _html.some = options.some;
         }
         return _chart;
     };
@@ -64,18 +64,18 @@ dc.dataCount = function (parent, chartGroup) {
     /**
      * Gets or sets an optional function to format the filter count and total count.
      * @name formatNumber
-     * @memberOf dc.dataCount
+     * @memberof dc.dataCount
      * @instance
      * @example
      * counter.formatNumber(d3.format('.2g'))
      * @param {Function} [formatter=d3.format('.2g')]
      * @returns {Chart}
      */
-    _chart.formatNumber = function (s) {
+    _chart.formatNumber = function (formatter) {
         if (!arguments.length) {
             return _formatNumber;
         }
-        _formatNumber = s;
+        _formatNumber = formatter;
         return _chart;
     };
 

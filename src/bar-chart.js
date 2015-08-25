@@ -4,7 +4,7 @@
  * - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
  * - [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
  * @name barChart
- * @memberOf dc
+ * @memberof dc
  * @mixes dc.stackMixin
  * @mixes dc.coordinateGridMixin
  * @example
@@ -176,7 +176,7 @@ dc.barChart = function (parent, chartGroup) {
     /**
      * Whether the bar chart will render each bar centered around the data position on x axis
      * @name centerBar
-     * @memberOf dc.barChart
+     * @memberof dc.barChart
      * @instance
      * @param {Boolean} [centerBar=false]
      * @returns {Boolean}
@@ -199,7 +199,7 @@ dc.barChart = function (parent, chartGroup) {
      * [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
      * for a visual description of how the padding is applied.
      * @name barPadding
-     * @memberOf dc.barChart
+     * @memberof dc.barChart
      * @instance
      * @param {Number} [barPadding]
      * @returns {Number}
@@ -221,7 +221,7 @@ dc.barChart = function (parent, chartGroup) {
      * Get or set the outer padding on an ordinal bar chart. This setting has no effect on non-ordinal charts.
      * Will pad the width by `padding * barWidth` on each side of the chart.
      * @name outerPadding
-     * @memberOf dc.barChart
+     * @memberof dc.barChart
      * @instance
      * @param {Number} [padding=0.5]
      * @returns {Number}
@@ -233,7 +233,7 @@ dc.barChart = function (parent, chartGroup) {
      * gap.  By default the bar chart implementation will calculate and set the gap automatically
      * based on the number of data points and the length of the x axis.
      * @name gap
-     * @memberOf dc.barChart
+     * @memberof dc.barChart
      * @instance
      * @param {Number} [gap=2]
      * @returns {Number}
@@ -267,7 +267,7 @@ dc.barChart = function (parent, chartGroup) {
      * centered bars since the bars are offset.  The rounding function must add an offset to
      * compensate, such as in the following example.
      * @name alwaysUseRounding
-     * @memberOf dc.barChart
+     * @memberof dc.barChart
      * @instance
      * @example
      * chart.round(function(n) {return Math.floor(n)+0.5});

@@ -1,7 +1,7 @@
 /**
  * This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.
  * @name bubbleMixin
- * @memberOf dc
+ * @memberof dc
  * @mixin
  * @mixes dc.colorMixin
  * @param {Chart} _chart
@@ -33,7 +33,7 @@ dc.bubbleMixin = function (_chart) {
      * Get or set the bubble radius scale. By default the bubble chart uses
      * `d3.scale.linear().domain([0, 100])` as its radius scale.
      * @name r
-     * @memberOf dc.bubbleMixin
+     * @memberof dc.bubbleMixin
      * @instance
      * @param {Number[]} [bubbleRadiusScale]
      * @returns {Number[]}
@@ -52,7 +52,7 @@ dc.bubbleMixin = function (_chart) {
      * the r scale to the actual bubble radius. This allows you to encode a data dimension using bubble
      * size.
      * @name radiusValueAccessor
-     * @memberOf dc.bubbleMixin
+     * @memberof dc.bubbleMixin
      * @instance
      * @param {Function} [radiusValueAccessor]
      * @returns {Function}
@@ -147,7 +147,7 @@ dc.bubbleMixin = function (_chart) {
     /**
      * Get or set the minimum radius. This will be used to initialize the radius scale's range.
      * @name minRadius
-     * @memberOf dc.bubbleMixin
+     * @memberof dc.bubbleMixin
      * @instance
      * @param {Number} [radius=10]
      * @returns {Number}
@@ -164,7 +164,7 @@ dc.bubbleMixin = function (_chart) {
      * Get or set the minimum radius for label rendering. If a bubble's radius is less than this value
      * then no label will be rendered.
      * @name minRadiusWithLabel
-     * @memberOf dc.bubbleMixin
+     * @memberof dc.bubbleMixin
      * @instance
      * @param {Number} [radius=10]
      * @returns {Number}
@@ -182,7 +182,7 @@ dc.bubbleMixin = function (_chart) {
      * Get or set the maximum relative size of a bubble to the length of x axis. This value is useful
      * when the difference in radius between bubbles is too great.
      * @name maxBubbleRelativeSize
-     * @memberOf dc.bubbleMixin
+     * @memberof dc.bubbleMixin
      * @instance
      * @param {Number} [relativeSize=0.3]
      * @returns {Number}

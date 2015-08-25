@@ -7,7 +7,7 @@
  * keys of the elements below the cap limit are recorded in order to filter by those keys when the
  * others* element is clicked.
  * @name capMixin
- * @memberOf dc
+ * @memberof dc
  * @mixin
  * @param {Chart} _chart
  * @returns {Chart}
@@ -62,7 +62,7 @@ dc.capMixin = function (_chart) {
     /**
      * Get or set the count of elements to that will be included in the cap.
      * @name cap
-     * @memberOf dc.capMixin
+     * @memberof dc.capMixin
      * @instance
      * @param {Number} [count=Infinity]
      * @returns {Number}
@@ -78,7 +78,7 @@ dc.capMixin = function (_chart) {
     /**
      * Get or set the label for *Others* slice when slices cap is specified
      * @name othersLabel
-     * @memberOf dc.capMixin
+     * @memberof dc.capMixin
      * @instance
      * @param {String} [label=Others]
      * @returns {String}
@@ -96,7 +96,7 @@ dc.capMixin = function (_chart) {
      * if the slices cap is specified. If set to a falsy value, no others will be added. By default the
      * grouper function computes the sum of all values below the cap.
      * @name othersGrouper
-     * @memberOf dc.capMixin
+     * @memberof dc.capMixin
      * @instance
      * @example
      * chart.othersGrouper(function (data) {
