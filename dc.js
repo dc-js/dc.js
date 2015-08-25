@@ -8606,7 +8606,8 @@ dc.heatMap = function (parent, chartGroup) {
               .text(_chart.colsLabel());
         dc.transition(gColsText, _chart.transitionDuration())
                .text(_chart.colsLabel())
-               .attr('x', function (d) { return cols(d) + boxWidth / 2; });
+               .attr('x', function (d) { return cols(d) + boxWidth / 2; })
+               .attr('y', _chart.effectiveHeight());
         gColsText.exit().remove();
         var gRows = _chartBody.selectAll('g.rows');
         if (gRows.empty()) {
