@@ -1,167 +1,331 @@
-# DC API
-  * [Utilities](#utilities)
-  * [Filters](#filters)
-  * [Base Mixin](#base-mixin)
-  * [Listeners](#listeners)
-  * [Margin Mixin](#margin-mixin)
-  * [Color Mixin](#color-mixin)
-  * [Coordinate Grid Mixin](#coordinate-grid-mixin)
-  * [Stack Mixin](#stack-mixin)
-  * [Cap Mixin](#cap-mixin)
-  * [Bubble Mixin](#bubble-mixin)
-  * [Pie Chart](#pie-chart)
-  * [Bar Chart](#bar-chart)
-  * [Line Chart](#line-chart)
-  * [Data Count Widget](#data-count-widget)
-  * [Data Table Widget](#data-table-widget)
-  * [Data Grid Widget](#data-grid-widget)
-  * [Bubble Chart](#bubble-chart)
-  * [Composite Chart](#composite-chart)
-  * [Series Chart](#series-chart)
-  * [Geo Choropleth Chart](#geo-choropleth-chart)
-  * [Bubble Overlay Chart](#bubble-overlay-chart)
-  * [Row Chart](#row-chart)
-  * [Legend](#legend)
-  * [Scatter Plot](#scatter-plot)
-  * [Number Display Widget](#number-display-widget)
-  * [Heat Map](#heat-map)
-  * [Box Plot](#box-plot)
+<a name="dc"></a>
+## dc : <code>object</code>
+The entire dc.js library is scoped under the **dc** name space. It does not introduce
+anything else into the global name space.
 
-#### Version 2.0.0-beta.17
-The entire dc.js library is scoped under the **dc** name space. It does not introduce anything else
-into the global name space.
-#### Function Chaining
-Most dc functions are designed to allow function chaining, meaning they return the current chart
-instance whenever it is appropriate. This way chart configuration can be written in the following
-style:
+Most `dc` functions are designed to allow function chaining, meaning they return the current chart
+instance whenever it is appropriate.  The getter forms of functions do not participate in function
+chaining because they necessarily return values that are not the chart.  Although some,
+such as `.svg` and `.xAxis`, return values that are chainable d3 objects.
+
+**Kind**: global namespace  
+**Version**: 2.0.0-beta.18  
+**Example**  
 ```js
+// Example chaining
 chart.width(300)
-.height(300)
-.filter('sunday')
-```
-The getter forms of functions do not participate in function chaining because they necessarily
-return values that are not the chart.  (Although some, such as `.svg` and `.xAxis`, return values
-that are chainable d3 objects.)
-
-## Utilities
-
-#### dc.filterAll([chartGroup])
-Clear all filters on all charts within the given chart group. If the chart group is not given then
-only charts that belong to the default chart group will be reset.
-
-#### dc.refocusAll([chartGroup])
-Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
-not given then only charts that belong to the default chart group will be reset.
-
-#### dc.renderAll([chartGroup])
-Re-render all charts belong to the given chart group. If the chart group is not given then only
-charts that belong to the default chart group will be re-rendered.
-
-#### dc.redrawAll([chartGroup])
-Redraw all charts belong to the given chart group. If the chart group is not given then only charts
-that belong to the default chart group will be re-drawn. Redraw is different from re-render since
-when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
-from scratch.
-
-#### dc.disableTransitions
-If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
-immediately.  Default: false
-
-#### dc.units.integers
-`dc.units.integers` is the default value for `xUnits` for the [Coordinate Grid
-Chart](#coordinate-grid-chart) and should be used when the x values are a sequence of integers.
-
-It is a function that counts the number of integers in the range supplied in its start and end parameters.
-
-```js
-chart.xUnits(dc.units.integers) // already the default
+     .height(300)
+     .filter('sunday');
 ```
 
-#### dc.units.ordinal
-This argument can be passed to the `xUnits` function of the to specify ordinal units for the x
-axis. Usually this parameter is used in combination with passing `d3.scale.ordinal()` to `.x`.
+* [dc](#dc) : <code>object</code>
+  * [.baseMixin](#dc.baseMixin) ⇒ <code>Chart</code>
+    * [.width](#dc.baseMixin+width) ⇒ <code>Number</code>
+    * [.height](#dc.baseMixin+height) ⇒ <code>Number</code>
+    * [.minWidth](#dc.baseMixin+minWidth) ⇒ <code>Number</code>
+    * [.minHeight](#dc.baseMixin+minHeight) ⇒ <code>Number</code>
+    * [.dimension](#dc.baseMixin+dimension) ⇒ <code>Dimension</code>
+    * [.data](#dc.baseMixin+data) ⇒ <code>\*</code>
+    * [.group](#dc.baseMixin+group) ⇒ <code>Group</code>
+    * [.ordering](#dc.baseMixin+ordering) ⇒ <code>function</code>
+    * [.filterAll](#dc.baseMixin+filterAll) ⇒ <code>Chart</code>
+    * [.select](#dc.baseMixin+select) ⇒ <code>Selection</code>
+    * [.selectAll](#dc.baseMixin+selectAll) ⇒ <code>Selection</code>
+    * [.anchor](#dc.baseMixin+anchor) ⇒ <code>Chart</code>
+    * [.anchorName](#dc.baseMixin+anchorName) ⇒ <code>String</code>
+    * [.root](#dc.baseMixin+root) ⇒ <code>Element</code>
+    * [.svg](#dc.baseMixin+svg) ⇒ <code>SVGElement</code>
+    * [.resetSvg](#dc.baseMixin+resetSvg) ⇒ <code>SVGElement</code>
+    * [.filterPrinter](#dc.baseMixin+filterPrinter) ⇒ <code>function</code>
+    * [.turnOnControls](#dc.baseMixin+turnOnControls) ⇒ <code>Chart</code>
+    * [.turnOffControls](#dc.baseMixin+turnOffControls) ⇒ <code>Chart</code>
+    * [.transitionDuration](#dc.baseMixin+transitionDuration) ⇒ <code>Number</code>
+    * [.render](#dc.baseMixin+render) ⇒ <code>Chart</code>
+    * [.redraw](#dc.baseMixin+redraw) ⇒ <code>Chart</code>
+    * [.hasFilterHandler](#dc.baseMixin+hasFilterHandler) ⇒ <code>Chart</code>
+    * [.hasFilter](#dc.baseMixin+hasFilter) ⇒ <code>Boolean</code>
+    * [.removeFilterHandler](#dc.baseMixin+removeFilterHandler) ⇒ <code>Chart</code>
+    * [.addFilterHandler](#dc.baseMixin+addFilterHandler) ⇒ <code>Chart</code>
+    * [.resetFilterHandler](#dc.baseMixin+resetFilterHandler) ⇒ <code>Chart</code>
+    * [.filter](#dc.baseMixin+filter) ⇒ <code>Chart</code>
+    * [.filters](#dc.baseMixin+filters) ⇒ <code>Array.&lt;\*&gt;</code>
+    * [.onClick](#dc.baseMixin+onClick)
+    * [.filterHandler](#dc.baseMixin+filterHandler) ⇒ <code>Chart</code>
+    * [.keyAccessor](#dc.baseMixin+keyAccessor) ⇒ <code>Chart</code>
+    * [.valueAccessor](#dc.baseMixin+valueAccessor) ⇒ <code>Chart</code>
+    * [.label](#dc.baseMixin+label) ⇒ <code>Chart</code>
+    * [.renderLabel](#dc.baseMixin+renderLabel) ⇒ <code>Boolean</code>
+    * [.title](#dc.baseMixin+title) ⇒ <code>function</code>
+    * [.renderTitle](#dc.baseMixin+renderTitle) ⇒ <code>Boolean</code>
+    * ~~[.renderlet](#dc.baseMixin+renderlet) ⇒ <code>function</code>~~
+    * [.chartGroup](#dc.baseMixin+chartGroup) ⇒ <code>String</code>
+    * [.expireCache](#dc.baseMixin+expireCache) ⇒ <code>Chart</code>
+    * [.legend](#dc.baseMixin+legend) ⇒ <code>[legend](#dc.legend)</code>
+    * [.chartID](#dc.baseMixin+chartID) ⇒ <code>String</code>
+    * [.options](#dc.baseMixin+options) ⇒ <code>Chart</code>
+    * [.on](#dc.baseMixin+on) ⇒ <code>Chart</code>
+  * [.marginMixin](#dc.marginMixin) ⇒ <code>Chart</code>
+    * [.margins](#dc.marginMixin+margins) ⇒ <code>Chart</code>
+  * [.colorMixin](#dc.colorMixin) ⇒ <code>Chart</code>
+    * [.colors](#dc.colorMixin+colors) ⇒ <code>Chart</code>
+    * [.ordinalColors](#dc.colorMixin+ordinalColors) ⇒ <code>Chart</code>
+    * [.linearColors](#dc.colorMixin+linearColors) ⇒ <code>Chart</code>
+    * [.linearColors](#dc.colorMixin+linearColors) ⇒ <code>function</code>
+    * [.colorDomain](#dc.colorMixin+colorDomain) ⇒ <code>function</code>
+    * [.calculateColorDomain](#dc.colorMixin+calculateColorDomain) ⇒ <code>Chart</code>
+    * [.getColor](#dc.colorMixin+getColor) ⇒ <code>String</code>
+    * [.colorCalculator](#dc.colorMixin+colorCalculator) ⇒ <code>\*</code>
+  * [.coordinateGridMixin](#dc.coordinateGridMixin) ⇒ <code>Chart</code>
+    * [.rescale](#dc.coordinateGridMixin+rescale) ⇒ <code>Chart</code>
+    * [.rangeChart](#dc.coordinateGridMixin+rangeChart) ⇒ <code>Chart</code>
+    * [.zoomScale](#dc.coordinateGridMixin+zoomScale) ⇒ <code>Chart</code>
+    * [.zoomOutRestrict](#dc.coordinateGridMixin+zoomOutRestrict) ⇒ <code>Chart</code>
+    * [.g](#dc.coordinateGridMixin+g) ⇒ <code>Chart</code>
+    * [.mouseZoomable](#dc.coordinateGridMixin+mouseZoomable) ⇒ <code>Chart</code>
+    * [.chartBodyG](#dc.coordinateGridMixin+chartBodyG) ⇒ <code>Chart</code>
+    * [.x](#dc.coordinateGridMixin+x) ⇒ <code>Chart</code>
+    * [.xUnits](#dc.coordinateGridMixin+xUnits) ⇒ <code>Chart</code>
+    * [.xAxis](#dc.coordinateGridMixin+xAxis) ⇒ <code>Chart</code>
+    * [.elasticX](#dc.coordinateGridMixin+elasticX) ⇒ <code>Chart</code>
+    * [.xAxisPadding](#dc.coordinateGridMixin+xAxisPadding) ⇒ <code>Chart</code>
+    * [.xUnitCount](#dc.coordinateGridMixin+xUnitCount) ⇒ <code>Number</code>
+    * [.useRightYAxis](#dc.coordinateGridMixin+useRightYAxis) ⇒ <code>Chart</code>
+    * [.isOrdinal](#dc.coordinateGridMixin+isOrdinal) ⇒ <code>Boolean</code>
+    * [.xAxisLabel](#dc.coordinateGridMixin+xAxisLabel) ⇒ <code>Chart</code>
+    * [.yAxisLabel](#dc.coordinateGridMixin+yAxisLabel) ⇒ <code>Chart</code>
+    * [.y](#dc.coordinateGridMixin+y) ⇒ <code>Chart</code>
+    * [.yAxis](#dc.coordinateGridMixin+yAxis) ⇒ <code>Chart</code>
+    * [.elasticY](#dc.coordinateGridMixin+elasticY) ⇒ <code>Chart</code>
+    * [.renderHorizontalGridLines](#dc.coordinateGridMixin+renderHorizontalGridLines) ⇒ <code>Chart</code>
+    * [.renderVerticalGridLines](#dc.coordinateGridMixin+renderVerticalGridLines) ⇒ <code>Chart</code>
+    * [.xAxisMin](#dc.coordinateGridMixin+xAxisMin) ⇒ <code>\*</code>
+    * [.xAxisMax](#dc.coordinateGridMixin+xAxisMax) ⇒ <code>\*</code>
+    * [.yAxisMin](#dc.coordinateGridMixin+yAxisMin) ⇒ <code>\*</code>
+    * [.yAxisMax](#dc.coordinateGridMixin+yAxisMax) ⇒ <code>\*</code>
+    * [.yAxisPadding](#dc.coordinateGridMixin+yAxisPadding) ⇒ <code>Chart</code>
+    * [.round](#dc.coordinateGridMixin+round) ⇒ <code>Chart</code>
+    * [.clipPadding](#dc.coordinateGridMixin+clipPadding) ⇒ <code>Chart</code>
+    * [.focus](#dc.coordinateGridMixin+focus)
+    * [.brushOn](#dc.coordinateGridMixin+brushOn) ⇒ <code>Chart</code>
+  * [.stackMixin](#dc.stackMixin) ⇒ <code>Chart</code>
+    * [.stack](#dc.stackMixin+stack) ⇒ <code>Chart</code>
+    * [.hidableStacks](#dc.stackMixin+hidableStacks) ⇒ <code>Chart</code>
+    * [.hideStack](#dc.stackMixin+hideStack) ⇒ <code>Chart</code>
+    * [.showStack](#dc.stackMixin+showStack) ⇒ <code>Chart</code>
+    * [.title](#dc.stackMixin+title) ⇒ <code>Chart</code>
+    * [.stackLayout](#dc.stackMixin+stackLayout) ⇒ <code>Chart</code>
+  * [.capMixin](#dc.capMixin) ⇒ <code>Chart</code>
+    * [.cap](#dc.capMixin+cap) ⇒ <code>Number</code>
+    * [.othersLabel](#dc.capMixin+othersLabel) ⇒ <code>String</code>
+    * [.othersGrouper](#dc.capMixin+othersGrouper) ⇒ <code>function</code>
+  * [.bubbleMixin](#dc.bubbleMixin) ⇒ <code>Chart</code>
+    * [.r](#dc.bubbleMixin+r) ⇒ <code>Array.&lt;Number&gt;</code>
+    * [.radiusValueAccessor](#dc.bubbleMixin+radiusValueAccessor) ⇒ <code>function</code>
+    * [.minRadius](#dc.bubbleMixin+minRadius) ⇒ <code>Number</code>
+    * [.minRadiusWithLabel](#dc.bubbleMixin+minRadiusWithLabel) ⇒ <code>Number</code>
+    * [.maxBubbleRelativeSize](#dc.bubbleMixin+maxBubbleRelativeSize) ⇒ <code>Number</code>
+  * [.filterAll](#dc.filterAll)
+  * [.refocusAll](#dc.refocusAll)
+  * [.renderAll](#dc.renderAll)
+  * [.redrawAll](#dc.redrawAll)
+  * [.disableTransitions](#dc.disableTransitions) : <code>Boolean</code>
+  * [.units](#dc.units) : <code>Object</code>
+    * [.integers](#dc.units.integers) ⇒ <code>Number</code>
+    * [.ordinal](#dc.units.ordinal) ⇒ <code>Array.&lt;String&gt;</code>
+    * [.fp](#dc.units.fp) : <code>Object</code>
+      * [.precision](#dc.units.fp.precision) ⇒ <code>function</code>
+  * [.filters](#dc.filters) : <code>Object</code>
+    * [.RangedFilter](#dc.filters.RangedFilter)
+      * [new RangedFilter(low, high)](#new_dc.filters.RangedFilter_new)
+    * [.TwoDimensionalFilter](#dc.filters.TwoDimensionalFilter)
+      * [new TwoDimensionalFilter(filter)](#new_dc.filters.TwoDimensionalFilter_new)
+    * [.RangedTwoDimensionalFilter](#dc.filters.RangedTwoDimensionalFilter)
+      * [new RangedTwoDimensionalFilter(filter)](#new_dc.filters.RangedTwoDimensionalFilter_new)
+  * [.pieChart](#dc.pieChart) ⇒ <code>PieChart</code>
+    * [.slicesCap](#dc.pieChart+slicesCap) ⇒ <code>Chart</code>
+    * [.externalRadiusPadding](#dc.pieChart+externalRadiusPadding) ⇒ <code>Chart</code>
+    * [.innerRadius](#dc.pieChart+innerRadius) ⇒ <code>Chart</code>
+    * [.radius](#dc.pieChart+radius) ⇒ <code>Chart</code>
+    * [.cx](#dc.pieChart+cx) ⇒ <code>Chart</code>
+    * [.cy](#dc.pieChart+cy) ⇒ <code>Chart</code>
+    * [.minAngleForLabel](#dc.pieChart+minAngleForLabel) ⇒ <code>Chart</code>
+    * [.emptyTitle](#dc.pieChart+emptyTitle) ⇒ <code>Chart</code>
+    * [.externalLabels](#dc.pieChart+externalLabels) ⇒ <code>Chart</code>
+  * [.barChart](#dc.barChart) ⇒ <code>BarChart</code>
+    * [.centerBar](#dc.barChart+centerBar) ⇒ <code>Boolean</code>
+    * [.barPadding](#dc.barChart+barPadding) ⇒ <code>Number</code>
+    * [.outerPadding](#dc.barChart+outerPadding) ⇒ <code>Number</code>
+    * [.gap](#dc.barChart+gap) ⇒ <code>Number</code>
+    * [.alwaysUseRounding](#dc.barChart+alwaysUseRounding) ⇒ <code>Boolean</code>
+  * [.lineChart](#dc.lineChart) ⇒ <code>LineChart</code>
+    * [.interpolate](#dc.lineChart+interpolate) ⇒ <code>Chart</code>
+    * [.tension](#dc.lineChart+tension) ⇒ <code>Chart</code>
+    * [.defined](#dc.lineChart+defined) ⇒ <code>Chart</code>
+    * [.dashStyle](#dc.lineChart+dashStyle) ⇒ <code>Chart</code>
+    * [.renderArea](#dc.lineChart+renderArea) ⇒ <code>Chart</code>
+    * [.xyTipsOn](#dc.lineChart+xyTipsOn) ⇒ <code>Chart</code>
+    * [.dotRadius](#dc.lineChart+dotRadius) ⇒ <code>Chart</code>
+    * [.renderDataPoints](#dc.lineChart+renderDataPoints) ⇒ <code>Chart</code>
+  * [.dataCount](#dc.dataCount) ⇒ <code>DataCount</code>
+    * [.html](#dc.dataCount+html) ⇒ <code>Chart</code>
+    * [.formatNumber](#dc.dataCount+formatNumber) ⇒ <code>Chart</code>
+  * [.dataTable](#dc.dataTable) ⇒ <code>DataTable</code>
+    * [.size](#dc.dataTable+size) ⇒ <code>Chart</code>
+    * [.columns](#dc.dataTable+columns) ⇒ <code>Chart</code>
+    * [.sortBy](#dc.dataTable+sortBy) ⇒ <code>Chart</code>
+    * [.order](#dc.dataTable+order) ⇒ <code>Chart</code>
+    * [.order](#dc.dataTable+order) ⇒ <code>Chart</code>
+  * [.dataGrid](#dc.dataGrid) ⇒ <code>DataGrid</code>
+    * [.beginSlice](#dc.dataGrid+beginSlice) ⇒ <code>Chart</code>
+    * [.endSlice](#dc.dataGrid+endSlice) ⇒ <code>Chart</code>
+    * [.size](#dc.dataGrid+size) ⇒ <code>Chart</code>
+    * [.html](#dc.dataGrid+html) ⇒ <code>Chart</code>
+    * [.htmlGroup](#dc.dataGrid+htmlGroup) ⇒ <code>Chart</code>
+    * [.sortBy](#dc.dataGrid+sortBy) ⇒ <code>Chart</code>
+    * [.order](#dc.dataGrid+order) ⇒ <code>Chart</code>
+  * [.bubbleChart](#dc.bubbleChart) ⇒ <code>BubbleChart</code>
+    * [.elasticRadius](#dc.bubbleChart+elasticRadius) ⇒ <code>Boolean</code>
+  * [.compositeChart](#dc.compositeChart) ⇒ <code>CompositeChart</code>
+    * [.useRightAxisGridLines](#dc.compositeChart+useRightAxisGridLines) ⇒ <code>Chart</code>
+    * [.childOptions](#dc.compositeChart+childOptions) ⇒ <code>Chart</code>
+    * [.rightYAxisLabel](#dc.compositeChart+rightYAxisLabel) ⇒ <code>Chart</code>
+    * [.compose](#dc.compositeChart+compose) ⇒ <code>Chart</code>
+    * [.children](#dc.compositeChart+children) ⇒ <code>Array.&lt;Chart&gt;</code>
+    * [.shareColors](#dc.compositeChart+shareColors) ⇒ <code>Chart</code>
+    * [.shareTitle](#dc.compositeChart+shareTitle) ⇒ <code>Chart</code>
+    * [.rightY](#dc.compositeChart+rightY) ⇒ <code>Chart</code>
+    * [.rightYAxis](#dc.compositeChart+rightYAxis) ⇒ <code>Chart</code>
+  * [.seriesChart](#dc.seriesChart) ⇒ <code>SeriesChart</code>
+    * [.chart](#dc.seriesChart+chart) ⇒ <code>Chart</code>
+    * [.seriesAccessor](#dc.seriesChart+seriesAccessor) ⇒ <code>Chart</code>
+    * [.seriesSort](#dc.seriesChart+seriesSort) ⇒ <code>Chart</code>
+    * [.valueSort](#dc.seriesChart+valueSort) ⇒ <code>Chart</code>
+  * [.geoChoroplethChart](#dc.geoChoroplethChart) ⇒ <code>GeoChoroplethChart</code>
+    * [.overlayGeoJson](#dc.geoChoroplethChart+overlayGeoJson) ⇒ <code>Chart</code>
+    * [.projection](#dc.geoChoroplethChart+projection) ⇒ <code>Chart</code>
+    * [.geoJsons](#dc.geoChoroplethChart+geoJsons) ⇒ <code>Array.&lt;{name:String, data: Object, accessor: function()}&gt;</code>
+    * [.geoPath](#dc.geoChoroplethChart+geoPath) ⇒ <code>d3.geo.path</code>
+    * [.removeGeoJson](#dc.geoChoroplethChart+removeGeoJson) ⇒ <code>Chart</code>
+  * [.bubbleOverlay](#dc.bubbleOverlay) ⇒ <code>BubbleOverlay</code>
+    * [.svg](#dc.bubbleOverlay+svg) ⇒ <code>Chart</code>
+    * [.point](#dc.bubbleOverlay+point) ⇒ <code>Chart</code>
+  * [.rowChart](#dc.rowChart) ⇒ <code>RowChart</code>
+    * [.x](#dc.rowChart+x) ⇒ <code>Chart</code>
+    * [.renderTitleLabel](#dc.rowChart+renderTitleLabel) ⇒ <code>Chart</code>
+    * [.xAxis](#dc.rowChart+xAxis) ⇒ <code>d3.svg.Axis</code>
+    * [.fixedBarHeight](#dc.rowChart+fixedBarHeight) ⇒ <code>Chart</code>
+    * [.gap](#dc.rowChart+gap) ⇒ <code>Chart</code>
+    * [.elasticX](#dc.rowChart+elasticX) ⇒ <code>Chart</code>
+    * [.labelOffsetX](#dc.rowChart+labelOffsetX) ⇒ <code>Chart</code>
+    * [.labelOffsetY](#dc.rowChart+labelOffsetY) ⇒ <code>Chart</code>
+    * [.titleLabelOffsetX](#dc.rowChart+titleLabelOffsetX) ⇒ <code>Chart</code>
+  * [.legend](#dc.legend) ⇒ <code>Legend</code>
+    * [.x](#dc.legend+x) ⇒ <code>Legend</code>
+    * [.y](#dc.legend+y) ⇒ <code>Legend</code>
+    * [.gap](#dc.legend+gap) ⇒ <code>Legend</code>
+    * [.itemHeight](#dc.legend+itemHeight) ⇒ <code>Legend</code>
+    * [.horizontal](#dc.legend+horizontal) ⇒ <code>Legend</code>
+    * [.legendWidth](#dc.legend+legendWidth) ⇒ <code>Legend</code>
+    * [.itemWidth](#dc.legend+itemWidth) ⇒ <code>Legend</code>
+    * [.autoItemWidth](#dc.legend+autoItemWidth) ⇒ <code>Legend</code>
+  * [.scatterPlot](#dc.scatterPlot) ⇒ <code>SeriesChart</code>
+    * [.existenceAccessor](#dc.scatterPlot+existenceAccessor) ⇒ <code>Chart</code>
+    * [.symbol](#dc.scatterPlot+symbol) ⇒ <code>Chart</code>
+    * [.symbolSize](#dc.scatterPlot+symbolSize) ⇒ <code>Chart</code>
+    * [.highlightedSize](#dc.scatterPlot+highlightedSize) ⇒ <code>Chart</code>
+    * [.hiddenSize](#dc.scatterPlot+hiddenSize) ⇒ <code>Chart</code>
+  * [.numberDisplay](#dc.numberDisplay) ⇒ <code>NumberDisplay</code>
+    * [.html](#dc.numberDisplay+html) ⇒ <code>Chart</code>
+    * [.value](#dc.numberDisplay+value) ⇒ <code>Number</code>
+    * [.formatNumber](#dc.numberDisplay+formatNumber) ⇒ <code>Chart</code>
+  * [.heatMap](#dc.heatMap) ⇒ <code>HeatMap</code>
+    * [.colsLabel](#dc.heatMap+colsLabel) ⇒ <code>Chart</code>
+    * [.rowsLabel](#dc.heatMap+rowsLabel) ⇒ <code>Chart</code>
+    * [.rows](#dc.heatMap+rows) ⇒ <code>Chart</code>
+    * [.cols](#dc.heatMap+cols) ⇒ <code>Chart</code>
+    * [.boxOnClick](#dc.heatMap+boxOnClick) ⇒ <code>Chart</code>
+    * [.xAxisOnClick](#dc.heatMap+xAxisOnClick) ⇒ <code>Chart</code>
+    * [.yAxisOnClick](#dc.heatMap+yAxisOnClick) ⇒ <code>Chart</code>
+    * [.xBorderRadius](#dc.heatMap+xBorderRadius) ⇒ <code>Chart</code>
+    * [.yBorderRadius](#dc.heatMap+yBorderRadius) ⇒ <code>Chart</code>
+  * [.boxPlot](#dc.boxPlot) ⇒ <code>BoxPlot</code>
+    * [.boxPadding](#dc.boxPlot+boxPadding) ⇒ <code>Number</code>
+    * [.outerPadding](#dc.boxPlot+outerPadding) ⇒ <code>Number</code>
+    * [.boxWidth](#dc.boxPlot+boxWidth) ⇒ <code>Number</code> &#124; <code>function</code>
+    * [.tickFormat](#dc.boxPlot+tickFormat) ⇒ <code>Number</code> &#124; <code>function</code>
 
-It just returns the domain passed to it, which for ordinal charts is an array of all values.
-
-```js
-chart.xUnits(dc.units.ordinal)
-.x(d3.scale.ordinal())
-```
-
-#### dc.units.fp.precision(precision)
-This function generates an argument for the [Coordinate Grid Chart's](#coordinate-grid-chart)
-`xUnits` function specifying that the x values are floating-point numbers with the given
-precision.
-
-The returned function determines how many values at the given precision will fit into the range
-supplied in its start and end parameters.
-
-```js
-// specify values (and ticks) every 0.1 units
-chart.xUnits(dc.units.fp.precision(0.1)
-// there are 500 units between 0.5 and 1 if the precision is 0.001
-var thousandths = dc.units.fp.precision(0.001);
-thousandths(0.5, 1.0) // returns 500
-```
-
-#### dc.events.trigger(function[, delay])
-This function triggers a throttled event function with a specified delay (in milli-seconds).  Events
-that are triggered repetitively due to user interaction such brush dragging might flood the library
-and invoke more renders than can be executed in time. Using this function to wrap your event
-function allows the library to smooth out the rendering by throttling events and only responding to
-the most recent event.
-
-```js
-chart.on('renderlet', function(chart) {
-    // smooth the rendering through event throttling
-    dc.events.trigger(function(){
-        // focus some other chart to the range selected by user on this chart
-        someOtherChart.focus(chart.filter());
-    });
-})
-```
-
-## Filters
-The dc.js filters are functions which are passed into crossfilter to chose which records will be
-accumulated to produce values for the charts.  In the crossfilter model, any filters applied on one
-dimension will affect all the other dimensions but not that one.  dc always applies a filter
-function to the dimension; the function combines multiple filters and if any of them accept a
-record, it is filtered in.
-
-These filter constructors are used as appropriate by the various charts to implement brushing.  We
-mention below which chart uses which filter.  In some cases, many instances of a filter will be added.
-
-#### dc.filters.RangedFilter(low, high)
-RangedFilter is a filter which accepts keys between `low` and `high`.  It is used to implement X
-axis brushing for the [coordinate grid charts](#coordinate-grid-mixin).
-
-#### dc.filters.TwoDimensionalFilter(array)
-TwoDimensionalFilter is a filter which accepts a single two-dimensional value.  It is used by the
-[heat map chart](#heat-map) to include particular cells as they are clicked.  (Rows and columns are
-filtered by filtering all the cells in the row or column.)
-
-#### dc.filters.RangedTwoDimensionalFilter(array)
-The RangedTwoDimensionalFilter allows filtering all values which fit within a rectangular
-region. It is used by the [scatter plot](#scatter-plot) to implement rectangular brushing.
-
-It takes two two-dimensional points in the form `[[x1,y1],[x2,y2]]`, and normalizes them so that
-`x1 <= x2` and `y1 <- y2`. It then returns a filter which accepts any points which are in the
-rectangular range including the lower values but excluding the higher values.
-
-If an array of two values are given to the RangedTwoDimensionalFilter, it interprets the values as
-two x coordinates `x1` and `x2` and returns a filter which accepts any points for which `x1 <= x <
-x2`.
-
-## Base Mixin
+<a name="dc.baseMixin"></a>
+### dc.baseMixin ⇒ <code>Chart</code>
 Base Mixin is an abstract functional object representing a basic dc chart object
 for all chart and widget implementations. Methods from the Base Mixin are inherited
-and available on all chart implementation in the DC library.
+and available on all chart implementations in the DC library.
 
-#### .width([value])
+**Kind**: static mixin of <code>[dc](#dc)</code>  
+
+| Param | Type |
+| --- | --- |
+| _chart | <code>Chart</code> | 
+
+
+* [.baseMixin](#dc.baseMixin) ⇒ <code>Chart</code>
+  * [.width](#dc.baseMixin+width) ⇒ <code>Number</code>
+  * [.height](#dc.baseMixin+height) ⇒ <code>Number</code>
+  * [.minWidth](#dc.baseMixin+minWidth) ⇒ <code>Number</code>
+  * [.minHeight](#dc.baseMixin+minHeight) ⇒ <code>Number</code>
+  * [.dimension](#dc.baseMixin+dimension) ⇒ <code>Dimension</code>
+  * [.data](#dc.baseMixin+data) ⇒ <code>\*</code>
+  * [.group](#dc.baseMixin+group) ⇒ <code>Group</code>
+  * [.ordering](#dc.baseMixin+ordering) ⇒ <code>function</code>
+  * [.filterAll](#dc.baseMixin+filterAll) ⇒ <code>Chart</code>
+  * [.select](#dc.baseMixin+select) ⇒ <code>Selection</code>
+  * [.selectAll](#dc.baseMixin+selectAll) ⇒ <code>Selection</code>
+  * [.anchor](#dc.baseMixin+anchor) ⇒ <code>Chart</code>
+  * [.anchorName](#dc.baseMixin+anchorName) ⇒ <code>String</code>
+  * [.root](#dc.baseMixin+root) ⇒ <code>Element</code>
+  * [.svg](#dc.baseMixin+svg) ⇒ <code>SVGElement</code>
+  * [.resetSvg](#dc.baseMixin+resetSvg) ⇒ <code>SVGElement</code>
+  * [.filterPrinter](#dc.baseMixin+filterPrinter) ⇒ <code>function</code>
+  * [.turnOnControls](#dc.baseMixin+turnOnControls) ⇒ <code>Chart</code>
+  * [.turnOffControls](#dc.baseMixin+turnOffControls) ⇒ <code>Chart</code>
+  * [.transitionDuration](#dc.baseMixin+transitionDuration) ⇒ <code>Number</code>
+  * [.render](#dc.baseMixin+render) ⇒ <code>Chart</code>
+  * [.redraw](#dc.baseMixin+redraw) ⇒ <code>Chart</code>
+  * [.hasFilterHandler](#dc.baseMixin+hasFilterHandler) ⇒ <code>Chart</code>
+  * [.hasFilter](#dc.baseMixin+hasFilter) ⇒ <code>Boolean</code>
+  * [.removeFilterHandler](#dc.baseMixin+removeFilterHandler) ⇒ <code>Chart</code>
+  * [.addFilterHandler](#dc.baseMixin+addFilterHandler) ⇒ <code>Chart</code>
+  * [.resetFilterHandler](#dc.baseMixin+resetFilterHandler) ⇒ <code>Chart</code>
+  * [.filter](#dc.baseMixin+filter) ⇒ <code>Chart</code>
+  * [.filters](#dc.baseMixin+filters) ⇒ <code>Array.&lt;\*&gt;</code>
+  * [.onClick](#dc.baseMixin+onClick)
+  * [.filterHandler](#dc.baseMixin+filterHandler) ⇒ <code>Chart</code>
+  * [.keyAccessor](#dc.baseMixin+keyAccessor) ⇒ <code>Chart</code>
+  * [.valueAccessor](#dc.baseMixin+valueAccessor) ⇒ <code>Chart</code>
+  * [.label](#dc.baseMixin+label) ⇒ <code>Chart</code>
+  * [.renderLabel](#dc.baseMixin+renderLabel) ⇒ <code>Boolean</code>
+  * [.title](#dc.baseMixin+title) ⇒ <code>function</code>
+  * [.renderTitle](#dc.baseMixin+renderTitle) ⇒ <code>Boolean</code>
+  * ~~[.renderlet](#dc.baseMixin+renderlet) ⇒ <code>function</code>~~
+  * [.chartGroup](#dc.baseMixin+chartGroup) ⇒ <code>String</code>
+  * [.expireCache](#dc.baseMixin+expireCache) ⇒ <code>Chart</code>
+  * [.legend](#dc.baseMixin+legend) ⇒ <code>[legend](#dc.legend)</code>
+  * [.chartID](#dc.baseMixin+chartID) ⇒ <code>String</code>
+  * [.options](#dc.baseMixin+options) ⇒ <code>Chart</code>
+  * [.on](#dc.baseMixin+on) ⇒ <code>Chart</code>
+
+<a name="dc.baseMixin+width"></a>
+#### baseMixin.width ⇒ <code>Number</code>
 Set or get the width attribute of a chart. See `.height` below for further description of the
 behavior.
 
-#### .height([value])
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| w | <code>Number</code> &#124; <code>function</code> | 
+
+<a name="dc.baseMixin+height"></a>
+#### baseMixin.height ⇒ <code>Number</code>
 Set or get the height attribute of a chart. The height is applied to the SVG element generated by
 the chart when rendered (or rerendered). If a value is given, then it will be used to calculate
 the new height and the chart returned for method chaining.  The value can either be a numeric, a
@@ -172,40 +336,78 @@ By default, without an explicit height being given, the chart will select the wi
 anchor element. If that isn't possible it defaults to 200. Setting the value falsy will return
 the chart to the default behavior
 
-Examples:
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
 
+| Param | Type |
+| --- | --- |
+| h | <code>Number</code> &#124; <code>function</code> | 
+
+**Example**  
 ```js
 chart.height(250); // Set the chart's height to 250px;
 chart.height(function(anchor) { return doSomethingWith(anchor); }); // set the chart's height with a function
 chart.height(null); // reset the height to the default auto calculation
 ```
-
-#### .minWidth([value])
+<a name="dc.baseMixin+minWidth"></a>
+#### baseMixin.minWidth ⇒ <code>Number</code>
 Set or get the minimum width attribute of a chart. This only applicable if the width is
 calculated by dc.
 
-#### .minHeight([value])
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| w | <code>Number</code> | 
+
+<a name="dc.baseMixin+minHeight"></a>
+#### baseMixin.minHeight ⇒ <code>Number</code>
 Set or get the minimum height attribute of a chart. This only applicable if the height is
 calculated by dc.
 
-#### .dimension([value]) - **mandatory**
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| h | <code>Number</code> | 
+
+<a name="dc.baseMixin+dimension"></a>
+#### baseMixin.dimension ⇒ <code>Dimension</code>
+**mandatory**
+
 Set or get the dimension attribute of a chart. In dc a dimension can be any valid [crossfilter
 dimension](https://github.com/square/crossfilter/wiki/API-Reference#wiki-dimension).
 
 If a value is given, then it will be used as the new dimension. If no value is specified then
 the current dimension will be returned.
 
-#### .data([callback])
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| d | <code>Dimension</code> | 
+
+<a name="dc.baseMixin+data"></a>
+#### baseMixin.data ⇒ <code>\*</code>
 Set the data callback or retrieve the chart's data set. The data callback is passed the chart's
 group and by default will return `group.all()`. This behavior may be modified to, for instance,
-return only the top 5 groups:
-```
-    chart.data(function(group) {
-        return group.top(5);
-    });
-```
+return only the top 5 groups.
 
-#### .group([value, [name]]) - **mandatory**
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [callback] | <code>function</code> | 
+
+**Example**  
+```js
+chart.data(function(group) {
+    return group.top(5);
+});
+```
+<a name="dc.baseMixin+group"></a>
+#### baseMixin.group ⇒ <code>Group</code>
+**mandatory**
+
 Set or get the group attribute of a chart. In dc a group is a [crossfilter
 group](https://github.com/square/crossfilter/wiki/API-Reference#wiki-group). Usually the group
 should be created from the particular dimension associated with the same chart. If a value is
@@ -214,82 +416,155 @@ given, then it will be used as the new group.
 If no value specified then the current group will be returned.
 If `name` is specified then it will be used to generate legend label.
 
-#### .ordering([orderFunction])
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [group] | <code>Group</code> | 
+| [name] | <code>String</code> | 
+
+<a name="dc.baseMixin+ordering"></a>
+#### baseMixin.ordering ⇒ <code>function</code>
 Get or set an accessor to order ordinal charts
 
-#### .filterAll()
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [orderFunction] | <code>function</code> | 
+
+<a name="dc.baseMixin+filterAll"></a>
+#### baseMixin.filterAll ⇒ <code>Chart</code>
 Clear all filters associated with this chart.
 
-#### .select(selector)
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+select"></a>
+#### baseMixin.select ⇒ <code>Selection</code>
 Execute d3 single selection in the chart's scope using the given selector and return the d3
-selection. Roughly the same as:
+selection.
+
+This function is **not chainable** since it does not return a chart instance; however the d3
+selection result can be chained to d3 function calls.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+**Example**  
 ```js
+// Similar to:
 d3.select('#chart-id').select(selector);
 ```
+<a name="dc.baseMixin+selectAll"></a>
+#### baseMixin.selectAll ⇒ <code>Selection</code>
+Execute in scope d3 selectAll using the given selector and return d3 selection result.
+
 This function is **not chainable** since it does not return a chart instance; however the d3
 selection result can be chained to d3 function calls.
 
-#### .selectAll(selector)
-Execute in scope d3 selectAll using the given selector and return d3 selection result. Roughly
-the same as:
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+**Example**  
 ```js
+// Similar to:
 d3.select('#chart-id').selectAll(selector);
 ```
-This function is **not chainable** since it does not return a chart instance; however the d3
-selection result can be chained to d3 function calls.
-
-#### .anchor([anchorChart|anchorSelector|anchorNode], [chartGroup])
+<a name="dc.baseMixin+anchor"></a>
+#### baseMixin.anchor ⇒ <code>Chart</code>
 Set the svg root to either be an existing chart's root; or any valid [d3 single
 selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom
 block element such as a div; or a dom element or d3 selection. Optionally registers the chart
 within the chartGroup. This class is called internally on chart initialization, but be called
 again to relocate the chart. However, it will orphan any previously created SVG elements.
 
-#### .anchorName()
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [a] | <code>anchorChart</code> &#124; <code>anchorSelector</code> &#124; <code>anchorNode</code> | 
+| [chartGroup] | <code>chartGroup</code> | 
+
+<a name="dc.baseMixin+anchorName"></a>
+#### baseMixin.anchorName ⇒ <code>String</code>
 Returns the dom id for the chart's anchored location.
 
-#### .root([rootElement])
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+root"></a>
+#### baseMixin.root ⇒ <code>Element</code>
 Returns the root element where a chart resides. Usually it will be the parent div element where
 the svg was created. You can also pass in a new root element however this is usually handled by
 dc internally. Resetting the root element on a chart outside of dc internals may have
 unexpected consequences.
 
-#### .svg([svgElement])
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [rootElement] | <code>Element</code> | 
+
+<a name="dc.baseMixin+svg"></a>
+#### baseMixin.svg ⇒ <code>SVGElement</code>
 Returns the top svg element for this specific chart. You can also pass in a new svg element,
 however this is usually handled by dc internally. Resetting the svg element on a chart outside
 of dc internals may have unexpected consequences.
 
-#### .resetSvg()
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [svgElement] | <code>SVGElement</code> | 
+
+<a name="dc.baseMixin+resetSvg"></a>
+#### baseMixin.resetSvg ⇒ <code>SVGElement</code>
 Remove the chart's SVG elements from the dom and recreate the container SVG element.
 
-#### .filterPrinter([filterPrinterFunction])
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+filterPrinter"></a>
+#### baseMixin.filterPrinter ⇒ <code>function</code>
 Set or get the filter printer function. The filter printer function is used to generate human
 friendly text for filter value(s) associated with the chart instance. By default dc charts use a
 default filter printer `dc.printers.filter` that provides simple printing support for both
 single value and ranged filters.
 
-#### .turnOnControls() & .turnOffControls()
-Turn on/off optional control elements within the root element. dc currently supports the
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [filterPrinterFunction] | <code>function</code> | 
+
+<a name="dc.baseMixin+turnOnControls"></a>
+#### baseMixin.turnOnControls ⇒ <code>Chart</code>
+Turn on optional control elements within the root element. dc currently supports the
 following html control elements.
-
 * root.selectAll('.reset') - elements are turned on if the chart has an active filter. This type
- of control element is usually used to store a reset link to allow user to reset filter on a
- certain chart. This element will be turned off automatically if the filter is cleared.
+of control element is usually used to store a reset link to allow user to reset filter on a
+certain chart. This element will be turned off automatically if the filter is cleared.
 * root.selectAll('.filter') elements are turned on if the chart has an active filter. The text
- content of this element is then replaced with the current filter value using the filter printer
- function. This type of element will be turned off automatically if the filter is cleared.
+content of this element is then replaced with the current filter value using the filter printer
+function. This type of element will be turned off automatically if the filter is cleared.
 
-#### .transitionDuration([duration])
-Set or get the animation transition duration(in milliseconds) for this chart instance. Default
-duration is 750ms.
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+turnOffControls"></a>
+#### baseMixin.turnOffControls ⇒ <code>Chart</code>
+Turn off optional control elements within the root element.
 
-#### .render()
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+transitionDuration"></a>
+#### baseMixin.transitionDuration ⇒ <code>Number</code>
+Set or get the animation transition duration (in milliseconds) for this chart instance.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [duration] | <code>Number</code> | 
+
+<a name="dc.baseMixin+render"></a>
+#### baseMixin.render ⇒ <code>Chart</code>
 Invoking this method will force the chart to re-render everything from scratch. Generally it
 should only be used to render the chart for the first time on the page or if you want to make
 sure everything is redrawn from scratch instead of relying on the default incremental redrawing
 behaviour.
 
-#### .redraw()
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+redraw"></a>
+#### baseMixin.redraw ⇒ <code>Chart</code>
 Calling redraw will cause the chart to re-render data changes incrementally. If there is no
 change in the underlying data dimension then calling this method will have no effect on the
 chart. Most chart interaction in dc will automatically trigger this method through internal
@@ -297,11 +572,20 @@ events (in particular [dc.redrawAll](#dcredrawallchartgroup)); therefore, you on
 manually invoke this function if data is manipulated outside of dc's control (for example if
 data is loaded in the background using `crossfilter.add()`).
 
-#### .hasFilterHandler([function])
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+hasFilterHandler"></a>
+#### baseMixin.hasFilterHandler ⇒ <code>Chart</code>
 Set or get the has filter handler. The has filter handler is a function that checks to see if
 the chart's current filters include a specific filter.  Using a custom has filter handler allows
 you to change the way filters are checked for and replaced.
 
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [hasFilterHandler] | <code>function</code> | 
+
+**Example**  
 ```js
 // default has filter handler
 function (filters, filter) {
@@ -318,12 +602,19 @@ chart.hasFilterHandler(function(filters, filter) {
     return false;
 });
 ```
-
-#### .hasFilter([filter])
+<a name="dc.baseMixin+hasFilter"></a>
+#### baseMixin.hasFilter ⇒ <code>Boolean</code>
 Check whether any active filter or a specific filter is associated with particular chart instance.
 This function is **not chainable**.
 
-#### .removeFilterHandler([function])
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [filter] | <code>\*</code> | 
+
+<a name="dc.baseMixin+removeFilterHandler"></a>
+#### baseMixin.removeFilterHandler ⇒ <code>Chart</code>
 Set or get the remove filter handler. The remove filter handler is a function that removes a
 filter from the chart's current filters. Using a custom remove filter handler allows you to
 change how filters are removed or perform additional work when removing a filter, e.g. when
@@ -331,6 +622,13 @@ using a filter server other than crossfilter.
 
 Any changes should modify the `filters` array argument and return that array.
 
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [removeFilterHandler] | <code>function</code> | 
+
+**Example**  
 ```js
 // default remove filter handler
 function (filters, filter) {
@@ -348,8 +646,8 @@ chart.removeFilterHandler(function(filters, filter) {
     return filters;
 });
 ```
-
-#### .addFilterHandler([function])
+<a name="dc.baseMixin+addFilterHandler"></a>
+#### baseMixin.addFilterHandler ⇒ <code>Chart</code>
 Set or get the add filter handler. The add filter handler is a function that adds a filter to
 the chart's filter list. Using a custom add filter handler allows you to change the way filters
 are added or perform additional work when adding a filter, e.g. when using a filter server other
@@ -357,6 +655,13 @@ than crossfilter.
 
 Any changes should modify the `filters` array argument and return that array.
 
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [addFilterHandler] | <code>function</code> | 
+
+**Example**  
 ```js
 // default add filter handler
 function (filters, filter) {
@@ -369,8 +674,8 @@ chart.addFilterHandler(function(filters, filter) {
     return filters;
 });
 ```
-
-#### .resetFilterHandler([function])
+<a name="dc.baseMixin+resetFilterHandler"></a>
+#### baseMixin.resetFilterHandler ⇒ <code>Chart</code>
 Set or get the reset filter handler. The reset filter handler is a function that resets the
 chart's filter list by returning a new list. Using a custom reset filter handler allows you to
 change the way filters are reset, or perform additional work when resetting the filters,
@@ -378,6 +683,13 @@ e.g. when using a filter server other than crossfilter.
 
 This function should return an array.
 
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [resetFilterHandler] | <code>function</code> | 
+
+**Example**  
 ```js
 // default remove filter handler
 function (filters) {
@@ -389,30 +701,54 @@ chart.resetFilterHandler(function(filters) {
     return filters;
 });
 ```
-
-#### .filter([filterValue])
+<a name="dc.baseMixin+filter"></a>
+#### baseMixin.filter ⇒ <code>Chart</code>
 Filter the chart by the given value or return the current filter if the input parameter is missing.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [filter] | <code>\*</code> | 
+
+**Example**  
 ```js
 // filter by a single string
 chart.filter('Sunday');
 // filter by a single age
 chart.filter(18);
 ```
-
-#### .filters()
+<a name="dc.baseMixin+filters"></a>
+#### baseMixin.filters ⇒ <code>Array.&lt;\*&gt;</code>
 Returns all current filters. This method does not perform defensive cloning of the internal
 filter array before returning, therefore any modification of the returned array will effect the
 chart's internal filter storage.
 
-#### .onClick(datum)
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+onClick"></a>
+#### baseMixin.onClick
 This function is passed to d3 as the onClick handler for each chart. The default behavior is to
 filter on the clicked datum (passed to the callback) and redraw the chart group.
 
-#### .filterHandler([function])
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| datum | <code>\*</code> | 
+
+<a name="dc.baseMixin+filterHandler"></a>
+#### baseMixin.filterHandler ⇒ <code>Chart</code>
 Set or get the filter handler. The filter handler is a function that performs the filter action
 on a specific dimension. Using a custom filter handler allows you to perform additional logic
 before or after filtering.
 
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| filterHandler | <code>function</code> | 
+
+**Example**  
 ```js
 // default filter handler
 function(dimension, filter){
@@ -427,77 +763,130 @@ chart.filterHandler(function(dimension, filter){
     return newFilter; // set the actual filter value to the new value
 });
 ```
-
-#### .keyAccessor([keyAccessorFunction])
+<a name="dc.baseMixin+keyAccessor"></a>
+#### baseMixin.keyAccessor ⇒ <code>Chart</code>
 Set or get the key accessor function. The key accessor function is used to retrieve the key
 value from the crossfilter group. Key values are used differently in different charts, for
 example keys correspond to slices in a pie chart and x axis positions in a grid coordinate chart.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| keyAccessor | <code>function</code> | 
+
+**Example**  
 ```js
 // default key accessor
 chart.keyAccessor(function(d) { return d.key; });
 // custom key accessor for a multi-value crossfilter reduction
 chart.keyAccessor(function(p) { return p.value.absGain; });
 ```
-
-#### .valueAccessor([valueAccessorFunction])
+<a name="dc.baseMixin+valueAccessor"></a>
+#### baseMixin.valueAccessor ⇒ <code>Chart</code>
 Set or get the value accessor function. The value accessor function is used to retrieve the
 value from the crossfilter group. Group values are used differently in different charts, for
 example values correspond to slice sizes in a pie chart and y axis positions in a grid
 coordinate chart.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| valueAccessor | <code>function</code> | 
+
+**Example**  
 ```js
 // default value accessor
 chart.valueAccessor(function(d) { return d.value; });
 // custom value accessor for a multi-value crossfilter reduction
 chart.valueAccessor(function(p) { return p.value.percentageGain; });
 ```
-
-#### .label([labelFunction])
+<a name="dc.baseMixin+label"></a>
+#### baseMixin.label ⇒ <code>Chart</code>
 Set or get the label function. The chart class will use this function to render labels for each
 child element in the chart, e.g. slices in a pie chart or bubbles in a bubble chart. Not every
 chart supports the label function for example bar chart and line chart do not use this function
 at all.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| labelFunction | <code>function</code> | 
+
+**Example**  
 ```js
 // default label function just return the key
 chart.label(function(d) { return d.key; });
 // label function has access to the standard d3 data binding and can get quite complicated
 chart.label(function(d) { return d.data.key + '(' + Math.floor(d.data.value / all.value() * 100) + '%)'; });
 ```
-
-#### .renderLabel(boolean)
+<a name="dc.baseMixin+renderLabel"></a>
+#### baseMixin.renderLabel ⇒ <code>Boolean</code>
 Turn on/off label rendering
 
-#### .title([titleFunction])
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| renderLabel | <code>Boolean</code> | 
+
+<a name="dc.baseMixin+title"></a>
+#### baseMixin.title ⇒ <code>function</code>
 Set or get the title function. The chart class will use this function to render the svg title
 (usually interpreted by browser as tooltips) for each child element in the chart, e.g. a slice
 in a pie chart or a bubble in a bubble chart. Almost every chart supports the title function;
 however in grid coordinate charts you need to turn off the brush in order to see titles, because
 otherwise the brush layer will block tooltip triggering.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| titleFunction | <code>function</code> | 
+
+**Example**  
 ```js
 // default title function just return the key
 chart.title(function(d) { return d.key + ': ' + d.value; });
 // title function has access to the standard d3 data binding and can get quite complicated
 chart.title(function(p) {
-    return p.key.getFullYear()
-        + '\n'
-        + 'Index Gain: ' + numberFormat(p.value.absGain) + '\n'
-        + 'Index Gain in Percentage: ' + numberFormat(p.value.percentageGain) + '%\n'
-        + 'Fluctuation / Index Ratio: ' + numberFormat(p.value.fluctuationPercentage) + '%';
+   return p.key.getFullYear()
+       + '\n'
+       + 'Index Gain: ' + numberFormat(p.value.absGain) + '\n'
+       + 'Index Gain in Percentage: ' + numberFormat(p.value.percentageGain) + '%\n'
+       + 'Fluctuation / Index Ratio: ' + numberFormat(p.value.fluctuationPercentage) + '%';
 });
 ```
-
-#### .renderTitle(boolean)
+<a name="dc.baseMixin+renderTitle"></a>
+#### baseMixin.renderTitle ⇒ <code>Boolean</code>
 Turn on/off title rendering, or return the state of the render title flag if no arguments are
 given.
 
-#### .renderlet(renderletFunction)
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| renderTitle | <code>Boolean</code> | 
+
+<a name="dc.baseMixin+renderlet"></a>
+#### ~~baseMixin.renderlet ⇒ <code>function</code>~~
+***Deprecated***
+
 A renderlet is similar to an event listener on rendering event. Multiple renderlets can be added
 to an individual chart.  Each time a chart is rerendered or redrawn the renderlets are invoked
 right after the chart finishes its transitions, giving you a way to modify the svg
 elements. Renderlet functions take the chart instance as the only input parameter and you can
 use the dc API or use raw d3 to achieve pretty much any effect.
 
-@Deprecated - Use [Listeners](#Listeners) with a 'renderlet' prefix
-Generates a random key for the renderlet, which makes it hard to remove.
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| renderletFunction | <code>function</code> | 
+
+**Example**  
 ```js
 // do this instead of .renderlet(function(chart) { ... })
 chart.on("renderlet", function(chart){
@@ -507,89 +896,157 @@ chart.on("renderlet", function(chart){
     moveChart.filter(chart.filter());
 });
 ```
-
-#### .chartGroup([group])
+<a name="dc.baseMixin+chartGroup"></a>
+#### baseMixin.chartGroup ⇒ <code>String</code>
 Get or set the chart group to which this chart belongs. Chart groups are rendered or redrawn
 together since it is expected they share the same underlying crossfilter data set.
 
-#### .expireCache()
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| chartGroup | <code>String</code> | 
+
+<a name="dc.baseMixin+expireCache"></a>
+#### baseMixin.expireCache ⇒ <code>Chart</code>
 Expire the internal chart cache. dc charts cache some data internally on a per chart basis to
 speed up rendering and avoid unnecessary calculation; however it might be useful to clear the
 cache if you have changed state which will affect rendering.  For example if you invoke the
 `crossfilter.add` function or reset group or dimension after rendering it is a good idea to
 clear the cache to make sure charts are rendered properly.
 
-#### .legend([dc.legend])
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+legend"></a>
+#### baseMixin.legend ⇒ <code>[legend](#dc.legend)</code>
 Attach a dc.legend widget to this chart. The legend widget will automatically draw legend labels
 based on the color setting and names associated with each group.
 
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [legend] | <code>[legend](#dc.legend)</code> | 
+
+**Example**  
 ```js
 chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
 ```
-
-#### .chartID()
+<a name="dc.baseMixin+chartID"></a>
+#### baseMixin.chartID ⇒ <code>String</code>
 Returns the internal numeric ID of the chart.
 
-#### .options(optionsObject)
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+options"></a>
+#### baseMixin.options ⇒ <code>Chart</code>
 Set chart options using a configuration object. Each key in the object will cause the method of
 the same name to be called with the value to set that attribute for the chart.
 
-Example:
-```
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| opts | <code>Object</code> | 
+
+**Example**  
+```js
 chart.options({dimension: myDimension, group: myGroup});
 ```
-
-## Listeners
+<a name="dc.baseMixin+on"></a>
+#### baseMixin.on ⇒ <code>Chart</code>
 All dc chart instance supports the following listeners.
-
-#### .on('renderlet', function(chart, filter){...})
-This listener function will be invoked after transitions after redraw and render. Replaces the
+Supports the following events:
+* 'renderlet' - This listener function will be invoked after transitions after redraw and render. Replaces the
 deprecated `.renderlet()` method.
+* 'pretransition' - Like `.on('renderlet', ...)` but the event is fired before transitions start.
+* 'preRender' - This listener function will be invoked before chart rendering.
+* 'postRender' - This listener function will be invoked after chart finish rendering including
+all renderlets' logic.
+* 'preRedraw' - This listener function will be invoked before chart redrawing.
+* 'postRedraw' - This listener function will be invoked after chart finish redrawing
+including all renderlets' logic.
+* 'filtered' - This listener function will be invoked after a filter is applied, added or removed.
+* 'zoomed' - This listener function will be invoked after a zoom is triggered.
 
-#### .on('pretransition', function(chart, filter){...})
-Like `.on('renderlet', ...)` but the event is fired before transitions start.
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
 
-#### .on('preRender', function(chart){...})
-This listener function will be invoked before chart rendering.
+| Param | Type |
+| --- | --- |
+| event | <code>String</code> | 
+| listener | <code>function</code> | 
 
-#### .on('postRender', function(chart){...})
-This listener function will be invoked after chart finish rendering including all renderlets' logic.
-
-#### .on('preRedraw', function(chart){...})
-This listener function will be invoked before chart redrawing.
-
-#### .on('postRedraw', function(chart){...})
-This listener function will be invoked after chart finish redrawing including all renderlets' logic.
-
-#### .on('filtered', function(chart, filter){...})
-This listener function will be invoked after a filter is applied, added or removed.
-
-#### .on('zoomed', function(chart, filter){...})
-This listener function will be invoked after a zoom is triggered.
-
-## Margin Mixin
+**Example**  
+```js
+.on('renderlet', function(chart, filter){...})
+.on('pretransition', function(chart, filter){...})
+.on('preRender', function(chart){...})
+.on('postRender', function(chart){...})
+.on('preRedraw', function(chart){...})
+.on('postRedraw', function(chart){...})
+.on('filtered', function(chart, filter){...})
+.on('zoomed', function(chart, filter){...})
+```
+<a name="dc.marginMixin"></a>
+### dc.marginMixin ⇒ <code>Chart</code>
 Margin is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid
 Charts.
 
-#### .margins([margins])
-Get or set the margins for a particular coordinate grid chart instance. The margins is stored as
-an associative Javascript array. Default margins: {top: 10, right: 50, bottom: 30, left: 30}.
+**Kind**: static mixin of <code>[dc](#dc)</code>  
 
-The margins can be accessed directly from the getter.
+| Param | Type |
+| --- | --- |
+| _chart | <code>Chart</code> | 
+
+<a name="dc.marginMixin+margins"></a>
+#### marginMixin.margins ⇒ <code>Chart</code>
+Get or set the margins for a particular coordinate grid chart instance. The margins is stored as
+an associative Javascript array.
+
+**Kind**: instance property of <code>[marginMixin](#dc.marginMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [margins] | <code>Object</code> | <code>{top: 10, right: 50, bottom: 30, left: 30}</code> | 
+
+**Example**  
 ```js
 var leftMargin = chart.margins().left; // 30 by default
 chart.margins().left = 50;
 leftMargin = chart.margins().left; // now 50
 ```
-
-## Color Mixin
+<a name="dc.colorMixin"></a>
+### dc.colorMixin ⇒ <code>Chart</code>
 The Color Mixin is an abstract chart functional class providing universal coloring support
 as a mix-in for any concrete chart implementation.
 
-#### .colors([colorScale])
+**Kind**: static mixin of <code>[dc](#dc)</code>  
+
+| Param | Type |
+| --- | --- |
+| _chart | <code>Chart</code> | 
+
+
+* [.colorMixin](#dc.colorMixin) ⇒ <code>Chart</code>
+  * [.colors](#dc.colorMixin+colors) ⇒ <code>Chart</code>
+  * [.ordinalColors](#dc.colorMixin+ordinalColors) ⇒ <code>Chart</code>
+  * [.linearColors](#dc.colorMixin+linearColors) ⇒ <code>Chart</code>
+  * [.linearColors](#dc.colorMixin+linearColors) ⇒ <code>function</code>
+  * [.colorDomain](#dc.colorMixin+colorDomain) ⇒ <code>function</code>
+  * [.calculateColorDomain](#dc.colorMixin+calculateColorDomain) ⇒ <code>Chart</code>
+  * [.getColor](#dc.colorMixin+getColor) ⇒ <code>String</code>
+  * [.colorCalculator](#dc.colorMixin+colorCalculator) ⇒ <code>\*</code>
+
+<a name="dc.colorMixin+colors"></a>
+#### colorMixin.colors ⇒ <code>Chart</code>
 Retrieve current color scale or set a new color scale. This methods accepts any function that
-operates like a d3 scale. If not set the default is
-`d3.scale.category20c()`.
+operates like a d3 scale.
+
+**Kind**: instance property of <code>[colorMixin](#dc.colorMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [colorScale] | <code>D3Scale</code> | <code>d3.scale.category20c()</code> | 
+
+**Example**  
 ```js
 // alternate categorical scale
 chart.colors(d3.scale.category20b());
@@ -602,90 +1059,230 @@ chart.ordinalColors(['red','green','blue']);
 // set a linear scale
 chart.linearColors(["#4575b4", "#ffffbf", "#a50026"]);
 ```
-
-#### .ordinalColors(r)
+<a name="dc.colorMixin+ordinalColors"></a>
+#### colorMixin.ordinalColors ⇒ <code>Chart</code>
 Convenience method to set the color scale to d3.scale.ordinal with range `r`.
 
-#### .linearColors(r)
+**Kind**: instance property of <code>[colorMixin](#dc.colorMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| r | <code>Array.&lt;String&gt;</code> | 
+
+<a name="dc.colorMixin+linearColors"></a>
+#### colorMixin.linearColors ⇒ <code>Chart</code>
 Convenience method to set the color scale to an Hcl interpolated linear scale with range `r`.
 
-#### .colorAccessor([colorAccessorFunction])
+**Kind**: instance property of <code>[colorMixin](#dc.colorMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| r | <code>Array.&lt;Number&gt;</code> | 
+
+<a name="dc.colorMixin+linearColors"></a>
+#### colorMixin.linearColors ⇒ <code>function</code>
 Set or the get color accessor function. This function will be used to map a data point in a
 crossfilter group to a color value on the color scale. The default function uses the key
 accessor.
+
+**Kind**: instance property of <code>[colorMixin](#dc.colorMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [colorAccessorFunction] | <code>function</code> | 
+
+**Example**  
 ```js
 // default index based color accessor
 .colorAccessor(function (d, i){return i;})
 // color accessor for a multi-value crossfilter reduction
 .colorAccessor(function (d){return d.value.absGain;})
 ```
-
-#### .colorDomain([domain])
+<a name="dc.colorMixin+colorDomain"></a>
+#### colorMixin.colorDomain ⇒ <code>function</code>
 Set or get the current domain for the color mapping function. The domain must be supplied as an
 array.
 
 Note: previously this method accepted a callback function. Instead you may use a custom scale
 set by `.colors`.
 
-#### .calculateColorDomain()
+**Kind**: instance property of <code>[colorMixin](#dc.colorMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [domain] | <code>Array.&lt;String&gt;</code> | 
+
+<a name="dc.colorMixin+calculateColorDomain"></a>
+#### colorMixin.calculateColorDomain ⇒ <code>Chart</code>
 Set the domain by determining the min and max values as retrieved by `.colorAccessor` over the
 chart's dataset.
 
-#### .getColor(d [, i])
+**Kind**: instance property of <code>[colorMixin](#dc.colorMixin)</code>  
+<a name="dc.colorMixin+getColor"></a>
+#### colorMixin.getColor ⇒ <code>String</code>
 Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
 
-#### .colorCalculator([value])
-Gets or sets chart.getColor.
+**Kind**: instance property of <code>[colorMixin](#dc.colorMixin)</code>  
 
-## Coordinate Grid Mixin
-Includes: [Color Mixin](#color-mixin), [Margin Mixin](#margin-mixin), [Base Mixin](#base-mixin)
+| Param | Type |
+| --- | --- |
+| d | <code>\*</code> | 
+| [i] | <code>Number</code> | 
 
+<a name="dc.colorMixin+colorCalculator"></a>
+#### colorMixin.colorCalculator ⇒ <code>\*</code>
+Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
+
+**Kind**: instance property of <code>[colorMixin](#dc.colorMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [colorCalculator] | <code>\*</code> | 
+
+<a name="dc.coordinateGridMixin"></a>
+### dc.coordinateGridMixin ⇒ <code>Chart</code>
 Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based
 concrete chart types, e.g. bar chart, line chart, and bubble chart.
 
-#### .rescale()
+**Kind**: static mixin of <code>[dc](#dc)</code>  
+**Mixes**: <code>[colorMixin](#dc.colorMixin)</code>, <code>[marginMixin](#dc.marginMixin)</code>, <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| _chart | <code>Chart</code> | 
+
+
+* [.coordinateGridMixin](#dc.coordinateGridMixin) ⇒ <code>Chart</code>
+  * [.rescale](#dc.coordinateGridMixin+rescale) ⇒ <code>Chart</code>
+  * [.rangeChart](#dc.coordinateGridMixin+rangeChart) ⇒ <code>Chart</code>
+  * [.zoomScale](#dc.coordinateGridMixin+zoomScale) ⇒ <code>Chart</code>
+  * [.zoomOutRestrict](#dc.coordinateGridMixin+zoomOutRestrict) ⇒ <code>Chart</code>
+  * [.g](#dc.coordinateGridMixin+g) ⇒ <code>Chart</code>
+  * [.mouseZoomable](#dc.coordinateGridMixin+mouseZoomable) ⇒ <code>Chart</code>
+  * [.chartBodyG](#dc.coordinateGridMixin+chartBodyG) ⇒ <code>Chart</code>
+  * [.x](#dc.coordinateGridMixin+x) ⇒ <code>Chart</code>
+  * [.xUnits](#dc.coordinateGridMixin+xUnits) ⇒ <code>Chart</code>
+  * [.xAxis](#dc.coordinateGridMixin+xAxis) ⇒ <code>Chart</code>
+  * [.elasticX](#dc.coordinateGridMixin+elasticX) ⇒ <code>Chart</code>
+  * [.xAxisPadding](#dc.coordinateGridMixin+xAxisPadding) ⇒ <code>Chart</code>
+  * [.xUnitCount](#dc.coordinateGridMixin+xUnitCount) ⇒ <code>Number</code>
+  * [.useRightYAxis](#dc.coordinateGridMixin+useRightYAxis) ⇒ <code>Chart</code>
+  * [.isOrdinal](#dc.coordinateGridMixin+isOrdinal) ⇒ <code>Boolean</code>
+  * [.xAxisLabel](#dc.coordinateGridMixin+xAxisLabel) ⇒ <code>Chart</code>
+  * [.yAxisLabel](#dc.coordinateGridMixin+yAxisLabel) ⇒ <code>Chart</code>
+  * [.y](#dc.coordinateGridMixin+y) ⇒ <code>Chart</code>
+  * [.yAxis](#dc.coordinateGridMixin+yAxis) ⇒ <code>Chart</code>
+  * [.elasticY](#dc.coordinateGridMixin+elasticY) ⇒ <code>Chart</code>
+  * [.renderHorizontalGridLines](#dc.coordinateGridMixin+renderHorizontalGridLines) ⇒ <code>Chart</code>
+  * [.renderVerticalGridLines](#dc.coordinateGridMixin+renderVerticalGridLines) ⇒ <code>Chart</code>
+  * [.xAxisMin](#dc.coordinateGridMixin+xAxisMin) ⇒ <code>\*</code>
+  * [.xAxisMax](#dc.coordinateGridMixin+xAxisMax) ⇒ <code>\*</code>
+  * [.yAxisMin](#dc.coordinateGridMixin+yAxisMin) ⇒ <code>\*</code>
+  * [.yAxisMax](#dc.coordinateGridMixin+yAxisMax) ⇒ <code>\*</code>
+  * [.yAxisPadding](#dc.coordinateGridMixin+yAxisPadding) ⇒ <code>Chart</code>
+  * [.round](#dc.coordinateGridMixin+round) ⇒ <code>Chart</code>
+  * [.clipPadding](#dc.coordinateGridMixin+clipPadding) ⇒ <code>Chart</code>
+  * [.focus](#dc.coordinateGridMixin+focus)
+  * [.brushOn](#dc.coordinateGridMixin+brushOn) ⇒ <code>Chart</code>
+
+<a name="dc.coordinateGridMixin+rescale"></a>
+#### coordinateGridMixin.rescale ⇒ <code>Chart</code>
 When changing the domain of the x or y scale, it is necessary to tell the chart to recalculate
 and redraw the axes. (`.rescale()` is called automatically when the x or y scale is replaced
 with `.x()` or `.y()`, and has no effect on elastic scales.)
 
-#### .rangeChart([chart])
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+<a name="dc.coordinateGridMixin+rangeChart"></a>
+#### coordinateGridMixin.rangeChart ⇒ <code>Chart</code>
 Get or set the range selection chart associated with this instance. Setting the range selection
 chart using this function will automatically update its selection brush when the current chart
 zooms in. In return the given range chart will also automatically attach this chart as its focus
 chart hence zoom in when range brush updates. See the [Nasdaq 100
 Index](http://dc-js.github.com/dc.js/) example for this effect in action.
 
-#### .zoomScale([extent])
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [rangeChart] | <code>Chart</code> | 
+
+<a name="dc.coordinateGridMixin+zoomScale"></a>
+#### coordinateGridMixin.zoomScale ⇒ <code>Chart</code>
 Get or set the scale extent for mouse zooms.
 
-#### .zoomOutRestrict([true/false])
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [extent] | <code>Array.&lt;\*&gt;</code> | 
+
+<a name="dc.coordinateGridMixin+zoomOutRestrict"></a>
+#### coordinateGridMixin.zoomOutRestrict ⇒ <code>Chart</code>
 Get or set the zoom restriction for the chart. If true limits the zoom to origional domain of the chart.
 
-#### .g([gElement])
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [zoomOutRestrict] | <code>Boolean</code> | <code>true</code> | 
+
+<a name="dc.coordinateGridMixin+g"></a>
+#### coordinateGridMixin.g ⇒ <code>Chart</code>
 Get or set the root g element. This method is usually used to retrieve the g element in order to
 overlay custom svg drawing programatically. **Caution**: The root g element is usually generated
 by dc.js internals, and resetting it might produce unpredictable result.
 
-#### .mouseZoomable([boolean])
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [gElement] | <code>svg</code> | 
+
+<a name="dc.coordinateGridMixin+mouseZoomable"></a>
+#### coordinateGridMixin.mouseZoomable ⇒ <code>Chart</code>
 Set or get mouse zoom capability flag (default: false). When turned on the chart will be
 zoomable using the mouse wheel. If the range selector chart is attached zooming will also update
 the range selection brush on the associated range selector chart.
 
-#### .chartBodyG()
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [mouseZoomable] | <code>Boolean</code> | 
+
+<a name="dc.coordinateGridMixin+chartBodyG"></a>
+#### coordinateGridMixin.chartBodyG ⇒ <code>Chart</code>
 Retrieve the svg group for the chart body.
 
-#### .x([xScale]) - **mandatory**
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [chartBodyG] | <code>svg</code> | 
+
+<a name="dc.coordinateGridMixin+x"></a>
+#### coordinateGridMixin.x ⇒ <code>Chart</code>
+**mandatory**
+
 Get or set the x scale. The x scale can be any d3
 [quantitive scale](https://github.com/mbostock/d3/wiki/Quantitative-Scales) or
 [ordinal scale](https://github.com/mbostock/d3/wiki/Ordinal-Scales).
+
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [xScale] | <code>d3.scale</code> | 
+
+**Example**  
 ```js
 // set x to a linear scale
 chart.x(d3.scale.linear().domain([-2500, 2500]))
 // set x to a time scale to generate histogram
 chart.x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
 ```
-
-#### .xUnits([xUnits function])
+<a name="dc.coordinateGridMixin+xUnits"></a>
+#### coordinateGridMixin.xUnits ⇒ <code>Chart</code>
 Set or get the xUnits function. The coordinate grid chart uses the xUnits function to calculate
 the number of data projections on x axis such as the number of bars for a bar chart or the
 number of dots for a line chart. This function is expected to return a Javascript array of all
@@ -694,187 +1291,370 @@ d3.time.days, d3.time.months, and
 d3.time.years](https://github.com/mbostock/d3/wiki/Time-Intervals#aliases) are all valid xUnits
 function. dc.js also provides a few units function, see the [Utilities](#utilities) section for
 a list of built-in units functions. The default xUnits function is dc.units.integers.
+
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [xUnits] | <code>function</code> | 
+
+**Example**  
 ```js
 // set x units to count days
 chart.xUnits(d3.time.days);
 // set x units to count months
 chart.xUnits(d3.time.months);
-```
-A custom xUnits function can be used as long as it follows the following interface:
-```js
+
+// A custom xUnits function can be used as long as it follows the following interface:
 // units in integer
 function(start, end, xDomain) {
-    // simply calculates how many integers in the domain
-    return Math.abs(end - start);
+     // simply calculates how many integers in the domain
+     return Math.abs(end - start);
 };
 
 // fixed units
 function(start, end, xDomain) {
-    // be aware using fixed units will disable the focus/zoom ability on the chart
-    return 1000;
-};
+     // be aware using fixed units will disable the focus/zoom ability on the chart
+     return 1000;
 ```
-
-#### .xAxis([xAxis])
+<a name="dc.coordinateGridMixin+xAxis"></a>
+#### coordinateGridMixin.xAxis ⇒ <code>Chart</code>
 Set or get the x axis used by a particular coordinate grid chart instance. This function is most
 useful when x axis customization is required. The x axis in dc.js is an instance of a [d3
 axis object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis); therefore it supports any
 valid d3 axis manipulation. **Caution**: The x axis is usually generated internally by dc;
 resetting it may cause unexpected results.
+
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [xAxis] | <code>d3.svg.axis</code> | 
+
+**Example**  
 ```js
 // customize x axis tick format
 chart.xAxis().tickFormat(function(v) {return v + '%';});
 // customize x axis tick values
 chart.xAxis().tickValues([0, 100, 200, 300]);
 ```
-
-#### .elasticX([boolean])
+<a name="dc.coordinateGridMixin+elasticX"></a>
+#### coordinateGridMixin.elasticX ⇒ <code>Chart</code>
 Turn on/off elastic x axis behavior. If x axis elasticity is turned on, then the grid chart will
 attempt to recalculate the x axis range whenever a redraw event is triggered.
 
-#### .xAxisPadding([padding])
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [elasticX] | <code>Boolean</code> | <code>false</code> | 
+
+<a name="dc.coordinateGridMixin+xAxisPadding"></a>
+#### coordinateGridMixin.xAxisPadding ⇒ <code>Chart</code>
 Set or get x axis padding for the elastic x axis. The padding will be added to both end of the x
 axis if elasticX is turned on; otherwise it is ignored.
 
-* padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
+padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
 number or date x axes.  When padding a date axis, an integer represents number of days being padded
 and a percentage string will be treated the same as an integer.
 
-#### .xUnitCount()
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [padding] | <code>Number</code> &#124; <code>String</code> | 
+
+<a name="dc.coordinateGridMixin+xUnitCount"></a>
+#### coordinateGridMixin.xUnitCount ⇒ <code>Number</code>
 Returns the number of units displayed on the x axis using the unit measure configured by
 .xUnits.
 
-#### .useRightYAxis()
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+<a name="dc.coordinateGridMixin+useRightYAxis"></a>
+#### coordinateGridMixin.useRightYAxis ⇒ <code>Chart</code>
 Gets or sets whether the chart should be drawn with a right axis instead of a left axis. When
 used with a chart in a composite chart, allows both left and right Y axes to be shown on a
 chart.
 
-#### isOrdinal()
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [useRightYAxis] | <code>Boolean</code> | <code>false</code> | 
+
+<a name="dc.coordinateGridMixin+isOrdinal"></a>
+#### coordinateGridMixin.isOrdinal ⇒ <code>Boolean</code>
 Returns true if the chart is using ordinal xUnits ([dc.units.ordinal](#dcunitsordinal)), or false
 otherwise. Most charts behave differently with ordinal data and use the result of this method to
 trigger the appropriate logic.
 
-#### .xAxisLabel([labelText, [, padding]])
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+<a name="dc.coordinateGridMixin+xAxisLabel"></a>
+#### coordinateGridMixin.xAxisLabel ⇒ <code>Chart</code>
 Set or get the x axis label. If setting the label, you may optionally include additional padding to
 the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.
 
-#### .yAxisLabel([labelText, [, padding]])
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [labelText] | <code>String</code> |  | 
+| [padding] | <code>Number</code> | <code>12</code> | 
+
+<a name="dc.coordinateGridMixin+yAxisLabel"></a>
+#### coordinateGridMixin.yAxisLabel ⇒ <code>Chart</code>
 Set or get the y axis label. If setting the label, you may optionally include additional padding
 to the margin to make room for the label. By default the padded is set to 12 to accomodate the
 text height.
 
-#### .y([yScale])
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [labelText] | <code>String</code> |  | 
+| [padding] | <code>Number</code> | <code>12</code> | 
+
+<a name="dc.coordinateGridMixin+y"></a>
+#### coordinateGridMixin.y ⇒ <code>Chart</code>
 Get or set the y scale. The y scale is typically automatically determined by the chart implementation.
 
-#### .yAxis([yAxis])
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [yScale] | <code>d3.scale</code> | 
+
+<a name="dc.coordinateGridMixin+yAxis"></a>
+#### coordinateGridMixin.yAxis ⇒ <code>Chart</code>
 Set or get the y axis used by the coordinate grid chart instance. This function is most useful
 when y axis customization is required. The y axis in dc.js is simply an instance of a [d3 axis
 object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis); therefore it supports any
 valid d3 axis manipulation. **Caution**: The y axis is usually generated internally by dc;
 resetting it may cause unexpected results.
+
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [yAxis] | <code>d3.svg.axis</code> | <code>d3.svg.axis().orient(&#x27;left&#x27;)</code> | 
+
+**Example**  
 ```js
 // customize y axis tick format
 chart.yAxis().tickFormat(function(v) {return v + '%';});
 // customize y axis tick values
 chart.yAxis().tickValues([0, 100, 200, 300]);
 ```
-
-#### .elasticY([boolean])
+<a name="dc.coordinateGridMixin+elasticY"></a>
+#### coordinateGridMixin.elasticY ⇒ <code>Chart</code>
 Turn on/off elastic y axis behavior. If y axis elasticity is turned on, then the grid chart will
 attempt to recalculate the y axis range whenever a redraw event is triggered.
 
-#### .renderHorizontalGridLines([boolean])
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [elasticY] | <code>Boolean</code> | <code>false</code> | 
+
+<a name="dc.coordinateGridMixin+renderHorizontalGridLines"></a>
+#### coordinateGridMixin.renderHorizontalGridLines ⇒ <code>Chart</code>
 Turn on/off horizontal grid lines.
 
-#### .renderVerticalGridLines([boolean])
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [renderHorizontalGridLines] | <code>Boolean</code> | <code>false</code> | 
+
+<a name="dc.coordinateGridMixin+renderVerticalGridLines"></a>
+#### coordinateGridMixin.renderVerticalGridLines ⇒ <code>Chart</code>
 Turn on/off vertical grid lines.
 
-#### .xAxisMin()
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [renderVerticalGridLines] | <code>Boolean</code> | <code>false</code> | 
+
+<a name="dc.coordinateGridMixin+xAxisMin"></a>
+#### coordinateGridMixin.xAxisMin ⇒ <code>\*</code>
 Calculates the minimum x value to display in the chart. Includes xAxisPadding if set.
 
-#### .xAxisMax()
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+<a name="dc.coordinateGridMixin+xAxisMax"></a>
+#### coordinateGridMixin.xAxisMax ⇒ <code>\*</code>
 Calculates the maximum x value to display in the chart. Includes xAxisPadding if set.
 
-#### .yAxisMin()
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+<a name="dc.coordinateGridMixin+yAxisMin"></a>
+#### coordinateGridMixin.yAxisMin ⇒ <code>\*</code>
 Calculates the minimum y value to display in the chart. Includes yAxisPadding if set.
 
-#### .yAxisMax()
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+<a name="dc.coordinateGridMixin+yAxisMax"></a>
+#### coordinateGridMixin.yAxisMax ⇒ <code>\*</code>
 Calculates the maximum y value to display in the chart. Includes yAxisPadding if set.
 
-#### .yAxisPadding([padding])
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+<a name="dc.coordinateGridMixin+yAxisPadding"></a>
+#### coordinateGridMixin.yAxisPadding ⇒ <code>Chart</code>
 Set or get y axis padding for the elastic y axis. The padding will be added to the top of the y
 axis if elasticY is turned on; otherwise it is ignored.
 
-* padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
+padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
 number or date axes. When padding a date axis, an integer represents number of days being padded
 and a percentage string will be treated the same as an integer.
 
-#### .round([rounding function])
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [padding] | <code>Number</code> &#124; <code>String</code> | <code>0</code> | 
+
+<a name="dc.coordinateGridMixin+round"></a>
+#### coordinateGridMixin.round ⇒ <code>Chart</code>
 Set or get the rounding function used to quantize the selection when brushing is enabled.
+
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [round] | <code>function</code> | 
+
+**Example**  
 ```js
 // set x unit round to by month, this will make sure range selection brush will
 // select whole months
 chart.round(d3.time.month.round);
 ```
-
-#### .clipPadding([padding])
+<a name="dc.coordinateGridMixin+clipPadding"></a>
+#### coordinateGridMixin.clipPadding ⇒ <code>Chart</code>
 Get or set the padding in pixels for the clip path. Once set padding will be applied evenly to
 the top, left, right, and bottom when the clip path is generated. If set to zero, the clip area
-will be exactly the chart body area minus the margins.  Default: 5
+will be exactly the chart body area minus the margins.
 
-#### .focus([range])
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [padding] | <code>Number</code> | <code>5</code> | 
+
+<a name="dc.coordinateGridMixin+focus"></a>
+#### coordinateGridMixin.focus
 Zoom this chart to focus on the given range. The given range should be an array containing only
 2 elements (`[start, end]`) defining a range in the x domain. If the range is not given or set
 to null, then the zoom will be reset. _For focus to work elasticX has to be turned off;
-otherwise focus will be ignored._
+otherwise focus will be ignored.
+
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [range] | <code>Array.&lt;Number&gt;</code> | 
+
+**Example**  
 ```js
 chart.on('renderlet', function(chart) {
     // smooth the rendering through event throttling
     dc.events.trigger(function(){
-        // focus some other chart to the range selected by user on this chart
-        someOtherChart.focus(chart.filter());
+         // focus some other chart to the range selected by user on this chart
+         someOtherChart.focus(chart.filter());
     });
 })
 ```
-
-#### .brushOn([boolean])
+<a name="dc.coordinateGridMixin+brushOn"></a>
+#### coordinateGridMixin.brushOn ⇒ <code>Chart</code>
 Turn on/off the brush-based range filter. When brushing is on then user can drag the mouse
 across a chart with a quantitative scale to perform range filtering based on the extent of the
 brush, or click on the bars of an ordinal bar chart or slices of a pie chart to filter and
 unfilter them. However turning on the brush filter will disable other interactive elements on
 the chart such as highlighting, tool tips, and reference lines. Zooming will still be possible
-if enabled, but only via scrolling (panning will be disabled.) Default: true
+if enabled, but only via scrolling (panning will be disabled.)
 
-## Stack Mixin
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [brushOn] | <code>Boolean</code> | <code>true</code> | 
+
+<a name="dc.stackMixin"></a>
+### dc.stackMixin ⇒ <code>Chart</code>
 Stack Mixin is an mixin that provides cross-chart support of stackability using d3.layout.stack.
 
-#### .stack(group[, name, accessor])
+**Kind**: static mixin of <code>[dc](#dc)</code>  
+
+| Param | Type |
+| --- | --- |
+| _chart | <code>Chart</code> | 
+
+
+* [.stackMixin](#dc.stackMixin) ⇒ <code>Chart</code>
+  * [.stack](#dc.stackMixin+stack) ⇒ <code>Chart</code>
+  * [.hidableStacks](#dc.stackMixin+hidableStacks) ⇒ <code>Chart</code>
+  * [.hideStack](#dc.stackMixin+hideStack) ⇒ <code>Chart</code>
+  * [.showStack](#dc.stackMixin+showStack) ⇒ <code>Chart</code>
+  * [.title](#dc.stackMixin+title) ⇒ <code>Chart</code>
+  * [.stackLayout](#dc.stackMixin+stackLayout) ⇒ <code>Chart</code>
+
+<a name="dc.stackMixin+stack"></a>
+#### stackMixin.stack ⇒ <code>Chart</code>
 Stack a new crossfilter group onto this chart with an optional custom value accessor. All stacks
 in the same chart will share the same key accessor and therefore the same set of keys.
 
 For example, in a stacked bar chart, the bars of each stack will be positioned using the same set
 of keys on the x axis, while stacked vertically. If name is specified then it will be used to
 generate the legend label.
+
+**Kind**: instance property of <code>[stackMixin](#dc.stackMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| group | <code>CrossfilterGroup</code> | 
+| [name] | <code>String</code> | 
+| [accessor] | <code>function</code> | 
+
+**Example**  
 ```js
 // stack group using default accessor
 chart.stack(valueSumGroup)
 // stack group using custom accessor
 .stack(avgByDayGroup, function(d){return d.value.avgByDay;});
 ```
-
-#### .hidableStacks([boolean])
+<a name="dc.stackMixin+hidableStacks"></a>
+#### stackMixin.hidableStacks ⇒ <code>Chart</code>
 Allow named stacks to be hidden or shown by clicking on legend items.
 This does not affect the behavior of hideStack or showStack.
 
-#### .hideStack(name)
+**Kind**: instance property of <code>[stackMixin](#dc.stackMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| hidableStacks | <code>Boolean</code> | 
+
+<a name="dc.stackMixin+hideStack"></a>
+#### stackMixin.hideStack ⇒ <code>Chart</code>
 Hide all stacks on the chart with the given name.
 The chart must be re-rendered for this change to appear.
 
-#### .showStack(name)
+**Kind**: instance property of <code>[stackMixin](#dc.stackMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| stackName | <code>String</code> | 
+
+<a name="dc.stackMixin+showStack"></a>
+#### stackMixin.showStack ⇒ <code>Chart</code>
 Show all stacks on the chart with the given name.
 The chart must be re-rendered for this change to appear.
 
-#### .title([stackName], [titleFunction])
+**Kind**: instance property of <code>[stackMixin](#dc.stackMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| stackName | <code>String</code> | 
+
+<a name="dc.stackMixin+title"></a>
+#### stackMixin.title ⇒ <code>Chart</code>
 Set or get the title function. Chart class will use this function to render svg title (usually interpreted by
 browser as tooltips) for each child element in the chart, i.e. a slice in a pie chart or a bubble in a bubble chart.
 Almost every chart supports title function however in grid coordinate chart you need to turn off brush in order to
@@ -882,38 +1662,87 @@ use title otherwise the brush layer will block tooltip trigger.
 
 If the first argument is a stack name, the title function will get or set the title for that stack. If stackName
 is not provided, the first stack is implied.
+
+**Kind**: instance property of <code>[stackMixin](#dc.stackMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [stackName] | <code>String</code> | 
+| [titleAccessor] | <code>function</code> | 
+
+**Example**  
 ```js
 // set a title function on 'first stack'
 chart.title('first stack', function(d) { return d.key + ': ' + d.value; });
 // get a title function from 'second stack'
 var secondTitleFunction = chart.title('second stack');
-);
 ```
-
-#### .stackLayout([layout])
+<a name="dc.stackMixin+stackLayout"></a>
+#### stackMixin.stackLayout ⇒ <code>Chart</code>
 Gets or sets the stack layout algorithm, which computes a baseline for each stack and
-propagates it to the next.  The default is
-[d3.layout.stack](https://github.com/mbostock/d3/wiki/Stack-Layout#stack).
+propagates it to the next
 
-## Cap Mixin
+**Kind**: instance property of <code>[stackMixin](#dc.stackMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [stack] | <code>function</code> | <code>d3.layout.stack</code> | 
+
+<a name="dc.capMixin"></a>
+### dc.capMixin ⇒ <code>Chart</code>
 Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the
 Row and Pie Charts.
 
 The top ordered elements in the group up to the cap amount will be kept in the chart, and the rest
 will be replaced with an *others* element, with value equal to the sum of the replaced values. The
 keys of the elements below the cap limit are recorded in order to filter by those keys when the
-*others* element is clicked.
+others* element is clicked.
 
-#### .cap([count])
+**Kind**: static mixin of <code>[dc](#dc)</code>  
+
+| Param | Type |
+| --- | --- |
+| _chart | <code>Chart</code> | 
+
+
+* [.capMixin](#dc.capMixin) ⇒ <code>Chart</code>
+  * [.cap](#dc.capMixin+cap) ⇒ <code>Number</code>
+  * [.othersLabel](#dc.capMixin+othersLabel) ⇒ <code>String</code>
+  * [.othersGrouper](#dc.capMixin+othersGrouper) ⇒ <code>function</code>
+
+<a name="dc.capMixin+cap"></a>
+#### capMixin.cap ⇒ <code>Number</code>
 Get or set the count of elements to that will be included in the cap.
 
-#### .othersLabel([label])
-Get or set the label for *Others* slice when slices cap is specified. Default label is **Others**.
+**Kind**: instance property of <code>[capMixin](#dc.capMixin)</code>  
 
-#### .othersGrouper([grouperFunction])
+| Param | Type | Default |
+| --- | --- | --- |
+| [count] | <code>Number</code> | <code>Infinity</code> | 
+
+<a name="dc.capMixin+othersLabel"></a>
+#### capMixin.othersLabel ⇒ <code>String</code>
+Get or set the label for *Others* slice when slices cap is specified
+
+**Kind**: instance property of <code>[capMixin](#dc.capMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [label] | <code>String</code> | <code>Others</code> | 
+
+<a name="dc.capMixin+othersGrouper"></a>
+#### capMixin.othersGrouper ⇒ <code>function</code>
 Get or set the grouper function that will perform the insertion of data for the *Others* slice
 if the slices cap is specified. If set to a falsy value, no others will be added. By default the
 grouper function computes the sum of all values below the cap.
+
+**Kind**: instance property of <code>[capMixin](#dc.capMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [grouperFunction] | <code>function</code> | 
+
+**Example**  
 ```js
 chart.othersGrouper(function (data) {
     // compute the value for others, presumably the sum of all values below the cap
@@ -928,56 +1757,292 @@ chart.othersGrouper(function (data) {
     return data;
 });
 ```
-
-## Bubble Mixin
-Includes: [Color Mixin](#color-mixin)
-
+<a name="dc.bubbleMixin"></a>
+### dc.bubbleMixin ⇒ <code>Chart</code>
 This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.
 
-#### .r([bubbleRadiusScale])
-Get or set the bubble radius scale. By default the bubble chart uses
-`d3.scale.linear().domain([0, 100])` as its r scale .
+**Kind**: static mixin of <code>[dc](#dc)</code>  
+**Mixes**: <code>[colorMixin](#dc.colorMixin)</code>  
 
-#### .radiusValueAccessor([radiusValueAccessor])
+| Param | Type |
+| --- | --- |
+| _chart | <code>Chart</code> | 
+
+
+* [.bubbleMixin](#dc.bubbleMixin) ⇒ <code>Chart</code>
+  * [.r](#dc.bubbleMixin+r) ⇒ <code>Array.&lt;Number&gt;</code>
+  * [.radiusValueAccessor](#dc.bubbleMixin+radiusValueAccessor) ⇒ <code>function</code>
+  * [.minRadius](#dc.bubbleMixin+minRadius) ⇒ <code>Number</code>
+  * [.minRadiusWithLabel](#dc.bubbleMixin+minRadiusWithLabel) ⇒ <code>Number</code>
+  * [.maxBubbleRelativeSize](#dc.bubbleMixin+maxBubbleRelativeSize) ⇒ <code>Number</code>
+
+<a name="dc.bubbleMixin+r"></a>
+#### bubbleMixin.r ⇒ <code>Array.&lt;Number&gt;</code>
+Get or set the bubble radius scale. By default the bubble chart uses
+`d3.scale.linear().domain([0, 100])` as its radius scale.
+
+**Kind**: instance property of <code>[bubbleMixin](#dc.bubbleMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [bubbleRadiusScale] | <code>Array.&lt;Number&gt;</code> | 
+
+<a name="dc.bubbleMixin+radiusValueAccessor"></a>
+#### bubbleMixin.radiusValueAccessor ⇒ <code>function</code>
 Get or set the radius value accessor function. If set, the radius value accessor function will
 be used to retrieve a data value for each bubble. The data retrieved then will be mapped using
 the r scale to the actual bubble radius. This allows you to encode a data dimension using bubble
 size.
 
-#### .minRadiusWithLabel([radius])
+**Kind**: instance property of <code>[bubbleMixin](#dc.bubbleMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [radiusValueAccessor] | <code>function</code> | 
+
+<a name="dc.bubbleMixin+minRadius"></a>
+#### bubbleMixin.minRadius ⇒ <code>Number</code>
+Get or set the minimum radius. This will be used to initialize the radius scale's range.
+
+**Kind**: instance property of <code>[bubbleMixin](#dc.bubbleMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [radius] | <code>Number</code> | <code>10</code> | 
+
+<a name="dc.bubbleMixin+minRadiusWithLabel"></a>
+#### bubbleMixin.minRadiusWithLabel ⇒ <code>Number</code>
 Get or set the minimum radius for label rendering. If a bubble's radius is less than this value
-then no label will be rendered.  Default: 10
+then no label will be rendered.
 
-#### .maxBubbleRelativeSize([relativeSize])
+**Kind**: instance property of <code>[bubbleMixin](#dc.bubbleMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [radius] | <code>Number</code> | <code>10</code> | 
+
+<a name="dc.bubbleMixin+maxBubbleRelativeSize"></a>
+#### bubbleMixin.maxBubbleRelativeSize ⇒ <code>Number</code>
 Get or set the maximum relative size of a bubble to the length of x axis. This value is useful
-when the difference in radius between bubbles is too great. Default: 0.3
+when the difference in radius between bubbles is too great.
 
-## Pie Chart
-Includes: [Cap Mixin](#cap-mixin), [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
+**Kind**: instance property of <code>[bubbleMixin](#dc.bubbleMixin)</code>  
 
+| Param | Type | Default |
+| --- | --- | --- |
+| [relativeSize] | <code>Number</code> | <code>0.3</code> | 
+
+<a name="dc.filterAll"></a>
+### dc.filterAll
+Clear all filters on all charts within the given chart group. If the chart group is not given then
+only charts that belong to the default chart group will be reset.
+
+**Kind**: static property of <code>[dc](#dc)</code>  
+
+| Param | Type |
+| --- | --- |
+| [group] | <code>String</code> | 
+
+<a name="dc.refocusAll"></a>
+### dc.refocusAll
+Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
+not given then only charts that belong to the default chart group will be reset.
+
+**Kind**: static property of <code>[dc](#dc)</code>  
+
+| Param | Type |
+| --- | --- |
+| [group] | <code>String</code> | 
+
+<a name="dc.renderAll"></a>
+### dc.renderAll
+Re-render all charts belong to the given chart group. If the chart group is not given then only
+charts that belong to the default chart group will be re-rendered.
+
+**Kind**: static property of <code>[dc](#dc)</code>  
+
+| Param | Type |
+| --- | --- |
+| [group] | <code>String</code> | 
+
+<a name="dc.redrawAll"></a>
+### dc.redrawAll
+Redraw all charts belong to the given chart group. If the chart group is not given then only charts
+that belong to the default chart group will be re-drawn. Redraw is different from re-render since
+when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
+from scratch.
+
+**Kind**: static property of <code>[dc](#dc)</code>  
+
+| Param | Type |
+| --- | --- |
+| [group] | <code>String</code> | 
+
+<a name="dc.disableTransitions"></a>
+### dc.disableTransitions : <code>Boolean</code>
+If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
+immediately
+
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Default**: <code>false</code>  
+<a name="dc.units"></a>
+### dc.units : <code>Object</code>
+**Kind**: static property of <code>[dc](#dc)</code>  
+
+* [.units](#dc.units) : <code>Object</code>
+  * [.integers](#dc.units.integers) ⇒ <code>Number</code>
+  * [.ordinal](#dc.units.ordinal) ⇒ <code>Array.&lt;String&gt;</code>
+  * [.fp](#dc.units.fp) : <code>Object</code>
+    * [.precision](#dc.units.fp.precision) ⇒ <code>function</code>
+
+<a name="dc.units.integers"></a>
+#### units.integers ⇒ <code>Number</code>
+The default value for `xUnits` for the [Coordinate Grid Chart](#coordinate-grid-chart) and should
+be used when the x values are a sequence of integers.
+It is a function that counts the number of integers in the range supplied in its start and end parameters.
+
+**Kind**: static property of <code>[units](#dc.units)</code>  
+
+| Param | Type |
+| --- | --- |
+| start | <code>Number</code> | 
+| end | <code>Number</code> | 
+
+**Example**  
+```js
+chart.xUnits(dc.units.integers) // already the default
+```
+<a name="dc.units.ordinal"></a>
+#### units.ordinal ⇒ <code>Array.&lt;String&gt;</code>
+This argument can be passed to the `xUnits` function of the to specify ordinal units for the x
+axis. Usually this parameter is used in combination with passing `d3.scale.ordinal()` to `.x`.
+It just returns the domain passed to it, which for ordinal charts is an array of all values.
+
+**Kind**: static property of <code>[units](#dc.units)</code>  
+
+| Param | Type |
+| --- | --- |
+| start | <code>\*</code> | 
+| end | <code>\*</code> | 
+| domain | <code>Array.&lt;String&gt;</code> | 
+
+**Example**  
+```js
+chart.xUnits(dc.units.ordinal)
+     .x(d3.scale.ordinal())
+```
+<a name="dc.units.fp"></a>
+#### units.fp : <code>Object</code>
+**Kind**: static property of <code>[units](#dc.units)</code>  
+<a name="dc.units.fp.precision"></a>
+##### fp.precision ⇒ <code>function</code>
+This function generates an argument for the [Coordinate Grid Chart's](#coordinate-grid-chart)
+`xUnits` function specifying that the x values are floating-point numbers with the given
+precision.
+The returned function determines how many values at the given precision will fit into the range
+supplied in its start and end parameters.
+
+**Kind**: static property of <code>[fp](#dc.units.fp)</code>  
+**Returns**: <code>function</code> - start-end unit function  
+
+| Param | Type |
+| --- | --- |
+| precision | <code>Number</code> | 
+
+**Example**  
+```js
+// specify values (and ticks) every 0.1 units
+chart.xUnits(dc.units.fp.precision(0.1)
+// there are 500 units between 0.5 and 1 if the precision is 0.001
+var thousandths = dc.units.fp.precision(0.001);
+thousandths(0.5, 1.0) // returns 500
+```
+<a name="dc.filters"></a>
+### dc.filters : <code>Object</code>
+The dc.js filters are functions which are passed into crossfilter to chose which records will be
+accumulated to produce values for the charts.  In the crossfilter model, any filters applied on one
+dimension will affect all the other dimensions but not that one.  dc always applies a filter
+function to the dimension; the function combines multiple filters and if any of them accept a
+record, it is filtered in.
+
+These filter constructors are used as appropriate by the various charts to implement brushing.  We
+mention below which chart uses which filter.  In some cases, many instances of a filter will be added.
+
+**Kind**: static property of <code>[dc](#dc)</code>  
+
+* [.filters](#dc.filters) : <code>Object</code>
+  * [.RangedFilter](#dc.filters.RangedFilter)
+    * [new RangedFilter(low, high)](#new_dc.filters.RangedFilter_new)
+  * [.TwoDimensionalFilter](#dc.filters.TwoDimensionalFilter)
+    * [new TwoDimensionalFilter(filter)](#new_dc.filters.TwoDimensionalFilter_new)
+  * [.RangedTwoDimensionalFilter](#dc.filters.RangedTwoDimensionalFilter)
+    * [new RangedTwoDimensionalFilter(filter)](#new_dc.filters.RangedTwoDimensionalFilter_new)
+
+<a name="dc.filters.RangedFilter"></a>
+#### filters.RangedFilter
+**Kind**: static class of <code>[filters](#dc.filters)</code>  
+<a name="new_dc.filters.RangedFilter_new"></a>
+##### new RangedFilter(low, high)
+RangedFilter is a filter which accepts keys between `low` and `high`.  It is used to implement X
+axis brushing for the [coordinate grid charts](#coordinate-grid-mixin).
+
+
+| Param | Type |
+| --- | --- |
+| low | <code>Number</code> | 
+| high | <code>Number</code> | 
+
+<a name="dc.filters.TwoDimensionalFilter"></a>
+#### filters.TwoDimensionalFilter
+**Kind**: static class of <code>[filters](#dc.filters)</code>  
+<a name="new_dc.filters.TwoDimensionalFilter_new"></a>
+##### new TwoDimensionalFilter(filter)
+TwoDimensionalFilter is a filter which accepts a single two-dimensional value.  It is used by the
+[heat map chart](#heat-map) to include particular cells as they are clicked.  (Rows and columns are
+filtered by filtering all the cells in the row or column.)
+
+
+| Param | Type |
+| --- | --- |
+| filter | <code>Array.&lt;Number&gt;</code> | 
+
+<a name="dc.filters.RangedTwoDimensionalFilter"></a>
+#### filters.RangedTwoDimensionalFilter
+**Kind**: static class of <code>[filters](#dc.filters)</code>  
+<a name="new_dc.filters.RangedTwoDimensionalFilter_new"></a>
+##### new RangedTwoDimensionalFilter(filter)
+The RangedTwoDimensionalFilter allows filtering all values which fit within a rectangular
+region. It is used by the [scatter plot](#scatter-plot) to implement rectangular brushing.
+
+It takes two two-dimensional points in the form `[[x1,y1],[x2,y2]]`, and normalizes them so that
+`x1 <= x2` and `y1 <- y2`. It then returns a filter which accepts any points which are in the
+rectangular range including the lower values but excluding the higher values.
+
+If an array of two values are given to the RangedTwoDimensionalFilter, it interprets the values as
+two x coordinates `x1` and `x2` and returns a filter which accepts any points for which `x1 <= x <
+x2`.
+
+
+| Param | Type |
+| --- | --- |
+| filter | <code>Array.&lt;Array.&lt;Number&gt;&gt;</code> | 
+
+<a name="dc.pieChart"></a>
+### dc.pieChart ⇒ <code>PieChart</code>
 The pie chart implementation is usually used to visualize a small categorical distribution.  The pie
 chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
 slice relative to the sum of all values. Slices are ordered by `.ordering` which defaults to sorting
 by key.
 
-Examples:
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Mixes**: <code>[capMixin](#dc.capMixin)</code>, <code>[colorMixin](#dc.colorMixin)</code>, <code>[baseMixin](#dc.baseMixin)</code>  
 
-* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
-#### dc.pieChart(parent[, chartGroup])
-Create a pie chart instance and attaches it to the given parent element.
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> &#124; <code>node</code> &#124; <code>d3.selection</code> &#124; <code>[compositeChart](#dc.compositeChart)</code> | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance. |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
-Parameters:
-
-* parent : string | node | selection - any valid
-[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
-a dom block element such as a div; or a dom element or d3 selection.
-
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart's group.
-
-Returns:
-A newly created pie chart instance
-
+**Example**  
 ```js
 // create a pie chart under #chart-container1 element using the default global chart group
 var chart1 = dc.pieChart('#chart-container1');
@@ -985,57 +2050,130 @@ var chart1 = dc.pieChart('#chart-container1');
 var chart2 = dc.pieChart('#chart-container2', 'chartGroupA');
 ```
 
-#### .slicesCap([cap])
+* [.pieChart](#dc.pieChart) ⇒ <code>PieChart</code>
+  * [.slicesCap](#dc.pieChart+slicesCap) ⇒ <code>Chart</code>
+  * [.externalRadiusPadding](#dc.pieChart+externalRadiusPadding) ⇒ <code>Chart</code>
+  * [.innerRadius](#dc.pieChart+innerRadius) ⇒ <code>Chart</code>
+  * [.radius](#dc.pieChart+radius) ⇒ <code>Chart</code>
+  * [.cx](#dc.pieChart+cx) ⇒ <code>Chart</code>
+  * [.cy](#dc.pieChart+cy) ⇒ <code>Chart</code>
+  * [.minAngleForLabel](#dc.pieChart+minAngleForLabel) ⇒ <code>Chart</code>
+  * [.emptyTitle](#dc.pieChart+emptyTitle) ⇒ <code>Chart</code>
+  * [.externalLabels](#dc.pieChart+externalLabels) ⇒ <code>Chart</code>
+
+<a name="dc.pieChart+slicesCap"></a>
+#### pieChart.slicesCap ⇒ <code>Chart</code>
 Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
 value from high to low. Other slices exeeding the cap will be rolled up into one single *Others* slice.
-The resulting data will still be sorted by .ordering (default by key).
 
-#### .externalRadiusPadding([externalRadiusPadding])
+**Kind**: instance property of <code>[pieChart](#dc.pieChart)</code>  
+
+| Param | Type |
+| --- | --- |
+| [cap] | <code>Number</code> | 
+
+<a name="dc.pieChart+externalRadiusPadding"></a>
+#### pieChart.externalRadiusPadding ⇒ <code>Chart</code>
 Get or set the external radius padding of the pie chart. This will force the radius of the
-pie chart to become smaller or larger depending on the value.  Default external radius padding is 0px.
+pie chart to become smaller or larger depending on the value.
 
-#### .innerRadius([innerRadius])
+**Kind**: instance property of <code>[pieChart](#dc.pieChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [externalRadiusPadding] | <code>Number</code> | <code>0</code> | 
+
+<a name="dc.pieChart+innerRadius"></a>
+#### pieChart.innerRadius ⇒ <code>Chart</code>
 Get or set the inner radius of the pie chart. If the inner radius is greater than 0px then the
-pie chart will be rendered as a doughnut chart. Default inner radius is 0px.
+pie chart will be rendered as a doughnut chart.
 
-#### .radius([radius])
+**Kind**: instance property of <code>[pieChart](#dc.pieChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [innerRadius] | <code>Number</code> | <code>0</code> | 
+
+<a name="dc.pieChart+radius"></a>
+#### pieChart.radius ⇒ <code>Chart</code>
 Get or set the outer radius. If the radius is not set, it will be half of the minimum of the
 chart width and height.
 
-#### .cx([cx])
+**Kind**: instance property of <code>[pieChart](#dc.pieChart)</code>  
+
+| Param | Type |
+| --- | --- |
+| [radius] | <code>Number</code> | 
+
+<a name="dc.pieChart+cx"></a>
+#### pieChart.cx ⇒ <code>Chart</code>
 Get or set center x coordinate position. Default is center of svg.
 
-#### .cy([cy])
+**Kind**: instance property of <code>[pieChart](#dc.pieChart)</code>  
+
+| Param | Type |
+| --- | --- |
+| [cx] | <code>Number</code> | 
+
+<a name="dc.pieChart+cy"></a>
+#### pieChart.cy ⇒ <code>Chart</code>
 Get or set center y coordinate position. Default is center of svg.
 
-#### .minAngleForLabel([minAngle])
+**Kind**: instance property of <code>[pieChart](#dc.pieChart)</code>  
+
+| Param | Type |
+| --- | --- |
+| [cy] | <code>Number</code> | 
+
+<a name="dc.pieChart+minAngleForLabel"></a>
+#### pieChart.minAngleForLabel ⇒ <code>Chart</code>
 Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
-display a slice label.  Default min angle is 0.5.
+display a slice label.
 
-## Bar Chart
-Includes: [Stack Mixin](#stack Mixin), [Coordinate Grid Mixin](#coordinate-grid-mixin)
+**Kind**: instance property of <code>[pieChart](#dc.pieChart)</code>  
 
+| Param | Type | Default |
+| --- | --- | --- |
+| [minAngleForLabel] | <code>Number</code> | <code>0.5</code> | 
+
+<a name="dc.pieChart+emptyTitle"></a>
+#### pieChart.emptyTitle ⇒ <code>Chart</code>
+Title to use for the only slice when there is no data.
+
+**Kind**: instance property of <code>[pieChart](#dc.pieChart)</code>  
+
+| Param | Type |
+| --- | --- |
+| [title] | <code>String</code> | 
+
+<a name="dc.pieChart+externalLabels"></a>
+#### pieChart.externalLabels ⇒ <code>Chart</code>
+Position slice labels offset from the outer edge of the chart
+
+The given argument sets the radial offset.
+
+**Kind**: instance property of <code>[pieChart](#dc.pieChart)</code>  
+
+| Param | Type |
+| --- | --- |
+| [radius] | <code>Number</code> | 
+
+<a name="dc.barChart"></a>
+### dc.barChart ⇒ <code>BarChart</code>
 Concrete bar chart/histogram implementation.
-
 Examples:
+- [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+- [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
 
-* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
-* [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
-#### dc.barChart(parent[, chartGroup])
-Create a bar chart instance and attach it to the given parent element.
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Mixes**: <code>[stackMixin](#dc.stackMixin)</code>, <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 
-Parameters:
-* parent : string | node | selection | compositeChart - any valid
-[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
-a dom block element such as a div; or a dom element or d3 selection.
-If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite
-chart instance.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart's group.
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> &#124; <code>node</code> &#124; <code>d3.selection</code> &#124; <code>[compositeChart](#dc.compositeChart)</code> | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance. |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
-Returns:
-A newly created bar chart instance
-
+**Example**  
 ```js
 // create a bar chart under #chart-container1 element using the default global chart group
 var chart1 = dc.barChart('#chart-container1');
@@ -1045,63 +2183,94 @@ var chart2 = dc.barChart('#chart-container2', 'chartGroupA');
 var chart3 = dc.barChart(compositeChart);
 ```
 
-#### .centerBar(boolean)
-Whether the bar chart will render each bar centered around the data position on x axis. Default: false
+* [.barChart](#dc.barChart) ⇒ <code>BarChart</code>
+  * [.centerBar](#dc.barChart+centerBar) ⇒ <code>Boolean</code>
+  * [.barPadding](#dc.barChart+barPadding) ⇒ <code>Number</code>
+  * [.outerPadding](#dc.barChart+outerPadding) ⇒ <code>Number</code>
+  * [.gap](#dc.barChart+gap) ⇒ <code>Number</code>
+  * [.alwaysUseRounding](#dc.barChart+alwaysUseRounding) ⇒ <code>Boolean</code>
 
-#### .barPadding([padding])
+<a name="dc.barChart+centerBar"></a>
+#### barChart.centerBar ⇒ <code>Boolean</code>
+Whether the bar chart will render each bar centered around the data position on x axis
+
+**Kind**: instance property of <code>[barChart](#dc.barChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [centerBar] | <code>Boolean</code> | <code>false</code> | 
+
+<a name="dc.barChart+barPadding"></a>
+#### barChart.barPadding ⇒ <code>Number</code>
 Get or set the spacing between bars as a fraction of bar size. Valid values are between 0-1.
 Setting this value will also remove any previously set `gap`. See the
 [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
 for a visual description of how the padding is applied.
 
-#### .outerPadding([padding])
+**Kind**: instance property of <code>[barChart](#dc.barChart)</code>  
+
+| Param | Type |
+| --- | --- |
+| [barPadding] | <code>Number</code> | 
+
+<a name="dc.barChart+outerPadding"></a>
+#### barChart.outerPadding ⇒ <code>Number</code>
 Get or set the outer padding on an ordinal bar chart. This setting has no effect on non-ordinal charts.
 Will pad the width by `padding * barWidth` on each side of the chart.
 
-Default: 0.5
+**Kind**: instance property of <code>[barChart](#dc.barChart)</code>  
 
-#### .gap(gapBetweenBars)
+| Param | Type | Default |
+| --- | --- | --- |
+| [padding] | <code>Number</code> | <code>0.5</code> | 
+
+<a name="dc.barChart+gap"></a>
+#### barChart.gap ⇒ <code>Number</code>
 Manually set fixed gap (in px) between bars instead of relying on the default auto-generated
 gap.  By default the bar chart implementation will calculate and set the gap automatically
 based on the number of data points and the length of the x axis.
 
-#### .alwaysUseRounding([boolean])
+**Kind**: instance property of <code>[barChart](#dc.barChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [gap] | <code>Number</code> | <code>2</code> | 
+
+<a name="dc.barChart+alwaysUseRounding"></a>
+#### barChart.alwaysUseRounding ⇒ <code>Boolean</code>
 Set or get whether rounding is enabled when bars are centered.  Default: false.  If false, using
 rounding with centered bars will result in a warning and rounding will be ignored.  This flag
 has no effect if bars are not centered.
-
 When using standard d3.js rounding methods, the brush often doesn't align correctly with
 centered bars since the bars are offset.  The rounding function must add an offset to
 compensate, such as in the following example.
+
+**Kind**: instance property of <code>[barChart](#dc.barChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [alwaysUseRounding] | <code>Boolean</code> | <code>false</code> | 
+
+**Example**  
 ```js
 chart.round(function(n) {return Math.floor(n)+0.5});
 ```
-
-## Line Chart
-Includes [Stack Mixin](#stack-mixin), [Coordinate Grid Mixin](#coordinate-grid-mixin)
-
+<a name="dc.lineChart"></a>
+### dc.lineChart ⇒ <code>LineChart</code>
 Concrete line/area chart implementation.
-
 Examples:
-* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
-* [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
-#### dc.lineChart(parent[, chartGroup])
-Create a line chart instance and attach it to the given parent element.
+- [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+- [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
 
-Parameters:
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Mixes**: <code>[stackMixin](#dc.stackMixin)</code>, <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 
-* parent : string | node | selection | compositeChart - any valid
-[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
-a dom block element such as a div; or a dom element or d3 selection.
-If the line chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite
-chart instance.
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> &#124; <code>node</code> &#124; <code>d3.selection</code> &#124; <code>[compositeChart](#dc.compositeChart)</code> | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance. |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart's group.
-
-Returns:
-A newly created line chart instance
-
+**Example**  
 ```js
 // create a line chart under #chart-container1 element using the default global chart group
 var chart1 = dc.lineChart('#chart-container1');
@@ -1111,21 +2280,45 @@ var chart2 = dc.lineChart('#chart-container2', 'chartGroupA');
 var chart3 = dc.lineChart(compositeChart);
 ```
 
-#### .interpolate([value])
+* [.lineChart](#dc.lineChart) ⇒ <code>LineChart</code>
+  * [.interpolate](#dc.lineChart+interpolate) ⇒ <code>Chart</code>
+  * [.tension](#dc.lineChart+tension) ⇒ <code>Chart</code>
+  * [.defined](#dc.lineChart+defined) ⇒ <code>Chart</code>
+  * [.dashStyle](#dc.lineChart+dashStyle) ⇒ <code>Chart</code>
+  * [.renderArea](#dc.lineChart+renderArea) ⇒ <code>Chart</code>
+  * [.xyTipsOn](#dc.lineChart+xyTipsOn) ⇒ <code>Chart</code>
+  * [.dotRadius](#dc.lineChart+dotRadius) ⇒ <code>Chart</code>
+  * [.renderDataPoints](#dc.lineChart+renderDataPoints) ⇒ <code>Chart</code>
+
+<a name="dc.lineChart+interpolate"></a>
+#### lineChart.interpolate ⇒ <code>Chart</code>
 Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
 functions, splines, and cubic interpolation.  This is passed to
 [d3.svg.line.interpolate](https://github.com/mbostock/d3/wiki/SVG-Shapes#line_interpolate) and
 [d3.svg.area.interpolate](https://github.com/mbostock/d3/wiki/SVG-Shapes#area_interpolate),
 where you can find a complete list of valid arguments
 
-#### .tension([value])
+**Kind**: instance property of <code>[lineChart](#dc.lineChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [interpolate] | <code>String</code> | <code>&#x27;linear&#x27;</code> | 
+
+<a name="dc.lineChart+tension"></a>
+#### lineChart.tension ⇒ <code>Chart</code>
 Gets or sets the tension to use for lines drawn, in the range 0 to 1.
 This parameter further customizes the interpolation behavior.  It is passed to
 [d3.svg.line.tension](https://github.com/mbostock/d3/wiki/SVG-Shapes#line_tension) and
-[d3.svg.area.tension](https://github.com/mbostock/d3/wiki/SVG-Shapes#area_tension).  Default:
-0.7
+[d3.svg.area.tension](https://github.com/mbostock/d3/wiki/SVG-Shapes#area_tension).
 
-#### .defined([value])
+**Kind**: instance property of <code>[lineChart](#dc.lineChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [tension] | <code>Number</code> | <code>0.7</code> | 
+
+<a name="dc.lineChart+defined"></a>
+#### lineChart.defined ⇒ <code>Chart</code>
 Gets or sets a function that will determine discontinuities in the line which should be
 skipped: the path will be broken into separate subpaths if some points are undefined.
 This function is passed to
@@ -1135,103 +2328,148 @@ Note: crossfilter will sometimes coerce nulls to 0, so you may need to carefully
 custom reduce functions to get this to work, depending on your data. See
 https://github.com/dc-js/dc.js/issues/615#issuecomment-49089248
 
-#### .dashStyle([array])
+**Kind**: instance property of <code>[lineChart](#dc.lineChart)</code>  
+
+| Param | Type |
+| --- | --- |
+| [defined] | <code>function</code> | 
+
+<a name="dc.lineChart+dashStyle"></a>
+#### lineChart.dashStyle ⇒ <code>Chart</code>
 Set the line's d3 dashstyle. This value becomes the 'stroke-dasharray' of line. Defaults to empty
 array (solid line).
- ```js
- // create a Dash Dot Dot Dot
- chart.dashStyle([3,1,1,1]);
- ```
 
-#### .renderArea([boolean])
+**Kind**: instance property of <code>[lineChart](#dc.lineChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [dashStyle] | <code>Array.&lt;Number&gt;</code> | <code>[]</code> | 
+
+**Example**  
+```js
+// create a Dash Dot Dot Dot
+chart.dashStyle([3,1,1,1]);
+```
+<a name="dc.lineChart+renderArea"></a>
+#### lineChart.renderArea ⇒ <code>Chart</code>
 Get or set render area flag. If the flag is set to true then the chart will render the area
 beneath each line and the line chart effectively becomes an area chart.
 
-#### .dotRadius([dotRadius])
-Get or set the radius (in px) for dots displayed on the data points. Default dot radius is 5.
+**Kind**: instance property of <code>[lineChart](#dc.lineChart)</code>  
 
-#### .renderDataPoints([options])
+| Param | Type | Default |
+| --- | --- | --- |
+| [renderArea] | <code>Boolean</code> | <code>false</code> | 
+
+<a name="dc.lineChart+xyTipsOn"></a>
+#### lineChart.xyTipsOn ⇒ <code>Chart</code>
+Turn on/off the mouseover behavior of an individual data point which renders a circle and x/y axis
+dashed lines back to each respective axis.  This is ignored if the chart brush is on (`brushOn`)
+
+**Kind**: instance property of <code>[lineChart](#dc.lineChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [xyTipsOn] | <code>Boolean</code> | <code>false</code> | 
+
+<a name="dc.lineChart+dotRadius"></a>
+#### lineChart.dotRadius ⇒ <code>Chart</code>
+Get or set the radius (in px) for dots displayed on the data points.
+
+**Kind**: instance property of <code>[lineChart](#dc.lineChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [dotRadius] | <code>Number</code> | <code>5</code> | 
+
+<a name="dc.lineChart+renderDataPoints"></a>
+#### lineChart.renderDataPoints ⇒ <code>Chart</code>
 Always show individual dots for each datapoint.
-
-Options, if given, is an object that can contain the following:
-
-* fillOpacity (default 0.8)
-* strokeOpacity (default 0.8)
-* radius (default 2)
-
 If `options` is falsy, it disables data point rendering.
 
 If no `options` are provided, the current `options` values are instead returned.
 
-Example:
-```
+**Kind**: instance property of <code>[lineChart](#dc.lineChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [options] | <code>Object</code> | <code>{fillOpacity: 0.8, strokeOpacity: 0.8, radius: 2}</code> | 
+
+**Example**  
+```js
 chart.renderDataPoints({radius: 2, fillOpacity: 0.8, strokeOpacity: 0.8})
 ```
-
-## Data Count Widget
-Includes: [Base Mixin](#base-mixin)
-
+<a name="dc.dataCount"></a>
+### dc.dataCount ⇒ <code>DataCount</code>
 The data count widget is a simple widget designed to display the number of records selected by the
 current filters out of the total number of records in the data set. Once created the data count widget
 will automatically update the text content of the following elements under the parent element.
 
-* '.total-count' - total number of records
-* '.filter-count' - number of records matched by the current filters
+'.total-count' - total number of records
+'.filter-count' - number of records matched by the current filters
 
 Examples:
+- [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 
-* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
-#### dc.dataCount(parent[, chartGroup])
-Create a data count widget and attach it to the given parent element.
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Mixes**: <code>[baseMixin](#dc.baseMixin)</code>  
 
-Parameters:
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> &#124; <code>node</code> &#124; <code>d3.selection</code> &#124; <code>[compositeChart](#dc.compositeChart)</code> | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance. |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
-* parent : string | node | selection - any valid
-[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
-a dom block element such as a div; or a dom element or d3 selection.
-* chartGroup : string (optional) - name of the chart group this widget should be placed in.
-The data count widget will only react to filter changes in the chart group.
-
-Returns:
-A newly created data count widget instance
-#### .dimension(allData) - **mandatory**
-For the data count widget the only valid dimension is the entire data set.
-#### .group(groupAll) - **mandatory**
-For the data count widget the only valid group is the group returned by `dimension.groupAll()`.
-
+**Example**  
 ```js
 var ndx = crossfilter(data);
 var all = ndx.groupAll();
 
 dc.dataCount('.dc-data-count')
-   .dimension(ndx)
-   .group(all);
+    .dimension(ndx)
+    .group(all);
 ```
 
-#### html([object])
+* [.dataCount](#dc.dataCount) ⇒ <code>DataCount</code>
+  * [.html](#dc.dataCount+html) ⇒ <code>Chart</code>
+  * [.formatNumber](#dc.dataCount+formatNumber) ⇒ <code>Chart</code>
+
+<a name="dc.dataCount+html"></a>
+#### dataCount.html ⇒ <code>Chart</code>
 Gets or sets an optional object specifying HTML templates to use depending how many items are
 selected. The text `%total-count` will replaced with the total number of records, and the text
 `%filter-count` will be replaced with the number of selected records.
 - all: HTML template to use if all items are selected
 - some: HTML template to use if not all items are selected
 
+**Kind**: instance property of <code>[dataCount](#dc.dataCount)</code>  
+
+| Param | Type |
+| --- | --- |
+| [options] | <code>Object</code> | 
+
+**Example**  
 ```js
 counter.html({
-    some: '%filter-count out of %total-count records selected',
-    all: 'All records selected. Click on charts to apply filters'
+     some: '%filter-count out of %total-count records selected',
+     all: 'All records selected. Click on charts to apply filters'
 })
 ```
-
-#### formatNumber([formatter])
+<a name="dc.dataCount+formatNumber"></a>
+#### dataCount.formatNumber ⇒ <code>Chart</code>
 Gets or sets an optional function to format the filter count and total count.
 
+**Kind**: instance property of <code>[dataCount](#dc.dataCount)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [formatter] | <code>function</code> | <code>d3.format(&#x27;.2g&#x27;)</code> | 
+
+**Example**  
 ```js
 counter.formatNumber(d3.format('.2g'))
 ```
-
-## Data Table Widget
-Includes: [Base Mixin](#base-mixin)
-
+<a name="dc.dataTable"></a>
+### dc.dataTable ⇒ <code>DataTable</code>
 The data table is a simple widget designed to list crossfilter focused data set (rows being
 filtered) in a good old tabular fashion.
 
@@ -1240,25 +2478,36 @@ for [nesting](https://github.com/mbostock/d3/wiki/Arrays#-nest) the data togethe
 Do not pass in a crossfilter group as this will not work.
 
 Examples:
-* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
-#### dc.dataTable(parent[, chartGroup])
-Create a data table widget instance and attach it to the given parent element.
+- [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 
-Parameters:
-* parent : string | node | selection - any valid
-[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
-a dom block element such as a div; or a dom element or d3 selection.
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Mixes**: <code>[baseMixin](#dc.baseMixin)</code>  
 
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart's group.
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> &#124; <code>node</code> &#124; <code>d3.selection</code> &#124; <code>[compositeChart](#dc.compositeChart)</code> | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance. |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
-Returns:
-A newly created data table widget instance
 
-#### .size([size])
+* [.dataTable](#dc.dataTable) ⇒ <code>DataTable</code>
+  * [.size](#dc.dataTable+size) ⇒ <code>Chart</code>
+  * [.columns](#dc.dataTable+columns) ⇒ <code>Chart</code>
+  * [.sortBy](#dc.dataTable+sortBy) ⇒ <code>Chart</code>
+  * [.order](#dc.dataTable+order) ⇒ <code>Chart</code>
+  * [.order](#dc.dataTable+order) ⇒ <code>Chart</code>
+
+<a name="dc.dataTable+size"></a>
+#### dataTable.size ⇒ <code>Chart</code>
 Get or set the table size which determines the number of rows displayed by the widget.
 
-#### .columns([columnFunctionArray])
+**Kind**: instance property of <code>[dataTable](#dc.dataTable)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [size] | <code>Number</code> | <code>25</code> | 
+
+<a name="dc.dataTable+columns"></a>
+#### dataTable.columns ⇒ <code>Chart</code>
 Get or set column functions. The data table widget now supports several methods of specifying
 the columns to display.  The original method, first shown below, uses an array of functions to
 generate dynamic columns. Column functions are simple javascript functions with only one input
@@ -1266,112 +2515,117 @@ argument `d` which represents a row in the data set. The return value of these f
 used directly to generate table content for each cell. However, this method requires the .html
 table entry to have a fixed set of column headers.
 
-```js
-    chart.columns([
-        function(d) {
-            return d.date;
-        },
-        function(d) {
-            return d.open;
-        },
-        function(d) {
-            return d.close;
-        },
-        function(d) {
-            return numberFormat(d.close - d.open);
-        },
-        function(d) {
-            return d.volume;
-        }
-    ]);
-```
-
-The next example shows you can simply list the data (d) content directly without
+The second example shows you can simply list the data (d) content directly without
 specifying it as a function, except where necessary (ie, computed columns).  Note
 the data element accessor name is capitalized when displayed in the table. You can
 also mix in functions as desired or necessary, but you must use the
-    Object = [Label, Fn] method as shown below.
+Object = [Label, Fn] method as shown below.
 You may wish to override the following two functions, which are internally used to
 translate the column information or function into a displayed header. The first one
 is used on the simple "string" column specifier, the second is used to transform the
 String(fn) into something displayable. For the Stock example, the function for Change
 becomes a header of 'd.close - d.open'.
-    _chart._doColumnHeaderCapitalize _chart._doColumnHeaderFnToString
+_chart._doColumnHeaderCapitalize _chart._doColumnHeaderFnToString
 You may use your own Object definition, however you must then override
-    _chart._doColumnHeaderFormat , _chart._doColumnValueFormat
+_chart._doColumnHeaderFormat , _chart._doColumnValueFormat
 Be aware that fields without numberFormat specification will be displayed just as
 they are stored in the data, unformatted.
+
+The third example, where all fields are specified using the Object = [Label, Fn] method.
+
+**Kind**: instance property of <code>[dataTable](#dc.dataTable)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [columns] | <code>Array.&lt;function()&gt;</code> | <code>[]</code> | 
+
+**Example**  
 ```js
-    chart.columns([
-            "date",    // d["date"], ie, a field accessor; capitalized automatically
-            "open",    // ...
-            "close",   // ...
-            ["Change", // Specify an Object = [Label, Fn]
-                  function (d) {
-                      return numberFormat(d.close - d.open);
-                  }],
-            "volume"   // d["volume"], ie, a field accessor; capitalized automatically
-    ]);
+chart.columns([
+    function(d) { return d.date; },
+    function(d) { return d.open; },
+    function(d) { return d.close; },
+    function(d) { return numberFormat(d.close - d.open); },
+    function(d) { return d.volume; }
+]);
 ```
-
-A third example, where all fields are specified using the Object = [Label, Fn] method.
-
+**Example**  
 ```js
-    chart.columns([
-        ["Date",   // Specify an Object = [Label, Fn]
-         function (d) {
-             return d.date;
-         }],
-        ["Open",
-         function (d) {
-             return numberFormat(d.open);
-         }],
-        ["Close",
-         function (d) {
-             return numberFormat(d.close);
-         }],
-        ["Change",
-         function (d) {
-             return numberFormat(d.close - d.open);
-         }],
-        ["Volume",
-         function (d) {
-             return d.volume;
-         }]
-    ]);
+chart.columns([
+    "date",    // d["date"], ie, a field accessor; capitalized automatically
+    "open",    // ...
+    "close",   // ...
+    ["Change", // Specify an Object = [Label, Fn]
+        function (d) { return numberFormat(d.close - d.open); }],
+    "volume"   // d["volume"], ie, a field accessor; capitalized automatically
+]);
 ```
-
-#### .sortBy([sortByFunction])
+**Example**  
+```js
+chart.columns([
+    ["Date",   // Specify an Object = [Label, Fn]
+        function (d) { return d.date; }],
+    ["Open",
+        function (d) { return numberFormat(d.open); }],
+    ["Close",
+        function (d) { return numberFormat(d.close); }],
+    ["Change",
+        function (d) { return numberFormat(d.close - d.open); }],
+    ["Volume",
+        function (d) { return d.volume; }]
+]);
+```
+<a name="dc.dataTable+sortBy"></a>
+#### dataTable.sortBy ⇒ <code>Chart</code>
 Get or set sort-by function. This function works as a value accessor at row level and returns a
 particular field to be sorted by. Default value: identity function
 
+**Kind**: instance property of <code>[dataTable](#dc.dataTable)</code>  
+
+| Param | Type |
+| --- | --- |
+| [sortBy] | <code>function</code> | 
+
+**Example**  
 ```js
-   chart.sortBy(function(d) {
-        return d.date;
-    });
+chart.sortBy(function(d) {
+    return d.date;
+});
 ```
+<a name="dc.dataTable+order"></a>
+#### dataTable.order ⇒ <code>Chart</code>
+Get or set sort order.
 
-#### .order([order])
-Get or set sort order. Default value: ``` d3.ascending ```
+**Kind**: instance property of <code>[dataTable](#dc.dataTable)</code>  
 
+| Param | Type | Default |
+| --- | --- | --- |
+| [order] | <code>function</code> | <code>d3.ascending</code> | 
+
+**Example**  
 ```js
-    chart.order(d3.descending);
+chart.order(d3.descending);
 ```
+<a name="dc.dataTable+order"></a>
+#### dataTable.order ⇒ <code>Chart</code>
+Get or set if group rows will be shown.
 
-### .showGroups(true|false)
-Get or set if group rows will be shown. Default value ``` true ```
 The .group() getter-setter must be provided in either case.
 
+**Kind**: instance property of <code>[dataTable](#dc.dataTable)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [showGroups] | <code>Boolean</code> | <code>true</code> | 
+
+**Example**  
 ```js
-    chart
-        .group([value], [name])
-        .showGroups(true|false);
+chart
+    .group([value], [name])
+    .showGroups(true|false);
 ```
-
-## Data Grid Widget
-
-Includes: [Base Mixin](#base-mixin)
-
+<a name="dc.dataGrid"></a>
+### dc.dataGrid ⇒ <code>DataGrid</code>
 Data grid is a simple widget designed to list the filtered records, providing
 a simple way to define how the items are displayed.
 
@@ -1380,122 +2634,172 @@ for [nesting](https://github.com/mbostock/d3/wiki/Arrays#-nest) the data togethe
 Do not pass in a crossfilter group as this will not work.
 
 Examples:
-* [List of members of the european parliament](http://europarl.me/dc.js/web/ep/index.html)
+- [List of members of the european parliament](http://europarl.me/dc.js/web/ep/index.html)
 
-#### dc.dataGrid(parent[, chartGroup])
-Create a data grid widget instance and attach it to the given parent element.
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Mixes**: <code>[baseMixin](#dc.baseMixin)</code>  
 
-Parameters:
-* parent : string | node | selection - any valid
-[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
-a dom block element such as a div; or a dom element or d3 selection.
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> &#124; <code>node</code> &#124; <code>d3.selection</code> &#124; <code>[compositeChart](#dc.compositeChart)</code> | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance. |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart's group.
 
-Returns:
-A newly created data grid widget instance
+* [.dataGrid](#dc.dataGrid) ⇒ <code>DataGrid</code>
+  * [.beginSlice](#dc.dataGrid+beginSlice) ⇒ <code>Chart</code>
+  * [.endSlice](#dc.dataGrid+endSlice) ⇒ <code>Chart</code>
+  * [.size](#dc.dataGrid+size) ⇒ <code>Chart</code>
+  * [.html](#dc.dataGrid+html) ⇒ <code>Chart</code>
+  * [.htmlGroup](#dc.dataGrid+htmlGroup) ⇒ <code>Chart</code>
+  * [.sortBy](#dc.dataGrid+sortBy) ⇒ <code>Chart</code>
+  * [.order](#dc.dataGrid+order) ⇒ <code>Chart</code>
 
-#### .beginSlice([index])
+<a name="dc.dataGrid+beginSlice"></a>
+#### dataGrid.beginSlice ⇒ <code>Chart</code>
 Get or set the index of the beginning slice which determines which entries get displayed by the widget
 Useful when implementing pagination.
 
-#### .endSlice([index])
+**Kind**: instance property of <code>[dataGrid](#dc.dataGrid)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [beginSlice] | <code>Number</code> | <code>0</code> | 
+
+<a name="dc.dataGrid+endSlice"></a>
+#### dataGrid.endSlice ⇒ <code>Chart</code>
 Get or set the index of the end slice which determines which entries get displayed by the widget
 Useful when implementing pagination.
 
-#### .size([size])
+**Kind**: instance property of <code>[dataGrid](#dc.dataGrid)</code>  
+
+| Param | Type |
+| --- | --- |
+| [endSlice] | <code>Number</code> | 
+
+<a name="dc.dataGrid+size"></a>
+#### dataGrid.size ⇒ <code>Chart</code>
 Get or set the grid size which determines the number of items displayed by the widget.
 
-#### .html( function (data) { return '<html>'; })
+**Kind**: instance property of <code>[dataGrid](#dc.dataGrid)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [size] | <code>Number</code> | <code>999</code> | 
+
+<a name="dc.dataGrid+html"></a>
+#### dataGrid.html ⇒ <code>Chart</code>
 Get or set the function that formats an item. The data grid widget uses a
 function to generate dynamic html. Use your favourite templating engine or
 generate the string directly.
+
+**Kind**: instance property of <code>[dataGrid](#dc.dataGrid)</code>  
+
+| Param | Type |
+| --- | --- |
+| [html] | <code>function</code> | 
+
+**Example**  
 ```js
 chart.html(function (d) { return '<div class='item '+data.exampleCategory+''>'+data.exampleString+'</div>';});
 ```
-
-#### .htmlGroup( function (data) { return '<html>'; })
+<a name="dc.dataGrid+htmlGroup"></a>
+#### dataGrid.htmlGroup ⇒ <code>Chart</code>
 Get or set the function that formats a group label.
+
+**Kind**: instance property of <code>[dataGrid](#dc.dataGrid)</code>  
+
+| Param | Type |
+| --- | --- |
+| [htmlGroup] | <code>function</code> | 
+
+**Example**  
 ```js
 chart.htmlGroup (function (d) { return '<h2>'.d.key . 'with ' . d.values.length .' items</h2>'});
 ```
-
-#### .sortBy([sortByFunction])
+<a name="dc.dataGrid+sortBy"></a>
+#### dataGrid.sortBy ⇒ <code>Chart</code>
 Get or set sort-by function. This function works as a value accessor at the item
 level and returns a particular field to be sorted.
-by. Default: identity function
 
+**Kind**: instance property of <code>[dataGrid](#dc.dataGrid)</code>  
+
+| Param | Type |
+| --- | --- |
+| [sortByFunction] | <code>function</code> | 
+
+**Example**  
 ```js
 chart.sortBy(function(d) {
     return d.date;
 });
 ```
+<a name="dc.dataGrid+order"></a>
+#### dataGrid.order ⇒ <code>Chart</code>
+Get or set sort order function.
 
-#### .order([order])
-Get or set sort order function. Default value: ``` d3.ascending ```
+**Kind**: instance property of <code>[dataGrid](#dc.dataGrid)</code>  
 
+| Param | Type | Default |
+| --- | --- | --- |
+| [order] | <code>function</code> | <code>d3.ascending</code> | 
+
+**Example**  
 ```js
 chart.order(d3.descending);
 ```
-
-## Bubble Chart
-Includes: [Bubble Mixin](#bubble-mixin), [Coordinate Grid Mixin](#coordinate-grid-mixin)
-
+<a name="dc.bubbleChart"></a>
+### dc.bubbleChart ⇒ <code>BubbleChart</code>
 A concrete implementation of a general purpose bubble chart that allows data visualization using the
 following dimensions:
-
-* x axis position
-* y axis position
-* bubble radius
-* color
-
+- x axis position
+- y axis position
+- bubble radius
+- color
 Examples:
-* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
-* [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
-#### dc.bubbleChart(parent[, chartGroup])
-Create a bubble chart instance and attach it to the given parent element.
+- [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+- [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
 
-Parameters:
-* parent : string | node | selection | compositeChart - any valid
-[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
-a dom block element such as a div; or a dom element or d3 selection.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart's group.
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Mixes**: <code>[bubbleMixin](#dc.bubbleMixin)</code>, <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 
-Returns:
-A newly created bubble chart instance
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> &#124; <code>node</code> &#124; <code>d3.selection</code> &#124; <code>[compositeChart](#dc.compositeChart)</code> | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance. |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
+**Example**  
 ```js
 // create a bubble chart under #chart-container1 element using the default global chart group
 var bubbleChart1 = dc.bubbleChart('#chart-container1');
 // create a bubble chart under #chart-container2 element using chart group A
 var bubbleChart2 = dc.bubbleChart('#chart-container2', 'chartGroupA');
 ```
-
-#### .elasticRadius([boolean])
+<a name="dc.bubbleChart+elasticRadius"></a>
+#### bubbleChart.elasticRadius ⇒ <code>Boolean</code>
 Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
 feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
 
-## Composite Chart
-Includes: [Coordinate Grid Mixin](#coordinate-grid-mixin)
+**Kind**: instance property of <code>[bubbleChart](#dc.bubbleChart)</code>  
 
+| Param | Type | Default |
+| --- | --- | --- |
+| [elasticRadius] | <code>Boolean</code> | <code>false</code> | 
+
+<a name="dc.compositeChart"></a>
+### dc.compositeChart ⇒ <code>CompositeChart</code>
 Composite charts are a special kind of chart that render multiple charts on the same Coordinate
 Grid. You can overlay (compose) different bar/line/area charts in a single composite chart to
 achieve some quite flexible charting effects.
-#### dc.compositeChart(parent[, chartGroup])
-Create a composite chart instance and attach it to the given parent element.
 
-Parameters:
-* parent : string | node | selection - any valid
-[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
-a dom block element such as a div; or a dom element or d3 selection.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart's group.
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Mixes**: <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 
-Returns:
-A newly created composite chart instance
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> &#124; <code>node</code> &#124; <code>d3.selection</code> &#124; <code>[compositeChart](#dc.compositeChart)</code> | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance. |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
+**Example**  
 ```js
 // create a composite chart under #chart-container1 element using the default global chart group
 var compositeChart1 = dc.compositeChart('#chart-container1');
@@ -1503,23 +2807,63 @@ var compositeChart1 = dc.compositeChart('#chart-container1');
 var compositeChart2 = dc.compositeChart('#chart-container2', 'chartGroupA');
 ```
 
-#### .useRightAxisGridLines(bool)
+* [.compositeChart](#dc.compositeChart) ⇒ <code>CompositeChart</code>
+  * [.useRightAxisGridLines](#dc.compositeChart+useRightAxisGridLines) ⇒ <code>Chart</code>
+  * [.childOptions](#dc.compositeChart+childOptions) ⇒ <code>Chart</code>
+  * [.rightYAxisLabel](#dc.compositeChart+rightYAxisLabel) ⇒ <code>Chart</code>
+  * [.compose](#dc.compositeChart+compose) ⇒ <code>Chart</code>
+  * [.children](#dc.compositeChart+children) ⇒ <code>Array.&lt;Chart&gt;</code>
+  * [.shareColors](#dc.compositeChart+shareColors) ⇒ <code>Chart</code>
+  * [.shareTitle](#dc.compositeChart+shareTitle) ⇒ <code>Chart</code>
+  * [.rightY](#dc.compositeChart+rightY) ⇒ <code>Chart</code>
+  * [.rightYAxis](#dc.compositeChart+rightYAxis) ⇒ <code>Chart</code>
+
+<a name="dc.compositeChart+useRightAxisGridLines"></a>
+#### compositeChart.useRightAxisGridLines ⇒ <code>Chart</code>
 Get or set whether to draw gridlines from the right y axis.  Drawing from the left y axis is the
 default behavior. This option is only respected when subcharts with both left and right y-axes
 are present.
 
-#### .childOptions({object})
+**Kind**: instance property of <code>[compositeChart](#dc.compositeChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [useRightAxisGridLines] | <code>Boolean</code> | <code>false</code> | 
+
+<a name="dc.compositeChart+childOptions"></a>
+#### compositeChart.childOptions ⇒ <code>Chart</code>
 Get or set chart-specific options for all child charts. This is equivalent to calling `.options`
 on each child chart.
 
-#### .rightYAxisLabel([labelText])
+**Kind**: instance property of <code>[compositeChart](#dc.compositeChart)</code>  
+
+| Param | Type |
+| --- | --- |
+| [childOptions] | <code>Object</code> | 
+
+<a name="dc.compositeChart+rightYAxisLabel"></a>
+#### compositeChart.rightYAxisLabel ⇒ <code>Chart</code>
 Set or get the right y axis label.
 
-#### .compose(subChartArray)
+**Kind**: instance property of <code>[compositeChart](#dc.compositeChart)</code>  
+
+| Param | Type |
+| --- | --- |
+| [rightYAxisLabel] | <code>String</code> | 
+| [padding] | <code>Number</code> | 
+
+<a name="dc.compositeChart+compose"></a>
+#### compositeChart.compose ⇒ <code>Chart</code>
 Combine the given charts into one single composite coordinate grid chart.
 
+**Kind**: instance property of <code>[compositeChart](#dc.compositeChart)</code>  
+
+| Param | Type |
+| --- | --- |
+| [subChartArray] | <code>Array.&lt;Chart&gt;</code> | 
+
+**Example**  
 ```js
-// compose the given charts in the array into one single composite chart
 moveChart.compose([
     // when creating sub-chart you need to pass in the parent chart
     dc.lineChart(moveChart)
@@ -1538,59 +2882,82 @@ moveChart.compose([
         .centerBar(true)
 ]);
 ```
-
-#### .children()
+<a name="dc.compositeChart+children"></a>
+#### compositeChart.children ⇒ <code>Array.&lt;Chart&gt;</code>
 Returns the child charts which are composed into the composite chart.
 
-#### .shareColors([boolean])
+**Kind**: instance property of <code>[compositeChart](#dc.compositeChart)</code>  
+<a name="dc.compositeChart+shareColors"></a>
+#### compositeChart.shareColors ⇒ <code>Chart</code>
 Get or set color sharing for the chart. If set, the `.colors()` value from this chart
 will be shared with composed children. Additionally if the child chart implements
 Stackable and has not set a custom .colorAccessor, then it will generate a color
 specific to its order in the composition.
 
-#### .shareTitle([[boolean])
-Get or set title sharing for the chart. If set, the `.title()` value from this chart will be
-shared with composed children. Default value is true.
+**Kind**: instance property of <code>[compositeChart](#dc.compositeChart)</code>  
 
-#### .rightY([yScale])
+| Param | Type | Default |
+| --- | --- | --- |
+| [shareColors] | <code>Boolean</code> | <code>false</code> | 
+
+<a name="dc.compositeChart+shareTitle"></a>
+#### compositeChart.shareTitle ⇒ <code>Chart</code>
+Get or set title sharing for the chart. If set, the `.title()` value from this chart will be
+shared with composed children.
+
+**Kind**: instance property of <code>[compositeChart](#dc.compositeChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [shareTitle] | <code>Boolean</code> | <code>true</code> | 
+
+<a name="dc.compositeChart+rightY"></a>
+#### compositeChart.rightY ⇒ <code>Chart</code>
 Get or set the y scale for the right axis. The right y scale is typically automatically
 generated by the chart implementation.
 
-#### .rightYAxis([yAxis])
+**Kind**: instance property of <code>[compositeChart](#dc.compositeChart)</code>  
+
+| Param | Type |
+| --- | --- |
+| [yScale] | <code>d3.scale</code> | 
+
+<a name="dc.compositeChart+rightYAxis"></a>
+#### compositeChart.rightYAxis ⇒ <code>Chart</code>
 Set or get the right y axis used by the composite chart. This function is most useful when y
 axis customization is required. The y axis in dc.js is an instance of a [d3 axis
 object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis) therefore it supports any valid
 d3 axis manipulation. **Caution**: The y axis is usually generated internally by dc;
 resetting it may cause unexpected results.
-```jså
+
+**Kind**: instance property of <code>[compositeChart](#dc.compositeChart)</code>  
+
+| Param | Type |
+| --- | --- |
+| [rightYAxis] | <code>d3.svg.axis</code> | 
+
+**Example**  
+```js
 // customize y axis tick format
 chart.rightYAxis().tickFormat(function (v) {return v + '%';});
 // customize y axis tick values
 chart.rightYAxis().tickValues([0, 100, 200, 300]);
 ```
-
-## Series Chart
-
-Includes: [Composite Chart](#composite chart)
-
+<a name="dc.seriesChart"></a>
+### dc.seriesChart ⇒ <code>SeriesChart</code>
 A series chart is a chart that shows multiple series of data overlaid on one chart, where the
 series is specified in the data. It is a specialization of Composite Chart and inherits all
 composite features other than recomposing the chart.
 
-#### dc.seriesChart(parent[, chartGroup])
-Create a series chart instance and attach it to the given parent element.
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Mixes**: <code>[compositeChart](#dc.compositeChart)</code>  
 
-Parameters:
-* parent : string | node | selection - any valid
-[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
-a dom block element such as a div; or a dom element or d3 selection.
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> &#124; <code>node</code> &#124; <code>d3.selection</code> &#124; <code>[compositeChart](#dc.compositeChart)</code> | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance. |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart's group.
-
-Returns:
-A newly created series chart instance
-
+**Example**  
 ```js
 // create a series chart under #chart-container1 element using the default global chart group
 var seriesChart1 = dc.seriesChart("#chart-container1");
@@ -1598,56 +2965,82 @@ var seriesChart1 = dc.seriesChart("#chart-container1");
 var seriesChart2 = dc.seriesChart("#chart-container2", "chartGroupA");
 ```
 
-#### .chart([function])
-Get or set the chart function, which generates the child charts.  Default: dc.lineChart
+* [.seriesChart](#dc.seriesChart) ⇒ <code>SeriesChart</code>
+  * [.chart](#dc.seriesChart+chart) ⇒ <code>Chart</code>
+  * [.seriesAccessor](#dc.seriesChart+seriesAccessor) ⇒ <code>Chart</code>
+  * [.seriesSort](#dc.seriesChart+seriesSort) ⇒ <code>Chart</code>
+  * [.valueSort](#dc.seriesChart+valueSort) ⇒ <code>Chart</code>
 
-```
+<a name="dc.seriesChart+chart"></a>
+#### seriesChart.chart ⇒ <code>Chart</code>
+Get or set the chart function, which generates the child charts.
+
+**Kind**: instance property of <code>[seriesChart](#dc.seriesChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [chartFunction] | <code>function</code> | <code>dc.lineChart</code> | 
+
+**Example**  
+```js
 // put interpolation on the line charts used for the series
 chart.chart(function(c) { return dc.lineChart(c).interpolate('basis'); })
 // do a scatter series chart
 chart.chart(dc.scatterPlot)
 ```
-
-#### .seriesAccessor([accessor])
+<a name="dc.seriesChart+seriesAccessor"></a>
+#### seriesChart.seriesAccessor ⇒ <code>Chart</code>
 Get or set accessor function for the displayed series. Given a datum, this function
 should return the series that datum belongs to.
 
-#### .seriesSort([sortFunction])
+**Kind**: instance property of <code>[seriesChart](#dc.seriesChart)</code>  
+
+| Param | Type |
+| --- | --- |
+| [accessor] | <code>function</code> | 
+
+<a name="dc.seriesChart+seriesSort"></a>
+#### seriesChart.seriesSort ⇒ <code>Chart</code>
 Get or set a function to sort the list of series by, given series values.
 
-Example:
-```
+**Kind**: instance property of <code>[seriesChart](#dc.seriesChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [sortFunction] | <code>function</code> | <code>d3.ascending</code> | 
+
+**Example**  
+```js
 chart.seriesSort(d3.descending);
 ```
-
-#### .valueSort([sortFunction])
+<a name="dc.seriesChart+valueSort"></a>
+#### seriesChart.valueSort ⇒ <code>Chart</code>
 Get or set a function to sort each series values by. By default this is the key accessor which,
 for example, will ensure a lineChart series connects its points in increasing key/x order,
 rather than haphazardly.
 
-## Geo Choropleth Chart
-Includes: [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
+**Kind**: instance property of <code>[seriesChart](#dc.seriesChart)</code>  
 
+| Param | Type |
+| --- | --- |
+| [sortFunction] | <code>function</code> | 
+
+<a name="dc.geoChoroplethChart"></a>
+### dc.geoChoroplethChart ⇒ <code>GeoChoroplethChart</code>
 The geo choropleth chart is designed as an easy way to create a crossfilter driven choropleth map
-from GeoJson data. This chart implementation was inspired by [the great d3 choropleth
-example](http://bl.ocks.org/4060606).
-
+from GeoJson data. This chart implementation was inspired by [the great d3 choropleth example](http://bl.ocks.org/4060606).
 Examples:
-* [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
-#### dc.geoChoroplethChart(parent[, chartGroup])
-Create a choropleth chart instance and attach it to the given parent element.
+- [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
 
-Parameters:
-* parent : string | node | selection - any valid
-[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
-a dom block element such as a div; or a dom element or d3 selection.
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Mixes**: <code>[colorMixin](#dc.colorMixin)</code>, <code>[baseMixin](#dc.baseMixin)</code>  
 
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart's group.
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> &#124; <code>node</code> &#124; <code>d3.selection</code> &#124; <code>[compositeChart](#dc.compositeChart)</code> | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance. |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
-Returns:
-A newly created choropleth chart instance
-
+**Example**  
 ```js
 // create a choropleth chart under '#us-chart' element using the default global chart group
 var chart1 = dc.geoChoroplethChart('#us-chart');
@@ -1655,108 +3048,149 @@ var chart1 = dc.geoChoroplethChart('#us-chart');
 var chart2 = dc.compositeChart('#us-chart2', 'chartGroupA');
 ```
 
-#### .overlayGeoJson(json, name, keyAccessor) - **mandatory**
+* [.geoChoroplethChart](#dc.geoChoroplethChart) ⇒ <code>GeoChoroplethChart</code>
+  * [.overlayGeoJson](#dc.geoChoroplethChart+overlayGeoJson) ⇒ <code>Chart</code>
+  * [.projection](#dc.geoChoroplethChart+projection) ⇒ <code>Chart</code>
+  * [.geoJsons](#dc.geoChoroplethChart+geoJsons) ⇒ <code>Array.&lt;{name:String, data: Object, accessor: function()}&gt;</code>
+  * [.geoPath](#dc.geoChoroplethChart+geoPath) ⇒ <code>d3.geo.path</code>
+  * [.removeGeoJson](#dc.geoChoroplethChart+removeGeoJson) ⇒ <code>Chart</code>
+
+<a name="dc.geoChoroplethChart+overlayGeoJson"></a>
+#### geoChoroplethChart.overlayGeoJson ⇒ <code>Chart</code>
+**mandatory**
+
 Use this function to insert a new GeoJson map layer. This function can be invoked multiple times
 if you have multiple GeoJson data layers to render on top of each other. If you overlay multiple
 layers with the same name the new overlay will override the existing one.
 
-Parameters:
-* json - GeoJson feed
-* name - name of the layer
-* keyAccessor - accessor function used to extract 'key' from the GeoJson data. The key extracted by
-this function should match the keys returned by the crossfilter groups.
+**Kind**: instance property of <code>[geoChoroplethChart](#dc.geoChoroplethChart)</code>  
 
+| Param | Type | Description |
+| --- | --- | --- |
+| json | <code>Object</code> | a geojson feed |
+| name | <code>String</code> | name of the layer |
+| keyAccessor | <code>function</code> | accessor function used to extract 'key' from the GeoJson data. The key extracted by this function should match the keys returned by the crossfilter groups. |
+
+**Example**  
 ```js
 // insert a layer for rendering US states
 chart.overlayGeoJson(statesJson.features, 'state', function(d) {
-    return d.properties.name;
+     return d.properties.name;
 });
 ```
-
-#### .projection(projection)
+<a name="dc.geoChoroplethChart+projection"></a>
+#### geoChoroplethChart.projection ⇒ <code>Chart</code>
 Set custom geo projection function. See the available [d3 geo projection
-functions](https://github.com/mbostock/d3/wiki/Geo-Projections).  Default value: albersUsa.
+functions](https://github.com/mbostock/d3/wiki/Geo-Projections).
 
-#### .geoJsons()
+**Kind**: instance property of <code>[geoChoroplethChart](#dc.geoChoroplethChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [projection] | <code>d3.projection</code> | <code>d3.projection.albersUsa()</code> | 
+
+<a name="dc.geoChoroplethChart+geoJsons"></a>
+#### geoChoroplethChart.geoJsons ⇒ <code>Array.&lt;{name:String, data: Object, accessor: function()}&gt;</code>
 Returns all GeoJson layers currently registered with this chart. The returned array is a
 reference to this chart's internal data structure, so any modification to this array will also
 modify this chart's internal registration.
 
-Returns an array of objects containing fields {name, data, accessor}
-
-#### .geoPath()
+**Kind**: instance property of <code>[geoChoroplethChart](#dc.geoChoroplethChart)</code>  
+<a name="dc.geoChoroplethChart+geoPath"></a>
+#### geoChoroplethChart.geoPath ⇒ <code>d3.geo.path</code>
 Returns the [d3.geo.path](https://github.com/mbostock/d3/wiki/Geo-Paths#path) object used to
 render the projection and features.  Can be useful for figuring out the bounding box of the
 feature set and thus a way to calculate scale and translation for the projection.
 
-#### .removeGeoJson(name)
+**Kind**: instance property of <code>[geoChoroplethChart](#dc.geoChoroplethChart)</code>  
+<a name="dc.geoChoroplethChart+removeGeoJson"></a>
+#### geoChoroplethChart.removeGeoJson ⇒ <code>Chart</code>
 Remove a GeoJson layer from this chart by name
 
-## Bubble Overlay Chart
-Includes: [Bubble Mixin](#bubble-mixin), [Base Mixin](#base-mixin)
+**Kind**: instance property of <code>[geoChoroplethChart](#dc.geoChoroplethChart)</code>  
 
+| Param | Type |
+| --- | --- |
+| name | <code>String</code> | 
+
+<a name="dc.bubbleOverlay"></a>
+### dc.bubbleOverlay ⇒ <code>BubbleOverlay</code>
 The bubble overlay chart is quite different from the typical bubble chart. With the bubble overlay
 chart you can arbitrarily place bubbles on an existing svg or bitmap image, thus changing the
 typical x and y positioning while retaining the capability to visualize data using bubble radius
 and coloring.
-
 Examples:
-* [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
-#### dc.bubbleOverlay(parent[, chartGroup])
-Create a bubble overlay chart instance and attach it to the given parent element.
+- [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
 
-Parameters:
-* parent : string | node | selection - any valid
-[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
-a dom block element such as a div; or a dom element or d3 selection.
-off-screen. Typically this element should also be the parent of the underlying image.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart's group.
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Mixes**: <code>[bubbleMixin](#dc.bubbleMixin)</code>, <code>[baseMixin](#dc.baseMixin)</code>  
 
-Returns:
-A newly created bubble overlay chart instance
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> &#124; <code>node</code> &#124; <code>d3.selection</code> &#124; <code>[compositeChart](#dc.compositeChart)</code> | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance. |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
+**Example**  
 ```js
 // create a bubble overlay chart on top of the '#chart-container1 svg' element using the default global chart group
 var bubbleChart1 = dc.bubbleOverlayChart('#chart-container1').svg(d3.select('#chart-container1 svg'));
 // create a bubble overlay chart on top of the '#chart-container2 svg' element using chart group A
 var bubbleChart2 = dc.compositeChart('#chart-container2', 'chartGroupA').svg(d3.select('#chart-container2 svg'));
 ```
-#### .svg(imageElement) - **mandatory**
+
+* [.bubbleOverlay](#dc.bubbleOverlay) ⇒ <code>BubbleOverlay</code>
+  * [.svg](#dc.bubbleOverlay+svg) ⇒ <code>Chart</code>
+  * [.point](#dc.bubbleOverlay+point) ⇒ <code>Chart</code>
+
+<a name="dc.bubbleOverlay+svg"></a>
+#### bubbleOverlay.svg ⇒ <code>Chart</code>
+**mandatory**
+
 Set the underlying svg image element. Unlike other dc charts this chart will not generate a svg
 element; therefore the bubble overlay chart will not work if this function is not invoked. If the
 underlying image is a bitmap, then an empty svg will need to be created on top of the image.
 
+**Kind**: instance property of <code>[bubbleOverlay](#dc.bubbleOverlay)</code>  
+
+| Param | Type |
+| --- | --- |
+| [imageElement] | <code>Selection</code> | 
+
+**Example**  
 ```js
 // set up underlying svg element
 chart.svg(d3.select('#chart svg'));
 ```
+<a name="dc.bubbleOverlay+point"></a>
+#### bubbleOverlay.point ⇒ <code>Chart</code>
+**mandatory**
 
-#### .point(name, x, y) - **mandatory**
 Set up a data point on the overlay. The name of a data point should match a specific 'key' among
 data groups generated using keyAccessor.  If a match is found (point name <-> data group key)
 then a bubble will be generated at the position specified by the function. x and y
 value specified here are relative to the underlying svg.
 
-## Row Chart
-Includes: [Cap Mixin](#cap-mixin), [Margin Mixin](#margin-mixin), [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
+**Kind**: instance property of <code>[bubbleOverlay](#dc.bubbleOverlay)</code>  
 
+| Param | Type |
+| --- | --- |
+| name | <code>String</code> | 
+| x | <code>Number</code> | 
+| y | <code>Number</code> | 
+
+<a name="dc.rowChart"></a>
+### dc.rowChart ⇒ <code>RowChart</code>
 Concrete row chart implementation.
-#### dc.rowChart(parent[, chartGroup])
-Create a row chart instance and attach it to the given parent element.
 
-Parameters:
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Mixes**: <code>[capMixin](#dc.capMixin)</code>, <code>[marginMixin](#dc.marginMixin)</code>, <code>[colorMixin](#dc.colorMixin)</code>, <code>[baseMixin](#dc.baseMixin)</code>  
 
-* parent : string | node | selection - any valid
-[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
-a dom block element such as a div; or a dom element or d3 selection.
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> &#124; <code>node</code> &#124; <code>d3.selection</code> &#124; <code>[compositeChart](#dc.compositeChart)</code> | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance. |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart's group.
-
-Returns:
-A newly created row chart instance
-
+**Example**  
 ```js
 // create a row chart under #chart-container1 element using the default global chart group
 var chart1 = dc.rowChart('#chart-container1');
@@ -1764,109 +3198,237 @@ var chart1 = dc.rowChart('#chart-container1');
 var chart2 = dc.rowChart('#chart-container2', 'chartGroupA');
 ```
 
-#### .x([scale])
+* [.rowChart](#dc.rowChart) ⇒ <code>RowChart</code>
+  * [.x](#dc.rowChart+x) ⇒ <code>Chart</code>
+  * [.renderTitleLabel](#dc.rowChart+renderTitleLabel) ⇒ <code>Chart</code>
+  * [.xAxis](#dc.rowChart+xAxis) ⇒ <code>d3.svg.Axis</code>
+  * [.fixedBarHeight](#dc.rowChart+fixedBarHeight) ⇒ <code>Chart</code>
+  * [.gap](#dc.rowChart+gap) ⇒ <code>Chart</code>
+  * [.elasticX](#dc.rowChart+elasticX) ⇒ <code>Chart</code>
+  * [.labelOffsetX](#dc.rowChart+labelOffsetX) ⇒ <code>Chart</code>
+  * [.labelOffsetY](#dc.rowChart+labelOffsetY) ⇒ <code>Chart</code>
+  * [.titleLabelOffsetX](#dc.rowChart+titleLabelOffsetX) ⇒ <code>Chart</code>
+
+<a name="dc.rowChart+x"></a>
+#### rowChart.x ⇒ <code>Chart</code>
 Gets or sets the x scale. The x scale can be any d3
 [quantitive scale](https://github.com/mbostock/d3/wiki/Quantitative-Scales)
 
-#### .renderTitleLabel(boolean)
+**Kind**: instance property of <code>[rowChart](#dc.rowChart)</code>  
+
+| Param | Type |
+| --- | --- |
+| [scale] | <code>d3.scale</code> | 
+
+<a name="dc.rowChart+renderTitleLabel"></a>
+#### rowChart.renderTitleLabel ⇒ <code>Chart</code>
 Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'
 
-#### .xAxis()
+**Kind**: instance property of <code>[rowChart](#dc.rowChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [renderTitleLabel] | <code>Boolean</code> | <code>false</code> | 
+
+<a name="dc.rowChart+xAxis"></a>
+#### rowChart.xAxis ⇒ <code>d3.svg.Axis</code>
 Get the x axis for the row chart instance.  Note: not settable for row charts.
 See the [d3 axis object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis) documention for more information.
+
+**Kind**: instance property of <code>[rowChart](#dc.rowChart)</code>  
+**Example**  
 ```js
 // customize x axis tick format
 chart.xAxis().tickFormat(function (v) {return v + '%';});
 // customize x axis tick values
 chart.xAxis().tickValues([0, 100, 200, 300]);
 ```
-
-#### .fixedBarHeight([height])
+<a name="dc.rowChart+fixedBarHeight"></a>
+#### rowChart.fixedBarHeight ⇒ <code>Chart</code>
 Get or set the fixed bar height. Default is [false] which will auto-scale bars.
 For example, if you want to fix the height for a specific number of bars (useful in TopN charts)
 you could fix height as follows (where count = total number of bars in your TopN and gap is
 your vertical gap space).
+
+**Kind**: instance property of <code>[rowChart](#dc.rowChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [fixedBarHeight] | <code>Boolean</code> &#124; <code>Number</code> | <code>false</code> | 
+
+**Example**  
 ```js
- chart.fixedBarHeight( chartheight - (count + 1) * gap / count);
+chart.fixedBarHeight( chartheight - (count + 1) * gap / count);
 ```
+<a name="dc.rowChart+gap"></a>
+#### rowChart.gap ⇒ <code>Chart</code>
+Get or set the vertical gap space between rows on a particular row chart instance
 
-#### .gap([gap])
-Get or set the vertical gap space between rows on a particular row chart instance. Default gap is 5px;
+**Kind**: instance property of <code>[rowChart](#dc.rowChart)</code>  
 
-#### .elasticX([boolean])
+| Param | Type | Default |
+| --- | --- | --- |
+| [gap] | <code>Number</code> | <code>5</code> | 
+
+<a name="dc.rowChart+elasticX"></a>
+#### rowChart.elasticX ⇒ <code>Chart</code>
 Get or set the elasticity on x axis. If this attribute is set to true, then the x axis will rescle to auto-fit the
 data range when filtered.
 
-#### .labelOffsetX([x])
+**Kind**: instance property of <code>[rowChart](#dc.rowChart)</code>  
+
+| Param | Type |
+| --- | --- |
+| [elasticX] | <code>Boolean</code> | 
+
+<a name="dc.rowChart+labelOffsetX"></a>
+#### rowChart.labelOffsetX ⇒ <code>Chart</code>
 Get or set the x offset (horizontal space to the top left corner of a row) for labels on a particular row chart.
-Default x offset is 10px;
 
-#### .labelOffsetY([y])
+**Kind**: instance property of <code>[rowChart](#dc.rowChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [labelOffsetX] | <code>Number</code> | <code>10</code> | 
+
+<a name="dc.rowChart+labelOffsetY"></a>
+#### rowChart.labelOffsetY ⇒ <code>Chart</code>
 Get or set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart.
-Default y offset is 15px;
 
-#### .titleLabelOffsetx([x])
+**Kind**: instance property of <code>[rowChart](#dc.rowChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [labelOffsety] | <code>Number</code> | <code>15</code> | 
+
+<a name="dc.rowChart+titleLabelOffsetX"></a>
+#### rowChart.titleLabelOffsetX ⇒ <code>Chart</code>
 Get of set the x offset (horizontal space between right edge of row and right edge or text.
-Default x offset is 2px;
 
-## Legend
+**Kind**: instance property of <code>[rowChart](#dc.rowChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [titleLabelOffsetX] | <code>Number</code> | <code>2</code> | 
+
+<a name="dc.legend"></a>
+### dc.legend ⇒ <code>Legend</code>
 Legend is a attachable widget that can be added to other dc charts to render horizontal legend
 labels.
+Examples:
+- [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+- [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
 
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Example**  
 ```js
 chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
 ```
 
-Examples:
-* [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
-* [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
+* [.legend](#dc.legend) ⇒ <code>Legend</code>
+  * [.x](#dc.legend+x) ⇒ <code>Legend</code>
+  * [.y](#dc.legend+y) ⇒ <code>Legend</code>
+  * [.gap](#dc.legend+gap) ⇒ <code>Legend</code>
+  * [.itemHeight](#dc.legend+itemHeight) ⇒ <code>Legend</code>
+  * [.horizontal](#dc.legend+horizontal) ⇒ <code>Legend</code>
+  * [.legendWidth](#dc.legend+legendWidth) ⇒ <code>Legend</code>
+  * [.itemWidth](#dc.legend+itemWidth) ⇒ <code>Legend</code>
+  * [.autoItemWidth](#dc.legend+autoItemWidth) ⇒ <code>Legend</code>
 
-#### .x([value])
-Set or get x coordinate for legend widget. Default: 0.
+<a name="dc.legend+x"></a>
+#### legend.x ⇒ <code>Legend</code>
+Set or get x coordinate for legend widget.
 
-#### .y([value])
-Set or get y coordinate for legend widget. Default: 0.
+**Kind**: instance property of <code>[legend](#dc.legend)</code>  
 
-#### .gap([value])
-Set or get gap between legend items. Default: 5.
+| Param | Type | Default |
+| --- | --- | --- |
+| [x] | <code>Number</code> | <code>0</code> | 
 
-#### .itemHeight([value])
-Set or get legend item height. Default: 12.
+<a name="dc.legend+y"></a>
+#### legend.y ⇒ <code>Legend</code>
+Set or get y coordinate for legend widget.
 
-#### .horizontal([boolean])
-Position legend horizontally instead of vertically
+**Kind**: instance property of <code>[legend](#dc.legend)</code>  
 
-#### .legendWidth([value])
-Maximum width for horizontal legend. Default: 560.
+| Param | Type | Default |
+| --- | --- | --- |
+| [y] | <code>Number</code> | <code>0</code> | 
 
-#### .itemWidth([value])
-legendItem width for horizontal legend. Default: 70.
+<a name="dc.legend+gap"></a>
+#### legend.gap ⇒ <code>Legend</code>
+Set or get gap between legend items.
 
-#### .autoItemWidth([value])
+**Kind**: instance property of <code>[legend](#dc.legend)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [gap] | <code>Number</code> | <code>5</code> | 
+
+<a name="dc.legend+itemHeight"></a>
+#### legend.itemHeight ⇒ <code>Legend</code>
+Set or get legend item height.
+
+**Kind**: instance property of <code>[legend](#dc.legend)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [itemHeight] | <code>Number</code> | <code>12</code> | 
+
+<a name="dc.legend+horizontal"></a>
+#### legend.horizontal ⇒ <code>Legend</code>
+Position legend horizontally instead of vertically.
+
+**Kind**: instance property of <code>[legend](#dc.legend)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [horizontal] | <code>Boolean</code> | <code>false</code> | 
+
+<a name="dc.legend+legendWidth"></a>
+#### legend.legendWidth ⇒ <code>Legend</code>
+Maximum width for horizontal legend.
+
+**Kind**: instance property of <code>[legend](#dc.legend)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [legendWidth] | <code>Number</code> | <code>500</code> | 
+
+<a name="dc.legend+itemWidth"></a>
+#### legend.itemWidth ⇒ <code>Legend</code>
+legendItem width for horizontal legend.
+
+**Kind**: instance property of <code>[legend](#dc.legend)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [itemWidth] | <code>Number</code> | <code>70</code> | 
+
+<a name="dc.legend+autoItemWidth"></a>
+#### legend.autoItemWidth ⇒ <code>Legend</code>
 Turn automatic width for legend items on or off. If true, itemWidth() is ignored.
-This setting takes into account gap(). Default: false.
+This setting takes into account gap().
 
-## Scatter Plot
-Includes: [Coordinate Grid Mixin](#coordinate-grid-mixin)
+**Kind**: instance property of <code>[legend](#dc.legend)</code>  
 
+| Param | Type | Default |
+| --- | --- | --- |
+| [autoItemWidth] | <code>Boolean</code> | <code>false</code> | 
+
+<a name="dc.scatterPlot"></a>
+### dc.scatterPlot ⇒ <code>SeriesChart</code>
 A scatter plot chart
-#### dc.scatterPlot(parent[, chartGroup])
-Create a scatter plot instance and attach it to the given parent element.
 
-Parameters:
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Mixes**: <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 
-* parent : string | node | selection | compositeChart - any valid
-[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
-a dom block element such as a div; or a dom element or d3 selection.
-If the scatter plot is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite
-chart instance.
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> &#124; <code>node</code> &#124; <code>d3.selection</code> &#124; <code>[compositeChart](#dc.compositeChart)</code> | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance. |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart's group.
-
-Returns:
-A newly created scatter plot instance
-
+**Example**  
 ```js
 // create a scatter plot under #chart-container1 element using the default global chart group
 var chart1 = dc.scatterPlot('#chart-container1');
@@ -1876,95 +3438,141 @@ var chart2 = dc.scatterPlot('#chart-container2', 'chartGroupA');
 var chart3 = dc.scatterPlot(compositeChart);
 ```
 
-#### .existenceAccessor([accessor])
+* [.scatterPlot](#dc.scatterPlot) ⇒ <code>SeriesChart</code>
+  * [.existenceAccessor](#dc.scatterPlot+existenceAccessor) ⇒ <code>Chart</code>
+  * [.symbol](#dc.scatterPlot+symbol) ⇒ <code>Chart</code>
+  * [.symbolSize](#dc.scatterPlot+symbolSize) ⇒ <code>Chart</code>
+  * [.highlightedSize](#dc.scatterPlot+highlightedSize) ⇒ <code>Chart</code>
+  * [.hiddenSize](#dc.scatterPlot+hiddenSize) ⇒ <code>Chart</code>
+
+<a name="dc.scatterPlot+existenceAccessor"></a>
+#### scatterPlot.existenceAccessor ⇒ <code>Chart</code>
 Get or set the existence accessor.  If a point exists, it is drawn with symbolSize radius and
 opacity 1; if it does not exist, it is drawn with hiddenSize radius and opacity 0. By default,
 the existence accessor checks if the reduced value is truthy.
 
-#### .symbol([type])
+**Kind**: instance property of <code>[scatterPlot](#dc.scatterPlot)</code>  
+
+| Param | Type |
+| --- | --- |
+| [accessor] | <code>function</code> | 
+
+<a name="dc.scatterPlot+symbol"></a>
+#### scatterPlot.symbol ⇒ <code>Chart</code>
 Get or set the symbol type used for each point. By default the symbol is a circle. See the D3
 [docs](https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-symbol_type) for acceptable types.
 Type can be a constant or an accessor.
 
-#### .symbolSize([radius])
-Set or get radius for symbols. Default: 3.
+**Kind**: instance property of <code>[scatterPlot](#dc.scatterPlot)</code>  
 
-#### .highlightedSize([radius])
-Set or get radius for highlighted symbols. Default: 4.
+| Param | Type |
+| --- | --- |
+| [type] | <code>function</code> | 
 
-#### .hiddenSize([radius])
-Set or get radius for symbols when the group is empty. Default: 0.
+<a name="dc.scatterPlot+symbolSize"></a>
+#### scatterPlot.symbolSize ⇒ <code>Chart</code>
+Set or get radius for symbols.
 
-## Number Display Widget
-Includes: [Base Mixin](#base-mixin)
+**Kind**: instance property of <code>[scatterPlot](#dc.scatterPlot)</code>  
 
+| Param | Type | Default |
+| --- | --- | --- |
+| [symbolSize] | <code>Number</code> | <code>3</code> | 
+
+<a name="dc.scatterPlot+highlightedSize"></a>
+#### scatterPlot.highlightedSize ⇒ <code>Chart</code>
+Set or get radius for highlighted symbols.
+
+**Kind**: instance property of <code>[scatterPlot](#dc.scatterPlot)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [highlightedSize] | <code>Number</code> | <code>5</code> | 
+
+<a name="dc.scatterPlot+hiddenSize"></a>
+#### scatterPlot.hiddenSize ⇒ <code>Chart</code>
+Set or get radius for symbols when the group is empty.
+
+**Kind**: instance property of <code>[scatterPlot](#dc.scatterPlot)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [_hiddenSize] | <code>Number</code> | <code>0</code> | 
+
+<a name="dc.numberDisplay"></a>
+### dc.numberDisplay ⇒ <code>NumberDisplay</code>
 A display of a single numeric value.
-
-Examples:
-
-* [Test Example](http://dc-js.github.io/dc.js/examples/number.html)
-#### dc.numberDisplay(parent[, chartGroup])
-Create a Number Display instance and attach it to the given parent element.
-
 Unlike other charts, you do not need to set a dimension. Instead a group object must be provided and
 a valueAccessor that returns a single value.
 
-Parameters:
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Mixes**: <code>[baseMixin](#dc.baseMixin)</code>  
 
-* parent : string | node | selection - any valid
-[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
-a dom block element such as a div; or a dom element or d3 selection.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-The number display widget will only react to filter changes in the chart group.
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> &#124; <code>node</code> &#124; <code>d3.selection</code> &#124; <code>[compositeChart](#dc.compositeChart)</code> | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance. |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
-Returns:
-A newly created number display instance
-
+**Example**  
 ```js
 // create a number display under #chart-container1 element using the default global chart group
 var display1 = dc.numberDisplay('#chart-container1');
 ```
 
-#### .html([object])
- Gets or sets an optional object specifying HTML templates to use depending on the number
- displayed.  The text `%number` will be replaced with the current value.
- - one: HTML template to use if the number is 1
- - zero: HTML template to use if the number is 0
- - some: HTML template to use otherwise
+* [.numberDisplay](#dc.numberDisplay) ⇒ <code>NumberDisplay</code>
+  * [.html](#dc.numberDisplay+html) ⇒ <code>Chart</code>
+  * [.value](#dc.numberDisplay+value) ⇒ <code>Number</code>
+  * [.formatNumber](#dc.numberDisplay+formatNumber) ⇒ <code>Chart</code>
 
- ```js
- numberWidget.html({
+<a name="dc.numberDisplay+html"></a>
+#### numberDisplay.html ⇒ <code>Chart</code>
+Gets or sets an optional object specifying HTML templates to use depending on the number
+displayed.  The text `%number` will be replaced with the current value.
+- one: HTML template to use if the number is 1
+- zero: HTML template to use if the number is 0
+- some: HTML template to use otherwise
+
+**Kind**: instance property of <code>[numberDisplay](#dc.numberDisplay)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [html] | <code>Object</code> | <code>{one: &#x27;&#x27;, some: &#x27;&#x27;, none: &#x27;&#x27;}</code> | 
+
+**Example**  
+```js
+numberWidget.html({
      one:'%number record',
      some:'%number records',
      none:'no records'})
- ```
-
-#### .value()
+```
+<a name="dc.numberDisplay+value"></a>
+#### numberDisplay.value ⇒ <code>Number</code>
 Calculate and return the underlying value of the display
 
-#### .formatNumber([formatter])
-Get or set a function to format the value for the display. By default `d3.format('.2s');` is used.
+**Kind**: instance property of <code>[numberDisplay](#dc.numberDisplay)</code>  
+<a name="dc.numberDisplay+formatNumber"></a>
+#### numberDisplay.formatNumber ⇒ <code>Chart</code>
+Get or set a function to format the value for the display.
 
-## Heat Map
+**Kind**: instance property of <code>[numberDisplay](#dc.numberDisplay)</code>  
 
-Includes: [Color Mixin](#color-mixin), [Margin Mixin](#margin-mixin), [Base Mixin](#base-mixin)
+| Param | Type | Default |
+| --- | --- | --- |
+| [formatter] | <code>function</code> | <code>d3.format(&#x27;.2s&#x27;)</code> | 
 
+<a name="dc.heatMap"></a>
+### dc.heatMap ⇒ <code>HeatMap</code>
 A heat map is matrix that represents the values of two dimensions of data using colors.
 
-#### dc.heatMap(parent[, chartGroup])
-Create a heat map instance and attach it to the given parent element.
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Mixes**: <code>[colorMixin](#dc.colorMixin)</code>, <code>[marginMixin](#dc.marginMixin)</code>, <code>[baseMixin](#dc.baseMixin)</code>  
 
-Parameters:
-* parent : string | node | selection - any valid
-[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
-a dom block element such as a div; or a dom element or d3 selection.
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> &#124; <code>node</code> &#124; <code>d3.selection</code> &#124; <code>[compositeChart](#dc.compositeChart)</code> | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance. |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart's group.
-
-Returns:
-A newly created heat map instance
-
+**Example**  
 ```js
 // create a heat map under #chart-container1 element using the default global chart group
 var heatMap1 = dc.heatMap('#chart-container1');
@@ -1972,65 +3580,144 @@ var heatMap1 = dc.heatMap('#chart-container1');
 var heatMap2 = dc.heatMap('#chart-container2', 'chartGroupA');
 ```
 
-#### .colsLabel([labelFunction])
+* [.heatMap](#dc.heatMap) ⇒ <code>HeatMap</code>
+  * [.colsLabel](#dc.heatMap+colsLabel) ⇒ <code>Chart</code>
+  * [.rowsLabel](#dc.heatMap+rowsLabel) ⇒ <code>Chart</code>
+  * [.rows](#dc.heatMap+rows) ⇒ <code>Chart</code>
+  * [.cols](#dc.heatMap+cols) ⇒ <code>Chart</code>
+  * [.boxOnClick](#dc.heatMap+boxOnClick) ⇒ <code>Chart</code>
+  * [.xAxisOnClick](#dc.heatMap+xAxisOnClick) ⇒ <code>Chart</code>
+  * [.yAxisOnClick](#dc.heatMap+yAxisOnClick) ⇒ <code>Chart</code>
+  * [.xBorderRadius](#dc.heatMap+xBorderRadius) ⇒ <code>Chart</code>
+  * [.yBorderRadius](#dc.heatMap+yBorderRadius) ⇒ <code>Chart</code>
+
+<a name="dc.heatMap+colsLabel"></a>
+#### heatMap.colsLabel ⇒ <code>Chart</code>
 Set or get the column label function. The chart class uses this function to render
 column labels on the X axis. It is passed the column name.
+
+**Kind**: instance property of <code>[heatMap](#dc.heatMap)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [labelFunction] | <code>function</code> | <code>function(d) { return d; }</code> | 
+
+**Example**  
 ```js
 // the default label function just returns the name
 chart.colsLabel(function(d) { return d; });
 ```
-
-#### .rowsLabel([labelFunction])
+<a name="dc.heatMap+rowsLabel"></a>
+#### heatMap.rowsLabel ⇒ <code>Chart</code>
 Set or get the row label function. The chart class uses this function to render
 row labels on the Y axis. It is passed the row name.
+
+**Kind**: instance property of <code>[heatMap](#dc.heatMap)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [labelFunction] | <code>function</code> | <code>function(d) { return d; }</code> | 
+
+**Example**  
 ```js
 // the default label function just returns the name
 chart.rowsLabel(function(d) { return d; });
 ```
-
-#### .rows([values])
+<a name="dc.heatMap+rows"></a>
+#### heatMap.rows ⇒ <code>Chart</code>
 Gets or sets the values used to create the rows of the heatmap, as an array. By default, all
 the values will be fetched from the data using the value accessor, and they will be sorted in
 ascending order.
 
-#### .cols([keys])
+**Kind**: instance property of <code>[heatMap](#dc.heatMap)</code>  
+
+| Param | Type |
+| --- | --- |
+| [rows] | <code>Array.&lt;(String\|Number)&gt;</code> | 
+
+<a name="dc.heatMap+cols"></a>
+#### heatMap.cols ⇒ <code>Chart</code>
 Gets or sets the keys used to create the columns of the heatmap, as an array. By default, all
 the values will be fetched from the data using the key accessor, and they will be sorted in
 ascending order.
 
-#### .boxOnClick([handler])
+**Kind**: instance property of <code>[heatMap](#dc.heatMap)</code>  
+
+| Param | Type |
+| --- | --- |
+| [cols] | <code>Array.&lt;(String\|Number)&gt;</code> | 
+
+<a name="dc.heatMap+boxOnClick"></a>
+#### heatMap.boxOnClick ⇒ <code>Chart</code>
 Gets or sets the handler that fires when an individual cell is clicked in the heatmap.
 By default, filtering of the cell will be toggled.
 
-#### .xAxisOnClick([handler])
+**Kind**: instance property of <code>[heatMap](#dc.heatMap)</code>  
+
+| Param | Type |
+| --- | --- |
+| [handler] | <code>function</code> | 
+
+<a name="dc.heatMap+xAxisOnClick"></a>
+#### heatMap.xAxisOnClick ⇒ <code>Chart</code>
 Gets or sets the handler that fires when a column tick is clicked in the x axis.
 By default, if any cells in the column are unselected, the whole column will be selected,
 otherwise the whole column will be unselected.
 
-#### .yAxisOnClick([handler])
+**Kind**: instance property of <code>[heatMap](#dc.heatMap)</code>  
+
+| Param | Type |
+| --- | --- |
+| [handler] | <code>function</code> | 
+
+<a name="dc.heatMap+yAxisOnClick"></a>
+#### heatMap.yAxisOnClick ⇒ <code>Chart</code>
 Gets or sets the handler that fires when a row tick is clicked in the y axis.
 By default, if any cells in the row are unselected, the whole row will be selected,
 otherwise the whole row will be unselected.
 
-## Box Plot
+**Kind**: instance property of <code>[heatMap](#dc.heatMap)</code>  
 
-Includes: [Coordinate Grid Mixin](#coordinate-grid-mixin)
+| Param | Type |
+| --- | --- |
+| [handler] | <code>function</code> | 
 
+<a name="dc.heatMap+xBorderRadius"></a>
+#### heatMap.xBorderRadius ⇒ <code>Chart</code>
+Gets or sets the X border radius.  Set to 0 to get full rectangles.
+
+**Kind**: instance property of <code>[heatMap](#dc.heatMap)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [xBorderRadius] | <code>Number</code> | <code>6.75</code> | 
+
+<a name="dc.heatMap+yBorderRadius"></a>
+#### heatMap.yBorderRadius ⇒ <code>Chart</code>
+Gets or sets the Y border radius.  Set to 0 to get full rectangles.
+
+**Kind**: instance property of <code>[heatMap](#dc.heatMap)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [yBorderRadius] | <code>Number</code> | <code>6.75</code> | 
+
+<a name="dc.boxPlot"></a>
+### dc.boxPlot ⇒ <code>BoxPlot</code>
 A box plot is a chart that depicts numerical data via their quartile ranges.
+Examples:
+- [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+- [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
 
-#### dc.boxPlot(parent[, chartGroup])
-Create a box plot instance and attach it to the given parent element.
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Mixes**: <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 
-Parameters:
-* parent : string | node | selection - any valid
-[d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) representing
-a dom block element such as a div; or a dom element or d3 selection.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
-Interaction with a chart will only trigger events and redraws within the chart's group.
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> &#124; <code>node</code> &#124; <code>d3.selection</code> &#124; <code>[compositeChart](#dc.compositeChart)</code> | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance. |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
-Returns:
-A newly created box plot instance
-
+**Example**  
 ```js
 // create a box plot under #chart-container1 element using the default global chart group
 var boxPlot1 = dc.boxPlot('#chart-container1');
@@ -2038,27 +3725,66 @@ var boxPlot1 = dc.boxPlot('#chart-container1');
 var boxPlot2 = dc.boxPlot('#chart-container2', 'chartGroupA');
 ```
 
-#### .boxPadding([padding])
+* [.boxPlot](#dc.boxPlot) ⇒ <code>BoxPlot</code>
+  * [.boxPadding](#dc.boxPlot+boxPadding) ⇒ <code>Number</code>
+  * [.outerPadding](#dc.boxPlot+outerPadding) ⇒ <code>Number</code>
+  * [.boxWidth](#dc.boxPlot+boxWidth) ⇒ <code>Number</code> &#124; <code>function</code>
+  * [.tickFormat](#dc.boxPlot+tickFormat) ⇒ <code>Number</code> &#124; <code>function</code>
+
+<a name="dc.boxPlot+boxPadding"></a>
+#### boxPlot.boxPadding ⇒ <code>Number</code>
 Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
 See the [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
 for a visual description of how the padding is applied.
 
-Default: 0.8
+**Kind**: instance property of <code>[boxPlot](#dc.boxPlot)</code>  
 
-#### .outerPadding([padding])
+| Param | Type | Default |
+| --- | --- | --- |
+| [padding] | <code>Number</code> | <code>0.8</code> | 
+
+<a name="dc.boxPlot+outerPadding"></a>
+#### boxPlot.outerPadding ⇒ <code>Number</code>
 Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
 or on charts with a custom `.boxWidth`. Will pad the width by `padding * barWidth` on each side of the chart.
 
-Default: 0.5
+**Kind**: instance property of <code>[boxPlot](#dc.boxPlot)</code>  
 
-#### .boxWidth(width || function(innerChartWidth, xUnits) { ... })
+| Param | Type | Default |
+| --- | --- | --- |
+| [padding] | <code>Number</code> | <code>0.5</code> | 
+
+<a name="dc.boxPlot+boxWidth"></a>
+#### boxPlot.boxWidth ⇒ <code>Number</code> &#124; <code>function</code>
 Get or set the numerical width of the boxplot box. The width may also be a function taking as
 parameters the chart width excluding the right and left margins, as well as the number of x
 units.
 
-#### .tickFormat()
+**Kind**: instance property of <code>[boxPlot](#dc.boxPlot)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [boxWidth] | <code>Number</code> &#124; <code>function</code> | <code>0.5</code> | 
+
+**Example**  
+```js
+// Using numerical parameter
+chart.boxWidth(10);
+// Using function
+chart.boxWidth((innerChartWidth, xUnits) { ... });
+```
+<a name="dc.boxPlot+tickFormat"></a>
+#### boxPlot.tickFormat ⇒ <code>Number</code> &#124; <code>function</code>
 Set the numerical format of the boxplot median, whiskers and quartile labels. Defaults to
 integer formatting.
+
+**Kind**: instance property of <code>[boxPlot](#dc.boxPlot)</code>  
+
+| Param | Type |
+| --- | --- |
+| [tickFormat] | <code>function</code> | 
+
+**Example**  
 ```js
 // format ticks to 2 decimal places
 chart.tickFormat(d3.format('.2f'));

@@ -142,7 +142,7 @@
 <li><a href="#heat-map">Heat Map</a></li>
 <li><a href="#box-plot">Box Plot</a></li>
 </ul>
-<h4 id="version-2-0-0-beta-17">Version 2.0.0-beta.17</h4>
+<h4 id="version-2-0-0-beta-18">Version 2.0.0-beta.18</h4>
 <p>The entire dc.js library is scoped under the <strong>dc</strong> name space. It does not introduce anything else
 into the global name space.</p>
 <h4 id="function-chaining">Function Chaining</h4>
@@ -868,6 +868,8 @@ grouper function computes the sum of all values below the cap.</p>
 be used to retrieve a data value for each bubble. The data retrieved then will be mapped using
 the r scale to the actual bubble radius. This allows you to encode a data dimension using bubble
 size.</p>
+<h4 id="-minradius-radius-">.minRadius([radius])</h4>
+<p>Get or set the minimum radius. This will be used to initialize the radius scale’s range.  Default: 10</p>
 <h4 id="-minradiuswithlabel-radius-">.minRadiusWithLabel([radius])</h4>
 <p>Get or set the minimum radius for label rendering. If a bubble’s radius is less than this value
 then no label will be rendered.  Default: 10</p>
