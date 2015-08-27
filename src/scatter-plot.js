@@ -151,7 +151,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @name hiddenSize
      * @memberof dc.scatterPlot
      * @instance
-     * @param {Number} [_hiddenSize=0]
+     * @param {Number} [hiddenSize=0]
      * @returns {Chart}
      */
     _chart.hiddenSize = function (hiddenSize) {
