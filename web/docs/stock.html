@@ -1612,9 +1612,9 @@ on other charts within the same chart group.
             </div>
             
             <div class="content"><div class='highlight'><pre>        .html({
-            some:<span class="hljs-string">'&lt;strong&gt;%filter-count&lt;/strong&gt; selected out of &lt;strong&gt;%total-count&lt;/strong&gt; records'</span> +
+            some: <span class="hljs-string">'&lt;strong&gt;%filter-count&lt;/strong&gt; selected out of &lt;strong&gt;%total-count&lt;/strong&gt; records'</span> +
                 <span class="hljs-string">' | &lt;a href=\'javascript:dc.filterAll(); dc.renderAll();\'\'&gt;Reset All&lt;/a&gt;'</span>,
-            all:<span class="hljs-string">'All records selected. Please click on the graph to apply filters.'</span>
+            all: <span class="hljs-string">'All records selected. Please click on the graph to apply filters.'</span>
         });</pre></div></div>
             
         </li>
@@ -1832,7 +1832,7 @@ This code demonstrates generating the column header automatically based on the c
             table.selectAll(<span class="hljs-string">'.dc-table-group'</span>).classed(<span class="hljs-string">'info'</span>, <span class="hljs-literal">true</span>);
         });
 
-<span class="hljs-comment">/*
+    <span class="hljs-comment">/*
 </span></pre></div></div>
             
         </li>
@@ -2478,7 +2478,7 @@ changes, without re-rendering everything</p>
             
             <div class="content"><div class='highlight'><pre>d3.json(<span class="hljs-string">'https://api.github.com/repos/dc-js/dc.js/releases/latest'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">error, latestRelease</span>) </span>{
     <span class="hljs-comment">/*jshint camelcase: false */</span>
-    d3.selectAll(<span class="hljs-string">'#latest'</span>).text(latestRelease.tag_name);
+    d3.selectAll(<span class="hljs-string">'#latest'</span>).text(latestRelease.tag_name); <span class="hljs-comment">/* jscs:disable */</span>
 });</pre></div></div>
             
         </li>
