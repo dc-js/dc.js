@@ -74,7 +74,7 @@ module.exports = function (grunt) {
         watch: {
             jsdoc2md: {
                 files: ['<%= conf.src %>/**/*.js'],
-                tasks: ['jsdoc2md']
+                tasks: ['build', 'jsdoc2md']
             },
             scripts: {
                 files: ['<%= conf.src %>/**/*.js', '<%= conf.web %>/stock.js'],
@@ -357,7 +357,7 @@ module.exports = function (grunt) {
     grunt.registerTask('ci-pull', ['test', 'jasmine:specs:build', 'connect:server']);
     grunt.registerTask('lint', ['jshint', 'jscs']);
     grunt.registerTask('default', ['build']);
-    grunt.registerTask('jsdoc', ['jsdoc2md', 'watch:jsdoc2md']);
+    grunt.registerTask('jsdoc', ['build', 'jsdoc2md', 'watch:jsdoc2md']);
 };
 
 module.exports.jsFiles = [

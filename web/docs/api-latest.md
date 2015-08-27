@@ -19,51 +19,51 @@ chart.width(300)
 ```
 
 * [dc](#dc) : <code>object</code>
-  * [.baseMixin](#dc.baseMixin) ⇒ <code>Chart</code>
-    * [.width](#dc.baseMixin+width) ⇒ <code>Number</code>
+  * [.baseMixin](#dc.baseMixin) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
     * [.height](#dc.baseMixin+height) ⇒ <code>Number</code>
+    * [.width](#dc.baseMixin+width) ⇒ <code>Number</code>
     * [.minWidth](#dc.baseMixin+minWidth) ⇒ <code>Number</code>
     * [.minHeight](#dc.baseMixin+minHeight) ⇒ <code>Number</code>
-    * [.dimension](#dc.baseMixin+dimension) ⇒ <code>Dimension</code>
+    * [.dimension](#dc.baseMixin+dimension) ⇒ <code>crossfilter.dimension</code>
     * [.data](#dc.baseMixin+data) ⇒ <code>\*</code>
-    * [.group](#dc.baseMixin+group) ⇒ <code>Group</code>
+    * [.group](#dc.baseMixin+group) ⇒ <code>crossfilter.group</code>
     * [.ordering](#dc.baseMixin+ordering) ⇒ <code>function</code>
-    * [.filterAll](#dc.baseMixin+filterAll) ⇒ <code>Chart</code>
-    * [.select](#dc.baseMixin+select) ⇒ <code>Selection</code>
-    * [.selectAll](#dc.baseMixin+selectAll) ⇒ <code>Selection</code>
-    * [.anchor](#dc.baseMixin+anchor) ⇒ <code>Chart</code>
+    * [.filterAll](#dc.baseMixin+filterAll) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+    * [.select](#dc.baseMixin+select) ⇒ <code>d3.selection</code>
+    * [.selectAll](#dc.baseMixin+selectAll) ⇒ <code>d3.selection</code>
+    * [.anchor](#dc.baseMixin+anchor) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
     * [.anchorName](#dc.baseMixin+anchorName) ⇒ <code>String</code>
-    * [.root](#dc.baseMixin+root) ⇒ <code>Element</code>
+    * [.root](#dc.baseMixin+root) ⇒ <code>HTMLElement</code>
     * [.svg](#dc.baseMixin+svg) ⇒ <code>SVGElement</code>
     * [.resetSvg](#dc.baseMixin+resetSvg) ⇒ <code>SVGElement</code>
     * [.filterPrinter](#dc.baseMixin+filterPrinter) ⇒ <code>function</code>
-    * [.turnOnControls](#dc.baseMixin+turnOnControls) ⇒ <code>Chart</code>
-    * [.turnOffControls](#dc.baseMixin+turnOffControls) ⇒ <code>Chart</code>
+    * [.turnOnControls](#dc.baseMixin+turnOnControls) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+    * [.turnOffControls](#dc.baseMixin+turnOffControls) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
     * [.transitionDuration](#dc.baseMixin+transitionDuration) ⇒ <code>Number</code>
-    * [.render](#dc.baseMixin+render) ⇒ <code>Chart</code>
-    * [.redraw](#dc.baseMixin+redraw) ⇒ <code>Chart</code>
-    * [.hasFilterHandler](#dc.baseMixin+hasFilterHandler) ⇒ <code>Chart</code>
+    * [.render](#dc.baseMixin+render) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+    * [.redraw](#dc.baseMixin+redraw) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+    * [.hasFilterHandler](#dc.baseMixin+hasFilterHandler) ⇒ <code>function</code>
     * [.hasFilter](#dc.baseMixin+hasFilter) ⇒ <code>Boolean</code>
-    * [.removeFilterHandler](#dc.baseMixin+removeFilterHandler) ⇒ <code>Chart</code>
-    * [.addFilterHandler](#dc.baseMixin+addFilterHandler) ⇒ <code>Chart</code>
-    * [.resetFilterHandler](#dc.baseMixin+resetFilterHandler) ⇒ <code>Chart</code>
-    * [.filter](#dc.baseMixin+filter) ⇒ <code>Chart</code>
+    * [.removeFilterHandler](#dc.baseMixin+removeFilterHandler) ⇒ <code>function</code>
+    * [.addFilterHandler](#dc.baseMixin+addFilterHandler) ⇒ <code>function</code>
+    * [.resetFilterHandler](#dc.baseMixin+resetFilterHandler) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+    * [.filter](#dc.baseMixin+filter) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
     * [.filters](#dc.baseMixin+filters) ⇒ <code>Array.&lt;\*&gt;</code>
     * [.onClick](#dc.baseMixin+onClick)
-    * [.filterHandler](#dc.baseMixin+filterHandler) ⇒ <code>Chart</code>
-    * [.keyAccessor](#dc.baseMixin+keyAccessor) ⇒ <code>Chart</code>
-    * [.valueAccessor](#dc.baseMixin+valueAccessor) ⇒ <code>Chart</code>
-    * [.label](#dc.baseMixin+label) ⇒ <code>Chart</code>
+    * [.filterHandler](#dc.baseMixin+filterHandler) ⇒ <code>function</code>
+    * [.keyAccessor](#dc.baseMixin+keyAccessor) ⇒ <code>function</code>
+    * [.valueAccessor](#dc.baseMixin+valueAccessor) ⇒ <code>function</code>
+    * [.label](#dc.baseMixin+label) ⇒ <code>function</code>
     * [.renderLabel](#dc.baseMixin+renderLabel) ⇒ <code>Boolean</code>
     * [.title](#dc.baseMixin+title) ⇒ <code>function</code>
     * [.renderTitle](#dc.baseMixin+renderTitle) ⇒ <code>Boolean</code>
     * ~~[.renderlet](#dc.baseMixin+renderlet) ⇒ <code>function</code>~~
     * [.chartGroup](#dc.baseMixin+chartGroup) ⇒ <code>String</code>
-    * [.expireCache](#dc.baseMixin+expireCache) ⇒ <code>Chart</code>
+    * [.expireCache](#dc.baseMixin+expireCache) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
     * [.legend](#dc.baseMixin+legend) ⇒ <code>[legend](#dc.legend)</code>
     * [.chartID](#dc.baseMixin+chartID) ⇒ <code>String</code>
-    * [.options](#dc.baseMixin+options) ⇒ <code>Chart</code>
-    * [.on](#dc.baseMixin+on) ⇒ <code>Chart</code>
+    * [.options](#dc.baseMixin+options) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+    * [.on](#dc.baseMixin+on) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
   * [.marginMixin](#dc.marginMixin) ⇒ <code>Chart</code>
     * [.margins](#dc.marginMixin+margins) ⇒ <code>Chart</code>
   * [.colorMixin](#dc.colorMixin) ⇒ <code>Chart</code>
@@ -255,137 +255,164 @@ chart.width(300)
     * [.tickFormat](#dc.boxPlot+tickFormat) ⇒ <code>Number</code> &#124; <code>function</code>
 
 <a name="dc.baseMixin"></a>
-### dc.baseMixin ⇒ <code>Chart</code>
-Base Mixin is an abstract functional object representing a basic dc chart object
-for all chart and widget implementations. Methods from the Base Mixin are inherited
-and available on all chart implementations in the DC library.
+### dc.baseMixin ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+`dc.baseMixin` is an abstract functional object representing a basic `dc` chart object
+for all chart and widget implementations. Methods from the `dc.baseMixin` are inherited
+and available on all chart implementations in the `dc` library.
 
 **Kind**: static mixin of <code>[dc](#dc)</code>  
 
 | Param | Type |
 | --- | --- |
-| _chart | <code>Chart</code> | 
+| _chart | <code>Object</code> | 
 
 
-* [.baseMixin](#dc.baseMixin) ⇒ <code>Chart</code>
-  * [.width](#dc.baseMixin+width) ⇒ <code>Number</code>
+* [.baseMixin](#dc.baseMixin) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
   * [.height](#dc.baseMixin+height) ⇒ <code>Number</code>
+  * [.width](#dc.baseMixin+width) ⇒ <code>Number</code>
   * [.minWidth](#dc.baseMixin+minWidth) ⇒ <code>Number</code>
   * [.minHeight](#dc.baseMixin+minHeight) ⇒ <code>Number</code>
-  * [.dimension](#dc.baseMixin+dimension) ⇒ <code>Dimension</code>
+  * [.dimension](#dc.baseMixin+dimension) ⇒ <code>crossfilter.dimension</code>
   * [.data](#dc.baseMixin+data) ⇒ <code>\*</code>
-  * [.group](#dc.baseMixin+group) ⇒ <code>Group</code>
+  * [.group](#dc.baseMixin+group) ⇒ <code>crossfilter.group</code>
   * [.ordering](#dc.baseMixin+ordering) ⇒ <code>function</code>
-  * [.filterAll](#dc.baseMixin+filterAll) ⇒ <code>Chart</code>
-  * [.select](#dc.baseMixin+select) ⇒ <code>Selection</code>
-  * [.selectAll](#dc.baseMixin+selectAll) ⇒ <code>Selection</code>
-  * [.anchor](#dc.baseMixin+anchor) ⇒ <code>Chart</code>
+  * [.filterAll](#dc.baseMixin+filterAll) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+  * [.select](#dc.baseMixin+select) ⇒ <code>d3.selection</code>
+  * [.selectAll](#dc.baseMixin+selectAll) ⇒ <code>d3.selection</code>
+  * [.anchor](#dc.baseMixin+anchor) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
   * [.anchorName](#dc.baseMixin+anchorName) ⇒ <code>String</code>
-  * [.root](#dc.baseMixin+root) ⇒ <code>Element</code>
+  * [.root](#dc.baseMixin+root) ⇒ <code>HTMLElement</code>
   * [.svg](#dc.baseMixin+svg) ⇒ <code>SVGElement</code>
   * [.resetSvg](#dc.baseMixin+resetSvg) ⇒ <code>SVGElement</code>
   * [.filterPrinter](#dc.baseMixin+filterPrinter) ⇒ <code>function</code>
-  * [.turnOnControls](#dc.baseMixin+turnOnControls) ⇒ <code>Chart</code>
-  * [.turnOffControls](#dc.baseMixin+turnOffControls) ⇒ <code>Chart</code>
+  * [.turnOnControls](#dc.baseMixin+turnOnControls) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+  * [.turnOffControls](#dc.baseMixin+turnOffControls) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
   * [.transitionDuration](#dc.baseMixin+transitionDuration) ⇒ <code>Number</code>
-  * [.render](#dc.baseMixin+render) ⇒ <code>Chart</code>
-  * [.redraw](#dc.baseMixin+redraw) ⇒ <code>Chart</code>
-  * [.hasFilterHandler](#dc.baseMixin+hasFilterHandler) ⇒ <code>Chart</code>
+  * [.render](#dc.baseMixin+render) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+  * [.redraw](#dc.baseMixin+redraw) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+  * [.hasFilterHandler](#dc.baseMixin+hasFilterHandler) ⇒ <code>function</code>
   * [.hasFilter](#dc.baseMixin+hasFilter) ⇒ <code>Boolean</code>
-  * [.removeFilterHandler](#dc.baseMixin+removeFilterHandler) ⇒ <code>Chart</code>
-  * [.addFilterHandler](#dc.baseMixin+addFilterHandler) ⇒ <code>Chart</code>
-  * [.resetFilterHandler](#dc.baseMixin+resetFilterHandler) ⇒ <code>Chart</code>
-  * [.filter](#dc.baseMixin+filter) ⇒ <code>Chart</code>
+  * [.removeFilterHandler](#dc.baseMixin+removeFilterHandler) ⇒ <code>function</code>
+  * [.addFilterHandler](#dc.baseMixin+addFilterHandler) ⇒ <code>function</code>
+  * [.resetFilterHandler](#dc.baseMixin+resetFilterHandler) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+  * [.filter](#dc.baseMixin+filter) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
   * [.filters](#dc.baseMixin+filters) ⇒ <code>Array.&lt;\*&gt;</code>
   * [.onClick](#dc.baseMixin+onClick)
-  * [.filterHandler](#dc.baseMixin+filterHandler) ⇒ <code>Chart</code>
-  * [.keyAccessor](#dc.baseMixin+keyAccessor) ⇒ <code>Chart</code>
-  * [.valueAccessor](#dc.baseMixin+valueAccessor) ⇒ <code>Chart</code>
-  * [.label](#dc.baseMixin+label) ⇒ <code>Chart</code>
+  * [.filterHandler](#dc.baseMixin+filterHandler) ⇒ <code>function</code>
+  * [.keyAccessor](#dc.baseMixin+keyAccessor) ⇒ <code>function</code>
+  * [.valueAccessor](#dc.baseMixin+valueAccessor) ⇒ <code>function</code>
+  * [.label](#dc.baseMixin+label) ⇒ <code>function</code>
   * [.renderLabel](#dc.baseMixin+renderLabel) ⇒ <code>Boolean</code>
   * [.title](#dc.baseMixin+title) ⇒ <code>function</code>
   * [.renderTitle](#dc.baseMixin+renderTitle) ⇒ <code>Boolean</code>
   * ~~[.renderlet](#dc.baseMixin+renderlet) ⇒ <code>function</code>~~
   * [.chartGroup](#dc.baseMixin+chartGroup) ⇒ <code>String</code>
-  * [.expireCache](#dc.baseMixin+expireCache) ⇒ <code>Chart</code>
+  * [.expireCache](#dc.baseMixin+expireCache) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
   * [.legend](#dc.baseMixin+legend) ⇒ <code>[legend](#dc.legend)</code>
   * [.chartID](#dc.baseMixin+chartID) ⇒ <code>String</code>
-  * [.options](#dc.baseMixin+options) ⇒ <code>Chart</code>
-  * [.on](#dc.baseMixin+on) ⇒ <code>Chart</code>
-
-<a name="dc.baseMixin+width"></a>
-#### baseMixin.width ⇒ <code>Number</code>
-Set or get the width attribute of a chart. See `.height` below for further description of the
-behavior.
-
-**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
-
-| Param | Type |
-| --- | --- |
-| w | <code>Number</code> &#124; <code>function</code> | 
+  * [.options](#dc.baseMixin+options) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+  * [.on](#dc.baseMixin+on) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
 
 <a name="dc.baseMixin+height"></a>
 #### baseMixin.height ⇒ <code>Number</code>
-Set or get the height attribute of a chart. The height is applied to the SVG element generated by
-the chart when rendered (or rerendered). If a value is given, then it will be used to calculate
+Set or get the height attribute of a chart. The height is applied to the SVGElement generated by
+the chart when rendered (or re-rendered). If a value is given, then it will be used to calculate
 the new height and the chart returned for method chaining.  The value can either be a numeric, a
 function, or falsy. If no value is specified then the value of the current height attribute will
 be returned.
 
 By default, without an explicit height being given, the chart will select the width of its
-anchor element. If that isn't possible it defaults to 200. Setting the value falsy will return
-the chart to the default behavior
+anchor element. If that isn't possible it defaults to 200 (provided by the
+[minHeight](#dc.baseMixin.minHeight) property). Setting the value falsy will return
+the chart to the default behavior.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+**See**: [minHeight](#dc.baseMixin+minHeight)  
 
 | Param | Type |
 | --- | --- |
-| h | <code>Number</code> &#124; <code>function</code> | 
+| [height] | <code>Number</code> &#124; <code>function</code> | 
 
 **Example**  
 ```js
+// Default height
+chart.height(function (element) {
+    var height = element && element.getBoundingClientRect && element.getBoundingClientRect().height;
+    return (height && height > chart.minHeight()) ? height : chart.minHeight();
+});
+
 chart.height(250); // Set the chart's height to 250px;
 chart.height(function(anchor) { return doSomethingWith(anchor); }); // set the chart's height with a function
 chart.height(null); // reset the height to the default auto calculation
 ```
-<a name="dc.baseMixin+minWidth"></a>
-#### baseMixin.minWidth ⇒ <code>Number</code>
-Set or get the minimum width attribute of a chart. This only applicable if the width is
-calculated by dc.
+<a name="dc.baseMixin+width"></a>
+#### baseMixin.width ⇒ <code>Number</code>
+Set or get the width attribute of a chart.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+**See**
+
+- [height](#dc.baseMixin+height)
+- [minWidth](#dc.baseMixin+minWidth)
+
 
 | Param | Type |
 | --- | --- |
-| w | <code>Number</code> | 
+| [width] | <code>Number</code> &#124; <code>function</code> | 
+
+**Example**  
+```js
+// Default width
+chart.width(function (element) {
+    var width = element && element.getBoundingClientRect && element.getBoundingClientRect().width;
+    return (width && width > chart.minWidth()) ? width : chart.minWidth();
+});
+```
+<a name="dc.baseMixin+minWidth"></a>
+#### baseMixin.minWidth ⇒ <code>Number</code>
+Set or get the minimum width attribute of a chart. This only has effect when used with the default `width` function.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+**See**: [width](#dc.baseMixin+width)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [minWidth] | <code>Number</code> | <code>200</code> | 
 
 <a name="dc.baseMixin+minHeight"></a>
 #### baseMixin.minHeight ⇒ <code>Number</code>
-Set or get the minimum height attribute of a chart. This only applicable if the height is
-calculated by dc.
+Set or get the minimum height attribute of a chart. This only has effect when used with the default `height` function.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+**See**: [height](#dc.baseMixin+height)  
 
-| Param | Type |
-| --- | --- |
-| h | <code>Number</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [minHeight] | <code>Number</code> | <code>200</code> | 
 
 <a name="dc.baseMixin+dimension"></a>
-#### baseMixin.dimension ⇒ <code>Dimension</code>
+#### baseMixin.dimension ⇒ <code>crossfilter.dimension</code>
 **mandatory**
 
-Set or get the dimension attribute of a chart. In dc a dimension can be any valid [crossfilter
+Set or get the dimension attribute of a chart. In `dc`, a dimension can be any valid [crossfilter
 dimension](https://github.com/square/crossfilter/wiki/API-Reference#wiki-dimension).
 
 If a value is given, then it will be used as the new dimension. If no value is specified then
 the current dimension will be returned.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+**See**: [crossfilter.dimension](https://github.com/square/crossfilter/wiki/API-Reference#dimension)  
 
 | Param | Type |
 | --- | --- |
-| d | <code>Dimension</code> | 
+| [dimension] | <code>crossfilter.dimension</code> | 
 
+**Example**  
+```js
+var index = crossfilter([]);
+var dimension = index.dimension(dc.pluck('key'));
+chart.dimension(dimension);
+```
 <a name="dc.baseMixin+data"></a>
 #### baseMixin.data ⇒ <code>\*</code>
 Set the data callback or retrieve the chart's data set. The data callback is passed the chart's
@@ -400,16 +427,17 @@ return only the top 5 groups.
 
 **Example**  
 ```js
-chart.data(function(group) {
-    return group.top(5);
-});
+// Default data function
+chart.data(function (group) { return group.all(); });
+
+chart.data(function (group) { return group.top(5); });
 ```
 <a name="dc.baseMixin+group"></a>
-#### baseMixin.group ⇒ <code>Group</code>
+#### baseMixin.group ⇒ <code>crossfilter.group</code>
 **mandatory**
 
-Set or get the group attribute of a chart. In dc a group is a [crossfilter
-group](https://github.com/square/crossfilter/wiki/API-Reference#wiki-group). Usually the group
+Set or get the group attribute of a chart. In `dc` a group is a [crossfilter
+group](https://github.com/square/crossfilter/wiki/API-Reference#group-map-reduce). Usually the group
 should be created from the particular dimension associated with the same chart. If a value is
 given, then it will be used as the new group.
 
@@ -417,29 +445,46 @@ If no value specified then the current group will be returned.
 If `name` is specified then it will be used to generate legend label.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+**See**: [crossfilter.group](https://github.com/square/crossfilter/wiki/API-Reference#group-map-reduce)  
 
 | Param | Type |
 | --- | --- |
-| [group] | <code>Group</code> | 
+| [group] | <code>crossfilter.group</code> | 
 | [name] | <code>String</code> | 
 
+**Example**  
+```js
+var index = crossfilter([]);
+var dimension = index.dimension(dc.pluck('key'));
+chart.dimension(dimension);
+chart.group(dimension.group(crossfilter.reduceSum()));
+```
 <a name="dc.baseMixin+ordering"></a>
 #### baseMixin.ordering ⇒ <code>function</code>
-Get or set an accessor to order ordinal charts
+Get or set an accessor to order ordinal dimensions.  This uses `crossfilter.quicksort.by` as the
+sort.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+**See**: [crossfilter.quicksort.by](https://github.com/square/crossfilter/wiki/API-Reference#quicksort_by)  
 
 | Param | Type |
 | --- | --- |
 | [orderFunction] | <code>function</code> | 
 
+**Example**  
+```js
+// Default ordering accessor
+_chart.ordering(dc.pluck('key'));
+```
 <a name="dc.baseMixin+filterAll"></a>
-#### baseMixin.filterAll ⇒ <code>Chart</code>
-Clear all filters associated with this chart.
+#### baseMixin.filterAll ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+Clear all filters associated with this chart
+
+The same can be achieved by calling `chart.filter(null)`.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
 <a name="dc.baseMixin+select"></a>
-#### baseMixin.select ⇒ <code>Selection</code>
+#### baseMixin.select ⇒ <code>d3.selection</code>
 Execute d3 single selection in the chart's scope using the given selector and return the d3
 selection.
 
@@ -447,64 +492,68 @@ This function is **not chainable** since it does not return a chart instance; ho
 selection result can be chained to d3 function calls.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+**See**: [d3.selection](https://github.com/mbostock/d3/wiki/Selections)  
 **Example**  
 ```js
 // Similar to:
 d3.select('#chart-id').select(selector);
 ```
 <a name="dc.baseMixin+selectAll"></a>
-#### baseMixin.selectAll ⇒ <code>Selection</code>
+#### baseMixin.selectAll ⇒ <code>d3.selection</code>
 Execute in scope d3 selectAll using the given selector and return d3 selection result.
 
 This function is **not chainable** since it does not return a chart instance; however the d3
 selection result can be chained to d3 function calls.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+**See**: [d3.selection](https://github.com/mbostock/d3/wiki/Selections)  
 **Example**  
 ```js
 // Similar to:
 d3.select('#chart-id').selectAll(selector);
 ```
 <a name="dc.baseMixin+anchor"></a>
-#### baseMixin.anchor ⇒ <code>Chart</code>
-Set the svg root to either be an existing chart's root; or any valid [d3 single
+#### baseMixin.anchor ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+Set the root SVGElement to either be an existing chart's root; or any valid [d3 single
 selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom
 block element such as a div; or a dom element or d3 selection. Optionally registers the chart
 within the chartGroup. This class is called internally on chart initialization, but be called
-again to relocate the chart. However, it will orphan any previously created SVG elements.
+again to relocate the chart. However, it will orphan any previously created SVGElements.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
 
 | Param | Type |
 | --- | --- |
 | [a] | <code>anchorChart</code> &#124; <code>anchorSelector</code> &#124; <code>anchorNode</code> | 
-| [chartGroup] | <code>chartGroup</code> | 
+| [chartGroup] | <code>String</code> | 
 
 <a name="dc.baseMixin+anchorName"></a>
 #### baseMixin.anchorName ⇒ <code>String</code>
-Returns the dom id for the chart's anchored location.
+Returns the DOM id for the chart's anchored location.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
 <a name="dc.baseMixin+root"></a>
-#### baseMixin.root ⇒ <code>Element</code>
+#### baseMixin.root ⇒ <code>HTMLElement</code>
 Returns the root element where a chart resides. Usually it will be the parent div element where
-the svg was created. You can also pass in a new root element however this is usually handled by
+the SVGElement was created. You can also pass in a new root element however this is usually handled by
 dc internally. Resetting the root element on a chart outside of dc internals may have
 unexpected consequences.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+**See**: [HTMLElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement)  
 
 | Param | Type |
 | --- | --- |
-| [rootElement] | <code>Element</code> | 
+| [rootElement] | <code>HTMLElement</code> | 
 
 <a name="dc.baseMixin+svg"></a>
 #### baseMixin.svg ⇒ <code>SVGElement</code>
-Returns the top svg element for this specific chart. You can also pass in a new svg element,
-however this is usually handled by dc internally. Resetting the svg element on a chart outside
+Returns the top SVGElement for this specific chart. You can also pass in a new SVGElement,
+however this is usually handled by dc internally. Resetting the SVGElement on a chart outside
 of dc internals may have unexpected consequences.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+**See**: [SVGElement](https://developer.mozilla.org/en-US/docs/Web/API/SVGElement)  
 
 | Param | Type |
 | --- | --- |
@@ -512,9 +561,10 @@ of dc internals may have unexpected consequences.
 
 <a name="dc.baseMixin+resetSvg"></a>
 #### baseMixin.resetSvg ⇒ <code>SVGElement</code>
-Remove the chart's SVG elements from the dom and recreate the container SVG element.
+Remove the chart's SVGElements from the dom and recreate the container SVGElement.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+**See**: [SVGElement](https://developer.mozilla.org/en-US/docs/Web/API/SVGElement)  
 <a name="dc.baseMixin+filterPrinter"></a>
 #### baseMixin.filterPrinter ⇒ <code>function</code>
 Set or get the filter printer function. The filter printer function is used to generate human
@@ -524,12 +574,12 @@ single value and ranged filters.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
 
-| Param | Type |
-| --- | --- |
-| [filterPrinterFunction] | <code>function</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [filterPrinterFunction] | <code>function</code> | <code>dc.printers.filter</code> | 
 
 <a name="dc.baseMixin+turnOnControls"></a>
-#### baseMixin.turnOnControls ⇒ <code>Chart</code>
+#### baseMixin.turnOnControls ⇒ <code>[baseMixin](#dc.baseMixin)</code>
 Turn on optional control elements within the root element. dc currently supports the
 following html control elements.
 * root.selectAll('.reset') - elements are turned on if the chart has an active filter. This type
@@ -541,22 +591,23 @@ function. This type of element will be turned off automatically if the filter is
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
 <a name="dc.baseMixin+turnOffControls"></a>
-#### baseMixin.turnOffControls ⇒ <code>Chart</code>
+#### baseMixin.turnOffControls ⇒ <code>[baseMixin](#dc.baseMixin)</code>
 Turn off optional control elements within the root element.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+**See**: [turnOnControls](#dc.baseMixin+turnOnControls)  
 <a name="dc.baseMixin+transitionDuration"></a>
 #### baseMixin.transitionDuration ⇒ <code>Number</code>
 Set or get the animation transition duration (in milliseconds) for this chart instance.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
 
-| Param | Type |
-| --- | --- |
-| [duration] | <code>Number</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [duration] | <code>Number</code> | <code>750</code> | 
 
 <a name="dc.baseMixin+render"></a>
-#### baseMixin.render ⇒ <code>Chart</code>
+#### baseMixin.render ⇒ <code>[baseMixin](#dc.baseMixin)</code>
 Invoking this method will force the chart to re-render everything from scratch. Generally it
 should only be used to render the chart for the first time on the page or if you want to make
 sure everything is redrawn from scratch instead of relying on the default incremental redrawing
@@ -564,7 +615,7 @@ behaviour.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
 <a name="dc.baseMixin+redraw"></a>
-#### baseMixin.redraw ⇒ <code>Chart</code>
+#### baseMixin.redraw ⇒ <code>[baseMixin](#dc.baseMixin)</code>
 Calling redraw will cause the chart to re-render data changes incrementally. If there is no
 change in the underlying data dimension then calling this method will have no effect on the
 chart. Most chart interaction in dc will automatically trigger this method through internal
@@ -574,7 +625,7 @@ data is loaded in the background using `crossfilter.add()`).
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
 <a name="dc.baseMixin+hasFilterHandler"></a>
-#### baseMixin.hasFilterHandler ⇒ <code>Chart</code>
+#### baseMixin.hasFilterHandler ⇒ <code>function</code>
 Set or get the has filter handler. The has filter handler is a function that checks to see if
 the chart's current filters include a specific filter.  Using a custom has filter handler allows
 you to change the way filters are checked for and replaced.
@@ -588,14 +639,14 @@ you to change the way filters are checked for and replaced.
 **Example**  
 ```js
 // default has filter handler
-function (filters, filter) {
+chart.hasFilterHandler(function (filters, filter) {
     if (filter === null || typeof(filter) === 'undefined') {
         return filters.length > 0;
     }
     return filters.some(function (f) {
         return filter <= f && filter >= f;
     });
-}
+});
 
 // custom filter handler (no-op)
 chart.hasFilterHandler(function(filters, filter) {
@@ -608,13 +659,14 @@ Check whether any active filter or a specific filter is associated with particul
 This function is **not chainable**.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+**See**: [hasFilterHandler](#dc.baseMixin+hasFilterHandler)  
 
 | Param | Type |
 | --- | --- |
 | [filter] | <code>\*</code> | 
 
 <a name="dc.baseMixin+removeFilterHandler"></a>
-#### baseMixin.removeFilterHandler ⇒ <code>Chart</code>
+#### baseMixin.removeFilterHandler ⇒ <code>function</code>
 Set or get the remove filter handler. The remove filter handler is a function that removes a
 filter from the chart's current filters. Using a custom remove filter handler allows you to
 change how filters are removed or perform additional work when removing a filter, e.g. when
@@ -631,7 +683,7 @@ Any changes should modify the `filters` array argument and return that array.
 **Example**  
 ```js
 // default remove filter handler
-function (filters, filter) {
+chart.removeFilterHandler(function (filters, filter) {
     for (var i = 0; i < filters.length; i++) {
         if (filters[i] <= filter && filters[i] >= filter) {
             filters.splice(i, 1);
@@ -639,7 +691,7 @@ function (filters, filter) {
         }
     }
     return filters;
-}
+});
 
 // custom filter handler (no-op)
 chart.removeFilterHandler(function(filters, filter) {
@@ -647,7 +699,7 @@ chart.removeFilterHandler(function(filters, filter) {
 });
 ```
 <a name="dc.baseMixin+addFilterHandler"></a>
-#### baseMixin.addFilterHandler ⇒ <code>Chart</code>
+#### baseMixin.addFilterHandler ⇒ <code>function</code>
 Set or get the add filter handler. The add filter handler is a function that adds a filter to
 the chart's filter list. Using a custom add filter handler allows you to change the way filters
 are added or perform additional work when adding a filter, e.g. when using a filter server other
@@ -664,10 +716,10 @@ Any changes should modify the `filters` array argument and return that array.
 **Example**  
 ```js
 // default add filter handler
-function (filters, filter) {
+chart.addFilterHandler(function (filters, filter) {
     filters.push(filter);
     return filters;
-}
+});
 
 // custom filter handler (no-op)
 chart.addFilterHandler(function(filters, filter) {
@@ -675,7 +727,7 @@ chart.addFilterHandler(function(filters, filter) {
 });
 ```
 <a name="dc.baseMixin+resetFilterHandler"></a>
-#### baseMixin.resetFilterHandler ⇒ <code>Chart</code>
+#### baseMixin.resetFilterHandler ⇒ <code>[baseMixin](#dc.baseMixin)</code>
 Set or get the reset filter handler. The reset filter handler is a function that resets the
 chart's filter list by returning a new list. Using a custom reset filter handler allows you to
 change the way filters are reset, or perform additional work when resetting the filters,
@@ -702,10 +754,25 @@ chart.resetFilterHandler(function(filters) {
 });
 ```
 <a name="dc.baseMixin+filter"></a>
-#### baseMixin.filter ⇒ <code>Chart</code>
+#### baseMixin.filter ⇒ <code>[baseMixin](#dc.baseMixin)</code>
 Filter the chart by the given value or return the current filter if the input parameter is missing.
+If the passed filter is not currently in the chart's filters, it is added to the filters by the
+[addFilterHandler](#dc.baseMixin+addFilterHandler).  If a filter exists already within the chart's
+filters, it will be removed by the [removeFilterHandler](#dc.baseMixin+removeFilterHandler).  If
+a `null` value was passed at the filter, this denotes that the filters should be reset, and is performed
+by the [resetFilterHandler](#dc.baseMixin+resetFilterHandler).
+
+Once the filters array has been updated, the filters are applied to the crossfilter.dimension, using the
+[filterHandler](#dc.baseMixin+filterHandler).
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+**See**
+
+- [addFilterHandler](#dc.baseMixin+addFilterHandler)
+- [removeFilterHandler](#dc.baseMixin+removeFilterHandler)
+- [resetFilterHandler](#dc.baseMixin+resetFilterHandler)
+- [filterHandler](#dc.baseMixin+filterHandler)
+
 
 | Param | Type |
 | --- | --- |
@@ -737,24 +804,40 @@ filter on the clicked datum (passed to the callback) and redraw the chart group.
 | datum | <code>\*</code> | 
 
 <a name="dc.baseMixin+filterHandler"></a>
-#### baseMixin.filterHandler ⇒ <code>Chart</code>
+#### baseMixin.filterHandler ⇒ <code>function</code>
 Set or get the filter handler. The filter handler is a function that performs the filter action
 on a specific dimension. Using a custom filter handler allows you to perform additional logic
 before or after filtering.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+**See**: [crossfilter.dimension.filter](https://github.com/square/crossfilter/wiki/API-Reference#dimension_filter)  
 
 | Param | Type |
 | --- | --- |
-| filterHandler | <code>function</code> | 
+| [filterHandler] | <code>function</code> | 
 
 **Example**  
 ```js
 // default filter handler
-function(dimension, filter){
-    dimension.filter(filter); // perform filtering
-    return filter; // return the actual filter value
-}
+chart.filterHandler(function (dimension, filters) {
+    dimension.filter(null);
+    if (filters.length === 0) {
+        dimension.filter(null);
+    } else {
+        dimension.filterFunction(function (d) {
+            for (var i = 0; i < filters.length; i++) {
+                var filter = filters[i];
+                if (filter.isFiltered && filter.isFiltered(d)) {
+                    return true;
+                } else if (filter <= d && filter >= d) {
+                    return true;
+                }
+            }
+            return false;
+        });
+    }
+    return filters;
+});
 
 // custom filter handler
 chart.filterHandler(function(dimension, filter){
@@ -764,7 +847,7 @@ chart.filterHandler(function(dimension, filter){
 });
 ```
 <a name="dc.baseMixin+keyAccessor"></a>
-#### baseMixin.keyAccessor ⇒ <code>Chart</code>
+#### baseMixin.keyAccessor ⇒ <code>function</code>
 Set or get the key accessor function. The key accessor function is used to retrieve the key
 value from the crossfilter group. Key values are used differently in different charts, for
 example keys correspond to slices in a pie chart and x axis positions in a grid coordinate chart.
@@ -773,7 +856,7 @@ example keys correspond to slices in a pie chart and x axis positions in a grid 
 
 | Param | Type |
 | --- | --- |
-| keyAccessor | <code>function</code> | 
+| [keyAccessor] | <code>function</code> | 
 
 **Example**  
 ```js
@@ -783,7 +866,7 @@ chart.keyAccessor(function(d) { return d.key; });
 chart.keyAccessor(function(p) { return p.value.absGain; });
 ```
 <a name="dc.baseMixin+valueAccessor"></a>
-#### baseMixin.valueAccessor ⇒ <code>Chart</code>
+#### baseMixin.valueAccessor ⇒ <code>function</code>
 Set or get the value accessor function. The value accessor function is used to retrieve the
 value from the crossfilter group. Group values are used differently in different charts, for
 example values correspond to slice sizes in a pie chart and y axis positions in a grid
@@ -793,7 +876,7 @@ coordinate chart.
 
 | Param | Type |
 | --- | --- |
-| valueAccessor | <code>function</code> | 
+| [valueAccessor] | <code>function</code> | 
 
 **Example**  
 ```js
@@ -803,7 +886,7 @@ chart.valueAccessor(function(d) { return d.value; });
 chart.valueAccessor(function(p) { return p.value.percentageGain; });
 ```
 <a name="dc.baseMixin+label"></a>
-#### baseMixin.label ⇒ <code>Chart</code>
+#### baseMixin.label ⇒ <code>function</code>
 Set or get the label function. The chart class will use this function to render labels for each
 child element in the chart, e.g. slices in a pie chart or bubbles in a bubble chart. Not every
 chart supports the label function for example bar chart and line chart do not use this function
@@ -813,7 +896,7 @@ at all.
 
 | Param | Type |
 | --- | --- |
-| labelFunction | <code>function</code> | 
+| [labelFunction] | <code>function</code> | 
 
 **Example**  
 ```js
@@ -828,13 +911,13 @@ Turn on/off label rendering
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
 
-| Param | Type |
-| --- | --- |
-| renderLabel | <code>Boolean</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [renderLabel] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="dc.baseMixin+title"></a>
 #### baseMixin.title ⇒ <code>function</code>
-Set or get the title function. The chart class will use this function to render the svg title
+Set or get the title function. The chart class will use this function to render the SVGElement title
 (usually interpreted by browser as tooltips) for each child element in the chart, e.g. a slice
 in a pie chart or a bubble in a bubble chart. Almost every chart supports the title function;
 however in grid coordinate charts you need to turn off the brush in order to see titles, because
@@ -844,7 +927,7 @@ otherwise the brush layer will block tooltip triggering.
 
 | Param | Type |
 | --- | --- |
-| titleFunction | <code>function</code> | 
+| [titleFunction] | <code>function</code> | 
 
 **Example**  
 ```js
@@ -866,9 +949,9 @@ given.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
 
-| Param | Type |
-| --- | --- |
-| renderTitle | <code>Boolean</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [renderTitle] | <code>Boolean</code> | <code>true</code> | 
 
 <a name="dc.baseMixin+renderlet"></a>
 #### ~~baseMixin.renderlet ⇒ <code>function</code>~~
@@ -876,9 +959,12 @@ given.
 
 A renderlet is similar to an event listener on rendering event. Multiple renderlets can be added
 to an individual chart.  Each time a chart is rerendered or redrawn the renderlets are invoked
-right after the chart finishes its transitions, giving you a way to modify the svg
-elements. Renderlet functions take the chart instance as the only input parameter and you can
+right after the chart finishes its transitions, giving you a way to modify the SVGElements.
+Renderlet functions take the chart instance as the only input parameter and you can
 use the dc API or use raw d3 to achieve pretty much any effect.
+
+Use [on](#dc.baseMixin+on) with a 'renderlet' prefix.
+Generates a random key for the renderlet, which makes it hard to remove.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
 
@@ -905,10 +991,10 @@ together since it is expected they share the same underlying crossfilter data se
 
 | Param | Type |
 | --- | --- |
-| chartGroup | <code>String</code> | 
+| [chartGroup] | <code>String</code> | 
 
 <a name="dc.baseMixin+expireCache"></a>
-#### baseMixin.expireCache ⇒ <code>Chart</code>
+#### baseMixin.expireCache ⇒ <code>[baseMixin](#dc.baseMixin)</code>
 Expire the internal chart cache. dc charts cache some data internally on a per chart basis to
 speed up rendering and avoid unnecessary calculation; however it might be useful to clear the
 cache if you have changed state which will affect rendering.  For example if you invoke the
@@ -937,7 +1023,7 @@ Returns the internal numeric ID of the chart.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
 <a name="dc.baseMixin+options"></a>
-#### baseMixin.options ⇒ <code>Chart</code>
+#### baseMixin.options ⇒ <code>[baseMixin](#dc.baseMixin)</code>
 Set chart options using a configuration object. Each key in the object will cause the method of
 the same name to be called with the value to set that attribute for the chart.
 
@@ -952,22 +1038,23 @@ the same name to be called with the value to set that attribute for the chart.
 chart.options({dimension: myDimension, group: myGroup});
 ```
 <a name="dc.baseMixin+on"></a>
-#### baseMixin.on ⇒ <code>Chart</code>
+#### baseMixin.on ⇒ <code>[baseMixin](#dc.baseMixin)</code>
 All dc chart instance supports the following listeners.
 Supports the following events:
-* 'renderlet' - This listener function will be invoked after transitions after redraw and render. Replaces the
-deprecated `.renderlet()` method.
-* 'pretransition' - Like `.on('renderlet', ...)` but the event is fired before transitions start.
-* 'preRender' - This listener function will be invoked before chart rendering.
-* 'postRender' - This listener function will be invoked after chart finish rendering including
+* `renderlet` - This listener function will be invoked after transitions after redraw and render. Replaces the
+deprecated [renderlet](#dc.baseMixin+renderlet) method.
+* `pretransition` - Like `.on('renderlet', ...)` but the event is fired before transitions start.
+* `preRender` - This listener function will be invoked before chart rendering.
+* `postRender` - This listener function will be invoked after chart finish rendering including
 all renderlets' logic.
-* 'preRedraw' - This listener function will be invoked before chart redrawing.
-* 'postRedraw' - This listener function will be invoked after chart finish redrawing
+* `preRedraw` - This listener function will be invoked before chart redrawing.
+* `postRedraw` - This listener function will be invoked after chart finish redrawing
 including all renderlets' logic.
-* 'filtered' - This listener function will be invoked after a filter is applied, added or removed.
-* 'zoomed' - This listener function will be invoked after a zoom is triggered.
+* `filtered` - This listener function will be invoked after a filter is applied, added or removed.
+* `zoomed` - This listener function will be invoked after a zoom is triggered.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+**See**: [d3.dispatch.on](https://github.com/mbostock/d3/wiki/Internals#dispatch_on)  
 
 | Param | Type |
 | --- | --- |
