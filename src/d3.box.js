@@ -13,7 +13,7 @@
             tickFormat = null;
 
         // For each small multiple…
-        function box(g) {
+        function box (g) {
             g.each(function (d, i) {
                 d = d.map(value).sort(d3.ascending);
                 var g = d3.select(this),
@@ -302,11 +302,11 @@
         return box;
     };
 
-    function boxWhiskers(d) {
+    function boxWhiskers (d) {
         return [0, d.length - 1];
     }
 
-    function boxQuartiles(d) {
+    function boxQuartiles (d) {
         return [
             d3.quantile(d, 0.25),
             d3.quantile(d, 0.5),

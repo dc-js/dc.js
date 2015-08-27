@@ -31,15 +31,19 @@ var nasdaqTable = dc.dataTable('.dc-data-table');
 // will automatically hide/show it based on whether there is a filter
 // set on the chart (e.g. slice selection for pie chart and brush
 // selection for bar chart). Enable this with `chart.turnOnControls(true)`
+
+// dc.js >=2.1 uses `visibility: hidden` to hide/show controls without
+// disrupting the layout. To return the old `display: none` behavior,
+// set `chart.controlsUseVisibility(false)` and use that style instead.
     <div id='chart'>
        <a class='reset'
           href='javascript:myChart.filterAll();dc.redrawAll();'
-          style='display: none;'>reset</a>
+          style='visibility: hidden;'>reset</a>
     </div>
 // dc.js will also automatically inject the current filter value into
 // any html element with its css class set to `filter`
     <div id='chart'>
-        <span class='reset' style='display: none;'>
+        <span class='reset' style='visibility: hidden;'>
           Current filter: <span class='filter'></span>
         </span>
     </div>
@@ -482,9 +486,9 @@ d3.csv('ndx.csv', function (data) {
         // `.html` replaces everything in the anchor with the html given using the following function.
         // `%filter-count` and `%total-count` are replaced with the values obtained.
         .html({
-            some:'<strong>%filter-count</strong> selected out of <strong>%total-count</strong> records' +
+            some: '<strong>%filter-count</strong> selected out of <strong>%total-count</strong> records' +
                 ' | <a href=\'javascript:dc.filterAll(); dc.renderAll();\'\'>Reset All</a>',
-            all:'All records selected. Please click on the graph to apply filters.'
+            all: 'All records selected. Please click on the graph to apply filters.'
         });
 
     //#### Data Table
@@ -553,7 +557,7 @@ d3.csv('ndx.csv', function (data) {
             table.selectAll('.dc-table-group').classed('info', true);
         });
 
-/*
+    /*
     //#### Geo Choropleth Chart
 
     //Create a choropleth chart and use the given css selector as anchor. You can also specify
@@ -677,5 +681,5 @@ d3.selectAll('#version').text(dc.version);
 // Determine latest stable version in the repo via Github API
 d3.json('https://api.github.com/repos/dc-js/dc.js/releases/latest', function (error, latestRelease) {
     /*jshint camelcase: false */
-    d3.selectAll('#latest').text(latestRelease.tag_name);
+    d3.selectAll('#latest').text(latestRelease.tag_name); /* jscs:disable */
 });

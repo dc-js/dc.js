@@ -29,7 +29,7 @@ dc.logger.debug = function (msg) {
 dc.logger.deprecate = function (fn, msg) {
     // Allow logging of deprecation
     var warned = false;
-    function deprecated() {
+    function deprecated () {
         if (!warned) {
             dc.logger.warn(msg);
             warned = true;
