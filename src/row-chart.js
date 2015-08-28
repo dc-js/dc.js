@@ -66,9 +66,9 @@ dc.rowChart = function (parent, chartGroup) {
         calculateAxisScale();
 
         if (axisG.empty()) {
-            axisG = _g.append('g').attr('class', 'axis')
-                .attr('transform', 'translate(0, ' + _chart.effectiveHeight() + ')');
+            axisG = _g.append('g').attr('class', 'axis');
         }
+        axisG.attr('transform', 'translate(0, ' + _chart.effectiveHeight() + ')');
 
         dc.transition(axisG, _chart.transitionDuration())
             .call(_xAxis);
