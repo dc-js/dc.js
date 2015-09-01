@@ -165,6 +165,31 @@ dc.barChart = function (parent, chartGroup) {
               return groupBarHeight(d);
             });
         }
+        else if(_renderType === 'overlap'){
+          dc.transition(bars, _chart.transitionDuration())
+            .attr('x', function(d, i){
+                  var x = _chart.x()(d.x);
+                  if (_centerBar) {
+                      x -= _barWidth / 2;
+                  }
+                  if (_chart.isOrdinal() && _gap !== undefined) {
+                      x += _gap / 2;
+                  }
+                  return dc.utils.safeNumber(x);
+            })
+            .attr('y', function(d) {
+                var y = _chart.y()(d.y);
+                
+                  if (d.y < 0) {
+                      y -= groupBarHeight(d);
+                  }
+                return dc.utils.safeNumber(y);
+            })
+            .attr('width', _barWidth)
+            .attr('height', function(d){
+              return groupBarHeight(d);
+            });
+        }
         dc.transition(bars.exit(), _chart.transitionDuration())
             .attr('height', 0)
             .remove();
@@ -360,7 +385,7 @@ dc.barChart = function (parent, chartGroup) {
           return p.y + p.y0;
         });
       }
-      else if(_renderType === 'group'){
+      else if(_renderType === 'group' || _renderType === 'overlap'){
         max = d3.max(flattenStack(), dc.pluck('y'));
       }
       return dc.utils.add(max, _chart.yAxisPadding());
