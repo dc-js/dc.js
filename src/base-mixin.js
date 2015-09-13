@@ -5,7 +5,7 @@
  * @name baseMixin
  * @memberof dc
  * @mixin
- * @param {{}} _chart
+ * @param {Object} _chart
  * @return {dc.baseMixin}
  */
 dc.baseMixin = function (_chart) {
@@ -120,6 +120,7 @@ dc.baseMixin = function (_chart) {
      * chart.height(null); // reset the height to the default auto calculation
      * @param {Number|Function} [height]
      * @return {Number}
+     * @return {dc.baseMixin}
      */
     _chart.height = function (height) {
         if (!arguments.length) {
@@ -144,6 +145,7 @@ dc.baseMixin = function (_chart) {
      * });
      * @param {Number|Function} [width]
      * @return {Number}
+     * @return {dc.baseMixin}
      */
     _chart.width = function (width) {
         if (!arguments.length) {
@@ -161,6 +163,7 @@ dc.baseMixin = function (_chart) {
      * @see {@link #dc.baseMixin+width width}
      * @param {Number} [minWidth=200]
      * @return {Number}
+     * @return {dc.baseMixin}
      */
     _chart.minWidth = function (minWidth) {
         if (!arguments.length) {
@@ -178,6 +181,7 @@ dc.baseMixin = function (_chart) {
      * @see {@link #dc.baseMixin+height height}
      * @param {Number} [minHeight=200]
      * @return {Number}
+     * @return {dc.baseMixin}
      */
     _chart.minHeight = function (minHeight) {
         if (!arguments.length) {
@@ -205,6 +209,7 @@ dc.baseMixin = function (_chart) {
      * chart.dimension(dimension);
      * @param {crossfilter.dimension} [dimension]
      * @return {crossfilter.dimension}
+     * @return {dc.baseMixin}
      */
     _chart.dimension = function (dimension) {
         if (!arguments.length) {
@@ -229,6 +234,7 @@ dc.baseMixin = function (_chart) {
      * chart.data(function (group) { return group.top(5); });
      * @param {Function} [callback]
      * @return {*}
+     * @return {dc.baseMixin}
      */
     _chart.data = function (callback) {
         if (!arguments.length) {
@@ -261,6 +267,7 @@ dc.baseMixin = function (_chart) {
      * @param {crossfilter.group} [group]
      * @param {String} [name]
      * @return {crossfilter.group}
+     * @return {dc.baseMixin}
      */
     _chart.group = function (group, name) {
         if (!arguments.length) {
@@ -284,6 +291,7 @@ dc.baseMixin = function (_chart) {
      * _chart.ordering(dc.pluck('key'));
      * @param {Function} [orderFunction]
      * @return {Function}
+     * @return {dc.baseMixin}
      */
     _chart.ordering = function (orderFunction) {
         if (!arguments.length) {
@@ -370,6 +378,7 @@ dc.baseMixin = function (_chart) {
      * @instance
      * @param {anchorChart|anchorSelector|anchorNode} [a]
      * @param {String} [chartGroup]
+     * @return {String|node|d3.selection}
      * @return {dc.baseMixin}
      */
     _chart.anchor = function (a, chartGroup) {
@@ -420,6 +429,7 @@ dc.baseMixin = function (_chart) {
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement HTMLElement}
      * @param {HTMLElement} [rootElement]
      * @return {HTMLElement}
+     * @return {dc.baseMixin}
      */
     _chart.root = function (rootElement) {
         if (!arguments.length) {
@@ -439,6 +449,7 @@ dc.baseMixin = function (_chart) {
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/SVGElement SVGElement}
      * @param {SVGElement} [svgElement]
      * @return {SVGElement}
+     * @return {dc.baseMixin}
      */
     _chart.svg = function (svgElement) {
         if (!arguments.length) {
@@ -485,6 +496,7 @@ dc.baseMixin = function (_chart) {
      * @instance
      * @param {Function} [filterPrinterFunction=dc.printers.filter]
      * @return {Function}
+     * @return {dc.baseMixin}
      */
     _chart.filterPrinter = function (filterPrinterFunction) {
         if (!arguments.length) {
@@ -539,6 +551,7 @@ dc.baseMixin = function (_chart) {
      * @instance
      * @param {Number} [duration=750]
      * @return {Number}
+     * @return {dc.baseMixin}
      */
     _chart.transitionDuration = function (duration) {
         if (!arguments.length) {
@@ -687,6 +700,7 @@ dc.baseMixin = function (_chart) {
      * });
      * @param {Function} [hasFilterHandler]
      * @return {Function}
+     * @return {dc.baseMixin}
      */
     _chart.hasFilterHandler = function (hasFilterHandler) {
         if (!arguments.length) {
@@ -748,6 +762,7 @@ dc.baseMixin = function (_chart) {
      * });
      * @param {Function} [removeFilterHandler]
      * @return {Function}
+     * @return {dc.baseMixin}
      */
     _chart.removeFilterHandler = function (removeFilterHandler) {
         if (!arguments.length) {
@@ -785,6 +800,7 @@ dc.baseMixin = function (_chart) {
      * });
      * @param {Function} [addFilterHandler]
      * @return {Function}
+     * @return {dc.baseMixin}
      */
     _chart.addFilterHandler = function (addFilterHandler) {
         if (!arguments.length) {
@@ -981,6 +997,7 @@ dc.baseMixin = function (_chart) {
      * });
      * @param {Function} [filterHandler]
      * @return {Function}
+     * @return {dc.baseMixin}
      */
     _chart.filterHandler = function (filterHandler) {
         if (!arguments.length) {
@@ -1037,6 +1054,7 @@ dc.baseMixin = function (_chart) {
      * chart.keyAccessor(function(p) { return p.value.absGain; });
      * @param {Function} [keyAccessor]
      * @return {Function}
+     * @return {dc.baseMixin}
      */
     _chart.keyAccessor = function (keyAccessor) {
         if (!arguments.length) {
@@ -1061,6 +1079,7 @@ dc.baseMixin = function (_chart) {
      * chart.valueAccessor(function(p) { return p.value.percentageGain; });
      * @param {Function} [valueAccessor]
      * @return {Function}
+     * @return {dc.baseMixin}
      */
     _chart.valueAccessor = function (valueAccessor) {
         if (!arguments.length) {
@@ -1085,6 +1104,7 @@ dc.baseMixin = function (_chart) {
      * chart.label(function(d) { return d.data.key + '(' + Math.floor(d.data.value / all.value() * 100) + '%)'; });
      * @param {Function} [labelFunction]
      * @return {Function}
+     * @return {dc.baseMixin}
      */
     _chart.label = function (labelFunction) {
         if (!arguments.length) {
@@ -1102,6 +1122,7 @@ dc.baseMixin = function (_chart) {
      * @instance
      * @param {Boolean} [renderLabel=false]
      * @return {Boolean}
+     * @return {dc.baseMixin}
      */
     _chart.renderLabel = function (renderLabel) {
         if (!arguments.length) {
@@ -1133,6 +1154,7 @@ dc.baseMixin = function (_chart) {
      * });
      * @param {Function} [titleFunction]
      * @return {Function}
+     * @return {dc.baseMixin}
      */
     _chart.title = function (titleFunction) {
         if (!arguments.length) {
@@ -1150,6 +1172,7 @@ dc.baseMixin = function (_chart) {
      * @instance
      * @param {Boolean} [renderTitle=true]
      * @return {Boolean}
+     * @return {dc.baseMixin}
      */
     _chart.renderTitle = function (renderTitle) {
         if (!arguments.length) {
@@ -1181,7 +1204,7 @@ dc.baseMixin = function (_chart) {
      *     moveChart.filter(chart.filter());
      * });
      * @param {Function} renderletFunction
-     * @return {Function}
+     * @return {dc.baseMixin}
      */
     _chart.renderlet = dc.logger.deprecate(function (renderletFunction) {
         _chart.on('renderlet.' + dc.utils.uniqueId(), renderletFunction);
@@ -1196,6 +1219,7 @@ dc.baseMixin = function (_chart) {
      * @instance
      * @param {String} [chartGroup]
      * @return {String}
+     * @return {dc.baseMixin}
      */
     _chart.chartGroup = function (chartGroup) {
         if (!arguments.length) {
@@ -1237,6 +1261,7 @@ dc.baseMixin = function (_chart) {
      * chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
      * @param {dc.legend} [legend]
      * @return {dc.legend}
+     * @return {dc.baseMixin}
      */
     _chart.legend = function (legend) {
         if (!arguments.length) {
