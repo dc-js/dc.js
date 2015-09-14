@@ -1,4 +1,9 @@
 # 2.0 Series
+## 2.0.0 beta 19
+* Allow d3.selection to be passed as parent, as documented ([#1006](https://github.com/dc-js/dc.js/issues/1006))
+* Properly derive dc.errors from Error prototype to get stack
+* Add BadArgumentException and make .anchor() parent argument mandatory
+
 ## 2.0.0 beta 18
 * Fixes resizing examples to use `rescale` - currently all coordinate grid charts need to call this when changing width/height, in order to get axes moved ([#974](https://github.com/dc-js/dc.js/issues/974))
 * Update all dependencies, continued linting, by Matt Traynham ([#975](https://github.com/dc-js/dc.js/pull/975))

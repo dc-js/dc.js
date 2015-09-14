@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-beta.18
+ *  dc 2.0.0-beta.19
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2015 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -28,7 +28,7 @@
  * chaining because they necessarily return values that are not the chart.  Although some,
  * such as `.svg` and `.xAxis`, return values that are chainable d3 objects.
  * @namespace dc
- * @version 2.0.0-beta.18
+ * @version 2.0.0-beta.19
  * @example
  * // Example chaining
  * chart.width(300)
@@ -37,7 +37,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-beta.18',
+    version: '2.0.0-beta.19',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -349,11 +349,24 @@ dc.errors.Exception = function (msg) {
     this.toString = function () {
         return _msg;
     };
+    this.stack = (new Error()).stack;
 };
+dc.errors.Exception.prototype = Object.create(Error.prototype);
+dc.errors.Exception.prototype.constructor = dc.errors.Exception;
 
 dc.errors.InvalidStateException = function () {
     dc.errors.Exception.apply(this, arguments);
 };
+
+dc.errors.InvalidStateException.prototype = Object.create(dc.errors.Exception.prototype);
+dc.errors.InvalidStateException.prototype.constructor = dc.errors.InvalidStateException;
+
+dc.errors.BadArgumentException = function() {
+    dc.errors.Exception.apply(this, arguments);
+};
+
+dc.errors.BadArgumentException.prototype = Object.create(dc.errors.Exception.prototype);
+dc.errors.BadArgumentException.prototype.constructor = dc.errors.BadArgumentException;
 
 dc.dateFormat = d3.time.format('%m/%d/%Y');
 
@@ -1022,24 +1035,31 @@ dc.baseMixin = function (_chart) {
      * @name anchor
      * @memberof dc.baseMixin
      * @instance
-     * @param {anchorChart|anchorSelector|anchorNode} [a]
+     * @param {anchorChart|anchorSelector|anchorNode} [parent]
      * @param {chartGroup} [chartGroup]
      * @returns {Chart}
      */
-    _chart.anchor = function (a, chartGroup) {
+    _chart.anchor = function (parent, chartGroup) {
         if (!arguments.length) {
             return _anchor;
         }
-        if (dc.instanceOfChart(a)) {
-            _anchor = a.anchor();
-            _root = a.root();
+        if (dc.instanceOfChart(parent)) {
+            _anchor = parent.anchor();
+            _root = parent.root();
             _isChild = true;
-        } else {
-            _anchor = a;
+        } else if(parent) {
+            if(parent.select && parent.classed) { // detect d3 selection
+                _anchor = parent.node();
+            } else {
+                _anchor = parent;
+            }
             _root = d3.select(_anchor);
             _root.classed(dc.constants.CHART_CLASS, true);
             dc.registerChart(_chart, chartGroup);
             _isChild = false;
+        }
+        else {
+            throw new dc.errors.BadArgumentException('parent must be defined');
         }
         _chartGroup = chartGroup;
         return _chart;

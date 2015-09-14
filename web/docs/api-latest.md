@@ -9,7 +9,7 @@ chaining because they necessarily return values that are not the chart.  Althoug
 such as `.svg` and `.xAxis`, return values that are chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 2.0.0-beta.18  
+**Version**: 2.0.0-beta.19  
 **Example**  
 ```js
 // Example chaining
@@ -477,7 +477,7 @@ again to relocate the chart. However, it will orphan any previously created SVG 
 
 | Param | Type |
 | --- | --- |
-| [a] | <code>anchorChart</code> &#124; <code>anchorSelector</code> &#124; <code>anchorNode</code> | 
+| [parent] | <code>anchorChart</code> &#124; <code>anchorSelector</code> &#124; <code>anchorNode</code> | 
 | [chartGroup] | <code>chartGroup</code> | 
 
 <a name="dc.baseMixin+anchorName"></a>
