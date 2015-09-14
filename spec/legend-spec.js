@@ -169,13 +169,13 @@ describe('dc.legend', function () {
             appendChartID(id);
             chart = dc.compositeChart('#' + id);
 
-            var subChart1 = dc.lineChart();
+            var subChart1 = dc.lineChart(chart);
             subChart1
                 .dimension(dateDimension)
                 .group(dateIdSumGroup, 'Id Sum')
                 .dashStyle([10,1]);
 
-            var subChart2 = dc.lineChart();
+            var subChart2 = dc.lineChart(chart);
             subChart2
                 .dimension(dateDimension)
                 .group(dateValueSumGroup, 'Value Sum')
