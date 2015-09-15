@@ -219,6 +219,9 @@ chart.width(300)
     * [.labelOffsetX](#dc.rowChart+labelOffsetX) ⇒ <code>Chart</code>
     * [.labelOffsetY](#dc.rowChart+labelOffsetY) ⇒ <code>Chart</code>
     * [.titleLabelOffsetX](#dc.rowChart+titleLabelOffsetX) ⇒ <code>Chart</code>
+    * [.xAxisMin](#dc.rowChart+xAxisMin) ⇒ <code>\*</code>
+    * [.xAxisMax](#dc.rowChart+xAxisMax) ⇒ <code>\*</code>
+    * [.xAxisLabel](#dc.rowChart+xAxisLabel) ⇒ <code>Chart</code>
   * [.legend](#dc.legend) ⇒ <code>Legend</code>
     * [.x](#dc.legend+x) ⇒ <code>Legend</code>
     * [.y](#dc.legend+y) ⇒ <code>Legend</code>
@@ -3214,6 +3217,9 @@ var chart2 = dc.rowChart('#chart-container2', 'chartGroupA');
   * [.labelOffsetX](#dc.rowChart+labelOffsetX) ⇒ <code>Chart</code>
   * [.labelOffsetY](#dc.rowChart+labelOffsetY) ⇒ <code>Chart</code>
   * [.titleLabelOffsetX](#dc.rowChart+titleLabelOffsetX) ⇒ <code>Chart</code>
+  * [.xAxisMin](#dc.rowChart+xAxisMin) ⇒ <code>\*</code>
+  * [.xAxisMax](#dc.rowChart+xAxisMax) ⇒ <code>\*</code>
+  * [.xAxisLabel](#dc.rowChart+xAxisLabel) ⇒ <code>Chart</code>
 
 <a name="dc.rowChart+x"></a>
 #### rowChart.x ⇒ <code>Chart</code>
@@ -3316,6 +3322,28 @@ Get of set the x offset (horizontal space between right edge of row and right ed
 | Param | Type | Default |
 | --- | --- | --- |
 | [titleLabelOffsetX] | <code>Number</code> | <code>2</code> | 
+
+<a name="dc.rowChart+xAxisMin"></a>
+#### rowChart.xAxisMin ⇒ <code>\*</code>
+Calculates the minimum x value to display in the chart.
+
+**Kind**: instance property of <code>[rowChart](#dc.rowChart)</code>  
+<a name="dc.rowChart+xAxisMax"></a>
+#### rowChart.xAxisMax ⇒ <code>\*</code>
+Calculates the maximum x value to display in the chart.
+
+**Kind**: instance property of <code>[rowChart](#dc.rowChart)</code>  
+<a name="dc.rowChart+xAxisLabel"></a>
+#### rowChart.xAxisLabel ⇒ <code>Chart</code>
+Set or get the x axis label. If setting the label, you may optionally include additional padding to
+the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.
+
+**Kind**: instance property of <code>[rowChart](#dc.rowChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [labelText] | <code>String</code> |  | 
+| [padding] | <code>Number</code> | <code>12</code> | 
 
 <a name="dc.legend"></a>
 ### dc.legend ⇒ <code>Legend</code>

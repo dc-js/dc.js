@@ -7765,29 +7765,37 @@ dc.rowChart = function (parent, chartGroup) {
     }
 
     /**
-    #### .xAxisMin()
-    Calculates the minimum x value to display in the chart.
-
-    **/
+     * Calculates the minimum x value to display in the chart.
+     * @name xAxisMin
+     * @memberof dc.rowChart
+     * @instance
+     * @returns {*}
+     */
     _chart.xAxisMin = function () {
         return d3.min(_chart.data(), _chart.cappedValueAccessor);
     };
 
     /**
-    #### .xAxisMax()
-    Calculates the maximum x value to display in the chart.
-
-    **/
+     * Calculates the maximum x value to display in the chart.
+     * @name xAxisMax
+     * @memberof dc.rowChart
+     * @instance
+     * @returns {*}
+     */
     _chart.xAxisMax = function () {
         return d3.max(_chart.data(), _chart.cappedValueAccessor);
     };
 
     /**
-    #### .xAxisLabel([labelText, [, padding]])
-    Set or get the x axis label. If setting the label, you may optionally include additional padding to
-    the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.\
-
-    **/
+     * Set or get the x axis label. If setting the label, you may optionally include additional padding to
+     * the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.
+     * @name xAxisLabel
+     * @memberof dc.rowChart
+     * @instance
+     * @param {String} [labelText]
+     * @param {Number} [padding=12]
+     * @returns {Chart}
+     */
     _chart.xAxisLabel = function (_, padding) {
         if (!arguments.length) {
             return _xAxisLabel;

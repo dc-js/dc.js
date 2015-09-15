@@ -631,7 +631,7 @@ function crossfilter() {
     // Incorporate any existing data into this dimension, and make sure that the
     // filter bitset is wide enough to handle the new dimension.
     m |= one;
-    if (M >= 32 ? !one : m & -(1 << M)) {
+    if (M >= 32 ? !one : m & (1 << M) - 1) {
       filters = crossfilter_arrayWiden(filters, M <<= 1);
     }
     preAdd(data, 0, n);
