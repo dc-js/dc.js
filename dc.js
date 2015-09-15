@@ -6308,8 +6308,7 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     _chart._prepareYAxis = function () {
-        if (leftYAxisChildren().length !== 0) { prepareLeftYAxis(); }
-        if (rightYAxisChildren().length !== 0) { prepareRightYAxis(); }
+        prepareYAxes(leftYAxisChildren().length !== 0, rightYAxisChildren().length !== 0);
 
         if (leftYAxisChildren().length > 0 && !_rightAxisGridLines) {
             _chart._renderHorizontalGridLinesForAxis(_chart.g(), _chart.y(), _chart.yAxis());
@@ -6330,34 +6329,68 @@ dc.compositeChart = function (parent, chartGroup) {
         }
     };
 
-    function prepareRightYAxis () {
-        if (_chart.rightY() === undefined || _chart.elasticY()) {
-            if (_chart.rightY() === undefined) {
-                _chart.rightY(d3.scale.linear());
-            }
-            _chart.rightY().domain([rightYAxisMin(_chart.alignYAxes()), rightYAxisMax(_chart.alignYAxes())])
-            .rangeRound([_chart.yAxisHeight(), 0]);
+    function prepareYAxes(left, right) {
+        var lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax;
+
+        if (left) {
+            lyAxisMin = yAxisMin();
+            lyAxisMax = yAxisMax();
         }
 
-        _chart.rightY().range([_chart.yAxisHeight(), 0]);
-        _chart.rightYAxis(_chart.rightYAxis().scale(_chart.rightY()));
-
-        _chart.rightYAxis().orient('right');
-    }
-
-    function prepareLeftYAxis () {
-        if (_chart.y() === undefined || _chart.elasticY()) {
-            if (_chart.y() === undefined) {
-                _chart.y(d3.scale.linear());
-            }
-            _chart.y().domain([yAxisMin(_chart.alignYAxes()), yAxisMax(_chart.alignYAxes())])
-            .rangeRound([_chart.yAxisHeight(), 0]);
+        if (right) {
+            ryAxisMin = rightYAxisMin();
+            ryAxisMax = rightYAxisMax();
         }
 
-        _chart.y().range([_chart.yAxisHeight(), 0]);
-        _chart.yAxis(_chart.yAxis().scale(_chart.y()));
+        if (_chart.alignYAxes() && left && right && (lyAxisMin < 0 || ryAxisMin < 0)) {
+            // both y axis are linear and at least one doesn't start at zero
+            var leftYRatio;
+            if (lyAxisMin < 0) {
+                leftYRatio = lyAxisMax / lyAxisMin;
+                if (ryAxisMin < 0) {
+                    var rightYRatio = ryAxisMax / ryAxisMin;
+                    if (leftYRatio < rightYRatio) {
+                        ryAxisMax = ryAxisMin * leftYRatio;
+                    } else {
+                        lyAxisMax = lyAxisMin * rightYRatio;
+                    }
+                } else {
+                  ryAxisMin = ryAxisMax / leftYRatio;
+                }
+            } else {
+                lyAxisMin = lyAxisMax / (ryAxisMax / ryAxisMin);
+            }
+        }
 
-        _chart.yAxis().orient('left');
+        if(left) {
+            // prepare left y axis
+            if (_chart.y() === undefined || _chart.elasticY()) {
+                if (_chart.y() === undefined) {
+                    _chart.y(d3.scale.linear());
+                }
+                _chart.y().domain([lyAxisMin, lyAxisMax]).rangeRound([_chart.yAxisHeight(), 0]);
+            }
+
+            _chart.y().range([_chart.yAxisHeight(), 0]);
+            _chart.yAxis(_chart.yAxis().scale(_chart.y()));
+
+            _chart.yAxis().orient('left');
+        }
+
+        if(right) {
+            // prepare right y axis
+            if (_chart.rightY() === undefined || _chart.elasticY()) {
+                if (_chart.rightY() === undefined) {
+                    _chart.rightY(d3.scale.linear());
+                }
+                _chart.rightY().domain([ryAxisMin, ryAxisMax]).rangeRound([_chart.yAxisHeight(), 0]);
+            }
+
+            _chart.rightY().range([_chart.yAxisHeight(), 0]);
+            _chart.rightYAxis(_chart.rightYAxis().scale(_chart.rightY()));
+
+            _chart.rightYAxis().orient('right');
+        }
     }
 
     function generateChildG (child, i) {
