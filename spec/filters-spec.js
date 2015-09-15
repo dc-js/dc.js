@@ -9,7 +9,7 @@ describe('dc.filters', function () {
             expect([filter[0], filter[1]]).toEqual([0, 10]);
         });
 
-        describe("isFiltered", function () {
+        describe('isFiltered', function () {
             it('should return false when the number is out of range', function () {
                 expect(filter.isFiltered(1234)).toBeFalsy();
             });
@@ -60,7 +60,6 @@ describe('dc.filters', function () {
     describe('RangedTwoDimensionalFilter', function () {
         var filter;
 
-
         it('should return null if filtered with null', function () {
             expect(dc.filters.RangedTwoDimensionalFilter(null)).toBe(null);
         });
@@ -98,8 +97,8 @@ describe('dc.filters', function () {
                 expect(filter.isFiltered([-1,-1])).toBeFalsy();
             });
 
-            describe('when a single value is considered', function() {
-                it('should filter that value using only x coordinates', function() {
+            describe('when a single value is considered', function () {
+                it('should filter that value using only x coordinates', function () {
                     expect(filter.isFiltered(5)).toBeTruthy();
                     expect(filter.isFiltered(0)).toBeTruthy();
                     expect(filter.isFiltered(10)).toBeFalsy();
@@ -128,8 +127,8 @@ describe('dc.filters', function () {
                 expect(filter.isFiltered([20,10])).toBeFalsy();
             });
 
-            describe('when a single value is considered', function() {
-                it('should filter that value using only x coordinates', function() {
+            describe('when a single value is considered', function () {
+                it('should filter that value using only x coordinates', function () {
                     expect(filter.isFiltered(10)).toBeTruthy();
                     expect(filter.isFiltered(15)).toBeTruthy();
                     expect(filter.isFiltered(20)).toBeFalsy();

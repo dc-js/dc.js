@@ -1,31 +1,23 @@
 /**
-## Composite Chart
-Includes: [Coordinate Grid Mixin](#coordinate-grid-mixin)
-
-Composite charts are a special kind of chart that render multiple charts on the same Coordinate
-Grid. You can overlay (compose) different bar/line/area charts in a single composite chart to
-achieve some quite flexible charting effects.
-#### dc.compositeChart(parent[, chartGroup])
-Create a composite chart instance and attach it to the given parent element.
-
-Parameters:
-* parent : string | node | selection - any valid
- [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- a dom block element such as a div; or a dom element or d3 selection.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
- Interaction with a chart will only trigger events and redraws within the chart's group.
-
-Returns:
-A newly created composite chart instance
-
-```js
-// create a composite chart under #chart-container1 element using the default global chart group
-var compositeChart1 = dc.compositeChart('#chart-container1');
-// create a composite chart under #chart-container2 element using chart group A
-var compositeChart2 = dc.compositeChart('#chart-container2', 'chartGroupA');
-```
-
-**/
+ * Composite charts are a special kind of chart that render multiple charts on the same Coordinate
+ * Grid. You can overlay (compose) different bar/line/area charts in a single composite chart to
+ * achieve some quite flexible charting effects.
+ * @name compositeChart
+ * @memberof dc
+ * @mixes dc.coordinateGridMixin
+ * @example
+ * // create a composite chart under #chart-container1 element using the default global chart group
+ * var compositeChart1 = dc.compositeChart('#chart-container1');
+ * // create a composite chart under #chart-container2 element using chart group A
+ * var compositeChart2 = dc.compositeChart('#chart-container2', 'chartGroupA');
+ * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
+ * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ * a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart
+ * in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+ * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+ * Interaction with a chart will only trigger events and redraws within the chart's group.
+ * @returns {CompositeChart}
+ */
 dc.compositeChart = function (parent, chartGroup) {
 
     var SUB_CHART_CLASS = 'sub';
@@ -94,8 +86,7 @@ dc.compositeChart = function (parent, chartGroup) {
 
         if (leftYAxisChildren().length > 0 && !_rightAxisGridLines) {
             _chart._renderHorizontalGridLinesForAxis(_chart.g(), _chart.y(), _chart.yAxis());
-        }
-        else if (rightYAxisChildren().length > 0) {
+        } else if (rightYAxisChildren().length > 0) {
             _chart._renderHorizontalGridLinesForAxis(_chart.g(), _rightY, _rightYAxis);
         }
     };
@@ -112,7 +103,7 @@ dc.compositeChart = function (parent, chartGroup) {
         }
     };
 
-    function prepareRightYAxis() {
+    function prepareRightYAxis () {
         if (_chart.rightY() === undefined || _chart.elasticY()) {
             if (_chart.rightY() === undefined) {
                 _chart.rightY(d3.scale.linear());
@@ -127,7 +118,7 @@ dc.compositeChart = function (parent, chartGroup) {
         _chart.rightYAxis().orient('right');
     }
 
-    function prepareLeftYAxis() {
+    function prepareLeftYAxis () {
         if (_chart.y() === undefined || _chart.elasticY()) {
             if (_chart.y() === undefined) {
                 _chart.y(d3.scale.linear());
@@ -142,7 +133,7 @@ dc.compositeChart = function (parent, chartGroup) {
         _chart.yAxis().orient('left');
     }
 
-    function generateChildG(child, i) {
+    function generateChildG (child, i) {
         child._generateG(_chart.g());
         child.g().attr('class', SUB_CHART_CLASS + ' _' + i);
     }
@@ -166,8 +157,7 @@ dc.compositeChart = function (parent, chartGroup) {
             if (child.useRightYAxis()) {
                 child.y(_chart.rightY());
                 child.yAxis(_chart.rightYAxis());
-            }
-            else {
+            } else {
                 child.y(_chart.y());
                 child.yAxis(_chart.yAxis());
             }
@@ -179,30 +169,38 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .useRightAxisGridLines(bool)
-    Get or set whether to draw gridlines from the right y axis.  Drawing from the left y axis is the
-    default behavior. This option is only respected when subcharts with both left and right y-axes
-    are present.
-    **/
-    _chart.useRightAxisGridLines = function (_) {
+     * Get or set whether to draw gridlines from the right y axis.  Drawing from the left y axis is the
+     * default behavior. This option is only respected when subcharts with both left and right y-axes
+     * are present.
+     * @name useRightAxisGridLines
+     * @memberof dc.compositeChart
+     * @instance
+     * @param {Boolean} [useRightAxisGridLines=false]
+     * @return {Chart}
+     */
+    _chart.useRightAxisGridLines = function (useRightAxisGridLines) {
         if (!arguments) {
             return _rightAxisGridLines;
         }
 
-        _rightAxisGridLines = _;
+        _rightAxisGridLines = useRightAxisGridLines;
         return _chart;
     };
 
     /**
-    #### .childOptions({object})
-    Get or set chart-specific options for all child charts. This is equivalent to calling `.options`
-    on each child chart.
-    **/
-    _chart.childOptions = function (_) {
+     * Get or set chart-specific options for all child charts. This is equivalent to calling `.options`
+     * on each child chart.
+     * @name childOptions
+     * @memberof dc.compositeChart
+     * @instance
+     * @param {Object} [childOptions]
+     * @return {Chart}
+     */
+    _chart.childOptions = function (childOptions) {
         if (!arguments.length) {
             return _childOptions;
         }
-        _childOptions = _;
+        _childOptions = childOptions;
         _children.forEach(function (child) {
             child.options(_childOptions);
         });
@@ -218,14 +216,19 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .rightYAxisLabel([labelText])
-    Set or get the right y axis label.
-    **/
-    _chart.rightYAxisLabel = function (_, padding) {
+     * Set or get the right y axis label.
+     * @name rightYAxisLabel
+     * @memberof dc.compositeChart
+     * @instance
+     * @param {String} [rightYAxisLabel]
+     * @param {Number} [padding]
+     * @return {Chart}
+     */
+    _chart.rightYAxisLabel = function (rightYAxisLabel, padding) {
         if (!arguments.length) {
             return _rightYAxisLabel;
         }
-        _rightYAxisLabel = _;
+        _rightYAxisLabel = rightYAxisLabel;
         _chart.margins().right -= _rightYAxisLabelPadding;
         _rightYAxisLabelPadding = (padding === undefined) ? DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING : padding;
         _chart.margins().right += _rightYAxisLabelPadding;
@@ -233,33 +236,33 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .compose(subChartArray)
-    Combine the given charts into one single composite coordinate grid chart.
-
-    ```js
-    // compose the given charts in the array into one single composite chart
-    moveChart.compose([
-        // when creating sub-chart you need to pass in the parent chart
-        dc.lineChart(moveChart)
-            .group(indexAvgByMonthGroup) // if group is missing then parent's group will be used
-            .valueAccessor(function (d){return d.value.avg;})
-            // most of the normal functions will continue to work in a composed chart
-            .renderArea(true)
-            .stack(monthlyMoveGroup, function (d){return d.value;})
-            .title(function (d){
-                var value = d.value.avg?d.value.avg:d.value;
-                if(isNaN(value)) value = 0;
-                return dateFormat(d.key) + '\n' + numberFormat(value);
-            }),
-        dc.barChart(moveChart)
-            .group(volumeByMonthGroup)
-            .centerBar(true)
-    ]);
-    ```
-
-    **/
-    _chart.compose = function (charts) {
-        _children = charts;
+     * Combine the given charts into one single composite coordinate grid chart.
+     * @name compose
+     * @memberof dc.compositeChart
+     * @instance
+     * @example
+     * moveChart.compose([
+     *     // when creating sub-chart you need to pass in the parent chart
+     *     dc.lineChart(moveChart)
+     *         .group(indexAvgByMonthGroup) // if group is missing then parent's group will be used
+     *         .valueAccessor(function (d){return d.value.avg;})
+     *         // most of the normal functions will continue to work in a composed chart
+     *         .renderArea(true)
+     *         .stack(monthlyMoveGroup, function (d){return d.value;})
+     *         .title(function (d){
+     *             var value = d.value.avg?d.value.avg:d.value;
+     *             if(isNaN(value)) value = 0;
+     *             return dateFormat(d.key) + '\n' + numberFormat(value);
+     *         }),
+     *     dc.barChart(moveChart)
+     *         .group(volumeByMonthGroup)
+     *         .centerBar(true)
+     * ]);
+     * @param {Array<Chart>} [subChartArray]
+     * @return {Chart}
+     */
+    _chart.compose = function (subChartArray) {
+        _children = subChartArray;
         _children.forEach(function (child) {
             child.height(_chart.height());
             child.width(_chart.width());
@@ -275,53 +278,66 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     /**
-     #### .children()
-     Returns the child charts which are composed into the composite chart.
-     **/
-
+     * Returns the child charts which are composed into the composite chart.
+     * @name children
+     * @memberof dc.compositeChart
+     * @instance
+     * @return {Array<Chart>}
+     */
     _chart.children = function () {
         return _children;
     };
 
     /**
-    #### .shareColors([boolean])
-    Get or set color sharing for the chart. If set, the `.colors()` value from this chart
-    will be shared with composed children. Additionally if the child chart implements
-    Stackable and has not set a custom .colorAccessor, then it will generate a color
-    specific to its order in the composition.
-    **/
-    _chart.shareColors = function (_) {
+     * Get or set color sharing for the chart. If set, the `.colors()` value from this chart
+     * will be shared with composed children. Additionally if the child chart implements
+     * Stackable and has not set a custom .colorAccessor, then it will generate a color
+     * specific to its order in the composition.
+     * @name shareColors
+     * @memberof dc.compositeChart
+     * @instance
+     * @param {Boolean} [shareColors=false]
+     * @return {Chart}
+     */
+    _chart.shareColors = function (shareColors) {
         if (!arguments.length) {
             return _shareColors;
         }
-        _shareColors = _;
+        _shareColors = shareColors;
         return _chart;
     };
 
     /**
-    #### .shareTitle([[boolean])
-    Get or set title sharing for the chart. If set, the `.title()` value from this chart will be
-    shared with composed children. Default value is true.
-    **/
-    _chart.shareTitle = function (_) {
+     * Get or set title sharing for the chart. If set, the `.title()` value from this chart will be
+     * shared with composed children.
+     * @name shareTitle
+     * @memberof dc.compositeChart
+     * @instance
+     * @param {Boolean} [shareTitle=true]
+     * @return {Chart}
+     */
+    _chart.shareTitle = function (shareTitle) {
         if (!arguments.length) {
             return _shareTitle;
         }
-        _shareTitle = _;
+        _shareTitle = shareTitle;
         return _chart;
     };
 
     /**
-    #### .rightY([yScale])
-    Get or set the y scale for the right axis. The right y scale is typically automatically
-    generated by the chart implementation.
-
-    **/
-    _chart.rightY = function (_) {
+     * Get or set the y scale for the right axis. The right y scale is typically automatically
+     * generated by the chart implementation.
+     * @name rightY
+     * @memberof dc.compositeChart
+     * @instance
+     * @param {d3.scale} [yScale]
+     * @return {Chart}
+     */
+    _chart.rightY = function (yScale) {
         if (!arguments.length) {
             return _rightY;
         }
-        _rightY = _;
+        _rightY = yScale;
         _chart.rescale();
         return _chart;
     };
@@ -340,19 +356,19 @@ dc.compositeChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    function leftYAxisChildren() {
+    function leftYAxisChildren () {
         return _children.filter(function (child) {
             return !child.useRightYAxis();
         });
     }
 
-    function rightYAxisChildren() {
+    function rightYAxisChildren () {
         return _children.filter(function (child) {
             return child.useRightYAxis();
         });
     }
 
-    function getYAxisMin(charts) {
+    function getYAxisMin (charts) {
         return charts.map(function (c) {
             return c.yAxisMin();
         });
@@ -388,14 +404,14 @@ dc.compositeChart = function (parent, chartGroup) {
         return ryAxisMin;
     }
 
-    function getYAxisMax(charts) {
+    function getYAxisMax (charts) {
         return charts.map(function (c) {
             return c.yAxisMax();
         });
     }
 
     delete _chart.yAxisMax;
-    function yAxisMax(aligned) {
+    function yAxisMax (aligned) {
         var lyAxisMax = dc.utils.add(d3.max(getYAxisMax(leftYAxisChildren())), _chart.yAxisPadding()),
         lyAxisMin, ryAxisMin, ryAxisMax;
 
@@ -415,7 +431,7 @@ dc.compositeChart = function (parent, chartGroup) {
         return lyAxisMax;
     }
 
-    function rightYAxisMax(aligned) {
+    function rightYAxisMax (aligned) {
         var ryAxisMax = dc.utils.add(d3.max(getYAxisMax(rightYAxisChildren())), _chart.yAxisPadding()),
         lyAxisMin, lyAxisMax, ryAxisMin;
 
@@ -439,7 +455,7 @@ dc.compositeChart = function (parent, chartGroup) {
         return ryAxisMax;
     }
 
-    function getAllXAxisMinFromChildCharts() {
+    function getAllXAxisMinFromChildCharts () {
         return _children.map(function (c) {
             return c.xAxisMin();
         });
@@ -449,7 +465,7 @@ dc.compositeChart = function (parent, chartGroup) {
         return dc.utils.subtract(d3.min(getAllXAxisMinFromChildCharts()), _chart.xAxisPadding());
     });
 
-    function getAllXAxisMaxFromChildCharts() {
+    function getAllXAxisMaxFromChildCharts () {
         return _children.map(function (c) {
             return c.xAxisMax();
         });
@@ -488,20 +504,22 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .rightYAxis([yAxis])
-    Set or get the right y axis used by the composite chart. This function is most useful when y
-    axis customization is required. The y axis in dc.js is an instance of a [d3 axis
-    object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis) therefore it supports any valid
-    d3 axis manipulation. **Caution**: The y axis is usually generated internally by dc;
-    resetting it may cause unexpected results.
-    ```jså
-    // customize y axis tick format
-    chart.rightYAxis().tickFormat(function (v) {return v + '%';});
-    // customize y axis tick values
-    chart.rightYAxis().tickValues([0, 100, 200, 300]);
-    ```
-
-    **/
+     * Set or get the right y axis used by the composite chart. This function is most useful when y
+     * axis customization is required. The y axis in dc.js is an instance of a [d3 axis
+     * object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis) therefore it supports any valid
+     * d3 axis manipulation. **Caution**: The y axis is usually generated internally by dc;
+     * resetting it may cause unexpected results.
+     * @name rightYAxis
+     * @memberof dc.compositeChart
+     * @instance
+     * @example
+     * // customize y axis tick format
+     * chart.rightYAxis().tickFormat(function (v) {return v + '%';});
+     * // customize y axis tick values
+     * chart.rightYAxis().tickValues([0, 100, 200, 300]);
+     * @param {d3.svg.axis} [rightYAxis]
+     * @return {Chart}
+     */
     _chart.rightYAxis = function (rightYAxis) {
         if (!arguments.length) {
             return _rightYAxis;
