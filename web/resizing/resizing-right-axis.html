@@ -94,9 +94,10 @@
 
      window.onresize = function() {
         moveChart
-            .width(window.innerWidth-adjustX)
-            .height(window.innerHeight-adjustY)
-            .redraw();
+             .width(window.innerWidth-adjustX)
+             .height(window.innerHeight-adjustY)
+             .rescale()
+             .redraw();
       };
 
         dc.renderAll();
