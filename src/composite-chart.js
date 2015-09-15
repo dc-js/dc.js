@@ -81,7 +81,11 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     _chart._prepareYAxis = function () {
-        prepareYAxes(leftYAxisChildren().length !== 0, rightYAxisChildren().length !== 0);
+        var left = (leftYAxisChildren().length !== 0), right = (rightYAxisChildren().length !== 0),
+        ranges = calculateYAxesRanges(left, right);
+
+        if (left) { prepareLeftYAxis(ranges); }
+        if (right) { prepareRightYAxis(ranges); }
 
         if (leftYAxisChildren().length > 0 && !_rightAxisGridLines) {
             _chart._renderHorizontalGridLinesForAxis(_chart.g(), _chart.y(), _chart.yAxis());
@@ -102,7 +106,7 @@ dc.compositeChart = function (parent, chartGroup) {
         }
     };
 
-    function prepareYAxes(left, right) {
+    function calculateYAxesRanges (left, right) {
         var lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax;
 
         if (left) {
@@ -117,53 +121,62 @@ dc.compositeChart = function (parent, chartGroup) {
 
         if (_chart.alignYAxes() && left && right && (lyAxisMin < 0 || ryAxisMin < 0)) {
             // both y axis are linear and at least one doesn't start at zero
-            var leftYRatio;
+            var leftYRatio, rightYRatio;
+
             if (lyAxisMin < 0) {
                 leftYRatio = lyAxisMax / lyAxisMin;
-                if (ryAxisMin < 0) {
-                    var rightYRatio = ryAxisMax / ryAxisMin;
-                    if (leftYRatio < rightYRatio) {
-                        ryAxisMax = ryAxisMin * leftYRatio;
-                    } else {
-                        lyAxisMax = lyAxisMin * rightYRatio;
-                    }
+            }
+
+            if (ryAxisMin < 0) {
+                rightYRatio = ryAxisMax / ryAxisMin;
+            }
+
+            if (lyAxisMin < 0 && ryAxisMin < 0) {
+                if (leftYRatio < rightYRatio) {
+                    ryAxisMax = ryAxisMin * leftYRatio;
                 } else {
-                  ryAxisMin = ryAxisMax / leftYRatio;
+                    lyAxisMax = lyAxisMin * rightYRatio;
                 }
+            } else if (lyAxisMin < 0) {
+                ryAxisMin = ryAxisMax / leftYRatio;
             } else {
                 lyAxisMin = lyAxisMax / (ryAxisMax / ryAxisMin);
             }
         }
+        return {
+            lyAxisMin: lyAxisMin,
+            lyAxisMax: lyAxisMax,
+            ryAxisMin: ryAxisMin,
+            ryAxisMax: ryAxisMax
+        };
+    }
 
-        if(left) {
-            // prepare left y axis
-            if (_chart.y() === undefined || _chart.elasticY()) {
-                if (_chart.y() === undefined) {
-                    _chart.y(d3.scale.linear());
-                }
-                _chart.y().domain([lyAxisMin, lyAxisMax]).rangeRound([_chart.yAxisHeight(), 0]);
+    function prepareRightYAxis (ranges) {
+        if (_chart.rightY() === undefined || _chart.elasticY()) {
+            if (_chart.rightY() === undefined) {
+                _chart.rightY(d3.scale.linear());
             }
-
-            _chart.y().range([_chart.yAxisHeight(), 0]);
-            _chart.yAxis(_chart.yAxis().scale(_chart.y()));
-
-            _chart.yAxis().orient('left');
+            _chart.rightY().domain([ranges.ryAxisMin, ranges.ryAxisMax]).rangeRound([_chart.yAxisHeight(), 0]);
         }
 
-        if(right) {
-            // prepare right y axis
-            if (_chart.rightY() === undefined || _chart.elasticY()) {
-                if (_chart.rightY() === undefined) {
-                    _chart.rightY(d3.scale.linear());
-                }
-                _chart.rightY().domain([ryAxisMin, ryAxisMax]).rangeRound([_chart.yAxisHeight(), 0]);
+        _chart.rightY().range([_chart.yAxisHeight(), 0]);
+        _chart.rightYAxis(_chart.rightYAxis().scale(_chart.rightY()));
+
+        _chart.rightYAxis().orient('right');
+    }
+
+    function prepareLeftYAxis (ranges) {
+        if (_chart.y() === undefined || _chart.elasticY()) {
+            if (_chart.y() === undefined) {
+                _chart.y(d3.scale.linear());
             }
-
-            _chart.rightY().range([_chart.yAxisHeight(), 0]);
-            _chart.rightYAxis(_chart.rightYAxis().scale(_chart.rightY()));
-
-            _chart.rightYAxis().orient('right');
+            _chart.y().domain([ranges.lyAxisMin, ranges.lyAxisMax]).rangeRound([_chart.yAxisHeight(), 0]);
         }
+
+        _chart.y().range([_chart.yAxisHeight(), 0]);
+        _chart.yAxis(_chart.yAxis().scale(_chart.y()));
+
+        _chart.yAxis().orient('left');
     }
 
     function generateChildG (child, i) {
@@ -408,33 +421,12 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     delete _chart.yAxisMin;
-    function yAxisMin(aligned) {
-        var lyAxisMin = d3.min(getYAxisMin(leftYAxisChildren())), rYAxisMin, rYAxisMax;
-
-        if (!aligned) {
-            return lyAxisMin;
-        }
-
-        rYAxisMin = rightYAxisMin();
-        if (rYAxisMin < 0) {
-            rYAxisMax = rightYAxisMax(true);
-            lyAxisMin = yAxisMax(true) / ((rYAxisMax || -rYAxisMin) / rYAxisMin);
-        }
-        return lyAxisMin;
+    function yAxisMin () {
+        return d3.min(getYAxisMin(leftYAxisChildren()));
     }
 
-    function rightYAxisMin(aligned) {
-        var ryAxisMin = d3.min(getYAxisMin(rightYAxisChildren())), lyAxisMin;
-
-        if (!aligned) {
-            return ryAxisMin;
-        }
-
-        lyAxisMin = yAxisMin();
-        if (lyAxisMin < 0 && ryAxisMin >= 0) {
-            ryAxisMin = rightYAxisMax() / (yAxisMax(true) / lyAxisMin);
-        }
-        return ryAxisMin;
+    function rightYAxisMin () {
+        return d3.min(getYAxisMin(rightYAxisChildren()));
     }
 
     function getYAxisMax (charts) {
@@ -444,48 +436,12 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     delete _chart.yAxisMax;
-    function yAxisMax (aligned) {
-        var lyAxisMax = dc.utils.add(d3.max(getYAxisMax(leftYAxisChildren())), _chart.yAxisPadding()),
-        lyAxisMin, ryAxisMin, ryAxisMax;
-
-        if (!aligned) {
-            return lyAxisMax;
-        }
-
-        lyAxisMin = yAxisMin();
-        ryAxisMin = rightYAxisMin();
-        ryAxisMax = rightYAxisMax();
-        if (lyAxisMin < 0 && ryAxisMin < 0) {
-            var leftYFactor = lyAxisMax / lyAxisMin, rightYFactor = ryAxisMax / ryAxisMin;
-            if (leftYFactor > rightYFactor) {
-                lyAxisMax = lyAxisMin * rightYFactor;
-            }
-        }
-        return lyAxisMax;
+    function yAxisMax () {
+        return dc.utils.add(d3.max(getYAxisMax(leftYAxisChildren())), _chart.yAxisPadding());
     }
 
-    function rightYAxisMax (aligned) {
-        var ryAxisMax = dc.utils.add(d3.max(getYAxisMax(rightYAxisChildren())), _chart.yAxisPadding()),
-        lyAxisMin, lyAxisMax, ryAxisMin;
-
-        if (!aligned) {
-            return ryAxisMax;
-        }
-
-        lyAxisMin = yAxisMin();
-        lyAxisMax = yAxisMax();
-        ryAxisMin = rightYAxisMin();
-        if (lyAxisMin < 0 && ryAxisMin < 0) {
-            var leftYFactor = lyAxisMax / lyAxisMin, rightYFactor = ryAxisMax / ryAxisMin;
-            if (leftYFactor < rightYFactor) {
-                ryAxisMax = ryAxisMin * leftYFactor;
-            }
-        } else if (lyAxisMin >= 0) {
-            if (ryAxisMax === 0) {
-                ryAxisMax = -ryAxisMin;
-            }
-        }
-        return ryAxisMax;
+    function rightYAxisMax () {
+        return dc.utils.add(d3.max(getYAxisMax(rightYAxisChildren())), _chart.yAxisPadding());
     }
 
     function getAllXAxisMinFromChildCharts () {
