@@ -6257,7 +6257,7 @@ dc.compositeChart = function (parent, chartGroup) {
 
     var _shareColors = false,
         _shareTitle = true,
-        _alignAxes = false;
+        _alignYAxes = false;
 
     var _rightYAxis = d3.svg.axis(),
         _rightYAxisLabel = 0,
@@ -6335,7 +6335,7 @@ dc.compositeChart = function (parent, chartGroup) {
             if (_chart.rightY() === undefined) {
                 _chart.rightY(d3.scale.linear());
             }
-            _chart.rightY().domain([rightYAxisMin(_chart.alignAxes()), rightYAxisMax(_chart.alignAxes())])
+            _chart.rightY().domain([rightYAxisMin(_chart.alignYAxes()), rightYAxisMax(_chart.alignYAxes())])
             .rangeRound([_chart.yAxisHeight(), 0]);
         }
 
@@ -6350,7 +6350,7 @@ dc.compositeChart = function (parent, chartGroup) {
             if (_chart.y() === undefined) {
                 _chart.y(d3.scale.linear());
             }
-            _chart.y().domain([yAxisMin(_chart.alignAxes()), yAxisMax(_chart.alignAxes())])
+            _chart.y().domain([yAxisMin(_chart.alignYAxes()), yAxisMax(_chart.alignYAxes())])
             .rangeRound([_chart.yAxisHeight(), 0]);
         }
 
@@ -6570,16 +6570,16 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .alignAxes([boolean])
+    #### .alignYAxes([boolean])
     Get or set alignment between left and right y axes. A line connecting '0' on both y axis
     will be parallel to x axis.
 
     **/
-    _chart.alignAxes = function (_) {
+    _chart.alignYAxes = function (_) {
         if (!arguments.length) {
-            return _alignAxes;
+            return _alignYAxes;
         }
-        _alignAxes = _;
+        _alignYAxes = _;
         return _chart;
     };
 
