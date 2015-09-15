@@ -6616,16 +6616,19 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     /**
-    #### .alignYAxes([boolean])
-    Get or set alignment between left and right y axes. A line connecting '0' on both y axis
-    will be parallel to x axis.
-
-    **/
-    _chart.alignYAxes = function (_) {
+     * Get or set alignment between left and right y axes. A line connecting '0' on both y axis
+     * will be parallel to x axis.
+     * @name alignYAxes
+     * @memberof dc.compositeChart
+     * @instance
+     * @param {Boolean} [alignYAxes=false]
+     * @return {Chart}
+     */
+    _chart.alignYAxes = function (alignYAxes) {
         if (!arguments.length) {
             return _alignYAxes;
         }
-        _alignYAxes = _;
+        _alignYAxes = alignYAxes;
         return _chart;
     };
 

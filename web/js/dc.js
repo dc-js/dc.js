@@ -6256,7 +6256,8 @@ dc.compositeChart = function (parent, chartGroup) {
     var _childOptions = {};
 
     var _shareColors = false,
-        _shareTitle = true;
+        _shareTitle = true,
+        _alignYAxes = false;
 
     var _rightYAxis = d3.svg.axis(),
         _rightYAxisLabel = 0,
@@ -6307,8 +6308,11 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     _chart._prepareYAxis = function () {
-        if (leftYAxisChildren().length !== 0) { prepareLeftYAxis(); }
-        if (rightYAxisChildren().length !== 0) { prepareRightYAxis(); }
+        var left = (leftYAxisChildren().length !== 0), right = (rightYAxisChildren().length !== 0),
+        ranges = calculateYAxesRanges(left, right);
+
+        if (left) { prepareLeftYAxis(ranges); }
+        if (right) { prepareRightYAxis(ranges); }
 
         if (leftYAxisChildren().length > 0 && !_rightAxisGridLines) {
             _chart._renderHorizontalGridLinesForAxis(_chart.g(), _chart.y(), _chart.yAxis());
@@ -6329,12 +6333,57 @@ dc.compositeChart = function (parent, chartGroup) {
         }
     };
 
-    function prepareRightYAxis () {
+    function calculateYAxesRanges (left, right) {
+        var lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax;
+
+        if (left) {
+            lyAxisMin = yAxisMin();
+            lyAxisMax = yAxisMax();
+        }
+
+        if (right) {
+            ryAxisMin = rightYAxisMin();
+            ryAxisMax = rightYAxisMax();
+        }
+
+        if (_chart.alignYAxes() && left && right && (lyAxisMin < 0 || ryAxisMin < 0)) {
+            // both y axis are linear and at least one doesn't start at zero
+            var leftYRatio, rightYRatio;
+
+            if (lyAxisMin < 0) {
+                leftYRatio = lyAxisMax / lyAxisMin;
+            }
+
+            if (ryAxisMin < 0) {
+                rightYRatio = ryAxisMax / ryAxisMin;
+            }
+
+            if (lyAxisMin < 0 && ryAxisMin < 0) {
+                if (leftYRatio < rightYRatio) {
+                    ryAxisMax = ryAxisMin * leftYRatio;
+                } else {
+                    lyAxisMax = lyAxisMin * rightYRatio;
+                }
+            } else if (lyAxisMin < 0) {
+                ryAxisMin = ryAxisMax / leftYRatio;
+            } else {
+                lyAxisMin = lyAxisMax / (ryAxisMax / ryAxisMin);
+            }
+        }
+        return {
+            lyAxisMin: lyAxisMin,
+            lyAxisMax: lyAxisMax,
+            ryAxisMin: ryAxisMin,
+            ryAxisMax: ryAxisMax
+        };
+    }
+
+    function prepareRightYAxis (ranges) {
         if (_chart.rightY() === undefined || _chart.elasticY()) {
             if (_chart.rightY() === undefined) {
                 _chart.rightY(d3.scale.linear());
             }
-            _chart.rightY().domain([rightYAxisMin(), rightYAxisMax()]).rangeRound([_chart.yAxisHeight(), 0]);
+            _chart.rightY().domain([ranges.ryAxisMin, ranges.ryAxisMax]).rangeRound([_chart.yAxisHeight(), 0]);
         }
 
         _chart.rightY().range([_chart.yAxisHeight(), 0]);
@@ -6343,12 +6392,12 @@ dc.compositeChart = function (parent, chartGroup) {
         _chart.rightYAxis().orient('right');
     }
 
-    function prepareLeftYAxis () {
+    function prepareLeftYAxis (ranges) {
         if (_chart.y() === undefined || _chart.elasticY()) {
             if (_chart.y() === undefined) {
                 _chart.y(d3.scale.linear());
             }
-            _chart.y().domain([yAxisMin(), yAxisMax()]).rangeRound([_chart.yAxisHeight(), 0]);
+            _chart.y().domain([ranges.lyAxisMin, ranges.lyAxisMax]).rangeRound([_chart.yAxisHeight(), 0]);
         }
 
         _chart.y().range([_chart.yAxisHeight(), 0]);
@@ -6563,6 +6612,23 @@ dc.compositeChart = function (parent, chartGroup) {
         }
         _rightY = yScale;
         _chart.rescale();
+        return _chart;
+    };
+
+    /**
+     * Get or set alignment between left and right y axes. A line connecting '0' on both y axis
+     * will be parallel to x axis.
+     * @name alignYAxes
+     * @memberof dc.compositeChart
+     * @instance
+     * @param {Boolean} [alignYAxes=false]
+     * @return {Chart}
+     */
+    _chart.alignYAxes = function (alignYAxes) {
+        if (!arguments.length) {
+            return _alignYAxes;
+        }
+        _alignYAxes = alignYAxes;
         return _chart;
     };
 
