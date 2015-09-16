@@ -10,6 +10,10 @@ module.exports = function (grunt) {
         pkg: grunt.file.readJSON('package.json'),
 
         concat: {
+            options: {
+                process: true,
+                sourceMap: true
+            },
             js: {
                 src: jsFiles,
                 dest: output.js
@@ -20,7 +24,7 @@ module.exports = function (grunt) {
                 options: {
                     mangle: true,
                     compress: true,
-                    sourceMap: output.map
+                    sourceMap: true
                 },
                 src: output.js,
                 dest: output.jsmin
