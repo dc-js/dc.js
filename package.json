@@ -57,7 +57,9 @@
       "files": [
         "dc.css",
         "dc.min.js",
-        "dc.js"
+        "dc.min.js.map",
+        "dc.js",
+        "dc.js.map"
       ]
     }
   ]
