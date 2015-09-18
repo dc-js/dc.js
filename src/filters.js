@@ -28,6 +28,7 @@ dc.filters.RangedFilter = function (low, high) {
     range.isFiltered = function (value) {
         return value >= this[0] && value < this[1];
     };
+    range.filterType = 'RangedFilter';
 
     return range;
 };
@@ -50,6 +51,7 @@ dc.filters.TwoDimensionalFilter = function (filter) {
         return value.length && value.length === f.length &&
                value[0] === f[0] && value[1] === f[1];
     };
+    f.filterType = 'TwoDimensionalFilter';
 
     return f;
 };
@@ -103,6 +105,7 @@ dc.filters.RangedTwoDimensionalFilter = function (filter) {
         return x >= fromBottomLeft[0][0] && x < fromBottomLeft[1][0] &&
                y >= fromBottomLeft[0][1] && y < fromBottomLeft[1][1];
     };
+    f.filterType = 'RangedTwoDimensionalFilter';
 
     return f;
 };

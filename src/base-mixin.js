@@ -74,6 +74,9 @@ dc.baseMixin = function (_chart) {
         } else if (filters.length === 1 && !filters[0].isFiltered) {
             // single value and not a function-based filter
             dimension.filterExact(filters[0]);
+        } else if (filters.length === 1 && filters[0].filterType==='RangedFilter') {
+            // single value and not a function-based filter
+            dimension.filterRange(filters[0]);
         } else {
             dimension.filterFunction(function (d) {
                 for (var i = 0; i < filters.length; i++) {
