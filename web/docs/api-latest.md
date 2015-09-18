@@ -174,7 +174,7 @@ chart.width(300)
     * [.columns](#dc.dataTable+columns) ⇒ <code>Chart</code>
     * [.sortBy](#dc.dataTable+sortBy) ⇒ <code>Chart</code>
     * [.order](#dc.dataTable+order) ⇒ <code>Chart</code>
-    * [.order](#dc.dataTable+order) ⇒ <code>Chart</code>
+    * [.showGroups](#dc.dataTable+showGroups) ⇒ <code>Chart</code>
   * [.dataGrid](#dc.dataGrid) ⇒ <code>DataGrid</code>
     * [.beginSlice](#dc.dataGrid+beginSlice) ⇒ <code>Chart</code>
     * [.endSlice](#dc.dataGrid+endSlice) ⇒ <code>Chart</code>
@@ -2507,7 +2507,7 @@ Examples:
   * [.columns](#dc.dataTable+columns) ⇒ <code>Chart</code>
   * [.sortBy](#dc.dataTable+sortBy) ⇒ <code>Chart</code>
   * [.order](#dc.dataTable+order) ⇒ <code>Chart</code>
-  * [.order](#dc.dataTable+order) ⇒ <code>Chart</code>
+  * [.showGroups](#dc.dataTable+showGroups) ⇒ <code>Chart</code>
 
 <a name="dc.dataTable+size"></a>
 #### dataTable.size ⇒ <code>Chart</code>
@@ -2619,8 +2619,8 @@ Get or set sort order.
 ```js
 chart.order(d3.descending);
 ```
-<a name="dc.dataTable+order"></a>
-#### dataTable.order ⇒ <code>Chart</code>
+<a name="dc.dataTable+showGroups"></a>
+#### dataTable.showGroups ⇒ <code>Chart</code>
 Get or set if group rows will be shown.
 
 The .group() getter-setter must be provided in either case.
