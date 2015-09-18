@@ -65,7 +65,7 @@ div.dc-chart {
     fill: #ccc;
 }
 
-.dc-chart .axis path, .axis line {
+.dc-chart .axis path, .dc-chart .axis line {
     fill: none;
     stroke: #000;
     shape-rendering: crispEdges;
