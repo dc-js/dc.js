@@ -9,8 +9,8 @@
  * @name capMixin
  * @memberof dc
  * @mixin
- * @param {Chart} _chart
- * @returns {Chart}
+ * @param {Object} _chart
+ * @return {dc.capMixin}
  */
 dc.capMixin = function (_chart) {
 
@@ -65,7 +65,8 @@ dc.capMixin = function (_chart) {
      * @memberof dc.capMixin
      * @instance
      * @param {Number} [count=Infinity]
-     * @returns {Number}
+     * @return {Number}
+     * @return {dc.capMixin}
      */
     _chart.cap = function (count) {
         if (!arguments.length) {
@@ -80,8 +81,9 @@ dc.capMixin = function (_chart) {
      * @name othersLabel
      * @memberof dc.capMixin
      * @instance
-     * @param {String} [label=Others]
-     * @returns {String}
+     * @param {String} [label="Others"]
+     * @return {String}
+     * @return {dc.capMixin}
      */
     _chart.othersLabel = function (label) {
         if (!arguments.length) {
@@ -99,6 +101,21 @@ dc.capMixin = function (_chart) {
      * @memberof dc.capMixin
      * @instance
      * @example
+     * // Default others grouper
+     * chart.othersGrouper(function (topRows) {
+     *    var topRowsSum = d3.sum(topRows, _chart.valueAccessor()),
+     *        allRows = _chart.group().all(),
+     *        allRowsSum = d3.sum(allRows, _chart.valueAccessor()),
+     *        topKeys = topRows.map(_chart.keyAccessor()),
+     *        allKeys = allRows.map(_chart.keyAccessor()),
+     *        topSet = d3.set(topKeys),
+     *        others = allKeys.filter(function (d) {return !topSet.has(d);});
+     *    if (allRowsSum > topRowsSum) {
+     *        return topRows.concat([{'others': others, 'key': _othersLabel, 'value': allRowsSum - topRowsSum}]);
+     *    }
+     *    return topRows;
+     * });
+     * // Custom others grouper
      * chart.othersGrouper(function (data) {
      *     // compute the value for others, presumably the sum of all values below the cap
      *     var othersSum  = yourComputeOthersValueLogic(data)
@@ -112,7 +129,8 @@ dc.capMixin = function (_chart) {
      *     return data;
      * });
      * @param {Function} [grouperFunction]
-     * @returns {Function}
+     * @return {Function}
+     * @return {dc.capMixin}
      */
     _chart.othersGrouper = function (grouperFunction) {
         if (!arguments.length) {

@@ -4,8 +4,8 @@
  * @memberof dc
  * @mixin
  * @mixes dc.colorMixin
- * @param {Chart} _chart
- * @returns {Chart}
+ * @param {Object} _chart
+ * @return {dc.bubbleMixin}
  */
 dc.bubbleMixin = function (_chart) {
     var _maxBubbleRelativeSize = 0.3;
@@ -35,8 +35,10 @@ dc.bubbleMixin = function (_chart) {
      * @name r
      * @memberof dc.bubbleMixin
      * @instance
-     * @param {Number[]} [bubbleRadiusScale]
-     * @returns {Number[]}
+     * @see {@link http://github.com/mbostock/d3/wiki/Scales d3.scale}
+     * @param {d3.scale} [bubbleRadiusScale=d3.scale.linear().domain([0, 100])]
+     * @return {d3.scale}
+     * @return {dc.bubbleMixin}
      */
     _chart.r = function (bubbleRadiusScale) {
         if (!arguments.length) {
@@ -55,7 +57,8 @@ dc.bubbleMixin = function (_chart) {
      * @memberof dc.bubbleMixin
      * @instance
      * @param {Function} [radiusValueAccessor]
-     * @returns {Function}
+     * @return {Function}
+     * @return {dc.bubbleMixin}
      */
     _chart.radiusValueAccessor = function (radiusValueAccessor) {
         if (!arguments.length) {
@@ -150,7 +153,8 @@ dc.bubbleMixin = function (_chart) {
      * @memberof dc.bubbleMixin
      * @instance
      * @param {Number} [radius=10]
-     * @returns {Number}
+     * @return {Number}
+     * @return {dc.bubbleMixin}
      */
     _chart.minRadius = function (radius) {
         if (!arguments.length) {
@@ -167,7 +171,8 @@ dc.bubbleMixin = function (_chart) {
      * @memberof dc.bubbleMixin
      * @instance
      * @param {Number} [radius=10]
-     * @returns {Number}
+     * @return {Number}
+     * @return {dc.bubbleMixin}
      */
 
     _chart.minRadiusWithLabel = function (radius) {
@@ -185,7 +190,8 @@ dc.bubbleMixin = function (_chart) {
      * @memberof dc.bubbleMixin
      * @instance
      * @param {Number} [relativeSize=0.3]
-     * @returns {Number}
+     * @return {Number}
+     * @return {dc.bubbleMixin}
      */
     _chart.maxBubbleRelativeSize = function (relativeSize) {
         if (!arguments.length) {
