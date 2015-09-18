@@ -71,7 +71,8 @@ dc.baseMixin = function (_chart) {
     var _filterHandler = function (dimension, filters) {
         if (filters.length === 0) {
             dimension.filter(null);
-        } else if (filters.length === 1 && !Array.isArray(filters[0])) {
+        } else if (filters.length === 1 && !filters[0].isFiltered) {
+            // single value and not a function-based filter
             dimension.filterExact(filters[0]);
         } else {
             dimension.filterFunction(function (d) {
