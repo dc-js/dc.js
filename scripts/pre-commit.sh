@@ -1,3 +1,3 @@
 #!/usr/bin/env sh
 
-grunt jshint
+scripts/check_merge_conflict.py `git diff --name-only --cached` && grunt jshint

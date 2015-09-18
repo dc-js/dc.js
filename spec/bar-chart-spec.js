@@ -968,6 +968,7 @@ describe('dc.barChart', function () {
                 jasmine.clock().tick(100);
                 var filter = chart.filter();
                 delete filter.isFiltered;
+                delete filter.filterType;
                 expect(filter).toEqual([makeDate(2012, 6, 1), makeDate(2012, 7, 15)]);
             });
         });
