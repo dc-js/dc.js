@@ -5840,7 +5840,7 @@ dc.dataTable = function (parent, chartGroup) {
      * Get or set if group rows will be shown.
      *
      * The .group() getter-setter must be provided in either case.
-     * @name order
+     * @name showGroups
      * @memberof dc.dataTable
      * @instance
      * @example
@@ -7426,9 +7426,9 @@ dc.rowChart = function (parent, chartGroup) {
         calculateAxisScale();
 
         if (axisG.empty()) {
-            axisG = _g.append('g').attr('class', 'axis')
-                .attr('transform', 'translate(0, ' + _chart.effectiveHeight() + ')');
+            axisG = _g.append('g').attr('class', 'axis');
         }
+        axisG.attr('transform', 'translate(0, ' + _chart.effectiveHeight() + ')');
 
         dc.transition(axisG, _chart.transitionDuration())
             .call(_xAxis);
