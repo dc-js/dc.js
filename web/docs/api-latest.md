@@ -1968,6 +1968,13 @@ record, it is filtered in.
 These filter constructors are used as appropriate by the various charts to implement brushing.  We
 mention below which chart uses which filter.  In some cases, many instances of a filter will be added.
 
+Each of the dc.js filters is an object with the following properties:
+* `isFiltered` - a function that returns true if a value is within the filter
+* `filterType` - a string identifying the filter, here the name of the constructor
+
+Currently these filter objects are also arrays, but this is not a requirement. Custom filters
+can be used as long as they have the properties above.
+
 **Kind**: static property of <code>[dc](#dc)</code>  
 
 * [.filters](#dc.filters) : <code>Object</code>
@@ -1986,6 +1993,8 @@ mention below which chart uses which filter.  In some cases, many instances of a
 RangedFilter is a filter which accepts keys between `low` and `high`.  It is used to implement X
 axis brushing for the [coordinate grid charts](#coordinate-grid-mixin).
 
+Its `filterType` is 'RangedFilter'
+
 
 | Param | Type |
 | --- | --- |
@@ -2000,6 +2009,8 @@ axis brushing for the [coordinate grid charts](#coordinate-grid-mixin).
 TwoDimensionalFilter is a filter which accepts a single two-dimensional value.  It is used by the
 [heat map chart](#heat-map) to include particular cells as they are clicked.  (Rows and columns are
 filtered by filtering all the cells in the row or column.)
+
+Its `filterType` is 'TwoDimensionalFilter'
 
 
 | Param | Type |
@@ -2021,6 +2032,8 @@ rectangular range including the lower values but excluding the higher values.
 If an array of two values are given to the RangedTwoDimensionalFilter, it interprets the values as
 two x coordinates `x1` and `x2` and returns a filter which accepts any points for which `x1 <= x <
 x2`.
+
+Its `filterType` is 'RangedTwoDimensionalFilter'
 
 
 | Param | Type |
