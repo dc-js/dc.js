@@ -3,6 +3,13 @@
 * Allow d3.selection to be passed as parent, as documented ([#1006](https://github.com/dc-js/dc.js/issues/1006))
 * Properly derive dc.errors from Error prototype to get stack
 * Add BadArgumentException and make .anchor() parent argument mandatory
+* Enable crossfilter optimizations by not resetting the filter and by using filterExact and filterRange, by Ethan Jewett ([#990](https://github.com/dc-js/dc.js/pull/990) / [#989](https://github.com/dc-js/dc.js/issues/989) / [#478](https://github.com/dc-js/dc.js/issues/478))
+* Add `filterType` to dc.filters, for filter optimizations and [easier serialization](https://github.com/dc-js/dc.js/issues/819)
+* More documentation improvements, by Matt Traynham ([#999](https://github.com/dc-js/dc.js/pull/999))
+* Fix method name in documentation ([#1009](https://github.com/dc-js/dc.js/issues/1009))
+* Move x axis when row chart size changes, by Wang Xuan ([#1001](https://github.com/dc-js/dc.js/pull/1001)
+* Fix css rule that was improperly selecting all axes, not just dc.js ones ([#1011](https://github.com/dc-js/dc.js/pull/1011) / ([#1005](https://github.com/dc-js/dc.js/issues/1007))
+* Add pre-commit hook to hopefully avoid ever checking in merge artifacts again.
 
 ## 2.0.0 beta 18
 * Fixes resizing examples to use `rescale` - currently all coordinate grid charts need to call this when changing width/height, in order to get axes moved ([#974](https://github.com/dc-js/dc.js/issues/974))
@@ -10,6 +17,7 @@
 * Bubble mixin minimum radius accessor ([#687](https://github.com/dc-js/dc.js/issues/687))
 * Example of single selection of ordinal bar chart (for [#996](https://github.com/dc-js/dc.js/issues/996))
 * Move documentation to JSDoc toolchain, by Matt Traynham ([#978](https://github.com/dc-js/dc.js/pull/978) / [#994](https://github.com/dc-js/dc.js/pull/994))
+* Resize heat map axes when chart size changes, by Wang Xuan ([#995](https://github.com/dc-js/dc.js/pull/995)
 
 ## 2.0.0 beta 17
 * Fixes issue where transitions were applied to the brush as it's being applied, causing it to lag ([#973](https://github.com/dc-js/dc.js/issues/973))
