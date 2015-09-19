@@ -142,7 +142,7 @@ chart.width(300)
       * [new TwoDimensionalFilter(filter)](#new_dc.filters.TwoDimensionalFilter_new)
     * [.RangedTwoDimensionalFilter](#dc.filters.RangedTwoDimensionalFilter)
       * [new RangedTwoDimensionalFilter(filter)](#new_dc.filters.RangedTwoDimensionalFilter_new)
-  * [.pieChart](#dc.pieChart) ⇒ <code>PieChart</code>
+  * [.pieChart](#dc.pieChart) ⇒ <code>[pieChart](#dc.pieChart)</code>
     * [.slicesCap](#dc.pieChart+slicesCap) ⇒ <code>Number</code> &#124; <code>[pieChart](#dc.pieChart)</code>
     * [.externalRadiusPadding](#dc.pieChart+externalRadiusPadding) ⇒ <code>Number</code> &#124; <code>[pieChart](#dc.pieChart)</code>
     * [.innerRadius](#dc.pieChart+innerRadius) ⇒ <code>Number</code> &#124; <code>[pieChart](#dc.pieChart)</code>
@@ -158,7 +158,7 @@ chart.width(300)
     * [.outerPadding](#dc.barChart+outerPadding) ⇒ <code>Number</code> &#124; <code>[barChart](#dc.barChart)</code>
     * [.gap](#dc.barChart+gap) ⇒ <code>Number</code> &#124; <code>[barChart](#dc.barChart)</code>
     * [.alwaysUseRounding](#dc.barChart+alwaysUseRounding) ⇒ <code>Boolean</code> &#124; <code>[barChart](#dc.barChart)</code>
-  * [.lineChart](#dc.lineChart) ⇒ <code>LineChart</code>
+  * [.lineChart](#dc.lineChart) ⇒ <code>[lineChart](#dc.lineChart)</code>
     * [.interpolate](#dc.lineChart+interpolate) ⇒ <code>String</code> &#124; <code>[lineChart](#dc.lineChart)</code>
     * [.tension](#dc.lineChart+tension) ⇒ <code>Number</code> &#124; <code>[lineChart](#dc.lineChart)</code>
     * [.defined](#dc.lineChart+defined) ⇒ <code>function</code> &#124; <code>[lineChart](#dc.lineChart)</code>
@@ -324,7 +324,7 @@ be returned.
 
 By default, without an explicit height being given, the chart will select the width of its
 anchor element. If that isn't possible it defaults to 200 (provided by the
-[minHeight](#dc.baseMixin.minHeight) property). Setting the value falsy will return
+[minHeight](#dc.baseMixin+minHeight) property). Setting the value falsy will return
 the chart to the default behavior.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
@@ -2175,7 +2175,7 @@ Its `filterType` is 'RangedTwoDimensionalFilter'
 | filter | <code>Array.&lt;Array.&lt;Number&gt;&gt;</code> | 
 
 <a name="dc.pieChart"></a>
-### dc.pieChart ⇒ <code>PieChart</code>
+### dc.pieChart ⇒ <code>[pieChart](#dc.pieChart)</code>
 The pie chart implementation is usually used to visualize a small categorical distribution.  The pie
 chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
 slice relative to the sum of all values. Slices are ordered by [ordering](#dc.baseMixin+ordering)
@@ -2200,7 +2200,7 @@ var chart1 = dc.pieChart('#chart-container1');
 var chart2 = dc.pieChart('#chart-container2', 'chartGroupA');
 ```
 
-* [.pieChart](#dc.pieChart) ⇒ <code>PieChart</code>
+* [.pieChart](#dc.pieChart) ⇒ <code>[pieChart](#dc.pieChart)</code>
   * [.slicesCap](#dc.pieChart+slicesCap) ⇒ <code>Number</code> &#124; <code>[pieChart](#dc.pieChart)</code>
   * [.externalRadiusPadding](#dc.pieChart+externalRadiusPadding) ⇒ <code>Number</code> &#124; <code>[pieChart](#dc.pieChart)</code>
   * [.innerRadius](#dc.pieChart+innerRadius) ⇒ <code>Number</code> &#124; <code>[pieChart](#dc.pieChart)</code>
@@ -2407,7 +2407,7 @@ compensate, such as in the following example.
 chart.round(function(n) { return Math.floor(n) + 0.5; });
 ```
 <a name="dc.lineChart"></a>
-### dc.lineChart ⇒ <code>LineChart</code>
+### dc.lineChart ⇒ <code>[lineChart](#dc.lineChart)</code>
 Concrete line/area chart implementation.
 
 Examples:
@@ -2432,7 +2432,7 @@ var chart2 = dc.lineChart('#chart-container2', 'chartGroupA');
 var chart3 = dc.lineChart(compositeChart);
 ```
 
-* [.lineChart](#dc.lineChart) ⇒ <code>LineChart</code>
+* [.lineChart](#dc.lineChart) ⇒ <code>[lineChart](#dc.lineChart)</code>
   * [.interpolate](#dc.lineChart+interpolate) ⇒ <code>String</code> &#124; <code>[lineChart](#dc.lineChart)</code>
   * [.tension](#dc.lineChart+tension) ⇒ <code>Number</code> &#124; <code>[lineChart](#dc.lineChart)</code>
   * [.defined](#dc.lineChart+defined) ⇒ <code>function</code> &#124; <code>[lineChart](#dc.lineChart)</code>

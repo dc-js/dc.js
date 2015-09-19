@@ -21,7 +21,7 @@
  * in a {@link #dc.compositeChart Composite Chart} then pass in the parent composite chart instance.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {LineChart}
+ * @return {dc.lineChart}
  */
 dc.lineChart = function (parent, chartGroup) {
     var DEFAULT_DOT_RADIUS = 5;

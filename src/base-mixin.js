@@ -106,7 +106,7 @@ dc.baseMixin = function (_chart) {
      *
      * By default, without an explicit height being given, the chart will select the width of its
      * anchor element. If that isn't possible it defaults to 200 (provided by the
-     * {@link #dc.baseMixin.minHeight minHeight} property). Setting the value falsy will return
+     * {@link #dc.baseMixin+minHeight minHeight} property). Setting the value falsy will return
      * the chart to the default behavior.
      * @name height
      * @memberof dc.baseMixin
