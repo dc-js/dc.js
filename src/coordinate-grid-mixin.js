@@ -107,7 +107,8 @@ dc.coordinateGridMixin = function (_chart) {
     /**
      * When changing the domain of the x or y scale, it is necessary to tell the chart to recalculate
      * and redraw the axes. (`.rescale()` is called automatically when the x or y scale is replaced
-     * with `.x()` or `.y()`, and has no effect on elastic scales.)
+     * with {@link #dc.coordinateGridMixin+x .x()} or {@link #dc.coordinateGridMixin+y .y()}, and has
+     * no effect on elastic scales.)
      * @name rescale
      * @memberof dc.coordinateGridMixin
      * @instance
@@ -249,8 +250,8 @@ dc.coordinateGridMixin = function (_chart) {
      * **mandatory**
      *
      * Get or set the x scale. The x scale can be any d3
-     * [quantitive scale](https://github.com/mbostock/d3/wiki/Quantitative-Scales) or
-     * [ordinal scale](https://github.com/mbostock/d3/wiki/Ordinal-Scales).
+     * {@link https://github.com/mbostock/d3/wiki/Quantitative-Scales quantitive scale} or
+     * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales ordinal scale}.
      * @name x
      * @memberof dc.coordinateGridMixin
      * @instance
@@ -285,11 +286,12 @@ dc.coordinateGridMixin = function (_chart) {
      * data points on x axis, or the number of points on the axis. [d3 time range functions
      * d3.time.days, d3.time.months, and
      * d3.time.years](https://github.com/mbostock/d3/wiki/Time-Intervals#aliases) are all valid xUnits
-     * function. dc.js also provides a few units function, see the [Utilities](#utilities) section for
+     * function. dc.js also provides a few units function, see the {@link #utilities Utilities} section for
      * a list of built-in units functions. The default xUnits function is dc.units.integers.
      * @name xUnits
      * @memberof dc.coordinateGridMixin
      * @instance
+     * @todo Add docs for utilities
      * @example
      * // set x units to count days
      * chart.xUnits(d3.time.days);
@@ -428,7 +430,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     /**
-     * Returns true if the chart is using ordinal xUnits ([dc.units.ordinal](#dcunitsordinal)), or false
+     * Returns true if the chart is using ordinal xUnits ({@link #dc.units.ordinal dc.units.ordinal}, or false
      * otherwise. Most charts behave differently with ordinal data and use the result of this method to
      * trigger the appropriate logic.
      * @name isOrdinal

@@ -46,7 +46,9 @@ dc.colorMixin = function (_chart) {
     };
 
     /**
-     * Convenience method to set the color scale to d3.scale.ordinal with range `r`.
+     * Convenience method to set the color scale to
+     * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales#ordinal d3.scale.ordinal} with
+     * range `r`.
      * @name ordinalColors
      * @memberof dc.colorMixin
      * @instance
@@ -106,7 +108,7 @@ dc.colorMixin = function (_chart) {
      * array.
      *
      * Note: previously this method accepted a callback function. Instead you may use a custom scale
-     * set by `.colors`.
+     * set by {@link #dc.colorMixin+colors .colors}.
      * @name colorDomain
      * @memberof dc.colorMixin
      * @instance
@@ -123,8 +125,8 @@ dc.colorMixin = function (_chart) {
     };
 
     /**
-     * Set the domain by determining the min and max values as retrieved by `.colorAccessor` over the
-     * chart's dataset.
+     * Set the domain by determining the min and max values as retrieved by
+     * {@link #dc.colorMixin+colorAccessor .colorAccessor} over the chart's dataset.
      * @name calculateColorDomain
      * @memberof dc.colorMixin
      * @instance

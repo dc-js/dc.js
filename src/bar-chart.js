@@ -2,8 +2,8 @@
  * Concrete bar chart/histogram implementation.
  *
  * Examples:
- * - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
- * - [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
+ * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
+ * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
  * @name barChart
  * @memberof dc
  * @mixes dc.stackMixin
@@ -16,9 +16,9 @@
  * // create a sub-chart under a composite parent chart
  * var chart3 = dc.barChart(compositeChart);
  * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart
- * in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+ * in a {@link #dc.compositeChart Composite Chart} then pass in the parent composite chart instance.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @return {dc.barChart}
@@ -197,8 +197,8 @@ dc.barChart = function (parent, chartGroup) {
 
     /**
      * Get or set the spacing between bars as a fraction of bar size. Valid values are between 0-1.
-     * Setting this value will also remove any previously set `gap`. See the
-     * [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
+     * Setting this value will also remove any previously set {@link #dc.barChart+gap gap}. See the
+     * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands d3 docs}
      * for a visual description of how the padding is applied.
      * @name barPadding
      * @memberof dc.barChart

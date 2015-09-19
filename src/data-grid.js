@@ -3,21 +3,20 @@
  * a simple way to define how the items are displayed.
  *
  * Note: Unlike other charts, the data grid chart (and data table) use the group attribute as a keying function
- * for [nesting](https://github.com/mbostock/d3/wiki/Arrays#-nest) the data together in groups.
+ * for {@link https://github.com/mbostock/d3/wiki/Arrays#-nest nesting} the data together in groups.
  * Do not pass in a crossfilter group as this will not work.
  *
  * Examples:
- * - [List of members of the european parliament](http://europarl.me/dc.js/web/ep/index.html)
+ * - {@link http://europarl.me/dc.js/web/ep/index.html List of members of the european parliament}
  * @name dataGrid
  * @memberof dc
  * @mixes dc.baseMixin
- * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- * a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart
- * in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+ * @param {String|node|d3.selection} parent - Any valid
+ * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {DataGrid}
+ * @return {dc.dataGrid}
  */
 dc.dataGrid = function (parent, chartGroup) {
     var LABEL_CSS_CLASS = 'dc-grid-label';
@@ -111,7 +110,8 @@ dc.dataGrid = function (parent, chartGroup) {
      * @memberof dc.dataGrid
      * @instance
      * @param {Number} [beginSlice=0]
-     * @returns {Chart}
+     * @return {Number}
+     * @return {dc.dataGrid}
      */
     _chart.beginSlice = function (beginSlice) {
         if (!arguments.length) {
@@ -128,7 +128,8 @@ dc.dataGrid = function (parent, chartGroup) {
      * @memberof dc.dataGrid
      * @instance
      * @param {Number} [endSlice]
-     * @returns {Chart}
+     * @return {Number}
+     * @return {dc.dataGrid}
      */
     _chart.endSlice = function (endSlice) {
         if (!arguments.length) {
@@ -144,7 +145,8 @@ dc.dataGrid = function (parent, chartGroup) {
      * @memberof dc.dataGrid
      * @instance
      * @param {Number} [size=999]
-     * @returns {Chart}
+     * @return {Number}
+     * @return {dc.dataGrid}
      */
     _chart.size = function (size) {
         if (!arguments.length) {
@@ -164,7 +166,8 @@ dc.dataGrid = function (parent, chartGroup) {
      * @example
      * chart.html(function (d) { return '<div class='item '+data.exampleCategory+''>'+data.exampleString+'</div>';});
      * @param {Function} [html]
-     * @returns {Chart}
+     * @return {Function}
+     * @return {dc.dataGrid}
      */
     _chart.html = function (html) {
         if (!arguments.length) {
@@ -182,7 +185,8 @@ dc.dataGrid = function (parent, chartGroup) {
      * @example
      * chart.htmlGroup (function (d) { return '<h2>'.d.key . 'with ' . d.values.length .' items</h2>'});
      * @param {Function} [htmlGroup]
-     * @returns {Chart}
+     * @return {Function}
+     * @return {dc.dataGrid}
      */
     _chart.htmlGroup = function (htmlGroup) {
         if (!arguments.length) {
@@ -203,7 +207,8 @@ dc.dataGrid = function (parent, chartGroup) {
      *     return d.date;
      * });
      * @param {Function} [sortByFunction]
-     * @returns {Chart}
+     * @return {Function}
+     * @return {dc.dataGrid}
      */
     _chart.sortBy = function (sortByFunction) {
         if (!arguments.length) {
@@ -218,10 +223,13 @@ dc.dataGrid = function (parent, chartGroup) {
      * @name order
      * @memberof dc.dataGrid
      * @instance
+     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_ascending d3.ascending}
+     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_descending d3.descending}
      * @example
      * chart.order(d3.descending);
      * @param {Function} [order=d3.ascending]
-     * @returns {Chart}
+     * @return {Function}
+     * @return {dc.dataGrid}
      */
     _chart.order = function (order) {
         if (!arguments.length) {

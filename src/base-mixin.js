@@ -1,6 +1,6 @@
 /**
  * `dc.baseMixin` is an abstract functional object representing a basic `dc` chart object
- * for all chart and widget implementations. Methods from the `dc.baseMixin` are inherited
+ * for all chart and widget implementations. Methods from the {@link #dc.baseMixin dc.baseMixin} are inherited
  * and available on all chart implementations in the `dc` library.
  * @name baseMixin
  * @memberof dc
@@ -160,7 +160,8 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-     * Set or get the minimum width attribute of a chart. This only has effect when used with the default `width` function.
+     * Set or get the minimum width attribute of a chart. This only has effect when used with the default
+     * {@link #dc.baseMixin+width width} function.
      * @name minWidth
      * @memberof dc.baseMixin
      * @instance
@@ -178,7 +179,8 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-     * Set or get the minimum height attribute of a chart. This only has effect when used with the default `height` function.
+     * Set or get the minimum height attribute of a chart. This only has effect when used with the default
+     * {@link #dc.baseMixin+height height} function.
      * @name minHeight
      * @memberof dc.baseMixin
      * @instance
@@ -226,8 +228,9 @@ dc.baseMixin = function (_chart) {
 
     /**
      * Set the data callback or retrieve the chart's data set. The data callback is passed the chart's
-     * group and by default will return `group.all()`. This behavior may be modified to, for instance,
-     * return only the top 5 groups.
+     * group and by default will return
+     * {@link https://github.com/square/crossfilter/wiki/API-Reference#group_all group.all}.
+     * This behavior may be modified to, for instance, return only the top 5 groups.
      * @name data
      * @memberof dc.baseMixin
      * @instance
@@ -252,9 +255,9 @@ dc.baseMixin = function (_chart) {
     /**
      * **mandatory**
      *
-     * Set or get the group attribute of a chart. In `dc` a group is a [crossfilter
-     * group](https://github.com/square/crossfilter/wiki/API-Reference#group-map-reduce). Usually the group
-     * should be created from the particular dimension associated with the same chart. If a value is
+     * Set or get the group attribute of a chart. In `dc` a group is a
+     * {@link https://github.com/square/crossfilter/wiki/API-Reference#group-map-reduce crossfilter group}.
+     * Usually the group should be created from the particular dimension associated with the same chart. If a value is
      * given, then it will be used as the new group.
      *
      * If no value specified then the current group will be returned.
@@ -284,7 +287,8 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-     * Get or set an accessor to order ordinal dimensions.  This uses `crossfilter.quicksort.by` as the
+     * Get or set an accessor to order ordinal dimensions.  This uses
+     * {@link https://github.com/square/crossfilter/wiki/API-Reference#quicksort_by crossfilter.quicksort.by} as the
      * sort.
      * @name ordering
      * @memberof dc.baseMixin
@@ -324,7 +328,7 @@ dc.baseMixin = function (_chart) {
     /**
      * Clear all filters associated with this chart
      *
-     * The same can be achieved by calling `chart.filter(null)`.
+     * The same can be achieved by calling {@link #dc.baseMixin+filter chart.filter(null)}.
      * @name filterAll
      * @memberof dc.baseMixin
      * @instance
@@ -458,8 +462,8 @@ dc.baseMixin = function (_chart) {
      * @memberof dc.baseMixin
      * @instance
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/SVGElement SVGElement}
-     * @param {SVGElement} [svgElement]
-     * @return {SVGElement}
+     * @param {SVGElement|d3.selection} [svgElement]
+     * @return {SVGElement|d3.selection}
      * @return {dc.baseMixin}
      */
     _chart.svg = function (svgElement) {
@@ -637,9 +641,10 @@ dc.baseMixin = function (_chart) {
      * Calling redraw will cause the chart to re-render data changes incrementally. If there is no
      * change in the underlying data dimension then calling this method will have no effect on the
      * chart. Most chart interaction in dc will automatically trigger this method through internal
-     * events (in particular [dc.redrawAll](#dcredrawallchartgroup)); therefore, you only need to
+     * events (in particular {@link #dc.redrawAll dc.redrawAll}; therefore, you only need to
      * manually invoke this function if data is manipulated outside of dc's control (for example if
-     * data is loaded in the background using `crossfilter.add()`).
+     * data is loaded in the background using
+     * {@link https://github.com/square/crossfilter/wiki/API-Reference#crossfilter_add crossfilter.add}.
      * @name redraw
      * @memberof dc.baseMixin
      * @instance
@@ -1250,7 +1255,8 @@ dc.baseMixin = function (_chart) {
      * Expire the internal chart cache. dc charts cache some data internally on a per chart basis to
      * speed up rendering and avoid unnecessary calculation; however it might be useful to clear the
      * cache if you have changed state which will affect rendering.  For example if you invoke the
-     * `crossfilter.add` function or reset group or dimension after rendering it is a good idea to
+     * {@link https://github.com/square/crossfilter/wiki/API-Reference#crossfilter_add crossfilter.add}
+     * function or reset group or dimension after rendering it is a good idea to
      * clear the cache to make sure charts are rendered properly.
      * @name expireCache
      * @memberof dc.baseMixin

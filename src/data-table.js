@@ -3,21 +3,20 @@
  * filtered) in a good old tabular fashion.
  *
  * Note: Unlike other charts, the data table (and data grid chart) use the group attribute as a keying function
- * for [nesting](https://github.com/mbostock/d3/wiki/Arrays#-nest) the data together in groups.
+ * for {@link https://github.com/mbostock/d3/wiki/Arrays#-nest nesting} the data together in groups.
  * Do not pass in a crossfilter group as this will not work.
  *
  * Examples:
- * - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+ * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  * @name dataTable
  * @memberof dc
  * @mixes dc.baseMixin
- * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- * a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart
- * in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+ * @param {String|node|d3.selection} parent - Any valid
+ * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {DataTable}
+ * @return {dc.dataTable}
  */
 dc.dataTable = function (parent, chartGroup) {
     var LABEL_CSS_CLASS = 'dc-table-label';
@@ -192,7 +191,8 @@ dc.dataTable = function (parent, chartGroup) {
      * @memberof dc.dataTable
      * @instance
      * @param {Number} [size=25]
-     * @returns {Chart}
+     * @return {Number}
+     * @return {dc.dataTable}
      */
     _chart.size = function (size) {
         if (!arguments.length) {
@@ -214,15 +214,16 @@ dc.dataTable = function (parent, chartGroup) {
      * specifying it as a function, except where necessary (ie, computed columns).  Note
      * the data element accessor name is capitalized when displayed in the table. You can
      * also mix in functions as desired or necessary, but you must use the
-     * Object = [Label, Fn] method as shown below.
+     * `Object = [Label, Fn]` method as shown below.
      * You may wish to override the following two functions, which are internally used to
      * translate the column information or function into a displayed header. The first one
      * is used on the simple "string" column specifier, the second is used to transform the
      * String(fn) into something displayable. For the Stock example, the function for Change
-     * becomes a header of 'd.close - d.open'.
-     * _chart._doColumnHeaderCapitalize _chart._doColumnHeaderFnToString
+     * becomes a header of `d.close - d.open`.
+     *
+     * `_chart._doColumnHeaderCapitalize` `_chart._doColumnHeaderFnToString`
      * You may use your own Object definition, however you must then override
-     * _chart._doColumnHeaderFormat , _chart._doColumnValueFormat
+     * `_chart._doColumnHeaderFormat`, `_chart._doColumnValueFormat`
      * Be aware that fields without numberFormat specification will be displayed just as
      * they are stored in the data, unformatted.
      *
@@ -261,7 +262,8 @@ dc.dataTable = function (parent, chartGroup) {
      *         function (d) { return d.volume; }]
      * ]);
      * @param {Array<Function>} [columns=[]]
-     * @returns {Chart}
+     * @return {Array<Function>}}
+     * @return {dc.dataTable}
      */
     _chart.columns = function (columns) {
         if (!arguments.length) {
@@ -282,7 +284,8 @@ dc.dataTable = function (parent, chartGroup) {
      *     return d.date;
      * });
      * @param {Function} [sortBy]
-     * @returns {Chart}
+     * @return {Function}
+     * @return {dc.dataTable}
      */
     _chart.sortBy = function (sortBy) {
         if (!arguments.length) {
@@ -297,10 +300,13 @@ dc.dataTable = function (parent, chartGroup) {
      * @name order
      * @memberof dc.dataTable
      * @instance
+     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_ascending d3.ascending}
+     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_descending d3.descending}
      * @example
      * chart.order(d3.descending);
      * @param {Function} [order=d3.ascending]
-     * @returns {Chart}
+     * @return {Function}
+     * @return {dc.dataTable}
      */
     _chart.order = function (order) {
         if (!arguments.length) {
@@ -322,7 +328,8 @@ dc.dataTable = function (parent, chartGroup) {
      *     .group([value], [name])
      *     .showGroups(true|false);
      * @param {Boolean} [showGroups=true]
-     * @returns {Chart}
+     * @return {Boolean}
+     * @return {dc.dataTable}
      */
     _chart.showGroups = function (showGroups) {
         if (!arguments.length) {
