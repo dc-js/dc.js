@@ -9633,7 +9633,7 @@ dc.selectMenu = function (parent, chartGroup) {
         // check if only prompt option is selected
         if (values.length === 1 && values[0] === '') {
             values = null;
-        } else if (values.length === 1) {
+        } else if (!_multiple && values.length === 1) {
             values = values[0];
         }
         _chart.onChange(values);
