@@ -17,7 +17,7 @@ import {utils} from './utils';
  *      .filter('sunday');
  */
 /*jshint -W079*/
-export var version = '<%= conf.pkg.version %>';
+export var version = __VERSION__; // jshint -W117
 export var constants = {
     CHART_CLASS: 'dc-chart',
     DEBUG_GROUP_CLASS: 'debug',
@@ -209,7 +209,7 @@ export var transition = function (selections, duration, callback, name) {
 export var optionalTransition = function (enable, duration, callback, name) {
     if (enable) {
         return function (selection) {
-            return dc.transition(selection, duration, callback, name);
+            return transition(selection, duration, callback, name);
         };
     } else {
         return function (selection) {

@@ -59,6 +59,7 @@ export {default as pieChart} from './src/pie-chart';
 export {default as rowChart} from './src/row-chart';
 export {default as scatterPlot} from './src/scatter-plot';
 export {default as seriesChart} from './src/series-chart';
+export {default as selectMenu} from './src/select-menu';
 
 import * as d3 from 'd3';
 import d3box from './src/d3.box';

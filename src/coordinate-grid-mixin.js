@@ -3,7 +3,7 @@ import baseMixin from './base-mixin';
 import marginMixin from './margin-mixin';
 import colorMixin from './color-mixin';
 import trigger from './events';
-import {constants, override, transition, units} from './core';
+import {constants, override, optionalTransition, transition, units} from './core';
 import {rangedFilter} from './filters';
 import {utils} from './utils';
 
@@ -517,7 +517,7 @@ var coordinateGridMixin = function (_chart) {
 
         transition(axisXG, _chart.transitionDuration())
             .call(_xAxis);
-        dc.transition(axisXLab, _chart.transitionDuration())
+        transition(axisXLab, _chart.transitionDuration())
             .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
                   (_chart.height() - _xAxisLabelPadding) + ')');
     };
@@ -635,7 +635,7 @@ var coordinateGridMixin = function (_chart) {
         if (text && axisYLab.text() !== text) {
             axisYLab.text(text);
         }
-        dc.transition(axisYLab, _chart.transitionDuration())
+        transition(axisYLab, _chart.transitionDuration())
             .attr('transform', 'translate(' + labelXPosition + ',' + labelYPosition + '),rotate(' + rotation + ')');
     };
 
@@ -1052,7 +1052,7 @@ var coordinateGridMixin = function (_chart) {
                 _chart.brush().extent(_chart.filter());
             }
 
-            var gBrush = dc.optionalTransition(doTransition, _chart.transitionDuration())(g.select('g.brush'));
+            var gBrush = optionalTransition(doTransition, _chart.transitionDuration())(g.select('g.brush'));
             _chart.setBrushY(gBrush);
             gBrush.call(_chart.brush()
                       .x(_chart.x())

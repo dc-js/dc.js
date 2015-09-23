@@ -1,5 +1,17 @@
 import * as d3 from 'd3';
 
+function boxWhiskers (d) {
+    return [0, d.length - 1];
+}
+
+function boxQuartiles (d) {
+    return [
+        d3.quantile(d, 0.25),
+        d3.quantile(d, 0.5),
+        d3.quantile(d, 0.75)
+    ];
+}
+
 // https://github.com/d3/d3-plugins/blob/master/box/box.js
 // Inspired by http://informationandvisualization.de/blog/box-plot
 var box = function () {
@@ -12,14 +24,14 @@ var box = function () {
         quartiles = boxQuartiles,
         tickFormat = null;
 
-        // For each small multiple…
-        function box (g) {
-            g.each(function (d, i) {
-                d = d.map(value).sort(d3.ascending);
-                var g = d3.select(this),
-                    n = d.length,
-                    min = d[0],
-                    max = d[n - 1];
+    // For each small multiple…
+    function box (g) {
+        g.each(function (d, i) {
+            d = d.map(value).sort(d3.ascending);
+            var g = d3.select(this),
+                n = d.length,
+                min = d[0],
+                max = d[n - 1];
 
             // Compute quartiles. Must return exactly 3 elements.
             var quartileData = d.quartiles = quartiles(d);
@@ -301,17 +313,5 @@ var box = function () {
 
     return box;
 };
-
-function boxWhiskers (d) {
-    return [0, d.length - 1];
-}
-
-function boxQuartiles (d) {
-    return [
-        d3.quantile(d, 0.25),
-        d3.quantile(d, 0.5),
-        d3.quantile(d, 0.75)
-    ];
-}
 
 export default box;

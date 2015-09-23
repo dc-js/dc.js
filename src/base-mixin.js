@@ -2,7 +2,7 @@ import * as crossfilter from 'crossfilter';
 import * as d3 from 'd3';
 import trigger from './events';
 import {constants, instanceOfChart, deregisterChart, registerChart, redrawAll, renderAll} from './core';
-import {InvalidStateException} from './errors';
+import {BadArgumentException, InvalidStateException} from './errors';
 import {debug, deprecate} from './logger';
 import {pluck, printers, utils} from './utils';
 
@@ -16,8 +16,8 @@ import {pluck, printers, utils} from './utils';
  * @param {Object} _chart
  * @return {dc.baseMixin}
  */
-dc.baseMixin = function (_chart) {
-    _chart.__dcFlag__ = dc.utils.uniqueId();
+var baseMixin = function (_chart) {
+    _chart.__dcFlag__ = utils.uniqueId();
 
     var _dimension;
     var _group;
@@ -83,7 +83,7 @@ dc.baseMixin = function (_chart) {
         } else if (filters.length === 1 && !filters[0].isFiltered) {
             // single value and not a function-based filter
             dimension.filterExact(filters[0]);
-        } else if (filters.length === 1 && filters[0].filterType==='RangedFilter') {
+        } else if (filters.length === 1 && filters[0].filterType === 'RangedFilter') {
             // single range-based filter
             dimension.filterRange(filters[0]);
         } else {
@@ -402,8 +402,8 @@ dc.baseMixin = function (_chart) {
             _anchor = parent.anchor();
             _root = parent.root();
             _isChild = true;
-        } else if(parent) {
-            if(parent.select && parent.classed) { // detect d3 selection
+        } else if (parent) {
+            if (parent.select && parent.classed) { // detect d3 selection
                 _anchor = parent.node();
             } else {
                 _anchor = parent;
@@ -412,9 +412,8 @@ dc.baseMixin = function (_chart) {
             _root.classed(constants.CHART_CLASS, true);
             registerChart(_chart, chartGroup);
             _isChild = false;
-        }
-        else {
-            throw new dc.errors.BadArgumentException('parent must be defined');
+        } else {
+            throw new BadArgumentException('parent must be defined');
         }
         _chartGroup = chartGroup;
         return _chart;
@@ -1247,7 +1246,7 @@ dc.baseMixin = function (_chart) {
      * @param {Function} renderletFunction
      * @return {dc.baseMixin}
      */
-    _chart.renderlet = dc.logger.deprecate(function (renderletFunction) {
+    _chart.renderlet = deprecate(function (renderletFunction) {
         _chart.on('renderlet.' + utils.uniqueId(), renderletFunction);
         return _chart;
     }, 'chart.renderlet has been deprecated.  Please use chart.on("renderlet.<renderletKey>", renderletFunction)');
