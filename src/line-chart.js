@@ -1,3 +1,9 @@
+import * as d3 from 'd3';
+import coordinateGridMixin from './coordinate-grid-mixin';
+import stackMixin from './stack-mixin';
+import {override, transition} from './core';
+import {pluck, utils} from './utils';
+
 /**
  * Concrete line/area chart implementation.
  * Examples:
@@ -22,7 +28,7 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {LineChart}
  */
-dc.lineChart = function (parent, chartGroup) {
+var lineChart = function (parent, chartGroup) {
     var DEFAULT_DOT_RADIUS = 5;
     var TOOLTIP_G_CLASS = 'dc-tooltip';
     var DOT_CIRCLE_CLASS = 'dot';
@@ -30,7 +36,7 @@ dc.lineChart = function (parent, chartGroup) {
     var X_AXIS_REF_LINE_CLASS = 'xRef';
     var DEFAULT_DOT_OPACITY = 1e-6;
 
-    var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
+    var _chart = stackMixin(coordinateGridMixin({}));
     var _renderArea = false;
     var _dotRadius = DEFAULT_DOT_RADIUS;
     var _dataPointRadius = null;
@@ -193,7 +199,7 @@ dc.lineChart = function (parent, chartGroup) {
             path.attr('stroke-dasharray', _dashStyle);
         }
 
-        dc.transition(layers.select('path.line'), _chart.transitionDuration())
+        transition(layers.select('path.line'), _chart.transitionDuration())
             //.ease('linear')
             .attr('stroke', colors)
             .attr('d', function (d) {
@@ -226,7 +232,7 @@ dc.lineChart = function (parent, chartGroup) {
                     return safeD(area(d.values));
                 });
 
-            dc.transition(layers.select('path.area'), _chart.transitionDuration())
+            transition(layers.select('path.area'), _chart.transitionDuration())
                 //.ease('linear')
                 .attr('fill', colors)
                 .attr('d', function (d) {
@@ -262,7 +268,7 @@ dc.lineChart = function (parent, chartGroup) {
                 createRefLines(g);
 
                 var dots = g.selectAll('circle.' + DOT_CIRCLE_CLASS)
-                    .data(points, dc.pluck('x'));
+                    .data(points, pluck('x'));
 
                 dots.enter()
                     .append('circle')
@@ -283,10 +289,10 @@ dc.lineChart = function (parent, chartGroup) {
 
                 dots
                     .attr('cx', function (d) {
-                        return dc.utils.safeNumber(_chart.x()(d.x));
+                        return utils.safeNumber(_chart.x()(d.x));
                     })
                     .attr('cy', function (d) {
-                        return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
+                        return utils.safeNumber(_chart.y()(d.y + d.y0));
                     })
                     .attr('fill', _chart.getColor)
                     .call(renderTitle, d);
@@ -341,7 +347,7 @@ dc.lineChart = function (parent, chartGroup) {
     function renderTitle (dot, d) {
         if (_chart.renderTitle()) {
             dot.selectAll('title').remove();
-            dot.append('title').text(dc.pluck('data', _chart.title(d.name)));
+            dot.append('title').text(pluck('data', _chart.title(d.name)));
         }
     }
 
@@ -434,7 +440,7 @@ dc.lineChart = function (parent, chartGroup) {
             .classed('fadeout', false);
     };
 
-    dc.override(_chart, 'legendables', function () {
+    override(_chart, 'legendables', function () {
         var legendables = _chart._legendables();
         if (!_dashStyle) {
             return legendables;
@@ -447,3 +453,5 @@ dc.lineChart = function (parent, chartGroup) {
 
     return _chart.anchor(parent, chartGroup);
 };
+
+export default lineChart;

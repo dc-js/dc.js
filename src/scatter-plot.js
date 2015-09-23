@@ -1,3 +1,9 @@
+import * as d3 from 'd3';
+import coordinateGridMixin from './coordinate-grid-mixin';
+import trigger from './events';
+import {constants, override, transition} from './core';
+import {rangedTwoDimensionalFilter} from './filters';
+
 /**
  * A scatter plot chart
  * @name scatterPlot
@@ -18,8 +24,8 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {SeriesChart}
  */
-dc.scatterPlot = function (parent, chartGroup) {
-    var _chart = dc.coordinateGridMixin({});
+var scatterPlot = function (parent, chartGroup) {
+    var _chart = coordinateGridMixin({});
     var _symbol = d3.svg.symbol();
 
     var _existenceAccessor = function (d) { return d.value; };
@@ -48,12 +54,12 @@ dc.scatterPlot = function (parent, chartGroup) {
         }
     });
 
-    dc.override(_chart, '_filter', function (filter) {
+    override(_chart, '_filter', function (filter) {
         if (!arguments.length) {
             return _chart.__filter();
         }
 
-        return _chart.__filter(dc.filters.RangedTwoDimensionalFilter(filter));
+        return _chart.__filter(rangedTwoDimensionalFilter(filter));
     });
 
     _chart.plotData = function () {
@@ -68,13 +74,13 @@ dc.scatterPlot = function (parent, chartGroup) {
             .attr('fill', _chart.getColor)
             .attr('transform', _locator);
 
-        dc.transition(symbols, _chart.transitionDuration())
+        transition(symbols, _chart.transitionDuration())
             .attr('opacity', function (d) { return _existenceAccessor(d) ? 1 : 0; })
             .attr('fill', _chart.getColor)
             .attr('transform', _locator)
             .attr('d', _symbol);
 
-        dc.transition(symbols.exit(), _chart.transitionDuration())
+        transition(symbols.exit(), _chart.transitionDuration())
             .attr('opacity', 0).remove();
     };
 
@@ -190,7 +196,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         });
         var oldSize = _symbol.size();
         _symbol.size(Math.pow(size, 2));
-        dc.transition(symbols, _chart.transitionDuration()).attr('d', _symbol);
+        transition(symbols, _chart.transitionDuration()).attr('d', _symbol);
         _symbol.size(oldSize);
     }
 
@@ -219,7 +225,7 @@ dc.scatterPlot = function (parent, chartGroup) {
             this.filtered = filter && filter.isFiltered(d.key);
         });
 
-        dc.transition(symbols, _chart.transitionDuration()).attr('d', _symbol);
+        transition(symbols, _chart.transitionDuration()).attr('d', _symbol);
     }
 
     _chart._brushing = function () {
@@ -228,7 +234,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         _chart.redrawBrush(_chart.g());
 
         if (_chart.brushIsEmpty(extent)) {
-            dc.events.trigger(function () {
+            trigger(function () {
                 _chart.filter(null);
                 _chart.redrawGroup();
             });
@@ -236,12 +242,12 @@ dc.scatterPlot = function (parent, chartGroup) {
             resizeFiltered(false);
 
         } else {
-            var ranged2DFilter = dc.filters.RangedTwoDimensionalFilter(extent);
-            dc.events.trigger(function () {
+            var ranged2DFilter = rangedTwoDimensionalFilter(extent);
+            trigger(function () {
                 _chart.filter(null);
                 _chart.filter(ranged2DFilter);
                 _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
+            }, constants.EVENT_DELAY);
 
             resizeFiltered(ranged2DFilter);
         }
@@ -253,3 +259,5 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     return _chart.anchor(parent, chartGroup);
 };
+
+export default scatterPlot;

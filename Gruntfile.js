@@ -1,6 +1,7 @@
 module.exports = function (grunt) {
     'use strict';
 
+    var webpack = require('webpack');
     require('load-grunt-tasks')(grunt, {
         pattern: ['grunt-*', '!grunt-lib-phantomjs', '!grunt-template-jasmine-istanbul']
     });
@@ -19,34 +20,10 @@ module.exports = function (grunt) {
     grunt.initConfig({
         conf: config,
 
-        concat: {
-            options: {
-                process: true,
-                sourceMap: true,
-                banner: '<%= conf.banner %>'
-            },
-            js: {
-                src: '<%= conf.jsFiles %>',
-                dest: '<%= conf.pkg.name %>.js'
-            }
-        },
-        uglify: {
-            jsmin: {
-                options: {
-                    mangle: true,
-                    compress: true,
-                    sourceMap: true,
-                    banner: '<%= conf.banner %>'
-                },
-                src: '<%= conf.pkg.name %>.js',
-                dest: '<%= conf.pkg.name %>.min.js'
-            }
-        },
         jscs: {
             source: {
                 src: [
                     '<%= conf.src %>/**/*.js',
-                    '!<%= conf.src %>/{banner,footer}.js',
                     '<%= conf.spec %>/**/*.js',
                     'Gruntfile.js',
                     'grunt/*.js',
@@ -60,7 +37,6 @@ module.exports = function (grunt) {
             source: {
                 src: [
                     '<%= conf.src %>/**/*.js',
-                    '!<%= conf.src %>/{banner,footer}.js',
                     '<%= conf.spec %>/**/*.js',
                     'Gruntfile.js',
                     'grunt/*.js',
@@ -147,20 +123,6 @@ module.exports = function (grunt) {
                         ]
                     }
                 }
-            },
-            browserify: {
-                options: {
-                    display: 'short',
-                    summary: true,
-                    specs:  '<%= conf.spec %>/*-spec.js',
-                    helpers: '<%= conf.spec %>/helpers/*.js',
-                    version: '2.0.0',
-                    outfile: '<%= conf.spec %>/index-browserify.html',
-                    keepRunner: true
-                },
-                src: [
-                    'bundle.js'
-                ]
             }
         },
         'saucelabs-jasmine': {
@@ -310,14 +272,49 @@ module.exports = function (grunt) {
                     ' || echo \'Cowardly refusing to overwrite your existing git pre-commit hook.\''
             }
         },
-        browserify: {
-            dev: {
-                src: '<%= conf.pkg.name %>.js',
-                dest: 'bundle.js',
-                options: {
-                    browserifyOptions: {
-                        standalone: 'dc'
-                    }
+
+        webpack: {
+            options: {
+                progress: false, // freaked on windows
+                failOnError: true,
+                externals: {
+                    'crossfilter': 'crossfilter',
+                    'd3': 'd3'
+                },
+                entry: './index.js',
+                devtool: 'source-map',
+                module: {
+                    preLoaders: [{test: /\.js$/, loader: 'source-map-loader'}],
+                    loaders: [{test: /\.js$/, loader: 'babel-loader'}]
+                }
+            },
+            debug: {
+                plugins: [
+                    new webpack.DefinePlugin({
+                        __VERSION__: JSON.stringify(config.pkg.version)
+                    }),
+                    new webpack.BannerPlugin('<%= conf.banner %>', {raw: true})
+                ],
+                output: {
+                    filename: 'dc.js',
+                    library: 'dc',
+                    libraryTarget: 'umd',
+                    devtoolModuleFilenameTemplate: 'webpack:///<%= conf.pkg.name %>/[resource-path]'
+                }
+            },
+            dist: {
+                plugins: [
+                    new webpack.DefinePlugin({
+                        __VERSION__: JSON.stringify(config.pkg.version)
+                    }),
+                    new webpack.BannerPlugin('<%= conf.banner %>', {raw: true}),
+                    new webpack.optimize.UglifyJsPlugin()
+                ],
+                output: {
+                    filename: 'dc.min.js',
+                    library: 'dc',
+                    libraryTarget: 'umd',
+                    devtoolModuleFilenameTemplate: 'webpack:///<%= conf.pkg.name %>/[resource-path]'
                 }
             }
         }
@@ -346,12 +343,11 @@ module.exports = function (grunt) {
     });
 
     // task aliases
-    grunt.registerTask('build', ['concat', 'uglify']);
+    grunt.registerTask('build', ['webpack']);
     grunt.registerTask('docs', ['build', 'copy', 'jsdoc2md', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine-docs']);
     grunt.registerTask('test', ['build', 'jasmine:specs']);
-    grunt.registerTask('test-browserify', ['build', 'browserify', 'jasmine:browserify']);
     grunt.registerTask('coverage', ['build', 'jasmine:coverage']);
     grunt.registerTask('ci', ['test', 'jasmine:specs:build', 'connect:server', 'saucelabs-jasmine']);
     grunt.registerTask('ci-pull', ['test', 'jasmine:specs:build', 'connect:server']);

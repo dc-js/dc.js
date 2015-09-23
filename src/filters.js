@@ -18,22 +18,19 @@
  * @memberof dc
  * @type {{}}
  */
-dc.filters = {};
 
 /**
  * RangedFilter is a filter which accepts keys between `low` and `high`.  It is used to implement X
  * axis brushing for the [coordinate grid charts](#coordinate-grid-mixin).
  *
  * Its `filterType` is 'RangedFilter'
- * @name RangedFilter
+ * @name rangedFilter
  * @memberof dc.filters
  * @param {Number} low
  * @param {Number} high
  * @returns {Array<Number>}
- * @constructor
  */
-dc.filters.RangedFilter = function (low, high) {
-    var range = new Array(low, high);
+export var rangedFilter = function (low, high) {    var range = new Array(low, high);
     range.isFiltered = function (value) {
         return value >= this[0] && value < this[1];
     };
@@ -48,13 +45,12 @@ dc.filters.RangedFilter = function (low, high) {
  * filtered by filtering all the cells in the row or column.)
  *
  * Its `filterType` is 'TwoDimensionalFilter'
- * @name TwoDimensionalFilter
+ * @name twoDimensionalFilter
  * @memberof dc.filters
  * @param {Array<Number>} filter
  * @returns {Array<Number>}
- * @constructor
  */
-dc.filters.TwoDimensionalFilter = function (filter) {
+export var twoDimensionalFilter = function (filter) {
     if (filter === null) { return null; }
 
     var f = filter;
@@ -80,13 +76,12 @@ dc.filters.TwoDimensionalFilter = function (filter) {
  * x2`.
  *
  * Its `filterType` is 'RangedTwoDimensionalFilter'
- * @name RangedTwoDimensionalFilter
+ * @name rangedTwoDimensionalFilter
  * @memberof dc.filters
  * @param {Array<Array<Number>>} filter
  * @returns {Array<Array<Number>>}
- * @constructor
  */
-dc.filters.RangedTwoDimensionalFilter = function (filter) {
+export var rangedTwoDimensionalFilter = function (filter) {
     if (filter === null) { return null; }
 
     var f = filter;

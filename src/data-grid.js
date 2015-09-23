@@ -1,3 +1,6 @@
+import * as d3 from 'd3';
+import baseMixin from './base-mixin';
+
 /**
  * Data grid is a simple widget designed to list the filtered records, providing
  * a simple way to define how the items are displayed.
@@ -19,13 +22,13 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {DataGrid}
  */
-dc.dataGrid = function (parent, chartGroup) {
+var dataGrid = function (parent, chartGroup) {
     var LABEL_CSS_CLASS = 'dc-grid-label';
     var ITEM_CSS_CLASS = 'dc-grid-item';
     var GROUP_CSS_CLASS = 'dc-grid-group';
     var GRID_CSS_CLASS = 'dc-grid-top';
 
-    var _chart = dc.baseMixin({});
+    var _chart = baseMixin({});
 
     var _size = 999; // shouldn't be needed, but you might
     var _html = function (d) { return 'you need to provide an html() handling param:  ' + JSON.stringify(d); };
@@ -233,3 +236,5 @@ dc.dataGrid = function (parent, chartGroup) {
 
     return _chart.anchor(parent, chartGroup);
 };
+
+export default dataGrid;

@@ -1,3 +1,11 @@
+import * as crossfilter from 'crossfilter';
+import * as d3 from 'd3';
+import trigger from './events';
+import {constants, instanceOfChart, deregisterChart, registerChart, redrawAll, renderAll} from './core';
+import {BadArgumentException, InvalidStateException} from './errors';
+import {debug, deprecate} from './logger';
+import {pluck, printers, utils} from './utils';
+
 /**
  * `dc.baseMixin` is an abstract functional object representing a basic `dc` chart object
  * for all chart and widget implementations. Methods from the `dc.baseMixin` are inherited
@@ -8,8 +16,8 @@
  * @param {Object} _chart
  * @return {dc.baseMixin}
  */
-dc.baseMixin = function (_chart) {
-    _chart.__dcFlag__ = dc.utils.uniqueId();
+var baseMixin = function (_chart) {
+    _chart.__dcFlag__ = utils.uniqueId();
 
     var _dimension;
     var _group;
@@ -33,11 +41,11 @@ dc.baseMixin = function (_chart) {
     };
     var _height = _defaultHeight;
 
-    var _keyAccessor = dc.pluck('key');
-    var _valueAccessor = dc.pluck('value');
-    var _label = dc.pluck('key');
+    var _keyAccessor = pluck('key');
+    var _valueAccessor = pluck('value');
+    var _label = pluck('key');
 
-    var _ordering = dc.pluck('key');
+    var _ordering = pluck('key');
     var _orderSort;
 
     var _renderLabel = false;
@@ -50,11 +58,11 @@ dc.baseMixin = function (_chart) {
 
     var _transitionDuration = 750;
 
-    var _filterPrinter = dc.printers.filters;
+    var _filterPrinter = printers.filters;
 
     var _mandatoryAttributes = ['dimension', 'group'];
 
-    var _chartGroup = dc.constants.DEFAULT_CHART_GROUP;
+    var _chartGroup = constants.DEFAULT_CHART_GROUP;
 
     var _listeners = d3.dispatch(
         'preRender',
@@ -75,7 +83,7 @@ dc.baseMixin = function (_chart) {
         } else if (filters.length === 1 && !filters[0].isFiltered) {
             // single value and not a function-based filter
             dimension.filterExact(filters[0]);
-        } else if (filters.length === 1 && filters[0].filterType==='RangedFilter') {
+        } else if (filters.length === 1 && filters[0].filterType === 'RangedFilter') {
             // single range-based filter
             dimension.filterRange(filters[0]);
         } else {
@@ -390,23 +398,22 @@ dc.baseMixin = function (_chart) {
         if (!arguments.length) {
             return _anchor;
         }
-        if (dc.instanceOfChart(parent)) {
+        if (instanceOfChart(parent)) {
             _anchor = parent.anchor();
             _root = parent.root();
             _isChild = true;
-        } else if(parent) {
-            if(parent.select && parent.classed) { // detect d3 selection
+        } else if (parent) {
+            if (parent.select && parent.classed) { // detect d3 selection
                 _anchor = parent.node();
             } else {
                 _anchor = parent;
             }
             _root = d3.select(_anchor);
-            _root.classed(dc.constants.CHART_CLASS, true);
-            dc.registerChart(_chart, chartGroup);
+            _root.classed(constants.CHART_CLASS, true);
+            registerChart(_chart, chartGroup);
             _isChild = false;
-        }
-        else {
-            throw new dc.errors.BadArgumentException('parent must be defined');
+        } else {
+            throw new BadArgumentException('parent must be defined');
         }
         _chartGroup = chartGroup;
         return _chart;
@@ -604,8 +611,8 @@ dc.baseMixin = function (_chart) {
 
     function checkForMandatoryAttributes (a) {
         if (!_chart[a] || !_chart[a]()) {
-            throw new dc.errors.InvalidStateException('Mandatory attribute chart.' + a +
-                ' is missing on chart[#' + _chart.anchorName() + ']');
+            throw new InvalidStateException('Mandatory attribute chart.' + a +
+                                                      ' is missing on chart[#' + _chart.anchorName() + ']');
         }
     }
 
@@ -683,11 +690,11 @@ dc.baseMixin = function (_chart) {
     };
 
     _chart.redrawGroup = function () {
-        dc.redrawAll(_chart.chartGroup());
+        redrawAll(_chart.chartGroup());
     };
 
     _chart.renderGroup = function () {
-        dc.renderAll(_chart.chartGroup());
+        renderAll(_chart.chartGroup());
     };
 
     _chart._invokeFilteredListener = function (f) {
@@ -962,18 +969,18 @@ dc.baseMixin = function (_chart) {
     };
 
     _chart.highlightSelected = function (e) {
-        d3.select(e).classed(dc.constants.SELECTED_CLASS, true);
-        d3.select(e).classed(dc.constants.DESELECTED_CLASS, false);
+        d3.select(e).classed(constants.SELECTED_CLASS, true);
+        d3.select(e).classed(constants.DESELECTED_CLASS, false);
     };
 
     _chart.fadeDeselected = function (e) {
-        d3.select(e).classed(dc.constants.SELECTED_CLASS, false);
-        d3.select(e).classed(dc.constants.DESELECTED_CLASS, true);
+        d3.select(e).classed(constants.SELECTED_CLASS, false);
+        d3.select(e).classed(constants.DESELECTED_CLASS, true);
     };
 
     _chart.resetHighlight = function (e) {
-        d3.select(e).classed(dc.constants.SELECTED_CLASS, false);
-        d3.select(e).classed(dc.constants.DESELECTED_CLASS, false);
+        d3.select(e).classed(constants.SELECTED_CLASS, false);
+        d3.select(e).classed(constants.DESELECTED_CLASS, false);
     };
 
     /**
@@ -986,7 +993,7 @@ dc.baseMixin = function (_chart) {
      */
     _chart.onClick = function (datum) {
         var filter = _chart.keyAccessor()(datum);
-        dc.events.trigger(function () {
+        trigger(function () {
             _chart.filter(filter);
             _chart.redrawGroup();
         });
@@ -1239,8 +1246,8 @@ dc.baseMixin = function (_chart) {
      * @param {Function} renderletFunction
      * @return {dc.baseMixin}
      */
-    _chart.renderlet = dc.logger.deprecate(function (renderletFunction) {
-        _chart.on('renderlet.' + dc.utils.uniqueId(), renderletFunction);
+    _chart.renderlet = deprecate(function (renderletFunction) {
+        _chart.on('renderlet.' + utils.uniqueId(), renderletFunction);
         return _chart;
     }, 'chart.renderlet has been deprecated.  Please use chart.on("renderlet.<renderletKey>", renderletFunction)');
 
@@ -1259,11 +1266,11 @@ dc.baseMixin = function (_chart) {
             return _chartGroup;
         }
         if (!_isChild) {
-            dc.deregisterChart(_chart, _chartGroup);
+            deregisterChart(_chart, _chartGroup);
         }
         _chartGroup = chartGroup;
         if (!_isChild) {
-            dc.registerChart(_chart, _chartGroup);
+            registerChart(_chart, _chartGroup);
         }
         return _chart;
     };
@@ -1348,7 +1355,7 @@ dc.baseMixin = function (_chart) {
                     _chart[o].call(_chart, opts[o]);
                 }
             } else {
-                dc.logger.debug('Not a valid option setter name: ' + o);
+                debug('Not a valid option setter name: ' + o);
             }
         }
         return _chart;
@@ -1392,3 +1399,5 @@ dc.baseMixin = function (_chart) {
 
     return _chart;
 };
+
+export default baseMixin;

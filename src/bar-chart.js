@@ -1,3 +1,10 @@
+import * as d3 from 'd3';
+import coordinateGridMixin from './coordinate-grid-mixin';
+import stackMixin from './stack-mixin';
+import {constants, override, transition} from './core';
+import {warn} from './logger';
+import {pluck, utils} from './utils';
+
 /**
  * Concrete bar chart/histogram implementation.
  *
@@ -23,11 +30,11 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @return {dc.barChart}
  */
-dc.barChart = function (parent, chartGroup) {
+var barChart = function (parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
     var DEFAULT_GAP_BETWEEN_BARS = 2;
 
-    var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
+    var _chart = stackMixin(coordinateGridMixin({}));
 
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
     var _centerBar = false;
@@ -35,15 +42,15 @@ dc.barChart = function (parent, chartGroup) {
 
     var _barWidth;
 
-    dc.override(_chart, 'rescale', function () {
+    override(_chart, 'rescale', function () {
         _chart._rescale();
         _barWidth = undefined;
         return _chart;
     });
 
-    dc.override(_chart, 'render', function () {
+    override(_chart, 'render', function () {
         if (_chart.round() && _centerBar && !_alwaysUseRounding) {
-            dc.logger.warn('By default, brush rounding is disabled if bars are centered. ' +
+            warn('By default, brush rounding is disabled if bars are centered. ' +
                          'See dc.js bar chart API documentation for details.');
         }
 
@@ -71,29 +78,29 @@ dc.barChart = function (parent, chartGroup) {
     };
 
     function barHeight (d) {
-        return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
+        return utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
     }
 
     function renderBars (layer, layerIndex, d) {
         var bars = layer.selectAll('rect.bar')
-            .data(d.values, dc.pluck('x'));
+            .data(d.values, pluck('x'));
 
         var enter = bars.enter()
             .append('rect')
             .attr('class', 'bar')
-            .attr('fill', dc.pluck('data', _chart.getColor))
+            .attr('fill', pluck('data', _chart.getColor))
             .attr('y', _chart.yAxisHeight())
             .attr('height', 0);
 
         if (_chart.renderTitle()) {
-            enter.append('title').text(dc.pluck('data', _chart.title(d.name)));
+            enter.append('title').text(pluck('data', _chart.title(d.name)));
         }
 
         if (_chart.isOrdinal()) {
             bars.on('click', _chart.onClick);
         }
 
-        dc.transition(bars, _chart.transitionDuration())
+        transition(bars, _chart.transitionDuration())
             .attr('x', function (d) {
                 var x = _chart.x()(d.x);
                 if (_centerBar) {
@@ -102,7 +109,7 @@ dc.barChart = function (parent, chartGroup) {
                 if (_chart.isOrdinal() && _gap !== undefined) {
                     x += _gap / 2;
                 }
-                return dc.utils.safeNumber(x);
+                return utils.safeNumber(x);
             })
             .attr('y', function (d) {
                 var y = _chart.y()(d.y + d.y0);
@@ -111,16 +118,16 @@ dc.barChart = function (parent, chartGroup) {
                     y -= barHeight(d);
                 }
 
-                return dc.utils.safeNumber(y);
+                return utils.safeNumber(y);
             })
             .attr('width', _barWidth)
             .attr('height', function (d) {
                 return barHeight(d);
             })
-            .attr('fill', dc.pluck('data', _chart.getColor))
-            .select('title').text(dc.pluck('data', _chart.title(d.name)));
+            .attr('fill', pluck('data', _chart.getColor))
+            .select('title').text(pluck('data', _chart.title(d.name)));
 
-        dc.transition(bars.exit(), _chart.transitionDuration())
+        transition(bars.exit(), _chart.transitionDuration())
             .attr('height', 0)
             .remove();
     }
@@ -150,26 +157,26 @@ dc.barChart = function (parent, chartGroup) {
 
         if (_chart.isOrdinal()) {
             if (_chart.hasFilter()) {
-                bars.classed(dc.constants.SELECTED_CLASS, function (d) {
+                bars.classed(constants.SELECTED_CLASS, function (d) {
                     return _chart.hasFilter(d.x);
                 });
-                bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
+                bars.classed(constants.DESELECTED_CLASS, function (d) {
                     return !_chart.hasFilter(d.x);
                 });
             } else {
-                bars.classed(dc.constants.SELECTED_CLASS, false);
-                bars.classed(dc.constants.DESELECTED_CLASS, false);
+                bars.classed(constants.SELECTED_CLASS, false);
+                bars.classed(constants.DESELECTED_CLASS, false);
             }
         } else {
             if (!_chart.brushIsEmpty(extent)) {
                 var start = extent[0];
                 var end = extent[1];
 
-                bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
+                bars.classed(constants.DESELECTED_CLASS, function (d) {
                     return d.x < start || d.x >= end;
                 });
             } else {
-                bars.classed(dc.constants.DESELECTED_CLASS, false);
+                bars.classed(constants.DESELECTED_CLASS, false);
             }
         }
     };
@@ -191,7 +198,7 @@ dc.barChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    dc.override(_chart, 'onClick', function (d) {
+    override(_chart, 'onClick', function (d) {
         _chart._onClick(d.data);
     });
 
@@ -310,7 +317,7 @@ dc.barChart = function (parent, chartGroup) {
             .classed('fadeout', false);
     };
 
-    dc.override(_chart, 'xAxisMax', function () {
+    override(_chart, 'xAxisMax', function () {
         var max = this._xAxisMax();
         if ('resolution' in _chart.xUnits()) {
             var res = _chart.xUnits().resolution;
@@ -321,3 +328,5 @@ dc.barChart = function (parent, chartGroup) {
 
     return _chart.anchor(parent, chartGroup);
 };
+
+export default barChart;

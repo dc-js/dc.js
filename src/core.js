@@ -1,3 +1,5 @@
+import {utils} from './utils';
+
 /**
  * The entire dc.js library is scoped under the **dc** name space. It does not introduce
  * anything else into the global name space.
@@ -15,31 +17,29 @@
  *      .filter('sunday');
  */
 /*jshint -W079*/
-var dc = {
-    version: '<%= conf.pkg.version %>',
-    constants: {
-        CHART_CLASS: 'dc-chart',
-        DEBUG_GROUP_CLASS: 'debug',
-        STACK_CLASS: 'stack',
-        DESELECTED_CLASS: 'deselected',
-        SELECTED_CLASS: 'selected',
-        NODE_INDEX_NAME: '__index__',
-        GROUP_INDEX_NAME: '__group_index__',
-        DEFAULT_CHART_GROUP: '__default_chart_group__',
-        EVENT_DELAY: 40,
-        NEGLIGIBLE_NUMBER: 1e-10
-    },
-    _renderlet: null
+export var version = __VERSION__; // jshint -W117
+export var constants = {
+    CHART_CLASS: 'dc-chart',
+    DEBUG_GROUP_CLASS: 'debug',
+    STACK_CLASS: 'stack',
+    DESELECTED_CLASS: 'deselected',
+    SELECTED_CLASS: 'selected',
+    NODE_INDEX_NAME: '__index__',
+    GROUP_INDEX_NAME: '__group_index__',
+    DEFAULT_CHART_GROUP: '__default_chart_group__',
+    EVENT_DELAY: 40,
+    NEGLIGIBLE_NUMBER: 1e-10
 };
 /*jshint +W079*/
+var _renderlet = null;
 
-dc.chartRegistry = (function () {
+export var chartRegistry = (function () {
     // chartGroup:string => charts:array
     var _chartMap = {};
 
     function initializeChartGroup (group) {
         if (!group) {
-            group = dc.constants.DEFAULT_CHART_GROUP;
+            group = constants.DEFAULT_CHART_GROUP;
         }
 
         if (!_chartMap[group]) {
@@ -89,20 +89,20 @@ dc.chartRegistry = (function () {
     };
 })();
 
-dc.registerChart = function (chart, group) {
-    dc.chartRegistry.register(chart, group);
+export var registerChart = function (chart, group) {
+    chartRegistry.register(chart, group);
 };
 
-dc.deregisterChart = function (chart, group) {
-    dc.chartRegistry.deregister(chart, group);
+export var deregisterChart = function (chart, group) {
+    chartRegistry.deregister(chart, group);
 };
 
-dc.hasChart = function (chart) {
-    return dc.chartRegistry.has(chart);
+export var hasChart = function (chart) {
+    return chartRegistry.has(chart);
 };
 
-dc.deregisterAllCharts = function (group) {
-    dc.chartRegistry.clear(group);
+export var deregisterAllCharts = function (group) {
+    chartRegistry.clear(group);
 };
 
 /**
@@ -112,8 +112,8 @@ dc.deregisterAllCharts = function (group) {
  * @name filterAll
  * @param {String} [group]
  */
-dc.filterAll = function (group) {
-    var charts = dc.chartRegistry.list(group);
+export var filterAll = function (group) {
+    var charts = chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         charts[i].filterAll();
     }
@@ -126,8 +126,8 @@ dc.filterAll = function (group) {
  * @name refocusAll
  * @param {String} [group]
  */
-dc.refocusAll = function (group) {
-    var charts = dc.chartRegistry.list(group);
+export var refocusAll = function (group) {
+    var charts = chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         if (charts[i].focus) {
             charts[i].focus();
@@ -142,14 +142,14 @@ dc.refocusAll = function (group) {
  * @name renderAll
  * @param {String} [group]
  */
-dc.renderAll = function (group) {
-    var charts = dc.chartRegistry.list(group);
+export var renderAll = function (group) {
+    var charts = chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         charts[i].render();
     }
 
-    if (dc._renderlet !== null) {
-        dc._renderlet(group);
+    if (_renderlet !== null) {
+        _renderlet(group);
     }
 };
 
@@ -162,14 +162,14 @@ dc.renderAll = function (group) {
  * @name redrawAll
  * @param {String} [group]
  */
-dc.redrawAll = function (group) {
-    var charts = dc.chartRegistry.list(group);
+export var redrawAll = function (group) {
+    var charts = chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         charts[i].redraw();
     }
 
-    if (dc._renderlet !== null) {
-        dc._renderlet(group);
+    if (_renderlet !== null) {
+        _renderlet(group);
     }
 };
 
@@ -178,13 +178,19 @@ dc.redrawAll = function (group) {
  * immediately
  * @memberof dc
  * @name disableTransitions
- * @type {Boolean}
- * @default false
+ * @param {Boolean} [disableTransitions=false]
+ * @return {Boolean}
  */
-dc.disableTransitions = false;
+var _disableTransitions = false;
+export var disableTransitions = function (disableTransitions) {
+    if (!arguments.length) {
+        return _disableTransitions;
+    }
+    _disableTransitions = disableTransitions;
+};
 
-dc.transition = function (selections, duration, callback, name) {
-    if (duration <= 0 || duration === undefined || dc.disableTransitions) {
+export var transition = function (selections, duration, callback, name) {
+    if (duration <= 0 || duration === undefined || _disableTransitions) {
         return selections;
     }
 
@@ -200,10 +206,10 @@ dc.transition = function (selections, duration, callback, name) {
 };
 
 /* somewhat silly, but to avoid duplicating logic */
-dc.optionalTransition = function (enable, duration, callback, name) {
+export var optionalTransition = function (enable, duration, callback, name) {
     if (enable) {
         return function (selection) {
-            return dc.transition(selection, duration, callback, name);
+            return transition(selection, duration, callback, name);
         };
     } else {
         return function (selection) {
@@ -217,7 +223,7 @@ dc.optionalTransition = function (enable, duration, callback, name) {
  * @memberof dc
  * @type {{}}
  */
-dc.units = {};
+var units = {};
 
 /**
  * The default value for `xUnits` for the [Coordinate Grid Chart](#coordinate-grid-chart) and should
@@ -231,7 +237,7 @@ dc.units = {};
  * @param {Number} end
  * @returns {Number}
  */
-dc.units.integers = function (start, end) {
+units.integers = function (start, end) {
     return Math.abs(end - start);
 };
 
@@ -249,7 +255,7 @@ dc.units.integers = function (start, end) {
  * @param {Array<String>} domain
  * @returns {Array<String>}
  */
-dc.units.ordinal = function (start, end, domain) {
+units.ordinal = function (start, end, domain) {
     return domain;
 };
 
@@ -258,7 +264,7 @@ dc.units.ordinal = function (start, end, domain) {
  * @memberof dc.units
  * @type {{}}
  */
-dc.units.fp = {};
+units.fp = {};
 /**
  * This function generates an argument for the [Coordinate Grid Chart's](#coordinate-grid-chart)
  * `xUnits` function specifying that the x values are floating-point numbers with the given
@@ -276,10 +282,10 @@ dc.units.fp = {};
  * @param {Number} precision
  * @returns {Function} start-end unit function
  */
-dc.units.fp.precision = function (precision) {
+units.fp.precision = function (precision) {
     var _f = function (s, e) {
         var d = Math.abs((e - s) / _f.resolution);
-        if (dc.utils.isNegligible(d - Math.floor(d))) {
+        if (utils.isNegligible(d - Math.floor(d))) {
             return Math.floor(d);
         } else {
             return Math.ceil(d);
@@ -288,32 +294,33 @@ dc.units.fp.precision = function (precision) {
     _f.resolution = precision;
     return _f;
 };
+export {units};
 
-dc.round = {};
-dc.round.floor = function (n) {
+var round = {};
+round.floor = function (n) {
     return Math.floor(n);
 };
-dc.round.ceil = function (n) {
+round.ceil = function (n) {
     return Math.ceil(n);
 };
-dc.round.round = function (n) {
+round.round = function (n) {
     return Math.round(n);
 };
+export {round};
 
-dc.override = function (obj, functionName, newFunction) {
+export var override = function (obj, functionName, newFunction) {
     var existingFunction = obj[functionName];
     obj['_' + functionName] = existingFunction;
     obj[functionName] = newFunction;
 };
 
-dc.renderlet = function (_) {
+export var renderlet = function (_) {
     if (!arguments.length) {
-        return dc._renderlet;
+        return _renderlet;
     }
-    dc._renderlet = _;
-    return dc;
+    _renderlet = _;
 };
 
-dc.instanceOfChart = function (o) {
+export var instanceOfChart = function (o) {
     return o instanceof Object && o.__dcFlag__ && true;
 };

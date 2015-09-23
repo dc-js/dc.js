@@ -1,3 +1,7 @@
+import bubbleMixin from './bubble-mixin';
+import coordinateGridMixin from './coordinate-grid-mixin';
+import {transition} from './core';
+
 /**
  * A concrete implementation of a general purpose bubble chart that allows data visualization using the
  * following dimensions:
@@ -25,8 +29,8 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {BubbleChart}
  */
-dc.bubbleChart = function (parent, chartGroup) {
-    var _chart = dc.bubbleMixin(dc.coordinateGridMixin({}));
+var bubbleChart = function (parent, chartGroup) {
+    var _chart = bubbleMixin(coordinateGridMixin({}));
 
     var _elasticRadius = false;
 
@@ -84,7 +88,7 @@ dc.bubbleChart = function (parent, chartGroup) {
             .on('click', _chart.onClick)
             .attr('fill', _chart.getColor)
             .attr('r', 0);
-        dc.transition(bubbleG, _chart.transitionDuration())
+        transition(bubbleG, _chart.transitionDuration())
             .selectAll('circle.' + _chart.BUBBLE_CLASS)
             .attr('r', function (d) {
                 return _chart.bubbleR(d);
@@ -99,7 +103,7 @@ dc.bubbleChart = function (parent, chartGroup) {
     }
 
     function updateNodes (bubbleG) {
-        dc.transition(bubbleG, _chart.transitionDuration())
+        transition(bubbleG, _chart.transitionDuration())
             .attr('transform', bubbleLocator)
             .selectAll('circle.' + _chart.BUBBLE_CLASS)
             .attr('fill', _chart.getColor)
@@ -145,3 +149,5 @@ dc.bubbleChart = function (parent, chartGroup) {
 
     return _chart.anchor(parent, chartGroup);
 };
+
+export default bubbleChart;

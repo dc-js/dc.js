@@ -1,3 +1,7 @@
+import * as d3 from 'd3';
+import compositeChart from './composite-chart';
+import lineChart from './line-chart';
+
 /**
  * A series chart is a chart that shows multiple series of data overlaid on one chart, where the
  * series is specified in the data. It is a specialization of Composite Chart and inherits all
@@ -18,15 +22,15 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {SeriesChart}
  */
-dc.seriesChart = function (parent, chartGroup) {
-    var _chart = dc.compositeChart(parent, chartGroup);
+var seriesChart = function (parent, chartGroup) {
+    var _chart = compositeChart(parent, chartGroup);
 
     function keySort (a, b) {
         return d3.ascending(_chart.keyAccessor()(a), _chart.keyAccessor()(b));
     }
 
     var _charts = {};
-    var _chartFunction = dc.lineChart;
+    var _chartFunction = lineChart;
     var _seriesAccessor;
     var _seriesSort = d3.ascending;
     var _valueSort = keySort;
@@ -170,3 +174,5 @@ dc.seriesChart = function (parent, chartGroup) {
 
     return _chart;
 };
+
+export default seriesChart;
