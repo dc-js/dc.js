@@ -361,7 +361,7 @@ dc.errors.InvalidStateException = function () {
 dc.errors.InvalidStateException.prototype = Object.create(dc.errors.Exception.prototype);
 dc.errors.InvalidStateException.prototype.constructor = dc.errors.InvalidStateException;
 
-dc.errors.BadArgumentException = function() {
+dc.errors.BadArgumentException = function () {
     dc.errors.Exception.apply(this, arguments);
 };
 
@@ -794,7 +794,7 @@ dc.baseMixin = function (_chart) {
         } else if (filters.length === 1 && !filters[0].isFiltered) {
             // single value and not a function-based filter
             dimension.filterExact(filters[0]);
-        } else if (filters.length === 1 && filters[0].filterType==='RangedFilter') {
+        } else if (filters.length === 1 && filters[0].filterType === 'RangedFilter') {
             // single range-based filter
             dimension.filterRange(filters[0]);
         } else {
@@ -1113,8 +1113,8 @@ dc.baseMixin = function (_chart) {
             _anchor = parent.anchor();
             _root = parent.root();
             _isChild = true;
-        } else if(parent) {
-            if(parent.select && parent.classed) { // detect d3 selection
+        } else if (parent) {
+            if (parent.select && parent.classed) { // detect d3 selection
                 _anchor = parent.node();
             } else {
                 _anchor = parent;
@@ -1123,8 +1123,7 @@ dc.baseMixin = function (_chart) {
             _root.classed(dc.constants.CHART_CLASS, true);
             dc.registerChart(_chart, chartGroup);
             _isChild = false;
-        }
-        else {
+        } else {
             throw new dc.errors.BadArgumentException('parent must be defined');
         }
         _chartGroup = chartGroup;
@@ -8121,6 +8120,7 @@ dc.pairedRowChart = function (parent, chartGroup) {
 
     // the margins between the charts need to be set to 0 so that they sit together
     var _margins = _chart.margins(); // get the default margins
+    _margins.right = _margins.left;
 
     _chart.margins = function (_) {
         if (!arguments.length) {
@@ -8200,12 +8200,12 @@ dc.pairedRowChart = function (parent, chartGroup) {
     };
 
     // get the charts - mainly used for testing
-    _chart.leftChart = function() {
-      return _leftChart;
+    _chart.leftChart = function () {
+        return _leftChart;
     };
 
-    _chart.rightChart = function() {
-      return _rightChart;
+    _chart.rightChart = function () {
+        return _rightChart;
     };
 
     // functions that we just want to pass on to both sub charts
@@ -8217,17 +8217,17 @@ dc.pairedRowChart = function (parent, chartGroup) {
         //colors
         'colors', 'ordinalColors', 'linearColors', 'colorAccessor', 'colorDomain', 'getColor', 'colorCalculator',
         // x axis
-        'x', 'elasticX', 'valueAccessor', 'labelOffsetX', 'titleLabelOffsetx',
+        'x', 'elasticX', 'valueAccessor', 'labelOffsetX', 'titleLabelOffsetx', 'xAxis',
         // y axis
-        'keyAccessor', 'labelOffsetY',
+        'keyAccessor', 'labelOffsetY', 'yAxis',
         // data
         'cap', 'ordering' , 'dimension', 'group', 'othersGrouper', 'data'
     ];
 
-    function addGetterSetterFunction(functionName) {
+    function addGetterSetterFunction (functionName) {
         _chart[functionName] = function (_) {
             if (!arguments.length) {
-                return _leftChart[functionName]();
+                return [_leftChart[functionName](), _rightChart[functionName]()];
             }
             _leftChart[functionName](_);
             _rightChart[functionName](_);
@@ -8243,7 +8243,7 @@ dc.pairedRowChart = function (parent, chartGroup) {
         '_doRedraw', 'redraw', '_doRender', 'render', 'calculateColorDomain', 'filterAll', 'resetSvg', 'expireCache'
     ];
 
-    function addPassOnFunctions(functionName) {
+    function addPassOnFunctions (functionName) {
         _chart[functionName] = function () {
             _leftChart[functionName]();
             _rightChart[functionName]();
