@@ -65,7 +65,8 @@ div.dc-chart {
     fill: #ccc;
 }
 
-.dc-chart .axis path, .axis line {
+.dc-chart .axis path,
+.dc-chart .axis line {
     fill: none;
     stroke: #000;
     shape-rendering: crispEdges;
@@ -253,7 +254,8 @@ div.dc-chart {
     stroke-opacity: 0.2;
 }
 
-.dc-chart path.dc-symbol, g.dc-legend-item.fadeout {
+.dc-chart path.dc-symbol,
+g.dc-legend-item.fadeout {
     fill-opacity: 0.5;
     stroke-opacity: 0.5;
 }

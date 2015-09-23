@@ -8,7 +8,7 @@
   <body>
 
     <div id="test"></div>
-    <button onclick="stop()">stop</button>
+    <button onclick="transitionTest.stop()">stop</button>
     <button onclick="button1()">left</button>
     <button onclick="button2()">right</button>
     <button onclick="button3()">middle</button>
@@ -19,7 +19,6 @@
     <script type="text/javascript" src="transition-test.js"></script>
     <script type="text/javascript">
 
-      var duration = 3000, pause = 500;
       var chart = dc.barChart("#test");
       d3.csv("../examples/morley.csv", function(error, experiments) {
 
@@ -32,7 +31,7 @@
               speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
 
           chart
-              .transitionDuration(duration)
+              .transitionDuration(transitionTest.duration)
               .width(768)
               .height(480)
               .x(d3.scale.linear().domain([0,20]))
@@ -47,17 +46,16 @@
               });
           chart.render();
 
-          var T = duration + pause;
           var reset = function() {
               chart.x().domain([0,20]);
           }
-          window.button1 = back_and_forth(T, function() {
+          window.button1 = transitionTest.oscillate(function() {
               chart.x().domain([0,10]);
           }, reset);
-          window.button2 = back_and_forth(T, function() {
+          window.button2 = transitionTest.oscillate(function() {
               chart.x().domain([16,20]);
           }, reset);
-          window.button3 = back_and_forth(T, function() {
+          window.button3 = transitionTest.oscillate(function() {
               chart.x().domain([6,14]);
           }, reset);
       });

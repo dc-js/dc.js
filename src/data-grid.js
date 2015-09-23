@@ -1,29 +1,24 @@
 /**
- ## Data Grid Widget
-
- Includes: [Base Mixin](#base-mixin)
-
- Data grid is a simple widget designed to list the filtered records, providing
- a simple way to define how the items are displayed.
-
- Examples:
- * [List of members of the european parliament](http://europarl.me/dc.js/web/ep/index.html)
-
- #### dc.dataGrid(parent[, chartGroup])
- Create a data grid widget instance and attach it to the given parent element.
-
-Parameters:
-* parent : string | node | selection - any valid
- [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- a dom block element such as a div; or a dom element or d3 selection.
-
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
- Interaction with a chart will only trigger events and redraws within the chart's group.
-
-Returns:
-A newly created data grid widget instance
-
- **/
+ * Data grid is a simple widget designed to list the filtered records, providing
+ * a simple way to define how the items are displayed.
+ *
+ * Note: Unlike other charts, the data grid chart (and data table) use the group attribute as a keying function
+ * for [nesting](https://github.com/mbostock/d3/wiki/Arrays#-nest) the data together in groups.
+ * Do not pass in a crossfilter group as this will not work.
+ *
+ * Examples:
+ * - [List of members of the european parliament](http://europarl.me/dc.js/web/ep/index.html)
+ * @name dataGrid
+ * @memberof dc
+ * @mixes dc.baseMixin
+ * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
+ * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ * a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart
+ * in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+ * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+ * Interaction with a chart will only trigger events and redraws within the chart's group.
+ * @returns {DataGrid}
+ */
 dc.dataGrid = function (parent, chartGroup) {
     var LABEL_CSS_CLASS = 'dc-grid-label';
     var ITEM_CSS_CLASS = 'dc-grid-item';
@@ -38,6 +33,7 @@ dc.dataGrid = function (parent, chartGroup) {
         return d;
     };
     var _order = d3.ascending;
+    var _beginSlice = 0, _endSlice;
 
     var _htmlGroup = function (d) {
         return '<div class=\'' + GROUP_CSS_CLASS + '\'><h1 class=\'' + LABEL_CSS_CLASS + '\'>' +
@@ -52,7 +48,7 @@ dc.dataGrid = function (parent, chartGroup) {
         return _chart;
     };
 
-    function renderGroups() {
+    function renderGroups () {
         var groups = _chart.root().selectAll('div.' + GRID_CSS_CLASS)
                 .data(nestEntries(), function (d) {
                     return _chart.keyAccessor()(d);
@@ -74,7 +70,7 @@ dc.dataGrid = function (parent, chartGroup) {
         return itemGroup;
     }
 
-    function nestEntries() {
+    function nestEntries () {
         var entries = _chart.dimension().top(_size);
 
         return d3.nest()
@@ -82,10 +78,10 @@ dc.dataGrid = function (parent, chartGroup) {
             .sortKeys(_order)
             .entries(entries.sort(function (a, b) {
                 return _order(_sortBy(a), _sortBy(b));
-            }));
+            }).slice(_beginSlice, _endSlice));
     }
 
-    function renderItems(groups) {
+    function renderItems (groups) {
         var items = groups.order()
                 .selectAll('div.' + ITEM_CSS_CLASS)
                 .data(function (d) {
@@ -109,87 +105,129 @@ dc.dataGrid = function (parent, chartGroup) {
     };
 
     /**
-     #### .size([size])
-     Get or set the grid size which determines the number of items displayed by the widget.
+     * Get or set the index of the beginning slice which determines which entries get displayed by the widget
+     * Useful when implementing pagination.
+     * @name beginSlice
+     * @memberof dc.dataGrid
+     * @instance
+     * @param {Number} [beginSlice=0]
+     * @returns {Chart}
+     */
+    _chart.beginSlice = function (beginSlice) {
+        if (!arguments.length) {
+            return _beginSlice;
+        }
+        _beginSlice = beginSlice;
+        return _chart;
+    };
 
-     **/
-    _chart.size = function (s) {
+    /**
+     * Get or set the index of the end slice which determines which entries get displayed by the widget
+     * Useful when implementing pagination.
+     * @name endSlice
+     * @memberof dc.dataGrid
+     * @instance
+     * @param {Number} [endSlice]
+     * @returns {Chart}
+     */
+    _chart.endSlice = function (endSlice) {
+        if (!arguments.length) {
+            return _endSlice;
+        }
+        _endSlice = endSlice;
+        return _chart;
+    };
+
+    /**
+     * Get or set the grid size which determines the number of items displayed by the widget.
+     * @name size
+     * @memberof dc.dataGrid
+     * @instance
+     * @param {Number} [size=999]
+     * @returns {Chart}
+     */
+    _chart.size = function (size) {
         if (!arguments.length) {
             return _size;
         }
-        _size = s;
+        _size = size;
         return _chart;
     };
 
     /**
-     #### .html( function (data) { return '<html>'; })
-     Get or set the function that formats an item. The data grid widget uses a
-     function to generate dynamic html. Use your favourite templating engine or
-     generate the string directly.
-     ```js
-     chart.html(function (d) { return '<div class='item '+data.exampleCategory+''>'+data.exampleString+'</div>';});
-     ```
-
-     **/
-    _chart.html = function (_) {
+     * Get or set the function that formats an item. The data grid widget uses a
+     * function to generate dynamic html. Use your favourite templating engine or
+     * generate the string directly.
+     * @name html
+     * @memberof dc.dataGrid
+     * @instance
+     * @example
+     * chart.html(function (d) { return '<div class='item '+data.exampleCategory+''>'+data.exampleString+'</div>';});
+     * @param {Function} [html]
+     * @returns {Chart}
+     */
+    _chart.html = function (html) {
         if (!arguments.length) {
             return _html;
         }
-        _html = _;
+        _html = html;
         return _chart;
     };
 
     /**
-     #### .htmlGroup( function (data) { return '<html>'; })
-     Get or set the function that formats a group label.
-     ```js
-     chart.htmlGroup (function (d) { return '<h2>'.d.key . 'with ' . d.values.length .' items</h2>'});
-     ```
-
-     **/
-    _chart.htmlGroup = function (_) {
+     * Get or set the function that formats a group label.
+     * @name htmlGroup
+     * @memberof dc.dataGrid
+     * @instance
+     * @example
+     * chart.htmlGroup (function (d) { return '<h2>'.d.key . 'with ' . d.values.length .' items</h2>'});
+     * @param {Function} [htmlGroup]
+     * @returns {Chart}
+     */
+    _chart.htmlGroup = function (htmlGroup) {
         if (!arguments.length) {
             return _htmlGroup;
         }
-        _htmlGroup = _;
+        _htmlGroup = htmlGroup;
         return _chart;
     };
 
     /**
-     #### .sortBy([sortByFunction])
-     Get or set sort-by function. This function works as a value accessor at the item
-     level and returns a particular field to be sorted.
-     by. Default: identity function
-
-     ```js
-     chart.sortBy(function(d) {
-         return d.date;
-     });
-     ```
-
-     **/
-    _chart.sortBy = function (_) {
+     * Get or set sort-by function. This function works as a value accessor at the item
+     * level and returns a particular field to be sorted.
+     * @name sortBy
+     * @memberof dc.dataGrid
+     * @instance
+     * @example
+     * chart.sortBy(function(d) {
+     *     return d.date;
+     * });
+     * @param {Function} [sortByFunction]
+     * @returns {Chart}
+     */
+    _chart.sortBy = function (sortByFunction) {
         if (!arguments.length) {
             return _sortBy;
         }
-        _sortBy = _;
+        _sortBy = sortByFunction;
         return _chart;
     };
 
     /**
-     #### .order([order])
-     Get or set sort order function. Default value: ``` d3.ascending ```
-
-     ```js
-     chart.order(d3.descending);
-     ```
-
-     **/
-    _chart.order = function (_) {
+     * Get or set sort order function.
+     * @name order
+     * @memberof dc.dataGrid
+     * @instance
+     * @example
+     * chart.order(d3.descending);
+     * @param {Function} [order=d3.ascending]
+     * @returns {Chart}
+     */
+    _chart.order = function (order) {
         if (!arguments.length) {
             return _order;
         }
-        _order = _;
+        _order = order;
         return _chart;
     };
 

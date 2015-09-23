@@ -3,10 +3,58 @@
  * Front page stable version automatically read from GitHub, by Enrico Spinielli ([#865](https://github.com/dc-js/dc.js/pull/865))
 
 # 2.0 Series
+## 2.0.0 beta 19
+* Allow d3.selection to be passed as parent, as documented ([#1006](https://github.com/dc-js/dc.js/issues/1006))
+* Properly derive dc.errors from Error prototype to get stack
+* Add BadArgumentException and make .anchor() parent argument mandatory
+* Enable crossfilter optimizations by not resetting the filter and by using filterExact and filterRange, by Ethan Jewett ([#990](https://github.com/dc-js/dc.js/pull/990) / [#989](https://github.com/dc-js/dc.js/issues/989) / [#478](https://github.com/dc-js/dc.js/issues/478))
+* Add `filterType` to dc.filters, for filter optimizations and [easier serialization](https://github.com/dc-js/dc.js/issues/819)
+* More documentation improvements, by Matt Traynham ([#999](https://github.com/dc-js/dc.js/pull/999))
+* Fix method name in documentation ([#1009](https://github.com/dc-js/dc.js/issues/1009))
+* Move x axis when row chart size changes, by Wang Xuan ([#1001](https://github.com/dc-js/dc.js/pull/1001)
+* Fix css rule that was improperly selecting all axes, not just dc.js ones ([#1011](https://github.com/dc-js/dc.js/pull/1011) / ([#1005](https://github.com/dc-js/dc.js/issues/1007))
+* Add pre-commit hook to hopefully avoid ever checking in merge artifacts again.
+
+## 2.0.0 beta 18
+* Fixes resizing examples to use `rescale` - currently all coordinate grid charts need to call this when changing width/height, in order to get axes moved ([#974](https://github.com/dc-js/dc.js/issues/974))
+* Update all dependencies, continued linting, by Matt Traynham ([#975](https://github.com/dc-js/dc.js/pull/975))
+* Bubble mixin minimum radius accessor ([#687](https://github.com/dc-js/dc.js/issues/687))
+* Example of single selection of ordinal bar chart (for [#996](https://github.com/dc-js/dc.js/issues/996))
+* Move documentation to JSDoc toolchain, by Matt Traynham ([#978](https://github.com/dc-js/dc.js/pull/978) / [#994](https://github.com/dc-js/dc.js/pull/994))
+* Resize heat map axes when chart size changes, by Wang Xuan ([#995](https://github.com/dc-js/dc.js/pull/995)
+
+## 2.0.0 beta 17
+* Fixes issue where transitions were applied to the brush as it's being applied, causing it to lag ([#973](https://github.com/dc-js/dc.js/issues/973))
+
+## 2.0.0 beta 16
+* Reposition brush when coordinate grid chart size changes ([#972](https://github.com/dc-js/dc.js/pull/972))
+* Ability to slice the data grid, by Chris Alvino ([#946](https://github.com/dc-js/dc.js/pull/946)). Also a much-needed warning that data table and data grid `.group()` means something completely different.
+* Ability not to apply grouping to data table, by Emiliano Guevara ([#863](https://github.com/dc-js/dc.js/pull/863))
+
+## 2.0.0 beta 15
+* Reposition X axis on chart resize, by Rob Hardwick ([#856](https://github.com/dc-js/dc.js/pull/856)). Y axis as well
+* More fixes for resizing charts, and [a new resizing examples directory](http://dc-js.github.io/dc.js/resizing/), mostly for testing.
+
+## 2.0.0 beta 14
+* Fix a test for IE and add svg subpath matcher, for #894
+
+## 2.0.0 beta 13
+* Pie chart radius padding, by Matt Traynham ([#894](https://github.com/dc-js/dc.js/pull/894))
+* Example of a table showing group-aggregated data, by Ion Alberdi ([#929](https://github.com/dc-js/dc.js/pull/929))
+* Filtered items were not displayed after render in coordinate grid charts, by Matt Traynham ([#900](https://github.com/dc-js/dc.js/pull/900))
+* grammar/spelling/formatting fixes to annotated stock example, by Johnny Peck and Enrico Spinielli ([#956](https://github.com/dc-js/dc.js/pull/956), [#875](https://github.com/dc-js/dc.js/pull/875))
+* document bower install, by Mayfarth ([#899](https://github.com/dc-js/dc.js/pull/899))
+* remove unused bower version, by Kevin Kirsche ([#948](https://github.com/dc-js/dc.js/pull/948))
+
+## 2.0.0 beta 12
+ * axes should rescale on chart rescale (not just on zoom). ([#791](https://github.com/dc-js/dc.js/issues/791))
+ * always rescale x axis on render, and detect domain change more thoroughly, by Matt Traynham
+ ([#896](https://github.com/dc-js/dc.js/pull/896))
+
 ## 2.0.0 beta 11
  * pretransition event ([#806](https://github.com/dc-js/dc.js/issues/806))
  * replace `.renderlet(...)` with `.on("renderlet", ...)` in test and examples, by Alan Kavanagh ([#906](https://github.com/dc-js/dc.js/issues/906) / ([#917](https://github.com/dc-js/dc.js/pull/917))
- 
+
 ## 2.0.0 beta 10
  * component package manager support, by Shobhit Gupta ([#860](https://github.com/dc-js/dc.js/pull/860))
  * add sourcemaps (*.map) to distributions ([#866](https://github.com/dc-js/dc.js/issues/866))

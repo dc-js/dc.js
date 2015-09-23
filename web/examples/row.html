@@ -1,52 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>dc.js - Bar Chart Example</title>
+    <title>dc.js - Row Chart Example</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
 </head>
 <body>
 
 <div id="test"></div>
-<div id="test2"></div>
 
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
-
 var chart = dc.rowChart("#test");
-var chart2 = dc.rowChart("#test2");
-
 d3.csv("morley.csv", function(error, experiments) {
-
   experiments.forEach(function(x) {
     x.Speed = +x.Speed;
   });
-
   var ndx                 = crossfilter(experiments),
       runDimension        = ndx.dimension(function(d) {return +d.Run;}),
       speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
-
   chart
     .width(768)
     .height(480)
+    .x(d3.scale.linear().domain([6,20]))
+    .elasticX(true)
     .dimension(runDimension)
     .group(speedSumGroup)
-    .cap(10);
-
-    chart.render();
-
-  chart2
-    .width(768)
-    .height(480)
-    .dimension(runDimension)
-    .group(speedSumGroup)
-    .useRightYAxis(true);
-
-    chart2.render();
+    .render();
 });
-
 </script>
 
 </body>

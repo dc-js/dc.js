@@ -1,35 +1,23 @@
 /**
-## Scatter Plot
-Includes: [Coordinate Grid Mixin](#coordinate-grid-mixin)
-
-A scatter plot chart
-#### dc.scatterPlot(parent[, chartGroup])
-Create a scatter plot instance and attach it to the given parent element.
-
-Parameters:
-
-* parent : string | node | selection | compositeChart - any valid
- [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- a dom block element such as a div; or a dom element or d3 selection.
- If the scatter plot is a sub-chart in a [Composite Chart](#composite-chart) then pass in the parent composite
- chart instance.
-
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
- Interaction with a chart will only trigger events and redraws within the chart's group.
-
-Returns:
-A newly created scatter plot instance
-
-```js
-// create a scatter plot under #chart-container1 element using the default global chart group
-var chart1 = dc.scatterPlot('#chart-container1');
-// create a scatter plot under #chart-container2 element using chart group A
-var chart2 = dc.scatterPlot('#chart-container2', 'chartGroupA');
-// create a sub-chart under a composite parent chart
-var chart3 = dc.scatterPlot(compositeChart);
-```
-
- **/
+ * A scatter plot chart
+ * @name scatterPlot
+ * @memberof dc
+ * @mixes dc.coordinateGridMixin
+ * @example
+ * // create a scatter plot under #chart-container1 element using the default global chart group
+ * var chart1 = dc.scatterPlot('#chart-container1');
+ * // create a scatter plot under #chart-container2 element using chart group A
+ * var chart2 = dc.scatterPlot('#chart-container2', 'chartGroupA');
+ * // create a sub-chart under a composite parent chart
+ * var chart3 = dc.scatterPlot(compositeChart);
+ * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
+ * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ * a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart
+ * in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+ * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+ * Interaction with a chart will only trigger events and redraws within the chart's group.
+ * @returns {SeriesChart}
+ */
 dc.scatterPlot = function (parent, chartGroup) {
     var _chart = dc.coordinateGridMixin({});
     var _symbol = d3.svg.symbol();
@@ -91,27 +79,33 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     /**
-    #### .existenceAccessor([accessor])
-    Get or set the existence accessor.  If a point exists, it is drawn with symbolSize radius and
-    opacity 1; if it does not exist, it is drawn with hiddenSize radius and opacity 0. By default,
-    the existence accessor checks if the reduced value is truthy.
-    **/
-
-    _chart.existenceAccessor = function (acc) {
+     * Get or set the existence accessor.  If a point exists, it is drawn with symbolSize radius and
+     * opacity 1; if it does not exist, it is drawn with hiddenSize radius and opacity 0. By default,
+     * the existence accessor checks if the reduced value is truthy.
+     * @name existenceAccessor
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {Function} [accessor]
+     * @returns {Chart}
+     */
+    _chart.existenceAccessor = function (accessor) {
         if (!arguments.length) {
             return _existenceAccessor;
         }
-        _existenceAccessor = acc;
+        _existenceAccessor = accessor;
         return this;
     };
 
     /**
-    #### .symbol([type])
-    Get or set the symbol type used for each point. By default the symbol is a circle. See the D3
-    [docs](https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-symbol_type) for acceptable types.
-    Type can be a constant or an accessor.
-
-    **/
+     * Get or set the symbol type used for each point. By default the symbol is a circle. See the D3
+     * [docs](https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-symbol_type) for acceptable types.
+     * Type can be a constant or an accessor.
+     * @name symbol
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {Function} [type]
+     * @returns {Chart}
+     */
     _chart.symbol = function (type) {
         if (!arguments.length) {
             return _symbol.type();
@@ -121,41 +115,50 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     /**
-    #### .symbolSize([radius])
-    Set or get radius for symbols. Default: 3.
-
-    **/
-    _chart.symbolSize = function (s) {
+     * Set or get radius for symbols.
+     * @name symbolSize
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {Number} [symbolSize=3]
+     * @returns {Chart}
+     */
+    _chart.symbolSize = function (symbolSize) {
         if (!arguments.length) {
             return _symbolSize;
         }
-        _symbolSize = s;
+        _symbolSize = symbolSize;
         return _chart;
     };
 
     /**
-    #### .highlightedSize([radius])
-    Set or get radius for highlighted symbols. Default: 4.
-
-    **/
-    _chart.highlightedSize = function (s) {
+     * Set or get radius for highlighted symbols.
+     * @name highlightedSize
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {Number} [highlightedSize=5]
+     * @returns {Chart}
+     */
+    _chart.highlightedSize = function (highlightedSize) {
         if (!arguments.length) {
             return _highlightedSize;
         }
-        _highlightedSize = s;
+        _highlightedSize = highlightedSize;
         return _chart;
     };
 
     /**
-    #### .hiddenSize([radius])
-    Set or get radius for symbols when the group is empty. Default: 0.
-
-    **/
-    _chart.hiddenSize = function (s) {
+     * Set or get radius for symbols when the group is empty.
+     * @name hiddenSize
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {Number} [hiddenSize=0]
+     * @returns {Chart}
+     */
+    _chart.hiddenSize = function (hiddenSize) {
         if (!arguments.length) {
             return _hiddenSize;
         }
-        _hiddenSize = s;
+        _hiddenSize = hiddenSize;
         return _chart;
     };
 
@@ -181,7 +184,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         }).classed('fadeout', false);
     };
 
-    function resizeSymbolsWhere(condition, size) {
+    function resizeSymbolsWhere (condition, size) {
         var symbols = _chart.selectAll('.chart-body path.symbol').filter(function () {
             return condition(d3.select(this));
         });
@@ -211,7 +214,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         return _chart.brush().empty() || !extent || extent[0][0] >= extent[1][0] || extent[0][1] >= extent[1][1];
     };
 
-    function resizeFiltered(filter) {
+    function resizeFiltered (filter) {
         var symbols = _chart.selectAll('.chart-body path.symbol').each(function (d) {
             this.filtered = filter && filter.isFiltered(d.key);
         });

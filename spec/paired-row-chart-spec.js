@@ -1,61 +1,62 @@
-describe('dc.pairedRowChart', function() {
+/* global appendChartID, loadGenderFixture */
+describe('dc.pairedRowChart', function () {
     var id, chart;
     var data, dimension, group, dummyGroup;
 
     beforeEach(function () {
-        genderFixture = loadGenderFixture();
-        data = crossfilter(genderFixture);
-        dimension = data.dimension(function(d) {
-            var age_range = 'Unknown';
+        data = crossfilter(loadGenderFixture());
+        dimension = data.dimension(function (d) {
+            /*jshint maxcomplexity:12 */
+            var ageRange = 'Unknown';
 
             if (d.age <= 9) {
-                age_range = '0 - 9';
+                ageRange = '0-9';
             } else if (d.age <= 19) {
-                age_range = '10 - 19';
+                ageRange = '10-19';
             } else if (d.age <= 29) {
-                age_range = '20 - 29';
+                ageRange = '20-29';
             } else if (d.age <= 39) {
-                age_range = '30 - 39';
+                ageRange = '30-39';
             } else if (d.age <= 49) {
-                age_range = '40 - 49';
+                ageRange = '40-49';
             } else if (d.age <= 59) {
-                age_range = '50 - 59';
+                ageRange = '50-59';
             } else if (d.age <= 69) {
-                age_range = '60 - 69';
+                ageRange = '60-69';
             } else if (d.age <= 79) {
-                age_range = '70 - 79';
+                ageRange = '70-79';
             } else if (d.age <= 89) {
-                age_range = '80 - 89';
+                ageRange = '80-89';
             } else if (d.age <= 99) {
-                age_range = '90 - 99';
+                ageRange = '90-99';
             } else if (d.age >= 100) {
-                age_range = '100+';
+                ageRange = '100+';
             }
 
-            return [d.gender, age_range];
-        }),
+            return [d.gender, ageRange];
+        });
         group = dimension.group().reduceCount();
 
         dummyGroup = {
-            all: function() {
-                var ageRanges = ['0 - 9', '10 - 19', '20 - 29', '30 - 39', '40 - 49', '50 - 59', '60 - 69', '70 - 79', '80 - 89', '90 - 99', '100+'];
+            all: function () {
+                var ageRanges = ['0-9', '10-19', '20-29', '30-39', '40-49', '50-59', '60-69', '70-79', '80-89', '90-99', '100+'];
 
                 // convert to object so we can easily tell if a key exists
                 var values = {};
-                group.all().forEach(function(d) {
+                group.all().forEach(function (d) {
                     values[d.key[0] + '.' + d.key[1]] = d.value;
                 });
 
                 // convert back into an array for the chart, making sure that all ageRanges exist
                 var g = [];
-                ageRanges.forEach(function(age_range) {
+                ageRanges.forEach(function (ageRange) {
                     g.push({
-                        key: ['Male', age_range],
-                        value: values['Male.' + age_range] || 0
+                        key: ['Male', ageRange],
+                        value: values['Male.' + ageRange] || 0
                     });
                     g.push({
-                        key: ['Female', age_range],
-                        value: values['Female.' + age_range] || 0
+                        key: ['Female', ageRange],
+                        value: values['Female.' + ageRange] || 0
                     });
                 });
 
@@ -66,15 +67,15 @@ describe('dc.pairedRowChart', function() {
         id = 'paired-row-chart';
         appendChartID(id);
 
-        chart = dc.pairedRowChart("#" + id);
+        chart = dc.pairedRowChart('#' + id);
         chart.dimension(dimension)
             .group(dummyGroup)
             .width(600).height(200).gap(10)
-            .leftKeyFilter(function(d) {
-              return d.key[0] === 'Male';
+            .leftKeyFilter(function (d) {
+                return d.key[0] === 'Male';
             })
-            .rightKeyFilter(function(d) {
-              return d.key[0] === 'Female';
+            .rightKeyFilter(function (d) {
+                return d.key[0] === 'Female';
             })
             .transitionDuration(0);
     });
@@ -112,10 +113,10 @@ describe('dc.pairedRowChart', function() {
             });
         });
 
-        describe('calculateAxisScaleData', function() {
-            it('should equal the group data', function() {
+        describe('calculateAxisScaleData', function () {
+            it('should equal the group data', function () {
                 expect(chart.leftChart().calculateAxisScaleData().length).toBe(dummyGroup.all().length);
-            })
+            });
         });
     });
 
@@ -152,10 +153,10 @@ describe('dc.pairedRowChart', function() {
             });
         });
 
-        describe('calculateAxisScaleData', function() {
-            it('should equal the group data', function() {
+        describe('calculateAxisScaleData', function () {
+            it('should equal the group data', function () {
                 expect(chart.rightChart().calculateAxisScaleData().length).toBe(dummyGroup.all().length);
-            })
+            });
         });
     });
 });

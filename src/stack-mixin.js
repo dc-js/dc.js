@@ -1,8 +1,11 @@
 /**
-## Stack Mixin
-Stack Mixin is an mixin that provides cross-chart support of stackability using d3.layout.stack.
-
-**/
+ * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.layout.stack.
+ * @name stackMixin
+ * @memberof dc
+ * @mixin
+ * @param {Object} _chart
+ * @return {dc.stackMixin}
+ */
 dc.stackMixin = function (_chart) {
 
     function prepareValues (layer, layerIdx) {
@@ -30,7 +33,7 @@ dc.stackMixin = function (_chart) {
 
     var _hidableStacks = false;
 
-    function domainFilter() {
+    function domainFilter () {
         if (!_chart.x()) {
             return d3.functor(true);
         }
@@ -52,21 +55,27 @@ dc.stackMixin = function (_chart) {
     }
 
     /**
-    #### .stack(group[, name, accessor])
-    Stack a new crossfilter group onto this chart with an optional custom value accessor. All stacks
-    in the same chart will share the same key accessor and therefore the same set of keys.
-
-    For example, in a stacked bar chart, the bars of each stack will be positioned using the same set
-    of keys on the x axis, while stacked vertically. If name is specified then it will be used to
-    generate the legend label.
-    ```js
-    // stack group using default accessor
-    chart.stack(valueSumGroup)
-    // stack group using custom accessor
-    .stack(avgByDayGroup, function(d){return d.value.avgByDay;});
-    ```
-
-    **/
+     * Stack a new crossfilter group onto this chart with an optional custom value accessor. All stacks
+     * in the same chart will share the same key accessor and therefore the same set of keys.
+     *
+     * For example, in a stacked bar chart, the bars of each stack will be positioned using the same set
+     * of keys on the x axis, while stacked vertically. If name is specified then it will be used to
+     * generate the legend label.
+     * @name stack
+     * @memberof dc.stackMixin
+     * @instance
+     * @see {@link https://github.com/square/crossfilter/wiki/API-Reference#group-map-reduce crossfilter.group}
+     * @example
+     * // stack group using default accessor
+     * chart.stack(valueSumGroup)
+     * // stack group using custom accessor
+     * .stack(avgByDayGroup, function(d){return d.value.avgByDay;});
+     * @param {crossfilter.group} group
+     * @param {String} [name]
+     * @param {Function} [accessor]
+     * @return {Array<{group: crossfilter.group, name: String, accessor: Function}>}
+     * @return {dc.stackMixin}
+     */
     _chart.stack = function (group, name, accessor) {
         if (!arguments.length) {
             return _stack;
@@ -76,7 +85,7 @@ dc.stackMixin = function (_chart) {
             accessor = name;
         }
 
-        var layer = {group:group};
+        var layer = {group: group};
         if (typeof name === 'string') {
             layer.name = name;
         }
@@ -102,30 +111,37 @@ dc.stackMixin = function (_chart) {
     });
 
     /**
-    #### .hidableStacks([boolean])
-    Allow named stacks to be hidden or shown by clicking on legend items.
-    This does not affect the behavior of hideStack or showStack.
-
-    **/
-    _chart.hidableStacks = function (_) {
+     * Allow named stacks to be hidden or shown by clicking on legend items.
+     * This does not affect the behavior of hideStack or showStack.
+     * @name hidableStacks
+     * @memberof dc.stackMixin
+     * @instance
+     * @param {Boolean} [hidableStacks=false]
+     * @return {Boolean}
+     * @return {dc.stackMixin}
+     */
+    _chart.hidableStacks = function (hidableStacks) {
         if (!arguments.length) {
             return _hidableStacks;
         }
-        _hidableStacks = _;
+        _hidableStacks = hidableStacks;
         return _chart;
     };
 
-    function findLayerByName(n) {
+    function findLayerByName (n) {
         var i = _stack.map(dc.pluck('name')).indexOf(n);
         return _stack[i];
     }
 
     /**
-    #### .hideStack(name)
-    Hide all stacks on the chart with the given name.
-    The chart must be re-rendered for this change to appear.
-
-    **/
+     * Hide all stacks on the chart with the given name.
+     * The chart must be re-rendered for this change to appear.
+     * @name hideStack
+     * @memberof dc.stackMixin
+     * @instance
+     * @param {String} stackName
+     * @return {dc.stackMixin}
+     */
     _chart.hideStack = function (stackName) {
         var layer = findLayerByName(stackName);
         if (layer) {
@@ -135,11 +151,14 @@ dc.stackMixin = function (_chart) {
     };
 
     /**
-    #### .showStack(name)
-    Show all stacks on the chart with the given name.
-    The chart must be re-rendered for this change to appear.
-
-    **/
+     * Show all stacks on the chart with the given name.
+     * The chart must be re-rendered for this change to appear.
+     * @name showStack
+     * @memberof dc.stackMixin
+     * @instance
+     * @param {String} stackName
+     * @return {dc.stackMixin}
+     */
     _chart.showStack = function (stackName) {
         var layer = findLayerByName(stackName);
         if (layer) {
@@ -169,7 +188,7 @@ dc.stackMixin = function (_chart) {
         return dc.utils.add(max, _chart.yAxisPadding());
     };
 
-    function flattenStack() {
+    function flattenStack () {
         var valueses = _chart.data().map(function (layer) { return layer.values; });
         return Array.prototype.concat.apply([], valueses);
     }
@@ -185,22 +204,26 @@ dc.stackMixin = function (_chart) {
     };
 
     /**
-    #### .title([stackName], [titleFunction])
-    Set or get the title function. Chart class will use this function to render svg title (usually interpreted by
-    browser as tooltips) for each child element in the chart, i.e. a slice in a pie chart or a bubble in a bubble chart.
-    Almost every chart supports title function however in grid coordinate chart you need to turn off brush in order to
-    use title otherwise the brush layer will block tooltip trigger.
-
-    If the first argument is a stack name, the title function will get or set the title for that stack. If stackName
-    is not provided, the first stack is implied.
-    ```js
-    // set a title function on 'first stack'
-    chart.title('first stack', function(d) { return d.key + ': ' + d.value; });
-    // get a title function from 'second stack'
-    var secondTitleFunction = chart.title('second stack');
-    );
-    ```
-    **/
+     * Set or get the title function. Chart class will use this function to render svg title (usually interpreted by
+     * browser as tooltips) for each child element in the chart, i.e. a slice in a pie chart or a bubble in a bubble chart.
+     * Almost every chart supports title function however in grid coordinate chart you need to turn off brush in order to
+     * use title otherwise the brush layer will block tooltip trigger.
+     *
+     * If the first argument is a stack name, the title function will get or set the title for that stack. If stackName
+     * is not provided, the first stack is implied.
+     * @name title
+     * @memberof dc.stackMixin
+     * @instance
+     * @example
+     * // set a title function on 'first stack'
+     * chart.title('first stack', function(d) { return d.key + ': ' + d.value; });
+     * // get a title function from 'second stack'
+     * var secondTitleFunction = chart.title('second stack');
+     * @param {String} [stackName]
+     * @param {Function} [titleAccessor]
+     * @return {String}
+     * @return {dc.stackMixin}
+     */
     dc.override(_chart, 'title', function (stackName, titleAccessor) {
         if (!stackName) {
             return _chart._title();
@@ -223,11 +246,16 @@ dc.stackMixin = function (_chart) {
     });
 
     /**
-     #### .stackLayout([layout])
-     Gets or sets the stack layout algorithm, which computes a baseline for each stack and
-     propagates it to the next.  The default is
-     [d3.layout.stack](https://github.com/mbostock/d3/wiki/Stack-Layout#stack).
-     **/
+     * Gets or sets the stack layout algorithm, which computes a baseline for each stack and
+     * propagates it to the next
+     * @name stackLayout
+     * @memberof dc.stackMixin
+     * @instance
+     * @see {@link http://github.com/mbostock/d3/wiki/Stack-Layout d3.layout.stack}
+     * @param {Function} [stack=d3.layout.stack]
+     * @return {Function}
+     * @return {dc.stackMixin}
+     */
     _chart.stackLayout = function (stack) {
         if (!arguments.length) {
             return _stackLayout;
@@ -236,7 +264,7 @@ dc.stackMixin = function (_chart) {
         return _chart;
     };
 
-    function visability(l) {
+    function visability (l) {
         return !l.hidden;
     }
 
@@ -259,10 +287,10 @@ dc.stackMixin = function (_chart) {
     _chart.legendables = function () {
         return _stack.map(function (layer, i) {
             return {
-                chart:_chart,
-                name:layer.name,
+                chart: _chart,
+                name: layer.name,
                 hidden: layer.hidden || false,
-                color:_chart.getColor.call(layer, layer.values, i)
+                color: _chart.getColor.call(layer, layer.values, i)
             };
         });
     };
