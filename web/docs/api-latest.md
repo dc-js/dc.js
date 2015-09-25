@@ -2778,7 +2778,7 @@ Examples:
 
 <a name="dc.dataGrid+beginSlice"></a>
 #### dataGrid.beginSlice ⇒ <code>Chart</code>
-Get or set the index of the beginning slice which determines which entries get displayed by the widget
+Get or set the index of the beginning slice which determines which entries get displayed by the widget.
 Useful when implementing pagination.
 
 **Kind**: instance property of <code>[dataGrid](#dc.dataGrid)</code>  
