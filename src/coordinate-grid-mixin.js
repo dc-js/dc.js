@@ -516,6 +516,7 @@ var coordinateGridMixin = function (_chart) {
         }
 
         transition(axisXG, _chart.transitionDuration())
+            .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')')
             .call(_xAxis);
         transition(axisXLab, _chart.transitionDuration())
             .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
