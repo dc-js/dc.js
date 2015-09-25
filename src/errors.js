@@ -20,7 +20,7 @@ dc.errors.InvalidStateException = function () {
 dc.errors.InvalidStateException.prototype = Object.create(dc.errors.Exception.prototype);
 dc.errors.InvalidStateException.prototype.constructor = dc.errors.InvalidStateException;
 
-dc.errors.BadArgumentException = function() {
+dc.errors.BadArgumentException = function () {
     dc.errors.Exception.apply(this, arguments);
 };
 
