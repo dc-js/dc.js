@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>dc.js - Bar Chart Example</title>
+    <title>dc.js - Row Chart Example</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
 </head>
@@ -14,7 +14,7 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = dc.barChart("#test");
+var chart = dc.rowChart("#test");
 d3.csv("../examples/morley.csv", function(error, experiments) {
 
   experiments.forEach(function(x) {
@@ -29,25 +29,18 @@ d3.csv("../examples/morley.csv", function(error, experiments) {
     .width(window.innerWidth-20)
     .height(window.innerHeight-20)
     .x(d3.scale.linear().domain([6,20]))
-    .brushOn(false)
-    .xAxisLabel("This is the X Axis!!")
-    .yAxisLabel("This is the Y Axis!")
+    .elasticX(true)
     .dimension(runDimension)
     .group(speedSumGroup)
-    .on('renderlet', function(chart) {
-        chart.selectAll('rect').on("click", function(d) {
-            console.log("click!", d);
-        });
-    });
-    chart.render();
+    .render();
 
-    window.onresize = function() {
-        chart
-            .width(window.innerWidth-20)
-            .height(window.innerHeight-20)
-            .rescale()
-            .redraw();
-      };
+  window.onresize = function() {
+      chart
+          .width(window.innerWidth-20)
+          .height(window.innerHeight-20)
+          .redraw();
+    };
+
 });
 
 </script>
