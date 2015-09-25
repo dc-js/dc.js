@@ -74,7 +74,7 @@ dc.baseMixin = function (_chart) {
         } else if (filters.length === 1 && !filters[0].isFiltered) {
             // single value and not a function-based filter
             dimension.filterExact(filters[0]);
-        } else if (filters.length === 1 && filters[0].filterType==='RangedFilter') {
+        } else if (filters.length === 1 && filters[0].filterType === 'RangedFilter') {
             // single range-based filter
             dimension.filterRange(filters[0]);
         } else {
@@ -393,8 +393,8 @@ dc.baseMixin = function (_chart) {
             _anchor = parent.anchor();
             _root = parent.root();
             _isChild = true;
-        } else if(parent) {
-            if(parent.select && parent.classed) { // detect d3 selection
+        } else if (parent) {
+            if (parent.select && parent.classed) { // detect d3 selection
                 _anchor = parent.node();
             } else {
                 _anchor = parent;
@@ -403,8 +403,7 @@ dc.baseMixin = function (_chart) {
             _root.classed(dc.constants.CHART_CLASS, true);
             dc.registerChart(_chart, chartGroup);
             _isChild = false;
-        }
-        else {
+        } else {
             throw new dc.errors.BadArgumentException('parent must be defined');
         }
         _chartGroup = chartGroup;
