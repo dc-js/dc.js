@@ -102,28 +102,24 @@ dc.selectMenu = function (parent, chartGroup) {
             });
         } else { // IE and other browsers do not support selectedOptions
             // adapted from this polyfill: https://gist.github.com/brettz9/4212217
-            var options = [].slice.call(d3.event.target.options);
+            var options = [].slice.call(target.options);
             values = options.filter(function (option) {
                 return option.selected;
             }).map(function (option) {
                 return option.value;
             });
         }
-        // console.log(values);
-        // check if only prompt option is selected
-        if (values.length === 1 && values[0] === '') {
-            values = null;
-        } else if (!_multiple && values.length === 1) {
-            values = values[0];
-        }
+        // console.log("VALUES", values);
         _chart.onChange(values);
     }
 
     _chart.onChange = function (val) {
-        if (val && _multiple) {
+        if (val && val instanceof Array) {
+            // filter out empty values
+            val = val.filter(function (option) {
+                return !!option;
+            });
             _chart.replaceFilter([val]);
-        } else if (val) {
-            _chart.replaceFilter(val);
         } else {
             _chart.filterAll();
         }

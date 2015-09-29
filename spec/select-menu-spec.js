@@ -96,22 +96,22 @@ describe('dc.selectMenu', function () {
     describe('regular single select', function () {
         describe('selecting an option', function () {
             it('filters dimension based on selected option\'s value', function () {
-                chart.onChange(stateGroup.all()[0].key);
+                chart.onChange([stateGroup.all()[0].key]);
                 expect(chart.filter()).toEqual('California');
             });
             it('replaces filter on second selection', function () {
-                chart.onChange(stateGroup.all()[0].key);
-                chart.onChange(stateGroup.all()[1].key);
+                chart.onChange([stateGroup.all()[0].key]);
+                chart.onChange([stateGroup.all()[1].key]);
                 expect(chart.filter()).toEqual('Colorado');
                 expect(chart.filters().length).toEqual(1);
             });
             it('actually filters dimension', function () {
-                chart.onChange(stateGroup.all()[0].key);
+                chart.onChange([stateGroup.all()[0].key]);
                 expect(regionGroup.all()[0].value).toEqual(0);
                 expect(regionGroup.all()[3].value).toEqual(2);
             });
             it('removes filter when prompt option is selected', function () {
-                chart.onChange(null);
+                chart.onChange(['']);
                 expect(chart.hasFilter()).not.toBeTruthy();
                 expect(regionGroup.all()[0].value).toEqual(1);
             });
@@ -119,7 +119,7 @@ describe('dc.selectMenu', function () {
 
         describe('redraw with existing filter', function () {
             it('selects option corresponding to active filter', function () {
-                chart.onChange(stateGroup.all()[0].key);
+                chart.onChange([stateGroup.all()[0].key]);
                 chart.redraw();
                 expect(chart.selectAll('select')[0][0].value).toEqual('California');
             });
@@ -143,11 +143,33 @@ describe('dc.selectMenu', function () {
             expect(regionGroup.all()[3].value).toEqual(2);
             expect(regionGroup.all()[4].value).toEqual(2);
         });
+
         it('removes all filters when prompt option is selected', function () {
-            chart.onChange(null);
+            chart.onChange(['']);
             expect(chart.hasFilter()).not.toBeTruthy();
             expect(regionGroup.all()[0].value).toEqual(1);
         });
+
+        it('filters out empty prompt option when other selections present', function () {
+            chart.onChange(['', stateGroup.all()[0].key, stateGroup.all()[1].key]);
+            expect(chart.filters()).toEqual(['California', 'Colorado']);
+            expect(chart.filters().length).toEqual(2);
+        });
+
+        describe('with a single selection', function () {
+            beforeEach(function () {
+                chart.onChange([stateGroup.all()[0].key]);
+            });
+            it('can be used with a single selection', function () {
+                expect(chart.filter()).toEqual('California');
+                expect(chart.filters().length).toEqual(1);
+            });
+            it('with a single selection correctly filters dimension', function () {
+                expect(regionGroup.all()[0].value).toEqual(0);
+                expect(regionGroup.all()[3].value).toEqual(2);
+            });
+        });
+
         it('selects all options corresponding to active filters on redraw', function () {
             var selectedOptions = chart.selectAll('select').selectAll('option')[0].filter(function (d) {
                 // IE returns an extra option with value '', not sure what it means
@@ -156,6 +178,7 @@ describe('dc.selectMenu', function () {
             expect(selectedOptions.length).toEqual(2);
             expect(selectedOptions.map(function (d) { return d.value; })).toEqual(['California', 'Colorado']);
         });
+
         it('does not deselect previously filtered options when new option is added', function () {
             chart.onChange([stateGroup.all()[0].key, stateGroup.all()[1].key, stateGroup.all()[5].key]);
 
