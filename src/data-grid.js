@@ -105,7 +105,7 @@ dc.dataGrid = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set the index of the beginning slice which determines which entries get displayed by the widget
+     * Get or set the index of the beginning slice which determines which entries get displayed by the widget.
      * Useful when implementing pagination.
      * @name beginSlice
      * @memberof dc.dataGrid
