@@ -6308,8 +6308,9 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     _chart._prepareYAxis = function () {
-        var left = (leftYAxisChildren().length !== 0), right = (rightYAxisChildren().length !== 0),
-        ranges = calculateYAxesRanges(left, right);
+        var left = (leftYAxisChildren().length !== 0);
+        var right = (rightYAxisChildren().length !== 0);
+        var ranges = calculateYAxesRanges(left, right);
 
         if (left) { prepareLeftYAxis(ranges); }
         if (right) { prepareRightYAxis(ranges); }
