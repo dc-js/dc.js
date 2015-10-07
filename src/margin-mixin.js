@@ -4,8 +4,8 @@
  * @name marginMixin
  * @memberof dc
  * @mixin
- * @param {Chart} _chart
- * @returns {Chart}
+ * @param {Object} _chart
+ * @return {dc.marginMixin}
  */
 dc.marginMixin = function (_chart) {
     var _margin = {top: 10, right: 50, bottom: 30, left: 30};
@@ -20,8 +20,9 @@ dc.marginMixin = function (_chart) {
      * var leftMargin = chart.margins().left; // 30 by default
      * chart.margins().left = 50;
      * leftMargin = chart.margins().left; // now 50
-     * @param {{top:Number, right: Number, left: Number, bottom: Number}} [margins={top: 10, right: 50, bottom: 30, left: 30}]
-     * @returns {Chart}
+     * @param {{top: Number, right: Number, left: Number, bottom: Number}} [margins={top: 10, right: 50, bottom: 30, left: 30}]
+     * @return {{top: Number, right: Number, left: Number, bottom: Number}}
+     * @return {dc.marginMixin}
      */
     _chart.margins = function (margins) {
         if (!arguments.length) {

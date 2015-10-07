@@ -255,7 +255,7 @@ describe('dc.baseMixin', function () {
             id = 'chart-id';
         });
 
-        describe('using a d3 node', function () {
+        describe('using a d3-created dom element', function () {
             var anchorDiv;
 
             beforeEach(function () {
@@ -269,6 +269,45 @@ describe('dc.baseMixin', function () {
 
             it('should return the node, when anchor is called', function () {
                 expect(chart.anchor()).toEqual(anchorDiv);
+            });
+
+            it('should return the id, when anchorName is called', function () {
+                expect(chart.anchorName()).toEqual(id);
+            });
+
+            describe('without an id', function () {
+                beforeEach(function () {
+                    d3.select('#' + id).remove();
+                    anchorDiv = d3.select('body').append('div').attr('class', 'no-id').node();
+                    chart.anchor(anchorDiv);
+                });
+
+                it('should return the node, when anchor is called', function () {
+                    expect(chart.anchor()).toEqual(anchorDiv);
+                });
+
+                it('should return a valid, selectable id', function () {
+                    // see http://stackoverflow.com/questions/70579/what-are-valid-values-for-the-id-attribute-in-html
+                    expect(chart.anchorName()).toMatch(/^[a-zA-Z][a-zA-Z0-9_:.-]*$/);
+                });
+
+            });
+        });
+
+        describe('using a d3 selection', function () {
+            var anchorDiv;
+
+            beforeEach(function () {
+                anchorDiv = d3.select('body').append('div').attr('id', id);
+                chart.anchor(anchorDiv);
+            });
+
+            it('should register the chart', function () {
+                expect(dc.hasChart(chart)).toBeTruthy();
+            });
+
+            it('should return the node, when anchor is called', function () {
+                expect(chart.anchor()).toEqual(anchorDiv.node());
             });
 
             it('should return the id, when anchorName is called', function () {

@@ -1,5 +1,6 @@
 /**
  * Concrete bar chart/histogram implementation.
+ *
  * Examples:
  * - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
  * - [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
@@ -20,7 +21,7 @@
  * in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {BarChart}
+ * @return {dc.barChart}
  */
 dc.barChart = function (parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
@@ -174,12 +175,13 @@ dc.barChart = function (parent, chartGroup) {
     };
 
     /**
-     * Whether the bar chart will render each bar centered around the data position on x axis
+     * Whether the bar chart will render each bar centered around the data position on the x-axis.
      * @name centerBar
      * @memberof dc.barChart
      * @instance
      * @param {Boolean} [centerBar=false]
-     * @returns {Boolean}
+     * @return {Boolean}
+     * @return {dc.barChart}
      */
     _chart.centerBar = function (centerBar) {
         if (!arguments.length) {
@@ -201,8 +203,9 @@ dc.barChart = function (parent, chartGroup) {
      * @name barPadding
      * @memberof dc.barChart
      * @instance
-     * @param {Number} [barPadding]
-     * @returns {Number}
+     * @param {Number} [barPadding=0]
+     * @return {Number}
+     * @return {dc.barChart}
      */
     _chart.barPadding = function (barPadding) {
         if (!arguments.length) {
@@ -224,7 +227,8 @@ dc.barChart = function (parent, chartGroup) {
      * @memberof dc.barChart
      * @instance
      * @param {Number} [padding=0.5]
-     * @returns {Number}
+     * @return {Number}
+     * @return {dc.barChart}
      */
     _chart.outerPadding = _chart._outerRangeBandPadding;
 
@@ -236,7 +240,8 @@ dc.barChart = function (parent, chartGroup) {
      * @memberof dc.barChart
      * @instance
      * @param {Number} [gap=2]
-     * @returns {Number}
+     * @return {Number}
+     * @return {dc.barChart}
      */
     _chart.gap = function (gap) {
         if (!arguments.length) {
@@ -260,9 +265,9 @@ dc.barChart = function (parent, chartGroup) {
     };
 
     /**
-     * Set or get whether rounding is enabled when bars are centered.  Default: false.  If false, using
+     * Set or get whether rounding is enabled when bars are centered. If false, using
      * rounding with centered bars will result in a warning and rounding will be ignored.  This flag
-     * has no effect if bars are not centered.
+     * has no effect if bars are not {@link #dc.barChart+centerBar centered}.
      * When using standard d3.js rounding methods, the brush often doesn't align correctly with
      * centered bars since the bars are offset.  The rounding function must add an offset to
      * compensate, such as in the following example.
@@ -270,9 +275,10 @@ dc.barChart = function (parent, chartGroup) {
      * @memberof dc.barChart
      * @instance
      * @example
-     * chart.round(function(n) {return Math.floor(n)+0.5});
+     * chart.round(function(n) { return Math.floor(n) + 0.5; });
      * @param {Boolean} [alwaysUseRounding=false]
-     * @returns {Boolean}
+     * @return {Boolean}
+     * @return {dc.barChart}
      */
     _chart.alwaysUseRounding = function (alwaysUseRounding) {
         if (!arguments.length) {

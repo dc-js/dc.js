@@ -63,10 +63,9 @@ dc.selectMenu = function (parent, chartGroup) {
         // select the option(s) corresponding to current filter(s)
         if (_chart.hasFilter() && _multiple) {
             _select.selectAll('option')
-                .filter(function (d) {
+                .property('selected', function (d) {
                     return d && _chart.filters().indexOf(String(_chart.keyAccessor()(d))) >= 0;
-                })
-                .property('selected', true);
+                });
         } else if (_chart.hasFilter()) {
             _select.property('value', _chart.filter());
         } else {
@@ -113,7 +112,7 @@ dc.selectMenu = function (parent, chartGroup) {
         // check if only prompt option is selected
         if (values.length === 1 && values[0] === '') {
             values = null;
-        } else if (values.length === 1) {
+        } else if (!_multiple && values.length === 1) {
             values = values[0];
         }
         _chart.onChange(values);

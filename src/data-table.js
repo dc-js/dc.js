@@ -314,7 +314,7 @@ dc.dataTable = function (parent, chartGroup) {
      * Get or set if group rows will be shown.
      *
      * The .group() getter-setter must be provided in either case.
-     * @name order
+     * @name showGroups
      * @memberof dc.dataTable
      * @instance
      * @example

@@ -737,6 +737,7 @@ describe('dc.coordinateGridChart', function () {
                 it('should update chart filter to match new x domain', function () {
                     var filter = chart.filter();
                     delete filter.isFiltered;
+                    delete filter.filterType;
                     expect(filter).toEqual(chart.x().domain());
                 });
 
@@ -851,6 +852,7 @@ describe('dc.coordinateGridChart', function () {
             // expect(chart.focus).toHaveBeenCalledWith(selectedRange);
             var focus = chart.focus.calls.argsFor(0)[0];
             delete focus.isFiltered;
+            delete focus.filterType;
             expect(focus).toEqual(selectedRange);
         });
 
@@ -871,6 +873,7 @@ describe('dc.coordinateGridChart', function () {
             // expect(rangeChart.replaceFilter).toHaveBeenCalledWith(selectedRange);
             var replaceFilter = rangeChart.replaceFilter.calls.argsFor(0)[0];
             delete replaceFilter.isFiltered;
+            delete replaceFilter.filterType;
             expect(replaceFilter).toEqual(selectedRange);
         });
     });

@@ -74,7 +74,7 @@ module.exports = function (grunt) {
         watch: {
             jsdoc2md: {
                 files: ['<%= conf.src %>/**/*.js'],
-                tasks: ['jsdoc2md']
+                tasks: ['build', 'jsdoc2md']
             },
             scripts: {
                 files: ['<%= conf.src %>/**/*.js', '<%= conf.web %>/stock.js'],
@@ -350,14 +350,14 @@ module.exports = function (grunt) {
     grunt.registerTask('docs', ['build', 'copy', 'jsdoc2md', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine-docs']);
-    grunt.registerTask('test', ['build', 'jasmine:specs', 'shell:hooks']);
+    grunt.registerTask('test', ['build', 'jasmine:specs']);
     grunt.registerTask('test-browserify', ['build', 'browserify', 'jasmine:browserify']);
     grunt.registerTask('coverage', ['build', 'jasmine:coverage']);
     grunt.registerTask('ci', ['test', 'jasmine:specs:build', 'connect:server', 'saucelabs-jasmine']);
     grunt.registerTask('ci-pull', ['test', 'jasmine:specs:build', 'connect:server']);
     grunt.registerTask('lint', ['jshint', 'jscs']);
-    grunt.registerTask('default', ['build']);
-    grunt.registerTask('jsdoc', ['jsdoc2md', 'watch:jsdoc2md']);
+    grunt.registerTask('default', ['build', 'shell:hooks']);
+    grunt.registerTask('jsdoc', ['build', 'jsdoc2md', 'watch:jsdoc2md']);
 };
 
 module.exports.jsFiles = [
