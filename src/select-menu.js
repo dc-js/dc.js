@@ -49,11 +49,9 @@ dc.selectMenu = function (parent, chartGroup) {
         _chart.select('select').remove();
         _select = _chart.root().append('select')
                         .classed(SELECT_CSS_CLASS, true);
-
-        setAttributes();
-
         _select.append('option').text(_promptText).attr('value', '');
-        renderOptions();
+
+        _chart._doRedraw();
         return _chart;
     };
 
