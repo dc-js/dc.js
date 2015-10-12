@@ -158,7 +158,7 @@ dc.boxPlot = function (parent, chartGroup) {
             .attr('transform', boxTransform)
             .call(_box)
             .on('click', function (d) {
-                _chart.filter(d.key);
+                _chart.filter(_chart.keyAccessor()(d));
                 _chart.redrawGroup();
             });
     }
@@ -190,8 +190,10 @@ dc.boxPlot = function (parent, chartGroup) {
                 var extent = _chart.brush().extent();
                 var start = extent[0];
                 var end = extent[1];
+                var keyAccessor = _chart.keyAccessor();
                 _chart.g().selectAll('g.box').each(function (d) {
-                    if (d.key < start || d.key >= end) {
+                    var key = keyAccessor(d);
+                    if (key < start || key >= end) {
                         _chart.fadeDeselected(this);
                     } else {
                         _chart.highlightSelected(this);
@@ -206,7 +208,7 @@ dc.boxPlot = function (parent, chartGroup) {
     };
 
     _chart.isSelectedNode = function (d) {
-        return _chart.hasFilter(d.key);
+        return _chart.hasFilter(_chart.keyAccessor()(d));
     };
 
     _chart.yAxisMin = function () {
