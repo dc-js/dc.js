@@ -60,8 +60,14 @@ dc.bubbleChart = function (parent, chartGroup) {
 
         _chart.r().range([_chart.MIN_RADIUS, _chart.xAxisLength() * _chart.maxBubbleRelativeSize()]);
 
+        // sort descending so smaller bubbles are on top
+        var data = _chart.data(),
+            radiusAccessor = _chart.radiusValueAccessor();
+        data.sort(function (a, b) { return d3.descending(radiusAccessor(a), radiusAccessor(b)); });
         var bubbleG = _chart.chartBodyG().selectAll('g.' + _chart.BUBBLE_NODE_CLASS)
-            .data(_chart.data(), function (d) { return d.key; });
+            .data(data, function (d) { return d.key; });
+        // Call order here to update dom order based on sort
+        bubbleG.order();
 
         renderNodes(bubbleG);
 

@@ -212,6 +212,22 @@ dc.optionalTransition = function (enable, duration, callback, name) {
     }
 };
 
+// See http://stackoverflow.com/a/20773846
+dc.afterTransition = function (transition, callback) {
+    if (transition.empty() || !transition.duration) {
+        callback.call(transition);
+    } else {
+        var n = 0;
+        transition
+            .each(function () { ++n; })
+            .each('end', function () {
+                if (!--n) {
+                    callback.call(transition);
+                }
+            });
+    }
+};
+
 /**
  * @name units
  * @memberof dc

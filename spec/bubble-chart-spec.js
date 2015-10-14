@@ -232,10 +232,10 @@ describe('dc.bubbleChart', function () {
         it('creates correct label for each bubble', function () {
             chart.selectAll('g.node title').each(function (d, i) {
                 if (i === 0) {
-                    expect(d3.select(this).text()).toBe('F: {count:0,value:0}');
+                    expect(d3.select(this).text()).toBe('T: {count:2,value:77}');
                 }
                 if (i === 1) {
-                    expect(d3.select(this).text()).toBe('T: {count:2,value:77}');
+                    expect(d3.select(this).text()).toBe('F: {count:0,value:0}');
                 }
             });
         });
@@ -243,10 +243,10 @@ describe('dc.bubbleChart', function () {
         it('fills bubbles with correct colors', function () {
             chart.selectAll('circle.bubble').each(function (d, i) {
                 if (i === 0) {
-                    expect(d3.select(this).attr('fill')).toBe('#a60000');
+                    expect(d3.select(this).attr('fill')).toBe('#ff4040');
                 }
                 if (i === 1) {
-                    expect(d3.select(this).attr('fill')).toBe('#ff4040');
+                    expect(d3.select(this).attr('fill')).toBe('#a60000');
                 }
             });
         });
