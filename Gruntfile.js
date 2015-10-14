@@ -42,6 +42,17 @@ module.exports = function (grunt) {
                 dest: '<%= conf.pkg.name %>.min.js'
             }
         },
+        cssmin: {
+            options: {
+                shorthandCompacting: false,
+                roundingPrecision: -1
+            },
+            main: {
+                files: {
+                    '<%= conf.pkg.name %>.min.css': ['<%= conf.pkg.name %>.css']
+                }
+            }
+        },
         jscs: {
             source: {
                 src: [
@@ -346,7 +357,7 @@ module.exports = function (grunt) {
     });
 
     // task aliases
-    grunt.registerTask('build', ['concat', 'uglify']);
+    grunt.registerTask('build', ['concat', 'uglify', 'cssmin']);
     grunt.registerTask('docs', ['build', 'copy', 'jsdoc2md', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine-docs']);

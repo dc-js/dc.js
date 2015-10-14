@@ -36,6 +36,7 @@
     "grunt-contrib-concat": "~0.5.0",
     "grunt-contrib-connect": "~0.11.2",
     "grunt-contrib-copy": "~0.8.0",
+    "grunt-contrib-cssmin": "^0.14.0",
     "grunt-contrib-jasmine": "~0.9.1",
     "grunt-contrib-jshint": "~0.11.0",
     "grunt-contrib-uglify": "~0.9.1",
@@ -43,6 +44,7 @@
     "grunt-docco2": "~0.2.0",
     "grunt-fileindex": "^0.1.0",
     "grunt-gh-pages": "~0.10.0",
+    "grunt-jscs": "~2.0.0",
     "grunt-jsdoc-to-markdown": "~1.1.1",
     "grunt-jscs": "~2.1.0",
     "grunt-lib-phantomjs": "~0.7.1",
@@ -50,11 +52,11 @@
     "grunt-saucelabs": "~8.6.1",
     "grunt-shell": "~1.1.1",
     "grunt-template-jasmine-istanbul": "~0.3.2",
-    "load-grunt-tasks": "~3.2.0",
     "jsdifflib": "~1.1.0",
+    "load-grunt-tasks": "~3.2.0",
     "marked": "~0.3.3",
-    "uglify-js": "2.4.x",
-    "time-grunt": "~1.2.1"
+    "time-grunt": "~1.2.1",
+    "uglify-js": "2.4.x"
   },
   "scripts": {
     "test": "grunt test"
@@ -65,6 +67,7 @@
       "basePath": "/",
       "files": [
         "dc.css",
+        "dc.min.css",
         "dc.min.js",
         "dc.min.js.map",
         "dc.js",
