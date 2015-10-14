@@ -103,8 +103,8 @@ dc.bubbleMixin = function (_chart) {
         return shouldLabel(d) ? 1 : 0;
     };
 
-    var labelDisplay = function (d) {
-        return shouldLabel(d) ? 'block' : 'none';
+    var labelPointerEvent = function (d) {
+        return shouldLabel(d) ? 'all' : 'none';
     };
 
     _chart._doRenderLabel = function (bubbleGEnter) {
@@ -120,29 +120,20 @@ dc.bubbleMixin = function (_chart) {
 
             label
                 .attr('opacity', 0)
-                .text(labelFunction)
-                .style('display', 'none');
+                .attr('pointer-events', labelPointerEvent)
+                .text(labelFunction);
             dc.transition(label, _chart.transitionDuration())
-                .attr('opacity', labelOpacity)
-                .call(dc.afterTransition, label.style.bind(label, 'display', labelDisplay));
+                .attr('opacity', labelOpacity);
         }
     };
 
     _chart.doUpdateLabels = function (bubbleGEnter) {
         if (_chart.renderLabel()) {
             var labels = bubbleGEnter.selectAll('text')
-                .text(labelFunction)
-                .style('display', function (d) {
-                    // On update, we can't fade in if it's hidden...
-                    var current = d3.select(this).style('display');
-                    if (current === 'none' && shouldLabel(d)) {
-                        return 'block';
-                    }
-                    return current;
-                });
+                .attr('pointer-events', labelPointerEvent)
+                .text(labelFunction);
             dc.transition(labels, _chart.transitionDuration())
-                .attr('opacity', labelOpacity)
-                .call(dc.afterTransition, labels.style.bind(labels, 'display', labelDisplay));
+                .attr('opacity', labelOpacity);
         }
     };
 
