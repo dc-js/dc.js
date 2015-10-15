@@ -26,10 +26,7 @@ dc.coordinateGridMixin = function (_chart) {
     function zoomHandler () {
         _refocused = true;
         if (_zoomOutRestrict) {
-            _chart.x().domain(constrainRange(_chart.x().domain(), _xOriginalDomain));
-            if (_rangeChart) {
-                _chart.x().domain(constrainRange(_chart.x().domain(), _rangeChart.x().domain()));
-            }
+            restrictZoom(_zoom, _xOriginalDomain);
         }
 
         var domain = _chart.x().domain();
@@ -1173,6 +1170,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart._enableMouseZoom = function () {
         _hasBeenMouseZoomable = true;
+        _zoom.x0 = _chart.x().copy();
         _zoom.x(_chart.x())
             .scaleExtent(_zoomScale)
             .size([_chart.width(), _chart.height()])
@@ -1184,11 +1182,30 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.root().call(_nullZoom);
     };
 
-    function constrainRange (range, constraint) {
-        var constrainedRange = [];
-        constrainedRange[0] = d3.max([range[0], constraint[0]]);
-        constrainedRange[1] = d3.min([range[1], constraint[1]]);
-        return constrainedRange;
+    function restrictZoom (zoom, extent) {
+        var ev = d3.event;
+        if (!ev) {
+            return;
+        }
+
+        var translateX = ev.translate[0],
+            scale      = ev.scale,
+            s0         = zoom.x0,
+            range0     = s0.range(),
+            getDomain  = function () { return range0.map(function (r) { return (r - translateX) / scale; }).map(s0.invert); },
+            domain;
+
+        scale = Math.max(scale, Math.abs((range0[0] - range0[range0.length - 1]) / (s0(extent[0]) - s0(extent[1]))));
+        domain = getDomain();
+
+        if (domain[0] < extent[0]) {
+            translateX = range0[0] - (s0(extent[0]) * scale);
+        } else {
+            if (domain[domain.length - 1] > extent[1]) {
+                translateX = range0[range0.length - 1] - (s0(extent[1]) * scale);
+            }
+        }
+        zoom.x().domain(getDomain());
     }
 
     /**
