@@ -27,6 +27,9 @@ dc.coordinateGridMixin = function (_chart) {
         _refocused = true;
         if (_zoomOutRestrict) {
             restrictZoom(_zoom, _xOriginalDomain);
+            if (_rangeChart) {
+                restrictZoom(_zoom, _rangeChart.x().domain());
+            }
         }
 
         var domain = _chart.x().domain();
@@ -1170,7 +1173,6 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart._enableMouseZoom = function () {
         _hasBeenMouseZoomable = true;
-        _zoom.x0 = _chart.x().copy();
         _zoom.x(_chart.x())
             .scaleExtent(_zoomScale)
             .size([_chart.width(), _chart.height()])
@@ -1183,26 +1185,21 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function restrictZoom (zoom, extent) {
-        var ev = d3.event;
-        if (!ev) {
-            return;
-        }
-
-        var translateX = ev.translate[0],
-            scale      = ev.scale,
-            s0         = zoom.x0,
-            range0     = s0.range(),
-            getDomain  = function () { return range0.map(function (r) { return (r - translateX) / scale; }).map(s0.invert); },
+        var translateX = zoom.translate()[0],
+            scale      = zoom.scale(),
+            xScale     = zoom.x(),
+            range      = xScale.range(),
+            getDomain  = function () { return range.map(function (r) { return (r - translateX) / scale; }).map(xScale.invert); },
             domain;
 
-        scale = Math.max(scale, Math.abs((range0[0] - range0[range0.length - 1]) / (s0(extent[0]) - s0(extent[1]))));
+        scale = Math.max(scale, Math.abs((range[0] - range[range.length - 1]) / (xScale(extent[0]) - xScale(extent[1]))));
         domain = getDomain();
 
         if (domain[0] < extent[0]) {
-            translateX = range0[0] - (s0(extent[0]) * scale);
+            translateX = range[0] - (xScale(extent[0]) * scale);
         } else {
             if (domain[domain.length - 1] > extent[1]) {
-                translateX = range0[range0.length - 1] - (s0(extent[1]) * scale);
+                translateX = range[range.length - 1] - (xScale(extent[1]) * scale);
             }
         }
         zoom.x().domain(getDomain());
