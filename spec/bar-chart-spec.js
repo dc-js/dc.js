@@ -63,6 +63,58 @@ describe('dc.barChart', function () {
             });
         });
 
+        describe('with bar labels', function () {
+            beforeEach(function () {
+                chart.renderLabel(true).render();
+            });
+
+            it('should generate a label for each datum', function () {
+                expect(chart.selectAll('text.barLabel').size()).toBe(6);
+            });
+
+            it('should generate labels with positions corresponding to their data', function () {
+                expect(nthStack(0).nthLabel(0).attr('x')).toBeWithinDelta(405, 1);
+                expect(nthStack(0).nthLabel(0).attr('y')).toBeWithinDelta(104, 1);
+                expect(nthStack(0).nthLabel(0).text()).toBe("1");
+
+                expect(nthStack(0).nthLabel(3).attr('x')).toBeWithinDelta(509, 1);
+                expect(nthStack(0).nthLabel(3).attr('y')).toBeWithinDelta(104, 1);
+                expect(nthStack(0).nthLabel(3).text()).toBe("1");
+
+                expect(nthStack(0).nthLabel(5).attr('x')).toBeWithinDelta(620, 1);
+                expect(nthStack(0).nthLabel(5).attr('y')).toBeWithinDelta(50, 1);
+                expect(nthStack(0).nthLabel(5).text()).toBe("2");
+            });
+        });
+
+        describe('with custom bar labels', function () {
+            beforeEach(function () {
+                chart.label(function () {
+                    return 'custom label';
+                }).render();
+            });
+
+            it('should render a label for each datum', function () {
+                expect(chart.selectAll('text.barLabel').size()).toBe(6);
+            });
+
+            it('should use the custom function for each label', function () {
+                chart.selectAll('text.barLabel').each(function () {
+                    expect(d3.select(this).text()).toBe('custom label');
+                });
+            });
+
+            describe('with labels disabled', function () {
+                beforeEach(function () {
+                    chart.renderLabel(false).render();
+                });
+
+                it('should not display labels', function () {
+                    expect(chart.selectAll('text.barLabel').size()).toBe(0);
+                });
+            });
+        });
+
         describe('and then switching the group at runtime', function () {
             beforeEach(function () {
                 chart.rescale(); // BUG: barWidth cannot change after initial rendering
@@ -287,6 +339,7 @@ describe('dc.barChart', function () {
                         .title('stack 1', function (d) { return 'stack 1: ' + d.value; })
                         .stack(sumGroup, 'stack 2', function (d) { return 3; })
                         .elasticY(true)
+                        .renderLabel(true)
                         .render();
                 });
 
@@ -302,6 +355,16 @@ describe('dc.barChart', function () {
 
                 it('should render the correct number of stacks', function () {
                     expect(chart.selectAll('.stack').size()).toBe(3);
+                });
+
+                it('should display one label for each stack', function () {
+                    expect(chart.selectAll('text.barLabel').size()).toBe(6);
+                });
+
+                it('should generate labels with total value of stack', function () {
+                    expect(nthStack(2).nthLabel(0).text()).toBe("48");
+                    expect(nthStack(2).nthLabel(3).text()).toBe("51");
+                    expect(nthStack(2).nthLabel(5).text()).toBe("92");
                 });
 
                 it('should stack the bars', function () {
@@ -1116,6 +1179,10 @@ describe('dc.barChart', function () {
         stack.nthBar = function (n) {
             return d3.select(this.selectAll('rect.bar')[0][n]);
         };
+
+        stack.nthLabel = function (n) {
+            return d3.select(this.selectAll('text.barLabel')[0][n]);
+        }
 
         stack.forEachBar = function (assertions) {
             this.selectAll('rect.bar').each(function (d) {

@@ -4867,7 +4867,7 @@ dc.barChart = function (parent, chartGroup) {
     });
 
     _chart.label(function(d) {
-        return d.y;
+        return d.y0 + d.y;
     });
 
     _chart.plotData = function () {
