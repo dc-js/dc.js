@@ -40,6 +40,10 @@ describe('dc.barChart', function () {
             expect(chart.render()).toEqual(chart);
         });
 
+        it('should not display bar labels without setting renderLabel(true)', function () {
+            expect(chart.selectAll('text.barLabel').size()).toBe(0);
+        });
+
         describe('with centered bars', function () {
             beforeEach(function () {
                 chart.centerBar(true).render();

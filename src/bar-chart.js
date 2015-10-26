@@ -54,6 +54,9 @@ dc.barChart = function (parent, chartGroup) {
     _chart.label(function(d) {
         return d.y0 + d.y;
     });
+    //_chart.label() sets _renderLabel to true.
+    //Set back to false to disable renderLabel by default
+    _chart.renderLabel(false);
 
     _chart.plotData = function () {
         var layers = _chart.chartBodyG().selectAll('g.stack')
@@ -91,6 +94,9 @@ dc.barChart = function (parent, chartGroup) {
         labels.enter()
             .append('text')
             .attr('class', 'barLabel')
+            .attr("text-anchor", "middle")
+
+        dc.transition(labels, _chart.transitionDuration())
             .attr('x', function(d) {
                 var x = _chart.x()(d.x);
                 if (!_centerBar) {
@@ -107,10 +113,13 @@ dc.barChart = function (parent, chartGroup) {
 
                 return dc.utils.safeNumber(y - LABEL_PADDING);
             })
-            .style("text-anchor", "middle")
             .text(function (d) {
                 return _chart.label()(d);
             });
+
+        dc.transition(labels.exit(), _chart.transitionDuration())
+            .attr('height', 0)
+            .remove();
     }
 
     function renderBars (layer, layerIndex, d) {
