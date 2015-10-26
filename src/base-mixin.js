@@ -40,6 +40,8 @@ dc.baseMixin = function (_chart) {
     var _ordering = dc.pluck('key');
     var _orderSort;
 
+    var _clickOn = true;
+
     var _renderLabel = false;
 
     var _title = function (d) {
@@ -984,11 +986,13 @@ dc.baseMixin = function (_chart) {
      * @param {*} datum
      */
     _chart.onClick = function (datum) {
-        var filter = _chart.keyAccessor()(datum);
-        dc.events.trigger(function () {
-            _chart.filter(filter);
-            _chart.redrawGroup();
-        });
+        if (_chart.clickOn()) {
+            var filter = _chart.keyAccessor()(datum);
+            dc.events.trigger(function () {
+                _chart.filter(filter);
+                _chart.redrawGroup();
+            });
+        }
     };
 
     /**
@@ -1211,6 +1215,23 @@ dc.baseMixin = function (_chart) {
             return _renderTitle;
         }
         _renderTitle = renderTitle;
+        return _chart;
+    };
+
+    /**
+     * Turn on/off the click filter.
+     * @name clickOn
+     * @memberof dc.baseMixin
+     * @instance
+     * @param {Boolean} [clickOn=true]
+     * @return {Boolean}
+     * @return {dc.baseMixin}
+     */
+    _chart.clickOn = function (clickOn) {
+        if (!arguments.length) {
+            return _clickOn;
+        }
+        _clickOn = clickOn;
         return _chart;
     };
 
