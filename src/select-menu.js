@@ -49,11 +49,9 @@ dc.selectMenu = function (parent, chartGroup) {
         _chart.select('select').remove();
         _select = _chart.root().append('select')
                         .classed(SELECT_CSS_CLASS, true);
-
-        setAttributes();
-
         _select.append('option').text(_promptText).attr('value', '');
-        renderOptions();
+
+        _chart._doRedraw();
         return _chart;
     };
 
@@ -63,10 +61,9 @@ dc.selectMenu = function (parent, chartGroup) {
         // select the option(s) corresponding to current filter(s)
         if (_chart.hasFilter() && _multiple) {
             _select.selectAll('option')
-                .filter(function (d) {
+                .property('selected', function (d) {
                     return d && _chart.filters().indexOf(String(_chart.keyAccessor()(d))) >= 0;
-                })
-                .property('selected', true);
+                });
         } else if (_chart.hasFilter()) {
             _select.property('value', _chart.filter());
         } else {

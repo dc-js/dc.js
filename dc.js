@@ -6136,7 +6136,7 @@ dc.dataGrid = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set the index of the beginning slice which determines which entries get displayed by the widget
+     * Get or set the index of the beginning slice which determines which entries get displayed by the widget.
      * Useful when implementing pagination.
      * @name beginSlice
      * @memberof dc.dataGrid
@@ -7574,27 +7574,16 @@ dc.rowChart = function (parent, chartGroup) {
 
     var _rowData;
 
-    var _useRightYAxis = false;
-
     _chart.rowsCap = _chart.cap;
-
-    _chart.calculateAxisScaleData = function () {
-        return _rowData;
-    };
 
     function calculateAxisScale () {
         if (!_x || _elasticX) {
-            var extent = d3.extent(_chart.calculateAxisScaleData(), _chart.cappedValueAccessor);
+            var extent = d3.extent(_rowData, _chart.cappedValueAccessor);
             if (extent[0] > 0) {
                 extent[0] = 0;
             }
-            var domain = d3.scale.linear().domain(extent);
-
-            if (_useRightYAxis) {
-                _x = domain.range([_chart.effectiveWidth(), 0]);
-            } else {
-                _x = domain.range([0, _chart.effectiveWidth()]);
-            }
+            _x = d3.scale.linear().domain(extent)
+                .range([0, _chart.effectiveWidth()]);
         }
         _xAxis.scale(_x);
     }
@@ -7716,9 +7705,7 @@ dc.rowChart = function (parent, chartGroup) {
         }
 
         var rect = rows.attr('transform', function (d, i) {
-                var h = ((i + 1) * _gap + i * height),
-                    w = _useRightYAxis ? _chart.effectiveWidth() : 0;
-                return 'translate(' + w + ',' + h + ')';
+                return 'translate(0,' + ((i + 1) * _gap + i * height) + ')';
             }).select('rect')
             .attr('height', height)
             .attr('fill', _chart.getColor)
@@ -7762,10 +7749,9 @@ dc.rowChart = function (parent, chartGroup) {
     function updateLabels (rows) {
         if (_chart.renderLabel()) {
             var lab = rows.select('text')
-                .attr('x', _useRightYAxis ? -_labelOffsetX : _labelOffsetX)
+                .attr('x', _labelOffsetX)
                 .attr('y', _labelOffsetY)
                 .attr('dy', _dyOffset)
-                .attr('text-anchor', _useRightYAxis ? 'end' : 'start')
                 .on('click', onClick)
                 .attr('class', function (d, i) {
                     return _rowCssClass + ' _' + i;
@@ -7774,21 +7760,13 @@ dc.rowChart = function (parent, chartGroup) {
                     return _chart.label()(d);
                 });
             dc.transition(lab, _chart.transitionDuration())
-                .attr('transform', function (d) {
-                    if (_useRightYAxis) {
-                        return 'translate(0,0)';
-                    }
-                    return translateX(d);
-                });
+                .attr('transform', translateX);
         }
         if (_chart.renderTitleLabel()) {
             var titlelab = rows.select('.' + _titleRowCssClass)
-                    .attr('x', _useRightYAxis ?
-                      _titleLabelOffsetX - _chart.effectiveWidth() :
-                      _chart.effectiveWidth() - _titleLabelOffsetX
-                    )
+                    .attr('x', _chart.effectiveWidth() - _titleLabelOffsetX)
                     .attr('y', _labelOffsetY)
-                    .attr('text-anchor', _useRightYAxis ? 'start' : 'end')
+                    .attr('text-anchor', 'end')
                     .on('click', onClick)
                     .attr('class', function (d, i) {
                         return _titleRowCssClass + ' _' + i ;
@@ -7797,12 +7775,7 @@ dc.rowChart = function (parent, chartGroup) {
                         return _chart.title()(d);
                     });
             dc.transition(titlelab, _chart.transitionDuration())
-                .attr('transform', function (d) {
-                    if (_useRightYAxis) {
-                        return 'translate(0,0)';
-                    }
-                    return translateX(d);
-                });
+                .attr('transform', translateX);
         }
     }
 
@@ -7830,11 +7803,6 @@ dc.rowChart = function (parent, chartGroup) {
         var x = _x(_chart.cappedValueAccessor(d)),
             x0 = rootValue(),
             s = x > x0 ? x0 : x;
-
-        if (_useRightYAxis) {
-            s -= _chart.effectiveWidth();
-        }
-
         return 'translate(' + s + ',0)';
     }
 
@@ -7963,296 +7931,8 @@ dc.rowChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    /**
-     #### .useRightYAxis()
-     Gets or sets whether the chart should be drawn with a right axis instead of a left axis.
-     **/
-
-    _chart.useRightYAxis = function (_) {
-        if (!arguments.length) {
-            return _useRightYAxis;
-        }
-        _useRightYAxis = _;
-        return _chart;
-    };
-
     function isSelectedRow (d) {
         return _chart.hasFilter(_chart.cappedKeyAccessor(d));
-    }
-
-    return _chart.anchor(parent, chartGroup);
-};
-
-/**
-## Paired Row Chart
-Includes: [Cap Mixin](#cap-mixin), [Margin Mixin](#margin-mixin), [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
-
-Concrete paired row chart implementation.
-#### dc.pairedRowChart(parent[, chartGroup])
-Create a paired row chart instance and attach it to the given parent element.
-
-Parameters:
-
-* parent : string | node | selection - any valid
- [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- a dom block element such as a div; or a dom element or d3 selection.
-
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
- Interaction with a chart will only trigger events and redraws within the chart's group.
-
-Returns:
-A newly created paired row chart instance
-
-```js
-// create a paired row chart under #chart-container1 element using the default global chart group
-var chart1 = dc.pairedRowChart('#chart-container1');
-// create a paired row chart under #chart-container2 element using chart group A
-var chart2 = dc.pairedRowChart('#chart-container2', 'chartGroupA');
-```
-**/
-dc.pairedRowChart = function (parent, chartGroup) {
-    var _chart = dc.capMixin(dc.marginMixin(dc.colorMixin(dc.baseMixin({}))));
-
-    var _leftChartWrapper = d3.select(parent).append('div');
-    var _rightChartWrapper = d3.select(parent).append('div');
-
-    var _leftChart = dc.rowChart(_leftChartWrapper[0][0], chartGroup);
-    var _rightChart = dc.rowChart(_rightChartWrapper[0][0], chartGroup);
-
-    _leftChart.useRightYAxis(true);
-
-    // data filtering
-
-    // we need a way to know which data belongs on the left chart and which data belongs on the right
-    var _leftKeyFilter = function (d) {
-        return d.key[0];
-    };
-
-    var _rightKeyFilter = function (d) {
-        return d.key[0];
-    };
-
-    /**
-    #### .leftKeyFilter([value]) - **mandatory**
-    Set or get the left key filter attribute of a chart.
-
-    For example
-    function(d) {
-        return d.key[0] === 'Male';
-    }
-
-    If a value is given, then it will be used as the new left key filter. If no value is specified then
-    the current left key filter will be returned.
-
-    **/
-    _chart.leftKeyFilter = function (_) {
-        if (!arguments.length) {
-            return _leftKeyFilter;
-        }
-
-        _leftKeyFilter = _;
-        return _chart;
-    };
-
-    /**
-    #### .rightKeyFilter([value]) - **mandatory**
-    Set or get the right key filter attribute of a chart.
-
-    For example
-    function(d) {
-        return d.key[0] === 'Female';
-    }
-
-    If a value is given, then it will be used as the new right key filter. If no value is specified then
-    the current right key filter will be returned.
-
-    **/
-    _chart.rightKeyFilter = function (_) {
-        if (!arguments.length) {
-            return _rightKeyFilter;
-        }
-
-        _rightKeyFilter = _;
-        return _chart;
-    };
-
-    // when trying to get the data for the left chart then filter all data using the leftKeyFilter function
-    _leftChart.data(function (data) {
-        var cap = _leftChart.cap(),
-            d = data.all().filter(function (d) {
-            return _chart.leftKeyFilter()(d);
-        });
-
-        if (cap === Infinity) {
-            return d;
-        }
-
-        return d.slice(0, cap);
-    });
-
-    // when trying to get the data for the right chart then filter all data using the rightKeyFilter function
-    _rightChart.data(function (data) {
-        var cap = _rightChart.cap(),
-            d = data.all().filter(function (d) {
-            return _chart.rightKeyFilter()(d);
-        });
-
-        if (cap === Infinity) {
-            return d;
-        }
-
-        return d.slice(0, cap);
-    });
-
-    // chart filtering
-    // on clicking either chart then filter both
-
-    _leftChart.onClick = _rightChart.onClick = function (d) {
-        var filter = _leftChart.keyAccessor()(d);
-        dc.events.trigger(function () {
-            _leftChart.filter(filter);
-            _rightChart.filter(filter);
-            _leftChart.redrawGroup();
-        });
-    };
-
-    // width and margins
-
-    // the margins between the charts need to be set to 0 so that they sit together
-    var _margins = _chart.margins(); // get the default margins
-    _margins.right = _margins.left;
-
-    _chart.margins = function (_) {
-        if (!arguments.length) {
-            return _margins;
-        }
-        _margins = _;
-
-        // set left chart margins
-        _leftChart.margins({
-            top: _.top,
-            right: 0,
-            bottom: _.bottom,
-            left: _.left,
-        });
-
-        // set right chart margins
-        _rightChart.margins({
-            top: _.top,
-            right: _.right,
-            bottom: _.bottom,
-            left: 0,
-        });
-
-        return _chart;
-    };
-
-    _chart.margins(_margins); // set the new margins
-
-    // the width needs to be halved
-    var _width = 0; // get the default width
-
-    _chart.width = function (_) {
-        if (!arguments.length) {
-            return _width;
-        }
-        _width = _;
-
-        // set left chart width
-        _leftChart.width(dc.utils.isNumber(_) ? _ / 2 : _);
-
-        // set right chart width
-        _rightChart.width(dc.utils.isNumber(_) ? _ / 2 : _);
-
-        return _chart;
-    };
-
-    // the minWidth needs to be halved
-    var _minWidth = _chart.minWidth(); // get the default minWidth
-
-    _chart.minWidth = function (_) {
-        if (!arguments.length) {
-            return _minWidth;
-        }
-        _minWidth = _;
-
-        // set left chart minWidth
-        _leftChart.minWidth(dc.utils.isNumber(_) ? _ / 2 : _);
-
-        // set right chart minWidth
-        _rightChart.minWidth(dc.utils.isNumber(_) ? _ / 2 : _);
-
-        return _chart;
-    };
-
-    _chart.minWidth(_minWidth); // set the new minWidth
-
-    // svg
-    // return an array of both the sub chart svgs
-
-    _chart.svg = function () {
-        return d3.selectAll([_leftChart.svg()[0][0], _rightChart.svg()[0][0]]);
-    };
-
-    // we need to make sure that the extent is the same for both charts
-    _leftChart.calculateAxisScaleData = _rightChart.calculateAxisScaleData = function () {
-        return _leftChart.data().concat(_rightChart.data());
-    };
-
-    // get the charts - mainly used for testing
-    _chart.leftChart = function () {
-        return _leftChart;
-    };
-
-    _chart.rightChart = function () {
-        return _rightChart;
-    };
-
-    // functions that we just want to pass on to both sub charts
-
-    var _getterSetterPassOn = [
-        // display
-        'height', 'minHeight', 'renderTitleLabel', 'fixedBarHeight', 'gap', 'othersLabel',
-        'transitionDuration', 'label', 'renderLabel', 'title', 'renderTitle', 'chartGroup',
-        //colors
-        'colors', 'ordinalColors', 'linearColors', 'colorAccessor', 'colorDomain', 'getColor', 'colorCalculator',
-        // x axis
-        'x', 'elasticX', 'valueAccessor', 'labelOffsetX', 'titleLabelOffsetx', 'xAxis',
-        // y axis
-        'keyAccessor', 'labelOffsetY', 'yAxis',
-        // data
-        'cap', 'ordering' , 'dimension', 'group', 'othersGrouper', 'data'
-    ];
-
-    function addGetterSetterFunction (functionName) {
-        _chart[functionName] = function (_) {
-            if (!arguments.length) {
-                return [_leftChart[functionName](), _rightChart[functionName]()];
-            }
-            _leftChart[functionName](_);
-            _rightChart[functionName](_);
-            return _chart;
-        };
-    }
-
-    for (var i = 0; i < _getterSetterPassOn.length; i++) {
-        addGetterSetterFunction(_getterSetterPassOn[i]);
-    }
-
-    var _passOnFunctions = [
-        '_doRedraw', 'redraw', '_doRender', 'render', 'calculateColorDomain', 'filterAll', 'resetSvg', 'expireCache'
-    ];
-
-    function addPassOnFunctions (functionName) {
-        _chart[functionName] = function () {
-            _leftChart[functionName]();
-            _rightChart[functionName]();
-            return _chart;
-        };
-    }
-
-    for (i = 0; i < _passOnFunctions.length; i++) {
-        addPassOnFunctions(_passOnFunctions[i]);
     }
 
     return _chart.anchor(parent, chartGroup);
@@ -9888,11 +9568,9 @@ dc.selectMenu = function (parent, chartGroup) {
         _chart.select('select').remove();
         _select = _chart.root().append('select')
                         .classed(SELECT_CSS_CLASS, true);
-
-        setAttributes();
-
         _select.append('option').text(_promptText).attr('value', '');
-        renderOptions();
+
+        _chart._doRedraw();
         return _chart;
     };
 
@@ -9902,10 +9580,9 @@ dc.selectMenu = function (parent, chartGroup) {
         // select the option(s) corresponding to current filter(s)
         if (_chart.hasFilter() && _multiple) {
             _select.selectAll('option')
-                .filter(function (d) {
+                .property('selected', function (d) {
                     return d && _chart.filters().indexOf(String(_chart.keyAccessor()(d))) >= 0;
-                })
-                .property('selected', true);
+                });
         } else if (_chart.hasFilter()) {
             _select.property('value', _chart.filter());
         } else {
