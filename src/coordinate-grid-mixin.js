@@ -522,7 +522,11 @@ dc.coordinateGridMixin = function (_chart) {
             axisXG
                 .selectAll('.tick text')
                 .style('text-anchor', rotate < 0 ? 'end' : 'start')
-                .attr('transform', 'rotate(' + rotate + ') translate(' + (10 * (rotate / MAX_TICK_LABEL_ROTATION)) + ', -' + Math.abs((13 * (rotate / MAX_TICK_LABEL_ROTATION))) + ')');
+                .attr('transform',
+                    'rotate(' + rotate + ') ' +
+                    'translate(' + (10 * (rotate / MAX_TICK_LABEL_ROTATION)) +
+                    ', -' + Math.abs((13 * (rotate / MAX_TICK_LABEL_ROTATION))) + ')'
+                );
         }
     };
 
@@ -679,7 +683,11 @@ dc.coordinateGridMixin = function (_chart) {
             axisYG
                 .selectAll('.tick text')
                 .style('text-anchor', 'end')
-                .attr('transform', 'rotate(' + rotate + ') translate(' + (translateXRatio * (rotate / MAX_TICK_LABEL_ROTATION)) + ', ' + (translateYRatio * (rotate / MAX_TICK_LABEL_ROTATION)) + ')');
+                .attr('transform',
+                    'rotate(' + rotate + ') ' +
+                    'translate(' + (translateXRatio * (rotate / MAX_TICK_LABEL_ROTATION)) +
+                    ', ' + (translateYRatio * (rotate / MAX_TICK_LABEL_ROTATION)) + ')'
+                );
         }
     };
 
