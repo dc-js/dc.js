@@ -26,6 +26,7 @@ d3.csv("morley.csv", function(error, experiments) {
     .height(480)
     .x(d3.scale.linear().domain([6,20]))
     .elasticX(true)
+    .xAxisLabel('Runs')
     .dimension(runDimension)
     .group(speedSumGroup)
     .render();

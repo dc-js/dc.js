@@ -516,7 +516,6 @@ dc.coordinateGridMixin = function (_chart) {
             .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
                   (_chart.height() - _xAxisLabelPadding) + ')');
 
-
         var rotate = _chart.xAxisTickLabelRotate();
         if (rotate) {
             axisXG
