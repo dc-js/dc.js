@@ -7633,7 +7633,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
 dc.rowChart = function (parent, chartGroup) {
 
     var X_AXIS_LABEL_CLASS = 'x-axis-label';
-    var DEFAULT_AXIS_LABEL_PADDING = 30;
+    var DEFAULT_AXIS_LABEL_PADDING = 12;
 
     var _g;
 
@@ -7701,18 +7701,18 @@ dc.rowChart = function (parent, chartGroup) {
         dc.transition(axisG, _chart.transitionDuration())
             .call(_xAxis);
 
-        renderXAxisLabel(axisG);
+        renderXAxisLabel();
     }
 
-    function renderXAxisLabel (g) {
-        var axisXLab = g.selectAll('text.' + X_AXIS_LABEL_CLASS);
+    function renderXAxisLabel () {
+        var axisXLab = _g.selectAll('text.' + X_AXIS_LABEL_CLASS);
 
         if (axisXLab.empty() && _chart.xAxisLabel()) {
-            axisXLab = g.append('text')
+            axisXLab = _g.append('text')
                 .attr('class', X_AXIS_LABEL_CLASS)
                 .attr('transform',
                     'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) +
-                    ',' + _xAxisLabelPadding + ')'
+                    ',' + (_chart.height() - _xAxisLabelPadding) + ')'
                 )
                 .attr('text-anchor', 'middle');
         }
@@ -8342,12 +8342,12 @@ dc.pairedRowChart = function (parent, chartGroup) {
         return _rightChart;
     };
 
-    _chart.leftXAxisLabel = function(labelText, padding) {
-        return _leftChart.xAxisLabel(labelText, padding)
+    _chart.leftXAxisLabel = function (labelText, padding) {
+        return _leftChart.xAxisLabel(labelText, padding);
     };
 
-    _chart.rightXAxisLabel = function(labelText, padding) {
-        return _rightChart.xAxisLabel(labelText, padding)
+    _chart.rightXAxisLabel = function (labelText, padding) {
+        return _rightChart.xAxisLabel(labelText, padding);
     };
 
     // functions that we just want to pass on to both sub charts
