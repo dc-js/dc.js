@@ -17,6 +17,7 @@ dc.coordinateGridMixin = function (_chart) {
     var Y_AXIS_LABEL_CLASS = 'y-axis-label';
     var X_AXIS_LABEL_CLASS = 'x-axis-label';
     var DEFAULT_AXIS_LABEL_PADDING = 12;
+    var MAX_TICK_LABEL_ROTATION = 90;
 
     _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin(_chart)));
 
@@ -68,6 +69,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _xAxisLabel;
     var _xAxisLabelPadding = 0;
     var _lastXDomain;
+    var _xAxisTickLabelRotate = 0;
 
     var _y;
     var _yAxis = d3.svg.axis().orient('left');
@@ -75,6 +77,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _yElasticity = false;
     var _yAxisLabel;
     var _yAxisLabelPadding = 0;
+    var _yAxisTickLabelRotate = 0;
 
     var _brush = d3.svg.brush();
     var _brushOn = true;
@@ -512,6 +515,15 @@ dc.coordinateGridMixin = function (_chart) {
         dc.transition(axisXLab, _chart.transitionDuration())
             .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
                   (_chart.height() - _xAxisLabelPadding) + ')');
+
+
+        var rotate = _chart.xAxisTickLabelRotate();
+        if (rotate) {
+            axisXG
+                .selectAll('.tick text')
+                .style('text-anchor', rotate < 0 ? 'end' : 'start')
+                .attr('transform', 'rotate(' + rotate + ') translate(' + (10 * (rotate / MAX_TICK_LABEL_ROTATION)) + ', -' + Math.abs((13 * (rotate / MAX_TICK_LABEL_ROTATION))) + ')');
+        }
     };
 
     function renderVerticalGridLines (g) {
@@ -592,6 +604,22 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
+    /**
+     * Set or get the x axis tick label rotation in degrees. Can be between -90 and 90.
+     * @name xAxisTickLabelRotate
+     * @memberof dc.coordinateGridMixin
+     * @instance
+     * @param {Number} [rotate]
+     * @return {Number}
+     */
+    _chart.xAxisTickLabelRotate = function (rotate) {
+        if (!arguments.length) {
+            return _xAxisTickLabelRotate;
+        }
+        _xAxisTickLabelRotate = rotate;
+        return _chart;
+    };
+
     _chart._prepareYAxis = function (g) {
         if (_y === undefined || _chart.elasticY()) {
             if (_y === undefined) {
@@ -642,6 +670,17 @@ dc.coordinateGridMixin = function (_chart) {
         dc.transition(axisYG, _chart.transitionDuration())
             .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')')
             .call(axis);
+
+        var rotate = _chart.yAxisTickLabelRotate();
+        if (rotate) {
+            var translateXRatio = rotate <= (MAX_TICK_LABEL_ROTATION / 2) ? 8 : 12;
+            var translateYRatio = rotate <= (MAX_TICK_LABEL_ROTATION / 2) ? 16 : 14;
+
+            axisYG
+                .selectAll('.tick text')
+                .style('text-anchor', 'end')
+                .attr('transform', 'rotate(' + rotate + ') translate(' + (translateXRatio * (rotate / MAX_TICK_LABEL_ROTATION)) + ', ' + (translateYRatio * (rotate / MAX_TICK_LABEL_ROTATION)) + ')');
+        }
     };
 
     _chart.renderYAxis = function () {
@@ -724,6 +763,22 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.margins().left -= _yAxisLabelPadding;
         _yAxisLabelPadding = (padding === undefined) ? DEFAULT_AXIS_LABEL_PADDING : padding;
         _chart.margins().left += _yAxisLabelPadding;
+        return _chart;
+    };
+
+    /**
+     * Set or get the y axis tick label rotation in degrees. Can be between -90 and 90.
+     * @name yAxisTickLabelRotate
+     * @memberof dc.coordinateGridMixin
+     * @instance
+     * @param {Number} [rotate]
+     * @return {Number}
+     */
+    _chart.yAxisTickLabelRotate = function (rotate) {
+        if (!arguments.length) {
+            return _yAxisTickLabelRotate;
+        }
+        _yAxisTickLabelRotate = rotate;
         return _chart;
     };
 
