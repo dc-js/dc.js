@@ -58,6 +58,7 @@ chart.width(300)
     * [.renderLabel](#dc.baseMixin+renderLabel) ⇒ <code>Boolean</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
     * [.title](#dc.baseMixin+title) ⇒ <code>function</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
     * [.renderTitle](#dc.baseMixin+renderTitle) ⇒ <code>Boolean</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
+    * [.clickOn](#dc.baseMixin+clickOn) ⇒ <code>Boolean</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
     * ~~[.renderlet](#dc.baseMixin+renderlet) ⇒ <code>[baseMixin](#dc.baseMixin)</code>~~
     * [.chartGroup](#dc.baseMixin+chartGroup) ⇒ <code>String</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
     * [.expireCache](#dc.baseMixin+expireCache) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
@@ -93,7 +94,9 @@ chart.width(300)
     * [.useRightYAxis](#dc.coordinateGridMixin+useRightYAxis) ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
     * [.isOrdinal](#dc.coordinateGridMixin+isOrdinal) ⇒ <code>Boolean</code>
     * [.xAxisLabel](#dc.coordinateGridMixin+xAxisLabel) ⇒ <code>String</code>
+    * [.xAxisTickLabelRotate](#dc.coordinateGridMixin+xAxisTickLabelRotate) ⇒ <code>Number</code>
     * [.yAxisLabel](#dc.coordinateGridMixin+yAxisLabel) ⇒ <code>String</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
+    * [.yAxisTickLabelRotate](#dc.coordinateGridMixin+yAxisTickLabelRotate) ⇒ <code>Number</code>
     * [.y](#dc.coordinateGridMixin+y) ⇒ <code>d3.scale</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
     * [.yAxis](#dc.coordinateGridMixin+yAxis) ⇒ <code>d3.svg.axis</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
     * [.elasticY](#dc.coordinateGridMixin+elasticY) ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
@@ -108,6 +111,7 @@ chart.width(300)
     * [.clipPadding](#dc.coordinateGridMixin+clipPadding) ⇒ <code>Number</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
     * [.focus](#dc.coordinateGridMixin+focus)
     * [.brushOn](#dc.coordinateGridMixin+brushOn) ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
+    * [.xAxisLabel](#dc.coordinateGridMixin+xAxisLabel) ⇒ <code>String</code>
   * [.stackMixin](#dc.stackMixin) ⇒ <code>[stackMixin](#dc.stackMixin)</code>
     * [.stack](#dc.stackMixin+stack) ⇒ <code>Array.&lt;{group: crossfilter.group, name: String, accessor: function()}&gt;</code> &#124; <code>[stackMixin](#dc.stackMixin)</code>
     * [.hidableStacks](#dc.stackMixin+hidableStacks) ⇒ <code>Boolean</code> &#124; <code>[stackMixin](#dc.stackMixin)</code>
@@ -313,6 +317,7 @@ and available on all chart implementations in the `dc` library.
   * [.renderLabel](#dc.baseMixin+renderLabel) ⇒ <code>Boolean</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
   * [.title](#dc.baseMixin+title) ⇒ <code>function</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
   * [.renderTitle](#dc.baseMixin+renderTitle) ⇒ <code>Boolean</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
+  * [.clickOn](#dc.baseMixin+clickOn) ⇒ <code>Boolean</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
   * ~~[.renderlet](#dc.baseMixin+renderlet) ⇒ <code>[baseMixin](#dc.baseMixin)</code>~~
   * [.chartGroup](#dc.baseMixin+chartGroup) ⇒ <code>String</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
   * [.expireCache](#dc.baseMixin+expireCache) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
@@ -972,6 +977,16 @@ given.
 | --- | --- | --- |
 | [renderTitle] | <code>Boolean</code> | <code>true</code> | 
 
+<a name="dc.baseMixin+clickOn"></a>
+#### baseMixin.clickOn ⇒ <code>Boolean</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
+Turn on/off the click filter.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [clickOn] | <code>Boolean</code> | <code>true</code> | 
+
 <a name="dc.baseMixin+renderlet"></a>
 #### ~~baseMixin.renderlet ⇒ <code>[baseMixin](#dc.baseMixin)</code>~~
 ***Deprecated***
@@ -1274,7 +1289,9 @@ concrete chart types, e.g. bar chart, line chart, and bubble chart.
   * [.useRightYAxis](#dc.coordinateGridMixin+useRightYAxis) ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
   * [.isOrdinal](#dc.coordinateGridMixin+isOrdinal) ⇒ <code>Boolean</code>
   * [.xAxisLabel](#dc.coordinateGridMixin+xAxisLabel) ⇒ <code>String</code>
+  * [.xAxisTickLabelRotate](#dc.coordinateGridMixin+xAxisTickLabelRotate) ⇒ <code>Number</code>
   * [.yAxisLabel](#dc.coordinateGridMixin+yAxisLabel) ⇒ <code>String</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
+  * [.yAxisTickLabelRotate](#dc.coordinateGridMixin+yAxisTickLabelRotate) ⇒ <code>Number</code>
   * [.y](#dc.coordinateGridMixin+y) ⇒ <code>d3.scale</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
   * [.yAxis](#dc.coordinateGridMixin+yAxis) ⇒ <code>d3.svg.axis</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
   * [.elasticY](#dc.coordinateGridMixin+elasticY) ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
@@ -1289,6 +1306,7 @@ concrete chart types, e.g. bar chart, line chart, and bubble chart.
   * [.clipPadding](#dc.coordinateGridMixin+clipPadding) ⇒ <code>Number</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
   * [.focus](#dc.coordinateGridMixin+focus)
   * [.brushOn](#dc.coordinateGridMixin+brushOn) ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
+  * [.xAxisLabel](#dc.coordinateGridMixin+xAxisLabel) ⇒ <code>String</code>
 
 <a name="dc.coordinateGridMixin+rescale"></a>
 #### coordinateGridMixin.rescale ⇒ <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
@@ -1508,6 +1526,16 @@ the margin to make room for the label. By default the padded is set to 12 to acc
 | [labelText] | <code>String</code> |  | 
 | [padding] | <code>Number</code> | <code>12</code> | 
 
+<a name="dc.coordinateGridMixin+xAxisTickLabelRotate"></a>
+#### coordinateGridMixin.xAxisTickLabelRotate ⇒ <code>Number</code>
+Set or get the x axis tick label rotation in degrees. Can be between -90 and 90.
+
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [rotate] | <code>Number</code> | 
+
 <a name="dc.coordinateGridMixin+yAxisLabel"></a>
 #### coordinateGridMixin.yAxisLabel ⇒ <code>String</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
 Set or get the y axis label. If setting the label, you may optionally include additional padding
@@ -1520,6 +1548,16 @@ text height.
 | --- | --- | --- |
 | [labelText] | <code>String</code> |  | 
 | [padding] | <code>Number</code> | <code>12</code> | 
+
+<a name="dc.coordinateGridMixin+yAxisTickLabelRotate"></a>
+#### coordinateGridMixin.yAxisTickLabelRotate ⇒ <code>Number</code>
+Set or get the y axis tick label rotation in degrees. Can be between -90 and 90.
+
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [rotate] | <code>Number</code> | 
 
 <a name="dc.coordinateGridMixin+y"></a>
 #### coordinateGridMixin.y ⇒ <code>d3.scale</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
@@ -1685,6 +1723,18 @@ if enabled, but only via scrolling (panning will be disabled.)
 | Param | Type | Default |
 | --- | --- | --- |
 | [brushOn] | <code>Boolean</code> | <code>true</code> | 
+
+<a name="dc.coordinateGridMixin+xAxisLabel"></a>
+#### coordinateGridMixin.xAxisLabel ⇒ <code>String</code>
+Set or get the x axis label. If setting the label, you may optionally include additional padding to
+the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.
+
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [labelText] | <code>String</code> |  | 
+| [padding] | <code>Number</code> | <code>12</code> | 
 
 <a name="dc.stackMixin"></a>
 ### dc.stackMixin ⇒ <code>[stackMixin](#dc.stackMixin)</code>

@@ -759,6 +759,8 @@ dc.baseMixin = function (_chart) {
     var _ordering = dc.pluck('key');
     var _orderSort;
 
+    var _clickOn = true;
+
     var _renderLabel = false;
 
     var _title = function (d) {
@@ -1703,11 +1705,13 @@ dc.baseMixin = function (_chart) {
      * @param {*} datum
      */
     _chart.onClick = function (datum) {
-        var filter = _chart.keyAccessor()(datum);
-        dc.events.trigger(function () {
-            _chart.filter(filter);
-            _chart.redrawGroup();
-        });
+        if (_chart.clickOn()) {
+            var filter = _chart.keyAccessor()(datum);
+            dc.events.trigger(function () {
+                _chart.filter(filter);
+                _chart.redrawGroup();
+            });
+        }
     };
 
     /**
@@ -1930,6 +1934,23 @@ dc.baseMixin = function (_chart) {
             return _renderTitle;
         }
         _renderTitle = renderTitle;
+        return _chart;
+    };
+
+    /**
+     * Turn on/off the click filter.
+     * @name clickOn
+     * @memberof dc.baseMixin
+     * @instance
+     * @param {Boolean} [clickOn=true]
+     * @return {Boolean}
+     * @return {dc.baseMixin}
+     */
+    _chart.clickOn = function (clickOn) {
+        if (!arguments.length) {
+            return _clickOn;
+        }
+        _clickOn = clickOn;
         return _chart;
     };
 
@@ -2346,6 +2367,7 @@ dc.coordinateGridMixin = function (_chart) {
     var Y_AXIS_LABEL_CLASS = 'y-axis-label';
     var X_AXIS_LABEL_CLASS = 'x-axis-label';
     var DEFAULT_AXIS_LABEL_PADDING = 12;
+    var MAX_TICK_LABEL_ROTATION = 90;
 
     _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin(_chart)));
 
@@ -2397,6 +2419,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _xAxisLabel;
     var _xAxisLabelPadding = 0;
     var _lastXDomain;
+    var _xAxisTickLabelRotate = 0;
 
     var _y;
     var _yAxis = d3.svg.axis().orient('left');
@@ -2404,6 +2427,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _yElasticity = false;
     var _yAxisLabel;
     var _yAxisLabelPadding = 0;
+    var _yAxisTickLabelRotate = 0;
 
     var _brush = d3.svg.brush();
     var _brushOn = true;
@@ -2841,6 +2865,18 @@ dc.coordinateGridMixin = function (_chart) {
         dc.transition(axisXLab, _chart.transitionDuration())
             .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
                   (_chart.height() - _xAxisLabelPadding) + ')');
+
+        var rotate = _chart.xAxisTickLabelRotate();
+        if (rotate) {
+            axisXG
+                .selectAll('.tick text')
+                .style('text-anchor', rotate < 0 ? 'end' : 'start')
+                .attr('transform',
+                    'rotate(' + rotate + ') ' +
+                    'translate(' + (10 * (rotate / MAX_TICK_LABEL_ROTATION)) +
+                    ', -' + Math.abs((13 * (rotate / MAX_TICK_LABEL_ROTATION))) + ')'
+                );
+        }
     };
 
     function renderVerticalGridLines (g) {
@@ -2921,6 +2957,22 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
+    /**
+     * Set or get the x axis tick label rotation in degrees. Can be between -90 and 90.
+     * @name xAxisTickLabelRotate
+     * @memberof dc.coordinateGridMixin
+     * @instance
+     * @param {Number} [rotate]
+     * @return {Number}
+     */
+    _chart.xAxisTickLabelRotate = function (rotate) {
+        if (!arguments.length) {
+            return _xAxisTickLabelRotate;
+        }
+        _xAxisTickLabelRotate = rotate;
+        return _chart;
+    };
+
     _chart._prepareYAxis = function (g) {
         if (_y === undefined || _chart.elasticY()) {
             if (_y === undefined) {
@@ -2971,6 +3023,21 @@ dc.coordinateGridMixin = function (_chart) {
         dc.transition(axisYG, _chart.transitionDuration())
             .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')')
             .call(axis);
+
+        var rotate = _chart.yAxisTickLabelRotate();
+        if (rotate) {
+            var translateXRatio = rotate <= (MAX_TICK_LABEL_ROTATION / 2) ? 8 : 12;
+            var translateYRatio = rotate <= (MAX_TICK_LABEL_ROTATION / 2) ? 16 : 14;
+
+            axisYG
+                .selectAll('.tick text')
+                .style('text-anchor', 'end')
+                .attr('transform',
+                    'rotate(' + rotate + ') ' +
+                    'translate(' + (translateXRatio * (rotate / MAX_TICK_LABEL_ROTATION)) +
+                    ', ' + (translateYRatio * (rotate / MAX_TICK_LABEL_ROTATION)) + ')'
+                );
+        }
     };
 
     _chart.renderYAxis = function () {
@@ -3053,6 +3120,22 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.margins().left -= _yAxisLabelPadding;
         _yAxisLabelPadding = (padding === undefined) ? DEFAULT_AXIS_LABEL_PADDING : padding;
         _chart.margins().left += _yAxisLabelPadding;
+        return _chart;
+    };
+
+    /**
+     * Set or get the y axis tick label rotation in degrees. Can be between -90 and 90.
+     * @name yAxisTickLabelRotate
+     * @memberof dc.coordinateGridMixin
+     * @instance
+     * @param {Number} [rotate]
+     * @return {Number}
+     */
+    _chart.yAxisTickLabelRotate = function (rotate) {
+        if (!arguments.length) {
+            return _yAxisTickLabelRotate;
+        }
+        _yAxisTickLabelRotate = rotate;
         return _chart;
     };
 
@@ -7549,6 +7632,9 @@ dc.bubbleOverlay = function (parent, chartGroup) {
  */
 dc.rowChart = function (parent, chartGroup) {
 
+    var X_AXIS_LABEL_CLASS = 'x-axis-label';
+    var DEFAULT_AXIS_LABEL_PADDING = 30;
+
     var _g;
 
     var _labelOffsetX = 10;
@@ -7556,6 +7642,9 @@ dc.rowChart = function (parent, chartGroup) {
     var _hasLabelOffsetY = false;
     var _dyOffset = '0.35em';  // this helps center labels https://github.com/mbostock/d3/wiki/SVG-Shapes#svg_text
     var _titleLabelOffsetX = 2;
+
+    var _xAxisLabel;
+    var _xAxisLabelPadding = 0;
 
     var _gap = 5;
 
@@ -7574,16 +7663,27 @@ dc.rowChart = function (parent, chartGroup) {
 
     var _rowData;
 
+    var _useRightYAxis = false;
+
     _chart.rowsCap = _chart.cap;
+
+    _chart.calculateAxisScaleData = function () {
+        return _rowData;
+    };
 
     function calculateAxisScale () {
         if (!_x || _elasticX) {
-            var extent = d3.extent(_rowData, _chart.cappedValueAccessor);
+            var extent = d3.extent(_chart.calculateAxisScaleData(), _chart.cappedValueAccessor);
             if (extent[0] > 0) {
                 extent[0] = 0;
             }
-            _x = d3.scale.linear().domain(extent)
-                .range([0, _chart.effectiveWidth()]);
+            var domain = d3.scale.linear().domain(extent);
+
+            if (_useRightYAxis) {
+                _x = domain.range([_chart.effectiveWidth(), 0]);
+            } else {
+                _x = domain.range([0, _chart.effectiveWidth()]);
+            }
         }
         _xAxis.scale(_x);
     }
@@ -7600,6 +7700,26 @@ dc.rowChart = function (parent, chartGroup) {
 
         dc.transition(axisG, _chart.transitionDuration())
             .call(_xAxis);
+
+        renderXAxisLabel(axisG);
+    }
+
+    function renderXAxisLabel (g) {
+        var axisXLab = g.selectAll('text.' + X_AXIS_LABEL_CLASS);
+
+        if (axisXLab.empty() && _chart.xAxisLabel()) {
+            axisXLab = g.append('text')
+                .attr('class', X_AXIS_LABEL_CLASS)
+                .attr('transform',
+                    'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) +
+                    ',' + _xAxisLabelPadding + ')'
+                )
+                .attr('text-anchor', 'middle');
+        }
+
+        if (_chart.xAxisLabel() && axisXLab.text() !== _chart.xAxisLabel()) {
+            axisXLab.text(_chart.xAxisLabel());
+        }
     }
 
     _chart._doRender = function () {
@@ -7705,7 +7825,9 @@ dc.rowChart = function (parent, chartGroup) {
         }
 
         var rect = rows.attr('transform', function (d, i) {
-                return 'translate(0,' + ((i + 1) * _gap + i * height) + ')';
+                var h = ((i + 1) * _gap + i * height),
+                    w = _useRightYAxis ? _chart.effectiveWidth() : 0;
+                return 'translate(' + w + ',' + h + ')';
             }).select('rect')
             .attr('height', height)
             .attr('fill', _chart.getColor)
@@ -7749,9 +7871,10 @@ dc.rowChart = function (parent, chartGroup) {
     function updateLabels (rows) {
         if (_chart.renderLabel()) {
             var lab = rows.select('text')
-                .attr('x', _labelOffsetX)
+                .attr('x', _useRightYAxis ? -_labelOffsetX : _labelOffsetX)
                 .attr('y', _labelOffsetY)
                 .attr('dy', _dyOffset)
+                .attr('text-anchor', _useRightYAxis ? 'end' : 'start')
                 .on('click', onClick)
                 .attr('class', function (d, i) {
                     return _rowCssClass + ' _' + i;
@@ -7760,13 +7883,21 @@ dc.rowChart = function (parent, chartGroup) {
                     return _chart.label()(d);
                 });
             dc.transition(lab, _chart.transitionDuration())
-                .attr('transform', translateX);
+                .attr('transform', function (d) {
+                    if (_useRightYAxis) {
+                        return 'translate(0,0)';
+                    }
+                    return translateX(d);
+                });
         }
         if (_chart.renderTitleLabel()) {
             var titlelab = rows.select('.' + _titleRowCssClass)
-                    .attr('x', _chart.effectiveWidth() - _titleLabelOffsetX)
+                    .attr('x', _useRightYAxis ?
+                      _titleLabelOffsetX - _chart.effectiveWidth() :
+                      _chart.effectiveWidth() - _titleLabelOffsetX
+                    )
                     .attr('y', _labelOffsetY)
-                    .attr('text-anchor', 'end')
+                    .attr('text-anchor', _useRightYAxis ? 'start' : 'end')
                     .on('click', onClick)
                     .attr('class', function (d, i) {
                         return _titleRowCssClass + ' _' + i ;
@@ -7775,7 +7906,12 @@ dc.rowChart = function (parent, chartGroup) {
                         return _chart.title()(d);
                     });
             dc.transition(titlelab, _chart.transitionDuration())
-                .attr('transform', translateX);
+                .attr('transform', function (d) {
+                    if (_useRightYAxis) {
+                        return 'translate(0,0)';
+                    }
+                    return translateX(d);
+                });
         }
     }
 
@@ -7803,6 +7939,11 @@ dc.rowChart = function (parent, chartGroup) {
         var x = _x(_chart.cappedValueAccessor(d)),
             x0 = rootValue(),
             s = x > x0 ? x0 : x;
+
+        if (_useRightYAxis) {
+            s -= _chart.effectiveWidth();
+        }
+
         return 'translate(' + s + ',0)';
     }
 
@@ -7882,6 +8023,31 @@ dc.rowChart = function (parent, chartGroup) {
         return _chart;
     };
 
+    _chart.xAxisLength = function () {
+        return _chart.effectiveWidth();
+    };
+
+    /**
+     * Set or get the x axis label. If setting the label, you may optionally include additional padding to
+     * the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.
+     * @name xAxisLabel
+     * @memberof dc.coordinateGridMixin
+     * @instance
+     * @param {String} [labelText]
+     * @param {Number} [padding=12]
+     * @return {String}
+     */
+    _chart.xAxisLabel = function (labelText, padding) {
+        if (!arguments.length) {
+            return _xAxisLabel;
+        }
+        _xAxisLabel = labelText;
+        _chart.margins().bottom -= _xAxisLabelPadding;
+        _xAxisLabelPadding = (padding === undefined) ? DEFAULT_AXIS_LABEL_PADDING : padding;
+        _chart.margins().bottom += _xAxisLabelPadding;
+        return _chart;
+    };
+
     /**
      * Get or set the x offset (horizontal space to the top left corner of a row) for labels on a particular row chart.
      * @name labelOffsetX
@@ -7931,8 +8097,304 @@ dc.rowChart = function (parent, chartGroup) {
         return _chart;
     };
 
+    /**
+     #### .useRightYAxis()
+     Gets or sets whether the chart should be drawn with a right axis instead of a left axis.
+     **/
+
+    _chart.useRightYAxis = function (_) {
+        if (!arguments.length) {
+            return _useRightYAxis;
+        }
+        _useRightYAxis = _;
+        return _chart;
+    };
+
     function isSelectedRow (d) {
         return _chart.hasFilter(_chart.cappedKeyAccessor(d));
+    }
+
+    return _chart.anchor(parent, chartGroup);
+};
+
+/**
+## Paired Row Chart
+Includes: [Cap Mixin](#cap-mixin), [Margin Mixin](#margin-mixin), [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
+
+Concrete paired row chart implementation.
+#### dc.pairedRowChart(parent[, chartGroup])
+Create a paired row chart instance and attach it to the given parent element.
+
+Parameters:
+
+* parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+
+* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
+ Interaction with a chart will only trigger events and redraws within the chart's group.
+
+Returns:
+A newly created paired row chart instance
+
+```js
+// create a paired row chart under #chart-container1 element using the default global chart group
+var chart1 = dc.pairedRowChart('#chart-container1');
+// create a paired row chart under #chart-container2 element using chart group A
+var chart2 = dc.pairedRowChart('#chart-container2', 'chartGroupA');
+```
+**/
+dc.pairedRowChart = function (parent, chartGroup) {
+    var _chart = dc.capMixin(dc.marginMixin(dc.colorMixin(dc.baseMixin({}))));
+
+    var _leftChartWrapper = d3.select(parent).append('div');
+    var _rightChartWrapper = d3.select(parent).append('div');
+
+    var _leftChart = dc.rowChart(_leftChartWrapper[0][0], chartGroup);
+    var _rightChart = dc.rowChart(_rightChartWrapper[0][0], chartGroup);
+
+    _leftChart.useRightYAxis(true);
+
+    // data filtering
+
+    // we need a way to know which data belongs on the left chart and which data belongs on the right
+    var _leftKeyFilter = function (d) {
+        return d.key[0];
+    };
+
+    var _rightKeyFilter = function (d) {
+        return d.key[0];
+    };
+
+    /**
+    #### .leftKeyFilter([value]) - **mandatory**
+    Set or get the left key filter attribute of a chart.
+
+    For example
+    function(d) {
+        return d.key[0] === 'Male';
+    }
+
+    If a value is given, then it will be used as the new left key filter. If no value is specified then
+    the current left key filter will be returned.
+
+    **/
+    _chart.leftKeyFilter = function (_) {
+        if (!arguments.length) {
+            return _leftKeyFilter;
+        }
+
+        _leftKeyFilter = _;
+        return _chart;
+    };
+
+    /**
+    #### .rightKeyFilter([value]) - **mandatory**
+    Set or get the right key filter attribute of a chart.
+
+    For example
+    function(d) {
+        return d.key[0] === 'Female';
+    }
+
+    If a value is given, then it will be used as the new right key filter. If no value is specified then
+    the current right key filter will be returned.
+
+    **/
+    _chart.rightKeyFilter = function (_) {
+        if (!arguments.length) {
+            return _rightKeyFilter;
+        }
+
+        _rightKeyFilter = _;
+        return _chart;
+    };
+
+    // when trying to get the data for the left chart then filter all data using the leftKeyFilter function
+    _leftChart.data(function (data) {
+        var cap = _leftChart.cap(),
+            d = data.all().filter(function (d) {
+            return _chart.leftKeyFilter()(d);
+        });
+
+        if (cap === Infinity) {
+            return d;
+        }
+
+        return d.slice(0, cap);
+    });
+
+    // when trying to get the data for the right chart then filter all data using the rightKeyFilter function
+    _rightChart.data(function (data) {
+        var cap = _rightChart.cap(),
+            d = data.all().filter(function (d) {
+            return _chart.rightKeyFilter()(d);
+        });
+
+        if (cap === Infinity) {
+            return d;
+        }
+
+        return d.slice(0, cap);
+    });
+
+    // chart filtering
+    // on clicking either chart then filter both
+
+    _leftChart.onClick = _rightChart.onClick = function (d) {
+        var filter = _leftChart.keyAccessor()(d);
+        dc.events.trigger(function () {
+            _leftChart.filter(filter);
+            _rightChart.filter(filter);
+            _leftChart.redrawGroup();
+        });
+    };
+
+    // width and margins
+
+    // the margins between the charts need to be set to 0 so that they sit together
+    var _margins = _chart.margins(); // get the default margins
+    _margins.right = _margins.left;
+
+    _chart.margins = function (_) {
+        if (!arguments.length) {
+            return _margins;
+        }
+        _margins = _;
+
+        // set left chart margins
+        _leftChart.margins({
+            top: _.top,
+            right: 0,
+            bottom: _.bottom,
+            left: _.left,
+        });
+
+        // set right chart margins
+        _rightChart.margins({
+            top: _.top,
+            right: _.right,
+            bottom: _.bottom,
+            left: 0,
+        });
+
+        return _chart;
+    };
+
+    _chart.margins(_margins); // set the new margins
+
+    // the width needs to be halved
+    var _width = 0; // get the default width
+
+    _chart.width = function (_) {
+        if (!arguments.length) {
+            return _width;
+        }
+        _width = _;
+
+        // set left chart width
+        _leftChart.width(dc.utils.isNumber(_) ? _ / 2 : _);
+
+        // set right chart width
+        _rightChart.width(dc.utils.isNumber(_) ? _ / 2 : _);
+
+        return _chart;
+    };
+
+    // the minWidth needs to be halved
+    var _minWidth = _chart.minWidth(); // get the default minWidth
+
+    _chart.minWidth = function (_) {
+        if (!arguments.length) {
+            return _minWidth;
+        }
+        _minWidth = _;
+
+        // set left chart minWidth
+        _leftChart.minWidth(dc.utils.isNumber(_) ? _ / 2 : _);
+
+        // set right chart minWidth
+        _rightChart.minWidth(dc.utils.isNumber(_) ? _ / 2 : _);
+
+        return _chart;
+    };
+
+    _chart.minWidth(_minWidth); // set the new minWidth
+
+    // svg
+    // return an array of both the sub chart svgs
+
+    _chart.svg = function () {
+        return d3.selectAll([_leftChart.svg()[0][0], _rightChart.svg()[0][0]]);
+    };
+
+    // we need to make sure that the extent is the same for both charts
+    _leftChart.calculateAxisScaleData = _rightChart.calculateAxisScaleData = function () {
+        return _leftChart.data().concat(_rightChart.data());
+    };
+
+    // get the charts - mainly used for testing
+    _chart.leftChart = function () {
+        return _leftChart;
+    };
+
+    _chart.rightChart = function () {
+        return _rightChart;
+    };
+
+    _chart.leftXAxisLabel = function (labelText, padding) {
+        return _leftChart.xAxisLabel(labelText, padding);
+    };
+
+    _chart.rightXAxisLabel = function (labelText, padding) {
+        return _rightChart.xAxisLabel(labelText, padding);
+    };
+
+    // functions that we just want to pass on to both sub charts
+
+    var _getterSetterPassOn = [
+        // display
+        'height', 'minHeight', 'renderTitleLabel', 'fixedBarHeight', 'gap', 'othersLabel',
+        'transitionDuration', 'label', 'renderLabel', 'title', 'renderTitle', 'chartGroup',
+        //colors
+        'colors', 'ordinalColors', 'linearColors', 'colorAccessor', 'colorDomain', 'getColor', 'colorCalculator',
+        // x axis
+        'x', 'elasticX', 'valueAccessor', 'labelOffsetX', 'titleLabelOffsetx', 'xAxis',
+        // y axis
+        'keyAccessor', 'labelOffsetY', 'yAxis',
+        // data
+        'cap', 'ordering' , 'dimension', 'group', 'othersGrouper', 'data'
+    ];
+
+    function addGetterSetterFunction (functionName) {
+        _chart[functionName] = function (_) {
+            if (!arguments.length) {
+                return [_leftChart[functionName](), _rightChart[functionName]()];
+            }
+            _leftChart[functionName](_);
+            _rightChart[functionName](_);
+            return _chart;
+        };
+    }
+
+    for (var i = 0; i < _getterSetterPassOn.length; i++) {
+        addGetterSetterFunction(_getterSetterPassOn[i]);
+    }
+
+    var _passOnFunctions = [
+        '_doRedraw', 'redraw', '_doRender', 'render', 'calculateColorDomain', 'filterAll', 'resetSvg', 'expireCache'
+    ];
+
+    function addPassOnFunctions (functionName) {
+        _chart[functionName] = function () {
+            _leftChart[functionName]();
+            _rightChart[functionName]();
+            return _chart;
+        };
+    }
+
+    for (i = 0; i < _passOnFunctions.length; i++) {
+        addPassOnFunctions(_passOnFunctions[i]);
     }
 
     return _chart.anchor(parent, chartGroup);
