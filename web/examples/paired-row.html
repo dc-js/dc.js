@@ -90,20 +90,22 @@
 
                 return '#C95AC7';
             },
+            renderTitleLabel: true,
+            title: function(d) {
+                return d.key[1];
+            },
+            label: function(d) {
+                return d.key[1];
+            },
 
             // data
             dimension: ageGenderDimension,
             group: group,
 
-            // misc
-            renderTitleLabel: true,
-            title: function(d) {
-                return d.key[0] + ': ' + d.key[1];
-            },
-            label: function(d) {
-                return d.key[0] + ': ' + d.key[1];
-            },
+            // x axis
             elasticX: true,
+            leftXAxisLabel: 'Male',
+            rightXAxisLabel: 'Female',
 
             // new fields for paired row chart
             leftKeyFilter: function(d) {
