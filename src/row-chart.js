@@ -23,6 +23,9 @@
  */
 dc.rowChart = function (parent, chartGroup) {
 
+    var X_AXIS_LABEL_CLASS = 'x-axis-label';
+    var DEFAULT_AXIS_LABEL_PADDING = 30;
+
     var _g;
 
     var _labelOffsetX = 10;
@@ -30,6 +33,9 @@ dc.rowChart = function (parent, chartGroup) {
     var _hasLabelOffsetY = false;
     var _dyOffset = '0.35em';  // this helps center labels https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#svg_text
     var _titleLabelOffsetX = 2;
+
+    var _xAxisLabel;
+    var _xAxisLabelPadding = 0;
 
     var _gap = 5;
 
@@ -87,6 +93,26 @@ dc.rowChart = function (parent, chartGroup) {
 
         dc.transition(axisG, _chart.transitionDuration(), _chart.transitionDelay())
             .call(_xAxis);
+
+        renderXAxisLabel(axisG);
+    }
+
+    function renderXAxisLabel (g) {
+        var axisXLab = g.selectAll('text.' + X_AXIS_LABEL_CLASS);
+
+        if (axisXLab.empty() && _chart.xAxisLabel()) {
+            axisXLab = g.append('text')
+                .attr('class', X_AXIS_LABEL_CLASS)
+                .attr('transform',
+                    'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) +
+                    ',' + _xAxisLabelPadding + ')'
+                )
+                .attr('text-anchor', 'middle');
+        }
+
+        if (_chart.xAxisLabel() && axisXLab.text() !== _chart.xAxisLabel()) {
+            axisXLab.text(_chart.xAxisLabel());
+        }
     }
 
     _chart._doRender = function () {
@@ -390,6 +416,31 @@ dc.rowChart = function (parent, chartGroup) {
             return _elasticX;
         }
         _elasticX = elasticX;
+        return _chart;
+    };
+
+    _chart.xAxisLength = function () {
+        return _chart.effectiveWidth();
+    };
+
+    /**
+     * Set or get the x axis label. If setting the label, you may optionally include additional padding to
+     * the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.
+     * @name xAxisLabel
+     * @memberof dc.coordinateGridMixin
+     * @instance
+     * @param {String} [labelText]
+     * @param {Number} [padding=12]
+     * @return {String}
+     */
+    _chart.xAxisLabel = function (labelText, padding) {
+        if (!arguments.length) {
+            return _xAxisLabel;
+        }
+        _xAxisLabel = labelText;
+        _chart.margins().bottom -= _xAxisLabelPadding;
+        _xAxisLabelPadding = (padding === undefined) ? DEFAULT_AXIS_LABEL_PADDING : padding;
+        _chart.margins().bottom += _xAxisLabelPadding;
         return _chart;
     };
 
