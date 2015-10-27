@@ -24,7 +24,7 @@
 dc.rowChart = function (parent, chartGroup) {
 
     var X_AXIS_LABEL_CLASS = 'x-axis-label';
-    var DEFAULT_AXIS_LABEL_PADDING = 30;
+    var DEFAULT_AXIS_LABEL_PADDING = 12;
 
     var _g;
 
@@ -94,18 +94,18 @@ dc.rowChart = function (parent, chartGroup) {
         dc.transition(axisG, _chart.transitionDuration(), _chart.transitionDelay())
             .call(_xAxis);
 
-        renderXAxisLabel(axisG);
+        renderXAxisLabel();
     }
 
-    function renderXAxisLabel (g) {
-        var axisXLab = g.selectAll('text.' + X_AXIS_LABEL_CLASS);
+    function renderXAxisLabel () {
+        var axisXLab = _g.selectAll('text.' + X_AXIS_LABEL_CLASS);
 
         if (axisXLab.empty() && _chart.xAxisLabel()) {
-            axisXLab = g.append('text')
+            axisXLab = _g.append('text')
                 .attr('class', X_AXIS_LABEL_CLASS)
                 .attr('transform',
                     'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) +
-                    ',' + _xAxisLabelPadding + ')'
+                    ',' + (_chart.height() - _xAxisLabelPadding) + ')'
                 )
                 .attr('text-anchor', 'middle');
         }
