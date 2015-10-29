@@ -511,8 +511,11 @@ dc.coordinateGridMixin = function (_chart) {
                   ', -' + Math.abs((13 * (rotate / MAX_TICK_LABEL_ROTATION))) + ')'
               );
         }
-        // word wrap tick labels
-        _chart._wrapLabels(axisXG.selectAll('.tick text'), _x.rangeBand());
+
+        // word wrap tick labels if possible
+        if (_x.rangeBand) {
+            _chart._wrapLabels(axisXG.selectAll('.tick text'), _x.rangeBand());
+        }
 
         axisXG.attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')');
 
