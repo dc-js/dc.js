@@ -1325,6 +1325,52 @@ dc.baseMixin = function (_chart) {
         return _chart;
     };
 
+    _chart._wrapLabels = function (texts, width) {
+        var maxLine = 0;
+
+        texts.each(function() {
+            var text = d3.select(this),
+                words = text.text().split(/\s+/).reverse(),
+                word,
+                line = [],
+                lineNumber = 0,
+                lineHeight = 1.1, // ems
+                x = text.attr('x') || 0,
+                y = text.attr('y') || 0,
+                dy = parseFloat(text.attr('dy')),
+                tspan = text.text(null).append('tspan').attr('x', x).attr('y', y).attr('dy', dy + 'em');
+
+            while (word = words.pop()) {
+                line.push(word);
+                tspan.text(line.join(' '));
+
+                // if no more lines or words then we have reached the end
+                if (line.length === 1 && words.length === 0) {
+                    break;
+                }
+
+                if (tspan.node().getComputedTextLength() > width) {
+                    if (line.length === 1) {
+                        line = [];
+                    } else {
+                        line.pop();
+                        tspan.text(line.join(' '));
+                        line = [word];
+                    }
+
+
+                    tspan = text.append('tspan').attr('x', x).attr('y', y).attr('dy', ++lineNumber * lineHeight + dy + 'em').text(word);
+
+                    if (lineNumber > maxLine) {
+                        maxLine = lineNumber;
+                    }
+                }
+            }
+        });
+
+        return maxLine;
+    };
+
     /**
      * Returns the internal numeric ID of the chart.
      * @name chartID

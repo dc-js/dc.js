@@ -2044,6 +2044,52 @@ dc.baseMixin = function (_chart) {
         return _chart;
     };
 
+    _chart._wrapLabels = function (texts, width) {
+        var maxLine = 0;
+
+        texts.each(function() {
+            var text = d3.select(this),
+                words = text.text().split(/\s+/).reverse(),
+                word,
+                line = [],
+                lineNumber = 0,
+                lineHeight = 1.1, // ems
+                x = text.attr('x') || 0,
+                y = text.attr('y') || 0,
+                dy = parseFloat(text.attr('dy')),
+                tspan = text.text(null).append('tspan').attr('x', x).attr('y', y).attr('dy', dy + 'em');
+
+            while (word = words.pop()) {
+                line.push(word);
+                tspan.text(line.join(' '));
+
+                // if no more lines or words then we have reached the end
+                if (line.length === 1 && words.length === 0) {
+                    break;
+                }
+
+                if (tspan.node().getComputedTextLength() > width) {
+                    if (line.length === 1) {
+                        line = [];
+                    } else {
+                        line.pop();
+                        tspan.text(line.join(' '));
+                        line = [word];
+                    }
+
+
+                    tspan = text.append('tspan').attr('x', x).attr('y', y).attr('dy', ++lineNumber * lineHeight + dy + 'em').text(word);
+
+                    if (lineNumber > maxLine) {
+                        maxLine = lineNumber;
+                    }
+                }
+            }
+        });
+
+        return maxLine;
+    };
+
     /**
      * Returns the internal numeric ID of the chart.
      * @name chartID
@@ -2843,9 +2889,40 @@ dc.coordinateGridMixin = function (_chart) {
 
         if (axisXG.empty()) {
             axisXG = g.append('g')
-                .attr('class', 'axis x')
-                .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')');
+                .attr('class', 'axis x');
         }
+
+        dc.transition(axisXG, _chart.transitionDuration())
+            // .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')')
+            .call(_xAxis);
+
+        // rotate tick labels
+        var rotate = _chart.xAxisTickLabelRotate();
+        if (rotate) {
+          axisXG
+              .selectAll('.tick text')
+              .style('text-anchor', rotate < 0 ? 'end' : 'start')
+              .attr('transform',
+                  'rotate(' + rotate + ') ' +
+                  'translate(' + (10 * (rotate / MAX_TICK_LABEL_ROTATION)) +
+                  ', -' + Math.abs((13 * (rotate / MAX_TICK_LABEL_ROTATION))) + ')'
+              );
+        }
+        // word wrap tick labels
+        var maxLine = _chart._wrapLabels(axisXG.selectAll('.tick text'), _x.rangeBand());
+
+        // move the chart up to make room the new labls
+        if (maxLine > 0) {
+            var margins = _chart.margins();
+            margins.bottom += (maxLine * 10);
+            _chart.margins(margins);
+
+            var transform = d3.transform(axisXG.attr('transform'));
+            transform.translate[1] += (maxLine * 10);
+            axisXG.attr('transform', transform.toString());
+        }
+
+        axisXG.attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')');
 
         var axisXLab = g.selectAll('text.' + X_AXIS_LABEL_CLASS);
         if (axisXLab.empty() && _chart.xAxisLabel()) {
@@ -2859,24 +2936,9 @@ dc.coordinateGridMixin = function (_chart) {
             axisXLab.text(_chart.xAxisLabel());
         }
 
-        dc.transition(axisXG, _chart.transitionDuration())
-            .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')')
-            .call(_xAxis);
         dc.transition(axisXLab, _chart.transitionDuration())
             .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
                   (_chart.height() - _xAxisLabelPadding) + ')');
-
-        var rotate = _chart.xAxisTickLabelRotate();
-        if (rotate) {
-            axisXG
-                .selectAll('.tick text')
-                .style('text-anchor', rotate < 0 ? 'end' : 'start')
-                .attr('transform',
-                    'rotate(' + rotate + ') ' +
-                    'translate(' + (10 * (rotate / MAX_TICK_LABEL_ROTATION)) +
-                    ', -' + Math.abs((13 * (rotate / MAX_TICK_LABEL_ROTATION))) + ')'
-                );
-        }
     };
 
     function renderVerticalGridLines (g) {
@@ -3554,17 +3616,18 @@ dc.coordinateGridMixin = function (_chart) {
         }
 
         prepareXAxis(_chart.g(), render);
-        _chart._prepareYAxis(_chart.g());
-
-        _chart.plotData();
 
         if (_chart.elasticX() || _resizing || render) {
             _chart.renderXAxis(_chart.g());
         }
 
+        _chart._prepareYAxis(_chart.g());
+
         if (_chart.elasticY() || _resizing || render) {
             _chart.renderYAxis(_chart.g());
         }
+
+        _chart.plotData();
 
         if (render) {
             _chart.renderBrush(_chart.g(), false);
