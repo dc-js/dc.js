@@ -96,6 +96,11 @@ dc.barChart = function (parent, chartGroup) {
             .attr('class', 'barLabel')
             .attr("text-anchor", "middle")
 
+        if (_chart.isOrdinal()) {
+            labels.on('click', _chart.onClick);
+            labels.attr("cursor", "pointer");
+        }
+
         dc.transition(labels, _chart.transitionDuration())
             .attr('x', function(d) {
                 var x = _chart.x()(d.x);
