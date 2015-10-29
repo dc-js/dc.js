@@ -2046,18 +2046,18 @@ dc.baseMixin = function (_chart) {
 
     _chart._wrapLabels = function (texts, width) {
         var maxLine = 0;
+        var lineHeight = 1.1;
 
         texts.each(function() {
-            var text = d3.select(this),
-                words = text.text().split(/\s+/).reverse(),
-                word,
-                line = [],
-                lineNumber = 0,
-                lineHeight = 1.1, // ems
-                x = text.attr('x') || 0,
-                y = text.attr('y') || 0,
-                dy = parseFloat(text.attr('dy')),
-                tspan = text.text(null).append('tspan').attr('x', x).attr('y', y).attr('dy', dy + 'em');
+            var text = d3.select(this);
+            var words = text.text().split(/\s+/).reverse();
+            var word;
+            var line = [];
+            var lineNumber = 0;
+            var x = text.attr('x') || 0;
+            var y = text.attr('y') || 0;
+            var dy = parseFloat(text.attr('dy'));
+            var tspan = text.text(null).append('tspan').attr('x', x).attr('y', y).attr('dy', dy + 'em');
 
             while (word = words.pop()) {
                 line.push(word);
@@ -2087,7 +2087,7 @@ dc.baseMixin = function (_chart) {
             }
         });
 
-        return maxLine;
+        _chart.xLabelPadding = maxLine * lineHeight * 10;
     };
 
     /**
@@ -2213,11 +2213,11 @@ dc.marginMixin = function (_chart) {
     };
 
     _chart.effectiveWidth = function () {
-        return _chart.width() - _chart.margins().left - _chart.margins().right;
+        return _chart.width() - _chart.margins().left - _chart.margins().right - (_chart.yLabelPadding || 0);
     };
 
     _chart.effectiveHeight = function () {
-        return _chart.height() - _chart.margins().top - _chart.margins().bottom;
+        return _chart.height() - _chart.margins().top - _chart.margins().bottom - (_chart.xLabelPadding || 0);
     };
 
     return _chart;
@@ -2893,7 +2893,6 @@ dc.coordinateGridMixin = function (_chart) {
         }
 
         dc.transition(axisXG, _chart.transitionDuration())
-            // .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')')
             .call(_xAxis);
 
         // rotate tick labels
@@ -2909,18 +2908,7 @@ dc.coordinateGridMixin = function (_chart) {
               );
         }
         // word wrap tick labels
-        var maxLine = _chart._wrapLabels(axisXG.selectAll('.tick text'), _x.rangeBand());
-
-        // move the chart up to make room the new labls
-        if (maxLine > 0) {
-            var margins = _chart.margins();
-            margins.bottom += (maxLine * 10);
-            _chart.margins(margins);
-
-            var transform = d3.transform(axisXG.attr('transform'));
-            transform.translate[1] += (maxLine * 10);
-            axisXG.attr('transform', transform.toString());
-        }
+        _chart._wrapLabels(axisXG.selectAll('.tick text'), _x.rangeBand());
 
         axisXG.attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')');
 
@@ -2991,7 +2979,7 @@ dc.coordinateGridMixin = function (_chart) {
     }
 
     _chart._xAxisY = function () {
-        return (_chart.height() - _chart.margins().bottom);
+        return _chart.effectiveHeight() + _chart.margins().top;
     };
 
     _chart.xAxisLength = function () {

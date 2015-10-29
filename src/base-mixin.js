@@ -1327,18 +1327,18 @@ dc.baseMixin = function (_chart) {
 
     _chart._wrapLabels = function (texts, width) {
         var maxLine = 0;
+        var lineHeight = 1.1;
 
         texts.each(function() {
-            var text = d3.select(this),
-                words = text.text().split(/\s+/).reverse(),
-                word,
-                line = [],
-                lineNumber = 0,
-                lineHeight = 1.1, // ems
-                x = text.attr('x') || 0,
-                y = text.attr('y') || 0,
-                dy = parseFloat(text.attr('dy')),
-                tspan = text.text(null).append('tspan').attr('x', x).attr('y', y).attr('dy', dy + 'em');
+            var text = d3.select(this);
+            var words = text.text().split(/\s+/).reverse();
+            var word;
+            var line = [];
+            var lineNumber = 0;
+            var x = text.attr('x') || 0;
+            var y = text.attr('y') || 0;
+            var dy = parseFloat(text.attr('dy'));
+            var tspan = text.text(null).append('tspan').attr('x', x).attr('y', y).attr('dy', dy + 'em');
 
             while (word = words.pop()) {
                 line.push(word);
@@ -1368,7 +1368,7 @@ dc.baseMixin = function (_chart) {
             }
         });
 
-        return maxLine;
+        _chart.xLabelPadding = maxLine * lineHeight * 10;
     };
 
     /**

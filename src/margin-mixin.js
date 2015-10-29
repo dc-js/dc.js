@@ -33,11 +33,11 @@ dc.marginMixin = function (_chart) {
     };
 
     _chart.effectiveWidth = function () {
-        return _chart.width() - _chart.margins().left - _chart.margins().right;
+        return _chart.width() - _chart.margins().left - _chart.margins().right - (_chart.yLabelPadding || 0);
     };
 
     _chart.effectiveHeight = function () {
-        return _chart.height() - _chart.margins().top - _chart.margins().bottom;
+        return _chart.height() - _chart.margins().top - _chart.margins().bottom - (_chart.xLabelPadding || 0);
     };
 
     return _chart;

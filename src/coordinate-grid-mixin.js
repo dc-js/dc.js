@@ -497,7 +497,6 @@ dc.coordinateGridMixin = function (_chart) {
         }
 
         dc.transition(axisXG, _chart.transitionDuration())
-            // .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')')
             .call(_xAxis);
 
         // rotate tick labels
@@ -513,18 +512,7 @@ dc.coordinateGridMixin = function (_chart) {
               );
         }
         // word wrap tick labels
-        var maxLine = _chart._wrapLabels(axisXG.selectAll('.tick text'), _x.rangeBand());
-
-        // move the chart up to make room the new labls
-        if (maxLine > 0) {
-            var margins = _chart.margins();
-            margins.bottom += (maxLine * 10);
-            _chart.margins(margins);
-
-            var transform = d3.transform(axisXG.attr('transform'));
-            transform.translate[1] += (maxLine * 10);
-            axisXG.attr('transform', transform.toString());
-        }
+        _chart._wrapLabels(axisXG.selectAll('.tick text'), _x.rangeBand());
 
         axisXG.attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')');
 
@@ -595,7 +583,7 @@ dc.coordinateGridMixin = function (_chart) {
     }
 
     _chart._xAxisY = function () {
-        return (_chart.height() - _chart.margins().bottom);
+        return _chart.effectiveHeight() + _chart.margins().top;
     };
 
     _chart.xAxisLength = function () {
