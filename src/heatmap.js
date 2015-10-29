@@ -228,10 +228,10 @@ dc.heatMap = function (parent, chartGroup) {
 
         if (_chart.renderTitle()) {
             gEnter.append('title');
-            boxes.selectAll('title').text(_chart.title());
+            boxes.select('title').text(_chart.title());
         }
 
-        dc.transition(boxes.selectAll('rect'), _chart.transitionDuration())
+        dc.transition(boxes.select('rect'), _chart.transitionDuration())
             .attr('x', function (d, i) { return cols(_chart.keyAccessor()(d, i)); })
             .attr('y', function (d, i) { return rows(_chart.valueAccessor()(d, i)); })
             .attr('rx', _xBorderRadius)
