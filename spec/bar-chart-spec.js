@@ -279,6 +279,20 @@ describe('dc.barChart', function () {
                     expect(dimension.top(Infinity).length).toEqual(1);
                 });
             });
+
+            describe('clicking bar labels', function () {
+                beforeEach(function () {
+                    chart.renderLabel(true).render();
+                });
+
+                it('causes other dimension to be filtered', function () {
+                    expect(dimension.top(Infinity).length).toEqual(10);
+                    // fake a click
+                    var alabel = chart.select('text.barLabel');
+                    alabel.on('click')(alabel.datum());
+                    expect(dimension.top(Infinity).length).toEqual(3);
+                });
+            });
         });
 
         describe('with a linear x domain', function () {
