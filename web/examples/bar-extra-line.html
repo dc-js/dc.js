@@ -40,9 +40,6 @@ d3.csv("morley.csv", function(error, experiments) {
     .dimension(runDimension)
     .group(speedSumGroup)
     .renderLabel(true)
-    .label(function(d) {
-        return Math.round(d.y);
-    })
     .on('renderlet', function(chart) {
         chart.selectAll('rect').on("click", function(d) {
             console.log("click!", d);
