@@ -40,7 +40,6 @@
     "grunt-contrib-jshint": "~0.11.0",
     "grunt-contrib-uglify": "~0.9.1",
     "grunt-contrib-watch": "~0.6.1",
-    "grunt-debug-task": "~0.1.5",
     "grunt-docco2": "~0.2.0",
     "grunt-fileindex": "^0.1.0",
     "grunt-gh-pages": "~0.10.0",
