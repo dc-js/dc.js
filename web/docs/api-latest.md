@@ -9,7 +9,7 @@ chaining because they necessarily return values that are not the chart.  Althoug
 such as `.svg` and `.xAxis`, return values that are chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 2.0.0-beta.19  
+**Version**: 2.0.0-beta.20  
 **Example**  
 ```js
 // Example chaining
@@ -171,6 +171,8 @@ chart.width(300)
     * [.formatNumber](#dc.dataCount+formatNumber) ⇒ <code>Chart</code>
   * [.dataTable](#dc.dataTable) ⇒ <code>DataTable</code>
     * [.size](#dc.dataTable+size) ⇒ <code>Chart</code>
+    * [.beginSlice](#dc.dataTable+beginSlice) ⇒ <code>Chart</code>
+    * [.endSlice](#dc.dataTable+endSlice) ⇒ <code>Chart</code>
     * [.columns](#dc.dataTable+columns) ⇒ <code>Chart</code>
     * [.sortBy](#dc.dataTable+sortBy) ⇒ <code>Chart</code>
     * [.order](#dc.dataTable+order) ⇒ <code>Chart</code>
@@ -2613,6 +2615,8 @@ Examples:
 
 * [.dataTable](#dc.dataTable) ⇒ <code>DataTable</code>
   * [.size](#dc.dataTable+size) ⇒ <code>Chart</code>
+  * [.beginSlice](#dc.dataTable+beginSlice) ⇒ <code>Chart</code>
+  * [.endSlice](#dc.dataTable+endSlice) ⇒ <code>Chart</code>
   * [.columns](#dc.dataTable+columns) ⇒ <code>Chart</code>
   * [.sortBy](#dc.dataTable+sortBy) ⇒ <code>Chart</code>
   * [.order](#dc.dataTable+order) ⇒ <code>Chart</code>
@@ -2627,6 +2631,32 @@ Get or set the table size which determines the number of rows displayed by the w
 | Param | Type | Default |
 | --- | --- | --- |
 | [size] | <code>Number</code> | <code>25</code> | 
+
+<a name="dc.dataTable+beginSlice"></a>
+#### dataTable.beginSlice ⇒ <code>Chart</code>
+Get or set the index of the beginning slice which determines which entries get displayed
+by the widget. Useful when implementing pagination.
+
+Note: the sortBy function will determine how the rows are ordered for pagination purposes.
+See the [table pagination example](http://dc-js.github.io/dc.js/examples/table-pagination.html)
+to see how to add a user interface to control the slicing.
+
+**Kind**: instance property of <code>[dataTable](#dc.dataTable)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [beginSlice] | <code>Number</code> | <code>0</code> | 
+
+<a name="dc.dataTable+endSlice"></a>
+#### dataTable.endSlice ⇒ <code>Chart</code>
+Get or set the index of the end slice which determines which entries get displayed by the
+widget. Useful when implementing pagination. See [`beginSlice`](#dc.dataTable+beginSlice) for more information.
+
+**Kind**: instance property of <code>[dataTable](#dc.dataTable)</code>  
+
+| Param | Type |
+| --- | --- |
+| [endSlice] | <code>Number</code> &#124; <code>undefined</code> | 
 
 <a name="dc.dataTable+columns"></a>
 #### dataTable.columns ⇒ <code>Chart</code>

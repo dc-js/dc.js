@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-beta.19
+ *  dc 2.0.0-beta.20
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2015 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -28,7 +28,7 @@
  * chaining because they necessarily return values that are not the chart.  Although some,
  * such as `.svg` and `.xAxis`, return values that are chainable d3 objects.
  * @namespace dc
- * @version 2.0.0-beta.19
+ * @version 2.0.0-beta.20
  * @example
  * // Example chaining
  * chart.width(300)
@@ -37,7 +37,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-beta.19',
+    version: '2.0.0-beta.20',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -5706,6 +5706,8 @@ dc.dataTable = function (parent, chartGroup) {
         return d;
     };
     var _order = d3.ascending;
+    var _beginSlice = 0;
+    var _endSlice;
     var _showGroups = true;
 
     _chart._doRender = function () {
@@ -5827,7 +5829,7 @@ dc.dataTable = function (parent, chartGroup) {
             .sortKeys(_order)
             .entries(entries.sort(function (a, b) {
                 return _order(_sortBy(a), _sortBy(b));
-            }));
+            }).slice(_beginSlice, _endSlice));
     }
 
     function renderRows (groups) {
@@ -5871,6 +5873,45 @@ dc.dataTable = function (parent, chartGroup) {
             return _size;
         }
         _size = size;
+        return _chart;
+    };
+
+    /**
+     * Get or set the index of the beginning slice which determines which entries get displayed
+     * by the widget. Useful when implementing pagination.
+     *
+     * Note: the sortBy function will determine how the rows are ordered for pagination purposes.
+
+     * See the [table pagination example](http://dc-js.github.io/dc.js/examples/table-pagination.html)
+     * to see how to add a user interface to control the slicing.
+     * @name beginSlice
+     * @memberof dc.dataTable
+     * @instance
+     * @param {Number} [beginSlice=0]
+     * @returns {Chart}
+     */
+    _chart.beginSlice = function (beginSlice) {
+        if (!arguments.length) {
+            return _beginSlice;
+        }
+        _beginSlice = beginSlice;
+        return _chart;
+    };
+
+    /**
+     * Get or set the index of the end slice which determines which entries get displayed by the
+     * widget. Useful when implementing pagination. See [`beginSlice`](#dc.dataTable+beginSlice) for more information.
+     * @name endSlice
+     * @memberof dc.dataTable
+     * @instance
+     * @param {Number|undefined} [endSlice=undefined]
+     * @returns {Chart}
+     */
+    _chart.endSlice = function (endSlice) {
+        if (!arguments.length) {
+            return _endSlice;
+        }
+        _endSlice = endSlice;
         return _chart;
     };
 
@@ -7940,7 +7981,8 @@ dc.legend = function () {
         _horizontal = false,
         _legendWidth = 560,
         _itemWidth = 70,
-        _autoItemWidth = false;
+        _autoItemWidth = false,
+        _legendText = dc.pluck('name');
 
     var _g;
 
@@ -7998,7 +8040,7 @@ dc.legend = function () {
         }
 
         itemEnter.append('text')
-                .text(dc.pluck('name'))
+                .text(_legendText)
                 .attr('x', _itemHeight + LABEL_GAP)
                 .attr('y', function () {
                     return _itemHeight / 2 + (this.clientHeight ? this.clientHeight : 13) / 2 - 2;
@@ -8154,6 +8196,30 @@ dc.legend = function () {
             return _autoItemWidth;
         }
         _autoItemWidth = autoItemWidth;
+        return _legend;
+    };
+
+    /**
+    #### .legendText([legendTextFunction])
+    Set or get the legend text function. The legend widget uses this function to render
+    the legend text on each item. If no function is specified the legend widget will display
+    the names associated with each group.
+
+    Default: dc.pluck('name')
+
+    ```js
+    // create numbered legend items
+    chart.legend(dc.legend().legendText(function(d, i) { return i + '. ' + d.name; }))
+
+    // create legend displaying group counts
+    chart.legend(dc.legend().legendText(function(d) { return d.name + ': ' d.data; }))
+    ```
+    **/
+    _legend.legendText = function (_) {
+        if (!arguments.length) {
+            return _legendText;
+        }
+        _legendText = _;
         return _legend;
     };
 
