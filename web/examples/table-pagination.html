@@ -48,7 +48,8 @@ d3.csv("morley.csv", function(error, experiments) {
     update();
     chart.render();
   });
-  var ofs = 0, pag = 20;
+  // use odd page size to show the effect better
+  var ofs = 0, pag = 17;
   function display() {
       d3.select('#begin')
           .text(ofs);
