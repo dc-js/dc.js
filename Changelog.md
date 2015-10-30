@@ -1,4 +1,8 @@
 # 2.0 Series
+## 2.0.0 beta 20
+* Slicing functionality for basic data table paging, based on Chris Alvino's feature for the data grid ([#101](https://github.com/dc-js/dc.js/issues/101))
+* Ability to customize the legend text, by Chris Alvino ([#982](https://github.com/dc-js/dc.js/pull/982))
+
 ## 2.0.0 beta 19
 * Allow d3.selection to be passed as parent, as documented ([#1006](https://github.com/dc-js/dc.js/issues/1006))
 * Properly derive dc.errors from Error prototype to get stack
