@@ -34,6 +34,8 @@ dc.dataTable = function (parent, chartGroup) {
         return d;
     };
     var _order = d3.ascending;
+    var _beginSlice = 0;
+    var _endSlice;
     var _showGroups = true;
 
     _chart._doRender = function () {
@@ -155,7 +157,7 @@ dc.dataTable = function (parent, chartGroup) {
             .sortKeys(_order)
             .entries(entries.sort(function (a, b) {
                 return _order(_sortBy(a), _sortBy(b));
-            }));
+            }).slice(_beginSlice, _endSlice));
     }
 
     function renderRows (groups) {
@@ -199,6 +201,34 @@ dc.dataTable = function (parent, chartGroup) {
             return _size;
         }
         _size = size;
+        return _chart;
+    };
+
+    /**
+     #### .beginSlice([index])
+     Get or set the index of the beginning slice which determines which entries get displayed by the widget
+     Useful when implementing pagination.
+
+     **/
+    _chart.beginSlice = function (_) {
+        if (!arguments.length) {
+            return _beginSlice;
+        }
+        _beginSlice = _;
+        return _chart;
+    };
+
+    /**
+     #### .endSlice([index])
+     Get or set the index of the end slice which determines which entries get displayed by the widget
+     Useful when implementing pagination.
+
+     **/
+    _chart.endSlice = function (_) {
+        if (!arguments.length) {
+            return _endSlice;
+        }
+        _endSlice = _;
         return _chart;
     };
 
