@@ -205,30 +205,41 @@ dc.dataTable = function (parent, chartGroup) {
     };
 
     /**
-     #### .beginSlice([index])
-     Get or set the index of the beginning slice which determines which entries get displayed by the widget
-     Useful when implementing pagination.
+     * Get or set the index of the beginning slice which determines which entries get displayed
+     * by the widget. Useful when implementing pagination.
+     *
+     * Note: the sortBy function will determine how the rows are ordered for pagination purposes.
 
-     **/
-    _chart.beginSlice = function (_) {
+     * See the [table pagination example](http://dc-js.github.io/dc.js/examples/table-pagination.html)
+     * to see how to add a user interface to control the slicing.
+     * @name beginSlice
+     * @memberof dc.dataTable
+     * @instance
+     * @param {Number} [beginSlice=0]
+     * @returns {Chart}
+     */
+    _chart.beginSlice = function (beginSlice) {
         if (!arguments.length) {
             return _beginSlice;
         }
-        _beginSlice = _;
+        _beginSlice = beginSlice;
         return _chart;
     };
 
     /**
-     #### .endSlice([index])
-     Get or set the index of the end slice which determines which entries get displayed by the widget
-     Useful when implementing pagination.
-
-     **/
-    _chart.endSlice = function (_) {
+     * Get or set the index of the end slice which determines which entries get displayed by the
+     * widget. Useful when implementing pagination. See [`beginSlice`](#dc.dataTable+beginSlice) for more information.
+     * @name endSlice
+     * @memberof dc.dataTable
+     * @instance
+     * @param {Number|undefined} [endSlice=undefined]
+     * @returns {Chart}
+     */
+    _chart.endSlice = function (endSlice) {
         if (!arguments.length) {
             return _endSlice;
         }
-        _endSlice = _;
+        _endSlice = endSlice;
         return _chart;
     };
 
