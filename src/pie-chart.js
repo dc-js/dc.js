@@ -483,6 +483,23 @@ dc.pieChart = function (parent, chartGroup) {
         return _chart;
     };
 
+    /**
+     * Get or set whether to draw lines from pie slices to their labels.
+     *
+     * @name drawPaths
+     * @memberof dc.pieChart
+     * @instance
+     * @param {Boolean} [drawPaths]
+     * @returns {Chart}
+     */
+    _chart.drawPaths = function (drawPaths) {
+        if (arguments.length === 0) {
+            return _drawPaths;
+        }
+        _drawPaths = drawPaths;
+        return _chart;
+    };
+
     function labelPosition (d, arc) {
         var centroid;
         if (_externalLabelRadius) {
@@ -527,13 +544,6 @@ dc.pieChart = function (parent, chartGroup) {
             }
         });
     }
-    _chart.drawPaths = function (d) {
-        if (arguments.length === 0) {
-            return _drawPaths;
-        }
-        _drawPaths = d;
-        return _chart;
-    };
 
     return _chart.anchor(parent, chartGroup);
 };
