@@ -503,7 +503,8 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Boolean} [drawPaths]
-     * @returns {Chart}
+     * @return {Boolean}
+     * @return {dc.pieChart}
      */
     _chart.drawPaths = function (drawPaths) {
         if (arguments.length === 0) {
