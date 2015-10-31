@@ -4,7 +4,7 @@
  * typical x and y positioning while retaining the capability to visualize data using bubble radius
  * and coloring.
  * Examples:
- * - [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
+ * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
  * @name bubbleOverlay
  * @memberof dc
  * @mixes dc.bubbleMixin
@@ -14,13 +14,12 @@
  * var bubbleChart1 = dc.bubbleOverlayChart('#chart-container1').svg(d3.select('#chart-container1 svg'));
  * // create a bubble overlay chart on top of the '#chart-container2 svg' element using chart group A
  * var bubbleChart2 = dc.compositeChart('#chart-container2', 'chartGroupA').svg(d3.select('#chart-container2 svg'));
- * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- * a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart
- * in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+ * @param {String|node|d3.selection} parent - Any valid
+ * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {BubbleOverlay}
+ * @return {dc.bubbleOverlay}
  */
 dc.bubbleOverlay = function (parent, chartGroup) {
     var BUBBLE_OVERLAY_CLASS = 'bubble-overlay';
@@ -39,8 +38,8 @@ dc.bubbleOverlay = function (parent, chartGroup) {
      * @example
      * // set up underlying svg element
      * chart.svg(d3.select('#chart svg'));
-     * @param {Selection} [imageElement]
-     * @returns {Chart}
+     * @param {SVGElement|d3.selection} [imageElement]
+     * @return {dc.bubbleOverlay}
      */
     var _chart = dc.bubbleMixin(dc.baseMixin({}));
     var _g;
@@ -65,7 +64,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
      * @param {String} name
      * @param {Number} x
      * @param {Number} y
-     * @returns {Chart}
+     * @return {dc.bubbleOverlay}
      */
     _chart.point = function (name, x, y) {
         _points.push({name: name, x: x, y: y});

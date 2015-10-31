@@ -1,8 +1,11 @@
 /**
  * The pie chart implementation is usually used to visualize a small categorical distribution.  The pie
  * chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
- * slice relative to the sum of all values. Slices are ordered by `.ordering` which defaults to sorting
- * by key.
+ * slice relative to the sum of all values. Slices are ordered by {@link #dc.baseMixin+ordering ordering}
+ * which defaults to sorting by key.
+ *
+ * Examples:
+ * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  * @name pieChart
  * @memberof dc
  * @mixes dc.capMixin
@@ -13,13 +16,12 @@
  * var chart1 = dc.pieChart('#chart-container1');
  * // create a pie chart under #chart-container2 element using chart group A
  * var chart2 = dc.pieChart('#chart-container2', 'chartGroupA');
- * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- * a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart
- * in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+ * @param {String|node|d3.selection} parent - Any valid
+ * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {PieChart}
+ * @return {dc.pieChart}
  */
 dc.pieChart = function (parent, chartGroup) {
     var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
@@ -54,7 +56,8 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [cap]
-     * @returns {Chart}
+     * @return {Number}
+     * @return {dc.pieChart}
      */
     _chart.slicesCap = _chart.cap;
 
@@ -291,7 +294,8 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [externalRadiusPadding=0]
-     * @returns {Chart}
+     * @return {Number}
+     * @return {dc.pieChart}
      */
     _chart.externalRadiusPadding = function (externalRadiusPadding) {
         if (!arguments.length) {
@@ -308,7 +312,8 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [innerRadius=0]
-     * @returns {Chart}
+     * @return {Number}
+     * @return {dc.pieChart}
      */
     _chart.innerRadius = function (innerRadius) {
         if (!arguments.length) {
@@ -325,7 +330,8 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [radius]
-     * @returns {Chart}
+     * @return {Number}
+     * @return {dc.pieChart}
      */
     _chart.radius = function (radius) {
         if (!arguments.length) {
@@ -341,7 +347,8 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [cx]
-     * @returns {Chart}
+     * @return {Number}
+     * @return {dc.pieChart}
      */
     _chart.cx = function (cx) {
         if (!arguments.length) {
@@ -357,7 +364,8 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [cy]
-     * @returns {Chart}
+     * @return {Number}
+     * @return {dc.pieChart}
      */
     _chart.cy = function (cy) {
         if (!arguments.length) {
@@ -389,7 +397,8 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [minAngleForLabel=0.5]
-     * @returns {Chart}
+     * @return {Number}
+     * @return {dc.pieChart}
      */
     _chart.minAngleForLabel = function (minAngleForLabel) {
         if (!arguments.length) {
@@ -453,7 +462,8 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {String} [title]
-     * @returns {Chart}
+     * @return {String}
+     * @return {dc.pieChart}
      */
     _chart.emptyTitle = function (title) {
         if (arguments.length === 0) {
@@ -470,14 +480,15 @@ dc.pieChart = function (parent, chartGroup) {
      * @name externalLabels
      * @memberof dc.pieChart
      * @instance
-     * @param {Number} [radius]
-     * @returns {Chart}
+     * @param {Number} [externalLabelRadius]
+     * @return {Number}
+     * @return {dc.pieChart}
      */
-    _chart.externalLabels = function (radius) {
+    _chart.externalLabels = function (externalLabelRadius) {
         if (arguments.length === 0) {
             return _externalLabelRadius;
-        } else if (radius) {
-            _externalLabelRadius = radius;
+        } else if (externalLabelRadius) {
+            _externalLabelRadius = externalLabelRadius;
         } else {
             _externalLabelRadius = undefined;
         }

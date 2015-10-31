@@ -31,7 +31,8 @@ dc.bubbleMixin = function (_chart) {
 
     /**
      * Get or set the bubble radius scale. By default the bubble chart uses
-     * `d3.scale.linear().domain([0, 100])` as its radius scale.
+     * {@link https://github.com/mbostock/d3/wiki/Quantitative-Scales#linear d3.scale.linear().domain([0, 100])}
+     * as its radius scale.
      * @name r
      * @memberof dc.bubbleMixin
      * @instance
