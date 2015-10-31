@@ -83,7 +83,7 @@ dc.compositeChart = function (parent, chartGroup) {
     _chart._prepareYAxis = function () {
         var left = (leftYAxisChildren().length !== 0);
         var right = (rightYAxisChildren().length !== 0);
-        var ranges = calculateYAxesRanges(left, right);
+        var ranges = calculateYAxisRanges(left, right);
 
         if (left) { prepareLeftYAxis(ranges); }
         if (right) { prepareRightYAxis(ranges); }
@@ -107,7 +107,7 @@ dc.compositeChart = function (parent, chartGroup) {
         }
     };
 
-    function calculateYAxesRanges (left, right) {
+    function calculateYAxisRanges (left, right) {
         var lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax;
 
         if (left) {
@@ -153,7 +153,7 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     function prepareRightYAxis (ranges) {
-        if (_chart.rightY() === undefined || _chart.elasticY()) {
+        if (_chart.rightY() === undefined || _chart.elasticY() || _chart.resizing()) {
             if (_chart.rightY() === undefined) {
                 _chart.rightY(d3.scale.linear());
             }
@@ -167,7 +167,7 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     function prepareLeftYAxis (ranges) {
-        if (_chart.y() === undefined || _chart.elasticY()) {
+        if (_chart.y() === undefined || _chart.elasticY() || _chart.resizing()) {
             if (_chart.y() === undefined) {
                 _chart.y(d3.scale.linear());
             }
@@ -403,6 +403,7 @@ dc.compositeChart = function (parent, chartGroup) {
             return _alignYAxes;
         }
         _alignYAxes = alignYAxes;
+        _chart.rescale();
         return _chart;
     };
 

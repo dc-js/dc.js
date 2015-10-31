@@ -119,6 +119,10 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
+    _chart.resizing = function () {
+        return _resizing;
+    };
+
     /**
      * Get or set the range selection chart associated with this instance. Setting the range selection
      * chart using this function will automatically update its selection brush when the current chart
