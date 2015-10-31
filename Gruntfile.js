@@ -224,7 +224,12 @@ module.exports = function (grunt) {
         copy: {
             'dc-to-gh': {
                 files: [
-                    {expand: true, flatten: true, src: '<%= conf.pkg.name %>.css', dest: '<%= conf.web %>/css/'},
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: ['<%= conf.pkg.name %>.css', '<%= conf.pkg.name %>.min.css'],
+                        dest: '<%= conf.web %>/css/'
+                    },
                     {
                         expand: true,
                         flatten: true,
