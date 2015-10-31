@@ -37,7 +37,7 @@ module.exports = function (grunt) {
             },
             main: {
                 files: {
-                    '<%= conf.pkg.name %>.min.css': ['<%= conf.pkg.name %>.css']
+                    'dc.min.css': ['dc.css']
                 }
             }
         },
@@ -111,6 +111,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-docco2');
     grunt.loadNpmTasks('grunt-gh-pages');
     grunt.loadNpmTasks('grunt-markdown');
@@ -127,7 +128,7 @@ module.exports = function (grunt) {
         grunt.log.writeln('File "' + destFile + '" created.');
     });
 
-    grunt.registerTask('default', ['concat', 'uglify', 'sed', 'copy']);
+    grunt.registerTask('default', ['concat', 'uglify', 'cssmin', 'sed', 'copy']);
     grunt.registerTask('docs', ['default', 'emu', 'markdown']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('test', ['default', 'vows']);
