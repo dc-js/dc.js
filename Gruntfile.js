@@ -30,6 +30,17 @@ module.exports = function (grunt) {
                 dest: output.jsmin
             }
         },
+        cssmin: {
+            options: {
+                shorthandCompacting: false,
+                roundingPrecision: -1
+            },
+            main: {
+                files: {
+                    '<%= conf.pkg.name %>.min.css': ['<%= conf.pkg.name %>.css']
+                }
+            }
+        },
         sed: {
             version: {
                 pattern: '%VERSION%',
