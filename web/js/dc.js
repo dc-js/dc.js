@@ -1,5 +1,5 @@
 /*!
- *  dc 1.7.4
+ *  dc 1.7.5
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012 Nick Zhu and other contributors
  *
@@ -20,7 +20,7 @@
 'use strict';
 
 /**
-#### Version 1.7.4
+#### Version 1.7.5
 
 The entire dc.js library is scoped under **dc** name space. It does not introduce anything else into the global
 name space.
@@ -57,7 +57,7 @@ The API references will highlight the fact if a particular function is not chain
 
 **/
 var dc = {
-    version: "1.7.4",
+    version: "1.7.5",
     constants: {
         CHART_CLASS: "dc-chart",
         DEBUG_GROUP_CLASS: "debug",
