@@ -196,7 +196,7 @@ dc.pieChart = function (parent, chartGroup) {
         var polyline = _g.selectAll('polyline.' + _sliceCssClass)
                 .data(pieData);
 
-        var polylineEnter = polyline
+        polyline
                 .enter()
                 .append('polyline')
                 .attr('class', function (d, i) {
@@ -204,24 +204,21 @@ dc.pieChart = function (parent, chartGroup) {
                 });
 
         polyline.exit().remove();
-        dc.transition(polylineEnter, _chart.transitionDuration())
+        dc.transition(polyline, _chart.transitionDuration())
             .attrTween('points', function (d) {
                 this._current = this._current || d;
                 var interpolate = d3.interpolate(this._current, d);
                 this._current = interpolate(0);
                 return function (t) {
-                    var centroid, centroid2;
-                    centroid = d3.svg.arc()
-                        .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
-                        .innerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
-                        .centroid(d);
-                    centroid2 = d3.svg.arc()
-                        .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
-                        .innerRadius(_radius - _externalRadiusPadding)
-                        .centroid(d);
+                    var arc2 = d3.svg.arc()
+                            .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
+                            .innerRadius(_radius - _externalRadiusPadding);
                     var d2 = interpolate(t);
-                    return [arc.centroid(d2), centroid2];
+                    return [arc.centroid(d2), arc2.centroid(d2)];
                 };
+            })
+            .style('visibility', function (d) {
+                return d.endAngle - d.startAngle < 0.0001 ? 'hidden' : 'visible';
             });
 
     }
@@ -250,6 +247,9 @@ dc.pieChart = function (parent, chartGroup) {
             var labels = _g.selectAll('text.' + _sliceCssClass)
                 .data(pieData);
             positionLabels(labels, arc);
+            if (_externalLabelRadius && _drawPaths) {
+                updateLabelPaths(pieData, arc);
+            }
         }
     }
 
