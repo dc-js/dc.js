@@ -1,5 +1,9 @@
 /**
  * A scatter plot chart
+ *
+ * Examples:
+ * - {@link http://dc-js.github.io/dc.js/examples/scatter.html Scatter Chart}
+ * - {@link http://dc-js.github.io/dc.js/examples/multi-scatter.html Multi-Scatter Chart}
  * @name scatterPlot
  * @memberof dc
  * @mixes dc.coordinateGridMixin
@@ -10,13 +14,12 @@
  * var chart2 = dc.scatterPlot('#chart-container2', 'chartGroupA');
  * // create a sub-chart under a composite parent chart
  * var chart3 = dc.scatterPlot(compositeChart);
- * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- * a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart
- * in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+ * @param {String|node|d3.selection} parent - Any valid
+ * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {SeriesChart}
+ * @return {dc.scatterPlot}
  */
 dc.scatterPlot = function (parent, chartGroup) {
     var _chart = dc.coordinateGridMixin({});
@@ -79,14 +82,22 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set the existence accessor.  If a point exists, it is drawn with symbolSize radius and
-     * opacity 1; if it does not exist, it is drawn with hiddenSize radius and opacity 0. By default,
+     * Get or set the existence accessor.  If a point exists, it is drawn with
+     * {@link #dc.scatterPlot+symbolSize symbolSize} radius and
+     * opacity 1; if it does not exist, it is drawn with
+     * {@link #dc.scatterPlot+hiddenSize hiddenSize} radius and opacity 0. By default,
      * the existence accessor checks if the reduced value is truthy.
      * @name existenceAccessor
      * @memberof dc.scatterPlot
      * @instance
+     * @see {@link #dc.scatterPlot+symbolSize symbolSize}
+     * @see {@link #dc.scatterPlot+hiddenSize hiddenSize}
+     * @example
+     * // default accessor
+     * chart.existenceAccessor(function (d) { return d.value; });
      * @param {Function} [accessor]
-     * @returns {Chart}
+     * @return {Function}
+     * @return {dc.scatterPlot}
      */
     _chart.existenceAccessor = function (accessor) {
         if (!arguments.length) {
@@ -97,14 +108,20 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set the symbol type used for each point. By default the symbol is a circle. See the D3
-     * [docs](https://github.com/mbostock/d3/wiki/SVG-Shapes#wiki-symbol_type) for acceptable types.
+     * Get or set the symbol type used for each point. By default the symbol is a circle.
      * Type can be a constant or an accessor.
      * @name symbol
      * @memberof dc.scatterPlot
      * @instance
-     * @param {Function} [type]
-     * @returns {Chart}
+     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_type d3.svg.symbol().type()}
+     * @example
+     * // Circle type
+     * chart.symbol('circle');
+     * // Square type
+     * chart.symbol('square');
+     * @param {String|Function} [type='circle']
+     * @return {String|Function}
+     * @return {dc.scatterPlot}
      */
     _chart.symbol = function (type) {
         if (!arguments.length) {
@@ -119,8 +136,10 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @name symbolSize
      * @memberof dc.scatterPlot
      * @instance
+     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
      * @param {Number} [symbolSize=3]
-     * @returns {Chart}
+     * @return {Number}
+     * @return {dc.scatterPlot}
      */
     _chart.symbolSize = function (symbolSize) {
         if (!arguments.length) {
@@ -135,8 +154,10 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @name highlightedSize
      * @memberof dc.scatterPlot
      * @instance
+     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
      * @param {Number} [highlightedSize=5]
-     * @returns {Chart}
+     * @return {Number}
+     * @return {dc.scatterPlot}
      */
     _chart.highlightedSize = function (highlightedSize) {
         if (!arguments.length) {
@@ -151,8 +172,10 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @name hiddenSize
      * @memberof dc.scatterPlot
      * @instance
+     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
      * @param {Number} [hiddenSize=0]
-     * @returns {Chart}
+     * @return {Number}
+     * @return {dc.scatterPlot}
      */
     _chart.hiddenSize = function (hiddenSize) {
         if (!arguments.length) {

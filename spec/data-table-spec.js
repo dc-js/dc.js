@@ -75,6 +75,24 @@ describe('dc.dataTable', function () {
         });
     });
 
+    describe('slicing entries', function () {
+        beforeEach(function () {
+            chart.beginSlice(1);
+            chart.redraw();
+        });
+
+        it('slice beginning', function () {
+            expect(chart.selectAll('tr.dc-table-row')[0].length).toEqual(2);
+        });
+
+        it('slice beginning and end', function () {
+            chart.endSlice(2);
+            chart.redraw();
+
+            expect(chart.selectAll('tr.dc-table-row')[0].length).toEqual(1);
+        });
+    });
+
     describe('external filter', function () {
         beforeEach(function () {
             countryDimension.filter('CA');

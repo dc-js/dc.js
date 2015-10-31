@@ -53,6 +53,13 @@ div.dc-chart {
     fill-opacity: .8;
 }
 
+.dc-chart .pie-path {
+  fill:none;
+  stroke-width: 2px;
+  stroke: black;
+  opacity: 0.4;
+}
+
 .dc-chart .selected path {
     stroke-width: 3;
     stroke: #ccc;
