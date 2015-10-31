@@ -151,6 +151,7 @@ chart.width(300)
     * [.minAngleForLabel](#dc.pieChart+minAngleForLabel) ⇒ <code>Chart</code>
     * [.emptyTitle](#dc.pieChart+emptyTitle) ⇒ <code>Chart</code>
     * [.externalLabels](#dc.pieChart+externalLabels) ⇒ <code>Chart</code>
+    * [.drawPaths](#dc.pieChart+drawPaths) ⇒ <code>Chart</code>
   * [.barChart](#dc.barChart) ⇒ <code>[barChart](#dc.barChart)</code>
     * [.centerBar](#dc.barChart+centerBar) ⇒ <code>Boolean</code> &#124; <code>[barChart](#dc.barChart)</code>
     * [.barPadding](#dc.barChart+barPadding) ⇒ <code>Number</code> &#124; <code>[barChart](#dc.barChart)</code>
@@ -2184,6 +2185,7 @@ var chart2 = dc.pieChart('#chart-container2', 'chartGroupA');
   * [.minAngleForLabel](#dc.pieChart+minAngleForLabel) ⇒ <code>Chart</code>
   * [.emptyTitle](#dc.pieChart+emptyTitle) ⇒ <code>Chart</code>
   * [.externalLabels](#dc.pieChart+externalLabels) ⇒ <code>Chart</code>
+  * [.drawPaths](#dc.pieChart+drawPaths) ⇒ <code>Chart</code>
 
 <a name="dc.pieChart+slicesCap"></a>
 #### pieChart.slicesCap ⇒ <code>Chart</code>
@@ -2281,6 +2283,16 @@ The given argument sets the radial offset.
 | Param | Type |
 | --- | --- |
 | [radius] | <code>Number</code> | 
+
+<a name="dc.pieChart+drawPaths"></a>
+#### pieChart.drawPaths ⇒ <code>Chart</code>
+Get or set whether to draw lines from pie slices to their labels.
+
+**Kind**: instance property of <code>[pieChart](#dc.pieChart)</code>  
+
+| Param | Type |
+| --- | --- |
+| [drawPaths] | <code>Boolean</code> | 
 
 <a name="dc.barChart"></a>
 ### dc.barChart ⇒ <code>[barChart](#dc.barChart)</code>

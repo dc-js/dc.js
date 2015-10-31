@@ -4340,6 +4340,7 @@ dc.pieChart = function (parent, chartGroup) {
     var _cy;
     var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
     var _externalLabelRadius;
+    var _drawPaths = false;
     var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
 
     _chart.colorAccessor(_chart.cappedKeyAccessor);
@@ -4487,7 +4488,41 @@ dc.pieChart = function (parent, chartGroup) {
                 })
                 .on('click', onClick);
             positionLabels(labelsEnter, arc);
+            if (_externalLabelRadius && _drawPaths) {
+                updateLabelPaths(pieData, arc);
+            }
         }
+    }
+
+    function updateLabelPaths (pieData, arc) {
+        var polyline = _g.selectAll('polyline.' + _sliceCssClass)
+                .data(pieData);
+
+        polyline
+                .enter()
+                .append('polyline')
+                .attr('class', function (d, i) {
+                    return 'pie-path _' + i + ' ' + _sliceCssClass;
+                });
+
+        polyline.exit().remove();
+        dc.transition(polyline, _chart.transitionDuration())
+            .attrTween('points', function (d) {
+                this._current = this._current || d;
+                var interpolate = d3.interpolate(this._current, d);
+                this._current = interpolate(0);
+                return function (t) {
+                    var arc2 = d3.svg.arc()
+                            .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
+                            .innerRadius(_radius - _externalRadiusPadding);
+                    var d2 = interpolate(t);
+                    return [arc.centroid(d2), arc2.centroid(d2)];
+                };
+            })
+            .style('visibility', function (d) {
+                return d.endAngle - d.startAngle < 0.0001 ? 'hidden' : 'visible';
+            });
+
     }
 
     function updateElements (pieData, arc) {
@@ -4514,6 +4549,9 @@ dc.pieChart = function (parent, chartGroup) {
             var labels = _g.selectAll('text.' + _sliceCssClass)
                 .data(pieData);
             positionLabels(labels, arc);
+            if (_externalLabelRadius && _drawPaths) {
+                updateLabelPaths(pieData, arc);
+            }
         }
     }
 
@@ -4632,7 +4670,9 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     function buildArcs () {
-        return d3.svg.arc().outerRadius(_radius - _externalRadiusPadding).innerRadius(_innerRadius);
+        return d3.svg.arc()
+            .outerRadius(_radius - _externalRadiusPadding)
+            .innerRadius(_innerRadius);
     }
 
     function isSelectedSlice (d) {
@@ -4744,6 +4784,23 @@ dc.pieChart = function (parent, chartGroup) {
             _externalLabelRadius = undefined;
         }
 
+        return _chart;
+    };
+
+    /**
+     * Get or set whether to draw lines from pie slices to their labels.
+     *
+     * @name drawPaths
+     * @memberof dc.pieChart
+     * @instance
+     * @param {Boolean} [drawPaths]
+     * @returns {Chart}
+     */
+    _chart.drawPaths = function (drawPaths) {
+        if (arguments.length === 0) {
+            return _drawPaths;
+        }
+        _drawPaths = drawPaths;
         return _chart;
     };
 
