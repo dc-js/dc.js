@@ -5,7 +5,8 @@
  * Most `dc` functions are designed to allow function chaining, meaning they return the current chart
  * instance whenever it is appropriate.  The getter forms of functions do not participate in function
  * chaining because they necessarily return values that are not the chart.  Although some,
- * such as `.svg` and `.xAxis`, return values that are chainable d3 objects.
+ * such as {@link #dc.baseMixin+svg .svg} and {@link #dc.coordinateGridMixin+xAxis .xAxis},
+ * return values that are chainable d3 objects.
  * @namespace dc
  * @version <%= conf.pkg.version %>
  * @example
@@ -220,34 +221,41 @@ dc.optionalTransition = function (enable, duration, callback, name) {
 dc.units = {};
 
 /**
- * The default value for `xUnits` for the [Coordinate Grid Chart](#coordinate-grid-chart) and should
+ * The default value for {@link #dc.coordinateGridMixin+xUnits .xUnits} for the
+ * {@link #dc.coordinateGridMixin Coordinate Grid Chart} and should
  * be used when the x values are a sequence of integers.
  * It is a function that counts the number of integers in the range supplied in its start and end parameters.
  * @name integers
  * @memberof dc.units
+ * @see {@link #dc.coordinateGridMixin+xUnits coordinateGridMixin.xUnits}
  * @example
  * chart.xUnits(dc.units.integers) // already the default
  * @param {Number} start
  * @param {Number} end
- * @returns {Number}
+ * @return {Number}
  */
 dc.units.integers = function (start, end) {
     return Math.abs(end - start);
 };
 
 /**
- * This argument can be passed to the `xUnits` function of the to specify ordinal units for the x
- * axis. Usually this parameter is used in combination with passing `d3.scale.ordinal()` to `.x`.
+ * This argument can be passed to the {@link #dc.coordinateGridMixin+xUnits .xUnits} function of the to
+ * specify ordinal units for the x axis. Usually this parameter is used in combination with passing
+ * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales d3.scale.ordinal} to
+ * {@link #dc.coordinateGridMixin+x .x}.
  * It just returns the domain passed to it, which for ordinal charts is an array of all values.
  * @name ordinal
  * @memberof dc.units
+ * @see {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales d3.scale.ordinal}
+ * @see {@link #dc.coordinateGridMixin+xUnits coordinateGridMixin.xUnits}
+ * @see {@link #dc.coordinateGridMixin+x coordinateGridMixin.x}
  * @example
  * chart.xUnits(dc.units.ordinal)
  *      .x(d3.scale.ordinal())
  * @param {*} start
  * @param {*} end
  * @param {Array<String>} domain
- * @returns {Array<String>}
+ * @return {Array<String>}
  */
 dc.units.ordinal = function (start, end, domain) {
     return domain;
@@ -260,13 +268,14 @@ dc.units.ordinal = function (start, end, domain) {
  */
 dc.units.fp = {};
 /**
- * This function generates an argument for the [Coordinate Grid Chart's](#coordinate-grid-chart)
- * `xUnits` function specifying that the x values are floating-point numbers with the given
- * precision.
+ * This function generates an argument for the {@link #dc.coordinateGridMixin Coordinate Grid Chart}
+ * {@link #dc.coordinateGridMixin+xUnits .xUnits} function specifying that the x values are floating-point
+ * numbers with the given precision.
  * The returned function determines how many values at the given precision will fit into the range
  * supplied in its start and end parameters.
  * @name precision
  * @memberof dc.units.fp
+ * @see {@link #dc.coordinateGridMixin+xUnits coordinateGridMixin.xUnits}
  * @example
  * // specify values (and ticks) every 0.1 units
  * chart.xUnits(dc.units.fp.precision(0.1)
@@ -274,7 +283,7 @@ dc.units.fp = {};
  * var thousandths = dc.units.fp.precision(0.001);
  * thousandths(0.5, 1.0) // returns 500
  * @param {Number} precision
- * @returns {Function} start-end unit function
+ * @return {Function} start-end unit function
  */
 dc.units.fp.precision = function (precision) {
     var _f = function (s, e) {

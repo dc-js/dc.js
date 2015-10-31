@@ -1,8 +1,9 @@
 /**
  * Concrete line/area chart implementation.
+ *
  * Examples:
- * - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
- * - [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
+ * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
+ * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
  * @name lineChart
  * @memberof dc
  * @mixes dc.stackMixin
@@ -15,12 +16,13 @@
  * // create a sub-chart under a composite parent chart
  * var chart3 = dc.lineChart(compositeChart);
  * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- * a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart
- * in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+ * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector}
+ * specifying a dom block element such as a div; or a dom element or d3 selection.  If the line
+ * chart is a sub-chart in a {@link #dc.compositeChart Composite Chart} then pass in the parent
+ * composite chart instance instead.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {LineChart}
+ * @return {dc.lineChart}
  */
 dc.lineChart = function (parent, chartGroup) {
     var DEFAULT_DOT_RADIUS = 5;
@@ -72,14 +74,17 @@ dc.lineChart = function (parent, chartGroup) {
     /**
      * Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
      * functions, splines, and cubic interpolation.  This is passed to
-     * [d3.svg.line.interpolate](https://github.com/mbostock/d3/wiki/SVG-Shapes#line_interpolate) and
-     * [d3.svg.area.interpolate](https://github.com/mbostock/d3/wiki/SVG-Shapes#area_interpolate),
+     * {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_interpolate d3.svg.line.interpolate} and
+     * {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#area_interpolate d3.svg.area.interpolate},
      * where you can find a complete list of valid arguments
      * @name interpolate
      * @memberof dc.lineChart
      * @instance
+     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_interpolate d3.svg.line.interpolate}
+     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#area_interpolate d3.svg.area.interpolate}
      * @param  {String} [interpolate='linear']
-     * @returns {Chart}
+     * @return {String}
+     * @return {dc.lineChart}
      */
     _chart.interpolate = function (interpolate) {
         if (!arguments.length) {
@@ -92,13 +97,16 @@ dc.lineChart = function (parent, chartGroup) {
     /**
      * Gets or sets the tension to use for lines drawn, in the range 0 to 1.
      * This parameter further customizes the interpolation behavior.  It is passed to
-     * [d3.svg.line.tension](https://github.com/mbostock/d3/wiki/SVG-Shapes#line_tension) and
-     * [d3.svg.area.tension](https://github.com/mbostock/d3/wiki/SVG-Shapes#area_tension).
+     * {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_tension d3.svg.line.tension} and
+     * {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#area_tension d3.svg.area.tension}.
      * @name tension
      * @memberof dc.lineChart
      * @instance
+     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_interpolate d3.svg.line.interpolate}
+     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#area_interpolate d3.svg.area.interpolate}
      * @param  {Number} [tension=0.7]
-     * @returns {Chart}
+     * @return {Number}
+     * @return {dc.lineChart}
      */
     _chart.tension = function (tension) {
         if (!arguments.length) {
@@ -112,7 +120,7 @@ dc.lineChart = function (parent, chartGroup) {
      * Gets or sets a function that will determine discontinuities in the line which should be
      * skipped: the path will be broken into separate subpaths if some points are undefined.
      * This function is passed to
-     * [d3.svg.line.defined](https://github.com/mbostock/d3/wiki/SVG-Shapes#line_defined)
+     * {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_defined d3.svg.line.defined}
      *
      * Note: crossfilter will sometimes coerce nulls to 0, so you may need to carefully write
      * custom reduce functions to get this to work, depending on your data. See
@@ -120,8 +128,10 @@ dc.lineChart = function (parent, chartGroup) {
      * @name defined
      * @memberof dc.lineChart
      * @instance
+     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_defined d3.svg.line.defined}
      * @param  {Function} [defined]
-     * @returns {Chart}
+     * @return {Function}
+     * @return {dc.lineChart}
      */
     _chart.defined = function (defined) {
         if (!arguments.length) {
@@ -137,11 +147,13 @@ dc.lineChart = function (parent, chartGroup) {
      * @name dashStyle
      * @memberof dc.lineChart
      * @instance
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray stroke-dasharray}
      * @example
      * // create a Dash Dot Dot Dot
      * chart.dashStyle([3,1,1,1]);
      * @param  {Array<Number>} [dashStyle=[]]
-     * @returns {Chart}
+     * @return {Array<Number>}
+     * @return {dc.lineChart}
      */
     _chart.dashStyle = function (dashStyle) {
         if (!arguments.length) {
@@ -158,7 +170,8 @@ dc.lineChart = function (parent, chartGroup) {
      * @memberof dc.lineChart
      * @instance
      * @param  {Boolean} [renderArea=false]
-     * @returns {Chart}
+     * @return {Boolean}
+     * @return {dc.lineChart}
      */
     _chart.renderArea = function (renderArea) {
         if (!arguments.length) {
@@ -347,12 +360,14 @@ dc.lineChart = function (parent, chartGroup) {
 
     /**
      * Turn on/off the mouseover behavior of an individual data point which renders a circle and x/y axis
-     * dashed lines back to each respective axis.  This is ignored if the chart brush is on (`brushOn`)
+     * dashed lines back to each respective axis.  This is ignored if the chart
+     * {@link #dc.coordinateGridMixin+brushOn brush} is on
      * @name xyTipsOn
      * @memberof dc.lineChart
      * @instance
      * @param  {Boolean} [xyTipsOn=false]
-     * @returns {Chart}
+     * @return {Boolean}
+     * @return {dc.lineChart}
      */
     _chart.xyTipsOn = function (xyTipsOn) {
         if (!arguments.length) {
@@ -368,7 +383,8 @@ dc.lineChart = function (parent, chartGroup) {
      * @memberof dc.lineChart
      * @instance
      * @param  {Number} [dotRadius=5]
-     * @returns {Chart}
+     * @return {Number}
+     * @return {dc.lineChart}
      */
     _chart.dotRadius = function (dotRadius) {
         if (!arguments.length) {
@@ -389,7 +405,8 @@ dc.lineChart = function (parent, chartGroup) {
      * @example
      * chart.renderDataPoints({radius: 2, fillOpacity: 0.8, strokeOpacity: 0.8})
      * @param  {{fillOpacity: Number, strokeOpacity: Number, radius: Number}} [options={fillOpacity: 0.8, strokeOpacity: 0.8, radius: 2}]
-     * @returns {Chart}
+     * @return {{fillOpacity: Number, strokeOpacity: Number, radius: Number}}
+     * @return {dc.lineChart}
      */
     _chart.renderDataPoints = function (options) {
         if (!arguments.length) {

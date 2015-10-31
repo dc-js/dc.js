@@ -1,8 +1,10 @@
 /**
  * The geo choropleth chart is designed as an easy way to create a crossfilter driven choropleth map
- * from GeoJson data. This chart implementation was inspired by [the great d3 choropleth example](http://bl.ocks.org/4060606).
+ * from GeoJson data. This chart implementation was inspired by
+ * {@link http://bl.ocks.org/4060606 the great d3 choropleth example}.
+ *
  * Examples:
- * - [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
+ * - {@link http://dc-js.github.com/dc.js/vc/index.html US Venture Capital Landscape 2011}
  * @name geoChoroplethChart
  * @memberof dc
  * @mixes dc.colorMixin
@@ -12,13 +14,12 @@
  * var chart1 = dc.geoChoroplethChart('#us-chart');
  * // create a choropleth chart under '#us-chart2' element using chart group A
  * var chart2 = dc.compositeChart('#us-chart2', 'chartGroupA');
- * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- * a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart
- * in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+ * @param {String|node|d3.selection} parent - Any valid
+ * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {GeoChoroplethChart}
+ * @return {dc.geoChoroplethChart}
  */
 dc.geoChoroplethChart = function (parent, chartGroup) {
     var _chart = dc.colorMixin(dc.baseMixin({}));
@@ -181,16 +182,19 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * @name overlayGeoJson
      * @memberof dc.geoChoroplethChart
      * @instance
+     * @see {@link http://geojson.org/ GeoJSON}
+     * @see {@link https://github.com/mbostock/topojson/wiki TopoJSON}
+     * @see {@link https://github.com/mbostock/topojson/wiki/API-Reference#feature topojson.feature}
      * @example
      * // insert a layer for rendering US states
      * chart.overlayGeoJson(statesJson.features, 'state', function(d) {
      *      return d.properties.name;
      * });
-     * @param {Object} json - a geojson feed
+     * @param {geoJson} json - a geojson feed
      * @param {String} name - name of the layer
      * @param {Function} keyAccessor - accessor function used to extract 'key' from the GeoJson data. The key extracted by
      * this function should match the keys returned by the crossfilter groups.
-     * @returns {Chart}
+     * @return {dc.geoChoroplethChart}
      */
     _chart.overlayGeoJson = function (json, name, keyAccessor) {
         for (var i = 0; i < _geoJsons.length; ++i) {
@@ -210,8 +214,10 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * @name projection
      * @memberof dc.geoChoroplethChart
      * @instance
-     * @param {d3.projection} [projection=d3.projection.albersUsa()]
-     * @returns {Chart}
+     * @see {@link https://github.com/mbostock/d3/wiki/Geo-Projections d3.geo.projection}
+     * @see {@link https://github.com/d3/d3-geo-projection Extended d3.geo.projection}
+     * @param {d3.projection} [projection=d3.geo.albersUsa()]
+     * @return {dc.geoChoroplethChart}
      */
     _chart.projection = function (projection) {
         _geoPath.projection(projection);
@@ -226,20 +232,21 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * @name geoJsons
      * @memberof dc.geoChoroplethChart
      * @instance
-     * @returns {Array<{name:String, data: Object, accessor: Function}>}
+     * @return {Array<{name:String, data: Object, accessor: Function}>}
      */
     _chart.geoJsons = function () {
         return _geoJsons;
     };
 
     /**
-     * Returns the [d3.geo.path](https://github.com/mbostock/d3/wiki/Geo-Paths#path) object used to
+     * Returns the {@link https://github.com/mbostock/d3/wiki/Geo-Paths#path d3.geo.path} object used to
      * render the projection and features.  Can be useful for figuring out the bounding box of the
      * feature set and thus a way to calculate scale and translation for the projection.
      * @name geoPath
      * @memberof dc.geoChoroplethChart
      * @instance
-     * @returns {d3.geo.path}
+     * @see {@link https://github.com/mbostock/d3/wiki/Geo-Paths#path d3.geo.path}
+     * @return {d3.geo.path}
      */
     _chart.geoPath = function () {
         return _geoPath;
@@ -251,7 +258,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * @memberof dc.geoChoroplethChart
      * @instance
      * @param {String} name
-     * @returns {Chart}
+     * @return {dc.geoChoroplethChart}
      */
     _chart.removeGeoJson = function (name) {
         var geoJsons = [];

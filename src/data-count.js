@@ -7,7 +7,7 @@
  * '.filter-count' - number of records matched by the current filters
  *
  * Examples:
- * - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+ * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  * @name dataCount
  * @memberof dc
  * @mixes dc.baseMixin
@@ -18,13 +18,12 @@
  * dc.dataCount('.dc-data-count')
  *     .dimension(ndx)
  *     .group(all);
- * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- * a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart
- * in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+ * @param {String|node|d3.selection} parent - Any valid
+ * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {DataCount}
+ * @return {dc.dataCount}
  */
 dc.dataCount = function (parent, chartGroup) {
     var _formatNumber = d3.format(',d');
@@ -46,7 +45,8 @@ dc.dataCount = function (parent, chartGroup) {
      *      all: 'All records selected. Click on charts to apply filters'
      * })
      * @param {{some:String, all: String}} [options]
-     * @returns {Chart}
+     * @return {{some:String, all: String}}
+     * @return {dc.dataCount}
      */
     _chart.html = function (options) {
         if (!arguments.length) {
@@ -66,10 +66,12 @@ dc.dataCount = function (parent, chartGroup) {
      * @name formatNumber
      * @memberof dc.dataCount
      * @instance
+     * @see {@link https://github.com/mbostock/d3/wiki/Formatting d3.format}
      * @example
      * counter.formatNumber(d3.format('.2g'))
      * @param {Function} [formatter=d3.format('.2g')]
-     * @returns {Chart}
+     * @return {Function}
+     * @return {dc.dataCount}
      */
     _chart.formatNumber = function (formatter) {
         if (!arguments.length) {

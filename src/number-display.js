@@ -8,13 +8,12 @@
  * @example
  * // create a number display under #chart-container1 element using the default global chart group
  * var display1 = dc.numberDisplay('#chart-container1');
- * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- * a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart
- * in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+ * @param {String|node|d3.selection} parent - Any valid
+ * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {NumberDisplay}
+ * @return {dc.numberDisplay}
  */
 dc.numberDisplay = function (parent, chartGroup) {
     var SPAN_CLASS = 'number-display';
@@ -40,7 +39,8 @@ dc.numberDisplay = function (parent, chartGroup) {
      *      some:'%number records',
      *      none:'no records'})
      * @param {{one:String, some:String, none:String}} [html={one: '', some: '', none: ''}]
-     * @returns {Chart}
+     * @return {{one:String, some:String, none:String}}
+     * @return {dc.numberDisplay}
      */
     _chart.html = function (html) {
         if (!arguments.length) {
@@ -71,7 +71,7 @@ dc.numberDisplay = function (parent, chartGroup) {
      * @name value
      * @memberof dc.numberDisplay
      * @instance
-     * @returns {Number}
+     * @return {Number}
      */
     _chart.value = function () {
         return _chart.data();
@@ -124,8 +124,10 @@ dc.numberDisplay = function (parent, chartGroup) {
      * @name formatNumber
      * @memberof dc.numberDisplay
      * @instance
+     * @see {@link https://github.com/mbostock/d3/wiki/Formatting d3.format}
      * @param {Function} [formatter=d3.format('.2s')]
-     * @returns {Chart}
+     * @return {Function}
+     * @return {dc.numberDisplay}
      */
     _chart.formatNumber = function (formatter) {
         if (!arguments.length) {
