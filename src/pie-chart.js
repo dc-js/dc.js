@@ -212,12 +212,12 @@ dc.pieChart = function (parent, chartGroup) {
                 return function (t) {
                     var centroid, centroid2;
                     centroid = d3.svg.arc()
-                        .outerRadius(_radius + _externalLabelRadius)
-                        .innerRadius(_radius + _externalLabelRadius)
+                        .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
+                        .innerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
                         .centroid(d);
                     centroid2 = d3.svg.arc()
-                        .outerRadius(_radius + _externalLabelRadius)
-                        .innerRadius(_radius)
+                        .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
+                        .innerRadius(_radius - _externalRadiusPadding)
                         .centroid(d);
                     var d2 = interpolate(t);
                     return [arc.centroid(d2), centroid2];
@@ -368,7 +368,9 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     function buildArcs () {
-        return d3.svg.arc().outerRadius(_radius - _externalRadiusPadding).innerRadius(_innerRadius);
+        return d3.svg.arc()
+            .outerRadius(_radius - _externalRadiusPadding)
+            .innerRadius(_innerRadius);
     }
 
     function isSelectedSlice (d) {
