@@ -1,8 +1,8 @@
 /**
  * A box plot is a chart that depicts numerical data via their quartile ranges.
  * Examples:
- * - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
- * - [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
+ * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
+ * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
  * @name boxPlot
  * @memberof dc
  * @mixes dc.coordinateGridMixin
@@ -11,13 +11,12 @@
  * var boxPlot1 = dc.boxPlot('#chart-container1');
  * // create a box plot under #chart-container2 element using chart group A
  * var boxPlot2 = dc.boxPlot('#chart-container2', 'chartGroupA');
- * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- * a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart
- * in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+ * @param {String|node|d3.selection} parent - Any valid
+ * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {BoxPlot}
+ * @return {dc.boxPlot}
  */
 dc.boxPlot = function (parent, chartGroup) {
     var _chart = dc.coordinateGridMixin({});
@@ -73,25 +72,29 @@ dc.boxPlot = function (parent, chartGroup) {
 
     /**
      * Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
-     * See the [d3 docs](https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands)
+     * See the {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands d3 docs}
      * for a visual description of how the padding is applied.
      * @name boxPadding
      * @memberof dc.boxPlot
      * @instance
+     * @see {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands d3.scale.ordinal.rangeBands}
      * @param {Number} [padding=0.8]
-     * @returns {Number}
+     * @return {Number}
+     * @return {dc.boxPlot}
      */
     _chart.boxPadding = _chart._rangeBandPadding;
     _chart.boxPadding(0.8);
 
     /**
      * Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
-     * or on charts with a custom `.boxWidth`. Will pad the width by `padding * barWidth` on each side of the chart.
+     * or on charts with a custom {@link #dc.boxPlot+boxWidth .boxWidth}. Will pad the width by
+     * `padding * barWidth` on each side of the chart.
      * @name outerPadding
      * @memberof dc.boxPlot
      * @instance
      * @param {Number} [padding=0.5]
-     * @returns {Number}
+     * @return {Number}
+     * @return {dc.boxPlot}
      */
     _chart.outerPadding = _chart._outerRangeBandPadding;
     _chart.outerPadding(0.5);
@@ -109,7 +112,8 @@ dc.boxPlot = function (parent, chartGroup) {
      * @memberof dc.boxPlot
      * @instance
      * @param {Number|Function} [boxWidth=0.5]
-     * @returns {Number|Function}
+     * @return {Number|Function}
+     * @return {dc.boxPlot}
      */
     _chart.boxWidth = function (boxWidth) {
         if (!arguments.length) {
@@ -220,7 +224,8 @@ dc.boxPlot = function (parent, chartGroup) {
      * @memberof dc.boxPlot
      * @instance
      * @param {Function} [tickFormat]
-     * @returns {Number|Function}
+     * @return {Number|Function}
+     * @return {dc.boxPlot}
      */
     _chart.tickFormat = function (tickFormat) {
         if (!arguments.length) {

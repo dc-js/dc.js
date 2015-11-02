@@ -1,5 +1,8 @@
 /**
  * Concrete row chart implementation.
+ *
+ * Examples:
+ * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  * @name rowChart
  * @memberof dc
  * @mixes dc.capMixin
@@ -11,13 +14,12 @@
  * var chart1 = dc.rowChart('#chart-container1');
  * // create a row chart under #chart-container2 element using chart group A
  * var chart2 = dc.rowChart('#chart-container2', 'chartGroupA');
- * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- * a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart
- * in a [Composite Chart](#composite-chart) then pass in the parent composite chart instance.
+ * @param {String|node|d3.selection} parent - Any valid
+ * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {RowChart}
+ * @return {dc.rowChart}
  */
 dc.rowChart = function (parent, chartGroup) {
 
@@ -135,12 +137,14 @@ dc.rowChart = function (parent, chartGroup) {
 
     /**
      * Gets or sets the x scale. The x scale can be any d3
-     * [quantitive scale](https://github.com/mbostock/d3/wiki/Quantitative-Scales)
+     * {@link https://github.com/mbostock/d3/wiki/Quantitative-Scales quantitive scale}
      * @name x
      * @memberof dc.rowChart
      * @instance
+     * @see {@link https://github.com/mbostock/d3/wiki/Quantitative-Scales quantitive scale}
      * @param {d3.scale} [scale]
-     * @returns {Chart}
+     * @return {d3.scale}
+     * @return {dc.rowChart}
      */
     _chart.x = function (scale) {
         if (!arguments.length) {
@@ -314,7 +318,8 @@ dc.rowChart = function (parent, chartGroup) {
      * @memberof dc.rowChart
      * @instance
      * @param {Boolean} [renderTitleLabel=false]
-     * @returns {Chart}
+     * @return {Boolean}
+     * @return {dc.rowChart}
      */
     _chart.renderTitleLabel = function (renderTitleLabel) {
         if (!arguments.length) {
@@ -347,16 +352,18 @@ dc.rowChart = function (parent, chartGroup) {
 
     /**
      * Get the x axis for the row chart instance.  Note: not settable for row charts.
-     * See the [d3 axis object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis) documention for more information.
+     * See the {@link https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis d3 axis object}
+     * documention for more information.
      * @name xAxis
      * @memberof dc.rowChart
      * @instance
+     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis d3.svg.axis}
      * @example
      * // customize x axis tick format
      * chart.xAxis().tickFormat(function (v) {return v + '%';});
      * // customize x axis tick values
      * chart.xAxis().tickValues([0, 100, 200, 300]);
-     * @returns {d3.svg.Axis}
+     * @return {d3.svg.axis}
      */
     _chart.xAxis = function () {
         return _xAxis;
@@ -373,7 +380,8 @@ dc.rowChart = function (parent, chartGroup) {
      * @example
      * chart.fixedBarHeight( chartheight - (count + 1) * gap / count);
      * @param {Boolean|Number} [fixedBarHeight=false]
-     * @returns {Chart}
+     * @return {Boolean|Number}
+     * @return {dc.rowChart}
      */
     _chart.fixedBarHeight = function (fixedBarHeight) {
         if (!arguments.length) {
@@ -389,7 +397,8 @@ dc.rowChart = function (parent, chartGroup) {
      * @memberof dc.rowChart
      * @instance
      * @param {Number} [gap=5]
-     * @returns {Chart}
+     * @return {Number}
+     * @return {dc.rowChart}
      */
     _chart.gap = function (gap) {
         if (!arguments.length) {
@@ -406,7 +415,8 @@ dc.rowChart = function (parent, chartGroup) {
      * @memberof dc.rowChart
      * @instance
      * @param {Boolean} [elasticX]
-     * @returns {Chart}
+     * @return {Boolean}
+     * @return {dc.rowChart}
      */
     _chart.elasticX = function (elasticX) {
         if (!arguments.length) {
@@ -447,7 +457,8 @@ dc.rowChart = function (parent, chartGroup) {
      * @memberof dc.rowChart
      * @instance
      * @param {Number} [labelOffsetX=10]
-     * @returns {Chart}
+     * @return {Number}
+     * @return {dc.rowChart}
      */
     _chart.labelOffsetX = function (labelOffsetX) {
         if (!arguments.length) {
@@ -463,7 +474,8 @@ dc.rowChart = function (parent, chartGroup) {
      * @memberof dc.rowChart
      * @instance
      * @param {Number} [labelOffsety=15]
-     * @returns {Chart}
+     * @return {Number}
+     * @return {dc.rowChart}
      */
     _chart.labelOffsetY = function (labelOffsety) {
         if (!arguments.length) {
@@ -480,7 +492,8 @@ dc.rowChart = function (parent, chartGroup) {
      * @memberof dc.rowChart
      * @instance
      * @param {Number} [titleLabelOffsetX=2]
-     * @returns {Chart}
+     * @return {Number}
+     * @return {dc.rowChart}
      */
     _chart.titleLabelOffsetX = function (titleLabelOffsetX) {
         if (!arguments.length) {
