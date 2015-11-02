@@ -8040,7 +8040,7 @@ dc.rowChart = function (parent, chartGroup) {
             axisXLab = _g.append('text')
                 .attr('class', X_AXIS_LABEL_CLASS)
                 .attr('transform',
-                    'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) +
+                    'translate(' + (_chart.xAxisLength() / 2) +
                     ',' + (_chart.height() - _xAxisLabelPadding) + ')'
                 )
                 .attr('text-anchor', 'middle');
@@ -8051,7 +8051,7 @@ dc.rowChart = function (parent, chartGroup) {
         }
 
         dc.transition(axisXLab, _chart.transitionDuration())
-            .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
+            .attr('transform', 'translate(' + (_chart.xAxisLength() / 2) + ',' +
                   (_chart.height() - _xAxisLabelPadding) + ')');
     }
 
