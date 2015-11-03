@@ -36,20 +36,24 @@ div.dc-chart {
 }
 
 .dc-chart .pie-slice {
-    fill: white;
-    font-size: 12px;
     cursor: pointer;
 }
 
-.dc-chart .pie-slice.external{
+.dc-chart .pie-slice-text {
+    fill: white;
+    font-size: 12px;
+    pointer-events: none;
+}
+
+.dc-chart .pie-slice-text.external{
     fill: black;
 }
 
-.dc-chart .pie-slice :hover {
+.dc-chart .pie-slice-text :hover {
     fill-opacity: .8;
 }
 
-.dc-chart .pie-slice.highlight {
+.dc-chart .pie-slice-text.highlight {
     fill-opacity: .8;
 }
 
