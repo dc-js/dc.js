@@ -3,8 +3,9 @@
   * Paired Row Charts (137213b566ae39e5f646016c9f13e30b0f6385a1 / 1267f7a82d4b8280d102460e1e85126aaffd0a60 / 5494b449f95a183bbc8416aa01b7bbc37efcf460 / 8c5ed0de8ac914c934da497fbfc54d7c85caa22f)
   * New ```clickOn``` option to disable all clicking events (c65346338df0f88a24847fd518cd950f657d0ae6)
   * ```xAxisTickLabelRotate``` and ```yAxisTickLabelRotate``` (d2bcf2338e21e5f7f3c9c4ff63e93e3cb2f7383d / f9e08c55fbe99649ae0b8052672f988aae81ee03)
-  * Row chart ```xAxisLabel``` (c6e473bf359f069f5d4e6883d16f25827084a7a0 / a8d72ae8b8a2d0d4a4dce11b377f044365cd58fc / 289ae4600a53aa7a3396e9d95257264535fc5cfc)
+  * Row chart ```xAxisLabel``` (c6e473bf359f069f5d4e6883d16f25827084a7a0 / a8d72ae8b8a2d0d4a4dce11b377f044365cd58fc / 289ae4600a53aa7a3396e9d95257264535fc5cfc / 27c03a48d9328673c632064aa7c784bfd6a1411a)
   * Wrap x axis labels if string is too long (f939481ff921e6020d97e508728546dca0260c45 / 9cd85df7e43ca57c4504a09b0091de53321fb2ff / 7196dfa8c35c4f0da6be26cc102a031c06cd255b)
+  * Pie chart - fixed there being no hover effect when mouse was over the text (aaeb3542ef3f83e48e23797f099c5f8d21785632)
 
 ## 2.1.0
  * Heatmap allows customizing the ordering separately from the values, by Matt Traynham ([#869](https://github.com/dc-js/dc.js/pull/869) - thanks also to Quinn Lee for [#837](https://github.com/dc-js/dc.js/pull/837))
