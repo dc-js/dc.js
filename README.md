@@ -16,9 +16,8 @@ more please visit the [Wiki](https://github.com/dc-js/dc.js/wiki).
 CDN location
 --------------------
 ```
-http://cdnjs.cloudflare.com/ajax/libs/dc/1.7.0/dc.js
-http://cdnjs.cloudflare.com/ajax/libs/dc/1.7.0/dc.min.js
-http://cdnjs.cloudflare.com/ajax/libs/dc/1.7.0/dc.css
+http://cdnjs.cloudflare.com/ajax/libs/dc/1.7.5/dc.min.js
+http://cdnjs.cloudflare.com/ajax/libs/dc/1.7.5/dc.min.css
 ```
 Please do not use github.io as a CDN unless you need the bleeding-edge features.
 
