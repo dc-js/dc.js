@@ -21,11 +21,6 @@ div.dc-chart {
     fill: green;
 }
 
-.dc-chart rect.deselected {
-    stroke: none;
-    fill: #ccc;
-}
-
 .dc-chart .empty-chart .pie-slice path {
     fill: #FFEEEE;
     cursor: default;
@@ -62,18 +57,6 @@ div.dc-chart {
   stroke-width: 2px;
   stroke: black;
   opacity: 0.4;
-}
-
-.dc-chart .selected path {
-    stroke-width: 3;
-    stroke: #ccc;
-    fill-opacity: 1;
-}
-
-.dc-chart .deselected path {
-    stroke: none;
-    fill-opacity: .5;
-    fill: #ccc;
 }
 
 .dc-chart .axis path,
@@ -144,18 +127,6 @@ div.dc-chart {
     fill-opacity: .8;
 }
 
-.dc-chart .selected circle {
-    stroke-width: 3;
-    stroke: #ccc;
-    fill-opacity: 1;
-}
-
-.dc-chart .deselected circle {
-    stroke: none;
-    fill-opacity: .5;
-    fill: #ccc;
-}
-
 .dc-chart .bubble {
     stroke: none;
     fill-opacity: 0.6;
@@ -190,20 +161,6 @@ div.dc-chart {
 
 .dc-chart g.state path {
     stroke: white;
-}
-
-.dc-chart g.selected path {
-}
-
-.dc-chart g.deselected path {
-    fill: grey;
-}
-
-.dc-chart g.selected text {
-}
-
-.dc-chart g.deselected text {
-    display: none;
 }
 
 .dc-chart g.county path {
@@ -306,25 +263,25 @@ g.dc-legend-item.fadeout {
     stroke: #ccc;
 }
 
-.dc-chart .box.deselected .box {
-    fill: #ccc;
-}
-
-.dc-chart .box.deselected {
-    opacity: .5;
-}
-
-.dc-chart .symbol{
+.dc-chart .symbol {
     stroke: none;
-}
-
-.dc-chart .heatmap .box-group.deselected rect {
-    stroke: none;
-    fill-opacity: .5;
-    fill: #ccc;
 }
 
 .dc-chart .heatmap g.axis text {
     pointer-events: all;
     cursor: pointer;
+}
+
+/* selected and deselected */
+.dc-chart .selected circle,
+.dc-chart .selected path,
+.dc-chart .selected rect,
+.dc-chart rect.selected {
+    stroke-width: 2;
+    stroke: #666666 !important;
+    fill-opacity: 1;
+}
+
+.dc-chart .deselected {
+    opacity: 0.3 !important;
 }
