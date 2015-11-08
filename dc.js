@@ -2491,6 +2491,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _yAxisLabel;
     var _yAxisLabelPadding = 0;
     var _yAxisTickLabelRotate = 0;
+    var _yAxisTickIntegersOnly = false;
 
     var _brush = d3.svg.brush();
     var _brushOn = true;
@@ -3062,6 +3063,10 @@ dc.coordinateGridMixin = function (_chart) {
         _y.range([_chart.yAxisHeight(), 0]);
         _yAxis = _yAxis.scale(_y);
 
+        if (_chart.yAxisTickIntegersOnly()) {
+            _yAxis.tickFormat(d3.format('d'));
+        }
+
         if (_useRightYAxis) {
             _yAxis.orient('right');
         }
@@ -3200,7 +3205,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     /**
-     * Set or get the y axis tick label rotation in degrees. Can be between -90 and 90.
+     * Get or set the y axis tick label rotation in degrees. Can be between -90 and 90.
      * @name yAxisTickLabelRotate
      * @memberof dc.coordinateGridMixin
      * @instance
@@ -3214,6 +3219,24 @@ dc.coordinateGridMixin = function (_chart) {
         _yAxisTickLabelRotate = rotate;
         return _chart;
     };
+
+    /**
+     * Get or set the y axis tick intergers only flag. Can be between true or false
+     * @name yAxisTickIntegersOnly
+     * @memberof dc.coordinateGridMixin
+     * @instance
+     * @param {Boolean} [flag]
+     * @return {Boolean}
+     */
+    _chart.yAxisTickIntegersOnly = function (flag) {
+        if (!arguments.length) {
+            return _yAxisTickIntegersOnly;
+        }
+        _yAxisTickIntegersOnly = flag;
+        return _chart;
+    };
+
+
 
     /**
      * Get or set the y scale. The y scale is typically automatically determined by the chart implementation.

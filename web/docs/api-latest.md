@@ -98,6 +98,7 @@ chart.width(300)
     * [.xAxisTickLabelRotate](#dc.coordinateGridMixin+xAxisTickLabelRotate) ⇒ <code>Number</code>
     * [.yAxisLabel](#dc.coordinateGridMixin+yAxisLabel) ⇒ <code>String</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
     * [.yAxisTickLabelRotate](#dc.coordinateGridMixin+yAxisTickLabelRotate) ⇒ <code>Number</code>
+    * [.yAxisTickIntegersOnly](#dc.coordinateGridMixin+yAxisTickIntegersOnly) ⇒ <code>Boolean</code>
     * [.y](#dc.coordinateGridMixin+y) ⇒ <code>d3.scale</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
     * [.yAxis](#dc.coordinateGridMixin+yAxis) ⇒ <code>d3.svg.axis</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
     * [.elasticY](#dc.coordinateGridMixin+elasticY) ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
@@ -1305,6 +1306,7 @@ concrete chart types, e.g. bar chart, line chart, and bubble chart.
   * [.xAxisTickLabelRotate](#dc.coordinateGridMixin+xAxisTickLabelRotate) ⇒ <code>Number</code>
   * [.yAxisLabel](#dc.coordinateGridMixin+yAxisLabel) ⇒ <code>String</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
   * [.yAxisTickLabelRotate](#dc.coordinateGridMixin+yAxisTickLabelRotate) ⇒ <code>Number</code>
+  * [.yAxisTickIntegersOnly](#dc.coordinateGridMixin+yAxisTickIntegersOnly) ⇒ <code>Boolean</code>
   * [.y](#dc.coordinateGridMixin+y) ⇒ <code>d3.scale</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
   * [.yAxis](#dc.coordinateGridMixin+yAxis) ⇒ <code>d3.svg.axis</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
   * [.elasticY](#dc.coordinateGridMixin+elasticY) ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
@@ -1569,13 +1571,23 @@ text height.
 
 <a name="dc.coordinateGridMixin+yAxisTickLabelRotate"></a>
 #### coordinateGridMixin.yAxisTickLabelRotate ⇒ <code>Number</code>
-Set or get the y axis tick label rotation in degrees. Can be between -90 and 90.
+Get or set the y axis tick label rotation in degrees. Can be between -90 and 90.
 
 **Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 
 | Param | Type |
 | --- | --- |
 | [rotate] | <code>Number</code> | 
+
+<a name="dc.coordinateGridMixin+yAxisTickIntegersOnly"></a>
+#### coordinateGridMixin.yAxisTickIntegersOnly ⇒ <code>Boolean</code>
+Get or set the y axis tick intergers only flag. Can be between true or false
+
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [flag] | <code>Boolean</code> | 
 
 <a name="dc.coordinateGridMixin+y"></a>
 #### coordinateGridMixin.y ⇒ <code>d3.scale</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>

@@ -17,13 +17,13 @@
 var chart = dc.barChart('#test');
 
 var counts = [
-  {name: 'Granny Smith', cnt: 10},
-  {name: 'Red Delicious', cnt: 15},
-  {name: 'Pink Lady', cnt: 12},
+  {name: 'Granny Smith', cnt: 5},
+  {name: 'Red Delicious', cnt: 4},
+  {name: 'Pink Lady', cnt: 3},
   {name: 'Cripps Pink', cnt: 2},
-  {name: 'Braeburn', cnt: 4},
-  {name: 'Bardsey Island Apple', cnt: 8},
-  {name: 'Bismarck', cnt: 6},
+  {name: 'Braeburn', cnt: 1},
+  {name: 'Bardsey Island Apple', cnt: 0},
+  {name: 'Bismarck', cnt: 5},
 ];
 
 var ndx            = crossfilter(counts),
@@ -39,6 +39,7 @@ chart
   .clickOn(false)
   .xAxisLabel('Fruit')
   .yAxisLabel('Quantity Sold')
+  .yAxisTickIntegersOnly(true)
   .dimension(fruitDimension)
   .barPadding(0.1)
   .outerPadding(0.05)
