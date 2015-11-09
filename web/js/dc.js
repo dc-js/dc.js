@@ -3810,8 +3810,14 @@ dc.stackMixin = function (_chart) {
 
     function prepareValues (layer, layerIdx) {
         var valAccessor = layer.accessor || _chart.valueAccessor();
+        var data = layer.group.all();
+
+        if (_chart.isOrdinal()) {
+            data = _chart._computeOrderedGroups(data);
+        }
+
         layer.name = String(layer.name || layerIdx);
-        layer.values = _chart._computeOrderedGroups(layer.group.all()).map(function (d, i) {
+        layer.values = data.map(function (d, i) {
             return {
                 x: _chart.keyAccessor()(d, i),
                 y: layer.hidden ? null : valAccessor(d, i),
