@@ -11,7 +11,7 @@ dc.stackMixin = function (_chart) {
     function prepareValues (layer, layerIdx) {
         var valAccessor = layer.accessor || _chart.valueAccessor();
         layer.name = String(layer.name || layerIdx);
-        layer.values = layer.group.all().map(function (d, i) {
+        layer.values = _chart._computeOrderedGroups(layer.group.all()).map(function (d, i) {
             return {
                 x: _chart.keyAccessor()(d, i),
                 y: layer.hidden ? null : valAccessor(d, i),
