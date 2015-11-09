@@ -66,6 +66,7 @@ dc.baseMixin = function (_chart) {
         'pretransition');
 
     var _legend;
+    var _commitHandler;
 
     var _filters = [];
     var _filterHandler = function (dimension, filters) {
@@ -664,12 +665,72 @@ dc.baseMixin = function (_chart) {
         return result;
     };
 
-    _chart.redrawGroup = function () {
-        dc.redrawAll(_chart.chartGroup());
+    /**
+     * Gets/sets the commit handler. If the chart has a commit handler, the handler will be called when
+     * the chart's filters have changed, in order to send the filter data asynchronously to a server.
+     *
+     * Unlike other functions in dc.js, the commit handler is asynchronous. It takes two arguments:
+     * a flag indicating whether this is a render (true) or a redraw (false), and a callback to be
+     * triggered once the commit is filtered. The callback has the standard node.js continuation signature
+     * with error first and result second.
+     * @name commitHandler
+     * @memberof dc.baseMixin
+     * @instance
+     * @return {dc.baseMixin}
+     */
+    _chart.commitHandler = function (commitHandler) {
+        if (!arguments.length) {
+            return _commitHandler;
+        }
+        _commitHandler = commitHandler;
+        return _chart;
     };
 
+    /**
+     * Redraws all charts in the same group as this chart, typically in reaction to a filter
+     * change. If the chart has a {@link dc.baseMixin.commitFilter commitHandler}, it will
+     * be executed and waited for.
+     * @name redrawGroup
+     * @memberof dc.baseMixin
+     * @instance
+     * @return {dc.baseMixin}
+     */
+    _chart.redrawGroup = function () {
+        if (_commitHandler) {
+            _commitHandler(false, function (error, result) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    dc.redrawAll(_chart.chartGroup());
+                }
+            });
+        } else {
+            dc.redrawAll(_chart.chartGroup());
+        }
+        return _chart;
+    };
+
+    /**
+     * Renders all charts in the same group as this chart. If the chart has a
+     * {@link dc.baseMixin.commitFilter commitHandler}, it will be executed and waited for
+     * @name renderGroup
+     * @memberof dc.baseMixin
+     * @instance
+     * @return {dc.baseMixin}
+     */
     _chart.renderGroup = function () {
-        dc.renderAll(_chart.chartGroup());
+        if (_commitHandler) {
+            _commitHandler(false, function (error, result) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    dc.renderAll(_chart.chartGroup());
+                }
+            });
+        } else {
+            dc.renderAll(_chart.chartGroup());
+        }
+        return _chart;
     };
 
     _chart._invokeFilteredListener = function (f) {
