@@ -308,7 +308,11 @@ dc.stackMixin = function (_chart) {
                 _chart.hideStack(d.name);
             }
             //_chart.redraw();
-            _chart.renderGroup();
+            if (_chart.parent()) {
+                _chart.parent().render();
+            } else {
+                _chart.render(); // #1039
+            }
         }
     };
 

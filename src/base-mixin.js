@@ -17,7 +17,7 @@ dc.baseMixin = function (_chart) {
     var _anchor;
     var _root;
     var _svg;
-    var _isChild;
+    var _parent = null;
 
     var _minWidth = 200;
     var _defaultWidth = function (element) {
@@ -396,7 +396,7 @@ dc.baseMixin = function (_chart) {
         if (dc.instanceOfChart(parent)) {
             _anchor = parent.anchor();
             _root = parent.root();
-            _isChild = true;
+            _parent = parent;
         } else if (parent) {
             if (parent.select && parent.classed) { // detect d3 selection
                 _anchor = parent.node();
@@ -406,12 +406,23 @@ dc.baseMixin = function (_chart) {
             _root = d3.select(_anchor);
             _root.classed(dc.constants.CHART_CLASS, true);
             dc.registerChart(_chart, chartGroup);
-            _isChild = false;
+            _parent = null;
         } else {
             throw new dc.errors.BadArgumentException('parent must be defined');
         }
         _chartGroup = chartGroup;
         return _chart;
+    };
+
+    /**
+     * If the chart is a child of a composite chart, returns the parent chart. Otherwise null.
+     * @name parent
+     * @memberof dc.baseMixin
+     * @instance
+     * @returns {dc.compositeChart | null}
+     */
+    _chart.parent = function () {
+        return _parent;
     };
 
     /**
@@ -664,6 +675,8 @@ dc.baseMixin = function (_chart) {
         return result;
     };
 
+    /**
+     * If `commitFilter` is */
     _chart.redrawGroup = function () {
         dc.redrawAll(_chart.chartGroup());
     };
@@ -1240,11 +1253,11 @@ dc.baseMixin = function (_chart) {
         if (!arguments.length) {
             return _chartGroup;
         }
-        if (!_isChild) {
+        if (!_parent) {
             dc.deregisterChart(_chart, _chartGroup);
         }
         _chartGroup = chartGroup;
-        if (!_isChild) {
+        if (!_parent) {
             dc.registerChart(_chart, _chartGroup);
         }
         return _chart;

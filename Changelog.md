@@ -1,4 +1,7 @@
 # 2.0 Series
+## 2.0.0 beta 21
+* Hiding or showing a stack should not cause all charts to render. For now, we restrict to rendering the stacked chart only. Later we'll fix redrawing of stacks and change this to a redraw([#1039](https://github.com/dc-js/dc.js/issues/1039))
+
 ## 2.0.0 beta 20
 * Slicing functionality for basic data table paging, based on Chris Alvino's feature for the data grid ([#101](https://github.com/dc-js/dc.js/issues/101))
 * Ability to customize the legend text, by Chris Alvino ([#982](https://github.com/dc-js/dc.js/pull/982))
