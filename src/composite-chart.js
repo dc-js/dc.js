@@ -530,5 +530,16 @@ dc.compositeChart = function (parent, chartGroup) {
         return _chart;
     };
 
+    dc.override(_chart, 'filterAll', function () {
+        var g = this._filterAll();
+        for (var i = 0; i < _children.length; ++i) {
+            var child = _children[i];
+
+            child.filterAll();
+        }
+
+        return g;
+    });
+
     return _chart.anchor(parent, chartGroup);
 };
