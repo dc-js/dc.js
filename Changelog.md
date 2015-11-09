@@ -9,6 +9,8 @@
   * Getting grunt server to watch and compile the main css file (60353aa2eca1ec32174a7dedf6aec7c2a2cadef6)
   * Changing deselected to a low opacity rather than changing to grey (6294d82ace8a5d1e9297c92dcc553f3db9a8c64d)
   * y axis tick integers only flag (0ecd81729bdbdbeac33d470b3413f8665c8c8888)
+  * Fixing composite chart resetting all filters - Bugs #390, #677 and #706 (f1b218db107afaee7910f87426d33240fb4cc166)
+  * Fixing line charts ordering potentially creating skewed lines (ab15d786855100936e4b7b53dccf8f5ee58ce79b)
 
 ## 2.1.0
  * Heatmap allows customizing the ordering separately from the values, by Matt Traynham ([#869](https://github.com/dc-js/dc.js/pull/869) - thanks also to Quinn Lee for [#837](https://github.com/dc-js/dc.js/pull/837))

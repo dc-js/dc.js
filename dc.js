@@ -3811,7 +3811,7 @@ dc.stackMixin = function (_chart) {
     function prepareValues (layer, layerIdx) {
         var valAccessor = layer.accessor || _chart.valueAccessor();
         layer.name = String(layer.name || layerIdx);
-        layer.values = layer.group.all().map(function (d, i) {
+        layer.values = _chart._computeOrderedGroups(layer.group.all()).map(function (d, i) {
             return {
                 x: _chart.keyAccessor()(d, i),
                 y: layer.hidden ? null : valAccessor(d, i),
@@ -7276,6 +7276,17 @@ dc.compositeChart = function (parent, chartGroup) {
         _rightYAxis = rightYAxis;
         return _chart;
     };
+
+    dc.override(_chart, 'filterAll', function () {
+        var g = this._filterAll();
+        for (var i = 0; i < _children.length; ++i) {
+            var child = _children[i];
+
+            child.filterAll();
+        }
+
+        return g;
+    });
 
     return _chart.anchor(parent, chartGroup);
 };
