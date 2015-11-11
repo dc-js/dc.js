@@ -15,7 +15,8 @@ describe('dc.barChart', function () {
         chart.dimension(dimension).group(group)
             .width(1100).height(200)
             .x(d3.time.scale.utc().domain([makeDate(2012, 0, 1), makeDate(2012, 11, 31)]))
-            .transitionDuration(0);
+            .transitionDuration(0)
+            .controlsUseVisibility(true);
     });
 
     describe('rendering', function () {
@@ -39,6 +40,10 @@ describe('dc.barChart', function () {
             expect(chart.render()).toEqual(chart);
         });
 
+        it('should not display bar labels without setting renderLabel(true)', function () {
+            expect(chart.selectAll('text.barLabel').size()).toBe(0);
+        });
+
         describe('with centered bars', function () {
             beforeEach(function () {
                 chart.centerBar(true).render();
@@ -58,6 +63,58 @@ describe('dc.barChart', function () {
                 forEachBar(function (bar, datum) {
                     var barPosition = chart.x()(datum.data.key);
                     expect(+bar.attr('x')).toBeCloseTo(barPosition, 3);
+                });
+            });
+        });
+
+        describe('with bar labels', function () {
+            beforeEach(function () {
+                chart.renderLabel(true).render();
+            });
+
+            it('should generate a label for each datum', function () {
+                expect(chart.selectAll('text.barLabel').size()).toBe(6);
+            });
+
+            it('should generate labels with positions corresponding to their data', function () {
+                expect(nthStack(0).nthLabel(0).attr('x')).toBeWithinDelta(405, 1);
+                expect(nthStack(0).nthLabel(0).attr('y')).toBeWithinDelta(104, 1);
+                expect(nthStack(0).nthLabel(0).text()).toBe('1');
+
+                expect(nthStack(0).nthLabel(3).attr('x')).toBeWithinDelta(509, 1);
+                expect(nthStack(0).nthLabel(3).attr('y')).toBeWithinDelta(104, 1);
+                expect(nthStack(0).nthLabel(3).text()).toBe('1');
+
+                expect(nthStack(0).nthLabel(5).attr('x')).toBeWithinDelta(620, 1);
+                expect(nthStack(0).nthLabel(5).attr('y')).toBeWithinDelta(50, 1);
+                expect(nthStack(0).nthLabel(5).text()).toBe('2');
+            });
+        });
+
+        describe('with custom bar labels', function () {
+            beforeEach(function () {
+                chart.label(function () {
+                    return 'custom label';
+                }).render();
+            });
+
+            it('should render a label for each datum', function () {
+                expect(chart.selectAll('text.barLabel').size()).toBe(6);
+            });
+
+            it('should use the custom function for each label', function () {
+                chart.selectAll('text.barLabel').each(function () {
+                    expect(d3.select(this).text()).toBe('custom label');
+                });
+            });
+
+            describe('with labels disabled', function () {
+                beforeEach(function () {
+                    chart.renderLabel(false).render();
+                });
+
+                it('should not display labels', function () {
+                    expect(chart.selectAll('text.barLabel').size()).toBe(0);
                 });
             });
         });
@@ -222,6 +279,20 @@ describe('dc.barChart', function () {
                     expect(dimension.top(Infinity).length).toEqual(1);
                 });
             });
+
+            describe('clicking bar labels', function () {
+                beforeEach(function () {
+                    chart.renderLabel(true).render();
+                });
+
+                it('causes other dimension to be filtered', function () {
+                    expect(dimension.top(Infinity).length).toEqual(10);
+                    // fake a click
+                    var alabel = chart.select('text.barLabel');
+                    alabel.on('click')(alabel.datum());
+                    expect(dimension.top(Infinity).length).toEqual(3);
+                });
+            });
         });
 
         describe('with a linear x domain', function () {
@@ -286,6 +357,7 @@ describe('dc.barChart', function () {
                         .title('stack 1', function (d) { return 'stack 1: ' + d.value; })
                         .stack(sumGroup, 'stack 2', function (d) { return 3; })
                         .elasticY(true)
+                        .renderLabel(true)
                         .render();
                 });
 
@@ -301,6 +373,16 @@ describe('dc.barChart', function () {
 
                 it('should render the correct number of stacks', function () {
                     expect(chart.selectAll('.stack').size()).toBe(3);
+                });
+
+                it('should display one label for each stack', function () {
+                    expect(chart.selectAll('text.barLabel').size()).toBe(6);
+                });
+
+                it('should generate labels with total value of stack', function () {
+                    expect(nthStack(2).nthLabel(0).text()).toBe('48');
+                    expect(nthStack(2).nthLabel(3).text()).toBe('51');
+                    expect(nthStack(2).nthLabel(5).text()).toBe('92');
                 });
 
                 it('should stack the bars', function () {
@@ -576,8 +658,8 @@ describe('dc.barChart', function () {
 
         describe('filtering', function () {
             beforeEach(function () {
-                d3.select('#' + id).append('span').attr('class', 'filter').style('display', 'none');
-                d3.select('#' + id).append('a').attr('class', 'reset').style('display', 'none');
+                d3.select('#' + id).append('span').attr('class', 'filter').style('visibility', 'hidden');
+                d3.select('#' + id).append('a').attr('class', 'reset').style('visibility', 'hidden');
                 chart.filter([makeDate(2012, 5, 1), makeDate(2012, 5, 30)]).redraw();
                 dc.dateFormat = d3.time.format.utc('%m/%d/%Y');
                 chart.redraw();
@@ -588,15 +670,15 @@ describe('dc.barChart', function () {
             });
 
             it('should enable the reset link after rendering', function () {
-                expect(chart.select('a.reset').style('display')).not.toBe('none');
+                expect(chart.select('a.reset').style('visibility')).not.toBe('none');
             });
 
             it('should set the filter printer', function () {
                 expect(chart.filterPrinter()).not.toBeNull();
             });
 
-            it('should turn the filter info on', function () {
-                expect(chart.select('span.filter').style('display')).not.toBe('none');
+            it('should show the filter info', function () {
+                expect(chart.select('span.filter').style('visibility')).toBe('visible');
             });
 
             it('should set filter text after slice selection', function () {
@@ -1114,6 +1196,10 @@ describe('dc.barChart', function () {
 
         stack.nthBar = function (n) {
             return d3.select(this.selectAll('rect.bar')[0][n]);
+        };
+
+        stack.nthLabel = function (n) {
+            return d3.select(this.selectAll('text.barLabel')[0][n]);
         };
 
         stack.forEachBar = function (assertions) {

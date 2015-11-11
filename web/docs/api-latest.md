@@ -10,7 +10,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 2.0.0-beta.20  
+**Version**: 2.0.0-beta.21  
 **Example**  
 ```js
 // Example chaining
@@ -43,6 +43,9 @@ chart.width(300)
     * [.transitionDuration](#dc.baseMixin+transitionDuration) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
     * [.render](#dc.baseMixin+render) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
     * [.redraw](#dc.baseMixin+redraw) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+    * [.commitHandler](#dc.baseMixin+commitHandler) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+    * [.redrawGroup](#dc.baseMixin+redrawGroup) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+    * [.renderGroup](#dc.baseMixin+renderGroup) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
     * [.hasFilterHandler](#dc.baseMixin+hasFilterHandler) ⇒ <code>function</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
     * [.hasFilter](#dc.baseMixin+hasFilter) ⇒ <code>Boolean</code>
     * [.removeFilterHandler](#dc.baseMixin+removeFilterHandler) ⇒ <code>function</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
@@ -295,6 +298,9 @@ and available on all chart implementations in the `dc` library.
   * [.transitionDuration](#dc.baseMixin+transitionDuration) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
   * [.render](#dc.baseMixin+render) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
   * [.redraw](#dc.baseMixin+redraw) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+  * [.commitHandler](#dc.baseMixin+commitHandler) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+  * [.redrawGroup](#dc.baseMixin+redrawGroup) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+  * [.renderGroup](#dc.baseMixin+renderGroup) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
   * [.hasFilterHandler](#dc.baseMixin+hasFilterHandler) ⇒ <code>function</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
   * [.hasFilter](#dc.baseMixin+hasFilter) ⇒ <code>Boolean</code>
   * [.removeFilterHandler](#dc.baseMixin+removeFilterHandler) ⇒ <code>function</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
@@ -632,6 +638,30 @@ events (in particular [dc.redrawAll](#dc.redrawAll); therefore, you only need to
 manually invoke this function if data is manipulated outside of dc's control (for example if
 data is loaded in the background using
 [crossfilter.add](https://github.com/square/crossfilter/wiki/API-Reference#crossfilter_add).
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+commitHandler"></a>
+#### baseMixin.commitHandler ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+Gets/sets the commit handler. If the chart has a commit handler, the handler will be called when
+the chart's filters have changed, in order to send the filter data asynchronously to a server.
+
+Unlike other functions in dc.js, the commit handler is asynchronous. It takes two arguments:
+a flag indicating whether this is a render (true) or a redraw (false), and a callback to be
+triggered once the commit is filtered. The callback has the standard node.js continuation signature
+with error first and result second.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+redrawGroup"></a>
+#### baseMixin.redrawGroup ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+Redraws all charts in the same group as this chart, typically in reaction to a filter
+change. If the chart has a [commitHandler](dc.baseMixin.commitFilter), it will
+be executed and waited for.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+<a name="dc.baseMixin+renderGroup"></a>
+#### baseMixin.renderGroup ⇒ <code>[baseMixin](#dc.baseMixin)</code>
+Renders all charts in the same group as this chart. If the chart has a
+[commitHandler](dc.baseMixin.commitFilter), it will be executed and waited for
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
 <a name="dc.baseMixin+hasFilterHandler"></a>

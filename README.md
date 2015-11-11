@@ -1,7 +1,8 @@
 [![Dependency Status](https://gemnasium.com/dc-js/dc.js.svg)](https://gemnasium.com/dc-js/dc.js)
-[![Build Status](https://api.travis-ci.org/dc-js/dc.js.png?branch=master)](http://travis-ci.org/dc-js/dc.js)
+[![Build Status](https://api.travis-ci.org/dc-js/dc.js.svg?branch=master)](http://travis-ci.org/dc-js/dc.js)
 [![Sauce Status](https://saucelabs.com/buildstatus/sclevine)](https://saucelabs.com/u/sclevine)
-[![NPM Status](https://badge.fury.io/js/dc.png)](http://badge.fury.io/js/dc)
+[![NPM Status](https://badge.fury.io/js/dc.svg)](http://badge.fury.io/js/dc)
+[![Join the chat at https://gitter.im/dc-js/dc.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dc-js/dc.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 dc.js
 =====
@@ -15,9 +16,8 @@ more please visit the [Wiki](https://github.com/dc-js/dc.js/wiki).
 CDN location
 --------------------
 ```
-http://cdnjs.cloudflare.com/ajax/libs/dc/1.7.0/dc.js
-http://cdnjs.cloudflare.com/ajax/libs/dc/1.7.0/dc.min.js
-http://cdnjs.cloudflare.com/ajax/libs/dc/1.7.0/dc.css
+http://cdnjs.cloudflare.com/ajax/libs/dc/1.7.5/dc.min.js
+http://cdnjs.cloudflare.com/ajax/libs/dc/1.7.5/dc.min.css
 ```
 Please do not use github.io as a CDN unless you need the bleeding-edge features.
 
