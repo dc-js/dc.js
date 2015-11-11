@@ -10,7 +10,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 2.0.0-beta.21  
+**Version**: 2.0.0-beta.22  
 **Example**  
 ```js
 // Example chaining
