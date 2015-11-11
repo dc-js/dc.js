@@ -54,10 +54,7 @@ dc.barChart = function (parent, chartGroup) {
 
     _chart.label(function (d) {
         return dc.utils.printSingleValue(d.y0 + d.y);
-    });
-    //_chart.label() sets _renderLabel to true.
-    //Set back to false to disable renderLabel by default
-    _chart.renderLabel(false);
+    }, false);
 
     _chart.plotData = function () {
         var layers = _chart.chartBodyG().selectAll('g.stack')
