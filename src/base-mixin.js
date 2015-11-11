@@ -46,7 +46,7 @@ dc.baseMixin = function (_chart) {
         return _chart.keyAccessor()(d) + ': ' + _chart.valueAccessor()(d);
     };
     var _renderTitle = true;
-    var _controlsUseVisibility = true;
+    var _controlsUseVisibility = false;
 
     var _transitionDuration = 750;
 
@@ -67,6 +67,7 @@ dc.baseMixin = function (_chart) {
         'pretransition');
 
     var _legend;
+    var _commitHandler;
 
     var _filters = [];
     var _filterHandler = function (dimension, filters) {
@@ -527,7 +528,7 @@ dc.baseMixin = function (_chart) {
      * @name controlsUseVisibility
      * @memberof dc.baseMixin
      * @instance
-     * @param {Boolean} useVisibility
+     * @param {Boolean} [controlsUseVisibility=false]
      * @return {Boolean}
      * @return {dc.baseMixin}
      **/
@@ -686,12 +687,72 @@ dc.baseMixin = function (_chart) {
         return result;
     };
 
-    _chart.redrawGroup = function () {
-        dc.redrawAll(_chart.chartGroup());
+    /**
+     * Gets/sets the commit handler. If the chart has a commit handler, the handler will be called when
+     * the chart's filters have changed, in order to send the filter data asynchronously to a server.
+     *
+     * Unlike other functions in dc.js, the commit handler is asynchronous. It takes two arguments:
+     * a flag indicating whether this is a render (true) or a redraw (false), and a callback to be
+     * triggered once the commit is filtered. The callback has the standard node.js continuation signature
+     * with error first and result second.
+     * @name commitHandler
+     * @memberof dc.baseMixin
+     * @instance
+     * @return {dc.baseMixin}
+     */
+    _chart.commitHandler = function (commitHandler) {
+        if (!arguments.length) {
+            return _commitHandler;
+        }
+        _commitHandler = commitHandler;
+        return _chart;
     };
 
+    /**
+     * Redraws all charts in the same group as this chart, typically in reaction to a filter
+     * change. If the chart has a {@link dc.baseMixin.commitFilter commitHandler}, it will
+     * be executed and waited for.
+     * @name redrawGroup
+     * @memberof dc.baseMixin
+     * @instance
+     * @return {dc.baseMixin}
+     */
+    _chart.redrawGroup = function () {
+        if (_commitHandler) {
+            _commitHandler(false, function (error, result) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    dc.redrawAll(_chart.chartGroup());
+                }
+            });
+        } else {
+            dc.redrawAll(_chart.chartGroup());
+        }
+        return _chart;
+    };
+
+    /**
+     * Renders all charts in the same group as this chart. If the chart has a
+     * {@link dc.baseMixin.commitFilter commitHandler}, it will be executed and waited for
+     * @name renderGroup
+     * @memberof dc.baseMixin
+     * @instance
+     * @return {dc.baseMixin}
+     */
     _chart.renderGroup = function () {
-        dc.renderAll(_chart.chartGroup());
+        if (_commitHandler) {
+            _commitHandler(false, function (error, result) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    dc.renderAll(_chart.chartGroup());
+                }
+            });
+        } else {
+            dc.renderAll(_chart.chartGroup());
+        }
+        return _chart;
     };
 
     _chart._invokeFilteredListener = function (f) {
@@ -1129,8 +1190,8 @@ dc.baseMixin = function (_chart) {
     /**
      * Set or get the label function. The chart class will use this function to render labels for each
      * child element in the chart, e.g. slices in a pie chart or bubbles in a bubble chart. Not every
-     * chart supports the label function for example bar chart and line chart do not use this function
-     * at all.
+     * chart supports the label function, for example line chart does not use this function
+     * at all. By default, enables labels; pass false for the second parameter if this is not desired.
      * @name label
      * @memberof dc.baseMixin
      * @instance
@@ -1140,15 +1201,18 @@ dc.baseMixin = function (_chart) {
      * // label function has access to the standard d3 data binding and can get quite complicated
      * chart.label(function(d) { return d.data.key + '(' + Math.floor(d.data.value / all.value() * 100) + '%)'; });
      * @param {Function} [labelFunction]
+     * @param {Boolean} [enableLabels=true]
      * @return {Function}
      * @return {dc.baseMixin}
      */
-    _chart.label = function (labelFunction) {
+    _chart.label = function (labelFunction, enableLabels) {
         if (!arguments.length) {
             return _label;
         }
         _label = labelFunction;
-        _renderLabel = true;
+        if ((enableLabels === undefined) || enableLabels) {
+            _renderLabel = true;
+        }
         return _chart;
     };
 

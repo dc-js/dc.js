@@ -234,6 +234,22 @@ dc.optionalTransition = function (enable, duration, callback, name) {
     }
 };
 
+// See http://stackoverflow.com/a/20773846
+dc.afterTransition = function (transition, callback) {
+    if (transition.empty() || !transition.duration) {
+        callback.call(transition);
+    } else {
+        var n = 0;
+        transition
+            .each(function () { ++n; })
+            .each('end', function () {
+                if (!--n) {
+                    callback.call(transition);
+                }
+            });
+    }
+};
+
 /**
  * @name units
  * @memberof dc
@@ -774,7 +790,7 @@ dc.baseMixin = function (_chart) {
         return _chart.keyAccessor()(d) + ': ' + _chart.valueAccessor()(d);
     };
     var _renderTitle = true;
-    var _controlsUseVisibility = true;
+    var _controlsUseVisibility = false;
 
     var _transitionDuration = 750;
 
@@ -795,6 +811,7 @@ dc.baseMixin = function (_chart) {
         'pretransition');
 
     var _legend;
+    var _commitHandler;
 
     var _filters = [];
     var _filterHandler = function (dimension, filters) {
@@ -1255,7 +1272,7 @@ dc.baseMixin = function (_chart) {
      * @name controlsUseVisibility
      * @memberof dc.baseMixin
      * @instance
-     * @param {Boolean} useVisibility
+     * @param {Boolean} [controlsUseVisibility=false]
      * @return {Boolean}
      * @return {dc.baseMixin}
      **/
@@ -1414,12 +1431,72 @@ dc.baseMixin = function (_chart) {
         return result;
     };
 
-    _chart.redrawGroup = function () {
-        dc.redrawAll(_chart.chartGroup());
+    /**
+     * Gets/sets the commit handler. If the chart has a commit handler, the handler will be called when
+     * the chart's filters have changed, in order to send the filter data asynchronously to a server.
+     *
+     * Unlike other functions in dc.js, the commit handler is asynchronous. It takes two arguments:
+     * a flag indicating whether this is a render (true) or a redraw (false), and a callback to be
+     * triggered once the commit is filtered. The callback has the standard node.js continuation signature
+     * with error first and result second.
+     * @name commitHandler
+     * @memberof dc.baseMixin
+     * @instance
+     * @return {dc.baseMixin}
+     */
+    _chart.commitHandler = function (commitHandler) {
+        if (!arguments.length) {
+            return _commitHandler;
+        }
+        _commitHandler = commitHandler;
+        return _chart;
     };
 
+    /**
+     * Redraws all charts in the same group as this chart, typically in reaction to a filter
+     * change. If the chart has a {@link dc.baseMixin.commitFilter commitHandler}, it will
+     * be executed and waited for.
+     * @name redrawGroup
+     * @memberof dc.baseMixin
+     * @instance
+     * @return {dc.baseMixin}
+     */
+    _chart.redrawGroup = function () {
+        if (_commitHandler) {
+            _commitHandler(false, function (error, result) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    dc.redrawAll(_chart.chartGroup());
+                }
+            });
+        } else {
+            dc.redrawAll(_chart.chartGroup());
+        }
+        return _chart;
+    };
+
+    /**
+     * Renders all charts in the same group as this chart. If the chart has a
+     * {@link dc.baseMixin.commitFilter commitHandler}, it will be executed and waited for
+     * @name renderGroup
+     * @memberof dc.baseMixin
+     * @instance
+     * @return {dc.baseMixin}
+     */
     _chart.renderGroup = function () {
-        dc.renderAll(_chart.chartGroup());
+        if (_commitHandler) {
+            _commitHandler(false, function (error, result) {
+                if (error) {
+                    console.log(error);
+                } else {
+                    dc.renderAll(_chart.chartGroup());
+                }
+            });
+        } else {
+            dc.renderAll(_chart.chartGroup());
+        }
+        return _chart;
     };
 
     _chart._invokeFilteredListener = function (f) {
@@ -1857,8 +1934,8 @@ dc.baseMixin = function (_chart) {
     /**
      * Set or get the label function. The chart class will use this function to render labels for each
      * child element in the chart, e.g. slices in a pie chart or bubbles in a bubble chart. Not every
-     * chart supports the label function for example bar chart and line chart do not use this function
-     * at all.
+     * chart supports the label function, for example line chart does not use this function
+     * at all. By default, enables labels; pass false for the second parameter if this is not desired.
      * @name label
      * @memberof dc.baseMixin
      * @instance
@@ -1868,15 +1945,18 @@ dc.baseMixin = function (_chart) {
      * // label function has access to the standard d3 data binding and can get quite complicated
      * chart.label(function(d) { return d.data.key + '(' + Math.floor(d.data.value / all.value() * 100) + '%)'; });
      * @param {Function} [labelFunction]
+     * @param {Boolean} [enableLabels=true]
      * @return {Function}
      * @return {dc.baseMixin}
      */
-    _chart.label = function (labelFunction) {
+    _chart.label = function (labelFunction, enableLabels) {
         if (!arguments.length) {
             return _label;
         }
         _label = labelFunction;
-        _renderLabel = true;
+        if ((enableLabels === undefined) || enableLabels) {
+            _renderLabel = true;
+        }
         return _chart;
     };
 
@@ -2803,7 +2883,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     function compareDomains (d1, d2) {
         return !d1 || !d2 || d1.length !== d2.length ||
-            d1.some(function (elem, i) { return elem.toString() !== d2[i].toString(); });
+            d1.some(function (elem, i) { return (elem && d2[i]) ? elem.toString() !== d2[i].toString() : elem === d2[i]; });
     }
 
     function prepareXAxis (g, render) {
@@ -4205,8 +4285,16 @@ dc.bubbleMixin = function (_chart) {
         return _chart.label()(d);
     };
 
+    var shouldLabel = function (d) {
+        return (_chart.bubbleR(d) > _minRadiusWithLabel);
+    };
+
     var labelOpacity = function (d) {
-        return (_chart.bubbleR(d) > _minRadiusWithLabel) ? 1 : 0;
+        return shouldLabel(d) ? 1 : 0;
+    };
+
+    var labelPointerEvent = function (d) {
+        return shouldLabel(d) ? 'all' : 'none';
     };
 
     _chart._doRenderLabel = function (bubbleGEnter) {
@@ -4222,6 +4310,7 @@ dc.bubbleMixin = function (_chart) {
 
             label
                 .attr('opacity', 0)
+                .attr('pointer-events', labelPointerEvent)
                 .text(labelFunction);
             dc.transition(label, _chart.transitionDuration())
                 .attr('opacity', labelOpacity);
@@ -4231,6 +4320,7 @@ dc.bubbleMixin = function (_chart) {
     _chart.doUpdateLabels = function (bubbleGEnter) {
         if (_chart.renderLabel()) {
             var labels = bubbleGEnter.selectAll('text')
+                .attr('pointer-events', labelPointerEvent)
                 .text(labelFunction);
             dc.transition(labels, _chart.transitionDuration())
                 .attr('opacity', labelOpacity);
@@ -4935,6 +5025,7 @@ dc.pieChart = function (parent, chartGroup) {
 dc.barChart = function (parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
     var DEFAULT_GAP_BETWEEN_BARS = 2;
+    var LABEL_PADDING = 3;
 
     var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
 
@@ -4959,6 +5050,10 @@ dc.barChart = function (parent, chartGroup) {
         return _chart._render();
     });
 
+    _chart.label(function (d) {
+        return dc.utils.printSingleValue(d.y0 + d.y);
+    }, false);
+
     _chart.plotData = function () {
         var layers = _chart.chartBodyG().selectAll('g.stack')
             .data(_chart.data());
@@ -4972,15 +5067,60 @@ dc.barChart = function (parent, chartGroup) {
                 return 'stack ' + '_' + i;
             });
 
+        var last = layers.size() - 1;
         layers.each(function (d, i) {
             var layer = d3.select(this);
 
             renderBars(layer, i, d);
+
+            if (_chart.renderLabel() && last === i) {
+                renderLabels(layer, i, d);
+            }
         });
     };
 
     function barHeight (d) {
         return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
+    }
+
+    function renderLabels (layer, layerIndex, d) {
+        var labels = layer.selectAll('text.barLabel')
+            .data(d.values, dc.pluck('x'));
+
+        labels.enter()
+            .append('text')
+            .attr('class', 'barLabel')
+            .attr('text-anchor', 'middle');
+
+        if (_chart.isOrdinal()) {
+            labels.on('click', _chart.onClick);
+            labels.attr('cursor', 'pointer');
+        }
+
+        dc.transition(labels, _chart.transitionDuration())
+            .attr('x', function (d) {
+                var x = _chart.x()(d.x);
+                if (!_centerBar) {
+                    x += _barWidth / 2;
+                }
+                return dc.utils.safeNumber(x);
+            })
+            .attr('y', function (d) {
+                var y = _chart.y()(d.y + d.y0);
+
+                if (d.y < 0) {
+                    y -= barHeight(d);
+                }
+
+                return dc.utils.safeNumber(y - LABEL_PADDING);
+            })
+            .text(function (d) {
+                return _chart.label()(d);
+            });
+
+        dc.transition(labels.exit(), _chart.transitionDuration())
+            .attr('height', 0)
+            .remove();
     }
 
     function renderBars (layer, layerIndex, d) {
@@ -6466,6 +6606,7 @@ dc.bubbleChart = function (parent, chartGroup) {
     var _chart = dc.bubbleMixin(dc.coordinateGridMixin({}));
 
     var _elasticRadius = false;
+    var _sortBubbleSize = false;
 
     _chart.transitionDuration(750);
 
@@ -6491,6 +6632,24 @@ dc.bubbleChart = function (parent, chartGroup) {
         return _chart;
     };
 
+    /**
+     * Turn on or off the bubble sorting feature, or return the value of the flag. If enabled,
+     * bubbles will be sorted by their radius, with smaller bubbles in front.
+     * @name sortBubbleSize
+     * @memberof dc.bubbleChart
+     * @instance
+     * @param {Boolean} [sortBubbleSize=false]
+     * @return {Boolean}
+     * @return {dc.bubbleChart}
+     */
+    _chart.sortBubbleSize = function (sortBubbleSize) {
+        if (!arguments.length) {
+            return _sortBubbleSize;
+        }
+        _sortBubbleSize = sortBubbleSize;
+        return _chart;
+    };
+
     _chart.plotData = function () {
         if (_elasticRadius) {
             _chart.r().domain([_chart.rMin(), _chart.rMax()]);
@@ -6498,8 +6657,18 @@ dc.bubbleChart = function (parent, chartGroup) {
 
         _chart.r().range([_chart.MIN_RADIUS, _chart.xAxisLength() * _chart.maxBubbleRelativeSize()]);
 
+        var data = _chart.data();
+        if (_sortBubbleSize) {
+            // sort descending so smaller bubbles are on top
+            var radiusAccessor = _chart.radiusValueAccessor();
+            data.sort(function (a, b) { return d3.descending(radiusAccessor(a), radiusAccessor(b)); });
+        }
         var bubbleG = _chart.chartBodyG().selectAll('g.' + _chart.BUBBLE_NODE_CLASS)
-            .data(_chart.data(), function (d) { return d.key; });
+                .data(data, function (d) { return d.key; });
+        if (_sortBubbleSize) {
+            // Call order here to update dom order based on sort
+            bubbleG.order();
+        }
 
         renderNodes(bubbleG);
 
