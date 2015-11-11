@@ -38,6 +38,7 @@ chart.width(300)
     * [.svg](#dc.baseMixin+svg) ⇒ <code>SVGElement</code> &#124; <code>d3.selection</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
     * [.resetSvg](#dc.baseMixin+resetSvg) ⇒ <code>SVGElement</code>
     * [.filterPrinter](#dc.baseMixin+filterPrinter) ⇒ <code>function</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
+    * [.controlsUseVisibility](#dc.baseMixin+controlsUseVisibility) ⇒ <code>Boolean</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
     * [.turnOnControls](#dc.baseMixin+turnOnControls) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
     * [.turnOffControls](#dc.baseMixin+turnOffControls) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
     * [.transitionDuration](#dc.baseMixin+transitionDuration) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
@@ -192,6 +193,7 @@ chart.width(300)
     * [.order](#dc.dataGrid+order) ⇒ <code>function</code> &#124; <code>[dataGrid](#dc.dataGrid)</code>
   * [.bubbleChart](#dc.bubbleChart) ⇒ <code>[bubbleChart](#dc.bubbleChart)</code>
     * [.elasticRadius](#dc.bubbleChart+elasticRadius) ⇒ <code>Boolean</code> &#124; <code>[bubbleChart](#dc.bubbleChart)</code>
+    * [.sortBubbleSize](#dc.bubbleChart+sortBubbleSize) ⇒ <code>Boolean</code> &#124; <code>[bubbleChart](#dc.bubbleChart)</code>
   * [.compositeChart](#dc.compositeChart) ⇒ <code>[compositeChart](#dc.compositeChart)</code>
     * [.useRightAxisGridLines](#dc.compositeChart+useRightAxisGridLines) ⇒ <code>Boolean</code> &#124; <code>[compositeChart](#dc.compositeChart)</code>
     * [.childOptions](#dc.compositeChart+childOptions) ⇒ <code>Object</code> &#124; <code>[compositeChart](#dc.compositeChart)</code>
@@ -293,6 +295,7 @@ and available on all chart implementations in the `dc` library.
   * [.svg](#dc.baseMixin+svg) ⇒ <code>SVGElement</code> &#124; <code>d3.selection</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
   * [.resetSvg](#dc.baseMixin+resetSvg) ⇒ <code>SVGElement</code>
   * [.filterPrinter](#dc.baseMixin+filterPrinter) ⇒ <code>function</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
+  * [.controlsUseVisibility](#dc.baseMixin+controlsUseVisibility) ⇒ <code>Boolean</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
   * [.turnOnControls](#dc.baseMixin+turnOnControls) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
   * [.turnOffControls](#dc.baseMixin+turnOffControls) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
   * [.transitionDuration](#dc.baseMixin+transitionDuration) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
@@ -592,6 +595,17 @@ single value and ranged filters.
 | Param | Type | Default |
 | --- | --- | --- |
 | [filterPrinterFunction] | <code>function</code> | <code>dc.printers.filter</code> | 
+
+<a name="dc.baseMixin+controlsUseVisibility"></a>
+#### baseMixin.controlsUseVisibility ⇒ <code>Boolean</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
+If set, use the `visibility` attribute instead of the `display` attribute for showing/hiding
+chart reset and filter controls, for less disruption to the layout.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [controlsUseVisibility] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="dc.baseMixin+turnOnControls"></a>
 #### baseMixin.turnOnControls ⇒ <code>[baseMixin](#dc.baseMixin)</code>
@@ -929,14 +943,15 @@ chart.valueAccessor(function(p) { return p.value.percentageGain; });
 #### baseMixin.label ⇒ <code>function</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
 Set or get the label function. The chart class will use this function to render labels for each
 child element in the chart, e.g. slices in a pie chart or bubbles in a bubble chart. Not every
-chart supports the label function for example bar chart and line chart do not use this function
-at all.
+chart supports the label function, for example line chart does not use this function
+at all. By default, enables labels; pass false for the second parameter if this is not desired.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
 
-| Param | Type |
-| --- | --- |
-| [labelFunction] | <code>function</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [labelFunction] | <code>function</code> |  | 
+| [enableLabels] | <code>Boolean</code> | <code>true</code> | 
 
 **Example**  
 ```js
@@ -3025,6 +3040,11 @@ var bubbleChart1 = dc.bubbleChart('#chart-container1');
 // create a bubble chart under #chart-container2 element using chart group A
 var bubbleChart2 = dc.bubbleChart('#chart-container2', 'chartGroupA');
 ```
+
+* [.bubbleChart](#dc.bubbleChart) ⇒ <code>[bubbleChart](#dc.bubbleChart)</code>
+  * [.elasticRadius](#dc.bubbleChart+elasticRadius) ⇒ <code>Boolean</code> &#124; <code>[bubbleChart](#dc.bubbleChart)</code>
+  * [.sortBubbleSize](#dc.bubbleChart+sortBubbleSize) ⇒ <code>Boolean</code> &#124; <code>[bubbleChart](#dc.bubbleChart)</code>
+
 <a name="dc.bubbleChart+elasticRadius"></a>
 #### bubbleChart.elasticRadius ⇒ <code>Boolean</code> &#124; <code>[bubbleChart](#dc.bubbleChart)</code>
 Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
@@ -3035,6 +3055,17 @@ feature is turned on, then bubble radii will be automatically rescaled to fit th
 | Param | Type | Default |
 | --- | --- | --- |
 | [elasticRadius] | <code>Boolean</code> | <code>false</code> | 
+
+<a name="dc.bubbleChart+sortBubbleSize"></a>
+#### bubbleChart.sortBubbleSize ⇒ <code>Boolean</code> &#124; <code>[bubbleChart](#dc.bubbleChart)</code>
+Turn on or off the bubble sorting feature, or return the value of the flag. If enabled,
+bubbles will be sorted by their radius, with smaller bubbles in front.
+
+**Kind**: instance property of <code>[bubbleChart](#dc.bubbleChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [sortBubbleSize] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="dc.compositeChart"></a>
 ### dc.compositeChart ⇒ <code>[compositeChart](#dc.compositeChart)</code>

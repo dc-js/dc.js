@@ -1267,9 +1267,14 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-     #### .controlsUseVisibility
-     If set, use the `visibility` attribute instead of the `display` attribute, for less disruption
-     to layout. Default: false.
+     * If set, use the `visibility` attribute instead of the `display` attribute for showing/hiding
+     * chart reset and filter controls, for less disruption to the layout.
+     * @name controlsUseVisibility
+     * @memberof dc.baseMixin
+     * @instance
+     * @param {Boolean} [controlsUseVisibility=false]
+     * @return {Boolean}
+     * @return {dc.baseMixin}
      **/
     _chart.controlsUseVisibility = function (_) {
         if (!arguments.length) {
