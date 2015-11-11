@@ -52,7 +52,7 @@ dc.barChart = function (parent, chartGroup) {
         return _chart._render();
     });
 
-    _chart.label(function(d) {
+    _chart.label(function (d) {
         return dc.utils.printSingleValue(d.y0 + d.y);
     });
     //_chart.label() sets _renderLabel to true.
@@ -88,29 +88,29 @@ dc.barChart = function (parent, chartGroup) {
         return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
     }
 
-    function renderLabels(layer, layerIndex, d) {
+    function renderLabels (layer, layerIndex, d) {
         var labels = layer.selectAll('text.barLabel')
             .data(d.values, dc.pluck('x'));
 
         labels.enter()
             .append('text')
             .attr('class', 'barLabel')
-            .attr("text-anchor", "middle")
+            .attr('text-anchor', 'middle');
 
         if (_chart.isOrdinal()) {
             labels.on('click', _chart.onClick);
-            labels.attr("cursor", "pointer");
+            labels.attr('cursor', 'pointer');
         }
 
         dc.transition(labels, _chart.transitionDuration())
-            .attr('x', function(d) {
+            .attr('x', function (d) {
                 var x = _chart.x()(d.x);
                 if (!_centerBar) {
                     x += _barWidth / 2;
                 }
                 return dc.utils.safeNumber(x);
             })
-            .attr('y', function(d) {
+            .attr('y', function (d) {
                 var y = _chart.y()(d.y + d.y0);
 
                 if (d.y < 0) {

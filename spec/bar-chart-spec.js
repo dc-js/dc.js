@@ -79,15 +79,15 @@ describe('dc.barChart', function () {
             it('should generate labels with positions corresponding to their data', function () {
                 expect(nthStack(0).nthLabel(0).attr('x')).toBeWithinDelta(405, 1);
                 expect(nthStack(0).nthLabel(0).attr('y')).toBeWithinDelta(104, 1);
-                expect(nthStack(0).nthLabel(0).text()).toBe("1");
+                expect(nthStack(0).nthLabel(0).text()).toBe('1');
 
                 expect(nthStack(0).nthLabel(3).attr('x')).toBeWithinDelta(509, 1);
                 expect(nthStack(0).nthLabel(3).attr('y')).toBeWithinDelta(104, 1);
-                expect(nthStack(0).nthLabel(3).text()).toBe("1");
+                expect(nthStack(0).nthLabel(3).text()).toBe('1');
 
                 expect(nthStack(0).nthLabel(5).attr('x')).toBeWithinDelta(620, 1);
                 expect(nthStack(0).nthLabel(5).attr('y')).toBeWithinDelta(50, 1);
-                expect(nthStack(0).nthLabel(5).text()).toBe("2");
+                expect(nthStack(0).nthLabel(5).text()).toBe('2');
             });
         });
 
@@ -380,9 +380,9 @@ describe('dc.barChart', function () {
                 });
 
                 it('should generate labels with total value of stack', function () {
-                    expect(nthStack(2).nthLabel(0).text()).toBe("48");
-                    expect(nthStack(2).nthLabel(3).text()).toBe("51");
-                    expect(nthStack(2).nthLabel(5).text()).toBe("92");
+                    expect(nthStack(2).nthLabel(0).text()).toBe('48');
+                    expect(nthStack(2).nthLabel(3).text()).toBe('51');
+                    expect(nthStack(2).nthLabel(5).text()).toBe('92');
                 });
 
                 it('should stack the bars', function () {
@@ -1200,7 +1200,7 @@ describe('dc.barChart', function () {
 
         stack.nthLabel = function (n) {
             return d3.select(this.selectAll('text.barLabel')[0][n]);
-        }
+        };
 
         stack.forEachBar = function (assertions) {
             this.selectAll('rect.bar').each(function (d) {

@@ -1186,7 +1186,7 @@ dc.baseMixin = function (_chart) {
      * Set or get the label function. The chart class will use this function to render labels for each
      * child element in the chart, e.g. slices in a pie chart or bubbles in a bubble chart. Not every
      * chart supports the label function, for example line chart does not use this function
-     * at all. 
+     * at all.
      * @name label
      * @memberof dc.baseMixin
      * @instance
