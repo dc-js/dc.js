@@ -1407,7 +1407,7 @@ dc.baseMixin = function (_chart) {
      * @return {dc.baseMixin}
      */
     _chart.commitHandler = function (commitHandler) {
-        if(!arguments.length) {
+        if (!arguments.length) {
             return _commitHandler;
         }
         _commitHandler = commitHandler;
@@ -1424,9 +1424,9 @@ dc.baseMixin = function (_chart) {
      * @return {dc.baseMixin}
      */
     _chart.redrawGroup = function () {
-        if(_commitHandler) {
-            _commitHandler(false, function(error, result) {
-                if(error) {
+        if (_commitHandler) {
+            _commitHandler(false, function (error, result) {
+                if (error) {
                     console.log(error);
                 } else {
                     dc.redrawAll(_chart.chartGroup());
@@ -1447,9 +1447,9 @@ dc.baseMixin = function (_chart) {
      * @return {dc.baseMixin}
      */
     _chart.renderGroup = function () {
-        if(_commitHandler) {
-            _commitHandler(false, function(error, result) {
-                if(error) {
+        if (_commitHandler) {
+            _commitHandler(false, function (error, result) {
+                if (error) {
                     console.log(error);
                 } else {
                     dc.renderAll(_chart.chartGroup());
@@ -2842,7 +2842,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     function compareDomains (d1, d2) {
         return !d1 || !d2 || d1.length !== d2.length ||
-            d1.some(function (elem, i) { return elem.toString() !== d2[i].toString(); });
+            d1.some(function (elem, i) { return (elem && d2[i]) ? elem.toString() !== d2[i].toString() : elem === d2[i]; });
     }
 
     function prepareXAxis (g, render) {

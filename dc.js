@@ -774,6 +774,7 @@ dc.baseMixin = function (_chart) {
         return _chart.keyAccessor()(d) + ': ' + _chart.valueAccessor()(d);
     };
     var _renderTitle = true;
+    var _controlsUseVisibility = false;
 
     var _transitionDuration = 750;
 
@@ -1250,6 +1251,19 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
+     #### .controlsUseVisibility
+     If set, use the `visibility` attribute instead of the `display` attribute, for less disruption
+     to layout. Default: false.
+     **/
+    _chart.controlsUseVisibility = function (_) {
+        if (!arguments.length) {
+            return _controlsUseVisibility;
+        }
+        _controlsUseVisibility = _;
+        return _chart;
+    };
+
+    /**
      * Turn on optional control elements within the root element. dc currently supports the
      * following html control elements.
      * * root.selectAll('.reset') - elements are turned on if the chart has an active filter. This type
@@ -1265,8 +1279,9 @@ dc.baseMixin = function (_chart) {
      */
     _chart.turnOnControls = function () {
         if (_root) {
-            _chart.selectAll('.reset').style('display', null);
-            _chart.selectAll('.filter').text(_filterPrinter(_chart.filters())).style('display', null);
+            var attribute = _chart.controlsUseVisibility() ? 'visibility' : 'display';
+            _chart.selectAll('.reset').style(attribute, null);
+            _chart.selectAll('.filter').text(_filterPrinter(_chart.filters())).style(attribute, null);
         }
         return _chart;
     };
@@ -1281,8 +1296,10 @@ dc.baseMixin = function (_chart) {
      */
     _chart.turnOffControls = function () {
         if (_root) {
-            _chart.selectAll('.reset').style('display', 'none');
-            _chart.selectAll('.filter').style('display', 'none').text(_chart.filter());
+            var attribute = _chart.controlsUseVisibility() ? 'visibility' : 'display';
+            var value = _chart.controlsUseVisibility() ? 'hidden' : 'none';
+            _chart.selectAll('.reset').style(attribute, value);
+            _chart.selectAll('.filter').style(attribute, value).text(_chart.filter());
         }
         return _chart;
     };
@@ -1407,7 +1424,7 @@ dc.baseMixin = function (_chart) {
      * @return {dc.baseMixin}
      */
     _chart.commitHandler = function (commitHandler) {
-        if(!arguments.length) {
+        if (!arguments.length) {
             return _commitHandler;
         }
         _commitHandler = commitHandler;
@@ -1424,9 +1441,9 @@ dc.baseMixin = function (_chart) {
      * @return {dc.baseMixin}
      */
     _chart.redrawGroup = function () {
-        if(_commitHandler) {
-            _commitHandler(false, function(error, result) {
-                if(error) {
+        if (_commitHandler) {
+            _commitHandler(false, function (error, result) {
+                if (error) {
                     console.log(error);
                 } else {
                     dc.redrawAll(_chart.chartGroup());
@@ -1447,9 +1464,9 @@ dc.baseMixin = function (_chart) {
      * @return {dc.baseMixin}
      */
     _chart.renderGroup = function () {
-        if(_commitHandler) {
-            _commitHandler(false, function(error, result) {
-                if(error) {
+        if (_commitHandler) {
+            _commitHandler(false, function (error, result) {
+                if (error) {
                     console.log(error);
                 } else {
                     dc.renderAll(_chart.chartGroup());
@@ -2842,7 +2859,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     function compareDomains (d1, d2) {
         return !d1 || !d2 || d1.length !== d2.length ||
-            d1.some(function (elem, i) { return elem.toString() !== d2[i].toString(); });
+            d1.some(function (elem, i) { return (elem && d2[i]) ? elem.toString() !== d2[i].toString() : elem === d2[i]; });
     }
 
     function prepareXAxis (g, render) {
