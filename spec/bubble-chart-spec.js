@@ -250,6 +250,37 @@ describe('dc.bubbleChart', function () {
                 }
             });
         });
+
+        describe('with bubble sorting', function () {
+            beforeEach(function () {
+                chart
+                    .sortBubbleSize(true)
+                    .render();
+            });
+
+            it('creates correct label for each bubble', function () {
+                chart.selectAll('g.node title').each(function (d, i) {
+                    if (i === 0) {
+                        expect(d3.select(this).text()).toBe('T: {count:2,value:77}');
+                    }
+                    if (i === 1) {
+                        expect(d3.select(this).text()).toBe('F: {count:0,value:0}');
+                    }
+                });
+            });
+
+            it('fills bubbles with correct colors', function () {
+                chart.selectAll('circle.bubble').each(function (d, i) {
+                    if (i === 0) {
+                        expect(d3.select(this).attr('fill')).toBe('#ff4040');
+                    }
+                    if (i === 1) {
+                        expect(d3.select(this).attr('fill')).toBe('#a60000');
+                    }
+                });
+            });
+        });
+
     });
 
     describe('with no filter', function () {
@@ -400,13 +431,12 @@ describe('dc.bubbleChart', function () {
 
     describe('with minimum radius', function () {
         beforeEach(function () {
-
             chart
-                .minRadius(1);
+                .minRadius(1)
+                .render();
         });
 
         it('shows smaller bubbles', function () {
-            chart.render();
             chart.selectAll('circle.bubble').each(function (d, i) {
                 if (i === 0) {
                     expect(Number(d3.select(this).attr('r'))).toBeCloseTo(41.83333333333333,3);

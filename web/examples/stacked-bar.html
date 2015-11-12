@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>dc.js - Area Chart Example</title>
+    <title>dc.js - Stacked Bar Example</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
   </head>
@@ -48,7 +48,8 @@
               .clipPadding(10)
               .yAxisLabel("This is the Y Axis!")
               .dimension(runDimension)
-              .group(speedSumGroup, "1", sel_stack('1'));
+              .group(speedSumGroup, "1", sel_stack('1'))
+              .renderLabel(true);
 
           for(var i = 2; i<6; ++i)
               chart.stack(speedSumGroup, ''+i, sel_stack(i));

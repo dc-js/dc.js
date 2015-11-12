@@ -52,8 +52,8 @@ describe('dc.pieChart', function () {
 
     function buildChart (id) {
         var div = appendChartID(id);
-        div.append('a').attr('class', 'reset').style('visibility', 'hidden');
-        div.append('span').attr('class', 'filter').style('visibility', 'hidden');
+        div.append('a').attr('class', 'reset').style('display', 'none');
+        div.append('span').attr('class', 'filter').style('display', 'none');
         var chart = dc.pieChart('#' + id);
         chart.dimension(valueDimension).group(valueGroup)
             .width(width)
@@ -164,13 +164,13 @@ describe('dc.pieChart', function () {
             });
         });
         it('reset link hidden after init rendering', function () {
-            expect(chart.select('a.reset').style('visibility')).toEqual('hidden');
+            expect(chart.select('a.reset').style('display')).toEqual('none');
         });
         it('filter printer should be set', function () {
             expect(chart.filterPrinter()).not.toBeNull();
         });
         it('filter info should be hidden after init rendering', function () {
-            expect(chart.select('span.filter').style('visibility')).toEqual('hidden');
+            expect(chart.select('span.filter').style('display')).toEqual('none');
         });
         describe('center positioning', function () {
             beforeEach(function () {
@@ -291,12 +291,12 @@ describe('dc.pieChart', function () {
             });
             it('reset link shown after slice selection', function () {
                 chart.filter('66');
-                expect(chart.select('a.reset').style('visibility')).not.toEqual('hidden');
+                expect(chart.select('a.reset').style('display')).not.toEqual('none');
             });
             it('filter info shown after slice selection', function () {
                 chart.filter(null);
                 chart.filter('66');
-                expect(chart.select('span.filter').style('visibility')).not.toEqual('hidden');
+                expect(chart.select('span.filter').style('display')).not.toEqual('none');
                 expect(chart.select('span.filter').text()).toEqual('66');
             });
             it('should remove highlight if no slice selected', function () {
