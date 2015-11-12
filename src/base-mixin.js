@@ -131,7 +131,7 @@ dc.baseMixin = function (_chart) {
      */
     _chart.height = function (height) {
         if (!arguments.length) {
-            return _height(_root.node());
+            return _root.node().getBoundingClientRect().height;
         }
         _height = d3.functor(height || _defaultHeight);
         return _chart;
@@ -156,7 +156,7 @@ dc.baseMixin = function (_chart) {
      */
     _chart.width = function (width) {
         if (!arguments.length) {
-            return _width(_root.node());
+            return _root.node().getBoundingClientRect().width;
         }
         _width = d3.functor(width || _defaultWidth);
         return _chart;
@@ -490,10 +490,10 @@ dc.baseMixin = function (_chart) {
     };
 
     function sizeSvg () {
-        if (_svg) {
-            _svg
-                .attr('width', _chart.width())
-                .attr('height', _chart.height());
+        if (_chart.root()) {
+            _chart.root()
+                .style('width', _chart.width())
+                .style('height', _chart.height());
         }
     }
 
@@ -1332,7 +1332,6 @@ dc.baseMixin = function (_chart) {
     };
 
     _chart._wrapLabels = function (texts, width) {
-        var maxLine = 0;
         var lineHeight = 1.1;
 
         texts.each(function() {
@@ -1343,38 +1342,43 @@ dc.baseMixin = function (_chart) {
             var lineNumber = 0;
             var x = text.attr('x') || 0;
             var y = text.attr('y') || 0;
-            var dy = parseFloat(text.attr('dy'));
+            var dy = parseFloat(text.attr('dy')) || 0;
             var tspan = text.text(null).append('tspan').attr('x', x).attr('y', y).attr('dy', dy + 'em');
 
             while (word = words.pop()) {
                 line.push(word);
                 tspan.text(line.join(' '));
 
-                // if no more lines or words then we have reached the end
-                if (line.length === 1 && words.length === 0) {
-                    break;
-                }
-
                 if (tspan.node().getComputedTextLength() > width) {
-                    if (line.length === 1) {
-                        line = [];
-                    } else {
-                        line.pop();
-                        tspan.text(line.join(' '));
+                    line.pop();
+
+                    if (line.length <= 1) {
+                        var t = line.length === 1 ? line[0] : word;
+                        tspan.text(t);
+
+                        while(tspan.node().getComputedTextLength() > width) {
+                            tspan.text(t + '...');
+                            t = t.substring(0, t.length - 1);
+                        }
+                    }
+
+                    if (line.length > 0) {
+                        if (line.length > 1) {
+                            tspan.text(line.join(' '));
+                        }
+
                         line = [word];
                     }
 
+                    // if no more lines or words then we have reached the end
+                    if (line.length === 0 && words.length === 0) {
+                        break;
+                    }
 
                     tspan = text.append('tspan').attr('x', x).attr('y', y).attr('dy', ++lineNumber * lineHeight + dy + 'em').text(word);
-
-                    if (lineNumber > maxLine) {
-                        maxLine = lineNumber;
-                    }
                 }
             }
         });
-
-        _chart.xLabelPadding = maxLine * lineHeight * 10;
     };
 
     /**
@@ -1461,6 +1465,14 @@ dc.baseMixin = function (_chart) {
         _listeners.on(event, listener);
         return _chart;
     };
+
+    window.addEventListener('resize', function() {
+        if (_chart.rescale) {
+            _chart.rescale();
+        }
+
+        _chart.redraw();
+    });
 
     return _chart;
 };
