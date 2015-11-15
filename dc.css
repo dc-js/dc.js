@@ -1,5 +1,6 @@
-div.dc-chart {
-    float: left;
+.dc-chart svg {
+    width: 100%;
+    height: 100%;
 }
 
 .dc-chart rect.bar {
