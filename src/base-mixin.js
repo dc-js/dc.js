@@ -17,6 +17,7 @@ dc.baseMixin = function (_chart) {
     var _anchor;
     var _root;
     var _svg;
+    var _g;
     var _isChild;
 
     var _minWidth = 200;
@@ -134,7 +135,10 @@ dc.baseMixin = function (_chart) {
         if (!arguments.length) {
             return _root.node().getBoundingClientRect().height;
         }
+
         _height = d3.functor(height || _defaultHeight);
+        _root.style('height', _height);
+
         return _chart;
     };
 
@@ -159,7 +163,10 @@ dc.baseMixin = function (_chart) {
         if (!arguments.length) {
             return _root.node().getBoundingClientRect().width;
         }
+
         _width = d3.functor(width || _defaultWidth);
+        _root.style('width', _width);
+
         return _chart;
     };
 
@@ -633,10 +640,6 @@ dc.baseMixin = function (_chart) {
         }
 
         var result = _chart._doRender();
-
-        if (_legend) {
-            _legend.render();
-        }
 
         _chart._activateRenderlets('postRender');
 
@@ -1398,6 +1401,10 @@ dc.baseMixin = function (_chart) {
     _chart._wrapLabels = function (texts, width) {
         var lineHeight = 1.1;
 
+        if (width <= 0) {
+            return false;
+        }
+
         texts.each(function() {
             var text = d3.select(this);
             var words = text.text().split(/\s+/).reverse();
@@ -1443,6 +1450,25 @@ dc.baseMixin = function (_chart) {
                 }
             }
         });
+    };
+
+    /**
+     * Get or set the root g element. This method is usually used to retrieve the g element in order to
+     * overlay custom svg drawing programatically. **Caution**: The root g element is usually generated
+     * by dc.js internals, and resetting it might produce unpredictable result.
+     * @name g
+     * @memberof dc.coordinateGridMixin
+     * @instance
+     * @param {SVGElement} [gElement]
+     * @return {SVGElement}
+     * @return {dc.coordinateGridMixin}
+     */
+    _chart.g = function (gElement) {
+        if (!arguments.length) {
+            return _chart._g;
+        }
+        _chart._g = gElement;
+        return _chart;
     };
 
     /**
@@ -1531,6 +1557,11 @@ dc.baseMixin = function (_chart) {
     };
 
     window.addEventListener('resize', function() {
+        // if the chart is a sub chart then don't do anything
+        if (!_chart.g() || _chart.g().node().offsetParent === null || _chart.g().node().classList.contains('sub')) {
+            return false;
+        }
+
         if (_chart.rescale) {
             _chart.rescale();
         }

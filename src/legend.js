@@ -12,21 +12,85 @@
  * @return {dc.legend}
  */
 dc.legend = function () {
-    var LABEL_GAP = 2;
+    var LEGEND_GAP = 5;
+    var LABEL_GAP = 4;
+    var LEGEND_CLASS = 'dc-legend';
+    var LEGEND_ITEM_CLASS = 'dc-legend-item';
 
-    var _legend = {},
-        _parent,
-        _x = 0,
-        _y = 0,
-        _itemHeight = 12,
-        _gap = 5,
-        _horizontal = false,
-        _legendWidth = 560,
-        _itemWidth = 70,
-        _autoItemWidth = false,
-        _legendText = dc.pluck('name');
-
+    var _legend = {};
+    var _parent;
+    var _itemHeight = 12;
+    var _position = 'bottom';
+    var _legendText = dc.pluck('name');
     var _g;
+
+    function getInfo() {
+        var x = 0;
+        var y = 0;
+        var horizontal = false;
+
+        switch(_position) {
+            case 'top':
+                x = _parent.width() / 2;
+                y = LEGEND_GAP;
+                horizontal = true;
+                break;
+
+            case 'bottom':
+                x = _parent.width() / 2;
+                y = _parent.height() - LEGEND_GAP;
+                horizontal = true;
+                break;
+
+            case 'left':
+                x = LEGEND_GAP
+                y = _parent.height() / 2;
+                horizontal = false;
+                break;
+
+            case 'right':
+                x = _parent.width() - LEGEND_GAP
+                y = _parent.height() / 2;
+                horizontal = false;
+                break;
+        }
+
+        return {
+            x: x,
+            y: y,
+            horizontal: horizontal,
+        }
+    }
+
+    function getPosition(info) {
+        var bBox = _g.node().getBBox();
+
+        switch(_position) {
+            case 'top':
+                _parent.legendTopPadding = bBox.height;
+                info.x -= (bBox.width / 2);
+                break;
+
+            case 'bottom':
+                _parent.legendBottomPadding = bBox.height;
+                info.x -= (bBox.width / 2);
+                info.y -= bBox.height;
+                break;
+
+            case 'left':
+                _parent.legendLeftPadding = bBox.width;
+                info.y -= (bBox.height / 2);
+                break;
+
+            case 'right':
+                _parent.legendRightPadding = bBox.width;
+                info.x -= bBox.width;
+                info.y -= (bBox.height / 2);
+                break;
+        }
+
+        return info.x + ',' + info.y;
+    }
 
     _legend.parent = function (p) {
         if (!arguments.length) {
@@ -37,17 +101,20 @@ dc.legend = function () {
     };
 
     _legend.render = function () {
-        _parent.svg().select('g.dc-legend').remove();
+        var info = getInfo();
+
+        _parent.svg().select('g.' + LEGEND_CLASS).remove();
+
         _g = _parent.svg().append('g')
-            .attr('class', 'dc-legend')
-            .attr('transform', 'translate(' + _x + ',' + _y + ')');
+            .attr('class', LEGEND_CLASS);
+
         var legendables = _parent.legendables();
 
-        var itemEnter = _g.selectAll('g.dc-legend-item')
+        var itemEnter = _g.selectAll('g.' + LEGEND_ITEM_CLASS)
             .data(legendables)
             .enter()
             .append('g')
-            .attr('class', 'dc-legend-item')
+            .attr('class', LEGEND_ITEM_CLASS)
             .on('mouseover', function (d) {
                 _parent.legendHighlight(d);
             })
@@ -58,7 +125,7 @@ dc.legend = function () {
                 d.chart.legendToggle(d);
             });
 
-        _g.selectAll('g.dc-legend-item')
+        _g.selectAll('g.' + LEGEND_ITEM_CLASS)
             .classed('fadeout', function (d) {
                 return d.chart.isLegendableHidden(d);
             });
@@ -91,161 +158,38 @@ dc.legend = function () {
         var _cumulativeLegendTextWidth = 0;
         var row = 0;
         itemEnter.attr('transform', function (d, i) {
-            if (_horizontal) {
-                var translateBy = 'translate(' + _cumulativeLegendTextWidth + ',' + row * legendItemHeight() + ')';
-                var itemWidth   = _autoItemWidth === true ? this.getBBox().width + _gap : _itemWidth;
+            if (info.horizontal) {
+                var itemWidth = this.getBBox().width + LABEL_GAP;
 
-                if ((_cumulativeLegendTextWidth + itemWidth) >= _legendWidth) {
-                    ++row ;
-                    _cumulativeLegendTextWidth = 0 ;
-                } else {
-                    _cumulativeLegendTextWidth += itemWidth;
+                _cumulativeLegendTextWidth += itemWidth;
+
+                if (_cumulativeLegendTextWidth >= _parent.width()) {
+                    ++row;
+                    _cumulativeLegendTextWidth = itemWidth;
                 }
-                return translateBy;
+
+                var translateBy = {
+                    x: _cumulativeLegendTextWidth - itemWidth,
+                    y: row * (_itemHeight + LABEL_GAP)
+                };
+
+
+                return 'translate(' + translateBy.x + ', ' + translateBy.y + ')';
             } else {
-                return 'translate(0,' + i * legendItemHeight() + ')';
+                return 'translate(0,' + i * (_itemHeight + LABEL_GAP) + ')';
             }
         });
+
+        _g.attr('transform', 'translate(' + getPosition(info) + ')');
     };
 
-    function legendItemHeight () {
-        return _gap + _itemHeight;
-    }
-
-    /**
-     * Set or get x coordinate for legend widget.
-     * @name x
-     * @memberof dc.legend
-     * @instance
-     * @param  {Number} [x=0]
-     * @return {Number}
-     * @return {dc.legend}
-     */
-    _legend.x = function (x) {
+    _legend.position = function (_) {
         if (!arguments.length) {
-            return _x;
+            return _position;
         }
-        _x = x;
-        return _legend;
-    };
 
-    /**
-     * Set or get y coordinate for legend widget.
-     * @name y
-     * @memberof dc.legend
-     * @instance
-     * @param  {Number} [y=0]
-     * @return {Number}
-     * @return {dc.legend}
-     */
-    _legend.y = function (y) {
-        if (!arguments.length) {
-            return _y;
-        }
-        _y = y;
-        return _legend;
-    };
+        _position = _;
 
-    /**
-     * Set or get gap between legend items.
-     * @name gap
-     * @memberof dc.legend
-     * @instance
-     * @param  {Number} [gap=5]
-     * @return {Number}
-     * @return {dc.legend}
-     */
-    _legend.gap = function (gap) {
-        if (!arguments.length) {
-            return _gap;
-        }
-        _gap = gap;
-        return _legend;
-    };
-
-    /**
-     * Set or get legend item height.
-     * @name itemHeight
-     * @memberof dc.legend
-     * @instance
-     * @param  {Number} [itemHeight=12]
-     * @return {Number}
-     * @return {dc.legend}
-     */
-    _legend.itemHeight = function (itemHeight) {
-        if (!arguments.length) {
-            return _itemHeight;
-        }
-        _itemHeight = itemHeight;
-        return _legend;
-    };
-
-    /**
-     * Position legend horizontally instead of vertically.
-     * @name horizontal
-     * @memberof dc.legend
-     * @instance
-     * @param  {Boolean} [horizontal=false]
-     * @return {Boolean}
-     * @return {dc.legend}
-     */
-    _legend.horizontal = function (horizontal) {
-        if (!arguments.length) {
-            return _horizontal;
-        }
-        _horizontal = horizontal;
-        return _legend;
-    };
-
-    /**
-     * Maximum width for horizontal legend.
-     * @name legendWidth
-     * @memberof dc.legend
-     * @instance
-     * @param  {Number} [legendWidth=500]
-     * @return {Number}
-     * @return {dc.legend}
-     */
-    _legend.legendWidth = function (legendWidth) {
-        if (!arguments.length) {
-            return _legendWidth;
-        }
-        _legendWidth = legendWidth;
-        return _legend;
-    };
-
-    /**
-     * legendItem width for horizontal legend.
-     * @name itemWidth
-     * @memberof dc.legend
-     * @instance
-     * @param  {Number} [itemWidth=70]
-     * @return {Number}
-     * @return {dc.legend}
-     */
-    _legend.itemWidth = function (itemWidth) {
-        if (!arguments.length) {
-            return _itemWidth;
-        }
-        _itemWidth = itemWidth;
-        return _legend;
-    };
-
-    /**
-     * Turn automatic width for legend items on or off. If true, {@link #dc.legend+itemWidth itemWidth} is ignored.
-     * This setting takes into account {@link #dc.legend+gap gap}.
-     * @name autoItemWidth
-     * @memberof dc.legend
-     * @instance
-     * @param  {Boolean} [autoItemWidth=false]
-     * @return {Boolean}
-     * @return {dc.legend}
-     */
-    _legend.autoItemWidth = function (autoItemWidth) {
-        if (!arguments.length) {
-            return _autoItemWidth;
-        }
-        _autoItemWidth = autoItemWidth;
         return _legend;
     };
 

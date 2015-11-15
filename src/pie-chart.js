@@ -42,7 +42,7 @@ dc.pieChart = function (parent, chartGroup) {
     var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
     var _externalLabelRadius;
     var _drawPaths = false;
-    var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
+    var _chart = dc.marginMixin(dc.capMixin(dc.colorMixin(dc.baseMixin({}))));
 
     _chart.colorAccessor(_chart.cappedKeyAccessor);
 
@@ -70,7 +70,11 @@ dc.pieChart = function (parent, chartGroup) {
     _chart._doRender = function () {
         _chart.resetSvg();
 
-        _g = _chart.svg()
+        if (_chart.legend()) {
+            _chart.legend().render();
+        }
+
+        _chart._g = _chart.svg()
             .append('g')
             .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
 
@@ -81,7 +85,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     function drawChart () {
         // set radius on basis of chart dimension if missing
-        _radius = _givenRadius ? _givenRadius : d3.min([_chart.width(), _chart.height()]) / 2;
+        _radius = _givenRadius ? _givenRadius : d3.min([_chart.effectiveWidth(), _chart.effectiveHeight()]) / 2;
 
         var arc = buildArcs();
 
@@ -90,16 +94,16 @@ dc.pieChart = function (parent, chartGroup) {
         // if we have data...
         if (d3.sum(_chart.data(), _chart.valueAccessor())) {
             pieData = pie(_chart.data());
-            _g.classed(_emptyCssClass, false);
+            _chart._g.classed(_emptyCssClass, false);
         } else {
             // otherwise we'd be getting NaNs, so override
             // note: abuse others for its ignoring the value accessor
             pieData = pie([{key: _emptyTitle, value: 1, others: [_emptyTitle]}]);
-            _g.classed(_emptyCssClass, true);
+            _chart._g.classed(_emptyCssClass, true);
         }
 
-        if (_g) {
-            var slices = _g.selectAll('g.' + _sliceCssClass)
+        if (_chart._g) {
+            var slices = _chart._g.selectAll('g.' + _sliceCssClass)
                 .data(pieData);
 
             createElements(slices, arc, pieData);
@@ -110,7 +114,7 @@ dc.pieChart = function (parent, chartGroup) {
 
             highlightFilter();
 
-            dc.transition(_g, _chart.transitionDuration())
+            dc.transition(_chart._g, _chart.transitionDuration())
                 .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
         }
     }
@@ -173,7 +177,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     function createLabels (pieData, arc) {
         if (_chart.renderLabel()) {
-            var labels = _g.selectAll('text.' + _sliceTextCssClass)
+            var labels = _chart._g.selectAll('text.' + _sliceTextCssClass)
                 .data(pieData);
 
             labels.exit().remove();
@@ -197,7 +201,7 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     function updateLabelPaths (pieData, arc) {
-        var polyline = _g.selectAll('polyline.' + _sliceCssClass)
+        var polyline = _chart._g.selectAll('polyline.' + _sliceCssClass)
                 .data(pieData);
 
         polyline
@@ -234,7 +238,7 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     function updateSlicePaths (pieData, arc) {
-        var slicePaths = _g.selectAll('g.' + _sliceCssClass)
+        var slicePaths = _chart._g.selectAll('g.' + _sliceCssClass)
             .data(pieData)
             .select('path')
             .attr('d', function (d, i) {
@@ -248,7 +252,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     function updateLabels (pieData, arc) {
         if (_chart.renderLabel()) {
-            var labels = _g.selectAll('text.' + _sliceTextCssClass)
+            var labels = _chart._g.selectAll('text.' + _sliceTextCssClass)
                 .data(pieData);
             positionLabels(labels, arc);
             if (_externalLabelRadius && _drawPaths) {
@@ -259,7 +263,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     function updateTitles (pieData) {
         if (_chart.renderTitle()) {
-            _g.selectAll('g.' + _sliceCssClass)
+            _chart._g.selectAll('g.' + _sliceCssClass)
                 .data(pieData)
                 .select('title')
                 .text(function (d) {
@@ -353,7 +357,7 @@ dc.pieChart = function (parent, chartGroup) {
      */
     _chart.cx = function (cx) {
         if (!arguments.length) {
-            return (_cx ||  _chart.width() / 2);
+            return (_cx ||  (_chart.width() + _chart.margins().left - _chart.margins().right) / 2);
         }
         _cx = cx;
         return _chart;
@@ -370,7 +374,7 @@ dc.pieChart = function (parent, chartGroup) {
      */
     _chart.cy = function (cy) {
         if (!arguments.length) {
-            return (_cy ||  _chart.height() / 2);
+            return (_cy ||  (_chart.height() + _chart.margins().top - _chart.margins().bottom) / 2);
         }
         _cy = cy;
         return _chart;
@@ -444,7 +448,7 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     function onClick (d, i) {
-        if (_g.attr('class') !== _emptyCssClass) {
+        if (_chart._g.attr('class') !== _emptyCssClass) {
             _chart.onClick(d.data, i);
         }
     }

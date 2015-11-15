@@ -15,12 +15,18 @@ dc.coordinateGridMixin = function (_chart) {
     var CHART_BODY_CLASS = 'chart-body';
     var HORIZONTAL_CLASS = 'horizontal';
     var VERTICAL_CLASS = 'vertical';
+
     var AXIS_LABEL_CLASS = 'axis';
     var Y_AXIS_CLASS= 'y';
     var X_AXIS_CLASS = 'x';
+    var Y_LEFT_AXIS_CLASS = 'y-left';
+    var Y_RIGHT_AXIS_CLASS = 'y-right';
     var Y_AXIS_LABEL_CLASS = Y_AXIS_CLASS + '-' + AXIS_LABEL_CLASS + '-label';
     var X_AXIS_LABEL_CLASS = X_AXIS_CLASS + '-' + AXIS_LABEL_CLASS + '-label';
+
     var MAX_TICK_LABEL_ROTATION = 90;
+    var AXIS_LABEL_PADDING = 15;
+    var EXTRA_PADDING = 5;
 
     _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin(_chart)));
 
@@ -60,7 +66,6 @@ dc.coordinateGridMixin = function (_chart) {
     }
 
     var _parent;
-    var _g;
     var _chartBodyG;
 
     var _x;
@@ -192,16 +197,16 @@ dc.coordinateGridMixin = function (_chart) {
             _parent = parent;
         }
 
-        _g = _parent.append('g');
+        _chart._g = _parent.append('g');
 
-        return _g;
+        return _chart._g;
     };
 
     _chart._generateBody = function() {
-        _chartBodyG = _g.select('.' + CHART_BODY_CLASS);
+        _chartBodyG = _chart._g.select('.' + CHART_BODY_CLASS);
 
         if (_chartBodyG.empty()) {
-            _chartBodyG = _g.append('g')
+            _chartBodyG = _chart._g.append('g')
                 .attr('class', CHART_BODY_CLASS)
                 .attr('clip-path', 'url(#' + getClipPathId() + ')');
         }
@@ -212,24 +217,7 @@ dc.coordinateGridMixin = function (_chart) {
         return _chartBodyG;
     }
 
-    /**
-     * Get or set the root g element. This method is usually used to retrieve the g element in order to
-     * overlay custom svg drawing programatically. **Caution**: The root g element is usually generated
-     * by dc.js internals, and resetting it might produce unpredictable result.
-     * @name g
-     * @memberof dc.coordinateGridMixin
-     * @instance
-     * @param {SVGElement} [gElement]
-     * @return {SVGElement}
-     * @return {dc.coordinateGridMixin}
-     */
-    _chart.g = function (gElement) {
-        if (!arguments.length) {
-            return _g;
-        }
-        _g = gElement;
-        return _chart;
-    };
+
 
     /**
      * Set or get mouse zoom capability flag (default: false). When turned on the chart will be
@@ -471,7 +459,12 @@ dc.coordinateGridMixin = function (_chart) {
         return groups.map(_chart.keyAccessor());
     };
 
-    function prepareAxisLabels(g) {
+    _chart.prepareAxisLabels = function (g) {
+        _chart.prepareXAxisLabel(g);
+        _chart.prepareYAxisLabel(g, _useRightYAxis, _chart.yAxisLabel());
+    }
+
+    _chart.prepareXAxisLabel = function(g) {
         // get the x axis label
         var axisXLab = g.selectAll('text.' + X_AXIS_LABEL_CLASS);
 
@@ -482,38 +475,59 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('text-anchor', 'middle');
         }
 
-        // set the text of the x axis label
-        if (_chart.xAxisLabel() && axisXLab.text() !== _chart.xAxisLabel()) {
-            axisXLab.text(_chart.xAxisLabel());
+        if (!axisXLab.empty()) {
+            // set the text of the x axis label
+            if (_chart.xAxisLabel() && axisXLab.text() !== _chart.xAxisLabel()) {
+                axisXLab.text(_chart.xAxisLabel());
+            }
+
+            // wrap the x axis label
+            _chart._wrapLabels(axisXLab, _chart.effectiveWidth());
+
+            // calculate the height of the x axis label
+            _chart.xAxisLabelPadding = axisXLab.node().getBBox().height;
+        }
+    };
+
+    _chart.prepareYAxisLabel = function(g, right, text) {
+        var selector = 'text.' + Y_AXIS_LABEL_CLASS + '.';
+        var classes = Y_AXIS_LABEL_CLASS + ' ';
+
+        if (right) {
+            selector += Y_RIGHT_AXIS_CLASS;
+            classes += Y_RIGHT_AXIS_CLASS;
+        } else {
+            selector += Y_LEFT_AXIS_CLASS;
+            classes += Y_LEFT_AXIS_CLASS;
         }
 
-        // wrap the x axis label
-        _chart._wrapLabels(axisXLab, _chart.effectiveWidth());
-
-        // calculate the height of the x axis label
-        _chart.xAxisLabelPadding = axisXLab.node().getBBox().height;
-
         // get the y axis label
-        var axisYLab = g.selectAll('text.' + Y_AXIS_LABEL_CLASS);
+        var axisYLab = g.selectAll(selector);
 
         // create the y axis label if it doesn't exist
-        if (axisYLab.empty() && _chart.yAxisLabel()) {
+        if (axisYLab.empty() && text) {
             axisYLab = g.append('text')
-                .attr('class', Y_AXIS_LABEL_CLASS)
+                .attr('class', classes)
                 .attr('text-anchor', 'middle');
         }
 
-        // set the text of the y axis label
-        if (_chart.yAxisLabel() && axisYLab.text() !== _chart.yAxisLabel()) {
-            axisYLab.text(_chart.yAxisLabel());
+        if (!axisYLab.empty()) {
+            // set the text of the y axis label
+            if (text && axisYLab.text() !== text) {
+                axisYLab.text(text);
+            }
+
+            // wrap the y axis label
+            _chart._wrapLabels(axisYLab, _chart.effectiveHeight());
+
+            // calculate the height of the y axis label
+            if (right) {
+                _chart.rightYAxisLabelPadding = axisYLab.node().getBBox().height;
+            } else {
+                _chart.yAxisLabelPadding = axisYLab.node().getBBox().height;
+            }
         }
-
-        // wrap the y axis label
-        _chart._wrapLabels(axisYLab, _chart.effectiveHeight());
-
-        // calculate the height of the y axis label
-        _chart.yAxisLabelPadding = axisYLab.node().getBBox().height;
-    }
+    };
 
     function compareDomains (d1, d2) {
         return !d1 || !d2 || d1.length !== d2.length ||
@@ -561,9 +575,8 @@ dc.coordinateGridMixin = function (_chart) {
         axisXG.call(_xAxis);
 
         // wrap the x axis tick labels
-        if (_x.rangeBand) {
-            _chart._wrapLabels(axisXG.selectAll('.tick text'), _x.rangeBand());
-        }
+        var ticks = axisXG.selectAll('.tick text');
+        _chart._wrapLabels(ticks, _chart.effectiveWidth() / ticks[0].length);
 
         _chart.xTickLabelPadding = axisXG.node().getBBox().height;
     }
@@ -595,12 +608,12 @@ dc.coordinateGridMixin = function (_chart) {
         // set the position of the x axis label
         axisXLab.attr('transform', 'translate(' +
             (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
-            (_chart.height() - _chart.xAxisLabelPadding + 10) +
+            (_chart.height() - _chart.xAxisLabelPadding - _chart.legendBottomPadding + EXTRA_PADDING) +
         ')');
 
         dc.transition(axisXLab, _chart.transitionDuration())
             .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
-                  (_chart.height() - _chart.xAxisLabelPadding + 10) + ')');
+                  (_chart.height() - _chart.xAxisLabelPadding - _chart.legendBottomPadding + EXTRA_PADDING) + ')');
 
         renderVerticalGridLines(g);
     };
@@ -703,12 +716,15 @@ dc.coordinateGridMixin = function (_chart) {
             if (_y === undefined) {
                 _y = d3.scale.linear();
             }
+
             var min = _chart.yAxisMin() || 0,
                 max = _chart.yAxisMax() || 0;
-            _y.domain([min, max]).rangeRound([_chart.yAxisHeight(), 0]);
+            _y.domain([min, max]);
         }
 
+        _y.rangeRound([_chart.yAxisHeight(), 0]);
         _y.range([_chart.yAxisHeight(), 0]);
+
         _yAxis = _yAxis.scale(_y);
 
         if (_chart.yAxisTickIntegersOnly()) {
@@ -719,40 +735,31 @@ dc.coordinateGridMixin = function (_chart) {
             _yAxis.orient('right');
         }
 
+        var selector = _useRightYAxis ? 'g.' + Y_AXIS_CLASS + '.' + Y_RIGHT_AXIS_CLASS : 'g.' + Y_AXIS_CLASS + '.' + Y_LEFT_AXIS_CLASS;
+        var classes = _useRightYAxis ? Y_RIGHT_AXIS_CLASS : Y_LEFT_AXIS_CLASS;
+
         // get the y axis group
-        var axisYG = _chart.g().selectAll('g.' + Y_AXIS_CLASS);
+        var axisYG = g.selectAll(selector);
 
         // create the y axis group if it doesn't exist
         if (axisYG.empty()) {
-            axisYG = _chart.g().append('g')
-                .attr('class', 'axis ' + Y_AXIS_CLASS);
+            axisYG = g.append('g')
+                .attr('class', AXIS_LABEL_CLASS + ' ' + Y_AXIS_CLASS + ' ' + classes);
         }
 
         // set the x axis to the group
         axisYG.call(_yAxis);
 
-        _chart.yTickLabelPadding = axisYG.node().getBBox().width;
+        if (_useRightYAxis) {
+            _chart.rightYTickLabelPadding = axisYG.node().getBBox().width;
+        } else {
+            _chart.yTickLabelPadding = axisYG.node().getBBox().width;
+        }
     };
 
     _chart.renderYAxis = function (g) {
-        // get the y axis group
-        var axisYG = g.selectAll('g.' + Y_AXIS_CLASS);
-
-        // set the position of the y axis group
-        axisYG.attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
-
-        dc.transition(axisYG, _chart.transitionDuration())
-            .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
-
-        // get the y axis group
-        var axisYLab = g.selectAll('text.' + Y_AXIS_LABEL_CLASS);
-
-        // set the position of the y axis label
-        var rotate = _useRightYAxis ? 90 : -90;
-        axisYLab.attr('transform', 'translate(15, ' + (_chart.effectiveHeight() / 2) + '), rotate(' + rotate + ')');
-
-        dc.transition(axisYLab, _chart.transitionDuration())
-            .attr('transform', 'translate(15, ' + (_chart.effectiveHeight() / 2) + '), rotate(' + rotate + ')');
+        _chart.renderYAxisAt(_useRightYAxis);
+        _chart.renderYAxisLabel(_useRightYAxis);
 
         // rotate the y axis tick labels
         var rotate = _chart.yAxisTickLabelRotate();
@@ -771,6 +778,46 @@ dc.coordinateGridMixin = function (_chart) {
         }
 
         _chart._renderHorizontalGridLinesForAxis(g);
+    };
+
+    _chart.renderYAxisAt = function(right) {
+        var axisPosition = right ? (_chart.width() - _chart.margins().right) : _chart.margins().left;
+        var selector = right ? 'g.' + Y_AXIS_CLASS + '.' + Y_RIGHT_AXIS_CLASS : 'g.' + Y_AXIS_CLASS + '.' + Y_LEFT_AXIS_CLASS;
+
+        // get the y axis group
+        var axisYG = _chart.g().selectAll(selector);
+
+        // set the position of the y axis group
+        axisYG.attr('transform', 'translate(' + axisPosition + ',' + _chart.margins().top + ')');
+
+        dc.transition(axisYG, _chart.transitionDuration())
+            .attr('transform', 'translate(' + axisPosition + ',' + _chart.margins().top + ')');
+    };
+
+    _chart.renderYAxisLabel = function(right) {
+        var axisLabelPosition = right ?
+            (_chart.width() - _chart.legendRightPadding - AXIS_LABEL_PADDING - EXTRA_PADDING) :
+            _chart.legendLeftPadding + AXIS_LABEL_PADDING + EXTRA_PADDING;
+        var rotate = right ? 90 : -90;
+        var selector = 'text.' + Y_AXIS_LABEL_CLASS + '.';
+        var classes = Y_AXIS_LABEL_CLASS + ' ';
+
+        if (right) {
+            selector += Y_RIGHT_AXIS_CLASS;
+        } else {
+            selector += Y_LEFT_AXIS_CLASS;
+        }
+
+        // get the y axis group
+        var axisYLab = _chart.g().selectAll(selector);
+
+        // set the position of the y axis label
+        var translateY = (_chart.height() - _chart.xAxisLabelPadding - _chart.legendBottomPadding) / 2 + EXTRA_PADDING;
+
+        axisYLab.attr('transform', 'translate(' + axisLabelPosition + ',' + translateY + '), rotate(' + rotate + ')');
+
+        dc.transition(axisYLab, _chart.transitionDuration())
+            .attr('transform', 'translate(' + axisLabelPosition + ',' + translateY + '), rotate(' + rotate + ')');
     };
 
     _chart._renderHorizontalGridLinesForAxis = function (g) {
@@ -1162,7 +1209,7 @@ dc.coordinateGridMixin = function (_chart) {
             extent[0] = extent.map(_chart.round())[0];
             extent[1] = extent.map(_chart.round())[1];
 
-            _g.select('.brush')
+            _chart._g.select('.brush')
                 .call(_brush.extent(extent));
         }
         return extent;
@@ -1175,7 +1222,7 @@ dc.coordinateGridMixin = function (_chart) {
     _chart._brushing = function () {
         var extent = _chart.extendBrush();
 
-        _chart.redrawBrush(_g, false);
+        _chart.redrawBrush(_chart._g, false);
 
         if (_chart.brushIsEmpty(extent)) {
             dc.events.trigger(function () {
@@ -1299,9 +1346,13 @@ dc.coordinateGridMixin = function (_chart) {
             _brushOn = false;
         }
 
-        prepareAxisLabels(g);
+        _chart.prepareAxisLabels(g);
 
         _chart._prepareYAxis(g);
+
+        if (_chart.legend()) {
+            _chart.legend().render();
+        }
 
         prepareXAxis(g, render);
 

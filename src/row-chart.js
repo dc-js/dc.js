@@ -26,8 +26,6 @@ dc.rowChart = function (parent, chartGroup) {
     var X_AXIS_LABEL_CLASS = 'x-axis-label';
     var DEFAULT_AXIS_LABEL_PADDING = 12;
 
-    var _g;
-
     var _labelOffsetX = 10;
     var _labelOffsetY = 15;
     var _hasLabelOffsetY = false;
@@ -35,7 +33,6 @@ dc.rowChart = function (parent, chartGroup) {
     var _titleLabelOffsetX = 2;
 
     var _xAxisLabel;
-    var _xAxisLabelPadding = 0;
 
     var _gap = 5;
 
@@ -80,31 +77,27 @@ dc.rowChart = function (parent, chartGroup) {
     }
 
     function drawAxis () {
-        var axisG = _g.select('g.axis');
+        var axisG = _chart._g.select('g.axis');
+
+        renderXAxisLabel();
 
         calculateAxisScale();
 
         if (axisG.empty()) {
-            axisG = _g.append('g').attr('class', 'axis');
+            axisG = _chart._g.append('g').attr('class', 'axis');
         }
         axisG.attr('transform', 'translate(0, ' + _chart.effectiveHeight() + ')');
 
         dc.transition(axisG, _chart.transitionDuration())
             .call(_xAxis);
-
-        renderXAxisLabel();
     }
 
     function renderXAxisLabel () {
-        var axisXLab = _g.selectAll('text.' + X_AXIS_LABEL_CLASS);
+        var axisXLab = _chart._g.selectAll('text.' + X_AXIS_LABEL_CLASS);
 
         if (axisXLab.empty() && _chart.xAxisLabel()) {
-            axisXLab = _g.append('text')
+            axisXLab = _chart._g.append('text')
                 .attr('class', X_AXIS_LABEL_CLASS)
-                .attr('transform',
-                    'translate(' + (_chart.xAxisLength() / 2) +
-                    ',' + (_chart.height() - _xAxisLabelPadding) + ')'
-                )
                 .attr('text-anchor', 'middle');
         }
 
@@ -112,15 +105,28 @@ dc.rowChart = function (parent, chartGroup) {
             axisXLab.text(_chart.xAxisLabel());
         }
 
+
+
+        // wrap the x axis label
+        _chart._wrapLabels(axisXLab, _chart.effectiveWidth());
+
+        // calculate the height of the x axis label
+        _chart.xAxisLabelPadding = axisXLab.node().getBBox().height + 10;
+
+        axisXLab.attr('transform',
+            'translate(' + (_chart.xAxisLength() / 2) +
+            ',' + (_chart.height() - _chart.xAxisLabelPadding + 10) + ')'
+        );
+
         dc.transition(axisXLab, _chart.transitionDuration())
             .attr('transform', 'translate(' + (_chart.xAxisLength() / 2) + ',' +
-                  (_chart.height() - _xAxisLabelPadding) + ')');
+                  (_chart.height() - _chart.xAxisLabelPadding + 10) + ')');
     }
 
     _chart._doRender = function () {
         _chart.resetSvg();
 
-        _g = _chart.svg()
+        _chart._g = _chart.svg()
             .append('g')
             .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
 
@@ -155,11 +161,11 @@ dc.rowChart = function (parent, chartGroup) {
     };
 
     function drawGridLines () {
-        _g.selectAll('g.tick')
+        _chart._g.selectAll('g.tick')
             .select('line.grid-line')
             .remove();
 
-        _g.selectAll('g.tick')
+        _chart._g.selectAll('g.tick')
             .append('line')
             .attr('class', 'grid-line')
             .attr('x1', 0)
@@ -176,7 +182,7 @@ dc.rowChart = function (parent, chartGroup) {
         drawAxis();
         drawGridLines();
 
-        var rows = _g.selectAll('g.' + _rowCssClass)
+        var rows = _chart._g.selectAll('g.' + _rowCssClass)
             .data(_rowData);
 
         createElements(rows);
@@ -445,9 +451,6 @@ dc.rowChart = function (parent, chartGroup) {
             return _xAxisLabel;
         }
         _xAxisLabel = labelText;
-        _chart.margins().bottom -= _xAxisLabelPadding;
-        _xAxisLabelPadding = (padding === undefined) ? DEFAULT_AXIS_LABEL_PADDING : padding;
-        _chart.margins().bottom += _xAxisLabelPadding;
         return _chart;
     };
 

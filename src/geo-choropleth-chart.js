@@ -34,7 +34,6 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     var _geoJsons = [];
 
     _chart._doRender = function () {
-        _chart.resetSvg();
         for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
             var states = _chart.svg().append('g')
                 .attr('class', 'layer' + layerIndex);

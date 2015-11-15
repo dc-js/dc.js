@@ -10,8 +10,17 @@
 dc.marginMixin = function (_chart) {
     _chart.xAxisLabelPadding = 0;
     _chart.xTickLabelPadding = 0;
+
     _chart.yAxisLabelPadding = 0;
     _chart.yTickLabelPadding = 0;
+
+    _chart.rightYAxisLabelPadding = 0;
+    _chart.rightYTickLabelPadding = 0;
+
+    _chart.legendTopPadding = 0;
+    _chart.legendBottomPadding = 0;
+    _chart.legendLeftPadding = 0;
+    _chart.legendRightPadding = 0;
 
     /**
      * Get the margins for a particular coordinate grid chart instance.
@@ -22,11 +31,13 @@ dc.marginMixin = function (_chart) {
      * @return {dc.marginMixin}
      */
     _chart.margins = function () {
+        var chart = _chart._parent || _chart;
+
         return {
-            top: 10,
-            bottom: _chart.xAxisLabelPadding + _chart.xTickLabelPadding + 10,
-            right: 10,
-            left: _chart.yAxisLabelPadding + _chart.yTickLabelPadding + 10,
+            top: chart.legendTopPadding + 10,
+            bottom: chart.xAxisLabelPadding + chart.xTickLabelPadding + chart.legendBottomPadding + 10,
+            left: chart.yAxisLabelPadding + chart.yTickLabelPadding + chart.legendLeftPadding + 10,
+            right: chart.rightYAxisLabelPadding + chart.rightYTickLabelPadding + chart.legendRightPadding + 10,
         }
     };
 
