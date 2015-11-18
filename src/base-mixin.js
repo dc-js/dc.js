@@ -1427,7 +1427,7 @@ dc.baseMixin = function (_chart) {
                         var t = line.length === 1 ? line[0] : word;
                         tspan.text(t);
 
-                        while(tspan.node().getComputedTextLength() > width) {
+                        while (tspan.node().getComputedTextLength() > width && t.length > 0) {
                             tspan.text(t + '...');
                             t = t.substring(0, t.length - 1);
                         }
