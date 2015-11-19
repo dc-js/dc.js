@@ -2047,17 +2047,17 @@ dc.baseMixin = function (_chart) {
             data = d.data;
         }
 
-        var tooltip = _root
+        var tooltip = d3.select('body')
             .append('div')
-            .attr('class', 'tooltip')
+            .attr('class', 'dc-title')
             .html(_title(data));
 
-        var elBounding = getRelativePosition(element, _root.node());
-        var tooltipBounding = getRelativePosition(tooltip.node(), _root.node());
+        var elBounding = element.getBoundingClientRect();
+        var tooltipBounding = tooltip.node().getBoundingClientRect()
 
         var style = {
-            left: elBounding.left - (tooltipBounding.width / 2),
-            top: elBounding.top - tooltipBounding.height - 10,
+            left: elBounding.left - (tooltipBounding.width / 2) + window.scrollX,
+            top: elBounding.top - tooltipBounding.height - 10 + window.scrollY,
             'border-color': _chart.getColor(d.layer ? d : data, i),
         };
 
@@ -2075,31 +2075,8 @@ dc.baseMixin = function (_chart) {
         tooltip.style(style);
     };
 
-    function getRelativePosition(el, parentElement) {
-        var elPos = el.getBoundingClientRect();
-        var vpPos = getVpPos(el);
-
-        function getVpPos(el) {
-            if (!el.parentElement || el.parentElement === parentElement) {
-                return el.parentElement.getBoundingClientRect();
-            }
-            return getVpPos(el.parentElement);
-        }
-
-        return {
-            top: elPos.top - vpPos.top,
-            left: elPos.left - vpPos.left,
-            width: elPos.width,
-            bottom: elPos.bottom - vpPos.top,
-            height: elPos.height,
-            right: elPos.right - vpPos.left
-        };
-    };
-
     _chart._removeTitle = function() {
-        _chart.root()
-            .selectAll('.tooltip')
-            .remove();
+        d3.selectAll('.dc-title').remove();
     };
 
     /**

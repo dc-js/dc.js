@@ -287,13 +287,9 @@ g.dc-legend-item.fadeout {
     opacity: 0.3 !important;
 }
 
-/* tooltip */
+/* title */
 
-.dc-chart {
-    position: relative;
-}
-
-.dc-chart .tooltip {
+.dc-title {
     position: absolute;
     background: #FFFFFF;
     z-index: 9999;
@@ -303,8 +299,8 @@ g.dc-legend-item.fadeout {
     user-select: none;
 }
 
-.dc-chart .tooltip:before,
-.dc-chart .tooltip:after {
+.dc-title:before,
+.dc-title:after {
 	top: 100%;
 	left: 50%;
 	border: solid transparent;
@@ -315,14 +311,14 @@ g.dc-legend-item.fadeout {
 	pointer-events: none;
 }
 
-.dc-chart .tooltip:before {
+.dc-title:before {
 	border-color: rgba(240, 240, 240, 0);
 	border-top-color: inherit;
 	border-width: 13px;
 	margin-left: -13px;
 }
 
-.dc-chart .tooltip:after {
+.dc-title:after {
 	border-color: rgba(0, 0, 0, 0);
 	border-top-color: #FFFFFF;
 	border-width: 10px;
