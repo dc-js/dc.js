@@ -53,6 +53,12 @@
     fill-opacity: .8;
 }
 
+.dc-chart .pie-slice path {
+    stroke-width: 1;
+    stroke: #FFFFFF;
+}
+
+
 .dc-chart .pie-path {
   fill:none;
   stroke-width: 2px;
@@ -297,6 +303,7 @@ g.dc-legend-item.fadeout {
     border: 2px solid #000000;
     pointer-events: none;
     user-select: none;
+    opacity: 0.8;
 }
 
 .dc-title:before,

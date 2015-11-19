@@ -2047,23 +2047,40 @@ dc.baseMixin = function (_chart) {
             data = d.data;
         }
 
-        var tooltip = d3.select('body')
-            .append('div')
-            .attr('class', 'dc-title')
-            .html(_title(data));
+        // get the tooltip
+        var tooltip = d3.select('.dc-title');
 
+        // the tooltip doesn't exist, so create it
+        if (tooltip.empty()) {
+            tooltip = d3.select('body')
+                .append('div')
+                .attr('class', 'dc-title')
+                .style('opacity', 0);
+        }
+
+        // cancel any transitions
+        tooltip.interrupt();
+
+        // set the content of the tooltip
+        tooltip.html(_title(data));
+
+        // set the standard styles
+        tooltip.style('border-color', _chart.getColor(d.layer ? d : data, i));
+
+        // calculate the position of the tooltip
+        var tooltipBounding = tooltip.node().getBoundingClientRect();
         var style = {
-            'border-color': _chart.getColor(d.layer ? d : data, i),
+            opacity: 1,
         };
 
-        var tooltipBounding = tooltip.node().getBoundingClientRect();
-
+        // if a pie chart
         if (arc) {
             var gBounding = _chart.g().node().getBoundingClientRect();
             var centroid = arc.centroid(d);
 
             style.left = gBounding.left + (gBounding.width / 2) - (tooltipBounding.width / 2) + centroid[0];
             style.top = gBounding.top + (gBounding.height / 2) - tooltipBounding.height - 10 + centroid[1];
+        // all other charts
         } else {
             var elBounding = element.getBoundingClientRect();
 
@@ -2074,11 +2091,15 @@ dc.baseMixin = function (_chart) {
         style.top += 'px';
         style.left += 'px';
 
-        tooltip.style(style);
+        // move the tooltip into position
+        dc.transition(tooltip, _chart.transitionDuration() / 1.5)
+            .style(style);
     };
 
     _chart._removeTitle = function() {
-        d3.selectAll('.dc-title').remove();
+        dc.transition(d3.select('.dc-title'), _chart.transitionDuration() / 1.5)
+            .style('opacity', 0)
+            .remove();
     };
 
     /**
