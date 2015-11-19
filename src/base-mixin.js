@@ -1308,21 +1308,23 @@ dc.baseMixin = function (_chart) {
             .attr('class', 'dc-title')
             .html(_title(data));
 
-        var elBounding = element.getBoundingClientRect();
-        var tooltipBounding = tooltip.node().getBoundingClientRect()
-
         var style = {
-            left: elBounding.left - (tooltipBounding.width / 2) + window.scrollX,
-            top: elBounding.top - tooltipBounding.height - 10 + window.scrollY,
             'border-color': _chart.getColor(d.layer ? d : data, i),
         };
 
+        var tooltipBounding = tooltip.node().getBoundingClientRect();
+
         if (arc) {
+            var gBounding = _chart.g().node().getBoundingClientRect();
             var centroid = arc.centroid(d);
-            style.left += Math.abs(centroid[0]);
-            style.top += Math.abs(centroid[1]);
+
+            style.left = gBounding.left + (gBounding.width / 2) - (tooltipBounding.width / 2) + centroid[0];
+            style.top = gBounding.top + (gBounding.height / 2) - tooltipBounding.height - 10 + centroid[1];
         } else {
-            style.left += elBounding.width / 2;
+            var elBounding = element.getBoundingClientRect();
+
+            style.left = elBounding.left - (tooltipBounding.width / 2) + window.scrollX + (elBounding.width / 2);
+            style.top = elBounding.top - tooltipBounding.height - 10 + window.scrollY;
         }
 
         style.top += 'px';
