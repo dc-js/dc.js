@@ -286,3 +286,41 @@ g.dc-legend-item.fadeout {
 .dc-chart .deselected {
     opacity: 0.3 !important;
 }
+
+/* tooltip */
+
+.dc-chart .tooltip {
+    position: absolute;
+    background: #FFFFFF;
+    z-index: 9999;
+    padding: 5px;
+    border: 2px solid #000000;
+    pointer-events: none;
+    user-select: none;
+}
+
+.dc-chart .tooltip:before,
+.dc-chart .tooltip:after {
+	top: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.dc-chart .tooltip:before {
+	border-color: rgba(240, 240, 240, 0);
+	border-top-color: inherit;
+	border-width: 13px;
+	margin-left: -13px;
+}
+
+.dc-chart .tooltip:after {
+	border-color: rgba(0, 0, 0, 0);
+	border-top-color: #FFFFFF;
+	border-width: 10px;
+	margin-left: -10px;
+}

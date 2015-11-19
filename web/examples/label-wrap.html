@@ -32,12 +32,12 @@
 <button onclick="show('series')">Series</button>
 <button onclick="show('composite')">Composite</button>
 
-<div id='bar' style='display:none;'></div>
+<div id='bar'></div>
 <div id='line' style='display:none;'></div>
 <div id='pie' style='display:none;'></div>
 <div id='row' style='display:none;'></div>
 <div id='series' style='display:none;'></div>
-<div id='composite'></div>
+<div id='composite' style='display:none;'></div>
 
 
 <script type='text/javascript' src='../js/d3.js'></script>
@@ -162,7 +162,7 @@ composite
   ])
   .legend(dc.legend().position('bottom'));
 
-composite.render();
+bar.render();
 
 </script>
 

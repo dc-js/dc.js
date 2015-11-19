@@ -790,7 +790,7 @@ dc.baseMixin = function (_chart) {
     var _renderLabel = false;
 
     var _title = function (d) {
-        return _chart.keyAccessor()(d) + ': ' + _chart.valueAccessor()(d);
+        return '<b>' + _chart.keyAccessor()(d) + ':</b> ' + _chart.valueAccessor()(d);
     };
     var _renderTitle = true;
     var _controlsUseVisibility = false;
@@ -2032,6 +2032,53 @@ dc.baseMixin = function (_chart) {
         }
         _renderTitle = renderTitle;
         return _chart;
+    };
+
+    _chart._attachTitle = function(items, arc) {
+        items.on('mouseover', function(d, i) {
+                _chart._renderTitle(d, i, this, arc)
+            })
+            .on('mouseleave', _chart._removeTitle);
+    }
+
+    _chart._renderTitle = function(d, i, element, arc) {
+        var data = d;
+        if (d.data) {
+            data = d.data;
+        }
+
+        var tooltip = _chart.root()
+            .append('div')
+            .attr('class', 'tooltip')
+            .html(_title(data));
+
+        var elBounding = element.getBoundingClientRect();
+        var tooltipBounding = tooltip[0][0].getBoundingClientRect();
+
+        var style = {
+            left: elBounding.left - (tooltipBounding.width / 2),
+            top: elBounding.top - tooltipBounding.height - 10,
+            'border-color': _chart.getColor(d.layer ? d : data, i),
+        };
+
+        if (arc) {
+            var centroid = arc.centroid(d);
+            style.left += Math.abs(centroid[0]);
+            style.top += Math.abs(centroid[1]);
+        } else {
+            style.left += elBounding.width / 2;
+        }
+
+        style.top += 'px';
+        style.left += 'px';
+
+        tooltip.style(style);
+    };
+
+    _chart._removeTitle = function() {
+        _chart.root()
+            .selectAll('.tooltip')
+            .remove();
     };
 
     /**
@@ -4816,7 +4863,7 @@ dc.pieChart = function (parent, chartGroup) {
     _chart.colorAccessor(_chart.cappedKeyAccessor);
 
     _chart.title(function (d) {
-        return _chart.cappedKeyAccessor(d) + ': ' + _chart.cappedValueAccessor(d);
+        return '<b>' + _chart.cappedKeyAccessor(d) + ':</b> ' + _chart.cappedValueAccessor(d);
     });
 
     /**
@@ -4893,7 +4940,7 @@ dc.pieChart = function (parent, chartGroup) {
 
         createSlicePath(slicesEnter, arc);
 
-        createTitles(slicesEnter);
+        _chart._attachTitle(slicesEnter, arc);
 
         createLabels(pieData, arc);
     }
@@ -4919,14 +4966,6 @@ dc.pieChart = function (parent, chartGroup) {
         dc.transition(slicePath, _chart.transitionDuration(), function (s) {
             s.attrTween('d', tweenPie);
         });
-    }
-
-    function createTitles (slicesEnter) {
-        if (_chart.renderTitle()) {
-            slicesEnter.append('title').text(function (d) {
-                return _chart.title()(d.data);
-            });
-        }
     }
 
     function positionLabels (labelsEnter, arc) {
@@ -5474,9 +5513,7 @@ dc.barChart = function (parent, chartGroup) {
             .attr('y', _chart.yAxisHeight())
             .attr('height', 0);
 
-        if (_chart.renderTitle()) {
-            enter.append('title').text(dc.pluck('data', _chart.title(d.name)));
-        }
+        _chart._attachTitle(bars);
 
         if (_chart.isOrdinal()) {
             bars.on('click', _chart.onClick);
@@ -6014,8 +6051,9 @@ dc.lineChart = function (parent, chartGroup) {
                     .attr('cy', function (d) {
                         return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
                     })
-                    .attr('fill', _chart.getColor)
-                    .call(renderTitle, d);
+                    .attr('fill', _chart.getColor);
+
+                _chart._attachTitle(dots);
 
                 dots.exit().remove();
             });
@@ -6062,13 +6100,6 @@ dc.lineChart = function (parent, chartGroup) {
     function hideRefLines (g) {
         g.select('path.' + Y_AXIS_REF_LINE_CLASS).style('display', 'none');
         g.select('path.' + X_AXIS_REF_LINE_CLASS).style('display', 'none');
-    }
-
-    function renderTitle (dot, d) {
-        if (_chart.renderTitle()) {
-            dot.selectAll('title').remove();
-            dot.append('title').text(dc.pluck('data', _chart.title(d.name)));
-        }
     }
 
     /**
@@ -8505,7 +8536,7 @@ dc.rowChart = function (parent, chartGroup) {
     };
 
     _chart.title(function (d) {
-        return _chart.cappedKeyAccessor(d) + ': ' + _chart.cappedValueAccessor(d);
+        return '<b>' + _chart.cappedKeyAccessor(d) + ':</b> ' + _chart.cappedValueAccessor(d);
     });
 
     _chart.label(_chart.cappedKeyAccessor);
@@ -8617,15 +8648,8 @@ dc.rowChart = function (parent, chartGroup) {
             })
             .attr('transform', translateX);
 
-        createTitles(rows);
+        _chart._attachTitle(rows);
         updateLabels(rows);
-    }
-
-    function createTitles (rows) {
-        if (_chart.renderTitle()) {
-            rows.selectAll('title').remove();
-            rows.append('title').text(_chart.title());
-        }
     }
 
     function createLabels (rowEnter) {

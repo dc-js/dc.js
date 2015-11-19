@@ -136,7 +136,7 @@ dc.rowChart = function (parent, chartGroup) {
     };
 
     _chart.title(function (d) {
-        return _chart.cappedKeyAccessor(d) + ': ' + _chart.cappedValueAccessor(d);
+        return '<b>' + _chart.cappedKeyAccessor(d) + ':</b> ' + _chart.cappedValueAccessor(d);
     });
 
     _chart.label(_chart.cappedKeyAccessor);
@@ -248,15 +248,8 @@ dc.rowChart = function (parent, chartGroup) {
             })
             .attr('transform', translateX);
 
-        createTitles(rows);
+        _chart._attachTitle(rows);
         updateLabels(rows);
-    }
-
-    function createTitles (rows) {
-        if (_chart.renderTitle()) {
-            rows.selectAll('title').remove();
-            rows.append('title').text(_chart.title());
-        }
     }
 
     function createLabels (rowEnter) {

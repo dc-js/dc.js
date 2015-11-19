@@ -47,7 +47,7 @@ dc.pieChart = function (parent, chartGroup) {
     _chart.colorAccessor(_chart.cappedKeyAccessor);
 
     _chart.title(function (d) {
-        return _chart.cappedKeyAccessor(d) + ': ' + _chart.cappedValueAccessor(d);
+        return '<b>' + _chart.cappedKeyAccessor(d) + ':</b> ' + _chart.cappedValueAccessor(d);
     });
 
     /**
@@ -124,7 +124,7 @@ dc.pieChart = function (parent, chartGroup) {
 
         createSlicePath(slicesEnter, arc);
 
-        createTitles(slicesEnter);
+        _chart._attachTitle(slicesEnter, arc);
 
         createLabels(pieData, arc);
     }
@@ -150,14 +150,6 @@ dc.pieChart = function (parent, chartGroup) {
         dc.transition(slicePath, _chart.transitionDuration(), function (s) {
             s.attrTween('d', tweenPie);
         });
-    }
-
-    function createTitles (slicesEnter) {
-        if (_chart.renderTitle()) {
-            slicesEnter.append('title').text(function (d) {
-                return _chart.title()(d.data);
-            });
-        }
     }
 
     function positionLabels (labelsEnter, arc) {

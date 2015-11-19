@@ -46,7 +46,7 @@ dc.baseMixin = function (_chart) {
     var _renderLabel = false;
 
     var _title = function (d) {
-        return _chart.keyAccessor()(d) + ': ' + _chart.valueAccessor()(d);
+        return '<b>' + _chart.keyAccessor()(d) + ':</b> ' + _chart.valueAccessor()(d);
     };
     var _renderTitle = true;
     var _controlsUseVisibility = false;
@@ -1288,6 +1288,53 @@ dc.baseMixin = function (_chart) {
         }
         _renderTitle = renderTitle;
         return _chart;
+    };
+
+    _chart._attachTitle = function(items, arc) {
+        items.on('mouseover', function(d, i) {
+                _chart._renderTitle(d, i, this, arc)
+            })
+            .on('mouseleave', _chart._removeTitle);
+    }
+
+    _chart._renderTitle = function(d, i, element, arc) {
+        var data = d;
+        if (d.data) {
+            data = d.data;
+        }
+
+        var tooltip = _chart.root()
+            .append('div')
+            .attr('class', 'tooltip')
+            .html(_title(data));
+
+        var elBounding = element.getBoundingClientRect();
+        var tooltipBounding = tooltip[0][0].getBoundingClientRect();
+
+        var style = {
+            left: elBounding.left - (tooltipBounding.width / 2),
+            top: elBounding.top - tooltipBounding.height - 10,
+            'border-color': _chart.getColor(d.layer ? d : data, i),
+        };
+
+        if (arc) {
+            var centroid = arc.centroid(d);
+            style.left += Math.abs(centroid[0]);
+            style.top += Math.abs(centroid[1]);
+        } else {
+            style.left += elBounding.width / 2;
+        }
+
+        style.top += 'px';
+        style.left += 'px';
+
+        tooltip.style(style);
+    };
+
+    _chart._removeTitle = function() {
+        _chart.root()
+            .selectAll('.tooltip')
+            .remove();
     };
 
     /**

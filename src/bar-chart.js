@@ -136,9 +136,7 @@ dc.barChart = function (parent, chartGroup) {
             .attr('y', _chart.yAxisHeight())
             .attr('height', 0);
 
-        if (_chart.renderTitle()) {
-            enter.append('title').text(dc.pluck('data', _chart.title(d.name)));
-        }
+        _chart._attachTitle(bars);
 
         if (_chart.isOrdinal()) {
             bars.on('click', _chart.onClick);
