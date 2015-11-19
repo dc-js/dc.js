@@ -2078,13 +2078,13 @@ dc.baseMixin = function (_chart) {
             var gBounding = _chart.g().node().getBoundingClientRect();
             var centroid = arc.centroid(d);
 
-            style.left = gBounding.left + (gBounding.width / 2) - (tooltipBounding.width / 2) + centroid[0];
-            style.top = gBounding.top + (gBounding.height / 2) - tooltipBounding.height - 10 + centroid[1];
+            style.left = gBounding.left + (gBounding.width / 2) - (tooltipBounding.width / 2) + centroid[0] + window.scrollX;
+            style.top = gBounding.top + (gBounding.height / 2) - tooltipBounding.height - 10 + centroid[1] + window.scrollY;
         // all other charts
         } else {
             var elBounding = element.getBoundingClientRect();
 
-            style.left = elBounding.left - (tooltipBounding.width / 2) + window.scrollX + (elBounding.width / 2);
+            style.left = elBounding.left + (elBounding.width / 2) - (tooltipBounding.width / 2) + window.scrollX;
             style.top = elBounding.top - tooltipBounding.height - 10 + window.scrollY;
         }
 
