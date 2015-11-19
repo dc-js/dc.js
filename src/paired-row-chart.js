@@ -131,76 +131,21 @@ dc.pairedRowChart = function (parent, chartGroup) {
         });
     };
 
-    // width and margins
+    // margins
+    var left_margins = _leftChart.margins;
+    var right_margins = _rightChart.margins;
 
-    // the margins between the charts need to be set to 0 so that they sit together
-    var _margins = _chart.margins(); // get the default margins
-    _margins.right = _margins.left;
-
-    _chart.margins = function (_) {
-        if (!arguments.length) {
-            return _margins;
-        }
-        _margins = _;
-
-        // set left chart margins
-        _leftChart.margins({
-            top: _.top,
-            right: 0,
-            bottom: _.bottom,
-            left: _.left,
-        });
-
-        // set right chart margins
-        _rightChart.margins({
-            top: _.top,
-            right: _.right,
-            bottom: _.bottom,
-            left: 0,
-        });
-
-        return _chart;
+    _leftChart.margins = function() {
+        var margins = left_margins();
+        margins.right = 0;
+        return margins;
     };
 
-    _chart.margins(_margins); // set the new margins
-
-    // the width needs to be halved
-    var _width = 0; // get the default width
-
-    _chart.width = function (_) {
-        if (!arguments.length) {
-            return _width;
-        }
-        _width = _;
-
-        // set left chart width
-        _leftChart.width(dc.utils.isNumber(_) ? _ / 2 : _);
-
-        // set right chart width
-        _rightChart.width(dc.utils.isNumber(_) ? _ / 2 : _);
-
-        return _chart;
+    _rightChart.margins = function() {
+        var margins = right_margins();
+        margins.left = 0;
+        return margins;
     };
-
-    // the minWidth needs to be halved
-    var _minWidth = _chart.minWidth(); // get the default minWidth
-
-    _chart.minWidth = function (_) {
-        if (!arguments.length) {
-            return _minWidth;
-        }
-        _minWidth = _;
-
-        // set left chart minWidth
-        _leftChart.minWidth(dc.utils.isNumber(_) ? _ / 2 : _);
-
-        // set right chart minWidth
-        _rightChart.minWidth(dc.utils.isNumber(_) ? _ / 2 : _);
-
-        return _chart;
-    };
-
-    _chart.minWidth(_minWidth); // set the new minWidth
 
     // svg
     // return an array of both the sub chart svgs
