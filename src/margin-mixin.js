@@ -1,37 +1,34 @@
 /**
-## Margin Mixin
-
-Margin is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid Charts.
-
-**/
+ * Margin is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid
+ * Charts.
+ * @name marginMixin
+ * @memberof dc
+ * @mixin
+ * @param {Object} _chart
+ * @return {dc.marginMixin}
+ */
 dc.marginMixin = function (_chart) {
     var _margin = {top: 10, right: 50, bottom: 30, left: 30};
 
     /**
-    #### .margins([margins])
-    Get or set the margins for a particular coordinate grid chart instance. The margins is stored as an associative Javascript
-    array. Default margins: {top: 10, right: 50, bottom: 30, left: 30}.
-
-    You can modify only some of the values, for example:
-
-    ```js
-    chart.margins({left: 30}) // set left margin to 35
-    ```
-
-    The margins can be accessed directly from the getter.
-    ```js
-    var leftMargin = chart.margins().left; // 30 by default
-    chart.margins().left = 50;
-    leftMargin = chart.margins().left; // now 50
-    ```
-
-    **/
-    _chart.margins = function (m) {
-        if (!arguments.length) return _margin;
-        if ( m.top    != undefined ){ _margin.top = m.top; }
-        if ( m.right  != undefined ){ _margin.right = m.right; }
-        if ( m.bottom != undefined ){ _margin.bottom = m.bottom; }
-        if ( m.left   != undefined ){ _margin.left = m.left; }
+     * Get or set the margins for a particular coordinate grid chart instance. The margins is stored as
+     * an associative Javascript array.
+     * @name margins
+     * @memberof dc.marginMixin
+     * @instance
+     * @example
+     * var leftMargin = chart.margins().left; // 30 by default
+     * chart.margins().left = 50;
+     * leftMargin = chart.margins().left; // now 50
+     * @param {{top: Number, right: Number, left: Number, bottom: Number}} [margins={top: 10, right: 50, bottom: 30, left: 30}]
+     * @return {{top: Number, right: Number, left: Number, bottom: Number}}
+     * @return {dc.marginMixin}
+     */
+    _chart.margins = function (margins) {
+        if (!arguments.length) {
+            return _margin;
+        }
+        _margin = margins;
         return _chart;
     };
 

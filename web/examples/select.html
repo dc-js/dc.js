@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Select Menu Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+
+  <p>A meaningless example of multiple selectMenus on some random data...</p>
+  <div id="select1">
+    <div>
+      <a class='reset'
+         href='javascript:select1.filterAll();dc.redrawAll();'
+         style='visibility: hidden;'>reset</a>
+    </div>
+  </div>
+  <div id="select2">
+    <div>
+      <a class='reset'
+         href='javascript:select2.filterAll();dc.redrawAll();'
+         style='visibility: hidden;'>reset</a>
+    </div>
+  </div>
+  <div id="select3">
+    <div>
+      <a class='reset'
+         href='javascript:select3.filterAll();dc.redrawAll();'
+         style='visibility: hidden;'>reset</a>
+    </div>
+  </div>
+<div style="clear: both"></div>
+<div id="datatable"></div>
+
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+
+<style type="text/css">
+  .dc-chart th {
+    text-align: left
+  }
+  .dc-chart th,.dc-chart td {
+      padding-left: 10px;
+  }
+  .dc-chart tr.dc-table-group td {
+      padding-top: 4px;
+      border-bottom: 1px solid black;
+  }
+  .dc-chart select {
+      width: 150px;
+  }
+</style>
+
+<script type="text/javascript">
+
+  var select1 = dc.selectMenu('#select1'),
+      select2 = dc.selectMenu('#select2'),
+      select3 = dc.selectMenu('#select3'),
+      datatable = dc.dataTable('#datatable');
+
+  // create a bunch of crosslinked categorical data
+
+  var letters = [];
+  for(var i = 0; i < 26; ++i)
+      letters.push(String.fromCharCode(i+65));
+
+  var colors = ["AliceBlue","AntiqueWhite","Aqua","Aquamarine","Azure","Beige","Bisque","Black","BlanchedAlmond","Blue","BlueViolet","Brown","BurlyWood","CadetBlue","Chartreuse","Chocolate","Coral","CornflowerBlue","Cornsilk","Crimson","Cyan","DarkBlue","DarkCyan","DarkGoldenRod","DarkGray","DarkGrey","DarkGreen","DarkKhaki","DarkMagenta","DarkOliveGreen","Darkorange","DarkOrchid","DarkRed","DarkSalmon","DarkSeaGreen","DarkSlateBlue","DarkSlateGray","DarkSlateGrey","DarkTurquoise","DarkViolet","DeepPink","DeepSkyBlue","DimGray","DimGrey","DodgerBlue","FireBrick","FloralWhite","ForestGreen","Fuchsia","Gainsboro","GhostWhite","Gold","GoldenRod","Gray","Grey","Green","GreenYellow","HoneyDew","HotPink","IndianRed","Indigo","Ivory","Khaki","Lavender","LavenderBlush","LawnGreen","LemonChiffon","LightBlue","LightCoral","LightCyan","LightGoldenRodYellow","LightGray","LightGrey","LightGreen","LightPink","LightSalmon","LightSeaGreen","LightSkyBlue","LightSlateGray","LightSlateGrey","LightSteelBlue","LightYellow","Lime","LimeGreen","Linen","Magenta","Maroon","MediumAquaMarine","MediumBlue","MediumOrchid","MediumPurple","MediumSeaGreen","MediumSlateBlue","MediumSpringGreen","MediumTurquoise","MediumVioletRed","MidnightBlue","MintCream","MistyRose","Moccasin","NavajoWhite","Navy","OldLace","Olive","OliveDrab","Orange","OrangeRed","Orchid","PaleGoldenRod","PaleGreen","PaleTurquoise","PaleVioletRed","PapayaWhip","PeachPuff","Peru","Pink","Plum","PowderBlue","Purple","Red","RosyBrown","RoyalBlue","SaddleBrown","Salmon","SandyBrown","SeaGreen","SeaShell","Sienna","Silver","SkyBlue","SlateBlue","SlateGray","SlateGrey","Snow","SpringGreen","SteelBlue","Tan","Teal","Thistle","Tomato","Turquoise","Violet","Wheat","White","WhiteSmoke","Yellow","YellowGreen"];
+
+  var states = new Array("AK","AL","AR","AZ","CA","CO","CT","DC","DE","FL","GA","GU","HI","IA","ID", "IL","IN","KS","KY","LA","MA","MD","ME","MH","MI","MN","MO","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY", "OH","OK","OR","PA","PR","PW","RI","SC","SD","TN","TX","UT","VA","VI","VT","WA","WI","WV","WY");
+
+  var data = [], SIZE = 500;
+
+  function rnd(a) {
+      return a[Math.floor(Math.random()*a.length)];
+  }
+
+  for(i = 0; i < SIZE; ++i)
+      data.push({letter: rnd(letters), color: rnd(colors), state: rnd(states)});
+
+  var ndx = crossfilter(data),
+      letterDimension = ndx.dimension(function(d) { return d.letter; }),
+      colorDimension = ndx.dimension(function(d) { return d.color; }),
+      stateDimension = ndx.dimension(function(d) { return d.state; }),
+      letterDimension2 = ndx.dimension(function(d) { return d.letter; });
+
+
+  select1
+    .dimension(letterDimension)
+    .group(letterDimension.group());
+  select2
+    .dimension(colorDimension)
+    .group(colorDimension.group())
+    .multiple(true)
+    .size(10);
+  select3.dimension(stateDimension)
+    .group(stateDimension.group())
+    .multiple(true)
+    .size(10);
+
+  datatable
+    .dimension(letterDimension2)
+    .group(function(d) { return d.letter; })
+    .columns(['color', 'state'])
+    .size(data.length);
+
+  dc.renderAll();
+
+</script>
+</body>
+</html>

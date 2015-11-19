@@ -4,10 +4,12 @@
 
 # local files
 node_modules
+bower_components
 
 # ide files
 *.iml
 .idea
+.project
 
 # vim files
 .*.swp
@@ -21,8 +23,16 @@ node_modules
 # files for gh-pages and grunt-contrib-jasmine
 .grunt
 
-# jasmine spec runner
-spec/index.html
+# jasmine spec runners
+spec/*.html
 
 # coverage reports
 coverage
+
+# browserify bundle & test
+bundle.js
+spec/index-browserify.html
+
+# font noise from some doc tool
+web/docs/public
+

@@ -53,6 +53,13 @@ div.dc-chart {
     fill-opacity: .8;
 }
 
+.dc-chart .pie-path {
+  fill:none;
+  stroke-width: 2px;
+  stroke: black;
+  opacity: 0.4;
+}
+
 .dc-chart .selected path {
     stroke-width: 3;
     stroke: #ccc;
@@ -65,7 +72,8 @@ div.dc-chart {
     fill: #ccc;
 }
 
-.dc-chart .axis path, .axis line {
+.dc-chart .axis path,
+.dc-chart .axis line {
     fill: none;
     stroke: #000;
     shape-rendering: crispEdges;
@@ -253,7 +261,8 @@ div.dc-chart {
     stroke-opacity: 0.2;
 }
 
-.dc-chart path.dc-symbol, g.dc-legend-item.fadeout {
+.dc-chart path.dc-symbol,
+g.dc-legend-item.fadeout {
     fill-opacity: 0.5;
     stroke-opacity: 0.5;
 }
