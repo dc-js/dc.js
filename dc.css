@@ -289,6 +289,10 @@ g.dc-legend-item.fadeout {
 
 /* tooltip */
 
+.dc-chart {
+    position: relative;
+}
+
 .dc-chart .tooltip {
     position: absolute;
     background: #FFFFFF;

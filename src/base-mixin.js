@@ -1303,13 +1303,13 @@ dc.baseMixin = function (_chart) {
             data = d.data;
         }
 
-        var tooltip = _chart.root()
+        var tooltip = _root
             .append('div')
             .attr('class', 'tooltip')
             .html(_title(data));
 
-        var elBounding = element.getBoundingClientRect();
-        var tooltipBounding = tooltip[0][0].getBoundingClientRect();
+        var elBounding = getRelativePosition(element, _root.node());
+        var tooltipBounding = getRelativePosition(tooltip.node(), _root.node());
 
         var style = {
             left: elBounding.left - (tooltipBounding.width / 2),
@@ -1329,6 +1329,27 @@ dc.baseMixin = function (_chart) {
         style.left += 'px';
 
         tooltip.style(style);
+    };
+
+    function getRelativePosition(el, parentElement) {
+        var elPos = el.getBoundingClientRect();
+        var vpPos = getVpPos(el);
+
+        function getVpPos(el) {
+            if (!el.parentElement || el.parentElement === parentElement) {
+                return el.parentElement.getBoundingClientRect();
+            }
+            return getVpPos(el.parentElement);
+        }
+
+        return {
+            top: elPos.top - vpPos.top,
+            left: elPos.left - vpPos.left,
+            width: elPos.width,
+            bottom: elPos.bottom - vpPos.top,
+            height: elPos.height,
+            right: elPos.right - vpPos.left
+        };
     };
 
     _chart._removeTitle = function() {
