@@ -148,14 +148,14 @@ dc.compositeChart = function (parent, chartGroup) {
             lyAxisMax: lyAxisMax,
             ryAxisMin: ryAxisMin,
             ryAxisMax: ryAxisMax
-    };
+        };
     }
 
     function prepareRightYAxis (ranges) {
         if (_chart.rightY() === undefined || _chart.elasticY() || _chart.resizing()) {
             if (_chart.rightY() === undefined) {
-            _chart.rightY(d3.scale.linear());
-        }
+                _chart.rightY(d3.scale.linear());
+            }
             _chart.rightY().domain([ranges.ryAxisMin, ranges.ryAxisMax]).rangeRound([_chart.yAxisHeight(), 0]);
         }
 
@@ -168,8 +168,8 @@ dc.compositeChart = function (parent, chartGroup) {
     function prepareLeftYAxis (ranges) {
         if (_chart.y() === undefined || _chart.elasticY() || _chart.resizing()) {
             if (_chart.y() === undefined) {
-            _chart.y(d3.scale.linear());
-        }
+                _chart.y(d3.scale.linear());
+            }
             _chart.y().domain([ranges.lyAxisMin, ranges.lyAxisMax]).rangeRound([_chart.yAxisHeight(), 0]);
         }
 
@@ -179,7 +179,7 @@ dc.compositeChart = function (parent, chartGroup) {
         _chart.yAxis().orient('left');
     }
 
-    function generateChildG(child, i) {
+    function generateChildG (child, i) {
         child._generateG(_chart.g());
         child.g().attr('class', SUB_CHART_CLASS + ' _' + i);
     }
@@ -249,7 +249,7 @@ dc.compositeChart = function (parent, chartGroup) {
             return _childOptions;
         }
         _childOptions = childOptions;
-        _children.forEach(function(child){
+        _children.forEach(function (child) {
             child.options(_childOptions);
         });
         return _chart;
@@ -312,7 +312,7 @@ dc.compositeChart = function (parent, chartGroup) {
      */
     _chart.compose = function (subChartArray) {
         _children = subChartArray;
-        _children.forEach(function(child) {
+        _children.forEach(function (child) {
             child.height(_chart.height());
             child.width(_chart.width());
             child.margins(_chart.margins());
@@ -413,76 +413,76 @@ dc.compositeChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    function leftYAxisChildren() {
+    function leftYAxisChildren () {
         return _children.filter(function (child) {
             return !child.useRightYAxis();
         });
     }
 
-    function rightYAxisChildren() {
+    function rightYAxisChildren () {
         return _children.filter(function (child) {
             return child.useRightYAxis();
         });
     }
 
-    function getYAxisMin(charts) {
-        return charts.map(function(c) {
+    function getYAxisMin (charts) {
+        return charts.map(function (c) {
             return c.yAxisMin();
         });
     }
 
     delete _chart.yAxisMin;
-    function yAxisMin() {
+    function yAxisMin () {
         return d3.min(getYAxisMin(leftYAxisChildren()));
     }
 
-    function rightYAxisMin() {
+    function rightYAxisMin () {
         return d3.min(getYAxisMin(rightYAxisChildren()));
     }
 
-    function getYAxisMax(charts) {
-        return charts.map(function(c) {
+    function getYAxisMax (charts) {
+        return charts.map(function (c) {
             return c.yAxisMax();
         });
     }
 
     delete _chart.yAxisMax;
-    function yAxisMax() {
+    function yAxisMax () {
         return dc.utils.add(d3.max(getYAxisMax(leftYAxisChildren())), _chart.yAxisPadding());
     }
 
-    function rightYAxisMax() {
+    function rightYAxisMax () {
         return dc.utils.add(d3.max(getYAxisMax(rightYAxisChildren())), _chart.yAxisPadding());
     }
 
-    function getAllXAxisMinFromChildCharts() {
-        return _children.map(function(c) {
+    function getAllXAxisMinFromChildCharts () {
+        return _children.map(function (c) {
             return c.xAxisMin();
         });
     }
 
-    dc.override(_chart, 'xAxisMin',function () {
+    dc.override(_chart, 'xAxisMin', function () {
         return dc.utils.subtract(d3.min(getAllXAxisMinFromChildCharts()), _chart.xAxisPadding());
     });
 
-    function getAllXAxisMaxFromChildCharts() {
-        return _children.map(function(c) {
+    function getAllXAxisMaxFromChildCharts () {
+        return _children.map(function (c) {
             return c.xAxisMax();
         });
     }
 
-    dc.override(_chart, 'xAxisMax',function () {
+    dc.override(_chart, 'xAxisMax', function () {
         return dc.utils.add(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding());
     });
 
     _chart.legendables = function () {
-        return _children.reduce(function(items,child) {
+        return _children.reduce(function (items, child) {
             if (_shareColors) {
                 child.colors(_chart.colors());
             }
             items.push.apply(items, child.legendables());
             return items;
-        },[]);
+        }, []);
     };
 
     _chart.legendHighlight = function (d) {
