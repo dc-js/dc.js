@@ -16,13 +16,13 @@ dc.multiBarChart = function (parent, chartGroup) {
         _barWidth = undefined;
     });
 
-    _chart._labelFormatter = function(d){ return d; };
+    _chart._labelFormatter = function (d) { return d; };
     _chart._barLabels = false;
 
     dc.override(_chart, 'render', function () {
         if (_chart.round() && _centerBar && !_alwaysUseRounding) {
-            dc.logger.warn("By default, brush rounding is disabled if bars are centered. " +
-                         "See dc.js bar chart API documentation for details.");
+            dc.logger.warn('By default, brush rounding is disabled if bars are centered. ' +
+                         'See dc.js bar chart API documentation for details.');
         }
 
         _chart._render();
@@ -30,29 +30,29 @@ dc.multiBarChart = function (parent, chartGroup) {
 
     _chart.plotData = function () {
 
-        var data = new Array();
-        _chart.groups().forEach(function(m, i){
+        var data = [];
+        _chart.groups().forEach(function (m, i) {
             var row = {};
-            row.data = m.dimgroup.all();
-            row.data.forEach(function(d, j){
-                d.valueAccessor = m.accessor;
-                d.x  = _chart.keyAccessor()( d );
-                d.y  = d.valueAccessor( d );
+            row.data = m.all();
+            row.data.forEach(function (d, j) {
+                d.valueAccessor = _chart.valueAccessor();
+                d.x  = _chart.keyAccessor()(d);
+                d.y  = d.valueAccessor(d);
                 d.y0 = 0;
             });
             data.push(row);
         });
 
-        var layers = _chart.chartBodyG().selectAll("g.series").data( data );
+        var layers = _chart.chartBodyG().selectAll('g.series').data(data);
 
         calculateBarWidth();
         calculateMaxBarLabelWidth();
 
         layers
             .enter()
-            .append("g")
-            .attr("class", function (d, i) {
-                return "series " + "_" + i;
+            .append('g')
+            .attr('class', function (d, i) {
+                return 'series ' + '_' + i;
             });
 
         layers.each(function (d, i) {
@@ -61,119 +61,116 @@ dc.multiBarChart = function (parent, chartGroup) {
         });
     };
 
-    function calculateMaxBarLabelWidth(){
+    function calculateMaxBarLabelWidth () {
         var
             max  = 0,
             data = _chart.groups();
 
-        max = d3.max(data, function(g, i){
-            return d3.max(g.dimgroup.all(), function(h, j){
+        max = d3.max(data, function (g, i) {
+            return d3.max(g.all(), function (h, j) {
                 return 5.5 * _chart._labelFormatter(h.valueAccessor(h)).length;
             });
         });
         _maxBarleLabelWidth = max;
     }
 
-    function barHeight(d) {
+    function barHeight (d) {
         return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
     }
 
-    function barLabelY(d) {
+    function barLabelY (d) {
         var
             labY = 0,
-            labP = "out",
-            maxY = _chart.y().range()[0],
-            curY = _chart.y()(d.y + d.y0)
-        ;
+            labP = 'out',
+            curY = _chart.y()(d.y + d.y0);
 
-        if( curY < 15 ){
+        if (curY < 15) {
             labY = curY + 15;
-            labP = "in";
-        }
-        else {
-            labY = curY -5;
+            labP = 'in';
+        } else {
+            labY = curY - 5;
         }
         labY = dc.utils.safeNumber(labY);
 
-        return { "y": labY, "p": labP };
+        return {'y': labY, 'p': labP};
     }
 
-    function renderBars(layer, layerIndex, d) {
+    function renderBars (layer, layerIndex, d) {
 
-        var bars = layer.selectAll("g.bargr").data(d.data);
+        var bars = layer.selectAll('g.bargr').data(d.data);
 
         var barEnter = bars.enter()
-            .append("g")
-                .attr("class", "bargr");
+            .append('g')
+                .attr('class', 'bargr');
 
         barEnter
-            .append("rect")
-                .attr("class", "bar")
-                .attr("fill", function(d){
+            .append('rect')
+                .attr('class', 'bar')
+                .attr('fill', function (d) {
                     return _chart.colors()(layerIndex);
                 })
-                .attr("height", 0)
-                .attr("width", _barWidth)
-                .attr("x", function (d) {
-                    var x; 
+                .attr('height', 0)
+                .attr('width', _barWidth)
+                .attr('x', function (d) {
+                    var x;
                     x  = _chart.x()(d.x) + _chart.groupGap() / 2;
                     x += layerIndex * (_barWidth + _gap);
-                    x += _gap / 2
+                    x += _gap / 2;
                     return dc.utils.safeNumber(x);
                 })
-                .attr("y", function(d){
+                .attr('y', function (d) {
                     return _chart.y()(0);
                 });
 
-        if (_chart.renderTitle()) {
-            //bars.append("title").text(dc.pluck('data',_chart.title(d.name)));
-        }
+        /*if (_chart.renderTitle()) {
+            bars.append('title').text(dc.pluck('data', _chart.title(d.name)));
+        }*/
 
         if (_chart.isOrdinal()) {
-            bars.on("click", onClick);
+            bars.on('click', onClick);
         }
 
-        dc.transition(bars.selectAll("rect.bar"), _chart.transitionDuration())
-            .attr("y", function (d) {
+        dc.transition(bars.selectAll('rect.bar'), _chart.transitionDuration())
+            .attr('y', function (d) {
                 var y = _chart.y()(d.y + d.y0);
 
-                if (d.y < 0)
+                if (d.y < 0) {
                     y -= barHeight(d);
+                }
 
                 return dc.utils.safeNumber(y);
             })
-            .attr("height", function (d) {
+            .attr('height', function (d) {
                 return barHeight(d);
             });
 
         dc.transition(bars.exit(), _chart.transitionDuration())
-            .attr("height", function(d){
+            .attr('height', function (d) {
                 return 0;
             })
             .remove();
 
-
-        if (_chart.barLabels() && _maxBarleLabelWidth <= _barWidth){
-            barEnter.append("text")
-                    .attr("class", "bar-label")
-                    .attr("text-anchor", "middle")
-                    .attr("y", function(d){
+        if (_chart.barLabels() && _maxBarleLabelWidth <= _barWidth) {
+            barEnter.append('text')
+                    .attr('class', 'bar-label')
+                    .attr('text-anchor', 'middle')
+                    .attr('y', function (d) {
                         return _chart.y()(0);
                     })
-                    .attr("data-prevvalue", function(d){
+                    .attr('data-prevvalue', function (d) {
                         return d.valueAccessor(d);
                     });
 
-            var labels = layer.selectAll("text.bar-label")
+            var labels = layer.selectAll('text.bar-label')
                     .data(d.data)
-                    .text(function(e){
+                    .text(function (e) {
                         var dat = Math.abs(e.valueAccessor(e));
                         var ret = _chart._labelFormatter(dat);
                         return ret;
                     });
 
-           dc.transition(labels, _chart.transitionDuration())
-                .attr("x", function (d) {
+            dc.transition(labels, _chart.transitionDuration())
+                .attr('x', function (d) {
                     var x = _chart.x()(d.x);
                     if (_chart.isOrdinal()) {
                         x += _barWidth / 2;
@@ -182,48 +179,57 @@ dc.multiBarChart = function (parent, chartGroup) {
                     }
                     return dc.utils.safeNumber(x);
                 })
-                .attr("y", function (d) {
+                .attr('y', function (d) {
                     return barLabelY(d).y;
                 })
-                .style("fill", function (d){
-                    if (barLabelY(d).p == "in"){
-                        return "white";
+                .style('fill', function (d) {
+                    if (barLabelY(d).p === 'in') {
+                        return 'white';
                     }
-                    if (barLabelY(d).p == "out"){
-                        return "#3d3d3d";
+                    if (barLabelY(d).p === 'out') {
+                        return '#3d3d3d';
                     }
                 })
-                .tween("text", function(d) {
+                .tween('text', function (d) {
                     var
                         start,
                         end,
                         i;
 
-                    start = d3.select(this).attr("data-prevvalue");
+                    start = d3.select(this).attr('data-prevvalue');
                     end   = d.valueAccessor(d);
                     i     = d3.interpolate(start, end);
-                    return function(t) {
-                        this.textContent = _chart._labelFormatter( i(t) );
+                    return function (t) {
+                        this.textContent = _chart._labelFormatter(i(t));
                     };
                 })
-                .each("end", function(d){
-                    d3.select(this).attr("data-prevvalue", function(d){
+                .each('end', function (d) {
+                    d3.select(this).attr('data-prevvalue', function (d) {
                         return d.valueAccessor(d);
                     });
                 });
         }
     }
 
-    function calculateBarWidth() {
-
+    function calculateBarWidth () {
         if (_barWidth === undefined) {
             var numberOfBars = _chart.xUnitCount() * _chart.groups().length;
-            _barWidth = (_chart.x().rangeBand() - _chart.groupGap()) / _chart.groups().length - _gap;
+
+            if (_chart.isOrdinal()) {
+                _barWidth = (_chart.x().rangeBand() - _chart.groupGap()) / _chart.groups().length - _gap;
+            } else {
+                _barWidth = Math.floor((_chart.xAxisLength() - (_chart.xUnitCount() - 1) * _chart.groupGap() -
+                        _chart.groups().length * _gap) / numberOfBars);
+            }
+
+            if (_barWidth === Infinity || isNaN(_barWidth) || _barWidth < MIN_BAR_WIDTH) {
+                _barWidth = MIN_BAR_WIDTH;
+            }
         }
     }
 
     _chart.fadeDeselectedArea = function () {
-        var bars = _chart.chartBodyG().selectAll("rect.bar");
+        var bars = _chart.chartBodyG().selectAll('rect.bar');
         var extent = _chart.brush().extent();
 
         if (_chart.isOrdinal()) {
@@ -258,12 +264,14 @@ dc.multiBarChart = function (parent, chartGroup) {
 
     **/
     _chart.centerBar = function (_) {
-        if (!arguments.length) return _centerBar;
+        if (!arguments.length) {
+            return _centerBar;
+        }
         _centerBar = _;
         return _chart;
     };
 
-    function onClick(d) {
+    function onClick (d) {
         _chart.onClick(d);
     }
 
@@ -275,7 +283,9 @@ dc.multiBarChart = function (parent, chartGroup) {
     for a visual description of how the padding is applied.
     **/
     _chart.barPadding = function (_) {
-        if (!arguments.length) return _chart._rangeBandPadding();
+        if (!arguments.length) {
+            return _chart._rangeBandPadding();
+        }
         _chart._rangeBandPadding(_);
         _gap = 0;
         return _chart;
@@ -297,7 +307,9 @@ dc.multiBarChart = function (parent, chartGroup) {
 
     **/
     _chart.gap = function (_) {
-        if (!arguments.length) return _gap;
+        if (!arguments.length) {
+            return _gap;
+        }
         _gap = _;
         return _chart;
     };
@@ -308,7 +320,7 @@ dc.multiBarChart = function (parent, chartGroup) {
             extent[0] = extent.map(_chart.round())[0];
             extent[1] = extent.map(_chart.round())[1];
 
-            _chart.chartBodyG().select(".brush")
+            _chart.chartBodyG().select('.brush')
                 .call(_chart.brush().extent(extent));
         }
 
@@ -324,37 +336,43 @@ dc.multiBarChart = function (parent, chartGroup) {
     When using standard d3.js rounding methods, the brush often doesn't align correctly with centered bars since the bars are offset.
     The rounding function must add an offset to compensate, such as in the following example.
     ```js
-    chart.round(function(n) {return Math.floor(n)+0.5});
+    chart.round(function (n) {return Math.floor(n)+0.5});
     ```
     **/
     _chart.alwaysUseRounding = function (_) {
-        if (!arguments.length) return _alwaysUseRounding;
+        if (!arguments.length) {
+            return _alwaysUseRounding;
+        }
         _alwaysUseRounding = _;
         return _chart;
     };
 
     _chart.barLabels = function (_) {
-        if (!arguments.length) return _chart._barLabels;
+        if (!arguments.length) {
+            return _chart._barLabels;
+        }
         _chart._barLabels = _;
         return _chart;
     };
 
     _chart.labelFormatter = function (_) {
-        if (!arguments.length) return _chart._labelFormatter;
+        if (!arguments.length) {
+            return _chart._labelFormatter;
+        }
         _chart._labelFormatter = _;
         return _chart;
     };
 
-    function colorFilter(color,inv) {
-        return function() {
+    function colorFilter (color, inv) {
+        return function () {
             var item = d3.select(this);
-            var match = item.attr('fill') == color;
+            var match = item.attr('fill') === color;
             return inv ? !match : match;
         };
     }
 
     _chart.legendHighlight = function (d) {
-        if(!_chart.isLegendableHidden(d)) {
+        if (!_chart.isLegendableHidden(d)) {
             _chart.g().selectAll('rect.bar')
                 .classed('highlight', colorFilter(d.color))
                 .classed('fadeout', colorFilter(d.color, true));
@@ -369,17 +387,18 @@ dc.multiBarChart = function (parent, chartGroup) {
 
     _chart.yAxisMax = function () {
         var max = d3.max(_chart.groups(), function (e) {
-            var groupmax = d3.max(e.dimgroup.all(), function(d){
-                return e.accessor( d );
+            var groupmax = d3.max(e.all(), function (d) {
+                d.valueAccessor = _chart.valueAccessor();
+                return d.valueAccessor(d);
             });
             return groupmax;
         });
         return max;
     };
 
-    dc.override(_chart, "xAxisMax", function() {
+    dc.override(_chart, 'xAxisMax', function () {
         var max = this._xAxisMax();
-        if('resolution' in _chart.xUnits()) {
+        if ('resolution' in _chart.xUnits()) {
             var res = _chart.xUnits().resolution;
             max += res;
         }
