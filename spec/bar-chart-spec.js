@@ -1206,11 +1206,11 @@ describe('dc.barChart', function () {
         }
     });
 
-    describe('grouped visualization for stacked data', function() {
-      beforeEach(function () {
-          chart
-              .groupBars(true);
-      });
+    describe('grouped visualization for stacked data', function () {
+        beforeEach(function () {
+            chart
+                .groupBars(true);
+        });
 
         describe('with linear x domain', function () {
             beforeEach(function () {
@@ -1359,5 +1359,5 @@ describe('dc.barChart', function () {
                 }
             }
         };
-    };
+    }
 });

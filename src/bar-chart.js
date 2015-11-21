@@ -188,9 +188,9 @@ dc.barChart = function (parent, chartGroup) {
         if (_barWidth === undefined) {
             var numberOfBars = _chart.xUnitCount();
 
-            if(_groupBars) {
+            if (_groupBars) {
                 var numberOfStacks = _chart.stack().length;
-  
+
                 if (_chart.isOrdinal()) {
                     _barWidth = Math.floor((_chart.x().rangeBand() - _chart.groupGap()) / numberOfStacks - _gap);
                 } else {
@@ -270,8 +270,8 @@ dc.barChart = function (parent, chartGroup) {
 
         if (_groupBars) {
             // set y0 to 0 on all layers
-            data.forEach(function(layer) {
-                layer.values.forEach(function(value){
+            data.forEach(function (layer) {
+                layer.values.forEach(function (value) {
                     value.y0 = 0;
                 });
             });
