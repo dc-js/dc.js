@@ -36,9 +36,9 @@ describe('dc.multiBarChart', function () {
     var barSpacing = function (n) {
         return function () {
             var i = 0, dx = [];
-            var barWidth = +chart.g().select('.series._0 .bar').attr('width');
+            var barWidth = +chart.g().select('.stack._0 .bar').attr('width');
             for (i; i < n; i += 1) {
-                dx[i] = +chart.g().select('.series._' + i + ' .bar').attr('x');
+                dx[i] = +chart.g().select('.stack._' + i + ' .bar').attr('x');
 
                 if (i > 0) {
                     expect(dx[i] - dx[i - 1]).toBeCloseTo(barWidth + chart.gap());
