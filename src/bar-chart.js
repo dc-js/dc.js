@@ -359,8 +359,8 @@ dc.barChart = function (parent, chartGroup) {
      * @name groupBars
      * @memberof dc.barChart
      * @instance
-     * @param {Number} [groupBars=false]
-     * @return {Number}
+     * @param {Boolean} [groupBars=false]
+     * @return {Boolean}
      * @return {dc.barChart}
      */
     _chart.groupBars = function (groupBars) {
