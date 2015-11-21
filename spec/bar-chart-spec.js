@@ -1,12 +1,27 @@
 /* global appendChartID, loadDateFixture, makeDate */
 describe('dc.barChart', function () {
     var id, chart, data;
-    var dimension, group;
+    var dimension, group, idSumGroup, valueSumGroup;
+    var linearDimension, linearGroup, linearIdSumGroup, linearValueSumGroup;
+    var ordinalDimension, ordinalGroup, ordinalIdSumGroup, ordinalValueSumGroup;
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
         dimension = data.dimension(function (d) { return d3.time.day.utc(d.dd); });
+        linearDimension = data.dimension(function (d) { return d.id; });
+        ordinalDimension = data.dimension(function (d) { return d.state; });
+
         group = dimension.group();
+        valueSumGroup = dimension.group().reduceSum(function (d) { return d.value; });
+        idSumGroup = dimension.group().reduceSum(function (d) { return d.id; });
+
+        linearGroup = linearDimension.group();
+        linearValueSumGroup = linearDimension.group().reduceSum(function (d) { return d.value; });
+        linearIdSumGroup = linearDimension.group().reduceSum(function (d) { return d.id; });
+
+        ordinalGroup = ordinalDimension.group();
+        ordinalValueSumGroup = ordinalDimension.group().reduceSum(function (d) { return d.value; });
+        ordinalIdSumGroup = ordinalDimension.group().reduceSum(function (d) { return d.id; });
 
         id = 'bar-chart';
         appendChartID(id);
@@ -1191,6 +1206,108 @@ describe('dc.barChart', function () {
         }
     });
 
+    describe('grouped visualization for stacked data', function() {
+      beforeEach(function () {
+          chart
+              .groupBars(true);
+      });
+
+        describe('with linear x domain', function () {
+            beforeEach(function () {
+                chart
+                    .dimension(linearDimension)
+                    .x(d3.scale.linear().domain([1, 10]));
+            });
+
+            describe('with even number of bar charts', function () {
+                beforeEach(function () {
+                    chart
+                        .group(linearValueSumGroup)
+                        .stack(linearIdSumGroup)
+                        .render();
+                });
+
+                it('bars should come one after the other', barSpacing(2));
+            });
+
+            describe('with odd number of bar charts', function () {
+                beforeEach(function () {
+                    chart
+                        .group(linearValueSumGroup)
+                        .stack(linearIdSumGroup)
+                        .stack(linearGroup)
+                        .render();
+                });
+
+                it('bars should come one after the other', barSpacing(3));
+            });
+        });
+
+        describe('with ordinal x domain', function () {
+            beforeEach(function () {
+                chart
+                    .dimension(ordinalDimension)
+                    .x(d3.scale.ordinal())
+                    .xUnits(dc.units.ordinal);
+            });
+
+            describe('with even number of bar charts', function () {
+                beforeEach(function () {
+                    chart
+                        .group(ordinalValueSumGroup)
+                        .stack(ordinalIdSumGroup)
+                        .render();
+                });
+
+                it('bars should come one after the other', barSpacing(2));
+            });
+
+            describe('with odd number of bar charts', function () {
+                beforeEach(function () {
+                    chart
+                        .group(ordinalValueSumGroup)
+                        .stack(ordinalIdSumGroup)
+                        .stack(ordinalGroup)
+                        .render();
+                });
+
+                it('bars should come one after the other', barSpacing(3));
+            });
+        });
+
+        describe('with date x domain', function () {
+            beforeEach(function () {
+                chart
+                    .dimension(dimension)
+                    .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]))
+                    .xUnits(d3.time.days.utc);
+            });
+
+            describe('with even number of bar charts', function () {
+                beforeEach(function () {
+                    chart
+                        .group(valueSumGroup)
+                        .stack(idSumGroup)
+                        .render();
+                });
+
+                it('bars should come one after the other', barSpacing(2));
+            });
+
+            describe('with odd number of bar charts', function () {
+                beforeEach(function () {
+                    chart
+                        .group(valueSumGroup)
+                        .stack(idSumGroup)
+                        .stack(group)
+                        .render();
+                });
+
+                it('bars should come one after the other', barSpacing(3));
+            });
+        });
+    });
+
     function nthStack (n) {
         var stack = d3.select(chart.selectAll('.stack')[0][n]);
 
@@ -1229,4 +1346,18 @@ describe('dc.barChart', function () {
         expect(x(nthStack(0).nthBar(n)) + wid(nthStack(0).nthBar(n)))
             .toBeLessThan(x(nthStack(0).nthBar(n + 1)));
     }
+
+    function barSpacing (n) {
+        return function () {
+            var i = 0, dx = [];
+            var barWidth = +chart.g().select('.stack._0 .bar').attr('width');
+            for (i; i < n; i += 1) {
+                dx[i] = +chart.g().select('.stack._' + i + ' .bar').attr('x');
+
+                if (i > 0) {
+                    expect(dx[i] - dx[i - 1]).toBeCloseTo(barWidth + chart.gap());
+                }
+            }
+        };
+    };
 });
