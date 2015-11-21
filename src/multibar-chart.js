@@ -29,21 +29,7 @@ dc.multiBarChart = function (parent, chartGroup) {
     });
 
     _chart.plotData = function () {
-
-        var data = [];
-        _chart.groups().forEach(function (m, i) {
-            var row = {};
-            row.data = m.all();
-            row.data.forEach(function (d, j) {
-                d.valueAccessor = _chart.valueAccessor();
-                d.x  = _chart.keyAccessor()(d);
-                d.y  = d.valueAccessor(d);
-                d.y0 = 0;
-            });
-            data.push(row);
-        });
-
-        var layers = _chart.chartBodyG().selectAll('g.series').data(data);
+        var layers = _chart.chartBodyG().selectAll('g.series').data(_chart.data());
 
         calculateBarWidth();
         calculateMaxBarLabelWidth();
@@ -62,12 +48,10 @@ dc.multiBarChart = function (parent, chartGroup) {
     };
 
     function calculateMaxBarLabelWidth () {
-        var
-            max  = 0,
-            data = _chart.groups();
+        var max  = 0;
 
-        max = d3.max(data, function (g, i) {
-            return d3.max(g.all(), function (h, j) {
+        max = d3.max(_chart.stack(), function (s, i) {
+            return d3.max(s.group.all(), function (h, j) {
                 return 5.5 * _chart._labelFormatter(h.valueAccessor(h)).length;
             });
         });
@@ -97,7 +81,7 @@ dc.multiBarChart = function (parent, chartGroup) {
 
     function renderBars (layer, layerIndex, d) {
 
-        var bars = layer.selectAll('g.bargr').data(d.data);
+        var bars = layer.selectAll('g.bargr').data(d.values);
 
         var barEnter = bars.enter()
             .append('g')
@@ -122,9 +106,9 @@ dc.multiBarChart = function (parent, chartGroup) {
                     return _chart.y()(0);
                 });
 
-        /*if (_chart.renderTitle()) {
+        if (_chart.renderTitle()) {
             bars.append('title').text(dc.pluck('data', _chart.title(d.name)));
-        }*/
+        }
 
         if (_chart.isOrdinal()) {
             bars.on('click', onClick);
@@ -213,13 +197,13 @@ dc.multiBarChart = function (parent, chartGroup) {
 
     function calculateBarWidth () {
         if (_barWidth === undefined) {
-            var numberOfBars = _chart.xUnitCount() * _chart.groups().length;
+            var numberOfBars = _chart.xUnitCount() * _chart.stack().length;
 
             if (_chart.isOrdinal()) {
-                _barWidth = (_chart.x().rangeBand() - _chart.groupGap()) / _chart.groups().length - _gap;
+                _barWidth = (_chart.x().rangeBand() - _chart.groupGap()) / _chart.stack().length - _gap;
             } else {
                 _barWidth = Math.floor((_chart.xAxisLength() - (_chart.xUnitCount() - 1) * _chart.groupGap() -
-                        _chart.groups().length * _gap) / numberOfBars);
+                        _chart.stack().length * _gap) / numberOfBars);
             }
 
             if (_barWidth === Infinity || isNaN(_barWidth) || _barWidth < MIN_BAR_WIDTH) {
@@ -386,8 +370,8 @@ dc.multiBarChart = function (parent, chartGroup) {
     };
 
     _chart.yAxisMax = function () {
-        var max = d3.max(_chart.groups(), function (e) {
-            var groupmax = d3.max(e.all(), function (d) {
+        var max = d3.max(_chart.stack(), function (e) {
+            var groupmax = d3.max(e.group.all(), function (d) {
                 d.valueAccessor = _chart.valueAccessor();
                 return d.valueAccessor(d);
             });

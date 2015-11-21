@@ -4,49 +4,28 @@ A mixin for adding basic multi aggregation support for charts.
 **/
 dc.multiGroupMixin = function (_chart) {
 
-    _chart._groups = [];
-    _chart._groupGap = 5;
-
-    _chart.groups = function (g) {
-        if (!arguments.length) {
-            return _chart._groups;
-        }
-        if (Object.prototype.toString.call(g) === '[object Array]') {
-            _chart._groups = g;
-        } else {
-            _chart._groups = [g];
-        }
-
-        // if group is not set, use the first group from groups
-        if (!_chart.group()) {
-            _chart.group(_chart._groups[0]);
-        }
-
-        _chart.expireCache();
-        return _chart;
-    };
+    var _groupGap = 5;
 
     _chart.groupGap = function (_) {
         if (!arguments.length) {
-            return _chart._groupGap;
+            return _groupGap;
         }
-        _chart._groupGap = _;
+        _groupGap = _;
         return _chart;
     };
 
-    _chart.legendables = function () {
-        var items = [];
-        _chart.groups().forEach(function (g, k) {
-            var item = {
-                chart:  _chart,
-                name:   g.title,
-                hidden: false,
-                color:  _chart.colors()(k)
-            };
-            items.push(item);
+    _chart.data(function () {
+        var layers = _chart.stack();
+        var data = layers.length ? _chart.stackLayout()(layers) : [];
+
+        // set y0 to 0 on all layers
+        data.forEach(function(layer) {
+            layer.values.forEach(function(value){
+                value.y0 = 0;
+            });
         });
-        return items;
-    };
+        return data;
+    });
 
     return _chart;
 };

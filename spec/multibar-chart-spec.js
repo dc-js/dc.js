@@ -28,8 +28,8 @@ describe('dc.multiBarChart', function () {
 
         chart = dc.multiBarChart('#' + id);
         chart
-            .width(500)
-            .height(150)
+            .width(800)
+            .height(200)
             .transitionDuration(0);
     });
 
@@ -57,7 +57,8 @@ describe('dc.multiBarChart', function () {
         describe('with even number of bar charts', function () {
             beforeEach(function () {
                 chart
-                    .groups([linearValueSumGroup, linearIdSumGroup])
+                    .group(linearValueSumGroup)
+                    .stack(linearIdSumGroup)
                     .render();
             });
 
@@ -67,7 +68,9 @@ describe('dc.multiBarChart', function () {
         describe('with odd number of bar charts', function () {
             beforeEach(function () {
                 chart
-                    .groups([linearValueSumGroup, linearIdSumGroup, linearGroup])
+                    .group(linearValueSumGroup)
+                    .stack(linearIdSumGroup)
+                    .stack(linearGroup)
                     .render();
             });
 
@@ -86,7 +89,8 @@ describe('dc.multiBarChart', function () {
         describe('with even number of bar charts', function () {
             beforeEach(function () {
                 chart
-                    .groups([ordinalValueSumGroup, ordinalIdSumGroup])
+                    .group(ordinalValueSumGroup)
+                    .stack(ordinalIdSumGroup)
                     .render();
             });
 
@@ -96,7 +100,9 @@ describe('dc.multiBarChart', function () {
         describe('with odd number of bar charts', function () {
             beforeEach(function () {
                 chart
-                    .groups([ordinalValueSumGroup, ordinalIdSumGroup, ordinalGroup])
+                    .group(ordinalValueSumGroup)
+                    .stack(ordinalIdSumGroup)
+                    .stack(ordinalGroup)
                     .render();
             });
 
@@ -115,7 +121,8 @@ describe('dc.multiBarChart', function () {
         describe('with even number of bar charts', function () {
             beforeEach(function () {
                 chart
-                    .groups([dateValueSumGroup, dateIdSumGroup])
+                    .group(dateValueSumGroup)
+                    .stack(dateIdSumGroup)
                     .render();
             });
 
@@ -125,7 +132,9 @@ describe('dc.multiBarChart', function () {
         describe('with odd number of bar charts', function () {
             beforeEach(function () {
                 chart
-                    .groups([dateValueSumGroup, dateIdSumGroup, dateGroup])
+                    .group(dateValueSumGroup)
+                    .stack(dateIdSumGroup)
+                    .stack(dateGroup)
                     .render();
             });
 
