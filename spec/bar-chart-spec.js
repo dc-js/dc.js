@@ -1230,6 +1230,16 @@ describe('dc.barChart', function () {
 
                 it('bars should come one after the other', barSpacing);
                 it('should generate labels with positions corresponding to their data', barLabels);
+
+                describe('with centered bars', function () {
+                    beforeEach(function () {
+                        chart
+                            .centerBar(true)
+                            .render();
+                    });
+
+                    it('should position bars centered around their data points', barCentering);
+                });
             });
 
             describe('with odd number of bar charts', function () {
@@ -1243,6 +1253,16 @@ describe('dc.barChart', function () {
 
                 it('bars should come one after the other', barSpacing);
                 it('should generate labels with positions corresponding to their data', barLabels);
+
+                describe('with centered bars', function () {
+                    beforeEach(function () {
+                        chart
+                            .centerBar(true)
+                            .render();
+                    });
+
+                    it('should position bars centered around their data points', barCentering);
+                });
             });
         });
 
@@ -1298,6 +1318,16 @@ describe('dc.barChart', function () {
 
                 it('bars should come one after the other', barSpacing);
                 it('should generate labels with positions corresponding to their data', barLabels);
+
+                describe('with centered bars', function () {
+                    beforeEach(function () {
+                        chart
+                            .centerBar(true)
+                            .render();
+                    });
+
+                    it('should position bars centered around their data points', barCentering);
+                });
             });
 
             describe('with odd number of bar charts', function () {
@@ -1310,6 +1340,17 @@ describe('dc.barChart', function () {
                 });
 
                 it('bars should come one after the other', barSpacing);
+                it('should generate labels with positions corresponding to their data', barLabels);
+
+                describe('with centered bars', function () {
+                    beforeEach(function () {
+                        chart
+                            .centerBar(true)
+                            .render();
+                    });
+
+                    it('should position bars centered around their data points', barCentering);
+                });
             });
         });
     });
@@ -1326,8 +1367,8 @@ describe('dc.barChart', function () {
         };
 
         stack.forEachBar = function (assertions) {
-            this.selectAll('rect.bar').each(function (d) {
-                assertions(d3.select(this), d);
+            this.selectAll('rect.bar').each(function (d, i) {
+                assertions(d3.select(this), d, i);
             });
         };
 
@@ -1335,8 +1376,8 @@ describe('dc.barChart', function () {
     }
 
     function forEachBar (assertions) {
-        chart.selectAll('rect.bar').each(function (d) {
-            assertions(d3.select(this), d);
+        chart.selectAll('rect.bar').each(function (d, i) {
+            assertions(d3.select(this), d, i);
         });
     }
 
@@ -1372,6 +1413,16 @@ describe('dc.barChart', function () {
                 var barX = +nthStack(i).nthBar(j).attr('x');
                 expect(+d3.select(barLabel).attr('x')).toBeWithinDelta(barX, barX + barWidth);
             });
+        });
+    }
+
+    function barCentering () {
+        var barWidth = +nthStack(0).nthBar(0).attr('width');
+        var noOfStacks = chart.selectAll('.stack')[0].length;
+
+        nthStack(0).forEachBar(function (bar, datum, i) {
+            var barPosition = chart.x()(datum.data.key);
+            expect((+bar.attr('x') + +nthStack(noOfStacks - 1).nthBar(i).attr('x') + barWidth) / 2).toBeCloseTo(barPosition);
         });
     }
 });
