@@ -1209,7 +1209,8 @@ describe('dc.barChart', function () {
     describe('grouped visualization for stacked data', function () {
         beforeEach(function () {
             chart
-                .groupBars(true);
+                .groupBars(true)
+                .renderLabel(true);
         });
 
         describe('with linear x domain', function () {
@@ -1227,7 +1228,8 @@ describe('dc.barChart', function () {
                         .render();
                 });
 
-                it('bars should come one after the other', barSpacing(2));
+                it('bars should come one after the other', barSpacing);
+                it('should generate labels with positions corresponding to their data', barLabels);
             });
 
             describe('with odd number of bar charts', function () {
@@ -1239,7 +1241,8 @@ describe('dc.barChart', function () {
                         .render();
                 });
 
-                it('bars should come one after the other', barSpacing(3));
+                it('bars should come one after the other', barSpacing);
+                it('should generate labels with positions corresponding to their data', barLabels);
             });
         });
 
@@ -1259,7 +1262,8 @@ describe('dc.barChart', function () {
                         .render();
                 });
 
-                it('bars should come one after the other', barSpacing(2));
+                it('bars should come one after the other', barSpacing);
+                it('should generate labels with positions corresponding to their data', barLabels);
             });
 
             describe('with odd number of bar charts', function () {
@@ -1271,7 +1275,8 @@ describe('dc.barChart', function () {
                         .render();
                 });
 
-                it('bars should come one after the other', barSpacing(3));
+                it('bars should come one after the other', barSpacing);
+                it('should generate labels with positions corresponding to their data', barLabels);
             });
         });
 
@@ -1291,7 +1296,8 @@ describe('dc.barChart', function () {
                         .render();
                 });
 
-                it('bars should come one after the other', barSpacing(2));
+                it('bars should come one after the other', barSpacing);
+                it('should generate labels with positions corresponding to their data', barLabels);
             });
 
             describe('with odd number of bar charts', function () {
@@ -1303,7 +1309,7 @@ describe('dc.barChart', function () {
                         .render();
                 });
 
-                it('bars should come one after the other', barSpacing(3));
+                it('bars should come one after the other', barSpacing);
             });
         });
     });
@@ -1347,17 +1353,25 @@ describe('dc.barChart', function () {
             .toBeLessThan(x(nthStack(0).nthBar(n + 1)));
     }
 
-    function barSpacing (n) {
-        return function () {
-            var i = 0, dx = [];
-            var barWidth = +chart.g().select('.stack._0 .bar').attr('width');
-            for (i; i < n; i += 1) {
-                dx[i] = +chart.g().select('.stack._' + i + ' .bar').attr('x');
+    function barSpacing () {
+        var dx = [];
+        var barWidth = +nthStack(0).nthBar(0).attr('width');
+        chart.selectAll('.stack')[0].forEach(function (stack, i) {
+            dx[i] = +d3.select(stack).select('.bar').attr('x');
 
-                if (i > 0) {
-                    expect(dx[i] - dx[i - 1]).toBeCloseTo(barWidth + chart.gap());
-                }
+            if (i > 0) {
+                expect(dx[i] - dx[i - 1]).toBeCloseTo(barWidth + chart.gap());
             }
-        };
+        });
+    }
+
+    function barLabels () {
+        var barWidth = +nthStack(0).nthBar(0).attr('width');
+        chart.selectAll('.stack')[0].forEach(function (stack, i) {
+            d3.select(stack).selectAll('text.barLabel')[0].forEach(function (barLabel, j) {
+                var barX = +nthStack(i).nthBar(j).attr('x');
+                expect(+d3.select(barLabel).attr('x')).toBeWithinDelta(barX, barX + barWidth);
+            });
+        });
     }
 });

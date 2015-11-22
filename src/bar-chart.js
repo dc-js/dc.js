@@ -78,7 +78,7 @@ dc.barChart = function (parent, chartGroup) {
 
             renderBars(layer, i, d);
 
-            if (_chart.renderLabel() && last === i) {
+            if (_chart.renderLabel() && (_groupBars || last === i)) {
                 renderLabels(layer, i, d);
             }
         });
@@ -105,6 +105,11 @@ dc.barChart = function (parent, chartGroup) {
         dc.transition(labels, _chart.transitionDuration())
             .attr('x', function (d) {
                 var x = _chart.x()(d.x);
+                if (_groupBars) {
+                    x += _chart.groupGap() / 2;
+                    x += layerIndex * (_barWidth + _gap);
+                    x += _gap / 2;
+                }
                 if (!_centerBar) {
                     x += _barWidth / 2;
                 }
