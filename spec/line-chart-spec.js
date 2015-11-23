@@ -686,12 +686,13 @@ describe('dc.lineChart', function () {
     }
 
     function lineLabelPositions () {
-      var LABEL_PADDING = 3;
-      chart.selectAll('.stack')[0].forEach(function (stack, i) {
-          d3.select(stack).selectAll('text.lineLabel')[0].forEach(function (lineLabel, j) {
-              expect(+d3.select(lineLabel).attr('x')).toBeCloseTo(chart.x()(chart.data()[i].values[j].x));
-              expect(+d3.select(lineLabel).attr('y') + LABEL_PADDING).toBeCloseTo(chart.y()(chart.data()[i].values[j].y + chart.data()[i].values[j].y0));
-          });
-      });
+        var LABEL_PADDING = 3;
+        chart.selectAll('.stack')[0].forEach(function (stack, i) {
+            d3.select(stack).selectAll('text.lineLabel')[0].forEach(function (lineLabel, j) {
+                expect(+d3.select(lineLabel).attr('x')).toBeCloseTo(chart.x()(chart.data()[i].values[j].x));
+                expect(+d3.select(lineLabel).attr('y') + LABEL_PADDING).toBeCloseTo(chart.y()(chart.data()[i].values[j].y +
+                        chart.data()[i].values[j].y0));
+            });
+        });
     }
 });

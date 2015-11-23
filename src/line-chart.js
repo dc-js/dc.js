@@ -320,30 +320,30 @@ dc.lineChart = function (parent, chartGroup) {
 
     function drawLabels (layers) {
         layers.each(function (d, layerIndex) {
-          var layer = d3.select(this);
-          var labels = layer.selectAll('text.lineLabel')
-              .data(d.values, dc.pluck('x'));
+            var layer = d3.select(this);
+            var labels = layer.selectAll('text.lineLabel')
+                .data(d.values, dc.pluck('x'));
 
-          labels.enter()
-              .append('text')
-              .attr('class', 'lineLabel')
-              .attr('text-anchor', 'middle');
+            labels.enter()
+                .append('text')
+                .attr('class', 'lineLabel')
+                .attr('text-anchor', 'middle');
 
-          dc.transition(labels, _chart.transitionDuration())
-              .attr('x', function (d) {
-                  return dc.utils.safeNumber(_chart.x()(d.x));
-              })
-              .attr('y', function (d) {
-                  var y = _chart.y()(d.y + d.y0) - LABEL_PADDING;
-                  return dc.utils.safeNumber(y);
-              })
-              .text(function (d) {
-                  return _chart.label()(d);
-              });
+            dc.transition(labels, _chart.transitionDuration())
+                .attr('x', function (d) {
+                    return dc.utils.safeNumber(_chart.x()(d.x));
+                })
+                .attr('y', function (d) {
+                    var y = _chart.y()(d.y + d.y0) - LABEL_PADDING;
+                    return dc.utils.safeNumber(y);
+                })
+                .text(function (d) {
+                    return _chart.label()(d);
+                });
 
-          dc.transition(labels.exit(), _chart.transitionDuration())
-              .attr('height', 0)
-              .remove();
+            dc.transition(labels.exit(), _chart.transitionDuration())
+                .attr('height', 0)
+                .remove();
         });
     }
 
