@@ -31,6 +31,7 @@ dc.lineChart = function (parent, chartGroup) {
     var Y_AXIS_REF_LINE_CLASS = 'yRef';
     var X_AXIS_REF_LINE_CLASS = 'xRef';
     var DEFAULT_DOT_OPACITY = 1e-6;
+    var LABEL_PADDING = 3;
 
     var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
     var _renderArea = false;
@@ -69,6 +70,10 @@ dc.lineChart = function (parent, chartGroup) {
         drawArea(layersEnter, layers);
 
         drawDots(chartBody, layers);
+
+        if (_chart.renderLabel()) {
+            drawLabels(layers);
+        }
     };
 
     /**
@@ -307,6 +312,39 @@ dc.lineChart = function (parent, chartGroup) {
                 dots.exit().remove();
             });
         }
+    }
+
+    _chart.label(function (d) {
+        return dc.utils.printSingleValue(d.y0 + d.y);
+    }, false);
+
+    function drawLabels (layers) {
+        layers.each(function (d, layerIndex) {
+          var layer = d3.select(this);
+          var labels = layer.selectAll('text.lineLabel')
+              .data(d.values, dc.pluck('x'));
+
+          labels.enter()
+              .append('text')
+              .attr('class', 'lineLabel')
+              .attr('text-anchor', 'middle');
+
+          dc.transition(labels, _chart.transitionDuration())
+              .attr('x', function (d) {
+                  return dc.utils.safeNumber(_chart.x()(d.x));
+              })
+              .attr('y', function (d) {
+                  var y = _chart.y()(d.y + d.y0) - LABEL_PADDING;
+                  return dc.utils.safeNumber(y);
+              })
+              .text(function (d) {
+                  return _chart.label()(d);
+              });
+
+          dc.transition(labels.exit(), _chart.transitionDuration())
+              .attr('height', 0)
+              .remove();
+        });
     }
 
     function createRefLines (g) {
