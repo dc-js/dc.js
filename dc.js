@@ -2050,8 +2050,10 @@ dc.baseMixin = function (_chart) {
         // get the tooltip
         var tooltip = d3.select('.dc-title');
 
+        var existed = !tooltip.empty();
+
         // the tooltip doesn't exist, so create it
-        if (tooltip.empty()) {
+        if (!existed) {
             tooltip = d3.select('body')
                 .append('div')
                 .attr('class', 'dc-title')
@@ -2069,29 +2071,33 @@ dc.baseMixin = function (_chart) {
 
         // calculate the position of the tooltip
         var tooltipBounding = tooltip.node().getBoundingClientRect();
-        var style = {
-            opacity: 1,
-        };
+        var style = {};
 
         // if a pie chart
         if (arc) {
             var gBounding = _chart.g().node().getBoundingClientRect();
             var centroid = arc.centroid(d);
 
-            style.left = gBounding.left + (gBounding.width / 2) - (tooltipBounding.width / 2) + centroid[0] + window.scrollX;
-            style.top = gBounding.top + (gBounding.height / 2) - tooltipBounding.height - 10 + centroid[1] + window.scrollY;
+            style.left = gBounding.left + (gBounding.width / 2) - (tooltipBounding.width / 2) + centroid[0] + (window.scrollX || document.documentElement.scrollLeft);
+            style.top = gBounding.top + (gBounding.height / 2) - tooltipBounding.height - 10 + centroid[1] + (window.scrollY || document.documentElement.scrollTop);
         // all other charts
         } else {
             var elBounding = element.getBoundingClientRect();
 
-            style.left = elBounding.left + (elBounding.width / 2) - (tooltipBounding.width / 2) + window.scrollX;
-            style.top = elBounding.top - tooltipBounding.height - 10 + window.scrollY;
+            style.left = elBounding.left + (elBounding.width / 2) - (tooltipBounding.width / 2) + (window.scrollX || document.documentElement.scrollLeft);
+            style.top = elBounding.top - tooltipBounding.height - 10 + (window.scrollY || document.documentElement.scrollTop);
         }
 
         style.top += 'px';
         style.left += 'px';
 
         // move the tooltip into position
+        if (!existed) {
+            tooltip.style(style);
+        }
+
+        style.opacity = 1;
+
         dc.transition(tooltip, _chart.transitionDuration() / 1.5)
             .style(style);
     };
@@ -2370,7 +2376,7 @@ dc.baseMixin = function (_chart) {
 
     window.addEventListener('resize', function() {
         // if the chart is a sub chart then don't do anything
-        if (!_chart.g() || _chart.g().node().offsetParent === null || _chart.g().node().classList.contains('sub')) {
+        if (!_chart.g() || _chart.g().node().offsetParent === null || (_chart.g().node().classList && _chart.g().node().classList.contains('sub'))) {
             return false;
         }
 
