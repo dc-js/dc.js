@@ -56,7 +56,7 @@ age_group = age.group().reduceSum(function(d){return d.Value})
     .colors(d3.scale.ordinal().range(['#f0bdbd','#c8c8ff']))
     .colorAccessor(function(d){return d.key[0]})
     .leftColumn(function(d){return d.key[0] == 'M'}) // return true if entry is to go in the left column. Defaults to i%2 == 0, i.e. every second one goes to the right.
-   .rowAccessor(function(d){return +d.key.split(' ')[1].split('-')[0]}) // return the row the group needs to go into.
+   .rowAccessor(function(d){return +d.key.split(' ')[1].split('-')[0]}) // return the row the group needs to go into. 
     .elasticX(true)
     .labelOffsetX(20) // a bit more than the default of 10 looks better IMNSHO
     .transitionDuration(1000)
@@ -91,7 +91,7 @@ age_group = age.group().reduceSum(function(d){return d.Value})
                   "West Coast region",
                   "Canterbury region",  
                   "Otago region", 
-                  "Southland region"])
+                  "Southland region"]) // .rowOrdrering can also take a function that works with .sort, eg d3.ascending or d3.descending. Defaults to d3.decending. 
     .elasticX(true)
     .labelOffsetX(20)
     .transitionDuration(1000)
