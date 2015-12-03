@@ -403,6 +403,7 @@ module.exports.jsFiles = [
     'src/geo-choropleth-chart.js',
     'src/bubble-overlay.js',
     'src/row-chart.js',
+    'src/pyramid-chart.js',
     'src/legend.js',
     'src/scatter-plot.js',
     'src/number-display.js',
