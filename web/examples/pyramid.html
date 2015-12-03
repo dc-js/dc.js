@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Demographic Pyramid Chart</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <style type="text/css">
+    .dc-chart g.row text {
+      fill: black;
+    }
+    </style>
+</head>
+<body>
+
+
+
+
+<p style="clear:left">The pyramid chart can be used to display data sets with some sort of pairing, in this case male vs female.   </p>
+
+<div id="age"></div>
+<div id="region"></div> 
+
+  
+  
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript">
+
+var age_chart = dc.pyramidChart("#age");
+var region_chart = dc.pyramidChart("#region");
+
+function cleanup(d) {
+  d.sexAge = d.Sex + ', '+ d.Age
+  d.sexRegion =  d.Sex + ', '+ d.Area
+  return d;
+}
+
+
+d3.csv("demographic_data_nzl_2015.csv", function(error, data) {
+
+ for (i in data) {
+    data[i] = cleanup(data[i]);
+  }
+
+ 
+ndx = crossfilter(data)
+
+age = ndx.dimension(function(d) {return d.sexAge});
+age_group = age.group().reduceSum(function(d){return d.Value})
+
+ age_chart.dimension(age)
+    .group(age_group)
+    .height(600)
+    .width(585)
+    .colors(d3.scale.ordinal().range(['#f0bdbd','#c8c8ff']))
+    .colorAccessor(function(d){return d.key[0]})
+    .leftColumn(function(d){return d.key[0] == 'M'}) // return true if entry is to go in the left column. Defaults to i%2 == 0, i.e. every second one goes to the right.
+   .rowAccessor(function(d){return +d.key.split(' ')[1].split('-')[0]}) // return the row the group needs to go into.
+    .elasticX(true)
+    .labelOffsetX(20) // a bit more than the default of 10 looks better IMNSHO
+    .transitionDuration(1000)
+
+  age_chart.xAxis().tickFormat(function(x) {return d3.format('s')(Math.abs(x))})// don't want negative values on the left axis
+
+  
+  region = ndx.dimension(function(d) {return d.sexRegion});
+  region_group = region.group().reduceSum(function(d){return d.Value})
+   
+//
+  region_chart.dimension(region)
+    .group(region_group)
+    .height(600)
+    .width(585)
+    .colors(d3.scale.ordinal().range(['#f0bdbd','#c8c8ff']))
+    .colorAccessor(function(d){return d.key[0]})
+    .leftColumn(function(d){return d.key[0] == 'M'})
+   .rowAccessor(function(d){return d.key.split(', ')[1]}) // return the row the group needs to go into.
+    .rowOrdering(["Northland region", 
+                  "Auckland region", 
+                  "Waikato region", 
+                  "Bay of Plenty region", 
+                  "Gisborne region", 
+                  "Hawke's Bay region", 
+                  "Taranaki region",
+                  "Manawatu-Wanganui region",  
+                  "Wellington region", 
+                  "Tasman region",
+                  "Nelson region", 
+                  "Marlborough region", 
+                  "West Coast region",
+                  "Canterbury region",  
+                  "Otago region", 
+                  "Southland region"])
+    .elasticX(true)
+    .labelOffsetX(20)
+    .transitionDuration(1000)
+
+  region_chart.xAxis().tickFormat(function(x) {return d3.format('s')(Math.abs(x))})
+
+   dc.renderAll()
+  
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,577 @@
+Area,Age,Sex,Value
+Northland region,0-4 Years,Male,5950
+Northland region,0-4 Years,Female,5730
+Auckland region,0-4 Years,Male,56870
+Auckland region,0-4 Years,Female,53310
+Waikato region,0-4 Years,Male,16050
+Bay of Plenty region,0-4 Years,Male,9960
+Bay of Plenty region,0-4 Years,Female,9590
+Waikato region,0-4 Years,Female,15120
+Gisborne region,0-4 Years,Male,1880
+Hawke's Bay region,0-4 Years,Male,5630
+Taranaki region,0-4 Years,Male,4120
+Hawke's Bay region,0-4 Years,Female,5520
+Taranaki region,0-4 Years,Female,3910
+Gisborne region,0-4 Years,Female,1790
+Wellington region,0-4 Years,Male,15980
+Manawatu-Wanganui region,0-4 Years,Male,7910
+Tasman region,0-4 Years,Male,1310
+Nelson region,0-4 Years,Male,1510
+Marlborough region,0-4 Years,Male,1340
+West Coast region,0-4 Years,Male,990
+Canterbury region,0-4 Years,Male,18010
+Otago region,0-4 Years,Male,6020
+Northland region,5-9 Years,Male,6580
+Northland region,5-9 Years,Female,6110
+Otago region,0-4 Years,Female,5810
+Canterbury region,0-4 Years,Female,17210
+West Coast region,0-4 Years,Female,970
+Marlborough region,0-4 Years,Female,1320
+Nelson region,0-4 Years,Female,1380
+Tasman region,0-4 Years,Female,1290
+Wellington region,0-4 Years,Female,15230
+Manawatu-Wanganui region,0-4 Years,Female,7620
+Southland region,0-4 Years,Male,3330
+Auckland region,5-9 Years,Male,55070
+Waikato region,5-9 Years,Male,16650
+Bay of Plenty region,5-9 Years,Male,10790
+Gisborne region,5-9 Years,Male,2060
+Hawke's Bay region,5-9 Years,Male,5980
+Taranaki region,5-9 Years,Male,4350
+Manawatu-Wanganui region,5-9 Years,Male,8470
+Wellington region,5-9 Years,Male,16680
+Tasman region,5-9 Years,Male,1700
+Nelson region,5-9 Years,Male,1590
+Marlborough region,5-9 Years,Male,1470
+West Coast region,5-9 Years,Male,1130
+Canterbury region,5-9 Years,Male,19210
+Northland region,10-14 Years,Male,6070
+Otago region,5-9 Years,Male,6480
+Auckland region,10-14 Years,Male,50540
+Southland region,5-9 Years,Male,3560
+Auckland region,10-14 Years,Female,48070
+Southland region,5-9 Years,Female,3330
+Otago region,5-9 Years,Female,5980
+Northland region,10-14 Years,Female,5790
+Canterbury region,5-9 Years,Female,18000
+West Coast region,5-9 Years,Female,1080
+Marlborough region,5-9 Years,Female,1450
+Tasman region,5-9 Years,Female,1610
+Nelson region,5-9 Years,Female,1540
+Wellington region,5-9 Years,Female,15920
+Manawatu-Wanganui region,5-9 Years,Female,8010
+Taranaki region,5-9 Years,Female,4170
+Hawke's Bay region,5-9 Years,Female,5960
+Gisborne region,5-9 Years,Female,2000
+Bay of Plenty region,5-9 Years,Female,10140
+Waikato region,5-9 Years,Female,15840
+Auckland region,5-9 Years,Female,52190
+Southland region,0-4 Years,Female,3060
+Waikato region,10-14 Years,Male,15180
+Bay of Plenty region,10-14 Years,Male,10360
+Gisborne region,10-14 Years,Male,2070
+Hawke's Bay region,10-14 Years,Male,5760
+Taranaki region,10-14 Years,Male,3950
+Manawatu-Wanganui region,10-14 Years,Male,7690
+Wellington region,10-14 Years,Male,15540
+Tasman region,10-14 Years,Male,1790
+Nelson region,10-14 Years,Male,1550
+Marlborough region,10-14 Years,Male,1310
+West Coast region,10-14 Years,Male,1000
+Canterbury region,10-14 Years,Male,17720
+Northland region,15-19 Years,Male,5710
+Otago region,10-14 Years,Male,6240
+Southland region,10-14 Years,Male,3290
+Auckland region,15-19 Years,Male,56830
+Waikato region,15-19 Years,Male,16130
+Bay of Plenty region,15-19 Years,Male,10190
+Gisborne region,15-19 Years,Male,1770
+Hawke's Bay region,15-19 Years,Male,5750
+Taranaki region,15-19 Years,Male,3850
+Manawatu-Wanganui region,15-19 Years,Male,8730
+Wellington region,15-19 Years,Male,16570
+Tasman region,15-19 Years,Male,1700
+Nelson region,15-19 Years,Male,1660
+Marlborough region,15-19 Years,Male,1290
+West Coast region,15-19 Years,Male,930
+Canterbury region,15-19 Years,Male,21010
+Otago region,15-19 Years,Male,8200
+Northland region,20-24 Years,Male,4650
+Auckland region,20-24 Years,Male,67130
+Southland region,15-19 Years,Male,3130
+Waikato region,20-24 Years,Male,16300
+Bay of Plenty region,20-24 Years,Male,8420
+Bay of Plenty region,20-24 Years,Female,7920
+Waikato region,20-24 Years,Female,14950
+Southland region,15-19 Years,Female,2910
+Auckland region,20-24 Years,Female,63610
+Northland region,20-24 Years,Female,4290
+Otago region,15-19 Years,Female,8260
+Canterbury region,15-19 Years,Female,19270
+Marlborough region,15-19 Years,Female,1180
+West Coast region,15-19 Years,Female,840
+Tasman region,15-19 Years,Female,1350
+Nelson region,15-19 Years,Female,1510
+Wellington region,15-19 Years,Female,16220
+Manawatu-Wanganui region,15-19 Years,Female,8190
+Taranaki region,15-19 Years,Female,3610
+Hawke's Bay region,15-19 Years,Female,5360
+Bay of Plenty region,15-19 Years,Female,9080
+Gisborne region,15-19 Years,Female,1610
+Waikato region,15-19 Years,Female,15150
+Auckland region,15-19 Years,Female,53450
+Southland region,10-14 Years,Female,3120
+Otago region,10-14 Years,Female,5850
+Northland region,15-19 Years,Female,5330
+Canterbury region,10-14 Years,Female,17140
+West Coast region,10-14 Years,Female,950
+Marlborough region,10-14 Years,Female,1220
+Nelson region,10-14 Years,Female,1480
+Tasman region,10-14 Years,Female,1770
+Wellington region,10-14 Years,Female,14850
+Manawatu-Wanganui region,10-14 Years,Female,7510
+Hawke's Bay region,10-14 Years,Female,5590
+Taranaki region,10-14 Years,Female,3710
+Gisborne region,10-14 Years,Female,1810
+Bay of Plenty region,10-14 Years,Female,9780
+Waikato region,10-14 Years,Female,14730
+Gisborne region,20-24 Years,Male,1530
+Hawke's Bay region,20-24 Years,Male,4620
+Taranaki region,20-24 Years,Male,3520
+Manawatu-Wanganui region,20-24 Years,Male,8610
+Wellington region,20-24 Years,Male,19780
+Nelson region,20-24 Years,Male,1420
+Tasman region,20-24 Years,Male,1150
+Marlborough region,20-24 Years,Male,1050
+West Coast region,20-24 Years,Male,910
+Canterbury region,20-24 Years,Male,23350
+Otago region,20-24 Years,Male,9860
+Northland region,25-29 Years,Male,3820
+Auckland region,25-29 Years,Male,63440
+Southland region,20-24 Years,Male,3140
+Waikato region,25-29 Years,Male,13490
+Bay of Plenty region,25-29 Years,Male,7280
+Gisborne region,25-29 Years,Male,1240
+Hawke's Bay region,25-29 Years,Male,3850
+Taranaki region,25-29 Years,Male,3310
+Manawatu-Wanganui region,25-29 Years,Male,6910
+Wellington region,25-29 Years,Male,16950
+Nelson region,25-29 Years,Male,1310
+Marlborough region,25-29 Years,Male,1130
+West Coast region,25-29 Years,Male,870
+Tasman region,25-29 Years,Male,950
+Canterbury region,25-29 Years,Male,21150
+Northland region,30-34 Years,Male,3650
+Otago region,25-29 Years,Male,6820
+Southland region,25-29 Years,Male,3030
+Auckland region,30-34 Years,Male,55170
+Waikato region,30-34 Years,Male,12190
+Bay of Plenty region,30-34 Years,Male,6660
+Gisborne region,30-34 Years,Male,1080
+Hawke's Bay region,30-34 Years,Male,3640
+Taranaki region,30-34 Years,Male,3200
+Manawatu-Wanganui region,30-34 Years,Male,5950
+Wellington region,30-34 Years,Male,15590
+Tasman region,30-34 Years,Male,1010
+Nelson region,30-34 Years,Male,1250
+Marlborough region,30-34 Years,Male,1100
+West Coast region,30-34 Years,Male,830
+Canterbury region,30-34 Years,Male,18240
+Otago region,30-34 Years,Male,6160
+Southland region,30-34 Years,Male,2770
+Auckland region,35-39 Years,Male,48390
+Northland region,35-39 Years,Male,3630
+Waikato region,35-39 Years,Male,11730
+Bay of Plenty region,35-39 Years,Male,7080
+Gisborne region,35-39 Years,Male,1210
+Hawke's Bay region,35-39 Years,Male,3990
+Taranaki region,35-39 Years,Male,3230
+Manawatu-Wanganui region,35-39 Years,Male,5780
+Wellington region,35-39 Years,Male,15420
+Tasman region,35-39 Years,Male,1160
+Nelson region,35-39 Years,Male,1370
+Marlborough region,35-39 Years,Male,1120
+West Coast region,35-39 Years,Male,820
+Canterbury region,35-39 Years,Male,17240
+Northland region,40-44 Years,Male,4640
+Otago region,35-39 Years,Male,5790
+Southland region,35-39 Years,Male,2890
+Auckland region,40-44 Years,Male,51380
+Waikato region,40-44 Years,Male,13460
+Bay of Plenty region,40-44 Years,Male,8670
+Gisborne region,40-44 Years,Male,1410
+Hawke's Bay region,40-44 Years,Male,4780
+Taranaki region,40-44 Years,Male,3720
+Manawatu-Wanganui region,40-44 Years,Male,6680
+Manawatu-Wanganui region,40-44 Years,Female,7420
+Taranaki region,40-44 Years,Female,4100
+Hawke's Bay region,40-44 Years,Female,5710
+Gisborne region,40-44 Years,Female,1570
+Bay of Plenty region,40-44 Years,Female,9890
+Waikato region,40-44 Years,Female,14840
+Auckland region,40-44 Years,Female,57010
+Southland region,35-39 Years,Female,2890
+Otago region,35-39 Years,Female,6340
+Northland region,40-44 Years,Female,5400
+Canterbury region,35-39 Years,Female,17610
+West Coast region,35-39 Years,Female,920
+Marlborough region,35-39 Years,Female,1240
+Nelson region,35-39 Years,Female,1450
+Tasman region,35-39 Years,Female,1310
+Wellington region,35-39 Years,Female,16820
+Taranaki region,35-39 Years,Female,3420
+Manawatu-Wanganui region,35-39 Years,Female,6370
+Hawke's Bay region,35-39 Years,Female,4480
+Bay of Plenty region,35-39 Years,Female,8250
+Gisborne region,35-39 Years,Female,1360
+Waikato region,35-39 Years,Female,13010
+Auckland region,35-39 Years,Female,53190
+Northland region,35-39 Years,Female,4250
+Southland region,30-34 Years,Female,3060
+Otago region,30-34 Years,Female,6420
+Canterbury region,30-34 Years,Female,17720
+Marlborough region,30-34 Years,Female,1180
+West Coast region,30-34 Years,Female,900
+Nelson region,30-34 Years,Female,1370
+Tasman region,30-34 Years,Female,1150
+Wellington region,30-34 Years,Female,17010
+Manawatu-Wanganui region,30-34 Years,Female,6550
+Taranaki region,30-34 Years,Female,3330
+Hawke's Bay region,30-34 Years,Female,4040
+Gisborne region,30-34 Years,Female,1360
+Bay of Plenty region,30-34 Years,Female,7700
+Waikato region,30-34 Years,Female,13010
+Southland region,25-29 Years,Female,3060
+Auckland region,30-34 Years,Female,59740
+Otago region,25-29 Years,Female,6500
+Northland region,30-34 Years,Female,3960
+Canterbury region,25-29 Years,Female,18740
+Tasman region,25-29 Years,Female,950
+West Coast region,25-29 Years,Female,910
+Marlborough region,25-29 Years,Female,1190
+Nelson region,25-29 Years,Female,1390
+Wellington region,25-29 Years,Female,17560
+Manawatu-Wanganui region,25-29 Years,Female,7260
+Taranaki region,25-29 Years,Female,3380
+Hawke's Bay region,25-29 Years,Female,4160
+Gisborne region,25-29 Years,Female,1450
+Bay of Plenty region,25-29 Years,Female,7900
+Waikato region,25-29 Years,Female,13870
+Auckland region,25-29 Years,Female,64240
+Southland region,20-24 Years,Female,2720
+Northland region,25-29 Years,Female,4190
+Otago region,20-24 Years,Female,10060
+Canterbury region,20-24 Years,Female,18890
+West Coast region,20-24 Years,Female,840
+Nelson region,20-24 Years,Female,1250
+Marlborough region,20-24 Years,Female,940
+Tasman region,20-24 Years,Female,970
+Wellington region,20-24 Years,Female,19880
+Taranaki region,20-24 Years,Female,3040
+Manawatu-Wanganui region,20-24 Years,Female,8090
+Hawke's Bay region,20-24 Years,Female,4320
+Gisborne region,20-24 Years,Female,1430
+Wellington region,40-44 Years,Male,16950
+Tasman region,40-44 Years,Male,1580
+Nelson region,40-44 Years,Male,1640
+Marlborough region,40-44 Years,Male,1380
+West Coast region,40-44 Years,Male,1070
+Canterbury region,40-44 Years,Male,19640
+Otago region,40-44 Years,Male,6760
+Northland region,45-49 Years,Male,5230
+Southland region,40-44 Years,Male,3090
+Auckland region,45-49 Years,Male,51330
+Waikato region,45-49 Years,Male,13950
+Bay of Plenty region,45-49 Years,Male,8810
+Gisborne region,45-49 Years,Male,1380
+Hawke's Bay region,45-49 Years,Male,5070
+Taranaki region,45-49 Years,Male,3820
+Manawatu-Wanganui region,45-49 Years,Male,7090
+Wellington region,45-49 Years,Male,16820
+Tasman region,45-49 Years,Male,1870
+Nelson region,45-49 Years,Male,1730
+Marlborough region,45-49 Years,Male,1460
+West Coast region,45-49 Years,Male,1100
+Canterbury region,45-49 Years,Male,20600
+Auckland region,50-54 Years,Male,50560
+Northland region,50-54 Years,Male,5750
+Otago region,45-49 Years,Male,6670
+Southland region,45-49 Years,Male,3100
+Waikato region,50-54 Years,Male,14300
+Gisborne region,50-54 Years,Male,1470
+Bay of Plenty region,50-54 Years,Male,9440
+Taranaki region,50-54 Years,Male,3990
+Manawatu-Wanganui region,50-54 Years,Male,7910
+Hawke's Bay region,50-54 Years,Male,5510
+Wellington region,50-54 Years,Male,16720
+Nelson region,50-54 Years,Male,1790
+Tasman region,50-54 Years,Male,1940
+Marlborough region,50-54 Years,Male,1600
+West Coast region,50-54 Years,Male,1370
+Canterbury region,50-54 Years,Male,20700
+Otago region,50-54 Years,Male,7210
+Northland region,55-59 Years,Male,5820
+Auckland region,55-59 Years,Male,43030
+Southland region,50-54 Years,Male,3600
+Waikato region,55-59 Years,Male,13280
+Bay of Plenty region,55-59 Years,Male,8840
+Gisborne region,55-59 Years,Male,1470
+Hawke's Bay region,55-59 Years,Male,5100
+Taranaki region,55-59 Years,Male,3670
+Manawatu-Wanganui region,55-59 Years,Male,7430
+Wellington region,55-59 Years,Male,14910
+Tasman region,55-59 Years,Male,1880
+Nelson region,55-59 Years,Male,1750
+Marlborough region,55-59 Years,Male,1710
+West Coast region,55-59 Years,Male,1380
+Canterbury region,55-59 Years,Male,18850
+Northland region,60-64 Years,Male,5470
+Otago region,55-59 Years,Male,7020
+Southland region,55-59 Years,Male,3290
+Auckland region,60-64 Years,Male,36000
+Waikato region,60-64 Years,Male,11820
+Bay of Plenty region,60-64 Years,Male,8230
+Gisborne region,60-64 Years,Male,1410
+Hawke's Bay region,60-64 Years,Male,4600
+Taranaki region,60-64 Years,Male,3420
+Manawatu-Wanganui region,60-64 Years,Male,6700
+Wellington region,60-64 Years,Male,12560
+Tasman region,60-64 Years,Male,1700
+Marlborough region,60-64 Years,Male,1590
+Nelson region,60-64 Years,Male,1500
+West Coast region,60-64 Years,Male,1190
+Canterbury region,60-64 Years,Male,16310
+Southland region,60-64 Years,Male,2880
+Northland region,65-69 Years,Male,5450
+Otago region,60-64 Years,Male,6250
+Auckland region,65-69 Years,Male,31020
+Waikato region,65-69 Years,Male,10980
+Bay of Plenty region,65-69 Years,Male,7990
+Gisborne region,65-69 Years,Male,1120
+Hawke's Bay region,65-69 Years,Male,4530
+Taranaki region,65-69 Years,Male,3050
+Manawatu-Wanganui region,65-69 Years,Male,6200
+Wellington region,65-69 Years,Male,11180
+Tasman region,65-69 Years,Male,1760
+Nelson region,65-69 Years,Male,1450
+Marlborough region,65-69 Years,Male,1630
+West Coast region,65-69 Years,Male,1070
+Canterbury region,65-69 Years,Male,14560
+Otago region,65-69 Years,Male,5700
+Northland region,70-74 Years,Male,4040
+Southland region,65-69 Years,Male,2510
+Auckland region,70-74 Years,Male,21550
+Waikato region,70-74 Years,Male,8190
+Bay of Plenty region,70-74 Years,Male,6150
+Gisborne region,70-74 Years,Male,820
+Hawke's Bay region,70-74 Years,Male,3330
+Taranaki region,70-74 Years,Male,2210
+Manawatu-Wanganui region,70-74 Years,Male,4740
+Wellington region,70-74 Years,Male,7960
+Tasman region,70-74 Years,Male,1260
+Nelson region,70-74 Years,Male,1020
+Marlborough region,70-74 Years,Male,1280
+West Coast region,70-74 Years,Male,760
+Canterbury region,70-74 Years,Male,10340
+Northland region,75-79 Years,Male,2820
+Otago region,70-74 Years,Male,4060
+Auckland region,75-79 Years,Male,15060
+Southland region,70-74 Years,Male,1850
+Waikato region,75-79 Years,Male,5690
+Bay of Plenty region,75-79 Years,Male,4600
+Gisborne region,75-79 Years,Male,520
+Hawke's Bay region,75-79 Years,Male,2330
+Taranaki region,75-79 Years,Male,1600
+Manawatu-Wanganui region,75-79 Years,Male,3460
+Wellington region,75-79 Years,Male,5480
+Tasman region,75-79 Years,Male,800
+Nelson region,75-79 Years,Male,740
+Marlborough region,75-79 Years,Male,880
+West Coast region,75-79 Years,Male,500
+Canterbury region,75-79 Years,Male,7390
+Northland region,80-84 Years,Male,1680
+Otago region,75-79 Years,Male,2870
+Auckland region,80-84 Years,Male,9540
+Southland region,75-79 Years,Male,1340
+Waikato region,80-84 Years,Male,3830
+Bay of Plenty region,80-84 Years,Male,3020
+Gisborne region,80-84 Years,Male,370
+Hawke's Bay region,80-84 Years,Male,1600
+Taranaki region,80-84 Years,Male,1130
+Manawatu-Wanganui region,80-84 Years,Male,2310
+Wellington region,80-84 Years,Male,3760
+Tasman region,80-84 Years,Male,540
+Nelson region,80-84 Years,Male,500
+Marlborough region,80-84 Years,Male,540
+West Coast region,80-84 Years,Male,320
+Canterbury region,80-84 Years,Male,5150
+Otago region,80-84 Years,Male,1980
+Northland region,85 Years and over,Male,1310
+Northland region,85 Years and over,Female,2040
+Otago region,80-84 Years,Female,2390
+Canterbury region,80-84 Years,Female,6520
+West Coast region,80-84 Years,Female,340
+Marlborough region,80-84 Years,Female,640
+Nelson region,80-84 Years,Female,660
+Tasman region,80-84 Years,Female,540
+Wellington region,80-84 Years,Female,4790
+Manawatu-Wanganui region,80-84 Years,Female,3000
+Hawke's Bay region,80-84 Years,Female,2000
+Taranaki region,80-84 Years,Female,1440
+Gisborne region,80-84 Years,Female,490
+Bay of Plenty region,80-84 Years,Female,3620
+Waikato region,80-84 Years,Female,4530
+Auckland region,80-84 Years,Female,11960
+Southland region,75-79 Years,Female,1540
+Northland region,80-84 Years,Female,1940
+Otago region,75-79 Years,Female,3220
+West Coast region,75-79 Years,Female,500
+Canterbury region,75-79 Years,Female,8760
+Nelson region,75-79 Years,Female,840
+Marlborough region,75-79 Years,Female,840
+Tasman region,75-79 Years,Female,830
+Wellington region,75-79 Years,Female,6620
+Manawatu-Wanganui region,75-79 Years,Female,3960
+Taranaki region,75-79 Years,Female,1870
+Gisborne region,75-79 Years,Female,660
+Hawke's Bay region,75-79 Years,Female,2700
+Bay of Plenty region,75-79 Years,Female,5140
+Waikato region,75-79 Years,Female,6290
+Southland region,70-74 Years,Female,1850
+Auckland region,75-79 Years,Female,17310
+Northland region,75-79 Years,Female,2910
+Otago region,70-74 Years,Female,4270
+Canterbury region,70-74 Years,Female,11190
+West Coast region,70-74 Years,Female,710
+Marlborough region,70-74 Years,Female,1270
+Nelson region,70-74 Years,Female,1130
+Tasman region,70-74 Years,Female,1210
+Wellington region,70-74 Years,Female,8790
+Manawatu-Wanganui region,70-74 Years,Female,5070
+Taranaki region,70-74 Years,Female,2320
+Hawke's Bay region,70-74 Years,Female,3530
+Gisborne region,70-74 Years,Female,840
+Bay of Plenty region,70-74 Years,Female,6910
+Waikato region,70-74 Years,Female,8740
+Auckland region,70-74 Years,Female,23720
+Southland region,65-69 Years,Female,2480
+Northland region,70-74 Years,Female,4060
+Otago region,65-69 Years,Female,5840
+Canterbury region,65-69 Years,Female,15220
+West Coast region,65-69 Years,Female,930
+Marlborough region,65-69 Years,Female,1650
+Nelson region,65-69 Years,Female,1610
+Tasman region,65-69 Years,Female,1750
+Wellington region,65-69 Years,Female,11970
+Manawatu-Wanganui region,65-69 Years,Female,6510
+Hawke's Bay region,65-69 Years,Female,4840
+Taranaki region,65-69 Years,Female,3150
+Gisborne region,65-69 Years,Female,1190
+Bay of Plenty region,65-69 Years,Female,8620
+Waikato region,65-69 Years,Female,11470
+Auckland region,65-69 Years,Female,32810
+Otago region,60-64 Years,Female,6240
+Northland region,65-69 Years,Female,5450
+Southland region,60-64 Years,Female,2700
+Canterbury region,60-64 Years,Female,16670
+Marlborough region,60-64 Years,Female,1630
+West Coast region,60-64 Years,Female,1060
+Tasman region,60-64 Years,Female,1870
+Nelson region,60-64 Years,Female,1670
+Wellington region,60-64 Years,Female,13200
+Manawatu-Wanganui region,60-64 Years,Female,7050
+Hawke's Bay region,60-64 Years,Female,5220
+Taranaki region,60-64 Years,Female,3410
+Gisborne region,60-64 Years,Female,1400
+Bay of Plenty region,60-64 Years,Female,9110
+Waikato region,60-64 Years,Female,12600
+Auckland region,60-64 Years,Female,38820
+Southland region,55-59 Years,Female,3370
+Otago region,55-59 Years,Female,7200
+Northland region,60-64 Years,Female,5840
+Canterbury region,55-59 Years,Female,19230
+West Coast region,55-59 Years,Female,1240
+Marlborough region,55-59 Years,Female,1740
+Nelson region,55-59 Years,Female,1870
+Tasman region,55-59 Years,Female,1910
+Wellington region,55-59 Years,Female,15800
+Manawatu-Wanganui region,55-59 Years,Female,7990
+Taranaki region,55-59 Years,Female,3970
+Hawke's Bay region,55-59 Years,Female,5610
+Gisborne region,55-59 Years,Female,1580
+Bay of Plenty region,55-59 Years,Female,9870
+Waikato region,55-59 Years,Female,14070
+Auckland region,55-59 Years,Female,46000
+Southland region,50-54 Years,Female,3640
+Northland region,55-59 Years,Female,6380
+Otago region,50-54 Years,Female,7730
+Canterbury region,50-54 Years,Female,21320
+West Coast region,50-54 Years,Female,1400
+Marlborough region,50-54 Years,Female,1770
+Nelson region,50-54 Years,Female,2010
+Tasman region,50-54 Years,Female,2100
+Wellington region,50-54 Years,Female,17960
+Hawke's Bay region,50-54 Years,Female,6060
+Manawatu-Wanganui region,50-54 Years,Female,8460
+Taranaki region,50-54 Years,Female,4170
+Bay of Plenty region,50-54 Years,Female,10610
+Gisborne region,50-54 Years,Female,1650
+Waikato region,50-54 Years,Female,15260
+Otago region,45-49 Years,Female,7380
+Southland region,45-49 Years,Female,3340
+Auckland region,50-54 Years,Female,53960
+Northland region,50-54 Years,Female,6530
+West Coast region,45-49 Years,Female,1230
+Canterbury region,45-49 Years,Female,20980
+Nelson region,45-49 Years,Female,1880
+Marlborough region,45-49 Years,Female,1610
+Tasman region,45-49 Years,Female,1980
+Wellington region,45-49 Years,Female,18370
+Manawatu-Wanganui region,45-49 Years,Female,7810
+Taranaki region,45-49 Years,Female,4020
+Hawke's Bay region,45-49 Years,Female,5490
+Gisborne region,45-49 Years,Female,1630
+Bay of Plenty region,45-49 Years,Female,10230
+Waikato region,45-49 Years,Female,15090
+Auckland region,45-49 Years,Female,56300
+Southland region,40-44 Years,Female,3320
+Northland region,45-49 Years,Female,5840
+Otago region,40-44 Years,Female,7150
+Canterbury region,40-44 Years,Female,20860
+West Coast region,40-44 Years,Female,1110
+Marlborough region,40-44 Years,Female,1510
+Nelson region,40-44 Years,Female,1830
+Tasman region,40-44 Years,Female,1860
+Wellington region,40-44 Years,Female,18770
+Auckland region,85 Years and over,Male,7670
+Southland region,80-84 Years,Male,940
+Waikato region,85 Years and over,Male,2730
+Bay of Plenty region,85 Years and over,Male,2410
+Hawke's Bay region,85 Years and over,Male,1270
+Gisborne region,85 Years and over,Male,280
+Taranaki region,85 Years and over,Male,950
+Manawatu-Wanganui region,85 Years and over,Male,1860
+Wellington region,85 Years and over,Male,3040
+Tasman region,85 Years and over,Male,390
+Nelson region,85 Years and over,Male,490
+Marlborough region,85 Years and over,Male,410
+West Coast region,85 Years and over,Male,240
+Canterbury region,85 Years and over,Male,4260
+Otago region,85 Years and over,Male,1570
+Southland region,85 Years and over,Male,730
+Southland region,85 Years and over,Female,1250
+Otago region,85 Years and over,Female,2760
+Canterbury region,85 Years and over,Female,7350
+West Coast region,85 Years and over,Female,340
+Tasman region,85 Years and over,Female,580
+Nelson region,85 Years and over,Female,800
+Marlborough region,85 Years and over,Female,670
+Wellington region,85 Years and over,Female,5210
+Taranaki region,85 Years and over,Female,1640
+Manawatu-Wanganui region,85 Years and over,Female,3160
+Hawke's Bay region,85 Years and over,Female,2080
+Gisborne region,85 Years and over,Female,480
+Bay of Plenty region,85 Years and over,Female,3850
+Waikato region,85 Years and over,Female,4580
+Southland region,80-84 Years,Female,1160
+Auckland region,85 Years and over,Female,13680
