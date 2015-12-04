@@ -34,7 +34,7 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     var _locator = function (d) {
         return 'translate(' + _chart.x()(_chart.keyAccessor()(d)) + ',' +
-            _chart.y()(_chart.valueAccessor()(d)) + ')';
+                              _chart.y()(_chart.valueAccessor()(d)) + ')';
     };
 
     var _highlightedSize = 7;
@@ -43,6 +43,8 @@ dc.scatterPlot = function (parent, chartGroup) {
     var _excludedColor = null;
     var _excludedOpacity = 1.0;
     var _emptySize = 0;
+    var _emptyOpacity = 0;
+    //var _emptyColor = 'grey';
     var _filtered = [];
 
     _symbol.size(function (d, i) {
@@ -65,11 +67,11 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     _chart.plotData = function () {
         var symbols = _chart.chartBodyG().selectAll('path.symbol')
-                .data(_chart.data());
+            .data(_chart.data());
 
         symbols
             .enter()
-            .append('path')
+        .append('path')
             .attr('class', 'symbol')
             .attr('opacity', 0)
             .attr('fill', _chart.getColor)
@@ -81,7 +83,7 @@ dc.scatterPlot = function (parent, chartGroup) {
 
         dc.transition(symbols, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('opacity', function (d, i) {
-                return !_existenceAccessor(d) ? 0 :
+                return !_existenceAccessor(d) ? _emptyOpacity :
                     _filtered[i] ? 1 : _chart.excludedOpacity();
             })
             .attr('fill', function (d, i) {
@@ -243,6 +245,40 @@ dc.scatterPlot = function (parent, chartGroup) {
             return _emptySize;
         }
         _emptySize = emptySize;
+        return _chart;
+    };
+
+    /**
+     * Set or get color for symbols when the group is empty.
+     * @name emptyColor
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param string [emptyColor="grey"]
+     * @return {String}
+     * @return {dc.scatterPlot}/
+     */
+    // _chart.emptyColor = function (emptyColor) {
+    //   if(!arguments.length){
+    //     return _emptyColor;
+    //   }
+    //   _emptyColor = _emptyColor;
+    //   return _chart;
+    // };
+
+    /**
+     * Set or get opacity for symbols when the group is empty.
+     * @name emptyOpacity
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {Number} [emptyOpacity=0]
+     * @return {Number}
+     * @return {dc.scatterPlot}
+     */
+    _chart.emptyOpacity = function (emptyOpacity) {
+        if (!arguments.length) {
+            return _emptyOpacity;
+        }
+        _emptyOpacity = emptyOpacity;
         return _chart;
     };
 
