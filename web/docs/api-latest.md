@@ -5,9 +5,9 @@ anything else into the global name space.
 
 Most `dc` functions are designed to allow function chaining, meaning they return the current chart
 instance whenever it is appropriate.  The getter forms of functions do not participate in function
-chaining because they necessarily return values that are not the chart.  Although some,
+chaining because they return values that are not the chart, although some,
 such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
-return values that are chainable d3 objects.
+return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
 **Version**: 2.0.0-beta.22  
