@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-beta.22
+ *  dc 2.0.0-beta.23
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2015 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link #dc.baseMixin+svg .svg} and {@link #dc.coordinateGridMixin+xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 2.0.0-beta.22
+ * @version 2.0.0-beta.23
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-beta.22',
+    version: '2.0.0-beta.23',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -6907,11 +6907,16 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     function prepareRightYAxis (ranges) {
-        if (_chart.rightY() === undefined || _chart.elasticY() || _chart.resizing()) {
-            if (_chart.rightY() === undefined) {
-                _chart.rightY(d3.scale.linear());
-            }
-            _chart.rightY().domain([ranges.ryAxisMin, ranges.ryAxisMax]).rangeRound([_chart.yAxisHeight(), 0]);
+        var needDomain = _chart.rightY() === undefined || _chart.elasticY(),
+            needRange = needDomain || _chart.resizing();
+        if (_chart.rightY() === undefined) {
+            _chart.rightY(d3.scale.linear());
+        }
+        if (needDomain) {
+            _chart.rightY().domain([ranges.ryAxisMin, ranges.ryAxisMax]);
+        }
+        if (needRange) {
+            _chart.rightY().rangeRound([_chart.yAxisHeight(), 0]);
         }
 
         _chart.rightY().range([_chart.yAxisHeight(), 0]);
@@ -6921,11 +6926,16 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     function prepareLeftYAxis (ranges) {
-        if (_chart.y() === undefined || _chart.elasticY() || _chart.resizing()) {
-            if (_chart.y() === undefined) {
-                _chart.y(d3.scale.linear());
-            }
-            _chart.y().domain([ranges.lyAxisMin, ranges.lyAxisMax]).rangeRound([_chart.yAxisHeight(), 0]);
+        var needDomain = _chart.y() === undefined || _chart.elasticY(),
+            needRange = needDomain || _chart.resizing();
+        if (_chart.y() === undefined) {
+            _chart.y(d3.scale.linear());
+        }
+        if (needDomain) {
+            _chart.y().domain([ranges.lyAxisMin, ranges.lyAxisMax]);
+        }
+        if (needRange) {
+            _chart.y().rangeRound([_chart.yAxisHeight(), 0]);
         }
 
         _chart.y().range([_chart.yAxisHeight(), 0]);
