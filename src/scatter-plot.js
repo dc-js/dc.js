@@ -40,6 +40,9 @@ dc.scatterPlot = function (parent, chartGroup) {
     var _symbolSize = 3;
     var _highlightedSize = 5;
     var _hiddenSize = 0;
+    var _hiddenOpacity = 0;
+    var _hiddenColor = 'grey';
+
 
     _symbol.size(function (d) {
         if (!_existenceAccessor(d)) {
@@ -72,7 +75,7 @@ dc.scatterPlot = function (parent, chartGroup) {
             .attr('transform', _locator);
 
         dc.transition(symbols, _chart.transitionDuration())
-            .attr('opacity', function (d) { return _existenceAccessor(d) ? 1 : 0; })
+            .attr('opacity', function (d) { return _existenceAccessor(d) ? 1 : _hiddenOpacity; })
             .attr('fill', _chart.getColor)
             .attr('transform', _locator)
             .attr('d', _symbol);
@@ -184,6 +187,42 @@ dc.scatterPlot = function (parent, chartGroup) {
         _hiddenSize = hiddenSize;
         return _chart;
     };
+
+    /**
+     * Set or get color for symbols when the group is empty.
+     * @name hiddenColor
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param string [hiddenColor="grey"]
+     * @return {string}
+     * @return {dc.scatterPlot}/
+     */
+    _chart.hiddenColor = function (hiddenColor) {
+      if(!arguments.length){
+        return _hiddenColor;
+      }
+      _hiddenColor = _hiddenColor;
+      return _chart;
+
+    };
+
+    /**
+     * Set or get opacity for symbols when the group is empty.
+     * @name hiddenOpacity
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {Number} [hiddenOpacity=0]
+     * @return {Number}
+     * @return {dc.scatterPlot}
+     */
+    _chart.hiddenOpacity = function (hiddenOpacity) {
+        if (!arguments.length) {
+            return _hiddenOpacity;
+        }
+        _hiddenOpacity = hiddenOpacity;
+        return _chart;
+    };
+
 
     _chart.legendables = function () {
         return [{chart: _chart, name: _chart._groupName, color: _chart.getColor()}];
