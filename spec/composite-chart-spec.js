@@ -341,6 +341,18 @@ describe('dc.compositeChart', function () {
         });
     });
 
+    describe('no elastic', function () {
+        beforeEach(function () {
+            chart.y(d3.scale.linear().domain([-200, 200]));
+            chart.render();
+        });
+
+        it('should respect manually applied domain', function () {
+            expect(chart.y().domain()[0]).toBe(-200);
+            expect(chart.y().domain()[1]).toBe(200);
+        });
+    });
+
     describe('elastic chart axes', function () {
         beforeEach(function () {
             data.dimension(function (d) {
