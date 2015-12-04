@@ -571,6 +571,7 @@ describe('dc.compositeChart', function () {
             describe('with alignYAxes', function () {
                 beforeEach(function () {
                     chart.alignYAxes(true)
+                        .elasticY(true)
                         .render();
                 });
                 it('the axis baselines should match', function () {
@@ -600,6 +601,7 @@ describe('dc.compositeChart', function () {
             describe('with alignYAxes', function () {
                 beforeEach(function () {
                     chart.alignYAxes(true)
+                        .elasticY(true)
                         .render();
                 });
                 it('the axis baselines should match', function () {
