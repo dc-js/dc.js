@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>dc.js - Stacked Bar Example</title>
+    <title>dc.js - Area Chart Example</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
   </head>
@@ -14,7 +14,7 @@
     <script type="text/javascript" src="../js/dc.js"></script>
     <script type="text/javascript">
 
-      var chart = dc.barChart("#test");
+      var chart = dc.lineChart("#test");
       d3.csv("morley.csv", function(error, experiments) {
 
           experiments.forEach(function(x) {
@@ -42,14 +42,15 @@
           chart
               .width(768)
               .height(480)
-              .x(d3.scale.linear().domain([1,21]))
+              .x(d3.scale.linear().domain([1,20]))
               .margins({left: 50, top: 10, right: 10, bottom: 20})
+              .renderArea(true)
               .brushOn(false)
+              .renderDataPoints(true)
               .clipPadding(10)
               .yAxisLabel("This is the Y Axis!")
               .dimension(runDimension)
-              .group(speedSumGroup, "1", sel_stack('1'))
-              .renderLabel(true);
+              .group(speedSumGroup, "1", sel_stack('1'));
 
           for(var i = 2; i<6; ++i)
               chart.stack(speedSumGroup, ''+i, sel_stack(i));
