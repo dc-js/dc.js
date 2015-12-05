@@ -3,6 +3,12 @@
  * Front page stable version automatically read from GitHub, by Enrico Spinielli ([#865](https://github.com/dc-js/dc.js/pull/865))
 
 # 2.0 Series
+## 2.0.0 beta 23
+* Domain was getting set for composite charts even when `elasticY` disabled. ([#1056](https://github.com/dc-js/dc.js/issues/1056)
+
+## 2.0.0 beta 22
+(no changes; bump due to botched npm publish)
+
 ## 2.0.0 beta 21
 * Ability to use non-crossfilter backend with asynchronous connection (callback), via `commitHandler`.
 * Domain comparison was failing for undefined/null domain values.

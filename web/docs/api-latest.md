@@ -5,9 +5,9 @@ anything else into the global name space.
 
 Most `dc` functions are designed to allow function chaining, meaning they return the current chart
 instance whenever it is appropriate.  The getter forms of functions do not participate in function
-chaining because they necessarily return values that are not the chart.  Although some,
+chaining because they return values that are not the chart, although some,
 such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
-return values that are chainable d3 objects.
+return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
 **Version**: 2.1.0-dev  
@@ -2215,7 +2215,7 @@ The RangedTwoDimensionalFilter allows filtering all values which fit within a re
 region. It is used by the [scatter plot](#dc.scatterPlot) to implement rectangular brushing.
 
 It takes two two-dimensional points in the form `[[x1,y1],[x2,y2]]`, and normalizes them so that
-`x1 <= x2` and `y1 <- y2`. It then returns a filter which accepts any points which are in the
+`x1 <= x2` and `y1 <= y2`. It then returns a filter which accepts any points which are in the
 rectangular range including the lower values but excluding the higher values.
 
 If an array of two values are given to the RangedTwoDimensionalFilter, it interprets the values as

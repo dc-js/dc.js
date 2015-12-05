@@ -25,9 +25,9 @@
  *
  * Most `dc` functions are designed to allow function chaining, meaning they return the current chart
  * instance whenever it is appropriate.  The getter forms of functions do not participate in function
- * chaining because they necessarily return values that are not the chart.  Although some,
+ * chaining because they return values that are not the chart, although some,
  * such as {@link #dc.baseMixin+svg .svg} and {@link #dc.coordinateGridMixin+xAxis .xAxis},
- * return values that are chainable d3 objects.
+ * return values that are themselves chainable d3 objects.
  * @namespace dc
  * @version 2.1.0-dev
  * @example
@@ -691,7 +691,7 @@ dc.filters.TwoDimensionalFilter = function (filter) {
  * region. It is used by the {@link #dc.scatterPlot scatter plot} to implement rectangular brushing.
  *
  * It takes two two-dimensional points in the form `[[x1,y1],[x2,y2]]`, and normalizes them so that
- * `x1 <= x2` and `y1 <- y2`. It then returns a filter which accepts any points which are in the
+ * `x1 <= x2` and `y1 <= y2`. It then returns a filter which accepts any points which are in the
  * rectangular range including the lower values but excluding the higher values.
  *
  * If an array of two values are given to the RangedTwoDimensionalFilter, it interprets the values as
@@ -6907,11 +6907,16 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     function prepareRightYAxis (ranges) {
-        if (_chart.rightY() === undefined || _chart.elasticY() || _chart.resizing()) {
-            if (_chart.rightY() === undefined) {
-                _chart.rightY(d3.scale.linear());
-            }
-            _chart.rightY().domain([ranges.ryAxisMin, ranges.ryAxisMax]).rangeRound([_chart.yAxisHeight(), 0]);
+        var needDomain = _chart.rightY() === undefined || _chart.elasticY(),
+            needRange = needDomain || _chart.resizing();
+        if (_chart.rightY() === undefined) {
+            _chart.rightY(d3.scale.linear());
+        }
+        if (needDomain) {
+            _chart.rightY().domain([ranges.ryAxisMin, ranges.ryAxisMax]);
+        }
+        if (needRange) {
+            _chart.rightY().rangeRound([_chart.yAxisHeight(), 0]);
         }
 
         _chart.rightY().range([_chart.yAxisHeight(), 0]);
@@ -6921,11 +6926,16 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     function prepareLeftYAxis (ranges) {
-        if (_chart.y() === undefined || _chart.elasticY() || _chart.resizing()) {
-            if (_chart.y() === undefined) {
-                _chart.y(d3.scale.linear());
-            }
-            _chart.y().domain([ranges.lyAxisMin, ranges.lyAxisMax]).rangeRound([_chart.yAxisHeight(), 0]);
+        var needDomain = _chart.y() === undefined || _chart.elasticY(),
+            needRange = needDomain || _chart.resizing();
+        if (_chart.y() === undefined) {
+            _chart.y(d3.scale.linear());
+        }
+        if (needDomain) {
+            _chart.y().domain([ranges.lyAxisMin, ranges.lyAxisMax]);
+        }
+        if (needRange) {
+            _chart.y().rangeRound([_chart.yAxisHeight(), 0]);
         }
 
         _chart.y().range([_chart.yAxisHeight(), 0]);
