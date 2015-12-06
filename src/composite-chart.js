@@ -422,7 +422,7 @@ dc.compositeChart = function (parent, chartGroup) {
 
     /**
      * Get or set alignment between left and right y axes. A line connecting '0' on both y axis
-     * will be parallel to x axis.
+     * will be parallel to x axis. This only has effect when {@link #dc.coordinateGridMixin+elasticY elasticY} is true.
      * @method alignYAxes
      * @memberof dc.compositeChart
      * @instance
