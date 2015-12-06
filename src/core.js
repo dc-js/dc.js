@@ -4,9 +4,9 @@
  *
  * Most `dc` functions are designed to allow function chaining, meaning they return the current chart
  * instance whenever it is appropriate.  The getter forms of functions do not participate in function
- * chaining because they necessarily return values that are not the chart.  Although some,
+ * chaining because they return values that are not the chart, although some,
  * such as {@link #dc.baseMixin+svg .svg} and {@link #dc.coordinateGridMixin+xAxis .xAxis},
- * return values that are chainable d3 objects.
+ * return values that are themselves chainable d3 objects.
  * @namespace dc
  * @version <%= conf.pkg.version %>
  * @example
@@ -210,6 +210,22 @@ dc.optionalTransition = function (enable, duration, callback, name) {
         return function (selection) {
             return selection;
         };
+    }
+};
+
+// See http://stackoverflow.com/a/20773846
+dc.afterTransition = function (transition, callback) {
+    if (transition.empty() || !transition.duration) {
+        callback.call(transition);
+    } else {
+        var n = 0;
+        transition
+            .each(function () { ++n; })
+            .each('end', function () {
+                if (!--n) {
+                    callback.call(transition);
+                }
+            });
     }
 };
 
