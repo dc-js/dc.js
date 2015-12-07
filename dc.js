@@ -25,9 +25,9 @@
  *
  * Most `dc` functions are designed to allow function chaining, meaning they return the current chart
  * instance whenever it is appropriate.  The getter forms of functions do not participate in function
- * chaining because they necessarily return values that are not the chart.  Although some,
+ * chaining because they return values that are not the chart, although some,
  * such as {@link #dc.baseMixin+svg .svg} and {@link #dc.coordinateGridMixin+xAxis .xAxis},
- * return values that are chainable d3 objects.
+ * return values that are themselves chainable d3 objects.
  * @namespace dc
  * @version 2.1.0-dev
  * @example
@@ -691,7 +691,7 @@ dc.filters.TwoDimensionalFilter = function (filter) {
  * region. It is used by the {@link #dc.scatterPlot scatter plot} to implement rectangular brushing.
  *
  * It takes two two-dimensional points in the form `[[x1,y1],[x2,y2]]`, and normalizes them so that
- * `x1 <= x2` and `y1 <- y2`. It then returns a filter which accepts any points which are in the
+ * `x1 <= x2` and `y1 <= y2`. It then returns a filter which accepts any points which are in the
  * rectangular range including the lower values but excluding the higher values.
  *
  * If an array of two values are given to the RangedTwoDimensionalFilter, it interprets the values as
@@ -1524,14 +1524,14 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-     * Set or get the has filter handler. The has filter handler is a function that checks to see if
-     * the chart's current filters include a specific filter.  Using a custom has filter handler allows
+     * Set or get the has-filter handler. The has-filter handler is a function that checks to see if
+     * the chart's current filters (first argument) include a specific filter (second argument).  Using a custom has-filter handler allows
      * you to change the way filters are checked for and replaced.
      * @name hasFilterHandler
      * @memberof dc.baseMixin
      * @instance
      * @example
-     * // default has filter handler
+     * // default has-filter handler
      * chart.hasFilterHandler(function (filters, filter) {
      *     if (filter === null || typeof(filter) === 'undefined') {
      *         return filters.length > 0;
@@ -1587,7 +1587,7 @@ dc.baseMixin = function (_chart) {
      * change how filters are removed or perform additional work when removing a filter, e.g. when
      * using a filter server other than crossfilter.
      *
-     * Any changes should modify the `filters` array argument and return that array.
+     * The handler should return a new or modified array as the result.
      * @name removeFilterHandler
      * @memberof dc.baseMixin
      * @instance
@@ -1630,7 +1630,7 @@ dc.baseMixin = function (_chart) {
      * are added or perform additional work when adding a filter, e.g. when using a filter server other
      * than crossfilter.
      *
-     * Any changes should modify the `filters` array argument and return that array.
+     * The handler should return a new or modified array as the result.
      * @name addFilterHandler
      * @memberof dc.baseMixin
      * @instance
@@ -1667,7 +1667,7 @@ dc.baseMixin = function (_chart) {
      * change the way filters are reset, or perform additional work when resetting the filters,
      * e.g. when using a filter server other than crossfilter.
      *
-     * This function should return an array.
+     * The handler should return a new or modified array as the result.
      * @name resetFilterHandler
      * @memberof dc.baseMixin
      * @instance
@@ -1692,11 +1692,14 @@ dc.baseMixin = function (_chart) {
         return _chart;
     };
 
-    function applyFilters () {
+    function applyFilters (filters) {
         if (_chart.dimension() && _chart.dimension().filter) {
-            var fs = _filterHandler(_chart.dimension(), _filters);
-            _filters = fs ? fs : _filters;
+            var fs = _filterHandler(_chart.dimension(), filters);
+            if (fs) {
+                filters = fs;
+            }
         }
+        return filters;
     }
 
     _chart.replaceFilter = function (_) {
@@ -1733,24 +1736,26 @@ dc.baseMixin = function (_chart) {
         if (!arguments.length) {
             return _filters.length > 0 ? _filters[0] : null;
         }
+        var filters = _filters;
         if (filter instanceof Array && filter[0] instanceof Array && !filter.isFiltered) {
-            filter[0].forEach(function (d) {
-                if (_chart.hasFilter(d)) {
-                    _removeFilterHandler(_filters, d);
+            // toggle each filter
+            filter[0].forEach(function (f) {
+                if (_hasFilterHandler(filters, f)) {
+                    filters = _removeFilterHandler(filters, f);
                 } else {
-                    _addFilterHandler(_filters, d);
+                    filters = _addFilterHandler(filters, f);
                 }
             });
         } else if (filter === null) {
-            _filters = _resetFilterHandler(_filters);
+            filters = _resetFilterHandler(filters);
         } else {
-            if (_chart.hasFilter(filter)) {
-                _removeFilterHandler(_filters, filter);
+            if (_hasFilterHandler(filters, filter)) {
+                filters = _removeFilterHandler(filters, filter);
             } else {
-                _addFilterHandler(_filters, filter);
+                filters = _addFilterHandler(filters, filter);
             }
         }
-        applyFilters();
+        _filters = applyFilters(filters);
         _chart._invokeFilteredListener(filter);
 
         if (_root !== null && _chart.hasFilter()) {
@@ -7318,11 +7323,16 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     function prepareRightYAxis (ranges) {
-        if (_chart.rightY() === undefined || _chart.elasticY() || _chart.resizing()) {
-            if (_chart.rightY() === undefined) {
-                _chart.rightY(d3.scale.linear());
-            }
-            _chart.rightY().domain([ranges.ryAxisMin, ranges.ryAxisMax]).rangeRound([_chart.yAxisHeight(), 0]);
+        var needDomain = _chart.rightY() === undefined || _chart.elasticY(),
+            needRange = needDomain || _chart.resizing();
+        if (_chart.rightY() === undefined) {
+            _chart.rightY(d3.scale.linear());
+        }
+        if (needDomain) {
+            _chart.rightY().domain([ranges.ryAxisMin, ranges.ryAxisMax]);
+        }
+        if (needRange) {
+            _chart.rightY().rangeRound([_chart.yAxisHeight(), 0]);
         }
 
         _chart.rightY().range([_chart.yAxisHeight(), 0]);
@@ -7351,11 +7361,16 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     function prepareLeftYAxis (ranges) {
-        if (_chart.y() === undefined || _chart.elasticY() || _chart.resizing()) {
-            if (_chart.y() === undefined) {
-                _chart.y(d3.scale.linear());
-            }
-            _chart.y().domain([ranges.lyAxisMin, ranges.lyAxisMax]).rangeRound([_chart.yAxisHeight(), 0]);
+        var needDomain = _chart.y() === undefined || _chart.elasticY(),
+            needRange = needDomain || _chart.resizing();
+        if (_chart.y() === undefined) {
+            _chart.y(d3.scale.linear());
+        }
+        if (needDomain) {
+            _chart.y().domain([ranges.lyAxisMin, ranges.lyAxisMax]);
+        }
+        if (needRange) {
+            _chart.y().rangeRound([_chart.yAxisHeight(), 0]);
         }
 
         _chart.y().range([_chart.yAxisHeight(), 0]);

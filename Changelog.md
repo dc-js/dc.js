@@ -15,8 +15,15 @@
 ## 2.1.0
  * Heatmap allows customizing the ordering separately from the values, by Matt Traynham ([#869](https://github.com/dc-js/dc.js/pull/869) - thanks also to Quinn Lee for [#837](https://github.com/dc-js/dc.js/pull/837))
  * Front page stable version automatically read from GitHub, by Enrico Spinielli ([#865](https://github.com/dc-js/dc.js/pull/865))
+ * Functional-style filter handlers: instead of modifying the array of filters in-place, filter handlers must return the new filter array. This is consistent with the old documention, but a different implementation: any changes to the `filters` argument will be ignored unless they are returned. This should make filter handlers easier to reason about.
 
 # 2.0 Series
+## 2.0.0 beta 23
+* Domain was getting set for composite charts even when `elasticY` disabled. ([#1056](https://github.com/dc-js/dc.js/issues/1056)
+
+## 2.0.0 beta 22
+(no changes; bump due to botched npm publish)
+
 ## 2.0.0 beta 21
 * Ability to use non-crossfilter backend with asynchronous connection (callback), via `commitHandler`.
 * Domain comparison was failing for undefined/null domain values.
