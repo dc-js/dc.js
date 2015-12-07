@@ -686,8 +686,8 @@ Renders all charts in the same group as this chart. If the chart has a
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
 <a name="dc.baseMixin+hasFilterHandler"></a>
 #### baseMixin.hasFilterHandler ⇒ <code>function</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
-Set or get the has filter handler. The has filter handler is a function that checks to see if
-the chart's current filters include a specific filter.  Using a custom has filter handler allows
+Set or get the has-filter handler. The has-filter handler is a function that checks to see if
+the chart's current filters (first argument) include a specific filter (second argument).  Using a custom has-filter handler allows
 you to change the way filters are checked for and replaced.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
@@ -698,7 +698,7 @@ you to change the way filters are checked for and replaced.
 
 **Example**  
 ```js
-// default has filter handler
+// default has-filter handler
 chart.hasFilterHandler(function (filters, filter) {
     if (filter === null || typeof(filter) === 'undefined') {
         return filters.length > 0;
@@ -732,7 +732,7 @@ filter from the chart's current filters. Using a custom remove filter handler al
 change how filters are removed or perform additional work when removing a filter, e.g. when
 using a filter server other than crossfilter.
 
-Any changes should modify the `filters` array argument and return that array.
+The handler should return a new or modified array as the result.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
 
@@ -765,7 +765,7 @@ the chart's filter list. Using a custom add filter handler allows you to change 
 are added or perform additional work when adding a filter, e.g. when using a filter server other
 than crossfilter.
 
-Any changes should modify the `filters` array argument and return that array.
+The handler should return a new or modified array as the result.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
 
@@ -793,7 +793,7 @@ chart's filter list by returning a new list. Using a custom reset filter handler
 change the way filters are reset, or perform additional work when resetting the filters,
 e.g. when using a filter server other than crossfilter.
 
-This function should return an array.
+The handler should return a new or modified array as the result.
 
 **Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
 
