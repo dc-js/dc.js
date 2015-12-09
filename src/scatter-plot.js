@@ -49,7 +49,7 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     _symbol.size(function (d, i) {
         if (!_existenceAccessor(d)) {
-            return _emptySize;
+            return Math.pow(_emptySize, 2);
         } else if (_filtered[i]) {
             return Math.pow(_symbolSize, 2);
         } else {
@@ -253,7 +253,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @name emptyColor
      * @memberof dc.scatterPlot
      * @instance
-     * @param string [emptyColor="grey"]
+     * @param String [emptyColor="grey"]
      * @return {String}
      * @return {dc.scatterPlot}/
      */
