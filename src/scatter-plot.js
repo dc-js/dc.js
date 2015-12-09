@@ -43,10 +43,9 @@ dc.scatterPlot = function (parent, chartGroup) {
     var _hiddenOpacity = 0;
     var _hiddenColor = 'grey';
 
-
     _symbol.size(function (d) {
         if (!_existenceAccessor(d)) {
-            return _hiddenSize;
+            return Math.pow(_hiddenSize, 2);
         } else if (this.filtered) {
             return Math.pow(_highlightedSize, 2);
         } else {
@@ -193,17 +192,16 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @name hiddenColor
      * @memberof dc.scatterPlot
      * @instance
-     * @param string [hiddenColor="grey"]
-     * @return {string}
+     * @param {String} [hiddenColor='grey']
+     * @return {String}
      * @return {dc.scatterPlot}/
      */
     _chart.hiddenColor = function (hiddenColor) {
-      if(!arguments.length){
-        return _hiddenColor;
-      }
-      _hiddenColor = _hiddenColor;
-      return _chart;
-
+        if (!arguments.length) {
+            return _hiddenColor;
+        }
+        _hiddenColor = _hiddenColor;
+        return _chart;
     };
 
     /**
@@ -222,7 +220,6 @@ dc.scatterPlot = function (parent, chartGroup) {
         _hiddenOpacity = hiddenOpacity;
         return _chart;
     };
-
 
     _chart.legendables = function () {
         return [{chart: _chart, name: _chart._groupName, color: _chart.getColor()}];
