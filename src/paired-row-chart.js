@@ -132,17 +132,17 @@ dc.pairedRowChart = function (parent, chartGroup) {
     };
 
     // margins
-    var left_margins = _leftChart.margins;
-    var right_margins = _rightChart.margins;
+    var leftMargins = _leftChart.margins;
+    var rightMargins = _rightChart.margins;
 
-    _leftChart.margins = function() {
-        var margins = left_margins();
+    _leftChart.margins = function () {
+        var margins = leftMargins();
         margins.right = 0;
         return margins;
     };
 
-    _rightChart.margins = function() {
-        var margins = right_margins();
+    _rightChart.margins = function () {
+        var margins = rightMargins();
         margins.left = 0;
         return margins;
     };
