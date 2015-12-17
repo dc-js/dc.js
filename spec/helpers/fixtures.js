@@ -78,7 +78,7 @@ function loadColorFixture2 () {
         "]");
 }
 
-function loadGenderFixture() {
+function loadGenderFixture () {
     return JSON.parse("[" +
         "{\"gender\":\"Male\", \"age\": \"10\"}," +
         "{\"gender\":\"Male\", \"age\": \"18\"}," +
