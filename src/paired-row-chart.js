@@ -223,6 +223,14 @@ dc.pairedRowChart = function (parent, chartGroup) {
         return _rightChart;
     };
 
+    _chart.leftXAxisLabel = function (labelText, padding) {
+        return _leftChart.xAxisLabel(labelText, padding);
+    };
+
+    _chart.rightXAxisLabel = function (labelText, padding) {
+        return _rightChart.xAxisLabel(labelText, padding);
+    };
+
     // functions that we just want to pass on to both sub charts
 
     var _getterSetterPassOn = [
