@@ -232,6 +232,38 @@ function loadIrisFixture () {
             "6.2,3.4,5.4,2.3,virginica\n" +
             "5.9,3,5.1,1.8,virginica"
     );
+} 
+function loadGenderFixture() {
+    return JSON.parse("[" +
+        "{\"gender\":\"Male\", \"age\": \"10\"}," +
+        "{\"gender\":\"Male\", \"age\": \"18\"}," +
+        "{\"gender\":\"Male\", \"age\": \"20\"}," +
+        "{\"gender\":\"Male\", \"age\": \"22\"}," +
+        "{\"gender\":\"Male\", \"age\": \"30\"}," +
+        "{\"gender\":\"Male\", \"age\": \"40\"}," +
+        "{\"gender\":\"Male\", \"age\": \"45\"}," +
+        "{\"gender\":\"Male\", \"age\": \"50\"}," +
+        "{\"gender\":\"Male\", \"age\": \"55\"}," +
+        "{\"gender\":\"Male\", \"age\": \"70\"}," +
+        "{\"gender\":\"Male\", \"age\": \"80\"}," +
+        "{\"gender\":\"Male\", \"age\": \"90\"}," +
+        "{\"gender\":\"Male\", \"age\": \"100\"}," +
+        "{\"gender\":\"Male\", \"age\": \"101\"}," +
+        "{\"gender\":\"Female\", \"age\": \"11\"}," +
+        "{\"gender\":\"Female\", \"age\": \"15\"}," +
+        "{\"gender\":\"Female\", \"age\": \"20\"}," +
+        "{\"gender\":\"Female\", \"age\": \"21\"}," +
+        "{\"gender\":\"Female\", \"age\": \"22\"}," +
+        "{\"gender\":\"Female\", \"age\": \"30\"}," +
+        "{\"gender\":\"Female\", \"age\": \"40\"}," +
+        "{\"gender\":\"Female\", \"age\": \"50\"}," +
+        "{\"gender\":\"Female\", \"age\": \"60\"}," +
+        "{\"gender\":\"Female\", \"age\": \"65\"}," +
+        "{\"gender\":\"Female\", \"age\": \"70\"}," +
+        "{\"gender\":\"Female\", \"age\": \"80\"}," +
+        "{\"gender\":\"Female\", \"age\": \"90\"}," +
+        "{\"gender\":\"Female\", \"age\": \"100\"}" +
+        "]");
 }
 
 /* jscs:enable validateQuoteMarks, maximumLineLength */
