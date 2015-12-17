@@ -6,10 +6,13 @@
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
 </head>
 <body>
+    <a href="javascript:dc.filterAll();dc.redrawAll();">Reset</a>
 
 <div id="chart-ring-year"></div>
 <div id="chart-hist-spend"></div>
 <div id="chart-row-spenders"></div>
+<div id="chart-hist-spend-line"></div>
+<div id="chart-composite"></div>
 
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
@@ -18,7 +21,9 @@
 
 var yearRingChart   = dc.pieChart("#chart-ring-year"),
     spendHistChart  = dc.barChart("#chart-hist-spend"),
-    spenderRowChart = dc.rowChart("#chart-row-spenders");
+    spenderRowChart = dc.rowChart("#chart-row-spenders"),
+    spendHistLineChart  = dc.lineChart("#chart-hist-spend-line"),
+    compositeChart = dc.compositeChart("#chart-composite");
 
 // use static or load via d3.csv("spendData.csv", function(error, spendData) {/* do stuff */});
 var spendData = [
@@ -43,7 +48,9 @@ var ndx = crossfilter(spendData),
     nameDim  = ndx.dimension(function(d) {return d.Name;}),
     spendPerYear = yearDim.group().reduceSum(function(d) {return +d.Spent;}),
     spendPerName = nameDim.group().reduceSum(function(d) {return +d.Spent;}),
-    spendHist    = spendDim.group().reduceCount();
+    spendHist    = spendDim.group().reduceCount(),
+    compositeDim = ndx.dimension(function(d) {return d.Name;}),
+    compositeGroup = compositeDim.group().reduceSum(function(d) {return +d.Spent;});
 
 yearRingChart
     .width(200).height(200)
@@ -66,6 +73,33 @@ spenderRowChart
     .dimension(nameDim)
     .group(spendPerName)
     .elasticX(true);
+
+spendHistLineChart
+    .width(300).height(200)
+    .dimension(spendDim)
+    .group(spendHist)
+    .x(d3.scale.ordinal())
+    .xUnits(dc.units.ordinal)
+    .elasticX(true)
+    .ordering(dc.pluck('value'));
+
+compositeChart
+    .width(850)
+    .height(250)
+    .x(d3.scale.ordinal())
+    .xUnits(dc.units.ordinal)
+    .elasticX(true)
+    .elasticY(true)
+    .dimension(compositeDim)
+    .group(compositeGroup)
+    .childOptions({
+        dimension: compositeDim,
+        group: compositeGroup,
+    })
+    .compose([
+        dc.barChart(compositeChart),
+        dc.lineChart(compositeChart),
+    ])
 
 dc.renderAll();
 

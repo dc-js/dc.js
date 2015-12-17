@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Paired Row Chart Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+
+<div id="test"></div>
+<div id="filter"></div>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript">
+    var chart = dc.pairedRowChart('#test');
+    var filter = dc.pieChart('#filter');
+
+    d3.csv('paried-row-data.csv', function(error, experiments) {
+        var ndx = crossfilter(experiments),
+            ageGenderDimension = ndx.dimension(function(d) {
+                var age_range = 'Unknown';
+
+                if (d.age <= 9) {
+                    age_range = '0 - 9';
+                } else if (d.age <= 19) {
+                    age_range = '10 - 19';
+                } else if (d.age <= 29) {
+                    age_range = '20 - 29';
+                } else if (d.age <= 39) {
+                    age_range = '30 - 39';
+                } else if (d.age <= 49) {
+                    age_range = '40 - 49';
+                } else if (d.age <= 59) {
+                    age_range = '50 - 59';
+                } else if (d.age <= 69) {
+                    age_range = '60 - 69';
+                } else if (d.age <= 79) {
+                    age_range = '70 - 79';
+                } else if (d.age <= 89) {
+                    age_range = '80 - 89';
+                } else if (d.age <= 99) {
+                    age_range = '90 - 99';
+                } else if (d.age >= 100) {
+                    age_range = '100+';
+                }
+
+                return [d.gender, age_range];
+            }),
+            ageGenderGroup = ageGenderDimension.group().reduceCount(),
+            genderDimension = ndx.dimension(function(d) {return d.gender;}),
+            genderGroup = genderDimension.group().reduceCount();
+
+        group = {
+            all: function() {
+                var age_ranges = ['0 - 9', '10 - 19', '20 - 29', '30 - 39', '40 - 49', '50 - 59', '60 - 69', '70 - 79', '80 - 89', '90 - 99', '100+'];
+
+                // convert to object so we can easily tell if a key exists
+                var values = {};
+                ageGenderGroup.all().forEach(function(d) {
+                    values[d.key[0] + '.' + d.key[1]] = d.value;
+                });
+
+                // convert back into an array for the chart, making sure that all age_ranges exist
+                var g = [];
+                age_ranges.forEach(function(age_range) {
+                    g.push({
+                        key: ['Male', age_range],
+                        value: values['Male.' + age_range] || 0
+                    });
+                    g.push({
+                        key: ['Female', age_range],
+                        value: values['Female.' + age_range] || 0
+                    });
+                });
+
+                return g;
+            }
+        };
+
+        chart.options({
+            // display
+            width: 500,
+            height: 500,
+            colorCalculator: function(d) {
+                if (d.key[0] === 'Male') {
+                    return '#5A9BCA';
+                }
+
+                return '#C95AC7';
+            },
+            renderTitleLabel: true,
+            title: function(d) {
+                return d.key[1];
+            },
+            label: function(d) {
+                return d.key[1];
+            },
+
+            // data
+            dimension: ageGenderDimension,
+            group: group,
+
+            // x axis
+            elasticX: true,
+            leftXAxisLabel: 'Male',
+            rightXAxisLabel: 'Female',
+
+            // new fields for paired row chart
+            leftKeyFilter: function(d) {
+                return d.key[0] === 'Male';
+            },
+            rightKeyFilter: function(d) {
+                return d.key[0] === 'Female';
+            },
+        })
+        .render();
+
+        filter.options({
+            dimension: genderDimension,
+            group: genderGroup
+        })
+        .render();
+    });
+
+</script>
+
+</body>
+</html>

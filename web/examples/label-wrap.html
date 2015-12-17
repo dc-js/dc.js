@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <title>dc.js - Ordinal Bar Chart Example With Label Wrapping</title>
+    <meta charset='UTF-8'>
+    <link rel='stylesheet' type='text/css' href='../css/dc.css'/>
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 1em;
+        }
+
+        .dc-chart {
+            border: 1px solid red;
+            height: 95%;
+        }
+    </style>
+</head>
+<body>
+
+<button onclick="show('bar')">Bar</button>
+<button onclick="show('line')">Line</button>
+<button onclick="show('pie')">Pie</button>
+<button onclick="show('row')">Row</button>
+<button onclick="show('series')">Series</button>
+<button onclick="show('composite')">Composite</button>
+
+<div id='bar'></div>
+<div id='line' style='display:none;'></div>
+<div id='pie' style='display:none;'></div>
+<div id='row' style='display:none;'></div>
+<div id='series' style='display:none;'></div>
+<div id='composite' style='display:none;'></div>
+
+
+<script type='text/javascript' src='../js/d3.js'></script>
+<script type='text/javascript' src='../js/crossfilter.js'></script>
+<script type='text/javascript' src='../js/dc.js'></script>
+<!-- <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/dc/2.0.0-beta.22/dc.js'></script> -->
+<script type='text/javascript'>
+
+function show(chart) {
+    document.getElementById('bar').style.display = 'none';
+    document.getElementById('line').style.display = 'none';
+    document.getElementById('pie').style.display = 'none';
+    document.getElementById('row').style.display = 'none';
+    document.getElementById('series').style.display = 'none';
+    document.getElementById('composite').style.display = 'none';
+
+    document.getElementById(chart).style.display = 'block';
+    window[chart].render();
+}
+
+var bar = dc.barChart('#bar');
+var line = dc.lineChart('#line');
+var pie = dc.pieChart('#pie');
+var row = dc.rowChart('#row');
+var series = dc.seriesChart('#series');
+var composite = dc.compositeChart('#composite');
+
+var counts = [
+  {name: 'Lorem ipsum', cnt: 5245, type: 'Quisque mattis mattis est, vel faucibus tellus commodo commodo.'},
+  {name: 'dolor sit amet', cnt: 4278, type: 'Quisque mattis mattis est, vel faucibus tellus commodo commodo.'},
+  {name: 'consecteturionationing', cnt: 3864, type: 'Quisque mattis mattis est, vel faucibus tellus commodo commodo.'},
+  {name: 'elit', cnt: 2537, type: 'Donec rutrum, est eu dictum rutrum, ex mauris porttitor massa, sed gravida est ipsum et mauris.'},
+  {name: 'Nam asdfasdfadfasdfasdfasdf qwerty', cnt: 1936, type: 'Donec rutrum, est eu dictum rutrum, ex mauris porttitor massa, sed gravida est ipsum et mauris.'},
+  {name: 'lectus nisl', cnt: 123, type: 'Maecenas lobortis enim elementum scelerisque egestas. Aliquam pellentesque vel orci nec rutrum'},
+  {name: 'qu', cnt: 5000, type: 'Maecenas lobortis enim elementum scelerisque egestas. Aliquam pellentesque vel orci nec rutrum'},
+];
+
+var ndx           = crossfilter(counts),
+    dimension     = ndx.dimension(function(d) {return d.name;}),
+    dualDimension = ndx.dimension(function(d) {return [d.name, d.type];}),
+    groupCount    = dimension.group().reduceCount(),
+    groupSum      = dimension.group().reduceSum(function(d) {return d.cnt;}),
+    groupRandom   = dimension.group().reduceSum(function(d) {return Math.random() * 10000;}),
+    dualGroup     = dualDimension.group().reduceSum(function(d) { return d.cnt;});
+
+bar
+  .x(d3.scale.ordinal())
+  .xUnits(dc.units.ordinal)
+  .renderVerticalGridLines(true)
+  .renderHorizontalGridLines(true)
+  .xAxisLabel('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam hendrerit lectus nisl, quis ultrices leo lobortis ut. Vivamus eleifend a metus eget gravida.')
+  .yAxisLabel('Fusce et massa in nulla lobortis molestie eu ac dui.')
+  .yAxisTickIntegersOnly(true)
+  .dimension(dimension)
+  .useRightYAxis(false)
+  .group(groupSum)
+  .legend(dc.legend().position('left'));
+
+line
+  .width('50%')
+  .height('500px')
+  .x(d3.scale.ordinal())
+  .xUnits(dc.units.ordinal)
+  .renderVerticalGridLines(true)
+  .renderHorizontalGridLines(true)
+  .xAxisLabel('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam hendrerit lectus nisl, quis ultrices leo lobortis ut. Vivamus eleifend a metus eget gravida.')
+  .yAxisLabel('Integer tempor efficitur metus. Etiam id enim lacinia.')
+  .yAxisTickIntegersOnly(true)
+  .dimension(dimension)
+  .group(groupSum)
+  .legend(dc.legend().position('top'));
+
+pie
+  .width('50%')
+  .height('50%')
+  .dimension(dimension)
+  .group(groupSum)
+  .legend(dc.legend().position('right'));
+
+row
+  .xAxisLabel('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam hendrerit lectus nisl, quis ultrices leo lobortis ut. Vivamus eleifend a metus eget gravida.')
+  .dimension(dimension)
+  .elasticX(true)
+  .group(groupSum);
+
+series
+  .x(d3.scale.ordinal())
+  .xUnits(dc.units.ordinal)
+  .renderVerticalGridLines(true)
+  .renderHorizontalGridLines(true)
+  .xAxisLabel('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam hendrerit lectus nisl, quis ultrices leo lobortis ut. Vivamus eleifend a metus eget gravida.')
+  .yAxisLabel('Integer tempor efficitur metus. Etiam id enim lacinia.')
+  .yAxisTickIntegersOnly(true)
+  .dimension(dualDimension)
+  .group(dualGroup)
+  .seriesAccessor(function(d) {
+      return d.key[1];
+  })
+  .keyAccessor(function(d) {
+      return d.key[0];
+  })
+  .legend(dc.legend().position('top'));
+
+composite
+  .x(d3.scale.ordinal())
+  .xUnits(dc.units.ordinal)
+  .renderVerticalGridLines(true)
+  .renderHorizontalGridLines(true)
+  .xAxisLabel('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam hendrerit lectus nisl, quis ultrices leo lobortis ut. Vivamus eleifend a metus eget gravida.')
+  .yAxisLabel('Ornare velit eu, pretium sem.')
+  .rightYAxisLabel('Praesent ultricies tortor sit amet urna dictum rutrum.')
+  .yAxisTickIntegersOnly(true)
+  .dimension(dimension)
+  .group(groupCount)
+  .compose([
+    dc.barChart(composite)
+      .group(groupSum)
+    ,
+    dc.lineChart(composite)
+      .group(groupRandom)
+      .useRightYAxis(true)
+  ])
+  .legend(dc.legend().position('bottom'));
+
+bar.render();
+
+</script>
+
+</body>
+</html>

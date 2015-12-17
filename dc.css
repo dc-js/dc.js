@@ -1,5 +1,6 @@
-div.dc-chart {
-    float: left;
+.dc-chart svg {
+    width: 100%;
+    height: 100%;
 }
 
 .dc-chart rect.bar {
@@ -21,11 +22,6 @@ div.dc-chart {
     fill: green;
 }
 
-.dc-chart rect.deselected {
-    stroke: none;
-    fill: #ccc;
-}
-
 .dc-chart .empty-chart .pie-slice path {
     fill: #FFEEEE;
     cursor: default;
@@ -36,16 +32,20 @@ div.dc-chart {
 }
 
 .dc-chart .pie-slice {
-    fill: white;
-    font-size: 12px;
     cursor: pointer;
 }
 
-.dc-chart .pie-slice.external{
+.dc-chart .pie-slice-text {
+    fill: white;
+    font-size: 12px;
+    pointer-events: none;
+}
+
+.dc-chart .pie-slice-text.external {
     fill: black;
 }
 
-.dc-chart .pie-slice :hover {
+.dc-chart .pie-slice:hover {
     fill-opacity: .8;
 }
 
@@ -53,23 +53,17 @@ div.dc-chart {
     fill-opacity: .8;
 }
 
+.dc-chart .pie-slice path {
+    stroke-width: 1;
+    stroke: #FFFFFF;
+}
+
+
 .dc-chart .pie-path {
   fill:none;
   stroke-width: 2px;
   stroke: black;
   opacity: 0.4;
-}
-
-.dc-chart .selected path {
-    stroke-width: 3;
-    stroke: #ccc;
-    fill-opacity: 1;
-}
-
-.dc-chart .deselected path {
-    stroke: none;
-    fill-opacity: .5;
-    fill: #ccc;
 }
 
 .dc-chart .axis path,
@@ -140,18 +134,6 @@ div.dc-chart {
     fill-opacity: .8;
 }
 
-.dc-chart .selected circle {
-    stroke-width: 3;
-    stroke: #ccc;
-    fill-opacity: 1;
-}
-
-.dc-chart .deselected circle {
-    stroke: none;
-    fill-opacity: .5;
-    fill: #ccc;
-}
-
 .dc-chart .bubble {
     stroke: none;
     fill-opacity: 0.6;
@@ -186,20 +168,6 @@ div.dc-chart {
 
 .dc-chart g.state path {
     stroke: white;
-}
-
-.dc-chart g.selected path {
-}
-
-.dc-chart g.deselected path {
-    fill: grey;
-}
-
-.dc-chart g.selected text {
-}
-
-.dc-chart g.deselected text {
-    display: none;
 }
 
 .dc-chart g.county path {
@@ -302,25 +270,64 @@ g.dc-legend-item.fadeout {
     stroke: #ccc;
 }
 
-.dc-chart .box.deselected .box {
-    fill: #ccc;
-}
-
-.dc-chart .box.deselected {
-    opacity: .5;
-}
-
-.dc-chart .symbol{
+.dc-chart .symbol {
     stroke: none;
-}
-
-.dc-chart .heatmap .box-group.deselected rect {
-    stroke: none;
-    fill-opacity: .5;
-    fill: #ccc;
 }
 
 .dc-chart .heatmap g.axis text {
     pointer-events: all;
     cursor: pointer;
+}
+
+/* selected and deselected */
+.dc-chart .selected circle,
+.dc-chart .selected path,
+.dc-chart .selected rect,
+.dc-chart rect.selected {
+    stroke-width: 2;
+    stroke: #666666 !important;
+    fill-opacity: 1;
+}
+
+.dc-chart .deselected {
+    opacity: 0.3 !important;
+}
+
+/* title */
+
+.dc-title {
+    position: absolute;
+    background: #FFFFFF;
+    z-index: 9999;
+    padding: 5px;
+    border: 2px solid #000000;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.8;
+}
+
+.dc-title:before,
+.dc-title:after {
+	top: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.dc-title:before {
+	border-color: rgba(240, 240, 240, 0);
+	border-top-color: inherit;
+	border-width: 13px;
+	margin-left: -13px;
+}
+
+.dc-title:after {
+	border-color: rgba(0, 0, 0, 0);
+	border-top-color: #FFFFFF;
+	border-width: 10px;
+	margin-left: -10px;
 }

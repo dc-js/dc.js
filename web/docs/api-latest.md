@@ -62,6 +62,7 @@ chart.width(300)
     * [.renderLabel](#dc.baseMixin+renderLabel) ⇒ <code>Boolean</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
     * [.title](#dc.baseMixin+title) ⇒ <code>function</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
     * [.renderTitle](#dc.baseMixin+renderTitle) ⇒ <code>Boolean</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
+    * [.clickOn](#dc.baseMixin+clickOn) ⇒ <code>Boolean</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
     * ~~[.renderlet](#dc.baseMixin+renderlet) ⇒ <code>[baseMixin](#dc.baseMixin)</code>~~
     * [.chartGroup](#dc.baseMixin+chartGroup) ⇒ <code>String</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
     * [.expireCache](#dc.baseMixin+expireCache) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
@@ -81,11 +82,11 @@ chart.width(300)
     * [.getColor](#dc.colorMixin+getColor) ⇒ <code>String</code>
     * [.colorCalculator](#dc.colorMixin+colorCalculator) ⇒ <code>\*</code>
   * [.coordinateGridMixin](#dc.coordinateGridMixin) ⇒ <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
+    * [.g](#dc.coordinateGridMixin+g) ⇒ <code>SVGElement</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
     * [.rescale](#dc.coordinateGridMixin+rescale) ⇒ <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
     * [.rangeChart](#dc.coordinateGridMixin+rangeChart) ⇒ <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
     * [.zoomScale](#dc.coordinateGridMixin+zoomScale) ⇒ <code>Array.&lt;(Number\|Date)&gt;</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
     * [.zoomOutRestrict](#dc.coordinateGridMixin+zoomOutRestrict) ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
-    * [.g](#dc.coordinateGridMixin+g) ⇒ <code>SVGElement</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
     * [.mouseZoomable](#dc.coordinateGridMixin+mouseZoomable) ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
     * [.chartBodyG](#dc.coordinateGridMixin+chartBodyG) ⇒ <code>SVGElement</code>
     * [.x](#dc.coordinateGridMixin+x) ⇒ <code>d3.scale</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
@@ -97,7 +98,10 @@ chart.width(300)
     * [.useRightYAxis](#dc.coordinateGridMixin+useRightYAxis) ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
     * [.isOrdinal](#dc.coordinateGridMixin+isOrdinal) ⇒ <code>Boolean</code>
     * [.xAxisLabel](#dc.coordinateGridMixin+xAxisLabel) ⇒ <code>String</code>
+    * [.xAxisTickLabelRotate](#dc.coordinateGridMixin+xAxisTickLabelRotate) ⇒ <code>Number</code>
     * [.yAxisLabel](#dc.coordinateGridMixin+yAxisLabel) ⇒ <code>String</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
+    * [.yAxisTickLabelRotate](#dc.coordinateGridMixin+yAxisTickLabelRotate) ⇒ <code>Number</code>
+    * [.yAxisTickIntegersOnly](#dc.coordinateGridMixin+yAxisTickIntegersOnly) ⇒ <code>Boolean</code>
     * [.y](#dc.coordinateGridMixin+y) ⇒ <code>d3.scale</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
     * [.yAxis](#dc.coordinateGridMixin+yAxis) ⇒ <code>d3.svg.axis</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
     * [.elasticY](#dc.coordinateGridMixin+elasticY) ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
@@ -112,6 +116,7 @@ chart.width(300)
     * [.clipPadding](#dc.coordinateGridMixin+clipPadding) ⇒ <code>Number</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
     * [.focus](#dc.coordinateGridMixin+focus)
     * [.brushOn](#dc.coordinateGridMixin+brushOn) ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
+    * [.xAxisLabel](#dc.coordinateGridMixin+xAxisLabel) ⇒ <code>String</code>
   * [.stackMixin](#dc.stackMixin) ⇒ <code>[stackMixin](#dc.stackMixin)</code>
     * [.stack](#dc.stackMixin+stack) ⇒ <code>Array.&lt;{group: crossfilter.group, name: String, accessor: function()}&gt;</code> &#124; <code>[stackMixin](#dc.stackMixin)</code>
     * [.hidableStacks](#dc.stackMixin+hidableStacks) ⇒ <code>Boolean</code> &#124; <code>[stackMixin](#dc.stackMixin)</code>
@@ -230,14 +235,6 @@ chart.width(300)
     * [.labelOffsetY](#dc.rowChart+labelOffsetY) ⇒ <code>Number</code> &#124; <code>[rowChart](#dc.rowChart)</code>
     * [.titleLabelOffsetX](#dc.rowChart+titleLabelOffsetX) ⇒ <code>Number</code> &#124; <code>[rowChart](#dc.rowChart)</code>
   * [.legend](#dc.legend) ⇒ <code>[legend](#dc.legend)</code>
-    * [.x](#dc.legend+x) ⇒ <code>Number</code> &#124; <code>[legend](#dc.legend)</code>
-    * [.y](#dc.legend+y) ⇒ <code>Number</code> &#124; <code>[legend](#dc.legend)</code>
-    * [.gap](#dc.legend+gap) ⇒ <code>Number</code> &#124; <code>[legend](#dc.legend)</code>
-    * [.itemHeight](#dc.legend+itemHeight) ⇒ <code>Number</code> &#124; <code>[legend](#dc.legend)</code>
-    * [.horizontal](#dc.legend+horizontal) ⇒ <code>Boolean</code> &#124; <code>[legend](#dc.legend)</code>
-    * [.legendWidth](#dc.legend+legendWidth) ⇒ <code>Number</code> &#124; <code>[legend](#dc.legend)</code>
-    * [.itemWidth](#dc.legend+itemWidth) ⇒ <code>Number</code> &#124; <code>[legend](#dc.legend)</code>
-    * [.autoItemWidth](#dc.legend+autoItemWidth) ⇒ <code>Boolean</code> &#124; <code>[legend](#dc.legend)</code>
   * [.scatterPlot](#dc.scatterPlot) ⇒ <code>[scatterPlot](#dc.scatterPlot)</code>
     * [.existenceAccessor](#dc.scatterPlot+existenceAccessor) ⇒ <code>function</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
     * [.symbol](#dc.scatterPlot+symbol) ⇒ <code>String</code> &#124; <code>function</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
@@ -325,6 +322,7 @@ and available on all chart implementations in the `dc` library.
   * [.renderLabel](#dc.baseMixin+renderLabel) ⇒ <code>Boolean</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
   * [.title](#dc.baseMixin+title) ⇒ <code>function</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
   * [.renderTitle](#dc.baseMixin+renderTitle) ⇒ <code>Boolean</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
+  * [.clickOn](#dc.baseMixin+clickOn) ⇒ <code>Boolean</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
   * ~~[.renderlet](#dc.baseMixin+renderlet) ⇒ <code>[baseMixin](#dc.baseMixin)</code>~~
   * [.chartGroup](#dc.baseMixin+chartGroup) ⇒ <code>String</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
   * [.expireCache](#dc.baseMixin+expireCache) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
@@ -1014,6 +1012,16 @@ given.
 | --- | --- | --- |
 | [renderTitle] | <code>Boolean</code> | <code>true</code> | 
 
+<a name="dc.baseMixin+clickOn"></a>
+#### baseMixin.clickOn ⇒ <code>Boolean</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
+Turn on/off the click filter.
+
+**Kind**: instance property of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [clickOn] | <code>Boolean</code> | <code>true</code> | 
+
 <a name="dc.baseMixin+renderlet"></a>
 #### ~~baseMixin.renderlet ⇒ <code>[baseMixin](#dc.baseMixin)</code>~~
 ***Deprecated***
@@ -1147,21 +1155,9 @@ Charts.
 
 <a name="dc.marginMixin+margins"></a>
 #### marginMixin.margins ⇒ <code>Object</code> &#124; <code>[marginMixin](#dc.marginMixin)</code>
-Get or set the margins for a particular coordinate grid chart instance. The margins is stored as
-an associative Javascript array.
+Get the margins for a particular coordinate grid chart instance.
 
 **Kind**: instance property of <code>[marginMixin](#dc.marginMixin)</code>  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| [margins] | <code>Object</code> | <code>{top: 10, right: 50, bottom: 30, left: 30}</code> | 
-
-**Example**  
-```js
-var leftMargin = chart.margins().left; // 30 by default
-chart.margins().left = 50;
-leftMargin = chart.margins().left; // now 50
-```
 <a name="dc.colorMixin"></a>
 ### dc.colorMixin ⇒ <code>[colorMixin](#dc.colorMixin)</code>
 The Color Mixin is an abstract chart functional class providing universal coloring support
@@ -1303,11 +1299,11 @@ concrete chart types, e.g. bar chart, line chart, and bubble chart.
 
 
 * [.coordinateGridMixin](#dc.coordinateGridMixin) ⇒ <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
+  * [.g](#dc.coordinateGridMixin+g) ⇒ <code>SVGElement</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
   * [.rescale](#dc.coordinateGridMixin+rescale) ⇒ <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
   * [.rangeChart](#dc.coordinateGridMixin+rangeChart) ⇒ <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
   * [.zoomScale](#dc.coordinateGridMixin+zoomScale) ⇒ <code>Array.&lt;(Number\|Date)&gt;</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
   * [.zoomOutRestrict](#dc.coordinateGridMixin+zoomOutRestrict) ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
-  * [.g](#dc.coordinateGridMixin+g) ⇒ <code>SVGElement</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
   * [.mouseZoomable](#dc.coordinateGridMixin+mouseZoomable) ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
   * [.chartBodyG](#dc.coordinateGridMixin+chartBodyG) ⇒ <code>SVGElement</code>
   * [.x](#dc.coordinateGridMixin+x) ⇒ <code>d3.scale</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
@@ -1319,7 +1315,10 @@ concrete chart types, e.g. bar chart, line chart, and bubble chart.
   * [.useRightYAxis](#dc.coordinateGridMixin+useRightYAxis) ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
   * [.isOrdinal](#dc.coordinateGridMixin+isOrdinal) ⇒ <code>Boolean</code>
   * [.xAxisLabel](#dc.coordinateGridMixin+xAxisLabel) ⇒ <code>String</code>
+  * [.xAxisTickLabelRotate](#dc.coordinateGridMixin+xAxisTickLabelRotate) ⇒ <code>Number</code>
   * [.yAxisLabel](#dc.coordinateGridMixin+yAxisLabel) ⇒ <code>String</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
+  * [.yAxisTickLabelRotate](#dc.coordinateGridMixin+yAxisTickLabelRotate) ⇒ <code>Number</code>
+  * [.yAxisTickIntegersOnly](#dc.coordinateGridMixin+yAxisTickIntegersOnly) ⇒ <code>Boolean</code>
   * [.y](#dc.coordinateGridMixin+y) ⇒ <code>d3.scale</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
   * [.yAxis](#dc.coordinateGridMixin+yAxis) ⇒ <code>d3.svg.axis</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
   * [.elasticY](#dc.coordinateGridMixin+elasticY) ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
@@ -1334,6 +1333,19 @@ concrete chart types, e.g. bar chart, line chart, and bubble chart.
   * [.clipPadding](#dc.coordinateGridMixin+clipPadding) ⇒ <code>Number</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
   * [.focus](#dc.coordinateGridMixin+focus)
   * [.brushOn](#dc.coordinateGridMixin+brushOn) ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
+  * [.xAxisLabel](#dc.coordinateGridMixin+xAxisLabel) ⇒ <code>String</code>
+
+<a name="dc.coordinateGridMixin+g"></a>
+#### coordinateGridMixin.g ⇒ <code>SVGElement</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
+Get or set the root g element. This method is usually used to retrieve the g element in order to
+overlay custom svg drawing programatically. **Caution**: The root g element is usually generated
+by dc.js internals, and resetting it might produce unpredictable result.
+
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [gElement] | <code>SVGElement</code> | 
 
 <a name="dc.coordinateGridMixin+rescale"></a>
 #### coordinateGridMixin.rescale ⇒ <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
@@ -1376,18 +1388,6 @@ Get or set the zoom restriction for the chart. If true limits the zoom to origio
 | Param | Type | Default |
 | --- | --- | --- |
 | [zoomOutRestrict] | <code>Boolean</code> | <code>true</code> | 
-
-<a name="dc.coordinateGridMixin+g"></a>
-#### coordinateGridMixin.g ⇒ <code>SVGElement</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
-Get or set the root g element. This method is usually used to retrieve the g element in order to
-overlay custom svg drawing programatically. **Caution**: The root g element is usually generated
-by dc.js internals, and resetting it might produce unpredictable result.
-
-**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
-
-| Param | Type |
-| --- | --- |
-| [gElement] | <code>SVGElement</code> | 
 
 <a name="dc.coordinateGridMixin+mouseZoomable"></a>
 #### coordinateGridMixin.mouseZoomable ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
@@ -1558,6 +1558,16 @@ the margin to make room for the label. By default the padded is set to 12 to acc
 | [labelText] | <code>String</code> |  | 
 | [padding] | <code>Number</code> | <code>12</code> | 
 
+<a name="dc.coordinateGridMixin+xAxisTickLabelRotate"></a>
+#### coordinateGridMixin.xAxisTickLabelRotate ⇒ <code>Number</code>
+Set or get the x axis tick label rotation in degrees. Can be between -90 and 90.
+
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [rotate] | <code>Number</code> | 
+
 <a name="dc.coordinateGridMixin+yAxisLabel"></a>
 #### coordinateGridMixin.yAxisLabel ⇒ <code>String</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
 Set or get the y axis label. If setting the label, you may optionally include additional padding
@@ -1570,6 +1580,26 @@ text height.
 | --- | --- | --- |
 | [labelText] | <code>String</code> |  | 
 | [padding] | <code>Number</code> | <code>12</code> | 
+
+<a name="dc.coordinateGridMixin+yAxisTickLabelRotate"></a>
+#### coordinateGridMixin.yAxisTickLabelRotate ⇒ <code>Number</code>
+Get or set the y axis tick label rotation in degrees. Can be between -90 and 90.
+
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [rotate] | <code>Number</code> | 
+
+<a name="dc.coordinateGridMixin+yAxisTickIntegersOnly"></a>
+#### coordinateGridMixin.yAxisTickIntegersOnly ⇒ <code>Boolean</code>
+Get or set the y axis tick intergers only flag. Can be between true or false
+
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type |
+| --- | --- |
+| [flag] | <code>Boolean</code> | 
 
 <a name="dc.coordinateGridMixin+y"></a>
 #### coordinateGridMixin.y ⇒ <code>d3.scale</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
@@ -1735,6 +1765,18 @@ if enabled, but only via scrolling (panning will be disabled.)
 | Param | Type | Default |
 | --- | --- | --- |
 | [brushOn] | <code>Boolean</code> | <code>true</code> | 
+
+<a name="dc.coordinateGridMixin+xAxisLabel"></a>
+#### coordinateGridMixin.xAxisLabel ⇒ <code>String</code>
+Set or get the x axis label. If setting the label, you may optionally include additional padding to
+the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.
+
+**Kind**: instance property of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [labelText] | <code>String</code> |  | 
+| [padding] | <code>Number</code> | <code>12</code> | 
 
 <a name="dc.stackMixin"></a>
 ### dc.stackMixin ⇒ <code>[stackMixin](#dc.stackMixin)</code>
@@ -3674,98 +3716,6 @@ Examples:
 ```js
 chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
 ```
-
-* [.legend](#dc.legend) ⇒ <code>[legend](#dc.legend)</code>
-  * [.x](#dc.legend+x) ⇒ <code>Number</code> &#124; <code>[legend](#dc.legend)</code>
-  * [.y](#dc.legend+y) ⇒ <code>Number</code> &#124; <code>[legend](#dc.legend)</code>
-  * [.gap](#dc.legend+gap) ⇒ <code>Number</code> &#124; <code>[legend](#dc.legend)</code>
-  * [.itemHeight](#dc.legend+itemHeight) ⇒ <code>Number</code> &#124; <code>[legend](#dc.legend)</code>
-  * [.horizontal](#dc.legend+horizontal) ⇒ <code>Boolean</code> &#124; <code>[legend](#dc.legend)</code>
-  * [.legendWidth](#dc.legend+legendWidth) ⇒ <code>Number</code> &#124; <code>[legend](#dc.legend)</code>
-  * [.itemWidth](#dc.legend+itemWidth) ⇒ <code>Number</code> &#124; <code>[legend](#dc.legend)</code>
-  * [.autoItemWidth](#dc.legend+autoItemWidth) ⇒ <code>Boolean</code> &#124; <code>[legend](#dc.legend)</code>
-
-<a name="dc.legend+x"></a>
-#### legend.x ⇒ <code>Number</code> &#124; <code>[legend](#dc.legend)</code>
-Set or get x coordinate for legend widget.
-
-**Kind**: instance property of <code>[legend](#dc.legend)</code>  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| [x] | <code>Number</code> | <code>0</code> | 
-
-<a name="dc.legend+y"></a>
-#### legend.y ⇒ <code>Number</code> &#124; <code>[legend](#dc.legend)</code>
-Set or get y coordinate for legend widget.
-
-**Kind**: instance property of <code>[legend](#dc.legend)</code>  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| [y] | <code>Number</code> | <code>0</code> | 
-
-<a name="dc.legend+gap"></a>
-#### legend.gap ⇒ <code>Number</code> &#124; <code>[legend](#dc.legend)</code>
-Set or get gap between legend items.
-
-**Kind**: instance property of <code>[legend](#dc.legend)</code>  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| [gap] | <code>Number</code> | <code>5</code> | 
-
-<a name="dc.legend+itemHeight"></a>
-#### legend.itemHeight ⇒ <code>Number</code> &#124; <code>[legend](#dc.legend)</code>
-Set or get legend item height.
-
-**Kind**: instance property of <code>[legend](#dc.legend)</code>  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| [itemHeight] | <code>Number</code> | <code>12</code> | 
-
-<a name="dc.legend+horizontal"></a>
-#### legend.horizontal ⇒ <code>Boolean</code> &#124; <code>[legend](#dc.legend)</code>
-Position legend horizontally instead of vertically.
-
-**Kind**: instance property of <code>[legend](#dc.legend)</code>  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| [horizontal] | <code>Boolean</code> | <code>false</code> | 
-
-<a name="dc.legend+legendWidth"></a>
-#### legend.legendWidth ⇒ <code>Number</code> &#124; <code>[legend](#dc.legend)</code>
-Maximum width for horizontal legend.
-
-**Kind**: instance property of <code>[legend](#dc.legend)</code>  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| [legendWidth] | <code>Number</code> | <code>500</code> | 
-
-<a name="dc.legend+itemWidth"></a>
-#### legend.itemWidth ⇒ <code>Number</code> &#124; <code>[legend](#dc.legend)</code>
-legendItem width for horizontal legend.
-
-**Kind**: instance property of <code>[legend](#dc.legend)</code>  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| [itemWidth] | <code>Number</code> | <code>70</code> | 
-
-<a name="dc.legend+autoItemWidth"></a>
-#### legend.autoItemWidth ⇒ <code>Boolean</code> &#124; <code>[legend](#dc.legend)</code>
-Turn automatic width for legend items on or off. If true, [itemWidth](#dc.legend+itemWidth) is ignored.
-This setting takes into account [gap](#dc.legend+gap).
-
-**Kind**: instance property of <code>[legend](#dc.legend)</code>  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| [autoItemWidth] | <code>Boolean</code> | <code>false</code> | 
-
 <a name="dc.scatterPlot"></a>
 ### dc.scatterPlot ⇒ <code>[scatterPlot](#dc.scatterPlot)</code>
 A scatter plot chart

@@ -8,28 +8,37 @@
  * @return {dc.marginMixin}
  */
 dc.marginMixin = function (_chart) {
-    var _margin = {top: 10, right: 50, bottom: 30, left: 30};
+    _chart.xAxisLabelPadding = 0;
+    _chart.xTickLabelPadding = 0;
+
+    _chart.yAxisLabelPadding = 0;
+    _chart.yTickLabelPadding = 0;
+
+    _chart.rightYAxisLabelPadding = 0;
+    _chart.rightYTickLabelPadding = 0;
+
+    _chart.legendTopPadding = 0;
+    _chart.legendBottomPadding = 0;
+    _chart.legendLeftPadding = 0;
+    _chart.legendRightPadding = 0;
 
     /**
-     * Get or set the margins for a particular coordinate grid chart instance. The margins is stored as
-     * an associative Javascript array.
+     * Get the margins for a particular coordinate grid chart instance.
      * @name margins
      * @memberof dc.marginMixin
      * @instance
-     * @example
-     * var leftMargin = chart.margins().left; // 30 by default
-     * chart.margins().left = 50;
-     * leftMargin = chart.margins().left; // now 50
-     * @param {{top: Number, right: Number, left: Number, bottom: Number}} [margins={top: 10, right: 50, bottom: 30, left: 30}]
      * @return {{top: Number, right: Number, left: Number, bottom: Number}}
      * @return {dc.marginMixin}
      */
-    _chart.margins = function (margins) {
-        if (!arguments.length) {
-            return _margin;
+    _chart.margins = function () {
+        var chart = _chart._parent || _chart;
+
+        return {
+            top: chart.legendTopPadding + 10,
+            bottom: chart.xAxisLabelPadding + chart.xTickLabelPadding + chart.legendBottomPadding + 10,
+            left: chart.yAxisLabelPadding + chart.yTickLabelPadding + chart.legendLeftPadding + 10,
+            right: chart.rightYAxisLabelPadding + chart.rightYTickLabelPadding + chart.legendRightPadding + 10,
         }
-        _margin = margins;
-        return _chart;
     };
 
     _chart.effectiveWidth = function () {

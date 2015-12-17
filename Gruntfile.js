@@ -91,6 +91,10 @@ module.exports = function (grunt) {
                 files: ['<%= conf.src %>/**/*.js', '<%= conf.web %>/stock.js'],
                 tasks: ['docs']
             },
+            styles: {
+                files: ['<%= conf.pkg.name %>.css'],
+                tasks: ['cssmin:main', 'copy:dc-to-gh']
+            },
             jasmineRunner: {
                 files: ['<%= conf.spec %>/**/*.js'],
                 tasks: ['jasmine:specs:build']
@@ -101,7 +105,7 @@ module.exports = function (grunt) {
             },
             reload: {
                 files: ['<%= conf.pkg.name %>.js',
-                    '<%= conf.pkg.name %>css',
+                    '<%= conf.pkg.name %>.css',
                     '<%= conf.web %>/js/<%= conf.pkg.name %>.js',
                     '<%= conf.web %>/css/<%= conf.pkg.name %>.css',
                     '<%= conf.pkg.name %>.min.js'],
@@ -356,7 +360,8 @@ module.exports = function (grunt) {
                 interrupt: true
             },
             runner: grunt.config('watch').jasmineRunner,
-            scripts: grunt.config('watch').scripts
+            scripts: grunt.config('watch').scripts,
+            styles: grunt.config('watch').styles,
         });
         grunt.task.run('watch');
     });
@@ -403,6 +408,7 @@ module.exports.jsFiles = [
     'src/geo-choropleth-chart.js',
     'src/bubble-overlay.js',
     'src/row-chart.js',
+    'src/paired-row-chart.js',
     'src/legend.js',
     'src/scatter-plot.js',
     'src/number-display.js',

@@ -301,8 +301,9 @@ dc.lineChart = function (parent, chartGroup) {
                     .attr('cy', function (d) {
                         return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
                     })
-                    .attr('fill', _chart.getColor)
-                    .call(renderTitle, d);
+                    .attr('fill', _chart.getColor);
+
+                _chart._attachTitle(dots);
 
                 dots.exit().remove();
             });
@@ -349,13 +350,6 @@ dc.lineChart = function (parent, chartGroup) {
     function hideRefLines (g) {
         g.select('path.' + Y_AXIS_REF_LINE_CLASS).style('display', 'none');
         g.select('path.' + X_AXIS_REF_LINE_CLASS).style('display', 'none');
-    }
-
-    function renderTitle (dot, d) {
-        if (_chart.renderTitle()) {
-            dot.selectAll('title').remove();
-            dot.append('title').text(dc.pluck('data', _chart.title(d.name)));
-        }
     }
 
     /**

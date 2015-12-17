@@ -20,7 +20,14 @@
 dc.compositeChart = function (parent, chartGroup) {
 
     var SUB_CHART_CLASS = 'sub';
-    var DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING = 12;
+
+    var AXIS_LABEL_CLASS = 'axis';
+    var Y_AXIS_CLASS= 'y';
+    var X_AXIS_CLASS = 'x';
+    var Y_LEFT_AXIS_CLASS = 'y-left';
+    var Y_RIGHT_AXIS_CLASS = 'y-right';
+    var Y_AXIS_LABEL_CLASS = Y_AXIS_CLASS + '-' + AXIS_LABEL_CLASS + '-label';
+    var X_AXIS_LABEL_CLASS = X_AXIS_CLASS + '-' + AXIS_LABEL_CLASS + '-label';
 
     var _chart = dc.coordinateGridMixin({});
     var _children = [];
@@ -33,7 +40,6 @@ dc.compositeChart = function (parent, chartGroup) {
 
     var _rightYAxis = d3.svg.axis(),
         _rightYAxisLabel = 0,
-        _rightYAxisLabelPadding = DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING,
         _rightY,
         _rightAxisGridLines = false;
 
@@ -55,6 +61,7 @@ dc.compositeChart = function (parent, chartGroup) {
                 child.group(_chart.group());
             }
 
+            child._parent = _chart;
             child.chartGroup(_chart.chartGroup());
             child.svg(_chart.svg());
             child.xUnits(_chart.xUnits());
@@ -79,6 +86,12 @@ dc.compositeChart = function (parent, chartGroup) {
         }
     };
 
+    _chart.prepareAxisLabels = function (g) {
+        _chart.prepareXAxisLabel(g);
+        _chart.prepareYAxisLabel(g, false, _chart.yAxisLabel());
+        _chart.prepareYAxisLabel(g, true, _chart.rightYAxisLabel());
+    }
+
     _chart._prepareYAxis = function () {
         var left = (leftYAxisChildren().length !== 0);
         var right = (rightYAxisChildren().length !== 0);
@@ -86,23 +99,23 @@ dc.compositeChart = function (parent, chartGroup) {
 
         if (left) { prepareLeftYAxis(ranges); }
         if (right) { prepareRightYAxis(ranges); }
-
-        if (leftYAxisChildren().length > 0 && !_rightAxisGridLines) {
-            _chart._renderHorizontalGridLinesForAxis(_chart.g(), _chart.y(), _chart.yAxis());
-        } else if (rightYAxisChildren().length > 0) {
-            _chart._renderHorizontalGridLinesForAxis(_chart.g(), _rightY, _rightYAxis);
-        }
     };
 
     _chart.renderYAxis = function () {
         if (leftYAxisChildren().length !== 0) {
-            _chart.renderYAxisAt('y', _chart.yAxis(), _chart.margins().left);
-            _chart.renderYAxisLabel('y', _chart.yAxisLabel(), -90);
+            _chart.renderYAxisAt(false);
+            _chart.renderYAxisLabel(false);
         }
 
         if (rightYAxisChildren().length !== 0) {
-            _chart.renderYAxisAt('yr', _chart.rightYAxis(), _chart.width() - _chart.margins().right);
-            _chart.renderYAxisLabel('yr', _chart.rightYAxisLabel(), 90, _chart.width() - _rightYAxisLabelPadding);
+            _chart.renderYAxisAt(true);
+            _chart.renderYAxisLabel(true);
+        }
+
+        if (leftYAxisChildren().length > 0 && !_rightAxisGridLines) {
+            _chart._renderHorizontalGridLinesForAxis(_chart.g());
+        } else if (rightYAxisChildren().length > 0) {
+            _chart._renderHorizontalGridLinesForAxis(_chart.g());
         }
     };
 
@@ -168,6 +181,25 @@ dc.compositeChart = function (parent, chartGroup) {
         _chart.rightYAxis(_chart.rightYAxis().scale(_chart.rightY()));
 
         _chart.rightYAxis().orient('right');
+
+        if (_chart.yAxisTickIntegersOnly()) {
+            _chart.rightYAxis().tickFormat(d3.format('d'));
+        }
+
+        // get the y axis group
+        var axisYG = _chart.g().selectAll('g.' + Y_AXIS_CLASS + '.' + Y_RIGHT_AXIS_CLASS);
+
+        // create the y axis group if it doesn't exist
+        if (axisYG.empty()) {
+            axisYG = _chart.g().append('g')
+                .attr('class', 'axis ' + Y_AXIS_CLASS + ' ' + Y_RIGHT_AXIS_CLASS);
+        }
+
+        // set the x axis to the group
+        axisYG.call(_chart.rightYAxis());
+
+
+        _chart.rightYTickLabelPadding = axisYG.node().getBBox().width;
     }
 
     function prepareLeftYAxis (ranges) {
@@ -187,6 +219,24 @@ dc.compositeChart = function (parent, chartGroup) {
         _chart.yAxis(_chart.yAxis().scale(_chart.y()));
 
         _chart.yAxis().orient('left');
+
+        if (_chart.yAxisTickIntegersOnly()) {
+            _chart.yAxis().tickFormat(d3.format('d'));
+        }
+
+        // get the y axis group
+        var axisYG = _chart.g().selectAll('g.' + Y_AXIS_CLASS + '.' + Y_LEFT_AXIS_CLASS);
+
+        // create the y axis group if it doesn't exist
+        if (axisYG.empty()) {
+            axisYG = _chart.g().append('g')
+                .attr('class', 'axis ' + Y_AXIS_CLASS + ' ' + Y_LEFT_AXIS_CLASS);
+        }
+
+        // set the x axis to the group
+        axisYG.call(_chart.yAxis());
+
+        _chart.yTickLabelPadding = axisYG.node().getBBox().width;
     }
 
     function generateChildG (child, i) {
@@ -217,6 +267,8 @@ dc.compositeChart = function (parent, chartGroup) {
                 child.y(_chart.y());
                 child.yAxis(_chart.yAxis());
             }
+
+            child._generateBody();
 
             child.plotData();
 
@@ -288,9 +340,6 @@ dc.compositeChart = function (parent, chartGroup) {
             return _rightYAxisLabel;
         }
         _rightYAxisLabel = rightYAxisLabel;
-        _chart.margins().right -= _rightYAxisLabelPadding;
-        _rightYAxisLabelPadding = (padding === undefined) ? DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING : padding;
-        _chart.margins().right += _rightYAxisLabelPadding;
         return _chart;
     };
 
@@ -539,6 +588,17 @@ dc.compositeChart = function (parent, chartGroup) {
         _rightYAxis = rightYAxis;
         return _chart;
     };
+
+    dc.override(_chart, 'filterAll', function () {
+        var g = this._filterAll();
+        for (var i = 0; i < _children.length; ++i) {
+            var child = _children[i];
+
+            child.filterAll();
+        }
+
+        return g;
+    });
 
     return _chart.anchor(parent, chartGroup);
 };

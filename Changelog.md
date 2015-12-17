@@ -1,3 +1,18 @@
+## Ruhley Changes
+  * Row Chart ```useRightYAxis``` (ba8bbc0e1d5d203ec39a39f9f99a0ee83d4597a2 / 217e294651961981a6959fa7ce30f21afe100fc7)
+  * Paired Row Charts (137213b566ae39e5f646016c9f13e30b0f6385a1 / 1267f7a82d4b8280d102460e1e85126aaffd0a60 / 5494b449f95a183bbc8416aa01b7bbc37efcf460 / 8c5ed0de8ac914c934da497fbfc54d7c85caa22f / 7e71309853c6a664f9a6827d8b291c5c56bd1db1 / 58c93c1b3773fd4a7b455bbc09f2725eeec55aef)
+  * New ```clickOn``` option to disable all clicking events (c65346338df0f88a24847fd518cd950f657d0ae6)
+  * ```xAxisTickLabelRotate``` and ```yAxisTickLabelRotate``` (d2bcf2338e21e5f7f3c9c4ff63e93e3cb2f7383d / f9e08c55fbe99649ae0b8052672f988aae81ee03)
+  * Row chart ```xAxisLabel``` (c6e473bf359f069f5d4e6883d16f25827084a7a0 / a8d72ae8b8a2d0d4a4dce11b377f044365cd58fc / 289ae4600a53aa7a3396e9d95257264535fc5cfc / 27c03a48d9328673c632064aa7c784bfd6a1411a)
+  * Responsive Charts - the chart is fit into the parent container, labels wrap and ellipses, all labels and legends make the chart body smaller, legend just has a position property (top, right, bottom, left) and it automatically fits it in (f939481ff921e6020d97e508728546dca0260c45 / 9cd85df7e43ca57c4504a09b0091de53321fb2ff / 7196dfa8c35c4f0da6be26cc102a031c06cd255b / 3f8b768021a947442b6d8500ce81fdc47133e728 / 670078d7e10513b57ac79e23ac8f0d5796c9ca48 / 2ce1fe8fd89b63b2953fe80fb6a1d19fd847fe96)
+  * Pie chart - fixed there being no hover effect when mouse was over the text (aaeb3542ef3f83e48e23797f099c5f8d21785632 / d5c6ad1b31c1c297b252f8fd79432a233c6b2d34 / a93180dcf15dc88bb2ca27bf4b1d12931ce869dc)
+  * Getting grunt server to watch and compile the main css file (60353aa2eca1ec32174a7dedf6aec7c2a2cadef6)
+  * Changing deselected to a low opacity rather than changing to grey (6294d82ace8a5d1e9297c92dcc553f3db9a8c64d)
+  * y axis tick integers only flag (0ecd81729bdbdbeac33d470b3413f8665c8c8888)
+  * Fixing composite chart resetting all filters - Bugs #390, #677 and #706 (f1b218db107afaee7910f87426d33240fb4cc166)
+  * Fixing line charts ordering potentially creating skewed lines (ab15d786855100936e4b7b53dccf8f5ee58ce79b / 4afcd0c61f99fcb44e4f952635936ad8834fd803)
+  * Tooltip redesign (324399d64e736102e8ca9073481d78ec9a78ef7a / c47b46b704c74e63803bfbc315b62ea77525e806 / f2124fa0b10c96e890c917a3908b446bb91b803c / e27405308ab14faa36b510f28b1fa6f90a68b3aa / 1e6d6d06074fbffda66631b62ad5f59e3432ab35 / 819f75c67a4faee6a9a31be1d8e2dcd18de2eea3 / b0230acdfae849a39d569825bb81bfdbcc110cdc)
+
 ## 2.1.0
  * Heatmap allows customizing the ordering separately from the values, by Matt Traynham ([#869](https://github.com/dc-js/dc.js/pull/869) - thanks also to Quinn Lee for [#837](https://github.com/dc-js/dc.js/pull/837))
  * Front page stable version automatically read from GitHub, by Enrico Spinielli ([#865](https://github.com/dc-js/dc.js/pull/865))

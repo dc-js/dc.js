@@ -17,6 +17,7 @@ dc.baseMixin = function (_chart) {
     var _anchor;
     var _root;
     var _svg;
+    var _g;
     var _isChild;
 
     var _minWidth = 200;
@@ -40,10 +41,12 @@ dc.baseMixin = function (_chart) {
     var _ordering = dc.pluck('key');
     var _orderSort;
 
+    var _clickOn = true;
+
     var _renderLabel = false;
 
     var _title = function (d) {
-        return _chart.keyAccessor()(d) + ': ' + _chart.valueAccessor()(d);
+        return '<b>' + _chart.keyAccessor()(d) + ':</b> ' + _chart.valueAccessor()(d);
     };
     var _renderTitle = true;
     var _controlsUseVisibility = false;
@@ -130,9 +133,12 @@ dc.baseMixin = function (_chart) {
      */
     _chart.height = function (height) {
         if (!arguments.length) {
-            return _height(_root.node());
+            return _root.node().getBoundingClientRect().height;
         }
+
         _height = d3.functor(height || _defaultHeight);
+        _root.style('height', _height);
+
         return _chart;
     };
 
@@ -155,9 +161,12 @@ dc.baseMixin = function (_chart) {
      */
     _chart.width = function (width) {
         if (!arguments.length) {
-            return _width(_root.node());
+            return _root.node().getBoundingClientRect().width;
         }
+
         _width = d3.functor(width || _defaultWidth);
+        _root.style('width', _width);
+
         return _chart;
     };
 
@@ -489,10 +498,10 @@ dc.baseMixin = function (_chart) {
     };
 
     function sizeSvg () {
-        if (_svg) {
-            _svg
-                .attr('width', _chart.width())
-                .attr('height', _chart.height());
+        if (_chart.root()) {
+            _chart.root()
+                .style('width', _chart.width())
+                .style('height', _chart.height());
         }
     }
 
@@ -631,10 +640,6 @@ dc.baseMixin = function (_chart) {
         }
 
         var result = _chart._doRender();
-
-        if (_legend) {
-            _legend.render();
-        }
 
         _chart._activateRenderlets('postRender');
 
@@ -1055,11 +1060,13 @@ dc.baseMixin = function (_chart) {
      * @param {*} datum
      */
     _chart.onClick = function (datum) {
-        var filter = _chart.keyAccessor()(datum);
-        dc.events.trigger(function () {
-            _chart.filter(filter);
-            _chart.redrawGroup();
-        });
+        if (_chart.clickOn()) {
+            var filter = _chart.keyAccessor()(datum);
+            dc.events.trigger(function () {
+                _chart.filter(filter);
+                _chart.redrawGroup();
+            });
+        }
     };
 
     /**
@@ -1288,6 +1295,97 @@ dc.baseMixin = function (_chart) {
         return _chart;
     };
 
+    _chart._attachTitle = function(items, arc) {
+        items.on('mouseover', function(d, i) {
+                _chart._renderTitle(d, i, this, arc)
+            })
+            .on('mouseleave', _chart._removeTitle);
+    }
+
+    _chart._renderTitle = function(d, i, element, arc) {
+        var data = d;
+        if (d.data) {
+            data = d.data;
+        }
+
+        // get the tooltip
+        var tooltip = d3.select('.dc-title');
+
+        var existed = !tooltip.empty();
+
+        // the tooltip doesn't exist, so create it
+        if (!existed) {
+            tooltip = d3.select('body')
+                .append('div')
+                .attr('class', 'dc-title')
+                .style('opacity', 0);
+        }
+
+        // cancel any transitions
+        tooltip.interrupt();
+
+        // set the content of the tooltip
+        tooltip.html(_title(data));
+
+        // set the standard styles
+        tooltip.style('border-color', _chart.getColor(d.layer ? d : data, i));
+
+        // calculate the position of the tooltip
+        var tooltipBounding = tooltip.node().getBoundingClientRect();
+        var style = {};
+
+        // if a pie chart
+        if (arc) {
+            var gBounding = _chart.g().node().getBoundingClientRect();
+            var centroid = arc.centroid(d);
+
+            style.left = gBounding.left + (gBounding.width / 2) - (tooltipBounding.width / 2) + centroid[0] + (window.scrollX || document.documentElement.scrollLeft);
+            style.top = gBounding.top + (gBounding.height / 2) - tooltipBounding.height - 10 + centroid[1] + (window.scrollY || document.documentElement.scrollTop);
+        // all other charts
+        } else {
+            var elBounding = element.getBoundingClientRect();
+
+            style.left = elBounding.left + (elBounding.width / 2) - (tooltipBounding.width / 2) + (window.scrollX || document.documentElement.scrollLeft);
+            style.top = elBounding.top - tooltipBounding.height - 10 + (window.scrollY || document.documentElement.scrollTop);
+        }
+
+        style.top += 'px';
+        style.left += 'px';
+
+        // move the tooltip into position
+        if (!existed) {
+            tooltip.style(style);
+        }
+
+        style.opacity = 1;
+
+        dc.transition(tooltip, _chart.transitionDuration() / 1.5)
+            .style(style);
+    };
+
+    _chart._removeTitle = function() {
+        dc.transition(d3.select('.dc-title'), _chart.transitionDuration() / 1.5)
+            .style('opacity', 0)
+            .remove();
+    };
+
+    /**
+     * Turn on/off the click filter.
+     * @name clickOn
+     * @memberof dc.baseMixin
+     * @instance
+     * @param {Boolean} [clickOn=true]
+     * @return {Boolean}
+     * @return {dc.baseMixin}
+     */
+    _chart.clickOn = function (clickOn) {
+        if (!arguments.length) {
+            return _clickOn;
+        }
+        _clickOn = clickOn;
+        return _chart;
+    };
+
     /**
      * A renderlet is similar to an event listener on rendering event. Multiple renderlets can be added
      * to an individual chart.  Each time a chart is rerendered or redrawn the renderlets are invoked
@@ -1379,6 +1477,79 @@ dc.baseMixin = function (_chart) {
         return _chart;
     };
 
+    _chart._wrapLabels = function (texts, width) {
+        var lineHeight = 1.1;
+
+        if (width <= 0) {
+            return false;
+        }
+
+        texts.each(function() {
+            var text = d3.select(this);
+            var words = text.text().split(/\s+/).reverse();
+            var word;
+            var line = [];
+            var lineNumber = 0;
+            var x = text.attr('x') || 0;
+            var y = text.attr('y') || 0;
+            var dy = parseFloat(text.attr('dy')) || 0;
+            var tspan = text.text(null).append('tspan').attr('x', x).attr('y', y).attr('dy', dy + 'em');
+
+            while (word = words.pop()) {
+                line.push(word);
+                tspan.text(line.join(' '));
+
+                if (tspan.node().getComputedTextLength() > width) {
+                    line.pop();
+
+                    if (line.length <= 1) {
+                        var t = line.length === 1 ? line[0] : word;
+                        tspan.text(t);
+
+                        while (tspan.node().getComputedTextLength() > width && t.length > 0) {
+                            tspan.text(t + '...');
+                            t = t.substring(0, t.length - 1);
+                        }
+                    }
+
+                    if (line.length > 0) {
+                        if (line.length > 1) {
+                            tspan.text(line.join(' '));
+                        }
+
+                        line = [word];
+                    }
+
+                    // if no more lines or words then we have reached the end
+                    if (line.length === 0 && words.length === 0) {
+                        break;
+                    }
+
+                    tspan = text.append('tspan').attr('x', x).attr('y', y).attr('dy', ++lineNumber * lineHeight + dy + 'em').text(word);
+                }
+            }
+        });
+    };
+
+    /**
+     * Get or set the root g element. This method is usually used to retrieve the g element in order to
+     * overlay custom svg drawing programatically. **Caution**: The root g element is usually generated
+     * by dc.js internals, and resetting it might produce unpredictable result.
+     * @name g
+     * @memberof dc.coordinateGridMixin
+     * @instance
+     * @param {SVGElement} [gElement]
+     * @return {SVGElement}
+     * @return {dc.coordinateGridMixin}
+     */
+    _chart.g = function (gElement) {
+        if (!arguments.length) {
+            return _chart._g;
+        }
+        _chart._g = gElement;
+        return _chart;
+    };
+
     /**
      * Returns the internal numeric ID of the chart.
      * @name chartID
@@ -1463,6 +1634,19 @@ dc.baseMixin = function (_chart) {
         _listeners.on(event, listener);
         return _chart;
     };
+
+    window.addEventListener('resize', function() {
+        // if the chart is a sub chart then don't do anything
+        if (!_chart.g() || _chart.g().node().offsetParent === null || (_chart.g().node().classList && _chart.g().node().classList.contains('sub'))) {
+            return false;
+        }
+
+        if (_chart.rescale) {
+            _chart.rescale();
+        }
+
+        _chart.redraw();
+    });
 
     return _chart;
 };
