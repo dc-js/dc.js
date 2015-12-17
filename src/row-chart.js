@@ -52,14 +52,18 @@ dc.rowChart = function (parent, chartGroup) {
 
     _chart.rowsCap = _chart.cap;
 
+    _chart.calculateAxisScaleData = function () {
+        return _rowData;
+    };
+
     function calculateAxisScale () {
         if (!_x || _elasticX) {
-            var extent = d3.extent(_rowData, _chart.cappedValueAccessor);
+            var extent = d3.extent(_chart.calculateAxisScaleData(), _chart.cappedValueAccessor);
             if (extent[0] > 0) {
                 extent[0] = 0;
             }
-
             var domain = d3.scale.linear().domain(extent);
+
             if (_useRightYAxis) {
                 _x = domain.range([_chart.effectiveWidth(), 0]);
             } else {
@@ -188,7 +192,9 @@ dc.rowChart = function (parent, chartGroup) {
         }
 
         var rect = rows.attr('transform', function (d, i) {
-                return 'translate(0,' + ((i + 1) * _gap + i * height) + ')';
+                var h = ((i + 1) * _gap + i * height),
+                    w = _useRightYAxis ? _chart.effectiveWidth() : 0;
+                return 'translate(' + w + ',' + h + ')';
             }).select('rect')
             .attr('height', height)
             .attr('fill', _chart.getColor)
@@ -232,9 +238,10 @@ dc.rowChart = function (parent, chartGroup) {
     function updateLabels (rows) {
         if (_chart.renderLabel()) {
             var lab = rows.select('text')
-                .attr('x', _labelOffsetX)
+                .attr('x', _useRightYAxis ? -_labelOffsetX : _labelOffsetX)
                 .attr('y', _labelOffsetY)
                 .attr('dy', _dyOffset)
+                .attr('text-anchor', _useRightYAxis ? 'end' : 'start')
                 .on('click', onClick)
                 .attr('class', function (d, i) {
                     return _rowCssClass + ' _' + i;
@@ -243,13 +250,21 @@ dc.rowChart = function (parent, chartGroup) {
                     return _chart.label()(d);
                 });
             dc.transition(lab, _chart.transitionDuration())
-                .attr('transform', translateX);
+                .attr('transform', function (d) {
+                    if (_useRightYAxis) {
+                        return 'translate(0,0)';
+                    }
+                    return translateX(d);
+                });
         }
         if (_chart.renderTitleLabel()) {
             var titlelab = rows.select('.' + _titleRowCssClass)
-                    .attr('x', _chart.effectiveWidth() - _titleLabelOffsetX)
+                    .attr('x', _useRightYAxis ?
+                      _titleLabelOffsetX - _chart.effectiveWidth() :
+                      _chart.effectiveWidth() - _titleLabelOffsetX
+                    )
                     .attr('y', _labelOffsetY)
-                    .attr('text-anchor', 'end')
+                    .attr('text-anchor', _useRightYAxis ? 'start' : 'end')
                     .on('click', onClick)
                     .attr('class', function (d, i) {
                         return _titleRowCssClass + ' _' + i ;
@@ -258,7 +273,12 @@ dc.rowChart = function (parent, chartGroup) {
                         return _chart.title()(d);
                     });
             dc.transition(titlelab, _chart.transitionDuration())
-                .attr('transform', translateX);
+                .attr('transform', function (d) {
+                    if (_useRightYAxis) {
+                        return 'translate(0,0)';
+                    }
+                    return translateX(d);
+                });
         }
     }
 
@@ -287,6 +307,11 @@ dc.rowChart = function (parent, chartGroup) {
         var x = _x(_chart.cappedValueAccessor(d)),
             x0 = rootValue(),
             s = x > x0 ? x0 : x;
+
+        if (_useRightYAxis) {
+            s -= _chart.effectiveWidth();
+        }
+
         return 'translate(' + s + ',0)';
     }
 
