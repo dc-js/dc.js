@@ -28,8 +28,8 @@ var chart2 = dc.pairedRowChart('#chart-container2', 'chartGroupA');
 dc.pairedRowChart = function (parent, chartGroup) {
     var _chart = dc.capMixin(dc.marginMixin(dc.colorMixin(dc.baseMixin({}))));
 
-    var _leftChartWrapper = d3.select(parent).append('div');
-    var _rightChartWrapper = d3.select(parent).append('div');
+    var _leftChartWrapper = d3.select(parent).append('div').style('width', '50%').style('display', 'inline-block');
+    var _rightChartWrapper = d3.select(parent).append('div').style('width', '50%').style('display', 'inline-block');
 
     var _leftChart = dc.rowChart(_leftChartWrapper[0][0], chartGroup);
     var _rightChart = dc.rowChart(_rightChartWrapper[0][0], chartGroup);
