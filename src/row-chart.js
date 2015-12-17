@@ -498,15 +498,20 @@ dc.rowChart = function (parent, chartGroup) {
     };
 
     /**
-     #### .useRightYAxis()
-     Gets or sets whether the chart should be drawn with a right axis instead of a left axis.
+     * Gets or sets whether the chart should be drawn with a right axis instead of a left axis.
+     * @name useRightYAxis
+     * @memberof dc.rowChart
+     * @instance
+     * @param {Number} [useRightYAxis=false]
+     * @return {Number}
+     * @return {dc.rowChart}
      **/
 
-    _chart.useRightYAxis = function (_) {
+    _chart.useRightYAxis = function (useRightYAxis) {
         if (!arguments.length) {
             return _useRightYAxis;
         }
-        _useRightYAxis = _;
+        _useRightYAxis = useRightYAxis;
         return _chart;
     };
 
