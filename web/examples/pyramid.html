@@ -8,6 +8,10 @@
     .dc-chart g.row text {
       fill: black;
     }
+    .columnLabel{
+      fill:black ;
+      font-weight: bold;
+    }
     </style>
 </head>
 <body>
@@ -75,7 +79,7 @@ age_group = age.group().reduceSum(function(d){return d.Value})
     .colors(d3.scale.ordinal().range(['#f0bdbd','#c8c8ff']))
     .colorAccessor(function(d){return d.key[0]})
     .leftColumn(function(d){return d.key[0] == 'M'})
-   .rowAccessor(function(d){return d.key.split(', ')[1]}) // return the row the group needs to go into.
+    .rowAccessor(function(d){return d.key.split(', ')[1]}) // return the row the group needs to go into.
     .rowOrdering(["Northland region", 
                   "Auckland region", 
                   "Waikato region", 
@@ -91,9 +95,11 @@ age_group = age.group().reduceSum(function(d){return d.Value})
                   "West Coast region",
                   "Canterbury region",  
                   "Otago region", 
-                  "Southland region"]) // .rowOrdrering can also take a function that works with .sort, eg d3.ascending or d3.descending. Defaults to d3.decending. 
+                  "Southland region"]) // .rowOrdrering can also take a function that works with .sort, eg d3.ascending or d3.descending. Defaults to d3.descending. 
     .elasticX(true)
-    .labelOffsetX(20)
+    .twoLabels(false)// defaults to true. if false, .label defaults to .rowAccessor
+    .columnLabels(['Male','Female']) // some column labels
+    .columnLabelPosition([40,25]) // position of the column labels, [in from the edge, downfrom the top] in pix. defaults to [5,10]
     .transitionDuration(1000)
 
   region_chart.xAxis().tickFormat(function(x) {return d3.format('s')(Math.abs(x))})
