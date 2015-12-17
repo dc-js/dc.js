@@ -233,7 +233,7 @@ function loadIrisFixture () {
             "5.9,3,5.1,1.8,virginica"
     );
 } 
-function loadGenderFixture() {
+function loadGenderFixture () {
     return JSON.parse("[" +
         "{\"gender\":\"Male\", \"age\": \"10\"}," +
         "{\"gender\":\"Male\", \"age\": \"18\"}," +

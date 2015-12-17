@@ -214,12 +214,12 @@ dc.pairedRowChart = function (parent, chartGroup) {
     };
 
     // get the charts - mainly used for testing
-    _chart.leftChart = function() {
-      return _leftChart;
+    _chart.leftChart = function () {
+        return _leftChart;
     };
 
-    _chart.rightChart = function() {
-      return _rightChart;
+    _chart.rightChart = function () {
+        return _rightChart;
     };
 
     // functions that we just want to pass on to both sub charts
@@ -238,7 +238,7 @@ dc.pairedRowChart = function (parent, chartGroup) {
         'cap', 'ordering' , 'dimension', 'group', 'othersGrouper', 'data'
     ];
 
-    function addGetterSetterFunction(functionName) {
+    function addGetterSetterFunction (functionName) {
         _chart[functionName] = function (_) {
             if (!arguments.length) {
                 return _leftChart[functionName]();
@@ -257,7 +257,7 @@ dc.pairedRowChart = function (parent, chartGroup) {
         '_doRedraw', 'redraw', '_doRender', 'render', 'calculateColorDomain', 'filterAll', 'resetSvg', 'expireCache'
     ];
 
-    function addPassOnFunctions(functionName) {
+    function addPassOnFunctions (functionName) {
         _chart[functionName] = function () {
             _leftChart[functionName]();
             _rightChart[functionName]();
