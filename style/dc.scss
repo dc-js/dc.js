@@ -157,9 +157,6 @@ div.dc-chart {
                 fill: $color_white;
                 font-size: 12px;
                 cursor: pointer;
-                &.titlerow {
-                   fill: #000000;
-                }
             }
         }
         &.dc-tooltip path {
