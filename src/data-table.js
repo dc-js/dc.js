@@ -110,7 +110,7 @@ dc.dataTable = function (parent, chartGroup) {
                 .append('th');
 
             headGroup
-                .attr('class', HEAD_CSS_CLASS)
+                .attr('class', function(d,i){ return HEAD_CSS_CLASS + ' _' + i})
                     .html(function (d) {
                         return (_chart._doColumnHeaderFormat(d));
 
