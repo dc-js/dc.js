@@ -413,6 +413,37 @@ describe('dc.baseMixin', function () {
             });
         });
 
+        describe('when set to a falsy on an unsized div with junk in it', function () {
+            var h0, w0;
+            beforeEach(function () {
+                dimdiv.append('h1').text('helL0');
+                chart.width(null).height(null)
+                    .render()
+                    .resetSvg(); // because all real charts generate svg
+                w0 = chart.width();
+                h0 = chart.height();
+            });
+
+            it('should set the height to at least the default minimum', function () {
+                expect(chart.height()).not.toBeLessThan(200);
+            });
+
+            it('should set the width to at least the default minimum', function () {
+                expect(chart.width()).not.toBeLessThan(200);
+            });
+
+            describe('and redrawn', function () {
+                beforeEach(function () {
+                    chart.redraw();
+                });
+
+                it('should keep the size the same', function () {
+                    expect(chart.height()).toBe(h0);
+                    expect(chart.width()).toBe(w0);
+                });
+            });
+        });
+
         describe('when set with a number', function () {
             beforeEach(function () {
                 chart.width(300).height(301).render();
