@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-beta.23
+ *  dc 2.0.0-beta.24
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2015 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link #dc.baseMixin+svg .svg} and {@link #dc.coordinateGridMixin+xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 2.0.0-beta.23
+ * @version 2.0.0-beta.24
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-beta.23',
+    version: '2.0.0-beta.24',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -393,10 +393,29 @@ dc.errors.BadArgumentException = function () {
 dc.errors.BadArgumentException.prototype = Object.create(dc.errors.Exception.prototype);
 dc.errors.BadArgumentException.prototype.constructor = dc.errors.BadArgumentException;
 
+/**
+ * The default date format for dc.js
+ * @name dateFormat
+ * @memberof dc
+ * @type {Function}
+ * @default d3.time.format('%m/%d/%Y')
+ */
 dc.dateFormat = d3.time.format('%m/%d/%Y');
 
+/**
+ * @name printers
+ * @memberof dc
+ * @type {{}}
+ */
 dc.printers = {};
 
+/**
+ * Converts a list of filters into a readable string
+ * @name filters
+ * @memberof dc.printers
+ * @param {Array<dc.filters|any>} filters
+ * @returns {String}
+ */
 dc.printers.filters = function (filters) {
     var s = '';
 
@@ -410,6 +429,13 @@ dc.printers.filters = function (filters) {
     return s;
 };
 
+/**
+ * Converts a filter into a readable string
+ * @name filter
+ * @memberof dc.printers
+ * @param {dc.filters|any|Array<any>} filter
+ * @returns {String}
+ */
 dc.printers.filter = function (filter) {
     var s = '';
 
@@ -428,6 +454,28 @@ dc.printers.filter = function (filter) {
     return s;
 };
 
+/**
+ * Returns a function that given a string property name, can be used to pluck the property off an object.  A function
+ * can be passed as the second argument to also alter the data being returned.  This can be a useful shorthand method to create
+ * accessor functions.
+ * @name pluck
+ * @memberof dc
+ * @example
+ * var xPluck = dc.pluck('x');
+ * var objA = {x: 1};
+ * xPluck(objA) // 1
+ * @example
+ * var xPosition = dc.pluck('x', function (x, i) {
+ *     // `this` is the original datum,
+ *     // `x` is the x property of the datum,
+ *     // `i` is the position in the array
+ *     return this.radius + x;
+ * });
+ * dc.selectAll('.circle').data(...).x(xPosition);
+ * @param {String} n
+ * @param {Function} [f]
+ * @returns {Function}
+ */
 dc.pluck = function (n, f) {
     if (!f) {
         return function (d) { return d[n]; };
@@ -435,8 +483,20 @@ dc.pluck = function (n, f) {
     return function (d, i) { return f.call(d, d[n], i); };
 };
 
+/**
+ * @name utils
+ * @memberof dc
+ * @type {{}}
+ */
 dc.utils = {};
 
+/**
+ * Print a single value filter
+ * @name printSingleValue
+ * @memberof dc.utils
+ * @param {any} filter
+ * @returns {String}
+ */
 dc.utils.printSingleValue = function (filter) {
     var s = '' + filter;
 
@@ -454,8 +514,17 @@ dc.utils.printSingleValue = function (filter) {
 };
 dc.utils.printSingleValue.fformat = d3.format('.2f');
 
-// FIXME: these assume than any string r is a percentage (whether or not it
-// includes %). They also generate strange results if l is a string.
+/**
+ * Arbitrary add one value to another.
+ * @name add
+ * @memberof dc.utils
+ * @todo
+ * These assume than any string r is a percentage (whether or not it includes %).
+ * They also generate strange results if l is a string.
+ * @param {String|Date|Number} l
+ * @param {Number} r
+ * @returns {String|Date|Number}
+ */
 dc.utils.add = function (l, r) {
     if (typeof r === 'string') {
         r = r.replace('%', '');
@@ -477,6 +546,17 @@ dc.utils.add = function (l, r) {
     }
 };
 
+/**
+ * Arbitrary subtract one value from another.
+ * @name subtract
+ * @memberof dc.utils
+ * @todo
+ * These assume than any string r is a percentage (whether or not it includes %).
+ * They also generate strange results if l is a string.
+ * @param {String|Date|Number} l
+ * @param {Number} r
+ * @returns {String|Date|Number}
+ */
 dc.utils.subtract = function (l, r) {
     if (typeof r === 'string') {
         r = r.replace('%', '');
@@ -498,35 +578,94 @@ dc.utils.subtract = function (l, r) {
     }
 };
 
+/**
+ * Is the value a number?
+ * @name isNumber
+ * @memberof dc.utils
+ * @param {any} n
+ * @returns {Boolean}
+ */
 dc.utils.isNumber = function (n) {
     return n === +n;
 };
 
+/**
+ * Is the value a float?
+ * @name isFloat
+ * @memberof dc.utils
+ * @param {any} n
+ * @returns {Boolean}
+ */
 dc.utils.isFloat = function (n) {
     return n === +n && n !== (n | 0);
 };
 
+/**
+ * Is the value an integer?
+ * @name isInteger
+ * @memberof dc.utils
+ * @param {any} n
+ * @returns {Boolean}
+ */
 dc.utils.isInteger = function (n) {
     return n === +n && n === (n | 0);
 };
 
+/**
+ * Is the value very close to zero?
+ * @name isNegligible
+ * @memberof dc.utils
+ * @param {any} n
+ * @returns {Boolean}
+ */
 dc.utils.isNegligible = function (n) {
     return !dc.utils.isNumber(n) || (n < dc.constants.NEGLIGIBLE_NUMBER && n > -dc.constants.NEGLIGIBLE_NUMBER);
 };
 
+/**
+ * Ensure the value is no greater or less than the min/max values.  If it is return the boundary value.
+ * @name clamp
+ * @memberof dc.utils
+ * @param {any} val
+ * @param {any} min
+ * @param {any} max
+ * @returns {any}
+ */
 dc.utils.clamp = function (val, min, max) {
     return val < min ? min : (val > max ? max : val);
 };
 
+/**
+ * Using a simple static counter, provide a unique integer id.
+ * @name uniqueId
+ * @memberof dc.utils
+ * @returns {Number}
+ */
 var _idCounter = 0;
 dc.utils.uniqueId = function () {
     return ++_idCounter;
 };
 
+/**
+ * Convert a name to an ID.
+ * @name nameToId
+ * @memberof dc.utils
+ * @param {String} name
+ * @returns {String}
+ */
 dc.utils.nameToId = function (name) {
     return name.toLowerCase().replace(/[\s]/g, '_').replace(/[\.']/g, '');
 };
 
+/**
+ * Append or select an item on a parent element
+ * @name appendOrSelect
+ * @memberof dc.utils
+ * @param {d3.selection} parent
+ * @param {String} selector
+ * @param {String} tag
+ * @returns {d3.selection}
+ */
 dc.utils.appendOrSelect = function (parent, selector, tag) {
     tag = tag || selector;
     var element = parent.select(selector);
@@ -536,6 +675,13 @@ dc.utils.appendOrSelect = function (parent, selector, tag) {
     return element;
 };
 
+/**
+ * Return the number if the value is a number; else 0.
+ * @name safeNumber
+ * @memberof dc.utils
+ * @param {Number|any} n
+ * @returns {Number}
+ */
 dc.utils.safeNumber = function (n) { return dc.utils.isNumber(+n) ? +n : 0;};
 
 dc.logger = {};
@@ -764,18 +910,19 @@ dc.baseMixin = function (_chart) {
     var _isChild;
 
     var _minWidth = 200;
-    var _defaultWidth = function (element) {
+    var _defaultWidthCalc = function (element) {
         var width = element && element.getBoundingClientRect && element.getBoundingClientRect().width;
         return (width && width > _minWidth) ? width : _minWidth;
     };
-    var _width = _defaultWidth;
+    var _widthCalc = _defaultWidthCalc;
 
     var _minHeight = 200;
-    var _defaultHeight = function (element) {
+    var _defaultHeightCalc = function (element) {
         var height = element && element.getBoundingClientRect && element.getBoundingClientRect().height;
         return (height && height > _minHeight) ? height : _minHeight;
     };
-    var _height = _defaultHeight;
+    var _heightCalc = _defaultHeightCalc;
+    var _width, _height;
 
     var _keyAccessor = dc.pluck('key');
     var _valueAccessor = dc.pluck('value');
@@ -874,9 +1021,14 @@ dc.baseMixin = function (_chart) {
      */
     _chart.height = function (height) {
         if (!arguments.length) {
-            return _height(_root.node());
+            if (!dc.utils.isNumber(_height)) {
+                // only calculate once
+                _height = _heightCalc(_root.node());
+            }
+            return _height;
         }
-        _height = d3.functor(height || _defaultHeight);
+        _heightCalc = d3.functor(height || _defaultHeightCalc);
+        _height = undefined;
         return _chart;
     };
 
@@ -899,9 +1051,14 @@ dc.baseMixin = function (_chart) {
      */
     _chart.width = function (width) {
         if (!arguments.length) {
-            return _width(_root.node());
+            if (!dc.utils.isNumber(_width)) {
+                // only calculate once
+                _width = _widthCalc(_root.node());
+            }
+            return _width;
         }
-        _width = d3.functor(width || _defaultWidth);
+        _widthCalc = d3.functor(width || _defaultWidthCalc);
+        _width = undefined;
         return _chart;
     };
 
@@ -1368,6 +1525,7 @@ dc.baseMixin = function (_chart) {
      * @return {dc.baseMixin}
      */
     _chart.render = function () {
+        _height = _width = undefined; // force recalculate
         _listeners.preRender(_chart);
 
         if (_mandatoryAttributes) {
