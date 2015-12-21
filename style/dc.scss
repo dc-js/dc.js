@@ -252,6 +252,10 @@ div.dc-chart {
             cursor: default;
         }
     }
+    .dc-chart .titlerow {
+        pointer-events: none;
+        opacity: 0;
+    }
 }
 
 .dc-data-count {
