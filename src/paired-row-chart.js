@@ -223,5 +223,11 @@ dc.pairedRowChart = function (parent, chartGroup) {
         addPassOnFunctions(_passOnFunctions[i]);
     }
 
+    dc.override(_chart, 'width', function (width) {
+        _leftChart.width(width / 2);
+        _rightChart.width(width / 2);
+        return _chart._width(width);
+    });
+
     return _chart.anchor(parent, chartGroup);
 };
