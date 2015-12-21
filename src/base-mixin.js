@@ -130,7 +130,11 @@ dc.baseMixin = function (_chart) {
      */
     _chart.height = function (height) {
         if (!arguments.length) {
-            return _height(_root.node());
+            if (!dc.utils.isNumber(_height)) {
+                // only calculate once
+                _height = _height(_root.node());
+            }
+            return _height;
         }
         _height = d3.functor(height || _defaultHeight);
         return _chart;
@@ -155,7 +159,11 @@ dc.baseMixin = function (_chart) {
      */
     _chart.width = function (width) {
         if (!arguments.length) {
-            return _width(_root.node());
+            if (!dc.utils.isNumber(_width)) {
+                // only calculate once
+                _width = _width(_root.node());
+            }
+            return _width;
         }
         _width = d3.functor(width || _defaultWidth);
         return _chart;

@@ -1,4 +1,7 @@
 # 2.0 Series
+## 2.0.0 beta 24
+* Only auto-calculate width/height once - sizes were getting calculated wrong ([#1070](https://github.com/dc-js/dc.js/issues/1070)) and charts were changing size on redraw if they didn't have a fixed size in the chart spec or in the div style ([#980](https://github.com/dc-js/dc.js/issues/980))
+
 ## 2.0.0 beta 23
 * Domain was getting set for composite charts even when `elasticY` disabled. ([#1056](https://github.com/dc-js/dc.js/issues/1056)
 
