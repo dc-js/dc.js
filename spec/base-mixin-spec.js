@@ -368,47 +368,42 @@ describe('dc.baseMixin', function () {
                     height: '220px',
                     width: '230px'
                 });
+                chart.width(null).height(null).render();
+                w0 = chart.width();
+                h0 = chart.height();
+            });
 
-                describe('and no minimums set', function () {
-                    beforeEach(function () {
-                        chart.width(null).height(null).render();
-                        w0 = chart.width();
-                        h0 = chart.height();
-                    });
+            it('should set the height to the div size', function () {
+                expect(chart.height()).toEqual(220);
+            });
 
-                    it('should set the height to the div size', function () {
-                        expect(chart.height()).toEqual(220);
-                    });
+            it('should set the width to the div size', function () {
+                expect(chart.width()).toEqual(230);
+            });
 
-                    it('should set the width to the div size', function () {
-                        expect(chart.width()).toEqual(230);
-                    });
-
-                    describe('and redrawn', function () {
-                        beforeEach(function () {
-                            chart.redraw();
-                        });
-
-                        it('should keep the size the same', function () {
-                            expect(chart.height()).toBe(h0);
-                            expect(chart.width()).toBe(w0);
-                        });
-                    });
+            describe('and redrawn', function () {
+                beforeEach(function () {
+                    chart.redraw();
                 });
 
-                describe('and minimums set', function () {
-                    beforeEach(function () {
-                        chart.minHeight(234).minWidth(976)
-                            .width(null).height(null).render();
-                    });
+                it('should keep the size the same', function () {
+                    expect(chart.height()).toBe(h0);
+                    expect(chart.width()).toBe(w0);
+                });
+            });
 
-                    it('should set the height to the minimum', function () {
-                        expect(chart.height()).toEqual(234);
-                    });
+            describe('and minimums set', function () {
+                beforeEach(function () {
+                    chart.minHeight(234).minWidth(976)
+                        .render();
+                });
 
-                    it('should set the width to the minimum', function () {
-                        expect(chart.width()).toEqual(976);
-                    });
+                it('should set the height to the minimum', function () {
+                    expect(chart.height()).toEqual(234);
+                });
+
+                it('should set the width to the minimum', function () {
+                    expect(chart.width()).toEqual(976);
                 });
             });
         });
