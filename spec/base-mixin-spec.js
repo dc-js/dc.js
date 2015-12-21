@@ -354,34 +354,61 @@ describe('dc.baseMixin', function () {
     });
 
     describe('calculation of dimensions', function () {
+        var dimdiv, bodyWidth;
         beforeEach(function () {
+            dimdiv = appendChartID('dimensionTest');
             chart.anchor('#dimensionTest');
+            bodyWidth = d3.select('body')[0][0].getBoundingClientRect().width;
         });
 
-        describe('when set to a falsy', function () {
+        describe('when set to a falsy on a sized div', function () {
+            var h0, w0;
             beforeEach(function () {
-                chart.width(null).height(null).render();
-            });
-
-            it('should set the height to the default', function () {
-                expect(chart.height()).toEqual(200);
-            });
-
-            it('should set the width to the default', function () {
-                expect(chart.width()).toEqual(200);
-            });
-
-            describe('with minimums set', function () {
-                beforeEach(function () {
-                    chart.minHeight(234).minWidth(976).render();
+                dimdiv.style({
+                    height: '220px',
+                    width: '230px'
                 });
 
-                it('should set the height to the minimum', function () {
-                    expect(chart.height()).toEqual(234);
+                describe('and no minimums set', function () {
+                    beforeEach(function () {
+                        chart.width(null).height(null).render();
+                        w0 = chart.width();
+                        h0 = chart.height();
+                    });
+
+                    it('should set the height to the div size', function () {
+                        expect(chart.height()).toEqual(220);
+                    });
+
+                    it('should set the width to the div size', function () {
+                        expect(chart.width()).toEqual(230);
+                    });
+
+                    describe('and redrawn', function () {
+                        beforeEach(function () {
+                            chart.redraw();
+                        });
+
+                        it('should keep the size the same', function () {
+                            expect(chart.height()).toBe(h0);
+                            expect(chart.width()).toBe(w0);
+                        });
+                    });
                 });
 
-                it('should set the width to the minimum', function () {
-                    expect(chart.width()).toEqual(976);
+                describe('and minimums set', function () {
+                    beforeEach(function () {
+                        chart.minHeight(234).minWidth(976)
+                            .width(null).height(null).render();
+                    });
+
+                    it('should set the height to the minimum', function () {
+                        expect(chart.height()).toEqual(234);
+                    });
+
+                    it('should set the width to the minimum', function () {
+                        expect(chart.width()).toEqual(976);
+                    });
                 });
             });
         });
