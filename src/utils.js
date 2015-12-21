@@ -217,7 +217,7 @@ dc.utils.isInteger = function (n) {
 };
 
 /**
- * Is the value negligibly 0?
+ * Is the value very close to zero?
  * @name isNegligible
  * @memberof dc.utils
  * @param {any} n
