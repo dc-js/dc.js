@@ -7,9 +7,21 @@
 </head>
 <body>
 
-<div id="chart-ring-year"></div>
-<div id="chart-hist-spend"></div>
-<div id="chart-row-spenders"></div>
+  <div id="chart-ring-year" style="width:300px; height:300px">
+    <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+      <a href="javascript:yearRingChart.filterAll();dc.redrawAll();">reset</a>
+    </div>
+  </div>
+  <div id="chart-hist-spend" style="width:300px; height:300px">
+    <div class="reset" style="visibility: hidden;">range: <span class="filter"></span>
+      <a href="javascript:spendHistChart.filterAll();dc.redrawAll();">reset</a>
+    </div>
+  </div>
+  <div id="chart-row-spenders">
+    <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+      <a href="javascript:spenderRowChart.filterAll();dc.redrawAll();">reset</a>
+    </div>
+  </div>
 
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
@@ -46,26 +58,26 @@ var ndx = crossfilter(spendData),
     spendHist    = spendDim.group().reduceCount();
 
 yearRingChart
-    .width(200).height(200)
     .dimension(yearDim)
     .group(spendPerYear)
-    .innerRadius(50);
+    .innerRadius(50)
+    .controlsUseVisibility(true);
 
-spendHistChart
-    .width(300).height(200)
+  spendHistChart
     .dimension(spendDim)
     .group(spendHist)
     .x(d3.scale.linear().domain([0,10]))
-    .elasticY(true);
+    .elasticY(true)
+    .controlsUseVisibility(true);
 
 spendHistChart.xAxis().tickFormat(function(d) {return d*10}); // convert back to base unit
 spendHistChart.yAxis().ticks(2);
 
 spenderRowChart
-    .width(350).height(200)
     .dimension(nameDim)
     .group(spendPerName)
-    .elasticX(true);
+    .elasticX(true)
+    .controlsUseVisibility(true);
 
 dc.renderAll();
 
