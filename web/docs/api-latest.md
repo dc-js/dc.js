@@ -139,6 +139,24 @@ chart.width(300)
     * [.ordinal](#dc.units.ordinal) ⇒ <code>Array.&lt;String&gt;</code>
     * [.fp](#dc.units.fp) : <code>Object</code>
       * [.precision](#dc.units.fp.precision) ⇒ <code>function</code>
+  * [.dateFormat](#dc.dateFormat) : <code>function</code>
+  * [.printers](#dc.printers) : <code>Object</code>
+    * [.filters](#dc.printers.filters) ⇒ <code>String</code>
+    * [.filter](#dc.printers.filter) ⇒ <code>String</code>
+  * [.pluck](#dc.pluck) ⇒ <code>function</code>
+  * [.utils](#dc.utils) : <code>Object</code>
+    * [.printSingleValue](#dc.utils.printSingleValue) ⇒ <code>String</code>
+    * [.add](#dc.utils.add) ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
+    * [.subtract](#dc.utils.subtract) ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
+    * [.isNumber](#dc.utils.isNumber) ⇒ <code>Boolean</code>
+    * [.isFloat](#dc.utils.isFloat) ⇒ <code>Boolean</code>
+    * [.isInteger](#dc.utils.isInteger) ⇒ <code>Boolean</code>
+    * [.isNegligible](#dc.utils.isNegligible) ⇒ <code>Boolean</code>
+    * [.clamp](#dc.utils.clamp) ⇒ <code>any</code>
+    * [.uniqueId](#dc.utils.uniqueId) ⇒ <code>Number</code>
+    * [.nameToId](#dc.utils.nameToId) ⇒ <code>String</code>
+    * [.appendOrSelect](#dc.utils.appendOrSelect) ⇒ <code>d3.selection</code>
+    * [.safeNumber](#dc.utils.safeNumber) ⇒ <code>Number</code>
   * [.filters](#dc.filters) : <code>Object</code>
     * [.RangedFilter](#dc.filters.RangedFilter)
       * [new RangedFilter(low, high)](#new_dc.filters.RangedFilter_new)
@@ -2146,6 +2164,218 @@ chart.xUnits(dc.units.fp.precision(0.1)
 var thousandths = dc.units.fp.precision(0.001);
 thousandths(0.5, 1.0) // returns 500
 ```
+<a name="dc.dateFormat"></a>
+### dc.dateFormat : <code>function</code>
+The default date format for dc.js
+
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Default**: <code>d3.time.format(&#x27;%m/%d/%Y&#x27;)</code>  
+<a name="dc.printers"></a>
+### dc.printers : <code>Object</code>
+**Kind**: static property of <code>[dc](#dc)</code>  
+
+* [.printers](#dc.printers) : <code>Object</code>
+  * [.filters](#dc.printers.filters) ⇒ <code>String</code>
+  * [.filter](#dc.printers.filter) ⇒ <code>String</code>
+
+<a name="dc.printers.filters"></a>
+#### printers.filters ⇒ <code>String</code>
+Converts a list of filters into a readable string
+
+**Kind**: static property of <code>[printers](#dc.printers)</code>  
+
+| Param | Type |
+| --- | --- |
+| filters | <code>Array.&lt;(dc.filters\|any)&gt;</code> | 
+
+<a name="dc.printers.filter"></a>
+#### printers.filter ⇒ <code>String</code>
+Converts a filter into a readable string
+
+**Kind**: static property of <code>[printers](#dc.printers)</code>  
+
+| Param | Type |
+| --- | --- |
+| filter | <code>[filters](#dc.filters)</code> &#124; <code>any</code> &#124; <code>Array.&lt;any&gt;</code> | 
+
+<a name="dc.pluck"></a>
+### dc.pluck ⇒ <code>function</code>
+Returns a function that given a string property name, can be used to pluck the property off an object.  A function
+can be passed as the second argument to also alter the data being returned.  This can be a useful shorthand method to create
+accessor functions.
+
+**Kind**: static property of <code>[dc](#dc)</code>  
+
+| Param | Type |
+| --- | --- |
+| n | <code>String</code> | 
+| [f] | <code>function</code> | 
+
+**Example**  
+```js
+var xPluck = dc.pluck('x');
+var objA = {x: 1};
+xPluck(objA) // 1
+```
+**Example**  
+```js
+var xPosition = dc.pluck('x', function (x, i) {
+    // `this` is the original datum,
+    // `x` is the x property of the datum,
+    // `i` is the position in the array
+    return this.radius + x;
+});
+dc.selectAll('.circle').data(...).x(xPosition);
+```
+<a name="dc.utils"></a>
+### dc.utils : <code>Object</code>
+**Kind**: static property of <code>[dc](#dc)</code>  
+
+* [.utils](#dc.utils) : <code>Object</code>
+  * [.printSingleValue](#dc.utils.printSingleValue) ⇒ <code>String</code>
+  * [.add](#dc.utils.add) ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
+  * [.subtract](#dc.utils.subtract) ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
+  * [.isNumber](#dc.utils.isNumber) ⇒ <code>Boolean</code>
+  * [.isFloat](#dc.utils.isFloat) ⇒ <code>Boolean</code>
+  * [.isInteger](#dc.utils.isInteger) ⇒ <code>Boolean</code>
+  * [.isNegligible](#dc.utils.isNegligible) ⇒ <code>Boolean</code>
+  * [.clamp](#dc.utils.clamp) ⇒ <code>any</code>
+  * [.uniqueId](#dc.utils.uniqueId) ⇒ <code>Number</code>
+  * [.nameToId](#dc.utils.nameToId) ⇒ <code>String</code>
+  * [.appendOrSelect](#dc.utils.appendOrSelect) ⇒ <code>d3.selection</code>
+  * [.safeNumber](#dc.utils.safeNumber) ⇒ <code>Number</code>
+
+<a name="dc.utils.printSingleValue"></a>
+#### utils.printSingleValue ⇒ <code>String</code>
+Print a single value filter
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+
+| Param | Type |
+| --- | --- |
+| filter | <code>any</code> | 
+
+<a name="dc.utils.add"></a>
+#### utils.add ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
+Arbitrary add one value to another.
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+**Todo**
+
+- [ ] These assume than any string r is a percentage (whether or not it includes %).
+They also generate strange results if l is a string.
+
+
+| Param | Type |
+| --- | --- |
+| l | <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code> | 
+| r | <code>Number</code> | 
+
+<a name="dc.utils.subtract"></a>
+#### utils.subtract ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
+Arbitrary subtract one value from another.
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+**Todo**
+
+- [ ] These assume than any string r is a percentage (whether or not it includes %).
+They also generate strange results if l is a string.
+
+
+| Param | Type |
+| --- | --- |
+| l | <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code> | 
+| r | <code>Number</code> | 
+
+<a name="dc.utils.isNumber"></a>
+#### utils.isNumber ⇒ <code>Boolean</code>
+Is the value a number?
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+
+| Param | Type |
+| --- | --- |
+| n | <code>any</code> | 
+
+<a name="dc.utils.isFloat"></a>
+#### utils.isFloat ⇒ <code>Boolean</code>
+Is the value a float?
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+
+| Param | Type |
+| --- | --- |
+| n | <code>any</code> | 
+
+<a name="dc.utils.isInteger"></a>
+#### utils.isInteger ⇒ <code>Boolean</code>
+Is the value an integer?
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+
+| Param | Type |
+| --- | --- |
+| n | <code>any</code> | 
+
+<a name="dc.utils.isNegligible"></a>
+#### utils.isNegligible ⇒ <code>Boolean</code>
+Is the value very close to zero?
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+
+| Param | Type |
+| --- | --- |
+| n | <code>any</code> | 
+
+<a name="dc.utils.clamp"></a>
+#### utils.clamp ⇒ <code>any</code>
+Ensure the value is no greater or less than the min/max values.  If it is return the boundary value.
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+
+| Param | Type |
+| --- | --- |
+| val | <code>any</code> | 
+| min | <code>any</code> | 
+| max | <code>any</code> | 
+
+<a name="dc.utils.uniqueId"></a>
+#### utils.uniqueId ⇒ <code>Number</code>
+Using a simple static counter, provide a unique integer id.
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+<a name="dc.utils.nameToId"></a>
+#### utils.nameToId ⇒ <code>String</code>
+Convert a name to an ID.
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+
+| Param | Type |
+| --- | --- |
+| name | <code>String</code> | 
+
+<a name="dc.utils.appendOrSelect"></a>
+#### utils.appendOrSelect ⇒ <code>d3.selection</code>
+Append or select an item on a parent element
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+
+| Param | Type |
+| --- | --- |
+| parent | <code>d3.selection</code> | 
+| selector | <code>String</code> | 
+| tag | <code>String</code> | 
+
+<a name="dc.utils.safeNumber"></a>
+#### utils.safeNumber ⇒ <code>Number</code>
+Return the number if the value is a number; else 0.
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+
+| Param | Type |
+| --- | --- |
+| n | <code>Number</code> &#124; <code>any</code> | 
+
 <a name="dc.filters"></a>
 ### dc.filters : <code>Object</code>
 The dc.js filters are functions which are passed into crossfilter to chose which records will be
