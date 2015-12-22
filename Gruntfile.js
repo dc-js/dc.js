@@ -129,8 +129,8 @@ module.exports = function (grunt) {
                     summary: true,
                     specs:  '<%= conf.spec %>/*-spec.js',
                     helpers: [
-                        '<%= conf.spec %>/helpers/*.js',
-                        'node_modules/grunt-saucelabs/examples/jasmine/lib/jasmine-jsreporter/jasmine-jsreporter.js'
+                        '<%= conf.web %>/js/jasmine-jsreporter.js',
+                        '<%= conf.spec %>/helpers/*.js'
                     ],
                     version: '2.0.0',
                     outfile: '<%= conf.spec %>/index.html',
@@ -188,18 +188,18 @@ module.exports = function (grunt) {
                     browsers: [
                         {
                             browserName: 'firefox',
-                            version: '25',
-                            platform: 'linux'
+                            version: '42.0',
+                            platform: 'Linux'
                         },
                         {
                             browserName: 'safari',
-                            version: '7',
-                            platform: 'OS X 10.9'
+                            version: '9.0',
+                            platform: 'OS X 10.11'
                         },
                         {
                             browserName: 'internet explorer',
-                            version: '10',
-                            platform: 'WIN8'
+                            version: '11.0',
+                            platform: 'Windows 10'
                         }
                     ],
                     testname: '<%= conf.pkg.name %>.js'
@@ -244,6 +244,7 @@ module.exports = function (grunt) {
                             '<%= conf.pkg.name %>.min.js.map',
                             'node_modules/d3/d3.js',
                             'node_modules/crossfilter/crossfilter.js',
+                            'node_modules/grunt-saucelabs/examples/jasmine/lib/jasmine-jsreporter/jasmine-jsreporter.js',
                             'test/env-data.js'
                         ],
                         dest: '<%= conf.web %>/js/'
