@@ -1,4 +1,4 @@
-/* global appendChartID, loadDateFixture, makeDate */
+/* global appendChartID, loadDateFixture, makeDate, cleanDateRange */
 describe('dc.coordinateGridChart', function () {
     var chart, id;
     var data, dimension, group;
@@ -735,9 +735,7 @@ describe('dc.coordinateGridChart', function () {
                 });
 
                 it('should update chart filter to match new x domain', function () {
-                    var filter = chart.filter();
-                    delete filter.isFiltered;
-                    delete filter.filterType;
+                    var filter = cleanDateRange(chart.filter());
                     expect(filter).toEqual(chart.x().domain());
                 });
 
@@ -850,9 +848,7 @@ describe('dc.coordinateGridChart', function () {
             rangeChart.brush().event(rangeChart.g());
             jasmine.clock().tick(100);
             // expect(chart.focus).toHaveBeenCalledWith(selectedRange);
-            var focus = chart.focus.calls.argsFor(0)[0];
-            delete focus.isFiltered;
-            delete focus.filterType;
+            var focus = cleanDateRange(chart.focus.calls.argsFor(0)[0]);
             expect(focus).toEqual(selectedRange);
         });
 
@@ -871,9 +867,7 @@ describe('dc.coordinateGridChart', function () {
             spyOn(rangeChart, 'replaceFilter');
             chart.focus(selectedRange);
             // expect(rangeChart.replaceFilter).toHaveBeenCalledWith(selectedRange);
-            var replaceFilter = rangeChart.replaceFilter.calls.argsFor(0)[0];
-            delete replaceFilter.isFiltered;
-            delete replaceFilter.filterType;
+            var replaceFilter = cleanDateRange(rangeChart.replaceFilter.calls.argsFor(0)[0]);
             expect(replaceFilter).toEqual(selectedRange);
         });
     });

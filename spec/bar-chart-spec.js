@@ -1,4 +1,4 @@
-/* global appendChartID, loadDateFixture, makeDate */
+/* global appendChartID, loadDateFixture, makeDate, cleanDateRange */
 describe('dc.barChart', function () {
     var id, chart, data;
     var dimension, group;
@@ -1047,9 +1047,7 @@ describe('dc.barChart', function () {
 
             it('should not round the brush', function () {
                 jasmine.clock().tick(100);
-                var filter = chart.filter();
-                delete filter.isFiltered;
-                delete filter.filterType;
+                var filter = cleanDateRange(chart.filter());
                 expect(filter).toEqual([makeDate(2012, 6, 1), makeDate(2012, 7, 15)]);
             });
         });

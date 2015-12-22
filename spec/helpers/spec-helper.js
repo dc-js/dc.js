@@ -37,6 +37,12 @@ function makeDate (year, month, day) {
     return new Date(Date.UTC(year, month, day, 0, 0, 0, 0));
 }
 
+// the invisible non-array members that we add in dc.filter cause the objects
+// to be non-equal (correctly, but with no good diagnostics) in the eyes of Jasmine.
+function cleanDateRange (range) {
+    return [range[0], range[1]];
+}
+
 // http://stackoverflow.com/questions/20068497/d3-transition-in-unit-testing
 function flushAllD3Transitions () {
     var now = Date.now;
