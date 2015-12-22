@@ -129,8 +129,8 @@ module.exports = function (grunt) {
                     summary: true,
                     specs:  '<%= conf.spec %>/*-spec.js',
                     helpers: [
-                        '<%= conf.spec %>/helpers/*.js',
-                        '<%= conf.web %>/js/jasmine-jsreporter.js'
+                        '<%= conf.web %>/js/jasmine-jsreporter.js',
+                        '<%= conf.spec %>/helpers/*.js'
                     ],
                     version: '2.0.0',
                     outfile: '<%= conf.spec %>/index.html',
