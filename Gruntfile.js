@@ -361,7 +361,7 @@ module.exports = function (grunt) {
             },
             runner: grunt.config('watch').jasmineRunner,
             scripts: grunt.config('watch').scripts,
-            styles: grunt.config('watch').styles,
+            styles: grunt.config('watch').styles
         });
         grunt.task.run('watch');
     });

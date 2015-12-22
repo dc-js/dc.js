@@ -6112,12 +6112,19 @@ dc.dataCount = function (parent, chartGroup) {
  * The data table is a simple widget designed to list crossfilter focused data set (rows being
  * filtered) in a good old tabular fashion.
  *
- * Note: Unlike other charts, the data table (and data grid chart) use the group attribute as a keying function
- * for {@link https://github.com/mbostock/d3/wiki/Arrays#-nest nesting} the data together in groups.
- * Do not pass in a crossfilter group as this will not work.
+ * Note: Unlike other charts, the data table (and data grid chart) use the group attribute as a
+ * keying function for {@link https://github.com/mbostock/d3/wiki/Arrays#-nest nesting} the data
+ * together in groups.  Do not pass in a crossfilter group as this will not work.
+ *
+ * Another interesting feature of the data table is that you can pass a crossfilter group to the `dimension`, as
+ * long as you specify the {@link #dc.dataTable+order order} as `d3.descending`, since the data
+ * table will use `dimension.top()` to fetch the data in that case, and the method is equally
+ * supported on the crossfilter group as the crossfilter dimension.
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
+ * - {@link http://dc-js.github.io/dc.js/examples/table-on-aggregated-data.html dataTable on a crossfilter group}
+ * ({@link https://github.com/dc-js/dc.js/blob/develop/web/examples/table-on-aggregated-data.html source})
  * @name dataTable
  * @memberof dc
  * @mixes dc.baseMixin
@@ -6168,7 +6175,7 @@ dc.dataTable = function (parent, chartGroup) {
     _chart._doColumnHeaderFormat = function (d) {
         // if 'function', convert to string representation
         // show a string capitalized
-        // if an object then display it's label string as-is.
+        // if an object then display its label string as-is.
         return (typeof d === 'function') ?
                 _chart._doColumnHeaderFnToString(d) :
                 ((typeof d === 'string') ?
@@ -6211,15 +6218,23 @@ dc.dataTable = function (parent, chartGroup) {
         });
 
         if (!bAllFunctions) {
-            _chart.selectAll('th').remove();
-            var headcols = _chart.root().selectAll('th')
+            // ensure one thead
+            var thead = _chart.selectAll('thead').data([0]);
+            thead.enter().append('thead');
+            thead.exit().remove();
+
+            // with one tr
+            var headrow = thead.selectAll('tr').data([0]);
+            headrow.enter().append('tr');
+            headrow.exit().remove();
+
+            // with a th for each column
+            var headcols = headrow.selectAll('th')
                 .data(_columns);
+            headcols.enter().append('th');
+            headcols.exit().remove();
 
-            var headGroup = headcols
-                .enter()
-                .append('th');
-
-            headGroup
+            headcols
                 .attr('class', HEAD_CSS_CLASS)
                     .html(function (d) {
                         return (_chart._doColumnHeaderFormat(d));
@@ -6356,64 +6371,81 @@ dc.dataTable = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set column functions. The data table widget now supports several methods of specifying
-     * the columns to display.  The original method, first shown below, uses an array of functions to
-     * generate dynamic columns. Column functions are simple javascript functions with only one input
-     * argument `d` which represents a row in the data set. The return value of these functions will be
-     * used directly to generate table content for each cell. However, this method requires the .html
-     * table entry to have a fixed set of column headers.
+     * Get or set column functions. The data table widget supports several methods of specifying the
+     * columns to display.
      *
-     * The second example shows you can simply list the data (d) content directly without
-     * specifying it as a function, except where necessary (ie, computed columns).  Note
-     * the data element accessor name is capitalized when displayed in the table. You can
-     * also mix in functions as desired or necessary, but you must use the
-     * `Object = [Label, Fn]` method as shown below.
-     * You may wish to override the following two functions, which are internally used to
-     * translate the column information or function into a displayed header. The first one
-     * is used on the simple "string" column specifier, the second is used to transform the
-     * String(fn) into something displayable. For the Stock example, the function for Change
-     * becomes a header of `d.close - d.open`.
+     * The original method uses an array of functions to generate dynamic columns. Column functions
+     * are simple javascript functions with only one input argument `d` which represents a row in
+     * the data set. The return value of these functions will be used to generate the content for
+     * each cell. However, this method requires the HTML for the table to have a fixed set of column
+     * headers.
      *
-     * `_chart._doColumnHeaderCapitalize` `_chart._doColumnHeaderFnToString`
-     * You may use your own Object definition, however you must then override
-     * `_chart._doColumnHeaderFormat`, `_chart._doColumnValueFormat`
-     * Be aware that fields without numberFormat specification will be displayed just as
-     * they are stored in the data, unformatted.
-     *
-     * The third example, where all fields are specified using the Object = [Label, Fn] method.
-     * @name columns
-     * @memberof dc.dataTable
-     * @instance
-     * @example
-     * chart.columns([
+     * <pre><code>chart.columns([
      *     function(d) { return d.date; },
      *     function(d) { return d.open; },
      *     function(d) { return d.close; },
      *     function(d) { return numberFormat(d.close - d.open); },
      *     function(d) { return d.volume; }
      * ]);
-     * @example
-     * chart.columns([
+     * </code></pre>
+     *
+     * In the second method, you can list the columns to read from the data without specifying it as
+     * a function, except where necessary (ie, computed columns).  Note the data element name is
+     * capitalized when displayed in the table header. You can also mix in functions as necessary,
+     * using the third `{label, format}` form, as shown below.
+     *
+     * <pre><code>chart.columns([
      *     "date",    // d["date"], ie, a field accessor; capitalized automatically
      *     "open",    // ...
      *     "close",   // ...
-     *     ["Change", // Specify an Object = [Label, Fn]
-     *         function (d) { return numberFormat(d.close - d.open); }],
+     *     {
+     *         label: "Change",
+     *         format: function (d) {
+     *             return numberFormat(d.close - d.open);
+     *         }
+     *     },
      *     "volume"   // d["volume"], ie, a field accessor; capitalized automatically
      * ]);
-     * @example
-     * chart.columns([
-     *     ["Date",   // Specify an Object = [Label, Fn]
-     *         function (d) { return d.date; }],
-     *     ["Open",
-     *         function (d) { return numberFormat(d.open); }],
-     *     ["Close",
-     *         function (d) { return numberFormat(d.close); }],
-     *     ["Change",
-     *         function (d) { return numberFormat(d.close - d.open); }],
-     *     ["Volume",
-     *         function (d) { return d.volume; }]
+     * </code></pre>
+     *
+     * In the third example, we specify all fields using the `{label, format}` method:
+     * <pre><code>chart.columns([
+     *     {
+     *         label: "Date",
+     *         function (d) { return d.date; }
+     *     },
+     *     {
+     *         label: "Open",
+     *         function (d) { return numberFormat(d.open); }
+     *     },
+     *     {
+     *         label: "Close",
+     *         function (d) { return numberFormat(d.close); }
+     *     },
+     *     {
+     *         label: "Change",
+     *         function (d) { return numberFormat(d.close - d.open); }
+     *     },
+     *     {
+     *         label: "Volume",
+     *         function (d) { return d.volume; }
+     *     }
      * ]);
+     * </code></pre>
+     *
+     * You may wish to override the dataTable functions `_doColumnHeaderCapitalize` and
+     * `_doColumnHeaderFnToString`, which are used internally to translate the column information or
+     * function into a displayed header. The first one is used on the "string" column specifier; the
+     * second is used to transform a stringified function into something displayable. For the Stock
+     * example, the function for Change becomes the table header **d.close - d.open**.
+     *
+     * Finally, you can even specify a completely different form of column definition. To do this,
+     * override `_chart._doColumnHeaderFormat` and `_chart._doColumnValueFormat` Be aware that
+     * fields without numberFormat specification will be displayed just as they are stored in the
+     * data, unformatted.
+     * @name columns
+     * @memberof dc.dataTable
+     * @instance
      * @param {Array<Function>} [columns=[]]
      * @return {Array<Function>}}
      * @return {dc.dataTable}
@@ -6449,7 +6481,8 @@ dc.dataTable = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set sort order.
+     * Get or set sort order. If the order is `d3.ascending`, the data table will use
+     * `dimension().bottom()` to fetch the data; otherwise it will use `dimension().top()`
      * @name order
      * @memberof dc.dataTable
      * @instance
