@@ -95,6 +95,7 @@ function compareSubPath (got, wanted, i, j, delta) {
     }
     return {pass: true};
 }
+
 function comparePaths (actual, expected, delta) {
     delta = delta || 1; // default delta of 1px
     var got = parsePath(actual),
@@ -108,6 +109,7 @@ function comparePaths (actual, expected, delta) {
     }
     return compareSubPath(got, wanted, 0, 0, delta);
 }
+
 function findSubPath (actual, expected, delta) {
     delta = delta || 1; // default delta of 1px
     var got = parsePath(actual),
@@ -123,6 +125,28 @@ function findSubPath (actual, expected, delta) {
         pass: false,
         message: 'did not find expected subpath \'' + expected + '\' in actual path \'' + actual + '\''
     };
+}
+
+// actually number list, but presumably you'd want closeness if you need that
+function compareIntList (actual, expected) {
+    var aparts = actual.split(/, */),
+        eparts = expected.split(/, */);
+    if (aparts.length !== eparts.length) {
+        return {
+            pass: false,
+            message: 'actual number of list items ' + aparts.length +
+                ' did not match expected number ' + eparts.length
+        };
+    }
+    for (var i = 0; i < eparts.length; ++i) {
+        if (+aparts[i] !== +eparts[i]) {
+            return {
+                pass: false,
+                message: 'list item[' + i + '] value ' + aparts[i] + ' did not equal expected value ' + eparts[i]
+            };
+        }
+    }
+    return {pass: true};
 }
 
 beforeEach(function () {
@@ -178,6 +202,11 @@ beforeEach(function () {
         toContainPath: function () {
             return {
                 compare: findSubPath
+            };
+        },
+        toEqualIntList: function () {
+            return {
+                compare: compareIntList
             };
         }
     });

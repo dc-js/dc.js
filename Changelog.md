@@ -1,4 +1,9 @@
 # 2.0 Series
+## 2.0.0 beta 25
+* Improved dataTable docs (including a fix for [#1030](https://github.com/dc-js/dc.js/issues/1030))
+* Generate proper data table header ([#1015](https://github.com/dc-js/dc.js/issues/1015))
+* Fix various test failures on Safari/IE/Edge (regular testing is on Chrome/Firefox/Opera) ([#1072](https://github.com/dc-js/dc.js/issues/1072), [#1073](https://github.com/dc-js/dc.js/issues/1073), [#1074](https://github.com/dc-js/dc.js/issues/1064))
+
 ## 2.0.0 beta 24
 * Only auto-calculate width/height once each render - sizes were getting calculated wrong ([#1070](https://github.com/dc-js/dc.js/issues/1070)) and charts were changing size on redraw if they didn't have a fixed size in the chart spec or in the div style ([#980](https://github.com/dc-js/dc.js/issues/980))
 * Tell browserify the correct entry point `browser: dc.js`, so it won't try to bundle jsdom, by Sam Dunster ([#1005](https://github.com/dc-js/dc.js/issues/1005) / ([#1062](https://github.com/dc-js/dc.js/pull/1062))
