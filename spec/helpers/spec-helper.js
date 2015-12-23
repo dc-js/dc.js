@@ -1,6 +1,4 @@
 /* global parseTranslate */
-// reporter for saucelabs
-jasmine.getEnv().addReporter(new jasmine.JSReporter2());
 beforeEach(function () {
     d3.select('body').append('div').attr('id', 'test-content');
     jasmine.clock().install();
