@@ -10,7 +10,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 2.0.0-beta.23  
+**Version**: 2.0.0-beta.25  
 **Example**  
 ```js
 // Example chaining
@@ -139,6 +139,24 @@ chart.width(300)
     * [.ordinal](#dc.units.ordinal) ⇒ <code>Array.&lt;String&gt;</code>
     * [.fp](#dc.units.fp) : <code>Object</code>
       * [.precision](#dc.units.fp.precision) ⇒ <code>function</code>
+  * [.dateFormat](#dc.dateFormat) : <code>function</code>
+  * [.printers](#dc.printers) : <code>Object</code>
+    * [.filters](#dc.printers.filters) ⇒ <code>String</code>
+    * [.filter](#dc.printers.filter) ⇒ <code>String</code>
+  * [.pluck](#dc.pluck) ⇒ <code>function</code>
+  * [.utils](#dc.utils) : <code>Object</code>
+    * [.printSingleValue](#dc.utils.printSingleValue) ⇒ <code>String</code>
+    * [.add](#dc.utils.add) ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
+    * [.subtract](#dc.utils.subtract) ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
+    * [.isNumber](#dc.utils.isNumber) ⇒ <code>Boolean</code>
+    * [.isFloat](#dc.utils.isFloat) ⇒ <code>Boolean</code>
+    * [.isInteger](#dc.utils.isInteger) ⇒ <code>Boolean</code>
+    * [.isNegligible](#dc.utils.isNegligible) ⇒ <code>Boolean</code>
+    * [.clamp](#dc.utils.clamp) ⇒ <code>any</code>
+    * [.uniqueId](#dc.utils.uniqueId) ⇒ <code>Number</code>
+    * [.nameToId](#dc.utils.nameToId) ⇒ <code>String</code>
+    * [.appendOrSelect](#dc.utils.appendOrSelect) ⇒ <code>d3.selection</code>
+    * [.safeNumber](#dc.utils.safeNumber) ⇒ <code>Number</code>
   * [.filters](#dc.filters) : <code>Object</code>
     * [.RangedFilter](#dc.filters.RangedFilter)
       * [new RangedFilter(low, high)](#new_dc.filters.RangedFilter_new)
@@ -2140,6 +2158,218 @@ chart.xUnits(dc.units.fp.precision(0.1)
 var thousandths = dc.units.fp.precision(0.001);
 thousandths(0.5, 1.0) // returns 500
 ```
+<a name="dc.dateFormat"></a>
+### dc.dateFormat : <code>function</code>
+The default date format for dc.js
+
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Default**: <code>d3.time.format(&#x27;%m/%d/%Y&#x27;)</code>  
+<a name="dc.printers"></a>
+### dc.printers : <code>Object</code>
+**Kind**: static property of <code>[dc](#dc)</code>  
+
+* [.printers](#dc.printers) : <code>Object</code>
+  * [.filters](#dc.printers.filters) ⇒ <code>String</code>
+  * [.filter](#dc.printers.filter) ⇒ <code>String</code>
+
+<a name="dc.printers.filters"></a>
+#### printers.filters ⇒ <code>String</code>
+Converts a list of filters into a readable string
+
+**Kind**: static property of <code>[printers](#dc.printers)</code>  
+
+| Param | Type |
+| --- | --- |
+| filters | <code>Array.&lt;(dc.filters\|any)&gt;</code> | 
+
+<a name="dc.printers.filter"></a>
+#### printers.filter ⇒ <code>String</code>
+Converts a filter into a readable string
+
+**Kind**: static property of <code>[printers](#dc.printers)</code>  
+
+| Param | Type |
+| --- | --- |
+| filter | <code>[filters](#dc.filters)</code> &#124; <code>any</code> &#124; <code>Array.&lt;any&gt;</code> | 
+
+<a name="dc.pluck"></a>
+### dc.pluck ⇒ <code>function</code>
+Returns a function that given a string property name, can be used to pluck the property off an object.  A function
+can be passed as the second argument to also alter the data being returned.  This can be a useful shorthand method to create
+accessor functions.
+
+**Kind**: static property of <code>[dc](#dc)</code>  
+
+| Param | Type |
+| --- | --- |
+| n | <code>String</code> | 
+| [f] | <code>function</code> | 
+
+**Example**  
+```js
+var xPluck = dc.pluck('x');
+var objA = {x: 1};
+xPluck(objA) // 1
+```
+**Example**  
+```js
+var xPosition = dc.pluck('x', function (x, i) {
+    // `this` is the original datum,
+    // `x` is the x property of the datum,
+    // `i` is the position in the array
+    return this.radius + x;
+});
+dc.selectAll('.circle').data(...).x(xPosition);
+```
+<a name="dc.utils"></a>
+### dc.utils : <code>Object</code>
+**Kind**: static property of <code>[dc](#dc)</code>  
+
+* [.utils](#dc.utils) : <code>Object</code>
+  * [.printSingleValue](#dc.utils.printSingleValue) ⇒ <code>String</code>
+  * [.add](#dc.utils.add) ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
+  * [.subtract](#dc.utils.subtract) ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
+  * [.isNumber](#dc.utils.isNumber) ⇒ <code>Boolean</code>
+  * [.isFloat](#dc.utils.isFloat) ⇒ <code>Boolean</code>
+  * [.isInteger](#dc.utils.isInteger) ⇒ <code>Boolean</code>
+  * [.isNegligible](#dc.utils.isNegligible) ⇒ <code>Boolean</code>
+  * [.clamp](#dc.utils.clamp) ⇒ <code>any</code>
+  * [.uniqueId](#dc.utils.uniqueId) ⇒ <code>Number</code>
+  * [.nameToId](#dc.utils.nameToId) ⇒ <code>String</code>
+  * [.appendOrSelect](#dc.utils.appendOrSelect) ⇒ <code>d3.selection</code>
+  * [.safeNumber](#dc.utils.safeNumber) ⇒ <code>Number</code>
+
+<a name="dc.utils.printSingleValue"></a>
+#### utils.printSingleValue ⇒ <code>String</code>
+Print a single value filter
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+
+| Param | Type |
+| --- | --- |
+| filter | <code>any</code> | 
+
+<a name="dc.utils.add"></a>
+#### utils.add ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
+Arbitrary add one value to another.
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+**Todo**
+
+- [ ] These assume than any string r is a percentage (whether or not it includes %).
+They also generate strange results if l is a string.
+
+
+| Param | Type |
+| --- | --- |
+| l | <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code> | 
+| r | <code>Number</code> | 
+
+<a name="dc.utils.subtract"></a>
+#### utils.subtract ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
+Arbitrary subtract one value from another.
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+**Todo**
+
+- [ ] These assume than any string r is a percentage (whether or not it includes %).
+They also generate strange results if l is a string.
+
+
+| Param | Type |
+| --- | --- |
+| l | <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code> | 
+| r | <code>Number</code> | 
+
+<a name="dc.utils.isNumber"></a>
+#### utils.isNumber ⇒ <code>Boolean</code>
+Is the value a number?
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+
+| Param | Type |
+| --- | --- |
+| n | <code>any</code> | 
+
+<a name="dc.utils.isFloat"></a>
+#### utils.isFloat ⇒ <code>Boolean</code>
+Is the value a float?
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+
+| Param | Type |
+| --- | --- |
+| n | <code>any</code> | 
+
+<a name="dc.utils.isInteger"></a>
+#### utils.isInteger ⇒ <code>Boolean</code>
+Is the value an integer?
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+
+| Param | Type |
+| --- | --- |
+| n | <code>any</code> | 
+
+<a name="dc.utils.isNegligible"></a>
+#### utils.isNegligible ⇒ <code>Boolean</code>
+Is the value very close to zero?
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+
+| Param | Type |
+| --- | --- |
+| n | <code>any</code> | 
+
+<a name="dc.utils.clamp"></a>
+#### utils.clamp ⇒ <code>any</code>
+Ensure the value is no greater or less than the min/max values.  If it is return the boundary value.
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+
+| Param | Type |
+| --- | --- |
+| val | <code>any</code> | 
+| min | <code>any</code> | 
+| max | <code>any</code> | 
+
+<a name="dc.utils.uniqueId"></a>
+#### utils.uniqueId ⇒ <code>Number</code>
+Using a simple static counter, provide a unique integer id.
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+<a name="dc.utils.nameToId"></a>
+#### utils.nameToId ⇒ <code>String</code>
+Convert a name to an ID.
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+
+| Param | Type |
+| --- | --- |
+| name | <code>String</code> | 
+
+<a name="dc.utils.appendOrSelect"></a>
+#### utils.appendOrSelect ⇒ <code>d3.selection</code>
+Append or select an item on a parent element
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+
+| Param | Type |
+| --- | --- |
+| parent | <code>d3.selection</code> | 
+| selector | <code>String</code> | 
+| tag | <code>String</code> | 
+
+<a name="dc.utils.safeNumber"></a>
+#### utils.safeNumber ⇒ <code>Number</code>
+Return the number if the value is a number; else 0.
+
+**Kind**: static property of <code>[utils](#dc.utils)</code>  
+
+| Param | Type |
+| --- | --- |
+| n | <code>Number</code> &#124; <code>any</code> | 
+
 <a name="dc.filters"></a>
 ### dc.filters : <code>Object</code>
 The dc.js filters are functions which are passed into crossfilter to chose which records will be
@@ -2699,12 +2929,19 @@ counter.formatNumber(d3.format('.2g'))
 The data table is a simple widget designed to list crossfilter focused data set (rows being
 filtered) in a good old tabular fashion.
 
-Note: Unlike other charts, the data table (and data grid chart) use the group attribute as a keying function
-for [nesting](https://github.com/mbostock/d3/wiki/Arrays#-nest) the data together in groups.
-Do not pass in a crossfilter group as this will not work.
+Note: Unlike other charts, the data table (and data grid chart) use the group attribute as a
+keying function for [nesting](https://github.com/mbostock/d3/wiki/Arrays#-nest) the data
+together in groups.  Do not pass in a crossfilter group as this will not work.
+
+Another interesting feature of the data table is that you can pass a crossfilter group to the `dimension`, as
+long as you specify the [order](#dc.dataTable+order) as `d3.descending`, since the data
+table will use `dimension.top()` to fetch the data in that case, and the method is equally
+supported on the crossfilter group as the crossfilter dimension.
 
 Examples:
 - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+- [dataTable on a crossfilter group](http://dc-js.github.io/dc.js/examples/table-on-aggregated-data.html)
+([source](https://github.com/dc-js/dc.js/blob/develop/web/examples/table-on-aggregated-data.html))
 
 **Kind**: static property of <code>[dc](#dc)</code>  
 **Mixes**: <code>[baseMixin](#dc.baseMixin)</code>  
@@ -2762,31 +2999,78 @@ widget. Useful when implementing pagination. See [`beginSlice`](#dc.dataTable+be
 
 <a name="dc.dataTable+columns"></a>
 #### dataTable.columns ⇒ <code>Array.&lt;function()&gt;</code> &#124; <code>[dataTable](#dc.dataTable)</code>
-Get or set column functions. The data table widget now supports several methods of specifying
-the columns to display.  The original method, first shown below, uses an array of functions to
-generate dynamic columns. Column functions are simple javascript functions with only one input
-argument `d` which represents a row in the data set. The return value of these functions will be
-used directly to generate table content for each cell. However, this method requires the .html
-table entry to have a fixed set of column headers.
+Get or set column functions. The data table widget supports several methods of specifying the
+columns to display.
 
-The second example shows you can simply list the data (d) content directly without
-specifying it as a function, except where necessary (ie, computed columns).  Note
-the data element accessor name is capitalized when displayed in the table. You can
-also mix in functions as desired or necessary, but you must use the
-`Object = [Label, Fn]` method as shown below.
-You may wish to override the following two functions, which are internally used to
-translate the column information or function into a displayed header. The first one
-is used on the simple "string" column specifier, the second is used to transform the
-String(fn) into something displayable. For the Stock example, the function for Change
-becomes a header of `d.close - d.open`.
+The original method uses an array of functions to generate dynamic columns. Column functions
+are simple javascript functions with only one input argument `d` which represents a row in
+the data set. The return value of these functions will be used to generate the content for
+each cell. However, this method requires the HTML for the table to have a fixed set of column
+headers.
 
-`_chart._doColumnHeaderCapitalize` `_chart._doColumnHeaderFnToString`
-You may use your own Object definition, however you must then override
-`_chart._doColumnHeaderFormat`, `_chart._doColumnValueFormat`
-Be aware that fields without numberFormat specification will be displayed just as
-they are stored in the data, unformatted.
+<pre><code>chart.columns([
+    function(d) { return d.date; },
+    function(d) { return d.open; },
+    function(d) { return d.close; },
+    function(d) { return numberFormat(d.close - d.open); },
+    function(d) { return d.volume; }
+]);
+</code></pre>
 
-The third example, where all fields are specified using the Object = [Label, Fn] method.
+In the second method, you can list the columns to read from the data without specifying it as
+a function, except where necessary (ie, computed columns).  Note the data element name is
+capitalized when displayed in the table header. You can also mix in functions as necessary,
+using the third `{label, format}` form, as shown below.
+
+<pre><code>chart.columns([
+    "date",    // d["date"], ie, a field accessor; capitalized automatically
+    "open",    // ...
+    "close",   // ...
+    {
+        label: "Change",
+        format: function (d) {
+            return numberFormat(d.close - d.open);
+        }
+    },
+    "volume"   // d["volume"], ie, a field accessor; capitalized automatically
+]);
+</code></pre>
+
+In the third example, we specify all fields using the `{label, format}` method:
+<pre><code>chart.columns([
+    {
+        label: "Date",
+        function (d) { return d.date; }
+    },
+    {
+        label: "Open",
+        function (d) { return numberFormat(d.open); }
+    },
+    {
+        label: "Close",
+        function (d) { return numberFormat(d.close); }
+    },
+    {
+        label: "Change",
+        function (d) { return numberFormat(d.close - d.open); }
+    },
+    {
+        label: "Volume",
+        function (d) { return d.volume; }
+    }
+]);
+</code></pre>
+
+You may wish to override the dataTable functions `_doColumnHeaderCapitalize` and
+`_doColumnHeaderFnToString`, which are used internally to translate the column information or
+function into a displayed header. The first one is used on the "string" column specifier; the
+second is used to transform a stringified function into something displayable. For the Stock
+example, the function for Change becomes the table header **d.close - d.open**.
+
+Finally, you can even specify a completely different form of column definition. To do this,
+override `_chart._doColumnHeaderFormat` and `_chart._doColumnValueFormat` Be aware that
+fields without numberFormat specification will be displayed just as they are stored in the
+data, unformatted.
 
 **Kind**: instance property of <code>[dataTable](#dc.dataTable)</code>  
 **Returns**: <code>Array.&lt;function()&gt;</code> - }<code>[dataTable](#dc.dataTable)</code>  
@@ -2795,42 +3079,6 @@ The third example, where all fields are specified using the Object = [Label, Fn]
 | --- | --- | --- |
 | [columns] | <code>Array.&lt;function()&gt;</code> | <code>[]</code> | 
 
-**Example**  
-```js
-chart.columns([
-    function(d) { return d.date; },
-    function(d) { return d.open; },
-    function(d) { return d.close; },
-    function(d) { return numberFormat(d.close - d.open); },
-    function(d) { return d.volume; }
-]);
-```
-**Example**  
-```js
-chart.columns([
-    "date",    // d["date"], ie, a field accessor; capitalized automatically
-    "open",    // ...
-    "close",   // ...
-    ["Change", // Specify an Object = [Label, Fn]
-        function (d) { return numberFormat(d.close - d.open); }],
-    "volume"   // d["volume"], ie, a field accessor; capitalized automatically
-]);
-```
-**Example**  
-```js
-chart.columns([
-    ["Date",   // Specify an Object = [Label, Fn]
-        function (d) { return d.date; }],
-    ["Open",
-        function (d) { return numberFormat(d.open); }],
-    ["Close",
-        function (d) { return numberFormat(d.close); }],
-    ["Change",
-        function (d) { return numberFormat(d.close - d.open); }],
-    ["Volume",
-        function (d) { return d.volume; }]
-]);
-```
 <a name="dc.dataTable+sortBy"></a>
 #### dataTable.sortBy ⇒ <code>function</code> &#124; <code>[dataTable](#dc.dataTable)</code>
 Get or set sort-by function. This function works as a value accessor at row level and returns a
@@ -2850,7 +3098,8 @@ chart.sortBy(function(d) {
 ```
 <a name="dc.dataTable+order"></a>
 #### dataTable.order ⇒ <code>function</code> &#124; <code>[dataTable](#dc.dataTable)</code>
-Get or set sort order.
+Get or set sort order. If the order is `d3.ascending`, the data table will use
+`dimension().bottom()` to fetch the data; otherwise it will use `dimension().top()`
 
 **Kind**: instance property of <code>[dataTable](#dc.dataTable)</code>  
 **See**
