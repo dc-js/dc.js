@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Bar Chart Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+
+<p>Frequently asked question: how to display the average of each bin in a group?</p>
+
+<div id="test-run">
+  <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+    <a href="javascript:runChart.filterAll().redrawGroup();">reset</a>
+  </div>
+</div>
+<div id="test-expt">
+  <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+    <a href="javascript:exptChart.filterAll().redrawGroup();">reset</a>
+  </div>
+</div>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript">
+
+  function groupArrayAdd(keyfn) {
+      var bisect = d3.bisector(keyfn);
+      return function(elements, item) {
+          var pos = bisect.right(elements, keyfn(item));
+          elements.splice(pos, 0, item);
+          return elements;
+      };
+  }
+
+  function groupArrayRemove(keyfn) {
+      var bisect = d3.bisector(keyfn);
+      return function(elements, item) {
+          var pos = bisect.left(elements, keyfn(item));
+          if(keyfn(elements[pos])===keyfn(item))
+              elements.splice(pos, 1);
+          return elements;
+      };
+  }
+
+  function groupArrayInit() {
+      return [];
+  }
+
+  function arrayAverage(keyfn) {
+      return function(elements) {
+          return d3.sum(elements, keyfn) / elements.length;
+      };
+  }
+
+  var runChart = dc.barChart("#test-run"), exptChart = dc.barChart("#test-expt");
+  d3.csv("morley.csv", function(error, experiments) {
+      experiments.forEach(function(x) {
+          x.Speed = +x.Speed;
+      });
+
+      var ndx = crossfilter(experiments),
+          runKey = function(d) {return +d.Run;},
+          exptKey = function(d) {return +d.Expt;},
+          speedValue = function(d) {return d.Speed;},
+          runDimension = ndx.dimension(runKey),
+          exptDimension = ndx.dimension(exptKey),
+          runAvgGroup = runDimension.group().reduce(groupArrayAdd(exptKey), groupArrayRemove(exptKey), groupArrayInit),
+          exptAvgGroup = exptDimension.group().reduce(groupArrayAdd(runKey), groupArrayRemove(runKey), groupArrayInit);
+
+      function averageSpeed(kv) {
+          return arrayAverage(speedValue)(kv.value);
+      }
+
+      runChart
+          .width(768)
+          .height(480)
+          .x(d3.scale.ordinal())
+          .xUnits(dc.units.ordinal)
+          .valueAccessor(averageSpeed)
+          .elasticY(true)
+          .brushOn(true)
+          .controlsUseVisibility(true)
+          .dimension(runDimension)
+          .group(runAvgGroup);
+
+      exptChart
+          .width(768)
+          .height(480)
+          .x(d3.scale.ordinal())
+          .xUnits(dc.units.ordinal)
+          .valueAccessor(averageSpeed)
+          .elasticY(true)
+          .brushOn(true)
+          .controlsUseVisibility(true)
+          .dimension(exptDimension)
+          .group(exptAvgGroup);
+
+      dc.renderAll();
+  });
+
+</script>
+
+</body>
+</html>
