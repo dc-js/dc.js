@@ -188,7 +188,7 @@ module.exports = function (grunt) {
                     browsers: [
                         {
                             browserName: 'firefox',
-                            version: '42.0',
+                            version: '43.0',
                             platform: 'Linux'
                         },
                         {
@@ -199,6 +199,11 @@ module.exports = function (grunt) {
                         {
                             browserName: 'internet explorer',
                             version: '11.0',
+                            platform: 'Windows 10'
+                        },
+                        {
+                            browserName: 'MicrosoftEdge',
+                            version: '20.10240',
                             platform: 'Windows 10'
                         }
                     ],
