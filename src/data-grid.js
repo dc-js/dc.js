@@ -8,7 +8,7 @@
  *
  * Examples:
  * - {@link http://europarl.me/dc.js/web/ep/index.html List of members of the european parliament}
- * @name dataGrid
+ * @namespace dataGrid
  * @memberof dc
  * @mixes dc.baseMixin
  * @param {String|node|d3.selection} parent - Any valid
@@ -106,7 +106,7 @@ dc.dataGrid = function (parent, chartGroup) {
     /**
      * Get or set the index of the beginning slice which determines which entries get displayed by the widget.
      * Useful when implementing pagination.
-     * @name beginSlice
+     * @method beginSlice
      * @memberof dc.dataGrid
      * @instance
      * @param {Number} [beginSlice=0]
@@ -124,7 +124,7 @@ dc.dataGrid = function (parent, chartGroup) {
     /**
      * Get or set the index of the end slice which determines which entries get displayed by the widget
      * Useful when implementing pagination.
-     * @name endSlice
+     * @method endSlice
      * @memberof dc.dataGrid
      * @instance
      * @param {Number} [endSlice]
@@ -141,7 +141,7 @@ dc.dataGrid = function (parent, chartGroup) {
 
     /**
      * Get or set the grid size which determines the number of items displayed by the widget.
-     * @name size
+     * @method size
      * @memberof dc.dataGrid
      * @instance
      * @param {Number} [size=999]
@@ -160,7 +160,7 @@ dc.dataGrid = function (parent, chartGroup) {
      * Get or set the function that formats an item. The data grid widget uses a
      * function to generate dynamic html. Use your favourite templating engine or
      * generate the string directly.
-     * @name html
+     * @method html
      * @memberof dc.dataGrid
      * @instance
      * @example
@@ -179,7 +179,7 @@ dc.dataGrid = function (parent, chartGroup) {
 
     /**
      * Get or set the function that formats a group label.
-     * @name htmlGroup
+     * @method htmlGroup
      * @memberof dc.dataGrid
      * @instance
      * @example
@@ -199,7 +199,7 @@ dc.dataGrid = function (parent, chartGroup) {
     /**
      * Get or set sort-by function. This function works as a value accessor at the item
      * level and returns a particular field to be sorted.
-     * @name sortBy
+     * @method sortBy
      * @memberof dc.dataGrid
      * @instance
      * @example
@@ -220,7 +220,7 @@ dc.dataGrid = function (parent, chartGroup) {
 
     /**
      * Get or set sort order function.
-     * @name order
+     * @method order
      * @memberof dc.dataGrid
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_ascending d3.ascending}

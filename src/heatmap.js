@@ -1,6 +1,6 @@
 /**
  * A heat map is matrix that represents the values of two dimensions of data using colors.
- * @name heatMap
+ * @namespace heatMap
  * @memberof dc
  * @mixes dc.colorMixin
  * @mixes dc.marginMixin
@@ -42,7 +42,7 @@ dc.heatMap = function (parent, chartGroup) {
     /**
      * Set or get the column label function. The chart class uses this function to render
      * column labels on the X axis. It is passed the column name.
-     * @name colsLabel
+     * @method colsLabel
      * @memberof dc.heatMap
      * @instance
      * @example
@@ -63,7 +63,7 @@ dc.heatMap = function (parent, chartGroup) {
     /**
      * Set or get the row label function. The chart class uses this function to render
      * row labels on the Y axis. It is passed the row name.
-     * @name rowsLabel
+     * @method rowsLabel
      * @memberof dc.heatMap
      * @instance
      * @example
@@ -128,7 +128,7 @@ dc.heatMap = function (parent, chartGroup) {
      * Gets or sets the values used to create the rows of the heatmap, as an array. By default, all
      * the values will be fetched from the data using the value accessor, and they will be sorted in
      * ascending order.
-     * @name rows
+     * @method rows
      * @memberof dc.heatMap
      * @instance
      * @param  {Array<String|Number>} [rows]
@@ -152,7 +152,7 @@ dc.heatMap = function (parent, chartGroup) {
      * Gets or sets the keys used to create the columns of the heatmap, as an array. By default, all
      * the values will be fetched from the data using the key accessor, and they will be sorted in
      * ascending order.
-     * @name cols
+     * @method cols
      * @memberof dc.heatMap
      * @instance
      * @param  {Array<String|Number>} [cols]
@@ -274,7 +274,7 @@ dc.heatMap = function (parent, chartGroup) {
     /**
      * Gets or sets the handler that fires when an individual cell is clicked in the heatmap.
      * By default, filtering of the cell will be toggled.
-     * @name boxOnClick
+     * @method boxOnClick
      * @memberof dc.heatMap
      * @instance
      * @example
@@ -302,7 +302,7 @@ dc.heatMap = function (parent, chartGroup) {
      * Gets or sets the handler that fires when a column tick is clicked in the x axis.
      * By default, if any cells in the column are unselected, the whole column will be selected,
      * otherwise the whole column will be unselected.
-     * @name xAxisOnClick
+     * @method xAxisOnClick
      * @memberof dc.heatMap
      * @instance
      * @param  {Function} [handler]
@@ -321,7 +321,7 @@ dc.heatMap = function (parent, chartGroup) {
      * Gets or sets the handler that fires when a row tick is clicked in the y axis.
      * By default, if any cells in the row are unselected, the whole row will be selected,
      * otherwise the whole row will be unselected.
-     * @name yAxisOnClick
+     * @method yAxisOnClick
      * @memberof dc.heatMap
      * @instance
      * @param  {Function} [handler]
@@ -338,7 +338,7 @@ dc.heatMap = function (parent, chartGroup) {
 
     /**
      * Gets or sets the X border radius.  Set to 0 to get full rectangles.
-     * @name xBorderRadius
+     * @method xBorderRadius
      * @memberof dc.heatMap
      * @instance
      * @param  {Number} [xBorderRadius=6.75]
@@ -355,7 +355,7 @@ dc.heatMap = function (parent, chartGroup) {
 
     /**
      * Gets or sets the Y border radius.  Set to 0 to get full rectangles.
-     * @name yBorderRadius
+     * @method yBorderRadius
      * @memberof dc.heatMap
      * @instance
      * @param  {Number} [yBorderRadius=6.75]

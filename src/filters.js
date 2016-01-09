@@ -14,7 +14,7 @@
  *
  * Currently these filter objects are also arrays, but this is not a requirement. Custom filters
  * can be used as long as they have the properties above.
- * @name filters
+ * @namespace filters
  * @memberof dc
  * @type {{}}
  */

@@ -2,7 +2,7 @@
  * A display of a single numeric value.
  * Unlike other charts, you do not need to set a dimension. Instead a group object must be provided and
  * a valueAccessor that returns a single value.
- * @name numberDisplay
+ * @namespace numberDisplay
  * @memberof dc
  * @mixes dc.baseMixin
  * @example
@@ -30,7 +30,7 @@ dc.numberDisplay = function (parent, chartGroup) {
      * - one: HTML template to use if the number is 1
      * - zero: HTML template to use if the number is 0
      * - some: HTML template to use otherwise
-     * @name html
+     * @method html
      * @memberof dc.numberDisplay
      * @instance
      * @example
@@ -68,7 +68,7 @@ dc.numberDisplay = function (parent, chartGroup) {
 
     /**
      * Calculate and return the underlying value of the display
-     * @name value
+     * @method value
      * @memberof dc.numberDisplay
      * @instance
      * @return {Number}
@@ -121,7 +121,7 @@ dc.numberDisplay = function (parent, chartGroup) {
 
     /**
      * Get or set a function to format the value for the display.
-     * @name formatNumber
+     * @method formatNumber
      * @memberof dc.numberDisplay
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/Formatting d3.format}

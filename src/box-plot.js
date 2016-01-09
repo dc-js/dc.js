@@ -3,7 +3,7 @@
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
- * @name boxPlot
+ * @namespace boxPlot
  * @memberof dc
  * @mixes dc.coordinateGridMixin
  * @example
@@ -74,7 +74,7 @@ dc.boxPlot = function (parent, chartGroup) {
      * Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
      * See the {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands d3 docs}
      * for a visual description of how the padding is applied.
-     * @name boxPadding
+     * @method boxPadding
      * @memberof dc.boxPlot
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands d3.scale.ordinal.rangeBands}
@@ -89,7 +89,7 @@ dc.boxPlot = function (parent, chartGroup) {
      * Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
      * or on charts with a custom {@link #dc.boxPlot+boxWidth .boxWidth}. Will pad the width by
      * `padding * barWidth` on each side of the chart.
-     * @name outerPadding
+     * @method outerPadding
      * @memberof dc.boxPlot
      * @instance
      * @param {Number} [padding=0.5]
@@ -108,7 +108,7 @@ dc.boxPlot = function (parent, chartGroup) {
      * chart.boxWidth(10);
      * // Using function
      * chart.boxWidth((innerChartWidth, xUnits) { ... });
-     * @name boxWidth
+     * @method boxWidth
      * @memberof dc.boxPlot
      * @instance
      * @param {Number|Function} [boxWidth=0.5]
@@ -220,7 +220,7 @@ dc.boxPlot = function (parent, chartGroup) {
      * @example
      * // format ticks to 2 decimal places
      * chart.tickFormat(d3.format('.2f'));
-     * @name tickFormat
+     * @method tickFormat
      * @memberof dc.boxPlot
      * @instance
      * @param {Function} [tickFormat]

@@ -5,7 +5,7 @@
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
- * @name legend
+ * @namespace legend
  * @memberof dc
  * @example
  * chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
@@ -114,7 +114,7 @@ dc.legend = function () {
 
     /**
      * Set or get x coordinate for legend widget.
-     * @name x
+     * @method x
      * @memberof dc.legend
      * @instance
      * @param  {Number} [x=0]
@@ -131,7 +131,7 @@ dc.legend = function () {
 
     /**
      * Set or get y coordinate for legend widget.
-     * @name y
+     * @method y
      * @memberof dc.legend
      * @instance
      * @param  {Number} [y=0]
@@ -148,7 +148,7 @@ dc.legend = function () {
 
     /**
      * Set or get gap between legend items.
-     * @name gap
+     * @method gap
      * @memberof dc.legend
      * @instance
      * @param  {Number} [gap=5]
@@ -165,7 +165,7 @@ dc.legend = function () {
 
     /**
      * Set or get legend item height.
-     * @name itemHeight
+     * @method itemHeight
      * @memberof dc.legend
      * @instance
      * @param  {Number} [itemHeight=12]
@@ -182,7 +182,7 @@ dc.legend = function () {
 
     /**
      * Position legend horizontally instead of vertically.
-     * @name horizontal
+     * @method horizontal
      * @memberof dc.legend
      * @instance
      * @param  {Boolean} [horizontal=false]
@@ -199,7 +199,7 @@ dc.legend = function () {
 
     /**
      * Maximum width for horizontal legend.
-     * @name legendWidth
+     * @method legendWidth
      * @memberof dc.legend
      * @instance
      * @param  {Number} [legendWidth=500]
@@ -216,7 +216,7 @@ dc.legend = function () {
 
     /**
      * legendItem width for horizontal legend.
-     * @name itemWidth
+     * @method itemWidth
      * @memberof dc.legend
      * @instance
      * @param  {Number} [itemWidth=70]
@@ -234,7 +234,7 @@ dc.legend = function () {
     /**
      * Turn automatic width for legend items on or off. If true, {@link #dc.legend+itemWidth itemWidth} is ignored.
      * This setting takes into account {@link #dc.legend+gap gap}.
-     * @name autoItemWidth
+     * @method autoItemWidth
      * @memberof dc.legend
      * @instance
      * @param  {Boolean} [autoItemWidth=false]
