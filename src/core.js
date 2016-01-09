@@ -110,7 +110,7 @@ dc.deregisterAllCharts = function (group) {
  * Clear all filters on all charts within the given chart group. If the chart group is not given then
  * only charts that belong to the default chart group will be reset.
  * @memberof dc
- * @name filterAll
+ * @method filterAll
  * @param {String} [group]
  */
 dc.filterAll = function (group) {
@@ -124,7 +124,7 @@ dc.filterAll = function (group) {
  * Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
  * not given then only charts that belong to the default chart group will be reset.
  * @memberof dc
- * @name refocusAll
+ * @method refocusAll
  * @param {String} [group]
  */
 dc.refocusAll = function (group) {
@@ -140,7 +140,7 @@ dc.refocusAll = function (group) {
  * Re-render all charts belong to the given chart group. If the chart group is not given then only
  * charts that belong to the default chart group will be re-rendered.
  * @memberof dc
- * @name renderAll
+ * @method renderAll
  * @param {String} [group]
  */
 dc.renderAll = function (group) {
@@ -160,7 +160,7 @@ dc.renderAll = function (group) {
  * when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
  * from scratch.
  * @memberof dc
- * @name redrawAll
+ * @method redrawAll
  * @param {String} [group]
  */
 dc.redrawAll = function (group) {
@@ -230,7 +230,7 @@ dc.afterTransition = function (transition, callback) {
 };
 
 /**
- * @name units
+ * @namespace units
  * @memberof dc
  * @type {{}}
  */
@@ -241,7 +241,7 @@ dc.units = {};
  * {@link #dc.coordinateGridMixin Coordinate Grid Chart} and should
  * be used when the x values are a sequence of integers.
  * It is a function that counts the number of integers in the range supplied in its start and end parameters.
- * @name integers
+ * @method integers
  * @memberof dc.units
  * @see {@link #dc.coordinateGridMixin+xUnits coordinateGridMixin.xUnits}
  * @example
@@ -260,7 +260,7 @@ dc.units.integers = function (start, end) {
  * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales d3.scale.ordinal} to
  * {@link #dc.coordinateGridMixin+x .x}.
  * It just returns the domain passed to it, which for ordinal charts is an array of all values.
- * @name ordinal
+ * @method ordinal
  * @memberof dc.units
  * @see {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales d3.scale.ordinal}
  * @see {@link #dc.coordinateGridMixin+xUnits coordinateGridMixin.xUnits}
@@ -278,7 +278,7 @@ dc.units.ordinal = function (start, end, domain) {
 };
 
 /**
- * @name fp
+ * @namespace fp
  * @memberof dc.units
  * @type {{}}
  */
@@ -289,7 +289,7 @@ dc.units.fp = {};
  * numbers with the given precision.
  * The returned function determines how many values at the given precision will fit into the range
  * supplied in its start and end parameters.
- * @name precision
+ * @method precision
  * @memberof dc.units.fp
  * @see {@link #dc.coordinateGridMixin+xUnits coordinateGridMixin.xUnits}
  * @example

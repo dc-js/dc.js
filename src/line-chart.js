@@ -4,7 +4,7 @@
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
- * @name lineChart
+ * @namespace lineChart
  * @memberof dc
  * @mixes dc.stackMixin
  * @mixes dc.coordinateGridMixin
@@ -77,7 +77,7 @@ dc.lineChart = function (parent, chartGroup) {
      * {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_interpolate d3.svg.line.interpolate} and
      * {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#area_interpolate d3.svg.area.interpolate},
      * where you can find a complete list of valid arguments
-     * @name interpolate
+     * @method interpolate
      * @memberof dc.lineChart
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_interpolate d3.svg.line.interpolate}
@@ -99,7 +99,7 @@ dc.lineChart = function (parent, chartGroup) {
      * This parameter further customizes the interpolation behavior.  It is passed to
      * {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_tension d3.svg.line.tension} and
      * {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#area_tension d3.svg.area.tension}.
-     * @name tension
+     * @method tension
      * @memberof dc.lineChart
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_interpolate d3.svg.line.interpolate}
@@ -125,7 +125,7 @@ dc.lineChart = function (parent, chartGroup) {
      * Note: crossfilter will sometimes coerce nulls to 0, so you may need to carefully write
      * custom reduce functions to get this to work, depending on your data. See
      * https://github.com/dc-js/dc.js/issues/615#issuecomment-49089248
-     * @name defined
+     * @method defined
      * @memberof dc.lineChart
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_defined d3.svg.line.defined}
@@ -144,7 +144,7 @@ dc.lineChart = function (parent, chartGroup) {
     /**
      * Set the line's d3 dashstyle. This value becomes the 'stroke-dasharray' of line. Defaults to empty
      * array (solid line).
-     * @name dashStyle
+     * @method dashStyle
      * @memberof dc.lineChart
      * @instance
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray stroke-dasharray}
@@ -166,7 +166,7 @@ dc.lineChart = function (parent, chartGroup) {
     /**
      * Get or set render area flag. If the flag is set to true then the chart will render the area
      * beneath each line and the line chart effectively becomes an area chart.
-     * @name renderArea
+     * @method renderArea
      * @memberof dc.lineChart
      * @instance
      * @param  {Boolean} [renderArea=false]
@@ -362,7 +362,7 @@ dc.lineChart = function (parent, chartGroup) {
      * Turn on/off the mouseover behavior of an individual data point which renders a circle and x/y axis
      * dashed lines back to each respective axis.  This is ignored if the chart
      * {@link #dc.coordinateGridMixin+brushOn brush} is on
-     * @name xyTipsOn
+     * @method xyTipsOn
      * @memberof dc.lineChart
      * @instance
      * @param  {Boolean} [xyTipsOn=false]
@@ -379,7 +379,7 @@ dc.lineChart = function (parent, chartGroup) {
 
     /**
      * Get or set the radius (in px) for dots displayed on the data points.
-     * @name dotRadius
+     * @method dotRadius
      * @memberof dc.lineChart
      * @instance
      * @param  {Number} [dotRadius=5]
@@ -399,7 +399,7 @@ dc.lineChart = function (parent, chartGroup) {
      * If `options` is falsy, it disables data point rendering.
      *
      * If no `options` are provided, the current `options` values are instead returned.
-     * @name renderDataPoints
+     * @method renderDataPoints
      * @memberof dc.lineChart
      * @instance
      * @example

@@ -13,7 +13,7 @@ dc.marginMixin = function (_chart) {
     /**
      * Get or set the margins for a particular coordinate grid chart instance. The margins is stored as
      * an associative Javascript array.
-     * @name margins
+     * @method margins
      * @memberof dc.marginMixin
      * @instance
      * @example
