@@ -11,6 +11,7 @@
     <strong>Monthly Index Abs Move &amp; Volume Chart</strong>
 </div>
 <div id="monthly-move-chart"></div>
+<div id="gain-loss-chart"></div>
 
 <script type="text/javascript" src="http://d3js.org/queue.v1.min.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
@@ -18,6 +19,7 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
     var moveChart = dc.compositeChart("#monthly-move-chart");
+var gainOrLossChart = dc.pieChart('#gain-loss-chart');
 
     d3.csv("monthly-move.csv", function (error, data) {
         var dateFormat = d3.time.format("%m/%d/%Y");
@@ -89,6 +91,36 @@
                 .yAxisLabel("Monthly Index Average")
                 .rightYAxisLabel("Monthly Index Move")
                 .renderHorizontalGridLines(true);
+
+    // Create categorical dimension
+    var gainOrLoss = ndx.dimension(function (d) {
+        return d.open > d.close ? 'Loss' : 'Gain';
+    });
+    // Produce counts records in the dimension
+    var gainOrLossGroup = gainOrLoss.group();
+
+            gainOrLossChart /* dc.pieChart('#gain-loss-chart', 'chartGroup') */
+    // (_optional_) define chart width, `default = 200`
+        .width(180)
+    // (optional) define chart height, `default = 200`
+        .height(180)
+    // Define pie radius
+        .radius(80)
+    // Set dimension
+        .dimension(gainOrLoss)
+    // Set group
+        .group(gainOrLossGroup)
+    // (_optional_) by default pie chart will use `group.key` as its label but you can overwrite it with a closure.
+        .label(function (d) {
+            if (gainOrLossChart.hasFilter() && !gainOrLossChart.hasFilter(d.key)) {
+                return d.key + '(0%)';
+            }
+            var label = d.key;
+            if (all.value()) {
+                label += '(' + Math.floor(d.value / all.value() * 100) + '%)';
+            }
+            return label;
+        })
 
         dc.renderAll();
     });

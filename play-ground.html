@@ -766,7 +766,8 @@ compositeChartDate.width(500)
         .dimension(dateDimension)
         .group(dateIdSumGroup, "Id Sum")
         .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
-        .xUnits(d3.time.days)
+    .xUnits(d3.time.days)
+    .elasticY(true)
         .shareColors(true)
         .compose([
             dc.barChart(compositeChartDate).group(dateValueSumGroup, "Value Sum"),
