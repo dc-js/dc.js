@@ -46,6 +46,9 @@
               .margins({left: 50, top: 10, right: 10, bottom: 20})
               .brushOn(false)
               .clipPadding(10)
+              .title(function(d) {
+                  return d.key + '[' + this.layer + ']: ' + d.value[this.layer];
+              })
               .yAxisLabel("This is the Y Axis!")
               .dimension(runDimension)
               .group(speedSumGroup, "1", sel_stack('1'))
