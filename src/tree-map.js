@@ -53,10 +53,10 @@ dc.treeMap = function (parent, chartGroup) {
     var _rootName = 'Data',
         _mode = 'squarify',
         _breadcrumbHeight = 20,
-        _breadcrumbPadding = 2,
         _breadcrumbColor = 'orange',
         _breadcrumbHoverColor = '#ee9700',
-        _padding = 3,
+        _treeMargins = {left: 0, right: 0, bottom: 0, top: 2},
+        _treeGap = 3,
         _sizeAggregator = {
             reduceAdd: function (p, v) { return p + v; },
             reduceInitial: function () { return 0; }
@@ -92,17 +92,17 @@ dc.treeMap = function (parent, chartGroup) {
      * @private
      * @param {d3.scale.linear} x
      * @param {d3.scale.linear} y
-     * @param {Number} padding
+     * @param {Number} gap
      * @return {Function}
      */
-    function selectionPosition (x, y, padding) {
+    function selectionPosition (x, y, gap) {
         /**
          * @this {d3.selection} the rect element
          */
-        padding = padding || 0;
+        gap = gap || 0;
         return function () {
-            this.attr('x', function (d) { return x(d.x) + padding / 2; })
-                .attr('y', function (d) { return y(d.y) + padding / 2; });
+            this.attr('x', function (d) { return x(d.x) + gap / 2; })
+                .attr('y', function (d) { return y(d.y) + gap / 2; });
         };
     }
 
@@ -112,17 +112,17 @@ dc.treeMap = function (parent, chartGroup) {
      * @private
      * @param {d3.scale.linear} x
      * @param {d3.scale.linear} y
-     * @param {Number} padding
+     * @param {Number} gap
      * @return {Function}
      */
-    function selectionSize (x, y, padding) {
+    function selectionSize (x, y, gap) {
         /**
          * @this {d3.selection} the rect element
          */
-        padding = padding || 0;
+        gap = gap || 0;
         return function () {
-            this.attr('width', function (d) { return Math.max(0, x(d.x + d.dx) - x(d.x) - padding / 2); })
-                .attr('height', function (d) { return Math.max(0, y(d.y + d.dy) - y(d.y) - padding / 2); });
+            this.attr('width', function (d) { return Math.max(0, x(d.x + d.dx) - x(d.x) - gap / 2); })
+                .attr('height', function (d) { return Math.max(0, y(d.y + d.dy) - y(d.y) - gap / 2); });
         };
     }
 
@@ -148,8 +148,8 @@ dc.treeMap = function (parent, chartGroup) {
         if (!node) {
             return;
         }
-        var sPosition = selectionPosition(_x, _y, _padding),
-            sSize = selectionSize(_x, _y, _padding);
+        var sPosition = selectionPosition(_x, _y, _treeGap),
+            sSize = selectionSize(_x, _y, _treeGap);
 
         var _g = _chart.svg()
             .select('g.' + TREE_MAP_CLASS);
@@ -187,8 +187,7 @@ dc.treeMap = function (parent, chartGroup) {
             .call(sPosition)
             .call(sSize)
             .style('fill-opacity', 0)
-            .append('title')
-            .text(_chart.title());
+            .append('title');
         childrenEnter.append('text')
             .attr('dx', '0.5em')
             .attr('dy', '1.3em')
@@ -216,6 +215,8 @@ dc.treeMap = function (parent, chartGroup) {
                     .remove();
             });
 
+        children.select('title').text(_chart.title());
+
         var childrenExit = children.exit()
             .on('mouseover', null)
             .on('mouseout', null);
@@ -224,9 +225,9 @@ dc.treeMap = function (parent, chartGroup) {
         // Update domain
         _x = _x.domain([node.x, node.x + node.dx]);
         _y = _y.domain([node.y, node.y + node.dy]);
-        _chart.colorDomain(node.values.map(function (d) { return d._color; }));
-        sPosition = selectionPosition(_x, _y, _padding);
-        sSize = selectionSize(_x, _y, _padding);
+        _chart.colorDomain(d3.extent(node.values, dc.pluck('_color')));
+        sPosition = selectionPosition(_x, _y, _treeGap);
+        sSize = selectionSize(_x, _y, _treeGap);
 
         /**
          * Transition a selection set of tree nodes
@@ -245,7 +246,11 @@ dc.treeMap = function (parent, chartGroup) {
             transition.select('text')
                 .call(sPosition)
                 .style('fill-opacity', function (d) {
-                    return (textOpacity && _minimumRectWidthForText < _x(d.x + d.dx) - _x(d.x)) ? textOpacity : 0;
+                    return (_chart.renderLabel() &&
+                    textOpacity &&
+                    _minimumRectWidthForText < _x(d.x + d.dx) - _x(d.x)) ?
+                        textOpacity :
+                        0;
                 });
             return transition;
         }
@@ -359,7 +364,14 @@ dc.treeMap = function (parent, chartGroup) {
         keyAccessors.forEach(nestedData.key);
         var rootNode = {
             key: rootName,
-            values: nestedData.entries(data),
+            values: nestedData.entries(data.map(function (d) {
+                // Clone the data as we'll modify it and don't want to edit
+                // the data in memory.
+                return Object.keys(d).reduce(function (acc, key) {
+                    acc[key] = d[key];
+                    return acc;
+                }, {});
+            })),
             x: 0,
             y: 0,
             dx: 1,
@@ -379,9 +391,9 @@ dc.treeMap = function (parent, chartGroup) {
         // Resize the chart accordingly
         var height = _chart.effectiveHeight(),
             width = _chart.effectiveWidth(),
-            treeOffset = _breadcrumbHeight + _breadcrumbPadding;
-        _x = _x.range([0, width]);
-        _y = _y.range([0, height - treeOffset]);
+            treeOffset = _breadcrumbHeight + _treeMargins.top;
+        _x = _x.range([0, width - (_treeMargins.left + _treeMargins.right)]);
+        _y = _y.range([0, height - treeOffset - _treeMargins.bottom]);
         var treemapG = _chart.svg().select('g.' + TREE_MAP_CLASS)
             .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
         var breadcrumbsG = treemapG.select('g.' + BREAD_CRUMB_CLASS);
@@ -391,7 +403,7 @@ dc.treeMap = function (parent, chartGroup) {
         breadcrumbsG.select('text')
             .attr('y', _breadcrumbHeight / 2);
         treemapG.select('g.' + DEPTH_CLASS)
-            .attr('transform', 'translate(0,' + treeOffset + ')');
+            .attr('transform', 'translate(' + _treeMargins.left + ',' + treeOffset + ')');
 
         // Update treemap layout
         _treeMap.mode(_mode);
@@ -502,30 +514,30 @@ dc.treeMap = function (parent, chartGroup) {
     };
 
     /**
-     * Get/set the breadcrumb padding
-     * @param {Number} [breadcrumbPadding=2]
+     * Get/set the gap between each treemap node
+     * @param {Number} [treeGap={left: 0, right: 0, bottom: 0, top: 2}]
      * @return {Number}
      * @return {dc.treeMap}
      */
-    _chart.breadcrumbPadding = function (breadcrumbPadding) {
+    _chart.treeGap = function (treeGap) {
         if (!arguments.length) {
-            return _breadcrumbPadding;
+            return _treeGap;
         }
-        _breadcrumbPadding = breadcrumbPadding;
+        _treeGap = treeGap;
         return _chart;
     };
 
     /**
-     * Get/set the padding between each treemap node
-     * @param {Number} [padding=3]
+     * Get/set the margins for the tree
+     * @param {Number} [treeMargins={}]
      * @return {Number}
      * @return {dc.treeMap}
      */
-    _chart.padding = function (padding) {
+    _chart.treeMargins = function (treeMargins) {
         if (!arguments.length) {
-            return _padding;
+            return _treeMargins;
         }
-        _padding = padding;
+        _treeMargins = treeMargins;
         return _chart;
     };
 
