@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>TreeMap</title>
+    <link rel="stylesheet" type="text/css" href="./dc.css">
+</head>
+<body>
+<div id="chart1" style="height: 400px; width: 400px;"></div>
+<script src="./bower_components/crossfilter/crossfilter.js"></script>
+<script src="./bower_components/d3/d3.js"></script>
+<script src="./dc.js"></script>
+<script>
+    var data = [
+        {
+            "TopicCLusterId": 1,
+            "word": "test",
+            "frequency": 2
+        },
+        {
+            "TopicCLusterId": 1,
+            "word": "test1",
+            "frequency": 3
+        },
+        {
+            "TopicCLusterId": 1,
+            "word": "test2",
+            "frequency": 3
+        },
+        {
+            "TopicCLusterId": 2,
+            "word": "test",
+            "frequency": 1
+        },
+        {
+            "TopicCLusterId": 2,
+            "word": "test1",
+            "frequency": 1
+        },
+        {
+            "TopicCLusterId": 2,
+            "word": "test2",
+            "frequency": 5
+        },
+        {
+            "TopicCLusterId": 4,
+            "word": "test",
+            "frequency": 2
+        },
+        {
+            "TopicCLusterId": 4,
+            "word": "test1",
+            "frequency": 3
+        },
+        {
+            "TopicCLusterId": 4,
+            "word": "test2",
+            "frequency": 3
+        },
+        {
+            "TopicCLusterId": 4,
+            "word": "test",
+            "frequency": 1
+        },
+        {
+            "TopicCLusterId": 4,
+            "word": "test1",
+            "frequency": 1
+        },
+        {
+            "TopicCLusterId": 4,
+            "word": "test2",
+            "frequency": 5
+        }
+    ];
+
+    var ndx = crossfilter(data),
+            dimension = ndx.dimension(function (d) { return [d.TopicCLusterId, d.word]; }),
+            group = dimension.group().reduceSum(function (d) { return d.frequency; });
+    var chart = dc.treeMap('#chart1')
+            .dimension(dimension)
+            .group(group)
+            .keyAccessor([
+                function (d) { return d.key[1]; },
+                function (d) { return d.key[0]; }
+            ])
+            .renderLabel(true);
+    chart.colorAccessor(chart.valueAccessor())
+            .render();
+</script>
+</body>
