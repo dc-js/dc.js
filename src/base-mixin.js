@@ -32,7 +32,7 @@ dc.baseMixin = function (_chart) {
         return (height && height > _minHeight) ? height : _minHeight;
     };
     var _heightCalc = _defaultHeightCalc;
-    var _width, _height;
+    var _width, _height, _responsive = false;
 
     var _keyAccessor = dc.pluck('key');
     var _valueAccessor = dc.pluck('value');
@@ -207,6 +207,23 @@ dc.baseMixin = function (_chart) {
             return _minHeight;
         }
         _minHeight = minHeight;
+        return _chart;
+    };
+
+    /**
+     * Set or get the responsive behavior of the chart. 
+     *
+     * When the chart is responsive, it will automatically fit its container's dimension. For backward compatibilty, chart are not responsive by  default. 
+     * 
+     * @param {Boolean} [responsive]
+     * @return {Boolean}
+     * @return {dc.baseMixin}
+     */
+    _chart.responsive = function (responsive) {
+        if (!arguments.length) {
+            return _responsive;
+        }
+        _responsive = responsive;
         return _chart;
     };
 
@@ -466,6 +483,8 @@ dc.baseMixin = function (_chart) {
         return _chart;
     };
 
+
+
     /**
      * Returns the top SVGElement for this specific chart. You can also pass in a new SVGElement,
      * however this is usually handled by dc internally. Resetting the SVGElement on a chart outside
@@ -499,11 +518,28 @@ dc.baseMixin = function (_chart) {
         return generateSvg();
     };
 
+
+
     function sizeSvg () {
         if (_svg) {
-            _svg
-                .attr('width', _chart.width())
-                .attr('height', _chart.height());
+            if(_responsive) {
+                _svg
+                    .attr({
+                        width : '100%',
+                        height : '100%',
+                        viewBox : '0 0 ' + _chart.width() + ' ' + _chart.height()
+                        });
+                _root.classed(dc.constants.RESPONSIVE_CLASS, true);   
+            }
+            else {
+                _svg
+                    .attr({
+                        width : _chart.width(),
+                        height : _chart.width(),
+                        viewBox : null
+                        });
+                _root.classed(dc.constants.RESPONSIVE_CLASS, false);   
+            }
         }
     }
 

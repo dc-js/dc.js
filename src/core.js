@@ -20,6 +20,7 @@ var dc = {
     version: '<%= conf.pkg.version %>',
     constants: {
         CHART_CLASS: 'dc-chart',
+        RESPONSIVE_CLASS: 'dc-responsive',
         DEBUG_GROUP_CLASS: 'debug',
         STACK_CLASS: 'stack',
         DESELECTED_CLASS: 'deselected',
