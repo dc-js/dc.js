@@ -535,7 +535,7 @@ dc.baseMixin = function (_chart) {
                 _svg
                     .attr({
                         width : _chart.width(),
-                        height : _chart.width(),
+                        height : _chart.height(),  
                         viewBox : null
                         });
                 _root.classed(dc.constants.RESPONSIVE_CLASS, false);   
