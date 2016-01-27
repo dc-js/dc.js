@@ -35,4 +35,4 @@ spec/index-browserify.html
 
 # font noise from some doc tool
 web/docs/public
-
+web/docs
