@@ -3046,23 +3046,23 @@ In the third example, we specify all fields using the `{label, format}` method:
 <pre><code>chart.columns([
     {
         label: "Date",
-        function (d) { return d.date; }
+        format: function (d) { return d.date; }
     },
     {
         label: "Open",
-        function (d) { return numberFormat(d.open); }
+        format: function (d) { return numberFormat(d.open); }
     },
     {
         label: "Close",
-        function (d) { return numberFormat(d.close); }
+        format: function (d) { return numberFormat(d.close); }
     },
     {
         label: "Change",
-        function (d) { return numberFormat(d.close - d.open); }
+        format: function (d) { return numberFormat(d.close - d.open); }
     },
     {
         label: "Volume",
-        function (d) { return d.volume; }
+        format: function (d) { return d.volume; }
     }
 ]);
 </code></pre>
