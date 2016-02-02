@@ -4337,8 +4337,7 @@ Gets or sets the Y border radius.  Set to 0 to get full rectangles.
 ### dc.boxPlot ⇒ <code>[boxPlot](#dc.boxPlot)</code>
 A box plot is a chart that depicts numerical data via their quartile ranges.
 Examples:
-- [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
-- [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
+- [Box plot demo](http://dc-js.github.io/dc.js/examples/box-plot.html)
 
 **Kind**: static property of <code>[dc](#dc)</code>  
 **Mixes**: <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
