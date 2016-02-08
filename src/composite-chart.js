@@ -120,27 +120,45 @@ dc.compositeChart = function (parent, chartGroup) {
         }
 
         if (_chart.alignYAxes() && left && right && (lyAxisMin < 0 || ryAxisMin < 0)) {
-            // both y axis are linear and at least one doesn't start at zero
-            var leftYRatio, rightYRatio;
+            return alignYAxisRanges(lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax);
+        }
+        return {
+            lyAxisMin: lyAxisMin,
+            lyAxisMax: lyAxisMax,
+            ryAxisMin: ryAxisMin,
+            ryAxisMax: ryAxisMax
+        };
+    }
 
-            if (lyAxisMin < 0) {
-                leftYRatio = lyAxisMax / lyAxisMin;
-            }
+    function alignYAxisRanges (lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax) {
+        // both y axis are linear and at least one doesn't start at zero
+        var leftYRatio, rightYRatio;
 
-            if (ryAxisMin < 0) {
-                rightYRatio = ryAxisMax / ryAxisMin;
-            }
+        if (lyAxisMin < 0) {
+            leftYRatio = lyAxisMax / lyAxisMin;
+        }
 
-            if (lyAxisMin < 0 && ryAxisMin < 0) {
-                if (leftYRatio < rightYRatio) {
-                    ryAxisMax = ryAxisMin * leftYRatio;
-                } else {
-                    lyAxisMax = lyAxisMin * rightYRatio;
-                }
-            } else if (lyAxisMin < 0) {
-                ryAxisMin = ryAxisMax / leftYRatio;
+        if (ryAxisMin < 0) {
+            rightYRatio = ryAxisMax / ryAxisMin;
+        }
+
+        if (lyAxisMin < 0 && ryAxisMin < 0) {
+            if (leftYRatio < rightYRatio) {
+                ryAxisMax = ryAxisMin * leftYRatio;
             } else {
-                lyAxisMin = lyAxisMax / (ryAxisMax / ryAxisMin);
+                lyAxisMax = lyAxisMin * rightYRatio;
+            }
+        } else if (lyAxisMin < 0) {
+            ryAxisMin = ryAxisMax / leftYRatio;
+            if (lyAxisMax < 0) {
+                lyAxisMax = -lyAxisMax;
+                ryAxisMin = -ryAxisMin;
+            }
+        } else {
+            lyAxisMin = lyAxisMax / rightYRatio;
+            if (ryAxisMax < 0) {
+                ryAxisMax = -ryAxisMax;
+                lyAxisMin = -lyAxisMin;
             }
         }
         return {
@@ -407,7 +425,7 @@ dc.compositeChart = function (parent, chartGroup) {
 
     /**
      * Get or set alignment between left and right y axes. A line connecting '0' on both y axis
-     * will be parallel to x axis.
+     * will be parallel to x axis. This only has effect when {@link #dc.coordinateGridMixin+elasticY elasticY} is true.
      * @name alignYAxes
      * @memberof dc.compositeChart
      * @instance
