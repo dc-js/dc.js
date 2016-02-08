@@ -48,6 +48,7 @@
     "grunt-jsdoc-to-markdown": "~1.1.1",
     "grunt-lib-phantomjs": "~0.7.1",
     "grunt-markdown": "~0.7.0",
+    "grunt-sass": "~1.1.0",
     "grunt-saucelabs": "~8.6.1",
     "grunt-shell": "~1.1.1",
     "grunt-template-jasmine-istanbul": "~0.3.2",
