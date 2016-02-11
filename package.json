@@ -2,7 +2,7 @@
   "name": "dc",
   "version": "2.0.0-beta.26",
   "license": "Apache-2.0",
-  "copyright": "2014",
+  "copyright": "2016",
   "description": "A multi-dimensional charting library built to work natively with crossfilter and rendered using d3.js ",
   "keywords": [
     "visualization",
