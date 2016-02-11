@@ -35,10 +35,17 @@ var dc = {
 /*jshint +W079*/
 
 /**
- * dc.chartRegistry maintains a mapping of all instantiated dc.js charts under a given or a default group
- * to facilitate rendering and filtering charts simultaneously using the functions dc.filterAll,
- * dc.refocusAll, renderAll, redrawAll.
+ * The dc.chartRegistry object maintains sets of all instantiated dc.js charts under named groups
+ * and the default group.
  *
+ * A chart group often corresponds to a crossfilter instance. It specifies
+ * the set of charts which should be updated when a filter changes on one of the charts or when the
+ * global functions {@link #dc.filterAll dc.filterAll}, {@link #dc.refocusAll dc.refocusAll},
+ * {@link #dc.renderAll dc.renderAll}, {@link #dc.redrawAll dc.redrawAll}, or chart functions
+ * {@link #dc.baseMixin+renderGroup baseMixin.renderGroup},
+ * {@link #dc.baseMixin+redrawGroup baseMixin.redrawGroup} are called.
+ *
+ * @memberof dc
  * @type {{has, register, deregister, clear, list}}
  */
 dc.chartRegistry = (function () {
@@ -60,7 +67,8 @@ dc.chartRegistry = (function () {
     return {
         /**
          * Determine if a given chart instance resides in any group in the registry.
-         * @param {*} chart dc.js chart instance
+         * @memberof dc.chartRegistry
+         * @param {Object} chart dc.js chart instance
          * @returns {Boolean}
          */
         has: function (chart) {
@@ -74,8 +82,9 @@ dc.chartRegistry = (function () {
 
         /**
          * Add given chart instance to the given group, creating the group if necessary.
-         * If no group is provided, a default group will be created using dc.constants.DEFAULT_CHART_GROUP.
-         * @param {*} chart dc.js chart instance
+         * If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
+         * @memberof dc.chartRegistry
+         * @param {Object} chart dc.js chart instance
          * @param {String} [group] Group name
          */
         register: function (chart, group) {
@@ -85,8 +94,9 @@ dc.chartRegistry = (function () {
 
         /**
          * Remove given chart instance from the given group, creating the group if necessary.
-         * If no group is provided, a default group will be created using dc.constants.DEFAULT_CHART_GROUP.
-         * @param {*} chart dc.js chart instance
+         * If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
+         * @memberof dc.chartRegistry
+         * @param {Object} chart dc.js chart instance
          * @param {String} [group] Group name
          */
         deregister: function (chart, group) {
@@ -101,6 +111,7 @@ dc.chartRegistry = (function () {
 
         /**
          * Clear given group if one is provided, otherwise clears all groups.
+         * @memberof dc.chartRegistry
          * @param {String} group Group name
          */
         clear: function (group) {
@@ -113,9 +124,10 @@ dc.chartRegistry = (function () {
 
         /**
          * Get an array of each chart instance in the given group.
-         * If no group is provided, the default group is returned.
+         * If no group is provided, the charts in the default group are returned.
+         * @memberof dc.chartRegistry
          * @param {String} [group] Group name
-         * @returns {*}
+         * @returns {Object}
          */
         list: function (group) {
             group = initializeChartGroup(group);
@@ -126,8 +138,10 @@ dc.chartRegistry = (function () {
 
 /**
  * Add given chart instance to the given group, creating the group if necessary.
- * If no group is provided, a default group will be created using dc.constants.DEFAULT_CHART_GROUP.
- * @param {*} chart dc.js chart instance
+ * If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
+ * @memberof dc
+ * @name registerChart
+ * @param {Object} chart dc.js chart instance
  * @param {String} [group] Group name
  */
 dc.registerChart = function (chart, group) {
@@ -136,8 +150,10 @@ dc.registerChart = function (chart, group) {
 
 /**
  * Remove given chart instance from the given group, creating the group if necessary.
- * If no group is provided, a default group will be created using dc.constants.DEFAULT_CHART_GROUP.
- * @param {*} chart dc.js chart instance
+ * If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
+ * @memberof dc
+ * @name deregisterChart
+ * @param {Object} chart dc.js chart instance
  * @param {String} [group] Group name
  */
 dc.deregisterChart = function (chart, group) {
@@ -146,7 +162,9 @@ dc.deregisterChart = function (chart, group) {
 
 /**
  * Determine if a given chart instance resides in any group in the registry.
- * @param {*} chart dc.js chart instance
+ * @memberof dc
+ * @name hasChart
+ * @param {Object} chart dc.js chart instance
  * @returns {Boolean}
  */
 dc.hasChart = function (chart) {
@@ -155,6 +173,8 @@ dc.hasChart = function (chart) {
 
 /**
  * Clear given group if one is provided, otherwise clears all groups.
+ * @memberof dc
+ * @name deregisterAllCharts
  * @param {String} group Group name
  */
 dc.deregisterAllCharts = function (group) {
