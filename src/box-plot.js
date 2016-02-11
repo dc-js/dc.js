@@ -1,5 +1,6 @@
 /**
  * A box plot is a chart that depicts numerical data via their quartile ranges.
+ *
  * Examples:
  * - {@link http://dc-js.github.io/dc.js/examples/box-plot-time.html Box plot time example}
  * - {@link http://dc-js.github.io/dc.js/examples/box-plot.html Box plot example}

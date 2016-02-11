@@ -5,6 +5,7 @@
  * - y axis position
  * - bubble radius
  * - color
+ *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  * - {@link http://dc-js.github.com/dc.js/vc/index.html US Venture Capital Landscape 2011}
