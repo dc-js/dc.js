@@ -45,6 +45,7 @@ var dc = {
  * {@link #dc.baseMixin+renderGroup baseMixin.renderGroup},
  * {@link #dc.baseMixin+redrawGroup baseMixin.redrawGroup} are called.
  *
+ * @namespace chartRegistry
  * @memberof dc
  * @type {{has, register, deregister, clear, list}}
  */
@@ -67,6 +68,7 @@ dc.chartRegistry = (function () {
     return {
         /**
          * Determine if a given chart instance resides in any group in the registry.
+         * @method has
          * @memberof dc.chartRegistry
          * @param {Object} chart dc.js chart instance
          * @returns {Boolean}
@@ -83,6 +85,7 @@ dc.chartRegistry = (function () {
         /**
          * Add given chart instance to the given group, creating the group if necessary.
          * If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
+         * @method register
          * @memberof dc.chartRegistry
          * @param {Object} chart dc.js chart instance
          * @param {String} [group] Group name
@@ -95,6 +98,7 @@ dc.chartRegistry = (function () {
         /**
          * Remove given chart instance from the given group, creating the group if necessary.
          * If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
+         * @method deregister
          * @memberof dc.chartRegistry
          * @param {Object} chart dc.js chart instance
          * @param {String} [group] Group name
@@ -111,6 +115,7 @@ dc.chartRegistry = (function () {
 
         /**
          * Clear given group if one is provided, otherwise clears all groups.
+         * @method clear
          * @memberof dc.chartRegistry
          * @param {String} group Group name
          */
@@ -125,9 +130,10 @@ dc.chartRegistry = (function () {
         /**
          * Get an array of each chart instance in the given group.
          * If no group is provided, the charts in the default group are returned.
+         * @method list
          * @memberof dc.chartRegistry
          * @param {String} [group] Group name
-         * @returns {Object}
+         * @returns {Array<Object>}
          */
         list: function (group) {
             group = initializeChartGroup(group);
@@ -140,7 +146,7 @@ dc.chartRegistry = (function () {
  * Add given chart instance to the given group, creating the group if necessary.
  * If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
  * @memberof dc
- * @name registerChart
+ * @method registerChart
  * @param {Object} chart dc.js chart instance
  * @param {String} [group] Group name
  */
@@ -152,7 +158,7 @@ dc.registerChart = function (chart, group) {
  * Remove given chart instance from the given group, creating the group if necessary.
  * If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
  * @memberof dc
- * @name deregisterChart
+ * @method deregisterChart
  * @param {Object} chart dc.js chart instance
  * @param {String} [group] Group name
  */
@@ -163,7 +169,7 @@ dc.deregisterChart = function (chart, group) {
 /**
  * Determine if a given chart instance resides in any group in the registry.
  * @memberof dc
- * @name hasChart
+ * @method hasChart
  * @param {Object} chart dc.js chart instance
  * @returns {Boolean}
  */
@@ -174,7 +180,7 @@ dc.hasChart = function (chart) {
 /**
  * Clear given group if one is provided, otherwise clears all groups.
  * @memberof dc
- * @name deregisterAllCharts
+ * @method deregisterAllCharts
  * @param {String} group Group name
  */
 dc.deregisterAllCharts = function (group) {
@@ -253,7 +259,7 @@ dc.redrawAll = function (group) {
  * If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
  * immediately
  * @memberof dc
- * @name disableTransitions
+ * @method disableTransitions
  * @type {Boolean}
  * @default false
  */
