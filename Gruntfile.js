@@ -168,7 +168,10 @@ module.exports = function (grunt) {
                     display: 'short',
                     summary: true,
                     specs:  '<%= conf.spec %>/*-spec.js',
-                    helpers: '<%= conf.spec %>/helpers/*.js',
+                    helpers: [
+                        '<%= conf.web %>/js/jasmine-jsreporter.js',
+                        '<%= conf.spec %>/helpers/*.js'
+                    ],
                     version: '2.0.0',
                     outfile: '<%= conf.spec %>/index-browserify.html',
                     keepRunner: true
