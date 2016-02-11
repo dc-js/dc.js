@@ -989,6 +989,9 @@ dc.baseMixin = function (_chart) {
      * chart.filter('Sunday');
      * // filter by a single age
      * chart.filter(18);
+     * // filter by range -- note the use of dc.filters.RangedFilter
+     * // which is different from regular crossfilter syntax ( dimension.filter([15,20]) )
+     * chart.filter(dc.filters.RangedFilter(15,20));
      * @param {*} [filter]
      * @return {dc.baseMixin}
      */
