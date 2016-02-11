@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-beta.25
+ *  dc 2.0.0-beta.26
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2015 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link #dc.baseMixin+svg .svg} and {@link #dc.coordinateGridMixin+xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 2.0.0-beta.25
+ * @version 2.0.0-beta.26
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-beta.25',
+    version: '2.0.0-beta.26',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -4747,12 +4747,8 @@ dc.pieChart = function (parent, chartGroup) {
         }
     }
 
-    function positionLabels (labelsEnter, arc) {
-        dc.transition(labelsEnter, _chart.transitionDuration())
-            .attr('transform', function (d) {
-                return labelPosition(d, arc);
-            })
-            .attr('text-anchor', 'middle')
+    _chart._applyLabelText = function (labels) {
+        labels
             .text(function (d) {
                 var data = d.data;
                 if ((sliceHasNoData(data) || sliceTooSmall(d)) && !isSelectedSlice(d)) {
@@ -4760,6 +4756,15 @@ dc.pieChart = function (parent, chartGroup) {
                 }
                 return _chart.label()(d.data);
             });
+    };
+
+    function positionLabels (labels, arc) {
+        _chart._applyLabelText(labels);
+        dc.transition(labels, _chart.transitionDuration())
+            .attr('transform', function (d) {
+                return labelPosition(d, arc);
+            })
+            .attr('text-anchor', 'middle');
     }
 
     function createLabels (pieData, arc) {
