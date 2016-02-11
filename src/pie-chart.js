@@ -155,12 +155,8 @@ dc.pieChart = function (parent, chartGroup) {
         }
     }
 
-    function positionLabels (labelsEnter, arc) {
-        dc.transition(labelsEnter, _chart.transitionDuration())
-            .attr('transform', function (d) {
-                return labelPosition(d, arc);
-            })
-            .attr('text-anchor', 'middle')
+    _chart._applyLabelText = function (labels) {
+        labels
             .text(function (d) {
                 var data = d.data;
                 if ((sliceHasNoData(data) || sliceTooSmall(d)) && !isSelectedSlice(d)) {
@@ -168,6 +164,15 @@ dc.pieChart = function (parent, chartGroup) {
                 }
                 return _chart.label()(d.data);
             });
+    };
+
+    function positionLabels (labels, arc) {
+        _chart._applyLabelText(labels);
+        dc.transition(labels, _chart.transitionDuration())
+            .attr('transform', function (d) {
+                return labelPosition(d, arc);
+            })
+            .attr('text-anchor', 'middle');
     }
 
     function createLabels (pieData, arc) {
