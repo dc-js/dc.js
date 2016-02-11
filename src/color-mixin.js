@@ -16,7 +16,7 @@ dc.colorMixin = function (_chart) {
     /**
      * Retrieve current color scale or set a new color scale. This methods accepts any function that
      * operates like a d3 scale.
-     * @name colors
+     * @method colors
      * @memberof dc.colorMixin
      * @instance
      * @see {@link http://github.com/mbostock/d3/wiki/Scales d3.scale}
@@ -49,7 +49,7 @@ dc.colorMixin = function (_chart) {
      * Convenience method to set the color scale to
      * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales#ordinal d3.scale.ordinal} with
      * range `r`.
-     * @name ordinalColors
+     * @method ordinalColors
      * @memberof dc.colorMixin
      * @instance
      * @param {Array<String>} r
@@ -61,7 +61,7 @@ dc.colorMixin = function (_chart) {
 
     /**
      * Convenience method to set the color scale to an Hcl interpolated linear scale with range `r`.
-     * @name linearColors
+     * @method linearColors
      * @memberof dc.colorMixin
      * @instance
      * @param {Array<Number>} r
@@ -77,7 +77,7 @@ dc.colorMixin = function (_chart) {
      * Set or the get color accessor function. This function will be used to map a data point in a
      * crossfilter group to a color value on the color scale. The default function uses the key
      * accessor.
-     * @name colorAccessor
+     * @method colorAccessor
      * @memberof dc.colorMixin
      * @instance
      * @example
@@ -109,7 +109,7 @@ dc.colorMixin = function (_chart) {
      *
      * Note: previously this method accepted a callback function. Instead you may use a custom scale
      * set by {@link #dc.colorMixin+colors .colors}.
-     * @name colorDomain
+     * @method colorDomain
      * @memberof dc.colorMixin
      * @instance
      * @param {Array<String>} [domain]
@@ -127,7 +127,7 @@ dc.colorMixin = function (_chart) {
     /**
      * Set the domain by determining the min and max values as retrieved by
      * {@link #dc.colorMixin+colorAccessor .colorAccessor} over the chart's dataset.
-     * @name calculateColorDomain
+     * @method calculateColorDomain
      * @memberof dc.colorMixin
      * @instance
      * @return {dc.colorMixin}
@@ -141,7 +141,7 @@ dc.colorMixin = function (_chart) {
 
     /**
      * Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
-     * @name getColor
+     * @method getColor
      * @memberof dc.colorMixin
      * @instance
      * @param {*} d
@@ -154,7 +154,7 @@ dc.colorMixin = function (_chart) {
 
     /**
      * Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
-     * @name colorCalculator
+     * @method colorCalculator
      * @memberof dc.colorMixin
      * @instance
      * @param {*} [colorCalculator]

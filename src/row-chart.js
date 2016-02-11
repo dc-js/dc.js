@@ -3,7 +3,7 @@
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * @name rowChart
+ * @namespace rowChart
  * @memberof dc
  * @mixes dc.capMixin
  * @mixes dc.marginMixin
@@ -97,7 +97,7 @@ dc.rowChart = function (parent, chartGroup) {
     /**
      * Gets or sets the x scale. The x scale can be any d3
      * {@link https://github.com/mbostock/d3/wiki/Quantitative-Scales quantitive scale}
-     * @name x
+     * @method x
      * @memberof dc.rowChart
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/Quantitative-Scales quantitive scale}
@@ -257,7 +257,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     /**
      * Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'
-     * @name renderTitleLabel
+     * @method renderTitleLabel
      * @memberof dc.rowChart
      * @instance
      * @param {Boolean} [renderTitleLabel=false]
@@ -292,7 +292,7 @@ dc.rowChart = function (parent, chartGroup) {
      * Get the x axis for the row chart instance.  Note: not settable for row charts.
      * See the {@link https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis d3 axis object}
      * documention for more information.
-     * @name xAxis
+     * @method xAxis
      * @memberof dc.rowChart
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis d3.svg.axis}
@@ -312,7 +312,7 @@ dc.rowChart = function (parent, chartGroup) {
      * For example, if you want to fix the height for a specific number of bars (useful in TopN charts)
      * you could fix height as follows (where count = total number of bars in your TopN and gap is
      * your vertical gap space).
-     * @name fixedBarHeight
+     * @method fixedBarHeight
      * @memberof dc.rowChart
      * @instance
      * @example
@@ -331,7 +331,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     /**
      * Get or set the vertical gap space between rows on a particular row chart instance
-     * @name gap
+     * @method gap
      * @memberof dc.rowChart
      * @instance
      * @param {Number} [gap=5]
@@ -349,7 +349,7 @@ dc.rowChart = function (parent, chartGroup) {
     /**
      * Get or set the elasticity on x axis. If this attribute is set to true, then the x axis will rescle to auto-fit the
      * data range when filtered.
-     * @name elasticX
+     * @method elasticX
      * @memberof dc.rowChart
      * @instance
      * @param {Boolean} [elasticX]
@@ -366,7 +366,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     /**
      * Get or set the x offset (horizontal space to the top left corner of a row) for labels on a particular row chart.
-     * @name labelOffsetX
+     * @method labelOffsetX
      * @memberof dc.rowChart
      * @instance
      * @param {Number} [labelOffsetX=10]
@@ -383,7 +383,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     /**
      * Get or set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart.
-     * @name labelOffsetY
+     * @method labelOffsetY
      * @memberof dc.rowChart
      * @instance
      * @param {Number} [labelOffsety=15]
@@ -401,7 +401,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     /**
      * Get of set the x offset (horizontal space between right edge of row and right edge or text.
-     * @name titleLabelOffsetX
+     * @method titleLabelOffsetX
      * @memberof dc.rowChart
      * @instance
      * @param {Number} [titleLabelOffsetX=2]

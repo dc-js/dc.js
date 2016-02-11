@@ -15,7 +15,7 @@
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  * - {@link http://dc-js.github.io/dc.js/examples/table-on-aggregated-data.html dataTable on a crossfilter group}
  * ({@link https://github.com/dc-js/dc.js/blob/develop/web/examples/table-on-aggregated-data.html source})
- * @name dataTable
+ * @namespace dataTable
  * @memberof dc
  * @mixes dc.baseMixin
  * @param {String|node|d3.selection} parent - Any valid
@@ -204,7 +204,7 @@ dc.dataTable = function (parent, chartGroup) {
 
     /**
      * Get or set the table size which determines the number of rows displayed by the widget.
-     * @name size
+     * @method size
      * @memberof dc.dataTable
      * @instance
      * @param {Number} [size=25]
@@ -227,7 +227,7 @@ dc.dataTable = function (parent, chartGroup) {
 
      * See the {@link http://dc-js.github.io/dc.js/examples/table-pagination.html table pagination example}
      * to see how to implement the pagination user interface using `beginSlice` and `endSlice`.
-     * @name beginSlice
+     * @method beginSlice
      * @memberof dc.dataTable
      * @instance
      * @param {Number} [beginSlice=0]
@@ -245,7 +245,7 @@ dc.dataTable = function (parent, chartGroup) {
     /**
      * Get or set the index of the end slice which determines which entries get displayed by the
      * widget. Useful when implementing pagination. See {@link #dc.dataTable+beginSlice `beginSlice`} for more information.
-     * @name endSlice
+     * @method endSlice
      * @memberof dc.dataTable
      * @instance
      * @param {Number|undefined} [endSlice=undefined]
@@ -333,7 +333,7 @@ dc.dataTable = function (parent, chartGroup) {
      * override `_chart._doColumnHeaderFormat` and `_chart._doColumnValueFormat` Be aware that
      * fields without numberFormat specification will be displayed just as they are stored in the
      * data, unformatted.
-     * @name columns
+     * @method columns
      * @memberof dc.dataTable
      * @instance
      * @param {Array<Function>} [columns=[]]
@@ -351,7 +351,7 @@ dc.dataTable = function (parent, chartGroup) {
     /**
      * Get or set sort-by function. This function works as a value accessor at row level and returns a
      * particular field to be sorted by. Default value: identity function
-     * @name sortBy
+     * @method sortBy
      * @memberof dc.dataTable
      * @instance
      * @example
@@ -373,7 +373,7 @@ dc.dataTable = function (parent, chartGroup) {
     /**
      * Get or set sort order. If the order is `d3.ascending`, the data table will use
      * `dimension().bottom()` to fetch the data; otherwise it will use `dimension().top()`
-     * @name order
+     * @method order
      * @memberof dc.dataTable
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_ascending d3.ascending}
@@ -396,7 +396,7 @@ dc.dataTable = function (parent, chartGroup) {
      * Get or set if group rows will be shown.
      *
      * The .group() getter-setter must be provided in either case.
-     * @name showGroups
+     * @method showGroups
      * @memberof dc.dataTable
      * @instance
      * @example

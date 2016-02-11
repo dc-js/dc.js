@@ -8,7 +8,7 @@
 dc.dateFormat = d3.time.format('%m/%d/%Y');
 
 /**
- * @name printers
+ * @namespace printers
  * @memberof dc
  * @type {{}}
  */
@@ -16,7 +16,7 @@ dc.printers = {};
 
 /**
  * Converts a list of filters into a readable string
- * @name filters
+ * @method filters
  * @memberof dc.printers
  * @param {Array<dc.filters|any>} filters
  * @returns {String}
@@ -36,7 +36,7 @@ dc.printers.filters = function (filters) {
 
 /**
  * Converts a filter into a readable string
- * @name filter
+ * @method filter
  * @memberof dc.printers
  * @param {dc.filters|any|Array<any>} filter
  * @returns {String}
@@ -63,7 +63,7 @@ dc.printers.filter = function (filter) {
  * Returns a function that given a string property name, can be used to pluck the property off an object.  A function
  * can be passed as the second argument to also alter the data being returned.  This can be a useful shorthand method to create
  * accessor functions.
- * @name pluck
+ * @method pluck
  * @memberof dc
  * @example
  * var xPluck = dc.pluck('x');
@@ -89,7 +89,7 @@ dc.pluck = function (n, f) {
 };
 
 /**
- * @name utils
+ * @namespace utils
  * @memberof dc
  * @type {{}}
  */
@@ -97,7 +97,7 @@ dc.utils = {};
 
 /**
  * Print a single value filter
- * @name printSingleValue
+ * @method printSingleValue
  * @memberof dc.utils
  * @param {any} filter
  * @returns {String}
@@ -121,7 +121,7 @@ dc.utils.printSingleValue.fformat = d3.format('.2f');
 
 /**
  * Arbitrary add one value to another.
- * @name add
+ * @method add
  * @memberof dc.utils
  * @todo
  * These assume than any string r is a percentage (whether or not it includes %).
@@ -153,7 +153,7 @@ dc.utils.add = function (l, r) {
 
 /**
  * Arbitrary subtract one value from another.
- * @name subtract
+ * @method subtract
  * @memberof dc.utils
  * @todo
  * These assume than any string r is a percentage (whether or not it includes %).
@@ -185,7 +185,7 @@ dc.utils.subtract = function (l, r) {
 
 /**
  * Is the value a number?
- * @name isNumber
+ * @method isNumber
  * @memberof dc.utils
  * @param {any} n
  * @returns {Boolean}
@@ -196,7 +196,7 @@ dc.utils.isNumber = function (n) {
 
 /**
  * Is the value a float?
- * @name isFloat
+ * @method isFloat
  * @memberof dc.utils
  * @param {any} n
  * @returns {Boolean}
@@ -207,7 +207,7 @@ dc.utils.isFloat = function (n) {
 
 /**
  * Is the value an integer?
- * @name isInteger
+ * @method isInteger
  * @memberof dc.utils
  * @param {any} n
  * @returns {Boolean}
@@ -218,7 +218,7 @@ dc.utils.isInteger = function (n) {
 
 /**
  * Is the value very close to zero?
- * @name isNegligible
+ * @method isNegligible
  * @memberof dc.utils
  * @param {any} n
  * @returns {Boolean}
@@ -229,7 +229,7 @@ dc.utils.isNegligible = function (n) {
 
 /**
  * Ensure the value is no greater or less than the min/max values.  If it is return the boundary value.
- * @name clamp
+ * @method clamp
  * @memberof dc.utils
  * @param {any} val
  * @param {any} min
@@ -242,7 +242,7 @@ dc.utils.clamp = function (val, min, max) {
 
 /**
  * Using a simple static counter, provide a unique integer id.
- * @name uniqueId
+ * @method uniqueId
  * @memberof dc.utils
  * @returns {Number}
  */
@@ -253,7 +253,7 @@ dc.utils.uniqueId = function () {
 
 /**
  * Convert a name to an ID.
- * @name nameToId
+ * @method nameToId
  * @memberof dc.utils
  * @param {String} name
  * @returns {String}
@@ -264,7 +264,7 @@ dc.utils.nameToId = function (name) {
 
 /**
  * Append or select an item on a parent element
- * @name appendOrSelect
+ * @method appendOrSelect
  * @memberof dc.utils
  * @param {d3.selection} parent
  * @param {String} selector
@@ -282,7 +282,7 @@ dc.utils.appendOrSelect = function (parent, selector, tag) {
 
 /**
  * Return the number if the value is a number; else 0.
- * @name safeNumber
+ * @method safeNumber
  * @memberof dc.utils
  * @param {Number|any} n
  * @returns {Number}

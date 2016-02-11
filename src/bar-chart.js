@@ -4,7 +4,7 @@
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
- * @name barChart
+ * @namespace barChart
  * @memberof dc
  * @mixes dc.stackMixin
  * @mixes dc.coordinateGridMixin
@@ -227,7 +227,7 @@ dc.barChart = function (parent, chartGroup) {
 
     /**
      * Whether the bar chart will render each bar centered around the data position on the x-axis.
-     * @name centerBar
+     * @method centerBar
      * @memberof dc.barChart
      * @instance
      * @param {Boolean} [centerBar=false]
@@ -251,7 +251,7 @@ dc.barChart = function (parent, chartGroup) {
      * Setting this value will also remove any previously set {@link #dc.barChart+gap gap}. See the
      * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands d3 docs}
      * for a visual description of how the padding is applied.
-     * @name barPadding
+     * @method barPadding
      * @memberof dc.barChart
      * @instance
      * @param {Number} [barPadding=0]
@@ -274,7 +274,7 @@ dc.barChart = function (parent, chartGroup) {
     /**
      * Get or set the outer padding on an ordinal bar chart. This setting has no effect on non-ordinal charts.
      * Will pad the width by `padding * barWidth` on each side of the chart.
-     * @name outerPadding
+     * @method outerPadding
      * @memberof dc.barChart
      * @instance
      * @param {Number} [padding=0.5]
@@ -287,7 +287,7 @@ dc.barChart = function (parent, chartGroup) {
      * Manually set fixed gap (in px) between bars instead of relying on the default auto-generated
      * gap.  By default the bar chart implementation will calculate and set the gap automatically
      * based on the number of data points and the length of the x axis.
-     * @name gap
+     * @method gap
      * @memberof dc.barChart
      * @instance
      * @param {Number} [gap=2]
@@ -322,7 +322,7 @@ dc.barChart = function (parent, chartGroup) {
      * When using standard d3.js rounding methods, the brush often doesn't align correctly with
      * centered bars since the bars are offset.  The rounding function must add an offset to
      * compensate, such as in the following example.
-     * @name alwaysUseRounding
+     * @method alwaysUseRounding
      * @memberof dc.barChart
      * @instance
      * @example
