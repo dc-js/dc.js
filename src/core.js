@@ -34,6 +34,13 @@ var dc = {
 };
 /*jshint +W079*/
 
+/**
+ * dc.chartRegistry maintains a mapping of all instantiated dc.js charts under a given or a default group
+ * to facilitate rendering and filtering charts simultaneously using the functions dc.filterAll,
+ * dc.refocusAll, renderAll, redrawAll.
+ *
+ * @type {{has, register, deregister, clear, list}}
+ */
 dc.chartRegistry = (function () {
     // chartGroup:string => charts:array
     var _chartMap = {};
@@ -51,6 +58,11 @@ dc.chartRegistry = (function () {
     }
 
     return {
+        /**
+         * Determine if a given chart instance resides in any group in the registry.
+         * @param {*} chart dc.js chart instance
+         * @returns {Boolean}
+         */
         has: function (chart) {
             for (var e in _chartMap) {
                 if (_chartMap[e].indexOf(chart) >= 0) {
@@ -60,11 +72,23 @@ dc.chartRegistry = (function () {
             return false;
         },
 
+        /**
+         * Add given chart instance to the given group, creating the group if necessary.
+         * If no group is provided, a default group will be created using dc.constants.DEFAULT_CHART_GROUP.
+         * @param {*} chart dc.js chart instance
+         * @param {String} [group] Group name
+         */
         register: function (chart, group) {
             group = initializeChartGroup(group);
             _chartMap[group].push(chart);
         },
 
+        /**
+         * Remove given chart instance from the given group, creating the group if necessary.
+         * If no group is provided, a default group will be created using dc.constants.DEFAULT_CHART_GROUP.
+         * @param {*} chart dc.js chart instance
+         * @param {String} [group] Group name
+         */
         deregister: function (chart, group) {
             group = initializeChartGroup(group);
             for (var i = 0; i < _chartMap[group].length; i++) {
@@ -75,6 +99,10 @@ dc.chartRegistry = (function () {
             }
         },
 
+        /**
+         * Clear given group if one is provided, otherwise clears all groups.
+         * @param {String} group Group name
+         */
         clear: function (group) {
             if (group) {
                 delete _chartMap[group];
@@ -83,6 +111,12 @@ dc.chartRegistry = (function () {
             }
         },
 
+        /**
+         * Get an array of each chart instance in the given group.
+         * If no group is provided, the default group is returned.
+         * @param {String} [group] Group name
+         * @returns {*}
+         */
         list: function (group) {
             group = initializeChartGroup(group);
             return _chartMap[group];
@@ -90,18 +124,39 @@ dc.chartRegistry = (function () {
     };
 })();
 
+/**
+ * Add given chart instance to the given group, creating the group if necessary.
+ * If no group is provided, a default group will be created using dc.constants.DEFAULT_CHART_GROUP.
+ * @param {*} chart dc.js chart instance
+ * @param {String} [group] Group name
+ */
 dc.registerChart = function (chart, group) {
     dc.chartRegistry.register(chart, group);
 };
 
+/**
+ * Remove given chart instance from the given group, creating the group if necessary.
+ * If no group is provided, a default group will be created using dc.constants.DEFAULT_CHART_GROUP.
+ * @param {*} chart dc.js chart instance
+ * @param {String} [group] Group name
+ */
 dc.deregisterChart = function (chart, group) {
     dc.chartRegistry.deregister(chart, group);
 };
 
+/**
+ * Determine if a given chart instance resides in any group in the registry.
+ * @param {*} chart dc.js chart instance
+ * @returns {Boolean}
+ */
 dc.hasChart = function (chart) {
     return dc.chartRegistry.has(chart);
 };
 
+/**
+ * Clear given group if one is provided, otherwise clears all groups.
+ * @param {String} group Group name
+ */
 dc.deregisterAllCharts = function (group) {
     dc.chartRegistry.clear(group);
 };
