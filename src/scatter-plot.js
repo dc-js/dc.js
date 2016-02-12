@@ -4,7 +4,7 @@
  * Examples:
  * - {@link http://dc-js.github.io/dc.js/examples/scatter.html Scatter Chart}
  * - {@link http://dc-js.github.io/dc.js/examples/multi-scatter.html Multi-Scatter Chart}
- * @name scatterPlot
+ * @namespace scatterPlot
  * @memberof dc
  * @mixes dc.coordinateGridMixin
  * @example
@@ -87,7 +87,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * opacity 1; if it does not exist, it is drawn with
      * {@link #dc.scatterPlot+hiddenSize hiddenSize} radius and opacity 0. By default,
      * the existence accessor checks if the reduced value is truthy.
-     * @name existenceAccessor
+     * @method existenceAccessor
      * @memberof dc.scatterPlot
      * @instance
      * @see {@link #dc.scatterPlot+symbolSize symbolSize}
@@ -110,7 +110,7 @@ dc.scatterPlot = function (parent, chartGroup) {
     /**
      * Get or set the symbol type used for each point. By default the symbol is a circle.
      * Type can be a constant or an accessor.
-     * @name symbol
+     * @method symbol
      * @memberof dc.scatterPlot
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_type d3.svg.symbol().type()}
@@ -133,7 +133,7 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
      * Set or get radius for symbols.
-     * @name symbolSize
+     * @method symbolSize
      * @memberof dc.scatterPlot
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
@@ -151,7 +151,7 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
      * Set or get radius for highlighted symbols.
-     * @name highlightedSize
+     * @method highlightedSize
      * @memberof dc.scatterPlot
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
@@ -169,7 +169,7 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
      * Set or get radius for symbols when the group is empty.
-     * @name hiddenSize
+     * @method hiddenSize
      * @memberof dc.scatterPlot
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}

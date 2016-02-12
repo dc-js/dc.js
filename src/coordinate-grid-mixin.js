@@ -109,7 +109,7 @@ dc.coordinateGridMixin = function (_chart) {
      * and redraw the axes. (`.rescale()` is called automatically when the x or y scale is replaced
      * with {@link #dc.coordinateGridMixin+x .x()} or {@link #dc.coordinateGridMixin+y .y()}, and has
      * no effect on elastic scales.)
-     * @name rescale
+     * @method rescale
      * @memberof dc.coordinateGridMixin
      * @instance
      * @return {dc.coordinateGridMixin}
@@ -130,7 +130,7 @@ dc.coordinateGridMixin = function (_chart) {
      * zooms in. In return the given range chart will also automatically attach this chart as its focus
      * chart hence zoom in when range brush updates. See the [Nasdaq 100
      * Index](http://dc-js.github.com/dc.js/) example for this effect in action.
-     * @name rangeChart
+     * @method rangeChart
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {dc.coordinateGridMixin} [rangeChart]
@@ -147,7 +147,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Get or set the scale extent for mouse zooms.
-     * @name zoomScale
+     * @method zoomScale
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Array<Number|Date>} [extent=[1, Infinity]]
@@ -164,7 +164,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Get or set the zoom restriction for the chart. If true limits the zoom to origional domain of the chart.
-     * @name zoomOutRestrict
+     * @method zoomOutRestrict
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [zoomOutRestrict=true]
@@ -200,7 +200,7 @@ dc.coordinateGridMixin = function (_chart) {
      * Get or set the root g element. This method is usually used to retrieve the g element in order to
      * overlay custom svg drawing programatically. **Caution**: The root g element is usually generated
      * by dc.js internals, and resetting it might produce unpredictable result.
-     * @name g
+     * @method g
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {SVGElement} [gElement]
@@ -219,7 +219,7 @@ dc.coordinateGridMixin = function (_chart) {
      * Set or get mouse zoom capability flag (default: false). When turned on the chart will be
      * zoomable using the mouse wheel. If the range selector chart is attached zooming will also update
      * the range selection brush on the associated range selector chart.
-     * @name mouseZoomable
+     * @method mouseZoomable
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [mouseZoomable=false]
@@ -236,7 +236,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Retrieve the svg group for the chart body.
-     * @name chartBodyG
+     * @method chartBodyG
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {SVGElement} [chartBodyG]
@@ -256,7 +256,7 @@ dc.coordinateGridMixin = function (_chart) {
      * Get or set the x scale. The x scale can be any d3
      * {@link https://github.com/mbostock/d3/wiki/Quantitative-Scales quantitive scale} or
      * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales ordinal scale}.
-     * @name x
+     * @method x
      * @memberof dc.coordinateGridMixin
      * @instance
      * @see {@link http://github.com/mbostock/d3/wiki/Scales d3.scale}
@@ -292,7 +292,7 @@ dc.coordinateGridMixin = function (_chart) {
      * d3.time.years](https://github.com/mbostock/d3/wiki/Time-Intervals#aliases) are all valid xUnits
      * function. dc.js also provides a few units function, see the {@link #utilities Utilities} section for
      * a list of built-in units functions. The default xUnits function is dc.units.integers.
-     * @name xUnits
+     * @method xUnits
      * @memberof dc.coordinateGridMixin
      * @instance
      * @todo Add docs for utilities
@@ -331,7 +331,7 @@ dc.coordinateGridMixin = function (_chart) {
      * axis object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis); therefore it supports any
      * valid d3 axis manipulation. **Caution**: The x axis is usually generated internally by dc;
      * resetting it may cause unexpected results.
-     * @name xAxis
+     * @method xAxis
      * @memberof dc.coordinateGridMixin
      * @instance
      * @see {@link http://github.com/mbostock/d3/wiki/SVG-Axes d3.svg.axis}
@@ -355,7 +355,7 @@ dc.coordinateGridMixin = function (_chart) {
     /**
      * Turn on/off elastic x axis behavior. If x axis elasticity is turned on, then the grid chart will
      * attempt to recalculate the x axis range whenever a redraw event is triggered.
-     * @name elasticX
+     * @method elasticX
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [elasticX=false]
@@ -377,7 +377,7 @@ dc.coordinateGridMixin = function (_chart) {
      * padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
      * number or date x axes.  When padding a date axis, an integer represents number of days being padded
      * and a percentage string will be treated the same as an integer.
-     * @name xAxisPadding
+     * @method xAxisPadding
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Number|String} [padding=0]
@@ -395,7 +395,7 @@ dc.coordinateGridMixin = function (_chart) {
     /**
      * Returns the number of units displayed on the x axis using the unit measure configured by
      * .xUnits.
-     * @name xUnitCount
+     * @method xUnitCount
      * @memberof dc.coordinateGridMixin
      * @instance
      * @return {Number}
@@ -418,7 +418,7 @@ dc.coordinateGridMixin = function (_chart) {
      * Gets or sets whether the chart should be drawn with a right axis instead of a left axis. When
      * used with a chart in a composite chart, allows both left and right Y axes to be shown on a
      * chart.
-     * @name useRightYAxis
+     * @method useRightYAxis
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [useRightYAxis=false]
@@ -437,7 +437,7 @@ dc.coordinateGridMixin = function (_chart) {
      * Returns true if the chart is using ordinal xUnits ({@link #dc.units.ordinal dc.units.ordinal}, or false
      * otherwise. Most charts behave differently with ordinal data and use the result of this method to
      * trigger the appropriate logic.
-     * @name isOrdinal
+     * @method isOrdinal
      * @memberof dc.coordinateGridMixin
      * @instance
      * @return {Boolean}
@@ -580,7 +580,7 @@ dc.coordinateGridMixin = function (_chart) {
     /**
      * Set or get the x axis label. If setting the label, you may optionally include additional padding to
      * the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.
-     * @name xAxisLabel
+     * @method xAxisLabel
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {String} [labelText]
@@ -714,7 +714,7 @@ dc.coordinateGridMixin = function (_chart) {
      * Set or get the y axis label. If setting the label, you may optionally include additional padding
      * to the margin to make room for the label. By default the padded is set to 12 to accomodate the
      * text height.
-     * @name yAxisLabel
+     * @method yAxisLabel
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {String} [labelText]
@@ -735,7 +735,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Get or set the y scale. The y scale is typically automatically determined by the chart implementation.
-     * @name y
+     * @method y
      * @memberof dc.coordinateGridMixin
      * @instance
      * @see {@link http://github.com/mbostock/d3/wiki/Scales d3.scale}
@@ -758,7 +758,7 @@ dc.coordinateGridMixin = function (_chart) {
      * object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis); therefore it supports any
      * valid d3 axis manipulation. **Caution**: The y axis is usually generated internally by dc;
      * resetting it may cause unexpected results.
-     * @name yAxis
+     * @method yAxis
      * @memberof dc.coordinateGridMixin
      * @instance
      * @see {@link http://github.com/mbostock/d3/wiki/SVG-Axes d3.svg.axis}
@@ -782,7 +782,7 @@ dc.coordinateGridMixin = function (_chart) {
     /**
      * Turn on/off elastic y axis behavior. If y axis elasticity is turned on, then the grid chart will
      * attempt to recalculate the y axis range whenever a redraw event is triggered.
-     * @name elasticY
+     * @method elasticY
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [elasticY=false]
@@ -799,7 +799,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Turn on/off horizontal grid lines.
-     * @name renderHorizontalGridLines
+     * @method renderHorizontalGridLines
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [renderHorizontalGridLines=false]
@@ -816,7 +816,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Turn on/off vertical grid lines.
-     * @name renderVerticalGridLines
+     * @method renderVerticalGridLines
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [renderVerticalGridLines=false]
@@ -833,7 +833,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Calculates the minimum x value to display in the chart. Includes xAxisPadding if set.
-     * @name xAxisMin
+     * @method xAxisMin
      * @memberof dc.coordinateGridMixin
      * @instance
      * @return {*}
@@ -847,7 +847,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Calculates the maximum x value to display in the chart. Includes xAxisPadding if set.
-     * @name xAxisMax
+     * @method xAxisMax
      * @memberof dc.coordinateGridMixin
      * @instance
      * @return {*}
@@ -861,7 +861,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Calculates the minimum y value to display in the chart. Includes yAxisPadding if set.
-     * @name yAxisMin
+     * @method yAxisMin
      * @memberof dc.coordinateGridMixin
      * @instance
      * @return {*}
@@ -875,7 +875,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Calculates the maximum y value to display in the chart. Includes yAxisPadding if set.
-     * @name yAxisMax
+     * @method yAxisMax
      * @memberof dc.coordinateGridMixin
      * @instance
      * @return {*}
@@ -894,7 +894,7 @@ dc.coordinateGridMixin = function (_chart) {
      * padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
      * number or date axes. When padding a date axis, an integer represents number of days being padded
      * and a percentage string will be treated the same as an integer.
-     * @name yAxisPadding
+     * @method yAxisPadding
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Number|String} [padding=0]
@@ -915,7 +915,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Set or get the rounding function used to quantize the selection when brushing is enabled.
-     * @name round
+     * @method round
      * @memberof dc.coordinateGridMixin
      * @instance
      * @example
@@ -1086,7 +1086,7 @@ dc.coordinateGridMixin = function (_chart) {
      * Get or set the padding in pixels for the clip path. Once set padding will be applied evenly to
      * the top, left, right, and bottom when the clip path is generated. If set to zero, the clip area
      * will be exactly the chart body area minus the margins.
-     * @name clipPadding
+     * @method clipPadding
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Number} [padding=5]
@@ -1202,7 +1202,7 @@ dc.coordinateGridMixin = function (_chart) {
      * 2 elements (`[start, end]`) defining a range in the x domain. If the range is not given or set
      * to null, then the zoom will be reset. _For focus to work elasticX has to be turned off;
      * otherwise focus will be ignored.
-     * @name focus
+     * @method focus
      * @memberof dc.coordinateGridMixin
      * @instance
      * @example
@@ -1270,7 +1270,7 @@ dc.coordinateGridMixin = function (_chart) {
      * un-filter them. However turning on the brush filter will disable other interactive elements on
      * the chart such as highlighting, tool tips, and reference lines. Zooming will still be possible
      * if enabled, but only via scrolling (panning will be disabled.)
-     * @name brushOn
+     * @method brushOn
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [brushOn=true]

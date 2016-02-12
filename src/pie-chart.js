@@ -6,7 +6,7 @@
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * @name pieChart
+ * @namespace pieChart
  * @memberof dc
  * @mixes dc.capMixin
  * @mixes dc.colorMixin
@@ -52,7 +52,7 @@ dc.pieChart = function (parent, chartGroup) {
     /**
      * Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
      * value from high to low. Other slices exeeding the cap will be rolled up into one single *Others* slice.
-     * @name slicesCap
+     * @method slicesCap
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [cap]
@@ -155,12 +155,8 @@ dc.pieChart = function (parent, chartGroup) {
         }
     }
 
-    function positionLabels (labelsEnter, arc) {
-        dc.transition(labelsEnter, _chart.transitionDuration())
-            .attr('transform', function (d) {
-                return labelPosition(d, arc);
-            })
-            .attr('text-anchor', 'middle')
+    _chart._applyLabelText = function (labels) {
+        labels
             .text(function (d) {
                 var data = d.data;
                 if ((sliceHasNoData(data) || sliceTooSmall(d)) && !isSelectedSlice(d)) {
@@ -168,6 +164,15 @@ dc.pieChart = function (parent, chartGroup) {
                 }
                 return _chart.label()(d.data);
             });
+    };
+
+    function positionLabels (labels, arc) {
+        _chart._applyLabelText(labels);
+        dc.transition(labels, _chart.transitionDuration())
+            .attr('transform', function (d) {
+                return labelPosition(d, arc);
+            })
+            .attr('text-anchor', 'middle');
     }
 
     function createLabels (pieData, arc) {
@@ -290,7 +295,7 @@ dc.pieChart = function (parent, chartGroup) {
     /**
      * Get or set the external radius padding of the pie chart. This will force the radius of the
      * pie chart to become smaller or larger depending on the value.
-     * @name externalRadiusPadding
+     * @method externalRadiusPadding
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [externalRadiusPadding=0]
@@ -308,7 +313,7 @@ dc.pieChart = function (parent, chartGroup) {
     /**
      * Get or set the inner radius of the pie chart. If the inner radius is greater than 0px then the
      * pie chart will be rendered as a doughnut chart.
-     * @name innerRadius
+     * @method innerRadius
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [innerRadius=0]
@@ -326,7 +331,7 @@ dc.pieChart = function (parent, chartGroup) {
     /**
      * Get or set the outer radius. If the radius is not set, it will be half of the minimum of the
      * chart width and height.
-     * @name radius
+     * @method radius
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [radius]
@@ -343,7 +348,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     /**
      * Get or set center x coordinate position. Default is center of svg.
-     * @name cx
+     * @method cx
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [cx]
@@ -360,7 +365,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     /**
      * Get or set center y coordinate position. Default is center of svg.
-     * @name cy
+     * @method cy
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [cy]
@@ -393,7 +398,7 @@ dc.pieChart = function (parent, chartGroup) {
     /**
      * Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
      * display a slice label.
-     * @name minAngleForLabel
+     * @method minAngleForLabel
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [minAngleForLabel=0.5]
@@ -458,7 +463,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     /**
      * Title to use for the only slice when there is no data.
-     * @name emptyTitle
+     * @method emptyTitle
      * @memberof dc.pieChart
      * @instance
      * @param {String} [title]
@@ -477,7 +482,7 @@ dc.pieChart = function (parent, chartGroup) {
      * Position slice labels offset from the outer edge of the chart
      *
      * The given argument sets the radial offset.
-     * @name externalLabels
+     * @method externalLabels
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [externalLabelRadius]
@@ -499,7 +504,7 @@ dc.pieChart = function (parent, chartGroup) {
     /**
      * Get or set whether to draw lines from pie slices to their labels.
      *
-     * @name drawPaths
+     * @method drawPaths
      * @memberof dc.pieChart
      * @instance
      * @param {Boolean} [drawPaths]

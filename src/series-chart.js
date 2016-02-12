@@ -5,7 +5,7 @@
  *
  * Examples:
  * - {@link http://dc-js.github.io/dc.js/examples/series.html Series Chart}
- * @name seriesChart
+ * @namespace seriesChart
  * @memberof dc
  * @mixes dc.compositeChart
  * @example
@@ -90,7 +90,7 @@ dc.seriesChart = function (parent, chartGroup) {
 
     /**
      * Get or set the chart function, which generates the child charts.
-     * @name chart
+     * @method chart
      * @memberof dc.seriesChart
      * @instance
      * @example
@@ -116,7 +116,7 @@ dc.seriesChart = function (parent, chartGroup) {
      *
      * Get or set accessor function for the displayed series. Given a datum, this function
      * should return the series that datum belongs to.
-     * @name seriesAccessor
+     * @method seriesAccessor
      * @memberof dc.seriesChart
      * @instance
      * @example
@@ -137,7 +137,7 @@ dc.seriesChart = function (parent, chartGroup) {
 
     /**
      * Get or set a function to sort the list of series by, given series values.
-     * @name seriesSort
+     * @method seriesSort
      * @memberof dc.seriesChart
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_ascending d3.ascending}
@@ -161,7 +161,7 @@ dc.seriesChart = function (parent, chartGroup) {
      * Get or set a function to sort each series values by. By default this is the key accessor which,
      * for example, will ensure a lineChart series connects its points in increasing key/x order,
      * rather than haphazardly.
-     * @name valueSort
+     * @method valueSort
      * @memberof dc.seriesChart
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_ascending d3.ascending}

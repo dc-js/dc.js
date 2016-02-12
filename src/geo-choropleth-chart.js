@@ -5,7 +5,7 @@
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/vc/index.html US Venture Capital Landscape 2011}
- * @name geoChoroplethChart
+ * @namespace geoChoroplethChart
  * @memberof dc
  * @mixes dc.colorMixin
  * @mixes dc.baseMixin
@@ -179,7 +179,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * Use this function to insert a new GeoJson map layer. This function can be invoked multiple times
      * if you have multiple GeoJson data layers to render on top of each other. If you overlay multiple
      * layers with the same name the new overlay will override the existing one.
-     * @name overlayGeoJson
+     * @method overlayGeoJson
      * @memberof dc.geoChoroplethChart
      * @instance
      * @see {@link http://geojson.org/ GeoJSON}
@@ -211,7 +211,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     /**
      * Set custom geo projection function. See the available [d3 geo projection
      * functions](https://github.com/mbostock/d3/wiki/Geo-Projections).
-     * @name projection
+     * @method projection
      * @memberof dc.geoChoroplethChart
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/Geo-Projections d3.geo.projection}
@@ -229,7 +229,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * Returns all GeoJson layers currently registered with this chart. The returned array is a
      * reference to this chart's internal data structure, so any modification to this array will also
      * modify this chart's internal registration.
-     * @name geoJsons
+     * @method geoJsons
      * @memberof dc.geoChoroplethChart
      * @instance
      * @return {Array<{name:String, data: Object, accessor: Function}>}
@@ -242,7 +242,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * Returns the {@link https://github.com/mbostock/d3/wiki/Geo-Paths#path d3.geo.path} object used to
      * render the projection and features.  Can be useful for figuring out the bounding box of the
      * feature set and thus a way to calculate scale and translation for the projection.
-     * @name geoPath
+     * @method geoPath
      * @memberof dc.geoChoroplethChart
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/Geo-Paths#path d3.geo.path}
@@ -254,7 +254,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
     /**
      * Remove a GeoJson layer from this chart by name
-     * @name removeGeoJson
+     * @method removeGeoJson
      * @memberof dc.geoChoroplethChart
      * @instance
      * @param {String} name
