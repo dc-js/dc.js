@@ -7,11 +7,7 @@
 </head>
 <body>
 
-<p>Frequently asked question: how to enable single-select on an ordinal chart?</p>
-
-<div id="test">
-  <a class="reset" style="display: none" href="javascript:chart.filter(null).redrawGroup()">reset</a>
-</div>
+<div id="test"></div>
 
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
@@ -32,18 +28,14 @@ d3.csv("morley.csv", function(error, experiments) {
   chart
     .width(768)
     .height(480)
-    .x(d3.scale.ordinal())
-    .xUnits(dc.units.ordinal)
-    .brushOn(true)
+    .x(d3.scale.linear().domain([6,20]))
+    .brushOn(false)
     .yAxisLabel("This is the Y Axis!")
     .dimension(runDimension)
     .group(speedSumGroup)
-    .on('pretransition', function(chart) {
-        chart.selectAll("rect.bar").on("click", function (d) {
-            console.log('click');
-            chart.filter(null)
-                .filter(d.data.key)
-                .redrawGroup();
+    .on('renderlet', function(chart) {
+        chart.selectAll('rect').on("click", function(d) {
+            console.log("click!", d);
         });
     });
     chart.render();
