@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>dc.js - Pie Chart Example</title>
+    <title>dc.js - Pie Chart External Labels Example</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
 </head>
@@ -25,16 +25,11 @@ d3.csv("morley.csv", function(error, experiments) {
     .width(768)
     .height(480)
     .slicesCap(4)
-    .innerRadius(100)
+        .innerRadius(100)
+    
     .dimension(runDimension)
     .group(speedSumGroup)
-    .legend(dc.legend())
-    // workaround for #703: not enough data is accessible through .label() to display percentages
-    .on('pretransition', function(chart) {
-        chart.selectAll('text.pie-slice').text(function(d) {
-            return d.data.key + ' ' + dc.utils.printSingleValue((d.endAngle - d.startAngle) / (2*Math.PI) * 100) + '%';
-        })
-    });
+    .legend(dc.legend());
 
   chart.render();
 });
