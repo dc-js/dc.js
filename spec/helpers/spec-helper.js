@@ -1,6 +1,5 @@
 /* global parseTranslate */
 beforeEach(function () {
-    d3.select('body').append('div').attr('id', 'test-content');
     jasmine.clock().install();
 
     // If we're using browserify bundle, pull d3 and crossfilter out of it,
@@ -9,6 +8,7 @@ beforeEach(function () {
     if (typeof d3 === 'undefined') { d3 = dc.d3; }
     if (typeof crossfilter === 'undefined') { crossfilter = dc.crossfilter; }
     /* jshint +W020 */
+    d3.select('body').append('div').attr('id', 'test-content');
 });
 
 afterEach(function () {
