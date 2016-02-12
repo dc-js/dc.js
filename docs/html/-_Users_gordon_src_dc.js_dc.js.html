@@ -1,7 +1,91 @@
-/*!
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>DocStrap Source: /Users/gordon/src/dc.js/dc.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cosmo.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">DocStrap</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="dc.html">dc</a></li><li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.chartRegistry.html">dc.chartRegistry</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.html">dc.filters</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.printers.html">dc.printers</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li><li><a href="dc.units.html">dc.units</a></li><li><a href="dc.units.fp.html">dc.units.fp</a></li><li><a href="dc.utils.html">dc.utils</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="mixins.list.html" class="dropdown-toggle" data-toggle="dropdown">Mixins<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="dc.baseMixin.html">dc.baseMixin</a></li><li><a href="dc.bubbleMixin.html">dc.bubbleMixin</a></li><li><a href="dc.capMixin.html">dc.capMixin</a></li><li><a href="dc.colorMixin.html">dc.colorMixin</a></li><li><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></li><li><a href="dc.marginMixin.html">dc.marginMixin</a></li><li><a href="dc.stackMixin.html">dc.stackMixin</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+		<div class="col-sm-3 col-md-3">
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: /Users/gordon/src/dc.js/dc.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/*!
  *  dc 2.0.0-beta.26
  *  http://dc-js.github.io/dc.js/
- *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
+ *  Copyright 2012-2016 Nick Zhu &amp; the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -126,7 +210,7 @@ dc.chartRegistry = (function () {
          */
         deregister: function (chart, group) {
             group = initializeChartGroup(group);
-            for (var i = 0; i < _chartMap[group].length; i++) {
+            for (var i = 0; i &lt; _chartMap[group].length; i++) {
                 if (_chartMap[group][i].anchorName() === chart.anchorName()) {
                     _chartMap[group].splice(i, 1);
                     break;
@@ -154,7 +238,7 @@ dc.chartRegistry = (function () {
          * @method list
          * @memberof dc.chartRegistry
          * @param {String} [group] Group name
-         * @returns {Array<Object>}
+         * @returns {Array&lt;Object>}
          */
         list: function (group) {
             group = initializeChartGroup(group);
@@ -217,7 +301,7 @@ dc.deregisterAllCharts = function (group) {
  */
 dc.filterAll = function (group) {
     var charts = dc.chartRegistry.list(group);
-    for (var i = 0; i < charts.length; ++i) {
+    for (var i = 0; i &lt; charts.length; ++i) {
         charts[i].filterAll();
     }
 };
@@ -231,7 +315,7 @@ dc.filterAll = function (group) {
  */
 dc.refocusAll = function (group) {
     var charts = dc.chartRegistry.list(group);
-    for (var i = 0; i < charts.length; ++i) {
+    for (var i = 0; i &lt; charts.length; ++i) {
         if (charts[i].focus) {
             charts[i].focus();
         }
@@ -247,7 +331,7 @@ dc.refocusAll = function (group) {
  */
 dc.renderAll = function (group) {
     var charts = dc.chartRegistry.list(group);
-    for (var i = 0; i < charts.length; ++i) {
+    for (var i = 0; i &lt; charts.length; ++i) {
         charts[i].render();
     }
 
@@ -267,7 +351,7 @@ dc.renderAll = function (group) {
  */
 dc.redrawAll = function (group) {
     var charts = dc.chartRegistry.list(group);
-    for (var i = 0; i < charts.length; ++i) {
+    for (var i = 0; i &lt; charts.length; ++i) {
         charts[i].redraw();
     }
 
@@ -287,7 +371,7 @@ dc.redrawAll = function (group) {
 dc.disableTransitions = false;
 
 dc.transition = function (selections, duration, callback, name) {
-    if (duration <= 0 || duration === undefined || dc.disableTransitions) {
+    if (duration &lt;= 0 || duration === undefined || dc.disableTransitions) {
         return selections;
     }
 
@@ -372,8 +456,8 @@ dc.units.integers = function (start, end) {
  *      .x(d3.scale.ordinal())
  * @param {*} start
  * @param {*} end
- * @param {Array<String>} domain
- * @return {Array<String>}
+ * @param {Array&lt;String>} domain
+ * @return {Array&lt;String>}
  */
 dc.units.ordinal = function (start, end, domain) {
     return domain;
@@ -442,7 +526,7 @@ dc.renderlet = function (_) {
 };
 
 dc.instanceOfChart = function (o) {
-    return o instanceof Object && o.__dcFlag__ && true;
+    return o instanceof Object &amp;&amp; o.__dcFlag__ &amp;&amp; true;
 };
 
 dc.errors = {};
@@ -494,13 +578,13 @@ dc.printers = {};
  * Converts a list of filters into a readable string
  * @method filters
  * @memberof dc.printers
- * @param {Array<dc.filters|any>} filters
+ * @param {Array&lt;dc.filters|any>} filters
  * @returns {String}
  */
 dc.printers.filters = function (filters) {
     var s = '';
 
-    for (var i = 0; i < filters.length; ++i) {
+    for (var i = 0; i &lt; filters.length; ++i) {
         if (i > 0) {
             s += ', ';
         }
@@ -514,13 +598,13 @@ dc.printers.filters = function (filters) {
  * Converts a filter into a readable string
  * @method filter
  * @memberof dc.printers
- * @param {dc.filters|any|Array<any>} filter
+ * @param {dc.filters|any|Array&lt;any>} filter
  * @returns {String}
  */
 dc.printers.filter = function (filter) {
     var s = '';
 
-    if (typeof filter !== 'undefined' && filter !== null) {
+    if (typeof filter !== 'undefined' &amp;&amp; filter !== null) {
         if (filter instanceof Array) {
             if (filter.length >= 2) {
                 s = '[' + dc.utils.printSingleValue(filter[0]) + ' -> ' + dc.utils.printSingleValue(filter[1]) + ']';
@@ -653,7 +737,7 @@ dc.utils.subtract = function (l, r) {
         return d;
     } else if (typeof r === 'string') {
         var percentage = (+r / 100);
-        return l < 0 ? l * (1 + percentage) : l * (1 - percentage);
+        return l &lt; 0 ? l * (1 + percentage) : l * (1 - percentage);
     } else {
         return l - r;
     }
@@ -678,7 +762,7 @@ dc.utils.isNumber = function (n) {
  * @returns {Boolean}
  */
 dc.utils.isFloat = function (n) {
-    return n === +n && n !== (n | 0);
+    return n === +n &amp;&amp; n !== (n | 0);
 };
 
 /**
@@ -689,7 +773,7 @@ dc.utils.isFloat = function (n) {
  * @returns {Boolean}
  */
 dc.utils.isInteger = function (n) {
-    return n === +n && n === (n | 0);
+    return n === +n &amp;&amp; n === (n | 0);
 };
 
 /**
@@ -700,7 +784,7 @@ dc.utils.isInteger = function (n) {
  * @returns {Boolean}
  */
 dc.utils.isNegligible = function (n) {
-    return !dc.utils.isNumber(n) || (n < dc.constants.NEGLIGIBLE_NUMBER && n > -dc.constants.NEGLIGIBLE_NUMBER);
+    return !dc.utils.isNumber(n) || (n &lt; dc.constants.NEGLIGIBLE_NUMBER &amp;&amp; n > -dc.constants.NEGLIGIBLE_NUMBER);
 };
 
 /**
@@ -713,7 +797,7 @@ dc.utils.isNegligible = function (n) {
  * @returns {any}
  */
 dc.utils.clamp = function (val, min, max) {
-    return val < min ? min : (val > max ? max : val);
+    return val &lt; min ? min : (val > max ? max : val);
 };
 
 /**
@@ -782,7 +866,7 @@ dc.logger.warn = function (msg) {
 };
 
 dc.logger.debug = function (msg) {
-    if (dc.logger.enableDebugLog && console) {
+    if (dc.logger.enableDebugLog &amp;&amp; console) {
         if (console.debug) {
             console.debug(msg);
         } else if (console.log) {
@@ -875,13 +959,13 @@ dc.filters = {};
  * @memberof dc.filters
  * @param {Number} low
  * @param {Number} high
- * @return {Array<Number>}
+ * @return {Array&lt;Number>}
  * @constructor
  */
 dc.filters.RangedFilter = function (low, high) {
     var range = new Array(low, high);
     range.isFiltered = function (value) {
-        return value >= this[0] && value < this[1];
+        return value >= this[0] &amp;&amp; value &lt; this[1];
     };
     range.filterType = 'RangedFilter';
 
@@ -896,8 +980,8 @@ dc.filters.RangedFilter = function (low, high) {
  * Its `filterType` is 'TwoDimensionalFilter'
  * @name TwoDimensionalFilter
  * @memberof dc.filters
- * @param {Array<Number>} filter
- * @return {Array<Number>}
+ * @param {Array&lt;Number>} filter
+ * @return {Array&lt;Number>}
  * @constructor
  */
 dc.filters.TwoDimensionalFilter = function (filter) {
@@ -905,8 +989,8 @@ dc.filters.TwoDimensionalFilter = function (filter) {
 
     var f = filter;
     f.isFiltered = function (value) {
-        return value.length && value.length === f.length &&
-               value[0] === f[0] && value[1] === f[1];
+        return value.length &amp;&amp; value.length === f.length &amp;&amp;
+               value[0] === f[0] &amp;&amp; value[1] === f[1];
     };
     f.filterType = 'TwoDimensionalFilter';
 
@@ -918,18 +1002,18 @@ dc.filters.TwoDimensionalFilter = function (filter) {
  * region. It is used by the {@link #dc.scatterPlot scatter plot} to implement rectangular brushing.
  *
  * It takes two two-dimensional points in the form `[[x1,y1],[x2,y2]]`, and normalizes them so that
- * `x1 <= x2` and `y1 <= y2`. It then returns a filter which accepts any points which are in the
+ * `x1 &lt;= x2` and `y1 &lt;= y2`. It then returns a filter which accepts any points which are in the
  * rectangular range including the lower values but excluding the higher values.
  *
  * If an array of two values are given to the RangedTwoDimensionalFilter, it interprets the values as
- * two x coordinates `x1` and `x2` and returns a filter which accepts any points for which `x1 <= x <
+ * two x coordinates `x1` and `x2` and returns a filter which accepts any points for which `x1 &lt;= x &lt;
  * x2`.
  *
  * Its `filterType` is 'RangedTwoDimensionalFilter'
  * @name RangedTwoDimensionalFilter
  * @memberof dc.filters
- * @param {Array<Array<Number>>} filter
- * @return {Array<Array<Number>>}
+ * @param {Array&lt;Array&lt;Number>>} filter
+ * @return {Array&lt;Array&lt;Number>>}
  * @constructor
  */
 dc.filters.RangedTwoDimensionalFilter = function (filter) {
@@ -961,8 +1045,8 @@ dc.filters.RangedTwoDimensionalFilter = function (filter) {
             y = fromBottomLeft[0][1];
         }
 
-        return x >= fromBottomLeft[0][0] && x < fromBottomLeft[1][0] &&
-               y >= fromBottomLeft[0][1] && y < fromBottomLeft[1][1];
+        return x >= fromBottomLeft[0][0] &amp;&amp; x &lt; fromBottomLeft[1][0] &amp;&amp;
+               y >= fromBottomLeft[0][1] &amp;&amp; y &lt; fromBottomLeft[1][1];
     };
     f.filterType = 'RangedTwoDimensionalFilter';
 
@@ -992,15 +1076,15 @@ dc.baseMixin = function (_chart) {
 
     var _minWidth = 200;
     var _defaultWidthCalc = function (element) {
-        var width = element && element.getBoundingClientRect && element.getBoundingClientRect().width;
-        return (width && width > _minWidth) ? width : _minWidth;
+        var width = element &amp;&amp; element.getBoundingClientRect &amp;&amp; element.getBoundingClientRect().width;
+        return (width &amp;&amp; width > _minWidth) ? width : _minWidth;
     };
     var _widthCalc = _defaultWidthCalc;
 
     var _minHeight = 200;
     var _defaultHeightCalc = function (element) {
-        var height = element && element.getBoundingClientRect && element.getBoundingClientRect().height;
-        return (height && height > _minHeight) ? height : _minHeight;
+        var height = element &amp;&amp; element.getBoundingClientRect &amp;&amp; element.getBoundingClientRect().height;
+        return (height &amp;&amp; height > _minHeight) ? height : _minHeight;
     };
     var _heightCalc = _defaultHeightCalc;
     var _width, _height;
@@ -1045,19 +1129,19 @@ dc.baseMixin = function (_chart) {
     var _filterHandler = function (dimension, filters) {
         if (filters.length === 0) {
             dimension.filter(null);
-        } else if (filters.length === 1 && !filters[0].isFiltered) {
+        } else if (filters.length === 1 &amp;&amp; !filters[0].isFiltered) {
             // single value and not a function-based filter
             dimension.filterExact(filters[0]);
-        } else if (filters.length === 1 && filters[0].filterType === 'RangedFilter') {
+        } else if (filters.length === 1 &amp;&amp; filters[0].filterType === 'RangedFilter') {
             // single range-based filter
             dimension.filterRange(filters[0]);
         } else {
             dimension.filterFunction(function (d) {
-                for (var i = 0; i < filters.length; i++) {
+                for (var i = 0; i &lt; filters.length; i++) {
                     var filter = filters[i];
-                    if (filter.isFiltered && filter.isFiltered(d)) {
+                    if (filter.isFiltered &amp;&amp; filter.isFiltered(d)) {
                         return true;
-                    } else if (filter <= d && filter >= d) {
+                    } else if (filter &lt;= d &amp;&amp; filter >= d) {
                         return true;
                     }
                 }
@@ -1089,8 +1173,8 @@ dc.baseMixin = function (_chart) {
      * @example
      * // Default height
      * chart.height(function (element) {
-     *     var height = element && element.getBoundingClientRect && element.getBoundingClientRect().height;
-     *     return (height && height > chart.minHeight()) ? height : chart.minHeight();
+     *     var height = element &amp;&amp; element.getBoundingClientRect &amp;&amp; element.getBoundingClientRect().height;
+     *     return (height &amp;&amp; height > chart.minHeight()) ? height : chart.minHeight();
      * });
      *
      * chart.height(250); // Set the chart's height to 250px;
@@ -1123,8 +1207,8 @@ dc.baseMixin = function (_chart) {
      * @example
      * // Default width
      * chart.width(function (element) {
-     *     var width = element && element.getBoundingClientRect && element.getBoundingClientRect().width;
-     *     return (width && width > chart.minWidth()) ? width : chart.minWidth();
+     *     var width = element &amp;&amp; element.getBoundingClientRect &amp;&amp; element.getBoundingClientRect().width;
+     *     return (width &amp;&amp; width > chart.minWidth()) ? width : chart.minWidth();
      * });
      * @param {Number|Function} [width]
      * @return {Number}
@@ -1298,7 +1382,7 @@ dc.baseMixin = function (_chart) {
     _chart._computeOrderedGroups = function (data) {
         var dataCopy = data.slice(0);
 
-        if (dataCopy.length <= 1) {
+        if (dataCopy.length &lt;= 1) {
             return dataCopy;
         }
 
@@ -1382,7 +1466,7 @@ dc.baseMixin = function (_chart) {
             _root = parent.root();
             _isChild = true;
         } else if (parent) {
-            if (parent.select && parent.classed) { // detect d3 selection
+            if (parent.select &amp;&amp; parent.classed) { // detect d3 selection
                 _anchor = parent.node();
             } else {
                 _anchor = parent;
@@ -1407,10 +1491,10 @@ dc.baseMixin = function (_chart) {
      */
     _chart.anchorName = function () {
         var a = _chart.anchor();
-        if (a && a.id) {
+        if (a &amp;&amp; a.id) {
             return a.id;
         }
-        if (a && a.replace) {
+        if (a &amp;&amp; a.replace) {
             return a.replace('#', '');
         }
         return 'dc-chart' + _chart.chartID();
@@ -1626,7 +1710,7 @@ dc.baseMixin = function (_chart) {
 
     _chart._activateRenderlets = function (event) {
         _listeners.pretransition(_chart);
-        if (_chart.transitionDuration() > 0 && _svg) {
+        if (_chart.transitionDuration() > 0 &amp;&amp; _svg) {
             _svg.transition().duration(_chart.transitionDuration())
                 .each('end', function () {
                     _listeners.renderlet(_chart);
@@ -1753,7 +1837,7 @@ dc.baseMixin = function (_chart) {
             return filters.length > 0;
         }
         return filters.some(function (f) {
-            return filter <= f && filter >= f;
+            return filter &lt;= f &amp;&amp; filter >= f;
         });
     };
 
@@ -1771,7 +1855,7 @@ dc.baseMixin = function (_chart) {
      *         return filters.length > 0;
      *     }
      *     return filters.some(function (f) {
-     *         return filter <= f && filter >= f;
+     *         return filter &lt;= f &amp;&amp; filter >= f;
      *     });
      * });
      *
@@ -1806,8 +1890,8 @@ dc.baseMixin = function (_chart) {
     };
 
     var _removeFilterHandler = function (filters, filter) {
-        for (var i = 0; i < filters.length; i++) {
-            if (filters[i] <= filter && filters[i] >= filter) {
+        for (var i = 0; i &lt; filters.length; i++) {
+            if (filters[i] &lt;= filter &amp;&amp; filters[i] >= filter) {
                 filters.splice(i, 1);
                 break;
             }
@@ -1828,8 +1912,8 @@ dc.baseMixin = function (_chart) {
      * @example
      * // default remove filter handler
      * chart.removeFilterHandler(function (filters, filter) {
-     *     for (var i = 0; i < filters.length; i++) {
-     *         if (filters[i] <= filter && filters[i] >= filter) {
+     *     for (var i = 0; i &lt; filters.length; i++) {
+     *         if (filters[i] &lt;= filter &amp;&amp; filters[i] >= filter) {
      *             filters.splice(i, 1);
      *             break;
      *         }
@@ -1927,7 +2011,7 @@ dc.baseMixin = function (_chart) {
     };
 
     function applyFilters () {
-        if (_chart.dimension() && _chart.dimension().filter) {
+        if (_chart.dimension() &amp;&amp; _chart.dimension().filter) {
             var fs = _filterHandler(_chart.dimension(), _filters);
             _filters = fs ? fs : _filters;
         }
@@ -1970,7 +2054,7 @@ dc.baseMixin = function (_chart) {
         if (!arguments.length) {
             return _filters.length > 0 ? _filters[0] : null;
         }
-        if (filter instanceof Array && filter[0] instanceof Array && !filter.isFiltered) {
+        if (filter instanceof Array &amp;&amp; filter[0] instanceof Array &amp;&amp; !filter.isFiltered) {
             filter[0].forEach(function (d) {
                 if (_chart.hasFilter(d)) {
                     _removeFilterHandler(_filters, d);
@@ -1990,7 +2074,7 @@ dc.baseMixin = function (_chart) {
         applyFilters();
         _chart._invokeFilteredListener(filter);
 
-        if (_root !== null && _chart.hasFilter()) {
+        if (_root !== null &amp;&amp; _chart.hasFilter()) {
             _chart.turnOnControls();
         } else {
             _chart.turnOffControls();
@@ -2006,7 +2090,7 @@ dc.baseMixin = function (_chart) {
      * @method filters
      * @memberof dc.baseMixin
      * @instance
-     * @return {Array<*>}
+     * @return {Array&lt;*>}
      */
     _chart.filters = function () {
         return _filters;
@@ -2059,11 +2143,11 @@ dc.baseMixin = function (_chart) {
      *         dimension.filter(null);
      *     } else {
      *         dimension.filterFunction(function (d) {
-     *             for (var i = 0; i < filters.length; i++) {
+     *             for (var i = 0; i &lt; filters.length; i++) {
      *                 var filter = filters[i];
-     *                 if (filter.isFiltered && filter.isFiltered(d)) {
+     *                 if (filter.isFiltered &amp;&amp; filter.isFiltered(d)) {
      *                     return true;
-     *                 } else if (filter <= d && filter >= d) {
+     *                 } else if (filter &lt;= d &amp;&amp; filter >= d) {
      *                     return true;
      *                 }
      *             }
@@ -2296,7 +2380,7 @@ dc.baseMixin = function (_chart) {
     _chart.renderlet = dc.logger.deprecate(function (renderletFunction) {
         _chart.on('renderlet.' + dc.utils.uniqueId(), renderletFunction);
         return _chart;
-    }, 'chart.renderlet has been deprecated.  Please use chart.on("renderlet.<renderletKey>", renderletFunction)');
+    }, 'chart.renderlet has been deprecated.  Please use chart.on("renderlet.&lt;renderletKey>", renderletFunction)');
 
     /**
      * Get or set the chart group to which this chart belongs. Chart groups are rendered or redrawn
@@ -2397,7 +2481,7 @@ dc.baseMixin = function (_chart) {
 
         for (var o in opts) {
             if (typeof(_chart[o]) === 'function') {
-                if (opts[o] instanceof Array && applyOptions.indexOf(o) !== -1) {
+                if (opts[o] instanceof Array &amp;&amp; applyOptions.indexOf(o) !== -1) {
                     _chart[o].apply(_chart, opts[o]);
                 } else {
                     _chart[o].call(_chart, opts[o]);
@@ -2547,7 +2631,7 @@ dc.colorMixin = function (_chart) {
      * @method ordinalColors
      * @memberof dc.colorMixin
      * @instance
-     * @param {Array<String>} r
+     * @param {Array&lt;String>} r
      * @return {dc.colorMixin}
      */
     _chart.ordinalColors = function (r) {
@@ -2559,7 +2643,7 @@ dc.colorMixin = function (_chart) {
      * @method linearColors
      * @memberof dc.colorMixin
      * @instance
-     * @param {Array<Number>} r
+     * @param {Array&lt;Number>} r
      * @return {dc.colorMixin}
      */
     _chart.linearColors = function (r) {
@@ -2607,8 +2691,8 @@ dc.colorMixin = function (_chart) {
      * @method colorDomain
      * @memberof dc.colorMixin
      * @instance
-     * @param {Array<String>} [domain]
-     * @return {Array<String>}
+     * @param {Array&lt;String>} [domain]
+     * @return {Array&lt;String>}
      * @return {dc.colorMixin}
      */
     _chart.colorDomain = function (domain) {
@@ -2707,7 +2791,7 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.rescale();
         _chart.redraw();
 
-        if (_rangeChart && !rangesEqual(_chart.filter(), _rangeChart.filter())) {
+        if (_rangeChart &amp;&amp; !rangesEqual(_chart.filter(), _rangeChart.filter())) {
             dc.events.trigger(function () {
                 _rangeChart.replaceFilter(domFilter);
                 _rangeChart.redraw();
@@ -2818,8 +2902,8 @@ dc.coordinateGridMixin = function (_chart) {
      * @method zoomScale
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @param {Array<Number|Date>} [extent=[1, Infinity]]
-     * @return {Array<Number|Date>}
+     * @param {Array&lt;Number|Date>} [extent=[1, Infinity]]
+     * @return {Array&lt;Number|Date>}
      * @return {dc.coordinateGridMixin}
      */
     _chart.zoomScale = function (extent) {
@@ -3125,7 +3209,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     function compareDomains (d1, d2) {
         return !d1 || !d2 || d1.length !== d2.length ||
-            d1.some(function (elem, i) { return (elem && d2[i]) ? elem.toString() !== d2[i].toString() : elem === d2[i]; });
+            d1.some(function (elem, i) { return (elem &amp;&amp; d2[i]) ? elem.toString() !== d2[i].toString() : elem === d2[i]; });
     }
 
     function prepareXAxis (g, render) {
@@ -3169,14 +3253,14 @@ dc.coordinateGridMixin = function (_chart) {
         }
 
         var axisXLab = g.selectAll('text.' + X_AXIS_LABEL_CLASS);
-        if (axisXLab.empty() && _chart.xAxisLabel()) {
+        if (axisXLab.empty() &amp;&amp; _chart.xAxisLabel()) {
             axisXLab = g.append('text')
                 .attr('class', X_AXIS_LABEL_CLASS)
                 .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
                       (_chart.height() - _xAxisLabelPadding) + ')')
                 .attr('text-anchor', 'middle');
         }
-        if (_chart.xAxisLabel() && axisXLab.text() !== _chart.xAxisLabel()) {
+        if (_chart.xAxisLabel() &amp;&amp; axisXLab.text() !== _chart.xAxisLabel()) {
             axisXLab.text(_chart.xAxisLabel());
         }
 
@@ -3291,14 +3375,14 @@ dc.coordinateGridMixin = function (_chart) {
 
         var axisYLab = _chart.g().selectAll('text.' + Y_AXIS_LABEL_CLASS + '.' + axisClass + '-label');
         var labelYPosition = (_chart.margins().top + _chart.yAxisHeight() / 2);
-        if (axisYLab.empty() && text) {
+        if (axisYLab.empty() &amp;&amp; text) {
             axisYLab = _chart.g().append('text')
                 .attr('transform', 'translate(' + labelXPosition + ',' + labelYPosition + '),rotate(' + rotation + ')')
                 .attr('class', Y_AXIS_LABEL_CLASS + ' ' + axisClass + '-label')
                 .attr('text-anchor', 'middle')
                 .text(text);
         }
-        if (text && axisYLab.text() !== text) {
+        if (text &amp;&amp; axisYLab.text() !== text) {
             axisYLab.text(text);
         }
         dc.transition(axisYLab, _chart.transitionDuration())
@@ -3689,7 +3773,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart.brushIsEmpty = function (extent) {
-        return _brush.empty() || !extent || extent[1] <= extent[0];
+        return _brush.empty() || !extent || extent[1] &lt;= extent[0];
     };
 
     _chart._brushing = function () {
@@ -3714,7 +3798,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart.redrawBrush = function (g, doTransition) {
         if (_brushOn) {
-            if (_chart.filter() && _chart.brush().empty()) {
+            if (_chart.filter() &amp;&amp; _chart.brush().empty()) {
                 _chart.brush().extent(_chart.filter());
             }
 
@@ -3771,7 +3855,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     function generateClipPath () {
         var defs = dc.utils.appendOrSelect(_parent, 'defs');
-        // cannot select <clippath> elements; bug in WebKit, must select by id
+        // cannot select &lt;clippath> elements; bug in WebKit, must select by id
         // https://groups.google.com/forum/#!topic/d3-js/6EpAzQ2gU9I
         var id = getClipPathId();
         var chartBodyClip = dc.utils.appendOrSelect(defs, '#' + id, 'clipPath').attr('id', id);
@@ -3881,7 +3965,7 @@ dc.coordinateGridMixin = function (_chart) {
      *          someOtherChart.focus(chart.filter());
      *     });
      * })
-     * @param {Array<Number>} [range]
+     * @param {Array&lt;Number>} [range]
      */
     _chart.focus = function (range) {
         if (hasRangeSelected(range)) {
@@ -3918,13 +4002,13 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function rangesEqual (range1, range2) {
-        if (!range1 && !range2) {
+        if (!range1 &amp;&amp; !range2) {
             return true;
         } else if (!range1 || !range2) {
             return false;
-        } else if (range1.length === 0 && range2.length === 0) {
+        } else if (range1.length === 0 &amp;&amp; range2.length === 0) {
             return true;
-        } else if (range1[0].valueOf() === range2[0].valueOf() &&
+        } else if (range1[0].valueOf() === range2[0].valueOf() &amp;&amp;
             range1[1].valueOf() === range2[1].valueOf()) {
             return true;
         }
@@ -3954,7 +4038,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function hasRangeSelected (range) {
-        return range instanceof Array && range.length > 1;
+        return range instanceof Array &amp;&amp; range.length > 1;
     }
 
     return _chart;
@@ -4012,7 +4096,7 @@ dc.stackMixin = function (_chart) {
         }
         return function (p) {
             //return true;
-            return p.x >= xDomain[0] && p.x <= xDomain[xDomain.length - 1];
+            return p.x >= xDomain[0] &amp;&amp; p.x &lt;= xDomain[xDomain.length - 1];
         };
     }
 
@@ -4035,7 +4119,7 @@ dc.stackMixin = function (_chart) {
      * @param {crossfilter.group} group
      * @param {String} [name]
      * @param {Function} [accessor]
-     * @return {Array<{group: crossfilter.group, name: String, accessor: Function}>}
+     * @return {Array&lt;{group: crossfilter.group, name: String, accessor: Function}>}
      * @return {dc.stackMixin}
      */
     _chart.stack = function (group, name, accessor) {
@@ -4043,7 +4127,7 @@ dc.stackMixin = function (_chart) {
             return _stack;
         }
 
-        if (arguments.length <= 2) {
+        if (arguments.length &lt;= 2) {
             accessor = name;
         }
 
@@ -4135,7 +4219,7 @@ dc.stackMixin = function (_chart) {
 
     _chart.yAxisMin = function () {
         var min = d3.min(flattenStack(), function (p) {
-            return (p.y + p.y0 < p.y0) ? (p.y + p.y0) : p.y0;
+            return (p.y + p.y0 &lt; p.y0) ? (p.y + p.y0) : p.y0;
         });
 
         return dc.utils.subtract(min, _chart.yAxisPadding());
@@ -4194,7 +4278,7 @@ dc.stackMixin = function (_chart) {
         if (typeof stackName === 'function') {
             return _chart._title(stackName);
         }
-        if (stackName === _chart._groupName && typeof titleAccessor === 'function') {
+        if (stackName === _chart._groupName &amp;&amp; typeof titleAccessor === 'function') {
             return _chart._title(titleAccessor);
         }
 
@@ -4517,7 +4601,7 @@ dc.bubbleMixin = function (_chart) {
     _chart.bubbleR = function (d) {
         var value = _chart.radiusValueAccessor()(d);
         var r = _chart.r()(value);
-        if (isNaN(r) || value <= 0) {
+        if (isNaN(r) || value &lt;= 0) {
             r = 0;
         }
         return r;
@@ -4835,7 +4919,7 @@ dc.pieChart = function (parent, chartGroup) {
         labels
             .text(function (d) {
                 var data = d.data;
-                if ((sliceHasNoData(data) || sliceTooSmall(d)) && !isSelectedSlice(d)) {
+                if ((sliceHasNoData(data) || sliceTooSmall(d)) &amp;&amp; !isSelectedSlice(d)) {
                     return '';
                 }
                 return _chart.label()(d.data);
@@ -4870,7 +4954,7 @@ dc.pieChart = function (parent, chartGroup) {
                 })
                 .on('click', onClick);
             positionLabels(labelsEnter, arc);
-            if (_externalLabelRadius && _drawPaths) {
+            if (_externalLabelRadius &amp;&amp; _drawPaths) {
                 updateLabelPaths(pieData, arc);
             }
         }
@@ -4902,7 +4986,7 @@ dc.pieChart = function (parent, chartGroup) {
                 };
             })
             .style('visibility', function (d) {
-                return d.endAngle - d.startAngle < 0.0001 ? 'hidden' : 'visible';
+                return d.endAngle - d.startAngle &lt; 0.0001 ? 'hidden' : 'visible';
             });
 
     }
@@ -4931,7 +5015,7 @@ dc.pieChart = function (parent, chartGroup) {
             var labels = _g.selectAll('text.' + _sliceCssClass)
                 .data(pieData);
             positionLabels(labels, arc);
-            if (_externalLabelRadius && _drawPaths) {
+            if (_externalLabelRadius &amp;&amp; _drawPaths) {
                 updateLabelPaths(pieData, arc);
             }
         }
@@ -5095,7 +5179,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     function sliceTooSmall (d) {
         var angle = (d.endAngle - d.startAngle);
-        return isNaN(angle) || angle < _minAngleForLabel;
+        return isNaN(angle) || angle &lt; _minAngleForLabel;
     }
 
     function sliceHasNoData (d) {
@@ -5289,7 +5373,7 @@ dc.barChart = function (parent, chartGroup) {
     });
 
     dc.override(_chart, 'render', function () {
-        if (_chart.round() && _centerBar && !_alwaysUseRounding) {
+        if (_chart.round() &amp;&amp; _centerBar &amp;&amp; !_alwaysUseRounding) {
             dc.logger.warn('By default, brush rounding is disabled if bars are centered. ' +
                          'See dc.js bar chart API documentation for details.');
         }
@@ -5320,7 +5404,7 @@ dc.barChart = function (parent, chartGroup) {
 
             renderBars(layer, i, d);
 
-            if (_chart.renderLabel() && last === i) {
+            if (_chart.renderLabel() &amp;&amp; last === i) {
                 renderLabels(layer, i, d);
             }
         });
@@ -5355,7 +5439,7 @@ dc.barChart = function (parent, chartGroup) {
             .attr('y', function (d) {
                 var y = _chart.y()(d.y + d.y0);
 
-                if (d.y < 0) {
+                if (d.y &lt; 0) {
                     y -= barHeight(d);
                 }
 
@@ -5395,7 +5479,7 @@ dc.barChart = function (parent, chartGroup) {
                 if (_centerBar) {
                     x -= _barWidth / 2;
                 }
-                if (_chart.isOrdinal() && _gap !== undefined) {
+                if (_chart.isOrdinal() &amp;&amp; _gap !== undefined) {
                     x += _gap / 2;
                 }
                 return dc.utils.safeNumber(x);
@@ -5403,7 +5487,7 @@ dc.barChart = function (parent, chartGroup) {
             .attr('y', function (d) {
                 var y = _chart.y()(d.y + d.y0);
 
-                if (d.y < 0) {
+                if (d.y &lt; 0) {
                     y -= barHeight(d);
                 }
 
@@ -5426,7 +5510,7 @@ dc.barChart = function (parent, chartGroup) {
             var numberOfBars = _chart.xUnitCount();
 
             // please can't we always use rangeBands for bar charts?
-            if (_chart.isOrdinal() && _gap === undefined) {
+            if (_chart.isOrdinal() &amp;&amp; _gap === undefined) {
                 _barWidth = Math.floor(_chart.x().rangeBand());
             } else if (_gap) {
                 _barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
@@ -5434,7 +5518,7 @@ dc.barChart = function (parent, chartGroup) {
                 _barWidth = Math.floor(_chart.xAxisLength() / (1 + _chart.barPadding()) / numberOfBars);
             }
 
-            if (_barWidth === Infinity || isNaN(_barWidth) || _barWidth < MIN_BAR_WIDTH) {
+            if (_barWidth === Infinity || isNaN(_barWidth) || _barWidth &lt; MIN_BAR_WIDTH) {
                 _barWidth = MIN_BAR_WIDTH;
             }
         }
@@ -5462,7 +5546,7 @@ dc.barChart = function (parent, chartGroup) {
                 var end = extent[1];
 
                 bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
-                    return d.x < start || d.x >= end;
+                    return d.x &lt; start || d.x >= end;
                 });
             } else {
                 bars.classed(dc.constants.DESELECTED_CLASS, false);
@@ -5549,7 +5633,7 @@ dc.barChart = function (parent, chartGroup) {
 
     _chart.extendBrush = function () {
         var extent = _chart.brush().extent();
-        if (_chart.round() && (!_centerBar || _alwaysUseRounding)) {
+        if (_chart.round() &amp;&amp; (!_centerBar || _alwaysUseRounding)) {
             extent[0] = extent.map(_chart.round())[0];
             extent[1] = extent.map(_chart.round())[1];
 
@@ -5771,8 +5855,8 @@ dc.lineChart = function (parent, chartGroup) {
      * @example
      * // create a Dash Dot Dot Dot
      * chart.dashStyle([3,1,1,1]);
-     * @param  {Array<Number>} [dashStyle=[]]
-     * @return {Array<Number>}
+     * @param  {Array&lt;Number>} [dashStyle=[]]
+     * @return {Array&lt;Number>}
      * @return {dc.lineChart}
      */
     _chart.dashStyle = function (dashStyle) {
@@ -5873,7 +5957,7 @@ dc.lineChart = function (parent, chartGroup) {
     }
 
     function drawDots (chartBody, layers) {
-        if (!_chart.brushOn() && _chart.xyTipsOn()) {
+        if (!_chart.brushOn() &amp;&amp; _chart.xyTipsOn()) {
             var tooltipListClass = TOOLTIP_G_CLASS + '-list';
             var tooltips = chartBody.select('g.' + tooltipListClass);
 
@@ -6050,7 +6134,7 @@ dc.lineChart = function (parent, chartGroup) {
     function colorFilter (color, dashstyle, inv) {
         return function () {
             var item = d3.select(this);
-            var match = (item.attr('stroke') === color &&
+            var match = (item.attr('stroke') === color &amp;&amp;
                 item.attr('stroke-dasharray') === ((dashstyle instanceof Array) ?
                     dashstyle.join(',') : null)) || item.attr('fill') === color;
             return inv ? !match : match;
@@ -6174,7 +6258,7 @@ dc.dataCount = function (parent, chartGroup) {
         var all = _formatNumber(tot);
         var selected = _formatNumber(val);
 
-        if ((tot === val) && (_html.all !== '')) {
+        if ((tot === val) &amp;&amp; (_html.all !== '')) {
             _chart.root().html(_html.all.replace('%total-count', all).replace('%filter-count', selected));
         } else if (_html.some !== '') {
             _chart.root().html(_html.some.replace('%total-count', all).replace('%filter-count', selected));
@@ -6298,7 +6382,7 @@ dc.dataTable = function (parent, chartGroup) {
         // create what you need.
         var bAllFunctions = true;
         _columns.forEach(function (f) {
-            bAllFunctions = bAllFunctions & (typeof f === 'function');
+            bAllFunctions = bAllFunctions &amp; (typeof f === 'function');
         });
 
         if (!bAllFunctions) {
@@ -6464,21 +6548,21 @@ dc.dataTable = function (parent, chartGroup) {
      * each cell. However, this method requires the HTML for the table to have a fixed set of column
      * headers.
      *
-     * <pre><code>chart.columns([
+     * &lt;pre>&lt;code>chart.columns([
      *     function(d) { return d.date; },
      *     function(d) { return d.open; },
      *     function(d) { return d.close; },
      *     function(d) { return numberFormat(d.close - d.open); },
      *     function(d) { return d.volume; }
      * ]);
-     * </code></pre>
+     * &lt;/code>&lt;/pre>
      *
      * In the second method, you can list the columns to read from the data without specifying it as
      * a function, except where necessary (ie, computed columns).  Note the data element name is
      * capitalized when displayed in the table header. You can also mix in functions as necessary,
      * using the third `{label, format}` form, as shown below.
      *
-     * <pre><code>chart.columns([
+     * &lt;pre>&lt;code>chart.columns([
      *     "date",    // d["date"], ie, a field accessor; capitalized automatically
      *     "open",    // ...
      *     "close",   // ...
@@ -6490,10 +6574,10 @@ dc.dataTable = function (parent, chartGroup) {
      *     },
      *     "volume"   // d["volume"], ie, a field accessor; capitalized automatically
      * ]);
-     * </code></pre>
+     * &lt;/code>&lt;/pre>
      *
      * In the third example, we specify all fields using the `{label, format}` method:
-     * <pre><code>chart.columns([
+     * &lt;pre>&lt;code>chart.columns([
      *     {
      *         label: "Date",
      *         format: function (d) { return d.date; }
@@ -6515,7 +6599,7 @@ dc.dataTable = function (parent, chartGroup) {
      *         format: function (d) { return d.volume; }
      *     }
      * ]);
-     * </code></pre>
+     * &lt;/code>&lt;/pre>
      *
      * You may wish to override the dataTable functions `_doColumnHeaderCapitalize` and
      * `_doColumnHeaderFnToString`, which are used internally to translate the column information or
@@ -6530,8 +6614,8 @@ dc.dataTable = function (parent, chartGroup) {
      * @method columns
      * @memberof dc.dataTable
      * @instance
-     * @param {Array<Function>} [columns=[]]
-     * @return {Array<Function>}}
+     * @param {Array&lt;Function>} [columns=[]]
+     * @return {Array&lt;Function>}}
      * @return {dc.dataTable}
      */
     _chart.columns = function (columns) {
@@ -6649,8 +6733,8 @@ dc.dataGrid = function (parent, chartGroup) {
     var _beginSlice = 0, _endSlice;
 
     var _htmlGroup = function (d) {
-        return '<div class=\'' + GROUP_CSS_CLASS + '\'><h1 class=\'' + LABEL_CSS_CLASS + '\'>' +
-            _chart.keyAccessor()(d) + '</h1></div>';
+        return '&lt;div class=\'' + GROUP_CSS_CLASS + '\'>&lt;h1 class=\'' + LABEL_CSS_CLASS + '\'>' +
+            _chart.keyAccessor()(d) + '&lt;/h1>&lt;/div>';
     };
 
     _chart._doRender = function () {
@@ -6778,7 +6862,7 @@ dc.dataGrid = function (parent, chartGroup) {
      * @memberof dc.dataGrid
      * @instance
      * @example
-     * chart.html(function (d) { return '<div class='item '+data.exampleCategory+''>'+data.exampleString+'</div>';});
+     * chart.html(function (d) { return '&lt;div class='item '+data.exampleCategory+''>'+data.exampleString+'&lt;/div>';});
      * @param {Function} [html]
      * @return {Function}
      * @return {dc.dataGrid}
@@ -6797,7 +6881,7 @@ dc.dataGrid = function (parent, chartGroup) {
      * @memberof dc.dataGrid
      * @instance
      * @example
-     * chart.htmlGroup (function (d) { return '<h2>'.d.key . 'with ' . d.values.length .' items</h2>'});
+     * chart.htmlGroup (function (d) { return '&lt;h2>'.d.key . 'with ' . d.values.length .' items&lt;/h2>'});
      * @param {Function} [htmlGroup]
      * @return {Function}
      * @return {dc.dataGrid}
@@ -7079,7 +7163,7 @@ dc.compositeChart = function (parent, chartGroup) {
     dc.override(_chart, '_generateG', function () {
         var g = this.__generateG();
 
-        for (var i = 0; i < _children.length; ++i) {
+        for (var i = 0; i &lt; _children.length; ++i) {
             var child = _children[i];
 
             generateChildG(child, i);
@@ -7107,7 +7191,7 @@ dc.compositeChart = function (parent, chartGroup) {
         var extent = _chart.extendBrush();
         var brushIsEmpty = _chart.brushIsEmpty(extent);
 
-        for (var i = 0; i < _children.length; ++i) {
+        for (var i = 0; i &lt; _children.length; ++i) {
             _children[i].filter(null);
             if (!brushIsEmpty) {
                 _children[i].filter(extent);
@@ -7123,7 +7207,7 @@ dc.compositeChart = function (parent, chartGroup) {
         if (left) { prepareLeftYAxis(ranges); }
         if (right) { prepareRightYAxis(ranges); }
 
-        if (leftYAxisChildren().length > 0 && !_rightAxisGridLines) {
+        if (leftYAxisChildren().length > 0 &amp;&amp; !_rightAxisGridLines) {
             _chart._renderHorizontalGridLinesForAxis(_chart.g(), _chart.y(), _chart.yAxis());
         } else if (rightYAxisChildren().length > 0) {
             _chart._renderHorizontalGridLinesForAxis(_chart.g(), _rightY, _rightYAxis);
@@ -7155,25 +7239,25 @@ dc.compositeChart = function (parent, chartGroup) {
             ryAxisMax = rightYAxisMax();
         }
 
-        if (_chart.alignYAxes() && left && right && (lyAxisMin < 0 || ryAxisMin < 0)) {
+        if (_chart.alignYAxes() &amp;&amp; left &amp;&amp; right &amp;&amp; (lyAxisMin &lt; 0 || ryAxisMin &lt; 0)) {
             // both y axis are linear and at least one doesn't start at zero
             var leftYRatio, rightYRatio;
 
-            if (lyAxisMin < 0) {
+            if (lyAxisMin &lt; 0) {
                 leftYRatio = lyAxisMax / lyAxisMin;
             }
 
-            if (ryAxisMin < 0) {
+            if (ryAxisMin &lt; 0) {
                 rightYRatio = ryAxisMax / ryAxisMin;
             }
 
-            if (lyAxisMin < 0 && ryAxisMin < 0) {
-                if (leftYRatio < rightYRatio) {
+            if (lyAxisMin &lt; 0 &amp;&amp; ryAxisMin &lt; 0) {
+                if (leftYRatio &lt; rightYRatio) {
                     ryAxisMax = ryAxisMin * leftYRatio;
                 } else {
                     lyAxisMax = lyAxisMin * rightYRatio;
                 }
-            } else if (lyAxisMin < 0) {
+            } else if (lyAxisMin &lt; 0) {
                 ryAxisMin = ryAxisMax / leftYRatio;
             } else {
                 lyAxisMin = lyAxisMax / (ryAxisMax / ryAxisMin);
@@ -7231,7 +7315,7 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     _chart.plotData = function () {
-        for (var i = 0; i < _children.length; ++i) {
+        for (var i = 0; i &lt; _children.length; ++i) {
             var child = _children[i];
 
             if (!child.g()) {
@@ -7302,7 +7386,7 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     _chart.fadeDeselectedArea = function () {
-        for (var i = 0; i < _children.length; ++i) {
+        for (var i = 0; i &lt; _children.length; ++i) {
             var child = _children[i];
             child.brush(_chart.brush());
             child.fadeDeselectedArea();
@@ -7353,7 +7437,7 @@ dc.compositeChart = function (parent, chartGroup) {
      *         .group(volumeByMonthGroup)
      *         .centerBar(true)
      * ]);
-     * @param {Array<Chart>} [subChartArray]
+     * @param {Array&lt;Chart>} [subChartArray]
      * @return {dc.compositeChart}
      */
     _chart.compose = function (subChartArray) {
@@ -7377,7 +7461,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @method children
      * @memberof dc.compositeChart
      * @instance
-     * @return {Array<dc.baseMixin>}
+     * @return {Array&lt;dc.baseMixin>}
      */
     _chart.children = function () {
         return _children;
@@ -7532,14 +7616,14 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     _chart.legendHighlight = function (d) {
-        for (var j = 0; j < _children.length; ++j) {
+        for (var j = 0; j &lt; _children.length; ++j) {
             var child = _children[j];
             child.legendHighlight(d);
         }
     };
 
     _chart.legendReset = function (d) {
-        for (var j = 0; j < _children.length; ++j) {
+        for (var j = 0; j &lt; _children.length; ++j) {
             var child = _children[j];
             child.legendReset(d);
         }
@@ -7652,7 +7736,7 @@ dc.seriesChart = function (parent, chartGroup) {
                 childrenChanged = true;
             });
         _chart._compose(children);
-        if (childrenChanged && _chart.legend()) {
+        if (childrenChanged &amp;&amp; _chart.legend()) {
             _chart.legend().render();
         }
     };
@@ -7809,7 +7893,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
     _chart._doRender = function () {
         _chart.resetSvg();
-        for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
+        for (var layerIndex = 0; layerIndex &lt; _geoJsons.length; ++layerIndex) {
             var states = _chart.svg().append('g')
                 .attr('class', 'layer' + layerIndex);
 
@@ -7846,7 +7930,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     function generateLayeredData () {
         var data = {};
         var groupAll = _chart.data();
-        for (var i = 0; i < groupAll.length; ++i) {
+        for (var i = 0; i &lt; groupAll.length; ++i) {
             data[_chart.keyAccessor()(groupAll[i])] = _chart.valueAccessor()(groupAll[i]);
         }
         return data;
@@ -7885,11 +7969,11 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     }
 
     function isSelected (layerIndex, d) {
-        return _chart.hasFilter() && _chart.hasFilter(getKey(layerIndex, d));
+        return _chart.hasFilter() &amp;&amp; _chart.hasFilter(getKey(layerIndex, d));
     }
 
     function isDeselected (layerIndex, d) {
-        return _chart.hasFilter() && !_chart.hasFilter(getKey(layerIndex, d));
+        return _chart.hasFilter() &amp;&amp; !_chart.hasFilter(getKey(layerIndex, d));
     }
 
     function getKey (layerIndex, d) {
@@ -7938,7 +8022,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     }
 
     _chart._doRedraw = function () {
-        for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
+        for (var layerIndex = 0; layerIndex &lt; _geoJsons.length; ++layerIndex) {
             plotData(layerIndex);
             if (_projectionFlag) {
                 _chart.svg().selectAll('g.' + geoJson(layerIndex).name + ' path').attr('d', _geoPath);
@@ -7971,7 +8055,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * @return {dc.geoChoroplethChart}
      */
     _chart.overlayGeoJson = function (json, name, keyAccessor) {
-        for (var i = 0; i < _geoJsons.length; ++i) {
+        for (var i = 0; i &lt; _geoJsons.length; ++i) {
             if (_geoJsons[i].name === name) {
                 _geoJsons[i].data = json;
                 _geoJsons[i].keyAccessor = keyAccessor;
@@ -8006,7 +8090,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * @method geoJsons
      * @memberof dc.geoChoroplethChart
      * @instance
-     * @return {Array<{name:String, data: Object, accessor: Function}>}
+     * @return {Array&lt;{name:String, data: Object, accessor: Function}>}
      */
     _chart.geoJsons = function () {
         return _geoJsons;
@@ -8037,7 +8121,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     _chart.removeGeoJson = function (name) {
         var geoJsons = [];
 
-        for (var i = 0; i < _geoJsons.length; ++i) {
+        for (var i = 0; i &lt; _geoJsons.length; ++i) {
             var layer = _geoJsons[i];
             if (layer.name !== name) {
                 geoJsons.push(layer);
@@ -8110,7 +8194,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
      * **mandatory**
      *
      * Set up a data point on the overlay. The name of a data point should match a specific 'key' among
-     * data groups generated using keyAccessor.  If a match is found (point name <-> data group key)
+     * data groups generated using keyAccessor.  If a match is found (point name &lt;-> data group key)
      * then a bubble will be generated at the position specified by the function. x and y
      * value specified here are relative to the underlying svg.
      * @method point
@@ -9204,7 +9288,7 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     function resizeFiltered (filter) {
         var symbols = _chart.selectAll('.chart-body path.symbol').each(function (d) {
-            this.filtered = filter && filter.isFiltered(d.key);
+            this.filtered = filter &amp;&amp; filter.isFiltered(d.key);
         });
 
         dc.transition(symbols, _chart.transitionDuration()).attr('d', _symbol);
@@ -9347,9 +9431,9 @@ dc.numberDisplay = function (parent, chartGroup) {
                 this.lastValue = newValue;
                 return function (t) {
                     var html = null, num = _chart.formatNumber()(interp(t));
-                    if (newValue === 0 && (_html.none !== '')) {
+                    if (newValue === 0 &amp;&amp; (_html.none !== '')) {
                         html = _html.none;
-                    } else if (newValue === 1 && (_html.one !== '')) {
+                    } else if (newValue === 1 &amp;&amp; (_html.one !== '')) {
                         html = _html.one;
                     } else if (_html.some !== '') {
                         html = _html.some;
@@ -9517,8 +9601,8 @@ dc.heatMap = function (parent, chartGroup) {
      * @method rows
      * @memberof dc.heatMap
      * @instance
-     * @param  {Array<String|Number>} [rows]
-     * @return {Array<String|Number>}
+     * @param  {Array&lt;String|Number>} [rows]
+     * @return {Array&lt;String|Number>}
      * @return {dc.heatMap}
      */
     _chart.rows = function (rows) {
@@ -9541,8 +9625,8 @@ dc.heatMap = function (parent, chartGroup) {
      * @method cols
      * @memberof dc.heatMap
      * @instance
-     * @param  {Array<String|Number>} [cols]
-     * @return {Array<String|Number>}
+     * @param  {Array&lt;String|Number>} [cols]
+     * @return {Array&lt;String|Number>}
      * @return {dc.heatMap}
      */
     _chart.cols = function (cols) {
@@ -9790,8 +9874,8 @@ dc.heatMap = function (parent, chartGroup) {
                 var quartileData = d.quartiles = quartiles(d);
 
                 // Compute whiskers. Must return exactly 2 elements, or null.
-                var whiskerIndices = whiskers && whiskers.call(this, d, i),
-                    whiskerData = whiskerIndices && whiskerIndices.map(function (i) { return d[i]; });
+                var whiskerIndices = whiskers &amp;&amp; whiskers.call(this, d, i),
+                    whiskerData = whiskerIndices &amp;&amp; whiskerIndices.map(function (i) { return d[i]; });
 
                 // Compute outliers. If no whiskers are specified, all data are 'outliers'.
                 // We compute the outliers as indices, so that we can join across transitions!
@@ -9800,7 +9884,7 @@ dc.heatMap = function (parent, chartGroup) {
 
                 // Compute the new x-scale.
                 var x1 = d3.scale.linear()
-                    .domain(domain && domain.call(this, d, i) || [min, max])
+                    .domain(domain &amp;&amp; domain.call(this, d, i) || [min, max])
                     .range([height, 0]);
 
                 // Retrieve the old x-scale, if this is an update.
@@ -9952,10 +10036,10 @@ dc.heatMap = function (parent, chartGroup) {
                 boxTick.enter().append('text')
                     .attr('class', 'box')
                     .attr('dy', '.3em')
-                    .attr('dx', function (d, i) { return i & 1 ? 6 : -6; })
-                    .attr('x', function (d, i) { return i & 1 ? width : 0; })
+                    .attr('dx', function (d, i) { return i &amp; 1 ? 6 : -6; })
+                    .attr('x', function (d, i) { return i &amp; 1 ? width : 0; })
                     .attr('y', x0)
-                    .attr('text-anchor', function (d, i) { return i & 1 ? 'start' : 'end'; })
+                    .attr('text-anchor', function (d, i) { return i &amp; 1 ? 'start' : 'end'; })
                     .text(format)
                     .transition()
                     .duration(duration)
@@ -10113,7 +10197,7 @@ dc.boxPlot = function (parent, chartGroup) {
                 iqr = (q3 - q1) * k,
                 i = -1,
                 j = d.length;
-            do { ++i; } while (d[i] < q1 - iqr);
+            do { ++i; } while (d[i] &lt; q1 - iqr);
             do { --j; } while (d[j] > q3 + iqr);
             return [i, j];
         };
@@ -10338,9 +10422,9 @@ dc.d3 = d3;
 dc.crossfilter = crossfilter;
 
 return dc;}
-    if(typeof define === "function" && define.amd) {
+    if(typeof define === "function" &amp;&amp; define.amd) {
         define(["d3", "crossfilter"], _dc);
-    } else if(typeof module === "object" && module.exports) {
+    } else if(typeof module === "object" &amp;&amp; module.exports) {
         var _d3 = require('d3');
         var _crossfilter = require('crossfilter');
         // When using npm + browserify, 'crossfilter' is a function,
@@ -10358,4 +10442,135 @@ return dc;}
 }
 )();
 
-//# sourceMappingURL=dc.js.map
+//# sourceMappingURL=dc.js.map</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+<div class="modal fade" id="searchResults">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Search results</h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+<footer>
+
+
+	<span class="copyright">
+	DocStrap Copyright © 2012-2015 The contributors to the JSDoc3 and DocStrap projects.
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	
+		on Thu Feb 11th 2016
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			var id = $( heading ).attr( "id" );
+			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		SearcherDisplay.init();
+	});
+</script>
+
+</body>
+</html>
