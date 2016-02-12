@@ -1,4 +1,5 @@
 ---
+layout: post
 ---
 <a name="dc"></a>
 ## dc : <code>object</code>
