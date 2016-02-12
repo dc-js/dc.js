@@ -1,3 +1,5 @@
+---
+---
 <a name="dc"></a>
 ## dc : <code>object</code>
 The entire dc.js library is scoped under the **dc** name space. It does not introduce
