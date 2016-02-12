@@ -2,7 +2,7 @@
 ## 2.0.0 beta 26
 * Apply pie chart labels before transition, so they are easier to manipulate with the pretransition hook. Added example of showing percentages in pie chart labels. (Workaround for [#703](https://github.com/dc-js/dc.js/issues/703))
 * Documentation of chart registry, by Jasmine Hegman ([#676](https://github.com/dc-js/dc.js/issues/676) / [#1082](https://github.com/dc-js/dc.js/pull/1082))
-* HTML documentation generation, by Matt Traynham. There are still some kinks to be worked out here, but in principle it should be more robust than the gigantic markdown file we are generating. ([#1086](https://github.com/dc-js/dc.js/pull/1086)
+* HTML documentation generation, by Matt Traynham. There are still some kinks to be worked out here, but in principle it should be more robust than the gigantic markdown file we are generating. ([#1086](https://github.com/dc-js/dc.js/pull/1086))
 * Document that you need to use a `RangedFilter` when filtering a range, by koefoed ([#1090](https://github.com/dc-js/dc.js/pull/1090))
 * Fix links to box plot examples, by Yuval Greenfield ([#1094](https://github.com/dc-js/dc.js/pull/1094))
 * [Sparkline example](http://dc-js.github.io/dc.js/examples/sparkline.html) ([#1013](https://github.com/dc-js/dc.js/issues/1013))
