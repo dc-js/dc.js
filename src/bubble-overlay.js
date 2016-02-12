@@ -3,9 +3,10 @@
  * chart you can arbitrarily place bubbles on an existing svg or bitmap image, thus changing the
  * typical x and y positioning while retaining the capability to visualize data using bubble radius
  * and coloring.
+ *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
- * @name bubbleOverlay
+ * @namespace bubbleOverlay
  * @memberof dc
  * @mixes dc.bubbleMixin
  * @mixes dc.baseMixin
@@ -32,7 +33,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
      * Set the underlying svg image element. Unlike other dc charts this chart will not generate a svg
      * element; therefore the bubble overlay chart will not work if this function is not invoked. If the
      * underlying image is a bitmap, then an empty svg will need to be created on top of the image.
-     * @name svg
+     * @method svg
      * @memberof dc.bubbleOverlay
      * @instance
      * @example
@@ -58,7 +59,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
      * data groups generated using keyAccessor.  If a match is found (point name <-> data group key)
      * then a bubble will be generated at the position specified by the function. x and y
      * value specified here are relative to the underlying svg.
-     * @name point
+     * @method point
      * @memberof dc.bubbleOverlay
      * @instance
      * @param {String} name

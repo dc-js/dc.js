@@ -61,7 +61,7 @@ dc.stackMixin = function (_chart) {
      * For example, in a stacked bar chart, the bars of each stack will be positioned using the same set
      * of keys on the x axis, while stacked vertically. If name is specified then it will be used to
      * generate the legend label.
-     * @name stack
+     * @method stack
      * @memberof dc.stackMixin
      * @instance
      * @see {@link https://github.com/square/crossfilter/wiki/API-Reference#group-map-reduce crossfilter.group}
@@ -113,7 +113,7 @@ dc.stackMixin = function (_chart) {
     /**
      * Allow named stacks to be hidden or shown by clicking on legend items.
      * This does not affect the behavior of hideStack or showStack.
-     * @name hidableStacks
+     * @method hidableStacks
      * @memberof dc.stackMixin
      * @instance
      * @param {Boolean} [hidableStacks=false]
@@ -136,7 +136,7 @@ dc.stackMixin = function (_chart) {
     /**
      * Hide all stacks on the chart with the given name.
      * The chart must be re-rendered for this change to appear.
-     * @name hideStack
+     * @method hideStack
      * @memberof dc.stackMixin
      * @instance
      * @param {String} stackName
@@ -153,7 +153,7 @@ dc.stackMixin = function (_chart) {
     /**
      * Show all stacks on the chart with the given name.
      * The chart must be re-rendered for this change to appear.
-     * @name showStack
+     * @method showStack
      * @memberof dc.stackMixin
      * @instance
      * @param {String} stackName
@@ -211,7 +211,7 @@ dc.stackMixin = function (_chart) {
      *
      * If the first argument is a stack name, the title function will get or set the title for that stack. If stackName
      * is not provided, the first stack is implied.
-     * @name title
+     * @method title
      * @memberof dc.stackMixin
      * @instance
      * @example
@@ -248,7 +248,7 @@ dc.stackMixin = function (_chart) {
     /**
      * Gets or sets the stack layout algorithm, which computes a baseline for each stack and
      * propagates it to the next
-     * @name stackLayout
+     * @method stackLayout
      * @memberof dc.stackMixin
      * @instance
      * @see {@link http://github.com/mbostock/d3/wiki/Stack-Layout d3.layout.stack}

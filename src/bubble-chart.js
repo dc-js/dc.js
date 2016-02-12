@@ -5,10 +5,11 @@
  * - y axis position
  * - bubble radius
  * - color
+ *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  * - {@link http://dc-js.github.com/dc.js/vc/index.html US Venture Capital Landscape 2011}
- * @name bubbleChart
+ * @namespace bubbleChart
  * @memberof dc
  * @mixes dc.bubbleMixin
  * @mixes dc.coordinateGridMixin
@@ -39,7 +40,7 @@ dc.bubbleChart = function (parent, chartGroup) {
     /**
      * Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
      * feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
-     * @name elasticRadius
+     * @method elasticRadius
      * @memberof dc.bubbleChart
      * @instance
      * @param {Boolean} [elasticRadius=false]
@@ -57,7 +58,7 @@ dc.bubbleChart = function (parent, chartGroup) {
     /**
      * Turn on or off the bubble sorting feature, or return the value of the flag. If enabled,
      * bubbles will be sorted by their radius, with smaller bubbles in front.
-     * @name sortBubbleSize
+     * @method sortBubbleSize
      * @memberof dc.bubbleChart
      * @instance
      * @param {Boolean} [sortBubbleSize=false]

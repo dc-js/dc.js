@@ -33,7 +33,7 @@ dc.bubbleMixin = function (_chart) {
      * Get or set the bubble radius scale. By default the bubble chart uses
      * {@link https://github.com/mbostock/d3/wiki/Quantitative-Scales#linear d3.scale.linear().domain([0, 100])}
      * as its radius scale.
-     * @name r
+     * @method r
      * @memberof dc.bubbleMixin
      * @instance
      * @see {@link http://github.com/mbostock/d3/wiki/Scales d3.scale}
@@ -54,7 +54,7 @@ dc.bubbleMixin = function (_chart) {
      * be used to retrieve a data value for each bubble. The data retrieved then will be mapped using
      * the r scale to the actual bubble radius. This allows you to encode a data dimension using bubble
      * size.
-     * @name radiusValueAccessor
+     * @method radiusValueAccessor
      * @memberof dc.bubbleMixin
      * @instance
      * @param {Function} [radiusValueAccessor]
@@ -160,7 +160,7 @@ dc.bubbleMixin = function (_chart) {
 
     /**
      * Get or set the minimum radius. This will be used to initialize the radius scale's range.
-     * @name minRadius
+     * @method minRadius
      * @memberof dc.bubbleMixin
      * @instance
      * @param {Number} [radius=10]
@@ -178,7 +178,7 @@ dc.bubbleMixin = function (_chart) {
     /**
      * Get or set the minimum radius for label rendering. If a bubble's radius is less than this value
      * then no label will be rendered.
-     * @name minRadiusWithLabel
+     * @method minRadiusWithLabel
      * @memberof dc.bubbleMixin
      * @instance
      * @param {Number} [radius=10]
@@ -197,7 +197,7 @@ dc.bubbleMixin = function (_chart) {
     /**
      * Get or set the maximum relative size of a bubble to the length of x axis. This value is useful
      * when the difference in radius between bubbles is too great.
-     * @name maxBubbleRelativeSize
+     * @method maxBubbleRelativeSize
      * @memberof dc.bubbleMixin
      * @instance
      * @param {Number} [relativeSize=0.3]

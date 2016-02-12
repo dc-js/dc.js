@@ -34,6 +34,21 @@ var dc = {
 };
 /*jshint +W079*/
 
+/**
+ * The dc.chartRegistry object maintains sets of all instantiated dc.js charts under named groups
+ * and the default group.
+ *
+ * A chart group often corresponds to a crossfilter instance. It specifies
+ * the set of charts which should be updated when a filter changes on one of the charts or when the
+ * global functions {@link #dc.filterAll dc.filterAll}, {@link #dc.refocusAll dc.refocusAll},
+ * {@link #dc.renderAll dc.renderAll}, {@link #dc.redrawAll dc.redrawAll}, or chart functions
+ * {@link #dc.baseMixin+renderGroup baseMixin.renderGroup},
+ * {@link #dc.baseMixin+redrawGroup baseMixin.redrawGroup} are called.
+ *
+ * @namespace chartRegistry
+ * @memberof dc
+ * @type {{has, register, deregister, clear, list}}
+ */
 dc.chartRegistry = (function () {
     // chartGroup:string => charts:array
     var _chartMap = {};
@@ -51,6 +66,13 @@ dc.chartRegistry = (function () {
     }
 
     return {
+        /**
+         * Determine if a given chart instance resides in any group in the registry.
+         * @method has
+         * @memberof dc.chartRegistry
+         * @param {Object} chart dc.js chart instance
+         * @returns {Boolean}
+         */
         has: function (chart) {
             for (var e in _chartMap) {
                 if (_chartMap[e].indexOf(chart) >= 0) {
@@ -60,11 +82,27 @@ dc.chartRegistry = (function () {
             return false;
         },
 
+        /**
+         * Add given chart instance to the given group, creating the group if necessary.
+         * If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
+         * @method register
+         * @memberof dc.chartRegistry
+         * @param {Object} chart dc.js chart instance
+         * @param {String} [group] Group name
+         */
         register: function (chart, group) {
             group = initializeChartGroup(group);
             _chartMap[group].push(chart);
         },
 
+        /**
+         * Remove given chart instance from the given group, creating the group if necessary.
+         * If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
+         * @method deregister
+         * @memberof dc.chartRegistry
+         * @param {Object} chart dc.js chart instance
+         * @param {String} [group] Group name
+         */
         deregister: function (chart, group) {
             group = initializeChartGroup(group);
             for (var i = 0; i < _chartMap[group].length; i++) {
@@ -75,6 +113,12 @@ dc.chartRegistry = (function () {
             }
         },
 
+        /**
+         * Clear given group if one is provided, otherwise clears all groups.
+         * @method clear
+         * @memberof dc.chartRegistry
+         * @param {String} group Group name
+         */
         clear: function (group) {
             if (group) {
                 delete _chartMap[group];
@@ -83,6 +127,14 @@ dc.chartRegistry = (function () {
             }
         },
 
+        /**
+         * Get an array of each chart instance in the given group.
+         * If no group is provided, the charts in the default group are returned.
+         * @method list
+         * @memberof dc.chartRegistry
+         * @param {String} [group] Group name
+         * @returns {Array<Object>}
+         */
         list: function (group) {
             group = initializeChartGroup(group);
             return _chartMap[group];
@@ -90,18 +142,47 @@ dc.chartRegistry = (function () {
     };
 })();
 
+/**
+ * Add given chart instance to the given group, creating the group if necessary.
+ * If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
+ * @memberof dc
+ * @method registerChart
+ * @param {Object} chart dc.js chart instance
+ * @param {String} [group] Group name
+ */
 dc.registerChart = function (chart, group) {
     dc.chartRegistry.register(chart, group);
 };
 
+/**
+ * Remove given chart instance from the given group, creating the group if necessary.
+ * If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
+ * @memberof dc
+ * @method deregisterChart
+ * @param {Object} chart dc.js chart instance
+ * @param {String} [group] Group name
+ */
 dc.deregisterChart = function (chart, group) {
     dc.chartRegistry.deregister(chart, group);
 };
 
+/**
+ * Determine if a given chart instance resides in any group in the registry.
+ * @memberof dc
+ * @method hasChart
+ * @param {Object} chart dc.js chart instance
+ * @returns {Boolean}
+ */
 dc.hasChart = function (chart) {
     return dc.chartRegistry.has(chart);
 };
 
+/**
+ * Clear given group if one is provided, otherwise clears all groups.
+ * @memberof dc
+ * @method deregisterAllCharts
+ * @param {String} group Group name
+ */
 dc.deregisterAllCharts = function (group) {
     dc.chartRegistry.clear(group);
 };
@@ -110,7 +191,7 @@ dc.deregisterAllCharts = function (group) {
  * Clear all filters on all charts within the given chart group. If the chart group is not given then
  * only charts that belong to the default chart group will be reset.
  * @memberof dc
- * @name filterAll
+ * @method filterAll
  * @param {String} [group]
  */
 dc.filterAll = function (group) {
@@ -124,7 +205,7 @@ dc.filterAll = function (group) {
  * Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
  * not given then only charts that belong to the default chart group will be reset.
  * @memberof dc
- * @name refocusAll
+ * @method refocusAll
  * @param {String} [group]
  */
 dc.refocusAll = function (group) {
@@ -140,7 +221,7 @@ dc.refocusAll = function (group) {
  * Re-render all charts belong to the given chart group. If the chart group is not given then only
  * charts that belong to the default chart group will be re-rendered.
  * @memberof dc
- * @name renderAll
+ * @method renderAll
  * @param {String} [group]
  */
 dc.renderAll = function (group) {
@@ -160,7 +241,7 @@ dc.renderAll = function (group) {
  * when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
  * from scratch.
  * @memberof dc
- * @name redrawAll
+ * @method redrawAll
  * @param {String} [group]
  */
 dc.redrawAll = function (group) {
@@ -178,7 +259,7 @@ dc.redrawAll = function (group) {
  * If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
  * immediately
  * @memberof dc
- * @name disableTransitions
+ * @method disableTransitions
  * @type {Boolean}
  * @default false
  */
@@ -230,7 +311,7 @@ dc.afterTransition = function (transition, callback) {
 };
 
 /**
- * @name units
+ * @namespace units
  * @memberof dc
  * @type {{}}
  */
@@ -241,7 +322,7 @@ dc.units = {};
  * {@link #dc.coordinateGridMixin Coordinate Grid Chart} and should
  * be used when the x values are a sequence of integers.
  * It is a function that counts the number of integers in the range supplied in its start and end parameters.
- * @name integers
+ * @method integers
  * @memberof dc.units
  * @see {@link #dc.coordinateGridMixin+xUnits coordinateGridMixin.xUnits}
  * @example
@@ -260,7 +341,7 @@ dc.units.integers = function (start, end) {
  * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales d3.scale.ordinal} to
  * {@link #dc.coordinateGridMixin+x .x}.
  * It just returns the domain passed to it, which for ordinal charts is an array of all values.
- * @name ordinal
+ * @method ordinal
  * @memberof dc.units
  * @see {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales d3.scale.ordinal}
  * @see {@link #dc.coordinateGridMixin+xUnits coordinateGridMixin.xUnits}
@@ -278,7 +359,7 @@ dc.units.ordinal = function (start, end, domain) {
 };
 
 /**
- * @name fp
+ * @namespace fp
  * @memberof dc.units
  * @type {{}}
  */
@@ -289,7 +370,7 @@ dc.units.fp = {};
  * numbers with the given precision.
  * The returned function determines how many values at the given precision will fit into the range
  * supplied in its start and end parameters.
- * @name precision
+ * @method precision
  * @memberof dc.units.fp
  * @see {@link #dc.coordinateGridMixin+xUnits coordinateGridMixin.xUnits}
  * @example

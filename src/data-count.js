@@ -8,7 +8,7 @@
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * @name dataCount
+ * @namespace dataCount
  * @memberof dc
  * @mixes dc.baseMixin
  * @example
@@ -36,7 +36,7 @@ dc.dataCount = function (parent, chartGroup) {
      * `%filter-count` will be replaced with the number of selected records.
      * - all: HTML template to use if all items are selected
      * - some: HTML template to use if not all items are selected
-     * @name html
+     * @method html
      * @memberof dc.dataCount
      * @instance
      * @example
@@ -63,7 +63,7 @@ dc.dataCount = function (parent, chartGroup) {
 
     /**
      * Gets or sets an optional function to format the filter count and total count.
-     * @name formatNumber
+     * @method formatNumber
      * @memberof dc.dataCount
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/Formatting d3.format}

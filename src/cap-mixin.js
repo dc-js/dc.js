@@ -61,7 +61,7 @@ dc.capMixin = function (_chart) {
 
     /**
      * Get or set the count of elements to that will be included in the cap.
-     * @name cap
+     * @method cap
      * @memberof dc.capMixin
      * @instance
      * @param {Number} [count=Infinity]
@@ -78,7 +78,7 @@ dc.capMixin = function (_chart) {
 
     /**
      * Get or set the label for *Others* slice when slices cap is specified
-     * @name othersLabel
+     * @method othersLabel
      * @memberof dc.capMixin
      * @instance
      * @param {String} [label="Others"]
@@ -97,7 +97,7 @@ dc.capMixin = function (_chart) {
      * Get or set the grouper function that will perform the insertion of data for the *Others* slice
      * if the slices cap is specified. If set to a falsy value, no others will be added. By default the
      * grouper function computes the sum of all values below the cap.
-     * @name othersGrouper
+     * @method othersGrouper
      * @memberof dc.capMixin
      * @instance
      * @example
