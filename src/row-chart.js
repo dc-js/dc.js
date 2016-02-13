@@ -3,7 +3,7 @@
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * @namespace rowChart
+ * @class rowChart
  * @memberof dc
  * @mixes dc.capMixin
  * @mixes dc.marginMixin

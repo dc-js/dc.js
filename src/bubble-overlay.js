@@ -6,7 +6,7 @@
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
- * @namespace bubbleOverlay
+ * @class bubbleOverlay
  * @memberof dc
  * @mixes dc.bubbleMixin
  * @mixes dc.baseMixin

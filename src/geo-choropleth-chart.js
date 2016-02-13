@@ -5,7 +5,7 @@
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/vc/index.html US Venture Capital Landscape 2011}
- * @namespace geoChoroplethChart
+ * @class geoChoroplethChart
  * @memberof dc
  * @mixes dc.colorMixin
  * @mixes dc.baseMixin

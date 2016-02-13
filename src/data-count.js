@@ -8,7 +8,7 @@
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * @namespace dataCount
+ * @class dataCount
  * @memberof dc
  * @mixes dc.baseMixin
  * @example

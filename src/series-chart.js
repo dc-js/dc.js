@@ -5,7 +5,7 @@
  *
  * Examples:
  * - {@link http://dc-js.github.io/dc.js/examples/series.html Series Chart}
- * @namespace seriesChart
+ * @class seriesChart
  * @memberof dc
  * @mixes dc.compositeChart
  * @example
