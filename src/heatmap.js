@@ -1,6 +1,6 @@
 /**
  * A heat map is matrix that represents the values of two dimensions of data using colors.
- * @namespace heatMap
+ * @class heatMap
  * @memberof dc
  * @mixes dc.colorMixin
  * @mixes dc.marginMixin
