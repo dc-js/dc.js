@@ -4,7 +4,7 @@
  * Examples:
  * - {@link http://dc-js.github.io/dc.js/examples/scatter.html Scatter Chart}
  * - {@link http://dc-js.github.io/dc.js/examples/multi-scatter.html Multi-Scatter Chart}
- * @namespace scatterPlot
+ * @class scatterPlot
  * @memberof dc
  * @mixes dc.coordinateGridMixin
  * @example

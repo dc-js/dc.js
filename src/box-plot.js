@@ -4,7 +4,7 @@
  * Examples:
  * - {@link http://dc-js.github.io/dc.js/examples/box-plot-time.html Box plot time example}
  * - {@link http://dc-js.github.io/dc.js/examples/box-plot.html Box plot example}
- * @namespace boxPlot
+ * @class boxPlot
  * @memberof dc
  * @mixes dc.coordinateGridMixin
  * @example

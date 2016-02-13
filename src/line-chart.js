@@ -4,7 +4,7 @@
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
- * @namespace lineChart
+ * @class lineChart
  * @memberof dc
  * @mixes dc.stackMixin
  * @mixes dc.coordinateGridMixin

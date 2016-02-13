@@ -2,7 +2,7 @@
  * A display of a single numeric value.
  * Unlike other charts, you do not need to set a dimension. Instead a group object must be provided and
  * a valueAccessor that returns a single value.
- * @namespace numberDisplay
+ * @class numberDisplay
  * @memberof dc
  * @mixes dc.baseMixin
  * @example
