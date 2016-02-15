@@ -4,6 +4,9 @@
  * Functional-style filter handlers: instead of modifying the array of filters in-place, filter handlers must return the new filter array. This is consistent with the old documention, but a different implementation: any changes to the `filters` argument will be ignored unless they are returned. This should make filter handlers easier to reason about.
 
 # 2.0 Series
+## 2.0.0 beta 27 (unreleased)
+* Improvements to HTML documentation, by Matt Traynham ([1096](https://github.com/dc-js/dc.js/issues/1096) / [1097](https://github.com/dc-js/dc.js/issues/1097) / [1099](https://github.com/dc-js/dc.js/issues/1099) / [1100](https://github.com/dc-js/dc.js/issues/1100) / [1101](https://github.com/dc-js/dc.js/pull/1101))
+
 ## 2.0.0 beta 26
 * Apply pie chart labels before transition, so they are easier to manipulate with the pretransition hook. Added example of showing percentages in pie chart labels. (Workaround for [#703](https://github.com/dc-js/dc.js/issues/703))
 * Documentation of chart registry, by Jasmine Hegman ([#676](https://github.com/dc-js/dc.js/issues/676) / [#1082](https://github.com/dc-js/dc.js/pull/1082))
