@@ -4682,7 +4682,7 @@ dc.bubbleMixin = function (_chart) {
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * @namespace pieChart
+ * @class pieChart
  * @memberof dc
  * @mixes dc.capMixin
  * @mixes dc.colorMixin
@@ -5249,7 +5249,7 @@ dc.pieChart = function (parent, chartGroup) {
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
- * @namespace barChart
+ * @class barChart
  * @memberof dc
  * @mixes dc.stackMixin
  * @mixes dc.coordinateGridMixin
@@ -5624,7 +5624,7 @@ dc.barChart = function (parent, chartGroup) {
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
- * @namespace lineChart
+ * @class lineChart
  * @memberof dc
  * @mixes dc.stackMixin
  * @mixes dc.coordinateGridMixin
@@ -6095,7 +6095,7 @@ dc.lineChart = function (parent, chartGroup) {
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * @namespace dataCount
+ * @class dataCount
  * @memberof dc
  * @mixes dc.baseMixin
  * @example
@@ -6209,7 +6209,7 @@ dc.dataCount = function (parent, chartGroup) {
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  * - {@link http://dc-js.github.io/dc.js/examples/table-on-aggregated-data.html dataTable on a crossfilter group}
  * ({@link https://github.com/dc-js/dc.js/blob/develop/web/examples/table-on-aggregated-data.html source})
- * @namespace dataTable
+ * @class dataTable
  * @memberof dc
  * @mixes dc.baseMixin
  * @param {String|node|d3.selection} parent - Any valid
@@ -6622,7 +6622,7 @@ dc.dataTable = function (parent, chartGroup) {
  *
  * Examples:
  * - {@link http://europarl.me/dc.js/web/ep/index.html List of members of the european parliament}
- * @namespace dataGrid
+ * @class dataGrid
  * @memberof dc
  * @mixes dc.baseMixin
  * @param {String|node|d3.selection} parent - Any valid
@@ -6867,7 +6867,7 @@ dc.dataGrid = function (parent, chartGroup) {
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  * - {@link http://dc-js.github.com/dc.js/vc/index.html US Venture Capital Landscape 2011}
- * @namespace bubbleChart
+ * @class bubbleChart
  * @memberof dc
  * @mixes dc.bubbleMixin
  * @mixes dc.coordinateGridMixin
@@ -7038,7 +7038,7 @@ dc.bubbleChart = function (parent, chartGroup) {
  * Composite charts are a special kind of chart that render multiple charts on the same Coordinate
  * Grid. You can overlay (compose) different bar/line/area charts in a single composite chart to
  * achieve some quite flexible charting effects.
- * @namespace compositeChart
+ * @class compositeChart
  * @memberof dc
  * @mixes dc.coordinateGridMixin
  * @example
@@ -7586,7 +7586,7 @@ dc.compositeChart = function (parent, chartGroup) {
  *
  * Examples:
  * - {@link http://dc-js.github.io/dc.js/examples/series.html Series Chart}
- * @namespace seriesChart
+ * @class seriesChart
  * @memberof dc
  * @mixes dc.compositeChart
  * @example
@@ -7779,7 +7779,7 @@ dc.seriesChart = function (parent, chartGroup) {
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/vc/index.html US Venture Capital Landscape 2011}
- * @namespace geoChoroplethChart
+ * @class geoChoroplethChart
  * @memberof dc
  * @mixes dc.colorMixin
  * @mixes dc.baseMixin
@@ -8060,7 +8060,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
- * @namespace bubbleOverlay
+ * @class bubbleOverlay
  * @memberof dc
  * @mixes dc.bubbleMixin
  * @mixes dc.baseMixin
@@ -8265,7 +8265,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * @namespace rowChart
+ * @class rowChart
  * @memberof dc
  * @mixes dc.capMixin
  * @mixes dc.marginMixin
@@ -8692,7 +8692,7 @@ dc.rowChart = function (parent, chartGroup) {
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
- * @namespace legend
+ * @class legend
  * @memberof dc
  * @example
  * chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
@@ -8969,7 +8969,7 @@ dc.legend = function () {
  * Examples:
  * - {@link http://dc-js.github.io/dc.js/examples/scatter.html Scatter Chart}
  * - {@link http://dc-js.github.io/dc.js/examples/multi-scatter.html Multi-Scatter Chart}
- * @namespace scatterPlot
+ * @class scatterPlot
  * @memberof dc
  * @mixes dc.coordinateGridMixin
  * @example
@@ -9246,7 +9246,7 @@ dc.scatterPlot = function (parent, chartGroup) {
  * A display of a single numeric value.
  * Unlike other charts, you do not need to set a dimension. Instead a group object must be provided and
  * a valueAccessor that returns a single value.
- * @namespace numberDisplay
+ * @class numberDisplay
  * @memberof dc
  * @mixes dc.baseMixin
  * @example
@@ -9386,7 +9386,7 @@ dc.numberDisplay = function (parent, chartGroup) {
 
 /**
  * A heat map is matrix that represents the values of two dimensions of data using colors.
- * @namespace heatMap
+ * @class heatMap
  * @memberof dc
  * @mixes dc.colorMixin
  * @mixes dc.marginMixin
@@ -10087,7 +10087,7 @@ dc.heatMap = function (parent, chartGroup) {
  * Examples:
  * - {@link http://dc-js.github.io/dc.js/examples/box-plot-time.html Box plot time example}
  * - {@link http://dc-js.github.io/dc.js/examples/box-plot.html Box plot example}
- * @namespace boxPlot
+ * @class boxPlot
  * @memberof dc
  * @mixes dc.coordinateGridMixin
  * @example

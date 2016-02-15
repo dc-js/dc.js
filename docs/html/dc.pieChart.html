@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>dc.js Namespace: pieChart</title>
+	<title>dc.js Class: pieChart</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.html">dc</a></li><li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.chartRegistry.html">dc.chartRegistry</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.html">dc.filters</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.printers.html">dc.printers</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li><li><a href="dc.units.html">dc.units</a></li><li><a href="dc.units.fp.html">dc.units.fp</a></li><li><a href="dc.utils.html">dc.utils</a></li>
+					<li><a href="dc.html">dc</a></li><li><a href="dc.chartRegistry.html">dc.chartRegistry</a></li><li><a href="dc.filters.html">dc.filters</a></li><li><a href="dc.printers.html">dc.printers</a></li><li><a href="dc.units.html">dc.units</a></li><li><a href="dc.units.fp.html">dc.units.fp</a></li><li><a href="dc.utils.html">dc.utils</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -77,7 +77,7 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Namespace: pieChart</h1>
+	<h1 class="page-title">Class: pieChart</h1>
 <section>
 
 <header>
@@ -96,14 +96,132 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>The pie chart implementation is usually used to visualize a small categorical distribution.  The pie<br>chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each<br>slice relative to the sum of all values. Slices are ordered by ordering<br>which defaults to sorting by key.</p>
+<hr>
+<dt>
+    <h4 class="name" id="pieChart"><span class="type-signature"></span>new pieChart(parent, <span class="optional">chartGroup</span>)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>The pie chart implementation is usually used to visualize a small categorical distribution.  The pie<br>chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each<br>slice relative to the sum of all values. Slices are ordered by ordering<br>which defaults to sorting by key.</p>
 <p>Examples:</p>
 <ul>
 <li><a href="http://dc-js.github.com/dc.js/">Nasdaq 100 Index</a></li>
-</ul></div>
+</ul>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
         
 
         
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>parent</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">node</span>
+|
+
+<span class="param-type">d3.selection</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Any valid<br><a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single selector</a> specifying<br>a dom block element such as a div; or a dom element or d3 selection.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>chartGroup</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The name of the chart group this chart instance should be placed in.<br>Interaction with a chart will only trigger events and redraws within the chart's group.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
 <dl class="details">
     
 
@@ -150,8 +268,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html">/Users/gordonwoodhull/src/dc.js/dc.js</a>,
-				 <a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html#sunlight-1-line-4677">line 4677</a>
+				<a href="pie-chart.js.html">pie-chart.js</a>,
+				 <a href="pie-chart.js.html#sunlight-1-line-1">line 1</a>
 			</li>
 		</ul>
 	</dd>
@@ -165,16 +283,50 @@
 </dl>
 
 
-        
-            <h3>Example</h3>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
             
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="dc.pieChart.html">dc.pieChart</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
     <pre class="sunlight-highlight-javascript">// create a pie chart under #chart-container1 element using the default global chart group
 var chart1 = dc.pieChart(&#x27;#chart-container1&#x27;);
 // create a pie chart under #chart-container2 element using chart group A
 var chart2 = dc.pieChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;);</pre>
 
 
-        
+    
+</dd>
+
     
     </div>
 
@@ -313,8 +465,8 @@ var chart2 = dc.pieChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html">/Users/gordonwoodhull/src/dc.js/dc.js</a>,
-				 <a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html#sunlight-1-line-5025">line 5025</a>
+				<a href="pie-chart.js.html">pie-chart.js</a>,
+				 <a href="pie-chart.js.html#sunlight-1-line-349">line 349</a>
 			</li>
 		</ul>
 	</dd>
@@ -501,8 +653,8 @@ var chart2 = dc.pieChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html">/Users/gordonwoodhull/src/dc.js/dc.js</a>,
-				 <a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html#sunlight-1-line-5042">line 5042</a>
+				<a href="pie-chart.js.html">pie-chart.js</a>,
+				 <a href="pie-chart.js.html#sunlight-1-line-366">line 366</a>
 			</li>
 		</ul>
 	</dd>
@@ -689,8 +841,8 @@ var chart2 = dc.pieChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html">/Users/gordonwoodhull/src/dc.js/dc.js</a>,
-				 <a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html#sunlight-1-line-5180">line 5180</a>
+				<a href="pie-chart.js.html">pie-chart.js</a>,
+				 <a href="pie-chart.js.html#sunlight-1-line-504">line 504</a>
 			</li>
 		</ul>
 	</dd>
@@ -877,8 +1029,8 @@ var chart2 = dc.pieChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html">/Users/gordonwoodhull/src/dc.js/dc.js</a>,
-				 <a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html#sunlight-1-line-5140">line 5140</a>
+				<a href="pie-chart.js.html">pie-chart.js</a>,
+				 <a href="pie-chart.js.html#sunlight-1-line-464">line 464</a>
 			</li>
 		</ul>
 	</dd>
@@ -1066,8 +1218,8 @@ var chart2 = dc.pieChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html">/Users/gordonwoodhull/src/dc.js/dc.js</a>,
-				 <a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html#sunlight-1-line-5157">line 5157</a>
+				<a href="pie-chart.js.html">pie-chart.js</a>,
+				 <a href="pie-chart.js.html#sunlight-1-line-481">line 481</a>
 			</li>
 		</ul>
 	</dd>
@@ -1262,8 +1414,8 @@ var chart2 = dc.pieChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html">/Users/gordonwoodhull/src/dc.js/dc.js</a>,
-				 <a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html#sunlight-1-line-4971">line 4971</a>
+				<a href="pie-chart.js.html">pie-chart.js</a>,
+				 <a href="pie-chart.js.html#sunlight-1-line-295">line 295</a>
 			</li>
 		</ul>
 	</dd>
@@ -1458,8 +1610,8 @@ var chart2 = dc.pieChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html">/Users/gordonwoodhull/src/dc.js/dc.js</a>,
-				 <a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html#sunlight-1-line-4989">line 4989</a>
+				<a href="pie-chart.js.html">pie-chart.js</a>,
+				 <a href="pie-chart.js.html#sunlight-1-line-313">line 313</a>
 			</li>
 		</ul>
 	</dd>
@@ -1654,8 +1806,8 @@ var chart2 = dc.pieChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html">/Users/gordonwoodhull/src/dc.js/dc.js</a>,
-				 <a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html#sunlight-1-line-5074">line 5074</a>
+				<a href="pie-chart.js.html">pie-chart.js</a>,
+				 <a href="pie-chart.js.html#sunlight-1-line-398">line 398</a>
 			</li>
 		</ul>
 	</dd>
@@ -1842,8 +1994,8 @@ var chart2 = dc.pieChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html">/Users/gordonwoodhull/src/dc.js/dc.js</a>,
-				 <a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html#sunlight-1-line-5007">line 5007</a>
+				<a href="pie-chart.js.html">pie-chart.js</a>,
+				 <a href="pie-chart.js.html#sunlight-1-line-331">line 331</a>
 			</li>
 		</ul>
 	</dd>
@@ -2030,8 +2182,8 @@ var chart2 = dc.pieChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html">/Users/gordonwoodhull/src/dc.js/dc.js</a>,
-				 <a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html#sunlight-1-line-4728">line 4728</a>
+				<a href="pie-chart.js.html">pie-chart.js</a>,
+				 <a href="pie-chart.js.html#sunlight-1-line-52">line 52</a>
 			</li>
 		</ul>
 	</dd>
@@ -2150,7 +2302,7 @@ var chart2 = dc.pieChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on Fri Feb 12th 2016
+		on Mon Feb 15th 2016
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

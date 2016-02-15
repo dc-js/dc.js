@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>dc.js Namespace: dataGrid</title>
+	<title>dc.js Class: dataGrid</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.html">dc</a></li><li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.chartRegistry.html">dc.chartRegistry</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.html">dc.filters</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.printers.html">dc.printers</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li><li><a href="dc.units.html">dc.units</a></li><li><a href="dc.units.fp.html">dc.units.fp</a></li><li><a href="dc.utils.html">dc.utils</a></li>
+					<li><a href="dc.html">dc</a></li><li><a href="dc.chartRegistry.html">dc.chartRegistry</a></li><li><a href="dc.filters.html">dc.filters</a></li><li><a href="dc.printers.html">dc.printers</a></li><li><a href="dc.units.html">dc.units</a></li><li><a href="dc.units.fp.html">dc.units.fp</a></li><li><a href="dc.utils.html">dc.utils</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -77,7 +77,7 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Namespace: dataGrid</h1>
+	<h1 class="page-title">Class: dataGrid</h1>
 <section>
 
 <header>
@@ -96,15 +96,133 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Data grid is a simple widget designed to list the filtered records, providing<br>a simple way to define how the items are displayed.</p>
+<hr>
+<dt>
+    <h4 class="name" id="dataGrid"><span class="type-signature"></span>new dataGrid(parent, <span class="optional">chartGroup</span>)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Data grid is a simple widget designed to list the filtered records, providing<br>a simple way to define how the items are displayed.</p>
 <p>Note: Unlike other charts, the data grid chart (and data table) use the group attribute as a keying function<br>for <a href="https://github.com/mbostock/d3/wiki/Arrays#-nest">nesting</a> the data together in groups.<br>Do not pass in a crossfilter group as this will not work.</p>
 <p>Examples:</p>
 <ul>
 <li><a href="http://europarl.me/dc.js/web/ep/index.html">List of members of the european parliament</a></li>
-</ul></div>
+</ul>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
         
 
         
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>parent</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">node</span>
+|
+
+<span class="param-type">d3.selection</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Any valid<br><a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single selector</a> specifying<br>a dom block element such as a div; or a dom element or d3 selection.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>chartGroup</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The name of the chart group this chart instance should be placed in.<br>Interaction with a chart will only trigger events and redraws within the chart's group.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
 <dl class="details">
     
 
@@ -147,8 +265,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html">/Users/gordonwoodhull/src/dc.js/dc.js</a>,
-				 <a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html#sunlight-1-line-6615">line 6615</a>
+				<a href="data-grid.js.html">data-grid.js</a>,
+				 <a href="data-grid.js.html#sunlight-1-line-1">line 1</a>
 			</li>
 		</ul>
 	</dd>
@@ -162,7 +280,41 @@
 </dl>
 
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
         
+<span class="param-type"><a href="dc.dataGrid.html">dc.dataGrid</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
     
     </div>
 
@@ -309,8 +461,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html">/Users/gordonwoodhull/src/dc.js/dc.js</a>,
-				 <a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html#sunlight-1-line-6720">line 6720</a>
+				<a href="data-grid.js.html">data-grid.js</a>,
+				 <a href="data-grid.js.html#sunlight-1-line-106">line 106</a>
 			</li>
 		</ul>
 	</dd>
@@ -497,8 +649,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html">/Users/gordonwoodhull/src/dc.js/dc.js</a>,
-				 <a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html#sunlight-1-line-6738">line 6738</a>
+				<a href="data-grid.js.html">data-grid.js</a>,
+				 <a href="data-grid.js.html#sunlight-1-line-124">line 124</a>
 			</li>
 		</ul>
 	</dd>
@@ -685,8 +837,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html">/Users/gordonwoodhull/src/dc.js/dc.js</a>,
-				 <a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html#sunlight-1-line-6773">line 6773</a>
+				<a href="data-grid.js.html">data-grid.js</a>,
+				 <a href="data-grid.js.html#sunlight-1-line-159">line 159</a>
 			</li>
 		</ul>
 	</dd>
@@ -879,8 +1031,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html">/Users/gordonwoodhull/src/dc.js/dc.js</a>,
-				 <a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html#sunlight-1-line-6794">line 6794</a>
+				<a href="data-grid.js.html">data-grid.js</a>,
+				 <a href="data-grid.js.html#sunlight-1-line-180">line 180</a>
 			</li>
 		</ul>
 	</dd>
@@ -1081,8 +1233,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html">/Users/gordonwoodhull/src/dc.js/dc.js</a>,
-				 <a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html#sunlight-1-line-6835">line 6835</a>
+				<a href="data-grid.js.html">data-grid.js</a>,
+				 <a href="data-grid.js.html#sunlight-1-line-221">line 221</a>
 			</li>
 		</ul>
 	</dd>
@@ -1292,8 +1444,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html">/Users/gordonwoodhull/src/dc.js/dc.js</a>,
-				 <a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html#sunlight-1-line-6756">line 6756</a>
+				<a href="data-grid.js.html">data-grid.js</a>,
+				 <a href="data-grid.js.html#sunlight-1-line-142">line 142</a>
 			</li>
 		</ul>
 	</dd>
@@ -1480,8 +1632,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html">/Users/gordonwoodhull/src/dc.js/dc.js</a>,
-				 <a href="-_Users_gordonwoodhull_src_dc.js_dc.js.html#sunlight-1-line-6813">line 6813</a>
+				<a href="data-grid.js.html">data-grid.js</a>,
+				 <a href="data-grid.js.html#sunlight-1-line-199">line 199</a>
 			</li>
 		</ul>
 	</dd>
@@ -1608,7 +1760,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on Fri Feb 12th 2016
+		on Mon Feb 15th 2016
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
