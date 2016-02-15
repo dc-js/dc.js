@@ -1,7 +1,7 @@
 /**
  * The select menu is a simple widget designed to filter a dimension by selecting an option from
  * an HTML `<select/>` menu. The menu can be optionally turned into a multiselect.
- * @name selectMenu
+ * @class selectMenu
  * @memberof dc
  * @mixes dc.baseMixin
  * @example
