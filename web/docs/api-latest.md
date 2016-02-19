@@ -131,7 +131,10 @@ chart.width(300)
     * [.symbol([type])](#dc.scatterPlot+symbol) ⇒ <code>String</code> &#124; <code>function</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
     * [.symbolSize([symbolSize])](#dc.scatterPlot+symbolSize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
     * [.highlightedSize([highlightedSize])](#dc.scatterPlot+highlightedSize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
-    * [.hiddenSize([hiddenSize])](#dc.scatterPlot+hiddenSize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+    * [.excludedSize([excludedSize])](#dc.scatterPlot+excludedSize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+    * [.excludedColor([excludedColor])](#dc.scatterPlot+excludedColor) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+    * [.excludedOpacity([excludedOpacity])](#dc.scatterPlot+excludedOpacity) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+    * [.emptySize([emptySize])](#dc.scatterPlot+emptySize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
   * [.numberDisplay](#dc.numberDisplay)
     * [new numberDisplay(parent, [chartGroup])](#new_dc.numberDisplay_new)
     * [.html([html])](#dc.numberDisplay+html) ⇒ <code>Object</code> &#124; <code>[numberDisplay](#dc.numberDisplay)</code>
@@ -1924,7 +1927,10 @@ This setting takes into account [gap](#dc.legend+gap).
   * [.symbol([type])](#dc.scatterPlot+symbol) ⇒ <code>String</code> &#124; <code>function</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
   * [.symbolSize([symbolSize])](#dc.scatterPlot+symbolSize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
   * [.highlightedSize([highlightedSize])](#dc.scatterPlot+highlightedSize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
-  * [.hiddenSize([hiddenSize])](#dc.scatterPlot+hiddenSize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+  * [.excludedSize([excludedSize])](#dc.scatterPlot+excludedSize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+  * [.excludedColor([excludedColor])](#dc.scatterPlot+excludedColor) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+  * [.excludedOpacity([excludedOpacity])](#dc.scatterPlot+excludedOpacity) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+  * [.emptySize([emptySize])](#dc.scatterPlot+emptySize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
 
 <a name="new_dc.scatterPlot_new"></a>
 #### new scatterPlot(parent, [chartGroup])
@@ -1954,14 +1960,14 @@ var chart3 = dc.scatterPlot(compositeChart);
 Get or set the existence accessor.  If a point exists, it is drawn with
 [symbolSize](#dc.scatterPlot+symbolSize) radius and
 opacity 1; if it does not exist, it is drawn with
-[hiddenSize](#dc.scatterPlot+hiddenSize) radius and opacity 0. By default,
+[emptySize](#dc.scatterPlot+emptySize) radius and opacity 0. By default,
 the existence accessor checks if the reduced value is truthy.
 
 **Kind**: instance method of <code>[scatterPlot](#dc.scatterPlot)</code>  
 **See**
 
 - [symbolSize](#dc.scatterPlot+symbolSize)
-- [hiddenSize](#dc.scatterPlot+hiddenSize)
+- [emptySize](#dc.scatterPlot+emptySize)
 
 
 | Param | Type |
@@ -2014,8 +2020,43 @@ Set or get radius for highlighted symbols.
 | --- | --- | --- |
 | [highlightedSize] | <code>Number</code> | <code>5</code> | 
 
-<a name="dc.scatterPlot+hiddenSize"></a>
-#### scatterPlot.hiddenSize([hiddenSize]) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+<a name="dc.scatterPlot+excludedSize"></a>
+#### scatterPlot.excludedSize([excludedSize]) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+Set or get size for symbols excluded from this chart's filter. If null, no
+special size is applied for symbols based on their filter status
+
+**Kind**: instance method of <code>[scatterPlot](#dc.scatterPlot)</code>  
+**See**: [d3.svg.symbol().size()](https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [excludedSize] | <code>Number</code> | <code></code> | 
+
+<a name="dc.scatterPlot+excludedColor"></a>
+#### scatterPlot.excludedColor([excludedColor]) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+Set or get color for symbols excluded from this chart's filter. If null, no
+special color is applied for symbols based on their filter status
+
+**Kind**: instance method of <code>[scatterPlot](#dc.scatterPlot)</code>  
+**See**: [d3.svg.symbol().size()](https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [excludedColor] | <code>Number</code> | <code></code> | 
+
+<a name="dc.scatterPlot+excludedOpacity"></a>
+#### scatterPlot.excludedOpacity([excludedOpacity]) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+Set or get opacity for symbols excluded from this chart's filter.
+
+**Kind**: instance method of <code>[scatterPlot](#dc.scatterPlot)</code>  
+**See**: [d3.svg.symbol().size()](https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [excludedOpacity] | <code>Number</code> | <code>1.0</code> | 
+
+<a name="dc.scatterPlot+emptySize"></a>
+#### scatterPlot.emptySize([emptySize]) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
 Set or get radius for symbols when the group is empty.
 
 **Kind**: instance method of <code>[scatterPlot](#dc.scatterPlot)</code>  
@@ -2023,7 +2064,7 @@ Set or get radius for symbols when the group is empty.
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [hiddenSize] | <code>Number</code> | <code>0</code> | 
+| [emptySize] | <code>Number</code> | <code>0</code> | 
 
 <a name="dc.numberDisplay"></a>
 ### dc.numberDisplay
