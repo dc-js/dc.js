@@ -1,6 +1,7 @@
 # 2.0 Series
-## 2.0.0 beta 27 (unreleased)
+## 2.0.0 beta 27
 * Improvements to HTML documentation, by Matt Traynham ([1096](https://github.com/dc-js/dc.js/issues/1096) / [1097](https://github.com/dc-js/dc.js/issues/1097) / [1099](https://github.com/dc-js/dc.js/issues/1099) / [1100](https://github.com/dc-js/dc.js/issues/1100) / [1101](https://github.com/dc-js/dc.js/pull/1101))
+* Ability to set color and opacity of non-brushed ("excluded") points in scatterplot; also separate brushing from highlighting, which seems like a different thing. ([938](https://github.com/dc-js/dc.js/issues/938))
 
 ## 2.0.0 beta 26
 * Apply pie chart labels before transition, so they are easier to manipulate with the pretransition hook. Added example of showing percentages in pie chart labels. (Workaround for [#703](https://github.com/dc-js/dc.js/issues/703))

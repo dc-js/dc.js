@@ -16,6 +16,8 @@ describe('dc.scatterPlot', function () {
             .group(group)
             .width(500).height(180)
             .x(d3.scale.linear().domain([0, 70]))
+            .excludedColor('#ccc')
+            .excludedOpacity(0.25)
             .transitionDuration(0);
     });
 
@@ -132,45 +134,115 @@ describe('dc.scatterPlot', function () {
                 expect(chart.select('.resize path').empty()).toBeTruthy();
             });
 
-            describe('highlighting', function () {
+            describe('excluded points', function () {
                 var selectedPoints;
 
                 beforeEach(function () {
-                    selectedPoints = symbolsOfRadius(chart.highlightedSize());
+                    jasmine.clock().tick(100);
                 });
 
-                it('should highlight the selected points', function () {
+                var isOpaque = function () {
+                    return +d3.select(this).attr('opacity') === 1;
+                }, isTranslucent = function () {
+                    return +d3.select(this).attr('opacity') === 0.25;
+                }, isBlue = function () {
+                    return d3.select(this).attr('fill') === '#1f77b4';
+                }, isGrey = function () {
+                    return d3.select(this).attr('fill') === '#ccc';
+                };
+
+                it('should not shrink the included points', function () {
+                    selectedPoints = symbolsOfRadius(chart.symbolSize());
                     expect(selectedPoints.length).toBe(2);
                     expect(selectedPoints[0].key).toEqual([22, -2]);
                     expect(selectedPoints[1].key).toEqual([33, 1]);
                 });
 
-                it('should remove highlighting when the brush is removed from the selected points', function () {
+                it('should shrink the excluded points', function () {
+                    selectedPoints = symbolsOfRadius(chart.excludedSize());
+                    expect(selectedPoints.length).toBe(7);
+                    expect(selectedPoints[0].key).toEqual([22, 10]);
+                    expect(selectedPoints[1].key).toEqual([44, -3]);
+                });
+
+                it('should keep the included points opaque', function () {
+                    selectedPoints = symbolsMatching(isOpaque);
+                    expect(selectedPoints.length).toBe(2);
+                    expect(selectedPoints[0].key).toEqual([22, -2]);
+                    expect(selectedPoints[1].key).toEqual([33, 1]);
+                });
+
+                it('should make the excluded points translucent', function () {
+                    selectedPoints = symbolsMatching(isTranslucent);
+                    expect(selectedPoints.length).toBe(7);
+                    expect(selectedPoints[0].key).toEqual([22, 10]);
+                    expect(selectedPoints[1].key).toEqual([44, -3]);
+                });
+
+                it('should keep the included points blue', function () {
+                    selectedPoints = symbolsMatching(isBlue);
+                    expect(selectedPoints.length).toBe(2);
+                    expect(selectedPoints[0].key).toEqual([22, -2]);
+                    expect(selectedPoints[1].key).toEqual([33, 1]);
+                });
+
+                it('should make the excluded points grey', function () {
+                    selectedPoints = symbolsMatching(isGrey);
+                    expect(selectedPoints.length).toBe(7);
+                    expect(selectedPoints[0].key).toEqual([22, 10]);
+                    expect(selectedPoints[1].key).toEqual([44, -3]);
+                });
+
+                it('should restore sizes, colors, and opacity when the brush is empty', function () {
                     chart.brush().extent([[22, 2], [22, -3]]);
                     chart.brush().on('brush')();
-                    selectedPoints = symbolsOfRadius(chart.highlightedSize());
-                    expect(selectedPoints.length).toBe(0);
+                    jasmine.clock().tick(100);
+
+                    selectedPoints = symbolsOfRadius(chart.symbolSize());
+                    expect(selectedPoints.length).toBe(9);
+
+                    selectedPoints = symbolsMatching(isBlue);
+                    expect(selectedPoints.length).toBe(9);
+
+                    selectedPoints = symbolsMatching(isOpaque);
+                    expect(selectedPoints.length).toBe(9);
+
                     chart.redraw();
-                    selectedPoints = symbolsOfRadius(chart.highlightedSize());
-                    expect(selectedPoints.length).toBe(0);
+
+                    selectedPoints = symbolsOfRadius(chart.symbolSize());
+                    expect(selectedPoints.length).toBe(9);
+
+                    selectedPoints = symbolsMatching(isBlue);
+                    expect(selectedPoints.length).toBe(9);
+
+                    selectedPoints = symbolsMatching(isOpaque);
+                    expect(selectedPoints.length).toBe(9);
                 });
             });
         });
     });
 
-    function symbolsOfRadius (r) {
-        function getData (symbols) {
-            return symbols[0].map(function (symbol) {
-                return d3.select(symbol).datum();
-            });
-        }
-        return getData(chart.selectAll('path.symbol').filter(function () {
+    function matchSymbolSize (r) {
+        return function () {
             var symbol = d3.select(this);
             var size = Math.pow(r, 2);
             var path = d3.svg.symbol().size(size)();
             var result = comparePaths(symbol.attr('d'), path);
             return result.pass;
-        }));
+        };
+    }
+
+    function symbolsMatching (pred) {
+        function getData (symbols) {
+            return symbols[0].map(function (symbol) {
+                return d3.select(symbol).datum();
+            });
+        }
+        return getData(chart.selectAll('path.symbol').filter(pred));
+    }
+
+    function symbolsOfRadius (r) {
+        return symbolsMatching(matchSymbolSize(r));
     }
 
     describe('legends', function () {
