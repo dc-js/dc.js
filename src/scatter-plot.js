@@ -98,15 +98,15 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
      * Get or set the existence accessor.  If a point exists, it is drawn with
-     * {@link #dc.scatterPlot+symbolSize symbolSize} radius and
+     * {@link dc.scatterPlot#symbolSize symbolSize} radius and
      * opacity 1; if it does not exist, it is drawn with
-     * {@link #dc.scatterPlot+emptySize emptySize} radius and opacity 0. By default,
+     * {@link dc.scatterPlot#emptySize emptySize} radius and opacity 0. By default,
      * the existence accessor checks if the reduced value is truthy.
      * @method existenceAccessor
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link #dc.scatterPlot+symbolSize symbolSize}
-     * @see {@link #dc.scatterPlot+emptySize emptySize}
+     * @see {@link dc.scatterPlot#symbolSize symbolSize}
+     * @see {@link dc.scatterPlot#emptySize emptySize}
      * @example
      * // default accessor
      * chart.existenceAccessor(function (d) { return d.value; });

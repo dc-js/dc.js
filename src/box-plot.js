@@ -88,7 +88,7 @@ dc.boxPlot = function (parent, chartGroup) {
 
     /**
      * Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
-     * or on charts with a custom {@link #dc.boxPlot+boxWidth .boxWidth}. Will pad the width by
+     * or on charts with a custom {@link dc.boxPlot#boxWidth .boxWidth}. Will pad the width by
      * `padding * barWidth` on each side of the chart.
      * @method outerPadding
      * @memberof dc.boxPlot

@@ -108,7 +108,7 @@ dc.colorMixin = function (_chart) {
      * array.
      *
      * Note: previously this method accepted a callback function. Instead you may use a custom scale
-     * set by {@link #dc.colorMixin+colors .colors}.
+     * set by {@link dc.colorMixin#colors .colors}.
      * @method colorDomain
      * @memberof dc.colorMixin
      * @instance
@@ -126,7 +126,7 @@ dc.colorMixin = function (_chart) {
 
     /**
      * Set the domain by determining the min and max values as retrieved by
-     * {@link #dc.colorMixin+colorAccessor .colorAccessor} over the chart's dataset.
+     * {@link dc.colorMixin#colorAccessor .colorAccessor} over the chart's dataset.
      * @method calculateColorDomain
      * @memberof dc.colorMixin
      * @instance

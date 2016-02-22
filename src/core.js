@@ -5,7 +5,7 @@
  * Most `dc` functions are designed to allow function chaining, meaning they return the current chart
  * instance whenever it is appropriate.  The getter forms of functions do not participate in function
  * chaining because they return values that are not the chart, although some,
- * such as {@link #dc.baseMixin+svg .svg} and {@link #dc.coordinateGridMixin+xAxis .xAxis},
+ * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
  * @version <%= conf.pkg.version %>
@@ -40,10 +40,10 @@ var dc = {
  *
  * A chart group often corresponds to a crossfilter instance. It specifies
  * the set of charts which should be updated when a filter changes on one of the charts or when the
- * global functions {@link #dc.filterAll dc.filterAll}, {@link #dc.refocusAll dc.refocusAll},
- * {@link #dc.renderAll dc.renderAll}, {@link #dc.redrawAll dc.redrawAll}, or chart functions
- * {@link #dc.baseMixin+renderGroup baseMixin.renderGroup},
- * {@link #dc.baseMixin+redrawGroup baseMixin.redrawGroup} are called.
+ * global functions {@link dc.filterAll dc.filterAll}, {@link dc.refocusAll dc.refocusAll},
+ * {@link dc.renderAll dc.renderAll}, {@link dc.redrawAll dc.redrawAll}, or chart functions
+ * {@link dc.baseMixin#renderGroup baseMixin.renderGroup},
+ * {@link dc.baseMixin#redrawGroup baseMixin.redrawGroup} are called.
  *
  * @namespace chartRegistry
  * @memberof dc
@@ -318,13 +318,13 @@ dc.afterTransition = function (transition, callback) {
 dc.units = {};
 
 /**
- * The default value for {@link #dc.coordinateGridMixin+xUnits .xUnits} for the
- * {@link #dc.coordinateGridMixin Coordinate Grid Chart} and should
+ * The default value for {@link dc.coordinateGridMixin#xUnits .xUnits} for the
+ * {@link dc.coordinateGridMixin Coordinate Grid Chart} and should
  * be used when the x values are a sequence of integers.
  * It is a function that counts the number of integers in the range supplied in its start and end parameters.
  * @method integers
  * @memberof dc.units
- * @see {@link #dc.coordinateGridMixin+xUnits coordinateGridMixin.xUnits}
+ * @see {@link dc.coordinateGridMixin#xUnits coordinateGridMixin.xUnits}
  * @example
  * chart.xUnits(dc.units.integers) // already the default
  * @param {Number} start
@@ -336,16 +336,16 @@ dc.units.integers = function (start, end) {
 };
 
 /**
- * This argument can be passed to the {@link #dc.coordinateGridMixin+xUnits .xUnits} function of the to
+ * This argument can be passed to the {@link dc.coordinateGridMixin#xUnits .xUnits} function of the to
  * specify ordinal units for the x axis. Usually this parameter is used in combination with passing
  * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales d3.scale.ordinal} to
- * {@link #dc.coordinateGridMixin+x .x}.
+ * {@link dc.coordinateGridMixin#x .x}.
  * It just returns the domain passed to it, which for ordinal charts is an array of all values.
  * @method ordinal
  * @memberof dc.units
  * @see {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales d3.scale.ordinal}
- * @see {@link #dc.coordinateGridMixin+xUnits coordinateGridMixin.xUnits}
- * @see {@link #dc.coordinateGridMixin+x coordinateGridMixin.x}
+ * @see {@link dc.coordinateGridMixin#xUnits coordinateGridMixin.xUnits}
+ * @see {@link dc.coordinateGridMixin#x coordinateGridMixin.x}
  * @example
  * chart.xUnits(dc.units.ordinal)
  *      .x(d3.scale.ordinal())
@@ -365,14 +365,14 @@ dc.units.ordinal = function (start, end, domain) {
  */
 dc.units.fp = {};
 /**
- * This function generates an argument for the {@link #dc.coordinateGridMixin Coordinate Grid Chart}
- * {@link #dc.coordinateGridMixin+xUnits .xUnits} function specifying that the x values are floating-point
+ * This function generates an argument for the {@link dc.coordinateGridMixin Coordinate Grid Chart}
+ * {@link dc.coordinateGridMixin#xUnits .xUnits} function specifying that the x values are floating-point
  * numbers with the given precision.
  * The returned function determines how many values at the given precision will fit into the range
  * supplied in its start and end parameters.
  * @method precision
  * @memberof dc.units.fp
- * @see {@link #dc.coordinateGridMixin+xUnits coordinateGridMixin.xUnits}
+ * @see {@link dc.coordinateGridMixin#xUnits coordinateGridMixin.xUnits}
  * @example
  * // specify values (and ticks) every 0.1 units
  * chart.xUnits(dc.units.fp.precision(0.1)
