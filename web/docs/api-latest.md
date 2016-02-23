@@ -2757,7 +2757,7 @@ behaviour.
 Calling redraw will cause the chart to re-render data changes incrementally. If there is no
 change in the underlying data dimension then calling this method will have no effect on the
 chart. Most chart interaction in dc will automatically trigger this method through internal
-events (in particular [dc.redrawAll](#dc.redrawAll); therefore, you only need to
+events (in particular [redrawAll](#dc.redrawAll); therefore, you only need to
 manually invoke this function if data is manipulated outside of dc's control (for example if
 data is loaded in the background using
 [crossfilter.add](https://github.com/square/crossfilter/wiki/API-Reference#crossfilter_add).
@@ -3445,7 +3445,7 @@ concrete chart types, e.g. bar chart, line chart, and bubble chart.
 #### coordinateGridMixin.rescale() ⇒ <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
 When changing the domain of the x or y scale, it is necessary to tell the chart to recalculate
 and redraw the axes. (`.rescale()` is called automatically when the x or y scale is replaced
-with [.x()](#dc.coordinateGridMixin+x) or [.y()](#dc.coordinateGridMixin+y), and has
+with [.x()](dc.coordinateGridMixin+x) or [.y()](#dc.coordinateGridMixin+y), and has
 no effect on elastic scales.)
 
 **Kind**: instance method of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
@@ -3547,7 +3547,7 @@ number of dots for a line chart. This function is expected to return a Javascrip
 data points on x axis, or the number of points on the axis. [d3 time range functions
 d3.time.days, d3.time.months, and
 d3.time.years](https://github.com/mbostock/d3/wiki/Time-Intervals#aliases) are all valid xUnits
-function. dc.js also provides a few units function, see the [Utilities](#utilities) section for
+function. dc.js also provides a few units function, see the [Utilities](#dc.utils) section for
 a list of built-in units functions. The default xUnits function is dc.units.integers.
 
 **Kind**: instance method of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
@@ -3647,7 +3647,7 @@ chart.
 
 <a name="dc.coordinateGridMixin+isOrdinal"></a>
 #### coordinateGridMixin.isOrdinal() ⇒ <code>Boolean</code>
-Returns true if the chart is using ordinal xUnits ([dc.units.ordinal](#dc.units.ordinal), or false
+Returns true if the chart is using ordinal xUnits ([ordinal](#dc.units.ordinal), or false
 otherwise. Most charts behave differently with ordinal data and use the result of this method to
 trigger the appropriate logic.
 
@@ -4129,8 +4129,8 @@ and the default group.
 
 A chart group often corresponds to a crossfilter instance. It specifies
 the set of charts which should be updated when a filter changes on one of the charts or when the
-global functions [dc.filterAll](#dc.filterAll), [dc.refocusAll](#dc.refocusAll),
-[dc.renderAll](#dc.renderAll), [dc.redrawAll](#dc.redrawAll), or chart functions
+global functions [filterAll](#dc.filterAll), [refocusAll](#dc.refocusAll),
+[renderAll](#dc.renderAll), [redrawAll](#dc.redrawAll), or chart functions
 [baseMixin.renderGroup](#dc.baseMixin+renderGroup),
 [baseMixin.redrawGroup](#dc.baseMixin+redrawGroup) are called.
 
