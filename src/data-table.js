@@ -7,7 +7,7 @@
  * together in groups.  Do not pass in a crossfilter group as this will not work.
  *
  * Another interesting feature of the data table is that you can pass a crossfilter group to the `dimension`, as
- * long as you specify the {@link #dc.dataTable+order order} as `d3.descending`, since the data
+ * long as you specify the {@link dc.dataTable#order order} as `d3.descending`, since the data
  * table will use `dimension.top()` to fetch the data in that case, and the method is equally
  * supported on the crossfilter group as the crossfilter dimension.
  *
@@ -244,7 +244,7 @@ dc.dataTable = function (parent, chartGroup) {
 
     /**
      * Get or set the index of the end slice which determines which entries get displayed by the
-     * widget. Useful when implementing pagination. See {@link #dc.dataTable+beginSlice `beginSlice`} for more information.
+     * widget. Useful when implementing pagination. See {@link dc.dataTable#beginSlice `beginSlice`} for more information.
      * @method endSlice
      * @memberof dc.dataTable
      * @instance

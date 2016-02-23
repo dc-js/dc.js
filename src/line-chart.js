@@ -18,7 +18,7 @@
  * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
  * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector}
  * specifying a dom block element such as a div; or a dom element or d3 selection.  If the line
- * chart is a sub-chart in a {@link #dc.compositeChart Composite Chart} then pass in the parent
+ * chart is a sub-chart in a {@link dc.compositeChart Composite Chart} then pass in the parent
  * composite chart instance instead.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -361,7 +361,7 @@ dc.lineChart = function (parent, chartGroup) {
     /**
      * Turn on/off the mouseover behavior of an individual data point which renders a circle and x/y axis
      * dashed lines back to each respective axis.  This is ignored if the chart
-     * {@link #dc.coordinateGridMixin+brushOn brush} is on
+     * {@link dc.coordinateGridMixin#brushOn brush} is on
      * @method xyTipsOn
      * @memberof dc.lineChart
      * @instance

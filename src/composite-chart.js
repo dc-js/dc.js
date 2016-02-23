@@ -246,7 +246,7 @@ dc.compositeChart = function (parent, chartGroup) {
 
     /**
      * Get or set chart-specific options for all child charts. This is equivalent to calling
-     * {@link #dc.baseMixin+options .options} on each child chart.
+     * {@link dc.baseMixin#options .options} on each child chart.
      * @method childOptions
      * @memberof dc.compositeChart
      * @instance
@@ -348,7 +348,7 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set color sharing for the chart. If set, the {@link #dc.colorMixin+colors .colors()} value from this chart
+     * Get or set color sharing for the chart. If set, the {@link dc.colorMixin#colors .colors()} value from this chart
      * will be shared with composed children. Additionally if the child chart implements
      * Stackable and has not set a custom .colorAccessor, then it will generate a color
      * specific to its order in the composition.
@@ -368,7 +368,7 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set title sharing for the chart. If set, the {@link #dc.baseMixin+title .title()} value from
+     * Get or set title sharing for the chart. If set, the {@link dc.baseMixin#title .title()} value from
      * this chart will be shared with composed children.
      * @method shareTitle
      * @memberof dc.compositeChart

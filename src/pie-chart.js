@@ -1,7 +1,7 @@
 /**
  * The pie chart implementation is usually used to visualize a small categorical distribution.  The pie
  * chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
- * slice relative to the sum of all values. Slices are ordered by {@link #dc.baseMixin+ordering ordering}
+ * slice relative to the sum of all values. Slices are ordered by {@link dc.baseMixin#ordering ordering}
  * which defaults to sorting by key.
  *
  * Examples:

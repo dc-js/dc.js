@@ -232,8 +232,8 @@ dc.legend = function () {
     };
 
     /**
-     * Turn automatic width for legend items on or off. If true, {@link #dc.legend+itemWidth itemWidth} is ignored.
-     * This setting takes into account {@link #dc.legend+gap gap}.
+     * Turn automatic width for legend items on or off. If true, {@link dc.legend#itemWidth itemWidth} is ignored.
+     * This setting takes into account {@link dc.legend#gap gap}.
      * @method autoItemWidth
      * @memberof dc.legend
      * @instance

@@ -109,12 +109,12 @@ dc.baseMixin = function (_chart) {
      *
      * By default, without an explicit height being given, the chart will select the width of its
      * anchor element. If that isn't possible it defaults to 200 (provided by the
-     * {@link #dc.baseMixin+minHeight minHeight} property). Setting the value falsy will return
+     * {@link dc.baseMixin#minHeight minHeight} property). Setting the value falsy will return
      * the chart to the default behavior.
      * @method height
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link #dc.baseMixin+minHeight minHeight}
+     * @see {@link dc.baseMixin#minHeight minHeight}
      * @example
      * // Default height
      * chart.height(function (element) {
@@ -147,8 +147,8 @@ dc.baseMixin = function (_chart) {
      * @method width
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link #dc.baseMixin+height height}
-     * @see {@link #dc.baseMixin+minWidth minWidth}
+     * @see {@link dc.baseMixin#height height}
+     * @see {@link dc.baseMixin#minWidth minWidth}
      * @example
      * // Default width
      * chart.width(function (element) {
@@ -174,11 +174,11 @@ dc.baseMixin = function (_chart) {
 
     /**
      * Set or get the minimum width attribute of a chart. This only has effect when used with the default
-     * {@link #dc.baseMixin+width width} function.
+     * {@link dc.baseMixin#width width} function.
      * @method minWidth
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link #dc.baseMixin+width width}
+     * @see {@link dc.baseMixin#width width}
      * @param {Number} [minWidth=200]
      * @return {Number}
      * @return {dc.baseMixin}
@@ -193,11 +193,11 @@ dc.baseMixin = function (_chart) {
 
     /**
      * Set or get the minimum height attribute of a chart. This only has effect when used with the default
-     * {@link #dc.baseMixin+height height} function.
+     * {@link dc.baseMixin#height height} function.
      * @method minHeight
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link #dc.baseMixin+height height}
+     * @see {@link dc.baseMixin#height height}
      * @param {Number} [minHeight=200]
      * @return {Number}
      * @return {dc.baseMixin}
@@ -341,7 +341,7 @@ dc.baseMixin = function (_chart) {
     /**
      * Clear all filters associated with this chart
      *
-     * The same can be achieved by calling {@link #dc.baseMixin+filter chart.filter(null)}.
+     * The same can be achieved by calling {@link dc.baseMixin#filter chart.filter(null)}.
      * @method filterAll
      * @memberof dc.baseMixin
      * @instance
@@ -578,7 +578,7 @@ dc.baseMixin = function (_chart) {
      * Turn off optional control elements within the root element.
      * @method turnOffControls
      * @memberof dc.baseMixin
-     * @see {@link #dc.baseMixin+turnOnControls turnOnControls}
+     * @see {@link dc.baseMixin#turnOnControls turnOnControls}
      * @instance
      * @return {dc.baseMixin}
      */
@@ -675,7 +675,7 @@ dc.baseMixin = function (_chart) {
      * Calling redraw will cause the chart to re-render data changes incrementally. If there is no
      * change in the underlying data dimension then calling this method will have no effect on the
      * chart. Most chart interaction in dc will automatically trigger this method through internal
-     * events (in particular {@link #dc.redrawAll dc.redrawAll}; therefore, you only need to
+     * events (in particular {@link dc.redrawAll dc.redrawAll}; therefore, you only need to
      * manually invoke this function if data is manipulated outside of dc's control (for example if
      * data is loaded in the background using
      * {@link https://github.com/square/crossfilter/wiki/API-Reference#crossfilter_add crossfilter.add}.
@@ -826,7 +826,7 @@ dc.baseMixin = function (_chart) {
      * @method hasFilter
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link #dc.baseMixin+hasFilterHandler hasFilterHandler}
+     * @see {@link dc.baseMixin#hasFilterHandler hasFilterHandler}
      * @param {*} [filter]
      * @return {Boolean}
      */
@@ -973,20 +973,20 @@ dc.baseMixin = function (_chart) {
     /**
      * Filter the chart by the given value or return the current filter if the input parameter is missing.
      * If the passed filter is not currently in the chart's filters, it is added to the filters by the
-     * {@link #dc.baseMixin+addFilterHandler addFilterHandler}.  If a filter exists already within the chart's
-     * filters, it will be removed by the {@link #dc.baseMixin+removeFilterHandler removeFilterHandler}.  If
+     * {@link dc.baseMixin#addFilterHandler addFilterHandler}.  If a filter exists already within the chart's
+     * filters, it will be removed by the {@link dc.baseMixin#removeFilterHandler removeFilterHandler}.  If
      * a `null` value was passed at the filter, this denotes that the filters should be reset, and is performed
-     * by the {@link #dc.baseMixin+resetFilterHandler resetFilterHandler}.
+     * by the {@link dc.baseMixin#resetFilterHandler resetFilterHandler}.
      *
      * Once the filters array has been updated, the filters are applied to the crossfilter.dimension, using the
-     * {@link #dc.baseMixin+filterHandler filterHandler}.
+     * {@link dc.baseMixin#filterHandler filterHandler}.
      * @method filter
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link #dc.baseMixin+addFilterHandler addFilterHandler}
-     * @see {@link #dc.baseMixin+removeFilterHandler removeFilterHandler}
-     * @see {@link #dc.baseMixin+resetFilterHandler resetFilterHandler}
-     * @see {@link #dc.baseMixin+filterHandler filterHandler}
+     * @see {@link dc.baseMixin#addFilterHandler addFilterHandler}
+     * @see {@link dc.baseMixin#removeFilterHandler removeFilterHandler}
+     * @see {@link dc.baseMixin#resetFilterHandler resetFilterHandler}
+     * @see {@link dc.baseMixin#filterHandler filterHandler}
      * @example
      * // filter by a single string
      * chart.filter('Sunday');
@@ -1310,7 +1310,7 @@ dc.baseMixin = function (_chart) {
      * Renderlet functions take the chart instance as the only input parameter and you can
      * use the dc API or use raw d3 to achieve pretty much any effect.
      *
-     * Use {@link #dc.baseMixin+on on} with a 'renderlet' prefix.
+     * Use {@link dc.baseMixin#on on} with a 'renderlet' prefix.
      * Generates a random key for the renderlet, which makes it hard to remove.
      * @method renderlet
      * @memberof dc.baseMixin
@@ -1447,7 +1447,7 @@ dc.baseMixin = function (_chart) {
      * All dc chart instance supports the following listeners.
      * Supports the following events:
      * * `renderlet` - This listener function will be invoked after transitions after redraw and render. Replaces the
-     * deprecated {@link #dc.baseMixin+renderlet renderlet} method.
+     * deprecated {@link dc.baseMixin#renderlet renderlet} method.
      * * `pretransition` - Like `.on('renderlet', ...)` but the event is fired before transitions start.
      * * `preRender` - This listener function will be invoked before chart rendering.
      * * `postRender` - This listener function will be invoked after chart finish rendering including
