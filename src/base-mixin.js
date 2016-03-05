@@ -51,6 +51,8 @@ dc.baseMixin = function (_chart) {
 
     var _transitionDuration = 750;
 
+    var _transitionDelay = 0;
+
     var _filterPrinter = dc.printers.filters;
 
     var _mandatoryAttributes = ['dimension', 'group'];
@@ -609,6 +611,23 @@ dc.baseMixin = function (_chart) {
         return _chart;
     };
 
+    /**
+     * Set or get the animation transition delay (in milliseconds) for this chart instance.
+     * @method transitionDelay
+     * @memberof dc.baseMixin
+     * @instance
+     * @param {Number} [delay=0]
+     * @return {Number}
+     * @return {dc.baseMixin}
+     */
+    _chart.transitionDelay = function (delay) {
+        if (!arguments.length) {
+            return _transitionDelay;
+        }
+        _transitionDelay = delay;
+        return _chart;
+    };
+
     _chart._mandatoryAttributes = function (_) {
         if (!arguments.length) {
             return _mandatoryAttributes;
@@ -656,7 +675,7 @@ dc.baseMixin = function (_chart) {
     _chart._activateRenderlets = function (event) {
         _listeners.pretransition(_chart);
         if (_chart.transitionDuration() > 0 && _svg) {
-            _svg.transition().duration(_chart.transitionDuration())
+            _svg.transition().duration(_chart.transitionDuration()).delay(_chart.transitionDelay())
                 .each('end', function () {
                     _listeners.renderlet(_chart);
                     if (event) {

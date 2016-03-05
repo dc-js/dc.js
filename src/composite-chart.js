@@ -39,6 +39,7 @@ dc.compositeChart = function (parent, chartGroup) {
 
     _chart._mandatoryAttributes([]);
     _chart.transitionDuration(500);
+    _chart.transitionDelay(0);
 
     dc.override(_chart, '_generateG', function () {
         var g = this.__generateG();
@@ -59,6 +60,7 @@ dc.compositeChart = function (parent, chartGroup) {
             child.svg(_chart.svg());
             child.xUnits(_chart.xUnits());
             child.transitionDuration(_chart.transitionDuration());
+	    child.transitionDelay(_chart.transitionDelay());
             child.brushOn(_chart.brushOn());
             child.renderTitle(_chart.renderTitle());
             child.elasticX(_chart.elasticX());

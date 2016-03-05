@@ -176,6 +176,7 @@ The entire dc.js library is scoped under the **dc** name space. It does not intr
         * [.turnOnControls()](#dc.baseMixin+turnOnControls) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
         * [.turnOffControls()](#dc.baseMixin+turnOffControls) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
         * [.transitionDuration([duration])](#dc.baseMixin+transitionDuration) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
+        * [.transitionDelay([delay])](#dc.baseMixin+transitionDelay) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
         * [.render()](#dc.baseMixin+render) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
         * [.redraw()](#dc.baseMixin+redraw) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
         * [.commitHandler()](#dc.baseMixin+commitHandler) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
@@ -2095,6 +2096,7 @@ chart.size(10);
     * [.turnOnControls()](#dc.baseMixin+turnOnControls) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
     * [.turnOffControls()](#dc.baseMixin+turnOffControls) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
     * [.transitionDuration([duration])](#dc.baseMixin+transitionDuration) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
+    * [.transitionDelay([delay])](#dc.baseMixin+transitionDelay) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
     * [.render()](#dc.baseMixin+render) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
     * [.redraw()](#dc.baseMixin+redraw) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
     * [.commitHandler()](#dc.baseMixin+commitHandler) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
@@ -2348,6 +2350,16 @@ Set or get the animation transition duration (in milliseconds) for this chart in
 | Param | Type | Default |
 | --- | --- | --- |
 | [duration] | <code>Number</code> | <code>750</code> | 
+
+<a name="dc.baseMixin+transitionDelay"></a>
+#### baseMixin.transitionDelay([delay]) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
+Set or get the animation transition delay (in milliseconds) for this chart instance.
+
+**Kind**: instance method of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [delay] | <code>Number</code> | <code>0</code> | 
 
 <a name="dc.baseMixin+render"></a>
 #### baseMixin.render() ⇒ <code>[baseMixin](#dc.baseMixin)</code>
