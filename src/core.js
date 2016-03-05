@@ -265,14 +265,15 @@ dc.redrawAll = function (group) {
  */
 dc.disableTransitions = false;
 
-dc.transition = function (selections, duration, callback, name) {
+dc.transition = function (selections, duration, delay, callback, name) {
     if (duration <= 0 || duration === undefined || dc.disableTransitions) {
         return selections;
     }
 
     var s = selections
-        .transition(name)
-        .duration(duration);
+    .transition(name)
+    .duration(duration)
+    .delay(delay);
 
     if (typeof(callback) === 'function') {
         callback(s);

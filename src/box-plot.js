@@ -143,7 +143,7 @@ dc.boxPlot = function (parent, chartGroup) {
             .height(_chart.effectiveHeight())
             .value(_chart.valueAccessor())
             .domain(_chart.y().domain())
-            .duration(_chart.transitionDuration())
+            .duration(_chart.transitionDuration(), _chart.transitionDelay())
             .tickFormat(_tickFormat);
 
         var boxesG = _chart.chartBodyG().selectAll('g.box').data(_chart.data(), function (d) { return d.key; });
@@ -169,7 +169,7 @@ dc.boxPlot = function (parent, chartGroup) {
     }
 
     function updateBoxes (boxesG) {
-        dc.transition(boxesG, _chart.transitionDuration())
+        dc.transition(boxesG, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', boxTransform)
             .call(_box)
             .each(function () {

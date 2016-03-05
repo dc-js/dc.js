@@ -123,7 +123,7 @@ dc.bubbleMixin = function (_chart) {
                 .attr('opacity', 0)
                 .attr('pointer-events', labelPointerEvent)
                 .text(labelFunction);
-            dc.transition(label, _chart.transitionDuration())
+            dc.transition(label, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('opacity', labelOpacity);
         }
     };
@@ -133,7 +133,7 @@ dc.bubbleMixin = function (_chart) {
             var labels = bubbleGEnter.selectAll('text')
                 .attr('pointer-events', labelPointerEvent)
                 .text(labelFunction);
-            dc.transition(labels, _chart.transitionDuration())
+            dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('opacity', labelOpacity);
         }
     };

@@ -26,7 +26,8 @@
   },
   "dependencies": {
     "crossfilter": "1.x",
-    "d3": "3.x"
+    "d3": "3.x",
+    "glob": "^6.0.4"
   },
   "devDependencies": {
     "emu": "~0.0.2",

@@ -286,14 +286,15 @@ dc.redrawAll = function (group) {
  */
 dc.disableTransitions = false;
 
-dc.transition = function (selections, duration, callback, name) {
+dc.transition = function (selections, duration, delay, callback, name) {
     if (duration <= 0 || duration === undefined || dc.disableTransitions) {
         return selections;
     }
 
     var s = selections
-        .transition(name)
-        .duration(duration);
+    .transition(name)
+    .duration(duration)
+    .delay(delay);
 
     if (typeof(callback) === 'function') {
         callback(s);
@@ -1022,6 +1023,8 @@ dc.baseMixin = function (_chart) {
 
     var _transitionDuration = 750;
 
+    var _transitionDelay = 0;
+
     var _filterPrinter = dc.printers.filters;
 
     var _mandatoryAttributes = ['dimension', 'group'];
@@ -1580,6 +1583,23 @@ dc.baseMixin = function (_chart) {
         return _chart;
     };
 
+    /**
+     * Set or get the animation transition delay (in milliseconds) for this chart instance.
+     * @method transitionDelay
+     * @memberof dc.baseMixin
+     * @instance
+     * @param {Number} [delay=0]
+     * @return {Number}
+     * @return {dc.baseMixin}
+     */
+    _chart.transitionDelay = function (delay) {
+        if (!arguments.length) {
+            return _transitionDelay;
+        }
+        _transitionDelay = delay;
+        return _chart;
+    };
+
     _chart._mandatoryAttributes = function (_) {
         if (!arguments.length) {
             return _mandatoryAttributes;
@@ -1627,7 +1647,7 @@ dc.baseMixin = function (_chart) {
     _chart._activateRenderlets = function (event) {
         _listeners.pretransition(_chart);
         if (_chart.transitionDuration() > 0 && _svg) {
-            _svg.transition().duration(_chart.transitionDuration())
+            _svg.transition().duration(_chart.transitionDuration()).delay(_chart.transitionDelay())
                 .each('end', function () {
                     _listeners.renderlet(_chart);
                     if (event) {
@@ -3185,10 +3205,10 @@ dc.coordinateGridMixin = function (_chart) {
             axisXLab.text(_chart.xAxisLabel());
         }
 
-        dc.transition(axisXG, _chart.transitionDuration())
+        dc.transition(axisXG, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')')
             .call(_xAxis);
-        dc.transition(axisXLab, _chart.transitionDuration())
+        dc.transition(axisXLab, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
                   (_chart.height() - _xAxisLabelPadding) + ')');
     };
@@ -3221,11 +3241,11 @@ dc.coordinateGridMixin = function (_chart) {
                 })
                 .attr('y2', 0)
                 .attr('opacity', 0);
-            dc.transition(linesGEnter, _chart.transitionDuration())
+            dc.transition(linesGEnter, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('opacity', 1);
 
             // update
-            dc.transition(lines, _chart.transitionDuration())
+            dc.transition(lines, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('x1', function (d) {
                     return _x(d);
                 })
@@ -3306,7 +3326,7 @@ dc.coordinateGridMixin = function (_chart) {
         if (text && axisYLab.text() !== text) {
             axisYLab.text(text);
         }
-        dc.transition(axisYLab, _chart.transitionDuration())
+        dc.transition(axisYLab, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', 'translate(' + labelXPosition + ',' + labelYPosition + '),rotate(' + rotation + ')');
     };
 
@@ -3318,7 +3338,7 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')');
         }
 
-        dc.transition(axisYG, _chart.transitionDuration())
+        dc.transition(axisYG, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')')
             .call(axis);
     };
@@ -3358,11 +3378,11 @@ dc.coordinateGridMixin = function (_chart) {
                     return scale(d);
                 })
                 .attr('opacity', 0);
-            dc.transition(linesGEnter, _chart.transitionDuration())
+            dc.transition(linesGEnter, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('opacity', 1);
 
             // update
-            dc.transition(lines, _chart.transitionDuration())
+            dc.transition(lines, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('x1', 1)
                 .attr('y1', function (d) {
                     return scale(d);
@@ -3855,7 +3875,8 @@ dc.coordinateGridMixin = function (_chart) {
         _zoom.x(_chart.x())
             .scaleExtent(_zoomScale)
             .size([_chart.width(), _chart.height()])
-            .duration(_chart.transitionDuration());
+            .duration(_chart.transitionDuration())
+            .delay(_chart.transitionDelay());
         _chart.root().call(_zoom);
     };
 
@@ -4559,7 +4580,7 @@ dc.bubbleMixin = function (_chart) {
                 .attr('opacity', 0)
                 .attr('pointer-events', labelPointerEvent)
                 .text(labelFunction);
-            dc.transition(label, _chart.transitionDuration())
+            dc.transition(label, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('opacity', labelOpacity);
         }
     };
@@ -4569,7 +4590,7 @@ dc.bubbleMixin = function (_chart) {
             var labels = bubbleGEnter.selectAll('text')
                 .attr('pointer-events', labelPointerEvent)
                 .text(labelFunction);
-            dc.transition(labels, _chart.transitionDuration())
+            dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('opacity', labelOpacity);
         }
     };
@@ -4746,6 +4767,7 @@ dc.pieChart = function (parent, chartGroup) {
     _chart.renderLabel(true);
 
     _chart.transitionDuration(350);
+    _chart.transitionDelay(0);
 
     _chart._doRender = function () {
         _chart.resetSvg();
@@ -4790,7 +4812,7 @@ dc.pieChart = function (parent, chartGroup) {
 
             highlightFilter();
 
-            dc.transition(_g, _chart.transitionDuration())
+            dc.transition(_g, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
         }
     }
@@ -4823,7 +4845,7 @@ dc.pieChart = function (parent, chartGroup) {
                 return safeArc(d, i, arc);
             });
 
-        dc.transition(slicePath, _chart.transitionDuration(), function (s) {
+        dc.transition(slicePath, _chart.transitionDuration(), _chart.transitionDelay(), function (s) {
             s.attrTween('d', tweenPie);
         });
     }
@@ -4849,7 +4871,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     function positionLabels (labels, arc) {
         _chart._applyLabelText(labels);
-        dc.transition(labels, _chart.transitionDuration())
+        dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', function (d) {
                 return labelPosition(d, arc);
             })
@@ -4893,7 +4915,7 @@ dc.pieChart = function (parent, chartGroup) {
                 });
 
         polyline.exit().remove();
-        dc.transition(polyline, _chart.transitionDuration())
+        dc.transition(polyline, _chart.transitionDuration(), _chart.transitionDelay())
             .attrTween('points', function (d) {
                 this._current = this._current || d;
                 var interpolate = d3.interpolate(this._current, d);
@@ -4925,7 +4947,7 @@ dc.pieChart = function (parent, chartGroup) {
             .attr('d', function (d, i) {
                 return safeArc(d, i, arc);
             });
-        dc.transition(slicePaths, _chart.transitionDuration(),
+        dc.transition(slicePaths, _chart.transitionDuration(), _chart.transitionDelay(),
             function (s) {
                 s.attrTween('d', tweenPie);
             }).attr('fill', fill);
@@ -5349,7 +5371,7 @@ dc.barChart = function (parent, chartGroup) {
             labels.attr('cursor', 'pointer');
         }
 
-        dc.transition(labels, _chart.transitionDuration())
+        dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', function (d) {
                 var x = _chart.x()(d.x);
                 if (!_centerBar) {
@@ -5370,7 +5392,7 @@ dc.barChart = function (parent, chartGroup) {
                 return _chart.label()(d);
             });
 
-        dc.transition(labels.exit(), _chart.transitionDuration())
+        dc.transition(labels.exit(), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('height', 0)
             .remove();
     }
@@ -5394,7 +5416,7 @@ dc.barChart = function (parent, chartGroup) {
             bars.on('click', _chart.onClick);
         }
 
-        dc.transition(bars, _chart.transitionDuration())
+        dc.transition(bars, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', function (d) {
                 var x = _chart.x()(d.x);
                 if (_centerBar) {
@@ -5421,7 +5443,7 @@ dc.barChart = function (parent, chartGroup) {
             .attr('fill', dc.pluck('data', _chart.getColor))
             .select('title').text(dc.pluck('data', _chart.title(d.name)));
 
-        dc.transition(bars.exit(), _chart.transitionDuration())
+        dc.transition(bars.exit(), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('height', 0)
             .remove();
     }
@@ -5670,6 +5692,7 @@ dc.lineChart = function (parent, chartGroup) {
     var _xyTipsOn = true;
 
     _chart.transitionDuration(500);
+    _chart.transitionDelay(0);
     _chart._rangeBandPadding(1);
 
     _chart.plotData = function () {
@@ -5831,7 +5854,7 @@ dc.lineChart = function (parent, chartGroup) {
             path.attr('stroke-dasharray', _dashStyle);
         }
 
-        dc.transition(layers.select('path.line'), _chart.transitionDuration())
+        dc.transition(layers.select('path.line'), _chart.transitionDuration(), _chart.transitionDelay())
             //.ease('linear')
             .attr('stroke', colors)
             .attr('d', function (d) {
@@ -5864,7 +5887,7 @@ dc.lineChart = function (parent, chartGroup) {
                     return safeD(area(d.values));
                 });
 
-            dc.transition(layers.select('path.area'), _chart.transitionDuration())
+            dc.transition(layers.select('path.area'), _chart.transitionDuration(), _chart.transitionDelay())
                 //.ease('linear')
                 .attr('fill', colors)
                 .attr('d', function (d) {
@@ -6896,6 +6919,8 @@ dc.bubbleChart = function (parent, chartGroup) {
 
     _chart.transitionDuration(750);
 
+    _chart.transitionDelay(0);
+
     var bubbleLocator = function (d) {
         return 'translate(' + (bubbleX(d)) + ',' + (bubbleY(d)) + ')';
     };
@@ -6977,7 +7002,7 @@ dc.bubbleChart = function (parent, chartGroup) {
             .on('click', _chart.onClick)
             .attr('fill', _chart.getColor)
             .attr('r', 0);
-        dc.transition(bubbleG, _chart.transitionDuration())
+        dc.transition(bubbleG, _chart.transitionDuration(), _chart.transitionDelay())
             .selectAll('circle.' + _chart.BUBBLE_CLASS)
             .attr('r', function (d) {
                 return _chart.bubbleR(d);
@@ -6992,7 +7017,7 @@ dc.bubbleChart = function (parent, chartGroup) {
     }
 
     function updateNodes (bubbleG) {
-        dc.transition(bubbleG, _chart.transitionDuration())
+        dc.transition(bubbleG, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', bubbleLocator)
             .selectAll('circle.' + _chart.BUBBLE_CLASS)
             .attr('fill', _chart.getColor)
@@ -7080,6 +7105,7 @@ dc.compositeChart = function (parent, chartGroup) {
 
     _chart._mandatoryAttributes([]);
     _chart.transitionDuration(500);
+    _chart.transitionDelay(0);
 
     dc.override(_chart, '_generateG', function () {
         var g = this.__generateG();
@@ -7100,6 +7126,7 @@ dc.compositeChart = function (parent, chartGroup) {
             child.svg(_chart.svg());
             child.xUnits(_chart.xUnits());
             child.transitionDuration(_chart.transitionDuration());
+	    child.transitionDelay(_chart.transitionDelay());
             child.brushOn(_chart.brushOn());
             child.renderTitle(_chart.renderTitle());
             child.elasticX(_chart.elasticX());
@@ -7919,7 +7946,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
                 return _chart.onClick(d, layerIndex);
             });
 
-        dc.transition(paths, _chart.transitionDuration()).attr('fill', function (d, i) {
+        dc.transition(paths, _chart.transitionDuration(), _chart.transitionDelay()).attr('fill', function (d, i) {
             return _chart.getColor(data[geoJson(layerIndex).keyAccessor(d)], i);
         });
     }
@@ -8107,6 +8134,8 @@ dc.bubbleOverlay = function (parent, chartGroup) {
 
     _chart.transitionDuration(750);
 
+    _chart.transitionDelay(0);
+
     _chart.radiusValueAccessor(function (d) {
         return d.value;
     });
@@ -8167,7 +8196,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
                     .on('click', _chart.onClick);
             }
 
-            dc.transition(circle, _chart.transitionDuration())
+            dc.transition(circle, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('r', function (d) {
                     return _chart.bubbleR(d);
                 });
@@ -8218,7 +8247,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
 
             var circle = nodeG.select('circle.' + BUBBLE_CLASS);
 
-            dc.transition(circle, _chart.transitionDuration())
+            dc.transition(circle, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('r', function (d) {
                     return _chart.bubbleR(d);
                 })
@@ -8339,7 +8368,7 @@ dc.rowChart = function (parent, chartGroup) {
         }
         axisG.attr('transform', 'translate(0, ' + _chart.effectiveHeight() + ')');
 
-        dc.transition(axisG, _chart.transitionDuration())
+        dc.transition(axisG, _chart.transitionDuration(), _chart.transitionDelay())
             .call(_xAxis);
     }
 
@@ -8460,7 +8489,7 @@ dc.rowChart = function (parent, chartGroup) {
                 return (_chart.hasFilter()) ? isSelectedRow(d) : false;
             });
 
-        dc.transition(rect, _chart.transitionDuration())
+        dc.transition(rect, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('width', function (d) {
                 return Math.abs(rootValue() - _x(_chart.valueAccessor()(d)));
             })
@@ -8502,7 +8531,7 @@ dc.rowChart = function (parent, chartGroup) {
                 .text(function (d) {
                     return _chart.label()(d);
                 });
-            dc.transition(lab, _chart.transitionDuration())
+            dc.transition(lab, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('transform', translateX);
         }
         if (_chart.renderTitleLabel()) {
@@ -8517,7 +8546,7 @@ dc.rowChart = function (parent, chartGroup) {
                     .text(function (d) {
                         return _chart.title()(d);
                     });
-            dc.transition(titlelab, _chart.transitionDuration())
+            dc.transition(titlelab, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('transform', translateX);
         }
     }
@@ -9049,7 +9078,7 @@ dc.scatterPlot = function (parent, chartGroup) {
             _filtered[i] = !_chart.filter() || _chart.filter().isFiltered(d.key);
         });
 
-        dc.transition(symbols, _chart.transitionDuration())
+        dc.transition(symbols, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('opacity', function (d, i) {
                 return !_existenceAccessor(d) ? 0 :
                     _filtered[i] ? 1 : _chart.excludedOpacity();
@@ -9062,7 +9091,7 @@ dc.scatterPlot = function (parent, chartGroup) {
             .attr('transform', _locator)
             .attr('d', _symbol);
 
-        dc.transition(symbols.exit(), _chart.transitionDuration())
+        dc.transition(symbols.exit(), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('opacity', 0).remove();
     };
 
@@ -9254,7 +9283,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         });
         var oldSize = _symbol.size();
         _symbol.size(Math.pow(size, 2));
-        dc.transition(symbols, _chart.transitionDuration()).attr('d', _symbol);
+        dc.transition(symbols, _chart.transitionDuration(), _chart.transitionDelay()).attr('d', _symbol);
         _symbol.size(oldSize);
     }
 
@@ -9392,6 +9421,7 @@ dc.numberDisplay = function (parent, chartGroup) {
     });
 
     _chart.transitionDuration(250); // good default
+    _chart.transitionDelay(0);
 
     _chart._doRender = function () {
         var newValue = _chart.value(),
@@ -9405,7 +9435,8 @@ dc.numberDisplay = function (parent, chartGroup) {
         }
 
         span.transition()
-            .duration(_chart.transitionDuration())
+	    .duration(_chart.transitionDuration())
+	    .delay(_chart.transitionDelay())
             .ease('quad-out-in')
             .tween('text', function () {
                 var interp = d3.interpolateNumber(this.lastValue || 0, newValue);
@@ -9685,7 +9716,7 @@ dc.heatMap = function (parent, chartGroup) {
             boxes.selectAll('title').text(_chart.title());
         }
 
-        dc.transition(boxes.selectAll('rect'), _chart.transitionDuration())
+        dc.transition(boxes.selectAll('rect'), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', function (d, i) { return cols(_chart.keyAccessor()(d, i)); })
             .attr('y', function (d, i) { return rows(_chart.valueAccessor()(d, i)); })
             .attr('rx', _xBorderRadius)
@@ -9708,7 +9739,7 @@ dc.heatMap = function (parent, chartGroup) {
               .attr('dy', 12)
               .on('click', _chart.xAxisOnClick())
               .text(_chart.colsLabel());
-        dc.transition(gColsText, _chart.transitionDuration())
+        dc.transition(gColsText, _chart.transitionDuration(), _chart.transitionDelay())
                .text(_chart.colsLabel())
                .attr('x', function (d) { return cols(d) + boxWidth / 2; })
                .attr('y', _chart.effectiveHeight());
@@ -9725,7 +9756,7 @@ dc.heatMap = function (parent, chartGroup) {
               .attr('dx', -2)
               .on('click', _chart.yAxisOnClick())
               .text(_chart.rowsLabel());
-        dc.transition(gRowsText, _chart.transitionDuration())
+        dc.transition(gRowsText, _chart.transitionDuration(), _chart.transitionDelay())
               .text(_chart.rowsLabel())
               .attr('y', function (d) { return rows(d) + boxHeight / 2; });
         gRowsText.exit().remove();
@@ -10315,7 +10346,7 @@ dc.boxPlot = function (parent, chartGroup) {
             .height(_chart.effectiveHeight())
             .value(_chart.valueAccessor())
             .domain(_chart.y().domain())
-            .duration(_chart.transitionDuration())
+            .duration(_chart.transitionDuration(), _chart.transitionDelay())
             .tickFormat(_tickFormat);
 
         var boxesG = _chart.chartBodyG().selectAll('g.box').data(_chart.data(), function (d) { return d.key; });
@@ -10341,7 +10372,7 @@ dc.boxPlot = function (parent, chartGroup) {
     }
 
     function updateBoxes (boxesG) {
-        dc.transition(boxesG, _chart.transitionDuration())
+        dc.transition(boxesG, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', boxTransform)
             .call(_box)
             .each(function () {
