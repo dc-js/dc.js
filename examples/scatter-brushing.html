@@ -52,9 +52,9 @@ chart1.width(300)
     .x(d3.scale.linear().domain([0, 20]))
     .yAxisLabel("y")
     .xAxisLabel("x")
-    .symbolSize(8)
     .clipPadding(10)
     .dimension(dim1)
+    .excludedOpacity(0.5)
     .group(group1);
 
 chart2.width(300)
@@ -62,9 +62,9 @@ chart2.width(300)
     .x(d3.scale.linear().domain([0, 20]))
     .yAxisLabel("z")
     .xAxisLabel("y")
-    .symbolSize(8)
     .clipPadding(10)
     .dimension(dim2)
+    .excludedColor('#ddd')
     .group(group2);
 
 dc.renderAll();

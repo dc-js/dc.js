@@ -10,7 +10,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 2.0.0-beta.26  
+**Version**: 2.0.0-beta.27  
 **Example**  
 ```js
 // Example chaining
@@ -131,7 +131,10 @@ chart.width(300)
     * [.symbol([type])](#dc.scatterPlot+symbol) ⇒ <code>String</code> &#124; <code>function</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
     * [.symbolSize([symbolSize])](#dc.scatterPlot+symbolSize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
     * [.highlightedSize([highlightedSize])](#dc.scatterPlot+highlightedSize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
-    * [.hiddenSize([hiddenSize])](#dc.scatterPlot+hiddenSize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+    * [.excludedSize([excludedSize])](#dc.scatterPlot+excludedSize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+    * [.excludedColor([excludedColor])](#dc.scatterPlot+excludedColor) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+    * [.excludedOpacity([excludedOpacity])](#dc.scatterPlot+excludedOpacity) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+    * [.emptySize([emptySize])](#dc.scatterPlot+emptySize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
   * [.numberDisplay](#dc.numberDisplay)
     * [new numberDisplay(parent, [chartGroup])](#new_dc.numberDisplay_new)
     * [.html([html])](#dc.numberDisplay+html) ⇒ <code>Object</code> &#124; <code>[numberDisplay](#dc.numberDisplay)</code>
@@ -1917,7 +1920,10 @@ This setting takes into account [gap](#dc.legend+gap).
   * [.symbol([type])](#dc.scatterPlot+symbol) ⇒ <code>String</code> &#124; <code>function</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
   * [.symbolSize([symbolSize])](#dc.scatterPlot+symbolSize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
   * [.highlightedSize([highlightedSize])](#dc.scatterPlot+highlightedSize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
-  * [.hiddenSize([hiddenSize])](#dc.scatterPlot+hiddenSize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+  * [.excludedSize([excludedSize])](#dc.scatterPlot+excludedSize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+  * [.excludedColor([excludedColor])](#dc.scatterPlot+excludedColor) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+  * [.excludedOpacity([excludedOpacity])](#dc.scatterPlot+excludedOpacity) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+  * [.emptySize([emptySize])](#dc.scatterPlot+emptySize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
 
 <a name="new_dc.scatterPlot_new"></a>
 #### new scatterPlot(parent, [chartGroup])
@@ -1947,14 +1953,14 @@ var chart3 = dc.scatterPlot(compositeChart);
 Get or set the existence accessor.  If a point exists, it is drawn with
 [symbolSize](#dc.scatterPlot+symbolSize) radius and
 opacity 1; if it does not exist, it is drawn with
-[hiddenSize](#dc.scatterPlot+hiddenSize) radius and opacity 0. By default,
+[emptySize](#dc.scatterPlot+emptySize) radius and opacity 0. By default,
 the existence accessor checks if the reduced value is truthy.
 
 **Kind**: instance method of <code>[scatterPlot](#dc.scatterPlot)</code>  
 **See**
 
 - [symbolSize](#dc.scatterPlot+symbolSize)
-- [hiddenSize](#dc.scatterPlot+hiddenSize)
+- [emptySize](#dc.scatterPlot+emptySize)
 
 
 | Param | Type |
@@ -2007,8 +2013,43 @@ Set or get radius for highlighted symbols.
 | --- | --- | --- |
 | [highlightedSize] | <code>Number</code> | <code>5</code> | 
 
-<a name="dc.scatterPlot+hiddenSize"></a>
-#### scatterPlot.hiddenSize([hiddenSize]) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+<a name="dc.scatterPlot+excludedSize"></a>
+#### scatterPlot.excludedSize([excludedSize]) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+Set or get size for symbols excluded from this chart's filter. If null, no
+special size is applied for symbols based on their filter status
+
+**Kind**: instance method of <code>[scatterPlot](#dc.scatterPlot)</code>  
+**See**: [d3.svg.symbol().size()](https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [excludedSize] | <code>Number</code> | <code></code> | 
+
+<a name="dc.scatterPlot+excludedColor"></a>
+#### scatterPlot.excludedColor([excludedColor]) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+Set or get color for symbols excluded from this chart's filter. If null, no
+special color is applied for symbols based on their filter status
+
+**Kind**: instance method of <code>[scatterPlot](#dc.scatterPlot)</code>  
+**See**: [d3.svg.symbol().size()](https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [excludedColor] | <code>Number</code> | <code></code> | 
+
+<a name="dc.scatterPlot+excludedOpacity"></a>
+#### scatterPlot.excludedOpacity([excludedOpacity]) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+Set or get opacity for symbols excluded from this chart's filter.
+
+**Kind**: instance method of <code>[scatterPlot](#dc.scatterPlot)</code>  
+**See**: [d3.svg.symbol().size()](https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [excludedOpacity] | <code>Number</code> | <code>1.0</code> | 
+
+<a name="dc.scatterPlot+emptySize"></a>
+#### scatterPlot.emptySize([emptySize]) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
 Set or get radius for symbols when the group is empty.
 
 **Kind**: instance method of <code>[scatterPlot](#dc.scatterPlot)</code>  
@@ -2016,7 +2057,7 @@ Set or get radius for symbols when the group is empty.
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [hiddenSize] | <code>Number</code> | <code>0</code> | 
+| [emptySize] | <code>Number</code> | <code>0</code> | 
 
 <a name="dc.numberDisplay"></a>
 ### dc.numberDisplay
@@ -2716,7 +2757,7 @@ behaviour.
 Calling redraw will cause the chart to re-render data changes incrementally. If there is no
 change in the underlying data dimension then calling this method will have no effect on the
 chart. Most chart interaction in dc will automatically trigger this method through internal
-events (in particular [dc.redrawAll](#dc.redrawAll); therefore, you only need to
+events (in particular [redrawAll](#dc.redrawAll); therefore, you only need to
 manually invoke this function if data is manipulated outside of dc's control (for example if
 data is loaded in the background using
 [crossfilter.add](https://github.com/square/crossfilter/wiki/API-Reference#crossfilter_add).
@@ -3404,7 +3445,7 @@ concrete chart types, e.g. bar chart, line chart, and bubble chart.
 #### coordinateGridMixin.rescale() ⇒ <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
 When changing the domain of the x or y scale, it is necessary to tell the chart to recalculate
 and redraw the axes. (`.rescale()` is called automatically when the x or y scale is replaced
-with [.x()](#dc.coordinateGridMixin+x) or [.y()](#dc.coordinateGridMixin+y), and has
+with [.x()](dc.coordinateGridMixin+x) or [.y()](#dc.coordinateGridMixin+y), and has
 no effect on elastic scales.)
 
 **Kind**: instance method of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
@@ -3506,7 +3547,7 @@ number of dots for a line chart. This function is expected to return a Javascrip
 data points on x axis, or the number of points on the axis. [d3 time range functions
 d3.time.days, d3.time.months, and
 d3.time.years](https://github.com/mbostock/d3/wiki/Time-Intervals#aliases) are all valid xUnits
-function. dc.js also provides a few units function, see the [Utilities](#utilities) section for
+function. dc.js also provides a few units function, see the [Utilities](#dc.utils) section for
 a list of built-in units functions. The default xUnits function is dc.units.integers.
 
 **Kind**: instance method of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
@@ -3606,7 +3647,7 @@ chart.
 
 <a name="dc.coordinateGridMixin+isOrdinal"></a>
 #### coordinateGridMixin.isOrdinal() ⇒ <code>Boolean</code>
-Returns true if the chart is using ordinal xUnits ([dc.units.ordinal](#dc.units.ordinal), or false
+Returns true if the chart is using ordinal xUnits ([ordinal](#dc.units.ordinal), or false
 otherwise. Most charts behave differently with ordinal data and use the result of this method to
 trigger the appropriate logic.
 
@@ -4088,8 +4129,8 @@ and the default group.
 
 A chart group often corresponds to a crossfilter instance. It specifies
 the set of charts which should be updated when a filter changes on one of the charts or when the
-global functions [dc.filterAll](#dc.filterAll), [dc.refocusAll](#dc.refocusAll),
-[dc.renderAll](#dc.renderAll), [dc.redrawAll](#dc.redrawAll), or chart functions
+global functions [filterAll](#dc.filterAll), [refocusAll](#dc.refocusAll),
+[renderAll](#dc.renderAll), [redrawAll](#dc.redrawAll), or chart functions
 [baseMixin.renderGroup](#dc.baseMixin+renderGroup),
 [baseMixin.redrawGroup](#dc.baseMixin+redrawGroup) are called.
 

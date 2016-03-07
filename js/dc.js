@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-beta.26
+ *  dc 2.0.0-beta.27
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -26,10 +26,10 @@
  * Most `dc` functions are designed to allow function chaining, meaning they return the current chart
  * instance whenever it is appropriate.  The getter forms of functions do not participate in function
  * chaining because they return values that are not the chart, although some,
- * such as {@link #dc.baseMixin+svg .svg} and {@link #dc.coordinateGridMixin+xAxis .xAxis},
+ * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 2.0.0-beta.26
+ * @version 2.0.0-beta.27
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-beta.26',
+    version: '2.0.0-beta.27',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -61,10 +61,10 @@ var dc = {
  *
  * A chart group often corresponds to a crossfilter instance. It specifies
  * the set of charts which should be updated when a filter changes on one of the charts or when the
- * global functions {@link #dc.filterAll dc.filterAll}, {@link #dc.refocusAll dc.refocusAll},
- * {@link #dc.renderAll dc.renderAll}, {@link #dc.redrawAll dc.redrawAll}, or chart functions
- * {@link #dc.baseMixin+renderGroup baseMixin.renderGroup},
- * {@link #dc.baseMixin+redrawGroup baseMixin.redrawGroup} are called.
+ * global functions {@link dc.filterAll dc.filterAll}, {@link dc.refocusAll dc.refocusAll},
+ * {@link dc.renderAll dc.renderAll}, {@link dc.redrawAll dc.redrawAll}, or chart functions
+ * {@link dc.baseMixin#renderGroup baseMixin.renderGroup},
+ * {@link dc.baseMixin#redrawGroup baseMixin.redrawGroup} are called.
  *
  * @namespace chartRegistry
  * @memberof dc
@@ -339,13 +339,13 @@ dc.afterTransition = function (transition, callback) {
 dc.units = {};
 
 /**
- * The default value for {@link #dc.coordinateGridMixin+xUnits .xUnits} for the
- * {@link #dc.coordinateGridMixin Coordinate Grid Chart} and should
+ * The default value for {@link dc.coordinateGridMixin#xUnits .xUnits} for the
+ * {@link dc.coordinateGridMixin Coordinate Grid Chart} and should
  * be used when the x values are a sequence of integers.
  * It is a function that counts the number of integers in the range supplied in its start and end parameters.
  * @method integers
  * @memberof dc.units
- * @see {@link #dc.coordinateGridMixin+xUnits coordinateGridMixin.xUnits}
+ * @see {@link dc.coordinateGridMixin#xUnits coordinateGridMixin.xUnits}
  * @example
  * chart.xUnits(dc.units.integers) // already the default
  * @param {Number} start
@@ -357,16 +357,16 @@ dc.units.integers = function (start, end) {
 };
 
 /**
- * This argument can be passed to the {@link #dc.coordinateGridMixin+xUnits .xUnits} function of the to
+ * This argument can be passed to the {@link dc.coordinateGridMixin#xUnits .xUnits} function of the to
  * specify ordinal units for the x axis. Usually this parameter is used in combination with passing
  * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales d3.scale.ordinal} to
- * {@link #dc.coordinateGridMixin+x .x}.
+ * {@link dc.coordinateGridMixin#x .x}.
  * It just returns the domain passed to it, which for ordinal charts is an array of all values.
  * @method ordinal
  * @memberof dc.units
  * @see {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales d3.scale.ordinal}
- * @see {@link #dc.coordinateGridMixin+xUnits coordinateGridMixin.xUnits}
- * @see {@link #dc.coordinateGridMixin+x coordinateGridMixin.x}
+ * @see {@link dc.coordinateGridMixin#xUnits coordinateGridMixin.xUnits}
+ * @see {@link dc.coordinateGridMixin#x coordinateGridMixin.x}
  * @example
  * chart.xUnits(dc.units.ordinal)
  *      .x(d3.scale.ordinal())
@@ -386,14 +386,14 @@ dc.units.ordinal = function (start, end, domain) {
  */
 dc.units.fp = {};
 /**
- * This function generates an argument for the {@link #dc.coordinateGridMixin Coordinate Grid Chart}
- * {@link #dc.coordinateGridMixin+xUnits .xUnits} function specifying that the x values are floating-point
+ * This function generates an argument for the {@link dc.coordinateGridMixin Coordinate Grid Chart}
+ * {@link dc.coordinateGridMixin#xUnits .xUnits} function specifying that the x values are floating-point
  * numbers with the given precision.
  * The returned function determines how many values at the given precision will fit into the range
  * supplied in its start and end parameters.
  * @method precision
  * @memberof dc.units.fp
- * @see {@link #dc.coordinateGridMixin+xUnits coordinateGridMixin.xUnits}
+ * @see {@link dc.coordinateGridMixin#xUnits coordinateGridMixin.xUnits}
  * @example
  * // specify values (and ticks) every 0.1 units
  * chart.xUnits(dc.units.fp.precision(0.1)
@@ -868,7 +868,7 @@ dc.filters = {};
 
 /**
  * RangedFilter is a filter which accepts keys between `low` and `high`.  It is used to implement X
- * axis brushing for the {@link #dc.coordinateGridMixin coordinate grid charts}.
+ * axis brushing for the {@link dc.coordinateGridMixin coordinate grid charts}.
  *
  * Its `filterType` is 'RangedFilter'
  * @name RangedFilter
@@ -890,7 +890,7 @@ dc.filters.RangedFilter = function (low, high) {
 
 /**
  * TwoDimensionalFilter is a filter which accepts a single two-dimensional value.  It is used by the
- * {@link #dc.heatMap heat map chart} to include particular cells as they are clicked.  (Rows and columns are
+ * {@link dc.heatMap heat map chart} to include particular cells as they are clicked.  (Rows and columns are
  * filtered by filtering all the cells in the row or column.)
  *
  * Its `filterType` is 'TwoDimensionalFilter'
@@ -915,7 +915,7 @@ dc.filters.TwoDimensionalFilter = function (filter) {
 
 /**
  * The RangedTwoDimensionalFilter allows filtering all values which fit within a rectangular
- * region. It is used by the {@link #dc.scatterPlot scatter plot} to implement rectangular brushing.
+ * region. It is used by the {@link dc.scatterPlot scatter plot} to implement rectangular brushing.
  *
  * It takes two two-dimensional points in the form `[[x1,y1],[x2,y2]]`, and normalizes them so that
  * `x1 <= x2` and `y1 <= y2`. It then returns a filter which accepts any points which are in the
@@ -1080,12 +1080,12 @@ dc.baseMixin = function (_chart) {
      *
      * By default, without an explicit height being given, the chart will select the width of its
      * anchor element. If that isn't possible it defaults to 200 (provided by the
-     * {@link #dc.baseMixin+minHeight minHeight} property). Setting the value falsy will return
+     * {@link dc.baseMixin#minHeight minHeight} property). Setting the value falsy will return
      * the chart to the default behavior.
      * @method height
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link #dc.baseMixin+minHeight minHeight}
+     * @see {@link dc.baseMixin#minHeight minHeight}
      * @example
      * // Default height
      * chart.height(function (element) {
@@ -1118,8 +1118,8 @@ dc.baseMixin = function (_chart) {
      * @method width
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link #dc.baseMixin+height height}
-     * @see {@link #dc.baseMixin+minWidth minWidth}
+     * @see {@link dc.baseMixin#height height}
+     * @see {@link dc.baseMixin#minWidth minWidth}
      * @example
      * // Default width
      * chart.width(function (element) {
@@ -1145,11 +1145,11 @@ dc.baseMixin = function (_chart) {
 
     /**
      * Set or get the minimum width attribute of a chart. This only has effect when used with the default
-     * {@link #dc.baseMixin+width width} function.
+     * {@link dc.baseMixin#width width} function.
      * @method minWidth
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link #dc.baseMixin+width width}
+     * @see {@link dc.baseMixin#width width}
      * @param {Number} [minWidth=200]
      * @return {Number}
      * @return {dc.baseMixin}
@@ -1164,11 +1164,11 @@ dc.baseMixin = function (_chart) {
 
     /**
      * Set or get the minimum height attribute of a chart. This only has effect when used with the default
-     * {@link #dc.baseMixin+height height} function.
+     * {@link dc.baseMixin#height height} function.
      * @method minHeight
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link #dc.baseMixin+height height}
+     * @see {@link dc.baseMixin#height height}
      * @param {Number} [minHeight=200]
      * @return {Number}
      * @return {dc.baseMixin}
@@ -1312,7 +1312,7 @@ dc.baseMixin = function (_chart) {
     /**
      * Clear all filters associated with this chart
      *
-     * The same can be achieved by calling {@link #dc.baseMixin+filter chart.filter(null)}.
+     * The same can be achieved by calling {@link dc.baseMixin#filter chart.filter(null)}.
      * @method filterAll
      * @memberof dc.baseMixin
      * @instance
@@ -1549,7 +1549,7 @@ dc.baseMixin = function (_chart) {
      * Turn off optional control elements within the root element.
      * @method turnOffControls
      * @memberof dc.baseMixin
-     * @see {@link #dc.baseMixin+turnOnControls turnOnControls}
+     * @see {@link dc.baseMixin#turnOnControls turnOnControls}
      * @instance
      * @return {dc.baseMixin}
      */
@@ -1646,7 +1646,7 @@ dc.baseMixin = function (_chart) {
      * Calling redraw will cause the chart to re-render data changes incrementally. If there is no
      * change in the underlying data dimension then calling this method will have no effect on the
      * chart. Most chart interaction in dc will automatically trigger this method through internal
-     * events (in particular {@link #dc.redrawAll dc.redrawAll}; therefore, you only need to
+     * events (in particular {@link dc.redrawAll dc.redrawAll}; therefore, you only need to
      * manually invoke this function if data is manipulated outside of dc's control (for example if
      * data is loaded in the background using
      * {@link https://github.com/square/crossfilter/wiki/API-Reference#crossfilter_add crossfilter.add}.
@@ -1797,7 +1797,7 @@ dc.baseMixin = function (_chart) {
      * @method hasFilter
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link #dc.baseMixin+hasFilterHandler hasFilterHandler}
+     * @see {@link dc.baseMixin#hasFilterHandler hasFilterHandler}
      * @param {*} [filter]
      * @return {Boolean}
      */
@@ -1941,20 +1941,20 @@ dc.baseMixin = function (_chart) {
     /**
      * Filter the chart by the given value or return the current filter if the input parameter is missing.
      * If the passed filter is not currently in the chart's filters, it is added to the filters by the
-     * {@link #dc.baseMixin+addFilterHandler addFilterHandler}.  If a filter exists already within the chart's
-     * filters, it will be removed by the {@link #dc.baseMixin+removeFilterHandler removeFilterHandler}.  If
+     * {@link dc.baseMixin#addFilterHandler addFilterHandler}.  If a filter exists already within the chart's
+     * filters, it will be removed by the {@link dc.baseMixin#removeFilterHandler removeFilterHandler}.  If
      * a `null` value was passed at the filter, this denotes that the filters should be reset, and is performed
-     * by the {@link #dc.baseMixin+resetFilterHandler resetFilterHandler}.
+     * by the {@link dc.baseMixin#resetFilterHandler resetFilterHandler}.
      *
      * Once the filters array has been updated, the filters are applied to the crossfilter.dimension, using the
-     * {@link #dc.baseMixin+filterHandler filterHandler}.
+     * {@link dc.baseMixin#filterHandler filterHandler}.
      * @method filter
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link #dc.baseMixin+addFilterHandler addFilterHandler}
-     * @see {@link #dc.baseMixin+removeFilterHandler removeFilterHandler}
-     * @see {@link #dc.baseMixin+resetFilterHandler resetFilterHandler}
-     * @see {@link #dc.baseMixin+filterHandler filterHandler}
+     * @see {@link dc.baseMixin#addFilterHandler addFilterHandler}
+     * @see {@link dc.baseMixin#removeFilterHandler removeFilterHandler}
+     * @see {@link dc.baseMixin#resetFilterHandler resetFilterHandler}
+     * @see {@link dc.baseMixin#filterHandler filterHandler}
      * @example
      * // filter by a single string
      * chart.filter('Sunday');
@@ -2276,7 +2276,7 @@ dc.baseMixin = function (_chart) {
      * Renderlet functions take the chart instance as the only input parameter and you can
      * use the dc API or use raw d3 to achieve pretty much any effect.
      *
-     * Use {@link #dc.baseMixin+on on} with a 'renderlet' prefix.
+     * Use {@link dc.baseMixin#on on} with a 'renderlet' prefix.
      * Generates a random key for the renderlet, which makes it hard to remove.
      * @method renderlet
      * @memberof dc.baseMixin
@@ -2413,7 +2413,7 @@ dc.baseMixin = function (_chart) {
      * All dc chart instance supports the following listeners.
      * Supports the following events:
      * * `renderlet` - This listener function will be invoked after transitions after redraw and render. Replaces the
-     * deprecated {@link #dc.baseMixin+renderlet renderlet} method.
+     * deprecated {@link dc.baseMixin#renderlet renderlet} method.
      * * `pretransition` - Like `.on('renderlet', ...)` but the event is fired before transitions start.
      * * `preRender` - This listener function will be invoked before chart rendering.
      * * `postRender` - This listener function will be invoked after chart finish rendering including
@@ -2603,7 +2603,7 @@ dc.colorMixin = function (_chart) {
      * array.
      *
      * Note: previously this method accepted a callback function. Instead you may use a custom scale
-     * set by {@link #dc.colorMixin+colors .colors}.
+     * set by {@link dc.colorMixin#colors .colors}.
      * @method colorDomain
      * @memberof dc.colorMixin
      * @instance
@@ -2621,7 +2621,7 @@ dc.colorMixin = function (_chart) {
 
     /**
      * Set the domain by determining the min and max values as retrieved by
-     * {@link #dc.colorMixin+colorAccessor .colorAccessor} over the chart's dataset.
+     * {@link dc.colorMixin#colorAccessor .colorAccessor} over the chart's dataset.
      * @method calculateColorDomain
      * @memberof dc.colorMixin
      * @instance
@@ -2775,7 +2775,7 @@ dc.coordinateGridMixin = function (_chart) {
     /**
      * When changing the domain of the x or y scale, it is necessary to tell the chart to recalculate
      * and redraw the axes. (`.rescale()` is called automatically when the x or y scale is replaced
-     * with {@link #dc.coordinateGridMixin+x .x()} or {@link #dc.coordinateGridMixin+y .y()}, and has
+     * with {@link dc.coordinateGridMixin+x .x()} or {@link dc.coordinateGridMixin#y .y()}, and has
      * no effect on elastic scales.)
      * @method rescale
      * @memberof dc.coordinateGridMixin
@@ -2958,7 +2958,7 @@ dc.coordinateGridMixin = function (_chart) {
      * data points on x axis, or the number of points on the axis. [d3 time range functions
      * d3.time.days, d3.time.months, and
      * d3.time.years](https://github.com/mbostock/d3/wiki/Time-Intervals#aliases) are all valid xUnits
-     * function. dc.js also provides a few units function, see the {@link #utilities Utilities} section for
+     * function. dc.js also provides a few units function, see the {@link dc.utils Utilities} section for
      * a list of built-in units functions. The default xUnits function is dc.units.integers.
      * @method xUnits
      * @memberof dc.coordinateGridMixin
@@ -3102,7 +3102,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     /**
-     * Returns true if the chart is using ordinal xUnits ({@link #dc.units.ordinal dc.units.ordinal}, or false
+     * Returns true if the chart is using ordinal xUnits ({@link dc.units.ordinal dc.units.ordinal}, or false
      * otherwise. Most charts behave differently with ordinal data and use the result of this method to
      * trigger the appropriate logic.
      * @method isOrdinal
@@ -4677,7 +4677,7 @@ dc.bubbleMixin = function (_chart) {
 /**
  * The pie chart implementation is usually used to visualize a small categorical distribution.  The pie
  * chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
- * slice relative to the sum of all values. Slices are ordered by {@link #dc.baseMixin+ordering ordering}
+ * slice relative to the sum of all values. Slices are ordered by {@link dc.baseMixin#ordering ordering}
  * which defaults to sorting by key.
  *
  * Examples:
@@ -5263,7 +5263,7 @@ dc.pieChart = function (parent, chartGroup) {
  * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
  * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector}
  * specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar
- * chart is a sub-chart in a {@link #dc.compositeChart Composite Chart} then pass in the parent
+ * chart is a sub-chart in a {@link dc.compositeChart Composite Chart} then pass in the parent
  * composite chart instance instead.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -5493,7 +5493,7 @@ dc.barChart = function (parent, chartGroup) {
 
     /**
      * Get or set the spacing between bars as a fraction of bar size. Valid values are between 0-1.
-     * Setting this value will also remove any previously set {@link #dc.barChart+gap gap}. See the
+     * Setting this value will also remove any previously set {@link dc.barChart#gap gap}. See the
      * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands d3 docs}
      * for a visual description of how the padding is applied.
      * @method barPadding
@@ -5563,7 +5563,7 @@ dc.barChart = function (parent, chartGroup) {
     /**
      * Set or get whether rounding is enabled when bars are centered. If false, using
      * rounding with centered bars will result in a warning and rounding will be ignored.  This flag
-     * has no effect if bars are not {@link #dc.barChart+centerBar centered}.
+     * has no effect if bars are not {@link dc.barChart#centerBar centered}.
      * When using standard d3.js rounding methods, the brush often doesn't align correctly with
      * centered bars since the bars are offset.  The rounding function must add an offset to
      * compensate, such as in the following example.
@@ -5638,7 +5638,7 @@ dc.barChart = function (parent, chartGroup) {
  * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
  * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector}
  * specifying a dom block element such as a div; or a dom element or d3 selection.  If the line
- * chart is a sub-chart in a {@link #dc.compositeChart Composite Chart} then pass in the parent
+ * chart is a sub-chart in a {@link dc.compositeChart Composite Chart} then pass in the parent
  * composite chart instance instead.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -5981,7 +5981,7 @@ dc.lineChart = function (parent, chartGroup) {
     /**
      * Turn on/off the mouseover behavior of an individual data point which renders a circle and x/y axis
      * dashed lines back to each respective axis.  This is ignored if the chart
-     * {@link #dc.coordinateGridMixin+brushOn brush} is on
+     * {@link dc.coordinateGridMixin#brushOn brush} is on
      * @method xyTipsOn
      * @memberof dc.lineChart
      * @instance
@@ -6201,7 +6201,7 @@ dc.dataCount = function (parent, chartGroup) {
  * together in groups.  Do not pass in a crossfilter group as this will not work.
  *
  * Another interesting feature of the data table is that you can pass a crossfilter group to the `dimension`, as
- * long as you specify the {@link #dc.dataTable+order order} as `d3.descending`, since the data
+ * long as you specify the {@link dc.dataTable#order order} as `d3.descending`, since the data
  * table will use `dimension.top()` to fetch the data in that case, and the method is equally
  * supported on the crossfilter group as the crossfilter dimension.
  *
@@ -6438,7 +6438,7 @@ dc.dataTable = function (parent, chartGroup) {
 
     /**
      * Get or set the index of the end slice which determines which entries get displayed by the
-     * widget. Useful when implementing pagination. See {@link #dc.dataTable+beginSlice `beginSlice`} for more information.
+     * widget. Useful when implementing pagination. See {@link dc.dataTable#beginSlice `beginSlice`} for more information.
      * @method endSlice
      * @memberof dc.dataTable
      * @instance
@@ -7282,7 +7282,7 @@ dc.compositeChart = function (parent, chartGroup) {
 
     /**
      * Get or set chart-specific options for all child charts. This is equivalent to calling
-     * {@link #dc.baseMixin+options .options} on each child chart.
+     * {@link dc.baseMixin#options .options} on each child chart.
      * @method childOptions
      * @memberof dc.compositeChart
      * @instance
@@ -7384,7 +7384,7 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set color sharing for the chart. If set, the {@link #dc.colorMixin+colors .colors()} value from this chart
+     * Get or set color sharing for the chart. If set, the {@link dc.colorMixin#colors .colors()} value from this chart
      * will be shared with composed children. Additionally if the child chart implements
      * Stackable and has not set a custom .colorAccessor, then it will generate a color
      * specific to its order in the composition.
@@ -7404,7 +7404,7 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set title sharing for the chart. If set, the {@link #dc.baseMixin+title .title()} value from
+     * Get or set title sharing for the chart. If set, the {@link dc.baseMixin#title .title()} value from
      * this chart will be shared with composed children.
      * @method shareTitle
      * @memberof dc.compositeChart
@@ -8919,8 +8919,8 @@ dc.legend = function () {
     };
 
     /**
-     * Turn automatic width for legend items on or off. If true, {@link #dc.legend+itemWidth itemWidth} is ignored.
-     * This setting takes into account {@link #dc.legend+gap gap}.
+     * Turn automatic width for legend items on or off. If true, {@link dc.legend#itemWidth itemWidth} is ignored.
+     * This setting takes into account {@link dc.legend#gap gap}.
      * @method autoItemWidth
      * @memberof dc.legend
      * @instance
@@ -8999,20 +8999,24 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     var _locator = function (d) {
         return 'translate(' + _chart.x()(_chart.keyAccessor()(d)) + ',' +
-                              _chart.y()(_chart.valueAccessor()(d)) + ')';
+            _chart.y()(_chart.valueAccessor()(d)) + ')';
     };
 
-    var _symbolSize = 3;
-    var _highlightedSize = 5;
-    var _hiddenSize = 0;
+    var _highlightedSize = 7;
+    var _symbolSize = 5;
+    var _excludedSize = 3;
+    var _excludedColor = null;
+    var _excludedOpacity = 1.0;
+    var _emptySize = 0;
+    var _filtered = [];
 
-    _symbol.size(function (d) {
+    _symbol.size(function (d, i) {
         if (!_existenceAccessor(d)) {
-            return _hiddenSize;
-        } else if (this.filtered) {
-            return Math.pow(_highlightedSize, 2);
-        } else {
+            return _emptySize;
+        } else if (_filtered[i]) {
             return Math.pow(_symbolSize, 2);
+        } else {
+            return Math.pow(_excludedSize, 2);
         }
     });
 
@@ -9026,19 +9030,30 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     _chart.plotData = function () {
         var symbols = _chart.chartBodyG().selectAll('path.symbol')
-            .data(_chart.data());
+                .data(_chart.data());
 
         symbols
             .enter()
-        .append('path')
+            .append('path')
             .attr('class', 'symbol')
             .attr('opacity', 0)
             .attr('fill', _chart.getColor)
             .attr('transform', _locator);
 
+        symbols.each(function (d, i) {
+            _filtered[i] = !_chart.filter() || _chart.filter().isFiltered(d.key);
+        });
+
         dc.transition(symbols, _chart.transitionDuration())
-            .attr('opacity', function (d) { return _existenceAccessor(d) ? 1 : 0; })
-            .attr('fill', _chart.getColor)
+            .attr('opacity', function (d, i) {
+                return !_existenceAccessor(d) ? 0 :
+                    _filtered[i] ? 1 : _chart.excludedOpacity();
+            })
+            .attr('fill', function (d, i) {
+                return _chart.excludedColor() && !_filtered[i] ?
+                    _chart.excludedColor() :
+                    _chart.getColor(d);
+            })
             .attr('transform', _locator)
             .attr('d', _symbol);
 
@@ -9048,15 +9063,15 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
      * Get or set the existence accessor.  If a point exists, it is drawn with
-     * {@link #dc.scatterPlot+symbolSize symbolSize} radius and
+     * {@link dc.scatterPlot#symbolSize symbolSize} radius and
      * opacity 1; if it does not exist, it is drawn with
-     * {@link #dc.scatterPlot+hiddenSize hiddenSize} radius and opacity 0. By default,
+     * {@link dc.scatterPlot#emptySize emptySize} radius and opacity 0. By default,
      * the existence accessor checks if the reduced value is truthy.
      * @method existenceAccessor
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link #dc.scatterPlot+symbolSize symbolSize}
-     * @see {@link #dc.scatterPlot+hiddenSize hiddenSize}
+     * @see {@link dc.scatterPlot#symbolSize symbolSize}
+     * @see {@link dc.scatterPlot#emptySize emptySize}
      * @example
      * // default accessor
      * chart.existenceAccessor(function (d) { return d.value; });
@@ -9133,20 +9148,76 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     /**
-     * Set or get radius for symbols when the group is empty.
-     * @method hiddenSize
+     * Set or get size for symbols excluded from this chart's filter. If null, no
+     * special size is applied for symbols based on their filter status
+     * @method excludedSize
      * @memberof dc.scatterPlot
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
-     * @param {Number} [hiddenSize=0]
+     * @param {Number} [excludedSize=null]
      * @return {Number}
      * @return {dc.scatterPlot}
      */
-    _chart.hiddenSize = function (hiddenSize) {
+    _chart.excludedSize = function (excludedSize) {
         if (!arguments.length) {
-            return _hiddenSize;
+            return _excludedSize;
         }
-        _hiddenSize = hiddenSize;
+        _excludedSize = excludedSize;
+        return _chart;
+    };
+
+    /**
+     * Set or get color for symbols excluded from this chart's filter. If null, no
+     * special color is applied for symbols based on their filter status
+     * @method excludedColor
+     * @memberof dc.scatterPlot
+     * @instance
+     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
+     * @param {Number} [excludedColor=null]
+     * @return {Number}
+     * @return {dc.scatterPlot}
+     */
+    _chart.excludedColor = function (excludedColor) {
+        if (!arguments.length) {
+            return _excludedColor;
+        }
+        _excludedColor = excludedColor;
+        return _chart;
+    };
+
+    /**
+     * Set or get opacity for symbols excluded from this chart's filter.
+     * @method excludedOpacity
+     * @memberof dc.scatterPlot
+     * @instance
+     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
+     * @param {Number} [excludedOpacity=1.0]
+     * @return {Number}
+     * @return {dc.scatterPlot}
+     */
+    _chart.excludedOpacity = function (excludedOpacity) {
+        if (!arguments.length) {
+            return _excludedOpacity;
+        }
+        _excludedOpacity = excludedOpacity;
+        return _chart;
+    };
+
+    /**
+     * Set or get radius for symbols when the group is empty.
+     * @method emptySize
+     * @memberof dc.scatterPlot
+     * @instance
+     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
+     * @param {Number} [emptySize=0]
+     * @return {Number}
+     * @return {dc.scatterPlot}
+     */
+    _chart.hiddenSize = _chart.emptySize = function (emptySize) {
+        if (!arguments.length) {
+            return _emptySize;
+        }
+        _emptySize = emptySize;
         return _chart;
     };
 
@@ -9202,14 +9273,6 @@ dc.scatterPlot = function (parent, chartGroup) {
         return _chart.brush().empty() || !extent || extent[0][0] >= extent[1][0] || extent[0][1] >= extent[1][1];
     };
 
-    function resizeFiltered (filter) {
-        var symbols = _chart.selectAll('.chart-body path.symbol').each(function (d) {
-            this.filtered = filter && filter.isFiltered(d.key);
-        });
-
-        dc.transition(symbols, _chart.transitionDuration()).attr('d', _symbol);
-    }
-
     _chart._brushing = function () {
         var extent = _chart.extendBrush();
 
@@ -9221,8 +9284,6 @@ dc.scatterPlot = function (parent, chartGroup) {
                 _chart.redrawGroup();
             });
 
-            resizeFiltered(false);
-
         } else {
             var ranged2DFilter = dc.filters.RangedTwoDimensionalFilter(extent);
             dc.events.trigger(function () {
@@ -9231,7 +9292,6 @@ dc.scatterPlot = function (parent, chartGroup) {
                 _chart.redrawGroup();
             }, dc.constants.EVENT_DELAY);
 
-            resizeFiltered(ranged2DFilter);
         }
     };
 
@@ -10171,7 +10231,7 @@ dc.boxPlot = function (parent, chartGroup) {
 
     /**
      * Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
-     * or on charts with a custom {@link #dc.boxPlot+boxWidth .boxWidth}. Will pad the width by
+     * or on charts with a custom {@link dc.boxPlot#boxWidth .boxWidth}. Will pad the width by
      * `padding * barWidth` on each side of the chart.
      * @method outerPadding
      * @memberof dc.boxPlot
