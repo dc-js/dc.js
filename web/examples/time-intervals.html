@@ -39,8 +39,6 @@
                   });
                   ret.push({key: i, value: count});
                   i = next;
-                  if(ret.length > 100)
-                      throw new Error('uh oh');
               }
               while(i.getTime() <= end.getTime());
               return ret;
