@@ -24,7 +24,8 @@ dc.legend = function () {
         _legendWidth = 560,
         _itemWidth = 70,
         _autoItemWidth = false,
-        _legendText = dc.pluck('name');
+        _legendText = dc.pluck('name'),
+        _maxItems;
 
     var _g;
 
@@ -42,6 +43,10 @@ dc.legend = function () {
             .attr('class', 'dc-legend')
             .attr('transform', 'translate(' + _x + ',' + _y + ')');
         var legendables = _parent.legendables();
+        
+        if (_maxItems) {
+            legendables = legendables.slice(0, _maxItems);
+        }
 
         var itemEnter = _g.selectAll('g.dc-legend-item')
             .data(legendables)
@@ -267,6 +272,22 @@ dc.legend = function () {
         _legendText = legendText;
         return _legend;
     };
+    
+    /**
+     * Maximum number of legend items to display
+     * @method maxItems
+     * @memberof dc.legend
+     * @instance
+     * @param  {Number} [maxItems]]
+     * @return {dc.legend}
+     */
+     
+    _legend.maxItems = function(maxItemCount) {
+        //TODO maybe check if maxItemCount is a number?
+        _maxItems = maxItemCount;
+        
+        return _legend;  
+    }
 
     return _legend;
 };
