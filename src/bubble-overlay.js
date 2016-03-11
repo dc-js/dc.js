@@ -48,6 +48,8 @@ dc.bubbleOverlay = function (parent, chartGroup) {
 
     _chart.transitionDuration(750);
 
+    _chart.transitionDelay(0);
+
     _chart.radiusValueAccessor(function (d) {
         return d.value;
     });
@@ -108,7 +110,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
                     .on('click', _chart.onClick);
             }
 
-            dc.transition(circle, _chart.transitionDuration())
+            dc.transition(circle, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('r', function (d) {
                     return _chart.bubbleR(d);
                 });
@@ -159,7 +161,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
 
             var circle = nodeG.select('circle.' + BUBBLE_CLASS);
 
-            dc.transition(circle, _chart.transitionDuration())
+            dc.transition(circle, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('r', function (d) {
                     return _chart.bubbleR(d);
                 })

@@ -68,6 +68,7 @@ dc.pieChart = function (parent, chartGroup) {
     _chart.renderLabel(true);
 
     _chart.transitionDuration(350);
+    _chart.transitionDelay(0);
 
     _chart._doRender = function () {
         _chart.resetSvg();
@@ -120,7 +121,7 @@ dc.pieChart = function (parent, chartGroup) {
 
             highlightFilter();
 
-            dc.transition(_g, _chart.transitionDuration())
+            dc.transition(_g, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
         }
     }
@@ -153,7 +154,7 @@ dc.pieChart = function (parent, chartGroup) {
                 return safeArc(d, i, arc);
             });
 
-        var transition = dc.transition(slicePath, _chart.transitionDuration());
+        var transition = dc.transition(slicePath, _chart.transitionDuration(), _chart.transitionDelay());
         if (transition.attrTween) {
             transition.attrTween('d', tweenPie);
         }
@@ -180,7 +181,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     function positionLabels (labels, arc) {
         _chart._applyLabelText(labels);
-        dc.transition(labels, _chart.transitionDuration())
+        dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', function (d) {
                 return labelPosition(d, arc);
             })
@@ -240,7 +241,7 @@ dc.pieChart = function (parent, chartGroup) {
         var arc2 = d3.svg.arc()
                 .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
                 .innerRadius(_radius - _externalRadiusPadding);
-        var transition = dc.transition(polyline, _chart.transitionDuration());
+        var transition = dc.transition(polyline, _chart.transitionDuration(), _chart.transitionDelay());
         // this is one rare case where d3.selection differs from d3.transition
         if (transition.attrTween) {
             transition
@@ -277,7 +278,7 @@ dc.pieChart = function (parent, chartGroup) {
             .attr('d', function (d, i) {
                 return safeArc(d, i, arc);
             });
-        var transition = dc.transition(slicePaths, _chart.transitionDuration());
+        var transition = dc.transition(slicePaths, _chart.transitionDuration(), _chart.transitionDelay());
         if (transition.attrTween) {
             transition.attrTween('d', tweenPie);
         }

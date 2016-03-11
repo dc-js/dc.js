@@ -84,6 +84,7 @@ dc.numberDisplay = function (parent, chartGroup) {
     });
 
     _chart.transitionDuration(250); // good default
+    _chart.transitionDelay(0);
 
     _chart._doRender = function () {
         var newValue = _chart.value(),
@@ -98,6 +99,7 @@ dc.numberDisplay = function (parent, chartGroup) {
 
         span.transition()
             .duration(_chart.transitionDuration())
+            .delay(_chart.transitionDelay())
             .ease('quad-out-in')
             .tween('text', function () {
                 // [XA] don't try and interpolate from Infinity, else this breaks.
