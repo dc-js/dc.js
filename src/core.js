@@ -266,14 +266,11 @@ dc.redrawAll = function (group) {
 dc.disableTransitions = false;
 
 dc.transition = function (selections, duration, delay, callback, name) {
-    if (duration <= 0 || duration === undefined || dc.disableTransitions) {
-        return selections;
+    if (dc.disableTransitions || duration <= 0 || duration === undefined || delay <= 0 || delay === undefined) {
+	return selections;
     }
 
-    var s = selections
-        .transition(name)
-        .duration(duration)
-	.delay(delay);
+    var s = selections.transition(name).duration(duration).delay(delay);
 
     if (typeof(callback) === 'function') {
         callback(s);

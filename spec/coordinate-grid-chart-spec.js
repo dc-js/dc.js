@@ -16,7 +16,8 @@ describe('dc.coordinateGridChart', function () {
             .height(150)
             .dimension(dimension)
             .group(group)
-            .transitionDuration(0)
+            .transitionDuration(0) 
+            .transitionDelay(0)
             .brushOn(false)
             .margins({top: 20, bottom: 0, right: 10, left: 0})
             .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
@@ -61,6 +62,10 @@ describe('dc.coordinateGridChart', function () {
 
         it('should have zero transition duration', function () {
             expect(chart.transitionDuration()).toBe(0);
+        });
+
+        it('should have zero transition delay', function () {
+            expect(chart.transitionDelay()).toBe(0);
         });
 
         it('should set the margins of the chart', function () {
@@ -197,6 +202,7 @@ describe('dc.coordinateGridChart', function () {
                         .dimension(dimension)
                         .group(group)
                         .transitionDuration(0)
+                        .transitionDelay(0)
                         .brushOn(false)
                         .margins({top: 20, bottom: 0, right: 10, left: 0})
                         .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
@@ -217,6 +223,7 @@ describe('dc.coordinateGridChart', function () {
                         .dimension(dimension)
                         .group(group)
                         .transitionDuration(0)
+                        .transitionDelay(0)
                         .brushOn(false)
                         .margins({top: 20, bottom: 0, right: 10, left: 0})
                         .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));

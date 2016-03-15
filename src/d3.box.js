@@ -6,6 +6,7 @@
         var width = 1,
             height = 1,
             duration = 0,
+	    delay = 0,
             domain = null,
             value = Number,
             whiskers = boxWhiskers,
@@ -62,7 +63,7 @@
                     .attr('x2', width / 2)
                     .attr('y2', function (d) { return x0(d[1]); })
                     .style('opacity', 1e-6)
-                  .transition()
+                    .transition()
                     .duration(duration)
 		    .delay(delay)
                     .style('opacity', 1)

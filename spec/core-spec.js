@@ -108,21 +108,26 @@ describe('dc.core', function () {
                 duration: function () {
                     return this;
                 }
+                delay: function () {
+                    return this;
+                }
             };
             spyOn(selections, 'transition').and.callThrough();
             spyOn(selections, 'duration').and.callThrough();
+            spyOn(selections, 'delay').and.callThrough();
         });
 
         describe('normal', function () {
             it('transition should be activated with duration', function () {
-                dc.transition(selections, 100);
+                dc.transition(selections, 100, 100);
                 expect(selections.transition).toHaveBeenCalled();
                 expect(selections.duration).toHaveBeenCalled();
+                expect(selections.delay).toHaveBeenCalled();
             });
 
             it('transition callback should be triggered', function () {
                 var triggered = false;
-                dc.transition(selections, 100, function () {
+                dc.transition(selections, 100, 100, function () {
                     triggered = true;
                 });
                 expect(triggered).toBeTruthy();
@@ -131,14 +136,15 @@ describe('dc.core', function () {
 
         describe('skip', function () {
             it('transition should not be activated with 0 duration', function () {
-                dc.transition(selections, 0);
+                dc.transition(selections, 0, 0);
                 expect(selections.transition).not.toHaveBeenCalled();
                 expect(selections.duration).not.toHaveBeenCalled();
+                expect(selections.delay).not.toHaveBeenCalled();
             });
 
             it('transition callback should not be triggered', function () {
                 var triggered = false;
-                dc.transition(selections, 0, function () {
+                dc.transition(selections, 0, 0, function () {
                     triggered = true;
                 });
                 expect(triggered).toBeFalsy();
