@@ -1050,7 +1050,7 @@ dc.coordinateGridMixin = function (_chart) {
                 _chart.brush().extent(_chart.filter());
             }
 
-            var gBrush = dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay()))(g.select('g.brush'));
+            var gBrush = dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(g.select('g.brush'));
             _chart.setBrushY(gBrush);
             gBrush.call(_chart.brush()
                       .x(_chart.x())
