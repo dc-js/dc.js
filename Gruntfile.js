@@ -84,7 +84,7 @@ module.exports = function (grunt) {
         },
         watch: {
             jsdoc2md: {
-                files: ['<%= conf.src %>/**/*.js'],
+                files: ['welcome.md', '<%= conf.src %>/**/*.js'],
                 tasks: ['build', 'jsdoc', 'jsdoc2md']
             },
             scripts: {
@@ -216,7 +216,7 @@ module.exports = function (grunt) {
         },
         jsdoc: {
             dist: {
-                src: ['<%= conf.src %>/**/*.js', '!<%= conf.src %>/{banner,footer}.js'],
+                src: ['welcome.md', '<%= conf.src %>/**/*.js', '!<%= conf.src %>/{banner,footer}.js'],
                 options: {
                     destination: 'web/docs/html',
                     template: 'node_modules/ink-docstrap/template',
