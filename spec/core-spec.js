@@ -107,7 +107,7 @@ describe('dc.core', function () {
                 },
                 duration: function () {
                     return this;
-                }
+                },
                 delay: function () {
                     return this;
                 }

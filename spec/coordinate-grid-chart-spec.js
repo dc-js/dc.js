@@ -16,7 +16,7 @@ describe('dc.coordinateGridChart', function () {
             .height(150)
             .dimension(dimension)
             .group(group)
-            .transitionDuration(0) 
+            .transitionDuration(0)
             .transitionDelay(0)
             .brushOn(false)
             .margins({top: 20, bottom: 0, right: 10, left: 0})
