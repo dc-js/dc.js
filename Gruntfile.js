@@ -84,7 +84,7 @@ module.exports = function (grunt) {
         },
         watch: {
             jsdoc2md: {
-                files: ['<%= conf.src %>/**/*.js'],
+                files: ['welcome.md', '<%= conf.src %>/**/*.js'],
                 tasks: ['build', 'jsdoc', 'jsdoc2md']
             },
             scripts: {
@@ -216,7 +216,7 @@ module.exports = function (grunt) {
         },
         jsdoc: {
             dist: {
-                src: ['<%= conf.src %>/**/*.js', '!<%= conf.src %>/{banner,footer}.js'],
+                src: ['welcome.md', '<%= conf.src %>/**/*.js', '!<%= conf.src %>/{banner,footer}.js'],
                 options: {
                     destination: 'web/docs/html',
                     template: 'node_modules/ink-docstrap/template',
@@ -261,7 +261,7 @@ module.exports = function (grunt) {
                             '<%= conf.pkg.name %>.min.js',
                             '<%= conf.pkg.name %>.min.js.map',
                             'node_modules/d3/d3.js',
-                            'node_modules/crossfilter/crossfilter.js',
+                            'node_modules/crossfilter2/crossfilter.js',
                             'node_modules/grunt-saucelabs/examples/jasmine/lib/jasmine-jsreporter/jasmine-jsreporter.js',
                             'test/env-data.js'
                         ],
