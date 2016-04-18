@@ -1,3 +1,8 @@
+import * as d3 from 'd3';
+import colorMixin from './color-mixin';
+import trigger from './events';
+import {transition} from './core';
+
 /**
  * This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.
  * @name bubbleMixin
@@ -7,33 +12,33 @@
  * @param {Object} _chart
  * @returns {dc.bubbleMixin}
  */
-dc.bubbleMixin = function (_chart) {
-    var _maxBubbleRelativeSize = 0.3;
-    var _minRadiusWithLabel = 10;
-    var _sortBubbleSize = false;
-    var _elasticRadius = false;
+export default function bubbleMixin (_chart) {
+    let _maxBubbleRelativeSize = 0.3;
+    let _minRadiusWithLabel = 10;
+    let _sortBubbleSize = false;
+    let _elasticRadius = false;
 
     _chart.BUBBLE_NODE_CLASS = 'node';
     _chart.BUBBLE_CLASS = 'bubble';
     _chart.MIN_RADIUS = 10;
 
-    _chart = dc.colorMixin(_chart);
+    _chart = colorMixin(_chart);
 
     _chart.renderLabel(true);
 
-    _chart.data(function (group) {
-        var data = group.all();
+    _chart.data((group) => {
+        const data = group.all();
         if (_sortBubbleSize) {
             // sort descending so smaller bubbles are on top
-            var radiusAccessor = _chart.radiusValueAccessor();
-            data.sort(function (a, b) { return d3.descending(radiusAccessor(a), radiusAccessor(b)); });
+            const radiusAccessor = _chart.radiusValueAccessor();
+            data.sort((a, b) => d3.descending(radiusAccessor(a), radiusAccessor(b)));
         }
         return data;
     });
 
-    var _r = d3.scale.linear().domain([0, 100]);
+    let _r = d3.scale.linear().domain([0, 100]);
 
-    var _rValueAccessor = function (d) {
+    let _rValueAccessor = function (d) {
         return d.r;
     };
 
@@ -99,47 +104,43 @@ dc.bubbleMixin = function (_chart) {
     };
 
     _chart.rMin = function () {
-        var min = d3.min(_chart.data(), function (e) {
-            return _chart.radiusValueAccessor()(e);
-        });
+        const min = d3.min(_chart.data(), _chart.radiusValueAccessor());
         return min;
     };
 
     _chart.rMax = function () {
-        var max = d3.max(_chart.data(), function (e) {
-            return _chart.radiusValueAccessor()(e);
-        });
+        const max = d3.max(_chart.data(), _chart.radiusValueAccessor());
         return max;
     };
 
     _chart.bubbleR = function (d) {
-        var value = _chart.radiusValueAccessor()(d);
-        var r = _chart.r()(value);
+        const value = _chart.radiusValueAccessor()(d);
+        let r = _chart.r()(value);
         if (isNaN(r) || value <= 0) {
             r = 0;
         }
         return r;
     };
 
-    var labelFunction = function (d) {
+    const labelFunction = function (d) {
         return _chart.label()(d);
     };
 
-    var shouldLabel = function (d) {
+    const shouldLabel = function (d) {
         return (_chart.bubbleR(d) > _minRadiusWithLabel);
     };
 
-    var labelOpacity = function (d) {
+    const labelOpacity = function (d) {
         return shouldLabel(d) ? 1 : 0;
     };
 
-    var labelPointerEvent = function (d) {
+    const labelPointerEvent = function (d) {
         return shouldLabel(d) ? 'all' : 'none';
     };
 
     _chart._doRenderLabel = function (bubbleGEnter) {
         if (_chart.renderLabel()) {
-            var label = bubbleGEnter.select('text');
+            let label = bubbleGEnter.select('text');
 
             if (label.empty()) {
                 label = bubbleGEnter.append('text')
@@ -152,28 +153,28 @@ dc.bubbleMixin = function (_chart) {
                 .attr('opacity', 0)
                 .attr('pointer-events', labelPointerEvent)
                 .text(labelFunction);
-            dc.transition(label, _chart.transitionDuration(), _chart.transitionDelay())
+            transition(label, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('opacity', labelOpacity);
         }
     };
 
     _chart.doUpdateLabels = function (bubbleGEnter) {
         if (_chart.renderLabel()) {
-            var labels = bubbleGEnter.select('text')
+            const labels = bubbleGEnter.select('text')
                 .attr('pointer-events', labelPointerEvent)
                 .text(labelFunction);
-            dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
+            transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('opacity', labelOpacity);
         }
     };
 
-    var titleFunction = function (d) {
+    const titleFunction = function (d) {
         return _chart.title()(d);
     };
 
     _chart._doRenderTitles = function (g) {
         if (_chart.renderTitle()) {
-            var title = g.select('title');
+            const title = g.select('title');
 
             if (title.empty()) {
                 g.append('title').text(titleFunction);
@@ -257,7 +258,7 @@ dc.bubbleMixin = function (_chart) {
 
     _chart.fadeDeselectedArea = function () {
         if (_chart.hasFilter()) {
-            _chart.selectAll('g.' + _chart.BUBBLE_NODE_CLASS).each(function (d) {
+            _chart.selectAll(`g.${_chart.BUBBLE_NODE_CLASS}`).each(function (d) {
                 if (_chart.isSelectedNode(d)) {
                     _chart.highlightSelected(this);
                 } else {
@@ -265,7 +266,7 @@ dc.bubbleMixin = function (_chart) {
                 }
             });
         } else {
-            _chart.selectAll('g.' + _chart.BUBBLE_NODE_CLASS).each(function () {
+            _chart.selectAll(`g.${_chart.BUBBLE_NODE_CLASS}`).each(function () {
                 _chart.resetHighlight(this);
             });
         }
@@ -276,12 +277,12 @@ dc.bubbleMixin = function (_chart) {
     };
 
     _chart.onClick = function (d) {
-        var filter = d.key;
-        dc.events.trigger(function () {
+        const filter = d.key;
+        trigger(() => {
             _chart.filter(filter);
             _chart.redrawGroup();
         });
     };
 
     return _chart;
-};
+}

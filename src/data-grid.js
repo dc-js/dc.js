@@ -1,3 +1,6 @@
+import * as d3 from 'd3';
+import baseMixin from './base-mixin';
+
 /**
  * Data grid is a simple widget designed to list the filtered records, providing
  * a simple way to define how the items are displayed.
@@ -18,29 +21,29 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.dataGrid}
  */
-dc.dataGrid = function (parent, chartGroup) {
-    var LABEL_CSS_CLASS = 'dc-grid-label';
-    var ITEM_CSS_CLASS = 'dc-grid-item';
-    var GROUP_CSS_CLASS = 'dc-grid-group';
-    var GRID_CSS_CLASS = 'dc-grid-top';
+export default function dataGrid (parent, chartGroup) {
+    const LABEL_CSS_CLASS = 'dc-grid-label';
+    const ITEM_CSS_CLASS = 'dc-grid-item';
+    const GROUP_CSS_CLASS = 'dc-grid-group';
+    const GRID_CSS_CLASS = 'dc-grid-top';
 
-    var _chart = dc.baseMixin({});
+    const _chart = baseMixin({});
 
-    var _size = 999; // shouldn't be needed, but you might
-    var _html = function (d) { return 'you need to provide an html() handling param:  ' + JSON.stringify(d); };
-    var _sortBy = function (d) {
+    let _size = 999; // shouldn't be needed, but you might
+    let _html = function (d) { return `you need to provide an html() handling param:  ${JSON.stringify(d)}`; };
+    let _sortBy = function (d) {
         return d;
     };
-    var _order = d3.ascending;
-    var _beginSlice = 0, _endSlice;
+    let _order = d3.ascending;
+    let _beginSlice = 0,
+        _endSlice;
 
-    var _htmlGroup = function (d) {
-        return '<div class=\'' + GROUP_CSS_CLASS + '\'><h1 class=\'' + LABEL_CSS_CLASS + '\'>' +
-            _chart.keyAccessor()(d) + '</h1></div>';
+    let _htmlGroup = function (d) {
+        return `<div class='${GROUP_CSS_CLASS}'><h1 class='${LABEL_CSS_CLASS}'>${_chart.keyAccessor()(d)}</h1></div>`;
     };
 
     _chart._doRender = function () {
-        _chart.selectAll('div.' + GRID_CSS_CLASS).remove();
+        _chart.selectAll(`div.${GRID_CSS_CLASS}`).remove();
 
         renderItems(renderGroups());
 
@@ -48,21 +51,17 @@ dc.dataGrid = function (parent, chartGroup) {
     };
 
     function renderGroups () {
-        var groups = _chart.root().selectAll('div.' + GRID_CSS_CLASS)
-                .data(nestEntries(), function (d) {
-                    return _chart.keyAccessor()(d);
-                });
+        const groups = _chart.root().selectAll(`div.${GRID_CSS_CLASS}`)
+            .data(nestEntries(), _chart.keyAccessor());
 
-        var itemGroup = groups
-                .enter()
-                .append('div')
-                .attr('class', GRID_CSS_CLASS);
+        const itemGroup = groups
+            .enter()
+            .append('div')
+            .attr('class', GRID_CSS_CLASS);
 
         if (_htmlGroup) {
             itemGroup
-                .html(function (d) {
-                    return _htmlGroup(d);
-                });
+                .html(_htmlGroup);
         }
 
         groups.exit().remove();
@@ -70,29 +69,24 @@ dc.dataGrid = function (parent, chartGroup) {
     }
 
     function nestEntries () {
-        var entries = _chart.dimension().top(_size);
+        const entries = _chart.dimension().top(_size);
 
         return d3.nest()
             .key(_chart.group())
             .sortKeys(_order)
-            .entries(entries.sort(function (a, b) {
-                return _order(_sortBy(a), _sortBy(b));
-            }).slice(_beginSlice, _endSlice));
+            .entries(entries.sort((a, b) => _order(_sortBy(a), _sortBy(b)))
+                .slice(_beginSlice, _endSlice));
     }
 
     function renderItems (groups) {
-        var items = groups.order()
-                .selectAll('div.' + ITEM_CSS_CLASS)
-                .data(function (d) {
-                    return d.values;
-                });
+        const items = groups.order()
+            .selectAll(`div.${ITEM_CSS_CLASS}`)
+            .data(d => d.values);
 
         items.enter()
             .append('div')
             .attr('class', ITEM_CSS_CLASS)
-            .html(function (d) {
-                return _html(d);
-            });
+            .html(_html);
 
         items.exit().remove();
 
@@ -250,4 +244,4 @@ dc.dataGrid = function (parent, chartGroup) {
     };
 
     return _chart.anchor(parent, chartGroup);
-};
+}

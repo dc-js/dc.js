@@ -18,7 +18,6 @@
  * @memberof dc
  * @type {{}}
  */
-dc.filters = {};
 
 /**
  * RangedFilter is a filter which accepts keys between `low` and `high`.  It is used to implement X
@@ -32,15 +31,15 @@ dc.filters = {};
  * @returns {Array<Number>}
  * @constructor
  */
-dc.filters.RangedFilter = function (low, high) {
-    var range = new Array(low, high);
+export function RangedFilter (low, high) {
+    const range = [low, high];
     range.isFiltered = function (value) {
         return value >= this[0] && value < this[1];
     };
     range.filterType = 'RangedFilter';
 
     return range;
-};
+}
 
 /**
  * TwoDimensionalFilter is a filter which accepts a single two-dimensional value.  It is used by the
@@ -54,10 +53,10 @@ dc.filters.RangedFilter = function (low, high) {
  * @returns {Array<Number>}
  * @constructor
  */
-dc.filters.TwoDimensionalFilter = function (filter) {
+export function TwoDimensionalFilter (filter) {
     if (filter === null) { return null; }
 
-    var f = filter;
+    const f = filter;
     f.isFiltered = function (value) {
         return value.length && value.length === f.length &&
                value[0] === f[0] && value[1] === f[1];
@@ -65,7 +64,7 @@ dc.filters.TwoDimensionalFilter = function (filter) {
     f.filterType = 'TwoDimensionalFilter';
 
     return f;
-};
+}
 
 /**
  * The RangedTwoDimensionalFilter allows filtering all values which fit within a rectangular
@@ -86,11 +85,11 @@ dc.filters.TwoDimensionalFilter = function (filter) {
  * @returns {Array<Array<Number>>}
  * @constructor
  */
-dc.filters.RangedTwoDimensionalFilter = function (filter) {
+export function RangedTwoDimensionalFilter (filter) {
     if (filter === null) { return null; }
 
-    var f = filter;
-    var fromBottomLeft;
+    const f = filter;
+    let fromBottomLeft;
 
     if (f[0] instanceof Array) {
         fromBottomLeft = [
@@ -102,13 +101,13 @@ dc.filters.RangedTwoDimensionalFilter = function (filter) {
     }
 
     f.isFiltered = function (value) {
-        var x, y;
-
+        let x,
+            y;
         if (value instanceof Array) {
-            x = value[0];
-            y = value[1];
+            [x, y] = value;
         } else {
             x = value;
+            // eslint-disable-next-line prefer-destructuring
             y = fromBottomLeft[0][1];
         }
 
@@ -118,4 +117,4 @@ dc.filters.RangedTwoDimensionalFilter = function (filter) {
     f.filterType = 'RangedTwoDimensionalFilter';
 
     return f;
-};
+}

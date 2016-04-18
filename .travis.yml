@@ -2,6 +2,9 @@ sudo: false
 language: node_js
 node_js:
   - '6'
+  - '7'
+  - '8'
+  - '9'
 script:
   - 'if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then grunt ci; else grunt ci-pull; fi'
 env:

@@ -1,3 +1,5 @@
+import {utils} from './utils';
+
 /**
  * The entire dc.js library is scoped under the **dc** name space. It does not introduce
  * anything else into the global name space.
@@ -15,24 +17,20 @@
  *      .height(300)
  *      .filter('sunday');
  */
-/*jshint -W079*/
-var dc = {
-    version: '<%= conf.pkg.version %>',
-    constants: {
-        CHART_CLASS: 'dc-chart',
-        DEBUG_GROUP_CLASS: 'debug',
-        STACK_CLASS: 'stack',
-        DESELECTED_CLASS: 'deselected',
-        SELECTED_CLASS: 'selected',
-        NODE_INDEX_NAME: '__index__',
-        GROUP_INDEX_NAME: '__group_index__',
-        DEFAULT_CHART_GROUP: '__default_chart_group__',
-        EVENT_DELAY: 40,
-        NEGLIGIBLE_NUMBER: 1e-10
-    },
-    _renderlet: null
+export const version = __VERSION__ || '2.1.0-dev'; // eslint-disable-line no-undef
+export const constants = {
+    CHART_CLASS: 'dc-chart',
+    DEBUG_GROUP_CLASS: 'debug',
+    STACK_CLASS: 'stack',
+    DESELECTED_CLASS: 'deselected',
+    SELECTED_CLASS: 'selected',
+    NODE_INDEX_NAME: '__index__',
+    GROUP_INDEX_NAME: '__group_index__',
+    DEFAULT_CHART_GROUP: '__default_chart_group__',
+    EVENT_DELAY: 40,
+    NEGLIGIBLE_NUMBER: 1e-10
 };
-/*jshint +W079*/
+let _renderlet = null;
 
 /**
  * The dc.chartRegistry object maintains sets of all instantiated dc.js charts under named groups
@@ -49,13 +47,13 @@ var dc = {
  * @memberof dc
  * @type {{has, register, deregister, clear, list}}
  */
-dc.chartRegistry = (function () {
+export const chartRegistry = (function () {
     // chartGroup:string => charts:array
-    var _chartMap = {};
+    let _chartMap = {};
 
     function initializeChartGroup (group) {
         if (!group) {
-            group = dc.constants.DEFAULT_CHART_GROUP;
+            group = constants.DEFAULT_CHART_GROUP;
         }
 
         if (!_chartMap[group]) {
@@ -73,9 +71,10 @@ dc.chartRegistry = (function () {
          * @param {Object} chart dc.js chart instance
          * @returns {Boolean}
          */
-        has: function (chart) {
-            for (var e in _chartMap) {
-                if (_chartMap[e].indexOf(chart) >= 0) {
+        has (chart) {
+            const groups = Object.keys(_chartMap);
+            for (let i = 0; i < groups.length; i++) {
+                if (_chartMap[groups[i]].indexOf(chart) >= 0) {
                     return true;
                 }
             }
@@ -90,7 +89,7 @@ dc.chartRegistry = (function () {
          * @param {Object} chart dc.js chart instance
          * @param {String} [group] Group name
          */
-        register: function (chart, group) {
+        register (chart, group) {
             group = initializeChartGroup(group);
             _chartMap[group].push(chart);
         },
@@ -103,9 +102,9 @@ dc.chartRegistry = (function () {
          * @param {Object} chart dc.js chart instance
          * @param {String} [group] Group name
          */
-        deregister: function (chart, group) {
+        deregister (chart, group) {
             group = initializeChartGroup(group);
-            for (var i = 0; i < _chartMap[group].length; i++) {
+            for (let i = 0; i < _chartMap[group].length; i++) {
                 if (_chartMap[group][i].anchorName() === chart.anchorName()) {
                     _chartMap[group].splice(i, 1);
                     break;
@@ -119,7 +118,7 @@ dc.chartRegistry = (function () {
          * @memberof dc.chartRegistry
          * @param {String} group Group name
          */
-        clear: function (group) {
+        clear (group) {
             if (group) {
                 delete _chartMap[group];
             } else {
@@ -135,12 +134,12 @@ dc.chartRegistry = (function () {
          * @param {String} [group] Group name
          * @returns {Array<Object>}
          */
-        list: function (group) {
+        list (group) {
             group = initializeChartGroup(group);
             return _chartMap[group];
         }
     };
-})();
+}());
 
 /**
  * Add given chart instance to the given group, creating the group if necessary.
@@ -150,9 +149,9 @@ dc.chartRegistry = (function () {
  * @param {Object} chart dc.js chart instance
  * @param {String} [group] Group name
  */
-dc.registerChart = function (chart, group) {
-    dc.chartRegistry.register(chart, group);
-};
+export function registerChart (chart, group) {
+    chartRegistry.register(chart, group);
+}
 
 /**
  * Remove given chart instance from the given group, creating the group if necessary.
@@ -162,9 +161,9 @@ dc.registerChart = function (chart, group) {
  * @param {Object} chart dc.js chart instance
  * @param {String} [group] Group name
  */
-dc.deregisterChart = function (chart, group) {
-    dc.chartRegistry.deregister(chart, group);
-};
+export function deregisterChart (chart, group) {
+    chartRegistry.deregister(chart, group);
+}
 
 /**
  * Determine if a given chart instance resides in any group in the registry.
@@ -173,9 +172,9 @@ dc.deregisterChart = function (chart, group) {
  * @param {Object} chart dc.js chart instance
  * @returns {Boolean}
  */
-dc.hasChart = function (chart) {
-    return dc.chartRegistry.has(chart);
-};
+export function hasChart (chart) {
+    return chartRegistry.has(chart);
+}
 
 /**
  * Clear given group if one is provided, otherwise clears all groups.
@@ -183,9 +182,9 @@ dc.hasChart = function (chart) {
  * @method deregisterAllCharts
  * @param {String} group Group name
  */
-dc.deregisterAllCharts = function (group) {
-    dc.chartRegistry.clear(group);
-};
+export function deregisterAllCharts (group) {
+    chartRegistry.clear(group);
+}
 
 /**
  * Clear all filters on all charts within the given chart group. If the chart group is not given then
@@ -194,12 +193,12 @@ dc.deregisterAllCharts = function (group) {
  * @method filterAll
  * @param {String} [group]
  */
-dc.filterAll = function (group) {
-    var charts = dc.chartRegistry.list(group);
-    for (var i = 0; i < charts.length; ++i) {
+export function filterAll (group) {
+    const charts = chartRegistry.list(group);
+    for (let i = 0; i < charts.length; ++i) {
         charts[i].filterAll();
     }
-};
+}
 
 /**
  * Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
@@ -208,14 +207,14 @@ dc.filterAll = function (group) {
  * @method refocusAll
  * @param {String} [group]
  */
-dc.refocusAll = function (group) {
-    var charts = dc.chartRegistry.list(group);
-    for (var i = 0; i < charts.length; ++i) {
+export function refocusAll (group) {
+    const charts = chartRegistry.list(group);
+    for (let i = 0; i < charts.length; ++i) {
         if (charts[i].focus) {
             charts[i].focus();
         }
     }
-};
+}
 
 /**
  * Re-render all charts belong to the given chart group. If the chart group is not given then only
@@ -224,16 +223,16 @@ dc.refocusAll = function (group) {
  * @method renderAll
  * @param {String} [group]
  */
-dc.renderAll = function (group) {
-    var charts = dc.chartRegistry.list(group);
-    for (var i = 0; i < charts.length; ++i) {
+export function renderAll (group) {
+    const charts = chartRegistry.list(group);
+    for (let i = 0; i < charts.length; ++i) {
         charts[i].render();
     }
 
-    if (dc._renderlet !== null) {
-        dc._renderlet(group);
+    if (_renderlet !== null) {
+        _renderlet(group);
     }
-};
+}
 
 /**
  * Redraw all charts belong to the given chart group. If the chart group is not given then only charts
@@ -244,26 +243,33 @@ dc.renderAll = function (group) {
  * @method redrawAll
  * @param {String} [group]
  */
-dc.redrawAll = function (group) {
-    var charts = dc.chartRegistry.list(group);
-    for (var i = 0; i < charts.length; ++i) {
+export function redrawAll (group) {
+    const charts = chartRegistry.list(group);
+    for (let i = 0; i < charts.length; ++i) {
         charts[i].redraw();
     }
 
-    if (dc._renderlet !== null) {
-        dc._renderlet(group);
+    if (_renderlet !== null) {
+        _renderlet(group);
     }
-};
+}
 
 /**
  * If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
  * immediately.
  * @memberof dc
- * @member disableTransitions
- * @type {Boolean}
- * @default false
+ * @method disableTransitions
+ * @param {Boolean} [disableTransition=false]
+ * @return {Boolean}
  */
-dc.disableTransitions = false;
+let _disableTransitions = false;
+export function disableTransitions (disableTransition = false) {
+    if (!arguments.length) {
+        return _disableTransitions;
+    }
+    _disableTransitions = disableTransition;
+    return _disableTransitions;
+}
 
 /**
  * Start a transition on a selection if transitions are globally enabled
@@ -281,12 +287,12 @@ dc.disableTransitions = false;
  * elements are needed)
  * @returns {d3.transition|d3.selection}
  */
-dc.transition = function (selection, duration, delay, name) {
-    if (dc.disableTransitions || duration <= 0) {
+export function transition (selection, duration, delay, name) {
+    if (_disableTransitions || duration <= 0) {
         return selection;
     }
 
-    var s = selection.transition(name);
+    let s = selection.transition(name);
 
     if (duration >= 0 || duration !== undefined) {
         s = s.duration(duration);
@@ -296,43 +302,37 @@ dc.transition = function (selection, duration, delay, name) {
     }
 
     return s;
-};
+}
 
 /* somewhat silly, but to avoid duplicating logic */
-dc.optionalTransition = function (enable, duration, delay, name) {
-    if (enable) {
-        return function (selection) {
-            return dc.transition(selection, duration, delay, name);
-        };
-    } else {
-        return function (selection) {
-            return selection;
-        };
-    }
-};
+export function optionalTransition (enable, duration, delay, name) {
+    return enable ?
+        selection => transition(selection, duration, delay, name) :
+        selection => selection;
+}
 
 // See http://stackoverflow.com/a/20773846
-dc.afterTransition = function (transition, callback) {
-    if (transition.empty() || !transition.duration) {
-        callback.call(transition);
+export function afterTransition (trans, callback) {
+    if (trans.empty() || !trans.duration) {
+        callback.call(trans);
     } else {
-        var n = 0;
-        transition
-            .each(function () { ++n; })
-            .each('end', function () {
+        let n = 0;
+        trans
+            .each(() => ++n)
+            .each('end', () => {
                 if (!--n) {
-                    callback.call(transition);
+                    callback.call(trans);
                 }
             });
     }
-};
+}
 
 /**
  * @namespace units
  * @memberof dc
  * @type {{}}
  */
-dc.units = {};
+export const units = {};
 
 /**
  * The default value for {@link dc.coordinateGridMixin#xUnits .xUnits} for the
@@ -348,7 +348,7 @@ dc.units = {};
  * @param {Number} end
  * @returns {Number}
  */
-dc.units.integers = function (start, end) {
+units.integers = function (start, end) {
     return Math.abs(end - start);
 };
 
@@ -371,7 +371,7 @@ dc.units.integers = function (start, end) {
  * @param {Array<String>} domain
  * @returns {Array<String>}
  */
-dc.units.ordinal = function (start, end, domain) {
+units.ordinal = function (start, end, domain) {
     return domain;
 };
 
@@ -380,7 +380,8 @@ dc.units.ordinal = function (start, end, domain) {
  * @memberof dc.units
  * @type {{}}
  */
-dc.units.fp = {};
+units.fp = {};
+
 /**
  * This function generates an argument for the {@link dc.coordinateGridMixin Coordinate Grid Chart}
  * {@link dc.coordinateGridMixin#xUnits .xUnits} function specifying that the x values are floating-point
@@ -394,49 +395,48 @@ dc.units.fp = {};
  * // specify values (and ticks) every 0.1 units
  * chart.xUnits(dc.units.fp.precision(0.1)
  * // there are 500 units between 0.5 and 1 if the precision is 0.001
- * var thousandths = dc.units.fp.precision(0.001);
+ * let thousandths = dc.units.fp.precision(0.001);
  * thousandths(0.5, 1.0) // returns 500
  * @param {Number} precision
  * @returns {Function} start-end unit function
  */
-dc.units.fp.precision = function (precision) {
-    var _f = function (s, e) {
-        var d = Math.abs((e - s) / _f.resolution);
-        if (dc.utils.isNegligible(d - Math.floor(d))) {
+units.fp.precision = function (precision) {
+    const _f = function (s, e) {
+        const d = Math.abs((e - s) / _f.resolution);
+        if (utils.isNegligible(d - Math.floor(d))) {
             return Math.floor(d);
-        } else {
-            return Math.ceil(d);
         }
+        return Math.ceil(d);
     };
     _f.resolution = precision;
     return _f;
 };
 
-dc.round = {};
-dc.round.floor = function (n) {
+export const round = {};
+round.floor = function (n) {
     return Math.floor(n);
 };
-dc.round.ceil = function (n) {
+round.ceil = function (n) {
     return Math.ceil(n);
 };
-dc.round.round = function (n) {
+round.round = function (n) {
     return Math.round(n);
 };
 
-dc.override = function (obj, functionName, newFunction) {
-    var existingFunction = obj[functionName];
-    obj['_' + functionName] = existingFunction;
+export function override (obj, functionName, newFunction) {
+    const existingFunction = obj[functionName];
+    obj[`_${functionName}`] = existingFunction;
     obj[functionName] = newFunction;
-};
+}
 
-dc.renderlet = function (_) {
+export function renderlet (_) {
     if (!arguments.length) {
-        return dc._renderlet;
+        return _renderlet;
     }
-    dc._renderlet = _;
-    return dc;
-};
+    _renderlet = _;
+    return null;
+}
 
-dc.instanceOfChart = function (o) {
-    return o instanceof Object && o.__dcFlag__ && true;
-};
+export function instanceOfChart (o) {
+    return o instanceof Object && o.__lag__ && true;
+}

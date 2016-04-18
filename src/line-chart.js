@@ -1,3 +1,9 @@
+import * as d3 from 'd3';
+import stackMixin from './stack-mixin';
+import coordinateGridMixin from './coordinate-grid-mixin';
+import {override, transition} from './core';
+import {pluck, utils} from './utils';
+
 /**
  * Concrete line/area chart implementation.
  *
@@ -10,11 +16,11 @@
  * @mixes dc.coordinateGridMixin
  * @example
  * // create a line chart under #chart-container1 element using the default global chart group
- * var chart1 = dc.lineChart('#chart-container1');
+ * let chart1 = dc.lineChart('#chart-container1');
  * // create a line chart under #chart-container2 element using chart group A
- * var chart2 = dc.lineChart('#chart-container2', 'chartGroupA');
+ * let chart2 = dc.lineChart('#chart-container2', 'chartGroupA');
  * // create a sub-chart under a composite parent chart
- * var chart3 = dc.lineChart(compositeChart);
+ * let chart3 = dc.lineChart(compositeChart);
  * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
  * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector}
  * specifying a dom block element such as a div; or a dom element or d3 selection.  If the line
@@ -24,47 +30,45 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.lineChart}
  */
-dc.lineChart = function (parent, chartGroup) {
-    var DEFAULT_DOT_RADIUS = 5;
-    var TOOLTIP_G_CLASS = 'dc-tooltip';
-    var DOT_CIRCLE_CLASS = 'dot';
-    var Y_AXIS_REF_LINE_CLASS = 'yRef';
-    var X_AXIS_REF_LINE_CLASS = 'xRef';
-    var DEFAULT_DOT_OPACITY = 1e-6;
-    var LABEL_PADDING = 3;
+export default function lineChart (parent, chartGroup) {
+    const DEFAULT_DOT_RADIUS = 5;
+    const TOOLTIP_G_CLASS = 'dc-tooltip';
+    const DOT_CIRCLE_CLASS = 'dot';
+    const Y_AXIS_REF_LINE_CLASS = 'yRef';
+    const X_AXIS_REF_LINE_CLASS = 'xRef';
+    const DEFAULT_DOT_OPACITY = 1e-6;
+    const LABEL_PADDING = 3;
 
-    var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
-    var _renderArea = false;
-    var _dotRadius = DEFAULT_DOT_RADIUS;
-    var _dataPointRadius = null;
-    var _dataPointFillOpacity = DEFAULT_DOT_OPACITY;
-    var _dataPointStrokeOpacity = DEFAULT_DOT_OPACITY;
-    var _interpolate = 'linear';
-    var _tension = 0.7;
-    var _defined;
-    var _dashStyle;
-    var _xyTipsOn = true;
+    const _chart = stackMixin(coordinateGridMixin({}));
+    let _renderArea = false;
+    let _dotRadius = DEFAULT_DOT_RADIUS;
+    let _dataPointRadius = null;
+    let _dataPointFillOpacity = DEFAULT_DOT_OPACITY;
+    let _dataPointStrokeOpacity = DEFAULT_DOT_OPACITY;
+    let _interpolate = 'linear';
+    let _tension = 0.7;
+    let _defined;
+    let _dashStyle;
+    let _xyTipsOn = true;
 
     _chart.transitionDuration(500);
     _chart.transitionDelay(0);
     _chart._rangeBandPadding(1);
 
     _chart.plotData = function () {
-        var chartBody = _chart.chartBodyG();
-        var layersList = chartBody.select('g.stack-list');
+        const chartBody = _chart.chartBodyG();
+        let layersList = chartBody.select('g.stack-list');
 
         if (layersList.empty()) {
             layersList = chartBody.append('g').attr('class', 'stack-list');
         }
 
-        var layers = layersList.selectAll('g.stack').data(_chart.data());
+        const layers = layersList.selectAll('g.stack').data(_chart.data());
 
-        var layersEnter = layers
+        const layersEnter = layers
             .enter()
             .append('g')
-            .attr('class', function (d, i) {
-                return 'stack ' + '_' + i;
-            });
+            .attr('class', (d, i) => `stack _${i}`);
 
         drawLine(layersEnter, layers);
 
@@ -188,46 +192,33 @@ dc.lineChart = function (parent, chartGroup) {
     }
 
     function drawLine (layersEnter, layers) {
-        var line = d3.svg.line()
-            .x(function (d) {
-                return _chart.x()(d.x);
-            })
-            .y(function (d) {
-                return _chart.y()(d.y + d.y0);
-            })
+        const line = d3.svg.line()
+            .x(d => _chart.x()(d.x))
+            .y(d => _chart.y()(d.y + d.y0))
             .interpolate(_interpolate)
             .tension(_tension);
         if (_defined) {
             line.defined(_defined);
         }
 
-        var path = layersEnter.append('path')
+        const path = layersEnter.append('path')
             .attr('class', 'line')
             .attr('stroke', colors);
         if (_dashStyle) {
             path.attr('stroke-dasharray', _dashStyle);
         }
 
-        dc.transition(layers.select('path.line'), _chart.transitionDuration(), _chart.transitionDelay())
-            //.ease('linear')
+        transition(layers.select('path.line'), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('stroke', colors)
-            .attr('d', function (d) {
-                return safeD(line(d.values));
-            });
+            .attr('d', d => safeD(line(d.values)));
     }
 
     function drawArea (layersEnter, layers) {
         if (_renderArea) {
-            var area = d3.svg.area()
-                .x(function (d) {
-                    return _chart.x()(d.x);
-                })
-                .y(function (d) {
-                    return _chart.y()(d.y + d.y0);
-                })
-                .y0(function (d) {
-                    return _chart.y()(d.y0);
-                })
+            const area = d3.svg.area()
+                .x(d => _chart.x()(d.x))
+                .y(d => _chart.y()(d.y + d.y0))
+                .y0(d => _chart.y()(d.y0))
                 .interpolate(_interpolate)
                 .tension(_tension);
             if (_defined) {
@@ -237,16 +228,11 @@ dc.lineChart = function (parent, chartGroup) {
             layersEnter.append('path')
                 .attr('class', 'area')
                 .attr('fill', colors)
-                .attr('d', function (d) {
-                    return safeD(area(d.values));
-                });
+                .attr('d', d => safeD(area(d.values)));
 
-            dc.transition(layers.select('path.area'), _chart.transitionDuration(), _chart.transitionDelay())
-                //.ease('linear')
+            transition(layers.select('path.area'), _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('fill', colors)
-                .attr('d', function (d) {
-                    return safeD(area(d.values));
-                });
+                .attr('d', d => safeD(area(d.values)));
         }
     }
 
@@ -256,28 +242,28 @@ dc.lineChart = function (parent, chartGroup) {
 
     function drawDots (chartBody, layers) {
         if (_chart.xyTipsOn() === 'always' || (!_chart.brushOn() && _chart.xyTipsOn())) {
-            var tooltipListClass = TOOLTIP_G_CLASS + '-list';
-            var tooltips = chartBody.select('g.' + tooltipListClass);
+            const tooltipListClass = `${TOOLTIP_G_CLASS}-list`;
+            let tooltips = chartBody.select(`g.${tooltipListClass}`);
 
             if (tooltips.empty()) {
                 tooltips = chartBody.append('g').attr('class', tooltipListClass);
             }
 
-            layers.each(function (d, layerIndex) {
-                var points = d.values;
+            layers.each((datum, layerIndex) => {
+                let points = datum.values;
                 if (_defined) {
                     points = points.filter(_defined);
                 }
 
-                var g = tooltips.select('g.' + TOOLTIP_G_CLASS + '._' + layerIndex);
+                let g = tooltips.select(`g.${TOOLTIP_G_CLASS}._${layerIndex}`);
                 if (g.empty()) {
-                    g = tooltips.append('g').attr('class', TOOLTIP_G_CLASS + ' _' + layerIndex);
+                    g = tooltips.append('g').attr('class', `${TOOLTIP_G_CLASS} _${layerIndex}`);
                 }
 
                 createRefLines(g);
 
-                var dots = g.selectAll('circle.' + DOT_CIRCLE_CLASS)
-                    .data(points, dc.pluck('x'));
+                const dots = g.selectAll(`circle.${DOT_CIRCLE_CLASS}`)
+                    .data(points, pluck('x'));
 
                 dots.enter()
                     .append('circle')
@@ -287,25 +273,21 @@ dc.lineChart = function (parent, chartGroup) {
                     .style('stroke-opacity', _dataPointStrokeOpacity)
                     .attr('fill', _chart.getColor)
                     .on('mousemove', function () {
-                        var dot = d3.select(this);
+                        const dot = d3.select(this);
                         showDot(dot);
                         showRefLines(dot, g);
                     })
                     .on('mouseout', function () {
-                        var dot = d3.select(this);
+                        const dot = d3.select(this);
                         hideDot(dot);
                         hideRefLines(g);
                     });
 
-                dots.call(renderTitle, d);
+                dots.call(renderTitle, datum);
 
-                dc.transition(dots, _chart.transitionDuration())
-                    .attr('cx', function (d) {
-                        return dc.utils.safeNumber(_chart.x()(d.x));
-                    })
-                    .attr('cy', function (d) {
-                        return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
-                    })
+                transition(dots, _chart.transitionDuration())
+                    .attr('cx', d => utils.safeNumber(_chart.x()(d.x)))
+                    .attr('cy', d => utils.safeNumber(_chart.y()(d.y + d.y0)))
                     .attr('fill', _chart.getColor);
 
                 dots.exit().remove();
@@ -313,46 +295,37 @@ dc.lineChart = function (parent, chartGroup) {
         }
     }
 
-    _chart.label(function (d) {
-        return dc.utils.printSingleValue(d.y0 + d.y);
-    }, false);
+    _chart.label(d => utils.printSingleValue(d.y0 + d.y), false);
 
     function drawLabels (layers) {
-        layers.each(function (d, layerIndex) {
-            var layer = d3.select(this);
-            var labels = layer.selectAll('text.lineLabel')
-                .data(d.values, dc.pluck('x'));
+        layers.each(function (datum) {
+            const layer = d3.select(this);
+            const labels = layer.selectAll('text.lineLabel')
+                .data(datum.values, pluck('x'));
 
             labels.enter()
                 .append('text')
                 .attr('class', 'lineLabel')
                 .attr('text-anchor', 'middle');
 
-            dc.transition(labels, _chart.transitionDuration())
-                .attr('x', function (d) {
-                    return dc.utils.safeNumber(_chart.x()(d.x));
-                })
-                .attr('y', function (d) {
-                    var y = _chart.y()(d.y + d.y0) - LABEL_PADDING;
-                    return dc.utils.safeNumber(y);
-                })
-                .text(function (d) {
-                    return _chart.label()(d);
-                });
+            transition(labels, _chart.transitionDuration())
+                .attr('x', d => utils.safeNumber(_chart.x()(d.x)))
+                .attr('y', d => utils.safeNumber(_chart.y()(d.y + d.y0) - LABEL_PADDING))
+                .text(_chart.label());
 
-            dc.transition(labels.exit(), _chart.transitionDuration())
+            transition(labels.exit(), _chart.transitionDuration())
                 .attr('height', 0)
                 .remove();
         });
     }
 
     function createRefLines (g) {
-        var yRefLine = g.select('path.' + Y_AXIS_REF_LINE_CLASS).empty() ?
-            g.append('path').attr('class', Y_AXIS_REF_LINE_CLASS) : g.select('path.' + Y_AXIS_REF_LINE_CLASS);
+        const yRefLine = g.select(`path.${Y_AXIS_REF_LINE_CLASS}`).empty() ?
+            g.append('path').attr('class', Y_AXIS_REF_LINE_CLASS) : g.select(`path.${Y_AXIS_REF_LINE_CLASS}`);
         yRefLine.style('display', 'none').attr('stroke-dasharray', '5,5');
 
-        var xRefLine = g.select('path.' + X_AXIS_REF_LINE_CLASS).empty() ?
-            g.append('path').attr('class', X_AXIS_REF_LINE_CLASS) : g.select('path.' + X_AXIS_REF_LINE_CLASS);
+        const xRefLine = g.select(`path.${X_AXIS_REF_LINE_CLASS}`).empty() ?
+            g.append('path').attr('class', X_AXIS_REF_LINE_CLASS) : g.select(`path.${X_AXIS_REF_LINE_CLASS}`);
         xRefLine.style('display', 'none').attr('stroke-dasharray', '5,5');
     }
 
@@ -364,13 +337,13 @@ dc.lineChart = function (parent, chartGroup) {
     }
 
     function showRefLines (dot, g) {
-        var x = dot.attr('cx');
-        var y = dot.attr('cy');
-        var yAxisX = (_chart._yAxisX() - _chart.margins().left);
-        var yAxisRefPathD = 'M' + yAxisX + ' ' + y + 'L' + (x) + ' ' + (y);
-        var xAxisRefPathD = 'M' + x + ' ' + _chart.yAxisHeight() + 'L' + x + ' ' + y;
-        g.select('path.' + Y_AXIS_REF_LINE_CLASS).style('display', '').attr('d', yAxisRefPathD);
-        g.select('path.' + X_AXIS_REF_LINE_CLASS).style('display', '').attr('d', xAxisRefPathD);
+        const x = dot.attr('cx');
+        const y = dot.attr('cy');
+        const yAxisX = (_chart._yAxisX() - _chart.margins().left);
+        const yAxisRefPathD = `M${yAxisX} ${y}L${x} ${y}`;
+        const xAxisRefPathD = `M${x} ${_chart.yAxisHeight()}L${x} ${y}`;
+        g.select(`path.${Y_AXIS_REF_LINE_CLASS}`).style('display', '').attr('d', yAxisRefPathD);
+        g.select(`path.${X_AXIS_REF_LINE_CLASS}`).style('display', '').attr('d', xAxisRefPathD);
     }
 
     function getDotRadius () {
@@ -384,14 +357,14 @@ dc.lineChart = function (parent, chartGroup) {
     }
 
     function hideRefLines (g) {
-        g.select('path.' + Y_AXIS_REF_LINE_CLASS).style('display', 'none');
-        g.select('path.' + X_AXIS_REF_LINE_CLASS).style('display', 'none');
+        g.select(`path.${Y_AXIS_REF_LINE_CLASS}`).style('display', 'none');
+        g.select(`path.${X_AXIS_REF_LINE_CLASS}`).style('display', 'none');
     }
 
     function renderTitle (dot, d) {
         if (_chart.renderTitle()) {
             dot.select('title').remove();
-            dot.append('title').text(dc.pluck('data', _chart.title(d.name)));
+            dot.append('title').text(pluck('data', _chart.title(d.name)));
         }
     }
 
@@ -463,8 +436,8 @@ dc.lineChart = function (parent, chartGroup) {
 
     function colorFilter (color, dashstyle, inv) {
         return function () {
-            var item = d3.select(this);
-            var match = (item.attr('stroke') === color &&
+            const item = d3.select(this);
+            const match = (item.attr('stroke') === color &&
                 item.attr('stroke-dasharray') === ((dashstyle instanceof Array) ?
                     dashstyle.join(',') : null)) || item.attr('fill') === color;
             return inv ? !match : match;
@@ -485,16 +458,16 @@ dc.lineChart = function (parent, chartGroup) {
             .classed('fadeout', false);
     };
 
-    dc.override(_chart, 'legendables', function () {
-        var legendables = _chart._legendables();
+    override(_chart, 'legendables', () => {
+        const legendables = _chart._legendables();
         if (!_dashStyle) {
             return legendables;
         }
-        return legendables.map(function (l) {
+        return legendables.map((l) => {
             l.dashstyle = _dashStyle;
             return l;
         });
     });
 
     return _chart.anchor(parent, chartGroup);
-};
+}

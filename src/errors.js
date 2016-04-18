@@ -1,28 +1,28 @@
-dc.errors = {};
+// TODO Extending built-ins is not currently supported by Babel
+// https://phabricator.babeljs.io/T3083
+// http://stackoverflow.com/a/33877501
+function extendableError () {
+    function _extendableBuiltin (message) {
+        Error.apply(this, arguments); // eslint-disable-line prefer-rest-params
+        this.message = message;
+        // eslint-disable-next-line no-restricted-globals
+        this.name = name;
+    }
+    _extendableBuiltin.prototype = Object.create(Error.prototype);
+    // Jasmine doesn't support Object.setPrototypeOf
+    if (Object.setPrototypeOf) {
+        Object.setPrototypeOf(_extendableBuiltin, Error);
+    } else {
+        _extendableBuiltin.__proto__ = Error; // eslint-disable-line no-proto
+    }
+    return _extendableBuiltin;
+}
 
-dc.errors.Exception = function (msg) {
-    var _msg = msg || 'Unexpected internal error';
+export class Exception extends extendableError() { // Error {
+}
 
-    this.message = _msg;
+export class InvalidStateException extends Exception {
+}
 
-    this.toString = function () {
-        return _msg;
-    };
-    this.stack = (new Error()).stack;
-};
-dc.errors.Exception.prototype = Object.create(Error.prototype);
-dc.errors.Exception.prototype.constructor = dc.errors.Exception;
-
-dc.errors.InvalidStateException = function () {
-    dc.errors.Exception.apply(this, arguments);
-};
-
-dc.errors.InvalidStateException.prototype = Object.create(dc.errors.Exception.prototype);
-dc.errors.InvalidStateException.prototype.constructor = dc.errors.InvalidStateException;
-
-dc.errors.BadArgumentException = function () {
-    dc.errors.Exception.apply(this, arguments);
-};
-
-dc.errors.BadArgumentException.prototype = Object.create(dc.errors.Exception.prototype);
-dc.errors.BadArgumentException.prototype.constructor = dc.errors.BadArgumentException;
+export class BadArgumentException extends Exception {
+}

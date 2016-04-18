@@ -142,7 +142,7 @@ describe('dc.core', function () {
             });
 
             it('transition should not be activated with dc.disableTransitions', function () {
-                dc.disableTransitions = true;
+                dc.disableTransitions(true);
                 dc.transition(selections, 100);
                 expect(selections.transition).not.toHaveBeenCalled();
                 expect(selections.duration).not.toHaveBeenCalled();

@@ -1,6 +1,4 @@
-dc.events = {
-    current: null
-};
+let _current = null;
 
 /**
  * This function triggers a throttled event function with a specified delay (in milli-seconds).  Events
@@ -21,17 +19,17 @@ dc.events = {
  * @param {Function} closure
  * @param {Number} [delay]
  */
-dc.events.trigger = function (closure, delay) {
+export default function trigger (closure, delay) {
     if (!delay) {
         closure();
         return;
     }
 
-    dc.events.current = closure;
+    _current = closure;
 
-    setTimeout(function () {
-        if (closure === dc.events.current) {
+    setTimeout(() => {
+        if (closure === _current) {
             closure();
         }
     }, delay);
-};
+}

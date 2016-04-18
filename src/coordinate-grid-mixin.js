@@ -1,3 +1,12 @@
+import * as d3 from 'd3';
+import colorMixin from './color-mixin';
+import marginMixin from './margin-mixin';
+import baseMixin from './base-mixin';
+import {RangedFilter} from './filters';
+import trigger from './events';
+import {constants, optionalTransition, override, transition, units} from './core';
+import {utils} from './utils';
+
 /**
  * Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based
  * concrete chart types, e.g. bar chart, line chart, and bubble chart.
@@ -10,67 +19,68 @@
  * @param {Object} _chart
  * @returns {dc.coordinateGridMixin}
  */
-dc.coordinateGridMixin = function (_chart) {
-    var GRID_LINE_CLASS = 'grid-line';
-    var HORIZONTAL_CLASS = 'horizontal';
-    var VERTICAL_CLASS = 'vertical';
-    var Y_AXIS_LABEL_CLASS = 'y-axis-label';
-    var X_AXIS_LABEL_CLASS = 'x-axis-label';
-    var DEFAULT_AXIS_LABEL_PADDING = 12;
+export default function coordinateGridMixin (_chart) {
+    const GRID_LINE_CLASS = 'grid-line';
+    const HORIZONTAL_CLASS = 'horizontal';
+    const VERTICAL_CLASS = 'vertical';
+    const Y_AXIS_LABEL_CLASS = 'y-axis-label';
+    const X_AXIS_LABEL_CLASS = 'x-axis-label';
+    const DEFAULT_AXIS_LABEL_PADDING = 12;
 
-    _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin(_chart)));
+    _chart = colorMixin(marginMixin(baseMixin(_chart)));
 
     _chart.colors(d3.scale.category10());
     _chart._mandatoryAttributes().push('x');
-    var _parent;
-    var _g;
-    var _chartBodyG;
+    let _parent;
+    let _g;
+    let _chartBodyG;
 
-    var _x;
-    var _xOriginalDomain;
-    var _xAxis = d3.svg.axis().orient('bottom');
-    var _xUnits = dc.units.integers;
-    var _xAxisPadding = 0;
-    var _xAxisPaddingUnit = 'day';
-    var _xElasticity = false;
-    var _xAxisLabel;
-    var _xAxisLabelPadding = 0;
-    var _lastXDomain;
+    let _x;
+    let _xOriginalDomain;
+    let _xAxis = d3.svg.axis().orient('bottom');
+    let _xUnits = units.integers;
+    let _xAxisPadding = 0;
+    let _xAxisPaddingUnit = 'day';
+    let _xElasticity = false;
+    let _xAxisLabel;
+    let _xAxisLabelPadding = 0;
+    let _lastXDomain;
 
-    var _y;
-    var _yAxis = d3.svg.axis().orient('left');
-    var _yAxisPadding = 0;
-    var _yElasticity = false;
-    var _yAxisLabel;
-    var _yAxisLabelPadding = 0;
+    let _y;
+    let _yAxis = d3.svg.axis().orient('left');
+    let _yAxisPadding = 0;
+    let _yElasticity = false;
+    let _yAxisLabel;
+    let _yAxisLabelPadding = 0;
 
-    var _brush = d3.svg.brush();
-    var _brushOn = true;
-    var _round;
+    let _brush = d3.svg.brush();
+    let _brushOn = true;
+    let _round;
 
-    var _renderHorizontalGridLine = false;
-    var _renderVerticalGridLine = false;
+    let _renderHorizontalGridLine = false;
+    let _renderVerticalGridLine = false;
 
-    var _refocused = false, _resizing = false;
-    var _unitCount;
+    let _refocused = false,
+        _resizing = false;
+    let _unitCount;
 
-    var _zoomScale = [1, Infinity];
-    var _zoomOutRestrict = true;
+    let _zoomScale = [1, Infinity];
+    let _zoomOutRestrict = true;
 
-    var _zoom = d3.behavior.zoom().on('zoom', zoomHandler);
-    var _nullZoom = d3.behavior.zoom().on('zoom', null);
-    var _hasBeenMouseZoomable = false;
+    const _zoom = d3.behavior.zoom().on('zoom', zoomHandler);
+    const _nullZoom = d3.behavior.zoom().on('zoom', null);
+    let _hasBeenMouseZoomable = false;
 
-    var _rangeChart;
-    var _focusChart;
+    let _rangeChart;
+    let _focusChart;
 
-    var _mouseZoomable = false;
-    var _clipPadding = 0;
+    let _mouseZoomable = false;
+    let _clipPadding = 0;
 
-    var _outerRangeBandPadding = 0.5;
-    var _rangeBandPadding = 0;
+    let _outerRangeBandPadding = 0.5;
+    let _rangeBandPadding = 0;
 
-    var _useRightYAxis = false;
+    let _useRightYAxis = false;
 
     /**
      * When changing the domain of the x or y scale, it is necessary to tell the chart to recalculate
@@ -158,13 +168,13 @@ dc.coordinateGridMixin = function (_chart) {
             _parent = parent;
         }
 
-        var href = window.location.href.split('#')[0];
+        const href = window.location.href.split('#')[0];
 
         _g = _parent.append('g');
 
         _chartBodyG = _g.append('g').attr('class', 'chart-body')
-            .attr('transform', 'translate(' + _chart.margins().left + ', ' + _chart.margins().top + ')')
-            .attr('clip-path', 'url(' + href + '#' + getClipPathId() + ')');
+            .attr('transform', `translate(${_chart.margins().left}, ${_chart.margins().top})`)
+            .attr('clip-path', `url(${href}#${getClipPathId()})`);
 
         return _g;
     };
@@ -396,12 +406,12 @@ dc.coordinateGridMixin = function (_chart) {
      */
     _chart.xUnitCount = function () {
         if (_unitCount === undefined) {
-            var units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain());
+            const u = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain());
 
-            if (units instanceof Array) {
-                _unitCount = units.length;
+            if (u instanceof Array) {
+                _unitCount = u.length;
             } else {
-                _unitCount = units;
+                _unitCount = u;
             }
         }
 
@@ -436,7 +446,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @returns {Boolean}
      */
     _chart.isOrdinal = function () {
-        return _chart.xUnits() === dc.units.ordinal;
+        return _chart.xUnits() === units.ordinal;
     };
 
     _chart._useOuterPadding = function () {
@@ -444,13 +454,13 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart._ordinalXDomain = function () {
-        var groups = _chart._computeOrderedGroups(_chart.data());
+        const groups = _chart._computeOrderedGroups(_chart.data());
         return groups.map(_chart.keyAccessor());
     };
 
     function compareDomains (d1, d2) {
         return !d1 || !d2 || d1.length !== d2.length ||
-            d1.some(function (elem, i) { return (elem && d2[i]) ? elem.toString() !== d2[i].toString() : elem === d2[i]; });
+            d1.some((elem, i) => ((elem && d2[i]) ? elem.toString() !== d2[i].toString() : elem === d2[i]));
     }
 
     function prepareXAxis (g, render) {
@@ -458,14 +468,12 @@ dc.coordinateGridMixin = function (_chart) {
             if (_chart.elasticX()) {
                 _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
             }
-        } else { // _chart.isOrdinal()
-            if (_chart.elasticX() || _x.domain().length === 0) {
-                _x.domain(_chart._ordinalXDomain());
-            }
+        } else if (_chart.elasticX() || _x.domain().length === 0) {
+            _x.domain(_chart._ordinalXDomain());
         }
 
         // has the domain changed?
-        var xdom = _x.domain();
+        const xdom = _x.domain();
         if (render || compareDomains(_lastXDomain, xdom)) {
             _chart.rescale();
         }
@@ -473,8 +481,11 @@ dc.coordinateGridMixin = function (_chart) {
 
         // please can't we always use rangeBands for bar charts?
         if (_chart.isOrdinal()) {
-            _x.rangeBands([0, _chart.xAxisLength()], _rangeBandPadding,
-                          _chart._useOuterPadding() ? _outerRangeBandPadding : 0);
+            _x.rangeBands(
+                [0, _chart.xAxisLength()],
+                _rangeBandPadding,
+                _chart._useOuterPadding() ? _outerRangeBandPadding : 0
+            );
         } else {
             _x.range([0, _chart.xAxisLength()]);
         }
@@ -485,74 +496,75 @@ dc.coordinateGridMixin = function (_chart) {
     }
 
     _chart.renderXAxis = function (g) {
-        var axisXG = g.select('g.x');
+        let axisXG = g.select('g.x');
 
         if (axisXG.empty()) {
             axisXG = g.append('g')
                 .attr('class', 'axis x')
-                .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')');
+                .attr('transform', `translate(${_chart.margins().left}, ${_chart._xAxisY()})`);
         }
 
-        var axisXLab = g.select('text.' + X_AXIS_LABEL_CLASS);
+        let axisXLab = g.select(`text.${X_AXIS_LABEL_CLASS}`);
         if (axisXLab.empty() && _chart.xAxisLabel()) {
             axisXLab = g.append('text')
                 .attr('class', X_AXIS_LABEL_CLASS)
-                .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
-                      (_chart.height() - _xAxisLabelPadding) + ')')
+                .attr(
+                    'transform',
+                    `translate(${(_chart.margins().left + _chart.xAxisLength() / 2)}, ${(_chart.height() - _xAxisLabelPadding)})`
+                )
                 .attr('text-anchor', 'middle');
         }
         if (_chart.xAxisLabel() && axisXLab.text() !== _chart.xAxisLabel()) {
             axisXLab.text(_chart.xAxisLabel());
         }
 
-        dc.transition(axisXG, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')')
+        transition(axisXG, _chart.transitionDuration(), _chart.transitionDelay())
+            .attr('transform', `translate(${_chart.margins().left}, ${_chart._xAxisY()})`)
             .call(_xAxis);
-        dc.transition(axisXLab, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
-                  (_chart.height() - _xAxisLabelPadding) + ')');
+        transition(axisXLab, _chart.transitionDuration(), _chart.transitionDelay())
+            .attr(
+                'transform',
+                `translate(${(_chart.margins().left + _chart.xAxisLength() / 2)}, ${(_chart.height() - _xAxisLabelPadding)})`
+            );
     };
 
     function renderVerticalGridLines (g) {
-        var gridLineG = g.select('g.' + VERTICAL_CLASS);
+        let gridLineG = g.select(`g.${VERTICAL_CLASS}`);
 
         if (_renderVerticalGridLine) {
             if (gridLineG.empty()) {
                 gridLineG = g.insert('g', ':first-child')
-                    .attr('class', GRID_LINE_CLASS + ' ' + VERTICAL_CLASS)
-                    .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
+                    .attr('class', `${GRID_LINE_CLASS} ${VERTICAL_CLASS}`)
+                    .attr('transform', `translate(${_chart.margins().left}, ${_chart.margins().top})`);
+            }
+            let ticks;
+            if (_xAxis.tickValues()) {
+                ticks = _xAxis.tickValues();
+            } else if (typeof _x.ticks === 'function') {
+                ticks = _x.ticks(_xAxis.ticks()[0]);
+            } else {
+                ticks = _x.domain();
             }
 
-            var ticks = _xAxis.tickValues() ? _xAxis.tickValues() :
-                    (typeof _x.ticks === 'function' ? _x.ticks(_xAxis.ticks()[0]) : _x.domain());
-
-            var lines = gridLineG.selectAll('line')
+            const lines = gridLineG.selectAll('line')
                 .data(ticks);
 
             // enter
-            var linesGEnter = lines.enter()
+            const linesGEnter = lines.enter()
                 .append('line')
-                .attr('x1', function (d) {
-                    return _x(d);
-                })
+                .attr('x1', _x)
                 .attr('y1', _chart._xAxisY() - _chart.margins().top)
-                .attr('x2', function (d) {
-                    return _x(d);
-                })
+                .attr('x2', _x)
                 .attr('y2', 0)
                 .attr('opacity', 0);
-            dc.transition(linesGEnter, _chart.transitionDuration(), _chart.transitionDelay())
+            transition(linesGEnter, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('opacity', 1);
 
             // update
-            dc.transition(lines, _chart.transitionDuration(), _chart.transitionDelay())
-                .attr('x1', function (d) {
-                    return _x(d);
-                })
+            transition(lines, _chart.transitionDuration(), _chart.transitionDelay())
+                .attr('x1', _x)
                 .attr('y1', _chart._xAxisY() - _chart.margins().top)
-                .attr('x2', function (d) {
-                    return _x(d);
-                })
+                .attr('x2', _x)
                 .attr('y2', 0);
 
             // exit
@@ -596,7 +608,7 @@ dc.coordinateGridMixin = function (_chart) {
             if (_y === undefined) {
                 _y = d3.scale.linear();
             }
-            var min = _chart.yAxisMin() || 0,
+            const min = _chart.yAxisMin() || 0,
                 max = _chart.yAxisMax() || 0;
             _y.domain([min, max]).rangeRound([_chart.yAxisHeight(), 0]);
         }
@@ -614,83 +626,75 @@ dc.coordinateGridMixin = function (_chart) {
     _chart.renderYAxisLabel = function (axisClass, text, rotation, labelXPosition) {
         labelXPosition = labelXPosition || _yAxisLabelPadding;
 
-        var axisYLab = _chart.g().select('text.' + Y_AXIS_LABEL_CLASS + '.' + axisClass + '-label');
-        var labelYPosition = (_chart.margins().top + _chart.yAxisHeight() / 2);
+        let axisYLab = _chart.g().select(`text.${Y_AXIS_LABEL_CLASS}.${axisClass}-label`);
+        const labelYPosition = (_chart.margins().top + _chart.yAxisHeight() / 2);
         if (axisYLab.empty() && text) {
             axisYLab = _chart.g().append('text')
-                .attr('transform', 'translate(' + labelXPosition + ',' + labelYPosition + '),rotate(' + rotation + ')')
-                .attr('class', Y_AXIS_LABEL_CLASS + ' ' + axisClass + '-label')
+                .attr('transform', `translate(${labelXPosition}, ${labelYPosition}),rotate(${rotation})`)
+                .attr('class', `${Y_AXIS_LABEL_CLASS} ${axisClass}-label`)
                 .attr('text-anchor', 'middle')
                 .text(text);
         }
         if (text && axisYLab.text() !== text) {
             axisYLab.text(text);
         }
-        dc.transition(axisYLab, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('transform', 'translate(' + labelXPosition + ',' + labelYPosition + '),rotate(' + rotation + ')');
+        transition(axisYLab, _chart.transitionDuration(), _chart.transitionDelay())
+            .attr('transform', `translate(${labelXPosition}, ${labelYPosition}),rotate(${rotation})`);
     };
 
     _chart.renderYAxisAt = function (axisClass, axis, position) {
-        var axisYG = _chart.g().select('g.' + axisClass);
+        let axisYG = _chart.g().select(`g.${axisClass}`);
         if (axisYG.empty()) {
             axisYG = _chart.g().append('g')
-                .attr('class', 'axis ' + axisClass)
-                .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')');
+                .attr('class', `axis ${axisClass}`)
+                .attr('transform', `translate(${position}, ${_chart.margins().top})`);
         }
 
-        dc.transition(axisYG, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')')
+        transition(axisYG, _chart.transitionDuration(), _chart.transitionDelay())
+            .attr('transform', `translate(${position}, ${_chart.margins().top})`)
             .call(axis);
     };
 
     _chart.renderYAxis = function () {
-        var axisPosition = _useRightYAxis ? (_chart.width() - _chart.margins().right) : _chart._yAxisX();
+        const axisPosition = _useRightYAxis ? (_chart.width() - _chart.margins().right) : _chart._yAxisX();
         _chart.renderYAxisAt('y', _yAxis, axisPosition);
-        var labelPosition = _useRightYAxis ? (_chart.width() - _yAxisLabelPadding) : _yAxisLabelPadding;
-        var rotation = _useRightYAxis ? 90 : -90;
+        const labelPosition = _useRightYAxis ? (_chart.width() - _yAxisLabelPadding) : _yAxisLabelPadding;
+        const rotation = _useRightYAxis ? 90 : -90;
         _chart.renderYAxisLabel('y', _chart.yAxisLabel(), rotation, labelPosition);
     };
 
     _chart._renderHorizontalGridLinesForAxis = function (g, scale, axis) {
-        var gridLineG = g.select('g.' + HORIZONTAL_CLASS);
+        let gridLineG = g.select(`g.${HORIZONTAL_CLASS}`);
 
         if (_renderHorizontalGridLine) {
-            var ticks = axis.tickValues() ? axis.tickValues() : scale.ticks(axis.ticks()[0]);
+            const ticks = axis.tickValues() ? axis.tickValues() : scale.ticks(axis.ticks()[0]);
 
             if (gridLineG.empty()) {
                 gridLineG = g.insert('g', ':first-child')
-                    .attr('class', GRID_LINE_CLASS + ' ' + HORIZONTAL_CLASS)
-                    .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
+                    .attr('class', `${GRID_LINE_CLASS} ${HORIZONTAL_CLASS}`)
+                    .attr('transform', `translate(${_chart.margins().left}, ${_chart.margins().top})`);
             }
 
-            var lines = gridLineG.selectAll('line')
+            const lines = gridLineG.selectAll('line')
                 .data(ticks);
 
             // enter
-            var linesGEnter = lines.enter()
+            const linesGEnter = lines.enter()
                 .append('line')
                 .attr('x1', 1)
-                .attr('y1', function (d) {
-                    return scale(d);
-                })
+                .attr('y1', scale)
                 .attr('x2', _chart.xAxisLength())
-                .attr('y2', function (d) {
-                    return scale(d);
-                })
+                .attr('y2', scale)
                 .attr('opacity', 0);
-            dc.transition(linesGEnter, _chart.transitionDuration(), _chart.transitionDelay())
+            transition(linesGEnter, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('opacity', 1);
 
             // update
-            dc.transition(lines, _chart.transitionDuration(), _chart.transitionDelay())
+            transition(lines, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('x1', 1)
-                .attr('y1', function (d) {
-                    return scale(d);
-                })
+                .attr('y1', scale)
                 .attr('x2', _chart.xAxisLength())
-                .attr('y2', function (d) {
-                    return scale(d);
-                });
+                .attr('y2', scale);
 
             // exit
             lines.exit().remove();
@@ -815,11 +819,11 @@ dc.coordinateGridMixin = function (_chart) {
      * @param {Boolean} [renderVerticalGridLines=false]
      * @returns {Boolean|dc.coordinateGridMixin}
      */
-    _chart.renderVerticalGridLines = function (renderVerticalGridLines) {
+    _chart.renderVerticalGridLines = function (_) {
         if (!arguments.length) {
             return _renderVerticalGridLine;
         }
-        _renderVerticalGridLine = renderVerticalGridLines;
+        _renderVerticalGridLine = _;
         return _chart;
     };
 
@@ -831,10 +835,8 @@ dc.coordinateGridMixin = function (_chart) {
      * @returns {*}
      */
     _chart.xAxisMin = function () {
-        var min = d3.min(_chart.data(), function (e) {
-            return _chart.keyAccessor()(e);
-        });
-        return dc.utils.subtract(min, _xAxisPadding, _xAxisPaddingUnit);
+        const min = d3.min(_chart.data(), _chart.keyAccessor());
+        return utils.subtract(min, _xAxisPadding, _xAxisPaddingUnit);
     };
 
     /**
@@ -845,10 +847,8 @@ dc.coordinateGridMixin = function (_chart) {
      * @returns {*}
      */
     _chart.xAxisMax = function () {
-        var max = d3.max(_chart.data(), function (e) {
-            return _chart.keyAccessor()(e);
-        });
-        return dc.utils.add(max, _xAxisPadding, _xAxisPaddingUnit);
+        const max = d3.max(_chart.data(), _chart.keyAccessor());
+        return utils.add(max, _xAxisPadding, _xAxisPaddingUnit);
     };
 
     /**
@@ -859,10 +859,8 @@ dc.coordinateGridMixin = function (_chart) {
      * @returns {*}
      */
     _chart.yAxisMin = function () {
-        var min = d3.min(_chart.data(), function (e) {
-            return _chart.valueAccessor()(e);
-        });
-        return dc.utils.subtract(min, _yAxisPadding);
+        const min = d3.min(_chart.data(), _chart.valueAccessor());
+        return utils.subtract(min, _yAxisPadding);
     };
 
     /**
@@ -873,10 +871,8 @@ dc.coordinateGridMixin = function (_chart) {
      * @returns {*}
      */
     _chart.yAxisMax = function () {
-        var max = d3.max(_chart.data(), function (e) {
-            return _chart.valueAccessor()(e);
-        });
-        return dc.utils.add(max, _yAxisPadding);
+        const max = d3.max(_chart.data(), _chart.valueAccessor());
+        return utils.add(max, _yAxisPadding);
     };
 
     /**
@@ -940,7 +936,7 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    dc.override(_chart, 'filter', function (_) {
+    override(_chart, 'filter', function (_) {
         if (!arguments.length) {
             return _chart._filter();
         }
@@ -974,9 +970,9 @@ dc.coordinateGridMixin = function (_chart) {
             _brush.on('brushstart', _chart._disableMouseZoom);
             _brush.on('brushend', configureMouseZoom);
 
-            var gBrush = g.append('g')
+            const gBrush = g.append('g')
                 .attr('class', 'brush')
-                .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')')
+                .attr('transform', `translate(${_chart.margins().left}, ${_chart.margins().top})`)
                 .call(_brush.x(_chart.x()));
             _chart.setBrushY(gBrush, false);
             _chart.setHandlePaths(gBrush);
@@ -999,10 +995,9 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart.extendBrush = function () {
-        var extent = _brush.extent();
+        const extent = _brush.extent();
         if (_chart.round()) {
-            extent[0] = extent.map(_chart.round())[0];
-            extent[1] = extent.map(_chart.round())[1];
+            [extent[0], extent[1]] = extent.map(_chart.round());
 
             _g.select('.brush')
                 .call(_brush.extent(extent));
@@ -1015,22 +1010,22 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart._brushing = function () {
-        var extent = _chart.extendBrush();
+        const extent = _chart.extendBrush();
 
         _chart.redrawBrush(_g, false);
 
         if (_chart.brushIsEmpty(extent)) {
-            dc.events.trigger(function () {
+            trigger(() => {
                 _chart.filter(null);
                 _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
+            }, constants.EVENT_DELAY);
         } else {
-            var rangedFilter = dc.filters.RangedFilter(extent[0], extent[1]);
+            const rangedFilter = RangedFilter(extent[0], extent[1]);
 
-            dc.events.trigger(function () {
+            trigger(() => {
                 _chart.replaceFilter(rangedFilter);
                 _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
+            }, constants.EVENT_DELAY);
         }
     };
 
@@ -1040,11 +1035,11 @@ dc.coordinateGridMixin = function (_chart) {
                 _chart.brush().extent(_chart.filter());
             }
 
-            var gBrush = dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(g.select('g.brush'));
+            const gBrush = optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(g.select('g.brush'));
             _chart.setBrushY(gBrush);
             gBrush.call(_chart.brush()
-                      .x(_chart.x())
-                      .extent(_chart.brush().extent()));
+                .x(_chart.x())
+                .extent(_chart.brush().extent()));
         }
 
         _chart.fadeDeselectedArea();
@@ -1056,20 +1051,15 @@ dc.coordinateGridMixin = function (_chart) {
 
     // borrowed from Crossfilter example
     _chart.resizeHandlePath = function (d) {
-        var e = +(d === 'e'), x = e ? 1 : -1, y = brushHeight() / 3;
-        return 'M' + (0.5 * x) + ',' + y +
-            'A6,6 0 0 ' + e + ' ' + (6.5 * x) + ',' + (y + 6) +
-            'V' + (2 * y - 6) +
-            'A6,6 0 0 ' + e + ' ' + (0.5 * x) + ',' + (2 * y) +
-            'Z' +
-            'M' + (2.5 * x) + ',' + (y + 8) +
-            'V' + (2 * y - 8) +
-            'M' + (4.5 * x) + ',' + (y + 8) +
-            'V' + (2 * y - 8);
+        const e = +(d === 'e'),
+            x = e ? 1 : -1,
+            y = brushHeight() / 3;
+        return `M${0.5 * x},${y}A6,6 0 0 ${e} ${6.5 * x}, ${y + 6}V${2 * y - 6}A6,6 0 0 ${e} ${0.5 * x},${2 * y}` +
+                `ZM${2.5 * x},${y + 8},V${2 * y - 8}M${4.5 * x},${y + 8}V${2 * y - 8}`;
     };
 
     function getClipPathId () {
-        return _chart.anchorName().replace(/[ .#=\[\]"]/g, '-') + '-clip';
+        return `${_chart.anchorName().replace(/[ .#=[\]"]/g, '-')}-clip`;
     }
 
     /**
@@ -1091,18 +1081,18 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function generateClipPath () {
-        var defs = dc.utils.appendOrSelect(_parent, 'defs');
+        const defs = utils.appendOrSelect(_parent, 'defs');
         // cannot select <clippath> elements; bug in WebKit, must select by id
         // https://groups.google.com/forum/#!topic/d3-js/6EpAzQ2gU9I
-        var id = getClipPathId();
-        var chartBodyClip = dc.utils.appendOrSelect(defs, '#' + id, 'clipPath').attr('id', id);
+        const id = getClipPathId();
+        const chartBodyClip = utils.appendOrSelect(defs, `#${id}`, 'clipPath').attr('id', id);
 
-        var padding = _clipPadding * 2;
+        const padding = _clipPadding * 2;
 
-        dc.utils.appendOrSelect(chartBodyClip, 'rect')
+        utils.appendOrSelect(chartBodyClip, 'rect')
             .attr('width', _chart.xAxisLength() + padding)
             .attr('height', _chart.yAxisHeight() + padding)
-            .attr('transform', 'translate(-' + _clipPadding + ', -' + _clipPadding + ')');
+            .attr('transform', `translate(-${_clipPadding}, -${_clipPadding})`);
     }
 
     _chart._preprocessData = function () {};
@@ -1182,25 +1172,25 @@ dc.coordinateGridMixin = function (_chart) {
     function zoomHandler () {
         _refocused = true;
         if (_zoomOutRestrict) {
-            var constraint = _xOriginalDomain;
+            let constraint = _xOriginalDomain;
             if (_rangeChart) {
                 constraint = intersectExtents(constraint, _rangeChart.x().domain());
             }
-            var constrained = constrainExtent(_chart.x().domain(), constraint);
+            const constrained = constrainExtent(_chart.x().domain(), constraint);
             if (constrained) {
                 _chart.x().domain(constrained);
             }
         }
 
-        var domain = _chart.x().domain();
-        var domFilter = dc.filters.RangedFilter(domain[0], domain[1]);
+        const domain = _chart.x().domain();
+        const domFilter = RangedFilter(domain[0], domain[1]);
 
         _chart.replaceFilter(domFilter);
         _chart.rescale();
         _chart.redraw();
 
         if (_rangeChart && !rangesEqual(_chart.filter(), _rangeChart.filter())) {
-            dc.events.trigger(function () {
+            trigger(() => {
                 _rangeChart.replaceFilter(domFilter);
                 _rangeChart.redraw();
             });
@@ -1208,9 +1198,7 @@ dc.coordinateGridMixin = function (_chart) {
 
         _chart._invokeZoomedListener();
 
-        dc.events.trigger(function () {
-            _chart.redrawGroup();
-        }, dc.constants.EVENT_DELAY);
+        trigger(_chart.redrawGroup, constants.EVENT_DELAY);
 
         _refocused = !rangesEqual(domain, _xOriginalDomain);
     }
@@ -1223,14 +1211,13 @@ dc.coordinateGridMixin = function (_chart) {
     }
 
     function constrainExtent (extent, constraint) {
-        var size = extent[1] - extent[0];
+        const size = extent[1] - extent[0];
         if (extent[0] < constraint[0]) {
-            return [constraint[0], Math.min(constraint[1], dc.utils.add(constraint[0], size, 'millis'))];
+            return [constraint[0], Math.min(constraint[1], utils.add(constraint[0], size, 'millis'))];
         } else if (extent[1] > constraint[1]) {
-            return [Math.max(constraint[0], dc.utils.subtract(constraint[1], size, 'millis')), constraint[1]];
-        } else {
-            return null;
+            return [Math.max(constraint[0], utils.subtract(constraint[1], size, 'millis')), constraint[1]];
         }
+        return null;
     }
 
     /**
@@ -1271,15 +1258,11 @@ dc.coordinateGridMixin = function (_chart) {
             return _focusChart;
         }
         _focusChart = c;
-        _chart.on('filtered', function (chart) {
+        _chart.on('filtered', (chart) => {
             if (!chart.filter()) {
-                dc.events.trigger(function () {
-                    _focusChart.x().domain(_focusChart.xOriginalDomain());
-                });
+                trigger(() => _focusChart.x().domain(_focusChart.xOriginalDomain()));
             } else if (!rangesEqual(chart.filter(), _focusChart.filter())) {
-                dc.events.trigger(function () {
-                    _focusChart.focus(chart.filter());
-                });
+                trigger(() => _focusChart.focus(chart.filter()));
             }
         });
         return _chart;
@@ -1325,4 +1308,4 @@ dc.coordinateGridMixin = function (_chart) {
     }
 
     return _chart;
-};
+}

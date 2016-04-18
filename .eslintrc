@@ -1,0 +1,49 @@
+{
+    "env": {
+        "browser": true,
+        "mocha": true,
+        "node": true
+    },
+    "extends": "airbnb",
+    "rules": {
+        "comma-dangle": [2, "never"],
+        "func-names": 0,
+        "global-require": 0,
+        "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
+        "indent": [2, 4, {"SwitchCase": 1}],
+        "max-len": [2, 140],
+        "new-cap": 1,
+        "no-bitwise": 0,
+        "no-console": 1,
+        "no-mixed-operators": 1,
+        "no-param-reassign": 1,
+        "no-plusplus": 0,
+        "no-restricted-globals": 0,
+        "no-underscore-dangle": 0,
+        "no-use-before-define": 1,
+        "one-var": 0,
+        "object-curly-spacing": [2, "never"],
+        "prefer-rest-params": 0,
+        "spaced-comment": 0,
+        "space-before-function-paren": [2, "always"],
+        "require-jsdoc": [1, {
+            "require": {
+                "FunctionDeclaration": true,
+                "MethodDefinition": true,
+                "ClassDeclaration": true
+            }
+        }],
+        "valid-jsdoc": [1, {
+            "prefer": {
+                "arg": "param",
+                "argument": "param",
+                "class": "constructor",
+                "return": "return",
+                "virtual": "abstract"
+            },
+            "requireParamDescription": false,
+            "requireReturnDescription": false,
+            "requireReturnType": true
+        }]
+    }
+}

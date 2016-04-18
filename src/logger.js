@@ -1,8 +1,13 @@
-dc.logger = {};
+let _enableDebugLog = false;
+export function enableDebugLog (_ = false) {
+    if (!arguments.length) {
+        return _enableDebugLog;
+    }
+    _enableDebugLog = _;
+    return _;
+}
 
-dc.logger.enableDebugLog = false;
-
-dc.logger.warn = function (msg) {
+export function warn (msg) {
     if (console) {
         if (console.warn) {
             console.warn(msg);
@@ -10,31 +15,27 @@ dc.logger.warn = function (msg) {
             console.log(msg);
         }
     }
+}
 
-    return dc.logger;
-};
-
-dc.logger.debug = function (msg) {
-    if (dc.logger.enableDebugLog && console) {
+export function debug (msg) {
+    if (_enableDebugLog && console) {
         if (console.debug) {
             console.debug(msg);
         } else if (console.log) {
             console.log(msg);
         }
     }
+}
 
-    return dc.logger;
-};
-
-dc.logger.deprecate = function (fn, msg) {
+export function deprecate (fn, msg) {
     // Allow logging of deprecation
-    var warned = false;
-    function deprecated () {
+    let warned = false;
+    function deprecated (...args) {
         if (!warned) {
-            dc.logger.warn(msg);
+            warn(msg);
             warned = true;
         }
-        return fn.apply(this, arguments);
+        return fn.apply(this, args);
     }
     return deprecated;
-};
+}

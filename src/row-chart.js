@@ -1,3 +1,10 @@
+import * as d3 from 'd3';
+import capMixin from './cap-mixin';
+import marginMixin from './margin-mixin';
+import colorMixin from './color-mixin';
+import baseMixin from './base-mixin';
+import {transition} from './core';
+
 /**
  * Concrete row chart implementation.
  *
@@ -11,9 +18,9 @@
  * @mixes dc.baseMixin
  * @example
  * // create a row chart under #chart-container1 element using the default global chart group
- * var chart1 = dc.rowChart('#chart-container1');
+ * let chart1 = dc.rowChart('#chart-container1');
  * // create a row chart under #chart-container2 element using chart group A
- * var chart2 = dc.rowChart('#chart-container2', 'chartGroupA');
+ * let chart2 = dc.rowChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
  * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
@@ -21,38 +28,37 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.rowChart}
  */
-dc.rowChart = function (parent, chartGroup) {
+export default function rowChart (parent, chartGroup) {
+    let _g;
 
-    var _g;
+    let _labelOffsetX = 10;
+    let _labelOffsetY = 15;
+    let _hasLabelOffsetY = false;
+    const _dyOffset = '0.35em'; // this helps center labels https://github.com/mbostock/d3/wiki/SVG-Shapes#svg_text
+    let _titleLabelOffsetX = 2;
 
-    var _labelOffsetX = 10;
-    var _labelOffsetY = 15;
-    var _hasLabelOffsetY = false;
-    var _dyOffset = '0.35em';  // this helps center labels https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#svg_text
-    var _titleLabelOffsetX = 2;
+    let _gap = 5;
 
-    var _gap = 5;
+    let _fixedBarHeight = false;
+    const _rowCssClass = 'row';
+    const _titleRowCssClass = 'titlerow';
+    let _renderTitleLabel = false;
 
-    var _fixedBarHeight = false;
-    var _rowCssClass = 'row';
-    var _titleRowCssClass = 'titlerow';
-    var _renderTitleLabel = false;
+    const _chart = capMixin(marginMixin(colorMixin(baseMixin({}))));
 
-    var _chart = dc.capMixin(dc.marginMixin(dc.colorMixin(dc.baseMixin({}))));
+    let _x;
 
-    var _x;
+    let _elasticX;
 
-    var _elasticX;
+    const _xAxis = d3.svg.axis().orient('bottom');
 
-    var _xAxis = d3.svg.axis().orient('bottom');
-
-    var _rowData;
+    let _rowData;
 
     _chart.rowsCap = _chart.cap;
 
     function calculateAxisScale () {
         if (!_x || _elasticX) {
-            var extent = d3.extent(_rowData, _chart.cappedValueAccessor);
+            const extent = d3.extent(_rowData, _chart.cappedValueAccessor);
             if (extent[0] > 0) {
                 extent[0] = 0;
             }
@@ -66,16 +72,16 @@ dc.rowChart = function (parent, chartGroup) {
     }
 
     function drawAxis () {
-        var axisG = _g.select('g.axis');
+        let axisG = _g.select('g.axis');
 
         calculateAxisScale();
 
         if (axisG.empty()) {
             axisG = _g.append('g').attr('class', 'axis');
         }
-        axisG.attr('transform', 'translate(0, ' + _chart.effectiveHeight() + ')');
+        axisG.attr('transform', `translate(0, ${_chart.effectiveHeight()})`);
 
-        dc.transition(axisG, _chart.transitionDuration(), _chart.transitionDelay())
+        transition(axisG, _chart.transitionDuration(), _chart.transitionDelay())
             .call(_xAxis);
     }
 
@@ -84,16 +90,14 @@ dc.rowChart = function (parent, chartGroup) {
 
         _g = _chart.svg()
             .append('g')
-            .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
+            .attr('transform', `translate(${_chart.margins().left}, ${_chart.margins().top})`);
 
         drawChart();
 
         return _chart;
     };
 
-    _chart.title(function (d) {
-        return _chart.cappedKeyAccessor(d) + ': ' + _chart.cappedValueAccessor(d);
-    });
+    _chart.title(d => `${_chart.cappedKeyAccessor(d)}: ${_chart.cappedValueAccessor(d)}`);
 
     _chart.label(_chart.cappedKeyAccessor);
 
@@ -126,9 +130,7 @@ dc.rowChart = function (parent, chartGroup) {
             .attr('x1', 0)
             .attr('y1', 0)
             .attr('x2', 0)
-            .attr('y2', function () {
-                return -_chart.effectiveHeight();
-            });
+            .attr('y2', () => -_chart.effectiveHeight());
     }
 
     function drawChart () {
@@ -137,7 +139,7 @@ dc.rowChart = function (parent, chartGroup) {
         drawAxis();
         drawGridLines();
 
-        var rows = _g.selectAll('g.' + _rowCssClass)
+        const rows = _g.selectAll(`g.${_rowCssClass}`)
             .data(_rowData);
 
         createElements(rows);
@@ -146,11 +148,9 @@ dc.rowChart = function (parent, chartGroup) {
     }
 
     function createElements (rows) {
-        var rowEnter = rows.enter()
+        const rowEnter = rows.enter()
             .append('g')
-            .attr('class', function (d, i) {
-                return _rowCssClass + ' _' + i;
-            });
+            .attr('class', (d, i) => `${_rowCssClass} _${i}`);
 
         rowEnter.append('rect').attr('width', 0);
 
@@ -162,14 +162,14 @@ dc.rowChart = function (parent, chartGroup) {
     }
 
     function rootValue () {
-        var root = _x(0);
-        return (root === -Infinity || root !== root) ? _x(1) : root;
+        const root = _x(0);
+        return (root === -Infinity || isNaN(root)) ? _x(1) : root;
     }
 
     function updateElements (rows) {
-        var n = _rowData.length;
+        const n = _rowData.length;
 
-        var height;
+        let height;
         if (!_fixedBarHeight) {
             height = (_chart.effectiveHeight() - (n + 1) * _gap) / n;
         } else {
@@ -181,23 +181,16 @@ dc.rowChart = function (parent, chartGroup) {
             _labelOffsetY = height / 2;
         }
 
-        var rect = rows.attr('transform', function (d, i) {
-                return 'translate(0,' + ((i + 1) * _gap + i * height) + ')';
-            }).select('rect')
+        const rect = rows.attr('transform', (d, i) => `translate(0, ${((i + 1) * _gap + i * height)})`)
+            .select('rect')
             .attr('height', height)
             .attr('fill', _chart.getColor)
             .on('click', onClick)
-            .classed('deselected', function (d) {
-                return (_chart.hasFilter()) ? !isSelectedRow(d) : false;
-            })
-            .classed('selected', function (d) {
-                return (_chart.hasFilter()) ? isSelectedRow(d) : false;
-            });
+            .classed('deselected', d => (_chart.hasFilter() ? !isSelectedRow(d) : false))
+            .classed('selected', d => (_chart.hasFilter() ? isSelectedRow(d) : false));
 
-        dc.transition(rect, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('width', function (d) {
-                return Math.abs(rootValue() - _x(_chart.valueAccessor()(d)));
-            })
+        transition(rect, _chart.transitionDuration(), _chart.transitionDelay())
+            .attr('width', d => Math.abs(rootValue() - _x(_chart.valueAccessor()(d))))
             .attr('transform', translateX);
 
         createTitles(rows);
@@ -225,34 +218,26 @@ dc.rowChart = function (parent, chartGroup) {
 
     function updateLabels (rows) {
         if (_chart.renderLabel()) {
-            var lab = rows.select('text')
+            const lab = rows.select('text')
                 .attr('x', _labelOffsetX)
                 .attr('y', _labelOffsetY)
                 .attr('dy', _dyOffset)
                 .on('click', onClick)
-                .attr('class', function (d, i) {
-                    return _rowCssClass + ' _' + i;
-                })
-                .text(function (d) {
-                    return _chart.label()(d);
-                });
-            dc.transition(lab, _chart.transitionDuration(), _chart.transitionDelay())
+                .attr('class', (d, i) => `${_rowCssClass} _${i}`)
+                .text(_chart.label());
+            transition(lab, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('transform', translateX);
         }
         if (_chart.renderTitleLabel()) {
-            var titlelab = rows.select('.' + _titleRowCssClass)
-                    .attr('x', _chart.effectiveWidth() - _titleLabelOffsetX)
-                    .attr('y', _labelOffsetY)
-                    .attr('dy', _dyOffset)
-                    .attr('text-anchor', 'end')
-                    .on('click', onClick)
-                    .attr('class', function (d, i) {
-                        return _titleRowCssClass + ' _' + i ;
-                    })
-                    .text(function (d) {
-                        return _chart.title()(d);
-                    });
-            dc.transition(titlelab, _chart.transitionDuration(), _chart.transitionDelay())
+            const titlelab = rows.select(`.${_titleRowCssClass}`)
+                .attr('x', _chart.effectiveWidth() - _titleLabelOffsetX)
+                .attr('y', _labelOffsetY)
+                .attr('dy', _dyOffset)
+                .attr('text-anchor', 'end')
+                .on('click', onClick)
+                .attr('class', (d, i) => `${_titleRowCssClass} _${i}`)
+                .text(_chart.title());
+            transition(titlelab, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('transform', translateX);
         }
     }
@@ -278,10 +263,10 @@ dc.rowChart = function (parent, chartGroup) {
     }
 
     function translateX (d) {
-        var x = _x(_chart.cappedValueAccessor(d)),
+        const x = _x(_chart.cappedValueAccessor(d)),
             x0 = rootValue(),
             s = x > x0 ? x0 : x;
-        return 'translate(' + s + ',0)';
+        return `translate(${s}, 0)`;
     }
 
     _chart._doRedraw = function () {
@@ -416,4 +401,4 @@ dc.rowChart = function (parent, chartGroup) {
     }
 
     return _chart.anchor(parent, chartGroup);
-};
+}

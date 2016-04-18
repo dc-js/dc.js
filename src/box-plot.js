@@ -1,3 +1,8 @@
+import * as d3 from 'd3';
+import d3box from './d3.box';
+import coordinateGridMixin from './coordinate-grid-mixin';
+import {transition, units} from './core';
+import {utils} from './utils';
 
 /**
  * A box plot is a chart that depicts numerical data via their quartile ranges.
@@ -10,9 +15,9 @@
  * @mixes dc.coordinateGridMixin
  * @example
  * // create a box plot under #chart-container1 element using the default global chart group
- * var boxPlot1 = dc.boxPlot('#chart-container1');
+ * let boxPlot1 = dc.boxPlot('#chart-container1');
  * // create a box plot under #chart-container2 element using chart group A
- * var boxPlot2 = dc.boxPlot('#chart-container2', 'chartGroupA');
+ * let boxPlot2 = dc.boxPlot('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
  * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
@@ -20,16 +25,16 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.boxPlot}
  */
-dc.boxPlot = function (parent, chartGroup) {
-    var _chart = dc.coordinateGridMixin({});
+export default function boxPlot (parent, chartGroup) {
+    const _chart = coordinateGridMixin({});
 
     // Returns a function to compute the interquartile range.
     function DEFAULT_WHISKERS_IQR (k) {
         return function (d) {
-            var q1 = d.quartiles[0],
+            const q1 = d.quartiles[0],
                 q3 = d.quartiles[2],
-                iqr = (q3 - q1) * k,
-                i = -1,
+                iqr = (q3 - q1) * k;
+            let i = -1,
                 j = d.length;
             do { ++i; } while (d[i] < q1 - iqr);
             do { --j; } while (d[j] > q3 + iqr);
@@ -37,19 +42,18 @@ dc.boxPlot = function (parent, chartGroup) {
         };
     }
 
-    var _whiskerIqrFactor = 1.5;
-    var _whiskersIqr = DEFAULT_WHISKERS_IQR;
-    var _whiskers = _whiskersIqr(_whiskerIqrFactor);
+    const _whiskerIqrFactor = 1.5;
+    const _whiskersIqr = DEFAULT_WHISKERS_IQR;
+    const _whiskers = _whiskersIqr(_whiskerIqrFactor);
 
-    var _box = d3.box();
-    var _tickFormat = null;
+    const _box = d3box();
+    let _tickFormat = null;
 
-    var _boxWidth = function (innerChartWidth, xUnits) {
+    let _boxWidth = function (innerChartWidth, xUnits) {
         if (_chart.isOrdinal()) {
             return _chart.x().rangeBand();
-        } else {
-            return innerChartWidth / (1 + _chart.boxPadding()) / xUnits;
         }
+        return innerChartWidth / (1 + _chart.boxPadding()) / xUnits;
     };
 
     // default padding to handle min/max whisker text
@@ -57,20 +61,19 @@ dc.boxPlot = function (parent, chartGroup) {
 
     // default to ordinal
     _chart.x(d3.scale.ordinal());
-    _chart.xUnits(dc.units.ordinal);
+    _chart.xUnits(units.ordinal);
 
     // valueAccessor should return an array of values that can be coerced into numbers
     // or if data is overloaded for a static array of arrays, it should be `Number`.
     // Empty arrays are not included.
-    _chart.data(function (group) {
-        return group.all().map(function (d) {
+    _chart.data(group =>
+        group.all().map((d) => {
             d.map = function (accessor) { return accessor.call(d, d); };
             return d;
-        }).filter(function (d) {
-            var values = _chart.valueAccessor()(d);
+        }).filter((d) => {
+            const values = _chart.valueAccessor()(d);
             return values.length !== 0;
-        });
-    });
+        }));
 
     /**
      * Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
@@ -122,9 +125,9 @@ dc.boxPlot = function (parent, chartGroup) {
         return _chart;
     };
 
-    var boxTransform = function (d, i) {
-        var xOffset = _chart.x()(_chart.keyAccessor()(d, i));
-        return 'translate(' + xOffset + ', 0)';
+    const boxTransform = function (d, i) {
+        const xOffset = _chart.x()(_chart.keyAccessor()(d, i));
+        return `translate(${xOffset}, 0)`;
     };
 
     _chart._preprocessData = function () {
@@ -134,7 +137,7 @@ dc.boxPlot = function (parent, chartGroup) {
     };
 
     _chart.plotData = function () {
-        var _calculatedBoxWidth = _boxWidth(_chart.effectiveWidth(), _chart.xUnitCount());
+        const _calculatedBoxWidth = _boxWidth(_chart.effectiveWidth(), _chart.xUnitCount());
 
         _box.whiskers(_whiskers)
             .width(_calculatedBoxWidth)
@@ -144,7 +147,7 @@ dc.boxPlot = function (parent, chartGroup) {
             .duration(_chart.transitionDuration())
             .tickFormat(_tickFormat);
 
-        var boxesG = _chart.chartBodyG().selectAll('g.box').data(_chart.data(), _chart.keyAccessor());
+        const boxesG = _chart.chartBodyG().selectAll('g.box').data(_chart.data(), _chart.keyAccessor());
 
         renderBoxes(boxesG);
         updateBoxes(boxesG);
@@ -154,20 +157,20 @@ dc.boxPlot = function (parent, chartGroup) {
     };
 
     function renderBoxes (boxesG) {
-        var boxesGEnter = boxesG.enter().append('g');
+        const boxesGEnter = boxesG.enter().append('g');
 
         boxesGEnter
             .attr('class', 'box')
             .attr('transform', boxTransform)
             .call(_box)
-            .on('click', function (d) {
+            .on('click', (d) => {
                 _chart.filter(_chart.keyAccessor()(d));
                 _chart.redrawGroup();
             });
     }
 
     function updateBoxes (boxesG) {
-        dc.transition(boxesG, _chart.transitionDuration(), _chart.transitionDelay())
+        transition(boxesG, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', boxTransform)
             .call(_box)
             .each(function () {
@@ -190,12 +193,12 @@ dc.boxPlot = function (parent, chartGroup) {
                     }
                 });
             } else {
-                var extent = _chart.brush().extent();
-                var start = extent[0];
-                var end = extent[1];
-                var keyAccessor = _chart.keyAccessor();
+                const extent = _chart.brush().extent();
+                const start = extent[0];
+                const end = extent[1];
+                const keyAccessor = _chart.keyAccessor();
                 _chart.g().selectAll('g.box').each(function (d) {
-                    var key = keyAccessor(d);
+                    const key = keyAccessor(d);
                     if (key < start || key >= end) {
                         _chart.fadeDeselected(this);
                     } else {
@@ -215,17 +218,13 @@ dc.boxPlot = function (parent, chartGroup) {
     };
 
     _chart.yAxisMin = function () {
-        var min = d3.min(_chart.data(), function (e) {
-            return d3.min(_chart.valueAccessor()(e));
-        });
-        return dc.utils.subtract(min, _chart.yAxisPadding());
+        const min = d3.min(_chart.data(), e => d3.min(_chart.valueAccessor()(e)));
+        return utils.subtract(min, _chart.yAxisPadding());
     };
 
     _chart.yAxisMax = function () {
-        var max = d3.max(_chart.data(), function (e) {
-            return d3.max(_chart.valueAccessor()(e));
-        });
-        return dc.utils.add(max, _chart.yAxisPadding());
+        const max = d3.max(_chart.data(), e => d3.max(_chart.valueAccessor()(e)));
+        return utils.add(max, _chart.yAxisPadding());
     };
 
     /**
@@ -249,4 +248,4 @@ dc.boxPlot = function (parent, chartGroup) {
     };
 
     return _chart.anchor(parent, chartGroup);
-};
+}
