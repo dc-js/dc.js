@@ -38,18 +38,14 @@ var dc = {
  * dc.chartRegistrar objects maintain sets of all instantiated dc.js charts under named groups
  * and the default group.
  *
- * dc instantiates two chart registrars:
- * * dc.chartRegistry maintains chart groups for reacting to crossfilter filter changes. This chart group
+ * dc instantiates one chart registry: `dc.chartRegistry` maintains chart groups for
+ * reacting to crossfilter filter changes. This chart group
  * often corresponds to a crossfilter instance. It specifies
  * the set of charts which should be updated when a filter changes on one of the charts or when the
  * global functions {@link dc.filterAll dc.filterAll}, {@link dc.refocusAll dc.refocusAll},
  * {@link dc.renderAll dc.renderAll}, {@link dc.redrawAll dc.redrawAll}, or chart functions
  * {@link dc.baseMixin#renderGroup baseMixin.renderGroup},
  * {@link dc.baseMixin#redrawGroup baseMixin.redrawGroup} are called.
- * * dc.filterGroupRegistry maintains groups of charts which should have some brush kept in sync. These
- * may be in the same crossfilter instance, for example a composite chart or two charts using the same
- * dimension. Or they may be in different crossfilter instances but with compatible filters. The first member
- * of the group will receive a `chart._modifyFilter` call; all members will receive `chart._updateFilter`.
  *
  * @namespace chartRegistry
  * @memberof dc
