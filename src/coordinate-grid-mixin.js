@@ -196,7 +196,7 @@ dc.coordinateGridMixin = function (_chart) {
 
         _chartBodyG = _g.append('g').attr('class', 'chart-body')
             .attr('transform', 'translate(' + _chart.margins().left + ', ' + _chart.margins().top + ')')
-            .attr('clip-path', 'url(#' + getClipPathId() + ')');
+            .attr('clip-path', 'url(' + window.location.href + '#' + getClipPathId() + ')');
 
         return _g;
     };
