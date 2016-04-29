@@ -76,7 +76,7 @@ dc.scatterPlot = function (parent, chartGroup) {
             .attr('transform', _locator);
 
         symbols.each(function (d, i) {
-            _filtered[i] = !_chart.filter() || _chart.filter().isFiltered(d.key);
+            _filtered[i] = !_chart.filter() || _chart.filter().isFiltered([d.key[0], d.key[1]]);
         });
 
         dc.transition(symbols, _chart.transitionDuration())
