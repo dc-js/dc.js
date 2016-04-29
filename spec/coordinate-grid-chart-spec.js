@@ -164,7 +164,7 @@ describe('dc.coordinateGridChart', function () {
 
             it('should add clip path refs to the chart body', function () {
                 chart.selectAll('g.chart-body').each(function () {
-                    expect(d3.select(this).attr('clip-path')).toMatchUrl('#coordinate-grid-chart-clip');
+                    expect(d3.select(this).attr('clip-path')).toMatchUrl(window.location.href + '#coordinate-grid-chart-clip');
                 });
             });
 

@@ -3,6 +3,10 @@
  * current filters out of the total number of records in the data set. Once created the data count widget
  * will automatically update the text content of the following elements under the parent element.
  *
+ * Note: this widget works best for the specific case of showing the number of records out of a
+ * total. If you want a more general-purpose numeric display, please use the
+ * {@link dc.numberDisplay} widget instead.
+ *
  * '.total-count' - total number of records
  * '.filter-count' - number of records matched by the current filters
  *

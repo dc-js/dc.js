@@ -75,6 +75,22 @@ describe('dc.rowChart', function () {
         });
     });
 
+    describe('with renderTitleLabel', function () {
+        beforeEach(function () {
+            chart.group(positiveGroupHolder.group);
+            chart.x(d3.scale.linear());
+            chart.title(function () {
+                return 'test title';
+            });
+            chart.renderTitleLabel(true);
+            chart.render();
+        });
+
+        it('should render title label centered', function () {
+            expect(chart.select('g.row .titlerow').attr('dy')).toBeDefined();
+        });
+    });
+
     function itShouldBehaveLikeARowChartWithGroup (groupHolder, N) {
         describe('for ' + groupHolder.groupType + ' data', function () {
             beforeEach(function () {
@@ -344,4 +360,3 @@ describe('dc.rowChart', function () {
     itShouldBehaveLikeARowChartWithGroup(mixedGroupHolder, 5);
     itShouldBehaveLikeARowChartWithGroup(largerGroupHolder, 7);
 });
-

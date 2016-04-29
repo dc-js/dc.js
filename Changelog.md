@@ -1,4 +1,16 @@
 # 2.0 Series
+## 2.0.0 beta 28
+* Line chart labels, by Mohamed Gazal ([1045](https://github.com/dc-js/dc.js/pull/1045))
+* Don't break when scatter plot key contains more than two elements, by Cathy Nangini ([1123](https://github.com/dc-js/dc.js/pull/1123))
+* Fix row chart title label offset, by Adrián de la Rosa ([941](https://github.com/dc-js/dc.js/issues/941) / [1129](https://github.com/dc-js/dc.js/pull/1129))
+* Fix clip paths being dropped by Angular by using abolute paths, by @yandongCoder ([1079](https://github.com/dc-js/dc.js/issues/1079))
+* Fix error with object-valued crossfilter groups in pie chart, by Xaser Acheron ([1085](https://github.com/dc-js/dc.js/issues/1085) / [1128](https://github.com/dc-js/dc.js/pull/1128))
+* Pass `value` function to `stackLayout` to make it possible to specify other stack layouts, by @jetsnguns ([1102](https://github.com/dc-js/dc.js/issues/1102))
+* Clarify documentation for `dataCount`, `rangeChart` ([1076](https://github.com/dc-js/dc.js/issues/1076), [1112](https://github.com/dc-js/dc.js/issues/1112))
+* Documentation syntax fixes by @devginie, Chaitanya Chandukar ([1131](https://github.com/dc-js/dc.js/issues/1131), [1111](https://github.com/dc-js/dc.js/pull/1111))
+* Switch to community fork of crossfilter. (Thanks Timothy Pfafman for correcting the node/browserify code here.) ([1124](https://github.com/dc-js/dc.js/pull/1124))
+* Add an HTML documentation front/welcome page ([1103](https://github.com/dc-js/dc.js/issues/1103))
+
 ## 2.0.0 beta 27
 * Improvements to HTML documentation, by Matt Traynham ([1096](https://github.com/dc-js/dc.js/issues/1096) / [1097](https://github.com/dc-js/dc.js/issues/1097) / [1099](https://github.com/dc-js/dc.js/issues/1099) / [1100](https://github.com/dc-js/dc.js/issues/1100) / [1101](https://github.com/dc-js/dc.js/pull/1101))
 * Ability to set color and opacity of non-brushed ("excluded") points in scatterplot; also separate brushing from highlighting, which seems like a different thing. ([938](https://github.com/dc-js/dc.js/issues/938))

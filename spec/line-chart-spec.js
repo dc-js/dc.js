@@ -123,6 +123,27 @@ describe('dc.lineChart', function () {
             });
         });
 
+        describe('label rendering off', function () {
+            beforeEach(function () {
+                chart.renderLabel(false);
+                chart.render();
+            });
+
+            it('should produce no labels', function () {
+                expect(chart.selectAll('.lineLabel').empty()).toBeTruthy();
+            });
+        });
+
+        describe('label rendering', function () {
+            beforeEach(function () {
+                chart.renderLabel(true);
+                chart.render();
+            });
+
+            it('should generate a label for each datum', lineLabelCount);
+            it('should generate labels with positions corresponding to their data', lineLabelPositions);
+        });
+
         describe('data point highlights and refs off', function () {
             beforeEach(function () {
                 chart.title(function (d) { return d.value; });
@@ -464,6 +485,16 @@ describe('dc.lineChart', function () {
                         });
                     });
                 });
+
+                describe('label rendering', function () {
+                    beforeEach(function () {
+                        chart.renderLabel(true);
+                        chart.render();
+                    });
+
+                    it('should generate a label for each datum', lineLabelCount);
+                    it('should generate labels with positions corresponding to their data', lineLabelPositions);
+                });
             });
 
             describe('with negative data', function () {
@@ -505,6 +536,16 @@ describe('dc.lineChart', function () {
                     expect(nthText(0).text()).toBe('-20');
                     expect(nthText(1).text()).toBe('0');
                     expect(nthText(2).text()).toBe('20');
+                });
+
+                describe('label rendering', function () {
+                    beforeEach(function () {
+                        chart.renderLabel(true);
+                        chart.render();
+                    });
+
+                    it('should generate a label for each datum', lineLabelCount);
+                    it('should generate labels with positions corresponding to their data', lineLabelPositions);
                 });
             });
         });
@@ -650,4 +691,19 @@ describe('dc.lineChart', function () {
             expect(chart.select('circle.dot')[0][0].attributes.fill.value).toMatch(/#FF0000/i);
         });
     });
+
+    function lineLabelCount () {
+        expect(chart.selectAll('text.lineLabel').size()).toBe(chart.stack().length * chart.group().all().length);
+    }
+
+    function lineLabelPositions () {
+        var LABEL_PADDING = 3;
+        chart.selectAll('.stack')[0].forEach(function (stack, i) {
+            d3.select(stack).selectAll('text.lineLabel')[0].forEach(function (lineLabel, j) {
+                expect(+d3.select(lineLabel).attr('x')).toBeCloseTo(chart.x()(chart.data()[i].values[j].x));
+                expect(+d3.select(lineLabel).attr('y') + LABEL_PADDING).toBeCloseTo(chart.y()(chart.data()[i].values[j].y +
+                        chart.data()[i].values[j].y0));
+            });
+        });
+    }
 });
