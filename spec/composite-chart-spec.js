@@ -223,7 +223,7 @@ describe('dc.compositeChart', function () {
             it('should have clip path refs', function () {
                 expect(chart.selectAll('g.chart-body').size()).not.toBe(0);
                 chart.selectAll('g.chart-body').each(function () {
-                    expect(d3.select(this).attr('clip-path')).toMatchUrl('#composite-chart-clip');
+                    expect(d3.select(this).attr('clip-path')).toMatchUrl(window.location.href + '#composite-chart-clip');
                 });
             });
         });

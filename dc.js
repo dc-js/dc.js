@@ -2801,8 +2801,13 @@ dc.coordinateGridMixin = function (_chart) {
      * Get or set the range selection chart associated with this instance. Setting the range selection
      * chart using this function will automatically update its selection brush when the current chart
      * zooms in. In return the given range chart will also automatically attach this chart as its focus
-     * chart hence zoom in when range brush updates. See the [Nasdaq 100
-     * Index](http://dc-js.github.com/dc.js/) example for this effect in action.
+     * chart hence zoom in when range brush updates.
+     *
+     * Usually the range and focus charts will share a dimension. The range chart will set the zoom
+     * boundaries for the focus chart, so its dimension values must be compatible with the domain of
+     * the focus chart.
+     *
+     * See the [Nasdaq 100 Index](http://dc-js.github.com/dc.js/) example for this effect in action.
      * @method rangeChart
      * @memberof dc.coordinateGridMixin
      * @instance
@@ -2864,7 +2869,7 @@ dc.coordinateGridMixin = function (_chart) {
 
         _chartBodyG = _g.append('g').attr('class', 'chart-body')
             .attr('transform', 'translate(' + _chart.margins().left + ', ' + _chart.margins().top + ')')
-            .attr('clip-path', 'url(#' + getClipPathId() + ')');
+            .attr('clip-path', 'url(' + window.location.href + '#' + getClipPathId() + ')');
 
         return _g;
     };
@@ -4228,6 +4233,9 @@ dc.stackMixin = function (_chart) {
             return _stackLayout;
         }
         _stackLayout = stack;
+        if (_stackLayout.values() === d3.layout.stack().values()) {
+            _stackLayout.values(prepareValues);
+        }
         return _chart;
     };
 
@@ -5112,6 +5120,9 @@ dc.pieChart = function (parent, chartGroup) {
         var current = this._current;
         if (isOffCanvas(current)) {
             current = {startAngle: 0, endAngle: 0};
+        } else {
+            // only interpolate startAngle & endAngle, not the whole data object
+            current = {startAngle: current.startAngle, endAngle: current.endAngle};
         }
         var i = d3.interpolate(current, b);
         this._current = i(0);
@@ -5656,6 +5667,7 @@ dc.lineChart = function (parent, chartGroup) {
     var Y_AXIS_REF_LINE_CLASS = 'yRef';
     var X_AXIS_REF_LINE_CLASS = 'xRef';
     var DEFAULT_DOT_OPACITY = 1e-6;
+    var LABEL_PADDING = 3;
 
     var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
     var _renderArea = false;
@@ -5694,6 +5706,10 @@ dc.lineChart = function (parent, chartGroup) {
         drawArea(layersEnter, layers);
 
         drawDots(chartBody, layers);
+
+        if (_chart.renderLabel()) {
+            drawLabels(layers);
+        }
     };
 
     /**
@@ -5934,6 +5950,39 @@ dc.lineChart = function (parent, chartGroup) {
         }
     }
 
+    _chart.label(function (d) {
+        return dc.utils.printSingleValue(d.y0 + d.y);
+    }, false);
+
+    function drawLabels (layers) {
+        layers.each(function (d, layerIndex) {
+            var layer = d3.select(this);
+            var labels = layer.selectAll('text.lineLabel')
+                .data(d.values, dc.pluck('x'));
+
+            labels.enter()
+                .append('text')
+                .attr('class', 'lineLabel')
+                .attr('text-anchor', 'middle');
+
+            dc.transition(labels, _chart.transitionDuration())
+                .attr('x', function (d) {
+                    return dc.utils.safeNumber(_chart.x()(d.x));
+                })
+                .attr('y', function (d) {
+                    var y = _chart.y()(d.y + d.y0) - LABEL_PADDING;
+                    return dc.utils.safeNumber(y);
+                })
+                .text(function (d) {
+                    return _chart.label()(d);
+                });
+
+            dc.transition(labels.exit(), _chart.transitionDuration())
+                .attr('height', 0)
+                .remove();
+        });
+    }
+
     function createRefLines (g) {
         var yRefLine = g.select('path.' + Y_AXIS_REF_LINE_CLASS).empty() ?
             g.append('path').attr('class', Y_AXIS_REF_LINE_CLASS) : g.select('path.' + Y_AXIS_REF_LINE_CLASS);
@@ -6094,6 +6143,10 @@ dc.lineChart = function (parent, chartGroup) {
  * The data count widget is a simple widget designed to display the number of records selected by the
  * current filters out of the total number of records in the data set. Once created the data count widget
  * will automatically update the text content of the following elements under the parent element.
+ *
+ * Note: this widget works best for the specific case of showing the number of records out of a
+ * total. If you want a more general-purpose numeric display, please use the
+ * {@link dc.numberDisplay} widget instead.
  *
  * '.total-count' - total number of records
  * '.filter-count' - number of records matched by the current filters
@@ -8509,6 +8562,7 @@ dc.rowChart = function (parent, chartGroup) {
             var titlelab = rows.select('.' + _titleRowCssClass)
                     .attr('x', _chart.effectiveWidth() - _titleLabelOffsetX)
                     .attr('y', _labelOffsetY)
+                    .attr('dy', _dyOffset)
                     .attr('text-anchor', 'end')
                     .on('click', onClick)
                     .attr('class', function (d, i) {
@@ -9046,7 +9100,7 @@ dc.scatterPlot = function (parent, chartGroup) {
             .attr('transform', _locator);
 
         symbols.each(function (d, i) {
-            _filtered[i] = !_chart.filter() || _chart.filter().isFiltered(d.key);
+            _filtered[i] = !_chart.filter() || _chart.filter().isFiltered([d.key[0], d.key[1]]);
         });
 
         dc.transition(symbols, _chart.transitionDuration())

@@ -745,6 +745,10 @@ The data count widget is a simple widget designed to display the number of recor
 current filters out of the total number of records in the data set. Once created the data count widget
 will automatically update the text content of the following elements under the parent element.
 
+Note: this widget works best for the specific case of showing the number of records out of a
+total. If you want a more general-purpose numeric display, please use the
+[numberDisplay](#dc.numberDisplay) widget instead.
+
 '.total-count' - total number of records
 '.filter-count' - number of records matched by the current filters
 
@@ -3576,8 +3580,13 @@ no effect on elastic scales.)
 Get or set the range selection chart associated with this instance. Setting the range selection
 chart using this function will automatically update its selection brush when the current chart
 zooms in. In return the given range chart will also automatically attach this chart as its focus
-chart hence zoom in when range brush updates. See the [Nasdaq 100
-Index](http://dc-js.github.com/dc.js/) example for this effect in action.
+chart hence zoom in when range brush updates.
+
+Usually the range and focus charts will share a dimension. The range chart will set the zoom
+boundaries for the focus chart, so its dimension values must be compatible with the domain of
+the focus chart.
+
+See the [Nasdaq 100 Index](http://dc-js.github.com/dc.js/) example for this effect in action.
 
 **Kind**: instance method of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 

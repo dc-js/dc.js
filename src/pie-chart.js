@@ -431,6 +431,9 @@ dc.pieChart = function (parent, chartGroup) {
         var current = this._current;
         if (isOffCanvas(current)) {
             current = {startAngle: 0, endAngle: 0};
+        } else {
+            // only interpolate startAngle & endAngle, not the whole data object
+            current = {startAngle: current.startAngle, endAngle: current.endAngle};
         }
         var i = d3.interpolate(current, b);
         this._current = i(0);
