@@ -123,6 +123,17 @@ describe('dc.lineChart', function () {
             });
         });
 
+        describe('label rendering off', function () {
+            beforeEach(function () {
+                chart.renderLabel(false);
+                chart.render();
+            });
+
+            it('should produce no labels', function () {
+                expect(chart.selectAll('.lineLabel').empty()).toBeTruthy();
+            });
+        });
+
         describe('label rendering', function () {
             beforeEach(function () {
                 chart.renderLabel(true);
