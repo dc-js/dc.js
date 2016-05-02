@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-beta.28
+ *  dc 2.0.0-beta.29
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 2.0.0-beta.28
+ * @version 2.0.0-beta.29
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-beta.28',
+    version: '2.0.0-beta.29',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -10456,7 +10456,7 @@ return dc;}
         define(["d3", "crossfilter"], _dc);
     } else if(typeof module === "object" && module.exports) {
         var _d3 = require('d3');
-        var _crossfilter = require('crossfilter');
+        var _crossfilter = require('crossfilter2');
         // When using npm + browserify, 'crossfilter' is a function,
         // since package.json specifies index.js as main function, and it
         // does special handling. When using bower + browserify,
