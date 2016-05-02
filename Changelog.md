@@ -1,4 +1,7 @@
 # 2.0 Series
+## 2.0.0 beta 29
+* Fix node/browserify require(crossfilter2) again (first fix was lost in merge). Thanks Timothy Pfafman! ([1133](https://github.com/dc-js/dc.js/pull/1133))
+
 ## 2.0.0 beta 28
 * Line chart labels, by Mohamed Gazal ([1045](https://github.com/dc-js/dc.js/pull/1045))
 * Don't break when scatter plot key contains more than two elements, by Cathy Nangini ([1123](https://github.com/dc-js/dc.js/pull/1123))
