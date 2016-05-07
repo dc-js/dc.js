@@ -1,12 +1,27 @@
 /* global appendChartID, loadDateFixture, makeDate, cleanDateRange */
 describe('dc.barChart', function () {
     var id, chart, data;
-    var dimension, group;
+    var dimension, group, idSumGroup, valueSumGroup;
+    var linearDimension, linearGroup, linearIdSumGroup, linearValueSumGroup;
+    var ordinalDimension, ordinalGroup, ordinalIdSumGroup, ordinalValueSumGroup;
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
         dimension = data.dimension(function (d) { return d3.time.day.utc(d.dd); });
+        linearDimension = data.dimension(function (d) { return d.id; });
+        ordinalDimension = data.dimension(function (d) { return d.state; });
+
         group = dimension.group();
+        valueSumGroup = dimension.group().reduceSum(function (d) { return d.value; });
+        idSumGroup = dimension.group().reduceSum(function (d) { return d.id; });
+
+        linearGroup = linearDimension.group();
+        linearValueSumGroup = linearDimension.group().reduceSum(function (d) { return d.value; });
+        linearIdSumGroup = linearDimension.group().reduceSum(function (d) { return d.id; });
+
+        ordinalGroup = ordinalDimension.group();
+        ordinalValueSumGroup = ordinalDimension.group().reduceSum(function (d) { return d.value; });
+        ordinalIdSumGroup = ordinalDimension.group().reduceSum(function (d) { return d.id; });
 
         id = 'bar-chart';
         appendChartID(id);
@@ -1189,6 +1204,155 @@ describe('dc.barChart', function () {
         }
     });
 
+    describe('grouped visualization for stacked data', function () {
+        beforeEach(function () {
+            chart
+                .groupBars(true)
+                .renderLabel(true);
+        });
+
+        describe('with linear x domain', function () {
+            beforeEach(function () {
+                chart
+                    .dimension(linearDimension)
+                    .x(d3.scale.linear().domain([1, 10]));
+            });
+
+            describe('with even number of bar charts', function () {
+                beforeEach(function () {
+                    chart
+                        .group(linearValueSumGroup)
+                        .stack(linearIdSumGroup)
+                        .render();
+                });
+
+                it('bars should come one after the other', barSpacing);
+                it('should generate labels with positions corresponding to their data', barLabels);
+
+                describe('with centered bars', function () {
+                    beforeEach(function () {
+                        chart
+                            .centerBar(true)
+                            .render();
+                    });
+
+                    it('should position bars centered around their data points', barCentering);
+                });
+            });
+
+            describe('with odd number of bar charts', function () {
+                beforeEach(function () {
+                    chart
+                        .group(linearValueSumGroup)
+                        .stack(linearIdSumGroup)
+                        .stack(linearGroup)
+                        .render();
+                });
+
+                it('bars should come one after the other', barSpacing);
+                it('should generate labels with positions corresponding to their data', barLabels);
+
+                describe('with centered bars', function () {
+                    beforeEach(function () {
+                        chart
+                            .centerBar(true)
+                            .render();
+                    });
+
+                    it('should position bars centered around their data points', barCentering);
+                });
+            });
+        });
+
+        describe('with ordinal x domain', function () {
+            beforeEach(function () {
+                chart
+                    .dimension(ordinalDimension)
+                    .x(d3.scale.ordinal())
+                    .xUnits(dc.units.ordinal);
+            });
+
+            describe('with even number of bar charts', function () {
+                beforeEach(function () {
+                    chart
+                        .group(ordinalValueSumGroup)
+                        .stack(ordinalIdSumGroup)
+                        .render();
+                });
+
+                it('bars should come one after the other', barSpacing);
+                it('should generate labels with positions corresponding to their data', barLabels);
+            });
+
+            describe('with odd number of bar charts', function () {
+                beforeEach(function () {
+                    chart
+                        .group(ordinalValueSumGroup)
+                        .stack(ordinalIdSumGroup)
+                        .stack(ordinalGroup)
+                        .render();
+                });
+
+                it('bars should come one after the other', barSpacing);
+                it('should generate labels with positions corresponding to their data', barLabels);
+            });
+        });
+
+        describe('with date x domain', function () {
+            beforeEach(function () {
+                chart
+                    .dimension(dimension)
+                    .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]))
+                    .xUnits(d3.time.days.utc);
+            });
+
+            describe('with even number of bar charts', function () {
+                beforeEach(function () {
+                    chart
+                        .group(valueSumGroup)
+                        .stack(idSumGroup)
+                        .render();
+                });
+
+                it('bars should come one after the other', barSpacing);
+                it('should generate labels with positions corresponding to their data', barLabels);
+
+                describe('with centered bars', function () {
+                    beforeEach(function () {
+                        chart
+                            .centerBar(true)
+                            .render();
+                    });
+
+                    it('should position bars centered around their data points', barCentering);
+                });
+            });
+
+            describe('with odd number of bar charts', function () {
+                beforeEach(function () {
+                    chart
+                        .group(valueSumGroup)
+                        .stack(idSumGroup)
+                        .stack(group)
+                        .render();
+                });
+
+                it('bars should come one after the other', barSpacing);
+                it('should generate labels with positions corresponding to their data', barLabels);
+
+                describe('with centered bars', function () {
+                    beforeEach(function () {
+                        chart
+                            .centerBar(true)
+                            .render();
+                    });
+
+                    it('should position bars centered around their data points', barCentering);
+                });
+            });
+        });
+    });
+
     function nthStack (n) {
         var stack = d3.select(chart.selectAll('.stack')[0][n]);
 
@@ -1201,8 +1365,8 @@ describe('dc.barChart', function () {
         };
 
         stack.forEachBar = function (assertions) {
-            this.selectAll('rect.bar').each(function (d) {
-                assertions(d3.select(this), d);
+            this.selectAll('rect.bar').each(function (d, i) {
+                assertions(d3.select(this), d, i);
             });
         };
 
@@ -1210,8 +1374,8 @@ describe('dc.barChart', function () {
     }
 
     function forEachBar (assertions) {
-        chart.selectAll('rect.bar').each(function (d) {
-            assertions(d3.select(this), d);
+        chart.selectAll('rect.bar').each(function (d, i) {
+            assertions(d3.select(this), d, i);
         });
     }
 
@@ -1226,5 +1390,37 @@ describe('dc.barChart', function () {
         var x = numAttr('x'), wid = numAttr('width');
         expect(x(nthStack(0).nthBar(n)) + wid(nthStack(0).nthBar(n)))
             .toBeLessThan(x(nthStack(0).nthBar(n + 1)));
+    }
+
+    function barSpacing () {
+        var dx = [];
+        var barWidth = +nthStack(0).nthBar(0).attr('width');
+        chart.selectAll('.stack')[0].forEach(function (stack, i) {
+            dx[i] = +d3.select(stack).select('.bar').attr('x');
+
+            if (i > 0) {
+                expect(dx[i] - dx[i - 1]).toBeCloseTo(barWidth + chart.gap());
+            }
+        });
+    }
+
+    function barLabels () {
+        var barWidth = +nthStack(0).nthBar(0).attr('width');
+        chart.selectAll('.stack')[0].forEach(function (stack, i) {
+            d3.select(stack).selectAll('text.barLabel')[0].forEach(function (barLabel, j) {
+                var barX = +nthStack(i).nthBar(j).attr('x');
+                expect(+d3.select(barLabel).attr('x')).toBeWithinDelta(barX, barX + barWidth);
+            });
+        });
+    }
+
+    function barCentering () {
+        var barWidth = +nthStack(0).nthBar(0).attr('width');
+        var noOfStacks = chart.selectAll('.stack')[0].length;
+
+        nthStack(0).forEachBar(function (bar, datum, i) {
+            var barPosition = chart.x()(datum.data.key);
+            expect((+bar.attr('x') + +nthStack(noOfStacks - 1).nthBar(i).attr('x') + barWidth) / 2).toBeCloseTo(barPosition);
+        });
     }
 });
