@@ -34,7 +34,7 @@ dc.barChart = function (parent, chartGroup) {
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
     var _centerBar = false;
     var _alwaysUseRounding = false;
-    
+
     var _barWidth;
 
     var _renderType = 'stack';
@@ -87,9 +87,9 @@ dc.barChart = function (parent, chartGroup) {
         return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
     }
 
-    function groupBarHeight (d){
+    function groupBarHeight (d) {
         var margin = _chart.margins();
-        return dc.utils.safeNumber(Math.abs(_chart.height() - margin.top - margin.bottom - _chart.y()(d.y))); 
+        return dc.utils.safeNumber(Math.abs(_chart.height() - margin.top - margin.bottom - _chart.y()(d.y)));
     }
 
     function renderLabels (layer, layerIndex, d) {
@@ -151,87 +151,84 @@ dc.barChart = function (parent, chartGroup) {
         if (_chart.isOrdinal()) {
             bars.on('click', _chart.onClick);
         }
-        
-        if(_renderType === 'stack'){
-          dc.transition(bars, _chart.transitionDuration())
-              .attr('x', function (d) {
-                  var x = _chart.x()(d.x);
-                  if (_centerBar) {
-                      x -= _barWidth / 2;
-                  }
-                  if (_chart.isOrdinal() && _gap !== undefined) {
-                      x += _gap / 2;
-                  }
-                  return dc.utils.safeNumber(x);
-              })
-              .attr('y', function (d) {
-                  var y = _chart.y()(d.y + d.y0);
 
-                  if (d.y < 0) {
-                      y -= stackBarHeight(d);
-                  }
+        if (_renderType === 'stack') {
+            dc.transition(bars, _chart.transitionDuration())
+                .attr('x', function (d) {
+                    var x = _chart.x()(d.x);
+                    if (_centerBar) {
+                        x -= _barWidth / 2;
+                    }
+                    if (_chart.isOrdinal() && _gap !== undefined) {
+                        x += _gap / 2;
+                    }
+                    return dc.utils.safeNumber(x);
+                })
+                .attr('y', function (d) {
+                    var y = _chart.y()(d.y + d.y0);
 
-                  return dc.utils.safeNumber(y);
-              })
-              .attr('width', _barWidth)
-              .attr('height', function (d) {
-                  return stackBarHeight(d);
-              })
-              .attr('fill', dc.pluck('data', _chart.getColor))
-              .select('title').text(dc.pluck('data', _chart.title(d.name)));
+                    if (d.y < 0) {
+                        y -= stackBarHeight(d);
+                    }
 
-        }
-        else if(_renderType === 'group'){
-          var groups = _chart.stack().map(function(d){ return d.name;});
-          var groupRange = d3.scale.ordinal().domain(groups).rangePoints([0, _barWidth - _barWidth/2]);
-          dc.transition(bars, _chart.transitionDuration())
-            .attr('x', function(d, i){
-                  var x = _chart.x()(d.x) + groupRange(d.layer);
-                  if (_centerBar) {
-                      x -= _barWidth / 2;
-                  }
-                  if (_chart.isOrdinal() && _gap !== undefined) {
-                      x += _gap / 2;
-                  }
-                  return dc.utils.safeNumber(x);
-            })
-            .attr('width', (_barWidth/_chart.stack().length) - 3)
-            .attr('y', function(d) {
-                var y = _chart.y()(d.y);
-                
-                  if (d.y < 0) {
-                      y -= groupBarHeight(d);
-                  }
-                return dc.utils.safeNumber(y);
-            })
-            .attr('height', function(d){
-              return groupBarHeight(d);
-            });
-        }
-        else if(_renderType === 'overlap'){
-          dc.transition(bars, _chart.transitionDuration())
-            .attr('x', function(d, i){
-                  var x = _chart.x()(d.x);
-                  if (_centerBar) {
-                      x -= _barWidth / 2;
-                  }
-                  if (_chart.isOrdinal() && _gap !== undefined) {
-                      x += _gap / 2;
-                  }
-                  return dc.utils.safeNumber(x);
-            })
-            .attr('y', function(d) {
-                var y = _chart.y()(d.y);
-                
-                  if (d.y < 0) {
-                      y -= groupBarHeight(d);
-                  }
-                return dc.utils.safeNumber(y);
-            })
-            .attr('width', _barWidth)
-            .attr('height', function(d){
-              return groupBarHeight(d);
-            });
+                    return dc.utils.safeNumber(y);
+                })
+                .attr('width', _barWidth)
+                .attr('height', function (d) {
+                    return stackBarHeight(d);
+                })
+                .attr('fill', dc.pluck('data', _chart.getColor))
+                .select('title').text(dc.pluck('data', _chart.title(d.name)));
+        } else if (_renderType === 'group') {
+            var groups = _chart.stack().map(function (d) { return d.name;});
+            var groupRange = d3.scale.ordinal().domain(groups).rangePoints([0, _barWidth - _barWidth / 2]);
+            dc.transition(bars, _chart.transitionDuration())
+                .attr('x', function (d, i) {
+                    var x = _chart.x()(d.x) + groupRange(d.layer);
+                    if (_centerBar) {
+                        x -= _barWidth / 2;
+                    }
+                    if (_chart.isOrdinal() && _gap !== undefined) {
+                        x += _gap / 2;
+                    }
+                    return dc.utils.safeNumber(x);
+                })
+                .attr('width', (_barWidth / _chart.stack().length) - 3)
+                .attr('y', function (d) {
+                    var y = _chart.y()(d.y);
+
+                    if (d.y < 0) {
+                        y -= groupBarHeight(d);
+                    }
+                    return dc.utils.safeNumber(y);
+                })
+                .attr('height', function (d) {
+                    return groupBarHeight(d);
+                });
+        } else if (_renderType === 'overlap') {
+            dc.transition(bars, _chart.transitionDuration())
+                .attr('x', function (d, i) {
+                    var x = _chart.x()(d.x);
+                    if (_centerBar) {
+                        x -= _barWidth / 2;
+                    }
+                    if (_chart.isOrdinal() && _gap !== undefined) {
+                        x += _gap / 2;
+                    }
+                    return dc.utils.safeNumber(x);
+                })
+                .attr('y', function (d) {
+                    var y = _chart.y()(d.y);
+
+                    if (d.y < 0) {
+                        y -= groupBarHeight(d);
+                    }
+                    return dc.utils.safeNumber(y);
+                })
+                .attr('width', _barWidth)
+                .attr('height', function (d) {
+                    return groupBarHeight(d);
+                });
         }
         dc.transition(bars.exit(), _chart.transitionDuration())
             .attr('height', 0)
@@ -388,7 +385,7 @@ dc.barChart = function (parent, chartGroup) {
      * @memberof dc.barChart
      * @instance
      * @example
-     * chart.round(function(n) { return Math.floor(n) + 0.5; });
+     * chart.round(function (n) { return Math.floor(n) + 0.5; });
      * @param {Boolean} [alwaysUseRounding=false]
      * @return {Boolean}
      * @return {dc.barChart}
@@ -433,12 +430,12 @@ dc.barChart = function (parent, chartGroup) {
      * @return {String}
      * @return {dc.barChart}
      */
-    _chart.renderType = function(_rendtype){
-      if(!arguments.length){
-        return _renderType;
-      }
-      _renderType = _rendtype;
-      return _chart;
+    _chart.renderType = function (renderType) {
+        if (!arguments.length) {
+            return _renderType;
+        }
+        _renderType = renderType;
+        return _chart;
     };
 
     dc.override(_chart, 'xAxisMax', function () {
@@ -450,21 +447,20 @@ dc.barChart = function (parent, chartGroup) {
         return max;
     });
 
-    dc.override(_chart, 'yAxisMax', function(){
-      var max;
-      if(_renderType === 'stack'){
-        max = d3.max(flattenStack(), function(p){
-          return p.y + p.y0;
-        });
-      }
-      else if(_renderType === 'group' || _renderType === 'overlap'){
-        max = d3.max(flattenStack(), dc.pluck('y'));
-      }
-      return dc.utils.add(max, _chart.yAxisPadding());
+    dc.override(_chart, 'yAxisMax', function () {
+        var max;
+        if (_renderType === 'stack') {
+            max = d3.max(flattenStack(), function (p) {
+                return p.y + p.y0;
+            });
+        } else if (_renderType === 'group' || _renderType === 'overlap') {
+            max = d3.max(flattenStack(), dc.pluck('y'));
+        }
+        return dc.utils.add(max, _chart.yAxisPadding());
     });
-  
+
     // Not dry but need flattenStack here and don't want to expose it, possible move to util
-    function flattenStack() {
+    function flattenStack () {
         var valueses = _chart.data().map(function (layer) { return layer.values; });
         return Array.prototype.concat.apply([], valueses);
     }
