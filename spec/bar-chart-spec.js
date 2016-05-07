@@ -1420,7 +1420,7 @@ describe('dc.barChart', function () {
 
         nthStack(0).forEachBar(function (bar, datum, i) {
             var barPosition = chart.x()(datum.data.key);
-            expect((+bar.attr('x') + +nthStack(noOfStacks - 1).nthBar(i).attr('x') + barWidth) / 2).toBeCloseTo(barPosition);
+            expect((+bar.attr('x') + (+nthStack(noOfStacks - 1).nthBar(i).attr('x')) + barWidth) / 2).toBeCloseTo(barPosition);
         });
     }
 });
