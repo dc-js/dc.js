@@ -93,6 +93,7 @@ dc.barChart = function (parent, chartGroup) {
     }
 
     function renderLabels (layer, layerIndex, d) {
+        var barHeight = _chart.renderType() === 'stack' ? stackBarHeight : groupBarHeight;
         var labels = layer.selectAll('text.barLabel')
             .data(d.values, dc.pluck('x'));
 
@@ -422,6 +423,16 @@ dc.barChart = function (parent, chartGroup) {
             .classed('fadeout', false);
     };
 
+    /**
+     * Set or get the way that multiple bars should be combined. Supported values are `'stack'`,
+     * `'group'`, and `'overlap'`.
+     * @method renderType
+     * @memberof dc.barChart
+     * @instance
+     * @param {String} [renderType='stack']
+     * @return {String}
+     * @return {dc.barChart}
+     */
     _chart.renderType = function(_rendtype){
       if(!arguments.length){
         return _renderType;
