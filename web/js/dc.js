@@ -5288,11 +5288,14 @@ dc.pieChart = function (parent, chartGroup) {
 dc.barChart = function (parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
     var DEFAULT_GAP_BETWEEN_BARS = 2;
+    var DEFAULT_GAP_BETWEEN_BAR_GROUPS = 5;
     var LABEL_PADDING = 3;
 
     var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
 
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
+    var _groupGap = DEFAULT_GAP_BETWEEN_BAR_GROUPS;
+    var _groupBars = false;
     var _centerBar = false;
     var _alwaysUseRounding = false;
 
@@ -5336,7 +5339,7 @@ dc.barChart = function (parent, chartGroup) {
 
             renderBars(layer, i, d);
 
-            if (_chart.renderLabel() && last === i) {
+            if (_chart.renderLabel() && (_groupBars || last === i)) {
                 renderLabels(layer, i, d);
             }
         });
@@ -5363,8 +5366,18 @@ dc.barChart = function (parent, chartGroup) {
         dc.transition(labels, _chart.transitionDuration())
             .attr('x', function (d) {
                 var x = _chart.x()(d.x);
-                if (!_centerBar) {
-                    x += _barWidth / 2;
+                if (_groupBars) {
+                    x += _chart.groupGap() / 2;
+                    x += layerIndex * (_barWidth + _gap);
+                    x += _gap / 2;
+                }
+                x += _barWidth / 2;
+                if (_centerBar && !_chart.isOrdinal()) {
+                    if (_groupBars) {
+                        x -= ((_barWidth + _gap) * _chart.stack().length + _chart.groupGap()) / 2;
+                    } else {
+                        x -= _barWidth / 2;
+                    }
                 }
                 return dc.utils.safeNumber(x);
             })
@@ -5408,8 +5421,17 @@ dc.barChart = function (parent, chartGroup) {
         dc.transition(bars, _chart.transitionDuration())
             .attr('x', function (d) {
                 var x = _chart.x()(d.x);
-                if (_centerBar) {
-                    x -= _barWidth / 2;
+                if (_groupBars) {
+                    x += _chart.groupGap() / 2;
+                    x += layerIndex * (_barWidth + _gap);
+                    x += _gap / 2;
+                }
+                if (_centerBar && !_chart.isOrdinal()) {
+                    if (_groupBars) {
+                        x -= ((_barWidth + _gap) * _chart.stack().length + _chart.groupGap()) / 2;
+                    } else {
+                        x -= _barWidth / 2;
+                    }
                 }
                 if (_chart.isOrdinal() && _gap !== undefined) {
                     x += _gap / 2;
@@ -5441,13 +5463,24 @@ dc.barChart = function (parent, chartGroup) {
         if (_barWidth === undefined) {
             var numberOfBars = _chart.xUnitCount();
 
-            // please can't we always use rangeBands for bar charts?
-            if (_chart.isOrdinal() && _gap === undefined) {
-                _barWidth = Math.floor(_chart.x().rangeBand());
-            } else if (_gap) {
-                _barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
+            if (_groupBars) {
+                var numberOfStacks = _chart.stack().length;
+
+                if (_chart.isOrdinal()) {
+                    _barWidth = Math.floor((_chart.x().rangeBand() - _chart.groupGap()) / numberOfStacks - _gap);
+                } else {
+                    _barWidth = Math.floor((_chart.xAxisLength() - (_chart.xUnitCount() - 1) * _chart.groupGap() -
+                            numberOfStacks * _gap) / (numberOfBars * numberOfStacks));
+                }
             } else {
-                _barWidth = Math.floor(_chart.xAxisLength() / (1 + _chart.barPadding()) / numberOfBars);
+                // please can't we always use rangeBands for bar charts?
+                if (_chart.isOrdinal() && _gap === undefined) {
+                    _barWidth = Math.floor(_chart.x().rangeBand());
+                } else if (_gap) {
+                    _barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
+                } else {
+                    _barWidth = Math.floor(_chart.xAxisLength() / (1 + _chart.barPadding()) / numberOfBars);
+                }
             }
 
             if (_barWidth === Infinity || isNaN(_barWidth) || _barWidth < MIN_BAR_WIDTH) {
@@ -5507,6 +5540,21 @@ dc.barChart = function (parent, chartGroup) {
         _chart._onClick(d.data);
     });
 
+    dc.override(_chart, 'data', function () {
+        var data = _chart._data();
+
+        if (_groupBars) {
+            // set y0 to 0 on all layers
+            data.forEach(function (layer) {
+                layer.values.forEach(function (value) {
+                    value.y0 = 0;
+                });
+            });
+        }
+
+        return data;
+    });
+
     /**
      * Get or set the spacing between bars as a fraction of bar size. Valid values are between 0-1.
      * Setting this value will also remove any previously set {@link dc.barChart#gap gap}. See the
@@ -5560,6 +5608,41 @@ dc.barChart = function (parent, chartGroup) {
             return _gap;
         }
         _gap = gap;
+        return _chart;
+    };
+
+    /**
+     * Manually set fixed gap (in px) between bar groups instead of relying on the default auto-generated
+     * gap.  Only applicable for grouped bar charts.
+     * @name groupGap
+     * @memberof dc.barChart
+     * @instance
+     * @param {Number} [groupGap=5]
+     * @return {Number}
+     * @return {dc.barChart}
+     */
+    _chart.groupGap = function (groupGap) {
+        if (!arguments.length) {
+            return _groupGap;
+        }
+        _groupGap = groupGap;
+        return _chart;
+    };
+
+    /**
+     * Set to true to group bars instead of stacking them.
+     * @name groupBars
+     * @memberof dc.barChart
+     * @instance
+     * @param {Boolean} [groupBars=false]
+     * @return {Boolean}
+     * @return {dc.barChart}
+     */
+    _chart.groupBars = function (groupBars) {
+        if (!arguments.length) {
+            return _groupBars;
+        }
+        _groupBars = groupBars;
         return _chart;
     };
 
