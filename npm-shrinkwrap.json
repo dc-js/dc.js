@@ -1,0 +1,38 @@
+{
+    "name": "dc",
+    "version": "2.0.0-beta.29",
+    "dependencies": {
+        "crossfilter2": {
+            "version": "~1.3"
+        },
+        "d3": {
+            "version": "^3"
+        },
+        "grunt-gh-pages": {
+            "version": "1.1.0",
+            "from": "grunt-gh-pages@>=1.1.0 <1.2.0",
+            "resolved": "https://registry.npmjs.org/grunt-gh-pages/-/grunt-gh-pages-1.1.0.tgz",
+            "dependencies": {
+                "async": {
+                    "version": "0.2.9"
+                },
+                "graceful-fs": {
+                    "version": "3.0.8"
+                },
+                "q": {
+                    "version": "0.9.3"
+                },
+                "q-io": {
+                    "version": "2.*",
+                    "GW-note-5-23-16": "this is the important override"
+                },
+                "url-safe": {
+                    "version": "1.0.1"
+                },
+                "wrench": {
+                    "version": "1.5.1"
+                }
+            }
+        }
+    }
+}
