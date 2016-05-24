@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-beta.29
+ *  dc 2.0.0-beta.30
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 2.0.0-beta.29
+ * @version 2.0.0-beta.30
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-beta.29',
+    version: '2.0.0-beta.30',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -2860,11 +2860,13 @@ dc.coordinateGridMixin = function (_chart) {
             _parent = parent;
         }
 
+        var href = window.location.href.split('#')[0];
+
         _g = _parent.append('g');
 
         _chartBodyG = _g.append('g').attr('class', 'chart-body')
             .attr('transform', 'translate(' + _chart.margins().left + ', ' + _chart.margins().top + ')')
-            .attr('clip-path', 'url(' + window.location.href + '#' + getClipPathId() + ')');
+            .attr('clip-path', 'url(' + href + '#' + getClipPathId() + ')');
 
         return _g;
     };
