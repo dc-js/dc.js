@@ -2633,8 +2633,10 @@ chart.multiple(true);
 <a name="dc.selectMenu+promptValue"></a>
 
 #### selectMenu.promptValue
-Controls the default value when only the prompt value is selected. If `null`, no filtering
-will occur when just the prompt is selected.
+Controls the default value to be used for
+[dimension.filter](https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter)
+when only the prompt value is selected. If `null` (the default), no filtering will occur when
+just the prompt is selected.
 
 **Kind**: instance property of <code>[selectMenu](#dc.selectMenu)</code>  
 
