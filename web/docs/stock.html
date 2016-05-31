@@ -25,7 +25,7 @@
 
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-pi">'use strict'</span>;
+            <div class="content"><div class='highlight'><pre><span class="hljs-meta">'use strict'</span>;
 
 <span class="hljs-comment">/* jshint globalstrict: true */</span>
 <span class="hljs-comment">/* global dc,d3,crossfilter,colorbrewer */</span></pre></div></div>
@@ -97,8 +97,7 @@ filtered by other page controls.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    &lt;div id=<span class="hljs-string">'your-chart'</span>&gt;<span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
-</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    &lt;div id=<span class="hljs-string">'your-chart'</span>&gt;<span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span></pre></div></div>
             
         </li>
         
@@ -113,8 +112,7 @@ filtered by other page controls.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    &lt;div id=<span class="hljs-string">'chart'</span>&gt;<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>Days by Gain or Loss<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
-</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    &lt;div id=<span class="hljs-string">'chart'</span>&gt;<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>Days by Gain or Loss<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span><span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span></pre></div></div>
             
         </li>
         
@@ -160,12 +158,11 @@ set <code>chart.controlsUseVisibility(false)</code> and use that style instead.<
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    &lt;div id=<span class="hljs-string">'chart'</span>&gt;
-       <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">a</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">'reset'</span>
-          <span class="hljs-attribute">href</span>=<span class="hljs-value">'javascript:myChart.filterAll();dc.redrawAll();'</span>
-          <span class="hljs-attribute">style</span>=<span class="hljs-value">'visibility: hidden;'</span>&gt;</span>reset<span class="hljs-tag">&lt;/<span class="hljs-title">a</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
-</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    &lt;div id='chart'&gt;
+       &lt;a class='reset'
+          href='javascript:myChart.filterAll();dc.redrawAll();'
+          style='visibility: hidden;'&gt;reset&lt;/a&gt;
+    &lt;/div&gt;</pre></div></div>
             
         </li>
         
@@ -181,14 +178,12 @@ any html element with its css class set to <code>filter</code></p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    &lt;div id=<span class="hljs-string">'chart'</span>&gt;
-        <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">'reset'</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">'visibility: hidden;'</span>&gt;</span>
-          Current filter: <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">'filter'</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
-        <span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
-    <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
-*/
-
-</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>    &lt;div id='chart'&gt;
+        &lt;span class='reset' style='visibility: hidden;'&gt;
+          Current filter: &lt;span class='filter'&gt;&lt;/span&gt;
+        &lt;/span&gt;
+    &lt;/div&gt;
+*/</pre></div></div>
             
         </li>
         
@@ -665,7 +660,7 @@ to generate x, y, and radius for each key (bubble) in the group</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .colorDomain([-<span class="hljs-number">500</span>, <span class="hljs-number">500</span>])</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        .colorDomain([<span class="hljs-number">-500</span>, <span class="hljs-number">500</span>])</pre></div></div>
             
         </li>
         
@@ -762,8 +757,8 @@ to generate x, y, and radius for each key (bubble) in the group</p>
             <span class="hljs-keyword">return</span> p.value.fluctuationPercentage;
         })
         .maxBubbleRelativeSize(<span class="hljs-number">0.3</span>)
-        .x(d3.scale.linear().domain([-<span class="hljs-number">2500</span>, <span class="hljs-number">2500</span>]))
-        .y(d3.scale.linear().domain([-<span class="hljs-number">100</span>, <span class="hljs-number">100</span>]))
+        .x(d3.scale.linear().domain([<span class="hljs-number">-2500</span>, <span class="hljs-number">2500</span>]))
+        .y(d3.scale.linear().domain([<span class="hljs-number">-100</span>, <span class="hljs-number">100</span>]))
         .r(d3.scale.linear().domain([<span class="hljs-number">0</span>, <span class="hljs-number">4000</span>]))</pre></div></div>
             
         </li>
@@ -1165,7 +1160,7 @@ on other charts within the same chart group.
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .colorDomain([-<span class="hljs-number">1750</span>, <span class="hljs-number">1644</span>])</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        .colorDomain([<span class="hljs-number">-1750</span>, <span class="hljs-number">1644</span>])</pre></div></div>
             
         </li>
         
@@ -1348,7 +1343,7 @@ on other charts within the same chart group.
             
             <div class="content"><div class='highlight'><pre>        .round(dc.round.floor)
         .alwaysUseRounding(<span class="hljs-literal">true</span>)
-        .x(d3.scale.linear().domain([-<span class="hljs-number">25</span>, <span class="hljs-number">25</span>]))
+        .x(d3.scale.linear().domain([<span class="hljs-number">-25</span>, <span class="hljs-number">25</span>]))
         .renderHorizontalGridLines(<span class="hljs-literal">true</span>)</pre></div></div>
             
         </li>
@@ -1598,10 +1593,10 @@ an optional chart group for this chart to be scoped within. When a chart belongs
 to a specific group then any interaction with such chart will only trigger redraw
 on other charts within the same chart group.
 <br>API: <a href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#data-count-widget">Data Count Widget</a></p>
-<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">'dc-data-count'</span>&gt;</span>
- <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">'filter-count'</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
- selected out of <span class="hljs-tag">&lt;<span class="hljs-title">span</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">'total-count'</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span> records.
-<span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'dc-data-count'</span>&gt;</span>
+ <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'filter-count'</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+ selected out of <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'total-count'</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span> records.
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
 </code></pre>
 
             </div>
@@ -1661,17 +1656,17 @@ on other charts within the same chart group.
 <br>API: <a href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#data-table-widget">Data Table Widget</a></p>
 <p>You can statically define the headers like in</p>
 <pre><code class="lang-html">   <span class="hljs-comment">&lt;!-- anchor div for data table --&gt;</span>
-   <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">'data-table'</span>&gt;</span>
+   <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">'data-table'</span>&gt;</span>
       <span class="hljs-comment">&lt;!-- create a custom header --&gt;</span>
-      <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">'header'</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>Date<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>Open<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>Close<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>Change<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
-          <span class="hljs-tag">&lt;<span class="hljs-title">span</span>&gt;</span>Volume<span class="hljs-tag">&lt;/<span class="hljs-title">span</span>&gt;</span>
-      <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'header'</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>Date<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>Open<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>Close<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>Change<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>Volume<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
       <span class="hljs-comment">&lt;!-- data rows will filled in here --&gt;</span>
-   <span class="hljs-tag">&lt;/<span class="hljs-title">div</span>&gt;</span>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
 </code></pre>
 <p>or do it programmatically using <code>.columns()</code>.</p>
 
@@ -1986,7 +1981,7 @@ on other charts within the same chart group.
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .colorDomain([-<span class="hljs-number">5</span>, <span class="hljs-number">200</span>])</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        .colorDomain([<span class="hljs-number">-5</span>, <span class="hljs-number">200</span>])</pre></div></div>
             
         </li>
         
@@ -2226,7 +2221,7 @@ svg to generate its overlay layer</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>            .colorDomain([-<span class="hljs-number">5</span>, <span class="hljs-number">200</span>])</pre></div></div>
+            <div class="content"><div class='highlight'><pre>            .colorDomain([<span class="hljs-number">-5</span>, <span class="hljs-number">200</span>])</pre></div></div>
             
         </li>
         

@@ -2865,11 +2865,13 @@ dc.coordinateGridMixin = function (_chart) {
             _parent = parent;
         }
 
+        var href = window.location.href.split('#')[0];
+
         _g = _parent.append('g');
 
         _chartBodyG = _g.append('g').attr('class', 'chart-body')
             .attr('transform', 'translate(' + _chart.margins().left + ', ' + _chart.margins().top + ')')
-            .attr('clip-path', 'url(' + window.location.href + '#' + getClipPathId() + ')');
+            .attr('clip-path', 'url(' + href + '#' + getClipPathId() + ')');
 
         return _g;
     };

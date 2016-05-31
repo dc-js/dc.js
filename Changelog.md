@@ -5,24 +5,28 @@
  * Functional-style filter handlers: instead of modifying the array of filters in-place, filter handlers must return the new filter array. This is consistent with the old documention, but a different implementation: any changes to the `filters` argument will be ignored unless they are returned. This should make filter handlers easier to reason about.
 
 # 2.0 Series
+## 2.0.0 beta 30
+* Fix the doc build, which was crashing due to an impolite library and the upgrade of another one that knew nothing about it ([#1142](https://github.com/dc-js/dc.js/issues/1142))
+* Strip fragment from URL before creating clip path URL ([#1079](https://github.com/dc-js/dc.js/issues/1079))
+
 ## 2.0.0 beta 29
-* Fix node/browserify require(crossfilter2) again (first fix was lost in merge). Thanks Timothy Pfafman! ([1133](https://github.com/dc-js/dc.js/pull/1133))
+* Fix node/browserify require(crossfilter2) again (first fix was lost in merge). Thanks Timothy Pfafman! ([#1133](https://github.com/dc-js/dc.js/pull/1133))
 
 ## 2.0.0 beta 28
-* Line chart labels, by Mohamed Gazal ([1045](https://github.com/dc-js/dc.js/pull/1045))
-* Don't break when scatter plot key contains more than two elements, by Cathy Nangini ([1123](https://github.com/dc-js/dc.js/pull/1123))
-* Fix row chart title label offset, by Adrián de la Rosa ([941](https://github.com/dc-js/dc.js/issues/941) / [1129](https://github.com/dc-js/dc.js/pull/1129))
-* Fix clip paths being dropped by Angular by using abolute paths, by @yandongCoder ([1079](https://github.com/dc-js/dc.js/issues/1079))
-* Fix error with object-valued crossfilter groups in pie chart, by Xaser Acheron ([1085](https://github.com/dc-js/dc.js/issues/1085) / [1128](https://github.com/dc-js/dc.js/pull/1128))
-* Pass `value` function to `stackLayout` to make it possible to specify other stack layouts, by @jetsnguns ([1102](https://github.com/dc-js/dc.js/issues/1102))
-* Clarify documentation for `dataCount`, `rangeChart` ([1076](https://github.com/dc-js/dc.js/issues/1076), [1112](https://github.com/dc-js/dc.js/issues/1112))
-* Documentation syntax fixes by @devginie, Chaitanya Chandukar ([1131](https://github.com/dc-js/dc.js/issues/1131), [1111](https://github.com/dc-js/dc.js/pull/1111))
-* Switch to community fork of crossfilter. (Thanks Timothy Pfafman for correcting the node/browserify code here.) ([1124](https://github.com/dc-js/dc.js/pull/1124))
-* Add an HTML documentation front/welcome page ([1103](https://github.com/dc-js/dc.js/issues/1103))
+* Line chart labels, by Mohamed Gazal ([#1045](https://github.com/dc-js/dc.js/pull/1045))
+* Don't break when scatter plot key contains more than two elements, by Cathy Nangini ([#1123](https://github.com/dc-js/dc.js/pull/1123))
+* Fix row chart title label offset, by Adrián de la Rosa ([#941](https://github.com/dc-js/dc.js/issues/941) / [#1129](https://github.com/dc-js/dc.js/pull/1129))
+* Fix clip paths being dropped by Angular by using abolute paths, by @yandongCoder ([#1079](https://github.com/dc-js/dc.js/issues/1079))
+* Fix error with object-valued crossfilter groups in pie chart, by Xaser Acheron ([#1085](https://github.com/dc-js/dc.js/issues/1085) / [#1128](https://github.com/dc-js/dc.js/pull/1128))
+* Pass `value` function to `stackLayout` to make it possible to specify other stack layouts, by @jetsnguns ([#1102](https://github.com/dc-js/dc.js/issues/1102))
+* Clarify documentation for `dataCount`, `rangeChart` ([#1076](https://github.com/dc-js/dc.js/issues/1076), [#1112](https://github.com/dc-js/dc.js/issues/1112))
+* Documentation syntax fixes by @devginie, Chaitanya Chandukar ([#1131](https://github.com/dc-js/dc.js/issues/1131), [#1111](https://github.com/dc-js/dc.js/pull/1111))
+* Switch to community fork of crossfilter. (Thanks Timothy Pfafman for correcting the node/browserify code here.) ([#1124](https://github.com/dc-js/dc.js/pull/1124))
+* Add an HTML documentation front/welcome page ([#1103](https://github.com/dc-js/dc.js/issues/1103))
 
 ## 2.0.0 beta 27
-* Improvements to HTML documentation, by Matt Traynham ([1096](https://github.com/dc-js/dc.js/issues/1096) / [1097](https://github.com/dc-js/dc.js/issues/1097) / [1099](https://github.com/dc-js/dc.js/issues/1099) / [1100](https://github.com/dc-js/dc.js/issues/1100) / [1101](https://github.com/dc-js/dc.js/pull/1101))
-* Ability to set color and opacity of non-brushed ("excluded") points in scatterplot; also separate brushing from highlighting, which seems like a different thing. ([938](https://github.com/dc-js/dc.js/issues/938))
+* Improvements to HTML documentation, by Matt Traynham ([#1096](https://github.com/dc-js/dc.js/issues/1096) / [#1097](https://github.com/dc-js/dc.js/issues/1097) / [#1099](https://github.com/dc-js/dc.js/issues/1099) / [#1100](https://github.com/dc-js/dc.js/issues/1100) / [#1101](https://github.com/dc-js/dc.js/pull/1101))
+* Ability to set color and opacity of non-brushed ("excluded") points in scatterplot; also separate brushing from highlighting, which seems like a different thing. ([#938](https://github.com/dc-js/dc.js/issues/938))
 
 ## 2.0.0 beta 26
 * Apply pie chart labels before transition, so they are easier to manipulate with the pretransition hook. Added example of showing percentages in pie chart labels. (Workaround for [#703](https://github.com/dc-js/dc.js/issues/703))
