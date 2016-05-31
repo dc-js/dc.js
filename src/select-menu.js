@@ -223,12 +223,14 @@ dc.selectMenu = function (parent, chartGroup) {
     };
 
     /**
-     * Controls the default value when only the prompt value is selected. If `null`, no filtering
-     * will occur when just the prompt is selected.
+     * Controls the default value to be used for
+     * [dimension.filter](https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter)
+     * when only the prompt value is selected. If `null` (the default), no filtering will occur when
+     * just the prompt is selected.
      * @name promptValue
      * @memberof dc.selectMenu
      * @instance
-     * @param {*} [promptValue=null]
+     * @param {?*} [promptValue=null]
      **/
     _chart.promptValue = function (promptValue) {
         if (!arguments.length) {
