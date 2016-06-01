@@ -263,6 +263,7 @@ module.exports = function (grunt) {
                             'node_modules/d3/d3.js',
                             'node_modules/crossfilter2/crossfilter.js',
                             'node_modules/grunt-saucelabs/examples/jasmine/lib/jasmine-jsreporter/jasmine-jsreporter.js',
+                            'node_modules/file-saver/FileSaver.js',
                             'test/env-data.js'
                         ],
                         dest: '<%= conf.web %>/js/'
