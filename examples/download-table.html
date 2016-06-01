@@ -7,18 +7,39 @@
 </head>
 <body>
 
-<div id="chart-ring-year"></div>
-<div id="chart-hist-spend"></div>
-<div id="chart-row-spenders"></div>
+  <div id="chart-ring-year" style="width:300px; height:300px">
+    <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+      <a href="javascript:yearRingChart.filterAll();dc.redrawAll();">reset</a>
+    </div>
+  </div>
+  <div id="chart-hist-spend" style="width:300px; height:300px">
+    <div class="reset" style="visibility: hidden;">range: <span class="filter"></span>
+      <a href="javascript:spendHistChart.filterAll();dc.redrawAll();">reset</a>
+    </div>
+  </div>
+  <div id="chart-row-spenders">
+    <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+      <a href="javascript:spenderRowChart.filterAll();dc.redrawAll();">reset</a>
+    </div>
+  </div>
+  <!-- not sure why all these styles necessary, not the point of this -->
+  <div id="table" style="clear: both; margin-top: 30px;">
+  </div>
+  <div style="clear: both">
+    <button id="download">download table</button>
+  </div>
 
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript" src="../js/FileSaver.js"></script>
 <script type="text/javascript">
 
 var yearRingChart   = dc.pieChart("#chart-ring-year"),
     spendHistChart  = dc.barChart("#chart-hist-spend"),
     spenderRowChart = dc.rowChart("#chart-row-spenders");
+
+var table = dc.dataTable('#table');
 
 // use static or load via d3.csv("spendData.csv", function(error, spendData) {/* do stuff */});
 var spendData = [
@@ -36,17 +57,6 @@ spendData.forEach(function(d) {
     d.Spent = d.Spent.match(/\d+/);
 });
 
-function remove_empty_bins(source_group) {
-    return {
-        all:function () {
-            return source_group.all().filter(function(d) {
-                return d.value != 0;
-            });
-        }
-    };
-}
-
-
 // set crossfilter
 var ndx = crossfilter(spendData),
     yearDim  = ndx.dimension(function(d) {return +d.Year;}),
@@ -57,24 +67,40 @@ var ndx = crossfilter(spendData),
     spendHist    = spendDim.group().reduceCount();
 
 yearRingChart
-    .width(200).height(200)
     .dimension(yearDim)
     .group(spendPerYear)
-    .innerRadius(50);
+    .innerRadius(50)
+    .controlsUseVisibility(true);
 
-spendHistChart
-    .width(300).height(200)
+  spendHistChart
     .dimension(spendDim)
     .group(spendHist)
-    .x(d3.scale.ordinal())
-    .xUnits(dc.units.ordinal)
-    .elasticY(true);
+    .x(d3.scale.linear().domain([0,10]))
+    .elasticY(true)
+    .controlsUseVisibility(true);
+
+spendHistChart.xAxis().tickFormat(function(d) {return d*10}); // convert back to base unit
+spendHistChart.yAxis().ticks(2);
 
 spenderRowChart
-    .width(350).height(200)
     .dimension(nameDim)
     .group(spendPerName)
-    .elasticX(true);
+    .elasticX(true)
+    .controlsUseVisibility(true);
+
+table
+    .dimension(spendDim)
+    .group(function(d) {
+        return d.value;
+    })
+    .showGroups(false)
+    .columns(['Name', 'Spent', 'Year']);
+
+d3.select('#download')
+    .on('click', function() {
+        var blob = new Blob([d3.csv.format(nameDim.top(Infinity))], {type: "text/csv;charset=utf-8"});
+        saveAs(blob, 'data.csv');
+    });
 
 dc.renderAll();
 
