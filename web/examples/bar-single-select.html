@@ -13,7 +13,9 @@
 <p>Frequently asked question: how to enable single-select on an ordinal chart?</p>
 
 <div id="test">
-  <a class="reset" style="display: none" href="javascript:chart.filter(null).redrawGroup()">reset</a>
+  <div>
+    <a class="reset" style="visibility: hidden" href="javascript:chart.filter(null).redrawGroup()">reset</a>
+  </div>
 </div>
 
 <script type="text/javascript" src="../js/d3.js"></script>
@@ -41,6 +43,7 @@ d3.csv("morley.csv", function(error, experiments) {
     .yAxisLabel("This is the Y Axis!")
     .dimension(runDimension)
     .group(speedSumGroup)
+    .controlsUseVisibility(true)
     .on('pretransition', function(chart) {
         chart.selectAll("rect.bar").on("click", function (d) {
             console.log('click');
