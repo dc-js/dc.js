@@ -3,22 +3,34 @@
 <head>
     <title>dc.js - Complex Reductions Example</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <style>
+      label {
+          display: inline;
+          padding-left: 1em;
+      }
+      label input {
+          vertical-align: top;
+      }
+    </style>
 </head>
 <body>
 
+<div class="container">
+
+<script type="text/javascript" src="header.js"></script>
   <p>Frequently asked question: how to show the minimum/maximum of some value in the rows?</p>
 
   <p>Some kinds of reductions require the entire set of values at every step: median, mode, minimum,
-  maximum. (It is almost by accident that you can get away with calculating the mean without looking
-  at all the rows.) This example shows how to keep the set of
-  values. <a href="http://github.com/dc-js/dc.js/tree/develop/web/examples/complex-reduce.html">See
-  the source</a> for details.</p>
+  maximum. (The mean just needs a running sum.)</p>
+
+  <p>This example shows how to keep the set of values.</p>
 
   <div id="select-operation">
-    <input type=radio name="operation" value="median" checked="true">median
-    <input type=radio name="operation" value="min">min
-    <input type=radio name="operation" value="max">max
+    <label><input type=radio name="operation" value="median" checked="true">&nbsp;median</label>
+    <label><input type=radio name="operation" value="min">&nbsp;min</label>
+    <label><input type=radio name="operation" value="max">&nbsp;max</label>
   </div>
   <div id="test-run">
     <h4>Run</h4>
@@ -135,5 +147,6 @@
 
 </script>
 
+</div>
 </body>
 </html>
