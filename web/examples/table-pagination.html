@@ -3,10 +3,13 @@
 <head>
     <title>dc.js - Table of Aggregated Data</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
 </head>
 <body>
 
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
   <table id="test"></table>
   <div id="paging">
     Showing <span id="begin"></span>-<span id="end"></span> of <span id="size"></span>.
@@ -71,5 +74,6 @@ d3.csv("morley.csv", function(error, experiments) {
 
 </script>
 
+</div>
 </body>
 </html>
