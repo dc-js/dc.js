@@ -10,6 +10,10 @@
 
 <div class="container">
 <script type="text/javascript" src="header.js"></script>
+
+<p>This demonstrates using an <a href="https://en.wikipedia.org/wiki/Interval_tree">interval
+tree</a> to plot items which span from a begin date to an end date. The brush will intersect with
+any items whose intervals overlap with it.</p>
   <div id="month">
     <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
       <a href="javascript:monthChart.filterAll().redrawGroup();">reset</a>
@@ -85,8 +89,8 @@
           projectCostGroup = projectCostDimension.group();
 
       monthChart
-          .width(768)
-          .height(480)
+          .width(400)
+          .height(300)
           .x(d3.time.scale())
           .y(d3.scale.linear().domain([0,25]))
           .xUnits(d3.time.months)
@@ -114,8 +118,8 @@
 
 
       costChart
-          .width(768)
-          .height(480)
+          .width(400)
+          .height(300)
           .x(d3.scale.linear().domain([0,24]))
           .y(d3.scale.linear().domain([0,25]))
           .brushOn(true)
