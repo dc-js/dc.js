@@ -5,8 +5,13 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <style>
+      .dc-chart g.chart-body {
+          clip-path: none;
+      }
+    </style>
   </head>
-  <body>
+<body>
 
 <div class="container">
 <script type="text/javascript" src="header.js"></script>
@@ -46,7 +51,7 @@
               .width(768)
               .height(480)
               .x(d3.scale.linear().domain([1,21]))
-              .margins({left: 50, top: 10, right: 10, bottom: 20})
+              .margins({left: 50, top: 20, right: 10, bottom: 20})
               .brushOn(false)
               .clipPadding(10)
               .title(function(d) {
