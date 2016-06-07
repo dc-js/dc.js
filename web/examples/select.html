@@ -3,10 +3,13 @@
 <head>
     <title>dc.js - Select Menu Example</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
 </head>
 <body>
 
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
   <p>A meaningless example of multiple selectMenus on some random data...</p>
   <div id="select1">
     <div>
@@ -88,16 +91,19 @@
 
   select1
     .dimension(letterDimension)
-    .group(letterDimension.group());
+    .group(letterDimension.group())
+    .controlsUseVisibility(true);
   select2
     .dimension(colorDimension)
     .group(colorDimension.group())
     .multiple(true)
-    .size(10);
+    .numberVisible(10)
+    .controlsUseVisibility(true);
   select3.dimension(stateDimension)
     .group(stateDimension.group())
     .multiple(true)
-    .size(10);
+    .numberVisible(10)
+    .controlsUseVisibility(true);
 
   datatable
     .dimension(letterDimension2)
@@ -108,5 +114,6 @@
   dc.renderAll();
 
 </script>
+</div>
 </body>
 </html>
