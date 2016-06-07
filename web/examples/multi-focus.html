@@ -41,14 +41,15 @@ d3.csv("morley.csv", function(error, experiments) {
             .width(400)
             .height(300)
             .x(d3.scale.linear().domain([6,20]))
-            .brushOn(true)
+            .brushOn(false)
             .yAxisLabel("This is the Y Axis!")
             .dimension(runDimension)
             .group(speedSumGroup);
-        chart.render();
+        return chart;
     }
 
-    bar_chart(chart1);
+    bar_chart(chart1)
+        .brushOn(true);
     bar_chart(chart2);
     bar_chart(chart3);
     bar_chart(chart4);
@@ -105,6 +106,8 @@ d3.csv("morley.csv", function(error, experiments) {
     };
 
     chart1.focusCharts([chart2,chart3,chart4]);
+
+    dc.renderAll();
 });
 
 </script>
