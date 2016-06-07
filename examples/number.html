@@ -3,6 +3,7 @@
 <head>
     <title>dc.js - Number Display Example</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
     <style>
       #number-box {
@@ -13,13 +14,16 @@
         padding-top: 63px;
         padding-bottom: 63px;
         height: 74px;
+        line-height: normal;
       }
     </style>
 </head>
 <body>
 
-<div id="test">
-  Inline Number Display. We have <span class="number-display"></span> Jumping on the bed.
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
+<div id="test" style="float: none">
+  Inline Number Display. We have <span class="number-display"></span> jumping on the bed.
 </div>
 
 <br />
@@ -97,5 +101,6 @@ d3.csv("morley.csv", function(error, experiments) {
 
 </script>
 
+</div>
 </body>
 </html>
