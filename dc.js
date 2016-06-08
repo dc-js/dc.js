@@ -2234,7 +2234,7 @@ dc.baseMixin = function (_chart) {
      * @memberof dc.baseMixin
      * @instance
      * @example
-     * // default title function just return the key
+     * // default title function shows "key: value"
      * chart.title(function(d) { return d.key + ': ' + d.value; });
      * // title function has access to the standard d3 data binding and can get quite complicated
      * chart.title(function(p) {
