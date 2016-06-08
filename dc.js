@@ -4156,7 +4156,7 @@ dc.stackMixin = function (_chart) {
 
     _chart.yAxisMax = function () {
         var max = d3.max(flattenStack(), function (p) {
-            return p.y + p.y0;
+            return (p.y + p.y0 > p.y0) ? (p.y + p.y0) : p.y0;
         });
 
         return dc.utils.add(max, _chart.yAxisPadding());
@@ -8378,6 +8378,9 @@ dc.rowChart = function (parent, chartGroup) {
             var extent = d3.extent(_rowData, _chart.cappedValueAccessor);
             if (extent[0] > 0) {
                 extent[0] = 0;
+            }
+            if (extent[1] < 0) {
+                extent[1] = 0;
             }
             _x = d3.scale.linear().domain(extent)
                 .range([0, _chart.effectiveWidth()]);
