@@ -675,7 +675,7 @@ dc.baseMixin = function (_chart) {
      * Calling redraw will cause the chart to re-render data changes incrementally. If there is no
      * change in the underlying data dimension then calling this method will have no effect on the
      * chart. Most chart interaction in dc will automatically trigger this method through internal
-     * events (in particular {@link dc.redrawAll dc.redrawAll}; therefore, you only need to
+     * events (in particular {@link dc.redrawAll dc.redrawAll}); therefore, you only need to
      * manually invoke this function if data is manipulated outside of dc's control (for example if
      * data is loaded in the background using
      * {@link https://github.com/square/crossfilter/wiki/API-Reference#crossfilter_add crossfilter.add}.
@@ -999,16 +999,16 @@ dc.baseMixin = function (_chart) {
      * you wish to replace the current filter, either call `chart.filter(null)` first, or
      * equivalently, call {@link dc.baseMixin#replaceFilter `chart.replaceFilter(filter)`} instead.
      *
-     * Each toggle is executed by checking if the value is already present using the {@link
-     * dc.baseMixin#hasFilterHandler hasFilterHandler}; if it is not present, it is added using the
-     * {@link dc.baseMixin#addFilterHandler addFilterHandler}; if it is already present, it is
-     * removed using the {@link dc.baseMixin#removeFilterHandler removeFilterHandler}.
+     * Each toggle is executed by checking if the value is already present using the
+     * {@link dc.baseMixin#hasFilterHandler hasFilterHandler}; if it is not present, it is added
+     * using the {@link dc.baseMixin#addFilterHandler addFilterHandler}; if it is already present,
+     * it is removed using the {@link dc.baseMixin#removeFilterHandler removeFilterHandler}.
      *
      * Once the filters array has been updated, the filters are applied to the
      * crossfilter dimension, using the {@link dc.baseMixin#filterHandler filterHandler}.
      *
      * Once you have set the filters, call {@link dc.baseMixin#redrawGroup `chart.redrawGroup()`}
-     * (or {@link dc#redrawAll `dc.redrawAll()`}) to redraw the chart's group.
+     * (or {@link dc.redrawAll `dc.redrawAll()`}) to redraw the chart's group.
      * @method filter
      * @memberof dc.baseMixin
      * @instance
