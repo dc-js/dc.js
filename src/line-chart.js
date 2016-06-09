@@ -258,7 +258,7 @@ dc.lineChart = function (parent, chartGroup) {
     }
 
     function drawDots (chartBody, layers) {
-        if (!_chart.brushOn() && _chart.xyTipsOn()) {
+        if (_chart.xyTipsOn() === 'always' || (!_chart.brushOn() && _chart.xyTipsOn())) {
             var tooltipListClass = TOOLTIP_G_CLASS + '-list';
             var tooltips = chartBody.select('g.' + tooltipListClass);
 
