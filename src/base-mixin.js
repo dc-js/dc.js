@@ -962,9 +962,18 @@ dc.baseMixin = function (_chart) {
         }
     }
 
-    _chart.replaceFilter = function (_) {
-        _filters = [];
-        _chart.filter(_);
+    /**
+     * Replace the chart filter. This is equivalent to calling `chart.filter(null).filter(filter)`
+     *
+     * @method replaceFilter
+     * @memberof dc.baseMixin
+     * @instance
+     * @param {*} [filter]
+     * @return {dc.baseMixin}
+     **/
+    _chart.replaceFilter = function (filter) {
+        _filters = _resetFilterHandler(_filters);
+        _chart.filter(filter);
     };
 
     /**
