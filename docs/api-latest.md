@@ -2925,7 +2925,7 @@ behaviour.
 Calling redraw will cause the chart to re-render data changes incrementally. If there is no
 change in the underlying data dimension then calling this method will have no effect on the
 chart. Most chart interaction in dc will automatically trigger this method through internal
-events (in particular [redrawAll](#dc.redrawAll); therefore, you only need to
+events (in particular [redrawAll](#dc.redrawAll)); therefore, you only need to
 manually invoke this function if data is manipulated outside of dc's control (for example if
 data is loaded in the background using
 [crossfilter.add](https://github.com/square/crossfilter/wiki/API-Reference#crossfilter_add).
@@ -3128,16 +3128,16 @@ Note that this is always a toggle (even when it doesn't make sense for the filte
 you wish to replace the current filter, either call `chart.filter(null)` first, or
 equivalently, call [`chart.replaceFilter(filter)`](#dc.baseMixin+replaceFilter) instead.
 
-Each toggle is executed by checking if the value is already present using the {@link
-dc.baseMixin#hasFilterHandler hasFilterHandler}; if it is not present, it is added using the
-[addFilterHandler](#dc.baseMixin+addFilterHandler); if it is already present, it is
-removed using the [removeFilterHandler](#dc.baseMixin+removeFilterHandler).
+Each toggle is executed by checking if the value is already present using the
+[hasFilterHandler](#dc.baseMixin+hasFilterHandler); if it is not present, it is added
+using the [addFilterHandler](#dc.baseMixin+addFilterHandler); if it is already present,
+it is removed using the [removeFilterHandler](#dc.baseMixin+removeFilterHandler).
 
 Once the filters array has been updated, the filters are applied to the
 crossfilter dimension, using the [filterHandler](#dc.baseMixin+filterHandler).
 
 Once you have set the filters, call [`chart.redrawGroup()`](#dc.baseMixin+redrawGroup)
-(or [`dc.redrawAll()`](dc#redrawAll)) to redraw the chart's group.
+(or [`dc.redrawAll()`](#dc.redrawAll)) to redraw the chart's group.
 
 **Kind**: instance method of <code>[baseMixin](#dc.baseMixin)</code>  
 **See**

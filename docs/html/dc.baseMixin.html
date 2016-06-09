@@ -1851,9 +1851,9 @@ chart.dimension(dimension);</pre>
 <li><code>null</code>: the filter will be reset using the<br><a href="dc.baseMixin.html#resetFilterHandler">resetFilterHandler</a></li>
 </ul>
 <p>Note that this is always a toggle (even when it doesn't make sense for the filter type). If<br>you wish to replace the current filter, either call <code>chart.filter(null)</code> first, or<br>equivalently, call <a href="dc.baseMixin.html#replaceFilter"><code>chart.replaceFilter(filter)</code></a> instead.</p>
-<p>Each toggle is executed by checking if the value is already present using the {@link<br>dc.baseMixin#hasFilterHandler hasFilterHandler}; if it is not present, it is added using the<br><a href="dc.baseMixin.html#addFilterHandler">addFilterHandler</a>; if it is already present, it is<br>removed using the <a href="dc.baseMixin.html#removeFilterHandler">removeFilterHandler</a>.</p>
+<p>Each toggle is executed by checking if the value is already present using the<br><a href="dc.baseMixin.html#hasFilterHandler">hasFilterHandler</a>; if it is not present, it is added<br>using the <a href="dc.baseMixin.html#addFilterHandler">addFilterHandler</a>; if it is already present,<br>it is removed using the <a href="dc.baseMixin.html#removeFilterHandler">removeFilterHandler</a>.</p>
 <p>Once the filters array has been updated, the filters are applied to the<br>crossfilter dimension, using the <a href="dc.baseMixin.html#filterHandler">filterHandler</a>.</p>
-<p>Once you have set the filters, call <a href="dc.baseMixin.html#redrawGroup"><code>chart.redrawGroup()</code></a><br>(or <code>dc.redrawAll()</code>) to redraw the chart's group.</p>
+<p>Once you have set the filters, call <a href="dc.baseMixin.html#redrawGroup"><code>chart.redrawGroup()</code></a><br>(or <a href="dc.html#.redrawAll"><code>dc.redrawAll()</code></a>) to redraw the chart's group.</p>
     </div>
     
 
@@ -5283,7 +5283,7 @@ _chart.ordering(dc.pluck(&#x27;key&#x27;));</pre>
 
     
     <div class="description">
-        <p>Calling redraw will cause the chart to re-render data changes incrementally. If there is no<br>change in the underlying data dimension then calling this method will have no effect on the<br>chart. Most chart interaction in dc will automatically trigger this method through internal<br>events (in particular <a href="dc.html#.redrawAll">dc.redrawAll</a>; therefore, you only need to<br>manually invoke this function if data is manipulated outside of dc's control (for example if<br>data is loaded in the background using<br><a href="https://github.com/square/crossfilter/wiki/API-Reference#crossfilter_add">crossfilter.add</a>.</p>
+        <p>Calling redraw will cause the chart to re-render data changes incrementally. If there is no<br>change in the underlying data dimension then calling this method will have no effect on the<br>chart. Most chart interaction in dc will automatically trigger this method through internal<br>events (in particular <a href="dc.html#.redrawAll">dc.redrawAll</a>); therefore, you only need to<br>manually invoke this function if data is manipulated outside of dc's control (for example if<br>data is loaded in the background using<br><a href="https://github.com/square/crossfilter/wiki/API-Reference#crossfilter_add">crossfilter.add</a>.</p>
     </div>
     
 
