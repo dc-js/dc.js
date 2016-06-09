@@ -266,7 +266,7 @@ dc.lineChart = function (parent, chartGroup) {
             });
     }
 
-    function flatArea(v) {
+    function flatArea (v) {
         return {
             x: v.x,
             y: 0,
