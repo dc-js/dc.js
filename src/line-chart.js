@@ -201,14 +201,10 @@ dc.lineChart = function (parent, chartGroup) {
         }
         if (other && index > 0) {
             var bname = curr[index - 1].name;
-            other.forEach(function (dd, i) {
-                if (dd.name === bname) {
-                    values = new Array(dd.values.length);
-                    for (var j = 0; j < values.length; ++j) {
-                        values[j] = transform(dd.values[j]);
-                    }
-                }
-            });
+            var layer = other.find(function (d) { return d.name === bname; });
+            if (layer) {
+                values = layer.values.map(transform);
+            }
         }
         if (!values) {
             var d = curr[index];
