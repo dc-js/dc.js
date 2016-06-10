@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>dc.js - Ordinal Bar Chart Transition Tester</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+  </head>
+  <body>
+
+    <div class="container">
+    <script type="text/javascript" src="../examples/header.js"></script>
+
+    <div id="test"></div>
+    <button onclick="transitionTest.stop()">stop</button>
+    <button onclick="button1()">left</button>
+    <button onclick="button2()">right</button>
+    <button onclick="button3()">middle</button>
+
+    <script type="text/javascript" src="../js/d3.js"></script>
+    <script type="text/javascript" src="../js/crossfilter.js"></script>
+    <script type="text/javascript" src="../js/dc.js"></script>
+    <script type="text/javascript" src="transition-test.js"></script>
+    <script type="text/javascript">
+
+      function remove_empty_bins(source_group) {
+          return {
+              all:function () {
+                  return source_group.all().filter(function(d) {
+                      return d.value != 0;
+                  });
+              }
+          };
+      }
+      function ordinal_filter(bins) {
+          return function(d) {
+              return bins.indexOf(d) >=0;
+          };
+      }
+
+      var chart = dc.barChart("#test");
+      d3.json('../examples/fruits.json', function(error, counts) {
+          if(error)
+              throw new Error(error);
+
+          var ndx            = crossfilter(counts),
+              fruitDimension = ndx.dimension(function(d) {return d.name;}),
+              sumGroup       = fruitDimension.group().reduceSum(function(d) {return d.cnt;}),
+              fruit2 = ndx.dimension(function(d) {return d.name;});
+
+          chart
+              .width(768)
+              .height(380)
+              .x(d3.scale.ordinal())
+              .xUnits(dc.units.ordinal)
+              .elasticX(true)
+              .elasticY(true)
+              .brushOn(false)
+              .xAxisLabel('Fruit')
+              .yAxisLabel('Quantity Sold')
+              .dimension(fruitDimension)
+              .barPadding(0.1)
+              .outerPadding(0.05)
+              .group(remove_empty_bins(sumGroup));
+
+          chart.render();
+
+          var reset = function() {
+              fruit2.filter(null);
+          }
+          window.button1 = transitionTest.oscillate(function() {
+              fruit2.filter(ordinal_filter(['grapefruit', 'lime', 'orange', 'pomegranate']));
+          }, reset);
+          window.button2 = transitionTest.oscillate(function() {
+              fruit2.filter(ordinal_filter(['apple', 'banana', 'grape', 'grapefruit']));
+          }, reset);
+          window.button3 = transitionTest.oscillate(function() {
+              fruit2.filter(ordinal_filter(['apple', 'banana', 'orange', 'pomegranate']));
+          }, reset);
+      });
+
+    </script>
+    </div>
+  </body>
+</html>
