@@ -1,0 +1,10 @@
+[
+    {"name": "apple", "cnt": 10},
+    {"name": "orange", "cnt": 15},
+    {"name": "banana", "cnt": 12},
+    {"name": "grapefruit", "cnt": 2},
+    {"name": "grapefruit", "cnt": 4},
+    {"name": "pomegranate", "cnt": 1},
+    {"name": "lime", "cnt": 12},
+    {"name": "grape", "cnt": 50}
+]
