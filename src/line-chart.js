@@ -195,30 +195,22 @@ dc.lineChart = function (parent, chartGroup) {
     }
 
     function otherLayerBelow (curr, other, index, transform) {
-        var values;
-        if (!transform) {
-            transform = function (v) { return v; };
-        }
         if (other && index > 0) {
             var bname = curr[index - 1].name;
             // want find but that's not es5
             var layer = other.filter(function (d) { return d.name === bname; });
             if (layer.length) {
-                values = layer[0].values.map(transform);
+                return layer[0].values
+                    .map(transform || function (v) { return v; });
             }
         }
-        if (!values) {
-            var d = curr[index];
-            values = new Array(d.values.length);
-            for (var j = 0; j < values.length; ++j) {
-                values[j] = {
-                    x: d.values[j].x,
-                    y: 0,
-                    y0: 0
-                };
-            }
-        }
-        return values;
+        return curr[index].values.map(function (d) {
+            return {
+                x: d.x,
+                y: 0,
+                y0: 0
+            };
+        });
     }
 
     function drawLine (data, layersEnter, layers, layersExit) {
