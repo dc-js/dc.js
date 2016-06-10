@@ -44,6 +44,8 @@
                   return d.value[i];
               };
           }
+          var doDots = transitionTest.querystring.dots!=="0",
+              doArea = transitionTest.querystring.area!=="0";
 
           chart
               .transitionDuration(transitionTest.duration)
@@ -51,9 +53,9 @@
               .height(480)
               .x(d3.scale.linear().domain([1,20]))
               .margins({left: 50, top: 10, right: 10, bottom: 20})
-              .renderArea(true)
+              .renderArea(doArea)
               .brushOn(false)
-              .renderDataPoints(true)
+              .renderDataPoints(doDots)
               .clipPadding(10)
               .yAxisLabel("This is the Y Axis!")
               .dimension(runDimension);
