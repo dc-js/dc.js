@@ -19,34 +19,27 @@
 
   var chart = dc.lineChart('#test');
 
-  var counts = [
-      {name: 'apple', cnt: 10},
-      {name: 'orange', cnt: 15},
-      {name: 'banana', cnt: 12},
-      {name: 'grapefruit', cnt: 2},
-      {name: 'grapefruit', cnt: 4},
-      {name: 'pomegranate', cnt: 1},
-      {name: 'lime', cnt: 12},
-      {name: 'grape', cnt: 50}
-  ];
+  d3.json('fruits.json', function(error, counts) {
+      if(error)
+          throw new Error(error);
 
-  var ndx            = crossfilter(counts),
-      fruitDimension = ndx.dimension(function(d) {return d.name;}),
-      sumGroup       = fruitDimension.group().reduceSum(function(d) {return d.cnt;});
+      var ndx            = crossfilter(counts),
+          fruitDimension = ndx.dimension(function(d) {return d.name;}),
+          sumGroup       = fruitDimension.group().reduceSum(function(d) {return d.cnt;});
 
-  chart
-    .width(768)
-    .height(380)
-    .x(d3.scale.ordinal())
-    .xUnits(dc.units.ordinal)
-    .brushOn(false)
-    .xAxisLabel('Fruit')
-    .yAxisLabel('Quantity Sold')
-    .dimension(fruitDimension)
-    .group(sumGroup);
+      chart
+          .width(768)
+          .height(380)
+          .x(d3.scale.ordinal())
+          .xUnits(dc.units.ordinal)
+          .brushOn(false)
+          .xAxisLabel('Fruit')
+          .yAxisLabel('Quantity Sold')
+          .dimension(fruitDimension)
+          .group(sumGroup);
 
-  chart.render();
-
+      chart.render();
+  });
 </script>
 
 </div>
