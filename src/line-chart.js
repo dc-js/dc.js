@@ -201,9 +201,10 @@ dc.lineChart = function (parent, chartGroup) {
         }
         if (other && index > 0) {
             var bname = curr[index - 1].name;
-            var layer = other.find(function (d) { return d.name === bname; });
-            if (layer) {
-                values = layer.values.map(transform);
+            // want find but that's not es5
+            var layer = other.filter(function (d) { return d.name === bname; });
+            if (layer.length) {
+                values = layer[0].values.map(transform);
             }
         }
         if (!values) {
