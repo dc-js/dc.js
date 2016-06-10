@@ -34,22 +34,11 @@ dc.stackMixin = function (_chart) {
     var _hidableStacks = false;
 
     function domainFilter () {
-        if (!_chart.x()) {
+        if (!_chart.x() || _chart.isOrdinal() || _chart.elasticX()) {
             return d3.functor(true);
         }
         var xDomain = _chart.x().domain();
-        if (_chart.isOrdinal()) {
-            // TODO #416
-            //var domainSet = d3.set(xDomain);
-            return function () {
-                return true; //domainSet.has(p.x);
-            };
-        }
-        if (_chart.elasticX()) {
-            return function () { return true; };
-        }
         return function (p) {
-            //return true;
             return p.x >= xDomain[0] && p.x <= xDomain[xDomain.length - 1];
         };
     }
