@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>dc.js - Ordinal Line Chart Transition Tester</title>
+    <title>dc.js - Ordinal Row Chart Transition Tester</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
@@ -26,18 +26,13 @@
     <script type="text/javascript" src="ordinal-transition.js"></script>
 
     <script type="text/javascript">
-      var chart = dc.lineChart('#test');
+      var chart = dc.rowChart('#test');
       startOrdinal(function(fruitDimension, fruitGroup) {
           return chart
               .width(768)
               .height(380)
               .x(d3.scale.ordinal())
-              .xUnits(dc.units.ordinal)
               .elasticX(true)
-              .elasticY(true)
-              .brushOn(false)
-              .xAxisLabel('Fruit')
-              .yAxisLabel('Quantity Sold')
               .dimension(fruitDimension)
               .group(fruitGroup);
       });
