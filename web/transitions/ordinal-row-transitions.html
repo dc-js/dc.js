@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>dc.js - Ordinal Row Chart Transition Tester</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+  </head>
+  <body>
+
+    <div class="container">
+    <script type="text/javascript" src="../examples/header.js"></script>
+
+    <div id="test"></div>
+    <button onclick="transitionTest.stop()">stop</button>
+    <button onclick="button1()">left</button>
+    <button onclick="button2()">right</button>
+    <button onclick="button3()">middle</button>
+    <button onclick="button4()">reverse</button>
+    <button onclick="button5()">backward</button>
+
+    <script type="text/javascript" src="../js/d3.js"></script>
+    <script type="text/javascript" src="../js/crossfilter.js"></script>
+    <script type="text/javascript" src="../js/dc.js"></script>
+    <script type="text/javascript" src="transition-test.js"></script>
+    <script type="text/javascript" src="ordinal-transition.js"></script>
+
+    <script type="text/javascript">
+      var chart = dc.rowChart('#test');
+      startOrdinal(function(fruitDimension, fruitGroup) {
+          return chart
+              .width(768)
+              .height(380)
+              .x(d3.scale.ordinal())
+              .elasticX(true)
+              .dimension(fruitDimension)
+              .group(fruitGroup);
+      });
+    </script>
+    </div>
+  </body>
+</html>
