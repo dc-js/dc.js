@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>dc.js - Area Chart Example</title>
+    <title>dc.js - Area Transitions Example</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
@@ -59,7 +59,6 @@
               .renderArea(doArea)
               .brushOn(false)
               .renderDataPoints(doDots)
-              .clipPadding(10)
               .yAxisLabel("This is the Y Axis!")
               .dimension(runDimension);
 
@@ -72,16 +71,16 @@
           chart.render();
 
           var reset = function() {
-              chart.x().domain([0,20]);
+              chart.x().domain([1,20]);
           }
           window.button1 = transitionTest.oscillate(function() {
-              chart.x().domain([0,10]);
+              chart.x().domain([1,10]);
           }, reset);
           window.button2 = transitionTest.oscillate(function() {
               chart.x().domain([16,20]);
           }, reset);
           window.button3 = transitionTest.oscillate(function() {
-              chart.x().domain([6,14]);
+              chart.x().domain([6.5,13.5]);
           }, reset);
           window.button4 = transitionTest.oscillate(function() {
               chart.group(speedSumGroup, '2', sel_stack('2'))

@@ -16,6 +16,8 @@
     <button onclick="button1()">left</button>
     <button onclick="button2()">right</button>
     <button onclick="button3()">middle</button>
+    <button onclick="button4()">reverse</button>
+    <button onclick="button5()">backward</button>
 
     <script type="text/javascript" src="../js/d3.js"></script>
     <script type="text/javascript" src="../js/crossfilter.js"></script>
@@ -65,7 +67,9 @@
 
           chart.render();
 
+          var ordinary_ordering = chart.ordering();
           var reset = function() {
+              chart.ordering(ordinary_ordering);
               fruit2.filter(null);
           }
           window.button1 = transitionTest.oscillate(function() {
@@ -76,6 +80,23 @@
           }, reset);
           window.button3 = transitionTest.oscillate(function() {
               fruit2.filter(ordinal_filter(['apple', 'banana', 'orange', 'pomegranate']));
+          }, reset);
+          window.button4 = transitionTest.oscillate(function() {
+              // reverse alphabetic sort
+              // we don't have complete control over the ordering, because dc.js uses
+              // crossfilter.quicksort.by: https://github.com/dc-js/dc.js/issues/1161
+              // so append a low character ('`' is before 'a') and then subtract each
+              // character from 'z' and add 'a'
+              chart.ordering(function(kv) {
+                  var chars = kv.key.split('');
+                  chars.push('`');
+                  return chars.map(function(s) {
+                      return String.fromCharCode(122+97-s.charCodeAt(0));
+                  }).join('');
+              });
+          }, reset);
+          window.button5 = transitionTest.oscillate(function() {
+              chart.ordering(function(kv) { return kv.key.split('').reverse().join(''); });
           }, reset);
       });
 
