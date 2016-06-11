@@ -2740,9 +2740,9 @@ chart.group(dimension.group(crossfilter.reduceSum()));
 <a name="dc.baseMixin+ordering"></a>
 
 #### baseMixin.ordering([orderFunction]) ⇒ <code>function</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
-Get or set an accessor to order ordinal dimensions.  This uses
-[crossfilter.quicksort.by](https://github.com/square/crossfilter/wiki/API-Reference#quicksort_by) as the
-sort.
+Get or set an accessor to order ordinal dimensions.  The chart uses
+[crossfilter.quicksort.by](https://github.com/square/crossfilter/wiki/API-Reference#quicksort_by)
+to sort elements; this accessor returns the value to order on.
 
 **Kind**: instance method of <code>[baseMixin](#dc.baseMixin)</code>  
 **See**: [crossfilter.quicksort.by](https://github.com/square/crossfilter/wiki/API-Reference#quicksort_by)  
