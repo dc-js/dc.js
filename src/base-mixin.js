@@ -300,9 +300,9 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-     * Get or set an accessor to order ordinal dimensions.  This uses
-     * {@link https://github.com/square/crossfilter/wiki/API-Reference#quicksort_by crossfilter.quicksort.by} as the
-     * sort.
+     * Get or set an accessor to order ordinal dimensions.  The chart uses
+     * {@link https://github.com/square/crossfilter/wiki/API-Reference#quicksort_by crossfilter.quicksort.by}
+     * to sort elements; this accessor returns the value to order on.
      * @method ordering
      * @memberof dc.baseMixin
      * @instance
