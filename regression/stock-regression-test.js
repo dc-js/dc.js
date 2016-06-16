@@ -1,6 +1,6 @@
 var grunt = require("grunt");
 var phantomjs = require('grunt-lib-phantomjs').init(grunt);
-var difflib = require("jsdifflib");
+require("./difflib.js");
 
 module.exports = {
     testStockExample: function (asyncDone, showDiff) {

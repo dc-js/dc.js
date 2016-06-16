@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 2.0.0-beta.30  
+**Version**: 2.1.0-dev  
 **Example**  
 ```js
 // Example chaining
@@ -158,6 +158,14 @@ chart.width(300)
         * [.outerPadding([padding])](#dc.boxPlot+outerPadding) ⇒ <code>Number</code> &#124; <code>[boxPlot](#dc.boxPlot)</code>
         * [.boxWidth([boxWidth])](#dc.boxPlot+boxWidth) ⇒ <code>Number</code> &#124; <code>function</code> &#124; <code>[boxPlot](#dc.boxPlot)</code>
         * [.tickFormat([tickFormat])](#dc.boxPlot+tickFormat) ⇒ <code>Number</code> &#124; <code>function</code> &#124; <code>[boxPlot](#dc.boxPlot)</code>
+    * [.selectMenu](#dc.selectMenu)
+        * [new selectMenu(parent, [chartGroup])](#new_dc.selectMenu_new)
+        * [.order](#dc.selectMenu+order)
+        * [.promptText](#dc.selectMenu+promptText)
+        * [.filterDisplayed](#dc.selectMenu+filterDisplayed)
+        * [.multiple](#dc.selectMenu+multiple)
+        * [.promptValue](#dc.selectMenu+promptValue)
+        * [.numberItems](#dc.selectMenu+numberItems)
     * [.baseMixin](#dc.baseMixin) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
         * [.height([height])](#dc.baseMixin+height) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
         * [.width([width])](#dc.baseMixin+width) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
@@ -2324,8 +2332,7 @@ chart.rowsLabel(function(d) { return d; });
 
 #### heatMap.rows([rows]) ⇒ <code>Array.&lt;(String\|Number)&gt;</code> &#124; <code>[heatMap](#dc.heatMap)</code>
 Gets or sets the values used to create the rows of the heatmap, as an array. By default, all
-the values will be fetched from the data using the value accessor, and they will be sorted in
-ascending order.
+the values will be fetched from the data using the value accessor.
 
 **Kind**: instance method of <code>[heatMap](#dc.heatMap)</code>  
 
@@ -2337,8 +2344,7 @@ ascending order.
 
 #### heatMap.cols([cols]) ⇒ <code>Array.&lt;(String\|Number)&gt;</code> &#124; <code>[heatMap](#dc.heatMap)</code>
 Gets or sets the keys used to create the columns of the heatmap, as an array. By default, all
-the values will be fetched from the data using the key accessor, and they will be sorted in
-ascending order.
+the values will be fetched from the data using the key accessor.
 
 **Kind**: instance method of <code>[heatMap](#dc.heatMap)</code>  
 
@@ -2515,6 +2521,146 @@ integer formatting.
 ```js
 // format ticks to 2 decimal places
 chart.tickFormat(d3.format('.2f'));
+```
+<a name="dc.selectMenu"></a>
+
+### dc.selectMenu
+**Kind**: static class of <code>[dc](#dc)</code>  
+**Mixes**: <code>[baseMixin](#dc.baseMixin)</code>  
+
+* [.selectMenu](#dc.selectMenu)
+    * [new selectMenu(parent, [chartGroup])](#new_dc.selectMenu_new)
+    * [.order](#dc.selectMenu+order)
+    * [.promptText](#dc.selectMenu+promptText)
+    * [.filterDisplayed](#dc.selectMenu+filterDisplayed)
+    * [.multiple](#dc.selectMenu+multiple)
+    * [.promptValue](#dc.selectMenu+promptValue)
+    * [.numberItems](#dc.selectMenu+numberItems)
+
+<a name="new_dc.selectMenu_new"></a>
+
+#### new selectMenu(parent, [chartGroup])
+The select menu is a simple widget designed to filter a dimension by selecting an option from
+an HTML `<select/>` menu. The menu can be optionally turned into a multiselect.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> &#124; <code>node</code> &#124; <code>d3.selection</code> &#124; <code>[compositeChart](#dc.compositeChart)</code> | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection. |
+| [chartGroup] | <code>String</code> | The name of the chart group this widget should be placed in. Interaction with the widget will only trigger events and redraws within its group. |
+
+**Example**  
+```js
+// create a select menu under #select-container using the default global chart group
+var select = dc.selectMenu('#select-container')
+               .dimension(states)
+               .group(stateGroup);
+// the option text can be set via the title() function
+// by default the option text is '`key`: `value`'
+select.title(function (d){
+    return 'STATE: ' + d.key;
+})
+```
+<a name="dc.selectMenu+order"></a>
+
+#### selectMenu.order
+Get or set the function that controls the ordering of option tags in the
+select menu. By default options are ordered by the group key in ascending
+order.
+
+**Kind**: instance property of <code>[selectMenu](#dc.selectMenu)</code>  
+
+| Param | Type |
+| --- | --- |
+| [order] | <code>function</code> | 
+
+**Example**  
+```js
+// order by the group's value
+chart.order(function (a,b) {
+    return a.value > b.value ? 1 : b.value > a.value ? -1 : 0;
+});
+```
+<a name="dc.selectMenu+promptText"></a>
+
+#### selectMenu.promptText
+Get or set the text displayed in the options used to prompt selection.
+
+**Kind**: instance property of <code>[selectMenu](#dc.selectMenu)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [promptText] | <code>String</code> | <code>&#x27;Select all&#x27;</code> | 
+
+**Example**  
+```js
+chart.promptText('All states');
+```
+<a name="dc.selectMenu+filterDisplayed"></a>
+
+#### selectMenu.filterDisplayed
+Get or set the function that filters option tags prior to display. By default options
+with a value of < 1 are not displayed.
+
+**Kind**: instance property of <code>[selectMenu](#dc.selectMenu)</code>  
+
+| Param | Type |
+| --- | --- |
+| [filterDisplayed] | <code>function</code> | 
+
+**Example**  
+```js
+// display all options override the `filterDisplayed` function:
+chart.filterDisplayed(function () {
+    return true;
+});
+```
+<a name="dc.selectMenu+multiple"></a>
+
+#### selectMenu.multiple
+Controls the type of select menu. Setting it to true converts the underlying
+HTML tag into a multiple select.
+
+**Kind**: instance property of <code>[selectMenu](#dc.selectMenu)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [multiple] | <code>boolean</code> | <code>false</code> | 
+
+**Example**  
+```js
+chart.multiple(true);
+```
+<a name="dc.selectMenu+promptValue"></a>
+
+#### selectMenu.promptValue
+Controls the default value to be used for
+[dimension.filter](https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter)
+when only the prompt value is selected. If `null` (the default), no filtering will occur when
+just the prompt is selected.
+
+**Kind**: instance property of <code>[selectMenu](#dc.selectMenu)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [promptValue] | <code>\*</code> | <code></code> | 
+
+<a name="dc.selectMenu+numberItems"></a>
+
+#### selectMenu.numberItems
+Controls the number of items to show in the select menu, when `.multiple()` is true. This
+controls the [`size` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select#Attributes) of
+the `select` element. If `null` (the default), uses the browser's default height.
+
+**Kind**: instance property of <code>[selectMenu](#dc.selectMenu)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [numberVisible] | <code>number</code> | <code></code> | 
+
+**Example**  
+```js
+chart.numberVisible(10);
 ```
 <a name="dc.baseMixin"></a>
 
@@ -2961,8 +3107,8 @@ Renders all charts in the same group as this chart. If the chart has a
 <a name="dc.baseMixin+hasFilterHandler"></a>
 
 #### baseMixin.hasFilterHandler([hasFilterHandler]) ⇒ <code>function</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
-Set or get the has filter handler. The has filter handler is a function that checks to see if
-the chart's current filters include a specific filter.  Using a custom has filter handler allows
+Set or get the has-filter handler. The has-filter handler is a function that checks to see if
+the chart's current filters (first argument) include a specific filter (second argument).  Using a custom has-filter handler allows
 you to change the way filters are checked for and replaced.
 
 **Kind**: instance method of <code>[baseMixin](#dc.baseMixin)</code>  
@@ -2973,7 +3119,7 @@ you to change the way filters are checked for and replaced.
 
 **Example**  
 ```js
-// default has filter handler
+// default has-filter handler
 chart.hasFilterHandler(function (filters, filter) {
     if (filter === null || typeof(filter) === 'undefined') {
         return filters.length > 0;
@@ -3009,7 +3155,7 @@ filter from the chart's current filters. Using a custom remove filter handler al
 change how filters are removed or perform additional work when removing a filter, e.g. when
 using a filter server other than crossfilter.
 
-Any changes should modify the `filters` array argument and return that array.
+The handler should return a new or modified array as the result.
 
 **Kind**: instance method of <code>[baseMixin](#dc.baseMixin)</code>  
 
@@ -3043,7 +3189,7 @@ the chart's filter list. Using a custom add filter handler allows you to change 
 are added or perform additional work when adding a filter, e.g. when using a filter server other
 than crossfilter.
 
-Any changes should modify the `filters` array argument and return that array.
+The handler should return a new or modified array as the result.
 
 **Kind**: instance method of <code>[baseMixin](#dc.baseMixin)</code>  
 
@@ -3072,7 +3218,7 @@ chart's filter list by returning a new list. Using a custom reset filter handler
 change the way filters are reset, or perform additional work when resetting the filters,
 e.g. when using a filter server other than crossfilter.
 
-This function should return an array.
+The handler should return a new or modified array as the result.
 
 **Kind**: instance method of <code>[baseMixin](#dc.baseMixin)</code>  
 
