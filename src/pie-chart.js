@@ -27,6 +27,9 @@ dc.pieChart = function (parent, chartGroup) {
     var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
     var _sliceCssClass = 'pie-slice';
+    var _labelCssClass = 'pie-label';
+    var _sliceGroupCssClass = 'pie-slice-group';
+    var _labelGroupCssClass = 'pie-label-group';
     var _emptyCssClass = 'empty-chart';
     var _emptyTitle = 'empty';
 
@@ -73,6 +76,9 @@ dc.pieChart = function (parent, chartGroup) {
             .append('g')
             .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
 
+        _g.append('g').attr('class', _sliceGroupCssClass);
+        _g.append('g').attr('class', _labelGroupCssClass);
+
         drawChart();
 
         return _chart;
@@ -98,14 +104,19 @@ dc.pieChart = function (parent, chartGroup) {
         }
 
         if (_g) {
-            var slices = _g.selectAll('g.' + _sliceCssClass)
+            var slices = _g.select('g.' + _sliceGroupCssClass)
+                .selectAll('g.' + _sliceCssClass)
                 .data(pieData);
 
-            createElements(slices, arc, pieData);
+            var labels = _g.select('g.' + _labelGroupCssClass)
+                .selectAll('text.' + _labelCssClass)
+                .data(pieData);
+
+            createElements(slices, labels, arc, pieData);
 
             updateElements(pieData, arc);
 
-            removeElements(slices);
+            removeElements(slices, labels);
 
             highlightFilter();
 
@@ -114,14 +125,14 @@ dc.pieChart = function (parent, chartGroup) {
         }
     }
 
-    function createElements (slices, arc, pieData) {
+    function createElements (slices, labels, arc, pieData) {
         var slicesEnter = createSliceNodes(slices);
 
         createSlicePath(slicesEnter, arc);
 
         createTitles(slicesEnter);
 
-        createLabels(pieData, arc);
+        createLabels(labels, pieData, arc);
     }
 
     function createSliceNodes (slices) {
@@ -175,18 +186,13 @@ dc.pieChart = function (parent, chartGroup) {
             .attr('text-anchor', 'middle');
     }
 
-    function createLabels (pieData, arc) {
+    function createLabels (labels, pieData, arc) {
         if (_chart.renderLabel()) {
-            var labels = _g.selectAll('text.' + _sliceCssClass)
-                .data(pieData);
-
-            labels.exit().remove();
-
             var labelsEnter = labels
                 .enter()
                 .append('text')
                 .attr('class', function (d, i) {
-                    var classes = _sliceCssClass + ' _' + i;
+                    var classes = _sliceCssClass + ' ' + _labelCssClass + ' _' + i;
                     if (_externalLabelRadius) {
                         classes += ' external';
                     }
@@ -252,7 +258,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     function updateLabels (pieData, arc) {
         if (_chart.renderLabel()) {
-            var labels = _g.selectAll('text.' + _sliceCssClass)
+            var labels = _g.selectAll('text.' + _labelCssClass)
                 .data(pieData);
             positionLabels(labels, arc);
             if (_externalLabelRadius && _drawPaths) {
@@ -272,8 +278,9 @@ dc.pieChart = function (parent, chartGroup) {
         }
     }
 
-    function removeElements (slices) {
+    function removeElements (slices, labels) {
         slices.exit().remove();
+        labels.exit().remove();
     }
 
     function highlightFilter () {
