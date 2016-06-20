@@ -246,8 +246,9 @@ dc.pieChart = function (parent, chartGroup) {
         if (transition.attrTween) {
             transition
                 .attrTween('points', function (d) {
-                    this._current = this._current || d;
-                    var interpolate = d3.interpolate(this._current, d);
+                    var current = this._current || d;
+                    current = {startAngle: current.startAngle, endAngle: current.endAngle};
+                    var interpolate = d3.interpolate(current, d);
                     this._current = interpolate(0);
                     return function (t) {
                         var d2 = interpolate(t);
