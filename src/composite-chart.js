@@ -72,10 +72,7 @@ dc.compositeChart = function (parent, chartGroup) {
         var brushIsEmpty = _chart.brushIsEmpty(extent);
 
         for (var i = 0; i < _children.length; ++i) {
-            _children[i].filter(null);
-            if (!brushIsEmpty) {
-                _children[i].filter(extent);
-            }
+            _children[i].replaceFilter(brushIsEmpty ? null : extent);
         }
     };
 
