@@ -1,4 +1,8 @@
 # 2.0 Series
+## 2.0.0 beta 31
+* Brush was sometimes not displaying, fix by Paul Briton ([#1134](https://github.com/dc-js/dc.js/issues/1134))
+* Example of workaround for using series chart as a range chart ([#479](https://github.com/dc-js/dc.js/issues/479))
+
 ## 2.0.0 beta 30
 * Fix the doc build, which was crashing due to an impolite library and the upgrade of another one that knew nothing about it ([#1142](https://github.com/dc-js/dc.js/issues/1142))
 * Strip fragment from URL before creating clip path URL ([#1079](https://github.com/dc-js/dc.js/issues/1079))
