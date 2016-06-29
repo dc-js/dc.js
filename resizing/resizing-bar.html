@@ -29,7 +29,7 @@ d3.csv("../examples/morley.csv", function(error, experiments) {
     .width(window.innerWidth-20)
     .height(window.innerHeight-20)
     .x(d3.scale.linear().domain([6,20]))
-    .brushOn(false)
+    .brushOn(true)
     .xAxisLabel("This is the X Axis!!")
     .yAxisLabel("This is the Y Axis!")
     .dimension(runDimension)
