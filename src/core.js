@@ -265,14 +265,15 @@ dc.redrawAll = function (group) {
  */
 dc.disableTransitions = false;
 
-dc.transition = function (selections, duration, callback, name) {
-    if (duration <= 0 || duration === undefined || dc.disableTransitions) {
+dc.transition = function (selections, duration, delay, callback, name) {
+    if (dc.disableTransitions || duration <= 0 || duration === undefined) {
         return selections;
     }
 
-    var s = selections
-        .transition(name)
-        .duration(duration);
+    var s = selections.transition(name);
+
+    if (duration >= 0 || duration !== undefined) {s = s.duration(duration);}
+    if (delay >= 0 || delay !== undefined) {s = s.delay(delay);}
 
     if (typeof(callback) === 'function') {
         callback(s);
@@ -282,10 +283,10 @@ dc.transition = function (selections, duration, callback, name) {
 };
 
 /* somewhat silly, but to avoid duplicating logic */
-dc.optionalTransition = function (enable, duration, callback, name) {
+dc.optionalTransition = function (enable, duration, delay, callback, name) {
     if (enable) {
         return function (selection) {
-            return dc.transition(selection, duration, callback, name);
+            return dc.transition(selection, duration, delay, callback, name);
         };
     } else {
         return function (selection) {

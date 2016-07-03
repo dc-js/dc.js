@@ -65,6 +65,7 @@ dc.pieChart = function (parent, chartGroup) {
     _chart.renderLabel(true);
 
     _chart.transitionDuration(350);
+    _chart.transitionDelay(0);
 
     _chart._doRender = function () {
         _chart.resetSvg();
@@ -109,7 +110,7 @@ dc.pieChart = function (parent, chartGroup) {
 
             highlightFilter();
 
-            dc.transition(_g, _chart.transitionDuration())
+            dc.transition(_g, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
         }
     }
@@ -142,7 +143,7 @@ dc.pieChart = function (parent, chartGroup) {
                 return safeArc(d, i, arc);
             });
 
-        dc.transition(slicePath, _chart.transitionDuration(), function (s) {
+        dc.transition(slicePath, _chart.transitionDuration(), _chart.transitionDelay(), function (s) {
             s.attrTween('d', tweenPie);
         });
     }
@@ -168,7 +169,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     function positionLabels (labels, arc) {
         _chart._applyLabelText(labels);
-        dc.transition(labels, _chart.transitionDuration())
+        dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', function (d) {
                 return labelPosition(d, arc);
             })
@@ -212,7 +213,7 @@ dc.pieChart = function (parent, chartGroup) {
                 });
 
         polyline.exit().remove();
-        dc.transition(polyline, _chart.transitionDuration())
+        dc.transition(polyline, _chart.transitionDuration(), _chart.transitionDelay())
             .attrTween('points', function (d) {
                 this._current = this._current || d;
                 var interpolate = d3.interpolate(this._current, d);
@@ -244,7 +245,7 @@ dc.pieChart = function (parent, chartGroup) {
             .attr('d', function (d, i) {
                 return safeArc(d, i, arc);
             });
-        dc.transition(slicePaths, _chart.transitionDuration(),
+        dc.transition(slicePaths, _chart.transitionDuration(), _chart.transitionDelay(),
             function (s) {
                 s.attrTween('d', tweenPie);
             }).attr('fill', fill);

@@ -46,6 +46,7 @@ dc.lineChart = function (parent, chartGroup) {
     var _xyTipsOn = true;
 
     _chart.transitionDuration(500);
+    _chart.transitionDelay(0);
     _chart._rangeBandPadding(1);
 
     _chart.plotData = function () {
@@ -211,7 +212,7 @@ dc.lineChart = function (parent, chartGroup) {
             path.attr('stroke-dasharray', _dashStyle);
         }
 
-        dc.transition(layers.select('path.line'), _chart.transitionDuration())
+        dc.transition(layers.select('path.line'), _chart.transitionDuration(), _chart.transitionDelay())
             //.ease('linear')
             .attr('stroke', colors)
             .attr('d', function (d) {
@@ -244,7 +245,7 @@ dc.lineChart = function (parent, chartGroup) {
                     return safeD(area(d.values));
                 });
 
-            dc.transition(layers.select('path.area'), _chart.transitionDuration())
+            dc.transition(layers.select('path.area'), _chart.transitionDuration(), _chart.transitionDelay())
                 //.ease('linear')
                 .attr('fill', colors)
                 .attr('d', function (d) {

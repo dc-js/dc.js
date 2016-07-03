@@ -1,3 +1,4 @@
+
 /**
  * A box plot is a chart that depicts numerical data via their quartile ranges.
  *
@@ -169,7 +170,7 @@ dc.boxPlot = function (parent, chartGroup) {
     }
 
     function updateBoxes (boxesG) {
-        dc.transition(boxesG, _chart.transitionDuration())
+        dc.transition(boxesG, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', boxTransform)
             .call(_box)
             .each(function () {
