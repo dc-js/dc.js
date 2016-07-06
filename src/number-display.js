@@ -99,7 +99,9 @@ dc.numberDisplay = function (parent, chartGroup) {
             .duration(_chart.transitionDuration())
             .ease('quad-out-in')
             .tween('text', function () {
-                var interp = d3.interpolateNumber(this.lastValue || 0, newValue);
+                // [XA] don't try and interpolate from Infinity, else this breaks.
+                var interpStart = isFinite(this.lastValue) ? this.lastValue : 0;
+                var interp = d3.interpolateNumber(interpStart || 0, newValue);
                 this.lastValue = newValue;
                 return function (t) {
                     var html = null, num = _chart.formatNumber()(interp(t));
