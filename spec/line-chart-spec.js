@@ -1,4 +1,4 @@
-/* global appendChartID, loadDateFixture, makeDate */
+/* global appendChartID, flushAllD3Transitions, loadDateFixture, makeDate */
 describe('dc.lineChart', function () {
     var id, chart, data;
     var dimension, group;
@@ -224,6 +224,7 @@ describe('dc.lineChart', function () {
                     describe('for vertical ref lines', function () {
                         var x;
                         beforeEach(function () {
+                            flushAllD3Transitions();
                             var dot = chart.select('circle.dot');
                             dot.on('mousemove').call(dot[0][0]);
                             x = dot.attr('cx');
@@ -240,6 +241,7 @@ describe('dc.lineChart', function () {
                         describe('for a left y-axis chart', function () {
                             var x;
                             beforeEach(function () {
+                                flushAllD3Transitions();
                                 var dot = chart.select('circle.dot');
                                 dot.on('mousemove').call(dot[0][0]);
                                 x = dot.attr('cx');
@@ -256,6 +258,7 @@ describe('dc.lineChart', function () {
                             var x;
                             beforeEach(function () {
                                 chart.useRightYAxis(true).render();
+                                flushAllD3Transitions();
                                 var dot = chart.select('circle.dot');
                                 dot.on('mousemove').call(dot[0][0]);
                                 x = dot.attr('cx');
