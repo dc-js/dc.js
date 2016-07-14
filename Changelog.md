@@ -1,4 +1,7 @@
 # 2.0 Series
+## 2.0.0 beta 32
+* elasticY and elasticX did not work if all values were negative (coordinate grid and row charts, respectively), by Sebastian Gröhn ([#879](https://github.com/dc-js/dc.js/issues/879) / [#1156](https://github.com/dc-js/dc.js/pull/1156))
+
 ## 2.0.0 beta 31
 * Brush was sometimes not displaying, fix by Paul Briton ([#1134](https://github.com/dc-js/dc.js/issues/1134))
 * Example of workaround for using series chart as a range chart ([#479](https://github.com/dc-js/dc.js/issues/479))
