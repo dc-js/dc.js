@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>dc.js - Area Transitions Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <style>
+      html, body {
+          margin: 0;
+          height: 100%;
+          width: 100%;
+      }
+      .container {
+          overflow: hidden; /* no matter what, don't scroll */
+          height: 100%;
+          width: 100vw;
+          margin-left: 0;
+          margin-right: 0;
+      }
+      #page {
+          height: 95vh;
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+      }
+      .row {
+          display: flex;
+          flex-direction: row;
+          flex: 1 1 auto;
+      }
+      .entry {
+          flex: 1 1 auto;
+      }
+      .chart-holder {
+          padding: 20px;
+      }
+      path.zero {
+          stroke: green;
+          stroke-width: 2;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript" src="../js/d3.js"></script>
+    <script type="text/javascript" src="../js/crossfilter.js"></script>
+    <script type="text/javascript" src="../js/dc.js"></script>
+    <div class="container">
+      <script type="text/javascript" src="./header.js"></script>
+
+      <div id="page"></div>
+
+      <script type="text/javascript">
+        var posiness = ['positive', 'upward', 'even', 'downward', 'negative'];
+
+        var N = 20;
+        var gen = d3.random.normal();
+        function distribute(vals, min, max) {
+            var ext = d3.extent(vals);
+            return vals.map(function(x) {
+                return min + (x-ext[0]) * (max-min)
+                    / (ext[1]-ext[0]);
+            });
+        }
+        function distribution(posi, scale) {
+            var vals = d3.range(N).map(gen);
+            switch(posi) {
+            case 'positive': return distribute(vals, 0, scale);
+            case 'upward': return distribute(vals, -scale*0.1, scale*0.9);
+            case 'even': return distribute(vals, -scale*0.5, scale*0.5);
+            case 'downward': return distribute(vals, -scale*0.9, scale*0.1);
+            case 'negative': return distribute(vals, -scale, 0);
+            default: throw 'no';
+            }
+        }
+
+        function dataset(lposi, rposi) {
+            var ldist = distribution(lposi, 10),
+                rdist = distribution(rposi, 100);
+            return ldist.map(function(v, i) { return {key: i, lvalue: v, rvalue: rdist[i]}; });
+        }
+
+        function init() {
+            var line = d3.svg.line()
+                .interpolate('linear');
+            d3.select('#page')
+                .selectAll('div').data(posiness)
+                .enter().append('div').attr('class', 'row')
+                .each(function(rposi) {
+                    d3.select(this).selectAll('div').data(posiness)
+                        .enter().append('div').attr('class', 'entry')
+                        .each(function(lposi) {
+                            var cdiv = d3.select(this).append('div').attr('class', 'chart-holder');
+                            var chart = dc.compositeChart(cdiv);
+                            var ndx = crossfilter(dataset(lposi, rposi)),
+                                dim = ndx.dimension(function(d) { return d.key; }),
+                                lgroup = dim.group().reduceSum(function(d) { return d.lvalue; }),
+                                rgroup = dim.group().reduceSum(function(d) { return d.rvalue; });
+                            chart
+                                .width(200)
+                                .height(200)
+                                .margins({left: 25, top: 20, right: 30, bottom: 20})
+                                .x(d3.scale.linear())
+                                .brushOn(false)
+                                .alignYAxes(true)
+                                .elasticX(true)
+                                .elasticY(true)
+                                .compose([
+                                    dc.lineChart(chart)
+                                        .dimension(dim)
+                                        .group(lgroup)
+                                        .x(d3.scale.linear())
+                                        .elasticX(true)
+                                        .elasticY(true)
+                                        .on('pretransition', function(chart) {
+                                            chart.select('g.chart-body')
+                                                .selectAll('path.zero').data([0]).enter()
+                                                .append('path').attr('class', 'zero')
+                                                .attr('d', function() {
+                                                    var y = chart.y()(0);
+                                                    return line([[chart.x().range()[0], y], [chart.x().range()[1], y]]);
+                                                });
+                                        }),
+                                    dc.lineChart(chart)
+                                        .dimension(dim)
+                                        .group(rgroup)
+                                        .x(d3.scale.linear())
+                                        .ordinalColors(["darkorange"])
+                                        .elasticX(true)
+                                        .elasticY(true)
+                                        .useRightYAxis(true)
+                                ]);
+                        });
+                });
+        }
+        init();
+        dc.renderAll();
+
+      </script>
+    </div>
+  </body>
+</html>
