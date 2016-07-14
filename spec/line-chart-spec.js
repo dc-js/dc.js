@@ -497,7 +497,7 @@ describe('dc.lineChart', function () {
                 });
             });
 
-            describe('with mixed data', function () {
+            describe('with mixed positive and negative data', function () {
                 beforeEach(function () {
                     var mixedGroup = dimension.group().reduceSum(function (d) { return d.nvalue; });
 
