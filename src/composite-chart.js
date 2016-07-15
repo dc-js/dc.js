@@ -105,6 +105,7 @@ dc.compositeChart = function (parent, chartGroup) {
 
     function calculateYAxisRanges (left, right) {
         var lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax;
+        var ranges;
 
         if (left) {
             lyAxisMin = yAxisMin();
@@ -116,10 +117,11 @@ dc.compositeChart = function (parent, chartGroup) {
             ryAxisMax = rightYAxisMax();
         }
 
-        if (_chart.alignYAxes() && left && right && (lyAxisMin < 0 || ryAxisMin < 0)) {
-            return alignYAxisRanges(lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax);
+        if (_chart.alignYAxes() && left && right) {
+            ranges = alignYAxisRanges(lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax);
         }
-        return {
+
+        return ranges || {
             lyAxisMin: lyAxisMin,
             lyAxisMax: lyAxisMax,
             ryAxisMin: ryAxisMin,
@@ -128,8 +130,21 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     function alignYAxisRanges (lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax) {
-        // both y axis are linear and at least one doesn't start at zero
-        var leftYRatio, rightYRatio;
+        /*
+        // both must touch or span zero
+        if(lyAxisMax < 0 || ryAxisMax < 0 || lyAxisMin > 0 || ryAxisMin > 0) {
+            return null;
+        }
+
+        // both completely below or above: no alignment necessary
+        if(dc.utils.isNegligible(lyAxisMin) && dc.utils.isNegligible(ryAxisMin) ||
+           dc.utils.isNegligible(lyAxisMax) && dc.utils.isNegligible(ryAxisMax)) {
+            return null;
+        }
+         */
+        var //lMoreAbove = lyAxisMax > -lyAxisMin,
+            //rMoreAbove = ryAxisMax > -ryAxisMin,
+            leftYRatio, rightYRatio;
 
         if (lyAxisMin < 0) {
             leftYRatio = lyAxisMax / lyAxisMin;
