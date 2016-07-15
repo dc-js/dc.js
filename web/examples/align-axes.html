@@ -35,9 +35,16 @@
       .chart-holder {
           padding: 20px;
       }
-      path.zero {
+      path.left-zero {
           stroke: green;
-          stroke-width: 2;
+          stroke-width: 1;
+          stroke-dasharray: 4, 4;
+      }
+      path.right-zero {
+          stroke: darkred;
+          stroke-width: 1;
+          stroke-dasharray: 4, 4;
+          stroke-dashoffset: 4;
       }
     </style>
   </head>
@@ -80,9 +87,22 @@
             return ldist.map(function(v, i) { return {key: i, lvalue: v, rvalue: rdist[i]}; });
         }
 
+        var line = d3.svg.line()
+            .interpolate('linear');
+
+        function draw_horizontal(Class, domy) {
+            return function(chart) {
+                chart.select('g.chart-body')
+                    .selectAll('path.zero').data([0]).enter()
+                    .append('path').attr('class', Class)
+                    .attr('d', function() {
+                        var y = chart.y()(domy);
+                        return line([[chart.x().range()[0], y], [chart.x().range()[1], y]]);
+                    });
+            }
+        }
+
         function init() {
-            var line = d3.svg.line()
-                .interpolate('linear');
             d3.select('#page')
                 .selectAll('div').data(posiness)
                 .enter().append('div').attr('class', 'row')
@@ -112,15 +132,7 @@
                                         .x(d3.scale.linear())
                                         .elasticX(true)
                                         .elasticY(true)
-                                        .on('pretransition', function(chart) {
-                                            chart.select('g.chart-body')
-                                                .selectAll('path.zero').data([0]).enter()
-                                                .append('path').attr('class', 'zero')
-                                                .attr('d', function() {
-                                                    var y = chart.y()(0);
-                                                    return line([[chart.x().range()[0], y], [chart.x().range()[1], y]]);
-                                                });
-                                        }),
+                                        .on('pretransition', draw_horizontal('left-zero', 0)),
                                     dc.lineChart(chart)
                                         .dimension(dim)
                                         .group(rgroup)
@@ -129,6 +141,7 @@
                                         .elasticX(true)
                                         .elasticY(true)
                                         .useRightYAxis(true)
+                                        .on('pretransition', draw_horizontal('right-zero', 0))
                                 ]);
                         });
                 });
