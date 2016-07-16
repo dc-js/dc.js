@@ -24,6 +24,12 @@
           flex-direction: row;
           flex: 1 1 auto;
       }
+      .heading {
+          flex: 0.25 0.25 auto;
+      }
+      div.row:not(.heading) div.heading div {
+          transform: rotate(-90deg);
+      }
       .entry {
           flex: 1 1 auto;
       }
@@ -64,7 +70,7 @@
       <div id="page"></div>
 
       <script type="text/javascript">
-        var posiness = ['above', 'upward', 'even', 'downward', 'below'];
+        var posiness = ['heading', 'above', 'upward', 'even', 'downward', 'below'];
 
         var N = 20;
         var gen = d3.random.normal();
@@ -111,12 +117,26 @@
         function init() {
             d3.select('#page')
                 .selectAll('div').data(posiness)
-                .enter().append('div').attr('class', 'row')
+                .enter().append('div').attr('class', function(d) {
+                    return d === 'heading' ? 'heading row' : 'row';
+                })
                 .each(function(rposi) {
                     d3.select(this).selectAll('div').data(posiness)
-                        .enter().append('div').attr('class', 'entry')
+                        .enter().append('div').attr('class', function(d) {
+                            return d === 'heading' ? 'heading entry' : 'entry';
+                        })
                         .each(function(lposi) {
-                            var cdiv = d3.select(this).append('div').attr('class', 'chart-holder');
+                            var cdiv = d3.select(this).append('div')
+                            if(lposi === 'heading') {
+                                if(rposi !== 'heading')
+                                    cdiv.text('right ' + rposi)
+                                return;
+                            }
+                            else if(rposi === 'heading') {
+                                cdiv.text('left ' + lposi)
+                                return;
+                            }
+                            cdiv.attr('class', 'chart-holder');
                             var chart = dc.compositeChart(cdiv);
                             var ndx = crossfilter(dataset(lposi, rposi)),
                                 dim = ndx.dimension(function(d) { return d.key; }),
