@@ -130,45 +130,25 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     function alignYAxisRanges (lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax) {
-        // both must touch or span zero
-        if (lyAxisMax < 0 || ryAxisMax < 0 || lyAxisMin > 0 || ryAxisMin > 0) {
-            return null;
-        }
+        // make sure both ranges include zero (or there's nothing to align)
+        // this is already true due to the stack mixin (#667)
+        lyAxisMin = Math.min(lyAxisMin, 0);
+        ryAxisMin = Math.min(ryAxisMin, 0);
+        lyAxisMax = Math.max(lyAxisMax, 0);
+        ryAxisMax = Math.max(ryAxisMax, 0);
 
-        // both completely below or above: no alignment necessary
-        if (dc.utils.isNegligible(lyAxisMin) && dc.utils.isNegligible(ryAxisMin) ||
-           dc.utils.isNegligible(lyAxisMax) && dc.utils.isNegligible(ryAxisMax)) {
-            return null;
-        }
-        var lMoreAbove = lyAxisMax > -lyAxisMin,
-            rMoreAbove = ryAxisMax > -ryAxisMin;
+        // since the two series will share a zero, each Y is just a multiple
+        // of the other. and the ratio should be the ratio of the ranges of the
+        // input data, so that they come out the same height. so we just min/max
+        // if #667 changes, we can reconsider whether we want data height or
+        // height from zero to be equal.
+        var extentRatio = (ryAxisMax - ryAxisMin) / (lyAxisMax - lyAxisMin);
 
-        // one is mostly above and other is mostly below:
-        // just split the space equally
-        if (lMoreAbove && !rMoreAbove) {
-            lyAxisMin = -lyAxisMax;
-            ryAxisMax = -ryAxisMin;
-        } else if (!lMoreAbove && rMoreAbove) {
-            lyAxisMax = -lyAxisMin;
-            ryAxisMin = -ryAxisMax;
-        } else {
-            // both children's data should be the same height and the y=0 axes should match.
-            // this is enough info to determine the mins and maxes to use.
-            var extentRatio = (ryAxisMax - ryAxisMin) / (lyAxisMax - lyAxisMin);
-            if (lMoreAbove) {
-                // they're both above, so align top and zero and determine min for bottom
-                lyAxisMin = Math.min(lyAxisMin, ryAxisMin / extentRatio);
-                ryAxisMin = Math.min(ryAxisMin, lyAxisMin * extentRatio);
-            } else {
-                lyAxisMax = Math.max(lyAxisMax, ryAxisMax / extentRatio);
-                ryAxisMax = Math.max(ryAxisMax, lyAxisMax * extentRatio);
-            }
-        }
         return {
-            lyAxisMin: lyAxisMin,
-            lyAxisMax: lyAxisMax,
-            ryAxisMin: ryAxisMin,
-            ryAxisMax: ryAxisMax
+            lyAxisMin: Math.min(lyAxisMin, ryAxisMin / extentRatio),
+            lyAxisMax: Math.max(lyAxisMax, ryAxisMax / extentRatio),
+            ryAxisMin: Math.min(ryAxisMin, lyAxisMin * extentRatio),
+            ryAxisMax: Math.max(ryAxisMax, lyAxisMax * extentRatio)
         };
     }
 
