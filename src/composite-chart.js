@@ -130,18 +130,14 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     function alignYAxisRanges (lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax) {
-        // make sure both ranges include zero (or there's nothing to align)
-        // this is already true due to the stack mixin (#667)
-        lyAxisMin = Math.min(lyAxisMin, 0);
-        ryAxisMin = Math.min(ryAxisMin, 0);
-        lyAxisMax = Math.max(lyAxisMax, 0);
-        ryAxisMax = Math.max(ryAxisMax, 0);
-
         // since the two series will share a zero, each Y is just a multiple
         // of the other. and the ratio should be the ratio of the ranges of the
         // input data, so that they come out the same height. so we just min/max
+
+        // note: both ranges already include zero due to the stack mixin (#667)
         // if #667 changes, we can reconsider whether we want data height or
-        // height from zero to be equal.
+        // height from zero to be equal. and it will be possible for the axes
+        // to be aligned but not visible.
         var extentRatio = (ryAxisMax - ryAxisMin) / (lyAxisMax - lyAxisMin);
 
         return {
