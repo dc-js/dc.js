@@ -84,11 +84,11 @@
         function distribution(posi, scale) {
             var vals = d3.range(N).map(gen);
             switch(posi) {
-            case 'above': return distribute(vals, 0, scale);
+            case 'above': return distribute(vals, scale*0.2, scale*1.2);
             case 'upward': return distribute(vals, -scale*0.1, scale*0.9);
             case 'even': return distribute(vals, -scale*0.5, scale*0.5);
             case 'downward': return distribute(vals, -scale*0.9, scale*0.1);
-            case 'below': return distribute(vals, -scale, 0);
+            case 'below': return distribute(vals, -scale*1.2, -0.2);
             default: throw 'no';
             }
         }
