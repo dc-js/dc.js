@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>dc.js - Area Transitions Example</title>
+    <title>dc.js - Align Y Axes Example</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
@@ -10,10 +10,8 @@
           margin: 0;
           width: 100%;
       }
-      .container {
-          width: 100vw;
-          margin-left: 0;
-          margin-right: 0;
+      code {
+          color: black;
       }
       #page {
           height: 95vh;
@@ -67,6 +65,12 @@
     <div class="container">
       <script type="text/javascript" src="./header.js"></script>
 
+      <p>This page demonstrates the
+        <a href="https://github.com/dc-js/dc.js/blob/develop/web/docs/api-latest.md#dc.compositeChart+alignYAxes">compositeChart.alignYAxes</a>
+        feature on different combinations of negative and positive data. <code>alignYAxes</code> is only valid if both child charts have
+        <a href="https://github.com/dc-js/dc.js/blob/develop/web/docs/api-latest.md#dc.coordinateGridMixin+elasticY"><code>elasticY</code></a>.
+        The left zero point will be horizontal with the right zero point, and the heights of the two series will be equal.
+        (As with <code>elasticY</code>, height is currently measured from the y=0 line - see <a href="https://github.com/dc-js/dc.js/issues/667">#667</a>.)</p>
       <div id="page"></div>
 
       <script type="text/javascript">
