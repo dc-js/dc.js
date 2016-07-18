@@ -590,6 +590,9 @@ describe('dc.compositeChart', function () {
                 it('the axis baselines should match', function () {
                     expect(leftChart.y()(0)).toEqual(rightChart.y()(0));
                 });
+                it('the series heights should be equal', function () {
+                    expect(plotHeight(leftChart)).toEqual(plotHeight(rightChart));
+                });
             });
         });
 
@@ -620,39 +623,48 @@ describe('dc.compositeChart', function () {
                 it('the axis baselines should match', function () {
                     expect(leftChart.y()(0)).toEqual(rightChart.y()(0));
                 });
+                it('the series heights should be equal', function () {
+                    expect(plotHeight(leftChart)).toEqual(plotHeight(rightChart));
+                });
             });
         });
 
         describe('when composing left and right axes charts with negative values', function () {
-          var leftChart, rightChart;
-          beforeEach(function () {
-              chart
-                  .compose([
-                      leftChart = dc.barChart(chart)
-                          .group(dateIdNegativeSumGroup, 'Date ID Group'),
-                      rightChart = dc.lineChart(chart)
-                          .group(dateValueNegativeSumGroup, 'Date Value Group')
-                          .useRightYAxis(true)
-                  ])
-                  .render();
-          });
+            var leftChart, rightChart;
+            beforeEach(function () {
+                chart
+                    .compose([
+                        leftChart = dc.barChart(chart)
+                            .group(dateIdNegativeSumGroup, 'Date ID Group'),
+                        rightChart = dc.lineChart(chart)
+                            .group(dateValueNegativeSumGroup, 'Date Value Group')
+                            .useRightYAxis(true)
+                    ])
+                    .render();
+            });
 
-          it('the axis baselines should match', function () {
-              /* because elasticY ensures zero is included for all-negatives, due to PR #1156 */
-              expect(leftChart.y()(0)).toEqual(rightChart.y()(0));
-          });
+            it('the axis baselines should match', function () {
+                /* because elasticY ensures zero is included for all-negatives, due to PR #1156 */
+                expect(leftChart.y()(0)).toEqual(rightChart.y()(0));
+            });
 
-          describe('with alignYAxes', function () {
-              beforeEach(function () {
-                  chart.alignYAxes(true)
-                      .elasticY(true)
-                      .render();
-              });
-              it('the axis baselines should match', function () {
-                  expect(leftChart.y()(0)).toEqual(rightChart.y()(0));
-              });
-          });
-      });
+            describe('with alignYAxes', function () {
+                beforeEach(function () {
+                    chart.alignYAxes(true)
+                        .elasticY(true)
+                        .render();
+                });
+                it('the axis baselines should match', function () {
+                    expect(leftChart.y()(0)).toEqual(rightChart.y()(0));
+                });
+                it('the series heights should be equal', function () {
+                    expect(plotHeight(leftChart)).toEqual(plotHeight(rightChart));
+                });
+            });
+        });
+        function plotHeight (chart) {
+            return chart.y()(chart.yAxisMax()) - chart.y()(chart.yAxisMin());
+        }
     });
 
     describe('sub-charts with different filter types', function () {
