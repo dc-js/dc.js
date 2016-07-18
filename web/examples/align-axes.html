@@ -13,6 +13,10 @@
       code {
           color: black;
       }
+      #hscroll {
+          width: 100%;
+          overflow: scroll;
+      }
       #page {
           height: 95vh;
           width: 100%;
@@ -70,7 +74,10 @@
         <a href="https://github.com/dc-js/dc.js/blob/develop/web/docs/api-latest.md#dc.coordinateGridMixin+elasticY"><code>elasticY</code></a>.
         The left zero point will be horizontal with the right zero point, and the heights of the two series will be equal.
         (As with <code>elasticY</code>, height is currently measured from the y=0 line - see <a href="https://github.com/dc-js/dc.js/issues/667">#667</a>.)</p>
-      <table id="content"></div>
+    </div>
+    <div id="hscroll">
+      <table id="content"></table>
+    </div>
 
       <script type="text/javascript">
         var posiness = ['heading', 'above', 'upward', 'even', 'downward', 'below'];
@@ -193,6 +200,5 @@
         dc.renderAll();
 
       </script>
-    </div>
   </body>
 </html>
