@@ -17,22 +17,21 @@
           height: 95vh;
           width: 100%;
       }
-      .row {
-          display: flex;
-          flex-direction: row;
-          flex: 1 1 auto;
+      tr.heading td div {
+          text-align: center;
       }
-      .heading {
-          flex: 0.25 0.25 auto;
+      td.heading {
+          position: relative;
       }
-      div.row:not(.heading) div.heading div {
-          transform: rotate(-90deg);
-      }
-      .entry {
-          flex: 1 1 auto;
+      tr.row:not(.heading) td.heading div {
+          white-space: nowrap;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform:  translateX(-50%) translateY(-50%) rotate(-90deg);
       }
       .chart-holder {
-          padding: 20px;
+          padding: 0 1em;
       }
       path.left {
           stroke: #1f77b4;
@@ -71,7 +70,7 @@
         <a href="https://github.com/dc-js/dc.js/blob/develop/web/docs/api-latest.md#dc.coordinateGridMixin+elasticY"><code>elasticY</code></a>.
         The left zero point will be horizontal with the right zero point, and the heights of the two series will be equal.
         (As with <code>elasticY</code>, height is currently measured from the y=0 line - see <a href="https://github.com/dc-js/dc.js/issues/667">#667</a>.)</p>
-      <div id="page"></div>
+      <table id="content"></div>
 
       <script type="text/javascript">
         var posiness = ['heading', 'above', 'upward', 'even', 'downward', 'below'];
@@ -119,14 +118,14 @@
         var get_value = dc.pluck('value');
 
         function init() {
-            d3.select('#page')
-                .selectAll('div').data(posiness)
-                .enter().append('div').attr('class', function(d) {
+            d3.select('#content')
+                .selectAll('tr').data(posiness)
+                .enter().append('tr').attr('class', function(d) {
                     return d === 'heading' ? 'heading row' : 'row';
                 })
                 .each(function(rposi) {
-                    d3.select(this).selectAll('div').data(posiness)
-                        .enter().append('div').attr('class', function(d) {
+                    d3.select(this).selectAll('td').data(posiness)
+                        .enter().append('td').attr('class', function(d) {
                             return d === 'heading' ? 'heading entry' : 'entry';
                         })
                         .each(function(lposi) {
