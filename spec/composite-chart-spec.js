@@ -637,8 +637,9 @@ describe('dc.compositeChart', function () {
                   .render();
           });
 
-          it('the axis baselines shouldn\'t match', function () {
-              expect(leftChart.y()(0)).not.toEqual(rightChart.y()(0));
+          it('the axis baselines should match', function () {
+              /* because elasticY ensures zero is included for all-negatives, due to PR #1156 */
+              expect(leftChart.y()(0)).toEqual(rightChart.y()(0));
           });
 
           describe('with alignYAxes', function () {
