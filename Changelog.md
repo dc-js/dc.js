@@ -1,5 +1,6 @@
 # 2.0 Series
 ## 2.0.0 beta 32
+* Improved implementation of alignYAxes, by Mohamed Gazal and Gordon Woodhull ([#1033](https://github.com/dc-js/dc.js/pull/1033))
 * elasticY and elasticX did not work if all values were negative (coordinate grid and row charts, respectively), by Sebastian Gröhn ([#879](https://github.com/dc-js/dc.js/issues/879) / [#1156](https://github.com/dc-js/dc.js/pull/1156))
 
 ## 2.0.0 beta 31
