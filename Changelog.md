@@ -2,7 +2,7 @@
 ## 2.0.0 beta 32
 * elasticY and elasticX did not work if all values were negative (coordinate grid and row charts, respectively), by Sebastian Gröhn ([#879](https://github.com/dc-js/dc.js/issues/879) / [#1156](https://github.com/dc-js/dc.js/pull/1156))
 * Improved implementation of alignYAxes, by Mohamed Gazal and Gordon Woodhull ([#1033](https://github.com/dc-js/dc.js/pull/1033))
-* Example of downloading the table data as it's formatted.
+* Examples of downloading the table data as it's formatted, and formatting legend items.
 * `legend.legendText` documentation was missing.
 
 ## 2.0.0 beta 31
