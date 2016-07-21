@@ -297,6 +297,24 @@ describe('dc.rowChart', function () {
                 });
             });
 
+            describe('removing all the data and restoring the data', function () {
+                // this test mainly exists to produce console errors for #1008;
+                // I can't seem to find any way to detect invalid setAttribute calls
+                beforeEach(function () {
+                    chart.render();
+                    chart.group({all: function () { return []; }});
+                    chart.redraw();
+                    chart.group(groupHolder.group);
+                    chart.redraw();
+                });
+
+                it('should restore the row chart', function () {
+                    chart.selectAll('g.row rect').each(function (p) {
+                        expect(d3.select(this).attr('width').indexOf('NaN') < 0).toBeTruthy();
+                    });
+                });
+            });
+
             describe('custom labels', function () {
                 beforeEach(function () {
                     chart.label(function () {

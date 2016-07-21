@@ -156,7 +156,6 @@ dc.rowChart = function (parent, chartGroup) {
         rowEnter.append('rect').attr('width', 0);
 
         createLabels(rowEnter);
-        updateLabels(rows);
     }
 
     function removeElements (rows) {
