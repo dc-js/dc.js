@@ -186,6 +186,11 @@ dc.pieChart = function (parent, chartGroup) {
             .attr('text-anchor', 'middle');
     }
 
+    function highlightSlice (i, whether) {
+        _chart.select('g.pie-slice._' + i)
+            .classed('highlight', whether);
+    }
+
     function createLabels (labels, pieData, arc) {
         if (_chart.renderLabel()) {
             var labelsEnter = labels
@@ -198,7 +203,13 @@ dc.pieChart = function (parent, chartGroup) {
                     }
                     return classes;
                 })
-                .on('click', onClick);
+                .on('click', onClick)
+                .on('mouseover', function (d, i) {
+                    highlightSlice(i, true);
+                })
+                .on('mouseout', function (d, i) {
+                    highlightSlice(i, false);
+                });
             positionLabels(labelsEnter, arc);
             if (_externalLabelRadius && _drawPaths) {
                 updateLabelPaths(pieData, arc);
@@ -215,6 +226,13 @@ dc.pieChart = function (parent, chartGroup) {
                 .append('polyline')
                 .attr('class', function (d, i) {
                     return 'pie-path _' + i + ' ' + _sliceCssClass;
+                })
+                .on('click', onClick)
+                .on('mouseover', function (d, i) {
+                    highlightSlice(i, true);
+                })
+                .on('mouseout', function (d, i) {
+                    highlightSlice(i, false);
                 });
 
         polyline.exit().remove();
