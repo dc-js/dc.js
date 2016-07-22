@@ -5,6 +5,7 @@
 * Examples of downloading the table data as it's formatted, and formatting legend items.
 * `legend.legendText` documentation was missing.
 * Stop error spew when row chart is emptied out, thanks Einar Norðfjörð and Fil ([#1008](https://github.com/dc-js/dc.js/issues/1008) / ([#1024](https://github.com/dc-js/dc.js/pull/1024))
+* Example of adjusting a pie chart threshold dynamically, by Wei Ding ([#1166](https://github.com/dc-js/dc.js/pull/1166))
 
 ## 2.0.0 beta 31
 * Brush was sometimes not displaying, fix by Paul Briton ([#1134](https://github.com/dc-js/dc.js/issues/1134))
