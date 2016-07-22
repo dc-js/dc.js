@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <link href="http://dc-js.github.io/dc.js/css/dc.css" type="text/css" rel="stylesheet"/>
-    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.10/d3.js" ></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.12/crossfilter.min.js"  ></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dc/2.1.0-dev/dc.js"></script>
+  <head>
+    <title>dc.js - Adjustable Threshold Example</title>
+    <link type="text/css" rel="stylesheet" href="../css/dc.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <script type="text/javascript" src="../js/d3.js" ></script>
+    <script type="text/javascript" src="../js/crossfilter.js"  ></script>
+    <script type="text/javascript" src="../js/dc.js"></script>
 </head>
 
 <body>
-    
+
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
+
+  <p>This example demonstrates assigning a threshold dynamically to a pie chart by creating a new dimension based on slider input.</p>
     <div id="inputSlider">
-        <input type="range" id="slideRange" value="0.5" min="0" max="1.0" step="0.1" onchange="updateSlider(this.value)">
-        Score threshold: 
-        <label id="sliderValue">0.5</label>
+        <div><input type="range" id="slideRange" value="0.5" min="0" max="1.0" step="0.1" onchange="updateSlider(this.value)"></div>
+        Score threshold: <span id="sliderValue">0.5</label>
     </div>
     <div id="dc-coreAcc-piechart"></div>
     <div id="dc-score-barchart"></div>
@@ -25,8 +30,8 @@
                 { "book": "D", "scores": 27 },
                 { "book": "E", "scores": 70 },
                 { "book": "F", "scores": 25 },
-                { "book": "G", "scores": 92 }, 
-                { "book": "H", "scores": 22 }, 
+                { "book": "G", "scores": 92 },
+                { "book": "H", "scores": 22 },
                 { "book": "I", "scores": 40 },
                 { "book": "J", "scores": 10 },
                 { "book": "K", "scores": 40 }
@@ -43,7 +48,7 @@
     var all = ndx.groupAll();
     var bookDimension = ndx.dimension(function (d) {return d.book;}),
         bookscoresGroup = bookDimension.group().reduceSum(function(d) {return d.scores;});
-    
+
     //## score bar chart
     scoreChart.width(320)
         .height(320)
@@ -51,10 +56,10 @@
         .group(bookscoresGroup)
         .elasticY(true)
         .x(d3.scale.ordinal())
-        .xUnits(dc.units.ordinal) 
+        .xUnits(dc.units.ordinal)
         .colors(["orange"])
         .yAxis().ticks(5);
-                            
+
     //## pie chart
     // reusable function to create threshold dimension
     function coreCount_from_threshold() {
@@ -110,5 +115,6 @@
     }
 
     </script>
+</div>
 </body>
 </html>
