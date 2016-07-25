@@ -236,22 +236,30 @@ dc.pieChart = function (parent, chartGroup) {
                 });
 
         polyline.exit().remove();
-        dc.transition(polyline, _chart.transitionDuration())
-            .attrTween('points', function (d) {
-                this._current = this._current || d;
-                var interpolate = d3.interpolate(this._current, d);
-                this._current = interpolate(0);
-                return function (t) {
-                    var arc2 = d3.svg.arc()
-                            .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
-                            .innerRadius(_radius - _externalRadiusPadding);
-                    var d2 = interpolate(t);
-                    return [arc.centroid(d2), arc2.centroid(d2)];
-                };
-            })
-            .style('visibility', function (d) {
-                return d.endAngle - d.startAngle < 0.0001 ? 'hidden' : 'visible';
+        var arc2 = d3.svg.arc()
+                .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
+                .innerRadius(_radius - _externalRadiusPadding);
+        var transition = dc.transition(polyline, _chart.transitionDuration());
+        // this is one rare case where d3.selection differs from d3.transition
+        if (transition.attrTween) {
+            transition
+                .attrTween('points', function (d) {
+                    this._current = this._current || d;
+                    var interpolate = d3.interpolate(this._current, d);
+                    this._current = interpolate(0);
+                    return function (t) {
+                        var d2 = interpolate(t);
+                        return [arc.centroid(d2), arc2.centroid(d2)];
+                    };
+                });
+        } else {
+            transition.attr('points', function (d) {
+                return [arc.centroid(d), arc2.centroid(d)];
             });
+        }
+        transition.style('visibility', function (d) {
+            return d.endAngle - d.startAngle < 0.0001 ? 'hidden' : 'visible';
+        });
 
     }
 
