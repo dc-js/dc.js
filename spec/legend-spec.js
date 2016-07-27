@@ -55,11 +55,11 @@ describe('dc.legend', function () {
 
         it('should position the legend labels', function () {
             expect(legendLabel(0).attr('x')).toBeWithinDelta(15, 2);
-            expect(legendLabel(0).attr('y')).toBeWithinDelta(13, 2);
+            expect(legendLabel(0).attr('y')).toBeWithinDelta(11.75, 2);
             expect(legendLabel(1).attr('x')).toBeWithinDelta(15, 2);
-            expect(legendLabel(1).attr('y')).toBeWithinDelta(13, 2);
+            expect(legendLabel(1).attr('y')).toBeWithinDelta(11.75, 2);
             expect(legendLabel(2).attr('x')).toBeWithinDelta(15, 2);
-            expect(legendLabel(2).attr('y')).toBeWithinDelta(13, 2);
+            expect(legendLabel(2).attr('y')).toBeWithinDelta(11.75, 2);
         });
 
         it('should label the legend items with the names of their associated stacks', function () {
