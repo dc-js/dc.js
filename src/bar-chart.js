@@ -121,8 +121,7 @@ dc.barChart = function (parent, chartGroup) {
             });
 
         dc.transition(labels.exit(), _chart.transitionDuration())
-            .attr('x', function(d) { return _chart.x()(d.x); })
-            .attr('width', _barWidth * 0.9)
+            .attr('height', 0)
             .remove();
     }
 
@@ -173,7 +172,8 @@ dc.barChart = function (parent, chartGroup) {
             .select('title').text(dc.pluck('data', _chart.title(d.name)));
 
         dc.transition(bars.exit(), _chart.transitionDuration())
-            .attr('height', 0)
+            .attr('x', function (d) { return _chart.x()(d.x); })
+            .attr('width', _barWidth * 0.9)
             .remove();
     }
 
