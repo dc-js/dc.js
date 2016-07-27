@@ -300,9 +300,9 @@ dc.lineChart = function (parent, chartGroup) {
                         hideRefLines(g);
                     });
 
-                dots.call(renderTitle, d)
-                    .transition()
-                    .duration(_chart.transitionDuration())
+                dots.call(renderTitle, d);
+
+                dc.transition(dots, _chart.transitionDuration())
                     .attr('cx', function (d) {
                         return dc.utils.safeNumber(_chart.x()(d.x));
                     })
