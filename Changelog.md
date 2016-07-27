@@ -10,6 +10,7 @@
 * Highlight pie slices when hovering labels and paths. (addressing a concern raised in commit [0a35ef61](https://github.com/dc-js/dc.js/pull/1167/commits/0a35ef61568baf8e84e0bc489f678df560dc7f31) in PR [#1167](https://github.com/dc-js/dc.js/pull/1167), but in a more robust way)
 * Transition dots in line chart, by Paul Mach ([#1181](https://github.com/dc-js/dc.js/pull/1181))
 * Number display was getting stuck on Infinity, by Xaser Acheron ([#1176](https://github.com/dc-js/dc.js/issues/1176) / [#1177](https://github.com/dc-js/dc.js/pull/1177))
+* Improved bar chart transitions, by Fil ([#822](https://github.com/dc-js/dc.js/issues/822) / [#1146](https://github.com/dc-js/dc.js/pull/1146))
 
 ## 2.0.0 beta 31
 * Brush was sometimes not displaying, fix by Paul Briton ([#1134](https://github.com/dc-js/dc.js/issues/1134))
