@@ -126,6 +126,7 @@ chart.width(300)
         * [.legendWidth([legendWidth])](#dc.legend+legendWidth) ⇒ <code>Number</code> &#124; <code>[legend](#dc.legend)</code>
         * [.itemWidth([itemWidth])](#dc.legend+itemWidth) ⇒ <code>Number</code> &#124; <code>[legend](#dc.legend)</code>
         * [.autoItemWidth([autoItemWidth])](#dc.legend+autoItemWidth) ⇒ <code>Boolean</code> &#124; <code>[legend](#dc.legend)</code>
+        * [.legendText([legendText])](#dc.legend+legendText) ⇒ <code>function</code> &#124; <code>[legend](#dc.legend)</code>
     * [.scatterPlot](#dc.scatterPlot)
         * [new scatterPlot(parent, [chartGroup])](#new_dc.scatterPlot_new)
         * [.existenceAccessor([accessor])](#dc.scatterPlot+existenceAccessor) ⇒ <code>function</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
@@ -1916,6 +1917,7 @@ Get of set the x offset (horizontal space between right edge of row and right ed
     * [.legendWidth([legendWidth])](#dc.legend+legendWidth) ⇒ <code>Number</code> &#124; <code>[legend](#dc.legend)</code>
     * [.itemWidth([itemWidth])](#dc.legend+itemWidth) ⇒ <code>Number</code> &#124; <code>[legend](#dc.legend)</code>
     * [.autoItemWidth([autoItemWidth])](#dc.legend+autoItemWidth) ⇒ <code>Boolean</code> &#124; <code>[legend](#dc.legend)</code>
+    * [.legendText([legendText])](#dc.legend+legendText) ⇒ <code>function</code> &#124; <code>[legend](#dc.legend)</code>
 
 <a name="new_dc.legend_new"></a>
 
@@ -2020,6 +2022,30 @@ This setting takes into account [gap](#dc.legend+gap).
 | --- | --- | --- |
 | [autoItemWidth] | <code>Boolean</code> | <code>false</code> | 
 
+<a name="dc.legend+legendText"></a>
+
+#### legend.legendText([legendText]) ⇒ <code>function</code> &#124; <code>[legend](#dc.legend)</code>
+Set or get the legend text function. The legend widget uses this function to render the legend
+text for each item. If no function is specified the legend widget will display the names
+associated with each group.
+
+**Kind**: instance method of <code>[legend](#dc.legend)</code>  
+
+| Param | Type |
+| --- | --- |
+| [legendText] | <code>function</code> | 
+
+**Example**  
+```js
+// default legendText
+legend.legendText(dc.pluck('name'))
+
+// create numbered legend items
+chart.legend(dc.legend().legendText(function(d, i) { return i + '. ' + d.name; }))
+
+// create legend displaying group counts
+chart.legend(dc.legend().legendText(function(d) { return d.name + ': ' d.data; }))
+```
 <a name="dc.scatterPlot"></a>
 
 ### dc.scatterPlot
