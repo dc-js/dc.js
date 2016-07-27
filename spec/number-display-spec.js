@@ -165,4 +165,30 @@ describe('dc.numberDisplay', function () {
             d3.select('#number-display-test-section').remove();
         });
     });
+    describe('Infinity', function () {
+        var chart;
+        beforeEach(function () {
+            var id = 'empty-div';
+            appendChartID(id);
+            chart = buildChart('#' + id);
+            chart.valueAccessor(function (x) { return x; })
+                .group({value: function () { return Infinity; }})
+                .formatNumber(function (d) { return d; })
+                .render();
+            d3.timer.flush();
+        });
+        it('should display as Infinity', function () {
+            expect(chart.root().text()).toEqual('Infinity');
+        });
+        describe('returning to finite', function () {
+            beforeEach(function () {
+                chart.group({value: function () { return 17; }})
+                    .render();
+                d3.timer.flush();
+            });
+            it('should display finite', function () {
+                expect(chart.root().text()).toEqual('17');
+            });
+        });
+    });
 });
