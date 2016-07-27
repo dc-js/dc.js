@@ -20,6 +20,7 @@ dc.numberDisplay = function (parent, chartGroup) {
     var _formatNumber = d3.format('.2s');
     var _chart = dc.baseMixin({});
     var _html = {one: '', some: '', none: ''};
+    var _lastValue;
 
     // dimension not required
     _chart._mandatoryAttributes(['group']);
@@ -100,9 +101,9 @@ dc.numberDisplay = function (parent, chartGroup) {
             .ease('quad-out-in')
             .tween('text', function () {
                 // [XA] don't try and interpolate from Infinity, else this breaks.
-                var interpStart = isFinite(this.lastValue) ? this.lastValue : 0;
+                var interpStart = isFinite(_lastValue) ? _lastValue : 0;
                 var interp = d3.interpolateNumber(interpStart || 0, newValue);
-                this.lastValue = newValue;
+                _lastValue = newValue;
                 return function (t) {
                     var html = null, num = _chart.formatNumber()(interp(t));
                     if (newValue === 0 && (_html.none !== '')) {
