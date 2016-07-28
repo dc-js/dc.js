@@ -20,6 +20,7 @@ var transitionTest = (function() {
     if(isNaN(pause)) pause = 500;
     function stop() {
         window.clearInterval(inter);
+        inter = null;
     }
     function oscillate(f1, f2) {
         return function() {
@@ -36,11 +37,80 @@ var transitionTest = (function() {
             }, duration+pause);
         };
     }
+    // generate continuous data
+    function progression(N, initial) {
+        var _steps = 5, // number of data points to add each tick
+            _interval = 1, // distance in x between points
+            _magnitude = 1, // maximum change in y per observation
+            _reverse = false; // whether to regress instead of progress
+        var _data = [];
+        var rand = d3.random.normal();
+        function startval() { // .fill() (when can we drop ie?)
+            var a = new Array(N);
+            for(var i = 0; i<N; ++i) {
+                a[i] = _magnitude*2;
+            }
+            return a;
+        }
+        function drop() {
+            _data.splice(0, 1);
+        }
+        function generate() {
+            var basis = _data.length ? _data[_data.length-1] : {key: 0, value: startval()};
+            var obs = [], key = basis.key + _interval;
+            for(var i = 0; i<N; ++i) {
+                obs[i] = Math.max(basis.value[i] + rand() * _magnitude, 0);
+            }
+            _data.push({key: key, value: obs});
+        }
+        while(initial--) generate();
+        return {
+            steps: function(steps) {
+                if(!arguments.length)
+                    return _steps;
+                _steps = steps;
+                return this;
+            },
+            interval: function(interval) {
+                if(!arguments.length)
+                    return _interval;
+                _interval = interval;
+                return this;
+            },
+            magnitude: function(magnitude) {
+                if(!arguments.length)
+                    return _magnitude;
+                _magnitude = magnitude;
+                return this;
+            },
+            reverse: function(reverse) {
+                if(!arguments.length)
+                    return _reverse;
+                _reverse = reverse;
+                return this;
+            },
+            start: function() {
+                stop();
+                dc.redrawAll();
+                inter = window.setInterval(function() {
+                    for(var i = 0; i < _steps; ++i) {
+                        generate();
+                        drop();
+                    }
+                    dc.redrawAll();
+                }, duration+pause);
+            },
+            data: function() {
+                return _data;
+            }
+        };
+    }
     return {
         querystring : querystring,
         duration: duration,
         pause: pause,
         stop: stop,
-        oscillate: oscillate
+        oscillate: oscillate,
+        progression: progression
     };
 })();
