@@ -895,10 +895,10 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     /**
-     * Set or get y axis padding for the elastic y axis. The padding will be added to the top of the y
-     * axis if elasticY is turned on; otherwise it is ignored.
+     * Set or get y axis padding for the elastic y axis. The padding will be added to the top and
+     * bottom of the y axis if elasticY is turned on; otherwise it is ignored.
      *
-     * padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
+     * Padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
      * number or date axes. When padding a date axis, an integer represents number of days being padded
      * and a percentage string will be treated the same as an integer.
      * @method yAxisPadding

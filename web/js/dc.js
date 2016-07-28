@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.0-beta.31
+ *  dc 2.0.0-beta.32
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 2.0.0-beta.31
+ * @version 2.0.0-beta.32
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '2.0.0-beta.31',
+    version: '2.0.0-beta.32',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -3597,10 +3597,10 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     /**
-     * Set or get y axis padding for the elastic y axis. The padding will be added to the top of the y
-     * axis if elasticY is turned on; otherwise it is ignored.
+     * Set or get y axis padding for the elastic y axis. The padding will be added to the top and
+     * bottom of the y axis if elasticY is turned on; otherwise it is ignored.
      *
-     * padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
+     * Padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
      * number or date axes. When padding a date axis, an integer represents number of days being padded
      * and a percentage string will be treated the same as an integer.
      * @method yAxisPadding
@@ -4176,7 +4176,7 @@ dc.stackMixin = function (_chart) {
 
     _chart.yAxisMin = function () {
         var min = d3.min(flattenStack(), function (p) {
-            return (p.y + p.y0 < p.y0) ? (p.y + p.y0) : p.y0;
+            return (p.y < 0) ? (p.y + p.y0) : p.y0;
         });
 
         return dc.utils.subtract(min, _chart.yAxisPadding());
@@ -4185,7 +4185,7 @@ dc.stackMixin = function (_chart) {
 
     _chart.yAxisMax = function () {
         var max = d3.max(flattenStack(), function (p) {
-            return p.y + p.y0;
+            return (p.y > 0) ? (p.y + p.y0) : p.y0;
         });
 
         return dc.utils.add(max, _chart.yAxisPadding());
@@ -4747,6 +4747,9 @@ dc.pieChart = function (parent, chartGroup) {
     var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
     var _sliceCssClass = 'pie-slice';
+    var _labelCssClass = 'pie-label';
+    var _sliceGroupCssClass = 'pie-slice-group';
+    var _labelGroupCssClass = 'pie-label-group';
     var _emptyCssClass = 'empty-chart';
     var _emptyTitle = 'empty';
 
@@ -4793,6 +4796,9 @@ dc.pieChart = function (parent, chartGroup) {
             .append('g')
             .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
 
+        _g.append('g').attr('class', _sliceGroupCssClass);
+        _g.append('g').attr('class', _labelGroupCssClass);
+
         drawChart();
 
         return _chart;
@@ -4818,14 +4824,19 @@ dc.pieChart = function (parent, chartGroup) {
         }
 
         if (_g) {
-            var slices = _g.selectAll('g.' + _sliceCssClass)
+            var slices = _g.select('g.' + _sliceGroupCssClass)
+                .selectAll('g.' + _sliceCssClass)
                 .data(pieData);
 
-            createElements(slices, arc, pieData);
+            var labels = _g.select('g.' + _labelGroupCssClass)
+                .selectAll('text.' + _labelCssClass)
+                .data(pieData);
+
+            createElements(slices, labels, arc, pieData);
 
             updateElements(pieData, arc);
 
-            removeElements(slices);
+            removeElements(slices, labels);
 
             highlightFilter();
 
@@ -4834,14 +4845,14 @@ dc.pieChart = function (parent, chartGroup) {
         }
     }
 
-    function createElements (slices, arc, pieData) {
+    function createElements (slices, labels, arc, pieData) {
         var slicesEnter = createSliceNodes(slices);
 
         createSlicePath(slicesEnter, arc);
 
         createTitles(slicesEnter);
 
-        createLabels(pieData, arc);
+        createLabels(labels, pieData, arc);
     }
 
     function createSliceNodes (slices) {
@@ -4895,24 +4906,30 @@ dc.pieChart = function (parent, chartGroup) {
             .attr('text-anchor', 'middle');
     }
 
-    function createLabels (pieData, arc) {
+    function highlightSlice (i, whether) {
+        _chart.select('g.pie-slice._' + i)
+            .classed('highlight', whether);
+    }
+
+    function createLabels (labels, pieData, arc) {
         if (_chart.renderLabel()) {
-            var labels = _g.selectAll('text.' + _sliceCssClass)
-                .data(pieData);
-
-            labels.exit().remove();
-
             var labelsEnter = labels
                 .enter()
                 .append('text')
                 .attr('class', function (d, i) {
-                    var classes = _sliceCssClass + ' _' + i;
+                    var classes = _sliceCssClass + ' ' + _labelCssClass + ' _' + i;
                     if (_externalLabelRadius) {
                         classes += ' external';
                     }
                     return classes;
                 })
-                .on('click', onClick);
+                .on('click', onClick)
+                .on('mouseover', function (d, i) {
+                    highlightSlice(i, true);
+                })
+                .on('mouseout', function (d, i) {
+                    highlightSlice(i, false);
+                });
             positionLabels(labelsEnter, arc);
             if (_externalLabelRadius && _drawPaths) {
                 updateLabelPaths(pieData, arc);
@@ -4929,25 +4946,40 @@ dc.pieChart = function (parent, chartGroup) {
                 .append('polyline')
                 .attr('class', function (d, i) {
                     return 'pie-path _' + i + ' ' + _sliceCssClass;
+                })
+                .on('click', onClick)
+                .on('mouseover', function (d, i) {
+                    highlightSlice(i, true);
+                })
+                .on('mouseout', function (d, i) {
+                    highlightSlice(i, false);
                 });
 
         polyline.exit().remove();
-        dc.transition(polyline, _chart.transitionDuration())
-            .attrTween('points', function (d) {
-                this._current = this._current || d;
-                var interpolate = d3.interpolate(this._current, d);
-                this._current = interpolate(0);
-                return function (t) {
-                    var arc2 = d3.svg.arc()
-                            .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
-                            .innerRadius(_radius - _externalRadiusPadding);
-                    var d2 = interpolate(t);
-                    return [arc.centroid(d2), arc2.centroid(d2)];
-                };
-            })
-            .style('visibility', function (d) {
-                return d.endAngle - d.startAngle < 0.0001 ? 'hidden' : 'visible';
+        var arc2 = d3.svg.arc()
+                .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
+                .innerRadius(_radius - _externalRadiusPadding);
+        var transition = dc.transition(polyline, _chart.transitionDuration());
+        // this is one rare case where d3.selection differs from d3.transition
+        if (transition.attrTween) {
+            transition
+                .attrTween('points', function (d) {
+                    this._current = this._current || d;
+                    var interpolate = d3.interpolate(this._current, d);
+                    this._current = interpolate(0);
+                    return function (t) {
+                        var d2 = interpolate(t);
+                        return [arc.centroid(d2), arc2.centroid(d2)];
+                    };
+                });
+        } else {
+            transition.attr('points', function (d) {
+                return [arc.centroid(d), arc2.centroid(d)];
             });
+        }
+        transition.style('visibility', function (d) {
+            return d.endAngle - d.startAngle < 0.0001 ? 'hidden' : 'visible';
+        });
 
     }
 
@@ -4972,7 +5004,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     function updateLabels (pieData, arc) {
         if (_chart.renderLabel()) {
-            var labels = _g.selectAll('text.' + _sliceCssClass)
+            var labels = _g.selectAll('text.' + _labelCssClass)
                 .data(pieData);
             positionLabels(labels, arc);
             if (_externalLabelRadius && _drawPaths) {
@@ -4992,8 +5024,9 @@ dc.pieChart = function (parent, chartGroup) {
         }
     }
 
-    function removeElements (slices) {
+    function removeElements (slices, labels) {
         slices.exit().remove();
+        labels.exit().remove();
     }
 
     function highlightFilter () {
@@ -5464,7 +5497,8 @@ dc.barChart = function (parent, chartGroup) {
             .select('title').text(dc.pluck('data', _chart.title(d.name)));
 
         dc.transition(bars.exit(), _chart.transitionDuration())
-            .attr('height', 0)
+            .attr('x', function (d) { return _chart.x()(d.x); })
+            .attr('width', _barWidth * 0.9)
             .remove();
     }
 
@@ -5955,6 +5989,7 @@ dc.lineChart = function (parent, chartGroup) {
                     .attr('r', getDotRadius())
                     .style('fill-opacity', _dataPointFillOpacity)
                     .style('stroke-opacity', _dataPointStrokeOpacity)
+                    .attr('fill', _chart.getColor)
                     .on('mousemove', function () {
                         var dot = d3.select(this);
                         showDot(dot);
@@ -5966,15 +6001,16 @@ dc.lineChart = function (parent, chartGroup) {
                         hideRefLines(g);
                     });
 
-                dots
+                dots.call(renderTitle, d);
+
+                dc.transition(dots, _chart.transitionDuration())
                     .attr('cx', function (d) {
                         return dc.utils.safeNumber(_chart.x()(d.x));
                     })
                     .attr('cy', function (d) {
                         return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
                     })
-                    .attr('fill', _chart.getColor)
-                    .call(renderTitle, d);
+                    .attr('fill', _chart.getColor);
 
                 dots.exit().remove();
             });
@@ -7230,6 +7266,7 @@ dc.compositeChart = function (parent, chartGroup) {
 
     function calculateYAxisRanges (left, right) {
         var lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax;
+        var ranges;
 
         if (left) {
             lyAxisMin = yAxisMin();
@@ -7241,35 +7278,34 @@ dc.compositeChart = function (parent, chartGroup) {
             ryAxisMax = rightYAxisMax();
         }
 
-        if (_chart.alignYAxes() && left && right && (lyAxisMin < 0 || ryAxisMin < 0)) {
-            // both y axis are linear and at least one doesn't start at zero
-            var leftYRatio, rightYRatio;
-
-            if (lyAxisMin < 0) {
-                leftYRatio = lyAxisMax / lyAxisMin;
-            }
-
-            if (ryAxisMin < 0) {
-                rightYRatio = ryAxisMax / ryAxisMin;
-            }
-
-            if (lyAxisMin < 0 && ryAxisMin < 0) {
-                if (leftYRatio < rightYRatio) {
-                    ryAxisMax = ryAxisMin * leftYRatio;
-                } else {
-                    lyAxisMax = lyAxisMin * rightYRatio;
-                }
-            } else if (lyAxisMin < 0) {
-                ryAxisMin = ryAxisMax / leftYRatio;
-            } else {
-                lyAxisMin = lyAxisMax / (ryAxisMax / ryAxisMin);
-            }
+        if (_chart.alignYAxes() && left && right) {
+            ranges = alignYAxisRanges(lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax);
         }
-        return {
+
+        return ranges || {
             lyAxisMin: lyAxisMin,
             lyAxisMax: lyAxisMax,
             ryAxisMin: ryAxisMin,
             ryAxisMax: ryAxisMax
+        };
+    }
+
+    function alignYAxisRanges (lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax) {
+        // since the two series will share a zero, each Y is just a multiple
+        // of the other. and the ratio should be the ratio of the ranges of the
+        // input data, so that they come out the same height. so we just min/max
+
+        // note: both ranges already include zero due to the stack mixin (#667)
+        // if #667 changes, we can reconsider whether we want data height or
+        // height from zero to be equal. and it will be possible for the axes
+        // to be aligned but not visible.
+        var extentRatio = (ryAxisMax - ryAxisMin) / (lyAxisMax - lyAxisMin);
+
+        return {
+            lyAxisMin: Math.min(lyAxisMin, ryAxisMin / extentRatio),
+            lyAxisMax: Math.max(lyAxisMax, ryAxisMax / extentRatio),
+            ryAxisMin: Math.min(ryAxisMin, lyAxisMin * extentRatio),
+            ryAxisMax: Math.max(ryAxisMax, lyAxisMax * extentRatio)
         };
     }
 
@@ -7529,7 +7565,7 @@ dc.compositeChart = function (parent, chartGroup) {
 
     /**
      * Get or set alignment between left and right y axes. A line connecting '0' on both y axis
-     * will be parallel to x axis.
+     * will be parallel to x axis. This only has effect when {@link #dc.coordinateGridMixin+elasticY elasticY} is true.
      * @method alignYAxes
      * @memberof dc.compositeChart
      * @instance
@@ -8404,6 +8440,9 @@ dc.rowChart = function (parent, chartGroup) {
             if (extent[0] > 0) {
                 extent[0] = 0;
             }
+            if (extent[1] < 0) {
+                extent[1] = 0;
+            }
             _x = d3.scale.linear().domain(extent)
                 .range([0, _chart.effectiveWidth()]);
         }
@@ -8501,7 +8540,6 @@ dc.rowChart = function (parent, chartGroup) {
         rowEnter.append('rect').attr('width', 0);
 
         createLabels(rowEnter);
-        updateLabels(rows);
     }
 
     function removeElements (rows) {
@@ -9024,26 +9062,30 @@ dc.legend = function () {
     };
 
     /**
-    #### .legendText([legendTextFunction])
-    Set or get the legend text function. The legend widget uses this function to render
-    the legend text on each item. If no function is specified the legend widget will display
-    the names associated with each group.
-
-    Default: dc.pluck('name')
-
-    ```js
-    // create numbered legend items
-    chart.legend(dc.legend().legendText(function(d, i) { return i + '. ' + d.name; }))
-
-    // create legend displaying group counts
-    chart.legend(dc.legend().legendText(function(d) { return d.name + ': ' d.data; }))
-    ```
-    **/
-    _legend.legendText = function (_) {
+     * Set or get the legend text function. The legend widget uses this function to render the legend
+     * text for each item. If no function is specified the legend widget will display the names
+     * associated with each group.
+     * @method legendText
+     * @memberof dc.legend
+     * @instance
+     * @param  {Function} [legendText]
+     * @return {Function}
+     * @return {dc.legend}
+     * @example
+     * // default legendText
+     * legend.legendText(dc.pluck('name'))
+     *
+     * // create numbered legend items
+     * chart.legend(dc.legend().legendText(function(d, i) { return i + '. ' + d.name; }))
+     *
+     * // create legend displaying group counts
+     * chart.legend(dc.legend().legendText(function(d) { return d.name + ': ' d.data; }))
+     **/
+    _legend.legendText = function (legendText) {
         if (!arguments.length) {
             return _legendText;
         }
-        _legendText = _;
+        _legendText = legendText;
         return _legend;
     };
 
@@ -9411,6 +9453,7 @@ dc.numberDisplay = function (parent, chartGroup) {
     var _formatNumber = d3.format('.2s');
     var _chart = dc.baseMixin({});
     var _html = {one: '', some: '', none: ''};
+    var _lastValue;
 
     // dimension not required
     _chart._mandatoryAttributes(['group']);
@@ -9490,8 +9533,10 @@ dc.numberDisplay = function (parent, chartGroup) {
             .duration(_chart.transitionDuration())
             .ease('quad-out-in')
             .tween('text', function () {
-                var interp = d3.interpolateNumber(this.lastValue || 0, newValue);
-                this.lastValue = newValue;
+                // [XA] don't try and interpolate from Infinity, else this breaks.
+                var interpStart = isFinite(_lastValue) ? _lastValue : 0;
+                var interp = d3.interpolateNumber(interpStart || 0, newValue);
+                _lastValue = newValue;
                 return function (t) {
                     var html = null, num = _chart.formatNumber()(interp(t));
                     if (newValue === 0 && (_html.none !== '')) {

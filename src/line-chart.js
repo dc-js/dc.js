@@ -288,6 +288,7 @@ dc.lineChart = function (parent, chartGroup) {
                     .attr('r', getDotRadius())
                     .style('fill-opacity', _dataPointFillOpacity)
                     .style('stroke-opacity', _dataPointStrokeOpacity)
+                    .attr('fill', _chart.getColor)
                     .on('mousemove', function () {
                         var dot = d3.select(this);
                         showDot(dot);
@@ -299,15 +300,16 @@ dc.lineChart = function (parent, chartGroup) {
                         hideRefLines(g);
                     });
 
-                dots
+                dots.call(renderTitle, d);
+
+                dc.transition(dots, _chart.transitionDuration())
                     .attr('cx', function (d) {
                         return dc.utils.safeNumber(_chart.x()(d.x));
                     })
                     .attr('cy', function (d) {
                         return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
                     })
-                    .attr('fill', _chart.getColor)
-                    .call(renderTitle, d);
+                    .attr('fill', _chart.getColor);
 
                 dots.exit().remove();
             });

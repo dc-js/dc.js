@@ -38,6 +38,41 @@ describe('dc.legend', function () {
             expect(chart.select('g.dc-legend').selectAll('g.dc-legend-item').size()).toBe(3);
         });
 
+        it('should generate legend item boxes', function () {
+            expect(legendIcon(0).attr('width')).toBeWithinDelta(13,2);
+            expect(legendIcon(0).attr('height')).toBeWithinDelta(13, 2);
+        });
+
+        it('should color the legend item boxes using the chart line colors', function () {
+            expect(legendIcon(0).attr('fill')).toBe('#1f77b4');
+            expect(legendIcon(1).attr('fill')).toBe('#ff7f0e');
+            expect(legendIcon(2).attr('fill')).toBe('#2ca02c');
+        });
+
+        it('should generate a legend label for each chart line', function () {
+            expect(chart.selectAll('g.dc-legend g.dc-legend-item text').size()).toBe(3);
+        });
+
+        it('should position the legend labels', function () {
+            expect(legendLabel(0).attr('x')).toBeWithinDelta(15, 2);
+            expect(legendLabel(0).attr('y')).toBeWithinDelta(11.75, 2);
+            expect(legendLabel(1).attr('x')).toBeWithinDelta(15, 2);
+            expect(legendLabel(1).attr('y')).toBeWithinDelta(11.75, 2);
+            expect(legendLabel(2).attr('x')).toBeWithinDelta(15, 2);
+            expect(legendLabel(2).attr('y')).toBeWithinDelta(11.75, 2);
+        });
+
+        it('should label the legend items with the names of their associated stacks', function () {
+            expect(legendLabel(0).text()).toBe('Id Sum');
+            expect(legendLabel(1).text()).toBe('Value Sum');
+            expect(legendLabel(2).text()).toBe('Fixed');
+        });
+
+        it('not allow hiding stacks be default', function () {
+            legendItem(0).on('click').call(legendItem(0)[0][0], legendItem(0).datum());
+            expect(chart.selectAll('path.line').size()).toBe(3);
+        });
+
         describe('without .horizontal(true)', function () {
             it('should place legend items vertically', function () {
                 expect(coordsFromTranslate(legendItem(0).attr('transform')).y).toBeWithinDelta(0, 1);
@@ -125,41 +160,6 @@ describe('dc.legend', function () {
                 expect(autoWidthOffset1).toBeGreaterThan(fixedWidthOffset1);
                 expect(autoWidthOffset2).toBeGreaterThan(fixedWidthOffset2);
             });
-        });
-
-        it('should generate legend item boxes', function () {
-            expect(legendIcon(0).attr('width')).toBeWithinDelta(13,2);
-            expect(legendIcon(0).attr('height')).toBeWithinDelta(13, 2);
-        });
-
-        it('should color the legend item boxes using the chart line colors', function () {
-            expect(legendIcon(0).attr('fill')).toBe('#1f77b4');
-            expect(legendIcon(1).attr('fill')).toBe('#ff7f0e');
-            expect(legendIcon(2).attr('fill')).toBe('#2ca02c');
-        });
-
-        it('should generate a legend label for each chart line', function () {
-            expect(chart.selectAll('g.dc-legend g.dc-legend-item text').size()).toBe(3);
-        });
-
-        it('should position the legend labels', function () {
-            expect(legendLabel(0).attr('x')).toBeWithinDelta(15, 2);
-            expect(legendLabel(0).attr('y')).toBeWithinDelta(13, 2);
-            expect(legendLabel(1).attr('x')).toBeWithinDelta(15, 2);
-            expect(legendLabel(1).attr('y')).toBeWithinDelta(13, 2);
-            expect(legendLabel(2).attr('x')).toBeWithinDelta(15, 2);
-            expect(legendLabel(2).attr('y')).toBeWithinDelta(13, 2);
-        });
-
-        it('should label the legend items with the names of their associated stacks', function () {
-            expect(legendLabel(0).text()).toBe('Id Sum');
-            expect(legendLabel(1).text()).toBe('Value Sum');
-            expect(legendLabel(2).text()).toBe('Fixed');
-        });
-
-        it('not allow hiding stacks be default', function () {
-            legendItem(0).on('click').call(legendItem(0)[0][0], legendItem(0).datum());
-            expect(chart.selectAll('path.line').size()).toBe(3);
         });
 
         describe('with .legendText()', function () {
