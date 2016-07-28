@@ -39,17 +39,17 @@
           doArea = transitionTest.querystring.area!=="0";
 
       chart
-      .transitionDuration(transitionTest.duration)
-      .width(768)
-      .height(480)
-      .x(d3.scale.linear())
-      .elasticX(true)
-      .elasticY(true)
-      .margins({left: 50, top: 10, right: 10, bottom: 20})
-      .renderArea(doArea)
-      .brushOn(false)
-      .renderDataPoints(doDots)
-      .dimension(noDimension);
+          .transitionDuration(transitionTest.duration)
+          .width(768)
+          .height(480)
+          .x(d3.scale.linear())
+          .elasticX(true)
+          .elasticY(true)
+          .margins({left: 50, top: 10, right: 10, bottom: 20})
+          .renderArea(doArea)
+          .brushOn(false)
+          .renderDataPoints(doDots)
+          .dimension(noDimension);
 
       function all_stacks() {
           chart.group(progressGroup, "0", sel_stack('0'));
