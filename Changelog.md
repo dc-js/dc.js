@@ -5,6 +5,19 @@
  * Functional-style filter handlers: instead of modifying the array of filters in-place, filter handlers must return the new filter array. This is consistent with the old documention, but a different implementation: any changes to the `filters` argument will be ignored unless they are returned. This should make filter handlers easier to reason about.
 
 # 2.0 Series
+## 2.0.0 beta 32
+* elasticY and elasticX did not work if all values were negative (coordinate grid and row charts, respectively), by Sebastian Gröhn ([#879](https://github.com/dc-js/dc.js/issues/879) / [#1156](https://github.com/dc-js/dc.js/pull/1156))
+* Improved implementation of alignYAxes, by Mohamed Gazal and Gordon Woodhull ([#1033](https://github.com/dc-js/dc.js/pull/1033))
+* Examples of downloading the table data as it's formatted, and formatting legend items.
+* `legend.legendText` documentation was missing.
+* Stop error spew when row chart is emptied out, thanks Einar Norðfjörð and Fil ([#1008](https://github.com/dc-js/dc.js/issues/1008) / ([#1024](https://github.com/dc-js/dc.js/pull/1024))
+* Example of adjusting a pie chart threshold dynamically, by Wei Ding ([#1166](https://github.com/dc-js/dc.js/pull/1166))
+* Do not allow pie slices to overlap pie labels, by Michael Dougherty ([#664](https://github.com/dc-js/dc.js/issues/664) / [#1167](https://github.com/dc-js/dc.js/pull/1167))
+* Highlight pie slices when hovering labels and paths. (addressing a concern raised in commit [0a35ef61](https://github.com/dc-js/dc.js/pull/1167/commits/0a35ef61568baf8e84e0bc489f678df560dc7f31) in PR [#1167](https://github.com/dc-js/dc.js/pull/1167), but in a more robust way)
+* Transition dots in line chart, by Paul Mach ([#1181](https://github.com/dc-js/dc.js/pull/1181))
+* Number display was getting stuck on Infinity, by Xaser Acheron ([#1176](https://github.com/dc-js/dc.js/issues/1176) / [#1177](https://github.com/dc-js/dc.js/pull/1177))
+* Improved bar chart transitions, by Fil ([#822](https://github.com/dc-js/dc.js/issues/822) / [#1146](https://github.com/dc-js/dc.js/pull/1146))
+
 ## 2.0.0 beta 31
 * Brush was sometimes not displaying, fix by Paul Briton ([#1134](https://github.com/dc-js/dc.js/issues/1134))
 * Example of workaround for using series chart as a range chart ([#479](https://github.com/dc-js/dc.js/issues/479))

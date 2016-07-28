@@ -1,7 +1,7 @@
 /* global appendChartID, loadDateFixture, makeDate */
 describe('dc.compositeChart', function () {
     var id, chart, data, dateDimension, dateValueSumGroup, dateValueNegativeSumGroup,
-        dateIdSumGroup, dateGroup;
+        dateIdSumGroup, dateIdNegativeSumGroup, dateGroup;
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
@@ -9,6 +9,7 @@ describe('dc.compositeChart', function () {
         dateValueSumGroup = dateDimension.group().reduceSum(function (d) { return d.value; });
         dateValueNegativeSumGroup = dateDimension.group().reduceSum(function (d) { return -d.value; });
         dateIdSumGroup = dateDimension.group().reduceSum(function (d) { return d.id; });
+        dateIdNegativeSumGroup = dateDimension.group().reduceSum(function (d) { return -d.id; });
         dateGroup = dateDimension.group();
 
         id = 'composite-chart';
@@ -589,6 +590,9 @@ describe('dc.compositeChart', function () {
                 it('the axis baselines should match', function () {
                     expect(leftChart.y()(0)).toEqual(rightChart.y()(0));
                 });
+                it('the series heights should be equal', function () {
+                    expect(plotHeight(leftChart)).toEqual(plotHeight(rightChart));
+                });
             });
         });
 
@@ -598,9 +602,9 @@ describe('dc.compositeChart', function () {
                 chart
                     .compose([
                         leftChart = dc.barChart(chart)
-                            .group(dateIdSumGroup, 'Date Value Group'),
+                            .group(dateIdSumGroup, 'Date ID Group'),
                         rightChart = dc.lineChart(chart)
-                            .group(dateValueNegativeSumGroup, 'Date ID Group')
+                            .group(dateValueNegativeSumGroup, 'Date Value Group')
                             .useRightYAxis(true)
                     ])
                     .render();
@@ -619,8 +623,48 @@ describe('dc.compositeChart', function () {
                 it('the axis baselines should match', function () {
                     expect(leftChart.y()(0)).toEqual(rightChart.y()(0));
                 });
+                it('the series heights should be equal', function () {
+                    expect(plotHeight(leftChart)).toEqual(plotHeight(rightChart));
+                });
             });
         });
+
+        describe('when composing left and right axes charts with negative values', function () {
+            var leftChart, rightChart;
+            beforeEach(function () {
+                chart
+                    .compose([
+                        leftChart = dc.barChart(chart)
+                            .group(dateIdNegativeSumGroup, 'Date ID Group'),
+                        rightChart = dc.lineChart(chart)
+                            .group(dateValueNegativeSumGroup, 'Date Value Group')
+                            .useRightYAxis(true)
+                    ])
+                    .render();
+            });
+
+            it('the axis baselines should match', function () {
+                /* because elasticY ensures zero is included for all-negatives, due to PR #1156 */
+                expect(leftChart.y()(0)).toEqual(rightChart.y()(0));
+            });
+
+            describe('with alignYAxes', function () {
+                beforeEach(function () {
+                    chart.alignYAxes(true)
+                        .elasticY(true)
+                        .render();
+                });
+                it('the axis baselines should match', function () {
+                    expect(leftChart.y()(0)).toEqual(rightChart.y()(0));
+                });
+                it('the series heights should be equal', function () {
+                    expect(plotHeight(leftChart)).toEqual(plotHeight(rightChart));
+                });
+            });
+        });
+        function plotHeight (chart) {
+            return chart.y()(chart.yAxisMax()) - chart.y()(chart.yAxisMin());
+        }
     });
 
     describe('sub-charts with different filter types', function () {

@@ -497,11 +497,11 @@ describe('dc.lineChart', function () {
                 });
             });
 
-            describe('with negative data', function () {
+            describe('with mixed positive and negative data', function () {
                 beforeEach(function () {
-                    var negativeGroup = dimension.group().reduceSum(function (d) { return d.nvalue; });
+                    var mixedGroup = dimension.group().reduceSum(function (d) { return d.nvalue; });
 
-                    chart.group(negativeGroup).stack(negativeGroup).stack(negativeGroup);
+                    chart.group(mixedGroup).stack(mixedGroup).stack(mixedGroup);
                     chart.x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
 
                     chart.margins({top: 30, right: 50, bottom: 30, left: 30})
@@ -531,7 +531,7 @@ describe('dc.lineChart', function () {
                 });
 
                 it('should generate y axis domain dynamically', function () {
-                    var nthText = function (n) { return d3.select(chart.selectAll('g.y text')[0][n]); };
+                    var nthText = function (n) { return d3.select(chart.selectAll('g.axis.y .tick text')[0][n]); };
 
                     expect(nthText(0).text()).toBe('-20');
                     expect(nthText(1).text()).toBe('0');
@@ -546,6 +546,31 @@ describe('dc.lineChart', function () {
 
                     it('should generate a label for each datum', lineLabelCount);
                     it('should generate labels with positions corresponding to their data', lineLabelPositions);
+                });
+            });
+
+            describe('with negative data', function () {
+                beforeEach(function () {
+                    var negativeGroup = dimension.group().reduceSum(function (d) { return -Math.abs(d.nvalue); });
+
+                    chart.group(negativeGroup).stack(negativeGroup).stack(negativeGroup);
+                    chart.x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
+
+                    chart.margins({top: 30, right: 50, bottom: 30, left: 30})
+                        .elasticY(true)
+                        .xUnits(d3.time.days.utc)
+                        .yAxis().ticks(3);
+
+                    chart.render();
+                });
+
+                it('should generate y axis domain dynamically', function () {
+                    var nthText = function (n) { return d3.select(chart.selectAll('g.axis.y .tick text')[0][n]); };
+
+                    expect(nthText(0).text()).toBe('-30');
+                    expect(nthText(1).text()).toBe('-20');
+                    expect(nthText(2).text()).toBe('-10');
+                    expect(nthText(3).text()).toBe('0');
                 });
             });
         });

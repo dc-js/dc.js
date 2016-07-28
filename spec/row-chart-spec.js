@@ -91,7 +91,7 @@ describe('dc.rowChart', function () {
         });
     });
 
-    function itShouldBehaveLikeARowChartWithGroup (groupHolder, N) {
+    function itShouldBehaveLikeARowChartWithGroup (groupHolder, N, xAxisTicks) {
         describe('for ' + groupHolder.groupType + ' data', function () {
             beforeEach(function () {
                 chart.group(groupHolder.group);
@@ -297,6 +297,24 @@ describe('dc.rowChart', function () {
                 });
             });
 
+            describe('removing all the data and restoring the data', function () {
+                // this test mainly exists to produce console errors for #1008;
+                // I can't seem to find any way to detect invalid setAttribute calls
+                beforeEach(function () {
+                    chart.render();
+                    chart.group({all: function () { return []; }});
+                    chart.redraw();
+                    chart.group(groupHolder.group);
+                    chart.redraw();
+                });
+
+                it('should restore the row chart', function () {
+                    chart.selectAll('g.row rect').each(function (p) {
+                        expect(d3.select(this).attr('width').indexOf('NaN') < 0).toBeTruthy();
+                    });
+                });
+            });
+
             describe('custom labels', function () {
                 beforeEach(function () {
                     chart.label(function () {
@@ -352,11 +370,30 @@ describe('dc.rowChart', function () {
                     });
                 });
             });
+
+            if (xAxisTicks) {
+                describe('with elasticX', function () {
+                    beforeEach(function () {
+                        chart.elasticX(true)
+                            .xAxis().ticks(3);
+
+                        chart.render();
+                    });
+
+                    it('should generate x axis domain dynamically', function () {
+                        var nthText = function (n) { return d3.select(chart.selectAll('g.axis .tick text')[0][n]); };
+
+                        for (var i = 0; i < xAxisTicks.length; i++) {
+                            expect(nthText(i).text()).toBe(xAxisTicks[i]);
+                        }
+                    });
+                });
+            }
         });
     }
 
-    itShouldBehaveLikeARowChartWithGroup(positiveGroupHolder, 5);
-    itShouldBehaveLikeARowChartWithGroup(negativeGroupHolder, 5);
-    itShouldBehaveLikeARowChartWithGroup(mixedGroupHolder, 5);
+    itShouldBehaveLikeARowChartWithGroup(positiveGroupHolder, 5, ['0', '5', '10']);
+    itShouldBehaveLikeARowChartWithGroup(negativeGroupHolder, 5, ['-10', '-5', '0']);
+    itShouldBehaveLikeARowChartWithGroup(mixedGroupHolder, 5, ['-5', '0', '5']);
     itShouldBehaveLikeARowChartWithGroup(largerGroupHolder, 7);
 });
