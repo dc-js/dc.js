@@ -13,6 +13,7 @@
     <div id="test"></div>
     <button class="btn" onclick="transitionTest.stop()">stop</button>
     <button class="btn" onclick="button1()">forward</button>
+    <button class="btn" onclick="button2()">reverse</button>
 
     <script type="text/javascript" src="../js/d3.js"></script>
     <script type="text/javascript" src="../js/crossfilter.js"></script>
@@ -58,10 +59,16 @@
       all_stacks();
       chart.render();
 
-      var reset = function() {
-          chart.x().domain([1,20]);
-      }
-      window.button1 = progression.start;
+      window.button1 = function() {
+          progression
+              .reverse(false)
+              .start();
+      };
+      window.button2 = function() {
+          progression
+              .reverse(true)
+              .start();
+      };
       window.button4 = transitionTest.oscillate(function() {
           chart.group(progressGroup, '2', sel_stack('2'))
               .stack(progressGroup, '4', sel_stack('4'));

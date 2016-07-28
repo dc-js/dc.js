@@ -53,15 +53,21 @@ var transitionTest = (function() {
             return a;
         }
         function drop() {
-            _data.splice(0, 1);
+            _data.splice(_reverse ? _data.length-1 : 0, 1);
         }
         function generate() {
-            var basis = _data.length ? _data[_data.length-1] : {key: 0, value: startval()};
-            var obs = [], key = basis.key + _interval;
+            var basis = _data.length ?
+                    _data[_reverse ? 0 : _data.length-1] :
+                {key: 0, value: startval()};
+            var obs = [], key = basis.key + (_reverse ? -1 : 1) * _interval;
             for(var i = 0; i<N; ++i) {
                 obs[i] = Math.max(basis.value[i] + rand() * _magnitude, 0);
             }
-            _data.push({key: key, value: obs});
+            var datum = {key: key, value: obs};
+            if(_reverse)
+                _data.unshift(datum);
+            else
+                _data.push(datum);
         }
         while(initial--) generate();
         return {
