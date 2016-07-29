@@ -22,17 +22,17 @@ var transitionTest = (function() {
         window.clearInterval(inter);
         inter = null;
     }
-    function oscillate(f1, f2) {
+    function oscillate() {
+        var fs = Array.prototype.slice.apply(arguments);
+        var curr = 0;
         return function() {
             stop();
             var which = false;
-            f1();
+            fs[curr]();
             dc.redrawAll();
             inter = window.setInterval(function() {
-                if((which = !which))
-                    f2();
-                else
-                    f1();
+                curr = (curr+1) % fs.length;
+                fs[curr]();
                 dc.redrawAll();
             }, duration+pause);
         };
@@ -112,7 +112,7 @@ var transitionTest = (function() {
         };
     }
     return {
-        querystring : querystring,
+        querystring: querystring,
         duration: duration,
         pause: pause,
         stop: stop,

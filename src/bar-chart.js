@@ -34,14 +34,7 @@ dc.barChart = function (parent, chartGroup) {
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
     var _centerBar = false;
     var _alwaysUseRounding = false;
-
-    var _barWidth;
-
-    dc.override(_chart, 'rescale', function () {
-        _chart._rescale();
-        _barWidth = undefined;
-        return _chart;
-    });
+    var _growFromZero = false;
 
     dc.override(_chart, 'render', function () {
         if (_chart.round() && _centerBar && !_alwaysUseRounding) {
@@ -56,11 +49,13 @@ dc.barChart = function (parent, chartGroup) {
         return dc.utils.printSingleValue(d.y0 + d.y);
     }, false);
 
-    _chart.plotData = function () {
+    _chart.plotData = function (params) {
+        var bounds = _chart.isOrdinal() ? null : params.fullBounds();
+        var stackData = _chart.computeStacks(bounds);
         var layers = _chart.chartBodyG().selectAll('g.stack')
-            .data(_chart.data());
-
-        calculateBarWidth();
+                .data(stackData);
+        params.preBarWidth = calculateBarWidth(params.preXScale);
+        params.postBarWidth = calculateBarWidth(params.postXScale);
 
         layers
             .enter()
@@ -73,19 +68,22 @@ dc.barChart = function (parent, chartGroup) {
         layers.each(function (d, i) {
             var layer = d3.select(this);
 
-            renderBars(layer, i, d);
+            renderBars(layer, d, params);
 
             if (_chart.renderLabel() && last === i) {
-                renderLabels(layer, i, d);
+                renderLabels(layer, d, params);
             }
         });
     };
 
-    function barHeight (d) {
-        return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
+    function barHeight (yScale) {
+        return function (d) {
+            return dc.utils.safeNumber(Math.abs(yScale(d.y + d.y0) - yScale(d.y0)));
+        };
     }
 
-    function renderLabels (layer, layerIndex, d) {
+    function renderLabels (layer, d, params) {
+        // stuff that should happen before scales updated
         var labels = layer.selectAll('text.barLabel')
             .data(d.values, dc.pluck('x'));
 
@@ -100,21 +98,9 @@ dc.barChart = function (parent, chartGroup) {
         }
 
         dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('x', function (d) {
-                var x = _chart.x()(d.x);
-                if (!_centerBar) {
-                    x += _barWidth / 2;
-                }
-                return dc.utils.safeNumber(x);
-            })
+            .attr('x', barX(params.postXScale))
             .attr('y', function (d) {
-                var y = _chart.y()(d.y + d.y0);
-
-                if (d.y < 0) {
-                    y -= barHeight(d);
-                }
-
-                return dc.utils.safeNumber(y - LABEL_PADDING);
+                return barY(params.postYScale)(d) - LABEL_PADDING;
             })
             .text(function (d) {
                 return _chart.label()(d);
@@ -125,16 +111,59 @@ dc.barChart = function (parent, chartGroup) {
             .remove();
     }
 
-    function renderBars (layer, layerIndex, d) {
+    function barX (xScale, barWidth) {
+        return function (d) {
+            var x = xScale(d.x);
+            if (_centerBar) {
+                x -= barWidth / 2;
+            }
+            if (_chart.isOrdinal() && _gap !== undefined) {
+                x += _gap / 2;
+            }
+            return dc.utils.safeNumber(x);
+        };
+    }
+    function barY (yScale) {
+        return function (d) {
+            var y = yScale(d.y + d.y0);
+
+            if (d.y < 0) {
+                y -= barHeight(yScale)(d);
+            }
+
+            return dc.utils.safeNumber(y);
+        };
+    }
+
+    function renderBars (layer, d, params) {
+        // stuff that should happen before scales updated
         var bars = layer.selectAll('rect.bar')
             .data(d.values, dc.pluck('x'));
 
         var enter = bars.enter()
             .append('rect')
             .attr('class', 'bar')
-            .attr('fill', dc.pluck('data', _chart.getColor))
-            .attr('y', _chart.yAxisHeight())
-            .attr('height', 0);
+            .attr('fill', dc.pluck('data', _chart.getColor));
+
+        if (!_chart.isOrdinal()) { // there's nowhere to arrive from if ordinal
+            enter
+                .attr('x', barX(params.preXScale, params.preBarWidth))
+                .attr('width', params.preBarWidth);
+        }
+
+        if (_growFromZero) {
+            enter
+                .attr('y', _chart.yAxisHeight())
+                .attr('height', 0);
+        } else {
+            if (!_chart.isOrdinal()) {
+                enter
+                    .attr('y', barY(params.preYScale))
+                    .attr('height', barHeight(params.preYScale));
+            }
+            enter
+                .attr('opacity', 0);
+        }
 
         if (_chart.renderTitle()) {
             enter.append('title').text(dc.pluck('data', _chart.title(d.name)));
@@ -145,55 +174,41 @@ dc.barChart = function (parent, chartGroup) {
         }
 
         dc.transition(bars, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('x', function (d) {
-                var x = _chart.x()(d.x);
-                if (_centerBar) {
-                    x -= _barWidth / 2;
-                }
-                if (_chart.isOrdinal() && _gap !== undefined) {
-                    x += _gap / 2;
-                }
-                return dc.utils.safeNumber(x);
-            })
-            .attr('y', function (d) {
-                var y = _chart.y()(d.y + d.y0);
-
-                if (d.y < 0) {
-                    y -= barHeight(d);
-                }
-
-                return dc.utils.safeNumber(y);
-            })
-            .attr('width', _barWidth)
-            .attr('height', function (d) {
-                return barHeight(d);
-            })
+            .attr('x', barX(params.postXScale, params.postBarWidth))
+            .attr('y', barY(params.postYScale))
+            .attr('width', params.postBarWidth)
+            .attr('height', barHeight(params.postYScale))
+            .attr('opacity', 1)
             .attr('fill', dc.pluck('data', _chart.getColor))
             .select('title').text(dc.pluck('data', _chart.title(d.name)));
 
-        dc.transition(bars.exit(), _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('x', function (d) { return _chart.x()(d.x); })
-            .attr('width', _barWidth * 0.9)
+        var transOut = dc.transition(bars.exit(), _chart.transitionDuration(), _chart.transitionDelay())
+            .attr('height', barHeight(params.postYScale))
+            .attr('opacity', 0);
+        if (!_chart.isOrdinal()) { // there's nowhere to "go" if ordinal
+            transOut.attr('x', barX(params.postXScale, params.postBarWidth))
+                .attr('y', barY(params.postYScale))
+                .attr('width', params.postBarWidth);
+        }
+        transOut
             .remove();
     }
 
-    function calculateBarWidth () {
-        if (_barWidth === undefined) {
-            var numberOfBars = _chart.xUnitCount();
+    function calculateBarWidth (xScale) {
+        var barWidth, numberOfBars = _chart.xUnitCount(xScale);
 
-            // please can't we always use rangeBands for bar charts?
-            if (_chart.isOrdinal() && _gap === undefined) {
-                _barWidth = Math.floor(_chart.x().rangeBand());
-            } else if (_gap) {
-                _barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
-            } else {
-                _barWidth = Math.floor(_chart.xAxisLength() / (1 + _chart.barPadding()) / numberOfBars);
-            }
-
-            if (_barWidth === Infinity || isNaN(_barWidth) || _barWidth < MIN_BAR_WIDTH) {
-                _barWidth = MIN_BAR_WIDTH;
-            }
+        if (_chart.isOrdinal() && _gap === undefined && xScale.rangeBand) { // may have been previously not ordinal
+            barWidth = Math.floor(xScale.rangeBand());
+        } else if (_gap) {
+            barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
+        } else {
+            barWidth = Math.floor(_chart.xAxisLength() / (1 + _chart.barPadding()) / numberOfBars);
         }
+
+        if (barWidth === Infinity || isNaN(barWidth) || barWidth < MIN_BAR_WIDTH) {
+            barWidth = MIN_BAR_WIDTH;
+        }
+        return barWidth;
     }
 
     _chart.fadeDeselectedArea = function () {
@@ -268,6 +283,24 @@ dc.barChart = function (parent, chartGroup) {
 
     _chart._useOuterPadding = function () {
         return _gap === undefined;
+    };
+
+    /**
+     * Whether bars should grow from the bottom of the chart when they are first drawn (true)
+     * or fade in (false).
+     * @method growFromZero
+     * @memberof dc.barChart
+     * @instance
+     * @param {Boolean} [growFromZero=false]
+     * @return {Boolean}
+     * @return {dc.barChart}
+     */
+    _chart.growFromZero = function (growFromZero) {
+        if (!arguments.length) {
+            return _growFromZero;
+        }
+        _growFromZero = growFromZero;
+        return _chart;
     };
 
     /**

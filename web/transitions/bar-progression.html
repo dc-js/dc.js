@@ -43,6 +43,7 @@
           .x(d3.scale.linear())
           .elasticX(true)
           .elasticY(true)
+          .growFromZero(!!transitionTest.querystring.grow)
           .margins({left: 50, top: 10, right: 10, bottom: 20})
           .brushOn(false)
           .dimension(noDimension);

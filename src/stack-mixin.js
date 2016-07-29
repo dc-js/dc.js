@@ -11,7 +11,7 @@ dc.stackMixin = function (_chart) {
     function prepareValues (layer, layerIdx) {
         var valAccessor = layer.accessor || _chart.valueAccessor();
         layer.name = String(layer.name || layerIdx);
-        layer.values = layer.group.all().map(function (d, i) {
+        layer.values = layer.values.map(function (d, i) {
             return {
                 x: _chart.keyAccessor()(d, i),
                 y: layer.hidden ? null : valAccessor(d, i),
@@ -21,7 +21,6 @@ dc.stackMixin = function (_chart) {
             };
         });
 
-        layer.values = layer.values.filter(domainFilter());
         return layer.values;
     }
 
@@ -32,25 +31,14 @@ dc.stackMixin = function (_chart) {
     var _titles = {};
 
     var _hidableStacks = false;
+    var _truef = d3.functor(true);
 
-    function domainFilter () {
-        if (!_chart.x()) {
-            return d3.functor(true);
+    function domainFilter (bounds) {
+        if (!bounds || _chart.isOrdinal() || _chart.elasticX()) {
+            return _truef;
         }
-        var xDomain = _chart.x().domain();
-        if (_chart.isOrdinal()) {
-            // TODO #416
-            //var domainSet = d3.set(xDomain);
-            return function () {
-                return true; //domainSet.has(p.x);
-            };
-        }
-        if (_chart.elasticX()) {
-            return function () { return true; };
-        }
-        return function (p) {
-            //return true;
-            return p.x >= xDomain[0] && p.x <= xDomain[xDomain.length - 1];
+        return function (x) {
+            return x >= bounds[0] && x <= bounds[bounds.length - 1];
         };
     }
 
@@ -267,10 +255,26 @@ dc.stackMixin = function (_chart) {
         return !l.hidden;
     }
 
+    // backward compatiblity until all charts are moved to computeStacks
+    // we don't want to override this, see #584
     _chart.data(function () {
-        var layers = _stack.filter(visability);
-        return layers.length ? _chart.stackLayout()(layers) : [];
+        return _chart.computeStacks(_chart.x() ? _chart.x().domain() : null);
     });
+
+    _chart.computeStacks = function (bounds) {
+        var layers = _stack.filter(visability);
+        if (!layers.length) {
+            return [];
+        }
+
+        var filter = domainFilter(bounds);
+        layers.forEach(function (layer) {
+            layer.values = layer.group.all().filter(function (kv) {
+                return filter(_chart.keyAccessor()(kv));
+            });
+        });
+        return _chart.stackLayout()(layers);
+    };
 
     _chart._ordinalXDomain = function () {
         var flat = flattenStack().map(dc.pluck('data'));

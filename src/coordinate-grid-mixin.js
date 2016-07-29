@@ -18,6 +18,8 @@ dc.coordinateGridMixin = function (_chart) {
     var X_AXIS_LABEL_CLASS = 'x-axis-label';
     var DEFAULT_AXIS_LABEL_PADDING = 12;
 
+    var _lastXScale, _lastYScale;
+
     _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin(_chart)));
 
     _chart.colors(d3.scale.category10());
@@ -52,7 +54,6 @@ dc.coordinateGridMixin = function (_chart) {
     var _renderVerticalGridLine = false;
 
     var _refocused = false, _resizing = false;
-    var _unitCount;
 
     var _zoomScale = [1, Infinity];
     var _zoomOutRestrict = true;
@@ -83,7 +84,6 @@ dc.coordinateGridMixin = function (_chart) {
      * @returns {dc.coordinateGridMixin}
      */
     _chart.rescale = function () {
-        _unitCount = undefined;
         _resizing = true;
         return _chart;
     };
@@ -394,18 +394,15 @@ dc.coordinateGridMixin = function (_chart) {
      * @instance
      * @returns {Number}
      */
-    _chart.xUnitCount = function () {
-        if (_unitCount === undefined) {
-            var units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain());
+    _chart.xUnitCount = function (xScale) {
+        xScale = xScale || _chart.x();
+        var units = _chart.xUnits()(xScale.domain()[0], xScale.domain()[1], xScale.domain());
 
-            if (units instanceof Array) {
-                _unitCount = units.length;
-            } else {
-                _unitCount = units;
-            }
+        if (units instanceof Array) {
+            return units.length;
+        } else {
+            return units;
         }
-
-        return _unitCount;
     };
 
     /**
@@ -450,10 +447,12 @@ dc.coordinateGridMixin = function (_chart) {
 
     function compareDomains (d1, d2) {
         return !d1 || !d2 || d1.length !== d2.length ||
-            d1.some(function (elem, i) { return (elem && d2[i]) ? elem.toString() !== d2[i].toString() : elem === d2[i]; });
+            d1.some(function (elem, i) {
+                return (elem && d2[i]) ? elem.toString() !== d2[i].toString() : elem !== d2[i];
+            });
     }
 
-    function prepareXAxis (g, render) {
+    function prepareXAxis (g, rescale) {
         if (!_chart.isOrdinal()) {
             if (_chart.elasticX()) {
                 _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
@@ -466,7 +465,7 @@ dc.coordinateGridMixin = function (_chart) {
 
         // has the domain changed?
         var xdom = _x.domain();
-        if (render || compareDomains(_lastXDomain, xdom)) {
+        if (rescale || compareDomains(_lastXDomain, xdom)) {
             _chart.rescale();
         }
         _lastXDomain = xdom;
@@ -1115,6 +1114,9 @@ dc.coordinateGridMixin = function (_chart) {
         _chart._generateG();
         generateClipPath();
 
+        prepareXAxis(_chart.g(), true);
+        _chart._prepareYAxis(_chart.g());
+
         drawChart(true);
 
         configureMouseZoom();
@@ -1132,14 +1134,27 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function drawChart (render) {
+        // jshint maxcomplexity: 14
         if (_chart.isOrdinal()) {
             _brushOn = false;
         }
 
-        prepareXAxis(_chart.g(), render);
+        prepareXAxis(_chart.g(), false);
         _chart._prepareYAxis(_chart.g());
 
-        _chart.plotData();
+        // must be implemented by concrete chart
+        _chart.plotData({
+            preXScale: _lastXScale || _x,
+            preYScale: _lastYScale || _y,
+            postXScale: _x,
+            postYScale: _y,
+            fullBounds: function () {
+                return [
+                    Math.min(this.preXScale.domain()[0], this.postXScale.domain()[0]),
+                    Math.max(this.preXScale.domain()[1], this.postXScale.domain()[1])
+                ];
+            }
+        });
 
         if (_chart.elasticX() || _resizing || render) {
             _chart.renderXAxis(_chart.g());
@@ -1156,6 +1171,8 @@ dc.coordinateGridMixin = function (_chart) {
         }
         _chart.fadeDeselectedArea();
         _resizing = false;
+        _lastXScale = _x.copy();
+        _lastYScale = _y ? _y.copy() : null; // null when composite with right axis only
     }
 
     function configureMouseZoom () {
