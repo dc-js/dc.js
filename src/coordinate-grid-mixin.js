@@ -467,7 +467,7 @@ dc.coordinateGridMixin = function (_chart) {
             d1.some(function (elem, i) { return (elem && d2[i]) ? elem.toString() !== d2[i].toString() : elem === d2[i]; });
     }
 
-    function prepareXAxis (g, render) {
+    function prepareXAxis (g, rescale) {
         if (!_chart.isOrdinal()) {
             if (_chart.elasticX()) {
                 _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
@@ -480,7 +480,7 @@ dc.coordinateGridMixin = function (_chart) {
 
         // has the domain changed?
         var xdom = _x.domain();
-        if (render || compareDomains(_lastXDomain, xdom)) {
+        if (rescale || compareDomains(_lastXDomain, xdom)) {
             _chart.rescale();
         }
         _lastXDomain = xdom;
@@ -1133,6 +1133,9 @@ dc.coordinateGridMixin = function (_chart) {
         _chart._generateG();
         generateClipPath();
 
+        prepareXAxis(_chart.g(), true);
+        _chart._prepareYAxis(_chart.g());
+
         drawChart(true);
 
         configureMouseZoom();
@@ -1154,10 +1157,19 @@ dc.coordinateGridMixin = function (_chart) {
             _brushOn = false;
         }
 
-        prepareXAxis(_chart.g(), render);
+        // give the concrete chart the chance to do two stages of drawing,
+        // once with the previous scales and once with the next scales
+
+        // pre-scale stuff
+        var k = _chart.plotData(); // must be implemented by concrete chart
+
+        prepareXAxis(_chart.g(), false);
         _chart._prepareYAxis(_chart.g());
 
-        _chart.plotData();
+        // post-scale stuff
+        if (k) {
+            k();
+        }
 
         if (_chart.elasticX() || _resizing || render) {
             _chart.renderXAxis(_chart.g());
