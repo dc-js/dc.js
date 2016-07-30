@@ -264,6 +264,8 @@ module.exports = function (grunt) {
                             '<%= conf.pkg.name %>.min.js',
                             '<%= conf.pkg.name %>.min.js.map',
                             'node_modules/d3/d3.js',
+                            'node_modules/crossfilter-async/crossfilter-async.js',
+                            'node_modules/crossfilter-async/node_modules/operative/dist/operative.js',
                             'node_modules/crossfilter2/crossfilter.js',
                             'node_modules/grunt-saucelabs/examples/jasmine/lib/jasmine-jsreporter/jasmine-jsreporter.js',
                             'node_modules/file-saver/FileSaver.js',
