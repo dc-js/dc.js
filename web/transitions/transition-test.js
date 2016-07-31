@@ -112,7 +112,7 @@ var transitionTest = (function() {
         };
     }
     return {
-        querystring : querystring,
+        querystring: querystring,
         duration: duration,
         pause: pause,
         stop: stop,

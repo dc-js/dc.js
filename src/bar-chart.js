@@ -34,7 +34,7 @@ dc.barChart = function (parent, chartGroup) {
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
     var _centerBar = false;
     var _alwaysUseRounding = false;
-
+    var _growFromZero = false;
     var _barWidth;
 
     dc.override(_chart, 'rescale', function () {
@@ -136,6 +136,26 @@ dc.barChart = function (parent, chartGroup) {
         };
     }
 
+    function barX (d) {
+        var x = _chart.x()(d.x);
+        if (_centerBar) {
+            x -= _barWidth / 2;
+        }
+        if (_chart.isOrdinal() && _gap !== undefined) {
+            x += _gap / 2;
+        }
+        return dc.utils.safeNumber(x);
+    }
+    function barY (d) {
+        var y = _chart.y()(d.y + d.y0);
+
+        if (d.y < 0) {
+            y -= barHeight(d);
+        }
+
+        return dc.utils.safeNumber(y);
+    }
+
     function renderBars (layer, layerIndex, d) {
         // stuff that should happen before scales updated
         var bars = layer.selectAll('rect.bar')
@@ -145,8 +165,18 @@ dc.barChart = function (parent, chartGroup) {
             .append('rect')
             .attr('class', 'bar')
             .attr('fill', dc.pluck('data', _chart.getColor))
-            .attr('y', _chart.yAxisHeight())
-            .attr('height', 0);
+            .attr('x', barX);
+
+        if (_growFromZero) {
+            enter
+                .attr('y', _chart.yAxisHeight())
+                .attr('height', 0);
+        } else {
+            enter
+                .attr('y', barY)
+                .attr('height', barHeight)
+                .attr('opacity', 0);
+        }
 
         if (_chart.renderTitle()) {
             enter.append('title').text(dc.pluck('data', _chart.title(d.name)));
@@ -159,29 +189,11 @@ dc.barChart = function (parent, chartGroup) {
         // stuff that should happen after scales updated
         return function () {
             dc.transition(bars, _chart.transitionDuration())
-                .attr('x', function (d) {
-                    var x = _chart.x()(d.x);
-                    if (_centerBar) {
-                        x -= _barWidth / 2;
-                    }
-                    if (_chart.isOrdinal() && _gap !== undefined) {
-                        x += _gap / 2;
-                    }
-                    return dc.utils.safeNumber(x);
-                })
-                .attr('y', function (d) {
-                    var y = _chart.y()(d.y + d.y0);
-
-                    if (d.y < 0) {
-                        y -= barHeight(d);
-                    }
-
-                    return dc.utils.safeNumber(y);
-                })
+                .attr('x', barX)
+                .attr('y', barY)
                 .attr('width', _barWidth)
-                .attr('height', function (d) {
-                    return barHeight(d);
-                })
+                .attr('height', barHeight)
+                .attr('opacity', 1)
                 .attr('fill', dc.pluck('data', _chart.getColor))
                 .select('title').text(dc.pluck('data', _chart.title(d.name)));
 
@@ -285,6 +297,24 @@ dc.barChart = function (parent, chartGroup) {
 
     _chart._useOuterPadding = function () {
         return _gap === undefined;
+    };
+
+    /**
+     * Whether bars should grow from the bottom of the chart when they are first drawn (true)
+     * or fade in (false).
+     * @method growFromZero
+     * @memberof dc.barChart
+     * @instance
+     * @param {Boolean} [growFromZero=false]
+     * @return {Boolean}
+     * @return {dc.barChart}
+     */
+    _chart.growFromZero = function (growFromZero) {
+        if (!arguments.length) {
+            return _growFromZero;
+        }
+        _growFromZero = growFromZero;
+        return _chart;
     };
 
     /**
