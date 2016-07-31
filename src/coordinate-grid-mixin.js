@@ -1162,6 +1162,8 @@ dc.coordinateGridMixin = function (_chart) {
             _brushOn = false;
         }
 
+        var data = _chart.data();
+
         var restoreXScale, restoreYScale;
         if (_lastXScale) {
             restoreXScale = _x;
@@ -1176,7 +1178,7 @@ dc.coordinateGridMixin = function (_chart) {
         // once with the previous scales and once with the next scales
 
         // pre-scale stuff
-        var k = _chart.plotData(); // must be implemented by concrete chart
+        var k = _chart.plotData(data); // must be implemented by concrete chart
 
         if (restoreXScale) {
             _x = restoreXScale;
