@@ -18,6 +18,8 @@ dc.coordinateGridMixin = function (_chart) {
     var X_AXIS_LABEL_CLASS = 'x-axis-label';
     var DEFAULT_AXIS_LABEL_PADDING = 12;
 
+    var _lastXScale, _lastYScale;
+
     _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin(_chart)));
 
     _chart.colors(d3.scale.category10());
@@ -1153,8 +1155,19 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function drawChart (render) {
+        // jshint maxcomplexity: 14
         if (_chart.isOrdinal()) {
             _brushOn = false;
+        }
+
+        var restoreXScale, restoreYScale;
+        if (_lastXScale) {
+            restoreXScale = _x;
+            _x = _lastXScale;
+        }
+        if (_lastYScale) {
+            restoreYScale = _y;
+            _y = _lastYScale;
         }
 
         // give the concrete chart the chance to do two stages of drawing,
@@ -1163,6 +1176,14 @@ dc.coordinateGridMixin = function (_chart) {
         // pre-scale stuff
         var k = _chart.plotData(); // must be implemented by concrete chart
 
+        if (restoreXScale) {
+            _x = restoreXScale;
+            _lastXScale = null;
+        }
+        if (restoreYScale) {
+            _y = restoreYScale;
+            _lastYScale = null;
+        }
         prepareXAxis(_chart.g(), false);
         _chart._prepareYAxis(_chart.g());
 
@@ -1186,6 +1207,8 @@ dc.coordinateGridMixin = function (_chart) {
         }
         _chart.fadeDeselectedArea();
         _resizing = false;
+        _lastXScale = _x.copy();
+        _lastYScale = _y.copy();
     }
 
     function configureMouseZoom () {
