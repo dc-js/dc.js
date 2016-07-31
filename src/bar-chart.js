@@ -165,7 +165,8 @@ dc.barChart = function (parent, chartGroup) {
             .append('rect')
             .attr('class', 'bar')
             .attr('fill', dc.pluck('data', _chart.getColor))
-            .attr('x', barX);
+            .attr('x', barX)
+            .attr('width', _barWidth);
 
         if (_growFromZero) {
             enter
