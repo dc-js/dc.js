@@ -141,18 +141,25 @@ dc.barChart = function (parent, chartGroup) {
         var enter = bars.enter()
             .append('rect')
             .attr('class', 'bar')
-            .attr('fill', dc.pluck('data', _chart.getColor))
-            .attr('x', barX(params.preXScale, params.preBarWidth))
-            .attr('width', params.preBarWidth);
+            .attr('fill', dc.pluck('data', _chart.getColor));
+
+        if (!_chart.isOrdinal()) { // there's nowhere to arrive from if ordinal
+            enter
+                .attr('x', barX(params.preXScale, params.preBarWidth))
+                .attr('width', params.preBarWidth);
+        }
 
         if (_growFromZero) {
             enter
                 .attr('y', _chart.yAxisHeight())
                 .attr('height', 0);
         } else {
+            if (!_chart.isOrdinal()) {
+                enter
+                    .attr('y', barY(params.preYScale))
+                    .attr('height', barHeight(params.preYScale));
+            }
             enter
-                .attr('y', barY(params.preYScale))
-                .attr('height', barHeight(params.preYScale))
                 .attr('opacity', 0);
         }
 
@@ -173,11 +180,15 @@ dc.barChart = function (parent, chartGroup) {
             .attr('fill', dc.pluck('data', _chart.getColor))
             .select('title').text(dc.pluck('data', _chart.title(d.name)));
 
-        dc.transition(bars.exit(), _chart.transitionDuration())
-            .attr('x', barX(params.postXScale, params.postBarWidth))
-            .attr('y', barY(params.postYScale))
-            .attr('width', params.postBarWidth)
+        var transOut = dc.transition(bars.exit(), _chart.transitionDuration())
             .attr('height', barHeight(params.postYScale))
+            .attr('opacity', 0);
+        if (!_chart.isOrdinal()) { // there's nowhere to "go" if ordinal
+            transOut.attr('x', barX(params.postXScale, params.postBarWidth))
+                .attr('y', barY(params.postYScale))
+                .attr('width', params.postBarWidth);
+        }
+        transOut
             .remove();
     }
 
