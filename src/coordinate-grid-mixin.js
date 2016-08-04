@@ -86,7 +86,6 @@ dc.coordinateGridMixin = function (_chart) {
     var _renderVerticalGridLine = false;
 
     var _refocused = false, _resizing = false;
-    var _unitCount;
 
     var _zoomScale = [1, Infinity];
     var _zoomOutRestrict = true;
@@ -117,7 +116,6 @@ dc.coordinateGridMixin = function (_chart) {
      * @return {dc.coordinateGridMixin}
      */
     _chart.rescale = function () {
-        _unitCount = undefined;
         _resizing = true;
         return _chart;
     };
@@ -409,18 +407,15 @@ dc.coordinateGridMixin = function (_chart) {
      * @instance
      * @return {Number}
      */
-    _chart.xUnitCount = function () {
-        if (_unitCount === undefined) {
-            var units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain());
+    _chart.xUnitCount = function (xScale) {
+        xScale = xScale || _chart.x();
+        var units = _chart.xUnits()(xScale.domain()[0], xScale.domain()[1], xScale.domain());
 
-            if (units instanceof Array) {
-                _unitCount = units.length;
-            } else {
-                _unitCount = units;
-            }
+        if (units instanceof Array) {
+            return units.length;
+        } else {
+            return units;
         }
-
-        return _unitCount;
     };
 
     /**
@@ -1162,39 +1157,16 @@ dc.coordinateGridMixin = function (_chart) {
             _brushOn = false;
         }
 
-        var data = _chart.data();
-
-        var restoreXScale, restoreYScale;
-        if (_lastXScale) {
-            restoreXScale = _x;
-            _x = _lastXScale;
-        }
-        if (_lastYScale) {
-            restoreYScale = _y;
-            _y = _lastYScale;
-        }
-
-        // give the concrete chart the chance to do two stages of drawing,
-        // once with the previous scales and once with the next scales
-
-        // pre-scale stuff
-        var k = _chart.plotData(data); // must be implemented by concrete chart
-
-        if (restoreXScale) {
-            _x = restoreXScale;
-            _lastXScale = null;
-        }
-        if (restoreYScale) {
-            _y = restoreYScale;
-            _lastYScale = null;
-        }
         prepareXAxis(_chart.g(), false);
         _chart._prepareYAxis(_chart.g());
 
-        // post-scale stuff
-        if (k) {
-            k();
-        }
+        var data = _chart.data();
+        _chart.plotData(data, {
+            preXScale: _lastXScale || _x,
+            preYScale: _lastYScale || _y,
+            postXScale: _x,
+            postYScale: _y
+        }); // must be implemented by concrete chart
 
         if (_chart.elasticX() || _resizing || render) {
             _chart.renderXAxis(_chart.g());

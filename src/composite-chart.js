@@ -192,7 +192,6 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     _chart.plotData = function () {
-        var ks = [];
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
 
@@ -216,18 +215,9 @@ dc.compositeChart = function (parent, chartGroup) {
                 child.yAxis(_chart.yAxis());
             }
 
-            // note the concrete chart doesn't need to return a continuation but we do
-            // need to store a value anyway because we rely on the array index below
-            ks.push(child.plotData());
+            child.plotData();
+            child._activateRenderlets();
         }
-        return function () {
-            ks.forEach(function (k, i) {
-                if (k) {
-                    k();
-                }
-                _children[i]._activateRenderlets();
-            });
-        };
     };
 
     /**
