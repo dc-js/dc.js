@@ -184,7 +184,7 @@ dc.barChart = function (parent, chartGroup) {
     function calculateBarWidth (xScale) {
         var barWidth, numberOfBars = _chart.xUnitCount(xScale);
 
-        if (_chart.isOrdinal() && _gap === undefined) {
+        if (_chart.isOrdinal() && _gap === undefined && xScale.rangeBand) { // may have been previously not ordinal
             barWidth = Math.floor(xScale.rangeBand());
         } else if (_gap) {
             barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
