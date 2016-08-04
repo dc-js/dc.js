@@ -1184,7 +1184,7 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.fadeDeselectedArea();
         _resizing = false;
         _lastXScale = _x.copy();
-        _lastYScale = _y.copy();
+        _lastYScale = _y ? _y.copy() : null; // null when composite with right axis only
     }
 
     function configureMouseZoom () {

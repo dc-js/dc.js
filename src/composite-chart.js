@@ -34,7 +34,7 @@ dc.compositeChart = function (parent, chartGroup) {
     var _rightYAxis = d3.svg.axis(),
         _rightYAxisLabel = 0,
         _rightYAxisLabelPadding = DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING,
-        _rightY,
+        _rightY, _lastRightYScale,
         _rightAxisGridLines = false;
 
     _chart._mandatoryAttributes([]);
@@ -191,7 +191,13 @@ dc.compositeChart = function (parent, chartGroup) {
         child.g().attr('class', SUB_CHART_CLASS + ' _' + i);
     }
 
-    _chart.plotData = function () {
+    _chart.plotData = function (data, params) {
+        var rightParams = {
+            preXScale: params.preXScale,
+            preYScale: _lastRightYScale,
+            postXScale: params.postYScale,
+            postYScale: _chart.rightY()
+        };
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
 
@@ -210,14 +216,16 @@ dc.compositeChart = function (parent, chartGroup) {
             if (child.useRightYAxis()) {
                 child.y(_chart.rightY());
                 child.yAxis(_chart.rightYAxis());
+                child.plotData(child.data(), rightParams);
             } else {
                 child.y(_chart.y());
                 child.yAxis(_chart.yAxis());
+                child.plotData(child.data(), params);
             }
 
-            child.plotData();
             child._activateRenderlets();
         }
+        _lastRightYScale = _rightY ? _rightY.copy() : null;
     };
 
     /**
