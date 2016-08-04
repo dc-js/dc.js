@@ -1165,7 +1165,13 @@ dc.coordinateGridMixin = function (_chart) {
             preXScale: _lastXScale || _x,
             preYScale: _lastYScale || _y,
             postXScale: _x,
-            postYScale: _y
+            postYScale: _y,
+            fullBounds: function () {
+                return [
+                    Math.min(this.preXScale.domain()[0], this.postXScale.domain()[0]),
+                    Math.max(this.preXScale.domain()[1], this.postXScale.domain()[1])
+                ];
+            }
         });
 
         if (_chart.elasticX() || _resizing || render) {

@@ -50,8 +50,10 @@ dc.barChart = function (parent, chartGroup) {
     }, false);
 
     _chart.plotData = function (params) {
+        var bounds = _chart.isOrdinal() ? null : params.fullBounds();
+        var stackData = _chart.computeStacks(bounds);
         var layers = _chart.chartBodyG().selectAll('g.stack')
-                .data(_chart.data());
+                .data(stackData);
         params.preBarWidth = calculateBarWidth(params.preXScale);
         params.postBarWidth = calculateBarWidth(params.postXScale);
 
