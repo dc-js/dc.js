@@ -191,7 +191,7 @@ dc.compositeChart = function (parent, chartGroup) {
         child.g().attr('class', SUB_CHART_CLASS + ' _' + i);
     }
 
-    _chart.plotData = function (data, params) {
+    _chart.plotData = function (params) {
         var rightParams = {
             preXScale: params.preXScale,
             preYScale: _lastRightYScale,
@@ -216,11 +216,11 @@ dc.compositeChart = function (parent, chartGroup) {
             if (child.useRightYAxis()) {
                 child.y(_chart.rightY());
                 child.yAxis(_chart.rightYAxis());
-                child.plotData(child.data(), rightParams);
+                child.plotData(rightParams);
             } else {
                 child.y(_chart.y());
                 child.yAxis(_chart.yAxis());
-                child.plotData(child.data(), params);
+                child.plotData(params);
             }
 
             child._activateRenderlets();

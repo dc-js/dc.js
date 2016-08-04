@@ -1160,13 +1160,13 @@ dc.coordinateGridMixin = function (_chart) {
         prepareXAxis(_chart.g(), false);
         _chart._prepareYAxis(_chart.g());
 
-        var data = _chart.data();
-        _chart.plotData(data, {
+        // must be implemented by concrete chart
+        _chart.plotData({
             preXScale: _lastXScale || _x,
             preYScale: _lastYScale || _y,
             postXScale: _x,
             postYScale: _y
-        }); // must be implemented by concrete chart
+        });
 
         if (_chart.elasticX() || _resizing || render) {
             _chart.renderXAxis(_chart.g());

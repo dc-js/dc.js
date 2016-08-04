@@ -49,9 +49,9 @@ dc.barChart = function (parent, chartGroup) {
         return dc.utils.printSingleValue(d.y0 + d.y);
     }, false);
 
-    _chart.plotData = function (data, params) {
+    _chart.plotData = function (params) {
         var layers = _chart.chartBodyG().selectAll('g.stack')
-            .data(data);
+                .data(_chart.data());
         params.preBarWidth = calculateBarWidth(params.preXScale);
         params.postBarWidth = calculateBarWidth(params.postXScale);
 
