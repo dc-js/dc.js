@@ -60,7 +60,13 @@
               chart.x().domain([16,20]);
           }, reset);
           window.button3 = transitionTest.oscillate(function() {
-              chart.x().domain([6,14]);
+              chart.x().domain([6.5,13.5]);
+          }, function() {
+              chart.x().domain([4.25,9.5]);
+          }, function() {
+              chart.x().domain([11.5,17.25]);
+          }, function() {
+              chart.x().domain([8.25,13.25]);
           }, reset);
           window.button4 = transitionTest.oscillate(function() {
               chart.x().domain([0,10]);
