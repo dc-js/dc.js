@@ -19,10 +19,10 @@
 * Make changes to the files in `src/` not dc.js
 * Add tests to `spec/`. Feel free to create a new file if needed.
 * Run `grunt server` and go to http://localhost:8888/spec to develop your tests.
-* If your changes might affect transitions, go to the relevant transition tests in http://localhost:8888/web/transitions and watch them by eye to see if they make sense
+* If your changes might affect transitions, go to the relevant transition tests in http://localhost:8888/docs/transitions and watch them by eye to see if they make sense
 * Run `grunt lint` to confirm that your code meets the dc.js style guidelines.
 * Run `grunt test` to confirm that all tests will pass on phantomjs.
-* Commit your changes to `src/*` and `spec/*` but not any build artifacts.  (Build artifacts include `dc.*js*`, `web/docs/*`, `web/js/*`)
+* Commit your changes to `src/*` and `spec/*` but not any build artifacts.  (Build artifacts include `dc.*js*`, `docs/docs/*`, `docs/js/*`)
 * Submit a pull request.
 * If you merge `develop` or `master` into your patchset, please rebase against develop. (It's okay to rewrite history for PRs, because these branches are temporary and it's unlikely that anyone is tracking your feature branch.)
 * The DC maintainer team will review and build the artifacts when merging.

@@ -10,7 +10,7 @@ module.exports = function (grunt) {
     var config = {
         src: 'src',
         spec: 'spec',
-        web: 'web',
+        docs: 'docs',
         pkg: require('./package.json'),
         banner: grunt.file.read('./LICENSE_BANNER'),
         jsFiles: module.exports.jsFiles
@@ -61,7 +61,7 @@ module.exports = function (grunt) {
                     '<%= conf.spec %>/**/*.js',
                     'Gruntfile.js',
                     'grunt/*.js',
-                    '<%= conf.web %>/stock.js'],
+                    '<%= conf.docs %>/stock.js'],
                 options: {
                     config: '.jscsrc'
                 }
@@ -75,7 +75,7 @@ module.exports = function (grunt) {
                     '<%= conf.spec %>/**/*.js',
                     'Gruntfile.js',
                     'grunt/*.js',
-                    '<%= conf.web %>/stock.js'
+                    '<%= conf.docs %>/stock.js'
                 ],
                 options: {
                     jshintrc: '.jshintrc'
@@ -88,12 +88,12 @@ module.exports = function (grunt) {
                 tasks: ['build', 'jsdoc', 'jsdoc2md']
             },
             scripts: {
-                files: ['<%= conf.src %>/**/*.js', '<%= conf.web %>/stock.js'],
+                files: ['<%= conf.src %>/**/*.js', '<%= conf.docs %>/stock.js'],
                 tasks: ['docs']
             },
             styles: {
                 files: ['<%= conf.pkg.name %>.css'],
-                tasks: ['cssmin:main', 'copy:dc-to-gh']
+                tasks: ['cssmin:main', 'copy:dc-to-docs']
             },
             jasmineRunner: {
                 files: ['<%= conf.spec %>/**/*.js'],
@@ -106,8 +106,8 @@ module.exports = function (grunt) {
             reload: {
                 files: ['<%= conf.pkg.name %>.js',
                     '<%= conf.pkg.name %>.css',
-                    '<%= conf.web %>/js/<%= conf.pkg.name %>.js',
-                    '<%= conf.web %>/css/<%= conf.pkg.name %>.css',
+                    '<%= conf.docs %>/js/<%= conf.pkg.name %>.js',
+                    '<%= conf.docs %>/css/<%= conf.pkg.name %>.css',
                     '<%= conf.pkg.name %>.min.js'],
                 options: {
                     livereload: true
@@ -129,20 +129,20 @@ module.exports = function (grunt) {
                     summary: true,
                     specs:  '<%= conf.spec %>/*-spec.js',
                     helpers: [
-                        '<%= conf.web %>/js/jasmine-jsreporter.js',
+                        '<%= conf.docs %>/js/jasmine-jsreporter.js',
                         '<%= conf.spec %>/helpers/*.js'
                     ],
                     styles: [
-                        '<%= conf.web %>/css/dc.css'
+                        '<%= conf.docs %>/css/dc.css'
                     ],
                     version: '2.0.0',
                     outfile: '<%= conf.spec %>/index.html',
                     keepRunner: true
                 },
                 src: [
-                    '<%= conf.web %>/js/d3.js',
-                    '<%= conf.web %>/js/crossfilter.js',
-                    '<%= conf.web %>/js/colorbrewer.js',
+                    '<%= conf.docs %>/js/d3.js',
+                    '<%= conf.docs %>/js/crossfilter.js',
+                    '<%= conf.docs %>/js/colorbrewer.js',
                     '<%= conf.pkg.name %>.js'
                 ]
             },
@@ -172,7 +172,7 @@ module.exports = function (grunt) {
                     summary: true,
                     specs:  '<%= conf.spec %>/*-spec.js',
                     helpers: [
-                        '<%= conf.web %>/js/jasmine-jsreporter.js',
+                        '<%= conf.docs %>/js/jasmine-jsreporter.js',
                         '<%= conf.spec %>/helpers/*.js'
                     ],
                     version: '2.0.0',
@@ -221,7 +221,7 @@ module.exports = function (grunt) {
             dist: {
                 src: ['welcome.md', '<%= conf.src %>/**/*.js', '!<%= conf.src %>/{banner,footer}.js'],
                 options: {
-                    destination: 'web/docs/html',
+                    destination: 'docs/docs/html',
                     template: 'node_modules/ink-docstrap/template',
                     configure: 'jsdoc.conf.json'
                 }
@@ -230,30 +230,30 @@ module.exports = function (grunt) {
         jsdoc2md: {
             dist: {
                 src: 'dc.js',
-                dest: 'web/docs/api-latest.md'
+                dest: 'docs/docs/api-latest.md'
             }
         },
         docco: {
             options: {
-                dst: '<%= conf.web %>/docs',
-                basepath: '<%= conf.web %>'
+                dst: '<%= conf.docs %>/docs',
+                basepath: '<%= conf.docs %>'
             },
             howto: {
                 files: [
                     {
-                        src: ['<%= conf.web %>/stock.js']
+                        src: ['<%= conf.docs %>/stock.js']
                     }
                 ]
             }
         },
         copy: {
-            'dc-to-gh': {
+            'dc-to-docs': {
                 files: [
                     {
                         expand: true,
                         flatten: true,
                         src: ['<%= conf.pkg.name %>.css', '<%= conf.pkg.name %>.min.css'],
-                        dest: '<%= conf.web %>/css/'
+                        dest: '<%= conf.docs %>/css/'
                     },
                     {
                         expand: true,
@@ -269,7 +269,7 @@ module.exports = function (grunt) {
                             'node_modules/file-saver/FileSaver.js',
                             'test/env-data.js'
                         ],
-                        dest: '<%= conf.web %>/js/'
+                        dest: '<%= conf.docs %>/js/'
                     }
                 ]
             }
@@ -282,10 +282,10 @@ module.exports = function (grunt) {
                     title: 'Index of dc.js examples',
                     heading: 'Examples of using dc.js',
                     description: 'An attempt to present a simple example of each chart type.',
-                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.web %>/examples'
+                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.docs %>/examples'
                 },
                 files: [
-                    {dest: '<%= conf.web %>/examples/index.html', src: ['<%= conf.web %>/examples/*.html']}
+                    {dest: '<%= conf.docs %>/examples/index.html', src: ['<%= conf.docs %>/examples/*.html']}
                 ]
             },
             'transitions-listing': {
@@ -296,10 +296,10 @@ module.exports = function (grunt) {
                     heading: 'Eyeball tests for dc.js transitions',
                     description: 'Transitions can only be tested by eye. ' +
                         'These pages automate the transitions so they can be visually verified.',
-                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.web %>/transitions'
+                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.docs %>/transitions'
                 },
                 files: [
-                    {dest: '<%= conf.web %>/transitions/index.html', src: ['<%= conf.web %>/transitions/*.html']}
+                    {dest: '<%= conf.docs %>/transitions/index.html', src: ['<%= conf.docs %>/transitions/*.html']}
                 ]
             },
             'resizing-listing': {
@@ -310,21 +310,14 @@ module.exports = function (grunt) {
                     heading: 'Eyeball tests for resizing dc.js charts',
                     description: 'It\'s a lot easier to test resizing behavior by eye. ' +
                         'These pages fit the charts to the browser dynamically so it\'s easier to test.',
-                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.web %>/resizing'
+                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.docs %>/resizing'
                 },
                 files: [
-                    {dest: '<%= conf.web %>/resizing/index.html', src: ['<%= conf.web %>/resizing/*.html']}
+                    {dest: '<%= conf.docs %>/resizing/index.html', src: ['<%= conf.docs %>/resizing/*.html']}
                 ]
             }
         },
 
-        'gh-pages': {
-            options: {
-                base: '<%= conf.web %>',
-                message: 'Synced from from master branch.'
-            },
-            src: ['**']
-        },
         shell: {
             merge: {
                 command: function (pr) {
@@ -392,7 +385,6 @@ module.exports = function (grunt) {
     // task aliases
     grunt.registerTask('build', ['concat', 'uglify', 'cssmin']);
     grunt.registerTask('docs', ['build', 'copy', 'jsdoc', 'jsdoc2md', 'docco', 'fileindex']);
-    grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine-docs']);
     grunt.registerTask('test', ['build', 'copy', 'jasmine:specs']);
     grunt.registerTask('test-browserify', ['build', 'copy', 'browserify', 'jasmine:browserify']);

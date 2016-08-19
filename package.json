@@ -42,7 +42,6 @@
     "grunt-contrib-watch": "~1.0",
     "grunt-docco2": "~0.2",
     "grunt-fileindex": "~0.1",
-    "grunt-gh-pages": "~1.1",
     "grunt-jscs": "~2.8",
     "grunt-jsdoc": "~2.0",
     "grunt-jsdoc-to-markdown": "~1.2",

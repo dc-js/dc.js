@@ -194,7 +194,7 @@ d3.csv('ndx.csv', function (data) {
 
     //### Define Chart Attributes
     // Define chart attributes using fluent methods. See the
-    // [dc.js API Reference](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md) for more information
+    // [dc.js API Reference](https://github.com/dc-js/dc.js/blob/master/docs/docs/api-latest.md) for more information
     //
 
     //#### Bubble Chart
@@ -203,7 +203,7 @@ d3.csv('ndx.csv', function (data) {
     //an optional chart group for this chart to be scoped within. When a chart belongs
     //to a specific group then any interaction with the chart will only trigger redraws
     //on charts within the same chart group.
-    // <br>API: [Bubble Chart](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#bubble-chart)
+    // <br>API: [Bubble Chart](https://github.com/dc-js/dc.js/blob/master/docs/docs/api-latest.md#bubble-chart)
 
     yearlyBubbleChart /* dc.bubbleChart('#yearly-bubble-chart', 'chartGroup') */
         // (_optional_) define chart width, `default = 200`
@@ -295,7 +295,7 @@ d3.csv('ndx.csv', function (data) {
     // an optional chart group for this chart to be scoped within. When a chart belongs
     // to a specific group then any interaction with such chart will only trigger redraw
     // on other charts within the same chart group.
-    // <br>API: [Pie Chart](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#pie-chart)
+    // <br>API: [Pie Chart](https://github.com/dc-js/dc.js/blob/master/docs/docs/api-latest.md#pie-chart)
 
     gainOrLossChart /* dc.pieChart('#gain-loss-chart', 'chartGroup') */
     // (_optional_) define chart width, `default = 200`
@@ -348,7 +348,7 @@ d3.csv('ndx.csv', function (data) {
     // an optional chart group for this chart to be scoped within. When a chart belongs
     // to a specific group then any interaction with such chart will only trigger redraw
     // on other charts within the same chart group.
-    // <br>API: [Row Chart](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#row-chart)
+    // <br>API: [Row Chart](https://github.com/dc-js/dc.js/blob/master/docs/docs/api-latest.md#row-chart)
     dayOfWeekChart /* dc.rowChart('#day-of-week-chart', 'chartGroup') */
         .width(180)
         .height(180)
@@ -373,7 +373,7 @@ d3.csv('ndx.csv', function (data) {
     // an optional chart group for this chart to be scoped within. When a chart belongs
     // to a specific group then any interaction with such chart will only trigger redraw
     // on other charts within the same chart group.
-    // <br>API: [Bar Chart](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#bar-chart)
+    // <br>API: [Bar Chart](https://github.com/dc-js/dc.js/blob/master/docs/docs/api-latest.md#bar-chart)
     fluctuationChart /* dc.barChart('#volume-month-chart', 'chartGroup') */
         .width(420)
         .height(180)
@@ -405,8 +405,8 @@ d3.csv('ndx.csv', function (data) {
     //#### Stacked Area Chart
 
     //Specify an area chart by using a line chart with `.renderArea(true)`.
-    // <br>API: [Stack Mixin](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#stack-mixin),
-    // [Line Chart](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#line-chart)
+    // <br>API: [Stack Mixin](https://github.com/dc-js/dc.js/blob/master/docs/docs/api-latest.md#stack-mixin),
+    // [Line Chart](https://github.com/dc-js/dc.js/blob/master/docs/docs/api-latest.md#line-chart)
     moveChart /* dc.lineChart('#monthly-move-chart', 'chartGroup') */
         .renderArea(true)
         .width(990)
@@ -470,7 +470,7 @@ d3.csv('ndx.csv', function (data) {
     // an optional chart group for this chart to be scoped within. When a chart belongs
     // to a specific group then any interaction with such chart will only trigger redraw
     // on other charts within the same chart group.
-    // <br>API: [Data Count Widget](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#data-count-widget)
+    // <br>API: [Data Count Widget](https://github.com/dc-js/dc.js/blob/master/docs/docs/api-latest.md#data-count-widget)
     //
     //```html
     //<div class='dc-data-count'>
@@ -497,7 +497,7 @@ d3.csv('ndx.csv', function (data) {
     // an optional chart group for this chart to be scoped within. When a chart belongs
     // to a specific group then any interaction with such chart will only trigger redraw
     // on other charts within the same chart group.
-    // <br>API: [Data Table Widget](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#data-table-widget)
+    // <br>API: [Data Table Widget](https://github.com/dc-js/dc.js/blob/master/docs/docs/api-latest.md#data-table-widget)
     //
     // You can statically define the headers like in
     //
@@ -565,7 +565,7 @@ d3.csv('ndx.csv', function (data) {
     //to a specific group then any interaction with such chart will only trigger redraw
     //on other charts within the same chart group.
     // <br>API: [Geo Chroropleth Chart][choro]
-    // [choro]: https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#geo-choropleth-chart
+    // [choro]: https://github.com/dc-js/dc.js/blob/master/docs/docs/api-latest.md#geo-choropleth-chart
     dc.geoChoroplethChart('#us-chart')
          // (_optional_) define chart width, default 200
         .width(990)
@@ -606,7 +606,7 @@ d3.csv('ndx.csv', function (data) {
         // to a specific group then any interaction with the chart will only trigger redraw
         // on charts within the same chart group.
         // <br>API: [Bubble Overlay Chart][bubble]
-        // [bubble]: https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#bubble-overlay-chart
+        // [bubble]: https://github.com/dc-js/dc.js/blob/master/docs/docs/api-latest.md#bubble-overlay-chart
         dc.bubbleOverlay('#bubble-overlay', 'chartGroup')
             // The bubble overlay chart does not generate its own svg element but rather reuses an existing
             // svg to generate its overlay layer
