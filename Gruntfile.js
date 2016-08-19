@@ -93,7 +93,7 @@ module.exports = function (grunt) {
             },
             styles: {
                 files: ['<%= conf.pkg.name %>.css'],
-                tasks: ['cssmin:main', 'copy:dc-to-gh']
+                tasks: ['cssmin:main', 'copy:dc-to-docs']
             },
             jasmineRunner: {
                 files: ['<%= conf.spec %>/**/*.js'],
@@ -247,7 +247,7 @@ module.exports = function (grunt) {
             }
         },
         copy: {
-            'dc-to-gh': {
+            'dc-to-docs': {
                 files: [
                     {
                         expand: true,
@@ -318,13 +318,6 @@ module.exports = function (grunt) {
             }
         },
 
-        'gh-pages': {
-            options: {
-                base: '<%= conf.docs %>',
-                message: 'Synced from from master branch.'
-            },
-            src: ['**']
-        },
         shell: {
             merge: {
                 command: function (pr) {
@@ -392,7 +385,6 @@ module.exports = function (grunt) {
     // task aliases
     grunt.registerTask('build', ['concat', 'uglify', 'cssmin']);
     grunt.registerTask('docs', ['build', 'copy', 'jsdoc', 'jsdoc2md', 'docco', 'fileindex']);
-    grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine-docs']);
     grunt.registerTask('test', ['build', 'copy', 'jasmine:specs']);
     grunt.registerTask('test-browserify', ['build', 'copy', 'browserify', 'jasmine:browserify']);
