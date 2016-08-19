@@ -9,7 +9,7 @@ dc.js
 
 Dimensional charting built to work natively with crossfilter rendered using d3.js. Check out the
 [example page](http://dc-js.github.com/dc.js/) with a quick five minutes how to guide. For a
-detailed [API reference](https://github.com/dc-js/dc.js/blob/master/web/docs/api-1.6.0.md) and
+detailed [API reference](https://github.com/dc-js/dc.js/blob/master/docs/docs/api-1.6.0.md) and
 more please visit the [Wiki](https://github.com/dc-js/dc.js/wiki).
 
 
@@ -76,7 +76,7 @@ dc.js$ grunt server
 
 * Jasmine specs are hosted at http://localhost:8888/spec
 * The stock example is at http://localhost:8888/web
-* More examples are at http://localhost:8888/web/examples
+* More examples are at http://localhost:8888/docs/examples
 
 License
 --------------------
