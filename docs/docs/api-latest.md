@@ -869,7 +869,7 @@ supported on the crossfilter group as the crossfilter dimension.
 Examples:
 - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 - [dataTable on a crossfilter group](http://dc-js.github.io/dc.js/examples/table-on-aggregated-data.html)
-([source](https://github.com/dc-js/dc.js/blob/develop/web/examples/table-on-aggregated-data.html))
+([source](https://github.com/dc-js/dc.js/blob/develop/docs/examples/table-on-aggregated-data.html))
 
 
 | Param | Type | Description |

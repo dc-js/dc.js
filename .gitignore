@@ -34,8 +34,8 @@ bundle.js
 spec/index-browserify.html
 
 # font noise from some doc tool
-web/docs/public
+docs/docs/public
 
 # html docs are only checked into gh-pages branch
-web/docs/html
+docs/docs/html
 
