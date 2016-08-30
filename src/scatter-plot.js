@@ -22,10 +22,14 @@
  * @return {dc.scatterPlot}
  */
 dc.scatterPlot = function (parent, chartGroup) {
+    var TOOLTIP_G_CLASS = 'dc-tooltip';
     var _chart = dc.coordinateGridMixin({});
     var _symbol = d3.svg.symbol();
 
     var _existenceAccessor = function (d) { return d.value; };
+    var _title = function (d) {
+        return _chart.keyAccessor()(d) + ': ' + _chart.valueAccessor()(d);
+    };
 
     var originalKeyAccessor = _chart.keyAccessor();
     _chart.keyAccessor(function (d) { return originalKeyAccessor(d)[0]; });
@@ -64,36 +68,66 @@ dc.scatterPlot = function (parent, chartGroup) {
     });
 
     _chart.plotData = function () {
-        var symbols = _chart.chartBodyG().selectAll('path.symbol')
-                .data(_chart.data());
+        var chartBody = _chart.chartBodyG();
+        var tooltipListClass = TOOLTIP_G_CLASS + '-list';
+        var tooltips = chartBody.select('g.' + tooltipListClass);
+        var layersList = chartBody.selectAll('g.stack-list');
 
-        symbols
+        if (layersList.empty()) {
+            layersList = chartBody.append('g').attr('class', 'stack-list');
+        }
+
+        var layers = layersList.selectAll('g.stack').data(_chart.data());
+
+        var layersEnter = layers
             .enter()
-            .append('path')
-            .attr('class', 'symbol')
-            .attr('opacity', 0)
-            .attr('fill', _chart.getColor)
-            .attr('transform', _locator);
+            .append('g')
+            .attr('class', function (d, i) {
+                return 'stack ' + '_' + i;
+            });
 
-        symbols.each(function (d, i) {
-            _filtered[i] = !_chart.filter() || _chart.filter().isFiltered([d.key[0], d.key[1]]);
+        if (tooltips.empty()) {
+            tooltips = chartBody.append('g').attr('class', tooltipListClass);
+        }
+        layers.each(function (d, i) {
+            var symbols = _chart.chartBodyG().selectAll('path.symbol')
+                .data(_chart.data());
+            symbols
+                .enter()
+                .append('path')
+                .attr('class', 'symbol')
+                .attr('opacity', 0)
+                .attr('fill', _chart.getColor)
+                .attr('transform', _locator);
+            var points = d.values;
+
+            var g = tooltips.select('g.' + TOOLTIP_G_CLASS + '._' + i);
+            if (g.empty()) {
+                g = tooltips.append('g').attr('class', TOOLTIP_G_CLASS + ' _' + i);
+            }
+
+            symbols.call(renderTitle, d);
+
+            symbols.each(function (d, i) {
+                _filtered[i] = !_chart.filter() || _chart.filter().isFiltered([d.key[0], d.key[1]]);
+            });
+
+            dc.transition(symbols, _chart.transitionDuration())
+                .attr('opacity', function (d, i) {
+                    return !_existenceAccessor(d) ? 0 :
+                        _filtered[i] ? 1 : _chart.excludedOpacity();
+                })
+                .attr('fill', function (d, i) {
+                    return _chart.excludedColor() && !_filtered[i] ?
+                        _chart.excludedColor() :
+                        _chart.getColor(d);
+                })
+                .attr('transform', _locator)
+                .attr('d', _symbol);
+
+            dc.transition(symbols.exit(), _chart.transitionDuration())
+                .attr('opacity', 0).remove();
         });
-
-        dc.transition(symbols, _chart.transitionDuration())
-            .attr('opacity', function (d, i) {
-                return !_existenceAccessor(d) ? 0 :
-                    _filtered[i] ? 1 : _chart.excludedOpacity();
-            })
-            .attr('fill', function (d, i) {
-                return _chart.excludedColor() && !_filtered[i] ?
-                    _chart.excludedColor() :
-                    _chart.getColor(d);
-            })
-            .attr('transform', _locator)
-            .attr('d', _symbol);
-
-        dc.transition(symbols.exit(), _chart.transitionDuration())
-            .attr('opacity', 0).remove();
     };
 
     /**
@@ -255,6 +289,17 @@ dc.scatterPlot = function (parent, chartGroup) {
         _emptySize = emptySize;
         return _chart;
     };
+
+    function renderTitle (symbol, d) {
+        if (_chart.renderTitle()) {
+            symbol.selectAll('title').remove();
+            //symbol.append('title').text(dc.pluck('data', _chart.title(d.name)));
+            symbol.append('title').text(function(d){
+                return _chart.title()(d);
+            });
+            //symbol.append('title').text('data');
+        }
+    }
 
     _chart.legendables = function () {
         return [{chart: _chart, name: _chart._groupName, color: _chart.getColor()}];
