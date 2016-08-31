@@ -27,9 +27,6 @@ dc.scatterPlot = function (parent, chartGroup) {
     var _symbol = d3.svg.symbol();
 
     var _existenceAccessor = function (d) { return d.value; };
-    var _title = function (d) {
-        return _chart.keyAccessor()(d) + ': ' + _chart.valueAccessor()(d);
-    };
 
     var originalKeyAccessor = _chart.keyAccessor();
     _chart.keyAccessor(function (d) { return originalKeyAccessor(d)[0]; });
@@ -79,7 +76,7 @@ dc.scatterPlot = function (parent, chartGroup) {
 
         var layers = layersList.selectAll('g.stack').data(_chart.data());
 
-        var layersEnter = layers
+        layers
             .enter()
             .append('g')
             .attr('class', function (d, i) {
@@ -99,7 +96,6 @@ dc.scatterPlot = function (parent, chartGroup) {
                 .attr('opacity', 0)
                 .attr('fill', _chart.getColor)
                 .attr('transform', _locator);
-            var points = d.values;
 
             var g = tooltips.select('g.' + TOOLTIP_G_CLASS + '._' + i);
             if (g.empty()) {
@@ -293,11 +289,9 @@ dc.scatterPlot = function (parent, chartGroup) {
     function renderTitle (symbol, d) {
         if (_chart.renderTitle()) {
             symbol.selectAll('title').remove();
-            //symbol.append('title').text(dc.pluck('data', _chart.title(d.name)));
-            symbol.append('title').text(function(d){
+            symbol.append('title').text(function (d) {
                 return _chart.title()(d);
             });
-            //symbol.append('title').text('data');
         }
     }
 
