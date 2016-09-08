@@ -107,11 +107,11 @@ dc.pieChart = function (parent, chartGroup) {
         if (_g) {
             var slices = _g.select('g.' + _sliceGroupCssClass)
                 .selectAll('g.' + _sliceCssClass)
-                .data(pieData, function(d) { return _chart.cappedKeyAccessor(d.data); });
+                .data(pieData, function (d) { return _chart.cappedKeyAccessor(d.data); });
 
             var labels = _g.select('g.' + _labelGroupCssClass)
                 .selectAll('text.' + _labelCssClass)
-                    .data(pieData, function(d) { return _chart.cappedKeyAccessor(d.data); });
+                    .data(pieData, function (d) { return _chart.cappedKeyAccessor(d.data); });
 
             createElements(slices, labels, arc, pieData);
 
@@ -272,7 +272,7 @@ dc.pieChart = function (parent, chartGroup) {
         updateTitles(pieData);
     }
 
-    function updateSlicePaths(slices, arc) {
+    function updateSlicePaths (slices, arc) {
         var slicePaths = slices.select('path')
             .attr('d', function (d, i) {
                 return safeArc(d, i, arc);
@@ -287,7 +287,7 @@ dc.pieChart = function (parent, chartGroup) {
     function updateLabels (pieData, arc) {
         if (_chart.renderLabel()) {
             var labels = _g.selectAll('text.' + _labelCssClass)
-                .data(pieData, function(d) { return _chart.cappedKeyAccessor(d.data); });
+                .data(pieData, function (d) { return _chart.cappedKeyAccessor(d.data); });
             positionLabels(labels, arc);
             if (_externalLabelRadius && _drawPaths) {
                 updateLabelPaths(pieData, arc);
@@ -298,7 +298,7 @@ dc.pieChart = function (parent, chartGroup) {
     function updateTitles (pieData) {
         if (_chart.renderTitle()) {
             _g.selectAll('g.' + _sliceCssClass)
-                .data(pieData, function(d) { return _chart.cappedKeyAccessor(d.data); })
+                .data(pieData, function (d) { return _chart.cappedKeyAccessor(d.data); })
                 .select('title')
                 .text(function (d) {
                     return _chart.title()(d.data);
