@@ -111,7 +111,7 @@ dc.pieChart = function (parent, chartGroup) {
 
             var labels = _g.select('g.' + _labelGroupCssClass)
                 .selectAll('text.' + _labelCssClass)
-                    .data(pieData, function (d) { return _chart.cappedKeyAccessor(d.data); });
+                .data(pieData, function (d) { return _chart.cappedKeyAccessor(d.data); });
 
             createElements(slices, labels, arc, pieData);
 
@@ -149,10 +149,7 @@ dc.pieChart = function (parent, chartGroup) {
     function createSlicePath  (slicesEnter, arc) {
         var slicePath = slicesEnter.append('path')
             .attr('fill', fill)
-            .on('click', onClick)
-            .attr('d', function (d, i) {
-                return safeArc(d, i, arc);
-            });
+            .on('click', onClick);
 
         var transition = dc.transition(slicePath, _chart.transitionDuration(), _chart.transitionDelay());
         if (transition.attrTween) {
@@ -273,10 +270,7 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     function updateSlicePaths (slices, arc) {
-        var slicePaths = slices.select('path')
-            .attr('d', function (d, i) {
-                return safeArc(d, i, arc);
-            });
+        var slicePaths = slices.select('path');
         var transition = dc.transition(slicePaths, _chart.transitionDuration(), _chart.transitionDelay());
         if (transition.attrTween) {
             transition.attrTween('d', tweenPie);
