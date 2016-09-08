@@ -147,11 +147,6 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     function createSlicePath  (slicesEnter, arc) {
-        console.log('createSlicePath');
-        slicesEnter.each(function(d) {
-            console.log(_chart.cappedKeyAccessor(d.data));
-        });
-        console.log(slicesEnter.datum());
         var slicePath = slicesEnter.append('path')
             .attr('fill', fill)
             .on('click', onClick)
