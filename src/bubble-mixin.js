@@ -10,6 +10,7 @@
 dc.bubbleMixin = function (_chart) {
     var _maxBubbleRelativeSize = 0.3;
     var _minRadiusWithLabel = 10;
+    var _fontSize = "10px";
 
     _chart.BUBBLE_NODE_CLASS = 'node';
     _chart.BUBBLE_CLASS = 'bubble';
@@ -50,6 +51,19 @@ dc.bubbleMixin = function (_chart) {
     };
 
     /**
+    #### .fontSize(bubbleFontSize)
+    Get or set the bubble label text font size. By default the bubble label text font size
+    is 10px.
+    **/
+    _chart.fontSize = function(_){
+        if(!arguments.length) {
+            return _fontSize;
+        }
+        _fontSize = _;
+        return _chart;
+    }
+
+    /**
      * Get or set the radius value accessor function. If set, the radius value accessor function will
      * be used to retrieve a data value for each bubble. The data retrieved then will be mapped using
      * the r scale to the actual bubble radius. This allows you to encode a data dimension using bubble
@@ -86,7 +100,7 @@ dc.bubbleMixin = function (_chart) {
     _chart.bubbleR = function (d) {
         var value = _chart.radiusValueAccessor()(d);
         var r = _chart.r()(value);
-        if (isNaN(r) || value <= 0) {
+        if (isNaN(r) || value <= 0 || r < 0) {
             r = 0;
         }
         return r;
@@ -122,6 +136,7 @@ dc.bubbleMixin = function (_chart) {
             label
                 .attr('opacity', 0)
                 .attr('pointer-events', labelPointerEvent)
+                .attr("font-size", _chart.fontSize())
                 .text(labelFunction);
             dc.transition(label, _chart.transitionDuration())
                 .attr('opacity', labelOpacity);

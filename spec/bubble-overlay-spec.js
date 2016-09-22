@@ -31,6 +31,7 @@ describe('dc.bubbleOverlay', function () {
                 .point('Oklahoma', 200, 350);
 
             chart.render();
+
         });
 
         it('should generate an instance of the dc chart', function () {
@@ -97,6 +98,64 @@ describe('dc.bubbleOverlay', function () {
             expect(d3.select(chart.selectAll('g.node')[0][1]).attr('class')).toEqual('node colorado selected');
             expect(d3.select(chart.selectAll('g.node')[0][3]).attr('class')).toEqual('node ontario deselected');
         });
+
+        it('should not find circle, title or text elements after a reset', function(){
+            chart.reset();
+            expect(chart.selectAll("circle.bubble")[0].length).toEqual(0);
+            expect(chart.selectAll("g.node text")[0].length).toEqual(0);
+            expect(chart.selectAll("g.node title")[0].length).toEqual(0);
+        });
+
+        it('should add the correct number of bubbles after a reset', function(){
+            var points = [];
+            points.push({name : "California", x:100, y:120});
+            points.push({name : "Colorado", x:300, y:120});
+            points.push({name : "Delaware", x:500, y:220});
+            points.push({name : "Ontario", x:180, y:90});
+            points.push({name : "Mississippi", x:120, y:220});
+            points.push({name : "Oklahoma", x:200, y:350});
+            chart.reset();
+            chart.addPoints(points);
+            chart.render();
+
+            expect(chart.selectAll("circle.bubble")[0].length).toEqual(6);
+        });
+
+        it('should set the min and maximum range of a bubbles radius', function(){
+            var points = [];
+            points.push({name : "California", x:100, y:120});
+            points.push({name : "Colorado", x:300, y:120});
+            points.push({name : "Delaware", x:500, y:220});
+            points.push({name : "Ontario", x:180, y:90});
+            points.push({name : "Mississippi", x:120, y:220});
+            points.push({name : "Oklahoma", x:200, y:350});
+            chart.reset();
+            chart.addPoints(points);
+            chart.minBubbleR(0);
+            chart.maxBubbleR(1);
+            chart.render();
+
+            expect(d3.select(chart.selectAll("circle.bubble")[0][0]).attr("r")).toEqual("0.308");
+            expect(d3.select(chart.selectAll("circle.bubble")[0][3]).attr("r")).toEqual("0.154");
+        });
+
+        it('should set the min and maximum range of a bubbles radius', function(){
+            var points = [];
+            points.push({name : "California", x:100, y:120});
+            points.push({name : "Colorado", x:300, y:120});
+            points.push({name : "Delaware", x:500, y:220});
+            points.push({name : "Ontario", x:180, y:90});
+            points.push({name : "Mississippi", x:120, y:220});
+            points.push({name : "Oklahoma", x:200, y:350});
+            chart.reset();
+            chart.addPoints(points);
+            chart.fontSize("20px");
+            chart.render();
+
+            expect(d3.select(chart.selectAll("g.node text")[0][0]).attr("font-size")).toEqual("20px");
+            expect(d3.select(chart.selectAll("g.node text")[0][3]).attr("font-size")).toEqual("20px");
+        });
+
     });
 });
 
