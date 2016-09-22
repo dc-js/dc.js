@@ -121,15 +121,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
         var data = mapData();
 
         _points.forEach(function (point) {
-            var nodeG = getNodeG(point, data);
-
-            var circle = nodeG.select('circle.' + BUBBLE_CLASS);
-            var label = nodeG.select('text');
-            var title = nodeG.select('title');
-
-            circle.remove();
-            label.remove();
-            title.remove();
+            getNodeG(point, data).remove();
         });
 
         _points = [];
