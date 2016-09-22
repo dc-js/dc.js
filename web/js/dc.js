@@ -4485,6 +4485,7 @@ dc.capMixin = function (_chart) {
 dc.bubbleMixin = function (_chart) {
     var _maxBubbleRelativeSize = 0.3;
     var _minRadiusWithLabel = 10;
+    var _fontSize = "10px";
 
     _chart.BUBBLE_NODE_CLASS = 'node';
     _chart.BUBBLE_CLASS = 'bubble';
@@ -4525,6 +4526,19 @@ dc.bubbleMixin = function (_chart) {
     };
 
     /**
+    #### .fontSize(bubbleFontSize)
+    Get or set the bubble label text font size. By default the bubble label text font size
+    is 10px.
+    **/
+    _chart.fontSize = function(_){
+        if(!arguments.length) {
+            return _fontSize;
+        }
+        _fontSize = _;
+        return _chart;
+    }
+
+    /**
      * Get or set the radius value accessor function. If set, the radius value accessor function will
      * be used to retrieve a data value for each bubble. The data retrieved then will be mapped using
      * the r scale to the actual bubble radius. This allows you to encode a data dimension using bubble
@@ -4561,7 +4575,7 @@ dc.bubbleMixin = function (_chart) {
     _chart.bubbleR = function (d) {
         var value = _chart.radiusValueAccessor()(d);
         var r = _chart.r()(value);
-        if (isNaN(r) || value <= 0) {
+        if (isNaN(r) || value <= 0 || r < 0) {
             r = 0;
         }
         return r;
@@ -4597,6 +4611,7 @@ dc.bubbleMixin = function (_chart) {
             label
                 .attr('opacity', 0)
                 .attr('pointer-events', labelPointerEvent)
+                .attr("font-size", _chart.fontSize())
                 .text(labelFunction);
             dc.transition(label, _chart.transitionDuration())
                 .attr('opacity', labelOpacity);
@@ -4956,6 +4971,7 @@ dc.pieChart = function (parent, chartGroup) {
                 });
 
         polyline.exit().remove();
+
         var arc2 = d3.svg.arc()
                 .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
                 .innerRadius(_radius - _externalRadiusPadding);
@@ -4964,8 +4980,9 @@ dc.pieChart = function (parent, chartGroup) {
         if (transition.attrTween) {
             transition
                 .attrTween('points', function (d) {
-                    this._current = this._current || d;
-                    var interpolate = d3.interpolate(this._current, d);
+                    var current = this._current || d;
+                    current = {startAngle: current.startAngle, endAngle: current.endAngle};
+                    var interpolate = d3.interpolate(current, d);
                     this._current = interpolate(0);
                     return function (t) {
                         var d2 = interpolate(t);
@@ -5959,7 +5976,7 @@ dc.lineChart = function (parent, chartGroup) {
     }
 
     function drawDots (chartBody, layers) {
-        if (!_chart.brushOn() && _chart.xyTipsOn()) {
+        if (_chart.xyTipsOn() === 'always' || (!_chart.brushOn() && _chart.xyTipsOn())) {
             var tooltipListClass = TOOLTIP_G_CLASS + '-list';
             var tooltips = chartBody.select('g.' + tooltipListClass);
 
@@ -8218,9 +8235,12 @@ dc.bubbleOverlay = function (parent, chartGroup) {
      * @param {SVGElement|d3.selection} [imageElement]
      * @return {dc.bubbleOverlay}
      */
+     
     var _chart = dc.bubbleMixin(dc.baseMixin({}));
     var _g;
     var _points = [];
+    var _minBubbleR = null;
+    var _maxBubbleR = null;
 
     _chart.transitionDuration(750);
 
@@ -8248,16 +8268,102 @@ dc.bubbleOverlay = function (parent, chartGroup) {
         return _chart;
     };
 
+
+
     _chart._doRender = function () {
         _g = initOverlayG();
 
-        _chart.r().range([_chart.MIN_RADIUS, _chart.width() * _chart.maxBubbleRelativeSize()]);
+        setRadiusRange();
 
         initializeBubbles();
 
         _chart.fadeDeselectedArea();
 
         return _chart;
+    };
+
+    /**
+    #### .minBubbleR(value)
+    Sets the minimum radius of a bubble overlay.
+    **/
+    _chart.minBubbleR = function(_){
+        if(!arguments.length){
+            return _minBubbleR;
+        }
+        _minBubbleR = _;
+        return _chart;
+    };
+
+    /**
+    #### .maxBubbleR(value)
+    Sets the maximum radius of a bubble overlay.
+    **/
+    _chart.maxBubbleR = function(_){
+        if(!arguments.length){
+            return _minBubbleR;
+        }
+        _maxBubbleR = _;
+        return _chart;
+    };
+
+    /**
+    #### .reset()
+    Clears all points, text and title elements from the bubble overlay.
+    **/
+    _chart.reset = function(){
+        var data = mapData();
+
+        _points.forEach(function (point) {
+            var nodeG = getNodeG(point, data);
+
+            var circle = nodeG.select('circle.' + BUBBLE_CLASS);
+            var label = nodeG.select('text');
+            var title = nodeG.select('title');
+
+            circle.remove();
+            label.remove();
+            title.remove();
+        });
+
+        _points = [];
+        
+        return _chart;
+    };
+
+    /**
+    #### .addPoints(points)
+    Set up data points on the overlay. The name of a data point should match a specific 'key' among
+    data groups generated using keyAccessor.  If a match is found (point name <-> data group key)
+    then a bubble will be generated at the position specified by the function. x and y
+    value specified here are relative to the underlying svg.
+
+    **/
+    _chart.addPoints = function(points){
+        if(points.length < 1){
+            throw "There must be at least one point";
+        }
+        points.forEach(function(point){
+            if(!("name" in point) || !("x" in point) || !("y" in point)){
+                throw "All points must be of type {name: name, x: x, y: y}";
+            }
+            _chart.point(point.name,point.x,point.y);
+        });
+        return _chart;
+    };   
+
+    function setRadiusRange(){
+        if(_minBubbleR != null && _minBubbleR >= 0 && _maxBubbleR == null){
+            _chart.r().range([_minBubbleR, _chart.width() * _chart.maxBubbleRelativeSize()]);
+        } 
+        else if(_maxBubbleR != null && _maxBubbleR >= 0 && _minBubbleR == null){
+            _chart.r().range([_chart.MIN_RADIUS, _maxBubbleR]);
+        } 
+        else if(_minBubbleR != null && _minBubbleR >= 0 && _maxBubbleR != null && _maxBubbleR >= 0 && _maxBubbleR >= _minBubbleR){
+            _chart.r().range([_minBubbleR, _maxBubbleR]);
+        } 
+        else {
+            _chart.r().range([_chart.MIN_RADIUS, _chart.width() * _chart.maxBubbleRelativeSize()]);
+        }
     };
 
     function initOverlayG () {
