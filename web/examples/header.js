@@ -9,8 +9,12 @@
         '<a href=".">all ' + dir + '</a>&emsp;<a href="',
         'https://github.com/dc-js/dc.js/tree/master/web/' + dir + '/' + filename,
         '">source</a>',
+        '<div style="float:right"><span id="version"></span></div>',
         '</div>',
         '<hr>',
         '</div>'
     ].join(''));
+    window.onload = function() {
+        d3.select('#version').text('v' + dc.version);
+    };
 }();
