@@ -127,6 +127,17 @@ describe('dc.core', function () {
                 expect(selections.transition).not.toHaveBeenCalled();
                 expect(selections.duration).not.toHaveBeenCalled();
             });
+
+            it('transition should not be activated with dc.disableTransitions', function () {
+                dc.disableTransitions = true;
+                dc.transition(selections, 100);
+                expect(selections.transition).not.toHaveBeenCalled();
+                expect(selections.duration).not.toHaveBeenCalled();
+            });
+
+            afterEach(function () {
+                dc.disableTransitions = false;
+            });
         });
     });
 
