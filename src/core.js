@@ -272,8 +272,12 @@ dc.transition = function (selections, duration, delay, name) {
 
     var s = selections.transition(name);
 
-    if (duration >= 0 || duration !== undefined) {s = s.duration(duration);}
-    if (delay >= 0 || delay !== undefined) {s = s.delay(delay);}
+    if (duration >= 0 || duration !== undefined) {
+        s = s.duration(duration);
+    }
+    if (delay >= 0 || delay !== undefined) {
+        s = s.delay(delay);
+    }
 
     return s;
 };
