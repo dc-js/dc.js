@@ -1,4 +1,8 @@
 # 2.0 Series
+## 2.0.0 beta 33
+* transitionDelay allows staggered transitions, by Mauricio Bustos ([#1116](https://github.com/dc-js/dc.js/pull/1116))
+* removed the confusing callback from dc.transition and documented the function
+
 ## 2.0.0 beta 32
 * elasticY and elasticX did not work if all values were negative (coordinate grid and row charts, respectively), by Sebastian Gröhn ([#879](https://github.com/dc-js/dc.js/issues/879) / [#1156](https://github.com/dc-js/dc.js/pull/1156))
 * Improved implementation of alignYAxes, by Mohamed Gazal and Gordon Woodhull ([#1033](https://github.com/dc-js/dc.js/pull/1033))
