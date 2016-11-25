@@ -191,7 +191,6 @@ module.exports = function (grunt) {
                     tunnelTimeout: 5,
                     build: process.env.TRAVIS_JOB_ID,
                     concurrency: 3,
-                    pollInterval: 5000,
                     browsers: [
                         {
                             browserName: 'firefox',
@@ -210,7 +209,7 @@ module.exports = function (grunt) {
                         },
                         {
                             browserName: 'MicrosoftEdge',
-                            version: '20.10240',
+                            version: '14',
                             platform: 'Windows 10'
                         }
                     ],
