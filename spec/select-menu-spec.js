@@ -12,7 +12,7 @@ describe('dc.selectMenu', function () {
         regionGroup = regionDimension.group();
         stateGroup = stateDimension.group();
 
-        id = 'seclect-menu';
+        id = 'select-menu';
         appendChartID(id);
 
         chart = dc.selectMenu('#' + id);
@@ -49,7 +49,7 @@ describe('dc.selectMenu', function () {
             expect(chart.selectAll('select').attr('size')).toBeNull();
         });
         it('can have size set', function () {
-            chart.size(10).redraw();
+            chart.numberVisible(10).redraw();
             expect(chart.selectAll('select').attr('size')).toEqual('10');
         });
         it('creates prompt option with empty value', function () {
