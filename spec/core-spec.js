@@ -119,14 +119,6 @@ describe('dc.core', function () {
                 expect(selections.transition).toHaveBeenCalled();
                 expect(selections.duration).toHaveBeenCalled();
             });
-
-            it('transition callback should be triggered', function () {
-                var triggered = false;
-                dc.transition(selections, 100, function () {
-                    triggered = true;
-                });
-                expect(triggered).toBeTruthy();
-            });
         });
 
         describe('skip', function () {
@@ -134,14 +126,6 @@ describe('dc.core', function () {
                 dc.transition(selections, 0);
                 expect(selections.transition).not.toHaveBeenCalled();
                 expect(selections.duration).not.toHaveBeenCalled();
-            });
-
-            it('transition callback should not be triggered', function () {
-                var triggered = false;
-                dc.transition(selections, 0, function () {
-                    triggered = true;
-                });
-                expect(triggered).toBeFalsy();
             });
         });
     });

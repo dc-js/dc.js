@@ -265,7 +265,7 @@ dc.redrawAll = function (group) {
  */
 dc.disableTransitions = false;
 
-dc.transition = function (selections, duration, callback, name) {
+dc.transition = function (selections, duration, name) {
     if (duration <= 0 || duration === undefined || dc.disableTransitions) {
         return selections;
     }
@@ -273,10 +273,6 @@ dc.transition = function (selections, duration, callback, name) {
     var s = selections
         .transition(name)
         .duration(duration);
-
-    if (typeof(callback) === 'function') {
-        callback(s);
-    }
 
     return s;
 };

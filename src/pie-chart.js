@@ -153,9 +153,10 @@ dc.pieChart = function (parent, chartGroup) {
                 return safeArc(d, i, arc);
             });
 
-        dc.transition(slicePath, _chart.transitionDuration(), function (s) {
-            s.attrTween('d', tweenPie);
-        });
+        var transition = dc.transition(slicePath, _chart.transitionDuration());
+        if (transition.attrTween) {
+            transition.attrTween('d', tweenPie);
+        }
     }
 
     function createTitles (slicesEnter) {
@@ -276,10 +277,11 @@ dc.pieChart = function (parent, chartGroup) {
             .attr('d', function (d, i) {
                 return safeArc(d, i, arc);
             });
-        dc.transition(slicePaths, _chart.transitionDuration(),
-            function (s) {
-                s.attrTween('d', tweenPie);
-            }).attr('fill', fill);
+        var transition = dc.transition(slicePaths, _chart.transitionDuration());
+        if (transition.attrTween) {
+            transition.attrTween('d', tweenPie);
+        }
+        transition.attr('fill', fill);
     }
 
     function updateLabels (pieData, arc) {
