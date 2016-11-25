@@ -51,16 +51,22 @@
               .width(768)
               .height(480)
               .x(d3.scale.linear().domain([1,21]))
-              .margins({left: 50, top: 20, right: 10, bottom: 20})
+              .margins({left: 80, top: 20, right: 10, bottom: 20})
               .brushOn(false)
               .clipPadding(10)
               .title(function(d) {
                   return d.key + '[' + this.layer + ']: ' + d.value[this.layer];
               })
-              .yAxisLabel("This is the Y Axis!")
               .dimension(runDimension)
               .group(speedSumGroup, "1", sel_stack('1'))
               .renderLabel(true);
+
+          chart.legend(dc.legend());
+
+          dc.override(chart, 'legendables', function() {
+              var items = chart._legendables();
+              return items.reverse();
+          });
 
           for(var i = 2; i<6; ++i)
               chart.stack(speedSumGroup, ''+i, sel_stack(i));
