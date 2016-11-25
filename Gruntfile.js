@@ -191,6 +191,7 @@ module.exports = function (grunt) {
                     tunnelTimeout: 5,
                     build: process.env.TRAVIS_JOB_ID,
                     concurrency: 3,
+                    pollInterval: 5,
                     browsers: [
                         {
                             browserName: 'firefox',
