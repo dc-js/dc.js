@@ -123,6 +123,13 @@ describe('dc.core', function () {
                 expect(selections.transition).toHaveBeenCalled();
                 expect(selections.duration).toHaveBeenCalled();
                 expect(selections.delay).toHaveBeenCalled();
+                expect(selections.duration).toHaveBeenCalledWith(100);
+                expect(selections.delay).toHaveBeenCalledWith(100);
+            });
+            it('with name', function () {
+                dc.transition(selections, 100, 100, 'transition-name');
+                expect(selections.transition).toHaveBeenCalled();
+                expect(selections.transition).toHaveBeenCalledWith('transition-name');
             });
         });
 
@@ -143,6 +150,18 @@ describe('dc.core', function () {
 
             afterEach(function () {
                 dc.disableTransitions = false;
+            });
+        });
+
+        describe('parameters', function () {
+            it('duration should not be called if skipped', function () {
+                dc.transition(selections);
+                expect(selections.duration).not.toHaveBeenCalled();
+            });
+
+            it('delay should not be called if skipped', function () {
+                dc.transition(selections, 100);
+                expect(selections.delay).not.toHaveBeenCalled();
             });
         });
     });
