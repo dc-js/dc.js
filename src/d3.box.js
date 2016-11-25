@@ -71,6 +71,8 @@
                 center.transition()
                     .duration(duration)
                     .style('opacity', 1)
+                    .attr('x1', width / 2)
+                    .attr('x2', width / 2)
                     .attr('y1', function (d) { return x1(d[0]); })
                     .attr('y2', function (d) { return x1(d[1]); });
 
@@ -98,6 +100,7 @@
 
                 box.transition()
                     .duration(duration)
+                    .attr('width', width)
                     .attr('y', function (d) { return x1(d[2]); })
                     .attr('height', function (d) { return x1(d[0]) - x1(d[2]); });
 
@@ -118,6 +121,8 @@
 
                 medianLine.transition()
                     .duration(duration)
+                    .attr('x1', 0)
+                    .attr('x2', width)
                     .attr('y1', x1)
                     .attr('y2', x1);
 
@@ -140,6 +145,8 @@
 
                 whisker.transition()
                     .duration(duration)
+                    .attr('x1', 0)
+                    .attr('x2', width)
                     .attr('y1', x1)
                     .attr('y2', x1)
                     .style('opacity', 1);
@@ -168,6 +175,7 @@
 
                 outlier.transition()
                     .duration(duration)
+                    .attr('cx', width / 2)
                     .attr('cy', function (i) { return x1(d[i]); })
                     .style('opacity', 1);
 
@@ -199,6 +207,7 @@
                 boxTick.transition()
                     .duration(duration)
                     .text(format)
+                    .attr('x', function (d, i) { return i & 1 ? width : 0; })
                     .attr('y', x1);
 
                 // Update whisker ticks. These are handled separately from the box
@@ -223,6 +232,7 @@
                 whiskerTick.transition()
                     .duration(duration)
                     .text(format)
+                    .attr('x', width)
                     .attr('y', x1)
                     .style('opacity', 1);
 
