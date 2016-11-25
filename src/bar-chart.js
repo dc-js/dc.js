@@ -121,7 +121,8 @@ dc.barChart = function (parent, chartGroup) {
             });
 
         dc.transition(labels.exit(), _chart.transitionDuration())
-            .attr('height', 0)
+            .attr('x', function(d) { return _chart.x()(d.x); })
+            .attr('width', _barWidth * 0.9)
             .remove();
     }
 
