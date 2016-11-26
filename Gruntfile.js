@@ -11,6 +11,7 @@ module.exports = function (grunt) {
         src: 'src',
         spec: 'spec',
         docs: 'docs',
+        olddocs: 'web/docs',
         pkg: require('./package.json'),
         banner: grunt.file.read('./LICENSE_BANNER'),
         jsFiles: module.exports.jsFiles
@@ -272,6 +273,16 @@ module.exports = function (grunt) {
                         dest: '<%= conf.docs %>/js/'
                     }
                 ]
+            },
+            'md-to-olddocs': {
+                files: [
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: ['<%= conf.docs %>/docs/*.md'],
+                        dest: '<%= conf.olddocs %>'
+                    }
+                ]
             }
         },
         fileindex: {
@@ -384,11 +395,11 @@ module.exports = function (grunt) {
 
     // task aliases
     grunt.registerTask('build', ['concat', 'uglify', 'cssmin']);
-    grunt.registerTask('docs', ['build', 'copy', 'jsdoc', 'jsdoc2md', 'docco', 'fileindex']);
+    grunt.registerTask('docs', ['build', 'copy:dc-to-docs', 'jsdoc', 'jsdoc2md', 'docco', 'copy:md-to-olddocs', 'fileindex']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine-docs']);
-    grunt.registerTask('test', ['build', 'copy', 'jasmine:specs']);
-    grunt.registerTask('test-browserify', ['build', 'copy', 'browserify', 'jasmine:browserify']);
-    grunt.registerTask('coverage', ['build', 'copy', 'jasmine:coverage']);
+    grunt.registerTask('test', ['build', 'copy:dc-to-docs', 'jasmine:specs']);
+    grunt.registerTask('test-browserify', ['build', 'copy:dc-to-docs', 'browserify', 'jasmine:browserify']);
+    grunt.registerTask('coverage', ['build', 'copy:dc-to-docs', 'jasmine:coverage']);
     grunt.registerTask('ci', ['test', 'jasmine:specs:build', 'connect:server', 'saucelabs-jasmine']);
     grunt.registerTask('ci-pull', ['test', 'jasmine:specs:build', 'connect:server']);
     grunt.registerTask('lint', ['jshint', 'jscs']);
