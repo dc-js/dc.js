@@ -36,6 +36,4 @@ spec/index-browserify.html
 # font noise from some doc tool
 docs/docs/public
 
-# html docs are only checked into gh-pages branch
-docs/docs/html
 
