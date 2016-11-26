@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 2.0.0-beta.32  
+**Version**: 2.0.0-beta.33  
 **Example**  
 ```js
 // Example chaining
@@ -181,6 +181,7 @@ chart.width(300)
         * [.turnOnControls()](#dc.baseMixin+turnOnControls) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
         * [.turnOffControls()](#dc.baseMixin+turnOffControls) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
         * [.transitionDuration([duration])](#dc.baseMixin+transitionDuration) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
+        * [.transitionDelay([delay])](#dc.baseMixin+transitionDelay) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
         * [.render()](#dc.baseMixin+render) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
         * [.redraw()](#dc.baseMixin+redraw) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
         * [.commitHandler()](#dc.baseMixin+commitHandler) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
@@ -269,6 +270,7 @@ chart.width(300)
         * [.minRadius([radius])](#dc.bubbleMixin+minRadius) ⇒ <code>Number</code> &#124; <code>[bubbleMixin](#dc.bubbleMixin)</code>
         * [.minRadiusWithLabel([radius])](#dc.bubbleMixin+minRadiusWithLabel) ⇒ <code>Number</code> &#124; <code>[bubbleMixin](#dc.bubbleMixin)</code>
         * [.maxBubbleRelativeSize([relativeSize])](#dc.bubbleMixin+maxBubbleRelativeSize) ⇒ <code>Number</code> &#124; <code>[bubbleMixin](#dc.bubbleMixin)</code>
+    * [.disableTransitions](#dc.disableTransitions) : <code>Boolean</code>
     * [.dateFormat](#dc.dateFormat) : <code>function</code>
     * [.chartRegistry](#dc.chartRegistry) : <code>object</code>
         * [.has(chart)](#dc.chartRegistry.has) ⇒ <code>Boolean</code>
@@ -312,7 +314,7 @@ chart.width(300)
     * [.refocusAll([group])](#dc.refocusAll)
     * [.renderAll([group])](#dc.renderAll)
     * [.redrawAll([group])](#dc.redrawAll)
-    * [.disableTransitions()](#dc.disableTransitions) ⇒ <code>Boolean</code>
+    * [.transition(selection, [duration], [delay], [name])](#dc.transition) ⇒ <code>d3.transition</code> &#124; <code>d3.selection</code>
     * [.pluck(n, [f])](#dc.pluck) ⇒ <code>function</code>
 
 <a name="dc.pieChart"></a>
@@ -2578,6 +2580,7 @@ and available on all chart implementations in the `dc` library.
     * [.turnOnControls()](#dc.baseMixin+turnOnControls) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
     * [.turnOffControls()](#dc.baseMixin+turnOffControls) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
     * [.transitionDuration([duration])](#dc.baseMixin+transitionDuration) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
+    * [.transitionDelay([delay])](#dc.baseMixin+transitionDelay) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
     * [.render()](#dc.baseMixin+render) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
     * [.redraw()](#dc.baseMixin+redraw) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
     * [.commitHandler()](#dc.baseMixin+commitHandler) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
@@ -2935,6 +2938,17 @@ Set or get the animation transition duration (in milliseconds) for this chart in
 | Param | Type | Default |
 | --- | --- | --- |
 | [duration] | <code>Number</code> | <code>750</code> | 
+
+<a name="dc.baseMixin+transitionDelay"></a>
+
+#### baseMixin.transitionDelay([delay]) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
+Set or get the animation transition delay (in milliseconds) for this chart instance.
+
+**Kind**: instance method of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [delay] | <code>Number</code> | <code>0</code> | 
 
 <a name="dc.baseMixin+render"></a>
 
@@ -4436,6 +4450,14 @@ when the difference in radius between bubbles is too great.
 | --- | --- | --- |
 | [relativeSize] | <code>Number</code> | <code>0.3</code> | 
 
+<a name="dc.disableTransitions"></a>
+
+### dc.disableTransitions : <code>Boolean</code>
+If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
+immediately
+
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Default**: <code>false</code>  
 <a name="dc.dateFormat"></a>
 
 ### dc.dateFormat : <code>function</code>
@@ -4994,14 +5016,23 @@ from scratch.
 | --- | --- |
 | [group] | <code>String</code> | 
 
-<a name="dc.disableTransitions"></a>
+<a name="dc.transition"></a>
 
-### dc.disableTransitions() ⇒ <code>Boolean</code>
-If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
-immediately
+### dc.transition(selection, [duration], [delay], [name]) ⇒ <code>d3.transition</code> &#124; <code>d3.selection</code>
+Start a transition on a selection if transitions are globally enabled
+([disableTransitions](#dc.disableTransitions) is false) and the duration is greater than zero; otherwise return
+the selection. Since most operations are the same on a d3 selection and a d3 transition, this
+allows a common code path for both cases.
 
 **Kind**: static method of <code>[dc](#dc)</code>  
-**Default**: <code>false</code>  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| selection | <code>d3.selection</code> |  | the selection to be transitioned |
+| [duration] | <code>Number</code> &#124; <code>function</code> | <code>250</code> | the duration of the transition in milliseconds, a function returning the duration, or 0 for no transition |
+| [delay] | <code>Number</code> &#124; <code>function</code> |  | the delay of the transition in milliseconds, or a function returning the delay, or 0 for no delay |
+| [name] | <code>String</code> |  | the name of the transition (if concurrent transitions on the same elements are needed) |
+
 <a name="dc.pluck"></a>
 
 ### dc.pluck(n, [f]) ⇒ <code>function</code>
