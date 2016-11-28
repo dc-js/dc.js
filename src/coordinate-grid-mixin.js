@@ -64,6 +64,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _xAxis = d3.svg.axis().orient('bottom');
     var _xUnits = dc.units.integers;
     var _xAxisPadding = 0;
+    var _xAxisPaddingUnit = 'day';
     var _xElasticity = false;
     var _xAxisLabel;
     var _xAxisLabelPadding = 0;
@@ -381,9 +382,10 @@ dc.coordinateGridMixin = function (_chart) {
      * Set or get x axis padding for the elastic x axis. The padding will be added to both end of the x
      * axis if elasticX is turned on; otherwise it is ignored.
      *
-     * padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
-     * number or date x axes.  When padding a date axis, an integer represents number of days being padded
-     * and a percentage string will be treated the same as an integer.
+     * Padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
+     * number or date x axes.  When padding a date axis, an integer represents number of units being padded
+     * and a percentage string will be treated the same as an integer. The unit will be determined by the
+     * xAxisPaddingUnit variable.
      * @method xAxisPadding
      * @memberof dc.coordinateGridMixin
      * @instance
@@ -396,6 +398,29 @@ dc.coordinateGridMixin = function (_chart) {
             return _xAxisPadding;
         }
         _xAxisPadding = padding;
+        return _chart;
+    };
+
+    /**
+     * Set or get x axis padding unit for the elastic x axis. The padding unit will determine which unit to
+     * use when applying xAxis padding if elasticX is turned on and if x-axis uses a time dimension;
+     * otherwise it is ignored.
+     *
+     * Padding unit is a string that will be used when the padding is calculated. Available parameters are
+     * the available d3 time intervals:
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval d3.time.interval}
+     * @method xAxisPaddingUnit
+     * @memberof dc.coordinateGridMixin
+     * @instance
+     * @param {String} [unit='days']
+     * @return {String}
+     * @return {dc.coordinateGridMixin}
+     */
+    _chart.xAxisPaddingUnit = function (unit) {
+        if (!arguments.length) {
+            return _xAxisPaddingUnit;
+        }
+        _xAxisPaddingUnit = unit;
         return _chart;
     };
 
@@ -849,7 +874,7 @@ dc.coordinateGridMixin = function (_chart) {
         var min = d3.min(_chart.data(), function (e) {
             return _chart.keyAccessor()(e);
         });
-        return dc.utils.subtract(min, _xAxisPadding);
+        return dc.utils.subtract(min, _xAxisPadding, _xAxisPaddingUnit);
     };
 
     /**
@@ -863,7 +888,7 @@ dc.coordinateGridMixin = function (_chart) {
         var max = d3.max(_chart.data(), function (e) {
             return _chart.keyAccessor()(e);
         });
-        return dc.utils.add(max, _xAxisPadding);
+        return dc.utils.add(max, _xAxisPadding, _xAxisPaddingUnit);
     };
 
     /**

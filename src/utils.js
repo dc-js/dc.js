@@ -130,7 +130,7 @@ dc.utils.printSingleValue.fformat = d3.format('.2f');
  * @param {Number} r
  * @returns {String|Date|Number}
  */
-dc.utils.add = function (l, r) {
+dc.utils.add = function (l, r, t) {
     if (typeof r === 'string') {
         r = r.replace('%', '');
     }
@@ -139,10 +139,8 @@ dc.utils.add = function (l, r) {
         if (typeof r === 'string') {
             r = +r;
         }
-        var d = new Date();
-        d.setTime(l.getTime());
-        d.setDate(l.getDate() + r);
-        return d;
+        t = t || 'day';
+        return d3.time[t].offset(l, r);
     } else if (typeof r === 'string') {
         var percentage = (+r / 100);
         return l > 0 ? l * (1 + percentage) : l * (1 - percentage);
@@ -162,7 +160,7 @@ dc.utils.add = function (l, r) {
  * @param {Number} r
  * @returns {String|Date|Number}
  */
-dc.utils.subtract = function (l, r) {
+dc.utils.subtract = function (l, r, t) {
     if (typeof r === 'string') {
         r = r.replace('%', '');
     }
@@ -171,10 +169,8 @@ dc.utils.subtract = function (l, r) {
         if (typeof r === 'string') {
             r = +r;
         }
-        var d = new Date();
-        d.setTime(l.getTime());
-        d.setDate(l.getDate() - r);
-        return d;
+        t = t || 'day';
+        return d3.time[t].offset(l, -r);
     } else if (typeof r === 'string') {
         var percentage = (+r / 100);
         return l < 0 ? l * (1 + percentage) : l * (1 - percentage);
