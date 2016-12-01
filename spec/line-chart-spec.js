@@ -124,6 +124,32 @@ describe('dc.lineChart', function () {
 
         });
 
+        describe('title rendering with brushOn', function () {
+            beforeEach(function () {
+                chart.brushOn(true)
+                    .xyTipsOn(true); // default, for exposition
+                chart.render();
+            });
+
+            it('should not render tips', function () {
+                expect(chart.select('.dc-tooltip._0 .dot').empty()).toBeTruthy();
+                expect(chart.select('.dc-tooltip._0 .dot title').empty()).toBeTruthy();
+            });
+
+            describe('with xyTipsOn always', function () {
+                beforeEach(function () {
+                    chart.brushOn(true)
+                        .xyTipsOn('always');
+                    chart.render();
+                });
+
+                it('should render dots', function () {
+                    expect(chart.select('.dc-tooltip._0 .dot').empty()).toBeFalsy();
+                    expect(chart.select('.dc-tooltip._0 .dot title').empty()).toBeFalsy();
+                });
+            });
+        });
+
         describe('label rendering off', function () {
             beforeEach(function () {
                 chart.renderLabel(false);
