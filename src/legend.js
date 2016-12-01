@@ -92,7 +92,7 @@ dc.legend = function () {
         var row = 0;
         itemEnter.attr('transform', function (d, i) {
             if (_horizontal) {
-                var itemWidth   = _autoItemWidth === true ? self.getBoundsBox(this).width + _gap : _itemWidth;
+                var itemWidth   = _autoItemWidth === true ? this.getBBox().width + _gap : _itemWidth;
                 if ((_cumulativeLegendTextWidth + itemWidth) >= _legendWidth && _cumulativeLegendTextWidth > 0) {
                     ++row;
                     _cumulativeLegendTextWidth = 0;
