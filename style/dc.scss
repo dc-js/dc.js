@@ -13,6 +13,14 @@ $color_blue: #00f;
 //fonts
 $font_sans_serif: 'sans-serif';
 
+@mixin no-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 
 //original selectors
 //.dc-chart path.dc-symbol, g.dc-legend-item.fadeout
@@ -165,8 +173,7 @@ div.dc-chart {
             fill-opacity: .2;
         }
         &.axis text {
-            //Instead of the line below you could use @include user-select($select)
-            user-select: none;
+            @include no-select
             pointer-events: none;
         }
     }
@@ -192,8 +199,7 @@ div.dc-chart {
     .box {
         text {
             font: 10px $font_sans_serif;
-            //Instead of the line below you could use @include user-select($select)
-            user-select: none;
+            @include no-select;
             pointer-events: none;
         }
         line, circle {
