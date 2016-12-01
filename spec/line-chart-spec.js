@@ -117,10 +117,11 @@ describe('dc.lineChart', function () {
                 chart.render();
             });
 
-            it('should not render tooltips when boolean flag is false', function () {
-                expect(chart.select('.sub._0 .dc-tooltip._0 .dot').empty()).toBeTruthy();
-                expect(chart.select('.sub._1 .dc-tooltip._0 .dot').empty()).toBeTruthy();
+            it('should not render dots and tips when boolean flag is false', function () {
+                expect(chart.select('.dc-tooltip._0 .dot').empty()).toBeTruthy();
+                expect(chart.select('.dc-tooltip._0 .dot title').empty()).toBeTruthy();
             });
+
         });
 
         describe('label rendering off', function () {
