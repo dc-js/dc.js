@@ -98,9 +98,9 @@ module.exports = function (grunt) {
                 files: ['<%= conf.src %>/**/*.js', '<%= conf.web %>/stock.js'],
                 tasks: ['docs']
             },
-            styles: {
-                files: ['<%= conf.pkg.name %>.css'],
-                tasks: ['cssmin:main', 'copy:dc-to-gh']
+            sass: {
+                files: ['style/<%= conf.pkg.name %>.scss'],
+                tasks: ['sass', 'cssmin:main', 'copy:dc-to-gh']
             },
             jasmineRunner: {
                 files: ['<%= conf.spec %>/**/*.js'],
@@ -391,7 +391,7 @@ module.exports = function (grunt) {
             },
             runner: grunt.config('watch').jasmineRunner,
             scripts: grunt.config('watch').scripts,
-            styles: grunt.config('watch').styles
+            sass: grunt.config('watch').sass
         });
         grunt.task.run('watch');
     });
