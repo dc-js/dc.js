@@ -104,10 +104,10 @@ describe('dc.bubbleChart', function () {
         it('calculates right cx for each bubble', function () {
             chart.selectAll('g.node').each(function (d, i) {
                 if (i === 0) {
-                    expect(d3.select(this).attr('transform')).toMatchTranslate(601.3333333333334,155,3);
+                    expect(d3.select(this).attr('transform')).toMatchTranslate(601.3333333333334, 155, 3);
                 }
                 if (i === 1) {
-                    expect(d3.select(this).attr('transform')).toMatchTranslate(541.2,155);
+                    expect(d3.select(this).attr('transform')).toMatchTranslate(541.2, 155);
                 }
             });
         });
@@ -122,10 +122,10 @@ describe('dc.bubbleChart', function () {
         it('calculates right r for each bubble', function () {
             chart.selectAll('circle.bubble').each(function (d, i) {
                 if (i === 0) {
-                    expect(Number(d3.select(this).attr('r'))).toBeCloseTo(49.33333333333333,3);
+                    expect(Number(d3.select(this).attr('r'))).toBeCloseTo(49.33333333333333, 3);
                 }
                 if (i === 1) {
-                    expect(Number(d3.select(this).attr('r'))).toBeCloseTo(49.33333333333333,3);
+                    expect(Number(d3.select(this).attr('r'))).toBeCloseTo(49.33333333333333, 3);
                 }
             });
         });
@@ -424,7 +424,7 @@ describe('dc.bubbleChart', function () {
         it('renders without errors', function () {
             chart.render();
             chart.selectAll('g.node').each(function (d, i) {
-                expect(d3.select(this).attr('transform')).toMatchTranslate(0,0);
+                expect(d3.select(this).attr('transform')).toMatchTranslate(0, 0);
             });
         });
     });
@@ -439,10 +439,10 @@ describe('dc.bubbleChart', function () {
         it('shows smaller bubbles', function () {
             chart.selectAll('circle.bubble').each(function (d, i) {
                 if (i === 0) {
-                    expect(Number(d3.select(this).attr('r'))).toBeCloseTo(41.83333333333333,3);
+                    expect(Number(d3.select(this).attr('r'))).toBeCloseTo(41.83333333333333, 3);
                 }
                 if (i === 1) {
-                    expect(Number(d3.select(this).attr('r'))).toBeCloseTo(41.83333333333333,3);
+                    expect(Number(d3.select(this).attr('r'))).toBeCloseTo(41.83333333333333, 3);
                 }
             });
         });

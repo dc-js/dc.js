@@ -62,7 +62,7 @@ describe('dc.core', function () {
             chart = dc.pieChart('#id')
                     .dimension(valueDimension)
                     .group(valueGroup);
-            chartGrouped = dc.pieChart('#id2',chartGroup)
+            chartGrouped = dc.pieChart('#id2', chartGroup)
                     .dimension(valueDimension)
                     .group(valueGroup);
             return chart;
@@ -214,11 +214,14 @@ describe('dc.core', function () {
         var o;
 
         beforeEach(function () {
-            o = {foo: function () {
-                return 'foo';
-            }, goo: function (i) {
-                return i;
-            }};
+            o = {
+                foo: function () {
+                    return 'foo';
+                },
+                goo: function (i) {
+                    return i;
+                }
+            };
         });
 
         it('wo/ override function should work as expected', function () {

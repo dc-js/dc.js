@@ -609,7 +609,7 @@ describe('dc.barChart', function () {
             });
 
             it('should redraw the x-axis scale and ticks', function () {
-                expect(xAxisText().slice(0,4)).toEqual(['Mon 11', 'Wed 13', 'Fri 15', 'Jun 17']);
+                expect(xAxisText().slice(0, 4)).toEqual(['Mon 11', 'Wed 13', 'Fri 15', 'Jun 17']);
             });
 
             it('should set its focus flag', function () {
@@ -630,7 +630,7 @@ describe('dc.barChart', function () {
                 expect(chart.refocused()).toBeFalsy();
                 expect(chart.x().domain()).toEqual([makeDate(2012, 0, 1), makeDate(2012, 11, 31)]);
 
-                expect(xAxisText().slice(0,4)).toEqual(['2012', 'February', 'March', 'April']);
+                expect(xAxisText().slice(0, 4)).toEqual(['2012', 'February', 'March', 'April']);
             }
 
             function xAxisText () {

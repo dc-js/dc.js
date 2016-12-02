@@ -40,7 +40,7 @@ describe('dc.heatmap', function () {
         });
 
         it('should transform the graph position using the graph margins', function () {
-            expect(chart.select('g.heatmap').attr('transform')).toMatchTranslate(5,5);
+            expect(chart.select('g.heatmap').attr('transform')).toMatchTranslate(5, 5);
         });
 
         it('should position the heatboxes in a matrix', function () {

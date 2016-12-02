@@ -31,7 +31,7 @@ describe('dc.legend', function () {
         });
 
         it('should place the legend using the provided x and y values', function () {
-            expect(chart.select('g.dc-legend').attr('transform')).toMatchTranslate(400,10);
+            expect(chart.select('g.dc-legend').attr('transform')).toMatchTranslate(400, 10);
         });
 
         it('should generate a legend item for each stacked line', function () {
@@ -39,7 +39,7 @@ describe('dc.legend', function () {
         });
 
         it('should generate legend item boxes', function () {
-            expect(legendIcon(0).attr('width')).toBeWithinDelta(13,2);
+            expect(legendIcon(0).attr('width')).toBeWithinDelta(13, 2);
             expect(legendIcon(0).attr('height')).toBeWithinDelta(13, 2);
         });
 
