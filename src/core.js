@@ -259,33 +259,50 @@ dc.redrawAll = function (group) {
  * If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
  * immediately
  * @memberof dc
- * @method disableTransitions
+ * @member disableTransitions
  * @type {Boolean}
  * @default false
  */
 dc.disableTransitions = false;
 
-dc.transition = function (selections, duration, callback, name) {
-    if (duration <= 0 || duration === undefined || dc.disableTransitions) {
-        return selections;
+/**
+ * Start a transition on a selection if transitions are globally enabled
+ * ({@link dc.disableTransitions} is false) and the duration is greater than zero; otherwise return
+ * the selection. Since most operations are the same on a d3 selection and a d3 transition, this
+ * allows a common code path for both cases.
+ * @memberof dc
+ * @method transition
+ * @param {d3.selection} selection - the selection to be transitioned
+ * @param {Number|Function} [duration=250] - the duration of the transition in milliseconds, a
+ * function returning the duration, or 0 for no transition
+ * @param {Number|Function} [delay] - the delay of the transition in milliseconds, or a function
+ * returning the delay, or 0 for no delay
+ * @param {String} [name] - the name of the transition (if concurrent transitions on the same
+ * elements are needed)
+ * @returns {d3.transition|d3.selection}
+ */
+dc.transition = function (selection, duration, delay, name) {
+    if (dc.disableTransitions || duration <= 0) {
+        return selection;
     }
 
-    var s = selections
-        .transition(name)
-        .duration(duration);
+    var s = selection.transition(name);
 
-    if (typeof(callback) === 'function') {
-        callback(s);
+    if (duration >= 0 || duration !== undefined) {
+        s = s.duration(duration);
+    }
+    if (delay >= 0 || delay !== undefined) {
+        s = s.delay(delay);
     }
 
     return s;
 };
 
 /* somewhat silly, but to avoid duplicating logic */
-dc.optionalTransition = function (enable, duration, callback, name) {
+dc.optionalTransition = function (enable, duration, delay, name) {
     if (enable) {
         return function (selection) {
-            return dc.transition(selection, duration, callback, name);
+            return dc.transition(selection, duration, delay, name);
         };
     } else {
         return function (selection) {

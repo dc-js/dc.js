@@ -1,3 +1,4 @@
+
 /**
  * A box plot is a chart that depicts numerical data via their quartile ranges.
  *
@@ -146,7 +147,7 @@ dc.boxPlot = function (parent, chartGroup) {
             .duration(_chart.transitionDuration())
             .tickFormat(_tickFormat);
 
-        var boxesG = _chart.chartBodyG().selectAll('g.box').data(_chart.data(), function (d) { return d.key; });
+        var boxesG = _chart.chartBodyG().selectAll('g.box').data(_chart.data(), _chart.keyAccessor());
 
         renderBoxes(boxesG);
         updateBoxes(boxesG);
@@ -163,13 +164,13 @@ dc.boxPlot = function (parent, chartGroup) {
             .attr('transform', boxTransform)
             .call(_box)
             .on('click', function (d) {
-                _chart.filter(d.key);
+                _chart.filter(_chart.keyAccessor()(d));
                 _chart.redrawGroup();
             });
     }
 
     function updateBoxes (boxesG) {
-        dc.transition(boxesG, _chart.transitionDuration())
+        dc.transition(boxesG, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', boxTransform)
             .call(_box)
             .each(function () {
@@ -183,13 +184,28 @@ dc.boxPlot = function (parent, chartGroup) {
 
     _chart.fadeDeselectedArea = function () {
         if (_chart.hasFilter()) {
-            _chart.g().selectAll('g.box').each(function (d) {
-                if (_chart.isSelectedNode(d)) {
-                    _chart.highlightSelected(this);
-                } else {
-                    _chart.fadeDeselected(this);
-                }
-            });
+            if (_chart.isOrdinal()) {
+                _chart.g().selectAll('g.box').each(function (d) {
+                    if (_chart.isSelectedNode(d)) {
+                        _chart.highlightSelected(this);
+                    } else {
+                        _chart.fadeDeselected(this);
+                    }
+                });
+            } else {
+                var extent = _chart.brush().extent();
+                var start = extent[0];
+                var end = extent[1];
+                var keyAccessor = _chart.keyAccessor();
+                _chart.g().selectAll('g.box').each(function (d) {
+                    var key = keyAccessor(d);
+                    if (key < start || key >= end) {
+                        _chart.fadeDeselected(this);
+                    } else {
+                        _chart.highlightSelected(this);
+                    }
+                });
+            }
         } else {
             _chart.g().selectAll('g.box').each(function () {
                 _chart.resetHighlight(this);
@@ -198,7 +214,7 @@ dc.boxPlot = function (parent, chartGroup) {
     };
 
     _chart.isSelectedNode = function (d) {
-        return _chart.hasFilter(d.key);
+        return _chart.hasFilter(_chart.keyAccessor()(d));
     };
 
     _chart.yAxisMin = function () {
