@@ -26,9 +26,9 @@ dc.coordinateGridMixin = function (_chart) {
     function zoomHandler () {
         _refocused = true;
         if (_zoomOutRestrict) {
-            _chart.x().domain(constrainRange(_chart.x().domain(), _xOriginalDomain));
+            restrictZoom(_zoom, _xOriginalDomain);
             if (_rangeChart) {
-                _chart.x().domain(constrainRange(_chart.x().domain(), _rangeChart.x().domain()));
+                restrictZoom(_zoom, _rangeChart.x().domain());
             }
         }
 
@@ -1222,11 +1222,25 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.root().call(_nullZoom);
     };
 
-    function constrainRange (range, constraint) {
-        var constrainedRange = [];
-        constrainedRange[0] = d3.max([range[0], constraint[0]]);
-        constrainedRange[1] = d3.min([range[1], constraint[1]]);
-        return constrainedRange;
+    function restrictZoom (zoom, extent) {
+        var translateX = zoom.translate()[0],
+            scale      = zoom.scale(),
+            xScale     = zoom.x(),
+            range      = xScale.range(),
+            getDomain  = function () { return range.map(function (r) { return (r - translateX) / scale; }).map(xScale.invert); },
+            domain;
+
+        scale = Math.max(scale, Math.abs((range[0] - range[range.length - 1]) / (xScale(extent[0]) - xScale(extent[1]))));
+        domain = getDomain();
+
+        if (domain[0] < extent[0]) {
+            translateX = range[0] - (xScale(extent[0]) * scale);
+        } else {
+            if (domain[domain.length - 1] > extent[1]) {
+                translateX = range[range.length - 1] - (xScale(extent[1]) * scale);
+            }
+        }
+        zoom.x().domain(getDomain());
     }
 
     /**
