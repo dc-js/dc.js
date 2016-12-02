@@ -107,41 +107,61 @@ describe('dc.core', function () {
                 },
                 duration: function () {
                     return this;
+                },
+                delay: function () {
+                    return this;
                 }
             };
             spyOn(selections, 'transition').and.callThrough();
             spyOn(selections, 'duration').and.callThrough();
+            spyOn(selections, 'delay').and.callThrough();
         });
 
         describe('normal', function () {
             it('transition should be activated with duration', function () {
-                dc.transition(selections, 100);
+                dc.transition(selections, 100, 100);
                 expect(selections.transition).toHaveBeenCalled();
                 expect(selections.duration).toHaveBeenCalled();
+                expect(selections.delay).toHaveBeenCalled();
+                expect(selections.duration).toHaveBeenCalledWith(100);
+                expect(selections.delay).toHaveBeenCalledWith(100);
             });
-
-            it('transition callback should be triggered', function () {
-                var triggered = false;
-                dc.transition(selections, 100, function () {
-                    triggered = true;
-                });
-                expect(triggered).toBeTruthy();
+            it('with name', function () {
+                dc.transition(selections, 100, 100, 'transition-name');
+                expect(selections.transition).toHaveBeenCalled();
+                expect(selections.transition).toHaveBeenCalledWith('transition-name');
             });
         });
 
         describe('skip', function () {
             it('transition should not be activated with 0 duration', function () {
-                dc.transition(selections, 0);
+                dc.transition(selections, 0, 0);
+                expect(selections.transition).not.toHaveBeenCalled();
+                expect(selections.duration).not.toHaveBeenCalled();
+                expect(selections.delay).not.toHaveBeenCalled();
+            });
+
+            it('transition should not be activated with dc.disableTransitions', function () {
+                dc.disableTransitions = true;
+                dc.transition(selections, 100);
                 expect(selections.transition).not.toHaveBeenCalled();
                 expect(selections.duration).not.toHaveBeenCalled();
             });
 
-            it('transition callback should not be triggered', function () {
-                var triggered = false;
-                dc.transition(selections, 0, function () {
-                    triggered = true;
-                });
-                expect(triggered).toBeFalsy();
+            afterEach(function () {
+                dc.disableTransitions = false;
+            });
+        });
+
+        describe('parameters', function () {
+            it('duration should not be called if skipped', function () {
+                dc.transition(selections);
+                expect(selections.duration).not.toHaveBeenCalled();
+            });
+
+            it('delay should not be called if skipped', function () {
+                dc.transition(selections, 100);
+                expect(selections.delay).not.toHaveBeenCalled();
             });
         });
     });

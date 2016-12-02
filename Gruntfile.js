@@ -209,7 +209,7 @@ module.exports = function (grunt) {
                         },
                         {
                             browserName: 'MicrosoftEdge',
-                            version: '20.10240',
+                            version: '14',
                             platform: 'Windows 10'
                         }
                     ],

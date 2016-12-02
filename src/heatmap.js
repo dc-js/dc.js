@@ -210,7 +210,7 @@ dc.heatMap = function (parent, chartGroup) {
             boxes.selectAll('title').text(_chart.title());
         }
 
-        dc.transition(boxes.selectAll('rect'), _chart.transitionDuration())
+        dc.transition(boxes.selectAll('rect'), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', function (d, i) { return cols(_chart.keyAccessor()(d, i)); })
             .attr('y', function (d, i) { return rows(_chart.valueAccessor()(d, i)); })
             .attr('rx', _xBorderRadius)
@@ -233,7 +233,7 @@ dc.heatMap = function (parent, chartGroup) {
               .attr('dy', 12)
               .on('click', _chart.xAxisOnClick())
               .text(_chart.colsLabel());
-        dc.transition(gColsText, _chart.transitionDuration())
+        dc.transition(gColsText, _chart.transitionDuration(), _chart.transitionDelay())
                .text(_chart.colsLabel())
                .attr('x', function (d) { return cols(d) + boxWidth / 2; })
                .attr('y', _chart.effectiveHeight());
@@ -250,7 +250,7 @@ dc.heatMap = function (parent, chartGroup) {
               .attr('dx', -2)
               .on('click', _chart.yAxisOnClick())
               .text(_chart.rowsLabel());
-        dc.transition(gRowsText, _chart.transitionDuration())
+        dc.transition(gRowsText, _chart.transitionDuration(), _chart.transitionDelay())
               .text(_chart.rowsLabel())
               .attr('y', function (d) { return rows(d) + boxHeight / 2; });
         gRowsText.exit().remove();

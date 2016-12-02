@@ -1,6 +1,11 @@
 # 2.0 Series
+## 2.0.0 beta 33
+* Use keyAccessor for box plots; fix ordinal boxplot brushing and whisker widths, by Matt Traynham ([#1022](https://github.com/dc-js/dc.js/pull/1022))
+* `transitionDelay` allows staggered transitions, by Mauricio Bustos ([#1116](https://github.com/dc-js/dc.js/pull/1116))
+* Removed the confusing callback from dc.transition and documented the function
+
 ## 2.0.0 beta 32
-* elasticY and elasticX did not work if all values were negative (coordinate grid and row charts, respectively), by Sebastian Gröhn ([#879](https://github.com/dc-js/dc.js/issues/879) / [#1156](https://github.com/dc-js/dc.js/pull/1156))
+* `elasticY` and `elasticX` did not work if all values were negative (coordinate grid and row charts, respectively), by Sebastian Gröhn ([#879](https://github.com/dc-js/dc.js/issues/879) / [#1156](https://github.com/dc-js/dc.js/pull/1156))
 * Improved implementation of alignYAxes, by Mohamed Gazal and Gordon Woodhull ([#1033](https://github.com/dc-js/dc.js/pull/1033))
 * Examples of downloading the table data as it's formatted, and formatting legend items.
 * `legend.legendText` documentation was missing.

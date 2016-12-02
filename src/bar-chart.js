@@ -99,7 +99,7 @@ dc.barChart = function (parent, chartGroup) {
             labels.attr('cursor', 'pointer');
         }
 
-        dc.transition(labels, _chart.transitionDuration())
+        dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', function (d) {
                 var x = _chart.x()(d.x);
                 if (!_centerBar) {
@@ -120,7 +120,7 @@ dc.barChart = function (parent, chartGroup) {
                 return _chart.label()(d);
             });
 
-        dc.transition(labels.exit(), _chart.transitionDuration())
+        dc.transition(labels.exit(), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('height', 0)
             .remove();
     }
@@ -144,7 +144,7 @@ dc.barChart = function (parent, chartGroup) {
             bars.on('click', _chart.onClick);
         }
 
-        dc.transition(bars, _chart.transitionDuration())
+        dc.transition(bars, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', function (d) {
                 var x = _chart.x()(d.x);
                 if (_centerBar) {
@@ -171,7 +171,7 @@ dc.barChart = function (parent, chartGroup) {
             .attr('fill', dc.pluck('data', _chart.getColor))
             .select('title').text(dc.pluck('data', _chart.title(d.name)));
 
-        dc.transition(bars.exit(), _chart.transitionDuration())
+        dc.transition(bars.exit(), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', function (d) { return _chart.x()(d.x); })
             .attr('width', _barWidth * 0.9)
             .remove();
