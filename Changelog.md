@@ -6,6 +6,10 @@
 
 # 2.0 Series
 ## 2.0.0 beta 33
+* Use Sass 3 (SCSS) for generating CSS, by Matt Traynham ([#1049](https://github.com/dc-js/dc.js/pull/1049))
+* Don't try to interpolate user data in label paths, by Alexander Stillesjö ([#1151](https://github.com/dc-js/dc.js/pull/1151))
+* Allow specifying the unit for padding the X axis, by Alexander Stillesjö (thanks also to Matt Traynham for the alternate implementation in [#892](https://github.com/dc-js/dc.js/pull/892))
+* Force dots to be shown with `.xyTipsOn('always')`, by Anders Dalvander ([#1152](https://github.com/dc-js/dc.js/issues/1152))
 * Use keyAccessor for box plots; fix ordinal boxplot brushing and whisker widths, by Matt Traynham ([#1022](https://github.com/dc-js/dc.js/pull/1022))
 * `transitionDelay` allows staggered transitions, by Mauricio Bustos ([#1116](https://github.com/dc-js/dc.js/pull/1116))
 * Removed the confusing callback from dc.transition and documented the function

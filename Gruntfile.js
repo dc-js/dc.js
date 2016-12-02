@@ -30,6 +30,13 @@ module.exports = function (grunt) {
                 dest: '<%= conf.pkg.name %>.js'
             }
         },
+        sass: {
+            dist: {
+                files: {
+                    '<%= conf.pkg.name %>.css': 'style/<%= conf.pkg.name %>.scss'
+                }
+            }
+        },
         uglify: {
             jsmin: {
                 options: {
@@ -91,9 +98,9 @@ module.exports = function (grunt) {
                 files: ['<%= conf.src %>/**/*.js', '<%= conf.web %>/stock.js'],
                 tasks: ['docs']
             },
-            styles: {
-                files: ['<%= conf.pkg.name %>.css'],
-                tasks: ['cssmin:main', 'copy:dc-to-gh']
+            sass: {
+                files: ['style/<%= conf.pkg.name %>.scss'],
+                tasks: ['sass', 'cssmin:main', 'copy:dc-to-gh']
             },
             jasmineRunner: {
                 files: ['<%= conf.spec %>/**/*.js'],
@@ -384,13 +391,13 @@ module.exports = function (grunt) {
             },
             runner: grunt.config('watch').jasmineRunner,
             scripts: grunt.config('watch').scripts,
-            styles: grunt.config('watch').styles
+            sass: grunt.config('watch').sass
         });
         grunt.task.run('watch');
     });
 
     // task aliases
-    grunt.registerTask('build', ['concat', 'uglify', 'cssmin']);
+    grunt.registerTask('build', ['concat', 'sass', 'uglify', 'cssmin']);
     grunt.registerTask('docs', ['build', 'copy', 'jsdoc', 'jsdoc2md', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine-docs']);
