@@ -374,11 +374,11 @@ describe('dc.baseMixin', function () {
             });
 
             it('should set the height to the div size', function () {
-                expect(chart.height()).toBeCloseTo(220,1);
+                expect(chart.height()).toBeCloseTo(220, 1);
             });
 
             it('should set the width to the div size', function () {
-                expect(chart.width()).toBeCloseTo(230,1);
+                expect(chart.width()).toBeCloseTo(230, 1);
             });
 
             describe('and redrawn', function () {
@@ -387,7 +387,7 @@ describe('dc.baseMixin', function () {
                 });
 
                 it('should keep the size the same', function () {
-                    expect(chart.height()).toEqual(h0,1);
+                    expect(chart.height()).toEqual(h0, 1);
                     expect(chart.width()).toEqual(w0);
                 });
             });
@@ -399,11 +399,11 @@ describe('dc.baseMixin', function () {
                 });
 
                 it('should set the height to the minimum', function () {
-                    expect(chart.height()).toBeCloseTo(234,1);
+                    expect(chart.height()).toBeCloseTo(234, 1);
                 });
 
                 it('should set the width to the minimum', function () {
-                    expect(chart.width()).toBeCloseTo(976,1);
+                    expect(chart.width()).toBeCloseTo(976, 1);
                 });
             });
         });
