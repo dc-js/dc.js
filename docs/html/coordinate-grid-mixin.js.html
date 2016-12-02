@@ -148,6 +148,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _xAxis = d3.svg.axis().orient('bottom');
     var _xUnits = dc.units.integers;
     var _xAxisPadding = 0;
+    var _xAxisPaddingUnit = 'day';
     var _xElasticity = false;
     var _xAxisLabel;
     var _xAxisLabelPadding = 0;
@@ -465,9 +466,10 @@ dc.coordinateGridMixin = function (_chart) {
      * Set or get x axis padding for the elastic x axis. The padding will be added to both end of the x
      * axis if elasticX is turned on; otherwise it is ignored.
      *
-     * padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
-     * number or date x axes.  When padding a date axis, an integer represents number of days being padded
-     * and a percentage string will be treated the same as an integer.
+     * Padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
+     * number or date x axes.  When padding a date axis, an integer represents number of units being padded
+     * and a percentage string will be treated the same as an integer. The unit will be determined by the
+     * xAxisPaddingUnit variable.
      * @method xAxisPadding
      * @memberof dc.coordinateGridMixin
      * @instance
@@ -480,6 +482,29 @@ dc.coordinateGridMixin = function (_chart) {
             return _xAxisPadding;
         }
         _xAxisPadding = padding;
+        return _chart;
+    };
+
+    /**
+     * Set or get x axis padding unit for the elastic x axis. The padding unit will determine which unit to
+     * use when applying xAxis padding if elasticX is turned on and if x-axis uses a time dimension;
+     * otherwise it is ignored.
+     *
+     * Padding unit is a string that will be used when the padding is calculated. Available parameters are
+     * the available d3 time intervals:
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval d3.time.interval}
+     * @method xAxisPaddingUnit
+     * @memberof dc.coordinateGridMixin
+     * @instance
+     * @param {String} [unit='days']
+     * @return {String}
+     * @return {dc.coordinateGridMixin}
+     */
+    _chart.xAxisPaddingUnit = function (unit) {
+        if (!arguments.length) {
+            return _xAxisPaddingUnit;
+        }
+        _xAxisPaddingUnit = unit;
         return _chart;
     };
 
@@ -603,10 +628,10 @@ dc.coordinateGridMixin = function (_chart) {
             axisXLab.text(_chart.xAxisLabel());
         }
 
-        dc.transition(axisXG, _chart.transitionDuration())
+        dc.transition(axisXG, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')')
             .call(_xAxis);
-        dc.transition(axisXLab, _chart.transitionDuration())
+        dc.transition(axisXLab, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
                   (_chart.height() - _xAxisLabelPadding) + ')');
     };
@@ -639,11 +664,11 @@ dc.coordinateGridMixin = function (_chart) {
                 })
                 .attr('y2', 0)
                 .attr('opacity', 0);
-            dc.transition(linesGEnter, _chart.transitionDuration())
+            dc.transition(linesGEnter, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('opacity', 1);
 
             // update
-            dc.transition(lines, _chart.transitionDuration())
+            dc.transition(lines, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('x1', function (d) {
                     return _x(d);
                 })
@@ -724,7 +749,7 @@ dc.coordinateGridMixin = function (_chart) {
         if (text &amp;&amp; axisYLab.text() !== text) {
             axisYLab.text(text);
         }
-        dc.transition(axisYLab, _chart.transitionDuration())
+        dc.transition(axisYLab, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', 'translate(' + labelXPosition + ',' + labelYPosition + '),rotate(' + rotation + ')');
     };
 
@@ -736,7 +761,7 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')');
         }
 
-        dc.transition(axisYG, _chart.transitionDuration())
+        dc.transition(axisYG, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')')
             .call(axis);
     };
@@ -776,11 +801,11 @@ dc.coordinateGridMixin = function (_chart) {
                     return scale(d);
                 })
                 .attr('opacity', 0);
-            dc.transition(linesGEnter, _chart.transitionDuration())
+            dc.transition(linesGEnter, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('opacity', 1);
 
             // update
-            dc.transition(lines, _chart.transitionDuration())
+            dc.transition(lines, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('x1', 1)
                 .attr('y1', function (d) {
                     return scale(d);
@@ -933,7 +958,7 @@ dc.coordinateGridMixin = function (_chart) {
         var min = d3.min(_chart.data(), function (e) {
             return _chart.keyAccessor()(e);
         });
-        return dc.utils.subtract(min, _xAxisPadding);
+        return dc.utils.subtract(min, _xAxisPadding, _xAxisPaddingUnit);
     };
 
     /**
@@ -947,7 +972,7 @@ dc.coordinateGridMixin = function (_chart) {
         var max = d3.max(_chart.data(), function (e) {
             return _chart.keyAccessor()(e);
         });
-        return dc.utils.add(max, _xAxisPadding);
+        return dc.utils.add(max, _xAxisPadding, _xAxisPaddingUnit);
     };
 
     /**
@@ -1141,7 +1166,7 @@ dc.coordinateGridMixin = function (_chart) {
                 _chart.brush().extent(_chart.filter());
             }
 
-            var gBrush = dc.optionalTransition(doTransition, _chart.transitionDuration())(g.select('g.brush'));
+            var gBrush = dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(g.select('g.brush'));
             _chart.setBrushY(gBrush);
             gBrush.call(_chart.brush()
                       .x(_chart.x())
@@ -1423,9 +1448,9 @@ dc.coordinateGridMixin = function (_chart) {
 	</span>
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Thu Oct 6th 2016
+		on Fri Dec 2nd 2016
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

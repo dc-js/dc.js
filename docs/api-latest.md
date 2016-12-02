@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 2.0.0-beta.32  
+**Version**: 2.0.0-beta.33  
 **Example**  
 ```js
 // Example chaining
@@ -181,6 +181,7 @@ chart.width(300)
         * [.turnOnControls()](#dc.baseMixin+turnOnControls) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
         * [.turnOffControls()](#dc.baseMixin+turnOffControls) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
         * [.transitionDuration([duration])](#dc.baseMixin+transitionDuration) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
+        * [.transitionDelay([delay])](#dc.baseMixin+transitionDelay) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
         * [.render()](#dc.baseMixin+render) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
         * [.redraw()](#dc.baseMixin+redraw) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
         * [.commitHandler()](#dc.baseMixin+commitHandler) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
@@ -233,6 +234,7 @@ chart.width(300)
         * [.xAxis([xAxis])](#dc.coordinateGridMixin+xAxis) ⇒ <code>d3.svg.axis</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
         * [.elasticX([elasticX])](#dc.coordinateGridMixin+elasticX) ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
         * [.xAxisPadding([padding])](#dc.coordinateGridMixin+xAxisPadding) ⇒ <code>Number</code> &#124; <code>String</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
+        * [.xAxisPaddingUnit([unit])](#dc.coordinateGridMixin+xAxisPaddingUnit) ⇒ <code>String</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
         * [.xUnitCount()](#dc.coordinateGridMixin+xUnitCount) ⇒ <code>Number</code>
         * [.useRightYAxis([useRightYAxis])](#dc.coordinateGridMixin+useRightYAxis) ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
         * [.isOrdinal()](#dc.coordinateGridMixin+isOrdinal) ⇒ <code>Boolean</code>
@@ -269,6 +271,7 @@ chart.width(300)
         * [.minRadius([radius])](#dc.bubbleMixin+minRadius) ⇒ <code>Number</code> &#124; <code>[bubbleMixin](#dc.bubbleMixin)</code>
         * [.minRadiusWithLabel([radius])](#dc.bubbleMixin+minRadiusWithLabel) ⇒ <code>Number</code> &#124; <code>[bubbleMixin](#dc.bubbleMixin)</code>
         * [.maxBubbleRelativeSize([relativeSize])](#dc.bubbleMixin+maxBubbleRelativeSize) ⇒ <code>Number</code> &#124; <code>[bubbleMixin](#dc.bubbleMixin)</code>
+    * [.disableTransitions](#dc.disableTransitions) : <code>Boolean</code>
     * [.dateFormat](#dc.dateFormat) : <code>function</code>
     * [.chartRegistry](#dc.chartRegistry) : <code>object</code>
         * [.has(chart)](#dc.chartRegistry.has) ⇒ <code>Boolean</code>
@@ -286,8 +289,8 @@ chart.width(300)
         * [.filter(filter)](#dc.printers.filter) ⇒ <code>String</code>
     * [.utils](#dc.utils) : <code>object</code>
         * [.printSingleValue(filter)](#dc.utils.printSingleValue) ⇒ <code>String</code>
-        * [.add(l, r)](#dc.utils.add) ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
-        * [.subtract(l, r)](#dc.utils.subtract) ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
+        * [.add(l, r, [t])](#dc.utils.add) ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
+        * [.subtract(l, r, [t])](#dc.utils.subtract) ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
         * [.isNumber(n)](#dc.utils.isNumber) ⇒ <code>Boolean</code>
         * [.isFloat(n)](#dc.utils.isFloat) ⇒ <code>Boolean</code>
         * [.isInteger(n)](#dc.utils.isInteger) ⇒ <code>Boolean</code>
@@ -312,7 +315,7 @@ chart.width(300)
     * [.refocusAll([group])](#dc.refocusAll)
     * [.renderAll([group])](#dc.renderAll)
     * [.redrawAll([group])](#dc.redrawAll)
-    * [.disableTransitions()](#dc.disableTransitions) ⇒ <code>Boolean</code>
+    * [.transition(selection, [duration], [delay], [name])](#dc.transition) ⇒ <code>d3.transition</code> &#124; <code>d3.selection</code>
     * [.pluck(n, [f])](#dc.pluck) ⇒ <code>function</code>
 
 <a name="dc.pieChart"></a>
@@ -2578,6 +2581,7 @@ and available on all chart implementations in the `dc` library.
     * [.turnOnControls()](#dc.baseMixin+turnOnControls) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
     * [.turnOffControls()](#dc.baseMixin+turnOffControls) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
     * [.transitionDuration([duration])](#dc.baseMixin+transitionDuration) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
+    * [.transitionDelay([delay])](#dc.baseMixin+transitionDelay) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
     * [.render()](#dc.baseMixin+render) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
     * [.redraw()](#dc.baseMixin+redraw) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
     * [.commitHandler()](#dc.baseMixin+commitHandler) ⇒ <code>[baseMixin](#dc.baseMixin)</code>
@@ -2935,6 +2939,17 @@ Set or get the animation transition duration (in milliseconds) for this chart in
 | Param | Type | Default |
 | --- | --- | --- |
 | [duration] | <code>Number</code> | <code>750</code> | 
+
+<a name="dc.baseMixin+transitionDelay"></a>
+
+#### baseMixin.transitionDelay([delay]) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
+Set or get the animation transition delay (in milliseconds) for this chart instance.
+
+**Kind**: instance method of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [delay] | <code>Number</code> | <code>0</code> | 
 
 <a name="dc.baseMixin+render"></a>
 
@@ -3688,6 +3703,7 @@ concrete chart types, e.g. bar chart, line chart, and bubble chart.
     * [.xAxis([xAxis])](#dc.coordinateGridMixin+xAxis) ⇒ <code>d3.svg.axis</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
     * [.elasticX([elasticX])](#dc.coordinateGridMixin+elasticX) ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
     * [.xAxisPadding([padding])](#dc.coordinateGridMixin+xAxisPadding) ⇒ <code>Number</code> &#124; <code>String</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
+    * [.xAxisPaddingUnit([unit])](#dc.coordinateGridMixin+xAxisPaddingUnit) ⇒ <code>String</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
     * [.xUnitCount()](#dc.coordinateGridMixin+xUnitCount) ⇒ <code>Number</code>
     * [.useRightYAxis([useRightYAxis])](#dc.coordinateGridMixin+useRightYAxis) ⇒ <code>Boolean</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
     * [.isOrdinal()](#dc.coordinateGridMixin+isOrdinal) ⇒ <code>Boolean</code>
@@ -3901,15 +3917,33 @@ attempt to recalculate the x axis range whenever a redraw event is triggered.
 Set or get x axis padding for the elastic x axis. The padding will be added to both end of the x
 axis if elasticX is turned on; otherwise it is ignored.
 
-padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
-number or date x axes.  When padding a date axis, an integer represents number of days being padded
-and a percentage string will be treated the same as an integer.
+Padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
+number or date x axes.  When padding a date axis, an integer represents number of units being padded
+and a percentage string will be treated the same as an integer. The unit will be determined by the
+xAxisPaddingUnit variable.
 
 **Kind**: instance method of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
 
 | Param | Type | Default |
 | --- | --- | --- |
 | [padding] | <code>Number</code> &#124; <code>String</code> | <code>0</code> | 
+
+<a name="dc.coordinateGridMixin+xAxisPaddingUnit"></a>
+
+#### coordinateGridMixin.xAxisPaddingUnit([unit]) ⇒ <code>String</code> &#124; <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>
+Set or get x axis padding unit for the elastic x axis. The padding unit will determine which unit to
+use when applying xAxis padding if elasticX is turned on and if x-axis uses a time dimension;
+otherwise it is ignored.
+
+Padding unit is a string that will be used when the padding is calculated. Available parameters are
+the available d3 time intervals:
+[d3.time.interval](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval)
+
+**Kind**: instance method of <code>[coordinateGridMixin](#dc.coordinateGridMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [unit] | <code>String</code> | <code>&#x27;days&#x27;</code> | 
 
 <a name="dc.coordinateGridMixin+xUnitCount"></a>
 
@@ -4436,6 +4470,14 @@ when the difference in radius between bubbles is too great.
 | --- | --- | --- |
 | [relativeSize] | <code>Number</code> | <code>0.3</code> | 
 
+<a name="dc.disableTransitions"></a>
+
+### dc.disableTransitions : <code>Boolean</code>
+If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
+immediately
+
+**Kind**: static property of <code>[dc](#dc)</code>  
+**Default**: <code>false</code>  
 <a name="dc.dateFormat"></a>
 
 ### dc.dateFormat : <code>function</code>
@@ -4631,7 +4673,7 @@ Converts a list of filters into a readable string
 
 | Param | Type |
 | --- | --- |
-| filters | <code>Array.&lt;(dc.filters\|any)&gt;</code> | 
+| filters | <code>[Array.&lt;filters&gt;](#dc.filters)</code> | 
 
 <a name="dc.printers.filter"></a>
 
@@ -4651,8 +4693,8 @@ Converts a filter into a readable string
 
 * [.utils](#dc.utils) : <code>object</code>
     * [.printSingleValue(filter)](#dc.utils.printSingleValue) ⇒ <code>String</code>
-    * [.add(l, r)](#dc.utils.add) ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
-    * [.subtract(l, r)](#dc.utils.subtract) ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
+    * [.add(l, r, [t])](#dc.utils.add) ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
+    * [.subtract(l, r, [t])](#dc.utils.subtract) ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
     * [.isNumber(n)](#dc.utils.isNumber) ⇒ <code>Boolean</code>
     * [.isFloat(n)](#dc.utils.isFloat) ⇒ <code>Boolean</code>
     * [.isInteger(n)](#dc.utils.isInteger) ⇒ <code>Boolean</code>
@@ -4676,7 +4718,7 @@ Print a single value filter
 
 <a name="dc.utils.add"></a>
 
-#### utils.add(l, r) ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
+#### utils.add(l, r, [t]) ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
 Arbitrary add one value to another.
 
 **Kind**: static method of <code>[utils](#dc.utils)</code>  
@@ -4686,14 +4728,15 @@ Arbitrary add one value to another.
 They also generate strange results if l is a string.
 
 
-| Param | Type |
-| --- | --- |
-| l | <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code> | 
-| r | <code>Number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| l | <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code> | the value to modify |
+| r | <code>Number</code> | the amount by which to modify the value |
+| [t] | <code>String</code> | if `l` is a `Date`, the [interval](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval) in the `d3.time` namespace |
 
 <a name="dc.utils.subtract"></a>
 
-#### utils.subtract(l, r) ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
+#### utils.subtract(l, r, [t]) ⇒ <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code>
 Arbitrary subtract one value from another.
 
 **Kind**: static method of <code>[utils](#dc.utils)</code>  
@@ -4703,10 +4746,11 @@ Arbitrary subtract one value from another.
 They also generate strange results if l is a string.
 
 
-| Param | Type |
-| --- | --- |
-| l | <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code> | 
-| r | <code>Number</code> | 
+| Param | Type | Description |
+| --- | --- | --- |
+| l | <code>String</code> &#124; <code>Date</code> &#124; <code>Number</code> | the value to modify |
+| r | <code>Number</code> | the amount by which to modify the value |
+| [t] | <code>String</code> | if `l` is a `Date`, the [interval](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval) in the `d3.time` namespace |
 
 <a name="dc.utils.isNumber"></a>
 
@@ -4994,14 +5038,23 @@ from scratch.
 | --- | --- |
 | [group] | <code>String</code> | 
 
-<a name="dc.disableTransitions"></a>
+<a name="dc.transition"></a>
 
-### dc.disableTransitions() ⇒ <code>Boolean</code>
-If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
-immediately
+### dc.transition(selection, [duration], [delay], [name]) ⇒ <code>d3.transition</code> &#124; <code>d3.selection</code>
+Start a transition on a selection if transitions are globally enabled
+([disableTransitions](#dc.disableTransitions) is false) and the duration is greater than zero; otherwise return
+the selection. Since most operations are the same on a d3 selection and a d3 transition, this
+allows a common code path for both cases.
 
 **Kind**: static method of <code>[dc](#dc)</code>  
-**Default**: <code>false</code>  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| selection | <code>d3.selection</code> |  | the selection to be transitioned |
+| [duration] | <code>Number</code> &#124; <code>function</code> | <code>250</code> | the duration of the transition in milliseconds, a function returning the duration, or 0 for no transition |
+| [delay] | <code>Number</code> &#124; <code>function</code> |  | the delay of the transition in milliseconds, or a function returning the delay, or 0 for no delay |
+| [name] | <code>String</code> |  | the name of the transition (if concurrent transitions on the same elements are needed) |
+
 <a name="dc.pluck"></a>
 
 ### dc.pluck(n, [f]) ⇒ <code>function</code>
