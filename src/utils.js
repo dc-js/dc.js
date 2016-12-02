@@ -18,7 +18,7 @@ dc.printers = {};
  * Converts a list of filters into a readable string
  * @method filters
  * @memberof dc.printers
- * @param {Array<dc.filters|any>} filters
+ * @param {Array<dc.filters>} filters
  * @returns {String}
  */
 dc.printers.filters = function (filters) {
@@ -126,8 +126,11 @@ dc.utils.printSingleValue.fformat = d3.format('.2f');
  * @todo
  * These assume than any string r is a percentage (whether or not it includes %).
  * They also generate strange results if l is a string.
- * @param {String|Date|Number} l
- * @param {Number} r
+ * @param {String|Date|Number} l the value to modify
+ * @param {Number} r the amount by which to modify the value
+ * @param {String} [t] if `l` is a `Date`, the
+ * [interval](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval) in
+ * the `d3.time` namespace
  * @returns {String|Date|Number}
  */
 dc.utils.add = function (l, r, t) {
@@ -156,8 +159,11 @@ dc.utils.add = function (l, r, t) {
  * @todo
  * These assume than any string r is a percentage (whether or not it includes %).
  * They also generate strange results if l is a string.
- * @param {String|Date|Number} l
- * @param {Number} r
+ * @param {String|Date|Number} l the value to modify
+ * @param {Number} r the amount by which to modify the value
+ * @param {String} [t] if `l` is a `Date`, the
+ * [interval](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval) in
+ * the `d3.time` namespace
  * @returns {String|Date|Number}
  */
 dc.utils.subtract = function (l, r, t) {
