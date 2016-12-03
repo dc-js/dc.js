@@ -65,8 +65,7 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     _chart.plotData = function () {
         var symbols = _chart.chartBodyG().selectAll('path.symbol')
-                .data(_chart.data());
-
+            .data(_chart.data());
         symbols
             .enter()
             .append('path')
@@ -74,6 +73,8 @@ dc.scatterPlot = function (parent, chartGroup) {
             .attr('opacity', 0)
             .attr('fill', _chart.getColor)
             .attr('transform', _locator);
+
+        symbols.call(renderTitle, _chart.data());
 
         symbols.each(function (d, i) {
             _filtered[i] = !_chart.filter() || _chart.filter().isFiltered([d.key[0], d.key[1]]);
@@ -255,6 +256,15 @@ dc.scatterPlot = function (parent, chartGroup) {
         _emptySize = emptySize;
         return _chart;
     };
+
+    function renderTitle (symbol, d) {
+        if (_chart.renderTitle()) {
+            symbol.selectAll('title').remove();
+            symbol.append('title').text(function (d) {
+                return _chart.title()(d);
+            });
+        }
+    }
 
     _chart.legendables = function () {
         return [{chart: _chart, name: _chart._groupName, color: _chart.getColor()}];
