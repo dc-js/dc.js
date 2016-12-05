@@ -193,12 +193,12 @@ dc.stackMixin = function (_chart) {
 
     _chart.xAxisMin = function () {
         var min = d3.min(flattenStack(), dc.pluck('x'));
-        return dc.utils.subtract(min, _chart.xAxisPadding());
+        return dc.utils.subtract(min, _chart.xAxisPadding(), _chart.xAxisPaddingUnit());
     };
 
     _chart.xAxisMax = function () {
         var max = d3.max(flattenStack(), dc.pluck('x'));
-        return dc.utils.add(max, _chart.xAxisPadding());
+        return dc.utils.add(max, _chart.xAxisPadding(), _chart.xAxisPaddingUnit());
     };
 
     /**
