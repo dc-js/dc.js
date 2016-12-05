@@ -257,7 +257,7 @@ dc.redrawAll = function (group) {
 
 /**
  * If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
- * immediately
+ * immediately.
  * @memberof dc
  * @member disableTransitions
  * @type {Boolean}

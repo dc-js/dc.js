@@ -77,7 +77,7 @@ dc.capMixin = function (_chart) {
     };
 
     /**
-     * Get or set the label for *Others* slice when slices cap is specified
+     * Get or set the label for *Others* slice when slices cap is specified.
      * @method othersLabel
      * @memberof dc.capMixin
      * @instance

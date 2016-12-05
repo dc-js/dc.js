@@ -184,7 +184,7 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
      * Set or get size for symbols excluded from this chart's filter. If null, no
-     * special size is applied for symbols based on their filter status
+     * special size is applied for symbols based on their filter status.
      * @method excludedSize
      * @memberof dc.scatterPlot
      * @instance
@@ -203,7 +203,7 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
      * Set or get color for symbols excluded from this chart's filter. If null, no
-     * special color is applied for symbols based on their filter status
+     * special color is applied for symbols based on their filter status.
      * @method excludedColor
      * @memberof dc.scatterPlot
      * @instance

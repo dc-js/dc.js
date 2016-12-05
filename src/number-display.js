@@ -68,7 +68,7 @@ dc.numberDisplay = function (parent, chartGroup) {
     };
 
     /**
-     * Calculate and return the underlying value of the display
+     * Calculate and return the underlying value of the display.
      * @method value
      * @memberof dc.numberDisplay
      * @instance

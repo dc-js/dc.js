@@ -299,7 +299,7 @@ dc.coordinateGridMixin = function (_chart) {
      * d3.time.days, d3.time.months, and
      * d3.time.years](https://github.com/mbostock/d3/wiki/Time-Intervals#aliases) are all valid xUnits
      * function. dc.js also provides a few units function, see the {@link dc.utils Utilities} section for
-     * a list of built-in units functions. The default xUnits function is dc.units.integers.
+     * a list of built-in units functions.
      * @method xUnits
      * @memberof dc.coordinateGridMixin
      * @instance
@@ -321,7 +321,7 @@ dc.coordinateGridMixin = function (_chart) {
      * function(start, end, xDomain) {
      *      // be aware using fixed units will disable the focus/zoom ability on the chart
      *      return 1000;
-     * @param {Function} [xUnits]
+     * @param {Function} [xUnits=dc.units.integers]
      * @return {Function}
      * @return {dc.coordinateGridMixin}
      */
@@ -337,8 +337,9 @@ dc.coordinateGridMixin = function (_chart) {
      * Set or get the x axis used by a particular coordinate grid chart instance. This function is most
      * useful when x axis customization is required. The x axis in dc.js is an instance of a [d3
      * axis object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis); therefore it supports any
-     * valid d3 axis manipulation. **Caution**: The x axis is usually generated internally by dc;
-     * resetting it may cause unexpected results.
+     * valid d3 axis manipulation.
+     *
+     * **Caution**: The x axis is usually generated internally by dc; resetting it may cause unexpected results.
      * @method xAxis
      * @memberof dc.coordinateGridMixin
      * @instance
@@ -407,8 +408,8 @@ dc.coordinateGridMixin = function (_chart) {
      * otherwise it is ignored.
      *
      * Padding unit is a string that will be used when the padding is calculated. Available parameters are
-     * the available d3 time intervals:
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval d3.time.interval}
+     * the available d3 time intervals; see
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval d3.time.interval}.
      * @method xAxisPaddingUnit
      * @memberof dc.coordinateGridMixin
      * @instance
@@ -426,7 +427,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Returns the number of units displayed on the x axis using the unit measure configured by
-     * .xUnits.
+     * {@link dc.coordinateGridMixin#xUnits xUnits}.
      * @method xUnitCount
      * @memberof dc.coordinateGridMixin
      * @instance
@@ -744,7 +745,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Set or get the y axis label. If setting the label, you may optionally include additional padding
-     * to the margin to make room for the label. By default the padded is set to 12 to accomodate the
+     * to the margin to make room for the label. By default the padding is set to 12 to accommodate the
      * text height.
      * @method yAxisLabel
      * @memberof dc.coordinateGridMixin
@@ -788,8 +789,9 @@ dc.coordinateGridMixin = function (_chart) {
      * Set or get the y axis used by the coordinate grid chart instance. This function is most useful
      * when y axis customization is required. The y axis in dc.js is simply an instance of a [d3 axis
      * object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis); therefore it supports any
-     * valid d3 axis manipulation. **Caution**: The y axis is usually generated internally by dc;
-     * resetting it may cause unexpected results.
+     * valid d3 axis manipulation.
+     *
+     * **Caution**: The y axis is usually generated internally by dc; resetting it may cause unexpected results.
      * @method yAxis
      * @memberof dc.coordinateGridMixin
      * @instance

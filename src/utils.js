@@ -15,7 +15,7 @@ dc.dateFormat = d3.time.format('%m/%d/%Y');
 dc.printers = {};
 
 /**
- * Converts a list of filters into a readable string
+ * Converts a list of filters into a readable string.
  * @method filters
  * @memberof dc.printers
  * @param {Array<dc.filters>} filters
@@ -35,7 +35,7 @@ dc.printers.filters = function (filters) {
 };
 
 /**
- * Converts a filter into a readable string
+ * Converts a filter into a readable string.
  * @method filter
  * @memberof dc.printers
  * @param {dc.filters|any|Array<any>} filter
@@ -61,8 +61,9 @@ dc.printers.filter = function (filter) {
 
 /**
  * Returns a function that given a string property name, can be used to pluck the property off an object.  A function
- * can be passed as the second argument to also alter the data being returned.  This can be a useful shorthand method to create
- * accessor functions.
+ * can be passed as the second argument to also alter the data being returned.
+ *
+ * This can be a useful shorthand method to create accessor functions.
  * @method pluck
  * @memberof dc
  * @example
@@ -96,7 +97,7 @@ dc.pluck = function (n, f) {
 dc.utils = {};
 
 /**
- * Print a single value filter
+ * Print a single value filter.
  * @method printSingleValue
  * @memberof dc.utils
  * @param {any} filter
@@ -265,7 +266,7 @@ dc.utils.nameToId = function (name) {
 };
 
 /**
- * Append or select an item on a parent element
+ * Append or select an item on a parent element.
  * @method appendOrSelect
  * @memberof dc.utils
  * @param {d3.selection} parent

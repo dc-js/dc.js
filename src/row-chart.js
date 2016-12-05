@@ -99,7 +99,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     /**
      * Gets or sets the x scale. The x scale can be any d3
-     * {@link https://github.com/mbostock/d3/wiki/Quantitative-Scales quantitive scale}
+     * {@link https://github.com/mbostock/d3/wiki/Quantitative-Scales quantitive scale}.
      * @method x
      * @memberof dc.rowChart
      * @instance
@@ -259,7 +259,7 @@ dc.rowChart = function (parent, chartGroup) {
     }
 
     /**
-     * Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'
+     * Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'.
      * @method renderTitleLabel
      * @memberof dc.rowChart
      * @instance
@@ -333,7 +333,7 @@ dc.rowChart = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set the vertical gap space between rows on a particular row chart instance
+     * Get or set the vertical gap space between rows on a particular row chart instance.
      * @method gap
      * @memberof dc.rowChart
      * @instance

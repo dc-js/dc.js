@@ -519,9 +519,9 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     /**
-     * Position slice labels offset from the outer edge of the chart
+     * Position slice labels offset from the outer edge of the chart.
      *
-     * The given argument sets the radial offset.
+     * The argument specifies the extra radius to be added for slice labels.
      * @method externalLabels
      * @memberof dc.pieChart
      * @instance

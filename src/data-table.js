@@ -225,8 +225,7 @@ dc.dataTable = function (parent, chartGroup) {
      * @memberof dc.dataTable
      * @instance
      * @param {Number} [size=25]
-     * @return {Number}
-     * @return {dc.dataTable}
+     * @returns {Number|dc.dataTable}
      */
     _chart.size = function (size) {
         if (!arguments.length) {
@@ -248,8 +247,7 @@ dc.dataTable = function (parent, chartGroup) {
      * @memberof dc.dataTable
      * @instance
      * @param {Number} [beginSlice=0]
-     * @return {Number}
-     * @return {dc.dataTable}
+     * @returns {Number|dc.dataTable}
      */
     _chart.beginSlice = function (beginSlice) {
         if (!arguments.length) {
@@ -266,8 +264,7 @@ dc.dataTable = function (parent, chartGroup) {
      * @memberof dc.dataTable
      * @instance
      * @param {Number|undefined} [endSlice=undefined]
-     * @return {Number}
-     * @return {dc.dataTable}
+     * @returns {Number|dc.dataTable}
      */
     _chart.endSlice = function (endSlice) {
         if (!arguments.length) {
@@ -367,7 +364,7 @@ dc.dataTable = function (parent, chartGroup) {
 
     /**
      * Get or set sort-by function. This function works as a value accessor at row level and returns a
-     * particular field to be sorted by. Default value: identity function
+     * particular field to be sorted by.
      * @method sortBy
      * @memberof dc.dataTable
      * @instance
@@ -375,7 +372,7 @@ dc.dataTable = function (parent, chartGroup) {
      * chart.sortBy(function(d) {
      *     return d.date;
      * });
-     * @param {Function} [sortBy]
+     * @param {Function} [sortBy=identity function]
      * @return {Function}
      * @return {dc.dataTable}
      */
@@ -410,9 +407,8 @@ dc.dataTable = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set if group rows will be shown.
-     *
-     * The .group() getter-setter must be provided in either case.
+     * Get or set if group rows will be shown. The dataTable {@link dc.dataTable#group group}
+     * function must be specified even if groups are not shown.
      * @method showGroups
      * @memberof dc.dataTable
      * @instance

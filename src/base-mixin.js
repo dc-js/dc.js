@@ -341,9 +341,8 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-     * Clear all filters associated with this chart
-     *
-     * The same can be achieved by calling {@link dc.baseMixin#filter chart.filter(null)}.
+     * Clear all filters associated with this chart. The same effect can be achieved by calling
+     * {@link dc.baseMixin#filter chart.filter(null)}.
      * @method filterAll
      * @memberof dc.baseMixin
      * @instance

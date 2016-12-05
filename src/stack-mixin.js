@@ -247,7 +247,7 @@ dc.stackMixin = function (_chart) {
 
     /**
      * Gets or sets the stack layout algorithm, which computes a baseline for each stack and
-     * propagates it to the next
+     * propagates it to the next.
      * @method stackLayout
      * @memberof dc.stackMixin
      * @instance

@@ -515,8 +515,10 @@ dc.compositeChart = function (parent, chartGroup) {
      * Set or get the right y axis used by the composite chart. This function is most useful when y
      * axis customization is required. The y axis in dc.js is an instance of a [d3 axis
      * object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis) therefore it supports any valid
-     * d3 axis manipulation. **Caution**: The y axis is usually generated internally by dc;
-     * resetting it may cause unexpected results.
+     * d3 axis manipulation.
+     *
+     * **Caution**: The y axis is usually generated internally by dc; resetting it may cause
+     * unexpected results.
      * @method rightYAxis
      * @memberof dc.compositeChart
      * @instance

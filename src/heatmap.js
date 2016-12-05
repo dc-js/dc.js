@@ -49,8 +49,7 @@ dc.heatMap = function (parent, chartGroup) {
      * // the default label function just returns the name
      * chart.colsLabel(function(d) { return d; });
      * @param  {Function} [labelFunction=function(d) { return d; }]
-     * @return {Function}
-     * @return {dc.heatMap}
+     * @returns {Function|dc.heatMap}
      */
     _chart.colsLabel = function (labelFunction) {
         if (!arguments.length) {
@@ -70,8 +69,7 @@ dc.heatMap = function (parent, chartGroup) {
      * // the default label function just returns the name
      * chart.rowsLabel(function(d) { return d; });
      * @param  {Function} [labelFunction=function(d) { return d; }]
-     * @return {Function}
-     * @return {dc.heatMap}
+     * @returns {Function|dc.heatMap}
      */
     _chart.rowsLabel = function (labelFunction) {
         if (!arguments.length) {
@@ -132,8 +130,7 @@ dc.heatMap = function (parent, chartGroup) {
      * @memberof dc.heatMap
      * @instance
      * @param  {Array<String|Number>} [rows]
-     * @return {Array<String|Number>}
-     * @return {dc.heatMap}
+     * @returns {Array<String|Number>|dc.heatMap}
      */
     _chart.rows = function (rows) {
         if (arguments.length) {
@@ -156,8 +153,7 @@ dc.heatMap = function (parent, chartGroup) {
      * @memberof dc.heatMap
      * @instance
      * @param  {Array<String|Number>} [cols]
-     * @return {Array<String|Number>}
-     * @return {dc.heatMap}
+     * @returns {Array<String|Number>|dc.heatMap}
      */
     _chart.cols = function (cols) {
         if (arguments.length) {
@@ -287,8 +283,7 @@ dc.heatMap = function (parent, chartGroup) {
      *     });
      * });
      * @param  {Function} [handler]
-     * @return {Function}
-     * @return {dc.heatMap}
+     * @returns {Function|dc.heatMap}
      */
     _chart.boxOnClick = function (handler) {
         if (!arguments.length) {
@@ -306,8 +301,7 @@ dc.heatMap = function (parent, chartGroup) {
      * @memberof dc.heatMap
      * @instance
      * @param  {Function} [handler]
-     * @return {Function}
-     * @return {dc.heatMap}
+     * @returns {Function|dc.heatMap}
      */
     _chart.xAxisOnClick = function (handler) {
         if (!arguments.length) {
@@ -325,8 +319,7 @@ dc.heatMap = function (parent, chartGroup) {
      * @memberof dc.heatMap
      * @instance
      * @param  {Function} [handler]
-     * @return {Function}
-     * @return {dc.heatMap}
+     * @returns {Function|dc.heatMap}
      */
     _chart.yAxisOnClick = function (handler) {
         if (!arguments.length) {
@@ -342,8 +335,7 @@ dc.heatMap = function (parent, chartGroup) {
      * @memberof dc.heatMap
      * @instance
      * @param  {Number} [xBorderRadius=6.75]
-     * @return {Number}
-     * @return {dc.heatMap}
+     * @returns {Number|dc.heatMap}
      */
     _chart.xBorderRadius = function (xBorderRadius) {
         if (!arguments.length) {
@@ -359,8 +351,7 @@ dc.heatMap = function (parent, chartGroup) {
      * @memberof dc.heatMap
      * @instance
      * @param  {Number} [yBorderRadius=6.75]
-     * @return {Number}
-     * @return {dc.heatMap}
+     * @returns {Number|dc.heatMap}
      */
     _chart.yBorderRadius = function (yBorderRadius) {
         if (!arguments.length) {
