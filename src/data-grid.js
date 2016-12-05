@@ -2,7 +2,7 @@
  * Data grid is a simple widget designed to list the filtered records, providing
  * a simple way to define how the items are displayed.
  *
- * Note: Unlike other charts, the data grid chart (and data table) use the group attribute as a keying function
+ * Note: Unlike other charts, the data grid chart (and data table) use the {@link dc.dataGrid#group group} attribute as a keying function
  * for {@link https://github.com/mbostock/d3/wiki/Arrays#-nest nesting} the data together in groups.
  * Do not pass in a crossfilter group as this will not work.
  *
@@ -102,6 +102,23 @@ dc.dataGrid = function (parent, chartGroup) {
     _chart._doRedraw = function () {
         return _chart._doRender();
     };
+
+    /**
+     * Get or set the group function for the data grid. The group function takes a data row and
+     * returns the key to specify to {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_nest d3.nest}
+     * to split rows into groups.
+     *
+     * Do not pass in a crossfilter group as this will not work.
+     * @method group
+     * @memberof dc.dataGrid
+     * @instance
+     * @example
+     * // group rows by the value of their field
+     * chart
+     *     .group(function(d) { return d.field; })
+     * @param {Function} groupFunction Function taking a row of data and returning the nest key.
+     * @returns {Function|dc.dataTable}
+     */
 
     /**
      * Get or set the index of the beginning slice which determines which entries get displayed by the widget.
@@ -219,7 +236,7 @@ dc.dataGrid = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set sort order function.
+     * Get or set sort the order function.
      * @method order
      * @memberof dc.dataGrid
      * @instance
