@@ -9,3 +9,6 @@ The other Namespaces contain utilities.
 The charts are listed under Classes.
 
 And shared chart functionality is under Mixins.
+
+<img src="class-hierarchy.svg"></img>
+
