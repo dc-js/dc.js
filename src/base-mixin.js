@@ -505,13 +505,25 @@ dc.baseMixin = function (_chart) {
 
     /**
      * Set or get the filter printer function. The filter printer function is used to generate human
-     * friendly text for filter value(s) associated with the chart instance. By default dc charts use a
-     * default filter printer `dc.printers.filter` that provides simple printing support for both
-     * single value and ranged filters.
+     * friendly text for filter value(s) associated with the chart instance. The text will get shown
+     * in the `.filter element; see {@link dc.baseMixin#turnOnControls turnOnControls}.
+     *
+     * By default dc charts use a default filter printer {@link dc.printers.filters dc.printers.filters}
+     * that provides simple printing support for both single value and ranged filters.
      * @method filterPrinter
      * @memberof dc.baseMixin
      * @instance
-     * @param {Function} [filterPrinterFunction=dc.printers.filter]
+     * @example
+     * // for a chart with an ordinal brush, print the filters in upper case
+     * chart.filterPrinter(function(filters) {
+     *   return filters.map(function(f) { return f.toUpperCase(); }).join(', ');
+     * });
+     * // for a chart with a range brush, print the filter as start and extent
+     * chart.filterPrinter(function(filters) {
+     *   return 'start ' + dc.utils.printSingleValue(filters[0][0]) +
+     *     ' extent ' + dc.utils.printSingleValue(filters[0][1] - filters[0][0]);
+     * });
+     * @param {Function} [filterPrinterFunction=dc.printers.filters]
      * @returns {Function|dc.baseMixin}
      */
     _chart.filterPrinter = function (filterPrinterFunction) {
