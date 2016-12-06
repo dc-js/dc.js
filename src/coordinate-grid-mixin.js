@@ -293,7 +293,7 @@ dc.coordinateGridMixin = function (_chart) {
      * data points on x axis, or the number of points on the axis. [d3 time range functions
      * d3.time.days, d3.time.months, and
      * d3.time.years](https://github.com/mbostock/d3/wiki/Time-Intervals#aliases) are all valid xUnits
-     * function. dc.js also provides a few units function, see the {@link dc.utils Utilities} section for
+     * function. dc.js also provides a few units function, see the {@link dc.units Units Namespace} for
      * a list of built-in units functions.
      * @method xUnits
      * @memberof dc.coordinateGridMixin
