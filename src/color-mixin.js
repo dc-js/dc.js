@@ -5,7 +5,7 @@
  * @memberof dc
  * @mixin
  * @param {Object} _chart
- * @return {dc.colorMixin}
+ * @returns {dc.colorMixin}
  */
 dc.colorMixin = function (_chart) {
     var _colors = d3.scale.category20c();
@@ -30,8 +30,7 @@ dc.colorMixin = function (_chart) {
      * // set a linear scale
      * chart.linearColors(["#4575b4", "#ffffbf", "#a50026"]);
      * @param {d3.scale} [colorScale=d3.scale.category20c()]
-     * @return {d3.scale}
-     * @return {dc.colorMixin}
+     * @returns {d3.scale|dc.colorMixin}
      */
     _chart.colors = function (colorScale) {
         if (!arguments.length) {
@@ -53,7 +52,7 @@ dc.colorMixin = function (_chart) {
      * @memberof dc.colorMixin
      * @instance
      * @param {Array<String>} r
-     * @return {dc.colorMixin}
+     * @returns {dc.colorMixin}
      */
     _chart.ordinalColors = function (r) {
         return _chart.colors(d3.scale.ordinal().range(r));
@@ -65,7 +64,7 @@ dc.colorMixin = function (_chart) {
      * @memberof dc.colorMixin
      * @instance
      * @param {Array<Number>} r
-     * @return {dc.colorMixin}
+     * @returns {dc.colorMixin}
      */
     _chart.linearColors = function (r) {
         return _chart.colors(d3.scale.linear()
@@ -86,8 +85,7 @@ dc.colorMixin = function (_chart) {
      * // color accessor for a multi-value crossfilter reduction
      * .colorAccessor(function (d){return d.value.absGain;})
      * @param {Function} [colorAccessor]
-     * @return {Function}
-     * @return {dc.colorMixin}
+     * @returns {Function|dc.colorMixin}
      */
     _chart.colorAccessor = function (colorAccessor) {
         if (!arguments.length) {
@@ -113,8 +111,7 @@ dc.colorMixin = function (_chart) {
      * @memberof dc.colorMixin
      * @instance
      * @param {Array<String>} [domain]
-     * @return {Array<String>}
-     * @return {dc.colorMixin}
+     * @returns {Array<String>|dc.colorMixin}
      */
     _chart.colorDomain = function (domain) {
         if (!arguments.length) {
@@ -130,7 +127,7 @@ dc.colorMixin = function (_chart) {
      * @method calculateColorDomain
      * @memberof dc.colorMixin
      * @instance
-     * @return {dc.colorMixin}
+     * @returns {dc.colorMixin}
      */
     _chart.calculateColorDomain = function () {
         var newDomain = [d3.min(_chart.data(), _chart.colorAccessor()),
@@ -146,7 +143,7 @@ dc.colorMixin = function (_chart) {
      * @instance
      * @param {*} d
      * @param {Number} [i]
-     * @return {String}
+     * @returns {String}
      */
     _chart.getColor = function (d, i) {
         return _colors(_colorAccessor.call(this, d, i));
@@ -158,7 +155,7 @@ dc.colorMixin = function (_chart) {
      * @memberof dc.colorMixin
      * @instance
      * @param {*} [colorCalculator]
-     * @return {*}
+     * @returns {*}
      */
     _chart.colorCalculator = function (colorCalculator) {
         if (!arguments.length) {

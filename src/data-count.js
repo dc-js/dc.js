@@ -27,7 +27,7 @@
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.dataCount}
+ * @returns {dc.dataCount}
  */
 dc.dataCount = function (parent, chartGroup) {
     var _formatNumber = d3.format(',d');
@@ -49,8 +49,7 @@ dc.dataCount = function (parent, chartGroup) {
      *      all: 'All records selected. Click on charts to apply filters'
      * })
      * @param {{some:String, all: String}} [options]
-     * @return {{some:String, all: String}}
-     * @return {dc.dataCount}
+     * @returns {{some:String, all: String}|dc.dataCount}
      */
     _chart.html = function (options) {
         if (!arguments.length) {
@@ -74,8 +73,7 @@ dc.dataCount = function (parent, chartGroup) {
      * @example
      * counter.formatNumber(d3.format('.2g'))
      * @param {Function} [formatter=d3.format('.2g')]
-     * @return {Function}
-     * @return {dc.dataCount}
+     * @returns {Function|dc.dataCount}
      */
     _chart.formatNumber = function (formatter) {
         if (!arguments.length) {

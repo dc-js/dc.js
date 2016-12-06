@@ -15,7 +15,7 @@
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.compositeChart}
+ * @returns {dc.compositeChart}
  */
 dc.compositeChart = function (parent, chartGroup) {
 
@@ -230,8 +230,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @memberof dc.compositeChart
      * @instance
      * @param {Boolean} [useRightAxisGridLines=false]
-     * @return {Boolean}
-     * @return {dc.compositeChart}
+     * @returns {Boolean|dc.compositeChart}
      */
     _chart.useRightAxisGridLines = function (useRightAxisGridLines) {
         if (!arguments) {
@@ -249,8 +248,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @memberof dc.compositeChart
      * @instance
      * @param {Object} [childOptions]
-     * @return {Object}
-     * @return {dc.compositeChart}
+     * @returns {Object|dc.compositeChart}
      */
     _chart.childOptions = function (childOptions) {
         if (!arguments.length) {
@@ -278,8 +276,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @instance
      * @param {String} [rightYAxisLabel]
      * @param {Number} [padding]
-     * @return {String}
-     * @return {dc.compositeChart}
+     * @returns {String|dc.compositeChart}
      */
     _chart.rightYAxisLabel = function (rightYAxisLabel, padding) {
         if (!arguments.length) {
@@ -316,7 +313,7 @@ dc.compositeChart = function (parent, chartGroup) {
      *         .centerBar(true)
      * ]);
      * @param {Array<Chart>} [subChartArray]
-     * @return {dc.compositeChart}
+     * @returns {dc.compositeChart}
      */
     _chart.compose = function (subChartArray) {
         _children = subChartArray;
@@ -339,7 +336,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @method children
      * @memberof dc.compositeChart
      * @instance
-     * @return {Array<dc.baseMixin>}
+     * @returns {Array<dc.baseMixin>}
      */
     _chart.children = function () {
         return _children;
@@ -354,8 +351,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @memberof dc.compositeChart
      * @instance
      * @param {Boolean} [shareColors=false]
-     * @return {Boolean}
-     * @return {dc.compositeChart}
+     * @returns {Boolean|dc.compositeChart}
      */
     _chart.shareColors = function (shareColors) {
         if (!arguments.length) {
@@ -372,8 +368,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @memberof dc.compositeChart
      * @instance
      * @param {Boolean} [shareTitle=true]
-     * @return {Boolean}
-     * @return {dc.compositeChart}
+     * @returns {Boolean|dc.compositeChart}
      */
     _chart.shareTitle = function (shareTitle) {
         if (!arguments.length) {
@@ -391,8 +386,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/Scales d3.scale}
      * @param {d3.scale} [yScale]
-     * @return {d3.scale}
-     * @return {dc.compositeChart}
+     * @returns {d3.scale|dc.compositeChart}
      */
     _chart.rightY = function (yScale) {
         if (!arguments.length) {
@@ -410,7 +404,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @memberof dc.compositeChart
      * @instance
      * @param {Boolean} [alignYAxes=false]
-     * @return {Chart}
+     * @returns {Chart}
      */
     _chart.alignYAxes = function (alignYAxes) {
         if (!arguments.length) {
@@ -529,8 +523,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * // customize y axis tick values
      * chart.rightYAxis().tickValues([0, 100, 200, 300]);
      * @param {d3.svg.axis} [rightYAxis]
-     * @return {d3.svg.axis}
-     * @return {dc.compositeChart}
+     * @returns {d3.svg.axis|dc.compositeChart}
      */
     _chart.rightYAxis = function (rightYAxis) {
         if (!arguments.length) {

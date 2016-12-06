@@ -23,7 +23,7 @@
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.dataTable}
+ * @returns {dc.dataTable}
  */
 dc.dataTable = function (parent, chartGroup) {
     var LABEL_CSS_CLASS = 'dc-table-label';
@@ -351,8 +351,7 @@ dc.dataTable = function (parent, chartGroup) {
      * @memberof dc.dataTable
      * @instance
      * @param {Array<Function>} [columns=[]]
-     * @return {Array<Function>}}
-     * @return {dc.dataTable}
+     * @returns {Array<Function>}|dc.dataTable}
      */
     _chart.columns = function (columns) {
         if (!arguments.length) {
@@ -373,8 +372,7 @@ dc.dataTable = function (parent, chartGroup) {
      *     return d.date;
      * });
      * @param {Function} [sortBy=identity function]
-     * @return {Function}
-     * @return {dc.dataTable}
+     * @returns {Function|dc.dataTable}
      */
     _chart.sortBy = function (sortBy) {
         if (!arguments.length) {
@@ -395,8 +393,7 @@ dc.dataTable = function (parent, chartGroup) {
      * @example
      * chart.order(d3.descending);
      * @param {Function} [order=d3.ascending]
-     * @return {Function}
-     * @return {dc.dataTable}
+     * @returns {Function|dc.dataTable}
      */
     _chart.order = function (order) {
         if (!arguments.length) {
@@ -417,8 +414,7 @@ dc.dataTable = function (parent, chartGroup) {
      *     .group([value], [name])
      *     .showGroups(true|false);
      * @param {Boolean} [showGroups=true]
-     * @return {Boolean}
-     * @return {dc.dataTable}
+     * @returns {Boolean|dc.dataTable}
      */
     _chart.showGroups = function (showGroups) {
         if (!arguments.length) {

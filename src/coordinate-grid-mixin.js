@@ -8,7 +8,7 @@
  * @mixes dc.marginMixin
  * @mixes dc.baseMixin
  * @param {Object} _chart
- * @return {dc.coordinateGridMixin}
+ * @returns {dc.coordinateGridMixin}
  */
 dc.coordinateGridMixin = function (_chart) {
     var GRID_LINE_CLASS = 'grid-line';
@@ -113,7 +113,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @method rescale
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @return {dc.coordinateGridMixin}
+     * @returns {dc.coordinateGridMixin}
      */
     _chart.rescale = function () {
         _unitCount = undefined;
@@ -140,7 +140,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {dc.coordinateGridMixin} [rangeChart]
-     * @return {dc.coordinateGridMixin}
+     * @returns {dc.coordinateGridMixin}
      */
     _chart.rangeChart = function (rangeChart) {
         if (!arguments.length) {
@@ -157,8 +157,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Array<Number|Date>} [extent=[1, Infinity]]
-     * @return {Array<Number|Date>}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Array<Number|Date>|dc.coordinateGridMixin}
      */
     _chart.zoomScale = function (extent) {
         if (!arguments.length) {
@@ -174,8 +173,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [zoomOutRestrict=true]
-     * @return {Boolean}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Boolean|dc.coordinateGridMixin}
      */
     _chart.zoomOutRestrict = function (zoomOutRestrict) {
         if (!arguments.length) {
@@ -212,8 +210,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {SVGElement} [gElement]
-     * @return {SVGElement}
-     * @return {dc.coordinateGridMixin}
+     * @returns {SVGElement|dc.coordinateGridMixin}
      */
     _chart.g = function (gElement) {
         if (!arguments.length) {
@@ -231,8 +228,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [mouseZoomable=false]
-     * @return {Boolean}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Boolean|dc.coordinateGridMixin}
      */
     _chart.mouseZoomable = function (mouseZoomable) {
         if (!arguments.length) {
@@ -248,7 +244,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {SVGElement} [chartBodyG]
-     * @return {SVGElement}
+     * @returns {SVGElement}
      */
     _chart.chartBodyG = function (chartBodyG) {
         if (!arguments.length) {
@@ -274,8 +270,7 @@ dc.coordinateGridMixin = function (_chart) {
      * // set x to a time scale to generate histogram
      * chart.x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
      * @param {d3.scale} [xScale]
-     * @return {d3.scale}
-     * @return {dc.coordinateGridMixin}
+     * @returns {d3.scale|dc.coordinateGridMixin}
      */
     _chart.x = function (xScale) {
         if (!arguments.length) {
@@ -322,8 +317,7 @@ dc.coordinateGridMixin = function (_chart) {
      *      // be aware using fixed units will disable the focus/zoom ability on the chart
      *      return 1000;
      * @param {Function} [xUnits=dc.units.integers]
-     * @return {Function}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Function|dc.coordinateGridMixin}
      */
     _chart.xUnits = function (xUnits) {
         if (!arguments.length) {
@@ -350,8 +344,7 @@ dc.coordinateGridMixin = function (_chart) {
      * // customize x axis tick values
      * chart.xAxis().tickValues([0, 100, 200, 300]);
      * @param {d3.svg.axis} [xAxis=d3.svg.axis().orient('bottom')]
-     * @return {d3.svg.axis}
-     * @return {dc.coordinateGridMixin}
+     * @returns {d3.svg.axis|dc.coordinateGridMixin}
      */
     _chart.xAxis = function (xAxis) {
         if (!arguments.length) {
@@ -368,8 +361,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [elasticX=false]
-     * @return {Boolean}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Boolean|dc.coordinateGridMixin}
      */
     _chart.elasticX = function (elasticX) {
         if (!arguments.length) {
@@ -391,8 +383,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Number|String} [padding=0]
-     * @return {Number|String}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Number|String|dc.coordinateGridMixin}
      */
     _chart.xAxisPadding = function (padding) {
         if (!arguments.length) {
@@ -414,8 +405,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {String} [unit='days']
-     * @return {String}
-     * @return {dc.coordinateGridMixin}
+     * @returns {String|dc.coordinateGridMixin}
      */
     _chart.xAxisPaddingUnit = function (unit) {
         if (!arguments.length) {
@@ -431,7 +421,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @method xUnitCount
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @return {Number}
+     * @returns {Number}
      */
     _chart.xUnitCount = function () {
         if (_unitCount === undefined) {
@@ -455,8 +445,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [useRightYAxis=false]
-     * @return {Boolean}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Boolean|dc.coordinateGridMixin}
      */
     _chart.useRightYAxis = function (useRightYAxis) {
         if (!arguments.length) {
@@ -473,7 +462,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @method isOrdinal
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @return {Boolean}
+     * @returns {Boolean}
      */
     _chart.isOrdinal = function () {
         return _chart.xUnits() === dc.units.ordinal;
@@ -618,7 +607,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @instance
      * @param {String} [labelText]
      * @param {Number} [padding=12]
-     * @return {String}
+     * @returns {String}
      */
     _chart.xAxisLabel = function (labelText, padding) {
         if (!arguments.length) {
@@ -752,8 +741,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @instance
      * @param {String} [labelText]
      * @param {Number} [padding=12]
-     * @return {String}
-     * @return {dc.coordinateGridMixin}
+     * @returns {String|dc.coordinateGridMixin}
      */
     _chart.yAxisLabel = function (labelText, padding) {
         if (!arguments.length) {
@@ -773,8 +761,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @instance
      * @see {@link http://github.com/mbostock/d3/wiki/Scales d3.scale}
      * @param {d3.scale} [yScale]
-     * @return {d3.scale}
-     * @return {dc.coordinateGridMixin}
+     * @returns {d3.scale|dc.coordinateGridMixin}
      */
     _chart.y = function (yScale) {
         if (!arguments.length) {
@@ -802,8 +789,7 @@ dc.coordinateGridMixin = function (_chart) {
      * // customize y axis tick values
      * chart.yAxis().tickValues([0, 100, 200, 300]);
      * @param {d3.svg.axis} [yAxis=d3.svg.axis().orient('left')]
-     * @return {d3.svg.axis}
-     * @return {dc.coordinateGridMixin}
+     * @returns {d3.svg.axis|dc.coordinateGridMixin}
      */
     _chart.yAxis = function (yAxis) {
         if (!arguments.length) {
@@ -820,8 +806,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [elasticY=false]
-     * @return {Boolean}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Boolean|dc.coordinateGridMixin}
      */
     _chart.elasticY = function (elasticY) {
         if (!arguments.length) {
@@ -837,8 +822,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [renderHorizontalGridLines=false]
-     * @return {Boolean}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Boolean|dc.coordinateGridMixin}
      */
     _chart.renderHorizontalGridLines = function (renderHorizontalGridLines) {
         if (!arguments.length) {
@@ -854,8 +838,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [renderVerticalGridLines=false]
-     * @return {Boolean}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Boolean|dc.coordinateGridMixin}
      */
     _chart.renderVerticalGridLines = function (renderVerticalGridLines) {
         if (!arguments.length) {
@@ -870,7 +853,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @method xAxisMin
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @return {*}
+     * @returns {*}
      */
     _chart.xAxisMin = function () {
         var min = d3.min(_chart.data(), function (e) {
@@ -884,7 +867,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @method xAxisMax
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @return {*}
+     * @returns {*}
      */
     _chart.xAxisMax = function () {
         var max = d3.max(_chart.data(), function (e) {
@@ -898,7 +881,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @method yAxisMin
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @return {*}
+     * @returns {*}
      */
     _chart.yAxisMin = function () {
         var min = d3.min(_chart.data(), function (e) {
@@ -912,7 +895,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @method yAxisMax
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @return {*}
+     * @returns {*}
      */
     _chart.yAxisMax = function () {
         var max = d3.max(_chart.data(), function (e) {
@@ -932,8 +915,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Number|String} [padding=0]
-     * @return {Number}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Number|dc.coordinateGridMixin}
      */
     _chart.yAxisPadding = function (padding) {
         if (!arguments.length) {
@@ -957,8 +939,7 @@ dc.coordinateGridMixin = function (_chart) {
      * // select whole months
      * chart.round(d3.time.month.round);
      * @param {Function} [round]
-     * @return {Function}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Function|dc.coordinateGridMixin}
      */
     _chart.round = function (round) {
         if (!arguments.length) {
@@ -1124,8 +1105,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Number} [padding=5]
-     * @return {Number}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Number|dc.coordinateGridMixin}
      */
     _chart.clipPadding = function (padding) {
         if (!arguments.length) {
@@ -1308,8 +1288,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [brushOn=true]
-     * @return {Boolean}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Boolean|dc.coordinateGridMixin}
      */
     _chart.brushOn = function (brushOn) {
         if (!arguments.length) {

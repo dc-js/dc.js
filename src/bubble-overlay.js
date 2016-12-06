@@ -20,7 +20,7 @@
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.bubbleOverlay}
+ * @returns {dc.bubbleOverlay}
  */
 dc.bubbleOverlay = function (parent, chartGroup) {
     var BUBBLE_OVERLAY_CLASS = 'bubble-overlay';
@@ -40,7 +40,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
      * // set up underlying svg element
      * chart.svg(d3.select('#chart svg'));
      * @param {SVGElement|d3.selection} [imageElement]
-     * @return {dc.bubbleOverlay}
+     * @returns {dc.bubbleOverlay}
      */
     var _chart = dc.bubbleMixin(dc.baseMixin({}));
     var _g;
@@ -67,7 +67,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
      * @param {String} name
      * @param {Number} x
      * @param {Number} y
-     * @return {dc.bubbleOverlay}
+     * @returns {dc.bubbleOverlay}
      */
     _chart.point = function (name, x, y) {
         _points.push({name: name, x: x, y: y});

@@ -23,7 +23,7 @@
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.bubbleChart}
+ * @returns {dc.bubbleChart}
  */
 dc.bubbleChart = function (parent, chartGroup) {
     var _chart = dc.bubbleMixin(dc.coordinateGridMixin({}));
@@ -46,8 +46,7 @@ dc.bubbleChart = function (parent, chartGroup) {
      * @memberof dc.bubbleChart
      * @instance
      * @param {Boolean} [elasticRadius=false]
-     * @return {Boolean}
-     * @return {dc.bubbleChart}
+     * @returns {Boolean|dc.bubbleChart}
      */
     _chart.elasticRadius = function (elasticRadius) {
         if (!arguments.length) {
@@ -64,8 +63,7 @@ dc.bubbleChart = function (parent, chartGroup) {
      * @memberof dc.bubbleChart
      * @instance
      * @param {Boolean} [sortBubbleSize=false]
-     * @return {Boolean}
-     * @return {dc.bubbleChart}
+     * @returns {Boolean|dc.bubbleChart}
      */
     _chart.sortBubbleSize = function (sortBubbleSize) {
         if (!arguments.length) {

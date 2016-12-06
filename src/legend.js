@@ -9,7 +9,7 @@
  * @memberof dc
  * @example
  * chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
- * @return {dc.legend}
+ * @returns {dc.legend}
  */
 dc.legend = function () {
     var LABEL_GAP = 2;
@@ -118,8 +118,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Number} [x=0]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.x = function (x) {
         if (!arguments.length) {
@@ -135,8 +134,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Number} [y=0]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.y = function (y) {
         if (!arguments.length) {
@@ -152,8 +150,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Number} [gap=5]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.gap = function (gap) {
         if (!arguments.length) {
@@ -169,8 +166,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Number} [itemHeight=12]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.itemHeight = function (itemHeight) {
         if (!arguments.length) {
@@ -186,8 +182,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Boolean} [horizontal=false]
-     * @return {Boolean}
-     * @return {dc.legend}
+     * @returns {Boolean|dc.legend}
      */
     _legend.horizontal = function (horizontal) {
         if (!arguments.length) {
@@ -203,8 +198,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Number} [legendWidth=500]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.legendWidth = function (legendWidth) {
         if (!arguments.length) {
@@ -220,8 +214,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Number} [itemWidth=70]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.itemWidth = function (itemWidth) {
         if (!arguments.length) {
@@ -238,8 +231,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Boolean} [autoItemWidth=false]
-     * @return {Boolean}
-     * @return {dc.legend}
+     * @returns {Boolean|dc.legend}
      */
     _legend.autoItemWidth = function (autoItemWidth) {
         if (!arguments.length) {
@@ -257,8 +249,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Function} [legendText]
-     * @return {Function}
-     * @return {dc.legend}
+     * @returns {Function|dc.legend}
      * @example
      * // default legendText
      * legend.legendText(dc.pluck('name'))

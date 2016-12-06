@@ -22,7 +22,7 @@
  * composite chart instance instead.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.barChart}
+ * @returns {dc.barChart}
  */
 dc.barChart = function (parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
@@ -232,8 +232,7 @@ dc.barChart = function (parent, chartGroup) {
      * @memberof dc.barChart
      * @instance
      * @param {Boolean} [centerBar=false]
-     * @return {Boolean}
-     * @return {dc.barChart}
+     * @returns {Boolean|dc.barChart}
      */
     _chart.centerBar = function (centerBar) {
         if (!arguments.length) {
@@ -256,8 +255,7 @@ dc.barChart = function (parent, chartGroup) {
      * @memberof dc.barChart
      * @instance
      * @param {Number} [barPadding=0]
-     * @return {Number}
-     * @return {dc.barChart}
+     * @returns {Number|dc.barChart}
      */
     _chart.barPadding = function (barPadding) {
         if (!arguments.length) {
@@ -279,8 +277,7 @@ dc.barChart = function (parent, chartGroup) {
      * @memberof dc.barChart
      * @instance
      * @param {Number} [padding=0.5]
-     * @return {Number}
-     * @return {dc.barChart}
+     * @returns {Number|dc.barChart}
      */
     _chart.outerPadding = _chart._outerRangeBandPadding;
 
@@ -292,8 +289,7 @@ dc.barChart = function (parent, chartGroup) {
      * @memberof dc.barChart
      * @instance
      * @param {Number} [gap=2]
-     * @return {Number}
-     * @return {dc.barChart}
+     * @returns {Number|dc.barChart}
      */
     _chart.gap = function (gap) {
         if (!arguments.length) {
@@ -329,8 +325,7 @@ dc.barChart = function (parent, chartGroup) {
      * @example
      * chart.round(function(n) { return Math.floor(n) + 0.5; });
      * @param {Boolean} [alwaysUseRounding=false]
-     * @return {Boolean}
-     * @return {dc.barChart}
+     * @returns {Boolean|dc.barChart}
      */
     _chart.alwaysUseRounding = function (alwaysUseRounding) {
         if (!arguments.length) {

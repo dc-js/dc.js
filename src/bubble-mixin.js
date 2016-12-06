@@ -5,7 +5,7 @@
  * @mixin
  * @mixes dc.colorMixin
  * @param {Object} _chart
- * @return {dc.bubbleMixin}
+ * @returns {dc.bubbleMixin}
  */
 dc.bubbleMixin = function (_chart) {
     var _maxBubbleRelativeSize = 0.3;
@@ -38,8 +38,7 @@ dc.bubbleMixin = function (_chart) {
      * @instance
      * @see {@link http://github.com/mbostock/d3/wiki/Scales d3.scale}
      * @param {d3.scale} [bubbleRadiusScale=d3.scale.linear().domain([0, 100])]
-     * @return {d3.scale}
-     * @return {dc.bubbleMixin}
+     * @returns {d3.scale|dc.bubbleMixin}
      */
     _chart.r = function (bubbleRadiusScale) {
         if (!arguments.length) {
@@ -58,8 +57,7 @@ dc.bubbleMixin = function (_chart) {
      * @memberof dc.bubbleMixin
      * @instance
      * @param {Function} [radiusValueAccessor]
-     * @return {Function}
-     * @return {dc.bubbleMixin}
+     * @returns {Function|dc.bubbleMixin}
      */
     _chart.radiusValueAccessor = function (radiusValueAccessor) {
         if (!arguments.length) {
@@ -164,8 +162,7 @@ dc.bubbleMixin = function (_chart) {
      * @memberof dc.bubbleMixin
      * @instance
      * @param {Number} [radius=10]
-     * @return {Number}
-     * @return {dc.bubbleMixin}
+     * @returns {Number|dc.bubbleMixin}
      */
     _chart.minRadius = function (radius) {
         if (!arguments.length) {
@@ -182,8 +179,7 @@ dc.bubbleMixin = function (_chart) {
      * @memberof dc.bubbleMixin
      * @instance
      * @param {Number} [radius=10]
-     * @return {Number}
-     * @return {dc.bubbleMixin}
+     * @returns {Number|dc.bubbleMixin}
      */
 
     _chart.minRadiusWithLabel = function (radius) {
@@ -201,8 +197,7 @@ dc.bubbleMixin = function (_chart) {
      * @memberof dc.bubbleMixin
      * @instance
      * @param {Number} [relativeSize=0.3]
-     * @return {Number}
-     * @return {dc.bubbleMixin}
+     * @returns {Number|dc.bubbleMixin}
      */
     _chart.maxBubbleRelativeSize = function (relativeSize) {
         if (!arguments.length) {

@@ -4,7 +4,7 @@
  * @memberof dc
  * @mixin
  * @param {Object} _chart
- * @return {dc.stackMixin}
+ * @returns {dc.stackMixin}
  */
 dc.stackMixin = function (_chart) {
 
@@ -73,8 +73,7 @@ dc.stackMixin = function (_chart) {
      * @param {crossfilter.group} group
      * @param {String} [name]
      * @param {Function} [accessor]
-     * @return {Array<{group: crossfilter.group, name: String, accessor: Function}>}
-     * @return {dc.stackMixin}
+     * @returns {Array<{group: crossfilter.group, name: String, accessor: Function}>|dc.stackMixin}
      */
     _chart.stack = function (group, name, accessor) {
         if (!arguments.length) {
@@ -117,8 +116,7 @@ dc.stackMixin = function (_chart) {
      * @memberof dc.stackMixin
      * @instance
      * @param {Boolean} [hidableStacks=false]
-     * @return {Boolean}
-     * @return {dc.stackMixin}
+     * @returns {Boolean|dc.stackMixin}
      */
     _chart.hidableStacks = function (hidableStacks) {
         if (!arguments.length) {
@@ -140,7 +138,7 @@ dc.stackMixin = function (_chart) {
      * @memberof dc.stackMixin
      * @instance
      * @param {String} stackName
-     * @return {dc.stackMixin}
+     * @returns {dc.stackMixin}
      */
     _chart.hideStack = function (stackName) {
         var layer = findLayerByName(stackName);
@@ -157,7 +155,7 @@ dc.stackMixin = function (_chart) {
      * @memberof dc.stackMixin
      * @instance
      * @param {String} stackName
-     * @return {dc.stackMixin}
+     * @returns {dc.stackMixin}
      */
     _chart.showStack = function (stackName) {
         var layer = findLayerByName(stackName);
@@ -221,8 +219,7 @@ dc.stackMixin = function (_chart) {
      * var secondTitleFunction = chart.title('second stack');
      * @param {String} [stackName]
      * @param {Function} [titleAccessor]
-     * @return {String}
-     * @return {dc.stackMixin}
+     * @returns {String|dc.stackMixin}
      */
     dc.override(_chart, 'title', function (stackName, titleAccessor) {
         if (!stackName) {
@@ -253,8 +250,7 @@ dc.stackMixin = function (_chart) {
      * @instance
      * @see {@link http://github.com/mbostock/d3/wiki/Stack-Layout d3.layout.stack}
      * @param {Function} [stack=d3.layout.stack]
-     * @return {Function}
-     * @return {dc.stackMixin}
+     * @returns {Function|dc.stackMixin}
      */
     _chart.stackLayout = function (stack) {
         if (!arguments.length) {

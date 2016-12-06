@@ -10,7 +10,7 @@
  * @memberof dc
  * @mixin
  * @param {Object} _chart
- * @return {dc.capMixin}
+ * @returns {dc.capMixin}
  */
 dc.capMixin = function (_chart) {
 
@@ -65,8 +65,7 @@ dc.capMixin = function (_chart) {
      * @memberof dc.capMixin
      * @instance
      * @param {Number} [count=Infinity]
-     * @return {Number}
-     * @return {dc.capMixin}
+     * @returns {Number|dc.capMixin}
      */
     _chart.cap = function (count) {
         if (!arguments.length) {
@@ -82,8 +81,7 @@ dc.capMixin = function (_chart) {
      * @memberof dc.capMixin
      * @instance
      * @param {String} [label="Others"]
-     * @return {String}
-     * @return {dc.capMixin}
+     * @returns {String|dc.capMixin}
      */
     _chart.othersLabel = function (label) {
         if (!arguments.length) {
@@ -129,8 +127,7 @@ dc.capMixin = function (_chart) {
      *     return data;
      * });
      * @param {Function} [grouperFunction]
-     * @return {Function}
-     * @return {dc.capMixin}
+     * @returns {Function|dc.capMixin}
      */
     _chart.othersGrouper = function (grouperFunction) {
         if (!arguments.length) {

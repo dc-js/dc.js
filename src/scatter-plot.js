@@ -19,7 +19,7 @@
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.scatterPlot}
+ * @returns {dc.scatterPlot}
  */
 dc.scatterPlot = function (parent, chartGroup) {
     var _chart = dc.coordinateGridMixin({});
@@ -111,8 +111,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * // default accessor
      * chart.existenceAccessor(function (d) { return d.value; });
      * @param {Function} [accessor]
-     * @return {Function}
-     * @return {dc.scatterPlot}
+     * @returns {Function|dc.scatterPlot}
      */
     _chart.existenceAccessor = function (accessor) {
         if (!arguments.length) {
@@ -135,8 +134,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * // Square type
      * chart.symbol('square');
      * @param {String|Function} [type='circle']
-     * @return {String|Function}
-     * @return {dc.scatterPlot}
+     * @returns {String|Function|dc.scatterPlot}
      */
     _chart.symbol = function (type) {
         if (!arguments.length) {
@@ -153,8 +151,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
      * @param {Number} [symbolSize=3]
-     * @return {Number}
-     * @return {dc.scatterPlot}
+     * @returns {Number|dc.scatterPlot}
      */
     _chart.symbolSize = function (symbolSize) {
         if (!arguments.length) {
@@ -171,8 +168,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
      * @param {Number} [highlightedSize=5]
-     * @return {Number}
-     * @return {dc.scatterPlot}
+     * @returns {Number|dc.scatterPlot}
      */
     _chart.highlightedSize = function (highlightedSize) {
         if (!arguments.length) {
@@ -190,8 +186,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
      * @param {Number} [excludedSize=null]
-     * @return {Number}
-     * @return {dc.scatterPlot}
+     * @returns {Number|dc.scatterPlot}
      */
     _chart.excludedSize = function (excludedSize) {
         if (!arguments.length) {
@@ -209,8 +204,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
      * @param {Number} [excludedColor=null]
-     * @return {Number}
-     * @return {dc.scatterPlot}
+     * @returns {Number|dc.scatterPlot}
      */
     _chart.excludedColor = function (excludedColor) {
         if (!arguments.length) {
@@ -227,8 +221,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
      * @param {Number} [excludedOpacity=1.0]
-     * @return {Number}
-     * @return {dc.scatterPlot}
+     * @returns {Number|dc.scatterPlot}
      */
     _chart.excludedOpacity = function (excludedOpacity) {
         if (!arguments.length) {
@@ -245,8 +238,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
      * @param {Number} [emptySize=0]
-     * @return {Number}
-     * @return {dc.scatterPlot}
+     * @returns {Number|dc.scatterPlot}
      */
     _chart.hiddenSize = _chart.emptySize = function (emptySize) {
         if (!arguments.length) {

@@ -15,7 +15,7 @@
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.heatMap}
+ * @returns {dc.heatMap}
  */
 dc.heatMap = function (parent, chartGroup) {
 

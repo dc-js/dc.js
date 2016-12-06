@@ -346,7 +346,7 @@ dc.units = {};
  * chart.xUnits(dc.units.integers) // already the default
  * @param {Number} start
  * @param {Number} end
- * @return {Number}
+ * @returns {Number}
  */
 dc.units.integers = function (start, end) {
     return Math.abs(end - start);
@@ -369,7 +369,7 @@ dc.units.integers = function (start, end) {
  * @param {*} start
  * @param {*} end
  * @param {Array<String>} domain
- * @return {Array<String>}
+ * @returns {Array<String>}
  */
 dc.units.ordinal = function (start, end, domain) {
     return domain;
@@ -397,7 +397,7 @@ dc.units.fp = {};
  * var thousandths = dc.units.fp.precision(0.001);
  * thousandths(0.5, 1.0) // returns 500
  * @param {Number} precision
- * @return {Function} start-end unit function
+ * @returns {Function} start-end unit function
  */
 dc.units.fp.precision = function (precision) {
     var _f = function (s, e) {

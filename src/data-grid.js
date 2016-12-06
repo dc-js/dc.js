@@ -16,7 +16,7 @@
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.dataGrid}
+ * @returns {dc.dataGrid}
  */
 dc.dataGrid = function (parent, chartGroup) {
     var LABEL_CSS_CLASS = 'dc-grid-label';
@@ -127,8 +127,7 @@ dc.dataGrid = function (parent, chartGroup) {
      * @memberof dc.dataGrid
      * @instance
      * @param {Number} [beginSlice=0]
-     * @return {Number}
-     * @return {dc.dataGrid}
+     * @returns {Number|dc.dataGrid}
      */
     _chart.beginSlice = function (beginSlice) {
         if (!arguments.length) {
@@ -145,8 +144,7 @@ dc.dataGrid = function (parent, chartGroup) {
      * @memberof dc.dataGrid
      * @instance
      * @param {Number} [endSlice]
-     * @return {Number}
-     * @return {dc.dataGrid}
+     * @returns {Number|dc.dataGrid}
      */
     _chart.endSlice = function (endSlice) {
         if (!arguments.length) {
@@ -162,8 +160,7 @@ dc.dataGrid = function (parent, chartGroup) {
      * @memberof dc.dataGrid
      * @instance
      * @param {Number} [size=999]
-     * @return {Number}
-     * @return {dc.dataGrid}
+     * @returns {Number|dc.dataGrid}
      */
     _chart.size = function (size) {
         if (!arguments.length) {
@@ -183,8 +180,7 @@ dc.dataGrid = function (parent, chartGroup) {
      * @example
      * chart.html(function (d) { return '<div class='item '+data.exampleCategory+''>'+data.exampleString+'</div>';});
      * @param {Function} [html]
-     * @return {Function}
-     * @return {dc.dataGrid}
+     * @returns {Function|dc.dataGrid}
      */
     _chart.html = function (html) {
         if (!arguments.length) {
@@ -202,8 +198,7 @@ dc.dataGrid = function (parent, chartGroup) {
      * @example
      * chart.htmlGroup (function (d) { return '<h2>'.d.key . 'with ' . d.values.length .' items</h2>'});
      * @param {Function} [htmlGroup]
-     * @return {Function}
-     * @return {dc.dataGrid}
+     * @returns {Function|dc.dataGrid}
      */
     _chart.htmlGroup = function (htmlGroup) {
         if (!arguments.length) {
@@ -224,8 +219,7 @@ dc.dataGrid = function (parent, chartGroup) {
      *     return d.date;
      * });
      * @param {Function} [sortByFunction]
-     * @return {Function}
-     * @return {dc.dataGrid}
+     * @returns {Function|dc.dataGrid}
      */
     _chart.sortBy = function (sortByFunction) {
         if (!arguments.length) {
@@ -245,8 +239,7 @@ dc.dataGrid = function (parent, chartGroup) {
      * @example
      * chart.order(d3.descending);
      * @param {Function} [order=d3.ascending]
-     * @return {Function}
-     * @return {dc.dataGrid}
+     * @returns {Function|dc.dataGrid}
      */
     _chart.order = function (order) {
         if (!arguments.length) {

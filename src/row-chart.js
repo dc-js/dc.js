@@ -19,7 +19,7 @@
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.rowChart}
+ * @returns {dc.rowChart}
  */
 dc.rowChart = function (parent, chartGroup) {
 
@@ -105,8 +105,7 @@ dc.rowChart = function (parent, chartGroup) {
      * @instance
      * @see {@link https://github.com/mbostock/d3/wiki/Quantitative-Scales quantitive scale}
      * @param {d3.scale} [scale]
-     * @return {d3.scale}
-     * @return {dc.rowChart}
+     * @returns {d3.scale|dc.rowChart}
      */
     _chart.x = function (scale) {
         if (!arguments.length) {
@@ -264,8 +263,7 @@ dc.rowChart = function (parent, chartGroup) {
      * @memberof dc.rowChart
      * @instance
      * @param {Boolean} [renderTitleLabel=false]
-     * @return {Boolean}
-     * @return {dc.rowChart}
+     * @returns {Boolean|dc.rowChart}
      */
     _chart.renderTitleLabel = function (renderTitleLabel) {
         if (!arguments.length) {
@@ -304,7 +302,7 @@ dc.rowChart = function (parent, chartGroup) {
      * chart.xAxis().tickFormat(function (v) {return v + '%';});
      * // customize x axis tick values
      * chart.xAxis().tickValues([0, 100, 200, 300]);
-     * @return {d3.svg.axis}
+     * @returns {d3.svg.axis}
      */
     _chart.xAxis = function () {
         return _xAxis;
@@ -321,8 +319,7 @@ dc.rowChart = function (parent, chartGroup) {
      * @example
      * chart.fixedBarHeight( chartheight - (count + 1) * gap / count);
      * @param {Boolean|Number} [fixedBarHeight=false]
-     * @return {Boolean|Number}
-     * @return {dc.rowChart}
+     * @returns {Boolean|Number|dc.rowChart}
      */
     _chart.fixedBarHeight = function (fixedBarHeight) {
         if (!arguments.length) {
@@ -338,8 +335,7 @@ dc.rowChart = function (parent, chartGroup) {
      * @memberof dc.rowChart
      * @instance
      * @param {Number} [gap=5]
-     * @return {Number}
-     * @return {dc.rowChart}
+     * @returns {Number|dc.rowChart}
      */
     _chart.gap = function (gap) {
         if (!arguments.length) {
@@ -356,8 +352,7 @@ dc.rowChart = function (parent, chartGroup) {
      * @memberof dc.rowChart
      * @instance
      * @param {Boolean} [elasticX]
-     * @return {Boolean}
-     * @return {dc.rowChart}
+     * @returns {Boolean|dc.rowChart}
      */
     _chart.elasticX = function (elasticX) {
         if (!arguments.length) {
@@ -373,8 +368,7 @@ dc.rowChart = function (parent, chartGroup) {
      * @memberof dc.rowChart
      * @instance
      * @param {Number} [labelOffsetX=10]
-     * @return {Number}
-     * @return {dc.rowChart}
+     * @returns {Number|dc.rowChart}
      */
     _chart.labelOffsetX = function (labelOffsetX) {
         if (!arguments.length) {
@@ -390,8 +384,7 @@ dc.rowChart = function (parent, chartGroup) {
      * @memberof dc.rowChart
      * @instance
      * @param {Number} [labelOffsety=15]
-     * @return {Number}
-     * @return {dc.rowChart}
+     * @returns {Number|dc.rowChart}
      */
     _chart.labelOffsetY = function (labelOffsety) {
         if (!arguments.length) {
@@ -408,8 +401,7 @@ dc.rowChart = function (parent, chartGroup) {
      * @memberof dc.rowChart
      * @instance
      * @param {Number} [titleLabelOffsetX=2]
-     * @return {Number}
-     * @return {dc.rowChart}
+     * @returns {Number|dc.rowChart}
      */
     _chart.titleLabelOffsetX = function (titleLabelOffsetX) {
         if (!arguments.length) {
