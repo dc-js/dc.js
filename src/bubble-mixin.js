@@ -128,7 +128,7 @@ dc.bubbleMixin = function (_chart) {
 
     _chart.doUpdateLabels = function (bubbleGEnter) {
         if (_chart.renderLabel()) {
-            var labels = bubbleGEnter.selectAll('text')
+            var labels = bubbleGEnter.select('text')
                 .attr('pointer-events', labelPointerEvent)
                 .text(labelFunction);
             dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
@@ -152,7 +152,7 @@ dc.bubbleMixin = function (_chart) {
 
     _chart.doUpdateTitles = function (g) {
         if (_chart.renderTitle()) {
-            g.selectAll('title').text(titleFunction);
+            g.select('title').text(titleFunction);
         }
     };
 
