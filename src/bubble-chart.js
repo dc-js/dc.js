@@ -117,7 +117,7 @@ dc.bubbleChart = function (parent, chartGroup) {
             .attr('fill', _chart.getColor)
             .attr('r', 0);
         dc.transition(bubbleG, _chart.transitionDuration(), _chart.transitionDelay())
-            .selectAll('circle.' + _chart.BUBBLE_CLASS)
+            .select('circle.' + _chart.BUBBLE_CLASS)
             .attr('r', function (d) {
                 return _chart.bubbleR(d);
             })
@@ -133,7 +133,7 @@ dc.bubbleChart = function (parent, chartGroup) {
     function updateNodes (bubbleG) {
         dc.transition(bubbleG, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', bubbleLocator)
-            .selectAll('circle.' + _chart.BUBBLE_CLASS)
+            .select('circle.' + _chart.BUBBLE_CLASS)
             .attr('fill', _chart.getColor)
             .attr('r', function (d) {
                 return _chart.bubbleR(d);
