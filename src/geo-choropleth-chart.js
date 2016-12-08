@@ -184,7 +184,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * @instance
      * @see {@link http://geojson.org/ GeoJSON}
      * @see {@link https://github.com/topojson/topojson/wiki TopoJSON}
-     * @see {@link https://github.com/topojson/topojson/wiki/API-Reference#feature topojson.feature}
+     * @see {@link https://github.com/topojson/topojson-1.x-api-reference/blob/master/API-Reference.md#wiki-feature topojson.feature}
      * @example
      * // insert a layer for rendering US states
      * chart.overlayGeoJson(statesJson.features, 'state', function(d) {
