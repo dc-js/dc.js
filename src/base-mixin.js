@@ -383,7 +383,7 @@ dc.baseMixin = function (_chart) {
 
     /**
      * Set the root SVGElement to either be an existing chart's root; or any valid [d3 single
-     * selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom
+     * selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom
      * block element such as a div; or a dom element or d3 selection. Optionally registers the chart
      * within the chartGroup. This class is called internally on chart initialization, but be called
      * again to relocate the chart. However, it will orphan any previously created SVGElements.

@@ -16,7 +16,7 @@
  * // create a sub-chart under a composite parent chart
  * var chart3 = dc.lineChart(compositeChart);
  * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector}
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector}
  * specifying a dom block element such as a div; or a dom element or d3 selection.  If the line
  * chart is a sub-chart in a {@link dc.compositeChart Composite Chart} then pass in the parent
  * composite chart instance instead.
