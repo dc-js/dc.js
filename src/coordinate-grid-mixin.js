@@ -333,7 +333,11 @@ dc.coordinateGridMixin = function (_chart) {
      * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3 axis object};
      * therefore it supports any valid d3 axis manipulation.
      *
-     * **Caution**: The x axis is usually generated internally by dc; resetting it may cause unexpected results.
+     * **Caution**: The x axis is usually generated internally by dc; resetting it may cause
+     * unexpected results. Note also that when used as a getter, this function is not chainable:
+     * it returns the axis, not the chart,
+     * {@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
+     * so attempting to call chart functions after calling `.xAxis()` will fail}.
      * @method xAxis
      * @memberof dc.coordinateGridMixin
      * @instance
@@ -778,7 +782,11 @@ dc.coordinateGridMixin = function (_chart) {
      * object](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis); therefore it supports any
      * valid d3 axis manipulation.
      *
-     * **Caution**: The y axis is usually generated internally by dc; resetting it may cause unexpected results.
+     * **Caution**: The y axis is usually generated internally by dc; resetting it may cause
+     * unexpected results.  Note also that when used as a getter, this function is not chainable: it
+     * returns the axis, not the chart,
+     * {@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
+     * so attempting to call chart functions after calling `.yAxis()` will fail}.
      * @method yAxis
      * @memberof dc.coordinateGridMixin
      * @instance
