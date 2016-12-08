@@ -128,7 +128,7 @@ dc.numberDisplay = function (parent, chartGroup) {
      * @method formatNumber
      * @memberof dc.numberDisplay
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Formatting d3.format}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Formatting.md d3.format}
      * @param {Function} [formatter=d3.format('.2s')]
      * @returns {Function|dc.numberDisplay}
      */

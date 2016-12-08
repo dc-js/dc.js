@@ -127,7 +127,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method symbol
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_type d3.svg.symbol().type()}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_type d3.svg.symbol.type}
      * @example
      * // Circle type
      * chart.symbol('circle');
@@ -149,7 +149,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method symbolSize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
      * @param {Number} [symbolSize=3]
      * @returns {Number|dc.scatterPlot}
      */
@@ -166,7 +166,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method highlightedSize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
      * @param {Number} [highlightedSize=5]
      * @returns {Number|dc.scatterPlot}
      */
@@ -184,7 +184,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method excludedSize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
      * @param {Number} [excludedSize=null]
      * @returns {Number|dc.scatterPlot}
      */
@@ -202,7 +202,6 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method excludedColor
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
      * @param {Number} [excludedColor=null]
      * @returns {Number|dc.scatterPlot}
      */
@@ -219,7 +218,6 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method excludedOpacity
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
      * @param {Number} [excludedOpacity=1.0]
      * @returns {Number|dc.scatterPlot}
      */
@@ -236,7 +234,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method emptySize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
      * @param {Number} [emptySize=0]
      * @returns {Number|dc.scatterPlot}
      */

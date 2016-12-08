@@ -249,7 +249,7 @@ dc.barChart = function (parent, chartGroup) {
     /**
      * Get or set the spacing between bars as a fraction of bar size. Valid values are between 0-1.
      * Setting this value will also remove any previously set {@link dc.barChart#gap gap}. See the
-     * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands d3 docs}
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands d3 docs}
      * for a visual description of how the padding is applied.
      * @method barPadding
      * @memberof dc.barChart

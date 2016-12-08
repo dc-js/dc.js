@@ -258,12 +258,12 @@ dc.coordinateGridMixin = function (_chart) {
      * **mandatory**
      *
      * Get or set the x scale. The x scale can be any d3
-     * {@link https://github.com/mbostock/d3/wiki/Quantitative-Scales quantitive scale} or
-     * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales ordinal scale}.
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md quantitive scale} or
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md ordinal scale}.
      * @method x
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @see {@link http://github.com/mbostock/d3/wiki/Scales d3.scale}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
      * @example
      * // set x to a linear scale
      * chart.x(d3.scale.linear().domain([-2500, 2500]))
@@ -292,7 +292,7 @@ dc.coordinateGridMixin = function (_chart) {
      * number of dots for a line chart. This function is expected to return a Javascript array of all
      * data points on x axis, or the number of points on the axis. [d3 time range functions
      * d3.time.days, d3.time.months, and
-     * d3.time.years](https://github.com/mbostock/d3/wiki/Time-Intervals#aliases) are all valid xUnits
+     * d3.time.years](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#aliases) are all valid xUnits
      * function. dc.js also provides a few units function, see the {@link dc.units Units Namespace} for
      * a list of built-in units functions.
      * @method xUnits
@@ -329,15 +329,15 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Set or get the x axis used by a particular coordinate grid chart instance. This function is most
-     * useful when x axis customization is required. The x axis in dc.js is an instance of a [d3
-     * axis object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis); therefore it supports any
-     * valid d3 axis manipulation.
+     * useful when x axis customization is required. The x axis in dc.js is an instance of a
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3 axis object};
+     * therefore it supports any valid d3 axis manipulation.
      *
      * **Caution**: The x axis is usually generated internally by dc; resetting it may cause unexpected results.
      * @method xAxis
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @see {@link http://github.com/mbostock/d3/wiki/SVG-Axes d3.svg.axis}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3.svg.axis}
      * @example
      * // customize x axis tick format
      * chart.xAxis().tickFormat(function(v) {return v + '%';});
@@ -759,7 +759,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @method y
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @see {@link http://github.com/mbostock/d3/wiki/Scales d3.scale}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
      * @param {d3.scale} [yScale]
      * @returns {d3.scale|dc.coordinateGridMixin}
      */
@@ -775,14 +775,14 @@ dc.coordinateGridMixin = function (_chart) {
     /**
      * Set or get the y axis used by the coordinate grid chart instance. This function is most useful
      * when y axis customization is required. The y axis in dc.js is simply an instance of a [d3 axis
-     * object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis); therefore it supports any
+     * object](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis); therefore it supports any
      * valid d3 axis manipulation.
      *
      * **Caution**: The y axis is usually generated internally by dc; resetting it may cause unexpected results.
      * @method yAxis
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @see {@link http://github.com/mbostock/d3/wiki/SVG-Axes d3.svg.axis}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3.svg.axis}
      * @example
      * // customize y axis tick format
      * chart.yAxis().tickFormat(function(v) {return v + '%';});

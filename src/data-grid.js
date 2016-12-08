@@ -3,7 +3,7 @@
  * a simple way to define how the items are displayed.
  *
  * Note: Unlike other charts, the data grid chart (and data table) use the {@link dc.dataGrid#group group} attribute as a keying function
- * for {@link https://github.com/mbostock/d3/wiki/Arrays#-nest nesting} the data together in groups.
+ * for {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#nest nesting} the data together in groups.
  * Do not pass in a crossfilter group as this will not work.
  *
  * Examples:
@@ -234,8 +234,8 @@ dc.dataGrid = function (parent, chartGroup) {
      * @method order
      * @memberof dc.dataGrid
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_ascending d3.ascending}
-     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_descending d3.descending}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending d3.ascending}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending d3.descending}
      * @example
      * chart.order(d3.descending);
      * @param {Function} [order=d3.ascending]

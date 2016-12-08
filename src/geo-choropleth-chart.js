@@ -183,8 +183,8 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * @memberof dc.geoChoroplethChart
      * @instance
      * @see {@link http://geojson.org/ GeoJSON}
-     * @see {@link https://github.com/mbostock/topojson/wiki TopoJSON}
-     * @see {@link https://github.com/mbostock/topojson/wiki/API-Reference#feature topojson.feature}
+     * @see {@link https://github.com/topojson/topojson/wiki TopoJSON}
+     * @see {@link https://github.com/topojson/topojson/wiki/API-Reference#feature topojson.feature}
      * @example
      * // insert a layer for rendering US states
      * chart.overlayGeoJson(statesJson.features, 'state', function(d) {
@@ -209,12 +209,12 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     };
 
     /**
-     * Set custom geo projection function. See the available [d3 geo projection
-     * functions](https://github.com/mbostock/d3/wiki/Geo-Projections).
+     * Set custom geo projection function. See the available
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Projections.md d3 geo projection functions}.
      * @method projection
      * @memberof dc.geoChoroplethChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Geo-Projections d3.geo.projection}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Projections.md d3.geo.projection}
      * @see {@link https://github.com/d3/d3-geo-projection Extended d3.geo.projection}
      * @param {d3.projection} [projection=d3.geo.albersUsa()]
      * @returns {dc.geoChoroplethChart}
@@ -239,13 +239,13 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     };
 
     /**
-     * Returns the {@link https://github.com/mbostock/d3/wiki/Geo-Paths#path d3.geo.path} object used to
+     * Returns the {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Paths.md#path d3.geo.path} object used to
      * render the projection and features.  Can be useful for figuring out the bounding box of the
      * feature set and thus a way to calculate scale and translation for the projection.
      * @method geoPath
      * @memberof dc.geoChoroplethChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Geo-Paths#path d3.geo.path}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Paths.md#path d3.geo.path}
      * @returns {d3.geo.path}
      */
     _chart.geoPath = function () {

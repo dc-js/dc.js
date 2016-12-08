@@ -69,7 +69,7 @@ dc.dataCount = function (parent, chartGroup) {
      * @method formatNumber
      * @memberof dc.dataCount
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Formatting d3.format}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Formatting.md d3.format}
      * @example
      * counter.formatNumber(d3.format('.2g'))
      * @param {Function} [formatter=d3.format('.2g')]

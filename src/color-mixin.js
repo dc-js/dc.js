@@ -19,7 +19,7 @@ dc.colorMixin = function (_chart) {
      * @method colors
      * @memberof dc.colorMixin
      * @instance
-     * @see {@link http://github.com/mbostock/d3/wiki/Scales d3.scale}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
      * @example
      * // alternate categorical scale
      * chart.colors(d3.scale.category20b());
@@ -46,7 +46,7 @@ dc.colorMixin = function (_chart) {
 
     /**
      * Convenience method to set the color scale to
-     * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales#ordinal d3.scale.ordinal} with
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal d3.scale.ordinal} with
      * range `r`.
      * @method ordinalColors
      * @memberof dc.colorMixin

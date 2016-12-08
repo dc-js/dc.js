@@ -211,8 +211,8 @@ dc.baseMixin = function (_chart) {
     /**
      * **mandatory**
      *
-     * Set or get the dimension attribute of a chart. In `dc`, a dimension can be any valid [crossfilter
-     * dimension](https://github.com/square/crossfilter/wiki/API-Reference#wiki-dimension).
+     * Set or get the dimension attribute of a chart. In `dc`, a dimension can be any valid
+     * {@link https://github.com/square/crossfilter/wiki/API-Reference#wiki-dimension crossfilter dimension}
      *
      * If a value is given, then it will be used as the new dimension. If no value is specified then
      * the current dimension will be returned.
@@ -353,10 +353,10 @@ dc.baseMixin = function (_chart) {
      * @method select
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Selections d3.selection}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#d3_select d3.select}
      * @example
-     * // Similar to:
-     * d3.select('#chart-id').select(selector);
+     * // Has the same effect as d3.select('#chart-id').select(selector)
+     * chart.select(selector)
      * @returns {d3.selection}
      */
     _chart.select = function (s) {
@@ -371,10 +371,10 @@ dc.baseMixin = function (_chart) {
      * @method selectAll
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Selections d3.selection}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#d3_selectAll d3.selectAll}
      * @example
-     * // Similar to:
-     * d3.select('#chart-id').selectAll(selector);
+     * // Has the same effect as d3.select('#chart-id').selectAll(selector)
+     * chart.selectAll(selector)
      * @returns {d3.selection}
      */
     _chart.selectAll = function (s) {
@@ -1492,7 +1492,7 @@ dc.baseMixin = function (_chart) {
      * @method on
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Internals#dispatch_on d3.dispatch.on}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Internals.md#dispatch_on d3.dispatch.on}
      * @example
      * .on('renderlet', function(chart, filter){...})
      * .on('pretransition', function(chart, filter){...})

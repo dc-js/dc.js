@@ -248,7 +248,7 @@ dc.stackMixin = function (_chart) {
      * @method stackLayout
      * @memberof dc.stackMixin
      * @instance
-     * @see {@link http://github.com/mbostock/d3/wiki/Stack-Layout d3.layout.stack}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Stack-Layout.md d3.layout.stack}
      * @param {Function} [stack=d3.layout.stack]
      * @returns {Function|dc.stackMixin}
      */

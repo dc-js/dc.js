@@ -384,7 +384,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @method rightY
      * @memberof dc.compositeChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Scales d3.scale}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
      * @param {d3.scale} [yScale]
      * @returns {d3.scale|dc.compositeChart}
      */
@@ -508,7 +508,7 @@ dc.compositeChart = function (parent, chartGroup) {
     /**
      * Set or get the right y axis used by the composite chart. This function is most useful when y
      * axis customization is required. The y axis in dc.js is an instance of a [d3 axis
-     * object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis) therefore it supports any valid
+     * object](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis) therefore it supports any valid
      * d3 axis manipulation.
      *
      * **Caution**: The y axis is usually generated internally by dc; resetting it may cause
@@ -516,7 +516,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @method rightYAxis
      * @memberof dc.compositeChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Axes d3.svg.axis}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3.svg.axis}
      * @example
      * // customize y axis tick format
      * chart.rightYAxis().tickFormat(function (v) {return v + '%';});

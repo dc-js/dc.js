@@ -3,7 +3,7 @@
  * filtered) in a good old tabular fashion.
  *
  * Note: Unlike other charts, the data table (and data grid chart) use the {@link dc.dataTable#group group} attribute as a
- * keying function for {@link https://github.com/mbostock/d3/wiki/Arrays#-nest nesting} the data
+ * keying function for {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#nest nesting} the data
  * together in groups.  Do not pass in a crossfilter group as this will not work.
  *
  * Another interesting feature of the data table is that you can pass a crossfilter group to the `dimension`, as
@@ -388,8 +388,8 @@ dc.dataTable = function (parent, chartGroup) {
      * @method order
      * @memberof dc.dataTable
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_ascending d3.ascending}
-     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_descending d3.descending}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending d3.ascending}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending d3.descending}
      * @example
      * chart.order(d3.descending);
      * @param {Function} [order=d3.ascending]

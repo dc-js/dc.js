@@ -138,8 +138,8 @@ dc.seriesChart = function (parent, chartGroup) {
      * @method seriesSort
      * @memberof dc.seriesChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_ascending d3.ascending}
-     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_descending d3.descending}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending d3.ascending}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending d3.descending}
      * @example
      * chart.seriesSort(d3.descending);
      * @param {Function} [sortFunction=d3.ascending]
@@ -161,8 +161,8 @@ dc.seriesChart = function (parent, chartGroup) {
      * @method valueSort
      * @memberof dc.seriesChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_ascending d3.ascending}
-     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_descending d3.descending}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending d3.ascending}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending d3.descending}
      * @example
      * // Default value sort
      * _chart.valueSort(function keySort (a, b) {
