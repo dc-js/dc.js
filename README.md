@@ -7,10 +7,17 @@
 dc.js
 =====
 
-Dimensional charting built to work natively with crossfilter rendered using d3.js. Check out the
-[example page](http://dc-js.github.com/dc.js/) with a quick five minutes how to guide. For a
-detailed [API reference](https://github.com/dc-js/dc.js/blob/master/web/docs/api-1.6.0.md) and
-more please visit the [Wiki](https://github.com/dc-js/dc.js/wiki).
+Dimensional charting built to work natively with [crossfilter](http://crossfilter.github.io/crossfilter/)
+rendered using [d3.js](https://d3js.org/). In dc.js, each chart displays an aggregation of some
+attributes through the position, size, and color of its elements, and also presents a dimension
+which can be filtered. When the filter or brush changes, all other charts are updated dynamically,
+using animated transitions.
+
+Check out the [example page](http://dc-js.github.com/dc.js/)
+and its [annotated source](http://dc-js.github.io/dc.js/docs/stock.html) for a quick five minute
+how-to guide. The detailed [API reference is here](http://dc-js.github.io/dc.js/docs/html/)
+([markdown version](https://github.com/dc-js/dc.js/blob/develop/web/docs/api-latest.md)). For
+more examples and hints please visit the [Wiki](https://github.com/dc-js/dc.js/wiki).
 
 
 CDN location
