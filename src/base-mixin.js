@@ -1127,12 +1127,20 @@ dc.baseMixin = function (_chart) {
      * @instance
      * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter crossfilter.dimension.filter}
      * @example
-     * // default filter handler
+     * // the default filter handler handles all possible cases for the charts in dc.js
+     * // you can replace it with something more specialized for your own chart
      * chart.filterHandler(function (dimension, filters) {
-     *     dimension.filter(null);
      *     if (filters.length === 0) {
+     *         // the empty case (no filtering)
      *         dimension.filter(null);
+     *     } else if (filters.length === 1 && !filters[0].isFiltered) {
+     *         // single value and not a function-based filter
+     *         dimension.filterExact(filters[0]);
+     *     } else if (filters.length === 1 && filters[0].filterType === 'RangedFilter') {
+     *         // single range-based filter
+     *         dimension.filterRange(filters[0]);
      *     } else {
+     *         // an array of values, or an array of filter objects
      *         dimension.filterFunction(function (d) {
      *             for (var i = 0; i < filters.length; i++) {
      *                 var filter = filters[i];
