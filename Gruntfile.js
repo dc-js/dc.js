@@ -358,6 +358,9 @@ module.exports = function (grunt) {
             hooks: {
                 command: 'cp -n scripts/pre-commit.sh .git/hooks/pre-commit' +
                     ' || echo \'Cowardly refusing to overwrite your existing git pre-commit hook.\''
+            },
+            hierarchy: {
+                command: 'dot -Tsvg -o web/img/class-hierarchy.svg class-hierarchy.dot'
             }
         },
         browserify: {
