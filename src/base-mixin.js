@@ -212,14 +212,14 @@ dc.baseMixin = function (_chart) {
      * **mandatory**
      *
      * Set or get the dimension attribute of a chart. In `dc`, a dimension can be any valid
-     * {@link https://github.com/square/crossfilter/wiki/API-Reference#wiki-dimension crossfilter dimension}
+     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension crossfilter dimension}
      *
      * If a value is given, then it will be used as the new dimension. If no value is specified then
      * the current dimension will be returned.
      * @method dimension
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/square/crossfilter/wiki/API-Reference#dimension crossfilter.dimension}
+     * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension crossfilter.dimension}
      * @example
      * var index = crossfilter([]);
      * var dimension = index.dimension(dc.pluck('key'));
@@ -239,7 +239,7 @@ dc.baseMixin = function (_chart) {
     /**
      * Set the data callback or retrieve the chart's data set. The data callback is passed the chart's
      * group and by default will return
-     * {@link https://github.com/square/crossfilter/wiki/API-Reference#group_all group.all}.
+     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_all group.all}.
      * This behavior may be modified to, for instance, return only the top 5 groups.
      * @method data
      * @memberof dc.baseMixin
@@ -265,7 +265,7 @@ dc.baseMixin = function (_chart) {
      * **mandatory**
      *
      * Set or get the group attribute of a chart. In `dc` a group is a
-     * {@link https://github.com/square/crossfilter/wiki/API-Reference#group-map-reduce crossfilter group}.
+     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group-map-reduce crossfilter group}.
      * Usually the group should be created from the particular dimension associated with the same chart. If a value is
      * given, then it will be used as the new group.
      *
@@ -274,7 +274,7 @@ dc.baseMixin = function (_chart) {
      * @method group
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/square/crossfilter/wiki/API-Reference#group-map-reduce crossfilter.group}
+     * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group-map-reduce crossfilter.group}
      * @example
      * var index = crossfilter([]);
      * var dimension = index.dimension(dc.pluck('key'));
@@ -296,12 +296,12 @@ dc.baseMixin = function (_chart) {
 
     /**
      * Get or set an accessor to order ordinal dimensions.  The chart uses
-     * {@link https://github.com/square/crossfilter/wiki/API-Reference#quicksort_by crossfilter.quicksort.by}
+     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#quicksort_by crossfilter.quicksort.by}
      * to sort elements; this accessor returns the value to order on.
      * @method ordering
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/square/crossfilter/wiki/API-Reference#quicksort_by crossfilter.quicksort.by}
+     * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#quicksort_by crossfilter.quicksort.by}
      * @example
      * // Default ordering accessor
      * _chart.ordering(dc.pluck('key'));
@@ -693,7 +693,7 @@ dc.baseMixin = function (_chart) {
      * events (in particular {@link dc.redrawAll dc.redrawAll}); therefore, you only need to
      * manually invoke this function if data is manipulated outside of dc's control (for example if
      * data is loaded in the background using
-     * {@link https://github.com/square/crossfilter/wiki/API-Reference#crossfilter_add crossfilter.add}.
+     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#crossfilter_add crossfilter.add}).
      * @method redraw
      * @memberof dc.baseMixin
      * @instance
@@ -1125,7 +1125,7 @@ dc.baseMixin = function (_chart) {
      * @method filterHandler
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/square/crossfilter/wiki/API-Reference#dimension_filter crossfilter.dimension.filter}
+     * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter crossfilter.dimension.filter}
      * @example
      * // default filter handler
      * chart.filterHandler(function (dimension, filters) {
@@ -1392,9 +1392,9 @@ dc.baseMixin = function (_chart) {
     /**
      * Expire the internal chart cache. dc charts cache some data internally on a per chart basis to
      * speed up rendering and avoid unnecessary calculation; however it might be useful to clear the
-     * cache if you have changed state which will affect rendering.  For example if you invoke the
-     * {@link https://github.com/square/crossfilter/wiki/API-Reference#crossfilter_add crossfilter.add}
-     * function or reset group or dimension after rendering it is a good idea to
+     * cache if you have changed state which will affect rendering.  For example, if you invoke
+     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#crossfilter_add crossfilter.add}
+     * function or reset group or dimension after rendering, it is a good idea to
      * clear the cache to make sure charts are rendered properly.
      * @method expireCache
      * @memberof dc.baseMixin
