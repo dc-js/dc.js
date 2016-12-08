@@ -20,6 +20,20 @@ how-to guide. The detailed [API reference is here](http://dc-js.github.io/dc.js/
 more examples and hints please visit the [Wiki](https://github.com/dc-js/dc.js/wiki).
 
 
+Support
+--------------------
+* [Example Site](http://dc-js.github.com/dc.js/)
+* [Changelog](https://github.com/dc-js/dc.js/blob/develop/Changelog.md)
+* [Frequently Asked Questions](https://github.com/dc-js/dc.js/wiki/FAQ)
+* [API Reference](http://dc-js.github.io/dc.js/docs/html/) - Latest ([markdown](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md))
+* [v1.7 API Reference](https://github.com/dc-js/dc.js/blob/master/web/docs/api-1.7.0.md)
+* [dc.js on StackOverflow](http://stackoverflow.com/questions/tagged/dc.js) - the best place to ask questions and get help
+* [User Group](https://groups.google.com/forum/?fromgroups#!forum/dc-js-user-group) ("mailing list") - the best place for discussion and longer topics
+* [GitHub Issues](https://github.com/dc-js/dc.js/issues) - for bug reports and feature requests.
+
+*Please direct questions and support requests to Stack Overflow or the user group.*
+
+
 CDN location
 --------------------
 ```
