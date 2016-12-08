@@ -20,14 +20,25 @@ module.exports = function (grunt) {
         conf: config,
 
         concat: {
-            options: {
-                process: true,
-                sourceMap: true,
-                banner: '<%= conf.banner %>'
-            },
             js: {
                 src: '<%= conf.jsFiles %>',
-                dest: '<%= conf.pkg.name %>.js'
+                dest: '<%= conf.pkg.name %>.js',
+                options: {
+                    process: true,
+                    sourceMap: true,
+                    banner: '<%= conf.banner %>'
+                }
+            },
+            welcome: {
+                src: ['docs/welcome.base.md', 'web/img/class-hierarchy.svg'],
+                dest: 'welcome.md',
+                options: {
+                    process: function (src, filepath) {
+                        return /svg/.test(filepath) ?
+                            src.split('\n').slice(5).join('\n') :
+                            src;
+                    }
+                }
             }
         },
         sass: {
