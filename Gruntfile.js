@@ -253,13 +253,14 @@ module.exports = function (grunt) {
         },
         docco: {
             options: {
-                dst: '<%= conf.web %>/docs',
-                basepath: '<%= conf.web %>'
+                dst: '<%= conf.web %>/docs'
             },
             howto: {
                 files: [
                     {
-                        src: ['<%= conf.web %>/stock.js']
+                        expand: true,
+                        cwd: '<%= conf.web %>',
+                        src: ['stock.js']
                     }
                 ]
             }
