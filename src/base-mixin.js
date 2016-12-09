@@ -976,6 +976,7 @@ dc.baseMixin = function (_chart) {
 
     /**
      * Replace the chart filter. This is equivalent to calling `chart.filter(null).filter(filter)`
+     * but more efficient because the filter is only applied once.
      *
      * @method replaceFilter
      * @memberof dc.baseMixin
@@ -1008,8 +1009,8 @@ dc.baseMixin = function (_chart) {
      * {@link dc.baseMixin#resetFilterHandler resetFilterHandler}
      *
      * Note that this is always a toggle (even when it doesn't make sense for the filter type). If
-     * you wish to replace the current filter, either call `chart.filter(null)` first, or
-     * equivalently, call {@link dc.baseMixin#replaceFilter `chart.replaceFilter(filter)`} instead.
+     * you wish to replace the current filter, either call `chart.filter(null)` first - or it's more
+     * efficient to call {@link dc.baseMixin#replaceFilter `chart.replaceFilter(filter)`} instead.
      *
      * Each toggle is executed by checking if the value is already present using the
      * {@link dc.baseMixin#hasFilterHandler hasFilterHandler}; if it is not present, it is added
