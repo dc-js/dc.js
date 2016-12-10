@@ -24,15 +24,16 @@ Support
 --------------------
 * [Example Site](http://dc-js.github.com/dc.js/)
 * [Changelog](https://github.com/dc-js/dc.js/blob/develop/Changelog.md)
-* [Frequently Asked Questions](https://github.com/dc-js/dc.js/wiki/FAQ)
-* [API Reference](http://dc-js.github.io/dc.js/docs/html/) - Latest ([markdown](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md))
-* [v1.7 API Reference](https://github.com/dc-js/dc.js/blob/master/web/docs/api-1.7.0.md)
-* [dc.js on StackOverflow](http://stackoverflow.com/questions/tagged/dc.js) - the best place to ask questions and get help
-* [User Group](https://groups.google.com/forum/?fromgroups#!forum/dc-js-user-group) ("mailing list") - the best place for discussion and longer topics
-* [GitHub Issues](https://github.com/dc-js/dc.js/issues) - for bug reports and feature requests.
+* [Frequently Asked Questions](https://github.com/dc-js/dc.js/wiki/FAQ) and [Wiki](https://github.com/dc-js/dc.js/wiki)
+* [v2.0 API Reference](http://dc-js.github.io/dc.js/docs/html/) <sup>([markdown](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md))</sup> <sup>([next - v2.1](https://github.com/dc-js/dc.js/blob/develop/web/docs/api-latest.md))</sup> <sup>([last - v1.7](https://github.com/dc-js/dc.js/blob/master/web/docs/api-1.7.0.md))</sup>
+* [dc.js on StackOverflow](http://stackoverflow.com/questions/tagged/dc.js) - ask questions and get help
+* [User Group](https://groups.google.com/forum/?fromgroups#!forum/dc-js-user-group) ("mailing list") - discussion and longer topics
+* [GitHub Issues](https://github.com/dc-js/dc.js/issues) - bug reports and feature requests
 
 *Please direct questions and support requests to Stack Overflow or the user group. When posting to Stack Overflow, use the* `[dc.js]` *and/or* `[crossfilter]` *tags - other tags are likely to draw unwanted attention.*
 
+Get help faster with a working example! Fork these to get started:<br>
+[example jsFiddle](https://jsfiddle.net/gordonwoodhull/1hbjwxzy/) - [blank jsFiddle](https://jsfiddle.net/gordonwoodhull/kk4j0bzn/) - [example bl.ock](http://blockbuilder.org/gordonwoodhull/ecce8e32d64c662cffd5) - [blank bl.ock](http://blockbuilder.org/gordonwoodhull/9ab997c9a8d7d3380364)
 
 CDN location
 --------------------
