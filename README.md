@@ -31,7 +31,7 @@ Support
 * [User Group](https://groups.google.com/forum/?fromgroups#!forum/dc-js-user-group) ("mailing list") - the best place for discussion and longer topics
 * [GitHub Issues](https://github.com/dc-js/dc.js/issues) - for bug reports and feature requests.
 
-*Please direct questions and support requests to Stack Overflow or the user group.*
+*Please direct questions and support requests to Stack Overflow or the user group. When posting to Stack Overflow, use the* `[dc.js]` *and/or* `[crossfilter]` *tags - other tags are likely to draw unwanted attention.*
 
 
 CDN location
