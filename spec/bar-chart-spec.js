@@ -949,7 +949,43 @@ describe('dc.barChart', function () {
             });
         });
     });
+    describe('with elasticX and x-axis padding', function() {
+        var date = makeDate(2012, 5, 1);
+        beforeEach(function () {
 
+            var rows = [
+              {x: date, y: 4},
+            ];
+            data = crossfilter(rows);
+            dimension = data.dimension(function (d) {
+              return d.x;
+            });
+            group = dimension.group().reduceSum(function (d) {
+              return d.y;
+            });
+            chart = dc.barChart('#' + id);
+            chart.width(500)
+              .transitionDuration(0)
+              .x(d3.time.scale())
+              .elasticY(true).elasticX(true)
+              .dimension(dimension)
+              .group(group)
+            chart.render();
+        });
+        it ('should render the right xAxisMax/Min when no padding', function () {
+            expect(chart.xAxisMin()).toEqual(date);
+            expect(chart.xAxisMax()).toEqual(date);
+        })
+        it ('should render the right xAxisMax/Min when 10 day padding', function () {
+          chart.xAxisPadding(10)
+          let expectedStartDate = d3.time.day.offset(date, -10);
+          let expectedEndDate = d3.time.day.offset(date, 10);
+          expect(chart.xAxisMin()).toEqual(expectedStartDate);
+          expect(chart.xAxisMax()).toEqual(expectedEndDate);
+        });
+
+        it ('should render the right ')
+    });
     describe('with changing number of bars and elasticX', function () {
         beforeEach(function () {
             var rows1 = [
@@ -997,6 +1033,7 @@ describe('dc.barChart', function () {
             });
         });
     });
+
 
     describe('with changing number of ordinal bars and elasticX', function () {
         beforeEach(function () {
