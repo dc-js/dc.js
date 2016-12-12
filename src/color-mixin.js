@@ -150,20 +150,24 @@ dc.colorMixin = function (_chart) {
     };
 
     /**
-     * Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
+     * **Deprecated.** Get/set the color calculator. This actually replaces the
+     * {@link dc.colorMixin#getColor getColor} method!
+     *
+     * This is not recommended, since using a {@link dc.colorMixin#colorAccessor colorAccessor} and
+     * color scale ({@link dc.colorMixin#colors .colors}) is more powerful and idiomatic d3.
      * @method colorCalculator
      * @memberof dc.colorMixin
      * @instance
      * @param {*} [colorCalculator]
-     * @returns {*}
+     * @returns {Function|dc.colorMixin}
      */
-    _chart.colorCalculator = function (colorCalculator) {
+    _chart.colorCalculator = dc.logger.deprecate(function (colorCalculator) {
         if (!arguments.length) {
             return _chart.getColor;
         }
         _chart.getColor = colorCalculator;
         return _chart;
-    };
+    }, 'colorMixin.colorCalculator has been deprecated. Please colorMixin.colors and colorMixin.colorAccessor instead');
 
     return _chart;
 };
