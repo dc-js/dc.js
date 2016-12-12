@@ -97,15 +97,11 @@ dc.heatMap = function (parent, chartGroup) {
             return !_chart.hasFilter(d.key);
         });
         dc.events.trigger(function () {
-            if (unfilteredCellsOnAxis.empty()) {
-                cellsOnAxis.each(function (d) {
-                    _chart.filter(d.key);
-                });
-            } else {
-                unfilteredCellsOnAxis.each(function (d) {
-                    _chart.filter(d.key);
-                });
-            }
+            var selection = unfilteredCellsOnAxis.empty() ? cellsOnAxis : unfilteredCellsOnAxis;
+            var filters = selection.data().map(function (kv) {
+                return dc.filters.TwoDimensionalFilter(kv.key);
+            });
+            _chart._filter([filters]);
             _chart.redrawGroup();
         });
     }
