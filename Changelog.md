@@ -1,4 +1,11 @@
 # 2.0 Series
+## 2.0.0
+* Heatmap column/row filtering is a lot faster ([#649](https://github.com/dc-js/dc.js/issues/649))
+* `colorMixin.colorCalculator` properly documented and deprecated ([#1225](https://github.com/dc-js/dc.js/issues/1225))
+* Development dependencies upgraded, by Matt Traynham ([#1233](https://github.com/dc-js/dc.js/pull/1233))
+* Add a class diagram to the [HTML documentation](http://dc-js.github.io/dc.js/docs/html/).
+* Many documentation fixes. ([#612](https://github.com/dc-js/dc.js/issues/612), [#636](https://github.com/dc-js/dc.js/issues/636), [#1110](https://github.com/dc-js/dc.js/issues/1110), [#1224](https://github.com/dc-js/dc.js/issues/1224), [#1226](https://github.com/dc-js/dc.js/issues/1226), [#1228](https://github.com/dc-js/dc.js/issues/1228), [#1231](https://github.com/dc-js/dc.js/issues/1231), [#1235](https://github.com/dc-js/dc.js/issues/1235))
+
 ## 2.0.0 beta 33
 * Use Sass 3 (SCSS) for generating CSS, by Matt Traynham ([#1049](https://github.com/dc-js/dc.js/pull/1049))
 * Don't try to interpolate user data in label paths, by Alexander Stillesjö ([#1151](https://github.com/dc-js/dc.js/pull/1151))
