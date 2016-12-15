@@ -27,7 +27,11 @@ dc.capMixin = function (_chart) {
             topSet = d3.set(topKeys),
             others = allKeys.filter(function (d) {return !topSet.has(d);});
         if (allRowsSum > topRowsSum) {
-            return topRows.concat([{'others': others, 'key': _othersLabel, 'value': allRowsSum - topRowsSum}]);
+            return topRows.concat([{
+                'others': others,
+                'key': _chart.othersLabel(),
+                'value': allRowsSum - topRowsSum
+            }]);
         }
         return topRows;
     };
@@ -113,7 +117,11 @@ dc.capMixin = function (_chart) {
      *        topSet = d3.set(topKeys),
      *        others = allKeys.filter(function (d) {return !topSet.has(d);});
      *    if (allRowsSum > topRowsSum) {
-     *        return topRows.concat([{'others': others, 'key': _othersLabel, 'value': allRowsSum - topRowsSum}]);
+     *        return topRows.concat([{
+     *            'others': others,
+     *            'key': _chart.othersLabel(),
+     *            'value': allRowsSum - topRowsSum
+     *        }]);
      *    }
      *    return topRows;
      * });
