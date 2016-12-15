@@ -38,8 +38,8 @@ Get help faster with a working example! Fork these to get started:<br>
 CDN location
 --------------------
 ```
-http://cdnjs.cloudflare.com/ajax/libs/dc/1.7.5/dc.min.js
-http://cdnjs.cloudflare.com/ajax/libs/dc/1.7.5/dc.min.css
+http://cdnjs.cloudflare.com/ajax/libs/dc/2.0.0/dc.min.js
+http://cdnjs.cloudflare.com/ajax/libs/dc/2.0.0/dc.min.css
 ```
 Please do not use github.io as a CDN unless you need the bleeding-edge features.
 
