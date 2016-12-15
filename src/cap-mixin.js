@@ -60,7 +60,9 @@ dc.capMixin = function (_chart) {
     });
 
     /**
-     * Get or set the count of elements to that will be included in the cap.
+     * Get or set the count of elements to that will be included in the cap. If there is an
+     * {@link dc.capMixin#othersGrouper othersGrouper}, any further elements will be combined in an
+     * extra element with its name determined by {@link dc.capMixin#othersLabel othersLabel}.
      * @method cap
      * @memberof dc.capMixin
      * @instance
@@ -99,6 +101,8 @@ dc.capMixin = function (_chart) {
      * @memberof dc.capMixin
      * @instance
      * @example
+     * // Do not show others
+     * chart.othersGrouper(null);
      * // Default others grouper
      * chart.othersGrouper(function (topRows) {
      *    var topRowsSum = d3.sum(topRows, _chart.valueAccessor()),
