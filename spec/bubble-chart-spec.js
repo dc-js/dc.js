@@ -1,4 +1,4 @@
-/* global appendChartID, loadDateFixture */
+/* global appendChartID, loadDateFixture, loadIrisFixture */
 describe('dc.bubbleChart', function () {
     var id, chart, data;
     var dateFixture;
@@ -446,5 +446,180 @@ describe('dc.bubbleChart', function () {
                 }
             });
         });
+    });
+
+    describe('iris filtering', function () {
+        /* jshint camelcase: false */
+        // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+        // 2-chart version of from http://bl.ocks.org/gordonwoodhull/14c623b95993808d69620563508edba6
+        var irisData, heatMap, sepalDim, sepalGroup;
+        beforeEach(function () {
+            irisData = loadIrisFixture();
+
+            var fields = {
+                sl: 'sepal_length',
+                sw: 'sepal_width',
+                pl: 'petal_length',
+                pw: 'petal_width'
+            };
+            var species = ['setosa', 'versicolor', 'virginica'];
+
+            irisData.forEach(function (d) {
+                Object.keys(fields).forEach(function (ab) {
+                    d[fields[ab]] = +d[fields[ab]];
+                });
+            });
+            // autogenerate a key function for an extent
+            function key_function (extent) {
+                var div = extent[1] - extent[0] < 5 ? 2 : 1;
+                return function (k) {
+                    return Math.floor(k * div) / div;
+                };
+            }
+            var extents = {};
+            var keyfuncs = {};
+            Object.keys(fields).forEach(function (ab) {
+                extents[ab] = d3.extent(irisData, function (d) { return d[fields[ab]]; });
+                keyfuncs[ab] = key_function(extents[ab]);
+            });
+            data = crossfilter(irisData);
+            function duo_key (ab1, ab2) {
+                return function (d) {
+                    return [keyfuncs[ab1](d[fields[ab1]]), keyfuncs[ab2](d[fields[ab2]])];
+                };
+            }
+            function key_part (i) {
+                return function (kv) {
+                    return kv.key[i];
+                };
+            }
+            function reduce_species (group) {
+                group.reduce(
+                    function (p, v) {
+                        p[v.species]++;
+                        p.total++;
+                        return p;
+                    }, function (p, v) {
+                        p[v.species]--;
+                        p.total--;
+                        return p;
+                    }, function () {
+                        var init = {total: 0};
+                        species.forEach(function (s) { init[s] = 0; });
+                        return init;
+                    }
+                );
+            }
+            function max_species (d) {
+                var max = 0, i = -1;
+                species.forEach(function (s, j) {
+                    if (d.value[s] > max) {
+                        max = d.value[s];
+                        i = j;
+                    }
+                });
+                return i >= 0 ? species[i] : null;
+            }
+            function initialize_bubble (bubbleChart) {
+                bubbleChart
+                    .width(400)
+                    .height(400)
+                    .x(d3.scale.linear()).xAxisPadding(0.5)
+                    .y(d3.scale.linear()).yAxisPadding(0.5)
+                    .elasticX(true)
+                    .elasticY(true)
+                    .label(d3.functor(''))
+                    .keyAccessor(key_part(0))
+                    .valueAccessor(key_part(1))
+                    .radiusValueAccessor(function (kv) { return kv.value.total; })
+                    .colors(d3.scale.ordinal()
+                            .domain(species.concat('none'))
+                            .range(['#e41a1c','#377eb8','#4daf4a', '#f8f8f8']))
+                    .colorAccessor(function (d) {
+                        return max_species(d) || 'none';
+                    });
+            }
+            function initialize_heatmap (heatMap) {
+                heatMap
+                    .width(400)
+                    .height(400)
+                    .xBorderRadius(15).yBorderRadius(15)
+                    .keyAccessor(key_part(0))
+                    .valueAccessor(key_part(1))
+                    .colors(d3.scale.ordinal()
+                            .domain(species.concat('none'))
+                            .range(['#e41a1c','#377eb8','#4daf4a', '#f8f8f8']))
+                    .colorAccessor(function (d) {
+                        return max_species(d) || 'none';
+                    });
+            }
+
+            var heatId = 'heat-map';
+            appendChartID(heatId);
+
+            heatMap = dc.heatMap('#' + heatId);
+            sepalDim = data.dimension(duo_key('sl', 'sw')); sepalGroup = sepalDim.group();
+            var petalDim = data.dimension(duo_key('pl', 'pw')), petalGroup = petalDim.group();
+
+            reduce_species(sepalGroup);
+            reduce_species(petalGroup);
+            initialize_bubble(chart.dimension(sepalDim).group(sepalGroup));
+            initialize_heatmap(heatMap.dimension(petalDim).group(petalGroup));
+            chart.render();
+            heatMap.render();
+        });
+        // return brand-new objects and keys every time
+        function clone_group (group) {
+            function clone_kvs (all) {
+                return all.map(function (kv) {
+                    return {
+                        key: kv.key.slice(0),
+                        value: Object.assign({}, kv.value)
+                    };
+                });
+            }
+            return {
+                all: function () {
+                    return clone_kvs(group.all());
+                },
+                top: function (N) {
+                    return clone_kvs(group.top(N));
+                }
+            };
+        }
+
+        function testSomeValuesCol3 (chart) {
+            var bubbles = chart.selectAll('circle.bubble')[0];
+            expect(d3.select(bubbles[0]).attr('r')).toBe('0');
+            expect(d3.select(bubbles[3]).attr('r')).toBe('0');
+            expect(d3.select(bubbles[6]).attr('r')).toBe('0');
+            expect(+d3.select(bubbles[11]).attr('r')).toBeWithinDelta(21.5, 0.5);
+            expect(d3.select(bubbles[14]).attr('r')).toBe('0');
+            expect(+d3.select(bubbles[16]).attr('r')).toBeWithinDelta(33, 0.5);
+            expect(+d3.select(bubbles[19]).attr('r')).toBeWithinDelta(50, 0.5);
+            expect(d3.select(bubbles[24]).attr('r')).toBe('0');
+        }
+        describe('column filtering with straight crossfilter', function () {
+            it('filters column correctly', function () {
+                var axisLabel = d3.select(heatMap.selectAll('.cols.axis text')[0][3]);
+                axisLabel.on('click')(axisLabel.datum());
+                d3.timer.flush();
+                testSomeValuesCol3(chart);
+            });
+        });
+        describe('column filtering with cloned results', function () {
+            beforeEach(function () {
+                chart.group(clone_group(sepalGroup));
+                chart.render();
+            });
+            it('filters column correctly', function () {
+                var axisLabel = d3.select(heatMap.selectAll('.cols.axis text')[0][3]);
+                axisLabel.on('click')(axisLabel.datum());
+                d3.timer.flush();
+                testSomeValuesCol3(chart);
+            });
+        });
+        /* jshint camelcase: true */
+        // jscs enable: requireCamelCaseOrUpperCaseIdentifiers
     });
 });
