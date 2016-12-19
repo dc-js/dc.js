@@ -51,7 +51,7 @@ dc.lineChart = function (parent, chartGroup) {
 
     _chart.plotData = function () {
         var chartBody = _chart.chartBodyG();
-        var layersList = chartBody.selectAll('g.stack-list');
+        var layersList = chartBody.select('g.stack-list');
 
         if (layersList.empty()) {
             layersList = chartBody.append('g').attr('class', 'stack-list');
@@ -390,7 +390,7 @@ dc.lineChart = function (parent, chartGroup) {
 
     function renderTitle (dot, d) {
         if (_chart.renderTitle()) {
-            dot.selectAll('title').remove();
+            dot.select('title').remove();
             dot.append('title').text(dc.pluck('data', _chart.title(d.name)));
         }
     }

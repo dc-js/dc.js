@@ -206,7 +206,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     function createTitles (rows) {
         if (_chart.renderTitle()) {
-            rows.selectAll('title').remove();
+            rows.select('title').remove();
             rows.append('title').text(_chart.title());
         }
     }
