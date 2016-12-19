@@ -522,13 +522,13 @@ describe('dc.bubbleChart', function () {
             }
             function initialize_bubble (bubbleChart) {
                 bubbleChart
+                    .transitionDuration(0)
                     .width(400)
                     .height(400)
                     .x(d3.scale.linear()).xAxisPadding(0.5)
                     .y(d3.scale.linear()).yAxisPadding(0.5)
                     .elasticX(true)
                     .elasticY(true)
-                    .label(d3.functor(''))
                     .keyAccessor(key_part(0))
                     .valueAccessor(key_part(1))
                     .radiusValueAccessor(function (kv) { return kv.value.total; })
@@ -537,10 +537,17 @@ describe('dc.bubbleChart', function () {
                             .range(['#e41a1c','#377eb8','#4daf4a', '#f8f8f8']))
                     .colorAccessor(function (d) {
                         return max_species(d) || 'none';
+                    })
+                    .label(function (d) {
+                        return d.value.total;
+                    })
+                    .title(function (d) {
+                        return JSON.stringify(d.value, null, 2);
                     });
             }
             function initialize_heatmap (heatMap) {
                 heatMap
+                    .transitionDuration(0)
                     .width(400)
                     .height(400)
                     .xBorderRadius(15).yBorderRadius(15)
@@ -598,6 +605,25 @@ describe('dc.bubbleChart', function () {
             expect(+d3.select(bubbles[16]).attr('r')).toBeWithinDelta(33, 0.5);
             expect(+d3.select(bubbles[19]).attr('r')).toBeWithinDelta(50, 0.5);
             expect(d3.select(bubbles[24]).attr('r')).toBe('0');
+
+            var titles = chart.selectAll('g.node title')[0];
+            expect(JSON.parse(d3.select(titles[4]).text()).total).toBe(0);
+            expect(JSON.parse(d3.select(titles[11]).text()).virginica).toBe(4);
+            expect(JSON.parse(d3.select(titles[12]).text()).virginica).toBe(1);
+            expect(JSON.parse(d3.select(titles[16]).text()).virginica).toBe(7);
+            expect(JSON.parse(d3.select(titles[16]).text()).versicolor).toBe(1);
+            expect(JSON.parse(d3.select(titles[19]).text()).virginica).toBe(13);
+            expect(JSON.parse(d3.select(titles[19]).text()).versicolor).toBe(1);
+
+            var labels = chart.selectAll('g.node text')[0];
+            expect(d3.select(labels[0]).text()).toBe('0');
+            expect(d3.select(labels[2]).text()).toBe('0');
+            expect(d3.select(labels[4]).text()).toBe('0');
+            expect(d3.select(labels[5]).text()).toBe('0');
+            expect(d3.select(labels[11]).text()).toBe('4');
+            expect(d3.select(labels[12]).text()).toBe('1');
+            expect(d3.select(labels[16]).text()).toBe('8');
+            expect(d3.select(labels[19]).text()).toBe('14');
         }
         describe('column filtering with straight crossfilter', function () {
             it('filters column correctly', function () {
