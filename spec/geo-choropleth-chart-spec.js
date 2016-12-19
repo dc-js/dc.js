@@ -148,11 +148,6 @@ describe('dc.geoChoropleth', function () {
         it('correct state boundary should be rendered [county]', function () {
             expect(chart.selectAll('g.layer1 g.county path')[0][1].getAttribute('d').length).not.toEqual(0);
         });
-
-        afterEach(function () {
-            stateDimension.filterAll();
-            districtDimension.filterAll();
-        });
     });
 
     describe('filter and highlight', function () {
@@ -172,11 +167,6 @@ describe('dc.geoChoropleth', function () {
             expect(chart.selectAll('g.layer0 g.state')[0][4].getAttribute('class')).toEqual('state california selected');
             expect(chart.selectAll('g.layer0 g.state')[0][5].getAttribute('class')).toEqual('state colorado selected');
         });
-
-        afterEach(function () {
-            stateDimension.filterAll();
-            districtDimension.filterAll();
-        });
     });
 
     describe('custom projection', function () {
@@ -190,11 +180,6 @@ describe('dc.geoChoropleth', function () {
         });
         it('svg is created', function () {
             expect(chart.selectAll('svg').length).not.toEqual(0);
-        });
-
-        afterEach(function () {
-            stateDimension.filterAll();
-            districtDimension.filterAll();
         });
     });
 
@@ -216,10 +201,6 @@ describe('dc.geoChoropleth', function () {
             expect(chart.geoJsons().filter(function (e) {
                 return e.name === 'state';
             }).length).toEqual(0);
-        });
-        afterEach(function () {
-            stateDimension.filterAll();
-            districtDimension.filterAll();
         });
     });
 });
