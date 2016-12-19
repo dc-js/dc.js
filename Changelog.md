@@ -1,6 +1,7 @@
 # 2.0 Series
 ## 2.0.0
 * Bubble chart and heatmap correctly re-select (not selectAll) the sub-components in order to correctly apply new data when redrawn. This affects uses of dc.js where the data is replaced instead of being modified in place. (For example, the case where crossfilter is not used.) By Steffen Dienst and Matt Traynham. ([#1032](https://github.com/dc-js/dc.js/pull/1032), [#1237](https://github.com/dc-js/dc.js/pull/1237))
+* Further changed other unnecessary uses of `selectAll` to `select` - when appending or inserting a single element, one should almost always match that with `select` for updates. ([#1239](https://github.com/dc-js/dc.js/issues/1239))
 * Heatmap column/row filtering is a lot faster ([#649](https://github.com/dc-js/dc.js/issues/649))
 * `colorMixin.colorCalculator` properly documented and deprecated ([#1225](https://github.com/dc-js/dc.js/issues/1225))
 * Development dependencies upgraded, by Matt Traynham ([#1233](https://github.com/dc-js/dc.js/pull/1233))

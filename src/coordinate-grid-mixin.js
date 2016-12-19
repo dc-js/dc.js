@@ -518,7 +518,7 @@ dc.coordinateGridMixin = function (_chart) {
     }
 
     _chart.renderXAxis = function (g) {
-        var axisXG = g.selectAll('g.x');
+        var axisXG = g.select('g.x');
 
         if (axisXG.empty()) {
             axisXG = g.append('g')
@@ -526,7 +526,7 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')');
         }
 
-        var axisXLab = g.selectAll('text.' + X_AXIS_LABEL_CLASS);
+        var axisXLab = g.select('text.' + X_AXIS_LABEL_CLASS);
         if (axisXLab.empty() && _chart.xAxisLabel()) {
             axisXLab = g.append('text')
                 .attr('class', X_AXIS_LABEL_CLASS)
@@ -547,7 +547,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function renderVerticalGridLines (g) {
-        var gridLineG = g.selectAll('g.' + VERTICAL_CLASS);
+        var gridLineG = g.select('g.' + VERTICAL_CLASS);
 
         if (_renderVerticalGridLine) {
             if (gridLineG.empty()) {
@@ -647,7 +647,7 @@ dc.coordinateGridMixin = function (_chart) {
     _chart.renderYAxisLabel = function (axisClass, text, rotation, labelXPosition) {
         labelXPosition = labelXPosition || _yAxisLabelPadding;
 
-        var axisYLab = _chart.g().selectAll('text.' + Y_AXIS_LABEL_CLASS + '.' + axisClass + '-label');
+        var axisYLab = _chart.g().select('text.' + Y_AXIS_LABEL_CLASS + '.' + axisClass + '-label');
         var labelYPosition = (_chart.margins().top + _chart.yAxisHeight() / 2);
         if (axisYLab.empty() && text) {
             axisYLab = _chart.g().append('text')
@@ -664,7 +664,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart.renderYAxisAt = function (axisClass, axis, position) {
-        var axisYG = _chart.g().selectAll('g.' + axisClass);
+        var axisYG = _chart.g().select('g.' + axisClass);
         if (axisYG.empty()) {
             axisYG = _chart.g().append('g')
                 .attr('class', 'axis ' + axisClass)
@@ -685,7 +685,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart._renderHorizontalGridLinesForAxis = function (g, scale, axis) {
-        var gridLineG = g.selectAll('g.' + HORIZONTAL_CLASS);
+        var gridLineG = g.select('g.' + HORIZONTAL_CLASS);
 
         if (_renderHorizontalGridLine) {
             var ticks = axis.tickValues() ? axis.tickValues() : scale.ticks(axis.ticks()[0]);
