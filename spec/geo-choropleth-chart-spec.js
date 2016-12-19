@@ -164,11 +164,11 @@ describe('dc.geoChoropleth', function () {
             chart.redraw();
         });
 
-        it('correct color should be set [California]', function () {
+        it('sets deselected classes for some states', function () {
             expect(chart.selectAll('g.layer0 g.state')[0][0].getAttribute('class')).toEqual('state alabama deselected');
             expect(chart.selectAll('g.layer0 g.state')[0][1].getAttribute('class')).toEqual('state alaska deselected');
         });
-        it('correct color should be set [California, Colorado]', function () {
+        it('sets selected classes for selected states', function () {
             expect(chart.selectAll('g.layer0 g.state')[0][4].getAttribute('class')).toEqual('state california selected');
             expect(chart.selectAll('g.layer0 g.state')[0][5].getAttribute('class')).toEqual('state colorado selected');
         });
