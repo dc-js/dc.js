@@ -41,9 +41,9 @@ describe('dc.scatterPlot', function () {
         });
 
         it('should generate a default color fill for symbols', function () {
-            expect(nthSymbol(4).attr('fill')).toBe('#1f77b4');
-            expect(nthSymbol(5).attr('fill')).toBe('#1f77b4');
-            expect(nthSymbol(8).attr('fill')).toBe('#1f77b4');
+            expect(nthSymbol(4).attr('fill')).toMatch(/#1f77b4/i);
+            expect(nthSymbol(5).attr('fill')).toMatch(/#1f77b4/i);
+            expect(nthSymbol(8).attr('fill')).toMatch(/#1f77b4/i);
         });
 
         describe('with a custom color', function () {

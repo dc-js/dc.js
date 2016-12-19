@@ -174,10 +174,10 @@ describe('dc.bubbleChart', function () {
         it('fills bubbles with correct colors', function () {
             chart.selectAll('circle.bubble').each(function (d, i) {
                 if (i === 0) {
-                    expect(d3.select(this).attr('fill')).toBe('#00cc00');
+                    expect(d3.select(this).attr('fill')).toMatch(/#00cc00/i);
                 }
                 if (i === 1) {
-                    expect(d3.select(this).attr('fill')).toBe('#00cc00');
+                    expect(d3.select(this).attr('fill')).toMatch(/#00cc00/i);
                 }
             });
         });
@@ -243,10 +243,10 @@ describe('dc.bubbleChart', function () {
         it('fills bubbles with correct colors', function () {
             chart.selectAll('circle.bubble').each(function (d, i) {
                 if (i === 0) {
-                    expect(d3.select(this).attr('fill')).toBe('#a60000');
+                    expect(d3.select(this).attr('fill')).toMatch(/#a60000/i);
                 }
                 if (i === 1) {
-                    expect(d3.select(this).attr('fill')).toBe('#ff4040');
+                    expect(d3.select(this).attr('fill')).toMatch(/#ff4040/i);
                 }
             });
         });
@@ -272,10 +272,10 @@ describe('dc.bubbleChart', function () {
             it('fills bubbles with correct colors', function () {
                 chart.selectAll('circle.bubble').each(function (d, i) {
                     if (i === 0) {
-                        expect(d3.select(this).attr('fill')).toBe('#ff4040');
+                        expect(d3.select(this).attr('fill')).toMatch(/#ff4040/i);
                     }
                     if (i === 1) {
-                        expect(d3.select(this).attr('fill')).toBe('#a60000');
+                        expect(d3.select(this).attr('fill')).toMatch(/#a60000/i);
                     }
                 });
             });

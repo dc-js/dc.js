@@ -141,10 +141,10 @@ describe('dc.pieChart', function () {
             });
         });
         it('slice path fill should be set correctly', function () {
-            expect(d3.select(chart.selectAll('g.pie-slice path')[0][0]).attr('fill')).toEqual('#3182bd');
-            expect(d3.select(chart.selectAll('g.pie-slice path')[0][1]).attr('fill')).toEqual('#6baed6');
-            expect(d3.select(chart.selectAll('g.pie-slice path')[0][2]).attr('fill')).toEqual('#9ecae1');
-            expect(d3.select(chart.selectAll('g.pie-slice path')[0][3]).attr('fill')).toEqual('#c6dbef');
+            expect(d3.select(chart.selectAll('g.pie-slice path')[0][0]).attr('fill')).toMatch(/#3182bd/i);
+            expect(d3.select(chart.selectAll('g.pie-slice path')[0][1]).attr('fill')).toMatch(/#6baed6/i);
+            expect(d3.select(chart.selectAll('g.pie-slice path')[0][2]).attr('fill')).toMatch(/#9ecae1/i);
+            expect(d3.select(chart.selectAll('g.pie-slice path')[0][3]).attr('fill')).toMatch(/#c6dbef/i);
         });
         it('slice label should be created', function () {
             expect(chart.selectAll('svg text.pie-slice').data().length).toEqual(5);

@@ -44,9 +44,9 @@ describe('dc.legend', function () {
         });
 
         it('should color the legend item boxes using the chart line colors', function () {
-            expect(legendIcon(0).attr('fill')).toBe('#1f77b4');
-            expect(legendIcon(1).attr('fill')).toBe('#ff7f0e');
-            expect(legendIcon(2).attr('fill')).toBe('#2ca02c');
+            expect(legendIcon(0).attr('fill')).toMatch(/#1f77b4/i);
+            expect(legendIcon(1).attr('fill')).toMatch(/#ff7f0e/i);
+            expect(legendIcon(2).attr('fill')).toMatch(/#2ca02c/i);
         });
 
         it('should generate a legend label for each chart line', function () {

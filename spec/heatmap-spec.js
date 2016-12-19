@@ -62,10 +62,10 @@ describe('dc.heatmap', function () {
         it('should color heatboxes using the provided color option', function () {
             var heatBoxes = chart.selectAll('rect.heat-box');
 
-            expect(heatBoxes[0][0].getAttribute('fill')).toEqual('#000001');
-            expect(heatBoxes[0][1].getAttribute('fill')).toEqual('#000002');
-            expect(heatBoxes[0][2].getAttribute('fill')).toEqual('#000003');
-            expect(heatBoxes[0][3].getAttribute('fill')).toEqual('#000004');
+            expect(heatBoxes[0][0].getAttribute('fill')).toMatch(/#000001/i);
+            expect(heatBoxes[0][1].getAttribute('fill')).toMatch(/#000002/i);
+            expect(heatBoxes[0][2].getAttribute('fill')).toMatch(/#000003/i);
+            expect(heatBoxes[0][3].getAttribute('fill')).toMatch(/#000004/i);
         });
 
         it('should size heatboxes based on the size of the matrix', function () {
@@ -506,14 +506,14 @@ describe('dc.heatmap', function () {
 
         function testRectFillsBubble12 (chart) {
             var rects = chart.selectAll('rect')[0];
-            expect(d3.select(rects[0]).attr('fill')).toBe('#f8f8f8');
-            expect(d3.select(rects[3]).attr('fill')).toBe('#377eb8');
-            expect(d3.select(rects[4]).attr('fill')).toBe('#377eb8');
-            expect(d3.select(rects[7]).attr('fill')).toBe('#4daf4a');
-            expect(d3.select(rects[8]).attr('fill')).toBe('#f8f8f8');
-            expect(d3.select(rects[10]).attr('fill')).toBe('#f8f8f8');
-            expect(d3.select(rects[11]).attr('fill')).toBe('#f8f8f8');
-            expect(d3.select(rects[12]).attr('fill')).toBe('#f8f8f8');
+            expect(d3.select(rects[0]).attr('fill')).toMatch(/#f8f8f8/i);
+            expect(d3.select(rects[3]).attr('fill')).toMatch(/#377eb8/i);
+            expect(d3.select(rects[4]).attr('fill')).toMatch(/#377eb8/i);
+            expect(d3.select(rects[7]).attr('fill')).toMatch(/#4daf4a/i);
+            expect(d3.select(rects[8]).attr('fill')).toMatch(/#f8f8f8/i);
+            expect(d3.select(rects[10]).attr('fill')).toMatch(/#f8f8f8/i);
+            expect(d3.select(rects[11]).attr('fill')).toMatch(/#f8f8f8/i);
+            expect(d3.select(rects[12]).attr('fill')).toMatch(/#f8f8f8/i);
         }
         function testRectTitlesBubble12 (chart) {
             var titles = chart.selectAll('g.box-group title')[0];

@@ -31,7 +31,7 @@ describe('dc.geoChoropleth', function () {
             .group(stateValueSumGroup)
             .width(990)
             .height(600)
-            .colors(['#ccc', '#E2F2FF', '#C4E4FF', '#9ED2FF', '#81C5FF', '#6BBAFF', '#51AEFF', '#36A2FF', '#1E96FF', '#0089FF'])
+            .colors(['#ccc', '#e2f2ff', '#c4e4ff', '#9ed2ff', '#81c5ff', '#6bbaff', '#51aeff', '#36a2ff', '#1e96ff', '#0089ff'])
             .colorDomain([0, 155])
             .overlayGeoJson(geoJson.features, 'state', function (d) {
                 return d.properties.name;
@@ -57,7 +57,7 @@ describe('dc.geoChoropleth', function () {
                         .translate([8227, 3207]))
             .width(990)
             .height(600)
-            .colors(['#ccc', '#E2F2FF', '#C4E4FF', '#9ED2FF', '#81C5FF', '#6BBAFF', '#51AEFF', '#36A2FF', '#1E96FF', '#0089FF'])
+            .colors(['#ccc', '#e2f2ff', '#c4e4ff', '#9ed2ff', '#81c5ff', '#6bbaff', '#51aeff', '#36a2ff', '#1e96ff', '#0089ff'])
             .colorDomain([0, 155])
             .overlayGeoJson(geoJson3.features, 'district', function (d) {
                 return d.properties.NAME;
@@ -98,7 +98,7 @@ describe('dc.geoChoropleth', function () {
             expect(chart.selectAll('g.layer0 g.state title')[0][1].textContent).toEqual('Alaska : 0');
         });
         it('correct color filling should be set [Alaska]', function () {
-            expect(chart.selectAll('g.layer0 g.state path')[0][1].getAttribute('fill')).toEqual('#ccc');
+            expect(chart.selectAll('g.layer0 g.state path')[0][1].getAttribute('fill')).toMatch(/#ccc/i);
         });
         it('correct state boundary should be rendered [Alaska]', function () {
             expect(chart.selectAll('g.layer0 g.state path')[0][1].getAttribute('d').length).not.toEqual(0);
@@ -113,7 +113,7 @@ describe('dc.geoChoropleth', function () {
             expect(chart.selectAll('g.layer0 g.state title')[0][4].textContent).toEqual('California : 154');
         });
         it('correct color should be set [California]', function () {
-            expect(chart.selectAll('g.layer0 g.state path')[0][4].getAttribute('fill')).toMatch(/#0089FF/i);
+            expect(chart.selectAll('g.layer0 g.state path')[0][4].getAttribute('fill')).toMatch(/#0089ff/i);
         });
         it('correct state boundary should be rendered [California]', function () {
             expect(chart.selectAll('g.layer0 g.state path')[0][4].getAttribute('d').length).not.toEqual(0);
@@ -125,7 +125,7 @@ describe('dc.geoChoropleth', function () {
             expect(chart.selectAll('g.layer0 g.state title')[0][5].textContent).toEqual('Colorado : 22');
         });
         it('correct color should be set [Colorado]', function () {
-            expect(chart.selectAll('g.layer0 g.state path')[0][5].getAttribute('fill')).toMatch(/#E2F2FF/i);
+            expect(chart.selectAll('g.layer0 g.state path')[0][5].getAttribute('fill')).toMatch(/#e2f2ff/i);
         });
         it('correct state boundary should be rendered [Colorado]', function () {
             expect(chart.selectAll('g.layer0 g.state path')[0][5].getAttribute('d').length).not.toEqual(0);
@@ -176,23 +176,23 @@ describe('dc.geoChoropleth', function () {
             nvalueDim = data.dimension(function (d) { return +d.nvalue; });
         });
         it('gets right colors when not filtered', function () {
-            expect(chart.selectAll('g.layer0 g.state.california path').attr('fill')).toEqual('#0089FF');
-            expect(chart.selectAll('g.layer0 g.state.colorado path').attr('fill')).toEqual('#E2F2FF');
-            expect(chart.selectAll('g.layer0 g.state.delaware path').attr('fill')).toEqual('#C4E4FF');
-            expect(chart.selectAll('g.layer0 g.state.mississippi path').attr('fill')).toEqual('#81C5FF');
-            expect(chart.selectAll('g.layer0 g.state.oklahoma path').attr('fill')).toEqual('#9ED2FF');
-            expect(chart.selectAll('g.layer0 g.state.maryland path').attr('fill')).toEqual('#ccc');
-            expect(chart.selectAll('g.layer0 g.state.washington path').attr('fill')).toEqual('#ccc');
+            expect(chart.selectAll('g.layer0 g.state.california path').attr('fill')).toMatch(/#0089ff/i);
+            expect(chart.selectAll('g.layer0 g.state.colorado path').attr('fill')).toMatch(/#e2f2ff/i);
+            expect(chart.selectAll('g.layer0 g.state.delaware path').attr('fill')).toMatch(/#c4e4ff/i);
+            expect(chart.selectAll('g.layer0 g.state.mississippi path').attr('fill')).toMatch(/#81c5ff/i);
+            expect(chart.selectAll('g.layer0 g.state.oklahoma path').attr('fill')).toMatch(/#9ed2ff/i);
+            expect(chart.selectAll('g.layer0 g.state.maryland path').attr('fill')).toMatch(/#ccc/i);
+            expect(chart.selectAll('g.layer0 g.state.washington path').attr('fill')).toMatch(/#ccc/i);
         });
 
         function checkEvenNValueColors () {
-            expect(chart.selectAll('g.layer0 g.state.california path').attr('fill')).toEqual('#36A2FF');
-            expect(chart.selectAll('g.layer0 g.state.colorado path').attr('fill')).toEqual('#E2F2FF');
-            expect(chart.selectAll('g.layer0 g.state.delaware path').attr('fill')).toEqual('#ccc');
-            expect(chart.selectAll('g.layer0 g.state.mississippi path').attr('fill')).toEqual('#C4E4FF');
-            expect(chart.selectAll('g.layer0 g.state.oklahoma path').attr('fill')).toEqual('#ccc');
-            expect(chart.selectAll('g.layer0 g.state.maryland path').attr('fill')).toEqual('#ccc');
-            expect(chart.selectAll('g.layer0 g.state.washington path').attr('fill')).toEqual('#ccc');
+            expect(chart.selectAll('g.layer0 g.state.california path').attr('fill')).toMatch(/#36a2ff/i);
+            expect(chart.selectAll('g.layer0 g.state.colorado path').attr('fill')).toMatch(/#e2f2ff/i);
+            expect(chart.selectAll('g.layer0 g.state.delaware path').attr('fill')).toMatch(/#ccc/i);
+            expect(chart.selectAll('g.layer0 g.state.mississippi path').attr('fill')).toMatch(/#c4e4ff/i);
+            expect(chart.selectAll('g.layer0 g.state.oklahoma path').attr('fill')).toMatch(/#ccc/i);
+            expect(chart.selectAll('g.layer0 g.state.maryland path').attr('fill')).toMatch(/#ccc/i);
+            expect(chart.selectAll('g.layer0 g.state.washington path').attr('fill')).toMatch(/#ccc/i);
         }
 
         function checkEvenNValueTitles () {

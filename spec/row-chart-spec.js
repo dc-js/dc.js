@@ -117,11 +117,11 @@ describe('dc.rowChart', function () {
                 });
 
                 it('should fill each row rect with pre-defined colors', function () {
-                    expect(d3.select(chart.selectAll('g.row rect')[0][0]).attr('fill')).toBe('#3182bd');
-                    expect(d3.select(chart.selectAll('g.row rect')[0][1]).attr('fill')).toBe('#6baed6');
-                    expect(d3.select(chart.selectAll('g.row rect')[0][2]).attr('fill')).toBe('#9ecae1');
-                    expect(d3.select(chart.selectAll('g.row rect')[0][3]).attr('fill')).toBe('#c6dbef');
-                    expect(d3.select(chart.selectAll('g.row rect')[0][4]).attr('fill')).toBe('#e6550d');
+                    expect(d3.select(chart.selectAll('g.row rect')[0][0]).attr('fill')).toMatch(/#3182bd/i);
+                    expect(d3.select(chart.selectAll('g.row rect')[0][1]).attr('fill')).toMatch(/#6baed6/i);
+                    expect(d3.select(chart.selectAll('g.row rect')[0][2]).attr('fill')).toMatch(/#9ecae1/i);
+                    expect(d3.select(chart.selectAll('g.row rect')[0][3]).attr('fill')).toMatch(/#c6dbef/i);
+                    expect(d3.select(chart.selectAll('g.row rect')[0][4]).attr('fill')).toMatch(/#e6550d/i);
                 });
 
                 it('should create a row label from the data for each row', function () {

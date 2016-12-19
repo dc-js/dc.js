@@ -735,12 +735,12 @@ describe('dc.lineChart', function () {
     describe('change color', function () {
         beforeEach(function () {
             chart.brushOn(false)
-                .ordinalColors(['#FF0000'])
+                .ordinalColors(['#ff0000'])
                 .colorAccessor(function () { return 0; })
                 .render();
         });
         it('updates dot colors', function () {
-            expect(chart.select('circle.dot')[0][0].attributes.fill.value).toMatch(/#FF0000/i);
+            expect(chart.select('circle.dot')[0][0].attributes.fill.value).toMatch(/#ff0000/i);
         });
     });
 
