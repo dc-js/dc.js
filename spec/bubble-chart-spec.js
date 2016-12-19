@@ -595,7 +595,7 @@ describe('dc.bubbleChart', function () {
             };
         }
 
-        function testSomeValuesCol3 (chart) {
+        function testBubbleRadiiCol3 (chart) {
             var bubbles = chart.selectAll('circle.bubble')[0];
             expect(d3.select(bubbles[0]).attr('r')).toBe('0');
             expect(d3.select(bubbles[3]).attr('r')).toBe('0');
@@ -605,7 +605,8 @@ describe('dc.bubbleChart', function () {
             expect(+d3.select(bubbles[16]).attr('r')).toBeWithinDelta(33, 0.5);
             expect(+d3.select(bubbles[19]).attr('r')).toBeWithinDelta(50, 0.5);
             expect(d3.select(bubbles[24]).attr('r')).toBe('0');
-
+        }
+        function testBubbleTitlesCol3 (chart) {
             var titles = chart.selectAll('g.node title')[0];
             expect(JSON.parse(d3.select(titles[4]).text()).total).toBe(0);
             expect(JSON.parse(d3.select(titles[11]).text()).virginica).toBe(4);
@@ -614,7 +615,8 @@ describe('dc.bubbleChart', function () {
             expect(JSON.parse(d3.select(titles[16]).text()).versicolor).toBe(1);
             expect(JSON.parse(d3.select(titles[19]).text()).virginica).toBe(13);
             expect(JSON.parse(d3.select(titles[19]).text()).versicolor).toBe(1);
-
+        }
+        function testBubbleLabelsCol3 (chart) {
             var labels = chart.selectAll('g.node text')[0];
             expect(d3.select(labels[0]).text()).toBe('0');
             expect(d3.select(labels[2]).text()).toBe('0');
@@ -626,23 +628,37 @@ describe('dc.bubbleChart', function () {
             expect(d3.select(labels[19]).text()).toBe('14');
         }
         describe('column filtering with straight crossfilter', function () {
-            it('filters column correctly', function () {
+            beforeEach(function () {
                 var axisLabel = d3.select(heatMap.selectAll('.cols.axis text')[0][3]);
                 axisLabel.on('click')(axisLabel.datum());
                 d3.timer.flush();
-                testSomeValuesCol3(chart);
+            });
+            it('updates bubble radii correctly', function () {
+                testBubbleRadiiCol3(chart);
+            });
+            it('updates bubble titles correctly', function () {
+                testBubbleTitlesCol3(chart);
+            });
+            it('updates bubble labels correctly', function () {
+                testBubbleLabelsCol3(chart);
             });
         });
         describe('column filtering with cloned results', function () {
             beforeEach(function () {
                 chart.group(clone_group(sepalGroup));
                 chart.render();
-            });
-            it('filters column correctly', function () {
                 var axisLabel = d3.select(heatMap.selectAll('.cols.axis text')[0][3]);
                 axisLabel.on('click')(axisLabel.datum());
                 d3.timer.flush();
-                testSomeValuesCol3(chart);
+            });
+            it('updates bubble radii correctly', function () {
+                testBubbleRadiiCol3(chart);
+            });
+            it('updates bubble titles correctly', function () {
+                testBubbleTitlesCol3(chart);
+            });
+            it('updates bubble labels correctly', function () {
+                testBubbleLabelsCol3(chart);
             });
         });
         /* jshint camelcase: true */
