@@ -463,6 +463,10 @@ describe('dc.heatmap', function () {
                             .range(['#e41a1c','#377eb8','#4daf4a', '#f8f8f8']))
                     .colorAccessor(function (d) {
                         return max_species(d) || 'none';
+                    })
+                    .renderTitle(true)
+                    .title(function (d) {
+                        return JSON.stringify(d.value, null, 2);
                     });
             }
 
@@ -500,7 +504,7 @@ describe('dc.heatmap', function () {
             };
         }
 
-        function testSomeValuesBubble12 (chart) {
+        function testRectFillsBubble12 (chart) {
             var rects = chart.selectAll('rect')[0];
             expect(d3.select(rects[0]).attr('fill')).toBe('#f8f8f8');
             expect(d3.select(rects[3]).attr('fill')).toBe('#377eb8');
@@ -511,24 +515,45 @@ describe('dc.heatmap', function () {
             expect(d3.select(rects[11]).attr('fill')).toBe('#f8f8f8');
             expect(d3.select(rects[12]).attr('fill')).toBe('#f8f8f8');
         }
+        function testRectTitlesBubble12 (chart) {
+            var titles = chart.selectAll('g.box-group title')[0];
+            expect(JSON.parse(d3.select(titles[0]).text()).total).toBe(0);
+            expect(JSON.parse(d3.select(titles[2]).text()).total).toBe(0);
+            expect(JSON.parse(d3.select(titles[3]).text()).total).toBe(2);
+            expect(JSON.parse(d3.select(titles[4]).text()).total).toBe(3);
+            expect(JSON.parse(d3.select(titles[5]).text()).total).toBe(0);
+            expect(JSON.parse(d3.select(titles[7]).text()).total).toBe(1);
+            expect(JSON.parse(d3.select(titles[9]).text()).total).toBe(0);
+            expect(JSON.parse(d3.select(titles[10]).text()).total).toBe(0);
+            expect(JSON.parse(d3.select(titles[12]).text()).total).toBe(0);
+        }
+
         describe('bubble filtering with straight crossfilter', function () {
-            it('filters bubble correctly', function () {
+            beforeEach(function () {
                 var aBubble = d3.select(bubbleChart.selectAll('circle.bubble')[0][12]);
                 aBubble.on('click')(aBubble.datum());
                 d3.timer.flush();
-                testSomeValuesBubble12(chart);
+            });
+            it('updates rect fills correctly', function () {
+                testRectFillsBubble12(chart);
+            });
+            it('updates rect titles correctly', function () {
+                testRectTitlesBubble12(chart);
             });
         });
         describe('column filtering with cloned results', function () {
             beforeEach(function () {
                 chart.group(clone_group(petalGroup));
                 chart.render();
-            });
-            it('filters column correctly', function () {
                 var aBubble = d3.select(bubbleChart.selectAll('circle.bubble')[0][12]);
                 aBubble.on('click')(aBubble.datum());
                 d3.timer.flush();
-                testSomeValuesBubble12(chart);
+            });
+            it('updates rect fills correctly', function () {
+                testRectFillsBubble12(chart);
+            });
+            it('updates rect titles correctly', function () {
+                testRectTitlesBubble12(chart);
             });
         });
         /* jshint camelcase: true */
