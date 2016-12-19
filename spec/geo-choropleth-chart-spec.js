@@ -184,6 +184,15 @@ describe('dc.geoChoropleth', function () {
             expect(chart.selectAll('g.layer0 g.state.maryland path').attr('fill')).toMatch(/#ccc/i);
             expect(chart.selectAll('g.layer0 g.state.washington path').attr('fill')).toMatch(/#ccc/i);
         });
+        it('has right titles when not filtered', function () {
+            expect(chart.selectAll('g.layer0 g.state.california title').text()).toEqual('California : 154');
+            expect(chart.selectAll('g.layer0 g.state.colorado title').text()).toEqual('Colorado : 22');
+            expect(chart.selectAll('g.layer0 g.state.delaware title').text()).toEqual('Delaware : 33');
+            expect(chart.selectAll('g.layer0 g.state.mississippi title').text()).toEqual('Mississippi : 77');
+            expect(chart.selectAll('g.layer0 g.state.oklahoma title').text()).toEqual('Oklahoma : 55');
+            expect(chart.selectAll('g.layer0 g.state.maryland title').text()).toEqual('Maryland : 0');
+            expect(chart.selectAll('g.layer0 g.state.washington title').text()).toEqual('Washington : 0');
+        });
 
         function checkEvenNValueColors () {
             expect(chart.selectAll('g.layer0 g.state.california path').attr('fill')).toMatch(/#36a2ff/i);
