@@ -291,7 +291,7 @@ describe('dc.scatterPlot', function () {
 
             describe('when a legend item is hovered over', function () {
                 it('should highlight corresponding plot', function () {
-                    nthChart(0).expectPlotSymbolsToHaveSize(chart.highlightedSize());
+                    nthChart(0).expectPlotSymbolsToHaveSize(subChart1.highlightedSize());
 
                 });
 
@@ -306,7 +306,7 @@ describe('dc.scatterPlot', function () {
                 });
 
                 it('should remove highlighting from corresponding lines and areas', function () {
-                    nthChart(0).expectPlotSymbolsToHaveSize(chart.symbolSize());
+                    nthChart(0).expectPlotSymbolsToHaveSize(subChart1.symbolSize());
                 });
 
                 it('should fade in non-corresponding lines and areas', function () {
@@ -325,10 +325,9 @@ describe('dc.scatterPlot', function () {
             };
 
             subChart.expectPlotSymbolsToHaveSize = function (size) {
-                var highlightedSize = Math.pow(size, 2);
-                var highlightedPath = d3.svg.symbol().size(highlightedSize)();
+                var match = matchSymbolSize(size);
                 subChart.selectAll('path.symbol').each(function () {
-                    expect(d3.select(this).attr('d')).toMatchPath(highlightedPath);
+                    expect(match.apply(this)).toBeTruthy();
                 });
             };
 
