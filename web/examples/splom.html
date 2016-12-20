@@ -13,11 +13,6 @@
       code {
           color: black;
       }
-      #hscroll {
-          width: 100%;
-          overflow: scroll;
-          padding-left: 20px;
-      }
       #page {
           height: 95vh;
           width: 100%;
@@ -60,6 +55,9 @@
       path.extreme.right {
           stroke-dashoffset: 1;
       }
+      .axis > path {
+          display: none;
+      }
     </style>
   </head>
   <body>
@@ -70,8 +68,6 @@
       <script type="text/javascript" src="./header.js"></script>
 
       <p>Implementing <a href="http://bl.ocks.org/mbostock/4063663">Scatterplot Matrix Brushing</a> in dc.js</p>
-    </div>
-    <div id="hscroll">
       <table id="content"></table>
     </div>
 
@@ -107,12 +103,12 @@
               .enter().append('tr').attr('class', function(d) {
                   return d === 'heading' ? 'heading row' : 'row';
               })
-              .each(function(row) {
+              .each(function(row, y) {
                   d3.select(this).selectAll('td').data(cols)
                       .enter().append('td').attr('class', function(d) {
                           return d === 'heading' ? 'heading entry' : 'entry';
                       })
-                      .each(function(col) {
+                      .each(function(col, x) {
                           var cdiv = d3.select(this).append('div')
                           if(row === 'heading') {
                               if(col !== 'heading')
@@ -127,11 +123,17 @@
                           var chart = dc.scatterPlot(cdiv);
                           var dim = make_dimension(col,row),
                               group = dim.group();
+                          var showYAxis = x === 1, showXAxis = y === 4;
                           chart
                               .transitionDuration(0)
-                              .width(200)
-                              .height(200)
-                              .margins({left: 20, top: 10, right: 10, bottom: 20})
+                              .width(200 + (showYAxis?25:0))
+                              .height(200 + (showXAxis?20:0))
+                              .margins({
+                                  left: showYAxis ? 25 : 0,
+                                  top: 10,
+                                  right: 10,
+                                  bottom: showXAxis ? 20 : 5
+                              })
                               .dimension(dim).group(group)
                               .keyAccessor(key_part(0))
                               .valueAccessor(key_part(1))
@@ -141,16 +143,14 @@
                               .y(d3.scale.linear())
                               .brushOn(true)
                               .elasticX(true)
-                              .elasticY(true);
-                          chart.filterHandler(function(dim, filters) {
-                              if(!filters.length)
-                                  dim.filter(null);
-                              else {
-                                  console.assert(filters.length === 1);
-                                  console.assert(filters[0].filterType === 'RangedTwoDimensionalFilter');
-                                  var filt = filters[0];
-                                  dim.filterFunction(dc.filters.RangedTwoDimensionalFilter([[filt[0][0], filt[0][1]], [filt[1][0], filt[1][1]]]).isFiltered);
-                              }
+                              .elasticY(true)
+                              .renderHorizontalGridLines(true)
+                              .renderVerticalGridLines(true);
+                          chart.on('postRender', function(chart) {
+                              if(!showXAxis)
+                                  chart.select('.x.axis').attr('display', 'none');
+                              if(!showYAxis)
+                                  chart.select('.y.axis').attr('display', 'none');
                           });
                       });
               });
