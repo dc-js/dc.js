@@ -17,6 +17,7 @@ describe('dc.scatterPlot', function () {
             .width(500).height(180)
             .x(d3.scale.linear().domain([0, 70]))
             .symbolSize(10)
+            .nonemptyOpacity(0.9)
             .excludedSize(2)
             .excludedColor('#ccc')
             .excludedOpacity(0.25)
@@ -159,7 +160,7 @@ describe('dc.scatterPlot', function () {
                 });
 
                 var isOpaque = function () {
-                    return +d3.select(this).attr('opacity') === 1;
+                    return +d3.select(this).attr('opacity') === 0.9; // test nonemptyOpacity
                 }, isTranslucent = function () {
                     return +d3.select(this).attr('opacity') === 0.25; // test excludedOpacity
                 }, isBlue = function () {

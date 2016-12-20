@@ -44,6 +44,7 @@ dc.scatterPlot = function (parent, chartGroup) {
     var _excludedOpacity = 1.0;
     var _emptySize = 0;
     var _emptyOpacity = 0;
+    var _nonemptyOpacity = 1;
     var _emptyColor = null;
     var _filtered = [];
 
@@ -86,7 +87,7 @@ dc.scatterPlot = function (parent, chartGroup) {
                 if (!_existenceAccessor(d)) {
                     return _emptyOpacity;
                 } else if (_filtered[i]) {
-                    return 1;
+                    return _nonemptyOpacity;
                 } else {
                     return _chart.excludedOpacity();
                 }
@@ -289,6 +290,23 @@ dc.scatterPlot = function (parent, chartGroup) {
             return _emptyOpacity;
         }
         _emptyOpacity = emptyOpacity;
+        return _chart;
+    };
+
+    /**
+     * Set or get opacity for symbols when the group is not empty.
+     * @name nonemptyOpacity
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {Number} [nonemptyOpacity=1]
+     * @return {Number}
+     * @return {dc.scatterPlot}
+     */
+    _chart.nonemptyOpacity = function (nonemptyOpacity) {
+        if (!arguments.length) {
+            return _emptyOpacity;
+        }
+        _nonemptyOpacity = nonemptyOpacity;
         return _chart;
     };
 
