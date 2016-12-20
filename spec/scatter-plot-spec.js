@@ -16,8 +16,11 @@ describe('dc.scatterPlot', function () {
             .group(group)
             .width(500).height(180)
             .x(d3.scale.linear().domain([0, 70]))
+            .symbolSize(10)
+            .excludedSize(2)
             .excludedColor('#ccc')
             .excludedOpacity(0.25)
+            .emptyOpacity(0.1)
             .transitionDuration(0);
     });
 
@@ -99,14 +102,20 @@ describe('dc.scatterPlot', function () {
             });
 
             it('should show the included points', function () {
-                var shownPoints = symbolsOfRadius(chart.symbolSize());
+                var shownPoints = symbolsOfRadius(10);
                 expect(shownPoints.length).toBe(2);
                 expect(shownPoints[0].key).toEqual([22, -2]);
                 expect(shownPoints[1].key).toEqual([33, 1]);
             });
             it('should hide the excluded points', function () {
-                var hiddenPoints = symbolsOfRadius(chart.hiddenSize());
-                expect(hiddenPoints.length).toBe(7);
+                var emptyPoints = symbolsOfRadius(chart.emptySize());
+                expect(emptyPoints.length).toBe(7);
+            });
+            it('should use emptyOpacity for excluded points', function () {
+                var translucentPoints = symbolsMatching(function () {
+                    return +d3.select(this).attr('opacity') === 0.1;
+                });
+                expect(translucentPoints.length).toBe(7);
             });
         });
 
@@ -159,7 +168,7 @@ describe('dc.scatterPlot', function () {
                 });
 
                 it('should shrink the excluded points', function () {
-                    selectedPoints = symbolsOfRadius(chart.excludedSize());
+                    selectedPoints = symbolsOfRadius(2);
                     expect(selectedPoints.length).toBe(7);
                     expect(selectedPoints[0].key).toEqual([22, 10]);
                     expect(selectedPoints[1].key).toEqual([44, -3]);
