@@ -20,6 +20,7 @@ describe('dc.scatterPlot', function () {
             .excludedSize(2)
             .excludedColor('#ccc')
             .excludedOpacity(0.25)
+            .emptySize(4)
             .emptyOpacity(0.1)
             .transitionDuration(0);
     });
@@ -108,7 +109,7 @@ describe('dc.scatterPlot', function () {
                 expect(shownPoints[1].key).toEqual([33, 1]);
             });
             it('should hide the excluded points', function () {
-                var emptyPoints = symbolsOfRadius(chart.emptySize());
+                var emptyPoints = symbolsOfRadius(4);
                 expect(emptyPoints.length).toBe(7);
             });
             it('should use emptyOpacity for excluded points', function () {
