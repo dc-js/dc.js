@@ -103,18 +103,18 @@ describe('dc.scatterPlot', function () {
             });
 
             it('should show the included points', function () {
-                var shownPoints = symbolsOfRadius(10);
+                var shownPoints = symbolsOfRadius(10); // test symbolSize
                 expect(shownPoints.length).toBe(2);
                 expect(shownPoints[0].key).toEqual([22, -2]);
                 expect(shownPoints[1].key).toEqual([33, 1]);
             });
             it('should hide the excluded points', function () {
-                var emptyPoints = symbolsOfRadius(4);
+                var emptyPoints = symbolsOfRadius(4); // test emptySize
                 expect(emptyPoints.length).toBe(7);
             });
             it('should use emptyOpacity for excluded points', function () {
                 var translucentPoints = symbolsMatching(function () {
-                    return +d3.select(this).attr('opacity') === 0.1;
+                    return +d3.select(this).attr('opacity') === 0.1; // emptyOpacity
                 });
                 expect(translucentPoints.length).toBe(7);
             });
@@ -154,11 +154,11 @@ describe('dc.scatterPlot', function () {
                 var isOpaque = function () {
                     return +d3.select(this).attr('opacity') === 1;
                 }, isTranslucent = function () {
-                    return +d3.select(this).attr('opacity') === 0.25;
+                    return +d3.select(this).attr('opacity') === 0.25; // test excludedOpacity
                 }, isBlue = function () {
                     return d3.select(this).attr('fill') === '#1f77b4';
                 }, isGrey = function () {
-                    return d3.select(this).attr('fill') === '#ccc';
+                    return d3.select(this).attr('fill') === '#ccc'; // test excludedColor
                 };
 
                 it('should not shrink the included points', function () {
@@ -169,7 +169,7 @@ describe('dc.scatterPlot', function () {
                 });
 
                 it('should shrink the excluded points', function () {
-                    selectedPoints = symbolsOfRadius(2);
+                    selectedPoints = symbolsOfRadius(2); // test excludedSize
                     expect(selectedPoints.length).toBe(7);
                     expect(selectedPoints[0].key).toEqual([22, 10]);
                     expect(selectedPoints[1].key).toEqual([44, -3]);
