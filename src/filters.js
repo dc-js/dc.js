@@ -105,9 +105,6 @@ dc.filters.RangedTwoDimensionalFilter = function (filter) {
         var x, y;
 
         if (value instanceof Array) {
-            if (value.length !== 2) {
-                return false;
-            }
             x = value[0];
             y = value[1];
         } else {
