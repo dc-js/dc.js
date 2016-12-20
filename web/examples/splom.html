@@ -129,9 +129,9 @@
                               .width(200 + (showYAxis?25:0))
                               .height(200 + (showXAxis?20:0))
                               .margins({
-                                  left: showYAxis ? 25 : 0,
-                                  top: 10,
-                                  right: 10,
+                                  left: showYAxis ? 25 : 8,
+                                  top: 5,
+                                  right: 0,
                                   bottom: showXAxis ? 20 : 5
                               })
                               .dimension(dim).group(group)
@@ -144,13 +144,24 @@
                               .brushOn(true)
                               .elasticX(true)
                               .elasticY(true)
+                              .symbolSize(7)
+                              .nonemptyOpacity(0.7)
+                              .emptySize(7)
+                              .emptyColor('#ccc')
+                              .emptyOpacity(0.7)
+                              .excludedSize(7)
+                              .excludedColor('#ccc')
+                              .excludedOpacity(0.7)
                               .renderHorizontalGridLines(true)
                               .renderVerticalGridLines(true);
+                          chart.xAxis().ticks(6);
+                          chart.yAxis().ticks(6);
                           chart.on('postRender', function(chart) {
                               if(!showXAxis)
                                   chart.select('.x.axis').attr('display', 'none');
                               if(!showYAxis)
                                   chart.select('.y.axis').attr('display', 'none');
+                              chart.select('.chart-body').attr('clip-path', null);
                           });
                       });
               });
