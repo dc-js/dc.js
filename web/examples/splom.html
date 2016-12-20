@@ -67,7 +67,14 @@
     <div class="container">
       <script type="text/javascript" src="./header.js"></script>
 
-      <p>Implementing <a href="http://bl.ocks.org/mbostock/4063663">Scatterplot Matrix Brushing</a> in dc.js</p>
+      <p>Implementing Scatterplot Matrix Brushing in
+        dc.js. Imitating <a href="http://bl.ocks.org/mbostock/4063663">Mike's bl.ock</a>.</p>
+
+      <p>dc.js will not be as efficient as a custom implementation, and there's a perceptible lag,
+      but this technique may be useful sometimes. By default, dc.js always waits to trigger events
+      because it is assumed that updating will be costly
+      - <span id="wait-verb">add</span> <a id="wait-url">?nowait</a> to see how this
+      performs <span id="wait-prep">without</span> event delay.</p>
       <table id="content"></table>
     </div>
 
@@ -75,6 +82,15 @@
       var fields = ['petal_width', 'petal_length', 'sepal_width', 'sepal_length'];
       var rows = ['heading'].concat(fields.slice(0).reverse()),
           cols = ['heading'].concat(fields);
+
+      if(location.search.indexOf('nowait')!==-1) {
+          dc.constants.EVENT_DELAY = 0;
+          d3.select('#wait-verb').text('remove')
+          d3.select('#wait-prep').text('with');
+          d3.select('#wait-url').attr('href', location.origin + location.pathname);
+      } else {
+          d3.select('#wait-url').attr('href', location.origin + location.pathname + '?nowait');
+      }
 
       d3.csv('iris.csv', function(error, iris) {
           if(error)
