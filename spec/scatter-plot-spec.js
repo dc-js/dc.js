@@ -21,7 +21,8 @@ describe('dc.scatterPlot', function () {
             .excludedColor('#ccc')
             .excludedOpacity(0.25)
             .emptySize(4)
-            .emptyOpacity(0.1)
+            .emptyOpacity(0.5)
+            .emptyColor('#DFFF00')
             .transitionDuration(0);
     });
 
@@ -114,9 +115,15 @@ describe('dc.scatterPlot', function () {
             });
             it('should use emptyOpacity for excluded points', function () {
                 var translucentPoints = symbolsMatching(function () {
-                    return +d3.select(this).attr('opacity') === 0.1; // emptyOpacity
+                    return +d3.select(this).attr('opacity') === 0.5; // emptyOpacity
                 });
                 expect(translucentPoints.length).toBe(7);
+            });
+            it('should use emptyColor for excluded points', function () {
+                var chartreusePoints = symbolsMatching(function () { // don't try this at home
+                    return /#DFFF00/i.test(d3.select(this).attr('fill')); // emptyColor
+                });
+                expect(chartreusePoints.length).toBe(7);
             });
         });
 

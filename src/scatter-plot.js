@@ -44,7 +44,7 @@ dc.scatterPlot = function (parent, chartGroup) {
     var _excludedOpacity = 1.0;
     var _emptySize = 0;
     var _emptyOpacity = 0;
-    //var _emptyColor = 'grey';
+    var _emptyColor = null;
     var _filtered = [];
 
     _symbol.size(function (d, i) {
@@ -83,13 +83,22 @@ dc.scatterPlot = function (parent, chartGroup) {
 
         dc.transition(symbols, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('opacity', function (d, i) {
-                return !_existenceAccessor(d) ? _emptyOpacity :
-                    _filtered[i] ? 1 : _chart.excludedOpacity();
+                if (!_existenceAccessor(d)) {
+                    return _emptyOpacity;
+                } else if (_filtered[i]) {
+                    return 1;
+                } else {
+                    return _chart.excludedOpacity();
+                }
             })
             .attr('fill', function (d, i) {
-                return _chart.excludedColor() && !_filtered[i] ?
-                    _chart.excludedColor() :
-                    _chart.getColor(d);
+                if (_emptyColor && !_existenceAccessor(d)) {
+                    return _emptyColor;
+                } else if (_chart.excludedColor() && !_filtered[i]) {
+                    return _chart.excludedColor();
+                } else {
+                    return _chart.getColor(d);
+                }
             })
             .attr('transform', _locator)
             .attr('d', _symbol);
@@ -249,21 +258,22 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     /**
-     * Set or get color for symbols when the group is empty.
+     * Set or get color for symbols when the group is empty. If null, just use the
+     * {@link dc.colorMixin#colors colorMixin.colors} color scale zero value.
      * @name emptyColor
      * @memberof dc.scatterPlot
      * @instance
-     * @param String [emptyColor="grey"]
+     * @param {String} [emptyColor=null]
      * @return {String}
      * @return {dc.scatterPlot}/
      */
-    // _chart.emptyColor = function (emptyColor) {
-    //   if(!arguments.length){
-    //     return _emptyColor;
-    //   }
-    //   _emptyColor = _emptyColor;
-    //   return _chart;
-    // };
+    _chart.emptyColor = function (emptyColor) {
+        if (!arguments.length) {
+            return _emptyColor;
+        }
+        _emptyColor = emptyColor;
+        return _chart;
+    };
 
     /**
      * Set or get opacity for symbols when the group is empty.
