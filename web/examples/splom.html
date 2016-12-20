@@ -98,6 +98,8 @@
               };
           }
 
+          var charts = [];
+
           d3.select('#content')
               .selectAll('tr').data(rows)
               .enter().append('tr').attr('class', function(d) {
@@ -157,12 +159,24 @@
                           chart.xAxis().ticks(6);
                           chart.yAxis().ticks(6);
                           chart.on('postRender', function(chart) {
+                              // remove axes unless at left or bottom
                               if(!showXAxis)
                                   chart.select('.x.axis').attr('display', 'none');
                               if(!showYAxis)
                                   chart.select('.y.axis').attr('display', 'none');
+                              // remove clip path, allow dots to display outside
                               chart.select('.chart-body').attr('clip-path', null);
                           });
+                          // only filter on one chart at a time
+                          chart.on('filtered', function(_, filter) {
+                              if(!filter)
+                                  return;
+                              charts.forEach(function(c) {
+                                  if(c !== chart)
+                                      c.filter(null);
+                              });
+                          });
+                          charts.push(chart);
                       });
               });
           dc.renderAll();
