@@ -24,7 +24,13 @@ describe('dc.scatterPlot', function () {
             .emptySize(4)
             .emptyOpacity(0.5)
             .emptyColor('#DFFF00')
-            .transitionDuration(0);
+            .transitionDuration(0)
+            .title(function (d) {
+                // because of the yucky way scatterPlot sets its own key/value accessors
+                // perhaps this should be defaulted within the scatter plot
+                return chart.keyAccessor()(d) + ',' + chart.valueAccessor()(d) + ': ' +
+                    chart.existenceAccessor()(d);
+            });
     });
 
     describe('rendering the scatter plot', function () {
@@ -52,6 +58,16 @@ describe('dc.scatterPlot', function () {
             expect(nthSymbol(8).attr('fill')).toMatch(/#1f77b4/i);
         });
 
+        it('should generate the correct titles', function () {
+            var titles = chart.selectAll('path.symbol title');
+            var expected = ['22,-2: 1','22,10: 1','33,1: 2','44,-3: 1','44,-4: 1',
+                            '44,2: 1','55,-3: 1','55,-5: 1','66,-4: 1'];
+            expect(titles.size()).toBe(expected.length);
+            titles.each(function (d) {
+                expect(this.textContent).toBe(expected.shift());
+            });
+        });
+
         describe('with a custom color', function () {
             beforeEach(function () {
                 chart.colors('red').render();
@@ -61,6 +77,16 @@ describe('dc.scatterPlot', function () {
                 expect(nthSymbol(4).attr('fill')).toBe('red');
                 expect(nthSymbol(5).attr('fill')).toBe('red');
                 expect(nthSymbol(8).attr('fill')).toBe('red');
+            });
+        });
+
+        describe('with title rendering disabled', function () {
+            beforeEach(function () {
+                chart.renderTitle(false).render();
+            });
+
+            it('should not generate title elements', function () {
+                expect(chart.selectAll('rect.bar title').empty()).toBeTruthy();
             });
         });
 
@@ -125,6 +151,15 @@ describe('dc.scatterPlot', function () {
                     return /#DFFF00/i.test(d3.select(this).attr('fill')); // emptyColor
                 });
                 expect(chartreusePoints.length).toBe(7);
+            });
+            it('should update the titles', function () {
+                var titles = chart.selectAll('path.symbol title');
+                var expected = ['22,-2: 1','22,10: 0','33,1: 2','44,-3: 0','44,-4: 0',
+                                '44,2: 0','55,-3: 0','55,-5: 0','66,-4: 0'];
+                expect(titles.size()).toBe(expected.length);
+                titles.each(function (d) {
+                    expect(this.textContent).toBe(expected.shift());
+                });
             });
         });
 
