@@ -120,47 +120,71 @@ describe('dc.scatterPlot', function () {
             });
         });
 
-        describe('filtering another dimension', function () {
-            var otherDimension;
+        function filteringAnotherDimension () {
+            describe('filtering another dimension', function () {
+                var otherDimension;
 
+                beforeEach(function () {
+                    otherDimension = data.dimension(function (d) { return [+d.value, +d.nvalue]; });
+                    var ff = dc.filters.RangedTwoDimensionalFilter([[22, -3], [44, 2]]).isFiltered;
+                    otherDimension.filterFunction(ff);
+                    chart.redraw();
+                });
+
+                it('should show the included points', function () {
+                    var shownPoints = symbolsOfRadius(10); // test symbolSize
+                    expect(shownPoints.length).toBe(2);
+                    expect(shownPoints[0].key).toEqual([22, -2]);
+                    expect(shownPoints[1].key).toEqual([33, 1]);
+                });
+                it('should hide the excluded points', function () {
+                    var emptyPoints = symbolsOfRadius(4); // test emptySize
+                    expect(emptyPoints.length).toBe(7);
+                });
+                it('should use emptyOpacity for excluded points', function () {
+                    var translucentPoints = symbolsMatching(function () {
+                        return +d3.select(this).attr('opacity') === 0.5; // emptyOpacity
+                    });
+                    expect(translucentPoints.length).toBe(7);
+                });
+                it('should use emptyColor for excluded points', function () {
+                    var chartreusePoints = symbolsMatching(function () { // don't try this at home
+                        return /#DFFF00/i.test(d3.select(this).attr('fill')); // emptyColor
+                    });
+                    expect(chartreusePoints.length).toBe(7);
+                });
+                it('should update the titles', function () {
+                    var titles = chart.selectAll('path.symbol title');
+                    var expected = ['22,-2: 1','22,10: 0','33,1: 2','44,-3: 0','44,-4: 0',
+                                    '44,2: 0','55,-3: 0','55,-5: 0','66,-4: 0'];
+                    expect(titles.size()).toBe(expected.length);
+                    titles.each(function (d) {
+                        expect(this.textContent).toBe(expected.shift());
+                    });
+                });
+            });
+        }
+        filteringAnotherDimension();
+
+        function cloneGroup (group) {
+            return {
+                all: function () {
+                    return group.all().map(function (kv) {
+                        return {
+                            key: kv.key.slice(0),
+                            value: kv.value
+                        };
+                    });
+                }
+            };
+        }
+        describe('with cloned data', function () {
             beforeEach(function () {
-                otherDimension = data.dimension(function (d) { return [+d.value, +d.nvalue]; });
-                var ff = dc.filters.RangedTwoDimensionalFilter([[22, -3], [44, 2]]).isFiltered;
-                otherDimension.filterFunction(ff);
-                chart.redraw();
+                chart.group(cloneGroup(group))
+                    .render();
             });
 
-            it('should show the included points', function () {
-                var shownPoints = symbolsOfRadius(10); // test symbolSize
-                expect(shownPoints.length).toBe(2);
-                expect(shownPoints[0].key).toEqual([22, -2]);
-                expect(shownPoints[1].key).toEqual([33, 1]);
-            });
-            it('should hide the excluded points', function () {
-                var emptyPoints = symbolsOfRadius(4); // test emptySize
-                expect(emptyPoints.length).toBe(7);
-            });
-            it('should use emptyOpacity for excluded points', function () {
-                var translucentPoints = symbolsMatching(function () {
-                    return +d3.select(this).attr('opacity') === 0.5; // emptyOpacity
-                });
-                expect(translucentPoints.length).toBe(7);
-            });
-            it('should use emptyColor for excluded points', function () {
-                var chartreusePoints = symbolsMatching(function () { // don't try this at home
-                    return /#DFFF00/i.test(d3.select(this).attr('fill')); // emptyColor
-                });
-                expect(chartreusePoints.length).toBe(7);
-            });
-            it('should update the titles', function () {
-                var titles = chart.selectAll('path.symbol title');
-                var expected = ['22,-2: 1','22,10: 0','33,1: 2','44,-3: 0','44,-4: 0',
-                                '44,2: 0','55,-3: 0','55,-5: 0','66,-4: 0'];
-                expect(titles.size()).toBe(expected.length);
-                titles.each(function (d) {
-                    expect(this.textContent).toBe(expected.shift());
-                });
-            });
+            filteringAnotherDimension();
         });
 
         describe('brushing', function () {
