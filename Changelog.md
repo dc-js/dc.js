@@ -1,5 +1,6 @@
 # 2.0 Series
 ## 2.0.0
+* Scatter plot titles, by Daniel Gall ([#1200](https://github.com/dc-js/dc.js/pull/1200))
 * `scatterPlot` and `RangedTwoDimensionalFilter` no longer require that the dimension key have exactly two elements, to support the common trick of putting the color in the third element.
 * `emptyOpacity` is exposed, and `emptySize` is a radius like the other sizes (squared for symbol size), by Ganesh Iyer ([#1058](https://github.com/dc-js/dc.js/pull/1058))
 * Bubble chart and heatmap correctly re-select (not selectAll) the sub-components in order to correctly apply new data when redrawn. This affects uses of dc.js where the data is replaced instead of being modified in place. (For example, the case where crossfilter is not used.) By Steffen Dienst and Matt Traynham. ([#1032](https://github.com/dc-js/dc.js/pull/1032), [#1237](https://github.com/dc-js/dc.js/pull/1237))
