@@ -38,7 +38,7 @@
       <script type="text/javascript">
 
         function find_query(field) {
-            var regexp = new RegExp(field+'=([a-zA-Z\._-]+)');
+            var regexp = new RegExp(field+'=([0-9a-zA-Z\._:/-]+)');
             var find;
             return (find = regexp.exec(location.search)) ? find[1] : null;
         }
