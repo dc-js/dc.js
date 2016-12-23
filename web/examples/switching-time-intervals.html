@@ -5,6 +5,11 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <style>
+      dl {
+        margin-left: 2em;
+      }
+    </style>
   </head>
   <body>
 
@@ -12,18 +17,20 @@
       <script type="text/javascript" src="header.js"></script>
 
       <p>This example demonstrates switching between different intervals of aggregation over time.</p>
-      <p>You can specify your own data source with query string parameters:
-        <dl>
-          <dt>data</dt><dd>URL to load</dd>
-          <dt>aggregate</dt><dd>Aggregation method: <code>average</code> or <code>total</code>
-          <dt>date</dt><dd>Date column name</dd>
-          <dt>val</dt><dd>Value column name</dd>
-        </dl>
-      </p>
       <select id="interval"></select>
-      <span style="font-size: large" id="counter"></span> selected.
+      <span style="font-size: large" id="counter"></span><span id="counter-text" style="display: none"> selected.</span>
       <br>
-      <div id="test"></div>
+      <div id="test" style="min-height: 500px"></div>
+      <div style="clear: both">
+        <p>You can supply your own data source with query string parameters:
+          <dl>
+            <dt>data</dt><dd>URL to load</dd>
+            <dt>aggregate</dt><dd>Aggregation method: <code>average</code> or <code>total</code>
+              <dt>date</dt><dd>Date column name</dd>
+            <dt>val</dt><dd>Value column name</dd>
+          </dl>
+        </p>
+      </div>
 
       <script type="text/javascript" src="../js/d3.js"></script>
       <script type="text/javascript" src="../js/crossfilter.js"></script>
@@ -133,6 +140,9 @@
             }
             d3.select('#interval').on('change', function() {
                 setup();
+            });
+            counter.on('postRender', function () {
+                d3.select('#counter-text').style('display', 'inline');
             });
             setup();
 
