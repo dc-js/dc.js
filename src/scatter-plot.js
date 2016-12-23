@@ -32,6 +32,13 @@ dc.scatterPlot = function (parent, chartGroup) {
     _chart.valueAccessor(function (d) { return originalKeyAccessor(d)[1]; });
     _chart.colorAccessor(function () { return _chart._groupName; });
 
+    _chart.title(function (d) {
+        // this basically just counteracts the setting of its own key/value accessors
+        // see https://github.com/dc-js/dc.js/issues/702
+        return _chart.keyAccessor()(d) + ',' + _chart.valueAccessor()(d) + ': ' +
+            _chart.existenceAccessor()(d);
+    });
+
     var _locator = function (d) {
         return 'translate(' + _chart.x()(_chart.keyAccessor()(d)) + ',' +
                               _chart.y()(_chart.valueAccessor()(d)) + ')';

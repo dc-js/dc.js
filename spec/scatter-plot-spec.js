@@ -24,13 +24,7 @@ describe('dc.scatterPlot', function () {
             .emptySize(4)
             .emptyOpacity(0.5)
             .emptyColor('#DFFF00')
-            .transitionDuration(0)
-            .title(function (d) {
-                // because of the yucky way scatterPlot sets its own key/value accessors
-                // perhaps this should be defaulted within the scatter plot
-                return chart.keyAccessor()(d) + ',' + chart.valueAccessor()(d) + ': ' +
-                    chart.existenceAccessor()(d);
-            });
+            .transitionDuration(0);
     });
 
     describe('rendering the scatter plot', function () {
