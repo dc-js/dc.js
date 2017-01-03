@@ -153,7 +153,7 @@ describe('dc.legend', function () {
                 chart.render();
                 fixedWidthOffset1 = coordsFromTranslate(legendItem(1).attr('transform')).x;
                 fixedWidthOffset2 = coordsFromTranslate(legendItem(2).attr('transform')).x;
-                chart.legend(dc.legend().horizontal(true).itemWidth(30).autoItemWidth(true).legendWidth(200));
+                chart.legend(dc.legend().horizontal(true).itemWidth(30).autoItemWidth(true).legendWidth(160));
                 chart.render();
                 autoWidthCoords = d3.range(3).map(function (i) {
                     return coordsFromTranslate(legendItem(i).attr('transform'));
@@ -165,6 +165,7 @@ describe('dc.legend', function () {
             });
             it('should wrap the third item based on actual widths', function () {
                 expect(autoWidthCoords[2].x).toBe(0);
+                expect(autoWidthCoords[2].y).toBeWithinDelta(13, 5);
             });
         });
 
