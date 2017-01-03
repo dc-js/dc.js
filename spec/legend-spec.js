@@ -145,24 +145,26 @@ describe('dc.legend', function () {
 
         describe('with .horizontal(true) and .autoItemWidth(true)', function () {
 
-            var
-                autoWidthOffset1, fixedWidthOffset1,
-                autoWidthOffset2, fixedWidthOffset2;
+            var fixedWidthOffset1, fixedWidthOffset2,
+                autoWidthCoords;
 
             beforeEach(function () {
                 chart.legend(dc.legend().horizontal(true).itemWidth(30).autoItemWidth(false));
                 chart.render();
                 fixedWidthOffset1 = coordsFromTranslate(legendItem(1).attr('transform')).x;
                 fixedWidthOffset2 = coordsFromTranslate(legendItem(2).attr('transform')).x;
-                chart.legend(dc.legend().horizontal(true).itemWidth(30).autoItemWidth(true));
+                chart.legend(dc.legend().horizontal(true).itemWidth(30).autoItemWidth(true).legendWidth(200));
                 chart.render();
-                autoWidthOffset1  = coordsFromTranslate(legendItem(1).attr('transform')).x;
-                autoWidthOffset2  = coordsFromTranslate(legendItem(2).attr('transform')).x;
+                autoWidthCoords = d3.range(3).map(function (i) {
+                    return coordsFromTranslate(legendItem(i).attr('transform'));
+                });
             });
 
-            it('autoWidth x offset should be greater than fixedWidth x offset for some legend items', function () {
-                expect(autoWidthOffset1).toBeGreaterThan(fixedWidthOffset1);
-                expect(autoWidthOffset2).toBeGreaterThan(fixedWidthOffset2);
+            it('autoWidth x offset should be greater than fixedWidth x offset for the second item', function () {
+                expect(autoWidthCoords[1].x).toBeGreaterThan(fixedWidthOffset1);
+            });
+            it('should wrap the third item based on actual widths', function () {
+                expect(autoWidthCoords[2].x).toBe(0);
             });
         });
 
