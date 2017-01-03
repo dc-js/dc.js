@@ -178,6 +178,28 @@ describe('dc.legend', function () {
                 expect(legendLabel(2).text()).toBe('3. Fixed');
             });
         });
+
+        describe('with .maxItems(2)', function () {
+            beforeEach(function () {
+                chart.legend()
+                    .maxItems(2);
+                chart.render();
+            });
+            it('should display two items', function () {
+                expect(chart.select('g.dc-legend').selectAll('g.dc-legend-item').size()).toBe(2);
+            });
+        });
+
+        describe('with invalid .maxItems', function () {
+            beforeEach(function () {
+                chart.legend()
+                    .maxItems('foo');
+                chart.render();
+            });
+            it('should display three items', function () {
+                expect(chart.select('g.dc-legend').selectAll('g.dc-legend-item').size()).toBe(3);
+            });
+        });
     });
 
     describe('legends with dashed lines', function () {
