@@ -44,7 +44,7 @@ dc.legend = function () {
             .attr('transform', 'translate(' + _x + ',' + _y + ')');
         var legendables = _parent.legendables();
 
-        if (_maxItems) {
+        if (_maxItems !== undefined) {
             legendables = legendables.slice(0, _maxItems);
         }
 
@@ -285,9 +285,7 @@ dc.legend = function () {
         if (!arguments.length) {
             return _maxItems;
         }
-        //TODO maybe check if maxItems is a number?
-        _maxItems = maxItems;
-
+        _maxItems = dc.utils.isNumber(maxItems) ? maxItems : undefined;
         return _legend;
     };
 
