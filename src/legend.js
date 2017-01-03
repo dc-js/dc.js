@@ -43,7 +43,7 @@ dc.legend = function () {
             .attr('class', 'dc-legend')
             .attr('transform', 'translate(' + _x + ',' + _y + ')');
         var legendables = _parent.legendables();
-        
+
         if (_maxItems) {
             legendables = legendables.slice(0, _maxItems);
         }
@@ -272,22 +272,24 @@ dc.legend = function () {
         _legendText = legendText;
         return _legend;
     };
-    
+
     /**
      * Maximum number of legend items to display
      * @method maxItems
      * @memberof dc.legend
      * @instance
-     * @param  {Number} [maxItems]]
+     * @param  {Number} [maxItems]
      * @return {dc.legend}
      */
-     
-    _legend.maxItems = function(maxItemCount) {
-        //TODO maybe check if maxItemCount is a number?
-        _maxItems = maxItemCount;
-        
-        return _legend;  
-    }
+    _legend.maxItems = function (maxItems) {
+        if (!arguments.length) {
+            return _maxItems;
+        }
+        //TODO maybe check if maxItems is a number?
+        _maxItems = maxItems;
+
+        return _legend;
+    };
 
     return _legend;
 };
