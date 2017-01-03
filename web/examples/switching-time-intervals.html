@@ -38,7 +38,7 @@
       <script type="text/javascript">
 
         function find_query(field) {
-            var regexp = new RegExp(field+'=([0-9a-zA-Z\._:/-]+)');
+            var regexp = new RegExp(field+'=([0-9a-zA-Z\._:/~-]+)');
             var find;
             return (find = regexp.exec(location.search)) ? find[1] : null;
         }
@@ -118,10 +118,20 @@
                 .x(d3.time.scale())
                 .xUnits(d3.time.weeks)
                 .margins({left: 50, top: 0, right: 0, bottom: 20})
-                .elasticX(true)
                 .elasticY(true)
                 .clipPadding(10);
             chart.yAxis().tickFormat(d3.format('.3s'));
+
+            // this demonstrates solving elasticX manually, avoiding the
+            // bug where the rightmost bar/box is not displayed, #792
+            function calc_domain(chart) {
+                var min = d3.min(chart.group().all(), function(kv) { return kv.key; }),
+                    max = d3.max(chart.group().all(), function(kv) { return kv.key; });
+                max = d3.time.month.offset(max, 1);
+                chart.x().domain([min, max]);
+            }
+            chart.on('preRender', calc_domain);
+            chart.on('preRedraw', calc_domain);
 
             var countAll = ndx.groupAll(),
                 groupAll = ndx.groupAll().reduceSum(function(d) { return d[val_col]; });
