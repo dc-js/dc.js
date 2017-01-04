@@ -1182,9 +1182,9 @@ dc.coordinateGridMixin = function (_chart) {
     function zoomHandler () {
         _refocused = true;
         if (_zoomOutRestrict) {
-            _chart.x().domain(constrainRange(_chart.x().domain(), _xOriginalDomain));
+            _chart.x().domain(constrainExtent(_chart.x().domain(), _xOriginalDomain));
             if (_rangeChart) {
-                _chart.x().domain(constrainRange(_chart.x().domain(), _rangeChart.x().domain()));
+                _chart.x().domain(constrainExtent(_chart.x().domain(), _rangeChart.x().domain()));
             }
         }
 
@@ -1211,11 +1211,11 @@ dc.coordinateGridMixin = function (_chart) {
         _refocused = !rangesEqual(domain, _xOriginalDomain);
     }
 
-    function constrainRange (range, constraint) {
-        var constrainedRange = [];
-        constrainedRange[0] = d3.max([range[0], constraint[0]]);
-        constrainedRange[1] = d3.min([range[1], constraint[1]]);
-        return constrainedRange;
+    function constrainExtent (extent, constraint) {
+        var constrainedExtent = [];
+        constrainedExtent[0] = d3.max([extent[0], constraint[0]]);
+        constrainedExtent[1] = d3.min([extent[1], constraint[1]]);
+        return constrainedExtent;
     }
 
     /**
