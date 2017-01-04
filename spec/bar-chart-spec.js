@@ -949,42 +949,51 @@ describe('dc.barChart', function () {
             });
         });
     });
-    describe('with elasticX and x-axis padding', function() {
+    describe('with elasticX and x-axis padding', function () {
         var date = makeDate(2012, 5, 1);
         beforeEach(function () {
-
             var rows = [
-              {x: date, y: 4},
+                {x: date, y: 4},
             ];
             data = crossfilter(rows);
             dimension = data.dimension(function (d) {
-              return d.x;
+                return d.x;
             });
             group = dimension.group().reduceSum(function (d) {
-              return d.y;
+                return d.y;
             });
             chart = dc.barChart('#' + id);
             chart.width(500)
-              .transitionDuration(0)
-              .x(d3.time.scale())
-              .elasticY(true).elasticX(true)
-              .dimension(dimension)
-              .group(group)
+                .transitionDuration(0)
+                .x(d3.time.scale())
+                .elasticY(true).elasticX(true)
+                .dimension(dimension)
+                .group(group);
             chart.render();
         });
-        it ('should render the right xAxisMax/Min when no padding', function () {
+        // note: these tests assume that the bar width is not included in the
+        // chart width, so they should be broken when #792 is fixed
+        it('should render the right xAxisMax/Min when no padding', function () {
             expect(chart.xAxisMin()).toEqual(date);
             expect(chart.xAxisMax()).toEqual(date);
-        })
-        it ('should render the right xAxisMax/Min when 10 day padding', function () {
-          chart.xAxisPadding(10)
-          let expectedStartDate = d3.time.day.offset(date, -10);
-          let expectedEndDate = d3.time.day.offset(date, 10);
-          expect(chart.xAxisMin()).toEqual(expectedStartDate);
-          expect(chart.xAxisMax()).toEqual(expectedEndDate);
         });
-
-        it ('should render the right ')
+        it('should render the right xAxisMax/Min when 10 day padding', function () {
+            chart.xAxisPadding(10)
+                .render();
+            var expectedStartDate = d3.time.day.offset(date, -10);
+            var expectedEndDate = d3.time.day.offset(date, 10);
+            expect(chart.xAxisMin()).toEqual(expectedStartDate);
+            expect(chart.xAxisMax()).toEqual(expectedEndDate);
+        });
+        it('should render the right xAxisMax/Min when 2 month padding', function () {
+            chart.xAxisPaddingUnit('month')
+                .xAxisPadding(2)
+                .render();
+            var expectedStartDate = d3.time.month.offset(date, -2);
+            var expectedEndDate = d3.time.month.offset(date, 2);
+            expect(chart.xAxisMin()).toEqual(expectedStartDate);
+            expect(chart.xAxisMax()).toEqual(expectedEndDate);
+        });
     });
     describe('with changing number of bars and elasticX', function () {
         beforeEach(function () {
@@ -1033,7 +1042,6 @@ describe('dc.barChart', function () {
             });
         });
     });
-
 
     describe('with changing number of ordinal bars and elasticX', function () {
         beforeEach(function () {
