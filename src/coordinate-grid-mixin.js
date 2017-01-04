@@ -1182,9 +1182,13 @@ dc.coordinateGridMixin = function (_chart) {
     function zoomHandler () {
         _refocused = true;
         if (_zoomOutRestrict) {
-            _chart.x().domain(constrainExtent(_chart.x().domain(), _xOriginalDomain));
+            var constraint = _xOriginalDomain;
             if (_rangeChart) {
-                _chart.x().domain(constrainExtent(_chart.x().domain(), _rangeChart.x().domain()));
+                constraint = intersectExtents(constraint, _rangeChart.x().domain());
+            }
+            var constrained = constrainExtent(_chart.x().domain(), constraint);
+            if (constrained) {
+                _chart.x().domain(constrained);
             }
         }
 
@@ -1211,11 +1215,22 @@ dc.coordinateGridMixin = function (_chart) {
         _refocused = !rangesEqual(domain, _xOriginalDomain);
     }
 
+    function intersectExtents (ext1, ext2) {
+        if (ext1[0] > ext2[1] || ext1[1] < ext2[0]) {
+            console.warn('could not intersect extents');
+        }
+        return [Math.max(ext1[0], ext2[0]), Math.min(ext1[1], ext2[1])];
+    }
+
     function constrainExtent (extent, constraint) {
-        var constrainedExtent = [];
-        constrainedExtent[0] = d3.max([extent[0], constraint[0]]);
-        constrainedExtent[1] = d3.min([extent[1], constraint[1]]);
-        return constrainedExtent;
+        var size = extent[1] - extent[0];
+        if (extent[0] < constraint[0]) {
+            return [constraint[0], Math.min(constraint[1], constraint[0] + size)];
+        } else if (extent[1] > constraint[1]) {
+            return [Math.max(constraint[0], constraint[1] - size), constraint[1]];
+        } else {
+            return null;
+        }
     }
 
     /**
