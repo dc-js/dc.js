@@ -334,6 +334,20 @@ module.exports = function (grunt) {
                 files: [
                     {dest: '<%= conf.web %>/resizing/index.html', src: ['<%= conf.web %>/resizing/*.html']}
                 ]
+            },
+            'zoom-listing': {
+                options: {
+                    format: formatFileList,
+                    absolute: true,
+                    title: 'Index of dc.js zoom tests',
+                    heading: 'Interactive test for dc.js chart zoom',
+                    description: 'It\'s hard to conceive of a way to test zoom except by trying it. ' +
+                        'So this is a substitute for automated tests in this area',
+                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.web %>/zoom'
+                },
+                files: [
+                    {dest: '<%= conf.web %>/zoom/index.html', src: ['<%= conf.web %>/zoom/*.html']}
+                ]
             }
         },
 
