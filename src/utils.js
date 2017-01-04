@@ -143,6 +143,9 @@ dc.utils.add = function (l, r, t) {
         if (typeof r === 'string') {
             r = +r;
         }
+        if (t === 'millis') {
+            return new Date(l.getTime() + r);
+        }
         t = t || 'day';
         return d3.time[t].offset(l, r);
     } else if (typeof r === 'string') {
@@ -175,6 +178,9 @@ dc.utils.subtract = function (l, r, t) {
     if (l instanceof Date) {
         if (typeof r === 'string') {
             r = +r;
+        }
+        if (t === 'millis') {
+            return new Date(l.getTime() - r);
         }
         t = t || 'day';
         return d3.time[t].offset(l, -r);

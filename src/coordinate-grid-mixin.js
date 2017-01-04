@@ -1225,9 +1225,9 @@ dc.coordinateGridMixin = function (_chart) {
     function constrainExtent (extent, constraint) {
         var size = extent[1] - extent[0];
         if (extent[0] < constraint[0]) {
-            return [constraint[0], Math.min(constraint[1], constraint[0] + size)];
+            return [constraint[0], Math.min(constraint[1], dc.utils.add(constraint[0], size, 'millis'))];
         } else if (extent[1] > constraint[1]) {
-            return [Math.max(constraint[0], constraint[1] - size), constraint[1]];
+            return [Math.max(constraint[0], dc.utils.subtract(constraint[1], size, 'millis')), constraint[1]];
         } else {
             return null;
         }
