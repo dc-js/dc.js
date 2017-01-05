@@ -120,6 +120,7 @@
                     });
                 }
                 chart.dimension(dateDim).group(group)
+                    .transitionDuration(!find_query('unsafe') && group.all().length > 2000 ? 0 : 1000)
                     .render();
             }
 
