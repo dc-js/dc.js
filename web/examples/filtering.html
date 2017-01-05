@@ -82,6 +82,27 @@ spenderRowChart
     .elasticX(true)
     .controlsUseVisibility(true);
 
+  function show_empty_message(chart) {
+      var is_empty = d3.sum(chart.group().all().map(chart.valueAccessor())) === 0;
+      var data = is_empty ? [1] : [];
+      var empty = chart.svg().selectAll('.empty-message').data(data);
+      empty.enter().append('text')
+          .text('NO DATA!')
+          .attr({
+              'text-anchor': 'middle',
+              'alignment-baseline': 'middle',
+              class: 'empty-message',
+              x: chart.margins().left + chart.effectiveWidth()/2,
+              y: chart.margins().top + chart.effectiveHeight()/2
+          })
+          .style('opacity', 0);
+      empty.transition().duration(1000).style('opacity', 1);
+      empty.exit().remove();
+  }
+
+  spendHistChart.on('pretransition', show_empty_message);
+  spenderRowChart.on('pretransition', show_empty_message);
+
 dc.renderAll();
 
 </script>
