@@ -1,4 +1,4 @@
-/* global appendChartID, loadColorFixture, loadColorFixture2 */
+/* global appendChartID, loadColorFixture, loadColorFixture2, loadIrisFixture */
 describe('dc.heatmap', function () {
     var id, data, dimension, group, chart, chartHeight, chartWidth;
 
@@ -40,7 +40,7 @@ describe('dc.heatmap', function () {
         });
 
         it('should transform the graph position using the graph margins', function () {
-            expect(chart.select('g.heatmap').attr('transform')).toMatchTranslate(5,5);
+            expect(chart.select('g.heatmap').attr('transform')).toMatchTranslate(5, 5);
         });
 
         it('should position the heatboxes in a matrix', function () {
@@ -62,10 +62,10 @@ describe('dc.heatmap', function () {
         it('should color heatboxes using the provided color option', function () {
             var heatBoxes = chart.selectAll('rect.heat-box');
 
-            expect(heatBoxes[0][0].getAttribute('fill')).toEqual('#000001');
-            expect(heatBoxes[0][1].getAttribute('fill')).toEqual('#000002');
-            expect(heatBoxes[0][2].getAttribute('fill')).toEqual('#000003');
-            expect(heatBoxes[0][3].getAttribute('fill')).toEqual('#000004');
+            expect(heatBoxes[0][0].getAttribute('fill')).toMatch(/#000001/i);
+            expect(heatBoxes[0][1].getAttribute('fill')).toMatch(/#000002/i);
+            expect(heatBoxes[0][2].getAttribute('fill')).toMatch(/#000003/i);
+            expect(heatBoxes[0][3].getAttribute('fill')).toMatch(/#000004/i);
         });
 
         it('should size heatboxes based on the size of the matrix', function () {
@@ -359,5 +359,204 @@ describe('dc.heatmap', function () {
                 });
             });
         });
+    });
+    describe('iris filtering', function () {
+        /* jshint camelcase: false */
+        // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+        // 2-chart version of from http://bl.ocks.org/gordonwoodhull/14c623b95993808d69620563508edba6
+        var irisData, bubbleChart, petalDim, petalGroup;
+        beforeEach(function () {
+            irisData = loadIrisFixture();
+
+            var fields = {
+                sl: 'sepal_length',
+                sw: 'sepal_width',
+                pl: 'petal_length',
+                pw: 'petal_width'
+            };
+            var species = ['setosa', 'versicolor', 'virginica'];
+
+            irisData.forEach(function (d) {
+                Object.keys(fields).forEach(function (ab) {
+                    d[fields[ab]] = +d[fields[ab]];
+                });
+            });
+            // autogenerate a key function for an extent
+            function key_function (extent) {
+                var div = extent[1] - extent[0] < 5 ? 2 : 1;
+                return function (k) {
+                    return Math.floor(k * div) / div;
+                };
+            }
+            var extents = {};
+            var keyfuncs = {};
+            Object.keys(fields).forEach(function (ab) {
+                extents[ab] = d3.extent(irisData, function (d) { return d[fields[ab]]; });
+                keyfuncs[ab] = key_function(extents[ab]);
+            });
+            data = crossfilter(irisData);
+            function duo_key (ab1, ab2) {
+                return function (d) {
+                    return [keyfuncs[ab1](d[fields[ab1]]), keyfuncs[ab2](d[fields[ab2]])];
+                };
+            }
+            function key_part (i) {
+                return function (kv) {
+                    return kv.key[i];
+                };
+            }
+            function reduce_species (group) {
+                group.reduce(
+                    function (p, v) {
+                        p[v.species]++;
+                        p.total++;
+                        return p;
+                    }, function (p, v) {
+                        p[v.species]--;
+                        p.total--;
+                        return p;
+                    }, function () {
+                        var init = {total: 0};
+                        species.forEach(function (s) { init[s] = 0; });
+                        return init;
+                    }
+                );
+            }
+            function max_species (d) {
+                var max = 0, i = -1;
+                species.forEach(function (s, j) {
+                    if (d.value[s] > max) {
+                        max = d.value[s];
+                        i = j;
+                    }
+                });
+                return i >= 0 ? species[i] : null;
+            }
+            function initialize_bubble (bubbleChart) {
+                bubbleChart
+                    .width(400)
+                    .height(400)
+                    .x(d3.scale.linear()).xAxisPadding(0.5)
+                    .y(d3.scale.linear()).yAxisPadding(0.5)
+                    .elasticX(true)
+                    .elasticY(true)
+                    .label(d3.functor(''))
+                    .keyAccessor(key_part(0))
+                    .valueAccessor(key_part(1))
+                    .radiusValueAccessor(function (kv) { return kv.value.total; })
+                    .colors(d3.scale.ordinal()
+                            .domain(species.concat('none'))
+                            .range(['#e41a1c','#377eb8','#4daf4a', '#f8f8f8']))
+                    .colorAccessor(function (d) {
+                        return max_species(d) || 'none';
+                    });
+            }
+            function initialize_heatmap (heatMap) {
+                heatMap
+                    .width(400)
+                    .height(400)
+                    .xBorderRadius(15).yBorderRadius(15)
+                    .keyAccessor(key_part(0))
+                    .valueAccessor(key_part(1))
+                    .colors(d3.scale.ordinal()
+                            .domain(species.concat('none'))
+                            .range(['#e41a1c','#377eb8','#4daf4a', '#f8f8f8']))
+                    .colorAccessor(function (d) {
+                        return max_species(d) || 'none';
+                    })
+                    .renderTitle(true)
+                    .title(function (d) {
+                        return JSON.stringify(d.value, null, 2);
+                    });
+            }
+
+            var bubbleId = 'bubble-chart';
+            appendChartID(bubbleId);
+
+            bubbleChart = dc.bubbleChart('#' + bubbleId);
+            var sepalDim = data.dimension(duo_key('sl', 'sw')), sepalGroup = sepalDim.group();
+            petalDim = data.dimension(duo_key('pl', 'pw')); petalGroup = petalDim.group();
+
+            reduce_species(sepalGroup);
+            reduce_species(petalGroup);
+            initialize_bubble(bubbleChart.dimension(sepalDim).group(sepalGroup));
+            initialize_heatmap(chart.dimension(petalDim).group(petalGroup));
+            bubbleChart.render();
+            chart.render();
+        });
+        // return brand-new objects and keys every time
+        function clone_group (group) {
+            function clone_kvs (all) {
+                return all.map(function (kv) {
+                    return {
+                        key: kv.key.slice(0),
+                        value: Object.assign({}, kv.value)
+                    };
+                });
+            }
+            return {
+                all: function () {
+                    return clone_kvs(group.all());
+                },
+                top: function (N) {
+                    return clone_kvs(group.top(N));
+                }
+            };
+        }
+
+        function testRectFillsBubble12 (chart) {
+            var rects = chart.selectAll('rect')[0];
+            expect(d3.select(rects[0]).attr('fill')).toMatch(/#f8f8f8/i);
+            expect(d3.select(rects[3]).attr('fill')).toMatch(/#377eb8/i);
+            expect(d3.select(rects[4]).attr('fill')).toMatch(/#377eb8/i);
+            expect(d3.select(rects[7]).attr('fill')).toMatch(/#4daf4a/i);
+            expect(d3.select(rects[8]).attr('fill')).toMatch(/#f8f8f8/i);
+            expect(d3.select(rects[10]).attr('fill')).toMatch(/#f8f8f8/i);
+            expect(d3.select(rects[11]).attr('fill')).toMatch(/#f8f8f8/i);
+            expect(d3.select(rects[12]).attr('fill')).toMatch(/#f8f8f8/i);
+        }
+        function testRectTitlesBubble12 (chart) {
+            var titles = chart.selectAll('g.box-group title')[0];
+            expect(JSON.parse(d3.select(titles[0]).text()).total).toBe(0);
+            expect(JSON.parse(d3.select(titles[2]).text()).total).toBe(0);
+            expect(JSON.parse(d3.select(titles[3]).text()).total).toBe(2);
+            expect(JSON.parse(d3.select(titles[4]).text()).total).toBe(3);
+            expect(JSON.parse(d3.select(titles[5]).text()).total).toBe(0);
+            expect(JSON.parse(d3.select(titles[7]).text()).total).toBe(1);
+            expect(JSON.parse(d3.select(titles[9]).text()).total).toBe(0);
+            expect(JSON.parse(d3.select(titles[10]).text()).total).toBe(0);
+            expect(JSON.parse(d3.select(titles[12]).text()).total).toBe(0);
+        }
+
+        describe('bubble filtering with straight crossfilter', function () {
+            beforeEach(function () {
+                var aBubble = d3.select(bubbleChart.selectAll('circle.bubble')[0][12]);
+                aBubble.on('click')(aBubble.datum());
+                d3.timer.flush();
+            });
+            it('updates rect fills correctly', function () {
+                testRectFillsBubble12(chart);
+            });
+            it('updates rect titles correctly', function () {
+                testRectTitlesBubble12(chart);
+            });
+        });
+        describe('column filtering with cloned results', function () {
+            beforeEach(function () {
+                chart.group(clone_group(petalGroup));
+                chart.render();
+                var aBubble = d3.select(bubbleChart.selectAll('circle.bubble')[0][12]);
+                aBubble.on('click')(aBubble.datum());
+                d3.timer.flush();
+            });
+            it('updates rect fills correctly', function () {
+                testRectFillsBubble12(chart);
+            });
+            it('updates rect titles correctly', function () {
+                testRectTitlesBubble12(chart);
+            });
+        });
+        /* jshint camelcase: true */
+        // jscs enable: requireCamelCaseOrUpperCaseIdentifiers
     });
 });

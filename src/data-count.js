@@ -1,14 +1,14 @@
 /**
  * The data count widget is a simple widget designed to display the number of records selected by the
  * current filters out of the total number of records in the data set. Once created the data count widget
- * will automatically update the text content of the following elements under the parent element.
+ * will automatically update the text content of child elements with the following classes:
+ *
+ * * `.total-count` - total number of records
+ * * `.filter-count` - number of records matched by the current filters
  *
  * Note: this widget works best for the specific case of showing the number of records out of a
  * total. If you want a more general-purpose numeric display, please use the
  * {@link dc.numberDisplay} widget instead.
- *
- * '.total-count' - total number of records
- * '.filter-count' - number of records matched by the current filters
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
@@ -23,11 +23,11 @@
  *     .dimension(ndx)
  *     .group(all);
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.dataCount}
+ * @returns {dc.dataCount}
  */
 dc.dataCount = function (parent, chartGroup) {
     var _formatNumber = d3.format(',d');
@@ -49,8 +49,7 @@ dc.dataCount = function (parent, chartGroup) {
      *      all: 'All records selected. Click on charts to apply filters'
      * })
      * @param {{some:String, all: String}} [options]
-     * @return {{some:String, all: String}}
-     * @return {dc.dataCount}
+     * @returns {{some:String, all: String}|dc.dataCount}
      */
     _chart.html = function (options) {
         if (!arguments.length) {
@@ -70,12 +69,11 @@ dc.dataCount = function (parent, chartGroup) {
      * @method formatNumber
      * @memberof dc.dataCount
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Formatting d3.format}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Formatting.md d3.format}
      * @example
      * counter.formatNumber(d3.format('.2g'))
      * @param {Function} [formatter=d3.format('.2g')]
-     * @return {Function}
-     * @return {dc.dataCount}
+     * @returns {Function|dc.dataCount}
      */
     _chart.formatNumber = function (formatter) {
         if (!arguments.length) {

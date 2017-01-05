@@ -31,7 +31,7 @@ describe('dc.legend', function () {
         });
 
         it('should place the legend using the provided x and y values', function () {
-            expect(chart.select('g.dc-legend').attr('transform')).toMatchTranslate(400,10);
+            expect(chart.select('g.dc-legend').attr('transform')).toMatchTranslate(400, 10);
         });
 
         it('should generate a legend item for each stacked line', function () {
@@ -39,14 +39,14 @@ describe('dc.legend', function () {
         });
 
         it('should generate legend item boxes', function () {
-            expect(legendIcon(0).attr('width')).toBeWithinDelta(13,2);
+            expect(legendIcon(0).attr('width')).toBeWithinDelta(13, 2);
             expect(legendIcon(0).attr('height')).toBeWithinDelta(13, 2);
         });
 
         it('should color the legend item boxes using the chart line colors', function () {
-            expect(legendIcon(0).attr('fill')).toBe('#1f77b4');
-            expect(legendIcon(1).attr('fill')).toBe('#ff7f0e');
-            expect(legendIcon(2).attr('fill')).toBe('#2ca02c');
+            expect(legendIcon(0).attr('fill')).toMatch(/#1f77b4/i);
+            expect(legendIcon(1).attr('fill')).toMatch(/#ff7f0e/i);
+            expect(legendIcon(2).attr('fill')).toMatch(/#2ca02c/i);
         });
 
         it('should generate a legend label for each chart line', function () {
@@ -95,18 +95,22 @@ describe('dc.legend', function () {
         });
 
         describe('with .horizontal(true) and defined legendWidth and itemWidth', function () {
+            var legendCoords;
             beforeEach(function () {
                 chart.legend(dc.legend().horizontal(true).legendWidth(60).itemWidth(30));
                 chart.render();
+                legendCoords = d3.range(3).map(function (i) {
+                    return coordsFromTranslate(legendItem(i).attr('transform'));
+                });
             });
 
             it('should place legend items in two columns. third item is new row', function () {
-                expect(coordsFromTranslate(legendItem(0).attr('transform')).x).toBeWithinDelta(0, 1);
-                expect(coordsFromTranslate(legendItem(1).attr('transform')).x).toBeWithinDelta(30, 5);
-                expect(coordsFromTranslate(legendItem(2).attr('transform')).x).toBeWithinDelta(0, 1);
-                expect(coordsFromTranslate(legendItem(0).attr('transform')).y).toBeWithinDelta(0, 1);
-                expect(coordsFromTranslate(legendItem(1).attr('transform')).y).toBeWithinDelta(0, 1);
-                expect(coordsFromTranslate(legendItem(2).attr('transform')).y).toBeWithinDelta(13, 5);
+                expect(legendCoords[0].x).toBeWithinDelta(0, 1);
+                expect(legendCoords[0].y).toBeWithinDelta(0, 1);
+                expect(legendCoords[1].x).toBeWithinDelta(30, 5);
+                expect(legendCoords[1].y).toBeWithinDelta(0, 1);
+                expect(legendCoords[2].x).toBeWithinDelta(0, 1);
+                expect(legendCoords[2].y).toBeWithinDelta(13, 5);
             });
         });
 
@@ -141,24 +145,27 @@ describe('dc.legend', function () {
 
         describe('with .horizontal(true) and .autoItemWidth(true)', function () {
 
-            var
-                autoWidthOffset1, fixedWidthOffset1,
-                autoWidthOffset2, fixedWidthOffset2;
+            var fixedWidthOffset1, fixedWidthOffset2,
+                autoWidthCoords;
 
             beforeEach(function () {
                 chart.legend(dc.legend().horizontal(true).itemWidth(30).autoItemWidth(false));
                 chart.render();
                 fixedWidthOffset1 = coordsFromTranslate(legendItem(1).attr('transform')).x;
                 fixedWidthOffset2 = coordsFromTranslate(legendItem(2).attr('transform')).x;
-                chart.legend(dc.legend().horizontal(true).itemWidth(30).autoItemWidth(true));
+                chart.legend(dc.legend().horizontal(true).itemWidth(30).autoItemWidth(true).legendWidth(160));
                 chart.render();
-                autoWidthOffset1  = coordsFromTranslate(legendItem(1).attr('transform')).x;
-                autoWidthOffset2  = coordsFromTranslate(legendItem(2).attr('transform')).x;
+                autoWidthCoords = d3.range(3).map(function (i) {
+                    return coordsFromTranslate(legendItem(i).attr('transform'));
+                });
             });
 
-            it('autoWidth x offset should be greater than fixedWidth x offset for some legend items', function () {
-                expect(autoWidthOffset1).toBeGreaterThan(fixedWidthOffset1);
-                expect(autoWidthOffset2).toBeGreaterThan(fixedWidthOffset2);
+            it('autoWidth x offset should be greater than fixedWidth x offset for the second item', function () {
+                expect(autoWidthCoords[1].x).toBeGreaterThan(fixedWidthOffset1);
+            });
+            it('should wrap the third item based on actual widths', function () {
+                expect(autoWidthCoords[2].x).toBe(0);
+                expect(autoWidthCoords[2].y).toBeWithinDelta(13, 5);
             });
         });
 
@@ -176,6 +183,28 @@ describe('dc.legend', function () {
                 expect(legendLabel(0).text()).toBe('1. Id Sum');
                 expect(legendLabel(1).text()).toBe('2. Value Sum');
                 expect(legendLabel(2).text()).toBe('3. Fixed');
+            });
+        });
+
+        describe('with .maxItems(2)', function () {
+            beforeEach(function () {
+                chart.legend()
+                    .maxItems(2);
+                chart.render();
+            });
+            it('should display two items', function () {
+                expect(chart.select('g.dc-legend').selectAll('g.dc-legend-item').size()).toBe(2);
+            });
+        });
+
+        describe('with invalid .maxItems', function () {
+            beforeEach(function () {
+                chart.legend()
+                    .maxItems('foo');
+                chart.render();
+            });
+            it('should display three items', function () {
+                expect(chart.select('g.dc-legend').selectAll('g.dc-legend-item').size()).toBe(3);
             });
         });
     });

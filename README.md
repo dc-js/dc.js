@@ -7,17 +7,39 @@
 dc.js
 =====
 
-Dimensional charting built to work natively with crossfilter rendered using d3.js. Check out the
-[example page](http://dc-js.github.com/dc.js/) with a quick five minutes how to guide. For a
-detailed [API reference](https://github.com/dc-js/dc.js/blob/master/web/docs/api-1.6.0.md) and
-more please visit the [Wiki](https://github.com/dc-js/dc.js/wiki).
+Dimensional charting built to work natively with [crossfilter](http://crossfilter.github.io/crossfilter/)
+rendered using [d3.js](https://d3js.org/). In dc.js, each chart displays an aggregation of some
+attributes through the position, size, and color of its elements, and also presents a dimension
+which can be filtered. When the filter or brush changes, all other charts are updated dynamically,
+using animated transitions.
 
+Check out the [example page](http://dc-js.github.com/dc.js/)
+and its [annotated source](http://dc-js.github.io/dc.js/docs/stock.html) for a quick five minute
+how-to guide. The detailed [API reference is here](http://dc-js.github.io/dc.js/docs/html/)
+([markdown version](https://github.com/dc-js/dc.js/blob/develop/web/docs/api-latest.md)). For
+more examples and hints please visit the [Wiki](https://github.com/dc-js/dc.js/wiki).
+
+
+Support
+--------------------
+* [Example Site](http://dc-js.github.com/dc.js/)
+* [Changelog](https://github.com/dc-js/dc.js/blob/develop/Changelog.md)
+* [Frequently Asked Questions](https://github.com/dc-js/dc.js/wiki/FAQ) and [Wiki](https://github.com/dc-js/dc.js/wiki)
+* [v2.0 API Reference](http://dc-js.github.io/dc.js/docs/html/) <sup>([markdown](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md))</sup> <sup>([next - v2.1](https://github.com/dc-js/dc.js/blob/develop/web/docs/api-latest.md))</sup> <sup>([last - v1.7](https://github.com/dc-js/dc.js/blob/master/web/docs/api-1.7.0.md))</sup>
+* [dc.js on StackOverflow](http://stackoverflow.com/questions/tagged/dc.js) - ask questions and get help
+* [User Group](https://groups.google.com/forum/?fromgroups#!forum/dc-js-user-group) ("mailing list") - discussion and longer topics
+* [GitHub Issues](https://github.com/dc-js/dc.js/issues) - bug reports and feature requests
+
+*Please direct questions and support requests to Stack Overflow or the user group. When posting to Stack Overflow, use the* `[dc.js]` *and/or* `[crossfilter]` *tags - other tags are likely to draw unwanted attention.*
+
+Get help faster with a working example! Fork these to get started:<br>
+[example jsFiddle](https://jsfiddle.net/gordonwoodhull/1hbjwxzy/) - [blank jsFiddle](https://jsfiddle.net/gordonwoodhull/kk4j0bzn/) - [example bl.ock](http://blockbuilder.org/gordonwoodhull/ecce8e32d64c662cffd5) - [blank bl.ock](http://blockbuilder.org/gordonwoodhull/9ab997c9a8d7d3380364)
 
 CDN location
 --------------------
 ```
-http://cdnjs.cloudflare.com/ajax/libs/dc/1.7.5/dc.min.js
-http://cdnjs.cloudflare.com/ajax/libs/dc/1.7.5/dc.min.css
+http://cdnjs.cloudflare.com/ajax/libs/dc/2.0.0/dc.min.js
+http://cdnjs.cloudflare.com/ajax/libs/dc/2.0.0/dc.min.css
 ```
 Please do not use github.io as a CDN unless you need the bleeding-edge features.
 

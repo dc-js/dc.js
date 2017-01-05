@@ -2,8 +2,8 @@
  * The data table is a simple widget designed to list crossfilter focused data set (rows being
  * filtered) in a good old tabular fashion.
  *
- * Note: Unlike other charts, the data table (and data grid chart) use the group attribute as a
- * keying function for {@link https://github.com/mbostock/d3/wiki/Arrays#-nest nesting} the data
+ * Note: Unlike other charts, the data table (and data grid chart) use the {@link dc.dataTable#group group} attribute as a
+ * keying function for {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#nest nesting} the data
  * together in groups.  Do not pass in a crossfilter group as this will not work.
  *
  * Another interesting feature of the data table is that you can pass a crossfilter group to the `dimension`, as
@@ -19,11 +19,11 @@
  * @memberof dc
  * @mixes dc.baseMixin
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.dataTable}
+ * @returns {dc.dataTable}
  */
 dc.dataTable = function (parent, chartGroup) {
     var LABEL_CSS_CLASS = 'dc-table-label';
@@ -203,13 +203,29 @@ dc.dataTable = function (parent, chartGroup) {
     };
 
     /**
+     * Get or set the group function for the data table. The group function takes a data row and
+     * returns the key to specify to {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_nest d3.nest}
+     * to split rows into groups.
+     *
+     * Do not pass in a crossfilter group as this will not work.
+     * @method group
+     * @memberof dc.dataTable
+     * @instance
+     * @example
+     * // group rows by the value of their field
+     * chart
+     *     .group(function(d) { return d.field; })
+     * @param {Function} groupFunction Function taking a row of data and returning the nest key.
+     * @returns {Function|dc.dataTable}
+     */
+
+    /**
      * Get or set the table size which determines the number of rows displayed by the widget.
      * @method size
      * @memberof dc.dataTable
      * @instance
      * @param {Number} [size=25]
-     * @return {Number}
-     * @return {dc.dataTable}
+     * @returns {Number|dc.dataTable}
      */
     _chart.size = function (size) {
         if (!arguments.length) {
@@ -231,8 +247,7 @@ dc.dataTable = function (parent, chartGroup) {
      * @memberof dc.dataTable
      * @instance
      * @param {Number} [beginSlice=0]
-     * @return {Number}
-     * @return {dc.dataTable}
+     * @returns {Number|dc.dataTable}
      */
     _chart.beginSlice = function (beginSlice) {
         if (!arguments.length) {
@@ -249,8 +264,7 @@ dc.dataTable = function (parent, chartGroup) {
      * @memberof dc.dataTable
      * @instance
      * @param {Number|undefined} [endSlice=undefined]
-     * @return {Number}
-     * @return {dc.dataTable}
+     * @returns {Number|dc.dataTable}
      */
     _chart.endSlice = function (endSlice) {
         if (!arguments.length) {
@@ -337,8 +351,7 @@ dc.dataTable = function (parent, chartGroup) {
      * @memberof dc.dataTable
      * @instance
      * @param {Array<Function>} [columns=[]]
-     * @return {Array<Function>}}
-     * @return {dc.dataTable}
+     * @returns {Array<Function>}|dc.dataTable}
      */
     _chart.columns = function (columns) {
         if (!arguments.length) {
@@ -350,7 +363,7 @@ dc.dataTable = function (parent, chartGroup) {
 
     /**
      * Get or set sort-by function. This function works as a value accessor at row level and returns a
-     * particular field to be sorted by. Default value: identity function
+     * particular field to be sorted by.
      * @method sortBy
      * @memberof dc.dataTable
      * @instance
@@ -358,9 +371,8 @@ dc.dataTable = function (parent, chartGroup) {
      * chart.sortBy(function(d) {
      *     return d.date;
      * });
-     * @param {Function} [sortBy]
-     * @return {Function}
-     * @return {dc.dataTable}
+     * @param {Function} [sortBy=identity function]
+     * @returns {Function|dc.dataTable}
      */
     _chart.sortBy = function (sortBy) {
         if (!arguments.length) {
@@ -376,13 +388,12 @@ dc.dataTable = function (parent, chartGroup) {
      * @method order
      * @memberof dc.dataTable
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_ascending d3.ascending}
-     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_descending d3.descending}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending d3.ascending}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending d3.descending}
      * @example
      * chart.order(d3.descending);
      * @param {Function} [order=d3.ascending]
-     * @return {Function}
-     * @return {dc.dataTable}
+     * @returns {Function|dc.dataTable}
      */
     _chart.order = function (order) {
         if (!arguments.length) {
@@ -393,9 +404,8 @@ dc.dataTable = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set if group rows will be shown.
-     *
-     * The .group() getter-setter must be provided in either case.
+     * Get or set if group rows will be shown. The dataTable {@link dc.dataTable#group group}
+     * function must be specified even if groups are not shown.
      * @method showGroups
      * @memberof dc.dataTable
      * @instance
@@ -404,8 +414,7 @@ dc.dataTable = function (parent, chartGroup) {
      *     .group([value], [name])
      *     .showGroups(true|false);
      * @param {Boolean} [showGroups=true]
-     * @return {Boolean}
-     * @return {dc.dataTable}
+     * @returns {Boolean|dc.dataTable}
      */
     _chart.showGroups = function (showGroups) {
         if (!arguments.length) {

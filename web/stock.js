@@ -681,5 +681,6 @@ d3.selectAll('#version').text(dc.version);
 // Determine latest stable version in the repo via Github API
 d3.json('https://api.github.com/repos/dc-js/dc.js/releases/latest', function (error, latestRelease) {
     /*jshint camelcase: false */
-    d3.selectAll('#latest').text(latestRelease.tag_name); /* jscs:disable */
+    /* jscs:disable */
+    d3.selectAll('#latest').text(latestRelease.tag_name);
 });

@@ -52,8 +52,8 @@ describe('dc.seriesChart', function () {
         it('should color lines using the colors in the data', function () {
             var lines = chart.selectAll('path.line');
 
-            expect(d3.select(lines[0][0]).attr('stroke')).toBe('#000001');
-            expect(d3.select(lines[0][1]).attr('stroke')).toBe('#000002');
+            expect(d3.select(lines[0][0]).attr('stroke')).toMatch(/#000001/i);
+            expect(d3.select(lines[0][1]).attr('stroke')).toMatch(/#000002/i);
         });
 
         describe('with brush off', function () {
@@ -93,8 +93,8 @@ describe('dc.seriesChart', function () {
             expect(d3.select(lines[0][0]).attr('stroke-dasharray')).toEqualIntList('3,1,1');
             expect(d3.select(lines[0][1]).attr('stroke-dasharray')).toEqualIntList('3,1,1');
 
-            expect(d3.select(areas[0][0]).attr('fill')).toBe('#000001');
-            expect(d3.select(areas[0][1]).attr('fill')).toBe('#000002');
+            expect(d3.select(areas[0][0]).attr('fill')).toMatch(/#000001/i);
+            expect(d3.select(areas[0][1]).attr('fill')).toMatch(/#000002/i);
         });
     });
 
