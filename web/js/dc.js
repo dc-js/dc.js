@@ -636,6 +636,9 @@ dc.utils.add = function (l, r, t) {
         if (typeof r === 'string') {
             r = +r;
         }
+        if (t === 'millis') {
+            return new Date(l.getTime() + r);
+        }
         t = t || 'day';
         return d3.time[t].offset(l, r);
     } else if (typeof r === 'string') {
@@ -668,6 +671,9 @@ dc.utils.subtract = function (l, r, t) {
     if (l instanceof Date) {
         if (typeof r === 'string') {
             r = +r;
+        }
+        if (t === 'millis') {
+            return new Date(l.getTime() - r);
         }
         t = t || 'day';
         return d3.time[t].offset(l, -r);
@@ -2753,39 +2759,6 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart.colors(d3.scale.category10());
     _chart._mandatoryAttributes().push('x');
-
-    function zoomHandler () {
-        _refocused = true;
-        if (_zoomOutRestrict) {
-            _chart.x().domain(constrainRange(_chart.x().domain(), _xOriginalDomain));
-            if (_rangeChart) {
-                _chart.x().domain(constrainRange(_chart.x().domain(), _rangeChart.x().domain()));
-            }
-        }
-
-        var domain = _chart.x().domain();
-        var domFilter = dc.filters.RangedFilter(domain[0], domain[1]);
-
-        _chart.replaceFilter(domFilter);
-        _chart.rescale();
-        _chart.redraw();
-
-        if (_rangeChart && !rangesEqual(_chart.filter(), _rangeChart.filter())) {
-            dc.events.trigger(function () {
-                _rangeChart.replaceFilter(domFilter);
-                _rangeChart.redraw();
-            });
-        }
-
-        _chart._invokeZoomedListener();
-
-        dc.events.trigger(function () {
-            _chart.redrawGroup();
-        }, dc.constants.EVENT_DELAY);
-
-        _refocused = !rangesEqual(domain, _xOriginalDomain);
-    }
-
     var _parent;
     var _g;
     var _chartBodyG;
@@ -3943,11 +3916,58 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.root().call(_nullZoom);
     };
 
-    function constrainRange (range, constraint) {
-        var constrainedRange = [];
-        constrainedRange[0] = d3.max([range[0], constraint[0]]);
-        constrainedRange[1] = d3.min([range[1], constraint[1]]);
-        return constrainedRange;
+    function zoomHandler () {
+        _refocused = true;
+        if (_zoomOutRestrict) {
+            var constraint = _xOriginalDomain;
+            if (_rangeChart) {
+                constraint = intersectExtents(constraint, _rangeChart.x().domain());
+            }
+            var constrained = constrainExtent(_chart.x().domain(), constraint);
+            if (constrained) {
+                _chart.x().domain(constrained);
+            }
+        }
+
+        var domain = _chart.x().domain();
+        var domFilter = dc.filters.RangedFilter(domain[0], domain[1]);
+
+        _chart.replaceFilter(domFilter);
+        _chart.rescale();
+        _chart.redraw();
+
+        if (_rangeChart && !rangesEqual(_chart.filter(), _rangeChart.filter())) {
+            dc.events.trigger(function () {
+                _rangeChart.replaceFilter(domFilter);
+                _rangeChart.redraw();
+            });
+        }
+
+        _chart._invokeZoomedListener();
+
+        dc.events.trigger(function () {
+            _chart.redrawGroup();
+        }, dc.constants.EVENT_DELAY);
+
+        _refocused = !rangesEqual(domain, _xOriginalDomain);
+    }
+
+    function intersectExtents (ext1, ext2) {
+        if (ext1[0] > ext2[1] || ext1[1] < ext2[0]) {
+            console.warn('could not intersect extents');
+        }
+        return [Math.max(ext1[0], ext2[0]), Math.min(ext1[1], ext2[1])];
+    }
+
+    function constrainExtent (extent, constraint) {
+        var size = extent[1] - extent[0];
+        if (extent[0] < constraint[0]) {
+            return [constraint[0], Math.min(constraint[1], dc.utils.add(constraint[0], size, 'millis'))];
+        } else if (extent[1] > constraint[1]) {
+            return [Math.max(constraint[0], dc.utils.subtract(constraint[1], size, 'millis')), constraint[1]];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -4239,12 +4259,12 @@ dc.stackMixin = function (_chart) {
 
     _chart.xAxisMin = function () {
         var min = d3.min(flattenStack(), dc.pluck('x'));
-        return dc.utils.subtract(min, _chart.xAxisPadding());
+        return dc.utils.subtract(min, _chart.xAxisPadding(), _chart.xAxisPaddingUnit());
     };
 
     _chart.xAxisMax = function () {
         var max = d3.max(flattenStack(), dc.pluck('x'));
-        return dc.utils.add(max, _chart.xAxisPadding());
+        return dc.utils.add(max, _chart.xAxisPadding(), _chart.xAxisPaddingUnit());
     };
 
     /**
@@ -8865,7 +8885,8 @@ dc.legend = function () {
         _legendWidth = 560,
         _itemWidth = 70,
         _autoItemWidth = false,
-        _legendText = dc.pluck('name');
+        _legendText = dc.pluck('name'),
+        _maxItems;
 
     var _g;
 
@@ -8883,6 +8904,10 @@ dc.legend = function () {
             .attr('class', 'dc-legend')
             .attr('transform', 'translate(' + _x + ',' + _y + ')');
         var legendables = _parent.legendables();
+
+        if (_maxItems !== undefined) {
+            legendables = legendables.slice(0, _maxItems);
+        }
 
         var itemEnter = _g.selectAll('g.dc-legend-item')
             .data(legendables)
@@ -8933,15 +8958,13 @@ dc.legend = function () {
         var row = 0;
         itemEnter.attr('transform', function (d, i) {
             if (_horizontal) {
-                var translateBy = 'translate(' + _cumulativeLegendTextWidth + ',' + row * legendItemHeight() + ')';
                 var itemWidth   = _autoItemWidth === true ? this.getBBox().width + _gap : _itemWidth;
-
-                if ((_cumulativeLegendTextWidth + itemWidth) >= _legendWidth) {
-                    ++row ;
-                    _cumulativeLegendTextWidth = 0 ;
-                } else {
-                    _cumulativeLegendTextWidth += itemWidth;
+                if ((_cumulativeLegendTextWidth + itemWidth) > _legendWidth && _cumulativeLegendTextWidth > 0) {
+                    ++row;
+                    _cumulativeLegendTextWidth = 0;
                 }
+                var translateBy = 'translate(' + _cumulativeLegendTextWidth + ',' + row * legendItemHeight() + ')';
+                _cumulativeLegendTextWidth += itemWidth;
                 return translateBy;
             } else {
                 return 'translate(0,' + i * legendItemHeight() + ')';
@@ -9106,6 +9129,22 @@ dc.legend = function () {
             return _legendText;
         }
         _legendText = legendText;
+        return _legend;
+    };
+
+    /**
+     * Maximum number of legend items to display
+     * @method maxItems
+     * @memberof dc.legend
+     * @instance
+     * @param  {Number} [maxItems]
+     * @return {dc.legend}
+     */
+    _legend.maxItems = function (maxItems) {
+        if (!arguments.length) {
+            return _maxItems;
+        }
+        _maxItems = dc.utils.isNumber(maxItems) ? maxItems : undefined;
         return _legend;
     };
 
