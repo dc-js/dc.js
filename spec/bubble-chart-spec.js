@@ -1,4 +1,4 @@
-/* global appendChartID, loadDateFixture, loadIrisFixture */
+/* global appendChartID, loadDateFixture, loadIrisFixture, makeDate */
 describe('dc.bubbleChart', function () {
     var id, chart, data;
     var dateFixture;
@@ -419,12 +419,74 @@ describe('dc.bubbleChart', function () {
                 .y(d3.scale.log().domain([1, 10]))
                 .elasticX(false)
                 .elasticY(false);
+            chart.render();
         });
 
         it('renders without errors', function () {
-            chart.render();
             chart.selectAll('g.node').each(function (d, i) {
                 expect(d3.select(this).attr('transform')).toMatchTranslate(0, 0);
+            });
+        });
+    });
+
+    describe('with a date-based scale', function () {
+        beforeEach(function () {
+            dimension = data.dimension(function (d) { return d3.time.day.utc(d.dd); });
+            group = dimension.group();
+
+            chart
+                .dimension(dimension)
+                .group(group)
+                .x(d3.time.scale.utc().domain([makeDate(2012, 0, 1), makeDate(2012, 11, 31)]))
+                .elasticX(true)
+                .elasticY(true)
+                .keyAccessor(function (kv) {
+                    return kv.key;
+                })
+                .valueAccessor(function (kv) {
+                    return kv.value;
+                })
+                .radiusValueAccessor(function (kv) {
+                    return kv.value;
+                })
+                .colors(d3.scale.ordinal().range(['#a60000', '#ff0000', '#ff4040', '#ff7373', '#67e667', '#39e639', '#00cc00']))
+                .colorAccessor(function (kv) {
+                    return kv.key;
+                })
+                .render();
+        });
+
+        it('draws bubbles in appropriate locations', function () {
+            var coords = [
+                [170.4,0], [820,155], [489.9,155], [394,310], [149.1,310], [0,310]
+            ];
+            chart.selectAll('g.node').each(function (d, i) {
+                expect(d3.select(this).attr('transform'))
+                    .toMatchTranslate(coords[i][0], coords[i][1], 1);
+            });
+        });
+        it('calculates elastic x axis exactly', function () {
+            expect(chart.x().domain()).toEqual([makeDate(2012, 4, 25), makeDate(2012, 7, 10)]);
+        });
+
+        describe('with 10 day padding', function () {
+            beforeEach(function () {
+                chart.xAxisPadding(10)
+                    .render();
+            });
+            it('should stretch the domain appropriately', function () {
+                expect(chart.x().domain()).toEqual([makeDate(2012, 4, 15), makeDate(2012, 7, 20)]);
+            });
+        });
+
+        describe('with 2 month padding', function () {
+            beforeEach(function () {
+                chart.xAxisPaddingUnit('month')
+                    .xAxisPadding(2)
+                    .render();
+            });
+            it('should stretch the domain appropriately', function () {
+                expect(chart.x().domain()).toEqual([makeDate(2012, 2, 25), makeDate(2012, 9, 10)]);
             });
         });
     });
