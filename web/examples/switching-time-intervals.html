@@ -37,11 +37,20 @@
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
 
-        function find_query(field) {
-            var regexp = new RegExp(field+'=([0-9a-zA-Z\._:/~-]+)');
-            var find;
-            return (find = regexp.exec(location.search)) ? find[1] : null;
-        }
+        var find_query = function() {
+            var _map = window.location.search.substr(1).split('&').map(function(a) {
+                return a.split('=');
+            }).reduce(function(p, v) {
+                if(v.length > 1)
+                    p[v[0]] = decodeURIComponent(v[1].replace(/\+/g, " "));
+                else
+                    p[v[0]] = true;
+                return p;
+            }, {});
+            return function(field) {
+                return _map[field] || null;
+            };
+        }();
         var data = find_query('data') || 'monthly-move.csv',
             date_col = find_query('date') || 'date',
             val_col = find_query('val') || 'volume',
