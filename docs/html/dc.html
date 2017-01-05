@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -52,16 +52,18 @@
 			</li>
 			
 		</ul>
-		<div class="col-sm-3 col-md-3">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
 	</div>
 
 </div>
@@ -94,8 +96,13 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>The entire dc.js library is scoped under the <strong>dc</strong> name space. It does not introduce<br>anything else into the global name space.</p>
-<p>Most <code>dc</code> functions are designed to allow function chaining, meaning they return the current chart<br>instance whenever it is appropriate.  The getter forms of functions do not participate in function<br>chaining because they return values that are not the chart, although some,<br>such as <a href="dc.baseMixin.html#svg">.svg</a> and <a href="dc.coordinateGridMixin.html#xAxis">.xAxis</a>,<br>return values that are themselves chainable d3 objects.</p></div>
+            <div class="description"><p>The entire dc.js library is scoped under the <strong>dc</strong> name space. It does not introduce
+anything else into the global name space.</p>
+<p>Most <code>dc</code> functions are designed to allow function chaining, meaning they return the current chart
+instance whenever it is appropriate.  The getter forms of functions do not participate in function
+chaining because they return values that are not the chart, although some,
+such as <a href="dc.baseMixin.html#svg">.svg</a> and <a href="dc.coordinateGridMixin.html#xAxis">.xAxis</a>,
+return values that are themselves chainable d3 objects.</p></div>
         
 
         
@@ -224,6 +231,9 @@ chart.width(300)
             <dt><a href="dc.scatterPlot.html">scatterPlot</a></dt>
             <dd></dd>
         
+            <dt><a href="dc.selectMenu.html">selectMenu</a></dt>
+            <dd></dd>
+        
             <dt><a href="dc.seriesChart.html">seriesChart</a></dt>
             <dd></dd>
         </dl>
@@ -284,7 +294,7 @@ chart.width(300)
             
 <hr>
 <dt class="name" id=".dateFormat">
-    <h4><span class="type-signature">&lt;static> </span>dateFormat<span class="type-signature"> :function</span></h4>
+    <h4 id=".dateFormat"><span class="type-signature">&lt;static> </span>dateFormat<span class="type-signature"> :function</span></h4>
 
     
 </dt>
@@ -372,14 +382,15 @@ chart.width(300)
             
 <hr>
 <dt class="name" id=".disableTransitions">
-    <h4><span class="type-signature">&lt;static> </span>disableTransitions<span class="type-signature"> :Boolean</span></h4>
+    <h4 id=".disableTransitions"><span class="type-signature">&lt;static> </span>disableTransitions<span class="type-signature"> :Boolean</span></h4>
 
     
 </dt>
 <dd>
     
     <div class="description">
-        <p>If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen<br>immediately</p>
+        <p>If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
+immediately.</p>
     </div>
     
 
@@ -604,7 +615,7 @@ chart.width(300)
             
 <hr>
 <dt>
-    <h4 class="name" id=".deregisterChart"><span class="type-signature">&lt;static> </span>deregisterChart(chart, <span class="optional">group</span>)</h4>
+    <h4 class="name" id=".deregisterChart"><span class="type-signature">&lt;static> </span>deregisterChart(chart [, group])</h4>
     
     
 </dt>
@@ -612,7 +623,8 @@ chart.width(300)
 
     
     <div class="description">
-        <p>Remove given chart instance from the given group, creating the group if necessary.<br>If no group is provided, the default group <code>dc.constants.DEFAULT_CHART_GROUP</code> will be used.</p>
+        <p>Remove given chart instance from the given group, creating the group if necessary.
+If no group is provided, the default group <code>dc.constants.DEFAULT_CHART_GROUP</code> will be used.</p>
     </div>
     
 
@@ -786,7 +798,7 @@ chart.width(300)
             
 <hr>
 <dt>
-    <h4 class="name" id=".filterAll"><span class="type-signature">&lt;static> </span>filterAll(<span class="optional">group</span>)</h4>
+    <h4 class="name" id=".filterAll"><span class="type-signature">&lt;static> </span>filterAll( [group])</h4>
     
     
 </dt>
@@ -794,7 +806,8 @@ chart.width(300)
 
     
     <div class="description">
-        <p>Clear all filters on all charts within the given chart group. If the chart group is not given then<br>only charts that belong to the default chart group will be reset.</p>
+        <p>Clear all filters on all charts within the given chart group. If the chart group is not given then
+only charts that belong to the default chart group will be reset.</p>
     </div>
     
 
@@ -1094,7 +1107,7 @@ chart.width(300)
             
 <hr>
 <dt>
-    <h4 class="name" id=".pluck"><span class="type-signature">&lt;static> </span>pluck(n, <span class="optional">f</span>)</h4>
+    <h4 class="name" id=".pluck"><span class="type-signature">&lt;static> </span>pluck(n [, f])</h4>
     
     
 </dt>
@@ -1102,7 +1115,9 @@ chart.width(300)
 
     
     <div class="description">
-        <p>Returns a function that given a string property name, can be used to pluck the property off an object.  A function<br>can be passed as the second argument to also alter the data being returned.  This can be a useful shorthand method to create<br>accessor functions.</p>
+        <p>Returns a function that given a string property name, can be used to pluck the property off an object.  A function
+can be passed as the second argument to also alter the data being returned.</p>
+<p>This can be a useful shorthand method to create accessor functions.</p>
     </div>
     
 
@@ -1312,7 +1327,7 @@ dc.selectAll(&#x27;.circle&#x27;).data(...).x(xPosition);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id=".redrawAll"><span class="type-signature">&lt;static> </span>redrawAll(<span class="optional">group</span>)</h4>
+    <h4 class="name" id=".redrawAll"><span class="type-signature">&lt;static> </span>redrawAll( [group])</h4>
     
     
 </dt>
@@ -1320,7 +1335,10 @@ dc.selectAll(&#x27;.circle&#x27;).data(...).x(xPosition);</pre>
 
     
     <div class="description">
-        <p>Redraw all charts belong to the given chart group. If the chart group is not given then only charts<br>that belong to the default chart group will be re-drawn. Redraw is different from re-render since<br>when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting<br>from scratch.</p>
+        <p>Redraw all charts belong to the given chart group. If the chart group is not given then only charts
+that belong to the default chart group will be re-drawn. Redraw is different from re-render since
+when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
+from scratch.</p>
     </div>
     
 
@@ -1462,7 +1480,7 @@ dc.selectAll(&#x27;.circle&#x27;).data(...).x(xPosition);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id=".refocusAll"><span class="type-signature">&lt;static> </span>refocusAll(<span class="optional">group</span>)</h4>
+    <h4 class="name" id=".refocusAll"><span class="type-signature">&lt;static> </span>refocusAll( [group])</h4>
     
     
 </dt>
@@ -1470,7 +1488,8 @@ dc.selectAll(&#x27;.circle&#x27;).data(...).x(xPosition);</pre>
 
     
     <div class="description">
-        <p>Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is<br>not given then only charts that belong to the default chart group will be reset.</p>
+        <p>Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
+not given then only charts that belong to the default chart group will be reset.</p>
     </div>
     
 
@@ -1612,7 +1631,7 @@ dc.selectAll(&#x27;.circle&#x27;).data(...).x(xPosition);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id=".registerChart"><span class="type-signature">&lt;static> </span>registerChart(chart, <span class="optional">group</span>)</h4>
+    <h4 class="name" id=".registerChart"><span class="type-signature">&lt;static> </span>registerChart(chart [, group])</h4>
     
     
 </dt>
@@ -1620,7 +1639,8 @@ dc.selectAll(&#x27;.circle&#x27;).data(...).x(xPosition);</pre>
 
     
     <div class="description">
-        <p>Add given chart instance to the given group, creating the group if necessary.<br>If no group is provided, the default group <code>dc.constants.DEFAULT_CHART_GROUP</code> will be used.</p>
+        <p>Add given chart instance to the given group, creating the group if necessary.
+If no group is provided, the default group <code>dc.constants.DEFAULT_CHART_GROUP</code> will be used.</p>
     </div>
     
 
@@ -1794,7 +1814,7 @@ dc.selectAll(&#x27;.circle&#x27;).data(...).x(xPosition);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id=".renderAll"><span class="type-signature">&lt;static> </span>renderAll(<span class="optional">group</span>)</h4>
+    <h4 class="name" id=".renderAll"><span class="type-signature">&lt;static> </span>renderAll( [group])</h4>
     
     
 </dt>
@@ -1802,7 +1822,8 @@ dc.selectAll(&#x27;.circle&#x27;).data(...).x(xPosition);</pre>
 
     
     <div class="description">
-        <p>Re-render all charts belong to the given chart group. If the chart group is not given then only<br>charts that belong to the default chart group will be re-rendered.</p>
+        <p>Re-render all charts belong to the given chart group. If the chart group is not given then only
+charts that belong to the default chart group will be re-rendered.</p>
     </div>
     
 
@@ -1944,7 +1965,7 @@ dc.selectAll(&#x27;.circle&#x27;).data(...).x(xPosition);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id=".transition"><span class="type-signature">&lt;static> </span>transition(selection, <span class="optional">duration</span>, <span class="optional">delay</span>, <span class="optional">name</span>)</h4>
+    <h4 class="name" id=".transition"><span class="type-signature">&lt;static> </span>transition(selection [, duration] [, delay] [, name])</h4>
     
     
 </dt>
@@ -1952,7 +1973,10 @@ dc.selectAll(&#x27;.circle&#x27;).data(...).x(xPosition);</pre>
 
     
     <div class="description">
-        <p>Start a transition on a selection if transitions are globally enabled<br>(<a href="dc.html#.disableTransitions">dc.disableTransitions</a> is false) and the duration is greater than zero; otherwise return<br>the selection. Since most operations are the same on a d3 selection and a d3 transition, this<br>allows a common code path for both cases.</p>
+        <p>Start a transition on a selection if transitions are globally enabled
+(<a href="dc.html#.disableTransitions">dc.disableTransitions</a> is false) and the duration is greater than zero; otherwise return
+the selection. Since most operations are the same on a d3 selection and a d3 transition, this
+allows a common code path for both cases.</p>
     </div>
     
 
@@ -2063,7 +2087,8 @@ dc.selectAll(&#x27;.circle&#x27;).data(...).x(xPosition);</pre>
                 </td>
             
 
-            <td class="description last"><p>the duration of the transition in milliseconds, a<br>function returning the duration, or 0 for no transition</p></td>
+            <td class="description last"><p>the duration of the transition in milliseconds, a
+function returning the duration, or 0 for no transition</p></td>
         </tr>
 
     
@@ -2104,7 +2129,8 @@ dc.selectAll(&#x27;.circle&#x27;).data(...).x(xPosition);</pre>
                 </td>
             
 
-            <td class="description last"><p>the delay of the transition in milliseconds, or a function<br>returning the delay, or 0 for no delay</p></td>
+            <td class="description last"><p>the delay of the transition in milliseconds, or a function
+returning the delay, or 0 for no delay</p></td>
         </tr>
 
     
@@ -2142,7 +2168,8 @@ dc.selectAll(&#x27;.circle&#x27;).data(...).x(xPosition);</pre>
                 </td>
             
 
-            <td class="description last"><p>the name of the transition (if concurrent transitions on the same<br>elements are needed)</p></td>
+            <td class="description last"><p>the name of the transition (if concurrent transitions on the same
+elements are needed)</p></td>
         </tr>
 
     
@@ -2266,20 +2293,22 @@ dc.selectAll(&#x27;.circle&#x27;).data(...).x(xPosition);</pre>
 </div>
 </div>
 
-<div class="modal fade" id="searchResults">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Search results</h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
 
@@ -2291,7 +2320,7 @@ dc.selectAll(&#x27;.circle&#x27;).data(...).x(xPosition);</pre>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Fri Dec 2nd 2016
+		on Wed Jan 4th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -2299,7 +2328,9 @@ dc.selectAll(&#x27;.circle&#x27;).data(...).x(xPosition);</pre>
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
 
 <script>
 $( function () {
@@ -2309,7 +2340,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -2345,8 +2376,7 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			var id = $( heading ).attr( "id" );
-			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+			return $( heading ).attr( "id" ) || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -2372,11 +2402,13 @@ $( function () {
 <!--Google Analytics-->
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		SearcherDisplay.init();
-	});
-</script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
 
 </body>
 </html>

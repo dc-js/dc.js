@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -52,16 +52,18 @@
 			</li>
 			
 		</ul>
-		<div class="col-sm-3 col-md-3">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
 	</div>
 
 </div>
@@ -96,7 +98,8 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>The Color Mixin is an abstract chart functional class providing universal coloring support<br>as a mix-in for any concrete chart implementation.</p></div>
+            <div class="description"><p>The Color Mixin is an abstract chart functional class providing universal coloring support
+as a mix-in for any concrete chart implementation.</p></div>
         
 
         
@@ -180,7 +183,8 @@
 
     
     <div class="description">
-        <p>Set the domain by determining the min and max values as retrieved by<br><a href="dc.colorMixin.html#colorAccessor">.colorAccessor</a> over the chart's dataset.</p>
+        <p>Set the domain by determining the min and max values as retrieved by
+<a href="dc.colorMixin.html#colorAccessor">.colorAccessor</a> over the chart's dataset.</p>
     </div>
     
 
@@ -227,7 +231,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="color-mixin.js.html">color-mixin.js</a>,
-				 <a href="color-mixin.js.html#sunlight-1-line-127">line 127</a>
+				 <a href="color-mixin.js.html#sunlight-1-line-124">line 124</a>
 			</li>
 		</ul>
 	</dd>
@@ -280,7 +284,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="colorAccessor"><span class="type-signature"></span>colorAccessor(<span class="optional">colorAccessor</span>)</h4>
+    <h4 class="name" id="colorAccessor"><span class="type-signature"></span>colorAccessor( [colorAccessor])</h4>
     
     
 </dt>
@@ -288,7 +292,9 @@
 
     
     <div class="description">
-        <p>Set or the get color accessor function. This function will be used to map a data point in a<br>crossfilter group to a color value on the color scale. The default function uses the key<br>accessor.</p>
+        <p>Set or the get color accessor function. This function will be used to map a data point in a
+crossfilter group to a color value on the color scale. The default function uses the key
+accessor.</p>
     </div>
     
 
@@ -397,7 +403,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="color-mixin.js.html">color-mixin.js</a>,
-				 <a href="color-mixin.js.html#sunlight-1-line-76">line 76</a>
+				 <a href="color-mixin.js.html#sunlight-1-line-75">line 75</a>
 			</li>
 		</ul>
 	</dd>
@@ -423,8 +429,8 @@
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -434,23 +440,8 @@
     <dd>
         
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.colorMixin.html">dc.colorMixin</a></span>
 
 
@@ -458,8 +449,8 @@
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -477,7 +468,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="colorCalculator"><span class="type-signature"></span>colorCalculator(<span class="optional">colorCalculator</span>)</h4>
+    <h4 class="name" id="colorCalculator"><span class="type-signature"></span>colorCalculator( [colorCalculator])</h4>
     
     
 </dt>
@@ -485,7 +476,10 @@
 
     
     <div class="description">
-        <p>Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.</p>
+        <p><strong>Deprecated.</strong> Get/set the color calculator. This actually replaces the
+<a href="dc.colorMixin.html#getColor">getColor</a> method!</p>
+<p>This is not recommended, since using a <a href="dc.colorMixin.html#colorAccessor">colorAccessor</a> and
+color scale (<a href="dc.colorMixin.html#colors">.colors</a>) is more powerful and idiomatic d3.</p>
     </div>
     
 
@@ -594,7 +588,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="color-mixin.js.html">color-mixin.js</a>,
-				 <a href="color-mixin.js.html#sunlight-1-line-155">line 155</a>
+				 <a href="color-mixin.js.html#sunlight-1-line-152">line 152</a>
 			</li>
 		</ul>
 	</dd>
@@ -630,7 +624,10 @@
     </dt>
     <dd>
         
-<span class="param-type">*</span>
+<span class="param-type">function</span>
+|
+
+<span class="param-type"><a href="dc.colorMixin.html">dc.colorMixin</a></span>
 
 
 
@@ -647,7 +644,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="colorDomain"><span class="type-signature"></span>colorDomain(<span class="optional">domain</span>)</h4>
+    <h4 class="name" id="colorDomain"><span class="type-signature"></span>colorDomain( [domain])</h4>
     
     
 </dt>
@@ -655,8 +652,10 @@
 
     
     <div class="description">
-        <p>Set or get the current domain for the color mapping function. The domain must be supplied as an<br>array.</p>
-<p>Note: previously this method accepted a callback function. Instead you may use a custom scale<br>set by <a href="dc.colorMixin.html#colors">.colors</a>.</p>
+        <p>Set or get the current domain for the color mapping function. The domain must be supplied as an
+array.</p>
+<p>Note: previously this method accepted a callback function. Instead you may use a custom scale
+set by <a href="dc.colorMixin.html#colors">.colors</a>.</p>
     </div>
     
 
@@ -765,7 +764,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="color-mixin.js.html">color-mixin.js</a>,
-				 <a href="color-mixin.js.html#sunlight-1-line-106">line 106</a>
+				 <a href="color-mixin.js.html#sunlight-1-line-104">line 104</a>
 			</li>
 		</ul>
 	</dd>
@@ -791,8 +790,8 @@
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -802,23 +801,8 @@
     <dd>
         
 <span class="param-type">Array.&lt;String></span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.colorMixin.html">dc.colorMixin</a></span>
 
 
@@ -826,8 +810,8 @@
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -836,7 +820,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="colors"><span class="type-signature"></span>colors(<span class="optional">colorScale</span>)</h4>
+    <h4 class="name" id="colors"><span class="type-signature"></span>colors( [colorScale])</h4>
     
     
 </dt>
@@ -844,7 +828,8 @@
 
     
     <div class="description">
-        <p>Retrieve current color scale or set a new color scale. This methods accepts any function that<br>operates like a d3 scale.</p>
+        <p>Retrieve current color scale or set a new color scale. This methods accepts any function that
+operates like a d3 scale.</p>
     </div>
     
 
@@ -973,7 +958,7 @@
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="http://github.com/mbostock/d3/wiki/Scales">d3.scale</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md">d3.scale</a></li>
 			</ul>
 	</dd>
 	
@@ -994,8 +979,8 @@
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1005,23 +990,8 @@
     <dd>
         
 <span class="param-type">d3.scale</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.colorMixin.html">dc.colorMixin</a></span>
 
 
@@ -1029,8 +999,8 @@
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -1052,7 +1022,7 @@ chart.linearColors([&quot;#4575b4&quot;, &quot;#ffffbf&quot;, &quot;#a50026&quot
             
 <hr>
 <dt>
-    <h4 class="name" id="getColor"><span class="type-signature"></span>getColor(d, <span class="optional">i</span>)</h4>
+    <h4 class="name" id="getColor"><span class="type-signature"></span>getColor(d [, i])</h4>
     
     
 </dt>
@@ -1201,7 +1171,7 @@ chart.linearColors([&quot;#4575b4&quot;, &quot;#ffffbf&quot;, &quot;#a50026&quot
 		<ul class="dummy">
 			<li>
 				<a href="color-mixin.js.html">color-mixin.js</a>,
-				 <a href="color-mixin.js.html#sunlight-1-line-142">line 142</a>
+				 <a href="color-mixin.js.html#sunlight-1-line-139">line 139</a>
 			</li>
 		</ul>
 	</dd>
@@ -1359,7 +1329,7 @@ chart.linearColors([&quot;#4575b4&quot;, &quot;#ffffbf&quot;, &quot;#a50026&quot
 		<ul class="dummy">
 			<li>
 				<a href="color-mixin.js.html">color-mixin.js</a>,
-				 <a href="color-mixin.js.html#sunlight-1-line-62">line 62</a>
+				 <a href="color-mixin.js.html#sunlight-1-line-61">line 61</a>
 			</li>
 		</ul>
 	</dd>
@@ -1420,7 +1390,9 @@ chart.linearColors([&quot;#4575b4&quot;, &quot;#ffffbf&quot;, &quot;#a50026&quot
 
     
     <div class="description">
-        <p>Convenience method to set the color scale to<br><a href="https://github.com/mbostock/d3/wiki/Ordinal-Scales#ordinal">d3.scale.ordinal</a> with<br>range <code>r</code>.</p>
+        <p>Convenience method to set the color scale to
+<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal">d3.scale.ordinal</a> with
+range <code>r</code>.</p>
     </div>
     
 
@@ -1517,7 +1489,7 @@ chart.linearColors([&quot;#4575b4&quot;, &quot;#ffffbf&quot;, &quot;#a50026&quot
 		<ul class="dummy">
 			<li>
 				<a href="color-mixin.js.html">color-mixin.js</a>,
-				 <a href="color-mixin.js.html#sunlight-1-line-48">line 48</a>
+				 <a href="color-mixin.js.html#sunlight-1-line-47">line 47</a>
 			</li>
 		</ul>
 	</dd>
@@ -1593,20 +1565,22 @@ chart.linearColors([&quot;#4575b4&quot;, &quot;#ffffbf&quot;, &quot;#a50026&quot
 </div>
 </div>
 
-<div class="modal fade" id="searchResults">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Search results</h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
 
@@ -1618,7 +1592,7 @@ chart.linearColors([&quot;#4575b4&quot;, &quot;#ffffbf&quot;, &quot;#a50026&quot
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Fri Dec 2nd 2016
+		on Wed Jan 4th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -1626,7 +1600,9 @@ chart.linearColors([&quot;#4575b4&quot;, &quot;#ffffbf&quot;, &quot;#a50026&quot
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
 
 <script>
 $( function () {
@@ -1636,7 +1612,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -1672,8 +1648,7 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			var id = $( heading ).attr( "id" );
-			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+			return $( heading ).attr( "id" ) || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -1699,11 +1674,13 @@ $( function () {
 <!--Google Analytics-->
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		SearcherDisplay.init();
-	});
-</script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
 
 </body>
 </html>

@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -52,16 +52,18 @@
 			</li>
 			
 		</ul>
-		<div class="col-sm-3 col-md-3">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
 	</div>
 
 </div>
@@ -99,11 +101,11 @@
  * // create a row chart under #chart-container2 element using chart group A
  * var chart2 = dc.rowChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.rowChart}
+ * @returns {dc.rowChart}
  */
 dc.rowChart = function (parent, chartGroup) {
 
@@ -112,7 +114,7 @@ dc.rowChart = function (parent, chartGroup) {
     var _labelOffsetX = 10;
     var _labelOffsetY = 15;
     var _hasLabelOffsetY = false;
-    var _dyOffset = '0.35em';  // this helps center labels https://github.com/mbostock/d3/wiki/SVG-Shapes#svg_text
+    var _dyOffset = '0.35em';  // this helps center labels https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#svg_text
     var _titleLabelOffsetX = 2;
 
     var _gap = 5;
@@ -183,14 +185,13 @@ dc.rowChart = function (parent, chartGroup) {
 
     /**
      * Gets or sets the x scale. The x scale can be any d3
-     * {@link https://github.com/mbostock/d3/wiki/Quantitative-Scales quantitive scale}
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md quantitive scale}.
      * @method x
      * @memberof dc.rowChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Quantitative-Scales quantitive scale}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md quantitive scale}
      * @param {d3.scale} [scale]
-     * @return {d3.scale}
-     * @return {dc.rowChart}
+     * @returns {d3.scale|dc.rowChart}
      */
     _chart.x = function (scale) {
         if (!arguments.length) {
@@ -291,7 +292,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     function createTitles (rows) {
         if (_chart.renderTitle()) {
-            rows.selectAll('title').remove();
+            rows.select('title').remove();
             rows.append('title').text(_chart.title());
         }
     }
@@ -343,13 +344,12 @@ dc.rowChart = function (parent, chartGroup) {
     }
 
     /**
-     * Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'
+     * Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'.
      * @method renderTitleLabel
      * @memberof dc.rowChart
      * @instance
      * @param {Boolean} [renderTitleLabel=false]
-     * @return {Boolean}
-     * @return {dc.rowChart}
+     * @returns {Boolean|dc.rowChart}
      */
     _chart.renderTitleLabel = function (renderTitleLabel) {
         if (!arguments.length) {
@@ -377,18 +377,18 @@ dc.rowChart = function (parent, chartGroup) {
 
     /**
      * Get the x axis for the row chart instance.  Note: not settable for row charts.
-     * See the {@link https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis d3 axis object}
+     * See the {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3 axis object}
      * documention for more information.
      * @method xAxis
      * @memberof dc.rowChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis d3.svg.axis}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3.svg.axis}
      * @example
      * // customize x axis tick format
      * chart.xAxis().tickFormat(function (v) {return v + '%';});
      * // customize x axis tick values
      * chart.xAxis().tickValues([0, 100, 200, 300]);
-     * @return {d3.svg.axis}
+     * @returns {d3.svg.axis}
      */
     _chart.xAxis = function () {
         return _xAxis;
@@ -405,8 +405,7 @@ dc.rowChart = function (parent, chartGroup) {
      * @example
      * chart.fixedBarHeight( chartheight - (count + 1) * gap / count);
      * @param {Boolean|Number} [fixedBarHeight=false]
-     * @return {Boolean|Number}
-     * @return {dc.rowChart}
+     * @returns {Boolean|Number|dc.rowChart}
      */
     _chart.fixedBarHeight = function (fixedBarHeight) {
         if (!arguments.length) {
@@ -417,13 +416,12 @@ dc.rowChart = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set the vertical gap space between rows on a particular row chart instance
+     * Get or set the vertical gap space between rows on a particular row chart instance.
      * @method gap
      * @memberof dc.rowChart
      * @instance
      * @param {Number} [gap=5]
-     * @return {Number}
-     * @return {dc.rowChart}
+     * @returns {Number|dc.rowChart}
      */
     _chart.gap = function (gap) {
         if (!arguments.length) {
@@ -440,8 +438,7 @@ dc.rowChart = function (parent, chartGroup) {
      * @memberof dc.rowChart
      * @instance
      * @param {Boolean} [elasticX]
-     * @return {Boolean}
-     * @return {dc.rowChart}
+     * @returns {Boolean|dc.rowChart}
      */
     _chart.elasticX = function (elasticX) {
         if (!arguments.length) {
@@ -457,8 +454,7 @@ dc.rowChart = function (parent, chartGroup) {
      * @memberof dc.rowChart
      * @instance
      * @param {Number} [labelOffsetX=10]
-     * @return {Number}
-     * @return {dc.rowChart}
+     * @returns {Number|dc.rowChart}
      */
     _chart.labelOffsetX = function (labelOffsetX) {
         if (!arguments.length) {
@@ -474,8 +470,7 @@ dc.rowChart = function (parent, chartGroup) {
      * @memberof dc.rowChart
      * @instance
      * @param {Number} [labelOffsety=15]
-     * @return {Number}
-     * @return {dc.rowChart}
+     * @returns {Number|dc.rowChart}
      */
     _chart.labelOffsetY = function (labelOffsety) {
         if (!arguments.length) {
@@ -492,8 +487,7 @@ dc.rowChart = function (parent, chartGroup) {
      * @memberof dc.rowChart
      * @instance
      * @param {Number} [titleLabelOffsetX=2]
-     * @return {Number}
-     * @return {dc.rowChart}
+     * @returns {Number|dc.rowChart}
      */
     _chart.titleLabelOffsetX = function (titleLabelOffsetX) {
         if (!arguments.length) {
@@ -527,20 +521,22 @@ dc.rowChart = function (parent, chartGroup) {
 </div>
 </div>
 
-<div class="modal fade" id="searchResults">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Search results</h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
 
@@ -552,7 +548,7 @@ dc.rowChart = function (parent, chartGroup) {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Fri Dec 2nd 2016
+		on Wed Jan 4th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -560,7 +556,9 @@ dc.rowChart = function (parent, chartGroup) {
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
 
 <script>
 $( function () {
@@ -570,7 +568,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -606,8 +604,7 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			var id = $( heading ).attr( "id" );
-			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+			return $( heading ).attr( "id" ) || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -633,11 +630,13 @@ $( function () {
 <!--Google Analytics-->
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		SearcherDisplay.init();
-	});
-</script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
 
 </body>
 </html>

@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -52,16 +52,18 @@
 			</li>
 			
 		</ul>
-		<div class="col-sm-3 col-md-3">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
 	</div>
 
 </div>
@@ -95,11 +97,11 @@
  * // create a composite chart under #chart-container2 element using chart group A
  * var compositeChart2 = dc.compositeChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.compositeChart}
+ * @returns {dc.compositeChart}
  */
 dc.compositeChart = function (parent, chartGroup) {
 
@@ -314,8 +316,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @memberof dc.compositeChart
      * @instance
      * @param {Boolean} [useRightAxisGridLines=false]
-     * @return {Boolean}
-     * @return {dc.compositeChart}
+     * @returns {Boolean|dc.compositeChart}
      */
     _chart.useRightAxisGridLines = function (useRightAxisGridLines) {
         if (!arguments) {
@@ -333,8 +334,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @memberof dc.compositeChart
      * @instance
      * @param {Object} [childOptions]
-     * @return {Object}
-     * @return {dc.compositeChart}
+     * @returns {Object|dc.compositeChart}
      */
     _chart.childOptions = function (childOptions) {
         if (!arguments.length) {
@@ -362,8 +362,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @instance
      * @param {String} [rightYAxisLabel]
      * @param {Number} [padding]
-     * @return {String}
-     * @return {dc.compositeChart}
+     * @returns {String|dc.compositeChart}
      */
     _chart.rightYAxisLabel = function (rightYAxisLabel, padding) {
         if (!arguments.length) {
@@ -400,7 +399,7 @@ dc.compositeChart = function (parent, chartGroup) {
      *         .centerBar(true)
      * ]);
      * @param {Array&lt;Chart>} [subChartArray]
-     * @return {dc.compositeChart}
+     * @returns {dc.compositeChart}
      */
     _chart.compose = function (subChartArray) {
         _children = subChartArray;
@@ -423,7 +422,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @method children
      * @memberof dc.compositeChart
      * @instance
-     * @return {Array&lt;dc.baseMixin>}
+     * @returns {Array&lt;dc.baseMixin>}
      */
     _chart.children = function () {
         return _children;
@@ -438,8 +437,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @memberof dc.compositeChart
      * @instance
      * @param {Boolean} [shareColors=false]
-     * @return {Boolean}
-     * @return {dc.compositeChart}
+     * @returns {Boolean|dc.compositeChart}
      */
     _chart.shareColors = function (shareColors) {
         if (!arguments.length) {
@@ -456,8 +454,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @memberof dc.compositeChart
      * @instance
      * @param {Boolean} [shareTitle=true]
-     * @return {Boolean}
-     * @return {dc.compositeChart}
+     * @returns {Boolean|dc.compositeChart}
      */
     _chart.shareTitle = function (shareTitle) {
         if (!arguments.length) {
@@ -473,10 +470,9 @@ dc.compositeChart = function (parent, chartGroup) {
      * @method rightY
      * @memberof dc.compositeChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Scales d3.scale}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
      * @param {d3.scale} [yScale]
-     * @return {d3.scale}
-     * @return {dc.compositeChart}
+     * @returns {d3.scale|dc.compositeChart}
      */
     _chart.rightY = function (yScale) {
         if (!arguments.length) {
@@ -494,7 +490,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @memberof dc.compositeChart
      * @instance
      * @param {Boolean} [alignYAxes=false]
-     * @return {Chart}
+     * @returns {Chart}
      */
     _chart.alignYAxes = function (alignYAxes) {
         if (!arguments.length) {
@@ -598,21 +594,22 @@ dc.compositeChart = function (parent, chartGroup) {
     /**
      * Set or get the right y axis used by the composite chart. This function is most useful when y
      * axis customization is required. The y axis in dc.js is an instance of a [d3 axis
-     * object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis) therefore it supports any valid
-     * d3 axis manipulation. **Caution**: The y axis is usually generated internally by dc;
-     * resetting it may cause unexpected results.
+     * object](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis) therefore it supports any valid
+     * d3 axis manipulation.
+     *
+     * **Caution**: The y axis is usually generated internally by dc; resetting it may cause
+     * unexpected results.
      * @method rightYAxis
      * @memberof dc.compositeChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Axes d3.svg.axis}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3.svg.axis}
      * @example
      * // customize y axis tick format
      * chart.rightYAxis().tickFormat(function (v) {return v + '%';});
      * // customize y axis tick values
      * chart.rightYAxis().tickValues([0, 100, 200, 300]);
      * @param {d3.svg.axis} [rightYAxis]
-     * @return {d3.svg.axis}
-     * @return {dc.compositeChart}
+     * @returns {d3.svg.axis|dc.compositeChart}
      */
     _chart.rightYAxis = function (rightYAxis) {
         if (!arguments.length) {
@@ -642,20 +639,22 @@ dc.compositeChart = function (parent, chartGroup) {
 </div>
 </div>
 
-<div class="modal fade" id="searchResults">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Search results</h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
 
@@ -667,7 +666,7 @@ dc.compositeChart = function (parent, chartGroup) {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Fri Dec 2nd 2016
+		on Wed Jan 4th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -675,7 +674,9 @@ dc.compositeChart = function (parent, chartGroup) {
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
 
 <script>
 $( function () {
@@ -685,7 +686,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -721,8 +722,7 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			var id = $( heading ).attr( "id" );
-			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+			return $( heading ).attr( "id" ) || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -748,11 +748,13 @@ $( function () {
 <!--Google Analytics-->
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		SearcherDisplay.init();
-	});
-</script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
 
 </body>
 </html>

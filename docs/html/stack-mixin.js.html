@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -52,16 +52,18 @@
 			</li>
 			
 		</ul>
-		<div class="col-sm-3 col-md-3">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
 	</div>
 
 </div>
@@ -88,7 +90,7 @@
  * @memberof dc
  * @mixin
  * @param {Object} _chart
- * @return {dc.stackMixin}
+ * @returns {dc.stackMixin}
  */
 dc.stackMixin = function (_chart) {
 
@@ -148,7 +150,7 @@ dc.stackMixin = function (_chart) {
      * @method stack
      * @memberof dc.stackMixin
      * @instance
-     * @see {@link https://github.com/square/crossfilter/wiki/API-Reference#group-map-reduce crossfilter.group}
+     * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group-map-reduce crossfilter.group}
      * @example
      * // stack group using default accessor
      * chart.stack(valueSumGroup)
@@ -157,8 +159,7 @@ dc.stackMixin = function (_chart) {
      * @param {crossfilter.group} group
      * @param {String} [name]
      * @param {Function} [accessor]
-     * @return {Array&lt;{group: crossfilter.group, name: String, accessor: Function}>}
-     * @return {dc.stackMixin}
+     * @returns {Array&lt;{group: crossfilter.group, name: String, accessor: Function}>|dc.stackMixin}
      */
     _chart.stack = function (group, name, accessor) {
         if (!arguments.length) {
@@ -201,8 +202,7 @@ dc.stackMixin = function (_chart) {
      * @memberof dc.stackMixin
      * @instance
      * @param {Boolean} [hidableStacks=false]
-     * @return {Boolean}
-     * @return {dc.stackMixin}
+     * @returns {Boolean|dc.stackMixin}
      */
     _chart.hidableStacks = function (hidableStacks) {
         if (!arguments.length) {
@@ -224,7 +224,7 @@ dc.stackMixin = function (_chart) {
      * @memberof dc.stackMixin
      * @instance
      * @param {String} stackName
-     * @return {dc.stackMixin}
+     * @returns {dc.stackMixin}
      */
     _chart.hideStack = function (stackName) {
         var layer = findLayerByName(stackName);
@@ -241,7 +241,7 @@ dc.stackMixin = function (_chart) {
      * @memberof dc.stackMixin
      * @instance
      * @param {String} stackName
-     * @return {dc.stackMixin}
+     * @returns {dc.stackMixin}
      */
     _chart.showStack = function (stackName) {
         var layer = findLayerByName(stackName);
@@ -279,12 +279,12 @@ dc.stackMixin = function (_chart) {
 
     _chart.xAxisMin = function () {
         var min = d3.min(flattenStack(), dc.pluck('x'));
-        return dc.utils.subtract(min, _chart.xAxisPadding());
+        return dc.utils.subtract(min, _chart.xAxisPadding(), _chart.xAxisPaddingUnit());
     };
 
     _chart.xAxisMax = function () {
         var max = d3.max(flattenStack(), dc.pluck('x'));
-        return dc.utils.add(max, _chart.xAxisPadding());
+        return dc.utils.add(max, _chart.xAxisPadding(), _chart.xAxisPaddingUnit());
     };
 
     /**
@@ -305,8 +305,7 @@ dc.stackMixin = function (_chart) {
      * var secondTitleFunction = chart.title('second stack');
      * @param {String} [stackName]
      * @param {Function} [titleAccessor]
-     * @return {String}
-     * @return {dc.stackMixin}
+     * @returns {String|dc.stackMixin}
      */
     dc.override(_chart, 'title', function (stackName, titleAccessor) {
         if (!stackName) {
@@ -331,14 +330,13 @@ dc.stackMixin = function (_chart) {
 
     /**
      * Gets or sets the stack layout algorithm, which computes a baseline for each stack and
-     * propagates it to the next
+     * propagates it to the next.
      * @method stackLayout
      * @memberof dc.stackMixin
      * @instance
-     * @see {@link http://github.com/mbostock/d3/wiki/Stack-Layout d3.layout.stack}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Stack-Layout.md d3.layout.stack}
      * @param {Function} [stack=d3.layout.stack]
-     * @return {Function}
-     * @return {dc.stackMixin}
+     * @returns {Function|dc.stackMixin}
      */
     _chart.stackLayout = function (stack) {
         if (!arguments.length) {
@@ -419,20 +417,22 @@ dc.stackMixin = function (_chart) {
 </div>
 </div>
 
-<div class="modal fade" id="searchResults">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Search results</h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
 
@@ -444,7 +444,7 @@ dc.stackMixin = function (_chart) {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Fri Dec 2nd 2016
+		on Wed Jan 4th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -452,7 +452,9 @@ dc.stackMixin = function (_chart) {
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
 
 <script>
 $( function () {
@@ -462,7 +464,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -498,8 +500,7 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			var id = $( heading ).attr( "id" );
-			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+			return $( heading ).attr( "id" ) || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -525,11 +526,13 @@ $( function () {
 <!--Google Analytics-->
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		SearcherDisplay.init();
-	});
-</script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
 
 </body>
 </html>

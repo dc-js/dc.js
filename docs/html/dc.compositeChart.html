@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -52,16 +52,18 @@
 			</li>
 			
 		</ul>
-		<div class="col-sm-3 col-md-3">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
 	</div>
 
 </div>
@@ -98,7 +100,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="compositeChart"><span class="type-signature"></span>new compositeChart(parent, <span class="optional">chartGroup</span>)</h4>
+    <h4 class="name" id="compositeChart"><span class="type-signature"></span>new compositeChart(parent [, chartGroup])</h4>
     
     
 </dt>
@@ -106,7 +108,9 @@
 
     
     <div class="description">
-        <p>Composite charts are a special kind of chart that render multiple charts on the same Coordinate<br>Grid. You can overlay (compose) different bar/line/area charts in a single composite chart to<br>achieve some quite flexible charting effects.</p>
+        <p>Composite charts are a special kind of chart that render multiple charts on the same Coordinate
+Grid. You can overlay (compose) different bar/line/area charts in a single composite chart to
+achieve some quite flexible charting effects.</p>
     </div>
     
 
@@ -174,7 +178,9 @@
 
             
 
-            <td class="description last"><p>Any valid<br><a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single selector</a> specifying<br>a dom block element such as a div; or a dom element or d3 selection.</p></td>
+            <td class="description last"><p>Any valid
+<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements">d3 single selector</a> specifying
+a dom block element such as a div; or a dom element or d3 selection.</p></td>
         </tr>
 
     
@@ -208,7 +214,8 @@
 
             
 
-            <td class="description last"><p>The name of the chart group this chart instance should be placed in.<br>Interaction with a chart will only trigger events and redraws within the chart's group.</p></td>
+            <td class="description last"><p>The name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.</p></td>
         </tr>
 
     
@@ -341,7 +348,7 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
             
 <hr>
 <dt>
-    <h4 class="name" id="alignYAxes"><span class="type-signature"></span>alignYAxes(<span class="optional">alignYAxes</span>)</h4>
+    <h4 class="name" id="alignYAxes"><span class="type-signature"></span>alignYAxes( [alignYAxes])</h4>
     
     
 </dt>
@@ -349,7 +356,8 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
 
     
     <div class="description">
-        <p>Get or set alignment between left and right y axes. A line connecting '0' on both y axis<br>will be parallel to x axis. This only has effect when elasticY is true.</p>
+        <p>Get or set alignment between left and right y axes. A line connecting '0' on both y axis
+will be parallel to x axis. This only has effect when elasticY is true.</p>
     </div>
     
 
@@ -466,7 +474,7 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
 		<ul class="dummy">
 			<li>
 				<a href="composite-chart.js.html">composite-chart.js</a>,
-				 <a href="composite-chart.js.html#sunlight-1-line-406">line 406</a>
+				 <a href="composite-chart.js.html#sunlight-1-line-400">line 400</a>
 			</li>
 		</ul>
 	</dd>
@@ -519,7 +527,7 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
             
 <hr>
 <dt>
-    <h4 class="name" id="childOptions"><span class="type-signature"></span>childOptions(<span class="optional">childOptions</span>)</h4>
+    <h4 class="name" id="childOptions"><span class="type-signature"></span>childOptions( [childOptions])</h4>
     
     
 </dt>
@@ -527,7 +535,8 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
 
     
     <div class="description">
-        <p>Get or set chart-specific options for all child charts. This is equivalent to calling<br><a href="dc.baseMixin.html#options">.options</a> on each child chart.</p>
+        <p>Get or set chart-specific options for all child charts. This is equivalent to calling
+<a href="dc.baseMixin.html#options">.options</a> on each child chart.</p>
     </div>
     
 
@@ -636,7 +645,7 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
 		<ul class="dummy">
 			<li>
 				<a href="composite-chart.js.html">composite-chart.js</a>,
-				 <a href="composite-chart.js.html#sunlight-1-line-245">line 245</a>
+				 <a href="composite-chart.js.html#sunlight-1-line-244">line 244</a>
 			</li>
 		</ul>
 	</dd>
@@ -662,8 +671,8 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -673,23 +682,8 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
     <dd>
         
 <span class="param-type">Object</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.compositeChart.html">dc.compositeChart</a></span>
 
 
@@ -697,8 +691,8 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -762,7 +756,7 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
 		<ul class="dummy">
 			<li>
 				<a href="composite-chart.js.html">composite-chart.js</a>,
-				 <a href="composite-chart.js.html#sunlight-1-line-337">line 337</a>
+				 <a href="composite-chart.js.html#sunlight-1-line-334">line 334</a>
 			</li>
 		</ul>
 	</dd>
@@ -815,7 +809,7 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
             
 <hr>
 <dt>
-    <h4 class="name" id="compose"><span class="type-signature"></span>compose(<span class="optional">subChartArray</span>)</h4>
+    <h4 class="name" id="compose"><span class="type-signature"></span>compose( [subChartArray])</h4>
     
     
 </dt>
@@ -932,7 +926,7 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
 		<ul class="dummy">
 			<li>
 				<a href="composite-chart.js.html">composite-chart.js</a>,
-				 <a href="composite-chart.js.html#sunlight-1-line-295">line 295</a>
+				 <a href="composite-chart.js.html#sunlight-1-line-292">line 292</a>
 			</li>
 		</ul>
 	</dd>
@@ -1007,7 +1001,7 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
             
 <hr>
 <dt>
-    <h4 class="name" id="rightY"><span class="type-signature"></span>rightY(<span class="optional">yScale</span>)</h4>
+    <h4 class="name" id="rightY"><span class="type-signature"></span>rightY( [yScale])</h4>
     
     
 </dt>
@@ -1015,7 +1009,8 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
 
     
     <div class="description">
-        <p>Get or set the y scale for the right axis. The right y scale is typically automatically<br>generated by the chart implementation.</p>
+        <p>Get or set the y scale for the right axis. The right y scale is typically automatically
+generated by the chart implementation.</p>
     </div>
     
 
@@ -1124,7 +1119,7 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
 		<ul class="dummy">
 			<li>
 				<a href="composite-chart.js.html">composite-chart.js</a>,
-				 <a href="composite-chart.js.html#sunlight-1-line-386">line 386</a>
+				 <a href="composite-chart.js.html#sunlight-1-line-381">line 381</a>
 			</li>
 		</ul>
 	</dd>
@@ -1136,7 +1131,7 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/mbostock/d3/wiki/Scales">d3.scale</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md">d3.scale</a></li>
 			</ul>
 	</dd>
 	
@@ -1157,8 +1152,8 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1168,23 +1163,8 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
     <dd>
         
 <span class="param-type">d3.scale</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.compositeChart.html">dc.compositeChart</a></span>
 
 
@@ -1192,8 +1172,8 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -1202,7 +1182,7 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
             
 <hr>
 <dt>
-    <h4 class="name" id="rightYAxis"><span class="type-signature"></span>rightYAxis(<span class="optional">rightYAxis</span>)</h4>
+    <h4 class="name" id="rightYAxis"><span class="type-signature"></span>rightYAxis( [rightYAxis])</h4>
     
     
 </dt>
@@ -1210,7 +1190,12 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
 
     
     <div class="description">
-        <p>Set or get the right y axis used by the composite chart. This function is most useful when y<br>axis customization is required. The y axis in dc.js is an instance of a <a href="https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis">d3 axis<br>object</a> therefore it supports any valid<br>d3 axis manipulation. <strong>Caution</strong>: The y axis is usually generated internally by dc;<br>resetting it may cause unexpected results.</p>
+        <p>Set or get the right y axis used by the composite chart. This function is most useful when y
+axis customization is required. The y axis in dc.js is an instance of a <a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis">d3 axis
+object</a> therefore it supports any valid
+d3 axis manipulation.</p>
+<p><strong>Caution</strong>: The y axis is usually generated internally by dc; resetting it may cause
+unexpected results.</p>
     </div>
     
 
@@ -1319,7 +1304,7 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
 		<ul class="dummy">
 			<li>
 				<a href="composite-chart.js.html">composite-chart.js</a>,
-				 <a href="composite-chart.js.html#sunlight-1-line-514">line 514</a>
+				 <a href="composite-chart.js.html#sunlight-1-line-508">line 508</a>
 			</li>
 		</ul>
 	</dd>
@@ -1331,7 +1316,7 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/mbostock/d3/wiki/SVG-Axes">d3.svg.axis</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis">d3.svg.axis</a></li>
 			</ul>
 	</dd>
 	
@@ -1352,8 +1337,8 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1363,23 +1348,8 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
     <dd>
         
 <span class="param-type">d3.svg.axis</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.compositeChart.html">dc.compositeChart</a></span>
 
 
@@ -1387,8 +1357,8 @@ var compositeChart2 = dc.compositeChart(&#x27;#chart-container2&#x27;, &#x27;cha
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -1406,7 +1376,7 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="rightYAxisLabel"><span class="type-signature"></span>rightYAxisLabel(<span class="optional">rightYAxisLabel</span>, <span class="optional">padding</span>)</h4>
+    <h4 class="name" id="rightYAxisLabel"><span class="type-signature"></span>rightYAxisLabel( [rightYAxisLabel] [, padding])</h4>
     
     
 </dt>
@@ -1557,7 +1527,7 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="composite-chart.js.html">composite-chart.js</a>,
-				 <a href="composite-chart.js.html#sunlight-1-line-274">line 274</a>
+				 <a href="composite-chart.js.html#sunlight-1-line-272">line 272</a>
 			</li>
 		</ul>
 	</dd>
@@ -1583,8 +1553,8 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1594,23 +1564,8 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
     <dd>
         
 <span class="param-type">String</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.compositeChart.html">dc.compositeChart</a></span>
 
 
@@ -1618,8 +1573,8 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -1628,7 +1583,7 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="shareColors"><span class="type-signature"></span>shareColors(<span class="optional">shareColors</span>)</h4>
+    <h4 class="name" id="shareColors"><span class="type-signature"></span>shareColors( [shareColors])</h4>
     
     
 </dt>
@@ -1636,7 +1591,10 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
 
     
     <div class="description">
-        <p>Get or set color sharing for the chart. If set, the <a href="dc.colorMixin.html#colors">.colors()</a> value from this chart<br>will be shared with composed children. Additionally if the child chart implements<br>Stackable and has not set a custom .colorAccessor, then it will generate a color<br>specific to its order in the composition.</p>
+        <p>Get or set color sharing for the chart. If set, the <a href="dc.colorMixin.html#colors">.colors()</a> value from this chart
+will be shared with composed children. Additionally if the child chart implements
+Stackable and has not set a custom .colorAccessor, then it will generate a color
+specific to its order in the composition.</p>
     </div>
     
 
@@ -1753,7 +1711,7 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="composite-chart.js.html">composite-chart.js</a>,
-				 <a href="composite-chart.js.html#sunlight-1-line-348">line 348</a>
+				 <a href="composite-chart.js.html#sunlight-1-line-345">line 345</a>
 			</li>
 		</ul>
 	</dd>
@@ -1779,8 +1737,8 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1790,23 +1748,8 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
     <dd>
         
 <span class="param-type">Boolean</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.compositeChart.html">dc.compositeChart</a></span>
 
 
@@ -1814,8 +1757,8 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -1824,7 +1767,7 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="shareTitle"><span class="type-signature"></span>shareTitle(<span class="optional">shareTitle</span>)</h4>
+    <h4 class="name" id="shareTitle"><span class="type-signature"></span>shareTitle( [shareTitle])</h4>
     
     
 </dt>
@@ -1832,7 +1775,8 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
 
     
     <div class="description">
-        <p>Get or set title sharing for the chart. If set, the <a href="dc.baseMixin.html#title">.title()</a> value from<br>this chart will be shared with composed children.</p>
+        <p>Get or set title sharing for the chart. If set, the <a href="dc.baseMixin.html#title">.title()</a> value from
+this chart will be shared with composed children.</p>
     </div>
     
 
@@ -1949,7 +1893,7 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="composite-chart.js.html">composite-chart.js</a>,
-				 <a href="composite-chart.js.html#sunlight-1-line-368">line 368</a>
+				 <a href="composite-chart.js.html#sunlight-1-line-364">line 364</a>
 			</li>
 		</ul>
 	</dd>
@@ -1975,8 +1919,8 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1986,23 +1930,8 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
     <dd>
         
 <span class="param-type">Boolean</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.compositeChart.html">dc.compositeChart</a></span>
 
 
@@ -2010,8 +1939,8 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -2020,7 +1949,7 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="useRightAxisGridLines"><span class="type-signature"></span>useRightAxisGridLines(<span class="optional">useRightAxisGridLines</span>)</h4>
+    <h4 class="name" id="useRightAxisGridLines"><span class="type-signature"></span>useRightAxisGridLines( [useRightAxisGridLines])</h4>
     
     
 </dt>
@@ -2028,7 +1957,9 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
 
     
     <div class="description">
-        <p>Get or set whether to draw gridlines from the right y axis.  Drawing from the left y axis is the<br>default behavior. This option is only respected when subcharts with both left and right y-axes<br>are present.</p>
+        <p>Get or set whether to draw gridlines from the right y axis.  Drawing from the left y axis is the
+default behavior. This option is only respected when subcharts with both left and right y-axes
+are present.</p>
     </div>
     
 
@@ -2171,8 +2102,8 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -2182,23 +2113,8 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
     <dd>
         
 <span class="param-type">Boolean</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.compositeChart.html">dc.compositeChart</a></span>
 
 
@@ -2206,8 +2122,8 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -2239,20 +2155,22 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
 </div>
 </div>
 
-<div class="modal fade" id="searchResults">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Search results</h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
 
@@ -2264,7 +2182,7 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Fri Dec 2nd 2016
+		on Wed Jan 4th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -2272,7 +2190,9 @@ chart.rightYAxis().tickValues([0, 100, 200, 300]);</pre>
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
 
 <script>
 $( function () {
@@ -2282,7 +2202,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -2318,8 +2238,7 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			var id = $( heading ).attr( "id" );
-			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+			return $( heading ).attr( "id" ) || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -2345,11 +2264,13 @@ $( function () {
 <!--Google Analytics-->
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		SearcherDisplay.init();
-	});
-</script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
 
 </body>
 </html>

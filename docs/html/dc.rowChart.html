@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -52,16 +52,18 @@
 			</li>
 			
 		</ul>
-		<div class="col-sm-3 col-md-3">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
 	</div>
 
 </div>
@@ -98,7 +100,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="rowChart"><span class="type-signature"></span>new rowChart(parent, <span class="optional">chartGroup</span>)</h4>
+    <h4 class="name" id="rowChart"><span class="type-signature"></span>new rowChart(parent [, chartGroup])</h4>
     
     
 </dt>
@@ -178,7 +180,9 @@
 
             
 
-            <td class="description last"><p>Any valid<br><a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single selector</a> specifying<br>a dom block element such as a div; or a dom element or d3 selection.</p></td>
+            <td class="description last"><p>Any valid
+<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements">d3 single selector</a> specifying
+a dom block element such as a div; or a dom element or d3 selection.</p></td>
         </tr>
 
     
@@ -212,7 +216,8 @@
 
             
 
-            <td class="description last"><p>The name of the chart group this chart instance should be placed in.<br>Interaction with a chart will only trigger events and redraws within the chart's group.</p></td>
+            <td class="description last"><p>The name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.</p></td>
         </tr>
 
     
@@ -351,7 +356,7 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
             
 <hr>
 <dt>
-    <h4 class="name" id="elasticX"><span class="type-signature"></span>elasticX(<span class="optional">elasticX</span>)</h4>
+    <h4 class="name" id="elasticX"><span class="type-signature"></span>elasticX( [elasticX])</h4>
     
     
 </dt>
@@ -359,7 +364,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 
     
     <div class="description">
-        <p>Get or set the elasticity on x axis. If this attribute is set to true, then the x axis will rescle to auto-fit the<br>data range when filtered.</p>
+        <p>Get or set the elasticity on x axis. If this attribute is set to true, then the x axis will rescle to auto-fit the
+data range when filtered.</p>
     </div>
     
 
@@ -468,7 +474,7 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 		<ul class="dummy">
 			<li>
 				<a href="row-chart.js.html">row-chart.js</a>,
-				 <a href="row-chart.js.html#sunlight-1-line-352">line 352</a>
+				 <a href="row-chart.js.html#sunlight-1-line-348">line 348</a>
 			</li>
 		</ul>
 	</dd>
@@ -494,8 +500,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -505,23 +511,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
     <dd>
         
 <span class="param-type">Boolean</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.rowChart.html">dc.rowChart</a></span>
 
 
@@ -529,8 +520,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -539,7 +530,7 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
             
 <hr>
 <dt>
-    <h4 class="name" id="fixedBarHeight"><span class="type-signature"></span>fixedBarHeight(<span class="optional">fixedBarHeight</span>)</h4>
+    <h4 class="name" id="fixedBarHeight"><span class="type-signature"></span>fixedBarHeight( [fixedBarHeight])</h4>
     
     
 </dt>
@@ -547,7 +538,10 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 
     
     <div class="description">
-        <p>Get or set the fixed bar height. Default is [false] which will auto-scale bars.<br>For example, if you want to fix the height for a specific number of bars (useful in TopN charts)<br>you could fix height as follows (where count = total number of bars in your TopN and gap is<br>your vertical gap space).</p>
+        <p>Get or set the fixed bar height. Default is [false] which will auto-scale bars.
+For example, if you want to fix the height for a specific number of bars (useful in TopN charts)
+you could fix height as follows (where count = total number of bars in your TopN and gap is
+your vertical gap space).</p>
     </div>
     
 
@@ -667,7 +661,7 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 		<ul class="dummy">
 			<li>
 				<a href="row-chart.js.html">row-chart.js</a>,
-				 <a href="row-chart.js.html#sunlight-1-line-313">line 313</a>
+				 <a href="row-chart.js.html#sunlight-1-line-311">line 311</a>
 			</li>
 		</ul>
 	</dd>
@@ -693,8 +687,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -707,23 +701,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 |
 
 <span class="param-type">Number</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.rowChart.html">dc.rowChart</a></span>
 
 
@@ -731,8 +710,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -747,7 +726,7 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
             
 <hr>
 <dt>
-    <h4 class="name" id="gap"><span class="type-signature"></span>gap(<span class="optional">gap</span>)</h4>
+    <h4 class="name" id="gap"><span class="type-signature"></span>gap( [gap])</h4>
     
     
 </dt>
@@ -755,7 +734,7 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 
     
     <div class="description">
-        <p>Get or set the vertical gap space between rows on a particular row chart instance</p>
+        <p>Get or set the vertical gap space between rows on a particular row chart instance.</p>
     </div>
     
 
@@ -872,7 +851,7 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 		<ul class="dummy">
 			<li>
 				<a href="row-chart.js.html">row-chart.js</a>,
-				 <a href="row-chart.js.html#sunlight-1-line-335">line 335</a>
+				 <a href="row-chart.js.html#sunlight-1-line-332">line 332</a>
 			</li>
 		</ul>
 	</dd>
@@ -898,8 +877,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -909,23 +888,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
     <dd>
         
 <span class="param-type">Number</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.rowChart.html">dc.rowChart</a></span>
 
 
@@ -933,8 +897,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -943,7 +907,7 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
             
 <hr>
 <dt>
-    <h4 class="name" id="labelOffsetX"><span class="type-signature"></span>labelOffsetX(<span class="optional">labelOffsetX</span>)</h4>
+    <h4 class="name" id="labelOffsetX"><span class="type-signature"></span>labelOffsetX( [labelOffsetX])</h4>
     
     
 </dt>
@@ -1068,7 +1032,7 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 		<ul class="dummy">
 			<li>
 				<a href="row-chart.js.html">row-chart.js</a>,
-				 <a href="row-chart.js.html#sunlight-1-line-370">line 370</a>
+				 <a href="row-chart.js.html#sunlight-1-line-365">line 365</a>
 			</li>
 		</ul>
 	</dd>
@@ -1094,8 +1058,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1105,23 +1069,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
     <dd>
         
 <span class="param-type">Number</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.rowChart.html">dc.rowChart</a></span>
 
 
@@ -1129,8 +1078,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -1139,7 +1088,7 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
             
 <hr>
 <dt>
-    <h4 class="name" id="labelOffsetY"><span class="type-signature"></span>labelOffsetY(<span class="optional">labelOffsety</span>)</h4>
+    <h4 class="name" id="labelOffsetY"><span class="type-signature"></span>labelOffsetY( [labelOffsety])</h4>
     
     
 </dt>
@@ -1264,7 +1213,7 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 		<ul class="dummy">
 			<li>
 				<a href="row-chart.js.html">row-chart.js</a>,
-				 <a href="row-chart.js.html#sunlight-1-line-387">line 387</a>
+				 <a href="row-chart.js.html#sunlight-1-line-381">line 381</a>
 			</li>
 		</ul>
 	</dd>
@@ -1290,8 +1239,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1301,23 +1250,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
     <dd>
         
 <span class="param-type">Number</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.rowChart.html">dc.rowChart</a></span>
 
 
@@ -1325,8 +1259,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -1335,7 +1269,7 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
             
 <hr>
 <dt>
-    <h4 class="name" id="renderTitleLabel"><span class="type-signature"></span>renderTitleLabel(<span class="optional">renderTitleLabel</span>)</h4>
+    <h4 class="name" id="renderTitleLabel"><span class="type-signature"></span>renderTitleLabel( [renderTitleLabel])</h4>
     
     
 </dt>
@@ -1343,7 +1277,7 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 
     
     <div class="description">
-        <p>Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'</p>
+        <p>Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'.</p>
     </div>
     
 
@@ -1460,7 +1394,7 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 		<ul class="dummy">
 			<li>
 				<a href="row-chart.js.html">row-chart.js</a>,
-				 <a href="row-chart.js.html#sunlight-1-line-261">line 261</a>
+				 <a href="row-chart.js.html#sunlight-1-line-260">line 260</a>
 			</li>
 		</ul>
 	</dd>
@@ -1486,8 +1420,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1497,23 +1431,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
     <dd>
         
 <span class="param-type">Boolean</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.rowChart.html">dc.rowChart</a></span>
 
 
@@ -1521,8 +1440,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -1531,7 +1450,7 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
             
 <hr>
 <dt>
-    <h4 class="name" id="titleLabelOffsetX"><span class="type-signature"></span>titleLabelOffsetX(<span class="optional">titleLabelOffsetX</span>)</h4>
+    <h4 class="name" id="titleLabelOffsetX"><span class="type-signature"></span>titleLabelOffsetX( [titleLabelOffsetX])</h4>
     
     
 </dt>
@@ -1656,7 +1575,7 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 		<ul class="dummy">
 			<li>
 				<a href="row-chart.js.html">row-chart.js</a>,
-				 <a href="row-chart.js.html#sunlight-1-line-405">line 405</a>
+				 <a href="row-chart.js.html#sunlight-1-line-398">line 398</a>
 			</li>
 		</ul>
 	</dd>
@@ -1682,8 +1601,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1693,23 +1612,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
     <dd>
         
 <span class="param-type">Number</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.rowChart.html">dc.rowChart</a></span>
 
 
@@ -1717,8 +1621,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -1727,7 +1631,7 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
             
 <hr>
 <dt>
-    <h4 class="name" id="x"><span class="type-signature"></span>x(<span class="optional">scale</span>)</h4>
+    <h4 class="name" id="x"><span class="type-signature"></span>x( [scale])</h4>
     
     
 </dt>
@@ -1735,7 +1639,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 
     
     <div class="description">
-        <p>Gets or sets the x scale. The x scale can be any d3<br><a href="https://github.com/mbostock/d3/wiki/Quantitative-Scales">quantitive scale</a></p>
+        <p>Gets or sets the x scale. The x scale can be any d3
+<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md">quantitive scale</a>.</p>
     </div>
     
 
@@ -1856,7 +1761,7 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/mbostock/d3/wiki/Quantitative-Scales">quantitive scale</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md">quantitive scale</a></li>
 			</ul>
 	</dd>
 	
@@ -1877,8 +1782,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1888,23 +1793,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
     <dd>
         
 <span class="param-type">d3.scale</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.rowChart.html">dc.rowChart</a></span>
 
 
@@ -1912,8 +1802,8 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -1930,7 +1820,9 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 
     
     <div class="description">
-        <p>Get the x axis for the row chart instance.  Note: not settable for row charts.<br>See the <a href="https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis">d3 axis object</a><br>documention for more information.</p>
+        <p>Get the x axis for the row chart instance.  Note: not settable for row charts.
+See the <a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis">d3 axis object</a>
+documention for more information.</p>
     </div>
     
 
@@ -1977,7 +1869,7 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 		<ul class="dummy">
 			<li>
 				<a href="row-chart.js.html">row-chart.js</a>,
-				 <a href="row-chart.js.html#sunlight-1-line-294">line 294</a>
+				 <a href="row-chart.js.html#sunlight-1-line-292">line 292</a>
 			</li>
 		</ul>
 	</dd>
@@ -1989,7 +1881,7 @@ var chart2 = dc.rowChart(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;)
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis">d3.svg.axis</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis">d3.svg.axis</a></li>
 			</ul>
 	</dd>
 	
@@ -2069,20 +1961,22 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
 </div>
 </div>
 
-<div class="modal fade" id="searchResults">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Search results</h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
 
@@ -2094,7 +1988,7 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Fri Dec 2nd 2016
+		on Wed Jan 4th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -2102,7 +1996,9 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
 
 <script>
 $( function () {
@@ -2112,7 +2008,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -2148,8 +2044,7 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			var id = $( heading ).attr( "id" );
-			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+			return $( heading ).attr( "id" ) || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -2175,11 +2070,13 @@ $( function () {
 <!--Google Analytics-->
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		SearcherDisplay.init();
-	});
-</script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
 
 </body>
 </html>

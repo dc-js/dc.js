@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -52,16 +52,18 @@
 			</li>
 			
 		</ul>
-		<div class="col-sm-3 col-md-3">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
 	</div>
 
 </div>
@@ -98,7 +100,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="geoChoroplethChart"><span class="type-signature"></span>new geoChoroplethChart(parent, <span class="optional">chartGroup</span>)</h4>
+    <h4 class="name" id="geoChoroplethChart"><span class="type-signature"></span>new geoChoroplethChart(parent [, chartGroup])</h4>
     
     
 </dt>
@@ -106,7 +108,9 @@
 
     
     <div class="description">
-        <p>The geo choropleth chart is designed as an easy way to create a crossfilter driven choropleth map<br>from GeoJson data. This chart implementation was inspired by<br><a href="http://bl.ocks.org/4060606">the great d3 choropleth example</a>.</p>
+        <p>The geo choropleth chart is designed as an easy way to create a crossfilter driven choropleth map
+from GeoJson data. This chart implementation was inspired by
+<a href="http://bl.ocks.org/4060606">the great d3 choropleth example</a>.</p>
 <p>Examples:</p>
 <ul>
 <li><a href="http://dc-js.github.com/dc.js/vc/index.html">US Venture Capital Landscape 2011</a></li>
@@ -178,7 +182,9 @@
 
             
 
-            <td class="description last"><p>Any valid<br><a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single selector</a> specifying<br>a dom block element such as a div; or a dom element or d3 selection.</p></td>
+            <td class="description last"><p>Any valid
+<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements">d3 single selector</a> specifying
+a dom block element such as a div; or a dom element or d3 selection.</p></td>
         </tr>
 
     
@@ -212,7 +218,8 @@
 
             
 
-            <td class="description last"><p>The name of the chart group this chart instance should be placed in.<br>Interaction with a chart will only trigger events and redraws within the chart's group.</p></td>
+            <td class="description last"><p>The name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.</p></td>
         </tr>
 
     
@@ -355,7 +362,9 @@ var chart2 = dc.compositeChart(&#x27;#us-chart2&#x27;, &#x27;chartGroupA&#x27;);
 
     
     <div class="description">
-        <p>Returns all GeoJson layers currently registered with this chart. The returned array is a<br>reference to this chart's internal data structure, so any modification to this array will also<br>modify this chart's internal registration.</p>
+        <p>Returns all GeoJson layers currently registered with this chart. The returned array is a
+reference to this chart's internal data structure, so any modification to this array will also
+modify this chart's internal registration.</p>
     </div>
     
 
@@ -463,7 +472,9 @@ var chart2 = dc.compositeChart(&#x27;#us-chart2&#x27;, &#x27;chartGroupA&#x27;);
 
     
     <div class="description">
-        <p>Returns the <a href="https://github.com/mbostock/d3/wiki/Geo-Paths#path">d3.geo.path</a> object used to<br>render the projection and features.  Can be useful for figuring out the bounding box of the<br>feature set and thus a way to calculate scale and translation for the projection.</p>
+        <p>Returns the <a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Paths.md#path">d3.geo.path</a> object used to
+render the projection and features.  Can be useful for figuring out the bounding box of the
+feature set and thus a way to calculate scale and translation for the projection.</p>
     </div>
     
 
@@ -522,7 +533,7 @@ var chart2 = dc.compositeChart(&#x27;#us-chart2&#x27;, &#x27;chartGroupA&#x27;);
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/mbostock/d3/wiki/Geo-Paths#path">d3.geo.path</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Paths.md#path">d3.geo.path</a></li>
 			</ul>
 	</dd>
 	
@@ -579,7 +590,9 @@ var chart2 = dc.compositeChart(&#x27;#us-chart2&#x27;, &#x27;chartGroupA&#x27;);
     
     <div class="description">
         <p><strong>mandatory</strong></p>
-<p>Use this function to insert a new GeoJson map layer. This function can be invoked multiple times<br>if you have multiple GeoJson data layers to render on top of each other. If you overlay multiple<br>layers with the same name the new overlay will override the existing one.</p>
+<p>Use this function to insert a new GeoJson map layer. This function can be invoked multiple times
+if you have multiple GeoJson data layers to render on top of each other. If you overlay multiple
+layers with the same name the new overlay will override the existing one.</p>
     </div>
     
 
@@ -679,7 +692,8 @@ var chart2 = dc.compositeChart(&#x27;#us-chart2&#x27;, &#x27;chartGroupA&#x27;);
 
             
 
-            <td class="description last"><p>accessor function used to extract 'key' from the GeoJson data. The key extracted by<br>this function should match the keys returned by the crossfilter groups.</p></td>
+            <td class="description last"><p>accessor function used to extract 'key' from the GeoJson data. The key extracted by
+this function should match the keys returned by the crossfilter groups.</p></td>
         </tr>
 
     
@@ -738,9 +752,9 @@ var chart2 = dc.compositeChart(&#x27;#us-chart2&#x27;, &#x27;chartGroupA&#x27;);
 		<ul>
 			<li><a href="http://geojson.org/">GeoJSON</a></li>
 			
-			<li><a href="https://github.com/mbostock/topojson/wiki">TopoJSON</a></li>
+			<li><a href="https://github.com/topojson/topojson/wiki">TopoJSON</a></li>
 			
-			<li><a href="https://github.com/mbostock/topojson/wiki/API-Reference#feature">topojson.feature</a></li>
+			<li><a href="https://github.com/topojson/topojson-1.x-api-reference/blob/master/API-Reference.md#wiki-feature">topojson.feature</a></li>
 			</ul>
 	</dd>
 	
@@ -797,7 +811,7 @@ chart.overlayGeoJson(statesJson.features, &#x27;state&#x27;, function(d) {
             
 <hr>
 <dt>
-    <h4 class="name" id="projection"><span class="type-signature"></span>projection(<span class="optional">projection</span>)</h4>
+    <h4 class="name" id="projection"><span class="type-signature"></span>projection( [projection])</h4>
     
     
 </dt>
@@ -805,7 +819,8 @@ chart.overlayGeoJson(statesJson.features, &#x27;state&#x27;, function(d) {
 
     
     <div class="description">
-        <p>Set custom geo projection function. See the available <a href="https://github.com/mbostock/d3/wiki/Geo-Projections">d3 geo projection<br>functions</a>.</p>
+        <p>Set custom geo projection function. See the available
+<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Projections.md">d3 geo projection functions</a>.</p>
     </div>
     
 
@@ -934,7 +949,7 @@ chart.overlayGeoJson(statesJson.features, &#x27;state&#x27;, function(d) {
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/mbostock/d3/wiki/Geo-Projections">d3.geo.projection</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Projections.md">d3.geo.projection</a></li>
 			
 			<li><a href="https://github.com/d3/d3-geo-projection">Extended d3.geo.projection</a></li>
 			</ul>
@@ -1165,20 +1180,22 @@ chart.overlayGeoJson(statesJson.features, &#x27;state&#x27;, function(d) {
 </div>
 </div>
 
-<div class="modal fade" id="searchResults">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Search results</h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
 
@@ -1190,7 +1207,7 @@ chart.overlayGeoJson(statesJson.features, &#x27;state&#x27;, function(d) {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Fri Dec 2nd 2016
+		on Wed Jan 4th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -1198,7 +1215,9 @@ chart.overlayGeoJson(statesJson.features, &#x27;state&#x27;, function(d) {
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
 
 <script>
 $( function () {
@@ -1208,7 +1227,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -1244,8 +1263,7 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			var id = $( heading ).attr( "id" );
-			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+			return $( heading ).attr( "id" ) || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -1271,11 +1289,13 @@ $( function () {
 <!--Google Analytics-->
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		SearcherDisplay.init();
-	});
-</script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
 
 </body>
 </html>

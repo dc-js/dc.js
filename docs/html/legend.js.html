@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -52,16 +52,18 @@
 			</li>
 			
 		</ul>
-		<div class="col-sm-3 col-md-3">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
 	</div>
 
 </div>
@@ -93,7 +95,7 @@
  * @memberof dc
  * @example
  * chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
- * @return {dc.legend}
+ * @returns {dc.legend}
  */
 dc.legend = function () {
     var LABEL_GAP = 2;
@@ -108,7 +110,8 @@ dc.legend = function () {
         _legendWidth = 560,
         _itemWidth = 70,
         _autoItemWidth = false,
-        _legendText = dc.pluck('name');
+        _legendText = dc.pluck('name'),
+        _maxItems;
 
     var _g;
 
@@ -126,6 +129,10 @@ dc.legend = function () {
             .attr('class', 'dc-legend')
             .attr('transform', 'translate(' + _x + ',' + _y + ')');
         var legendables = _parent.legendables();
+
+        if (_maxItems !== undefined) {
+            legendables = legendables.slice(0, _maxItems);
+        }
 
         var itemEnter = _g.selectAll('g.dc-legend-item')
             .data(legendables)
@@ -176,15 +183,13 @@ dc.legend = function () {
         var row = 0;
         itemEnter.attr('transform', function (d, i) {
             if (_horizontal) {
-                var translateBy = 'translate(' + _cumulativeLegendTextWidth + ',' + row * legendItemHeight() + ')';
                 var itemWidth   = _autoItemWidth === true ? this.getBBox().width + _gap : _itemWidth;
-
-                if ((_cumulativeLegendTextWidth + itemWidth) >= _legendWidth) {
-                    ++row ;
-                    _cumulativeLegendTextWidth = 0 ;
-                } else {
-                    _cumulativeLegendTextWidth += itemWidth;
+                if ((_cumulativeLegendTextWidth + itemWidth) > _legendWidth &amp;&amp; _cumulativeLegendTextWidth > 0) {
+                    ++row;
+                    _cumulativeLegendTextWidth = 0;
                 }
+                var translateBy = 'translate(' + _cumulativeLegendTextWidth + ',' + row * legendItemHeight() + ')';
+                _cumulativeLegendTextWidth += itemWidth;
                 return translateBy;
             } else {
                 return 'translate(0,' + i * legendItemHeight() + ')';
@@ -202,8 +207,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Number} [x=0]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.x = function (x) {
         if (!arguments.length) {
@@ -219,8 +223,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Number} [y=0]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.y = function (y) {
         if (!arguments.length) {
@@ -236,8 +239,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Number} [gap=5]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.gap = function (gap) {
         if (!arguments.length) {
@@ -253,8 +255,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Number} [itemHeight=12]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.itemHeight = function (itemHeight) {
         if (!arguments.length) {
@@ -270,8 +271,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Boolean} [horizontal=false]
-     * @return {Boolean}
-     * @return {dc.legend}
+     * @returns {Boolean|dc.legend}
      */
     _legend.horizontal = function (horizontal) {
         if (!arguments.length) {
@@ -287,8 +287,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Number} [legendWidth=500]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.legendWidth = function (legendWidth) {
         if (!arguments.length) {
@@ -299,13 +298,12 @@ dc.legend = function () {
     };
 
     /**
-     * legendItem width for horizontal legend.
+     * Legend item width for horizontal legend.
      * @method itemWidth
      * @memberof dc.legend
      * @instance
      * @param  {Number} [itemWidth=70]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.itemWidth = function (itemWidth) {
         if (!arguments.length) {
@@ -317,13 +315,12 @@ dc.legend = function () {
 
     /**
      * Turn automatic width for legend items on or off. If true, {@link dc.legend#itemWidth itemWidth} is ignored.
-     * This setting takes into account {@link dc.legend#gap gap}.
+     * This setting takes into account the {@link dc.legend#gap gap}.
      * @method autoItemWidth
      * @memberof dc.legend
      * @instance
      * @param  {Boolean} [autoItemWidth=false]
-     * @return {Boolean}
-     * @return {dc.legend}
+     * @returns {Boolean|dc.legend}
      */
     _legend.autoItemWidth = function (autoItemWidth) {
         if (!arguments.length) {
@@ -341,8 +338,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Function} [legendText]
-     * @return {Function}
-     * @return {dc.legend}
+     * @returns {Function|dc.legend}
      * @example
      * // default legendText
      * legend.legendText(dc.pluck('name'))
@@ -358,6 +354,22 @@ dc.legend = function () {
             return _legendText;
         }
         _legendText = legendText;
+        return _legend;
+    };
+
+    /**
+     * Maximum number of legend items to display
+     * @method maxItems
+     * @memberof dc.legend
+     * @instance
+     * @param  {Number} [maxItems]
+     * @return {dc.legend}
+     */
+    _legend.maxItems = function (maxItems) {
+        if (!arguments.length) {
+            return _maxItems;
+        }
+        _maxItems = dc.utils.isNumber(maxItems) ? maxItems : undefined;
         return _legend;
     };
 
@@ -381,20 +393,22 @@ dc.legend = function () {
 </div>
 </div>
 
-<div class="modal fade" id="searchResults">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Search results</h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
 
@@ -406,7 +420,7 @@ dc.legend = function () {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Fri Dec 2nd 2016
+		on Wed Jan 4th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -414,7 +428,9 @@ dc.legend = function () {
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
 
 <script>
 $( function () {
@@ -424,7 +440,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -460,8 +476,7 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			var id = $( heading ).attr( "id" );
-			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+			return $( heading ).attr( "id" ) || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -487,11 +502,13 @@ $( function () {
 <!--Google Analytics-->
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		SearcherDisplay.init();
-	});
-</script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
 
 </body>
 </html>

@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -52,16 +52,18 @@
 			</li>
 			
 		</ul>
-		<div class="col-sm-3 col-md-3">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
 	</div>
 
 </div>
@@ -98,7 +100,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="dataGrid"><span class="type-signature"></span>new dataGrid(parent, <span class="optional">chartGroup</span>)</h4>
+    <h4 class="name" id="dataGrid"><span class="type-signature"></span>new dataGrid(parent [, chartGroup])</h4>
     
     
 </dt>
@@ -106,8 +108,11 @@
 
     
     <div class="description">
-        <p>Data grid is a simple widget designed to list the filtered records, providing<br>a simple way to define how the items are displayed.</p>
-<p>Note: Unlike other charts, the data grid chart (and data table) use the group attribute as a keying function<br>for <a href="https://github.com/mbostock/d3/wiki/Arrays#-nest">nesting</a> the data together in groups.<br>Do not pass in a crossfilter group as this will not work.</p>
+        <p>Data grid is a simple widget designed to list the filtered records, providing
+a simple way to define how the items are displayed.</p>
+<p>Note: Unlike other charts, the data grid chart (and data table) use the <a href="dc.dataGrid.html#group">group</a> attribute as a keying function
+for <a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#nest">nesting</a> the data together in groups.
+Do not pass in a crossfilter group as this will not work.</p>
 <p>Examples:</p>
 <ul>
 <li><a href="http://europarl.me/dc.js/web/ep/index.html">List of members of the european parliament</a></li>
@@ -179,7 +184,9 @@
 
             
 
-            <td class="description last"><p>Any valid<br><a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single selector</a> specifying<br>a dom block element such as a div; or a dom element or d3 selection.</p></td>
+            <td class="description last"><p>Any valid
+<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements">d3 single selector</a> specifying
+a dom block element such as a div; or a dom element or d3 selection.</p></td>
         </tr>
 
     
@@ -213,7 +220,8 @@
 
             
 
-            <td class="description last"><p>The name of the chart group this chart instance should be placed in.<br>Interaction with a chart will only trigger events and redraws within the chart's group.</p></td>
+            <td class="description last"><p>The name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.</p></td>
         </tr>
 
     
@@ -337,7 +345,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="beginSlice"><span class="type-signature"></span>beginSlice(<span class="optional">beginSlice</span>)</h4>
+    <h4 class="name" id="beginSlice"><span class="type-signature"></span>beginSlice( [beginSlice])</h4>
     
     
 </dt>
@@ -345,7 +353,8 @@
 
     
     <div class="description">
-        <p>Get or set the index of the beginning slice which determines which entries get displayed by the widget.<br>Useful when implementing pagination.</p>
+        <p>Get or set the index of the beginning slice which determines which entries get displayed by the widget.
+Useful when implementing pagination.</p>
     </div>
     
 
@@ -462,7 +471,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-106">line 106</a>
+				 <a href="data-grid.js.html#sunlight-1-line-123">line 123</a>
 			</li>
 		</ul>
 	</dd>
@@ -488,8 +497,8 @@
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -499,23 +508,8 @@
     <dd>
         
 <span class="param-type">Number</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.dataGrid.html">dc.dataGrid</a></span>
 
 
@@ -523,8 +517,8 @@
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -533,7 +527,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="endSlice"><span class="type-signature"></span>endSlice(<span class="optional">endSlice</span>)</h4>
+    <h4 class="name" id="endSlice"><span class="type-signature"></span>endSlice( [endSlice])</h4>
     
     
 </dt>
@@ -541,7 +535,8 @@
 
     
     <div class="description">
-        <p>Get or set the index of the end slice which determines which entries get displayed by the widget<br>Useful when implementing pagination.</p>
+        <p>Get or set the index of the end slice which determines which entries get displayed by the widget.
+Useful when implementing pagination.</p>
     </div>
     
 
@@ -650,7 +645,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-124">line 124</a>
+				 <a href="data-grid.js.html#sunlight-1-line-140">line 140</a>
 			</li>
 		</ul>
 	</dd>
@@ -676,8 +671,8 @@
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -687,23 +682,8 @@
     <dd>
         
 <span class="param-type">Number</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.dataGrid.html">dc.dataGrid</a></span>
 
 
@@ -711,8 +691,8 @@
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -721,7 +701,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="html"><span class="type-signature"></span>html(<span class="optional">html</span>)</h4>
+    <h4 class="name" id="group"><span class="type-signature"></span>group(groupFunction)</h4>
     
     
 </dt>
@@ -729,7 +709,181 @@
 
     
     <div class="description">
-        <p>Get or set the function that formats an item. The data grid widget uses a<br>function to generate dynamic html. Use your favourite templating engine or<br>generate the string directly.</p>
+        <p>Get or set the group function for the data grid. The group function takes a data row and
+returns the key to specify to <a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_nest">d3.nest</a>
+to split rows into groups.</p>
+<p>Do not pass in a crossfilter group as this will not work.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>groupFunction</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Function taking a row of data and returning the nest key.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-grid.js.html">data-grid.js</a>,
+				 <a href="data-grid.js.html#sunlight-1-line-106">line 106</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">function</span>
+|
+
+<span class="param-type"><a href="dc.dataTable.html">dc.dataTable</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">// group rows by the value of their field
+chart
+    .group(function(d) { return d.field; })</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="html"><span class="type-signature"></span>html( [html])</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Get or set the function that formats an item. The data grid widget uses a
+function to generate dynamic html. Use your favourite templating engine or
+generate the string directly.</p>
     </div>
     
 
@@ -838,7 +992,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-159">line 159</a>
+				 <a href="data-grid.js.html#sunlight-1-line-173">line 173</a>
 			</li>
 		</ul>
 	</dd>
@@ -864,8 +1018,8 @@
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -875,23 +1029,8 @@
     <dd>
         
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.dataGrid.html">dc.dataGrid</a></span>
 
 
@@ -899,8 +1038,8 @@
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -915,7 +1054,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="htmlGroup"><span class="type-signature"></span>htmlGroup(<span class="optional">htmlGroup</span>)</h4>
+    <h4 class="name" id="htmlGroup"><span class="type-signature"></span>htmlGroup( [htmlGroup])</h4>
     
     
 </dt>
@@ -1032,7 +1171,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-180">line 180</a>
+				 <a href="data-grid.js.html#sunlight-1-line-193">line 193</a>
 			</li>
 		</ul>
 	</dd>
@@ -1058,8 +1197,8 @@
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1069,23 +1208,8 @@
     <dd>
         
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.dataGrid.html">dc.dataGrid</a></span>
 
 
@@ -1093,8 +1217,8 @@
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -1109,7 +1233,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="order"><span class="type-signature"></span>order(<span class="optional">order</span>)</h4>
+    <h4 class="name" id="order"><span class="type-signature"></span>order( [order])</h4>
     
     
 </dt>
@@ -1117,7 +1241,7 @@
 
     
     <div class="description">
-        <p>Get or set sort order function.</p>
+        <p>Get or set sort the order function.</p>
     </div>
     
 
@@ -1234,7 +1358,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-221">line 221</a>
+				 <a href="data-grid.js.html#sunlight-1-line-232">line 232</a>
 			</li>
 		</ul>
 	</dd>
@@ -1246,9 +1370,9 @@
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/mbostock/d3/wiki/Arrays#d3_ascending">d3.ascending</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending">d3.ascending</a></li>
 			
-			<li><a href="https://github.com/mbostock/d3/wiki/Arrays#d3_descending">d3.descending</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending">d3.descending</a></li>
 			</ul>
 	</dd>
 	
@@ -1269,8 +1393,8 @@
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1280,23 +1404,8 @@
     <dd>
         
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.dataGrid.html">dc.dataGrid</a></span>
 
 
@@ -1304,8 +1413,8 @@
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -1320,7 +1429,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="size"><span class="type-signature"></span>size(<span class="optional">size</span>)</h4>
+    <h4 class="name" id="size"><span class="type-signature"></span>size( [size])</h4>
     
     
 </dt>
@@ -1445,7 +1554,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-142">line 142</a>
+				 <a href="data-grid.js.html#sunlight-1-line-157">line 157</a>
 			</li>
 		</ul>
 	</dd>
@@ -1471,8 +1580,8 @@
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1482,23 +1591,8 @@
     <dd>
         
 <span class="param-type">Number</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.dataGrid.html">dc.dataGrid</a></span>
 
 
@@ -1506,8 +1600,8 @@
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -1516,7 +1610,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="sortBy"><span class="type-signature"></span>sortBy(<span class="optional">sortByFunction</span>)</h4>
+    <h4 class="name" id="sortBy"><span class="type-signature"></span>sortBy( [sortByFunction])</h4>
     
     
 </dt>
@@ -1524,7 +1618,8 @@
 
     
     <div class="description">
-        <p>Get or set sort-by function. This function works as a value accessor at the item<br>level and returns a particular field to be sorted.</p>
+        <p>Get or set sort-by function. This function works as a value accessor at the item
+level and returns a particular field to be sorted.</p>
     </div>
     
 
@@ -1633,7 +1728,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-199">line 199</a>
+				 <a href="data-grid.js.html#sunlight-1-line-211">line 211</a>
 			</li>
 		</ul>
 	</dd>
@@ -1659,8 +1754,8 @@
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1670,23 +1765,8 @@
     <dd>
         
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.dataGrid.html">dc.dataGrid</a></span>
 
 
@@ -1694,8 +1774,8 @@
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -1735,20 +1815,22 @@
 </div>
 </div>
 
-<div class="modal fade" id="searchResults">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Search results</h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
 
@@ -1760,7 +1842,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Fri Dec 2nd 2016
+		on Wed Jan 4th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -1768,7 +1850,9 @@
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
 
 <script>
 $( function () {
@@ -1778,7 +1862,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -1814,8 +1898,7 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			var id = $( heading ).attr( "id" );
-			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+			return $( heading ).attr( "id" ) || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -1841,11 +1924,13 @@ $( function () {
 <!--Google Analytics-->
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		SearcherDisplay.init();
-	});
-</script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
 
 </body>
 </html>

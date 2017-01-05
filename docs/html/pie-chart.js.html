@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -52,16 +52,18 @@
 			</li>
 			
 		</ul>
-		<div class="col-sm-3 col-md-3">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
 	</div>
 
 </div>
@@ -101,11 +103,11 @@
  * // create a pie chart under #chart-container2 element using chart group A
  * var chart2 = dc.pieChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.pieChart}
+ * @returns {dc.pieChart}
  */
 dc.pieChart = function (parent, chartGroup) {
     var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
@@ -143,8 +145,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [cap]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.slicesCap = _chart.cap;
 
@@ -420,8 +421,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [externalRadiusPadding=0]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.externalRadiusPadding = function (externalRadiusPadding) {
         if (!arguments.length) {
@@ -438,8 +438,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [innerRadius=0]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.innerRadius = function (innerRadius) {
         if (!arguments.length) {
@@ -456,8 +455,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [radius]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.radius = function (radius) {
         if (!arguments.length) {
@@ -473,8 +471,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [cx]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.cx = function (cx) {
         if (!arguments.length) {
@@ -490,8 +487,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [cy]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.cy = function (cy) {
         if (!arguments.length) {
@@ -523,8 +519,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [minAngleForLabel=0.5]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.minAngleForLabel = function (minAngleForLabel) {
         if (!arguments.length) {
@@ -591,8 +586,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {String} [title]
-     * @return {String}
-     * @return {dc.pieChart}
+     * @returns {String|dc.pieChart}
      */
     _chart.emptyTitle = function (title) {
         if (arguments.length === 0) {
@@ -603,15 +597,14 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     /**
-     * Position slice labels offset from the outer edge of the chart
+     * Position slice labels offset from the outer edge of the chart.
      *
-     * The given argument sets the radial offset.
+     * The argument specifies the extra radius to be added for slice labels.
      * @method externalLabels
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [externalLabelRadius]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.externalLabels = function (externalLabelRadius) {
         if (arguments.length === 0) {
@@ -632,8 +625,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Boolean} [drawPaths]
-     * @return {Boolean}
-     * @return {dc.pieChart}
+     * @returns {Boolean|dc.pieChart}
      */
     _chart.drawPaths = function (drawPaths) {
         if (arguments.length === 0) {
@@ -708,20 +700,22 @@ dc.pieChart = function (parent, chartGroup) {
 </div>
 </div>
 
-<div class="modal fade" id="searchResults">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Search results</h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
 
@@ -733,7 +727,7 @@ dc.pieChart = function (parent, chartGroup) {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Fri Dec 2nd 2016
+		on Wed Jan 4th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -741,7 +735,9 @@ dc.pieChart = function (parent, chartGroup) {
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
 
 <script>
 $( function () {
@@ -751,7 +747,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -787,8 +783,7 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			var id = $( heading ).attr( "id" );
-			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+			return $( heading ).attr( "id" ) || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -814,11 +809,13 @@ $( function () {
 <!--Google Analytics-->
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		SearcherDisplay.init();
-	});
-</script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
 
 </body>
 </html>

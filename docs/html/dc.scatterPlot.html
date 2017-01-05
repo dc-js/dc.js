@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -52,16 +52,18 @@
 			</li>
 			
 		</ul>
-		<div class="col-sm-3 col-md-3">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
 	</div>
 
 </div>
@@ -98,7 +100,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="scatterPlot"><span class="type-signature"></span>new scatterPlot(parent, <span class="optional">chartGroup</span>)</h4>
+    <h4 class="name" id="scatterPlot"><span class="type-signature"></span>new scatterPlot(parent [, chartGroup])</h4>
     
     
 </dt>
@@ -179,7 +181,9 @@
 
             
 
-            <td class="description last"><p>Any valid<br><a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single selector</a> specifying<br>a dom block element such as a div; or a dom element or d3 selection.</p></td>
+            <td class="description last"><p>Any valid
+<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements">d3 single selector</a> specifying
+a dom block element such as a div; or a dom element or d3 selection.</p></td>
         </tr>
 
     
@@ -213,7 +217,8 @@
 
             
 
-            <td class="description last"><p>The name of the chart group this chart instance should be placed in.<br>Interaction with a chart will only trigger events and redraws within the chart's group.</p></td>
+            <td class="description last"><p>The name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.</p></td>
         </tr>
 
     
@@ -340,6 +345,221 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
     
 
     
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<hr>
+<dt class="name" id="emptyColor">
+    <h4 id="emptyColor"><span class="type-signature"></span>emptyColor<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Set or get color for symbols when the group is empty. If null, just use the
+<a href="dc.colorMixin.html#colors">colorMixin.colors</a> color scale zero value.</p>
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="scatter-plot.js.html">scatter-plot.js</a>,
+				 <a href="scatter-plot.js.html#sunlight-1-line-279">line 279</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="emptyOpacity">
+    <h4 id="emptyOpacity"><span class="type-signature"></span>emptyOpacity<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Set or get opacity for symbols when the group is empty.</p>
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="scatter-plot.js.html">scatter-plot.js</a>,
+				 <a href="scatter-plot.js.html#sunlight-1-line-297">line 297</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="nonemptyOpacity">
+    <h4 id="nonemptyOpacity"><span class="type-signature"></span>nonemptyOpacity<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Set or get opacity for symbols when the group is not empty.</p>
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="scatter-plot.js.html">scatter-plot.js</a>,
+				 <a href="scatter-plot.js.html#sunlight-1-line-314">line 314</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        </dl>
+    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -348,7 +568,7 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="emptySize"><span class="type-signature"></span>emptySize(<span class="optional">emptySize</span>)</h4>
+    <h4 class="name" id="emptySize"><span class="type-signature"></span>emptySize( [emptySize])</h4>
     
     
 </dt>
@@ -473,7 +693,7 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="scatter-plot.js.html">scatter-plot.js</a>,
-				 <a href="scatter-plot.js.html#sunlight-1-line-241">line 241</a>
+				 <a href="scatter-plot.js.html#sunlight-1-line-262">line 262</a>
 			</li>
 		</ul>
 	</dd>
@@ -485,7 +705,7 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size">d3.svg.symbol().size()</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size">d3.svg.symbol.size</a></li>
 			</ul>
 	</dd>
 	
@@ -506,8 +726,8 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -517,23 +737,8 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
     <dd>
         
 <span class="param-type">Number</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.scatterPlot.html">dc.scatterPlot</a></span>
 
 
@@ -541,8 +746,8 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -551,7 +756,7 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="excludedColor"><span class="type-signature"></span>excludedColor(<span class="optional">excludedColor</span>)</h4>
+    <h4 class="name" id="excludedColor"><span class="type-signature"></span>excludedColor( [excludedColor])</h4>
     
     
 </dt>
@@ -559,7 +764,8 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
 
     
     <div class="description">
-        <p>Set or get color for symbols excluded from this chart's filter. If null, no<br>special color is applied for symbols based on their filter status</p>
+        <p>Set or get color for symbols excluded from this chart's filter. If null, no
+special color is applied for symbols based on their filter status.</p>
     </div>
     
 
@@ -676,7 +882,7 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="scatter-plot.js.html">scatter-plot.js</a>,
-				 <a href="scatter-plot.js.html#sunlight-1-line-204">line 204</a>
+				 <a href="scatter-plot.js.html#sunlight-1-line-229">line 229</a>
 			</li>
 		</ul>
 	</dd>
@@ -684,13 +890,6 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
 
 	
 
-	
-	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
-	<dd class="tag-see">
-		<ul>
-			<li><a href="https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size">d3.svg.symbol().size()</a></li>
-			</ul>
-	</dd>
 	
 
 	
@@ -709,8 +908,8 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -720,23 +919,8 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
     <dd>
         
 <span class="param-type">Number</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.scatterPlot.html">dc.scatterPlot</a></span>
 
 
@@ -744,8 +928,8 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -754,7 +938,7 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="excludedOpacity"><span class="type-signature"></span>excludedOpacity(<span class="optional">excludedOpacity</span>)</h4>
+    <h4 class="name" id="excludedOpacity"><span class="type-signature"></span>excludedOpacity( [excludedOpacity])</h4>
     
     
 </dt>
@@ -879,7 +1063,7 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="scatter-plot.js.html">scatter-plot.js</a>,
-				 <a href="scatter-plot.js.html#sunlight-1-line-223">line 223</a>
+				 <a href="scatter-plot.js.html#sunlight-1-line-246">line 246</a>
 			</li>
 		</ul>
 	</dd>
@@ -887,13 +1071,6 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
 
 	
 
-	
-	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
-	<dd class="tag-see">
-		<ul>
-			<li><a href="https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size">d3.svg.symbol().size()</a></li>
-			</ul>
-	</dd>
 	
 
 	
@@ -912,8 +1089,8 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -923,23 +1100,8 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
     <dd>
         
 <span class="param-type">Number</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.scatterPlot.html">dc.scatterPlot</a></span>
 
 
@@ -947,8 +1109,8 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -957,7 +1119,7 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="excludedSize"><span class="type-signature"></span>excludedSize(<span class="optional">excludedSize</span>)</h4>
+    <h4 class="name" id="excludedSize"><span class="type-signature"></span>excludedSize( [excludedSize])</h4>
     
     
 </dt>
@@ -965,7 +1127,8 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
 
     
     <div class="description">
-        <p>Set or get size for symbols excluded from this chart's filter. If null, no<br>special size is applied for symbols based on their filter status</p>
+        <p>Set or get size for symbols excluded from this chart's filter. If null, no
+special size is applied for symbols based on their filter status.</p>
     </div>
     
 
@@ -1082,7 +1245,7 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="scatter-plot.js.html">scatter-plot.js</a>,
-				 <a href="scatter-plot.js.html#sunlight-1-line-185">line 185</a>
+				 <a href="scatter-plot.js.html#sunlight-1-line-211">line 211</a>
 			</li>
 		</ul>
 	</dd>
@@ -1094,7 +1257,7 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size">d3.svg.symbol().size()</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size">d3.svg.symbol.size</a></li>
 			</ul>
 	</dd>
 	
@@ -1115,8 +1278,8 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1126,23 +1289,8 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
     <dd>
         
 <span class="param-type">Number</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.scatterPlot.html">dc.scatterPlot</a></span>
 
 
@@ -1150,8 +1298,8 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -1160,7 +1308,7 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="existenceAccessor"><span class="type-signature"></span>existenceAccessor(<span class="optional">accessor</span>)</h4>
+    <h4 class="name" id="existenceAccessor"><span class="type-signature"></span>existenceAccessor( [accessor])</h4>
     
     
 </dt>
@@ -1168,7 +1316,11 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
 
     
     <div class="description">
-        <p>Get or set the existence accessor.  If a point exists, it is drawn with<br><a href="dc.scatterPlot.html#symbolSize">symbolSize</a> radius and<br>opacity 1; if it does not exist, it is drawn with<br><a href="dc.scatterPlot.html#emptySize">emptySize</a> radius and opacity 0. By default,<br>the existence accessor checks if the reduced value is truthy.</p>
+        <p>Get or set the existence accessor.  If a point exists, it is drawn with
+<a href="dc.scatterPlot.html#symbolSize">symbolSize</a> radius and
+opacity 1; if it does not exist, it is drawn with
+<a href="dc.scatterPlot.html#emptySize">emptySize</a> radius and opacity 0. By default,
+the existence accessor checks if the reduced value is truthy.</p>
     </div>
     
 
@@ -1277,7 +1429,7 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="scatter-plot.js.html">scatter-plot.js</a>,
-				 <a href="scatter-plot.js.html#sunlight-1-line-99">line 99</a>
+				 <a href="scatter-plot.js.html#sunlight-1-line-129">line 129</a>
 			</li>
 		</ul>
 	</dd>
@@ -1312,8 +1464,8 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1323,23 +1475,8 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
     <dd>
         
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.scatterPlot.html">dc.scatterPlot</a></span>
 
 
@@ -1347,8 +1484,8 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -1364,7 +1501,7 @@ chart.existenceAccessor(function (d) { return d.value; });</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="highlightedSize"><span class="type-signature"></span>highlightedSize(<span class="optional">highlightedSize</span>)</h4>
+    <h4 class="name" id="highlightedSize"><span class="type-signature"></span>highlightedSize( [highlightedSize])</h4>
     
     
 </dt>
@@ -1489,7 +1626,7 @@ chart.existenceAccessor(function (d) { return d.value; });</pre>
 		<ul class="dummy">
 			<li>
 				<a href="scatter-plot.js.html">scatter-plot.js</a>,
-				 <a href="scatter-plot.js.html#sunlight-1-line-167">line 167</a>
+				 <a href="scatter-plot.js.html#sunlight-1-line-194">line 194</a>
 			</li>
 		</ul>
 	</dd>
@@ -1501,7 +1638,7 @@ chart.existenceAccessor(function (d) { return d.value; });</pre>
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size">d3.svg.symbol().size()</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size">d3.svg.symbol.size</a></li>
 			</ul>
 	</dd>
 	
@@ -1522,8 +1659,8 @@ chart.existenceAccessor(function (d) { return d.value; });</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1533,23 +1670,8 @@ chart.existenceAccessor(function (d) { return d.value; });</pre>
     <dd>
         
 <span class="param-type">Number</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.scatterPlot.html">dc.scatterPlot</a></span>
 
 
@@ -1557,8 +1679,8 @@ chart.existenceAccessor(function (d) { return d.value; });</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -1567,7 +1689,7 @@ chart.existenceAccessor(function (d) { return d.value; });</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="symbol"><span class="type-signature"></span>symbol(<span class="optional">type</span>)</h4>
+    <h4 class="name" id="symbol"><span class="type-signature"></span>symbol( [type])</h4>
     
     
 </dt>
@@ -1575,7 +1697,8 @@ chart.existenceAccessor(function (d) { return d.value; });</pre>
 
     
     <div class="description">
-        <p>Get or set the symbol type used for each point. By default the symbol is a circle.<br>Type can be a constant or an accessor.</p>
+        <p>Get or set the symbol type used for each point. By default the symbol is a circle.
+Type can be a constant or an accessor.</p>
     </div>
     
 
@@ -1695,7 +1818,7 @@ chart.existenceAccessor(function (d) { return d.value; });</pre>
 		<ul class="dummy">
 			<li>
 				<a href="scatter-plot.js.html">scatter-plot.js</a>,
-				 <a href="scatter-plot.js.html#sunlight-1-line-125">line 125</a>
+				 <a href="scatter-plot.js.html#sunlight-1-line-154">line 154</a>
 			</li>
 		</ul>
 	</dd>
@@ -1707,7 +1830,7 @@ chart.existenceAccessor(function (d) { return d.value; });</pre>
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_type">d3.svg.symbol().type()</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_type">d3.svg.symbol.type</a></li>
 			</ul>
 	</dd>
 	
@@ -1728,8 +1851,8 @@ chart.existenceAccessor(function (d) { return d.value; });</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1742,23 +1865,8 @@ chart.existenceAccessor(function (d) { return d.value; });</pre>
 |
 
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.scatterPlot.html">dc.scatterPlot</a></span>
 
 
@@ -1766,8 +1874,8 @@ chart.existenceAccessor(function (d) { return d.value; });</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -1785,7 +1893,7 @@ chart.symbol(&#x27;square&#x27;);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="symbolSize"><span class="type-signature"></span>symbolSize(<span class="optional">symbolSize</span>)</h4>
+    <h4 class="name" id="symbolSize"><span class="type-signature"></span>symbolSize( [symbolSize])</h4>
     
     
 </dt>
@@ -1910,7 +2018,7 @@ chart.symbol(&#x27;square&#x27;);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="scatter-plot.js.html">scatter-plot.js</a>,
-				 <a href="scatter-plot.js.html#sunlight-1-line-149">line 149</a>
+				 <a href="scatter-plot.js.html#sunlight-1-line-177">line 177</a>
 			</li>
 		</ul>
 	</dd>
@@ -1922,7 +2030,7 @@ chart.symbol(&#x27;square&#x27;);</pre>
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size">d3.svg.symbol().size()</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size">d3.svg.symbol.size</a></li>
 			</ul>
 	</dd>
 	
@@ -1943,8 +2051,8 @@ chart.symbol(&#x27;square&#x27;);</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1954,23 +2062,8 @@ chart.symbol(&#x27;square&#x27;);</pre>
     <dd>
         
 <span class="param-type">Number</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.scatterPlot.html">dc.scatterPlot</a></span>
 
 
@@ -1978,8 +2071,8 @@ chart.symbol(&#x27;square&#x27;);</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -2011,20 +2104,22 @@ chart.symbol(&#x27;square&#x27;);</pre>
 </div>
 </div>
 
-<div class="modal fade" id="searchResults">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Search results</h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
 
@@ -2036,7 +2131,7 @@ chart.symbol(&#x27;square&#x27;);</pre>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Fri Dec 2nd 2016
+		on Wed Jan 4th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -2044,7 +2139,9 @@ chart.symbol(&#x27;square&#x27;);</pre>
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
 
 <script>
 $( function () {
@@ -2054,7 +2151,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -2090,8 +2187,7 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			var id = $( heading ).attr( "id" );
-			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+			return $( heading ).attr( "id" ) || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -2117,11 +2213,13 @@ $( function () {
 <!--Google Analytics-->
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		SearcherDisplay.init();
-	});
-</script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
 
 </body>
 </html>

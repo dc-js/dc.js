@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -52,16 +52,18 @@
 			</li>
 			
 		</ul>
-		<div class="col-sm-3 col-md-3">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
 	</div>
 
 </div>
@@ -98,7 +100,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="numberDisplay"><span class="type-signature"></span>new numberDisplay(parent, <span class="optional">chartGroup</span>)</h4>
+    <h4 class="name" id="numberDisplay"><span class="type-signature"></span>new numberDisplay(parent [, chartGroup])</h4>
     
     
 </dt>
@@ -106,7 +108,9 @@
 
     
     <div class="description">
-        <p>A display of a single numeric value.<br>Unlike other charts, you do not need to set a dimension. Instead a group object must be provided and<br>a valueAccessor that returns a single value.</p>
+        <p>A display of a single numeric value.
+Unlike other charts, you do not need to set a dimension. Instead a group object must be provided and
+a valueAccessor that returns a single value.</p>
     </div>
     
 
@@ -174,7 +178,9 @@
 
             
 
-            <td class="description last"><p>Any valid<br><a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single selector</a> specifying<br>a dom block element such as a div; or a dom element or d3 selection.</p></td>
+            <td class="description last"><p>Any valid
+<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements">d3 single selector</a> specifying
+a dom block element such as a div; or a dom element or d3 selection.</p></td>
         </tr>
 
     
@@ -208,7 +214,8 @@
 
             
 
-            <td class="description last"><p>The name of the chart group this chart instance should be placed in.<br>Interaction with a chart will only trigger events and redraws within the chart's group.</p></td>
+            <td class="description last"><p>The name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.</p></td>
         </tr>
 
     
@@ -339,7 +346,7 @@ var display1 = dc.numberDisplay(&#x27;#chart-container1&#x27;);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="formatNumber"><span class="type-signature"></span>formatNumber(<span class="optional">formatter</span>)</h4>
+    <h4 class="name" id="formatNumber"><span class="type-signature"></span>formatNumber( [formatter])</h4>
     
     
 </dt>
@@ -464,7 +471,7 @@ var display1 = dc.numberDisplay(&#x27;#chart-container1&#x27;);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="number-display.js.html">number-display.js</a>,
-				 <a href="number-display.js.html#sunlight-1-line-127">line 127</a>
+				 <a href="number-display.js.html#sunlight-1-line-126">line 126</a>
 			</li>
 		</ul>
 	</dd>
@@ -476,7 +483,7 @@ var display1 = dc.numberDisplay(&#x27;#chart-container1&#x27;);</pre>
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/mbostock/d3/wiki/Formatting">d3.format</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Formatting.md">d3.format</a></li>
 			</ul>
 	</dd>
 	
@@ -497,8 +504,8 @@ var display1 = dc.numberDisplay(&#x27;#chart-container1&#x27;);</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -508,23 +515,8 @@ var display1 = dc.numberDisplay(&#x27;#chart-container1&#x27;);</pre>
     <dd>
         
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.numberDisplay.html">dc.numberDisplay</a></span>
 
 
@@ -532,8 +524,8 @@ var display1 = dc.numberDisplay(&#x27;#chart-container1&#x27;);</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -542,7 +534,7 @@ var display1 = dc.numberDisplay(&#x27;#chart-container1&#x27;);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="html"><span class="type-signature"></span>html(<span class="optional">html</span>)</h4>
+    <h4 class="name" id="html"><span class="type-signature"></span>html( [html])</h4>
     
     
 </dt>
@@ -550,7 +542,8 @@ var display1 = dc.numberDisplay(&#x27;#chart-container1&#x27;);</pre>
 
     
     <div class="description">
-        <p>Gets or sets an optional object specifying HTML templates to use depending on the number<br>displayed.  The text <code>%number</code> will be replaced with the current value.</p>
+        <p>Gets or sets an optional object specifying HTML templates to use depending on the number
+displayed.  The text <code>%number</code> will be replaced with the current value.</p>
 <ul>
 <li>one: HTML template to use if the number is 1</li>
 <li>zero: HTML template to use if the number is 0</li>
@@ -698,8 +691,8 @@ var display1 = dc.numberDisplay(&#x27;#chart-container1&#x27;);</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -709,23 +702,8 @@ var display1 = dc.numberDisplay(&#x27;#chart-container1&#x27;);</pre>
     <dd>
         
 <span class="param-type">Object</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.numberDisplay.html">dc.numberDisplay</a></span>
 
 
@@ -733,8 +711,8 @@ var display1 = dc.numberDisplay(&#x27;#chart-container1&#x27;);</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -760,7 +738,7 @@ var display1 = dc.numberDisplay(&#x27;#chart-container1&#x27;);</pre>
 
     
     <div class="description">
-        <p>Calculate and return the underlying value of the display</p>
+        <p>Calculate and return the underlying value of the display.</p>
     </div>
     
 
@@ -807,7 +785,7 @@ var display1 = dc.numberDisplay(&#x27;#chart-container1&#x27;);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="number-display.js.html">number-display.js</a>,
-				 <a href="number-display.js.html#sunlight-1-line-70">line 70</a>
+				 <a href="number-display.js.html#sunlight-1-line-69">line 69</a>
 			</li>
 		</ul>
 	</dd>
@@ -883,20 +861,22 @@ var display1 = dc.numberDisplay(&#x27;#chart-container1&#x27;);</pre>
 </div>
 </div>
 
-<div class="modal fade" id="searchResults">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Search results</h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
 
@@ -908,7 +888,7 @@ var display1 = dc.numberDisplay(&#x27;#chart-container1&#x27;);</pre>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Fri Dec 2nd 2016
+		on Wed Jan 4th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -916,7 +896,9 @@ var display1 = dc.numberDisplay(&#x27;#chart-container1&#x27;);</pre>
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
 
 <script>
 $( function () {
@@ -926,7 +908,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -962,8 +944,7 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			var id = $( heading ).attr( "id" );
-			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+			return $( heading ).attr( "id" ) || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -989,11 +970,13 @@ $( function () {
 <!--Google Analytics-->
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		SearcherDisplay.init();
-	});
-</script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
 
 </body>
 </html>

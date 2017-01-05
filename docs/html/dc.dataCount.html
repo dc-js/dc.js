@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -52,16 +52,18 @@
 			</li>
 			
 		</ul>
-		<div class="col-sm-3 col-md-3">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
 	</div>
 
 </div>
@@ -98,7 +100,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="dataCount"><span class="type-signature"></span>new dataCount(parent, <span class="optional">chartGroup</span>)</h4>
+    <h4 class="name" id="dataCount"><span class="type-signature"></span>new dataCount(parent [, chartGroup])</h4>
     
     
 </dt>
@@ -106,9 +108,16 @@
 
     
     <div class="description">
-        <p>The data count widget is a simple widget designed to display the number of records selected by the<br>current filters out of the total number of records in the data set. Once created the data count widget<br>will automatically update the text content of the following elements under the parent element.</p>
-<p>Note: this widget works best for the specific case of showing the number of records out of a<br>total. If you want a more general-purpose numeric display, please use the<br><a href="dc.numberDisplay.html">dc.numberDisplay</a> widget instead.</p>
-<p>'.total-count' - total number of records<br>'.filter-count' - number of records matched by the current filters</p>
+        <p>The data count widget is a simple widget designed to display the number of records selected by the
+current filters out of the total number of records in the data set. Once created the data count widget
+will automatically update the text content of child elements with the following classes:</p>
+<ul>
+<li><code>.total-count</code> - total number of records</li>
+<li><code>.filter-count</code> - number of records matched by the current filters</li>
+</ul>
+<p>Note: this widget works best for the specific case of showing the number of records out of a
+total. If you want a more general-purpose numeric display, please use the
+<a href="dc.numberDisplay.html">dc.numberDisplay</a> widget instead.</p>
 <p>Examples:</p>
 <ul>
 <li><a href="http://dc-js.github.com/dc.js/">Nasdaq 100 Index</a></li>
@@ -180,7 +189,9 @@
 
             
 
-            <td class="description last"><p>Any valid<br><a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single selector</a> specifying<br>a dom block element such as a div; or a dom element or d3 selection.</p></td>
+            <td class="description last"><p>Any valid
+<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements">d3 single selector</a> specifying
+a dom block element such as a div; or a dom element or d3 selection.</p></td>
         </tr>
 
     
@@ -214,7 +225,8 @@
 
             
 
-            <td class="description last"><p>The name of the chart group this chart instance should be placed in.<br>Interaction with a chart will only trigger events and redraws within the chart's group.</p></td>
+            <td class="description last"><p>The name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.</p></td>
         </tr>
 
     
@@ -349,7 +361,7 @@ dc.dataCount(&#x27;.dc-data-count&#x27;)
             
 <hr>
 <dt>
-    <h4 class="name" id="formatNumber"><span class="type-signature"></span>formatNumber(<span class="optional">formatter</span>)</h4>
+    <h4 class="name" id="formatNumber"><span class="type-signature"></span>formatNumber( [formatter])</h4>
     
     
 </dt>
@@ -474,7 +486,7 @@ dc.dataCount(&#x27;.dc-data-count&#x27;)
 		<ul class="dummy">
 			<li>
 				<a href="data-count.js.html">data-count.js</a>,
-				 <a href="data-count.js.html#sunlight-1-line-68">line 68</a>
+				 <a href="data-count.js.html#sunlight-1-line-67">line 67</a>
 			</li>
 		</ul>
 	</dd>
@@ -486,7 +498,7 @@ dc.dataCount(&#x27;.dc-data-count&#x27;)
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/mbostock/d3/wiki/Formatting">d3.format</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Formatting.md">d3.format</a></li>
 			</ul>
 	</dd>
 	
@@ -507,8 +519,8 @@ dc.dataCount(&#x27;.dc-data-count&#x27;)
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -518,23 +530,8 @@ dc.dataCount(&#x27;.dc-data-count&#x27;)
     <dd>
         
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.dataCount.html">dc.dataCount</a></span>
 
 
@@ -542,8 +539,8 @@ dc.dataCount(&#x27;.dc-data-count&#x27;)
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -558,7 +555,7 @@ dc.dataCount(&#x27;.dc-data-count&#x27;)
             
 <hr>
 <dt>
-    <h4 class="name" id="html"><span class="type-signature"></span>html(<span class="optional">options</span>)</h4>
+    <h4 class="name" id="html"><span class="type-signature"></span>html( [options])</h4>
     
     
 </dt>
@@ -566,7 +563,9 @@ dc.dataCount(&#x27;.dc-data-count&#x27;)
 
     
     <div class="description">
-        <p>Gets or sets an optional object specifying HTML templates to use depending how many items are<br>selected. The text <code>%total-count</code> will replaced with the total number of records, and the text<br><code>%filter-count</code> will be replaced with the number of selected records.</p>
+        <p>Gets or sets an optional object specifying HTML templates to use depending how many items are
+selected. The text <code>%total-count</code> will replaced with the total number of records, and the text
+<code>%filter-count</code> will be replaced with the number of selected records.</p>
 <ul>
 <li>all: HTML template to use if all items are selected</li>
 <li>some: HTML template to use if not all items are selected</li>
@@ -705,8 +704,8 @@ dc.dataCount(&#x27;.dc-data-count&#x27;)
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -716,23 +715,8 @@ dc.dataCount(&#x27;.dc-data-count&#x27;)
     <dd>
         
 <span class="param-type">Object</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.dataCount.html">dc.dataCount</a></span>
 
 
@@ -740,8 +724,8 @@ dc.dataCount(&#x27;.dc-data-count&#x27;)
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -782,20 +766,22 @@ dc.dataCount(&#x27;.dc-data-count&#x27;)
 </div>
 </div>
 
-<div class="modal fade" id="searchResults">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Search results</h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
 
@@ -807,7 +793,7 @@ dc.dataCount(&#x27;.dc-data-count&#x27;)
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Fri Dec 2nd 2016
+		on Wed Jan 4th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -815,7 +801,9 @@ dc.dataCount(&#x27;.dc-data-count&#x27;)
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
 
 <script>
 $( function () {
@@ -825,7 +813,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -861,8 +849,7 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			var id = $( heading ).attr( "id" );
-			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+			return $( heading ).attr( "id" ) || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -888,11 +875,13 @@ $( function () {
 <!--Google Analytics-->
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		SearcherDisplay.init();
-	});
-</script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
 
 </body>
 </html>

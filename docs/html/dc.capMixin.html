@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -52,16 +52,18 @@
 			</li>
 			
 		</ul>
-		<div class="col-sm-3 col-md-3">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
 	</div>
 
 </div>
@@ -96,8 +98,12 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Cap is a mixin that groups small data elements below a <em>cap</em> into an <em>others</em> grouping for both the<br>Row and Pie Charts.</p>
-<p>The top ordered elements in the group up to the cap amount will be kept in the chart, and the rest<br>will be replaced with an <em>others</em> element, with value equal to the sum of the replaced values. The<br>keys of the elements below the cap limit are recorded in order to filter by those keys when the<br>others* element is clicked.</p></div>
+            <div class="description"><p>Cap is a mixin that groups small data elements below a <em>cap</em> into an <em>others</em> grouping for both the
+Row and Pie Charts.</p>
+<p>The top ordered elements in the group up to the cap amount will be kept in the chart, and the rest
+will be replaced with an <em>others</em> element, with value equal to the sum of the replaced values. The
+keys of the elements below the cap limit are recorded in order to filter by those keys when the
+others* element is clicked.</p></div>
         
 
         
@@ -173,7 +179,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="cap"><span class="type-signature"></span>cap(<span class="optional">count</span>)</h4>
+    <h4 class="name" id="cap"><span class="type-signature"></span>cap( [count])</h4>
     
     
 </dt>
@@ -181,7 +187,9 @@
 
     
     <div class="description">
-        <p>Get or set the count of elements to that will be included in the cap.</p>
+        <p>Get or set the count of elements to that will be included in the cap. If there is an
+<a href="dc.capMixin.html#othersGrouper">othersGrouper</a>, any further elements will be combined in an
+extra element with its name determined by <a href="dc.capMixin.html#othersLabel">othersLabel</a>.</p>
     </div>
     
 
@@ -298,7 +306,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="cap-mixin.js.html">cap-mixin.js</a>,
-				 <a href="cap-mixin.js.html#sunlight-1-line-62">line 62</a>
+				 <a href="cap-mixin.js.html#sunlight-1-line-66">line 66</a>
 			</li>
 		</ul>
 	</dd>
@@ -324,8 +332,8 @@
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -335,23 +343,8 @@
     <dd>
         
 <span class="param-type">Number</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.capMixin.html">dc.capMixin</a></span>
 
 
@@ -359,8 +352,8 @@
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -369,7 +362,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="othersGrouper"><span class="type-signature"></span>othersGrouper(<span class="optional">grouperFunction</span>)</h4>
+    <h4 class="name" id="othersGrouper"><span class="type-signature"></span>othersGrouper( [grouperFunction])</h4>
     
     
 </dt>
@@ -377,7 +370,9 @@
 
     
     <div class="description">
-        <p>Get or set the grouper function that will perform the insertion of data for the <em>Others</em> slice<br>if the slices cap is specified. If set to a falsy value, no others will be added. By default the<br>grouper function computes the sum of all values below the cap.</p>
+        <p>Get or set the grouper function that will perform the insertion of data for the <em>Others</em> slice
+if the slices cap is specified. If set to a falsy value, no others will be added. By default the
+grouper function computes the sum of all values below the cap.</p>
     </div>
     
 
@@ -486,7 +481,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="cap-mixin.js.html">cap-mixin.js</a>,
-				 <a href="cap-mixin.js.html#sunlight-1-line-96">line 96</a>
+				 <a href="cap-mixin.js.html#sunlight-1-line-100">line 100</a>
 			</li>
 		</ul>
 	</dd>
@@ -512,8 +507,8 @@
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -523,23 +518,8 @@
     <dd>
         
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.capMixin.html">dc.capMixin</a></span>
 
 
@@ -547,13 +527,15 @@
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">// Default others grouper
+    <pre class="sunlight-highlight-javascript">// Do not show others
+chart.othersGrouper(null);
+// Default others grouper
 chart.othersGrouper(function (topRows) {
    var topRowsSum = d3.sum(topRows, _chart.valueAccessor()),
        allRows = _chart.group().all(),
@@ -563,7 +545,11 @@ chart.othersGrouper(function (topRows) {
        topSet = d3.set(topKeys),
        others = allKeys.filter(function (d) {return !topSet.has(d);});
    if (allRowsSum &gt; topRowsSum) {
-       return topRows.concat([{&#x27;others&#x27;: others, &#x27;key&#x27;: _othersLabel, &#x27;value&#x27;: allRowsSum - topRowsSum}]);
+       return topRows.concat([{
+           &#x27;others&#x27;: others,
+           &#x27;key&#x27;: _chart.othersLabel(),
+           &#x27;value&#x27;: allRowsSum - topRowsSum
+       }]);
    }
    return topRows;
 });
@@ -589,7 +575,7 @@ chart.othersGrouper(function (data) {
             
 <hr>
 <dt>
-    <h4 class="name" id="othersLabel"><span class="type-signature"></span>othersLabel(<span class="optional">label</span>)</h4>
+    <h4 class="name" id="othersLabel"><span class="type-signature"></span>othersLabel( [label])</h4>
     
     
 </dt>
@@ -597,7 +583,7 @@ chart.othersGrouper(function (data) {
 
     
     <div class="description">
-        <p>Get or set the label for <em>Others</em> slice when slices cap is specified</p>
+        <p>Get or set the label for <em>Others</em> slice when slices cap is specified.</p>
     </div>
     
 
@@ -714,7 +700,7 @@ chart.othersGrouper(function (data) {
 		<ul class="dummy">
 			<li>
 				<a href="cap-mixin.js.html">cap-mixin.js</a>,
-				 <a href="cap-mixin.js.html#sunlight-1-line-79">line 79</a>
+				 <a href="cap-mixin.js.html#sunlight-1-line-84">line 84</a>
 			</li>
 		</ul>
 	</dd>
@@ -740,8 +726,8 @@ chart.othersGrouper(function (data) {
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -751,23 +737,8 @@ chart.othersGrouper(function (data) {
     <dd>
         
 <span class="param-type">String</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.capMixin.html">dc.capMixin</a></span>
 
 
@@ -775,8 +746,8 @@ chart.othersGrouper(function (data) {
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -808,20 +779,22 @@ chart.othersGrouper(function (data) {
 </div>
 </div>
 
-<div class="modal fade" id="searchResults">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Search results</h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
 
@@ -833,7 +806,7 @@ chart.othersGrouper(function (data) {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Fri Dec 2nd 2016
+		on Wed Jan 4th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -841,7 +814,9 @@ chart.othersGrouper(function (data) {
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
 
 <script>
 $( function () {
@@ -851,7 +826,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -887,8 +862,7 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			var id = $( heading ).attr( "id" );
-			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+			return $( heading ).attr( "id" ) || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -914,11 +888,13 @@ $( function () {
 <!--Google Analytics-->
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		SearcherDisplay.init();
-	});
-</script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
 
 </body>
 </html>

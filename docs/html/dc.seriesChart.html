@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -52,16 +52,18 @@
 			</li>
 			
 		</ul>
-		<div class="col-sm-3 col-md-3">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
 	</div>
 
 </div>
@@ -98,7 +100,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="seriesChart"><span class="type-signature"></span>new seriesChart(parent, <span class="optional">chartGroup</span>)</h4>
+    <h4 class="name" id="seriesChart"><span class="type-signature"></span>new seriesChart(parent [, chartGroup])</h4>
     
     
 </dt>
@@ -106,7 +108,9 @@
 
     
     <div class="description">
-        <p>A series chart is a chart that shows multiple series of data overlaid on one chart, where the<br>series is specified in the data. It is a specialization of Composite Chart and inherits all<br>composite features other than recomposing the chart.</p>
+        <p>A series chart is a chart that shows multiple series of data overlaid on one chart, where the
+series is specified in the data. It is a specialization of Composite Chart and inherits all
+composite features other than recomposing the chart.</p>
 <p>Examples:</p>
 <ul>
 <li><a href="http://dc-js.github.io/dc.js/examples/series.html">Series Chart</a></li>
@@ -178,7 +182,9 @@
 
             
 
-            <td class="description last"><p>Any valid<br><a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single selector</a> specifying<br>a dom block element such as a div; or a dom element or d3 selection.</p></td>
+            <td class="description last"><p>Any valid
+<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements">d3 single selector</a> specifying
+a dom block element such as a div; or a dom element or d3 selection.</p></td>
         </tr>
 
     
@@ -212,7 +218,8 @@
 
             
 
-            <td class="description last"><p>The name of the chart group this chart instance should be placed in.<br>Interaction with a chart will only trigger events and redraws within the chart's group.</p></td>
+            <td class="description last"><p>The name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.</p></td>
         </tr>
 
     
@@ -345,7 +352,7 @@ var seriesChart2 = dc.seriesChart(&quot;#chart-container2&quot;, &quot;chartGrou
             
 <hr>
 <dt>
-    <h4 class="name" id="chart"><span class="type-signature"></span>chart(<span class="optional">chartFunction</span>)</h4>
+    <h4 class="name" id="chart"><span class="type-signature"></span>chart( [chartFunction])</h4>
     
     
 </dt>
@@ -496,8 +503,8 @@ var seriesChart2 = dc.seriesChart(&quot;#chart-container2&quot;, &quot;chartGrou
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -507,23 +514,8 @@ var seriesChart2 = dc.seriesChart(&quot;#chart-container2&quot;, &quot;chartGrou
     <dd>
         
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.seriesChart.html">dc.seriesChart</a></span>
 
 
@@ -531,8 +523,8 @@ var seriesChart2 = dc.seriesChart(&quot;#chart-container2&quot;, &quot;chartGrou
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -550,7 +542,7 @@ chart.chart(dc.scatterPlot)</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="seriesAccessor"><span class="type-signature"></span>seriesAccessor(<span class="optional">accessor</span>)</h4>
+    <h4 class="name" id="seriesAccessor"><span class="type-signature"></span>seriesAccessor( [accessor])</h4>
     
     
 </dt>
@@ -559,7 +551,8 @@ chart.chart(dc.scatterPlot)</pre>
     
     <div class="description">
         <p><strong>mandatory</strong></p>
-<p>Get or set accessor function for the displayed series. Given a datum, this function<br>should return the series that datum belongs to.</p>
+<p>Get or set accessor function for the displayed series. Given a datum, this function
+should return the series that datum belongs to.</p>
     </div>
     
 
@@ -668,7 +661,7 @@ chart.chart(dc.scatterPlot)</pre>
 		<ul class="dummy">
 			<li>
 				<a href="series-chart.js.html">series-chart.js</a>,
-				 <a href="series-chart.js.html#sunlight-1-line-114">line 114</a>
+				 <a href="series-chart.js.html#sunlight-1-line-113">line 113</a>
 			</li>
 		</ul>
 	</dd>
@@ -694,8 +687,8 @@ chart.chart(dc.scatterPlot)</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -705,23 +698,8 @@ chart.chart(dc.scatterPlot)</pre>
     <dd>
         
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.seriesChart.html">dc.seriesChart</a></span>
 
 
@@ -729,8 +707,8 @@ chart.chart(dc.scatterPlot)</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -746,7 +724,7 @@ chart.seriesAccessor(function(d) { return &quot;Expt: &quot; + d.key[0]; })</pre
             
 <hr>
 <dt>
-    <h4 class="name" id="seriesSort"><span class="type-signature"></span>seriesSort(<span class="optional">sortFunction</span>)</h4>
+    <h4 class="name" id="seriesSort"><span class="type-signature"></span>seriesSort( [sortFunction])</h4>
     
     
 </dt>
@@ -871,7 +849,7 @@ chart.seriesAccessor(function(d) { return &quot;Expt: &quot; + d.key[0]; })</pre
 		<ul class="dummy">
 			<li>
 				<a href="series-chart.js.html">series-chart.js</a>,
-				 <a href="series-chart.js.html#sunlight-1-line-138">line 138</a>
+				 <a href="series-chart.js.html#sunlight-1-line-136">line 136</a>
 			</li>
 		</ul>
 	</dd>
@@ -883,9 +861,9 @@ chart.seriesAccessor(function(d) { return &quot;Expt: &quot; + d.key[0]; })</pre
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/mbostock/d3/wiki/Arrays#d3_ascending">d3.ascending</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending">d3.ascending</a></li>
 			
-			<li><a href="https://github.com/mbostock/d3/wiki/Arrays#d3_descending">d3.descending</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending">d3.descending</a></li>
 			</ul>
 	</dd>
 	
@@ -906,8 +884,8 @@ chart.seriesAccessor(function(d) { return &quot;Expt: &quot; + d.key[0]; })</pre
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -917,23 +895,8 @@ chart.seriesAccessor(function(d) { return &quot;Expt: &quot; + d.key[0]; })</pre
     <dd>
         
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.seriesChart.html">dc.seriesChart</a></span>
 
 
@@ -941,8 +904,8 @@ chart.seriesAccessor(function(d) { return &quot;Expt: &quot; + d.key[0]; })</pre
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -957,7 +920,7 @@ chart.seriesAccessor(function(d) { return &quot;Expt: &quot; + d.key[0]; })</pre
             
 <hr>
 <dt>
-    <h4 class="name" id="valueSort"><span class="type-signature"></span>valueSort(<span class="optional">sortFunction</span>)</h4>
+    <h4 class="name" id="valueSort"><span class="type-signature"></span>valueSort( [sortFunction])</h4>
     
     
 </dt>
@@ -965,7 +928,9 @@ chart.seriesAccessor(function(d) { return &quot;Expt: &quot; + d.key[0]; })</pre
 
     
     <div class="description">
-        <p>Get or set a function to sort each series values by. By default this is the key accessor which,<br>for example, will ensure a lineChart series connects its points in increasing key/x order,<br>rather than haphazardly.</p>
+        <p>Get or set a function to sort each series values by. By default this is the key accessor which,
+for example, will ensure a lineChart series connects its points in increasing key/x order,
+rather than haphazardly.</p>
     </div>
     
 
@@ -1074,7 +1039,7 @@ chart.seriesAccessor(function(d) { return &quot;Expt: &quot; + d.key[0]; })</pre
 		<ul class="dummy">
 			<li>
 				<a href="series-chart.js.html">series-chart.js</a>,
-				 <a href="series-chart.js.html#sunlight-1-line-160">line 160</a>
+				 <a href="series-chart.js.html#sunlight-1-line-157">line 157</a>
 			</li>
 		</ul>
 	</dd>
@@ -1086,9 +1051,9 @@ chart.seriesAccessor(function(d) { return &quot;Expt: &quot; + d.key[0]; })</pre
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/mbostock/d3/wiki/Arrays#d3_ascending">d3.ascending</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending">d3.ascending</a></li>
 			
-			<li><a href="https://github.com/mbostock/d3/wiki/Arrays#d3_descending">d3.descending</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending">d3.descending</a></li>
 			</ul>
 	</dd>
 	
@@ -1109,8 +1074,8 @@ chart.seriesAccessor(function(d) { return &quot;Expt: &quot; + d.key[0]; })</pre
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1120,23 +1085,8 @@ chart.seriesAccessor(function(d) { return &quot;Expt: &quot; + d.key[0]; })</pre
     <dd>
         
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.seriesChart.html">dc.seriesChart</a></span>
 
 
@@ -1144,8 +1094,8 @@ chart.seriesAccessor(function(d) { return &quot;Expt: &quot; + d.key[0]; })</pre
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -1186,20 +1136,22 @@ _chart.valueSort(function keySort (a, b) {
 </div>
 </div>
 
-<div class="modal fade" id="searchResults">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Search results</h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
 
@@ -1211,7 +1163,7 @@ _chart.valueSort(function keySort (a, b) {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Fri Dec 2nd 2016
+		on Wed Jan 4th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -1219,7 +1171,9 @@ _chart.valueSort(function keySort (a, b) {
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
 
 <script>
 $( function () {
@@ -1229,7 +1183,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -1265,8 +1219,7 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			var id = $( heading ).attr( "id" );
-			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+			return $( heading ).attr( "id" ) || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -1292,11 +1245,13 @@ $( function () {
 <!--Google Analytics-->
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		SearcherDisplay.init();
-	});
-</script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
 
 </body>
 </html>

@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -52,16 +52,18 @@
 			</li>
 			
 		</ul>
-		<div class="col-sm-3 col-md-3">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
 	</div>
 
 </div>
@@ -98,7 +100,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="heatMap"><span class="type-signature"></span>new heatMap(parent, <span class="optional">chartGroup</span>)</h4>
+    <h4 class="name" id="heatMap"><span class="type-signature"></span>new heatMap(parent [, chartGroup])</h4>
     
     
 </dt>
@@ -174,7 +176,9 @@
 
             
 
-            <td class="description last"><p>Any valid<br><a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single selector</a> specifying<br>a dom block element such as a div; or a dom element or d3 selection.</p></td>
+            <td class="description last"><p>Any valid
+<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements">d3 single selector</a> specifying
+a dom block element such as a div; or a dom element or d3 selection.</p></td>
         </tr>
 
     
@@ -208,7 +212,8 @@
 
             
 
-            <td class="description last"><p>The name of the chart group this chart instance should be placed in.<br>Interaction with a chart will only trigger events and redraws within the chart's group.</p></td>
+            <td class="description last"><p>The name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.</p></td>
         </tr>
 
     
@@ -345,7 +350,7 @@ var heatMap2 = dc.heatMap(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;
             
 <hr>
 <dt>
-    <h4 class="name" id="boxOnClick"><span class="type-signature"></span>boxOnClick(<span class="optional">handler</span>)</h4>
+    <h4 class="name" id="boxOnClick"><span class="type-signature"></span>boxOnClick( [handler])</h4>
     
     
 </dt>
@@ -353,7 +358,8 @@ var heatMap2 = dc.heatMap(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;
 
     
     <div class="description">
-        <p>Gets or sets the handler that fires when an individual cell is clicked in the heatmap.<br>By default, filtering of the cell will be toggled.</p>
+        <p>Gets or sets the handler that fires when an individual cell is clicked in the heatmap.
+By default, filtering of the cell will be toggled.</p>
     </div>
     
 
@@ -462,7 +468,7 @@ var heatMap2 = dc.heatMap(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;
 		<ul class="dummy">
 			<li>
 				<a href="heatmap.js.html">heatmap.js</a>,
-				 <a href="heatmap.js.html#sunlight-1-line-274">line 274</a>
+				 <a href="heatmap.js.html#sunlight-1-line-290">line 290</a>
 			</li>
 		</ul>
 	</dd>
@@ -488,8 +494,8 @@ var heatMap2 = dc.heatMap(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -499,23 +505,8 @@ var heatMap2 = dc.heatMap(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;
     <dd>
         
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.heatMap.html">dc.heatMap</a></span>
 
 
@@ -523,8 +514,8 @@ var heatMap2 = dc.heatMap(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -546,7 +537,7 @@ chart.boxOnClick(function (d) {
             
 <hr>
 <dt>
-    <h4 class="name" id="cols"><span class="type-signature"></span>cols(<span class="optional">cols</span>)</h4>
+    <h4 class="name" id="cols"><span class="type-signature"></span>cols( [cols])</h4>
     
     
 </dt>
@@ -554,7 +545,8 @@ chart.boxOnClick(function (d) {
 
     
     <div class="description">
-        <p>Gets or sets the keys used to create the columns of the heatmap, as an array. By default, all<br>the values will be fetched from the data using the key accessor, and they will be sorted in<br>ascending order.</p>
+        <p>Gets or sets the keys used to create the columns of the heatmap, as an array. By default, all
+the values will be fetched from the data using the key accessor.</p>
     </div>
     
 
@@ -663,7 +655,7 @@ chart.boxOnClick(function (d) {
 		<ul class="dummy">
 			<li>
 				<a href="heatmap.js.html">heatmap.js</a>,
-				 <a href="heatmap.js.html#sunlight-1-line-151">line 151</a>
+				 <a href="heatmap.js.html#sunlight-1-line-152">line 152</a>
 			</li>
 		</ul>
 	</dd>
@@ -689,8 +681,8 @@ chart.boxOnClick(function (d) {
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -700,23 +692,8 @@ chart.boxOnClick(function (d) {
     <dd>
         
 <span class="param-type">Array.&lt;(String|Number)></span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.heatMap.html">dc.heatMap</a></span>
 
 
@@ -724,8 +701,8 @@ chart.boxOnClick(function (d) {
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -734,7 +711,7 @@ chart.boxOnClick(function (d) {
             
 <hr>
 <dt>
-    <h4 class="name" id="colsLabel"><span class="type-signature"></span>colsLabel(<span class="optional">labelFunction</span>)</h4>
+    <h4 class="name" id="colsLabel"><span class="type-signature"></span>colsLabel( [labelFunction])</h4>
     
     
 </dt>
@@ -742,7 +719,8 @@ chart.boxOnClick(function (d) {
 
     
     <div class="description">
-        <p>Set or get the column label function. The chart class uses this function to render<br>column labels on the X axis. It is passed the column name.</p>
+        <p>Set or get the column label function. The chart class uses this function to render
+column labels on the X axis. It is passed the column name.</p>
     </div>
     
 
@@ -859,7 +837,7 @@ chart.boxOnClick(function (d) {
 		<ul class="dummy">
 			<li>
 				<a href="heatmap.js.html">heatmap.js</a>,
-				 <a href="heatmap.js.html#sunlight-1-line-42">line 42</a>
+				 <a href="heatmap.js.html#sunlight-1-line-47">line 47</a>
 			</li>
 		</ul>
 	</dd>
@@ -885,8 +863,8 @@ chart.boxOnClick(function (d) {
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -896,23 +874,8 @@ chart.boxOnClick(function (d) {
     <dd>
         
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.heatMap.html">dc.heatMap</a></span>
 
 
@@ -920,8 +883,8 @@ chart.boxOnClick(function (d) {
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -937,7 +900,7 @@ chart.colsLabel(function(d) { return d; });</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="rows"><span class="type-signature"></span>rows(<span class="optional">rows</span>)</h4>
+    <h4 class="name" id="rows"><span class="type-signature"></span>rows( [rows])</h4>
     
     
 </dt>
@@ -945,7 +908,8 @@ chart.colsLabel(function(d) { return d; });</pre>
 
     
     <div class="description">
-        <p>Gets or sets the values used to create the rows of the heatmap, as an array. By default, all<br>the values will be fetched from the data using the value accessor, and they will be sorted in<br>ascending order.</p>
+        <p>Gets or sets the values used to create the rows of the heatmap, as an array. By default, all
+the values will be fetched from the data using the value accessor.</p>
     </div>
     
 
@@ -1054,7 +1018,7 @@ chart.colsLabel(function(d) { return d; });</pre>
 		<ul class="dummy">
 			<li>
 				<a href="heatmap.js.html">heatmap.js</a>,
-				 <a href="heatmap.js.html#sunlight-1-line-127">line 127</a>
+				 <a href="heatmap.js.html#sunlight-1-line-122">line 122</a>
 			</li>
 		</ul>
 	</dd>
@@ -1080,8 +1044,8 @@ chart.colsLabel(function(d) { return d; });</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1091,23 +1055,8 @@ chart.colsLabel(function(d) { return d; });</pre>
     <dd>
         
 <span class="param-type">Array.&lt;(String|Number)></span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.heatMap.html">dc.heatMap</a></span>
 
 
@@ -1115,8 +1064,8 @@ chart.colsLabel(function(d) { return d; });</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -1125,7 +1074,7 @@ chart.colsLabel(function(d) { return d; });</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="rowsLabel"><span class="type-signature"></span>rowsLabel(<span class="optional">labelFunction</span>)</h4>
+    <h4 class="name" id="rowsLabel"><span class="type-signature"></span>rowsLabel( [labelFunction])</h4>
     
     
 </dt>
@@ -1133,7 +1082,8 @@ chart.colsLabel(function(d) { return d; });</pre>
 
     
     <div class="description">
-        <p>Set or get the row label function. The chart class uses this function to render<br>row labels on the Y axis. It is passed the row name.</p>
+        <p>Set or get the row label function. The chart class uses this function to render
+row labels on the Y axis. It is passed the row name.</p>
     </div>
     
 
@@ -1250,7 +1200,7 @@ chart.colsLabel(function(d) { return d; });</pre>
 		<ul class="dummy">
 			<li>
 				<a href="heatmap.js.html">heatmap.js</a>,
-				 <a href="heatmap.js.html#sunlight-1-line-63">line 63</a>
+				 <a href="heatmap.js.html#sunlight-1-line-67">line 67</a>
 			</li>
 		</ul>
 	</dd>
@@ -1276,8 +1226,8 @@ chart.colsLabel(function(d) { return d; });</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1287,23 +1237,8 @@ chart.colsLabel(function(d) { return d; });</pre>
     <dd>
         
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.heatMap.html">dc.heatMap</a></span>
 
 
@@ -1311,8 +1246,8 @@ chart.colsLabel(function(d) { return d; });</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -1328,7 +1263,7 @@ chart.rowsLabel(function(d) { return d; });</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="xAxisOnClick"><span class="type-signature"></span>xAxisOnClick(<span class="optional">handler</span>)</h4>
+    <h4 class="name" id="xAxisOnClick"><span class="type-signature"></span>xAxisOnClick( [handler])</h4>
     
     
 </dt>
@@ -1336,7 +1271,9 @@ chart.rowsLabel(function(d) { return d; });</pre>
 
     
     <div class="description">
-        <p>Gets or sets the handler that fires when a column tick is clicked in the x axis.<br>By default, if any cells in the column are unselected, the whole column will be selected,<br>otherwise the whole column will be unselected.</p>
+        <p>Gets or sets the handler that fires when a column tick is clicked in the x axis.
+By default, if any cells in the column are unselected, the whole column will be selected,
+otherwise the whole column will be unselected.</p>
     </div>
     
 
@@ -1445,7 +1382,7 @@ chart.rowsLabel(function(d) { return d; });</pre>
 		<ul class="dummy">
 			<li>
 				<a href="heatmap.js.html">heatmap.js</a>,
-				 <a href="heatmap.js.html#sunlight-1-line-301">line 301</a>
+				 <a href="heatmap.js.html#sunlight-1-line-316">line 316</a>
 			</li>
 		</ul>
 	</dd>
@@ -1471,8 +1408,8 @@ chart.rowsLabel(function(d) { return d; });</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1482,23 +1419,8 @@ chart.rowsLabel(function(d) { return d; });</pre>
     <dd>
         
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.heatMap.html">dc.heatMap</a></span>
 
 
@@ -1506,8 +1428,8 @@ chart.rowsLabel(function(d) { return d; });</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -1516,7 +1438,7 @@ chart.rowsLabel(function(d) { return d; });</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="xBorderRadius"><span class="type-signature"></span>xBorderRadius(<span class="optional">xBorderRadius</span>)</h4>
+    <h4 class="name" id="xBorderRadius"><span class="type-signature"></span>xBorderRadius( [xBorderRadius])</h4>
     
     
 </dt>
@@ -1641,7 +1563,7 @@ chart.rowsLabel(function(d) { return d; });</pre>
 		<ul class="dummy">
 			<li>
 				<a href="heatmap.js.html">heatmap.js</a>,
-				 <a href="heatmap.js.html#sunlight-1-line-339">line 339</a>
+				 <a href="heatmap.js.html#sunlight-1-line-352">line 352</a>
 			</li>
 		</ul>
 	</dd>
@@ -1667,8 +1589,8 @@ chart.rowsLabel(function(d) { return d; });</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1678,23 +1600,8 @@ chart.rowsLabel(function(d) { return d; });</pre>
     <dd>
         
 <span class="param-type">Number</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.heatMap.html">dc.heatMap</a></span>
 
 
@@ -1702,8 +1609,8 @@ chart.rowsLabel(function(d) { return d; });</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -1712,7 +1619,7 @@ chart.rowsLabel(function(d) { return d; });</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="yAxisOnClick"><span class="type-signature"></span>yAxisOnClick(<span class="optional">handler</span>)</h4>
+    <h4 class="name" id="yAxisOnClick"><span class="type-signature"></span>yAxisOnClick( [handler])</h4>
     
     
 </dt>
@@ -1720,7 +1627,9 @@ chart.rowsLabel(function(d) { return d; });</pre>
 
     
     <div class="description">
-        <p>Gets or sets the handler that fires when a row tick is clicked in the y axis.<br>By default, if any cells in the row are unselected, the whole row will be selected,<br>otherwise the whole row will be unselected.</p>
+        <p>Gets or sets the handler that fires when a row tick is clicked in the y axis.
+By default, if any cells in the row are unselected, the whole row will be selected,
+otherwise the whole row will be unselected.</p>
     </div>
     
 
@@ -1829,7 +1738,7 @@ chart.rowsLabel(function(d) { return d; });</pre>
 		<ul class="dummy">
 			<li>
 				<a href="heatmap.js.html">heatmap.js</a>,
-				 <a href="heatmap.js.html#sunlight-1-line-320">line 320</a>
+				 <a href="heatmap.js.html#sunlight-1-line-334">line 334</a>
 			</li>
 		</ul>
 	</dd>
@@ -1855,8 +1764,8 @@ chart.rowsLabel(function(d) { return d; });</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1866,23 +1775,8 @@ chart.rowsLabel(function(d) { return d; });</pre>
     <dd>
         
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.heatMap.html">dc.heatMap</a></span>
 
 
@@ -1890,8 +1784,8 @@ chart.rowsLabel(function(d) { return d; });</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -1900,7 +1794,7 @@ chart.rowsLabel(function(d) { return d; });</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="yBorderRadius"><span class="type-signature"></span>yBorderRadius(<span class="optional">yBorderRadius</span>)</h4>
+    <h4 class="name" id="yBorderRadius"><span class="type-signature"></span>yBorderRadius( [yBorderRadius])</h4>
     
     
 </dt>
@@ -2025,7 +1919,7 @@ chart.rowsLabel(function(d) { return d; });</pre>
 		<ul class="dummy">
 			<li>
 				<a href="heatmap.js.html">heatmap.js</a>,
-				 <a href="heatmap.js.html#sunlight-1-line-356">line 356</a>
+				 <a href="heatmap.js.html#sunlight-1-line-368">line 368</a>
 			</li>
 		</ul>
 	</dd>
@@ -2051,8 +1945,8 @@ chart.rowsLabel(function(d) { return d; });</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -2062,23 +1956,8 @@ chart.rowsLabel(function(d) { return d; });</pre>
     <dd>
         
 <span class="param-type">Number</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.heatMap.html">dc.heatMap</a></span>
 
 
@@ -2086,8 +1965,8 @@ chart.rowsLabel(function(d) { return d; });</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -2119,20 +1998,22 @@ chart.rowsLabel(function(d) { return d; });</pre>
 </div>
 </div>
 
-<div class="modal fade" id="searchResults">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Search results</h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
 
@@ -2144,7 +2025,7 @@ chart.rowsLabel(function(d) { return d; });</pre>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Fri Dec 2nd 2016
+		on Wed Jan 4th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -2152,7 +2033,9 @@ chart.rowsLabel(function(d) { return d; });</pre>
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
 
 <script>
 $( function () {
@@ -2162,7 +2045,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -2198,8 +2081,7 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			var id = $( heading ).attr( "id" );
-			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+			return $( heading ).attr( "id" ) || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -2225,11 +2107,13 @@ $( function () {
 <!--Google Analytics-->
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		SearcherDisplay.init();
-	});
-</script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
 
 </body>
 </html>

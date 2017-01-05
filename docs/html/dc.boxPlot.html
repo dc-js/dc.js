@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -52,16 +52,18 @@
 			</li>
 			
 		</ul>
-		<div class="col-sm-3 col-md-3">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
 	</div>
 
 </div>
@@ -98,7 +100,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="boxPlot"><span class="type-signature"></span>new boxPlot(parent, <span class="optional">chartGroup</span>)</h4>
+    <h4 class="name" id="boxPlot"><span class="type-signature"></span>new boxPlot(parent [, chartGroup])</h4>
     
     
 </dt>
@@ -179,7 +181,9 @@
 
             
 
-            <td class="description last"><p>Any valid<br><a href="https://github.com/mbostock/d3/wiki/Selections#selecting-elements">d3 single selector</a> specifying<br>a dom block element such as a div; or a dom element or d3 selection.</p></td>
+            <td class="description last"><p>Any valid
+<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements">d3 single selector</a> specifying
+a dom block element such as a div; or a dom element or d3 selection.</p></td>
         </tr>
 
     
@@ -213,7 +217,8 @@
 
             
 
-            <td class="description last"><p>The name of the chart group this chart instance should be placed in.<br>Interaction with a chart will only trigger events and redraws within the chart's group.</p></td>
+            <td class="description last"><p>The name of the chart group this chart instance should be placed in.
+Interaction with a chart will only trigger events and redraws within the chart's group.</p></td>
         </tr>
 
     
@@ -346,7 +351,7 @@ var boxPlot2 = dc.boxPlot(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;
             
 <hr>
 <dt>
-    <h4 class="name" id="boxPadding"><span class="type-signature"></span>boxPadding(<span class="optional">padding</span>)</h4>
+    <h4 class="name" id="boxPadding"><span class="type-signature"></span>boxPadding( [padding])</h4>
     
     
 </dt>
@@ -354,7 +359,9 @@ var boxPlot2 = dc.boxPlot(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;
 
     
     <div class="description">
-        <p>Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.<br>See the <a href="https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands">d3 docs</a><br>for a visual description of how the padding is applied.</p>
+        <p>Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
+See the <a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands">d3 docs</a>
+for a visual description of how the padding is applied.</p>
     </div>
     
 
@@ -483,7 +490,7 @@ var boxPlot2 = dc.boxPlot(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands">d3.scale.ordinal.rangeBands</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands">d3.scale.ordinal.rangeBands</a></li>
 			</ul>
 	</dd>
 	
@@ -504,8 +511,8 @@ var boxPlot2 = dc.boxPlot(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -515,23 +522,8 @@ var boxPlot2 = dc.boxPlot(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;
     <dd>
         
 <span class="param-type">Number</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.boxPlot.html">dc.boxPlot</a></span>
 
 
@@ -539,8 +531,8 @@ var boxPlot2 = dc.boxPlot(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -549,7 +541,7 @@ var boxPlot2 = dc.boxPlot(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;
             
 <hr>
 <dt>
-    <h4 class="name" id="boxWidth"><span class="type-signature"></span>boxWidth(<span class="optional">boxWidth</span>)</h4>
+    <h4 class="name" id="boxWidth"><span class="type-signature"></span>boxWidth( [boxWidth])</h4>
     
     
 </dt>
@@ -557,7 +549,9 @@ var boxPlot2 = dc.boxPlot(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;
 
     
     <div class="description">
-        <p>Get or set the numerical width of the boxplot box. The width may also be a function taking as<br>parameters the chart width excluding the right and left margins, as well as the number of x<br>units.</p>
+        <p>Get or set the numerical width of the boxplot box. The width may also be a function taking as
+parameters the chart width excluding the right and left margins, as well as the number of x
+units.</p>
     </div>
     
 
@@ -677,7 +671,7 @@ var boxPlot2 = dc.boxPlot(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;
 		<ul class="dummy">
 			<li>
 				<a href="box-plot.js.html">box-plot.js</a>,
-				 <a href="box-plot.js.html#sunlight-1-line-104">line 104</a>
+				 <a href="box-plot.js.html#sunlight-1-line-102">line 102</a>
 			</li>
 		</ul>
 	</dd>
@@ -703,8 +697,8 @@ var boxPlot2 = dc.boxPlot(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -717,23 +711,8 @@ var boxPlot2 = dc.boxPlot(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;
 |
 
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.boxPlot.html">dc.boxPlot</a></span>
 
 
@@ -741,8 +720,8 @@ var boxPlot2 = dc.boxPlot(&#x27;#chart-container2&#x27;, &#x27;chartGroupA&#x27;
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -760,7 +739,7 @@ chart.boxWidth((innerChartWidth, xUnits) { ... });</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="outerPadding"><span class="type-signature"></span>outerPadding(<span class="optional">padding</span>)</h4>
+    <h4 class="name" id="outerPadding"><span class="type-signature"></span>outerPadding( [padding])</h4>
     
     
 </dt>
@@ -768,7 +747,9 @@ chart.boxWidth((innerChartWidth, xUnits) { ... });</pre>
 
     
     <div class="description">
-        <p>Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts<br>or on charts with a custom <a href="dc.boxPlot.html#boxWidth">.boxWidth</a>. Will pad the width by<br><code>padding * barWidth</code> on each side of the chart.</p>
+        <p>Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
+or on charts with a custom <a href="dc.boxPlot.html#boxWidth">.boxWidth</a>. Will pad the width by
+<code>padding * barWidth</code> on each side of the chart.</p>
     </div>
     
 
@@ -885,7 +866,7 @@ chart.boxWidth((innerChartWidth, xUnits) { ... });</pre>
 		<ul class="dummy">
 			<li>
 				<a href="box-plot.js.html">box-plot.js</a>,
-				 <a href="box-plot.js.html#sunlight-1-line-90">line 90</a>
+				 <a href="box-plot.js.html#sunlight-1-line-89">line 89</a>
 			</li>
 		</ul>
 	</dd>
@@ -911,8 +892,8 @@ chart.boxWidth((innerChartWidth, xUnits) { ... });</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -922,23 +903,8 @@ chart.boxWidth((innerChartWidth, xUnits) { ... });</pre>
     <dd>
         
 <span class="param-type">Number</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.boxPlot.html">dc.boxPlot</a></span>
 
 
@@ -946,8 +912,8 @@ chart.boxWidth((innerChartWidth, xUnits) { ... });</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -956,7 +922,7 @@ chart.boxWidth((innerChartWidth, xUnits) { ... });</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="tickFormat"><span class="type-signature"></span>tickFormat(<span class="optional">tickFormat</span>)</h4>
+    <h4 class="name" id="tickFormat"><span class="type-signature"></span>tickFormat( [tickFormat])</h4>
     
     
 </dt>
@@ -964,7 +930,8 @@ chart.boxWidth((innerChartWidth, xUnits) { ... });</pre>
 
     
     <div class="description">
-        <p>Set the numerical format of the boxplot median, whiskers and quartile labels. Defaults to<br>integer formatting.</p>
+        <p>Set the numerical format of the boxplot median, whiskers and quartile labels. Defaults to
+integer formatting.</p>
     </div>
     
 
@@ -1073,7 +1040,7 @@ chart.boxWidth((innerChartWidth, xUnits) { ... });</pre>
 		<ul class="dummy">
 			<li>
 				<a href="box-plot.js.html">box-plot.js</a>,
-				 <a href="box-plot.js.html#sunlight-1-line-234">line 234</a>
+				 <a href="box-plot.js.html#sunlight-1-line-231">line 231</a>
 			</li>
 		</ul>
 	</dd>
@@ -1099,8 +1066,8 @@ chart.boxWidth((innerChartWidth, xUnits) { ... });</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1113,23 +1080,8 @@ chart.boxWidth((innerChartWidth, xUnits) { ... });</pre>
 |
 
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.boxPlot.html">dc.boxPlot</a></span>
 
 
@@ -1137,8 +1089,8 @@ chart.boxWidth((innerChartWidth, xUnits) { ... });</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -1177,20 +1129,22 @@ chart.tickFormat(d3.format(&#x27;.2f&#x27;));</pre>
 </div>
 </div>
 
-<div class="modal fade" id="searchResults">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Search results</h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
 
@@ -1202,7 +1156,7 @@ chart.tickFormat(d3.format(&#x27;.2f&#x27;));</pre>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Fri Dec 2nd 2016
+		on Wed Jan 4th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -1210,7 +1164,9 @@ chart.tickFormat(d3.format(&#x27;.2f&#x27;));</pre>
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
 
 <script>
 $( function () {
@@ -1220,7 +1176,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -1256,8 +1212,7 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			var id = $( heading ).attr( "id" );
-			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+			return $( heading ).attr( "id" ) || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -1283,11 +1238,13 @@ $( function () {
 <!--Google Analytics-->
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		SearcherDisplay.init();
-	});
-</script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
 
 </body>
 </html>

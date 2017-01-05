@@ -39,6 +39,7 @@ d3.csv("morley.csv", function(error, experiments) {
         .yAxisLabel("This is the Y Axis!")
         .clipPadding(10)
         .dimension(scatterDimension)
+        .brushOn(false)
         .legend(dc.legend().x(70).y(10).itemHeight(13).gap(5))
         .compose([
             dc.scatterPlot(chart)

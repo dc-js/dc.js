@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -52,16 +52,18 @@
 			</li>
 			
 		</ul>
-		<div class="col-sm-3 col-md-3">
-            <form class="navbar-form" role="search">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        
 	</div>
 
 </div>
@@ -96,7 +98,8 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based<br>concrete chart types, e.g. bar chart, line chart, and bubble chart.</p></div>
+            <div class="description"><p>Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based
+concrete chart types, e.g. bar chart, line chart, and bubble chart.</p></div>
         
 
         
@@ -184,7 +187,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="brushOn"><span class="type-signature"></span>brushOn(<span class="optional">brushOn</span>)</h4>
+    <h4 class="name" id="brushOn"><span class="type-signature"></span>brushOn( [brushOn])</h4>
     
     
 </dt>
@@ -192,7 +195,12 @@
 
     
     <div class="description">
-        <p>Turn on/off the brush-based range filter. When brushing is on then user can drag the mouse<br>across a chart with a quantitative scale to perform range filtering based on the extent of the<br>brush, or click on the bars of an ordinal bar chart or slices of a pie chart to filter and<br>un-filter them. However turning on the brush filter will disable other interactive elements on<br>the chart such as highlighting, tool tips, and reference lines. Zooming will still be possible<br>if enabled, but only via scrolling (panning will be disabled.)</p>
+        <p>Turn on/off the brush-based range filter. When brushing is on then user can drag the mouse
+across a chart with a quantitative scale to perform range filtering based on the extent of the
+brush, or click on the bars of an ordinal bar chart or slices of a pie chart to filter and
+un-filter them. However turning on the brush filter will disable other interactive elements on
+the chart such as highlighting, tool tips, and reference lines. Zooming will still be possible
+if enabled, but only via scrolling (panning will be disabled.)</p>
     </div>
     
 
@@ -309,7 +317,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-1298">line 1298</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-1302">line 1302</a>
 			</li>
 		</ul>
 	</dd>
@@ -335,8 +343,8 @@
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -346,23 +354,8 @@
     <dd>
         
 <span class="param-type">Boolean</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></span>
 
 
@@ -370,8 +363,8 @@
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -380,7 +373,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="chartBodyG"><span class="type-signature"></span>chartBodyG(<span class="optional">chartBodyG</span>)</h4>
+    <h4 class="name" id="chartBodyG"><span class="type-signature"></span>chartBodyG( [chartBodyG])</h4>
     
     
 </dt>
@@ -497,7 +490,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-245">line 245</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-208">line 208</a>
 			</li>
 		</ul>
 	</dd>
@@ -550,7 +543,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="clipPadding"><span class="type-signature"></span>clipPadding(<span class="optional">padding</span>)</h4>
+    <h4 class="name" id="clipPadding"><span class="type-signature"></span>clipPadding( [padding])</h4>
     
     
 </dt>
@@ -558,7 +551,9 @@
 
     
     <div class="description">
-        <p>Get or set the padding in pixels for the clip path. Once set padding will be applied evenly to<br>the top, left, right, and bottom when the clip path is generated. If set to zero, the clip area<br>will be exactly the chart body area minus the margins.</p>
+        <p>Get or set the padding in pixels for the clip path. Once set padding will be applied evenly to
+the top, left, right, and bottom when the clip path is generated. If set to zero, the clip area
+will be exactly the chart body area minus the margins.</p>
     </div>
     
 
@@ -675,7 +670,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-1117">line 1117</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-1075">line 1075</a>
 			</li>
 		</ul>
 	</dd>
@@ -701,8 +696,8 @@
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -712,23 +707,8 @@
     <dd>
         
 <span class="param-type">Number</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></span>
 
 
@@ -736,8 +716,8 @@
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -746,7 +726,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="elasticX"><span class="type-signature"></span>elasticX(<span class="optional">elasticX</span>)</h4>
+    <h4 class="name" id="elasticX"><span class="type-signature"></span>elasticX( [elasticX])</h4>
     
     
 </dt>
@@ -754,7 +734,8 @@
 
     
     <div class="description">
-        <p>Turn on/off elastic x axis behavior. If x axis elasticity is turned on, then the grid chart will<br>attempt to recalculate the x axis range whenever a redraw event is triggered.</p>
+        <p>Turn on/off elastic x axis behavior. If x axis elasticity is turned on, then the grid chart will
+attempt to recalculate the x axis range whenever a redraw event is triggered.</p>
     </div>
     
 
@@ -871,7 +852,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-363">line 363</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-328">line 328</a>
 			</li>
 		</ul>
 	</dd>
@@ -897,8 +878,8 @@
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -908,23 +889,8 @@
     <dd>
         
 <span class="param-type">Boolean</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></span>
 
 
@@ -932,8 +898,8 @@
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -942,7 +908,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="elasticY"><span class="type-signature"></span>elasticY(<span class="optional">elasticY</span>)</h4>
+    <h4 class="name" id="elasticY"><span class="type-signature"></span>elasticY( [elasticY])</h4>
     
     
 </dt>
@@ -950,7 +916,8 @@
 
     
     <div class="description">
-        <p>Turn on/off elastic y axis behavior. If y axis elasticity is turned on, then the grid chart will<br>attempt to recalculate the y axis range whenever a redraw event is triggered.</p>
+        <p>Turn on/off elastic y axis behavior. If y axis elasticity is turned on, then the grid chart will
+attempt to recalculate the y axis range whenever a redraw event is triggered.</p>
     </div>
     
 
@@ -1067,7 +1034,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-814">line 814</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-777">line 777</a>
 			</li>
 		</ul>
 	</dd>
@@ -1093,8 +1060,8 @@
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1104,23 +1071,8 @@
     <dd>
         
 <span class="param-type">Boolean</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></span>
 
 
@@ -1128,8 +1080,8 @@
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -1138,7 +1090,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="focus"><span class="type-signature"></span>focus(<span class="optional">range</span>)</h4>
+    <h4 class="name" id="focus"><span class="type-signature"></span>focus( [range])</h4>
     
     
 </dt>
@@ -1146,7 +1098,10 @@
 
     
     <div class="description">
-        <p>Zoom this chart to focus on the given range. The given range should be an array containing only<br>2 elements (<code>[start, end]</code>) defining a range in the x domain. If the range is not given or set<br>to null, then the zoom will be reset. _For focus to work elasticX has to be turned off;<br>otherwise focus will be ignored.</p>
+        <p>Zoom this chart to focus on the given range. The given range should be an array containing only
+2 elements (<code>[start, end]</code>) defining a range in the x domain. If the range is not given or set
+to null, then the zoom will be reset. _For focus to work elasticX has to be turned off;
+otherwise focus will be ignored.</p>
     </div>
     
 
@@ -1255,7 +1210,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-1232">line 1232</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-1236">line 1236</a>
 			</li>
 		</ul>
 	</dd>
@@ -1300,7 +1255,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="g"><span class="type-signature"></span>g(<span class="optional">gElement</span>)</h4>
+    <h4 class="name" id="g"><span class="type-signature"></span>g( [gElement])</h4>
     
     
 </dt>
@@ -1308,7 +1263,9 @@
 
     
     <div class="description">
-        <p>Get or set the root g element. This method is usually used to retrieve the g element in order to<br>overlay custom svg drawing programatically. <strong>Caution</strong>: The root g element is usually generated<br>by dc.js internals, and resetting it might produce unpredictable result.</p>
+        <p>Get or set the root g element. This method is usually used to retrieve the g element in order to
+overlay custom svg drawing programatically. <strong>Caution</strong>: The root g element is usually generated
+by dc.js internals, and resetting it might produce unpredictable result.</p>
     </div>
     
 
@@ -1417,7 +1374,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-207">line 207</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-172">line 172</a>
 			</li>
 		</ul>
 	</dd>
@@ -1443,8 +1400,8 @@
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1454,23 +1411,8 @@
     <dd>
         
 <span class="param-type">SVGElement</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></span>
 
 
@@ -1478,8 +1420,8 @@
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -1496,7 +1438,9 @@
 
     
     <div class="description">
-        <p>Returns true if the chart is using ordinal xUnits (<a href="dc.units.html#.ordinal">dc.units.ordinal</a>, or false<br>otherwise. Most charts behave differently with ordinal data and use the result of this method to<br>trigger the appropriate logic.</p>
+        <p>Returns true if the chart is using ordinal xUnits (<a href="dc.units.html#.ordinal">dc.units.ordinal</a>, or false
+otherwise. Most charts behave differently with ordinal data and use the result of this method to
+trigger the appropriate logic.</p>
     </div>
     
 
@@ -1543,7 +1487,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-468">line 468</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-429">line 429</a>
 			</li>
 		</ul>
 	</dd>
@@ -1596,7 +1540,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="mouseZoomable"><span class="type-signature"></span>mouseZoomable(<span class="optional">mouseZoomable</span>)</h4>
+    <h4 class="name" id="mouseZoomable"><span class="type-signature"></span>mouseZoomable( [mouseZoomable])</h4>
     
     
 </dt>
@@ -1604,7 +1548,9 @@
 
     
     <div class="description">
-        <p>Set or get mouse zoom capability flag (default: false). When turned on the chart will be<br>zoomable using the mouse wheel. If the range selector chart is attached zooming will also update<br>the range selection brush on the associated range selector chart.</p>
+        <p>Set or get mouse zoom capability flag (default: false). When turned on the chart will be
+zoomable using the mouse wheel. If the range selector chart is attached zooming will also update
+the range selection brush on the associated range selector chart.</p>
     </div>
     
 
@@ -1721,7 +1667,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-226">line 226</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-190">line 190</a>
 			</li>
 		</ul>
 	</dd>
@@ -1747,8 +1693,8 @@
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -1758,23 +1704,8 @@
     <dd>
         
 <span class="param-type">Boolean</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></span>
 
 
@@ -1782,8 +1713,8 @@
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -1792,7 +1723,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="rangeChart"><span class="type-signature"></span>rangeChart(<span class="optional">rangeChart</span>)</h4>
+    <h4 class="name" id="rangeChart"><span class="type-signature"></span>rangeChart( [rangeChart])</h4>
     
     
 </dt>
@@ -1800,8 +1731,13 @@
 
     
     <div class="description">
-        <p>Get or set the range selection chart associated with this instance. Setting the range selection<br>chart using this function will automatically update its selection brush when the current chart<br>zooms in. In return the given range chart will also automatically attach this chart as its focus<br>chart hence zoom in when range brush updates.</p>
-<p>Usually the range and focus charts will share a dimension. The range chart will set the zoom<br>boundaries for the focus chart, so its dimension values must be compatible with the domain of<br>the focus chart.</p>
+        <p>Get or set the range selection chart associated with this instance. Setting the range selection
+chart using this function will automatically update its selection brush when the current chart
+zooms in. In return the given range chart will also automatically attach this chart as its focus
+chart hence zoom in when range brush updates.</p>
+<p>Usually the range and focus charts will share a dimension. The range chart will set the zoom
+boundaries for the focus chart, so its dimension values must be compatible with the domain of
+the focus chart.</p>
 <p>See the <a href="http://dc-js.github.com/dc.js/">Nasdaq 100 Index</a> example for this effect in action.</p>
     </div>
     
@@ -1911,7 +1847,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-128">line 128</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-95">line 95</a>
 			</li>
 		</ul>
 	</dd>
@@ -1964,7 +1900,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="renderHorizontalGridLines"><span class="type-signature"></span>renderHorizontalGridLines(<span class="optional">renderHorizontalGridLines</span>)</h4>
+    <h4 class="name" id="renderHorizontalGridLines"><span class="type-signature"></span>renderHorizontalGridLines( [renderHorizontalGridLines])</h4>
     
     
 </dt>
@@ -2089,7 +2025,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-832">line 832</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-794">line 794</a>
 			</li>
 		</ul>
 	</dd>
@@ -2115,8 +2051,8 @@
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -2126,23 +2062,8 @@
     <dd>
         
 <span class="param-type">Boolean</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></span>
 
 
@@ -2150,8 +2071,8 @@
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -2160,7 +2081,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="renderVerticalGridLines"><span class="type-signature"></span>renderVerticalGridLines(<span class="optional">renderVerticalGridLines</span>)</h4>
+    <h4 class="name" id="renderVerticalGridLines"><span class="type-signature"></span>renderVerticalGridLines( [renderVerticalGridLines])</h4>
     
     
 </dt>
@@ -2285,7 +2206,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-849">line 849</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-810">line 810</a>
 			</li>
 		</ul>
 	</dd>
@@ -2311,8 +2232,8 @@
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -2322,23 +2243,8 @@
     <dd>
         
 <span class="param-type">Boolean</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></span>
 
 
@@ -2346,8 +2252,8 @@
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -2364,7 +2270,10 @@
 
     
     <div class="description">
-        <p>When changing the domain of the x or y scale, it is necessary to tell the chart to recalculate<br>and redraw the axes. (<code>.rescale()</code> is called automatically when the x or y scale is replaced<br>with .x() or <a href="dc.coordinateGridMixin.html#y">.y()</a>, and has<br>no effect on elastic scales.)</p>
+        <p>When changing the domain of the x or y scale, it is necessary to tell the chart to recalculate
+and redraw the axes. (<code>.rescale()</code> is called automatically when the x or y scale is replaced
+with .x() or <a href="dc.coordinateGridMixin.html#y">.y()</a>, and has
+no effect on elastic scales.)</p>
     </div>
     
 
@@ -2411,7 +2320,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-108">line 108</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-75">line 75</a>
 			</li>
 		</ul>
 	</dd>
@@ -2464,7 +2373,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="round"><span class="type-signature"></span>round(<span class="optional">round</span>)</h4>
+    <h4 class="name" id="round"><span class="type-signature"></span>round( [round])</h4>
     
     
 </dt>
@@ -2581,7 +2490,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-948">line 948</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-907">line 907</a>
 			</li>
 		</ul>
 	</dd>
@@ -2607,8 +2516,8 @@
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -2618,23 +2527,8 @@
     <dd>
         
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></span>
 
 
@@ -2642,8 +2536,8 @@
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -2660,7 +2554,7 @@ chart.round(d3.time.month.round);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="useRightYAxis"><span class="type-signature"></span>useRightYAxis(<span class="optional">useRightYAxis</span>)</h4>
+    <h4 class="name" id="useRightYAxis"><span class="type-signature"></span>useRightYAxis( [useRightYAxis])</h4>
     
     
 </dt>
@@ -2668,7 +2562,9 @@ chart.round(d3.time.month.round);</pre>
 
     
     <div class="description">
-        <p>Gets or sets whether the chart should be drawn with a right axis instead of a left axis. When<br>used with a chart in a composite chart, allows both left and right Y axes to be shown on a<br>chart.</p>
+        <p>Gets or sets whether the chart should be drawn with a right axis instead of a left axis. When
+used with a chart in a composite chart, allows both left and right Y axes to be shown on a
+chart.</p>
     </div>
     
 
@@ -2785,7 +2681,7 @@ chart.round(d3.time.month.round);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-449">line 449</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-411">line 411</a>
 			</li>
 		</ul>
 	</dd>
@@ -2811,8 +2707,8 @@ chart.round(d3.time.month.round);</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -2822,23 +2718,8 @@ chart.round(d3.time.month.round);</pre>
     <dd>
         
 <span class="param-type">Boolean</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></span>
 
 
@@ -2846,8 +2727,8 @@ chart.round(d3.time.month.round);</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -2856,7 +2737,7 @@ chart.round(d3.time.month.round);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="x"><span class="type-signature"></span>x(<span class="optional">xScale</span>)</h4>
+    <h4 class="name" id="x"><span class="type-signature"></span>x( [xScale])</h4>
     
     
 </dt>
@@ -2865,7 +2746,9 @@ chart.round(d3.time.month.round);</pre>
     
     <div class="description">
         <p><strong>mandatory</strong></p>
-<p>Get or set the x scale. The x scale can be any d3<br><a href="https://github.com/mbostock/d3/wiki/Quantitative-Scales">quantitive scale</a> or<br><a href="https://github.com/mbostock/d3/wiki/Ordinal-Scales">ordinal scale</a>.</p>
+<p>Get or set the x scale. The x scale can be any d3
+<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md">quantitive scale</a> or
+<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md">ordinal scale</a>.</p>
     </div>
     
 
@@ -2974,7 +2857,7 @@ chart.round(d3.time.month.round);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-261">line 261</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-224">line 224</a>
 			</li>
 		</ul>
 	</dd>
@@ -2986,7 +2869,7 @@ chart.round(d3.time.month.round);</pre>
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="http://github.com/mbostock/d3/wiki/Scales">d3.scale</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md">d3.scale</a></li>
 			</ul>
 	</dd>
 	
@@ -3007,8 +2890,8 @@ chart.round(d3.time.month.round);</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -3018,23 +2901,8 @@ chart.round(d3.time.month.round);</pre>
     <dd>
         
 <span class="param-type">d3.scale</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></span>
 
 
@@ -3042,8 +2910,8 @@ chart.round(d3.time.month.round);</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -3061,7 +2929,7 @@ chart.x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))<
             
 <hr>
 <dt>
-    <h4 class="name" id="xAxis"><span class="type-signature"></span>xAxis(<span class="optional">xAxis</span>)</h4>
+    <h4 class="name" id="xAxis"><span class="type-signature"></span>xAxis( [xAxis])</h4>
     
     
 </dt>
@@ -3069,7 +2937,14 @@ chart.x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))<
 
     
     <div class="description">
-        <p>Set or get the x axis used by a particular coordinate grid chart instance. This function is most<br>useful when x axis customization is required. The x axis in dc.js is an instance of a <a href="https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis">d3<br>axis object</a>; therefore it supports any<br>valid d3 axis manipulation. <strong>Caution</strong>: The x axis is usually generated internally by dc;<br>resetting it may cause unexpected results.</p>
+        <p>Set or get the x axis used by a particular coordinate grid chart instance. This function is most
+useful when x axis customization is required. The x axis in dc.js is an instance of a
+<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis">d3 axis object</a>;
+therefore it supports any valid d3 axis manipulation.</p>
+<p><strong>Caution</strong>: The x axis is usually generated internally by dc; resetting it may cause
+unexpected results. Note also that when used as a getter, this function is not chainable:
+it returns the axis, not the chart,
+<a href="https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis">so attempting to call chart functions after calling <code>.xAxis()</code> will fail</a>.</p>
     </div>
     
 
@@ -3186,7 +3061,7 @@ chart.x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))<
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-336">line 336</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-297">line 297</a>
 			</li>
 		</ul>
 	</dd>
@@ -3198,7 +3073,7 @@ chart.x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))<
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="http://github.com/mbostock/d3/wiki/SVG-Axes">d3.svg.axis</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis">d3.svg.axis</a></li>
 			</ul>
 	</dd>
 	
@@ -3219,8 +3094,8 @@ chart.x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))<
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -3230,23 +3105,8 @@ chart.x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))<
     <dd>
         
 <span class="param-type">d3.svg.axis</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></span>
 
 
@@ -3254,8 +3114,8 @@ chart.x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))<
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -3273,7 +3133,7 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="xAxisLabel"><span class="type-signature"></span>xAxisLabel(<span class="optional">labelText</span>, <span class="optional">padding</span>)</h4>
+    <h4 class="name" id="xAxisLabel"><span class="type-signature"></span>xAxisLabel( [labelText] [, padding])</h4>
     
     
 </dt>
@@ -3281,7 +3141,8 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
 
     
     <div class="description">
-        <p>Set or get the x axis label. If setting the label, you may optionally include additional padding to<br>the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.</p>
+        <p>Set or get the x axis label. If setting the label, you may optionally include additional padding to
+the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.</p>
     </div>
     
 
@@ -3436,7 +3297,7 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-612">line 612</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-573">line 573</a>
 			</li>
 		</ul>
 	</dd>
@@ -3544,7 +3405,7 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-880">line 880</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-840">line 840</a>
 			</li>
 		</ul>
 	</dd>
@@ -3652,7 +3513,7 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-866">line 866</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-826">line 826</a>
 			</li>
 		</ul>
 	</dd>
@@ -3705,7 +3566,7 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="xAxisPadding"><span class="type-signature"></span>xAxisPadding(<span class="optional">padding</span>)</h4>
+    <h4 class="name" id="xAxisPadding"><span class="type-signature"></span>xAxisPadding( [padding])</h4>
     
     
 </dt>
@@ -3713,8 +3574,12 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
 
     
     <div class="description">
-        <p>Set or get x axis padding for the elastic x axis. The padding will be added to both end of the x<br>axis if elasticX is turned on; otherwise it is ignored.</p>
-<p>Padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to<br>number or date x axes.  When padding a date axis, an integer represents number of units being padded<br>and a percentage string will be treated the same as an integer. The unit will be determined by the<br>xAxisPaddingUnit variable.</p>
+        <p>Set or get x axis padding for the elastic x axis. The padding will be added to both end of the x
+axis if elasticX is turned on; otherwise it is ignored.</p>
+<p>Padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
+number or date x axes.  When padding a date axis, an integer represents number of units being padded
+and a percentage string will be treated the same as an integer. The unit will be determined by the
+xAxisPaddingUnit variable.</p>
     </div>
     
 
@@ -3834,7 +3699,7 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-381">line 381</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-345">line 345</a>
 			</li>
 		</ul>
 	</dd>
@@ -3860,8 +3725,8 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -3874,23 +3739,8 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
 |
 
 <span class="param-type">String</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></span>
 
 
@@ -3898,8 +3748,8 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -3908,7 +3758,7 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="xAxisPaddingUnit"><span class="type-signature"></span>xAxisPaddingUnit(<span class="optional">unit</span>)</h4>
+    <h4 class="name" id="xAxisPaddingUnit"><span class="type-signature"></span>xAxisPaddingUnit( [unit])</h4>
     
     
 </dt>
@@ -3916,8 +3766,12 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
 
     
     <div class="description">
-        <p>Set or get x axis padding unit for the elastic x axis. The padding unit will determine which unit to<br>use when applying xAxis padding if elasticX is turned on and if x-axis uses a time dimension;<br>otherwise it is ignored.</p>
-<p>Padding unit is a string that will be used when the padding is calculated. Available parameters are<br>the available d3 time intervals:<br><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval">d3.time.interval</a></p>
+        <p>Set or get x axis padding unit for the elastic x axis. The padding unit will determine which unit to
+use when applying xAxis padding if elasticX is turned on and if x-axis uses a time dimension;
+otherwise it is ignored.</p>
+<p>Padding unit is a string that will be used when the padding is calculated. Available parameters are
+the available d3 time intervals; see
+<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval">d3.time.interval</a>.</p>
     </div>
     
 
@@ -4034,7 +3888,7 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-404">line 404</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-367">line 367</a>
 			</li>
 		</ul>
 	</dd>
@@ -4060,8 +3914,8 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -4071,23 +3925,8 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
     <dd>
         
 <span class="param-type">String</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></span>
 
 
@@ -4095,8 +3934,8 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -4113,7 +3952,8 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
 
     
     <div class="description">
-        <p>Returns the number of units displayed on the x axis using the unit measure configured by<br>.xUnits.</p>
+        <p>Returns the number of units displayed on the x axis using the unit measure configured by
+<a href="dc.coordinateGridMixin.html#xUnits">xUnits</a>.</p>
     </div>
     
 
@@ -4160,7 +4000,7 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-427">line 427</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-389">line 389</a>
 			</li>
 		</ul>
 	</dd>
@@ -4213,7 +4053,7 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="xUnits"><span class="type-signature"></span>xUnits(<span class="optional">xUnits</span>)</h4>
+    <h4 class="name" id="xUnits"><span class="type-signature"></span>xUnits( [xUnits])</h4>
     
     
 </dt>
@@ -4221,7 +4061,14 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
 
     
     <div class="description">
-        <p>Set or get the xUnits function. The coordinate grid chart uses the xUnits function to calculate<br>the number of data projections on x axis such as the number of bars for a bar chart or the<br>number of dots for a line chart. This function is expected to return a Javascript array of all<br>data points on x axis, or the number of points on the axis. <a href="https://github.com/mbostock/d3/wiki/Time-Intervals#aliases">d3 time range functions<br>d3.time.days, d3.time.months, and<br>d3.time.years</a> are all valid xUnits<br>function. dc.js also provides a few units function, see the <a href="dc.utils.html">Utilities</a> section for<br>a list of built-in units functions. The default xUnits function is dc.units.integers.</p>
+        <p>Set or get the xUnits function. The coordinate grid chart uses the xUnits function to calculate
+the number of data projections on x axis such as the number of bars for a bar chart or the
+number of dots for a line chart. This function is expected to return a Javascript array of all
+data points on x axis, or the number of points on the axis. <a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#aliases">d3 time range functions
+d3.time.days, d3.time.months, and
+d3.time.years</a> are all valid xUnits
+function. dc.js also provides a few units function, see the <a href="dc.units.html">Units Namespace</a> for
+a list of built-in units functions.</p>
     </div>
     
 
@@ -4247,6 +4094,8 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
         <th>Argument</th>
         
 
+        
+        <th>Default</th>
         
 
         <th class="last">Description</th>
@@ -4283,6 +4132,12 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
                 </td>
             
 
+            
+                <td class="default">
+                
+                    dc.units.integers
+                
+                </td>
             
 
             <td class="description last"></td>
@@ -4330,7 +4185,7 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-294">line 294</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-256">line 256</a>
 			</li>
 		</ul>
 	</dd>
@@ -4363,8 +4218,8 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -4374,23 +4229,8 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
     <dd>
         
 <span class="param-type">function</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></span>
 
 
@@ -4398,8 +4238,8 @@ chart.xAxis().tickValues([0, 100, 200, 300]);</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -4429,7 +4269,7 @@ function(start, end, xDomain) {
             
 <hr>
 <dt>
-    <h4 class="name" id="y"><span class="type-signature"></span>y(<span class="optional">yScale</span>)</h4>
+    <h4 class="name" id="y"><span class="type-signature"></span>y( [yScale])</h4>
     
     
 </dt>
@@ -4546,7 +4386,7 @@ function(start, end, xDomain) {
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-768">line 768</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-728">line 728</a>
 			</li>
 		</ul>
 	</dd>
@@ -4558,7 +4398,7 @@ function(start, end, xDomain) {
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="http://github.com/mbostock/d3/wiki/Scales">d3.scale</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md">d3.scale</a></li>
 			</ul>
 	</dd>
 	
@@ -4579,8 +4419,8 @@ function(start, end, xDomain) {
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -4590,23 +4430,8 @@ function(start, end, xDomain) {
     <dd>
         
 <span class="param-type">d3.scale</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></span>
 
 
@@ -4614,8 +4439,8 @@ function(start, end, xDomain) {
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -4624,7 +4449,7 @@ function(start, end, xDomain) {
             
 <hr>
 <dt>
-    <h4 class="name" id="yAxis"><span class="type-signature"></span>yAxis(<span class="optional">yAxis</span>)</h4>
+    <h4 class="name" id="yAxis"><span class="type-signature"></span>yAxis( [yAxis])</h4>
     
     
 </dt>
@@ -4632,7 +4457,14 @@ function(start, end, xDomain) {
 
     
     <div class="description">
-        <p>Set or get the y axis used by the coordinate grid chart instance. This function is most useful<br>when y axis customization is required. The y axis in dc.js is simply an instance of a <a href="https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis">d3 axis<br>object</a>; therefore it supports any<br>valid d3 axis manipulation. <strong>Caution</strong>: The y axis is usually generated internally by dc;<br>resetting it may cause unexpected results.</p>
+        <p>Set or get the y axis used by the coordinate grid chart instance. This function is most useful
+when y axis customization is required. The y axis in dc.js is simply an instance of a <a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis">d3 axis
+object</a>; therefore it supports any
+valid d3 axis manipulation.</p>
+<p><strong>Caution</strong>: The y axis is usually generated internally by dc; resetting it may cause
+unexpected results.  Note also that when used as a getter, this function is not chainable: it
+returns the axis, not the chart,
+<a href="https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis">so attempting to call chart functions after calling <code>.yAxis()</code> will fail</a>.</p>
     </div>
     
 
@@ -4749,7 +4581,7 @@ function(start, end, xDomain) {
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-787">line 787</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-746">line 746</a>
 			</li>
 		</ul>
 	</dd>
@@ -4761,7 +4593,7 @@ function(start, end, xDomain) {
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="http://github.com/mbostock/d3/wiki/SVG-Axes">d3.svg.axis</a></li>
+			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis">d3.svg.axis</a></li>
 			</ul>
 	</dd>
 	
@@ -4782,8 +4614,8 @@ function(start, end, xDomain) {
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -4793,23 +4625,8 @@ function(start, end, xDomain) {
     <dd>
         
 <span class="param-type">d3.svg.axis</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></span>
 
 
@@ -4817,8 +4634,8 @@ function(start, end, xDomain) {
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
         <h5>Example</h5>
@@ -4836,7 +4653,7 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="yAxisLabel"><span class="type-signature"></span>yAxisLabel(<span class="optional">labelText</span>, <span class="optional">padding</span>)</h4>
+    <h4 class="name" id="yAxisLabel"><span class="type-signature"></span>yAxisLabel( [labelText] [, padding])</h4>
     
     
 </dt>
@@ -4844,7 +4661,9 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
 
     
     <div class="description">
-        <p>Set or get the y axis label. If setting the label, you may optionally include additional padding<br>to the margin to make room for the label. By default the padded is set to 12 to accomodate the<br>text height.</p>
+        <p>Set or get the y axis label. If setting the label, you may optionally include additional padding
+to the margin to make room for the label. By default the padding is set to 12 to accommodate the
+text height.</p>
     </div>
     
 
@@ -4999,7 +4818,7 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-745">line 745</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-706">line 706</a>
 			</li>
 		</ul>
 	</dd>
@@ -5025,8 +4844,8 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -5036,23 +4855,8 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
     <dd>
         
 <span class="param-type">String</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></span>
 
 
@@ -5060,8 +4864,8 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -5125,7 +4929,7 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-908">line 908</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-868">line 868</a>
 			</li>
 		</ul>
 	</dd>
@@ -5233,7 +5037,7 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-894">line 894</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-854">line 854</a>
 			</li>
 		</ul>
 	</dd>
@@ -5286,7 +5090,7 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="yAxisPadding"><span class="type-signature"></span>yAxisPadding(<span class="optional">padding</span>)</h4>
+    <h4 class="name" id="yAxisPadding"><span class="type-signature"></span>yAxisPadding( [padding])</h4>
     
     
 </dt>
@@ -5294,8 +5098,11 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
 
     
     <div class="description">
-        <p>Set or get y axis padding for the elastic y axis. The padding will be added to the top and<br>bottom of the y axis if elasticY is turned on; otherwise it is ignored.</p>
-<p>Padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to<br>number or date axes. When padding a date axis, an integer represents number of days being padded<br>and a percentage string will be treated the same as an integer.</p>
+        <p>Set or get y axis padding for the elastic y axis. The padding will be added to the top and
+bottom of the y axis if elasticY is turned on; otherwise it is ignored.</p>
+<p>Padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
+number or date axes. When padding a date axis, an integer represents number of days being padded
+and a percentage string will be treated the same as an integer.</p>
     </div>
     
 
@@ -5415,7 +5222,7 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-922">line 922</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-882">line 882</a>
 			</li>
 		</ul>
 	</dd>
@@ -5441,8 +5248,8 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -5452,23 +5259,8 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
     <dd>
         
 <span class="param-type">Number</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></span>
 
 
@@ -5476,8 +5268,8 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -5486,7 +5278,7 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="zoomOutRestrict"><span class="type-signature"></span>zoomOutRestrict(<span class="optional">zoomOutRestrict</span>)</h4>
+    <h4 class="name" id="zoomOutRestrict"><span class="type-signature"></span>zoomOutRestrict( [zoomOutRestrict])</h4>
     
     
 </dt>
@@ -5611,7 +5403,7 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-171">line 171</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-137">line 137</a>
 			</li>
 		</ul>
 	</dd>
@@ -5637,8 +5429,8 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -5648,23 +5440,8 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
     <dd>
         
 <span class="param-type">Boolean</span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></span>
 
 
@@ -5672,8 +5449,8 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -5682,7 +5459,7 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="zoomScale"><span class="type-signature"></span>zoomScale(<span class="optional">extent</span>)</h4>
+    <h4 class="name" id="zoomScale"><span class="type-signature"></span>zoomScale( [extent])</h4>
     
     
 </dt>
@@ -5807,7 +5584,7 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="coordinate-grid-mixin.js.html">coordinate-grid-mixin.js</a>,
-				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-154">line 154</a>
+				 <a href="coordinate-grid-mixin.js.html#sunlight-1-line-121">line 121</a>
 			</li>
 		</ul>
 	</dd>
@@ -5833,8 +5610,8 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
 
     
     <h5>Returns:</h5>
-    <ul>
-            <li>
+    
+            
 
 
 <dl>
@@ -5844,23 +5621,8 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
     <dd>
         
 <span class="param-type">Array.&lt;(Number|Date)></span>
+|
 
-
-
-    </dd>
-</dl>
-
-</li>
-        
-            <li>
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></span>
 
 
@@ -5868,8 +5630,8 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
     </dd>
 </dl>
 
-</li>
-        </ul>
+
+        
 
     
 </dd>
@@ -5901,20 +5663,22 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
 </div>
 </div>
 
-<div class="modal fade" id="searchResults">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Search results</h4>
-      </div>
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div>
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
 
 <footer>
 
@@ -5926,7 +5690,7 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Fri Dec 2nd 2016
+		on Wed Jan 4th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
@@ -5934,7 +5698,9 @@ chart.yAxis().tickValues([0, 100, 200, 300]);</pre>
 
 <script src="scripts/docstrap.lib.js"></script>
 <script src="scripts/toc.js"></script>
-<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
 
 <script>
 $( function () {
@@ -5944,7 +5710,7 @@ $( function () {
 		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
 	} );
 
-	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
 		var $this = $( this );
 
 		var example = $this.find( "code" );
@@ -5980,8 +5746,7 @@ $( function () {
 	} );
 	$( "#toc" ).toc( {
 		anchorName  : function ( i, heading, prefix ) {
-			var id = $( heading ).attr( "id" );
-			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+			return $( heading ).attr( "id" ) || ( prefix + i );
 		},
 		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
 		showAndHide : false,
@@ -6007,11 +5772,13 @@ $( function () {
 <!--Google Analytics-->
 
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		SearcherDisplay.init();
-	});
-</script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
 
 </body>
 </html>
