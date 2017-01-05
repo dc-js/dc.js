@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -188,7 +188,7 @@ and available on all chart implementations in the <code>dc</code> library.</p></
 the chart's filter list. Using a custom add filter handler allows you to change the way filters
 are added or perform additional work when adding a filter, e.g. when using a filter server other
 than crossfilter.</p>
-<p>The handler should return a new or modified array as the result.</p>
+<p>Any changes should modify the <code>filters</code> array argument and return that array.</p>
     </div>
     
 
@@ -817,7 +817,7 @@ together since it is expected they share the same underlying crossfilter data se
 		<ul class="dummy">
 			<li>
 				<a href="base-mixin.js.html">base-mixin.js</a>,
-				 <a href="base-mixin.js.html#sunlight-1-line-1383">line 1383</a>
+				 <a href="base-mixin.js.html#sunlight-1-line-1378">line 1378</a>
 			</li>
 		</ul>
 	</dd>
@@ -928,7 +928,7 @@ together since it is expected they share the same underlying crossfilter data se
 		<ul class="dummy">
 			<li>
 				<a href="base-mixin.js.html">base-mixin.js</a>,
-				 <a href="base-mixin.js.html#sunlight-1-line-1443">line 1443</a>
+				 <a href="base-mixin.js.html#sunlight-1-line-1438">line 1438</a>
 			</li>
 		</ul>
 	</dd>
@@ -1713,7 +1713,7 @@ clear the cache to make sure charts are rendered properly.</p>
 		<ul class="dummy">
 			<li>
 				<a href="base-mixin.js.html">base-mixin.js</a>,
-				 <a href="base-mixin.js.html#sunlight-1-line-1406">line 1406</a>
+				 <a href="base-mixin.js.html#sunlight-1-line-1401">line 1401</a>
 			</li>
 		</ul>
 	</dd>
@@ -1913,7 +1913,7 @@ crossfilter dimension, using the <a href="dc.baseMixin.html#filterHandler">filte
 		<ul class="dummy">
 			<li>
 				<a href="base-mixin.js.html">base-mixin.js</a>,
-				 <a href="base-mixin.js.html#sunlight-1-line-995">line 995</a>
+				 <a href="base-mixin.js.html#sunlight-1-line-992">line 992</a>
 			</li>
 		</ul>
 	</dd>
@@ -2221,7 +2221,7 @@ before or after filtering.</p>
 		<ul class="dummy">
 			<li>
 				<a href="base-mixin.js.html">base-mixin.js</a>,
-				 <a href="base-mixin.js.html#sunlight-1-line-1127">line 1127</a>
+				 <a href="base-mixin.js.html#sunlight-1-line-1122">line 1122</a>
 			</li>
 		</ul>
 	</dd>
@@ -2580,7 +2580,7 @@ chart's internal filter storage.</p>
 		<ul class="dummy">
 			<li>
 				<a href="base-mixin.js.html">base-mixin.js</a>,
-				 <a href="base-mixin.js.html#sunlight-1-line-1083">line 1083</a>
+				 <a href="base-mixin.js.html#sunlight-1-line-1078">line 1078</a>
 			</li>
 		</ul>
 	</dd>
@@ -3048,8 +3048,8 @@ This function is <strong>not chainable</strong>.</p>
 
     
     <div class="description">
-        <p>Set or get the has-filter handler. The has-filter handler is a function that checks to see if
-the chart's current filters (first argument) include a specific filter (second argument).  Using a custom has-filter handler allows
+        <p>Set or get the has filter handler. The has filter handler is a function that checks to see if
+the chart's current filters include a specific filter.  Using a custom has filter handler allows
 you to change the way filters are checked for and replaced.</p>
     </div>
     
@@ -3211,7 +3211,7 @@ you to change the way filters are checked for and replaced.</p>
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">// default has-filter handler
+    <pre class="sunlight-highlight-javascript">// default has filter handler
 chart.hasFilterHandler(function (filters, filter) {
     if (filter === null || typeof(filter) === &#x27;undefined&#x27;) {
         return filters.length &gt; 0;
@@ -3558,7 +3558,7 @@ example keys correspond to slices in a pie chart and x axis positions in a grid 
 		<ul class="dummy">
 			<li>
 				<a href="base-mixin.js.html">base-mixin.js</a>,
-				 <a href="base-mixin.js.html#sunlight-1-line-1215">line 1215</a>
+				 <a href="base-mixin.js.html#sunlight-1-line-1210">line 1210</a>
 			</li>
 		</ul>
 	</dd>
@@ -3789,7 +3789,7 @@ at all. By default, enables labels; pass false for the second parameter if this 
 		<ul class="dummy">
 			<li>
 				<a href="base-mixin.js.html">base-mixin.js</a>,
-				 <a href="base-mixin.js.html#sunlight-1-line-1262">line 1262</a>
+				 <a href="base-mixin.js.html#sunlight-1-line-1257">line 1257</a>
 			</li>
 		</ul>
 	</dd>
@@ -3972,7 +3972,7 @@ based on the color setting and names associated with each group.</p>
 		<ul class="dummy">
 			<li>
 				<a href="base-mixin.js.html">base-mixin.js</a>,
-				 <a href="base-mixin.js.html#sunlight-1-line-1423">line 1423</a>
+				 <a href="base-mixin.js.html#sunlight-1-line-1418">line 1418</a>
 			</li>
 		</ul>
 	</dd>
@@ -4555,7 +4555,7 @@ including all renderlets' logic.</li>
 		<ul class="dummy">
 			<li>
 				<a href="base-mixin.js.html">base-mixin.js</a>,
-				 <a href="base-mixin.js.html#sunlight-1-line-1492">line 1492</a>
+				 <a href="base-mixin.js.html#sunlight-1-line-1487">line 1487</a>
 			</li>
 		</ul>
 	</dd>
@@ -4734,7 +4734,7 @@ filter on the clicked datum (passed to the callback) and redraw the chart group.
 		<ul class="dummy">
 			<li>
 				<a href="base-mixin.js.html">base-mixin.js</a>,
-				 <a href="base-mixin.js.html#sunlight-1-line-1111">line 1111</a>
+				 <a href="base-mixin.js.html#sunlight-1-line-1106">line 1106</a>
 			</li>
 		</ul>
 	</dd>
@@ -4873,7 +4873,7 @@ the same name to be called with the value to set that attribute for the chart.</
 		<ul class="dummy">
 			<li>
 				<a href="base-mixin.js.html">base-mixin.js</a>,
-				 <a href="base-mixin.js.html#sunlight-1-line-1454">line 1454</a>
+				 <a href="base-mixin.js.html#sunlight-1-line-1449">line 1449</a>
 			</li>
 		</ul>
 	</dd>
@@ -5357,7 +5357,7 @@ be executed and waited for.</p>
 filter from the chart's current filters. Using a custom remove filter handler allows you to
 change how filters are removed or perform additional work when removing a filter, e.g. when
 using a filter server other than crossfilter.</p>
-<p>The handler should return a new or modified array as the result.</p>
+<p>Any changes should modify the <code>filters</code> array argument and return that array.</p>
     </div>
     
 
@@ -5887,7 +5887,7 @@ commitHandler, it will be executed and waited for</p>
 		<ul class="dummy">
 			<li>
 				<a href="base-mixin.js.html">base-mixin.js</a>,
-				 <a href="base-mixin.js.html#sunlight-1-line-1290">line 1290</a>
+				 <a href="base-mixin.js.html#sunlight-1-line-1285">line 1285</a>
 			</li>
 		</ul>
 	</dd>
@@ -6063,7 +6063,7 @@ Generates a random key for the renderlet, which makes it hard to remove.</p>
 		<ul class="dummy">
 			<li>
 				<a href="base-mixin.js.html">base-mixin.js</a>,
-				 <a href="base-mixin.js.html#sunlight-1-line-1354">line 1354</a>
+				 <a href="base-mixin.js.html#sunlight-1-line-1349">line 1349</a>
 			</li>
 		</ul>
 	</dd>
@@ -6254,7 +6254,7 @@ given.</p>
 		<ul class="dummy">
 			<li>
 				<a href="base-mixin.js.html">base-mixin.js</a>,
-				 <a href="base-mixin.js.html#sunlight-1-line-1337">line 1337</a>
+				 <a href="base-mixin.js.html#sunlight-1-line-1332">line 1332</a>
 			</li>
 		</ul>
 	</dd>
@@ -6428,7 +6428,7 @@ but more efficient because the filter is only applied once.</p>
 		<ul class="dummy">
 			<li>
 				<a href="base-mixin.js.html">base-mixin.js</a>,
-				 <a href="base-mixin.js.html#sunlight-1-line-980">line 980</a>
+				 <a href="base-mixin.js.html#sunlight-1-line-977">line 977</a>
 			</li>
 		</ul>
 	</dd>
@@ -6493,7 +6493,7 @@ but more efficient because the filter is only applied once.</p>
 chart's filter list by returning a new list. Using a custom reset filter handler allows you to
 change the way filters are reset, or perform additional work when resetting the filters,
 e.g. when using a filter server other than crossfilter.</p>
-<p>The handler should return a new or modified array as the result.</p>
+<p>This function should return an array.</p>
     </div>
     
 
@@ -7525,7 +7525,7 @@ otherwise the brush layer will block tooltip triggering.</p>
 		<ul class="dummy">
 			<li>
 				<a href="base-mixin.js.html">base-mixin.js</a>,
-				 <a href="base-mixin.js.html#sunlight-1-line-1306">line 1306</a>
+				 <a href="base-mixin.js.html#sunlight-1-line-1301">line 1301</a>
 			</li>
 		</ul>
 	</dd>
@@ -8310,7 +8310,7 @@ coordinate chart.</p>
 		<ul class="dummy">
 			<li>
 				<a href="base-mixin.js.html">base-mixin.js</a>,
-				 <a href="base-mixin.js.html#sunlight-1-line-1238">line 1238</a>
+				 <a href="base-mixin.js.html#sunlight-1-line-1233">line 1233</a>
 			</li>
 		</ul>
 	</dd>

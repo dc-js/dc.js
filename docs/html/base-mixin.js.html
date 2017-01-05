@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -629,11 +629,11 @@ dc.baseMixin = function (_chart) {
      * @param {Boolean} [controlsUseVisibility=false]
      * @returns {Boolean|dc.baseMixin}
      **/
-    _chart.controlsUseVisibility = function (useVisibility) {
+    _chart.controlsUseVisibility = function (_) {
         if (!arguments.length) {
             return _controlsUseVisibility;
         }
-        _controlsUseVisibility = useVisibility;
+        _controlsUseVisibility = _;
         return _chart;
     };
 
@@ -888,14 +888,14 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-     * Set or get the has-filter handler. The has-filter handler is a function that checks to see if
-     * the chart's current filters (first argument) include a specific filter (second argument).  Using a custom has-filter handler allows
+     * Set or get the has filter handler. The has filter handler is a function that checks to see if
+     * the chart's current filters include a specific filter.  Using a custom has filter handler allows
      * you to change the way filters are checked for and replaced.
      * @method hasFilterHandler
      * @memberof dc.baseMixin
      * @instance
      * @example
-     * // default has-filter handler
+     * // default has filter handler
      * chart.hasFilterHandler(function (filters, filter) {
      *     if (filter === null || typeof(filter) === 'undefined') {
      *         return filters.length > 0;
@@ -950,7 +950,7 @@ dc.baseMixin = function (_chart) {
      * change how filters are removed or perform additional work when removing a filter, e.g. when
      * using a filter server other than crossfilter.
      *
-     * The handler should return a new or modified array as the result.
+     * Any changes should modify the `filters` array argument and return that array.
      * @method removeFilterHandler
      * @memberof dc.baseMixin
      * @instance
@@ -992,7 +992,7 @@ dc.baseMixin = function (_chart) {
      * are added or perform additional work when adding a filter, e.g. when using a filter server other
      * than crossfilter.
      *
-     * The handler should return a new or modified array as the result.
+     * Any changes should modify the `filters` array argument and return that array.
      * @method addFilterHandler
      * @memberof dc.baseMixin
      * @instance
@@ -1028,7 +1028,7 @@ dc.baseMixin = function (_chart) {
      * change the way filters are reset, or perform additional work when resetting the filters,
      * e.g. when using a filter server other than crossfilter.
      *
-     * The handler should return a new or modified array as the result.
+     * This function should return an array.
      * @method resetFilterHandler
      * @memberof dc.baseMixin
      * @instance
@@ -1053,14 +1053,11 @@ dc.baseMixin = function (_chart) {
         return _chart;
     };
 
-    function applyFilters (filters) {
+    function applyFilters () {
         if (_chart.dimension() &amp;&amp; _chart.dimension().filter) {
-            var fs = _filterHandler(_chart.dimension(), filters);
-            if (fs) {
-                filters = fs;
-            }
+            var fs = _filterHandler(_chart.dimension(), _filters);
+            _filters = fs ? fs : _filters;
         }
-        return filters;
     }
 
     /**
@@ -1135,26 +1132,24 @@ dc.baseMixin = function (_chart) {
         if (!arguments.length) {
             return _filters.length > 0 ? _filters[0] : null;
         }
-        var filters = _filters;
         if (filter instanceof Array &amp;&amp; filter[0] instanceof Array &amp;&amp; !filter.isFiltered) {
-            // toggle each filter
-            filter[0].forEach(function (f) {
-                if (_hasFilterHandler(filters, f)) {
-                    filters = _removeFilterHandler(filters, f);
+            filter[0].forEach(function (d) {
+                if (_chart.hasFilter(d)) {
+                    _removeFilterHandler(_filters, d);
                 } else {
-                    filters = _addFilterHandler(filters, f);
+                    _addFilterHandler(_filters, d);
                 }
             });
         } else if (filter === null) {
-            filters = _resetFilterHandler(filters);
+            _filters = _resetFilterHandler(_filters);
         } else {
-            if (_hasFilterHandler(filters, filter)) {
-                filters = _removeFilterHandler(filters, filter);
+            if (_chart.hasFilter(filter)) {
+                _removeFilterHandler(_filters, filter);
             } else {
-                filters = _addFilterHandler(filters, filter);
+                _addFilterHandler(_filters, filter);
             }
         }
-        _filters = applyFilters(filters);
+        applyFilters();
         _chart._invokeFilteredListener(filter);
 
         if (_root !== null &amp;&amp; _chart.hasFilter()) {
