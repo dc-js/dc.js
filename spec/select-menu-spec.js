@@ -70,15 +70,15 @@ describe('dc.selectMenu', function () {
         var firstOption, lastOption, lastIndex;
         beforeEach(function () {
             lastIndex = stateGroup.all().length - 1;
-            firstOption = getOption(chart,0);
-            lastOption = getOption(chart,lastIndex);
+            firstOption = getOption(chart, 0);
+            lastOption = getOption(chart, lastIndex);
         });
         it('display title as default option text', function () {
             expect(firstOption.text).toEqual('California: 3');
         });
         it('text property can be changed by changing title', function () {
             chart.title(function (d) { return d.key; }).redraw();
-            firstOption = getOption(chart,0);
+            firstOption = getOption(chart, 0);
             expect(firstOption.text).toEqual('California');
         });
         it('are ordered by ascending group key by default', function () {
@@ -88,7 +88,7 @@ describe('dc.selectMenu', function () {
         it('order can be changed by changing order function', function () {
             chart.order(function (a, b) { return a.key.length - b.key.length; });
             chart.redraw();
-            lastOption = getOption(chart,lastIndex);
+            lastOption = getOption(chart, lastIndex);
             expect(lastOption.text).toEqual('Mississippi: 2');
         });
     });
@@ -177,7 +177,7 @@ describe('dc.selectMenu', function () {
             regionDimension.filter('South');
             chart.redraw();
             expect(chart.selectAll('option.dc-select-option')[0].length).toEqual(1);
-            expect(getOption(chart,0).text).toEqual('California: 2');
+            expect(getOption(chart, 0).text).toEqual('California: 2');
         });
         it('can be overridden', function () {
             regionDimension.filter('South');
@@ -188,8 +188,8 @@ describe('dc.selectMenu', function () {
         it('retains order with filtered options', function () {
             regionDimension.filter('Central');
             chart.redraw();
-            expect(getOption(chart,0).text).toEqual('Mississippi: 2');
-            expect(getOption(chart,1).text).toEqual('Ontario: 1');
+            expect(getOption(chart, 0).text).toEqual('Mississippi: 2');
+            expect(getOption(chart, 1).text).toEqual('Ontario: 1');
         });
         afterEach(function () {
             regionDimension.filterAll();
