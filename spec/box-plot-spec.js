@@ -44,8 +44,8 @@ describe('dc.boxPlot', function () {
         });
 
         it('should create an offset box for each dimension in the group', function () {
-            expect(box(0).attr('transform')).toMatchTranslate(50,0);
-            expect(box(1).attr('transform')).toMatchTranslate(150,0);
+            expect(box(0).attr('transform')).toMatchTranslate(50, 0);
+            expect(box(1).attr('transform')).toMatchTranslate(150, 0);
         });
 
         it('should correctly place median line', function () {

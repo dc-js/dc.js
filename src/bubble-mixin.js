@@ -5,7 +5,7 @@
  * @mixin
  * @mixes dc.colorMixin
  * @param {Object} _chart
- * @return {dc.bubbleMixin}
+ * @returns {dc.bubbleMixin}
  */
 dc.bubbleMixin = function (_chart) {
     var _maxBubbleRelativeSize = 0.3;
@@ -31,15 +31,14 @@ dc.bubbleMixin = function (_chart) {
 
     /**
      * Get or set the bubble radius scale. By default the bubble chart uses
-     * {@link https://github.com/mbostock/d3/wiki/Quantitative-Scales#linear d3.scale.linear().domain([0, 100])}
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md#linear d3.scale.linear().domain([0, 100])}
      * as its radius scale.
      * @method r
      * @memberof dc.bubbleMixin
      * @instance
-     * @see {@link http://github.com/mbostock/d3/wiki/Scales d3.scale}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
      * @param {d3.scale} [bubbleRadiusScale=d3.scale.linear().domain([0, 100])]
-     * @return {d3.scale}
-     * @return {dc.bubbleMixin}
+     * @returns {d3.scale|dc.bubbleMixin}
      */
     _chart.r = function (bubbleRadiusScale) {
         if (!arguments.length) {
@@ -58,8 +57,7 @@ dc.bubbleMixin = function (_chart) {
      * @memberof dc.bubbleMixin
      * @instance
      * @param {Function} [radiusValueAccessor]
-     * @return {Function}
-     * @return {dc.bubbleMixin}
+     * @returns {Function|dc.bubbleMixin}
      */
     _chart.radiusValueAccessor = function (radiusValueAccessor) {
         if (!arguments.length) {
@@ -130,7 +128,7 @@ dc.bubbleMixin = function (_chart) {
 
     _chart.doUpdateLabels = function (bubbleGEnter) {
         if (_chart.renderLabel()) {
-            var labels = bubbleGEnter.selectAll('text')
+            var labels = bubbleGEnter.select('text')
                 .attr('pointer-events', labelPointerEvent)
                 .text(labelFunction);
             dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
@@ -154,7 +152,7 @@ dc.bubbleMixin = function (_chart) {
 
     _chart.doUpdateTitles = function (g) {
         if (_chart.renderTitle()) {
-            g.selectAll('title').text(titleFunction);
+            g.select('title').text(titleFunction);
         }
     };
 
@@ -164,8 +162,7 @@ dc.bubbleMixin = function (_chart) {
      * @memberof dc.bubbleMixin
      * @instance
      * @param {Number} [radius=10]
-     * @return {Number}
-     * @return {dc.bubbleMixin}
+     * @returns {Number|dc.bubbleMixin}
      */
     _chart.minRadius = function (radius) {
         if (!arguments.length) {
@@ -182,8 +179,7 @@ dc.bubbleMixin = function (_chart) {
      * @memberof dc.bubbleMixin
      * @instance
      * @param {Number} [radius=10]
-     * @return {Number}
-     * @return {dc.bubbleMixin}
+     * @returns {Number|dc.bubbleMixin}
      */
 
     _chart.minRadiusWithLabel = function (radius) {
@@ -201,8 +197,7 @@ dc.bubbleMixin = function (_chart) {
      * @memberof dc.bubbleMixin
      * @instance
      * @param {Number} [relativeSize=0.3]
-     * @return {Number}
-     * @return {dc.bubbleMixin}
+     * @returns {Number|dc.bubbleMixin}
      */
     _chart.maxBubbleRelativeSize = function (relativeSize) {
         if (!arguments.length) {

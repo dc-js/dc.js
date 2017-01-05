@@ -31,7 +31,7 @@ describe('dc.geoChoropleth', function () {
             .group(stateValueSumGroup)
             .width(990)
             .height(600)
-            .colors(['#ccc', '#E2F2FF', '#C4E4FF', '#9ED2FF', '#81C5FF', '#6BBAFF', '#51AEFF', '#36A2FF', '#1E96FF', '#0089FF'])
+            .colors(['#ccc', '#e2f2ff', '#c4e4ff', '#9ed2ff', '#81c5ff', '#6bbaff', '#51aeff', '#36a2ff', '#1e96ff', '#0089ff'])
             .colorDomain([0, 155])
             .overlayGeoJson(geoJson.features, 'state', function (d) {
                 return d.properties.name;
@@ -57,7 +57,7 @@ describe('dc.geoChoropleth', function () {
                         .translate([8227, 3207]))
             .width(990)
             .height(600)
-            .colors(['#ccc', '#E2F2FF', '#C4E4FF', '#9ED2FF', '#81C5FF', '#6BBAFF', '#51AEFF', '#36A2FF', '#1E96FF', '#0089FF'])
+            .colors(['#ccc', '#e2f2ff', '#c4e4ff', '#9ed2ff', '#81c5ff', '#6bbaff', '#51aeff', '#36a2ff', '#1e96ff', '#0089ff'])
             .colorDomain([0, 155])
             .overlayGeoJson(geoJson3.features, 'district', function (d) {
                 return d.properties.NAME;
@@ -98,7 +98,7 @@ describe('dc.geoChoropleth', function () {
             expect(chart.selectAll('g.layer0 g.state title')[0][1].textContent).toEqual('Alaska : 0');
         });
         it('correct color filling should be set [Alaska]', function () {
-            expect(chart.selectAll('g.layer0 g.state path')[0][1].getAttribute('fill')).toEqual('#ccc');
+            expect(chart.selectAll('g.layer0 g.state path')[0][1].getAttribute('fill')).toMatch(/#ccc/i);
         });
         it('correct state boundary should be rendered [Alaska]', function () {
             expect(chart.selectAll('g.layer0 g.state path')[0][1].getAttribute('d').length).not.toEqual(0);
@@ -113,7 +113,7 @@ describe('dc.geoChoropleth', function () {
             expect(chart.selectAll('g.layer0 g.state title')[0][4].textContent).toEqual('California : 154');
         });
         it('correct color should be set [California]', function () {
-            expect(chart.selectAll('g.layer0 g.state path')[0][4].getAttribute('fill')).toMatch(/#0089FF/i);
+            expect(chart.selectAll('g.layer0 g.state path')[0][4].getAttribute('fill')).toMatch(/#0089ff/i);
         });
         it('correct state boundary should be rendered [California]', function () {
             expect(chart.selectAll('g.layer0 g.state path')[0][4].getAttribute('d').length).not.toEqual(0);
@@ -125,7 +125,7 @@ describe('dc.geoChoropleth', function () {
             expect(chart.selectAll('g.layer0 g.state title')[0][5].textContent).toEqual('Colorado : 22');
         });
         it('correct color should be set [Colorado]', function () {
-            expect(chart.selectAll('g.layer0 g.state path')[0][5].getAttribute('fill')).toMatch(/#E2F2FF/i);
+            expect(chart.selectAll('g.layer0 g.state path')[0][5].getAttribute('fill')).toMatch(/#e2f2ff/i);
         });
         it('correct state boundary should be rendered [Colorado]', function () {
             expect(chart.selectAll('g.layer0 g.state path')[0][5].getAttribute('d').length).not.toEqual(0);
@@ -148,11 +148,6 @@ describe('dc.geoChoropleth', function () {
         it('correct state boundary should be rendered [county]', function () {
             expect(chart.selectAll('g.layer1 g.county path')[0][1].getAttribute('d').length).not.toEqual(0);
         });
-
-        afterEach(function () {
-            stateDimension.filterAll();
-            districtDimension.filterAll();
-        });
     });
 
     describe('filter and highlight', function () {
@@ -164,18 +159,98 @@ describe('dc.geoChoropleth', function () {
             chart.redraw();
         });
 
-        it('correct color should be set [California]', function () {
+        it('sets deselected classes for some states', function () {
             expect(chart.selectAll('g.layer0 g.state')[0][0].getAttribute('class')).toEqual('state alabama deselected');
             expect(chart.selectAll('g.layer0 g.state')[0][1].getAttribute('class')).toEqual('state alaska deselected');
         });
-        it('correct color should be set [California, Colorado]', function () {
+        it('sets selected classes for selected states', function () {
             expect(chart.selectAll('g.layer0 g.state')[0][4].getAttribute('class')).toEqual('state california selected');
             expect(chart.selectAll('g.layer0 g.state')[0][5].getAttribute('class')).toEqual('state colorado selected');
         });
+    });
 
-        afterEach(function () {
-            stateDimension.filterAll();
-            districtDimension.filterAll();
+    describe('respond to external filter', function () {
+        var chart, nvalueDim;
+        beforeEach(function () {
+            chart = buildChart('choropleth-chart-being-filtered');
+            nvalueDim = data.dimension(function (d) { return +d.nvalue; });
+        });
+        it('gets right colors when not filtered', function () {
+            expect(chart.selectAll('g.layer0 g.state.california path').attr('fill')).toMatch(/#0089ff/i);
+            expect(chart.selectAll('g.layer0 g.state.colorado path').attr('fill')).toMatch(/#e2f2ff/i);
+            expect(chart.selectAll('g.layer0 g.state.delaware path').attr('fill')).toMatch(/#c4e4ff/i);
+            expect(chart.selectAll('g.layer0 g.state.mississippi path').attr('fill')).toMatch(/#81c5ff/i);
+            expect(chart.selectAll('g.layer0 g.state.oklahoma path').attr('fill')).toMatch(/#9ed2ff/i);
+            expect(chart.selectAll('g.layer0 g.state.maryland path').attr('fill')).toMatch(/#ccc/i);
+            expect(chart.selectAll('g.layer0 g.state.washington path').attr('fill')).toMatch(/#ccc/i);
+        });
+        it('has right titles when not filtered', function () {
+            expect(chart.selectAll('g.layer0 g.state.california title').text()).toEqual('California : 154');
+            expect(chart.selectAll('g.layer0 g.state.colorado title').text()).toEqual('Colorado : 22');
+            expect(chart.selectAll('g.layer0 g.state.delaware title').text()).toEqual('Delaware : 33');
+            expect(chart.selectAll('g.layer0 g.state.mississippi title').text()).toEqual('Mississippi : 77');
+            expect(chart.selectAll('g.layer0 g.state.oklahoma title').text()).toEqual('Oklahoma : 55');
+            expect(chart.selectAll('g.layer0 g.state.maryland title').text()).toEqual('Maryland : 0');
+            expect(chart.selectAll('g.layer0 g.state.washington title').text()).toEqual('Washington : 0');
+        });
+
+        function checkEvenNValueColors () {
+            expect(chart.selectAll('g.layer0 g.state.california path').attr('fill')).toMatch(/#36a2ff/i);
+            expect(chart.selectAll('g.layer0 g.state.colorado path').attr('fill')).toMatch(/#e2f2ff/i);
+            expect(chart.selectAll('g.layer0 g.state.delaware path').attr('fill')).toMatch(/#ccc/i);
+            expect(chart.selectAll('g.layer0 g.state.mississippi path').attr('fill')).toMatch(/#c4e4ff/i);
+            expect(chart.selectAll('g.layer0 g.state.oklahoma path').attr('fill')).toMatch(/#ccc/i);
+            expect(chart.selectAll('g.layer0 g.state.maryland path').attr('fill')).toMatch(/#ccc/i);
+            expect(chart.selectAll('g.layer0 g.state.washington path').attr('fill')).toMatch(/#ccc/i);
+        }
+
+        function checkEvenNValueTitles () {
+            expect(chart.selectAll('g.layer0 g.state.california title').text()).toEqual('California : 110');
+            expect(chart.selectAll('g.layer0 g.state.colorado title').text()).toEqual('Colorado : 22');
+            expect(chart.selectAll('g.layer0 g.state.delaware title').text()).toEqual('Delaware : 0');
+            expect(chart.selectAll('g.layer0 g.state.mississippi title').text()).toEqual('Mississippi : 44');
+            expect(chart.selectAll('g.layer0 g.state.oklahoma title').text()).toEqual('Oklahoma : 0');
+            expect(chart.selectAll('g.layer0 g.state.maryland title').text()).toEqual('Maryland : 0');
+            expect(chart.selectAll('g.layer0 g.state.washington title').text()).toEqual('Washington : 0');
+        }
+
+        describe('column filtering with straight crossfilter', function () {
+            beforeEach(function () {
+                nvalueDim.filterFunction(function (k) {
+                    return k % 2 === 0;
+                });
+                chart.redraw();
+            });
+            it('gets right filtered colors', function () {
+                checkEvenNValueColors();
+            });
+            it('gets the titles right', function () {
+                checkEvenNValueTitles();
+            });
+        });
+        describe('column filtering with cloned results', function () {
+            function dupeGroup (group) {
+                return {
+                    all: function () {
+                        return group.all().map(function (kv) {
+                            return Object.assign({}, kv);
+                        });
+                    }
+                };
+            }
+            beforeEach(function () {
+                chart.group(dupeGroup(stateValueSumGroup)).render();
+                nvalueDim.filterFunction(function (k) {
+                    return k % 2 === 0;
+                });
+                chart.redraw();
+            });
+            it('gets right filtered colors', function () {
+                checkEvenNValueColors();
+            });
+            it('gets the titles right', function () {
+                checkEvenNValueTitles();
+            });
         });
     });
 
@@ -190,11 +265,6 @@ describe('dc.geoChoropleth', function () {
         });
         it('svg is created', function () {
             expect(chart.selectAll('svg').length).not.toEqual(0);
-        });
-
-        afterEach(function () {
-            stateDimension.filterAll();
-            districtDimension.filterAll();
         });
     });
 
@@ -216,10 +286,6 @@ describe('dc.geoChoropleth', function () {
             expect(chart.geoJsons().filter(function (e) {
                 return e.name === 'state';
             }).length).toEqual(0);
-        });
-        afterEach(function () {
-            stateDimension.filterAll();
-            districtDimension.filterAll();
         });
     });
 });

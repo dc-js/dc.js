@@ -16,13 +16,13 @@
  * // create a sub-chart under a composite parent chart
  * var chart3 = dc.lineChart(compositeChart);
  * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector}
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector}
  * specifying a dom block element such as a div; or a dom element or d3 selection.  If the line
  * chart is a sub-chart in a {@link dc.compositeChart Composite Chart} then pass in the parent
  * composite chart instance instead.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.lineChart}
+ * @returns {dc.lineChart}
  */
 dc.lineChart = function (parent, chartGroup) {
     var DEFAULT_DOT_RADIUS = 5;
@@ -51,7 +51,7 @@ dc.lineChart = function (parent, chartGroup) {
 
     _chart.plotData = function () {
         var chartBody = _chart.chartBodyG();
-        var layersList = chartBody.selectAll('g.stack-list');
+        var layersList = chartBody.select('g.stack-list');
 
         if (layersList.empty()) {
             layersList = chartBody.append('g').attr('class', 'stack-list');
@@ -80,17 +80,16 @@ dc.lineChart = function (parent, chartGroup) {
     /**
      * Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
      * functions, splines, and cubic interpolation.  This is passed to
-     * {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_interpolate d3.svg.line.interpolate} and
-     * {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#area_interpolate d3.svg.area.interpolate},
-     * where you can find a complete list of valid arguments
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate d3.svg.line.interpolate} and
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate d3.svg.area.interpolate},
+     * where you can find a complete list of valid arguments.
      * @method interpolate
      * @memberof dc.lineChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_interpolate d3.svg.line.interpolate}
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#area_interpolate d3.svg.area.interpolate}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate d3.svg.line.interpolate}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate d3.svg.area.interpolate}
      * @param  {String} [interpolate='linear']
-     * @return {String}
-     * @return {dc.lineChart}
+     * @returns {String|dc.lineChart}
      */
     _chart.interpolate = function (interpolate) {
         if (!arguments.length) {
@@ -103,16 +102,15 @@ dc.lineChart = function (parent, chartGroup) {
     /**
      * Gets or sets the tension to use for lines drawn, in the range 0 to 1.
      * This parameter further customizes the interpolation behavior.  It is passed to
-     * {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_tension d3.svg.line.tension} and
-     * {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#area_tension d3.svg.area.tension}.
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_tension d3.svg.line.tension} and
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_tension d3.svg.area.tension}.
      * @method tension
      * @memberof dc.lineChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_interpolate d3.svg.line.interpolate}
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#area_interpolate d3.svg.area.interpolate}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate d3.svg.line.interpolate}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate d3.svg.area.interpolate}
      * @param  {Number} [tension=0.7]
-     * @return {Number}
-     * @return {dc.lineChart}
+     * @returns {Number|dc.lineChart}
      */
     _chart.tension = function (tension) {
         if (!arguments.length) {
@@ -126,18 +124,18 @@ dc.lineChart = function (parent, chartGroup) {
      * Gets or sets a function that will determine discontinuities in the line which should be
      * skipped: the path will be broken into separate subpaths if some points are undefined.
      * This function is passed to
-     * {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_defined d3.svg.line.defined}
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_defined d3.svg.line.defined}
      *
      * Note: crossfilter will sometimes coerce nulls to 0, so you may need to carefully write
      * custom reduce functions to get this to work, depending on your data. See
-     * https://github.com/dc-js/dc.js/issues/615#issuecomment-49089248
+     * {@link https://github.com/dc-js/dc.js/issues/615#issuecomment-49089248 this GitHub comment}
+     * for more details and an example.
      * @method defined
      * @memberof dc.lineChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_defined d3.svg.line.defined}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_defined d3.svg.line.defined}
      * @param  {Function} [defined]
-     * @return {Function}
-     * @return {dc.lineChart}
+     * @returns {Function|dc.lineChart}
      */
     _chart.defined = function (defined) {
         if (!arguments.length) {
@@ -158,8 +156,7 @@ dc.lineChart = function (parent, chartGroup) {
      * // create a Dash Dot Dot Dot
      * chart.dashStyle([3,1,1,1]);
      * @param  {Array<Number>} [dashStyle=[]]
-     * @return {Array<Number>}
-     * @return {dc.lineChart}
+     * @returns {Array<Number>|dc.lineChart}
      */
     _chart.dashStyle = function (dashStyle) {
         if (!arguments.length) {
@@ -176,8 +173,7 @@ dc.lineChart = function (parent, chartGroup) {
      * @memberof dc.lineChart
      * @instance
      * @param  {Boolean} [renderArea=false]
-     * @return {Boolean}
-     * @return {dc.lineChart}
+     * @returns {Boolean|dc.lineChart}
      */
     _chart.renderArea = function (renderArea) {
         if (!arguments.length) {
@@ -394,7 +390,7 @@ dc.lineChart = function (parent, chartGroup) {
 
     function renderTitle (dot, d) {
         if (_chart.renderTitle()) {
-            dot.selectAll('title').remove();
+            dot.select('title').remove();
             dot.append('title').text(dc.pluck('data', _chart.title(d.name)));
         }
     }
@@ -407,8 +403,7 @@ dc.lineChart = function (parent, chartGroup) {
      * @memberof dc.lineChart
      * @instance
      * @param  {Boolean} [xyTipsOn=false]
-     * @return {Boolean}
-     * @return {dc.lineChart}
+     * @returns {Boolean|dc.lineChart}
      */
     _chart.xyTipsOn = function (xyTipsOn) {
         if (!arguments.length) {
@@ -424,8 +419,7 @@ dc.lineChart = function (parent, chartGroup) {
      * @memberof dc.lineChart
      * @instance
      * @param  {Number} [dotRadius=5]
-     * @return {Number}
-     * @return {dc.lineChart}
+     * @returns {Number|dc.lineChart}
      */
     _chart.dotRadius = function (dotRadius) {
         if (!arguments.length) {
@@ -437,17 +431,16 @@ dc.lineChart = function (parent, chartGroup) {
 
     /**
      * Always show individual dots for each datapoint.
-     * If `options` is falsy, it disables data point rendering.
      *
-     * If no `options` are provided, the current `options` values are instead returned.
+     * If `options` is falsy, it disables data point rendering. If no `options` are provided, the
+     * current `options` values are instead returned.
      * @method renderDataPoints
      * @memberof dc.lineChart
      * @instance
      * @example
      * chart.renderDataPoints({radius: 2, fillOpacity: 0.8, strokeOpacity: 0.8})
      * @param  {{fillOpacity: Number, strokeOpacity: Number, radius: Number}} [options={fillOpacity: 0.8, strokeOpacity: 0.8, radius: 2}]
-     * @return {{fillOpacity: Number, strokeOpacity: Number, radius: Number}}
-     * @return {dc.lineChart}
+     * @returns {{fillOpacity: Number, strokeOpacity: Number, radius: Number}|dc.lineChart}
      */
     _chart.renderDataPoints = function (options) {
         if (!arguments.length) {

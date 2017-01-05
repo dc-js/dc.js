@@ -4,7 +4,7 @@
  * @memberof dc
  * @mixin
  * @param {Object} _chart
- * @return {dc.stackMixin}
+ * @returns {dc.stackMixin}
  */
 dc.stackMixin = function (_chart) {
 
@@ -64,7 +64,7 @@ dc.stackMixin = function (_chart) {
      * @method stack
      * @memberof dc.stackMixin
      * @instance
-     * @see {@link https://github.com/square/crossfilter/wiki/API-Reference#group-map-reduce crossfilter.group}
+     * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group-map-reduce crossfilter.group}
      * @example
      * // stack group using default accessor
      * chart.stack(valueSumGroup)
@@ -73,8 +73,7 @@ dc.stackMixin = function (_chart) {
      * @param {crossfilter.group} group
      * @param {String} [name]
      * @param {Function} [accessor]
-     * @return {Array<{group: crossfilter.group, name: String, accessor: Function}>}
-     * @return {dc.stackMixin}
+     * @returns {Array<{group: crossfilter.group, name: String, accessor: Function}>|dc.stackMixin}
      */
     _chart.stack = function (group, name, accessor) {
         if (!arguments.length) {
@@ -117,8 +116,7 @@ dc.stackMixin = function (_chart) {
      * @memberof dc.stackMixin
      * @instance
      * @param {Boolean} [hidableStacks=false]
-     * @return {Boolean}
-     * @return {dc.stackMixin}
+     * @returns {Boolean|dc.stackMixin}
      */
     _chart.hidableStacks = function (hidableStacks) {
         if (!arguments.length) {
@@ -140,7 +138,7 @@ dc.stackMixin = function (_chart) {
      * @memberof dc.stackMixin
      * @instance
      * @param {String} stackName
-     * @return {dc.stackMixin}
+     * @returns {dc.stackMixin}
      */
     _chart.hideStack = function (stackName) {
         var layer = findLayerByName(stackName);
@@ -157,7 +155,7 @@ dc.stackMixin = function (_chart) {
      * @memberof dc.stackMixin
      * @instance
      * @param {String} stackName
-     * @return {dc.stackMixin}
+     * @returns {dc.stackMixin}
      */
     _chart.showStack = function (stackName) {
         var layer = findLayerByName(stackName);
@@ -195,12 +193,12 @@ dc.stackMixin = function (_chart) {
 
     _chart.xAxisMin = function () {
         var min = d3.min(flattenStack(), dc.pluck('x'));
-        return dc.utils.subtract(min, _chart.xAxisPadding());
+        return dc.utils.subtract(min, _chart.xAxisPadding(), _chart.xAxisPaddingUnit());
     };
 
     _chart.xAxisMax = function () {
         var max = d3.max(flattenStack(), dc.pluck('x'));
-        return dc.utils.add(max, _chart.xAxisPadding());
+        return dc.utils.add(max, _chart.xAxisPadding(), _chart.xAxisPaddingUnit());
     };
 
     /**
@@ -221,8 +219,7 @@ dc.stackMixin = function (_chart) {
      * var secondTitleFunction = chart.title('second stack');
      * @param {String} [stackName]
      * @param {Function} [titleAccessor]
-     * @return {String}
-     * @return {dc.stackMixin}
+     * @returns {String|dc.stackMixin}
      */
     dc.override(_chart, 'title', function (stackName, titleAccessor) {
         if (!stackName) {
@@ -247,14 +244,13 @@ dc.stackMixin = function (_chart) {
 
     /**
      * Gets or sets the stack layout algorithm, which computes a baseline for each stack and
-     * propagates it to the next
+     * propagates it to the next.
      * @method stackLayout
      * @memberof dc.stackMixin
      * @instance
-     * @see {@link http://github.com/mbostock/d3/wiki/Stack-Layout d3.layout.stack}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Stack-Layout.md d3.layout.stack}
      * @param {Function} [stack=d3.layout.stack]
-     * @return {Function}
-     * @return {dc.stackMixin}
+     * @returns {Function|dc.stackMixin}
      */
     _chart.stackLayout = function (stack) {
         if (!arguments.length) {

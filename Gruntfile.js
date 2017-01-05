@@ -20,14 +20,25 @@ module.exports = function (grunt) {
         conf: config,
 
         concat: {
-            options: {
-                process: true,
-                sourceMap: true,
-                banner: '<%= conf.banner %>'
-            },
             js: {
                 src: '<%= conf.jsFiles %>',
-                dest: '<%= conf.pkg.name %>.js'
+                dest: '<%= conf.pkg.name %>.js',
+                options: {
+                    process: true,
+                    sourceMap: true,
+                    banner: '<%= conf.banner %>'
+                }
+            },
+            welcome: {
+                src: ['docs/welcome.base.md', 'web/img/class-hierarchy.svg'],
+                dest: 'welcome.md',
+                options: {
+                    process: function (src, filepath) {
+                        return /svg/.test(filepath) ?
+                            src.split('\n').slice(5).join('\n') :
+                            src;
+                    }
+                }
             }
         },
         sass: {
@@ -242,13 +253,14 @@ module.exports = function (grunt) {
         },
         docco: {
             options: {
-                dst: '<%= conf.web %>/docs',
-                basepath: '<%= conf.web %>'
+                dst: '<%= conf.web %>/docs'
             },
             howto: {
                 files: [
                     {
-                        src: ['<%= conf.web %>/stock.js']
+                        expand: true,
+                        cwd: '<%= conf.web %>',
+                        src: ['stock.js']
                     }
                 ]
             }
@@ -322,6 +334,20 @@ module.exports = function (grunt) {
                 files: [
                     {dest: '<%= conf.web %>/resizing/index.html', src: ['<%= conf.web %>/resizing/*.html']}
                 ]
+            },
+            'zoom-listing': {
+                options: {
+                    format: formatFileList,
+                    absolute: true,
+                    title: 'Index of dc.js zoom tests',
+                    heading: 'Interactive test for dc.js chart zoom',
+                    description: 'It\'s hard to conceive of a way to test zoom except by trying it. ' +
+                        'So this is a substitute for automated tests in this area',
+                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.web %>/zoom'
+                },
+                files: [
+                    {dest: '<%= conf.web %>/zoom/index.html', src: ['<%= conf.web %>/zoom/*.html']}
+                ]
             }
         },
 
@@ -358,6 +384,9 @@ module.exports = function (grunt) {
             hooks: {
                 command: 'cp -n scripts/pre-commit.sh .git/hooks/pre-commit' +
                     ' || echo \'Cowardly refusing to overwrite your existing git pre-commit hook.\''
+            },
+            hierarchy: {
+                command: 'dot -Tsvg -o web/img/class-hierarchy.svg class-hierarchy.dot'
             }
         },
         browserify: {

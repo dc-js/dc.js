@@ -7,7 +7,7 @@
     "freeze": true,
     "immed": true,
     "indent": 4,
-    "latedef": true,
+    "latedef": false,
     "newcap": true,
     "noarg": true,
     "nonbsp": true,

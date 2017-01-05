@@ -5,7 +5,7 @@
  * @memberof dc
  * @mixin
  * @param {Object} _chart
- * @return {dc.colorMixin}
+ * @returns {dc.colorMixin}
  */
 dc.colorMixin = function (_chart) {
     var _colors = d3.scale.category20c();
@@ -19,7 +19,7 @@ dc.colorMixin = function (_chart) {
      * @method colors
      * @memberof dc.colorMixin
      * @instance
-     * @see {@link http://github.com/mbostock/d3/wiki/Scales d3.scale}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
      * @example
      * // alternate categorical scale
      * chart.colors(d3.scale.category20b());
@@ -30,8 +30,7 @@ dc.colorMixin = function (_chart) {
      * // set a linear scale
      * chart.linearColors(["#4575b4", "#ffffbf", "#a50026"]);
      * @param {d3.scale} [colorScale=d3.scale.category20c()]
-     * @return {d3.scale}
-     * @return {dc.colorMixin}
+     * @returns {d3.scale|dc.colorMixin}
      */
     _chart.colors = function (colorScale) {
         if (!arguments.length) {
@@ -47,13 +46,13 @@ dc.colorMixin = function (_chart) {
 
     /**
      * Convenience method to set the color scale to
-     * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales#ordinal d3.scale.ordinal} with
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal d3.scale.ordinal} with
      * range `r`.
      * @method ordinalColors
      * @memberof dc.colorMixin
      * @instance
      * @param {Array<String>} r
-     * @return {dc.colorMixin}
+     * @returns {dc.colorMixin}
      */
     _chart.ordinalColors = function (r) {
         return _chart.colors(d3.scale.ordinal().range(r));
@@ -65,7 +64,7 @@ dc.colorMixin = function (_chart) {
      * @memberof dc.colorMixin
      * @instance
      * @param {Array<Number>} r
-     * @return {dc.colorMixin}
+     * @returns {dc.colorMixin}
      */
     _chart.linearColors = function (r) {
         return _chart.colors(d3.scale.linear()
@@ -86,8 +85,7 @@ dc.colorMixin = function (_chart) {
      * // color accessor for a multi-value crossfilter reduction
      * .colorAccessor(function (d){return d.value.absGain;})
      * @param {Function} [colorAccessor]
-     * @return {Function}
-     * @return {dc.colorMixin}
+     * @returns {Function|dc.colorMixin}
      */
     _chart.colorAccessor = function (colorAccessor) {
         if (!arguments.length) {
@@ -113,8 +111,7 @@ dc.colorMixin = function (_chart) {
      * @memberof dc.colorMixin
      * @instance
      * @param {Array<String>} [domain]
-     * @return {Array<String>}
-     * @return {dc.colorMixin}
+     * @returns {Array<String>|dc.colorMixin}
      */
     _chart.colorDomain = function (domain) {
         if (!arguments.length) {
@@ -130,7 +127,7 @@ dc.colorMixin = function (_chart) {
      * @method calculateColorDomain
      * @memberof dc.colorMixin
      * @instance
-     * @return {dc.colorMixin}
+     * @returns {dc.colorMixin}
      */
     _chart.calculateColorDomain = function () {
         var newDomain = [d3.min(_chart.data(), _chart.colorAccessor()),
@@ -146,27 +143,31 @@ dc.colorMixin = function (_chart) {
      * @instance
      * @param {*} d
      * @param {Number} [i]
-     * @return {String}
+     * @returns {String}
      */
     _chart.getColor = function (d, i) {
         return _colors(_colorAccessor.call(this, d, i));
     };
 
     /**
-     * Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
+     * **Deprecated.** Get/set the color calculator. This actually replaces the
+     * {@link dc.colorMixin#getColor getColor} method!
+     *
+     * This is not recommended, since using a {@link dc.colorMixin#colorAccessor colorAccessor} and
+     * color scale ({@link dc.colorMixin#colors .colors}) is more powerful and idiomatic d3.
      * @method colorCalculator
      * @memberof dc.colorMixin
      * @instance
      * @param {*} [colorCalculator]
-     * @return {*}
+     * @returns {Function|dc.colorMixin}
      */
-    _chart.colorCalculator = function (colorCalculator) {
+    _chart.colorCalculator = dc.logger.deprecate(function (colorCalculator) {
         if (!arguments.length) {
             return _chart.getColor;
         }
         _chart.getColor = colorCalculator;
         return _chart;
-    };
+    }, 'colorMixin.colorCalculator has been deprecated. Please colorMixin.colors and colorMixin.colorAccessor instead');
 
     return _chart;
 };

@@ -29,7 +29,7 @@ dc.filters = {};
  * @memberof dc.filters
  * @param {Number} low
  * @param {Number} high
- * @return {Array<Number>}
+ * @returns {Array<Number>}
  * @constructor
  */
 dc.filters.RangedFilter = function (low, high) {
@@ -51,7 +51,7 @@ dc.filters.RangedFilter = function (low, high) {
  * @name TwoDimensionalFilter
  * @memberof dc.filters
  * @param {Array<Number>} filter
- * @return {Array<Number>}
+ * @returns {Array<Number>}
  * @constructor
  */
 dc.filters.TwoDimensionalFilter = function (filter) {
@@ -83,7 +83,7 @@ dc.filters.TwoDimensionalFilter = function (filter) {
  * @name RangedTwoDimensionalFilter
  * @memberof dc.filters
  * @param {Array<Array<Number>>} filter
- * @return {Array<Array<Number>>}
+ * @returns {Array<Array<Number>>}
  * @constructor
  */
 dc.filters.RangedTwoDimensionalFilter = function (filter) {
@@ -105,9 +105,6 @@ dc.filters.RangedTwoDimensionalFilter = function (filter) {
         var x, y;
 
         if (value instanceof Array) {
-            if (value.length !== 2) {
-                return false;
-            }
             x = value[0];
             y = value[1];
         } else {

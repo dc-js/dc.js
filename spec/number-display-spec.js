@@ -151,7 +151,7 @@ describe('dc.numberDisplay', function () {
     });
     describe('Inline nonspan element' , function () {
         beforeEach(function () {
-            var div = d3.select('body').append('div').attr('id','number-display-test-section');
+            var div = d3.select('body').append('div').attr('id', 'number-display-test-section');
             div.append('p').html('There are <em id="nonspan"></em> Total Widgets.');
             buildChart('#nonspan');
         });

@@ -126,7 +126,7 @@ describe('dc utils', function () {
             expect(date.toString()).toEqual(makeDate(2012, 0, 1).toString());
         });
         it('should be able to subtract month from dates', function () {
-            var date = subtract(makeDate(2012,1,1), '1', 'month');
+            var date = subtract(makeDate(2012, 1, 1), '1', 'month');
             expect(date.toString()).toEqual(makeDate(2012, 0, 1).toString());
         });
     });

@@ -257,7 +257,7 @@ dc.redrawAll = function (group) {
 
 /**
  * If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
- * immediately
+ * immediately.
  * @memberof dc
  * @member disableTransitions
  * @type {Boolean}
@@ -346,7 +346,7 @@ dc.units = {};
  * chart.xUnits(dc.units.integers) // already the default
  * @param {Number} start
  * @param {Number} end
- * @return {Number}
+ * @returns {Number}
  */
 dc.units.integers = function (start, end) {
     return Math.abs(end - start);
@@ -355,12 +355,12 @@ dc.units.integers = function (start, end) {
 /**
  * This argument can be passed to the {@link dc.coordinateGridMixin#xUnits .xUnits} function of the to
  * specify ordinal units for the x axis. Usually this parameter is used in combination with passing
- * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales d3.scale.ordinal} to
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md d3.scale.ordinal} to
  * {@link dc.coordinateGridMixin#x .x}.
  * It just returns the domain passed to it, which for ordinal charts is an array of all values.
  * @method ordinal
  * @memberof dc.units
- * @see {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales d3.scale.ordinal}
+ * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md d3.scale.ordinal}
  * @see {@link dc.coordinateGridMixin#xUnits coordinateGridMixin.xUnits}
  * @see {@link dc.coordinateGridMixin#x coordinateGridMixin.x}
  * @example
@@ -369,7 +369,7 @@ dc.units.integers = function (start, end) {
  * @param {*} start
  * @param {*} end
  * @param {Array<String>} domain
- * @return {Array<String>}
+ * @returns {Array<String>}
  */
 dc.units.ordinal = function (start, end, domain) {
     return domain;
@@ -397,7 +397,7 @@ dc.units.fp = {};
  * var thousandths = dc.units.fp.precision(0.001);
  * thousandths(0.5, 1.0) // returns 500
  * @param {Number} precision
- * @return {Function} start-end unit function
+ * @returns {Function} start-end unit function
  */
 dc.units.fp.precision = function (precision) {
     var _f = function (s, e) {

@@ -5,6 +5,24 @@
  * Functional-style filter handlers: instead of modifying the array of filters in-place, filter handlers must return the new filter array. This is consistent with the old documention, but a different implementation: any changes to the `filters` argument will be ignored unless they are returned. This should make filter handlers easier to reason about.
 
 # 2.0 Series
+## 2.0.0
+* xAxisPaddingUnit also applied to stacked charts, by Alexander Stillesjö ([#1234](https://github.com/dc-js/dc.js/pull/1234)
+* Limit zoom bounds - panning past the end should not cause brush to turn inside out. Thanks to Indri Muska for initial implementation and test ([#1026](https://github.com/dc-js/dc.js/pull/1026))
+* Legend was wrapping one item too late, by alexnb ([#1229](https://github.com/dc-js/dc.js/pull/1229))
+* Limit the number of legend items with `maxItems`, by Renoth ([#1114](https://github.com/dc-js/dc.js/pull/1114))
+* [Example of switching time intervals](http://dc-js.github.io/dc.js/examples/switching-time-intervals.html), for doing simple aggregation of simple time series data
+* Scatter plot titles, by Daniel Gall ([#1200](https://github.com/dc-js/dc.js/pull/1200))
+* `scatterPlot` and `RangedTwoDimensionalFilter` no longer require that the dimension key have exactly two elements, to support the common trick of putting the color in the third element.
+* [Scatter plot matrix brushing example](http://dc-js.github.io/dc.js/examples/splom.html)
+* `emptyOpacity` is exposed, and `emptySize` is a radius like the other sizes (squared for symbol size), by Ganesh Iyer ([#1058](https://github.com/dc-js/dc.js/pull/1058))
+* Bubble chart and heatmap correctly re-select (not selectAll) the sub-components in order to correctly apply new data when redrawn. This affects uses of dc.js where the data is replaced instead of being modified in place. (For example, the case where crossfilter is not used.) By Steffen Dienst and Matt Traynham. ([#1032](https://github.com/dc-js/dc.js/pull/1032), [#1237](https://github.com/dc-js/dc.js/pull/1237))
+* Further changed other unnecessary uses of `selectAll` to `select` - when appending or inserting a single element, one should almost always match that with `select` for updates. ([#1239](https://github.com/dc-js/dc.js/issues/1239))
+* Heatmap column/row filtering is a lot faster ([#649](https://github.com/dc-js/dc.js/issues/649))
+* `colorMixin.colorCalculator` properly documented and deprecated ([#1225](https://github.com/dc-js/dc.js/issues/1225))
+* Development dependencies upgraded, by Matt Traynham ([#1233](https://github.com/dc-js/dc.js/pull/1233))
+* Add a class diagram to the [HTML documentation](http://dc-js.github.io/dc.js/docs/html/).
+* Many documentation fixes. ([#612](https://github.com/dc-js/dc.js/issues/612), [#636](https://github.com/dc-js/dc.js/issues/636), [#1110](https://github.com/dc-js/dc.js/issues/1110), [#1224](https://github.com/dc-js/dc.js/issues/1224), [#1226](https://github.com/dc-js/dc.js/issues/1226), [#1228](https://github.com/dc-js/dc.js/issues/1228), [#1231](https://github.com/dc-js/dc.js/issues/1231), [#1235](https://github.com/dc-js/dc.js/issues/1235))
+
 ## 2.0.0 beta 33
 * Use Sass 3 (SCSS) for generating CSS, by Matt Traynham ([#1049](https://github.com/dc-js/dc.js/pull/1049))
 * Don't try to interpolate user data in label paths, by Alexander Stillesjö ([#1151](https://github.com/dc-js/dc.js/pull/1151))

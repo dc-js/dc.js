@@ -10,7 +10,7 @@
  * @memberof dc
  * @mixin
  * @param {Object} _chart
- * @return {dc.capMixin}
+ * @returns {dc.capMixin}
  */
 dc.capMixin = function (_chart) {
 
@@ -27,7 +27,11 @@ dc.capMixin = function (_chart) {
             topSet = d3.set(topKeys),
             others = allKeys.filter(function (d) {return !topSet.has(d);});
         if (allRowsSum > topRowsSum) {
-            return topRows.concat([{'others': others, 'key': _othersLabel, 'value': allRowsSum - topRowsSum}]);
+            return topRows.concat([{
+                'others': others,
+                'key': _chart.othersLabel(),
+                'value': allRowsSum - topRowsSum
+            }]);
         }
         return topRows;
     };
@@ -60,13 +64,14 @@ dc.capMixin = function (_chart) {
     });
 
     /**
-     * Get or set the count of elements to that will be included in the cap.
+     * Get or set the count of elements to that will be included in the cap. If there is an
+     * {@link dc.capMixin#othersGrouper othersGrouper}, any further elements will be combined in an
+     * extra element with its name determined by {@link dc.capMixin#othersLabel othersLabel}.
      * @method cap
      * @memberof dc.capMixin
      * @instance
      * @param {Number} [count=Infinity]
-     * @return {Number}
-     * @return {dc.capMixin}
+     * @returns {Number|dc.capMixin}
      */
     _chart.cap = function (count) {
         if (!arguments.length) {
@@ -77,13 +82,12 @@ dc.capMixin = function (_chart) {
     };
 
     /**
-     * Get or set the label for *Others* slice when slices cap is specified
+     * Get or set the label for *Others* slice when slices cap is specified.
      * @method othersLabel
      * @memberof dc.capMixin
      * @instance
      * @param {String} [label="Others"]
-     * @return {String}
-     * @return {dc.capMixin}
+     * @returns {String|dc.capMixin}
      */
     _chart.othersLabel = function (label) {
         if (!arguments.length) {
@@ -101,6 +105,8 @@ dc.capMixin = function (_chart) {
      * @memberof dc.capMixin
      * @instance
      * @example
+     * // Do not show others
+     * chart.othersGrouper(null);
      * // Default others grouper
      * chart.othersGrouper(function (topRows) {
      *    var topRowsSum = d3.sum(topRows, _chart.valueAccessor()),
@@ -111,7 +117,11 @@ dc.capMixin = function (_chart) {
      *        topSet = d3.set(topKeys),
      *        others = allKeys.filter(function (d) {return !topSet.has(d);});
      *    if (allRowsSum > topRowsSum) {
-     *        return topRows.concat([{'others': others, 'key': _othersLabel, 'value': allRowsSum - topRowsSum}]);
+     *        return topRows.concat([{
+     *            'others': others,
+     *            'key': _chart.othersLabel(),
+     *            'value': allRowsSum - topRowsSum
+     *        }]);
      *    }
      *    return topRows;
      * });
@@ -129,8 +139,7 @@ dc.capMixin = function (_chart) {
      *     return data;
      * });
      * @param {Function} [grouperFunction]
-     * @return {Function}
-     * @return {dc.capMixin}
+     * @returns {Function|dc.capMixin}
      */
     _chart.othersGrouper = function (grouperFunction) {
         if (!arguments.length) {

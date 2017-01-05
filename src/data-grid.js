@@ -2,8 +2,8 @@
  * Data grid is a simple widget designed to list the filtered records, providing
  * a simple way to define how the items are displayed.
  *
- * Note: Unlike other charts, the data grid chart (and data table) use the group attribute as a keying function
- * for {@link https://github.com/mbostock/d3/wiki/Arrays#-nest nesting} the data together in groups.
+ * Note: Unlike other charts, the data grid chart (and data table) use the {@link dc.dataGrid#group group} attribute as a keying function
+ * for {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#nest nesting} the data together in groups.
  * Do not pass in a crossfilter group as this will not work.
  *
  * Examples:
@@ -12,11 +12,11 @@
  * @memberof dc
  * @mixes dc.baseMixin
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.dataGrid}
+ * @returns {dc.dataGrid}
  */
 dc.dataGrid = function (parent, chartGroup) {
     var LABEL_CSS_CLASS = 'dc-grid-label';
@@ -104,14 +104,30 @@ dc.dataGrid = function (parent, chartGroup) {
     };
 
     /**
+     * Get or set the group function for the data grid. The group function takes a data row and
+     * returns the key to specify to {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_nest d3.nest}
+     * to split rows into groups.
+     *
+     * Do not pass in a crossfilter group as this will not work.
+     * @method group
+     * @memberof dc.dataGrid
+     * @instance
+     * @example
+     * // group rows by the value of their field
+     * chart
+     *     .group(function(d) { return d.field; })
+     * @param {Function} groupFunction Function taking a row of data and returning the nest key.
+     * @returns {Function|dc.dataTable}
+     */
+
+    /**
      * Get or set the index of the beginning slice which determines which entries get displayed by the widget.
      * Useful when implementing pagination.
      * @method beginSlice
      * @memberof dc.dataGrid
      * @instance
      * @param {Number} [beginSlice=0]
-     * @return {Number}
-     * @return {dc.dataGrid}
+     * @returns {Number|dc.dataGrid}
      */
     _chart.beginSlice = function (beginSlice) {
         if (!arguments.length) {
@@ -122,14 +138,13 @@ dc.dataGrid = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set the index of the end slice which determines which entries get displayed by the widget
+     * Get or set the index of the end slice which determines which entries get displayed by the widget.
      * Useful when implementing pagination.
      * @method endSlice
      * @memberof dc.dataGrid
      * @instance
      * @param {Number} [endSlice]
-     * @return {Number}
-     * @return {dc.dataGrid}
+     * @returns {Number|dc.dataGrid}
      */
     _chart.endSlice = function (endSlice) {
         if (!arguments.length) {
@@ -145,8 +160,7 @@ dc.dataGrid = function (parent, chartGroup) {
      * @memberof dc.dataGrid
      * @instance
      * @param {Number} [size=999]
-     * @return {Number}
-     * @return {dc.dataGrid}
+     * @returns {Number|dc.dataGrid}
      */
     _chart.size = function (size) {
         if (!arguments.length) {
@@ -166,8 +180,7 @@ dc.dataGrid = function (parent, chartGroup) {
      * @example
      * chart.html(function (d) { return '<div class='item '+data.exampleCategory+''>'+data.exampleString+'</div>';});
      * @param {Function} [html]
-     * @return {Function}
-     * @return {dc.dataGrid}
+     * @returns {Function|dc.dataGrid}
      */
     _chart.html = function (html) {
         if (!arguments.length) {
@@ -185,8 +198,7 @@ dc.dataGrid = function (parent, chartGroup) {
      * @example
      * chart.htmlGroup (function (d) { return '<h2>'.d.key . 'with ' . d.values.length .' items</h2>'});
      * @param {Function} [htmlGroup]
-     * @return {Function}
-     * @return {dc.dataGrid}
+     * @returns {Function|dc.dataGrid}
      */
     _chart.htmlGroup = function (htmlGroup) {
         if (!arguments.length) {
@@ -207,8 +219,7 @@ dc.dataGrid = function (parent, chartGroup) {
      *     return d.date;
      * });
      * @param {Function} [sortByFunction]
-     * @return {Function}
-     * @return {dc.dataGrid}
+     * @returns {Function|dc.dataGrid}
      */
     _chart.sortBy = function (sortByFunction) {
         if (!arguments.length) {
@@ -219,17 +230,16 @@ dc.dataGrid = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set sort order function.
+     * Get or set sort the order function.
      * @method order
      * @memberof dc.dataGrid
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_ascending d3.ascending}
-     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_descending d3.descending}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending d3.ascending}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending d3.descending}
      * @example
      * chart.order(d3.descending);
      * @param {Function} [order=d3.ascending]
-     * @return {Function}
-     * @return {dc.dataGrid}
+     * @returns {Function|dc.dataGrid}
      */
     _chart.order = function (order) {
         if (!arguments.length) {
