@@ -74,10 +74,12 @@
                 Months: d3.time.month,
                 Years: d3.time.year
             };
+            var defint = find_query('interval') || 'Weeks';
             d3.select('#interval').selectAll('option')
                 .data(Object.keys(intervals))
               .enter().append('option')
-                .text(function(d) { return d; });
+                .text(function(d) { return d; })
+                .attr('selected', function(d) { return d === defint ? '' : null; });
             function setup() {
                 if(dateDim) {
                     dateDim.dispose();
