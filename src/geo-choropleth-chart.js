@@ -134,7 +134,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * @memberof dc.geoChoroplethChart
      * @instance
      * @param {String} name
-     * @return {dc.geoChoroplethChart}
+     * @returns {dc.geoChoroplethChart}
      */
     _chart.removeLayer = function (name) {
         delete _layers[name];
@@ -252,7 +252,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * @memberof dc.geoChoroplethChart
      * @instance
      * @param {Boolean} [showGraticule=false]
-     * @return {Boolean|dc.geoChoroplethChart}
+     * @returns {Boolean|dc.geoChoroplethChart}
      */
     _chart.showGraticule = function (showGraticule) {
         if (!arguments.length) {
@@ -307,6 +307,12 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
             .selectAll('path')
             .data(dc.pluck('features')).enter()
             .append('path')
+            .attr('key', function (d) {
+                var parent = d3.select(this.parentNode).datum();
+                if (parent.keyAccessor) {
+                    return parent.keyAccessor(d);
+                }
+            })
             .attr('fill', 'white')
             .attr('d', _path)
             .on('click', function (d) {
