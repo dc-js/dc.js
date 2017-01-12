@@ -76,7 +76,7 @@ describe('dc.filter-dates', function () {
     // Create a Random Date
     function randomDate (start, end) {
         var d = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-        d.setUTCHours(0,0,0,0);
+        d.setUTCHours(0, 0, 0, 0);
         return d;
     }
 

@@ -9,7 +9,7 @@
  * @memberof dc
  * @example
  * chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
- * @return {dc.legend}
+ * @returns {dc.legend}
  */
 dc.legend = function () {
     var LABEL_GAP = 2;
@@ -24,7 +24,8 @@ dc.legend = function () {
         _legendWidth = 560,
         _itemWidth = 70,
         _autoItemWidth = false,
-        _legendText = dc.pluck('name');
+        _legendText = dc.pluck('name'),
+        _maxItems;
 
     var _g;
 
@@ -42,6 +43,10 @@ dc.legend = function () {
             .attr('class', 'dc-legend')
             .attr('transform', 'translate(' + _x + ',' + _y + ')');
         var legendables = _parent.legendables();
+
+        if (_maxItems !== undefined) {
+            legendables = legendables.slice(0, _maxItems);
+        }
 
         var itemEnter = _g.selectAll('g.dc-legend-item')
             .data(legendables)
@@ -92,15 +97,13 @@ dc.legend = function () {
         var row = 0;
         itemEnter.attr('transform', function (d, i) {
             if (_horizontal) {
-                var translateBy = 'translate(' + _cumulativeLegendTextWidth + ',' + row * legendItemHeight() + ')';
                 var itemWidth   = _autoItemWidth === true ? this.getBBox().width + _gap : _itemWidth;
-
-                if ((_cumulativeLegendTextWidth + itemWidth) >= _legendWidth) {
-                    ++row ;
-                    _cumulativeLegendTextWidth = 0 ;
-                } else {
-                    _cumulativeLegendTextWidth += itemWidth;
+                if ((_cumulativeLegendTextWidth + itemWidth) > _legendWidth && _cumulativeLegendTextWidth > 0) {
+                    ++row;
+                    _cumulativeLegendTextWidth = 0;
                 }
+                var translateBy = 'translate(' + _cumulativeLegendTextWidth + ',' + row * legendItemHeight() + ')';
+                _cumulativeLegendTextWidth += itemWidth;
                 return translateBy;
             } else {
                 return 'translate(0,' + i * legendItemHeight() + ')';
@@ -118,8 +121,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Number} [x=0]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.x = function (x) {
         if (!arguments.length) {
@@ -135,8 +137,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Number} [y=0]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.y = function (y) {
         if (!arguments.length) {
@@ -152,8 +153,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Number} [gap=5]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.gap = function (gap) {
         if (!arguments.length) {
@@ -169,8 +169,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Number} [itemHeight=12]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.itemHeight = function (itemHeight) {
         if (!arguments.length) {
@@ -186,8 +185,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Boolean} [horizontal=false]
-     * @return {Boolean}
-     * @return {dc.legend}
+     * @returns {Boolean|dc.legend}
      */
     _legend.horizontal = function (horizontal) {
         if (!arguments.length) {
@@ -203,8 +201,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Number} [legendWidth=500]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.legendWidth = function (legendWidth) {
         if (!arguments.length) {
@@ -215,13 +212,12 @@ dc.legend = function () {
     };
 
     /**
-     * legendItem width for horizontal legend.
+     * Legend item width for horizontal legend.
      * @method itemWidth
      * @memberof dc.legend
      * @instance
      * @param  {Number} [itemWidth=70]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.itemWidth = function (itemWidth) {
         if (!arguments.length) {
@@ -233,13 +229,12 @@ dc.legend = function () {
 
     /**
      * Turn automatic width for legend items on or off. If true, {@link dc.legend#itemWidth itemWidth} is ignored.
-     * This setting takes into account {@link dc.legend#gap gap}.
+     * This setting takes into account the {@link dc.legend#gap gap}.
      * @method autoItemWidth
      * @memberof dc.legend
      * @instance
      * @param  {Boolean} [autoItemWidth=false]
-     * @return {Boolean}
-     * @return {dc.legend}
+     * @returns {Boolean|dc.legend}
      */
     _legend.autoItemWidth = function (autoItemWidth) {
         if (!arguments.length) {
@@ -250,26 +245,45 @@ dc.legend = function () {
     };
 
     /**
-    #### .legendText([legendTextFunction])
-    Set or get the legend text function. The legend widget uses this function to render
-    the legend text on each item. If no function is specified the legend widget will display
-    the names associated with each group.
-
-    Default: dc.pluck('name')
-
-    ```js
-    // create numbered legend items
-    chart.legend(dc.legend().legendText(function(d, i) { return i + '. ' + d.name; }))
-
-    // create legend displaying group counts
-    chart.legend(dc.legend().legendText(function(d) { return d.name + ': ' d.data; }))
-    ```
-    **/
-    _legend.legendText = function (_) {
+     * Set or get the legend text function. The legend widget uses this function to render the legend
+     * text for each item. If no function is specified the legend widget will display the names
+     * associated with each group.
+     * @method legendText
+     * @memberof dc.legend
+     * @instance
+     * @param  {Function} [legendText]
+     * @returns {Function|dc.legend}
+     * @example
+     * // default legendText
+     * legend.legendText(dc.pluck('name'))
+     *
+     * // create numbered legend items
+     * chart.legend(dc.legend().legendText(function(d, i) { return i + '. ' + d.name; }))
+     *
+     * // create legend displaying group counts
+     * chart.legend(dc.legend().legendText(function(d) { return d.name + ': ' d.data; }))
+     **/
+    _legend.legendText = function (legendText) {
         if (!arguments.length) {
             return _legendText;
         }
-        _legendText = _;
+        _legendText = legendText;
+        return _legend;
+    };
+
+    /**
+     * Maximum number of legend items to display
+     * @method maxItems
+     * @memberof dc.legend
+     * @instance
+     * @param  {Number} [maxItems]
+     * @return {dc.legend}
+     */
+    _legend.maxItems = function (maxItems) {
+        if (!arguments.length) {
+            return _maxItems;
+        }
+        _maxItems = dc.utils.isNumber(maxItems) ? maxItems : undefined;
         return _legend;
     };
 

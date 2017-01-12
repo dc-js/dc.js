@@ -3,22 +3,35 @@
 <head>
     <title>dc.js - Complex Reductions Example</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <style>
+      label {
+          display: inline;
+          padding-left: 1em;
+      }
+      label input {
+          vertical-align: top;
+      }
+    </style>
 </head>
 <body>
 
+<div class="container">
+
+<script type="text/javascript" src="header.js"></script>
   <p>Frequently asked question: how to show the minimum/maximum of some value in the rows?</p>
 
   <p>Some kinds of reductions require the entire set of values at every step: median, mode, minimum,
-  maximum. (It is almost by accident that you can get away with calculating the mean without looking
-  at all the rows.) This example shows how to keep the set of
-  values. <a href="http://github.com/dc-js/dc.js/tree/develop/web/examples/complex-reduce.html">See
-  the source</a> for details.</p>
+  maximum. (The mean just needs a running sum.)</p>
+
+  <p>This example shows how to keep the set of values.</p>
 
   <div id="select-operation">
-    <input type=radio name="operation" value="median" checked="true">median
-    <input type=radio name="operation" value="min">min
-    <input type=radio name="operation" value="max">max
+    <label><input type=radio name="operation" value="median" checked="true">&nbsp;median</label>
+    <label><input type=radio name="operation" value="mode">&nbsp;mode</label>
+    <label><input type=radio name="operation" value="min">&nbsp;min</label>
+    <label><input type=radio name="operation" value="max">&nbsp;max</label>
   </div>
   <div id="test-run">
     <h4>Run</h4>
@@ -66,6 +79,19 @@
       return [];
   }
 
+  // adapted from Code Review: Finding the mode of an array
+  // http://codereview.stackexchange.com/a/68431/108362
+  var mode = function mode(arr, acc) {
+      return arr.reduce(function(current, item) {
+          item = acc(item);
+          var val = current.numMapping[item] = (current.numMapping[item] || 0) + 1;
+          if (val > current.greatestFreq) {
+              current.greatestFreq = val;
+              current.mode = item;
+          }
+          return current;
+      }, {mode: null, greatestFreq: -Infinity, numMapping: {}}, arr).mode;
+  };
 
   var runChart = dc.barChart("#test-run"), exptChart = dc.barChart("#test-expt");
   d3.csv("morley.csv", function(error, experiments) {
@@ -85,6 +111,9 @@
       function medianSpeed(kv) {
           return d3.median(kv.value, speedValue);
       }
+      function modeSpeed(kv) {
+          return mode(kv.value, speedValue);
+      }
       function minSpeed(kv) {
           return d3.min(kv.value, speedValue);
       }
@@ -93,6 +122,7 @@
       }
       var accessors = {
           median: medianSpeed,
+          mode: modeSpeed,
           min: minSpeed,
           max: maxSpeed
       };
@@ -105,8 +135,8 @@
           });
 
       runChart
-          .width(768)
-          .height(480)
+          .width(400)
+          .height(300)
           .x(d3.scale.ordinal())
           .xUnits(dc.units.ordinal)
           .valueAccessor(medianSpeed)
@@ -117,8 +147,8 @@
           .group(runAvgGroup);
 
       exptChart
-          .width(768)
-          .height(480)
+          .width(400)
+          .height(300)
           .x(d3.scale.ordinal())
           .xUnits(dc.units.ordinal)
           .valueAccessor(medianSpeed)
@@ -135,5 +165,6 @@
 
 </script>
 
+</div>
 </body>
 </html>

@@ -3,16 +3,19 @@
   <head>
     <title>dc.js - Area Chart Example</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
   </head>
   <body>
+    <div class="container">
+    <script type="text/javascript" src="../examples/header.js"></script>
 
     <div id="test"></div>
-    <button onclick="transitionTest.stop()">stop</button>
-    <button onclick="button1()">left</button>
-    <button onclick="button2()">right</button>
-    <button onclick="button3()">middle</button>
-    <button onclick="button4()">stacks</button>
+    <button class="btn" onclick="transitionTest.stop()">stop</button>
+    <button class="btn" onclick="button1()">left</button>
+    <button class="btn" onclick="button2()">right</button>
+    <button class="btn" onclick="button3()">middle</button>
+    <button class="btn" onclick="button4()">stacks</button>
 
     <script type="text/javascript" src="../js/d3.js"></script>
     <script type="text/javascript" src="../js/crossfilter.js"></script>
@@ -83,6 +86,6 @@
       });
 
     </script>
-
+    </div>
   </body>
 </html>

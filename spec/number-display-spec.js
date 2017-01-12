@@ -151,7 +151,7 @@ describe('dc.numberDisplay', function () {
     });
     describe('Inline nonspan element' , function () {
         beforeEach(function () {
-            var div = d3.select('body').append('div').attr('id','number-display-test-section');
+            var div = d3.select('body').append('div').attr('id', 'number-display-test-section');
             div.append('p').html('There are <em id="nonspan"></em> Total Widgets.');
             buildChart('#nonspan');
         });
@@ -163,6 +163,32 @@ describe('dc.numberDisplay', function () {
         afterEach(function () {
             countryDimension.filterAll();
             d3.select('#number-display-test-section').remove();
+        });
+    });
+    describe('Infinity', function () {
+        var chart;
+        beforeEach(function () {
+            var id = 'empty-div';
+            appendChartID(id);
+            chart = buildChart('#' + id);
+            chart.valueAccessor(function (x) { return x; })
+                .group({value: function () { return Infinity; }})
+                .formatNumber(function (d) { return d; })
+                .render();
+            d3.timer.flush();
+        });
+        it('should display as Infinity', function () {
+            expect(chart.root().text()).toEqual('Infinity');
+        });
+        describe('returning to finite', function () {
+            beforeEach(function () {
+                chart.group({value: function () { return 17; }})
+                    .render();
+                d3.timer.flush();
+            });
+            it('should display finite', function () {
+                expect(chart.root().text()).toEqual('17');
+            });
         });
     });
 });

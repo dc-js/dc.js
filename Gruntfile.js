@@ -20,14 +20,32 @@ module.exports = function (grunt) {
         conf: config,
 
         concat: {
-            options: {
-                process: true,
-                sourceMap: true,
-                banner: '<%= conf.banner %>'
-            },
             js: {
                 src: '<%= conf.jsFiles %>',
-                dest: '<%= conf.pkg.name %>.js'
+                dest: '<%= conf.pkg.name %>.js',
+                options: {
+                    process: true,
+                    sourceMap: true,
+                    banner: '<%= conf.banner %>'
+                }
+            },
+            welcome: {
+                src: ['docs/welcome.base.md', 'web/img/class-hierarchy.svg'],
+                dest: 'welcome.md',
+                options: {
+                    process: function (src, filepath) {
+                        return /svg/.test(filepath) ?
+                            src.split('\n').slice(5).join('\n') :
+                            src;
+                    }
+                }
+            }
+        },
+        sass: {
+            dist: {
+                files: {
+                    '<%= conf.pkg.name %>.css': 'style/<%= conf.pkg.name %>.scss'
+                }
             }
         },
         uglify: {
@@ -91,9 +109,9 @@ module.exports = function (grunt) {
                 files: ['<%= conf.src %>/**/*.js', '<%= conf.web %>/stock.js'],
                 tasks: ['docs']
             },
-            styles: {
-                files: ['<%= conf.pkg.name %>.css'],
-                tasks: ['cssmin:main', 'copy:dc-to-gh']
+            sass: {
+                files: ['style/<%= conf.pkg.name %>.scss'],
+                tasks: ['sass', 'cssmin:main', 'copy:dc-to-gh']
             },
             jasmineRunner: {
                 files: ['<%= conf.spec %>/**/*.js'],
@@ -131,6 +149,9 @@ module.exports = function (grunt) {
                     helpers: [
                         '<%= conf.web %>/js/jasmine-jsreporter.js',
                         '<%= conf.spec %>/helpers/*.js'
+                    ],
+                    styles: [
+                        '<%= conf.web %>/css/dc.css'
                     ],
                     version: '2.0.0',
                     outfile: '<%= conf.spec %>/index.html',
@@ -206,7 +227,7 @@ module.exports = function (grunt) {
                         },
                         {
                             browserName: 'MicrosoftEdge',
-                            version: '20.10240',
+                            version: '14',
                             platform: 'Windows 10'
                         }
                     ],
@@ -232,13 +253,14 @@ module.exports = function (grunt) {
         },
         docco: {
             options: {
-                dst: '<%= conf.web %>/docs',
-                basepath: '<%= conf.web %>'
+                dst: '<%= conf.web %>/docs'
             },
             howto: {
                 files: [
                     {
-                        src: ['<%= conf.web %>/stock.js']
+                        expand: true,
+                        cwd: '<%= conf.web %>',
+                        src: ['stock.js']
                     }
                 ]
             }
@@ -263,6 +285,7 @@ module.exports = function (grunt) {
                             'node_modules/d3/d3.js',
                             'node_modules/crossfilter2/crossfilter.js',
                             'node_modules/grunt-saucelabs/examples/jasmine/lib/jasmine-jsreporter/jasmine-jsreporter.js',
+                            'node_modules/file-saver/FileSaver.js',
                             'test/env-data.js'
                         ],
                         dest: '<%= conf.web %>/js/'
@@ -311,6 +334,20 @@ module.exports = function (grunt) {
                 files: [
                     {dest: '<%= conf.web %>/resizing/index.html', src: ['<%= conf.web %>/resizing/*.html']}
                 ]
+            },
+            'zoom-listing': {
+                options: {
+                    format: formatFileList,
+                    absolute: true,
+                    title: 'Index of dc.js zoom tests',
+                    heading: 'Interactive test for dc.js chart zoom',
+                    description: 'It\'s hard to conceive of a way to test zoom except by trying it. ' +
+                        'So this is a substitute for automated tests in this area',
+                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.web %>/zoom'
+                },
+                files: [
+                    {dest: '<%= conf.web %>/zoom/index.html', src: ['<%= conf.web %>/zoom/*.html']}
+                ]
             }
         },
 
@@ -347,6 +384,9 @@ module.exports = function (grunt) {
             hooks: {
                 command: 'cp -n scripts/pre-commit.sh .git/hooks/pre-commit' +
                     ' || echo \'Cowardly refusing to overwrite your existing git pre-commit hook.\''
+            },
+            hierarchy: {
+                command: 'dot -Tsvg -o web/img/class-hierarchy.svg class-hierarchy.dot'
             }
         },
         browserify: {
@@ -380,13 +420,13 @@ module.exports = function (grunt) {
             },
             runner: grunt.config('watch').jasmineRunner,
             scripts: grunt.config('watch').scripts,
-            styles: grunt.config('watch').styles
+            sass: grunt.config('watch').sass
         });
         grunt.task.run('watch');
     });
 
     // task aliases
-    grunt.registerTask('build', ['concat', 'uglify', 'cssmin']);
+    grunt.registerTask('build', ['concat', 'sass', 'uglify', 'cssmin']);
     grunt.registerTask('docs', ['build', 'copy', 'jsdoc', 'jsdoc2md', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine-docs']);

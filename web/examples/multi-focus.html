@@ -3,10 +3,13 @@
 <head>
     <title>dc.js - Filter Group Example</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
 </head>
 <body>
 
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
 <div id="test1"></div>
 <div id="test2"></div>
 <div id="test3"></div>
@@ -38,14 +41,15 @@ d3.csv("morley.csv", function(error, experiments) {
             .width(400)
             .height(300)
             .x(d3.scale.linear().domain([6,20]))
-            .brushOn(true)
+            .brushOn(false)
             .yAxisLabel("This is the Y Axis!")
             .dimension(runDimension)
             .group(speedSumGroup);
-        chart.render();
+        return chart;
     }
 
-    bar_chart(chart1);
+    bar_chart(chart1)
+        .brushOn(true);
     bar_chart(chart2);
     bar_chart(chart3);
     bar_chart(chart4);
@@ -102,9 +106,12 @@ d3.csv("morley.csv", function(error, experiments) {
     };
 
     chart1.focusCharts([chart2,chart3,chart4]);
+
+    dc.renderAll();
 });
 
 </script>
 
+</div>
 </body>
 </html>

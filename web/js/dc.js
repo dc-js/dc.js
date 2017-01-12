@@ -278,35 +278,52 @@ dc.redrawAll = function (group) {
 
 /**
  * If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
- * immediately
+ * immediately.
  * @memberof dc
- * @method disableTransitions
+ * @member disableTransitions
  * @type {Boolean}
  * @default false
  */
 dc.disableTransitions = false;
 
-dc.transition = function (selections, duration, callback, name) {
-    if (duration <= 0 || duration === undefined || dc.disableTransitions) {
-        return selections;
+/**
+ * Start a transition on a selection if transitions are globally enabled
+ * ({@link dc.disableTransitions} is false) and the duration is greater than zero; otherwise return
+ * the selection. Since most operations are the same on a d3 selection and a d3 transition, this
+ * allows a common code path for both cases.
+ * @memberof dc
+ * @method transition
+ * @param {d3.selection} selection - the selection to be transitioned
+ * @param {Number|Function} [duration=250] - the duration of the transition in milliseconds, a
+ * function returning the duration, or 0 for no transition
+ * @param {Number|Function} [delay] - the delay of the transition in milliseconds, or a function
+ * returning the delay, or 0 for no delay
+ * @param {String} [name] - the name of the transition (if concurrent transitions on the same
+ * elements are needed)
+ * @returns {d3.transition|d3.selection}
+ */
+dc.transition = function (selection, duration, delay, name) {
+    if (dc.disableTransitions || duration <= 0) {
+        return selection;
     }
 
-    var s = selections
-        .transition(name)
-        .duration(duration);
+    var s = selection.transition(name);
 
-    if (typeof(callback) === 'function') {
-        callback(s);
+    if (duration >= 0 || duration !== undefined) {
+        s = s.duration(duration);
+    }
+    if (delay >= 0 || delay !== undefined) {
+        s = s.delay(delay);
     }
 
     return s;
 };
 
 /* somewhat silly, but to avoid duplicating logic */
-dc.optionalTransition = function (enable, duration, callback, name) {
+dc.optionalTransition = function (enable, duration, delay, name) {
     if (enable) {
         return function (selection) {
-            return dc.transition(selection, duration, callback, name);
+            return dc.transition(selection, duration, delay, name);
         };
     } else {
         return function (selection) {
@@ -350,7 +367,7 @@ dc.units = {};
  * chart.xUnits(dc.units.integers) // already the default
  * @param {Number} start
  * @param {Number} end
- * @return {Number}
+ * @returns {Number}
  */
 dc.units.integers = function (start, end) {
     return Math.abs(end - start);
@@ -359,12 +376,12 @@ dc.units.integers = function (start, end) {
 /**
  * This argument can be passed to the {@link dc.coordinateGridMixin#xUnits .xUnits} function of the to
  * specify ordinal units for the x axis. Usually this parameter is used in combination with passing
- * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales d3.scale.ordinal} to
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md d3.scale.ordinal} to
  * {@link dc.coordinateGridMixin#x .x}.
  * It just returns the domain passed to it, which for ordinal charts is an array of all values.
  * @method ordinal
  * @memberof dc.units
- * @see {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales d3.scale.ordinal}
+ * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md d3.scale.ordinal}
  * @see {@link dc.coordinateGridMixin#xUnits coordinateGridMixin.xUnits}
  * @see {@link dc.coordinateGridMixin#x coordinateGridMixin.x}
  * @example
@@ -373,7 +390,7 @@ dc.units.integers = function (start, end) {
  * @param {*} start
  * @param {*} end
  * @param {Array<String>} domain
- * @return {Array<String>}
+ * @returns {Array<String>}
  */
 dc.units.ordinal = function (start, end, domain) {
     return domain;
@@ -401,7 +418,7 @@ dc.units.fp = {};
  * var thousandths = dc.units.fp.precision(0.001);
  * thousandths(0.5, 1.0) // returns 500
  * @param {Number} precision
- * @return {Function} start-end unit function
+ * @returns {Function} start-end unit function
  */
 dc.units.fp.precision = function (precision) {
     var _f = function (s, e) {
@@ -491,10 +508,10 @@ dc.dateFormat = d3.time.format('%m/%d/%Y');
 dc.printers = {};
 
 /**
- * Converts a list of filters into a readable string
+ * Converts a list of filters into a readable string.
  * @method filters
  * @memberof dc.printers
- * @param {Array<dc.filters|any>} filters
+ * @param {Array<dc.filters>} filters
  * @returns {String}
  */
 dc.printers.filters = function (filters) {
@@ -511,7 +528,7 @@ dc.printers.filters = function (filters) {
 };
 
 /**
- * Converts a filter into a readable string
+ * Converts a filter into a readable string.
  * @method filter
  * @memberof dc.printers
  * @param {dc.filters|any|Array<any>} filter
@@ -537,8 +554,9 @@ dc.printers.filter = function (filter) {
 
 /**
  * Returns a function that given a string property name, can be used to pluck the property off an object.  A function
- * can be passed as the second argument to also alter the data being returned.  This can be a useful shorthand method to create
- * accessor functions.
+ * can be passed as the second argument to also alter the data being returned.
+ *
+ * This can be a useful shorthand method to create accessor functions.
  * @method pluck
  * @memberof dc
  * @example
@@ -572,7 +590,7 @@ dc.pluck = function (n, f) {
 dc.utils = {};
 
 /**
- * Print a single value filter
+ * Print a single value filter.
  * @method printSingleValue
  * @memberof dc.utils
  * @param {any} filter
@@ -602,11 +620,14 @@ dc.utils.printSingleValue.fformat = d3.format('.2f');
  * @todo
  * These assume than any string r is a percentage (whether or not it includes %).
  * They also generate strange results if l is a string.
- * @param {String|Date|Number} l
- * @param {Number} r
+ * @param {String|Date|Number} l the value to modify
+ * @param {Number} r the amount by which to modify the value
+ * @param {String} [t] if `l` is a `Date`, the
+ * [interval](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval) in
+ * the `d3.time` namespace
  * @returns {String|Date|Number}
  */
-dc.utils.add = function (l, r) {
+dc.utils.add = function (l, r, t) {
     if (typeof r === 'string') {
         r = r.replace('%', '');
     }
@@ -615,10 +636,11 @@ dc.utils.add = function (l, r) {
         if (typeof r === 'string') {
             r = +r;
         }
-        var d = new Date();
-        d.setTime(l.getTime());
-        d.setDate(l.getDate() + r);
-        return d;
+        if (t === 'millis') {
+            return new Date(l.getTime() + r);
+        }
+        t = t || 'day';
+        return d3.time[t].offset(l, r);
     } else if (typeof r === 'string') {
         var percentage = (+r / 100);
         return l > 0 ? l * (1 + percentage) : l * (1 - percentage);
@@ -634,11 +656,14 @@ dc.utils.add = function (l, r) {
  * @todo
  * These assume than any string r is a percentage (whether or not it includes %).
  * They also generate strange results if l is a string.
- * @param {String|Date|Number} l
- * @param {Number} r
+ * @param {String|Date|Number} l the value to modify
+ * @param {Number} r the amount by which to modify the value
+ * @param {String} [t] if `l` is a `Date`, the
+ * [interval](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval) in
+ * the `d3.time` namespace
  * @returns {String|Date|Number}
  */
-dc.utils.subtract = function (l, r) {
+dc.utils.subtract = function (l, r, t) {
     if (typeof r === 'string') {
         r = r.replace('%', '');
     }
@@ -647,10 +672,11 @@ dc.utils.subtract = function (l, r) {
         if (typeof r === 'string') {
             r = +r;
         }
-        var d = new Date();
-        d.setTime(l.getTime());
-        d.setDate(l.getDate() - r);
-        return d;
+        if (t === 'millis') {
+            return new Date(l.getTime() - r);
+        }
+        t = t || 'day';
+        return d3.time[t].offset(l, -r);
     } else if (typeof r === 'string') {
         var percentage = (+r / 100);
         return l < 0 ? l * (1 + percentage) : l * (1 - percentage);
@@ -739,7 +765,7 @@ dc.utils.nameToId = function (name) {
 };
 
 /**
- * Append or select an item on a parent element
+ * Append or select an item on a parent element.
  * @method appendOrSelect
  * @memberof dc.utils
  * @param {d3.selection} parent
@@ -875,7 +901,7 @@ dc.filters = {};
  * @memberof dc.filters
  * @param {Number} low
  * @param {Number} high
- * @return {Array<Number>}
+ * @returns {Array<Number>}
  * @constructor
  */
 dc.filters.RangedFilter = function (low, high) {
@@ -897,7 +923,7 @@ dc.filters.RangedFilter = function (low, high) {
  * @name TwoDimensionalFilter
  * @memberof dc.filters
  * @param {Array<Number>} filter
- * @return {Array<Number>}
+ * @returns {Array<Number>}
  * @constructor
  */
 dc.filters.TwoDimensionalFilter = function (filter) {
@@ -929,7 +955,7 @@ dc.filters.TwoDimensionalFilter = function (filter) {
  * @name RangedTwoDimensionalFilter
  * @memberof dc.filters
  * @param {Array<Array<Number>>} filter
- * @return {Array<Array<Number>>}
+ * @returns {Array<Array<Number>>}
  * @constructor
  */
 dc.filters.RangedTwoDimensionalFilter = function (filter) {
@@ -951,9 +977,6 @@ dc.filters.RangedTwoDimensionalFilter = function (filter) {
         var x, y;
 
         if (value instanceof Array) {
-            if (value.length !== 2) {
-                return false;
-            }
             x = value[0];
             y = value[1];
         } else {
@@ -977,7 +1000,7 @@ dc.filters.RangedTwoDimensionalFilter = function (filter) {
  * @memberof dc
  * @mixin
  * @param {Object} _chart
- * @return {dc.baseMixin}
+ * @returns {dc.baseMixin}
  */
 dc.baseMixin = function (_chart) {
     _chart.__dcFlag__ = dc.utils.uniqueId();
@@ -1021,6 +1044,8 @@ dc.baseMixin = function (_chart) {
     var _controlsUseVisibility = false;
 
     var _transitionDuration = 750;
+
+    var _transitionDelay = 0;
 
     var _filterPrinter = dc.printers.filters;
 
@@ -1097,8 +1122,7 @@ dc.baseMixin = function (_chart) {
      * chart.height(function(anchor) { return doSomethingWith(anchor); }); // set the chart's height with a function
      * chart.height(null); // reset the height to the default auto calculation
      * @param {Number|Function} [height]
-     * @return {Number}
-     * @return {dc.baseMixin}
+     * @returns {Number|dc.baseMixin}
      */
     _chart.height = function (height) {
         if (!arguments.length) {
@@ -1127,8 +1151,7 @@ dc.baseMixin = function (_chart) {
      *     return (width && width > chart.minWidth()) ? width : chart.minWidth();
      * });
      * @param {Number|Function} [width]
-     * @return {Number}
-     * @return {dc.baseMixin}
+     * @returns {Number|dc.baseMixin}
      */
     _chart.width = function (width) {
         if (!arguments.length) {
@@ -1151,8 +1174,7 @@ dc.baseMixin = function (_chart) {
      * @instance
      * @see {@link dc.baseMixin#width width}
      * @param {Number} [minWidth=200]
-     * @return {Number}
-     * @return {dc.baseMixin}
+     * @returns {Number|dc.baseMixin}
      */
     _chart.minWidth = function (minWidth) {
         if (!arguments.length) {
@@ -1170,8 +1192,7 @@ dc.baseMixin = function (_chart) {
      * @instance
      * @see {@link dc.baseMixin#height height}
      * @param {Number} [minHeight=200]
-     * @return {Number}
-     * @return {dc.baseMixin}
+     * @returns {Number|dc.baseMixin}
      */
     _chart.minHeight = function (minHeight) {
         if (!arguments.length) {
@@ -1184,22 +1205,21 @@ dc.baseMixin = function (_chart) {
     /**
      * **mandatory**
      *
-     * Set or get the dimension attribute of a chart. In `dc`, a dimension can be any valid [crossfilter
-     * dimension](https://github.com/square/crossfilter/wiki/API-Reference#wiki-dimension).
+     * Set or get the dimension attribute of a chart. In `dc`, a dimension can be any valid
+     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension crossfilter dimension}
      *
      * If a value is given, then it will be used as the new dimension. If no value is specified then
      * the current dimension will be returned.
      * @method dimension
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/square/crossfilter/wiki/API-Reference#dimension crossfilter.dimension}
+     * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension crossfilter.dimension}
      * @example
      * var index = crossfilter([]);
      * var dimension = index.dimension(dc.pluck('key'));
      * chart.dimension(dimension);
      * @param {crossfilter.dimension} [dimension]
-     * @return {crossfilter.dimension}
-     * @return {dc.baseMixin}
+     * @returns {crossfilter.dimension|dc.baseMixin}
      */
     _chart.dimension = function (dimension) {
         if (!arguments.length) {
@@ -1213,7 +1233,7 @@ dc.baseMixin = function (_chart) {
     /**
      * Set the data callback or retrieve the chart's data set. The data callback is passed the chart's
      * group and by default will return
-     * {@link https://github.com/square/crossfilter/wiki/API-Reference#group_all group.all}.
+     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_all group.all}.
      * This behavior may be modified to, for instance, return only the top 5 groups.
      * @method data
      * @memberof dc.baseMixin
@@ -1224,8 +1244,7 @@ dc.baseMixin = function (_chart) {
      *
      * chart.data(function (group) { return group.top(5); });
      * @param {Function} [callback]
-     * @return {*}
-     * @return {dc.baseMixin}
+     * @returns {*|dc.baseMixin}
      */
     _chart.data = function (callback) {
         if (!arguments.length) {
@@ -1240,7 +1259,7 @@ dc.baseMixin = function (_chart) {
      * **mandatory**
      *
      * Set or get the group attribute of a chart. In `dc` a group is a
-     * {@link https://github.com/square/crossfilter/wiki/API-Reference#group-map-reduce crossfilter group}.
+     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group-map-reduce crossfilter group}.
      * Usually the group should be created from the particular dimension associated with the same chart. If a value is
      * given, then it will be used as the new group.
      *
@@ -1249,7 +1268,7 @@ dc.baseMixin = function (_chart) {
      * @method group
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/square/crossfilter/wiki/API-Reference#group-map-reduce crossfilter.group}
+     * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group-map-reduce crossfilter.group}
      * @example
      * var index = crossfilter([]);
      * var dimension = index.dimension(dc.pluck('key'));
@@ -1257,8 +1276,7 @@ dc.baseMixin = function (_chart) {
      * chart.group(dimension.group(crossfilter.reduceSum()));
      * @param {crossfilter.group} [group]
      * @param {String} [name]
-     * @return {crossfilter.group}
-     * @return {dc.baseMixin}
+     * @returns {crossfilter.group|dc.baseMixin}
      */
     _chart.group = function (group, name) {
         if (!arguments.length) {
@@ -1271,19 +1289,18 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-     * Get or set an accessor to order ordinal dimensions.  This uses
-     * {@link https://github.com/square/crossfilter/wiki/API-Reference#quicksort_by crossfilter.quicksort.by} as the
-     * sort.
+     * Get or set an accessor to order ordinal dimensions.  The chart uses
+     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#quicksort_by crossfilter.quicksort.by}
+     * to sort elements; this accessor returns the value to order on.
      * @method ordering
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/square/crossfilter/wiki/API-Reference#quicksort_by crossfilter.quicksort.by}
+     * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#quicksort_by crossfilter.quicksort.by}
      * @example
      * // Default ordering accessor
      * _chart.ordering(dc.pluck('key'));
      * @param {Function} [orderFunction]
-     * @return {Function}
-     * @return {dc.baseMixin}
+     * @returns {Function|dc.baseMixin}
      */
     _chart.ordering = function (orderFunction) {
         if (!arguments.length) {
@@ -1310,13 +1327,12 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-     * Clear all filters associated with this chart
-     *
-     * The same can be achieved by calling {@link dc.baseMixin#filter chart.filter(null)}.
+     * Clear all filters associated with this chart. The same effect can be achieved by calling
+     * {@link dc.baseMixin#filter chart.filter(null)}.
      * @method filterAll
      * @memberof dc.baseMixin
      * @instance
-     * @return {dc.baseMixin}
+     * @returns {dc.baseMixin}
      */
     _chart.filterAll = function () {
         return _chart.filter(null);
@@ -1331,11 +1347,11 @@ dc.baseMixin = function (_chart) {
      * @method select
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Selections d3.selection}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#d3_select d3.select}
      * @example
-     * // Similar to:
-     * d3.select('#chart-id').select(selector);
-     * @return {d3.selection}
+     * // Has the same effect as d3.select('#chart-id').select(selector)
+     * chart.select(selector)
+     * @returns {d3.selection}
      */
     _chart.select = function (s) {
         return _root.select(s);
@@ -1349,11 +1365,11 @@ dc.baseMixin = function (_chart) {
      * @method selectAll
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Selections d3.selection}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#d3_selectAll d3.selectAll}
      * @example
-     * // Similar to:
-     * d3.select('#chart-id').selectAll(selector);
-     * @return {d3.selection}
+     * // Has the same effect as d3.select('#chart-id').selectAll(selector)
+     * chart.selectAll(selector)
+     * @returns {d3.selection}
      */
     _chart.selectAll = function (s) {
         return _root ? _root.selectAll(s) : null;
@@ -1361,7 +1377,7 @@ dc.baseMixin = function (_chart) {
 
     /**
      * Set the root SVGElement to either be an existing chart's root; or any valid [d3 single
-     * selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom
+     * selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom
      * block element such as a div; or a dom element or d3 selection. Optionally registers the chart
      * within the chartGroup. This class is called internally on chart initialization, but be called
      * again to relocate the chart. However, it will orphan any previously created SVGElements.
@@ -1370,8 +1386,7 @@ dc.baseMixin = function (_chart) {
      * @instance
      * @param {anchorChart|anchorSelector|anchorNode} [parent]
      * @param {String} [chartGroup]
-     * @return {String|node|d3.selection}
-     * @return {dc.baseMixin}
+     * @returns {String|node|d3.selection|dc.baseMixin}
      */
     _chart.anchor = function (parent, chartGroup) {
         if (!arguments.length) {
@@ -1403,7 +1418,7 @@ dc.baseMixin = function (_chart) {
      * @method anchorName
      * @memberof dc.baseMixin
      * @instance
-     * @return {String}
+     * @returns {String}
      */
     _chart.anchorName = function () {
         var a = _chart.anchor();
@@ -1426,8 +1441,7 @@ dc.baseMixin = function (_chart) {
      * @instance
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement HTMLElement}
      * @param {HTMLElement} [rootElement]
-     * @return {HTMLElement}
-     * @return {dc.baseMixin}
+     * @returns {HTMLElement|dc.baseMixin}
      */
     _chart.root = function (rootElement) {
         if (!arguments.length) {
@@ -1446,8 +1460,7 @@ dc.baseMixin = function (_chart) {
      * @instance
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/SVGElement SVGElement}
      * @param {SVGElement|d3.selection} [svgElement]
-     * @return {SVGElement|d3.selection}
-     * @return {dc.baseMixin}
+     * @returns {SVGElement|d3.selection|dc.baseMixin}
      */
     _chart.svg = function (svgElement) {
         if (!arguments.length) {
@@ -1463,7 +1476,7 @@ dc.baseMixin = function (_chart) {
      * @memberof dc.baseMixin
      * @instance
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/SVGElement SVGElement}
-     * @return {SVGElement}
+     * @returns {SVGElement}
      */
     _chart.resetSvg = function () {
         _chart.select('svg').remove();
@@ -1486,15 +1499,26 @@ dc.baseMixin = function (_chart) {
 
     /**
      * Set or get the filter printer function. The filter printer function is used to generate human
-     * friendly text for filter value(s) associated with the chart instance. By default dc charts use a
-     * default filter printer `dc.printers.filter` that provides simple printing support for both
-     * single value and ranged filters.
+     * friendly text for filter value(s) associated with the chart instance. The text will get shown
+     * in the `.filter element; see {@link dc.baseMixin#turnOnControls turnOnControls}.
+     *
+     * By default dc charts use a default filter printer {@link dc.printers.filters dc.printers.filters}
+     * that provides simple printing support for both single value and ranged filters.
      * @method filterPrinter
      * @memberof dc.baseMixin
      * @instance
-     * @param {Function} [filterPrinterFunction=dc.printers.filter]
-     * @return {Function}
-     * @return {dc.baseMixin}
+     * @example
+     * // for a chart with an ordinal brush, print the filters in upper case
+     * chart.filterPrinter(function(filters) {
+     *   return filters.map(function(f) { return f.toUpperCase(); }).join(', ');
+     * });
+     * // for a chart with a range brush, print the filter as start and extent
+     * chart.filterPrinter(function(filters) {
+     *   return 'start ' + dc.utils.printSingleValue(filters[0][0]) +
+     *     ' extent ' + dc.utils.printSingleValue(filters[0][1] - filters[0][0]);
+     * });
+     * @param {Function} [filterPrinterFunction=dc.printers.filters]
+     * @returns {Function|dc.baseMixin}
      */
     _chart.filterPrinter = function (filterPrinterFunction) {
         if (!arguments.length) {
@@ -1511,8 +1535,7 @@ dc.baseMixin = function (_chart) {
      * @memberof dc.baseMixin
      * @instance
      * @param {Boolean} [controlsUseVisibility=false]
-     * @return {Boolean}
-     * @return {dc.baseMixin}
+     * @returns {Boolean|dc.baseMixin}
      **/
     _chart.controlsUseVisibility = function (useVisibility) {
         if (!arguments.length) {
@@ -1534,7 +1557,7 @@ dc.baseMixin = function (_chart) {
      * @method turnOnControls
      * @memberof dc.baseMixin
      * @instance
-     * @return {dc.baseMixin}
+     * @returns {dc.baseMixin}
      */
     _chart.turnOnControls = function () {
         if (_root) {
@@ -1551,7 +1574,7 @@ dc.baseMixin = function (_chart) {
      * @memberof dc.baseMixin
      * @see {@link dc.baseMixin#turnOnControls turnOnControls}
      * @instance
-     * @return {dc.baseMixin}
+     * @returns {dc.baseMixin}
      */
     _chart.turnOffControls = function () {
         if (_root) {
@@ -1569,14 +1592,29 @@ dc.baseMixin = function (_chart) {
      * @memberof dc.baseMixin
      * @instance
      * @param {Number} [duration=750]
-     * @return {Number}
-     * @return {dc.baseMixin}
+     * @returns {Number|dc.baseMixin}
      */
     _chart.transitionDuration = function (duration) {
         if (!arguments.length) {
             return _transitionDuration;
         }
         _transitionDuration = duration;
+        return _chart;
+    };
+
+    /**
+     * Set or get the animation transition delay (in milliseconds) for this chart instance.
+     * @method transitionDelay
+     * @memberof dc.baseMixin
+     * @instance
+     * @param {Number} [delay=0]
+     * @returns {Number|dc.baseMixin}
+     */
+    _chart.transitionDelay = function (delay) {
+        if (!arguments.length) {
+            return _transitionDelay;
+        }
+        _transitionDelay = delay;
         return _chart;
     };
 
@@ -1603,7 +1641,7 @@ dc.baseMixin = function (_chart) {
      * @method render
      * @memberof dc.baseMixin
      * @instance
-     * @return {dc.baseMixin}
+     * @returns {dc.baseMixin}
      */
     _chart.render = function () {
         _height = _width = undefined; // force recalculate
@@ -1627,7 +1665,7 @@ dc.baseMixin = function (_chart) {
     _chart._activateRenderlets = function (event) {
         _listeners.pretransition(_chart);
         if (_chart.transitionDuration() > 0 && _svg) {
-            _svg.transition().duration(_chart.transitionDuration())
+            _svg.transition().duration(_chart.transitionDuration()).delay(_chart.transitionDelay())
                 .each('end', function () {
                     _listeners.renderlet(_chart);
                     if (event) {
@@ -1646,14 +1684,14 @@ dc.baseMixin = function (_chart) {
      * Calling redraw will cause the chart to re-render data changes incrementally. If there is no
      * change in the underlying data dimension then calling this method will have no effect on the
      * chart. Most chart interaction in dc will automatically trigger this method through internal
-     * events (in particular {@link dc.redrawAll dc.redrawAll}; therefore, you only need to
+     * events (in particular {@link dc.redrawAll dc.redrawAll}); therefore, you only need to
      * manually invoke this function if data is manipulated outside of dc's control (for example if
      * data is loaded in the background using
-     * {@link https://github.com/square/crossfilter/wiki/API-Reference#crossfilter_add crossfilter.add}.
+     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#crossfilter_add crossfilter.add}).
      * @method redraw
      * @memberof dc.baseMixin
      * @instance
-     * @return {dc.baseMixin}
+     * @returns {dc.baseMixin}
      */
     _chart.redraw = function () {
         sizeSvg();
@@ -1681,7 +1719,7 @@ dc.baseMixin = function (_chart) {
      * @method commitHandler
      * @memberof dc.baseMixin
      * @instance
-     * @return {dc.baseMixin}
+     * @returns {dc.baseMixin}
      */
     _chart.commitHandler = function (commitHandler) {
         if (!arguments.length) {
@@ -1698,7 +1736,7 @@ dc.baseMixin = function (_chart) {
      * @method redrawGroup
      * @memberof dc.baseMixin
      * @instance
-     * @return {dc.baseMixin}
+     * @returns {dc.baseMixin}
      */
     _chart.redrawGroup = function () {
         if (_commitHandler) {
@@ -1721,7 +1759,7 @@ dc.baseMixin = function (_chart) {
      * @method renderGroup
      * @memberof dc.baseMixin
      * @instance
-     * @return {dc.baseMixin}
+     * @returns {dc.baseMixin}
      */
     _chart.renderGroup = function () {
         if (_commitHandler) {
@@ -1780,8 +1818,7 @@ dc.baseMixin = function (_chart) {
      *     return false;
      * });
      * @param {Function} [hasFilterHandler]
-     * @return {Function}
-     * @return {dc.baseMixin}
+     * @returns {Function|dc.baseMixin}
      */
     _chart.hasFilterHandler = function (hasFilterHandler) {
         if (!arguments.length) {
@@ -1799,7 +1836,7 @@ dc.baseMixin = function (_chart) {
      * @instance
      * @see {@link dc.baseMixin#hasFilterHandler hasFilterHandler}
      * @param {*} [filter]
-     * @return {Boolean}
+     * @returns {Boolean}
      */
     _chart.hasFilter = function (filter) {
         return _hasFilterHandler(_filters, filter);
@@ -1842,8 +1879,7 @@ dc.baseMixin = function (_chart) {
      *     return filters;
      * });
      * @param {Function} [removeFilterHandler]
-     * @return {Function}
-     * @return {dc.baseMixin}
+     * @returns {Function|dc.baseMixin}
      */
     _chart.removeFilterHandler = function (removeFilterHandler) {
         if (!arguments.length) {
@@ -1880,8 +1916,7 @@ dc.baseMixin = function (_chart) {
      *     return filters;
      * });
      * @param {Function} [addFilterHandler]
-     * @return {Function}
-     * @return {dc.baseMixin}
+     * @returns {Function|dc.baseMixin}
      */
     _chart.addFilterHandler = function (addFilterHandler) {
         if (!arguments.length) {
@@ -1916,7 +1951,7 @@ dc.baseMixin = function (_chart) {
      *     return filters;
      * });
      * @param {Function} [resetFilterHandler]
-     * @return {dc.baseMixin}
+     * @returns {dc.baseMixin}
      */
     _chart.resetFilterHandler = function (resetFilterHandler) {
         if (!arguments.length) {
@@ -1936,21 +1971,54 @@ dc.baseMixin = function (_chart) {
         return filters;
     }
 
-    _chart.replaceFilter = function (_) {
-        _filters = [];
-        _chart.filter(_);
+    /**
+     * Replace the chart filter. This is equivalent to calling `chart.filter(null).filter(filter)`
+     * but more efficient because the filter is only applied once.
+     *
+     * @method replaceFilter
+     * @memberof dc.baseMixin
+     * @instance
+     * @param {*} [filter]
+     * @returns {dc.baseMixin}
+     **/
+    _chart.replaceFilter = function (filter) {
+        _filters = _resetFilterHandler(_filters);
+        _chart.filter(filter);
     };
 
     /**
-     * Filter the chart by the given value or return the current filter if the input parameter is missing.
-     * If the passed filter is not currently in the chart's filters, it is added to the filters by the
-     * {@link dc.baseMixin#addFilterHandler addFilterHandler}.  If a filter exists already within the chart's
-     * filters, it will be removed by the {@link dc.baseMixin#removeFilterHandler removeFilterHandler}.  If
-     * a `null` value was passed at the filter, this denotes that the filters should be reset, and is performed
-     * by the {@link dc.baseMixin#resetFilterHandler resetFilterHandler}.
+     * Filter the chart by the given parameter, or return the current filter if no input parameter
+     * is given.
      *
-     * Once the filters array has been updated, the filters are applied to the crossfilter.dimension, using the
-     * {@link dc.baseMixin#filterHandler filterHandler}.
+     * The filter parameter can take one of these forms:
+     * * A single value: the value will be toggled (added if it is not present in the current
+     * filters, removed if it is present)
+     * * An array containing a single array of values (`[[value,value,value]]`): each value is
+     * toggled
+     * * When appropriate for the chart, a {@link dc.filters dc filter object} such as
+     *   * {@link dc.filters.RangedFilter `dc.filters.RangedFilter`} for the
+     * {@link dc.coordinateGridMixin dc.coordinateGridMixin} charts
+     *   * {@link dc.filters.TwoDimensionalFilter `dc.filters.TwoDimensionalFilter`} for the
+     * {@link dc.heatMap heat map}
+     *   * {@link dc.filters.RangedTwoDimensionalFilter `dc.filters.RangedTwoDimensionalFilter`}
+     * for the {@link dc.scatterPlot scatter plot}
+     * * `null`: the filter will be reset using the
+     * {@link dc.baseMixin#resetFilterHandler resetFilterHandler}
+     *
+     * Note that this is always a toggle (even when it doesn't make sense for the filter type). If
+     * you wish to replace the current filter, either call `chart.filter(null)` first - or it's more
+     * efficient to call {@link dc.baseMixin#replaceFilter `chart.replaceFilter(filter)`} instead.
+     *
+     * Each toggle is executed by checking if the value is already present using the
+     * {@link dc.baseMixin#hasFilterHandler hasFilterHandler}; if it is not present, it is added
+     * using the {@link dc.baseMixin#addFilterHandler addFilterHandler}; if it is already present,
+     * it is removed using the {@link dc.baseMixin#removeFilterHandler removeFilterHandler}.
+     *
+     * Once the filters array has been updated, the filters are applied to the
+     * crossfilter dimension, using the {@link dc.baseMixin#filterHandler filterHandler}.
+     *
+     * Once you have set the filters, call {@link dc.baseMixin#redrawGroup `chart.redrawGroup()`}
+     * (or {@link dc.redrawAll `dc.redrawAll()`}) to redraw the chart's group.
      * @method filter
      * @memberof dc.baseMixin
      * @instance
@@ -1963,11 +2031,13 @@ dc.baseMixin = function (_chart) {
      * chart.filter('Sunday');
      * // filter by a single age
      * chart.filter(18);
-     * // filter by range -- note the use of dc.filters.RangedFilter
-     * // which is different from the regular crossfilter syntax, dimension.filter([15,20])
+     * // filter by a set of states
+     * chart.filter([['MA', 'TX', 'ND', 'WA']]);
+     * // filter by range -- note the use of dc.filters.RangedFilter, which is different
+     * // from the syntax for filtering a crossfilter dimension directly, dimension.filter([15,20])
      * chart.filter(dc.filters.RangedFilter(15,20));
      * @param {*} [filter]
-     * @return {dc.baseMixin}
+     * @returns {dc.baseMixin}
      */
     _chart.filter = function (filter) {
         if (!arguments.length) {
@@ -2011,7 +2081,7 @@ dc.baseMixin = function (_chart) {
      * @method filters
      * @memberof dc.baseMixin
      * @instance
-     * @return {Array<*>}
+     * @returns {Array<*>}
      */
     _chart.filters = function () {
         return _filters;
@@ -2055,14 +2125,22 @@ dc.baseMixin = function (_chart) {
      * @method filterHandler
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/square/crossfilter/wiki/API-Reference#dimension_filter crossfilter.dimension.filter}
+     * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter crossfilter.dimension.filter}
      * @example
-     * // default filter handler
+     * // the default filter handler handles all possible cases for the charts in dc.js
+     * // you can replace it with something more specialized for your own chart
      * chart.filterHandler(function (dimension, filters) {
-     *     dimension.filter(null);
      *     if (filters.length === 0) {
+     *         // the empty case (no filtering)
      *         dimension.filter(null);
+     *     } else if (filters.length === 1 && !filters[0].isFiltered) {
+     *         // single value and not a function-based filter
+     *         dimension.filterExact(filters[0]);
+     *     } else if (filters.length === 1 && filters[0].filterType === 'RangedFilter') {
+     *         // single range-based filter
+     *         dimension.filterRange(filters[0]);
      *     } else {
+     *         // an array of values, or an array of filter objects
      *         dimension.filterFunction(function (d) {
      *             for (var i = 0; i < filters.length; i++) {
      *                 var filter = filters[i];
@@ -2085,8 +2163,7 @@ dc.baseMixin = function (_chart) {
      *     return newFilter; // set the actual filter value to the new value
      * });
      * @param {Function} [filterHandler]
-     * @return {Function}
-     * @return {dc.baseMixin}
+     * @returns {Function|dc.baseMixin}
      */
     _chart.filterHandler = function (filterHandler) {
         if (!arguments.length) {
@@ -2142,8 +2219,7 @@ dc.baseMixin = function (_chart) {
      * // custom key accessor for a multi-value crossfilter reduction
      * chart.keyAccessor(function(p) { return p.value.absGain; });
      * @param {Function} [keyAccessor]
-     * @return {Function}
-     * @return {dc.baseMixin}
+     * @returns {Function|dc.baseMixin}
      */
     _chart.keyAccessor = function (keyAccessor) {
         if (!arguments.length) {
@@ -2167,8 +2243,7 @@ dc.baseMixin = function (_chart) {
      * // custom value accessor for a multi-value crossfilter reduction
      * chart.valueAccessor(function(p) { return p.value.percentageGain; });
      * @param {Function} [valueAccessor]
-     * @return {Function}
-     * @return {dc.baseMixin}
+     * @returns {Function|dc.baseMixin}
      */
     _chart.valueAccessor = function (valueAccessor) {
         if (!arguments.length) {
@@ -2193,8 +2268,7 @@ dc.baseMixin = function (_chart) {
      * chart.label(function(d) { return d.data.key + '(' + Math.floor(d.data.value / all.value() * 100) + '%)'; });
      * @param {Function} [labelFunction]
      * @param {Boolean} [enableLabels=true]
-     * @return {Function}
-     * @return {dc.baseMixin}
+     * @returns {Function|dc.baseMixin}
      */
     _chart.label = function (labelFunction, enableLabels) {
         if (!arguments.length) {
@@ -2213,8 +2287,7 @@ dc.baseMixin = function (_chart) {
      * @memberof dc.baseMixin
      * @instance
      * @param {Boolean} [renderLabel=false]
-     * @return {Boolean}
-     * @return {dc.baseMixin}
+     * @returns {Boolean|dc.baseMixin}
      */
     _chart.renderLabel = function (renderLabel) {
         if (!arguments.length) {
@@ -2234,7 +2307,7 @@ dc.baseMixin = function (_chart) {
      * @memberof dc.baseMixin
      * @instance
      * @example
-     * // default title function just return the key
+     * // default title function shows "key: value"
      * chart.title(function(d) { return d.key + ': ' + d.value; });
      * // title function has access to the standard d3 data binding and can get quite complicated
      * chart.title(function(p) {
@@ -2245,8 +2318,7 @@ dc.baseMixin = function (_chart) {
      *        + 'Fluctuation / Index Ratio: ' + numberFormat(p.value.fluctuationPercentage) + '%';
      * });
      * @param {Function} [titleFunction]
-     * @return {Function}
-     * @return {dc.baseMixin}
+     * @returns {Function|dc.baseMixin}
      */
     _chart.title = function (titleFunction) {
         if (!arguments.length) {
@@ -2263,8 +2335,7 @@ dc.baseMixin = function (_chart) {
      * @memberof dc.baseMixin
      * @instance
      * @param {Boolean} [renderTitle=true]
-     * @return {Boolean}
-     * @return {dc.baseMixin}
+     * @returns {Boolean|dc.baseMixin}
      */
     _chart.renderTitle = function (renderTitle) {
         if (!arguments.length) {
@@ -2296,7 +2367,7 @@ dc.baseMixin = function (_chart) {
      *     moveChart.filter(chart.filter());
      * });
      * @param {Function} renderletFunction
-     * @return {dc.baseMixin}
+     * @returns {dc.baseMixin}
      */
     _chart.renderlet = dc.logger.deprecate(function (renderletFunction) {
         _chart.on('renderlet.' + dc.utils.uniqueId(), renderletFunction);
@@ -2310,8 +2381,7 @@ dc.baseMixin = function (_chart) {
      * @memberof dc.baseMixin
      * @instance
      * @param {String} [chartGroup]
-     * @return {String}
-     * @return {dc.baseMixin}
+     * @returns {String|dc.baseMixin}
      */
     _chart.chartGroup = function (chartGroup) {
         if (!arguments.length) {
@@ -2330,14 +2400,14 @@ dc.baseMixin = function (_chart) {
     /**
      * Expire the internal chart cache. dc charts cache some data internally on a per chart basis to
      * speed up rendering and avoid unnecessary calculation; however it might be useful to clear the
-     * cache if you have changed state which will affect rendering.  For example if you invoke the
-     * {@link https://github.com/square/crossfilter/wiki/API-Reference#crossfilter_add crossfilter.add}
-     * function or reset group or dimension after rendering it is a good idea to
+     * cache if you have changed state which will affect rendering.  For example, if you invoke
+     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#crossfilter_add crossfilter.add}
+     * function or reset group or dimension after rendering, it is a good idea to
      * clear the cache to make sure charts are rendered properly.
      * @method expireCache
      * @memberof dc.baseMixin
      * @instance
-     * @return {dc.baseMixin}
+     * @returns {dc.baseMixin}
      */
     _chart.expireCache = function () {
         // do nothing in base, should be overridden by sub-function
@@ -2353,8 +2423,7 @@ dc.baseMixin = function (_chart) {
      * @example
      * chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
      * @param {dc.legend} [legend]
-     * @return {dc.legend}
-     * @return {dc.baseMixin}
+     * @returns {dc.legend|dc.baseMixin}
      */
     _chart.legend = function (legend) {
         if (!arguments.length) {
@@ -2370,7 +2439,7 @@ dc.baseMixin = function (_chart) {
      * @method chartID
      * @memberof dc.baseMixin
      * @instance
-     * @return {String}
+     * @returns {String}
      */
     _chart.chartID = function () {
         return _chart.__dcFlag__;
@@ -2385,7 +2454,7 @@ dc.baseMixin = function (_chart) {
      * @example
      * chart.options({dimension: myDimension, group: myGroup});
      * @param {{}} opts
-     * @return {dc.baseMixin}
+     * @returns {dc.baseMixin}
      */
     _chart.options = function (opts) {
         var applyOptions = [
@@ -2431,7 +2500,7 @@ dc.baseMixin = function (_chart) {
      * @method on
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Internals#dispatch_on d3.dispatch.on}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Internals.md#dispatch_on d3.dispatch.on}
      * @example
      * .on('renderlet', function(chart, filter){...})
      * .on('pretransition', function(chart, filter){...})
@@ -2443,7 +2512,7 @@ dc.baseMixin = function (_chart) {
      * .on('zoomed', function(chart, filter){...})
      * @param {String} event
      * @param {Function} listener
-     * @return {dc.baseMixin}
+     * @returns {dc.baseMixin}
      */
     _chart.on = function (event, listener) {
         _listeners.on(event, listener);
@@ -2460,7 +2529,7 @@ dc.baseMixin = function (_chart) {
  * @memberof dc
  * @mixin
  * @param {Object} _chart
- * @return {dc.marginMixin}
+ * @returns {dc.marginMixin}
  */
 dc.marginMixin = function (_chart) {
     var _margin = {top: 10, right: 50, bottom: 30, left: 30};
@@ -2476,8 +2545,7 @@ dc.marginMixin = function (_chart) {
      * chart.margins().left = 50;
      * leftMargin = chart.margins().left; // now 50
      * @param {{top: Number, right: Number, left: Number, bottom: Number}} [margins={top: 10, right: 50, bottom: 30, left: 30}]
-     * @return {{top: Number, right: Number, left: Number, bottom: Number}}
-     * @return {dc.marginMixin}
+     * @returns {{top: Number, right: Number, left: Number, bottom: Number}|dc.marginMixin}
      */
     _chart.margins = function (margins) {
         if (!arguments.length) {
@@ -2505,7 +2573,7 @@ dc.marginMixin = function (_chart) {
  * @memberof dc
  * @mixin
  * @param {Object} _chart
- * @return {dc.colorMixin}
+ * @returns {dc.colorMixin}
  */
 dc.colorMixin = function (_chart) {
     var _colors = d3.scale.category20c();
@@ -2519,7 +2587,7 @@ dc.colorMixin = function (_chart) {
      * @method colors
      * @memberof dc.colorMixin
      * @instance
-     * @see {@link http://github.com/mbostock/d3/wiki/Scales d3.scale}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
      * @example
      * // alternate categorical scale
      * chart.colors(d3.scale.category20b());
@@ -2530,8 +2598,7 @@ dc.colorMixin = function (_chart) {
      * // set a linear scale
      * chart.linearColors(["#4575b4", "#ffffbf", "#a50026"]);
      * @param {d3.scale} [colorScale=d3.scale.category20c()]
-     * @return {d3.scale}
-     * @return {dc.colorMixin}
+     * @returns {d3.scale|dc.colorMixin}
      */
     _chart.colors = function (colorScale) {
         if (!arguments.length) {
@@ -2547,13 +2614,13 @@ dc.colorMixin = function (_chart) {
 
     /**
      * Convenience method to set the color scale to
-     * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales#ordinal d3.scale.ordinal} with
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal d3.scale.ordinal} with
      * range `r`.
      * @method ordinalColors
      * @memberof dc.colorMixin
      * @instance
      * @param {Array<String>} r
-     * @return {dc.colorMixin}
+     * @returns {dc.colorMixin}
      */
     _chart.ordinalColors = function (r) {
         return _chart.colors(d3.scale.ordinal().range(r));
@@ -2565,7 +2632,7 @@ dc.colorMixin = function (_chart) {
      * @memberof dc.colorMixin
      * @instance
      * @param {Array<Number>} r
-     * @return {dc.colorMixin}
+     * @returns {dc.colorMixin}
      */
     _chart.linearColors = function (r) {
         return _chart.colors(d3.scale.linear()
@@ -2586,8 +2653,7 @@ dc.colorMixin = function (_chart) {
      * // color accessor for a multi-value crossfilter reduction
      * .colorAccessor(function (d){return d.value.absGain;})
      * @param {Function} [colorAccessor]
-     * @return {Function}
-     * @return {dc.colorMixin}
+     * @returns {Function|dc.colorMixin}
      */
     _chart.colorAccessor = function (colorAccessor) {
         if (!arguments.length) {
@@ -2613,8 +2679,7 @@ dc.colorMixin = function (_chart) {
      * @memberof dc.colorMixin
      * @instance
      * @param {Array<String>} [domain]
-     * @return {Array<String>}
-     * @return {dc.colorMixin}
+     * @returns {Array<String>|dc.colorMixin}
      */
     _chart.colorDomain = function (domain) {
         if (!arguments.length) {
@@ -2630,7 +2695,7 @@ dc.colorMixin = function (_chart) {
      * @method calculateColorDomain
      * @memberof dc.colorMixin
      * @instance
-     * @return {dc.colorMixin}
+     * @returns {dc.colorMixin}
      */
     _chart.calculateColorDomain = function () {
         var newDomain = [d3.min(_chart.data(), _chart.colorAccessor()),
@@ -2646,27 +2711,31 @@ dc.colorMixin = function (_chart) {
      * @instance
      * @param {*} d
      * @param {Number} [i]
-     * @return {String}
+     * @returns {String}
      */
     _chart.getColor = function (d, i) {
         return _colors(_colorAccessor.call(this, d, i));
     };
 
     /**
-     * Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
+     * **Deprecated.** Get/set the color calculator. This actually replaces the
+     * {@link dc.colorMixin#getColor getColor} method!
+     *
+     * This is not recommended, since using a {@link dc.colorMixin#colorAccessor colorAccessor} and
+     * color scale ({@link dc.colorMixin#colors .colors}) is more powerful and idiomatic d3.
      * @method colorCalculator
      * @memberof dc.colorMixin
      * @instance
      * @param {*} [colorCalculator]
-     * @return {*}
+     * @returns {Function|dc.colorMixin}
      */
-    _chart.colorCalculator = function (colorCalculator) {
+    _chart.colorCalculator = dc.logger.deprecate(function (colorCalculator) {
         if (!arguments.length) {
             return _chart.getColor;
         }
         _chart.getColor = colorCalculator;
         return _chart;
-    };
+    }, 'colorMixin.colorCalculator has been deprecated. Please colorMixin.colors and colorMixin.colorAccessor instead');
 
     return _chart;
 };
@@ -2681,7 +2750,7 @@ dc.colorMixin = function (_chart) {
  * @mixes dc.marginMixin
  * @mixes dc.baseMixin
  * @param {Object} _chart
- * @return {dc.coordinateGridMixin}
+ * @returns {dc.coordinateGridMixin}
  */
 dc.coordinateGridMixin = function (_chart) {
     var GRID_LINE_CLASS = 'grid-line';
@@ -2695,39 +2764,6 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart.colors(d3.scale.category10());
     _chart._mandatoryAttributes().push('x');
-
-    function zoomHandler () {
-        _refocused = true;
-        if (_zoomOutRestrict) {
-            _chart.x().domain(constrainRange(_chart.x().domain(), _xOriginalDomain));
-            if (_rangeChart) {
-                _chart.x().domain(constrainRange(_chart.x().domain(), _rangeChart.x().domain()));
-            }
-        }
-
-        var domain = _chart.x().domain();
-        var domFilter = dc.filters.RangedFilter(domain[0], domain[1]);
-
-        _chart.replaceFilter(domFilter);
-        _chart.rescale();
-        _chart.redraw();
-
-        if (_rangeChart && !rangesEqual(_chart.filter(), _rangeChart.filter())) {
-            dc.events.trigger(function () {
-                _rangeChart.replaceFilter(domFilter);
-                _rangeChart.redraw();
-            });
-        }
-
-        _chart._invokeZoomedListener();
-
-        dc.events.trigger(function () {
-            _chart.redrawGroup();
-        }, dc.constants.EVENT_DELAY);
-
-        _refocused = !rangesEqual(domain, _xOriginalDomain);
-    }
-
     var _parent;
     var _g;
     var _chartBodyG;
@@ -2737,6 +2773,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _xAxis = d3.svg.axis().orient('bottom');
     var _xUnits = dc.units.integers;
     var _xAxisPadding = 0;
+    var _xAxisPaddingUnit = 'day';
     var _xElasticity = false;
     var _xAxisLabel;
     var _xAxisLabelPadding = 0;
@@ -2785,7 +2822,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @method rescale
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @return {dc.coordinateGridMixin}
+     * @returns {dc.coordinateGridMixin}
      */
     _chart.rescale = function () {
         _unitCount = undefined;
@@ -2812,7 +2849,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {dc.coordinateGridMixin} [rangeChart]
-     * @return {dc.coordinateGridMixin}
+     * @returns {dc.coordinateGridMixin}
      */
     _chart.rangeChart = function (rangeChart) {
         if (!arguments.length) {
@@ -2829,8 +2866,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Array<Number|Date>} [extent=[1, Infinity]]
-     * @return {Array<Number|Date>}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Array<Number|Date>|dc.coordinateGridMixin}
      */
     _chart.zoomScale = function (extent) {
         if (!arguments.length) {
@@ -2846,8 +2882,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [zoomOutRestrict=true]
-     * @return {Boolean}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Boolean|dc.coordinateGridMixin}
      */
     _chart.zoomOutRestrict = function (zoomOutRestrict) {
         if (!arguments.length) {
@@ -2865,11 +2900,13 @@ dc.coordinateGridMixin = function (_chart) {
             _parent = parent;
         }
 
+        var href = window.location.href.split('#')[0];
+
         _g = _parent.append('g');
 
         _chartBodyG = _g.append('g').attr('class', 'chart-body')
             .attr('transform', 'translate(' + _chart.margins().left + ', ' + _chart.margins().top + ')')
-            .attr('clip-path', 'url(' + window.location.href + '#' + getClipPathId() + ')');
+            .attr('clip-path', 'url(' + href + '#' + getClipPathId() + ')');
 
         return _g;
     };
@@ -2882,8 +2919,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {SVGElement} [gElement]
-     * @return {SVGElement}
-     * @return {dc.coordinateGridMixin}
+     * @returns {SVGElement|dc.coordinateGridMixin}
      */
     _chart.g = function (gElement) {
         if (!arguments.length) {
@@ -2901,8 +2937,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [mouseZoomable=false]
-     * @return {Boolean}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Boolean|dc.coordinateGridMixin}
      */
     _chart.mouseZoomable = function (mouseZoomable) {
         if (!arguments.length) {
@@ -2918,7 +2953,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {SVGElement} [chartBodyG]
-     * @return {SVGElement}
+     * @returns {SVGElement}
      */
     _chart.chartBodyG = function (chartBodyG) {
         if (!arguments.length) {
@@ -2932,20 +2967,19 @@ dc.coordinateGridMixin = function (_chart) {
      * **mandatory**
      *
      * Get or set the x scale. The x scale can be any d3
-     * {@link https://github.com/mbostock/d3/wiki/Quantitative-Scales quantitive scale} or
-     * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales ordinal scale}.
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md quantitive scale} or
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md ordinal scale}.
      * @method x
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @see {@link http://github.com/mbostock/d3/wiki/Scales d3.scale}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
      * @example
      * // set x to a linear scale
      * chart.x(d3.scale.linear().domain([-2500, 2500]))
      * // set x to a time scale to generate histogram
      * chart.x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
      * @param {d3.scale} [xScale]
-     * @return {d3.scale}
-     * @return {dc.coordinateGridMixin}
+     * @returns {d3.scale|dc.coordinateGridMixin}
      */
     _chart.x = function (xScale) {
         if (!arguments.length) {
@@ -2967,9 +3001,9 @@ dc.coordinateGridMixin = function (_chart) {
      * number of dots for a line chart. This function is expected to return a Javascript array of all
      * data points on x axis, or the number of points on the axis. [d3 time range functions
      * d3.time.days, d3.time.months, and
-     * d3.time.years](https://github.com/mbostock/d3/wiki/Time-Intervals#aliases) are all valid xUnits
-     * function. dc.js also provides a few units function, see the {@link dc.utils Utilities} section for
-     * a list of built-in units functions. The default xUnits function is dc.units.integers.
+     * d3.time.years](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#aliases) are all valid xUnits
+     * function. dc.js also provides a few units function, see the {@link dc.units Units Namespace} for
+     * a list of built-in units functions.
      * @method xUnits
      * @memberof dc.coordinateGridMixin
      * @instance
@@ -2991,9 +3025,8 @@ dc.coordinateGridMixin = function (_chart) {
      * function(start, end, xDomain) {
      *      // be aware using fixed units will disable the focus/zoom ability on the chart
      *      return 1000;
-     * @param {Function} [xUnits]
-     * @return {Function}
-     * @return {dc.coordinateGridMixin}
+     * @param {Function} [xUnits=dc.units.integers]
+     * @returns {Function|dc.coordinateGridMixin}
      */
     _chart.xUnits = function (xUnits) {
         if (!arguments.length) {
@@ -3005,22 +3038,26 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Set or get the x axis used by a particular coordinate grid chart instance. This function is most
-     * useful when x axis customization is required. The x axis in dc.js is an instance of a [d3
-     * axis object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis); therefore it supports any
-     * valid d3 axis manipulation. **Caution**: The x axis is usually generated internally by dc;
-     * resetting it may cause unexpected results.
+     * useful when x axis customization is required. The x axis in dc.js is an instance of a
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3 axis object};
+     * therefore it supports any valid d3 axis manipulation.
+     *
+     * **Caution**: The x axis is usually generated internally by dc; resetting it may cause
+     * unexpected results. Note also that when used as a getter, this function is not chainable:
+     * it returns the axis, not the chart,
+     * {@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
+     * so attempting to call chart functions after calling `.xAxis()` will fail}.
      * @method xAxis
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @see {@link http://github.com/mbostock/d3/wiki/SVG-Axes d3.svg.axis}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3.svg.axis}
      * @example
      * // customize x axis tick format
      * chart.xAxis().tickFormat(function(v) {return v + '%';});
      * // customize x axis tick values
      * chart.xAxis().tickValues([0, 100, 200, 300]);
      * @param {d3.svg.axis} [xAxis=d3.svg.axis().orient('bottom')]
-     * @return {d3.svg.axis}
-     * @return {dc.coordinateGridMixin}
+     * @returns {d3.svg.axis|dc.coordinateGridMixin}
      */
     _chart.xAxis = function (xAxis) {
         if (!arguments.length) {
@@ -3037,8 +3074,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [elasticX=false]
-     * @return {Boolean}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Boolean|dc.coordinateGridMixin}
      */
     _chart.elasticX = function (elasticX) {
         if (!arguments.length) {
@@ -3052,15 +3088,15 @@ dc.coordinateGridMixin = function (_chart) {
      * Set or get x axis padding for the elastic x axis. The padding will be added to both end of the x
      * axis if elasticX is turned on; otherwise it is ignored.
      *
-     * padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
-     * number or date x axes.  When padding a date axis, an integer represents number of days being padded
-     * and a percentage string will be treated the same as an integer.
+     * Padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
+     * number or date x axes.  When padding a date axis, an integer represents number of units being padded
+     * and a percentage string will be treated the same as an integer. The unit will be determined by the
+     * xAxisPaddingUnit variable.
      * @method xAxisPadding
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Number|String} [padding=0]
-     * @return {Number|String}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Number|String|dc.coordinateGridMixin}
      */
     _chart.xAxisPadding = function (padding) {
         if (!arguments.length) {
@@ -3071,12 +3107,34 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     /**
+     * Set or get x axis padding unit for the elastic x axis. The padding unit will determine which unit to
+     * use when applying xAxis padding if elasticX is turned on and if x-axis uses a time dimension;
+     * otherwise it is ignored.
+     *
+     * Padding unit is a string that will be used when the padding is calculated. Available parameters are
+     * the available d3 time intervals; see
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval d3.time.interval}.
+     * @method xAxisPaddingUnit
+     * @memberof dc.coordinateGridMixin
+     * @instance
+     * @param {String} [unit='days']
+     * @returns {String|dc.coordinateGridMixin}
+     */
+    _chart.xAxisPaddingUnit = function (unit) {
+        if (!arguments.length) {
+            return _xAxisPaddingUnit;
+        }
+        _xAxisPaddingUnit = unit;
+        return _chart;
+    };
+
+    /**
      * Returns the number of units displayed on the x axis using the unit measure configured by
-     * .xUnits.
+     * {@link dc.coordinateGridMixin#xUnits xUnits}.
      * @method xUnitCount
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @return {Number}
+     * @returns {Number}
      */
     _chart.xUnitCount = function () {
         if (_unitCount === undefined) {
@@ -3100,8 +3158,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [useRightYAxis=false]
-     * @return {Boolean}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Boolean|dc.coordinateGridMixin}
      */
     _chart.useRightYAxis = function (useRightYAxis) {
         if (!arguments.length) {
@@ -3118,7 +3175,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @method isOrdinal
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @return {Boolean}
+     * @returns {Boolean}
      */
     _chart.isOrdinal = function () {
         return _chart.xUnits() === dc.units.ordinal;
@@ -3170,7 +3227,7 @@ dc.coordinateGridMixin = function (_chart) {
     }
 
     _chart.renderXAxis = function (g) {
-        var axisXG = g.selectAll('g.x');
+        var axisXG = g.select('g.x');
 
         if (axisXG.empty()) {
             axisXG = g.append('g')
@@ -3178,7 +3235,7 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')');
         }
 
-        var axisXLab = g.selectAll('text.' + X_AXIS_LABEL_CLASS);
+        var axisXLab = g.select('text.' + X_AXIS_LABEL_CLASS);
         if (axisXLab.empty() && _chart.xAxisLabel()) {
             axisXLab = g.append('text')
                 .attr('class', X_AXIS_LABEL_CLASS)
@@ -3190,16 +3247,16 @@ dc.coordinateGridMixin = function (_chart) {
             axisXLab.text(_chart.xAxisLabel());
         }
 
-        dc.transition(axisXG, _chart.transitionDuration())
+        dc.transition(axisXG, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')')
             .call(_xAxis);
-        dc.transition(axisXLab, _chart.transitionDuration())
+        dc.transition(axisXLab, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
                   (_chart.height() - _xAxisLabelPadding) + ')');
     };
 
     function renderVerticalGridLines (g) {
-        var gridLineG = g.selectAll('g.' + VERTICAL_CLASS);
+        var gridLineG = g.select('g.' + VERTICAL_CLASS);
 
         if (_renderVerticalGridLine) {
             if (gridLineG.empty()) {
@@ -3226,11 +3283,11 @@ dc.coordinateGridMixin = function (_chart) {
                 })
                 .attr('y2', 0)
                 .attr('opacity', 0);
-            dc.transition(linesGEnter, _chart.transitionDuration())
+            dc.transition(linesGEnter, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('opacity', 1);
 
             // update
-            dc.transition(lines, _chart.transitionDuration())
+            dc.transition(lines, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('x1', function (d) {
                     return _x(d);
                 })
@@ -3263,7 +3320,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @instance
      * @param {String} [labelText]
      * @param {Number} [padding=12]
-     * @return {String}
+     * @returns {String}
      */
     _chart.xAxisLabel = function (labelText, padding) {
         if (!arguments.length) {
@@ -3299,7 +3356,7 @@ dc.coordinateGridMixin = function (_chart) {
     _chart.renderYAxisLabel = function (axisClass, text, rotation, labelXPosition) {
         labelXPosition = labelXPosition || _yAxisLabelPadding;
 
-        var axisYLab = _chart.g().selectAll('text.' + Y_AXIS_LABEL_CLASS + '.' + axisClass + '-label');
+        var axisYLab = _chart.g().select('text.' + Y_AXIS_LABEL_CLASS + '.' + axisClass + '-label');
         var labelYPosition = (_chart.margins().top + _chart.yAxisHeight() / 2);
         if (axisYLab.empty() && text) {
             axisYLab = _chart.g().append('text')
@@ -3311,19 +3368,19 @@ dc.coordinateGridMixin = function (_chart) {
         if (text && axisYLab.text() !== text) {
             axisYLab.text(text);
         }
-        dc.transition(axisYLab, _chart.transitionDuration())
+        dc.transition(axisYLab, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', 'translate(' + labelXPosition + ',' + labelYPosition + '),rotate(' + rotation + ')');
     };
 
     _chart.renderYAxisAt = function (axisClass, axis, position) {
-        var axisYG = _chart.g().selectAll('g.' + axisClass);
+        var axisYG = _chart.g().select('g.' + axisClass);
         if (axisYG.empty()) {
             axisYG = _chart.g().append('g')
                 .attr('class', 'axis ' + axisClass)
                 .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')');
         }
 
-        dc.transition(axisYG, _chart.transitionDuration())
+        dc.transition(axisYG, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')')
             .call(axis);
     };
@@ -3337,7 +3394,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart._renderHorizontalGridLinesForAxis = function (g, scale, axis) {
-        var gridLineG = g.selectAll('g.' + HORIZONTAL_CLASS);
+        var gridLineG = g.select('g.' + HORIZONTAL_CLASS);
 
         if (_renderHorizontalGridLine) {
             var ticks = axis.tickValues() ? axis.tickValues() : scale.ticks(axis.ticks()[0]);
@@ -3363,11 +3420,11 @@ dc.coordinateGridMixin = function (_chart) {
                     return scale(d);
                 })
                 .attr('opacity', 0);
-            dc.transition(linesGEnter, _chart.transitionDuration())
+            dc.transition(linesGEnter, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('opacity', 1);
 
             // update
-            dc.transition(lines, _chart.transitionDuration())
+            dc.transition(lines, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('x1', 1)
                 .attr('y1', function (d) {
                     return scale(d);
@@ -3390,15 +3447,14 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Set or get the y axis label. If setting the label, you may optionally include additional padding
-     * to the margin to make room for the label. By default the padded is set to 12 to accomodate the
+     * to the margin to make room for the label. By default the padding is set to 12 to accommodate the
      * text height.
      * @method yAxisLabel
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {String} [labelText]
      * @param {Number} [padding=12]
-     * @return {String}
-     * @return {dc.coordinateGridMixin}
+     * @returns {String|dc.coordinateGridMixin}
      */
     _chart.yAxisLabel = function (labelText, padding) {
         if (!arguments.length) {
@@ -3416,10 +3472,9 @@ dc.coordinateGridMixin = function (_chart) {
      * @method y
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @see {@link http://github.com/mbostock/d3/wiki/Scales d3.scale}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
      * @param {d3.scale} [yScale]
-     * @return {d3.scale}
-     * @return {dc.coordinateGridMixin}
+     * @returns {d3.scale|dc.coordinateGridMixin}
      */
     _chart.y = function (yScale) {
         if (!arguments.length) {
@@ -3433,21 +3488,25 @@ dc.coordinateGridMixin = function (_chart) {
     /**
      * Set or get the y axis used by the coordinate grid chart instance. This function is most useful
      * when y axis customization is required. The y axis in dc.js is simply an instance of a [d3 axis
-     * object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis); therefore it supports any
-     * valid d3 axis manipulation. **Caution**: The y axis is usually generated internally by dc;
-     * resetting it may cause unexpected results.
+     * object](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis); therefore it supports any
+     * valid d3 axis manipulation.
+     *
+     * **Caution**: The y axis is usually generated internally by dc; resetting it may cause
+     * unexpected results.  Note also that when used as a getter, this function is not chainable: it
+     * returns the axis, not the chart,
+     * {@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
+     * so attempting to call chart functions after calling `.yAxis()` will fail}.
      * @method yAxis
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @see {@link http://github.com/mbostock/d3/wiki/SVG-Axes d3.svg.axis}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3.svg.axis}
      * @example
      * // customize y axis tick format
      * chart.yAxis().tickFormat(function(v) {return v + '%';});
      * // customize y axis tick values
      * chart.yAxis().tickValues([0, 100, 200, 300]);
      * @param {d3.svg.axis} [yAxis=d3.svg.axis().orient('left')]
-     * @return {d3.svg.axis}
-     * @return {dc.coordinateGridMixin}
+     * @returns {d3.svg.axis|dc.coordinateGridMixin}
      */
     _chart.yAxis = function (yAxis) {
         if (!arguments.length) {
@@ -3464,8 +3523,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [elasticY=false]
-     * @return {Boolean}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Boolean|dc.coordinateGridMixin}
      */
     _chart.elasticY = function (elasticY) {
         if (!arguments.length) {
@@ -3481,8 +3539,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [renderHorizontalGridLines=false]
-     * @return {Boolean}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Boolean|dc.coordinateGridMixin}
      */
     _chart.renderHorizontalGridLines = function (renderHorizontalGridLines) {
         if (!arguments.length) {
@@ -3498,8 +3555,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [renderVerticalGridLines=false]
-     * @return {Boolean}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Boolean|dc.coordinateGridMixin}
      */
     _chart.renderVerticalGridLines = function (renderVerticalGridLines) {
         if (!arguments.length) {
@@ -3514,13 +3570,13 @@ dc.coordinateGridMixin = function (_chart) {
      * @method xAxisMin
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @return {*}
+     * @returns {*}
      */
     _chart.xAxisMin = function () {
         var min = d3.min(_chart.data(), function (e) {
             return _chart.keyAccessor()(e);
         });
-        return dc.utils.subtract(min, _xAxisPadding);
+        return dc.utils.subtract(min, _xAxisPadding, _xAxisPaddingUnit);
     };
 
     /**
@@ -3528,13 +3584,13 @@ dc.coordinateGridMixin = function (_chart) {
      * @method xAxisMax
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @return {*}
+     * @returns {*}
      */
     _chart.xAxisMax = function () {
         var max = d3.max(_chart.data(), function (e) {
             return _chart.keyAccessor()(e);
         });
-        return dc.utils.add(max, _xAxisPadding);
+        return dc.utils.add(max, _xAxisPadding, _xAxisPaddingUnit);
     };
 
     /**
@@ -3542,7 +3598,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @method yAxisMin
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @return {*}
+     * @returns {*}
      */
     _chart.yAxisMin = function () {
         var min = d3.min(_chart.data(), function (e) {
@@ -3556,7 +3612,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @method yAxisMax
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @return {*}
+     * @returns {*}
      */
     _chart.yAxisMax = function () {
         var max = d3.max(_chart.data(), function (e) {
@@ -3566,18 +3622,17 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     /**
-     * Set or get y axis padding for the elastic y axis. The padding will be added to the top of the y
-     * axis if elasticY is turned on; otherwise it is ignored.
+     * Set or get y axis padding for the elastic y axis. The padding will be added to the top and
+     * bottom of the y axis if elasticY is turned on; otherwise it is ignored.
      *
-     * padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
+     * Padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
      * number or date axes. When padding a date axis, an integer represents number of days being padded
      * and a percentage string will be treated the same as an integer.
      * @method yAxisPadding
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Number|String} [padding=0]
-     * @return {Number}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Number|dc.coordinateGridMixin}
      */
     _chart.yAxisPadding = function (padding) {
         if (!arguments.length) {
@@ -3601,8 +3656,7 @@ dc.coordinateGridMixin = function (_chart) {
      * // select whole months
      * chart.round(d3.time.month.round);
      * @param {Function} [round]
-     * @return {Function}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Function|dc.coordinateGridMixin}
      */
     _chart.round = function (round) {
         if (!arguments.length) {
@@ -3680,7 +3734,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart.setBrushY = function (gBrush) {
-        gBrush.selectAll('.brush rect')
+        gBrush.selectAll('rect')
             .attr('height', brushHeight());
         gBrush.selectAll('.resize path')
             .attr('d', _chart.resizeHandlePath);
@@ -3728,7 +3782,7 @@ dc.coordinateGridMixin = function (_chart) {
                 _chart.brush().extent(_chart.filter());
             }
 
-            var gBrush = dc.optionalTransition(doTransition, _chart.transitionDuration())(g.select('g.brush'));
+            var gBrush = dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(g.select('g.brush'));
             _chart.setBrushY(gBrush);
             gBrush.call(_chart.brush()
                       .x(_chart.x())
@@ -3768,8 +3822,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Number} [padding=5]
-     * @return {Number}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Number|dc.coordinateGridMixin}
      */
     _chart.clipPadding = function (padding) {
         if (!arguments.length) {
@@ -3868,11 +3921,58 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.root().call(_nullZoom);
     };
 
-    function constrainRange (range, constraint) {
-        var constrainedRange = [];
-        constrainedRange[0] = d3.max([range[0], constraint[0]]);
-        constrainedRange[1] = d3.min([range[1], constraint[1]]);
-        return constrainedRange;
+    function zoomHandler () {
+        _refocused = true;
+        if (_zoomOutRestrict) {
+            var constraint = _xOriginalDomain;
+            if (_rangeChart) {
+                constraint = intersectExtents(constraint, _rangeChart.x().domain());
+            }
+            var constrained = constrainExtent(_chart.x().domain(), constraint);
+            if (constrained) {
+                _chart.x().domain(constrained);
+            }
+        }
+
+        var domain = _chart.x().domain();
+        var domFilter = dc.filters.RangedFilter(domain[0], domain[1]);
+
+        _chart.replaceFilter(domFilter);
+        _chart.rescale();
+        _chart.redraw();
+
+        if (_rangeChart && !rangesEqual(_chart.filter(), _rangeChart.filter())) {
+            dc.events.trigger(function () {
+                _rangeChart.replaceFilter(domFilter);
+                _rangeChart.redraw();
+            });
+        }
+
+        _chart._invokeZoomedListener();
+
+        dc.events.trigger(function () {
+            _chart.redrawGroup();
+        }, dc.constants.EVENT_DELAY);
+
+        _refocused = !rangesEqual(domain, _xOriginalDomain);
+    }
+
+    function intersectExtents (ext1, ext2) {
+        if (ext1[0] > ext2[1] || ext1[1] < ext2[0]) {
+            console.warn('could not intersect extents');
+        }
+        return [Math.max(ext1[0], ext2[0]), Math.min(ext1[1], ext2[1])];
+    }
+
+    function constrainExtent (extent, constraint) {
+        var size = extent[1] - extent[0];
+        if (extent[0] < constraint[0]) {
+            return [constraint[0], Math.min(constraint[1], dc.utils.add(constraint[0], size, 'millis'))];
+        } else if (extent[1] > constraint[1]) {
+            return [Math.max(constraint[0], dc.utils.subtract(constraint[1], size, 'millis')), constraint[1]];
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -3952,8 +4052,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @memberof dc.coordinateGridMixin
      * @instance
      * @param {Boolean} [brushOn=true]
-     * @return {Boolean}
-     * @return {dc.coordinateGridMixin}
+     * @returns {Boolean|dc.coordinateGridMixin}
      */
     _chart.brushOn = function (brushOn) {
         if (!arguments.length) {
@@ -3976,7 +4075,7 @@ dc.coordinateGridMixin = function (_chart) {
  * @memberof dc
  * @mixin
  * @param {Object} _chart
- * @return {dc.stackMixin}
+ * @returns {dc.stackMixin}
  */
 dc.stackMixin = function (_chart) {
 
@@ -4036,7 +4135,7 @@ dc.stackMixin = function (_chart) {
      * @method stack
      * @memberof dc.stackMixin
      * @instance
-     * @see {@link https://github.com/square/crossfilter/wiki/API-Reference#group-map-reduce crossfilter.group}
+     * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group-map-reduce crossfilter.group}
      * @example
      * // stack group using default accessor
      * chart.stack(valueSumGroup)
@@ -4045,8 +4144,7 @@ dc.stackMixin = function (_chart) {
      * @param {crossfilter.group} group
      * @param {String} [name]
      * @param {Function} [accessor]
-     * @return {Array<{group: crossfilter.group, name: String, accessor: Function}>}
-     * @return {dc.stackMixin}
+     * @returns {Array<{group: crossfilter.group, name: String, accessor: Function}>|dc.stackMixin}
      */
     _chart.stack = function (group, name, accessor) {
         if (!arguments.length) {
@@ -4089,8 +4187,7 @@ dc.stackMixin = function (_chart) {
      * @memberof dc.stackMixin
      * @instance
      * @param {Boolean} [hidableStacks=false]
-     * @return {Boolean}
-     * @return {dc.stackMixin}
+     * @returns {Boolean|dc.stackMixin}
      */
     _chart.hidableStacks = function (hidableStacks) {
         if (!arguments.length) {
@@ -4112,7 +4209,7 @@ dc.stackMixin = function (_chart) {
      * @memberof dc.stackMixin
      * @instance
      * @param {String} stackName
-     * @return {dc.stackMixin}
+     * @returns {dc.stackMixin}
      */
     _chart.hideStack = function (stackName) {
         var layer = findLayerByName(stackName);
@@ -4129,7 +4226,7 @@ dc.stackMixin = function (_chart) {
      * @memberof dc.stackMixin
      * @instance
      * @param {String} stackName
-     * @return {dc.stackMixin}
+     * @returns {dc.stackMixin}
      */
     _chart.showStack = function (stackName) {
         var layer = findLayerByName(stackName);
@@ -4145,7 +4242,7 @@ dc.stackMixin = function (_chart) {
 
     _chart.yAxisMin = function () {
         var min = d3.min(flattenStack(), function (p) {
-            return (p.y + p.y0 < p.y0) ? (p.y + p.y0) : p.y0;
+            return (p.y < 0) ? (p.y + p.y0) : p.y0;
         });
 
         return dc.utils.subtract(min, _chart.yAxisPadding());
@@ -4154,7 +4251,7 @@ dc.stackMixin = function (_chart) {
 
     _chart.yAxisMax = function () {
         var max = d3.max(flattenStack(), function (p) {
-            return p.y + p.y0;
+            return (p.y > 0) ? (p.y + p.y0) : p.y0;
         });
 
         return dc.utils.add(max, _chart.yAxisPadding());
@@ -4167,12 +4264,12 @@ dc.stackMixin = function (_chart) {
 
     _chart.xAxisMin = function () {
         var min = d3.min(flattenStack(), dc.pluck('x'));
-        return dc.utils.subtract(min, _chart.xAxisPadding());
+        return dc.utils.subtract(min, _chart.xAxisPadding(), _chart.xAxisPaddingUnit());
     };
 
     _chart.xAxisMax = function () {
         var max = d3.max(flattenStack(), dc.pluck('x'));
-        return dc.utils.add(max, _chart.xAxisPadding());
+        return dc.utils.add(max, _chart.xAxisPadding(), _chart.xAxisPaddingUnit());
     };
 
     /**
@@ -4193,8 +4290,7 @@ dc.stackMixin = function (_chart) {
      * var secondTitleFunction = chart.title('second stack');
      * @param {String} [stackName]
      * @param {Function} [titleAccessor]
-     * @return {String}
-     * @return {dc.stackMixin}
+     * @returns {String|dc.stackMixin}
      */
     dc.override(_chart, 'title', function (stackName, titleAccessor) {
         if (!stackName) {
@@ -4219,14 +4315,13 @@ dc.stackMixin = function (_chart) {
 
     /**
      * Gets or sets the stack layout algorithm, which computes a baseline for each stack and
-     * propagates it to the next
+     * propagates it to the next.
      * @method stackLayout
      * @memberof dc.stackMixin
      * @instance
-     * @see {@link http://github.com/mbostock/d3/wiki/Stack-Layout d3.layout.stack}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Stack-Layout.md d3.layout.stack}
      * @param {Function} [stack=d3.layout.stack]
-     * @return {Function}
-     * @return {dc.stackMixin}
+     * @returns {Function|dc.stackMixin}
      */
     _chart.stackLayout = function (stack) {
         if (!arguments.length) {
@@ -4302,7 +4397,7 @@ dc.stackMixin = function (_chart) {
  * @memberof dc
  * @mixin
  * @param {Object} _chart
- * @return {dc.capMixin}
+ * @returns {dc.capMixin}
  */
 dc.capMixin = function (_chart) {
 
@@ -4319,7 +4414,11 @@ dc.capMixin = function (_chart) {
             topSet = d3.set(topKeys),
             others = allKeys.filter(function (d) {return !topSet.has(d);});
         if (allRowsSum > topRowsSum) {
-            return topRows.concat([{'others': others, 'key': _othersLabel, 'value': allRowsSum - topRowsSum}]);
+            return topRows.concat([{
+                'others': others,
+                'key': _chart.othersLabel(),
+                'value': allRowsSum - topRowsSum
+            }]);
         }
         return topRows;
     };
@@ -4352,13 +4451,14 @@ dc.capMixin = function (_chart) {
     });
 
     /**
-     * Get or set the count of elements to that will be included in the cap.
+     * Get or set the count of elements to that will be included in the cap. If there is an
+     * {@link dc.capMixin#othersGrouper othersGrouper}, any further elements will be combined in an
+     * extra element with its name determined by {@link dc.capMixin#othersLabel othersLabel}.
      * @method cap
      * @memberof dc.capMixin
      * @instance
      * @param {Number} [count=Infinity]
-     * @return {Number}
-     * @return {dc.capMixin}
+     * @returns {Number|dc.capMixin}
      */
     _chart.cap = function (count) {
         if (!arguments.length) {
@@ -4369,13 +4469,12 @@ dc.capMixin = function (_chart) {
     };
 
     /**
-     * Get or set the label for *Others* slice when slices cap is specified
+     * Get or set the label for *Others* slice when slices cap is specified.
      * @method othersLabel
      * @memberof dc.capMixin
      * @instance
      * @param {String} [label="Others"]
-     * @return {String}
-     * @return {dc.capMixin}
+     * @returns {String|dc.capMixin}
      */
     _chart.othersLabel = function (label) {
         if (!arguments.length) {
@@ -4393,6 +4492,8 @@ dc.capMixin = function (_chart) {
      * @memberof dc.capMixin
      * @instance
      * @example
+     * // Do not show others
+     * chart.othersGrouper(null);
      * // Default others grouper
      * chart.othersGrouper(function (topRows) {
      *    var topRowsSum = d3.sum(topRows, _chart.valueAccessor()),
@@ -4403,7 +4504,11 @@ dc.capMixin = function (_chart) {
      *        topSet = d3.set(topKeys),
      *        others = allKeys.filter(function (d) {return !topSet.has(d);});
      *    if (allRowsSum > topRowsSum) {
-     *        return topRows.concat([{'others': others, 'key': _othersLabel, 'value': allRowsSum - topRowsSum}]);
+     *        return topRows.concat([{
+     *            'others': others,
+     *            'key': _chart.othersLabel(),
+     *            'value': allRowsSum - topRowsSum
+     *        }]);
      *    }
      *    return topRows;
      * });
@@ -4421,8 +4526,7 @@ dc.capMixin = function (_chart) {
      *     return data;
      * });
      * @param {Function} [grouperFunction]
-     * @return {Function}
-     * @return {dc.capMixin}
+     * @returns {Function|dc.capMixin}
      */
     _chart.othersGrouper = function (grouperFunction) {
         if (!arguments.length) {
@@ -4449,7 +4553,7 @@ dc.capMixin = function (_chart) {
  * @mixin
  * @mixes dc.colorMixin
  * @param {Object} _chart
- * @return {dc.bubbleMixin}
+ * @returns {dc.bubbleMixin}
  */
 dc.bubbleMixin = function (_chart) {
     var _maxBubbleRelativeSize = 0.3;
@@ -4475,15 +4579,14 @@ dc.bubbleMixin = function (_chart) {
 
     /**
      * Get or set the bubble radius scale. By default the bubble chart uses
-     * {@link https://github.com/mbostock/d3/wiki/Quantitative-Scales#linear d3.scale.linear().domain([0, 100])}
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md#linear d3.scale.linear().domain([0, 100])}
      * as its radius scale.
      * @method r
      * @memberof dc.bubbleMixin
      * @instance
-     * @see {@link http://github.com/mbostock/d3/wiki/Scales d3.scale}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
      * @param {d3.scale} [bubbleRadiusScale=d3.scale.linear().domain([0, 100])]
-     * @return {d3.scale}
-     * @return {dc.bubbleMixin}
+     * @returns {d3.scale|dc.bubbleMixin}
      */
     _chart.r = function (bubbleRadiusScale) {
         if (!arguments.length) {
@@ -4502,8 +4605,7 @@ dc.bubbleMixin = function (_chart) {
      * @memberof dc.bubbleMixin
      * @instance
      * @param {Function} [radiusValueAccessor]
-     * @return {Function}
-     * @return {dc.bubbleMixin}
+     * @returns {Function|dc.bubbleMixin}
      */
     _chart.radiusValueAccessor = function (radiusValueAccessor) {
         if (!arguments.length) {
@@ -4567,17 +4669,17 @@ dc.bubbleMixin = function (_chart) {
                 .attr('opacity', 0)
                 .attr('pointer-events', labelPointerEvent)
                 .text(labelFunction);
-            dc.transition(label, _chart.transitionDuration())
+            dc.transition(label, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('opacity', labelOpacity);
         }
     };
 
     _chart.doUpdateLabels = function (bubbleGEnter) {
         if (_chart.renderLabel()) {
-            var labels = bubbleGEnter.selectAll('text')
+            var labels = bubbleGEnter.select('text')
                 .attr('pointer-events', labelPointerEvent)
                 .text(labelFunction);
-            dc.transition(labels, _chart.transitionDuration())
+            dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('opacity', labelOpacity);
         }
     };
@@ -4598,7 +4700,7 @@ dc.bubbleMixin = function (_chart) {
 
     _chart.doUpdateTitles = function (g) {
         if (_chart.renderTitle()) {
-            g.selectAll('title').text(titleFunction);
+            g.select('title').text(titleFunction);
         }
     };
 
@@ -4608,8 +4710,7 @@ dc.bubbleMixin = function (_chart) {
      * @memberof dc.bubbleMixin
      * @instance
      * @param {Number} [radius=10]
-     * @return {Number}
-     * @return {dc.bubbleMixin}
+     * @returns {Number|dc.bubbleMixin}
      */
     _chart.minRadius = function (radius) {
         if (!arguments.length) {
@@ -4626,8 +4727,7 @@ dc.bubbleMixin = function (_chart) {
      * @memberof dc.bubbleMixin
      * @instance
      * @param {Number} [radius=10]
-     * @return {Number}
-     * @return {dc.bubbleMixin}
+     * @returns {Number|dc.bubbleMixin}
      */
 
     _chart.minRadiusWithLabel = function (radius) {
@@ -4645,8 +4745,7 @@ dc.bubbleMixin = function (_chart) {
      * @memberof dc.bubbleMixin
      * @instance
      * @param {Number} [relativeSize=0.3]
-     * @return {Number}
-     * @return {dc.bubbleMixin}
+     * @returns {Number|dc.bubbleMixin}
      */
     _chart.maxBubbleRelativeSize = function (relativeSize) {
         if (!arguments.length) {
@@ -4706,16 +4805,19 @@ dc.bubbleMixin = function (_chart) {
  * // create a pie chart under #chart-container2 element using chart group A
  * var chart2 = dc.pieChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.pieChart}
+ * @returns {dc.pieChart}
  */
 dc.pieChart = function (parent, chartGroup) {
     var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
     var _sliceCssClass = 'pie-slice';
+    var _labelCssClass = 'pie-label';
+    var _sliceGroupCssClass = 'pie-slice-group';
+    var _labelGroupCssClass = 'pie-label-group';
     var _emptyCssClass = 'empty-chart';
     var _emptyTitle = 'empty';
 
@@ -4745,8 +4847,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [cap]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.slicesCap = _chart.cap;
 
@@ -4754,6 +4855,7 @@ dc.pieChart = function (parent, chartGroup) {
     _chart.renderLabel(true);
 
     _chart.transitionDuration(350);
+    _chart.transitionDelay(0);
 
     _chart._doRender = function () {
         _chart.resetSvg();
@@ -4761,6 +4863,9 @@ dc.pieChart = function (parent, chartGroup) {
         _g = _chart.svg()
             .append('g')
             .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
+
+        _g.append('g').attr('class', _sliceGroupCssClass);
+        _g.append('g').attr('class', _labelGroupCssClass);
 
         drawChart();
 
@@ -4787,30 +4892,35 @@ dc.pieChart = function (parent, chartGroup) {
         }
 
         if (_g) {
-            var slices = _g.selectAll('g.' + _sliceCssClass)
+            var slices = _g.select('g.' + _sliceGroupCssClass)
+                .selectAll('g.' + _sliceCssClass)
                 .data(pieData);
 
-            createElements(slices, arc, pieData);
+            var labels = _g.select('g.' + _labelGroupCssClass)
+                .selectAll('text.' + _labelCssClass)
+                .data(pieData);
+
+            createElements(slices, labels, arc, pieData);
 
             updateElements(pieData, arc);
 
-            removeElements(slices);
+            removeElements(slices, labels);
 
             highlightFilter();
 
-            dc.transition(_g, _chart.transitionDuration())
+            dc.transition(_g, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
         }
     }
 
-    function createElements (slices, arc, pieData) {
+    function createElements (slices, labels, arc, pieData) {
         var slicesEnter = createSliceNodes(slices);
 
         createSlicePath(slicesEnter, arc);
 
         createTitles(slicesEnter);
 
-        createLabels(pieData, arc);
+        createLabels(labels, pieData, arc);
     }
 
     function createSliceNodes (slices) {
@@ -4831,9 +4941,10 @@ dc.pieChart = function (parent, chartGroup) {
                 return safeArc(d, i, arc);
             });
 
-        dc.transition(slicePath, _chart.transitionDuration(), function (s) {
-            s.attrTween('d', tweenPie);
-        });
+        var transition = dc.transition(slicePath, _chart.transitionDuration(), _chart.transitionDelay());
+        if (transition.attrTween) {
+            transition.attrTween('d', tweenPie);
+        }
     }
 
     function createTitles (slicesEnter) {
@@ -4857,31 +4968,37 @@ dc.pieChart = function (parent, chartGroup) {
 
     function positionLabels (labels, arc) {
         _chart._applyLabelText(labels);
-        dc.transition(labels, _chart.transitionDuration())
+        dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', function (d) {
                 return labelPosition(d, arc);
             })
             .attr('text-anchor', 'middle');
     }
 
-    function createLabels (pieData, arc) {
+    function highlightSlice (i, whether) {
+        _chart.select('g.pie-slice._' + i)
+            .classed('highlight', whether);
+    }
+
+    function createLabels (labels, pieData, arc) {
         if (_chart.renderLabel()) {
-            var labels = _g.selectAll('text.' + _sliceCssClass)
-                .data(pieData);
-
-            labels.exit().remove();
-
             var labelsEnter = labels
                 .enter()
                 .append('text')
                 .attr('class', function (d, i) {
-                    var classes = _sliceCssClass + ' _' + i;
+                    var classes = _sliceCssClass + ' ' + _labelCssClass + ' _' + i;
                     if (_externalLabelRadius) {
                         classes += ' external';
                     }
                     return classes;
                 })
-                .on('click', onClick);
+                .on('click', onClick)
+                .on('mouseover', function (d, i) {
+                    highlightSlice(i, true);
+                })
+                .on('mouseout', function (d, i) {
+                    highlightSlice(i, false);
+                });
             positionLabels(labelsEnter, arc);
             if (_externalLabelRadius && _drawPaths) {
                 updateLabelPaths(pieData, arc);
@@ -4898,25 +5015,41 @@ dc.pieChart = function (parent, chartGroup) {
                 .append('polyline')
                 .attr('class', function (d, i) {
                     return 'pie-path _' + i + ' ' + _sliceCssClass;
+                })
+                .on('click', onClick)
+                .on('mouseover', function (d, i) {
+                    highlightSlice(i, true);
+                })
+                .on('mouseout', function (d, i) {
+                    highlightSlice(i, false);
                 });
 
         polyline.exit().remove();
-        dc.transition(polyline, _chart.transitionDuration())
-            .attrTween('points', function (d) {
-                this._current = this._current || d;
-                var interpolate = d3.interpolate(this._current, d);
-                this._current = interpolate(0);
-                return function (t) {
-                    var arc2 = d3.svg.arc()
-                            .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
-                            .innerRadius(_radius - _externalRadiusPadding);
-                    var d2 = interpolate(t);
-                    return [arc.centroid(d2), arc2.centroid(d2)];
-                };
-            })
-            .style('visibility', function (d) {
-                return d.endAngle - d.startAngle < 0.0001 ? 'hidden' : 'visible';
+        var arc2 = d3.svg.arc()
+                .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
+                .innerRadius(_radius - _externalRadiusPadding);
+        var transition = dc.transition(polyline, _chart.transitionDuration(), _chart.transitionDelay());
+        // this is one rare case where d3.selection differs from d3.transition
+        if (transition.attrTween) {
+            transition
+                .attrTween('points', function (d) {
+                    var current = this._current || d;
+                    current = {startAngle: current.startAngle, endAngle: current.endAngle};
+                    var interpolate = d3.interpolate(current, d);
+                    this._current = interpolate(0);
+                    return function (t) {
+                        var d2 = interpolate(t);
+                        return [arc.centroid(d2), arc2.centroid(d2)];
+                    };
+                });
+        } else {
+            transition.attr('points', function (d) {
+                return [arc.centroid(d), arc2.centroid(d)];
             });
+        }
+        transition.style('visibility', function (d) {
+            return d.endAngle - d.startAngle < 0.0001 ? 'hidden' : 'visible';
+        });
 
     }
 
@@ -4933,15 +5066,16 @@ dc.pieChart = function (parent, chartGroup) {
             .attr('d', function (d, i) {
                 return safeArc(d, i, arc);
             });
-        dc.transition(slicePaths, _chart.transitionDuration(),
-            function (s) {
-                s.attrTween('d', tweenPie);
-            }).attr('fill', fill);
+        var transition = dc.transition(slicePaths, _chart.transitionDuration(), _chart.transitionDelay());
+        if (transition.attrTween) {
+            transition.attrTween('d', tweenPie);
+        }
+        transition.attr('fill', fill);
     }
 
     function updateLabels (pieData, arc) {
         if (_chart.renderLabel()) {
-            var labels = _g.selectAll('text.' + _sliceCssClass)
+            var labels = _g.selectAll('text.' + _labelCssClass)
                 .data(pieData);
             positionLabels(labels, arc);
             if (_externalLabelRadius && _drawPaths) {
@@ -4961,8 +5095,9 @@ dc.pieChart = function (parent, chartGroup) {
         }
     }
 
-    function removeElements (slices) {
+    function removeElements (slices, labels) {
         slices.exit().remove();
+        labels.exit().remove();
     }
 
     function highlightFilter () {
@@ -4988,8 +5123,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [externalRadiusPadding=0]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.externalRadiusPadding = function (externalRadiusPadding) {
         if (!arguments.length) {
@@ -5006,8 +5140,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [innerRadius=0]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.innerRadius = function (innerRadius) {
         if (!arguments.length) {
@@ -5024,8 +5157,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [radius]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.radius = function (radius) {
         if (!arguments.length) {
@@ -5041,8 +5173,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [cx]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.cx = function (cx) {
         if (!arguments.length) {
@@ -5058,8 +5189,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [cy]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.cy = function (cy) {
         if (!arguments.length) {
@@ -5091,8 +5221,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [minAngleForLabel=0.5]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.minAngleForLabel = function (minAngleForLabel) {
         if (!arguments.length) {
@@ -5159,8 +5288,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {String} [title]
-     * @return {String}
-     * @return {dc.pieChart}
+     * @returns {String|dc.pieChart}
      */
     _chart.emptyTitle = function (title) {
         if (arguments.length === 0) {
@@ -5171,15 +5299,14 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     /**
-     * Position slice labels offset from the outer edge of the chart
+     * Position slice labels offset from the outer edge of the chart.
      *
-     * The given argument sets the radial offset.
+     * The argument specifies the extra radius to be added for slice labels.
      * @method externalLabels
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [externalLabelRadius]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.externalLabels = function (externalLabelRadius) {
         if (arguments.length === 0) {
@@ -5200,8 +5327,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Boolean} [drawPaths]
-     * @return {Boolean}
-     * @return {dc.pieChart}
+     * @returns {Boolean|dc.pieChart}
      */
     _chart.drawPaths = function (drawPaths) {
         if (arguments.length === 0) {
@@ -5277,13 +5403,13 @@ dc.pieChart = function (parent, chartGroup) {
  * // create a sub-chart under a composite parent chart
  * var chart3 = dc.barChart(compositeChart);
  * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector}
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector}
  * specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar
  * chart is a sub-chart in a {@link dc.compositeChart Composite Chart} then pass in the parent
  * composite chart instance instead.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.barChart}
+ * @returns {dc.barChart}
  */
 dc.barChart = function (parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
@@ -5363,7 +5489,7 @@ dc.barChart = function (parent, chartGroup) {
             labels.attr('cursor', 'pointer');
         }
 
-        dc.transition(labels, _chart.transitionDuration())
+        dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', function (d) {
                 var x = _chart.x()(d.x);
                 if (_groupBars) {
@@ -5394,7 +5520,7 @@ dc.barChart = function (parent, chartGroup) {
                 return _chart.label()(d);
             });
 
-        dc.transition(labels.exit(), _chart.transitionDuration())
+        dc.transition(labels.exit(), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('height', 0)
             .remove();
     }
@@ -5418,7 +5544,7 @@ dc.barChart = function (parent, chartGroup) {
             bars.on('click', _chart.onClick);
         }
 
-        dc.transition(bars, _chart.transitionDuration())
+        dc.transition(bars, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', function (d) {
                 var x = _chart.x()(d.x);
                 if (_groupBars) {
@@ -5454,8 +5580,9 @@ dc.barChart = function (parent, chartGroup) {
             .attr('fill', dc.pluck('data', _chart.getColor))
             .select('title').text(dc.pluck('data', _chart.title(d.name)));
 
-        dc.transition(bars.exit(), _chart.transitionDuration())
-            .attr('height', 0)
+        dc.transition(bars.exit(), _chart.transitionDuration(), _chart.transitionDelay())
+            .attr('x', function (d) { return _chart.x()(d.x); })
+            .attr('width', _barWidth * 0.9)
             .remove();
     }
 
@@ -5525,8 +5652,7 @@ dc.barChart = function (parent, chartGroup) {
      * @memberof dc.barChart
      * @instance
      * @param {Boolean} [centerBar=false]
-     * @return {Boolean}
-     * @return {dc.barChart}
+     * @returns {Boolean|dc.barChart}
      */
     _chart.centerBar = function (centerBar) {
         if (!arguments.length) {
@@ -5558,14 +5684,13 @@ dc.barChart = function (parent, chartGroup) {
     /**
      * Get or set the spacing between bars as a fraction of bar size. Valid values are between 0-1.
      * Setting this value will also remove any previously set {@link dc.barChart#gap gap}. See the
-     * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands d3 docs}
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands d3 docs}
      * for a visual description of how the padding is applied.
      * @method barPadding
      * @memberof dc.barChart
      * @instance
      * @param {Number} [barPadding=0]
-     * @return {Number}
-     * @return {dc.barChart}
+     * @returns {Number|dc.barChart}
      */
     _chart.barPadding = function (barPadding) {
         if (!arguments.length) {
@@ -5587,8 +5712,7 @@ dc.barChart = function (parent, chartGroup) {
      * @memberof dc.barChart
      * @instance
      * @param {Number} [padding=0.5]
-     * @return {Number}
-     * @return {dc.barChart}
+     * @returns {Number|dc.barChart}
      */
     _chart.outerPadding = _chart._outerRangeBandPadding;
 
@@ -5600,8 +5724,7 @@ dc.barChart = function (parent, chartGroup) {
      * @memberof dc.barChart
      * @instance
      * @param {Number} [gap=2]
-     * @return {Number}
-     * @return {dc.barChart}
+     * @returns {Number|dc.barChart}
      */
     _chart.gap = function (gap) {
         if (!arguments.length) {
@@ -5672,8 +5795,7 @@ dc.barChart = function (parent, chartGroup) {
      * @example
      * chart.round(function(n) { return Math.floor(n) + 0.5; });
      * @param {Boolean} [alwaysUseRounding=false]
-     * @return {Boolean}
-     * @return {dc.barChart}
+     * @returns {Boolean|dc.barChart}
      */
     _chart.alwaysUseRounding = function (alwaysUseRounding) {
         if (!arguments.length) {
@@ -5735,13 +5857,13 @@ dc.barChart = function (parent, chartGroup) {
  * // create a sub-chart under a composite parent chart
  * var chart3 = dc.lineChart(compositeChart);
  * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector}
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector}
  * specifying a dom block element such as a div; or a dom element or d3 selection.  If the line
  * chart is a sub-chart in a {@link dc.compositeChart Composite Chart} then pass in the parent
  * composite chart instance instead.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.lineChart}
+ * @returns {dc.lineChart}
  */
 dc.lineChart = function (parent, chartGroup) {
     var DEFAULT_DOT_RADIUS = 5;
@@ -5765,11 +5887,12 @@ dc.lineChart = function (parent, chartGroup) {
     var _xyTipsOn = true;
 
     _chart.transitionDuration(500);
+    _chart.transitionDelay(0);
     _chart._rangeBandPadding(1);
 
     _chart.plotData = function () {
         var chartBody = _chart.chartBodyG();
-        var layersList = chartBody.selectAll('g.stack-list');
+        var layersList = chartBody.select('g.stack-list');
 
         if (layersList.empty()) {
             layersList = chartBody.append('g').attr('class', 'stack-list');
@@ -5798,17 +5921,16 @@ dc.lineChart = function (parent, chartGroup) {
     /**
      * Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
      * functions, splines, and cubic interpolation.  This is passed to
-     * {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_interpolate d3.svg.line.interpolate} and
-     * {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#area_interpolate d3.svg.area.interpolate},
-     * where you can find a complete list of valid arguments
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate d3.svg.line.interpolate} and
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate d3.svg.area.interpolate},
+     * where you can find a complete list of valid arguments.
      * @method interpolate
      * @memberof dc.lineChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_interpolate d3.svg.line.interpolate}
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#area_interpolate d3.svg.area.interpolate}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate d3.svg.line.interpolate}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate d3.svg.area.interpolate}
      * @param  {String} [interpolate='linear']
-     * @return {String}
-     * @return {dc.lineChart}
+     * @returns {String|dc.lineChart}
      */
     _chart.interpolate = function (interpolate) {
         if (!arguments.length) {
@@ -5821,16 +5943,15 @@ dc.lineChart = function (parent, chartGroup) {
     /**
      * Gets or sets the tension to use for lines drawn, in the range 0 to 1.
      * This parameter further customizes the interpolation behavior.  It is passed to
-     * {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_tension d3.svg.line.tension} and
-     * {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#area_tension d3.svg.area.tension}.
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_tension d3.svg.line.tension} and
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_tension d3.svg.area.tension}.
      * @method tension
      * @memberof dc.lineChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_interpolate d3.svg.line.interpolate}
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#area_interpolate d3.svg.area.interpolate}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate d3.svg.line.interpolate}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate d3.svg.area.interpolate}
      * @param  {Number} [tension=0.7]
-     * @return {Number}
-     * @return {dc.lineChart}
+     * @returns {Number|dc.lineChart}
      */
     _chart.tension = function (tension) {
         if (!arguments.length) {
@@ -5844,18 +5965,18 @@ dc.lineChart = function (parent, chartGroup) {
      * Gets or sets a function that will determine discontinuities in the line which should be
      * skipped: the path will be broken into separate subpaths if some points are undefined.
      * This function is passed to
-     * {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_defined d3.svg.line.defined}
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_defined d3.svg.line.defined}
      *
      * Note: crossfilter will sometimes coerce nulls to 0, so you may need to carefully write
      * custom reduce functions to get this to work, depending on your data. See
-     * https://github.com/dc-js/dc.js/issues/615#issuecomment-49089248
+     * {@link https://github.com/dc-js/dc.js/issues/615#issuecomment-49089248 this GitHub comment}
+     * for more details and an example.
      * @method defined
      * @memberof dc.lineChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#line_defined d3.svg.line.defined}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_defined d3.svg.line.defined}
      * @param  {Function} [defined]
-     * @return {Function}
-     * @return {dc.lineChart}
+     * @returns {Function|dc.lineChart}
      */
     _chart.defined = function (defined) {
         if (!arguments.length) {
@@ -5876,8 +5997,7 @@ dc.lineChart = function (parent, chartGroup) {
      * // create a Dash Dot Dot Dot
      * chart.dashStyle([3,1,1,1]);
      * @param  {Array<Number>} [dashStyle=[]]
-     * @return {Array<Number>}
-     * @return {dc.lineChart}
+     * @returns {Array<Number>|dc.lineChart}
      */
     _chart.dashStyle = function (dashStyle) {
         if (!arguments.length) {
@@ -5894,8 +6014,7 @@ dc.lineChart = function (parent, chartGroup) {
      * @memberof dc.lineChart
      * @instance
      * @param  {Boolean} [renderArea=false]
-     * @return {Boolean}
-     * @return {dc.lineChart}
+     * @returns {Boolean|dc.lineChart}
      */
     _chart.renderArea = function (renderArea) {
         if (!arguments.length) {
@@ -5930,7 +6049,7 @@ dc.lineChart = function (parent, chartGroup) {
             path.attr('stroke-dasharray', _dashStyle);
         }
 
-        dc.transition(layers.select('path.line'), _chart.transitionDuration())
+        dc.transition(layers.select('path.line'), _chart.transitionDuration(), _chart.transitionDelay())
             //.ease('linear')
             .attr('stroke', colors)
             .attr('d', function (d) {
@@ -5963,7 +6082,7 @@ dc.lineChart = function (parent, chartGroup) {
                     return safeD(area(d.values));
                 });
 
-            dc.transition(layers.select('path.area'), _chart.transitionDuration())
+            dc.transition(layers.select('path.area'), _chart.transitionDuration(), _chart.transitionDelay())
                 //.ease('linear')
                 .attr('fill', colors)
                 .attr('d', function (d) {
@@ -5977,7 +6096,7 @@ dc.lineChart = function (parent, chartGroup) {
     }
 
     function drawDots (chartBody, layers) {
-        if (!_chart.brushOn() && _chart.xyTipsOn()) {
+        if (_chart.xyTipsOn() === 'always' || (!_chart.brushOn() && _chart.xyTipsOn())) {
             var tooltipListClass = TOOLTIP_G_CLASS + '-list';
             var tooltips = chartBody.select('g.' + tooltipListClass);
 
@@ -6007,6 +6126,7 @@ dc.lineChart = function (parent, chartGroup) {
                     .attr('r', getDotRadius())
                     .style('fill-opacity', _dataPointFillOpacity)
                     .style('stroke-opacity', _dataPointStrokeOpacity)
+                    .attr('fill', _chart.getColor)
                     .on('mousemove', function () {
                         var dot = d3.select(this);
                         showDot(dot);
@@ -6018,15 +6138,16 @@ dc.lineChart = function (parent, chartGroup) {
                         hideRefLines(g);
                     });
 
-                dots
+                dots.call(renderTitle, d);
+
+                dc.transition(dots, _chart.transitionDuration())
                     .attr('cx', function (d) {
                         return dc.utils.safeNumber(_chart.x()(d.x));
                     })
                     .attr('cy', function (d) {
                         return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
                     })
-                    .attr('fill', _chart.getColor)
-                    .call(renderTitle, d);
+                    .attr('fill', _chart.getColor);
 
                 dots.exit().remove();
             });
@@ -6110,7 +6231,7 @@ dc.lineChart = function (parent, chartGroup) {
 
     function renderTitle (dot, d) {
         if (_chart.renderTitle()) {
-            dot.selectAll('title').remove();
+            dot.select('title').remove();
             dot.append('title').text(dc.pluck('data', _chart.title(d.name)));
         }
     }
@@ -6123,8 +6244,7 @@ dc.lineChart = function (parent, chartGroup) {
      * @memberof dc.lineChart
      * @instance
      * @param  {Boolean} [xyTipsOn=false]
-     * @return {Boolean}
-     * @return {dc.lineChart}
+     * @returns {Boolean|dc.lineChart}
      */
     _chart.xyTipsOn = function (xyTipsOn) {
         if (!arguments.length) {
@@ -6140,8 +6260,7 @@ dc.lineChart = function (parent, chartGroup) {
      * @memberof dc.lineChart
      * @instance
      * @param  {Number} [dotRadius=5]
-     * @return {Number}
-     * @return {dc.lineChart}
+     * @returns {Number|dc.lineChart}
      */
     _chart.dotRadius = function (dotRadius) {
         if (!arguments.length) {
@@ -6153,17 +6272,16 @@ dc.lineChart = function (parent, chartGroup) {
 
     /**
      * Always show individual dots for each datapoint.
-     * If `options` is falsy, it disables data point rendering.
      *
-     * If no `options` are provided, the current `options` values are instead returned.
+     * If `options` is falsy, it disables data point rendering. If no `options` are provided, the
+     * current `options` values are instead returned.
      * @method renderDataPoints
      * @memberof dc.lineChart
      * @instance
      * @example
      * chart.renderDataPoints({radius: 2, fillOpacity: 0.8, strokeOpacity: 0.8})
      * @param  {{fillOpacity: Number, strokeOpacity: Number, radius: Number}} [options={fillOpacity: 0.8, strokeOpacity: 0.8, radius: 2}]
-     * @return {{fillOpacity: Number, strokeOpacity: Number, radius: Number}}
-     * @return {dc.lineChart}
+     * @returns {{fillOpacity: Number, strokeOpacity: Number, radius: Number}|dc.lineChart}
      */
     _chart.renderDataPoints = function (options) {
         if (!arguments.length) {
@@ -6225,14 +6343,14 @@ dc.lineChart = function (parent, chartGroup) {
 /**
  * The data count widget is a simple widget designed to display the number of records selected by the
  * current filters out of the total number of records in the data set. Once created the data count widget
- * will automatically update the text content of the following elements under the parent element.
+ * will automatically update the text content of child elements with the following classes:
+ *
+ * * `.total-count` - total number of records
+ * * `.filter-count` - number of records matched by the current filters
  *
  * Note: this widget works best for the specific case of showing the number of records out of a
  * total. If you want a more general-purpose numeric display, please use the
  * {@link dc.numberDisplay} widget instead.
- *
- * '.total-count' - total number of records
- * '.filter-count' - number of records matched by the current filters
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
@@ -6247,11 +6365,11 @@ dc.lineChart = function (parent, chartGroup) {
  *     .dimension(ndx)
  *     .group(all);
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.dataCount}
+ * @returns {dc.dataCount}
  */
 dc.dataCount = function (parent, chartGroup) {
     var _formatNumber = d3.format(',d');
@@ -6273,8 +6391,7 @@ dc.dataCount = function (parent, chartGroup) {
      *      all: 'All records selected. Click on charts to apply filters'
      * })
      * @param {{some:String, all: String}} [options]
-     * @return {{some:String, all: String}}
-     * @return {dc.dataCount}
+     * @returns {{some:String, all: String}|dc.dataCount}
      */
     _chart.html = function (options) {
         if (!arguments.length) {
@@ -6294,12 +6411,11 @@ dc.dataCount = function (parent, chartGroup) {
      * @method formatNumber
      * @memberof dc.dataCount
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Formatting d3.format}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Formatting.md d3.format}
      * @example
      * counter.formatNumber(d3.format('.2g'))
      * @param {Function} [formatter=d3.format('.2g')]
-     * @return {Function}
-     * @return {dc.dataCount}
+     * @returns {Function|dc.dataCount}
      */
     _chart.formatNumber = function (formatter) {
         if (!arguments.length) {
@@ -6337,8 +6453,8 @@ dc.dataCount = function (parent, chartGroup) {
  * The data table is a simple widget designed to list crossfilter focused data set (rows being
  * filtered) in a good old tabular fashion.
  *
- * Note: Unlike other charts, the data table (and data grid chart) use the group attribute as a
- * keying function for {@link https://github.com/mbostock/d3/wiki/Arrays#-nest nesting} the data
+ * Note: Unlike other charts, the data table (and data grid chart) use the {@link dc.dataTable#group group} attribute as a
+ * keying function for {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#nest nesting} the data
  * together in groups.  Do not pass in a crossfilter group as this will not work.
  *
  * Another interesting feature of the data table is that you can pass a crossfilter group to the `dimension`, as
@@ -6354,11 +6470,11 @@ dc.dataCount = function (parent, chartGroup) {
  * @memberof dc
  * @mixes dc.baseMixin
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.dataTable}
+ * @returns {dc.dataTable}
  */
 dc.dataTable = function (parent, chartGroup) {
     var LABEL_CSS_CLASS = 'dc-table-label';
@@ -6538,13 +6654,29 @@ dc.dataTable = function (parent, chartGroup) {
     };
 
     /**
+     * Get or set the group function for the data table. The group function takes a data row and
+     * returns the key to specify to {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_nest d3.nest}
+     * to split rows into groups.
+     *
+     * Do not pass in a crossfilter group as this will not work.
+     * @method group
+     * @memberof dc.dataTable
+     * @instance
+     * @example
+     * // group rows by the value of their field
+     * chart
+     *     .group(function(d) { return d.field; })
+     * @param {Function} groupFunction Function taking a row of data and returning the nest key.
+     * @returns {Function|dc.dataTable}
+     */
+
+    /**
      * Get or set the table size which determines the number of rows displayed by the widget.
      * @method size
      * @memberof dc.dataTable
      * @instance
      * @param {Number} [size=25]
-     * @return {Number}
-     * @return {dc.dataTable}
+     * @returns {Number|dc.dataTable}
      */
     _chart.size = function (size) {
         if (!arguments.length) {
@@ -6566,8 +6698,7 @@ dc.dataTable = function (parent, chartGroup) {
      * @memberof dc.dataTable
      * @instance
      * @param {Number} [beginSlice=0]
-     * @return {Number}
-     * @return {dc.dataTable}
+     * @returns {Number|dc.dataTable}
      */
     _chart.beginSlice = function (beginSlice) {
         if (!arguments.length) {
@@ -6584,8 +6715,7 @@ dc.dataTable = function (parent, chartGroup) {
      * @memberof dc.dataTable
      * @instance
      * @param {Number|undefined} [endSlice=undefined]
-     * @return {Number}
-     * @return {dc.dataTable}
+     * @returns {Number|dc.dataTable}
      */
     _chart.endSlice = function (endSlice) {
         if (!arguments.length) {
@@ -6672,8 +6802,7 @@ dc.dataTable = function (parent, chartGroup) {
      * @memberof dc.dataTable
      * @instance
      * @param {Array<Function>} [columns=[]]
-     * @return {Array<Function>}}
-     * @return {dc.dataTable}
+     * @returns {Array<Function>}|dc.dataTable}
      */
     _chart.columns = function (columns) {
         if (!arguments.length) {
@@ -6685,7 +6814,7 @@ dc.dataTable = function (parent, chartGroup) {
 
     /**
      * Get or set sort-by function. This function works as a value accessor at row level and returns a
-     * particular field to be sorted by. Default value: identity function
+     * particular field to be sorted by.
      * @method sortBy
      * @memberof dc.dataTable
      * @instance
@@ -6693,9 +6822,8 @@ dc.dataTable = function (parent, chartGroup) {
      * chart.sortBy(function(d) {
      *     return d.date;
      * });
-     * @param {Function} [sortBy]
-     * @return {Function}
-     * @return {dc.dataTable}
+     * @param {Function} [sortBy=identity function]
+     * @returns {Function|dc.dataTable}
      */
     _chart.sortBy = function (sortBy) {
         if (!arguments.length) {
@@ -6711,13 +6839,12 @@ dc.dataTable = function (parent, chartGroup) {
      * @method order
      * @memberof dc.dataTable
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_ascending d3.ascending}
-     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_descending d3.descending}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending d3.ascending}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending d3.descending}
      * @example
      * chart.order(d3.descending);
      * @param {Function} [order=d3.ascending]
-     * @return {Function}
-     * @return {dc.dataTable}
+     * @returns {Function|dc.dataTable}
      */
     _chart.order = function (order) {
         if (!arguments.length) {
@@ -6728,9 +6855,8 @@ dc.dataTable = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set if group rows will be shown.
-     *
-     * The .group() getter-setter must be provided in either case.
+     * Get or set if group rows will be shown. The dataTable {@link dc.dataTable#group group}
+     * function must be specified even if groups are not shown.
      * @method showGroups
      * @memberof dc.dataTable
      * @instance
@@ -6739,8 +6865,7 @@ dc.dataTable = function (parent, chartGroup) {
      *     .group([value], [name])
      *     .showGroups(true|false);
      * @param {Boolean} [showGroups=true]
-     * @return {Boolean}
-     * @return {dc.dataTable}
+     * @returns {Boolean|dc.dataTable}
      */
     _chart.showGroups = function (showGroups) {
         if (!arguments.length) {
@@ -6757,8 +6882,8 @@ dc.dataTable = function (parent, chartGroup) {
  * Data grid is a simple widget designed to list the filtered records, providing
  * a simple way to define how the items are displayed.
  *
- * Note: Unlike other charts, the data grid chart (and data table) use the group attribute as a keying function
- * for {@link https://github.com/mbostock/d3/wiki/Arrays#-nest nesting} the data together in groups.
+ * Note: Unlike other charts, the data grid chart (and data table) use the {@link dc.dataGrid#group group} attribute as a keying function
+ * for {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#nest nesting} the data together in groups.
  * Do not pass in a crossfilter group as this will not work.
  *
  * Examples:
@@ -6767,11 +6892,11 @@ dc.dataTable = function (parent, chartGroup) {
  * @memberof dc
  * @mixes dc.baseMixin
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.dataGrid}
+ * @returns {dc.dataGrid}
  */
 dc.dataGrid = function (parent, chartGroup) {
     var LABEL_CSS_CLASS = 'dc-grid-label';
@@ -6859,14 +6984,30 @@ dc.dataGrid = function (parent, chartGroup) {
     };
 
     /**
+     * Get or set the group function for the data grid. The group function takes a data row and
+     * returns the key to specify to {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_nest d3.nest}
+     * to split rows into groups.
+     *
+     * Do not pass in a crossfilter group as this will not work.
+     * @method group
+     * @memberof dc.dataGrid
+     * @instance
+     * @example
+     * // group rows by the value of their field
+     * chart
+     *     .group(function(d) { return d.field; })
+     * @param {Function} groupFunction Function taking a row of data and returning the nest key.
+     * @returns {Function|dc.dataTable}
+     */
+
+    /**
      * Get or set the index of the beginning slice which determines which entries get displayed by the widget.
      * Useful when implementing pagination.
      * @method beginSlice
      * @memberof dc.dataGrid
      * @instance
      * @param {Number} [beginSlice=0]
-     * @return {Number}
-     * @return {dc.dataGrid}
+     * @returns {Number|dc.dataGrid}
      */
     _chart.beginSlice = function (beginSlice) {
         if (!arguments.length) {
@@ -6877,14 +7018,13 @@ dc.dataGrid = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set the index of the end slice which determines which entries get displayed by the widget
+     * Get or set the index of the end slice which determines which entries get displayed by the widget.
      * Useful when implementing pagination.
      * @method endSlice
      * @memberof dc.dataGrid
      * @instance
      * @param {Number} [endSlice]
-     * @return {Number}
-     * @return {dc.dataGrid}
+     * @returns {Number|dc.dataGrid}
      */
     _chart.endSlice = function (endSlice) {
         if (!arguments.length) {
@@ -6900,8 +7040,7 @@ dc.dataGrid = function (parent, chartGroup) {
      * @memberof dc.dataGrid
      * @instance
      * @param {Number} [size=999]
-     * @return {Number}
-     * @return {dc.dataGrid}
+     * @returns {Number|dc.dataGrid}
      */
     _chart.size = function (size) {
         if (!arguments.length) {
@@ -6921,8 +7060,7 @@ dc.dataGrid = function (parent, chartGroup) {
      * @example
      * chart.html(function (d) { return '<div class='item '+data.exampleCategory+''>'+data.exampleString+'</div>';});
      * @param {Function} [html]
-     * @return {Function}
-     * @return {dc.dataGrid}
+     * @returns {Function|dc.dataGrid}
      */
     _chart.html = function (html) {
         if (!arguments.length) {
@@ -6940,8 +7078,7 @@ dc.dataGrid = function (parent, chartGroup) {
      * @example
      * chart.htmlGroup (function (d) { return '<h2>'.d.key . 'with ' . d.values.length .' items</h2>'});
      * @param {Function} [htmlGroup]
-     * @return {Function}
-     * @return {dc.dataGrid}
+     * @returns {Function|dc.dataGrid}
      */
     _chart.htmlGroup = function (htmlGroup) {
         if (!arguments.length) {
@@ -6962,8 +7099,7 @@ dc.dataGrid = function (parent, chartGroup) {
      *     return d.date;
      * });
      * @param {Function} [sortByFunction]
-     * @return {Function}
-     * @return {dc.dataGrid}
+     * @returns {Function|dc.dataGrid}
      */
     _chart.sortBy = function (sortByFunction) {
         if (!arguments.length) {
@@ -6974,17 +7110,16 @@ dc.dataGrid = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set sort order function.
+     * Get or set sort the order function.
      * @method order
      * @memberof dc.dataGrid
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_ascending d3.ascending}
-     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_descending d3.descending}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending d3.ascending}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending d3.descending}
      * @example
      * chart.order(d3.descending);
      * @param {Function} [order=d3.ascending]
-     * @return {Function}
-     * @return {dc.dataGrid}
+     * @returns {Function|dc.dataGrid}
      */
     _chart.order = function (order) {
         if (!arguments.length) {
@@ -7018,11 +7153,11 @@ dc.dataGrid = function (parent, chartGroup) {
  * // create a bubble chart under #chart-container2 element using chart group A
  * var bubbleChart2 = dc.bubbleChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.bubbleChart}
+ * @returns {dc.bubbleChart}
  */
 dc.bubbleChart = function (parent, chartGroup) {
     var _chart = dc.bubbleMixin(dc.coordinateGridMixin({}));
@@ -7031,6 +7166,8 @@ dc.bubbleChart = function (parent, chartGroup) {
     var _sortBubbleSize = false;
 
     _chart.transitionDuration(750);
+
+    _chart.transitionDelay(0);
 
     var bubbleLocator = function (d) {
         return 'translate(' + (bubbleX(d)) + ',' + (bubbleY(d)) + ')';
@@ -7043,8 +7180,7 @@ dc.bubbleChart = function (parent, chartGroup) {
      * @memberof dc.bubbleChart
      * @instance
      * @param {Boolean} [elasticRadius=false]
-     * @return {Boolean}
-     * @return {dc.bubbleChart}
+     * @returns {Boolean|dc.bubbleChart}
      */
     _chart.elasticRadius = function (elasticRadius) {
         if (!arguments.length) {
@@ -7061,8 +7197,7 @@ dc.bubbleChart = function (parent, chartGroup) {
      * @memberof dc.bubbleChart
      * @instance
      * @param {Boolean} [sortBubbleSize=false]
-     * @return {Boolean}
-     * @return {dc.bubbleChart}
+     * @returns {Boolean|dc.bubbleChart}
      */
     _chart.sortBubbleSize = function (sortBubbleSize) {
         if (!arguments.length) {
@@ -7113,8 +7248,8 @@ dc.bubbleChart = function (parent, chartGroup) {
             .on('click', _chart.onClick)
             .attr('fill', _chart.getColor)
             .attr('r', 0);
-        dc.transition(bubbleG, _chart.transitionDuration())
-            .selectAll('circle.' + _chart.BUBBLE_CLASS)
+        dc.transition(bubbleG, _chart.transitionDuration(), _chart.transitionDelay())
+            .select('circle.' + _chart.BUBBLE_CLASS)
             .attr('r', function (d) {
                 return _chart.bubbleR(d);
             })
@@ -7128,9 +7263,9 @@ dc.bubbleChart = function (parent, chartGroup) {
     }
 
     function updateNodes (bubbleG) {
-        dc.transition(bubbleG, _chart.transitionDuration())
+        dc.transition(bubbleG, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', bubbleLocator)
-            .selectAll('circle.' + _chart.BUBBLE_CLASS)
+            .select('circle.' + _chart.BUBBLE_CLASS)
             .attr('fill', _chart.getColor)
             .attr('r', function (d) {
                 return _chart.bubbleR(d);
@@ -7188,11 +7323,11 @@ dc.bubbleChart = function (parent, chartGroup) {
  * // create a composite chart under #chart-container2 element using chart group A
  * var compositeChart2 = dc.compositeChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.compositeChart}
+ * @returns {dc.compositeChart}
  */
 dc.compositeChart = function (parent, chartGroup) {
 
@@ -7216,6 +7351,7 @@ dc.compositeChart = function (parent, chartGroup) {
 
     _chart._mandatoryAttributes([]);
     _chart.transitionDuration(500);
+    _chart.transitionDelay(0);
 
     dc.override(_chart, '_generateG', function () {
         var g = this.__generateG();
@@ -7235,7 +7371,7 @@ dc.compositeChart = function (parent, chartGroup) {
             child.chartGroup(_chart.chartGroup());
             child.svg(_chart.svg());
             child.xUnits(_chart.xUnits());
-            child.transitionDuration(_chart.transitionDuration());
+            child.transitionDuration(_chart.transitionDuration(), _chart.transitionDelay());
             child.brushOn(_chart.brushOn());
             child.renderTitle(_chart.renderTitle());
             child.elasticX(_chart.elasticX());
@@ -7249,10 +7385,7 @@ dc.compositeChart = function (parent, chartGroup) {
         var brushIsEmpty = _chart.brushIsEmpty(extent);
 
         for (var i = 0; i < _children.length; ++i) {
-            _children[i].filter(null);
-            if (!brushIsEmpty) {
-                _children[i].filter(extent);
-            }
+            _children[i].replaceFilter(brushIsEmpty ? null : extent);
         }
     };
 
@@ -7285,6 +7418,7 @@ dc.compositeChart = function (parent, chartGroup) {
 
     function calculateYAxisRanges (left, right) {
         var lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax;
+        var ranges;
 
         if (left) {
             lyAxisMin = yAxisMin();
@@ -7296,35 +7430,34 @@ dc.compositeChart = function (parent, chartGroup) {
             ryAxisMax = rightYAxisMax();
         }
 
-        if (_chart.alignYAxes() && left && right && (lyAxisMin < 0 || ryAxisMin < 0)) {
-            // both y axis are linear and at least one doesn't start at zero
-            var leftYRatio, rightYRatio;
-
-            if (lyAxisMin < 0) {
-                leftYRatio = lyAxisMax / lyAxisMin;
-            }
-
-            if (ryAxisMin < 0) {
-                rightYRatio = ryAxisMax / ryAxisMin;
-            }
-
-            if (lyAxisMin < 0 && ryAxisMin < 0) {
-                if (leftYRatio < rightYRatio) {
-                    ryAxisMax = ryAxisMin * leftYRatio;
-                } else {
-                    lyAxisMax = lyAxisMin * rightYRatio;
-                }
-            } else if (lyAxisMin < 0) {
-                ryAxisMin = ryAxisMax / leftYRatio;
-            } else {
-                lyAxisMin = lyAxisMax / (ryAxisMax / ryAxisMin);
-            }
+        if (_chart.alignYAxes() && left && right) {
+            ranges = alignYAxisRanges(lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax);
         }
-        return {
+
+        return ranges || {
             lyAxisMin: lyAxisMin,
             lyAxisMax: lyAxisMax,
             ryAxisMin: ryAxisMin,
             ryAxisMax: ryAxisMax
+        };
+    }
+
+    function alignYAxisRanges (lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax) {
+        // since the two series will share a zero, each Y is just a multiple
+        // of the other. and the ratio should be the ratio of the ranges of the
+        // input data, so that they come out the same height. so we just min/max
+
+        // note: both ranges already include zero due to the stack mixin (#667)
+        // if #667 changes, we can reconsider whether we want data height or
+        // height from zero to be equal. and it will be possible for the axes
+        // to be aligned but not visible.
+        var extentRatio = (ryAxisMax - ryAxisMin) / (lyAxisMax - lyAxisMin);
+
+        return {
+            lyAxisMin: Math.min(lyAxisMin, ryAxisMin / extentRatio),
+            lyAxisMax: Math.max(lyAxisMax, ryAxisMax / extentRatio),
+            ryAxisMin: Math.min(ryAxisMin, lyAxisMin * extentRatio),
+            ryAxisMax: Math.max(ryAxisMax, lyAxisMax * extentRatio)
         };
     }
 
@@ -7409,8 +7542,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @memberof dc.compositeChart
      * @instance
      * @param {Boolean} [useRightAxisGridLines=false]
-     * @return {Boolean}
-     * @return {dc.compositeChart}
+     * @returns {Boolean|dc.compositeChart}
      */
     _chart.useRightAxisGridLines = function (useRightAxisGridLines) {
         if (!arguments) {
@@ -7428,8 +7560,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @memberof dc.compositeChart
      * @instance
      * @param {Object} [childOptions]
-     * @return {Object}
-     * @return {dc.compositeChart}
+     * @returns {Object|dc.compositeChart}
      */
     _chart.childOptions = function (childOptions) {
         if (!arguments.length) {
@@ -7457,8 +7588,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @instance
      * @param {String} [rightYAxisLabel]
      * @param {Number} [padding]
-     * @return {String}
-     * @return {dc.compositeChart}
+     * @returns {String|dc.compositeChart}
      */
     _chart.rightYAxisLabel = function (rightYAxisLabel, padding) {
         if (!arguments.length) {
@@ -7495,7 +7625,7 @@ dc.compositeChart = function (parent, chartGroup) {
      *         .centerBar(true)
      * ]);
      * @param {Array<Chart>} [subChartArray]
-     * @return {dc.compositeChart}
+     * @returns {dc.compositeChart}
      */
     _chart.compose = function (subChartArray) {
         _children = subChartArray;
@@ -7518,7 +7648,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @method children
      * @memberof dc.compositeChart
      * @instance
-     * @return {Array<dc.baseMixin>}
+     * @returns {Array<dc.baseMixin>}
      */
     _chart.children = function () {
         return _children;
@@ -7533,8 +7663,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @memberof dc.compositeChart
      * @instance
      * @param {Boolean} [shareColors=false]
-     * @return {Boolean}
-     * @return {dc.compositeChart}
+     * @returns {Boolean|dc.compositeChart}
      */
     _chart.shareColors = function (shareColors) {
         if (!arguments.length) {
@@ -7551,8 +7680,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @memberof dc.compositeChart
      * @instance
      * @param {Boolean} [shareTitle=true]
-     * @return {Boolean}
-     * @return {dc.compositeChart}
+     * @returns {Boolean|dc.compositeChart}
      */
     _chart.shareTitle = function (shareTitle) {
         if (!arguments.length) {
@@ -7568,10 +7696,9 @@ dc.compositeChart = function (parent, chartGroup) {
      * @method rightY
      * @memberof dc.compositeChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Scales d3.scale}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
      * @param {d3.scale} [yScale]
-     * @return {d3.scale}
-     * @return {dc.compositeChart}
+     * @returns {d3.scale|dc.compositeChart}
      */
     _chart.rightY = function (yScale) {
         if (!arguments.length) {
@@ -7584,12 +7711,12 @@ dc.compositeChart = function (parent, chartGroup) {
 
     /**
      * Get or set alignment between left and right y axes. A line connecting '0' on both y axis
-     * will be parallel to x axis.
+     * will be parallel to x axis. This only has effect when {@link #dc.coordinateGridMixin+elasticY elasticY} is true.
      * @method alignYAxes
      * @memberof dc.compositeChart
      * @instance
      * @param {Boolean} [alignYAxes=false]
-     * @return {Chart}
+     * @returns {Chart}
      */
     _chart.alignYAxes = function (alignYAxes) {
         if (!arguments.length) {
@@ -7693,21 +7820,22 @@ dc.compositeChart = function (parent, chartGroup) {
     /**
      * Set or get the right y axis used by the composite chart. This function is most useful when y
      * axis customization is required. The y axis in dc.js is an instance of a [d3 axis
-     * object](https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-_axis) therefore it supports any valid
-     * d3 axis manipulation. **Caution**: The y axis is usually generated internally by dc;
-     * resetting it may cause unexpected results.
+     * object](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis) therefore it supports any valid
+     * d3 axis manipulation.
+     *
+     * **Caution**: The y axis is usually generated internally by dc; resetting it may cause
+     * unexpected results.
      * @method rightYAxis
      * @memberof dc.compositeChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Axes d3.svg.axis}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3.svg.axis}
      * @example
      * // customize y axis tick format
      * chart.rightYAxis().tickFormat(function (v) {return v + '%';});
      * // customize y axis tick values
      * chart.rightYAxis().tickValues([0, 100, 200, 300]);
      * @param {d3.svg.axis} [rightYAxis]
-     * @return {d3.svg.axis}
-     * @return {dc.compositeChart}
+     * @returns {d3.svg.axis|dc.compositeChart}
      */
     _chart.rightYAxis = function (rightYAxis) {
         if (!arguments.length) {
@@ -7736,11 +7864,11 @@ dc.compositeChart = function (parent, chartGroup) {
  * // create a series chart under #chart-container2 element using chart group A
  * var seriesChart2 = dc.seriesChart("#chart-container2", "chartGroupA");
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.seriesChart}
+ * @returns {dc.seriesChart}
  */
 dc.seriesChart = function (parent, chartGroup) {
     var _chart = dc.compositeChart(parent, chartGroup);
@@ -7821,8 +7949,7 @@ dc.seriesChart = function (parent, chartGroup) {
      * // do a scatter series chart
      * chart.chart(dc.scatterPlot)
      * @param {Function} [chartFunction=dc.lineChart]
-     * @return {Function}
-     * @return {dc.seriesChart}
+     * @returns {Function|dc.seriesChart}
      */
     _chart.chart = function (chartFunction) {
         if (!arguments.length) {
@@ -7845,8 +7972,7 @@ dc.seriesChart = function (parent, chartGroup) {
      * // simple series accessor
      * chart.seriesAccessor(function(d) { return "Expt: " + d.key[0]; })
      * @param {Function} [accessor]
-     * @return {Function}
-     * @return {dc.seriesChart}
+     * @returns {Function|dc.seriesChart}
      */
     _chart.seriesAccessor = function (accessor) {
         if (!arguments.length) {
@@ -7862,13 +7988,12 @@ dc.seriesChart = function (parent, chartGroup) {
      * @method seriesSort
      * @memberof dc.seriesChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_ascending d3.ascending}
-     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_descending d3.descending}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending d3.ascending}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending d3.descending}
      * @example
      * chart.seriesSort(d3.descending);
      * @param {Function} [sortFunction=d3.ascending]
-     * @return {Function}
-     * @return {dc.seriesChart}
+     * @returns {Function|dc.seriesChart}
      */
     _chart.seriesSort = function (sortFunction) {
         if (!arguments.length) {
@@ -7886,16 +8011,15 @@ dc.seriesChart = function (parent, chartGroup) {
      * @method valueSort
      * @memberof dc.seriesChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_ascending d3.ascending}
-     * @see {@link https://github.com/mbostock/d3/wiki/Arrays#d3_descending d3.descending}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending d3.ascending}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending d3.descending}
      * @example
      * // Default value sort
      * _chart.valueSort(function keySort (a, b) {
      *     return d3.ascending(_chart.keyAccessor()(a), _chart.keyAccessor()(b));
      * });
      * @param {Function} [sortFunction]
-     * @return {Function}
-     * @return {dc.seriesChart}
+     * @returns {Function|dc.seriesChart}
      */
     _chart.valueSort = function (sortFunction) {
         if (!arguments.length) {
@@ -7930,11 +8054,11 @@ dc.seriesChart = function (parent, chartGroup) {
  * // create a choropleth chart under '#us-chart2' element using chart group A
  * var chart2 = dc.compositeChart('#us-chart2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.geoChoroplethChart}
+ * @returns {dc.geoChoroplethChart}
  */
 dc.geoChoroplethChart = function (parent, chartGroup) {
     var _chart = dc.colorMixin(dc.baseMixin({}));
@@ -8055,7 +8179,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
                 return _chart.onClick(d, layerIndex);
             });
 
-        dc.transition(paths, _chart.transitionDuration()).attr('fill', function (d, i) {
+        dc.transition(paths, _chart.transitionDuration(), _chart.transitionDelay()).attr('fill', function (d, i) {
             return _chart.getColor(data[geoJson(layerIndex).keyAccessor(d)], i);
         });
     }
@@ -8098,8 +8222,8 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * @memberof dc.geoChoroplethChart
      * @instance
      * @see {@link http://geojson.org/ GeoJSON}
-     * @see {@link https://github.com/mbostock/topojson/wiki TopoJSON}
-     * @see {@link https://github.com/mbostock/topojson/wiki/API-Reference#feature topojson.feature}
+     * @see {@link https://github.com/topojson/topojson/wiki TopoJSON}
+     * @see {@link https://github.com/topojson/topojson-1.x-api-reference/blob/master/API-Reference.md#wiki-feature topojson.feature}
      * @example
      * // insert a layer for rendering US states
      * chart.overlayGeoJson(statesJson.features, 'state', function(d) {
@@ -8109,7 +8233,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * @param {String} name - name of the layer
      * @param {Function} keyAccessor - accessor function used to extract 'key' from the GeoJson data. The key extracted by
      * this function should match the keys returned by the crossfilter groups.
-     * @return {dc.geoChoroplethChart}
+     * @returns {dc.geoChoroplethChart}
      */
     _chart.overlayGeoJson = function (json, name, keyAccessor) {
         for (var i = 0; i < _geoJsons.length; ++i) {
@@ -8124,15 +8248,15 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     };
 
     /**
-     * Set custom geo projection function. See the available [d3 geo projection
-     * functions](https://github.com/mbostock/d3/wiki/Geo-Projections).
+     * Set custom geo projection function. See the available
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Projections.md d3 geo projection functions}.
      * @method projection
      * @memberof dc.geoChoroplethChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Geo-Projections d3.geo.projection}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Projections.md d3.geo.projection}
      * @see {@link https://github.com/d3/d3-geo-projection Extended d3.geo.projection}
      * @param {d3.projection} [projection=d3.geo.albersUsa()]
-     * @return {dc.geoChoroplethChart}
+     * @returns {dc.geoChoroplethChart}
      */
     _chart.projection = function (projection) {
         _geoPath.projection(projection);
@@ -8147,21 +8271,21 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * @method geoJsons
      * @memberof dc.geoChoroplethChart
      * @instance
-     * @return {Array<{name:String, data: Object, accessor: Function}>}
+     * @returns {Array<{name:String, data: Object, accessor: Function}>}
      */
     _chart.geoJsons = function () {
         return _geoJsons;
     };
 
     /**
-     * Returns the {@link https://github.com/mbostock/d3/wiki/Geo-Paths#path d3.geo.path} object used to
+     * Returns the {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Paths.md#path d3.geo.path} object used to
      * render the projection and features.  Can be useful for figuring out the bounding box of the
      * feature set and thus a way to calculate scale and translation for the projection.
      * @method geoPath
      * @memberof dc.geoChoroplethChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Geo-Paths#path d3.geo.path}
-     * @return {d3.geo.path}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Paths.md#path d3.geo.path}
+     * @returns {d3.geo.path}
      */
     _chart.geoPath = function () {
         return _geoPath;
@@ -8173,7 +8297,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * @memberof dc.geoChoroplethChart
      * @instance
      * @param {String} name
-     * @return {dc.geoChoroplethChart}
+     * @returns {dc.geoChoroplethChart}
      */
     _chart.removeGeoJson = function (name) {
         var geoJsons = [];
@@ -8211,11 +8335,11 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
  * // create a bubble overlay chart on top of the '#chart-container2 svg' element using chart group A
  * var bubbleChart2 = dc.compositeChart('#chart-container2', 'chartGroupA').svg(d3.select('#chart-container2 svg'));
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.bubbleOverlay}
+ * @returns {dc.bubbleOverlay}
  */
 dc.bubbleOverlay = function (parent, chartGroup) {
     var BUBBLE_OVERLAY_CLASS = 'bubble-overlay';
@@ -8235,13 +8359,15 @@ dc.bubbleOverlay = function (parent, chartGroup) {
      * // set up underlying svg element
      * chart.svg(d3.select('#chart svg'));
      * @param {SVGElement|d3.selection} [imageElement]
-     * @return {dc.bubbleOverlay}
+     * @returns {dc.bubbleOverlay}
      */
     var _chart = dc.bubbleMixin(dc.baseMixin({}));
     var _g;
     var _points = [];
 
     _chart.transitionDuration(750);
+
+    _chart.transitionDelay(0);
 
     _chart.radiusValueAccessor(function (d) {
         return d.value;
@@ -8260,7 +8386,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
      * @param {String} name
      * @param {Number} x
      * @param {Number} y
-     * @return {dc.bubbleOverlay}
+     * @returns {dc.bubbleOverlay}
      */
     _chart.point = function (name, x, y) {
         _points.push({name: name, x: x, y: y});
@@ -8303,7 +8429,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
                     .on('click', _chart.onClick);
             }
 
-            dc.transition(circle, _chart.transitionDuration())
+            dc.transition(circle, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('r', function (d) {
                     return _chart.bubbleR(d);
                 });
@@ -8354,7 +8480,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
 
             var circle = nodeG.select('circle.' + BUBBLE_CLASS);
 
-            dc.transition(circle, _chart.transitionDuration())
+            dc.transition(circle, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('r', function (d) {
                     return _chart.bubbleR(d);
                 })
@@ -8418,11 +8544,11 @@ dc.bubbleOverlay = function (parent, chartGroup) {
  * // create a row chart under #chart-container2 element using chart group A
  * var chart2 = dc.rowChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.rowChart}
+ * @returns {dc.rowChart}
  */
 dc.rowChart = function (parent, chartGroup) {
 
@@ -8431,7 +8557,7 @@ dc.rowChart = function (parent, chartGroup) {
     var _labelOffsetX = 10;
     var _labelOffsetY = 15;
     var _hasLabelOffsetY = false;
-    var _dyOffset = '0.35em';  // this helps center labels https://github.com/mbostock/d3/wiki/SVG-Shapes#svg_text
+    var _dyOffset = '0.35em';  // this helps center labels https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#svg_text
     var _titleLabelOffsetX = 2;
 
     var _gap = 5;
@@ -8459,6 +8585,9 @@ dc.rowChart = function (parent, chartGroup) {
             if (extent[0] > 0) {
                 extent[0] = 0;
             }
+            if (extent[1] < 0) {
+                extent[1] = 0;
+            }
             _x = d3.scale.linear().domain(extent)
                 .range([0, _chart.effectiveWidth()]);
         }
@@ -8475,7 +8604,7 @@ dc.rowChart = function (parent, chartGroup) {
         }
         axisG.attr('transform', 'translate(0, ' + _chart.effectiveHeight() + ')');
 
-        dc.transition(axisG, _chart.transitionDuration())
+        dc.transition(axisG, _chart.transitionDuration(), _chart.transitionDelay())
             .call(_xAxis);
     }
 
@@ -8499,14 +8628,13 @@ dc.rowChart = function (parent, chartGroup) {
 
     /**
      * Gets or sets the x scale. The x scale can be any d3
-     * {@link https://github.com/mbostock/d3/wiki/Quantitative-Scales quantitive scale}
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md quantitive scale}.
      * @method x
      * @memberof dc.rowChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Quantitative-Scales quantitive scale}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md quantitive scale}
      * @param {d3.scale} [scale]
-     * @return {d3.scale}
-     * @return {dc.rowChart}
+     * @returns {d3.scale|dc.rowChart}
      */
     _chart.x = function (scale) {
         if (!arguments.length) {
@@ -8556,7 +8684,6 @@ dc.rowChart = function (parent, chartGroup) {
         rowEnter.append('rect').attr('width', 0);
 
         createLabels(rowEnter);
-        updateLabels(rows);
     }
 
     function removeElements (rows) {
@@ -8596,7 +8723,7 @@ dc.rowChart = function (parent, chartGroup) {
                 return (_chart.hasFilter()) ? isSelectedRow(d) : false;
             });
 
-        dc.transition(rect, _chart.transitionDuration())
+        dc.transition(rect, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('width', function (d) {
                 return Math.abs(rootValue() - _x(_chart.valueAccessor()(d)));
             })
@@ -8608,7 +8735,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     function createTitles (rows) {
         if (_chart.renderTitle()) {
-            rows.selectAll('title').remove();
+            rows.select('title').remove();
             rows.append('title').text(_chart.title());
         }
     }
@@ -8638,7 +8765,7 @@ dc.rowChart = function (parent, chartGroup) {
                 .text(function (d) {
                     return _chart.label()(d);
                 });
-            dc.transition(lab, _chart.transitionDuration())
+            dc.transition(lab, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('transform', translateX);
         }
         if (_chart.renderTitleLabel()) {
@@ -8654,19 +8781,18 @@ dc.rowChart = function (parent, chartGroup) {
                     .text(function (d) {
                         return _chart.title()(d);
                     });
-            dc.transition(titlelab, _chart.transitionDuration())
+            dc.transition(titlelab, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('transform', translateX);
         }
     }
 
     /**
-     * Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'
+     * Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'.
      * @method renderTitleLabel
      * @memberof dc.rowChart
      * @instance
      * @param {Boolean} [renderTitleLabel=false]
-     * @return {Boolean}
-     * @return {dc.rowChart}
+     * @returns {Boolean|dc.rowChart}
      */
     _chart.renderTitleLabel = function (renderTitleLabel) {
         if (!arguments.length) {
@@ -8694,18 +8820,18 @@ dc.rowChart = function (parent, chartGroup) {
 
     /**
      * Get the x axis for the row chart instance.  Note: not settable for row charts.
-     * See the {@link https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis d3 axis object}
+     * See the {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3 axis object}
      * documention for more information.
      * @method xAxis
      * @memberof dc.rowChart
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Axes#wiki-axis d3.svg.axis}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3.svg.axis}
      * @example
      * // customize x axis tick format
      * chart.xAxis().tickFormat(function (v) {return v + '%';});
      * // customize x axis tick values
      * chart.xAxis().tickValues([0, 100, 200, 300]);
-     * @return {d3.svg.axis}
+     * @returns {d3.svg.axis}
      */
     _chart.xAxis = function () {
         return _xAxis;
@@ -8722,8 +8848,7 @@ dc.rowChart = function (parent, chartGroup) {
      * @example
      * chart.fixedBarHeight( chartheight - (count + 1) * gap / count);
      * @param {Boolean|Number} [fixedBarHeight=false]
-     * @return {Boolean|Number}
-     * @return {dc.rowChart}
+     * @returns {Boolean|Number|dc.rowChart}
      */
     _chart.fixedBarHeight = function (fixedBarHeight) {
         if (!arguments.length) {
@@ -8734,13 +8859,12 @@ dc.rowChart = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set the vertical gap space between rows on a particular row chart instance
+     * Get or set the vertical gap space between rows on a particular row chart instance.
      * @method gap
      * @memberof dc.rowChart
      * @instance
      * @param {Number} [gap=5]
-     * @return {Number}
-     * @return {dc.rowChart}
+     * @returns {Number|dc.rowChart}
      */
     _chart.gap = function (gap) {
         if (!arguments.length) {
@@ -8757,8 +8881,7 @@ dc.rowChart = function (parent, chartGroup) {
      * @memberof dc.rowChart
      * @instance
      * @param {Boolean} [elasticX]
-     * @return {Boolean}
-     * @return {dc.rowChart}
+     * @returns {Boolean|dc.rowChart}
      */
     _chart.elasticX = function (elasticX) {
         if (!arguments.length) {
@@ -8774,8 +8897,7 @@ dc.rowChart = function (parent, chartGroup) {
      * @memberof dc.rowChart
      * @instance
      * @param {Number} [labelOffsetX=10]
-     * @return {Number}
-     * @return {dc.rowChart}
+     * @returns {Number|dc.rowChart}
      */
     _chart.labelOffsetX = function (labelOffsetX) {
         if (!arguments.length) {
@@ -8791,8 +8913,7 @@ dc.rowChart = function (parent, chartGroup) {
      * @memberof dc.rowChart
      * @instance
      * @param {Number} [labelOffsety=15]
-     * @return {Number}
-     * @return {dc.rowChart}
+     * @returns {Number|dc.rowChart}
      */
     _chart.labelOffsetY = function (labelOffsety) {
         if (!arguments.length) {
@@ -8809,8 +8930,7 @@ dc.rowChart = function (parent, chartGroup) {
      * @memberof dc.rowChart
      * @instance
      * @param {Number} [titleLabelOffsetX=2]
-     * @return {Number}
-     * @return {dc.rowChart}
+     * @returns {Number|dc.rowChart}
      */
     _chart.titleLabelOffsetX = function (titleLabelOffsetX) {
         if (!arguments.length) {
@@ -8838,7 +8958,7 @@ dc.rowChart = function (parent, chartGroup) {
  * @memberof dc
  * @example
  * chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
- * @return {dc.legend}
+ * @returns {dc.legend}
  */
 dc.legend = function () {
     var LABEL_GAP = 2;
@@ -8853,7 +8973,8 @@ dc.legend = function () {
         _legendWidth = 560,
         _itemWidth = 70,
         _autoItemWidth = false,
-        _legendText = dc.pluck('name');
+        _legendText = dc.pluck('name'),
+        _maxItems;
 
     var _g;
 
@@ -8871,6 +8992,10 @@ dc.legend = function () {
             .attr('class', 'dc-legend')
             .attr('transform', 'translate(' + _x + ',' + _y + ')');
         var legendables = _parent.legendables();
+
+        if (_maxItems !== undefined) {
+            legendables = legendables.slice(0, _maxItems);
+        }
 
         var itemEnter = _g.selectAll('g.dc-legend-item')
             .data(legendables)
@@ -8921,15 +9046,13 @@ dc.legend = function () {
         var row = 0;
         itemEnter.attr('transform', function (d, i) {
             if (_horizontal) {
-                var translateBy = 'translate(' + _cumulativeLegendTextWidth + ',' + row * legendItemHeight() + ')';
                 var itemWidth   = _autoItemWidth === true ? this.getBBox().width + _gap : _itemWidth;
-
-                if ((_cumulativeLegendTextWidth + itemWidth) >= _legendWidth) {
-                    ++row ;
-                    _cumulativeLegendTextWidth = 0 ;
-                } else {
-                    _cumulativeLegendTextWidth += itemWidth;
+                if ((_cumulativeLegendTextWidth + itemWidth) > _legendWidth && _cumulativeLegendTextWidth > 0) {
+                    ++row;
+                    _cumulativeLegendTextWidth = 0;
                 }
+                var translateBy = 'translate(' + _cumulativeLegendTextWidth + ',' + row * legendItemHeight() + ')';
+                _cumulativeLegendTextWidth += itemWidth;
                 return translateBy;
             } else {
                 return 'translate(0,' + i * legendItemHeight() + ')';
@@ -8947,8 +9070,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Number} [x=0]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.x = function (x) {
         if (!arguments.length) {
@@ -8964,8 +9086,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Number} [y=0]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.y = function (y) {
         if (!arguments.length) {
@@ -8981,8 +9102,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Number} [gap=5]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.gap = function (gap) {
         if (!arguments.length) {
@@ -8998,8 +9118,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Number} [itemHeight=12]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.itemHeight = function (itemHeight) {
         if (!arguments.length) {
@@ -9015,8 +9134,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Boolean} [horizontal=false]
-     * @return {Boolean}
-     * @return {dc.legend}
+     * @returns {Boolean|dc.legend}
      */
     _legend.horizontal = function (horizontal) {
         if (!arguments.length) {
@@ -9032,8 +9150,7 @@ dc.legend = function () {
      * @memberof dc.legend
      * @instance
      * @param  {Number} [legendWidth=500]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.legendWidth = function (legendWidth) {
         if (!arguments.length) {
@@ -9044,13 +9161,12 @@ dc.legend = function () {
     };
 
     /**
-     * legendItem width for horizontal legend.
+     * Legend item width for horizontal legend.
      * @method itemWidth
      * @memberof dc.legend
      * @instance
      * @param  {Number} [itemWidth=70]
-     * @return {Number}
-     * @return {dc.legend}
+     * @returns {Number|dc.legend}
      */
     _legend.itemWidth = function (itemWidth) {
         if (!arguments.length) {
@@ -9062,13 +9178,12 @@ dc.legend = function () {
 
     /**
      * Turn automatic width for legend items on or off. If true, {@link dc.legend#itemWidth itemWidth} is ignored.
-     * This setting takes into account {@link dc.legend#gap gap}.
+     * This setting takes into account the {@link dc.legend#gap gap}.
      * @method autoItemWidth
      * @memberof dc.legend
      * @instance
      * @param  {Boolean} [autoItemWidth=false]
-     * @return {Boolean}
-     * @return {dc.legend}
+     * @returns {Boolean|dc.legend}
      */
     _legend.autoItemWidth = function (autoItemWidth) {
         if (!arguments.length) {
@@ -9079,26 +9194,45 @@ dc.legend = function () {
     };
 
     /**
-    #### .legendText([legendTextFunction])
-    Set or get the legend text function. The legend widget uses this function to render
-    the legend text on each item. If no function is specified the legend widget will display
-    the names associated with each group.
-
-    Default: dc.pluck('name')
-
-    ```js
-    // create numbered legend items
-    chart.legend(dc.legend().legendText(function(d, i) { return i + '. ' + d.name; }))
-
-    // create legend displaying group counts
-    chart.legend(dc.legend().legendText(function(d) { return d.name + ': ' d.data; }))
-    ```
-    **/
-    _legend.legendText = function (_) {
+     * Set or get the legend text function. The legend widget uses this function to render the legend
+     * text for each item. If no function is specified the legend widget will display the names
+     * associated with each group.
+     * @method legendText
+     * @memberof dc.legend
+     * @instance
+     * @param  {Function} [legendText]
+     * @returns {Function|dc.legend}
+     * @example
+     * // default legendText
+     * legend.legendText(dc.pluck('name'))
+     *
+     * // create numbered legend items
+     * chart.legend(dc.legend().legendText(function(d, i) { return i + '. ' + d.name; }))
+     *
+     * // create legend displaying group counts
+     * chart.legend(dc.legend().legendText(function(d) { return d.name + ': ' d.data; }))
+     **/
+    _legend.legendText = function (legendText) {
         if (!arguments.length) {
             return _legendText;
         }
-        _legendText = _;
+        _legendText = legendText;
+        return _legend;
+    };
+
+    /**
+     * Maximum number of legend items to display
+     * @method maxItems
+     * @memberof dc.legend
+     * @instance
+     * @param  {Number} [maxItems]
+     * @return {dc.legend}
+     */
+    _legend.maxItems = function (maxItems) {
+        if (!arguments.length) {
+            return _maxItems;
+        }
+        _maxItems = dc.utils.isNumber(maxItems) ? maxItems : undefined;
         return _legend;
     };
 
@@ -9122,11 +9256,11 @@ dc.legend = function () {
  * // create a sub-chart under a composite parent chart
  * var chart3 = dc.scatterPlot(compositeChart);
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.scatterPlot}
+ * @returns {dc.scatterPlot}
  */
 dc.scatterPlot = function (parent, chartGroup) {
     var _chart = dc.coordinateGridMixin({});
@@ -9139,9 +9273,16 @@ dc.scatterPlot = function (parent, chartGroup) {
     _chart.valueAccessor(function (d) { return originalKeyAccessor(d)[1]; });
     _chart.colorAccessor(function () { return _chart._groupName; });
 
+    _chart.title(function (d) {
+        // this basically just counteracts the setting of its own key/value accessors
+        // see https://github.com/dc-js/dc.js/issues/702
+        return _chart.keyAccessor()(d) + ',' + _chart.valueAccessor()(d) + ': ' +
+            _chart.existenceAccessor()(d);
+    });
+
     var _locator = function (d) {
         return 'translate(' + _chart.x()(_chart.keyAccessor()(d)) + ',' +
-            _chart.y()(_chart.valueAccessor()(d)) + ')';
+                              _chart.y()(_chart.valueAccessor()(d)) + ')';
     };
 
     var _highlightedSize = 7;
@@ -9150,11 +9291,14 @@ dc.scatterPlot = function (parent, chartGroup) {
     var _excludedColor = null;
     var _excludedOpacity = 1.0;
     var _emptySize = 0;
+    var _emptyOpacity = 0;
+    var _nonemptyOpacity = 1;
+    var _emptyColor = null;
     var _filtered = [];
 
     _symbol.size(function (d, i) {
         if (!_existenceAccessor(d)) {
-            return _emptySize;
+            return Math.pow(_emptySize, 2);
         } else if (_filtered[i]) {
             return Math.pow(_symbolSize, 2);
         } else {
@@ -9172,36 +9316,56 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     _chart.plotData = function () {
         var symbols = _chart.chartBodyG().selectAll('path.symbol')
-                .data(_chart.data());
+            .data(_chart.data());
 
         symbols
             .enter()
-            .append('path')
+        .append('path')
             .attr('class', 'symbol')
             .attr('opacity', 0)
             .attr('fill', _chart.getColor)
             .attr('transform', _locator);
 
+        symbols.call(renderTitles, _chart.data());
+
         symbols.each(function (d, i) {
             _filtered[i] = !_chart.filter() || _chart.filter().isFiltered([d.key[0], d.key[1]]);
         });
 
-        dc.transition(symbols, _chart.transitionDuration())
+        dc.transition(symbols, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('opacity', function (d, i) {
-                return !_existenceAccessor(d) ? 0 :
-                    _filtered[i] ? 1 : _chart.excludedOpacity();
+                if (!_existenceAccessor(d)) {
+                    return _emptyOpacity;
+                } else if (_filtered[i]) {
+                    return _nonemptyOpacity;
+                } else {
+                    return _chart.excludedOpacity();
+                }
             })
             .attr('fill', function (d, i) {
-                return _chart.excludedColor() && !_filtered[i] ?
-                    _chart.excludedColor() :
-                    _chart.getColor(d);
+                if (_emptyColor && !_existenceAccessor(d)) {
+                    return _emptyColor;
+                } else if (_chart.excludedColor() && !_filtered[i]) {
+                    return _chart.excludedColor();
+                } else {
+                    return _chart.getColor(d);
+                }
             })
             .attr('transform', _locator)
             .attr('d', _symbol);
 
-        dc.transition(symbols.exit(), _chart.transitionDuration())
+        dc.transition(symbols.exit(), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('opacity', 0).remove();
     };
+
+    function renderTitles (symbol, d) {
+        if (_chart.renderTitle()) {
+            symbol.selectAll('title').remove();
+            symbol.append('title').text(function (d) {
+                return _chart.title()(d);
+            });
+        }
+    }
 
     /**
      * Get or set the existence accessor.  If a point exists, it is drawn with
@@ -9218,8 +9382,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * // default accessor
      * chart.existenceAccessor(function (d) { return d.value; });
      * @param {Function} [accessor]
-     * @return {Function}
-     * @return {dc.scatterPlot}
+     * @returns {Function|dc.scatterPlot}
      */
     _chart.existenceAccessor = function (accessor) {
         if (!arguments.length) {
@@ -9235,15 +9398,14 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method symbol
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_type d3.svg.symbol().type()}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_type d3.svg.symbol.type}
      * @example
      * // Circle type
      * chart.symbol('circle');
      * // Square type
      * chart.symbol('square');
      * @param {String|Function} [type='circle']
-     * @return {String|Function}
-     * @return {dc.scatterPlot}
+     * @returns {String|Function|dc.scatterPlot}
      */
     _chart.symbol = function (type) {
         if (!arguments.length) {
@@ -9258,10 +9420,9 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method symbolSize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
      * @param {Number} [symbolSize=3]
-     * @return {Number}
-     * @return {dc.scatterPlot}
+     * @returns {Number|dc.scatterPlot}
      */
     _chart.symbolSize = function (symbolSize) {
         if (!arguments.length) {
@@ -9276,10 +9437,9 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method highlightedSize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
      * @param {Number} [highlightedSize=5]
-     * @return {Number}
-     * @return {dc.scatterPlot}
+     * @returns {Number|dc.scatterPlot}
      */
     _chart.highlightedSize = function (highlightedSize) {
         if (!arguments.length) {
@@ -9291,14 +9451,13 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
      * Set or get size for symbols excluded from this chart's filter. If null, no
-     * special size is applied for symbols based on their filter status
+     * special size is applied for symbols based on their filter status.
      * @method excludedSize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
      * @param {Number} [excludedSize=null]
-     * @return {Number}
-     * @return {dc.scatterPlot}
+     * @returns {Number|dc.scatterPlot}
      */
     _chart.excludedSize = function (excludedSize) {
         if (!arguments.length) {
@@ -9310,14 +9469,12 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
      * Set or get color for symbols excluded from this chart's filter. If null, no
-     * special color is applied for symbols based on their filter status
+     * special color is applied for symbols based on their filter status.
      * @method excludedColor
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
      * @param {Number} [excludedColor=null]
-     * @return {Number}
-     * @return {dc.scatterPlot}
+     * @returns {Number|dc.scatterPlot}
      */
     _chart.excludedColor = function (excludedColor) {
         if (!arguments.length) {
@@ -9332,10 +9489,8 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method excludedOpacity
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
      * @param {Number} [excludedOpacity=1.0]
-     * @return {Number}
-     * @return {dc.scatterPlot}
+     * @returns {Number|dc.scatterPlot}
      */
     _chart.excludedOpacity = function (excludedOpacity) {
         if (!arguments.length) {
@@ -9350,16 +9505,67 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method emptySize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
      * @param {Number} [emptySize=0]
-     * @return {Number}
-     * @return {dc.scatterPlot}
+     * @returns {Number|dc.scatterPlot}
      */
     _chart.hiddenSize = _chart.emptySize = function (emptySize) {
         if (!arguments.length) {
             return _emptySize;
         }
         _emptySize = emptySize;
+        return _chart;
+    };
+
+    /**
+     * Set or get color for symbols when the group is empty. If null, just use the
+     * {@link dc.colorMixin#colors colorMixin.colors} color scale zero value.
+     * @name emptyColor
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {String} [emptyColor=null]
+     * @return {String}
+     * @return {dc.scatterPlot}/
+     */
+    _chart.emptyColor = function (emptyColor) {
+        if (!arguments.length) {
+            return _emptyColor;
+        }
+        _emptyColor = emptyColor;
+        return _chart;
+    };
+
+    /**
+     * Set or get opacity for symbols when the group is empty.
+     * @name emptyOpacity
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {Number} [emptyOpacity=0]
+     * @return {Number}
+     * @return {dc.scatterPlot}
+     */
+    _chart.emptyOpacity = function (emptyOpacity) {
+        if (!arguments.length) {
+            return _emptyOpacity;
+        }
+        _emptyOpacity = emptyOpacity;
+        return _chart;
+    };
+
+    /**
+     * Set or get opacity for symbols when the group is not empty.
+     * @name nonemptyOpacity
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {Number} [nonemptyOpacity=1]
+     * @return {Number}
+     * @return {dc.scatterPlot}
+     */
+    _chart.nonemptyOpacity = function (nonemptyOpacity) {
+        if (!arguments.length) {
+            return _emptyOpacity;
+        }
+        _nonemptyOpacity = nonemptyOpacity;
         return _chart;
     };
 
@@ -9391,7 +9597,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         });
         var oldSize = _symbol.size();
         _symbol.size(Math.pow(size, 2));
-        dc.transition(symbols, _chart.transitionDuration()).attr('d', _symbol);
+        dc.transition(symbols, _chart.transitionDuration(), _chart.transitionDelay()).attr('d', _symbol);
         _symbol.size(oldSize);
     }
 
@@ -9455,17 +9661,18 @@ dc.scatterPlot = function (parent, chartGroup) {
  * // create a number display under #chart-container1 element using the default global chart group
  * var display1 = dc.numberDisplay('#chart-container1');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.numberDisplay}
+ * @returns {dc.numberDisplay}
  */
 dc.numberDisplay = function (parent, chartGroup) {
     var SPAN_CLASS = 'number-display';
     var _formatNumber = d3.format('.2s');
     var _chart = dc.baseMixin({});
     var _html = {one: '', some: '', none: ''};
+    var _lastValue;
 
     // dimension not required
     _chart._mandatoryAttributes(['group']);
@@ -9485,8 +9692,7 @@ dc.numberDisplay = function (parent, chartGroup) {
      *      some:'%number records',
      *      none:'no records'})
      * @param {{one:String, some:String, none:String}} [html={one: '', some: '', none: ''}]
-     * @return {{one:String, some:String, none:String}}
-     * @return {dc.numberDisplay}
+     * @returns {{one:String, some:String, none:String}|dc.numberDisplay}
      */
     _chart.html = function (html) {
         if (!arguments.length) {
@@ -9513,11 +9719,11 @@ dc.numberDisplay = function (parent, chartGroup) {
     };
 
     /**
-     * Calculate and return the underlying value of the display
+     * Calculate and return the underlying value of the display.
      * @method value
      * @memberof dc.numberDisplay
      * @instance
-     * @return {Number}
+     * @returns {Number}
      */
     _chart.value = function () {
         return _chart.data();
@@ -9529,6 +9735,7 @@ dc.numberDisplay = function (parent, chartGroup) {
     });
 
     _chart.transitionDuration(250); // good default
+    _chart.transitionDelay(0);
 
     _chart._doRender = function () {
         var newValue = _chart.value(),
@@ -9543,10 +9750,13 @@ dc.numberDisplay = function (parent, chartGroup) {
 
         span.transition()
             .duration(_chart.transitionDuration())
+            .delay(_chart.transitionDelay())
             .ease('quad-out-in')
             .tween('text', function () {
-                var interp = d3.interpolateNumber(this.lastValue || 0, newValue);
-                this.lastValue = newValue;
+                // [XA] don't try and interpolate from Infinity, else this breaks.
+                var interpStart = isFinite(_lastValue) ? _lastValue : 0;
+                var interp = d3.interpolateNumber(interpStart || 0, newValue);
+                _lastValue = newValue;
                 return function (t) {
                     var html = null, num = _chart.formatNumber()(interp(t));
                     if (newValue === 0 && (_html.none !== '')) {
@@ -9570,10 +9780,9 @@ dc.numberDisplay = function (parent, chartGroup) {
      * @method formatNumber
      * @memberof dc.numberDisplay
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Formatting d3.format}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Formatting.md d3.format}
      * @param {Function} [formatter=d3.format('.2s')]
-     * @return {Function}
-     * @return {dc.numberDisplay}
+     * @returns {Function|dc.numberDisplay}
      */
     _chart.formatNumber = function (formatter) {
         if (!arguments.length) {
@@ -9599,11 +9808,11 @@ dc.numberDisplay = function (parent, chartGroup) {
  * // create a heat map under #chart-container2 element using chart group A
  * var heatMap2 = dc.heatMap('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.heatMap}
+ * @returns {dc.heatMap}
  */
 dc.heatMap = function (parent, chartGroup) {
 
@@ -9642,8 +9851,7 @@ dc.heatMap = function (parent, chartGroup) {
      * // the default label function just returns the name
      * chart.colsLabel(function(d) { return d; });
      * @param  {Function} [labelFunction=function(d) { return d; }]
-     * @return {Function}
-     * @return {dc.heatMap}
+     * @returns {Function|dc.heatMap}
      */
     _chart.colsLabel = function (labelFunction) {
         if (!arguments.length) {
@@ -9663,8 +9871,7 @@ dc.heatMap = function (parent, chartGroup) {
      * // the default label function just returns the name
      * chart.rowsLabel(function(d) { return d; });
      * @param  {Function} [labelFunction=function(d) { return d; }]
-     * @return {Function}
-     * @return {dc.heatMap}
+     * @returns {Function|dc.heatMap}
      */
     _chart.rowsLabel = function (labelFunction) {
         if (!arguments.length) {
@@ -9692,15 +9899,11 @@ dc.heatMap = function (parent, chartGroup) {
             return !_chart.hasFilter(d.key);
         });
         dc.events.trigger(function () {
-            if (unfilteredCellsOnAxis.empty()) {
-                cellsOnAxis.each(function (d) {
-                    _chart.filter(d.key);
-                });
-            } else {
-                unfilteredCellsOnAxis.each(function (d) {
-                    _chart.filter(d.key);
-                });
-            }
+            var selection = unfilteredCellsOnAxis.empty() ? cellsOnAxis : unfilteredCellsOnAxis;
+            var filters = selection.data().map(function (kv) {
+                return dc.filters.TwoDimensionalFilter(kv.key);
+            });
+            _chart._filter([filters]);
             _chart.redrawGroup();
         });
     }
@@ -9720,8 +9923,7 @@ dc.heatMap = function (parent, chartGroup) {
      * @memberof dc.heatMap
      * @instance
      * @param  {Array<String|Number>} [rows]
-     * @return {Array<String|Number>}
-     * @return {dc.heatMap}
+     * @returns {Array<String|Number>|dc.heatMap}
      */
 
     _chart.rows = function (rows) {
@@ -9751,8 +9953,7 @@ dc.heatMap = function (parent, chartGroup) {
      * @memberof dc.heatMap
      * @instance
      * @param  {Array<String|Number>} [cols]
-     * @return {Array<String|Number>}
-     * @return {dc.heatMap}
+     * @returns {Array<String|Number>|dc.heatMap}
      */
     _chart.cols = function (cols) {
         if (!arguments.length) {
@@ -9819,10 +10020,10 @@ dc.heatMap = function (parent, chartGroup) {
 
         if (_chart.renderTitle()) {
             gEnter.append('title');
-            boxes.selectAll('title').text(_chart.title());
+            boxes.select('title').text(_chart.title());
         }
 
-        dc.transition(boxes.selectAll('rect'), _chart.transitionDuration())
+        dc.transition(boxes.select('rect'), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', function (d, i) { return cols(_chart.keyAccessor()(d, i)); })
             .attr('y', function (d, i) { return rows(_chart.valueAccessor()(d, i)); })
             .attr('rx', _xBorderRadius)
@@ -9833,7 +10034,7 @@ dc.heatMap = function (parent, chartGroup) {
 
         boxes.exit().remove();
 
-        var gCols = _chartBody.selectAll('g.cols');
+        var gCols = _chartBody.select('g.cols');
         if (gCols.empty()) {
             gCols = _chartBody.append('g').attr('class', 'cols axis');
         }
@@ -9845,12 +10046,12 @@ dc.heatMap = function (parent, chartGroup) {
               .attr('dy', 12)
               .on('click', _chart.xAxisOnClick())
               .text(_chart.colsLabel());
-        dc.transition(gColsText, _chart.transitionDuration())
+        dc.transition(gColsText, _chart.transitionDuration(), _chart.transitionDelay())
                .text(_chart.colsLabel())
                .attr('x', function (d) { return cols(d) + boxWidth / 2; })
                .attr('y', _chart.effectiveHeight());
         gColsText.exit().remove();
-        var gRows = _chartBody.selectAll('g.rows');
+        var gRows = _chartBody.select('g.rows');
         if (gRows.empty()) {
             gRows = _chartBody.append('g').attr('class', 'rows axis');
         }
@@ -9862,7 +10063,7 @@ dc.heatMap = function (parent, chartGroup) {
               .attr('dx', -2)
               .on('click', _chart.yAxisOnClick())
               .text(_chart.rowsLabel());
-        dc.transition(gRowsText, _chart.transitionDuration())
+        dc.transition(gRowsText, _chart.transitionDuration(), _chart.transitionDelay())
               .text(_chart.rowsLabel())
               .attr('y', function (d) { return rows(d) + boxHeight / 2; });
         gRowsText.exit().remove();
@@ -9899,8 +10100,7 @@ dc.heatMap = function (parent, chartGroup) {
      *     });
      * });
      * @param  {Function} [handler]
-     * @return {Function}
-     * @return {dc.heatMap}
+     * @returns {Function|dc.heatMap}
      */
     _chart.boxOnClick = function (handler) {
         if (!arguments.length) {
@@ -9918,8 +10118,7 @@ dc.heatMap = function (parent, chartGroup) {
      * @memberof dc.heatMap
      * @instance
      * @param  {Function} [handler]
-     * @return {Function}
-     * @return {dc.heatMap}
+     * @returns {Function|dc.heatMap}
      */
     _chart.xAxisOnClick = function (handler) {
         if (!arguments.length) {
@@ -9937,8 +10136,7 @@ dc.heatMap = function (parent, chartGroup) {
      * @memberof dc.heatMap
      * @instance
      * @param  {Function} [handler]
-     * @return {Function}
-     * @return {dc.heatMap}
+     * @returns {Function|dc.heatMap}
      */
     _chart.yAxisOnClick = function (handler) {
         if (!arguments.length) {
@@ -9954,8 +10152,7 @@ dc.heatMap = function (parent, chartGroup) {
      * @memberof dc.heatMap
      * @instance
      * @param  {Number} [xBorderRadius=6.75]
-     * @return {Number}
-     * @return {dc.heatMap}
+     * @returns {Number|dc.heatMap}
      */
     _chart.xBorderRadius = function (xBorderRadius) {
         if (!arguments.length) {
@@ -9971,8 +10168,7 @@ dc.heatMap = function (parent, chartGroup) {
      * @memberof dc.heatMap
      * @instance
      * @param  {Number} [yBorderRadius=6.75]
-     * @return {Number}
-     * @return {dc.heatMap}
+     * @returns {Number|dc.heatMap}
      */
     _chart.yBorderRadius = function (yBorderRadius) {
         if (!arguments.length) {
@@ -9997,6 +10193,7 @@ dc.heatMap = function (parent, chartGroup) {
         var width = 1,
             height = 1,
             duration = 0,
+            delay = 0,
             domain = null,
             value = Number,
             whiskers = boxWhiskers,
@@ -10053,20 +10250,25 @@ dc.heatMap = function (parent, chartGroup) {
                     .attr('x2', width / 2)
                     .attr('y2', function (d) { return x0(d[1]); })
                     .style('opacity', 1e-6)
-                  .transition()
+                    .transition()
                     .duration(duration)
+                    .delay(delay)
                     .style('opacity', 1)
                     .attr('y1', function (d) { return x1(d[0]); })
                     .attr('y2', function (d) { return x1(d[1]); });
 
                 center.transition()
                     .duration(duration)
+                    .delay(delay)
                     .style('opacity', 1)
+                    .attr('x1', width / 2)
+                    .attr('x2', width / 2)
                     .attr('y1', function (d) { return x1(d[0]); })
                     .attr('y2', function (d) { return x1(d[1]); });
 
                 center.exit().transition()
                     .duration(duration)
+                    .delay(delay)
                     .style('opacity', 1e-6)
                     .attr('y1', function (d) { return x1(d[0]); })
                     .attr('y2', function (d) { return x1(d[1]); })
@@ -10084,11 +10286,14 @@ dc.heatMap = function (parent, chartGroup) {
                     .attr('height', function (d) { return x0(d[0]) - x0(d[2]); })
                   .transition()
                     .duration(duration)
+                    .delay(delay)
                     .attr('y', function (d) { return x1(d[2]); })
                     .attr('height', function (d) { return x1(d[0]) - x1(d[2]); });
 
                 box.transition()
                     .duration(duration)
+                    .delay(delay)
+                    .attr('width', width)
                     .attr('y', function (d) { return x1(d[2]); })
                     .attr('height', function (d) { return x1(d[0]) - x1(d[2]); });
 
@@ -10104,11 +10309,15 @@ dc.heatMap = function (parent, chartGroup) {
                     .attr('y2', x0)
                     .transition()
                     .duration(duration)
+                    .delay(delay)
                     .attr('y1', x1)
                     .attr('y2', x1);
 
                 medianLine.transition()
                     .duration(duration)
+                    .delay(delay)
+                    .attr('x1', 0)
+                    .attr('x2', width)
                     .attr('y1', x1)
                     .attr('y2', x1);
 
@@ -10125,18 +10334,23 @@ dc.heatMap = function (parent, chartGroup) {
                     .style('opacity', 1e-6)
                   .transition()
                     .duration(duration)
+                    .delay(delay)
                     .attr('y1', x1)
                     .attr('y2', x1)
                     .style('opacity', 1);
 
                 whisker.transition()
                     .duration(duration)
+                    .delay(delay)
+                    .attr('x1', 0)
+                    .attr('x2', width)
                     .attr('y1', x1)
                     .attr('y2', x1)
                     .style('opacity', 1);
 
                 whisker.exit().transition()
                     .duration(duration)
+                    .delay(delay)
                     .attr('y1', x1)
                     .attr('y2', x1)
                     .style('opacity', 1e-6)
@@ -10154,16 +10368,20 @@ dc.heatMap = function (parent, chartGroup) {
                     .style('opacity', 1e-6)
                     .transition()
                     .duration(duration)
+                    .delay(delay)
                     .attr('cy', function (i) { return x1(d[i]); })
                     .style('opacity', 1);
 
                 outlier.transition()
                     .duration(duration)
+                    .delay(delay)
+                    .attr('cx', width / 2)
                     .attr('cy', function (i) { return x1(d[i]); })
                     .style('opacity', 1);
 
                 outlier.exit().transition()
                     .duration(duration)
+                    .delay(delay)
                     .attr('cy', function (i) { return x1(d[i]); })
                     .style('opacity', 1e-6)
                     .remove();
@@ -10185,11 +10403,14 @@ dc.heatMap = function (parent, chartGroup) {
                     .text(format)
                     .transition()
                     .duration(duration)
+                    .delay(delay)
                     .attr('y', x1);
 
                 boxTick.transition()
                     .duration(duration)
+                    .delay(delay)
                     .text(format)
+                    .attr('x', function (d, i) { return i & 1 ? width : 0; })
                     .attr('y', x1);
 
                 // Update whisker ticks. These are handled separately from the box
@@ -10208,17 +10429,21 @@ dc.heatMap = function (parent, chartGroup) {
                     .style('opacity', 1e-6)
                     .transition()
                     .duration(duration)
+                    .delay(delay)
                     .attr('y', x1)
                     .style('opacity', 1);
 
                 whiskerTick.transition()
                     .duration(duration)
+                    .delay(delay)
                     .text(format)
+                    .attr('x', width)
                     .attr('y', x1)
                     .style('opacity', 1);
 
                 whiskerTick.exit().transition()
                     .duration(duration)
+                    .delay(delay)
                     .attr('y', x1)
                     .style('opacity', 1e-6)
                     .remove();
@@ -10307,6 +10532,7 @@ dc.heatMap = function (parent, chartGroup) {
 
 })();
 
+
 /**
  * A box plot is a chart that depicts numerical data via their quartile ranges.
  *
@@ -10322,11 +10548,11 @@ dc.heatMap = function (parent, chartGroup) {
  * // create a box plot under #chart-container2 element using chart group A
  * var boxPlot2 = dc.boxPlot('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.boxPlot}
+ * @returns {dc.boxPlot}
  */
 dc.boxPlot = function (parent, chartGroup) {
     var _chart = dc.coordinateGridMixin({});
@@ -10382,15 +10608,14 @@ dc.boxPlot = function (parent, chartGroup) {
 
     /**
      * Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
-     * See the {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands d3 docs}
+     * See the {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands d3 docs}
      * for a visual description of how the padding is applied.
      * @method boxPadding
      * @memberof dc.boxPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands d3.scale.ordinal.rangeBands}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands d3.scale.ordinal.rangeBands}
      * @param {Number} [padding=0.8]
-     * @return {Number}
-     * @return {dc.boxPlot}
+     * @returns {Number|dc.boxPlot}
      */
     _chart.boxPadding = _chart._rangeBandPadding;
     _chart.boxPadding(0.8);
@@ -10403,8 +10628,7 @@ dc.boxPlot = function (parent, chartGroup) {
      * @memberof dc.boxPlot
      * @instance
      * @param {Number} [padding=0.5]
-     * @return {Number}
-     * @return {dc.boxPlot}
+     * @returns {Number|dc.boxPlot}
      */
     _chart.outerPadding = _chart._outerRangeBandPadding;
     _chart.outerPadding(0.5);
@@ -10422,8 +10646,7 @@ dc.boxPlot = function (parent, chartGroup) {
      * @memberof dc.boxPlot
      * @instance
      * @param {Number|Function} [boxWidth=0.5]
-     * @return {Number|Function}
-     * @return {dc.boxPlot}
+     * @returns {Number|Function|dc.boxPlot}
      */
     _chart.boxWidth = function (boxWidth) {
         if (!arguments.length) {
@@ -10455,7 +10678,7 @@ dc.boxPlot = function (parent, chartGroup) {
             .duration(_chart.transitionDuration())
             .tickFormat(_tickFormat);
 
-        var boxesG = _chart.chartBodyG().selectAll('g.box').data(_chart.data(), function (d) { return d.key; });
+        var boxesG = _chart.chartBodyG().selectAll('g.box').data(_chart.data(), _chart.keyAccessor());
 
         renderBoxes(boxesG);
         updateBoxes(boxesG);
@@ -10472,13 +10695,13 @@ dc.boxPlot = function (parent, chartGroup) {
             .attr('transform', boxTransform)
             .call(_box)
             .on('click', function (d) {
-                _chart.filter(d.key);
+                _chart.filter(_chart.keyAccessor()(d));
                 _chart.redrawGroup();
             });
     }
 
     function updateBoxes (boxesG) {
-        dc.transition(boxesG, _chart.transitionDuration())
+        dc.transition(boxesG, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', boxTransform)
             .call(_box)
             .each(function () {
@@ -10492,13 +10715,28 @@ dc.boxPlot = function (parent, chartGroup) {
 
     _chart.fadeDeselectedArea = function () {
         if (_chart.hasFilter()) {
-            _chart.g().selectAll('g.box').each(function (d) {
-                if (_chart.isSelectedNode(d)) {
-                    _chart.highlightSelected(this);
-                } else {
-                    _chart.fadeDeselected(this);
-                }
-            });
+            if (_chart.isOrdinal()) {
+                _chart.g().selectAll('g.box').each(function (d) {
+                    if (_chart.isSelectedNode(d)) {
+                        _chart.highlightSelected(this);
+                    } else {
+                        _chart.fadeDeselected(this);
+                    }
+                });
+            } else {
+                var extent = _chart.brush().extent();
+                var start = extent[0];
+                var end = extent[1];
+                var keyAccessor = _chart.keyAccessor();
+                _chart.g().selectAll('g.box').each(function (d) {
+                    var key = keyAccessor(d);
+                    if (key < start || key >= end) {
+                        _chart.fadeDeselected(this);
+                    } else {
+                        _chart.highlightSelected(this);
+                    }
+                });
+            }
         } else {
             _chart.g().selectAll('g.box').each(function () {
                 _chart.resetHighlight(this);
@@ -10507,7 +10745,7 @@ dc.boxPlot = function (parent, chartGroup) {
     };
 
     _chart.isSelectedNode = function (d) {
-        return _chart.hasFilter(d.key);
+        return _chart.hasFilter(_chart.keyAccessor()(d));
     };
 
     _chart.yAxisMin = function () {
@@ -10534,8 +10772,7 @@ dc.boxPlot = function (parent, chartGroup) {
      * @memberof dc.boxPlot
      * @instance
      * @param {Function} [tickFormat]
-     * @return {Number|Function}
-     * @return {dc.boxPlot}
+     * @returns {Number|Function|dc.boxPlot}
      */
     _chart.tickFormat = function (tickFormat) {
         if (!arguments.length) {
@@ -10580,7 +10817,8 @@ dc.selectMenu = function (parent, chartGroup) {
     var _select;
     var _promptText = 'Select all';
     var _multiple = false;
-    var _size = null;
+    var _promptValue = null;
+    var _numberVisible = null;
     var _order = function (a, b) {
         return _chart.keyAccessor()(a) > _chart.keyAccessor()(b) ?
              1 : _chart.keyAccessor()(b) > _chart.keyAccessor()(a) ?
@@ -10659,7 +10897,7 @@ dc.selectMenu = function (parent, chartGroup) {
         // console.log(values);
         // check if only prompt option is selected
         if (values.length === 1 && values[0] === '') {
-            values = null;
+            values = _promptValue || null;
         } else if (!_multiple && values.length === 1) {
             values = values[0];
         }
@@ -10685,8 +10923,8 @@ dc.selectMenu = function (parent, chartGroup) {
         } else {
             _select.attr('multiple', null);
         }
-        if (_size !== null) {
-            _select.attr('size', _size);
+        if (_numberVisible !== null) {
+            _select.attr('size', _numberVisible);
         } else {
             _select.attr('size', null);
         }
@@ -10772,23 +11010,45 @@ dc.selectMenu = function (parent, chartGroup) {
     };
 
     /**
-     * Controls the height, in lines, of the select menu, when `.multiple()` is true. If `null` (the default),
-     * uses the browser's default height.
-     * @name size
+     * Controls the default value to be used for
+     * [dimension.filter](https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter)
+     * when only the prompt value is selected. If `null` (the default), no filtering will occur when
+     * just the prompt is selected.
+     * @name promptValue
      * @memberof dc.selectMenu
      * @instance
-     * @param {?number} [size
-     * @example
-     * chart.size(10);
+     * @param {?*} [promptValue=null]
      **/
-    _chart.size = function (size) {
+    _chart.promptValue = function (promptValue) {
         if (!arguments.length) {
-            return _size;
+            return _promptValue;
         }
-        _size = size;
+        _promptValue = promptValue;
 
         return _chart;
     };
+
+    /**
+     * Controls the number of items to show in the select menu, when `.multiple()` is true. This
+     * controls the [`size` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select#Attributes) of
+     * the `select` element. If `null` (the default), uses the browser's default height.
+     * @name numberItems
+     * @memberof dc.selectMenu
+     * @instance
+     * @param {?number} [numberVisible=null]
+     * @example
+     * chart.numberVisible(10);
+     **/
+    _chart.numberVisible = function (numberVisible) {
+        if (!arguments.length) {
+            return _numberVisible;
+        }
+        _numberVisible = numberVisible;
+
+        return _chart;
+    };
+
+    _chart.size = dc.logger.deprecate(_chart.numberVisible, 'selectMenu.size is ambiguous - use numberVisible instead');
 
     return _chart.anchor(parent, chartGroup);
 };

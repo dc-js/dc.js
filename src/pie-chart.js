@@ -17,16 +17,19 @@
  * // create a pie chart under #chart-container2 element using chart group A
  * var chart2 = dc.pieChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.pieChart}
+ * @returns {dc.pieChart}
  */
 dc.pieChart = function (parent, chartGroup) {
     var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
     var _sliceCssClass = 'pie-slice';
+    var _labelCssClass = 'pie-label';
+    var _sliceGroupCssClass = 'pie-slice-group';
+    var _labelGroupCssClass = 'pie-label-group';
     var _emptyCssClass = 'empty-chart';
     var _emptyTitle = 'empty';
 
@@ -56,8 +59,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [cap]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.slicesCap = _chart.cap;
 
@@ -65,6 +67,7 @@ dc.pieChart = function (parent, chartGroup) {
     _chart.renderLabel(true);
 
     _chart.transitionDuration(350);
+    _chart.transitionDelay(0);
 
     _chart._doRender = function () {
         _chart.resetSvg();
@@ -72,6 +75,9 @@ dc.pieChart = function (parent, chartGroup) {
         _g = _chart.svg()
             .append('g')
             .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
+
+        _g.append('g').attr('class', _sliceGroupCssClass);
+        _g.append('g').attr('class', _labelGroupCssClass);
 
         drawChart();
 
@@ -98,30 +104,35 @@ dc.pieChart = function (parent, chartGroup) {
         }
 
         if (_g) {
-            var slices = _g.selectAll('g.' + _sliceCssClass)
+            var slices = _g.select('g.' + _sliceGroupCssClass)
+                .selectAll('g.' + _sliceCssClass)
                 .data(pieData);
 
-            createElements(slices, arc, pieData);
+            var labels = _g.select('g.' + _labelGroupCssClass)
+                .selectAll('text.' + _labelCssClass)
+                .data(pieData);
+
+            createElements(slices, labels, arc, pieData);
 
             updateElements(pieData, arc);
 
-            removeElements(slices);
+            removeElements(slices, labels);
 
             highlightFilter();
 
-            dc.transition(_g, _chart.transitionDuration())
+            dc.transition(_g, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
         }
     }
 
-    function createElements (slices, arc, pieData) {
+    function createElements (slices, labels, arc, pieData) {
         var slicesEnter = createSliceNodes(slices);
 
         createSlicePath(slicesEnter, arc);
 
         createTitles(slicesEnter);
 
-        createLabels(pieData, arc);
+        createLabels(labels, pieData, arc);
     }
 
     function createSliceNodes (slices) {
@@ -142,9 +153,10 @@ dc.pieChart = function (parent, chartGroup) {
                 return safeArc(d, i, arc);
             });
 
-        dc.transition(slicePath, _chart.transitionDuration(), function (s) {
-            s.attrTween('d', tweenPie);
-        });
+        var transition = dc.transition(slicePath, _chart.transitionDuration(), _chart.transitionDelay());
+        if (transition.attrTween) {
+            transition.attrTween('d', tweenPie);
+        }
     }
 
     function createTitles (slicesEnter) {
@@ -168,31 +180,37 @@ dc.pieChart = function (parent, chartGroup) {
 
     function positionLabels (labels, arc) {
         _chart._applyLabelText(labels);
-        dc.transition(labels, _chart.transitionDuration())
+        dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', function (d) {
                 return labelPosition(d, arc);
             })
             .attr('text-anchor', 'middle');
     }
 
-    function createLabels (pieData, arc) {
+    function highlightSlice (i, whether) {
+        _chart.select('g.pie-slice._' + i)
+            .classed('highlight', whether);
+    }
+
+    function createLabels (labels, pieData, arc) {
         if (_chart.renderLabel()) {
-            var labels = _g.selectAll('text.' + _sliceCssClass)
-                .data(pieData);
-
-            labels.exit().remove();
-
             var labelsEnter = labels
                 .enter()
                 .append('text')
                 .attr('class', function (d, i) {
-                    var classes = _sliceCssClass + ' _' + i;
+                    var classes = _sliceCssClass + ' ' + _labelCssClass + ' _' + i;
                     if (_externalLabelRadius) {
                         classes += ' external';
                     }
                     return classes;
                 })
-                .on('click', onClick);
+                .on('click', onClick)
+                .on('mouseover', function (d, i) {
+                    highlightSlice(i, true);
+                })
+                .on('mouseout', function (d, i) {
+                    highlightSlice(i, false);
+                });
             positionLabels(labelsEnter, arc);
             if (_externalLabelRadius && _drawPaths) {
                 updateLabelPaths(pieData, arc);
@@ -209,25 +227,41 @@ dc.pieChart = function (parent, chartGroup) {
                 .append('polyline')
                 .attr('class', function (d, i) {
                     return 'pie-path _' + i + ' ' + _sliceCssClass;
+                })
+                .on('click', onClick)
+                .on('mouseover', function (d, i) {
+                    highlightSlice(i, true);
+                })
+                .on('mouseout', function (d, i) {
+                    highlightSlice(i, false);
                 });
 
         polyline.exit().remove();
-        dc.transition(polyline, _chart.transitionDuration())
-            .attrTween('points', function (d) {
-                this._current = this._current || d;
-                var interpolate = d3.interpolate(this._current, d);
-                this._current = interpolate(0);
-                return function (t) {
-                    var arc2 = d3.svg.arc()
-                            .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
-                            .innerRadius(_radius - _externalRadiusPadding);
-                    var d2 = interpolate(t);
-                    return [arc.centroid(d2), arc2.centroid(d2)];
-                };
-            })
-            .style('visibility', function (d) {
-                return d.endAngle - d.startAngle < 0.0001 ? 'hidden' : 'visible';
+        var arc2 = d3.svg.arc()
+                .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
+                .innerRadius(_radius - _externalRadiusPadding);
+        var transition = dc.transition(polyline, _chart.transitionDuration(), _chart.transitionDelay());
+        // this is one rare case where d3.selection differs from d3.transition
+        if (transition.attrTween) {
+            transition
+                .attrTween('points', function (d) {
+                    var current = this._current || d;
+                    current = {startAngle: current.startAngle, endAngle: current.endAngle};
+                    var interpolate = d3.interpolate(current, d);
+                    this._current = interpolate(0);
+                    return function (t) {
+                        var d2 = interpolate(t);
+                        return [arc.centroid(d2), arc2.centroid(d2)];
+                    };
+                });
+        } else {
+            transition.attr('points', function (d) {
+                return [arc.centroid(d), arc2.centroid(d)];
             });
+        }
+        transition.style('visibility', function (d) {
+            return d.endAngle - d.startAngle < 0.0001 ? 'hidden' : 'visible';
+        });
 
     }
 
@@ -244,15 +278,16 @@ dc.pieChart = function (parent, chartGroup) {
             .attr('d', function (d, i) {
                 return safeArc(d, i, arc);
             });
-        dc.transition(slicePaths, _chart.transitionDuration(),
-            function (s) {
-                s.attrTween('d', tweenPie);
-            }).attr('fill', fill);
+        var transition = dc.transition(slicePaths, _chart.transitionDuration(), _chart.transitionDelay());
+        if (transition.attrTween) {
+            transition.attrTween('d', tweenPie);
+        }
+        transition.attr('fill', fill);
     }
 
     function updateLabels (pieData, arc) {
         if (_chart.renderLabel()) {
-            var labels = _g.selectAll('text.' + _sliceCssClass)
+            var labels = _g.selectAll('text.' + _labelCssClass)
                 .data(pieData);
             positionLabels(labels, arc);
             if (_externalLabelRadius && _drawPaths) {
@@ -272,8 +307,9 @@ dc.pieChart = function (parent, chartGroup) {
         }
     }
 
-    function removeElements (slices) {
+    function removeElements (slices, labels) {
         slices.exit().remove();
+        labels.exit().remove();
     }
 
     function highlightFilter () {
@@ -299,8 +335,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [externalRadiusPadding=0]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.externalRadiusPadding = function (externalRadiusPadding) {
         if (!arguments.length) {
@@ -317,8 +352,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [innerRadius=0]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.innerRadius = function (innerRadius) {
         if (!arguments.length) {
@@ -335,8 +369,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [radius]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.radius = function (radius) {
         if (!arguments.length) {
@@ -352,8 +385,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [cx]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.cx = function (cx) {
         if (!arguments.length) {
@@ -369,8 +401,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [cy]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.cy = function (cy) {
         if (!arguments.length) {
@@ -402,8 +433,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [minAngleForLabel=0.5]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.minAngleForLabel = function (minAngleForLabel) {
         if (!arguments.length) {
@@ -470,8 +500,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {String} [title]
-     * @return {String}
-     * @return {dc.pieChart}
+     * @returns {String|dc.pieChart}
      */
     _chart.emptyTitle = function (title) {
         if (arguments.length === 0) {
@@ -482,15 +511,14 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     /**
-     * Position slice labels offset from the outer edge of the chart
+     * Position slice labels offset from the outer edge of the chart.
      *
-     * The given argument sets the radial offset.
+     * The argument specifies the extra radius to be added for slice labels.
      * @method externalLabels
      * @memberof dc.pieChart
      * @instance
      * @param {Number} [externalLabelRadius]
-     * @return {Number}
-     * @return {dc.pieChart}
+     * @returns {Number|dc.pieChart}
      */
     _chart.externalLabels = function (externalLabelRadius) {
         if (arguments.length === 0) {
@@ -511,8 +539,7 @@ dc.pieChart = function (parent, chartGroup) {
      * @memberof dc.pieChart
      * @instance
      * @param {Boolean} [drawPaths]
-     * @return {Boolean}
-     * @return {dc.pieChart}
+     * @returns {Boolean|dc.pieChart}
      */
     _chart.drawPaths = function (drawPaths) {
         if (arguments.length === 0) {

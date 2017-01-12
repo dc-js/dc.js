@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>dc.js - Scatter Plot Matrix</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <style>
+      html, body {
+          margin: 0;
+          width: 100%;
+      }
+      code {
+          color: black;
+      }
+      #page {
+          height: 95vh;
+          width: 100%;
+      }
+      tr.heading td div {
+          text-align: center;
+      }
+      td.heading {
+          position: relative;
+      }
+      tr.row:not(.heading) td.heading div {
+          white-space: nowrap;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform:  translateX(-50%) translateY(-50%) rotate(-90deg);
+      }
+      .chart-holder {
+          padding: 0 1em;
+      }
+      path.left {
+          stroke: #1f77b4;
+      }
+      path.right {
+          stroke: #ff7f0e;
+      }
+      path.horizontal {
+          stroke-width: 1;
+          stroke-opacity: 0.5;
+      }
+      path.zero {
+          stroke-dasharray: 4, 4;
+      }
+      path.zero.right {
+          stroke-dashoffset: 4;
+      }
+      path.extreme {
+          stroke-dasharray: 1, 1;
+      }
+      path.extreme.right {
+          stroke-dashoffset: 1;
+      }
+      .axis > path {
+          display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript" src="../js/d3.js"></script>
+    <script type="text/javascript" src="../js/crossfilter.js"></script>
+    <script type="text/javascript" src="../js/dc.js"></script>
+    <div class="container">
+      <script type="text/javascript" src="./header.js"></script>
+
+      <p>Scatterplot Matrix Brushing in
+        dc.js. Imitating <a href="http://bl.ocks.org/mbostock/4063663">Mike's bl.ock</a>.</p>
+
+      <p>dc.js will not be as efficient as a custom implementation, and there's a perceptible lag,
+      but this technique may be useful sometimes. By default, dc.js always waits to trigger events
+      because it is assumed that updating will be costly
+      - <span id="wait-verb">add</span> <a id="wait-url">?nowait</a> to see how this
+      performs <span id="wait-prep">without</span> event delay.</p>
+      <table id="content"></table>
+    </div>
+
+    <script type="text/javascript">
+      var fields = ['petal_width', 'petal_length', 'sepal_width', 'sepal_length'];
+      var rows = ['heading'].concat(fields.slice(0).reverse()),
+          cols = ['heading'].concat(fields);
+
+      if(location.search.indexOf('nowait')!==-1) {
+          dc.constants.EVENT_DELAY = 0;
+          d3.select('#wait-verb').text('remove')
+          d3.select('#wait-prep').text('with');
+          d3.select('#wait-url').attr('href', location.origin + location.pathname);
+      } else {
+          d3.select('#wait-url').attr('href', location.origin + location.pathname + '?nowait');
+      }
+
+      d3.csv('iris.csv', function(error, iris) {
+          if(error)
+              throw new Error(error);
+
+          iris.forEach(function(d) {
+              Object.keys(fields).forEach(function(ab) {
+                  d[fields[ab]] = +d[fields[ab]];
+              });
+          });
+          var data = crossfilter(iris);
+
+          function make_dimension(var1, var2) {
+              return data.dimension(function(d) {
+                  return [d[var1], d[var2], d.species];
+              });
+          }
+          function key_part(i) {
+              return function(kv) {
+                  return kv.key[i];
+              };
+          }
+
+          var charts = [];
+
+          d3.select('#content')
+              .selectAll('tr').data(rows)
+              .enter().append('tr').attr('class', function(d) {
+                  return d === 'heading' ? 'heading row' : 'row';
+              })
+              .each(function(row, y) {
+                  d3.select(this).selectAll('td').data(cols)
+                      .enter().append('td').attr('class', function(d) {
+                          return d === 'heading' ? 'heading entry' : 'entry';
+                      })
+                      .each(function(col, x) {
+                          var cdiv = d3.select(this).append('div')
+                          if(row === 'heading') {
+                              if(col !== 'heading')
+                                  cdiv.text(col.replace('_', ' '))
+                              return;
+                          }
+                          else if(col === 'heading') {
+                              cdiv.text(row.replace('_', ' '))
+                              return;
+                          }
+                          cdiv.attr('class', 'chart-holder');
+                          var chart = dc.scatterPlot(cdiv);
+                          var dim = make_dimension(col,row),
+                              group = dim.group();
+                          var showYAxis = x === 1, showXAxis = y === 4;
+                          chart
+                              .transitionDuration(0)
+                              .width(200 + (showYAxis?25:0))
+                              .height(200 + (showXAxis?20:0))
+                              .margins({
+                                  left: showYAxis ? 25 : 8,
+                                  top: 5,
+                                  right: 0,
+                                  bottom: showXAxis ? 20 : 5
+                              })
+                              .dimension(dim).group(group)
+                              .keyAccessor(key_part(0))
+                              .valueAccessor(key_part(1))
+                              .colorAccessor(key_part(2))
+                              .colorDomain(['setosa', 'versicolor', 'virginica'])
+                              .x(d3.scale.linear()).xAxisPadding("0.001%")
+                              .y(d3.scale.linear()).yAxisPadding("0.001%")
+                              .brushOn(true)
+                              .elasticX(true)
+                              .elasticY(true)
+                              .symbolSize(7)
+                              .nonemptyOpacity(0.7)
+                              .emptySize(7)
+                              .emptyColor('#ccc')
+                              .emptyOpacity(0.7)
+                              .excludedSize(7)
+                              .excludedColor('#ccc')
+                              .excludedOpacity(0.7)
+                              .renderHorizontalGridLines(true)
+                              .renderVerticalGridLines(true);
+                          chart.xAxis().ticks(6);
+                          chart.yAxis().ticks(6);
+                          chart.on('postRender', function(chart) {
+                              // remove axes unless at left or bottom
+                              if(!showXAxis)
+                                  chart.select('.x.axis').attr('display', 'none');
+                              if(!showYAxis)
+                                  chart.select('.y.axis').attr('display', 'none');
+                              // remove clip path, allow dots to display outside
+                              chart.select('.chart-body').attr('clip-path', null);
+                          });
+                          // only filter on one chart at a time
+                          chart.on('filtered', function(_, filter) {
+                              if(!filter)
+                                  return;
+                              charts.forEach(function(c) {
+                                  if(c !== chart)
+                                      c.filter(null);
+                              });
+                          });
+                          charts.push(chart);
+                      });
+              });
+          dc.renderAll();
+      });
+
+      </script>
+  </body>
+</html>

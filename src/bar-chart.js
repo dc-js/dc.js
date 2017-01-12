@@ -16,13 +16,13 @@
  * // create a sub-chart under a composite parent chart
  * var chart3 = dc.barChart(compositeChart);
  * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector}
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector}
  * specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar
  * chart is a sub-chart in a {@link dc.compositeChart Composite Chart} then pass in the parent
  * composite chart instance instead.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.barChart}
+ * @returns {dc.barChart}
  */
 dc.barChart = function (parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
@@ -102,7 +102,7 @@ dc.barChart = function (parent, chartGroup) {
             labels.attr('cursor', 'pointer');
         }
 
-        dc.transition(labels, _chart.transitionDuration())
+        dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', function (d) {
                 var x = _chart.x()(d.x);
                 if (_groupBars) {
@@ -133,7 +133,7 @@ dc.barChart = function (parent, chartGroup) {
                 return _chart.label()(d);
             });
 
-        dc.transition(labels.exit(), _chart.transitionDuration())
+        dc.transition(labels.exit(), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('height', 0)
             .remove();
     }
@@ -157,7 +157,7 @@ dc.barChart = function (parent, chartGroup) {
             bars.on('click', _chart.onClick);
         }
 
-        dc.transition(bars, _chart.transitionDuration())
+        dc.transition(bars, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', function (d) {
                 var x = _chart.x()(d.x);
                 if (_groupBars) {
@@ -193,8 +193,9 @@ dc.barChart = function (parent, chartGroup) {
             .attr('fill', dc.pluck('data', _chart.getColor))
             .select('title').text(dc.pluck('data', _chart.title(d.name)));
 
-        dc.transition(bars.exit(), _chart.transitionDuration())
-            .attr('height', 0)
+        dc.transition(bars.exit(), _chart.transitionDuration(), _chart.transitionDelay())
+            .attr('x', function (d) { return _chart.x()(d.x); })
+            .attr('width', _barWidth * 0.9)
             .remove();
     }
 
@@ -264,8 +265,7 @@ dc.barChart = function (parent, chartGroup) {
      * @memberof dc.barChart
      * @instance
      * @param {Boolean} [centerBar=false]
-     * @return {Boolean}
-     * @return {dc.barChart}
+     * @returns {Boolean|dc.barChart}
      */
     _chart.centerBar = function (centerBar) {
         if (!arguments.length) {
@@ -297,14 +297,13 @@ dc.barChart = function (parent, chartGroup) {
     /**
      * Get or set the spacing between bars as a fraction of bar size. Valid values are between 0-1.
      * Setting this value will also remove any previously set {@link dc.barChart#gap gap}. See the
-     * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands d3 docs}
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands d3 docs}
      * for a visual description of how the padding is applied.
      * @method barPadding
      * @memberof dc.barChart
      * @instance
      * @param {Number} [barPadding=0]
-     * @return {Number}
-     * @return {dc.barChart}
+     * @returns {Number|dc.barChart}
      */
     _chart.barPadding = function (barPadding) {
         if (!arguments.length) {
@@ -326,8 +325,7 @@ dc.barChart = function (parent, chartGroup) {
      * @memberof dc.barChart
      * @instance
      * @param {Number} [padding=0.5]
-     * @return {Number}
-     * @return {dc.barChart}
+     * @returns {Number|dc.barChart}
      */
     _chart.outerPadding = _chart._outerRangeBandPadding;
 
@@ -339,8 +337,7 @@ dc.barChart = function (parent, chartGroup) {
      * @memberof dc.barChart
      * @instance
      * @param {Number} [gap=2]
-     * @return {Number}
-     * @return {dc.barChart}
+     * @returns {Number|dc.barChart}
      */
     _chart.gap = function (gap) {
         if (!arguments.length) {
@@ -411,8 +408,7 @@ dc.barChart = function (parent, chartGroup) {
      * @example
      * chart.round(function(n) { return Math.floor(n) + 0.5; });
      * @param {Boolean} [alwaysUseRounding=false]
-     * @return {Boolean}
-     * @return {dc.barChart}
+     * @returns {Boolean|dc.barChart}
      */
     _chart.alwaysUseRounding = function (alwaysUseRounding) {
         if (!arguments.length) {

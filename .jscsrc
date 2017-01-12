@@ -26,6 +26,5 @@
         "requireReturnTypes": true,
         "checkTypes": "capitalizedNativeCase",
         "checkRedundantAccess": true
-    },
-    "esnext": true
+    }
 }

@@ -141,10 +141,10 @@ describe('dc.pieChart', function () {
             });
         });
         it('slice path fill should be set correctly', function () {
-            expect(d3.select(chart.selectAll('g.pie-slice path')[0][0]).attr('fill')).toEqual('#3182bd');
-            expect(d3.select(chart.selectAll('g.pie-slice path')[0][1]).attr('fill')).toEqual('#6baed6');
-            expect(d3.select(chart.selectAll('g.pie-slice path')[0][2]).attr('fill')).toEqual('#9ecae1');
-            expect(d3.select(chart.selectAll('g.pie-slice path')[0][3]).attr('fill')).toEqual('#c6dbef');
+            expect(d3.select(chart.selectAll('g.pie-slice path')[0][0]).attr('fill')).toMatch(/#3182bd/i);
+            expect(d3.select(chart.selectAll('g.pie-slice path')[0][1]).attr('fill')).toMatch(/#6baed6/i);
+            expect(d3.select(chart.selectAll('g.pie-slice path')[0][2]).attr('fill')).toMatch(/#9ecae1/i);
+            expect(d3.select(chart.selectAll('g.pie-slice path')[0][3]).attr('fill')).toMatch(/#c6dbef/i);
         });
         it('slice label should be created', function () {
             expect(chart.selectAll('svg text.pie-slice').data().length).toEqual(5);
@@ -446,7 +446,7 @@ describe('dc.pieChart', function () {
             });
             it('clicking others slice should filter all groups slices', function () {
                 var event = document.createEvent('MouseEvents');
-                event.initEvent('click',true,true);
+                event.initEvent('click', true, true);
                 chart.selectAll('.pie-slice path')[0][2].dispatchEvent(event);
                 expect(chart.filters()).toEqual(['22','55','66','small']);
                 chart.selectAll('.pie-slice path')[0][2].dispatchEvent(event);
@@ -582,6 +582,7 @@ describe('dc.pieChart', function () {
         beforeEach(function () {
             chart = buildChart('pie-chart-external-labeling')
                 .externalLabels(10)
+                .drawPaths(true)
                 .render();
         });
         it('should place labels outside of pie offset by given radius', function () {
@@ -617,6 +618,43 @@ describe('dc.pieChart', function () {
                 expect(label.classed('external')).toBeFalsy();
             });
         });
+        it('hovering on label should highlight corresponding slice', function () {
+            chart.selectAll('#pie-chart-external-labeling text.pie-slice').each(function (d, i) {
+                var legendItem = d3.select(this);
+                legendItem.on('mouseover')(legendItem.datum(), i);
+
+                expect(chart.select('g.pie-slice._' + i).classed('highlight')).toBeTruthy();
+                legendItem.on('mouseout')(legendItem.datum());
+            });
+        });
+        it('unhovering label removes highlight from corresponding slice', function () {
+            chart.selectAll('#pie-chart-external-labeling text.pie-slice').each(function (d, i) {
+                var legendItem = d3.select(this);
+                legendItem.on('mouseover')(legendItem.datum(), i);
+                legendItem.on('mouseout')(legendItem.datum(), i);
+
+                expect(chart.select('.pie-slice._' + i).classed('highlight')).toBeFalsy();
+            });
+        });
+
+        it('hovering on path should highlight corresponding slice', function () {
+            chart.selectAll('#pie-chart-external-labeling polyline.pie-path').each(function (d, i) {
+                var legendItem = d3.select(this);
+                legendItem.on('mouseover')(legendItem.datum(), i);
+
+                expect(chart.select('g.pie-slice._' + i).classed('highlight')).toBeTruthy();
+                legendItem.on('mouseout')(legendItem.datum());
+            });
+        });
+        it('unhovering label removes highlight from corresponding slice', function () {
+            chart.selectAll('#pie-chart-external-labeling polyline.pie-path').each(function (d, i) {
+                var legendItem = d3.select(this);
+                legendItem.on('mouseover')(legendItem.datum(), i);
+                legendItem.on('mouseout')(legendItem.datum(), i);
+
+                expect(chart.select('.pie-slice._' + i).classed('highlight')).toBeFalsy();
+            });
+        });
     });
 
     describe('legends', function () {
@@ -647,7 +685,7 @@ describe('dc.pieChart', function () {
                 var legendItem = d3.select(this);
                 legendItem.on('mouseover')(legendItem.datum());
 
-                expect(chart.select('.pie-slice._' + i).classed('highlight')).toBeTruthy();
+                expect(chart.select('g.pie-slice._' + i).classed('highlight')).toBeTruthy();
                 legendItem.on('mouseout')(legendItem.datum());
             });
         });
@@ -657,7 +695,7 @@ describe('dc.pieChart', function () {
                 legendItem.on('mouseover')(legendItem.datum());
                 legendItem.on('mouseout')(legendItem.datum());
 
-                expect(chart.select('.pie-slice._' + i).classed('highlight')).toBeFalsy();
+                expect(chart.select('g.pie-slice._' + i).classed('highlight')).toBeFalsy();
             });
         });
         it('clicking on items filters them', function () {

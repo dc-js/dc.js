@@ -15,11 +15,11 @@
  * // create a sub-chart under a composite parent chart
  * var chart3 = dc.scatterPlot(compositeChart);
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.scatterPlot}
+ * @returns {dc.scatterPlot}
  */
 dc.scatterPlot = function (parent, chartGroup) {
     var _chart = dc.coordinateGridMixin({});
@@ -32,9 +32,16 @@ dc.scatterPlot = function (parent, chartGroup) {
     _chart.valueAccessor(function (d) { return originalKeyAccessor(d)[1]; });
     _chart.colorAccessor(function () { return _chart._groupName; });
 
+    _chart.title(function (d) {
+        // this basically just counteracts the setting of its own key/value accessors
+        // see https://github.com/dc-js/dc.js/issues/702
+        return _chart.keyAccessor()(d) + ',' + _chart.valueAccessor()(d) + ': ' +
+            _chart.existenceAccessor()(d);
+    });
+
     var _locator = function (d) {
         return 'translate(' + _chart.x()(_chart.keyAccessor()(d)) + ',' +
-            _chart.y()(_chart.valueAccessor()(d)) + ')';
+                              _chart.y()(_chart.valueAccessor()(d)) + ')';
     };
 
     var _highlightedSize = 7;
@@ -43,11 +50,14 @@ dc.scatterPlot = function (parent, chartGroup) {
     var _excludedColor = null;
     var _excludedOpacity = 1.0;
     var _emptySize = 0;
+    var _emptyOpacity = 0;
+    var _nonemptyOpacity = 1;
+    var _emptyColor = null;
     var _filtered = [];
 
     _symbol.size(function (d, i) {
         if (!_existenceAccessor(d)) {
-            return _emptySize;
+            return Math.pow(_emptySize, 2);
         } else if (_filtered[i]) {
             return Math.pow(_symbolSize, 2);
         } else {
@@ -65,36 +75,56 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     _chart.plotData = function () {
         var symbols = _chart.chartBodyG().selectAll('path.symbol')
-                .data(_chart.data());
+            .data(_chart.data());
 
         symbols
             .enter()
-            .append('path')
+        .append('path')
             .attr('class', 'symbol')
             .attr('opacity', 0)
             .attr('fill', _chart.getColor)
             .attr('transform', _locator);
 
+        symbols.call(renderTitles, _chart.data());
+
         symbols.each(function (d, i) {
             _filtered[i] = !_chart.filter() || _chart.filter().isFiltered([d.key[0], d.key[1]]);
         });
 
-        dc.transition(symbols, _chart.transitionDuration())
+        dc.transition(symbols, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('opacity', function (d, i) {
-                return !_existenceAccessor(d) ? 0 :
-                    _filtered[i] ? 1 : _chart.excludedOpacity();
+                if (!_existenceAccessor(d)) {
+                    return _emptyOpacity;
+                } else if (_filtered[i]) {
+                    return _nonemptyOpacity;
+                } else {
+                    return _chart.excludedOpacity();
+                }
             })
             .attr('fill', function (d, i) {
-                return _chart.excludedColor() && !_filtered[i] ?
-                    _chart.excludedColor() :
-                    _chart.getColor(d);
+                if (_emptyColor && !_existenceAccessor(d)) {
+                    return _emptyColor;
+                } else if (_chart.excludedColor() && !_filtered[i]) {
+                    return _chart.excludedColor();
+                } else {
+                    return _chart.getColor(d);
+                }
             })
             .attr('transform', _locator)
             .attr('d', _symbol);
 
-        dc.transition(symbols.exit(), _chart.transitionDuration())
+        dc.transition(symbols.exit(), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('opacity', 0).remove();
     };
+
+    function renderTitles (symbol, d) {
+        if (_chart.renderTitle()) {
+            symbol.selectAll('title').remove();
+            symbol.append('title').text(function (d) {
+                return _chart.title()(d);
+            });
+        }
+    }
 
     /**
      * Get or set the existence accessor.  If a point exists, it is drawn with
@@ -111,8 +141,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * // default accessor
      * chart.existenceAccessor(function (d) { return d.value; });
      * @param {Function} [accessor]
-     * @return {Function}
-     * @return {dc.scatterPlot}
+     * @returns {Function|dc.scatterPlot}
      */
     _chart.existenceAccessor = function (accessor) {
         if (!arguments.length) {
@@ -128,15 +157,14 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method symbol
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_type d3.svg.symbol().type()}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_type d3.svg.symbol.type}
      * @example
      * // Circle type
      * chart.symbol('circle');
      * // Square type
      * chart.symbol('square');
      * @param {String|Function} [type='circle']
-     * @return {String|Function}
-     * @return {dc.scatterPlot}
+     * @returns {String|Function|dc.scatterPlot}
      */
     _chart.symbol = function (type) {
         if (!arguments.length) {
@@ -151,10 +179,9 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method symbolSize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
      * @param {Number} [symbolSize=3]
-     * @return {Number}
-     * @return {dc.scatterPlot}
+     * @returns {Number|dc.scatterPlot}
      */
     _chart.symbolSize = function (symbolSize) {
         if (!arguments.length) {
@@ -169,10 +196,9 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method highlightedSize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
      * @param {Number} [highlightedSize=5]
-     * @return {Number}
-     * @return {dc.scatterPlot}
+     * @returns {Number|dc.scatterPlot}
      */
     _chart.highlightedSize = function (highlightedSize) {
         if (!arguments.length) {
@@ -184,14 +210,13 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
      * Set or get size for symbols excluded from this chart's filter. If null, no
-     * special size is applied for symbols based on their filter status
+     * special size is applied for symbols based on their filter status.
      * @method excludedSize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
      * @param {Number} [excludedSize=null]
-     * @return {Number}
-     * @return {dc.scatterPlot}
+     * @returns {Number|dc.scatterPlot}
      */
     _chart.excludedSize = function (excludedSize) {
         if (!arguments.length) {
@@ -203,14 +228,12 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
      * Set or get color for symbols excluded from this chart's filter. If null, no
-     * special color is applied for symbols based on their filter status
+     * special color is applied for symbols based on their filter status.
      * @method excludedColor
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
      * @param {Number} [excludedColor=null]
-     * @return {Number}
-     * @return {dc.scatterPlot}
+     * @returns {Number|dc.scatterPlot}
      */
     _chart.excludedColor = function (excludedColor) {
         if (!arguments.length) {
@@ -225,10 +248,8 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method excludedOpacity
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
      * @param {Number} [excludedOpacity=1.0]
-     * @return {Number}
-     * @return {dc.scatterPlot}
+     * @returns {Number|dc.scatterPlot}
      */
     _chart.excludedOpacity = function (excludedOpacity) {
         if (!arguments.length) {
@@ -243,16 +264,67 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method emptySize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/SVG-Shapes#symbol_size d3.svg.symbol().size()}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
      * @param {Number} [emptySize=0]
-     * @return {Number}
-     * @return {dc.scatterPlot}
+     * @returns {Number|dc.scatterPlot}
      */
     _chart.hiddenSize = _chart.emptySize = function (emptySize) {
         if (!arguments.length) {
             return _emptySize;
         }
         _emptySize = emptySize;
+        return _chart;
+    };
+
+    /**
+     * Set or get color for symbols when the group is empty. If null, just use the
+     * {@link dc.colorMixin#colors colorMixin.colors} color scale zero value.
+     * @name emptyColor
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {String} [emptyColor=null]
+     * @return {String}
+     * @return {dc.scatterPlot}/
+     */
+    _chart.emptyColor = function (emptyColor) {
+        if (!arguments.length) {
+            return _emptyColor;
+        }
+        _emptyColor = emptyColor;
+        return _chart;
+    };
+
+    /**
+     * Set or get opacity for symbols when the group is empty.
+     * @name emptyOpacity
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {Number} [emptyOpacity=0]
+     * @return {Number}
+     * @return {dc.scatterPlot}
+     */
+    _chart.emptyOpacity = function (emptyOpacity) {
+        if (!arguments.length) {
+            return _emptyOpacity;
+        }
+        _emptyOpacity = emptyOpacity;
+        return _chart;
+    };
+
+    /**
+     * Set or get opacity for symbols when the group is not empty.
+     * @name nonemptyOpacity
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {Number} [nonemptyOpacity=1]
+     * @return {Number}
+     * @return {dc.scatterPlot}
+     */
+    _chart.nonemptyOpacity = function (nonemptyOpacity) {
+        if (!arguments.length) {
+            return _emptyOpacity;
+        }
+        _nonemptyOpacity = nonemptyOpacity;
         return _chart;
     };
 
@@ -284,7 +356,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         });
         var oldSize = _symbol.size();
         _symbol.size(Math.pow(size, 2));
-        dc.transition(symbols, _chart.transitionDuration()).attr('d', _symbol);
+        dc.transition(symbols, _chart.transitionDuration(), _chart.transitionDelay()).attr('d', _symbol);
         _symbol.size(oldSize);
     }
 

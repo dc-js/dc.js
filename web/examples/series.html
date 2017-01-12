@@ -3,14 +3,17 @@
 <head>
     <title>dc.js - Series Example</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
 </head>
 <body>
 
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
 <div id="test"></div>
-<button onclick="button1()">1</button>
-<button onclick="button2()">2</button>
-<button onclick="button3()">3</button>
+<button class="btn" onclick="button1()">1</button>
+<button class="btn" onclick="button2()">2</button>
+<button class="btn" onclick="button3()">3</button>
 
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
@@ -66,5 +69,6 @@ var button1 = load_button("morley.csv"),
 
 </script>
 
+</div>
 </body>
 </html>

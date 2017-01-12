@@ -326,13 +326,13 @@ jQuery.getJson(<span class="hljs-string">'data.json'</span>, <span class="hljs-f
         <span class="hljs-comment">/* initialize p */</span>
         <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
             <span class="hljs-keyword">return</span> {
-                count: <span class="hljs-number">0</span>,
-                absGain: <span class="hljs-number">0</span>,
-                fluctuation: <span class="hljs-number">0</span>,
-                fluctuationPercentage: <span class="hljs-number">0</span>,
-                sumIndex: <span class="hljs-number">0</span>,
-                avgIndex: <span class="hljs-number">0</span>,
-                percentageGain: <span class="hljs-number">0</span>
+                <span class="hljs-attr">count</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">absGain</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">fluctuation</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">fluctuationPercentage</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">sumIndex</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">avgIndex</span>: <span class="hljs-number">0</span>,
+                <span class="hljs-attr">percentageGain</span>: <span class="hljs-number">0</span>
             };
         }
     );</pre></div></div>
@@ -418,7 +418,7 @@ jQuery.getJson(<span class="hljs-string">'data.json'</span>, <span class="hljs-f
             <span class="hljs-keyword">return</span> p;
         },
         <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-            <span class="hljs-keyword">return</span> {days: <span class="hljs-number">0</span>, total: <span class="hljs-number">0</span>, avg: <span class="hljs-number">0</span>};
+            <span class="hljs-keyword">return</span> {<span class="hljs-attr">days</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">total</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">avg</span>: <span class="hljs-number">0</span>};
         }
     );</pre></div></div>
             
@@ -613,7 +613,7 @@ on charts within the same chart group.
             </div>
             
             <div class="content"><div class='highlight'><pre>        .transitionDuration(<span class="hljs-number">1500</span>)
-        .margins({top: <span class="hljs-number">10</span>, right: <span class="hljs-number">50</span>, bottom: <span class="hljs-number">30</span>, left: <span class="hljs-number">40</span>})
+        .margins({<span class="hljs-attr">top</span>: <span class="hljs-number">10</span>, <span class="hljs-attr">right</span>: <span class="hljs-number">50</span>, <span class="hljs-attr">bottom</span>: <span class="hljs-number">30</span>, <span class="hljs-attr">left</span>: <span class="hljs-number">40</span>})
         .dimension(yearlyDimension)</pre></div></div>
             
         </li>
@@ -1219,7 +1219,7 @@ on other charts within the same chart group.
             <div class="content"><div class='highlight'><pre>    dayOfWeekChart <span class="hljs-comment">/* dc.rowChart('#day-of-week-chart', 'chartGroup') */</span>
         .width(<span class="hljs-number">180</span>)
         .height(<span class="hljs-number">180</span>)
-        .margins({top: <span class="hljs-number">20</span>, left: <span class="hljs-number">10</span>, right: <span class="hljs-number">10</span>, bottom: <span class="hljs-number">20</span>})
+        .margins({<span class="hljs-attr">top</span>: <span class="hljs-number">20</span>, <span class="hljs-attr">left</span>: <span class="hljs-number">10</span>, <span class="hljs-attr">right</span>: <span class="hljs-number">10</span>, <span class="hljs-attr">bottom</span>: <span class="hljs-number">20</span>})
         .group(dayOfWeekGroup)
         .dimension(dayOfWeek)</pre></div></div>
             
@@ -1293,7 +1293,7 @@ on other charts within the same chart group.
             <div class="content"><div class='highlight'><pre>    fluctuationChart <span class="hljs-comment">/* dc.barChart('#volume-month-chart', 'chartGroup') */</span>
         .width(<span class="hljs-number">420</span>)
         .height(<span class="hljs-number">180</span>)
-        .margins({top: <span class="hljs-number">10</span>, right: <span class="hljs-number">50</span>, bottom: <span class="hljs-number">30</span>, left: <span class="hljs-number">40</span>})
+        .margins({<span class="hljs-attr">top</span>: <span class="hljs-number">10</span>, <span class="hljs-attr">right</span>: <span class="hljs-number">50</span>, <span class="hljs-attr">bottom</span>: <span class="hljs-number">30</span>, <span class="hljs-attr">left</span>: <span class="hljs-number">40</span>})
         .dimension(fluctuation)
         .group(fluctuationGroup)
         .elasticY(<span class="hljs-literal">true</span>)</pre></div></div>
@@ -1415,7 +1415,7 @@ on other charts within the same chart group.
         .width(<span class="hljs-number">990</span>)
         .height(<span class="hljs-number">200</span>)
         .transitionDuration(<span class="hljs-number">1000</span>)
-        .margins({top: <span class="hljs-number">30</span>, right: <span class="hljs-number">50</span>, bottom: <span class="hljs-number">25</span>, left: <span class="hljs-number">40</span>})
+        .margins({<span class="hljs-attr">top</span>: <span class="hljs-number">30</span>, <span class="hljs-attr">right</span>: <span class="hljs-number">50</span>, <span class="hljs-attr">bottom</span>: <span class="hljs-number">25</span>, <span class="hljs-attr">left</span>: <span class="hljs-number">40</span>})
         .dimension(moveMonths)
         .mouseZoomable(<span class="hljs-literal">true</span>)</pre></div></div>
             
@@ -1556,7 +1556,7 @@ will always match the zoom of the area chart.</p>
             
             <div class="content"><div class='highlight'><pre>    volumeChart.width(<span class="hljs-number">990</span>) <span class="hljs-comment">/* dc.barChart('#monthly-volume-chart', 'chartGroup'); */</span>
         .height(<span class="hljs-number">40</span>)
-        .margins({top: <span class="hljs-number">0</span>, right: <span class="hljs-number">50</span>, bottom: <span class="hljs-number">20</span>, left: <span class="hljs-number">40</span>})
+        .margins({<span class="hljs-attr">top</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">right</span>: <span class="hljs-number">50</span>, <span class="hljs-attr">bottom</span>: <span class="hljs-number">20</span>, <span class="hljs-attr">left</span>: <span class="hljs-number">40</span>})
         .dimension(moveMonths)
         .group(volumeByMonthGroup)
         .centerBar(<span class="hljs-literal">true</span>)
@@ -1622,9 +1622,9 @@ on other charts within the same chart group.
             </div>
             
             <div class="content"><div class='highlight'><pre>        .html({
-            some: <span class="hljs-string">'&lt;strong&gt;%filter-count&lt;/strong&gt; selected out of &lt;strong&gt;%total-count&lt;/strong&gt; records'</span> +
+            <span class="hljs-attr">some</span>: <span class="hljs-string">'&lt;strong&gt;%filter-count&lt;/strong&gt; selected out of &lt;strong&gt;%total-count&lt;/strong&gt; records'</span> +
                 <span class="hljs-string">' | &lt;a href=\'javascript:dc.filterAll(); dc.renderAll();\'&gt;Reset All&lt;/a&gt;'</span>,
-            all: <span class="hljs-string">'All records selected. Please click on the graph to apply filters.'</span>
+            <span class="hljs-attr">all</span>: <span class="hljs-string">'All records selected. Please click on the graph to apply filters.'</span>
         });</pre></div></div>
             
         </li>
@@ -1772,7 +1772,7 @@ This code demonstrates generating the column header automatically based on the c
             </div>
             
             <div class="content"><div class='highlight'><pre>                label: <span class="hljs-string">'Change'</span>,
-                format: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">d</span>) </span>{
+                <span class="hljs-attr">format</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">d</span>) </span>{
                     <span class="hljs-keyword">return</span> numberFormat(d.close - d.open);
                 }
             },</pre></div></div>
@@ -2488,7 +2488,8 @@ changes, without re-rendering everything</p>
             
             <div class="content"><div class='highlight'><pre>d3.json(<span class="hljs-string">'https://api.github.com/repos/dc-js/dc.js/releases/latest'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">error, latestRelease</span>) </span>{
     <span class="hljs-comment">/*jshint camelcase: false */</span>
-    d3.selectAll(<span class="hljs-string">'#latest'</span>).text(latestRelease.tag_name); <span class="hljs-comment">/* jscs:disable */</span>
+    <span class="hljs-comment">/* jscs:disable */</span>
+    d3.selectAll(<span class="hljs-string">'#latest'</span>).text(latestRelease.tag_name);
 });</pre></div></div>
             
         </li>

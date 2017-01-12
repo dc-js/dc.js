@@ -17,6 +17,7 @@ describe('dc.coordinateGridChart', function () {
             .dimension(dimension)
             .group(group)
             .transitionDuration(0)
+            .transitionDelay(0)
             .brushOn(false)
             .margins({top: 20, bottom: 0, right: 10, left: 0})
             .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
@@ -61,6 +62,10 @@ describe('dc.coordinateGridChart', function () {
 
         it('should have zero transition duration', function () {
             expect(chart.transitionDuration()).toBe(0);
+        });
+
+        it('should have zero transition delay', function () {
+            expect(chart.transitionDelay()).toBe(0);
         });
 
         it('should set the margins of the chart', function () {
@@ -159,7 +164,7 @@ describe('dc.coordinateGridChart', function () {
 
             it('should translate the clip rect to 0,0', function () {
                 var rect = chart.select('defs #coordinate-grid-chart-clip rect');
-                expect(rect.attr('transform')).toMatchTranslate(0,0);
+                expect(rect.attr('transform')).toMatchTranslate(0, 0);
             });
 
             it('should add clip path refs to the chart body', function () {
@@ -183,7 +188,7 @@ describe('dc.coordinateGridChart', function () {
 
                 it('should translate the clip rect to -20,-20', function () {
                     var rect = chart.select('defs #coordinate-grid-chart-clip rect');
-                    expect(rect.attr('transform')).toMatchTranslate(-20,-20);
+                    expect(rect.attr('transform')).toMatchTranslate(-20, -20);
                 });
 
             });
@@ -197,6 +202,7 @@ describe('dc.coordinateGridChart', function () {
                         .dimension(dimension)
                         .group(group)
                         .transitionDuration(0)
+                        .transitionDelay(0)
                         .brushOn(false)
                         .margins({top: 20, bottom: 0, right: 10, left: 0})
                         .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
@@ -217,6 +223,7 @@ describe('dc.coordinateGridChart', function () {
                         .dimension(dimension)
                         .group(group)
                         .transitionDuration(0)
+                        .transitionDelay(0)
                         .brushOn(false)
                         .margins({top: 20, bottom: 0, right: 10, left: 0})
                         .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
@@ -254,12 +261,12 @@ describe('dc.coordinateGridChart', function () {
 
         describe('x-axis', function () {
             it('should place an x axis at the bottom', function () {
-                expect(chart.select('g.x').attr('transform')).toMatchTranslate(0,150);
+                expect(chart.select('g.x').attr('transform')).toMatchTranslate(0, 150);
             });
 
             it('should update x axis position when the chart height is changed', function () {
                 chart.elasticX(true).height(400).redraw();
-                expect(chart.select('g.x').attr('transform')).toMatchTranslate(0,400);
+                expect(chart.select('g.x').attr('transform')).toMatchTranslate(0, 400);
             });
 
             describe('labels', function () {
@@ -404,7 +411,7 @@ describe('dc.coordinateGridChart', function () {
                 });
 
                 it('should place the y axis to the left', function () {
-                    expect(chart.select('g.y').attr('transform')).toMatchTranslate(0,20);
+                    expect(chart.select('g.y').attr('transform')).toMatchTranslate(0, 20);
                 });
 
                 describe('y-axis labels', function () {
@@ -422,7 +429,7 @@ describe('dc.coordinateGridChart', function () {
                     });
 
                     it('should position the label to the left of the chart', function () {
-                        expect(chart.selectAll('text.y-axis-label.y-label').attr('transform')).toMatchTransRot(12,85,-90);
+                        expect(chart.selectAll('text.y-axis-label.y-label').attr('transform')).toMatchTransRot(12, 85, -90);
                     });
 
                     describe('with custom padding', function () {
@@ -451,7 +458,7 @@ describe('dc.coordinateGridChart', function () {
                 });
 
                 it('should position the axis to the right of the chart', function () {
-                    expect(chart.select('.axis.y').attr('transform')).toMatchTranslate(490,20);
+                    expect(chart.select('.axis.y').attr('transform')).toMatchTranslate(490, 20);
                 });
 
                 describe('y-axis labels', function () {
@@ -469,7 +476,7 @@ describe('dc.coordinateGridChart', function () {
                     });
 
                     it('should position the label to the right of the chart', function () {
-                        expect(chart.selectAll('text.y-axis-label.y-label').attr('transform')).toMatchTransRot(488,85,90);
+                        expect(chart.selectAll('text.y-axis-label.y-label').attr('transform')).toMatchTransRot(488, 85, 90);
                     });
 
                     describe('with custom padding', function () {
@@ -920,7 +927,7 @@ describe('dc.coordinateGridChart', function () {
         });
 
         describe('when called with a range argument', function () {
-            var focusDomain = [makeDate(2012,5,20), makeDate(2012,5,30)];
+            var focusDomain = [makeDate(2012, 5, 20), makeDate(2012, 5, 30)];
 
             beforeEach(function () {
                 chart.focus(focusDomain);
@@ -933,7 +940,7 @@ describe('dc.coordinateGridChart', function () {
 
         describe('when called with no arguments', function () {
             beforeEach(function () {
-                chart.focus([makeDate(2012,5,1), makeDate(2012,5,2)]);
+                chart.focus([makeDate(2012, 5, 1), makeDate(2012, 5, 2)]);
                 chart.focus();
             });
 

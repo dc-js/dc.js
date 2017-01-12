@@ -1,3 +1,4 @@
+
 /**
  * A box plot is a chart that depicts numerical data via their quartile ranges.
  *
@@ -13,11 +14,11 @@
  * // create a box plot under #chart-container2 element using chart group A
  * var boxPlot2 = dc.boxPlot('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/mbostock/d3/wiki/Selections#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @return {dc.boxPlot}
+ * @returns {dc.boxPlot}
  */
 dc.boxPlot = function (parent, chartGroup) {
     var _chart = dc.coordinateGridMixin({});
@@ -73,15 +74,14 @@ dc.boxPlot = function (parent, chartGroup) {
 
     /**
      * Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
-     * See the {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands d3 docs}
+     * See the {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands d3 docs}
      * for a visual description of how the padding is applied.
      * @method boxPadding
      * @memberof dc.boxPlot
      * @instance
-     * @see {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-ordinal_rangeBands d3.scale.ordinal.rangeBands}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands d3.scale.ordinal.rangeBands}
      * @param {Number} [padding=0.8]
-     * @return {Number}
-     * @return {dc.boxPlot}
+     * @returns {Number|dc.boxPlot}
      */
     _chart.boxPadding = _chart._rangeBandPadding;
     _chart.boxPadding(0.8);
@@ -94,8 +94,7 @@ dc.boxPlot = function (parent, chartGroup) {
      * @memberof dc.boxPlot
      * @instance
      * @param {Number} [padding=0.5]
-     * @return {Number}
-     * @return {dc.boxPlot}
+     * @returns {Number|dc.boxPlot}
      */
     _chart.outerPadding = _chart._outerRangeBandPadding;
     _chart.outerPadding(0.5);
@@ -113,8 +112,7 @@ dc.boxPlot = function (parent, chartGroup) {
      * @memberof dc.boxPlot
      * @instance
      * @param {Number|Function} [boxWidth=0.5]
-     * @return {Number|Function}
-     * @return {dc.boxPlot}
+     * @returns {Number|Function|dc.boxPlot}
      */
     _chart.boxWidth = function (boxWidth) {
         if (!arguments.length) {
@@ -146,7 +144,7 @@ dc.boxPlot = function (parent, chartGroup) {
             .duration(_chart.transitionDuration())
             .tickFormat(_tickFormat);
 
-        var boxesG = _chart.chartBodyG().selectAll('g.box').data(_chart.data(), function (d) { return d.key; });
+        var boxesG = _chart.chartBodyG().selectAll('g.box').data(_chart.data(), _chart.keyAccessor());
 
         renderBoxes(boxesG);
         updateBoxes(boxesG);
@@ -163,13 +161,13 @@ dc.boxPlot = function (parent, chartGroup) {
             .attr('transform', boxTransform)
             .call(_box)
             .on('click', function (d) {
-                _chart.filter(d.key);
+                _chart.filter(_chart.keyAccessor()(d));
                 _chart.redrawGroup();
             });
     }
 
     function updateBoxes (boxesG) {
-        dc.transition(boxesG, _chart.transitionDuration())
+        dc.transition(boxesG, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', boxTransform)
             .call(_box)
             .each(function () {
@@ -183,13 +181,28 @@ dc.boxPlot = function (parent, chartGroup) {
 
     _chart.fadeDeselectedArea = function () {
         if (_chart.hasFilter()) {
-            _chart.g().selectAll('g.box').each(function (d) {
-                if (_chart.isSelectedNode(d)) {
-                    _chart.highlightSelected(this);
-                } else {
-                    _chart.fadeDeselected(this);
-                }
-            });
+            if (_chart.isOrdinal()) {
+                _chart.g().selectAll('g.box').each(function (d) {
+                    if (_chart.isSelectedNode(d)) {
+                        _chart.highlightSelected(this);
+                    } else {
+                        _chart.fadeDeselected(this);
+                    }
+                });
+            } else {
+                var extent = _chart.brush().extent();
+                var start = extent[0];
+                var end = extent[1];
+                var keyAccessor = _chart.keyAccessor();
+                _chart.g().selectAll('g.box').each(function (d) {
+                    var key = keyAccessor(d);
+                    if (key < start || key >= end) {
+                        _chart.fadeDeselected(this);
+                    } else {
+                        _chart.highlightSelected(this);
+                    }
+                });
+            }
         } else {
             _chart.g().selectAll('g.box').each(function () {
                 _chart.resetHighlight(this);
@@ -198,7 +211,7 @@ dc.boxPlot = function (parent, chartGroup) {
     };
 
     _chart.isSelectedNode = function (d) {
-        return _chart.hasFilter(d.key);
+        return _chart.hasFilter(_chart.keyAccessor()(d));
     };
 
     _chart.yAxisMin = function () {
@@ -225,8 +238,7 @@ dc.boxPlot = function (parent, chartGroup) {
      * @memberof dc.boxPlot
      * @instance
      * @param {Function} [tickFormat]
-     * @return {Number|Function}
-     * @return {dc.boxPlot}
+     * @returns {Number|Function|dc.boxPlot}
      */
     _chart.tickFormat = function (tickFormat) {
         if (!arguments.length) {

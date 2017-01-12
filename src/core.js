@@ -257,35 +257,52 @@ dc.redrawAll = function (group) {
 
 /**
  * If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
- * immediately
+ * immediately.
  * @memberof dc
- * @method disableTransitions
+ * @member disableTransitions
  * @type {Boolean}
  * @default false
  */
 dc.disableTransitions = false;
 
-dc.transition = function (selections, duration, callback, name) {
-    if (duration <= 0 || duration === undefined || dc.disableTransitions) {
-        return selections;
+/**
+ * Start a transition on a selection if transitions are globally enabled
+ * ({@link dc.disableTransitions} is false) and the duration is greater than zero; otherwise return
+ * the selection. Since most operations are the same on a d3 selection and a d3 transition, this
+ * allows a common code path for both cases.
+ * @memberof dc
+ * @method transition
+ * @param {d3.selection} selection - the selection to be transitioned
+ * @param {Number|Function} [duration=250] - the duration of the transition in milliseconds, a
+ * function returning the duration, or 0 for no transition
+ * @param {Number|Function} [delay] - the delay of the transition in milliseconds, or a function
+ * returning the delay, or 0 for no delay
+ * @param {String} [name] - the name of the transition (if concurrent transitions on the same
+ * elements are needed)
+ * @returns {d3.transition|d3.selection}
+ */
+dc.transition = function (selection, duration, delay, name) {
+    if (dc.disableTransitions || duration <= 0) {
+        return selection;
     }
 
-    var s = selections
-        .transition(name)
-        .duration(duration);
+    var s = selection.transition(name);
 
-    if (typeof(callback) === 'function') {
-        callback(s);
+    if (duration >= 0 || duration !== undefined) {
+        s = s.duration(duration);
+    }
+    if (delay >= 0 || delay !== undefined) {
+        s = s.delay(delay);
     }
 
     return s;
 };
 
 /* somewhat silly, but to avoid duplicating logic */
-dc.optionalTransition = function (enable, duration, callback, name) {
+dc.optionalTransition = function (enable, duration, delay, name) {
     if (enable) {
         return function (selection) {
-            return dc.transition(selection, duration, callback, name);
+            return dc.transition(selection, duration, delay, name);
         };
     } else {
         return function (selection) {
@@ -329,7 +346,7 @@ dc.units = {};
  * chart.xUnits(dc.units.integers) // already the default
  * @param {Number} start
  * @param {Number} end
- * @return {Number}
+ * @returns {Number}
  */
 dc.units.integers = function (start, end) {
     return Math.abs(end - start);
@@ -338,12 +355,12 @@ dc.units.integers = function (start, end) {
 /**
  * This argument can be passed to the {@link dc.coordinateGridMixin#xUnits .xUnits} function of the to
  * specify ordinal units for the x axis. Usually this parameter is used in combination with passing
- * {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales d3.scale.ordinal} to
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md d3.scale.ordinal} to
  * {@link dc.coordinateGridMixin#x .x}.
  * It just returns the domain passed to it, which for ordinal charts is an array of all values.
  * @method ordinal
  * @memberof dc.units
- * @see {@link https://github.com/mbostock/d3/wiki/Ordinal-Scales d3.scale.ordinal}
+ * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md d3.scale.ordinal}
  * @see {@link dc.coordinateGridMixin#xUnits coordinateGridMixin.xUnits}
  * @see {@link dc.coordinateGridMixin#x coordinateGridMixin.x}
  * @example
@@ -352,7 +369,7 @@ dc.units.integers = function (start, end) {
  * @param {*} start
  * @param {*} end
  * @param {Array<String>} domain
- * @return {Array<String>}
+ * @returns {Array<String>}
  */
 dc.units.ordinal = function (start, end, domain) {
     return domain;
@@ -380,7 +397,7 @@ dc.units.fp = {};
  * var thousandths = dc.units.fp.precision(0.001);
  * thousandths(0.5, 1.0) // returns 500
  * @param {Number} precision
- * @return {Function} start-end unit function
+ * @returns {Function} start-end unit function
  */
 dc.units.fp.precision = function (precision) {
     var _f = function (s, e) {

@@ -25,6 +25,7 @@ describe('dc.boxPlot', function () {
             .margins({top: 0, right: 0, bottom: 0, left: 0})
             .boxPadding(0)
             .transitionDuration(0)
+            .transitionDelay(0)
             .y(d3.scale.linear().domain([0, 144]))
             .ordinalColors(['#01','#02']);
     });
@@ -43,8 +44,8 @@ describe('dc.boxPlot', function () {
         });
 
         it('should create an offset box for each dimension in the group', function () {
-            expect(box(0).attr('transform')).toMatchTranslate(50,0);
-            expect(box(1).attr('transform')).toMatchTranslate(150,0);
+            expect(box(0).attr('transform')).toMatchTranslate(50, 0);
+            expect(box(1).attr('transform')).toMatchTranslate(150, 0);
         });
 
         it('should correctly place median line', function () {

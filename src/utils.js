@@ -15,10 +15,10 @@ dc.dateFormat = d3.time.format('%m/%d/%Y');
 dc.printers = {};
 
 /**
- * Converts a list of filters into a readable string
+ * Converts a list of filters into a readable string.
  * @method filters
  * @memberof dc.printers
- * @param {Array<dc.filters|any>} filters
+ * @param {Array<dc.filters>} filters
  * @returns {String}
  */
 dc.printers.filters = function (filters) {
@@ -35,7 +35,7 @@ dc.printers.filters = function (filters) {
 };
 
 /**
- * Converts a filter into a readable string
+ * Converts a filter into a readable string.
  * @method filter
  * @memberof dc.printers
  * @param {dc.filters|any|Array<any>} filter
@@ -61,8 +61,9 @@ dc.printers.filter = function (filter) {
 
 /**
  * Returns a function that given a string property name, can be used to pluck the property off an object.  A function
- * can be passed as the second argument to also alter the data being returned.  This can be a useful shorthand method to create
- * accessor functions.
+ * can be passed as the second argument to also alter the data being returned.
+ *
+ * This can be a useful shorthand method to create accessor functions.
  * @method pluck
  * @memberof dc
  * @example
@@ -96,7 +97,7 @@ dc.pluck = function (n, f) {
 dc.utils = {};
 
 /**
- * Print a single value filter
+ * Print a single value filter.
  * @method printSingleValue
  * @memberof dc.utils
  * @param {any} filter
@@ -126,11 +127,14 @@ dc.utils.printSingleValue.fformat = d3.format('.2f');
  * @todo
  * These assume than any string r is a percentage (whether or not it includes %).
  * They also generate strange results if l is a string.
- * @param {String|Date|Number} l
- * @param {Number} r
+ * @param {String|Date|Number} l the value to modify
+ * @param {Number} r the amount by which to modify the value
+ * @param {String} [t] if `l` is a `Date`, the
+ * [interval](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval) in
+ * the `d3.time` namespace
  * @returns {String|Date|Number}
  */
-dc.utils.add = function (l, r) {
+dc.utils.add = function (l, r, t) {
     if (typeof r === 'string') {
         r = r.replace('%', '');
     }
@@ -139,10 +143,11 @@ dc.utils.add = function (l, r) {
         if (typeof r === 'string') {
             r = +r;
         }
-        var d = new Date();
-        d.setTime(l.getTime());
-        d.setDate(l.getDate() + r);
-        return d;
+        if (t === 'millis') {
+            return new Date(l.getTime() + r);
+        }
+        t = t || 'day';
+        return d3.time[t].offset(l, r);
     } else if (typeof r === 'string') {
         var percentage = (+r / 100);
         return l > 0 ? l * (1 + percentage) : l * (1 - percentage);
@@ -158,11 +163,14 @@ dc.utils.add = function (l, r) {
  * @todo
  * These assume than any string r is a percentage (whether or not it includes %).
  * They also generate strange results if l is a string.
- * @param {String|Date|Number} l
- * @param {Number} r
+ * @param {String|Date|Number} l the value to modify
+ * @param {Number} r the amount by which to modify the value
+ * @param {String} [t] if `l` is a `Date`, the
+ * [interval](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval) in
+ * the `d3.time` namespace
  * @returns {String|Date|Number}
  */
-dc.utils.subtract = function (l, r) {
+dc.utils.subtract = function (l, r, t) {
     if (typeof r === 'string') {
         r = r.replace('%', '');
     }
@@ -171,10 +179,11 @@ dc.utils.subtract = function (l, r) {
         if (typeof r === 'string') {
             r = +r;
         }
-        var d = new Date();
-        d.setTime(l.getTime());
-        d.setDate(l.getDate() - r);
-        return d;
+        if (t === 'millis') {
+            return new Date(l.getTime() - r);
+        }
+        t = t || 'day';
+        return d3.time[t].offset(l, -r);
     } else if (typeof r === 'string') {
         var percentage = (+r / 100);
         return l < 0 ? l * (1 + percentage) : l * (1 - percentage);
@@ -263,7 +272,7 @@ dc.utils.nameToId = function (name) {
 };
 
 /**
- * Append or select an item on a parent element
+ * Append or select an item on a parent element.
  * @method appendOrSelect
  * @memberof dc.utils
  * @param {d3.selection} parent

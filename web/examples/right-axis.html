@@ -3,10 +3,13 @@
 <head>
     <title>dc.js - Right Axis Example</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
 </head>
 <body>
 
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
 <div>
     <strong>Monthly Index Abs Move &amp; Volume Chart</strong>
 </div>
@@ -60,6 +63,7 @@
                 .margins({top: 30, right: 50, bottom: 25, left: 60})
                 .dimension(moveMonths)
                 .mouseZoomable(true)
+                .shareTitle(false)
                 .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
                 .round(d3.time.month.round)
                 .xUnits(d3.time.months)
@@ -79,9 +83,9 @@
                                 return Math.sqrt(d.value);
                             })
                             .title(function (d) {
-                                var value = d.data.value.avg ? d.data.value.avg : d.data.value;
+                                var value = d.value.avg ? d.value.avg : d.value;
                                 if (isNaN(value)) value = 0;
-                                return dateFormat(d.data.key) + "\n" + numberFormat(value);
+                                return dateFormat(d.key) + "\n" + numberFormat(value);
                             })
                             .ordinalColors(["orange"])
                             .useRightYAxis(true)
@@ -93,5 +97,6 @@
         dc.renderAll();
     });
 </script>
+</div>
 </body>
 </html>

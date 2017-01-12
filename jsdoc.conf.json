@@ -19,10 +19,14 @@
     "collapseSymbols": false,
     "inverseNav": true,
     "protocol": "html://",
-    "methodHeadingReturns": false
+    "methodHeadingReturns": false,
+    "default": {
+      "staticFiles": {
+        "include": ["./web/img/class-hierarchy.svg"]
+      }
+    }
   },
   "markdown": {
-    "parser": "gfm",
-    "hardwrap": true
+    "parser": "gfm"
   }
 }

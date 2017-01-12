@@ -3,15 +3,18 @@
   <head>
     <title>dc.js - Pie Chart Transition Tester</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
   </head>
   <body>
+    <div class="container">
+    <script type="text/javascript" src="../examples/header.js"></script>
 
     <div id="test"></div>
-    <button onclick="transitionTest.stop()">stop</button>
-    <button onclick="button1()">little</button>
-    <button onclick="button2()">keep 2</button>
-    <button onclick="button3()">keep 4</button>
+    <button class="btn" onclick="transitionTest.stop()">stop</button>
+    <button class="btn" onclick="button1()">little</button>
+    <button class="btn" onclick="button2()">keep 2</button>
+    <button class="btn" onclick="button3()">keep 4</button>
 
 
     <script type="text/javascript" src="../js/d3.js"></script>
@@ -66,6 +69,6 @@
       });
 
     </script>
-
+    </div>
   </body>
 </html>

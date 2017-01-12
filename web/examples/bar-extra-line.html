@@ -3,10 +3,13 @@
 <head>
     <title>dc.js - Bar Chart with Extra Line Example</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
 </head>
 <body>
 
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
 
 <div id="test"></div>
 
@@ -50,14 +53,30 @@ d3.csv("morley.csv", function(error, experiments) {
             .x(function(d) { return d.x; })
             .y(function(d) { return d.y; })
             .interpolate('linear');
-        var path = chart.select('g.chart-body').selectAll('path.extra').data([extra_data]);
-        path.enter().append('path').attr('class', 'extra').attr('stroke', 'red');
+        var chartBody = chart.select('g.chart-body');
+        var path = chartBody.selectAll('path.extra').data([extra_data]);
+        path.enter().append('path').attr({
+            class: 'extra',
+            stroke: 'red',
+            id: 'extra-line'
+        });
         path.attr('d', line);
+        // and perhaps you'd like to label it?
+        var text = chartBody.selectAll('text.extra-label').data([0]);
+        text.enter().append('text')
+                .attr('text-anchor', 'middle')
+            .append('textPath').attr({
+                class: 'extra-label',
+                'xlink:href': '#extra-line',
+                startOffset: '50%'
+            })
+            .text('this is a label for the line');
     });
     chart.render();
 });
 
 </script>
 
+</div>
 </body>
 </html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Series Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+
+<div class="container">
+  <script type="text/javascript" src="header.js"></script>
+
+  <p>This page demonstrates a very hacky workaround for issue <a href="https://github.com/dc-js/dc.js/issues/479">#479</a>, using a series chart as a range chart.
+<div id="test"></div>
+<div id="test-overview"></div>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript">
+
+var focusChart = dc.seriesChart("#test");
+var overviewChart = dc.seriesChart("#test-overview");
+var ndx, runDimension, runGroup, overviewRunDimension, overviewRunGroup;
+
+d3.csv("morley.csv", function(error, experiments) {
+
+  ndx = crossfilter(experiments);
+  runDimension = ndx.dimension(function(d) {return [+d.Expt, +d.Run]; });
+  overviewRunDimension = ndx.dimension(function(d) {return [+d.Expt, +d.Run]; });
+  runGroup = runDimension.group().reduceSum(function(d) { return +d.Speed; });
+  overviewRunGroup = overviewRunDimension.group().reduceSum(function(d) { return +d.Speed; });
+
+  focusChart
+    .width(768)
+    .height(480)
+    .chart(function(c) { return dc.lineChart(c).interpolate('basis'); })
+    .x(d3.scale.linear().domain([0,20]))
+    .brushOn(false)
+    .yAxisLabel("Measured Speed km/s")
+    .xAxisLabel("Run")
+    .clipPadding(10)
+    .elasticY(true)
+    .dimension(runDimension)
+    .group(runGroup)
+    .mouseZoomable(true)
+    .rangeChart(overviewChart)
+    .seriesAccessor(function(d) {return "Expt: " + d.key[0];})
+    .keyAccessor(function(d) {return +d.key[1];})
+    .valueAccessor(function(d) {return +d.value - 500;})
+    .legend(dc.legend().x(350).y(350).itemHeight(13).gap(5).horizontal(1).legendWidth(140).itemWidth(70));
+  focusChart.yAxis().tickFormat(function(d) {return d3.format(',d')(d+299500);});
+  focusChart.margins().left += 40;
+  
+  focusChart.elasticX = function() {
+    return arguments.length ? this : false;
+  };
+
+    function rangesEqual (range1, range2) {
+        if (!range1 && !range2) {
+            return true;
+        } else if (!range1 || !range2) {
+            return false;
+        } else if (range1.length === 0 && range2.length === 0) {
+            return true;
+        } else if (range1[0].valueOf() === range2[0].valueOf() &&
+            range1[1].valueOf() === range2[1].valueOf()) {
+            return true;
+        }
+        return false;
+    }
+
+  overviewChart
+    .width(768)
+    .height(100)
+    .chart(function(c,_,_,i) {
+    var chart = dc.lineChart(c).interpolate('basis');
+    if(i===0)
+    	chart.on('filtered', function (chart) {
+            if (!chart.filter()) {
+                dc.events.trigger(function () {
+                    overviewChart.focusChart().x().domain(overviewChart.focusChart().xOriginalDomain());
+                    overviewChart.focusChart().redraw();
+                });
+            } else if (!rangesEqual(chart.filter(), overviewChart.focusChart().filter())) {
+                dc.events.trigger(function () {
+                    overviewChart.focusChart().focus(chart.filter());
+                });
+            }
+        });
+    return chart;
+    })
+    .x(d3.scale.linear().domain([0,20]))
+    .brushOn(true)
+    .xAxisLabel("Run")
+    .clipPadding(10)
+    .dimension(runDimension)
+    .group(runGroup)
+    .seriesAccessor(function(d) {return "Expt: " + d.key[0];})
+    .keyAccessor(function(d) {return +d.key[1];})
+    .valueAccessor(function(d) {return +d.value - 500;})
+
+  dc.renderAll();
+
+  });
+</script>
+
+</div>
+</body>
+</html>
