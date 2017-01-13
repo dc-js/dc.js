@@ -458,7 +458,7 @@ describe('dc.bubbleChart', function () {
 
         it('draws bubbles in appropriate locations', function () {
             var coords = [
-                [170.4,0], [820,155], [489.9,155], [394,310], [149.1,310], [0,310]
+                [0,310], [149.1,310], [170.4,0], [394,310], [489.9,155], [820,155],
             ];
             chart.selectAll('g.node').each(function (d, i) {
                 expect(d3.select(this).attr('transform'))
