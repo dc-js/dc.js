@@ -4461,7 +4461,7 @@ dc.capMixin = function (_chart) {
      * implement.
      *
      * In dc.js 2.1 and forward, only
-     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_all `group.all()`}
+     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_all group.all()}
      * and `baseMixin.ordering()` are used.
      * @method cap
      * @memberof dc.capMixin

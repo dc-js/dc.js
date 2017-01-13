@@ -4475,7 +4475,7 @@ forget about `group.order()`), the latter will mask the problem. This also makes
 implement.
 
 In dc.js 2.1 and forward, only
-[`group.all()`](https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_all)
+[group.all()](https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_all)
 and `baseMixin.ordering()` are used.
 
 **Kind**: instance method of <code>[capMixin](#dc.capMixin)</code>  
