@@ -1,6 +1,8 @@
 ## 2.1.2
- * Eliminate use of `group.top()` in cap mixin, by Macy Abbey ([#934](https://github.com/dc-js/dc.js/issues/934) / [#1184](https://github.com/dc-js/dc.js/pull/1184))
- * Eliminate `group.top()` in number display. This one is more problematic but probably less common. If anyone is using a group with multiple bins with the number display, they may now have to also specify `.ordering()` in order to tell dc.js which value is largest. ([#934](https://github.com/dc-js/dc.js/issues/934))
+Stop using `group.top()` in favor of `group.all()` sorting and slicing.
+ * Eliminate use of `group.top()` in cap mixin, by Macy Abbey ([#1184](https://github.com/dc-js/dc.js/pull/1184)). It already had to agree with `chart.ordering()` for the results to make sense.
+ * Eliminate `group.top()` in number display. This one is more problematic but probably less common. If anyone is using a group with multiple bins with the number display, they may now have to also specify `.ordering()` in order to tell dc.js which value is largest.
+ * Eliminate `group.top()` in bubble mixin, which was used to draw the bubbles in descending order of size, if the `group.order()` corresponded to the radius. The bubble chart's `sortBubbleSize` is more powerful and is lifted to the mixin.
 
 ## 2.1.1
  * Merges 2.0.1
