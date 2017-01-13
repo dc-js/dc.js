@@ -5,6 +5,9 @@
  * Functional-style filter handlers: instead of modifying the array of filters in-place, filter handlers must return the new filter array. This is consistent with the old documention, but a different implementation: any changes to the `filters` argument will be ignored unless they are returned. This should make filter handlers easier to reason about.
 
 # 2.0 Series
+## 2.0.1
+* `sans-serif` was specified as a string, which is invalid, by Kyle Doherty ([#1260](https://github.com/dc-js/dc.js/pull/1260))
+
 ## 2.0.0
 * xAxisPaddingUnit also applied to stacked charts, by Alexander Stillesjö ([#1234](https://github.com/dc-js/dc.js/pull/1234)
 * Limit zoom bounds - panning past the end should not cause brush to turn inside out. Thanks to Indri Muska for initial implementation and test ([#1026](https://github.com/dc-js/dc.js/pull/1026))
