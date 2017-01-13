@@ -1,3 +1,10 @@
+## 2.1.2
+ * Eliminate use of `group.top()` in cap mixin, by Macy Abbey ([#934](https://github.com/dc-js/dc.js/issues/934) / [#1184](https://github.com/dc-js/dc.js/pull/1184))
+ * Eliminate `group.top()` in number display. This one is more problematic but probably less common. If anyone is using a group with multiple bins with the number display, they may now have to also specify `.ordering()` in order to tell dc.js which value is largest. ([#934](https://github.com/dc-js/dc.js/issues/934))
+
+## 2.1.1
+ * Merges 2.0.1
+
 ## 2.1.0
  * `dc.selectMenu`, implementing a `<select>` menu or multiple-select widget, by Andrea Singh ([#771](https://github.com/dc-js/dc.js/pull/771))
  * Heatmap allows customizing the ordering separately from the values, by Matt Traynham ([#869](https://github.com/dc-js/dc.js/pull/869) - thanks also to Quinn Lee for [#837](https://github.com/dc-js/dc.js/pull/837))
