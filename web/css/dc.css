@@ -46,7 +46,7 @@ div.dc-chart {
   shape-rendering: crispEdges; }
 
 .dc-chart .axis text {
-  font: 10px "sans-serif"; }
+  font: 10px sans-serif; }
 
 .dc-chart .grid-line, .dc-chart .axis .grid-line, .dc-chart .grid-line line, .dc-chart .axis .grid-line line {
   fill: none;
@@ -143,7 +143,7 @@ div.dc-chart {
   stroke-opacity: 0.2; }
 
 .dc-chart .box text {
-  font: 10px "sans-serif";
+  font: 10px sans-serif;
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
