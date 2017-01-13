@@ -50,12 +50,38 @@ dc.capMixin = function (_chart) {
         return _chart.valueAccessor()(d, i);
     };
 
+    /**
+     * Base function orders by crossfilter's group.all.
+     * This returns all groups, in ascending order, by value.
+     *
+     * This function is expected to return items in the same direction,
+     * ascending but the N biggest where N is cap.
+     *
+     * Since computeOrderedGroups is using crossfilter's quicksort, the
+     * sorted items will always be in ascending order.
+     *
+     * This means if we cap, we need to take from N to the end of the array.
+     *
+     *  Index
+     *  0-------N-------length
+     *
+     *  Value
+     *  small -> big
+     *
+     */
     _chart.data(function (group) {
         if (_cap === Infinity) {
             return _chart._computeOrderedGroups(group.all());
         } else {
-            var topRows = group.top(_cap); // ordered by crossfilter group order (default value)
+            var topRows = group.all(); // ordered by crossfilter group order (default value)
+
             topRows = _chart._computeOrderedGroups(topRows); // re-order using ordering (default key)
+
+            if (_cap) {
+              var start = Math.max(0, topRows.length - _cap);
+              topRows = topRows.slice(start, topRows.length);
+            }
+
             if (_othersGrouper) {
                 return _othersGrouper(topRows);
             }
