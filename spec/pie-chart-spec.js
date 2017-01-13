@@ -396,7 +396,7 @@ describe('dc.pieChart', function () {
                 defaultCapOrder = countryChart.data().map(dc.pluck('key'));
 
                 countryChart.ordering(function (d) {
-                  return -d.value;
+                    return -d.value;
                 });
 
                 //This should be ["CA", "Others"]. CA is now higher because it is -2 and US is -8.
@@ -408,7 +408,7 @@ describe('dc.pieChart', function () {
             it('group should be ordered when dimension key and ordering are different orders, by ordering.', function () {
                 expect(['CA','Others']).toEqual(reverseValueOrder);
                 countryChart.ordering(function (d) {
-                  return d.value;
+                    return d.value;
                 });
                 valueOrder = countryChart.data().map(dc.pluck('key'));
                 expect(['US','Others']).toEqual(valueOrder);

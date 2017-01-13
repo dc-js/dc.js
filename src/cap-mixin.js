@@ -78,8 +78,8 @@ dc.capMixin = function (_chart) {
             topRows = _chart._computeOrderedGroups(topRows); // re-order using ordering (default key)
 
             if (_cap) {
-              var start = Math.max(0, topRows.length - _cap);
-              topRows = topRows.slice(start, topRows.length);
+                var start = Math.max(0, topRows.length - _cap);
+                topRows = topRows.slice(start, topRows.length);
             }
 
             if (_othersGrouper) {
