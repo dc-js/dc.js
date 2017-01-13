@@ -1,5 +1,5 @@
 /*!
- *  dc 2.1.0
+ *  dc 2.1.1
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 2.1.0
+ * @version 2.1.1
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '2.1.0',
+    version: '2.1.1',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -4454,6 +4454,20 @@ dc.capMixin = function (_chart) {
      * Get or set the count of elements to that will be included in the cap. If there is an
      * {@link dc.capMixin#othersGrouper othersGrouper}, any further elements will be combined in an
      * extra element with its name determined by {@link dc.capMixin#othersLabel othersLabel}.
+     *
+     * Up through dc.js 2.0.*, capping uses
+     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_top group.top(N)},
+     * which selects the largest items according to
+     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_order group.order()}.
+     * The chart then sorts the items according to {@link dc.baseMixin#ordering baseMixin.ordering()}.
+     * So the two values essentially have to agree, but if the former is incorrect (it's easy to
+     * forget about `group.order()`), the latter will mask the problem. This also makes
+     * {@link https://github.com/dc-js/dc.js/wiki/FAQ#fake-groups fake groups} difficult to
+     * implement.
+     *
+     * In dc.js 2.1 and forward, only
+     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_all group.all()}
+     * and `baseMixin.ordering()` are used.
      * @method cap
      * @memberof dc.capMixin
      * @instance
