@@ -4464,6 +4464,20 @@ Get or set the count of elements to that will be included in the cap. If there i
 [othersGrouper](#dc.capMixin+othersGrouper), any further elements will be combined in an
 extra element with its name determined by [othersLabel](#dc.capMixin+othersLabel).
 
+Up through dc.js 2.0.*, capping uses
+[group.top(N)](https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_top),
+which selects the largest items according to
+[group.order()](https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_order).
+The chart then sorts the items according to [baseMixin.ordering()](#dc.baseMixin+ordering).
+So the two values essentially have to agree, but if the former is incorrect (it's easy to
+forget about `group.order()`), the latter will mask the problem. This also makes
+[fake groups](https://github.com/dc-js/dc.js/wiki/FAQ#fake-groups) difficult to
+implement.
+
+In dc.js 2.1 and forward, only
+[group.all()](https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_all)
+and `baseMixin.ordering()` are used.
+
 **Kind**: instance method of <code>[capMixin](#dc.capMixin)</code>  
 
 | Param | Type | Default |
