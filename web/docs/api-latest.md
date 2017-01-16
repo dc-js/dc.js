@@ -37,6 +37,7 @@ chart.width(300)
         * [new barChart(parent, [chartGroup])](#new_dc.barChart_new)
         * [.centerBar([centerBar])](#dc.barChart+centerBar) ⇒ <code>Boolean</code> &#124; <code>[barChart](#dc.barChart)</code>
         * [.barPadding([barPadding])](#dc.barChart+barPadding) ⇒ <code>Number</code> &#124; <code>[barChart](#dc.barChart)</code>
+        * [.growFromZero([growFromZero])](#dc.barChart+growFromZero) ⇒ <code>Boolean</code> &#124; <code>[barChart](#dc.barChart)</code>
         * [.outerPadding([padding])](#dc.barChart+outerPadding) ⇒ <code>Number</code> &#124; <code>[barChart](#dc.barChart)</code>
         * [.gap([gap])](#dc.barChart+gap) ⇒ <code>Number</code> &#124; <code>[barChart](#dc.barChart)</code>
         * [.alwaysUseRounding([alwaysUseRounding])](#dc.barChart+alwaysUseRounding) ⇒ <code>Boolean</code> &#124; <code>[barChart](#dc.barChart)</code>
@@ -502,6 +503,7 @@ Get or set whether to draw lines from pie slices to their labels.
     * [new barChart(parent, [chartGroup])](#new_dc.barChart_new)
     * [.centerBar([centerBar])](#dc.barChart+centerBar) ⇒ <code>Boolean</code> &#124; <code>[barChart](#dc.barChart)</code>
     * [.barPadding([barPadding])](#dc.barChart+barPadding) ⇒ <code>Number</code> &#124; <code>[barChart](#dc.barChart)</code>
+    * [.growFromZero([growFromZero])](#dc.barChart+growFromZero) ⇒ <code>Boolean</code> &#124; <code>[barChart](#dc.barChart)</code>
     * [.outerPadding([padding])](#dc.barChart+outerPadding) ⇒ <code>Number</code> &#124; <code>[barChart](#dc.barChart)</code>
     * [.gap([gap])](#dc.barChart+gap) ⇒ <code>Number</code> &#124; <code>[barChart](#dc.barChart)</code>
     * [.alwaysUseRounding([alwaysUseRounding])](#dc.barChart+alwaysUseRounding) ⇒ <code>Boolean</code> &#124; <code>[barChart](#dc.barChart)</code>
@@ -554,6 +556,18 @@ for a visual description of how the padding is applied.
 | Param | Type | Default |
 | --- | --- | --- |
 | [barPadding] | <code>Number</code> | <code>0</code> | 
+
+<a name="dc.barChart+growFromZero"></a>
+
+#### barChart.growFromZero([growFromZero]) ⇒ <code>Boolean</code> &#124; <code>[barChart](#dc.barChart)</code>
+Whether bars should grow from the bottom of the chart when they are first drawn (true)
+or fade in (false).
+
+**Kind**: instance method of <code>[barChart](#dc.barChart)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [growFromZero] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="dc.barChart+outerPadding"></a>
 
