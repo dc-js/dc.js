@@ -423,15 +423,21 @@ describe('dc.heatmap', function () {
         // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
         // 2-chart version of from http://bl.ocks.org/gordonwoodhull/14c623b95993808d69620563508edba6
         var irisData, bubbleChart, petalDim, petalGroup;
+        var fields = {
+            sl: 'sepal_length',
+            sw: 'sepal_width',
+            pl: 'petal_length',
+            pw: 'petal_width'
+        };
+        var keyfuncs = {};
+        function duo_key (ab1, ab2) {
+            return function (d) {
+                return [keyfuncs[ab1](d[fields[ab1]]), keyfuncs[ab2](d[fields[ab2]])];
+            };
+        }
         beforeEach(function () {
             irisData = loadIrisFixture();
 
-            var fields = {
-                sl: 'sepal_length',
-                sw: 'sepal_width',
-                pl: 'petal_length',
-                pw: 'petal_width'
-            };
             var species = ['setosa', 'versicolor', 'virginica'];
 
             irisData.forEach(function (d) {
@@ -447,17 +453,11 @@ describe('dc.heatmap', function () {
                 };
             }
             var extents = {};
-            var keyfuncs = {};
             Object.keys(fields).forEach(function (ab) {
                 extents[ab] = d3.extent(irisData, function (d) { return d[fields[ab]]; });
                 keyfuncs[ab] = key_function(extents[ab]);
             });
             data = crossfilter(irisData);
-            function duo_key (ab1, ab2) {
-                return function (d) {
-                    return [keyfuncs[ab1](d[fields[ab1]]), keyfuncs[ab2](d[fields[ab2]])];
-                };
-            }
             function key_part (i) {
                 return function (kv) {
                     return kv.key[i];
@@ -590,9 +590,7 @@ describe('dc.heatmap', function () {
 
         describe('bubble filtering with straight crossfilter', function () {
             beforeEach(function () {
-                var aBubble = d3.select(bubbleChart.selectAll('circle.bubble')[0][12]);
-                aBubble.on('click')(aBubble.datum());
-                d3.timer.flush();
+                bubbleChart.filter(duo_key('sl', 'sw')({sepal_length: 5.5, sepal_width: 3})).redrawGroup();
             });
             it('updates rect fills correctly', function () {
                 testRectFillsBubble12(chart);
@@ -605,9 +603,7 @@ describe('dc.heatmap', function () {
             beforeEach(function () {
                 chart.group(clone_group(petalGroup));
                 chart.render();
-                var aBubble = d3.select(bubbleChart.selectAll('circle.bubble')[0][12]);
-                aBubble.on('click')(aBubble.datum());
-                d3.timer.flush();
+                bubbleChart.filter(duo_key('sl', 'sw')({sepal_length: 5.5, sepal_width: 3})).redrawGroup();
             });
             it('updates rect fills correctly', function () {
                 testRectFillsBubble12(chart);
