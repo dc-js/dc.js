@@ -494,6 +494,7 @@ describe('dc.heatmap', function () {
                 bubbleChart
                     .width(400)
                     .height(400)
+                    .transitionDuration(0)
                     .x(d3.scale.linear()).xAxisPadding(0.5)
                     .y(d3.scale.linear()).yAxisPadding(0.5)
                     .elasticX(true)
@@ -501,6 +502,7 @@ describe('dc.heatmap', function () {
                     .label(d3.functor(''))
                     .keyAccessor(key_part(0))
                     .valueAccessor(key_part(1))
+                    .r(d3.scale.linear().domain([0,20]).range([4,25]))
                     .radiusValueAccessor(function (kv) { return kv.value.total; })
                     .colors(d3.scale.ordinal()
                             .domain(species.concat('none'))
