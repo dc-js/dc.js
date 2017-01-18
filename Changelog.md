@@ -1,4 +1,5 @@
 ## 2.1.2
+ * Lift `elasticRadius` from `bubbleChart` to `bubbleMixin`, making it available to `bubbleOverlay` ([#661](https://github.com/dc-js/dc.js/issues/661))
 Stop using `group.top()` in favor of `group.all()` sorting and slicing. ([#934](https://github.com/dc-js/dc.js/issues/934))
  * Eliminate use of `group.top()` in cap mixin, by Macy Abbey ([#1184](https://github.com/dc-js/dc.js/pull/1184)). It already had to agree with `chart.ordering()` for the results to make sense.
  * Eliminate `group.top()` in number display. This one is more problematic but probably less common. Although the number display now defaults ordering to `function (kv) { return kv.value; }`, applications which use a group with multiple bins with the number display, which were using `group.order()` to specify which bin should be displayed, must now specify `numberDisplay.ordering()` instead.

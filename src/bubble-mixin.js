@@ -11,6 +11,7 @@ dc.bubbleMixin = function (_chart) {
     var _maxBubbleRelativeSize = 0.3;
     var _minRadiusWithLabel = 10;
     var _sortBubbleSize = false;
+    var _elasticRadius = false;
 
     _chart.BUBBLE_NODE_CLASS = 'node';
     _chart.BUBBLE_CLASS = 'bubble';
@@ -53,6 +54,29 @@ dc.bubbleMixin = function (_chart) {
         }
         _r = bubbleRadiusScale;
         return _chart;
+    };
+
+    /**
+     * Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
+     * feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
+     * @method elasticRadius
+     * @memberof dc.bubbleChart
+     * @instance
+     * @param {Boolean} [elasticRadius=false]
+     * @returns {Boolean|dc.bubbleChart}
+     */
+    _chart.elasticRadius = function (elasticRadius) {
+        if (!arguments.length) {
+            return _elasticRadius;
+        }
+        _elasticRadius = elasticRadius;
+        return _chart;
+    };
+
+    _chart.calculateRadiusDomain = function () {
+        if (_elasticRadius) {
+            _chart.r().domain([_chart.rMin(), _chart.rMax()]);
+        }
     };
 
     /**

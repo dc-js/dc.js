@@ -28,8 +28,6 @@
 dc.bubbleChart = function (parent, chartGroup) {
     var _chart = dc.bubbleMixin(dc.coordinateGridMixin({}));
 
-    var _elasticRadius = false;
-
     _chart.transitionDuration(750);
 
     _chart.transitionDelay(0);
@@ -38,28 +36,8 @@ dc.bubbleChart = function (parent, chartGroup) {
         return 'translate(' + (bubbleX(d)) + ',' + (bubbleY(d)) + ')';
     };
 
-    /**
-     * Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
-     * feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
-     * @method elasticRadius
-     * @memberof dc.bubbleChart
-     * @instance
-     * @param {Boolean} [elasticRadius=false]
-     * @returns {Boolean|dc.bubbleChart}
-     */
-    _chart.elasticRadius = function (elasticRadius) {
-        if (!arguments.length) {
-            return _elasticRadius;
-        }
-        _elasticRadius = elasticRadius;
-        return _chart;
-    };
-
     _chart.plotData = function () {
-        if (_elasticRadius) {
-            _chart.r().domain([_chart.rMin(), _chart.rMax()]);
-        }
-
+        _chart.calculateRadiusDomain();
         _chart.r().range([_chart.MIN_RADIUS, _chart.xAxisLength() * _chart.maxBubbleRelativeSize()]);
 
         var data = _chart.data();
