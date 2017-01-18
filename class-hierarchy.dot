@@ -31,4 +31,5 @@ capMixin -> rowChart
 marginMixin -> rowChart
 colorMixin -> rowChart
 coordinateGridMixin -> scatterPlot
+baseMixin -> selectMenu
 }
