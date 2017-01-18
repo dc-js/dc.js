@@ -25,6 +25,9 @@ dc.numberDisplay = function (parent, chartGroup) {
     // dimension not required
     _chart._mandatoryAttributes(['group']);
 
+    // default to ordering by value, to emulate old group.top(1) behavior when multiple groups
+    _chart.ordering(function (kv) { return kv.value; });
+
     /**
      * Gets or sets an optional object specifying HTML templates to use depending on the number
      * displayed.  The text `%number` will be replaced with the current value.
@@ -77,8 +80,23 @@ dc.numberDisplay = function (parent, chartGroup) {
         return _chart.data();
     };
 
+    // probably unnecessary efficiency over computeOrderedGroups sort
+    function maxBin (all) {
+        if (all.length < 1) {
+            return null;
+        }
+        var maxi = 0, max = _chart.ordering()(all[0]);
+        for (var i = 1; i < all.length; ++i) {
+            var v = _chart.ordering()(all[i]);
+            if (v > max) {
+                max = v;
+                maxi = i;
+            }
+        }
+        return all[maxi];
+    }
     _chart.data(function (group) {
-        var valObj = group.value ? group.value() : group.top(1)[0];
+        var valObj = group.value ? group.value() : maxBin(group.all());
         return _chart.valueAccessor()(valObj);
     });
 

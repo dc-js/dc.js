@@ -10,6 +10,8 @@
 dc.bubbleMixin = function (_chart) {
     var _maxBubbleRelativeSize = 0.3;
     var _minRadiusWithLabel = 10;
+    var _sortBubbleSize = false;
+    var _elasticRadius = false;
 
     _chart.BUBBLE_NODE_CLASS = 'node';
     _chart.BUBBLE_CLASS = 'bubble';
@@ -20,7 +22,13 @@ dc.bubbleMixin = function (_chart) {
     _chart.renderLabel(true);
 
     _chart.data(function (group) {
-        return group.top(Infinity);
+        var data = group.all();
+        if (_sortBubbleSize) {
+            // sort descending so smaller bubbles are on top
+            var radiusAccessor = _chart.radiusValueAccessor();
+            data.sort(function (a, b) { return d3.descending(radiusAccessor(a), radiusAccessor(b)); });
+        }
+        return data;
     });
 
     var _r = d3.scale.linear().domain([0, 100]);
@@ -46,6 +54,29 @@ dc.bubbleMixin = function (_chart) {
         }
         _r = bubbleRadiusScale;
         return _chart;
+    };
+
+    /**
+     * Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
+     * feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
+     * @method elasticRadius
+     * @memberof dc.bubbleChart
+     * @instance
+     * @param {Boolean} [elasticRadius=false]
+     * @returns {Boolean|dc.bubbleChart}
+     */
+    _chart.elasticRadius = function (elasticRadius) {
+        if (!arguments.length) {
+            return _elasticRadius;
+        }
+        _elasticRadius = elasticRadius;
+        return _chart;
+    };
+
+    _chart.calculateRadiusDomain = function () {
+        if (_elasticRadius) {
+            _chart.r().domain([_chart.rMin(), _chart.rMax()]);
+        }
     };
 
     /**
@@ -154,6 +185,23 @@ dc.bubbleMixin = function (_chart) {
         if (_chart.renderTitle()) {
             g.select('title').text(titleFunction);
         }
+    };
+
+    /**
+     * Turn on or off the bubble sorting feature, or return the value of the flag. If enabled,
+     * bubbles will be sorted by their radius, with smaller bubbles in front.
+     * @method sortBubbleSize
+     * @memberof dc.bubbleChart
+     * @instance
+     * @param {Boolean} [sortBubbleSize=false]
+     * @returns {Boolean|dc.bubbleChart}
+     */
+    _chart.sortBubbleSize = function (sortBubbleSize) {
+        if (!arguments.length) {
+            return _sortBubbleSize;
+        }
+        _sortBubbleSize = sortBubbleSize;
+        return _chart;
     };
 
     /**

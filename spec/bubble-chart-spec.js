@@ -458,7 +458,7 @@ describe('dc.bubbleChart', function () {
 
         it('draws bubbles in appropriate locations', function () {
             var coords = [
-                [170.4,0], [820,155], [489.9,155], [394,310], [149.1,310], [0,310]
+                [0,310], [149.1,310], [170.4,0], [394,310], [489.9,155], [820,155],
             ];
             chart.selectAll('g.node').each(function (d, i) {
                 expect(d3.select(this).attr('transform'))
@@ -594,6 +594,7 @@ describe('dc.bubbleChart', function () {
                     .keyAccessor(key_part(0))
                     .valueAccessor(key_part(1))
                     .radiusValueAccessor(function (kv) { return kv.value.total; })
+                    .elasticRadius(true)
                     .colors(d3.scale.ordinal()
                             .domain(species.concat('none'))
                             .range(['#e41a1c','#377eb8','#4daf4a', '#f8f8f8']))
@@ -659,35 +660,38 @@ describe('dc.bubbleChart', function () {
 
         function testBubbleRadiiCol3 (chart) {
             var bubbles = chart.selectAll('circle.bubble')[0];
-            expect(d3.select(bubbles[0]).attr('r')).toBe('0');
-            expect(d3.select(bubbles[3]).attr('r')).toBe('0');
-            expect(d3.select(bubbles[6]).attr('r')).toBe('0');
-            expect(+d3.select(bubbles[11]).attr('r')).toBeWithinDelta(21.5, 0.5);
-            expect(d3.select(bubbles[14]).attr('r')).toBe('0');
-            expect(+d3.select(bubbles[16]).attr('r')).toBeWithinDelta(33, 0.5);
-            expect(+d3.select(bubbles[19]).attr('r')).toBeWithinDelta(50, 0.5);
-            expect(d3.select(bubbles[24]).attr('r')).toBe('0');
+            var expected = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34.5, 16.1, 0, 0, 16.1, 59.1, 34.5, 16.1, 96, 0, 22.2, 0, 0, 0, 0];
+            bubbles.forEach(function (b, i) {
+                expect(+d3.select(b).attr('r')).toBeWithinDelta(expected[i], 0.1);
+            });
         }
         function testBubbleTitlesCol3 (chart) {
             var titles = chart.selectAll('g.node title')[0];
-            expect(JSON.parse(d3.select(titles[4]).text()).total).toBe(0);
-            expect(JSON.parse(d3.select(titles[11]).text()).virginica).toBe(4);
-            expect(JSON.parse(d3.select(titles[12]).text()).virginica).toBe(1);
-            expect(JSON.parse(d3.select(titles[16]).text()).virginica).toBe(7);
-            expect(JSON.parse(d3.select(titles[16]).text()).versicolor).toBe(1);
-            expect(JSON.parse(d3.select(titles[19]).text()).virginica).toBe(13);
-            expect(JSON.parse(d3.select(titles[19]).text()).versicolor).toBe(1);
+            var expected = [
+                {'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
+                {'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
+                {'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
+                {'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
+                {'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
+                {'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
+                {'total': 4,'setosa': 0,'versicolor': 0,'virginica': 4},{'total': 1,'setosa': 0,'versicolor': 0,'virginica': 1},
+                {'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
+                {'total': 1,'setosa': 0,'versicolor': 0,'virginica': 1},{'total': 8,'setosa': 0,'versicolor': 1,'virginica': 7},
+                {'total': 4,'setosa': 0,'versicolor': 0,'virginica': 4},{'total': 1,'setosa': 0,'versicolor': 0,'virginica': 1},
+                {'total': 14,'setosa': 0,'versicolor': 1,'virginica': 13},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
+                {'total': 2,'setosa': 0,'versicolor': 0,'virginica': 2},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
+                {'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
+                {'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0}];
+            titles.forEach(function (t, i) {
+                expect(JSON.parse(d3.select(t).text())).toEqual(expected[i]);
+            });
         }
         function testBubbleLabelsCol3 (chart) {
             var labels = chart.selectAll('g.node text')[0];
-            expect(d3.select(labels[0]).text()).toBe('0');
-            expect(d3.select(labels[2]).text()).toBe('0');
-            expect(d3.select(labels[4]).text()).toBe('0');
-            expect(d3.select(labels[5]).text()).toBe('0');
-            expect(d3.select(labels[11]).text()).toBe('4');
-            expect(d3.select(labels[12]).text()).toBe('1');
-            expect(d3.select(labels[16]).text()).toBe('8');
-            expect(d3.select(labels[19]).text()).toBe('14');
+            var expected = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1, 0, 0, 1, 8, 4, 1, 14, 0, 2, 0, 0, 0, 0];
+            labels.forEach(function (l, i) {
+                expect(+d3.select(l).text()).toBe(expected[i]);
+            });
         }
         describe('column filtering with straight crossfilter', function () {
             beforeEach(function () {

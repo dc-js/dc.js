@@ -50,12 +50,19 @@ dc.capMixin = function (_chart) {
         return _chart.valueAccessor()(d, i);
     };
 
+    // return N biggest groups, where N is the cap, sorted in ascending order.
     _chart.data(function (group) {
         if (_cap === Infinity) {
             return _chart._computeOrderedGroups(group.all());
         } else {
-            var topRows = group.top(_cap); // ordered by crossfilter group order (default value)
-            topRows = _chart._computeOrderedGroups(topRows); // re-order using ordering (default key)
+            var topRows = group.all(); // in key order
+            topRows = _chart._computeOrderedGroups(topRows); // re-order using ordering (defaults to key)
+
+            if (_cap) {
+                var start = Math.max(0, topRows.length - _cap);
+                topRows = topRows.slice(start);
+            }
+
             if (_othersGrouper) {
                 return _othersGrouper(topRows);
             }

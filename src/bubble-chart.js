@@ -28,9 +28,6 @@
 dc.bubbleChart = function (parent, chartGroup) {
     var _chart = dc.bubbleMixin(dc.coordinateGridMixin({}));
 
-    var _elasticRadius = false;
-    var _sortBubbleSize = false;
-
     _chart.transitionDuration(750);
 
     _chart.transitionDelay(0);
@@ -39,57 +36,15 @@ dc.bubbleChart = function (parent, chartGroup) {
         return 'translate(' + (bubbleX(d)) + ',' + (bubbleY(d)) + ')';
     };
 
-    /**
-     * Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
-     * feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
-     * @method elasticRadius
-     * @memberof dc.bubbleChart
-     * @instance
-     * @param {Boolean} [elasticRadius=false]
-     * @returns {Boolean|dc.bubbleChart}
-     */
-    _chart.elasticRadius = function (elasticRadius) {
-        if (!arguments.length) {
-            return _elasticRadius;
-        }
-        _elasticRadius = elasticRadius;
-        return _chart;
-    };
-
-    /**
-     * Turn on or off the bubble sorting feature, or return the value of the flag. If enabled,
-     * bubbles will be sorted by their radius, with smaller bubbles in front.
-     * @method sortBubbleSize
-     * @memberof dc.bubbleChart
-     * @instance
-     * @param {Boolean} [sortBubbleSize=false]
-     * @returns {Boolean|dc.bubbleChart}
-     */
-    _chart.sortBubbleSize = function (sortBubbleSize) {
-        if (!arguments.length) {
-            return _sortBubbleSize;
-        }
-        _sortBubbleSize = sortBubbleSize;
-        return _chart;
-    };
-
     _chart.plotData = function () {
-        if (_elasticRadius) {
-            _chart.r().domain([_chart.rMin(), _chart.rMax()]);
-        }
-
+        _chart.calculateRadiusDomain();
         _chart.r().range([_chart.MIN_RADIUS, _chart.xAxisLength() * _chart.maxBubbleRelativeSize()]);
 
         var data = _chart.data();
-        if (_sortBubbleSize) {
-            // sort descending so smaller bubbles are on top
-            var radiusAccessor = _chart.radiusValueAccessor();
-            data.sort(function (a, b) { return d3.descending(radiusAccessor(a), radiusAccessor(b)); });
-        }
         var bubbleG = _chart.chartBodyG().selectAll('g.' + _chart.BUBBLE_NODE_CLASS)
                 .data(data, function (d) { return d.key; });
-        if (_sortBubbleSize) {
-            // Call order here to update dom order based on sort
+        if (_chart.sortBubbleSize()) {
+            // update dom order based on sort
             bubbleG.order();
         }
 
