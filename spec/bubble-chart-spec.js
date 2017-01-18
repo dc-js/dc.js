@@ -594,6 +594,7 @@ describe('dc.bubbleChart', function () {
                     .keyAccessor(key_part(0))
                     .valueAccessor(key_part(1))
                     .radiusValueAccessor(function (kv) { return kv.value.total; })
+                    .elasticRadius(true)
                     .colors(d3.scale.ordinal()
                             .domain(species.concat('none'))
                             .range(['#e41a1c','#377eb8','#4daf4a', '#f8f8f8']))
@@ -659,7 +660,7 @@ describe('dc.bubbleChart', function () {
 
         function testBubbleRadiiCol3 (chart) {
             var bubbles = chart.selectAll('circle.bubble')[0];
-            var expected = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21.4, 12.8, 0, 0, 12.8, 32.9, 21.4, 12.8, 50.1, 0, 15.7, 0, 0, 0, 0];
+            var expected = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34.5, 16.1, 0, 0, 16.1, 59.1, 34.5, 16.1, 96, 0, 22.2, 0, 0, 0, 0];
             bubbles.forEach(function (b, i) {
                 expect(+d3.select(b).attr('r')).toBeWithinDelta(expected[i], 0.1);
             });
