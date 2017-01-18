@@ -96,6 +96,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
 
     function initializeBubbles () {
         var data = mapData();
+        _chart.calculateRadiusDomain();
 
         _points.forEach(function (point) {
             var nodeG = getNodeG(point, data);
@@ -155,6 +156,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
 
     function updateBubbles () {
         var data = mapData();
+        _chart.calculateRadiusDomain();
 
         _points.forEach(function (point) {
             var nodeG = getNodeG(point, data);

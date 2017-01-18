@@ -1,5 +1,5 @@
 /*!
- *  dc 2.1.1
+ *  dc 2.1.2
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 2.1.1
+ * @version 2.1.2
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '2.1.1',
+    version: '2.1.2',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -4437,12 +4437,19 @@ dc.capMixin = function (_chart) {
         return _chart.valueAccessor()(d, i);
     };
 
+    // return N biggest groups, where N is the cap, sorted in ascending order.
     _chart.data(function (group) {
         if (_cap === Infinity) {
             return _chart._computeOrderedGroups(group.all());
         } else {
-            var topRows = group.top(_cap); // ordered by crossfilter group order (default value)
-            topRows = _chart._computeOrderedGroups(topRows); // re-order using ordering (default key)
+            var topRows = group.all(); // in key order
+            topRows = _chart._computeOrderedGroups(topRows); // re-order using ordering (defaults to key)
+
+            if (_cap) {
+                var start = Math.max(0, topRows.length - _cap);
+                topRows = topRows.slice(start);
+            }
+
             if (_othersGrouper) {
                 return _othersGrouper(topRows);
             }
@@ -4572,6 +4579,8 @@ dc.capMixin = function (_chart) {
 dc.bubbleMixin = function (_chart) {
     var _maxBubbleRelativeSize = 0.3;
     var _minRadiusWithLabel = 10;
+    var _sortBubbleSize = false;
+    var _elasticRadius = false;
 
     _chart.BUBBLE_NODE_CLASS = 'node';
     _chart.BUBBLE_CLASS = 'bubble';
@@ -4582,7 +4591,13 @@ dc.bubbleMixin = function (_chart) {
     _chart.renderLabel(true);
 
     _chart.data(function (group) {
-        return group.top(Infinity);
+        var data = group.all();
+        if (_sortBubbleSize) {
+            // sort descending so smaller bubbles are on top
+            var radiusAccessor = _chart.radiusValueAccessor();
+            data.sort(function (a, b) { return d3.descending(radiusAccessor(a), radiusAccessor(b)); });
+        }
+        return data;
     });
 
     var _r = d3.scale.linear().domain([0, 100]);
@@ -4608,6 +4623,29 @@ dc.bubbleMixin = function (_chart) {
         }
         _r = bubbleRadiusScale;
         return _chart;
+    };
+
+    /**
+     * Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
+     * feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
+     * @method elasticRadius
+     * @memberof dc.bubbleChart
+     * @instance
+     * @param {Boolean} [elasticRadius=false]
+     * @returns {Boolean|dc.bubbleChart}
+     */
+    _chart.elasticRadius = function (elasticRadius) {
+        if (!arguments.length) {
+            return _elasticRadius;
+        }
+        _elasticRadius = elasticRadius;
+        return _chart;
+    };
+
+    _chart.calculateRadiusDomain = function () {
+        if (_elasticRadius) {
+            _chart.r().domain([_chart.rMin(), _chart.rMax()]);
+        }
     };
 
     /**
@@ -4716,6 +4754,23 @@ dc.bubbleMixin = function (_chart) {
         if (_chart.renderTitle()) {
             g.select('title').text(titleFunction);
         }
+    };
+
+    /**
+     * Turn on or off the bubble sorting feature, or return the value of the flag. If enabled,
+     * bubbles will be sorted by their radius, with smaller bubbles in front.
+     * @method sortBubbleSize
+     * @memberof dc.bubbleChart
+     * @instance
+     * @param {Boolean} [sortBubbleSize=false]
+     * @returns {Boolean|dc.bubbleChart}
+     */
+    _chart.sortBubbleSize = function (sortBubbleSize) {
+        if (!arguments.length) {
+            return _sortBubbleSize;
+        }
+        _sortBubbleSize = sortBubbleSize;
+        return _chart;
     };
 
     /**
@@ -7093,9 +7148,6 @@ dc.dataGrid = function (parent, chartGroup) {
 dc.bubbleChart = function (parent, chartGroup) {
     var _chart = dc.bubbleMixin(dc.coordinateGridMixin({}));
 
-    var _elasticRadius = false;
-    var _sortBubbleSize = false;
-
     _chart.transitionDuration(750);
 
     _chart.transitionDelay(0);
@@ -7104,57 +7156,15 @@ dc.bubbleChart = function (parent, chartGroup) {
         return 'translate(' + (bubbleX(d)) + ',' + (bubbleY(d)) + ')';
     };
 
-    /**
-     * Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
-     * feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
-     * @method elasticRadius
-     * @memberof dc.bubbleChart
-     * @instance
-     * @param {Boolean} [elasticRadius=false]
-     * @returns {Boolean|dc.bubbleChart}
-     */
-    _chart.elasticRadius = function (elasticRadius) {
-        if (!arguments.length) {
-            return _elasticRadius;
-        }
-        _elasticRadius = elasticRadius;
-        return _chart;
-    };
-
-    /**
-     * Turn on or off the bubble sorting feature, or return the value of the flag. If enabled,
-     * bubbles will be sorted by their radius, with smaller bubbles in front.
-     * @method sortBubbleSize
-     * @memberof dc.bubbleChart
-     * @instance
-     * @param {Boolean} [sortBubbleSize=false]
-     * @returns {Boolean|dc.bubbleChart}
-     */
-    _chart.sortBubbleSize = function (sortBubbleSize) {
-        if (!arguments.length) {
-            return _sortBubbleSize;
-        }
-        _sortBubbleSize = sortBubbleSize;
-        return _chart;
-    };
-
     _chart.plotData = function () {
-        if (_elasticRadius) {
-            _chart.r().domain([_chart.rMin(), _chart.rMax()]);
-        }
-
+        _chart.calculateRadiusDomain();
         _chart.r().range([_chart.MIN_RADIUS, _chart.xAxisLength() * _chart.maxBubbleRelativeSize()]);
 
         var data = _chart.data();
-        if (_sortBubbleSize) {
-            // sort descending so smaller bubbles are on top
-            var radiusAccessor = _chart.radiusValueAccessor();
-            data.sort(function (a, b) { return d3.descending(radiusAccessor(a), radiusAccessor(b)); });
-        }
         var bubbleG = _chart.chartBodyG().selectAll('g.' + _chart.BUBBLE_NODE_CLASS)
                 .data(data, function (d) { return d.key; });
-        if (_sortBubbleSize) {
-            // Call order here to update dom order based on sort
+        if (_chart.sortBubbleSize()) {
+            // update dom order based on sort
             bubbleG.order();
         }
 
@@ -8346,6 +8356,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
 
     function initializeBubbles () {
         var data = mapData();
+        _chart.calculateRadiusDomain();
 
         _points.forEach(function (point) {
             var nodeG = getNodeG(point, data);
@@ -8405,6 +8416,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
 
     function updateBubbles () {
         var data = mapData();
+        _chart.calculateRadiusDomain();
 
         _points.forEach(function (point) {
             var nodeG = getNodeG(point, data);
@@ -9608,6 +9620,9 @@ dc.numberDisplay = function (parent, chartGroup) {
     // dimension not required
     _chart._mandatoryAttributes(['group']);
 
+    // default to ordering by value, to emulate old group.top(1) behavior when multiple groups
+    _chart.ordering(function (kv) { return kv.value; });
+
     /**
      * Gets or sets an optional object specifying HTML templates to use depending on the number
      * displayed.  The text `%number` will be replaced with the current value.
@@ -9660,8 +9675,23 @@ dc.numberDisplay = function (parent, chartGroup) {
         return _chart.data();
     };
 
+    // probably unnecessary efficiency over computeOrderedGroups sort
+    function maxBin (all) {
+        if (all.length < 1) {
+            return null;
+        }
+        var maxi = 0, max = _chart.ordering()(all[0]);
+        for (var i = 1; i < all.length; ++i) {
+            var v = _chart.ordering()(all[i]);
+            if (v > max) {
+                max = v;
+                maxi = i;
+            }
+        }
+        return all[maxi];
+    }
     _chart.data(function (group) {
-        var valObj = group.value ? group.value() : group.top(1)[0];
+        var valObj = group.value ? group.value() : maxBin(group.all());
         return _chart.valueAccessor()(valObj);
     });
 
