@@ -126,15 +126,26 @@ div.dc-chart {
         &.dc-symbol {
             @extend %extend_1;
         }
+        &.graticule {
+            fill: none;
+            stroke: grey;
+            stroke-opacity: 0.4;
+            stroke-dasharray: 2, 2;
+        }
+        &.sphere {
+            fill: none;
+            stroke: #000000;
+            stroke-width: 3px;
+        }
     }
     g {
-        &.state {
-            cursor: pointer;
-            :hover {
-                fill-opacity: .8;
-            }
+        &.feature {
             path {
-                stroke: $color_white;
+                stroke: white;
+                stroke-width: 1px;
+                &.deselected {
+                    fill: grey;
+                }
             }
         }
         &.deselected {

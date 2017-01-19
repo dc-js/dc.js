@@ -134,9 +134,10 @@
                     .colors(d3.scale.quantize().range(["#E2F2FF", "#C4E4FF", "#9ED2FF", "#81C5FF", "#6BBAFF", "#51AEFF", "#36A2FF", "#1E96FF", "#0089FF", "#0061B5"]))
                     .colorDomain([0, 200])
                     .colorCalculator(function (d) { return d ? usChart.colors()(d) : '#ccc'; })
-                    .overlayGeoJson(statesJson.features, "state", function (d) {
-                        return d.properties.name;
+                    .addLayer(statesJson.features, "state", function (d) {
+                        return d.properties.postal;
                     })
+                    .projection(d3.geo.albersUsa())
                     .title(function (d) {
                         return "State: " + d.key + "\nTotal Amount Raised: " + numberFormat(d.value ? d.value : 0) + "M";
                     });
