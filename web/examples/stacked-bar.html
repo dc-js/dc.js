@@ -51,6 +51,8 @@
               .width(768)
               .height(480)
               .x(d3.scale.linear().domain([1,21]))
+              .y(d3.scale.log())
+              .elasticY(true).yAxisPadding(100)
               .margins({left: 80, top: 20, right: 10, bottom: 20})
               .brushOn(false)
               .clipPadding(10)
@@ -60,6 +62,20 @@
               .dimension(runDimension)
               .group(speedSumGroup, "1", sel_stack('1'))
               .renderLabel(true);
+
+          var oldStack = chart.stackLayout();
+          var newStack = function() {
+              var stacked = oldStack.apply(oldStack, arguments);
+              stacked[0].values.forEach(function(v) {
+                  v.y0 = 1;
+              });
+              return stacked;
+          };
+          newStack.values = function(v) {
+              return arguments.length ? oldStack.values(v) : oldStack.values();
+          };
+          chart.stackLayout(newStack);
+          chart.yAxisMin = function() { return 1; };
 
           chart.legend(dc.legend());
 
