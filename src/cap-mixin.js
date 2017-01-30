@@ -21,9 +21,9 @@ dc.capMixin = function (_chart) {
             restKeys = restItems.map(_chart.keyAccessor());
         if (restItemsSum > 0) {
             return topItems.concat([{
-                'others': restKeys,
-                'key': _chart.othersLabel(),
-                'value': restItemsSum
+                others: restKeys,
+                key: _chart.othersLabel(),
+                value: restItemsSum
             }]);
         }
         return topItems;
@@ -159,9 +159,9 @@ dc.capMixin = function (_chart) {
      *         restKeys = restItems.map(_chart.keyAccessor());
      *     if (restItemsSum > 0) {
      *         return topItems.concat([{
-     *             'others': restKeys,
-     *             'key': _chart.othersLabel(),
-     *             'value': restItemsSum
+     *             others: restKeys,
+     *             key: _chart.othersLabel(),
+     *             value: restItemsSum
      *         }]);
      *     }
      *     return topItems;
