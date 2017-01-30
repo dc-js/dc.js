@@ -137,6 +137,10 @@
                     .overlayGeoJson(statesJson.features, "state", function (d) {
                         return d.properties.name;
                     })
+                .valueAccessor(function(kv) {
+                    console.log(kv);
+                    return kv.value;
+                })
                     .title(function (d) {
                         return "State: " + d.key + "\nTotal Amount Raised: " + numberFormat(d.value ? d.value : 0) + "M";
                     });

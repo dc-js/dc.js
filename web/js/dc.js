@@ -1,5 +1,5 @@
 /*!
- *  dc 2.1.2
+ *  dc 2.1.3
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 2.1.2
+ * @version 2.1.3
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '2.1.2',
+    version: '2.1.3',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -4400,9 +4400,7 @@ dc.stackMixin = function (_chart) {
  * @returns {dc.capMixin}
  */
 dc.capMixin = function (_chart) {
-
-    var _cap = Infinity;
-
+    var _cap = Infinity, _takeFront = true;
     var _othersLabel = 'Others';
 
     var _othersGrouper = function (topRows) {
@@ -4437,23 +4435,28 @@ dc.capMixin = function (_chart) {
         return _chart.valueAccessor()(d, i);
     };
 
-    // return N biggest groups, where N is the cap, sorted in ascending order.
+    // return N "top" groups, where N is the cap, sorted by baseMixin.ordering
+    // whether top means front or back depends on takeFront
     _chart.data(function (group) {
         if (_cap === Infinity) {
             return _chart._computeOrderedGroups(group.all());
         } else {
-            var topRows = group.all(); // in key order
-            topRows = _chart._computeOrderedGroups(topRows); // re-order using ordering (defaults to key)
+            var items = group.all();
+            items = _chart._computeOrderedGroups(items); // sort by baseMixin.ordering
 
             if (_cap) {
-                var start = Math.max(0, topRows.length - _cap);
-                topRows = topRows.slice(start);
+                if (_takeFront) {
+                    items = items.slice(0, _cap);
+                } else {
+                    var start = Math.max(0, items.length - _cap);
+                    items = items.slice(start);
+                }
             }
 
             if (_othersGrouper) {
-                return _othersGrouper(topRows);
+                return _othersGrouper(items);
             }
-            return topRows;
+            return items;
         }
     });
 
@@ -4462,19 +4465,24 @@ dc.capMixin = function (_chart) {
      * {@link dc.capMixin#othersGrouper othersGrouper}, any further elements will be combined in an
      * extra element with its name determined by {@link dc.capMixin#othersLabel othersLabel}.
      *
-     * Up through dc.js 2.0.*, capping uses
+     * As of dc.js 2.1 and onward, the capped charts use
+     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_all group.all()}
+     * and {@link dc.baseMixin#ordering baseMixin.ordering()} to determine the order of
+     * elements. Then `cap` and {@link dc.capMixin#takeFront takeFront} determine how many elements
+     * to keep, from which end of the resulting array.
+     *
+     * **Migration note:** Up through dc.js 2.0.*, capping used
      * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_top group.top(N)},
      * which selects the largest items according to
      * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_order group.order()}.
-     * The chart then sorts the items according to {@link dc.baseMixin#ordering baseMixin.ordering()}.
-     * So the two values essentially have to agree, but if the former is incorrect (it's easy to
-     * forget about `group.order()`), the latter will mask the problem. This also makes
-     * {@link https://github.com/dc-js/dc.js/wiki/FAQ#fake-groups fake groups} difficult to
-     * implement.
+     * The chart then sorted the items according to {@link dc.baseMixin#ordering baseMixin.ordering()}.
+     * So the two values essentially had to agree, but if the `group.order()` was incorrect (it's
+     * easy to forget about), the wrong rows or slices would be displayed, in the correct order.
      *
-     * In dc.js 2.1 and forward, only
-     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_all group.all()}
-     * and `baseMixin.ordering()` are used.
+     * If your chart previously relied on `group.order()`, use `chart.ordering()` instead. If you
+     * actually want to cap by size but e.g. sort alphabetically by key, please
+     * [file an issue](https://github.com/dc-js/dc.js/issues/new) - it's still possible but we'll
+     * need to work up an example.
      * @method cap
      * @memberof dc.capMixin
      * @instance
@@ -4486,6 +4494,24 @@ dc.capMixin = function (_chart) {
             return _cap;
         }
         _cap = count;
+        return _chart;
+    };
+
+    /**
+     * Get or set the direction of capping. If set, the chart takes the first
+     * {@link dc.capMixin#cap cap} elements from the sorted array of elements; otherwise
+     * it takes the last `cap` elements.
+     * @method takeFront
+     * @memberof dc.capMixin
+     * @instance
+     * @param {Boolean} [takeFront=true]
+     * @returns {Boolean|dc.capMixin}
+     */
+    _chart.takeFront = function (takeFront) {
+        if (!arguments.length) {
+            return _takeFront;
+        }
+        _takeFront = takeFront;
         return _chart;
     };
 
