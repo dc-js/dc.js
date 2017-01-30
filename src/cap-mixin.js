@@ -16,22 +16,17 @@ dc.capMixin = function (_chart) {
     var _cap = Infinity, _takeFront = true;
     var _othersLabel = 'Others';
 
-    var _othersGrouper = function (topRows) {
-        var topRowsSum = d3.sum(topRows, _chart.valueAccessor()),
-            allRows = _chart.group().all(),
-            allRowsSum = d3.sum(allRows, _chart.valueAccessor()),
-            topKeys = topRows.map(_chart.keyAccessor()),
-            allKeys = allRows.map(_chart.keyAccessor()),
-            topSet = d3.set(topKeys),
-            others = allKeys.filter(function (d) {return !topSet.has(d);});
-        if (allRowsSum > topRowsSum) {
-            return topRows.concat([{
-                'others': others,
+    var _othersGrouper = function (topItems, restItems) {
+        var restItemsSum = d3.sum(restItems, _chart.valueAccessor()),
+            restKeys = restItems.map(_chart.keyAccessor());
+        if (restItemsSum > 0) {
+            return topItems.concat([{
+                'others': restKeys,
                 'key': _chart.othersLabel(),
-                'value': allRowsSum - topRowsSum
+                'value': restItemsSum
             }]);
         }
-        return topRows;
+        return topItems;
     };
 
     _chart.cappedKeyAccessor = function (d, i) {
@@ -54,20 +49,22 @@ dc.capMixin = function (_chart) {
         if (_cap === Infinity) {
             return _chart._computeOrderedGroups(group.all());
         } else {
-            var items = group.all();
+            var items = group.all(), rest;
             items = _chart._computeOrderedGroups(items); // sort by baseMixin.ordering
 
             if (_cap) {
                 if (_takeFront) {
+                    rest = items.slice(_cap);
                     items = items.slice(0, _cap);
                 } else {
                     var start = Math.max(0, items.length - _cap);
+                    rest = items.slice(0, start);
                     items = items.slice(start);
                 }
             }
 
             if (_othersGrouper) {
-                return _othersGrouper(items);
+                return _othersGrouper(items, rest);
             }
             return items;
         }
@@ -146,8 +143,10 @@ dc.capMixin = function (_chart) {
 
     /**
      * Get or set the grouper function that will perform the insertion of data for the *Others* slice
-     * if the slices cap is specified. If set to a falsy value, no others will be added. By default the
-     * grouper function computes the sum of all values below the cap.
+     * if the slices cap is specified. If set to a falsy value, no others will be added.
+     *
+     * The grouper function takes an array of included ("top") items, and an array of the rest of
+     * the items. By default the grouper function computes the sum of the rest.
      * @method othersGrouper
      * @memberof dc.capMixin
      * @instance
@@ -155,35 +154,17 @@ dc.capMixin = function (_chart) {
      * // Do not show others
      * chart.othersGrouper(null);
      * // Default others grouper
-     * chart.othersGrouper(function (topRows) {
-     *    var topRowsSum = d3.sum(topRows, _chart.valueAccessor()),
-     *        allRows = _chart.group().all(),
-     *        allRowsSum = d3.sum(allRows, _chart.valueAccessor()),
-     *        topKeys = topRows.map(_chart.keyAccessor()),
-     *        allKeys = allRows.map(_chart.keyAccessor()),
-     *        topSet = d3.set(topKeys),
-     *        others = allKeys.filter(function (d) {return !topSet.has(d);});
-     *    if (allRowsSum > topRowsSum) {
-     *        return topRows.concat([{
-     *            'others': others,
-     *            'key': _chart.othersLabel(),
-     *            'value': allRowsSum - topRowsSum
-     *        }]);
-     *    }
-     *    return topRows;
-     * });
-     * // Custom others grouper
-     * chart.othersGrouper(function (data) {
-     *     // compute the value for others, presumably the sum of all values below the cap
-     *     var othersSum  = yourComputeOthersValueLogic(data)
-     *
-     *     // the keys are needed to properly filter when the others element is clicked
-     *     var othersKeys = yourComputeOthersKeysArrayLogic(data);
-     *
-     *     // add the others row to the dataset
-     *     data.push({'key': 'Others', 'value': othersSum, 'others': othersKeys });
-     *
-     *     return data;
+     * chart.othersGrouper(function (topItems, restItems) {
+     *     var restItemsSum = d3.sum(restItems, _chart.valueAccessor()),
+     *         restKeys = restItems.map(_chart.keyAccessor());
+     *     if (restItemsSum > 0) {
+     *         return topItems.concat([{
+     *             'others': restKeys,
+     *             'key': _chart.othersLabel(),
+     *             'value': restItemsSum
+     *         }]);
+     *     }
+     *     return topItems;
      * });
      * @param {Function} [grouperFunction]
      * @returns {Function|dc.capMixin}
