@@ -34,18 +34,18 @@ describe('dc.pieChart', function () {
             //add
             function (p, v) {
                 ++p.count;
-                p.value += +v.value;
+                p.total += +v.value;
                 return p;
             },
             //remove
             function (p, v) {
                 --p.count;
-                p.value -= +v.value;
+                p.total -= +v.value;
                 return p;
             },
             //init
             function () {
-                return {count: 0, value: 0};
+                return {count: 0, total: 0};
             }
         );
     });
@@ -342,79 +342,87 @@ describe('dc.pieChart', function () {
                 expect(chart.hasFilter('33')).toBeTruthy();
             });
         });
-        describe('group order', function () {
+        describe('group order with capping', function () {
             beforeEach(function () {
-                chart.cap(4).ordering(dc.pluck('value'));
+                chart.cap(4);
             });
-            it('group should be ordered', function () {
-                //Value ordered by value dimension, which is just a count.
-                //Collissions at count of 2 resolved by order initial dataset.
-                // 44 -> 3
-                // 22 -> 2
-                // 33 -> 2
-                // 55 -> 2
-                // 66 -> 1
-                expect(['22','33','55','44','Others']).toEqual(chart.data().map(dc.pluck('key')));
-
-                //Value dimension ordered by key
-                chart.ordering(dc.pluck('key'));
-
-                expect(['33','44','55','66','Others']).toEqual(chart.data().map(dc.pluck('key')));
+            // group.all starts with 22 -> 2, 33 -> 2, 44 -> 3, 55 -> 2, 66 -> 1
+            describe('with usual top->bottom sorting and cap', function () {
+                beforeEach(function () {
+                    chart.cap(4).ordering(function (kv) {
+                        return -kv.value;
+                    }).redraw();
+                });
+                it('should show top 4 groups and others', function () {
+                    // crossfilter's quicksort is stable for < 32 elements, so the value:2's are still in alphabetical order
+                    expect(['44', '22', '33', '55', 'Others']).toEqual(chart.data().map(dc.pluck('key')));
+                });
             });
-            afterEach(function () {
-                chart.cap(Infinity).ordering(dc.pluck('key'));
+            describe('with key ordering', function () {
+                beforeEach(function () {
+                    chart
+                        .ordering(dc.pluck('key'))
+                        .redraw();
+                });
+                it('should show lowest 4 groups by key and others', function () {
+                    expect(['22', '33', '44', '55', 'Others']).toEqual(chart.data().map(dc.pluck('key')));
+                });
             });
         });
-        describe('group order when ordering is different than crossfilter group ordering', function () {
+        describe('comparing crossfilter ordering with chart ordering', function () {
             var crossfilterOrder,
-              crossfilterTop1,
-              chartOrder,
-              defaultCapOrder,
-              reverseValueOrder,
-              valueOrder;
-
+                crossfilterTop2;
             beforeEach(function () {
                 countryChart = buildCountryChart('country-chart');
                 countryChart.innerRadius(innerRadius);
 
-                //An array sorted in ascending value order.
-                //[{"key":"CA","value":2},{"key":"US","value":8}]
+                // group.all returns array sorted in ascending key order.
+                // [{"key":"CA","value":2},{"key":"US","value":8}]
                 crossfilterOrder = countryGroup.all();
 
-                //This would be {"key":"US","value":8},
-                //top function takes elements from the all array, last to first.
-                crossfilterTop1 = countryGroup.top(1);
-
-                //["CA", "US"] no ordering applied, top not used, so uses order of all.
-                chartOrder = countryChart.data().map(dc.pluck('key'));
-
-                //Once you cap the chart, this forces the ordering function to sort.
-                //By default that should be by key, since the default ordering is dc.pluck('key')
-                countryChart.cap(1);
-
-                //This will be US, Others.  US is higher by key and by value (8)
-                defaultCapOrder = countryChart.data().map(dc.pluck('key'));
-
-                countryChart.ordering(function (d) {
-                    return -d.value;
+                // group.top returns array sorted in descending value order
+                // [{"key":"US","value":8}]
+                crossfilterTop2 = countryGroup.top(2);
+            });
+            describe('with ordering and capping not set', function () {
+                it('should match the crossfilter default order', function () {
+                    expect(countryChart.data()).toEqual(crossfilterOrder);
+                });
+            });
+            describe('with ordering matching the crossfilter order', function () {
+                beforeEach(function () {
+                    countryChart.ordering(function (kv) {
+                        return -kv.value;
+                    }).redraw();
+                });
+                it('should should match crossfilter top(2)', function () {
+                    expect(countryChart.data()).toEqual(crossfilterTop2);
+                });
+                describe('with cap(1)', function () {
+                    beforeEach(function () {
+                        countryChart.cap(1).redraw();
+                    });
+                    it('should show the top value, and others', function () {
+                        expect(['US','Others']).toEqual(countryChart.data().map(dc.pluck('key')));
+                    });
                 });
 
-                //This should be ["CA", "Others"]. CA is now higher because it is -2 and US is -8.
-                reverseValueOrder = countryChart.data().map(dc.pluck('key'));
-
-                countryChart.render();
-
             });
-            it('group should be ordered when dimension key and ordering are different orders, by ordering.', function () {
-                expect(['CA','Others']).toEqual(reverseValueOrder);
-                countryChart.ordering(function (d) {
-                    return d.value;
+            describe('with default ordering and cap(1)', function () {
+                beforeEach(function () {
+                    countryChart.cap(1).redraw();
                 });
-                valueOrder = countryChart.data().map(dc.pluck('key'));
-                expect(['US','Others']).toEqual(valueOrder);
-            });
-            afterEach(function () {
-                chart.cap(Infinity).ordering(dc.pluck('key'));
+                it('should show the first key alphabetically, and others', function () {
+                    expect(['CA', 'Others']).toEqual(countryChart.data().map(dc.pluck('key')));
+                });
+                describe('and takeFront(false)', function () {
+                    beforeEach(function () {
+                        countryChart.takeFront(false).redraw();
+                    });
+                    it('should show the last key alphabetically, and others', function () {
+                        expect(['US','Others']).toEqual(countryChart.data().map(dc.pluck('key')));
+                    });
+                });
             });
         });
     });
@@ -498,6 +506,7 @@ describe('dc.pieChart', function () {
     });
 
     describe('pie chart slices cap and group switching', function () {
+        // again, group.all starts with 22 -> 2, 33 -> 2, 44 -> 3, 55 -> 2, 66 -> 1
         var chart;
         beforeEach(function () {
             chart = buildChart('pie-chart4');
@@ -506,10 +515,13 @@ describe('dc.pieChart', function () {
                 .othersLabel('small');
             chart.render();
         });
-        describe('with normal valueAccessor', function () {
+        describe('with normal valueAccessor and descending value ordering', function () {
             beforeEach(function () {
                 chart.dimension(valueDimension).group(valueGroup)
                     .valueAccessor(dc.pluck('value'))
+                    .ordering(function (kv) {
+                        return -kv.value;
+                    })
                     .render();
             });
             it('produce expected number of slices', function () {
@@ -518,48 +530,56 @@ describe('dc.pieChart', function () {
             it('others slice should use custom name', function () {
                 expect(d3.select(chart.selectAll('text.pie-slice')[0][2]).text()).toEqual('small');
             });
-            it('remaining slices should be in numerical order', function () {
-                // Remaining slices are in key order from default ordering function, ascending.
-                // 55, 66, Others.
-
-                // Remember all values are:
-                // 44 -> 3
-                // 22 -> 2
-                // 33 -> 2
-                // 55 -> 2
-                // 66 -> 1
-
-                // 2, 1, 7
+            it('remaining slices should be in descending value order', function () {
                 expect(chart.selectAll('text.pie-slice').data().map(dc.pluck('value')))
-                    .toEqual([2,1,7]);
+                    .toEqual([3,2,5]);
             });
-            it('clicking others slice should filter all groups slices', function () {
-                var event = document.createEvent('MouseEvents');
-                event.initEvent('click', true, true);
-                chart.selectAll('.pie-slice path')[0][2].dispatchEvent(event);
-                //22, 33, 44 are what is included in "others" since we are ordering by key
-                //and capping to only include the two biggest keys.
-                expect(chart.filters()).toEqual(['22', '33', '44','small']);
-                chart.selectAll('.pie-slice path')[0][2].dispatchEvent(event);
-                expect(chart.filters()).toEqual([]);
+            describe('clicking others slice', function () {
+                var event;
+                beforeEach(function () {
+                    event = document.createEvent('MouseEvents');
+                    event.initEvent('click', true, true);
+                    chart.selectAll('.pie-slice path')[0][2].dispatchEvent(event);
+                });
+                it('should filter three smallest', function () {
+                    expect(chart.filters()).toEqual(['33', '55', '66','small']);
+                });
+                describe('clicking again', function () {
+                    beforeEach(function () {
+                        chart.selectAll('.pie-slice path')[0][2].dispatchEvent(event);
+                    });
+                    it('should reset filter', function () {
+                        expect(chart.filters()).toEqual([]);
+                    });
+                });
             });
         });
         describe('with custom valueAccessor', function () {
+            // statusMultiGroup has
+            // [{"key":"F","value":{"count":5,"total":220}},{"key":"T","value":{"count":5,"total":198}}]
             beforeEach(function () {
                 chart.dimension(statusDimension).group(statusMultiGroup)
-                    .valueAccessor(function (d) {return d.value.value;})
+                    .valueAccessor(function (d) {
+                        return d.value.total;
+                    })
+                    .ordering(function (d) {
+                        return -d.value.total;
+                    })
                     .render();
                 return chart;
             });
-            it('correct values, no others row', function () {
+            it('correct values, no others slice', function () {
                 expect(chart.selectAll('g.pie-slice').data().map(dc.pluck('value')))
                     .toEqual([220, 198]);
             });
-            it('correct values, others row', function () {
-                chart.cap(1).render();
-                expect(chart.selectAll('title')[0].map(function (t) {return d3.select(t).text();}))
-                    .toEqual(['T: 198', 'small: 220']);
-                chart.cap(3); //teardown
+            describe('with cap(1)', function () {
+                beforeEach(function () {
+                    chart.cap(1).render();
+                });
+                it('correct values, others row', function () {
+                    expect(chart.selectAll('title')[0].map(function (t) {return d3.select(t).text();}))
+                        .toEqual(['F: 220', 'small: 198']);
+                });
             });
         });
         afterEach(function () {
@@ -567,7 +587,7 @@ describe('dc.pieChart', function () {
         });
     });
 
-    describe('pie chart wo/ label', function () {
+    describe('pie chart w/o label', function () {
         var chart;
         beforeEach(function () {
             chart = buildChart('pie-chart4');

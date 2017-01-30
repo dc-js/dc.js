@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 2.1.2  
+**Version**: 2.1.3  
 **Example**  
 ```js
 // Example chaining
@@ -277,6 +277,7 @@ chart.width(300)
         * [.stackLayout([stack])](#dc.stackMixin+stackLayout) ⇒ <code>function</code> &#124; <code>[stackMixin](#dc.stackMixin)</code>
     * [.capMixin](#dc.capMixin) ⇒ <code>[capMixin](#dc.capMixin)</code>
         * [.cap([count])](#dc.capMixin+cap) ⇒ <code>Number</code> &#124; <code>[capMixin](#dc.capMixin)</code>
+        * [.takeFront([takeFront])](#dc.capMixin+takeFront) ⇒ <code>Boolean</code> &#124; <code>[capMixin](#dc.capMixin)</code>
         * [.othersLabel([label])](#dc.capMixin+othersLabel) ⇒ <code>String</code> &#124; <code>[capMixin](#dc.capMixin)</code>
         * [.othersGrouper([grouperFunction])](#dc.capMixin+othersGrouper) ⇒ <code>function</code> &#124; <code>[capMixin](#dc.capMixin)</code>
     * [.bubbleMixin](#dc.bubbleMixin) ⇒ <code>[bubbleMixin](#dc.bubbleMixin)</code>
@@ -4600,6 +4601,7 @@ others* element is clicked.
 
 * [.capMixin](#dc.capMixin) ⇒ <code>[capMixin](#dc.capMixin)</code>
     * [.cap([count])](#dc.capMixin+cap) ⇒ <code>Number</code> &#124; <code>[capMixin](#dc.capMixin)</code>
+    * [.takeFront([takeFront])](#dc.capMixin+takeFront) ⇒ <code>Boolean</code> &#124; <code>[capMixin](#dc.capMixin)</code>
     * [.othersLabel([label])](#dc.capMixin+othersLabel) ⇒ <code>String</code> &#124; <code>[capMixin](#dc.capMixin)</code>
     * [.othersGrouper([grouperFunction])](#dc.capMixin+othersGrouper) ⇒ <code>function</code> &#124; <code>[capMixin](#dc.capMixin)</code>
 
@@ -4610,25 +4612,43 @@ Get or set the count of elements to that will be included in the cap. If there i
 [othersGrouper](#dc.capMixin+othersGrouper), any further elements will be combined in an
 extra element with its name determined by [othersLabel](#dc.capMixin+othersLabel).
 
-Up through dc.js 2.0.*, capping uses
+As of dc.js 2.1 and onward, the capped charts use
+[group.all()](https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_all)
+and [baseMixin.ordering()](#dc.baseMixin+ordering) to determine the order of
+elements. Then `cap` and [takeFront](#dc.capMixin+takeFront) determine how many elements
+to keep, from which end of the resulting array.
+
+**Migration note:** Up through dc.js 2.0.*, capping used
 [group.top(N)](https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_top),
 which selects the largest items according to
 [group.order()](https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_order).
-The chart then sorts the items according to [baseMixin.ordering()](#dc.baseMixin+ordering).
-So the two values essentially have to agree, but if the former is incorrect (it's easy to
-forget about `group.order()`), the latter will mask the problem. This also makes
-[fake groups](https://github.com/dc-js/dc.js/wiki/FAQ#fake-groups) difficult to
-implement.
+The chart then sorted the items according to [baseMixin.ordering()](#dc.baseMixin+ordering).
+So the two values essentially had to agree, but if the `group.order()` was incorrect (it's
+easy to forget about), the wrong rows or slices would be displayed, in the correct order.
 
-In dc.js 2.1 and forward, only
-[group.all()](https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_all)
-and `baseMixin.ordering()` are used.
+If your chart previously relied on `group.order()`, use `chart.ordering()` instead. If you
+actually want to cap by size but e.g. sort alphabetically by key, please
+[file an issue](https://github.com/dc-js/dc.js/issues/new) - it's still possible but we'll
+need to work up an example.
 
 **Kind**: instance method of <code>[capMixin](#dc.capMixin)</code>  
 
 | Param | Type | Default |
 | --- | --- | --- |
 | [count] | <code>Number</code> | <code>Infinity</code> | 
+
+<a name="dc.capMixin+takeFront"></a>
+
+#### capMixin.takeFront([takeFront]) ⇒ <code>Boolean</code> &#124; <code>[capMixin](#dc.capMixin)</code>
+Get or set the direction of capping. If set, the chart takes the first
+[cap](#dc.capMixin+cap) elements from the sorted array of elements; otherwise
+it takes the last `cap` elements.
+
+**Kind**: instance method of <code>[capMixin](#dc.capMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [takeFront] | <code>Boolean</code> | <code>true</code> | 
 
 <a name="dc.capMixin+othersLabel"></a>
 

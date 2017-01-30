@@ -1,3 +1,8 @@
+## 2.1.3
+ * 2.1.2 did not observe the common convention of having the rows/pie slices ordered from greatest to least - now we take from the front by default. ([#1296](https://github.com/dc-js/dc.js/issues/1296)
+ * Add [`takeFront`](http://dc-js.github.io/dc.js/docs/html/dc.capMixin.html#takeFront) option, defaulted true, in case you want to take from the back isntead.
+ * Remove `component.json`, since [component-js has been deprecated for a long time](https://github.com/componentjs/component/issues/639) (actually it got deprecated immediately after we added this in [#860](https://github.com/dc-js/dc.js/pull/860))
+
 ## 2.1.2
  * Lift `elasticRadius` from `bubbleChart` to `bubbleMixin`, making it available to `bubbleOverlay` ([#661](https://github.com/dc-js/dc.js/issues/661))
 Stop using `group.top()` in favor of `group.all()` sorting and slicing. ([#934](https://github.com/dc-js/dc.js/issues/934))
