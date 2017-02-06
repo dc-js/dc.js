@@ -1,3 +1,6 @@
+## 2.1.4
+ * Simplified `capMixin.othersGrouper` default implementation by passing the rest of the items as well as those before the cap. This is possible because of [#934](https://github.com/dc-js/dc.js/issues/934) relying on sorting of `group.all()` instead of `group.top()`. The default implementation is now easy to understand and it should be easier to customize (if anyone should want to).
+
 ## 2.1.3
  * 2.1.2 did not observe the common convention of having the rows/pie slices ordered from greatest to least - now we take from the front by default. ([#1296](https://github.com/dc-js/dc.js/issues/1296)
  * Add [`takeFront`](http://dc-js.github.io/dc.js/docs/html/dc.capMixin.html#takeFront) option, defaulted true, in case you want to take from the back isntead.
