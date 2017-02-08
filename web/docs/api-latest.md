@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 2.1.3  
+**Version**: 2.1.4  
 **Example**  
 ```js
 // Example chaining
@@ -4665,8 +4665,10 @@ Get or set the label for *Others* slice when slices cap is specified.
 
 #### capMixin.othersGrouper([grouperFunction]) ⇒ <code>function</code> &#124; <code>[capMixin](#dc.capMixin)</code>
 Get or set the grouper function that will perform the insertion of data for the *Others* slice
-if the slices cap is specified. If set to a falsy value, no others will be added. By default the
-grouper function computes the sum of all values below the cap.
+if the slices cap is specified. If set to a falsy value, no others will be added.
+
+The grouper function takes an array of included ("top") items, and an array of the rest of
+the items. By default the grouper function computes the sum of the rest.
 
 **Kind**: instance method of <code>[capMixin](#dc.capMixin)</code>  
 
@@ -4679,35 +4681,17 @@ grouper function computes the sum of all values below the cap.
 // Do not show others
 chart.othersGrouper(null);
 // Default others grouper
-chart.othersGrouper(function (topRows) {
-   var topRowsSum = d3.sum(topRows, _chart.valueAccessor()),
-       allRows = _chart.group().all(),
-       allRowsSum = d3.sum(allRows, _chart.valueAccessor()),
-       topKeys = topRows.map(_chart.keyAccessor()),
-       allKeys = allRows.map(_chart.keyAccessor()),
-       topSet = d3.set(topKeys),
-       others = allKeys.filter(function (d) {return !topSet.has(d);});
-   if (allRowsSum > topRowsSum) {
-       return topRows.concat([{
-           'others': others,
-           'key': _chart.othersLabel(),
-           'value': allRowsSum - topRowsSum
-       }]);
-   }
-   return topRows;
-});
-// Custom others grouper
-chart.othersGrouper(function (data) {
-    // compute the value for others, presumably the sum of all values below the cap
-    var othersSum  = yourComputeOthersValueLogic(data)
-
-    // the keys are needed to properly filter when the others element is clicked
-    var othersKeys = yourComputeOthersKeysArrayLogic(data);
-
-    // add the others row to the dataset
-    data.push({'key': 'Others', 'value': othersSum, 'others': othersKeys });
-
-    return data;
+chart.othersGrouper(function (topItems, restItems) {
+    var restItemsSum = d3.sum(restItems, _chart.valueAccessor()),
+        restKeys = restItems.map(_chart.keyAccessor());
+    if (restItemsSum > 0) {
+        return topItems.concat([{
+            others: restKeys,
+            key: _chart.othersLabel(),
+            value: restItemsSum
+        }]);
+    }
+    return topItems;
 });
 ```
 <a name="dc.bubbleMixin"></a>
