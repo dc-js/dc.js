@@ -88,35 +88,6 @@
               return quantizeSpeed(d.Speed);
           }), quantizeSpeedGroup = quantizeSpeedDim.group();
 
-          function set_filterer(dim) {
-              var set = d3.set();
-              function inkey(d) {
-                  return multikey(d.x, d.layer);
-              }
-              return {
-                  toggle: function(d) {
-                      var key = inkey(d);
-                      if(set.has(key))
-                          set.remove(key);
-                      else
-                          set.add(key);
-                      if(set.empty())
-                          dim.filter(null);
-                      else
-                          dim.filterFunction(function(k) {
-                              return set.has(k);
-                          });
-                  },
-                  has: function(d) {
-                      return set.has(inkey(d));
-                  },
-                  empty: function() {
-                      return set.empty();
-                  }
-              };
-          }
-          var stack_filter = set_filterer(runExptDim);
-
           function sel_stack(i) {
               return function(d) {
                   return d.value[i];
@@ -144,14 +115,13 @@
           chart.on('pretransition', function(chart) {
               chart.selectAll('rect.bar')
                   .classed('stack-deselected', function(d) {
-                      return !stack_filter.empty() && !stack_filter.has(d);
+                      // display stack faded if the chart has filters AND
+                      // the current stack is not one of them
+                      var key = multikey(d.x, d.layer);
+                      return chart.filter() && chart.filters().indexOf(key)===-1;
                   })
                   .on('click', function(d) {
-                      stack_filter.toggle(d);
-                      if(stack_filter.empty())
-                          chart.turnOffControls();
-                      else
-                          chart.turnOnControls();
+                      chart.filter(multikey(d.x, d.layer));
                       dc.redrawAll();
                   });
           });
