@@ -190,18 +190,22 @@ others* element is clicked.</p></div>
         <p>Get or set the count of elements to that will be included in the cap. If there is an
 <a href="dc.capMixin.html#othersGrouper">othersGrouper</a>, any further elements will be combined in an
 extra element with its name determined by <a href="dc.capMixin.html#othersLabel">othersLabel</a>.</p>
-<p>Up through dc.js 2.0.*, capping uses
+<p>As of dc.js 2.1 and onward, the capped charts use
+<a href="https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_all">group.all()</a>
+and <a href="dc.baseMixin.html#ordering">baseMixin.ordering()</a> to determine the order of
+elements. Then <code>cap</code> and <a href="dc.capMixin.html#takeFront">takeFront</a> determine how many elements
+to keep, from which end of the resulting array.</p>
+<p><strong>Migration note:</strong> Up through dc.js 2.0.*, capping used
 <a href="https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_top">group.top(N)</a>,
 which selects the largest items according to
 <a href="https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_order">group.order()</a>.
-The chart then sorts the items according to <a href="dc.baseMixin.html#ordering">baseMixin.ordering()</a>.
-So the two values essentially have to agree, but if the former is incorrect (it's easy to
-forget about <code>group.order()</code>), the latter will mask the problem. This also makes
-<a href="https://github.com/dc-js/dc.js/wiki/FAQ#fake-groups">fake groups</a> difficult to
-implement.</p>
-<p>In dc.js 2.1 and forward, only
-<a href="https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_all">group.all()</a>
-and <code>baseMixin.ordering()</code> are used.</p>
+The chart then sorted the items according to <a href="dc.baseMixin.html#ordering">baseMixin.ordering()</a>.
+So the two values essentially had to agree, but if the <code>group.order()</code> was incorrect (it's
+easy to forget about), the wrong rows or slices would be displayed, in the correct order.</p>
+<p>If your chart previously relied on <code>group.order()</code>, use <code>chart.ordering()</code> instead. If you
+actually want to cap by size but e.g. sort alphabetically by key, please
+<a href="https://github.com/dc-js/dc.js/issues/new">file an issue</a> - it's still possible but we'll
+need to work up an example.</p>
     </div>
     
 
@@ -383,8 +387,9 @@ and <code>baseMixin.ordering()</code> are used.</p>
     
     <div class="description">
         <p>Get or set the grouper function that will perform the insertion of data for the <em>Others</em> slice
-if the slices cap is specified. If set to a falsy value, no others will be added. By default the
-grouper function computes the sum of all values below the cap.</p>
+if the slices cap is specified. If set to a falsy value, no others will be added.</p>
+<p>The grouper function takes an array of included (&quot;top&quot;) items, and an array of the rest of
+the items. By default the grouper function computes the sum of the rest.</p>
     </div>
     
 
@@ -493,7 +498,7 @@ grouper function computes the sum of all values below the cap.</p>
 		<ul class="dummy">
 			<li>
 				<a href="cap-mixin.js.html">cap-mixin.js</a>,
-				 <a href="cap-mixin.js.html#sunlight-1-line-121">line 121</a>
+				 <a href="cap-mixin.js.html#sunlight-1-line-144">line 144</a>
 			</li>
 		</ul>
 	</dd>
@@ -548,35 +553,17 @@ grouper function computes the sum of all values below the cap.</p>
     <pre class="sunlight-highlight-javascript">// Do not show others
 chart.othersGrouper(null);
 // Default others grouper
-chart.othersGrouper(function (topRows) {
-   var topRowsSum = d3.sum(topRows, _chart.valueAccessor()),
-       allRows = _chart.group().all(),
-       allRowsSum = d3.sum(allRows, _chart.valueAccessor()),
-       topKeys = topRows.map(_chart.keyAccessor()),
-       allKeys = allRows.map(_chart.keyAccessor()),
-       topSet = d3.set(topKeys),
-       others = allKeys.filter(function (d) {return !topSet.has(d);});
-   if (allRowsSum &gt; topRowsSum) {
-       return topRows.concat([{
-           &#x27;others&#x27;: others,
-           &#x27;key&#x27;: _chart.othersLabel(),
-           &#x27;value&#x27;: allRowsSum - topRowsSum
-       }]);
-   }
-   return topRows;
-});
-// Custom others grouper
-chart.othersGrouper(function (data) {
-    // compute the value for others, presumably the sum of all values below the cap
-    var othersSum  = yourComputeOthersValueLogic(data)
-
-    // the keys are needed to properly filter when the others element is clicked
-    var othersKeys = yourComputeOthersKeysArrayLogic(data);
-
-    // add the others row to the dataset
-    data.push({&#x27;key&#x27;: &#x27;Others&#x27;, &#x27;value&#x27;: othersSum, &#x27;others&#x27;: othersKeys });
-
-    return data;
+chart.othersGrouper(function (topItems, restItems) {
+    var restItemsSum = d3.sum(restItems, _chart.valueAccessor()),
+        restKeys = restItems.map(_chart.keyAccessor());
+    if (restItemsSum &gt; 0) {
+        return topItems.concat([{
+            others: restKeys,
+            key: _chart.othersLabel(),
+            value: restItemsSum
+        }]);
+    }
+    return topItems;
 });</pre>
 
 
@@ -712,7 +699,7 @@ chart.othersGrouper(function (data) {
 		<ul class="dummy">
 			<li>
 				<a href="cap-mixin.js.html">cap-mixin.js</a>,
-				 <a href="cap-mixin.js.html#sunlight-1-line-105">line 105</a>
+				 <a href="cap-mixin.js.html#sunlight-1-line-128">line 128</a>
 			</li>
 		</ul>
 	</dd>
@@ -749,6 +736,189 @@ chart.othersGrouper(function (data) {
     <dd>
         
 <span class="param-type">String</span>
+|
+
+<span class="param-type"><a href="dc.capMixin.html">dc.capMixin</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="takeFront"><span class="type-signature"></span>takeFront( [takeFront])</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Get or set the direction of capping. If set, the chart takes the first
+<a href="dc.capMixin.html#cap">cap</a> elements from the sorted array of elements; otherwise
+it takes the last <code>cap</code> elements.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>takeFront</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    true
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="cap-mixin.js.html">cap-mixin.js</a>,
+				 <a href="cap-mixin.js.html#sunlight-1-line-110">line 110</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
 |
 
 <span class="param-type"><a href="dc.capMixin.html">dc.capMixin</a></span>
@@ -818,7 +988,7 @@ chart.othersGrouper(function (data) {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Wed Jan 18th 2017
+		on Wed Feb 8th 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

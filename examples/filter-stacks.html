@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>dc.js - Stacked Bar Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <style>
+      .dc-chart g.chart-body {
+          clip-path: none;
+      }
+      .dc-chart rect.stack-deselected {
+          opacity: 0.2;
+      }
+    </style>
+  </head>
+<body>
+
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
+  <div id="test">
+    <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+      <a href="javascript:chart.filterAll();dc.redrawAll();">reset</a>
+    </div>
+  </div>
+  <div id="pie">
+    <div class="reset" style="visibility: hidden;">range: <span class="filter"></span>
+      <a href="javascript:pie.filterAll();dc.redrawAll();">reset</a>
+    </div>
+  </div>
+
+    <script type="text/javascript" src="../js/d3.js"></script>
+    <script type="text/javascript" src="../js/crossfilter.js"></script>
+    <script type="text/javascript" src="../js/dc.js"></script>
+    <script type="text/javascript">
+
+      var chart = dc.barChart("#test"),
+          pie = dc.pieChart('#pie');
+      d3.csv("morley.csv", function(error, experiments) {
+
+          experiments.forEach(function(x) {
+              x.Speed = +x.Speed;
+          });
+
+          // the way to combine multiple keys into one is domain-specific (and controversial)
+          // array keys are risky but also valid sometimes, that would be
+          // function multikey(x,y) {
+          //     return [x,y];
+          // }
+          // function splitkey(k) {
+          //     return k;
+          // }
+          function multikey(x,y) {
+              return x + 'x' + y;
+          }
+          function splitkey(k) {
+              return k.split('x');
+          }
+          function stack_second(group) {
+              return {
+                  all: function() {
+                      var all = group.all(),
+                          m = {};
+                      // build matrix from multikey/value pairs
+                      all.forEach(function(kv) {
+                          var ks = splitkey(kv.key);
+                          m[ks[0]] = m[ks[0]] || {};
+                          m[ks[0]][ks[1]] = kv.value;
+                      });
+                      // then produce multivalue key/value pairs
+                      return Object.keys(m).map(function(k) {
+                          return {key: k, value: m[k]};
+                      });
+                  }
+              };
+          }
+
+          var ndx = crossfilter(experiments),
+              runExptDim = ndx.dimension(function(d) { return multikey(d.Run, d.Expt); }),
+              runExptGroup = runExptDim.group().reduceSum(function(d) {
+                  return d.Speed;
+              }),
+              stackedGroup = stack_second(runExptGroup);
+          var quantizeSpeed = d3.scale.quantize().domain(d3.extent(experiments, function(d) {
+              return d.Speed;
+          })).range(['lowest', 'low', 'medium', 'high', 'highest']);
+          var quantizeSpeedDim = ndx.dimension(function(d) {
+              return quantizeSpeed(d.Speed);
+          }), quantizeSpeedGroup = quantizeSpeedDim.group();
+
+          function sel_stack(i) {
+              return function(d) {
+                  return d.value[i];
+              };
+          }
+
+          chart
+              .width(600)
+              .height(400)
+              .controlsUseVisibility(true)
+              .x(d3.scale.linear().domain([1,21]))
+              .margins({left: 80, top: 20, right: 10, bottom: 20})
+              .brushOn(false)
+              .clipPadding(10)
+              .title(function(d) {
+                  return d.key + '[' + this.layer + ']: ' + d.value[this.layer];
+              })
+              .dimension(runExptDim)
+              .group(stackedGroup, "1", sel_stack('1'))
+              .renderLabel(true);
+
+          for(var i = 2; i<6; ++i)
+              chart.stack(stackedGroup, ''+i, sel_stack(i));
+
+          chart.on('pretransition', function(chart) {
+              chart.selectAll('rect.bar')
+                  .classed('stack-deselected', function(d) {
+                      // display stack faded if the chart has filters AND
+                      // the current stack is not one of them
+                      var key = multikey(d.x, d.layer);
+                      return chart.filter() && chart.filters().indexOf(key)===-1;
+                  })
+                  .on('click', function(d) {
+                      chart.filter(multikey(d.x, d.layer));
+                      dc.redrawAll();
+                  });
+          });
+
+          pie
+              .width(300)
+              .height(300)
+              .controlsUseVisibility(true)
+              .dimension(quantizeSpeedDim)
+              .group(quantizeSpeedGroup);
+
+          dc.renderAll();
+      });
+
+    </script>
+
+</div>
+  </body>
+</html>

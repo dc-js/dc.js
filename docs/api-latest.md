@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 2.1.2  
+**Version**: 2.1.4  
 **Example**  
 ```js
 // Example chaining
@@ -277,6 +277,7 @@ chart.width(300)
         * [.stackLayout([stack])](#dc.stackMixin+stackLayout) ⇒ <code>function</code> &#124; <code>[stackMixin](#dc.stackMixin)</code>
     * [.capMixin](#dc.capMixin) ⇒ <code>[capMixin](#dc.capMixin)</code>
         * [.cap([count])](#dc.capMixin+cap) ⇒ <code>Number</code> &#124; <code>[capMixin](#dc.capMixin)</code>
+        * [.takeFront([takeFront])](#dc.capMixin+takeFront) ⇒ <code>Boolean</code> &#124; <code>[capMixin](#dc.capMixin)</code>
         * [.othersLabel([label])](#dc.capMixin+othersLabel) ⇒ <code>String</code> &#124; <code>[capMixin](#dc.capMixin)</code>
         * [.othersGrouper([grouperFunction])](#dc.capMixin+othersGrouper) ⇒ <code>function</code> &#124; <code>[capMixin](#dc.capMixin)</code>
     * [.bubbleMixin](#dc.bubbleMixin) ⇒ <code>[bubbleMixin](#dc.bubbleMixin)</code>
@@ -4600,6 +4601,7 @@ others* element is clicked.
 
 * [.capMixin](#dc.capMixin) ⇒ <code>[capMixin](#dc.capMixin)</code>
     * [.cap([count])](#dc.capMixin+cap) ⇒ <code>Number</code> &#124; <code>[capMixin](#dc.capMixin)</code>
+    * [.takeFront([takeFront])](#dc.capMixin+takeFront) ⇒ <code>Boolean</code> &#124; <code>[capMixin](#dc.capMixin)</code>
     * [.othersLabel([label])](#dc.capMixin+othersLabel) ⇒ <code>String</code> &#124; <code>[capMixin](#dc.capMixin)</code>
     * [.othersGrouper([grouperFunction])](#dc.capMixin+othersGrouper) ⇒ <code>function</code> &#124; <code>[capMixin](#dc.capMixin)</code>
 
@@ -4610,25 +4612,43 @@ Get or set the count of elements to that will be included in the cap. If there i
 [othersGrouper](#dc.capMixin+othersGrouper), any further elements will be combined in an
 extra element with its name determined by [othersLabel](#dc.capMixin+othersLabel).
 
-Up through dc.js 2.0.*, capping uses
+As of dc.js 2.1 and onward, the capped charts use
+[group.all()](https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_all)
+and [baseMixin.ordering()](#dc.baseMixin+ordering) to determine the order of
+elements. Then `cap` and [takeFront](#dc.capMixin+takeFront) determine how many elements
+to keep, from which end of the resulting array.
+
+**Migration note:** Up through dc.js 2.0.*, capping used
 [group.top(N)](https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_top),
 which selects the largest items according to
 [group.order()](https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_order).
-The chart then sorts the items according to [baseMixin.ordering()](#dc.baseMixin+ordering).
-So the two values essentially have to agree, but if the former is incorrect (it's easy to
-forget about `group.order()`), the latter will mask the problem. This also makes
-[fake groups](https://github.com/dc-js/dc.js/wiki/FAQ#fake-groups) difficult to
-implement.
+The chart then sorted the items according to [baseMixin.ordering()](#dc.baseMixin+ordering).
+So the two values essentially had to agree, but if the `group.order()` was incorrect (it's
+easy to forget about), the wrong rows or slices would be displayed, in the correct order.
 
-In dc.js 2.1 and forward, only
-[group.all()](https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_all)
-and `baseMixin.ordering()` are used.
+If your chart previously relied on `group.order()`, use `chart.ordering()` instead. If you
+actually want to cap by size but e.g. sort alphabetically by key, please
+[file an issue](https://github.com/dc-js/dc.js/issues/new) - it's still possible but we'll
+need to work up an example.
 
 **Kind**: instance method of <code>[capMixin](#dc.capMixin)</code>  
 
 | Param | Type | Default |
 | --- | --- | --- |
 | [count] | <code>Number</code> | <code>Infinity</code> | 
+
+<a name="dc.capMixin+takeFront"></a>
+
+#### capMixin.takeFront([takeFront]) ⇒ <code>Boolean</code> &#124; <code>[capMixin](#dc.capMixin)</code>
+Get or set the direction of capping. If set, the chart takes the first
+[cap](#dc.capMixin+cap) elements from the sorted array of elements; otherwise
+it takes the last `cap` elements.
+
+**Kind**: instance method of <code>[capMixin](#dc.capMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [takeFront] | <code>Boolean</code> | <code>true</code> | 
 
 <a name="dc.capMixin+othersLabel"></a>
 
@@ -4645,8 +4665,10 @@ Get or set the label for *Others* slice when slices cap is specified.
 
 #### capMixin.othersGrouper([grouperFunction]) ⇒ <code>function</code> &#124; <code>[capMixin](#dc.capMixin)</code>
 Get or set the grouper function that will perform the insertion of data for the *Others* slice
-if the slices cap is specified. If set to a falsy value, no others will be added. By default the
-grouper function computes the sum of all values below the cap.
+if the slices cap is specified. If set to a falsy value, no others will be added.
+
+The grouper function takes an array of included ("top") items, and an array of the rest of
+the items. By default the grouper function computes the sum of the rest.
 
 **Kind**: instance method of <code>[capMixin](#dc.capMixin)</code>  
 
@@ -4659,35 +4681,17 @@ grouper function computes the sum of all values below the cap.
 // Do not show others
 chart.othersGrouper(null);
 // Default others grouper
-chart.othersGrouper(function (topRows) {
-   var topRowsSum = d3.sum(topRows, _chart.valueAccessor()),
-       allRows = _chart.group().all(),
-       allRowsSum = d3.sum(allRows, _chart.valueAccessor()),
-       topKeys = topRows.map(_chart.keyAccessor()),
-       allKeys = allRows.map(_chart.keyAccessor()),
-       topSet = d3.set(topKeys),
-       others = allKeys.filter(function (d) {return !topSet.has(d);});
-   if (allRowsSum > topRowsSum) {
-       return topRows.concat([{
-           'others': others,
-           'key': _chart.othersLabel(),
-           'value': allRowsSum - topRowsSum
-       }]);
-   }
-   return topRows;
-});
-// Custom others grouper
-chart.othersGrouper(function (data) {
-    // compute the value for others, presumably the sum of all values below the cap
-    var othersSum  = yourComputeOthersValueLogic(data)
-
-    // the keys are needed to properly filter when the others element is clicked
-    var othersKeys = yourComputeOthersKeysArrayLogic(data);
-
-    // add the others row to the dataset
-    data.push({'key': 'Others', 'value': othersSum, 'others': othersKeys });
-
-    return data;
+chart.othersGrouper(function (topItems, restItems) {
+    var restItemsSum = d3.sum(restItems, _chart.valueAccessor()),
+        restKeys = restItems.map(_chart.keyAccessor());
+    if (restItemsSum > 0) {
+        return topItems.concat([{
+            others: restKeys,
+            key: _chart.othersLabel(),
+            value: restItemsSum
+        }]);
+    }
+    return topItems;
 });
 ```
 <a name="dc.bubbleMixin"></a>
