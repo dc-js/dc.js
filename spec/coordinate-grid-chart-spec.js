@@ -216,8 +216,8 @@ describe('dc.coordinateGridChart', function () {
 
             describe('with a selector containing brackets', function () {
                 beforeEach(function () {
-                    appendChartID('coordinate-grid').append('div').attr('class', 'chart').attr('foo', 'bar');
-                    chart = dc.lineChart('#coordinate-grid .chart[foo=bar]')
+                    appendChartID('coordinate-grid').append('div').attr('class', 'chart').attr('foo', '5bar');
+                    chart = dc.lineChart('#coordinate-grid .chart[foo="5bar"]')
                         .width(500)
                         .height(150)
                         .dimension(dimension)
@@ -230,7 +230,7 @@ describe('dc.coordinateGridChart', function () {
                     chart.render();
                 });
                 it('should generate a valid clippath id', function () {
-                    var rect = chart.select('defs #coordinate-grid--chart-foo-bar--clip rect');
+                    var rect = chart.select('defs #coordinate-grid--chart-foo--5bar---clip rect');
                     expect(rect.empty()).toBeFalsy();
                 });
             });
