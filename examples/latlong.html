@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bug</title>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Bug</h2>
+    <div align="center">
+        <div id="scatter"><h4>Flight Path</h4></div>
+        <script src="https://dc-js.github.io/dc.js/js/d3.js"></script>
+        <script src="https://dc-js.github.io/dc.js/js/crossfilter.js"></script>
+        <script src="https://dc-js.github.io/dc.js/js/dc.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://dc-js.github.io/dc.js/css/dc.css"/>
+
+        <script type="text/javascript">
+
+          d3.csv("latlong.csv", function (data) {
+              data.forEach(function(r) {
+                  r["Longitude (Degrees)"] = +r["Longitude (Degrees)"];
+                  r["Latitude (Degrees)"] = +r["Latitude (Degrees)"];
+              });
+            var ndx = crossfilter(data);
+            locationDimension = ndx.dimension(function (d) {
+                return [d["Longitude (Degrees)"],d["Latitude (Degrees)"]];
+            })
+            var locationGroup = locationDimension.group()
+
+            var scatterChart = dc.scatterPlot("#scatter");
+            scatterChart
+                .width(768)                                         // baseMixin
+                .height(480)                                        // baseMixin
+                .dimension(locationDimension)                       // baseMixin
+                .group(locationGroup)                               // baseMixin
+                .margins({                                          // marginMixin
+                   left: 50,
+                   top: 25,
+                   right: 50,
+                   bottom: 50
+                })
+                .x(d3.scale.linear() )                              // coordinateGridMixin
+                .clipPadding(20)                                    // coordinateGridMixin
+                .xAxisLabel("Longitude (Degrees)")                  // coordinateGridMixin
+                .yAxisLabel("Latitude (Degrees)")                   // coordinateGridMixin
+                .renderHorizontalGridLines(true)                    // coordinateGridMixin
+                .renderVerticalGridLines(true)                      // coordinateGridMixin
+                .symbolSize(8)                                      // scatterPlot
+                .elasticX(true).xAxis()                             // coordinateGridMixin
+                ;
+
+            dc.renderAll();
+        });
+        </script>
+    </div>
+</body>

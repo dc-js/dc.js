@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>dc.js - Align Y Axes Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <style>
+      html, body {
+          margin: 0;
+          width: 100%;
+      }
+      code {
+          color: black;
+      }
+      #hscroll {
+          width: 100%;
+          overflow: scroll;
+          padding-left: 20px;
+      }
+      #page {
+          height: 95vh;
+          width: 100%;
+      }
+      tr.heading td div {
+          text-align: center;
+      }
+      td.heading {
+          position: relative;
+      }
+      tr.row:not(.heading) td.heading div {
+          white-space: nowrap;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform:  translateX(-50%) translateY(-50%) rotate(-90deg);
+      }
+      .chart-holder {
+          padding: 0 1em;
+      }
+      path.left {
+          stroke: #1f77b4;
+      }
+      path.right {
+          stroke: #ff7f0e;
+      }
+      path.horizontal {
+          stroke-width: 1;
+          stroke-opacity: 0.5;
+      }
+      path.zero {
+          stroke-dasharray: 4, 4;
+      }
+      path.zero.right {
+          stroke-dashoffset: 4;
+      }
+      path.extreme {
+          stroke-dasharray: 1, 1;
+      }
+      path.extreme.right {
+          stroke-dashoffset: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="text/javascript" src="../js/d3.js"></script>
+    <script type="text/javascript" src="../js/crossfilter.js"></script>
+    <script type="text/javascript" src="../js/dc.js"></script>
+    <div class="container">
+      <script type="text/javascript" src="./header.js"></script>
+
+      <p>This page demonstrates the
+        <a href="https://github.com/dc-js/dc.js/blob/develop/web/docs/api-latest.md#dc.compositeChart+alignYAxes">compositeChart.alignYAxes</a>
+        feature on different combinations of negative and positive data. <code>alignYAxes</code> is only valid if both child charts have
+        <a href="https://github.com/dc-js/dc.js/blob/develop/web/docs/api-latest.md#dc.coordinateGridMixin+elasticY"><code>elasticY</code></a>.
+        The left zero point will be horizontal with the right zero point, and the heights of the two series will be equal.
+        (As with <code>elasticY</code>, height is currently measured from the y=0 line - see <a href="https://github.com/dc-js/dc.js/issues/667">#667</a>.)</p>
+    </div>
+    <div id="hscroll">
+      <table id="content"></table>
+    </div>
+
+      <script type="text/javascript">
+        var posiness = ['heading', 'above', 'upward', 'even', 'downward', 'below'];
+
+        var N = 20;
+        var gen = d3.random.normal();
+        function distribute(vals, min, max) {
+            var ext = d3.extent(vals);
+            return vals.map(function(x) {
+                return min + (x-ext[0]) * (max-min)
+                    / (ext[1]-ext[0]);
+            });
+        }
+        function distribution(posi, scale) {
+            var vals = d3.range(N).map(gen);
+            switch(posi) {
+            case 'above': return distribute(vals, scale*0.2, scale*1.2);
+            case 'upward': return distribute(vals, -scale*0.1, scale*0.9);
+            case 'even': return distribute(vals, -scale*0.5, scale*0.5);
+            case 'downward': return distribute(vals, -scale*0.9, scale*0.1);
+            case 'below': return distribute(vals, -scale*1.2, -0.2);
+            default: throw 'no';
+            }
+        }
+
+        function dataset(lposi, rposi) {
+            var ldist = distribution(lposi, 10),
+                rdist = distribution(rposi, 100);
+            return ldist.map(function(v, i) { return {key: i, lvalue: v, rvalue: rdist[i]}; });
+        }
+
+        var line = d3.svg.line()
+            .interpolate('linear');
+
+        function draw_horizontals(chart, hz) {
+            chart.g().select('g.chart-body')
+                .selectAll('path.horizontal').data(hz).enter()
+                .append('path').attr('class', function(d) { return d.classes.concat(['horizontal']).join(' '); })
+                .attr('d', function(d) {
+                    var y = chart.y()(d.y);
+                    return line([[chart.x().range()[0], y], [chart.x().range()[1], y]]);
+                });
+        }
+
+        var get_value = dc.pluck('value');
+
+        function init() {
+            d3.select('#content')
+                .selectAll('tr').data(posiness)
+                .enter().append('tr').attr('class', function(d) {
+                    return d === 'heading' ? 'heading row' : 'row';
+                })
+                .each(function(rposi) {
+                    d3.select(this).selectAll('td').data(posiness)
+                        .enter().append('td').attr('class', function(d) {
+                            return d === 'heading' ? 'heading entry' : 'entry';
+                        })
+                        .each(function(lposi) {
+                            var cdiv = d3.select(this).append('div')
+                            if(lposi === 'heading') {
+                                if(rposi !== 'heading')
+                                    cdiv.text('right ' + rposi)
+                                return;
+                            }
+                            else if(rposi === 'heading') {
+                                cdiv.text('left ' + lposi)
+                                return;
+                            }
+                            cdiv.attr('class', 'chart-holder');
+                            var chart = dc.compositeChart(cdiv);
+                            var ndx = crossfilter(dataset(lposi, rposi)),
+                                dim = ndx.dimension(function(d) { return d.key; }),
+                                lgroup = dim.group().reduceSum(function(d) { return d.lvalue; }),
+                                rgroup = dim.group().reduceSum(function(d) { return d.rvalue; });
+                            chart
+                                .width(200)
+                                .height(200)
+                                .margins({left: 25, top: 20, right: 30, bottom: 20})
+                                .x(d3.scale.linear())
+                                .brushOn(false)
+                                .alignYAxes(true)
+                                .elasticX(true)
+                                .elasticY(true)
+                                .compose([
+                                    dc.lineChart(chart)
+                                        .dimension(dim)
+                                        .group(lgroup)
+                                        .x(d3.scale.linear())
+                                        .elasticX(true)
+                                        .elasticY(true)
+                                        .yAxisPadding(1)
+                                        .on('pretransition', function(chart) {
+                                            draw_horizontals(chart, [
+                                                {classes: ['left','zero'], y: 0},
+                                                {classes: ['left','extreme'], y: d3.min(lgroup.all(), get_value)},
+                                                {classes: ['left','extreme'], y: d3.max(lgroup.all(), get_value)}
+                                            ]);
+                                        }),
+                                    dc.lineChart(chart)
+                                        .dimension(dim)
+                                        .group(rgroup)
+                                        .x(d3.scale.linear())
+                                        .ordinalColors(["darkorange"])
+                                        .elasticX(true)
+                                        .elasticY(true)
+                                        .yAxisPadding(10)
+                                        .useRightYAxis(true)
+                                        .on('pretransition', function(chart) {
+                                            draw_horizontals(chart, [
+                                                {classes: ['right','zero'], y: 0},
+                                                {classes: ['right','extreme'], y: d3.min(rgroup.all(), get_value)},
+                                                {classes: ['right','extreme'], y: d3.max(rgroup.all(), get_value)}
+                                            ]);
+                                        })
+                                ]);
+                        });
+                });
+        }
+        init();
+        dc.renderAll();
+
+      </script>
+  </body>
+</html>
