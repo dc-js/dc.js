@@ -1,3 +1,7 @@
+## 2.1.5
+ * Default capMixin.ordering to sort decreasing by value, to emulate old group.top(N)
+ * `numberDisplay` was picking lowest instead of highest value in the case where it was given a regular group
+
 ## 2.1.4
  * Simplified `capMixin.othersGrouper` default implementation by passing the rest of the items as well as those before the cap. This is possible because of [#934](https://github.com/dc-js/dc.js/issues/934) relying on sorting of `group.all()` instead of `group.top()`. The default implementation is now easy to understand and it should be easier to customize (if anyone should want to).
  * Added example filtering segments of stack ([#657](https://github.com/dc-js/dc.js/issues/657))

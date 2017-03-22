@@ -16,6 +16,11 @@ dc.capMixin = function (_chart) {
     var _cap = Infinity, _takeFront = true;
     var _othersLabel = 'Others';
 
+    // emulate old group.top(N) ordering
+    _chart.ordering(function (kv) {
+        return -kv.value;
+    });
+
     var _othersGrouper = function (topItems, restItems) {
         var restItemsSum = d3.sum(restItems, _chart.valueAccessor()),
             restKeys = restItems.map(_chart.keyAccessor());
@@ -89,8 +94,10 @@ dc.capMixin = function (_chart) {
      * So the two values essentially had to agree, but if the `group.order()` was incorrect (it's
      * easy to forget about), the wrong rows or slices would be displayed, in the correct order.
      *
-     * If your chart previously relied on `group.order()`, use `chart.ordering()` instead. If you
-     * actually want to cap by size but e.g. sort alphabetically by key, please
+     * If your chart previously relied on `group.order()`, use `chart.ordering()` instead. As of
+     * 2.1.5, the ordering defaults to sorting from greatest to least like `group.top(N)` did.
+     *
+     * If you want to cap by one ordering but sort by another, please
      * [file an issue](https://github.com/dc-js/dc.js/issues/new) - it's still possible but we'll
      * need to work up an example.
      * @method cap
