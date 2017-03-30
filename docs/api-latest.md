@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 2.1.4  
+**Version**: 2.1.5  
 **Example**  
 ```js
 // Example chaining
@@ -4626,8 +4626,10 @@ The chart then sorted the items according to [baseMixin.ordering()](#dc.baseMixi
 So the two values essentially had to agree, but if the `group.order()` was incorrect (it's
 easy to forget about), the wrong rows or slices would be displayed, in the correct order.
 
-If your chart previously relied on `group.order()`, use `chart.ordering()` instead. If you
-actually want to cap by size but e.g. sort alphabetically by key, please
+If your chart previously relied on `group.order()`, use `chart.ordering()` instead. As of
+2.1.5, the ordering defaults to sorting from greatest to least like `group.top(N)` did.
+
+If you want to cap by one ordering but sort by another, please
 [file an issue](https://github.com/dc-js/dc.js/issues/new) - it's still possible but we'll
 need to work up an example.
 
