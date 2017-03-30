@@ -1,5 +1,5 @@
 /*!
- *  dc 2.1.4
+ *  dc 2.1.5
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 2.1.4
+ * @version 2.1.5
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '2.1.4',
+    version: '2.1.5',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -3811,7 +3811,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function getClipPathId () {
-        return _chart.anchorName().replace(/[ .#=\[\]]/g, '-') + '-clip';
+        return _chart.anchorName().replace(/[ .#=\[\]"]/g, '-') + '-clip';
     }
 
     /**
@@ -4403,6 +4403,11 @@ dc.capMixin = function (_chart) {
     var _cap = Infinity, _takeFront = true;
     var _othersLabel = 'Others';
 
+    // emulate old group.top(N) ordering
+    _chart.ordering(function (kv) {
+        return -kv.value;
+    });
+
     var _othersGrouper = function (topItems, restItems) {
         var restItemsSum = d3.sum(restItems, _chart.valueAccessor()),
             restKeys = restItems.map(_chart.keyAccessor());
@@ -4476,8 +4481,10 @@ dc.capMixin = function (_chart) {
      * So the two values essentially had to agree, but if the `group.order()` was incorrect (it's
      * easy to forget about), the wrong rows or slices would be displayed, in the correct order.
      *
-     * If your chart previously relied on `group.order()`, use `chart.ordering()` instead. If you
-     * actually want to cap by size but e.g. sort alphabetically by key, please
+     * If your chart previously relied on `group.order()`, use `chart.ordering()` instead. As of
+     * 2.1.5, the ordering defaults to sorting from greatest to least like `group.top(N)` did.
+     *
+     * If you want to cap by one ordering but sort by another, please
      * [file an issue](https://github.com/dc-js/dc.js/issues/new) - it's still possible but we'll
      * need to work up an example.
      * @method cap
@@ -9628,7 +9635,7 @@ dc.numberDisplay = function (parent, chartGroup) {
     _chart._mandatoryAttributes(['group']);
 
     // default to ordering by value, to emulate old group.top(1) behavior when multiple groups
-    _chart.ordering(function (kv) { return kv.value; });
+    _chart.ordering(function (kv) { return -kv.value; });
 
     /**
      * Gets or sets an optional object specifying HTML templates to use depending on the number
