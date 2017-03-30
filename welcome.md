@@ -8,11 +8,11 @@ A class diagram is shown below - mixins are blue and chart classes are green. (R
 
 
 <!-- Title: dcHierarchy Pages: 1 -->
-<svg width="558pt" height="518pt"
- viewBox="0.00 0.00 558.25 518.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="571pt" height="518pt"
+ viewBox="0.00 0.00 571.08 518.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 514)">
 <title>dcHierarchy</title>
-<polygon fill="white" stroke="none" points="-4,4 -4,-514 554.248,-514 554.248,4 -4,4"/>
+<polygon fill="white" stroke="none" points="-4,4 -4,-514 567.075,-514 567.075,4 -4,4"/>
 <!-- baseMixin -->
 <g id="node1" class="node"><title>baseMixin</title>
 <g id="a_node1"><a xlink:href="dc.baseMixin.html" xlink:title="baseMixin">
@@ -30,7 +30,7 @@ A class diagram is shown below - mixins are blue and chart classes are green. (R
 </g>
 </g>
 <!-- baseMixin&#45;&gt;colorMixin -->
-<g id="edge14" class="edge"><title>baseMixin&#45;&gt;colorMixin</title>
+<g id="edge15" class="edge"><title>baseMixin&#45;&gt;colorMixin</title>
 <path fill="none" stroke="black" d="M48.4355,-221.784C61.4346,-232.973 80.0475,-248.496 97.2217,-261 101.225,-263.914 105.533,-266.869 109.813,-269.703"/>
 <polygon fill="black" stroke="black" points="108.154,-272.798 118.451,-275.295 111.959,-266.922 108.154,-272.798"/>
 </g>
@@ -43,7 +43,7 @@ A class diagram is shown below - mixins are blue and chart classes are green. (R
 </g>
 </g>
 <!-- baseMixin&#45;&gt;marginMixin -->
-<g id="edge16" class="edge"><title>baseMixin&#45;&gt;marginMixin</title>
+<g id="edge17" class="edge"><title>baseMixin&#45;&gt;marginMixin</title>
 <path fill="none" stroke="black" d="M39.1048,-224.343C49.5901,-247.147 70.4024,-287.527 97.2217,-315 100.157,-318.007 103.487,-320.842 106.958,-323.462"/>
 <polygon fill="black" stroke="black" points="104.98,-326.349 115.193,-329.166 108.966,-320.594 104.98,-326.349"/>
 </g>
@@ -69,59 +69,59 @@ A class diagram is shown below - mixins are blue and chart classes are green. (R
 </g>
 </g>
 <!-- baseMixin&#45;&gt;capMixin -->
-<g id="edge22" class="edge"><title>baseMixin&#45;&gt;capMixin</title>
+<g id="edge23" class="edge"><title>baseMixin&#45;&gt;capMixin</title>
 <path fill="none" stroke="black" d="M59.0758,-213.883C72.9549,-217.361 89.9405,-221.618 104.707,-225.319"/>
 <polygon fill="black" stroke="black" points="103.959,-228.74 114.51,-227.776 105.661,-221.95 103.959,-228.74"/>
 </g>
 <!-- dataCount -->
-<g id="node13" class="node"><title>dataCount</title>
-<g id="a_node13"><a xlink:href="dc.dataCount.html" xlink:title="dataCount">
+<g id="node14" class="node"><title>dataCount</title>
+<g id="a_node14"><a xlink:href="dc.dataCount.html" xlink:title="dataCount">
 <ellipse fill="lightgreen" stroke="black" cx="140.346" cy="-180" rx="31.0259" ry="18"/>
 <text text-anchor="middle" x="140.346" y="-177" font-family="sans-serif" font-size="10.00">dataCount</text>
 </a>
 </g>
 </g>
 <!-- baseMixin&#45;&gt;dataCount -->
-<g id="edge11" class="edge"><title>baseMixin&#45;&gt;dataCount</title>
+<g id="edge12" class="edge"><title>baseMixin&#45;&gt;dataCount</title>
 <path fill="none" stroke="black" d="M59.0758,-200.117C71.9184,-196.898 87.421,-193.013 101.364,-189.519"/>
 <polygon fill="black" stroke="black" points="102.332,-192.885 111.181,-187.059 100.63,-186.095 102.332,-192.885"/>
 </g>
 <!-- dataGrid -->
-<g id="node14" class="node"><title>dataGrid</title>
-<g id="a_node14"><a xlink:href="dc.dataGrid.html" xlink:title="dataGrid">
+<g id="node15" class="node"><title>dataGrid</title>
+<g id="a_node15"><a xlink:href="dc.dataGrid.html" xlink:title="dataGrid">
 <ellipse fill="lightgreen" stroke="black" cx="140.346" cy="-126" rx="27" ry="18"/>
 <text text-anchor="middle" x="140.346" y="-123" font-family="sans-serif" font-size="10.00">dataGrid</text>
 </a>
 </g>
 </g>
 <!-- baseMixin&#45;&gt;dataGrid -->
-<g id="edge12" class="edge"><title>baseMixin&#45;&gt;dataGrid</title>
+<g id="edge13" class="edge"><title>baseMixin&#45;&gt;dataGrid</title>
 <path fill="none" stroke="black" d="M48.4355,-192.216C61.4346,-181.027 80.0475,-165.504 97.2217,-153 101.587,-149.822 106.315,-146.596 110.974,-143.532"/>
 <polygon fill="black" stroke="black" points="113.217,-146.25 119.731,-137.895 109.428,-140.364 113.217,-146.25"/>
 </g>
 <!-- dataTable -->
-<g id="node15" class="node"><title>dataTable</title>
-<g id="a_node15"><a xlink:href="dc.dataTable.html" xlink:title="dataTable">
+<g id="node16" class="node"><title>dataTable</title>
+<g id="a_node16"><a xlink:href="dc.dataTable.html" xlink:title="dataTable">
 <ellipse fill="lightgreen" stroke="black" cx="140.346" cy="-72" rx="29.8168" ry="18"/>
 <text text-anchor="middle" x="140.346" y="-69" font-family="sans-serif" font-size="10.00">dataTable</text>
 </a>
 </g>
 </g>
 <!-- baseMixin&#45;&gt;dataTable -->
-<g id="edge13" class="edge"><title>baseMixin&#45;&gt;dataTable</title>
+<g id="edge14" class="edge"><title>baseMixin&#45;&gt;dataTable</title>
 <path fill="none" stroke="black" d="M39.1048,-189.657C49.5901,-166.853 70.4024,-126.473 97.2217,-99 100.68,-95.457 104.687,-92.1531 108.827,-89.1577"/>
 <polygon fill="black" stroke="black" points="110.993,-91.9201 117.377,-83.4642 107.113,-86.0937 110.993,-91.9201"/>
 </g>
 <!-- numberDisplay -->
-<g id="node19" class="node"><title>numberDisplay</title>
-<g id="a_node19"><a xlink:href="dc.numberDisplay.html" xlink:title="numberDisplay">
+<g id="node20" class="node"><title>numberDisplay</title>
+<g id="a_node20"><a xlink:href="dc.numberDisplay.html" xlink:title="numberDisplay">
 <ellipse fill="lightgreen" stroke="black" cx="140.346" cy="-18" rx="43.25" ry="18"/>
 <text text-anchor="middle" x="140.346" y="-15" font-family="sans-serif" font-size="10.00">numberDisplay</text>
 </a>
 </g>
 </g>
 <!-- baseMixin&#45;&gt;numberDisplay -->
-<g id="edge20" class="edge"><title>baseMixin&#45;&gt;numberDisplay</title>
+<g id="edge21" class="edge"><title>baseMixin&#45;&gt;numberDisplay</title>
 <path fill="none" stroke="black" d="M35.1024,-189.095C42.0933,-157.111 60.3981,-89.362 97.2217,-45 99.33,-42.4601 101.741,-40.0793 104.317,-37.8664"/>
 <polygon fill="black" stroke="black" points="106.549,-40.5666 112.409,-31.7399 102.324,-34.9857 106.549,-40.5666"/>
 </g>
@@ -139,54 +139,54 @@ A class diagram is shown below - mixins are blue and chart classes are green. (R
 <polygon fill="black" stroke="black" points="229.963,-327.555 240.546,-328.054 232.584,-321.064 229.963,-327.555"/>
 </g>
 <!-- geoChoroplethChart -->
-<g id="node16" class="node"><title>geoChoroplethChart</title>
-<g id="a_node16"><a xlink:href="dc.geoChoroplethChart.html" xlink:title="geoChoroplethChart">
+<g id="node17" class="node"><title>geoChoroplethChart</title>
+<g id="a_node17"><a xlink:href="dc.geoChoroplethChart.html" xlink:title="geoChoroplethChart">
 <ellipse fill="lightgreen" stroke="black" cx="276.085" cy="-234" rx="56.7285" ry="18"/>
 <text text-anchor="middle" x="276.085" y="-231" font-family="sans-serif" font-size="10.00">geoChoroplethChart</text>
 </a>
 </g>
 </g>
 <!-- colorMixin&#45;&gt;geoChoroplethChart -->
-<g id="edge15" class="edge"><title>colorMixin&#45;&gt;geoChoroplethChart</title>
+<g id="edge16" class="edge"><title>colorMixin&#45;&gt;geoChoroplethChart</title>
 <path fill="none" stroke="black" d="M166.188,-277.97C184.35,-270.637 209.467,-260.495 231.002,-251.8"/>
 <polygon fill="black" stroke="black" points="232.331,-255.038 240.293,-248.048 229.71,-248.547 232.331,-255.038"/>
 </g>
 <!-- heatMap -->
-<g id="node17" class="node"><title>heatMap</title>
-<g id="a_node17"><a xlink:href="dc.heatMap.html" xlink:title="heatMap">
+<g id="node18" class="node"><title>heatMap</title>
+<g id="a_node18"><a xlink:href="dc.heatMap.html" xlink:title="heatMap">
 <ellipse fill="lightgreen" stroke="black" cx="276.085" cy="-396" rx="27.1742" ry="18"/>
 <text text-anchor="middle" x="276.085" y="-393" font-family="sans-serif" font-size="10.00">heatMap</text>
 </a>
 </g>
 </g>
 <!-- colorMixin&#45;&gt;heatMap -->
-<g id="edge18" class="edge"><title>colorMixin&#45;&gt;heatMap</title>
+<g id="edge19" class="edge"><title>colorMixin&#45;&gt;heatMap</title>
 <path fill="none" stroke="black" d="M163.605,-299.879C170.419,-304.118 177.646,-309.278 183.471,-315 204.05,-335.212 197.736,-350.037 219.471,-369 226.214,-374.883 234.464,-379.798 242.524,-383.751"/>
 <polygon fill="black" stroke="black" points="241.243,-387.013 251.797,-387.951 244.131,-380.637 241.243,-387.013"/>
 </g>
 <!-- pieChart -->
-<g id="node20" class="node"><title>pieChart</title>
-<g id="a_node20"><a xlink:href="dc.pieChart.html" xlink:title="pieChart">
+<g id="node21" class="node"><title>pieChart</title>
+<g id="a_node21"><a xlink:href="dc.pieChart.html" xlink:title="pieChart">
 <ellipse fill="lightgreen" stroke="black" cx="276.085" cy="-180" rx="27" ry="18"/>
 <text text-anchor="middle" x="276.085" y="-177" font-family="sans-serif" font-size="10.00">pieChart</text>
 </a>
 </g>
 </g>
 <!-- colorMixin&#45;&gt;pieChart -->
-<g id="edge21" class="edge"><title>colorMixin&#45;&gt;pieChart</title>
+<g id="edge22" class="edge"><title>colorMixin&#45;&gt;pieChart</title>
 <path fill="none" stroke="black" d="M163.605,-276.121C170.419,-271.882 177.646,-266.722 183.471,-261 204.05,-240.788 197.736,-225.963 219.471,-207 226.214,-201.117 234.464,-196.202 242.524,-192.249"/>
 <polygon fill="black" stroke="black" points="244.131,-195.363 251.797,-188.049 241.243,-188.987 244.131,-195.363"/>
 </g>
 <!-- rowChart -->
-<g id="node21" class="node"><title>rowChart</title>
-<g id="a_node21"><a xlink:href="dc.rowChart.html" xlink:title="rowChart">
+<g id="node22" class="node"><title>rowChart</title>
+<g id="a_node22"><a xlink:href="dc.rowChart.html" xlink:title="rowChart">
 <ellipse fill="lightgreen" stroke="black" cx="276.085" cy="-288" rx="28.0797" ry="18"/>
 <text text-anchor="middle" x="276.085" y="-285" font-family="sans-serif" font-size="10.00">rowChart</text>
 </a>
 </g>
 </g>
 <!-- colorMixin&#45;&gt;rowChart -->
-<g id="edge26" class="edge"><title>colorMixin&#45;&gt;rowChart</title>
+<g id="edge27" class="edge"><title>colorMixin&#45;&gt;rowChart</title>
 <path fill="none" stroke="black" d="M171.027,-288C190.645,-288 216.525,-288 237.567,-288"/>
 <polygon fill="black" stroke="black" points="237.764,-291.5 247.764,-288 237.764,-284.5 237.764,-291.5"/>
 </g>
@@ -196,12 +196,12 @@ A class diagram is shown below - mixins are blue and chart classes are green. (R
 <polygon fill="black" stroke="black" points="210.002,-345.5 220.002,-342 210.002,-338.5 210.002,-345.5"/>
 </g>
 <!-- marginMixin&#45;&gt;heatMap -->
-<g id="edge17" class="edge"><title>marginMixin&#45;&gt;heatMap</title>
+<g id="edge18" class="edge"><title>marginMixin&#45;&gt;heatMap</title>
 <path fill="none" stroke="black" d="M168.733,-353.058C190.302,-361.767 220.408,-373.923 243.086,-383.079"/>
 <polygon fill="black" stroke="black" points="242.03,-386.428 252.613,-386.926 244.651,-379.937 242.03,-386.428"/>
 </g>
 <!-- marginMixin&#45;&gt;rowChart -->
-<g id="edge25" class="edge"><title>marginMixin&#45;&gt;rowChart</title>
+<g id="edge26" class="edge"><title>marginMixin&#45;&gt;rowChart</title>
 <path fill="none" stroke="black" d="M168.733,-330.942C190.035,-322.341 219.666,-310.377 242.242,-301.261"/>
 <polygon fill="black" stroke="black" points="243.789,-304.411 251.752,-297.422 241.169,-297.92 243.789,-304.411"/>
 </g>
@@ -276,53 +276,66 @@ A class diagram is shown below - mixins are blue and chart classes are green. (R
 <polygon fill="black" stroke="black" points="358.475,-344.301 368.422,-340.653 358.372,-337.301 358.475,-344.301"/>
 </g>
 <!-- scatterPlot -->
-<g id="node22" class="node"><title>scatterPlot</title>
-<g id="a_node22"><a xlink:href="dc.scatterPlot.html" xlink:title="scatterPlot">
+<g id="node23" class="node"><title>scatterPlot</title>
+<g id="a_node23"><a xlink:href="dc.scatterPlot.html" xlink:title="scatterPlot">
 <ellipse fill="lightgreen" stroke="black" cx="413.75" cy="-286" rx="31.7874" ry="18"/>
 <text text-anchor="middle" x="413.75" y="-283" font-family="sans-serif" font-size="10.00">scatterPlot</text>
 </a>
 </g>
 </g>
 <!-- coordinateGridMixin&#45;&gt;scatterPlot -->
-<g id="edge27" class="edge"><title>coordinateGridMixin&#45;&gt;scatterPlot</title>
+<g id="edge28" class="edge"><title>coordinateGridMixin&#45;&gt;scatterPlot</title>
 <path fill="none" stroke="black" d="M311.319,-327.869C331.784,-319.421 357.707,-308.721 378.223,-300.252"/>
 <polygon fill="black" stroke="black" points="379.613,-303.465 387.521,-296.414 376.942,-296.995 379.613,-303.465"/>
 </g>
 <!-- barChart -->
 <g id="node8" class="node"><title>barChart</title>
 <g id="a_node8"><a xlink:href="dc.barChart.html" xlink:title="barChart">
-<ellipse fill="lightgreen" stroke="black" cx="522.524" cy="-259" rx="27.1629" ry="18"/>
-<text text-anchor="middle" x="522.524" y="-256" font-family="sans-serif" font-size="10.00">barChart</text>
+<ellipse fill="lightgreen" stroke="black" cx="528.938" cy="-259" rx="27.1629" ry="18"/>
+<text text-anchor="middle" x="528.938" y="-256" font-family="sans-serif" font-size="10.00">barChart</text>
 </a>
 </g>
 </g>
 <!-- stackMixin&#45;&gt;barChart -->
 <g id="edge4" class="edge"><title>stackMixin&#45;&gt;barChart</title>
-<path fill="none" stroke="black" d="M442.804,-239.094C456.327,-242.514 472.675,-246.647 486.96,-250.26"/>
-<polygon fill="black" stroke="black" points="486.375,-253.722 496.927,-252.78 488.091,-246.935 486.375,-253.722"/>
+<path fill="none" stroke="black" d="M443.02,-238.744C458.167,-242.357 476.962,-246.84 493.015,-250.67"/>
+<polygon fill="black" stroke="black" points="492.564,-254.16 503.104,-253.076 494.189,-247.351 492.564,-254.16"/>
 </g>
 <!-- lineChart -->
-<g id="node18" class="node"><title>lineChart</title>
-<g id="a_node18"><a xlink:href="dc.lineChart.html" xlink:title="lineChart">
-<ellipse fill="lightgreen" stroke="black" cx="522.524" cy="-205" rx="27.95" ry="18"/>
-<text text-anchor="middle" x="522.524" y="-202" font-family="sans-serif" font-size="10.00">lineChart</text>
+<g id="node19" class="node"><title>lineChart</title>
+<g id="a_node19"><a xlink:href="dc.lineChart.html" xlink:title="lineChart">
+<ellipse fill="lightgreen" stroke="black" cx="528.938" cy="-205" rx="27.95" ry="18"/>
+<text text-anchor="middle" x="528.938" y="-202" font-family="sans-serif" font-size="10.00">lineChart</text>
 </a>
 </g>
 </g>
 <!-- stackMixin&#45;&gt;lineChart -->
-<g id="edge19" class="edge"><title>stackMixin&#45;&gt;lineChart</title>
-<path fill="none" stroke="black" d="M442.804,-224.906C456.128,-221.537 472.194,-217.474 486.328,-213.9"/>
-<polygon fill="black" stroke="black" points="487.375,-217.246 496.212,-211.401 485.659,-210.459 487.375,-217.246"/>
+<g id="edge20" class="edge"><title>stackMixin&#45;&gt;lineChart</title>
+<path fill="none" stroke="black" d="M443.02,-225.256C458.06,-221.669 476.695,-217.223 492.673,-213.412"/>
+<polygon fill="black" stroke="black" points="493.81,-216.739 502.725,-211.014 492.186,-209.93 493.81,-216.739"/>
 </g>
 <!-- capMixin&#45;&gt;pieChart -->
-<g id="edge23" class="edge"><title>capMixin&#45;&gt;pieChart</title>
+<g id="edge24" class="edge"><title>capMixin&#45;&gt;pieChart</title>
 <path fill="none" stroke="black" d="M164.033,-224.84C185.648,-216.112 218.411,-202.883 242.755,-193.054"/>
 <polygon fill="black" stroke="black" points="244.325,-196.195 252.287,-189.205 241.704,-189.704 244.325,-196.195"/>
 </g>
 <!-- capMixin&#45;&gt;rowChart -->
-<g id="edge24" class="edge"><title>capMixin&#45;&gt;rowChart</title>
+<g id="edge25" class="edge"><title>capMixin&#45;&gt;rowChart</title>
 <path fill="none" stroke="black" d="M164.033,-243.16C185.517,-251.835 218.014,-264.956 242.312,-274.767"/>
 <polygon fill="black" stroke="black" points="241.255,-278.115 251.838,-278.613 243.875,-271.624 241.255,-278.115"/>
+</g>
+<!-- seriesChart -->
+<g id="node13" class="node"><title>seriesChart</title>
+<g id="a_node13"><a xlink:href="dc.seriesChart.html" xlink:title="seriesChart">
+<ellipse fill="lightgreen" stroke="black" cx="528.938" cy="-340" rx="34.2756" ry="18"/>
+<text text-anchor="middle" x="528.938" y="-337" font-family="sans-serif" font-size="10.00">seriesChart</text>
+</a>
+</g>
+</g>
+<!-- compositeChart&#45;&gt;seriesChart -->
+<g id="edge11" class="edge"><title>compositeChart&#45;&gt;seriesChart</title>
+<path fill="none" stroke="black" d="M458.835,-340C467.308,-340 476.175,-340 484.623,-340"/>
+<polygon fill="black" stroke="black" points="484.666,-343.5 494.666,-340 484.666,-336.5 484.666,-343.5"/>
 </g>
 </g>
 </svg>

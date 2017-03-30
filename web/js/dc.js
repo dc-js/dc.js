@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.1
+ *  dc 2.0.2
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 2.0.1
+ * @version 2.0.2
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '2.0.1',
+    version: '2.0.2',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -3806,7 +3806,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function getClipPathId () {
-        return _chart.anchorName().replace(/[ .#=\[\]]/g, '-') + '-clip';
+        return _chart.anchorName().replace(/[ .#=\[\]"]/g, '-') + '-clip';
     }
 
     /**
