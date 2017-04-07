@@ -47,14 +47,14 @@ describe('Dynamic data addition in crossfilter', function () {
             expect(chart.selectAll('svg g g.pie-slice path').data().length).toEqual(7);
         });
         it('default function should be used to dynamically generate label', function () {
-            expect(d3.select(chart.selectAll('text.pie-slice')[0][0]).text()).toEqual('11');
+            expect(d3.select(chart.selectAll('text.pie-slice')[0][0]).text()).toEqual('44');
         });
-        it('pie chart slices should be in numerical order', function () {
+        it('pie chart slices should be in numerical size order', function () {
             expect(chart.selectAll('text.pie-slice').data().map(function (slice) { return slice.data.key; }))
-                .toEqual(['11','22','33','44','55','66','76']);
+                .toEqual(['44', '22', '33', '55', '11', '66', '76']);
         });
         it('default function should be used to dynamically generate title', function () {
-            expect(d3.select(chart.selectAll('g.pie-slice title')[0][0]).text()).toEqual('11: 1');
+            expect(d3.select(chart.selectAll('g.pie-slice title')[0][0]).text()).toEqual('44: 3');
         });
         afterEach(function () {
             valueDimension.filterAll();
