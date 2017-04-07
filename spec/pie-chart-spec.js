@@ -167,7 +167,7 @@ describe('dc.pieChart', function () {
         });
         it('slice label transform to centroid', function () {
             expect(chart.selectAll('svg g text.pie-slice').attr('transform'))
-                .toMatchTranslate(38.20604139901076, -52.58610463437158, 3);
+                .toMatchTranslate(52.58610463437159, -38.20604139901075, 3);
         });
         it('slice label text should be set', function () {
             chart.selectAll('svg g text.pie-slice').call(function (p) {
@@ -217,7 +217,9 @@ describe('dc.pieChart', function () {
                 expect(chart.select('svg g').attr('transform')).toMatchTranslate(defaultCenter.x, defaultCenter.y);
             });
             it('should decrease outer radius', function () {
-                expect(chart.select('svg g.pie-slice path').attr('d')).toContainPath('A83,83 0 0,1 78,-25');
+                expect(chart.select('svg g.pie-slice path').attr('d')).toBe('M5.082284216461516e-15,-83A83,83 ' +
+                    '0 0,1 78.93769085249774,25.648410533120632L28.531695488854606,9.270509831248422A30,30 ' +
+                    '0 0,0 1.83697019872103e-15,-30Z');
             });
         });
 
@@ -385,8 +387,8 @@ describe('dc.pieChart', function () {
                 crossfilterTop2 = countryGroup.top(2);
             });
             describe('with ordering and capping not set', function () {
-                it('should match the crossfilter default order', function () {
-                    expect(countryChart.data()).toEqual(crossfilterOrder);
+                it('should match the crossfilter sorted by value', function () {
+                    expect(countryChart.data()).toEqual(crossfilterOrder.sort(function (a, b) { return b.value - a.value; }));
                 });
             });
             describe('with ordering matching the crossfilter order', function () {
@@ -412,15 +414,15 @@ describe('dc.pieChart', function () {
                 beforeEach(function () {
                     countryChart.cap(1).redraw();
                 });
-                it('should show the first key alphabetically, and others', function () {
-                    expect(['CA', 'Others']).toEqual(countryChart.data().map(dc.pluck('key')));
+                it('should show the first largest value\'s key, and others', function () {
+                    expect(['US', 'Others']).toEqual(countryChart.data().map(dc.pluck('key')));
                 });
                 describe('and takeFront(false)', function () {
                     beforeEach(function () {
                         countryChart.takeFront(false).redraw();
                     });
-                    it('should show the last key alphabetically, and others', function () {
-                        expect(['US','Others']).toEqual(countryChart.data().map(dc.pluck('key')));
+                    it('should show the last smallest value\'s key, and others', function () {
+                        expect(['CA','Others']).toEqual(countryChart.data().map(dc.pluck('key')));
                     });
                 });
             });
