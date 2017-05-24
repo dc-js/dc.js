@@ -180,18 +180,18 @@ describe('dc.numberDisplay', function () {
             d3.timer.flush();
         });
 
-        it('should show the smallest value', function () {
-            expect(chart.select('span.number-display').text()).toEqual('77.0');
+        it('should show the largest value', function () {
+            expect(chart.select('span.number-display').text()).toEqual('341');
         });
 
         describe('with reversed ordering', function () {
             beforeEach(function () {
-                chart.ordering(function (kv) { return kv.value; })
+                chart.ordering(function (kv) { return -kv.value; })
                     .render();
                 d3.timer.flush();
             });
-            it('should show the largest value', function () {
-                expect(chart.select('span.number-display').text()).toEqual('341');
+            it('should show the smallest value', function () {
+                expect(chart.select('span.number-display').text()).toEqual('77.0');
             });
         });
 
