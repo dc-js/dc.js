@@ -1,5 +1,6 @@
 # 2.0 Series
 ## 2.0.3
+* crossfilter is loaded by its module name (crossfilter2), not its filename (crossfilter). This is intended to help webpack and other automatic module loaders. This is likely to break requireJS configurations; see [#1304](https://github.com/dc-js/dc.js/issues/1304) for details. ([#1213](https://github.com/dc-js/dc.js/issues/1213), [#1214](https://github.com/dc-js/dc.js/issues/1214), [#1261](https://github.com/dc-js/dc.js/issues/1261), [#1293](https://github.com/dc-js/dc.js/issues/1293), [#1302](https://github.com/dc-js/dc.js/issues/1302))
 * Do not make the pie chart radius bigger than the chart size, by Sandeep Fatangare ([#1279](https://github.com/dc-js/dc.js/pull/1279))
 
 ## 2.0.2
