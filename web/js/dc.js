@@ -1,5 +1,5 @@
 /*!
- *  dc 2.1.4
+ *  dc 2.1.5
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 2.1.4
+ * @version 2.1.5
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '2.1.4',
+    version: '2.1.5',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -1984,6 +1984,7 @@ dc.baseMixin = function (_chart) {
     _chart.replaceFilter = function (filter) {
         _filters = _resetFilterHandler(_filters);
         _chart.filter(filter);
+        return _chart;
     };
 
     /**
@@ -3811,7 +3812,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function getClipPathId () {
-        return _chart.anchorName().replace(/[ .#=\[\]]/g, '-') + '-clip';
+        return _chart.anchorName().replace(/[ .#=\[\]"]/g, '-') + '-clip';
     }
 
     /**
@@ -4403,6 +4404,11 @@ dc.capMixin = function (_chart) {
     var _cap = Infinity, _takeFront = true;
     var _othersLabel = 'Others';
 
+    // emulate old group.top(N) ordering
+    _chart.ordering(function (kv) {
+        return -kv.value;
+    });
+
     var _othersGrouper = function (topItems, restItems) {
         var restItemsSum = d3.sum(restItems, _chart.valueAccessor()),
             restKeys = restItems.map(_chart.keyAccessor());
@@ -4476,8 +4482,10 @@ dc.capMixin = function (_chart) {
      * So the two values essentially had to agree, but if the `group.order()` was incorrect (it's
      * easy to forget about), the wrong rows or slices would be displayed, in the correct order.
      *
-     * If your chart previously relied on `group.order()`, use `chart.ordering()` instead. If you
-     * actually want to cap by size but e.g. sort alphabetically by key, please
+     * If your chart previously relied on `group.order()`, use `chart.ordering()` instead. As of
+     * 2.1.5, the ordering defaults to sorting from greatest to least like `group.top(N)` did.
+     *
+     * If you want to cap by one ordering but sort by another, please
      * [file an issue](https://github.com/dc-js/dc.js/issues/new) - it's still possible but we'll
      * need to work up an example.
      * @method cap
@@ -4949,8 +4957,9 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     function drawChart () {
-        // set radius on basis of chart dimension if missing
-        _radius = _givenRadius ? _givenRadius : d3.min([_chart.width(), _chart.height()]) / 2;
+        // set radius from chart size if none given, or if given radius is too large
+        var maxRadius =  d3.min([_chart.width(), _chart.height()]) / 2;
+        _radius = _givenRadius && _givenRadius < maxRadius ? _givenRadius : maxRadius;
 
         var arc = buildArcs();
 
@@ -9246,7 +9255,7 @@ dc.scatterPlot = function (parent, chartGroup) {
     var _emptyColor = null;
     var _filtered = [];
 
-    _symbol.size(function (d, i) {
+    function elementSize (d, i) {
         if (!_existenceAccessor(d)) {
             return Math.pow(_emptySize, 2);
         } else if (_filtered[i]) {
@@ -9254,7 +9263,8 @@ dc.scatterPlot = function (parent, chartGroup) {
         } else {
             return Math.pow(_excludedSize, 2);
         }
-    });
+    }
+    _symbol.size(elementSize);
 
     dc.override(_chart, '_filter', function (filter) {
         if (!arguments.length) {
@@ -9362,6 +9372,29 @@ dc.scatterPlot = function (parent, chartGroup) {
             return _symbol.type();
         }
         _symbol.type(type);
+        return _chart;
+    };
+
+    /**
+     * Get or set the symbol generator. By default `dc.scatterPlot` will use
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol d3.svg.symbol()}
+     * to generate symbols. `dc.scatterPlot` will set the
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size size accessor}
+     * on the symbol generator.
+     * @method customSymbol
+     * @memberof dc.scatterPlot
+     * @instance
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol d3.svg.symbol}
+     * @see {@link https://stackoverflow.com/questions/25332120/create-additional-d3-js-symbols Create additional D3.js symbols}
+     * @param {String|Function} [customSymbol=d3.svg.symbol()]
+     * @returns {String|Function|dc.scatterPlot}
+     */
+    _chart.customSymbol = function (customSymbol) {
+        if (!arguments.length) {
+            return _symbol;
+        }
+        _symbol = customSymbol;
+        _symbol.size(elementSize);
         return _chart;
     };
 
@@ -9628,7 +9661,7 @@ dc.numberDisplay = function (parent, chartGroup) {
     _chart._mandatoryAttributes(['group']);
 
     // default to ordering by value, to emulate old group.top(1) behavior when multiple groups
-    _chart.ordering(function (kv) { return kv.value; });
+    _chart.ordering(function (kv) { return -kv.value; });
 
     /**
      * Gets or sets an optional object specifying HTML templates to use depending on the number
@@ -11038,7 +11071,7 @@ dc.crossfilter = crossfilter;
 
 return dc;}
     if(typeof define === "function" && define.amd) {
-        define(["d3", "crossfilter"], _dc);
+        define(["d3", "crossfilter2"], _dc);
     } else if(typeof module === "object" && module.exports) {
         var _d3 = require('d3');
         var _crossfilter = require('crossfilter2');

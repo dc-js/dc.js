@@ -85,8 +85,9 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     function drawChart () {
-        // set radius on basis of chart dimension if missing
-        _radius = _givenRadius ? _givenRadius : d3.min([_chart.width(), _chart.height()]) / 2;
+        // set radius from chart size if none given, or if given radius is too large
+        var maxRadius =  d3.min([_chart.width(), _chart.height()]) / 2;
+        _radius = _givenRadius && _givenRadius < maxRadius ? _givenRadius : maxRadius;
 
         var arc = buildArcs();
 

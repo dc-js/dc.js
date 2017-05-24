@@ -271,12 +271,14 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         flatten: true,
+                        nonull: true,
                         src: ['<%= conf.pkg.name %>.css', '<%= conf.pkg.name %>.min.css'],
                         dest: '<%= conf.web %>/css/'
                     },
                     {
                         expand: true,
                         flatten: true,
+                        nonull: true,
                         src: [
                             '<%= conf.pkg.name %>.js',
                             '<%= conf.pkg.name %>.js.map',
@@ -284,9 +286,9 @@ module.exports = function (grunt) {
                             '<%= conf.pkg.name %>.min.js.map',
                             'node_modules/d3/d3.js',
                             'node_modules/crossfilter2/crossfilter.js',
+                            'node_modules/queue-async/build/queue.js',
                             'node_modules/grunt-saucelabs/examples/jasmine/lib/jasmine-jsreporter/jasmine-jsreporter.js',
-                            'node_modules/file-saver/FileSaver.js',
-                            'test/env-data.js'
+                            'node_modules/file-saver/FileSaver.js'
                         ],
                         dest: '<%= conf.web %>/js/'
                     }

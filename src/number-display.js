@@ -26,7 +26,7 @@ dc.numberDisplay = function (parent, chartGroup) {
     _chart._mandatoryAttributes(['group']);
 
     // default to ordering by value, to emulate old group.top(1) behavior when multiple groups
-    _chart.ordering(function (kv) { return kv.value; });
+    _chart.ordering(function (kv) { return -kv.value; });
 
     /**
      * Gets or sets an optional object specifying HTML templates to use depending on the number
