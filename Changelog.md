@@ -1,3 +1,6 @@
+## 2.1.6
+* fix test syntax for Microsoft browsers
+
 ## 2.1.5
 * crossfilter is loaded by its module name (crossfilter2), not its filename (crossfilter). This is intended to help webpack and other automatic module loaders. This is likely to break requireJS configurations; see [#1304](https://github.com/dc-js/dc.js/issues/1304) for details. ([#1213](https://github.com/dc-js/dc.js/issues/1213), [#1214](https://github.com/dc-js/dc.js/issues/1214), [#1261](https://github.com/dc-js/dc.js/issues/1261), [#1293](https://github.com/dc-js/dc.js/issues/1293), [#1302](https://github.com/dc-js/dc.js/issues/1302))
  * Default capMixin.ordering to sort decreasing by value, to emulate old group.top(N)

@@ -217,7 +217,7 @@ describe('dc.pieChart', function () {
                 expect(chart.select('svg g').attr('transform')).toMatchTranslate(defaultCenter.x, defaultCenter.y);
             });
             it('should decrease outer radius', function () {
-                expect(chart.select('svg g.pie-slice path').attr('d')).toContain('83,83'); // i.e. 100-17
+                expect(chart.select('svg g.pie-slice path').attr('d')).toMatch(/83[, ]83/); // i.e. 100-17
             });
         });
 
