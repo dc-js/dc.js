@@ -26,6 +26,7 @@ describe('Dynamic data addition in crossfilter', function () {
                 .width(width)
                 .height(height)
                 .radius(radius)
+                .ordering(function (kv) { return kv.key; })
                 .transitionDuration(0);
             chart.render();
             baseData.add(moreData);

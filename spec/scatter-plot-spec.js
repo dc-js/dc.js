@@ -74,6 +74,48 @@ describe('dc.scatterPlot', function () {
             });
         });
 
+        function fishSymbol () {
+            var size;
+            var points = [[2, 0], [1, -1], [-1, 1], [-1, -1], [1, 1]];
+            function symbol (d, i) {
+                // native size is 3 square pixels, so to get size N, multiply by sqrt(N)/3
+                var m = size.call(this, d, i);
+                m = Math.sqrt(m) / 3;
+                var path = d3.svg.line()
+                        .x(function (d) {
+                            return d[0] * m;
+                        })
+                        .y(function (d) {
+                            return d[1] * m;
+                        });
+                return path(points) + 'Z';
+            }
+            symbol.type = function () {
+                if (arguments.length) {
+                    throw new Error('no, you must have fish');
+                }
+                return 'fish';
+            };
+            symbol.size = function (_) {
+                if (!arguments.length) {
+                    return size;
+                }
+                size = d3.functor(_);
+                return symbol;
+            };
+            return symbol;
+        }
+        describe('with a fish symbol', function () {
+            beforeEach(function () {
+                chart.customSymbol(fishSymbol().size(chart.symbolSize()))
+                    .render();
+            });
+
+            it('should draw fishes', function () {
+                expect(symbolsMatching(matchSymbol(fishSymbol(), chart.symbolSize())).length).toBe(9);
+            });
+        });
+
         describe('with title rendering disabled', function () {
             beforeEach(function () {
                 chart.renderTitle(false).render();
@@ -298,6 +340,16 @@ describe('dc.scatterPlot', function () {
             var symbol = d3.select(this);
             var size = Math.pow(r, 2);
             var path = d3.svg.symbol().size(size)();
+            var result = comparePaths(symbol.attr('d'), path);
+            return result.pass;
+        };
+    }
+
+    function matchSymbol (s, r) {
+        return function () {
+            var symbol = d3.select(this);
+            var size = Math.pow(r, 2);
+            var path = s.size(size)();
             var result = comparePaths(symbol.attr('d'), path);
             return result.pass;
         };

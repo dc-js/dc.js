@@ -55,7 +55,7 @@ dc.scatterPlot = function (parent, chartGroup) {
     var _emptyColor = null;
     var _filtered = [];
 
-    _symbol.size(function (d, i) {
+    function elementSize (d, i) {
         if (!_existenceAccessor(d)) {
             return Math.pow(_emptySize, 2);
         } else if (_filtered[i]) {
@@ -63,7 +63,8 @@ dc.scatterPlot = function (parent, chartGroup) {
         } else {
             return Math.pow(_excludedSize, 2);
         }
-    });
+    }
+    _symbol.size(elementSize);
 
     dc.override(_chart, '_filter', function (filter) {
         if (!arguments.length) {
@@ -171,6 +172,29 @@ dc.scatterPlot = function (parent, chartGroup) {
             return _symbol.type();
         }
         _symbol.type(type);
+        return _chart;
+    };
+
+    /**
+     * Get or set the symbol generator. By default `dc.scatterPlot` will use
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol d3.svg.symbol()}
+     * to generate symbols. `dc.scatterPlot` will set the
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size size accessor}
+     * on the symbol generator.
+     * @method customSymbol
+     * @memberof dc.scatterPlot
+     * @instance
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol d3.svg.symbol}
+     * @see {@link https://stackoverflow.com/questions/25332120/create-additional-d3-js-symbols Create additional D3.js symbols}
+     * @param {String|Function} [customSymbol=d3.svg.symbol()]
+     * @returns {String|Function|dc.scatterPlot}
+     */
+    _chart.customSymbol = function (customSymbol) {
+        if (!arguments.length) {
+            return _symbol;
+        }
+        _symbol = customSymbol;
+        _symbol.size(elementSize);
         return _chart;
     };
 

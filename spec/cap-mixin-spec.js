@@ -19,8 +19,8 @@ describe('dc.capMixin', function () {
         it('should include everything', function () {
             expect(mixin.data().length).toBe(5);
         });
-        it('should be in key order', function () {
-            expect(mixin.data().map(dc.pluck('key'))).toEqual([22, 33, 44, 55, 66]);
+        it('should be in descending value order', function () {
+            expect(mixin.data().map(dc.pluck('value'))).toEqual([12, 9, 8, 4, 2]);
         });
         it('should sum to total', function () {
             expect(d3.sum(mixin.data().map(dc.pluck('value')))).toEqual(total);
