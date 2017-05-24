@@ -137,6 +137,7 @@ chart.width(300)
         * [.nonemptyOpacity](#dc.scatterPlot+nonemptyOpacity) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
         * [.existenceAccessor([accessor])](#dc.scatterPlot+existenceAccessor) ⇒ <code>function</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
         * [.symbol([type])](#dc.scatterPlot+symbol) ⇒ <code>String</code> &#124; <code>function</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+        * [.customSymbol([customSymbol])](#dc.scatterPlot+customSymbol) ⇒ <code>String</code> &#124; <code>function</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
         * [.symbolSize([symbolSize])](#dc.scatterPlot+symbolSize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
         * [.highlightedSize([highlightedSize])](#dc.scatterPlot+highlightedSize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
         * [.excludedSize([excludedSize])](#dc.scatterPlot+excludedSize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
@@ -2135,6 +2136,7 @@ Maximum number of legend items to display
     * [.nonemptyOpacity](#dc.scatterPlot+nonemptyOpacity) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
     * [.existenceAccessor([accessor])](#dc.scatterPlot+existenceAccessor) ⇒ <code>function</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
     * [.symbol([type])](#dc.scatterPlot+symbol) ⇒ <code>String</code> &#124; <code>function</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+    * [.customSymbol([customSymbol])](#dc.scatterPlot+customSymbol) ⇒ <code>String</code> &#124; <code>function</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
     * [.symbolSize([symbolSize])](#dc.scatterPlot+symbolSize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
     * [.highlightedSize([highlightedSize])](#dc.scatterPlot+highlightedSize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
     * [.excludedSize([excludedSize])](#dc.scatterPlot+excludedSize) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
@@ -2245,6 +2247,26 @@ chart.symbol('circle');
 // Square type
 chart.symbol('square');
 ```
+<a name="dc.scatterPlot+customSymbol"></a>
+
+#### scatterPlot.customSymbol([customSymbol]) ⇒ <code>String</code> &#124; <code>function</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
+Get or set the symbol generator. By default `dc.scatterPlot` will use
+[d3.svg.symbol()](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol)
+to generate symbols. `dc.scatterPlot` will set the
+[size accessor](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size)
+on the symbol generator.
+
+**Kind**: instance method of <code>[scatterPlot](#dc.scatterPlot)</code>  
+**See**
+
+- [d3.svg.symbol](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol)
+- [Create additional D3.js symbols](https://stackoverflow.com/questions/25332120/create-additional-d3-js-symbols)
+
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [customSymbol] | <code>String</code> &#124; <code>function</code> | <code>d3.svg.symbol()</code> | 
+
 <a name="dc.scatterPlot+symbolSize"></a>
 
 #### scatterPlot.symbolSize([symbolSize]) ⇒ <code>Number</code> &#124; <code>[scatterPlot](#dc.scatterPlot)</code>
