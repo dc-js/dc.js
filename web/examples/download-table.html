@@ -111,6 +111,7 @@ table
     .group(function(d) {
         return d.value;
     })
+    .sortBy(function(d) { return +d.Spent; })
     .showGroups(false)
     .columns(['Name',
               {
@@ -131,6 +132,9 @@ d3.select('#download')
     .on('click', function() {
         var data = nameDim.top(Infinity);
         if(d3.select('#download-type input:checked').node().value==='table') {
+            data = data.sort(function(a, b) {
+                return table.order()(table.sortBy()(a), table.sortBy()(b));
+            });
             data = data.map(function(d) {
                 var row = {};
                 table.columns().forEach(function(c) {
