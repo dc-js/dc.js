@@ -990,6 +990,7 @@ dc.baseMixin = function (_chart) {
     _chart.replaceFilter = function (filter) {
         _filters = _resetFilterHandler(_filters);
         _chart.filter(filter);
+        return _chart;
     };
 
     /**

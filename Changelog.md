@@ -28,6 +28,13 @@ Stop using `group.top()` in favor of `group.all()` sorting and slicing. ([#934](
  * Functional-style filter handlers: instead of modifying the array of filters in-place, filter handlers must return the new filter array. This is consistent with the old documention, but a different implementation: any changes to the `filters` argument will be ignored unless they are returned. This should make filter handlers easier to reason about.
 
 # 2.0 Series
+## 2.0.3
+* crossfilter is loaded by its module name (crossfilter2), not its filename (crossfilter). This is intended to help webpack and other automatic module loaders. This is likely to break requireJS configurations; see [#1304](https://github.com/dc-js/dc.js/issues/1304) for details. ([#1213](https://github.com/dc-js/dc.js/issues/1213), [#1214](https://github.com/dc-js/dc.js/issues/1214), [#1261](https://github.com/dc-js/dc.js/issues/1261), [#1293](https://github.com/dc-js/dc.js/issues/1293), [#1302](https://github.com/dc-js/dc.js/issues/1302))
+* Do not make the pie chart radius bigger than the chart size, by Sandeep Fatangare ([#1279](https://github.com/dc-js/dc.js/pull/1279))
+* Allow custom scatter plot symbols ([#1274](https://github.com/dc-js/dc.js/issues/1274))
+* Download example sorts the table data in the same order as it's shown ([#1232](https://github.com/dc-js/dc.js/issues/1232))
+* `baseChart.replaceFilter` should return the chart ([#1227](https://github.com/dc-js/dc.js/issues/1227))
+
 ## 2.0.2
 * Allow bracketed selectors for charts to work with numeric/quoted values, by Marcel Pfeiffer ([#1282](https://github.com/dc-js/dc.js/pull/1282))
 * Fix images in [European Parliament example](http://dc-js.github.io/dc.js/ep/), by Xavier Dutoit ([#1284](https://github.com/dc-js/dc.js/pull/1284) / [#1256](https://github.com/dc-js/dc.js/issues/1256))
