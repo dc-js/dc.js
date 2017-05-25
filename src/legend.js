@@ -43,6 +43,10 @@ dc.legend = function () {
             .attr('class', 'dc-legend')
             .attr('transform', 'translate(' + _x + ',' + _y + ')');
         var legendables = _parent.legendables();
+        
+        if (_maxItems) {
+            legendables = legendables.slice(0, _maxItems);
+        }
 
         if (_maxItems !== undefined) {
             legendables = legendables.slice(0, _maxItems);
@@ -286,6 +290,22 @@ dc.legend = function () {
         _maxItems = dc.utils.isNumber(maxItems) ? maxItems : undefined;
         return _legend;
     };
+    
+    /**
+     * Maximum number of legend items to display
+     * @method maxItems
+     * @memberof dc.legend
+     * @instance
+     * @param  {Number} [maxItems]]
+     * @return {dc.legend}
+     */
+     
+    _legend.maxItems = function(maxItemCount) {
+        //TODO maybe check if maxItemCount is a number?
+        _maxItems = maxItemCount;
+        
+        return _legend;  
+    }
 
     return _legend;
 };
