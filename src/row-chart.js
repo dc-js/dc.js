@@ -177,7 +177,7 @@ dc.rowChart = function (parent, chartGroup) {
         }
 
         // vertically align label in center unless they override the value via property setter
-        if (!_hasLabelOffsetY) {
+        if (!_hasLabelOffsetY && height !== Infinity) {
             _labelOffsetY = height / 2;
         }
 
