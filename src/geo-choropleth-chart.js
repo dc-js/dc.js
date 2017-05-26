@@ -155,7 +155,8 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
     function renderTitle (regionG, layerIndex, data) {
         if (_chart.renderTitle()) {
-            regionG.selectAll('title').text(function (d) {
+            regionG.selectAll('title').remove();
+            regionG.append('title').text(function (d) {
                 var key = getKey(layerIndex, d);
                 var value = data[key];
                 return _chart.title()({key: key, value: value});
