@@ -99,7 +99,7 @@ dc.baseMixin = function (_chart) {
     };
 
     var _data = function (group) {
-        return group.all();
+        return group ? group.all() : null;
     };
 
     /**
