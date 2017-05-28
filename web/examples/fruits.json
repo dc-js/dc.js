@@ -5,6 +5,7 @@
     {"name": "grapefruit", "cnt": 2},
     {"name": "grapefruit", "cnt": 4},
     {"name": "pomegranate", "cnt": 1},
+    {"name": "pomegranate", "cnt": 17},
     {"name": "lime", "cnt": 12},
-    {"name": "grape", "cnt": 50}
+    {"name": "grape", "cnt": 25}
 ]
