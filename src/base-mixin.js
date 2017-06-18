@@ -33,7 +33,7 @@ dc.baseMixin = function (_chart) {
     };
     var _heightCalc = _defaultHeightCalc;
     var _width, _height;
-    var _responsiveResizing = false;
+    var _useViewBox = false;
 
     var _keyAccessor = dc.pluck('key');
     var _valueAccessor = dc.pluck('value');
@@ -210,20 +210,20 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-     * Turn on/off responsive resizing. When on, viewBox will be set on the svg root instead of width and height.
+     * Turn on/off using viewBox. When on, viewBox will be set on the svg root instead of width and height.
      * Requires that the chart aspect ratio be defined using chart.width(w) and chart.height(h).
      * This will maintain the aspect ratio while enabling the chart to resize responsively to the browser window using only css. 
-     * @method responsiveResizing
+     * @method useViewBox
      * @memberof dc.baseMixin
      * @instance
-     * @param {Boolean} [responsiveResizing=false]
+     * @param {Boolean} [useViewBox=false]
      * @returns {Boolean|dc.baseMixin}
      */
-    _chart.responsiveResizing = function (responsiveResizing) {
+    _chart.useViewBox = function (useViewBox) {
         if (!arguments.length) {
-            return _responsiveResizing;
+            return _useViewBox;
         }
-        _responsiveResizing = responsiveResizing;
+        _useViewBox = useViewBox;
         return _chart;
     };
 
@@ -510,7 +510,7 @@ dc.baseMixin = function (_chart) {
 
     function sizeSvg () {
         if (_svg) {
-            if (!_responsiveResizing) {
+            if (!_useViewBox) {
                 _svg
                     .attr('width', _chart.width())
                     .attr('height', _chart.height());
