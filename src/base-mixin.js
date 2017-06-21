@@ -33,6 +33,7 @@ dc.baseMixin = function (_chart) {
     };
     var _heightCalc = _defaultHeightCalc;
     var _width, _height;
+    var _useViewBox = false;
 
     var _keyAccessor = dc.pluck('key');
     var _valueAccessor = dc.pluck('value');
@@ -205,6 +206,24 @@ dc.baseMixin = function (_chart) {
             return _minHeight;
         }
         _minHeight = minHeight;
+        return _chart;
+    };
+
+    /**
+     * Turn on/off using viewBox. When on, viewBox will be set on the svg root instead of width and height.
+     * Requires that the chart aspect ratio be defined using chart.width(w) and chart.height(h).
+     * This will maintain the aspect ratio while enabling the chart to resize responsively to the browser window using only css. 
+     * @method useViewBox
+     * @memberof dc.baseMixin
+     * @instance
+     * @param {Boolean} [useViewBox=false]
+     * @returns {Boolean|dc.baseMixin}
+     */
+    _chart.useViewBox = function (useViewBox) {
+        if (!arguments.length) {
+            return _useViewBox;
+        }
+        _useViewBox = useViewBox;
         return _chart;
     };
 
@@ -491,9 +510,14 @@ dc.baseMixin = function (_chart) {
 
     function sizeSvg () {
         if (_svg) {
-            _svg
-                .attr('width', _chart.width())
-                .attr('height', _chart.height());
+            if (!_useViewBox) {
+                _svg
+                    .attr('width', _chart.width())
+                    .attr('height', _chart.height());
+            } else if (!_svg.attr('viewBox')) {
+                _svg
+                    .attr('viewBox', '0 0 ' + _chart.width() + ' ' + _chart.height());
+            }
         }
     }
 
