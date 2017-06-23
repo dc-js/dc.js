@@ -4,6 +4,7 @@
     <title>dc.js - Series Example</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <link rel="stylesheet" type="text/css" href="dc-resizing.css" />
   </head>
   <body>
 
@@ -15,6 +16,7 @@
     <script type="text/javascript" src="../js/d3.js"></script>
     <script type="text/javascript" src="../js/crossfilter.js"></script>
     <script type="text/javascript" src="../js/dc.js"></script>
+    <script type="text/javascript" src="dc-resizing.js"></script>
     <script type="text/javascript">
 
       var chart = dc.seriesChart("#test");
@@ -30,7 +32,7 @@
           chart
               .width(window.innerWidth-adjustX)
               .height(window.innerHeight-adjustY)
-              .chart(function(c) { return dc.lineChart(c).interpolate('basis'); })
+              .chart(function(c) { return dc.lineChart(c).interpolate('cardinal'); })
               .x(d3.scale.linear().domain([0,20]))
               .brushOn(false)
               .yAxisLabel("Measured Speed km/s")
@@ -49,14 +51,9 @@
           chart.yAxis().tickFormat(function(d) {return d3.format(',d')(d+299500);});
           chart.margins().left += 40;
 
-          window.onresize = function() {
+          apply_resizing(chart, adjustX, adjustY, function(chart) {
               chart.legend().x(window.innerWidth-200);
-              chart
-                  .width(window.innerWidth-adjustX)
-                  .height(window.innerHeight-adjustY)
-                  .rescale()
-                  .redraw();
-          };
+          });
 
           dc.renderAll();
 
@@ -72,9 +69,9 @@
           };
       }
 
-      var button1 = load_button("morley.csv"),
-          button2 = load_button("morley2.csv"),
-          button3 = load_button("morley3.csv");
+      var button1 = load_button("../examples/morley.csv"),
+          button2 = load_button("../examples/morley2.csv"),
+          button3 = load_button("../examples/morley3.csv");
 
     </script>
 

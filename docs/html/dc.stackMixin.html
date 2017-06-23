@@ -174,6 +174,193 @@
             
 <hr>
 <dt>
+    <h4 class="name" id="evadeDomainFilter"><span class="type-signature"></span>evadeDomainFilter( [evadeDomainFilter])</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Since dc.js 2.0, there has been <a href="https://github.com/dc-js/dc.js/issues/949">an issue</a>
+where points are filtered to the current domain. While this is a useful optimization, it is
+incorrectly implemented: the next point outside the domain is required in order to draw lines
+that are clipped to the bounds, as well as bars that are partly clipped.</p>
+<p>A fix will be included in dc.js 2.1.x, but a workaround is needed for dc.js 2.0 and until
+that fix is published, so set this flag to skip any filtering of points.</p>
+<p>Once the bug is fixed, this flag will have no effect, and it will be deprecated.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>evadeDomainFilter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="stack-mixin.js.html">stack-mixin.js</a>,
+				 <a href="stack-mixin.js.html#sunlight-1-line-267">line 267</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+|
+
+<span class="param-type"><a href="dc.stackMixin.html">dc.stackMixin</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
     <h4 class="name" id="hidableStacks"><span class="type-signature"></span>hidableStacks( [hidableStacks])</h4>
     
     
@@ -300,7 +487,7 @@ This does not affect the behavior of hideStack or showStack.</p>
 		<ul class="dummy">
 			<li>
 				<a href="stack-mixin.js.html">stack-mixin.js</a>,
-				 <a href="stack-mixin.js.html#sunlight-1-line-112">line 112</a>
+				 <a href="stack-mixin.js.html#sunlight-1-line-113">line 113</a>
 			</li>
 		</ul>
 	</dd>
@@ -462,7 +649,7 @@ The chart must be re-rendered for this change to appear.</p>
 		<ul class="dummy">
 			<li>
 				<a href="stack-mixin.js.html">stack-mixin.js</a>,
-				 <a href="stack-mixin.js.html#sunlight-1-line-134">line 134</a>
+				 <a href="stack-mixin.js.html#sunlight-1-line-135">line 135</a>
 			</li>
 		</ul>
 	</dd>
@@ -621,7 +808,7 @@ The chart must be re-rendered for this change to appear.</p>
 		<ul class="dummy">
 			<li>
 				<a href="stack-mixin.js.html">stack-mixin.js</a>,
-				 <a href="stack-mixin.js.html#sunlight-1-line-151">line 151</a>
+				 <a href="stack-mixin.js.html#sunlight-1-line-152">line 152</a>
 			</li>
 		</ul>
 	</dd>
@@ -861,7 +1048,7 @@ generate the legend label.</p>
 		<ul class="dummy">
 			<li>
 				<a href="stack-mixin.js.html">stack-mixin.js</a>,
-				 <a href="stack-mixin.js.html#sunlight-1-line-57">line 57</a>
+				 <a href="stack-mixin.js.html#sunlight-1-line-58">line 58</a>
 			</li>
 		</ul>
 	</dd>
@@ -1059,7 +1246,7 @@ propagates it to the next.</p>
 		<ul class="dummy">
 			<li>
 				<a href="stack-mixin.js.html">stack-mixin.js</a>,
-				 <a href="stack-mixin.js.html#sunlight-1-line-245">line 245</a>
+				 <a href="stack-mixin.js.html#sunlight-1-line-246">line 246</a>
 			</li>
 		</ul>
 	</dd>
@@ -1278,7 +1465,7 @@ is not provided, the first stack is implied.</p>
 		<ul class="dummy">
 			<li>
 				<a href="stack-mixin.js.html">stack-mixin.js</a>,
-				 <a href="stack-mixin.js.html#sunlight-1-line-204">line 204</a>
+				 <a href="stack-mixin.js.html#sunlight-1-line-205">line 205</a>
 			</li>
 		</ul>
 	</dd>
@@ -1393,7 +1580,7 @@ var secondTitleFunction = chart.title(&#x27;second stack&#x27;);</pre>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Wed May 24th 2017
+		on Fri Jun 23rd 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
