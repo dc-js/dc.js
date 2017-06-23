@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 2.1.6  
+**Version**: 2.1.7  
 **Example**  
 ```js
 // Example chaining
@@ -179,6 +179,7 @@ chart.width(300)
         * [.width([width])](#dc.baseMixin+width) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
         * [.minWidth([minWidth])](#dc.baseMixin+minWidth) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
         * [.minHeight([minHeight])](#dc.baseMixin+minHeight) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
+        * [.useViewBoxResizing([useViewBoxResizing])](#dc.baseMixin+useViewBoxResizing) ⇒ <code>Boolean</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
         * [.dimension([dimension])](#dc.baseMixin+dimension) ⇒ <code>crossfilter.dimension</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
         * [.data([callback])](#dc.baseMixin+data) ⇒ <code>\*</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
         * [.group([group], [name])](#dc.baseMixin+group) ⇒ <code>crossfilter.group</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
@@ -276,6 +277,7 @@ chart.width(300)
         * [.showStack(stackName)](#dc.stackMixin+showStack) ⇒ <code>[stackMixin](#dc.stackMixin)</code>
         * [.title([stackName], [titleAccessor])](#dc.stackMixin+title) ⇒ <code>String</code> &#124; <code>[stackMixin](#dc.stackMixin)</code>
         * [.stackLayout([stack])](#dc.stackMixin+stackLayout) ⇒ <code>function</code> &#124; <code>[stackMixin](#dc.stackMixin)</code>
+        * [.evadeDomainFilter([evadeDomainFilter])](#dc.stackMixin+evadeDomainFilter) ⇒ <code>Boolean</code> &#124; <code>[stackMixin](#dc.stackMixin)</code>
     * [.capMixin](#dc.capMixin) ⇒ <code>[capMixin](#dc.capMixin)</code>
         * [.cap([count])](#dc.capMixin+cap) ⇒ <code>Number</code> &#124; <code>[capMixin](#dc.capMixin)</code>
         * [.takeFront([takeFront])](#dc.capMixin+takeFront) ⇒ <code>Boolean</code> &#124; <code>[capMixin](#dc.capMixin)</code>
@@ -2832,6 +2834,7 @@ and available on all chart implementations in the `dc` library.
     * [.width([width])](#dc.baseMixin+width) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
     * [.minWidth([minWidth])](#dc.baseMixin+minWidth) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
     * [.minHeight([minHeight])](#dc.baseMixin+minHeight) ⇒ <code>Number</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
+    * [.useViewBoxResizing([useViewBoxResizing])](#dc.baseMixin+useViewBoxResizing) ⇒ <code>Boolean</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
     * [.dimension([dimension])](#dc.baseMixin+dimension) ⇒ <code>crossfilter.dimension</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
     * [.data([callback])](#dc.baseMixin+data) ⇒ <code>\*</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
     * [.group([group], [name])](#dc.baseMixin+group) ⇒ <code>crossfilter.group</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
@@ -2961,6 +2964,32 @@ Set or get the minimum height attribute of a chart. This only has effect when us
 | Param | Type | Default |
 | --- | --- | --- |
 | [minHeight] | <code>Number</code> | <code>200</code> | 
+
+<a name="dc.baseMixin+useViewBoxResizing"></a>
+
+#### baseMixin.useViewBoxResizing([useViewBoxResizing]) ⇒ <code>Boolean</code> &#124; <code>[baseMixin](#dc.baseMixin)</code>
+Turn on/off using the SVG
+[`viewBox` attribute](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox).
+When enabled, `viewBox` will be set on the svg root element instead of `width` and `height`.
+Requires that the chart aspect ratio be defined using chart.width(w) and chart.height(h).
+
+This will maintain the aspect ratio while enabling the chart to resize responsively to the
+space given to the chart using CSS. For example, the chart can use `width: 100%; height:
+100%` or absolute positioning to resize to its parent div.
+
+Since the text will be sized as if the chart is drawn according to the width and height, and
+will be resized if the chart is any other size, you need to set the chart width and height so
+that the text looks good. In practice, 600x400 seems to work pretty well for most charts.
+
+You can see examples of this resizing strategy in the [Chart Resizing
+Examples](http://dc-js.github.io/dc.js/resizing/); just add `?resize=viewbox` to any of the
+one-chart examples to enable `useViewBoxResizing`.
+
+**Kind**: instance method of <code>[baseMixin](#dc.baseMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [useViewBoxResizing] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="dc.baseMixin+dimension"></a>
 
@@ -4502,6 +4531,7 @@ Stack Mixin is an mixin that provides cross-chart support of stackability using 
     * [.showStack(stackName)](#dc.stackMixin+showStack) ⇒ <code>[stackMixin](#dc.stackMixin)</code>
     * [.title([stackName], [titleAccessor])](#dc.stackMixin+title) ⇒ <code>String</code> &#124; <code>[stackMixin](#dc.stackMixin)</code>
     * [.stackLayout([stack])](#dc.stackMixin+stackLayout) ⇒ <code>function</code> &#124; <code>[stackMixin](#dc.stackMixin)</code>
+    * [.evadeDomainFilter([evadeDomainFilter])](#dc.stackMixin+evadeDomainFilter) ⇒ <code>Boolean</code> &#124; <code>[stackMixin](#dc.stackMixin)</code>
 
 <a name="dc.stackMixin+stack"></a>
 
@@ -4602,6 +4632,25 @@ propagates it to the next.
 | Param | Type | Default |
 | --- | --- | --- |
 | [stack] | <code>function</code> | <code>d3.layout.stack</code> | 
+
+<a name="dc.stackMixin+evadeDomainFilter"></a>
+
+#### stackMixin.evadeDomainFilter([evadeDomainFilter]) ⇒ <code>Boolean</code> &#124; <code>[stackMixin](#dc.stackMixin)</code>
+Since dc.js 2.0, there has been [an issue](https://github.com/dc-js/dc.js/issues/949)
+where points are filtered to the current domain. While this is a useful optimization, it is
+incorrectly implemented: the next point outside the domain is required in order to draw lines
+that are clipped to the bounds, as well as bars that are partly clipped.
+
+A fix will be included in dc.js 2.1.x, but a workaround is needed for dc.js 2.0 and until
+that fix is published, so set this flag to skip any filtering of points.
+
+Once the bug is fixed, this flag will have no effect, and it will be deprecated.
+
+**Kind**: instance method of <code>[stackMixin](#dc.stackMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [evadeDomainFilter] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="dc.capMixin"></a>
 
