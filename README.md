@@ -37,10 +37,8 @@ Get help faster with a working example! Fork these to get started:<br>
 
 CDN location
 --------------------
-```
-http://cdnjs.cloudflare.com/ajax/libs/dc/2.0.0/dc.min.js
-http://cdnjs.cloudflare.com/ajax/libs/dc/2.0.0/dc.min.css
-```
+For CDN URLs, please visit [dc.js on cdnjs.com](https://cdnjs.com/libraries/dc), select the version you want (2.0 is stable, 2.1 has breaking changes), and copy the URLs from there.
+
 Please do not use github.io as a CDN unless you need the bleeding-edge features.
 
 [More info on the Wiki.](https://github.com/dc-js/dc.js/wiki#cdn-location)
