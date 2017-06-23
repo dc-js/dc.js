@@ -1,3 +1,8 @@
+## 2.1.7
+* viewBox-based resizing of charts, by James Tindall ([#1312](https://github.com/dc-js/dc.js/pull/1312))
+* workaround for [issue #949](https://github.com/dc-js/dc.js/issues/949) merged from 2.0.4
+* remove pointless and confusing optimization from number display - it now uses `computeOrderedGroups` like everything else.
+
 ## 2.1.6
 * fix test syntax for Microsoft browsers
 
@@ -32,6 +37,9 @@ Stop using `group.top()` in favor of `group.all()` sorting and slicing. ([#934](
  * Functional-style filter handlers: instead of modifying the array of filters in-place, filter handlers must return the new filter array. This is consistent with the old documention, but a different implementation: any changes to the `filters` argument will be ignored unless they are returned. This should make filter handlers easier to reason about.
 
 # 2.0 Series
+## 2.0.4
+* Temporary flag [`stackMixin.evadeDomainFilter`](http://dc-js.github.io/dc.js/docs/html/dc.stackMixin.html#evadeDomainFilter__anchor) to work around [issue #949](https://github.com/dc-js/dc.js/issues/949) until it's fixed. The flag completely disables filtering of points by the stack mixin, because the current filtering is wrong. (The correct fix will be included in dc.js 2.1.x when it's ready.)
+
 ## 2.0.3
 * crossfilter is loaded by its module name (crossfilter2), not its filename (crossfilter). This is intended to help webpack and other automatic module loaders. This is likely to break requireJS configurations; see [#1304](https://github.com/dc-js/dc.js/issues/1304) for details. ([#1213](https://github.com/dc-js/dc.js/issues/1213), [#1214](https://github.com/dc-js/dc.js/issues/1214), [#1261](https://github.com/dc-js/dc.js/issues/1261), [#1293](https://github.com/dc-js/dc.js/issues/1293), [#1302](https://github.com/dc-js/dc.js/issues/1302))
 * Do not make the pie chart radius bigger than the chart size, by Sandeep Fatangare ([#1279](https://github.com/dc-js/dc.js/pull/1279))

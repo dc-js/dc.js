@@ -471,6 +471,48 @@ describe('dc.baseMixin', function () {
         });
     });
 
+    describe('viewbox resizing strategy', function () {
+        beforeEach(function () {
+            chart
+                .width(600)
+                .height(400)
+                .resetSvg();
+        });
+        it('useViewBoxResizing defaults false', function () {
+            expect(chart.useViewBoxResizing()).toBeFalsy();
+        });
+
+        it('svg has no viewbox when useViewBoxResizing is false', function () {
+            expect(chart.svg().attr('viewBox')).toBeNull();
+        });
+
+        it('svg has width, height when useViewBoxResizing is false', function () {
+            expect(chart.svg().attr('width')).toBe('600');
+            expect(chart.svg().attr('height')).toBe('400');
+        });
+
+        describe('with viewbox enabled', function () {
+            beforeEach(function () {
+                chart
+                    .useViewBoxResizing(true)
+                    .resetSvg();
+            });
+
+            it('has useViewBoxResizing set', function () {
+                expect(chart.useViewBoxResizing()).toBeTruthy();
+            });
+
+            it('svg has viewbox encoding width and height', function () {
+                expect(chart.svg().attr('viewBox')).toEqual('0 0 600 400');
+            });
+
+            it('svg does not have width, height attributes', function () {
+                expect(chart.svg().attr('width')).toBeNull();
+                expect(chart.svg().attr('height')).toBeNull();
+            });
+        });
+    });
+
     describe('filter handling', function () {
         var filter, notFilter;
         beforeEach(function () {

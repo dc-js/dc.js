@@ -35,12 +35,11 @@ d3.csv("morley.csv", function(error, experiments) {
   focusChart
     .width(768)
     .height(480)
-    .chart(function(c) { return dc.lineChart(c).interpolate('basis'); })
+    .chart(function(c) { return dc.lineChart(c).interpolate('cardinal').evadeDomainFilter(true); })
     .x(d3.scale.linear().domain([0,20]))
     .brushOn(false)
     .yAxisLabel("Measured Speed km/s")
     .xAxisLabel("Run")
-    .clipPadding(10)
     .elasticY(true)
     .dimension(runDimension)
     .group(runGroup)
@@ -75,7 +74,7 @@ d3.csv("morley.csv", function(error, experiments) {
     .width(768)
     .height(100)
     .chart(function(c,_,_,i) {
-    var chart = dc.lineChart(c).interpolate('basis');
+    var chart = dc.lineChart(c).interpolate('cardinal');
     if(i===0)
     	chart.on('filtered', function (chart) {
             if (!chart.filter()) {

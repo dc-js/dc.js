@@ -80,20 +80,12 @@ dc.numberDisplay = function (parent, chartGroup) {
         return _chart.data();
     };
 
-    // probably unnecessary efficiency over computeOrderedGroups sort
     function maxBin (all) {
-        if (all.length < 1) {
+        if (!all.length) {
             return null;
         }
-        var maxi = 0, max = _chart.ordering()(all[0]);
-        for (var i = 1; i < all.length; ++i) {
-            var v = _chart.ordering()(all[i]);
-            if (v > max) {
-                max = v;
-                maxi = i;
-            }
-        }
-        return all[maxi];
+        var sorted = _chart._computeOrderedGroups(all);
+        return sorted[sorted.length - 1];
     }
     _chart.data(function (group) {
         var valObj = group.value ? group.value() : maxBin(group.all());

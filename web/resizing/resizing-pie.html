@@ -4,6 +4,7 @@
     <title>dc.js - Pie Chart Example</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <link rel="stylesheet" type="text/css" href="dc-resizing.css" />
 </head>
 <body>
 
@@ -12,6 +13,7 @@
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript" src="dc-resizing.js"></script>
 <script type="text/javascript">
 
 var chart = dc.pieChart("#test");
@@ -31,12 +33,7 @@ d3.csv("../examples/morley.csv", function(error, experiments) {
     .group(speedSumGroup)
     .legend(dc.legend());
 
-  window.onresize = function() {
-      chart
-          .width(window.innerWidth-adjustX)
-          .height(window.innerHeight-adjustY)
-          .redraw();
-  };
+    apply_resizing(chart, adjustX, adjustY);
 
   chart.render();
 });
