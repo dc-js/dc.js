@@ -1,4 +1,5 @@
 ## 2.1.7
+* viewBox-based resizing of charts, by James Tindall ([#1312](https://github.com/dc-js/dc.js/pull/1312))
 * workaround for [issue #949](https://github.com/dc-js/dc.js/issues/949) merged from 2.0.4
 * remove pointless and confusing optimization from number display - it now uses `computeOrderedGroups` like everything else.
 
