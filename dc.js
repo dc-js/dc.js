@@ -1,5 +1,5 @@
 /*!
- *  dc 2.0.3
+ *  dc 2.0.4
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 2.0.3
+ * @version 2.0.4
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '2.0.3',
+    version: '2.0.4',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -4099,9 +4099,10 @@ dc.stackMixin = function (_chart) {
     var _titles = {};
 
     var _hidableStacks = false;
+    var _evadeDomainFilter = false;
 
     function domainFilter () {
-        if (!_chart.x()) {
+        if (!_chart.x() || _evadeDomainFilter) {
             return d3.functor(true);
         }
         var xDomain = _chart.x().domain();
@@ -4327,6 +4328,30 @@ dc.stackMixin = function (_chart) {
         if (_stackLayout.values() === d3.layout.stack().values()) {
             _stackLayout.values(prepareValues);
         }
+        return _chart;
+    };
+
+    /**
+     * Since dc.js 2.0, there has been {@link https://github.com/dc-js/dc.js/issues/949 an issue}
+     * where points are filtered to the current domain. While this is a useful optimization, it is
+     * incorrectly implemented: the next point outside the domain is required in order to draw lines
+     * that are clipped to the bounds, as well as bars that are partly clipped.
+     *
+     * A fix will be included in dc.js 2.1.x, but a workaround is needed for dc.js 2.0 and until
+     * that fix is published, so set this flag to skip any filtering of points.
+     *
+     * Once the bug is fixed, this flag will have no effect, and it will be deprecated.
+     * @method evadeDomainFilter
+     * @memberof dc.stackMixin
+     * @instance
+     * @param {Boolean} [evadeDomainFilter=false]
+     * @returns {Boolean|dc.stackMixin}
+     */
+    _chart.evadeDomainFilter = function (evadeDomainFilter) {
+        if (!arguments.length) {
+            return _evadeDomainFilter;
+        }
+        _evadeDomainFilter = evadeDomainFilter;
         return _chart;
     };
 

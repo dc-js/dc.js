@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 2.0.3  
+**Version**: 2.0.4  
 **Example**  
 ```js
 // Example chaining
@@ -268,6 +268,7 @@ chart.width(300)
         * [.showStack(stackName)](#dc.stackMixin+showStack) ⇒ <code>[stackMixin](#dc.stackMixin)</code>
         * [.title([stackName], [titleAccessor])](#dc.stackMixin+title) ⇒ <code>String</code> &#124; <code>[stackMixin](#dc.stackMixin)</code>
         * [.stackLayout([stack])](#dc.stackMixin+stackLayout) ⇒ <code>function</code> &#124; <code>[stackMixin](#dc.stackMixin)</code>
+        * [.evadeDomainFilter([evadeDomainFilter])](#dc.stackMixin+evadeDomainFilter) ⇒ <code>Boolean</code> &#124; <code>[stackMixin](#dc.stackMixin)</code>
     * [.capMixin](#dc.capMixin) ⇒ <code>[capMixin](#dc.capMixin)</code>
         * [.cap([count])](#dc.capMixin+cap) ⇒ <code>Number</code> &#124; <code>[capMixin](#dc.capMixin)</code>
         * [.othersLabel([label])](#dc.capMixin+othersLabel) ⇒ <code>String</code> &#124; <code>[capMixin](#dc.capMixin)</code>
@@ -4355,6 +4356,7 @@ Stack Mixin is an mixin that provides cross-chart support of stackability using 
     * [.showStack(stackName)](#dc.stackMixin+showStack) ⇒ <code>[stackMixin](#dc.stackMixin)</code>
     * [.title([stackName], [titleAccessor])](#dc.stackMixin+title) ⇒ <code>String</code> &#124; <code>[stackMixin](#dc.stackMixin)</code>
     * [.stackLayout([stack])](#dc.stackMixin+stackLayout) ⇒ <code>function</code> &#124; <code>[stackMixin](#dc.stackMixin)</code>
+    * [.evadeDomainFilter([evadeDomainFilter])](#dc.stackMixin+evadeDomainFilter) ⇒ <code>Boolean</code> &#124; <code>[stackMixin](#dc.stackMixin)</code>
 
 <a name="dc.stackMixin+stack"></a>
 
@@ -4455,6 +4457,25 @@ propagates it to the next.
 | Param | Type | Default |
 | --- | --- | --- |
 | [stack] | <code>function</code> | <code>d3.layout.stack</code> | 
+
+<a name="dc.stackMixin+evadeDomainFilter"></a>
+
+#### stackMixin.evadeDomainFilter([evadeDomainFilter]) ⇒ <code>Boolean</code> &#124; <code>[stackMixin](#dc.stackMixin)</code>
+Since dc.js 2.0, there has been [an issue](https://github.com/dc-js/dc.js/issues/949)
+where points are filtered to the current domain. While this is a useful optimization, it is
+incorrectly implemented: the next point outside the domain is required in order to draw lines
+that are clipped to the bounds, as well as bars that are partly clipped.
+
+A fix will be included in dc.js 2.1.x, but a workaround is needed for dc.js 2.0 and until
+that fix is published, so set this flag to skip any filtering of points.
+
+Once the bug is fixed, this flag will have no effect, and it will be deprecated.
+
+**Kind**: instance method of <code>[stackMixin](#dc.stackMixin)</code>  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [evadeDomainFilter] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="dc.capMixin"></a>
 
