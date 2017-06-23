@@ -1,4 +1,7 @@
 # 2.0 Series
+## 2.0.4
+* Temporary flag [`stackMixin.evadeDomainFilter`](http://dc-js.github.io/dc.js/docs/html/dc.stackMixin.html#evadeDomainFilter__anchor) to work around [issue #949](https://github.com/dc-js/dc.js/issues/949) until it's fixed. The flag completely disables filtering of points by the stack mixin, because the current filtering is wrong. (The correct fix will be included in dc.js 2.1.x when it's ready.)
+
 ## 2.0.3
 * crossfilter is loaded by its module name (crossfilter2), not its filename (crossfilter). This is intended to help webpack and other automatic module loaders. This is likely to break requireJS configurations; see [#1304](https://github.com/dc-js/dc.js/issues/1304) for details. ([#1213](https://github.com/dc-js/dc.js/issues/1213), [#1214](https://github.com/dc-js/dc.js/issues/1214), [#1261](https://github.com/dc-js/dc.js/issues/1261), [#1293](https://github.com/dc-js/dc.js/issues/1293), [#1302](https://github.com/dc-js/dc.js/issues/1302))
 * Do not make the pie chart radius bigger than the chart size, by Sandeep Fatangare ([#1279](https://github.com/dc-js/dc.js/pull/1279))
