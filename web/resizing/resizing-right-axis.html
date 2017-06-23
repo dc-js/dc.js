@@ -4,6 +4,7 @@
     <title>dc.js - Right Axis Example</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <link rel="stylesheet" type="text/css" href="dc-resizing.css" />
 </head>
 <body>
 
@@ -16,6 +17,7 @@
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript" src="dc-resizing.js"></script>
 <script type="text/javascript">
     var moveChart = dc.compositeChart("#monthly-move-chart");
 
@@ -92,13 +94,7 @@
                 .rightYAxisLabel("Monthly Index Move")
                 .renderHorizontalGridLines(true);
 
-     window.onresize = function() {
-        moveChart
-             .width(window.innerWidth-adjustX)
-             .height(window.innerHeight-adjustY)
-             .rescale()
-             .redraw();
-      };
+        apply_resizing(moveChart, adjustX, adjustY);
 
         dc.renderAll();
     });

@@ -4,6 +4,7 @@
     <title>dc.js - Row Chart Example</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <link rel="stylesheet" type="text/css" href="dc-resizing.css" />
 </head>
 <body>
 
@@ -12,6 +13,7 @@
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript" src="dc-resizing.js"></script>
 <script type="text/javascript">
 
 var chart = dc.rowChart("#test");
@@ -34,12 +36,8 @@ d3.csv("../examples/morley.csv", function(error, experiments) {
     .group(speedSumGroup)
     .render();
 
-  window.onresize = function() {
-      chart
-          .width(window.innerWidth-20)
-          .height(window.innerHeight-20)
-          .redraw();
-    };
+    apply_resizing(chart, 20);
+    dc.renderAll();
 
 });
 

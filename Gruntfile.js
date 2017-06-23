@@ -330,7 +330,10 @@ module.exports = function (grunt) {
                     title: 'Index of dc.js resizing tests',
                     heading: 'Eyeball tests for resizing dc.js charts',
                     description: 'It\'s a lot easier to test resizing behavior by eye. ' +
-                        'These pages fit the charts to the browser dynamically so it\'s easier to test.',
+                        'These pages fit the charts to the browser dynamically so it\'s easier to test. ' +
+                        'For the examples with a single chart taking up the entire window, you can add <code>?resize=viewbox</code> ' +
+                        'to the URL to test resizing the chart using the ' +
+          '<a href="http://dc-js.github.io/dc.js/docs/html/dc.baseMixin.html#useViewBoxResizing__anchor">useViewBoxResizing</a> strategy.',
                     sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.web %>/resizing'
                 },
                 files: [
