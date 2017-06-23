@@ -1,3 +1,7 @@
+## 2.1.7
+* workaround for [issue #949](https://github.com/dc-js/dc.js/issues/949) merged from 2.0.4
+* remove pointless and confusing optimization from number display - it now uses `computeOrderedGroups` like everything else.
+
 ## 2.1.6
 * fix test syntax for Microsoft browsers
 
