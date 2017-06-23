@@ -33,7 +33,7 @@ dc.baseMixin = function (_chart) {
     };
     var _heightCalc = _defaultHeightCalc;
     var _width, _height;
-    var _useViewBox = false;
+    var _useViewBoxResizing = false;
 
     var _keyAccessor = dc.pluck('key');
     var _valueAccessor = dc.pluck('value');
@@ -210,20 +210,33 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-     * Turn on/off using viewBox. When on, viewBox will be set on the svg root instead of width and height.
+     * Turn on/off using the SVG
+     * {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox `viewBox` attribute}.
+     * When enabled, `viewBox` will be set on the svg root element instead of `width` and `height`.
      * Requires that the chart aspect ratio be defined using chart.width(w) and chart.height(h).
-     * This will maintain the aspect ratio while enabling the chart to resize responsively to the browser window using only css. 
-     * @method useViewBox
+     *
+     * This will maintain the aspect ratio while enabling the chart to resize responsively to the
+     * space given to the chart using CSS. For example, the chart can use `width: 100%; height:
+     * 100%` or absolute positioning to resize to its parent div.
+     *
+     * Since the text will be sized as if the chart is drawn according to the width and height, and
+     * will be resized if the chart is any other size, you need to set the chart width and height so
+     * that the text looks good. In practice, 600x400 seems to work pretty well for most charts.
+     *
+     * You can see examples of this resizing strategy in the [Chart Resizing
+     * Examples](http://dc-js.github.io/dc.js/resizing/); just add `?resize=viewbox` to any of the
+     * one-chart examples to enable `useViewBoxResizing`.
+     * @method useViewBoxResizing
      * @memberof dc.baseMixin
      * @instance
-     * @param {Boolean} [useViewBox=false]
+     * @param {Boolean} [useViewBoxResizing=false]
      * @returns {Boolean|dc.baseMixin}
      */
-    _chart.useViewBox = function (useViewBox) {
+    _chart.useViewBoxResizing = function (useViewBoxResizing) {
         if (!arguments.length) {
-            return _useViewBox;
+            return _useViewBoxResizing;
         }
-        _useViewBox = useViewBox;
+        _useViewBoxResizing = useViewBoxResizing;
         return _chart;
     };
 
@@ -510,7 +523,7 @@ dc.baseMixin = function (_chart) {
 
     function sizeSvg () {
         if (_svg) {
-            if (!_useViewBox) {
+            if (!_useViewBoxResizing) {
                 _svg
                     .attr('width', _chart.width())
                     .attr('height', _chart.height());
