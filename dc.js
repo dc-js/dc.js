@@ -1,5 +1,5 @@
 /*!
- *  dc 2.1.6
+ *  dc 2.1.7
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 2.1.6
+ * @version 2.1.7
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '2.1.6',
+    version: '2.1.7',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -1027,7 +1027,7 @@ dc.baseMixin = function (_chart) {
     };
     var _heightCalc = _defaultHeightCalc;
     var _width, _height;
-    var _responsiveResizing = false;
+    var _useViewBoxResizing = false;
 
     var _keyAccessor = dc.pluck('key');
     var _valueAccessor = dc.pluck('value');
@@ -1204,20 +1204,33 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
-     * Turn on/off responsive resizing. When on, viewBox will be set on the svg root instead of width and height.
+     * Turn on/off using the SVG
+     * {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox `viewBox` attribute}.
+     * When enabled, `viewBox` will be set on the svg root element instead of `width` and `height`.
      * Requires that the chart aspect ratio be defined using chart.width(w) and chart.height(h).
-     * This will maintain the aspect ratio while enabling the chart to resize responsively to the browser window using only css. 
-     * @method responsiveResizing
+     *
+     * This will maintain the aspect ratio while enabling the chart to resize responsively to the
+     * space given to the chart using CSS. For example, the chart can use `width: 100%; height:
+     * 100%` or absolute positioning to resize to its parent div.
+     *
+     * Since the text will be sized as if the chart is drawn according to the width and height, and
+     * will be resized if the chart is any other size, you need to set the chart width and height so
+     * that the text looks good. In practice, 600x400 seems to work pretty well for most charts.
+     *
+     * You can see examples of this resizing strategy in the [Chart Resizing
+     * Examples](http://dc-js.github.io/dc.js/resizing/); just add `?resize=viewbox` to any of the
+     * one-chart examples to enable `useViewBoxResizing`.
+     * @method useViewBoxResizing
      * @memberof dc.baseMixin
      * @instance
-     * @param {Boolean} [responsiveResizing=false]
+     * @param {Boolean} [useViewBoxResizing=false]
      * @returns {Boolean|dc.baseMixin}
      */
-    _chart.responsiveResizing = function (responsiveResizing) {
+    _chart.useViewBoxResizing = function (useViewBoxResizing) {
         if (!arguments.length) {
-            return _responsiveResizing;
+            return _useViewBoxResizing;
         }
-        _responsiveResizing = responsiveResizing;
+        _useViewBoxResizing = useViewBoxResizing;
         return _chart;
     };
 
@@ -1504,7 +1517,7 @@ dc.baseMixin = function (_chart) {
 
     function sizeSvg () {
         if (_svg) {
-            if (!_responsiveResizing) {
+            if (!_useViewBoxResizing) {
                 _svg
                     .attr('width', _chart.width())
                     .attr('height', _chart.height());
@@ -4128,9 +4141,10 @@ dc.stackMixin = function (_chart) {
     var _titles = {};
 
     var _hidableStacks = false;
+    var _evadeDomainFilter = false;
 
     function domainFilter () {
-        if (!_chart.x()) {
+        if (!_chart.x() || _evadeDomainFilter) {
             return d3.functor(true);
         }
         var xDomain = _chart.x().domain();
@@ -4356,6 +4370,30 @@ dc.stackMixin = function (_chart) {
         if (_stackLayout.values() === d3.layout.stack().values()) {
             _stackLayout.values(prepareValues);
         }
+        return _chart;
+    };
+
+    /**
+     * Since dc.js 2.0, there has been {@link https://github.com/dc-js/dc.js/issues/949 an issue}
+     * where points are filtered to the current domain. While this is a useful optimization, it is
+     * incorrectly implemented: the next point outside the domain is required in order to draw lines
+     * that are clipped to the bounds, as well as bars that are partly clipped.
+     *
+     * A fix will be included in dc.js 2.1.x, but a workaround is needed for dc.js 2.0 and until
+     * that fix is published, so set this flag to skip any filtering of points.
+     *
+     * Once the bug is fixed, this flag will have no effect, and it will be deprecated.
+     * @method evadeDomainFilter
+     * @memberof dc.stackMixin
+     * @instance
+     * @param {Boolean} [evadeDomainFilter=false]
+     * @returns {Boolean|dc.stackMixin}
+     */
+    _chart.evadeDomainFilter = function (evadeDomainFilter) {
+        if (!arguments.length) {
+            return _evadeDomainFilter;
+        }
+        _evadeDomainFilter = evadeDomainFilter;
         return _chart;
     };
 
@@ -9739,20 +9777,12 @@ dc.numberDisplay = function (parent, chartGroup) {
         return _chart.data();
     };
 
-    // probably unnecessary efficiency over computeOrderedGroups sort
     function maxBin (all) {
-        if (all.length < 1) {
+        if (!all.length) {
             return null;
         }
-        var maxi = 0, max = _chart.ordering()(all[0]);
-        for (var i = 1; i < all.length; ++i) {
-            var v = _chart.ordering()(all[i]);
-            if (v > max) {
-                max = v;
-                maxi = i;
-            }
-        }
-        return all[maxi];
+        var sorted = _chart._computeOrderedGroups(all);
+        return sorted[sorted.length - 1];
     }
     _chart.data(function (group) {
         var valObj = group.value ? group.value() : maxBin(group.all());
