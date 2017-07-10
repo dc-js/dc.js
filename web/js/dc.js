@@ -1,5 +1,5 @@
 /*!
- *  dc 2.1.7
+ *  dc 2.1.8
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 2.1.7
+ * @version 2.1.8
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '2.1.7',
+    version: '2.1.8',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -9622,7 +9622,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         resizeSymbolsWhere(function (symbol) {
             return symbol.attr('fill') === d.color;
         }, _highlightedSize);
-        _chart.selectAll('.chart-body path.symbol').filter(function () {
+        _chart.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
             return d3.select(this).attr('fill') !== d.color;
         }).classed('fadeout', true);
     };
@@ -9631,13 +9631,13 @@ dc.scatterPlot = function (parent, chartGroup) {
         resizeSymbolsWhere(function (symbol) {
             return symbol.attr('fill') === d.color;
         }, _symbolSize);
-        _chart.selectAll('.chart-body path.symbol').filter(function () {
+        _chart.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
             return d3.select(this).attr('fill') !== d.color;
         }).classed('fadeout', false);
     };
 
     function resizeSymbolsWhere (condition, size) {
-        var symbols = _chart.selectAll('.chart-body path.symbol').filter(function () {
+        var symbols = _chart.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
             return condition(d3.select(this));
         });
         var oldSize = _symbol.size();
