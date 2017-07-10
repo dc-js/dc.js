@@ -37,6 +37,9 @@ Stop using `group.top()` in favor of `group.all()` sorting and slicing. ([#934](
  * Functional-style filter handlers: instead of modifying the array of filters in-place, filter handlers must return the new filter array. This is consistent with the old documention, but a different implementation: any changes to the `filters` argument will be ignored unless they are returned. This should make filter handlers easier to reason about.
 
 # 2.0 Series
+## 2.0.5
+* legend highlighting functions of scatter plots would select symbols in sibling charts, causing the symbols and sizes to change ([#874](https://github.com/dc-js/dc.js/issues/874))
+
 ## 2.0.4
 * Temporary flag [`stackMixin.evadeDomainFilter`](http://dc-js.github.io/dc.js/docs/html/dc.stackMixin.html#evadeDomainFilter__anchor) to work around [issue #949](https://github.com/dc-js/dc.js/issues/949) until it's fixed. The flag completely disables filtering of points by the stack mixin, because the current filtering is wrong. (The correct fix will be included in dc.js 2.1.x when it's ready.)
 
