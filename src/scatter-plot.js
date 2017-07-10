@@ -360,7 +360,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         resizeSymbolsWhere(function (symbol) {
             return symbol.attr('fill') === d.color;
         }, _highlightedSize);
-        _chart.selectAll('.chart-body path.symbol').filter(function () {
+        _chart.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
             return d3.select(this).attr('fill') !== d.color;
         }).classed('fadeout', true);
     };
@@ -369,13 +369,13 @@ dc.scatterPlot = function (parent, chartGroup) {
         resizeSymbolsWhere(function (symbol) {
             return symbol.attr('fill') === d.color;
         }, _symbolSize);
-        _chart.selectAll('.chart-body path.symbol').filter(function () {
+        _chart.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
             return d3.select(this).attr('fill') !== d.color;
         }).classed('fadeout', false);
     };
 
     function resizeSymbolsWhere (condition, size) {
-        var symbols = _chart.selectAll('.chart-body path.symbol').filter(function () {
+        var symbols = _chart.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
             return condition(d3.select(this));
         });
         var oldSize = _symbol.size();
