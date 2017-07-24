@@ -60,7 +60,7 @@ describe('dc.core', function () {
             chart = dc.pieChart('#id')
                     .dimension(valueDimension)
                     .group(valueGroup)
-		    .filter(0);
+                    .filter(0);
             spyOn(chart, 'filterAll');
             return chart;
         });
