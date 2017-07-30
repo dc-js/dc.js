@@ -270,3 +270,31 @@ div.dc-chart {
 .dc-hard .number-display {
     float: none;
 }
+
+
+div.dc-legend {
+    overflow: auto;
+    height: calc(100% - 20px);
+    .dc-legend-item-horizontal {
+        display: inline-block;
+        margin-left: 5px;
+        margin-right: 5px;
+        cursor: pointer;
+    }
+    .dc-legend-item-vertical {
+        display: block;
+        margin-top: 5px;
+        cursor: pointer;
+    }
+    .dc-legend-item-color {
+        display: table-cell;
+        width: 12px;
+        height: 12px;
+    }
+    .dc-legend-item-label {
+        line-height: 12px;
+        display: table-cell;
+        vertical-align: middle;
+        padding-left: 3px;
+    }
+}
