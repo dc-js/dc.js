@@ -8,7 +8,7 @@
  * @memberof dc
  * @example
  * chart.legend(dc.htmlLegend().container(legendContainerElement).horizontal(false))
- * @returns {dc.legend}
+ * @returns {dc.htmlLegend}
  */
 dc.htmlLegend = function () {
     var _legend = {},
@@ -30,27 +30,22 @@ dc.htmlLegend = function () {
 
     _legend.render = function () {
         var orientation = _horizontal ? 'horizontal' : 'vertical';
-        _container.select('div.dc-legend').remove();
+        _container.select('div.dc-html-legend').remove();
         _l = _container.append('div')
-            .attr('class', 'dc-legend');
-
+            .attr('class', 'dc-html-legend');
         var legendables = _parent.legendables();
-
         if (_maxItems !== undefined) {
             legendables = legendables.slice(0, _maxItems);
         }
-
         var itemEnter = _l.selectAll('div.dc-legend-item-' + orientation)
             .data(legendables).enter()
             .append('div').attr('class', 'dc-legend-item-' + orientation)
             .on('mouseover', _parent.legendHighlight)
             .on('mouseout', _parent.legendReset)
             .on('click', _parent.legendToggle);
-
         itemEnter.append('span')
             .attr('class', 'dc-legend-item-color')
             .style('background-color', dc.pluck('color'));
-
         itemEnter.append('span')
             .attr('class', 'dc-legend-item-label')
             .text(_legendText);
@@ -85,19 +80,19 @@ dc.htmlLegend = function () {
      * text for each item. If no function is specified the legend widget will display the names
      * associated with each group.
      * @method legendText
-     * @memberof dc.legend
+     * @memberof dc.htmlLegend
      * @instance
      * @param  {Function} [legendText]
-     * @returns {Function|dc.legend}
+     * @returns {Function|dc.htmlLegend}
      * @example
      * // default legendText
      * legend.legendText(dc.pluck('name'))
      *
      * // create numbered legend items
-     * chart.legend(dc.legend().legendText(function(d, i) { return i + '. ' + d.name; }))
+     * chart.legend(dc.htmlLegend().legendText(function(d, i) { return i + '. ' + d.name; }))
      *
      * // create legend displaying group counts
-     * chart.legend(dc.legend().legendText(function(d) { return d.name + ': ' d.data; }))
+     * chart.legend(dc.htmlLegend().legendText(function(d) { return d.name + ': ' d.data; }))
      **/
     _legend.legendText = function (legendText) {
         if (!arguments.length) {
@@ -110,10 +105,10 @@ dc.htmlLegend = function () {
     /**
      * Maximum number of legend items to display
      * @method maxItems
-     * @memberof dc.legend
+     * @memberof dc.htmlLegend
      * @instance
      * @param  {Number} [maxItems]
-     * @return {dc.legend}
+     * @return {dc.htmlLegend}
      */
     _legend.maxItems = function (maxItems) {
         if (!arguments.length) {
