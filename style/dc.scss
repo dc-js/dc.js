@@ -173,7 +173,7 @@ div.dc-chart {
             fill-opacity: .2;
         }
         &.axis text {
-            @include no-select
+            @include no-select;
             pointer-events: none;
         }
     }
@@ -274,9 +274,8 @@ div.dc-chart {
 }
 
 
-div.dc-legend {
+div.dc-html-legend {
     overflow: auto;
-    height: calc(100% - 20px);
     .dc-legend-item-horizontal {
         display: inline-block;
         margin-left: 5px;
