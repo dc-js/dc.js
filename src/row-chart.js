@@ -199,7 +199,7 @@ dc.rowChart = function (parent, chartGroup) {
 
         dc.transition(rect, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('width', function (d) {
-                return Math.abs(rootValue() - _x(_chart.valueAccessor()(d)));
+                return Math.abs(rootValue() - _x(_chart.cappedValueAccessor(d)));
             })
             .attr('transform', translateX);
 
