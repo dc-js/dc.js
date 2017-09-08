@@ -65,7 +65,7 @@ dc.htmlLegend = function () {
 
     /**
      #### .horizontal([boolean])
-     Display the legend horizontally instead of horizontally
+     Display the legend horizontally instead of vertically
      **/
     _legend.horizontal = function (b) {
         if (!arguments.length) {
