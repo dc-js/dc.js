@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>dc.js - Switching Time Intervals</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <style>
+      dl {
+        margin-left: 2em;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="container">
+      <script type="text/javascript" src="header.js"></script>
+
+      <p>This example demonstrates switching between different intervals of aggregation over time.</p>
+      <select id="interval"></select>
+      <span style="font-size: large" id="counter"></span><span id="counter-text" style="display: none"> selected.</span>
+      <br>
+      <div id="test" style="min-height: 500px"></div>
+      <div style="clear: both">
+        <p>You can supply your own data source with query string parameters:
+          <dl>
+            <dt>data</dt><dd>URL to load</dd>
+            <dt>aggregate</dt><dd>Aggregation method: <code>average</code> or <code>total</code>
+              <dt>date</dt><dd>Date column name</dd>
+            <dt>val</dt><dd>Value column name</dd>
+          </dl>
+        </p>
+      </div>
+
+      <script type="text/javascript" src="../js/d3.js"></script>
+      <script type="text/javascript" src="../js/crossfilter.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
+      <script type="text/javascript">
+
+        var find_query = function() {
+            var _map = window.location.search.substr(1).split('&').map(function(a) {
+                return a.split('=');
+            }).reduce(function(p, v) {
+                if(v.length > 1)
+                    p[v[0]] = decodeURIComponent(v[1].replace(/\+/g, " "));
+                else
+                    p[v[0]] = true;
+                return p;
+            }, {});
+            return function(field) {
+                return _map[field] || null;
+            };
+        }();
+        var data = find_query('data') || 'monthly-move.csv',
+            date_col = find_query('date') || 'date',
+            val_col = find_query('val') || 'volume',
+            aggregate = find_query('aggregate') || 'average';
+
+        var chart = dc.barChart("#test"), counter = dc.numberDisplay('#counter');
+        d3.csv(data, function(error, posts) {
+            if(error)
+                throw new Error(error);
+
+            posts.forEach(function(d) {
+                d[date_col] = new Date(d[date_col]);
+                d[val_col] = +d[val_col];
+            });
+
+            var ndx = crossfilter(posts), dateDim, postsGroup;
+
+            var intervals = {
+                Days: d3.time.day,
+                Weeks: d3.time.week,
+                Months: d3.time.month,
+                Years: d3.time.year
+            };
+            var defint = find_query('interval') || 'Weeks';
+            d3.select('#interval').selectAll('option')
+                .data(Object.keys(intervals))
+              .enter().append('option')
+                .text(function(d) { return d; })
+                .attr('selected', function(d) { return d === defint ? '' : null; });
+            function setup() {
+                if(dateDim) {
+                    dateDim.dispose();
+                    group.dispose();
+                }
+                var interval = intervals[d3.select('#interval')[0][0].value];
+                dateDim = ndx.dimension(function(d) {return interval(d[date_col]);});
+                chart.xUnits(interval.range);
+                group = dateDim
+                    .group().reduce(
+                        function(p, v) {
+                            ++p.count;
+                            p.total += v[val_col];
+                            return p;
+                        },
+                        function(p, v) {
+                            --p.count;
+                            p.total -= v[val_col];
+                            return p;
+                        },
+                        function() {
+                            return {
+                                count: 0,
+                                total: 0
+                            };
+                        }
+                    );
+                switch(aggregate) {
+                case 'average':
+                    chart.valueAccessor(function(kv) {
+                        return kv.value.total / kv.value.count;
+                    });
+                    break;
+                case 'total':
+                default:
+                    chart.valueAccessor(function(kv) {
+                        return kv.value.total;
+                    });
+                }
+                chart.dimension(dateDim).group(group)
+                    .transitionDuration(!find_query('unsafe') && group.all().length > 2000 ? 0 : 1000)
+                    .render();
+            }
+
+            chart
+                .width(768)
+                .height(480)
+                .x(d3.time.scale())
+                .xUnits(d3.time.weeks)
+                .margins({left: 50, top: 0, right: 0, bottom: 20})
+                .elasticY(true)
+                .clipPadding(10);
+            chart.yAxis().tickFormat(d3.format('.3s'));
+
+            // this demonstrates solving elasticX manually, avoiding the
+            // bug where the rightmost bar/box is not displayed, #792
+            function calc_domain(chart) {
+                var min = d3.min(chart.group().all(), function(kv) { return kv.key; }),
+                    max = d3.max(chart.group().all(), function(kv) { return kv.key; });
+                max = d3.time.month.offset(max, 1);
+                chart.x().domain([min, max]);
+            }
+            chart.on('preRender', calc_domain);
+            chart.on('preRedraw', calc_domain);
+
+            var countAll = ndx.groupAll(),
+                groupAll = ndx.groupAll().reduceSum(function(d) { return d[val_col]; });
+            counter
+                .dimension({})
+                .group(groupAll);
+            switch(aggregate) {
+            case 'average':
+                counter.valueAccessor(function(x) {
+                    return x / countAll.value();
+                });
+                break;
+            case 'total':
+            default:
+                counter.valueAccessor(function(x) { return x; });
+            }
+            d3.select('#interval').on('change', function() {
+                setup();
+            });
+            counter.on('postRender', function () {
+                d3.select('#counter-text').style('display', 'inline');
+            });
+            setup();
+
+            dc.renderAll();
+
+        });
+
+      </script>
+
+    </div>
+  </body>
+</html>

@@ -6,6 +6,7 @@
         var width = 1,
             height = 1,
             duration = 0,
+            delay = 0,
             domain = null,
             value = Number,
             whiskers = boxWhiskers,
@@ -13,7 +14,7 @@
             tickFormat = null;
 
         // For each small multiple…
-        function box(g) {
+        function box (g) {
             g.each(function (d, i) {
                 d = d.map(value).sort(d3.ascending);
                 var g = d3.select(this),
@@ -62,20 +63,25 @@
                     .attr('x2', width / 2)
                     .attr('y2', function (d) { return x0(d[1]); })
                     .style('opacity', 1e-6)
-                  .transition()
+                    .transition()
                     .duration(duration)
+                    .delay(delay)
                     .style('opacity', 1)
                     .attr('y1', function (d) { return x1(d[0]); })
                     .attr('y2', function (d) { return x1(d[1]); });
 
                 center.transition()
                     .duration(duration)
+                    .delay(delay)
                     .style('opacity', 1)
+                    .attr('x1', width / 2)
+                    .attr('x2', width / 2)
                     .attr('y1', function (d) { return x1(d[0]); })
                     .attr('y2', function (d) { return x1(d[1]); });
 
                 center.exit().transition()
                     .duration(duration)
+                    .delay(delay)
                     .style('opacity', 1e-6)
                     .attr('y1', function (d) { return x1(d[0]); })
                     .attr('y2', function (d) { return x1(d[1]); })
@@ -93,11 +99,14 @@
                     .attr('height', function (d) { return x0(d[0]) - x0(d[2]); })
                   .transition()
                     .duration(duration)
+                    .delay(delay)
                     .attr('y', function (d) { return x1(d[2]); })
                     .attr('height', function (d) { return x1(d[0]) - x1(d[2]); });
 
                 box.transition()
                     .duration(duration)
+                    .delay(delay)
+                    .attr('width', width)
                     .attr('y', function (d) { return x1(d[2]); })
                     .attr('height', function (d) { return x1(d[0]) - x1(d[2]); });
 
@@ -113,11 +122,15 @@
                     .attr('y2', x0)
                     .transition()
                     .duration(duration)
+                    .delay(delay)
                     .attr('y1', x1)
                     .attr('y2', x1);
 
                 medianLine.transition()
                     .duration(duration)
+                    .delay(delay)
+                    .attr('x1', 0)
+                    .attr('x2', width)
                     .attr('y1', x1)
                     .attr('y2', x1);
 
@@ -134,18 +147,23 @@
                     .style('opacity', 1e-6)
                   .transition()
                     .duration(duration)
+                    .delay(delay)
                     .attr('y1', x1)
                     .attr('y2', x1)
                     .style('opacity', 1);
 
                 whisker.transition()
                     .duration(duration)
+                    .delay(delay)
+                    .attr('x1', 0)
+                    .attr('x2', width)
                     .attr('y1', x1)
                     .attr('y2', x1)
                     .style('opacity', 1);
 
                 whisker.exit().transition()
                     .duration(duration)
+                    .delay(delay)
                     .attr('y1', x1)
                     .attr('y2', x1)
                     .style('opacity', 1e-6)
@@ -163,16 +181,20 @@
                     .style('opacity', 1e-6)
                     .transition()
                     .duration(duration)
+                    .delay(delay)
                     .attr('cy', function (i) { return x1(d[i]); })
                     .style('opacity', 1);
 
                 outlier.transition()
                     .duration(duration)
+                    .delay(delay)
+                    .attr('cx', width / 2)
                     .attr('cy', function (i) { return x1(d[i]); })
                     .style('opacity', 1);
 
                 outlier.exit().transition()
                     .duration(duration)
+                    .delay(delay)
                     .attr('cy', function (i) { return x1(d[i]); })
                     .style('opacity', 1e-6)
                     .remove();
@@ -194,11 +216,14 @@
                     .text(format)
                     .transition()
                     .duration(duration)
+                    .delay(delay)
                     .attr('y', x1);
 
                 boxTick.transition()
                     .duration(duration)
+                    .delay(delay)
                     .text(format)
+                    .attr('x', function (d, i) { return i & 1 ? width : 0; })
                     .attr('y', x1);
 
                 // Update whisker ticks. These are handled separately from the box
@@ -217,17 +242,21 @@
                     .style('opacity', 1e-6)
                     .transition()
                     .duration(duration)
+                    .delay(delay)
                     .attr('y', x1)
                     .style('opacity', 1);
 
                 whiskerTick.transition()
                     .duration(duration)
+                    .delay(delay)
                     .text(format)
+                    .attr('x', width)
                     .attr('y', x1)
                     .style('opacity', 1);
 
                 whiskerTick.exit().transition()
                     .duration(duration)
+                    .delay(delay)
                     .attr('y', x1)
                     .style('opacity', 1e-6)
                     .remove();
@@ -302,11 +331,11 @@
         return box;
     };
 
-    function boxWhiskers(d) {
+    function boxWhiskers (d) {
         return [0, d.length - 1];
     }
 
-    function boxQuartiles(d) {
+    function boxQuartiles (d) {
         return [
             d3.quantile(d, 0.25),
             d3.quantile(d, 0.5),

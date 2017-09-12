@@ -1,39 +1,35 @@
-describe('dc.rowChart', function() {
+/* global appendChartID, loadDateFixture, makeDate */
+describe('dc.rowChart', function () {
     var id, chart;
     var data, dimension, nvdimension;
-    var positiveGroupHolder = { groupType: "positive signed" };
-    var negativeGroupHolder = { groupType: "negative signed" };
-    var mixedGroupHolder = { groupType: "mixed signed" };
-    var largerGroupHolder = { groupType: "larger" };
+    var positiveGroupHolder = {groupType: 'positive signed'};
+    var negativeGroupHolder = {groupType: 'negative signed'};
+    var mixedGroupHolder = {groupType: 'mixed signed'};
+    var largerGroupHolder = {groupType: 'larger'};
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
-        dimension = data.dimension(function(d) { return +d.value; });
+        dimension = data.dimension(function (d) { return +d.value; });
 
-        positiveGroupHolder.group = dimension.group().reduceSum(function(d){return Math.abs(+d.nvalue);});
+        positiveGroupHolder.group = dimension.group().reduceSum(function (d) {return Math.abs(+d.nvalue);});
         positiveGroupHolder.dimension = dimension;
-        negativeGroupHolder.group = dimension.group().reduceSum(function(d){return -Math.abs(+d.nvalue);});
+        negativeGroupHolder.group = dimension.group().reduceSum(function (d) {return -Math.abs(+d.nvalue);});
         negativeGroupHolder.dimension = dimension;
-        mixedGroupHolder.group = dimension.group().reduceSum(function(d){return +d.nvalue;});
+        mixedGroupHolder.group = dimension.group().reduceSum(function (d) {return +d.nvalue;});
         mixedGroupHolder.dimension = dimension;
 
-        nvdimension = data.dimension(function(d) { return +d.nvalue; });
-        largerGroupHolder.group = nvdimension.group().reduceSum(function(d){return +d.value;});
+        nvdimension = data.dimension(function (d) { return +d.nvalue; });
+        largerGroupHolder.group = nvdimension.group().reduceSum(function (d) {return +d.value;});
         largerGroupHolder.dimension = nvdimension;
 
         id = 'row-chart';
         appendChartID(id);
 
-        chart = dc.rowChart("#" + id);
+        chart = dc.rowChart('#' + id);
         chart.dimension(dimension)
             .width(600).height(200).gap(10)
             .transitionDuration(0);
     });
-
-    itShouldBehaveLikeARowChartWithGroup(positiveGroupHolder, 5);
-    itShouldBehaveLikeARowChartWithGroup(negativeGroupHolder, 5);
-    itShouldBehaveLikeARowChartWithGroup(mixedGroupHolder, 5);
-    itShouldBehaveLikeARowChartWithGroup(largerGroupHolder, 7);
 
     describe('enabling the chart title and label with a value accessor', function () {
         beforeEach(function () {
@@ -48,7 +44,7 @@ describe('dc.rowChart', function() {
         });
 
         it('should use the default function to dynamically generate the title', function () {
-            expect(chart.select("g.row title").text()).toBe('22: 108');
+            expect(chart.select('g.row title').text()).toBe('22: 108');
         });
     });
 
@@ -79,10 +75,24 @@ describe('dc.rowChart', function() {
         });
     });
 
-    function itShouldBehaveLikeARowChartWithGroup(groupHolder, N) {
-        describe('for ' + groupHolder.groupType + ' data', function () {
-            var group;
+    describe('with renderTitleLabel', function () {
+        beforeEach(function () {
+            chart.group(positiveGroupHolder.group);
+            chart.x(d3.scale.linear());
+            chart.title(function () {
+                return 'test title';
+            });
+            chart.renderTitleLabel(true);
+            chart.render();
+        });
 
+        it('should render title label centered', function () {
+            expect(chart.select('g.row .titlerow').attr('dy')).toBeDefined();
+        });
+    });
+
+    function itShouldBehaveLikeARowChartWithGroup (groupHolder, N, xAxisTicks) {
+        describe('for ' + groupHolder.groupType + ' data', function () {
             beforeEach(function () {
                 chart.group(groupHolder.group);
             });
@@ -93,52 +103,53 @@ describe('dc.rowChart', function() {
                 });
 
                 it('should create a root svg node', function () {
-                    expect(chart.select("svg").size()).toBe(1);
+                    expect(chart.select('svg').size()).toBe(1);
                 });
 
                 it('should create a row group for each datum', function () {
-                    expect(chart.selectAll("svg g g.row").size()).toBe(N);
+                    expect(chart.selectAll('svg g g.row').size()).toBe(N);
                 });
 
                 it('should number each row sequentially with classes', function () {
-                    chart.selectAll("svg g g.row").each(function (r, i) {
-                        expect(d3.select(this).attr("class")).toBe("row _" + i);
+                    chart.selectAll('svg g g.row').each(function (r, i) {
+                        expect(d3.select(this).attr('class')).toBe('row _' + i);
                     });
                 });
 
                 it('should fill each row rect with pre-defined colors', function () {
-                    expect(d3.select(chart.selectAll("g.row rect")[0][0]).attr("fill")).toBe("#3182bd");
-                    expect(d3.select(chart.selectAll("g.row rect")[0][1]).attr("fill")).toBe("#6baed6");
-                    expect(d3.select(chart.selectAll("g.row rect")[0][2]).attr("fill")).toBe("#9ecae1");
-                    expect(d3.select(chart.selectAll("g.row rect")[0][3]).attr("fill")).toBe("#c6dbef");
-                    expect(d3.select(chart.selectAll("g.row rect")[0][4]).attr("fill")).toBe("#e6550d");
+                    expect(d3.select(chart.selectAll('g.row rect')[0][0]).attr('fill')).toMatch(/#3182bd/i);
+                    expect(d3.select(chart.selectAll('g.row rect')[0][1]).attr('fill')).toMatch(/#6baed6/i);
+                    expect(d3.select(chart.selectAll('g.row rect')[0][2]).attr('fill')).toMatch(/#9ecae1/i);
+                    expect(d3.select(chart.selectAll('g.row rect')[0][3]).attr('fill')).toMatch(/#c6dbef/i);
+                    expect(d3.select(chart.selectAll('g.row rect')[0][4]).attr('fill')).toMatch(/#e6550d/i);
                 });
 
                 it('should create a row label from the data for each row', function () {
-                    expect(chart.selectAll("svg text.row").size()).toBe(N);
+                    expect(chart.selectAll('svg text.row').size()).toBe(N);
 
                     chart.selectAll('svg g text.row').call(function (t) {
                         expect(+t.text()).toBe(t.datum().key);
                     });
                 });
 
-                describe('row label vertical position', function() {
+                describe('row label vertical position', function () {
                     var labels, rows;
-                    beforeEach(function() {
-                        labels = chart.selectAll("svg text.row");
-                        rows = chart.selectAll("g.row rect");
+                    beforeEach(function () {
+                        labels = chart.selectAll('svg text.row');
+                        rows = chart.selectAll('g.row rect');
                     });
 
-                    function itShouldVerticallyCenterLabelWithinRow(i) {
-                        it('should place label ' + i + ' within row ' + i, function() {
+                    function itShouldVerticallyCenterLabelWithinRow (i) {
+                        it('should place label ' + i + ' within row ' + i, function () {
                             var rowpos = rows[0][i].getBoundingClientRect(),
                                 textpos = labels[0][i].getBoundingClientRect();
-                            expect((textpos.top+textpos.bottom)/2)
-                                .toBeWithinDelta((rowpos.top+rowpos.bottom)/2, 2);
+                            expect((textpos.top + textpos.bottom) / 2)
+                                .toBeWithinDelta((rowpos.top + rowpos.bottom) / 2, 2);
                         });
                     }
-                    for(var i=0; i<N ;++i)
+                    for (var i = 0; i < N ; ++i) {
                         itShouldVerticallyCenterLabelWithinRow(i);
+                    }
                 });
 
                 describe('re-rendering the chart', function () {
@@ -155,7 +166,7 @@ describe('dc.rowChart', function() {
             describe('chart filters', function () {
                 beforeEach(function () {
                     chart.render();
-                    d3.select("#" + id).append("span").classed("filter", true);
+                    d3.select('#' + id).append('span').classed('filter', true);
                 });
 
                 it('should not have filter by default', function () {
@@ -164,7 +175,7 @@ describe('dc.rowChart', function() {
 
                 it('should not modify the underlying crossfilter group', function () {
                     var oldGroupData = chart.group().all().slice(0);
-                    chart.ordering(dc.pluck("value"));
+                    chart.ordering(dc.pluck('value'));
                     chart.filter('66').render();
 
                     expect(chart.group().all().length).toBe(oldGroupData.length);
@@ -199,7 +210,7 @@ describe('dc.rowChart', function() {
                     });
 
                     it('should generate filter info in a filter-classed element', function () {
-                        expect(chart.select('span.filter').style("display")).not.toBe('none');
+                        expect(chart.select('span.filter').style('display')).not.toBe('none');
                         expect(chart.select('span.filter').text()).toBe('66');
                     });
 
@@ -210,7 +221,7 @@ describe('dc.rowChart', function() {
                         });
 
                         it('should remove highlighting', function () {
-                            chart.selectAll("g.row rect").each(function (d) {
+                            chart.selectAll('g.row rect').each(function (d) {
                                 expect(d3.select(this).classed('deselected')).toBeFalsy();
                                 expect(d3.select(this).classed('selected')).toBeFalsy();
                             });
@@ -222,12 +233,12 @@ describe('dc.rowChart', function() {
             describe('filtering related dimensions', function () {
                 beforeEach(function () {
                     chart.render();
-                    data.dimension(function(d) { return d.status; }).filter("E");
+                    data.dimension(function (d) { return d.status; }).filter('E');
                 });
 
                 it('should preserve the labels', function () {
                     chart.selectAll('svg g text.row').each(function () {
-                        expect(d3.select(this).text()).not.toBe("");
+                        expect(d3.select(this).text()).not.toBe('');
                     });
                 });
             });
@@ -280,8 +291,26 @@ describe('dc.rowChart', function() {
                 });
 
                 it('should restore the row chart', function () {
-                    chart.selectAll("g.row rect").each(function (p) {
-                        expect(d3.select(this).attr("width").indexOf("NaN") < 0).toBeTruthy();
+                    chart.selectAll('g.row rect').each(function (p) {
+                        expect(d3.select(this).attr('width').indexOf('NaN') < 0).toBeTruthy();
+                    });
+                });
+            });
+
+            describe('removing all the data and restoring the data', function () {
+                // this test mainly exists to produce console errors for #1008;
+                // I can't seem to find any way to detect invalid setAttribute calls
+                beforeEach(function () {
+                    chart.render();
+                    chart.group({all: function () { return []; }});
+                    chart.redraw();
+                    chart.group(groupHolder.group);
+                    chart.redraw();
+                });
+
+                it('should restore the row chart', function () {
+                    chart.selectAll('g.row rect').each(function (p) {
+                        expect(d3.select(this).attr('width').indexOf('NaN') < 0).toBeTruthy();
                     });
                 });
             });
@@ -289,7 +318,7 @@ describe('dc.rowChart', function() {
             describe('custom labels', function () {
                 beforeEach(function () {
                     chart.label(function () {
-                        return "custom label";
+                        return 'custom label';
                     }).render();
                 });
 
@@ -317,7 +346,7 @@ describe('dc.rowChart', function() {
             describe('custom titles', function () {
                 beforeEach(function () {
                     chart.title(function () {
-                        return "custom title";
+                        return 'custom title';
                     }).render();
                 });
 
@@ -341,7 +370,30 @@ describe('dc.rowChart', function() {
                     });
                 });
             });
+
+            if (xAxisTicks) {
+                describe('with elasticX', function () {
+                    beforeEach(function () {
+                        chart.elasticX(true)
+                            .xAxis().ticks(3);
+
+                        chart.render();
+                    });
+
+                    it('should generate x axis domain dynamically', function () {
+                        var nthText = function (n) { return d3.select(chart.selectAll('g.axis .tick text')[0][n]); };
+
+                        for (var i = 0; i < xAxisTicks.length; i++) {
+                            expect(nthText(i).text()).toBe(xAxisTicks[i]);
+                        }
+                    });
+                });
+            }
         });
     }
-});
 
+    itShouldBehaveLikeARowChartWithGroup(positiveGroupHolder, 5, ['0', '5', '10']);
+    itShouldBehaveLikeARowChartWithGroup(negativeGroupHolder, 5, ['-10', '-5', '0']);
+    itShouldBehaveLikeARowChartWithGroup(mixedGroupHolder, 5, ['-5', '0', '5']);
+    itShouldBehaveLikeARowChartWithGroup(largerGroupHolder, 7);
+});

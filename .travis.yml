@@ -1,6 +1,7 @@
+sudo: false
 language: node_js
 node_js:
-  - '0.10'
+  - '6'
 script:
   - 'if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then grunt ci; else grunt ci-pull; fi'
 env:

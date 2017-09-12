@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Filtering Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
+  <div id="chart-ring-year" style="width:300px; height:300px">
+    <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+      <a href="javascript:yearRingChart.filterAll();dc.redrawAll();">reset</a>
+    </div>
+  </div>
+  <div id="chart-hist-spend" style="width:300px; height:300px">
+    <div class="reset" style="visibility: hidden;">range: <span class="filter"></span>
+      <a href="javascript:spendHistChart.filterAll();dc.redrawAll();">reset</a>
+    </div>
+  </div>
+  <div id="chart-row-spenders">
+    <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+      <a href="javascript:spenderRowChart.filterAll();dc.redrawAll();">reset</a>
+    </div>
+  </div>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript">
+
+var yearRingChart   = dc.pieChart("#chart-ring-year"),
+    spendHistChart  = dc.barChart("#chart-hist-spend"),
+    spenderRowChart = dc.rowChart("#chart-row-spenders");
+
+// use static or load via d3.csv("spendData.csv", function(error, spendData) {/* do stuff */});
+var spendData = [
+    {Name: 'Mr A', Spent: '$40', Year: 2011},
+    {Name: 'Mr B', Spent: '$10', Year: 2011},
+    {Name: 'Mr C', Spent: '$40', Year: 2011},
+    {Name: 'Mr A', Spent: '$70', Year: 2012},
+    {Name: 'Mr B', Spent: '$20', Year: 2012},
+    {Name: 'Mr B', Spent: '$50', Year: 2013},
+    {Name: 'Mr C', Spent: '$30', Year: 2013}
+];
+
+// normalize/parse data
+spendData.forEach(function(d) {
+    d.Spent = d.Spent.match(/\d+/);
+});
+
+// set crossfilter
+var ndx = crossfilter(spendData),
+    yearDim  = ndx.dimension(function(d) {return +d.Year;}),
+    spendDim = ndx.dimension(function(d) {return Math.floor(d.Spent/10);}),
+    nameDim  = ndx.dimension(function(d) {return d.Name;}),
+    spendPerYear = yearDim.group().reduceSum(function(d) {return +d.Spent;}),
+    spendPerName = nameDim.group().reduceSum(function(d) {return +d.Spent;}),
+    spendHist    = spendDim.group().reduceCount();
+
+yearRingChart
+    .dimension(yearDim)
+    .group(spendPerYear)
+    .innerRadius(50)
+    .controlsUseVisibility(true);
+
+  spendHistChart
+    .dimension(spendDim)
+    .group(spendHist)
+    .x(d3.scale.linear().domain([0,10]))
+    .elasticY(true)
+    .controlsUseVisibility(true);
+
+spendHistChart.xAxis().tickFormat(function(d) {return d*10}); // convert back to base unit
+spendHistChart.yAxis().ticks(2);
+
+spenderRowChart
+    .dimension(nameDim)
+    .group(spendPerName)
+    .elasticX(true)
+    .controlsUseVisibility(true);
+
+  function show_empty_message(chart) {
+      var is_empty = d3.sum(chart.group().all().map(chart.valueAccessor())) === 0;
+      var data = is_empty ? [1] : [];
+      var empty = chart.svg().selectAll('.empty-message').data(data);
+      empty.enter().append('text')
+          .text('NO DATA!')
+          .attr({
+              'text-anchor': 'middle',
+              'alignment-baseline': 'middle',
+              class: 'empty-message',
+              x: chart.margins().left + chart.effectiveWidth()/2,
+              y: chart.margins().top + chart.effectiveHeight()/2
+          })
+          .style('opacity', 0);
+      empty.transition().duration(1000).style('opacity', 1);
+      empty.exit().remove();
+  }
+
+  spendHistChart.on('pretransition', show_empty_message);
+  spenderRowChart.on('pretransition', show_empty_message);
+
+dc.renderAll();
+
+</script>
+
+</div>
+</body>
+</html>

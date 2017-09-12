@@ -1,68 +1,74 @@
 /**
-## Bubble Overlay Chart
-Includes: [Bubble Mixin](#bubble-mixin), [Base Mixin](#base-mixin)
-
-The bubble overlay chart is quite different from the typical bubble chart. With the bubble overlay
-chart you can arbitrarily place bubbles on an existing svg or bitmap image, thus changing the
-typical x and y positioning while retaining the capability to visualize data using bubble radius
-and coloring.
-
-Examples:
-* [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
-#### dc.bubbleOverlay(parent[, chartGroup])
-Create a bubble overlay chart instance and attach it to the given parent element.
-
-Parameters:
-* parent : string | node | selection - any valid
- [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- a dom block element such as a div; or a dom element or d3 selection.
- off-screen. Typically this element should also be the parent of the underlying image.
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
- Interaction with a chart will only trigger events and redraws within the chart's group.
-
-Returns:
-A newly created bubble overlay chart instance
-
-```js
-// create a bubble overlay chart on top of the '#chart-container1 svg' element using the default global chart group
-var bubbleChart1 = dc.bubbleOverlayChart('#chart-container1').svg(d3.select('#chart-container1 svg'));
-// create a bubble overlay chart on top of the '#chart-container2 svg' element using chart group A
-var bubbleChart2 = dc.compositeChart('#chart-container2', 'chartGroupA').svg(d3.select('#chart-container2 svg'));
-```
-#### .svg(imageElement) - **mandatory**
-Set the underlying svg image element. Unlike other dc charts this chart will not generate a svg
-element; therefore the bubble overlay chart will not work if this function is not invoked. If the
-underlying image is a bitmap, then an empty svg will need to be created on top of the image.
-
-```js
-// set up underlying svg element
-chart.svg(d3.select('#chart svg'));
-```
-
-**/
-dc.bubbleOverlay = function (root, chartGroup) {
+ * The bubble overlay chart is quite different from the typical bubble chart. With the bubble overlay
+ * chart you can arbitrarily place bubbles on an existing svg or bitmap image, thus changing the
+ * typical x and y positioning while retaining the capability to visualize data using bubble radius
+ * and coloring.
+ *
+ * Examples:
+ * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
+ * @class bubbleOverlay
+ * @memberof dc
+ * @mixes dc.bubbleMixin
+ * @mixes dc.baseMixin
+ * @example
+ * // create a bubble overlay chart on top of the '#chart-container1 svg' element using the default global chart group
+ * var bubbleChart1 = dc.bubbleOverlayChart('#chart-container1').svg(d3.select('#chart-container1 svg'));
+ * // create a bubble overlay chart on top of the '#chart-container2 svg' element using chart group A
+ * var bubbleChart2 = dc.compositeChart('#chart-container2', 'chartGroupA').svg(d3.select('#chart-container2 svg'));
+ * @param {String|node|d3.selection} parent - Any valid
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * a dom block element such as a div; or a dom element or d3 selection.
+ * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+ * Interaction with a chart will only trigger events and redraws within the chart's group.
+ * @returns {dc.bubbleOverlay}
+ */
+dc.bubbleOverlay = function (parent, chartGroup) {
     var BUBBLE_OVERLAY_CLASS = 'bubble-overlay';
     var BUBBLE_NODE_CLASS = 'node';
     var BUBBLE_CLASS = 'bubble';
 
+    /**
+     * **mandatory**
+     *
+     * Set the underlying svg image element. Unlike other dc charts this chart will not generate a svg
+     * element; therefore the bubble overlay chart will not work if this function is not invoked. If the
+     * underlying image is a bitmap, then an empty svg will need to be created on top of the image.
+     * @method svg
+     * @memberof dc.bubbleOverlay
+     * @instance
+     * @example
+     * // set up underlying svg element
+     * chart.svg(d3.select('#chart svg'));
+     * @param {SVGElement|d3.selection} [imageElement]
+     * @returns {dc.bubbleOverlay}
+     */
     var _chart = dc.bubbleMixin(dc.baseMixin({}));
     var _g;
     var _points = [];
 
     _chart.transitionDuration(750);
 
+    _chart.transitionDelay(0);
+
     _chart.radiusValueAccessor(function (d) {
         return d.value;
     });
 
     /**
-    #### .point(name, x, y) - **mandatory**
-    Set up a data point on the overlay. The name of a data point should match a specific 'key' among
-    data groups generated using keyAccessor.  If a match is found (point name <-> data group key)
-    then a bubble will be generated at the position specified by the function. x and y
-    value specified here are relative to the underlying svg.
-
-    **/
+     * **mandatory**
+     *
+     * Set up a data point on the overlay. The name of a data point should match a specific 'key' among
+     * data groups generated using keyAccessor.  If a match is found (point name <-> data group key)
+     * then a bubble will be generated at the position specified by the function. x and y
+     * value specified here are relative to the underlying svg.
+     * @method point
+     * @memberof dc.bubbleOverlay
+     * @instance
+     * @param {String} name
+     * @param {Number} x
+     * @param {Number} y
+     * @returns {dc.bubbleOverlay}
+     */
     _chart.point = function (name, x, y) {
         _points.push({name: name, x: x, y: y});
         return _chart;
@@ -80,7 +86,7 @@ dc.bubbleOverlay = function (root, chartGroup) {
         return _chart;
     };
 
-    function initOverlayG() {
+    function initOverlayG () {
         _g = _chart.select('g.' + BUBBLE_OVERLAY_CLASS);
         if (_g.empty()) {
             _g = _chart.svg().append('g').attr('class', BUBBLE_OVERLAY_CLASS);
@@ -88,8 +94,9 @@ dc.bubbleOverlay = function (root, chartGroup) {
         return _g;
     }
 
-    function initializeBubbles() {
+    function initializeBubbles () {
         var data = mapData();
+        _chart.calculateRadiusDomain();
 
         _points.forEach(function (point) {
             var nodeG = getNodeG(point, data);
@@ -104,7 +111,7 @@ dc.bubbleOverlay = function (root, chartGroup) {
                     .on('click', _chart.onClick);
             }
 
-            dc.transition(circle, _chart.transitionDuration())
+            dc.transition(circle, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('r', function (d) {
                     return _chart.bubbleR(d);
                 });
@@ -115,7 +122,7 @@ dc.bubbleOverlay = function (root, chartGroup) {
         });
     }
 
-    function mapData() {
+    function mapData () {
         var data = {};
         _chart.data().forEach(function (datum) {
             data[_chart.keyAccessor()(datum)] = datum;
@@ -123,7 +130,7 @@ dc.bubbleOverlay = function (root, chartGroup) {
         return data;
     }
 
-    function getNodeG(point, data) {
+    function getNodeG (point, data) {
         var bubbleNodeClass = BUBBLE_NODE_CLASS + ' ' + dc.utils.nameToId(point.name);
 
         var nodeG = _g.select('g.' + dc.utils.nameToId(point.name));
@@ -147,15 +154,16 @@ dc.bubbleOverlay = function (root, chartGroup) {
         return _chart;
     };
 
-    function updateBubbles() {
+    function updateBubbles () {
         var data = mapData();
+        _chart.calculateRadiusDomain();
 
         _points.forEach(function (point) {
             var nodeG = getNodeG(point, data);
 
             var circle = nodeG.select('circle.' + BUBBLE_CLASS);
 
-            dc.transition(circle, _chart.transitionDuration())
+            dc.transition(circle, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('r', function (d) {
                     return _chart.bubbleR(d);
                 })
@@ -197,7 +205,7 @@ dc.bubbleOverlay = function (root, chartGroup) {
         return _chart;
     };
 
-    _chart.anchor(root, chartGroup);
+    _chart.anchor(parent, chartGroup);
 
     return _chart;
 };

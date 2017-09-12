@@ -3,12 +3,16 @@
 <head>
     <title>dc.js - Heatmap Filtering Example</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
     <style>
     </style>
 </head>
 <body>
-<h2>Michelson–Morley experiment</h2>
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
+
+<h2>Nasdaq 100 Percentage Gain by Month of Year</h2>
 <div id="heatmap"></div>
 <div id="barchart"></div>
 
@@ -64,17 +68,9 @@
                 }
             );
 
-        var heatColorMapping = function(d) {
-            if (d < 0) {
-                return d3.scale.linear().domain([-23,0]).range(["red", "#e5e5e5"])(d);
-            }
-            else {
-                return d3.scale.linear().domain([0,23]).range(["#e5e5e5", "green"])(d);
-            }
-        };
-        heatColorMapping.domain = function() {
-            return [-23,23];
-        };
+        var heatColorMapping = d3.scale.linear()
+            .domain([-23, 0, 23])
+            .range(["red", "#e5e5e5", "green"]);
 
         heatmapChart
                 .width(12 * 80 + 80)
@@ -88,8 +84,7 @@
                     return " Month:   " + d.key[0] + "\n" +
                            "  Year:   " + d.key[1] + "\n" +
                            "  Gain:   " + d.value.percentageGain + "%";})
-                .colors(heatColorMapping)
-                .calculateColorDomain();
+                .colors(heatColorMapping);
 
         heatmapChart.xBorderRadius(0);
         heatmapChart.yBorderRadius(0);
@@ -127,5 +122,6 @@
 
 </script>
 
+</div>
 </body>
 </html>

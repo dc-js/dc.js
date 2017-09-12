@@ -1,11 +1,15 @@
-describe('dc.compositeChart', function() {
-    var id, chart, data, dateDimension, dateValueSumGroup, dateIdSumGroup, dateGroup;
+/* global appendChartID, loadDateFixture, makeDate */
+describe('dc.compositeChart', function () {
+    var id, chart, data, dateDimension, dateValueSumGroup, dateValueNegativeSumGroup,
+        dateIdSumGroup, dateIdNegativeSumGroup, dateGroup;
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
-        dateDimension = data.dimension(function(d) { return d3.time.day.utc(d.dd); });
-        dateValueSumGroup = dateDimension.group().reduceSum(function(d) { return d.value; });
-        dateIdSumGroup = dateDimension.group().reduceSum(function(d) { return d.id; });
+        dateDimension = data.dimension(function (d) { return d3.time.day.utc(d.dd); });
+        dateValueSumGroup = dateDimension.group().reduceSum(function (d) { return d.value; });
+        dateValueNegativeSumGroup = dateDimension.group().reduceSum(function (d) { return -d.value; });
+        dateIdSumGroup = dateDimension.group().reduceSum(function (d) { return d.id; });
+        dateIdNegativeSumGroup = dateDimension.group().reduceSum(function (d) { return -d.id; });
         dateGroup = dateDimension.group();
 
         id = 'composite-chart';
@@ -36,7 +40,7 @@ describe('dc.compositeChart', function() {
             ]);
     });
 
-    it('should registered the chart with DC', function(){
+    it('should registered the chart with DC', function () {
         expect(dc.hasChart(chart)).toBeTruthy();
     });
 
@@ -73,11 +77,11 @@ describe('dc.compositeChart', function() {
         expect(chart.x().domain()[1].getTime()).toBe(makeDate(2012, 7, 15).getTime());
     });
 
-    it('should set the x units', function(){
+    it('should set the x units', function () {
         expect(chart.xUnits()).toBe(d3.time.days.utc);
     });
 
-    it('should create the x axis', function(){
+    it('should create the x axis', function () {
         expect(chart.xAxis()).not.toBeNull();
     });
 
@@ -106,16 +110,16 @@ describe('dc.compositeChart', function() {
         expect(chart.valueAccessor()).not.toBeNull();
     });
 
-    describe('rendering the chart', function(){
-        beforeEach(function(){
+    describe('rendering the chart', function () {
+        beforeEach(function () {
             chart.render();
         });
 
-        it('should create a root SVG element', function(){
+        it('should create a root SVG element', function () {
             expect(chart.svg().empty()).toBeFalsy();
         });
 
-        it('should create a root SVG group element', function(){
+        it('should create a root SVG group element', function () {
             expect(chart.g().empty()).toBeFalsy();
         });
 
@@ -139,12 +143,12 @@ describe('dc.compositeChart', function() {
             expect(chart.y().domain()).toEqual([0, 281]);
         });
 
-        it('should place the x axis at the bottom', function(){
-            expect(chart.select('svg g g.x').attr('transform')).toMatchTranslate(30,120);
+        it('should place the x axis at the bottom', function () {
+            expect(chart.select('svg g g.x').attr('transform')).toMatchTranslate(30, 120);
         });
 
-        it('should place the y axis to the left', function(){
-            expect(chart.select('svg g g.y').attr('transform')).toMatchTranslate(30,10);
+        it('should place the y axis to the left', function () {
+            expect(chart.select('svg g g.y').attr('transform')).toMatchTranslate(30, 10);
         });
 
         it('should create a separate g for each subchart', function () {
@@ -158,40 +162,42 @@ describe('dc.compositeChart', function() {
 
         it('should generate sub line chart paths', function () {
             expect(chart.selectAll('g.sub path.line').size()).not.toBe(0);
-            chart.selectAll('g.sub path.line').each(function(d, i) {
+            chart.selectAll('g.sub path.line').each(function (d, i) {
                 switch (i) {
-                case 0:
-                    expect(d3.select(this).attr('d'))
-                        .toMatchPath('M24.137931034482758,110L91.72413793103448,108L101.37931034482757,103L202.75862068965515,108L246.20689655172413,104L395.8620689655172,105');
-                    break;
-                case 1:
-                    expect(d3.select(this).attr('d'))
-                        .toMatchPath('M24.137931034482758,92L91.72413793103448,82L101.37931034482757,52L202.75862068965515,91L246.20689655172413,83L395.8620689655172,75');
-                    break;
+                    case 0:
+                        expect(d3.select(this).attr('d'))
+                            .toMatchPath('M24.137931034482758,110L91.72413793103448,108L101.37931034482757,103L202.75862068965515,' +
+                            '108L246.20689655172413,104L395.8620689655172,105');
+                        break;
+                    case 1:
+                        expect(d3.select(this).attr('d'))
+                            .toMatchPath('M24.137931034482758,92L91.72413793103448,82L101.37931034482757,52L202.75862068965515,' +
+                            '91L246.20689655172413,83L395.8620689655172,75');
+                        break;
                 }
             });
         });
 
-        it('should generate sub bar charts', function(){
+        it('should generate sub bar charts', function () {
             expect(chart.selectAll('g.sub g._0 rect').size()).toBe(6);
         });
 
         it('should render sub bar chart', function () {
             expect(chart.selectAll('g.sub rect.bar').size()).not.toBe(0);
-            chart.selectAll('g.sub rect.bar').each(function(d, i) {
+            chart.selectAll('g.sub rect.bar').each(function (d, i) {
                 switch (i) {
-                case 0:
-                    expect(d3.select(this).attr('x')).toBeCloseTo('22.637931034482758', 3);
-                    expect(d3.select(this).attr('y')).toBe('93');
-                    expect(d3.select(this).attr('width')).toBe('3');
-                    expect(d3.select(this).attr('height')).toBe('17');
-                    break;
-                case 5:
-                    expect(d3.select(this).attr('x')).toBeCloseTo('394.3620689655172', 3);
-                    expect(d3.select(this).attr('y')).toBe('80');
-                    expect(d3.select(this).attr('width')).toBe('3');
-                    expect(d3.select(this).attr('height')).toBe('30');
-                    break;
+                    case 0:
+                        expect(d3.select(this).attr('x')).toBeCloseTo('22.637931034482758', 3);
+                        expect(d3.select(this).attr('y')).toBe('93');
+                        expect(d3.select(this).attr('width')).toBe('3');
+                        expect(d3.select(this).attr('height')).toBe('17');
+                        break;
+                    case 5:
+                        expect(d3.select(this).attr('x')).toBeCloseTo('394.3620689655172', 3);
+                        expect(d3.select(this).attr('y')).toBe('80');
+                        expect(d3.select(this).attr('width')).toBe('3');
+                        expect(d3.select(this).attr('height')).toBe('30');
+                        break;
                 }
             });
         });
@@ -216,9 +222,9 @@ describe('dc.compositeChart', function() {
             });
 
             it('should have clip path refs', function () {
-                expect(chart.selectAll("g.chart-body").size()).not.toBe(0);
-                chart.selectAll("g.chart-body").each(function(){
-                    expect(d3.select(this).attr("clip-path")).toMatchUrl("#composite-chart-clip");
+                expect(chart.selectAll('g.chart-body').size()).not.toBe(0);
+                chart.selectAll('g.chart-body').each(function () {
+                    expect(d3.select(this).attr('clip-path')).toMatchUrl(window.location.href + '#composite-chart-clip');
                 });
             });
         });
@@ -226,19 +232,22 @@ describe('dc.compositeChart', function() {
         describe('the chart brush', function () {
 
             it('should be positioned with the chart left margin', function () {
-                expect(chart.select('g.brush').attr('transform')).toMatchTranslate(chart.margins().left,10);
+                expect(chart.select('g.brush').attr('transform')).toMatchTranslate(chart.margins().left, 10);
             });
 
             it('should have a resize handle', function () {
                 expect(chart.selectAll('g.brush .resize path').size()).not.toBe(0);
-                chart.selectAll('g.brush .resize path').each(function(d, i) {
-                    if (i === 0){
+                chart.selectAll('g.brush .resize path').each(function (d, i) {
+                    if (i === 0) {
                         expect(d3.select(this).attr('d'))
-                            .toMatchPath('M0.5,36.666666666666664A6,6 0 0 1 6.5,42.666666666666664V67.33333333333333A6,6 0 0 1 0.5,73.33333333333333ZM2.5,44.666666666666664V65.33333333333333M4.5,44.666666666666664V65.33333333333333');
-                    }
-                    else{
+                            .toMatchPath('M0.5,36.666666666666664A6,6 0 0 1 6.5,42.666666666666664V67.33333333333333A6,' +
+                            '6 0 0 1 0.5,73.33333333333333ZM2.5,44.666666666666664V65.33333333333333M4.5,' +
+                            '44.666666666666664V65.33333333333333');
+                    } else {
                         expect(d3.select(this).attr('d'))
-                            .toMatchPath('M-0.5,36.666666666666664A6,6 0 0 0 -6.5,42.666666666666664V67.33333333333333A6,6 0 0 0 -0.5,73.33333333333333ZM-2.5,44.666666666666664V65.33333333333333M-4.5,44.666666666666664V65.33333333333333');
+                            .toMatchPath('M-0.5,36.666666666666664A6,6 0 0 0 -6.5,42.666666666666664V67.33333333333333A6,' +
+                            '6 0 0 0 -0.5,73.33333333333333ZM-2.5,44.666666666666664V65.33333333333333M-4.5,' +
+                            '44.666666666666664V65.33333333333333');
                     }
                 });
             });
@@ -270,13 +279,13 @@ describe('dc.compositeChart', function() {
             });
 
             describe('after filtering all', function () {
-                beforeEach(function(){
+                beforeEach(function () {
                     chart.filterAll();
                     chart.redraw();
                 });
 
                 it('should bring all bars to the foreground', function () {
-                    chart.selectAll('g rect.bar').each(function(d) {
+                    chart.selectAll('g rect.bar').each(function (d) {
                         expect(d3.select(this).attr('class')).toBe('bar');
                     });
                 });
@@ -293,15 +302,15 @@ describe('dc.compositeChart', function() {
             });
 
             it('should generate legend labels for each sub-chart', function () {
-                expect(chart.selectAll("g.dc-legend-item text").size()).toBe(5);
+                expect(chart.selectAll('g.dc-legend-item text').size()).toBe(5);
             });
 
             it('should be placed according to its own legend option, ignoring the sub-charts', function () {
-                expect(chart.select("g.dc-legend").attr("transform")).toMatchTranslate(200,10);
+                expect(chart.select('g.dc-legend').attr('transform')).toMatchTranslate(200, 10);
             });
 
             it('should generate legend labels with their associated group text', function () {
-                function legendText(n) {
+                function legendText (n) {
                     return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item text')[0][n]).text();
                 }
                 expect(legendText(0)).toBe('Date Value Group Bar');
@@ -314,28 +323,40 @@ describe('dc.compositeChart', function() {
             it('should properly delegate highlighting to its children', function () {
                 var firstItem = chart.select('g.dc-legend g.dc-legend-item');
 
-                firstItem.on("mouseover")(firstItem.datum());
-                expect(chart.selectAll("rect.highlight").size()).toBe(6);
-                expect(chart.selectAll("path.fadeout").size()).toBe(4);
-                firstItem.on("mouseout")(firstItem.datum());
-                expect(chart.selectAll("rect.highlight").size()).toBe(0);
-                expect(chart.selectAll("path.fadeout").size()).toBe(0);
+                firstItem.on('mouseover')(firstItem.datum());
+                expect(chart.selectAll('rect.highlight').size()).toBe(6);
+                expect(chart.selectAll('path.fadeout').size()).toBe(4);
+                firstItem.on('mouseout')(firstItem.datum());
+                expect(chart.selectAll('rect.highlight').size()).toBe(0);
+                expect(chart.selectAll('path.fadeout').size()).toBe(0);
             });
 
-            it('should hide hidable child stacks', function() {
+            it('should hide hidable child stacks', function () {
                 var dateValueGroupLine2 = d3.select(chart.selectAll('g.dc-legend g.dc-legend-item')[0][3]);
 
-                dateValueGroupLine2.on("click")(dateValueGroupLine2.datum());
+                dateValueGroupLine2.on('click')(dateValueGroupLine2.datum());
                 expect(dateValueGroupLine2.text()).toBe('Date Value Group Line 2');
-                expect(d3.select(chart.selectAll('g.dc-legend g.dc-legend-item')[0][3]).classed("fadeout")).toBeTruthy();                
-                expect(chart.selectAll("path.line").size()).toEqual(3);
+                expect(d3.select(chart.selectAll('g.dc-legend g.dc-legend-item')[0][3]).classed('fadeout')).toBeTruthy();
+                expect(chart.selectAll('path.line').size()).toEqual(3);
             });
+        });
+    });
+
+    describe('no elastic', function () {
+        beforeEach(function () {
+            chart.y(d3.scale.linear().domain([-200, 200]));
+            chart.render();
+        });
+
+        it('should respect manually applied domain', function () {
+            expect(chart.y().domain()[0]).toBe(-200);
+            expect(chart.y().domain()[1]).toBe(200);
         });
     });
 
     describe('elastic chart axes', function () {
         beforeEach(function () {
-            data.dimension(function(d) {
+            data.dimension(function (d) {
                 return d.countrycode;
             }).filter('CA');
 
@@ -354,8 +375,8 @@ describe('dc.compositeChart', function() {
 
     describe('subchart renderlets', function () {
         beforeEach(function () {
-            chart.children()[0].renderlet(function(chart) {
-                chart.selectAll('rect.bar').attr('width', function(d) {
+            chart.children()[0].on('renderlet', function (chart) {
+                chart.selectAll('rect.bar').attr('width', function (d) {
                     return 10;
                 });
             });
@@ -369,22 +390,22 @@ describe('dc.compositeChart', function() {
 
     describe('when two subcharts share the same group', function () {
         beforeEach(function () {
-            var dimension = data.dimension(function(d) {
+            var dimension = data.dimension(function (d) {
                 return d.status;
             });
             var group = dimension.group().reduce(
-                function(p, v) {
+                function (p, v) {
                     ++p.count;
                     p.value += +v.value;
                     return p;
                 },
-                function(p, v) {
+                function (p, v) {
                     --p.count;
                     p.value -= +v.value;
                     return p;
                 },
-                function() {
-                    return { count: 0, value: 0 };
+                function () {
+                    return {count: 0, value: 0};
                 }
             );
             chart
@@ -395,32 +416,36 @@ describe('dc.compositeChart', function() {
                 .xUnits(dc.units.ordinal)
                 .compose([
                     dc.lineChart(chart)
-                        .group(group, "Series 1")
+                        .group(group, 'Series 1')
                         .valueAccessor(function (d) {
                             return d.value.count;
                         })
                         .title(function (d) {
                             var value = d.value.count;
-                            if (isNaN(value)) value = 0;
-                            return "Count: " + d3.format("d")(value);
+                            if (isNaN(value)) {
+                                value = 0;
+                            }
+                            return 'Count: ' + d3.format('d')(value);
                         }),
                     dc.lineChart(chart)
-                        .group(group, "Series 2")
+                        .group(group, 'Series 2')
                         .valueAccessor(function (d) {
                             return d.value.value;
                         })
                         .title(function (d) {
                             var value = d.value.value;
-                            if (isNaN(value)) value = 0;
-                            return "Value: " + d3.format("d")(value);
+                            if (isNaN(value)) {
+                                value = 0;
+                            }
+                            return 'Value: ' + d3.format('d')(value);
 
                         })
                 ]).render();
         });
 
         it('should set a tooltip based on the shared group', function () {
-            expect(chart.select(".sub._0 .dc-tooltip._0 .dot title").text()).toBe("Count: 5");
-            expect(chart.select(".sub._1 .dc-tooltip._0 .dot title").text()).toBe("Value: 220");
+            expect(chart.select('.sub._0 .dc-tooltip._0 .dot title').text()).toBe('Count: 5');
+            expect(chart.select('.sub._1 .dc-tooltip._0 .dot title').text()).toBe('Value: 220');
         });
     });
 
@@ -431,12 +456,12 @@ describe('dc.compositeChart', function() {
         });
 
         it('should respect boolean flag when title not set', function () {
-            expect(chart.select(".sub._0 .dc-tooltip._0 .dot").empty()).toBeTruthy();
-            expect(chart.select(".sub._1 .dc-tooltip._0 .dot").empty()).toBeTruthy();
+            expect(chart.select('.sub._0 .dc-tooltip._0 .dot').empty()).toBeTruthy();
+            expect(chart.select('.sub._1 .dc-tooltip._0 .dot').empty()).toBeTruthy();
         });
     });
 
-    describe('the y-axes', function() {
+    describe('the y-axes', function () {
         describe('when composing charts with both left and right y-axes', function () {
             var rightChart;
 
@@ -459,7 +484,7 @@ describe('dc.compositeChart', function() {
             });
 
             it('should render a right and a left label', function () {
-                chart.yAxisLabel("Left Label").rightYAxisLabel("Right Label").render();
+                chart.yAxisLabel('Left Label').rightYAxisLabel('Right Label').render();
 
                 expect(chart.selectAll('.y-axis-label').size()).toBe(2);
                 expect(chart.selectAll('.y-axis-label.y-label').empty()).toBeFalsy();
@@ -484,26 +509,26 @@ describe('dc.compositeChart', function() {
                 expect(rightChart.yAxis()).toBe(chart.rightYAxis());
             });
 
-            describe('horizontal gridlines', function() {
-                beforeEach(function() {
+            describe('horizontal gridlines', function () {
+                beforeEach(function () {
                     chart.yAxis().ticks(3);
                     chart.rightYAxis().ticks(6);
                     chart.renderHorizontalGridLines(true).render();
                 });
 
-                it('should draw left horizontal gridlines by default', function() {
+                it('should draw left horizontal gridlines by default', function () {
                     expect(chart.selectAll('.grid-line.horizontal line').size()).toBe(3);
                 });
 
-                it('should allow right horizontal gridlines to be used', function() {
+                it('should allow right horizontal gridlines to be used', function () {
                     chart.useRightAxisGridLines(true).render();
                     expect(chart.selectAll('.grid-line.horizontal line').size()).toBe(6);
                 });
             });
         });
 
-        describe('when composing charts with just a left axis', function() {
-            beforeEach(function() {
+        describe('when composing charts with just a left axis', function () {
+            beforeEach(function () {
                 chart.yAxis().ticks(4);
                 chart.compose([
                     dc.lineChart(chart).group(dateGroup)
@@ -520,7 +545,7 @@ describe('dc.compositeChart', function() {
             });
         });
 
-        describe('when composing charts with just a right axis', function() {
+        describe('when composing charts with just a right axis', function () {
             beforeEach(function () {
                 chart.yAxis().ticks(7);
                 chart.compose([
@@ -538,22 +563,121 @@ describe('dc.compositeChart', function() {
             });
         });
 
-        function nthGridLine(n) {
-            return d3.select(chart.selectAll('.grid-line.horizontal line')[0][n]);
+        describe('when composing a left axis chart with negative values', function () {
+            var leftChart, rightChart;
+            beforeEach(function () {
+                chart
+                    .compose([
+                        leftChart = dc.barChart(chart)
+                            .group(dateValueNegativeSumGroup, 'Date Value Group'),
+                        rightChart = dc.lineChart(chart)
+                            .group(dateIdSumGroup, 'Date ID Group')
+                            .useRightYAxis(true)
+                    ])
+                    .render();
+            });
+
+            it('the axis baselines shouldn\'t match', function () {
+                expect(leftChart.y()(0)).not.toEqual(rightChart.y()(0));
+            });
+
+            describe('with alignYAxes', function () {
+                beforeEach(function () {
+                    chart.alignYAxes(true)
+                        .elasticY(true)
+                        .render();
+                });
+                it('the axis baselines should match', function () {
+                    expect(leftChart.y()(0)).toEqual(rightChart.y()(0));
+                });
+                it('the series heights should be equal', function () {
+                    expect(plotHeight(leftChart)).toEqual(plotHeight(rightChart));
+                });
+            });
+        });
+
+        describe('when composing a right axis chart with negative values', function () {
+            var leftChart, rightChart;
+            beforeEach(function () {
+                chart
+                    .compose([
+                        leftChart = dc.barChart(chart)
+                            .group(dateIdSumGroup, 'Date ID Group'),
+                        rightChart = dc.lineChart(chart)
+                            .group(dateValueNegativeSumGroup, 'Date Value Group')
+                            .useRightYAxis(true)
+                    ])
+                    .render();
+            });
+
+            it('the axis baselines shouldn\'t match', function () {
+                expect(leftChart.y()(0)).not.toEqual(rightChart.y()(0));
+            });
+
+            describe('with alignYAxes', function () {
+                beforeEach(function () {
+                    chart.alignYAxes(true)
+                        .elasticY(true)
+                        .render();
+                });
+                it('the axis baselines should match', function () {
+                    expect(leftChart.y()(0)).toEqual(rightChart.y()(0));
+                });
+                it('the series heights should be equal', function () {
+                    expect(plotHeight(leftChart)).toEqual(plotHeight(rightChart));
+                });
+            });
+        });
+
+        describe('when composing left and right axes charts with negative values', function () {
+            var leftChart, rightChart;
+            beforeEach(function () {
+                chart
+                    .compose([
+                        leftChart = dc.barChart(chart)
+                            .group(dateIdNegativeSumGroup, 'Date ID Group'),
+                        rightChart = dc.lineChart(chart)
+                            .group(dateValueNegativeSumGroup, 'Date Value Group')
+                            .useRightYAxis(true)
+                    ])
+                    .render();
+            });
+
+            it('the axis baselines should match', function () {
+                /* because elasticY ensures zero is included for all-negatives, due to PR #1156 */
+                expect(leftChart.y()(0)).toEqual(rightChart.y()(0));
+            });
+
+            describe('with alignYAxes', function () {
+                beforeEach(function () {
+                    chart.alignYAxes(true)
+                        .elasticY(true)
+                        .render();
+                });
+                it('the axis baselines should match', function () {
+                    expect(leftChart.y()(0)).toEqual(rightChart.y()(0));
+                });
+                it('the series heights should be equal', function () {
+                    expect(plotHeight(leftChart)).toEqual(plotHeight(rightChart));
+                });
+            });
+        });
+        function plotHeight (chart) {
+            return chart.y()(chart.yAxisMax()) - chart.y()(chart.yAxisMin());
         }
     });
 
-    describe('sub-charts with different filter types', function() {
+    describe('sub-charts with different filter types', function () {
         var scatterGroup, scatterDimension;
         var lineGroup, lineDimension;
 
         beforeEach(function () {
             data = crossfilter(loadDateFixture());
 
-            scatterDimension = data.dimension(function(d) { return [+d.value, +d.nvalue]; });
+            scatterDimension = data.dimension(function (d) { return [+d.value, +d.nvalue]; });
             scatterGroup = scatterDimension.group();
 
-            lineDimension = data.dimension(function(d) { return +d.value; });
+            lineDimension = data.dimension(function (d) { return +d.value; });
             lineGroup = lineDimension.group();
 
             chart
@@ -572,37 +696,37 @@ describe('dc.compositeChart', function() {
             var otherDimension;
 
             beforeEach(function () {
-                otherDimension = data.dimension(function(d) { return [+d.value, +d.nvalue]; });
+                otherDimension = data.dimension(function (d) { return [+d.value, +d.nvalue]; });
                 chart.brush().extent([22, 35]);
-                chart.brush().on("brush")();
+                chart.brush().on('brush')();
                 chart.redraw();
             });
 
-            it('should filter the child charts', function() {
+            it('should filter the child charts', function () {
                 expect(otherDimension.top(Infinity).length).toBe(4);
             });
 
             describe('brush decreases in size', function () {
                 beforeEach(function () {
                     chart.brush().extent([22, 33]);
-                    chart.brush().on("brush")();
+                    chart.brush().on('brush')();
                     chart.redraw();
                 });
 
-                it('should filter down to fewer points', function() {
+                it('should filter down to fewer points', function () {
                     expect(otherDimension.top(Infinity).length).toBe(2);
                 });
 
             });
 
-            describe('brush disappears', function() {
-                beforeEach(function() {
+            describe('brush disappears', function () {
+                beforeEach(function () {
                     chart.brush().extent([22, 22]);
-                    chart.brush().on("brush")();
+                    chart.brush().on('brush')();
                     chart.redraw();
                 });
 
-                it('should clear all filters', function() {
+                it('should clear all filters', function () {
                     expect(otherDimension.top(Infinity).length).toBe(10);
                 });
             });

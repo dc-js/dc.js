@@ -1,0 +1,274 @@
+//colors
+$color_celeste: #ccc;
+$color_fair_pink: #fee;
+$color_white: #fff;
+$color_black: #000;
+$color_steel_blue: #4682b4;
+$color_gallery: #eee;
+$color_storm_dust: #666;
+$color_grey: #808080;
+$color_boston_blue: #3182bd;
+$color_blue: #00f;
+
+//fonts
+$font_sans_serif: sans-serif;
+
+@mixin no-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+//original selectors
+//.dc-chart path.dc-symbol, g.dc-legend-item.fadeout
+%extend_1 {
+    fill-opacity: 0.5;
+    stroke-opacity: 0.5;
+}
+
+div.dc-chart {
+    float: left;
+}
+
+.dc-chart {
+    rect {
+        &.bar {
+            stroke: none;
+            cursor: pointer;
+            &:hover {
+                fill-opacity: .5;
+            }
+        }
+        &.deselected {
+            stroke: none;
+            fill: $color_celeste;
+        }
+    }
+    .pie-slice {
+        fill: $color_white;
+        font-size: 12px;
+        cursor: pointer;
+        &.external {
+            fill: $color_black;
+        }
+        :hover, &.highlight {
+            fill-opacity: .8;
+        }
+    }
+    .pie-path {
+        fill: none;
+        stroke-width: 2px;
+        stroke: $color_black;
+        opacity: 0.4;
+    }
+    .selected {
+        path, circle {
+            stroke-width: 3;
+            stroke: $color_celeste;
+            fill-opacity: 1;
+        }
+    }
+    .deselected {
+        path, circle {
+            stroke: none;
+            fill-opacity: .5;
+            fill: $color_celeste;
+        }
+    }
+    .axis {
+        path, line {
+            fill: none;
+            stroke: $color_black;
+            shape-rendering: crispEdges;
+        }
+        text {
+            font: 10px $font_sans_serif;
+        }
+    }
+    .grid-line, .axis .grid-line, .grid-line line, .axis .grid-line line {
+        fill: none;
+        stroke: $color_celeste;
+        opacity: .5;
+        shape-rendering: crispEdges;
+    }
+    .brush {
+        rect {
+            &.background {
+                z-index: -999;
+            }
+            &.extent {
+                fill: $color_steel_blue;
+                fill-opacity: .125;
+            }
+        }
+        .resize path {
+            fill: $color_gallery;
+            stroke: $color_storm_dust;
+        }
+    }
+    path {
+        &.line {
+            fill: none;
+            stroke-width: 1.5px;
+        }
+        &.area {
+            fill-opacity: .3;
+            stroke: none;
+        }
+        &.highlight {
+            stroke-width: 3;
+            fill-opacity: 1;
+            stroke-opacity: 1;
+        }
+        &.dc-symbol {
+            @extend %extend_1;
+        }
+    }
+    g {
+        &.state {
+            cursor: pointer;
+            :hover {
+                fill-opacity: .8;
+            }
+            path {
+                stroke: $color_white;
+            }
+        }
+        &.deselected {
+            path {
+                fill: $color_grey;
+            }
+            text {
+                display: none;
+            }
+        }
+        &.row {
+            rect {
+                fill-opacity: 0.8;
+                cursor: pointer;
+                &:hover {
+                    fill-opacity: 0.6;
+                }
+            }
+            text {
+                fill: $color_white;
+                font-size: 12px;
+                cursor: pointer;
+            }
+        }
+        &.dc-tooltip path {
+            fill: none;
+            stroke: $color_grey;
+            stroke-opacity: .8;
+        }
+        &.county path {
+            stroke: $color_white;
+            fill: none;
+        }
+        &.debug rect {
+            fill: $color_blue;
+            fill-opacity: .2;
+        }
+        &.axis text {
+            @include no-select
+            pointer-events: none;
+        }
+    }
+    .node {
+        font-size: 0.7em;
+        cursor: pointer;
+        :hover {
+            fill-opacity: .8;
+        }
+    }
+    .bubble {
+        stroke: none;
+        fill-opacity: 0.6;
+    }
+    .highlight {
+        fill-opacity: 1;
+        stroke-opacity: 1;
+    }
+    .fadeout {
+        fill-opacity: 0.2;
+        stroke-opacity: 0.2;
+    }
+    .box {
+        text {
+            font: 10px $font_sans_serif;
+            @include no-select;
+            pointer-events: none;
+        }
+        line, circle {
+            fill: $color_white;
+        }
+        rect, line, circle {
+            stroke: $color_black;
+            stroke-width: 1.5px;
+        }
+        .center {
+            stroke-dasharray: 3, 3;
+        }
+        .outlier {
+            fill: none;
+            stroke: $color_celeste;
+        }
+        &.deselected {
+            opacity: 0.5;
+            .box {
+                fill: $color_celeste;
+            }
+        }
+    }
+    .symbol {
+        stroke: none;
+    }
+    .heatmap {
+        .box-group.deselected rect {
+            stroke: none;
+            fill-opacity: 0.5;
+            fill: $color_celeste;
+        }
+        g.axis text {
+            pointer-events: all;
+            cursor: pointer;
+        }
+    }
+    .empty-chart .pie-slice {
+        cursor: default;
+        path {
+            fill: $color_fair_pink;
+            cursor: default;
+        }
+    }
+    circle.dot {
+        stroke: none;
+    }
+}
+
+.dc-data-count {
+    float: right;
+    margin-top: 15px;
+    margin-right: 15px;
+    .filter-count, .total-count {
+        color: $color_boston_blue;
+        font-weight: bold;
+    }
+}
+
+.dc-legend {
+    font-size: 11px;
+    .dc-legend-item {
+        cursor: pointer;
+    }
+    g.dc-legend-item.fadeout {
+        @extend %extend_1;
+    }
+}
+
+.dc-hard .number-display {
+    float: none;
+}

@@ -3,10 +3,13 @@
 <head>
     <title>dc.js - Pie Chart Example</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
 </head>
 <body>
 
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
 <div id="test"></div>
 
 <script type="text/javascript" src="../js/d3.js"></script>
@@ -28,12 +31,19 @@ d3.csv("morley.csv", function(error, experiments) {
     .innerRadius(100)
     .dimension(runDimension)
     .group(speedSumGroup)
-    .legend(dc.legend());
+    .legend(dc.legend())
+    // workaround for #703: not enough data is accessible through .label() to display percentages
+    .on('pretransition', function(chart) {
+        chart.selectAll('text.pie-slice').text(function(d) {
+            return d.data.key + ' ' + dc.utils.printSingleValue((d.endAngle - d.startAngle) / (2*Math.PI) * 100) + '%';
+        })
+    });
 
   chart.render();
 });
 
 </script>
 
+</div>
 </body>
 </html>

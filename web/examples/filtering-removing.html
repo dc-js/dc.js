@@ -1,11 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>dc.js - Number Display Example</title>
+    <title>dc.js - Filtering Example</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
 </head>
 <body>
+
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
+  <p>Example demonstrating using a "<a href="https://github.com/dc-js/dc.js/wiki/FAQ#fake-groups">Fake Group</a>" to remove
+    the empty bars of an ordinal bar chart when their values drop to zero.</p>
+
+  <p>(Note the use of <code><a href="https://github.com/dc-js/dc.js/blob/develop/web/docs/api-latest.md#dc.coordinateGridMixin+elasticX">.elasticX(true)</a></code>
+    to force calculation of the X domain each round.)</p>
 
 <div id="chart-ring-year"></div>
 <div id="chart-hist-spend"></div>
@@ -36,6 +45,16 @@ spendData.forEach(function(d) {
     d.Spent = d.Spent.match(/\d+/);
 });
 
+function remove_empty_bins(source_group) {
+    return {
+        all:function () {
+            return source_group.all().filter(function(d) {
+                return d.value != 0;
+            });
+        }
+    };
+}
+
 // set crossfilter
 var ndx = crossfilter(spendData),
     yearDim  = ndx.dimension(function(d) {return +d.Year;}),
@@ -43,7 +62,8 @@ var ndx = crossfilter(spendData),
     nameDim  = ndx.dimension(function(d) {return d.Name;}),
     spendPerYear = yearDim.group().reduceSum(function(d) {return +d.Spent;}),
     spendPerName = nameDim.group().reduceSum(function(d) {return +d.Spent;}),
-    spendHist    = spendDim.group().reduceCount();
+    spendHist    = spendDim.group().reduceCount(),
+    nonEmptyHist = remove_empty_bins(spendHist)
 
 yearRingChart
     .width(200).height(200)
@@ -54,8 +74,10 @@ yearRingChart
 spendHistChart
     .width(300).height(200)
     .dimension(spendDim)
-    .group(spendHist)
-    .x(d3.scale.linear().domain([0,10]))
+    .group(nonEmptyHist)
+    .x(d3.scale.ordinal())
+    .xUnits(dc.units.ordinal)
+    .elasticX(true)
     .elasticY(true);
 
 spendHistChart.xAxis().tickFormat(function(d) {return d*10}); // convert back to base unit
@@ -71,5 +93,6 @@ dc.renderAll();
 
 </script>
 
+</div>
 </body>
 </html>

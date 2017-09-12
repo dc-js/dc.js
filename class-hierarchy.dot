@@ -1,0 +1,36 @@
+digraph dcHierarchy {
+graph [rankdir=LR, ranksep=0.5]
+node [fontname="sans-serif", fontsize=10, margin="0.05,0.05", href="dc.\N.html"]
+node [style=filled, fillcolor=lightgreen]
+{ node [style=filled, fillcolor=lightblue] baseMixin colorMixin marginMixin bubbleMixin coordinateGridMixin stackMixin capMixin }
+baseMixin [href="dc.baseMixin.html"]
+colorMixin -> coordinateGridMixin
+marginMixin -> coordinateGridMixin
+coordinateGridMixin -> stackMixin
+stackMixin -> barChart
+coordinateGridMixin -> boxPlot
+coordinateGridMixin -> bubbleChart
+bubbleMixin -> bubbleChart
+baseMixin -> bubbleMixin
+bubbleMixin -> bubbleOverlay
+coordinateGridMixin -> compositeChart
+compositeChart -> seriesChart
+baseMixin -> dataCount
+baseMixin -> dataGrid
+baseMixin -> dataTable
+baseMixin -> colorMixin
+colorMixin -> geoChoroplethChart
+baseMixin -> marginMixin
+marginMixin -> heatMap
+colorMixin -> heatMap
+stackMixin -> lineChart
+baseMixin -> numberDisplay
+colorMixin -> pieChart
+baseMixin -> capMixin
+capMixin -> pieChart
+capMixin -> rowChart
+marginMixin -> rowChart
+colorMixin -> rowChart
+coordinateGridMixin -> scatterPlot
+baseMixin -> selectMenu
+}

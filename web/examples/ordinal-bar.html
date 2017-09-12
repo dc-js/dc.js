@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Ordinal Bar Chart Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
+<div id="test"></div>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript">
+
+  var chart = dc.barChart('#test');
+
+  d3.json('fruits.json', function(error, counts) {
+      if(error)
+          throw new Error(error);
+
+      var ndx            = crossfilter(counts),
+          fruitDimension = ndx.dimension(function(d) {return d.name;}),
+          sumGroup       = fruitDimension.group().reduceSum(function(d) {return d.cnt;});
+
+      chart
+          .width(768)
+          .height(380)
+          .x(d3.scale.ordinal())
+          .xUnits(dc.units.ordinal)
+          .brushOn(false)
+          .xAxisLabel('Fruit')
+          .yAxisLabel('Quantity Sold')
+          .dimension(fruitDimension)
+          .barPadding(0.1)
+          .outerPadding(0.05)
+          .group(sumGroup);
+
+      chart.render();
+  });
+
+</script>
+
+</div>
+</body>
+</html>

@@ -3,10 +3,13 @@
 <head>
     <title>dc.js - Bar Chart Example</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
 </head>
 <body>
 
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
 <div id="test"></div>
 
 <script type="text/javascript" src="../js/d3.js"></script>
@@ -33,7 +36,7 @@ d3.csv("morley.csv", function(error, experiments) {
     .yAxisLabel("This is the Y Axis!")
     .dimension(runDimension)
     .group(speedSumGroup)
-    .renderlet(function(chart) {
+    .on('renderlet', function(chart) {
         chart.selectAll('rect').on("click", function(d) {
             console.log("click!", d);
         });
@@ -43,5 +46,6 @@ d3.csv("morley.csv", function(error, experiments) {
 
 </script>
 
+</div>
 </body>
 </html>

@@ -773,7 +773,7 @@ compositeChartDate.width(500)
             dc.lineChart(compositeChartDate),
             dc.lineChart(compositeChartDate).group(dateGroup, "Date Group")
         ])
-        .renderlet(function (chart) {
+        .on('renderlet', function (chart) {
             dc.events.trigger(function () {
                 barChartDate.focus(chart.filter());
                 lineChartDate.focus(chart.filter());
@@ -995,7 +995,7 @@ compositeChartDateB.width(500)
             dc.lineChart(compositeChartDateB).group(dateGroup)
         ])
         .brushOn(false)
-        .renderlet(function (chart) {
+        .on('renderlet', function (chart) {
             chart.selectAll("rect.bar").attr("width", function (d) {
                 return Math.round(d.data.value / 10);
             });

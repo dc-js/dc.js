@@ -3,10 +3,13 @@
 <head>
     <title>dc.js - Series Example</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
 </head>
 <body>
 
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
 <div id="test"></div>
 
 <script type="text/javascript" src="../js/d3.js"></script>
@@ -45,6 +48,7 @@ d3.csv("morley.csv", function(error, experiments) {
     .dimension(runDimension)
     .group(runGroup)
     .mouseZoomable(true)
+    .shareTitle(false) // allow default scatter title to work
     .seriesAccessor(function(d) {return "Expt: " + d.key[0];})
     .keyAccessor(function(d) {return +d.key[1];})
     .valueAccessor(function(d) {return +d.value - 500;})
@@ -57,5 +61,6 @@ d3.csv("morley.csv", function(error, experiments) {
 });
 
 </script>
+</div>
 </body>
 </html>
