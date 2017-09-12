@@ -90,17 +90,18 @@ dc.sunburstChart = function (parent, chartGroup) {
 
         var arc = buildArcs();
 
-        var sunburstData;
+        var sunburstData, cdata;
         // if we have data...
         if (d3.sum(_chart.data(), _chart.valueAccessor())) {
-            var cdata = dc.utils.toHierarchy(_chart.data(), _chart.valueAccessor());
+            cdata = dc.utils.toHierarchy(_chart.data(), _chart.valueAccessor());
             sunburstData = partitionLayout().nodes(cdata);
             sunburstData.shift();
             _g.classed(_emptyCssClass, false);
         } else {
             // otherwise we'd be getting NaNs, so override
             // note: abuse others for its ignoring the value accessor
-            sunburstData = partitionLayout([{key:[0], value:1}]);
+	        cdata = dc.utils.toHierarchy([{key:[0], value:1}], function (d) { return d.value; });
+	        sunburstData = partitionLayout().nodes(cdata);
             _g.classed(_emptyCssClass, true);
         }
 
@@ -143,9 +144,8 @@ dc.sunburstChart = function (parent, chartGroup) {
                 return safeArc(d, i, arc);
             });
 
-        dc.transition(slicePath, _chart.transitionDuration(), function (s) {
-            s.attrTween('d', tweenSlice);
-        });
+	    dc.transition(slicePath, _chart.transitionDuration())
+		    .attrTween('d', tweenSlice);
     }
 
     function createTitles(slicesEnter) {
@@ -206,10 +206,9 @@ dc.sunburstChart = function (parent, chartGroup) {
             .attr('d', function (d, i) {
                 return safeArc(d, i, arc);
             });
-        dc.transition(slicePaths, _chart.transitionDuration(),
-            function (s) {
-                s.attrTween('d', tweenSlice);
-            }).attr('fill', fill);
+	    dc.transition(slicePaths, _chart.transitionDuration())
+		    .attrTween('d', tweenSlice)
+		    .attr('fill', fill);
     }
 
     function updateLabels(sunburstData, arc) {
@@ -307,7 +306,7 @@ dc.sunburstChart = function (parent, chartGroup) {
         return d3.svg.arc()
           .startAngle(function (d) { return d.x; })
           .endAngle(function (d) { return d.x + d.dx; })
-          .innerRadius(function (d) { return Math.sqrt(d.y); })
+          .innerRadius(function (d) { return d.path && d.path.length === 1 ? _innerRadius : Math.sqrt(d.y); })
           .outerRadius(function (d) { return Math.sqrt(d.y + d.dy); });
     }
 
@@ -385,7 +384,7 @@ dc.sunburstChart = function (parent, chartGroup) {
         var i = d3.interpolate(current, tweenTarget);
         this._current = i(0);
         return function (t) {
-            return safeArc(i(t), 0, buildArcs());
+	        return safeArc(Object.assign({}, b, i(t)), 0, buildArcs());
         };
     }
 

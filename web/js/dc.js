@@ -641,16 +641,10 @@ dc.utils.toHierarchy = function (list, accessor) {
             var childNode;
             if (j + 1 < parts.length) {
                 // Not yet at the end of the sequence; move down the tree.
-                var foundChild = false;
-                for (var k = 0; k < children.length; k++) {
-                    if (children[k].key === nodeName) {
-                        childNode = children[k];
-                        foundChild = true;
-                        break;
-                    }
-                }
-            // If we don't already have a child node for this branch, create it.
-                if (!foundChild) {
+				childNode = findChild(children, nodeName);
+
+                // If we don't already have a child node for this branch, create it.
+                if (childNode !== void 0) {
                     childNode = {'key': nodeName, 'children': [], 'path':currentPath};
                     children.push(childNode);
                 }
@@ -664,6 +658,14 @@ dc.utils.toHierarchy = function (list, accessor) {
     }
     return root;
 };
+
+function findChild(children, nodeName) {
+	for (var k = 0; k < children.length; k++) {
+		if (children[k].key === nodeName) {
+			return children[k];
+		}
+	}
+}
 
 dc.utils.getAncestors = function (node) {
     var path = [];
