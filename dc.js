@@ -5785,9 +5785,11 @@ dc.sunburstChart = function (parent, chartGroup) {
         var slicesEnter = slices
             .enter()
             .append('g')
-            .attr('class', function (d, i) {
-                return _sliceCssClass + ' _' + i;
-            });
+	        .attr('class', function (d, i) {
+		        return _sliceCssClass +
+			        ' _' + i + ' ' +
+			        _sliceCssClass + '-level-' + d.depth;
+	        });
         return slicesEnter;
     }
 
@@ -5799,8 +5801,10 @@ dc.sunburstChart = function (parent, chartGroup) {
                 return safeArc(d, i, arc);
             });
 
-	    dc.transition(slicePath, _chart.transitionDuration())
-		    .attrTween('d', tweenSlice);
+	    var transition = dc.transition(slicePath, _chart.transitionDuration());
+	    if (transition.attrTween) {
+		    transition.attrTween( 'd', tweenSlice );
+	    }
     }
 
     function createTitles(slicesEnter) {
@@ -5861,9 +5865,11 @@ dc.sunburstChart = function (parent, chartGroup) {
             .attr('d', function (d, i) {
                 return safeArc(d, i, arc);
             });
-	    dc.transition(slicePaths, _chart.transitionDuration())
-		    .attrTween('d', tweenSlice)
-		    .attr('fill', fill);
+	    var transition = dc.transition(slicePaths, _chart.transitionDuration());
+	    if (transition.attrTween) {
+		    transition.attrTween( 'd', tweenSlice )
+	    }
+        transition.attr('fill', fill);
     }
 
     function updateLabels(sunburstData, arc) {
