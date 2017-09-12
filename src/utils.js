@@ -148,17 +148,17 @@ dc.utils.toHierarchy = function (list, accessor) {
             var childNode;
             if (j + 1 < parts.length) {
                 // Not yet at the end of the sequence; move down the tree.
-				childNode = findChild(children, nodeName);
+                childNode = findChild(children, nodeName);
 
                 // If we don't already have a child node for this branch, create it.
                 if (childNode === void 0) {
-                    childNode = {'key': nodeName, 'children': [], 'path':currentPath};
+                    childNode = {'key': nodeName, 'children': [], 'path': currentPath};
                     children.push(childNode);
                 }
                 currentNode = childNode;
             } else {
                 // Reached the end of the sequence; create a leaf node.
-                childNode = {'key': nodeName, 'value': value, 'data': data, 'path':currentPath};
+                childNode = {'key': nodeName, 'value': value, 'data': data, 'path': currentPath};
                 children.push(childNode);
             }
         }
@@ -166,12 +166,12 @@ dc.utils.toHierarchy = function (list, accessor) {
     return root;
 };
 
-function findChild(children, nodeName) {
-	for (var k = 0; k < children.length; k++) {
-		if (children[k].key === nodeName) {
-			return children[k];
-		}
-	}
+function findChild (children, nodeName) {
+    for (var k = 0; k < children.length; k++) {
+        if (children[k].key === nodeName) {
+            return children[k];
+        }
+    }
 }
 
 dc.utils.getAncestors = function (node) {

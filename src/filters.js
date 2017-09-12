@@ -43,30 +43,36 @@ dc.filters.RangedFilter = function (low, high) {
 };
 
 /**
-#### dc.filters.HierarchyFilter(path)
- HierarchyFilter is a filter which accepts a path.  It is used by the
- [sunburst chart](#sunburst) to include particular cells and all their children as they are clicked.
-**/
+ * HierarchyFilter is a filter which accepts a key path as an array. It matches any node at, or
+ * child of, the given path. It is used by the sunburst chart to include particular cells and all
+ * their children as they are clicked.
+ *
+ * @name HierarchyFilter
+ * @memberof dc.filters
+ * @param {String} path
+ * @returns {Array<String>}
+ * @constructor
+ */
 dc.filters.HierarchyFilter = function (path) {
-	if (path === null) {
-	    return null;
-	}
+    if (path === null) {
+        return null;
+    }
 
-	var filter = path.slice(0);
-	filter.isFiltered = function (value) {
-		if ( !(filter.length && value.length && value.length >= filter.length) ) {
-		    return false;
-		}
+    var filter = path.slice(0);
+    filter.isFiltered = function (value) {
+        if (!(filter.length && value.length && value.length >= filter.length)) {
+            return false;
+        }
 
-		for ( var i = 0; i < filter.length; i++ ) {
-			if ( value[i] !== filter[i] ) {
-			    return false;
-			}
-		}
+        for (var i = 0; i < filter.length; i++) {
+            if (value[i] !== filter[i]) {
+                return false;
+            }
+        }
 
-		return true;
-	};
-	return filter;
+        return true;
+    };
+    return filter;
 };
 
 /**
@@ -82,12 +88,14 @@ dc.filters.HierarchyFilter = function (path) {
  * @constructor
  */
 dc.filters.TwoDimensionalFilter = function (filter) {
-    if (filter === null) { return null; }
+    if (filter === null) {
+        return null;
+    }
 
     var f = filter;
     f.isFiltered = function (value) {
         return value.length && value.length === f.length &&
-               value[0] === f[0] && value[1] === f[1];
+            value[0] === f[0] && value[1] === f[1];
     };
     f.filterType = 'TwoDimensionalFilter';
 
@@ -114,7 +122,9 @@ dc.filters.TwoDimensionalFilter = function (filter) {
  * @constructor
  */
 dc.filters.RangedTwoDimensionalFilter = function (filter) {
-    if (filter === null) { return null; }
+    if (filter === null) {
+        return null;
+    }
 
     var f = filter;
     var fromBottomLeft;
@@ -140,7 +150,7 @@ dc.filters.RangedTwoDimensionalFilter = function (filter) {
         }
 
         return x >= fromBottomLeft[0][0] && x < fromBottomLeft[1][0] &&
-               y >= fromBottomLeft[0][1] && y < fromBottomLeft[1][1];
+            y >= fromBottomLeft[0][1] && y < fromBottomLeft[1][1];
     };
     f.filterType = 'RangedTwoDimensionalFilter';
 
