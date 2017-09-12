@@ -48,12 +48,25 @@ dc.filters.RangedFilter = function (low, high) {
  [sunburst chart](#sunburst) to include particular cells and all their children as they are clicked.
 **/
 dc.filters.HierarchyFilter = function (path) {
-    if (path === null) { return null; }
-    var filter = path;
-    filter.isFiltered = function (value) {
-        return filter.length && value.length && dc.utils.arraysIdentical(value.slice(0, filter.length), filter);
-    };
-    return filter;
+	if (path === null) {
+	    return null;
+	}
+
+	var filter = path.slice(0);
+	filter.isFiltered = function (value) {
+		if ( !(filter.length && value.length && value.length >= filter.length) ) {
+		    return false;
+		}
+
+		for ( var i = 0; i < filter.length; i++ ) {
+			if ( value[i] !== filter[i] ) {
+			    return false;
+			}
+		}
+
+		return true;
+	};
+	return filter;
 };
 
 /**

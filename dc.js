@@ -997,12 +997,25 @@ dc.filters.RangedFilter = function (low, high) {
  [sunburst chart](#sunburst) to include particular cells and all their children as they are clicked.
 **/
 dc.filters.HierarchyFilter = function (path) {
-    if (path === null) { return null; }
-    var filter = path;
-    filter.isFiltered = function (value) {
-        return filter.length && value.length && dc.utils.arraysIdentical(value.slice(0, filter.length), filter);
-    };
-    return filter;
+	if (path === null) {
+	    return null;
+	}
+
+	var filter = path.slice(0);
+	filter.isFiltered = function (value) {
+		if ( !(filter.length && value.length && value.length >= filter.length) ) {
+		    return false;
+		}
+
+		for ( var i = 0; i < filter.length; i++ ) {
+			if ( value[i] !== filter[i] ) {
+			    return false;
+			}
+		}
+
+		return true;
+	};
+	return filter;
 };
 
 /**
@@ -5696,6 +5709,23 @@ dc.sunburstChart = function (parent, chartGroup) {
     _chart.renderLabel(true);
 
     _chart.transitionDuration(350);
+
+	_chart.filterHandler(function (dimension, filters) {
+		if (filters.length === 0) {
+			dimension.filter(null);
+		} else {
+			dimension.filterFunction(function (d) {
+				for (var i = 0; i < filters.length; i++) {
+					var filter = filters[i];
+					if (filter.isFiltered && filter.isFiltered(d)) {
+						return true;
+					}
+				}
+				return false;
+			});
+		}
+		return filters;
+	});
 
     _chart._doRender = function () {
         _chart.resetSvg();
