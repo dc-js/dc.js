@@ -72,6 +72,23 @@ dc.sunburstChart = function (parent, chartGroup) {
 
     _chart.transitionDuration(350);
 
+	_chart.filterHandler(function (dimension, filters) {
+		if (filters.length === 0) {
+			dimension.filter(null);
+		} else {
+			dimension.filterFunction(function (d) {
+				for (var i = 0; i < filters.length; i++) {
+					var filter = filters[i];
+					if (filter.isFiltered && filter.isFiltered(d)) {
+						return true;
+					}
+				}
+				return false;
+			});
+		}
+		return filters;
+	});
+
     _chart._doRender = function () {
         _chart.resetSvg();
 
