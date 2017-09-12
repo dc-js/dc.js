@@ -229,7 +229,7 @@ dc.sunburstChart = function (parent, chartGroup) {
             });
 	    var transition = dc.transition(slicePaths, _chart.transitionDuration());
 	    if (transition.attrTween) {
-		    transition.attrTween( 'd', tweenSlice )
+		    transition.attrTween( 'd', tweenSlice );
 	    }
         transition.attr('fill', fill);
     }
@@ -339,7 +339,7 @@ dc.sunburstChart = function (parent, chartGroup) {
 
     function isPathFiltered(path) {
         for (var i = 0; i < _chart.filters().length; i++) {
-            var currentFilter =  _chart.filters()[i];
+            var currentFilter = _chart.filters()[i];
             if (currentFilter.isFiltered(path)) {
                 return true;
             }
@@ -443,6 +443,8 @@ dc.sunburstChart = function (parent, chartGroup) {
             _chart.redrawGroup();
         });
     }
+
+    _chart.onClick = onClick;
 
     function onClick(d, i) {
         if (_g.attr('class') !== _emptyCssClass) {
