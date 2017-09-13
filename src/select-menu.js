@@ -55,7 +55,7 @@ dc.selectMenu = function (parent, chartGroup) {
         _chart._doRedraw();
         return _chart;
     };
-    // Fixing IE 11 crash when re
+    // Fixing IE 11 crash when redrawing the chart
     _chart.redraw = function () {
         var result = _chart.render();
         if (_chart.hasFilter() && _multiple) {
