@@ -55,7 +55,24 @@ dc.selectMenu = function (parent, chartGroup) {
         _chart._doRedraw();
         return _chart;
     };
-
+    // Fixing IE 11 crash when re
+    _chart.redraw = function () {
+        var result = _chart.render();
+        if (_chart.hasFilter() && _multiple) {
+            _select.selectAll('option')
+                .property('selected', function (d) {
+                    if (typeof d === 'undefined') {
+                        return false;
+                    }
+                    return d && _chart.filters().indexOf(String(_chart.keyAccessor()(d))) >= 0;
+                });
+        } else if (_chart.hasFilter()) {
+            _select.property('value', _chart.filter());
+        } else {
+            _select.property('value', '');
+        }
+        return result;
+    };
     _chart._doRedraw = function () {
         setAttributes();
         renderOptions();
