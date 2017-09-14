@@ -56,23 +56,8 @@ dc.selectMenu = function (parent, chartGroup) {
         return _chart;
     };
     // Fixing IE 11 crash when redrawing the chart
-    _chart.redraw = function () {
-        var result = _chart.render();
-        if (_chart.hasFilter() && _multiple) {
-            _select.selectAll('option')
-                .property('selected', function (d) {
-                    if (typeof d === 'undefined') {
-                        return false;
-                    }
-                    return d && _chart.filters().indexOf(String(_chart.keyAccessor()(d))) >= 0;
-                });
-        } else if (_chart.hasFilter()) {
-            _select.property('value', _chart.filter());
-        } else {
-            _select.property('value', '');
-        }
-        return result;
-    };
+    _chart.redraw = _chart.render;
+
     _chart._doRedraw = function () {
         setAttributes();
         renderOptions();
@@ -80,7 +65,7 @@ dc.selectMenu = function (parent, chartGroup) {
         if (_chart.hasFilter() && _multiple) {
             _select.selectAll('option')
                 .property('selected', function (d) {
-                    return d && _chart.filters().indexOf(String(_chart.keyAccessor()(d))) >= 0;
+                    return typeof d !== 'undefined' && _chart.filters().indexOf(String(_chart.keyAccessor()(d))) >= 0;
                 });
         } else if (_chart.hasFilter()) {
             _select.property('value', _chart.filter());
