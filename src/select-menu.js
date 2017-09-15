@@ -56,7 +56,13 @@ dc.selectMenu = function (parent, chartGroup) {
         return _chart;
     };
     // Fixing IE 11 crash when redrawing the chart
-    _chart.redraw = _chart.render;
+    // see here for list of IE user Agents :
+    // http://www.useragentstring.com/pages/useragentstring.php?name=Internet+Explorer
+    var ua = window.navigator.userAgent;
+    // test for IE 11 but not a lower version (which contains MSIE in UA)
+    if (ua.indexOf('Trident/') > 0 && ua.indexOf('MSIE') === -1) {
+        _chart.redraw = _chart.render;
+    }
 
     _chart._doRedraw = function () {
         setAttributes();
