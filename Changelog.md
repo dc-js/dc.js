@@ -1,3 +1,9 @@
+## 2.1.9
+* Fix selectMenu crashing IE11 on Windows 8 and below, by Victor Parpoil ([#1338](https://github.com/dc-js/dc.js/pull/1338) / [#1334](https://github.com/dc-js/dc.js/issues/1334))
+
+## 2.1.8
+(see 2.0.5)
+
 ## 2.1.7
 * viewBox-based resizing of charts, by James Tindall ([#1312](https://github.com/dc-js/dc.js/pull/1312))
 * workaround for [issue #949](https://github.com/dc-js/dc.js/issues/949) merged from 2.0.4
