@@ -41,6 +41,16 @@ dc.compositeChart = function (parent, chartGroup) {
     _chart.transitionDuration(500);
     _chart.transitionDelay(0);
 
+    dc.override(_chart, '__computeMargins', function () {
+        var margins = _chart.___computeMargins();
+        return {
+            top: margins.top,
+            right: margins.right + _rightYAxisLabelPadding,
+            bottom: margins.bottom,
+            left: margins.left
+        };
+    });
+
     dc.override(_chart, '_generateG', function () {
         var g = this.__generateG();
 
@@ -94,12 +104,12 @@ dc.compositeChart = function (parent, chartGroup) {
 
     _chart.renderYAxis = function () {
         if (leftYAxisChildren().length !== 0) {
-            _chart.renderYAxisAt('y', _chart.yAxis(), _chart.margins().left);
+            _chart.renderYAxisAt('y', _chart.yAxis(), _chart.computedMargins().left);
             _chart.renderYAxisLabel('y', _chart.yAxisLabel(), -90);
         }
 
         if (rightYAxisChildren().length !== 0) {
-            _chart.renderYAxisAt('yr', _chart.rightYAxis(), _chart.width() - _chart.margins().right);
+            _chart.renderYAxisAt('yr', _chart.rightYAxis(), _chart.width() - _chart.computedMargins().right);
             _chart.renderYAxisLabel('yr', _chart.rightYAxisLabel(), 90, _chart.width() - _rightYAxisLabelPadding);
         }
     };
@@ -283,9 +293,8 @@ dc.compositeChart = function (parent, chartGroup) {
             return _rightYAxisLabel;
         }
         _rightYAxisLabel = rightYAxisLabel;
-        _chart.margins().right -= _rightYAxisLabelPadding;
         _rightYAxisLabelPadding = (padding === undefined) ? DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING : padding;
-        _chart.margins().right += _rightYAxisLabelPadding;
+        _chart.computedMargins(_chart._computeMargins());
         return _chart;
     };
 
@@ -320,7 +329,7 @@ dc.compositeChart = function (parent, chartGroup) {
         _children.forEach(function (child) {
             child.height(_chart.height());
             child.width(_chart.width());
-            child.margins(_chart.margins());
+            child.margins(_chart.computedMargins());
 
             if (_shareTitle) {
                 child.title(_chart.title());

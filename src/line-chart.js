@@ -366,7 +366,7 @@ dc.lineChart = function (parent, chartGroup) {
     function showRefLines (dot, g) {
         var x = dot.attr('cx');
         var y = dot.attr('cy');
-        var yAxisX = (_chart._yAxisX() - _chart.margins().left);
+        var yAxisX = (_chart._yAxisX() - _chart.computedMargins().left);
         var yAxisRefPathD = 'M' + yAxisX + ' ' + y + 'L' + (x) + ' ' + (y);
         var xAxisRefPathD = 'M' + x + ' ' + _chart.yAxisHeight() + 'L' + x + ' ' + y;
         g.select('path.' + Y_AXIS_REF_LINE_CLASS).style('display', '').attr('d', yAxisRefPathD);

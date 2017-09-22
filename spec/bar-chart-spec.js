@@ -712,7 +712,7 @@ describe('dc.barChart', function () {
 
             describe('when a brush is defined', function () {
                 it('should position the brush with an offset', function () {
-                    expect(chart.select('g.brush').attr('transform')).toMatchTranslate(chart.margins().left, 10);
+                    expect(chart.select('g.brush').attr('transform')).toMatchTranslate(chart.computedMargins().left, 10);
                 });
 
                 it('should create a fancy brush resize handle', function () {

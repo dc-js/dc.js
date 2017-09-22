@@ -72,6 +72,16 @@ dc.coordinateGridMixin = function (_chart) {
 
     var _useRightYAxis = false;
 
+    dc.override(_chart, '_computeMargins', function () {
+        var margins = _chart.__computeMargins();
+        return {
+            top: margins.top,
+            right: margins.right,
+            bottom: margins.bottom + _xAxisLabelPadding,
+            left: margins.left + _yAxisLabelPadding
+        };
+    });
+
     /**
      * When changing the domain of the x or y scale, it is necessary to tell the chart to recalculate
      * and redraw the axes. (`.rescale()` is called automatically when the x or y scale is replaced
@@ -163,7 +173,7 @@ dc.coordinateGridMixin = function (_chart) {
         _g = _parent.append('g');
 
         _chartBodyG = _g.append('g').attr('class', 'chart-body')
-            .attr('transform', 'translate(' + _chart.margins().left + ', ' + _chart.margins().top + ')')
+            .attr('transform', 'translate(' + _chart.computedMargins().left + ', ' + _chart.computedMargins().top + ')')
             .attr('clip-path', 'url(' + href + '#' + getClipPathId() + ')');
 
         return _g;
@@ -490,14 +500,14 @@ dc.coordinateGridMixin = function (_chart) {
         if (axisXG.empty()) {
             axisXG = g.append('g')
                 .attr('class', 'axis x')
-                .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')');
+                .attr('transform', 'translate(' + _chart.computedMargins().left + ',' + _chart._xAxisY() + ')');
         }
 
         var axisXLab = g.select('text.' + X_AXIS_LABEL_CLASS);
         if (axisXLab.empty() && _chart.xAxisLabel()) {
             axisXLab = g.append('text')
                 .attr('class', X_AXIS_LABEL_CLASS)
-                .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
+                .attr('transform', 'translate(' + (_chart.computedMargins().left + _chart.xAxisLength() / 2) + ',' +
                       (_chart.height() - _xAxisLabelPadding) + ')')
                 .attr('text-anchor', 'middle');
         }
@@ -506,10 +516,10 @@ dc.coordinateGridMixin = function (_chart) {
         }
 
         dc.transition(axisXG, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart._xAxisY() + ')')
+            .attr('transform', 'translate(' + _chart.computedMargins().left + ',' + _chart._xAxisY() + ')')
             .call(_xAxis);
         dc.transition(axisXLab, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('transform', 'translate(' + (_chart.margins().left + _chart.xAxisLength() / 2) + ',' +
+            .attr('transform', 'translate(' + (_chart.computedMargins().left + _chart.xAxisLength() / 2) + ',' +
                   (_chart.height() - _xAxisLabelPadding) + ')');
     };
 
@@ -520,7 +530,7 @@ dc.coordinateGridMixin = function (_chart) {
             if (gridLineG.empty()) {
                 gridLineG = g.insert('g', ':first-child')
                     .attr('class', GRID_LINE_CLASS + ' ' + VERTICAL_CLASS)
-                    .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
+                    .attr('transform', 'translate(' + _chart.computedMargins().left + ',' + _chart.computedMargins().top + ')');
             }
 
             var ticks = _xAxis.tickValues() ? _xAxis.tickValues() :
@@ -535,7 +545,7 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('x1', function (d) {
                     return _x(d);
                 })
-                .attr('y1', _chart._xAxisY() - _chart.margins().top)
+                .attr('y1', _chart._xAxisY() - _chart.computedMargins().top)
                 .attr('x2', function (d) {
                     return _x(d);
                 })
@@ -549,7 +559,7 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('x1', function (d) {
                     return _x(d);
                 })
-                .attr('y1', _chart._xAxisY() - _chart.margins().top)
+                .attr('y1', _chart._xAxisY() - _chart.computedMargins().top)
                 .attr('x2', function (d) {
                     return _x(d);
                 })
@@ -563,7 +573,7 @@ dc.coordinateGridMixin = function (_chart) {
     }
 
     _chart._xAxisY = function () {
-        return (_chart.height() - _chart.margins().bottom);
+        return (_chart.height() - _chart.computedMargins().bottom);
     };
 
     _chart.xAxisLength = function () {
@@ -585,9 +595,8 @@ dc.coordinateGridMixin = function (_chart) {
             return _xAxisLabel;
         }
         _xAxisLabel = labelText;
-        _chart.margins().bottom -= _xAxisLabelPadding;
         _xAxisLabelPadding = (padding === undefined) ? DEFAULT_AXIS_LABEL_PADDING : padding;
-        _chart.margins().bottom += _xAxisLabelPadding;
+        _chart.computedMargins(_chart._computeMargins());
         return _chart;
     };
 
@@ -615,7 +624,7 @@ dc.coordinateGridMixin = function (_chart) {
         labelXPosition = labelXPosition || _yAxisLabelPadding;
 
         var axisYLab = _chart.g().select('text.' + Y_AXIS_LABEL_CLASS + '.' + axisClass + '-label');
-        var labelYPosition = (_chart.margins().top + _chart.yAxisHeight() / 2);
+        var labelYPosition = (_chart.computedMargins().top + _chart.yAxisHeight() / 2);
         if (axisYLab.empty() && text) {
             axisYLab = _chart.g().append('text')
                 .attr('transform', 'translate(' + labelXPosition + ',' + labelYPosition + '),rotate(' + rotation + ')')
@@ -635,16 +644,16 @@ dc.coordinateGridMixin = function (_chart) {
         if (axisYG.empty()) {
             axisYG = _chart.g().append('g')
                 .attr('class', 'axis ' + axisClass)
-                .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')');
+                .attr('transform', 'translate(' + position + ',' + _chart.computedMargins().top + ')');
         }
 
         dc.transition(axisYG, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('transform', 'translate(' + position + ',' + _chart.margins().top + ')')
+            .attr('transform', 'translate(' + position + ',' + _chart.computedMargins().top + ')')
             .call(axis);
     };
 
     _chart.renderYAxis = function () {
-        var axisPosition = _useRightYAxis ? (_chart.width() - _chart.margins().right) : _chart._yAxisX();
+        var axisPosition = _useRightYAxis ? (_chart.width() - _chart.computedMargins().right) : _chart._yAxisX();
         _chart.renderYAxisAt('y', _yAxis, axisPosition);
         var labelPosition = _useRightYAxis ? (_chart.width() - _yAxisLabelPadding) : _yAxisLabelPadding;
         var rotation = _useRightYAxis ? 90 : -90;
@@ -660,7 +669,7 @@ dc.coordinateGridMixin = function (_chart) {
             if (gridLineG.empty()) {
                 gridLineG = g.insert('g', ':first-child')
                     .attr('class', GRID_LINE_CLASS + ' ' + HORIZONTAL_CLASS)
-                    .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
+                    .attr('transform', 'translate(' + _chart.computedMargins().left + ',' + _chart.computedMargins().top + ')');
             }
 
             var lines = gridLineG.selectAll('line')
@@ -700,7 +709,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart._yAxisX = function () {
-        return _chart.useRightYAxis() ? _chart.width() - _chart.margins().right : _chart.margins().left;
+        return _chart.useRightYAxis() ? _chart.width() - _chart.computedMargins().right : _chart.computedMargins().left;
     };
 
     /**
@@ -719,9 +728,8 @@ dc.coordinateGridMixin = function (_chart) {
             return _yAxisLabel;
         }
         _yAxisLabel = labelText;
-        _chart.margins().left -= _yAxisLabelPadding;
         _yAxisLabelPadding = (padding === undefined) ? DEFAULT_AXIS_LABEL_PADDING : padding;
-        _chart.margins().left += _yAxisLabelPadding;
+        _chart.computedMargins(_chart._computeMargins());
         return _chart;
     };
 
@@ -965,7 +973,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function brushHeight () {
-        return _chart._xAxisY() - _chart.margins().top;
+        return _chart._xAxisY() - _chart.computedMargins().top;
     }
 
     _chart.renderBrush = function (g) {
@@ -976,7 +984,7 @@ dc.coordinateGridMixin = function (_chart) {
 
             var gBrush = g.append('g')
                 .attr('class', 'brush')
-                .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')')
+                .attr('transform', 'translate(' + _chart.computedMargins().left + ',' + _chart.computedMargins().top + ')')
                 .call(_brush.x(_chart.x()));
             _chart.setBrushY(gBrush, false);
             _chart.setHandlePaths(gBrush);
