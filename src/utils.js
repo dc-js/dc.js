@@ -120,6 +120,70 @@ dc.utils.printSingleValue = function (filter) {
 };
 dc.utils.printSingleValue.fformat = d3.format('.2f');
 
+dc.utils.allChildren = function (node) {
+    var paths = [];
+    paths.push(node.path);
+    console.log('currentNode', node);
+    if (node.children) {
+        for (var i = 0; i < node.children.length; i++) {
+            paths = paths.concat(dc.utils.allChildren(node.children[i]));
+        }
+    }
+    return paths;
+};
+
+// builds a d3 Hierarchy from a collection
+// TODO: turn this monster method something better.
+dc.utils.toHierarchy = function (list, accessor) {
+    var root = {'key': 'root', 'children': []};
+    for (var i = 0; i < list.length; i++) {
+        var data = list[i];
+        var parts = data.key;
+        var value = accessor(data);
+        var currentNode = root;
+        for (var j = 0; j < parts.length; j++) {
+            var currentPath = parts.slice(0, j + 1);
+            var children = currentNode.children;
+            var nodeName = parts[j];
+            var childNode;
+            if (j + 1 < parts.length) {
+                // Not yet at the end of the sequence; move down the tree.
+                childNode = findChild(children, nodeName);
+
+                // If we don't already have a child node for this branch, create it.
+                if (childNode === void 0) {
+                    childNode = {'key': nodeName, 'children': [], 'path': currentPath};
+                    children.push(childNode);
+                }
+                currentNode = childNode;
+            } else {
+                // Reached the end of the sequence; create a leaf node.
+                childNode = {'key': nodeName, 'value': value, 'data': data, 'path': currentPath};
+                children.push(childNode);
+            }
+        }
+    }
+    return root;
+};
+
+function findChild (children, nodeName) {
+    for (var k = 0; k < children.length; k++) {
+        if (children[k].key === nodeName) {
+            return children[k];
+        }
+    }
+}
+
+dc.utils.getAncestors = function (node) {
+    var path = [];
+    var current = node;
+    while (current.parent) {
+        path.unshift(current.name);
+        current = current.parent;
+    }
+    return path;
+};
+
 /**
  * Arbitrary add one value to another.
  * @method add
@@ -297,3 +361,16 @@ dc.utils.appendOrSelect = function (parent, selector, tag) {
  * @returns {Number}
  */
 dc.utils.safeNumber = function (n) { return dc.utils.isNumber(+n) ? +n : 0;};
+
+dc.utils.arraysIdentical = function (a, b) {
+    var i = a.length;
+    if (i !== b.length) {
+        return false;
+    }
+    while (i--) {
+        if (a[i] !== b[i]) {
+            return false;
+        }
+    }
+    return true;
+};
