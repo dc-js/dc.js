@@ -1,8 +1,30 @@
 /**
  * The sunburst chart implementation is usually used to visualize a small tree distribution.  The sunburst
  * chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
- * slice relative to the sum of all values. Slices are ordered by `.ordering` which defaults to sorting
+ * slice relative to the sum of all values. Slices are ordered by {@link dc.baseMixin#ordering ordering} which defaults to sorting
  * by key.
+ *
+ * The keys used in the sunburst chart should be arrays, representing paths in the tree.
+ *
+ * When filtering, the sunburst chart creates instances of {@link dc.filters.HierarchyFilter HierarchyFilter}.
+ *
+ * @class sunburstChart
+ * @memberof dc
+ * @mixes dc.capMixin
+ * @mixes dc.colorMixin
+ * @mixes dc.baseMixin
+ * @example
+ * // create a sunburst chart under #chart-container1 element using the default global chart group
+ * var chart1 = dc.sunburstChart('#chart-container1');
+ * // create a sunburst chart under #chart-container2 element using chart group A
+ * var chart2 = dc.sunburstChart('#chart-container2', 'chartGroupA');
+ *
+ * @param {String|node|d3.selection} parent - Any valid
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * a dom block element such as a div; or a dom element or d3 selection.
+ * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+ * Interaction with a chart will only trigger events and redraws within the chart's group.
+ * @returns {dc.sunburstChart}
  **/
 dc.sunburstChart = function (parent, chartGroup) {
     var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
@@ -26,15 +48,6 @@ dc.sunburstChart = function (parent, chartGroup) {
     _chart.title(function (d) {
         return _chart.cappedKeyAccessor(d) + ': ' + _chart.cappedValueAccessor(d);
     });
-
-    /**
-     #### .slicesCap([cap])
-     Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
-     value from high to low. Other slices exeeding the cap will be rolled up into one single *Others* slice.
-     The resulting data will still be sorted by .ordering (default by key).
-     **/
-
-    _chart.slicesCap = _chart.cap; // this doesn't work yet.
 
     _chart.label(_chart.cappedKeyAccessor);
     _chart.renderLabel(true);
@@ -245,36 +258,47 @@ dc.sunburstChart = function (parent, chartGroup) {
     }
 
     /**
-     #### .innerRadius([innerRadius])
-     Get or set the inner radius of the sunburstData chart. If the inner radius is greater than 0px then the
-     sunburstData chart will be rendered as a doughnut chart. Default inner radius is 0px.
-     **/
-    _chart.innerRadius = function (r) {
+     * Get or set the inner radius of the sunburst chart. If the inner radius is greater than 0px then the
+     * sunburst chart will be rendered as a doughnut chart. Default inner radius is 0px.
+     * @method innerRadius
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [innerRadius=0]
+     * @returns {Number|dc.sunburstChart}
+     */
+    _chart.innerRadius = function (innerRadius) {
         if (!arguments.length) {
             return _innerRadius;
         }
-        _innerRadius = r;
+        _innerRadius = innerRadius;
         return _chart;
     };
 
     /**
-     #### .radius([radius])
-     Get or set the outer radius. Default radius is 90px.
-
-     **/
-    _chart.radius = function (r) {
+     * Get or set the outer radius. If the radius is not set, it will be half of the minimum of the
+     * chart width and height.
+     * @method radius
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [radius]
+     * @returns {Number|dc.sunburstChart}
+     */
+    _chart.radius = function (radius) {
         if (!arguments.length) {
             return _radius;
         }
-        _radius = r;
+        _radius = radius;
         return _chart;
     };
 
     /**
-     #### .cx([cx])
-     Get or set center x coordinate position. Default is center of svg.
-
-     **/
+     * Get or set center x coordinate position. Default is center of svg.
+     * @method cx
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [cx]
+     * @returns {Number|dc.sunburstChart}
+     */
     _chart.cx = function (cx) {
         if (!arguments.length) {
             return (_cx || _chart.width() / 2);
@@ -284,15 +308,73 @@ dc.sunburstChart = function (parent, chartGroup) {
     };
 
     /**
-     #### .cy([cy])
-     Get or set center y coordinate position. Default is center of svg.
-
-     **/
+     * Get or set center y coordinate position. Default is center of svg.
+     * @method cy
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [cy]
+     * @returns {Number|dc.sunburstChart}
+     */
     _chart.cy = function (cy) {
         if (!arguments.length) {
             return (_cy || _chart.height() / 2);
         }
         _cy = cy;
+        return _chart;
+    };
+
+    /**
+     * Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
+     * display a slice label.
+     * @method minAngleForLabel
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [minAngleForLabel=0.5]
+     * @returns {Number|dc.sunburstChart}
+     */
+    _chart.minAngleForLabel = function (minAngleForLabel) {
+        if (!arguments.length) {
+            return _minAngleForLabel;
+        }
+        _minAngleForLabel = minAngleForLabel;
+        return _chart;
+    };
+
+    /**
+     * Title to use for the only slice when there is no data.
+     * @method emptyTitle
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {String} [title]
+     * @returns {String|dc.sunburstChart}
+     */
+    _chart.emptyTitle = function (title) {
+        if (arguments.length === 0) {
+            return _emptyTitle;
+        }
+        _emptyTitle = title;
+        return _chart;
+    };
+
+    /**
+     * Position slice labels offset from the outer edge of the chart.
+     *
+     * The argument specifies the extra radius to be added for slice labels.
+     * @method externalLabels
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [externalLabelRadius]
+     * @returns {Number|dc.sunburstChart}
+     */
+    _chart.externalLabels = function (externalLabelRadius) {
+        if (arguments.length === 0) {
+            return _externalLabelRadius;
+        } else if (externalLabelRadius) {
+            _externalLabelRadius = externalLabelRadius;
+        } else {
+            _externalLabelRadius = undefined;
+        }
+
         return _chart;
     };
 
@@ -341,19 +423,6 @@ dc.sunburstChart = function (parent, chartGroup) {
 
     _chart._doRedraw = function () {
         drawChart();
-        return _chart;
-    };
-
-    /**
-     #### .minAngleForLabel([minAngle])
-     Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
-     display a slice label.  Default min angle is 0.5.
-     **/
-    _chart.minAngleForLabel = function (_) {
-        if (!arguments.length) {
-            return _minAngleForLabel;
-        }
-        _minAngleForLabel = _;
         return _chart;
     };
 
@@ -438,36 +507,6 @@ dc.sunburstChart = function (parent, chartGroup) {
         }
         return path;
     }
-
-    /**
-     #### .emptyTitle([title])
-     Title to use for the only slice when there is no data
-     */
-    _chart.emptyTitle = function (title) {
-        if (arguments.length === 0) {
-            return _emptyTitle;
-        }
-        _emptyTitle = title;
-        return _chart;
-    };
-
-    /**
-     #### .externalLabels([radius])
-     Position slice labels offset from the outer edge of the chart
-
-     The given argument sets the radial offset.
-     */
-    _chart.externalLabels = function (radius) {
-        if (arguments.length === 0) {
-            return _externalLabelRadius;
-        } else if (radius) {
-            _externalLabelRadius = radius;
-        } else {
-            _externalLabelRadius = undefined;
-        }
-
-        return _chart;
-    };
 
     function labelPosition (d, arc) {
         var centroid;

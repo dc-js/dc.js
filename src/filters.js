@@ -44,7 +44,7 @@ dc.filters.RangedFilter = function (low, high) {
 
 /**
  * HierarchyFilter is a filter which accepts a key path as an array. It matches any node at, or
- * child of, the given path. It is used by the sunburst chart to include particular cells and all
+ * child of, the given path. It is used by the {@link dc.sunburstChart sunburst chart} to include particular cells and all
  * their children as they are clicked.
  *
  * @name HierarchyFilter
