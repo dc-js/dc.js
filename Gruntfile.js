@@ -519,5 +519,6 @@ module.exports.jsFiles = [
     'src/box-plot.js',
     'src/select-menu.js',
     'src/text-filter-widget.js',
+    'src/cbox-menu.js',
     'src/footer.js'  // NOTE: keep this last
 ];
