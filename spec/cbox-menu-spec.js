@@ -38,73 +38,63 @@ describe('dc.cboxMenu', function () {
         it('creates an unordered list', function () {
             expect(chart.selectAll('ul')[0].length).toEqual(1);
         });
-        it('creates li elements for each item', function () {
-            console.log('chart.selectAll("li"):');
-            console.log(chart.selectAll('li'));
+        it('creates .dc-cbox-item class elements for each item', function () {
+            expect(chart.selectAll('li.dc-cbox-item')[0].length).toEqual(stateGroup.all().length);
+        });
+        it('creates an extra item for the select all option', function () {
             expect(chart.selectAll('li')[0].length).toEqual(stateGroup.all().length + 1);
         });
         it('creates input elements within each list item', function () {
             expect(chart.selectAll('li input')[0].length).toEqual(stateGroup.all().length + 1);
         });
-        //         it('creates cbox tag', function () {
-        //             expect(chart.selectAll('input[type=radio]').length).toEqual(1);
-        //         });
-        it('radio buttons are created by default', function () {
-            expect(chart.selectAll('input[type=checkbox]')[0].length).toEqual(0);
-            expect(chart.selectAll('input[type=radio]')[0].length).toEqual(stateGroup.all().length + 1);
+        // check labels and IDs
+        it('creates input elements with IDs and labels with the corresponding "for" attribute', function () {
+            var str = chart.selectAll('input')[0].map(function (e) {
+                return e.id;
+            }).join('--');
+            expect(str).toMatch(/^(input_\d+_\d+--)+input_\d+_all$/);
+            expect(str).toEqual(chart.selectAll('label')[0].map(function (e) {
+                return e.getAttribute('for');
+            }).join('--'));
         });
-        //         it('has a select all option in single mode', function () {
-        //             expect( chart.selectAll('input[type=reset]')[0].length ).toEqual(1);
-        //         });
+
+        // Single select
+        it('creates radio buttons by default', function () {
+            expect(chart.selectAll('input[type=checkbox]')[0].length).toEqual(0);
+            expect(chart.selectAll('.dc-cbox-item input[type=radio]')[0].length).toEqual(stateGroup.all().length);
+        });
         it('uses a radio button for the select all option', function () {
             expect(chart.selectAll('input[type=radio]')[0].length).toEqual(stateGroup.all().length + 1);
         });
+        // select all:
+        it('creates a select all option with default prompt text', function () {
+            var option = chart.selectAll('li label')[0].pop();
+            expect(option.textContent).toEqual('Select all');
+        });
+        it('creates a select all option with no value', function () {
+            var option = chart.selectAll('li input')[0].pop();
+            expect(option.name).toMatch(/^domain_\d+$/);
+            expect(option.getAttribute('value')).toBeNull();
+        });
+        // multiple select
         it('can be made into a multiple', function () {
-            console.log('Running make into a multiple');
             chart.multiple(true).redraw();
-            console.log('make multiple: chart.selectAll("li input"):');
-            console.log(chart.selectAll('li input'));
-            expect(chart.selectAll('input[type=checkbox]')[0].length).toEqual(stateGroup.all().length);
+            expect(chart.selectAll('.dc-cbox-item input[type=checkbox]')[0].length).toEqual(stateGroup.all().length);
         });
         it('does not use radio buttons for multiples', function () {
             chart.multiple(true).redraw();
-            expect(chart.selectAll('input[type=radio]')[0].length).toEqual(0);
-        });
-        it('creates correct number of options', function () {
-            expect(chart.selectAll('.dc-cbox-item')[0].length).toEqual(stateGroup.all().length);
-        });
-        //         it('select tag does not have size by default', function () {
-        //             expect(chart.selectAll('select').attr('size')).toBeNull();
-        //         });
-        //         it('can have size set', function () {
-        //             chart.numberVisible(10).redraw();
-        //             expect(chart.selectAll('select').attr('size')).toEqual('10');
-        //         });
-        // select all:
-        it('creates prompt option with empty value', function () {
-            var option = chart.selectAll('li input')[0].pop();
-            console.log(option);
-            expect(option).not.toBeNull();
-            expect(option.name).toMatch(/^domain_\d+$/);
-            expect(option.value).toEqual('on');
-        });
-        it('creates prompt option with default prompt text', function () {
-            var option = chart.selectAll('li label')[0].pop();
-            console.log(option);
-            expect(option.textContent).toEqual('Select all');
+            expect(chart.selectAll('.dc-cbox-item input[type=radio]')[0].length).toEqual(0);
         });
         // select all multiple:
         it('has a reset button in multiple mode', function () {
             chart.multiple(true).redraw();
             var option = chart.selectAll('li input')[0].pop();
-            console.log(option);
             expect(option.type).toEqual('reset');
             expect(chart.selectAll('input[type=reset]')[0].length).toEqual(1);
         });
         it('creates prompt option with default prompt text', function () {
             chart.multiple(true).redraw();
             var option = chart.selectAll('li input')[0].pop();
-            console.log(option);
             expect(option.textContent).toEqual('Select all');
         });
 
@@ -215,9 +205,6 @@ describe('dc.cboxMenu', function () {
             regionDimension.filter('South');
             chart.redraw();
             expect(chart.selectAll('.dc-cbox-item')[0].length).toEqual(1);
-
-            console.log(getOption(chart, 0).textContent);
-
             expect(getOption(chart, 0).textContent).toEqual('California: 2');
         });
         it('can be overridden', function () {
