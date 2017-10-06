@@ -70,7 +70,6 @@ dc.cboxMenu = function (parent, chartGroup) {
             .classed(GROUP_CSS_CLASS, true);
         renderOptions();
 
-        // select the option(s) corresponding to current filter(s)
         if (_chart.hasFilter() && _multiple) {
             _cbox.selectAll('input')
                  .property('checked', function (d) {
@@ -108,6 +107,7 @@ dc.cboxMenu = function (parent, chartGroup) {
             })
             .text(_chart.title());
 
+        // 'all' option
         if (_multiple) {
             _cbox
             .append('li')
@@ -116,7 +116,6 @@ dc.cboxMenu = function (parent, chartGroup) {
             .text(_promptText)
             .on('click', onChange);
         } else {
-            // 'all' option
             var li = _cbox.append('li');
             li.append('input')
                 .attr('type', _inputType)
