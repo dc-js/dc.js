@@ -517,5 +517,6 @@ module.exports.jsFiles = [
     'src/d3.box.js',
     'src/box-plot.js',
     'src/select-menu.js',
+    'src/cbox-menu.js',
     'src/footer.js'  // NOTE: keep this last
 ];
