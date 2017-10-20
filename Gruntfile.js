@@ -226,6 +226,11 @@ module.exports = function (grunt) {
                             platform: 'Windows 10'
                         },
                         {
+                            browserName: 'internet explorer',
+                            version: '11.0',
+                            platform: 'Windows 8.1'
+                        },
+                        {
                             browserName: 'MicrosoftEdge',
                             version: '14',
                             platform: 'Windows 10'
