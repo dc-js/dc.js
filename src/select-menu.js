@@ -55,6 +55,14 @@ dc.selectMenu = function (parent, chartGroup) {
         _chart._doRedraw();
         return _chart;
     };
+    // Fixing IE 11 crash when redrawing the chart
+    // see here for list of IE user Agents :
+    // http://www.useragentstring.com/pages/useragentstring.php?name=Internet+Explorer
+    var ua = window.navigator.userAgent;
+    // test for IE 11 but not a lower version (which contains MSIE in UA)
+    if (ua.indexOf('Trident/') > 0 && ua.indexOf('MSIE') === -1) {
+        _chart.redraw = _chart.render;
+    }
 
     _chart._doRedraw = function () {
         setAttributes();
@@ -63,7 +71,7 @@ dc.selectMenu = function (parent, chartGroup) {
         if (_chart.hasFilter() && _multiple) {
             _select.selectAll('option')
                 .property('selected', function (d) {
-                    return d && _chart.filters().indexOf(String(_chart.keyAccessor()(d))) >= 0;
+                    return typeof d !== 'undefined' && _chart.filters().indexOf(String(_chart.keyAccessor()(d))) >= 0;
                 });
         } else if (_chart.hasFilter()) {
             _select.property('value', _chart.filter());
