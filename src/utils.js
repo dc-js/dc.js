@@ -1,18 +1,29 @@
+import * as d3 from 'd3';
+import {constants} from './core';
+
+let _dateFormat = d3.time.format('%m/%d/%Y');
 /**
  * The default date format for dc.js
- * @name dateFormat
  * @memberof dc
- * @type {Function}
+ * @method dateFormat
+ * @param {Function} [dateFormatter=d3.time.format('%m/%d/%Y')]
+ * @return {Function}
  * @default d3.time.format('%m/%d/%Y')
  */
-dc.dateFormat = d3.time.format('%m/%d/%Y');
+export function dateFormat (dateFormatter = d3.time.format('%m/%d/%Y')) {
+    if (!arguments.length) {
+        return _dateFormat;
+    }
+    _dateFormat = dateFormatter;
+    return _dateFormat;
+}
 
 /**
  * @namespace printers
  * @memberof dc
  * @type {{}}
  */
-dc.printers = {};
+export const printers = {};
 
 /**
  * Converts a list of filters into a readable string.
@@ -21,14 +32,14 @@ dc.printers = {};
  * @param {Array<dc.filters>} filters
  * @returns {String}
  */
-dc.printers.filters = function (filters) {
-    var s = '';
+printers.filters = function (filters) {
+    let s = '';
 
-    for (var i = 0; i < filters.length; ++i) {
+    for (let i = 0; i < filters.length; ++i) {
         if (i > 0) {
             s += ', ';
         }
-        s += dc.printers.filter(filters[i]);
+        s += printers.filter(filters[i]);
     }
 
     return s;
@@ -41,18 +52,18 @@ dc.printers.filters = function (filters) {
  * @param {dc.filters|any|Array<any>} filter
  * @returns {String}
  */
-dc.printers.filter = function (filter) {
-    var s = '';
+printers.filter = function (filter) {
+    let s = '';
 
     if (typeof filter !== 'undefined' && filter !== null) {
         if (filter instanceof Array) {
             if (filter.length >= 2) {
-                s = '[' + dc.utils.printSingleValue(filter[0]) + ' -> ' + dc.utils.printSingleValue(filter[1]) + ']';
+                s = `[${utils.printSingleValue(filter[0])} -> ${utils.printSingleValue(filter[1])}]`;
             } else if (filter.length >= 1) {
-                s = dc.utils.printSingleValue(filter[0]);
+                s = utils.printSingleValue(filter[0]);
             }
         } else {
-            s = dc.utils.printSingleValue(filter);
+            s = utils.printSingleValue(filter);
         }
     }
 
@@ -67,11 +78,11 @@ dc.printers.filter = function (filter) {
  * @method pluck
  * @memberof dc
  * @example
- * var xPluck = dc.pluck('x');
- * var objA = {x: 1};
+ * let xPluck = dc.pluck('x');
+ * let objA = {x: 1};
  * xPluck(objA) // 1
  * @example
- * var xPosition = dc.pluck('x', function (x, i) {
+ * let xPosition = dc.pluck('x', function (x, i) {
  *     // `this` is the original datum,
  *     // `x` is the x property of the datum,
  *     // `i` is the position in the array
@@ -82,19 +93,19 @@ dc.printers.filter = function (filter) {
  * @param {Function} [f]
  * @returns {Function}
  */
-dc.pluck = function (n, f) {
+export function pluck (n, f) {
     if (!f) {
         return function (d) { return d[n]; };
     }
     return function (d, i) { return f.call(d, d[n], i); };
-};
+}
 
 /**
  * @namespace utils
  * @memberof dc
  * @type {{}}
  */
-dc.utils = {};
+export const utils = {};
 
 /**
  * Print a single value filter.
@@ -103,22 +114,22 @@ dc.utils = {};
  * @param {any} filter
  * @returns {String}
  */
-dc.utils.printSingleValue = function (filter) {
-    var s = '' + filter;
+utils.printSingleValue = function (filter) {
+    let s = `${filter}`;
 
     if (filter instanceof Date) {
-        s = dc.dateFormat(filter);
-    } else if (typeof(filter) === 'string') {
+        s = _dateFormat(filter);
+    } else if (typeof (filter) === 'string') {
         s = filter;
-    } else if (dc.utils.isFloat(filter)) {
-        s = dc.utils.printSingleValue.fformat(filter);
-    } else if (dc.utils.isInteger(filter)) {
+    } else if (utils.isFloat(filter)) {
+        s = utils.printSingleValue.fformat(filter);
+    } else if (utils.isInteger(filter)) {
         s = Math.round(filter);
     }
 
     return s;
 };
-dc.utils.printSingleValue.fformat = d3.format('.2f');
+utils.printSingleValue.fformat = d3.format('.2f');
 
 /**
  * Arbitrary add one value to another.
@@ -134,7 +145,7 @@ dc.utils.printSingleValue.fformat = d3.format('.2f');
  * the `d3.time` namespace
  * @returns {String|Date|Number}
  */
-dc.utils.add = function (l, r, t) {
+utils.add = function (l, r, t) {
     if (typeof r === 'string') {
         r = r.replace('%', '');
     }
@@ -149,11 +160,10 @@ dc.utils.add = function (l, r, t) {
         t = t || 'day';
         return d3.time[t].offset(l, r);
     } else if (typeof r === 'string') {
-        var percentage = (+r / 100);
+        const percentage = (+r / 100);
         return l > 0 ? l * (1 + percentage) : l * (1 - percentage);
-    } else {
-        return l + r;
     }
+    return l + r;
 };
 
 /**
@@ -170,7 +180,7 @@ dc.utils.add = function (l, r, t) {
  * the `d3.time` namespace
  * @returns {String|Date|Number}
  */
-dc.utils.subtract = function (l, r, t) {
+utils.subtract = function (l, r, t) {
     if (typeof r === 'string') {
         r = r.replace('%', '');
     }
@@ -185,11 +195,10 @@ dc.utils.subtract = function (l, r, t) {
         t = t || 'day';
         return d3.time[t].offset(l, -r);
     } else if (typeof r === 'string') {
-        var percentage = (+r / 100);
+        const percentage = (+r / 100);
         return l < 0 ? l * (1 + percentage) : l * (1 - percentage);
-    } else {
-        return l - r;
     }
+    return l - r;
 };
 
 /**
@@ -199,7 +208,7 @@ dc.utils.subtract = function (l, r, t) {
  * @param {any} n
  * @returns {Boolean}
  */
-dc.utils.isNumber = function (n) {
+utils.isNumber = function (n) {
     return n === +n;
 };
 
@@ -210,7 +219,7 @@ dc.utils.isNumber = function (n) {
  * @param {any} n
  * @returns {Boolean}
  */
-dc.utils.isFloat = function (n) {
+utils.isFloat = function (n) {
     return n === +n && n !== (n | 0);
 };
 
@@ -221,7 +230,7 @@ dc.utils.isFloat = function (n) {
  * @param {any} n
  * @returns {Boolean}
  */
-dc.utils.isInteger = function (n) {
+utils.isInteger = function (n) {
     return n === +n && n === (n | 0);
 };
 
@@ -232,8 +241,8 @@ dc.utils.isInteger = function (n) {
  * @param {any} n
  * @returns {Boolean}
  */
-dc.utils.isNegligible = function (n) {
-    return !dc.utils.isNumber(n) || (n < dc.constants.NEGLIGIBLE_NUMBER && n > -dc.constants.NEGLIGIBLE_NUMBER);
+utils.isNegligible = function (n) {
+    return !utils.isNumber(n) || (n < constants.NEGLIGIBLE_NUMBER && n > -constants.NEGLIGIBLE_NUMBER);
 };
 
 /**
@@ -245,8 +254,13 @@ dc.utils.isNegligible = function (n) {
  * @param {any} max
  * @returns {any}
  */
-dc.utils.clamp = function (val, min, max) {
-    return val < min ? min : (val > max ? max : val);
+utils.clamp = function (val, min, max) {
+    if (val < min) {
+        return min;
+    } else if (val > max) {
+        return max;
+    }
+    return val;
 };
 
 /**
@@ -255,8 +269,8 @@ dc.utils.clamp = function (val, min, max) {
  * @memberof dc.utils
  * @returns {Number}
  */
-var _idCounter = 0;
-dc.utils.uniqueId = function () {
+let _idCounter = 0;
+utils.uniqueId = function () {
     return ++_idCounter;
 };
 
@@ -267,8 +281,8 @@ dc.utils.uniqueId = function () {
  * @param {String} name
  * @returns {String}
  */
-dc.utils.nameToId = function (name) {
-    return name.toLowerCase().replace(/[\s]/g, '_').replace(/[\.']/g, '');
+utils.nameToId = function (name) {
+    return name.toLowerCase().replace(/[\s]/g, '_').replace(/[.']/g, '');
 };
 
 /**
@@ -280,9 +294,9 @@ dc.utils.nameToId = function (name) {
  * @param {String} tag
  * @returns {d3.selection}
  */
-dc.utils.appendOrSelect = function (parent, selector, tag) {
+utils.appendOrSelect = function (parent, selector, tag) {
     tag = tag || selector;
-    var element = parent.select(selector);
+    let element = parent.select(selector);
     if (element.empty()) {
         element = parent.append(tag);
     }
@@ -296,4 +310,4 @@ dc.utils.appendOrSelect = function (parent, selector, tag) {
  * @param {Number|any} n
  * @returns {Number}
  */
-dc.utils.safeNumber = function (n) { return dc.utils.isNumber(+n) ? +n : 0;};
+utils.safeNumber = function (n) { return utils.isNumber(+n) ? +n : 0; };

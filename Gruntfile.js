@@ -1,13 +1,6 @@
 module.exports = function (grunt) {
-    'use strict';
-
-    require('load-grunt-tasks')(grunt, {
-        pattern: ['grunt-*', '!grunt-lib-phantomjs', '!grunt-template-jasmine-istanbul']
-    });
-    require('time-grunt')(grunt);
-    var formatFileList = require('./grunt/format-file-list')(grunt);
-
-    var config = {
+    const formatFileList = require('./grunt/format-file-list')(grunt);
+    const config = {
         src: 'src',
         spec: 'spec',
         web: 'web',
@@ -15,25 +8,26 @@ module.exports = function (grunt) {
         banner: grunt.file.read('./LICENSE_BANNER'),
         jsFiles: module.exports.jsFiles
     };
+    const path = require('path');
+    const cssnano = require('cssnano');
+    const webpack = require('webpack');
+    const ExtractTextPlugin = require('extract-text-webpack-plugin');
+    const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+
+    require('load-grunt-tasks')(grunt, {
+        pattern: ['grunt-*', '!grunt-lib-phantomjs', '!grunt-template-jasmine-istanbul']
+    });
+    require('time-grunt')(grunt);
 
     grunt.initConfig({
         conf: config,
 
         concat: {
-            js: {
-                src: '<%= conf.jsFiles %>',
-                dest: '<%= conf.pkg.name %>.js',
-                options: {
-                    process: true,
-                    sourceMap: true,
-                    banner: '<%= conf.banner %>'
-                }
-            },
             welcome: {
                 src: ['docs/welcome.base.md', 'web/img/class-hierarchy.svg'],
                 dest: 'welcome.md',
                 options: {
-                    process: function (src, filepath) {
+                    process (src, filepath) {
                         return /svg/.test(filepath) ?
                             src.split('\n').slice(5).join('\n') :
                             src;
@@ -41,63 +35,19 @@ module.exports = function (grunt) {
                 }
             }
         },
-        sass: {
-            dist: {
-                files: {
-                    '<%= conf.pkg.name %>.css': 'style/<%= conf.pkg.name %>.scss'
-                }
-            }
-        },
-        uglify: {
-            jsmin: {
+        eslint: {
+            source: {
                 options: {
-                    mangle: true,
-                    compress: true,
-                    sourceMap: true,
-                    banner: '<%= conf.banner %>'
+                    quiet: true
                 },
-                src: '<%= conf.pkg.name %>.js',
-                dest: '<%= conf.pkg.name %>.min.js'
-            }
-        },
-        cssmin: {
-            options: {
-                shorthandCompacting: false,
-                roundingPrecision: -1
-            },
-            main: {
-                files: {
-                    '<%= conf.pkg.name %>.min.css': ['<%= conf.pkg.name %>.css']
-                }
-            }
-        },
-        jscs: {
-            source: {
                 src: [
+                    './index.js',
                     '<%= conf.src %>/**/*.js',
-                    '!<%= conf.src %>/{banner,footer}.js',
-                    '<%= conf.spec %>/**/*.js',
-                    'Gruntfile.js',
-                    'grunt/*.js',
-                    '<%= conf.web %>/stock.js'],
-                options: {
-                    config: '.jscsrc'
-                }
-            }
-        },
-        jshint: {
-            source: {
-                src: [
-                    '<%= conf.src %>/**/*.js',
-                    '!<%= conf.src %>/{banner,footer}.js',
-                    '<%= conf.spec %>/**/*.js',
-                    'Gruntfile.js',
-                    'grunt/*.js',
-                    '<%= conf.web %>/stock.js'
-                ],
-                options: {
-                    jshintrc: '.jshintrc'
-                }
+                    // '<%= conf.spec %>/**/*.js',
+                    'Gruntfile.js'
+                    // 'grunt/*.js',
+                    // '<%= conf.web %>/stock.js'
+                ]
             }
         },
         watch: {
@@ -106,19 +56,15 @@ module.exports = function (grunt) {
                 tasks: ['build', 'jsdoc', 'jsdoc2md']
             },
             scripts: {
-                files: ['<%= conf.src %>/**/*.js', '<%= conf.web %>/stock.js'],
+                files: ['style/<%= conf.pkg.name %>.scss', '<%= conf.src %>/**/*.js', '<%= conf.web %>/stock.js'],
                 tasks: ['docs']
-            },
-            sass: {
-                files: ['style/<%= conf.pkg.name %>.scss'],
-                tasks: ['sass', 'cssmin:main', 'copy:dc-to-gh']
             },
             jasmineRunner: {
                 files: ['<%= conf.spec %>/**/*.js'],
                 tasks: ['jasmine:specs:build']
             },
             tests: {
-                files: ['<%= conf.src %>/**/*.js', '<%= conf.spec %>/**/*.js'],
+                files: ['style/<%= conf.pkg.name %>.scss', '<%= conf.src %>/**/*.js', '<%= conf.spec %>/**/*.js'],
                 tasks: ['test']
             },
             reload: {
@@ -145,7 +91,7 @@ module.exports = function (grunt) {
                 options: {
                     display: 'short',
                     summary: true,
-                    specs:  '<%= conf.spec %>/*-spec.js',
+                    specs: '<%= conf.spec %>/*-spec.js',
                     helpers: [
                         '<%= conf.web %>/js/jasmine-jsreporter.js',
                         '<%= conf.spec %>/helpers/*.js'
@@ -183,23 +129,6 @@ module.exports = function (grunt) {
                         ]
                     }
                 }
-            },
-            browserify: {
-                options: {
-                    display: 'short',
-                    summary: true,
-                    specs:  '<%= conf.spec %>/*-spec.js',
-                    helpers: [
-                        '<%= conf.web %>/js/jasmine-jsreporter.js',
-                        '<%= conf.spec %>/helpers/*.js'
-                    ],
-                    version: '2.0.0',
-                    outfile: '<%= conf.spec %>/index-browserify.html',
-                    keepRunner: true
-                },
-                src: [
-                    'bundle.js'
-                ]
             }
         },
         'saucelabs-jasmine': {
@@ -242,7 +171,7 @@ module.exports = function (grunt) {
         },
         jsdoc: {
             dist: {
-                src: ['welcome.md', '<%= conf.src %>/**/*.js', '!<%= conf.src %>/{banner,footer}.js'],
+                src: ['welcome.md', '<%= conf.src %>/**/*.js'],
                 options: {
                     destination: 'web/docs/html',
                     template: 'node_modules/ink-docstrap/template',
@@ -370,13 +299,13 @@ module.exports = function (grunt) {
         },
         shell: {
             merge: {
-                command: function (pr) {
+                command (pr) {
                     return [
                         'git fetch origin',
                         'git checkout master',
                         'git reset --hard origin/master',
                         'git fetch origin',
-                        'git merge --no-ff origin/pr/' + pr + ' -m \'Merge pull request #' + pr + '\''
+                        `git merge --no-ff origin/pr/${pr} -m 'Merge pull request #${pr}'`
                     ].join('&&');
                 },
                 options: {
@@ -399,31 +328,96 @@ module.exports = function (grunt) {
                 command: 'dot -Tsvg -o web/img/class-hierarchy.svg class-hierarchy.dot'
             }
         },
-        browserify: {
-            dev: {
-                src: '<%= conf.pkg.name %>.js',
-                dest: 'bundle.js',
-                options: {
-                    browserifyOptions: {
-                        standalone: 'dc'
-                    }
+        webpack: {
+            options: {
+                progress: false, // freaked on windows
+                failOnError: true,
+                externals: {
+                    crossfilter2: {
+                        root: 'crossfilter',
+                        commonjs: 'crossfilter2',
+                        commonjs2: 'crossfilter2',
+                        amd: 'crossfilter2',
+                        toJSON: () => 'crossfilter2'
+                    },
+                    d3: 'd3'
+                },
+                entry: {
+                    dc: path.resolve('./index.js')
+                },
+                devtool: 'source-map',
+                module: {
+                    rules: [
+                        {test: /\.js$/, enforce: 'pre', use: 'source-map-loader'},
+                        {test: /\.js$/, exclude: /node_modules/, use: 'babel-loader'},
+                        {
+                            test: /\.(sass|scss)$/,
+                            use: ExtractTextPlugin.extract({fallback: 'style-loader', use: ['css-loader', 'sass-loader']})
+                        }
+                    ]
+                }
+            },
+            debug: {
+                plugins: [
+                    new webpack.DefinePlugin({
+                        __VERSION__: JSON.stringify(config.pkg.version)
+                    }),
+                    new ExtractTextPlugin({
+                        filename: '[name].css',
+                        disable: false,
+                        allChunks: true
+                    }),
+                    new webpack.BannerPlugin({banner: '<%= conf.banner %>', raw: true})
+                ],
+                output: {
+                    filename: '[name].js',
+                    library: 'dc',
+                    libraryTarget: 'umd',
+                    devtoolModuleFilenameTemplate: 'webpack:///<%= conf.pkg.name %>/[resource-path]'
+                }
+            },
+            dist: {
+                plugins: [
+                    new webpack.DefinePlugin({
+                        __VERSION__: JSON.stringify(config.pkg.version)
+                    }),
+                    new ExtractTextPlugin({
+                        filename: '[name].min.css',
+                        disable: false,
+                        allChunks: true
+                    }),
+                    new OptimizeCssAssetsPlugin({
+                        cssProcessor: cssnano,
+                        cssProcessorOptions: {discardComments: {removeAll: true}}
+                    }),
+                    new webpack.optimize.UglifyJsPlugin({sourceMap: true, comments: false}),
+                    new webpack.BannerPlugin({banner: '<%= conf.banner %>', raw: true})
+                ],
+                output: {
+                    filename: '[name].min.js',
+                    library: 'dc',
+                    libraryTarget: 'umd',
+                    devtoolModuleFilenameTemplate: 'webpack:///<%= conf.pkg.name %>/[resource-path]'
                 }
             }
         }
     });
 
-    grunt.registerTask('merge', 'Merge a github pull request.', function (pr) {
-        grunt.log.writeln('Merge Github Pull Request #' + pr);
-        grunt.task.run(['shell:merge:' + pr, 'test' , 'shell:amend']);
+    grunt.registerTask('merge', 'Merge a github pull request.', (pr) => {
+        grunt.log.writeln(`Merge Github Pull Request #${pr}`);
+        grunt.task.run([`shell:merge:${pr}`, 'test', 'shell:amend']);
     });
-    grunt.registerTask('test-stock-example', 'Test a new rendering of the stock example web page against a ' +
-        'baseline rendering', function (option) {
+    grunt.registerTask(
+        'test-stock-example',
+        'Test a new rendering of the stock example web page against a baseline rendering',
+        function (option) {
             require('./regression/stock-regression-test.js').testStockExample(this.async(), option === 'diff');
-        });
+        }
+    );
     grunt.registerTask('update-stock-example', 'Update the baseline stock example web page.', function () {
         require('./regression/stock-regression-test.js').updateStockExample(this.async());
     });
-    grunt.registerTask('watch:jasmine-docs', function () {
+    grunt.registerTask('watch:jasmine-docs', () => {
         grunt.config('watch', {
             options: {
                 interrupt: true
@@ -436,22 +430,21 @@ module.exports = function (grunt) {
     });
 
     // task aliases
-    grunt.registerTask('build', ['concat', 'sass', 'uglify', 'cssmin']);
+    grunt.registerTask('build', ['concat', 'webpack']);
     grunt.registerTask('docs', ['build', 'copy', 'jsdoc', 'jsdoc2md', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine-docs']);
     grunt.registerTask('test', ['build', 'copy', 'jasmine:specs']);
-    grunt.registerTask('test-browserify', ['build', 'copy', 'browserify', 'jasmine:browserify']);
     grunt.registerTask('coverage', ['build', 'copy', 'jasmine:coverage']);
     grunt.registerTask('ci', ['test', 'jasmine:specs:build', 'connect:server', 'saucelabs-jasmine']);
     grunt.registerTask('ci-pull', ['test', 'jasmine:specs:build', 'connect:server']);
-    grunt.registerTask('lint', ['jshint', 'jscs']);
+    grunt.registerTask('lint', ['eslint']);
     grunt.registerTask('default', ['build', 'shell:hooks']);
     grunt.registerTask('doc-debug', ['build', 'jsdoc', 'jsdoc2md', 'watch:jsdoc2md']);
 };
 
 module.exports.jsFiles = [
-    'src/banner.js',   // NOTE: keep this first
+    'src/banner.js', // NOTE: keep this first
     'src/core.js',
     'src/errors.js',
     'src/utils.js',
@@ -484,5 +477,5 @@ module.exports.jsFiles = [
     'src/d3.box.js',
     'src/box-plot.js',
     'src/select-menu.js',
-    'src/footer.js'  // NOTE: keep this last
+    'src/footer.js' // NOTE: keep this last
 ];

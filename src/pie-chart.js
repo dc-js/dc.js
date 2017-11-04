@@ -1,3 +1,9 @@
+import * as d3 from 'd3';
+import capMixin from './cap-mixin';
+import colorMixin from './color-mixin';
+import baseMixin from './base-mixin';
+import {transition} from './core';
+
 /**
  * The pie chart implementation is usually used to visualize a small categorical distribution.  The pie
  * chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
@@ -13,9 +19,9 @@
  * @mixes dc.baseMixin
  * @example
  * // create a pie chart under #chart-container1 element using the default global chart group
- * var chart1 = dc.pieChart('#chart-container1');
+ * let chart1 = dc.pieChart('#chart-container1');
  * // create a pie chart under #chart-container2 element using chart group A
- * var chart2 = dc.pieChart('#chart-container2', 'chartGroupA');
+ * let chart2 = dc.pieChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
  * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
@@ -23,34 +29,32 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.pieChart}
  */
-dc.pieChart = function (parent, chartGroup) {
-    var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
+export default function pieChart (parent, chartGroup) {
+    const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
-    var _sliceCssClass = 'pie-slice';
-    var _labelCssClass = 'pie-label';
-    var _sliceGroupCssClass = 'pie-slice-group';
-    var _labelGroupCssClass = 'pie-label-group';
-    var _emptyCssClass = 'empty-chart';
-    var _emptyTitle = 'empty';
+    const _sliceCssClass = 'pie-slice';
+    const _labelCssClass = 'pie-label';
+    const _sliceGroupCssClass = 'pie-slice-group';
+    const _labelGroupCssClass = 'pie-label-group';
+    const _emptyCssClass = 'empty-chart';
+    let _emptyTitle = 'empty';
 
-    var _radius,
+    let _radius,
         _givenRadius, // specified radius, if any
         _innerRadius = 0,
         _externalRadiusPadding = 0;
 
-    var _g;
-    var _cx;
-    var _cy;
-    var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
-    var _externalLabelRadius;
-    var _drawPaths = false;
-    var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
+    let _g;
+    let _cx;
+    let _cy;
+    let _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
+    let _externalLabelRadius;
+    let _drawPaths = false;
+    const _chart = capMixin(colorMixin(baseMixin({})));
 
     _chart.colorAccessor(_chart.cappedKeyAccessor);
 
-    _chart.title(function (d) {
-        return _chart.cappedKeyAccessor(d) + ': ' + _chart.cappedValueAccessor(d);
-    });
+    _chart.title(d => `${_chart.cappedKeyAccessor(d)}: ${_chart.cappedValueAccessor(d)}`);
 
     /**
      * Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
@@ -74,7 +78,7 @@ dc.pieChart = function (parent, chartGroup) {
 
         _g = _chart.svg()
             .append('g')
-            .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
+            .attr('transform', `translate(${_chart.cx()}, ${_chart.cy()})`);
 
         _g.append('g').attr('class', _sliceGroupCssClass);
         _g.append('g').attr('class', _labelGroupCssClass);
@@ -86,13 +90,13 @@ dc.pieChart = function (parent, chartGroup) {
 
     function drawChart () {
         // set radius from chart size if none given, or if given radius is too large
-        var maxRadius =  d3.min([_chart.width(), _chart.height()]) / 2;
+        const maxRadius = d3.min([_chart.width(), _chart.height()]) / 2;
         _radius = _givenRadius && _givenRadius < maxRadius ? _givenRadius : maxRadius;
 
-        var arc = buildArcs();
+        const arc = buildArcs();
 
-        var pie = pieLayout();
-        var pieData;
+        const pie = pieLayout();
+        let pieData;
         // if we have data...
         if (d3.sum(_chart.data(), _chart.valueAccessor())) {
             pieData = pie(_chart.data());
@@ -105,12 +109,12 @@ dc.pieChart = function (parent, chartGroup) {
         }
 
         if (_g) {
-            var slices = _g.select('g.' + _sliceGroupCssClass)
-                .selectAll('g.' + _sliceCssClass)
+            const slices = _g.select(`g.${_sliceGroupCssClass}`)
+                .selectAll(`g.${_sliceCssClass}`)
                 .data(pieData);
 
-            var labels = _g.select('g.' + _labelGroupCssClass)
-                .selectAll('text.' + _labelCssClass)
+            const labels = _g.select(`g.${_labelGroupCssClass}`)
+                .selectAll(`text.${_labelCssClass}`)
                 .data(pieData);
 
             createElements(slices, labels, arc, pieData);
@@ -121,13 +125,13 @@ dc.pieChart = function (parent, chartGroup) {
 
             highlightFilter();
 
-            dc.transition(_g, _chart.transitionDuration(), _chart.transitionDelay())
-                .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
+            transition(_g, _chart.transitionDuration(), _chart.transitionDelay())
+                .attr('transform', `translate(${_chart.cx()}, ${_chart.cy()})`);
         }
     }
 
     function createElements (slices, labels, arc, pieData) {
-        var slicesEnter = createSliceNodes(slices);
+        const slicesEnter = createSliceNodes(slices);
 
         createSlicePath(slicesEnter, arc);
 
@@ -137,41 +141,35 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     function createSliceNodes (slices) {
-        var slicesEnter = slices
+        const slicesEnter = slices
             .enter()
             .append('g')
-            .attr('class', function (d, i) {
-                return _sliceCssClass + ' _' + i;
-            });
+            .attr('class', (d, i) => `${_sliceCssClass} _${i}`);
         return slicesEnter;
     }
 
     function createSlicePath (slicesEnter, arc) {
-        var slicePath = slicesEnter.append('path')
+        const slicePath = slicesEnter.append('path')
             .attr('fill', fill)
             .on('click', onClick)
-            .attr('d', function (d, i) {
-                return safeArc(d, i, arc);
-            });
+            .attr('d', (d, i) => safeArc(d, i, arc));
 
-        var transition = dc.transition(slicePath, _chart.transitionDuration(), _chart.transitionDelay());
-        if (transition.attrTween) {
-            transition.attrTween('d', tweenPie);
+        const _transition = transition(slicePath, _chart.transitionDuration(), _chart.transitionDelay());
+        if (_transition.attrTween) {
+            _transition.attrTween('d', tweenPie);
         }
     }
 
     function createTitles (slicesEnter) {
         if (_chart.renderTitle()) {
-            slicesEnter.append('title').text(function (d) {
-                return _chart.title()(d.data);
-            });
+            slicesEnter.append('title').text(d => _chart.title()(d.data));
         }
     }
 
     _chart._applyLabelText = function (labels) {
         labels
-            .text(function (d) {
-                var data = d.data;
+            .text((d) => {
+                const {data} = d;
                 if ((sliceHasNoData(data) || sliceTooSmall(d)) && !isSelectedSlice(d)) {
                     return '';
                 }
@@ -181,35 +179,33 @@ dc.pieChart = function (parent, chartGroup) {
 
     function positionLabels (labels, arc) {
         _chart._applyLabelText(labels);
-        dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('transform', function (d) {
-                return labelPosition(d, arc);
-            })
+        transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
+            .attr('transform', d => labelPosition(d, arc))
             .attr('text-anchor', 'middle');
     }
 
     function highlightSlice (i, whether) {
-        _chart.select('g.pie-slice._' + i)
+        _chart.select(`g.pie-slice._${i}`)
             .classed('highlight', whether);
     }
 
     function createLabels (labels, pieData, arc) {
         if (_chart.renderLabel()) {
-            var labelsEnter = labels
+            const labelsEnter = labels
                 .enter()
                 .append('text')
-                .attr('class', function (d, i) {
-                    var classes = _sliceCssClass + ' ' + _labelCssClass + ' _' + i;
+                .attr('class', (d, i) => {
+                    let classes = `${_sliceCssClass} ${_labelCssClass} _${i}`;
                     if (_externalLabelRadius) {
                         classes += ' external';
                     }
                     return classes;
                 })
                 .on('click', onClick)
-                .on('mouseover', function (d, i) {
+                .on('mouseover', (d, i) => {
                     highlightSlice(i, true);
                 })
-                .on('mouseout', function (d, i) {
+                .on('mouseout', (d, i) => {
                     highlightSlice(i, false);
                 });
             positionLabels(labelsEnter, arc);
@@ -220,50 +216,43 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     function updateLabelPaths (pieData, arc) {
-        var polyline = _g.selectAll('polyline.' + _sliceCssClass)
-                .data(pieData);
+        const polyline = _g.selectAll(`polyline.${_sliceCssClass}`)
+            .data(pieData);
 
         polyline
-                .enter()
-                .append('polyline')
-                .attr('class', function (d, i) {
-                    return 'pie-path _' + i + ' ' + _sliceCssClass;
-                })
-                .on('click', onClick)
-                .on('mouseover', function (d, i) {
-                    highlightSlice(i, true);
-                })
-                .on('mouseout', function (d, i) {
-                    highlightSlice(i, false);
-                });
+            .enter()
+            .append('polyline')
+            .attr('class', (d, i) => `pie-path _${i} ${_sliceCssClass}`)
+            .on('click', onClick)
+            .on('mouseover', (d, i) => {
+                highlightSlice(i, true);
+            })
+            .on('mouseout', (d, i) => {
+                highlightSlice(i, false);
+            });
 
         polyline.exit().remove();
-        var arc2 = d3.svg.arc()
-                .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
-                .innerRadius(_radius - _externalRadiusPadding);
-        var transition = dc.transition(polyline, _chart.transitionDuration(), _chart.transitionDelay());
+        const arc2 = d3.svg.arc()
+            .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
+            .innerRadius(_radius - _externalRadiusPadding);
+        const _transition = transition(polyline, _chart.transitionDuration(), _chart.transitionDelay());
         // this is one rare case where d3.selection differs from d3.transition
-        if (transition.attrTween) {
-            transition
+        if (_transition.attrTween) {
+            _transition
                 .attrTween('points', function (d) {
-                    var current = this._current || d;
+                    let current = this._current || d;
                     current = {startAngle: current.startAngle, endAngle: current.endAngle};
-                    var interpolate = d3.interpolate(current, d);
+                    const interpolate = d3.interpolate(current, d);
                     this._current = interpolate(0);
                     return function (t) {
-                        var d2 = interpolate(t);
+                        const d2 = interpolate(t);
                         return [arc.centroid(d2), arc2.centroid(d2)];
                     };
                 });
         } else {
-            transition.attr('points', function (d) {
-                return [arc.centroid(d), arc2.centroid(d)];
-            });
+            _transition.attr('points', d => [arc.centroid(d), arc2.centroid(d)]);
         }
-        transition.style('visibility', function (d) {
-            return d.endAngle - d.startAngle < 0.0001 ? 'hidden' : 'visible';
-        });
-
+        _transition.style('visibility', d => (d.endAngle - d.startAngle < 0.0001 ? 'hidden' : 'visible'));
     }
 
     function updateElements (pieData, arc) {
@@ -273,22 +262,20 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     function updateSlicePaths (pieData, arc) {
-        var slicePaths = _g.selectAll('g.' + _sliceCssClass)
+        const slicePaths = _g.selectAll(`g.${_sliceCssClass}`)
             .data(pieData)
             .select('path')
-            .attr('d', function (d, i) {
-                return safeArc(d, i, arc);
-            });
-        var transition = dc.transition(slicePaths, _chart.transitionDuration(), _chart.transitionDelay());
-        if (transition.attrTween) {
-            transition.attrTween('d', tweenPie);
+            .attr('d', (d, i) => safeArc(d, i, arc));
+        const _transition = transition(slicePaths, _chart.transitionDuration(), _chart.transitionDelay());
+        if (_transition.attrTween) {
+            _transition.attrTween('d', tweenPie);
         }
-        transition.attr('fill', fill);
+        _transition.attr('fill', fill);
     }
 
     function updateLabels (pieData, arc) {
         if (_chart.renderLabel()) {
-            var labels = _g.selectAll('text.' + _labelCssClass)
+            const labels = _g.selectAll(`text.${_labelCssClass}`)
                 .data(pieData);
             positionLabels(labels, arc);
             if (_externalLabelRadius && _drawPaths) {
@@ -299,12 +286,10 @@ dc.pieChart = function (parent, chartGroup) {
 
     function updateTitles (pieData) {
         if (_chart.renderTitle()) {
-            _g.selectAll('g.' + _sliceCssClass)
+            _g.selectAll(`g.${_sliceCssClass}`)
                 .data(pieData)
                 .select('title')
-                .text(function (d) {
-                    return _chart.title()(d.data);
-                });
+                .text(d => _chart.title()(d.data));
         }
     }
 
@@ -315,7 +300,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     function highlightFilter () {
         if (_chart.hasFilter()) {
-            _chart.selectAll('g.' + _sliceCssClass).each(function (d) {
+            _chart.selectAll(`g.${_sliceCssClass}`).each(function (d) {
                 if (isSelectedSlice(d)) {
                     _chart.highlightSelected(this);
                 } else {
@@ -323,7 +308,7 @@ dc.pieChart = function (parent, chartGroup) {
                 }
             });
         } else {
-            _chart.selectAll('g.' + _sliceCssClass).each(function () {
+            _chart.selectAll(`g.${_sliceCssClass}`).each(function () {
                 _chart.resetHighlight(this);
             });
         }
@@ -390,7 +375,7 @@ dc.pieChart = function (parent, chartGroup) {
      */
     _chart.cx = function (cx) {
         if (!arguments.length) {
-            return (_cx ||  _chart.width() / 2);
+            return (_cx || _chart.width() / 2);
         }
         _cx = cx;
         return _chart;
@@ -406,7 +391,7 @@ dc.pieChart = function (parent, chartGroup) {
      */
     _chart.cy = function (cy) {
         if (!arguments.length) {
-            return (_cy ||  _chart.height() / 2);
+            return (_cy || _chart.height() / 2);
         }
         _cy = cy;
         return _chart;
@@ -449,7 +434,7 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     function sliceTooSmall (d) {
-        var angle = (d.endAngle - d.startAngle);
+        const angle = (d.endAngle - d.startAngle);
         return isNaN(angle) || angle < _minAngleForLabel;
     }
 
@@ -459,14 +444,14 @@ dc.pieChart = function (parent, chartGroup) {
 
     function tweenPie (b) {
         b.innerRadius = _innerRadius;
-        var current = this._current;
+        let current = this._current;
         if (isOffCanvas(current)) {
             current = {startAngle: 0, endAngle: 0};
         } else {
             // only interpolate startAngle & endAngle, not the whole data object
             current = {startAngle: current.startAngle, endAngle: current.endAngle};
         }
-        var i = d3.interpolate(current, b);
+        const i = d3.interpolate(current, b);
         this._current = i(0);
         return function (t) {
             return safeArc(i(t), 0, buildArcs());
@@ -488,7 +473,7 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     function safeArc (d, i, arc) {
-        var path = arc(d, i);
+        let path = arc(d, i);
         if (path.indexOf('NaN') >= 0) {
             path = 'M0,0';
         }
@@ -551,7 +536,7 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     function labelPosition (d, arc) {
-        var centroid;
+        let centroid;
         if (_externalLabelRadius) {
             centroid = d3.svg.arc()
                 .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
@@ -561,15 +546,19 @@ dc.pieChart = function (parent, chartGroup) {
             centroid = arc.centroid(d);
         }
         if (isNaN(centroid[0]) || isNaN(centroid[1])) {
-            return 'translate(0,0)';
-        } else {
-            return 'translate(' + centroid + ')';
+            return 'translate(0, 0)';
         }
+        return `translate(${centroid})`;
     }
 
     _chart.legendables = function () {
-        return _chart.data().map(function (d, i) {
-            var legendable = {name: d.key, data: d.value, others: d.others, chart: _chart};
+        return _chart.data().map((d, i) => {
+            const legendable = {
+                name: d.key,
+                data: d.value,
+                others: d.others,
+                chart: _chart
+            };
             legendable.color = _chart.getColor(d, i);
             return legendable;
         });
@@ -596,4 +585,4 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     return _chart.anchor(parent, chartGroup);
-};
+}

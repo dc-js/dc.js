@@ -1,3 +1,7 @@
+import coordinateGridMixin from './coordinate-grid-mixin';
+import bubbleMixin from './bubble-mixin';
+import {transition} from './core';
+
 /**
  * A concrete implementation of a general purpose bubble chart that allows data visualization using the
  * following dimensions:
@@ -15,9 +19,9 @@
  * @mixes dc.coordinateGridMixin
  * @example
  * // create a bubble chart under #chart-container1 element using the default global chart group
- * var bubbleChart1 = dc.bubbleChart('#chart-container1');
+ * let bubbleChart1 = dc.bubbleChart('#chart-container1');
  * // create a bubble chart under #chart-container2 element using chart group A
- * var bubbleChart2 = dc.bubbleChart('#chart-container2', 'chartGroupA');
+ * let bubbleChart2 = dc.bubbleChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
  * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
@@ -25,24 +29,24 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.bubbleChart}
  */
-dc.bubbleChart = function (parent, chartGroup) {
-    var _chart = dc.bubbleMixin(dc.coordinateGridMixin({}));
+export default function bubbleChart (parent, chartGroup) {
+    const _chart = bubbleMixin(coordinateGridMixin({}));
 
     _chart.transitionDuration(750);
 
     _chart.transitionDelay(0);
 
-    var bubbleLocator = function (d) {
-        return 'translate(' + (bubbleX(d)) + ',' + (bubbleY(d)) + ')';
+    const bubbleLocator = function (d) {
+        return `translate(${bubbleX(d)}, ${bubbleY(d)})`;
     };
 
     _chart.plotData = function () {
         _chart.calculateRadiusDomain();
         _chart.r().range([_chart.MIN_RADIUS, _chart.xAxisLength() * _chart.maxBubbleRelativeSize()]);
 
-        var data = _chart.data();
-        var bubbleG = _chart.chartBodyG().selectAll('g.' + _chart.BUBBLE_NODE_CLASS)
-                .data(data, function (d) { return d.key; });
+        const data = _chart.data();
+        const bubbleG = _chart.chartBodyG().selectAll(`g.${_chart.BUBBLE_NODE_CLASS}`)
+            .data(data, d => d.key);
         if (_chart.sortBubbleSize()) {
             // update dom order based on sort
             bubbleG.order();
@@ -58,25 +62,20 @@ dc.bubbleChart = function (parent, chartGroup) {
     };
 
     function renderNodes (bubbleG) {
-        var bubbleGEnter = bubbleG.enter().append('g');
+        const bubbleGEnter = bubbleG.enter().append('g');
 
         bubbleGEnter
             .attr('class', _chart.BUBBLE_NODE_CLASS)
             .attr('transform', bubbleLocator)
-            .append('circle').attr('class', function (d, i) {
-                return _chart.BUBBLE_CLASS + ' _' + i;
-            })
+            .append('circle')
+            .attr('class', (d, i) => `${_chart.BUBBLE_CLASS} _${i}`)
             .on('click', _chart.onClick)
             .attr('fill', _chart.getColor)
             .attr('r', 0);
-        dc.transition(bubbleG, _chart.transitionDuration(), _chart.transitionDelay())
-            .select('circle.' + _chart.BUBBLE_CLASS)
-            .attr('r', function (d) {
-                return _chart.bubbleR(d);
-            })
-            .attr('opacity', function (d) {
-                return (_chart.bubbleR(d) > 0) ? 1 : 0;
-            });
+        transition(bubbleG, _chart.transitionDuration(), _chart.transitionDelay())
+            .select(`circle.${_chart.BUBBLE_CLASS}`)
+            .attr('r', _chart.bubbleR)
+            .attr('opacity', d => (_chart.bubbleR(d) > 0 ? 1 : 0));
 
         _chart._doRenderLabel(bubbleGEnter);
 
@@ -84,16 +83,12 @@ dc.bubbleChart = function (parent, chartGroup) {
     }
 
     function updateNodes (bubbleG) {
-        dc.transition(bubbleG, _chart.transitionDuration(), _chart.transitionDelay())
+        transition(bubbleG, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', bubbleLocator)
-            .select('circle.' + _chart.BUBBLE_CLASS)
+            .select(`circle.${_chart.BUBBLE_CLASS}`)
             .attr('fill', _chart.getColor)
-            .attr('r', function (d) {
-                return _chart.bubbleR(d);
-            })
-            .attr('opacity', function (d) {
-                return (_chart.bubbleR(d) > 0) ? 1 : 0;
-            });
+            .attr('r', _chart.bubbleR)
+            .attr('opacity', d => (_chart.bubbleR(d) > 0 ? 1 : 0));
 
         _chart.doUpdateLabels(bubbleG);
         _chart.doUpdateTitles(bubbleG);
@@ -104,7 +99,7 @@ dc.bubbleChart = function (parent, chartGroup) {
     }
 
     function bubbleX (d) {
-        var x = _chart.x()(_chart.keyAccessor()(d));
+        let x = _chart.x()(_chart.keyAccessor()(d));
         if (isNaN(x)) {
             x = 0;
         }
@@ -112,7 +107,7 @@ dc.bubbleChart = function (parent, chartGroup) {
     }
 
     function bubbleY (d) {
-        var y = _chart.y()(_chart.valueAccessor()(d));
+        let y = _chart.y()(_chart.valueAccessor()(d));
         if (isNaN(y)) {
             y = 0;
         }
@@ -129,4 +124,4 @@ dc.bubbleChart = function (parent, chartGroup) {
     };
 
     return _chart.anchor(parent, chartGroup);
-};
+}

@@ -1,3 +1,6 @@
+import * as d3 from 'd3';
+import baseMixin from './base-mixin';
+
 /**
  * The data count widget is a simple widget designed to display the number of records selected by the
  * current filters out of the total number of records in the data set. Once created the data count widget
@@ -16,8 +19,8 @@
  * @memberof dc
  * @mixes dc.baseMixin
  * @example
- * var ndx = crossfilter(data);
- * var all = ndx.groupAll();
+ * let ndx = crossfilter(data);
+ * let all = ndx.groupAll();
  *
  * dc.dataCount('.dc-data-count')
  *     .dimension(ndx)
@@ -29,10 +32,10 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.dataCount}
  */
-dc.dataCount = function (parent, chartGroup) {
-    var _formatNumber = d3.format(',d');
-    var _chart = dc.baseMixin({});
-    var _html = {some: '', all: ''};
+export default function dataCount (parent, chartGroup) {
+    let _formatNumber = d3.format(',d');
+    const _chart = baseMixin({});
+    const _html = {some: '', all: ''};
 
     /**
      * Gets or sets an optional object specifying HTML templates to use depending how many items are
@@ -84,10 +87,10 @@ dc.dataCount = function (parent, chartGroup) {
     };
 
     _chart._doRender = function () {
-        var tot = _chart.dimension().size(),
+        const tot = _chart.dimension().size(),
             val = _chart.group().value();
-        var all = _formatNumber(tot);
-        var selected = _formatNumber(val);
+        const all = _formatNumber(tot);
+        const selected = _formatNumber(val);
 
         if ((tot === val) && (_html.all !== '')) {
             _chart.root().html(_html.all.replace('%total-count', all).replace('%filter-count', selected));
@@ -105,4 +108,4 @@ dc.dataCount = function (parent, chartGroup) {
     };
 
     return _chart.anchor(parent, chartGroup);
-};
+}

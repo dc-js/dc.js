@@ -1,3 +1,6 @@
+import * as d3 from 'd3';
+import baseMixin from './base-mixin';
+
 /**
  * A display of a single numeric value.
  * Unlike other charts, you do not need to set a dimension. Instead a group object must be provided and
@@ -7,7 +10,7 @@
  * @mixes dc.baseMixin
  * @example
  * // create a number display under #chart-container1 element using the default global chart group
- * var display1 = dc.numberDisplay('#chart-container1');
+ * let display1 = dc.numberDisplay('#chart-container1');
  * @param {String|node|d3.selection} parent - Any valid
  * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
@@ -15,18 +18,18 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.numberDisplay}
  */
-dc.numberDisplay = function (parent, chartGroup) {
-    var SPAN_CLASS = 'number-display';
-    var _formatNumber = d3.format('.2s');
-    var _chart = dc.baseMixin({});
-    var _html = {one: '', some: '', none: ''};
-    var _lastValue;
+export default function numberDisplay (parent, chartGroup) {
+    const SPAN_CLASS = 'number-display';
+    let _formatNumber = d3.format('.2s');
+    const _chart = baseMixin({});
+    const _html = {one: '', some: '', none: ''};
+    let _lastValue;
 
     // dimension not required
     _chart._mandatoryAttributes(['group']);
 
     // default to ordering by value, to emulate old group.top(1) behavior when multiple groups
-    _chart.ordering(function (kv) { return kv.value; });
+    _chart.ordering(kv => kv.value);
 
     /**
      * Gets or sets an optional object specifying HTML templates to use depending on the number
@@ -50,21 +53,21 @@ dc.numberDisplay = function (parent, chartGroup) {
             return _html;
         }
         if (html.none) {
-            _html.none = html.none;//if none available
+            _html.none = html.none; // if none available
         } else if (html.one) {
-            _html.none = html.one;//if none not available use one
+            _html.none = html.one; // if none not available use one
         } else if (html.some) {
-            _html.none = html.some;//if none and one not available use some
+            _html.none = html.some; // if none and one not available use some
         }
         if (html.one) {
-            _html.one = html.one;//if one available
+            _html.one = html.one; // if one available
         } else if (html.some) {
-            _html.one = html.some;//if one not available use some
+            _html.one = html.some; // if one not available use some
         }
         if (html.some) {
-            _html.some = html.some;//if some available
+            _html.some = html.some; // if some available
         } else if (html.one) {
-            _html.some = html.one;//if some not available use one
+            _html.some = html.one; // if some not available use one
         }
         return _chart;
     };
@@ -84,11 +87,11 @@ dc.numberDisplay = function (parent, chartGroup) {
         if (!all.length) {
             return null;
         }
-        var sorted = _chart._computeOrderedGroups(all);
+        const sorted = _chart._computeOrderedGroups(all);
         return sorted[sorted.length - 1];
     }
-    _chart.data(function (group) {
-        var valObj = group.value ? group.value() : maxBin(group.all());
+    _chart.data((group) => {
+        const valObj = group.value ? group.value() : maxBin(group.all());
         return _chart.valueAccessor()(valObj);
     });
 
@@ -96,8 +99,8 @@ dc.numberDisplay = function (parent, chartGroup) {
     _chart.transitionDelay(0);
 
     _chart._doRender = function () {
-        var newValue = _chart.value(),
-            span = _chart.selectAll('.' + SPAN_CLASS);
+        const newValue = _chart.value();
+        let span = _chart.selectAll(`.${SPAN_CLASS}`);
 
         if (span.empty()) {
             span = span.data([0])
@@ -110,13 +113,14 @@ dc.numberDisplay = function (parent, chartGroup) {
             .duration(_chart.transitionDuration())
             .delay(_chart.transitionDelay())
             .ease('quad-out-in')
-            .tween('text', function () {
+            .tween('text', () => {
                 // [XA] don't try and interpolate from Infinity, else this breaks.
-                var interpStart = isFinite(_lastValue) ? _lastValue : 0;
-                var interp = d3.interpolateNumber(interpStart || 0, newValue);
+                const interpStart = isFinite(_lastValue) ? _lastValue : 0;
+                const interp = d3.interpolateNumber(interpStart || 0, newValue);
                 _lastValue = newValue;
                 return function (t) {
-                    var html = null, num = _chart.formatNumber()(interp(t));
+                    let html = null;
+                    const num = _chart.formatNumber()(interp(t));
                     if (newValue === 0 && (_html.none !== '')) {
                         html = _html.none;
                     } else if (newValue === 1 && (_html.one !== '')) {
@@ -151,4 +155,4 @@ dc.numberDisplay = function (parent, chartGroup) {
     };
 
     return _chart.anchor(parent, chartGroup);
-};
+}

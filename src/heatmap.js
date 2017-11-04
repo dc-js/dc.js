@@ -1,3 +1,11 @@
+import * as d3 from 'd3';
+import colorMixin from './color-mixin';
+import baseMixin from './base-mixin';
+import marginMixin from './margin-mixin';
+import trigger from './events';
+import {override, transition} from './core';
+import {TwoDimensionalFilter} from './filters';
+
 /**
  * A heat map is matrix that represents the values of two dimensions of data using colors.
  * @class heatMap
@@ -7,9 +15,9 @@
  * @mixes dc.baseMixin
  * @example
  * // create a heat map under #chart-container1 element using the default global chart group
- * var heatMap1 = dc.heatMap('#chart-container1');
+ * let heatMap1 = dc.heatMap('#chart-container1');
  * // create a heat map under #chart-container2 element using chart group A
- * var heatMap2 = dc.heatMap('#chart-container2', 'chartGroupA');
+ * let heatMap2 = dc.heatMap('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
  * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
@@ -17,32 +25,27 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.heatMap}
  */
-dc.heatMap = function (parent, chartGroup) {
+export default function heatMap (parent, chartGroup) {
+    const DEFAULT_BORDER_RADIUS = 6.75;
 
-    var DEFAULT_BORDER_RADIUS = 6.75;
+    let _chartBody;
 
-    var _chartBody;
+    let _cols;
+    let _rows;
+    let _colOrdering = d3.ascending;
+    let _rowOrdering = d3.ascending;
+    const _colScale = d3.scale.ordinal();
+    const _rowScale = d3.scale.ordinal();
 
-    var _cols;
-    var _rows;
-    var _colOrdering = d3.ascending;
-    var _rowOrdering = d3.ascending;
-    var _colScale = d3.scale.ordinal();
-    var _rowScale = d3.scale.ordinal();
+    let _xBorderRadius = DEFAULT_BORDER_RADIUS;
+    let _yBorderRadius = DEFAULT_BORDER_RADIUS;
 
-    var _xBorderRadius = DEFAULT_BORDER_RADIUS;
-    var _yBorderRadius = DEFAULT_BORDER_RADIUS;
-
-    var _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin({})));
+    const _chart = colorMixin(marginMixin(baseMixin({})));
     _chart._mandatoryAttributes(['group']);
     _chart.title(_chart.colorAccessor());
 
-    var _colsLabel = function (d) {
-        return d;
-    };
-    var _rowsLabel = function (d) {
-        return d;
-    };
+    let _colsLabel = d => d;
+    let _rowsLabel = d => d;
 
     /**
      * Set or get the column label function. The chart class uses this function to render
@@ -84,39 +87,33 @@ dc.heatMap = function (parent, chartGroup) {
         return _chart;
     };
 
-    var _xAxisOnClick = function (d) { filterAxis(0, d); };
-    var _yAxisOnClick = function (d) { filterAxis(1, d); };
-    var _boxOnClick = function (d) {
-        var filter = d.key;
-        dc.events.trigger(function () {
+    let _xAxisOnClick = function (d) { filterAxis(0, d); };
+    let _yAxisOnClick = function (d) { filterAxis(1, d); };
+    let _boxOnClick = function (d) {
+        const filter = d.key;
+        trigger(() => {
             _chart.filter(filter);
             _chart.redrawGroup();
         });
     };
 
     function filterAxis (axis, value) {
-        var cellsOnAxis = _chart.selectAll('.box-group').filter(function (d) {
-            return d.key[axis] === value;
-        });
-        var unfilteredCellsOnAxis = cellsOnAxis.filter(function (d) {
-            return !_chart.hasFilter(d.key);
-        });
-        dc.events.trigger(function () {
-            var selection = unfilteredCellsOnAxis.empty() ? cellsOnAxis : unfilteredCellsOnAxis;
-            var filters = selection.data().map(function (kv) {
-                return dc.filters.TwoDimensionalFilter(kv.key);
-            });
+        const cellsOnAxis = _chart.selectAll('.box-group').filter(d => d.key[axis] === value);
+        const unfilteredCellsOnAxis = cellsOnAxis.filter(d => !_chart.hasFilter(d.key));
+        trigger(() => {
+            const selection = unfilteredCellsOnAxis.empty() ? cellsOnAxis : unfilteredCellsOnAxis;
+            const filters = selection.data().map(kv => TwoDimensionalFilter(kv.key));
             _chart._filter([filters]);
             _chart.redrawGroup();
         });
     }
 
-    dc.override(_chart, 'filter', function (filter) {
+    override(_chart, 'filter', function (filter) {
         if (!arguments.length) {
             return _chart._filter();
         }
 
-        return _chart._filter(dc.filters.TwoDimensionalFilter(filter));
+        return _chart._filter(TwoDimensionalFilter(filter));
     });
 
     /**
@@ -184,14 +181,14 @@ dc.heatMap = function (parent, chartGroup) {
         _chartBody = _chart.svg()
             .append('g')
             .attr('class', 'heatmap')
-            .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
+            .attr('transform', `translate(${_chart.margins().left}, ${_chart.margins().top})`);
 
         return _chart._doRedraw();
     };
 
     _chart._doRedraw = function () {
-        var data = _chart.data(),
-            rows = _chart.rows() || data.map(_chart.valueAccessor()),
+        const data = _chart.data();
+        let rows = _chart.rows() || data.map(_chart.valueAccessor()),
             cols = _chart.cols() || data.map(_chart.keyAccessor());
         if (_rowOrdering) {
             rows = rows.sort(_rowOrdering);
@@ -202,7 +199,7 @@ dc.heatMap = function (parent, chartGroup) {
         rows = _rowScale.domain(rows);
         cols = _colScale.domain(cols);
 
-        var rowCount = rows.domain().length,
+        const rowCount = rows.domain().length,
             colCount = cols.domain().length,
             boxWidth = Math.floor(_chart.effectiveWidth() / colCount),
             boxHeight = Math.floor(_chart.effectiveHeight() / rowCount);
@@ -210,10 +207,9 @@ dc.heatMap = function (parent, chartGroup) {
         cols.rangeRoundBands([0, _chart.effectiveWidth()]);
         rows.rangeRoundBands([_chart.effectiveHeight(), 0]);
 
-        var boxes = _chartBody.selectAll('g.box-group').data(_chart.data(), function (d, i) {
-            return _chart.keyAccessor()(d, i) + '\0' + _chart.valueAccessor()(d, i);
-        });
-        var gEnter = boxes.enter().append('g')
+        const boxes = _chartBody.selectAll('g.box-group')
+            .data(_chart.data(), (d, i) => `${_chart.keyAccessor()(d, i)}\0'${_chart.valueAccessor()(d, i)}`);
+        const gEnter = boxes.enter().append('g')
             .attr('class', 'box-group');
 
         gEnter.append('rect')
@@ -226,9 +222,9 @@ dc.heatMap = function (parent, chartGroup) {
             boxes.select('title').text(_chart.title());
         }
 
-        dc.transition(boxes.select('rect'), _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('x', function (d, i) { return cols(_chart.keyAccessor()(d, i)); })
-            .attr('y', function (d, i) { return rows(_chart.valueAccessor()(d, i)); })
+        transition(boxes.select('rect'), _chart.transitionDuration(), _chart.transitionDelay())
+            .attr('x', (d, i) => cols(_chart.keyAccessor()(d, i)))
+            .attr('y', (d, i) => rows(_chart.valueAccessor()(d, i)))
             .attr('rx', _xBorderRadius)
             .attr('ry', _yBorderRadius)
             .attr('fill', _chart.getColor)
@@ -237,38 +233,38 @@ dc.heatMap = function (parent, chartGroup) {
 
         boxes.exit().remove();
 
-        var gCols = _chartBody.select('g.cols');
+        let gCols = _chartBody.select('g.cols');
         if (gCols.empty()) {
             gCols = _chartBody.append('g').attr('class', 'cols axis');
         }
-        var gColsText = gCols.selectAll('text').data(cols.domain());
+        const gColsText = gCols.selectAll('text').data(cols.domain());
         gColsText.enter().append('text')
-              .attr('x', function (d) { return cols(d) + boxWidth / 2; })
-              .style('text-anchor', 'middle')
-              .attr('y', _chart.effectiveHeight())
-              .attr('dy', 12)
-              .on('click', _chart.xAxisOnClick())
-              .text(_chart.colsLabel());
-        dc.transition(gColsText, _chart.transitionDuration(), _chart.transitionDelay())
-               .text(_chart.colsLabel())
-               .attr('x', function (d) { return cols(d) + boxWidth / 2; })
-               .attr('y', _chart.effectiveHeight());
+            .attr('x', d => cols(d) + boxWidth / 2)
+            .style('text-anchor', 'middle')
+            .attr('y', _chart.effectiveHeight())
+            .attr('dy', 12)
+            .on('click', _chart.xAxisOnClick())
+            .text(_chart.colsLabel());
+        transition(gColsText, _chart.transitionDuration(), _chart.transitionDelay())
+            .text(_chart.colsLabel())
+            .attr('x', d => cols(d) + boxWidth / 2)
+            .attr('y', _chart.effectiveHeight());
         gColsText.exit().remove();
-        var gRows = _chartBody.select('g.rows');
+        let gRows = _chartBody.select('g.rows');
         if (gRows.empty()) {
             gRows = _chartBody.append('g').attr('class', 'rows axis');
         }
-        var gRowsText = gRows.selectAll('text').data(rows.domain());
+        const gRowsText = gRows.selectAll('text').data(rows.domain());
         gRowsText.enter().append('text')
-              .attr('dy', 6)
-              .style('text-anchor', 'end')
-              .attr('x', 0)
-              .attr('dx', -2)
-              .on('click', _chart.yAxisOnClick())
-              .text(_chart.rowsLabel());
-        dc.transition(gRowsText, _chart.transitionDuration(), _chart.transitionDelay())
-              .text(_chart.rowsLabel())
-              .attr('y', function (d) { return rows(d) + boxHeight / 2; });
+            .attr('dy', 6)
+            .style('text-anchor', 'end')
+            .attr('x', 0)
+            .attr('dx', -2)
+            .on('click', _chart.yAxisOnClick())
+            .text(_chart.rowsLabel());
+        transition(gRowsText, _chart.transitionDuration(), _chart.transitionDelay())
+            .text(_chart.rowsLabel())
+            .attr('y', d => rows(d) + boxHeight / 2);
         gRowsText.exit().remove();
 
         if (_chart.hasFilter()) {
@@ -296,8 +292,8 @@ dc.heatMap = function (parent, chartGroup) {
      * @example
      * // default box on click handler
      * chart.boxOnClick(function (d) {
-     *     var filter = d.key;
-     *     dc.events.trigger(function () {
+     *     let filter = d.key;
+     *     dc.trigger(function () {
      *         _chart.filter(filter);
      *         _chart.redrawGroup();
      *     });
@@ -386,4 +382,4 @@ dc.heatMap = function (parent, chartGroup) {
     };
 
     return _chart.anchor(parent, chartGroup);
-};
+}

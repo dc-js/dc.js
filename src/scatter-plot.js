@@ -1,3 +1,9 @@
+import * as d3 from 'd3';
+import coordinateGridMixin from './coordinate-grid-mixin';
+import {constants, override, transition} from './core';
+import {RangedTwoDimensionalFilter} from './filters';
+import trigger from './events';
+
 /**
  * A scatter plot chart
  *
@@ -9,11 +15,11 @@
  * @mixes dc.coordinateGridMixin
  * @example
  * // create a scatter plot under #chart-container1 element using the default global chart group
- * var chart1 = dc.scatterPlot('#chart-container1');
+ * let chart1 = dc.scatterPlot('#chart-container1');
  * // create a scatter plot under #chart-container2 element using chart group A
- * var chart2 = dc.scatterPlot('#chart-container2', 'chartGroupA');
+ * let chart2 = dc.scatterPlot('#chart-container2', 'chartGroupA');
  * // create a sub-chart under a composite parent chart
- * var chart3 = dc.scatterPlot(compositeChart);
+ * let chart3 = dc.scatterPlot(compositeChart);
  * @param {String|node|d3.selection} parent - Any valid
  * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
@@ -21,66 +27,60 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.scatterPlot}
  */
-dc.scatterPlot = function (parent, chartGroup) {
-    var _chart = dc.coordinateGridMixin({});
-    var _symbol = d3.svg.symbol();
+export default function scatterPlot (parent, chartGroup) {
+    const _chart = coordinateGridMixin({});
+    let _symbol = d3.svg.symbol();
 
-    var _existenceAccessor = function (d) { return d.value; };
+    let _existenceAccessor = function (d) { return d.value; };
 
-    var originalKeyAccessor = _chart.keyAccessor();
-    _chart.keyAccessor(function (d) { return originalKeyAccessor(d)[0]; });
-    _chart.valueAccessor(function (d) { return originalKeyAccessor(d)[1]; });
-    _chart.colorAccessor(function () { return _chart._groupName; });
+    const originalKeyAccessor = _chart.keyAccessor();
+    _chart.keyAccessor(d => originalKeyAccessor(d)[0]);
+    _chart.valueAccessor(d => originalKeyAccessor(d)[1]);
+    _chart.colorAccessor(() => _chart._groupName);
 
-    _chart.title(function (d) {
+    _chart.title(d =>
         // this basically just counteracts the setting of its own key/value accessors
         // see https://github.com/dc-js/dc.js/issues/702
-        return _chart.keyAccessor()(d) + ',' + _chart.valueAccessor()(d) + ': ' +
-            _chart.existenceAccessor()(d);
-    });
+        `${_chart.keyAccessor()(d)},${_chart.valueAccessor()(d)}: ${_chart.existenceAccessor()(d)}`);
 
-    var _locator = function (d) {
-        return 'translate(' + _chart.x()(_chart.keyAccessor()(d)) + ',' +
-                              _chart.y()(_chart.valueAccessor()(d)) + ')';
-    };
+    const _locator = d => `translate(${_chart.x()(_chart.keyAccessor()(d))}, ${_chart.y()(_chart.valueAccessor()(d))})`;
 
-    var _highlightedSize = 7;
-    var _symbolSize = 5;
-    var _excludedSize = 3;
-    var _excludedColor = null;
-    var _excludedOpacity = 1.0;
-    var _emptySize = 0;
-    var _emptyOpacity = 0;
-    var _nonemptyOpacity = 1;
-    var _emptyColor = null;
-    var _filtered = [];
+    let _highlightedSize = 7;
+    let _symbolSize = 5;
+    let _excludedSize = 3;
+    let _excludedColor = null;
+    let _excludedOpacity = 1.0;
+    let _emptySize = 0;
+    let _emptyOpacity = 0;
+    let _nonemptyOpacity = 1;
+    let _emptyColor = null;
+    const _filtered = [];
 
     function elementSize (d, i) {
         if (!_existenceAccessor(d)) {
-            return Math.pow(_emptySize, 2);
+            return _emptySize ** 2;
         } else if (_filtered[i]) {
-            return Math.pow(_symbolSize, 2);
-        } else {
-            return Math.pow(_excludedSize, 2);
+            return _symbolSize ** 2;
         }
+        return _excludedSize ** 2;
     }
     _symbol.size(elementSize);
 
-    dc.override(_chart, '_filter', function (filter) {
+    override(_chart, '_filter', function (filter) {
         if (!arguments.length) {
             return _chart.__filter();
         }
 
-        return _chart.__filter(dc.filters.RangedTwoDimensionalFilter(filter));
+        return _chart.__filter(RangedTwoDimensionalFilter(filter));
     });
 
     _chart.plotData = function () {
-        var symbols = _chart.chartBodyG().selectAll('path.symbol')
+        const symbols = _chart.chartBodyG().selectAll('path.symbol')
             .data(_chart.data());
 
         symbols
             .enter()
-        .append('path')
+            .append('path')
             .attr('class', 'symbol')
             .attr('opacity', 0)
             .attr('fill', _chart.getColor)
@@ -88,42 +88,38 @@ dc.scatterPlot = function (parent, chartGroup) {
 
         symbols.call(renderTitles, _chart.data());
 
-        symbols.each(function (d, i) {
+        symbols.each((d, i) => {
             _filtered[i] = !_chart.filter() || _chart.filter().isFiltered([d.key[0], d.key[1]]);
         });
 
-        dc.transition(symbols, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('opacity', function (d, i) {
+        transition(symbols, _chart.transitionDuration(), _chart.transitionDelay())
+            .attr('opacity', (d, i) => {
                 if (!_existenceAccessor(d)) {
                     return _emptyOpacity;
                 } else if (_filtered[i]) {
                     return _nonemptyOpacity;
-                } else {
-                    return _chart.excludedOpacity();
                 }
+                return _chart.excludedOpacity();
             })
-            .attr('fill', function (d, i) {
+            .attr('fill', (d, i) => {
                 if (_emptyColor && !_existenceAccessor(d)) {
                     return _emptyColor;
                 } else if (_chart.excludedColor() && !_filtered[i]) {
                     return _chart.excludedColor();
-                } else {
-                    return _chart.getColor(d);
                 }
+                return _chart.getColor(d);
             })
             .attr('transform', _locator)
             .attr('d', _symbol);
 
-        dc.transition(symbols.exit(), _chart.transitionDuration(), _chart.transitionDelay())
+        transition(symbols.exit(), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('opacity', 0).remove();
     };
 
-    function renderTitles (symbol, d) {
+    function renderTitles (symbol) {
         if (_chart.renderTitle()) {
             symbol.selectAll('title').remove();
-            symbol.append('title').text(function (d) {
-                return _chart.title()(d);
-            });
+            symbol.append('title').text(_chart.title());
         }
     }
 
@@ -292,13 +288,14 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @param {Number} [emptySize=0]
      * @returns {Number|dc.scatterPlot}
      */
-    _chart.hiddenSize = _chart.emptySize = function (emptySize) {
+    _chart.emptySize = function (emptySize) {
         if (!arguments.length) {
             return _emptySize;
         }
         _emptySize = emptySize;
         return _chart;
     };
+    _chart.hiddenSize = _chart.emptySize;
 
     /**
      * Set or get color for symbols when the group is empty. If null, just use the
@@ -357,30 +354,26 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     _chart.legendHighlight = function (d) {
-        resizeSymbolsWhere(function (symbol) {
-            return symbol.attr('fill') === d.color;
-        }, _highlightedSize);
+        resizeSymbolsWhere(symbol => symbol.attr('fill') === d.color, _highlightedSize);
         _chart.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
             return d3.select(this).attr('fill') !== d.color;
         }).classed('fadeout', true);
     };
 
     _chart.legendReset = function (d) {
-        resizeSymbolsWhere(function (symbol) {
-            return symbol.attr('fill') === d.color;
-        }, _symbolSize);
+        resizeSymbolsWhere(symbol => symbol.attr('fill') === d.color, _symbolSize);
         _chart.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
             return d3.select(this).attr('fill') !== d.color;
         }).classed('fadeout', false);
     };
 
     function resizeSymbolsWhere (condition, size) {
-        var symbols = _chart.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
+        const symbols = _chart.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
             return condition(d3.select(this));
         });
-        var oldSize = _symbol.size();
-        _symbol.size(Math.pow(size, 2));
-        dc.transition(symbols, _chart.transitionDuration(), _chart.transitionDelay()).attr('d', _symbol);
+        const oldSize = _symbol.size();
+        _symbol.size(size ** 2);
+        transition(symbols, _chart.transitionDuration(), _chart.transitionDelay()).attr('d', _symbol);
         _symbol.size(oldSize);
     }
 
@@ -389,7 +382,7 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     _chart.extendBrush = function () {
-        var extent = _chart.brush().extent();
+        const extent = _chart.brush().extent();
         if (_chart.round()) {
             extent[0] = extent[0].map(_chart.round());
             extent[1] = extent[1].map(_chart.round());
@@ -405,24 +398,22 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     _chart._brushing = function () {
-        var extent = _chart.extendBrush();
+        const extent = _chart.extendBrush();
 
         _chart.redrawBrush(_chart.g());
 
         if (_chart.brushIsEmpty(extent)) {
-            dc.events.trigger(function () {
+            trigger(() => {
                 _chart.filter(null);
                 _chart.redrawGroup();
             });
-
         } else {
-            var ranged2DFilter = dc.filters.RangedTwoDimensionalFilter(extent);
-            dc.events.trigger(function () {
+            const ranged2DFilter = RangedTwoDimensionalFilter(extent);
+            trigger(() => {
                 _chart.filter(null);
                 _chart.filter(ranged2DFilter);
                 _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
-
+            }, constants.EVENT_DELAY);
         }
     };
 
@@ -431,4 +422,4 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     return _chart.anchor(parent, chartGroup);
-};
+}

@@ -1,3 +1,8 @@
+import * as d3 from 'd3';
+import baseMixin from './base-mixin';
+import trigger from './events';
+import {deprecate} from './logger';
+
 /**
  * The select menu is a simple widget designed to filter a dimension by selecting an option from
  * an HTML `<select/>` menu. The menu can be optionally turned into a multiselect.
@@ -6,7 +11,7 @@
  * @mixes dc.baseMixin
  * @example
  * // create a select menu under #select-container using the default global chart group
- * var select = dc.selectMenu('#select-container')
+ * let select = dc.selectMenu('#select-container')
  *                .dimension(states)
  *                .group(stateGroup);
  * // the option text can be set via the title() function
@@ -21,35 +26,31 @@
  * Interaction with the widget will only trigger events and redraws within its group.
  * @returns {selectMenu}
  **/
-dc.selectMenu = function (parent, chartGroup) {
-    var SELECT_CSS_CLASS = 'dc-select-menu';
-    var OPTION_CSS_CLASS = 'dc-select-option';
+export default function selectMenu (parent, chartGroup) {
+    const SELECT_CSS_CLASS = 'dc-select-menu';
+    const OPTION_CSS_CLASS = 'dc-select-option';
 
-    var _chart = dc.baseMixin({});
+    const _chart = baseMixin({});
 
-    var _select;
-    var _promptText = 'Select all';
-    var _multiple = false;
-    var _promptValue = null;
-    var _numberVisible = null;
-    var _order = function (a, b) {
-        return _chart.keyAccessor()(a) > _chart.keyAccessor()(b) ?
-             1 : _chart.keyAccessor()(b) > _chart.keyAccessor()(a) ?
-            -1 : 0;
+    let _select;
+    let _promptText = 'Select all';
+    let _multiple = false;
+    let _promptValue = null;
+    let _numberVisible = null;
+    let _order = function (a, b) {
+        return d3.ascending(_chart.keyAccessor()(a), _chart.keyAccessor()(b));
     };
 
-    var _filterDisplayed = function (d) {
+    let _filterDisplayed = function (d) {
         return _chart.valueAccessor()(d) > 0;
     };
 
-    _chart.data(function (group) {
-        return group.all().filter(_filterDisplayed);
-    });
+    _chart.data(group => group.all().filter(_filterDisplayed));
 
     _chart._doRender = function () {
         _chart.select('select').remove();
         _select = _chart.root().append('select')
-                        .classed(SELECT_CSS_CLASS, true);
+            .classed(SELECT_CSS_CLASS, true);
         _select.append('option').text(_promptText).attr('value', '');
 
         _chart._doRedraw();
@@ -58,7 +59,7 @@ dc.selectMenu = function (parent, chartGroup) {
     // Fixing IE 11 crash when redrawing the chart
     // see here for list of IE user Agents :
     // http://www.useragentstring.com/pages/useragentstring.php?name=Internet+Explorer
-    var ua = window.navigator.userAgent;
+    const ua = window.navigator.userAgent;
     // test for IE 11 but not a lower version (which contains MSIE in UA)
     if (ua.indexOf('Trident/') > 0 && ua.indexOf('MSIE') === -1) {
         _chart.redraw = _chart.render;
@@ -70,9 +71,7 @@ dc.selectMenu = function (parent, chartGroup) {
         // select the option(s) corresponding to current filter(s)
         if (_chart.hasFilter() && _multiple) {
             _select.selectAll('option')
-                .property('selected', function (d) {
-                    return typeof d !== 'undefined' && _chart.filters().indexOf(String(_chart.keyAccessor()(d))) >= 0;
-                });
+                .property('selected', d => typeof d !== 'undefined' && _chart.filters().indexOf(String(_chart.keyAccessor()(d))) >= 0);
         } else if (_chart.hasFilter()) {
             _select.property('value', _chart.filter());
         } else {
@@ -82,45 +81,40 @@ dc.selectMenu = function (parent, chartGroup) {
     };
 
     function renderOptions () {
-        var options = _select.selectAll('option.' + OPTION_CSS_CLASS)
-          .data(_chart.data(), function (d) { return _chart.keyAccessor()(d); });
+        const options = _select.selectAll(`option.${OPTION_CSS_CLASS}`)
+            .data(_chart.data(), _chart.keyAccessor());
 
         options.enter()
-              .append('option')
-              .classed(OPTION_CSS_CLASS, true)
-              .attr('value', function (d) { return _chart.keyAccessor()(d); });
+            .append('option')
+            .classed(OPTION_CSS_CLASS, true)
+            .attr('value', _chart.keyAccessor());
 
         options.text(_chart.title());
         options.exit().remove();
-        _select.selectAll('option.' + OPTION_CSS_CLASS).sort(_order);
+        _select.selectAll(`option.${OPTION_CSS_CLASS}`).sort(_order);
 
         _select.on('change', onChange);
         return options;
     }
 
-    function onChange (d, i) {
-        var values;
-        var target = d3.event.target;
+    function onChange () {
+        let values;
+        const {target} = d3.event;
         if (target.selectedOptions) {
-            var selectedOptions = Array.prototype.slice.call(target.selectedOptions);
-            values = selectedOptions.map(function (d) {
-                return d.value;
-            });
+            const selectedOptions = Array.prototype.slice.call(target.selectedOptions);
+            values = selectedOptions.map(d => d.value);
         } else { // IE and other browsers do not support selectedOptions
             // adapted from this polyfill: https://gist.github.com/brettz9/4212217
-            var options = [].slice.call(d3.event.target.options);
-            values = options.filter(function (option) {
-                return option.selected;
-            }).map(function (option) {
-                return option.value;
-            });
+            const options = [].slice.call(d3.event.target.options);
+            values = options.filter(option => option.selected)
+                .map(option => option.value);
         }
         // console.log(values);
         // check if only prompt option is selected
         if (values.length === 1 && values[0] === '') {
             values = _promptValue || null;
         } else if (!_multiple && values.length === 1) {
-            values = values[0];
+            [values] = values;
         }
         _chart.onChange(values);
     }
@@ -133,9 +127,7 @@ dc.selectMenu = function (parent, chartGroup) {
         } else {
             _chart.filterAll();
         }
-        dc.events.trigger(function () {
-            _chart.redrawGroup();
-        });
+        trigger(_chart.redrawGroup);
     };
 
     function setAttributes () {
@@ -269,7 +261,7 @@ dc.selectMenu = function (parent, chartGroup) {
         return _chart;
     };
 
-    _chart.size = dc.logger.deprecate(_chart.numberVisible, 'selectMenu.size is ambiguous - use numberVisible instead');
+    _chart.size = deprecate(_chart.numberVisible, 'selectMenu.size is ambiguous - use numberVisible instead');
 
     return _chart.anchor(parent, chartGroup);
-};
+}

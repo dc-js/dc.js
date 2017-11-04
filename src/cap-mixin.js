@@ -1,3 +1,6 @@
+import * as d3 from 'd3';
+import {override} from './core';
+
 /**
  * Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the
  * Row and Pie Charts.
@@ -12,17 +15,16 @@
  * @param {Object} _chart
  * @returns {dc.capMixin}
  */
-dc.capMixin = function (_chart) {
-    var _cap = Infinity, _takeFront = true;
-    var _othersLabel = 'Others';
+export default function capMixin (_chart) {
+    let _cap = Infinity,
+        _takeFront = true;
+    let _othersLabel = 'Others';
 
     // emulate old group.top(N) ordering
-    _chart.ordering(function (kv) {
-        return -kv.value;
-    });
+    _chart.ordering(kv => -kv.value);
 
-    var _othersGrouper = function (topItems, restItems) {
-        var restItemsSum = d3.sum(restItems, _chart.valueAccessor()),
+    let _othersGrouper = function (topItems, restItems) {
+        const restItemsSum = d3.sum(restItems, _chart.valueAccessor()),
             restKeys = restItems.map(_chart.keyAccessor());
         if (restItemsSum > 0) {
             return topItems.concat([{
@@ -50,29 +52,29 @@ dc.capMixin = function (_chart) {
 
     // return N "top" groups, where N is the cap, sorted by baseMixin.ordering
     // whether top means front or back depends on takeFront
-    _chart.data(function (group) {
+    _chart.data((group) => {
         if (_cap === Infinity) {
             return _chart._computeOrderedGroups(group.all());
-        } else {
-            var items = group.all(), rest;
-            items = _chart._computeOrderedGroups(items); // sort by baseMixin.ordering
-
-            if (_cap) {
-                if (_takeFront) {
-                    rest = items.slice(_cap);
-                    items = items.slice(0, _cap);
-                } else {
-                    var start = Math.max(0, items.length - _cap);
-                    rest = items.slice(0, start);
-                    items = items.slice(start);
-                }
-            }
-
-            if (_othersGrouper) {
-                return _othersGrouper(items, rest);
-            }
-            return items;
         }
+        let items = group.all(),
+            rest;
+        items = _chart._computeOrderedGroups(items); // sort by baseMixin.ordering
+
+        if (_cap) {
+            if (_takeFront) {
+                rest = items.slice(_cap);
+                items = items.slice(0, _cap);
+            } else {
+                const start = Math.max(0, items.length - _cap);
+                rest = items.slice(0, start);
+                items = items.slice(start);
+            }
+        }
+
+        if (_othersGrouper) {
+            return _othersGrouper(items, rest);
+        }
+        return items;
     });
 
     /**
@@ -162,7 +164,7 @@ dc.capMixin = function (_chart) {
      * chart.othersGrouper(null);
      * // Default others grouper
      * chart.othersGrouper(function (topItems, restItems) {
-     *     var restItemsSum = d3.sum(restItems, _chart.valueAccessor()),
+     *     const restItemsSum = d3.sum(restItems, _chart.valueAccessor()),
      *         restKeys = restItems.map(_chart.keyAccessor());
      *     if (restItemsSum > 0) {
      *         return topItems.concat([{
@@ -184,7 +186,7 @@ dc.capMixin = function (_chart) {
         return _chart;
     };
 
-    dc.override(_chart, 'onClick', function (d) {
+    override(_chart, 'onClick', (d) => {
         if (d.others) {
             _chart.filter([d.others]);
         }
@@ -192,4 +194,4 @@ dc.capMixin = function (_chart) {
     });
 
     return _chart;
-};
+}

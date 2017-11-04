@@ -1,3 +1,6 @@
+import * as d3 from 'd3';
+import baseMixin from './base-mixin';
+
 /**
  * The data table is a simple widget designed to list crossfilter focused data set (rows being
  * filtered) in a good old tabular fashion.
@@ -25,24 +28,24 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.dataTable}
  */
-dc.dataTable = function (parent, chartGroup) {
-    var LABEL_CSS_CLASS = 'dc-table-label';
-    var ROW_CSS_CLASS = 'dc-table-row';
-    var COLUMN_CSS_CLASS = 'dc-table-column';
-    var GROUP_CSS_CLASS = 'dc-table-group';
-    var HEAD_CSS_CLASS = 'dc-table-head';
+export default function dataTable (parent, chartGroup) {
+    const LABEL_CSS_CLASS = 'dc-table-label';
+    const ROW_CSS_CLASS = 'dc-table-row';
+    const COLUMN_CSS_CLASS = 'dc-table-column';
+    const GROUP_CSS_CLASS = 'dc-table-group';
+    const HEAD_CSS_CLASS = 'dc-table-head';
 
-    var _chart = dc.baseMixin({});
+    const _chart = baseMixin({});
 
-    var _size = 25;
-    var _columns = [];
-    var _sortBy = function (d) {
+    let _size = 25;
+    let _columns = [];
+    let _sortBy = function (d) {
         return d;
     };
-    var _order = d3.ascending;
-    var _beginSlice = 0;
-    var _endSlice;
-    var _showGroups = true;
+    let _order = d3.ascending;
+    let _beginSlice = 0;
+    let _endSlice;
+    let _showGroups = true;
 
     _chart._doRender = function () {
         _chart.selectAll('tbody').remove();
@@ -53,23 +56,24 @@ dc.dataTable = function (parent, chartGroup) {
     };
 
     _chart._doColumnValueFormat = function (v, d) {
-        return ((typeof v === 'function') ?
-                v(d) :                          // v as function
-                ((typeof v === 'string') ?
-                 d[v] :                         // v is field name string
-                 v.format(d)                        // v is Object, use fn (element 2)
-                )
-               );
+        if (typeof v === 'function') {
+            return v(d);
+        } else if (typeof v === 'string') {
+            return d[v];
+        }
+        return v.format(d);
     };
 
     _chart._doColumnHeaderFormat = function (d) {
         // if 'function', convert to string representation
         // show a string capitalized
         // if an object then display its label string as-is.
-        return (typeof d === 'function') ?
-                _chart._doColumnHeaderFnToString(d) :
-                ((typeof d === 'string') ?
-                 _chart._doColumnHeaderCapitalize(d) : String(d.label));
+        if (typeof d === 'function') {
+            return _chart._doColumnHeaderFnToString(d);
+        } else if (typeof d === 'string') {
+            return _chart._doColumnHeaderCapitalize(d);
+        }
+        return String(d.label);
     };
 
     _chart._doColumnHeaderCapitalize = function (s) {
@@ -79,13 +83,13 @@ dc.dataTable = function (parent, chartGroup) {
 
     _chart._doColumnHeaderFnToString = function (f) {
         // columnString(f) {
-        var s = String(f);
-        var i1 = s.indexOf('return ');
+        let s = String(f);
+        const i1 = s.indexOf('return ');
         if (i1 >= 0) {
-            var i2 = s.lastIndexOf(';');
+            const i2 = s.lastIndexOf(';');
             if (i2 >= 0) {
                 s = s.substring(i1 + 7, i2);
-                var i3 = s.indexOf('numberFormat');
+                const i3 = s.indexOf('numberFormat');
                 if (i3 >= 0) {
                     s = s.replace('numberFormat', '');
                 }
@@ -102,42 +106,34 @@ dc.dataTable = function (parent, chartGroup) {
         // A third option is to supply an Object such as an array of 'information', and
         // supply your own _doColumnHeaderFormat and _doColumnValueFormat functions to
         // create what you need.
-        var bAllFunctions = true;
-        _columns.forEach(function (f) {
-            bAllFunctions = bAllFunctions & (typeof f === 'function');
-        });
+        const bAllFunctions = _columns.every(f => typeof f === 'function');
 
         if (!bAllFunctions) {
             // ensure one thead
-            var thead = _chart.selectAll('thead').data([0]);
+            const thead = _chart.selectAll('thead').data([0]);
             thead.enter().append('thead');
             thead.exit().remove();
 
             // with one tr
-            var headrow = thead.selectAll('tr').data([0]);
+            const headrow = thead.selectAll('tr').data([0]);
             headrow.enter().append('tr');
             headrow.exit().remove();
 
             // with a th for each column
-            var headcols = headrow.selectAll('th')
+            const heals = headrow.selectAll('th')
                 .data(_columns);
-            headcols.enter().append('th');
-            headcols.exit().remove();
+            heals.enter().append('th');
+            heals.exit().remove();
 
-            headcols
+            heals
                 .attr('class', HEAD_CSS_CLASS)
-                    .html(function (d) {
-                        return (_chart._doColumnHeaderFormat(d));
-
-                    });
+                .html(_chart._doColumnHeaderFormat);
         }
 
-        var groups = _chart.root().selectAll('tbody')
-            .data(nestEntries(), function (d) {
-                return _chart.keyAccessor()(d);
-            });
+        const groups = _chart.root().selectAll('tbody')
+            .data(nestEntries(), _chart.keyAccessor());
 
-        var rowGroup = groups
+        const rowGroup = groups
             .enter()
             .append('tbody');
 
@@ -145,12 +141,10 @@ dc.dataTable = function (parent, chartGroup) {
             rowGroup
                 .append('tr')
                 .attr('class', GROUP_CSS_CLASS)
-                    .append('td')
-                    .attr('class', LABEL_CSS_CLASS)
-                    .attr('colspan', _columns.length)
-                    .html(function (d) {
-                        return _chart.keyAccessor()(d);
-                    });
+                .append('td')
+                .attr('class', LABEL_CSS_CLASS)
+                .attr('colspan', _columns.length)
+                .html(_chart.keyAccessor());
         }
 
         groups.exit().remove();
@@ -159,7 +153,7 @@ dc.dataTable = function (parent, chartGroup) {
     }
 
     function nestEntries () {
-        var entries;
+        let entries;
         if (_order === d3.ascending) {
             entries = _chart.dimension().bottom(_size);
         } else {
@@ -169,28 +163,23 @@ dc.dataTable = function (parent, chartGroup) {
         return d3.nest()
             .key(_chart.group())
             .sortKeys(_order)
-            .entries(entries.sort(function (a, b) {
-                return _order(_sortBy(a), _sortBy(b));
-            }).slice(_beginSlice, _endSlice));
+            .entries(entries.sort((a, b) => _order(_sortBy(a), _sortBy(b)))
+                .slice(_beginSlice, _endSlice));
     }
 
     function renderRows (groups) {
-        var rows = groups.order()
-            .selectAll('tr.' + ROW_CSS_CLASS)
-            .data(function (d) {
-                return d.values;
-            });
+        const rows = groups.order()
+            .selectAll(`tr.${ROW_CSS_CLASS}`)
+            .data(d => d.values);
 
-        var rowEnter = rows.enter()
+        const rowEnter = rows.enter()
             .append('tr')
             .attr('class', ROW_CSS_CLASS);
 
-        _columns.forEach(function (v, i) {
+        _columns.forEach((v, i) => {
             rowEnter.append('td')
-                .attr('class', COLUMN_CSS_CLASS + ' _' + i)
-                .html(function (d) {
-                    return _chart._doColumnValueFormat(v, d);
-                });
+                .attr('class', `${COLUMN_CSS_CLASS} _${i}`)
+                .html(d => _chart._doColumnValueFormat(v, d));
         });
 
         rows.exit().remove();
@@ -425,4 +414,4 @@ dc.dataTable = function (parent, chartGroup) {
     };
 
     return _chart.anchor(parent, chartGroup);
-};
+}

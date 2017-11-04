@@ -1,3 +1,5 @@
+import {pluck, utils} from './utils';
+
 /**
  * Legend is a attachable widget that can be added to other dc charts to render horizontal legend
  * labels.
@@ -11,11 +13,11 @@
  * chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
  * @returns {dc.legend}
  */
-dc.legend = function () {
-    var LABEL_GAP = 2;
+export default function legend () {
+    const LABEL_GAP = 2;
 
-    var _legend = {},
-        _parent,
+    const _legend = {};
+    let _parent,
         _x = 0,
         _y = 0,
         _itemHeight = 12,
@@ -24,10 +26,10 @@ dc.legend = function () {
         _legendWidth = 560,
         _itemWidth = 70,
         _autoItemWidth = false,
-        _legendText = dc.pluck('name'),
+        _legendText = pluck('name'),
         _maxItems;
 
-    var _g;
+    let _g;
 
     _legend.parent = function (p) {
         if (!arguments.length) {
@@ -41,34 +43,26 @@ dc.legend = function () {
         _parent.svg().select('g.dc-legend').remove();
         _g = _parent.svg().append('g')
             .attr('class', 'dc-legend')
-            .attr('transform', 'translate(' + _x + ',' + _y + ')');
-        var legendables = _parent.legendables();
+            .attr('transform', `translate(${_x}, ${_y})`);
+        let legendables = _parent.legendables();
 
         if (_maxItems !== undefined) {
             legendables = legendables.slice(0, _maxItems);
         }
 
-        var itemEnter = _g.selectAll('g.dc-legend-item')
+        const itemEnter = _g.selectAll('g.dc-legend-item')
             .data(legendables)
             .enter()
             .append('g')
             .attr('class', 'dc-legend-item')
-            .on('mouseover', function (d) {
-                _parent.legendHighlight(d);
-            })
-            .on('mouseout', function (d) {
-                _parent.legendReset(d);
-            })
-            .on('click', function (d) {
-                d.chart.legendToggle(d);
-            });
+            .on('mouseover', _parent.legendHighlight)
+            .on('mouseout', _parent.legendReset)
+            .on('click', d => d.chart.legendToggle(d));
 
         _g.selectAll('g.dc-legend-item')
-            .classed('fadeout', function (d) {
-                return d.chart.isLegendableHidden(d);
-            });
+            .classed('fadeout', d => d.chart.isLegendableHidden(d));
 
-        if (legendables.some(dc.pluck('dashstyle'))) {
+        if (legendables.some(pluck('dashstyle'))) {
             itemEnter
                 .append('line')
                 .attr('x1', 0)
@@ -76,38 +70,37 @@ dc.legend = function () {
                 .attr('x2', _itemHeight)
                 .attr('y2', _itemHeight / 2)
                 .attr('stroke-width', 2)
-                .attr('stroke-dasharray', dc.pluck('dashstyle'))
-                .attr('stroke', dc.pluck('color'));
+                .attr('stroke-dasharray', pluck('dashstyle'))
+                .attr('stroke', pluck('color'));
         } else {
             itemEnter
                 .append('rect')
                 .attr('width', _itemHeight)
                 .attr('height', _itemHeight)
-                .attr('fill', function (d) {return d ? d.color : 'blue';});
+                .attr('fill', d => (d ? d.color : 'blue'));
         }
 
         itemEnter.append('text')
-                .text(_legendText)
-                .attr('x', _itemHeight + LABEL_GAP)
-                .attr('y', function () {
-                    return _itemHeight / 2 + (this.clientHeight ? this.clientHeight : 13) / 2 - 2;
-                });
+            .text(_legendText)
+            .attr('x', _itemHeight + LABEL_GAP)
+            .attr('y', function () {
+                return _itemHeight / 2 + (this.clientHeight ? this.clientHeight : 13) / 2 - 2;
+            });
 
-        var _cumulativeLegendTextWidth = 0;
-        var row = 0;
+        let _cumulativeLegendTextWidth = 0;
+        let row = 0;
         itemEnter.attr('transform', function (d, i) {
             if (_horizontal) {
-                var itemWidth   = _autoItemWidth === true ? this.getBBox().width + _gap : _itemWidth;
+                const itemWidth = _autoItemWidth === true ? this.getBBox().width + _gap : _itemWidth;
                 if ((_cumulativeLegendTextWidth + itemWidth) > _legendWidth && _cumulativeLegendTextWidth > 0) {
                     ++row;
                     _cumulativeLegendTextWidth = 0;
                 }
-                var translateBy = 'translate(' + _cumulativeLegendTextWidth + ',' + row * legendItemHeight() + ')';
+                const translateBy = `translate(${_cumulativeLegendTextWidth}, ${row * legendItemHeight()})`;
                 _cumulativeLegendTextWidth += itemWidth;
                 return translateBy;
-            } else {
-                return 'translate(0,' + i * legendItemHeight() + ')';
             }
+            return `translate(0, ${i * legendItemHeight()})`;
         });
     };
 
@@ -283,9 +276,9 @@ dc.legend = function () {
         if (!arguments.length) {
             return _maxItems;
         }
-        _maxItems = dc.utils.isNumber(maxItems) ? maxItems : undefined;
+        _maxItems = utils.isNumber(maxItems) ? maxItems : undefined;
         return _legend;
     };
 
     return _legend;
-};
+}

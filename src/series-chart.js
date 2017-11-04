@@ -1,3 +1,7 @@
+import * as d3 from 'd3';
+import compositeChart from './composite-chart';
+import lineChart from './line-chart';
+
 /**
  * A series chart is a chart that shows multiple series of data overlaid on one chart, where the
  * series is specified in the data. It is a specialization of Composite Chart and inherits all
@@ -10,9 +14,9 @@
  * @mixes dc.compositeChart
  * @example
  * // create a series chart under #chart-container1 element using the default global chart group
- * var seriesChart1 = dc.seriesChart("#chart-container1");
+ * let seriesChart1 = dc.seriesChart("#chart-container1");
  * // create a series chart under #chart-container2 element using chart group A
- * var seriesChart2 = dc.seriesChart("#chart-container2", "chartGroupA");
+ * let seriesChart2 = dc.seriesChart("#chart-container2", "chartGroupA");
  * @param {String|node|d3.selection} parent - Any valid
  * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
@@ -20,36 +24,36 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.seriesChart}
  */
-dc.seriesChart = function (parent, chartGroup) {
-    var _chart = dc.compositeChart(parent, chartGroup);
+export default function seriesChart (parent, chartGroup) {
+    const _chart = compositeChart(parent, chartGroup);
 
     function keySort (a, b) {
         return d3.ascending(_chart.keyAccessor()(a), _chart.keyAccessor()(b));
     }
 
-    var _charts = {};
-    var _chartFunction = dc.lineChart;
-    var _seriesAccessor;
-    var _seriesSort = d3.ascending;
-    var _valueSort = keySort;
+    let _charts = {};
+    let _chartFunction = lineChart;
+    let _seriesAccessor;
+    let _seriesSort = d3.ascending;
+    let _valueSort = keySort;
 
     _chart._mandatoryAttributes().push('seriesAccessor', 'chart');
     _chart.shareColors(true);
 
     _chart._preprocessData = function () {
-        var keep = [];
-        var childrenChanged;
-        var nester = d3.nest().key(_seriesAccessor);
+        const keep = [];
+        let childrenChanged;
+        const nester = d3.nest().key(_seriesAccessor);
         if (_seriesSort) {
             nester.sortKeys(_seriesSort);
         }
         if (_valueSort) {
             nester.sortValues(_valueSort);
         }
-        var nesting = nester.entries(_chart.data());
-        var children =
-            nesting.map(function (sub, i) {
-                var subChart = _charts[sub.key] || _chartFunction.call(_chart, _chart, chartGroup, sub.key, i);
+        const nesting = nester.entries(_chart.data());
+        const children =
+            nesting.map((sub, i) => {
+                const subChart = _charts[sub.key] || _chartFunction.call(_chart, _chart, chartGroup, sub.key, i);
                 if (!_charts[sub.key]) {
                     childrenChanged = true;
                 }
@@ -65,8 +69,8 @@ dc.seriesChart = function (parent, chartGroup) {
         // this works around the fact compositeChart doesn't really
         // have a removal interface
         Object.keys(_charts)
-            .filter(function (c) {return keep.indexOf(c) === -1;})
-            .forEach(function (c) {
+            .filter(c => keep.indexOf(c) === -1)
+            .forEach((c) => {
                 clearChart(c);
                 childrenChanged = true;
             });
@@ -185,4 +189,4 @@ dc.seriesChart = function (parent, chartGroup) {
     delete _chart.compose;
 
     return _chart;
-};
+}

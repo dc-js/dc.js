@@ -1,3 +1,6 @@
+import * as d3 from 'd3';
+import {deprecate} from './logger';
+
 /**
  * The Color Mixin is an abstract chart functional class providing universal coloring support
  * as a mix-in for any concrete chart implementation.
@@ -7,11 +10,11 @@
  * @param {Object} _chart
  * @returns {dc.colorMixin}
  */
-dc.colorMixin = function (_chart) {
-    var _colors = d3.scale.category20c();
-    var _defaultAccessor = true;
+export default function colorMixin (_chart) {
+    let _colors = d3.scale.category20c();
+    let _defaultAccessor = true;
 
-    var _colorAccessor = function (d) { return _chart.keyAccessor()(d); };
+    let _colorAccessor = d => _chart.keyAccessor()(d);
 
     /**
      * Retrieve current color scale or set a new color scale. This methods accepts any function that
@@ -68,8 +71,8 @@ dc.colorMixin = function (_chart) {
      */
     _chart.linearColors = function (r) {
         return _chart.colors(d3.scale.linear()
-                             .range(r)
-                             .interpolate(d3.interpolateHcl));
+            .range(r)
+            .interpolate(d3.interpolateHcl));
     };
 
     /**
@@ -130,8 +133,8 @@ dc.colorMixin = function (_chart) {
      * @returns {dc.colorMixin}
      */
     _chart.calculateColorDomain = function () {
-        var newDomain = [d3.min(_chart.data(), _chart.colorAccessor()),
-                         d3.max(_chart.data(), _chart.colorAccessor())];
+        const newDomain = [d3.min(_chart.data(), _chart.colorAccessor()),
+            d3.max(_chart.data(), _chart.colorAccessor())];
         _colors.domain(newDomain);
         return _chart;
     };
@@ -161,7 +164,7 @@ dc.colorMixin = function (_chart) {
      * @param {*} [colorCalculator]
      * @returns {Function|dc.colorMixin}
      */
-    _chart.colorCalculator = dc.logger.deprecate(function (colorCalculator) {
+    _chart.colorCalculator = deprecate((colorCalculator) => {
         if (!arguments.length) {
             return _chart.getColor;
         }
@@ -170,4 +173,4 @@ dc.colorMixin = function (_chart) {
     }, 'colorMixin.colorCalculator has been deprecated. Please colorMixin.colors and colorMixin.colorAccessor instead');
 
     return _chart;
-};
+}

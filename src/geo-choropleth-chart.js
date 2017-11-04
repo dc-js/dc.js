@@ -1,3 +1,10 @@
+import * as d3 from 'd3';
+import colorMixin from './color-mixin';
+import baseMixin from './base-mixin';
+import {utils} from './utils';
+import {transition} from './core';
+import trigger from './events';
+
 /**
  * The geo choropleth chart is designed as an easy way to create a crossfilter driven choropleth map
  * from GeoJson data. This chart implementation was inspired by
@@ -11,9 +18,9 @@
  * @mixes dc.baseMixin
  * @example
  * // create a choropleth chart under '#us-chart' element using the default global chart group
- * var chart1 = dc.geoChoroplethChart('#us-chart');
+ * let chart1 = dc.geoChoroplethChart('#us-chart');
  * // create a choropleth chart under '#us-chart2' element using chart group A
- * var chart2 = dc.compositeChart('#us-chart2', 'chartGroupA');
+ * let chart2 = dc.compositeChart('#us-chart2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
  * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
@@ -21,25 +28,23 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.geoChoroplethChart}
  */
-dc.geoChoroplethChart = function (parent, chartGroup) {
-    var _chart = dc.colorMixin(dc.baseMixin({}));
+export default function geoChoroplethChart (parent, chartGroup) {
+    const _chart = colorMixin(baseMixin({}));
 
-    _chart.colorAccessor(function (d) {
-        return d || 0;
-    });
+    _chart.colorAccessor(d => d || 0);
 
-    var _geoPath = d3.geo.path();
-    var _projectionFlag;
+    const _geoPath = d3.geo.path();
+    let _projectionFlag;
 
-    var _geoJsons = [];
+    let _geoJsons = [];
 
     _chart._doRender = function () {
         _chart.resetSvg();
-        for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
-            var states = _chart.svg().append('g')
-                .attr('class', 'layer' + layerIndex);
+        for (let layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
+            const states = _chart.svg().append('g')
+                .attr('class', `layer${layerIndex}`);
 
-            var regionG = states.selectAll('g.' + geoJson(layerIndex).name)
+            const regionG = states.selectAll(`g.${geoJson(layerIndex).name}`)
                 .data(geoJson(layerIndex).data)
                 .enter()
                 .append('g')
@@ -58,10 +63,10 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     };
 
     function plotData (layerIndex) {
-        var data = generateLayeredData();
+        const data = generateLayeredData();
 
         if (isDataLayer(layerIndex)) {
-            var regionG = renderRegionG(layerIndex);
+            const regionG = renderRegionG(layerIndex);
 
             renderPaths(regionG, layerIndex, data);
 
@@ -70,9 +75,9 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     }
 
     function generateLayeredData () {
-        var data = {};
-        var groupAll = _chart.data();
-        for (var i = 0; i < groupAll.length; ++i) {
+        const data = {};
+        const groupAll = _chart.data();
+        for (let i = 0; i < groupAll.length; ++i) {
             data[_chart.keyAccessor()(groupAll[i])] = _chart.valueAccessor()(groupAll[i]);
         }
         return data;
@@ -83,18 +88,14 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     }
 
     function renderRegionG (layerIndex) {
-        var regionG = _chart.svg()
+        const regionG = _chart.svg()
             .selectAll(layerSelector(layerIndex))
-            .classed('selected', function (d) {
-                return isSelected(layerIndex, d);
-            })
-            .classed('deselected', function (d) {
-                return isDeselected(layerIndex, d);
-            })
-            .attr('class', function (d) {
-                var layerNameClass = geoJson(layerIndex).name;
-                var regionClass = dc.utils.nameToId(geoJson(layerIndex).keyAccessor(d));
-                var baseClasses = layerNameClass + ' ' + regionClass;
+            .classed('selected', d => isSelected(layerIndex, d))
+            .classed('deselected', d => isDeselected(layerIndex, d))
+            .attr('class', (d) => {
+                const layerNameClass = geoJson(layerIndex).name;
+                const regionClass = utils.nameToId(geoJson(layerIndex).keyAccessor(d));
+                let baseClasses = `${layerNameClass} ${regionClass}`;
                 if (isSelected(layerIndex, d)) {
                     baseClasses += ' selected';
                 }
@@ -107,7 +108,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     }
 
     function layerSelector (layerIndex) {
-        return 'g.layer' + layerIndex + ' g.' + geoJson(layerIndex).name;
+        return `g.layer${layerIndex} g.${geoJson(layerIndex).name}`;
     }
 
     function isSelected (layerIndex, d) {
@@ -127,27 +128,20 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     }
 
     function renderPaths (regionG, layerIndex, data) {
-        var paths = regionG
+        const paths = regionG
             .select('path')
             .attr('fill', function () {
-                var currentFill = d3.select(this).attr('fill');
-                if (currentFill) {
-                    return currentFill;
-                }
-                return 'none';
+                return d3.select(this).attr('fill') || 'none';
             })
-            .on('click', function (d) {
-                return _chart.onClick(d, layerIndex);
-            });
+            .on('click', d => _chart.onClick(d, layerIndex));
 
-        dc.transition(paths, _chart.transitionDuration(), _chart.transitionDelay()).attr('fill', function (d, i) {
-            return _chart.getColor(data[geoJson(layerIndex).keyAccessor(d)], i);
-        });
+        transition(paths, _chart.transitionDuration(), _chart.transitionDelay())
+            .attr('fill', (d, i) => _chart.getColor(data[geoJson(layerIndex).keyAccessor(d)], i));
     }
 
     _chart.onClick = function (d, layerIndex) {
-        var selectedRegion = geoJson(layerIndex).keyAccessor(d);
-        dc.events.trigger(function () {
+        const selectedRegion = geoJson(layerIndex).keyAccessor(d);
+        trigger(() => {
             _chart.filter(selectedRegion);
             _chart.redrawGroup();
         });
@@ -155,19 +149,19 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
     function renderTitle (regionG, layerIndex, data) {
         if (_chart.renderTitle()) {
-            regionG.selectAll('title').text(function (d) {
-                var key = getKey(layerIndex, d);
-                var value = data[key];
-                return _chart.title()({key: key, value: value});
+            regionG.selectAll('title').text((d) => {
+                const key = getKey(layerIndex, d);
+                const value = data[key];
+                return _chart.title()({key, value});
             });
         }
     }
 
     _chart._doRedraw = function () {
-        for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
+        for (let layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
             plotData(layerIndex);
             if (_projectionFlag) {
-                _chart.svg().selectAll('g.' + geoJson(layerIndex).name + ' path').attr('d', _geoPath);
+                _chart.svg().selectAll(`g.${geoJson(layerIndex).name} path`).attr('d', _geoPath);
             }
         }
         _projectionFlag = false;
@@ -197,14 +191,14 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * @returns {dc.geoChoroplethChart}
      */
     _chart.overlayGeoJson = function (json, name, keyAccessor) {
-        for (var i = 0; i < _geoJsons.length; ++i) {
+        for (let i = 0; i < _geoJsons.length; ++i) {
             if (_geoJsons[i].name === name) {
                 _geoJsons[i].data = json;
                 _geoJsons[i].keyAccessor = keyAccessor;
                 return _chart;
             }
         }
-        _geoJsons.push({name: name, data: json, keyAccessor: keyAccessor});
+        _geoJsons.push({name, data: json, keyAccessor});
         return _chart;
     };
 
@@ -261,10 +255,10 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
      * @returns {dc.geoChoroplethChart}
      */
     _chart.removeGeoJson = function (name) {
-        var geoJsons = [];
+        const geoJsons = [];
 
-        for (var i = 0; i < _geoJsons.length; ++i) {
-            var layer = _geoJsons[i];
+        for (let i = 0; i < _geoJsons.length; ++i) {
+            const layer = _geoJsons[i];
             if (layer.name !== name) {
                 geoJsons.push(layer);
             }
@@ -276,4 +270,4 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     };
 
     return _chart.anchor(parent, chartGroup);
-};
+}

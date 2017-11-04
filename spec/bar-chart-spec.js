@@ -685,8 +685,8 @@ describe('dc.barChart', function () {
             beforeEach(function () {
                 d3.select('#' + id).append('span').attr('class', 'filter').style('visibility', 'hidden');
                 d3.select('#' + id).append('a').attr('class', 'reset').style('visibility', 'hidden');
+                dc.dateFormat(d3.time.format.utc('%m/%d/%Y'));
                 chart.filter([makeDate(2012, 5, 1), makeDate(2012, 5, 30)]).redraw();
-                dc.dateFormat = d3.time.format.utc('%m/%d/%Y');
                 chart.redraw();
             });
 
