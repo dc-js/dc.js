@@ -25,10 +25,8 @@
     "url": "https://github.com/dc-js/dc.js.git"
   },
   "dependencies": {
-    "are-we-there-yet": "^1.1.4",
     "crossfilter2": "~1.4",
-    "d3": "^3",
-    "gauge": "^2.7.4"
+    "d3": "^3"
   },
   "devDependencies": {
     "file-saver": "^1.3.0",
