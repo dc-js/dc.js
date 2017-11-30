@@ -15,6 +15,7 @@
     <button class="btn" onclick="button1()">little</button>
     <button class="btn" onclick="button2()">keep 2</button>
     <button class="btn" onclick="button3()">keep 4</button>
+    <button class="btn" onclick="button4()">reverse</button>
 
 
     <script type="text/javascript" src="../js/d3.js"></script>
@@ -63,6 +64,15 @@
               });
           }, function() {
               run2.filter();
+          });
+          window.button4 = transitionTest.oscillate(function() {
+              chart.ordering(function(kv) {
+                  return kv.value;
+              });
+          }, function() {
+              chart.ordering(function(kv) {
+                  return -kv.value;
+              });
           });
       });
 
