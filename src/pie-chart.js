@@ -44,6 +44,7 @@ dc.pieChart = function (parent, chartGroup) {
     var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
     var _externalLabelRadius;
     var _drawPaths = false;
+    var _previousKeys = [];
     var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
 
     _chart.colorAccessor(_chart.cappedKeyAccessor);
@@ -95,7 +96,26 @@ dc.pieChart = function (parent, chartGroup) {
         var pieData;
         // if we have data...
         if (d3.sum(_chart.data(), _chart.valueAccessor())) {
-            pieData = pie(_chart.data());
+            var data = _chart.data(), keys = data.map(function(kv) { return kv.key; });
+            var prev = d3.set(_previousKeys), curr = d3.set(data.map(function(kv) { return kv.key; }));
+            var combined = [];
+            for(var pi = 0, di = 0; pi < _previousKeys.length && di < data.length;) {
+                var p = _previousKeys[pi], c = data[di].key;
+                if(p === c) {
+                    combined.push(data[di]);
+                    ++pi; ++di;
+                } else if(prev.has(c) && !curr.has(p)) {
+                    combined.push({key: p, value: 0});
+                    ++pi;
+                } else {
+                    combined.push(data[di]);
+                    ++di;
+                }
+            }
+            combined = combined.concat(data.slice(di));
+            combined = combined.concat(_previousKeys.slice(pi).map(function(k) { return {key: k, value: 0}; }));
+            _previousKeys = keys;
+            pieData = pie(combined);
             _g.classed(_emptyCssClass, false);
         } else {
             // otherwise we'd be getting NaNs, so override
