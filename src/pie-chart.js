@@ -199,8 +199,15 @@ dc.pieChart = function (parent, chartGroup) {
     function positionLabels (labels, arc) {
         _chart._applyLabelText(labels);
         dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('transform', function (d) {
-                return labelPosition(d, arc);
+            .attrTween('transform', function (d) {
+                var current = this._current || {startAngle: 0, endAngle: 0};
+                current = {startAngle: current.startAngle, endAngle: current.endAngle};
+                var interpolate = d3.interpolate(current, d);
+                this._current = interpolate(0);
+                return function (t) {
+                    var d2 = interpolate(t);
+                    return labelPosition(d2, arc);
+                };
             })
             .attr('text-anchor', 'middle');
     }
