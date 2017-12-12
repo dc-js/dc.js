@@ -27,16 +27,21 @@
 dc.barChart = function (parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
     var DEFAULT_GAP_BETWEEN_BARS = 2;
+    var DEFAULT_GAP_BETWEEN_BAR_SERIES = 5;
     var LABEL_PADDING = 3;
+    var _type = "dc.BAR_CHART";
 
     var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
 
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
+    var _serieGap = DEFAULT_GAP_BETWEEN_BAR_SERIES;
     var _centerBar = false;
     var _alwaysUseRounding = false;
 
     var _barWidth;
 
+
+    _chart.type = _type;
     dc.override(_chart, 'rescale', function () {
         _chart._rescale();
         _barWidth = undefined;
@@ -46,7 +51,7 @@ dc.barChart = function (parent, chartGroup) {
     dc.override(_chart, 'render', function () {
         if (_chart.round() && _centerBar && !_alwaysUseRounding) {
             dc.logger.warn('By default, brush rounding is disabled if bars are centered. ' +
-                         'See dc.js bar chart API documentation for details.');
+                'See dc.js bar chart API documentation for details.');
         }
 
         return _chart._render();
@@ -82,32 +87,24 @@ dc.barChart = function (parent, chartGroup) {
         });
     };
 
-    function barHeight (d) {
+    function barHeight(d) {
         return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
     }
 
-    function labelXPos (d) {
-        var x = _chart.x()(d.x);
-        if (!_centerBar) {
-            x += _barWidth / 2;
+
+    function getCharts() {
+        if (parent instanceof Object) {
+            if (parent.children() instanceof Array) {
+                return parent.children().filter(function (chart) {
+                    return chart.type === _type;
+                });
+            }
         }
-        if (_chart.isOrdinal() && _gap !== undefined) {
-            x += _gap / 2;
-        }
-        return dc.utils.safeNumber(x);
+        return [];
+
     }
 
-    function labelYPos (d) {
-        var y = _chart.y()(d.y + d.y0);
-
-        if (d.y < 0) {
-            y -= barHeight(d);
-        }
-
-        return dc.utils.safeNumber(y - LABEL_PADDING);
-    }
-
-    function renderLabels (layer, layerIndex, d) {
+    function renderLabels(layer, layerIndex, d) {
         var labels = layer.selectAll('text.barLabel')
             .data(d.values, dc.pluck('x'));
 
@@ -125,9 +122,34 @@ dc.barChart = function (parent, chartGroup) {
             labelsEnterUpdate.attr('cursor', 'pointer');
         }
 
-        dc.transition(labelsEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('x', labelXPos)
-            .attr('y', labelYPos)
+        dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
+            .attr('x', function (d) {
+                var x = _chart.x()(d.x);
+                var charts = getCharts();
+                if (charts.length > 1) {
+                    x += _chart.serieGap() / 2;
+                    x += layerIndex * (_barWidth + _gap);
+                    x += _gap / 2;
+                }
+                x += _barWidth / 2;
+                if (_centerBar && !_chart.isOrdinal()) {
+                    if (charts.length > 1) {
+                        x -= ((_barWidth + _gap) * charts.length + _chart.serieGap()) / 2;
+                    } else {
+                        x -= _barWidth / 2;
+                    }
+                }
+                return dc.utils.safeNumber(x);
+            })
+            .attr('y', function (d) {
+                var y = _chart.y()(d.y + d.y0);
+
+                if (d.y < 0) {
+                    y -= barHeight(d);
+                }
+
+                return dc.utils.safeNumber(y - LABEL_PADDING);
+            })
             .text(function (d) {
                 return _chart.label()(d);
             });
@@ -137,18 +159,7 @@ dc.barChart = function (parent, chartGroup) {
             .remove();
     }
 
-    function barXPos (d) {
-        var x = _chart.x()(d.x);
-        if (_centerBar) {
-            x -= _barWidth / 2;
-        }
-        if (_chart.isOrdinal() && _gap !== undefined) {
-            x += _gap / 2;
-        }
-        return dc.utils.safeNumber(x);
-    }
-
-    function renderBars (layer, layerIndex, d) {
+    function renderBars(layer, layerIndex, d) {
         var bars = layer.selectAll('rect.bar')
             .data(d.values, dc.pluck('x'));
 
@@ -170,8 +181,28 @@ dc.barChart = function (parent, chartGroup) {
             barsEnterUpdate.on('click', _chart.onClick);
         }
 
-        dc.transition(barsEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('x', barXPos)
+        dc.transition(bars, _chart.transitionDuration(), _chart.transitionDelay())
+            .attr('x', function (d) {
+                var x = _chart.x()(d.x);
+                var charts = getCharts();
+                var chartIndex = charts.indexOf(_chart);
+                if (charts.length > 1) {
+                    x += _chart.serieGap() / 2;
+                    x += chartIndex * (_barWidth + _gap);
+                    x += _gap / 2;
+                }
+                if (_centerBar && !_chart.isOrdinal()) {
+                    if (charts.length > 1) {
+                        x -= ((_barWidth + _gap) * charts.length + _chart.serieGap()) / 2;
+                    } else {
+                        x -= _barWidth / 2;
+                    }
+                }
+                if (_chart.isOrdinal() && _gap !== undefined) {
+                    x += _gap / 2;
+                }
+                return dc.utils.safeNumber(x);
+            })
             .attr('y', function (d) {
                 var y = _chart.y()(d.y + d.y0);
 
@@ -194,18 +225,30 @@ dc.barChart = function (parent, chartGroup) {
             .remove();
     }
 
-    function calculateBarWidth () {
+    function calculateBarWidth() {
         if (_barWidth === undefined) {
             var numberOfBars = _chart.xUnitCount();
-
-            // please can't we always use rangeBands for bar charts?
-            if (_chart.isOrdinal() && _gap === undefined) {
-                _barWidth = Math.floor(_chart.x().bandwidth());
-            } else if (_gap) {
-                _barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
+            var charts = getCharts();
+            if (charts.length > 1) {
+                var numberOfCharts = charts.length;
+                if (_chart.isOrdinal()) {
+                    _barWidth = Math.floor((_chart.x().rangeBand() - _chart.serieGap()) / numberOfCharts - _gap);
+                } else {
+                    _barWidth = Math.floor((_chart.xAxisLength() - (_chart.xUnitCount() - 1) * _chart.serieGap() -
+                        (numberOfBars - 1) * (numberOfCharts) * _gap) / (numberOfBars * numberOfCharts));
+                }
             } else {
-                _barWidth = Math.floor(_chart.xAxisLength() / (1 + _chart.barPadding()) / numberOfBars);
+                // please can't we always use rangeBands for bar charts?
+                if (_chart.isOrdinal() && _gap === undefined) {
+                    _barWidth = Math.floor(_chart.x().rangeBand());
+                } else if (_gap) {
+                    _barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
+                } else {
+                    _barWidth = Math.floor(_chart.xAxisLength() / (1 + _chart.barPadding()) / numberOfBars);
+                }
             }
+
+
 
             if (_barWidth === Infinity || isNaN(_barWidth) || _barWidth < MIN_BAR_WIDTH) {
                 _barWidth = MIN_BAR_WIDTH;
@@ -315,10 +358,32 @@ dc.barChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    _chart.extendBrush = function (brushSelection) {
-        if (brushSelection && _chart.round() && (!_centerBar || _alwaysUseRounding)) {
-            brushSelection[0] = _chart.round()(brushSelection[0]);
-            brushSelection[1] = _chart.round()(brushSelection[1]);
+    /**
+     * Manually set fixed gap (in px) between bar groups instead of relying on the default auto-generated
+     * gap.  Only applicable for grouped bar charts.
+     * @name serieGap
+     * @memberof dc.barChart
+     * @instance
+     * @param {Number} [serieGap=5]
+     * @return {Number}
+     * @return {dc.barChart}
+     */
+    _chart.serieGap = function (serieGap) {
+        if (!arguments.length) {
+            return _serieGap;
+        }
+        _serieGap = serieGap;
+        return _chart;
+    };
+
+    _chart.extendBrush = function () {
+        var extent = _chart.brush().extent();
+        if (_chart.round() && (!_centerBar || _alwaysUseRounding)) {
+            extent[0] = extent.map(_chart.round())[0];
+            extent[1] = extent.map(_chart.round())[1];
+
+            _chart.chartBodyG().select('.brush')
+                .call(_chart.brush().extent(extent));
         }
         return brushSelection;
     };
@@ -346,7 +411,7 @@ dc.barChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    function colorFilter (color, inv) {
+    function colorFilter(color, inv) {
         return function () {
             var item = d3.select(this);
             var match = item.attr('fill') === color;
