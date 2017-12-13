@@ -42,6 +42,7 @@ dc.barChart = function (parent, chartGroup) {
 
 
     _chart.type = _type;
+    
     dc.override(_chart, 'rescale', function () {
         _chart._rescale();
         _barWidth = undefined;
@@ -93,9 +94,10 @@ dc.barChart = function (parent, chartGroup) {
 
 
     function getCharts() {
-        if (parent instanceof Object) {
-            if (parent.children() instanceof Array) {
-                return parent.children().filter(function (chart) {
+        if (dc.instanceOfChart(parent) && typeof parent.children === 'function') {
+            var children = parent.children();
+            if (children instanceof Array) {
+                return children.filter(function (chart) {
                     return chart.type === _type;
                 });
             }
