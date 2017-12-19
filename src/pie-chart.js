@@ -85,6 +85,10 @@ dc.pieChart = function (parent, chartGroup) {
         return _chart;
     };
 
+    function matches (val) {
+        return function (k) { return k !== val; };
+    }
+
     function drawChart () {
         // set radius from chart size if none given, or if given radius is too large
         var maxRadius =  d3.min([_chart.width(), _chart.height()]) / 2;
@@ -104,10 +108,16 @@ dc.pieChart = function (parent, chartGroup) {
                 if(p === c) {
                     combined.push(data[di]);
                     ++pi; ++di;
-                } else if(prev.has(c) && !curr.has(p)) {
+                } else if (prev.has(c) && curr.has(p)) {
+                    // inconsistent ordering, just take current and drop any place where this key was used in previous
+                    _previousKeys = _previousKeys.filter(matches(c));
+                    combined.push(data[di]);
+                    ++di;
+                } else if (!prev.has(c) && curr.has(p)) {
                     combined.push({key: p, value: 0});
                     ++pi;
                 } else {
+                    _previousKeys = _previousKeys.filter(matches(c));
                     combined.push(data[di]);
                     ++di;
                 }
