@@ -39,7 +39,7 @@
     "grunt-contrib-cssmin": "2.x",
     "grunt-contrib-jasmine": "1.x",
     "grunt-contrib-jshint": "~1.1",
-    "grunt-contrib-uglify": "~2.0",
+    "grunt-contrib-uglify": "~3.2",
     "grunt-contrib-watch": "~1.0",
     "grunt-docco2": "~0.2",
     "grunt-fileindex": "~0.1",
