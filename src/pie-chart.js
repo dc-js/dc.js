@@ -100,12 +100,12 @@ dc.pieChart = function (parent, chartGroup) {
         var pieData;
         // if we have data...
         if (d3.sum(_chart.data(), _chart.valueAccessor())) {
-            var data = _chart.data(), keys = data.map(function(kv) { return kv.key; });
-            var prev = d3.set(_previousKeys), curr = d3.set(data.map(function(kv) { return kv.key; }));
+            var data = _chart.data(), keys = data.map(function (kv) { return kv.key; });
+            var prev = d3.set(_previousKeys), curr = d3.set(data.map(function (kv) { return kv.key; }));
             var combined = [];
-            for(var pi = 0, di = 0; pi < _previousKeys.length && di < data.length;) {
+            for (var pi = 0, di = 0; pi < _previousKeys.length && di < data.length;) {
                 var p = _previousKeys[pi], c = data[di].key;
-                if(p === c) {
+                if (p === c) {
                     combined.push(data[di]);
                     ++pi; ++di;
                 } else if (prev.has(c) && curr.has(p)) {
@@ -123,7 +123,8 @@ dc.pieChart = function (parent, chartGroup) {
                 }
             }
             combined = combined.concat(data.slice(di));
-            combined = combined.concat(_previousKeys.slice(pi).map(function(k) { return {key: k, value: 0}; }));
+            combined = combined.concat(_previousKeys.slice(pi).map(function (k) { return {key: k, value: 0}; }));
+            //console.log('combined', combined.map(function (kv) { return kv.key; }));
             _previousKeys = keys;
             pieData = pie(combined);
             _g.classed(_emptyCssClass, false);
