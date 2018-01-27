@@ -59,6 +59,10 @@ export class ScatterPlot extends CoordinateGridMixin {
         this._nonemptyOpacity = 1;
         this._emptyColor = null;
         this._filtered = [];
+        this._canvas = null;
+        this._context = null;
+        this._useCanvas = false;
+
 
         // Use a 2 dimensional brush
         this.brush(d3.brush());
@@ -69,6 +73,17 @@ export class ScatterPlot extends CoordinateGridMixin {
         this.hiddenSize = this.emptySize;
 
         this.anchor(parent, chartGroup);
+    }
+
+    // Calculates element radius for canvas plot to be comparable to D3 area based symbol sizes
+    _canvasElementSize (d, isFiltered) {
+        if (!this._existenceAccessor(d)) {
+            return this._emptySize / Math.sqrt(Math.PI);
+        } else if (isFiltered) {
+            return this._symbolSize / Math.sqrt(Math.PI);
+        } else {
+            return this._excludedSize / Math.sqrt(Math.PI);
+        }
     }
 
     _elementSize (d, i) {
@@ -94,7 +109,176 @@ export class ScatterPlot extends CoordinateGridMixin {
         return super.filter(filters.RangedTwoDimensionalFilter(filter));
     }
 
-    plotData () {
+    /**
+     * Method that replaces original resetSvg and appropriately inserts canvas
+     * element along with svg element and sets their CSS properties appropriately
+     * so they are overlapped on top of each other.
+     * Remove the chart's SVGElements from the dom and recreate the container SVGElement.
+     * @method resetSvg
+     * @memberof dc.scatterPlot
+     * @instance
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/SVGElement SVGElement}
+     * @returns {SVGElement}
+     */
+    resetSvg () {
+        if (!this._useCanvas) {
+            return super.resetSvg();
+        } else {
+            super.resetSvg(); // Perform original svgReset inherited from baseMixin
+            this.select('canvas').remove(); // remove old canvas
+
+            var svgSel = this.svg();
+            var rootSel = this.root();
+
+            // Set root node to relative positioning and svg to absolute
+            rootSel.style('position', 'relative');
+            svgSel.style('position', 'relative');
+
+            // Check if SVG element already has any extra top/left CSS offsets
+            var svgLeft = isNaN(parseInt(svgSel.style('left'), 10)) ? 0 : parseInt(svgSel.style('left'), 10);
+            var svgTop = isNaN(parseInt(svgSel.style('top'), 10)) ? 0 : parseInt(svgSel.style('top'), 10);
+            var width = this.effectiveWidth();
+            var height = this.effectiveHeight();
+            var margins = this.margins(); // {top: 10, right: 130, bottom: 42, left: 42}
+
+            // Add the canvas element such that it perfectly overlaps the plot area of the scatter plot SVG
+            var devicePixelRatio = window.devicePixelRatio || 1;
+            this._canvas = this.root().append('canvas')
+                .attr('x', 0)
+                .attr('y', 0)
+                .attr('width', (width) * devicePixelRatio)
+                .attr('height', (height) * devicePixelRatio)
+                .style('width', width + 'px')
+                .style('height', height + 'px')
+                .style('position', 'absolute')
+                .style('top', margins.top + svgTop + 'px')
+                .style('left', margins.left + svgLeft + 'px')
+                .style('z-index', -1) // Place behind SVG
+                .style('pointer-events', 'none'); // Disable pointer events on canvas so SVG can capture brushing
+
+            // Define canvas context and set clipping path
+            this._context = this._canvas.node().getContext('2d');
+            this._context.scale(devicePixelRatio, devicePixelRatio);
+            this._context.rect(0, 0, width, height);
+            this._context.clip(); // Setup clipping path
+            this._context.imageSmoothingQuality = 'high';
+
+            return this.svg(); // Respect original return param for this.resetSvg;
+        }
+    }
+
+    /**
+     * Set or get whether to use canvas backend for plotting scatterPlot. Note that the
+     * canvas backend does not currently support
+     * {@link dc.scatterPlot#customSymbol customSymbol} or
+     * {@link dc.scatterPlot#symbol symbol} methods and is limited to always plotting
+     * with filled circles. Symbols are drawn with
+     * {@link dc.scatterPlot#symbolSize symbolSize} radius. By default, the SVG backend
+     * is used when `useCanvas` is set to `false`.
+     * @method useCanvas
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {Boolean} [useCanvas=false]
+     * @return {Boolean|d3.selection}
+     */
+    useCanvas (useCanvas) {
+        if (!arguments.length) {
+            return this._useCanvas;
+        }
+        this._useCanvas = useCanvas;
+        return this;
+    }
+
+    /**
+     * Set or get canvas element. You should usually only ever use the get method as
+     * dc.js will handle canvas element generation.  Provides valid canvas only when
+     * {@link dc.scatterPlot#useCanvas useCanvas} is set to `true`
+     * @method canvas
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {CanvasElement|d3.selection} [canvasElement]
+     * @return {CanvasElement|d3.selection}
+     */
+    canvas (canvasElement) {
+        if (!arguments.length) {
+            return this._canvas;
+        }
+        this._canvas = canvasElement;
+        return this;
+    }
+
+    /**
+     * Get canvas 2D context. Provides valid context only when
+     * {@link dc.scatterPlot#useCanvas useCanvas} is set to `true`
+     * @method context
+     * @memberof dc.scatterPlot
+     * @instance
+     * @return {CanvasContext}
+     */
+    context () {
+        return this._context;
+    }
+
+    /*eslint complexity: [2,11] */
+    // Plots data on canvas element. If argument provided, assumes legend is
+    // currently being highlighted and modifies opacity/size of symbols accordingly
+    // @param {Object} [legendHighlightDatum] - Datum provided to legendHighlight method
+    _plotOnCanvas (legendHighlightDatum) {
+        var context = this.context();
+        context.clearRect(0, 0, (context.canvas.width + 2) * 1, (context.canvas.height + 2) * 1);
+        var data = this.data();
+
+        // Draw the data on canvas
+        data.forEach((d, i) => {
+            var isFiltered = !this.filter() || this.filter().isFiltered([d.key[0], d.key[1]]);
+            // Calculate opacity for current data point
+            var cOpacity = 1;
+            if (!this._existenceAccessor(d)) {
+                cOpacity = this._emptyOpacity;
+            } else if (isFiltered) {
+                cOpacity = this._nonemptyOpacity;
+            } else {
+                cOpacity = this.excludedOpacity();
+            }
+            // Calculate color for current data point
+            var cColor = null;
+            if (this._emptyColor && !this._existenceAccessor(d)) {
+                cColor = this._emptyColor;
+            } else if (this.excludedColor() && !isFiltered) {
+                cColor = this.excludedColor();
+            } else {
+                cColor = this.getColor(d);
+            }
+            var cSize = this._canvasElementSize(d, isFiltered);
+
+            // Adjust params for data points if legend is highlighted
+            if (legendHighlightDatum) {
+                var isHighlighted = (cColor === legendHighlightDatum.color);
+                // Calculate opacity for current data point
+                var fadeOutOpacity = 0.1; // TODO: Make this programmatically setable
+                if (!isHighlighted) { // Fade out non-highlighted colors + highlighted colors outside filter
+                    cOpacity = fadeOutOpacity;
+                }
+                if (isHighlighted) { // Set size for highlighted color data points
+                    cSize = this._highlightedSize / Math.sqrt(Math.PI);
+                }
+            }
+
+            // Draw point on canvas
+            context.save();
+            context.globalAlpha = cOpacity;
+            context.beginPath();
+            context.arc(this.x()(this.keyAccessor()(d)), this.y()(this.valueAccessor()(d)), cSize, 0, 2 * Math.PI, true);
+            context.fillStyle = cColor;
+            context.fill();
+            // context.lineWidth = 0.5; // Commented out code to add stroke around scatter points if desired
+            // context.strokeStyle = '#333';
+            // context.stroke();
+            context.restore();
+        });
+    }
+
+    _plotOnSVG () {
         let symbols = this.chartBodyG().selectAll('path.symbol')
             .data(this.data());
 
@@ -137,6 +321,14 @@ export class ScatterPlot extends CoordinateGridMixin {
             })
             .attr('transform', d => this._locator(d))
             .attr('d', this._symbol);
+    }
+
+    plotData () {
+        if (this._useCanvas) {
+            this._plotOnCanvas();
+        } else {
+            this._plotOnSVG();
+        }
     }
 
     _renderTitles (symbol, d) {
@@ -376,17 +568,25 @@ export class ScatterPlot extends CoordinateGridMixin {
     }
 
     legendHighlight (d) {
-        this._resizeSymbolsWhere(symbol => symbol.attr('fill') === d.color, this._highlightedSize);
-        this.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
-            return d3.select(this).attr('fill') !== d.color;
-        }).classed('fadeout', true);
+        if (this._useCanvas) {
+            this._plotOnCanvas(d); // Supply legend datum to plotOnCanvas
+        } else {
+            this._resizeSymbolsWhere(symbol => symbol.attr('fill') === d.color, this._highlightedSize);
+            this.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
+                return d3.select(this).attr('fill') !== d.color;
+            }).classed('fadeout', true);
+        }
     }
 
     legendReset (d) {
-        this._resizeSymbolsWhere(symbol => symbol.attr('fill') === d.color, this._symbolSize);
-        this.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
-            return d3.select(this).attr('fill') !== d.color;
-        }).classed('fadeout', false);
+        if (this._useCanvas) {
+            this._plotOnCanvas(d); // Supply legend datum to plotOnCanvas
+        } else {
+            this._resizeSymbolsWhere(symbol => symbol.attr('fill') === d.color, this._symbolSize);
+            this.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
+                return d3.select(this).attr('fill') !== d.color;
+            }).classed('fadeout', false);
+        }
     }
 
     _resizeSymbolsWhere (condition, size) {
