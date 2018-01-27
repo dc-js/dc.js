@@ -54,6 +54,20 @@ dc.scatterPlot = function (parent, chartGroup) {
     var _nonemptyOpacity = 1;
     var _emptyColor = null;
     var _filtered = [];
+    var _canvas = null;
+    var _context = null;
+    var _useCanvas = false;
+
+    // Calculates element radius for canvas plot to be comparable to D3 area based symbol sizes
+    function canvasElementSize (d, i) {
+        if (!_existenceAccessor(d)) {
+            return _emptySize / Math.sqrt(Math.PI);
+        } else if (_filtered[i]) {
+            return _symbolSize / Math.sqrt(Math.PI);
+        } else {
+            return _excludedSize / Math.sqrt(Math.PI);
+        }
+    }
 
     function elementSize (d, i) {
         if (!_existenceAccessor(d)) {
@@ -74,48 +88,214 @@ dc.scatterPlot = function (parent, chartGroup) {
         return _chart.__filter(dc.filters.RangedTwoDimensionalFilter(filter));
     });
 
-    _chart.plotData = function () {
-        var symbols = _chart.chartBodyG().selectAll('path.symbol')
-            .data(_chart.data());
+    _chart._resetSvgOld = _chart.resetSvg; // Copy original closure from base-mixin
 
-        symbols
-            .enter()
-        .append('path')
-            .attr('class', 'symbol')
-            .attr('opacity', 0)
-            .attr('fill', _chart.getColor)
-            .attr('transform', _locator);
+    /**
+     * Method that replaces original resetSvg and appropriately inserts canvas
+     * element along with svg element and sets their CSS properties appropriately
+     * so they are overlapped on top of each other.
+     * Remove the chart's SVGElements from the dom and recreate the container SVGElement.
+     * @method resetSvg
+     * @memberof dc.scatterPlot
+     * @instance
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/SVGElement SVGElement}
+     * @returns {SVGElement}
+     */
+    _chart.resetSvg = function () {
+        if (!_useCanvas) {
+            return _chart._resetSvgOld();
+        } else {
+            _chart._resetSvgOld(); // Perform original svgReset inherited from baseMixin
+            _chart.select('canvas').remove(); // remove old canvas
 
-        symbols.call(renderTitles, _chart.data());
+            var svgSel = _chart.svg();
+            var rootSel = _chart.root();
 
-        symbols.each(function (d, i) {
-            _filtered[i] = !_chart.filter() || _chart.filter().isFiltered([d.key[0], d.key[1]]);
+            // Set root node to relative positioning and svg to absolute
+            rootSel.style('position', 'relative');
+            svgSel.style('position', 'relative');
+
+            // Check if SVG element already has any extra top/left CSS offsets
+            var svgLeft = isNaN(parseInt(svgSel.style('left'), 10)) ? 0 : parseInt(svgSel.style('left'), 10);
+            var svgTop = isNaN(parseInt(svgSel.style('top'), 10)) ? 0 : parseInt(svgSel.style('top'), 10);
+            var width = _chart.effectiveWidth();
+            var height = _chart.effectiveHeight();
+            var margins = _chart.margins(); // {top: 10, right: 130, bottom: 42, left: 42}
+
+            // Add the canvas element such that it perfectly overlaps the plot area of the scatter plot SVG
+            var devicePixelRatio = window.devicePixelRatio || 1;
+            _canvas = _chart.root().append('canvas')
+                .attr('x', 0)
+                .attr('y', 0)
+                .attr('width', (width) * devicePixelRatio)
+                .attr('height', (height) * devicePixelRatio)
+                .style('width', width + 'px')
+                .style('height', height + 'px')
+                .style('position', 'absolute')
+                .style('top', margins.top + svgTop + 'px')
+                .style('left', margins.left + svgLeft + 'px')
+                .style('pointer-events', 'none'); // Disable pointer events on canvas so SVG can capture brushing
+
+            // Define canvas context and set clipping path
+            _context = _canvas.node().getContext('2d');
+            _context.scale(devicePixelRatio, devicePixelRatio);
+            _context.rect(0, 0, width, height);
+            _context.clip(); // Setup clipping path
+            _context.imageSmoothingQuality = 'high';
+
+            return _chart.svg(); // Respect original return param for _chart.resetSvg;
+        }
+    };
+
+    /**
+     * Set or get whether to use canvas backend for plotting scatterPlot
+     * @name useCanvas
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {Boolean} [useCanvas=false]
+     * @return {Boolean|d3.selection}
+     */
+    _chart.useCanvas = function (useCanvas) {
+        if (!arguments.length) {
+            return _useCanvas;
+        }
+        _useCanvas = useCanvas;
+        return _chart;
+    };
+
+    /**
+     * Set or get canvas element. You should usually only ever use the get method as
+     * dc.js will handle canvas element generation.
+     * @name canvas
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {CanvasElement|d3.selection} [canvasElement]
+     * @return {CanvasElement|d3.selection}
+     */
+    _chart.canvas = function (canvasElement) {
+        if (!arguments.length) {
+            return _canvas;
+        }
+        _canvas = canvasElement;
+        return _chart;
+    };
+
+    /**
+     * Get canvas 2D context
+     * @name context
+     * @memberof dc.scatterPlot
+     * @instance
+     * @return {CanvasContext}
+     */
+    _chart.context = function () {
+        return _context;
+    };
+    /**
+     * Plots data on canvas element. If argument provided, assumes legend is
+     * currently being highlighted and modifies opacity/size of symbols accordingly
+     * @param {Object} [legendHighlightDatum] - Datum provided to legendHighlight method
+     */
+    function plotOnCanvas (legendHighlightDatum) {
+        var context = _chart.context();
+        context.clearRect(0, 0, (context.canvas.width + 2) * 1, (context.canvas.height + 2) * 1);
+        var data = _chart.data();
+
+        // Draw the data on canvas
+        data.forEach(function (d, i) {
+            var isFiltered = !_chart.filter() || _chart.filter().isFiltered([d.key[0], d.key[1]]);
+            // Calculate opacity for current data point
+            var cOpacity = 1;
+            if (!_existenceAccessor(d)) {
+                cOpacity = _emptyOpacity;
+            } else if (isFiltered) {
+                cOpacity = _nonemptyOpacity;
+            } else {
+                cOpacity = _chart.excludedOpacity();
+            }
+            // Calculate color for current data point
+            var cColor = null;
+            if (_emptyColor && !_existenceAccessor(d)) {
+                cColor = _emptyColor;
+            } else if (_chart.excludedColor() && !isFiltered) {
+                cColor = _chart.excludedColor();
+            } else {
+                cColor = _chart.getColor(d);
+            }
+            var cSize = canvasElementSize(d, i);
+
+            // Adjust params for data points if legend is highlighted
+            if (legendHighlightDatum) {
+                var isHighlighted = (cColor === legendHighlightDatum.color);
+                // Calculate opacity for current data point
+                var fadeOutOpacity = 0.1; // TODO: Make this programmatically setable
+                if (!isHighlighted) { // Fade out non-highlighted colors + highlighted colors outside filter
+                    cOpacity = fadeOutOpacity;
+                }
+                if (isHighlighted) { // Set size for highlighted color data points
+                    cSize = _highlightedSize / Math.sqrt(Math.PI);
+                }
+            }
+
+            // Draw point on canvas
+            context.save();
+            context.globalAlpha = cOpacity;
+            context.beginPath();
+            context.arc(_chart.x()(_chart.keyAccessor()(d)), _chart.y()(_chart.valueAccessor()(d)), cSize, 0, 2 * Math.PI, true);
+            context.fillStyle = cColor;
+            context.fill();
+            // context.lineWidth = 0.5; // Commented out code to add stroke around scatter points if desired
+            // context.strokeStyle = '#333';
+            // context.stroke();
+            context.restore();
         });
+    }
 
-        dc.transition(symbols, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('opacity', function (d, i) {
-                if (!_existenceAccessor(d)) {
-                    return _emptyOpacity;
-                } else if (_filtered[i]) {
-                    return _nonemptyOpacity;
-                } else {
-                    return _chart.excludedOpacity();
-                }
-            })
-            .attr('fill', function (d, i) {
-                if (_emptyColor && !_existenceAccessor(d)) {
-                    return _emptyColor;
-                } else if (_chart.excludedColor() && !_filtered[i]) {
-                    return _chart.excludedColor();
-                } else {
-                    return _chart.getColor(d);
-                }
-            })
-            .attr('transform', _locator)
-            .attr('d', _symbol);
+    _chart.plotData = function () {
+        if (_useCanvas) {
+            plotOnCanvas();
+        } else {
+            var symbols = _chart.chartBodyG().selectAll('path.symbol')
+                .data(_chart.data());
 
-        dc.transition(symbols.exit(), _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('opacity', 0).remove();
+            symbols
+                .enter()
+                .append('path')
+                .attr('class', 'symbol')
+                .attr('opacity', 0)
+                .attr('fill', _chart.getColor)
+                .attr('transform', _locator);
+
+            symbols.call(renderTitles, _chart.data());
+
+            symbols.each(function (d, i) {
+                _filtered[i] = !_chart.filter() || _chart.filter().isFiltered([d.key[0], d.key[1]]);
+            });
+
+            dc.transition(symbols, _chart.transitionDuration(), _chart.transitionDelay())
+                .attr('opacity', function (d, i) {
+                    if (!_existenceAccessor(d)) {
+                        return _emptyOpacity;
+                    } else if (_filtered[i]) {
+                        return _nonemptyOpacity;
+                    } else {
+                        return _chart.excludedOpacity();
+                    }
+                })
+                .attr('fill', function (d, i) {
+                    if (_emptyColor && !_existenceAccessor(d)) {
+                        return _emptyColor;
+                    } else if (_chart.excludedColor() && !_filtered[i]) {
+                        return _chart.excludedColor();
+                    } else {
+                        return _chart.getColor(d);
+                    }
+                })
+                .attr('transform', _locator)
+                .attr('d', _symbol);
+
+            dc.transition(symbols.exit(), _chart.transitionDuration(), _chart.transitionDelay())
+                .attr('opacity', 0).remove();
+        }
     };
 
     function renderTitles (symbol, d) {
@@ -357,21 +537,29 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     _chart.legendHighlight = function (d) {
-        resizeSymbolsWhere(function (symbol) {
-            return symbol.attr('fill') === d.color;
-        }, _highlightedSize);
-        _chart.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
-            return d3.select(this).attr('fill') !== d.color;
-        }).classed('fadeout', true);
+        if (_useCanvas) {
+            plotOnCanvas(d); // Supply legend datum to plotOnCanvas
+        } else {
+            resizeSymbolsWhere(function (symbol) {
+                return symbol.attr('fill') === d.color;
+            }, _highlightedSize);
+            _chart.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
+                return d3.select(this).attr('fill') !== d.color;
+            }).classed('fadeout', true);
+        }
     };
 
     _chart.legendReset = function (d) {
-        resizeSymbolsWhere(function (symbol) {
-            return symbol.attr('fill') === d.color;
-        }, _symbolSize);
-        _chart.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
-            return d3.select(this).attr('fill') !== d.color;
-        }).classed('fadeout', false);
+        if (_useCanvas) {
+            plotOnCanvas();
+        } else {
+            resizeSymbolsWhere(function (symbol) {
+                return symbol.attr('fill') === d.color;
+            }, _symbolSize);
+            _chart.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
+                return d3.select(this).attr('fill') !== d.color;
+            }).classed('fadeout', false);
+        }
     };
 
     function resizeSymbolsWhere (condition, size) {
