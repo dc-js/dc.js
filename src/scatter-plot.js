@@ -59,10 +59,10 @@ dc.scatterPlot = function (parent, chartGroup) {
     var _useCanvas = false;
 
     // Calculates element radius for canvas plot to be comparable to D3 area based symbol sizes
-    function canvasElementSize (d, i) {
+    function canvasElementSize (d, isFiltered) {
         if (!_existenceAccessor(d)) {
             return _emptySize / Math.sqrt(Math.PI);
-        } else if (_filtered[i]) {
+        } else if (isFiltered) {
             return _symbolSize / Math.sqrt(Math.PI);
         } else {
             return _excludedSize / Math.sqrt(Math.PI);
@@ -134,6 +134,7 @@ dc.scatterPlot = function (parent, chartGroup) {
                 .style('position', 'absolute')
                 .style('top', margins.top + svgTop + 'px')
                 .style('left', margins.left + svgLeft + 'px')
+                .style('z-index', -1) // Place behind SVG
                 .style('pointer-events', 'none'); // Disable pointer events on canvas so SVG can capture brushing
 
             // Define canvas context and set clipping path
@@ -148,8 +149,14 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     /**
-     * Set or get whether to use canvas backend for plotting scatterPlot
-     * @name useCanvas
+     * Set or get whether to use canvas backend for plotting scatterPlot. Note that the
+     * canvas backend does not currently support 
+     * {@link dc.scatterPlot#customSymbol customSymbol} or 
+     * {@link dc.scatterPlot#symbol symbol} methods and is limited to always plotting 
+     * with filled circles. Symbols are drawn with
+     * {@link dc.scatterPlot#symbolSize symbolSize} radius. By default, the SVG backend
+     * is used when `useCanvas` is set to `false`. 
+     * @method useCanvas
      * @memberof dc.scatterPlot
      * @instance
      * @param {Boolean} [useCanvas=false]
@@ -165,8 +172,9 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
      * Set or get canvas element. You should usually only ever use the get method as
-     * dc.js will handle canvas element generation.
-     * @name canvas
+     * dc.js will handle canvas element generation.  Provides valid canvas only when
+     * {@link dc.scatterPlot#useCanvas useCanvas} is set to `true`
+     * @method canvas
      * @memberof dc.scatterPlot
      * @instance
      * @param {CanvasElement|d3.selection} [canvasElement]
@@ -181,8 +189,9 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     /**
-     * Get canvas 2D context
-     * @name context
+     * Get canvas 2D context. Provides valid context only when
+     * {@link dc.scatterPlot#useCanvas useCanvas} is set to `true`
+     * @method context
      * @memberof dc.scatterPlot
      * @instance
      * @return {CanvasContext}
@@ -190,11 +199,10 @@ dc.scatterPlot = function (parent, chartGroup) {
     _chart.context = function () {
         return _context;
     };
-    /**
-     * Plots data on canvas element. If argument provided, assumes legend is
-     * currently being highlighted and modifies opacity/size of symbols accordingly
-     * @param {Object} [legendHighlightDatum] - Datum provided to legendHighlight method
-     */
+
+    // Plots data on canvas element. If argument provided, assumes legend is
+    // currently being highlighted and modifies opacity/size of symbols accordingly
+    // @param {Object} [legendHighlightDatum] - Datum provided to legendHighlight method
     function plotOnCanvas (legendHighlightDatum) {
         var context = _chart.context();
         context.clearRect(0, 0, (context.canvas.width + 2) * 1, (context.canvas.height + 2) * 1);
@@ -221,7 +229,7 @@ dc.scatterPlot = function (parent, chartGroup) {
             } else {
                 cColor = _chart.getColor(d);
             }
-            var cSize = canvasElementSize(d, i);
+            var cSize = canvasElementSize(d, isFiltered);
 
             // Adjust params for data points if legend is highlighted
             if (legendHighlightDatum) {
