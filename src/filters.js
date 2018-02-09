@@ -60,7 +60,7 @@ dc.filters.HierarchyFilter = function (path) {
 
     var filter = path.slice(0);
     filter.isFiltered = function (value) {
-        if (!(filter.length && value.length && value.length >= filter.length)) {
+        if (!(filter.length && value && value.length && value.length >= filter.length)) {
             return false;
         }
 
